@@ -26,7 +26,7 @@
 // @include     http*://www.kaze5.com/*
 // @include     http*://www.acglover.top/*
 // @include     http*://lifan.moe/*
-// @version     3.19.50
+// @version     3.19.51
 // @grant       GM_notification
 // @run-at      document-start
 // @require     https://greasyfork.org/scripts/23522-olddriver-js/code/oldDriverjs.js?version=151229
@@ -202,7 +202,7 @@
             link = document.getElementsByTagName('a');
         }
         for (var i = 0, k = link.length; i < k; i++) {
-            if (/.*http:.*\.hacg\./i.test(link[i].outerHTML)) {
+            if (/.*http:[^\.]*(\.)?hacg\./i.test(link[i].outerHTML)) {
                 link[i].href = link[i].href.replace(/http/, 'https');
             }
             var target=link[i];
