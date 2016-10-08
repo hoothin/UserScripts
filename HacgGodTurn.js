@@ -26,9 +26,9 @@
 // @include     http*://www.kaze5.com/*
 // @include     http*://www.acglover.top/*
 // @include     http*://lifan.moe/*
-// @version     3.19.52
+// @version     3.19.53
 // @grant       GM_notification
-// @run-at      document-start
+// @run-at      document-end
 // @require     https://greasyfork.org/scripts/23522-olddriver-js/code/oldDriverjs.js?version=151229
 // @require     https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js
