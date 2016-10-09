@@ -31,7 +31,7 @@
 // @version     3.19.58
 // @grant       GM_notification
 // @run-at      document-end
-// @require     https://greasyfork.org/scripts/23522-olddriver-js/code/oldDriverjs.js?version=151557
+// @require     https://greasyfork.org/scripts/23522-olddriver-js/code/oldDriverjs.js?version=151574
 // @require     https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/enc-base64-min.js
@@ -386,9 +386,11 @@
             var links=document.querySelectorAll("a");
             var rocketLinks=document.querySelector("div#rocketLinks");
             rocketLinks.innerHTML="";
+            var i=0;
             for(var link of links){
-                if(/magnet:\?xt|pan\.baidu\.com\/s|yunpan\.cn|howfile\.com\/file|mega\.|ed2k:\/\/\|file/.test(link.href)){
-                    if(rocketLinks.innerHTML.indexOf(link.href)!=-1)continue;
+                if(/magnet:\?xt|pan\.baidu\.com\/s|yunpan\.cn|howfile\.com\/file|mega\.|ed2k:\/\/\|file|bt\.cosxcos\.com\/view/.test(link.href)){
+                    if(rocketLinks.innerHTML.indexOf(link.outerHTML)!=-1)continue;
+                    rocketLinks.innerHTML+=++i+":";
                     rocketLinks.appendChild(link.cloneNode(true));
                     rocketLinks.innerHTML+="&nbsp;";
                 }
