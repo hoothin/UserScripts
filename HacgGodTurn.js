@@ -26,10 +26,10 @@
 // @include     http*://www.kaze5.com/*
 // @include     http*://www.acglover.top/*
 // @include     http*://lifan.moe/*
-// @version     3.19.57
+// @version     3.19.58
 // @grant       GM_notification
 // @run-at      document-end
-// @require     https://greasyfork.org/scripts/23522-olddriver-js/code/oldDriverjs.js?version=151518
+// @require     https://greasyfork.org/scripts/23522-olddriver-js/code/oldDriverjs.js?version=151532
 // @require     https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/enc-base64-min.js
@@ -308,10 +308,12 @@
         oD_box.onmouseover = function(e) {
             oD_link.style.visibility = "visible";
             oD_link2.style.visibility = "visible";
+            rocketBtn.style.visibility = "visible";
         };
         oD_box.onmouseout = function(e) {
             oD_link.style.visibility = "hidden";
             oD_link2.style.visibility = "hidden";
+            rocketBtn.style.visibility = "hidden";
         };
         var oD_text=document.createElement("input");
         oD_text.id="oD_text";
@@ -353,6 +355,36 @@
         oD_box.appendChild(oD_link);
         oD_box.appendChild(oD_link2);
         oD_box.appendChild(oD_link3);
+        var rocketContent=document.createElement("div");
+        document.body.appendChild(rocketContent);
+        rocketContent.outerHTML=rocketStr;
+        rocketContent=document.querySelector("#rocketContent");
+        var rocketBtn=document.createElement("button");
+        rocketBtn.id="rocketBtn";
+        rocketBtn.type="button";
+        rocketBtn.textContent="\u706b\u7bad";
+        rocketBtn.style="padding:4px 0;position:absolute;top:-36px;right:0px;width:40px;height:35px;visibility:hidden";
+        rocketBtn.onclick=function (){
+            rocketContent.style.display="block";
+            var links=document.querySelectorAll("a");
+            var rocketLinks=document.querySelector("div#rocketLinks");
+            rocketLinks.innerHTML="";
+            for(var link of links){
+                if(/magnet:\?xt|pan\.baidu\.com\/s|yunpan\.cn|howfile\.com\/file|mega\.|ed2k:\/\/\|file/.test(link.href)){
+                    if(rocketLinks.innerHTML.indexOf(link.href)!=-1)continue;
+                    rocketLinks.appendChild(link.cloneNode(true));
+                    rocketLinks.innerHTML+="&nbsp;";
+                }
+            }
+            if(rocketLinks.innerHTML===""){
+                rocketLinks.innerHTML="No links found!";
+            }
+        };
+        var rocketQuit=document.querySelector("#rocketQuit");
+        rocketQuit.onclick=function (){
+            rocketContent.style.display="none";
+        };
+        oD_box.appendChild(rocketBtn);
         document.body.appendChild(oD_box);
     }
     //评论区度娘、115、tcn
