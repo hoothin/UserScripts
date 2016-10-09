@@ -211,7 +211,7 @@
             if(/baidu.com/i.test(target.href)&&!/(?:eyun|tieba)\.baidu\.com/i.test(target.href)&&!/#/i.test(target.href)){
                 if(/(acggj\.com|oomoe\.moe|kaze5\.com)\/storage-download/.test(location.href)){
                     var pass=target.parentNode.parentNode.querySelector('input.pwd');
-                    if(pass)target.href+='#'+pass.value;
+                    if(pass&&pass.id.indexOf("download-pwd")!=-1)target.href+='#'+pass.value;
                 } else if(/acg12\.com\/download/.test(location.href)){
                     var pass2=target.parentNode.parentNode.parentNode.querySelector('input.form-control');
                     if(pass2)target.href+='#'+pass2.value;
