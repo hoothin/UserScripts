@@ -111,6 +111,10 @@
             if (author && !document.querySelector("#blockBtn")) {
                 createBlockBtn();
                 process();
+                var toggles = document.querySelectorAll("div.toggle-box");
+                for(var toggle of toggles){
+                    toggle.style="display:block";
+                }
                 clickBlockListener();
             }
         });
