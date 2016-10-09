@@ -195,6 +195,19 @@
             contentArea='.article-content';
         }else if(/acglover\.top/.test(location.href)){
             st2https(true,[["a","img"],[['acglover\.net','acglover\.top']]]);
+        }else if(/idanmu\.co/.test(location.href)){
+            var resets = document.querySelectorAll('body>style');
+            for(var reset of resets){
+                if(/\.card-bg\simg|\.content-reset\simg/.test(reset.innerHTML)){
+                    reset.parentNode.removeChild(reset);
+                }
+            }
+            var r10=document.querySelector('#menu-item-12744');
+            if(r10){
+                var r18=r10.cloneNode(true);
+                r18.innerHTML = r18.innerHTML.replace(/资讯/g, 'r18').replace(/category\/v01/g, 'category/v09/v13');
+                r10.after(r18);
+            }
         }
         var content=document.querySelector(contentArea);
         if(content){
