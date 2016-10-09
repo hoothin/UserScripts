@@ -26,7 +26,7 @@
 // @include     http*://www.kaze5.com/*
 // @include     http*://www.acglover.top/*
 // @include     http*://lifan.moe/*
-// @version     3.19.56
+// @version     3.19.57
 // @grant       GM_notification
 // @run-at      document-end
 // @require     https://greasyfork.org/scripts/23522-olddriver-js/code/oldDriverjs.js?version=151458
@@ -158,7 +158,7 @@
         } else if(/lifan\.moe/.test(location.href)){
             st2https(true,[["a","img","script","link"],[['p:(\/\/|\\\\\\/\\\\\\/)lifan\.moe','ps:$1lifan\.moe']]]);
         } else if(/www\.acggj\./.test(location.href)){
-            st2https(true,[["a","img","script","link"],[['p:(\/\/|\\\\\\/\\\\\\/)(www\.)?acggj','ps:$1$2acggj'],['"\/\/(img\.2dfan)','"http:\/\/$1']]]);
+            st2https(true,[["a","img","script","link"],[['p:(\/\/|\\\\\\/\\\\\\/)(www\.|bbs\.)?acggj','ps:$1$2acggj'],['"\/\/(img\.2dfan)','"http:\/\/$1']]]);
             var benzi=document.querySelector('#menu-item-3786');
             if(benzi){
                 var scy=benzi.cloneNode(true);
@@ -185,6 +185,8 @@
             contentArea='.content';
         }else if(/tianshit\.com/.test(location.href)){
             contentArea='.article-content';
+        }else if(/acglover\.top/.test(location.href)){
+            st2https(true,[["a","img"],[['acglover\.net','acglover\.top']]]);
         }
         var content=document.querySelector(contentArea);
         if(content){
