@@ -29,7 +29,7 @@
 // @version     3.19.58
 // @grant       GM_notification
 // @run-at      document-end
-// @require     https://greasyfork.org/scripts/23522-olddriver-js/code/oldDriverjs.js?version=151532
+// @require     https://greasyfork.org/scripts/23522-olddriver-js/code/oldDriverjs.js?version=151549
 // @require     https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/enc-base64-min.js
@@ -49,7 +49,9 @@
                ["http://www.kaze5.com/","kaze5.com"],
                ["https://lifan.moe/","lifan.moe"],
                ["http://nacg.me/","nacg.me"],
-               ["https://www.oomoe.moe/","oomoe.moe"]];
+               ["https://www.oomoe.moe/","oomoe.moe"],
+               ["http://www.idanmu.co/","idanmu.co"],
+               ["https://www.sijihuisuo.club/","sijihuisuo.club"]];
     document.onkeydown= function(e) {
         if (e.keyCode == 117) {
             var i=0;
