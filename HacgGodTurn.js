@@ -26,6 +26,8 @@
 // @include     http*://www.kaze5.com/*
 // @include     http*://www.acglover.top/*
 // @include     http*://lifan.moe/*
+// @include     http*://www.idanmu.co/*
+// @include     http*://www.sijihuisuo.club/*
 // @version     3.19.58
 // @grant       GM_notification
 // @run-at      document-end
