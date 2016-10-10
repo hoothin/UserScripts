@@ -396,7 +396,7 @@
             rocketLinks.innerHTML="";
             var i=0;
             for(var link of links){
-                if(/magnet:\?xt|pan\.baidu\.com\/s|yunpan\.cn|howfile\.com\/file|mega\.|ed2k:\/\/\|file|bt\.cosxcos\.com\/view/.test(link.href)){
+                if(/magnet:\?xt|pan\.baidu\.com\/s|yunpan\.cn|howfile\.com\/file|mega\.|ed2k:\/\/\|file|bt\.cosxcos\.com\/view|du\.acgget\.com\/go\//.test(link.href)){
                     if(rocketLinks.innerHTML.indexOf(link.outerHTML)!=-1)continue;
                     rocketLinks.innerHTML+="<strong style='color:red'>"+(++i)+"</strong>:";
                     rocketLinks.appendChild(link.cloneNode(true));
