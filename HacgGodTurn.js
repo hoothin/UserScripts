@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name        琉神转 | Create Download Links for HACG (https)
+// @name        琉神转 | HacgGodTurn
 // @namespace   hoothin
 // @description 琉璃神社与其他绅士站神秘代码转换成下载链接
 // @author      hoothin
@@ -26,7 +26,7 @@
 // @include     http*://lifan.moe/*
 // @include     http*://www.idanmu.co/*
 // @include     http*://www.sijihuisuo.club/*
-// @version     3.19.61
+// @version     3.19.62
 // @grant       GM_notification
 // @run-at      document-end
 // @require     https://greasyfork.org/scripts/23522-olddriver-js/code/oldDriverjs.js?version=151669
