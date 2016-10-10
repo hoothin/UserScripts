@@ -31,7 +31,7 @@
 // @version     3.19.58
 // @grant       GM_notification
 // @run-at      document-end
-// @require     https://greasyfork.org/scripts/23522-olddriver-js/code/oldDriverjs.js?version=151602
+// @require     https://greasyfork.org/scripts/23522-olddriver-js/code/oldDriverjs.js?version=151668
 // @require     https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/enc-base64-min.js
@@ -124,7 +124,19 @@
         });
         createBlockBtn();
     }else if(/acg12\.com\/download/.test(location.href)){
-        t=window.setInterval(checkAcg12,1000);
+        t=window.setInterval(function(){
+            if(document.querySelector('.btn-success')){
+                clearInterval(t);
+                process();
+            }
+        },1000);
+    }else if(/sijihuisuo\.club\/sj\/\d/.test(location.href)){
+        t=window.setInterval(function(){
+            if(document.querySelector(".ds-comments")){
+                clearInterval(t);
+                process();
+            }
+        },500);
     }else if(/hacg\./.test(location.href)){
         var has8=false;
         var comms=document.querySelectorAll("span.fn");
@@ -208,6 +220,8 @@
                 r18.innerHTML = r18.innerHTML.replace(/资讯/g, 'r18').replace(/category\/v01/g, 'category/v09/v13');
                 r10.after(r18);
             }
+        }else if(/sijihuisuo\.club\/sj\/\d/.test(location.href)){
+            contentArea=".ds-comments";
         }
         var content=document.querySelector(contentArea);
         if(content){
@@ -243,7 +257,7 @@
                         target.href+=/#/i.test(target.href)?extCode(target.nextSibling):('#'+extCode(target.nextSibling));
                     }
                 } else if(codeRule.test(target.parentNode.textContent)){
-                    if(!/#\S+/i.test(target.href)) target.href+=/#/i.test(target.href)?extCode(target.nextSibling):('#'+extCode(target.nextSibling));
+                    if(!/#\S+/i.test(target.href)) target.href+=/#/i.test(target.href)?extCode(target.parentNode):('#'+extCode(target.parentNode));
                 } else {
                     var j = 0,
                         maxParent = 5,
@@ -307,12 +321,6 @@
         }
     }
     var t;
-    function checkAcg12(){
-        if(document.querySelector('.btn-success')){
-            clearInterval(t);
-            process();
-        }
-    }
     process();
     clickBlockListener();
 
