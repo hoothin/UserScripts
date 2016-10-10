@@ -12,9 +12,7 @@
 // @include     http*://pan.baidu.com/s/*
 // @include     http*://sexacg.com/*
 // @include     http*://www.acg.tf/*
-// @include     http*://www.shenshi.re/*
 // @include     http*://acg.tf/*
-// @include     http*://shenshi.re/*
 // @include     http*://www.moxacg.com/*
 // @include     http*://*.acggj.com/*
 // @include     http*://acg12.com/*
@@ -28,7 +26,7 @@
 // @include     http*://lifan.moe/*
 // @include     http*://www.idanmu.co/*
 // @include     http*://www.sijihuisuo.club/*
-// @version     3.19.59
+// @version     3.19.60
 // @grant       GM_notification
 // @run-at      document-end
 // @require     https://greasyfork.org/scripts/23522-olddriver-js/code/oldDriverjs.js?version=151669
@@ -38,33 +36,101 @@
 // @license     MIT License
 // ==/UserScript==
 (function(){
-    var sites=[["https://www.hacg.fi/wp/",".hacg."],
-               ["https://blog.reimu.net/","blog.reimu."],
-               ["https://sexacg.com/","sexacg"],
-               ["https://www.acg.tf/",".acg.tf"],
-               ["http://www.acglover.top/","acglover.top"],
-               ["https://www.tianshit.com/","tianshit."],
-               ["https://www.acggj.com/","acggj."],
-               ["https://acg12.com/","acg12."],
-               ["https://www.acgnz.cc/","acgnz.cc"],
-               ["https://www.moxacg.com/","moxacg."],
-               ["http://www.kaze5.com/","kaze5.com"],
-               ["https://lifan.moe/","lifan.moe"],
-               ["http://nacg.me/","nacg.me"],
-               ["https://www.oomoe.moe/","oomoe.moe"],
-               ["http://www.idanmu.co/","idanmu.co"],
-               ["https://www.sijihuisuo.club/","sijihuisuo.club"]];
+    var config={
+        sites:[
+            {
+                url:"https://www.hacg.fi/wp/",
+                regex:/hacg\./
+            },
+            {
+                url:"https://blog.reimu.net/",
+                regex:/blog\.reimu\./
+            },
+            {
+                url:"https://sexacg.com/",
+                regex:/sexacg\./
+            },
+            {
+                url:"https://www.acg.tf/",
+                regex:/acg\.tf/
+            },
+            {
+                url:"http://www.acglover.top/",
+                regex:/acglover\.top/
+            },
+            {
+                url:"https://www.tianshit.com/",
+                regex:/tianshit\./
+            },
+            {
+                url:"https://www.acggj.com/",
+                regex:/www\.acggj\./,
+                hideOd:true,
+                bbs:/bbs\.acggj\./
+            },
+            {
+                url:"https://acg12.com/",
+                regex:/acg12\./,
+                hideOd:true,
+                downloadUrl:/acg12\.com\/download/
+            },
+            {
+                url:"https://www.acgnz.cc/",
+                regex:/acgnz\.cc/,
+                hideOd:true
+            },
+            {
+                url:"https://www.moxacg.com/",
+                regex:/moxacg\./,
+                hideOd:true
+            },
+            {
+                url:"http://www.kaze5.com/",
+                regex:/kaze5\.com/,
+                hideOd:true
+            },
+            {
+                url:"https://lifan.moe/",
+                regex:/lifan\.moe/
+            },
+            {
+                url:"http://nacg.me/",
+                regex:/nacg\.me/,
+                hideOd:true
+            },
+            {
+                url:"https://www.oomoe.moe/",
+                regex:/oomoe\.moe/,
+                hideOd:true
+            },
+            {
+                url:"http://www.idanmu.co/",
+                regex:/idanmu\.co/
+            },
+            {
+                url:"https://www.sijihuisuo.club/",
+                regex:/sijihuisuo\.club/,
+                innerPage:/sijihuisuo\.club\/sj\/\d/
+            }
+        ],
+        exsites:/nacg\.me|oomoe\.moe|kaze5\.|acg12\.|acgnz\.cc|moxacg\.|acggj\./,
+        rocketReg:/magnet:\?xt|pan\.baidu\.com\/s|yunpan\.cn|howfile\.com\/file|mega\.|ed2k:\/\/\|file|bt\.cosxcos\.com\/view|du\.acgget\.com\/go\//,
+        disableSites:/hacg.*about\.html/
+    };
+    var contentArea='.entry-content';
+    var commArea="comment-content";
+    var t;
     document.onkeydown= function(e) {
         if (e.keyCode == 117) {
             var i=0;
-            for(var j=sites.length;i<j;i++){
-                if(location.href.indexOf(sites[i][1]) !=-1){
+            for(var j=config.sites.length;i<j;i++){
+                if(config.sites[i].regex.test(location.href)){
                     break;
                 }
             }
-            if(e.shiftKey) i=i===0?(sites.length-1):(i-1);
-            else i=i==(sites.length-1)?0:(i+1);
-            location.href = sites[i][0];
+            if(e.shiftKey) i=i===0?(config.sites.length-1):(i-1);
+            else i=i==(config.sites.length-1)?0:(i+1);
+            location.href = config.sites[i].url;
             return false;
         }
     };
@@ -82,9 +148,9 @@
             document.querySelector('#submitBtn').click();
         }
         return;
-    }else if(/hacg.*about\.html/.test(location.href)){
+    }else if(config.disableSites.test(location.href)){
         return;
-    }else if(/acg\.tf/.test(location.href)){
+    }else if(config.sites[3].regex.test(location.href)){
         var content=document.querySelector('.entry-content');
         if(content){
             var plist = content.querySelectorAll("p");
@@ -109,7 +175,7 @@
 
             }
         }
-    }else if (/reimu\./.test(location.href)){
+    }else if (config.sites[1].regex.test(location.href)){
         document.querySelector("#main").addEventListener('DOMNodeInserted', function(e) {
             var author = document.querySelector(".author-info");
             if (author && !document.querySelector("#blockBtn")) {
@@ -123,21 +189,25 @@
             }
         });
         createBlockBtn();
-    }else if(/acg12\.com\/download/.test(location.href)){
-        t=window.setInterval(function(){
-            if(document.querySelector('.btn-success')){
-                clearInterval(t);
-                process();
-            }
-        },1000);
-    }else if(/sijihuisuo\.club\/sj\/\d/.test(location.href)){
+    }else if(config.sites[7].regex.test(location.href)){
+        addInsertHandler([["a","img","link","script"],[['p:(\/\/|\\\\\\/\\\\\\/)(www\.|static\.)?acg12','ps:$1$2acg12']]]);
+        if(config.sites[7].downloadUrl.test(location.href)){
+            t=window.setInterval(function(){
+                if(document.querySelector('.btn-success')){
+                    clearInterval(t);
+                    process();
+                }
+            },1000);
+        }
+    }else if(config.sites[15].innerPage.test(location.href)){
+        contentArea=".ds-comments";
         t=window.setInterval(function(){
             if(document.querySelector(".ds-comments")){
                 clearInterval(t);
                 process();
             }
         },500);
-    }else if(/hacg\./.test(location.href)){
+    }else if(config.sites[0].regex.test(location.href)){
         var has8=false;
         var comms=document.querySelectorAll("span.fn");
         for(var comm of comms){
@@ -152,6 +222,54 @@
             if(title){
                 title.innerHTML+=" <a href=\"#little8\" style=\"color:#f60000\">\u2605\u76f4\u8fbe\u5c0f\u0038\u9171\u2605<\/a>";
             }
+        }
+    }else if(config.sites[2].regex.test(location.href)){
+        contentArea='article';
+        commArea='su-quote-inner';
+    }else if(config.sites[9].regex.test(location.href)){
+        addInsertHandler([["body","a","img","link","script"],[['p:(\/\/|\\\\\\/\\\\\\/)(www\.)?moxacg','ps:$1$2moxacg']]]);
+    }else if(config.sites[11].regex.test(location.href)){
+        st2https(true,[["a","img","script","link"],[['p:(\/\/|\\\\\\/\\\\\\/)lifan\.moe','ps:$1lifan\.moe']]]);
+    }else if(config.sites[6].regex.test(location.href)){
+        st2https(true,[["a","img","script","link"],[['p:(\/\/|\\\\\\/\\\\\\/)(www\.|bbs\.)?acggj','ps:$1$2acggj'],['"\/\/(img\.2dfan)','"http:\/\/$1']]]);
+        var benzi=document.querySelector('#menu-item-3786');
+        if(benzi){
+            var scy=benzi.cloneNode(true);
+            scy.innerHTML = scy.innerHTML.replace(/\u672c\u5b50/g, '\u4e09\u6b21\u5143').replace(/hexie\/book/g, 'sciyuan').replace(/fa-book/g, 'fa-instagram');
+            benzi.after(scy);
+        }
+    }else if(config.sites[6].bbs.test(location.href)){
+        st2https(true,[["a","img","script","link"],[['p:(\/\/|\\\\\\/\\\\\\/)bbs\.acggj','ps:$1bbs\.acggj'],['"\/\/(img\.2dfan)','"http:\/\/$1']]]);
+        var baseUrl=document.querySelector('base');
+        baseUrl.href=baseUrl.href.replace(/http:/,"https:");
+        var tags=["a","img","script","link"];
+        for(var tag of tags){
+            var temps=document.querySelectorAll(tag);
+            for(var temp of temps){
+                if(temp.parentNode)
+                    temp.outerHTML = temp.outerHTML;
+            }
+        }
+    }else if(config.sites[8].regex.test(location.href)){
+        addInsertHandler([["a","img","link","script"],[['p:(\/\/|\\\\\\/\\\\\\/)(www\.)?acgnz','ps:$1$2acgnz'],['"\/\/(pic|tc)\.(ffsky|rpgsky)','"http:\/\/$1\.$2']]]);
+    }else if(config.sites[12].regex.test(location.href)){
+        contentArea='.content';
+    }else if(config.sites[5].regex.test(location.href)){
+        contentArea='.article-content';
+    }else if(config.sites[4].regex.test(location.href)){
+        st2https(true,[["a","img"],[['acglover\.net','acglover\.top']]]);
+    }else if(config.sites[14].regex.test(location.href)){
+        var resets = document.querySelectorAll('body>style');
+        for(var reset of resets){
+            if(/\.card-bg\simg|\.content-reset\simg/.test(reset.innerHTML)){
+                reset.parentNode.removeChild(reset);
+            }
+        }
+        var r10=document.querySelector('#menu-item-12744');
+        if(r10){
+            var r18=r10.cloneNode(true);
+            r18.innerHTML = r18.innerHTML.replace(/\u8d44\u8baf/g, 'r18').replace(/category\/v01/g, 'category/v09/v13');
+            r10.after(r18);
         }
     }
 
@@ -170,58 +288,6 @@
                 }
             };
             setTimeout(t,100);
-        }
-        var contentArea='.entry-content';
-        if(/sexacg\./.test(location.href))contentArea='article';
-        else if(/moxacg\./.test(location.href)){
-            addInsertHandler([["body","a","img","link","script"],[['p:(\/\/|\\\\\\/\\\\\\/)(www\.)?moxacg','ps:$1$2moxacg']]]);
-        } else if(/lifan\.moe/.test(location.href)){
-            st2https(true,[["a","img","script","link"],[['p:(\/\/|\\\\\\/\\\\\\/)lifan\.moe','ps:$1lifan\.moe']]]);
-        } else if(/www\.acggj\./.test(location.href)){
-            st2https(true,[["a","img","script","link"],[['p:(\/\/|\\\\\\/\\\\\\/)(www\.|bbs\.)?acggj','ps:$1$2acggj'],['"\/\/(img\.2dfan)','"http:\/\/$1']]]);
-            var benzi=document.querySelector('#menu-item-3786');
-            if(benzi){
-                var scy=benzi.cloneNode(true);
-                scy.innerHTML = scy.innerHTML.replace(/\u672c\u5b50/g, '\u4e09\u6b21\u5143').replace(/hexie\/book/g, 'sciyuan').replace(/fa-book/g, 'fa-instagram');
-                benzi.after(scy);
-            }
-        }else if(/bbs\.acggj\./.test(location.href)){
-            st2https(true,[["a","img","script","link"],[['p:(\/\/|\\\\\\/\\\\\\/)bbs\.acggj','ps:$1bbs\.acggj'],['"\/\/(img\.2dfan)','"http:\/\/$1']]]);
-            var baseUrl=document.querySelector('base');
-            baseUrl.href=baseUrl.href.replace(/http:/,"https:");
-            var tags=["a","img","script","link"];
-            for(var tag of tags){
-                var temps=document.querySelectorAll(tag);
-                for(var temp of temps){
-                    if(temp.parentNode)
-                        temp.outerHTML = temp.outerHTML;
-                }
-            }
-        }else if(/acg12\./.test(location.href)){
-            addInsertHandler([["a","img","link","script"],[['p:(\/\/|\\\\\\/\\\\\\/)(www\.|static\.)?acg12','ps:$1$2acg12']]]);
-        }else if(/acgnz\.cc/.test(location.href)){
-            addInsertHandler([["a","img","link","script"],[['p:(\/\/|\\\\\\/\\\\\\/)(www\.)?acgnz','ps:$1$2acgnz'],['"\/\/(pic|tc)\.(ffsky|rpgsky)','"http:\/\/$1\.$2']]]);
-        }else if(/nacg\.me/.test(location.href)){
-            contentArea='.content';
-        }else if(/tianshit\.com/.test(location.href)){
-            contentArea='.article-content';
-        }else if(/acglover\.top/.test(location.href)){
-            st2https(true,[["a","img"],[['acglover\.net','acglover\.top']]]);
-        }else if(/idanmu\.co/.test(location.href)){
-            var resets = document.querySelectorAll('body>style');
-            for(var reset of resets){
-                if(/\.card-bg\simg|\.content-reset\simg/.test(reset.innerHTML)){
-                    reset.parentNode.removeChild(reset);
-                }
-            }
-            var r10=document.querySelector('#menu-item-12744');
-            if(r10){
-                var r18=r10.cloneNode(true);
-                r18.innerHTML = r18.innerHTML.replace(/资讯/g, 'r18').replace(/category\/v01/g, 'category/v09/v13');
-                r10.after(r18);
-            }
-        }else if(/sijihuisuo\.club\/sj\/\d/.test(location.href)){
-            contentArea=".ds-comments";
         }
         var content=document.querySelector(contentArea);
         if(content){
@@ -247,7 +313,7 @@
                 if(/\/storage-download/.test(location.href)){
                     var pass=target.parentNode.parentNode.querySelector('input.pwd');
                     if(pass&&pass.id.indexOf("download-pwd")!=-1)target.href=target.href.split("#")[0]+'#'+pass.value;
-                } else if(/acg12\.com\/download/.test(location.href)){
+                } else if(config.sites[7].downloadUrl.test(location.href)){
                     var pass2=target.parentNode.parentNode.parentNode.querySelector('input.form-control');
                     if(pass2)target.href+='#'+pass2.value;
                 } else if(codeRule.test(target.textContent)){
@@ -320,12 +386,11 @@
             feiZao[0].parentNode.removeChild(feiZao[0]);
         }
     }
-    var t;
+
     process();
     clickBlockListener();
 
-    var exsites=/nacg\.me|oomoe\.moe|kaze5\.|acg12\.|acgnz\.cc|moxacg\.|acggj\./;
-    if(!exsites.test(location.href)){
+    if(!config.exsites.test(location.href)){
         document.getElementsByTagName("head")[0].appendChild(nod);
         var oD_box=document.createElement("div");
         oD_box.id="oD_box";
@@ -343,7 +408,7 @@
         var oD_text=document.createElement("input");
         oD_text.id="oD_text";
         oD_text.type="text";
-        oD_text.style="min-height:25px;max-height:33px";
+        oD_text.style="min-height:25px;max-height:33px;width:168px;height:33px;position:absolute;margin-top: 0px";
         oD_text.placeholder="输入hash值";
         oD_text.title='将自动添加"magnet:?xt=urn:btih:"，去除[]中的内容、非字母数字字符、空格';
         var oD_button=document.createElement("button");
@@ -396,7 +461,7 @@
             rocketLinks.innerHTML="";
             var i=0;
             for(var link of links){
-                if(/magnet:\?xt|pan\.baidu\.com\/s|yunpan\.cn|howfile\.com\/file|mega\.|ed2k:\/\/\|file|bt\.cosxcos\.com\/view|du\.acgget\.com\/go\//.test(link.href)){
+                if(config.rocketReg.test(link.href)){
                     if(rocketLinks.innerHTML.indexOf(link.outerHTML)!=-1)continue;
                     rocketLinks.innerHTML+="<strong style='color:red'>"+(++i)+"</strong>:";
                     rocketLinks.appendChild(link.cloneNode(true));
@@ -415,18 +480,12 @@
         document.body.appendChild(oD_box);
     }
     //评论区度娘、115、tcn
-    var commArea="";
-    if(/sexacg\./.test(location.href)){
-        commArea='su-quote-inner';
-    }else{
-        commArea='comment-content';
-    }
     seriousReplace(commArea);
 
     var hasViewed=false;
     if(document.referrer){
-        for(var site of sites){
-            if(document.referrer.indexOf(site[1])!=-1){
+        for(var site of config.sites){
+            if(site.regex.test(document.referrer)){
                 hasViewed=true;
                 break;
             }
