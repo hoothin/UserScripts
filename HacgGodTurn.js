@@ -408,7 +408,7 @@
         var oD_text=document.createElement("input");
         oD_text.id="oD_text";
         oD_text.type="text";
-        oD_text.style="min-height:25px;max-height:33px;width:168px;height:33px;position:absolute;margin-top: 0px";
+        oD_text.style="width:168px;height:33px;position:absolute;margin-top: 0px;padding: 0px;";
         oD_text.placeholder="输入hash值";
         oD_text.title='将自动添加"magnet:?xt=urn:btih:"，去除[]中的内容、非字母数字字符、空格';
         var oD_button=document.createElement("button");
