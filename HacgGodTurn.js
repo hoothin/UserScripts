@@ -26,7 +26,7 @@
 // @include     http*://lifan.moe/*
 // @include     http*://www.idanmu.co/*
 // @include     http*://www.sijihuisuo.club/*
-// @version     3.19.60
+// @version     3.19.61
 // @grant       GM_notification
 // @run-at      document-end
 // @require     https://greasyfork.org/scripts/23522-olddriver-js/code/oldDriverjs.js?version=151669
@@ -113,21 +113,23 @@
                 innerPage:/sijihuisuo\.club\/sj\/\d/
             }
         ],
-        exsites:/nacg\.me|oomoe\.moe|kaze5\.|acg12\.|acgnz\.cc|moxacg\.|acggj\./,
         rocketReg:/magnet:\?xt|pan\.baidu\.com\/s|yunpan\.cn|howfile\.com\/file|mega\.|ed2k:\/\/\|file|bt\.cosxcos\.com\/view|du\.acgget\.com\/go\//,
         disableSites:/hacg.*about\.html/
     };
     var contentArea='.entry-content';
     var commArea="comment-content";
     var t;
+    var curSite;
+    for(var site of config.sites){
+        if(site.regex.test(location.href)){
+            curSite=site;
+            break;
+        }
+    }
     document.onkeydown= function(e) {
         if (e.keyCode == 117) {
             var i=0;
-            for(var j=config.sites.length;i<j;i++){
-                if(config.sites[i].regex.test(location.href)){
-                    break;
-                }
-            }
+            if(curSite)i=config.sites.indexOf(curSite);
             if(e.shiftKey) i=i===0?(config.sites.length-1):(i-1);
             else i=i==(config.sites.length-1)?0:(i+1);
             location.href = config.sites[i].url;
@@ -390,7 +392,7 @@
     process();
     clickBlockListener();
 
-    if(!config.exsites.test(location.href)){
+    if(!curSite.hideOd){
         document.getElementsByTagName("head")[0].appendChild(nod);
         var oD_box=document.createElement("div");
         oD_box.id="oD_box";
