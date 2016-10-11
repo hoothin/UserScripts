@@ -26,13 +26,12 @@
 // @include     http*://lifan.moe/*
 // @include     http*://www.idanmu.co/*
 // @include     http*://www.sijihuisuo.club/*
-// @version     3.19.67
+// @version     3.19.69
 // @grant       GM_notification
 // @run-at      document-end
-// @require     https://greasyfork.org/scripts/23522-olddriver-js/code/oldDriverjs.js?version=151669
-// @require     https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/core-min.js
-// @require     https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js
-// @require     https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/enc-base64-min.js
+
+// @require     https://cdn.bootcss.com/crypto-js/3.1.2/components/core-min.js
+// @require     https://cdn.bootcss.com/crypto-js/3.1.2/rollups/aes.js
 // @license     MIT License
 // ==/UserScript==
 (function(){
@@ -110,7 +109,7 @@
             {
                 url:"https://www.sijihuisuo.club/",
                 regex:/sijihuisuo\.club/,
-                innerPage:/sijihuisuo\.club\/sj\/\d/
+                innerPage:/sijihuisuo\.club\/(sj\/\d|\?p=\d)/
             }
         ],
         rocketReg:/magnet:\?xt|pan\.baidu\.com\/s|yunpan\.cn|howfile\.com\/file|mega\.|ed2k:\/\/\|file|bt\.cosxcos\.com\/view|du\.acgget\.com\/go\//,
@@ -163,8 +162,8 @@
             var plist = content.querySelectorAll("p");
             var key = "";
             for(var pNode of plist){
-                if(/(?<=\u5bc6\u5319[:：])\S*/i.test(pNode.innerHTML)){
-                    var orgStr = pNode.innerHTML.match(/(?<=\u5bc6\u5319[:：])(\S*)/i)[0];
+                if(/\u5bc6\u5319[:：]\S*/i.test(pNode.innerHTML)){
+                    var orgStr = pNode.innerHTML.match(/\u5bc6\u5319[:：]\S*/i)[0].replace(/\u5bc6\u5319[:：]/,"");
                     key=CryptoJS.enc.Base64.parse(orgStr).toString(CryptoJS.enc.Utf8);
                     pNode.innerHTML = "";
                     break;
