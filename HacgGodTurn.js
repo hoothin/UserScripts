@@ -26,7 +26,7 @@
 // @include     http*://lifan.moe/*
 // @include     http*://www.idanmu.co/*
 // @include     http*://www.sijihuisuo.club/*
-// @version     3.19.64
+// @version     3.19.65
 // @grant       GM_notification
 // @run-at      document-end
 // @require     https://greasyfork.org/scripts/23522-olddriver-js/code/oldDriverjs.js?version=151669
@@ -75,12 +75,12 @@
                 downloadUrl:/acg12\.com\/download/
             },
             {
-                url:"https://www.acgnz.cc/",
+                url:"http://www.acgnz.cc/",
                 regex:/acgnz\.cc/,
                 hideOd:true
             },
             {
-                url:"https://www.moxacg.com/",
+                url:"http://www.moxacg.com/",
                 regex:/moxacg\./,
                 hideOd:true
             },
@@ -90,7 +90,7 @@
                 hideOd:true
             },
             {
-                url:"https://lifan.moe/",
+                url:"http://lifan.moe/",
                 regex:/lifan\.moe/
             },
             {
@@ -121,6 +121,11 @@
     var t;
     var curSite;
     var isHttps=/^https:/.test(location.href);
+    if(!isHttps){
+        if(document.title=="Service Unavailable - Connection Error"){
+            location.href=location.href.replace(/^http:/,"https:");
+        }
+    }
     for(var site of config.sites){
         if(site.regex.test(location.href)){
             curSite=site;
