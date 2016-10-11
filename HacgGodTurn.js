@@ -26,7 +26,7 @@
 // @include     http*://lifan.moe/*
 // @include     http*://www.idanmu.co/*
 // @include     http*://www.sijihuisuo.club/*
-// @version     3.19.65
+// @version     3.19.67
 // @grant       GM_notification
 // @run-at      document-end
 // @require     https://greasyfork.org/scripts/23522-olddriver-js/code/oldDriverjs.js?version=151669
@@ -120,8 +120,13 @@
     var commArea="comment-content";
     var t;
     var curSite;
-    var isHttps=/^https:/.test(location.href);
-    if(!isHttps){
+    var isHttps=location.protocol=="https:";
+    if(isHttps){
+        var refMeta = document.createElement('meta');
+        refMeta.name = 'referrer';
+        refMeta.content = 'always';
+        document.getElementsByTagName('head')[0].appendChild(refMeta);
+    }else{
         if(document.title=="Service Unavailable - Connection Error"){
             location.href=location.href.replace(/^http:/,"https:");
         }
@@ -132,6 +137,7 @@
             break;
         }
     }
+
     document.onkeydown= function(e) {
         if (e.keyCode == 117) {
             var i=0;
@@ -142,13 +148,6 @@
             return false;
         }
     };
-
-    if(location.protocol=="https:"){
-        var refMeta = document.createElement('meta');
-        refMeta.name = 'referrer';
-        refMeta.content = 'always';
-        document.getElementsByTagName('head')[0].appendChild(refMeta);
-    }
 
     if(/\.baidu\./.test(location.href)){
         if(location.hash.slice(1)){
@@ -184,6 +183,18 @@
             }
         }
     }else if (config.sites[1].regex.test(location.href)){
+        var OriginTitile = document.title;
+        var titleTime;
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                clearTimeout(titleTime);
+            }
+            else {
+                titleTime = setTimeout(function() {
+                    document.title = OriginTitile;
+                }, 2000);
+            }
+        });
         document.querySelector("#main").addEventListener('DOMNodeInserted', function(e) {
             var author = document.querySelector(".author-info");
             if (author && !document.querySelector("#blockBtn")) {
