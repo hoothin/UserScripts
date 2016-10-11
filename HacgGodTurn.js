@@ -26,7 +26,7 @@
 // @include     http*://lifan.moe/*
 // @include     http*://www.idanmu.co/*
 // @include     http*://www.sijihuisuo.club/*
-// @version     3.19.63
+// @version     3.19.64
 // @grant       GM_notification
 // @run-at      document-end
 // @require     https://greasyfork.org/scripts/23522-olddriver-js/code/oldDriverjs.js?version=151669
@@ -120,6 +120,7 @@
     var commArea="comment-content";
     var t;
     var curSite;
+    var isHttps=/^https:/.test(location.href);
     for(var site of config.sites){
         if(site.regex.test(location.href)){
             curSite=site;
@@ -192,7 +193,8 @@
         });
         createBlockBtn();
     }else if(config.sites[7].regex.test(location.href)){
-        addInsertHandler([["a","img","link","script"],[['p:(\/\/|\\\\\\/\\\\\\/)(www\.|static\.)?acg12','ps:$1$2acg12']]]);
+        if(isHttps)
+            addInsertHandler([["a","img","link","script"],[['p:(\/\/|\\\\\\/\\\\\\/)(www\.|static\.)?acg12','ps:$1$2acg12']]]);
         if(config.sites[7].downloadUrl.test(location.href)){
             t=window.setInterval(function(){
                 if(document.querySelector('.btn-success')){
@@ -229,11 +231,14 @@
         contentArea='article';
         commArea='su-quote-inner';
     }else if(config.sites[9].regex.test(location.href)){
-        addInsertHandler([["body","a","img","link","script"],[['p:(\/\/|\\\\\\/\\\\\\/)(www\.)?moxacg','ps:$1$2moxacg']]]);
+        if(isHttps)
+            addInsertHandler([["body","a","img","link","script"],[['p:(\/\/|\\\\\\/\\\\\\/)(www\.)?moxacg','ps:$1$2moxacg']]]);
     }else if(config.sites[11].regex.test(location.href)){
-        st2https(true,[["a","img","script","link"],[['p:(\/\/|\\\\\\/\\\\\\/)lifan\.moe','ps:$1lifan\.moe']]]);
+        if(isHttps)
+            st2https(true,[["a","img","script","link"],[['p:(\/\/|\\\\\\/\\\\\\/)lifan\.moe','ps:$1lifan\.moe']]]);
     }else if(config.sites[6].regex.test(location.href)){
-        st2https(true,[["a","img","script","link"],[['p:(\/\/|\\\\\\/\\\\\\/)(www\.|bbs\.)?acggj','ps:$1$2acggj'],['"\/\/(img\.2dfan)','"http:\/\/$1']]]);
+        if(isHttps)
+            st2https(true,[["a","img","script","link"],[['p:(\/\/|\\\\\\/\\\\\\/)(www\.|bbs\.)?acggj','ps:$1$2acggj'],['"\/\/(img\.2dfan)','"http:\/\/$1']]]);
         var benzi=document.querySelector('#menu-item-3786');
         if(benzi){
             var scy=benzi.cloneNode(true);
@@ -241,9 +246,11 @@
             benzi.after(scy);
         }
     }else if(config.sites[6].bbs.test(location.href)){
-        st2https(true,[["a","img","script","link"],[['p:(\/\/|\\\\\\/\\\\\\/)bbs\.acggj','ps:$1bbs\.acggj'],['"\/\/(img\.2dfan)','"http:\/\/$1']]]);
-        var baseUrl=document.querySelector('base');
-        baseUrl.href=baseUrl.href.replace(/http:/,"https:");
+        if(isHttps){
+            st2https(true,[["a","img","script","link"],[['p:(\/\/|\\\\\\/\\\\\\/)bbs\.acggj','ps:$1bbs\.acggj'],['"\/\/(img\.2dfan)','"http:\/\/$1']]]);
+            var baseUrl=document.querySelector('base');
+            baseUrl.href=baseUrl.href.replace(/http:/,"https:");
+        }
         var tags=["a","img","script","link"];
         for(var tag of tags){
             var temps=document.querySelectorAll(tag);
@@ -253,7 +260,8 @@
             }
         }
     }else if(config.sites[8].regex.test(location.href)){
-        addInsertHandler([["a","img","link","script"],[['p:(\/\/|\\\\\\/\\\\\\/)(www\.)?acgnz','ps:$1$2acgnz'],['"\/\/(pic|tc)\.(ffsky|rpgsky)','"http:\/\/$1\.$2']]]);
+        if(isHttps)
+            addInsertHandler([["a","img","link","script"],[['p:(\/\/|\\\\\\/\\\\\\/)(www\.)?acgnz','ps:$1$2acgnz'],['"\/\/(pic|tc)\.(ffsky|rpgsky)','"http:\/\/$1\.$2']]]);
     }else if(config.sites[12].regex.test(location.href)){
         contentArea='.content';
     }else if(config.sites[5].regex.test(location.href)){
@@ -486,7 +494,7 @@
 
     var hasViewed=false;
     if(document.referrer){
-        for(var site of config.sites){
+        for(site of config.sites){
             if(site.regex.test(document.referrer)){
                 hasViewed=true;
                 break;
