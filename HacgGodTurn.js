@@ -29,7 +29,7 @@
 // @version     3.19.69
 // @grant       GM_notification
 // @run-at      document-end
-
+// @require     https://greasyfork.org/scripts/23522-olddriver-js/code/oldDriverjs.js?version=151976
 // @require     https://cdn.bootcss.com/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdn.bootcss.com/crypto-js/3.1.2/rollups/aes.js
 // @license     MIT License
