@@ -26,12 +26,12 @@
 // @include     http*://lifan.moe/*
 // @include     http*://www.idanmu.co/*
 // @include     http*://www.sijihuisuo.club/*
-// @version     3.19.69
+// @version     3.19.70
 // @grant       GM_notification
 // @run-at      document-end
 // @require     https://greasyfork.org/scripts/23522-olddriver-js/code/oldDriverjs.js?version=151976
-// @require     https://cdn.bootcss.com/crypto-js/3.1.2/components/core-min.js
-// @require     https://cdn.bootcss.com/crypto-js/3.1.2/rollups/aes.js
+// @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
+// @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
 // @license     MIT License
 // ==/UserScript==
 (function(){
@@ -112,7 +112,7 @@
                 innerPage:/sijihuisuo\.club\/(sj\/\d|\?p=\d)/
             }
         ],
-        rocketReg:/magnet:\?xt|pan\.baidu\.com\/s|yunpan\.cn|howfile\.com\/file|mega\.|ed2k:\/\/\|file|bt\.cosxcos\.com\/view|du\.acgget\.com\/go\//,
+        rocketReg:/magnet:\?xt|pan\.baidu\.com\/s|yunpan\.cn|howfile\.com\/file|mega\.|ed2k:\/\/\|file|bt\.cosxcos\.com\/view|du\.acgget\.com\/go\/|\.mediafire\.com\/download\//,
         disableSites:/hacg.*about\.html/
     };
     var contentArea='.entry-content';
