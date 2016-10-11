@@ -26,7 +26,7 @@
 // @include     http*://lifan.moe/*
 // @include     http*://www.idanmu.co/*
 // @include     http*://www.sijihuisuo.club/*
-// @version     3.19.62
+// @version     3.19.63
 // @grant       GM_notification
 // @run-at      document-end
 // @require     https://greasyfork.org/scripts/23522-olddriver-js/code/oldDriverjs.js?version=151669
@@ -463,7 +463,7 @@
             rocketLinks.innerHTML="";
             var i=0;
             for(var link of links){
-                if(config.rocketReg.test(link.href)){
+                if(config.rocketReg.test(link.href)&&link.className.indexOf("whx-a")==-1){
                     if(rocketLinks.innerHTML.indexOf(link.outerHTML)!=-1)continue;
                     rocketLinks.innerHTML+="<strong style='color:red'>"+(++i)+"</strong>:";
                     rocketLinks.appendChild(link.cloneNode(true));
