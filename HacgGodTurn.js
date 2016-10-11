@@ -187,9 +187,11 @@
         var titleTime;
         document.addEventListener('visibilitychange', function() {
             if (document.hidden) {
+                document.title = '\u6765\u556a\u0038\u5566~(*´∇｀*) ' + OriginTitile;
                 clearTimeout(titleTime);
             }
             else {
+                document.title = '\u624d\u4e0d\u7ed9\u556a(╯‵□′)╯︵┻━┻ ' + OriginTitile;
                 titleTime = setTimeout(function() {
                     document.title = OriginTitile;
                 }, 2000);
