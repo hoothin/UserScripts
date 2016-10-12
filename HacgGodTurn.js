@@ -26,10 +26,12 @@
 // @include     http*://lifan.moe/*
 // @include     http*://www.idanmu.co/*
 // @include     http*://www.sijihuisuo.club/*
+// @include     http*://acg18.us/*
+// @include     http*://*.acg18.us/*
 // @version     3.19.71
 // @grant       GM_notification
 // @run-at      document-end
-// @require     https://greasyfork.org/scripts/23522-olddriver-js/code/oldDriverjs.js?version=152066
+// @require     https://greasyfork.org/scripts/23522-olddriver-js/code/oldDriverjs.js?version=152074
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
 // @license     MIT License
@@ -110,6 +112,10 @@
                 url:"https://www.sijihuisuo.club/",
                 regex:/sijihuisuo\.club/,
                 innerPage:/sijihuisuo\.club\/(sj\/\d|\?p=\d)/
+            },
+            {
+                url:"https://acg18.us/",
+                regex:/acg18\./
             }
         ],
         rocketReg:/magnet:\?xt|pan\.baidu\.com\/s|yunpan\.cn|howfile\.com\/file|mega\.|ed2k:\/\/\|file|bt\.cosxcos\.com\/view|du\.acgget\.com\/go\/|\.mediafire\.com\/download\//,
@@ -334,6 +340,8 @@
         for (var i = 0, k = link.length; i < k; i++) {
             if (/.*http:[^\.]*(\.)?hacg\./i.test(link[i].href)) {
                 link[i].href = link[i].href.replace(/http/, 'https');
+            }else if(/https?:\/\/[^\.]*(\.)?acg18\.us\/go\/\?url=/.test(link[i].href)){
+                link[i].href = link[i].href.replace(/https?:\/\/[^\.]*(\.)?acg18\.us\/go\/\?url=/, '');
             }
             var target=link[i];
             if(/baidu.com/i.test(target.href)&&!/(?:eyun|tieba)\.baidu\.com/i.test(target.href)&&!/#/i.test(target.href)){
