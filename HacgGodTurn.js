@@ -32,10 +32,10 @@
 // @include     http*://www.sijihuisuo.club/*
 // @include     http*://acg18.us/*
 // @include     http*://*.acg18.us/*
-// @version     3.19.71
+// @version     3.19.72
 // @grant       GM_notification
 // @run-at      document-end
-// @require     https://greasyfork.org/scripts/23522-olddriver-js/code/oldDriverjs.js?version=152074
+// @require     https://greasyfork.org/scripts/23522-olddriver-js/code/oldDriverjs.js?version=152102
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
 // @license     MIT License
