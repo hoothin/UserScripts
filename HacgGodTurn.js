@@ -3,7 +3,9 @@
 // @name:zh-CN   琉神转
 // @name:zh-TW   琉神轉
 // @namespace   hoothin
-// @description 琉璃神社与其他绅士站神秘代码转换成下载链接
+// @description Hacg God Turn
+// @description:zh-CN   琉璃神社与其他绅士站神秘代码转换成下载链接
+// @description:zh-TW   琉璃神社與其他紳士站神秘代碼轉換成下載鏈接
 // @author      hoothin
 // @include     http*://www.hacg.*/wordpress/*
 // @include     http*://hacg.*/wordpress/*
