@@ -157,7 +157,7 @@
             location.href = config.sites[i].url;
             return false;
         }else{
-            if(document.querySelector("article")){
+            if(!e.shiftKey&&!e.ctrlKey&&document.querySelector("article")){
                 var articles=document.querySelectorAll("article");
                 var article;
                 if(e.keyCode==39){
