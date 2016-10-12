@@ -1,5 +1,7 @@
 // ==UserScript==
-// @name        琉神转 | HacgGodTurn
+// @name        HacgGodTurn
+// @name:zh-CN   琉神转
+// @name:zh-TW   琉神轉
 // @namespace   hoothin
 // @description 琉璃神社与其他绅士站神秘代码转换成下载链接
 // @author      hoothin
