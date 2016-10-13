@@ -33,10 +33,10 @@
 // @include     http*://www.sijihuisuo.club/*
 // @include     http*://acg18.us/*
 // @include     http*://*.acg18.us/*
-// @version     3.19.74
+// @version     3.19.75
 // @grant       GM_notification
 // @run-at      document-end
-// @require     https://greasyfork.org/scripts/23522-olddriver-js/code/oldDriverjs.js?version=152244
+// @require     https://greasyfork.org/scripts/23522-olddriver-js/code/oldDriverjs.js?version=152313
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
 // @license     MIT License
@@ -158,6 +158,7 @@
             return false;
         }else{
             if(!e.shiftKey&&!e.ctrlKey&&!e.altKey&&document.querySelector("article")){
+                if(/INPUT|TEXTAREA/.test(document.activeElement.tagName))return;
                 var articles=document.querySelectorAll("article");
                 var article;
                 if(e.keyCode==39){
@@ -275,7 +276,7 @@
         if(has8){
             var title=document.querySelector("h1.entry-title");
             if(title){
-                title.innerHTML+=" <a href=\"#little8\" style=\"color:#f60000\">\u2605\u76f4\u8fbe\u5c0f\u0038\u9171\u2605<\/a>";
+                title.innerHTML+="</br> <a href=\"#little8\" style=\"color:#f60000\">\u2605\u76f4\u8fbe\u5c0f\u0038\u9171\u2605<\/a>";
             }
         }
     }else if(config.sites[2].regex.test(location.href)){
