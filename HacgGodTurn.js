@@ -137,7 +137,7 @@
         refMeta.content = 'always';
         document.getElementsByTagName('head')[0].appendChild(refMeta);
     }else{
-        if(!isHttps&&document.title=="Service Unavailable - Connection Error"){
+        if(document.title=="Service Unavailable - Connection Error"){
             location.href=location.href.replace(/^http:/,"https:");
         }
     }
