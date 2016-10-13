@@ -196,8 +196,8 @@
             var plist = content.querySelectorAll("p");
             var key = "";
             for(var pNode of plist){
-                if(/\u5bc6\u5319[:：]\S*/i.test(pNode.innerHTML)){
-                    var orgStr = pNode.innerHTML.match(/\u5bc6\u5319[:：]\S*/i)[0].replace(/\u5bc6\u5319[:：]/,"");
+                if(/\u5bc6\u5319[:：]/i.test(pNode.innerHTML)){
+                    var orgStr = pNode.innerHTML.match(/\u5bc6\u5319[:：]\s*\S*/i)[0].replace(/\u5bc6\u5319[:：]\s*/,"");
                     key=CryptoJS.enc.Base64.parse(orgStr).toString(CryptoJS.enc.Utf8);
                     pNode.innerHTML = "";
                     break;
