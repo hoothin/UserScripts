@@ -30,10 +30,11 @@
 // @include     http*://www.acglover.top/*
 // @include     http*://lifan.moe/*
 // @include     http*://www.idanmu.co/*
-// @include     http*://www.sijihuisuo.club/*
+// @include     http*://*.sijihuisuo.club/*
+// @include     http*://sijihuisuo.club/*
 // @include     http*://acg18.us/*
 // @include     http*://*.acg18.us/*
-// @version     3.19.75
+// @version     3.19.76
 // @grant       GM_notification
 // @run-at      document-end
 // @require     https://greasyfork.org/scripts/23522-olddriver-js/code/oldDriverjs.js?version=152313
@@ -371,6 +372,8 @@
                 link[i].href = link[i].href.replace(/http/, 'https');
             }else if(/https?:\/\/[^\.]*(\.)?acg18\.us\/go\/\?url=/.test(link[i].href)){
                 link[i].href = link[i].href.replace(/https?:\/\/[^\.]*(\.)?acg18\.us\/go\/\?url=/, '');
+            }else if(/https?:\/\/[^\.]*(\.)?sijihuisuo\.club\/go\/\?url=/.test(link[i].href)){
+                link[i].href = link[i].href.replace(/https?:\/\/[^\.]*(\.)?sijihuisuo\.club\/go\/\?url=/, '');
             }
             var target=link[i];
             if(/baidu.com/i.test(target.href)&&!/(?:eyun|tieba)\.baidu\.com/i.test(target.href)&&!/#/i.test(target.href)){
