@@ -35,10 +35,10 @@
 // @include     http*://sijihuisuo.club/*
 // @include     http*://acg18.us/*
 // @include     http*://*.acg18.us/*
-// @version     3.19.79
+// @version     3.19.80
 // @grant       GM_notification
 // @run-at      document-end
-// @require     https://greasyfork.org/scripts/23522-olddriver-js/code/oldDriverjs.js?version=153013
+// @require     https://greasyfork.org/scripts/23522-olddriver-js/code/oldDriverjs.js?version=153029
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
 // @license     MIT License
@@ -163,13 +163,14 @@
                 if(/INPUT|TEXTAREA/.test(document.activeElement.tagName))return;
                 var articles=document.querySelectorAll("article");
                 var article;
+                var scrollTop = window.pageYOffset || document.documentElement.scrollTop  || document.body.scrollTop  || 0;
                 if(e.keyCode==39){
                     if(e.ctrlKey){
                         var next=getPage().next;
                         if(next)next.click();
                     }else{
                         for(article of articles){
-                            if(elementPosition(article).y>document.body.scrollTop+50){
+                            if(elementPosition(article).y>scrollTop+50){
                                 scrollToControl(article);
                                 break;
                             }
@@ -182,7 +183,7 @@
                     }else{
                         var temp;
                         for(article of articles){
-                            if(elementPosition(article).y>document.body.scrollTop-50){
+                            if(elementPosition(article).y>scrollTop-50){
                                 break;
                             }
                             temp=article;
@@ -196,7 +197,7 @@
                     return false;
                 }else if(e.ctrlKey && e.keyCode==40){
                     for(article of articles){
-                        var dis=elementPosition(article).y - document.body.scrollTop;
+                        var dis=elementPosition(article).y - scrollTop;
                         if(dis > -50 && dis < 50){
                             let aLink=article.querySelector("a");
                             if(aLink){
