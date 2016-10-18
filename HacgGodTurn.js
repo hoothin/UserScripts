@@ -35,7 +35,7 @@
 // @include     http*://sijihuisuo.club/*
 // @include     http*://acg18.us/*
 // @include     http*://*.acg18.us/*
-// @version     3.19.77
+// @version     3.19.78
 // @grant       GM_notification
 // @run-at      document-end
 // @require     https://greasyfork.org/scripts/23522-olddriver-js/code/oldDriverjs.js?version=153013
