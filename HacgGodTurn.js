@@ -38,7 +38,7 @@
 // @version     3.19.77
 // @grant       GM_notification
 // @run-at      document-end
-// @require     https://greasyfork.org/scripts/23522-olddriver-js/code/oldDriverjs.js?version=152313
+// @require     https://greasyfork.org/scripts/23522-olddriver-js/code/oldDriverjs.js?version=153013
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
 // @license     MIT License
@@ -132,6 +132,7 @@
     var commArea="comment-content";
     var t;
     var curSite;
+    var curArticle;
     var isHttps=location.protocol=="https:";
     if(isHttps){
         var refMeta = document.createElement('meta');
@@ -159,7 +160,7 @@
             location.href = config.sites[i].url;
             return false;
         }else{
-            if(!e.shiftKey&&!e.altKey&&document.querySelector("article")){
+            if(!e.shiftKey && !e.altKey && document.querySelector("article")){
                 if(/INPUT|TEXTAREA/.test(document.activeElement.tagName))return;
                 var articles=document.querySelectorAll("article");
                 var article;
@@ -171,6 +172,7 @@
                         for(article of articles){
                             if(elementPosition(article).y>document.body.scrollTop+50){
                                 scrollToControl(article);
+                                curArticle=article;
                                 break;
                             }
                         }
@@ -187,8 +189,22 @@
                             }
                             temp=article;
                         }
-                        if(temp)
+                        if(temp){
                             scrollToControl(temp);
+                            curArticle=temp;
+                        }
+                    }
+                }else if(e.keyCode==38){
+                    if(e.ctrlKey){
+                        history.go(-1);
+                        return false;
+                    }
+                }else if(e.keyCode==40){
+                    if(curArticle && e.ctrlKey && -10 < elementPosition(curArticle).y - document.body.scrollTop < 10){
+                        let aLink=curArticle.querySelector("a");
+                        if(aLink)
+                            aLink.click();
+                        return false;
                     }
                 }
             }
