@@ -35,7 +35,7 @@
 // @include     http*://sijihuisuo.club/*
 // @include     http*://acg18.us/*
 // @include     http*://*.acg18.us/*
-// @version     3.19.78
+// @version     3.19.79
 // @grant       GM_notification
 // @run-at      document-end
 // @require     https://greasyfork.org/scripts/23522-olddriver-js/code/oldDriverjs.js?version=153013
@@ -132,7 +132,6 @@
     var commArea="comment-content";
     var t;
     var curSite;
-    var curArticle;
     var isHttps=location.protocol=="https:";
     if(isHttps){
         var refMeta = document.createElement('meta');
@@ -172,7 +171,6 @@
                         for(article of articles){
                             if(elementPosition(article).y>document.body.scrollTop+50){
                                 scrollToControl(article);
-                                curArticle=article;
                                 break;
                             }
                         }
@@ -191,20 +189,22 @@
                         }
                         if(temp){
                             scrollToControl(temp);
-                            curArticle=temp;
                         }
                     }
-                }else if(e.keyCode==38){
-                    if(e.ctrlKey){
-                        history.go(-1);
-                        return false;
-                    }
-                }else if(e.keyCode==40){
-                    if(curArticle && e.ctrlKey && -10 < elementPosition(curArticle).y - document.body.scrollTop < 10){
-                        let aLink=curArticle.querySelector("a");
-                        if(aLink)
-                            aLink.click();
-                        return false;
+                }else if(e.ctrlKey && e.keyCode==38){
+                    history.go(-1);
+                    return false;
+                }else if(e.ctrlKey && e.keyCode==40){
+                    for(article of articles){
+                        var dis=elementPosition(article).y - document.body.scrollTop;
+                        if(dis > -50 && dis < 50){
+                            let aLink=article.querySelector("a");
+                            if(aLink){
+                                aLink.click();
+                                return false;
+                            }
+                            break;
+                        }
                     }
                 }
             }
