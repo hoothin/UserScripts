@@ -42,6 +42,8 @@
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
 // @license     MIT License
+// @compatible        chrome
+// @compatible        firefox
 // ==/UserScript==
 (function(){
     var config={
