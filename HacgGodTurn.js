@@ -4,8 +4,8 @@
 // @name:zh-TW   琉神轉
 // @namespace   hoothin
 // @description Hacg God Turn
-// @description:zh-CN   琉璃神社与其他绅士站（灵梦御所、纯爱计划、绅士二次元、萌心次元、次元轨迹、ACG调查小队、幻天领域、轻萌社、天使二次元、樱花漫舍、风铃窝、次元の圣光、爱弹幕、幻想次元、司机会所、里番萌）神秘代码转换成下载链接，F6站点切换，方向键文章跳转，快捷翻页，下载链接嗅探，自动填写提取码，各种和谐补丁
-// @description:zh-TW   琉璃神社與其他紳士站（靈夢禦所、純愛計劃、紳士二次元、萌心次元、次元軌跡、ACG調查小隊、幻天領域、輕萌社、天使二次元、櫻花漫舍、風鈴窩、次元の聖光、愛彈幕、幻想次元、司機會所、裏番萌）神秘代碼轉換成下載鏈接，F6站點切換，方向鍵文章跳轉，快捷翻頁，下載鏈接嗅探，自動填寫提取碼，各種和諧補丁
+// @description:zh-CN   琉璃神社与其他成人绅士站（灵梦御所、纯爱计划、绅士二次元、萌心次元、次元轨迹、ACG调查小队、幻天领域、轻萌社、天使二次元、樱花漫舍、风铃窝、次元の圣光、爱弹幕、幻想次元、司机会所、里番萌）神秘代码转换成下载链接，F6、shift+F6站点切换，左右方向键文章跳转，Ctrl+左右快捷翻页，Ctrl+上下跳入跳出，下载链接嗅探，百度盘自动化，绕过重定向跳转，各种和谐补丁
+// @description:zh-TW   琉璃神社與其他成人紳士站（靈夢禦所、純愛計劃、紳士二次元、萌心次元、次元軌跡、ACG調查小隊、幻天領域、輕萌社、天使二次元、櫻花漫舍、風鈴窩、次元の聖光、愛彈幕、幻想次元、司機會所、裏番萌）神秘代碼轉換成下載鏈接，F6、shift+F6站點切換，左右方向鍵文章跳轉，Ctrl+左右快捷翻頁，Ctrl+上下跳入跳出，下載鏈接嗅探，百度盤自動化，繞過重定向跳轉，各種和諧補丁
 // @author      hoothin
 // @icon        https://www.hacg.fi/favicon.ico
 // @include     http*://www.hacg.*/wordpress/*
@@ -35,7 +35,7 @@
 // @include     http*://sijihuisuo.club/*
 // @include     http*://acg18.us/*
 // @include     http*://*.acg18.us/*
-// @version     3.19.80
+// @version     3.19.83
 // @grant       GM_notification
 // @run-at      document-end
 // @require     https://greasyfork.org/scripts/23522-olddriver-js/code/oldDriverjs.js?version=153029
@@ -132,8 +132,7 @@
     };
     var contentArea='.entry-content';
     var commArea="comment-content";
-    var t;
-    var curSite;
+    var t, curSite;
     var isHttps=location.protocol=="https:";
     if(isHttps){
         var refMeta = document.createElement('meta');
@@ -161,7 +160,7 @@
             location.href = config.sites[i].url;
             return false;
         }else{
-            if(!e.shiftKey && !e.altKey && document.querySelector("article")){
+            if(e.keyCode>36 && e.keyCode<41 && !e.shiftKey && !e.altKey && document.querySelector("article")){
                 if(/INPUT|TEXTAREA/.test(document.activeElement.tagName))return;
                 var articles=document.querySelectorAll("article");
                 var article;
@@ -361,7 +360,7 @@
         var r10=document.querySelector('#menu-item-12744');
         if(r10){
             var r18=r10.cloneNode(true);
-            r18.innerHTML = r18.innerHTML.replace(/\u8d44\u8baf/g, 'r18').replace(/category\/v01/g, 'category/v09/v13');
+            r18.innerHTML = r18.innerHTML.replace(/\u8d44\u8baf/g, '18禁').replace(/category\/v01/g, 'category/v09/v13');
             r10.after(r18);
         }
     }
@@ -598,8 +597,10 @@
                 rocketLinks.innerHTML="No links found!";
             }
         };
-        var rocketQuit=document.querySelector("#rocketQuit");
-        rocketQuit.onclick=function (){
+        document.querySelector("#rocketQuit").onclick=function (){
+            rocketContent.style.display="none";
+        };
+        document.querySelector("#rocketContent>div").onclick=function (){
             rocketContent.style.display="none";
         };
         oD_box.appendChild(rocketBtn);
