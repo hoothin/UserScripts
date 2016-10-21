@@ -3,7 +3,7 @@
 // @name:zh-CN   琉神转
 // @name:zh-TW   琉神轉
 // @namespace   hoothin
-// @description Glazed shrine and other adult gentleman station (Reimu imperial, pure love plan, gentleman two dimension, dimension and dimension trajectory, adorable heart ACG survey team, the magic day in the field, light agency, two dimensional, adorable Angel Sakura diffuse homes, Shengguang, love nest, Campanula dimension barrage, fantasy element, our opportunities, some adorable) mysterious code into the download link, F6, shift+F6 switching station, the left and right arrow keys to the jump, about Ctrl+ Ctrl+ on Fast Flip, jump out, download link sniffer, Baidu disk automation, bypassing the redirection jump, harmonious patch
+// @description Glazed shrine and other adult gentleman station (Reimu imperial, pure love plan, gentleman two dimension, dimension and dimension trajectory, adorable heart ACG survey team, the magic day in the field, light agency, two dimensional, adorable Angel Sakura diffuse homes, Shengguang, love nest, Campanula dimension barrage, fantasy element, our opportunities, some adorable) mysterious code into the download link, F6, shift+F6 switching station, Baidu disk automation, harmonious patch
 // @description:zh-CN   琉璃神社与其他成人绅士站（灵梦御所、纯爱计划、绅士二次元、萌心次元、次元轨迹、ACG调查小队、幻天领域、轻萌社、天使二次元、樱花漫舍、风铃窝、次元の圣光、爱弹幕、幻想次元、司机会所、里番萌）神秘代码转换成下载链接，F6、shift+F6站点切换，左右方向键文章跳转，Ctrl+左右快捷翻页，Ctrl+上下跳入跳出，下载链接嗅探，百度盘自动化，绕过重定向跳转，各种和谐补丁
 // @description:zh-TW   琉璃神社與其他成人紳士站（靈夢禦所、純愛計劃、紳士二次元、萌心次元、次元軌跡、ACG調查小隊、幻天領域、輕萌社、天使二次元、櫻花漫舍、風鈴窩、次元の聖光、愛彈幕、幻想次元、司機會所、裏番萌）神秘代碼轉換成下載鏈接，F6、shift+F6站點切換，左右方向鍵文章跳轉，Ctrl+左右快捷翻頁，Ctrl+上下跳入跳出，下載鏈接嗅探，百度盤自動化，繞過重定向跳轉，各種和諧補丁
 // @author      hoothin
