@@ -4,8 +4,8 @@
 // @name:zh-TW   琉神轉
 // @namespace   hoothin
 // @description Glazed shrine and other adult gentleman station (Reimu imperial, pure love plan, gentleman two dimension, dimension and dimension trajectory, adorable heart ACG survey team, the magic day in the field, light agency, two dimensional, adorable Angel Sakura diffuse homes, Shengguang, love nest, Campanula dimension barrage, fantasy element, our opportunities, some adorable) mysterious code into the download link, F6, shift+F6 switching station, Baidu disk automation, harmonious patch
-// @description:zh-CN   琉璃神社与其他成人绅士站（灵梦御所、纯爱计划、绅士二次元、萌心次元、次元轨迹、ACG调查小队、幻天领域、轻萌社、天使二次元、樱花漫舍、风铃窝、次元の圣光、爱弹幕、幻想次元、司机会所、里番萌）神秘代码转换成下载链接，F6、shift+F6站点切换，左右方向键文章跳转，Ctrl+左右快捷翻页，Ctrl+上下跳入跳出，下载链接嗅探，百度盘自动化，绕过重定向跳转，各种和谐补丁
-// @description:zh-TW   琉璃神社與其他成人紳士站（靈夢禦所、純愛計劃、紳士二次元、萌心次元、次元軌跡、ACG調查小隊、幻天領域、輕萌社、天使二次元、櫻花漫舍、風鈴窩、次元の聖光、愛彈幕、幻想次元、司機會所、裏番萌）神秘代碼轉換成下載鏈接，F6、shift+F6站點切換，左右方向鍵文章跳轉，Ctrl+左右快捷翻頁，Ctrl+上下跳入跳出，下載鏈接嗅探，百度盤自動化，繞過重定向跳轉，各種和諧補丁
+// @description:zh-CN   琉璃神社与其他成人绅士站（灵梦御所、纯爱计划、绅士二次元、萌心次元、次元轨迹、ACG调查小队、幻天领域、轻萌社、天使二次元、樱花漫舍、风铃窝、次元の圣光、爱弹幕、幻想次元、司机会所、里番萌、最ACG）神秘代码转换成下载链接，F6、shift+F6站点切换，左右方向键文章跳转，Ctrl+左右快捷翻页，Ctrl+上下跳入跳出，下载链接嗅探，百度盘自动化，绕过重定向跳转，各种和谐补丁
+// @description:zh-TW   琉璃神社與其他成人紳士站（靈夢禦所、純愛計劃、紳士二次元、萌心次元、次元軌跡、ACG調查小隊、幻天領域、輕萌社、天使二次元、櫻花漫舍、風鈴窩、次元の聖光、愛彈幕、幻想次元、司機會所、裏番萌、最ACG）神秘代碼轉換成下載鏈接，F6、shift+F6站點切換，左右方向鍵文章跳轉，Ctrl+左右快捷翻頁，Ctrl+上下跳入跳出，下載鏈接嗅探，百度盤自動化，繞過重定向跳轉，各種和諧補丁
 // @author      hoothin
 // @icon        https://www.hacg.fi/favicon.ico
 // @include     http*://www.hacg.*/wordpress/*
@@ -35,8 +35,10 @@
 // @include     http*://sijihuisuo.club/*
 // @include     http*://acg18.us/*
 // @include     http*://*.acg18.us/*
-// @version     3.19.86
+// @include     http*://zuiacg.com/*
+// @version     3.19.87
 // @grant       GM_notification
+// @grant       GM_xmlhttpRequest
 // @run-at      document-end
 // @require     https://greasyfork.org/scripts/23522-olddriver-js/code/oldDriverjs.js?version=153486
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
@@ -49,87 +51,120 @@
     var config={
         sites:[
             {
+                name:"hacg",
                 url:"https://www.hacg.fi/wp/",
                 regex:/hacg\./
             },
             {
+                name:"reimu",
                 url:"https://blog.reimu.net/",
                 regex:/blog\.reimu\./
             },
             {
+                name:"sexacg",
                 url:"https://sexacg.com/",
                 regex:/sexacg\./
             },
             {
-                url:"https://www.acg.tf/",
-                regex:/acg\.tf/
-            },
-            {
+                name:"acglover",
                 url:"http://www.acglover.top/",
                 regex:/acglover\.top/
             },
             {
+                name:"acgtf",
+                url:"https://www.acg.tf/",
+                regex:/acg\.tf/
+            },
+            {
+                name:"tianshit",
                 url:"https://www.tianshit.com/",
                 regex:/tianshit\./
             },
             {
+                name:"acggj",
                 url:"https://www.acggj.com/",
                 regex:/www\.acggj\./,
                 hideOd:true,
                 bbs:/bbs\.acggj\./
             },
             {
+                name:"acg12",
                 url:"https://acg12.com/",
                 regex:/acg12\./,
                 hideOd:true,
                 downloadUrl:/acg12\.com\/download/
             },
             {
+                name:"acgnz",
                 url:"http://www.acgnz.cc/",
                 regex:/acgnz\.cc/,
                 hideOd:true
             },
             {
+                name:"moxacg",
                 url:"http://www.moxacg.com/",
                 regex:/moxacg\./,
                 hideOd:true
             },
             {
+                name:"acg15",
                 url:"http://www.acg15.com/",
                 regex:/acg15\.com/,
                 hideOd:true
             },
             {
+                name:"lifan",
                 url:"http://lifan.moe/",
                 regex:/lifan\.moe/
             },
             {
+                name:"nacg",
                 url:"http://nacg.me/",
                 regex:/nacg\.me/,
                 hideOd:true
             },
             {
+                name:"oomoe",
                 url:"https://www.oomoe.moe/",
                 regex:/oomoe\.moe/,
                 hideOd:true
             },
             {
+                name:"idanmu",
                 url:"http://www.idanmu.co/",
                 regex:/idanmu\.co/
             },
             {
+                name:"sijihuisuo",
                 url:"https://www.sijihuisuo.club/",
                 regex:/sijihuisuo\.club/,
                 innerPage:/sijihuisuo\.club\/(sj\/\d|\?p=\d)/
             },
             {
+                name:"acg18",
                 url:"https://acg18.us/",
                 regex:/acg18\./
+            },
+            {
+                name:"zuiacg",
+                url:"http://zuiacg.com/",
+                regex:/zuiacg\./,
+                hideOd:true
             }
         ],
         rocketReg:/magnet:\?xt|pan\.baidu\.com\/s|yunpan\.cn|howfile\.com\/file|mega\.|ed2k:\/\/\|file|bt\.cosxcos\.com\/view|du\.acgget\.com\/go\/|\.mediafire\.com\/download\//,
         disableSites:/hacg.*about\.html/
     };
+    if (!Array.prototype.findSite) {
+        Array.prototype.findSite = function (siteName) {
+            var arr = this;
+            for (var i = 0, length = arr.length; i < length; i++) {
+                if (arr[i].name == siteName) {
+                    return arr[i];
+                }
+            }
+        };
+    }
     var contentArea='.entry-content';
     var commArea="comment-content";
     var t, curSite;
@@ -221,7 +256,7 @@
         return;
     }else if(config.disableSites.test(location.href)){
         return;
-    }else if(config.sites[3].regex.test(location.href)){
+    }else if(config.sites.findSite("acgtf").regex.test(location.href)){
         var content=document.querySelector('.entry-content');
         if(content){
             var plist = content.querySelectorAll("p");
@@ -246,7 +281,7 @@
 
             }
         }
-    }else if (config.sites[1].regex.test(location.href)){
+    }else if (config.sites.findSite("reimu").regex.test(location.href)){
         var OriginTitile = document.title;
         var titleTime;
         document.addEventListener('visibilitychange', function() {
@@ -274,10 +309,10 @@
             }
         });
         createBlockBtn();
-    }else if(config.sites[7].regex.test(location.href)){
+    }else if(config.sites.findSite("acg12").regex.test(location.href)){
         if(isHttps)
             addInsertHandler([["a","img","link","script"],[['p:(\/\/|\\\\\\/\\\\\\/)(www\.|static\.)?acg12','ps:$1$2acg12']]]);
-        if(config.sites[7].downloadUrl.test(location.href)){
+        if(config.sites.findSite("acg12").downloadUrl.test(location.href)){
             t=window.setInterval(function(){
                 if(document.querySelector('.btn-success')){
                     clearInterval(t);
@@ -285,7 +320,7 @@
                 }
             },1000);
         }
-    }else if(config.sites[15].innerPage.test(location.href)){
+    }else if(config.sites.findSite("sijihuisuo").innerPage.test(location.href)){
         contentArea=".ds-comments";
         t=window.setInterval(function(){
             if(document.querySelector(".ds-comments")){
@@ -293,32 +328,32 @@
                 process();
             }
         },500);
-    }else if(config.sites[0].regex.test(location.href)){
+    }else if(config.sites.findSite("hacg").regex.test(location.href)){
         var has8=false;
         var comms=document.querySelectorAll("span.fn");
         for(var comm of comms){
             if(comm.innerHTML == "\u5c0f\u0038\u9171"){
                 has8=true;
-                comm.innerHTML=comm.innerHTML.replace(/\u5c0f\u0038\u9171/,'<a name=\"little8\">\u5c0f\u0038\u9171<\/a>');
+                comm.innerHTML=comm.innerHTML.replace(/\u5c0f\u0038\u9171/,'<a name=\"pa8\">\u5c0f\u0038\u9171<\/a>');
                 break;
             }
         }
         if(has8){
             var title=document.querySelector("h1.entry-title");
             if(title){
-                title.innerHTML+="</br> <a href=\"#little8\" style=\"color:#f60000\">\u2605\u76f4\u8fbe\u5c0f\u0038\u9171\u2605<\/a>";
+                title.innerHTML+="</br> <a href=\"#pa8\" style=\"color:#e30000\">\u2605\u5c0f\u0038\u9171\u2605<\/a>";
             }
         }
-    }else if(config.sites[2].regex.test(location.href)){
+    }else if(config.sites.findSite("sexacg").regex.test(location.href)){
         contentArea='article';
         commArea='su-quote-inner';
-    }else if(config.sites[9].regex.test(location.href)){
+    }else if(config.sites.findSite("moxacg").regex.test(location.href)){
         if(isHttps)
             addInsertHandler([["body","a","img","link","script"],[['p:(\/\/|\\\\\\/\\\\\\/)(www\.)?moxacg','ps:$1$2moxacg']]]);
-    }else if(config.sites[11].regex.test(location.href)){
+    }else if(config.sites.findSite("lifan").regex.test(location.href)){
         if(isHttps)
             st2https(true,[["a","img","script","link"],[['p:(\/\/|\\\\\\/\\\\\\/)lifan\.moe','ps:$1lifan\.moe']]]);
-    }else if(config.sites[6].regex.test(location.href)){
+    }else if(config.sites.findSite("acggj").regex.test(location.href)){
         if(isHttps)
             st2https(true,[["a","img","script","link"],[['p:(\/\/|\\\\\\/\\\\\\/)(www\.|bbs\.)?acggj','ps:$1$2acggj'],['"\/\/(img\.2dfan)','"http:\/\/$1']]]);
         var benzi=document.querySelector('#menu-item-3786');
@@ -327,7 +362,7 @@
             scy.innerHTML = scy.innerHTML.replace(/\u672c\u5b50/g, '\u4e09\u6b21\u5143').replace(/hexie\/book/g, 'sciyuan').replace(/fa-book/g, 'fa-instagram');
             benzi.after(scy);
         }
-    }else if(config.sites[6].bbs.test(location.href)){
+    }else if(config.sites.findSite("acggj").bbs.test(location.href)){
         if(isHttps){
             st2https(true,[["a","img","script","link"],[['p:(\/\/|\\\\\\/\\\\\\/)bbs\.acggj','ps:$1bbs\.acggj'],['"\/\/(img\.2dfan)','"http:\/\/$1']]]);
             var baseUrl=document.querySelector('base');
@@ -341,16 +376,16 @@
                     temp.outerHTML = temp.outerHTML;
             }
         }
-    }else if(config.sites[8].regex.test(location.href)){
+    }else if(config.sites.findSite("acgnz").regex.test(location.href)){
         if(isHttps)
             addInsertHandler([["a","img","link","script"],[['p:(\/\/|\\\\\\/\\\\\\/)(www\.)?acgnz','ps:$1$2acgnz'],['"\/\/(pic|tc)\.(ffsky|rpgsky)','"http:\/\/$1\.$2']]]);
-    }else if(config.sites[12].regex.test(location.href)){
+    }else if(config.sites.findSite("nacg").regex.test(location.href)){
         contentArea='.content';
-    }else if(config.sites[5].regex.test(location.href)){
+    }else if(config.sites.findSite("tianshit").regex.test(location.href)){
         contentArea='.article-content';
-    }else if(config.sites[4].regex.test(location.href)){
+    }else if(config.sites.findSite("acglover").regex.test(location.href)){
         st2https(true,[["a","img"],[['acglover\.net','acglover\.top']]]);
-    }else if(config.sites[14].regex.test(location.href)){
+    }else if(config.sites.findSite("idanmu").regex.test(location.href)){
         var resets = document.querySelectorAll('body>style');
         for(var reset of resets){
             if(/\.card-bg\simg|\.content-reset\simg/.test(reset.innerHTML)){
@@ -362,6 +397,53 @@
             var r18=r10.cloneNode(true);
             r18.innerHTML = r18.innerHTML.replace(/\u8d44\u8baf/g, '18禁').replace(/category\/v01/g, 'category/v09/v13');
             r10.after(r18);
+        }
+    }else if(config.sites.findSite("zuiacg").regex.test(location.href)){
+        let shield=document.querySelector('#shieldclass');
+        if(shield){
+            shield.parentNode.removeChild(shield);
+            let imgs=document.querySelectorAll('p>img');
+            for(let img of imgs){
+                img.onclick=function(){this.className="";};
+            }
+        }
+        var downloadBtn=document.querySelector('a[data-action=download]');
+        if(downloadBtn){
+            if(/\.com\/download\//.test(location.href)){
+                let cd=document.querySelector('div.single-content>p>input');
+                if(cd){
+                    downloadBtn.href+="#"+cd.value;
+                }
+            }else{
+                downloadBtn.onclick=function(e){
+                    if(e.ctrlKey){
+                        let newWin=window.open('');
+                        GM_xmlhttpRequest({
+                            method: 'GET',
+                            url: downloadBtn.href.replace(/\/news\//,"/download/"),
+                            onload: function(d) {
+                                let html=document.implementation.createHTMLDocument('');
+                                html.documentElement.innerHTML = d.responseText;
+                                let dl=html.querySelector('#adddownload>a');
+                                if(dl){
+                                    let url=dl.href;
+                                    let cd=html.querySelector('div.single-content>p>input');
+                                    if(cd){
+                                        url+="#"+cd.value;
+                                    }
+                                    newWin.location.href=url;
+                                }else{
+                                    newWin.close();
+                                }
+                            },
+                            onerror: function(e) {
+                                newWin.close();
+                            }
+                        });
+                        return false;
+                    }
+                };
+            }
         }
     }
 
@@ -409,7 +491,7 @@
                 if(/\/storage-download/.test(location.href)){
                     var pass=target.parentNode.parentNode.querySelector('input.pwd');
                     if(pass&&pass.id.indexOf("download-pwd")!=-1)target.href=target.href.split("#")[0]+'#'+pass.value;
-                } else if(config.sites[7].downloadUrl.test(location.href)){
+                } else if(config.sites.findSite("acg12").downloadUrl.test(location.href)){
                     var pass2=target.parentNode.parentNode.parentNode.querySelector('input.form-control');
                     if(pass2)target.href+='#'+pass2.value;
                 } else if(codeRule.test(target.textContent)){
