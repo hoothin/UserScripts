@@ -479,7 +479,7 @@
             link = document.getElementsByTagName('a');
         }
         for (var i = 0, k = link.length; i < k; i++) {
-            if (/.*http:[^\.]*(\.)?hacg\./i.test(link[i].href)) {
+            if (isHttps && /.*http:[^\.]*(\.)?hacg\./i.test(link[i].href)) {
                 link[i].href = link[i].href.replace(/http/, 'https');
             }else if(/https?:\/\/[^\.]*(\.)?acg18\.us\/go\/\?url=/.test(link[i].href)){
                 link[i].href = link[i].href.replace(/https?:\/\/[^\.]*(\.)?acg18\.us\/go\/\?url=/, '');
