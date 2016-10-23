@@ -416,11 +416,16 @@
                         var next=getPage().next;
                         if(next)next.click();
                     }else{
+                        let isFind = false;
                         for(article of articles){
                             if(elementPosition(article).y>scrollTop+50){
                                 scrollToControl(article);
+                                isFind = true;
                                 break;
                             }
+                        }
+                        if(!isFind){
+                            scrollTo(0,document.body.scrollHeight);
                         }
                     }
                 }else if(e.keyCode==37){
@@ -437,6 +442,8 @@
                         }
                         if(temp){
                             scrollToControl(temp);
+                        }else{
+                            scrollTo(0,0);
                         }
                     }
                 }else if(e.ctrlKey && e.keyCode==38){
