@@ -36,7 +36,7 @@
 // @include     http*://acg18.us/*
 // @include     http*://*.acg18.us/*
 // @include     http*://zuiacg.com/*
-// @version     3.19.87
+// @version     3.19.88
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
@@ -330,7 +330,7 @@
     }else if(config.sites.findSite("hacg").regex.test(location.href)){
         var has8=false;
         var comms=document.querySelectorAll("span.fn");
-        var msg = "…" + quote;pos = 0;
+        var msg = "…" + quote,pos = 0;
         function scrollMSG() {
             document.title = msg.substring(pos, msg.length) + msg.substring(0, pos);
             pos++;
