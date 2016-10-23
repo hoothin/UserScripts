@@ -36,7 +36,7 @@
 // @include     http*://acg18.us/*
 // @include     http*://*.acg18.us/*
 // @include     http*://zuiacg.com/*
-// @version     3.19.88
+// @version     3.19.89
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
@@ -152,7 +152,7 @@
                 hideOd:true
             }
         ],
-        rocketReg:/magnet:\?xt|pan\.baidu\.com\/s|yunpan\.cn|howfile\.com\/file|mega\.|ed2k:\/\/\|file|bt\.cosxcos\.com\/view|du\.acgget\.com\/go\/|\.mediafire\.com\/download\//,
+        rocketReg:/magnet:\?xt|pan\.baidu\.com\/s|yunpan\.cn|howfile\.com\/file|mega\.|ed2k:\/\/\|file|bt\.cosxcos\.com\/view|du\.acgget\.com\/go\/|\.mediafire\.com\/download\/|\.torrent$/,
         disableSites:/hacg.*about\.html/
     };
     if (!Array.prototype.findSite) {
@@ -195,10 +195,9 @@
             location.href = config.sites[i].url;
             return false;
         }else{
-            if(e.keyCode>36 && e.keyCode<41 && !e.shiftKey && !e.altKey && document.querySelector("article")){
+            if(e.keyCode>36 && e.keyCode<41 && !e.shiftKey && !e.altKey){
                 if(/INPUT|TEXTAREA/.test(document.activeElement.tagName))return;
-                var articles=document.querySelectorAll("article");
-                var article;
+                var article, articles=document.querySelectorAll("article");
                 var scrollTop = window.pageYOffset || document.documentElement.scrollTop  || document.body.scrollTop  || 0;
                 if(e.keyCode==39){
                     if(e.ctrlKey){
@@ -366,7 +365,7 @@
             st2https(true,[["a","img","script","link"],[['p:(\/\/|\\\\\\/\\\\\\/)lifan\.moe','ps:$1lifan\.moe']]]);
     }else if(config.sites.findSite("acggj").regex.test(location.href)){
         if(isHttps)
-            st2https(true,[["a","img","script","link"],[['p:(\/\/|\\\\\\/\\\\\\/)(www\.|bbs\.)?acggj','ps:$1$2acggj'],['"\/\/(img\.2dfan)','"http:\/\/$1']]]);
+            st2https(true,[["a","img","script","link"],[['p:(\/\/|\\\\\\/\\\\\\/)(www\.|bbs\.)?acggj','ps:$1$2acggj'],['"\/\/(img\.2dfan|www\.moxtu\.cc)','"http:\/\/$1']]]);
         var benzi=document.querySelector('#menu-item-3786');
         if(benzi){
             var scy=benzi.cloneNode(true);
@@ -375,17 +374,9 @@
         }
     }else if(config.sites.findSite("acggj").bbs.test(location.href)){
         if(isHttps){
-            st2https(true,[["a","img","script","link"],[['p:(\/\/|\\\\\\/\\\\\\/)bbs\.acggj','ps:$1bbs\.acggj'],['"\/\/(img\.2dfan)','"http:\/\/$1']]]);
+            st2https(true,[["a","img","script","link"],[['p:(\/\/|\\\\\\/\\\\\\/)bbs\.acggj','ps:$1bbs\.acggj'],['"\/\/(img\.2dfan|www\.moxtu\.cc)','"http:\/\/$1']]]);
             var baseUrl=document.querySelector('base');
             baseUrl.href=baseUrl.href.replace(/http:/,"https:");
-        }
-        var tags=["a","img","script","link"];
-        for(var tag of tags){
-            var temps=document.querySelectorAll(tag);
-            for(var temp of temps){
-                if(temp.parentNode)
-                    temp.outerHTML = temp.outerHTML;
-            }
         }
     }else if(config.sites.findSite("acgnz").regex.test(location.href)){
         if(isHttps)
@@ -406,7 +397,7 @@
         var r10=document.querySelector('#menu-item-12744');
         if(r10){
             var r18=r10.cloneNode(true);
-            r18.innerHTML = r18.innerHTML.replace(/\u8d44\u8baf/g, '18禁').replace(/category\/v01/g, 'category/v09/v13');
+            r18.innerHTML = r18.innerHTML.replace(/\u8d44\u8baf/g, 'R18').replace(/category\/v01/g, 'category/v09/v13');
             r10.after(r18);
         }
     }else if(config.sites.findSite("zuiacg").regex.test(location.href)){
