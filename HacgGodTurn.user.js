@@ -36,6 +36,7 @@
 // @include     http*://acg18.us/*
 // @include     http*://*.acg18.us/*
 // @include     http*://zuiacg.com/*
+// @include     http*://www.galacg.me/*
 // @version     3.19.89
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
@@ -150,6 +151,12 @@
                 url:"http://zuiacg.com/",
                 regex:/zuiacg\./,
                 hideOd:true
+            },
+            {
+                name:"galacg",
+                url:"http://www.galacg.me",
+                regex:/galacg\./,
+                hideOd:true
             }
         ],
         rocketReg:/magnet:\?xt|pan\.baidu\.com\/s|yunpan\.cn|howfile\.com\/file|mega\.|ed2k:\/\/\|file|bt\.cosxcos\.com\/view|du\.acgget\.com\/go\/|\.mediafire\.com\/download\/|\.torrent$/,
@@ -168,6 +175,7 @@
     var t, curSite;
     var contentArea='.entry-content', commArea="comment-content";
     var originTitile = document.title;
+    var articleSel="article";
     var isHttps=location.protocol=="https:";
     if(isHttps){
         var refMeta = document.createElement('meta');
@@ -185,67 +193,6 @@
             break;
         }
     }
-
-    document.onkeydown= function(e) {
-        if (e.keyCode == 117) {
-            var i=0;
-            if(curSite)i=config.sites.indexOf(curSite);
-            if(e.shiftKey) i=i===0?(config.sites.length-1):(i-1);
-            else i=i==(config.sites.length-1)?0:(i+1);
-            location.href = config.sites[i].url;
-            return false;
-        }else{
-            if(e.keyCode>36 && e.keyCode<41 && !e.shiftKey && !e.altKey){
-                if(/INPUT|TEXTAREA/.test(document.activeElement.tagName))return;
-                var article, articles=document.querySelectorAll("article");
-                var scrollTop = window.pageYOffset || document.documentElement.scrollTop  || document.body.scrollTop  || 0;
-                if(e.keyCode==39){
-                    if(e.ctrlKey){
-                        var next=getPage().next;
-                        if(next)next.click();
-                    }else{
-                        for(article of articles){
-                            if(elementPosition(article).y>scrollTop+50){
-                                scrollToControl(article);
-                                break;
-                            }
-                        }
-                    }
-                }else if(e.keyCode==37){
-                    if(e.ctrlKey){
-                        var pre=getPage().pre;
-                        if(pre)pre.click();
-                    }else{
-                        var temp;
-                        for(article of articles){
-                            if(elementPosition(article).y>scrollTop-50){
-                                break;
-                            }
-                            temp=article;
-                        }
-                        if(temp){
-                            scrollToControl(temp);
-                        }
-                    }
-                }else if(e.ctrlKey && e.keyCode==38){
-                    history.go(-1);
-                    return false;
-                }else if(e.ctrlKey && e.keyCode==40){
-                    for(article of articles){
-                        var dis=elementPosition(article).y - scrollTop;
-                        if(dis > -50 && dis < 50){
-                            let aLink=article.querySelector("a");
-                            if(aLink){
-                                aLink.click();
-                                return false;
-                            }
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-    };
 
     if(/\.baidu\./.test(location.href)){
         if(location.hash.slice(1)){
@@ -447,7 +394,70 @@
                 };
             }
         }
+    }else if(config.sites.findSite("galacg").regex.test(location.href)){
+        articleSel="div.article";
     }
+
+    document.onkeydown= function(e) {
+        if (e.keyCode == 117) {
+            var i=0;
+            if(curSite)i=config.sites.indexOf(curSite);
+            if(e.shiftKey) i=i===0?(config.sites.length-1):(i-1);
+            else i=i==(config.sites.length-1)?0:(i+1);
+            location.href = config.sites[i].url;
+            return false;
+        }else{
+            if(e.keyCode>36 && e.keyCode<41 && !e.shiftKey && !e.altKey){
+                if(/INPUT|TEXTAREA/.test(document.activeElement.tagName))return;
+                var article, articles=document.querySelectorAll(articleSel);
+                var scrollTop = window.pageYOffset || document.documentElement.scrollTop  || document.body.scrollTop  || 0;
+                if(e.keyCode==39){
+                    if(e.ctrlKey){
+                        var next=getPage().next;
+                        if(next)next.click();
+                    }else{
+                        for(article of articles){
+                            if(elementPosition(article).y>scrollTop+50){
+                                scrollToControl(article);
+                                break;
+                            }
+                        }
+                    }
+                }else if(e.keyCode==37){
+                    if(e.ctrlKey){
+                        var pre=getPage().pre;
+                        if(pre)pre.click();
+                    }else{
+                        var temp;
+                        for(article of articles){
+                            if(elementPosition(article).y>scrollTop-50){
+                                break;
+                            }
+                            temp=article;
+                        }
+                        if(temp){
+                            scrollToControl(temp);
+                        }
+                    }
+                }else if(e.ctrlKey && e.keyCode==38){
+                    history.go(-1);
+                    return false;
+                }else if(e.ctrlKey && e.keyCode==40){
+                    for(article of articles){
+                        var dis=elementPosition(article).y - scrollTop;
+                        if(dis > -50 && dis < 50){
+                            let aLink=article.querySelector("a");
+                            if(aLink){
+                                aLink.click();
+                                return false;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    };
 
     function process(){
         var downloadBtn=document.querySelector("div#post-toolbar-download-count-container");
@@ -561,22 +571,54 @@
     function getPage(){
         let pre=document.querySelector("a.prev");
         let next=document.querySelector("a.next");
-        let aTags=document.querySelectorAll("a");
-        for(let aTag of aTags){
+        if(!pre && !next){
+            let aTags=document.querySelectorAll("a");
             if(!pre){
-                if(aTag.innerHTML=="&lt;" || /上一页/.test(aTag.innerHTML) || aTag.innerHTML=="«"){
-                    pre=aTag;
-                    if(next)break;
+                let pref,pres,pret;
+                for(let aTag of aTags){
+                    if(pref && pres && pret)break;
+                    if(!pref){
+                        if(/上一页/.test(aTag.innerHTML)){
+                            pref=aTag;
+                        }
+                    }
+                    if(!pres){
+                        if(aTag.innerHTML=="&lt;"){
+                            pres=aTag;
+                        }
+                    }
+                    if(!pret){
+                        if(aTag.innerHTML=="«"){
+                            pret=aTag;
+                        }
+                    }
                 }
+                pre=pref||pres||pret;
             }
             if(!next){
-                if(aTag.innerHTML=="&gt;" || /下一页/.test(aTag.innerHTML) || aTag.innerHTML=="»"){
-                    next=aTag;
-                    if(pre)break;
+                let nextf,nexts,nextt;
+                for(let aTag of aTags){
+                    if(nextf && nexts && nextt)break;
+                    if(!nextf){
+                        if(/下一页/.test(aTag.innerHTML)){
+                            nextf=aTag;
+                        }
+                    }
+                    if(!nexts){
+                        if(aTag.innerHTML=="&gt;"){
+                            nexts=aTag;
+                        }
+                    }
+                    if(!nextt){
+                        if(aTag.innerHTML=="»"){
+                            nextt=aTag;
+                        }
+                    }
                 }
+                next=nextf||nexts||nextt;
             }
         }
-        if(!pre&&!next){
+        if(!pre && !next){
             let pageDiv=document.querySelector("div.wp-pagenavi");
             if(pageDiv){
                 var cur=pageDiv.querySelector("span.current");
