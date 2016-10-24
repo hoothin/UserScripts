@@ -210,7 +210,7 @@
             var key = "";
             for(var pNode of plist){
                 if(/\u5bc6\u5319[:：]/i.test(pNode.innerHTML)){
-                    var orgStr = pNode.innerHTML.match(/\u5bc6\u5319[:：]\s*\S*/i)[0].replace(/\u5bc6\u5319[:：]\s*/,"");
+                    var orgStr = pNode.innerHTML.match(/\u5bc6\u5319[:：]\s*\S*/i)[0].replace(/\u5bc6\u5319[:：]\s*/,"").replace('&amp;','&');
                     key=CryptoJS.enc.Base64.parse(orgStr).toString(CryptoJS.enc.Utf8);
                     pNode.innerHTML = "";
                     break;
