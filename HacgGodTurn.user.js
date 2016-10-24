@@ -37,11 +37,11 @@
 // @include     http*://*.acg18.us/*
 // @include     http*://zuiacg.com/*
 // @include     http*://www.galacg.me/*
-// @version     3.19.90
+// @version     3.19.91
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
-// @require     https://greasyfork.org/scripts/23522-olddriver-js/code/oldDriverjs.js?version=153486
+// @require     https://greasyfork.org/scripts/23522-olddriver-js/code/oldDriverjs.js?version=154196
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
 // @license     MIT License
@@ -173,7 +173,7 @@
             }
         };
     }
-    var t, curSite;
+    var t, curSite, curArticle;
     var contentArea='.entry-content', commArea="comment-content";
     var originTitile = document.title;
     var articleSel="article";
@@ -204,6 +204,7 @@
     }else if(config.disableSites.test(location.href)){
         return;
     }else if(config.sites.findSite("acgtf").regex.test(location.href)){
+        articleSel="div.dt-news-post";
         var content=document.querySelector('.entry-content');
         if(content){
             var plist = content.querySelectorAll("p");
@@ -225,7 +226,6 @@
                     result = CryptoJS.AES.decrypt(result,key).toString(CryptoJS.enc.Utf8);
                     target.innerHTML = result;
                 }
-
             }
         }
     }else if (config.sites.findSite("reimu").regex.test(location.href)){
@@ -397,11 +397,11 @@
         }
     }else if(config.sites.findSite("galacg").regex.test(location.href)){
         articleSel="div.article";
-        st2https(true,[["img"],[['p:(\/\/|\\\\\\/\\\\\\/)bbs\.acggj','ps:$1bbs\.acggj']]]);
     }
 
-    document.onkeydown= function(e) {
-        if (e.keyCode == 117) {
+    document.onkeydown = function(e) {
+        if(curArticle)curArticle.classList.remove("oD_sel");
+        if(e.keyCode == 117) {
             var i=0;
             if(curSite)i=config.sites.indexOf(curSite);
             if(e.shiftKey) i=i===0?(config.sites.length-1):(i-1);
@@ -411,22 +411,31 @@
         }else{
             if(e.keyCode>36 && e.keyCode<41 && !e.shiftKey && !e.altKey){
                 if(/INPUT|TEXTAREA/.test(document.activeElement.tagName))return;
-                var article, articles=document.querySelectorAll(articleSel);
+                var article, isFind, index, articles=document.querySelectorAll(articleSel);
                 var scrollTop = window.pageYOffset || document.documentElement.scrollTop  || document.body.scrollTop  || 0;
                 if(e.keyCode==39){
                     if(e.ctrlKey){
                         var next=getPage().next;
                         if(next)next.click();
                     }else{
-                        let isFind = false;
-                        for(article of articles){
-                            if(elementPosition(article).y>scrollTop+50){
-                                scrollToControl(article);
+                        isFind = false;
+                        if(curArticle){
+                            index=Array.prototype.indexOf.call(articles, curArticle)+1;
+                            if(index<articles.length){
+                                scrollArticle(articles[index]);
                                 isFind = true;
-                                break;
+                            }
+                        }else{
+                            for(article of articles){
+                                if(elementPosition(article).y>scrollTop+50){
+                                    scrollArticle(article);
+                                    isFind = true;
+                                    break;
+                                }
                             }
                         }
                         if(!isFind){
+                            curArticle=null;
                             scrollTo(0,document.body.scrollHeight);
                         }
                     }
@@ -435,16 +444,25 @@
                         var pre=getPage().pre;
                         if(pre)pre.click();
                     }else{
-                        var temp;
-                        for(article of articles){
-                            if(elementPosition(article).y>scrollTop-50){
-                                break;
+                        isFind = false;
+                        if(curArticle){
+                            index=Array.prototype.indexOf.call(articles, curArticle)-1;
+                            if(index>=0){
+                                scrollArticle(articles[index]);
+                                isFind = true;
                             }
-                            temp=article;
-                        }
-                        if(temp){
-                            scrollToControl(temp);
                         }else{
+                            for(let i=0,j=articles.length;i<j;i++){
+                                article=articles[j-i-1];
+                                if(elementPosition(article).y<scrollTop-50){
+                                    scrollArticle(article);
+                                    isFind = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if(!isFind){
+                            curArticle=null;
                             scrollTo(0,0);
                         }
                     }
@@ -452,18 +470,29 @@
                     history.go(-1);
                     return false;
                 }else if(e.ctrlKey && e.keyCode==40){
-                    for(article of articles){
-                        var dis=elementPosition(article).y - scrollTop;
-                        if(dis > -50 && dis < 50){
-                            let aLink=article.querySelector("a");
-                            if(aLink){
-                                aLink.click();
-                                return false;
+                    if(curArticle){
+                        let aLink=article.querySelector("a");
+                        if(aLink){
+                            aLink.click();
+                            return false;
+                        }
+                    }else{
+                        let dis;
+                        for(article of articles){
+                            dis=elementPosition(article).y - scrollTop;
+                            if(dis > -50 && dis < 50){
+                                let aLink=article.querySelector("a");
+                                if(aLink){
+                                    aLink.click();
+                                    return false;
+                                }
+                                break;
                             }
-                            break;
                         }
                     }
                 }
+            }else{
+                curArticle=null;
             }
         }
     };
@@ -658,8 +687,8 @@
     process();
     clickBlockListener();
 
+    document.getElementsByTagName("head")[0].appendChild(nod);
     if(!curSite.hideOd){
-        document.getElementsByTagName("head")[0].appendChild(nod);
         var oD_box=document.createElement("div");
         oD_box.id="oD_box";
         oD_box.className = "oD_box";
@@ -751,6 +780,12 @@
     }
     //评论区度娘、115、tcn
     seriousReplace(commArea);
+
+    function scrollArticle(a){
+        curArticle=a;
+        curArticle.classList.add("oD_sel");
+        scrollToControl(curArticle);
+    }
 
     var hasViewed=false;
     if(document.referrer){
