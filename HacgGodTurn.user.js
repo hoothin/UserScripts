@@ -37,7 +37,7 @@
 // @include     http*://*.acg18.us/*
 // @include     http*://zuiacg.com/*
 // @include     http*://www.galacg.me/*
-// @version     3.19.89
+// @version     3.19.90
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
@@ -160,7 +160,8 @@
             }
         ],
         rocketReg:/magnet:\?xt|pan\.baidu\.com\/s|yunpan\.cn|howfile\.com\/file|mega\.|ed2k:\/\/\|file|bt\.cosxcos\.com\/view|du\.acgget\.com\/go\/|\.mediafire\.com\/download\/|\.torrent$/,
-        disableSites:/hacg.*about\.html/
+        disableSites:/hacg.*about\.html/,
+        imgRegs:[[/^(?:https:)?(\/\/img\.2dfan|www\.moxtu\.cc|(?:pic|tc)\.(?:ffsky|rpgsky))/,'http:$1'],[/http(:\/\/(?:[^\.]*\.)?loli\.io)/,'https$1'],[/^https:\/\/galacg.me/,'http://galacg.me/']]
     };
     if (!Array.prototype.findSite) {
         Array.prototype.findSite = function (siteName) {
@@ -312,7 +313,7 @@
             st2https(true,[["a","img","script","link"],[['p:(\/\/|\\\\\\/\\\\\\/)lifan\.moe','ps:$1lifan\.moe']]]);
     }else if(config.sites.findSite("acggj").regex.test(location.href)){
         if(isHttps)
-            st2https(true,[["a","img","script","link"],[['p:(\/\/|\\\\\\/\\\\\\/)(www\.|bbs\.)?acggj','ps:$1$2acggj'],['"\/\/(img\.2dfan|www\.moxtu\.cc)','"http:\/\/$1']]]);
+            st2https(true,[["a","img","script","link"],[['p:(\/\/|\\\\\\/\\\\\\/)(www\.|bbs\.)?acggj','ps:$1$2acggj']]]);
         var benzi=document.querySelector('#menu-item-3786');
         if(benzi){
             var scy=benzi.cloneNode(true);
@@ -321,13 +322,13 @@
         }
     }else if(config.sites.findSite("acggj").bbs.test(location.href)){
         if(isHttps){
-            st2https(true,[["a","img","script","link"],[['p:(\/\/|\\\\\\/\\\\\\/)bbs\.acggj','ps:$1bbs\.acggj'],['"\/\/(img\.2dfan|www\.moxtu\.cc)','"http:\/\/$1']]]);
+            st2https(true,[["a","img","script","link"],[['p:(\/\/|\\\\\\/\\\\\\/)bbs\.acggj','ps:$1bbs\.acggj']]]);
             var baseUrl=document.querySelector('base');
             baseUrl.href=baseUrl.href.replace(/http:/,"https:");
         }
     }else if(config.sites.findSite("acgnz").regex.test(location.href)){
         if(isHttps)
-            addInsertHandler([["a","img","link","script"],[['p:(\/\/|\\\\\\/\\\\\\/)(www\.)?acgnz','ps:$1$2acgnz'],['"\/\/(pic|tc)\.(ffsky|rpgsky)','"http:\/\/$1\.$2']]]);
+            addInsertHandler([["a","img","link","script"],[['p:(\/\/|\\\\\\/\\\\\\/)(www\.)?acgnz','ps:$1$2acgnz']]]);
     }else if(config.sites.findSite("nacg").regex.test(location.href)){
         contentArea='.content';
     }else if(config.sites.findSite("tianshit").regex.test(location.href)){
@@ -396,6 +397,7 @@
         }
     }else if(config.sites.findSite("galacg").regex.test(location.href)){
         articleSel="div.article";
+        st2https(true,[["img"],[['p:(\/\/|\\\\\\/\\\\\\/)bbs\.acggj','ps:$1bbs\.acggj']]]);
     }
 
     document.onkeydown= function(e) {
@@ -467,10 +469,9 @@
     };
 
     function process(){
-        var downloadBtn=document.querySelector("div#post-toolbar-download-count-container");
-        if(downloadBtn){
+        var downloadBtn;
+        if(isHttps && (downloadBtn=document.querySelector("div#post-toolbar-download-count-container"))){
             var t=function(){
-                downloadBtn=document.querySelector("div#post-toolbar-download-count-container");
                 if(downloadBtn.innerHTML=="<!-- react-empty: 1 -->"){
                     var downloadContent=document.createElement("a");
                     downloadContent.href=window.location.protocol+"//"+window.location.host+"/download?id="+window.location.pathname.split("/").pop();
@@ -491,13 +492,15 @@
                 }
             }
         }
-        var link;
+        var link, imgs, i, k;
         if (document.querySelectorAll) {
             link = document.querySelectorAll('a');
+            imgs = document.querySelectorAll('img');
         } else {
             link = document.getElementsByTagName('a');
+            imgs = document.getElementsByTagName('img');
         }
-        for (var i = 0, k = link.length; i < k; i++) {
+        for (i = 0, k = link.length; i < k; i++) {
             if (isHttps && /.*http:[^\.]*(\.)?hacg\./i.test(link[i].href)) {
                 link[i].href = link[i].href.replace(/http/, 'https');
             }else if(/https?:\/\/[^\.]*(\.)?acg18\.us\/go\/\?url=/.test(link[i].href)){
@@ -541,6 +544,13 @@
                         if(parent==document.body) break;
                     }
                 }
+            }
+        }
+        for (i = 0, k = imgs.length; i < k; i++) {
+            let src;
+            for(let imgReg of config.imgRegs){
+                src = imgs[i].src.replace(imgReg[0], imgReg[1]);
+                if(src != imgs[i].src)imgs[i].src = src;
             }
         }
     }
