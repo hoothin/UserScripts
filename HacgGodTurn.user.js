@@ -37,7 +37,8 @@
 // @include     http*://*.acg18.us/*
 // @include     http*://zuiacg.com/*
 // @include     http*://www.galacg.me/*
-// @version     3.19.92
+// @include     http*://www.mhecy.com/*
+// @version     3.19.93
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
@@ -154,8 +155,15 @@
             },
             {
                 name:"galacg",
-                url:"http://www.galacg.me",
+                url:"http://www.galacg.me/",
                 regex:/galacg\./,
+                hideOd:true
+            },
+            {
+                name:"mhecy",
+                url:"http://www.mhecy.com/",
+                regex:/mhecy\./,
+                downloadUrl:/www\.mhecy\.com\/\?page_id=\d+&code/,
                 hideOd:true
             }
         ],
@@ -542,7 +550,7 @@
             }
             var target=link[i];
             if(/baidu.com/i.test(target.href)&&!/(?:eyun|tieba)\.baidu\.com/i.test(target.href)&&!/#/i.test(target.href)){
-                if(/\/storage-download/.test(location.href)){
+                if(/\/storage-download/.test(location.href) || config.sites.findSite("mhecy").downloadUrl.test(location.href)){
                     var pass=target.parentNode.parentNode.querySelector('input.pwd');
                     if(pass&&pass.id.indexOf("download-pwd")!=-1)target.href=target.href.split("#")[0]+'#'+pass.value;
                 } else if(config.sites.findSite("acg12").downloadUrl.test(location.href)){
