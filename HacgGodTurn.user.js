@@ -29,7 +29,7 @@
 // @include     http*://www.kaze5.com/*
 // @include     http*://www.acg15.com/*
 // @include     http*://www.acglover.top/*
-// @include     http*://lifan.moe/*
+// @include     http*://lifanmoe.com/*
 // @include     http*://www.idanmu.co/*
 // @include     http*://*.sijihuisuo.club/*
 // @include     http*://sijihuisuo.club/*
@@ -37,7 +37,7 @@
 // @include     http*://*.acg18.us/*
 // @include     http*://zuiacg.com/*
 // @include     http*://www.galacg.me/*
-// @version     3.19.91
+// @version     3.19.92
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
@@ -115,8 +115,8 @@
             },
             {
                 name:"lifan",
-                url:"http://lifan.moe/",
-                regex:/lifan\.moe/
+                url:"http://lifanmoe.com/",
+                regex:/lifanmoe\./
             },
             {
                 name:"nacg",
@@ -256,6 +256,7 @@
         });
         createBlockBtn();
     }else if(config.sites.findSite("acg12").regex.test(location.href)){
+        articleSel="section.post";
         if(isHttps)
             addInsertHandler([["a","img","link","script"],[['p:(\/\/|\\\\\\/\\\\\\/)(www\.|static\.)?acg12','ps:$1$2acg12']]]);
         if(config.sites.findSite("acg12").downloadUrl.test(location.href)){
@@ -306,11 +307,11 @@
         contentArea='article';
         commArea='su-quote-inner';
     }else if(config.sites.findSite("moxacg").regex.test(location.href)){
+        articleSel="section.post";
         if(isHttps)
             addInsertHandler([["body","a","img","link","script"],[['p:(\/\/|\\\\\\/\\\\\\/)(www\.)?moxacg','ps:$1$2moxacg']]]);
     }else if(config.sites.findSite("lifan").regex.test(location.href)){
-        if(isHttps)
-            st2https(true,[["a","img","script","link"],[['p:(\/\/|\\\\\\/\\\\\\/)lifan\.moe','ps:$1lifan\.moe']]]);
+        articleSel="section.post";
     }else if(config.sites.findSite("acggj").regex.test(location.href)){
         if(isHttps)
             st2https(true,[["a","img","script","link"],[['p:(\/\/|\\\\\\/\\\\\\/)(www\.|bbs\.)?acggj','ps:$1$2acggj']]]);
@@ -397,6 +398,8 @@
         }
     }else if(config.sites.findSite("galacg").regex.test(location.href)){
         articleSel="div.article";
+    }else if(config.sites.findSite("acg15").regex.test(location.href)){
+        articleSel="section.post";
     }
 
     document.onkeydown = function(e) {
@@ -617,6 +620,8 @@
     function getPage(){
         let pre=document.querySelector("a.prev");
         let next=document.querySelector("a.next");
+        if(!pre)pre=document.querySelector(".prev>a");
+        if(!next)next=document.querySelector(".next>a");
         if(!pre && !next){
             let aTags=document.querySelectorAll("a");
             if(!pre){
