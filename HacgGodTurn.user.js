@@ -161,7 +161,7 @@
         ],
         rocketReg:/magnet:\?xt|pan\.baidu\.com\/s|yunpan\.cn|howfile\.com\/file|mega\.|ed2k:\/\/\|file|bt\.cosxcos\.com\/view|du\.acgget\.com\/go\/|\.mediafire\.com\/download\/|\.torrent$/,
         disableSites:/hacg.*about\.html/,
-        imgRegs:[[/^(?:https:)?(\/\/img\.2dfan|www\.moxtu\.cc|(?:pic|tc)\.(?:ffsky|rpgsky))/,'http:$1'],[/http(:\/\/(?:[^\.]*\.)?loli\.io)/,'https$1'],[/^https:\/\/galacg.me/,'http://galacg.me/']]
+        imgRegs:[[/^(?:https:)?(\/\/img\.2dfan|www\.moxtu\.cc|(?:pic|tc)\.(?:ffsky|rpgsky))/,'http:$1'],[/http(:\/\/(?:[^\.]*\.)?loli\.io)/,'https$1'],[/^https:\/\/galacg.me/,'https://www.galacg.me/']]
     };
     if (!Array.prototype.findSite) {
         Array.prototype.findSite = function (siteName) {
