@@ -401,7 +401,7 @@
 
     document.onkeydown = function(e) {
         if(curArticle)curArticle.classList.remove("oD_sel");
-        if(e.keyCode == 117) {
+        if(e.keyCode == 119) {
             var i=0;
             if(curSite)i=config.sites.indexOf(curSite);
             if(e.shiftKey) i=i===0?(config.sites.length-1):(i-1);
