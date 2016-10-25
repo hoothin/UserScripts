@@ -410,7 +410,7 @@
         articleSel="section.post";
     }
 
-    document.onkeydown = function(e) {
+    document.addEventListener("keydown", function(e) {
         if(curArticle)curArticle.classList.remove("oD_sel");
         if(e.keyCode == 119) {
             var i=0;
@@ -506,7 +506,7 @@
                 curArticle=null;
             }
         }
-    };
+    });
 
     function process(){
         var downloadBtn;
