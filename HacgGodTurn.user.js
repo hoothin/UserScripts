@@ -42,11 +42,11 @@
 // @include     http*://www.acgzone.org/*
 // @include     http*://uraban.me/*
 // @include     http*://www.uraban.me/*
-// @version     3.19.94
+// @version     3.19.95
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
-// @require     https://greasyfork.org/scripts/23522-od-js/code/odjs.js?version=154299
+// @require     https://greasyfork.org/scripts/23522-od-js/code/odjs.js?version=154351
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
 // @license     MIT License
@@ -74,12 +74,14 @@
             {
                 name:"acglover",
                 url:"http://www.acglover.top/",
-                regex:/acglover\.top/
+                regex:/acglover\.top/,
+                offset:60
             },
             {
                 name:"acgtf",
                 url:"https://www.acg.tf/",
-                regex:/acg\.tf/
+                regex:/acg\.tf/,
+                offset:50
             },
             {
                 name:"tianshit",
@@ -91,59 +93,69 @@
                 url:"https://www.acggj.com/",
                 regex:/www\.acggj\./,
                 hideOd:true,
-                bbs:/bbs\.acggj\./
+                bbs:/bbs\.acggj\./,
+                offset:10
             },
             {
                 name:"acg12",
                 url:"https://acg12.com/",
                 regex:/acg12\./,
                 hideOd:true,
-                downloadUrl:/acg12\.com\/download/
+                downloadUrl:/acg12\.com\/download/,
+                offset:55
             },
             {
                 name:"moxacg",
                 url:"http://www.moxacg.com/",
                 regex:/moxacg\./,
-                hideOd:true
+                hideOd:true,
+                offset:55
             },
             {
                 name:"acg15",
                 url:"http://www.acg15.com/",
                 regex:/acg15\.com/,
-                hideOd:true
+                hideOd:true,
+                offset:55
             },
             {
                 name:"lifan",
                 url:"http://lifanmoe.com/",
-                regex:/lifanmoe\./
+                regex:/lifanmoe\./,
+                offset:55
             },
             {
                 name:"nacg",
                 url:"http://nacg.me/",
                 regex:/nacg\.me/,
-                hideOd:true
+                hideOd:true,
+                offset:65
             },
             {
                 name:"idanmu",
                 url:"http://www.idanmu.co/",
-                regex:/idanmu\.co/
+                regex:/idanmu\.co/,
+                offset:10
             },
             {
                 name:"sijihuisuo",
                 url:"https://www.sijihuisuo.club/",
                 regex:/sijihuisuo\.club/,
-                innerPage:/sijihuisuo\.club\/(sj\/\d|\?p=\d)/
+                innerPage:/sijihuisuo\.club\/(sj\/\d|\?p=\d)/,
+                offset:115
             },
             {
                 name:"acg18",
                 url:"https://acg18.us/",
-                regex:/acg18\./
+                regex:/acg18\./,
+                offset:55
             },
             {
                 name:"zuiacg",
                 url:"http://zuiacg.com/",
                 regex:/zuiacg\./,
-                hideOd:true
+                hideOd:true,
+                offset:75
             },
             {
                 name:"galacg",
@@ -156,7 +168,8 @@
                 url:"http://www.mhecy.com/",
                 regex:/mhecy\./,
                 downloadUrl:/www\.mhecy\.com\/\?page_id=\d+&code/,
-                hideOd:true
+                hideOd:true,
+                offset:10
             },
             {
                 name:"acgnz",
@@ -168,11 +181,12 @@
                 name:"oomoe",
                 url:"https://www.oomoe.moe/",
                 regex:/oomoe\.moe/,
-                hideOd:true
+                hideOd:true,
+                offset:10
             },
             {
                 name:"acgzone",
-                url:"https://acgzone.org/",
+                url:"http://acgzone.org/",
                 regex:/acgzone\.org|uraban\.me/
             }
         ],
@@ -806,7 +820,9 @@
     function scrollArticle(a){
         curArticle=a;
         curArticle.classList.add("oD_sel");
-        scrollToControl(curArticle);
+        let pos=elementPosition(curArticle).y;
+        if(curSite.offset)pos-=curSite.offset;
+        scrollToControl(pos);
     }
 
     var hasViewed=false;
