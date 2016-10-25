@@ -420,7 +420,7 @@
     }
 
     document.addEventListener("keydown", function(e) {
-        if(curArticle)curArticle.classList.remove("oD_sel");
+        if(curArticle && e.keyCode != 17)curArticle.classList.remove("oD_sel");
         if(e.keyCode == 119) {
             var i=0;
             if(curSite)i=config.sites.indexOf(curSite);
