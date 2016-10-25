@@ -97,12 +97,6 @@
                 downloadUrl:/acg12\.com\/download/
             },
             {
-                name:"acgnz",
-                url:"http://www.acgnz.cc/",
-                regex:/acgnz\.cc/,
-                hideOd:true
-            },
-            {
                 name:"moxacg",
                 url:"http://www.moxacg.com/",
                 regex:/moxacg\./,
@@ -123,12 +117,6 @@
                 name:"nacg",
                 url:"http://nacg.me/",
                 regex:/nacg\.me/,
-                hideOd:true
-            },
-            {
-                name:"oomoe",
-                url:"https://www.oomoe.moe/",
-                regex:/oomoe\.moe/,
                 hideOd:true
             },
             {
@@ -164,6 +152,18 @@
                 url:"http://www.mhecy.com/",
                 regex:/mhecy\./,
                 downloadUrl:/www\.mhecy\.com\/\?page_id=\d+&code/,
+                hideOd:true
+            },
+            {
+                name:"acgnz",
+                url:"http://www.acgnz.cc/",
+                regex:/acgnz\.cc/,
+                hideOd:true
+            },
+            {
+                name:"oomoe",
+                url:"https://www.oomoe.moe/",
+                regex:/oomoe\.moe/,
                 hideOd:true
             }
         ],
