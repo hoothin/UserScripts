@@ -308,20 +308,24 @@
             }
         },500);
     }else if(config.sites.findSite("hacg").regex.test(location.href)){
+        var feiZaos=document.getElementsByTagName("p1");
+        for(var feiZao of feiZaos){
+            if(feiZao.parentNode)feiZao.parentNode.removeChild(feiZao);
+        }
         var has8=false;
         var comms=document.querySelectorAll("span.fn");
         var msg = "…" + unsafeWindow.quote,pos = 0;
-        function scrollMSG() {
+        function scrollMsg() {
             document.title = msg.substring(pos, msg.length) + msg.substring(0, pos);
             pos++;
             if (pos >  msg.length) {
                 pos = 0;
                 document.title = originTitile;
             }else{
-                setTimeout(scrollMSG,150);
+                setTimeout(scrollMsg,150);
             }
         }
-        scrollMSG();
+        scrollMsg();
         for(var comm of comms){
             if(comm.innerHTML == "\u5c0f\u0038\u9171"){
                 has8=true;
@@ -725,15 +729,6 @@
         return {pre:pre,next:next};
     }
 
-    //防爆补丁
-    var feiZao=document.getElementsByTagName("p1");
-    var fZLength=feiZao.length;
-    if (!!fZLength){
-        for (var i = 0; i < fZLength; i++){
-            feiZao[0].parentNode.removeChild(feiZao[0]);
-        }
-    }
-
     process();
     clickBlockListener();
 
@@ -753,13 +748,11 @@
             rocketBtn.style.visibility = "hidden";
         };
         var oD_text=document.createElement("input");
-        oD_text.id="oD_text";
         oD_text.type="text";
-        oD_text.style="width:168px;height:33px;position:absolute;margin-top: 0px;padding: 0px;";
+        oD_text.style="width:168px;height:33px;position:relative;margin-top: 0px;padding: 0px;";
         oD_text.placeholder="输入hash值";
-        oD_text.title='将自动添加"magnet:?xt=urn:btih:"，去除[]中的内容、非字母数字字符、空格';
+        oD_text.title='将自动添加"magnet:?xt=urn:btih:"并去除非法字符';
         var oD_button=document.createElement("button");
-        oD_button.id="oD_button";
         oD_button.type="button";
         oD_button.textContent="开车";
         oD_button.style="padding:4px 0;position: absolute;top:-1px;right:0px;width:40px;height:35px";
@@ -784,8 +777,7 @@
         var oD_link=document.createElement("a");
         var oD_link2=document.createElement("a");
         var oD_link3=document.createElement("a");
-        oD_link2.target="_blank";
-        oD_link3.target="_blank";
+        oD_link2.target=oD_link3.target="_blank";
         oD_box.appendChild(oD_text);
         oD_box.appendChild(oD_button);
         oD_box.appendChild(document.createElement('br'));
