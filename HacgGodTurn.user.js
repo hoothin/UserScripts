@@ -42,7 +42,6 @@
 // @include     http*://www.acgzone.org/*
 // @include     http*://uraban.me/*
 // @include     http*://www.uraban.me/*
-// @version     3.19.98
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
@@ -446,7 +445,6 @@
             if(e.keyCode>36 && e.keyCode<41 && !e.shiftKey && !e.altKey){
                 if(/INPUT|TEXTAREA/.test(document.activeElement.tagName))return;
                 var article, isFind, index, articles=document.querySelectorAll(articleSel);
-                if(articles.length<2)return;
                 var scrollTop = window.pageYOffset || document.documentElement.scrollTop  || document.body.scrollTop  || 0;
                 if(e.keyCode==39){
                     if(e.ctrlKey){
@@ -506,7 +504,7 @@
                     return false;
                 }else if(e.ctrlKey && e.keyCode==40){
                     if(curArticle){
-                        let aLink=article.querySelector("a");
+                        let aLink=curArticle.querySelector("a:not(.label)");
                         if(aLink){
                             aLink.click();
                             return false;
@@ -516,7 +514,7 @@
                         for(article of articles){
                             dis=elementPosition(article).y - scrollTop;
                             if(dis > -50 && dis < 50){
-                                let aLink=article.querySelector("a");
+                                let aLink=article.querySelector("a:not(.label)");
                                 if(aLink){
                                     aLink.click();
                                     return false;
@@ -526,7 +524,7 @@
                         }
                     }
                 }
-            }else{
+            }else if(e.keyCode != 17){
                 curArticle=null;
             }
         }
