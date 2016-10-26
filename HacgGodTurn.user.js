@@ -42,11 +42,11 @@
 // @include     http*://www.acgzone.org/*
 // @include     http*://uraban.me/*
 // @include     http*://www.uraban.me/*
-// @version     3.19.96
+// @version     3.19.97
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
-// @require     https://greasyfork.org/scripts/23522-od-js/code/odjs.js?version=154476
+// @require     https://greasyfork.org/scripts/23522-od-js/code/odjs.js?version=154488
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
 // @license     MIT License
@@ -548,12 +548,7 @@
         }
         var content=document.querySelector(contentArea);
         if(content){
-            var oldDrivers = content.childNodes;
-            for(var childOd of oldDrivers){
-                if(childOd.innerHTML){
-                    processTxt(childOd);
-                }
-            }
+            processObj(content);
         }
         var link, imgs, i, k;
         if (document.querySelectorAll) {
@@ -632,6 +627,23 @@
             }else{
                 blockBtn.style="display:none;";
                 author.appendChild(blockBtn);
+            }
+        }
+    }
+
+    function processObj(obj){
+        if(obj){
+            if(obj.nodeType==1){
+                for(var childOd of obj.childNodes){
+                    processObj(childOd);
+                }
+            }else if(obj.nodeType==3){
+                var data=processTxt(obj.data);
+                if(obj.data != data){
+                    var newData = document.createElement("p");
+                    obj.parentNode.replaceChild(newData, obj);
+                    newData.outerHTML=data;
+                }
             }
         }
     }
