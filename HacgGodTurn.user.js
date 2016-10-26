@@ -42,7 +42,7 @@
 // @include     http*://www.acgzone.org/*
 // @include     http*://uraban.me/*
 // @include     http*://www.uraban.me/*
-// @version     3.20.01
+// @version     3.20.02
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
@@ -310,7 +310,7 @@
     }else if(config.sites.findSite("hacg").regex.test(location.href)){
         var has8=false;
         var comms=document.querySelectorAll("span.fn");
-        var msg = "…" + quote,pos = 0;
+        var msg = "…" + unsafeWindow.quote,pos = 0;
         function scrollMSG() {
             document.title = msg.substring(pos, msg.length) + msg.substring(0, pos);
             pos++;
