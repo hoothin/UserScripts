@@ -437,6 +437,8 @@
         articleSel="div.article";
     }else if(config.sites.findSite("acg15").regex.test(location.href)){
         articleSel="section.card";
+    }else if(config.sites.findSite("acgzone").regex.test(location.href)){
+        contentArea='article';
     }
 
     document.addEventListener("keydown", function(e) {
