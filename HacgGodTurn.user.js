@@ -446,6 +446,7 @@
             if(e.keyCode>36 && e.keyCode<41 && !e.shiftKey && !e.altKey){
                 if(/INPUT|TEXTAREA/.test(document.activeElement.tagName))return;
                 var article, isFind, index, articles=document.querySelectorAll(articleSel);
+                if(articles.length<2)return;
                 var scrollTop = window.pageYOffset || document.documentElement.scrollTop  || document.body.scrollTop  || 0;
                 if(e.keyCode==39){
                     if(e.ctrlKey){
