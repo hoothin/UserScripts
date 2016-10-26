@@ -42,7 +42,7 @@
 // @include     http*://www.acgzone.org/*
 // @include     http*://uraban.me/*
 // @include     http*://www.uraban.me/*
-// @version     3.20.02
+// @version     3.20.03
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
@@ -639,7 +639,7 @@
 
     function processObj(obj){
         if(obj){
-            if(obj.nodeType==1){
+            if(obj.nodeType==1 && obj.tagName != "A"){
                 for(var childOd of obj.childNodes){
                     processObj(childOd);
                 }
