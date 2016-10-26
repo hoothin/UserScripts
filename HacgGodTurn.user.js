@@ -42,6 +42,7 @@
 // @include     http*://www.acgzone.org/*
 // @include     http*://uraban.me/*
 // @include     http*://www.uraban.me/*
+// @version     3.19.99
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
