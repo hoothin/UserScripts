@@ -42,11 +42,11 @@
 // @include     http*://www.acgzone.org/*
 // @include     http*://uraban.me/*
 // @include     http*://www.uraban.me/*
-// @version     3.20.04
+// @version     3.20.05
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
-// @require     https://greasyfork.org/scripts/23522/code/od.js?version=154553
+// @require     https://greasyfork.org/scripts/23522/code/od.js?version=154564
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
 // @license     MIT License
@@ -318,6 +318,7 @@
                         }
                     },500);
                 }
+                changeUrl(true,[["a"],[['https?:\/\/[^\.]*(\.)?sijihuisuo\.club\/go\/\?url=','']]]);
                 break;
             case "hacg":
                 var feiZaos=document.getElementsByTagName("p1");
@@ -351,6 +352,7 @@
                         title.innerHTML+="</br> <a href=\"#pa8\" style=\"color:#e30000\">\u2605\u5c0f\u0038\u9171\u2605<\/a>";
                     }
                 }
+                changeUrl(true,[["a"],[['^http:','https:']]]);
                 break;
             case "sexacg":
                 contentArea='article';
@@ -365,7 +367,7 @@
                 break;
             case "acggj":
                 if(isHttps){
-                    st2https(true,[["a","img","script","link"],[['p:(\/\/|\\\\\\/\\\\\\/)(www\.|bbs\.)?acggj','ps:$1$2acggj']]]);
+                    changeUrl(true,[["a","img","script","link"],[['p:(\/\/|\\\\\\/\\\\\\/)(www\.|bbs\.)?acggj','ps:$1$2acggj']]]);
                     var baseUrl=document.querySelector('base');
                     if(baseUrl)baseUrl.href=baseUrl.href.replace(/http:/,"https:");
                 }
@@ -387,7 +389,7 @@
                 contentArea='.article-content';
                 break;
             case "acglover":
-                st2https(true,[["a","img"],[['acglover\.net','acglover\.top']]]);
+                changeUrl(true,[["a","img"],[['acglover\.net','acglover\.top']]]);
                 break;
             case "idanmu":
                 var resets = document.querySelectorAll('body>style');
@@ -466,6 +468,8 @@
                     if(pass&&pass.id.indexOf("download-pwd")!=-1)target.href=target.href.split("#")[0]+'#'+pass.value;
                 };
                 break;
+            case "acg18":
+                changeUrl(true,[["a"],[['https?:\/\/[^\.]*(\.)?acg18\.us\/go\/\?url=','']]]);
         }
     }
 
@@ -595,13 +599,6 @@
             imgs = document.getElementsByTagName('img');
         }
         for (i = 0, k = link.length; i < k; i++) {
-            if (isHttps && /.*http:[^\.]*(\.)?hacg\./i.test(link[i].href)) {
-                link[i].href = link[i].href.replace(/http/, 'https');
-            }else if(/https?:\/\/[^\.]*(\.)?acg18\.us\/go\/\?url=/.test(link[i].href)){
-                link[i].href = link[i].href.replace(/https?:\/\/[^\.]*(\.)?acg18\.us\/go\/\?url=/, '');
-            }else if(/https?:\/\/[^\.]*(\.)?sijihuisuo\.club\/go\/\?url=/.test(link[i].href)){
-                link[i].href = link[i].href.replace(/https?:\/\/[^\.]*(\.)?sijihuisuo\.club\/go\/\?url=/, '');
-            }
             var target=link[i];
             if(/baidu.com/i.test(target.href)&&!/(?:eyun|tieba)\.baidu\.com/i.test(target.href)&&!/#/i.test(target.href)){
                 if(/\/storage-download/.test(location.href)){
