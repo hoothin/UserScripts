@@ -42,7 +42,7 @@
 // @include     http*://www.acgzone.org/*
 // @include     http*://uraban.me/*
 // @include     http*://www.uraban.me/*
-// @version     3.19.99
+// @version     3.20.01
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
@@ -175,7 +175,8 @@
                 name:"acgnz",
                 url:"http://www.acgnz.cc/",
                 regex:/acgnz\.cc/,
-                hideOd:true
+                hideOd:true,
+                offset:55
             },
             {
                 name:"oomoe",
@@ -287,7 +288,7 @@
         });
         createBlockBtn();
     }else if(config.sites.findSite("acg12").regex.test(location.href)){
-        articleSel="section.post";
+        articleSel="section.card";
         if(isHttps)
             addInsertHandler([["a","img","link","script"],[['p:(\/\/|\\\\\\/\\\\\\/)(www\.|static\.)?acg12','ps:$1$2acg12']]]);
         if(config.sites.findSite("acg12").downloadUrl.test(location.href)){
@@ -359,6 +360,7 @@
             baseUrl.href=baseUrl.href.replace(/http:/,"https:");
         }
     }else if(config.sites.findSite("acgnz").regex.test(location.href)){
+        articleSel="section.card";
         if(isHttps)
             addInsertHandler([["a","img","link","script"],[['p:(\/\/|\\\\\\/\\\\\\/)(www\.)?acgnz','ps:$1$2acgnz']]]);
     }else if(config.sites.findSite("nacg").regex.test(location.href)){
@@ -430,7 +432,7 @@
     }else if(config.sites.findSite("galacg").regex.test(location.href)){
         articleSel="div.article";
     }else if(config.sites.findSite("acg15").regex.test(location.href)){
-        articleSel="section.post";
+        articleSel="section.card";
     }
 
     document.addEventListener("keydown", function(e) {
