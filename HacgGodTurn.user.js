@@ -42,11 +42,11 @@
 // @include     http*://www.acgzone.org/*
 // @include     http*://uraban.me/*
 // @include     http*://www.uraban.me/*
-// @version     3.19.97
+// @version     3.19.98
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
-// @require     https://greasyfork.org/scripts/23522-od-js/code/odjs.js?version=154488
+// @require     https://greasyfork.org/scripts/23522/code/od.js?version=154509
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
 // @license     MIT License
@@ -186,7 +186,7 @@
             },
             {
                 name:"acgzone",
-                url:"http://acgzone.org/",
+                url:"http://www.uraban.me/",
                 regex:/acgzone\.org|uraban\.me/
             }
         ],
