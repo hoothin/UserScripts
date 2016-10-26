@@ -42,11 +42,11 @@
 // @include     http*://www.acgzone.org/*
 // @include     http*://uraban.me/*
 // @include     http*://www.uraban.me/*
-// @version     3.19.95
+// @version     3.19.96
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
-// @require     https://greasyfork.org/scripts/23522-od-js/code/odjs.js?version=154351
+// @require     https://greasyfork.org/scripts/23522-od-js/code/odjs.js?version=154476
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
 // @license     MIT License
