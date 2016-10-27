@@ -42,17 +42,18 @@
 // @include     http*://www.acgzone.org/*
 // @include     http*://uraban.me/*
 // @include     http*://www.uraban.me/*
-// @version     3.20.05
+// @version     3.20.06
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
-// @require     https://greasyfork.org/scripts/23522/code/od.js?version=154564
+// @require     https://greasyfork.org/scripts/23522/code/od.js?version=154711
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
 // @license     MIT License
 // @compatible        chrome
 // @compatible        firefox
 // ==/UserScript==
+
 (function(){
     var config={
         sites:[
@@ -294,7 +295,7 @@
             case "acg12":
                 articleSel="section.card";
                 if(isHttps)
-                    addInsertHandler([["a","img","link","script"],[['p:(\/\/|\\\\\\/\\\\\\/)(www\.|static\.)?acg12','ps:$1$2acg12']]]);
+                    addInsertHandler([["a","img","link","script"],[['p:(\\\/\\\/|\\\\\\/\\\\\\/)(www\\\.|static\\\.)?acg12','ps:$1$2acg12']]]);
                 if(curSite.downloadUrl.test(location.href)){
                     t=window.setInterval(function(){
                         if(document.querySelector('.btn-success')){
@@ -318,7 +319,7 @@
                         }
                     },500);
                 }
-                changeUrl(true,[["a"],[['https?:\/\/[^\.]*(\.)?sijihuisuo\.club\/go\/\?url=','']]]);
+                changeUrl(true,[["a"],[['https?:\\\/\\\/[^\\\.]*(\\\.)?sijihuisuo\\\.club\\\/go\\\/\\\?url=','']]]);
                 break;
             case "hacg":
                 var feiZaos=document.getElementsByTagName("p1");
@@ -360,14 +361,14 @@
                 break;
             case "moxacg":
                 articleSel="section.post";
-                if(isHttps)addInsertHandler([["body","a","img","link","script"],[['p:(\/\/|\\\\\\/\\\\\\/)(www\.)?moxacg','ps:$1$2moxacg']]]);
+                if(isHttps)addInsertHandler([["body","a","img","link","script"],[['p:(\\\/\\\/|\\\\\\/\\\\\\/)(www\\\.)?moxacg','ps:$1$2moxacg']]]);
                 break;
             case "lifan":
                 articleSel="section.post";
                 break;
             case "acggj":
                 if(isHttps){
-                    changeUrl(true,[["a","img","script","link"],[['p:(\/\/|\\\\\\/\\\\\\/)(www\.|bbs\.)?acggj','ps:$1$2acggj']]]);
+                    changeUrl(true,[["a","img","script","link"],[['p:(\\\/\\\/|\\\\\\/\\\\\\/)(www\\\.|bbs\\\.)?acggj','ps:$1$2acggj']]]);
                     var baseUrl=document.querySelector('base');
                     if(baseUrl)baseUrl.href=baseUrl.href.replace(/http:/,"https:");
                 }
@@ -380,7 +381,7 @@
                 break;
             case "acgnz":
                 articleSel="section.card";
-                if(isHttps)addInsertHandler([["a","img","link","script"],[['p:(\/\/|\\\\\\/\\\\\\/)(www\.)?acgnz','ps:$1$2acgnz']]]);
+                if(isHttps)addInsertHandler([["a","img","link","script"],[['p:(\\\/\\\/|\\\\\\/\\\\\\/)(www\\\.)?acgnz','ps:$1$2acgnz']]]);
                 break;
             case "nacg":
                 contentArea='.content';
@@ -389,7 +390,7 @@
                 contentArea='.article-content';
                 break;
             case "acglover":
-                changeUrl(true,[["a","img"],[['acglover\.net','acglover\.top']]]);
+                changeUrl(true,[["a","img"],[['acglover\\\.net','acglover\\\.top']]]);
                 break;
             case "idanmu":
                 var resets = document.querySelectorAll('body>style');
@@ -469,7 +470,8 @@
                 };
                 break;
             case "acg18":
-                changeUrl(true,[["a"],[['https?:\/\/[^\.]*(\.)?acg18\.us\/go\/\?url=','']]]);
+                changeUrl(true,[["a"],[['https?:\\\/\\\/[^\\\.]*(\\\.)?acg18\\\.us\\\/go\\\/\\\?url=','']]]);
+                break;
         }
     }
 
