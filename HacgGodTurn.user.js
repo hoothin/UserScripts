@@ -42,7 +42,7 @@
 // @include     http*://www.acgzone.org/*
 // @include     http*://uraban.me/*
 // @include     http*://www.uraban.me/*
-// @version     3.20.07
+// @version     3.20.08
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
@@ -252,7 +252,7 @@
                             break;
                         }
                     }
-                    if(key !==""){
+                    if(key !== ""){
                         var blockquotes = content.querySelectorAll("blockquote");
                         for(var blockquote of blockquotes){
                             var target = blockquote.querySelector("p");
@@ -601,42 +601,44 @@
             imgs = document.getElementsByTagName('img');
         }
         for (i = 0, k = link.length; i < k; i++) {
-            var target=link[i];
-            if(/baidu.com/i.test(target.href)&&!/(?:eyun|tieba)\.baidu\.com/i.test(target.href)&&!/#/i.test(target.href)){
-                if(/\/storage-download/.test(location.href)){
-                    var pass=target.parentNode.parentNode.querySelector('input.pwd');
-                    if(pass&&pass.id.indexOf("download-pwd")!=-1)target.href=target.href.split("#")[0]+'#'+pass.value;
-                } else if(curSite.downloadUrl && curSite.downloadUrl.test(location.href) && curSite.getDownPass){
-                    curSite.getDownPass(target);
-                } else if(codeRule.test(target.textContent)){
-                    target.href+='#'+extCode(target);
-                } else if(target.nextSibling&&codeRule.test(target.nextSibling.textContent)){
-                    if(!/#\S+/i.test(target.href)){
-                        target.href+=/#/i.test(target.href)?extCode(target.nextSibling):('#'+extCode(target.nextSibling));
-                    }
-                } else if(codeRule.test(target.parentNode.textContent)){
-                    if(!/#\S+/i.test(target.href)) target.href+=/#/i.test(target.href)?extCode(target.parentNode):('#'+extCode(target.parentNode));
-                } else {
-                    var j = 0,
-                        maxParent = 5,
-                        parent = target;
-                    while(j<maxParent) {
-                        j++;
-                        parent = parent.parentNode;
-                        if(parent.tagName=="TR") {
-                            if(codeRule.test(parent.nextElementSibling.textContent)) {
-                                parent=parent.nextElementSibling;
+            let target=link[i];
+            target.addEventListener("mousedown", function(){
+                if(/baidu.com/i.test(target.href)&&!/(?:eyun|tieba)\.baidu\.com/i.test(target.href)&&!/#/i.test(target.href)){
+                    if(/\/storage-download/.test(location.href)){
+                        var pass=target.parentNode.parentNode.querySelector('input.pwd');
+                        if(pass&&pass.id.indexOf("download-pwd")!=-1)target.href=target.href.split("#")[0]+'#'+pass.value;
+                    } else if(curSite.downloadUrl && curSite.downloadUrl.test(location.href) && curSite.getDownPass){
+                        curSite.getDownPass(target);
+                    } else if(codeRule.test(target.textContent)){
+                        target.href+='#'+extCode(target);
+                    } else if(target.nextSibling&&codeRule.test(target.nextSibling.textContent)){
+                        if(!/#\S+/i.test(target.href)){
+                            target.href+=/#/i.test(target.href)?extCode(target.nextSibling):('#'+extCode(target.nextSibling));
+                        }
+                    } else if(codeRule.test(target.parentNode.textContent)){
+                        if(!/#\S+/i.test(target.href)) target.href+=/#/i.test(target.href)?extCode(target.parentNode):('#'+extCode(target.parentNode));
+                    } else {
+                        var j = 0,
+                            maxParent = 5,
+                            parent = target;
+                        while(j<maxParent) {
+                            j++;
+                            parent = parent.parentNode;
+                            if(parent.tagName=="TR") {
+                                if(codeRule.test(parent.nextElementSibling.textContent)) {
+                                    parent=parent.nextElementSibling;
+                                    target.href+='#'+extCode(parent);
+                                    break;
+                                }
+                            } else if(codeRule.test(parent.textContent)) {
                                 target.href+='#'+extCode(parent);
                                 break;
                             }
-                        } else if(codeRule.test(parent.textContent)) {
-                            target.href+='#'+extCode(parent);
-                            break;
+                            if(parent==document.body) break;
                         }
-                        if(parent==document.body) break;
                     }
                 }
-            }
+            });
         }
         for (i = 0, k = imgs.length; i < k; i++) {
             let src;
