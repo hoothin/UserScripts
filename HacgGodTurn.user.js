@@ -42,7 +42,7 @@
 // @include     http*://www.acgzone.org/*
 // @include     http*://uraban.me/*
 // @include     http*://www.uraban.me/*
-// @version     3.20.06
+// @version     3.20.07
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
@@ -360,11 +360,11 @@
                 commArea='su-quote-inner';
                 break;
             case "moxacg":
-                articleSel="section.post";
+                articleSel="section.card";
                 if(isHttps)addInsertHandler([["body","a","img","link","script"],[['p:(\\\/\\\/|\\\\\\/\\\\\\/)(www\\\.)?moxacg','ps:$1$2moxacg']]]);
                 break;
             case "lifan":
-                articleSel="section.post";
+                articleSel="section.card";
                 break;
             case "acggj":
                 if(isHttps){
