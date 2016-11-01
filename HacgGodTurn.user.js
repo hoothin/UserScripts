@@ -843,7 +843,8 @@
             var rocketLinks=document.querySelector("div#rocketLinks");
             rocketLinks.innerHTML="";
             var i=0;
-            for(var link of links){
+            for(let j=0;j<links.length;j++){
+                let link=links[j];
                 if(config.rocketReg.test(link.href)&&link.className.indexOf("whx-a")==-1){
                     if(rocketLinks.innerHTML.indexOf(link.outerHTML)!=-1)continue;
                     rocketLinks.innerHTML+="<strong style='color:red'>"+(++i)+"</strong>:";
