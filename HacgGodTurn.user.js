@@ -198,6 +198,7 @@
         disableSites:/hacg.*about\.html/,
         imgRegs:[[/^(?:https:)?(\/\/img\.2dfan|www\.moxtu\.cc|(?:pic|tc)\.(?:ffsky|rpgsky))/,'http:$1'],[/http(:\/\/(?:[^\.]*\.)?loli\.io)/,'https$1'],[/^https:\/\/galacg.me/,'https://www.galacg.me/']]
     };
+    if(unsafeWindow)window = unsafeWindow;
     if (!Array.prototype.findSite) {
         Array.prototype.findSite = function (siteName) {
             var arr = this;
@@ -324,13 +325,15 @@
                 changeUrl(true,[["a"],[['https?:\\\/\\\/[^\\\.]*(\\\.)?sijihuisuo\\\.club\\\/go\\\/\\\?url=','']]]);
                 break;
             case "hacg":
-                var feiZaos=document.getElementsByTagName("p1");
-                for(var feiZao of feiZaos){
+                var feiZao,feiZaos=document.querySelectorAll("p1"),i;
+                for(i=0;i<feiZaos.length;i++){
+                    feiZao=feiZaos[i];
                     if(feiZao.parentNode)feiZao.parentNode.removeChild(feiZao);
                 }
                 var has8=false;
-                var comms=document.querySelectorAll("span.fn");
-                for(var comm of comms){
+                var comm,comms=document.querySelectorAll("span.fn");
+                for(i=0;i<comms.length;i++){
+                    comm=comms[i];
                     if(comm.innerHTML == "\u5c0f\u0038\u9171"){
                         has8=true;
                         comm.innerHTML=comm.innerHTML.replace(/\u5c0f\u0038\u9171/,'<a name=\"pa8\">\u5c0f\u0038\u9171<\/a>');
@@ -506,7 +509,8 @@
                                 isFind = true;
                             }
                         }else{
-                            for(article of articles){
+                            for(let i=0,j=articles.length;i<j;i++){
+                                article=articles[i];
                                 if(elementPosition(article).y>scrollTop+50){
                                     scrollArticle(article);
                                     isFind = true;
@@ -558,7 +562,8 @@
                         }
                     }else{
                         let dis;
-                        for(article of articles){
+                        for(let i=0,j=articles.length;i<j;i++){
+                            article=articles[i];
                             dis=elementPosition(article).y - scrollTop;
                             if(dis > -50 && dis < 50){
                                 let aLink=article.querySelector("a:not(.label)");
@@ -663,7 +668,8 @@
             blockBtn.textContent="\u597d\u5b69\u5b50\u770b\u4e0d\u5230";
             blockBtn.style="padding:4px 0;position: relative;width:120px;";
             if(pre){
-                pre.before(blockBtn);
+                pre.parentNode.insertBefore(blockBtn,pre);
+                //pre.before(blockBtn);
             }else{
                 blockBtn.style="display:none;";
                 author.appendChild(blockBtn);
@@ -674,8 +680,8 @@
     function processObj(obj){
         if(obj){
             if(obj.nodeType==1 && obj.tagName != "A"){
-                for(var childOd of obj.childNodes){
-                    processObj(childOd);
+                for(var i=0;i<obj.childNodes.length;i++){
+                    processObj(obj.childNodes[i]);
                 }
             }else if(obj.nodeType==3){
                 var data=processTxt(obj.data);
@@ -709,7 +715,8 @@
             let aTags=document.querySelectorAll("a");
             if(!pre){
                 let pref,pres,pret;
-                for(let aTag of aTags){
+                for(var i=0;i<aTags.length;i++){
+                    let aTag=aTags[i];
                     if(pref && pres && pret)break;
                     if(!pref){
                         if(/上一页/.test(aTag.innerHTML)){
@@ -731,7 +738,8 @@
             }
             if(!next){
                 let nextf,nexts,nextt;
-                for(let aTag of aTags){
+                for(var i=0;i<aTags.length;i++){
+                    let aTag=aTags[i];
                     if(nextf && nexts && nextt)break;
                     if(!nextf){
                         if(/下一页/.test(aTag.innerHTML)){
