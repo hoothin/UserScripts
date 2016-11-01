@@ -42,7 +42,7 @@
 // @include     http*://www.acgzone.org/*
 // @include     http*://uraban.me/*
 // @include     http*://www.uraban.me/*
-// @version     3.20.09
+// @version     3.20.10
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
@@ -330,18 +330,6 @@
                 }
                 var has8=false;
                 var comms=document.querySelectorAll("span.fn");
-                var msg = "…" + unsafeWindow.quote,pos = 0;
-                function scrollMsg() {
-                    document.title = msg.substring(pos, msg.length) + msg.substring(0, pos);
-                    pos++;
-                    if (pos >  msg.length) {
-                        pos = 0;
-                        document.title = originTitile;
-                    }else{
-                        setTimeout(scrollMsg,150);
-                    }
-                }
-                scrollMsg();
                 for(var comm of comms){
                     if(comm.innerHTML == "\u5c0f\u0038\u9171"){
                         has8=true;
@@ -352,10 +340,24 @@
                 if(has8){
                     var title=document.querySelector("h1.entry-title");
                     if(title){
-                        title.innerHTML+="</br> <a href=\"#pa8\" style=\"color:#e30000\">\u2605\u5c0f\u0038\u9171\u2605<\/a>";
+                        title.innerHTML+="</br> <a href=\"#pa8\" style=\"color:#e30000\">\u2605\u8865\u6863\u59ec\u5c0f\u0038\u9171\u2605<\/a>";
                     }
                 }
-                changeUrl(true,[["a"],[['^http:','https:']]]);
+                if(unsafeWindow.quote){
+                    var msg = "…" + unsafeWindow.quote + "…",pos = 0;
+                    function scrollMsg() {
+                        document.title = msg.substring(pos, msg.length) + msg.substring(0, pos);
+                        pos++;
+                        if (pos >  msg.length) {
+                            pos = 0;
+                            document.title = originTitile;
+                        }else{
+                            setTimeout(scrollMsg,250);
+                        }
+                    }
+                    scrollMsg();
+                }
+                if(isHttps)changeUrl(true,[["a"],[['^http:','https:']]]);
                 break;
             case "sexacg":
                 contentArea='article';
