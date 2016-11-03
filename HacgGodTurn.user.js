@@ -42,7 +42,7 @@
 // @include     http*://www.acgzone.org/*
 // @include     http*://uraban.me/*
 // @include     http*://www.uraban.me/*
-// @version     3.20.10
+// @version     3.20.11
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
@@ -336,14 +336,14 @@
                     comm=comms[i];
                     if(comm.innerHTML == "\u5c0f\u0038\u9171"){
                         has8=true;
-                        comm.innerHTML=comm.innerHTML.replace(/\u5c0f\u0038\u9171/,'<a name=\"pa8\">\u5c0f\u0038\u9171<\/a>');
+                        comm.innerHTML=comm.innerHTML.replace(/\u5c0f\u0038\u9171/,'<a name=\"pa8\" style="color:#999;font-weight:normal;">\u5c0f\u0038\u9171<\/a>');
                         break;
                     }
                 }
                 if(has8){
-                    var title=document.querySelector("h1.entry-title");
-                    if(title){
-                        title.innerHTML+="</br> <a href=\"#pa8\" style=\"color:#e30000\">\u2605\u8865\u6863\u59ec\u5c0f\u0038\u9171\u2605<\/a>";
+                    var header=document.querySelector("div.entry-meta");
+                    if(header){
+                        header.innerHTML+="</br> <a href=\"#pa8\">\u2605\u8865\u6863\u59ec\u5c0f\u0038\u9171\u2605<\/a>";
                     }
                 }
                 if(unsafeWindow.quote){
