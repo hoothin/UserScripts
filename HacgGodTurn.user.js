@@ -42,7 +42,7 @@
 // @include     http*://www.acgzone.org/*
 // @include     http*://uraban.me/*
 // @include     http*://www.uraban.me/*
-// @version     3.20.11
+// @version     3.20.12
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
@@ -343,7 +343,7 @@
                 if(has8){
                     var header=document.querySelector("div.entry-meta");
                     if(header){
-                        header.innerHTML+="</br> <a href=\"#pa8\">\u2605\u8865\u6863\u59ec\u5c0f\u0038\u9171\u2605<\/a>";
+                        header.innerHTML+="</br> <a href=\"#pa8\">\u2605\u0020\u76f4\u8fbe\u8865\u6863\u59ec\u0020\u2605<\/a>";
                     }
                 }
                 if(unsafeWindow.quote){
