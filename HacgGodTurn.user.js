@@ -42,7 +42,8 @@
 // @include     http*://www.acgzone.org/*
 // @include     http*://uraban.me/*
 // @include     http*://www.uraban.me/*
-// @version     3.20.12
+// @include     http*://acgmoon.*
+// @version     3.20.13
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
@@ -192,6 +193,12 @@
                 name:"acgzone",
                 url:"http://www.uraban.me/",
                 regex:/acgzone\.org|uraban\.me/
+            },
+            {
+                name:"acgmoon",
+                url:"https://acgmoon.org/",
+                regex:/acgmoon\.(org|com)/,
+                offset:50
             }
         ],
         rocketReg:/magnet:\?xt|pan\.baidu\.com\/s|yunpan\.cn|howfile\.com\/file|mega\.|ed2k:\/\/\|file|bt\.cosxcos\.com\/view|du\.acgget\.com\/go\/|\.mediafire\.com\/download\/|\.torrent$/,
@@ -463,6 +470,24 @@
                 break;
             case "galacg":
                 articleSel="div.article";
+                break;
+            case "acgmoon":
+                contentArea="div.post-content";
+                var warn=document.querySelector("div.kinky-warning");
+                if(warn){
+                    var postContent=document.querySelector("div.post-content");
+                    if(postContent && postContent.classList.contains("hexie")){
+                        var hexieBtn=document.createElement("button");
+                        hexieBtn.id="hexieBtn";
+                        hexieBtn.type="button";
+                        hexieBtn.textContent="\u597d\u5b69\u5b50\u770b\u4e0d\u5230";
+                        hexieBtn.style="padding:4px 0;position: relative;width:120px;";
+                        hexieBtn.onclick=function(){
+                            postContent.classList.contains("hexie")?postContent.classList.remove("hexie"):postContent.classList.add("hexie");
+                        };
+                        warn.parentNode.insertBefore(hexieBtn,warn.nextSibling);
+                    }
+                }
                 break;
             case "acg15":
                 articleSel="section.card";
