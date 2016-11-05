@@ -4,8 +4,8 @@
 // @name:zh-TW   琉神轉
 // @namespace   hoothin
 // @description Glazed shrine and other adult gentleman station (Reimu imperial, pure love plan, gentleman two dimension, dimension and dimension trajectory, adorable heart ACG survey team, the magic day in the field, light agency, two dimensional, adorable Angel Sakura diffuse homes, Shengguang, love nest, Campanula dimension barrage, fantasy element, our opportunities, some adorable) mysterious code into the download link, F8, shift+F8 switching station, Baidu disk automation, harmonious patch
-// @description:zh-CN   琉璃神社与其他成人绅士站（灵梦御所、纯爱计划、绅士二次元、萌心次元、次元轨迹、ACG调查小队、幻天领域、轻萌社、天使二次元、樱花漫舍、风铃窝、次元の圣光、爱弹幕、幻想次元、司机会所、里番萌、最ACG、绅士仓库、梦幻二次元、ACG和谐区/里世界、寂月神社）神秘代码转换成下载链接，百度网盘自动填写提取密码，F8、shift+F8站点切换，左右方向键文章跳转，Ctrl+左右快捷翻页，Ctrl+上下跳入跳出，下载链接嗅探，绕过重定向跳转，各种和谐补丁
-// @description:zh-TW   琉璃神社與其他成人紳士站（靈夢禦所、純愛計劃、紳士二次元、萌心次元、次元軌跡、ACG調查小隊、幻天領域、輕萌社、天使二次元、櫻花漫舍、風鈴窩、次元の聖光、愛彈幕、幻想次元、司機會所、裏番萌、最ACG、紳士倉庫、夢幻二次元、ACG和諧區/裏世界、寂月神社）神秘代碼轉換成下載鏈接，百度網盤自動填寫提取密碼，F8、shift+F8站點切換，左右方向鍵文章跳轉，Ctrl+左右快捷翻頁，Ctrl+上下跳入跳出，下載鏈接嗅探，繞過重定向跳轉，各種和諧補丁
+// @description:zh-CN   琉璃神社与其他成人绅士站（灵梦御所、纯爱计划、绅士二次元、萌心次元、次元轨迹、ACG调查小队、幻天领域、轻萌社、天使二次元、樱花漫舍、风铃窝、次元の圣光、爱弹幕、幻想次元、司机会所、里番萌、最ACG、绅士仓库、梦幻二次元、ACG和谐区/里世界、寂月神社、萌幻之乡）神秘代码转换成下载链接，百度网盘自动填写提取密码，F8、shift+F8站点切换，左右方向键文章跳转，Ctrl+左右快捷翻页，Ctrl+上下跳入跳出，下载链接嗅探，绕过重定向跳转，各种和谐补丁
+// @description:zh-TW   琉璃神社與其他成人紳士站（靈夢禦所、純愛計劃、紳士二次元、萌心次元、次元軌跡、ACG調查小隊、幻天領域、輕萌社、天使二次元、櫻花漫舍、風鈴窩、次元の聖光、愛彈幕、幻想次元、司機會所、裏番萌、最ACG、紳士倉庫、夢幻二次元、ACG和諧區/裏世界、寂月神社、萌幻之鄕）神秘代碼轉換成下載鏈接，百度網盤自動填寫提取密碼，F8、shift+F8站點切換，左右方向鍵文章跳轉，Ctrl+左右快捷翻頁，Ctrl+上下跳入跳出，下載鏈接嗅探，繞過重定向跳轉，各種和諧補丁
 // @author      hoothin
 // @icon        https://www.hacg.fi/favicon.ico
 // @include     http*://www.hacg.*/wordpress/*
@@ -43,7 +43,8 @@
 // @include     http*://uraban.me/*
 // @include     http*://www.uraban.me/*
 // @include     http*://acgmoon.*
-// @version     3.20.15
+// @include     http*://www.moe-acg.cc/*
+// @version     3.20.16
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
@@ -199,6 +200,14 @@
                 url:"https://acgmoon.org/",
                 regex:/acgmoon\.(org|com)/,
                 offset:50
+            },
+            {
+                name:"moe-acg",
+                url:"https://www.moe-acg.cc/",
+                regex:/moe-acg\./,
+                offset:55,
+                hideOd:true,
+                downloadUrl:/moe-acg\.cc\/download/
             }
         ],
         rocketReg:/magnet:\?xt|pan\.baidu\.com\/s|yunpan\.cn|howfile\.com\/file|mega\.|ed2k:\/\/\|file|bt\.cosxcos\.com\/view|du\.acgget\.com\/go\/|\.mediafire\.com\/download\/|\.torrent$/,
@@ -379,6 +388,21 @@
                 break;
             case "lifan":
                 articleSel="section.card";
+                break;
+            case "moe-acg":
+                articleSel="section.card";
+                if(curSite.downloadUrl.test(location.href)){
+                    t=window.setInterval(function(){
+                        if(document.querySelector('.btn-success')){
+                            clearInterval(t);
+                            process();
+                        }
+                    },1000);
+                }
+                curSite.getDownPass=function(target){
+                    var pass2=target.parentNode.parentNode.parentNode.querySelector('input.form-control');
+                    if(pass2)target.href+='#'+pass2.value;
+                };
                 break;
             case "acggj":
                 if(isHttps){
