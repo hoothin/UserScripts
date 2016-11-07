@@ -44,7 +44,8 @@
 // @include     http*://www.uraban.me/*
 // @include     http*://acgmoon.*
 // @include     http*://www.moe-acg.cc/*
-// @version     3.20.16
+// @include     http*://htai.*
+// @version     3.20.17
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
@@ -59,6 +60,7 @@
 // ==/UserScript==
 
 (function(){
+    'use strict';
     var config={
         sites:[
             {
@@ -208,6 +210,11 @@
                 offset:55,
                 hideOd:true,
                 downloadUrl:/moe-acg\.cc\/download/
+            },
+            {
+                name:"htai",
+                url:"http://htai.co/",
+                regex:/htai\.(co|me)/
             }
         ],
         rocketReg:/magnet:\?xt|pan\.baidu\.com\/s|yunpan\.cn|howfile\.com\/file|mega\.|ed2k:\/\/\|file|bt\.cosxcos\.com\/view|du\.acgget\.com\/go\/|\.mediafire\.com\/download\/|\.torrent$/,
@@ -497,20 +504,19 @@
                 break;
             case "acgmoon":
                 contentArea="div.post-content";
-                var warn=document.querySelector("div.kinky-warning");
-                if(warn){
-                    var postContent=document.querySelector("div.post-content");
-                    if(postContent && postContent.classList.contains("hexie")){
-                        var hexieBtn=document.createElement("button");
-                        hexieBtn.id="hexieBtn";
-                        hexieBtn.type="button";
-                        hexieBtn.textContent="\u597d\u5b69\u5b50\u770b\u4e0d\u5230";
-                        hexieBtn.style="padding:4px 0;position: relative;width:120px;";
-                        hexieBtn.onclick=function(){
-                            postContent.classList.contains("hexie")?postContent.classList.remove("hexie"):postContent.classList.add("hexie");
-                        };
-                        warn.parentNode.insertBefore(hexieBtn,warn.nextSibling);
-                    }
+                var postContent=document.querySelector("div.post-content");
+                if(postContent && postContent.classList.contains("hexie")){
+                    var hexieBtn=document.createElement("button");
+                    hexieBtn.id="hexieBtn";
+                    hexieBtn.type="button";
+                    hexieBtn.textContent="\u597d\u5b69\u5b50\u770b\u4e0d\u5230";
+                    hexieBtn.style="padding:4px 0;position: relative;width:120px;";
+                    hexieBtn.onclick=function(){
+                        postContent.classList.contains("hexie")?postContent.classList.remove("hexie"):postContent.classList.add("hexie");
+                    };
+                    var warn=document.querySelector("div.kinky-warning");
+                    if(warn)warn.parentNode.insertBefore(hexieBtn,warn.nextSibling);
+                    else postContent.parentNode.insertBefore(hexieBtn,postContent);
                 }
                 break;
             case "acg15":
@@ -527,6 +533,10 @@
                 break;
             case "acg18":
                 changeUrl(true,[["a"],[['https?:\\\/\\\/[^\\\.]*(\\\.)?acg18\\\.us\\\/go\\\/\\\?url=','']]]);
+                break;
+            case "htai":
+                contentArea="div.post_content";
+                commArea='commentlist';
                 break;
         }
     }
