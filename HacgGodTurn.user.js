@@ -177,7 +177,7 @@
                 regex:/mhecy\./,
                 downloadUrl:/www\.mhecy\.com\/\?page_id=\d+&code/,
                 hideOd:true,
-                offset:10
+                offset:55
             },
             {
                 name:"acgnz",
@@ -528,6 +528,7 @@
                 contentArea='article';
                 break;
             case "mhecy":
+                articleSel="section.card";
                 curSite.getDownPass=function(target){
                     var pass=target.parentNode.parentNode.querySelector('input.pwd');
                     if(pass&&pass.id.indexOf("download-pwd")!=-1)target.href=target.href.split("#")[0]+'#'+pass.value;
