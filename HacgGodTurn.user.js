@@ -35,6 +35,7 @@
 // @include     http*://sijihuisuo.club/*
 // @include     http*://acg18.us/*
 // @include     http*://*.acg18.us/*
+// @include     http*://*.acg44.com/*
 // @include     http*://zuiacg.com/*
 // @include     http*://www.galacg.me/*
 // @include     http*://www.mhecy.com/*
@@ -45,7 +46,7 @@
 // @include     http*://acgmoon.*
 // @include     http*://www.moe-acg.cc/*
 // @include     http*://htai.*
-// @version     3.20.18
+// @version     3.20.19
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
@@ -98,10 +99,10 @@
             {
                 name:"acggj",
                 url:"https://www.acggj.com/",
-                regex:/www\.acggj\./,
+                regex:/www\.(acggj|acg44)\./,
                 hideOd:true,
                 bbs:/bbs\.acggj\./,
-                offset:10
+                offset:55
             },
             {
                 name:"acg12",
@@ -412,17 +413,18 @@
                 };
                 break;
             case "acggj":
+                articleSel="section.card";
                 if(isHttps){
                     changeUrl(true,[["a","img","script","link"],[['p:(\\\/\\\/|\\\\\\/\\\\\\/)(www\\\.|bbs\\\.)?acggj','ps:$1$2acggj']]]);
                     var baseUrl=document.querySelector('base');
                     if(baseUrl)baseUrl.href=baseUrl.href.replace(/http:/,"https:");
                 }
-                var benzi=document.querySelector('#menu-item-3786');
+                /*var benzi=document.querySelector('#menu-item-3786');
                 if(benzi){
                     var scy=benzi.cloneNode(true);
                     scy.innerHTML = scy.innerHTML.replace(/\u672c\u5b50/g, '\u4e09\u6b21\u5143').replace(/hexie\/book/g, 'sciyuan').replace(/fa-book/g, 'fa-instagram');
                     benzi.after(scy);
-                }
+                }*/
                 break;
             case "acgnz":
                 articleSel="section.card";
