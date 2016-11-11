@@ -46,7 +46,7 @@
 // @include     http*://acgmoon.*
 // @include     http*://www.moe-acg.cc/*
 // @include     http*://htai.*
-// @version     3.20.20
+// @version     3.20.21
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
@@ -519,6 +519,11 @@
                     var warn=document.querySelector("div.kinky-warning");
                     if(warn)warn.parentNode.insertBefore(hexieBtn,warn.nextSibling);
                     else postContent.parentNode.insertBefore(hexieBtn,postContent);
+                }
+                var ele,eles=document.querySelectorAll(".hexie"),i;
+                for(i=0;i<eles.length;i++){
+                    ele=eles[i];
+                    if(!ele.classList.contains("post-content"))ele.classList.remove("hexie");
                 }
                 break;
             case "acg15":
