@@ -525,6 +525,13 @@
                     ele=eles[i];
                     if(!ele.classList.contains("post-content"))ele.classList.remove("hexie");
                 }
+                eles=document.querySelectorAll("a");
+                for(i=0;i<eles.length;i++){
+                    ele=eles[i];
+                    if(/pan\.baidu\.com/i.test(ele.href) && /[0-9a-z]{4}/i.test(ele.innerHTML) && !/#/i.test(ele.href)){
+                        ele.href+="#"+ele.innerHTML;
+                    }
+                }
                 break;
             case "acg15":
                 articleSel="section.card";
