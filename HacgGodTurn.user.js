@@ -271,7 +271,8 @@
                 if(content){
                     var plist = content.querySelectorAll("p");
                     var key = "";
-                    for(var pNode of plist){
+                    for(var i=0;i<plist.length;i++){
+                        var pNode=plist[i];
                         if(/\u5bc6\u5319[:：]/i.test(pNode.innerHTML)){
                             var orgStr = pNode.innerHTML.match(/\u5bc6\u5319[:：]\s*\S*/i)[0].replace(/\u5bc6\u5319[:：]\s*/,"").replace('&amp;','&');
                             key=CryptoJS.enc.Base64.parse(orgStr).toString(CryptoJS.enc.Utf8);
@@ -281,7 +282,8 @@
                     }
                     if(key !== ""){
                         var blockquotes = content.querySelectorAll("blockquote");
-                        for(var blockquote of blockquotes){
+                        for(var i=0;i<blockquotes.length;i++){
+                            var blockquote=blockquotes[i];
                             var target = blockquote.querySelector("p");
                             if(!target||target.innerText===""||!/^[0-9a-z\+\/=\s]+$/i.test(target.innerText)){continue;}
                             var result = target.innerHTML.replace(/<br>/g,"").replace(/\s/g,"");
@@ -311,7 +313,8 @@
                         createBlockBtn();
                         process();
                         var toggles = document.querySelectorAll("div.toggle-box");
-                        for(var toggle of toggles){
+                        for(var i=0;i<toggles.length;i++){
+                            var toggle=toggles[i];
                             toggle.style.cssText="display:block";
                         }
                         clickBlockListener();
@@ -441,7 +444,8 @@
                 break;
             case "idanmu":
                 var resets = document.querySelectorAll('body>style');
-                for(var reset of resets){
+                for(var i=0;i<resets.length;i++){
+                    var reset=resets[i];
                     if(/\.card-bg\simg|\.content-reset\simg/.test(reset.innerHTML)){
                         reset.parentNode.removeChild(reset);
                     }
@@ -458,7 +462,8 @@
                 if(shield){
                     shield.parentNode.removeChild(shield);
                     let imgs=document.querySelectorAll('p>img');
-                    for(let img of imgs){
+                    for(let i=0;i<imgs.length;i++){
+                        let img=imgs[i];
                         img.onclick=function(){this.className="";};
                     }
                 }
