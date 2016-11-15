@@ -46,7 +46,7 @@
 // @include     http*://acgmoon.*
 // @include     http*://www.moe-acg.cc/*
 // @include     http*://htai.*
-// @version     3.20.25
+// @version     3.20.26
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
@@ -123,6 +123,7 @@
                 name:"lifan",
                 url:"http://lifanmoe.com/",
                 regex:/lifanmoe\./,
+                downloadUrl:/lifanmoe\.com\/download/,
                 offset:55
             },
             {
@@ -399,6 +400,18 @@
                 break;
             case "lifan":
                 articleSel="section.card";
+                if(curSite.downloadUrl.test(location.href)){
+                    t=window.setInterval(function(){
+                        if(document.querySelector('.btn-success')){
+                            clearInterval(t);
+                            process();
+                        }
+                    },1000);
+                }
+                curSite.getDownPass=function(target){
+                    var pass2=target.parentNode.parentNode.parentNode.querySelector('input.form-control');
+                    if(pass2)target.href+='#'+pass2.value;
+                };
                 break;
             case "moe-acg":
                 articleSel="section.card";
