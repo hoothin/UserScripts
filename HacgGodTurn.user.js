@@ -46,7 +46,7 @@
 // @include     http*://acgmoon.*
 // @include     http*://www.moe-acg.cc/*
 // @include     http*://htai.*
-// @version     3.20.26
+// @version     3.20.27
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
@@ -56,6 +56,7 @@
 // @license     MIT License
 // @compatible        chrome
 // @compatible        firefox
+// @connect     tts.baidu.com
 // @contributionURL https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
 // @contributionAmount 1
 // ==/UserScript==
@@ -388,7 +389,7 @@
                     }
                     scrollMsg();
                 }
-                if(isHttps)changeUrl(true,[["a"],[['^http:','https:']]]);
+                if(isHttps)changeUrl(true,[["a","iframe"],[['http:','https:']]]);
                 break;
             case "sexacg":
                 contentArea='article';
@@ -989,5 +990,35 @@
             }
         };
         GM_notification(notificationDetails);
+        var context = new AudioContext();
+        function playSound(buffer) {
+            var source = context.createBufferSource();
+            source.buffer = buffer;
+            source.connect(context.destination);
+            source.start(0);
+        }
+        var ttss=["有家，有爱，有欧派","未被穿过的胖次是没有价值的","巨乳只有下垂的未来","男人变态有什么错","为什么你会这么熟练啊","在虚构的故事当中寻求真实感的人脑袋一定有问题"," 胸部什么的，明明只是装饰","无妹恨穹不是妹，有妹恨妹不成穹","有个能干的妹妹真好","玄不救非，氪不改命","只要可爱就算是男孩子也没关系","道歉時露出胸部是常識","我就是叫紫妈怎么了 有本事突然从我背后出现 把我的脸按在键盘上aqswdectfrvtghunijopioijohnuygbyfvtcdesxwedrfvtbguyhiumjiuyvftrssexrybtgnyuhm"];
+        var ttsRand=Math.floor(Math.random()*ttss.length);
+        var tts=ttss[ttsRand];
+        var soundUrl = `http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=5&text=${tts}`;
+        var p = new Promise(function(resolve, reject) {
+            var ret = GM_xmlhttpRequest({
+                method: "GET",
+                url: soundUrl,
+                responseType: 'arraybuffer',
+                onload: function(res) {
+                    try {
+                        context.decodeAudioData(res.response, function(buffer) {
+                            resolve(buffer);
+                        });
+                    } catch(e) {
+                        reject(e);
+                    }
+                }
+            });
+        });
+        p.then(playSound, function(e) {
+            console.log(e);
+        });
     }
 })();
