@@ -550,7 +550,7 @@
                 break;
         }
     }
-    if(curSite.downloadUrl.test(location.href)){
+    if(curSite && curSite.downloadUrl && curSite.downloadUrl.test(location.href)){
         t=window.setInterval(function(){
             if(document.querySelector('.btn-success')){
                 clearInterval(t);
