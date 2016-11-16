@@ -46,7 +46,7 @@
 // @include     http*://acgmoon.*
 // @include     http*://www.moe-acg.cc/*
 // @include     http*://htai.*
-// @version     3.20.28
+// @version     3.20.29
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
@@ -224,7 +224,7 @@
         disableSites:/hacg.*about\.html/,
         imgRegs:[[/^(?:https:)?(\/\/img\.2dfan|www\.moxtu\.cc|(?:pic|tc)\.(?:ffsky|rpgsky))/,'http:$1'],[/http(:\/\/(?:[^\.]*\.)?loli\.io)/,'https$1'],[/^https:\/\/galacg.me/,'https://www.galacg.me/']]
     };
-    if(unsafeWindow)window = unsafeWindow;
+    //if(unsafeWindow)window = unsafeWindow;
     if (!Array.prototype.findSite) {
         Array.prototype.findSite = function (siteName) {
             var arr = this;
@@ -973,7 +973,6 @@
                 //window.open("http://hoothin.com");
             }
         };
-        GM_notification(notificationDetails);
         var context = new AudioContext();
         function playSound(buffer) {
             var source = context.createBufferSource();
@@ -1004,5 +1003,6 @@
         p.then(playSound, function(e) {
             console.log(e);
         });
+        GM_notification(notificationDetails);
     }
 })();
