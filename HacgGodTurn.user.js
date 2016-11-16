@@ -46,7 +46,7 @@
 // @include     http*://acgmoon.*
 // @include     http*://www.moe-acg.cc/*
 // @include     http*://htai.*
-// @version     3.20.27
+// @version     3.20.28
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
@@ -163,7 +163,7 @@
                 name:"mhecy",
                 url:"http://www.mhecy.com/",
                 regex:/mhecy\./,
-                downloadUrl:/www\.mhecy\.com\/\?page_id=\d+&code/,
+                downloadUrl:/www\.mhecy\.com\/\?page_id=\d+/,
                 hideOd:true,
                 offset:55
             },
@@ -328,14 +328,6 @@
                 articleSel="section.card";
                 if(isHttps)
                     addInsertHandler([["a","img","link","script"],[['p:(\\\/\\\/|\\\\\\/\\\\\\/)(www\\\.|static\\\.)?acg12','ps:$1$2acg12']]]);
-                if(curSite.downloadUrl.test(location.href)){
-                    t=window.setInterval(function(){
-                        if(document.querySelector('.btn-success')){
-                            clearInterval(t);
-                            process();
-                        }
-                    },1000);
-                }
                 curSite.getDownPass=function(target){
                     var pass2=target.parentNode.parentNode.parentNode.querySelector('input.form-control');
                     if(pass2)target.href+='#'+pass2.value;
@@ -401,14 +393,6 @@
                 break;
             case "lifan":
                 articleSel="section.card";
-                if(curSite.downloadUrl.test(location.href)){
-                    t=window.setInterval(function(){
-                        if(document.querySelector('.btn-success')){
-                            clearInterval(t);
-                            process();
-                        }
-                    },1000);
-                }
                 curSite.getDownPass=function(target){
                     var pass2=target.parentNode.parentNode.parentNode.querySelector('input.form-control');
                     if(pass2)target.href+='#'+pass2.value;
@@ -416,14 +400,6 @@
                 break;
             case "moe-acg":
                 articleSel="section.card";
-                if(curSite.downloadUrl.test(location.href)){
-                    t=window.setInterval(function(){
-                        if(document.querySelector('.btn-success')){
-                            clearInterval(t);
-                            process();
-                        }
-                    },1000);
-                }
                 curSite.getDownPass=function(target){
                     var pass2=target.parentNode.parentNode.parentNode.querySelector('input.form-control');
                     if(pass2)target.href+='#'+pass2.value;
@@ -561,8 +537,8 @@
             case "mhecy":
                 articleSel="section.card";
                 curSite.getDownPass=function(target){
-                    var pass=target.parentNode.parentNode.querySelector('input.pwd');
-                    if(pass&&pass.id.indexOf("download-pwd")!=-1)target.href=target.href.split("#")[0]+'#'+pass.value;
+                    var pass=target.parentNode.parentNode.parentNode.querySelector('input.form-control');
+                    if(pass&&pass.id.indexOf("downloadPwd")!=-1)target.href=target.href.split("#")[0]+'#'+pass.value;
                 };
                 break;
             case "acg18":
@@ -573,6 +549,14 @@
                 commArea='commentlist';
                 break;
         }
+    }
+    if(curSite.downloadUrl.test(location.href)){
+        t=window.setInterval(function(){
+            if(document.querySelector('.btn-success')){
+                clearInterval(t);
+                process();
+            }
+        },1000);
     }
 
     document.addEventListener("keydown", function(e) {
