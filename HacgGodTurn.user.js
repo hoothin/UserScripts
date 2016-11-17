@@ -980,7 +980,7 @@
             source.connect(context.destination);
             source.start(0);
         }
-        var ttss=["有家，有爱，有欧派","未被穿过的胖次是没有价值的","巨乳只有下垂的未来","男人变态有什么错","为什么你会这么熟练啊","德国的科学技术是世界第一","在虚构的故事当中寻求真实感的人脑袋一定有问题"," 胸部什么的，明明只是装饰","我们的宇宙充满了质子,中子,电子,还有奶子","有个能干的妹妹真好","玄不救非，氪不改命","只要可爱就算是男孩子也没关系","道歉時露出胸部是常識","我就是叫紫妈怎么了 有本事突然从我背后出现 把我的脸按在键盘上aqswdectfrvtghunijopioijohnuygbyfvtcdesxwedrfvtbguyhiumjiuyvftrssexrybtgnyuhm","反基复奶"];
+        var ttss=["有家，有爱，有欧派","未被穿过的胖次是没有价值的","巨乳只有下垂的未来","男人变态有什么错","为什么你会这么熟练啊","德国的科学技术是世界第一","在虚构的故事当中寻求真实感的人脑袋一定有问题"," 胸部什么的，明明只是装饰","哥哥让开！这样我杀不了那家伙","我们的宇宙充满了质子,中子,电子,还有奶子","有个能干的妹妹真好","玄不救非，氪不改命","只要可爱就算是男孩子也没关系","道歉時露出胸部是常識","我就是叫紫妈怎么了 有本事突然从我背后出现 把我的脸按在键盘上aqswdectfrvtghunijopioijohnuygbyfvtcdesxwedrfvtbguyhiumjiuyvftrssexrybtgnyuhm","反基复奶"];
         var ttsRand=Math.floor(Math.random()*ttss.length);
         var tts=ttss[ttsRand];
         var soundUrl = `http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=5&text=${tts}`;
