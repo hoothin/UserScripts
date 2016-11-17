@@ -350,19 +350,19 @@
                     if(feiZao.parentNode)feiZao.parentNode.removeChild(feiZao);
                 }
                 var has8=false;
-                var comm,comms=document.querySelectorAll("span.fn");
+                var comm,comms=document.querySelectorAll("span.fn"),commId;
                 for(i=0;i<comms.length;i++){
                     comm=comms[i];
                     if(comm.innerHTML == "\u5c0f\u0038\u9171"){
                         has8=true;
-                        comm.innerHTML=comm.innerHTML.replace(/\u5c0f\u0038\u9171/,'<a name=\"pa8\" style="color:#999;font-weight:normal;">\u5c0f\u0038\u9171<\/a>');
+                        commId=comm.parentNode.parentNode.parentNode.id;
                         break;
                     }
                 }
                 if(has8){
                     var header=document.querySelector("div.entry-meta");
                     if(header){
-                        header.innerHTML+="</br> <a href=\"#pa8\">\u2605\u0020\u76f4\u8fbe\u8865\u6863\u59ec\u0020\u2605<\/a>";
+                        header.innerHTML+="</br> <a href=\"#"+commId+"\">\u2605\u0020\u76f4\u8fbe\u8865\u6863\u59ec\u0020\u2605<\/a>";
                     }
                 }
                 if(unsafeWindow.quote){
