@@ -1,37 +1,29 @@
-琉璃神社与其他绅士站神秘代码转换成下载链接
+我编写的油猴脚本
 ==========================
-https://www.hacg.fi/wp/
-
-![img](https://greasyfork.org/system/screenshots/screenshots/000/005/554/original/GIF.gif?1477034051)
 
 ---
-+ 增加支持如下二次元Hentai挊站：
- - [灵梦御所](https://blog.reimu.net/)、[纯爱计划](https://sexacg.com/)、[绅士二次元](https://www.acg.tf/)、[萌心次元](https://www.moxacg.com/)、[次元轨迹](https://www.acggj.com/)、[ACG调查小队](https://acg12.com/)、[幻天领域](https://www.acgnz.cc/)、[轻萌社](http://nacg.me/)、[天使二次元](https://www.tianshit.com/)、[樱花漫舍](https://www.oomoe.moe/)、[风铃窝](http://www.kaze5.com/)、[次元の圣光](http://www.acglover.top/)、[爱弹幕](http://www.idanmu.co/)、[幻想次元](https://acg18.us/)、[司机会所](http://www.sijihuisuo.club/)、[里番萌](https://lifan.moe/)、[最ACG](http://zuiacg.com/)
- - （*__注__：里番萌等站强制转https后无需翻墙，但是下载内容和登录状态获取不了，翻不翻墙自行取舍*）
-+ **通用快捷键：**
- - **F6或者shift+F6**向前或向后循环宅站列表
- - **左右方向键**快速定位到上一篇或下一篇文章
- - **Ctrl+左右方向键**快速翻页
- - **Ctrl+上下方向键**进入文章内容页或返回
-+ **最ACG快捷键：**
- - **点击**图片去除和谐力量
- - 按住**Ctrl点击**图集或文章页面的下载按钮直接跳转至百度盘
-+ 绅士站点各种神秘代码转换成下载链接
-+ 爱弹幕添加R18福利tag并去除和谐图片屏蔽
-+ 替换神社所有http链接为https，免翻墻
-+ 绅士二次元自动解密AES
-+ 司机会所评论区分享地址解析
-+ 添加火箭功能，一键嗅探所有下载链接
-+ 萌心次元、次元轨迹、里番萌、幻天领域与ACG调查小队无法访问时自动转https，坑爹的移动网
-+ 次元轨迹添加三次元tag
-+ 增强度盘支持
-+ 次元轨迹、樱花漫舍、风铃窝与ACG调查小队自动添加提取码
-+ 修复7酱8酱9酱A君B君Q君等等提取码
-+ 修复折叠失效问题
-+ 增加32位md5磁链支持
-+ 磁链判断优化
-+ 重构啦，删除了之前写的一些冗余代码
-+ 御所某些家伙深深伤害了我的狗眼，所以加了个“好孩子看不见”的按钮，点击之后才会显示隐藏内容
++ [百度广告(首尾推广及右侧广告)清理](https://github.com/hoothin/UserScripts/blob/master/Kill+Baidu+AD)
+ 彻底清理百度搜索(www.baidu.com)结果首尾的推广广告、二次顽固广告与右侧广告，并防止反复
++ [一键离线下载](https://github.com/hoothin/UserScripts/blob/master/Easy+offline)
+ 一键自动将磁链、bt种子或其他下载资源离线下载至网盘
++ [True URL downloads](https://github.com/hoothin/UserScripts/blob/master/True+URL+downloads)
+ 迅雷、快车、QQ旋风等专有链解密
++ [贴吧伪装广告清理](https://github.com/hoothin/UserScripts/blob/master/Kill+TieBa+AD)
+ 清理ADB或UBO等未能清理掉的百度贴吧列表伪装广告、帖内伪装广告与推荐应用广告
++ [琉神转](https://github.com/hoothin/UserScripts/blob/master/HacgGodTurn)
+ 琉璃神社工具集，支持诸多绅士站（灵梦御所、纯爱计划、绅士二次元、萌心次元、次元轨迹、ACG调查小队、幻天领域、轻萌社、天使二次元、樱花漫舍、风铃窝、次元の圣光、爱弹幕、幻想次元、司机会所、里番萌、最ACG、绅士仓库、梦幻二次元、ACG和谐区/里世界、寂月神社、萌幻之乡），神秘代码转换成下载链接，百度网盘自动填写提取密码，F8、shift+F8站点切换，左右方向键文章跳转，Ctrl+左右快捷翻页，Ctrl+上下跳入跳出，下载链接嗅探，绕过重定向跳转，各种和谐补丁
++ [Picviewer CE+](https://github.com/hoothin/UserScripts/blob/master/Picviewer+CE+)
+ NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
++ [多选框伴侣](https://github.com/hoothin/UserScripts/blob/master/Select+All+Checkboxes)
+ Ctrl+Alt点击全选多选框，Alt加鼠标悬停选择多选框，Shift选择两个多选框之间的所有多选框
++ [Steam游戏评分集](https://github.com/hoothin/UserScripts/blob/master/MoreSteamRatings)
+ 在Steam游戏详情页显示更多网站评分
++ [代码片段高亮](https://github.com/hoothin/UserScripts/blob/master/Highlight+Every+Code)
+ 选择代码片段后点击图标弹出新窗口显示高亮美化与格式化后的代码与字数统计
++ [简繁自由切换](https://github.com/hoothin/UserScripts/blob/master/Switch+Traditional+Chinese+and+Simplified+Chinese)
+ 自由切换简体中文与繁体中文
++ [大人的Greasyfork](https://github.com/hoothin/UserScripts/blob/master/Greasyfork+Search+with+Sleazyfork+Results+include)
+ 在sleazyfork查找成人内容后合并至greasyfork，访问匿名不可用脚本时跳转至sleazyfork，并添加评分与版本号
 
 ---
-加了太多东西，其他的修改内容懒得记了
+ Feedback发邮件
