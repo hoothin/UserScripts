@@ -1,5 +1,6 @@
 我编写的油猴脚本
 ==========================
+https://greasyfork.org/users/8227-hoothin
 
 ---
 + [百度广告(首尾推广及右侧广告)清理](https://github.com/hoothin/UserScripts/blob/master/Kill%20Baidu%20AD)
