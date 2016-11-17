@@ -46,7 +46,7 @@
 // @include     http*://acgmoon.*
 // @include     http*://www.moe-acg.cc/*
 // @include     http*://htai.*
-// @version     3.20.32
+// @version     3.20.33
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
