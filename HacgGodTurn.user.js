@@ -236,7 +236,7 @@
             }
         };
     }
-    
+
     var t, curSite, curArticle;
     var contentArea='.entry-content', commArea="comment-content";
     var originTitile = document.title;
