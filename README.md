@@ -4,7 +4,7 @@
 ---
 + [百度广告(首尾推广及右侧广告)清理](https://github.com/hoothin/UserScripts/blob/master/Kill%20Baidu%20AD)
 
- 彻底清理百度搜索(www.baidu.com)结果首尾的推广广告、二次顽固广告与右侧广告，并防止反复
+ 彻底清理百度搜索结果首尾的推广广告、二次顽固广告与右侧广告，并防止反复
 + [一键离线下载](https://github.com/hoothin/UserScripts/blob/master/Easy%20offline)
 
  一键自动将磁链、bt种子或其他下载资源离线下载至网盘
