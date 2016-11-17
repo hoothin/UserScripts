@@ -46,7 +46,7 @@
 // @include     http*://acgmoon.*
 // @include     http*://www.moe-acg.cc/*
 // @include     http*://htai.*
-// @version     3.20.31
+// @version     3.20.32
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
@@ -236,6 +236,7 @@
             }
         };
     }
+    
     var t, curSite, curArticle;
     var contentArea='.entry-content', commArea="comment-content";
     var originTitile = document.title;
@@ -329,10 +330,6 @@
                 articleSel="section.card";
                 if(isHttps)
                     addInsertHandler([["a","img","link","script"],[['p:(\\\/\\\/|\\\\\\/\\\\\\/)(www\\\.|static\\\.)?acg12','ps:$1$2acg12']]]);
-                curSite.getDownPass=function(target){
-                    var pass2=target.parentNode.parentNode.parentNode.querySelector('input.form-control');
-                    if(pass2)target.href+='#'+pass2.value;
-                };
                 break;
             case "sijihuisuo":
                 if(curSite.innerPage.test(location.href)){
@@ -394,17 +391,9 @@
                 break;
             case "lifan":
                 articleSel="section.card";
-                curSite.getDownPass=function(target){
-                    var pass2=target.parentNode.parentNode.parentNode.querySelector('input.form-control');
-                    if(pass2)target.href+='#'+pass2.value;
-                };
                 break;
             case "moe-acg":
                 articleSel="section.card";
-                curSite.getDownPass=function(target){
-                    var pass2=target.parentNode.parentNode.parentNode.querySelector('input.form-control');
-                    if(pass2)target.href+='#'+pass2.value;
-                };
                 break;
             case "acggj":
                 articleSel="section.card";
@@ -423,10 +412,6 @@
             case "acgnz":
                 articleSel="section.card";
                 if(isHttps)addInsertHandler([["a","img","link","script"],[['p:(\\\/\\\/|\\\\\\/\\\\\\/)(www\\\.)?acgnz','ps:$1$2acgnz']]]);
-                curSite.getDownPass=function(target){
-                    var pass2=target.parentNode.parentNode.parentNode.querySelector('input.form-control');
-                    if(pass2)target.href+='#'+pass2.value;
-                };
                 break;
             case "nacg":
                 contentArea='.content';
@@ -541,10 +526,6 @@
                 break;
             case "mhecy":
                 articleSel="section.card";
-                curSite.getDownPass=function(target){
-                    var pass=target.parentNode.parentNode.parentNode.querySelector('input.form-control');
-                    if(pass&&pass.id.indexOf("downloadPwd")!=-1)target.href=target.href.split("#")[0]+'#'+pass.value;
-                };
                 break;
             case "acg18":
                 changeUrl(true,[["a"],[['https?:\\\/\\\/[^\\\.]*(\\\.)?acg18\\\.us\\\/go\\\/\\\?url=','']]]);
@@ -556,6 +537,12 @@
         }
     }
     if(curSite && curSite.downloadUrl && curSite.downloadUrl.test(location.href)){
+        if(!curSite.getDownPass){
+            curSite.getDownPass=function(target){
+                var pass=target.parentNode.parentNode.parentNode.querySelector('input.form-control');
+                if(pass)target.href=target.href.split("#")[0]+'#'+pass.value;
+            };
+        }
         t=window.setInterval(function(){
             if(document.querySelector('.btn-success')){
                 clearInterval(t);
