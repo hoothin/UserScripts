@@ -46,7 +46,7 @@
 // @include     http*://acgmoon.*
 // @include     http*://www.moe-acg.cc/*
 // @include     http*://htai.*
-// @version     3.20.30
+// @version     3.20.31
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
@@ -203,7 +203,8 @@
                 url:"http://www.acgnz.cc/",
                 regex:/acgnz\.cc/,
                 hideOd:true,
-                offset:55
+                offset:55,
+                downloadUrl:/acgnz\.cc\/download/
             },
             {
                 name:"moxacg",
@@ -422,6 +423,10 @@
             case "acgnz":
                 articleSel="section.card";
                 if(isHttps)addInsertHandler([["a","img","link","script"],[['p:(\\\/\\\/|\\\\\\/\\\\\\/)(www\\\.)?acgnz','ps:$1$2acgnz']]]);
+                curSite.getDownPass=function(target){
+                    var pass2=target.parentNode.parentNode.parentNode.querySelector('input.form-control');
+                    if(pass2)target.href+='#'+pass2.value;
+                };
                 break;
             case "nacg":
                 contentArea='.content';
