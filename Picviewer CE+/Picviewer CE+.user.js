@@ -210,33 +210,34 @@
                  }
              }
             },
-            // {name:"豆瓣",
-            // 	siteExample:"http://movie.douban.com/photos/photo/1000656155/",
-            // 	enabled: false,
-            // 	url:/^https?:\/\/[^.]*\.douban\.com/i,
-            // 	getImage:function(){
-            // 		var oldsrc = this.src,
-            // 			newsrc = oldsrc;
-            // 		var pic = /\/view\/photo\/(?:photo|albumcover|albumicon|thumb)\/public\//i;
-            // 		var movieCover = /\/view\/movie_poster_cover\/[si]pst\/public\//i;
-            // 		var bookCover = /\/view\/ark_article_cover\/cut\/public\//i;
-            // 		var spic = /(img\d+.douban.com)\/[sm]pic\//i
+            {name:"豆瓣",
+                siteExample:"http://movie.douban.com/photos/photo/1000656155/",
+                enabled: false,
+                url:/^https?:\/\/[^.]*\.douban\.com/i,
+                getImage:function(){
+                    var oldsrc = this.src,
+                        newsrc = oldsrc;
+                    var pic = /\/view\/photo\/(?:photo|albumcover|albumicon|thumb)\/public\//i;
+                    var movieCover = /\/view\/movie_poster_cover\/[si]pst\/public\//i;
+                    var bookCover = /\/view\/ark_article_cover\/cut\/public\//i;
+                    var spic = /(img\d+.douban.com)\/[sm]pic\//i
 
-            // 		// 这个网址大图会出错
-            // 		// http://movie.douban.com/subject/25708579/discussion/58950206/
-            // 		if (pic.test(oldsrc)) {
-            // 			newsrc = oldsrc.replace(pic, '/view/photo/raw/public/');
-            // 		} else if (movieCover.test(oldsrc)) {
-            // 			newsrc = oldsrc.replace(movieCover, '/view/photo/raw/public/');
-            // 		} else if (bookCover.test(oldsrc)) {
-            // 			newsrc = oldsrc.replace(bookCover, '/view/ark_article_cover/retina/public/');
-            // 		} else if (spic.test(oldsrc)) {
-            // 			newsrc = oldsrc.replace(spic, '$1/lpic/');
-            // 		}
+                    // 这个网址大图会出错
+                    // http://movie.douban.com/subject/25708579/discussion/58950206/
+                    if(/movie\.douban\.com\/subject/.test(location.href)){
+                    } else if (pic.test(oldsrc)) {
+                        newsrc = oldsrc.replace(pic, '/view/photo/raw/public/');
+                    } else if (movieCover.test(oldsrc)) {
+                        newsrc = oldsrc.replace(movieCover, '/view/photo/raw/public/');
+                    } else if (bookCover.test(oldsrc)) {
+                        newsrc = oldsrc.replace(bookCover, '/view/ark_article_cover/retina/public/');
+                    } else if (spic.test(oldsrc)) {
+                        newsrc = oldsrc.replace(spic, '$1/lpic/');
+                    }
 
-            // 		return newsrc == oldsrc ? null : newsrc;
-            // 	}
-            // },
+                    return newsrc == oldsrc ? null : newsrc;
+                }
+            },
             {name:"新浪微博",
              siteExample:"http://weibo.com/pub/?source=toptray",
              enabled:true,
