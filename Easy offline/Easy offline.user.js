@@ -7,7 +7,7 @@
 // @description:zh-TW 一鍵自動將磁鏈、bt種子或其他下載資源離綫下載至網槃
 // @namespace    http://tampermonkey.net/
 // @require      http://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
-// @version      1.0.36
+// @version      1.0.37
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -16,7 +16,7 @@
 // @exclude      http*://www.bing.*
 // @exclude      http*://github.com/*
 // @include      http*://pan.baidu.com/*
-// @include      http://115.com/*
+// @include      http*://115.com/*
 // @include      https://www.furk.net/*
 // @include      https://www.seedr.cc/*
 // @grant        GM_setValue
