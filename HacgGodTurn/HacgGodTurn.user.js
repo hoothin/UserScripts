@@ -49,7 +49,7 @@
 // @include     http*://htai.*
 // @include     http*://gmgard.com/*
 // @include     http*://*.gmgard.com/*
-// @version     3.20.40
+// @version     3.20.41
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
@@ -561,6 +561,19 @@
                         }
                     }
                 }
+                var bgLi=document.createElement("li");
+                bgLi.innerHTML="<a><i class='fa fa-star'></i>\u5f53\u524d\u80cc\u666f\u56fe\u7247</a>";
+                var bgs=document.querySelectorAll(".cb-slideshow>li>span");
+                bgLi.onclick=function(){
+                    for(var i=0;i<bgs.length;i++){
+                        var bg=bgs[i];
+                        if(getComputedStyle(bg).opacity==1){
+                            var url=getComputedStyle(bg).backgroundImage.replace(/url\("([^"]+)"\)/,"$1");
+                            window.open(url);
+                        }
+                    }
+                }
+                document.querySelector("ul.navbar-nav").appendChild(bgLi);
                 break;
             case "gmgard":
                 if(isHttps)addInsertHandler([["img"],[['p(:\\\/\\\/static\.gmgard\.com)','ps$1']]]);
