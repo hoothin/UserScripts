@@ -49,7 +49,7 @@
 // @include     http*://htai.*
 // @include     http*://gmgard.com/*
 // @include     http*://*.gmgard.com/*
-// @version     3.20.41
+// @version     3.20.42
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
@@ -567,7 +567,7 @@
                 bgLi.onclick=function(){
                     for(var i=0;i<bgs.length;i++){
                         var bg=bgs[i];
-                        if(getComputedStyle(bg).opacity==1){
+                        if(getComputedStyle(bg).opacity>.5){
                             var url=getComputedStyle(bg).backgroundImage.replace(/url\("([^"]+)"\)/,"$1");
                             window.open(url);
                         }
