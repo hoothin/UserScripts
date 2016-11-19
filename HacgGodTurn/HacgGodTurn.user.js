@@ -46,11 +46,11 @@
 // @include     http*://acgmoon.*
 // @include     http*://www.moe-acg.cc/*
 // @include     http*://htai.*
-// @version     3.20.36
+// @version     3.20.37
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
-// @require     https://greasyfork.org/scripts/23522/code/od.js?version=158670
+// @require     https://greasyfork.org/scripts/23522/code/od.js?version=158777
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
 // @license     MIT License
