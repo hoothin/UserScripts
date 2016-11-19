@@ -45,12 +45,13 @@
 // @include     http*://www.uraban.me/*
 // @include     http*://acgmoon.*
 // @include     http*://www.moe-acg.cc/*
+// @include     http*://www.mygalgame.com/*
 // @include     http*://htai.*
-// @version     3.20.37
+// @version     3.20.38
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
-// @require     https://greasyfork.org/scripts/23522/code/od.js?version=158777
+// @require     https://greasyfork.org/scripts/23522/code/od.js?version=158811
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
 // @license     MIT License
@@ -60,7 +61,6 @@
 // @contributionURL https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
 // @contributionAmount 1
 // ==/UserScript==
-
 (function(){
     'use strict';
     var config={
@@ -199,6 +199,11 @@
                 regex:/htai\.(co|me)/
             },
             {
+                name:"mygalgame",
+                url:"https://www.mygalgame.com/",
+                regex:/mygalgame\.com/
+            },
+            {
                 name:"acgnz",
                 url:"http://www.acgnz.cc/",
                 regex:/acgnz\.cc/,
@@ -225,7 +230,6 @@
         disableSites:/hacg.*about\.html/,
         imgRegs:[[/^(?:https:)?(\/\/img\.2dfan|www\.moxtu\.cc|(?:pic|tc)\.(?:ffsky|rpgsky))/,'http:$1'],[/http(:\/\/(?:[^\.]*\.)?loli\.io)/,'https$1'],[/^https:\/\/galacg.me/,'https://www.galacg.me/']]
     };
-    //if(unsafeWindow)window = unsafeWindow;
     if (!Array.prototype.findSite) {
         Array.prototype.findSite = function (siteName) {
             var arr = this;
@@ -267,7 +271,7 @@
         return;
     }else if(config.disableSites.test(location.href)){
         return;
-    }else{
+    }else if(curSite){
         switch(curSite.name){
             case "acgtf":
                 articleSel="div.dt-news-post";
@@ -533,6 +537,23 @@
             case "htai":
                 contentArea="div.post_content";
                 commArea='commentlist';
+                break;
+            case "mygalgame":
+                commArea='commentlist';
+                articleSel=".article";
+                var downBtn=document.querySelector("a.hint--right");
+                if(downBtn){
+                    var innBtn=downBtn.querySelector(".btn-danger");
+                    if(innBtn){
+                        var onclickStr=innBtn.getAttribute("onclick");
+                        if(/http:\/\/www\.mygalgame\.com\/go\.php\?url\=/.test(onclickStr)){
+                            innBtn.setAttribute("onclick", "");
+                            var href=onclickStr.replace(/.*www\.mygalgame\.com\/go\.php\?url\=([^']+)'.*/,"$1");
+                            downBtn.setAttribute("href", href);
+                            downBtn.setAttribute("target", "_blank")
+                        }
+                    }
+                }
                 break;
         }
     }
@@ -846,7 +867,7 @@
 
     document.getElementsByTagName("head")[0].appendChild(nod);
 
-    if(!curSite.hideOd && !frameElement){
+    if((!curSite || !curSite.hideOd) && !frameElement){
         var oD_box=document.createElement("div");
         oD_box.id="oD_box";
         oD_box.className = "oD_box";
@@ -906,6 +927,7 @@
         rocketBtn.type="button";
         rocketBtn.textContent="\u706b\u7bad";
         rocketBtn.style.cssText="padding:4px 0;position:absolute;top:-36px;right:0px;width:40px;height:35px;visibility:hidden";
+        var preImgData="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAMAAAAMCGV4AAAAgVBMVEUAAADDKkPPN1HLM02+Iz3PPFbUQFrDK0XcR2LTOlXUO1bJL0rGLkjHN1DXSmPRRl/DLUfHM0zOOVPaSGPCK0TIMUrdRmHIMEm/JT/DK0bHLki7ITvdRWHHLUe+IzzYPVm+JD7OR17KQVnRTGTJO1TXVGvRSmLKPlfFNE3LP1fHNk/FsIf5AAAAIXRSTlMAdQwGysW4l35hRDss/vj45uXe2MCzoZ6TjIBLSkQxKxaE9dxlAAAAZ0lEQVQI152LVw6AIBAFAXvvvSPY7n9AcTUGf52PncxLFv2k/RTJTTmHhMtt+ZzrNnnK1pZZsAS6pYh04ulFuwaS7ZTSla3iFvCBPcYMt6sjdrgwOOGGhRRjqxAwphhcquihvwUt0Zy1HgdDH4CNEQAAAABJRU5ErkJggg==";
         rocketBtn.onclick=function (){
             rocketContent.style.display="block";
             var links=document.querySelectorAll("a");
@@ -916,10 +938,20 @@
                 let link=links[j];
                 if(config.rocketReg.test(link.href)&&link.className.indexOf("whx-a")==-1){
                     if(rocketLinks.innerHTML.indexOf(link.outerHTML)!=-1)continue;
-                    rocketLinks.innerHTML+="<strong style='color:red'>"+(++i)+"</strong>:";
+                    rocketLinks.innerHTML+="<a id='rocketBack' style='font-weight:bold;color:red;' href='javascript:void(0)'>"+(++i)+"<img src='"+preImgData+"'></a>: ";
                     rocketLinks.appendChild(link.cloneNode(true));
-                    rocketLinks.innerHTML+="&nbsp;";
+                    rocketLinks.innerHTML+="<br/>";
                 }
+            }
+            var backs=document.querySelectorAll("div#rocketLinks>#rocketBack");
+            for(i=0;i<backs.length;i++){
+                let back=backs[i];
+                back.onclick=function(){
+                    let target=document.querySelector("[href='"+back.nextSibling.nextSibling.getAttribute("href")+"']");
+                    let pos=elementPosition(target).y;
+                    scrollToControl(pos);
+                    rocketContent.style.display="none";
+                };
             }
             if(rocketLinks.innerHTML===""){
                 rocketLinks.innerHTML="No links found!";
@@ -941,7 +973,7 @@
         curArticle=a;
         curArticle.classList.add("oD_sel");
         let pos=elementPosition(curArticle).y;
-        if(curSite.offset)pos-=curSite.offset;
+        if(curSite && curSite.offset)pos-=curSite.offset;
         scrollToControl(pos);
     }
 
