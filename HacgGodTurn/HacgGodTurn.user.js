@@ -419,12 +419,6 @@
                     var baseUrl=document.querySelector('base');
                     if(baseUrl)baseUrl.href=baseUrl.href.replace(/http:/,"https:");
                 }
-                /*var benzi=document.querySelector('#menu-item-3786');
-                if(benzi){
-                    var scy=benzi.cloneNode(true);
-                    scy.innerHTML = scy.innerHTML.replace(/\u672c\u5b50/g, '\u4e09\u6b21\u5143').replace(/hexie\/book/g, 'sciyuan').replace(/fa-book/g, 'fa-instagram');
-                    benzi.after(scy);
-                }*/
                 break;
             case "acgnz":
                 if(isHttps)addInsertHandler([["a","img","link","script"],[['p:(\\\/\\\/|\\\\\\/\\\\\\/)(www\\\.)?acgnz','ps:$1$2acgnz']]]);
