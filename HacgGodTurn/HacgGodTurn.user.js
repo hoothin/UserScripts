@@ -49,7 +49,7 @@
 // @include     http*://htai.*
 // @include     http*://gmgard.com/*
 // @include     http*://*.gmgard.com/*
-// @version     3.20.45
+// @version     3.20.46
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
@@ -342,6 +342,30 @@
                         }, 2000);
                     }
                 });
+                function createBlockBtn(){
+                    var pre = document.querySelector("pre");
+                    var author = document.querySelector(".author-info");
+                    if (author && !document.querySelector("#blockBtn")) {
+                        var blockBtn=document.createElement("button");
+                        blockBtn.id="blockBtn";
+                        blockBtn.type="button";
+                        blockBtn.textContent="\u597d\u5b69\u5b50\u770b\u4e0d\u5230";
+                        blockBtn.style.cssText="padding:4px 0;position: relative;width:120px;";
+                        if(pre){
+                            pre.parentNode.insertBefore(blockBtn,pre);
+                        }else{
+                            blockBtn.style.cssText="display:none;";
+                            author.appendChild(blockBtn);
+                        }
+                        blockBtn.addEventListener("click", function(){
+                            if(this.nextSibling.style.display == 'block'){
+                                this.nextSibling.style.display = '';
+                            }else{
+                                this.nextSibling.style.display = 'block';
+                            }
+                        });
+                    }
+                }
                 document.querySelector("#main").addEventListener('DOMNodeInserted', function(e) {
                     var author = document.querySelector(".author-info");
                     if (author && !document.querySelector("#blockBtn")) {
@@ -352,7 +376,6 @@
                             var toggle=toggles[i];
                             toggle.style.cssText="display:block";
                         }
-                        clickBlockListener();
                     }
                 });
                 createBlockBtn();
@@ -419,6 +442,12 @@
                     var baseUrl=document.querySelector('base');
                     if(baseUrl)baseUrl.href=baseUrl.href.replace(/http:/,"https:");
                 }
+                /*var benzi=document.querySelector('#menu-item-3786');
+                if(benzi){
+                    var scy=benzi.cloneNode(true);
+                    scy.innerHTML = scy.innerHTML.replace(/\u672c\u5b50/g, '\u4e09\u6b21\u5143').replace(/hexie\/book/g, 'sciyuan').replace(/fa-book/g, 'fa-instagram');
+                    benzi.after(scy);
+                }*/
                 break;
             case "acgnz":
                 if(isHttps)addInsertHandler([["a","img","link","script"],[['p:(\\\/\\\/|\\\\\\/\\\\\\/)(www\\\.)?acgnz','ps:$1$2acgnz']]]);
@@ -744,25 +773,7 @@
                 if(src != imgs[i].src)imgs[i].src = src;
             }
         }
-    }
-
-    function createBlockBtn(){
-        var pre = document.querySelector("pre");
-        var author = document.querySelector(".author-info");
-        if (author && !document.querySelector("#blockBtn")) {
-            var blockBtn=document.createElement("button");
-            blockBtn.id="blockBtn";
-            blockBtn.type="button";
-            blockBtn.textContent="\u597d\u5b69\u5b50\u770b\u4e0d\u5230";
-            blockBtn.style.cssText="padding:4px 0;position: relative;width:120px;";
-            if(pre){
-                pre.parentNode.insertBefore(blockBtn,pre);
-                //pre.before(blockBtn);
-            }else{
-                blockBtn.style.cssText="display:none;";
-                author.appendChild(blockBtn);
-            }
-        }
+        seriousReplace(commArea);
     }
 
     function processObj(obj){
@@ -779,18 +790,6 @@
                     newData.outerHTML=data;
                 }
             }
-        }
-    }
-
-    function clickBlockListener(){
-        if(document.querySelector("#blockBtn")){
-            document.querySelector("#blockBtn").addEventListener("click", function(){
-                if(this.nextSibling.style.display == 'block'){
-                    this.nextSibling.style.display = '';
-                }else{
-                    this.nextSibling.style.display = 'block';
-                }
-            });
         }
     }
 
@@ -859,12 +858,7 @@
         return {pre:pre,next:next};
     }
 
-    process();
-
-    clickBlockListener();
-
     document.getElementsByTagName("head")[0].appendChild(nod);
-
     if((!curSite || !curSite.hideOd) && !frameElement){
         var oD_box=document.createElement("div");
         oD_box.id="oD_box";
@@ -968,8 +962,6 @@
         document.body.appendChild(oD_box);
     }
 
-    seriousReplace(commArea);
-
     function scrollArticle(a){
         curArticle=a;
         curArticle.classList.add("oD_sel");
@@ -977,6 +969,8 @@
         if(curSite && curSite.offset)pos-=curSite.offset;
         scrollToControl(pos);
     }
+
+    process();
 
     var hasViewed=false;
     if(document.referrer){
@@ -987,7 +981,6 @@
             }
         }
     }
-
     if(!hasViewed){
         var notificationDetails = {
             text: "\u0046\u0038\u4e0b\u4e00\u4e2a\u7ec5\u58eb\u7ad9\uff0c\u0073\u0068\u0069\u0066\u0074\u002b\u0046\u0038\u4e0a\u4e00\u4e2a\u7ec5\u58eb\u7ad9\n\u0043\u0074\u0072\u006c\u002b\u004c\u0065\u0066\u0074\u4e0a\u4e00\u9875\uff0c\u0043\u0074\u0072\u006c\u002b\u0052\u0069\u0067\u0068\u0074\u4e0b\u4e00\u9875",
