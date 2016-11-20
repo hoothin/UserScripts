@@ -49,7 +49,7 @@
 // @include     http*://htai.*
 // @include     http*://gmgard.com/*
 // @include     http*://*.gmgard.com/*
-// @version     3.20.46
+// @version     3.20.47
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
@@ -293,7 +293,7 @@
 
     if(/\.baidu\./.test(location.href)){
         if(location.hash.slice(1)){
-            document.querySelector("#accessCode").value=location.hash.slice(1);
+            document.querySelector("#accessCode").value=decodeURI(location.hash.slice(1));
             document.querySelector('#submitBtn').click();
         }
         return;
