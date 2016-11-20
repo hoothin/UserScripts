@@ -289,7 +289,7 @@
             break;
         }
     }
-    var contentArea=curSite&&curSite.contentArea?curSite.contentArea:'.entry-content', commArea=curSite&&curSite.commArea?curSite.commArea:"comment-content",articleSel=curSite&&curSite.articleSel?curSite.articleSel:"article";
+    var contentArea=curSite&&curSite.contentArea?curSite.contentArea:'.entry-content',commArea=curSite&&curSite.commArea?curSite.commArea:"comment-content",articleSel=curSite&&curSite.articleSel?curSite.articleSel:"article";
 
     if(/\.baidu\./.test(location.href)){
         if(location.hash.slice(1)){
