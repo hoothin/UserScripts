@@ -49,11 +49,11 @@
 // @include     http*://htai.*
 // @include     http*://gmgard.com/*
 // @include     http*://*.gmgard.com/*
-// @version     3.20.43
+// @version     3.20.45
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
-// @require     https://greasyfork.org/scripts/23522/code/od.js?version=158958
+// @require     https://greasyfork.org/scripts/23522/code/od.js?version=159035
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
 // @license     MIT License
@@ -80,7 +80,9 @@
             {
                 name:"sexacg",
                 url:"https://sexacg.com/",
-                regex:/sexacg\./
+                regex:/sexacg\./,
+                contentArea:'article',
+                commArea:'su-quote-inner'
             },
             {
                 name:"acglover",
@@ -92,12 +94,14 @@
                 name:"acgtf",
                 url:"https://www.acg.tf/",
                 regex:/acg\.tf/,
-                offset:50
+                offset:50,
+                articleSel:"div.dt-news-post"
             },
             {
                 name:"tianshit",
                 url:"https://www.tianshit.com/",
-                regex:/tianshit\./
+                regex:/tianshit\./,
+                contentArea:'.article-content'
             },
             {
                 name:"acggj",
@@ -105,7 +109,8 @@
                 regex:/www\.(acggj|acg44)\./,
                 hideOd:true,
                 bbs:/bbs\.acggj\./,
-                offset:55
+                offset:55,
+                articleSel:"section.card"
             },
             {
                 name:"acg12",
@@ -113,21 +118,24 @@
                 regex:/acg12\./,
                 hideOd:true,
                 downloadUrl:/acg12\.com\/download/,
-                offset:55
+                offset:55,
+                articleSel:"section.card"
             },
             {
                 name:"acg15",
                 url:"http://www.acg15.com/",
                 regex:/acg15\.com/,
                 hideOd:true,
-                offset:55
+                offset:55,
+                articleSel:"section.card"
             },
             {
                 name:"lifan",
                 url:"http://lifanmoe.com/",
                 regex:/lifanmoe\./,
                 downloadUrl:/lifanmoe\.com\/download/,
-                offset:55
+                offset:55,
+                articleSel:"section.card"
             },
             {
                 name:"idanmu",
@@ -140,7 +148,8 @@
                 url:"https://www.sijihuisuo.club/",
                 regex:/sijihuisuo\.club/,
                 innerPage:/sijihuisuo\.club\/(sj\/\d|\?p=\d)/,
-                offset:115
+                offset:115,
+                contentArea:".ds-comments"
             },
             {
                 name:"acg18",
@@ -159,7 +168,8 @@
                 name:"galacg",
                 url:"http://www.galacg.me/",
                 regex:/galacg\./,
-                hideOd:true
+                hideOd:true,
+                articleSel:"div.article"
             },
             {
                 name:"mhecy",
@@ -167,7 +177,8 @@
                 regex:/mhecy\./,
                 downloadUrl:/www\.mhecy\.com\/\?page_id=\d+/,
                 hideOd:true,
-                offset:55
+                offset:55,
+                articleSel:"section.card"
             },
             {
                 name:"oomoe",
@@ -179,13 +190,15 @@
             {
                 name:"acgzone",
                 url:"http://www.uraban.me/",
-                regex:/acgzone\.org|uraban\.me/
+                regex:/acgzone\.org|uraban\.me/,
+                contentArea:'article'
             },
             {
                 name:"acgmoon",
                 url:"https://acgmoon.org/",
                 regex:/acgmoon\.(org|com)/,
-                offset:50
+                offset:50,
+                contentArea:"div.post-content"
             },
             {
                 name:"moe-acg",
@@ -193,22 +206,28 @@
                 regex:/moe-acg\./,
                 offset:55,
                 hideOd:true,
-                downloadUrl:/moe-acg\.cc\/download/
+                downloadUrl:/moe-acg\.cc\/download/,
+                articleSel:"section.card"
             },
             {
                 name:"htai",
                 url:"http://htai.co/",
-                regex:/htai\.(co|me)/
+                regex:/htai\.(co|me)/,
+                contentArea:"div.post_content",
+                commArea:'commentlist'
             },
             {
                 name:"gmgard",
                 url:"https://gmgard.com/",
-                regex:/gmgard\.com/
+                regex:/gmgard\.com/,
+                articleSel:"div.post"
             },
             {
                 name:"mygalgame",
                 url:"https://www.mygalgame.com/",
-                regex:/mygalgame\.com/
+                regex:/mygalgame\.com/,
+                articleSel:".article",
+                commArea:'commentlist'
             },
             {
                 name:"acgnz",
@@ -216,21 +235,24 @@
                 regex:/acgnz\.cc/,
                 hideOd:true,
                 offset:55,
-                downloadUrl:/acgnz\.cc\/download/
+                downloadUrl:/acgnz\.cc\/download/,
+                articleSel:"section.card"
             },
             {
                 name:"moxacg",
                 url:"http://www.moxacg.com/",
                 regex:/moxacg\./,
                 hideOd:true,
-                offset:55
+                offset:55,
+                articleSel:"section.card"
             },
             {
                 name:"nacg",
                 url:"http://nacg.me/",
                 regex:/nacg\.me/,
                 hideOd:true,
-                offset:65
+                offset:65,
+                contentArea:'.content'
             }
         ],
         rocketReg:/magnet:\?xt|pan\.baidu\.com\/s|yunpan\.cn|howfile\.com\/file|mega\.|ed2k:\/\/\|file|bt\.cosxcos\.com\/view|du\.acgget\.com\/go\/|\.mediafire\.com\/download\/|\.torrent$/,
@@ -249,9 +271,7 @@
     }
 
     var t, curSite, curArticle;
-    var contentArea='.entry-content', commArea="comment-content";
     var originTitile = document.title;
-    var articleSel="article";
     var isHttps=location.protocol=="https:";
     if(isHttps){
         var refMeta = document.createElement('meta');
@@ -269,6 +289,7 @@
             break;
         }
     }
+    var contentArea=curSite&&curSite.contentArea?curSite.contentArea:'.entry-content', commArea=curSite&&curSite.commArea?curSite.commArea:"comment-content",articleSel=curSite&&curSite.articleSel?curSite.articleSel:"article";
 
     if(/\.baidu\./.test(location.href)){
         if(location.hash.slice(1)){
@@ -281,7 +302,6 @@
     }else if(curSite){
         switch(curSite.name){
             case "acgtf":
-                articleSel="div.dt-news-post";
                 var content=document.querySelector('.entry-content');
                 if(content){
                     var plist = content.querySelectorAll("p");
@@ -338,13 +358,11 @@
                 createBlockBtn();
                 break;
             case "acg12":
-                articleSel="section.card";
                 if(isHttps)
                     addInsertHandler([["a","img","link","script"],[['p:(\\\/\\\/|\\\\\\/\\\\\\/)(www\\\.|static\\\.)?acg12','ps:$1$2acg12']]]);
                 break;
             case "sijihuisuo":
                 if(curSite.innerPage.test(location.href)){
-                    contentArea=".ds-comments";
                     t=window.setInterval(function(){
                         if(document.querySelector(".ds-comments")){
                             clearInterval(t);
@@ -392,22 +410,10 @@
                 }
                 if(isHttps)changeUrl(true,[["a","iframe"],[['http:','https:']]]);
                 break;
-            case "sexacg":
-                contentArea='article';
-                commArea='su-quote-inner';
-                break;
             case "moxacg":
-                articleSel="section.card";
                 if(isHttps)addInsertHandler([["body","a","img","link","script"],[['p:(\\\/\\\/|\\\\\\/\\\\\\/)(www\\\.)?moxacg','ps:$1$2moxacg']]]);
                 break;
-            case "lifan":
-                articleSel="section.card";
-                break;
-            case "moe-acg":
-                articleSel="section.card";
-                break;
             case "acggj":
-                articleSel="section.card";
                 if(isHttps){
                     changeUrl(true,[["a","img","script","link"],[['p:(\\\/\\\/|\\\\\\/\\\\\\/)(www\\\.|bbs\\\.)?acggj','ps:$1$2acggj']]]);
                     var baseUrl=document.querySelector('base');
@@ -421,14 +427,7 @@
                 }*/
                 break;
             case "acgnz":
-                articleSel="section.card";
                 if(isHttps)addInsertHandler([["a","img","link","script"],[['p:(\\\/\\\/|\\\\\\/\\\\\\/)(www\\\.)?acgnz','ps:$1$2acgnz']]]);
-                break;
-            case "nacg":
-                contentArea='.content';
-                break;
-            case "tianshit":
-                contentArea='.article-content';
                 break;
             case "acglover":
                 changeUrl(true,[["a","img"],[['acglover\\\.net','acglover\\\.top']]]);
@@ -497,11 +496,7 @@
                     }
                 }
                 break;
-            case "galacg":
-                articleSel="div.article";
-                break;
             case "acgmoon":
-                contentArea="div.post-content";
                 var postContent=document.querySelector("div.post-content");
                 if(postContent && postContent.classList.contains("hexie")){
                     var hexieBtn=document.createElement("button");
@@ -529,25 +524,10 @@
                     }
                 }
                 break;
-            case "acg15":
-                articleSel="section.card";
-                break;
-            case "acgzone":
-                contentArea='article';
-                break;
-            case "mhecy":
-                articleSel="section.card";
-                break;
             case "acg18":
                 changeUrl(true,[["a"],[['https?:\\\/\\\/[^\\\.]*(\\\.)?acg18\\\.us\\\/go\\\/\\\?url=','']]]);
                 break;
-            case "htai":
-                contentArea="div.post_content";
-                commArea='commentlist';
-                break;
             case "mygalgame":
-                commArea='commentlist';
-                articleSel=".article";
                 var downBtn=document.querySelector("a.hint--right");
                 if(downBtn){
                     var innBtn=downBtn.querySelector(".btn-danger");
@@ -577,7 +557,6 @@
                 break;
             case "gmgard":
                 if(isHttps)addInsertHandler([["img"],[['p(:\\\/\\\/static\.gmgard\.com)','ps$1']]]);
-                articleSel="div.post";
                 curSite.preRocket=function(){unsafeWindow.$('#dllist a').mouseenter();};
                 break;
         }
