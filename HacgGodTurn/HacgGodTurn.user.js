@@ -49,11 +49,11 @@
 // @include     http*://htai.*
 // @include     http*://gmgard.com/*
 // @include     http*://*.gmgard.com/*
-// @version     3.20.49
+// @version     3.20.50
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
-// @require     https://greasyfork.org/scripts/23522/code/od.js?version=159126
+// @require     https://greasyfork.org/scripts/23522/code/od.js?version=159140
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
 // @license     MIT License
@@ -191,7 +191,7 @@
             },
             {
                 name:"acgzone",
-                url:"http://www.uraban.me/",
+                url:"http://www.uraban.me/wp/",
                 regex:/acgzone\.org|uraban\.me/,
                 contentArea:'article'
             },
@@ -717,30 +717,41 @@
         };
         var oD_text=document.createElement("input");
         oD_text.type="text";
-        oD_text.style.cssText="width:168px;height:33px;position:relative;margin-top: 0px;padding: 0px;";
-        oD_text.placeholder="输入hash值";
+        oD_text.style.cssText="width:168px;height:33px;position:relative;margin-top:0px;padding:0px;box-sizing:border-box;";
+        oD_text.placeholder="输入hash值、网盘或下载地址";
         oD_text.title='将自动添加"magnet:?xt=urn:btih:"并去除非法字符';
         var oD_button=document.createElement("button");
         oD_button.type="button";
         oD_button.textContent="开车";
         oD_button.style.cssText="padding:4px 0;position: absolute;top:-1px;right:0px;width:40px;height:35px";
         oD_button.onclick=function (){
-            var oD_hash=oD_text.value.replace(/(\[.*\])|[\W_]/g,"");
+            var oD_hash=oD_text.value;
             if(oD_hash===""){
-                alert("请输入hash值");
-                return;
-            }else if(!regObj.btih.test(oD_hash)){
-                alert("hash值格式错误");
-                return;
+                alert("请输入hash值、网盘或下载地址");
+            }else if(/\b1[0-9a-z]{6,7}/i.test(oD_hash)){
+                var panMatch=oD_hash.match(/\b1[0-9a-z]{6,7}/i);
+                var ecode=oD_hash.trim(),url="https://pan.baidu.com/s/"+panMatch;
+                ecode=simpleRule.test(ecode)?ecode.match(simpleRule)[1]:codeRule.test(ecode)?ecode.match(codeRule)[1]:"";
+                if(ecode)url+="#"+ecode;
+                window.open(url);
+            }else if(/^\s*(https|ftp)?:\/\//.test(oD_hash)){
+                var url=oD_hash.replace(/[^a-z0-9:\/%\?&\._\-\+\*]/gi,"");
+                window.open(url);
+            }else{
+                oD_hash=oD_hash.replace(/(\[.*\])|[\W_]/g,"");
+                if(!regObj.btih.test(oD_hash)){
+                    alert("hash值格式错误");
+                }else{
+                    oD_link.href="magnet:?xt=urn:btih:"+oD_hash;
+                    oD_link.textContent="磁链";
+                    oD_link2.href="http://www.torrent.org.cn/Home/torrent/download.html?hash="+oD_hash;
+                    oD_link2.textContent="种子";
+                    oD_link2.style.cssText="margin-left:20px";
+                    oD_link3.href="https://btso.pw/magnet/detail/hash/"+oD_hash;
+                    oD_link3.textContent="详情";
+                    oD_link3.style.cssText="margin-left:20px";
+                }
             }
-            oD_link.href="magnet:?xt=urn:btih:"+oD_hash;
-            oD_link.textContent="磁链";
-            oD_link2.href="http://www.torrent.org.cn/Home/torrent/download.html?hash="+oD_hash;
-            oD_link2.textContent="种子";
-            oD_link2.style.cssText="margin-left:20px";
-            oD_link3.href="https://btso.pw/magnet/detail/hash/"+oD_hash;
-            oD_link3.textContent="详情";
-            oD_link3.style.cssText="margin-left:20px";
         };
         var oD_link=document.createElement("a");
         var oD_link2=document.createElement("a");
