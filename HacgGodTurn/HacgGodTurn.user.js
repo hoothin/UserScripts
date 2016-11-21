@@ -718,13 +718,14 @@
         var oD_text=document.createElement("input");
         oD_text.type="text";
         oD_text.style.cssText="width:168px;height:33px;position:relative;margin-top:0px;padding:0px;box-sizing:border-box;";
-        oD_text.placeholder="输入hash值、网盘或下载地址";
+        oD_text.placeholder="输入hash值或网盘地址";
         oD_text.title='将自动添加"magnet:?xt=urn:btih:"并去除非法字符';
         var oD_button=document.createElement("button");
         oD_button.type="button";
         oD_button.textContent="开车";
         oD_button.style.cssText="padding:4px 0;position: absolute;top:-1px;right:0px;width:40px;height:35px";
         oD_button.onclick=function (){
+            oD_link.textContent=oD_link2.textContent=oD_link3.textContent="";
             var oD_hash=oD_text.value;
             if(oD_hash===""){
                 alert("请输入hash值、网盘或下载地址");
