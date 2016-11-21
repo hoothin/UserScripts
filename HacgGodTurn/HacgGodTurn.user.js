@@ -49,11 +49,11 @@
 // @include     http*://htai.*
 // @include     http*://gmgard.com/*
 // @include     http*://*.gmgard.com/*
-// @version     3.20.48
+// @version     3.20.49
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
-// @require     https://greasyfork.org/scripts/23522/code/od.js?version=159035
+// @require     https://greasyfork.org/scripts/23522/code/od.js?version=159126
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
 // @license     MIT License
@@ -433,7 +433,10 @@
                     }
                     scrollMsg();
                 }
-                if(isHttps)changeUrl(true,[["a","iframe"],[['http:','https:']]]);
+                if(isHttps){
+                    changeUrl(true,[["iframe"],[['http:','https:']]]);
+                    changeUrl(true,[["a"],[['http:(.*hacg)','https:$1']]]);
+                }
                 break;
             case "moxacg":
                 if(isHttps)addInsertHandler([["body","a","img","link","script"],[['p:(\\\/\\\/|\\\\\\/\\\\\\/)(www\\\.)?moxacg','ps:$1$2moxacg']]]);
@@ -595,6 +598,8 @@
         },1000);
     }
 
+    process();
+
     document.addEventListener("keydown", function(e) {
         if(curArticle && e.keyCode != 17)curArticle.classList.remove("oD_sel");
         if(e.keyCode == 119) {
@@ -694,165 +699,6 @@
             }
         }
     });
-
-    function process(){
-        var downloadBtn;
-        if(isHttps && (downloadBtn=document.querySelector("div#post-toolbar-download-count-container"))){
-            var t=function(){
-                if(downloadBtn.innerHTML=="<!-- react-empty: 1 -->"){
-                    var downloadContent=document.createElement("a");
-                    downloadContent.href=window.location.protocol+"//"+window.location.host+"/download?id="+window.location.pathname.split("/").pop();
-                    downloadContent.innerHTML+='<div class="tx"><span><i class="fa fa-cloud-download"></i></span>\u4e0b\u8f7d</div>';
-                    downloadBtn.appendChild(downloadContent);
-                }else if(downloadBtn.innerHTML===""){
-                    setTimeout(t,100);
-                }
-            };
-            setTimeout(t,100);
-        }
-        var content=document.querySelector(contentArea);
-        if(content){
-            processObj(content);
-        }
-        var link, imgs, i, k;
-        if (document.querySelectorAll) {
-            link = document.querySelectorAll('a');
-            imgs = document.querySelectorAll('img');
-        } else {
-            link = document.getElementsByTagName('a');
-            imgs = document.getElementsByTagName('img');
-        }
-        for (i = 0, k = link.length; i < k; i++) {
-            let target=link[i];
-            target.addEventListener("mousedown", function(){
-                if(/baidu.com/i.test(target.href)&&!/(?:eyun|tieba)\.baidu\.com/i.test(target.href)&&!/#/i.test(target.href)){
-                    if(/\/storage-download/.test(location.href)){
-                        var pass=target.parentNode.parentNode.querySelector('input.pwd');
-                        if(pass&&pass.id.indexOf("download-pwd")!=-1)target.href=target.href.split("#")[0]+'#'+pass.value;
-                    } else if(curSite.downloadUrl && curSite.downloadUrl.test(location.href) && curSite.getDownPass){
-                        curSite.getDownPass(target);
-                    } else if(codeRule.test(target.textContent)){
-                        target.href+='#'+extCode(target);
-                    } else if(target.nextSibling&&codeRule.test(target.nextSibling.textContent)){
-                        if(!/#\S+/i.test(target.href)){
-                            target.href+=/#/i.test(target.href)?extCode(target.nextSibling):('#'+extCode(target.nextSibling));
-                        }
-                    } else if(codeRule.test(target.parentNode.textContent)){
-                        if(!/#\S+/i.test(target.href)) target.href+=/#/i.test(target.href)?extCode(target.parentNode):('#'+extCode(target.parentNode));
-                    } else {
-                        var j = 0,
-                            maxParent = 5,
-                            parent = target;
-                        while(j<maxParent) {
-                            j++;
-                            parent = parent.parentNode;
-                            if(parent.tagName=="TR") {
-                                if(codeRule.test(parent.nextElementSibling.textContent)) {
-                                    parent=parent.nextElementSibling;
-                                    target.href+='#'+extCode(parent);
-                                    break;
-                                }
-                            } else if(codeRule.test(parent.textContent)) {
-                                target.href+='#'+extCode(parent);
-                                break;
-                            }
-                            if(parent==document.body) break;
-                        }
-                    }
-                }
-            });
-        }
-        for (i = 0, k = imgs.length; i < k; i++) {
-            let src;
-            for(let imgReg of config.imgRegs){
-                src = imgs[i].src.replace(imgReg[0], imgReg[1]);
-                if(src != imgs[i].src)imgs[i].src = src;
-            }
-        }
-        seriousReplace(commArea);
-    }
-
-    function processObj(obj){
-        if(obj){
-            if(obj.nodeType==1 && obj.tagName != "A"){
-                for(var i=0;i<obj.childNodes.length;i++){
-                    processObj(obj.childNodes[i]);
-                }
-            }else if(obj.nodeType==3){
-                var data=processTxt(obj.data);
-                if(obj.data != data){
-                    var newData = document.createElement("p");
-                    obj.parentNode.replaceChild(newData, obj);
-                    newData.outerHTML=data;
-                }
-            }
-        }
-    }
-
-    function getPage(){
-        let pre=document.querySelector("a.prev");
-        let next=document.querySelector("a.next");
-        if(!pre)pre=document.querySelector(".prev>a");
-        if(!next)next=document.querySelector(".next>a");
-        if(!pre && !next){
-            let aTags=document.querySelectorAll("a");
-            if(!pre){
-                let pref,pres,pret;
-                for(var i=0;i<aTags.length;i++){
-                    let aTag=aTags[i];
-                    if(pref && pres && pret)break;
-                    if(!pref){
-                        if(/上一页/.test(aTag.innerHTML)){
-                            pref=aTag;
-                        }
-                    }
-                    if(!pres){
-                        if(aTag.innerHTML=="&lt;"){
-                            pres=aTag;
-                        }
-                    }
-                    if(!pret){
-                        if(aTag.innerHTML=="«"){
-                            pret=aTag;
-                        }
-                    }
-                }
-                pre=pref||pres||pret;
-            }
-            if(!next){
-                let nextf,nexts,nextt;
-                for(var i=0;i<aTags.length;i++){
-                    let aTag=aTags[i];
-                    if(nextf && nexts && nextt)break;
-                    if(!nextf){
-                        if(/下一页/.test(aTag.innerHTML)){
-                            nextf=aTag;
-                        }
-                    }
-                    if(!nexts){
-                        if(aTag.innerHTML=="&gt;"){
-                            nexts=aTag;
-                        }
-                    }
-                    if(!nextt){
-                        if(aTag.innerHTML=="»"){
-                            nextt=aTag;
-                        }
-                    }
-                }
-                next=nextf||nexts||nextt;
-            }
-        }
-        if(!pre && !next){
-            let pageDiv=document.querySelector("div.wp-pagenavi");
-            if(pageDiv){
-                var cur=pageDiv.querySelector("span.current");
-                pre=cur.previousSibling;
-                next=cur.nextSibling;
-            }
-        }
-        return {pre:pre,next:next};
-    }
 
     document.getElementsByTagName("head")[0].appendChild(nod);
     if((!curSite || !curSite.hideOd) && !frameElement){
@@ -958,6 +804,174 @@
         document.body.appendChild(oD_box);
     }
 
+    function process(){
+        var downloadBtn;
+        if(isHttps && (downloadBtn=document.querySelector("div#post-toolbar-download-count-container"))){
+            var t=function(){
+                if(downloadBtn.innerHTML=="<!-- react-empty: 1 -->"){
+                    var downloadContent=document.createElement("a");
+                    downloadContent.href=window.location.protocol+"//"+window.location.host+"/download?id="+window.location.pathname.split("/").pop();
+                    downloadContent.innerHTML+='<div class="tx"><span><i class="fa fa-cloud-download"></i></span>\u4e0b\u8f7d</div>';
+                    downloadBtn.appendChild(downloadContent);
+                }else if(downloadBtn.innerHTML===""){
+                    setTimeout(t,100);
+                }
+            };
+            setTimeout(t,100);
+        }
+        var content=document.querySelector(contentArea);
+        if(content){
+            processObj(content);
+        }
+        var link, imgs, i, k;
+        if (document.querySelectorAll) {
+            link = document.querySelectorAll('a');
+            imgs = document.querySelectorAll('img');
+        } else {
+            link = document.getElementsByTagName('a');
+            imgs = document.getElementsByTagName('img');
+        }
+        for (i = 0, k = link.length; i < k; i++) {
+            let target=link[i];
+            target.addEventListener("mousedown", function(){
+                if(/baidu.com/i.test(target.href)&&!/(?:eyun|tieba)\.baidu\.com/i.test(target.href)&&!/#/i.test(target.href)){
+                    if(/\/storage-download/.test(location.href)){
+                        var pass=target.parentNode.parentNode.querySelector('input.pwd');
+                        if(pass&&pass.id.indexOf("download-pwd")!=-1)target.href=target.href.split("#")[0]+'#'+pass.value;
+                    } else if(curSite.downloadUrl && curSite.downloadUrl.test(location.href) && curSite.getDownPass){
+                        curSite.getDownPass(target);
+                    } else if(codeRule.test(target.textContent)){
+                        target.href+='#'+extCode(target);
+                    } else if(target.nextSibling&&codeRule.test(target.nextSibling.textContent)){
+                        if(!/#\S+/i.test(target.href)){
+                            target.href+=/#/i.test(target.href)?extCode(target.nextSibling):('#'+extCode(target.nextSibling));
+                        }
+                    } else if(codeRule.test(target.parentNode.textContent)){
+                        if(!/#\S+/i.test(target.href)) target.href+=/#/i.test(target.href)?extCode(target.parentNode):('#'+extCode(target.parentNode));
+                    } else {
+                        var j = 0,
+                            maxParent = 5,
+                            parent = target;
+                        while(j<maxParent) {
+                            j++;
+                            parent = parent.parentNode;
+                            if(parent.tagName=="TR") {
+                                if(codeRule.test(parent.nextElementSibling.textContent)) {
+                                    parent=parent.nextElementSibling;
+                                    target.href+='#'+extCode(parent);
+                                    break;
+                                }
+                            } else if(codeRule.test(parent.textContent)) {
+                                target.href+='#'+extCode(parent);
+                                break;
+                            }
+                            if(parent==document.body) break;
+                        }
+                    }
+                }
+            });
+        }
+        for (i = 0, k = imgs.length; i < k; i++) {
+            let src;
+            for(let imgReg of config.imgRegs){
+                src = imgs[i].src.replace(imgReg[0], imgReg[1]);
+                if(src != imgs[i].src)imgs[i].src = src;
+            }
+        }
+        seriousReplace(commArea);
+    }
+
+    function processObj(obj){
+        if(obj){
+            if(obj.nodeType==1 && obj.tagName != "A"){
+                for(var i=0;i<obj.childNodes.length;i++){
+                    processObj(obj.childNodes[i]);
+                }
+            }else if(obj.nodeType==3){
+                var curData=obj.data;
+                if(obj.nextSibling && obj.nextSibling.outerHTML=="<b>hacg</b>"){
+                    curData+="hacg";
+                    if(obj.nextSibling.nextSibling && obj.nextSibling.nextSibling.nodeType==3){
+                        curData+=obj.nextSibling.nextSibling.data;
+                        obj.nextSibling.nextSibling.data="";
+                    }
+                    obj.parentNode.removeChild(obj.nextSibling);
+                }
+                var data=processTxt(curData);
+                if(curData != data){
+                    var newData = document.createElement("p");
+                    obj.parentNode.replaceChild(newData, obj);
+                    newData.outerHTML=data;
+                }
+            }
+        }
+    }
+
+    function getPage(){
+        let pre=document.querySelector("a.prev");
+        let next=document.querySelector("a.next");
+        if(!pre)pre=document.querySelector(".prev>a");
+        if(!next)next=document.querySelector(".next>a");
+        if(!pre && !next){
+            let aTags=document.querySelectorAll("a");
+            if(!pre){
+                let pref,pres,pret;
+                for(var i=0;i<aTags.length;i++){
+                    let aTag=aTags[i];
+                    if(pref && pres && pret)break;
+                    if(!pref){
+                        if(/上一页/.test(aTag.innerHTML)){
+                            pref=aTag;
+                        }
+                    }
+                    if(!pres){
+                        if(aTag.innerHTML=="&lt;"){
+                            pres=aTag;
+                        }
+                    }
+                    if(!pret){
+                        if(aTag.innerHTML=="«"){
+                            pret=aTag;
+                        }
+                    }
+                }
+                pre=pref||pres||pret;
+            }
+            if(!next){
+                let nextf,nexts,nextt;
+                for(var i=0;i<aTags.length;i++){
+                    let aTag=aTags[i];
+                    if(nextf && nexts && nextt)break;
+                    if(!nextf){
+                        if(/下一页/.test(aTag.innerHTML)){
+                            nextf=aTag;
+                        }
+                    }
+                    if(!nexts){
+                        if(aTag.innerHTML=="&gt;"){
+                            nexts=aTag;
+                        }
+                    }
+                    if(!nextt){
+                        if(aTag.innerHTML=="»"){
+                            nextt=aTag;
+                        }
+                    }
+                }
+                next=nextf||nexts||nextt;
+            }
+        }
+        if(!pre && !next){
+            let pageDiv=document.querySelector("div.wp-pagenavi");
+            if(pageDiv){
+                var cur=pageDiv.querySelector("span.current");
+                pre=cur.previousSibling;
+                next=cur.nextSibling;
+            }
+        }
+        return {pre:pre,next:next};
+    }
+
     function scrollArticle(a){
         curArticle=a;
         curArticle.classList.add("oD_sel");
@@ -965,8 +979,6 @@
         if(curSite && curSite.offset)pos-=curSite.offset;
         scrollToControl(pos);
     }
-
-    process();
 
     var hasViewed=false;
     if(document.referrer){
