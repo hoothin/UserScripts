@@ -2,12 +2,14 @@
 // @name           True URL downloads
 // @name:zh-CN     True URL downloads
 // @name:zh-TW     True URL downloads
+// @name:ja        迅雷、快車、QQ旋風などの専有チェーンが解読されて
 // @author         Yulei, Hoothin
 // @namespace      Yuleigq@gmail.com
 // @description    Decryption and Display the real URL of the download links.(of xunlei,kuaiche,xuanfeng;thunder,flashget,qqdl)
 // @description:zh-CN    迅雷、快车、QQ旋风等专有链解密 Decryption and Display the real URL of the download links.(of xunlei,kuaiche,xuanfeng;thunder,flashget,qqdl)
 // @description:zh-TW    迅雷、快車、QQ旋風等專有鏈解密 Decryption and Display the real URL of the download links.(of xunlei,kuaiche,xuanfeng;thunder,flashget,qqdl)
-// @version        1.21.46
+// @description:ja       True URL downloads, Decryption and Display the real URL of the download links.(of xunlei,kuaiche,xuanfeng;thunder,flashget,qqdl)
+// @version        1.21.48
 // @create         2013-01-05
 // @lastmodified   2016-04-09
 // @include        http://*
@@ -144,15 +146,9 @@
         document.addEventListener('DOMNodeInserted', function(e) {
             if(document.readyState=="complete" && !isseeking){
                 isseeking=true;
-                var times=0;
-                var t=setInterval(function(){
-                    if(times==1){
-                        seekUrl();
-                    }else if(times==4){
-                        isseeking=false;
-                        clearInterval(t);
-                    }
-                    times++;
+                setTimeout(function(){
+                    seekUrl();
+                    isseeking=false;
                 },500);
             }
         });

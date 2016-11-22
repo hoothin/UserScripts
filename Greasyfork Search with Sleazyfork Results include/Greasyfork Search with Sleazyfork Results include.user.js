@@ -2,11 +2,13 @@
 // @name         Greasyfork Search with Sleazyfork Results include
 // @name:zh-CN   大人的Greasyfork
 // @name:zh-TW   大人的Greasyfork
+// @name:ja      大人のGreasyfork
 // @namespace    hoothin
 // @version      0.59
 // @description  Merge adult results of sleazyfork into greasyfork when the script is no longer anonymously available, add rating score and version for scripts then
-// @description:zh-CN 在sleazyfork查找成人内容后合并至greasyfork，访问匿名不可用脚本时跳转至sleazyfork，并添加评分与版本号
-// @description:zh-TW 在sleazyfork查找成人內容後合並至greasyfork，訪問匿名不可用脚本時跳轉至sleazyfork，並添加評分與版本號
+// @description:zh-CN 在Greasyfork的搜索结果中添加Sleazyfork上的成人脚本，增加评分与版本号，并在访问匿名不可用脚本时跳转至Sleazyfork
+// @description:zh-TW 在Greasyfork的搜索結果中添加Sleazyfork上的成人腳本，增加評分與版本號，並在訪問匿名不可用腳本時跳轉至Sleazyfork
+// @description:ja    脚本付けるSleazyfork上の成人脚本検索結果からGreasyfork、脚本付ける採点とバージョン番号を訪問匿名利用できない脚本にジャンプからSleazyfork
 // @author       hoothin
 // @include      http*://greasyfork.org/*
 // @include      http*://www.greasyfork.org/*
