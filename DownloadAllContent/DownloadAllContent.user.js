@@ -6,8 +6,8 @@
 // @namespace    hoothin
 // @version      0.3
 // @description  Fetch and download main content on current page
-// @description:zh-CN  通用网站内容抓取工具，可抓取小说，论坛内容等并保存为TXT文档
-// @description:zh-TW  通用網站內容抓取工具，可抓取小說，論壇內容等並保存為TXT文檔
+// @description:zh-CN  通用网站内容抓取工具，可批量抓取小说、论坛内容等并保存为TXT文档
+// @description:zh-TW  通用網站內容抓取工具，可批量抓取小說、論壇內容等並保存為TXT文檔
 // @description:ja     ユニバーサルサイトコンテンツクロールツール、クロール、フォーラム内容など
 // @author       hoothin
 // @include      *
