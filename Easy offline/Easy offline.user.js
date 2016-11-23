@@ -7,14 +7,13 @@
 // @description:zh-TW 一鍵自動將磁鏈、bt種子或其他下載資源離綫下載至網槃
 // @namespace    http://tampermonkey.net/
 // @require      http://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
-// @version      1.0.38
+// @version      1.0.39
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
 // @exclude      http*://www.baidu.*
 // @exclude      http*://www.google.*
 // @exclude      http*://www.bing.*
-// @exclude      http*://github.com/*
 // @include      http*://pan.baidu.com/*
 // @include      http*://115.com/*
 // @include      https://www.furk.net/*
@@ -147,6 +146,19 @@
         var curNode;
         var offUrl;
         var offNodes=[];
+        var regs=GM_getValue("eoReg");
+        if(regs){
+            var aTags = $("a").get();
+            for(var aTag of aTags){
+                for(var reg of regs){
+                    var patt=new RegExp(reg);
+                    if(patt.test(aTag.href) && $.inArray(aTag, rawnodes)==-1){
+                        rawnodes.push(aTag);
+                        break;
+                    }
+                }
+            }
+        }
         function hideIcons(){
             parentDiv.css("display","none");
             for(var node of offNodes){
@@ -278,7 +290,41 @@
     var i=0;
     var t=window.setInterval(function() {
         var curlink;
-        if (location.href.indexOf("furk.net/users/files/add") != -1){
+        if (location.href.indexOf("github.com/hoothin/UserScripts/tree/master/Easy%20offline") != -1){
+            window.clearInterval(t);
+            var configContent=document.createElement("div");
+            document.body.appendChild(configContent);
+            configContent.outerHTML=`
+            <div id="configContent" style="display: none;">
+                <div style="width:300px;height:300px;position:fixed;left:50%;top:50%;margin-top:-150px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;">
+                    <div style="text-align:center;font-size: 12px;margin-top: 25px;">自定义需要启用一键下载的链接正则，一行一条</div>
+                    <textarea id="configInput" placeholder="例：http:.*\\.php\\?getRes=\\d+" style="position:absolute;left:20px;top:50px;width:260px;height:200px"></textarea>
+                    <button id="configSave" type="button" style="position:absolute;left:110px;top:260px;width:80px;height:30px;background-color:#3892ed;color:white;border-radius:5px;border:0px;">设置</button>
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAMAAAAM7l6QAAAA5FBMVEUAAAD+/v7////9/f7////////+/v7+/v7////+/v7+/v7////+/v7+/v7////+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7////////////+/v7+/v7+/v7+/v7+/v4uje3///82ke7s9P3N5PtQoPDI4fqCu/Tu9v5Im+/6/P+VxfZgqPFNnvDp8/3f7fq42Pmnz/d1tPNvsfNkq/JCmO/4+/7X6fz19/rn8PqYx/aNwfV8uPRqrvJZpfFUovAzkO3Q5vu92/mr0fieyva92fWx0vQ6lO5pygFTAAAAJHRSTlMAmfD+RMGwgj2mknlIKR/36+XGnIyHfnJfVDk2My8S4E1CJBvTatKDAAABY0lEQVQoz4WSZ1fCMBRA05ahLPfemkspBUFwgGz3+P//x/hK6ZBzvB/ak96+kZeoGCtFK5eziitqCSfWOnM2CuWUrOyQYPc0bjM2htHXh+/ffQ4lQ6zEPoZ6TwdUp10M56EtAe5MR7y0HGAeX7Ghe6MTzIZwFtTfBrepUzw4UFSGY8CUTTMGLo3eglv58By21pRnB7aNBqTwPfWq/OVey9sH22wZXiWo6Yr3GtRl/f0IRyoPYy14v97YWjVY12BPrcK9XvhaZPUdWCoLbR35yOoW5P7R8eQ3JrmbSp6HVmSrXuTrmNYyUAs2JkL6D6YjG1PgNGXK87F4nWAsUxmL2gyH6oVD7cuhdqFg9CE4T/oPE6CsgvBOP21715AP7ugaDFK+3YD1KyUcAG47bn0TSylxFd8WDTwMMByoBSUHw+jd9/3JbQODnVExygUS7FRUksPVtdDZW8dqCZm8lc1auxcq4gc02GVGTUchmgAAAABJRU5ErkJggg==" id="configQuit" style="position:absolute;right:0px;top:0px;cursor: pointer;" />
+                </div>
+            </div>`;
+            var configInput=document.querySelector("#configInput");
+            var configQuit=document.querySelector("#configQuit");
+            var configSave=document.querySelector("#configSave");
+            configContent=document.querySelector("#configContent");
+            configContent.style.display="block";
+            $(configInput).val(GM_getValue("eoReg").join("\n"));
+            $(configQuit).click(function (event) {configContent.style.display="none";});
+            $(configSave).click(function (event) {
+                var regStr=$(configInput).val();
+                var regStrs=regStr.split("\n");
+                for(var reg of regStrs){
+                    try{
+                        new RegExp(reg);
+                    }catch(e){
+                        alert("含有无效正则，请重新输入");
+                        return;
+                    }
+                }
+                GM_setValue("eoReg",regStrs);
+                alert("设置成功");
+            });
+        }else if (location.href.indexOf("furk.net/users/files/add") != -1){
             window.clearInterval(t);
             curlink = GM_getValue('eoUrl');
             if(curlink){
