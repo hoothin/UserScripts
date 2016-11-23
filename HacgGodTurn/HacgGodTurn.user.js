@@ -51,7 +51,7 @@
 // @include     http*://htai.*
 // @include     http*://gmgard.com/*
 // @include     http*://*.gmgard.com/*
-// @version     3.20.52
+// @version     3.20.53
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
@@ -598,9 +598,9 @@
                 process();
             }
         },1000);
+    }else{
+        process();
     }
-
-    process();
 
     document.addEventListener("keydown", function(e) {
         if(curArticle && e.keyCode != 17)curArticle.classList.remove("oD_sel");
