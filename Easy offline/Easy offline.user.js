@@ -133,8 +133,7 @@
                 background-position:center!important;
                 background-repeat:no-repeat!important;
             }
-        </style>
-        `);
+        </style>`);
     }
 
     function getAllEnableUrl() {
