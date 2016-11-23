@@ -36,6 +36,9 @@ https://greasyfork.org/users/8227-hoothin
 + [大人的Greasyfork](Greasyfork%20Search%20with%20Sleazyfork%20Results%20include)
 
  在sleazyfork查找成人内容后合并至greasyfork，访问匿名不可用脚本时跳转至sleazyfork，并添加评分与版本号
++ [懒人小说下载器](DownloadAllContent)
+
+ 通用网站内容抓取工具，可抓取小说，论坛内容等并保存为TXT文档
 
 ---
  Feedback发邮件
