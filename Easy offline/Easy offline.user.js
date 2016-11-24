@@ -7,7 +7,7 @@
 // @description:zh-TW 一鍵自動將磁鏈、bt種子或其他下載資源離綫下載至網槃
 // @namespace    http://tampermonkey.net/
 // @require      http://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
-// @version      1.0.39
+// @version      1.0.40
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -307,7 +307,7 @@
             var configSave=document.querySelector("#configSave");
             configContent=document.querySelector("#configContent");
             configContent.style.display="block";
-            $(configInput).val(GM_getValue("eoReg").join("\n"));
+            if(GM_getValue("eoReg"))$(configInput).val(GM_getValue("eoReg").join("\n"));
             $(configQuit).click(function (event) {configContent.style.display="none";});
             $(configSave).click(function (event) {
                 var regStr=$(configInput).val();
