@@ -25,7 +25,7 @@
 
 (function() {
     function Yu() {
-        var batchPrefix="";
+        var prefix="";//批量增加前缀
         decode64 = (window.atob) ? atob : decode64;
         var Rstr = /^\s?(?:thunder|flashget|qqdl|fs2you):\/\/([^'"\s]*)/i,
             aft = /^AA|ZZ$|\[FLASHGET\]/g,
