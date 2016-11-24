@@ -51,11 +51,11 @@
 // @include     http*://htai.*
 // @include     http*://gmgard.com/*
 // @include     http*://*.gmgard.com/*
-// @version     3.20.53
+// @version     3.20.55
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
-// @require     https://greasyfork.org/scripts/23522/code/od.js?version=159291
+// @require     https://greasyfork.org/scripts/23522/code/od.js?version=159707
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
 // @license     MIT License
@@ -92,7 +92,8 @@
                 name:"acglover",
                 url:"http://www.acglover.top/",
                 regex:/acglover\.top/,
-                offset:60
+                offset:60,
+                contentArea:".entry-inner"
             },
             {
                 name:"acgtf",
@@ -679,6 +680,9 @@
                         if(aLink){
                             aLink.click();
                             return false;
+                        }else if(curArticle.parentNode && curArticle.parentNode.tagName=="A"){
+                            curArticle.parentNode.click();
+                            return false;
                         }
                     }else{
                         let dis;
@@ -689,6 +693,9 @@
                                 let aLink=article.querySelector("a:not(.label)");
                                 if(aLink){
                                     aLink.click();
+                                    return false;
+                                }else if(article.parentNode && article.parentNode.tagName=="A"){
+                                    article.parentNode.click();
                                     return false;
                                 }
                                 break;
