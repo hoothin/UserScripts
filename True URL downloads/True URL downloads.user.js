@@ -9,7 +9,7 @@
 // @description:zh-CN    迅雷、快车、QQ旋风等专有链解密 Decryption and Display the real URL of the download links.(of xunlei,kuaiche,xuanfeng;thunder,flashget,qqdl)
 // @description:zh-TW    迅雷、快車、QQ旋風等專有鏈解密 Decryption and Display the real URL of the download links.(of xunlei,kuaiche,xuanfeng;thunder,flashget,qqdl)
 // @description:ja       True URL downloads, Decryption and Display the real URL of the download links.(of xunlei,kuaiche,xuanfeng;thunder,flashget,qqdl)
-// @version        1.21.48
+// @version        1.21.49
 // @create         2013-01-05
 // @lastmodified   2016-04-09
 // @include        http://*
@@ -162,7 +162,7 @@
                 }
             }
             if(linksArr.length > 0){
-                GM_setClipboard(batchPrefix+linksArr.join("\n"+batchPrefix));
+                GM_setClipboard(prefix+linksArr.join("\n"+prefix));
                 alert("批量复制成功！");
             }else{
                 alert("当前页面没有资源！");
