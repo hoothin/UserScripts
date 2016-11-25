@@ -4,7 +4,7 @@
 // @name:zh-TW   懶人小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      0.5
+// @version      0.6
 // @description  Fetch and download main content on current page
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取小說、論壇內容等並保存為TXT文檔
@@ -123,10 +123,10 @@
             if(content.firstChild && (
                 (content.firstChild.nodeType!=3 && !/^[I|A]$/.test(content.firstChild.tagName)) ||
                 (/^\s*$/.test(content.firstChild.data) &&
-                 (!content.childNodes[1]||!/^[I|A]$/.test(content.childNodes[1].tagName)))
+                 (!content.childNodes[1] || !/^[I|A]$/.test(content.childNodes[1].tagName)))
             ))
                 continue;
-            if(pageData==document && content.offsetWidth <= 0 && content.offsetHeight <= 0)
+            if(pageData==document && content.offsetWidth<=0 && content.offsetHeight<=0)
                 continue;
             if(navigator.userAgent.toLowerCase().indexOf('firefox')!=-1){
                 if(!largestContent || largestContent.textContent.length<content.textContent.length){
@@ -142,16 +142,25 @@
         for(i=0;i<childlist.length;i++){
             var child=childlist[i];
             if(largestContent.className && largestContent.className==child.className){
-            }else if(child.firstChild && ((child.firstChild.nodeType!=3 && !/^[I|A]$/.test(child.firstChild.tagName)) || (/^\s*$/.test(child.firstChild.data) && (!child.childNodes[1] || !/^[I|A]$/.test(child.childNodes[1].tagName)))))continue;
-            if(getDepth(child)==getDepth(largestContent)){
                 let childNodes=child.childNodes,cStr="\r\n",hasText=false;
-                for(var j=0;j<childNodes.length;j++){
-                    var childNode=childNodes[j];
-                    if(childNode.nodeType==3 && childNode.data && !/^\s*$/.test(childNode.data))hasText=true;
+                for(let j=0;j<childNodes.length;j++){
+                    let childNode=childNodes[j];
                     if(childNode.tagName=="BR")cStr+="\r\n";
                     else if(!/SCRIPT|STYLE/.test(childNode.tagName) && childNode.textContent)cStr+=childNode.textContent.replace(/\s*/,"  ");
                 }
-                if(hasText)rStr+=cStr;
+                rStr+=cStr;
+            }else {
+                if(child.firstChild && ((child.firstChild.nodeType!=3 && !/^[I|A]$/.test(child.firstChild.tagName)) || (/^\s*$/.test(child.firstChild.data) && (!child.childNodes[1] || !/^[I|A]$/.test(child.childNodes[1].tagName)))))continue;
+                if(getDepth(child)==getDepth(largestContent)){
+                    let childNodes=child.childNodes,cStr="\r\n",hasText=false;
+                    for(let j=0;j<childNodes.length;j++){
+                        let childNode=childNodes[j];
+                        if(childNode.nodeType==3 && childNode.data && !/^\s*$/.test(childNode.data))hasText=true;
+                        if(childNode.tagName=="BR")cStr+="\r\n";
+                        else if(!/SCRIPT|STYLE/.test(childNode.tagName) && childNode.textContent)cStr+=childNode.textContent.replace(/\s*/,"  ");
+                    }
+                    if(hasText)rStr+=cStr;
+                }
             }
         }
         return rStr;
