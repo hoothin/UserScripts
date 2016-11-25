@@ -14,6 +14,16 @@
 // @include     http*://hacg.*/wordpress/*
 // @include     http*://www.hacg.*/wp/*
 // @include     http*://hacg.*/wp/*
+// @include     http*://hacg.riwee.com/*
+// @include     http*://hacg.me/*
+// @include     http*://hacg.in/*
+// @include     http*://hacg.be/*
+// @include     http*://hacg.lol/*
+// @include     http*://hacg.club/*
+// @include     http*://hacg.li/*
+// @include     http*://hacg.fi/*
+// @include     http*://hacg.red/*
+// @include     http*://hacg.la/*
 // @include     http*://blog.reimu.net/*
 // @include     http*://pan.baidu.com/share/*
 // @include     http*://pan.baidu.com/s/*
@@ -51,7 +61,7 @@
 // @include     http*://htai.*
 // @include     http*://gmgard.com/*
 // @include     http*://*.gmgard.com/*
-// @version     3.20.55
+// @version     3.20.56
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
@@ -242,14 +252,14 @@
                 offset:55,
                 articleSel:"section.card"
             },
-            {
+            /*{
                 name:"nacg",
                 url:"http://nacg.me/",
                 regex:/nacg\.me/,
                 hideOd:true,
                 offset:65,
                 contentArea:'.content'
-            },
+            },*/
             {
                 name:"acggj",
                 url:"https://www.acggj.com/",
@@ -707,6 +717,10 @@
                 curArticle=null;
             }
         }
+    });
+    var mousewheelEvent=navigator.userAgent.toLowerCase().indexOf('firefox')==-1?"mousewheel":"DOMMouseScroll";
+    document.addEventListener(mousewheelEvent,function(e){
+        if(curArticle)curArticle.classList.remove("oD_sel");
     });
 
     document.getElementsByTagName("head")[0].appendChild(nod);
