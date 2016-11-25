@@ -7,7 +7,7 @@
 // @description:zh-TW 一鍵自動將磁鏈、bt種子或其他下載資源離綫下載至網槃
 // @namespace    http://tampermonkey.net/
 // @require      http://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
-// @version      1.0.40
+// @version      1.0.41
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -137,9 +137,9 @@
     }
 
     function getAllEnableUrl() {
-        if(GM_getValue('eoDisable_'+location.href))return;
+        if(GM_getValue('eoDisable_'+document.domain))return;
         var parentDiv=$("<div style='display:none;position:relative;z-index:99999;overflow:visible;text-align:left;'></div>");
-        var rawnodes = $(enableUrl).get();
+        var rawnodes = $(enableUrl).get(),customnodes=[];
         var nodes = [];
         var i,x;
         var curNode;
@@ -152,7 +152,7 @@
                 for(var reg of regs){
                     var patt=new RegExp(reg);
                     if(patt.test(aTag.href) && $.inArray(aTag, rawnodes)==-1){
-                        rawnodes.push(aTag);
+                        customnodes.push(aTag);
                         break;
                     }
                 }
@@ -211,6 +211,14 @@
                     }
                     if(disable)continue;
                 }
+                if(!include(nodes,curNode)){
+                    nodes.push(curNode);
+                }
+            }
+        }
+        if(customnodes.length > 0){
+            for (i = 0; i < customnodes.length; i++) {
+                curNode = customnodes[i];
                 if(!include(nodes,curNode)){
                     nodes.push(curNode);
                 }
@@ -409,7 +417,7 @@
                 }, 500);
                 GM_deleteValue('eoUrl');
             }
-        }else if(i > 6 || ((i++) === 0 && $(enableUrl).length > 0)){
+        }else if(i > 2 || ((i++) === 0 && $(enableUrl).length > 0)){
             window.clearInterval(t);
             getAllEnableUrl();
         }
@@ -419,11 +427,11 @@
     }
     function toggleIcon(){
         $('.whx-a').toggle(500);
-        if(GM_getValue('eoDisable_'+location.href)){
-            GM_deleteValue('eoDisable_'+location.href);
+        if(GM_getValue('eoDisable_'+document.domain)){
+            GM_deleteValue('eoDisable_'+document.domain);
             if($('.whx-a').length<1)getAllEnableUrl();
         }else{
-            GM_setValue('eoDisable_'+location.href,true);
+            GM_setValue('eoDisable_'+document.domain,true);
         }
     }
     GM_registerMenuCommand(i18n.toggle, toggleIcon);
