@@ -7,7 +7,7 @@
 // @description:zh-TW 一鍵自動將磁鏈、bt種子或其他下載資源離綫下載至網槃
 // @namespace    http://tampermonkey.net/
 // @require      http://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
-// @version      1.0.41
+// @version      1.0.42
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -79,6 +79,7 @@
     var disableUrl=[".torrentkitty.","bt.box.n0808.com"];
     var lang = navigator.appName=="Netscape"?navigator.language:navigator.userLanguage;
     var i18n={};
+    var showType=!!GM_getValue("showType");
     $=jQuery;
     switch (lang){
         case "zh-CN":
@@ -169,7 +170,10 @@
             offNode.addClass('whx-a').css("position","absolute").css("margin-top","0px").css("margin-left","0px").attr("target","_blank");
             let siteConfig=sites[x];
             offNode.css("background-color","#"+siteConfig.bgColor).attr("title",i18n[siteConfig.name] ).attr("href", siteConfig.url);
-            if(siteConfig.name!="xunlei")offNode.click(function (event) {GM_setValue("eoUrl",getRightMagnetUrl(offUrl));});
+            offNode.click(function(e){
+                if(siteConfig.name!="xunlei")GM_setValue("eoUrl",getRightMagnetUrl(offUrl));
+                e.stopPropagation();
+            });
             if(siteConfig.bgImg)offNode.css("background-image","url(\""+siteConfig.bgImg+"\")");
             /*switch(x){
             case 0:
@@ -232,6 +236,12 @@
             listLen = nodes.length;
             setCss();
             if (listLen !== 0) {
+                var preNode;
+                if(showType){
+                    document.addEventListener("click", function(){
+                        if(preNode)preNode.hide(300);
+                    });
+                }
                 for (i = 0; i < listLen; i++) {
                     curNode = nodes[i];
                     let clone=$("<a></a>").attr("style",curNode.getAttribute("style")).attr("href",curNode.getAttribute("href")).addClass('whx-a').css("background-color","#e1e1e1").css("background-image",'url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAMAAADzN3VRAAAARVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADc6ur3AAAAFnRSTlMAYM5vMOA/ENGegK2olI6G1b97Z0sXENA+jAAAAKFJREFUKM+FklkSxCAIRHFfss3K/Y86iQSDVqzpH7FfgQpCVfAmGx+gl9JI0qrxrcNLzooEbKUG4EKWdkCiDRV0N0RTrZ5wvdgTTgp4SzCAHxAPZkAM5GOJWuuT7FE5OVPOBFLTYb3Oc2YB5uJ8+G6pgkTGt74ntcCJHiwFLHw10Tdc93jlGXGvSRtsHNpuPs+/o1ODfxAtSL0f7HPC+L/9AF60G3QxO1UaAAAAAElFTkSuQmCC")');
@@ -259,6 +269,16 @@
                         e.stopPropagation();
                     });
                     $(curNode).after(clone);
+                    if(showType){
+                        clone.hide();
+                        $(curNode).mouseover(function(){
+                            if(clone.is(':hidden')){
+                                if(preNode)preNode.hide(300);
+                                clone.show(500);
+                                preNode=clone;
+                            }
+                        });
+                    }
                 }
             }
         }
@@ -299,23 +319,38 @@
         var curlink;
         if (location.href.indexOf("github.com/hoothin/UserScripts/tree/master/Easy%20offline") != -1){
             window.clearInterval(t);
+            $('head').append(`
+            <style>
+                .whx-btn{
+                    background-color:#3892ed;
+                    transition:background-color 0.25s ease;
+                }
+                .whx-btn:hover{
+                    background-color:#83c1ff;
+                }
+            </style>`);
             var configContent=document.createElement("div");
             document.body.appendChild(configContent);
             configContent.outerHTML=`
             <div id="configContent" style="display: none;">
                 <div style="width:300px;height:300px;position:fixed;left:50%;top:50%;margin-top:-150px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;">
-                    <div style="text-align:center;font-size: 12px;margin-top: 25px;">自定义需要启用一键下载的链接正则，一行一条</div>
-                    <textarea id="configInput" placeholder="例：http:.*\\.php\\?getRes=\\d+" style="position:absolute;left:20px;top:50px;width:260px;height:200px"></textarea>
-                    <button id="configSave" type="button" style="position:absolute;left:110px;top:260px;width:80px;height:30px;background-color:#3892ed;color:white;border-radius:5px;border:0px;">设置</button>
-                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAMAAAAM7l6QAAAA5FBMVEUAAAD+/v7////9/f7////////+/v7+/v7////+/v7+/v7////+/v7+/v7////+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7////////////+/v7+/v7+/v7+/v7+/v4uje3///82ke7s9P3N5PtQoPDI4fqCu/Tu9v5Im+/6/P+VxfZgqPFNnvDp8/3f7fq42Pmnz/d1tPNvsfNkq/JCmO/4+/7X6fz19/rn8PqYx/aNwfV8uPRqrvJZpfFUovAzkO3Q5vu92/mr0fieyva92fWx0vQ6lO5pygFTAAAAJHRSTlMAmfD+RMGwgj2mknlIKR/36+XGnIyHfnJfVDk2My8S4E1CJBvTatKDAAABY0lEQVQoz4WSZ1fCMBRA05ahLPfemkspBUFwgGz3+P//x/hK6ZBzvB/ak96+kZeoGCtFK5eziitqCSfWOnM2CuWUrOyQYPc0bjM2htHXh+/ffQ4lQ6zEPoZ6TwdUp10M56EtAe5MR7y0HGAeX7Ghe6MTzIZwFtTfBrepUzw4UFSGY8CUTTMGLo3eglv58By21pRnB7aNBqTwPfWq/OVey9sH22wZXiWo6Yr3GtRl/f0IRyoPYy14v97YWjVY12BPrcK9XvhaZPUdWCoLbR35yOoW5P7R8eQ3JrmbSp6HVmSrXuTrmNYyUAs2JkL6D6YjG1PgNGXK87F4nWAsUxmL2gyH6oVD7cuhdqFg9CE4T/oPE6CsgvBOP21715AP7ugaDFK+3YD1KyUcAG47bn0TSylxFd8WDTwMMByoBSUHw+jd9/3JbQODnVExygUS7FRUksPVtdDZW8dqCZm8lc1auxcq4gc02GVGTUchmgAAAABJRU5ErkJggg==" id="configQuit" style="position:absolute;right:0px;top:0px;cursor: pointer;" />
+                    <div style="text-align:center;font-size: 12px;margin-top: 28px;">自定义需要启用一键下载的链接正则，一行一条</div>
+                    <textarea id="configInput" placeholder="例：http:.*\\.php\\?getRes=\\d+" style="position:absolute;left:20px;top:50px;width:260px;height:170px"></textarea>
+                    <label style="position:absolute;left:60px;top:225px;"><input id="showType" type="checkbox"/>仅当鼠标经过时显示图标</label>
+                    <button id="configSave" class="whx-btn" type="button" style="position:absolute;left:110px;top:260px;width:80px;height:30px;color:white;border-radius:5px;border:0px;outline:none;">设置</button>
+                    <div id="configQuit" class="whx-btn" style="width:28px;height:28px;border-radius:14px;position:absolute;right:2px;top:2px;cursor:pointer;">
+                        <span style="height:28px;line-height:28px;display:block;color:#FFF;text-align:center;font-size:20px;">╳</span>
+                    </div>
                 </div>
             </div>`;
             var configInput=document.querySelector("#configInput");
             var configQuit=document.querySelector("#configQuit");
             var configSave=document.querySelector("#configSave");
+            var showTypeCheck=document.querySelector("#showType");
             configContent=document.querySelector("#configContent");
             configContent.style.display="block";
             if(GM_getValue("eoReg"))$(configInput).val(GM_getValue("eoReg").join("\n"));
+            if(GM_getValue("showType"))showTypeCheck.checked=true;
             $(configQuit).click(function (event) {configContent.style.display="none";});
             $(configSave).click(function (event) {
                 var regStr=$(configInput).val();
@@ -329,6 +364,7 @@
                     }
                 }
                 GM_setValue("eoReg",regStrs);
+                GM_setValue("showType", showTypeCheck.checked);
                 alert("设置成功");
             });
         }else if (location.href.indexOf("furk.net/users/files/add") != -1){
