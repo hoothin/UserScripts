@@ -4,7 +4,7 @@
 // @name:zh-TW   懶人小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      0.6
+// @version      0.7
 // @description  Fetch and download main content on current page
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取小說、論壇內容等並保存為TXT文檔
@@ -85,31 +85,17 @@
         }
         for(let i=0;i<aEles.length;i++){
             let aTag=aEles[i];
+            var contentType=document.querySelector("meta[http-equiv=Content-Type]");
             GM_xmlhttpRequest({
                 method: 'GET',
                 url: aTag.href,
+                overrideMimeType:contentType?contentType.content:null,
                 onload: function(result) {
                     var doc = getDocEle(result.responseText);
                     if (!doc) {
                         return;
                     }
-                    var contentType=doc.querySelector("meta[http-equiv=Content-Type]");
-                    if(contentType && !/utf\-?8/i.test(contentType.content)){
-                        GM_xmlhttpRequest({
-                            method: 'GET',
-                            url: aTag.href,
-                            overrideMimeType:contentType.content,
-                            onload: function(result) {
-                                var doc = getDocEle(result.responseText);
-                                if (!doc) {
-                                    return;
-                                }
-                                processDoc(i, aTag, doc);
-                            }
-                        });
-                    }else{
-                        processDoc(i, aTag, doc);
-                    }
+                    processDoc(i, aTag, doc);
                 }
             });
         }
@@ -139,27 +125,23 @@
             }
         }
         var childlist=pageData.querySelectorAll(largestContent.tagName);
+        function getRightStr(ele, noTextEnable){
+            let childNodes=ele.childNodes,cStr="\r\n",hasText=false;
+            for(let j=0;j<childNodes.length;j++){
+                let childNode=childNodes[j];
+                if(childNode.nodeType==3 && childNode.data && !/^\s*$/.test(childNode.data))hasText=true;
+                if(childNode.tagName=="BR")cStr+="\r\n";
+                else if(!/SCRIPT|STYLE/.test(childNode.tagName) && childNode.textContent)cStr+=childNode.textContent.replace(/\s*/,"  ");
+            }
+            if(hasText || noTextEnable)rStr+=cStr;
+        }
         for(i=0;i<childlist.length;i++){
             var child=childlist[i];
-            if(largestContent.className && largestContent.className==child.className){
-                let childNodes=child.childNodes,cStr="\r\n",hasText=false;
-                for(let j=0;j<childNodes.length;j++){
-                    let childNode=childNodes[j];
-                    if(childNode.tagName=="BR")cStr+="\r\n";
-                    else if(!/SCRIPT|STYLE/.test(childNode.tagName) && childNode.textContent)cStr+=childNode.textContent.replace(/\s*/,"  ");
-                }
-                rStr+=cStr;
-            }else {
-                if(child.firstChild && ((child.firstChild.nodeType!=3 && !/^[I|A]$/.test(child.firstChild.tagName)) || (/^\s*$/.test(child.firstChild.data) && (!child.childNodes[1] || !/^[I|A]$/.test(child.childNodes[1].tagName)))))continue;
-                if(getDepth(child)==getDepth(largestContent)){
-                    let childNodes=child.childNodes,cStr="\r\n",hasText=false;
-                    for(let j=0;j<childNodes.length;j++){
-                        let childNode=childNodes[j];
-                        if(childNode.nodeType==3 && childNode.data && !/^\s*$/.test(childNode.data))hasText=true;
-                        if(childNode.tagName=="BR")cStr+="\r\n";
-                        else if(!/SCRIPT|STYLE/.test(childNode.tagName) && childNode.textContent)cStr+=childNode.textContent.replace(/\s*/,"  ");
-                    }
-                    if(hasText)rStr+=cStr;
+            if(getDepth(child)==getDepth(largestContent)){
+                if(largestContent.className && largestContent.className==child.className){
+                    getRightStr(child, true);
+                }else {
+                    getRightStr(child, false);
                 }
             }
         }
