@@ -4,9 +4,9 @@
 // @name:zh-TW  琉神轉
 // @name:ja     琉璃神社工具セット
 // @namespace   hoothin
-// @description         琉璃神社工具集，支持诸多绅士站（灵梦御所、纯爱计划、绅士二次元、萌心次元、次元轨迹、ACG调查小队、幻天领域、轻萌社、天使二次元、樱花漫舍、风铃窝、次元の圣光、爱弹幕、幻想次元、司机会所、里番萌、最ACG、绅士仓库、梦幻二次元、ACG和谐区/里世界、寂月神社、萌幻之乡、绅士之庭），神秘代码转换成下载链接，百度网盘自动填写提取密码，F8、shift+F8站点切换，左右方向键文章跳转，Ctrl+左右快捷翻页，Ctrl+上下跳入跳出，下载链接嗅探，绕过重定向跳转，各种和谐补丁
+// @description         琉璃神社工具集，支持诸多绅士站（灵梦御所、纯爱计划、绅士二次元、萌心次元、次元轨迹、ACG调查小队、幻天领域、天使二次元、樱花漫舍、风铃窝、次元の圣光、爱弹幕、幻想次元、司机会所、里番萌、最ACG、绅士仓库、绅士图书馆、梦幻二次元、ACG和谐区/里世界、寂月神社、萌幻之乡、绅士之庭等），神秘代码转换成下载链接，百度网盘自动填写提取密码，F8、shift+F8站点切换，左右方向键文章跳转，Ctrl+左右快捷翻页，Ctrl+上下跳入跳出，下载链接嗅探，绕过重定向跳转，各种和谐补丁
 // @description:en      Glazed shrine and other adult gentleman station (Reimu imperial, pure love plan, gentleman two dimension, dimension and dimension trajectory, adorable heart ACG survey team, the magic day in the field, light agency, two dimensional, adorable Angel Sakura diffuse homes, Shengguang, love nest, Campanula dimension barrage, fantasy element, our opportunities, some adorable) mysterious code into the download link, F8, shift+F8 switching station, Baidu disk automation, harmonious patch
-// @description:zh-TW   琉璃神社工具集，支持諸多紳士站（靈夢禦所、純愛計劃、紳士二次元、萌心次元、次元軌跡、ACG調查小隊、幻天領域、輕萌社、天使二次元、櫻花漫舍、風鈴窩、次元の聖光、愛彈幕、幻想次元、司機會所、裏番萌、最ACG、紳士倉庫、夢幻二次元、ACG和諧區/裏世界、寂月神社、萌幻之鄕、紳士の庭），神秘代碼轉換成下載鏈接，百度網盤自動填寫提取密碼，F8、shift+F8站點切換，左右方向鍵文章跳轉，Ctrl+左右快捷翻頁，Ctrl+上下跳入跳出，下載鏈接嗅探，繞過重定向跳轉，各種和諧補丁
+// @description:zh-TW   琉璃神社工具集，支持諸多紳士站（靈夢禦所、純愛計劃、紳士二次元、萌心次元、次元軌跡、ACG調查小隊、幻天領域、天使二次元、櫻花漫舍、風鈴窩、次元の聖光、愛彈幕、幻想次元、司機會所、裏番萌、最ACG、紳士倉庫、紳士圖書館、夢幻二次元、ACG和諧區/裏世界、寂月神社、萌幻之鄕、紳士の庭等），神秘代碼轉換成下載鏈接，百度網盤自動填寫提取密碼，F8、shift+F8站點切換，左右方向鍵文章跳轉，Ctrl+左右快捷翻頁，Ctrl+上下跳入跳出，下載鏈接嗅探，繞過重定向跳轉，各種和諧補丁
 // @description:ja      琉璃神社工具セット、秋の名山老運転手専用
 // @author      hoothin
 // @icon        https://www.hacg.fi/favicon.ico
@@ -61,7 +61,7 @@
 // @include     http*://htai.*
 // @include     http*://gmgard.com/*
 // @include     http*://*.gmgard.com/*
-// @version     3.20.58
+// @version     3.20.59
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
@@ -285,7 +285,7 @@
         };
     }
 
-    var t, curSite, curArticle;
+    var t, curSite, curArticle, copyData;
     var originTitile = document.title;
     var isHttps=location.protocol=="https:";
     if(isHttps){
@@ -722,6 +722,9 @@
     document.addEventListener(mousewheelEvent,function(e){
         if(curArticle)curArticle.classList.remove("oD_sel");
     });
+    document.addEventListener("copy", function(e) {
+        copyData=document.getSelection().toString();
+    });
 
     document.getElementsByTagName("head")[0].appendChild(nod);
     if((!curSite || !curSite.hideOd) && !frameElement){
@@ -732,6 +735,9 @@
             oD_link.style.visibility = "visible";
             oD_link2.style.visibility = "visible";
             rocketBtn.style.visibility = "visible";
+            if(copyData && !oD_text.value){
+                oD_text.value=copyData;
+            }
         };
         oD_box.onmouseout = function(e) {
             oD_link.style.visibility = "hidden";
