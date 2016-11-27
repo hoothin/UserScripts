@@ -298,9 +298,9 @@
              url: /^https?:\/\/huaban\.com\//i,
              ext: 'previous-2',
              // ext: function(target) {
-             // 	if (target.className == 'cover') {
-             // 		return target.parentNode.querySelector('img');
-             // 	}
+             //     if (target.className == 'cover') {
+             //         return target.parentNode.querySelector('img');
+             //     }
              // },
              getImage: function() {
                  var pic = /(.*img.hb.aicdn.com\/.*)_fw(?:236|320)$/i
@@ -492,10 +492,10 @@
              s: "r;$1.baidu.com/$2/pic/item/$3"
             },
             // {name: "百度图片2",
-            // 	d: "image.baidu.com",  // imgt8.bdstatic.com 类型的图片链接
-            // 	r: "image\\.baidu\\.com/detail/newindex\\?",
-            // 	q: 'img[alt="preloading"][src*="/pic/item/"]',
-            // 	// description: './../../following-sibling::div[@class="ext-info"]/a',
+            //  d: "image.baidu.com",  // imgt8.bdstatic.com 类型的图片链接
+            //  r: "image\\.baidu\\.com/detail/newindex\\?",
+            //  q: 'img[alt="preloading"][src*="/pic/item/"]',
+            //  // description: './../../following-sibling::div[@class="ext-info"]/a',
             // },
             {name: "GoogleContent",  // 来自 Imagus 扩展
              r: "^((?:(?:lh|gp|yt)\\d+\\.g(?:oogleuserconten|gph)|\\d\\.bp\\.blogspo)t\\.com/)(?:([_-](?:[\\w\\-]{11}/){4})[^/]+(/[^?#]+)?|([^=]+)).*",
@@ -548,10 +548,10 @@
 
             // 视频、新闻
             // {name: "优酷电视剧",
-            // 	d: "youku.com",
-            // 	r: "www\\.youku\\.com\\/show_page\\/id_.*\\.html",
-            // 	q: ".baseinfo > .thumb > img",
-            // 	example: 'http://www.youku.com/v_olist/c_97.html',
+            //  d: "youku.com",
+            //  r: "www\\.youku\\.com\\/show_page\\/id_.*\\.html",
+            //  q: ".baseinfo > .thumb > img",
+            //  example: 'http://www.youku.com/v_olist/c_97.html',
             // },
             {name: "人人影视",
              d: "yyets.com",
@@ -646,9 +646,9 @@
         //api项，请返回给一个{url:url,wSize:{w:,h:}}，脚本会自动调用window.open打开，如果不返回任何的话，脚本将不做任何其他事情。
         //api的参数
         /*{
-	title
-	pic
-	url
+    title
+    pic
+    url
 } */
         prefs.share={
             weibo:{
@@ -903,12 +903,12 @@
         //获取窗口大小.
         function getWindowSize(){
             /*
-		//包含滚动条
-		return {
-			h:window.innerHeight,
-			w:window.innerWidth,
-		};
-	*/
+        //包含滚动条
+        return {
+            h:window.innerHeight,
+            w:window.innerWidth,
+        };
+    */
 
             //去除滚动条的窗口大小
             var de=document.documentElement;
@@ -1892,10 +1892,10 @@
 
                     // new
                     // scaleZoomResized: {
-                    // 	shown: false,
-                    // 	count: 0,
-                    // 	description: '缩放的图片，图片尺寸最少相差比例 ' + prefs.gallery.zoomresized + '%',
-                    // 	name: '小缩放'
+                    //  shown: false,
+                    //  count: 0,
+                    //  description: '缩放的图片，图片尺寸最少相差比例 ' + prefs.gallery.zoomresized + '%',
+                    //  name: '小缩放'
                     // },
                     scaleSmall: {
                         shown: true,
@@ -2616,9 +2616,9 @@ padding-left:24px;">'+shareItem.name+'</span>');
 
             initToggleBar: function() {  // 是否显示切换 sidebar 按钮
                 /**
-		 * TODO：仿造下面的链接重新改造过？
-		 * http://image.baidu.com/detail/newindex?col=%E8%B5%84%E8%AE%AF&tag=%E4%BD%93%E8%82%B2&pn=0&pid=5123662821688142478&aid=&user_id=10086&setid=-1&sort=0&newsPn=4&star=&fr=hotword&from=1
-		 */
+         * TODO：仿造下面的链接重新改造过？
+         * http://image.baidu.com/detail/newindex?col=%E8%B5%84%E8%AE%AF&tag=%E4%BD%93%E8%82%B2&pn=0&pid=5123662821688142478&aid=&user_id=10086&setid=-1&sort=0&newsPn=4&star=&fr=hotword&from=1
+         */
                 if (prefs.gallery.sidebarToggle) {
                     var toggleBar = this.eleMaps['sidebar-toggle'];
                     toggleBar.style.display = 'block';
@@ -4199,7 +4199,7 @@ background-color:red;\
 
                 // 让 description 的文字内容溢出用点点点(...)省略号表示
                 // .pv-gallery-head-left-img-info-description {
-                //   	overflow: hidden;
+                //      overflow: hidden;
                 //     text-overflow: ellipsis;
                 //     white-space: nowrap;
                 //     width: 27em;
@@ -4781,7 +4781,8 @@ left:0px;\
                     '<span class="pv-pic-window-close"></span>' +
                     '<span class="pv-pic-window-search" title="以图搜图"></span>' +
                     '<span class="pv-pic-window-range"></span>' +
-                    '<span class="pv-pic-window-description"></span>';
+                    '<span class="pv-pic-window-description"></span>'+
+                    '<span class="pv-pic-search-state"></span>';
 
                 container.insertBefore(img,container.firstChild);
 
@@ -4810,6 +4811,7 @@ left:0px;\
                 this.searchButton=searchButton;
                 var srcs, from;
                 img.onerror=function(e){
+                    setSearchState("原图加载失败，尝试加载下一结果……");
                     var src=self.srcs.shift();
                     if(src)img.src=src;
                     else{
@@ -4820,9 +4822,17 @@ left:0px;\
                                 self.srcs=srcs;
                                 self.img.src=srcs.shift();
                             },null,null,from);
+                        }else{
+                            setSearchState("未找到原图");
+                            setTimeout(function(){
+                                setSearchState("");
+                            },2000);
                         }
                     }
                 };
+                img.onload=function(e){
+                    setSearchState("");
+                }
                 searchButton.addEventListener('click',function(e){
                     searchImgByImg(self.img.src, function(srcs, index){
                         from=index;
@@ -4832,15 +4842,15 @@ left:0px;\
                 },false);
 
                 /**
-		 * 说明
-		 * 1、对原来的适应屏幕等功能会有影响，暂时禁用。
-		 * 2、分为 absolute 和默认的2种情况
-		 */
+         * 说明
+         * 1、对原来的适应屏幕等功能会有影响，暂时禁用。
+         * 2、分为 absolute 和默认的2种情况
+         */
                 if (this.data) {
                     var descriptionSpan = container.querySelector('.pv-pic-window-description');
                     // descriptionSpan.style.cssText = '\
-                    // 	bottom: -40px;\
-                    // 	left: 10px;\
+                    //  bottom: -40px;\
+                    //  left: 10px;\
                     // ';
                     descriptionSpan.textContent = this.data.description || '';
                     // descriptionSpan.style.display = this.data.description ? 'block' : 'none';
@@ -5101,6 +5111,19 @@ display: block;\
 .pv-pic-window-description {\
 margin-top: 20px;\
 min-height: 20px;\
+}\
+.pv-pic-search-state {\
+top: 10px;\
+left: 10px;\
+display: block;\
+position: absolute;\
+z-index: 1;\
+color: #ffff00;\
+width: 300px;\
+font-size: large;\
+text-shadow: 1px 0 0 #000,-1px 0 0 #000,0 1px 0 #000,0 -1px 0 #000;\
+-webkit-text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;\
+-moz-text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;\
 }\
 .pv-pic-window-pic {\
 position: relative;\
@@ -6391,7 +6414,6 @@ background-color:rgba(255, 0, 0, 0.150);\
                             let searchFun=function(){
                                 console.log(self.data.imgSrc);
                                 searchImgByImg(self.data.imgSrc, function(srcs, index){
-                                    console.log(srcs);
                                     let src=srcs.shift();
                                     if(index==3){
                                         self.loadImg(src, srcs);
@@ -6433,63 +6455,63 @@ background-color:rgba(255, 0, 0, 0.150);\
                 var style=document.createElement('style');
                 style.type='text/css';
                 style.textContent='\
-.pv-loading-container {\
-position: absolute;\
-z-index:999999997;\
-background: black url("'+prefs.icons.loading+'") center no-repeat;\
-background-origin: content-box;\
-border: none;\
-padding: 1px 30px 1px 2px;\
-margin: 0;\
-opacity: 0.7;\
-height: 24px;\
-min-width: 24px;\
-box-shadow: 2px 2px 0px #666;\
--webkit-transition: opacity 0.15s ease-in-out;\
-transition: opacity 0.15s ease-in-out;\
-}\
-.pv-loading-container:hover {\
-opacity: 0.9;\
-}\
-.pv-loading-button {\
-cursor: pointer;\
-height: 24px;\
-width: 24px;\
-position: absolute;\
-right: 0;\
-top: 0;\
-opacity: 0.4;\
-background:transparent center no-repeat;\
--webkit-transition: opacity 0.15s ease-in-out;\
-transition: opacity 0.15s ease-in-out;\
-}\
-.pv-loading-button:hover {\
-opacity: 1;\
-}\
-.pv-loading-cancle{\
-background-image: url("'+prefs.icons.loadingCancle+'");\
-}\
-.pv-loading-retry{\
-display:none;\
-background-image: url("'+prefs.icons.retry+'");\
-}\
-.pv-loading-container_error{\
-background-image:none;\
-}\
-.pv-loading-container_error::after{\
-content:"加载失败";\
-line-height: 24px;\
-color: red;\
-font-size: 14px;\
-display:inline;\
-}\
-.pv-loading-container_error .pv-loading-cancle{\
-display:none;\
-}\
-.pv-loading-container_error .pv-loading-retry{\
-display:block;\
-}\
-';
+                .pv-loading-container {\
+                position: absolute;\
+                z-index:999999997;\
+                background: black url("'+prefs.icons.loading+'") center no-repeat;\
+                background-origin: content-box;\
+                border: none;\
+                padding: 1px 30px 1px 2px;\
+                margin: 0;\
+                opacity: 0.7;\
+                height: 24px;\
+                min-width: 24px;\
+                box-shadow: 2px 2px 0px #666;\
+                -webkit-transition: opacity 0.15s ease-in-out;\
+                transition: opacity 0.15s ease-in-out;\
+                }\
+                .pv-loading-container:hover {\
+                opacity: 0.9;\
+                }\
+                .pv-loading-button {\
+                cursor: pointer;\
+                height: 24px;\
+                width: 24px;\
+                position: absolute;\
+                right: 0;\
+                top: 0;\
+                opacity: 0.4;\
+                background:transparent center no-repeat;\
+                -webkit-transition: opacity 0.15s ease-in-out;\
+                transition: opacity 0.15s ease-in-out;\
+                }\
+                .pv-loading-button:hover {\
+                opacity: 1;\
+                }\
+                .pv-loading-cancle{\
+                background-image: url("'+prefs.icons.loadingCancle+'");\
+                }\
+                .pv-loading-retry{\
+                display:none;\
+                background-image: url("'+prefs.icons.retry+'");\
+                }\
+                .pv-loading-container_error{\
+                background-image:none;\
+                }\
+                .pv-loading-container_error::after{\
+                content:"加载失败";\
+                line-height: 24px;\
+                color: red;\
+                font-size: 14px;\
+                display:inline;\
+                }\
+                .pv-loading-container_error .pv-loading-cancle{\
+                display:none;\
+                }\
+                .pv-loading-container_error .pv-loading-retry{\
+                display:block;\
+                }\
+                ';
                 document.head.appendChild(style);
             },
             remove:function(){
@@ -6500,7 +6522,7 @@ display:block;\
                 };
             },
             error:function(msg,img,e){
-                if(msg)this.loadingAnim.innerHTML="<font color=red>" + msg + "，</font>";
+                if(msg)console.debug(msg);
                 this.loadingAnim.classList.add('pv-loading-container_error');
                 console.debug('picviewer CE 载入大图错误：%o', this.data);
 
@@ -6958,9 +6980,9 @@ background-image:url("'+ prefs.icons.magnifier +'");\
             var handleError;
 
             /**
-	 * @param  q  图片的选择器或函数
-	 * @param  c  图片说明的选择器或函数
-	 */
+     * @param  q  图片的选择器或函数
+     * @param  c  图片说明的选择器或函数
+     */
             function parsePage(url, q, c, post, cb) {
                 downloadPage(url, post, function(html) {
                     var iurl, iurls = [], cap, doc = createDoc(html);
@@ -7122,11 +7144,11 @@ background-image:url("'+ prefs.icons.magnifier +'");\
             }
 
             /**
-	 * 我新增了特殊的替换模式
-	 * 规则：
-	 *   {"r":"hotimg\\.com/image", "s":"/image/direct/"}
-	 *   把 image 替换为 direct ，就是 .replace(/image/, "direct")
-	 */
+     * 我新增了特殊的替换模式
+     * 规则：
+     *   {"r":"hotimg\\.com/image", "s":"/image/direct/"}
+     *   把 image 替换为 direct ，就是 .replace(/image/, "direct")
+     */
             function replace(s, m, r, http) {
                 if(!m) return s;
 
@@ -7400,7 +7422,7 @@ background-image:url("'+ prefs.icons.magnifier +'");\
 
                         // // 图片尺寸相差
                         // if (!isNaN(imgCS.h) && (imgAS.h * imgAS.w / (imgCS.h * imgCS.w) * 100 - 100) < prefs.gallery.zoomresized) {
-                        // 	type = 'scaleZoomResized'
+                        //  type = 'scaleZoomResized'
                         // }
                         if (imgAS.h < prefs.gallery.scaleSmallSize && imgAS.w < prefs.gallery.scaleSmallSize) {
                             type = 'scaleSmall';
@@ -7671,25 +7693,25 @@ background-image:url("'+ prefs.icons.magnifier +'");\
             var result;
 
             // if (target.nodeName != 'IMG') {  // 兼容 MPIV 脚本规则的非 img 节点，缺失图库的功能
-            // 	var info = MPIV.parseNode(target);
-            // 	if (info && info.r) {
-            // 		var img = info.node;
-            // 		result = {
-            // 			type: 'rule',
-            // 			src: info.url,
-            // 			srcs: info.urls,
-            // 			imgSrc: img.src,
+            //  var info = MPIV.parseNode(target);
+            //  if (info && info.r) {
+            //      var img = info.node;
+            //      result = {
+            //          type: 'rule',
+            //          src: info.url,
+            //          srcs: info.urls,
+            //          imgSrc: img.src,
 
-            // 			img: img,
-            // 			imgPA: null,
-            // 		};
+            //          img: img,
+            //          imgPA: null,
+            //      };
 
-            // 		if (info.q) {
-            // 			result.xhr = {
-            // 				q: info.q
-            // 			};
-            // 		}
-            // 	}
+            //      if (info.q) {
+            //          result.xhr = {
+            //              q: info.q
+            //          };
+            //      }
+            //  }
             // }
 
             if (!target || !result && target.nodeName != 'IMG') return;
@@ -8222,9 +8244,16 @@ background-image:url("'+ prefs.icons.magnifier +'");\
         });
     }
 
+    function setSearchState(words){
+        if(words)console.info(words);
+        var searchState = document.querySelector('.pv-pic-search-state');
+        if(searchState)searchState.innerHTML=words;
+    }
+
     function searchImgByImg(imgSrc, callBack, onError, noneResult, searchFrom){
         let srcs=[];
         var searchBaidu=function(){
+            setSearchState("百度识图开始……");
             getUrl("http://image.baidu.com/n/same?queryImageUrl="+encodeURIComponent(imgSrc)+"&isguessword=1&rn=30&fr=pc&pn=0&sort=size", function(d){
                 let baiduJson;
                 try{
@@ -8239,6 +8268,7 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                         if(srcs.length>2)break;
                         srcs.push(imgData.objURL);
                     }
+                    setSearchState("百度识图结束，共找到"+srcs.length+"张匹配图片");
                     callBack(srcs, 2);
                 }else{
                     if(noneResult)noneResult();
@@ -8247,6 +8277,7 @@ background-image:url("'+ prefs.icons.magnifier +'");\
             }, onError);
         };
         var searchGoogle=function(){
+            setSearchState("谷歌识图开始……");
             getUrl("https://www.google.com/searchbyimage?image_url="+encodeURIComponent(imgSrc), function(d){
                 let googleHtml=document.implementation.createHTMLDocument('');
                 googleHtml.documentElement.innerHTML = d.responseText;
@@ -8261,6 +8292,7 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                             let jsonData=JSON.parse(img.innerHTML);
                             srcs.push(jsonData.ou);
                         }
+                        setSearchState("谷歌识图结束，共找到"+srcs.length+"张匹配图片");
                         callBack(srcs, 3);
                     }, onError);
                 }else{
@@ -8269,6 +8301,7 @@ background-image:url("'+ prefs.icons.magnifier +'");\
             }, onError);
         };
         var searchTineye=function(){
+            setSearchState("Tineye识图开始……");
             getUrl("https://www.tineye.com/search?url="+encodeURIComponent(imgSrc)+"&sort=size", function(d){
                 let tineyeHtml=document.implementation.createHTMLDocument('');
                 tineyeHtml.documentElement.innerHTML = d.responseText;
@@ -8279,6 +8312,7 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                         if(srcs.length>2)break;
                         srcs.push(img.href);
                     }
+                    setSearchState("Tineye识图结束，共找到"+srcs.length+"张匹配图片");
                     callBack(srcs, 1);
                 }else{
                     searchGoogle();
