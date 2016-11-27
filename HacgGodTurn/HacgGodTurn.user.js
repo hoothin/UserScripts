@@ -4,9 +4,9 @@
 // @name:zh-TW  琉神轉
 // @name:ja     琉璃神社工具セット
 // @namespace   hoothin
-// @description         琉璃神社工具集，支持诸多绅士站（灵梦御所、纯爱计划、绅士二次元、萌心次元、次元轨迹、ACG调查小队、幻天领域、天使二次元、樱花漫舍、风铃窝、次元の圣光、爱弹幕、幻想次元、司机会所、里番萌、最ACG、绅士仓库、绅士图书馆、梦幻二次元、ACG和谐区/里世界、寂月神社、萌幻之乡、绅士之庭等），神秘代码转换成下载链接，百度网盘自动填写提取密码，F8、shift+F8站点切换，左右方向键文章跳转，Ctrl+左右快捷翻页，Ctrl+上下跳入跳出，下载链接嗅探，绕过重定向跳转，各种和谐补丁
+// @description         琉璃神社白科技工具集，支持诸多绅士站（灵梦御所、纯爱计划、绅士二次元、萌心次元、次元轨迹、ACG调查小队、幻天领域、天使二次元、樱花漫舍、风铃窝、次元の圣光、爱弹幕、幻想次元、司机会所、里番萌、最ACG、绅士仓库、绅士图书馆、梦幻二次元、ACG和谐区/里世界、寂月神社、萌幻之乡、绅士之庭等），神秘代码转换成下载链接，百度网盘自动填写提取密码，F8、Shift+F8站点切换，Ctrl+F8列表浏览，左右方向键文章跳转，Ctrl+左右快捷翻页，Ctrl+上下跳入跳出，下载链接嗅探，绕过重定向跳转，各种和谐补丁
 // @description:en      Glazed shrine and other adult gentleman station (Reimu imperial, pure love plan, gentleman two dimension, dimension and dimension trajectory, adorable heart ACG survey team, the magic day in the field, light agency, two dimensional, adorable Angel Sakura diffuse homes, Shengguang, love nest, Campanula dimension barrage, fantasy element, our opportunities, some adorable) mysterious code into the download link, F8, shift+F8 switching station, Baidu disk automation, harmonious patch
-// @description:zh-TW   琉璃神社工具集，支持諸多紳士站（靈夢禦所、純愛計劃、紳士二次元、萌心次元、次元軌跡、ACG調查小隊、幻天領域、天使二次元、櫻花漫舍、風鈴窩、次元の聖光、愛彈幕、幻想次元、司機會所、裏番萌、最ACG、紳士倉庫、紳士圖書館、夢幻二次元、ACG和諧區/裏世界、寂月神社、萌幻之鄕、紳士の庭等），神秘代碼轉換成下載鏈接，百度網盤自動填寫提取密碼，F8、shift+F8站點切換，左右方向鍵文章跳轉，Ctrl+左右快捷翻頁，Ctrl+上下跳入跳出，下載鏈接嗅探，繞過重定向跳轉，各種和諧補丁
+// @description:zh-TW   琉璃神社白科技工具集，支持諸多紳士站（靈夢禦所、純愛計劃、紳士二次元、萌心次元、次元軌跡、ACG調查小隊、幻天領域、天使二次元、櫻花漫舍、風鈴窩、次元の聖光、愛彈幕、幻想次元、司機會所、裏番萌、最ACG、紳士倉庫、紳士圖書館、夢幻二次元、ACG和諧區/裏世界、寂月神社、萌幻之鄕、紳士の庭等），神秘代碼轉換成下載鏈接，百度網盤自動填寫提取密碼，F8、Shift+F8站點切換，Ctrl+F8列表瀏覽，左右方向鍵文章跳轉，Ctrl+左右快捷翻頁，Ctrl+上下跳入跳出，下載鏈接嗅探，繞過重定向跳轉，各種和諧補丁
 // @description:ja      琉璃神社工具セット、秋の名山老運転手専用
 // @author      hoothin
 // @icon        https://www.hacg.fi/favicon.ico
@@ -61,7 +61,9 @@
 // @include     http*://htai.*
 // @include     http*://gmgard.com/*
 // @include     http*://*.gmgard.com/*
-// @version     3.20.59
+// @include     http*://www.kou.moe/*
+// @include     http*://www.91moe.com/*
+// @version     3.20.60
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
@@ -82,44 +84,44 @@
     var config={
         sites:[
             {
-                name:"hacg",
+                name:"琉璃神社",
                 url:"https://www.hacg.fi/wp/",
                 regex:/hacg\./
             },
             {
-                name:"reimu",
+                name:"灵梦御所",
                 url:"https://blog.reimu.net/",
                 regex:/blog\.reimu\./
             },
             {
-                name:"sexacg",
+                name:"纯爱计划",
                 url:"https://sexacg.com/",
                 regex:/sexacg\./,
                 contentArea:'article',
                 commArea:'su-quote-inner'
             },
             {
-                name:"acglover",
+                name:"次元の圣光",
                 url:"http://www.acglover.top/",
                 regex:/acglover\.top/,
                 offset:60,
                 contentArea:".entry-inner"
             },
             {
-                name:"acgtf",
+                name:"绅士二次元",
                 url:"https://www.acg.tf/",
                 regex:/acg\.tf/,
                 offset:50,
                 articleSel:"div.dt-news-post"
             },
             {
-                name:"tianshit",
+                name:"天使二次元",
                 url:"https://www.tianshit.com/",
                 regex:/tianshit\./,
                 contentArea:'.article-content'
             },
             {
-                name:"acg12",
+                name:"ACG调查小队",
                 url:"https://acg12.com/",
                 regex:/acg12\./,
                 hideOd:true,
@@ -128,7 +130,7 @@
                 articleSel:"section.card"
             },
             {
-                name:"acg15",
+                name:"风铃窝",
                 url:"http://www.acg15.com/",
                 regex:/acg15\.com/,
                 hideOd:true,
@@ -136,7 +138,7 @@
                 articleSel:"section.card"
             },
             {
-                name:"lifan",
+                name:"里番萌",
                 url:"http://lifanmoe.com/",
                 regex:/lifanmoe\./,
                 downloadUrl:/lifanmoe\.com\/download/,
@@ -144,13 +146,13 @@
                 articleSel:"section.card"
             },
             {
-                name:"idanmu",
+                name:"爱弹幕",
                 url:"http://www.idanmu.co/",
                 regex:/idanmu\.co/,
                 offset:10
             },
             {
-                name:"sijihuisuo",
+                name:"司机会所",
                 url:"https://www.sijihuisuo.club/",
                 regex:/sijihuisuo\.club/,
                 innerPage:/sijihuisuo\.club\/(sj\/\d|\?p=\d)/,
@@ -158,27 +160,27 @@
                 contentArea:".ds-comments"
             },
             {
-                name:"acg18",
+                name:"幻想次元",
                 url:"https://acg18.us/",
                 regex:/acg18\./,
                 offset:55
             },
             {
-                name:"zuiacg",
+                name:"最ACG网",
                 url:"http://zuiacg.com/",
                 regex:/zuiacg\./,
                 hideOd:true,
                 offset:75
             },
             {
-                name:"galacg",
+                name:"绅士仓库",
                 url:"http://www.galacg.me/",
                 regex:/galacg\./,
                 hideOd:true,
                 articleSel:"div.article"
             },
             {
-                name:"mhecy",
+                name:"梦幻二次元",
                 url:"http://www.mhecy.com/",
                 regex:/mhecy\./,
                 downloadUrl:/www\.mhecy\.com\/\?page_id=\d+/,
@@ -187,27 +189,27 @@
                 articleSel:"section.card"
             },
             {
-                name:"oomoe",
+                name:"樱花漫舍",
                 url:"https://www.oomoe.moe/",
                 regex:/oomoe\.moe/,
                 hideOd:true,
                 offset:10
             },
             {
-                name:"acgzone",
+                name:"ACG和谐区/里世界/毛站",
                 url:"http://www.uraban.me/wp/",
                 regex:/acgzone\.org|uraban\.me/,
                 contentArea:'article'
             },
             {
-                name:"acgmoon",
+                name:"寂月神社",
                 url:"https://acgmoon.org/",
                 regex:/acgmoon\.(org|com)/,
                 offset:50,
                 contentArea:"div.post-content"
             },
             {
-                name:"moe-acg",
+                name:"萌幻之乡",
                 url:"https://www.moe-acg.cc/",
                 regex:/moe-acg\./,
                 offset:55,
@@ -216,27 +218,27 @@
                 articleSel:"section.card"
             },
             {
-                name:"htai",
+                name:"绅士图书馆",
                 url:"http://htai.co/",
                 regex:/htai\.(co|me)/,
                 contentArea:"div.post_content",
                 commArea:'commentlist'
             },
             {
-                name:"gmgard",
+                name:"紳士の庭",
                 url:"https://gmgard.com/",
                 regex:/gmgard\.com/,
                 articleSel:"div.post"
             },
             {
-                name:"mygalgame",
+                name:"我的Galgame资源发布站 - 忧郁的弟弟",
                 url:"https://www.mygalgame.com/",
                 regex:/mygalgame\.com/,
                 articleSel:".article",
                 commArea:'commentlist'
             },
             {
-                name:"acgnz",
+                name:"幻天领域",
                 url:"http://www.acgnz.cc/",
                 regex:/acgnz\.cc/,
                 hideOd:true,
@@ -245,7 +247,7 @@
                 articleSel:"section.card"
             },
             {
-                name:"moxacg",
+                name:"萌心次元",
                 url:"http://www.moxacg.com/",
                 regex:/moxacg\./,
                 hideOd:true,
@@ -253,7 +255,7 @@
                 articleSel:"section.card"
             },
             /*{
-                name:"nacg",
+                name:"轻萌社",
                 url:"http://nacg.me/",
                 regex:/nacg\.me/,
                 hideOd:true,
@@ -261,13 +263,31 @@
                 contentArea:'.content'
             },*/
             {
-                name:"acggj",
+                name:"次元轨迹",
                 url:"https://www.acggj.com/",
                 regex:/www\.(acggj|acg44)\./,
                 hideOd:true,
                 bbs:/bbs\.acggj\./,
                 offset:55,
                 articleSel:"section.card"
+            },
+            {
+                name:"萌口组",
+                url:"http://www.kou.moe/",
+                regex:/kou\.moe/,
+                offset:35,
+                articleSel:".arrow_box",
+                contentArea:'.article_content'
+            },
+            {
+                name:"九妖萌",
+                url:"http://www.91moe.com/",
+                regex:/91moe\.com/,
+                offset:55,
+                hideOd:true,
+                downloadUrl:/91moe\.com\/download/,
+                articleSel:"section.card",
+                contentArea:'.article_content'
             }
         ],
         rocketReg:/magnet:\?xt|pan\.baidu\.com\/s|yunpan\.cn|howfile\.com\/file|mega\.|ed2k:\/\/\|file|bt\.cosxcos\.com\/view|du\.acgget\.com\/go\/|\.mediafire\.com\/download\/|\.torrent$/,
@@ -316,7 +336,7 @@
         return;
     }else if(curSite){
         switch(curSite.name){
-            case "acgtf":
+            case "绅士二次元":
                 var content=document.querySelector('.entry-content');
                 if(content){
                     var plist = content.querySelectorAll("p");
@@ -343,7 +363,7 @@
                     }
                 }
                 break;
-            case "reimu":
+            case "灵梦御所":
                 var titleTime;
                 document.addEventListener('visibilitychange', function() {
                     if (document.hidden) {
@@ -395,11 +415,11 @@
                 });
                 createBlockBtn();
                 break;
-            case "acg12":
+            case "ACG调查小队":
                 if(isHttps)
                     addInsertHandler([["a","img","link","script"],[['p:(\\\/\\\/|\\\\\\/\\\\\\/)(www\\\.|static\\\.)?acg12','ps:$1$2acg12']]]);
                 break;
-            case "sijihuisuo":
+            case "司机会所":
                 if(curSite.innerPage.test(location.href)){
                     t=window.setInterval(function(){
                         if(document.querySelector(".ds-comments")){
@@ -410,7 +430,7 @@
                 }
                 changeUrl(true,[["a"],[['https?:\\\/\\\/[^\\\.]*(\\\.)?sijihuisuo\\\.club\\\/go\\\/\\\?url=','']]]);
                 break;
-            case "hacg":
+            case "琉璃神社":
                 var feiZao,feiZaos=document.querySelectorAll("p1"),i;
                 for(i=0;i<feiZaos.length;i++){
                     feiZao=feiZaos[i];
@@ -451,23 +471,23 @@
                     changeUrl(true,[["a"],[['http:(.*hacg)','https:$1']]]);
                 }
                 break;
-            case "moxacg":
+            case "萌心次元":
                 if(isHttps)addInsertHandler([["body","a","img","link","script"],[['p:(\\\/\\\/|\\\\\\/\\\\\\/)(www\\\.)?moxacg','ps:$1$2moxacg']]]);
                 break;
-            case "acggj":
+            case "次元轨迹":
                 if(isHttps){
                     changeUrl(true,[["a","img","script","link"],[['p:(\\\/\\\/|\\\\\\/\\\\\\/)(www\\\.|bbs\\\.)?acggj','ps:$1$2acggj']]]);
                     var baseUrl=document.querySelector('base');
                     if(baseUrl)baseUrl.href=baseUrl.href.replace(/http:/,"https:");
                 }
                 break;
-            case "acgnz":
+            case "幻天领域":
                 if(isHttps)addInsertHandler([["a","img","link","script"],[['p:(\\\/\\\/|\\\\\\/\\\\\\/)(www\\\.)?acgnz','ps:$1$2acgnz']]]);
                 break;
-            case "acglover":
+            case "次元の圣光":
                 changeUrl(true,[["a","img"],[['acglover\\\.net','acglover\\\.top']]]);
                 break;
-            case "idanmu":
+            case "爱弹幕":
                 var resets = document.querySelectorAll('body>style');
                 for(var i=0;i<resets.length;i++){
                     var reset=resets[i];
@@ -482,7 +502,7 @@
                     r10.after(r18);
                 }
                 break;
-            case "zuiacg":
+            case "最ACG网":
                 let shield=document.querySelector('#shieldclass');
                 if(shield){
                     shield.parentNode.removeChild(shield);
@@ -531,7 +551,7 @@
                     }
                 }
                 break;
-            case "acgmoon":
+            case "寂月神社":
                 var postContent=document.querySelector("div.post-content");
                 if(postContent && postContent.classList.contains("hexie")){
                     var hexieBtn=document.createElement("button");
@@ -559,16 +579,16 @@
                     }
                 }
                 break;
-            case "acg18":
+            case "幻想次元":
                 changeUrl(true,[["a"],[['https?:\\\/\\\/[^\\\.]*(\\\.)?acg18\\\.us\\\/go\\\/\\\?url=','']]]);
                 break;
-            case "mygalgame":
+            case "我的Galgame资源发布站 - 忧郁的弟弟":
                 var downBtn=document.querySelector("a.hint--right");
                 if(downBtn){
                     var innBtn=downBtn.querySelector(".btn-danger");
                     if(innBtn){
                         var onclickStr=innBtn.getAttribute("onclick");
-                        if(/http:\/\/www\.mygalgame\.com\/go\.php\?url\=/.test(onclickStr)){
+                        if(/\/\/www\.mygalgame\.com\/go\.php\?url\=/.test(onclickStr)){
                             innBtn.setAttribute("onclick", "");
                             var href=onclickStr.replace(/.*www\.mygalgame\.com\/go\.php\?url\=([^']+)'.*/,"$1");
                             downBtn.setAttribute("href", href);
@@ -590,7 +610,7 @@
                 }
                 document.querySelector("ul.navbar-nav").appendChild(bgLi);
                 break;
-            case "gmgard":
+            case "紳士の庭":
                 if(isHttps)addInsertHandler([["img"],[['p(:\\\/\\\/static\.gmgard\.com)','ps$1']]]);
                 curSite.preRocket=function(){unsafeWindow.$('#dllist a').mouseenter();};
                 break;
@@ -616,11 +636,21 @@
     document.addEventListener("keydown", function(e) {
         if(curArticle && e.keyCode != 17)curArticle.classList.remove("oD_sel");
         if(e.keyCode == 119) {
-            var i=0;
-            if(curSite)i=config.sites.indexOf(curSite);
-            if(e.shiftKey) i=i===0?(config.sites.length-1):(i-1);
-            else i=i==(config.sites.length-1)?0:(i+1);
-            location.href = config.sites[i].url;
+            if(e.ctrlKey){
+                rocketContent.style.display="block";
+                var rocketLinks=document.querySelector("div#rocketLinks");
+                rocketLinks.innerHTML="";
+                for(var i=0;i<config.sites.length;i++){
+                    var site=config.sites[i];
+                    rocketLinks.innerHTML+="<span style='font-weight:bold;color:red;'>"+(i+1)+":\t</span>"+"<a href="+site.url+">"+site.name+"</a><br/>";
+                }
+            }else{
+                var i=0;
+                if(curSite)i=config.sites.indexOf(curSite);
+                if(e.shiftKey) i=i===0?(config.sites.length-1):(i-1);
+                else i=i==(config.sites.length-1)?0:(i+1);
+                location.href = config.sites[i].url;
+            }
             return false;
         }else{
             if(e.keyCode>36 && e.keyCode<41 && !e.shiftKey && !e.altKey){
@@ -727,6 +757,16 @@
     });
 
     document.getElementsByTagName("head")[0].appendChild(nod);
+    var rocketContent=document.createElement("div");
+    document.body.appendChild(rocketContent);
+    rocketContent.outerHTML=rocketStr;
+    rocketContent=document.querySelector("#rocketContent");
+    document.querySelector("#rocketQuit").onclick=function (){
+        rocketContent.style.display="none";
+    };
+    document.querySelector("#rocketContent>div").onclick=function (){
+        rocketContent.style.display="none";
+    };
     if((!curSite || !curSite.hideOd) && !frameElement){
         var oD_box=document.createElement("div");
         oD_box.id="oD_box";
@@ -793,10 +833,6 @@
         oD_box.appendChild(oD_link);
         oD_box.appendChild(oD_link2);
         oD_box.appendChild(oD_link3);
-        var rocketContent=document.createElement("div");
-        document.body.appendChild(rocketContent);
-        rocketContent.outerHTML=rocketStr;
-        rocketContent=document.querySelector("#rocketContent");
         var rocketBtn=document.createElement("button");
         rocketBtn.id="rocketBtn";
         rocketBtn.type="button";
@@ -835,12 +871,6 @@
             if(rocketLinks.innerHTML===""){
                 rocketLinks.innerHTML="No links found!";
             }
-        };
-        document.querySelector("#rocketQuit").onclick=function (){
-            rocketContent.style.display="none";
-        };
-        document.querySelector("#rocketContent>div").onclick=function (){
-            rocketContent.style.display="none";
         };
         oD_box.appendChild(rocketBtn);
         document.body.appendChild(oD_box);
