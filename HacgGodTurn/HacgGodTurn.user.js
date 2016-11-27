@@ -4,9 +4,9 @@
 // @name:zh-TW  琉神轉
 // @name:ja     琉璃神社工具セット
 // @namespace   hoothin
-// @description         琉璃神社白科技工具集，支持诸多绅士站（灵梦御所、纯爱计划、绅士二次元、萌心次元、次元轨迹、ACG调查小队、幻天领域、天使二次元、樱花漫舍、风铃窝、次元の圣光、爱弹幕、幻想次元、司机会所、里番萌、最ACG、绅士仓库、绅士图书馆、梦幻二次元、ACG和谐区/里世界、寂月神社、萌幻之乡、绅士之庭等），神秘代码转换成下载链接，百度网盘自动填写提取密码，F8、Shift+F8站点切换，Ctrl+F8列表浏览，左右方向键文章跳转，Ctrl+左右快捷翻页，Ctrl+上下跳入跳出，下载链接嗅探，绕过重定向跳转，各种和谐补丁
+// @description         琉璃神社白科技工具集，支持诸多绅士站（灵梦御所、纯爱计划、绅士二次元、萌心次元、次元轨迹、ACG调查小队、幻天领域、天使二次元、樱花漫舍、风铃窝、次元の圣光、爱弹幕、幻想次元、司机会所、里番萌、最ACG、绅士仓库、绅士图书馆、梦幻二次元、ACG和谐区/里世界、寂月神社、萌幻之乡、绅士之庭、萌口组、九妖萌等），神秘代码转换成下载链接，百度网盘自动填写提取密码，F8、Shift+F8站点切换，Ctrl+F8列表浏览，左右方向键文章跳转，Ctrl+左右快捷翻页，Ctrl+上下跳入跳出，下载链接嗅探，绕过重定向跳转，各种和谐补丁
 // @description:en      Glazed shrine and other adult gentleman station (Reimu imperial, pure love plan, gentleman two dimension, dimension and dimension trajectory, adorable heart ACG survey team, the magic day in the field, light agency, two dimensional, adorable Angel Sakura diffuse homes, Shengguang, love nest, Campanula dimension barrage, fantasy element, our opportunities, some adorable) mysterious code into the download link, F8, shift+F8 switching station, Baidu disk automation, harmonious patch
-// @description:zh-TW   琉璃神社白科技工具集，支持諸多紳士站（靈夢禦所、純愛計劃、紳士二次元、萌心次元、次元軌跡、ACG調查小隊、幻天領域、天使二次元、櫻花漫舍、風鈴窩、次元の聖光、愛彈幕、幻想次元、司機會所、裏番萌、最ACG、紳士倉庫、紳士圖書館、夢幻二次元、ACG和諧區/裏世界、寂月神社、萌幻之鄕、紳士の庭等），神秘代碼轉換成下載鏈接，百度網盤自動填寫提取密碼，F8、Shift+F8站點切換，Ctrl+F8列表瀏覽，左右方向鍵文章跳轉，Ctrl+左右快捷翻頁，Ctrl+上下跳入跳出，下載鏈接嗅探，繞過重定向跳轉，各種和諧補丁
+// @description:zh-TW   琉璃神社白科技工具集，支持諸多紳士站（靈夢禦所、純愛計劃、紳士二次元、萌心次元、次元軌跡、ACG調查小隊、幻天領域、天使二次元、櫻花漫舍、風鈴窩、次元の聖光、愛彈幕、幻想次元、司機會所、裏番萌、最ACG、紳士倉庫、紳士圖書館、夢幻二次元、ACG和諧區/裏世界、寂月神社、萌幻之鄕、紳士の庭、萌口組、九妖萌等），神秘代碼轉換成下載鏈接，百度網盤自動填寫提取密碼，F8、Shift+F8站點切換，Ctrl+F8列表瀏覽，左右方向鍵文章跳轉，Ctrl+左右快捷翻頁，Ctrl+上下跳入跳出，下載鏈接嗅探，繞過重定向跳轉，各種和諧補丁
 // @description:ja      琉璃神社工具セット、秋の名山老運転手専用
 // @author      hoothin
 // @icon        https://www.hacg.fi/favicon.ico
@@ -231,7 +231,7 @@
                 articleSel:"div.post"
             },
             {
-                name:"我的Galgame资源发布站 - 忧郁的弟弟",
+                name:"MyGalgame - 忧郁的弟弟",
                 url:"https://www.mygalgame.com/",
                 regex:/mygalgame\.com/,
                 articleSel:".article",
@@ -582,7 +582,7 @@
             case "幻想次元":
                 changeUrl(true,[["a"],[['https?:\\\/\\\/[^\\\.]*(\\\.)?acg18\\\.us\\\/go\\\/\\\?url=','']]]);
                 break;
-            case "我的Galgame资源发布站 - 忧郁的弟弟":
+            case "MyGalgame - 忧郁的弟弟":
                 var downBtn=document.querySelector("a.hint--right");
                 if(downBtn){
                     var innBtn=downBtn.querySelector(".btn-danger");
@@ -801,8 +801,13 @@
             }else if(/\b1[0-9a-z]{6,7}/i.test(oD_hash)){
                 var panMatch=oD_hash.match(/\b1[0-9a-z]{6,7}/i);
                 var ecode=oD_hash.trim(),url="https://pan.baidu.com/s/"+panMatch;
-                ecode=simpleRule.test(ecode)?ecode.match(simpleRule)[1]:codeRule.test(ecode)?ecode.match(codeRule)[1]:"";
-                if(ecode)url+="#"+ecode;
+                var shortMatch=/\b1[0-9a-z]{6,7}\s*([0-9a-z]{4})\b/i.exec(ecode);
+                if(shortMatch){
+                    url+="#"+shortMatch[1];
+                }else{
+                    ecode=simpleRule.test(ecode)?ecode.match(simpleRule)[1]:codeRule.test(ecode)?ecode.match(codeRule)[1]:"";
+                    if(ecode)url+="#"+ecode;
+                }
                 window.open(url);
             }else if(/^\s*(https|ftp)?:\/\//.test(oD_hash)){
                 var url=oD_hash.replace(/[^a-z0-9:\/%\?&\._\-\+\*]/gi,"");
