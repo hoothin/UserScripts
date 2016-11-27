@@ -63,7 +63,7 @@
 // @include     http*://*.gmgard.com/*
 // @include     http*://www.kou.moe/*
 // @include     http*://www.91moe.com/*
-// @version     3.20.62
+// @version     3.20.63
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
@@ -305,7 +305,7 @@
         };
     }
 
-    var t, curSite, curArticle, copyData;
+    var t, curSite, curArticle, copyData, siteListHtml;
     var originTitile = document.title;
     var isHttps=location.protocol=="https:";
     if(isHttps){
@@ -639,11 +639,14 @@
             if(e.ctrlKey){
                 rocketContent.style.display="block";
                 var rocketLinks=document.querySelector("div#rocketLinks");
-                rocketLinks.innerHTML="";
-                for(var i=0;i<config.sites.length;i++){
-                    var site=config.sites[i];
-                    rocketLinks.innerHTML+="<span style='font-weight:bold;color:red;'>"+(i+1)+":\t</span>"+"<a href="+site.url+">"+site.name+"</a><br/>";
+                if(!siteListHtml){
+                    siteListHtml="";
+                    for(var i=0;i<config.sites.length;i++){
+                        var site=config.sites[i];
+                        siteListHtml+="<span style='font-weight:bold;color:red;'>"+(i+1)+":\t</span>"+"<a href="+site.url+">"+site.name+"</a><br/>";
+                    }
                 }
+                rocketLinks.innerHTML=siteListHtml;
             }else{
                 var i=0;
                 if(curSite)i=config.sites.indexOf(curSite);
