@@ -63,7 +63,7 @@
 // @include     http*://*.gmgard.com/*
 // @include     http*://www.kou.moe/*
 // @include     http*://www.91moe.com/*
-// @version     3.20.61
+// @version     3.20.62
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
@@ -767,6 +767,11 @@
     document.querySelector("#rocketContent>div").onclick=function (){
         rocketContent.style.display="none";
     };
+    setTimeout(function(){
+        if(document.querySelectorAll("#oD_box").length > 1){
+            alert("\u68c0\u6d4b\u5230\u0049\u0044\u51b2\u7a81\uff01\u8bf7\u68c0\u67e5\u662f\u5426\u5b58\u5728\u91cd\u590d\u811a\u672c\u6216\u540c\u7c7b\u811a\u672c");
+        }
+    },500);
     if((!curSite || !curSite.hideOd) && !frameElement){
         var oD_box=document.createElement("div");
         oD_box.id="oD_box";
