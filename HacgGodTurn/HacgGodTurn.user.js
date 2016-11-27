@@ -63,7 +63,7 @@
 // @include     http*://*.gmgard.com/*
 // @include     http*://www.kou.moe/*
 // @include     http*://www.91moe.com/*
-// @version     3.20.60
+// @version     3.20.61
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
