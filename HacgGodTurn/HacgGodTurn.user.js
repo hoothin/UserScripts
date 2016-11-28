@@ -63,7 +63,7 @@
 // @include     http*://*.gmgard.com/*
 // @include     http*://www.kou.moe/*
 // @include     http*://www.91moe.com/*
-// @version     3.20.65
+// @version     3.20.66
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
@@ -292,7 +292,7 @@
         ],
         rocketReg:/magnet:\?xt|pan\.baidu\.com\/s|yunpan\.cn|howfile\.com\/file|mega\.|ed2k:\/\/\|file|bt\.cosxcos\.com\/view|du\.acgget\.com\/go\/|\.mediafire\.com\/download\/|\.torrent$/,
         disableSites:/hacg.*about\.html/,
-        imgRegs:[[/^(?:https:)?(\/\/img\.2dfan|www\.moxtu\.cc|(?:pic|tc)\.(?:ffsky|rpgsky))/,'http:$1'],[/http(:\/\/(?:[^\.]*\.)?loli\.io)/,'https$1'],[/^https:\/\/galacg.me/,'https://www.galacg.me/']]
+        imgRegs:[[/^(?:https:)?(\/\/img\.2dfan|www\.moxtu\.cc|(?:pic|tc)\.(?:ffsky|rpgsky)|\/\/i\.tianshi\.info)/,'http:$1'],[/http(:\/\/(?:[^\.]*\.)?loli\.io)/,'https$1'],[/^https:\/\/galacg.me/,'https://www.galacg.me/']]
     };
     if (!Array.prototype.findSite) {
         Array.prototype.findSite = function (siteName) {
