@@ -63,7 +63,7 @@
 // @include     http*://*.gmgard.com/*
 // @include     http*://www.kou.moe/*
 // @include     http*://www.91moe.com/*
-// @version     3.20.63
+// @version     3.20.64
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @run-at      document-end
@@ -470,6 +470,13 @@
                     changeUrl(true,[["iframe"],[['http:','https:']]]);
                     changeUrl(true,[["a"],[['http:(.*hacg)','https:$1']]]);
                 }
+                setTimeout(function(){
+                    var embeds=document.querySelectorAll(".wp-embedded-content");
+                    for(i=0;i<embeds.length;i++){
+                        var embed=embeds[i];
+                        embed.removeAttribute("data-secret");
+                    }
+                },1000);
                 break;
             case "萌心次元":
                 if(isHttps)addInsertHandler([["body","a","img","link","script"],[['p:(\\\/\\\/|\\\\\\/\\\\\\/)(www\\\.)?moxacg','ps:$1$2moxacg']]]);
