@@ -63,9 +63,10 @@
 // @include     http*://*.gmgard.com/*
 // @include     http*://www.kou.moe/*
 // @include     http*://www.91moe.com/*
-// @version     3.20.66
+// @version     3.20.67
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
+// @grant       GM_setClipboard
 // @run-at      document-end
 // @require     https://greasyfork.org/scripts/23522/code/od.js?version=159871
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
@@ -592,6 +593,19 @@
                 changeUrl(true,[["a"],[['https?:\\\/\\\/[^\\\.]*(\\\.)?acg18\\\.us\\\/go\\\/\\\?url=','']]]);
                 break;
             case "MyGalgame - 忧郁的弟弟":
+                String.prototype.pmatch = function(reg){
+                    if(!(reg instanceof RegExp))return 0;
+                    if(!reg.global){
+                        var a = this.match(reg);
+                        return a? [a.slice(1,a.length)] : 0;
+                    }
+                    var a=[],b;
+                    while(b=reg.exec(this)){
+                        b.shift();
+                        a.push(b);
+                    }
+                    return a.length>0?a:0;
+                }
                 var downBtn=document.querySelector("a.hint--right");
                 if(downBtn){
                     var innBtn=downBtn.querySelector(".btn-danger");
@@ -617,6 +631,48 @@
                         }
                     }
                 }
+                bgLi.onmouseover=function(){
+                    bgLi.classList.add("open");
+                }
+                bgLi.onmouseout=function(){
+                    bgLi.classList.remove("open");
+                }
+                var bgUrls,sum=0,maxCss=5;
+                var batchBg=document.createElement("ul");
+                batchBg.classList.add("dropdown-menu");
+                batchBg.innerHTML="<li><a href=\"javascript:void(0)\">复制所有背景图片链接</a></li>";
+                batchBg.onclick=function(e){
+                    if(bgUrls==undefined){
+                        bgUrls="";
+                        for(let j=0;j<=maxCss;j++){
+                            GM_xmlhttpRequest({
+                                method: 'GET',
+                                url: "https://www.mygalgame.com/wp-content/themes/mygalgame/ui/css/background"+j+".css",
+                                onload: function(d) {
+                                    let bgRegs=d.responseText.pmatch(/background\-image:url\(([^\)]+)\)/gi);
+                                    for(let bgReg of bgRegs){
+                                        bgUrls+=bgReg[0]+"\n";
+                                    }
+                                    sum++;
+                                    if(sum>maxCss){
+                                        GM_setClipboard(bgUrls);
+                                        alert("背景图片链接复制完毕");
+                                    }
+                                },
+                                onerror: function(e) {
+                                    console.log(e);
+                                }
+                            });
+                        }
+                    }else{
+                        if(bgUrls!=""){
+                            GM_setClipboard(bgUrls);
+                            alert("背景图片链接复制完毕");
+                        }
+                    }
+                    e.stopPropagation();
+                }
+                bgLi.appendChild(batchBg);
                 document.querySelector("ul.navbar-nav").appendChild(bgLi);
                 break;
             case "紳士の庭":
