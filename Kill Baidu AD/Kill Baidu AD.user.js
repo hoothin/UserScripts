@@ -1,18 +1,21 @@
 // ==UserScript==
 // @name               Kill Baidu AD
 // @name:zh-CN         百度广告(首尾推广及右侧广告)清理
-// @namespace    hoothin
-// @version      0.3
+// @namespace          hoothin
+// @version            0.5
 // @description        Just Kill Baidu AD
 // @description:zh-CN  彻底清理百度搜索(www.baidu.com)结果首尾的推广广告、二次顽固广告与右侧广告，并防止反复
-// @author       hoothin
-// @include      http*://www.baidu.com/*
-// @grant        none
-// @run-at       document-body
-// @license     MIT License
-// @compatible        chrome 测试通过
-// @compatible        firefox 测试通过
-// @contributionURL https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
+// @author             hoothin
+// @include            http*://www.baidu.com/*
+// @include            http*://m.baidu.com/*
+// @grant              none
+// @run-at             document-body
+// @license            MIT License
+// @compatible         chrome 测试通过
+// @compatible         firefox 测试通过
+// @compatible         opera 未测试
+// @compatible         safari 未测试
+// @contributionURL    https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
 // @contributionAmount 1
 // ==/UserScript==
 
@@ -28,7 +31,11 @@
     };
     observer.observe(document.body, option);
 
+    var mAd=document.querySelector(".ec_wise_ad");
+    if(mAd)mAd.parentNode.removeChild(mAd);
     function clearAD(){
+        var mAd=document.querySelector(".ec_wise_ad");
+        if(mAd)mAd.parentNode.removeChild(mAd);
         var list=document.body.querySelectorAll("#content_left>div,#content_left>table"),i;
         for(i=0;i<list.length;i++){
             let item = list[i];
