@@ -5,8 +5,8 @@
 // @namespace    hoothin
 // @version      0.3
 // @description  Just Switch Traditional Chinese and Simplified Chinese
-// @description:zh-CN  自由切换简体中文与繁体中文
-// @description:zh-TW  自由切换繁體中文與簡體中文
+// @description:zh-CN  通过快捷键快速转换网页中的简体中文与繁体中文
+// @description:zh-TW  通過快捷鍵快速轉換網頁中的簡體中文與繁體中文
 // @author       hoothin
 // @include      *
 // @grant        GM_setValue
