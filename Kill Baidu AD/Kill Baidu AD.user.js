@@ -37,7 +37,7 @@
         var mAds=document.querySelectorAll(".ec_wise_ad,.ec_youxuan_card");
         for(var i=0;i<mAds.length;i++){
             var mAd=mAds[i];
-            mAd.parentNode.removeChild(mAd);
+            mAd.remove();
         }
     }
 
@@ -48,11 +48,11 @@
             let item = list[i];
             let s = item.getAttribute("style");
             if (s && /display:(table|block)\s!important/.test(s)) {
-                item.parentNode.removeChild(item);
+                item.remove();
             }else{
                 var span=item.querySelector("div>span");
                 if(span && span.innerHTML=="广告"){
-                    item.parentNode.removeChild(item);
+                    item.remove();
                 }
             }
         }
@@ -61,7 +61,7 @@
         for(i=0;i<eb.length;i++){
             let d = eb[i];
             if (d.id!="con-ar") {
-                d.parentNode.removeChild(d);
+                d.remove();
             }
         }
     }
