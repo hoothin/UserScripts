@@ -63,7 +63,7 @@
 // @include     http*://*.gmgard.com/*
 // @include     http*://www.kou.moe/*
 // @include     http*://www.91moe.com/*
-// @version     3.20.67
+// @version     3.20.68
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -470,6 +470,9 @@
                 if(isHttps){
                     changeUrl(true,[["iframe"],[['http:','https:']]]);
                     changeUrl(true,[["a"],[['http:(.*hacg)','https:$1']]]);
+                }
+                if(/hacg\.(ch|la|at|tw)/.test(location.href)){
+                    document.title = "冒牌的"+document.title;
                 }
                 var embeds=document.querySelectorAll(".wp-embedded-content");
                 for(i=0;i<embeds.length;i++){
