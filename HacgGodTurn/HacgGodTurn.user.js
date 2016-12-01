@@ -66,12 +66,12 @@
 // @include     http*://*.gmgard.com/*
 // @include     http*://www.kou.moe/*
 // @include     http*://www.91moe.com/*
-// @version     3.20.69
+// @version     3.20.71
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
 // @run-at      document-end
-// @require     https://greasyfork.org/scripts/23522/code/od.js?version=160909
+// @require     https://greasyfork.org/scripts/23522/code/od.js?version=160939
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
 // @license     MIT License
