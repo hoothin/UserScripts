@@ -24,6 +24,9 @@
 // @include     http*://hacg.fi/*
 // @include     http*://hacg.red/*
 // @include     http*://hacg.la/*
+// @include     http*://hacg.tw/*
+// @include     http*://hacg.at/*
+// @include     http*://hacg.ch/*
 // @include     http*://blog.reimu.net/*
 // @include     http*://pan.baidu.com/share/*
 // @include     http*://pan.baidu.com/s/*
