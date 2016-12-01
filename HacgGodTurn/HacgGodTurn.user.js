@@ -66,12 +66,12 @@
 // @include     http*://*.gmgard.com/*
 // @include     http*://www.kou.moe/*
 // @include     http*://www.91moe.com/*
-// @version     3.20.68
+// @version     3.20.69
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
 // @run-at      document-end
-// @require     https://greasyfork.org/scripts/23522/code/od.js?version=159871
+// @require     https://greasyfork.org/scripts/23522/code/od.js?version=160909
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
 // @license     MIT License
@@ -475,7 +475,7 @@
                     changeUrl(true,[["a"],[['http:(.*hacg)','https:$1']]]);
                 }
                 if(/hacg\.(ch|la|at|tw)/.test(location.href)){
-                    document.title = "冒牌的"+document.title;
+                    document.title = "冒牌货 ★ "+document.title;
                 }
                 var embeds=document.querySelectorAll(".wp-embedded-content");
                 for(i=0;i<embeds.length;i++){
@@ -680,6 +680,15 @@
                 }
                 bgLi.appendChild(batchBg);
                 document.querySelector("ul.navbar-nav").appendChild(bgLi);
+                var processing=false;
+                document.querySelector("#comments").addEventListener('DOMNodeInserted', function(e) {
+                    if(processing)return;
+                    processing=true;
+                    setTimeout(function(){
+                        seriousReplace(commArea);
+                        processing=false;
+                    },500);
+                });
                 break;
             case "紳士の庭":
                 if(isHttps)addInsertHandler([["img"],[['p(:\\\/\\\/static\.gmgard\.com)','ps$1']]]);
