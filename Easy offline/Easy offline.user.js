@@ -7,7 +7,7 @@
 // @description:zh-TW 一鍵自動將磁鏈、bt種子或其他下載資源離綫下載至網槃
 // @namespace    http://tampermonkey.net/
 // @require      http://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
-// @version      1.0.42
+// @version      1.0.43
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -57,7 +57,7 @@
         3:{
             name:"furk",
             url:"https://www.furk.net/users/files/add",
-            bgColor:"f1f1f1",
+            bgColor:"fff",
             hide:false,
             bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAAuCAMAAABgZ9sFAAAAflBMVEX///+CuuaGv+rjXKniTaiDu+d3tufiXq/nUqxAn9+t1vGiz/FOnt/sj8nol8bhcLJRo97b7vp5uOpCoeGQw+m31/XW6/er0++Iwe330uZUpuHssNjni8Tqf7/o9Pn68PSUx+732eucyuvzzuJjq+H0v97sm8q12vDto8/rcrjt831UAAABmUlEQVRIx+2T6W6DMBCE8dr4aEgw0KS5kzZH2/d/we7aliJlN6KR+rNjgYwYfxrwuPrXXwkeaC7ba1nqU7YrWfV83N6rm95G7ZCWlNnL6Kfa20zBA7tNEl7KSsjl5In/rsBOnqArtfx1GGXVGH112Wwuq2KnMMDp2nnUtaquOsttchik15yeLGZ68tpp7403elXo4pZn5Ld3zpg03VWFjkOme51kcGj/nu1p7wF6QPU0cjKDVIyBRrfbtdptM4XYqYIoSKP+KHQ04X17wKfDF8JJYJUt9cqrVH2sUOg0hJ4Ju5rNRSWMIb9r70uA4a2lRRSrx9stDF6ne7tCrz12XbdfLPbdAicVCdFEr5gdQGq306Qt6wz5gR81+t2tmXI6SbLT5sx4ga1YMdNidM/sAMQXOmOoBVPxeMidaaUwFsSjbVBa+NS0RdyequgYXS0pjhSmlegWcKxfRbrmdFBwjpHbMblEV+cQwiDSnUBfD8PQNMDtVBpOH2IYhjVInZHosYkxBh7GGZEeGpRg161Ib0ITQhTCMPrz+gG1shF4koHETAAAAABJRU5ErkJggg=="
         },
@@ -190,7 +190,7 @@
                 break;
             }*/
             offNodes.push(offNode);
-            if(siteConfig.hide)continue;
+            if(siteConfig.hide || GM_getValue("eoHide"+siteConfig.name))continue;
             parentDiv.prepend(offNode);
         }
         parentDiv.mouseover(function(e){
@@ -323,7 +323,7 @@
             <style>
                 .whx-btn{
                     background-color:#3892ed;
-                    transition:background-color 0.25s ease;
+                    transition:background-color 0.15s ease;
                 }
                 .whx-btn:hover{
                     background-color:#83c1ff;
@@ -335,8 +335,9 @@
             <div id="configContent" style="display: none;">
                 <div style="width:300px;height:300px;position:fixed;left:50%;top:50%;margin-top:-150px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;">
                     <div style="text-align:center;font-size: 12px;margin-top: 28px;">自定义需要启用一键下载的链接正则，一行一条</div>
-                    <textarea id="configInput" placeholder="例：http:.*\\.php\\?getRes=\\d+" style="position:absolute;left:20px;top:50px;width:260px;height:170px"></textarea>
-                    <label style="position:absolute;left:60px;top:225px;"><input id="showType" type="checkbox"/>仅当鼠标经过时显示图标</label>
+                    <textarea id="configInput" placeholder="例：http:.*\\.php\\?getRes=\\d+" style="position:absolute;left:20px;top:50px;width:260px;height:150px"></textarea>
+                    <div id="icons" style="position:absolute;left:3px;top:202px"></div>
+                    <label style="position:absolute;left:60px;top:230px;"><input id="showType" type="checkbox"/>仅当鼠标经过时显示图标</label>
                     <button id="configSave" class="whx-btn" type="button" style="position:absolute;left:110px;top:260px;width:80px;height:30px;color:white;border-radius:5px;border:0px;outline:none;">设置</button>
                     <div id="configQuit" class="whx-btn" style="width:28px;height:28px;border-radius:14px;position:absolute;right:2px;top:2px;cursor:pointer;">
                         <span style="height:28px;line-height:28px;display:block;color:#FFF;text-align:center;font-size:20px;">╳</span>
@@ -347,6 +348,22 @@
             var configQuit=document.querySelector("#configQuit");
             var configSave=document.querySelector("#configSave");
             var showTypeCheck=document.querySelector("#showType");
+            var icons=$("#icons");
+            for(var x = 0; x < Object.keys(sites).length; x++){
+                let siteConfig=sites[x];
+                let icon=$("<div style='height:25px;width:25px;float:left;border-radius:50%;background-position:center;background-repeat:no-repeat;background-size:20px;margin-left:20px;cursor:pointer'></div>");
+                icon.css("background-color","#"+siteConfig.bgColor).attr("title",i18n[siteConfig.name] );
+                if(GM_getValue("eoHide"+siteConfig.name)){
+                    icon.css("opacity","0.2");
+                }
+                if(siteConfig.bgImg)icon.css("background-image","url(\""+siteConfig.bgImg+"\")");
+                icon.on("click", function(){
+                    var eoHide=GM_getValue("eoHide"+siteConfig.name);
+                    GM_setValue("eoHide"+siteConfig.name, !eoHide);
+                    icon.css("opacity",eoHide?"1":"0.2");
+                });
+                icons.append(icon);
+            }
             configContent=document.querySelector("#configContent");
             configContent.style.display="block";
             if(GM_getValue("eoReg"))$(configInput).val(GM_getValue("eoReg").join("\n"));
