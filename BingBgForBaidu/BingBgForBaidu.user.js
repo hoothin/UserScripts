@@ -2,7 +2,7 @@
 // @name         百Bing图
 // @name:en      BingBgForBaidu
 // @namespace    hoothin
-// @version      1.0
+// @version      1.2
 // @description     把百度首页背景图换成Bing的
 // @description:en  Just change the background image of baidu.com to bing.com
 // @author       hoothin
@@ -10,12 +10,11 @@
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_addStyle
-// @connect      cn.bing.com
-// @run-at       document-body
-// @include 	 *://www.baidu.com/
-// @include 	 *://www.baidu.com/home*
-// @include 	 *://www.baidu.com/?tn=*
-// @include 	 *://www.baidu.com/index.php*
+// @connect      global.bing.com
+// @include      *://www.baidu.com/
+// @include      *://www.baidu.com/home*
+// @include      *://www.baidu.com/?tn=*
+// @include      *://www.baidu.com/index.php*
 // ==/UserScript==
 
 (function() {
@@ -59,23 +58,26 @@
     function setBingBg(){
         var ctnerContents=document.querySelector("#s_ctner_contents");
         var menuContainer=document.querySelector(".s-menu-container");
-        if(!ctnerContents||!menuContainer)return;
         if(!head.classList.contains("s-skin-hasbg")){
             head.classList.add("s-skin-hasbg");
             GM_addStyle(".s-mod-weather .unknown-text, .unknown-city, .city-wather a, .city-wather em, .city-wather span, .show-pollution a, .show-pollution em, .show-pollution span, .s-upfunc-menus .s-icons a {color: #fff!important;}");
             GM_addStyle(".s-skin-hasbg .s-top-wrap {border: none;background: none;background-image: -webkit-gradient(linear,left top,left bottom,from(rgba(15,25,50,.3)),to(rgba(15,25,50,.3)));background-image: -moz-linear-gradient(rgba(15,25,50,.3) 0,rgba(15,25,50,.3) 100%);background-image: -ms-linear-gradient(rgba(15,25,50,.3) 0,rgba(15,25,50,.3) 100%);background-image: -o-linear-gradient(rgba(15,25,50,.3) 0,rgba(15,25,50,.3) 100%);background-image: linear-gradient(rgba(15,25,50,.3) 0,rgba(15,25,50,.3) 100%);filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#330f1932,endColorstr=#330f1932);}");
             GM_addStyle(".s-opacity-50 .s-ctner-menus .s-menu-item:hover {color: #333 !important;background-color: transparent !important;background-image: -webkit-gradient(linear,left top,left bottom,from(rgba(240,240,240,.2)),to(rgba(240,240,240,.2))) !important;background-image: -moz-linear-gradient(rgba(240,240,240,.2) 0,rgba(240,240,240,.2) 100%) !important;background-image: -ms-linear-gradient(rgba(240,240,240,.2) 0,rgba(240,240,240,.2) 100%) !important;background-image: -o-linear-gradient(rgba(240,240,240,.2) 0,rgba(240,240,240,.2) 100%) !important;background-image: linear-gradient(rgba(240,240,240,.2) 0,rgba(240,240,240,.2) 100%) !important;filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#33f0f0f0,endColorstr=#33f0f0f0) !important;}");
-            ctnerContents.setAttribute("style", "background: none !important;background-image: -webkit-gradient(linear,left top,left bottom,from(rgba(255,255,255,0.5)),to(rgba(255,255,255,0.5))) !important;background-image: -moz-linear-gradient(rgba(255,255,255,0.5) 0%,rgba(255,255,255,0.5) 100%) !important;background-image: -ms-linear-gradient(rgba(255,255,255,0.5) 0%,rgba(255,255,255,0.5) 100%) !important;background-image: -o-linear-gradient(rgba(255,255,255,0.5) 0%,rgba(255,255,255,0.5) 100%) !important;background-image: linear-gradient(rgba(255,255,255,0.5) 0%,rgba(255,255,255,0.5) 100%) !important;filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#7FFFFFFF,endColorstr=#7FFFFFFF) !important;");
-            menuContainer.setAttribute("style", "background: none !important;background-image: -webkit-gradient(linear,left top,left bottom,from(rgba(255,255,255,0.5)),to(rgba(255,255,255,0.5))) !important;background-image: -moz-linear-gradient(rgba(255,255,255,0.5) 0%,rgba(255,255,255,0.5) 100%) !important;background-image: -ms-linear-gradient(rgba(255,255,255,0.5) 0%,rgba(255,255,255,0.5) 100%) !important;background-image: -o-linear-gradient(rgba(255,255,255,0.5) 0%,rgba(255,255,255,0.5) 100%) !important;background-image: linear-gradient(rgba(255,255,255,0.5) 0%,rgba(255,255,255,0.5) 100%) !important;filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#7FFFFFFF,endColorstr=#7FFFFFFF) !important;");
+            if(ctnerContents)ctnerContents.setAttribute("style", "background: none !important;background-image: -webkit-gradient(linear,left top,left bottom,from(rgba(255,255,255,0.5)),to(rgba(255,255,255,0.5))) !important;background-image: -moz-linear-gradient(rgba(255,255,255,0.5) 0%,rgba(255,255,255,0.5) 100%) !important;background-image: -ms-linear-gradient(rgba(255,255,255,0.5) 0%,rgba(255,255,255,0.5) 100%) !important;background-image: -o-linear-gradient(rgba(255,255,255,0.5) 0%,rgba(255,255,255,0.5) 100%) !important;background-image: linear-gradient(rgba(255,255,255,0.5) 0%,rgba(255,255,255,0.5) 100%) !important;filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#7FFFFFFF,endColorstr=#7FFFFFFF) !important;");
+            if(menuContainer)menuContainer.setAttribute("style", "background: none !important;background-image: -webkit-gradient(linear,left top,left bottom,from(rgba(255,255,255,0.5)),to(rgba(255,255,255,0.5))) !important;background-image: -moz-linear-gradient(rgba(255,255,255,0.5) 0%,rgba(255,255,255,0.5) 100%) !important;background-image: -ms-linear-gradient(rgba(255,255,255,0.5) 0%,rgba(255,255,255,0.5) 100%) !important;background-image: -o-linear-gradient(rgba(255,255,255,0.5) 0%,rgba(255,255,255,0.5) 100%) !important;background-image: linear-gradient(rgba(255,255,255,0.5) 0%,rgba(255,255,255,0.5) 100%) !important;filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#7FFFFFFF,endColorstr=#7FFFFFFF) !important;");
         }
         GM_xmlhttpRequest({
             method: 'GET',
-            url: "http://cn.bing.com/HPImageArchive.aspx?format=js&idx=0&pid=hp&video=1&n=1",
+            url: "http://global.bing.com/HPImageArchive.aspx?format=js&idx=0&pid=hp&video=1&n=1",
             onload: function(result) {
                 var jsonData = null;
                 try {
                     jsonData = JSON.parse(result.responseText);
-                    var bgUrl="url(\""+jsonData.images[0].url+"\")";
+                    var bgUrl=jsonData.images[0].url;
+                    if(!/^https?:\/\//.test(bgUrl)){
+                        bgUrl="http://global.bing.com"+bgUrl;
+                    }
+                    bgUrl="url(\""+bgUrl+"\")";
                     var skinContainer=document.querySelector(".s-skin-container");
                     if(!skinContainer){
                         return;
