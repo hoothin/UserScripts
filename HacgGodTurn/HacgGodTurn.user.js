@@ -4,9 +4,9 @@
 // @name:zh-TW  琉神轉
 // @name:ja     琉璃神社工具セット
 // @namespace   hoothin
-// @description         琉璃神社白科技工具集，支持诸多绅士站（灵梦御所、纯爱计划、绅士二次元、萌心次元、次元轨迹、ACG调查小队、幻天领域、天使二次元、樱花漫舍、风铃窝、次元の圣光、爱弹幕、幻想次元、司机会所、里番萌、最ACG、绅士仓库、绅士图书馆、梦幻二次元、ACG和谐区/里世界、寂月神社、萌幻之乡、绅士之庭、萌口组、九妖萌等），神秘代码转换成下载链接，百度网盘自动填写提取密码，F8、Shift+F8站点切换，Ctrl+F8列表浏览，左右方向键文章跳转，Ctrl+左右快捷翻页，Ctrl+上下跳入跳出，下载链接嗅探，绕过重定向跳转，各种和谐补丁
+// @description         琉璃神社白科技工具集，支持诸多绅士站（灵梦御所、纯爱计划、绅士二次元、萌心次元、次元轨迹、ACG调查小队、幻天领域、天使二次元、樱花漫舍、风铃窝、次元の圣光、爱弹幕、幻想次元、司机会所、里番萌、最ACG、绅士仓库、绅士图书馆、梦幻二次元、ACG和谐区/里世界、寂月神社、萌幻之乡、绅士之庭、萌口组、九妖萌、CE家族社、喵窝、次元老司机、绅士ACG社等），神秘代码转换成下载链接，百度网盘自动填写提取密码，F8、Shift+F8站点切换，Ctrl+F8列表浏览，左右方向键文章跳转，Ctrl+左右快捷翻页，Ctrl+上下跳入跳出，下载链接嗅探，绕过重定向跳转，各种和谐补丁
 // @description:en      Glazed shrine and other adult gentleman station (Reimu imperial, pure love plan, gentleman two dimension, dimension and dimension trajectory, adorable heart ACG survey team, the magic day in the field, light agency, two dimensional, adorable Angel Sakura diffuse homes, Shengguang, love nest, Campanula dimension barrage, fantasy element, our opportunities, some adorable) mysterious code into the download link, F8, shift+F8 switching station, Baidu disk automation, harmonious patch
-// @description:zh-TW   琉璃神社白科技工具集，支持諸多紳士站（靈夢禦所、純愛計劃、紳士二次元、萌心次元、次元軌跡、ACG調查小隊、幻天領域、天使二次元、櫻花漫舍、風鈴窩、次元の聖光、愛彈幕、幻想次元、司機會所、裏番萌、最ACG、紳士倉庫、紳士圖書館、夢幻二次元、ACG和諧區/裏世界、寂月神社、萌幻之鄕、紳士の庭、萌口組、九妖萌等），神秘代碼轉換成下載鏈接，百度網盤自動填寫提取密碼，F8、Shift+F8站點切換，Ctrl+F8列表瀏覽，左右方向鍵文章跳轉，Ctrl+左右快捷翻頁，Ctrl+上下跳入跳出，下載鏈接嗅探，繞過重定向跳轉，各種和諧補丁
+// @description:zh-TW   琉璃神社白科技工具集，支持諸多紳士站（靈夢禦所、純愛計劃、紳士二次元、萌心次元、次元軌跡、ACG調查小隊、幻天領域、天使二次元、櫻花漫舍、風鈴窩、次元の聖光、愛彈幕、幻想次元、司機會所、裏番萌、最ACG、紳士倉庫、紳士圖書館、夢幻二次元、ACG和諧區/裏世界、寂月神社、萌幻之鄕、紳士の庭、萌口組、九妖萌、CE家族社、喵窩、次元老司機、紳士ACG社等），神秘代碼轉換成下載鏈接，百度網盤自動填寫提取密碼，F8、Shift+F8站點切換，Ctrl+F8列表瀏覽，左右方向鍵文章跳轉，Ctrl+左右快捷翻頁，Ctrl+上下跳入跳出，下載鏈接嗅探，繞過重定向跳轉，各種和諧補丁
 // @description:ja      琉璃神社工具セット、秋の名山老運転手専用
 // @author      hoothin
 // @icon        https://www.hacg.fi/favicon.ico
@@ -66,12 +66,16 @@
 // @include     http*://*.gmgard.com/*
 // @include     http*://www.kou.moe/*
 // @include     http*://www.91moe.com/*
-// @version     3.20.71
+// @include     http*://cefamilie.com/*
+// @include     http*://yui-nya.com/*
+// @include     http*://www.l-sj.cc/*
+// @include     http*://htacg.cc/*
+// @version     3.20.72
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
 // @run-at      document-end
-// @require     https://greasyfork.org/scripts/23522/code/od.js?version=160939
+// @require     https://greasyfork.org/scripts/23522/code/od.js?version=161122
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
 // @license     MIT License
@@ -292,11 +296,43 @@
                 downloadUrl:/91moe\.com\/download/,
                 articleSel:"section.card",
                 contentArea:'.article_content'
+            },
+            {
+                name:"CE家族社",
+                url:"https://cefamilie.com/",
+                regex:/cefamilie\.com/,
+                articleSel:"li.post>div.thumbnail",
+                contentArea:'#post_content',
+                commArea:"commentlist"
+            },
+            {
+                name:"喵窝",
+                url:"http://yui-nya.com/",
+                regex:/yui\-nya\.com/,
+                articleSel:"article",
+                contentArea:'.article-content',
+                commArea:"commentlist"
+            },
+            {
+                name:"次元老司机",
+                url:"http://www.l-sj.cc/",
+                regex:/l\-sj\.cc/,
+                articleSel:"section.card",
+                hideOd:true,
+                downloadUrl:/l\-sj\.cc\/download\?id=/
+            },
+            {
+                name:"绅士ACG社",
+                url:"http://htacg.cc/",
+                regex:/htacg\.cc/,
+                articleSel:"article.card",
+                hideOd:true,
+                downloadUrl:/htacg\.cc\/storage\-download\?/
             }
         ],
         rocketReg:/magnet:\?xt|pan\.baidu\.com\/s|yunpan\.cn|howfile\.com\/file|mega\.|ed2k:\/\/\|file|bt\.cosxcos\.com\/view|du\.acgget\.com\/go\/|\.mediafire\.com\/download\/|\.torrent$/,
         disableSites:/hacg.*about\.html/,
-        imgRegs:[[/^(?:https:)?(\/\/img\.2dfan|www\.moxtu\.cc|(?:pic|tc)\.(?:ffsky|rpgsky)|\/\/i\.tianshi\.info)/,'http:$1'],[/http(:\/\/(?:[^\.]*\.)?loli\.io)/,'https$1'],[/^https:\/\/galacg.me/,'https://www.galacg.me/']]
+        imgRegs:[[/^(?:https:)?(\/\/img\.2dfan|www\.moxtu\.cc|(?:pic|tc)\.(?:ffsky|rpgsky)|\/\/i\.tianshi\.info)/,'http:$1'],[/http(:\/\/(?:[^\.]*\.)?loli\.io)/,'https$1'],[/^https:\/\/galacg.me/,'https://www.galacg.me/'],[/^http:\/\/www\.moepicx\.cc/,'https://www.moepicx.cc']]
     };
     if (!Array.prototype.findSite) {
         Array.prototype.findSite = function (siteName) {
@@ -876,7 +912,7 @@
         };
         var oD_text=document.createElement("input");
         oD_text.type="text";
-        oD_text.style.cssText="width:168px;height:33px;position:relative;margin-top:0px;padding:0px;box-sizing:border-box;";
+        oD_text.style.cssText="width:168px;height:33px;position:relative;margin-top:0px;padding:0px;box-sizing:border-box;z-index:0";
         oD_text.placeholder="输入hash值或网盘地址";
         oD_text.title='将自动添加"magnet:?xt=urn:btih:"并去除非法字符';
         var oD_button=document.createElement("button");
@@ -1048,6 +1084,10 @@
             for(let imgReg of config.imgRegs){
                 src = imgs[i].src.replace(imgReg[0], imgReg[1]);
                 if(src != imgs[i].src)imgs[i].src = src;
+                if(imgs[i].dataset.src){
+                    src=imgs[i].dataset.src.replace(imgReg[0], imgReg[1]);
+                    if(src != imgs[i].dataset.src)imgs[i].dataset.src = src;
+                }
             }
         }
         seriousReplace(commArea);
