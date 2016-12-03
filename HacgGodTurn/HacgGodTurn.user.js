@@ -70,7 +70,7 @@
 // @include     http*://yui-nya.com/*
 // @include     http*://www.l-sj.cc/*
 // @include     http*://htacg.cc/*
-// @version     3.20.72
+// @version     3.20.73
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -274,6 +274,7 @@
                 name:"次元轨迹",
                 url:"https://www.acggj.com/",
                 regex:/www\.(acggj|acg44)\./,
+                downloadUrl:/com\/\?page_id=/,
                 hideOd:true,
                 bbs:/bbs\.acggj\./,
                 offset:55,
