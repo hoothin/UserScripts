@@ -7,7 +7,7 @@
 // @description:zh-TW 一鍵自動將磁鏈、bt種子或其他下載資源離綫下載至網槃
 // @namespace    http://tampermonkey.net/
 // @require      http://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
-// @version      1.0.43
+// @version      1.0.45
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -171,7 +171,7 @@
             let siteConfig=sites[x];
             offNode.css("background-color","#"+siteConfig.bgColor).attr("title",i18n[siteConfig.name] ).attr("href", siteConfig.url);
             offNode.click(function(e){
-                if(siteConfig.name!="xunlei")GM_setValue("eoUrl",getRightMagnetUrl(offUrl));
+                if(siteConfig.name!="xunlei")GM_setValue("eoUrl",getRightUrl(offUrl));
                 e.stopPropagation();
             });
             if(siteConfig.bgImg)offNode.css("background-image","url(\""+siteConfig.bgImg+"\")");
@@ -284,7 +284,7 @@
         }
     }
 
-    function getRightMagnetUrl(url){
+    function getRightUrl(url){
         var newUrl = url;
         if(/^magnet/.test(url)){
             newUrl=newUrl.split("&")[0].substring(20);
@@ -293,6 +293,8 @@
             }else{
                 newUrl=url;
             }
+        }else if(/^\/\//.test(url)){
+            newUrl=location.protocol+url;
         }
         return newUrl;
     }
