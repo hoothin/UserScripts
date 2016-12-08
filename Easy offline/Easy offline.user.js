@@ -7,7 +7,7 @@
 // @description:zh-TW 一鍵自動將磁鏈、bt種子或其他下載資源離綫下載至網槃
 // @namespace    http://tampermonkey.net/
 // @require      http://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
-// @version      1.0.45
+// @version      1.0.46
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -90,7 +90,9 @@
                 furk:"Furk网盘",
                 seedr:"Seedr网盘",
                 pcloud:"Pcloud网盘",
-                xunlei:"迅雷离线"
+                xunlei:"迅雷离线",
+                enable:"启用",
+                disable:"禁用"
             };
             break;
         default:
@@ -101,7 +103,9 @@
                 furk:"Furk",
                 seedr:"Seedr",
                 pcloud:"Pcloud",
-                xunlei:"Xunlei"
+                xunlei:"Xunlei",
+                enable:"Enable ",
+                disable:"Disable "
             };
             break;
     }
@@ -354,15 +358,17 @@
             for(var x = 0; x < Object.keys(sites).length; x++){
                 let siteConfig=sites[x];
                 let icon=$("<div style='height:25px;width:25px;float:left;border-radius:50%;background-position:center;background-repeat:no-repeat;background-size:20px;margin-left:20px;cursor:pointer'></div>");
-                icon.css("background-color","#"+siteConfig.bgColor).attr("title",i18n[siteConfig.name] );
+                icon.css("background-color","#"+siteConfig.bgColor).attr("title",i18n.disable+i18n[siteConfig.name] );
                 if(GM_getValue("eoHide"+siteConfig.name)){
                     icon.css("opacity","0.2");
+                    icon.attr("title",i18n.enable+i18n[siteConfig.name] );
                 }
                 if(siteConfig.bgImg)icon.css("background-image","url(\""+siteConfig.bgImg+"\")");
                 icon.on("click", function(){
                     var eoHide=GM_getValue("eoHide"+siteConfig.name);
                     GM_setValue("eoHide"+siteConfig.name, !eoHide);
                     icon.css("opacity",eoHide?"1":"0.2");
+                    icon.attr("title",(eoHide?i18n.disable:i18n.enable)+i18n[siteConfig.name] );
                 });
                 icons.append(icon);
             }
