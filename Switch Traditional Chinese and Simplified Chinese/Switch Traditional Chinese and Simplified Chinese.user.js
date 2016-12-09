@@ -1,12 +1,12 @@
 // ==UserScript==
-// @name         Switch Traditional Chinese and Simplified Chinese
+// @name         繁簡自由切換
 // @name:zh-CN   简繁自由切换
-// @name:zh-TW   繁簡自由切換
+// @name:en      Switch Traditional Chinese and Simplified Chinese
 // @namespace    hoothin
-// @version      0.3
-// @description  Just Switch Traditional Chinese and Simplified Chinese
-// @description:zh-CN  通过快捷键快速转换网页中的简体中文与繁体中文
-// @description:zh-TW  通過快捷鍵快速轉換網頁中的簡體中文與繁體中文
+// @version      0.5
+// @description        快速轉換整個網頁或者指定輸入框中的簡體中文與繁體中文
+// @description:zh-CN  快速转换整个网页或者指定输入框中的简体中文与繁体中文
+// @description:en     Just Switch Traditional Chinese and Simplified Chinese
 // @author       hoothin
 // @include      *
 // @grant        GM_setValue
@@ -59,14 +59,12 @@
                     if(child.value != value){
                         child.value=value;
                     }
-                }
-                if(child.nodeType == 3){
+                }else if(child.nodeType == 3){
                     let data=stranText(child.data);
                     if(child.data != data){
                         child.data=data;
                     }
-                }
-                else stranBody(child);
+                }else stranBody(child);
             }
     }
 
@@ -134,7 +132,13 @@
     document.addEventListener("keydown", function(e) {
         if(e.keyCode == shortcutKey && e.ctrlKey) {
             action=action==2?3:2;
-            setLanguage();
+            if("TEXTAREA"==document.activeElement.tagName){
+                document.activeElement.innerHTML=stranText(document.activeElement.innerHTML);
+            }else if("INPUT"==document.activeElement.tagName){
+                document.activeElement.value=stranText(document.activeElement.value);
+            }else{
+                setLanguage();
+            }
         }
     });
 

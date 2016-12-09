@@ -23,6 +23,7 @@
     'use strict';
     var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
     var observer = new MutationObserver(function(records){
+        delMobileAD();
         clearAD();
     });
     var option = {
@@ -42,7 +43,6 @@
     }
 
     function clearAD(){
-        delMobileAD();
         var list=document.body.querySelectorAll("#content_left>div,#content_left>table"),i;
         for(i=0;i<list.length;i++){
             let item = list[i];
