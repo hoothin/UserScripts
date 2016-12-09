@@ -28,6 +28,7 @@
 // @include     http*://hacg.tw/*
 // @include     http*://hacg.at/*
 // @include     http*://hacg.ch/*
+// @include     http*://www.acgpy.com/wpx/*
 // @include     http*://blog.reimu.net/*
 // @include     http*://pan.baidu.com/share/*
 // @include     http*://pan.baidu.com/s/*
@@ -71,7 +72,7 @@
 // @include     http*://yui-nya.com/*
 // @include     http*://www.l-sj.cc/*
 // @include     http*://htacg.cc/*
-// @version     3.20.73
+// @version     3.20.75
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -330,6 +331,12 @@
                 articleSel:"article.card",
                 hideOd:true,
                 downloadUrl:/htacg\.cc\/storage\-download\?/
+            },
+            {
+                name:"绅士交易",
+                url:"https://www.acgpy.com/wpx/",
+                regex:/acgpy\.com/,
+                hideOd:true
             }
         ],
         rocketReg:/magnet:\?xt|pan\.baidu\.com\/s|yunpan\.cn|howfile\.com\/file|mega\.|ed2k:\/\/\|file|bt\.cosxcos\.com\/view|du\.acgget\.com\/go\/|\.mediafire\.com\/download\/|\.torrent$/,
