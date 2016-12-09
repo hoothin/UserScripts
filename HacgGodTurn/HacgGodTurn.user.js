@@ -14,11 +14,12 @@
 // @include     http*://hacg.*/wordpress/*
 // @include     http*://www.hacg.*/wp/*
 // @include     http*://hacg.*/wp/*
+// @include     http*://www.hacg.lol/*
+// @include     http*://hacg.lol/*
 // @include     http*://hacg.riwee.com/*
 // @include     http*://hacg.me/*
 // @include     http*://hacg.in/*
 // @include     http*://hacg.be/*
-// @include     http*://hacg.lol/*
 // @include     http*://hacg.club/*
 // @include     http*://hacg.li/*
 // @include     http*://hacg.fi/*
