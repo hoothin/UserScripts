@@ -8,7 +8,7 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdn.jsdelivr.net/jquery/1.7.2/jquery.min.js
 // @require      https://cdn.jsdelivr.net/hi-base64/0.2.0/base64.min.js
-// @version      1.0.48
+// @version      1.0.49
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -170,6 +170,7 @@
             var aTags = $("a").get();
             for(var aTag of aTags){
                 for(var reg of regs){
+                    if(reg==="")continue;
                     var patt=new RegExp(reg);
                     if(patt.test(aTag.href) && $.inArray(aTag, rawnodes)==-1){
                         customnodes.push(aTag);
