@@ -72,7 +72,7 @@
 // @include     http*://yui-nya.com/*
 // @include     http*://www.l-sj.cc/*
 // @include     http*://htacg.cc/*
-// @version     3.20.76
+// @version     3.20.77
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -740,6 +740,32 @@
                 if(isHttps)addInsertHandler([["img"],[['p(:\\\/\\\/static\.gmgard\.com)','ps$1']]]);
                 curSite.preRocket=function(){unsafeWindow.$('#dllist a').mouseenter();};
                 break;
+            case "绅士交易":
+                var downBtn=document.querySelector("a.downbtn");
+                if(downBtn){
+                    GM_xmlhttpRequest({
+                        method: 'GET',
+                        url: downBtn.href,
+                        onload: function(d) {
+                            var doc = null;
+                            try {
+                                doc = document.implementation.createHTMLDocument('');
+                                doc.documentElement.innerHTML = d.responseText;
+                            }
+                            catch (e) {
+                                console.log('parse error');
+                            }
+                            if (!doc) {
+                                return;
+                            }
+                            downBtn.parentNode.insertBefore(doc.querySelector("div.list"),downBtn);
+                            process();
+                        },
+                        onerror: function(e) {
+                            console.log(e);
+                        }
+                    });
+                }
         }
     }
     if(curSite && curSite.downloadUrl && curSite.downloadUrl.test(location.href)){
