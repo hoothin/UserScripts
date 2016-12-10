@@ -6,8 +6,9 @@
 // @description:zh-CN 一键自动将磁链、bt种子或其他下载资源离线下载至网盘
 // @description:zh-TW 一鍵自動將磁鏈、bt種子或其他下載資源離綫下載至網槃
 // @namespace    http://tampermonkey.net/
-// @require      http://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
-// @version      1.0.46
+// @require      https://cdn.jsdelivr.net/jquery/1.7.2/jquery.min.js
+// @require      https://cdn.jsdelivr.net/hi-base64/0.2.0/base64.min.js
+// @version      1.0.47
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -72,8 +73,20 @@
             name:"xunlei",
             url:"http://lixian.vip.xunlei.com/lixian_login.html?furl=",
             bgColor:"2e71f1",
+            directUrl:function(offUrl){
+                return this.url+offUrl;
+            },
             bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAMAAADzN3VRAAABC1BMVEUAAAArcPUscPQkavJSd79UdrhTdrled6kjae8ucfAqbOwoa+0pa+xTd71WdrNad61dea4pbO4vcvEsb/Aqbe8sbu8ucfArbu8ucfEpbe0oa+4vcPH///4ZYe7j8fne7fknbPAkaO41dfDa6vgcY+/o8/rV6PchZ+4bZO79//3u+fklavIiaO8VXu3x9/3t9fve7veLsfYqcfZNhvE5d/AfZO36/fz0+/ry+vrb6PrG2vnR5fbL4faXufbG3fWqyPWjw/WErPWixPR4pPR0ovOIsfJsnPJYj+9Bfe/1+v3l7f3p8Pzg7fq+0/mlw/fY6/aQtPaHrfZnl/S41fORt/KAqvKZvvFJhO8eZe4RVCzFAAAAEXRSTlMA+P74gnpzWP329OrohXJgXOQVaEcAAAFOSURBVCjPZczneoIwGIbhqNXuEQORYGIBQXDvvbfde5z/kfSTi1Kx9798z/UGIXQQUuJBSiiGwDmEPUklFIVFDcI/4doVqilUCSIFArdjlAxQFE1Ir41EMhlGlFKiEerRhPFy29O3byiyUTccx9HiVBbxYYm3jAL1ilyvPlerhl1wFnec83mRuoUQSgr2lPP7Bn3g2dJNtm6TLSggUXzMZrtdXi6X+dCR/QLEtGV1SpZltXvfGtkt5qSdcnXmpmlit8guc5K79vTHK0OCk1eaq1x6q2LlUunBUsZQEi5sj3MZMJp9bLCuynCCjUvX3yuVzKBRFLqK4TNvA+Qj8TV7Si1E4heSfKZYj/pUlzxQfFjQt2XRL/iPJDXVz43tvRBmO6SmsdaZS0N5zHZnOpMwYNoJiuU1pu5j+fwhQtGIynAQUyMXCFyeqntFPYPFD095Qx8x+n7CAAAAAElFTkSuQmCC"
         },
+        6:{
+            name:"xiaomi",
+            url:"http://d.miwifi.com/d2r/?url=",
+            bgColor:"f97306",
+            directUrl:function(offUrl){
+                return this.url+base64.encode(offUrl)+"&src=EasyOffline";
+            },
+            bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAeFBMVEX4cwD+/v7+/vz+/f7+zKr+mU/++vj93cf8hiv+28T+z6/+z6v8lUv+kkn8gSf+fCL98OP92sH+17z+yqf+yaX+wJX9lk/7mkz8kkb9jj79gyr6hyn9exv++/r+9/X96+H+xJz9v47+mFP+mEr+dh37dhn+dhL+cAw9Nvl9AAAAf0lEQVQY053NWQ6DMAwE0LFNEkqahLK0hdJ9u/8NcXIERpY/nkY2NuVS1zoRwDL/dL9vIkJsXcRgjwqG7uP4fLTcw5NROJGH5iUOFWcw3KBqJ9AOFe1zQzwcBXCBcqPBgc8FuIAoiILTRv4SbI/OTrAdhmuAZk5Y4h/pg2/Clqzm5QVwiFSSmAAAAABJRU5ErkJggg=="
+        }
     };
     var enableUrl = 'a[href^="magnet"],[href^="ed2k://|file"],[href$=".torrent"],[href$=".mp4"],[href$=".rar"],[href$=".7z"],[href$=".zip"],[href$=".rmvb"],[href$=".mkv"],[href$=".avi"],[href$=".iso"]';
     var disableUrl=[".torrentkitty.","bt.box.n0808.com"];
@@ -91,6 +104,7 @@
                 seedr:"Seedr网盘",
                 pcloud:"Pcloud网盘",
                 xunlei:"迅雷离线",
+                xiaomi:"小米路由器",
                 enable:"启用",
                 disable:"禁用"
             };
@@ -104,6 +118,7 @@
                 seedr:"Seedr",
                 pcloud:"Pcloud",
                 xunlei:"Xunlei",
+                xiaomi:"MiWifi",
                 enable:"Enable ",
                 disable:"Disable "
             };
@@ -175,7 +190,7 @@
             let siteConfig=sites[x];
             offNode.css("background-color","#"+siteConfig.bgColor).attr("title",i18n[siteConfig.name] ).attr("href", siteConfig.url);
             offNode.click(function(e){
-                if(siteConfig.name!="xunlei")GM_setValue("eoUrl",getRightUrl(offUrl));
+                if(!siteConfig.directUrl)GM_setValue("eoUrl",getRightUrl(offUrl));
                 e.stopPropagation();
             });
             if(siteConfig.bgImg)offNode.css("background-image","url(\""+siteConfig.bgImg+"\")");
@@ -267,7 +282,7 @@
                                 node.show();
                                 node.css("margin-top",-j*25+"px");
                                 j++;
-                                if(sites[x].name=="xunlei")node.attr('href', sites[x].url+offUrl);
+                                if(!!sites[x].directUrl)node.attr('href', sites[x].directUrl(offUrl));
                             }
                         }
                         e.stopPropagation();
