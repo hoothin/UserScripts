@@ -8,7 +8,7 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdn.jsdelivr.net/jquery/1.7.2/jquery.min.js
 // @require      https://cdn.jsdelivr.net/hi-base64/0.2.0/base64.min.js
-// @version      1.0.49
+// @version      1.1.0
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -209,8 +209,8 @@
                 offNode.css("background-color","#5e5eff").attr("title",i18n.yyw ).attr("href", "http://115.com/?tab=offline&mode=wangpan");
                 break;
             }*/
-            offNodes.push(offNode);
             if(siteConfig.hide || GM_getValue("eoHide"+siteConfig.name))continue;
+            offNodes.push(offNode);
             parentDiv.prepend(offNode);
         }
         parentDiv.mouseover(function(e){
