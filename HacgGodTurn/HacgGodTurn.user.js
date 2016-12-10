@@ -72,7 +72,7 @@
 // @include     http*://yui-nya.com/*
 // @include     http*://www.l-sj.cc/*
 // @include     http*://htacg.cc/*
-// @version     3.20.75
+// @version     3.20.76
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -336,6 +336,7 @@
                 name:"绅士交易",
                 url:"https://www.acgpy.com/wpx/",
                 regex:/acgpy\.com/,
+                offset:45,
                 hideOd:true
             }
         ],
