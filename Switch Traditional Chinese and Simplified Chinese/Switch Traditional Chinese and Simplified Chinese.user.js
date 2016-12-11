@@ -3,7 +3,7 @@
 // @name:zh-CN   简繁自由切换
 // @name:en      Switch Traditional Chinese and Simplified Chinese
 // @namespace    hoothin
-// @version      0.5
+// @version      0.6
 // @description        快速轉換整個網頁或者指定輸入框中的簡體中文與繁體中文
 // @description:zh-CN  快速转换整个网页或者指定输入框中的简体中文与繁体中文
 // @description:en     Just Switch Traditional Chinese and Simplified Chinese
@@ -54,7 +54,7 @@
                         child.alt=alt;
                     }
                 }
-                if(child.tagName == "INPUT" && child.value !== "" && child.type != "text" && child.type != "hidden"){
+                if(child.tagName == "INPUT" && child.value !== "" && child.type != "text" && child.type != "search" && child.type != "hidden"){
                     let value=stranText(child.value);
                     if(child.value != value){
                         child.value=value;
@@ -129,14 +129,17 @@
         setTimeout(stranBody,50);
     }
 
+    var curLang=isSimple;
     document.addEventListener("keydown", function(e) {
         if(e.keyCode == shortcutKey && e.ctrlKey) {
-            action=action==2?3:2;
             if("TEXTAREA"==document.activeElement.tagName){
-                document.activeElement.innerHTML=stranText(document.activeElement.innerHTML);
+                document.activeElement.innerHTML=curLang?traditionalized(document.activeElement.innerHTML):simplized(document.activeElement.innerHTML);
+                curLang=!curLang;
             }else if("INPUT"==document.activeElement.tagName){
-                document.activeElement.value=stranText(document.activeElement.value);
+                document.activeElement.value=curLang?traditionalized(document.activeElement.value):simplized(document.activeElement.value);
+                curLang=!curLang;
             }else{
+                action=action==2?3:2;
                 setLanguage();
             }
         }
