@@ -8,7 +8,7 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdn.jsdelivr.net/jquery/1.7.2/jquery.min.js
 // @require      https://cdn.jsdelivr.net/hi-base64/0.2.0/base64.min.js
-// @version      1.1.1
+// @version      1.1.2
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -97,7 +97,7 @@
     switch (lang){
         case "zh-CN":
             i18n={
-                toggle:"显示或隐藏一键离线按钮",
+                configure:"一键离线下载设置",
                 yyw:"115网盘",
                 baidu:"百度网盘",
                 furk:"Furk网盘",
@@ -111,7 +111,7 @@
             break;
         default:
             i18n={
-                toggle:"Toggle visibility of EasyOffline",
+                configure:"EasyOffline - Configure",
                 yyw:"115",
                 baidu:"BaiduPan",
                 furk:"Furk",
@@ -506,5 +506,15 @@
             GM_setValue('eoDisable_'+document.domain,true);
         }
     }
-    GM_registerMenuCommand(i18n.toggle, toggleIcon);
+
+    function goSetting(){
+        location.href="https://github.com/hoothin/UserScripts/tree/master/Easy offline#一键离线下载";
+    }
+
+    document.addEventListener("keydown", function(e) {
+        if(e.keyCode == 120) {
+            toggleIcon();
+        }
+    });
+    GM_registerMenuCommand(i18n.configure, goSetting);
 })();
