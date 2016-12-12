@@ -8,7 +8,7 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdn.jsdelivr.net/jquery/1.7.2/jquery.min.js
 // @require      https://cdn.jsdelivr.net/hi-base64/0.2.0/base64.min.js
-// @version      1.1.0
+// @version      1.1.1
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -337,11 +337,28 @@
     }
 
     var i=0;
-    var t=window.setInterval(function() {
-        var curlink;
-        if (location.href.indexOf("github.com/hoothin/UserScripts/tree/master/Easy%20offline") != -1){
-            window.clearInterval(t);
-            $('head').append(`
+    var curlink=GM_getValue('eoUrl');
+    var isDisk=/furk\.net|seedr\.cc|pan\.baidu\.com\/disk|115\.com|pcloud\.com/.test(location.href);
+    if(isDisk){
+        if(curlink){
+            diskFun();
+            GM_deleteValue('eoUrl');
+        }
+    }else if(location.href.indexOf("pan.baidu.com/wap/home") != -1){
+        if(curlink)location.href="https://pan.baidu.com/disk/home";
+    }else if (location.href.indexOf("github.com/hoothin/UserScripts/tree/master/Easy%20offline") != -1){
+        setting();
+    }else{
+        var t=window.setInterval(function() {
+            if(i > 2 || ((i++) === 0 && $(enableUrl).length > 0)){
+                window.clearInterval(t);
+                getAllEnableUrl();
+            }
+        }, 500);
+    }
+
+    function setting(){
+         $('head').append(`
             <style>
                 .whx-btn{
                     background-color:#3892ed;
@@ -351,9 +368,9 @@
                     background-color:#83c1ff;
                 }
             </style>`);
-            var configContent=document.createElement("div");
-            document.body.appendChild(configContent);
-            configContent.outerHTML=`
+        var configContent=document.createElement("div");
+        document.body.appendChild(configContent);
+        configContent.outerHTML=`
             <div id="configContent" style="display: none;">
                 <div style="width:300px;height:300px;position:fixed;left:50%;top:50%;margin-top:-150px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;">
                     <div style="text-align:center;font-size: 12px;margin-top: 28px;">自定义需要启用一键下载的链接正则，一行一条</div>
@@ -366,35 +383,36 @@
                     </div>
                 </div>
             </div>`;
-            var configInput=document.querySelector("#configInput");
-            var configQuit=document.querySelector("#configQuit");
-            var configSave=document.querySelector("#configSave");
-            var showTypeCheck=document.querySelector("#showType");
-            var icons=$("#icons");
-            for(var x = 0; x < Object.keys(sites).length; x++){
-                let siteConfig=sites[x];
-                let icon=$("<div style='height:25px;width:25px;float:left;border-radius:50%;background-position:center;background-repeat:no-repeat;background-size:20px;margin-left:15px;cursor:pointer'></div>");
-                icon.css("background-color","#"+siteConfig.bgColor).attr("title",i18n.disable+i18n[siteConfig.name] );
-                if(GM_getValue("eoHide"+siteConfig.name)){
-                    icon.css("opacity","0.2");
-                    icon.attr("title",i18n.enable+i18n[siteConfig.name] );
-                }
-                if(siteConfig.bgImg)icon.css("background-image","url(\""+siteConfig.bgImg+"\")");
-                icon.on("click", function(){
-                    var eoHide=GM_getValue("eoHide"+siteConfig.name);
-                    GM_setValue("eoHide"+siteConfig.name, !eoHide);
-                    icon.css("opacity",eoHide?"1":"0.2");
-                    icon.attr("title",(eoHide?i18n.disable:i18n.enable)+i18n[siteConfig.name] );
-                });
-                icons.append(icon);
+        var configInput=document.querySelector("#configInput");
+        var configQuit=document.querySelector("#configQuit");
+        var configSave=document.querySelector("#configSave");
+        var showTypeCheck=document.querySelector("#showType");
+        var icons=$("#icons");
+        for(var x = 0; x < Object.keys(sites).length; x++){
+            let siteConfig=sites[x];
+            let icon=$("<div style='height:25px;width:25px;float:left;border-radius:50%;background-position:center;background-repeat:no-repeat;background-size:20px;margin-left:15px;cursor:pointer'></div>");
+            icon.css("background-color","#"+siteConfig.bgColor).attr("title",i18n.disable+i18n[siteConfig.name] );
+            if(GM_getValue("eoHide"+siteConfig.name)){
+                icon.css("opacity","0.2");
+                icon.attr("title",i18n.enable+i18n[siteConfig.name] );
             }
-            configContent=document.querySelector("#configContent");
-            configContent.style.display="block";
-            if(GM_getValue("eoReg"))$(configInput).val(GM_getValue("eoReg").join("\n"));
-            if(GM_getValue("showType"))showTypeCheck.checked=true;
-            $(configQuit).click(function (event) {configContent.style.display="none";});
-            $(configSave).click(function (event) {
-                var regStr=$(configInput).val();
+            if(siteConfig.bgImg)icon.css("background-image","url(\""+siteConfig.bgImg+"\")");
+            icon.on("click", function(){
+                var eoHide=GM_getValue("eoHide"+siteConfig.name);
+                GM_setValue("eoHide"+siteConfig.name, !eoHide);
+                icon.css("opacity",eoHide?"1":"0.2");
+                icon.attr("title",(eoHide?i18n.disable:i18n.enable)+i18n[siteConfig.name] );
+            });
+            icons.append(icon);
+        }
+        configContent=document.querySelector("#configContent");
+        configContent.style.display="block";
+        if(GM_getValue("eoReg"))$(configInput).val(GM_getValue("eoReg").join("\n"));
+        if(GM_getValue("showType"))showTypeCheck.checked=true;
+        $(configQuit).click(function (event) {configContent.style.display="none";});
+        $(configSave).click(function (event) {
+            var regStr=$(configInput).val();
+            if(!/^\s*$/.test(regStr)){
                 var regStrs=regStr.split("\n");
                 for(var reg of regStrs){
                     try{
@@ -405,103 +423,80 @@
                     }
                 }
                 GM_setValue("eoReg",regStrs);
-                GM_setValue("showType", showTypeCheck.checked);
-                alert("设置成功");
-            });
-        }else if (location.href.indexOf("furk.net/users/files/add") != -1){
-            window.clearInterval(t);
-            curlink = GM_getValue('eoUrl');
-            if(curlink){
-                setTimeout(function() {
-                    $('#url').val(curlink);
-                    GM_deleteValue('eoUrl');
-                    $(":submit[value='Add download']").click();
-                }, 500);
             }
+            GM_setValue("showType", showTypeCheck.checked);
+            alert("设置成功");
+        });
+    }
+
+    function diskFun(){
+        if (location.href.indexOf("furk.net/users/files/add") != -1){
+            setTimeout(function() {
+                $('#url').val(curlink);
+                $(":submit[value='Add download']").click();
+            }, 500);
         }else if(location.href.indexOf("seedr.cc/files") != -1){
-            if($('#upload-button').css("display") != "none"){
-                window.clearInterval(t);
-                curlink = GM_getValue('eoUrl');
-                if(curlink){
+            var sdi = setInterval(function() {
+                if($('#upload-button').css("display") != "none"){
+                    window.clearInterval(sdi);
                     setTimeout(function() {
                         $(':text[name="torrent"]').val(curlink);
-                        GM_deleteValue('eoUrl');
                         $('#upload-button').click();
                     }, 500);
                 }
-            }
+            },500);
         }else if(location.href.indexOf("pan.baidu.com/disk/home") != -1){
-            window.clearInterval(t);
-            curlink = GM_getValue('eoUrl');
-            if(curlink){
-                document.querySelector('.g-button[data-button-id=b13]').click();
-                var bsi = setInterval(function() {
-                    var newTaskBtn = document.querySelector('#_disk_id_2');
-                    if(newTaskBtn){
-                        clearInterval(bsi);
-                        newTaskBtn.click();
-                        var bsl = setInterval(function() {
-                            var offLink=document.querySelector('#share-offline-link');
-                            if(offLink){
-                                clearInterval(bsl);
-                                offLink.value = curlink;
-                                document.querySelectorAll('#newoffline-dialog>.dialog-footer>.g-button')[1].click();
-                                if(/^magnet|torrent$/.test(curlink))
-                                    var i=0, bsb = setInterval(function(){
-                                        var btList=document.querySelector('#offlinebtlist-dialog');
-                                        if(++i>50 || (btList && btList.style.display!="none")){
-                                            clearInterval(bsb);
-                                            btList.querySelectorAll('.dialog-footer>.g-button')[1].click();
-                                        }
-                                    }, 200);
-                            }
-                        }, 500);
-                    }
-                }, 500);
-                GM_deleteValue('eoUrl');
-            }
+            document.querySelector('.g-button[data-button-id=b13]').click();
+            var bsi = setInterval(function() {
+                var newTaskBtn = document.querySelector('#_disk_id_2');
+                if(newTaskBtn){
+                    clearInterval(bsi);
+                    newTaskBtn.click();
+                    var bsl = setInterval(function() {
+                        var offLink=document.querySelector('#share-offline-link');
+                        if(offLink){
+                            clearInterval(bsl);
+                            offLink.value = curlink;
+                            document.querySelectorAll('#newoffline-dialog>.dialog-footer>.g-button')[1].click();
+                            if(/^magnet|torrent$/.test(curlink))
+                                var i=0, bsb = setInterval(function(){
+                                    var btList=document.querySelector('#offlinebtlist-dialog');
+                                    if(++i>50 || (btList && btList.style.display!="none")){
+                                        clearInterval(bsb);
+                                        btList.querySelectorAll('.dialog-footer>.g-button')[1].click();
+                                    }
+                                }, 200);
+                        }
+                    }, 500);
+                }
+            }, 500);
         }else if(location.href.indexOf("115.com/?tab=offline&mode=wangpan") != -1){
-            window.clearInterval(t);
-            curlink = GM_getValue('eoUrl');
-            if(curlink){
-                var rsc = setInterval(function() {
-                    if (document.readyState == 'complete') {
-                        clearInterval(rsc);
+            var rsc = setInterval(function() {
+                if (document.readyState == 'complete') {
+                    clearInterval(rsc);
+                    setTimeout(function() {
+                        Core['OFFL5Plug'].OpenLink();
                         setTimeout(function() {
-                            Core['OFFL5Plug'].OpenLink();
-                            setTimeout(function() {
-                                $('#js_offline_new_add').val(curlink);
-                            }, 300);
-                        }, 1000);
-                    }
-                }, 400);
-                GM_deleteValue('eoUrl');
-            }
+                            $('#js_offline_new_add').val(curlink);
+                        }, 300);
+                    }, 1000);
+                }
+            }, 300);
         }else if(location.href.indexOf("my.pcloud.com") != -1){
-            window.clearInterval(t);
-            curlink = GM_getValue('eoUrl');
-            if(curlink){
-                var psc = setInterval(function() {
-                    var upBtn = document.querySelector('div.upload_button');
-                    if (upBtn) {
-                        clearInterval(psc);
-                        upBtn.click();
-                        document.querySelector('span.remoteupload-ctrl').click();
-                        var remotearea=document.querySelector('textarea.remotearea');
-                        remotearea.value=curlink;
-                        remotearea.nextSibling.click();
-                    }
-                }, 500);
-                GM_deleteValue('eoUrl');
-            }
-        }else if(i > 2 || ((i++) === 0 && $(enableUrl).length > 0)){
-            window.clearInterval(t);
-            getAllEnableUrl();
+            var psc = setInterval(function() {
+                var upBtn = document.querySelector('div.upload_button');
+                if (upBtn) {
+                    clearInterval(psc);
+                    upBtn.click();
+                    document.querySelector('span.remoteupload-ctrl').click();
+                    var remotearea=document.querySelector('textarea.remotearea');
+                    remotearea.value=curlink;
+                    remotearea.nextSibling.click();
+                }
+            }, 500);
         }
-    }, 500);
-    if(/pan\.baidu\.com\/wap\/home/.test(location.href) && GM_getValue('eoUrl')){
-        location.href="https://pan.baidu.com/disk/home";
     }
+
     function toggleIcon(){
         $('.whx-a').toggle(500);
         if(GM_getValue('eoDisable_'+document.domain)){
