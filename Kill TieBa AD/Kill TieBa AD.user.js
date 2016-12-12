@@ -3,7 +3,7 @@
 // @name:zh-CN   贴吧伪装广告清理
 // @name:zh-TW   貼吧僞裝廣告清理
 // @namespace    hoothin
-// @version      0.50
+// @version      0.51
 // @description        Just Kill TieBa AD
 // @description:zh-CN  清理ADB或UBO等未能清理掉的百度贴吧列表伪装广告、帖内伪装广告与推荐应用广告
 // @description:zh-TW  清理ADB或UBO等未能清理掉的百度貼吧列表偽裝廣告、帖內偽裝廣告與推薦應用廣告
@@ -23,7 +23,7 @@
     'use strict';
     var observer, option;
     var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
-    var tcss = ".j_encourage_entry{display: none !important;} #encourage_entry{display: none !important;} .tpoint-skin{display: none !important;} #pb_adbanner{display: none !important;} .iframe_wrapper{display: none !important;} div.tpoint-skin{display: none !important;}";
+    var tcss = ".j_encourage_entry{display: none !important;} #encourage_entry{display: none !important;} .tpoint-skin{display: none !important;} #pb_adbanner{display: none !important;} .iframe_wrapper{display: none !important;} div.tpoint-skin{display: none !important;} .j_click_stats{display: none !important;}";
     var snod = document.createElement('style');
     snod.innerHTML = tcss;
     document.getElementsByTagName("head")[0].appendChild(snod);
@@ -40,16 +40,28 @@
         observer.observe(content, option);
     }else{
         content=document.querySelector(".content");
-        if(!content)return;
-        delAD("#j_p_postlist","DIV");
-        observer = new MutationObserver(function(records){
+        if(content){
             delAD("#j_p_postlist","DIV");
-        });
-        option = {
-            'childList': true,
-            'subtree': true
-        };
-        observer.observe(content, option);
+            observer = new MutationObserver(function(records){
+                delAD("#j_p_postlist","DIV");
+            });
+            option = {
+                'childList': true,
+                'subtree': true
+            };
+            observer.observe(content, option);
+        }else{
+            content=document.querySelector(".post_list");
+            delAD(".threads_list","LI");
+            observer = new MutationObserver(function(records){
+                delAD(".threads_list","LI");
+            });
+            option = {
+                'childList': true,
+                'subtree': true
+            };
+            observer.observe(content, option);
+        }
     }
 
     function delAD(a,b){
@@ -63,11 +75,16 @@
                 delList.push(thread);
                 var previousSibling = thread.previousSibling;
                 previousSibling = previousSibling.tagName == b?previousSibling:previousSibling.previousSibling;
+                if(previousSibling.innerHTML.indexOf("广告") != -1)
                 delList.push(previousSibling);
             }else{
                 if(thread.getAttribute && thread.getAttribute("data-field")){
                     let tdata=JSON.parse(thread.getAttribute("data-field"));
                     if(tdata.content && tdata.content.pb_tpoint && tdata.content.pb_tpoint.is_tpoint==1)delList.push(thread);
+                }else{
+                    if(thread.classList && thread.classList.length==2){
+                        delList.push(thread);
+                    }
                 }
             }
         }
@@ -80,6 +97,13 @@
             easyAD = easyADs[i];
             if(easyAD.innerHTML=="广告" && easyAD.parentNode && easyAD.parentNode.parentNode){
                 easyAD.parentNode.parentNode.removeChild(easyAD.parentNode);
+            }
+        }
+        easyADs=document.querySelectorAll("span.ti_time");
+        for(i=0;i<easyADs.length;i++){
+            easyAD = easyADs[i];
+            if(easyAD.innerHTML=="广告" && easyAD.parentNode && easyAD.parentNode.parentNode && easyAD.parentNode.parentNode.parentNode){
+                easyAD.parentNode.parentNode.parentNode.removeChild(easyAD.parentNode.parentNode);
             }
         }
     }

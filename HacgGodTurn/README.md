@@ -1,6 +1,6 @@
 琉璃神社与其他绅士站神秘代码转换成下载链接
 ==========================
-主要功能：转换各绅士站的神秘代码便于下载，嗅探页面中所有下载链接，去除和谐限制，快速翻页，快速定位或访问文章
+主要功能：转换各绅士站的神秘代码，嗅探下载链接，去除和谐限制，快速翻页、定位或访问文章
 
 [**浏览器必须支持ES6**](https://www.hacg.fi/wp/)
 
@@ -11,12 +11,15 @@
 ---
 + 增加支持如下Hentai站：
  - [灵梦御所](https://blog.reimu.net/ "porn 8")、[纯爱计划](https://sexacg.com/ "挊")、[绅士二次元](https://www.acg.tf/ "上车")、[萌心次元](https://www.moxacg.com/ "1024")、[次元轨迹](https://www.acggj.com/ "拤")、[ACG调查小队](https://acg12.com/ "老司机")、[幻天领域](https://www.acgnz.cc/)、[轻萌社](http://nacg.me/ "撸")、[紳士の庭](https://gmgard.com/ "传说")、[我的Galgame资源发布站](https://www.mygalgame.com/)、[天使二次元](https://www.tianshit.com/)、[樱花漫舍](https://www.oomoe.moe/)、[风铃窝](http://www.kaze5.com/)、[次元の圣光](http://www.acglover.top/)、[爱弹幕](http://www.idanmu.co/)、[幻想次元](https://acg18.us/)、[司机会所](http://www.sijihuisuo.club/)、[里番萌](https://lifanmoe.com/)、[最ACG](http://zuiacg.com/)、[绅士仓库](http://www.galacg.me/)、[梦幻二次元](http://www.mhecy.com/)、[ACG和谐区/里世界](http://acgzone.org/)、[寂月神社](https://acgmoon.org/)、[萌幻之乡](https://www.moe-acg.cc/)
+ 其他的`Alt`+`F8`查看
 
 + 通用快捷键：
  - `F8`或者`shift`+`F8`向前或向后循环宅站列表
  - `← →`快速定位到上一篇或下一篇文章
  - `Ctrl`+`← →`快速翻页
  - `Ctrl`+`↑ ↓`进入文章内容页或返回
+ - `Alt`+`F8`打开绅士站点列表
+ - `Ctrl`+`F8`打开火箭嗅探窗口（这样就可以`Ctrl`+` →`、`Ctrl`+`F8`快速查找评论里的资源啦）
 
 + 最ACG快捷键：
  - 点击图片去除和谐力量
