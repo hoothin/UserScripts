@@ -346,7 +346,7 @@
         }
     }else if(location.href.indexOf("pan.baidu.com/wap/home") != -1){
         if(curlink)location.href="https://pan.baidu.com/disk/home";
-    }else if (location.href.indexOf("github.com/hoothin/UserScripts/tree/master/Easy%20offline") != -1){
+    }else if(location.href.indexOf("github.com/hoothin/UserScripts/tree/master/Easy%20offline") != -1){
         setting();
     }else{
         var t=window.setInterval(function() {
@@ -430,7 +430,7 @@
     }
 
     function diskFun(){
-        if (location.href.indexOf("furk.net/users/files/add") != -1){
+        if(location.href.indexOf("furk.net/users/files/add") != -1){
             setTimeout(function() {
                 $('#url').val(curlink);
                 $(":submit[value='Add download']").click();
