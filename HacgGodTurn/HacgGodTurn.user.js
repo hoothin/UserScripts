@@ -72,7 +72,7 @@
 // @include     http*://yui-nya.com/*
 // @include     http*://www.l-sj.cc/*
 // @include     http*://htacg.cc/*
-// @version     3.20.78
+// @version     3.20.79
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -707,6 +707,12 @@
                                     }
                                     sum++;
                                     if(sum>maxCss){
+                                        var style=document.querySelector("style");
+                                        var curRegs=style.innerHTML.pmatch(/background\-image:\s*url\(([^\)]+)\)/gi);
+                                        for(var curReg of curRegs){
+                                            if(bgUrls.indexOf(curReg[0])==-1)
+                                                bgUrls+=curReg[0]+"\n";
+                                        }
                                         GM_setClipboard(bgUrls);
                                         alert("背景图片链接复制完毕");
                                     }
@@ -735,6 +741,15 @@
                         processing=false;
                     },500);
                 });
+                var picTitle=document.querySelector("h1>a[href='https://www.mygalgame.com/gengxinrizhi.html']");
+                if(picTitle){
+                    var imgUrl=picTitle.parentNode.parentNode.parentNode.querySelector("div.img>img").src;
+                    var picBtn=document.createElement("a");
+                    picBtn.href=imgUrl;
+                    picBtn.target="_blank";
+                    picBtn.innerHTML="<span class='animated_h1'>封面图</span>";
+                    picTitle.parentNode.appendChild(picBtn);
+                }
                 break;
             case "紳士の庭":
                 if(isHttps)addInsertHandler([["img"],[['p(:\\\/\\\/static\.gmgard\.com)','ps$1']]]);
