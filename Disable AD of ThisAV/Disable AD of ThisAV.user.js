@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name               ThisAV去广告
-// @name:en            Disable popup AD of ThisAV
+// @name:en            Disable AD of ThisAV
 // @name:zh-TW         ThisAV去廣告
 // @namespace          hoothin
 // @version            0.5

@@ -39,7 +39,7 @@ https://greasyfork.org/users/8227-hoothin
 + [懒人小说下载器](DownloadAllContent)
 
  通用网站内容抓取工具，可抓取小说，论坛内容等并保存为TXT文档
-+ [ThisAV去广告](Disable%20popup%20AD%20of%20ThisAV)
++ [ThisAV去广告](Disable%20AD%20of%20ThisAV)
 
  去除ThisAV页面中的弹出广告与导航栏广告，添加视频下载按鈕
 + [煎蛋侠](JiandanHero)
