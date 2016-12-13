@@ -72,7 +72,7 @@
 // @include     http*://yui-nya.com/*
 // @include     http*://www.l-sj.cc/*
 // @include     http*://htacg.cc/*
-// @version     3.21.01
+// @version     3.21.02
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -376,7 +376,7 @@
     }
     var contentArea=curSite&&curSite.contentArea?curSite.contentArea:'.entry-content',commArea=curSite&&curSite.commArea?curSite.commArea:"comment-content",articleSel=curSite&&curSite.articleSel?curSite.articleSel:"article";
 
-    if(/\.baidu\./.test(location.href)){
+    if(/^https?:\/\/pan\.baidu\.com/.test(location.href)){
         if(location.hash.slice(1)){
             document.querySelector("#accessCode").value=decodeURI(location.hash.slice(1));
             document.querySelector('#submitBtn').click();
