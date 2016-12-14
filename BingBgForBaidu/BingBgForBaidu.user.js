@@ -10,6 +10,7 @@
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_addStyle
+// @run-at       document-body
 // @connect      global.bing.com
 // @include      *://www.baidu.com/
 // @include      *://www.baidu.com/home*
