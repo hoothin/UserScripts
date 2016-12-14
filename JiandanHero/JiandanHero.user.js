@@ -8,7 +8,7 @@
 // @description:en  Tools for jandan.net
 // @description:zh-TW  為煎蛋jandan.net提供左右方向鍵快捷翻頁、鼠標懸停顯示大圖、屏蔽指定用戶發言等功能
 // @author       hoothin
-// @match        http*://jandan.net/*
+// @include      http*://jandan.net/*
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_deleteValue
