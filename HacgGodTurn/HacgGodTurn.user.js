@@ -72,12 +72,12 @@
 // @include     http*://yui-nya.com/*
 // @include     http*://www.l-sj.cc/*
 // @include     http*://htacg.cc/*
-// @version     3.21.02
+// @version     3.21.03
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
 // @run-at      document-end
-// @require     https://greasyfork.org/scripts/23522/code/od.js?version=162893
+// @require     https://greasyfork.org/scripts/23522/code/od.js?version=163021
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
 // @license     MIT License
