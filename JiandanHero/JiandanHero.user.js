@@ -3,7 +3,7 @@
 // @name:en      Jiandan Hero
 // @name:zh-TW   煎蛋俠
 // @namespace    hoothin
-// @version      0.8
+// @version      1.0
 // @description  为煎蛋jandan.net提供左右方向键快捷翻页、鼠标悬停显示大图、屏蔽指定用户发言等功能
 // @description:en  Tools for jandan.net
 // @description:zh-TW  為煎蛋jandan.net提供左右方向鍵快捷翻頁、鼠標懸停顯示大圖、屏蔽指定用戶發言等功能
@@ -102,8 +102,10 @@
         if(!type && bigImg.width>document.documentElement.clientWidth){
             bigImg.width=document.documentElement.clientWidth;
         }
-        if(top+bigImg.height>document.documentElement.clientHeight){
-            top=document.documentElement.clientHeight-bigImg.height;
+        if(top-bigImg.height<0){
+            top=0;
+        }else{
+            top-=bigImg.height;
         }
         if(left+bigImg.width>document.documentElement.clientWidth){
             left=document.documentElement.clientWidth-bigImg.width;
