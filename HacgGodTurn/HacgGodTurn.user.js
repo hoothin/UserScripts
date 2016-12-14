@@ -72,7 +72,7 @@
 // @include     http*://yui-nya.com/*
 // @include     http*://www.l-sj.cc/*
 // @include     http*://htacg.cc/*
-// @version     3.21.05
+// @version     3.21.06
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -725,8 +725,7 @@
                         var style=document.querySelector("style");
                         var curRegs=style.innerHTML.pmatch(/background\-image:\s*url\('?([^\')]+)'?\)/gi);
                         for(var curReg of curRegs){
-                            if(bgUrls.indexOf(curReg[0])==-1)
-                                bgUrls+=curReg[0]+"\n";
+                            bgUrls+=curReg[0]+"\n";
                         }
                         GM_setClipboard(bgUrls);
                         alert("背景图片链接复制完毕");
