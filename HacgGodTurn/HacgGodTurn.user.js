@@ -72,7 +72,7 @@
 // @include     http*://yui-nya.com/*
 // @include     http*://www.l-sj.cc/*
 // @include     http*://htacg.cc/*
-// @version     3.21.03
+// @version     3.21.05
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -692,11 +692,11 @@
                 var bgUrls,sum=0,maxCss=5;
                 var batchBg=document.createElement("ul");
                 batchBg.classList.add("dropdown-menu");
-                batchBg.innerHTML="<li><a href=\"javascript:void(0)\">复制所有背景图片链接</a></li>";
+                batchBg.innerHTML="<li><a href=\"javascript:void(0)\">复制当组背景图链接</a></li>";
                 batchBg.onclick=function(e){
                     if(bgUrls==undefined){
                         bgUrls="";
-                        for(let j=0;j<=maxCss;j++){
+                        /*for(let j=0;j<=maxCss;j++){
                             GM_xmlhttpRequest({
                                 method: 'GET',
                                 url: "https://www.mygalgame.com/wp-content/themes/mygalgame/ui/css/background"+j+".css",
@@ -721,7 +721,15 @@
                                     console.log(e);
                                 }
                             });
+                        }*/
+                        var style=document.querySelector("style");
+                        var curRegs=style.innerHTML.pmatch(/background\-image:\s*url\('?([^\')]+)'?\)/gi);
+                        for(var curReg of curRegs){
+                            if(bgUrls.indexOf(curReg[0])==-1)
+                                bgUrls+=curReg[0]+"\n";
                         }
+                        GM_setClipboard(bgUrls);
+                        alert("背景图片链接复制完毕");
                     }else{
                         if(bgUrls!=""){
                             GM_setClipboard(bgUrls);
