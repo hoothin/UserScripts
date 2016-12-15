@@ -722,7 +722,13 @@
                                 }
                             });
                         }*/
-                        var style=document.querySelectorAll("style")[1];
+                        var style=document.querySelectorAll("style");
+                        for(let j=0;j<=style.length;j++){
+                            if(style[j].innerHTML.indexOf(".cb-slideshow")!=-1){
+                                style=style[j];
+                                break;
+                            }
+                        }
                         var curRegs=style.innerHTML.pmatch(/background\-image:\s*url\('?([^\')]+)'?\)/gi);
                         for(var curReg of curRegs){
                             bgUrls+=curReg[0]+"\n";
