@@ -72,7 +72,7 @@
 // @include     http*://yui-nya.com/*
 // @include     http*://www.l-sj.cc/*
 // @include     http*://htacg.cc/*
-// @version     3.21.06
+// @version     3.21.07
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -722,7 +722,7 @@
                                 }
                             });
                         }*/
-                        var style=document.querySelector("style");
+                        var style=document.querySelectorAll("style")[1];
                         var curRegs=style.innerHTML.pmatch(/background\-image:\s*url\('?([^\')]+)'?\)/gi);
                         for(var curReg of curRegs){
                             bgUrls+=curReg[0]+"\n";
