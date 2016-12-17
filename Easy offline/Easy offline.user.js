@@ -8,7 +8,7 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdn.jsdelivr.net/jquery/1.7.2/jquery.min.js
 // @require      https://cdn.jsdelivr.net/hi-base64/0.2.0/base64.min.js
-// @version      1.1.2
+// @version      1.2.1
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -36,12 +36,14 @@
     var sites={
         0:{
             name:"baidu",
+            regex:/pan\.baidu\.com/,
             url:"https://pan.baidu.com/disk/home",
             bgColor:"ffffff",
             bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAABjFBMVEX////7+/v+/v/8/Pwyf/wzc/w0bvza5f4xffz5+//0+P8ybPz8/f4yevw0cPwza/z39/cwe/UxdfzSPyr4+v/2+f/m7/53nv0vf/wvce9pof1tlPwxf/gzfPYwePPp8f7Z5/7S4v7P4P7L3f7I2f2Gtf2Rr/1hkP0yd/1FiPwygfxAdPxspftYkvUtc/Dg6f7C2f7F1f54oP1flf0/hfwsbu7i7f/w9f7b5v7X5f7V4v6nyv6oxv6jwP6Ns/2Lsf1/rv1+ov1zof1xof10nf1jm/1djP0xe/2NufxalvxHj/xPhvxKgPxHffw+efw0ePyXu/mqxPg5hfiTtvdyo/dgmfdOj/dBhfVflfQvefT+9fOIqvMyefNMhvFIgO9MeePyycVjZbzKb3DaZVa/Q0Dx9f+Bp/1olv1gkPw0dvzg6Pu2zPk0gflNjPctc/c9gfX88/JJfO3n3+ni2unHxuSGktNpdtBJY8paashRW71nXqp7YpyDYJKpaIKPU33AVFXARkTVTTvFQjrUPypKwHq1AAACAklEQVQ4y4WTB3OqQBSFF3BpAk+KIBixJ2rs0fTee68vvbzee+9//O1Cio46npmFPfd8d2cY9gIASMJHUESDKFQmAZJAUKCFKELA/WSr3A3d/tZnAF99C8fVHYhiosbxxflsdr7I15SIWiCe3exA2szGmwOJXTkUkvHaTTQD9NyBLO/t7OzJ8kFObwKs2/bRdrSvL7p9ZNvrjQC/n8/nwngXzuXz+3wDED42zS13u2Wax+EGQD+pmhvudsOsnuj1gBAZSp5+/XRIYkMeVu1XyaGIcAfoycVM4Pn3qx9vcW3gRUcmE8gsJvUboNfyeDyBwLd/6sX7wtNnC45DD6vXBbRx1sOmrQ+/VFX9efomhFzFstLoNa45QKzCijMx/vXZpar+/fKSZecWijwfmxHZSgzFFBgWxXQUIJ39UX9/nhPFngHsomlRHEYxRY6mlCkOl+5fXp2vraV6IgCLm1JSoyQGxhRlUnCAi/PUEwXnWMKkooxhAIxAuNSPS+8+Qgi7GOB3zutfgnAExQSIr0JoMJw2GJSghPLSo4eDGscYEK7Gna/gy7QkLRvTK5JEP2bAgy4vvTJtLCNX5h0AMLNemvbihfqBv3zjZpHDACKM7ntI3RMFgFSYcJ3B3P0sf6kzGOxM+AFwXAK7kuNurz2pcWTt7deuna/t4LQdvbbD23b8/wPY0UTO99dD5gAAAABJRU5ErkJggg=="
         },
         1:{
             name:"pcloud",
+            regex:/my\.pcloud\.com/,
             url:"https://my.pcloud.com/",
             bgColor:"f1f1f1",
             noMag:true,
@@ -51,12 +53,14 @@
         },
         2:{
             name:"yyw",
+            regex:/115\.com/,
             url:"http://115.com/?tab=offline&mode=wangpan",
             bgColor:"21458a",
             bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAASFBMVEUhRYr///+XqcjV3OmJnMFTb6QoS45PbKLu8fbZ4OvBy95xiLRifKxbdqlXcqYxU5P3+Prh5u/O1uXH0eK6xduks89/lLtGZJ4ysMfhAAAAVUlEQVQY04WPSQ6AMAwD6ySkdKHs8P+fckyDhPBtRoojhyG4GP6FEjPvxhGZiKKJPM7uoAHYSif0Lgdw+tppQfOGIF4ILsea3CetvMa+UaRq+Mh7/gPkxAHFh9WDUQAAAABJRU5ErkJggg=="
         },
         3:{
             name:"furk",
+            regex:/www\.furk\.net/,
             url:"https://www.furk.net/users/files/add",
             bgColor:"fff",
             hide:false,
@@ -64,22 +68,32 @@
         },
         4:{
             name:"seedr",
+            regex:/www\.seedr\.cc/,
             url:"https://www.seedr.cc/files",
             bgColor:"ca2a15",
             hide:false,
             bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAllBMVEXGKBPGKBPGKBPGKBPORDLJMh3uv7nQTDvILRjprKPmoZjbdmnLOyjKNSHtvLbrtK3opp3lm5Hhj4Tac2XZb2HXalvUXEzLOibGKBPGKBPGKBPqsarjlovehHjXaFnTWkrMQC3GKBPGKBPGKBP////44+H77u323Nj01dHxycP88vH66+n23dr019Tyz8rxzMfvw73vwrxYVj9BAAAAJHRSTlP7yb+j+/v9+/v9/f37+/39/f39/f39+/uxmSj9/f37+/uXNR2Gd9E6AAAAmUlEQVQY003NVxKDMAxFUQVsbHqv6YkMIT3731wEZoD7oZl3fgQXY7PKaKACKn93BxirwaArWsQXH8EcYYeUu4BnDRAsUKgBWjZDeqfduXKGmHbPT3YiJ9giPtj+qUJWavghxoUSHFxLAz3JIgcAypsGBzF3bAJvAvHB5PiVnm8HGoBZIffTVvWMoIIhX4KIMg5whsbcrKqvf29uDBcu2+SAAAAAAElFTkSuQmCC"
         },
         5:{
+            name:"weiyun",
+            regex:/www\.weiyun\.com/,
+            url:"https://www.weiyun.com/disk/index.html",
+            bgColor:"3c95ee",
+            bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAV1BMVEUed9E4htg2hNI2g84KJkMSKkMJIjwHEBr///8lh+k5k+49lu4hhegyj+wri+s/lu+s0vfg7vzX6vy/3PlWou+w1PicyfaWxvXf7fzB3fmHvfSBuvNfp/GhDGXVAAAACHRSTlPm5uDeSkhCHO7HIjkAAAB4SURBVBjTZYuJDsIwDEM9TnfDodc2rv//TtoKITqeosR+UnAcrj/szhimjj2mDRgbM8nYEj59GRfOX/Fg3a+2IUWSUh0vCfKhRUbFaiAqs1L0PVAw2vrM3sx8sFJgieUGWwNzzXAukTeSqX46B7fhX+DSARzQ9dMbRIkLk61eQagAAAAASUVORK5CYII="
+        },
+        6:{
             name:"xunlei",
-            url:"http://lixian.vip.xunlei.com/lixian_login.html?furl=",
+            regex:/lixian\.vip\.xunlei\.com/,
+            url:"http://lixian.vip.xunlei.com/?furl=",
             bgColor:"2e71f1",
             directUrl:function(offUrl){
                 return this.url+offUrl;
             },
             bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAMAAADzN3VRAAABC1BMVEUAAAArcPUscPQkavJSd79UdrhTdrled6kjae8ucfAqbOwoa+0pa+xTd71WdrNad61dea4pbO4vcvEsb/Aqbe8sbu8ucfArbu8ucfEpbe0oa+4vcPH///4ZYe7j8fne7fknbPAkaO41dfDa6vgcY+/o8/rV6PchZ+4bZO79//3u+fklavIiaO8VXu3x9/3t9fve7veLsfYqcfZNhvE5d/AfZO36/fz0+/ry+vrb6PrG2vnR5fbL4faXufbG3fWqyPWjw/WErPWixPR4pPR0ovOIsfJsnPJYj+9Bfe/1+v3l7f3p8Pzg7fq+0/mlw/fY6/aQtPaHrfZnl/S41fORt/KAqvKZvvFJhO8eZe4RVCzFAAAAEXRSTlMA+P74gnpzWP329OrohXJgXOQVaEcAAAFOSURBVCjPZczneoIwGIbhqNXuEQORYGIBQXDvvbfde5z/kfSTi1Kx9798z/UGIXQQUuJBSiiGwDmEPUklFIVFDcI/4doVqilUCSIFArdjlAxQFE1Ir41EMhlGlFKiEerRhPFy29O3byiyUTccx9HiVBbxYYm3jAL1ilyvPlerhl1wFnec83mRuoUQSgr2lPP7Bn3g2dJNtm6TLSggUXzMZrtdXi6X+dCR/QLEtGV1SpZltXvfGtkt5qSdcnXmpmlit8guc5K79vTHK0OCk1eaq1x6q2LlUunBUsZQEi5sj3MZMJp9bLCuynCCjUvX3yuVzKBRFLqK4TNvA+Qj8TV7Si1E4heSfKZYj/pUlzxQfFjQt2XRL/iPJDXVz43tvRBmO6SmsdaZS0N5zHZnOpMwYNoJiuU1pu5j+fwhQtGIynAQUyMXCFyeqntFPYPFD095Qx8x+n7CAAAAAElFTkSuQmCC"
         },
-        6:{
+        7:{
             name:"xiaomi",
+            regex:/miwifi\.com/,
             url:"http://d.miwifi.com/d2r/?url=",
             bgColor:"f97306",
             directUrl:function(offUrl){
@@ -105,6 +119,7 @@
                 pcloud:"Pcloud网盘",
                 xunlei:"迅雷离线",
                 xiaomi:"小米路由器",
+                weiyun:"微云",
                 enable:"启用",
                 disable:"禁用"
             };
@@ -119,6 +134,7 @@
                 pcloud:"Pcloud",
                 xunlei:"Xunlei",
                 xiaomi:"MiWifi",
+                weiyun:"Weiyun",
                 enable:"Enable ",
                 disable:"Disable "
             };
@@ -133,7 +149,10 @@
         }
     }
 
+    var isCssSeted=false;
     function setCss(){
+        if(isCssSeted)return;
+        isCssSeted=true;
         $('head').append(`
         <style>
             a.whx-a{
@@ -156,18 +175,51 @@
         </style>`);
     }
 
-    function getAllEnableUrl() {
+    var parentDiv=$("<div style='display:none;position:relative;z-index:99999;overflow:visible;text-align:left;'></div>");
+    var regs=GM_getValue("eoReg");
+    function hideIcons(){
+        parentDiv.css("display","none");
+        for(var node of offNodes){
+            node.css("margin-top","0px");
+        }
+    }
+    var offNodes=[];
+    var offUrl;
+    for(var x = 0; x < Object.keys(sites).length; x++){
+        let offNode=$("<a></a>");
+        offNode.addClass('whx-a').css("position","absolute").css("margin-top","0px").css("margin-left","0px").attr("target","_blank");
+        let siteConfig=sites[x];
+        offNode.css("background-color","#"+siteConfig.bgColor).attr("title",i18n[siteConfig.name] ).attr("href", siteConfig.url);
+        offNode.click(function(e){
+            if(!siteConfig.directUrl)GM_setValue("eoUrl",getRightUrl(offUrl));
+            e.stopPropagation();
+        });
+        if(siteConfig.bgImg)offNode.css("background-image","url(\""+siteConfig.bgImg+"\")");
+        if(siteConfig.hide || GM_getValue("eoHide"+siteConfig.name))continue;
+        offNodes.push(offNode);
+        parentDiv.prepend(offNode);
+    }
+    parentDiv.mouseover(function(e){
+        e.stopPropagation();
+    });
+    document.addEventListener("mouseover", function(e){
+        hideIcons();
+    });
+    var preNode;
+    if(showType){
+        document.addEventListener("click", function(){
+            if(preNode)preNode.hide(300);
+        });
+    }
+
+    function getAllEnableUrl(target) {
         if(GM_getValue('eoDisable_'+document.domain))return;
-        var parentDiv=$("<div style='display:none;position:relative;z-index:99999;overflow:visible;text-align:left;'></div>");
-        var rawnodes = $(enableUrl).get(),customnodes=[];
+        var rawnodes=(target?$(target).find(enableUrl):$(enableUrl)).get(),customnodes=[];
         var nodes = [];
-        var i,x;
+        var i;
         var curNode;
-        var offUrl;
-        var offNodes=[];
-        var regs=GM_getValue("eoReg");
         if(regs){
-            var aTags = $("a").get();
+            var aTags = (target?$(target).find("a"):$("a")).get();
             for(var aTag of aTags){
                 for(var reg of regs){
                     if(reg==="")continue;
@@ -179,46 +231,6 @@
                 }
             }
         }
-        function hideIcons(){
-            parentDiv.css("display","none");
-            for(var node of offNodes){
-                node.css("margin-top","0px");
-            }
-        }
-        for(x = 0; x < Object.keys(sites).length; x++){
-            let offNode=$("<a></a>");
-            offNode.addClass('whx-a').css("position","absolute").css("margin-top","0px").css("margin-left","0px").attr("target","_blank");
-            let siteConfig=sites[x];
-            offNode.css("background-color","#"+siteConfig.bgColor).attr("title",i18n[siteConfig.name] ).attr("href", siteConfig.url);
-            offNode.click(function(e){
-                if(!siteConfig.directUrl)GM_setValue("eoUrl",getRightUrl(offUrl));
-                e.stopPropagation();
-            });
-            if(siteConfig.bgImg)offNode.css("background-image","url(\""+siteConfig.bgImg+"\")");
-            /*switch(x){
-            case 0:
-                offNode.css("background-color","#e1e1e1").attr("title",i18n.baidu ).attr("href", "http://pan.baidu.com/disk/home");
-                break;
-            case 1:
-                offNode.css("background-color","#F44336").attr("title",i18n.seedr ).attr("href", "https://www.seedr.cc/files");
-                break;
-            case 2:
-                offNode.css("background-color","#3BEBFF").attr("title",i18n.furk ).attr("href", "https://www.furk.net/users/files/add");
-                break;
-            case 3:
-                offNode.css("background-color","#5e5eff").attr("title",i18n.yyw ).attr("href", "http://115.com/?tab=offline&mode=wangpan");
-                break;
-            }*/
-            if(siteConfig.hide || GM_getValue("eoHide"+siteConfig.name))continue;
-            offNodes.push(offNode);
-            parentDiv.prepend(offNode);
-        }
-        parentDiv.mouseover(function(e){
-            e.stopPropagation();
-        });
-        document.addEventListener("mouseover", function(e){
-            hideIcons();
-        });
 
         if(rawnodes.length > 0){
             for (i = 0; i < rawnodes.length; i++) {
@@ -256,14 +268,9 @@
             listLen = nodes.length;
             setCss();
             if (listLen !== 0) {
-                var preNode;
-                if(showType){
-                    document.addEventListener("click", function(){
-                        if(preNode)preNode.hide(300);
-                    });
-                }
                 for (i = 0; i < listLen; i++) {
                     curNode = nodes[i];
+                    if(curNode.classList.contains("whx-a"))continue;
                     let clone=$("<a></a>").attr("style",curNode.getAttribute("style")).attr("href",curNode.getAttribute("href")).addClass('whx-a').css("background-color","#e1e1e1").css("background-image",'url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAMAAADzN3VRAAAARVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADc6ur3AAAAFnRSTlMAYM5vMOA/ENGegK2olI6G1b97Z0sXENA+jAAAAKFJREFUKM+FklkSxCAIRHFfss3K/Y86iQSDVqzpH7FfgQpCVfAmGx+gl9JI0qrxrcNLzooEbKUG4EKWdkCiDRV0N0RTrZ5wvdgTTgp4SzCAHxAPZkAM5GOJWuuT7FE5OVPOBFLTYb3Oc2YB5uJ8+G6pgkTGt74ntcCJHiwFLHw10Tdc93jlGXGvSRtsHNpuPs+/o1ODfxAtSL0f7HPC+L/9AF60G3QxO1UaAAAAAElFTkSuQmCC")');
                     clone.mouseover(function(e){
                         offUrl=clone.attr("href");
@@ -338,7 +345,14 @@
 
     var i=0;
     var curlink=GM_getValue('eoUrl');
-    var isDisk=/furk\.net|seedr\.cc|pan\.baidu\.com\/disk|115\.com|pcloud\.com/.test(location.href);
+    var isDisk=false;
+    for(x = 0; x < Object.keys(sites).length; x++){
+        let siteConfig=sites[x];
+        if(siteConfig.regex.test(location.href)){
+            isDisk=true;
+            break;
+        }
+    }
     if(isDisk){
         if(curlink){
             diskFun();
@@ -349,12 +363,18 @@
     }else if(location.href.indexOf("github.com/hoothin/UserScripts/tree/master/Easy%20offline") != -1){
         setting();
     }else{
-        var t=window.setInterval(function() {
-            if(i > 2 || ((i++) === 0 && $(enableUrl).length > 0)){
-                window.clearInterval(t);
-                getAllEnableUrl();
-            }
-        }, 500);
+        var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+        var observer = new MutationObserver(function(records){
+            records.map(function(record) {
+                if(record.addedNodes)setTimeout(function(){getAllEnableUrl(record.addedNodes);},501);
+            });
+        });
+        var option = {
+            'childList': true,
+            'subtree': true
+        };
+        observer.observe(document.body, option);
+        getAllEnableUrl();
     }
 
     function setting(){
@@ -375,7 +395,7 @@
                 <div style="width:300px;height:300px;position:fixed;left:50%;top:50%;margin-top:-150px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;">
                     <div style="text-align:center;font-size: 12px;margin-top: 28px;">自定义需要启用一键下载的链接正则，一行一条</div>
                     <textarea id="configInput" placeholder="例：http:.*\\.php\\?getRes=\\d+" style="position:absolute;left:20px;top:50px;width:260px;height:150px"></textarea>
-                    <div id="icons" style="position:absolute;left:1px;top:202px"></div>
+                    <div id="icons" style="position:absolute;left:3px;top:202px"></div>
                     <label style="position:absolute;left:60px;top:230px;"><input id="showType" type="checkbox"/>仅当鼠标经过时显示图标</label>
                     <button id="configSave" class="whx-btn" type="button" style="position:absolute;left:110px;top:260px;width:80px;height:30px;color:white;border-radius:5px;border:0px;outline:none;">设置</button>
                     <div id="configQuit" class="whx-btn" style="width:28px;height:28px;border-radius:14px;position:absolute;right:2px;top:2px;cursor:pointer;">
@@ -390,7 +410,7 @@
         var icons=$("#icons");
         for(var x = 0; x < Object.keys(sites).length; x++){
             let siteConfig=sites[x];
-            let icon=$("<div style='height:25px;width:25px;float:left;border-radius:50%;background-position:center;background-repeat:no-repeat;background-size:20px;margin-left:15px;cursor:pointer'></div>");
+            let icon=$("<div style='height:25px;width:25px;float:left;border-radius:50%;background-position:center;background-repeat:no-repeat;background-size:20px;margin-left:10px;cursor:pointer'></div>");
             icon.css("background-color","#"+siteConfig.bgColor).attr("title",i18n.disable+i18n[siteConfig.name] );
             if(GM_getValue("eoHide"+siteConfig.name)){
                 icon.css("opacity","0.2");
@@ -494,6 +514,24 @@
                     remotearea.nextSibling.click();
                 }
             }, 500);
+        }else if(location.href.indexOf("www.weiyun.com/disk/index.html") != -1){
+            var offBtn=document.querySelector('li[data-action=offline_download]');
+            setTimeout(function(){
+                offBtn.click();
+                var wsc = setInterval(function() {
+                    var tab=document.querySelector('li.link[data-id=offline_tab]');
+                    if(tab){
+                        clearInterval(wsc);
+                        tab.click();
+                        var textarea=document.querySelector('textarea.copyurl');
+                        textarea.innerHTML=curlink;
+                        var event = document.createEvent('HTMLEvents');
+                        event.initEvent("change", false, true);
+                        textarea.dispatchEvent(event);
+                        document.querySelector('div[data-btn-id=OK]').click();
+                    }
+                },200);
+            },1000);
         }
     }
 
