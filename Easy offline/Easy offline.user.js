@@ -8,7 +8,7 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdn.jsdelivr.net/jquery/1.7.2/jquery.min.js
 // @require      https://cdn.jsdelivr.net/hi-base64/0.2.0/base64.min.js
-// @version      1.2.1
+// @version      1.2.2
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -189,7 +189,7 @@
         let offNode=$("<a></a>");
         offNode.addClass('whx-a').css("position","absolute").css("margin-top","0px").css("margin-left","0px").attr("target","_blank");
         let siteConfig=sites[x];
-        offNode.css("background-color","#"+siteConfig.bgColor).attr("title",i18n[siteConfig.name] ).attr("href", siteConfig.url);
+        offNode.css("background-color","#"+siteConfig.bgColor).attr("title",i18n[siteConfig.name] ).attr("href", siteConfig.url).attr("name", siteConfig.name);
         offNode.click(function(e){
             if(!siteConfig.directUrl)GM_setValue("eoUrl",getRightUrl(offUrl));
             e.stopPropagation();
@@ -290,7 +290,16 @@
                                 node.show();
                                 node.css("margin-top",-j*25+"px");
                                 j++;
-                                if(!!sites[x].directUrl)node.attr('href', sites[x].directUrl(offUrl));
+                                var name=node.attr("name");
+                                for(var s = 0; s < Object.keys(sites).length; s++){
+                                    let siteConfig=sites[s];
+                                    if(siteConfig.name==name){
+                                        if(siteConfig.directUrl){
+                                            node.attr('href', siteConfig.directUrl(offUrl));
+                                        }
+                                        break;
+                                    }
+                                }
                             }
                         }
                         e.stopPropagation();
