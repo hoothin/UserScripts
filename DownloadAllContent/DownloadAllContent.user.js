@@ -30,13 +30,13 @@
     switch (lang){
         case "zh-CN":
             i18n={
-                fetch:"开始下载小说或其他",
+                fetch:"开始下载小说或其他【F9】",
                 info:"本文使用DownloadAllContent脚本下载"
             };
             break;
         default:
             i18n={
-                fetch:"Download All Content",
+                fetch:"Download All Content[F9]",
                 info:"The TXT is downloaded with 'DownloadAllContent'"
             };
             break;
