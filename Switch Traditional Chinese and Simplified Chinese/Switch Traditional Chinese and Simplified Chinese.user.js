@@ -3,9 +3,9 @@
 // @name:zh-CN   简繁自由切换
 // @name:en      Switch Traditional Chinese and Simplified Chinese
 // @namespace    hoothin
-// @version      0.6
-// @description        快速轉換整個網頁或者指定輸入框中的簡體中文與繁體中文
-// @description:zh-CN  快速转换整个网页或者指定输入框中的简体中文与繁体中文
+// @version      0.7
+// @description        任意轉換網頁中的簡體中文與繁體中文
+// @description:zh-CN  任意转换网页中的简体中文与繁体中文
 // @description:en     Just Switch Traditional Chinese and Simplified Chinese
 // @author       hoothin
 // @include      *
@@ -114,11 +114,11 @@
 
     function switchLanguage(){
         if(isSimple){
-            action++;
-            action=action>3?1:action;
-        }else{
             action--;
             action=action<1?3:action;
+        }else{
+            action++;
+            action=action>3?1:action;
         }
         setLanguage();
     }
@@ -145,5 +145,5 @@
         }
     });
 
-    GM_registerMenuCommand("繁簡切換", switchLanguage);
+    GM_registerMenuCommand("繁簡切換【Ctrl+F8】", switchLanguage);
 })();
