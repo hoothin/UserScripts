@@ -72,7 +72,7 @@
 // @include     http*://yui-nya.com/*
 // @include     http*://www.l-sj.cc/*
 // @include     http*://htacg.cc/*
-// @version     3.21.08
+// @version     3.21.09
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -89,6 +89,23 @@
 // @contributionURL https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
 // @contributionAmount 1
 // ==/UserScript==
+/*
+通用快捷键：
+    F8或者shift+F8向前或向后循环宅站列表
+    ← →快速定位到上一篇或下一篇文章
+    Ctrl+← →快速翻页
+    Ctrl+↑ ↓进入文章内容页或返回
+    Alt+F8打开绅士站点列表
+    Ctrl+F8打开火箭嗅探窗口
+
+最ACG快捷键：
+    点击图片去除和谐力量
+    按住Ctrl点击图集或文章页面的下载按钮直接跳转至百度盘
+
+火箭功能，嗅探并显示所有下载链接，点击序号定位至页面中资源所在位置
+
+老司机输入框输入链接:https://pan.baidu.com/s/xxxxxxxx 密码:yyyy或者xxxxxxxx yyyy等可跳转至:https://pan.baidu.com/s/xxxxxxxx#yyyy
+*/
 (function(){
     'use strict';
     var config={
