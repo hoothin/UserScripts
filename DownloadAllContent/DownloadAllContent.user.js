@@ -4,7 +4,7 @@
 // @name:zh-TW   懶人小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      0.7
+// @version      0.8
 // @description  Fetch and download main content on current page
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取小說、論壇內容等並保存為TXT文檔
@@ -85,11 +85,10 @@
         }
         for(let i=0;i<aEles.length;i++){
             let aTag=aEles[i];
-            var contentType=document.querySelector("meta[http-equiv=Content-Type]");
             GM_xmlhttpRequest({
                 method: 'GET',
                 url: aTag.href,
-                overrideMimeType:contentType?contentType.content:null,
+                overrideMimeType:"text/html;charset="+document.charset,
                 onload: function(result) {
                     var doc = getDocEle(result.responseText);
                     if (!doc) {
