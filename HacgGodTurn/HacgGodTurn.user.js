@@ -72,7 +72,7 @@
 // @include     http*://yui-nya.com/*
 // @include     http*://www.l-sj.cc/*
 // @include     http*://htacg.cc/*
-// @version     3.21.07
+// @version     3.21.08
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -694,6 +694,7 @@
                 batchBg.classList.add("dropdown-menu");
                 batchBg.innerHTML="<li><a href=\"javascript:void(0)\">复制当组背景图链接</a></li>";
                 batchBg.onclick=function(e){
+                    e.stopPropagation();
                     if(bgUrls==undefined){
                         bgUrls="";
                         /*for(let j=0;j<=maxCss;j++){
@@ -733,6 +734,8 @@
                         for(var curReg of curRegs){
                             bgUrls+=curReg[0]+"\n";
                         }
+                        var rmBg=document.querySelector("div.large");
+                        if(rmBg)bgUrls+=getComputedStyle(rmBg).backgroundImage.replace(/url\("([^"]+)"\)/,"$1");
                         GM_setClipboard(bgUrls);
                         alert("背景图片链接复制完毕");
                     }else{
@@ -741,7 +744,6 @@
                             alert("背景图片链接复制完毕");
                         }
                     }
-                    e.stopPropagation();
                 }
                 bgLi.appendChild(batchBg);
                 document.querySelector("ul.navbar-nav").appendChild(bgLi);
