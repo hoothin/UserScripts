@@ -3,7 +3,7 @@
 // @name:zh-CN   贴吧伪装广告清理
 // @name:zh-TW   貼吧僞裝廣告清理
 // @namespace    hoothin
-// @version      0.51
+// @version      0.52
 // @description        Just Kill TieBa AD
 // @description:zh-CN  清理ADB或UBO等未能清理掉的百度贴吧列表伪装广告、帖内伪装广告与推荐应用广告
 // @description:zh-TW  清理ADB或UBO等未能清理掉的百度貼吧列表偽裝廣告、帖內偽裝廣告與推薦應用廣告
@@ -39,7 +39,7 @@
         };
         observer.observe(content, option);
     }else{
-        content=document.querySelector(".content");
+        content=document.querySelector(".l_container");
         if(content){
             delAD("#j_p_postlist","DIV");
             observer = new MutationObserver(function(records){
@@ -52,15 +52,17 @@
             observer.observe(content, option);
         }else{
             content=document.querySelector(".post_list");
-            delAD(".threads_list","LI");
-            observer = new MutationObserver(function(records){
+            if(content){
                 delAD(".threads_list","LI");
-            });
-            option = {
-                'childList': true,
-                'subtree': true
-            };
-            observer.observe(content, option);
+                observer = new MutationObserver(function(records){
+                    delAD(".threads_list","LI");
+                });
+                option = {
+                    'childList': true,
+                    'subtree': true
+                };
+                observer.observe(content, option);
+            }
         }
     }
 
