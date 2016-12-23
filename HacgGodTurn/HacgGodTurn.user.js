@@ -72,7 +72,7 @@
 // @include     http*://yui-nya.com/*
 // @include     http*://www.l-sj.cc/*
 // @include     http*://htacg.cc/*
-// @version     3.21.10
+// @version     3.21.11
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -695,7 +695,7 @@
                     for(var i=0;i<bgs.length;i++){
                         var bg=bgs[i];
                         if(getComputedStyle(bg).opacity>.5){
-                            var url=getComputedStyle(bg).backgroundImage.replace(/url\("([^"]+)"\)/,"$1");
+                            var url=getComputedStyle(bg).backgroundImage.replace(/url\("?([^"]+)"?\)/,"$1");
                             window.open(url);
                         }
                     }
@@ -752,8 +752,9 @@
                             bgUrls+=curReg[0]+"\n";
                         }
                         var rmBg=document.querySelector("div.large");
-                        if(rmBg)bgUrls+=getComputedStyle(rmBg).backgroundImage.replace(/url\("([^"]+)"\)/,"$1");
+                        if(rmBg)bgUrls+=getComputedStyle(rmBg).backgroundImage.replace(/url\("?([^"]+)"?\)/,"$1");
                         GM_setClipboard(bgUrls);
+                        console.info(bgUrls);
                         alert("背景图片链接复制完毕");
                     }else{
                         if(bgUrls!=""){
