@@ -72,10 +72,12 @@
 // @include     http*://yui-nya.com/*
 // @include     http*://www.l-sj.cc/*
 // @include     http*://htacg.cc/*
-// @version     3.21.11
+// @version     3.21.12
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
+// @grant       GM_setValue
+// @grant       GM_getValue
 // @run-at      document-end
 // @require     https://greasyfork.org/scripts/23522/code/od.js?version=163021
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
@@ -1305,7 +1307,7 @@
         var ttss=["有家，有爱，有欧派","未被穿过的胖次是没有价值的","巨乳只有下垂的未来","男人变态有什么错","为什么你会这么熟练啊","德国的科学技术是世界第一","在虚构的故事当中寻求真实感的人脑袋一定有问题"," 胸部什么的，明明只是装饰","勇士喜欢巨乳有什么错","哥哥让开！这样我杀不了那家伙","我们的宇宙充满了质子,中子,电子,还有奶子","有个能干的妹妹真好","玄不救非，氪不改命","只要可爱就算是男孩子也没关系","道歉時露出胸部是常識","我就是叫紫妈怎么了 有本事突然从我背后出现 把我的脸按在键盘上aqswdectfrvtghunijopioijohnuygbyfvtcdesxwedrfvtbguyhiumjiuyvftrssexrybtgnyuhm","反基复奶"];
         var ttsRand=Math.floor(Math.random()*ttss.length);
         var tts=ttss[ttsRand];
-        var soundUrl = `http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=5&text=${tts}`;
+        var soundUrl = "http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=5&text="+tts;//`http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=5&text=${tts}`;
         var p = new Promise(function(resolve, reject) {
             var ret = GM_xmlhttpRequest({
                 method: "GET",
@@ -1322,8 +1324,29 @@
                 }
             });
         });
-        p.then(playSound, function(e) {
-            console.log(e);
+        if(!GM_getValue("hazukashii")){
+            p.then(playSound, function(e) {
+                console.log(e);
+            });
+        }
+        var command=[72,65,90,85,75,65,83,72,73,73],index=0;//"hazukashii"
+        document.addEventListener("keydown", function(e) {
+            if(e.keyCode == command[index]) {
+                if(index==command.length-1){
+                    index=0;
+                    var nowValue=GM_getValue("hazukashii");
+                    GM_setValue("hazukashii", !nowValue);
+                    if(nowValue){
+                        p.then(playSound, function(e) {
+                            console.log(e);
+                        });
+                    }
+                }else{
+                    index++;
+                }
+            }else{
+                index=0;
+            }
         });
         GM_notification(notificationDetails);
     }
