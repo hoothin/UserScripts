@@ -2,7 +2,7 @@
 // @name         百Bing图
 // @name:en      BingBgForBaidu
 // @namespace    hoothin
-// @version      1.2
+// @version      1.3
 // @description     把百度首页背景图换成Bing的
 // @description:en  Just change the background image of baidu.com to bing.com
 // @author       hoothin
@@ -78,16 +78,16 @@
                     if(!/^https?:\/\//.test(bgUrl)){
                         bgUrl="http://global.bing.com"+bgUrl;
                     }
-                    bgUrl="url(\""+bgUrl+"\")";
                     var skinContainer=document.querySelector(".s-skin-container");
                     if(!skinContainer){
                         return;
                     }
                     var bingBgLink=document.createElement("a");
                     bingBgLink.title="Bing图";
-                    bingBgLink.href=jsonData.images[0].url;
+                    bingBgLink.href=bgUrl;
                     bingBgLink.innerHTML="<span class='title'>Bing图</span>";
                     document.querySelector("#s_icons").appendChild(bingBgLink);
+                    bgUrl="url(\""+bgUrl+"\")";
                     if(skinContainer.style.backgroundImage != bgUrl){
                         skinContainer.style.backgroundImage = bgUrl;
                     }
