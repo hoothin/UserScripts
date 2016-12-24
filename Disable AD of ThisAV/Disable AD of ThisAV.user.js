@@ -4,7 +4,7 @@
 // @name:zh-TW         ThisAV去廣告
 // @namespace          hoothin
 // @version            0.5
-// @description        去除ThisAV页面中的弹出广告与导航栏广告，添加视频下载按鈕
+// @description        去除ThisAV页面中的弹出广告与导航栏广告，添加视频下载按钮
 // @description:en     Just disable popup AD & tab menu AD of ThisAV.com
 // @description:zh-TW  去除ThisAV頁面中的彈出廣告與導航欄廣告，添加視頻下載按鈕
 // @author             hoothin
