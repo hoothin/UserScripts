@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         Highlight Every Code
 // @name:zh-CN   代码片段高亮
-// @name:zh-TW   代碼片斷高亮
+// @name:zh-TW   程式碼片斷高亮
 // @namespace    hoothin
-// @version      0.80
+// @version      0.81
 // @description  Add a icon to popup a window that allows syntax highlighting and beautify and word count of source code snippets on current page
 // @description:zh-CN 选择代码片段后点击图标弹出新窗口显示高亮美化与格式化后的代码与字数统计
 // @description:zh-TW 選擇程式碼片段後點選圖示彈出新視窗顯示高亮美化與格式化後的程式碼與字數統計
@@ -32,7 +32,7 @@
             '<script src="http'+(isChrome?'s':'')+'://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.6.4/beautify.min.js"></script>'+
             '<script src="http'+(isChrome?'s':'')+'://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.6.4/beautify-html.min.js"></script>'+
             '<script src="http'+(isChrome?'s':'')+'://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.6.4/beautify-css.min.js"></script>'+
-            'Code formatting: <a href="#" onclick="code.innerHTML=js_beautify(codeStr);code.className=\'prettyprint linenums\';prettyPrint();return false;">Javaspcript</a> '+
+            'Code formatting: <a href="#" onclick="code.innerHTML=js_beautify(codeStr.replace(/&amp;lt;/g, \'&lt;\').replace(/&amp;gt;/g, \'&gt;\'));code.className=\'prettyprint linenums\';prettyPrint();return false;">Javaspcript</a> '+
             '<a href="#" onclick="code.innerHTML=html_beautify(codeStr);code.className=\'prettyprint linenums\';prettyPrint();return false;">Html</a> '+
             '<a href="#" onclick="code.innerHTML=css_beautify(codeStr);code.className=\'prettyprint linenums\';prettyPrint();return false;">Css</a> '+
             '<a href="#" onclick="code.innerHTML=codeStr;code.className=\'prettyprint linenums\';prettyPrint();return false;">Raw</a> <b style="color:red">('+codes.length+' words)</b>'+
