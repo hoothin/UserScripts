@@ -19,8 +19,6 @@
 
 (function() {
     'use strict';
-    var ctnerContents=document.querySelector("#s_ctner_contents");
-    var menuContainer=document.querySelector(".s-menu-container");
     var head=document.querySelector("#head");
     if(!head.classList.contains("s-skin-hasbg")){
         head.classList.add("s-skin-hasbg");
