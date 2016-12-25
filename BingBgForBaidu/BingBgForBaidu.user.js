@@ -2,7 +2,7 @@
 // @name         百Bing图
 // @name:en      BingBgForBaidu
 // @namespace    hoothin
-// @version      1.5
+// @version      1.6
 // @description     把百度首页背景图换成Bing的
 // @description:en  Just change the background image of baidu.com to bing.com
 // @author       hoothin
@@ -11,7 +11,6 @@
 // @grant        GM_getValue
 // @grant        GM_addStyle
 // @connect      global.bing.com
-// @run-at       document-body
 // @include      *://www.baidu.com/
 // @include      *://www.baidu.com/home*
 // @include      *://www.baidu.com/?tn=*
@@ -72,7 +71,7 @@
                 bgUrl="url(\""+bgUrl+"\")";
                 if(!bingImg)skinContainer.style.backgroundImage = bgUrl;
                 var logo=document.querySelector("#s_lg_img");
-                if(logo)logo.src=logo.src.replace(/\/[^\/]+$/,"/logo_white.png");
+                if(logo && logo.src)logo.src=logo.src.replace(/\/[^\/]+$/,"/logo_white.png");
             }catch (e) {
                 console.log(e);
             }
