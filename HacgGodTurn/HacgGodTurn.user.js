@@ -73,6 +73,7 @@
 // @include     http*://yui-nya.com/*
 // @include     http*://www.l-sj.cc/*
 // @include     http*://htacg.cc/*
+// @include     http*://www.htacg.cc/*
 // @version     3.21.14
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
