@@ -36,6 +36,7 @@
 // @include     http*://www.acg.tf/*
 // @include     http*://acg.tf/*
 // @include     http*://www.moxacg.com/*
+// @include     http*://moxacg.*
 // @include     http*://*.acggj.com/*
 // @include     http*://acg12.com/*
 // @include     http*://*.acg12.com/*
@@ -278,7 +279,7 @@
             },
             {
                 name:"萌心次元",
-                url:"http://www.moxacg.com/",
+                url:"https://moxacg.moe/",
                 regex:/moxacg\./,
                 hideOd:true,
                 offset:55,
@@ -334,6 +335,7 @@
                 regex:/yui\-nya\.com/,
                 articleSel:"article",
                 contentArea:'.article-content',
+                offset:50,
                 commArea:"commentlist"
             },
             {
@@ -554,7 +556,7 @@
                 }
                 break;
             case "萌心次元":
-                if(isHttps)addInsertHandler([["body","a","img","link","script"],[['p:(\\\/\\\/|\\\\\\/\\\\\\/)(www\\\.)?moxacg','ps:$1$2moxacg']]]);
+                //if(isHttps)addInsertHandler([["body","a","img","link","script"],[['p:(\\\/\\\/|\\\\\\/\\\\\\/)(www\\\.)?moxacg','ps:$1$2moxacg']]]);
                 break;
             case "次元轨迹":
                 if(isHttps){
@@ -717,32 +719,6 @@
                     e.stopPropagation();
                     if(bgUrls==undefined){
                         bgUrls="";
-                        /*for(let j=0;j<=maxCss;j++){
-                            GM_xmlhttpRequest({
-                                method: 'GET',
-                                url: "https://www.mygalgame.com/wp-content/themes/mygalgame/ui/css/background"+j+".css",
-                                onload: function(d) {
-                                    let bgRegs=d.responseText.pmatch(/background\-image:url\(([^\)]+)\)/gi);
-                                    for(let bgReg of bgRegs){
-                                        bgUrls+=bgReg[0]+"\n";
-                                    }
-                                    sum++;
-                                    if(sum>maxCss){
-                                        var style=document.querySelector("style");
-                                        var curRegs=style.innerHTML.pmatch(/background\-image:\s*url\(([^\)]+)\)/gi);
-                                        for(var curReg of curRegs){
-                                            if(bgUrls.indexOf(curReg[0])==-1)
-                                                bgUrls+=curReg[0]+"\n";
-                                        }
-                                        GM_setClipboard(bgUrls);
-                                        alert("背景图片链接复制完毕");
-                                    }
-                                },
-                                onerror: function(e) {
-                                    console.log(e);
-                                }
-                            });
-                        }*/
                         var style=document.querySelectorAll("style");
                         for(let j=0;j<=style.length;j++){
                             if(style[j].innerHTML.indexOf(".cb-slideshow")!=-1){
