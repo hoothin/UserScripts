@@ -28,7 +28,7 @@
 // @include     http*://hacg.tw/*
 // @include     http*://hacg.at/*
 // @include     http*://hacg.ch/*
-// @include     http*://www.acgpy.com/wpx/*
+// @include     http*://www.acgpy.com/*
 // @include     http*://blog.reimu.net/*
 // @include     http*://pan.baidu.com/share/*
 // @include     http*://pan.baidu.com/s/*
@@ -72,7 +72,7 @@
 // @include     http*://yui-nya.com/*
 // @include     http*://www.l-sj.cc/*
 // @include     http*://htacg.cc/*
-// @version     3.21.13
+// @version     3.21.14
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -791,6 +791,12 @@
                 curSite.preRocket=function(){unsafeWindow.$('#dllist a').mouseenter();};
                 break;
             case "绅士交易":
+                if(location.href=="https://www.acgpy.com/indexlogin.html"){
+                    var date=new Date();
+                    date.setTime(date.getTime()+14400*60*1000);
+                    document.cookie="trade=A32; expires="+date.toGMTString();
+                    top.location='wpx';
+                }
                 var downBtn=document.querySelector("a.downbtn");
                 if(downBtn){
                     GM_xmlhttpRequest({
