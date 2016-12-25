@@ -61,7 +61,7 @@
 // @include     http*://uraban.me/*
 // @include     http*://www.uraban.me/*
 // @include     http*://acgmoon.*
-// @include     http*://www.moe-acg.cc/*
+// @include     http*://www.moe-acg.*/*
 // @include     http*://www.mygalgame.com/*
 // @include     http*://htai.*
 // @include     http*://gmgard.com/*
@@ -239,11 +239,11 @@
             },
             {
                 name:"萌幻之乡",
-                url:"https://www.moe-acg.cc/",
+                url:"https://www.moe-acg.us/",
                 regex:/moe-acg\./,
                 offset:55,
                 hideOd:true,
-                downloadUrl:/moe-acg\.cc\/download/,
+                downloadUrl:/moe-acg\..*\/download/,
                 articleSel:"section.card"
             },
             {
@@ -257,7 +257,8 @@
                 name:"紳士の庭",
                 url:"https://gmgard.com/",
                 regex:/gmgard\.com/,
-                articleSel:"div.post"
+                articleSel:"div.post",
+                noScale:true
             },
             {
                 name:"MyGalgame - 忧郁的弟弟",
@@ -1283,7 +1284,7 @@
 
     function scrollArticle(a){
         curArticle=a;
-        curArticle.classList.add("oD_sel");
+        if(!curSite.noScale)curArticle.classList.add("oD_sel");
         let pos=elementPosition(curArticle).y;
         if(curSite && curSite.offset)pos-=curSite.offset;
         scrollToControl(pos);
