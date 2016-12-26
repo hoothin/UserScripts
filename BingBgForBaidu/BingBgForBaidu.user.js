@@ -74,6 +74,10 @@
                 if(!bingImg)skinContainer.style.backgroundImage = bgUrl;
                 var logo=document.querySelector("#s_lg_img");
                 if(logo && logo.src)logo.src=logo.src.replace(/\/[^\/]+$/,"/logo_white.png");
+                else{
+                    logo=document.querySelector("#lg>img");
+                    if(logo && logo.src)logo.src=logo.src.replace(/.*\/img\/bd_logo1\.png/,"//ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/logo_white.png");
+                }
             }catch (e) {
                 console.log(e);
             }
