@@ -4,8 +4,8 @@
 // @name:en      Switch Traditional Chinese and Simplified Chinese
 // @namespace    hoothin
 // @version      0.7
-// @description        任意轉換網頁中的簡體中文與繁體中文
-// @description:zh-CN  任意转换网页中的简体中文与繁体中文
+// @description        任意轉換網頁中的簡體中文與繁體中文（默認簡體→繁體）
+// @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体）
 // @description:en     Just Switch Traditional Chinese and Simplified Chinese
 // @author       hoothin
 // @include      *
