@@ -74,7 +74,7 @@
 // @include     http*://www.l-sj.cc/*
 // @include     http*://htacg.cc/*
 // @include     http*://www.htacg.cc/*
-// @version     3.21.16
+// @version     3.21.17
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -545,8 +545,9 @@
                 }
                 if(/hacg\.(ch|la|at|tw)/.test(location.href)){
                     document.title = document.title.replace(/\u7409\u7483\u795e\u793e/,"\u6d41\u5229\u4f38\u820c");
-                    var titleName=document.querySelector("#site-title>span>a");
-                    titleName.innerHTML=titleName.innerHTML.replace(/\u7409\u7483\u795e\u793e/,"\u6d41\u5229\u4f38\u820c");
+                    [].forEach.call(document.querySelectorAll("a"), function(item, index, arr) {
+                        item.innerHTML=item.innerHTML.replace(/\u7409\u7483\u795e\u793e/,"\u6d41\u5229\u4f38\u820c");
+                    });
                 }
                 var embeds=document.querySelectorAll(".wp-embedded-content");
                 for(i=0;i<embeds.length;i++){
