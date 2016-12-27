@@ -19,6 +19,7 @@
 
 (function() {
     'use strict';
+    if(/&wd=/.test(location.href))return;
     var head=document.querySelector("#head");
     if(!head.classList.contains("s-skin-hasbg")){
         head.classList.add("s-skin-hasbg");
@@ -35,9 +36,9 @@
     if(icons)icons.appendChild(bingBgLink);
     var skinContainer=document.querySelector(".s-skin-container");
     if(!skinContainer){
-        if(!document.querySelector("#lg"))return;
         skinContainer=document.getElementsByTagName("body")[0];
         GM_addStyle("body{position:fixed;_position:absolute;top:0;left:0;height:100%;width:100%;min-width:1000px;z-index:-10;background-position:center 0;background-repeat:no-repeat;background-size:cover;-webkit-background-size:cover;-o-background-size:cover;zoom:1;}#u1 a:not(.bri),#qrcode .qrcode-text b{-webkit-text-shadow:#fff 0.5px 0 0,#fff 0 0.5px 0,#fff -0.5px 0 0,#fff 0 -0.5px 0;-moz-text-shadow:#fff 0.5px 0 0,#fff 0 0.5px 0,#fff -0.5px 0 0,#fff 0 -0.5px 0;text-shadow:#fff 0.5px 0 0,#fff 0 0.5px 0,#fff -0.5px 0 0,#fff 0 -0.5px 0;*filter: Glow(Color=#fff, Strength=1);}");
+        document.querySelector("input#su").addEventListener("click",function(){skinContainer.style.backgroundImage="";});
     }
     var bingImg=GM_getValue("bingImg");
     if(bingImg){
