@@ -5364,7 +5364,7 @@ background-color:rgba(255, 0, 0, 0.150);\
                     h:parseFloat(imgWindowCS.height),
                     w:parseFloat(imgWindowCS.width),
                 };
-                if(prefs.imgWindow.fitToScreen && !(rectSize.h/rectSize.w > 3.5 && rectSize.h > wSize.h)){
+                if(prefs.imgWindow.fitToScreen && !(rectSize.h/rectSize.w > 2.5 && rectSize.h > wSize.h)){
                     this.fitToScreen();
                     this.center(true,true);
                 }else{
