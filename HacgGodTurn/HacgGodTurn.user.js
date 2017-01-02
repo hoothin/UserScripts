@@ -62,6 +62,7 @@
 // @include     http*://uraban.me/*
 // @include     http*://www.uraban.me/*
 // @include     http*://acgmoon.*
+// @include     http*://www.jiyue.*
 // @include     http*://www.moe-acg.*/*
 // @include     http*://www.mygalgame.com/*
 // @include     http*://htai.*
@@ -74,7 +75,7 @@
 // @include     http*://www.l-sj.cc/*
 // @include     http*://htacg.cc/*
 // @include     http*://www.htacg.cc/*
-// @version     3.21.17
+// @version     3.21.18
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -234,8 +235,8 @@
             },
             {
                 name:"寂月神社",
-                url:"https://acgmoon.org/",
-                regex:/acgmoon\.(org|com)/,
+                url:"http://www.jiyue.com/",
+                regex:/(acgmoon|jiyue)\.(org|com)/,
                 offset:50,
                 contentArea:"div.post-content"
             },
