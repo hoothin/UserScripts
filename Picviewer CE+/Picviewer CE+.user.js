@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2017.1.2.1
+// @version        2017.1.3.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -184,9 +184,12 @@
              getImage:function(img){
                  var src=img.src;
                  var reg=/^(http:\/\/imgsrc\.baidu\.com\/forum\/)ab(pic\/item\/[\w.]+)/i ;
+                 var portrait=/himg.baidu.com\/sys\/portrait/;
                  var result=src.match(reg);
                  //帖子列表页面
-                 if(result){//小图的时候
+                 if(portrait.test(src)){
+                     return src.replace(/himg.baidu.com\/sys\/portrait/,"himg.baidu.com/sys/portraitl");
+                 }else if(result){//小图的时候
                      return result[1]+result[2];
                  }else{//小图点击之后的较大图，或者帖子内容页面的图片。
                      var prefix = 'http://imgsrc.baidu.com/forum/pic/item/';
