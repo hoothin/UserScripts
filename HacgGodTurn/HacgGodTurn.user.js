@@ -75,7 +75,7 @@
 // @include     http*://www.l-sj.cc/*
 // @include     http*://htacg.cc/*
 // @include     http*://www.htacg.cc/*
-// @version     3.21.18
+// @version     3.21.19
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -542,6 +542,7 @@
                 }
                 if(isHttps){
                     changeUrl(true,[["iframe"],[['http:','https:']]]);
+                    changeUrl(true,[["object"],[['http:','https:']]]);
                     changeUrl(true,[["a"],[['http:(.*hacg)','https:$1']]]);
                 }
                 if(/hacg\.(ch|la|at|tw)/.test(location.href)){
