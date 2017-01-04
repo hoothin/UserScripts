@@ -75,7 +75,7 @@
 // @include     http*://www.l-sj.cc/*
 // @include     http*://htacg.cc/*
 // @include     http*://www.htacg.cc/*
-// @version     3.21.23
+// @version     3.21.24
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -690,6 +690,11 @@
                         ele.href+="#"+ele.innerHTML;
                     }
                 }
+                $(document).off("click", ".sora-card .__copy");
+                $(document).on("click", ".sora-card .__copy", function() {
+                    var code = $(this).children("code").text();
+                    this.href=this.href.split("#")[0]+"#"+code;
+                });
                 break;
             case "幻想次元":
                 changeUrl(true,[["a"],[['https?:\\\/\\\/[^\\\.]*(\\\.)?acg18\\\.us\\\/go\\\/\\\?url=','']]]);
