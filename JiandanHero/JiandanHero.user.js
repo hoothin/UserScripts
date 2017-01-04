@@ -3,7 +3,7 @@
 // @name:en      Jiandan Hero
 // @name:zh-TW   煎蛋俠
 // @namespace    hoothin
-// @version      1.3
+// @version      1.5
 // @description  为煎蛋jandan.net提供左右方向键快捷翻页、鼠标悬停显示大图、屏蔽指定用户发言等功能
 // @description:en  Tools for jandan.net
 // @description:zh-TW  為煎蛋jandan.net提供左右方向鍵快捷翻頁、鼠標懸停顯示大圖、屏蔽指定用戶發言等功能
@@ -18,7 +18,7 @@
     'use strict';
     var timer,tempImg=document.createElement("img"),getImgWH=function(img,callBack){
         if(timer)clearInterval(timer);
-        tempImg.src=null;
+        tempImg.src="";
         tempImg.src=img.src;
         var check=function(){
             if(tempImg.width>0 || tempImg.height>0){
@@ -110,7 +110,7 @@
             };
         };
         img.onmouseout=function(e){
-            document.body.removeChild(bigImg);
+            if(bigImg.parentNode)bigImg.parentNode.removeChild(bigImg);
             bigImg.removeAttribute("height");
             bigImg.removeAttribute("width");
         };
@@ -118,7 +118,7 @@
             left=e.clientX;
             top=e.clientY;
             if(!bigImg.src || bigImg.src===""){
-                img.onmouseover(null);
+                img.onmouseover(e);
             }
             relocBigImg(left, top);
         };
@@ -137,15 +137,17 @@
         };
     });
     $("p").on("mouseout","div.gif-mask",function(e){
-        document.body.removeChild(bigImg);
+        if(bigImg.parentNode)bigImg.parentNode.removeChild(bigImg);
         bigImg.removeAttribute("height");
         bigImg.removeAttribute("width");
     });
     $("p").on("mousemove","div.gif-mask",function(e){
-        left=e.clientX;
-        top=e.clientY;
+        if(e){
+            left=e.clientX;
+            top=e.clientY;
+        }
         if(!bigImg.src || bigImg.src===""){
-            this.onmouseover(null);
+            this.onmouseover(e);
         }
         relocBigImg(left, top);
     });
@@ -154,10 +156,10 @@
         var imgHeight=h?h:bigImg.height;
         var type=imgHeight/imgWidth>document.documentElement.clientHeight/document.documentElement.clientWidth;
         if(type && imgHeight>document.documentElement.clientHeight){
-            imgHeight=document.documentElement.clientHeight;
+            imgHeight=bigImg.height=document.documentElement.clientHeight;
         }
         if(!type && imgWidth>document.documentElement.clientWidth){
-            imgWidth=document.documentElement.clientWidth;
+            imgWidth=bigImg.width=document.documentElement.clientWidth;
         }
         if(top-imgHeight<0){
             top=0;
