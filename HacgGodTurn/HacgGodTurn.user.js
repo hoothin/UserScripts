@@ -75,12 +75,13 @@
 // @include     http*://www.l-sj.cc/*
 // @include     http*://htacg.cc/*
 // @include     http*://www.htacg.cc/*
-// @version     3.21.24
+// @version     3.21.25
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
 // @grant       GM_setValue
 // @grant       GM_getValue
+// @grant       unsafeWindow
 // @run-at      document-end
 // @require     https://greasyfork.org/scripts/23522/code/od.js?version=167311
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
@@ -690,6 +691,7 @@
                         ele.href+="#"+ele.innerHTML;
                     }
                 }
+                var $=unsafeWindow.jQuery;
                 $(document).off("click", ".sora-card .__copy");
                 $(document).on("click", ".sora-card .__copy", function() {
                     var code = $(this).children("code").text();
