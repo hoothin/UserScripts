@@ -75,14 +75,14 @@
 // @include     http*://www.l-sj.cc/*
 // @include     http*://htacg.cc/*
 // @include     http*://www.htacg.cc/*
-// @version     3.21.20
+// @version     3.21.21
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
 // @grant       GM_setValue
 // @grant       GM_getValue
 // @run-at      document-end
-// @require     https://greasyfork.org/scripts/23522/code/od.js?version=165598
+// @require     https://greasyfork.org/scripts/23522/code/od.js?version=167300
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
 // @license     MIT License
