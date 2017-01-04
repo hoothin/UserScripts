@@ -75,7 +75,7 @@
 // @include     http*://www.l-sj.cc/*
 // @include     http*://htacg.cc/*
 // @include     http*://www.htacg.cc/*
-// @version     3.21.22
+// @version     3.21.23
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -480,10 +480,21 @@
                     if (author && !document.querySelector("#blockBtn")) {
                         createBlockBtn();
                         process();
-                        var toggles = document.querySelectorAll("div.toggle-box");
-                        for(var i=0;i<toggles.length;i++){
-                            var toggle=toggles[i];
-                            toggle.style.cssText="display:block";
+                        var $=unsafeWindow.jQuery;
+                        var toggle=$(".toggle")[0];
+                        if(toggle){
+                            var evts=$._data(toggle, "events");
+                            if(!evts || !evts["click"]){
+                                $(".toggle-box").hide();
+                                $(".toggle").toggle(function(){
+                                    $(this).addClass("toggle-active");
+                                }, function () {
+                                    $(this).removeClass("toggle-active");
+                                });
+                                $(".toggle").click(function(){
+                                    $(this).next(".toggle-box").slideToggle();
+                                });
+                            }
                         }
                     }
                 });
