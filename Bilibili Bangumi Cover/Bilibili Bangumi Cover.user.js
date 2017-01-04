@@ -2,7 +2,7 @@
 // @name         Bilibili Bangumi Cover
 // @name:zh-CN   哔哩哔哩番剧封面
 // @namespace    hoothin
-// @version      0.2
+// @version      0.3
 // @description        Show Bilibili Bangumi Cover
 // @description:zh-CN  在哔哩哔哩番剧页面中显示封面
 // @grant        GM_xmlhttpRequest
@@ -26,7 +26,7 @@
     coverLink.appendChild(cover);
     var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
     var observer = new MutationObserver(function(records){
-        if(vSmall.childNodes.length>0 && !vSmall.querySelector("h3#coverTitle")){
+        if(!vSmall.querySelector("h3#coverTitle")){
             vSmall.insertBefore(coverLink,vSmall.firstChild);
             vSmall.insertBefore(title,vSmall.firstChild);
             refreshCover();
