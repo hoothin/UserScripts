@@ -75,7 +75,7 @@
 // @include     http*://www.l-sj.cc/*
 // @include     http*://htacg.cc/*
 // @include     http*://www.htacg.cc/*
-// @version     3.21.25
+// @version     3.21.26
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -83,7 +83,7 @@
 // @grant       GM_getValue
 // @grant       unsafeWindow
 // @run-at      document-end
-// @require     https://greasyfork.org/scripts/23522/code/od.js?version=167311
+// @require     https://greasyfork.org/scripts/23522/code/od.js?version=167534
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
 // @license     MIT License
@@ -380,7 +380,7 @@
         };
     }
 
-    var t, curSite, curArticle, copyData, siteListHtml;
+    var t, curSite, curArticle, siteListHtml;
     var originTitile = document.title;
     var isHttps=location.protocol=="https:";
     if(isHttps){
@@ -978,7 +978,10 @@
         if(curArticle)curArticle.classList.remove("oD_sel");
     });
     document.addEventListener("copy", function(e) {
-        copyData=document.getSelection().toString();
+        var copyData=document.getSelection().toString();
+        if(copyData && oD_text){
+            oD_text.value=copyData;
+        }
     });
 
     document.getElementsByTagName("head")[0].appendChild(nod);
@@ -1002,29 +1005,27 @@
             alert("\u68c0\u6d4b\u5230\u0049\u0044\u51b2\u7a81\uff01\u8bf7\u68c0\u67e5\u662f\u5426\u5b58\u5728\u91cd\u590d\u811a\u672c\u6216\u540c\u7c7b\u811a\u672c");
         }
     },500);
+    var oD_box,oD_text,oD_button;
     if((!curSite || !curSite.hideOd) && !frameElement){
-        var oD_box=document.createElement("div");
+        oD_box=document.createElement("div");
         oD_box.id="oD_box";
         oD_box.className = "oD_box";
         oD_box.onmouseover = function(e) {
             oD_link.style.visibility = "visible";
             oD_link2.style.visibility = "visible";
             rocketBtn.style.visibility = "visible";
-            if(copyData && !oD_text.value){
-                oD_text.value=copyData;
-            }
         };
         oD_box.onmouseout = function(e) {
             oD_link.style.visibility = "hidden";
             oD_link2.style.visibility = "hidden";
             rocketBtn.style.visibility = "hidden";
         };
-        var oD_text=document.createElement("input");
+        oD_text=document.createElement("input");
         oD_text.type="text";
         oD_text.style.cssText="width:168px;height:33px;position:relative;margin-top:0px;padding:0px;box-sizing:border-box;z-index:0";
         oD_text.placeholder="输入hash值或网盘地址";
         oD_text.title='将自动添加"magnet:?xt=urn:btih:"并去除非法字符';
-        var oD_button=document.createElement("button");
+        oD_button=document.createElement("button");
         oD_button.type="button";
         oD_button.textContent="开车";
         oD_button.style.cssText="padding:4px 0;position: absolute;top:-1px;right:0px;width:40px;height:35px";
