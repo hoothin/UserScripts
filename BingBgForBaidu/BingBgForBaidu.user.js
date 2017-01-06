@@ -2,7 +2,7 @@
 // @name         百Bing图
 // @name:en      BingBgForBaidu
 // @namespace    hoothin
-// @version      2.1
+// @version      2.2
 // @description     给百度首页换上Bing的背景图，并添加背景图链接与日历组件
 // @description:en  Just change the background image of baidu.com to bing.com
 // @author       hoothin
@@ -10,6 +10,7 @@
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_addStyle
+// @grant        unsafeWindow
 // @connect      global.bing.com
 // @include      *://www.baidu.com/
 // @include      *://www.baidu.com/home*
@@ -45,18 +46,25 @@
         sUpfuncMenus.appendChild(iframe);
     }
     iframe.onload=function(){
-        var iframeDoc=iframe.contentWindow.$(iframe.contentDocument);
-        var rili=iframe.contentWindow.$("div.op-calendar-new");
-        iframe.contentWindow.$("#head").hide();
-        iframeDoc.scrollTop(rili.offset().top);
-        iframeDoc.scrollLeft(rili.offset().left);
+        var $=unsafeWindow.$;
+        var iframeDoc=$(iframe.contentDocument);
+        var rili=$("div.op-calendar-new",iframe.contentDocument);
+        $("#head",iframe.contentDocument).hide();
+        var top=rili.offset().top;
+        var left=rili.offset().left;
+        iframeDoc.scrollTop(top===0?138:top);
+        iframeDoc.scrollLeft(left===0?121:left);
         iframe.setAttribute("scrolling","no");
-        iframe.width=rili.width();
-        iframe.height=rili.height();
-        var today=iframe.contentWindow.$(".op-calendar-new-table-today");
+        var width=rili.width();
+        var height=rili.height();
+        iframe.width=width===0?538:width;
+        iframe.height=height===0?370:height;
+        var today=$(".op-calendar-new-table-today",iframe.contentDocument);
         var riliLink=document.createElement("a");
-        riliLink.innerHTML="<span class='title' href='javascript:void(0)' style='text-decoration:overline;cursor:crosshair'>"+iframe.contentWindow.$(".op-calendar-new-right-date").html()+"</span>";
+        riliLink.innerHTML="<span class='title' href='javascript:void(0)' style='text-decoration:overline;cursor:crosshair'>"+$(".op-calendar-new-right-date",iframe.contentDocument).html()+"</span>";
         riliLink.onmousemove=function(){
+            if(top===0)iframeDoc.scrollTop(138);
+            if(left===0)iframeDoc.scrollLeft(121);
             iframe.style.display="block";
         };
         iframe.onmouseout=function(){
@@ -64,7 +72,7 @@
         };
         if(icons)icons.appendChild(riliLink);
         if(today[0].classList.contains("op-calendar-new-table-festival")){
-            riliLink.innerHTML+="<font color='red' style='background-color:gainsboro;font-weight:bold'>("+iframe.contentWindow.$(".op-calendar-new-table-almanac").html()+")</font>";
+            riliLink.innerHTML+="<font color='red' style='background-color:gainsboro;font-weight:bold'>("+$(".op-calendar-new-table-almanac",iframe.contentDocument).html()+")</font>";
         }
     };
     var skinContainer=document.querySelector(".s-skin-container");

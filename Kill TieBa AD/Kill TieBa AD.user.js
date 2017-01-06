@@ -2,11 +2,13 @@
 // @name         Kill TieBa AD
 // @name:zh-CN   贴吧伪装广告清理
 // @name:zh-TW   貼吧僞裝廣告清理
+// @name:ja      贴吧去广告
 // @namespace    hoothin
-// @version      0.52
+// @version      0.53
 // @description        Just Kill TieBa AD
 // @description:zh-CN  清理AdBlock或uBlock Origin等未能清理掉的百度贴吧列表伪装广告、帖内伪装广告与推荐应用广告
 // @description:zh-TW  清理AdBlock或uBlock Origin等未能清理掉的百度貼吧列表偽裝廣告、帖內偽裝廣告與推薦應用廣告
+// @description:ja     去除AdBlock或uBlock Origin等未能清理掉的百度贴吧列表伪装广告、帖内伪装广告与推荐应用广告
 // @author       hoothin
 // @include      http*://tieba.baidu.com/*
 // @grant        none
@@ -78,11 +80,11 @@
                 var previousSibling = thread.previousSibling;
                 previousSibling = previousSibling.tagName == b?previousSibling:previousSibling.previousSibling;
                 if(previousSibling.innerHTML.indexOf("广告") != -1)
-                delList.push(previousSibling);
+                    delList.push(previousSibling);
             }else{
                 if(thread.getAttribute && thread.getAttribute("data-field")){
-                    let tdata=JSON.parse(thread.getAttribute("data-field"));
-                    if(tdata.content && tdata.content.pb_tpoint && tdata.content.pb_tpoint.is_tpoint==1)delList.push(thread);
+                    let tdata=JSON.parse(thread.getAttribute("data-field")),tpoint=thread.querySelector("tpoint-skin");
+                    if(tdata.content && tdata.content.pb_tpoint && tdata.content.pb_tpoint.is_tpoint==1 && tpoint)delList.push(tpoint);
                 }else{
                     if(thread.classList && thread.classList.length==2){
                         delList.push(thread);
@@ -92,7 +94,8 @@
         }
         for(i=0;i<delList.length;i++){
             let del = delList[i];
-            threadList.removeChild(del);
+            if(del.parentNode)
+                del.parentNode.removeChild(del);
         }
         var easyAD, easyADs=document.querySelectorAll("span.label_text");
         for(i=0;i<easyADs.length;i++){
