@@ -83,8 +83,6 @@
                     delList.push(previousSibling);
             }else{
                 if(thread.getAttribute && thread.getAttribute("data-field")){
-                    let tdata=JSON.parse(thread.getAttribute("data-field")),tpoint=thread.querySelector("tpoint-skin");
-                    if(tdata.content && tdata.content.pb_tpoint && tdata.content.pb_tpoint.is_tpoint==1 && tpoint)delList.push(tpoint);
                 }else{
                     if(thread.classList && thread.classList.length==2){
                         delList.push(thread);
