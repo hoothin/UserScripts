@@ -2,8 +2,8 @@
 // @name         百Bing图
 // @name:en      BingBgForBaidu
 // @namespace    hoothin
-// @version      2.0
-// @description     把百度首页背景图换成Bing的
+// @version      2.1
+// @description     给百度首页换上Bing的背景图，并添加背景图链接与日历组件
 // @description:en  Just change the background image of baidu.com to bing.com
 // @author       hoothin
 // @grant        GM_xmlhttpRequest
@@ -34,6 +34,39 @@
         bingBgLink.classList.add("mnav");
     }
     if(icons)icons.appendChild(bingBgLink);
+    var iframe=document.createElement("iframe");
+    iframe.src="/s?wd=%E6%97%A5%E5%8E%86";
+    iframe.setAttribute("scrolling","no");
+    iframe.style.display="none";
+    iframe.style.top="30px";
+    iframe.style.position="absolute";
+    var sUpfuncMenus=document.querySelector("#s_upfunc_menus");
+    if(sUpfuncMenus){
+        sUpfuncMenus.appendChild(iframe);
+    }
+    iframe.onload=function(){
+        var iframeDoc=iframe.contentWindow.$(iframe.contentDocument);
+        var rili=iframe.contentWindow.$("div.op-calendar-new");
+        iframe.contentWindow.$("#head").hide();
+        iframeDoc.scrollTop(rili.offset().top);
+        iframeDoc.scrollLeft(rili.offset().left);
+        iframe.setAttribute("scrolling","no");
+        iframe.width=rili.width();
+        iframe.height=rili.height();
+        var today=iframe.contentWindow.$(".op-calendar-new-table-today");
+        var riliLink=document.createElement("a");
+        riliLink.innerHTML="<span class='title' href='javascript:void(0)' style='text-decoration:overline;cursor:crosshair'>"+iframe.contentWindow.$(".op-calendar-new-right-date").html()+"</span>";
+        riliLink.onmousemove=function(){
+            iframe.style.display="block";
+        };
+        iframe.onmouseout=function(){
+            iframe.style.display="none";
+        };
+        if(icons)icons.appendChild(riliLink);
+        if(today[0].classList.contains("op-calendar-new-table-festival")){
+            riliLink.innerHTML+="<font color='red' style='background-color:gainsboro;font-weight:bold'>("+iframe.contentWindow.$(".op-calendar-new-table-almanac").html()+")</font>";
+        }
+    };
     var skinContainer=document.querySelector(".s-skin-container");
     if(!skinContainer){
         skinContainer=document.getElementsByTagName("body")[0];
