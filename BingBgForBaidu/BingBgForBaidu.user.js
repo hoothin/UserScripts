@@ -45,6 +45,13 @@
     if(sUpfuncMenus){
         sUpfuncMenus.appendChild(iframe);
     }
+    var riliLink=document.createElement("a"),date=new Date();
+    var dateDay=date.getDate(),dateMonth=date.getMonth()+1;
+    if(dateDay<10)dateDay="0"+dateDay;
+    if(dateMonth<10)dateMonth="0"+dateMonth;
+    var week=["\u65e5","\u4e00","\u4e8c","\u4e09","\u56db","\u4e94","\u516d"];
+    riliLink.innerHTML="<span class='title' href='javascript:void(0)' style='text-decoration:overline;cursor:crosshair'>"+date.getFullYear()+"-"+dateMonth+"-"+dateDay+" "+"\u661f\u671f"+week[date.getDay()]+"</span>";
+    if(icons)icons.appendChild(riliLink);
     iframe.onload=function(){
         var $=unsafeWindow.$;
         var iframeDoc=$(iframe.contentDocument);
@@ -60,7 +67,6 @@
         iframe.width=width===0?538:width;
         iframe.height=height===0?370:height;
         var today=$(".op-calendar-new-table-today",iframe.contentDocument);
-        var riliLink=document.createElement("a");
         riliLink.innerHTML="<span class='title' href='javascript:void(0)' style='text-decoration:overline;cursor:crosshair'>"+$(".op-calendar-new-right-date",iframe.contentDocument).html()+"</span>";
         riliLink.onmousemove=function(){
             if(top===0)iframeDoc.scrollTop(138);
@@ -70,7 +76,6 @@
         iframe.onmouseout=function(){
             iframe.style.display="none";
         };
-        if(icons)icons.appendChild(riliLink);
         if(today[0].classList.contains("op-calendar-new-table-festival")){
             riliLink.innerHTML+="<font color='red' style='background-color:gainsboro;font-weight:bold'>("+$(".op-calendar-new-table-almanac",iframe.contentDocument).html()+")</font>";
         }
