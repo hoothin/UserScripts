@@ -2,7 +2,7 @@
 // @name         Bilibili Bangumi Cover
 // @name:zh-CN   哔哩哔哩(bilibili.com)番剧封面
 // @namespace    hoothin
-// @version      0.3
+// @version      0.5
 // @description        Show Bilibili Bangumi Cover
 // @description:zh-CN  在哔哩哔哩番剧页面中显示封面
 // @grant        GM_xmlhttpRequest
@@ -52,9 +52,9 @@
                 if (!doc) {
                     return;
                 }
-                var img=doc.querySelector("a.v1-complete-text[href='"+location.href+"']>div>img");
+                var img=doc.querySelector("a.v1-complete-text[href='"+location.href.replace(/https?:/,"")+"']>div>img");
                 if(img){
-                    coverLink.href=cover.src=img.src.replace(/\d+_\d+|_\d+x\d+\.jpg/,"");
+                    coverLink.href=cover.src=img.getAttribute("src").replace(/\d+_\d+|_\d+x\d+\.jpg/,"");
                 }
             }
         });
