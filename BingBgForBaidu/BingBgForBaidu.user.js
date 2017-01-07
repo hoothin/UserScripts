@@ -50,7 +50,7 @@
     if(dateDay<10)dateDay="0"+dateDay;
     if(dateMonth<10)dateMonth="0"+dateMonth;
     var week=["\u65e5","\u4e00","\u4e8c","\u4e09","\u56db","\u4e94","\u516d"];
-    riliLink.innerHTML="<span class='title' href='javascript:void(0)' style='text-decoration:overline;cursor:crosshair'>"+date.getFullYear()+"-"+dateMonth+"-"+dateDay+" "+"\u661f\u671f"+week[date.getDay()]+"</span>";
+    riliLink.innerHTML="<span class='title' style='text-decoration:overline;cursor:crosshair'>"+date.getFullYear()+"-"+dateMonth+"-"+dateDay+" "+"\u661f\u671f"+week[date.getDay()]+"</span>";
     if(icons)icons.appendChild(riliLink);
     iframe.onload=function(){
         var $=unsafeWindow.$;
@@ -67,7 +67,7 @@
         iframe.width=width===0?538:width;
         iframe.height=height===0?370:height;
         var today=$(".op-calendar-new-table-today",iframe.contentDocument);
-        riliLink.innerHTML="<span class='title' href='javascript:void(0)' style='text-decoration:overline;cursor:crosshair'>"+$(".op-calendar-new-right-date",iframe.contentDocument).html()+"</span>";
+        riliLink.innerHTML="<span class='title' style='text-decoration:overline;cursor:crosshair'>"+$(".op-calendar-new-right-date",iframe.contentDocument).html()+"</span>";
         riliLink.onmousemove=function(){
             if(top===0)iframeDoc.scrollTop(138);
             if(left===0)iframeDoc.scrollLeft(121);
