@@ -4,7 +4,7 @@
 // @name:zh-TW   懶人小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      1.0
+// @version      1.01
 // @description  Fetch and download main content on current page
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取小說、論壇內容等並保存為TXT文檔
@@ -104,7 +104,7 @@
         var i,j,rStr="",pageData=(doc.body?doc.body:doc).cloneNode(true),delList=[];
         [].forEach.call(pageData.querySelectorAll("script,style,link"),function(item){delList.push(item);});
         [].forEach.call(delList,function(item){item.parentNode.removeChild(item);});
-        var largestContent,contents=pageData.querySelectorAll("span,div,article,p,td,strong,font");
+        var largestContent,contents=pageData.querySelectorAll("span,div,article,p,td");
         for(i=0;i<contents.length;i++){
             let content=contents[i],hasText=false;
             [].forEach.call(content.childNodes,function(item){
@@ -120,9 +120,9 @@
                 }
             }
             if(content.firstChild && (
-                (content.firstChild.nodeType!=3 && !/^(I|A|STRONG|FONT|BR)$/.test(content.firstChild.tagName)) ||
+                (content.firstChild.nodeType!=3 && !/^(I|A|STRONG|B|FONT|BR)$/.test(content.firstChild.tagName)) ||
                 (content.firstChild.nodeType==3 && /^\s*$/.test(content.firstChild.data) &&
-                 (!content.childNodes[1] || !(content.childNodes[1].nodeType==3 || /^(I|A|STRONG|FONT|BR)$/.test(content.childNodes[1].tagName))))
+                 (!content.childNodes[1] || !(content.childNodes[1].nodeType==3 || /^(I|A|STRONG|B|FONT|BR)$/.test(content.childNodes[1].tagName))))
             ))
                 continue;
             if(pageData==document && content.offsetWidth<=0 && content.offsetHeight<=0)
