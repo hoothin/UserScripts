@@ -4,7 +4,7 @@
 // @name:zh-TW   懶人小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      1.01
+// @version      1.02
 // @description  Fetch and download main content on current page
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取小說、論壇內容等並保存為TXT文檔
@@ -14,6 +14,8 @@
 // @grant        GM_xmlhttpRequest
 // @grant        GM_registerMenuCommand
 // @require      https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.3/FileSaver.min.js
+// @updateURL    https://greasyfork.org/scripts/25068/code/DownloadAllContent.user.js
+// @downloadURL  https://greasyfork.org/scripts/25068/code/DownloadAllContent.user.js
 // @license      MIT License
 // @compatible        chrome
 // @compatible        firefox
@@ -137,7 +139,7 @@
                 }
             }
         }
-        var childlist=pageData.querySelectorAll(largestContent.tagName);
+        var childlist=pageData.querySelectorAll(largestContent.tagName+(largestContent.className?"."+largestContent.className:""));
         function getRightStr(ele, noTextEnable){
             let childNodes=ele.childNodes,cStr="\r\n",hasText=false;
             for(let j=0;j<childNodes.length;j++){
@@ -174,7 +176,7 @@
         var aEles=document.querySelectorAll("a"),list=[];
         for(var i=0;i<aEles.length;i++){
             var aEle=aEles[i];
-            if(aEle.href && /第[\d|〇|零|一|二|三|四|五|六|七|八|九|十|百|千|万|萬]+[章|节|回|卷|折|篇|幕|集]|序|序\s*言|序\s*章|前\s*言|引\s*言|引\s*子|摘\s*要|楔\s*子|后\s*记|附\s*言|结\s*语/.test(aEle.innerHTML)){
+            if(aEle.href && /第[\d|〇|零|一|二|三|四|五|六|七|八|九|十|百|千|万|萬]+[章|节|回|卷|折|篇|幕|集]|序|序\s*言|序\s*章|前\s*言|引\s*言|引\s*子|摘\s*要|楔\s*子|后\s*记|附\s*言|结\s*语|[\d|〇|零|一|二|三|四|五|六|七|八|九|十|百|千|万|萬]+、/.test(aEle.innerHTML)){
                 list.push(aEle);
             }
         }
