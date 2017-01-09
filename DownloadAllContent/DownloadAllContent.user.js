@@ -4,7 +4,7 @@
 // @name:zh-TW   懶人小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      1.03
+// @version      1.05
 // @description  Fetch and download main content on current page
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取小說、論壇內容等並保存為TXT文檔
@@ -108,27 +108,38 @@
         [].forEach.call(delList,function(item){item.parentNode.removeChild(item);});
         var largestContent,contents=pageData.querySelectorAll("span,div,article,p,td");
         for(i=0;i<contents.length;i++){
-            let content=contents[i],hasText=false;
+            let content=contents[i],hasText=false,allSingle=true,item;
+            for(j=content.childNodes.length-1;j>=0;j--){
+                item=content.childNodes[j];
+                if(item.nodeType==3 && /^\s*$/.test(item.data))
+                    item.parentNode.removeChild(item);
+            }
             [].forEach.call(content.childNodes,function(item){
                 if(item.nodeType==3 && item.data && !/^\s*$/.test(item.data))
                     hasText=true;
             });
-            if(!hasText)continue;
-            if(content.childNodes){
-                for(j=content.childNodes.length-1;j>=0;j--){
-                    var item=content.childNodes[j];
-                    if(item.nodeType==3 && /^\s*$/.test(item.data))
-                        item.parentNode.removeChild(item);
+            if(content.childNodes.length>1){
+                for(j=0;j<content.childNodes.length;j++){
+                    item=content.childNodes[j];
+                    if(item.nodeType==1 && item.firstChild && item.firstChild.nodeType!=3){
+                        allSingle=false;
+                        break;
+                    }
                 }
+            }else{
+                allSingle=false;
             }
-            if(content.firstChild && (
-                (content.firstChild.nodeType!=3 && !/^(I|A|STRONG|B|FONT|BR)$/.test(content.firstChild.tagName)) ||
-                (content.firstChild.nodeType==3 && /^\s*$/.test(content.firstChild.data) &&
-                 (!content.childNodes[1] || !(content.childNodes[1].nodeType==3 || /^(I|A|STRONG|B|FONT|BR)$/.test(content.childNodes[1].tagName))))
-            ))
-                continue;
-            if(pageData==document && content.offsetWidth<=0 && content.offsetHeight<=0)
-                continue;
+            if(!allSingle){
+                if(!hasText)continue;
+                if(content.firstChild && (
+                    (content.firstChild.nodeType!=3 && !/^(I|A|STRONG|B|FONT|BR)$/.test(content.firstChild.tagName)) ||
+                    (content.firstChild.nodeType==3 && /^\s*$/.test(content.firstChild.data) &&
+                     (!content.childNodes[1] || !(content.childNodes[1].nodeType==3 || /^(I|A|STRONG|B|FONT|BR)$/.test(content.childNodes[1].tagName))))
+                ))
+                    continue;
+                if(pageData==document && content.offsetWidth<=0 && content.offsetHeight<=0)
+                    continue;
+            }
             if(navigator.userAgent.toLowerCase().indexOf('firefox')!=-1){
                 if(!largestContent || largestContent.textContent.length<content.textContent.length){
                     largestContent=content;
@@ -146,7 +157,7 @@
                 let childNode=childNodes[j];
                 if(childNode.nodeType==3 && childNode.data && !/^\s*$/.test(childNode.data))hasText=true;
                 if(childNode.tagName=="BR")cStr+="\r\n";
-                else if(childNode.textContent)cStr+=childNode.textContent.replace(/\s*/,"  ");
+                else if(childNode.textContent)cStr+=childNode.textContent.replace(/ +/g,"  ").replace(/([^\r]|^)\n([^\r]|$)/g,"$1\r\n$2");
             }
             if(hasText || noTextEnable)rStr+=cStr+"\r\n";
         }
@@ -176,7 +187,7 @@
         var aEles=document.querySelectorAll("a"),list=[];
         for(var i=0;i<aEles.length;i++){
             var aEle=aEles[i];
-            if(aEle.href && /第[\d|〇|零|一|二|三|四|五|六|七|八|九|十|百|千|万|萬]+[章|节|回|卷|折|篇|幕|集]|序|序\s*言|序\s*章|前\s*言|引\s*言|引\s*子|摘\s*要|楔\s*子|后\s*记|附\s*言|结\s*语|[\d|〇|零|一|二|三|四|五|六|七|八|九|十|百|千|万|萬]+、/.test(aEle.innerHTML)){
+            if(aEle.href && /第.+[章|节|回|卷|折|篇|幕|集]|序|序\s*言|序\s*章|前\s*言|引\s*言|引\s*子|摘\s*要|楔\s*子|后\s*记|附\s*言|结\s*语|[\d|〇|零|一|二|三|四|五|六|七|八|九|十|百|千|万|萬|-]+(、|）)/.test(aEle.innerHTML)){
                 list.push(aEle);
             }
         }
