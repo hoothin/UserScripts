@@ -75,7 +75,7 @@
 // @include     http*://www.l-sj.cc/*
 // @include     http*://htacg.cc/*
 // @include     http*://www.htacg.cc/*
-// @version     3.21.27
+// @version     3.21.28
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -86,6 +86,8 @@
 // @require     https://greasyfork.org/scripts/23522/code/od.js?version=167946
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
+// @updateURL   https://greasyfork.org/scripts/23316/code/HacgGodTurn.user.js
+// @downloadURL https://greasyfork.org/scripts/23316/code/HacgGodTurn.user.js
 // @license     MIT License
 // @connect     tts.baidu.com
 // @compatible        chrome
