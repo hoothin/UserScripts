@@ -8,7 +8,7 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdn.jsdelivr.net/jquery/1.7.2/jquery.min.js
 // @require      https://cdn.jsdelivr.net/hi-base64/0.2.0/base64.min.js
-// @version      1.2.3
+// @version      1.2.4
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -403,7 +403,8 @@
             <div id="configContent" style="display: none;">
                 <div style="width:300px;height:300px;position:fixed;left:50%;top:50%;margin-top:-150px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;">
                     <div style="text-align:center;font-size: 12px;margin-top: 28px;">自定义需要启用一键下载的链接正则，一行一条</div>
-                    <textarea id="configInput" placeholder="例：http:.*\\.php\\?getRes=\\d+" style="position:absolute;left:20px;top:50px;width:260px;height:150px"></textarea>
+                    <textarea id="configInput" placeholder="例：http:.*\\.php\\?getRes=\\d+" style="position:absolute;left:20px;top:50px;width:260px;height:110px"></textarea>
+                    <div style="text-align:center;font-size:12px;margin-top:125px;" title="不需要加'我的网盘/全部文件'">度盘存储路径：<input id="baiduPath" placeholder="例：/av" style="width:170px;"></div>
                     <div id="icons" style="position:absolute;left:3px;top:202px"></div>
                     <label style="position:absolute;left:60px;top:230px;"><input id="showType" type="checkbox"/>仅当鼠标经过时显示图标</label>
                     <button id="configSave" class="whx-btn" type="button" style="position:absolute;left:110px;top:260px;width:80px;height:30px;color:white;border-radius:5px;border:0px;outline:none;">设置</button>
@@ -416,6 +417,7 @@
         var configQuit=document.querySelector("#configQuit");
         var configSave=document.querySelector("#configSave");
         var showTypeCheck=document.querySelector("#showType");
+        var baiduPath=document.querySelector("#baiduPath");
         var icons=$("#icons");
         for(var x = 0; x < Object.keys(sites).length; x++){
             let siteConfig=sites[x];
@@ -437,10 +439,14 @@
         configContent=document.querySelector("#configContent");
         configContent.style.display="block";
         if(GM_getValue("eoReg"))$(configInput).val(GM_getValue("eoReg").join("\n"));
+        if(GM_getValue("baiduPath"))$(baiduPath).val(GM_getValue("baiduPath"));
         if(GM_getValue("showType"))showTypeCheck.checked=true;
         $(configQuit).click(function (event) {configContent.style.display="none";});
         $(configSave).click(function (event) {
             var regStr=$(configInput).val();
+            var baiduPathStr=$(baiduPath).val();
+            console.log(baiduPathStr);
+            if(baiduPathStr)GM_setValue("baiduPath",baiduPathStr);
             if(!/^\s*$/.test(regStr)){
                 var regStrs=regStr.split("\n");
                 for(var reg of regStrs){
@@ -486,6 +492,10 @@
                         if(offLink){
                             clearInterval(bsl);
                             offLink.value = curlink;
+                            var baiduPathStr=GM_getValue("baiduPath");
+                            if(baiduPathStr){
+                                unsafeWindow.require("function-widget-1:offlineDownload/util/newOfflineDialog.js").obtain()._checkPath=baiduPathStr;
+                            }
                             document.querySelectorAll('#newoffline-dialog>.dialog-footer>.g-button')[1].click();
                             if(/^magnet|torrent$/.test(curlink))
                                 var i=0, bsb = setInterval(function(){
