@@ -2,7 +2,7 @@
 // @name         百Bing图
 // @name:en      BingBgForBaidu
 // @namespace    hoothin
-// @version      2.2.1
+// @version      2.2.2
 // @description     给百度首页换上Bing的背景图，并添加背景图链接与日历组件
 // @description:en  Just change the background image of baidu.com to bing.com
 // @author       hoothin
@@ -40,6 +40,7 @@
     iframe.setAttribute("scrolling","no");
     iframe.style.display="none";
     iframe.style.top="30px";
+    iframe.style.left="0px";
     iframe.style.position="absolute";
     var sUpfuncMenus=document.querySelector("#s_upfunc_menus");
     if(sUpfuncMenus){
@@ -67,11 +68,17 @@
         iframe.width=width===0?538:width;
         iframe.height=height===0?370:height;
         var today=$(".op-calendar-new-table-today",iframe.contentDocument);
+        var t;
         riliLink.innerHTML="<span class='title' style='text-decoration:overline;cursor:crosshair'>"+$(".op-calendar-new-right-date",iframe.contentDocument).html()+"</span>";
-        riliLink.onmousemove=function(){
-            if(top===0)iframeDoc.scrollTop(138);
-            if(left===0)iframeDoc.scrollLeft(121);
-            iframe.style.display="block";
+        riliLink.onmouseover=function(){
+            t=setTimeout(function(){
+                if(top===0)iframeDoc.scrollTop(138);
+                if(left===0)iframeDoc.scrollLeft(121);
+                $(iframe).show(200);
+            },500);
+        };
+        riliLink.onmouseout=function(){
+            clearTimeout(t);
         };
         iframe.onmouseout=function(){
             iframe.style.display="none";
