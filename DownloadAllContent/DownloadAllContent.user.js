@@ -4,8 +4,8 @@
 // @name:zh-TW   懶人小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      1.05
-// @description  Fetch and download main content on current page
+// @version      1.06
+// @description  Fetch and download main content on current page,provide special support for chinese novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取小說、論壇內容等並保存為TXT文檔
 // @description:ja     ユニバーサルサイトコンテンツクロールツール、クロール、フォーラム内容など
@@ -14,8 +14,6 @@
 // @grant        GM_xmlhttpRequest
 // @grant        GM_registerMenuCommand
 // @require      https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.3/FileSaver.min.js
-// @updateURL    https://greasyfork.org/scripts/25068/code/DownloadAllContent.user.js
-// @downloadURL  https://greasyfork.org/scripts/25068/code/DownloadAllContent.user.js
 // @license      MIT License
 // @compatible        chrome
 // @compatible        firefox
@@ -103,7 +101,7 @@
     }
 
     function getPageContent(doc){
-        var i,j,rStr="",pageData=(doc.body?doc.body:doc).cloneNode(true),delList=[];
+        var i,j,k,rStr="",pageData=(doc.body?doc.body:doc).cloneNode(true),delList=[];
         [].forEach.call(pageData.querySelectorAll("script,style,link"),function(item){delList.push(item);});
         [].forEach.call(delList,function(item){item.parentNode.removeChild(item);});
         var largestContent,contents=pageData.querySelectorAll("span,div,article,p,td");
@@ -121,9 +119,18 @@
             if(content.childNodes.length>1){
                 for(j=0;j<content.childNodes.length;j++){
                     item=content.childNodes[j];
-                    if(item.nodeType==1 && item.firstChild && item.firstChild.nodeType!=3){
-                        allSingle=false;
-                        break;
+                    if(item.nodeType==1){
+                         for(k=0;k<item.childNodes.length;k++){
+                             var childNode=item.childNodes[k];
+                             if(childNode.nodeType!=3 && !/^(I|A|STRONG|B|FONT|BR)$/.test(childNode.tagName)){
+                                 allSingle=false;
+                                 break;
+                             }
+                         }
+                        if(!allSingle)break;
+                        delList=[];
+                        [].forEach.call(item.childNodes,function(n){if((n.nodeType==3 && /^\s*$/.test(n.data)) || (n.nodeType==1 && /^\s*$/.test(n.textContent)))delList.push(n);});
+                        [].forEach.call(delList,function(n){n.parentNode.removeChild(n);});
                     }
                 }
             }else{
@@ -159,7 +166,7 @@
                 if(childNode.tagName=="BR")cStr+="\r\n";
                 else if(childNode.textContent)cStr+=childNode.textContent.replace(/ +/g,"  ").replace(/([^\r]|^)\n([^\r]|$)/g,"$1\r\n$2");
             }
-            if(hasText || noTextEnable)rStr+=cStr+"\r\n";
+            if(hasText || noTextEnable || ele==largestContent)rStr+=cStr+"\r\n";
         }
         for(i=0;i<childlist.length;i++){
             var child=childlist[i];

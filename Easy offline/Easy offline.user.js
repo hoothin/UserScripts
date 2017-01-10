@@ -2,7 +2,7 @@
 // @name         Easy offline
 // @name:zh-CN   一键离线下载
 // @name:zh-TW   一鍵離綫下載
-// @description  Be easy to find out all magnet links and torrents and video links in current page, and stream them from cloud storage automatically.
+// @description  Find out all magnet links and torrents and video links in current page, and stream them from cloud storage automatically.
 // @description:zh-CN 一键自动将磁链、bt种子或其他下载资源离线下载至网盘
 // @description:zh-TW 一鍵自動將磁鏈、bt種子或其他下載資源離綫下載至網槃
 // @namespace    http://tampermonkey.net/
