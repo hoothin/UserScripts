@@ -9,7 +9,7 @@
 // @description:zh-CN    迅雷、快车、QQ旋风等专有链解密 Decryption and Display the real URL of the download links.(of xunlei,kuaiche,xuanfeng;thunder,flashget,qqdl)
 // @description:zh-TW    迅雷、快車、QQ旋風等專有鏈解密 Decryption and Display the real URL of the download links.(of xunlei,kuaiche,xuanfeng;thunder,flashget,qqdl)
 // @description:ja       True URL downloads, Decryption and Display the real URL of the download links.(of xunlei,kuaiche,xuanfeng;thunder,flashget,qqdl)
-// @version        1.22.01
+// @version        1.22.02
 // @create         2013-01-05
 // @lastmodified   2016-04-09
 // @include        http://*
@@ -19,6 +19,7 @@
 // @copyright      2013+, Yulei, Hoothin
 // @grant          GM_registerMenuCommand
 // @grant          GM_setClipboard
+// @license        MIT License
 // @contributionURL https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
 // @contributionAmount 1
 // ==/UserScript==
@@ -27,7 +28,7 @@
     function Yu() {
         var prefix="";//批量增加前缀
         decode64 = (window.atob) ? atob : decode64;
-        var Rstr = /^\s?(?:thunder|flashget|qqdl|fs2you):\/\/([^'"\s]*)/i,
+        var Rstr = /^\s*(?:thunder|flashget|qqdl|fs2you):\/\/([^'"\s]*)/i,
             aft = /^AA|ZZ$|\[FLASHGET\]/g,
             aff = /&.*$|\/$/g;
         var TId = "title='├TrueUrl┤' ID='\u0059\u0075'";
