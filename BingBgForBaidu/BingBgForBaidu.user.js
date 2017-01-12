@@ -2,7 +2,7 @@
 // @name         百Bing图
 // @name:en      BingBgForBaidu
 // @namespace    hoothin
-// @version      2.2.6
+// @version      2.2.7
 // @description     给百度首页换上Bing的背景图，并添加背景图链接与日历组件
 // @description:en  Just change the background image of baidu.com to bing.com
 // @author       hoothin
@@ -30,10 +30,12 @@
     }
     var bingBgLink=document.createElement("a");
     bingBgLink.innerHTML="<span class='title'>Bing图</span>";
+    var riliLink=document.createElement("a"),date=new Date();
     var icons=document.querySelector("#s_icons");
     if(!icons){
         icons=document.querySelector("#u1");
         bingBgLink.classList.add("mnav");
+        riliLink.classList.add("mnav");
     }
     if(icons)icons.appendChild(bingBgLink);
     var iframe=document.createElement("iframe");
@@ -43,11 +45,17 @@
     iframe.style.top="30px";
     iframe.style.left="0px";
     iframe.style.position="absolute";
+    iframe.style.zIndex="999";
     var sUpfuncMenus=document.querySelector("#s_upfunc_menus");
+    if(!sUpfuncMenus){
+        sUpfuncMenus=document.querySelector(".head_wrapper");
+        iframe.style.top="50px";
+        iframe.style.left="";
+        iframe.style.right="0px";
+    }
     if(sUpfuncMenus){
         sUpfuncMenus.appendChild(iframe);
     }
-    var riliLink=document.createElement("a"),date=new Date();
     var dateDay=date.getDate(),dateMonth=date.getMonth()+1;
     if(dateDay<10)dateDay="0"+dateDay;
     if(dateMonth<10)dateMonth="0"+dateMonth;
