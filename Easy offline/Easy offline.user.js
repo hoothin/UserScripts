@@ -273,7 +273,7 @@
                     if(curNode.classList.contains("whx-a"))continue;
                     let clone=$("<a></a>").attr("style",curNode.getAttribute("style")).attr("href",curNode.getAttribute("href")).addClass('whx-a').css("background-color","#e1e1e1").css("background-image",'url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAMAAADzN3VRAAAARVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADc6ur3AAAAFnRSTlMAYM5vMOA/ENGegK2olI6G1b97Z0sXENA+jAAAAKFJREFUKM+FklkSxCAIRHFfss3K/Y86iQSDVqzpH7FfgQpCVfAmGx+gl9JI0qrxrcNLzooEbKUG4EKWdkCiDRV0N0RTrZ5wvdgTTgp4SzCAHxAPZkAM5GOJWuuT7FE5OVPOBFLTYb3Oc2YB5uJ8+G6pgkTGt74ntcCJHiwFLHw10Tdc93jlGXGvSRtsHNpuPs+/o1ODfxAtSL0f7HPC+L/9AF60G3QxO1UaAAAAAElFTkSuQmCC")');
                     clone.mouseover(function(e){
-                        offUrl=clone.attr("href");
+                        offUrl=clone[0].href;
                         parentDiv.css("display","block");
                         var basePos=clone.offset();
                         parentDiv.offset({top:basePos.top,left:basePos.left});
