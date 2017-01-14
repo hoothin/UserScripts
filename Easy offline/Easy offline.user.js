@@ -8,7 +8,7 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdn.jsdelivr.net/jquery/1.7.2/jquery.min.js
 // @require      https://cdn.jsdelivr.net/hi-base64/0.2.0/base64.min.js
-// @version      1.2.4
+// @version      1.2.5
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -175,7 +175,7 @@
         </style>`);
     }
 
-    var parentDiv=$("<div style='display:none;position:relative;z-index:99999;overflow:visible;text-align:left;'></div>");
+    var parentDiv=$("<div style='display:none;position:absolute;z-index:99999;overflow:visible;text-align:left;'></div>");
     var regs=GM_getValue("eoReg");
     function hideIcons(){
         parentDiv.css("display","none");
