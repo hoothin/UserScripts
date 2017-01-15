@@ -75,7 +75,7 @@
 // @include     http*://www.l-sj.cc/*
 // @include     http*://htacg.cc/*
 // @include     http*://www.htacg.cc/*
-// @version     3.21.28
+// @version     3.21.30
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -83,7 +83,7 @@
 // @grant       GM_getValue
 // @grant       unsafeWindow
 // @run-at      document-end
-// @require     https://greasyfork.org/scripts/23522/code/od.js?version=167946
+// @require     https://greasyfork.org/scripts/23522/code/od.js?version=169400
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
 // @updateURL   https://greasyfork.org/scripts/23316/code/HacgGodTurn.user.js
@@ -559,7 +559,7 @@
                     changeUrl(true,[["object"],[['http:','https:']]]);
                     changeUrl(true,[["a"],[['http:(.*hacg)','https:$1']]]);
                 }
-                if(/hacg\.(ch|la|at|tw)/.test(location.href)){
+                if(/hacg\.(ch|la|at|tw|se)/.test(location.href)){
                     document.title = document.title.replace(/\u7409\u7483\u795e\u793e/,"\u674e\u9b3c\u795e\u793e");
                     [].forEach.call(document.querySelectorAll("a"), function(item, index, arr) {
                         item.innerHTML=item.innerHTML.replace(/\u7409\u7483\u795e\u793e/,"\u674e\u9b3c\u795e\u793e");
