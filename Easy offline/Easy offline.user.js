@@ -134,7 +134,7 @@
     }
 
     var sitesArr=[],siteSort=GM_getValue("siteSort"),siteName;
-    if(!siteSort)siteSort=["yyw","baidu","furk","seedr"];
+    if(!siteSort)siteSort=["baidu","yyw","furk","seedr"];
     siteSort.forEach(function(item) {
         var siteConfig=sites[item];
         siteConfig.name=item;
