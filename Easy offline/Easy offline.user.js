@@ -8,7 +8,7 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdn.jsdelivr.net/jquery/1.7.2/jquery.min.js
 // @require      https://cdn.jsdelivr.net/hi-base64/0.2.0/base64.min.js
-// @version      1.3.0
+// @version      1.3.1
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -214,16 +214,28 @@
         offNode.click(function(e){
             if(!siteConfig.directUrl)GM_setValue("eoUrl",getRightUrl(offUrl));
             e.stopPropagation();
+            hideIcons();
         });
         if(siteConfig.bgImg)offNode.css("background-image","url(\""+siteConfig.bgImg+"\")");
         if(siteConfig.hide || GM_getValue("eoHide"+siteConfig.name))continue;
         offNodes.push(offNode);
         parentDiv.prepend(offNode);
     }
-    parentDiv.mouseover(function(e){
-        e.stopPropagation();
-    });
-    document.addEventListener("mouseover", function(e){
+    if(typeof(HTMLElement)!="undefined"){
+        HTMLElement.prototype.contains=function(obj) {
+            while(obj){
+                if(obj==this)
+                    return true;
+                obj=obj.parentNode;
+            }
+            return false;
+        };
+    }
+    var marginTop=offNodes.length*25;
+    parentDiv.prepend($('<div style="position:absolute;width:25px;height:'+marginTop+'px;margin-top:-'+(marginTop-25)+'px;background-color:white;opacity:0.001;"></div>'));
+    parentDiv.mouseout(function(e){
+        var relatedTarget=(e.relatedTarget||e.fromElement);
+        if(relatedTarget && !parentDiv[0].contains(relatedTarget))
         hideIcons();
     });
     var preNode;
@@ -467,6 +479,19 @@
             if(siteConfig.bgImg)icon.css("background-image","url(\""+siteConfig.bgImg+"\")");
             icon.on("click", function(){
                 var eoHide=GM_getValue("eoHide"+siteConfig.name);
+                if(!eoHide){
+                    var allHide=true;
+                    $("#icons>div").each(function(){
+                        if(this!=icon[0] && $(this).css("opacity")!="0.2"){
+                            allHide=false;
+                            return false;
+                        }
+                    });
+                    if(allHide){
+                        alert("不能全部禁用！");
+                        return;
+                    }
+                }
                 GM_setValue("eoHide"+siteConfig.name, !eoHide);
                 icon.css("opacity",eoHide?"1":"0.2");
                 icon.attr("title",(eoHide?i18n.disable:i18n.enable)+i18n[siteConfig.name] );
