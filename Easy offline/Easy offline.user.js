@@ -8,7 +8,7 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdn.jsdelivr.net/jquery/1.7.2/jquery.min.js
 // @require      https://cdn.jsdelivr.net/hi-base64/0.2.0/base64.min.js
-// @version      1.2.5
+// @version      1.3.0
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -34,15 +34,13 @@
 (function() {
     'use strict';
     var sites={
-        0:{
-            name:"baidu",
+        baidu:{
             regex:/pan\.baidu\.com/,
             url:"https://pan.baidu.com/disk/home",
             bgColor:"ffffff",
             bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAABjFBMVEX////7+/v+/v/8/Pwyf/wzc/w0bvza5f4xffz5+//0+P8ybPz8/f4yevw0cPwza/z39/cwe/UxdfzSPyr4+v/2+f/m7/53nv0vf/wvce9pof1tlPwxf/gzfPYwePPp8f7Z5/7S4v7P4P7L3f7I2f2Gtf2Rr/1hkP0yd/1FiPwygfxAdPxspftYkvUtc/Dg6f7C2f7F1f54oP1flf0/hfwsbu7i7f/w9f7b5v7X5f7V4v6nyv6oxv6jwP6Ns/2Lsf1/rv1+ov1zof1xof10nf1jm/1djP0xe/2NufxalvxHj/xPhvxKgPxHffw+efw0ePyXu/mqxPg5hfiTtvdyo/dgmfdOj/dBhfVflfQvefT+9fOIqvMyefNMhvFIgO9MeePyycVjZbzKb3DaZVa/Q0Dx9f+Bp/1olv1gkPw0dvzg6Pu2zPk0gflNjPctc/c9gfX88/JJfO3n3+ni2unHxuSGktNpdtBJY8paashRW71nXqp7YpyDYJKpaIKPU33AVFXARkTVTTvFQjrUPypKwHq1AAACAklEQVQ4y4WTB3OqQBSFF3BpAk+KIBixJ2rs0fTee68vvbzee+9//O1Cio46npmFPfd8d2cY9gIASMJHUESDKFQmAZJAUKCFKELA/WSr3A3d/tZnAF99C8fVHYhiosbxxflsdr7I15SIWiCe3exA2szGmwOJXTkUkvHaTTQD9NyBLO/t7OzJ8kFObwKs2/bRdrSvL7p9ZNvrjQC/n8/nwngXzuXz+3wDED42zS13u2Wax+EGQD+pmhvudsOsnuj1gBAZSp5+/XRIYkMeVu1XyaGIcAfoycVM4Pn3qx9vcW3gRUcmE8gsJvUboNfyeDyBwLd/6sX7wtNnC45DD6vXBbRx1sOmrQ+/VFX9efomhFzFstLoNa45QKzCijMx/vXZpar+/fKSZecWijwfmxHZSgzFFBgWxXQUIJ39UX9/nhPFngHsomlRHEYxRY6mlCkOl+5fXp2vraV6IgCLm1JSoyQGxhRlUnCAi/PUEwXnWMKkooxhAIxAuNSPS+8+Qgi7GOB3zutfgnAExQSIr0JoMJw2GJSghPLSo4eDGscYEK7Gna/gy7QkLRvTK5JEP2bAgy4vvTJtLCNX5h0AMLNemvbihfqBv3zjZpHDACKM7ntI3RMFgFSYcJ3B3P0sf6kzGOxM+AFwXAK7kuNurz2pcWTt7deuna/t4LQdvbbD23b8/wPY0UTO99dD5gAAAABJRU5ErkJggg=="
         },
-        1:{
-            name:"pcloud",
+        pcloud:{
             regex:/my\.pcloud\.com/,
             url:"https://my.pcloud.com/",
             bgColor:"f1f1f1",
@@ -51,38 +49,33 @@
             noFtp:true,
             bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAXVBMVEX///////8bytT///8fy9UbytQbytQfy9Ufy9UmzNYbytQgy9UizNUbytT///8bytQey9Ufy9Ugy9VG1NxB09sbytRg2uFS194bytT///9G1Nzx/Pzi+PpT19+c6OxZ7rqXAAAAGHRSTlMBG/AHxYAh49O3oWJBMRUR4bOLYV9RQz9fW5zbAAAAbUlEQVQY043MRxLCMBBE0WYkOQcyXybc/5hIhUuww2/3u2pGG1WdYV1VujcyG9ceWdmcM8jDK8bHE0LqCzMQF5Y7NOnNgeE7MATBMQ+fE/q9wCwNkDUetUAZPLVuxq+z3LWlqE9OctOumFL/9QYClwvt3NkDkgAAAABJRU5ErkJggg=="
         },
-        2:{
-            name:"yyw",
+        yyw:{
             regex:/115\.com/,
             url:"http://115.com/?tab=offline&mode=wangpan",
             bgColor:"21458a",
             bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAASFBMVEUhRYr///+XqcjV3OmJnMFTb6QoS45PbKLu8fbZ4OvBy95xiLRifKxbdqlXcqYxU5P3+Prh5u/O1uXH0eK6xduks89/lLtGZJ4ysMfhAAAAVUlEQVQY04WPSQ6AMAwD6ySkdKHs8P+fckyDhPBtRoojhyG4GP6FEjPvxhGZiKKJPM7uoAHYSif0Lgdw+tppQfOGIF4ILsea3CetvMa+UaRq+Mh7/gPkxAHFh9WDUQAAAABJRU5ErkJggg=="
         },
-        3:{
-            name:"furk",
+        furk:{
             regex:/www\.furk\.net/,
             url:"https://www.furk.net/users/files/add",
             bgColor:"fff",
             hide:false,
             bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAAuCAMAAABgZ9sFAAAAflBMVEX///+CuuaGv+rjXKniTaiDu+d3tufiXq/nUqxAn9+t1vGiz/FOnt/sj8nol8bhcLJRo97b7vp5uOpCoeGQw+m31/XW6/er0++Iwe330uZUpuHssNjni8Tqf7/o9Pn68PSUx+732eucyuvzzuJjq+H0v97sm8q12vDto8/rcrjt831UAAABmUlEQVRIx+2T6W6DMBCE8dr4aEgw0KS5kzZH2/d/we7aliJlN6KR+rNjgYwYfxrwuPrXXwkeaC7ba1nqU7YrWfV83N6rm95G7ZCWlNnL6Kfa20zBA7tNEl7KSsjl5In/rsBOnqArtfx1GGXVGH112Wwuq2KnMMDp2nnUtaquOsttchik15yeLGZ68tpp7403elXo4pZn5Ld3zpg03VWFjkOme51kcGj/nu1p7wF6QPU0cjKDVIyBRrfbtdptM4XYqYIoSKP+KHQ04X17wKfDF8JJYJUt9cqrVH2sUOg0hJ4Ju5rNRSWMIb9r70uA4a2lRRSrx9stDF6ne7tCrz12XbdfLPbdAicVCdFEr5gdQGq306Qt6wz5gR81+t2tmXI6SbLT5sx4ga1YMdNidM/sAMQXOmOoBVPxeMidaaUwFsSjbVBa+NS0RdyequgYXS0pjhSmlegWcKxfRbrmdFBwjpHbMblEV+cQwiDSnUBfD8PQNMDtVBpOH2IYhjVInZHosYkxBh7GGZEeGpRg161Ib0ITQhTCMPrz+gG1shF4koHETAAAAABJRU5ErkJggg=="
         },
-        4:{
-            name:"seedr",
+        seedr:{
             regex:/www\.seedr\.cc/,
             url:"https://www.seedr.cc/files",
             bgColor:"ca2a15",
             hide:false,
             bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAllBMVEXGKBPGKBPGKBPGKBPORDLJMh3uv7nQTDvILRjprKPmoZjbdmnLOyjKNSHtvLbrtK3opp3lm5Hhj4Tac2XZb2HXalvUXEzLOibGKBPGKBPGKBPqsarjlovehHjXaFnTWkrMQC3GKBPGKBPGKBP////44+H77u323Nj01dHxycP88vH66+n23dr019Tyz8rxzMfvw73vwrxYVj9BAAAAJHRSTlP7yb+j+/v9+/v9/f37+/39/f39/f39+/uxmSj9/f37+/uXNR2Gd9E6AAAAmUlEQVQY003NVxKDMAxFUQVsbHqv6YkMIT3731wEZoD7oZl3fgQXY7PKaKACKn93BxirwaArWsQXH8EcYYeUu4BnDRAsUKgBWjZDeqfduXKGmHbPT3YiJ9giPtj+qUJWavghxoUSHFxLAz3JIgcAypsGBzF3bAJvAvHB5PiVnm8HGoBZIffTVvWMoIIhX4KIMg5whsbcrKqvf29uDBcu2+SAAAAAAElFTkSuQmCC"
         },
-        5:{
-            name:"weiyun",
+        weiyun:{
             regex:/www\.weiyun\.com/,
             url:"https://www.weiyun.com/disk/index.html",
             bgColor:"3c95ee",
             bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAV1BMVEUed9E4htg2hNI2g84KJkMSKkMJIjwHEBr///8lh+k5k+49lu4hhegyj+wri+s/lu+s0vfg7vzX6vy/3PlWou+w1PicyfaWxvXf7fzB3fmHvfSBuvNfp/GhDGXVAAAACHRSTlPm5uDeSkhCHO7HIjkAAAB4SURBVBjTZYuJDsIwDEM9TnfDodc2rv//TtoKITqeosR+UnAcrj/szhimjj2mDRgbM8nYEj59GRfOX/Fg3a+2IUWSUh0vCfKhRUbFaiAqs1L0PVAw2vrM3sx8sFJgieUGWwNzzXAukTeSqX46B7fhX+DSARzQ9dMbRIkLk61eQagAAAAASUVORK5CYII="
         },
-        6:{
-            name:"xunlei",
+        xunlei:{
             regex:/lixian\.vip\.xunlei\.com/,
             url:"http://lixian.vip.xunlei.com/?furl=",
             bgColor:"2e71f1",
@@ -91,8 +84,7 @@
             },
             bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAMAAADzN3VRAAABC1BMVEUAAAArcPUscPQkavJSd79UdrhTdrled6kjae8ucfAqbOwoa+0pa+xTd71WdrNad61dea4pbO4vcvEsb/Aqbe8sbu8ucfArbu8ucfEpbe0oa+4vcPH///4ZYe7j8fne7fknbPAkaO41dfDa6vgcY+/o8/rV6PchZ+4bZO79//3u+fklavIiaO8VXu3x9/3t9fve7veLsfYqcfZNhvE5d/AfZO36/fz0+/ry+vrb6PrG2vnR5fbL4faXufbG3fWqyPWjw/WErPWixPR4pPR0ovOIsfJsnPJYj+9Bfe/1+v3l7f3p8Pzg7fq+0/mlw/fY6/aQtPaHrfZnl/S41fORt/KAqvKZvvFJhO8eZe4RVCzFAAAAEXRSTlMA+P74gnpzWP329OrohXJgXOQVaEcAAAFOSURBVCjPZczneoIwGIbhqNXuEQORYGIBQXDvvbfde5z/kfSTi1Kx9798z/UGIXQQUuJBSiiGwDmEPUklFIVFDcI/4doVqilUCSIFArdjlAxQFE1Ir41EMhlGlFKiEerRhPFy29O3byiyUTccx9HiVBbxYYm3jAL1ilyvPlerhl1wFnec83mRuoUQSgr2lPP7Bn3g2dJNtm6TLSggUXzMZrtdXi6X+dCR/QLEtGV1SpZltXvfGtkt5qSdcnXmpmlit8guc5K79vTHK0OCk1eaq1x6q2LlUunBUsZQEi5sj3MZMJp9bLCuynCCjUvX3yuVzKBRFLqK4TNvA+Qj8TV7Si1E4heSfKZYj/pUlzxQfFjQt2XRL/iPJDXVz43tvRBmO6SmsdaZS0N5zHZnOpMwYNoJiuU1pu5j+fwhQtGIynAQUyMXCFyeqntFPYPFD095Qx8x+n7CAAAAAElFTkSuQmCC"
         },
-        7:{
-            name:"xiaomi",
+        xiaomi:{
             regex:/miwifi\.com/,
             url:"http://d.miwifi.com/d2r/?url=",
             bgColor:"f97306",
@@ -119,7 +111,7 @@
                 pcloud:"Pcloud网盘",
                 xunlei:"迅雷离线",
                 xiaomi:"小米路由器",
-                weiyun:"微云",
+                weiyun:"腾讯微云",
                 enable:"启用",
                 disable:"禁用"
             };
@@ -141,6 +133,21 @@
             break;
     }
 
+    var sitesArr=[],siteSort=GM_getValue("siteSort"),siteName;
+    if(!siteSort)siteSort=["yyw","baidu","furk","seedr"];
+    siteSort.forEach(function(item) {
+        var siteConfig=sites[item];
+        siteConfig.name=item;
+        sitesArr.push(siteConfig);
+    });
+    for(siteName in sites){
+        var hasSite=false;
+        siteSort.forEach(function(item){if(item==siteName)hasSite=true;});
+        if(hasSite)continue;
+        var siteConfig=sites[siteName];
+        siteConfig.name=siteName;
+        sitesArr.push(siteConfig);
+    }
     function include(things,obj) {
         for (var i = things.length - 1; i >= 0; i--) {
             if ($(things[i]).attr('href')===$(obj).attr('href')){
@@ -172,6 +179,20 @@
                 background-position:center!important;
                 background-repeat:no-repeat!important;
             }
+            a.whx-a:hover{
+                animation:rotateAni 2s infinite;
+                animation-direction:alternate;
+                -webkit-animation:rotateAni 2s infinite;
+                -webkit-animation-direction:alternate;
+            }
+            @keyframes rotateAni{
+                from {transform: rotate(0deg);}
+                to {transform: rotate(360deg);}
+            }
+            @-webkit-keyframes rotateAni{
+                from {transform: rotate(0deg);}
+                to {transform: rotate(360deg);}
+            }
         </style>`);
     }
 
@@ -185,10 +206,10 @@
     }
     var offNodes=[];
     var offUrl;
-    for(var x = 0; x < Object.keys(sites).length; x++){
+    for(var x = 0; x < sitesArr.length; x++){
         let offNode=$("<a></a>");
         offNode.addClass('whx-a').css("position","absolute").css("margin-top","0px").css("margin-left","0px").attr("target","_blank");
-        let siteConfig=sites[x];
+        let siteConfig=sitesArr[x];
         offNode.css("background-color","#"+siteConfig.bgColor).attr("title",i18n[siteConfig.name] ).attr("href", siteConfig.url).attr("name", siteConfig.name);
         offNode.click(function(e){
             if(!siteConfig.directUrl)GM_setValue("eoUrl",getRightUrl(offUrl));
@@ -280,25 +301,19 @@
                         let j=0;
                         for(var x=0;x<offNodes.length;x++){
                             let node=offNodes[x];
-                            if(/^magnet/i.test(offUrl) && sites[x].noMag){
+                            let siteConfig=sites[node.attr("name")];
+                            if(/^magnet/i.test(offUrl) && siteConfig.noMag){
                                 node.hide();
-                            }else if(/^ftp/i.test(offUrl) && sites[x].noFtp){
+                            }else if(/^ftp/i.test(offUrl) && siteConfig.noFtp){
                                 node.hide();
-                            }else if(/^ed2k:\/\//i.test(offUrl) && sites[x].noEd2k){
+                            }else if(/^ed2k:\/\//i.test(offUrl) && siteConfig.noEd2k){
                                 node.hide();
                             }else{
                                 node.show();
                                 node.css("margin-top",-j*25+"px");
                                 j++;
-                                var name=node.attr("name");
-                                for(var s = 0; s < Object.keys(sites).length; s++){
-                                    let siteConfig=sites[s];
-                                    if(siteConfig.name==name){
-                                        if(siteConfig.directUrl){
-                                            node.attr('href', siteConfig.directUrl(offUrl));
-                                        }
-                                        break;
-                                    }
+                                if(siteConfig.directUrl){
+                                    node.attr('href', siteConfig.directUrl(offUrl));
                                 }
                             }
                         }
@@ -355,8 +370,8 @@
     var i=0;
     var curlink=GM_getValue('eoUrl');
     var isDisk=false;
-    for(x = 0; x < Object.keys(sites).length; x++){
-        let siteConfig=sites[x];
+    for(x = 0; x < sitesArr.length; x++){
+        let siteConfig=sitesArr[x];
         if(siteConfig.regex.test(location.href)){
             isDisk=true;
             break;
@@ -418,11 +433,33 @@
         var configSave=document.querySelector("#configSave");
         var showTypeCheck=document.querySelector("#showType");
         var baiduPath=document.querySelector("#baiduPath");
-        var icons=$("#icons");
-        for(var x = 0; x < Object.keys(sites).length; x++){
-            let siteConfig=sites[x];
+        var icons=$("#icons"),dragIcon;
+        icons[0].ondrop=function(e){
+            var nextIcon;
+            $("#icons>div").each(function(){
+                nextIcon=$(this);
+                if(e.pageX<nextIcon.offset().left){
+                    if(this!=dragIcon)
+                        nextIcon.before(dragIcon);
+                    return false;
+                }
+            });
+            siteSort=[];
+            $("#icons>div").each(function(){
+                siteSort.push($(this).attr("name"));
+            });
+            GM_setValue("siteSort",siteSort);
+        };
+        icons[0].ondragover=function(e){
+            e.preventDefault();
+        };
+        for(var x = 0; x < sitesArr.length; x++){
+            let siteConfig=sitesArr[x];
             let icon=$("<div style='height:25px;width:25px;float:left;border-radius:50%;background-position:center;background-repeat:no-repeat;background-size:20px;margin-left:10px;cursor:pointer'></div>");
-            icon.css("background-color","#"+siteConfig.bgColor).attr("title",i18n.disable+i18n[siteConfig.name] );
+            icon.css("background-color","#"+siteConfig.bgColor).attr("title",i18n.disable+i18n[siteConfig.name] ).attr("draggable",true).attr("name",siteConfig.name);
+            icon[0].ondragstart=function(e){
+                dragIcon=this;
+            };
             if(GM_getValue("eoHide"+siteConfig.name)){
                 icon.css("opacity","0.2");
                 icon.attr("title",i18n.enable+i18n[siteConfig.name] );
@@ -445,7 +482,6 @@
         $(configSave).click(function (event) {
             var regStr=$(configInput).val();
             var baiduPathStr=$(baiduPath).val();
-            console.log(baiduPathStr);
             if(baiduPathStr)GM_setValue("baiduPath",baiduPathStr);
             if(!/^\s*$/.test(regStr)){
                 var regStrs=regStr.split("\n");
