@@ -1,14 +1,12 @@
 // ==UserScript==
 // @name         Kill TieBa AD
 // @name:zh-CN   贴吧广告清理
-// @name:zh-TW   貼吧廣告清理
-// @name:ja      贴吧去广告
+// @name:zh-TW   貼吧廣告去除
 // @namespace    hoothin
 // @version      1.0
 // @description        Just Kill TieBa AD
-// @description:zh-CN  清理adb等未能清理掉的百度贴吧（tieba.baidu.com）广告
-// @description:zh-TW  清理adb等未能清理掉的百度貼吧（tieba.baidu.com）廣告
-// @description:ja     去除adb等未能清理掉的百度贴吧（tieba.baidu.com）广告
+// @description:zh-CN  清理百度贴吧（tieba.baidu.com）内adb等未能清理掉的各类广告
+// @description:zh-TW  去除百度貼吧（tieba.baidu.com）内adb等未能清理掉的各類廣告
 // @author       hoothin
 // @include      http*://tieba.baidu.com/*
 // @grant        none
