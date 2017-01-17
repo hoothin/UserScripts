@@ -9,9 +9,8 @@
 // @description:zh-CN    迅雷、快车、QQ旋风等专有链解密 Decryption and Display the real URL of the download links.(of xunlei,kuaiche,xuanfeng;thunder,flashget,qqdl)
 // @description:zh-TW    迅雷、快車、QQ旋風等專有鏈解密 Decryption and Display the real URL of the download links.(of xunlei,kuaiche,xuanfeng;thunder,flashget,qqdl)
 // @description:ja       True URL downloads, Decryption and Display the real URL of the download links.(of xunlei,kuaiche,xuanfeng;thunder,flashget,qqdl)
-// @version        1.22.02
+// @version        1.22.03
 // @create         2013-01-05
-// @lastmodified   2016-04-09
 // @include        http://*
 // @include        https://*
 // @exclude        http://192.168.*
@@ -20,6 +19,8 @@
 // @grant          GM_registerMenuCommand
 // @grant          GM_setClipboard
 // @license        MIT License
+// @require        https://cdn.jsdelivr.net/jquery/1.7.2/jquery.min.js
+// @require        https://greasyfork.org/scripts/26615-managerlinks/code/managerLinks.js?version=169865
 // @contributionURL https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
 // @contributionAmount 1
 // ==/UserScript==
@@ -153,21 +154,15 @@
                 },500);
             }
         });
-
-        var resReg=/^magnet|^ed2k|\.torrent$|\.mp4$|\.rar$|\.7z$|\.zip$|\.rmvb$|\.mkv$|\.avi$|\.iso$|\.mp3$|\.txt$|\.exe$|\.chm$|\.pdf$|\.ppt$|\.doc$|\.pptx$|\.docx$|\.epub$|\.xlsx$|\.xls$|\.flac$|\.wma$|\.wav$|\.aac$|\.ape$|\.mid$|\.ogg$|\.m4a$|\.dts$|\.dsd$|\.apk$/i;
         function copyLink() {
-            var links=document.querySelectorAll('a');
-            for(var link of links){
-                if(resReg.test(link.href) && linksArr.toString().indexOf(link.href) == -1){
-                    linksArr.push(link.href);
+            showLinkFrame(function(r){
+                if(r){
+                    GM_setClipboard(r);
+                    alert("复制成功！");
+                }else{
+                    alert("当前页面没有资源！");
                 }
-            }
-            if(linksArr.length > 0){
-                GM_setClipboard(prefix+linksArr.join("\n"+prefix));
-                alert("批量复制成功！");
-            }else{
-                alert("当前页面没有资源！");
-            }
+            });
         }
         //GM_registerMenuCommand("True url downloads seek", seekUrl);
         GM_registerMenuCommand("True url links copy", copyLink);
@@ -310,5 +305,5 @@
 
 /* （支持：Opera12；及所有浏览器，如Firefox、Chromes、IE、Safari） 
  *  解码下载地址，并显示真实的下载地址，回显原(初)始链接，如迅雷、快车、QQ旋风的加密下载地址
- * 简单成就下载 -|- by Yulei 本脚本只作学习研究参考用，版权所有 不得滥用、商用、它用，后果自负
+ * 本脚本只作学习研究参考用，版权所有 不得滥用、商用、它用，后果自负
  */
