@@ -75,7 +75,7 @@
 // @include     http*://www.l-sj.cc/*
 // @include     http*://htacg.cc/*
 // @include     http*://www.htacg.cc/*
-// @version     3.21.32
+// @version     3.21.33
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -83,7 +83,7 @@
 // @grant       GM_getValue
 // @grant       unsafeWindow
 // @run-at      document-end
-// @require     https://greasyfork.org/scripts/23522/code/od.js?version=169400
+// @require     https://greasyfork.org/scripts/23522/code/od.js?version=169890
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
 // @updateURL   https://greasyfork.org/scripts/23316/code/HacgGodTurn.user.js
@@ -1025,8 +1025,8 @@
         };
         oD_text=document.createElement("input");
         oD_text.type="text";
-        oD_text.style.cssText="width:168px;height:33px;position:relative;margin-top:0px;padding:0px;box-sizing:border-box;z-index:0";
-        oD_text.placeholder="输入hash值或网盘地址";
+        oD_text.style.cssText="width:248px;height:33px;position:relative;margin-top:0px;padding:0px;box-sizing:border-box;z-index:0";
+        oD_text.placeholder="输入hash值、网盘地址或Base64密文";
         oD_text.title='将自动添加"magnet:?xt=urn:btih:"并去除非法字符';
         oD_button=document.createElement("button");
         oD_button.type="button";
@@ -1036,8 +1036,8 @@
             oD_link.textContent=oD_link2.textContent=oD_link3.textContent="";
             var oD_hash=oD_text.value;
             if(oD_hash===""){
-                alert("请输入hash值、网盘或下载地址");
-            }else if(/\b1[0-9a-z]{6,7}/i.test(oD_hash)){
+                alert("请输入hash值、网盘或Base64密文");
+            }else if(/\b1[0-9a-z]{6,7}(\b|$)/i.test(oD_hash)){
                 var panMatch=oD_hash.match(/\b1[0-9a-z]{6,7}/i);
                 var ecode=oD_hash.trim(),url="https://pan.baidu.com/s/"+panMatch;
                 var shortMatch=/\b1[0-9a-z]{6,7}\s*([0-9a-z]{4})\b/i.exec(ecode);
@@ -1054,7 +1054,15 @@
             }else{
                 oD_hash=oD_hash.replace(/(\[.*\])|[\W_]/g,"");
                 if(!regObj.btih.test(oD_hash)){
-                    alert("hash值格式错误");
+                    if(/^[\da-z\/\+\=]+$/i.test(oD_hash)){
+                        try{
+                            GM_setClipboard(CryptoJS.enc.Base64.parse(oD_hash).toString(CryptoJS.enc.Utf8));
+                            alert("Base64解密结果已复制");
+                        }catch(e){
+                            alert(e+" 格式错误");
+                        }
+                    }else
+                        alert("hash值格式错误");
                 }else{
                     oD_link.href="magnet:?xt=urn:btih:"+oD_hash;
                     oD_link.textContent="磁链";
