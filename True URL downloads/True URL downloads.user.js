@@ -9,7 +9,7 @@
 // @description:zh-CN    迅雷、快车、QQ旋风等专有链解密 Decryption and Display the real URL of the download links.(of xunlei,kuaiche,xuanfeng;thunder,flashget,qqdl)
 // @description:zh-TW    迅雷、快車、QQ旋風等專有鏈解密 Decryption and Display the real URL of the download links.(of xunlei,kuaiche,xuanfeng;thunder,flashget,qqdl)
 // @description:ja       True URL downloads, Decryption and Display the real URL of the download links.(of xunlei,kuaiche,xuanfeng;thunder,flashget,qqdl)
-// @version        1.22.05
+// @version        1.22.06
 // @create         2013-01-05
 // @include        http://*
 // @include        https://*
@@ -20,7 +20,7 @@
 // @grant          GM_setClipboard
 // @license        MIT License
 // @require        https://cdn.jsdelivr.net/jquery/1.7.2/jquery.min.js
-// @require        https://greasyfork.org/scripts/26615-managerlinks/code/managerLinks.js?version=169865
+// @require        https://greasyfork.org/scripts/26615-managerlinks/code/managerLinks.js?version=169880
 // @contributionURL https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
 // @contributionAmount 1
 // ==/UserScript==

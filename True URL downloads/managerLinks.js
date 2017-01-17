@@ -46,15 +46,15 @@ function showLinkFrame(callBack) {
 	var typeHtml = "类型：";
 	if (!frame) {
 		frame = $('<div id="managerLinksContent" style="display:none;">
-		<div style="height:100%; width:100%; position:fixed; top:0; z-index:99998; opacity:0.3; filter: alpha(opacity=30); background-color:#000"></div>
-		<div id="managerLinksBody" style="width:300px;height:300px;position:fixed;left:50%;top:50%;margin-top:-150px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;">
+		<div style="height:100%; width:100%; position:fixed; top:0; z-index:99998; opacity:0.3; filter: alpha(opacity=30); background-color:#000;"></div>
+		<div id="managerLinksBody" style="width:300px;height:300px;position:fixed;left:50%;top:50%;margin-top:-150px;margin-left:-150px;z-index:99998;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;">
 			<div id="managerLinksType" style="width:290px;margin-left:5px;"></div>
-			<div><input id="managerLinksSortByName" value="按文件名排序" style="width: 33.3%;" type="button"><input id="managerLinksSortByUrl" value="按网址排序" style="width: 33.3%;" type="button"><input id="managerLinksSortByType" value="按扩展名排序" style="width: 33.3%;" type="button">
+			<div><input id="managerLinksSortByName" value="按文件名排序" style="width: 33.3%;font-size:12px" type="button"><input id="managerLinksSortByUrl" value="按网址排序" style="width: 33.3%;font-size:12px" type="button"><input id="managerLinksSortByType" value="按扩展名排序" style="width: 33.3%;font-size:12px" type="button">
 			</div>
-			<div id="managerLinksLinks" style="width:100%;overflow:auto;word-wrap:break-word;"></div>
-			<div title="%i代表递增 %n代表文件名"><input id="managerLinksPre" style="width: 48%;" type="text" placeholder="批量前缀"><input id="managerLinksAfter" style="width: 48%;" type="text" placeholder="批量后缀">
+			<div id="managerLinksLinks" style="width:100%;overflow:auto;word-wrap:break-word;font-size:12px"></div>
+			<div title="%i代表递增 %n代表文件名"><input id="managerLinksPre" style="width: 48%;font-size:12px" type="text" placeholder="批量前缀"><input id="managerLinksAfter" style="width: 48%;font-size:12px" type="text" placeholder="批量后缀">
 			</div>
-			<div><input id="managerLinksCopyAll" value="全部复制" style="width: 33.3%;" type="button"><input id="managerLinksCopySel" value="复制选中" style="width: 33.3%;" type="button"><input id="managerLinksClose" value="关闭" style="width: 33.3%;" type="button">
+			<div><input id="managerLinksCopyAll" value="全部复制" style="width: 33.3%;font-size:12px" type="button"><input id="managerLinksCopySel" value="复制选中" style="width: 33.3%;font-size:12px" type="button"><input id="managerLinksClose" value="关闭" style="width: 33.3%;font-size:12px" type="button">
 			</div>
 		</div>
 		</div>');
@@ -83,15 +83,23 @@ function showLinkFrame(callBack) {
 		$("#managerLinksCopyAll").click(function() {
 			var pre = $("#managerLinksPre").val();
 			var after = $("#managerLinksAfter").val();
-			callBack(pre + linksArr.join(after + "\n" + pre) + after);
+			var resultStr = "",i=0;
+			linkItems.forEach(function(item) {
+				i++;
+				var linkName=decodeURIComponent(item.linkName);
+				resultStr += (pre.replace(/%i/g,i+"").replace(/%n/g,linkName) + item.href + after.replace(/%i/g,i+"").replace(/%n/g,linkName) + "\n");
+			});
+			callBack(resultStr);
 		});
 		$("#managerLinksCopySel").click(function() {
 			var pre = $("#managerLinksPre").val();
 			var after = $("#managerLinksAfter").val();
-			var resultStr = "";
+			var resultStr = "",i=0;
 			linkItems.forEach(function(item) {
+				i++;
 				if (item.item[0].checked) {
-					resultStr += (pre + item.href + after + "\n");
+					var linkName=decodeURIComponent(item.linkName);
+					resultStr += (pre.replace(/%i/g,i+"").replace(/%n/g,linkName) + item.href + after.replace(/%i/g,i+"").replace(/%n/g,linkName) + "\n");
 				}
 			});
 			callBack(resultStr);
