@@ -8,7 +8,7 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdn.jsdelivr.net/jquery/1.7.2/jquery.min.js
 // @require      https://cdn.jsdelivr.net/hi-base64/0.2.0/base64.min.js
-// @version      1.3.1
+// @version      1.3.2
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -351,7 +351,7 @@
         if(/^magnet/.test(url)){
             newUrl=newUrl.split("&")[0].substring(20);
             if(newUrl.length==32){
-                newUrl="magnet:?xt=urn:btih:" + base32ToHex(newUrl);
+                newUrl="magnet:?xt=urn:btih:" + base32To16(newUrl);
             }else{
                 newUrl=url;
             }
@@ -361,19 +361,22 @@
         return newUrl;
     }
 
-    var b32 = {'a':'00000','b':'00001','c':'00010','d':'00011','e':'00100','f':'00101','g':'00110','h':'00111','i':'01000','j':'01001','k':'01010','l':'01011','m':'01100','n':'01101','o':'01110','p':'01111','q':'10000','r':'10001','s':'10010','t':'10011','u':'10100','v':'10101','w':'10110','x':'10111','y':'11000','z':'11001','2':'11010','3':'11011','4':'11100','5':'11101','6':'11110','7':'11111'};
-    var b16 = {'0000':'0','0001':'1','0010':'2','0011':'3','0100':'4','0101':'5','0110':'6','0111':'7','1000':'8','1001':'9','1010':'a','1011':'b','1100':'c','1101':'d','1110':'e','1111':'f'};
-    function base32ToHex(str){
-        if(str.length % 8 !== 0 || /[0189].test(str)/){
+    function base32To16(str){
+        if(str.length % 8 !== 0 || /[0189]/.test(str)){
             return str;
         }
-        str = str.toLowerCase();
+        str = str.toUpperCase();
         var bin =  "", returnStr = "", i;
         for(i = 0;i < str.length;i++){
-            bin += b32[str.substring(i,i+1)];
+            var charCode=str.charCodeAt(i);
+            if(charCode<65)charCode-=24;
+            else charCode-=65;
+            charCode='0000'+charCode.toString(2);
+            charCode=charCode.substr(charCode.length-5);
+            bin+=charCode;
         }
         for(i = 0;i < bin.length;i+=4){
-            returnStr += b16[bin.substring(i,i+4)];
+            returnStr += parseInt(bin.substring(i,i+4),2).toString(16);
         }
         return returnStr;
     }
@@ -574,10 +577,10 @@
                 if (document.readyState == 'complete') {
                     clearInterval(rsc);
                     setTimeout(function() {
-                        Core['OFFL5Plug'].OpenLink();
+                        unsafeWindow.Core.OFFL5Plug.OpenLink();
                         setTimeout(function() {
                             $('#js_offline_new_add').val(curlink);
-                        }, 300);
+                        }, 1);
                     }, 1000);
                 }
             }, 300);
