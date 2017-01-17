@@ -214,7 +214,6 @@
         offNode.click(function(e){
             if(!siteConfig.directUrl)GM_setValue("eoUrl",getRightUrl(offUrl));
             e.stopPropagation();
-            hideIcons();
         });
         if(siteConfig.bgImg)offNode.css("background-image","url(\""+siteConfig.bgImg+"\")");
         if(siteConfig.hide || GM_getValue("eoHide"+siteConfig.name))continue;
