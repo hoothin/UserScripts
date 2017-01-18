@@ -75,7 +75,7 @@
 // @include     http*://www.l-sj.cc/*
 // @include     http*://htacg.cc/*
 // @include     http*://www.htacg.cc/*
-// @version     3.21.33
+// @version     3.21.35
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -214,15 +214,6 @@
                 regex:/galacg\./,
                 hideOd:true,
                 articleSel:"div.article"
-            },
-            {
-                name:"梦幻二次元",
-                url:"http://www.mhecy.com/",
-                regex:/mhecy\./,
-                downloadUrl:/www\.mhecy\.com\/\?page_id=\d+/,
-                hideOd:true,
-                offset:55,
-                articleSel:"section.card"
             },
             {
                 name:"樱花漫舍",
@@ -366,6 +357,15 @@
                 regex:/acgpy\.com/,
                 offset:45,
                 hideOd:true
+            },
+            {
+                name:"梦幻二次元",
+                url:"http://www.mhecy.com/",
+                regex:/mhecy\./,
+                downloadUrl:/www\.mhecy\.com\/\?page_id=\d+/,
+                hideOd:true,
+                offset:55,
+                articleSel:"section.card"
             }
         ],
         rocketReg:/magnet:\?xt|pan\.baidu\.com\/s|yunpan\.cn|howfile\.com\/file|mega\.|ed2k:\/\/\|file|bt\.cosxcos\.com\/view|du\.acgget\.com\/go\/|\.mediafire\.com\/download\/|\.torrent$/,
@@ -573,6 +573,7 @@
                         var articleTitle=document.querySelector(".entry-title");
                         if(articleTitle){
                             articleTitle.innerHTML="<font color='red' title='！\u53cd\u9e21\u590d\u5976！'>\u2642\u8def\u897f\u6cd5\u2642</font> "+articleTitle.innerHTML;
+                            document.title = document.title.replace(/\u7409\u7483\u795e\u793e/,"\u5927\u5c4c\u795e\u793e");
                         }
                         break;
                     }
@@ -1332,27 +1333,22 @@
                 window.open("https://sleazyfork.org/scripts/23316#additional-info");
             }
         };
-        var context = new AudioContext();
+        var audioContext = new AudioContext();
         function playSound(buffer) {
-            var source = context.createBufferSource();
+            var source = audioContext.createBufferSource();
             source.buffer = buffer;
-            source.connect(context.destination);
+            source.connect(audioContext.destination);
             source.start(0);
         }
-        var ttss=["有家，有爱，有欧派","未被穿过的胖次是没有价值的","巨乳只有下垂的未来","男人变态有什么错","为什么你会这么熟练啊","德国的科学技术是世界第一","在虚构的故事当中寻求真实感的人脑袋一定有问题"," 胸部什么的，明明只是装饰","勇士喜欢巨乳有什么错","哥哥让开！这样我杀不了那家伙","我们的宇宙充满了质子,中子,电子,还有奶子","有个能干的妹妹真好","玄不救非，氪不改命","只要可爱就算是男孩子也没关系","道歉時露出胸部是常識","我就是叫紫妈怎么了 有本事突然从我背后出现 把我的脸按在键盘上aqswdectfrvtghunijopioijohnuygbyfvtcdesxwedrfvtbguyhiumjiuyvftrssexrybtgnyuhm","反基复奶"];
+        var ttss=["有家，有爱，有欧派","未被穿过的胖次是没有价值的","巨乳只有下垂的未来","男人变态有什么错","为什么你会这么熟练啊","德国的科学技术是世界第一","在虚构的故事当中寻求真实感的人脑袋一定有问题"," 胸部什么的，明明只是装饰","勇士喜欢巨乳有什么错","哥哥让开！这样我杀不了那家伙","我们的宇宙充满了质子,中子,电子,还有奶子","有个能干的妹妹真好","只要可爱就算是男孩子也没关系","道歉時露出胸部是常識","我就是叫紫妈怎么了 有本事突然从我背后出现 把我的脸按在键盘上aqswdectfrvtghunijopioijohnuygbyfvtcdesxwedrfvtbguyhiumjiuyvftrssexrybtgnyuhm","反基复奶"];
         var ttsRand=Math.floor(Math.random()*ttss.length);
         var tts=ttss[ttsRand];
-        var soundUrl = "http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=5&text="+tts;//`http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=5&text=${tts}`;
+        var sUrl = "http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=5&text="+tts;//`http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=5&text=${tts}`;
         var p = new Promise(function(resolve, reject) {
-            var ret = GM_xmlhttpRequest({
-                method: "GET",
-                url: soundUrl,
-                responseType: 'arraybuffer',
+            var ret = GM_xmlhttpRequest({method: "GET",url: sUrl,responseType: 'arraybuffer',
                 onload: function(res) {
                     try {
-                        context.decodeAudioData(res.response, function(buffer) {
-                            resolve(buffer);
-                        });
+                        audioContext.decodeAudioData(res.response, function(buffer) {resolve(buffer);});
                     } catch(e) {
                         reject(e);
                     }
@@ -1361,7 +1357,7 @@
         });
         if(!GM_getValue("hazukashii")){
             p.then(playSound, function(e) {
-                console.log(e);
+                console.error(e);
             });
         }
         var command=[72,65,90,85,75,65,83,72,73,73],index=0;//"hazukashii"
