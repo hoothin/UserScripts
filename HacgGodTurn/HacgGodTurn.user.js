@@ -75,7 +75,7 @@
 // @include     http*://www.l-sj.cc/*
 // @include     http*://htacg.cc/*
 // @include     http*://www.htacg.cc/*
-// @version     3.21.35
+// @version     3.21.36
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -541,20 +541,6 @@
                         header.innerHTML+="</br> <a href=\"#"+commId+"\">\u2605\u0020\u76f4\u8fbe\u8865\u6863\u59ec\u0020\u2605<\/a>";
                     }
                 }
-                if(unsafeWindow.quote){
-                    var msg = "…" + unsafeWindow.quote + "…",pos = 0;
-                    function scrollMsg() {
-                        document.title = msg.substring(pos, msg.length) + msg.substring(0, pos);
-                        pos++;
-                        if (pos >  msg.length) {
-                            pos = 0;
-                            document.title = originTitile;
-                        }else{
-                            setTimeout(scrollMsg,250);
-                        }
-                    }
-                    scrollMsg();
-                }
                 if(isHttps){
                     changeUrl(true,[["iframe"],[['http:','https:']]]);
                     changeUrl(true,[["object"],[['http:','https:']]]);
@@ -573,7 +559,7 @@
                         var articleTitle=document.querySelector(".entry-title");
                         if(articleTitle){
                             articleTitle.innerHTML="<font color='red' title='！\u53cd\u9e21\u590d\u5976！'>\u2642\u8def\u897f\u6cd5\u2642</font> "+articleTitle.innerHTML;
-                            document.title = document.title.replace(/\u7409\u7483\u795e\u793e/,"\u5927\u5c4c\u795e\u793e");
+                            originTitile = document.title = document.title.replace(/\u7409\u7483\u795e\u793e/,"\u5927\u5c4c\u795e\u793e");
                         }
                         break;
                     }
@@ -587,9 +573,22 @@
                         },1);
                     };
                 }
+                if(unsafeWindow.quote){
+                    var msg = "…" + unsafeWindow.quote + "…",pos = 0;
+                    function scrollMsg() {
+                        document.title = msg.substring(pos, msg.length) + msg.substring(0, pos);
+                        pos++;
+                        if (pos >  msg.length) {
+                            pos = 0;
+                            document.title = originTitile;
+                        }else{
+                            setTimeout(scrollMsg,250);
+                        }
+                    }
+                    scrollMsg();
+                }
                 break;
             case "萌心次元":
-                //if(isHttps)addInsertHandler([["body","a","img","link","script"],[['p:(\\\/\\\/|\\\\\\/\\\\\\/)(www\\\.)?moxacg','ps:$1$2moxacg']]]);
                 break;
             case "次元轨迹":
                 if(isHttps){
