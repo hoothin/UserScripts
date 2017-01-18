@@ -8,7 +8,7 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdn.jsdelivr.net/jquery/1.7.2/jquery.min.js
 // @require      https://cdn.jsdelivr.net/hi-base64/0.2.0/base64.min.js
-// @version      1.3.5
+// @version      1.3.6
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -38,6 +38,7 @@
             regex:/pan\.baidu\.com/,
             url:"https://pan.baidu.com/disk/home",
             bgColor:"ffffff",
+            canMul:true,
             bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAABjFBMVEX////7+/v+/v/8/Pwyf/wzc/w0bvza5f4xffz5+//0+P8ybPz8/f4yevw0cPwza/z39/cwe/UxdfzSPyr4+v/2+f/m7/53nv0vf/wvce9pof1tlPwxf/gzfPYwePPp8f7Z5/7S4v7P4P7L3f7I2f2Gtf2Rr/1hkP0yd/1FiPwygfxAdPxspftYkvUtc/Dg6f7C2f7F1f54oP1flf0/hfwsbu7i7f/w9f7b5v7X5f7V4v6nyv6oxv6jwP6Ns/2Lsf1/rv1+ov1zof1xof10nf1jm/1djP0xe/2NufxalvxHj/xPhvxKgPxHffw+efw0ePyXu/mqxPg5hfiTtvdyo/dgmfdOj/dBhfVflfQvefT+9fOIqvMyefNMhvFIgO9MeePyycVjZbzKb3DaZVa/Q0Dx9f+Bp/1olv1gkPw0dvzg6Pu2zPk0gflNjPctc/c9gfX88/JJfO3n3+ni2unHxuSGktNpdtBJY8paashRW71nXqp7YpyDYJKpaIKPU33AVFXARkTVTTvFQjrUPypKwHq1AAACAklEQVQ4y4WTB3OqQBSFF3BpAk+KIBixJ2rs0fTee68vvbzee+9//O1Cio46npmFPfd8d2cY9gIASMJHUESDKFQmAZJAUKCFKELA/WSr3A3d/tZnAF99C8fVHYhiosbxxflsdr7I15SIWiCe3exA2szGmwOJXTkUkvHaTTQD9NyBLO/t7OzJ8kFObwKs2/bRdrSvL7p9ZNvrjQC/n8/nwngXzuXz+3wDED42zS13u2Wax+EGQD+pmhvudsOsnuj1gBAZSp5+/XRIYkMeVu1XyaGIcAfoycVM4Pn3qx9vcW3gRUcmE8gsJvUboNfyeDyBwLd/6sX7wtNnC45DD6vXBbRx1sOmrQ+/VFX9efomhFzFstLoNa45QKzCijMx/vXZpar+/fKSZecWijwfmxHZSgzFFBgWxXQUIJ39UX9/nhPFngHsomlRHEYxRY6mlCkOl+5fXp2vraV6IgCLm1JSoyQGxhRlUnCAi/PUEwXnWMKkooxhAIxAuNSPS+8+Qgi7GOB3zutfgnAExQSIr0JoMJw2GJSghPLSo4eDGscYEK7Gna/gy7QkLRvTK5JEP2bAgy4vvTJtLCNX5h0AMLNemvbihfqBv3zjZpHDACKM7ntI3RMFgFSYcJ3B3P0sf6kzGOxM+AFwXAK7kuNurz2pcWTt7deuna/t4LQdvbbD23b8/wPY0UTO99dD5gAAAABJRU5ErkJggg==",
             offFunc:function(){
                 document.querySelector('.g-button[data-button-id=b13]').click();
@@ -50,7 +51,7 @@
                             var offLink=document.querySelector('#share-offline-link');
                             if(offLink){
                                 clearInterval(bsl);
-                                (function(){
+                                var beginOffline=function(){
                                     if(curlink.length===0)return;
                                     if(Object.prototype.toString.call(curlink) === '[object Array]')
                                         offLink.value = curlink.shift();
@@ -74,11 +75,11 @@
                                                 clearInterval(bsb);
                                             }
                                         }, 200);
-                                    (function(){
+                                    var ckeckEnd=function(){
                                         var bck=setInterval(function(){
                                             if(document.querySelector("#offlinelist-dialog").style.display!="none"){
                                                 clearInterval(bck);
-                                                arguments.caller();
+                                                beginOffline();
                                             }else if(document.querySelector("#dialog1").style.display!="none"){
                                                 clearInterval(bck);
                                                 var inputCode=$("#dialog1").find(".input-code");
@@ -87,13 +88,13 @@
                                                     if(inputCode.val().length==4){
                                                         clearInterval(bck);
                                                         $("#dialog1").find("span:contains('确定')[class='text']").click();
-                                                        arguments.callee();
+                                                        ckeckEnd();
                                                     }
                                                 },200);
                                             }
                                         },500);
-                                    })();
-                                })();
+                                    };ckeckEnd();
+                                };beginOffline();
                             }
                         }, 500);
                     }
@@ -327,14 +328,18 @@
         }
     }
     var offNodes=[];
-    var offUrl;
+    var offUrl,allUrl=[];
     for(var x = 0; x < sitesArr.length; x++){
         let offNode=$("<a></a>");
         offNode.addClass('whx-a').css("position","absolute").css("margin-top","0px").css("margin-left","0px").attr("target","_blank");
         let siteConfig=sitesArr[x];
         offNode.css("background-color","#"+siteConfig.bgColor).attr("title",i18n[siteConfig.name] ).attr("href", siteConfig.url).attr("name", siteConfig.name);
         offNode.click(function(e){
-            if(!siteConfig.directUrl)GM_setValue("eoUrl",getRightUrl(offUrl));
+            if(!siteConfig.directUrl){
+                if(e.ctrlKey && e.shiftKey && siteConfig.canMul)
+                    GM_setValue("eoUrl",allUrl);
+                else GM_setValue("eoUrl",getRightUrl(offUrl));
+            }
             e.stopPropagation();
         });
         if(siteConfig.bgImg)offNode.css("background-image","url(\""+siteConfig.bgImg+"\")");
@@ -425,7 +430,9 @@
                 for (i = 0; i < listLen; i++) {
                     curNode = nodes[i];
                     if(curNode.classList.contains("whx-a"))continue;
-                    let clone=$("<a></a>").attr("style",curNode.getAttribute("style")).attr("href",curNode.getAttribute("href")).addClass('whx-a').css("background-color","#e1e1e1").css("background-image",'url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAMAAADzN3VRAAAARVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADc6ur3AAAAFnRSTlMAYM5vMOA/ENGegK2olI6G1b97Z0sXENA+jAAAAKFJREFUKM+FklkSxCAIRHFfss3K/Y86iQSDVqzpH7FfgQpCVfAmGx+gl9JI0qrxrcNLzooEbKUG4EKWdkCiDRV0N0RTrZ5wvdgTTgp4SzCAHxAPZkAM5GOJWuuT7FE5OVPOBFLTYb3Oc2YB5uJ8+G6pgkTGt74ntcCJHiwFLHw10Tdc93jlGXGvSRtsHNpuPs+/o1ODfxAtSL0f7HPC+L/9AF60G3QxO1UaAAAAAElFTkSuQmCC")');
+                    let href=curNode.getAttribute("href"),rUrl=getRightUrl(href);
+                    let clone=$("<a></a>").attr("style",curNode.getAttribute("style")).attr("href",href).addClass('whx-a').css("background-color","#e1e1e1").css("background-image",'url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAMAAADzN3VRAAAARVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADc6ur3AAAAFnRSTlMAYM5vMOA/ENGegK2olI6G1b97Z0sXENA+jAAAAKFJREFUKM+FklkSxCAIRHFfss3K/Y86iQSDVqzpH7FfgQpCVfAmGx+gl9JI0qrxrcNLzooEbKUG4EKWdkCiDRV0N0RTrZ5wvdgTTgp4SzCAHxAPZkAM5GOJWuuT7FE5OVPOBFLTYb3Oc2YB5uJ8+G6pgkTGt74ntcCJHiwFLHw10Tdc93jlGXGvSRtsHNpuPs+/o1ODfxAtSL0f7HPC+L/9AF60G3QxO1UaAAAAAElFTkSuQmCC")');
+                    if(allUrl.toString().indexOf(rUrl)==-1)allUrl.push(rUrl);
                     clone.mouseover(function(e){
                         offUrl=clone[0].href;
                         parentDiv.css("display","block");
