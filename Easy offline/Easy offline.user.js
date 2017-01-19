@@ -8,7 +8,7 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdn.jsdelivr.net/jquery/1.7.2/jquery.min.js
 // @require      https://cdn.jsdelivr.net/hi-base64/0.2.0/base64.min.js
-// @version      1.3.7
+// @version      1.3.8
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -371,6 +371,16 @@
         });
     }
 
+    var sNodes=[];
+    if(!Array.prototype.indexOf)
+        Array.prototype.indexOf = function(e){
+            for(var i=0;i<this.length;i++){
+                if(e===this[i]){
+                    return i;
+                }
+            }
+            return -1;
+        };
     function getAllEnableUrl(target) {
         if(GM_getValue('eoDisable_'+document.domain))return;
         var rawnodes=(target?$(target).find(enableUrl):$(enableUrl)).get(),customnodes=[];
@@ -430,6 +440,10 @@
                 for (i = 0; i < listLen; i++) {
                     curNode = nodes[i];
                     if(curNode.classList.contains("whx-a"))continue;
+                    if(target){
+                        if(sNodes.indexOf(curNode)!=-1)continue;
+                        sNodes.push(curNode);
+                    }
                     let href=curNode.href,rUrl=getRightUrl(href);
                     let clone=$("<a></a>").attr("style",curNode.getAttribute("style")).attr("href",href).addClass('whx-a').css("background-color","#e1e1e1").css("background-image",'url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAMAAADzN3VRAAAARVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADc6ur3AAAAFnRSTlMAYM5vMOA/ENGegK2olI6G1b97Z0sXENA+jAAAAKFJREFUKM+FklkSxCAIRHFfss3K/Y86iQSDVqzpH7FfgQpCVfAmGx+gl9JI0qrxrcNLzooEbKUG4EKWdkCiDRV0N0RTrZ5wvdgTTgp4SzCAHxAPZkAM5GOJWuuT7FE5OVPOBFLTYb3Oc2YB5uJ8+G6pgkTGt74ntcCJHiwFLHw10Tdc93jlGXGvSRtsHNpuPs+/o1ODfxAtSL0f7HPC+L/9AF60G3QxO1UaAAAAAElFTkSuQmCC")');
                     if(allUrl.toString().indexOf(rUrl)==-1)allUrl.push(rUrl);
@@ -529,10 +543,11 @@
     }else if(location.href.indexOf("github.com/hoothin/UserScripts/tree/master/Easy%20offline") != -1){
         setting();
     }else if(!isDisk){
+        getAllEnableUrl();
         var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
         var observer = new MutationObserver(function(records){
             records.map(function(record) {
-                if(record.addedNodes)setTimeout(function(){getAllEnableUrl(record.addedNodes);},501);
+                if(record.addedNodes.length)setTimeout(function(){getAllEnableUrl(record.addedNodes);},501);
             });
         });
         var option = {
@@ -540,7 +555,6 @@
             'subtree': true
         };
         observer.observe(document.body, option);
-        getAllEnableUrl();
     }
 
     function setting(){
