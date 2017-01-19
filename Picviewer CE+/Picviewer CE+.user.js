@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2017.1.13.1
+// @version        2017.1.19.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -41,7 +41,7 @@
         // 默认设置，请到设置界面修改
         var prefs={
             floatBar:{//浮动工具栏相关设置.
-                butonOrder:['actual','current','magnifier','gallery','search'],//按钮排列顺序'actual'(实际的图片),'current'(当前显示的图片),'magnifier'(放大镜观察),'gallery'(图集)
+                butonOrder:['actual','gallery','magnifier','current','search'],//按钮排列顺序'actual'(实际的图片),'current'(当前显示的图片),'magnifier'(放大镜观察),'gallery'(图集)
                 showDelay:366,//浮动工具栏显示延时.单位(毫秒)
                 hideDelay:566,//浮动工具栏隐藏延时.单位(毫秒)
                 position:'top left',// 取值为: 'top left'(图片左上角) 或者 'top right'(图片右上角) 'bottom right'(图片右下角) 'bottom left'(图片左下角);
@@ -3006,7 +3006,7 @@ padding-left:24px;">'+shareItem.name+'</span>');
 
                 var scaled='100%';
 
-                if(this.fitContains){//适应屏幕
+                if(this.fitContains && !(scale && scale.x==0 && scale.y==0 && this.imgNaturalSize.h/this.imgNaturalSize.w > 2.5)){//适应屏幕
                     this.imgScrollbarV.hide();
                     this.imgScrollbarH.hide();
                     if(larger){
@@ -5357,22 +5357,23 @@ background-color:rgba(255, 0, 0, 0.150);\
                 imgWindow.style.left=-5 + scrolled.x + 'px';
                 imgWindow.style.top=-5 + scrolled.y + 'px';
 
-                //window的尺寸
-                var wSize=getWindowSize();
-                //空隙
-                wSize.h -= 16;
-                wSize.w -= 16;
-
-                var imgWindowCS=unsafeWindow.getComputedStyle(imgWindow);
-
-                var rectSize={
-                    h:parseFloat(imgWindowCS.height),
-                    w:parseFloat(imgWindowCS.width),
-                };
-                if(prefs.imgWindow.fitToScreen && !(rectSize.h/rectSize.w > 2.5 && rectSize.h > wSize.h)){
+                if(prefs.imgWindow.fitToScreen){
                     this.fitToScreen();
                     this.center(true,true);
                 }else{
+                    //window的尺寸
+                    var wSize=getWindowSize();
+                    //空隙
+                    wSize.h -= 16;
+                    wSize.w -= 16;
+
+                    var imgWindowCS=unsafeWindow.getComputedStyle(imgWindow);
+
+                    var rectSize={
+                        h:parseFloat(imgWindowCS.height),
+                        w:parseFloat(imgWindowCS.width),
+                    };
+
                     this.center(rectSize.w <= wSize.w , rectSize.h <= wSize.h);
                 };
 
