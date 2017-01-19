@@ -4,7 +4,7 @@
 // @name:ja      简繁
 // @name:en      Switch Traditional Chinese and Simplified Chinese
 // @namespace    hoothin
-// @version      0.7
+// @version      1.0
 // @description        任意轉換網頁中的簡體中文與繁體中文（默認簡體→繁體）
 // @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体）
 // @description:ja     简繁中国語に変換
@@ -128,7 +128,24 @@
     var saveAction=GM_getValue("action" + location.hostname.toString().replace(/\./g,""));
     action=saveAction?saveAction:(isSimple?2:3);
     if(auto && action > 1){
-        setTimeout(stranBody,50);
+        setTimeout(function(){
+            stranBody();
+            var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+            var observer = new MutationObserver(function(records){
+                records.map(function(record) {
+                    if(record.addedNodes){
+                        [].forEach.call(record.addedNodes,function(item){
+                            stranBody(item);
+                        });
+                    }
+                });
+            });
+            var option = {
+                'childList': true,
+                'subtree': true
+            };
+            observer.observe(document.body, option);
+        },50);
     }
 
     var curLang=isSimple;
