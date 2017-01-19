@@ -3,7 +3,7 @@ managerLinks v0.1
 https://github.com/hoothin/UserScripts/tree/master/True%20URL%20downloads/managerLinks.js
 (c) 2017-2017 by Hoothin Wang. All rights reserved.
 */
-var resReg = /.*(^magnet|^ed2k|\.torrent$|\.mp4$|\.rar$|\.7z$|\.zip$|\.rmvb$|\.mkv$|\.avi$|\.iso$|\.mp3$|\.txt$|\.exe$|\.chm$|\.pdf$|\.ppt$|\.doc$|\.pptx$|\.docx$|\.epub$|\.xlsx$|\.xls$|\.flac$|\.wma$|\.wav$|\.aac$|\.ape$|\.mid$|\.ogg$|\.m4a$|\.dts$|\.dsd$|\.apk$).*/i,
+var resReg = /.*(^magnet|^ed2k|\.torrent$|\.mp4$|\.rar$|\.7z$|\.zip$|\.rmvb$|\.mkv$|\.avi$|\.iso$|\.mp3$|\.txt$|\.exe$|\.chm$|\.pdf$|\.ppt$|\.doc$|\.pptx$|\.docx$|\.epub$|\.xlsx$|\.xls$|\.flac$|\.wma$|\.wav$|\.aac$|\.ape$|\.mid$|\.ogg$|\.m4a$|\.dts$|\.dsd$|\.apk$|\.flv$).*/i,
 	linksArr = [],
 	frame;
 var by = function(byName, secName) {
@@ -33,10 +33,14 @@ var by = function(byName, secName) {
 }
 
 function getLinks() {
-	var links = document.querySelectorAll('a');
 	[].forEach.call(document.querySelectorAll('a'), function(link){
-		if (resReg.test(link.href) && linksArr.toString().indexOf(link.href) == -1) {
+		if (link.className!="whx-a" && resReg.test(link.href) && linksArr.toString().indexOf(link.href) == -1) {
 			linksArr.push(link.href);
+		}
+	});
+	[].forEach.call(document.querySelectorAll('source'), function(link){
+		if (resReg.test(link.src) && linksArr.toString().indexOf(link.src) == -1) {
+			linksArr.push(link.src);
 		}
 	});
 }
@@ -47,16 +51,17 @@ function showLinkFrame(callBack,allBtn,selBtn) {
 	if(!allBtn)allBtn="全部复制";
 	if(!selBtn)selBtn="复制选中";
 	if (!frame) {
+		$('<style>#managerLinksContent input{border-width:2px;border-style:outset;border-color:buttonface;border-image:initial;font-size:12px}#managerLinksBody>.sort>input{width:33.3%}#managerLinksBody>.addTxt>input{width: 48%;}#managerLinksBody>.fun>input{width: 33.3%;}#managerLinksLinks>div{width:100%;height:20px;overflow:hidden}</style>').appendTo('head');
 		frame = $('<div id="managerLinksContent" style="display:none;">
 		<div style="height:100%; width:100%; position:fixed; top:0; z-index:99998; opacity:0.3; filter: alpha(opacity=30); background-color:#000;"></div>
 		<div id="managerLinksBody" style="width:300px;height:300px;position:fixed;left:50%;top:50%;margin-top:-150px;margin-left:-150px;z-index:99998;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;">
 			<div id="managerLinksType" style="width:290px;margin-left:5px;"></div>
-			<div><input id="managerLinksSortByName" value="按文件名排序" style="width: 33.3%;font-size:12px" type="button"><input id="managerLinksSortByUrl" value="按网址排序" style="width: 33.3%;font-size:12px" type="button"><input id="managerLinksSortByType" value="按扩展名排序" style="width: 33.3%;font-size:12px" type="button">
+			<div class="sort"><input id="managerLinksSortByName" value="按文件名排序" type="button"><input id="managerLinksSortByUrl" value="按网址排序" type="button"><input id="managerLinksSortByType" value="按扩展名排序" type="button">
 			</div>
-			<div id="managerLinksLinks" style="width:100%;overflow:auto;word-wrap:break-word;font-size:12px"></div>
-			<div title="%i代表递增 %n代表文件名"><input id="managerLinksPre" style="width: 48%;font-size:12px" type="text" placeholder="批量前缀"><input id="managerLinksAfter" style="width: 48%;font-size:12px" type="text" placeholder="批量后缀">
+			<div id="managerLinksLinks" style="width:100%;overflow:auto;word-wrap:break-word;"></div>
+			<div title="%i代表递增 %n代表文件名" class="addTxt"><input id="managerLinksPre" type="text" placeholder="批量前缀"><input id="managerLinksAfter" type="text" placeholder="批量后缀">
 			</div>
-			<div><input id="managerLinksCopyAll" value="'+allBtn+'" style="width: 33.3%;font-size:12px" type="button"><input id="managerLinksCopySel" value="'+selBtn+'" style="width: 33.3%;font-size:12px" type="button"><input id="managerLinksClose" value="关闭" style="width: 33.3%;font-size:12px" type="button">
+			<div class="fun"><input id="managerLinksCopyAll" value="'+allBtn+'" type="button"><input id="managerLinksCopySel" value="'+selBtn+'" type="button"><input id="managerLinksClose" value="关闭" type="button">
 			</div>
 		</div>
 		</div>');
@@ -99,11 +104,12 @@ function showLinkFrame(callBack,allBtn,selBtn) {
 			var resultStr = "",i=0;
 			linkItems.forEach(function(item) {
 				i++;
-				if (item.item[0].checked) {
+				if (item.item.children("input")[0].checked) {
 					var linkName=decodeURIComponent(item.linkName);
 					resultStr += (pre.replace(/%i/g,i+"").replace(/%n/g,linkName) + item.href + after.replace(/%i/g,i+"").replace(/%n/g,linkName) + "\n");
 				}
 			});
+			if(resultStr!="")
 			callBack(resultStr);
 		});
 		$("#managerLinksClose").click(function() {
@@ -125,7 +131,7 @@ function showLinkFrame(callBack,allBtn,selBtn) {
 		if (typeHtml.indexOf(type) == -1) {
 			typeHtml += '<a href="javascript:void(0);">' + type + "</a> ";
 		}
-		var linkItem = $('<input type="checkbox" style="float:left;"/><a href="' + link + '" style="width:230px;display:block;overflow:hidden;word-break:keep-all;white-space:nowrap;text-overflow:ellipsis;float:left">' + decodeURIComponent(linkName) + '</a><br>');
+		var linkItem = $('<div><input type="checkbox" style="float:left;"/><a href="' + link + '" style="width:230px;display:block;overflow:hidden;word-break:keep-all;white-space:nowrap;text-overflow:ellipsis;float:left">' + decodeURIComponent(linkName) + '</a></div>');
 		$("#managerLinksLinks").append(linkItem);
 		linkItems.push({
 			item: linkItem,
@@ -141,7 +147,7 @@ function showLinkFrame(callBack,allBtn,selBtn) {
 		var type = this.innerHTML;
 		linkItems.forEach(function(item) {
 			if (item.type == type) {
-				item.item[0].checked = !selected;
+				item.item.children("input")[0].checked = !selected;
 			}
 		});
 	});
