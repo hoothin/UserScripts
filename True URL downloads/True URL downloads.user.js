@@ -9,7 +9,7 @@
 // @description:zh-CN    迅雷、快车、QQ旋风等专有链解密 Decryption and Display the real URL of the download links.(of xunlei,kuaiche,xuanfeng;thunder,flashget,qqdl)
 // @description:zh-TW    迅雷、快車、QQ旋風等專有鏈解密 Decryption and Display the real URL of the download links.(of xunlei,kuaiche,xuanfeng;thunder,flashget,qqdl)
 // @description:ja       True URL downloads, Decryption and Display the real URL of the download links.(of xunlei,kuaiche,xuanfeng;thunder,flashget,qqdl)
-// @version        1.22.06
+// @version        1.22.07
 // @create         2013-01-05
 // @include        http://*
 // @include        https://*
@@ -20,12 +20,13 @@
 // @grant          GM_setClipboard
 // @license        MIT License
 // @require        https://cdn.jsdelivr.net/jquery/1.7.2/jquery.min.js
-// @require        https://greasyfork.org/scripts/26615-managerlinks/code/managerLinks.js?version=169880
+// @require        https://greasyfork.org/scripts/26615-managerlinks/code/managerLinks.js?version=170255
 // @contributionURL https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
 // @contributionAmount 1
 // ==/UserScript==
 
 (function() {
+    'use strict';
     function Yu() {
         decode64 = (window.atob) ? atob : decode64;
         var Rstr = /^\s*(?:thunder|flashget|qqdl|fs2you):\/\/([^'"\s]*)/i,
@@ -120,9 +121,9 @@
             }
             for (var i = 0, k = link.length; i < k; i++) {
                 if (/\w+href/i.test(link[i].outerHTML)) { //枚举所有专用链属性
-                    var lion = link[i].getAttribute("oncontextmenu");
+                    var lion = link[i].getAttribute("oncontextmenu"),attr;
                     if (/\w+href=/i.test(link[i].outerHTML)) {
-                        var attr = link[i].outerHTML.match(/\w+href=/i).toString().replace(/=/, '');
+                        attr = link[i].outerHTML.match(/\w+href=/i).toString().replace(/=/, '');
                         link[i].href = link[i].getAttribute(attr);
                         link[i].removeAttribute(attr);
                         Decryption(link[i]);
@@ -131,13 +132,13 @@
                             link[i].oncontextmenu();
                         }catch(e){
                         }
+                        attr = link[i].outerHTML.match(/\w+href=/i).toString().replace(/=/, '');
+                        if(attr)link[i].removeAttribute(attr);
                         Decryption(link[i]);
                     } //枚举失败后再侦听处理，如网页上有错误
                     link[i].removeAttribute("oncontextmenu");
                     link[i].removeAttribute("onclick");
                 } else {
-                    //link[i].removeEventListener("mouseover", decThis, false);
-                    //link[i].addEventListener("mouseover", decThis, false);
                     Decryption(link[i]);
                 }
             }
@@ -302,7 +303,7 @@
 
 //ADD Bookmark:javascript:(function(){ var link=document.getElementsByTagName('a');for (var i=0,k=link.length; i<k; i++){if(/\w+href=/i.test(link[i].outerHTML)){link[i].href=link[i].getAttribute(link[i].outerHTML.match(/\w+href=/i).toString().replace(/=/,''));link[i].removeAttribute("onclick");}else if(/\w+href/i.test(link[i].outerHTML)){link[i].oncontextmenu();link[i].removeAttribute("onclick");}} void('Yulei');})();
 
-/* （支持：Opera12；及所有浏览器，如Firefox、Chromes、IE、Safari） 
+/* （支持：Opera12；及所有浏览器，如Firefox、Chromes、IE、Safari）
  *  解码下载地址，并显示真实的下载地址，回显原(初)始链接，如迅雷、快车、QQ旋风的加密下载地址
- * 本脚本只作学习研究参考用，版权所有 不得滥用、商用、它用，后果自负
+ *  本脚本只作学习研究参考用，版权所有 不得滥用、商用、它用，后果自负
  */

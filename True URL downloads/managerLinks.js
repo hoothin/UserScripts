@@ -41,9 +41,11 @@ function getLinks() {
 	});
 }
 
-function showLinkFrame(callBack) {
+function showLinkFrame(callBack,allBtn,selBtn) {
 	var linkItems = [];
 	var typeHtml = "类型：";
+	if(!allBtn)allBtn="全部复制";
+	if(!selBtn)selBtn="复制选中";
 	if (!frame) {
 		frame = $('<div id="managerLinksContent" style="display:none;">
 		<div style="height:100%; width:100%; position:fixed; top:0; z-index:99998; opacity:0.3; filter: alpha(opacity=30); background-color:#000;"></div>
@@ -54,7 +56,7 @@ function showLinkFrame(callBack) {
 			<div id="managerLinksLinks" style="width:100%;overflow:auto;word-wrap:break-word;font-size:12px"></div>
 			<div title="%i代表递增 %n代表文件名"><input id="managerLinksPre" style="width: 48%;font-size:12px" type="text" placeholder="批量前缀"><input id="managerLinksAfter" style="width: 48%;font-size:12px" type="text" placeholder="批量后缀">
 			</div>
-			<div><input id="managerLinksCopyAll" value="全部复制" style="width: 33.3%;font-size:12px" type="button"><input id="managerLinksCopySel" value="复制选中" style="width: 33.3%;font-size:12px" type="button"><input id="managerLinksClose" value="关闭" style="width: 33.3%;font-size:12px" type="button">
+			<div><input id="managerLinksCopyAll" value="'+allBtn+'" style="width: 33.3%;font-size:12px" type="button"><input id="managerLinksCopySel" value="'+selBtn+'" style="width: 33.3%;font-size:12px" type="button"><input id="managerLinksClose" value="关闭" style="width: 33.3%;font-size:12px" type="button">
 			</div>
 		</div>
 		</div>');
