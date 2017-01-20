@@ -8,7 +8,7 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdn.jsdelivr.net/jquery/1.7.2/jquery.min.js
 // @require      https://cdn.jsdelivr.net/hi-base64/0.2.0/base64.min.js
-// @version      1.3.8
+// @version      1.3.10
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -338,7 +338,7 @@
             if(!siteConfig.directUrl){
                 if(e.ctrlKey && e.shiftKey && siteConfig.canMul)
                     GM_setValue("eoUrl",allUrl);
-                else GM_setValue("eoUrl",getRightUrl(offUrl));
+                else GM_setValue("eoUrl",offUrl);
             }
             e.stopPropagation();
         });
@@ -444,11 +444,11 @@
                         if(sNodes.indexOf(curNode)!=-1)continue;
                         sNodes.push(curNode);
                     }
-                    let href=curNode.href,rUrl=getRightUrl(href);
+                    let href=getRightUrl(curNode.href);
                     let clone=$("<a></a>").attr("style",curNode.getAttribute("style")).attr("href",href).addClass('whx-a').css("background-color","#e1e1e1").css("background-image",'url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAMAAADzN3VRAAAARVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADc6ur3AAAAFnRSTlMAYM5vMOA/ENGegK2olI6G1b97Z0sXENA+jAAAAKFJREFUKM+FklkSxCAIRHFfss3K/Y86iQSDVqzpH7FfgQpCVfAmGx+gl9JI0qrxrcNLzooEbKUG4EKWdkCiDRV0N0RTrZ5wvdgTTgp4SzCAHxAPZkAM5GOJWuuT7FE5OVPOBFLTYb3Oc2YB5uJ8+G6pgkTGt74ntcCJHiwFLHw10Tdc93jlGXGvSRtsHNpuPs+/o1ODfxAtSL0f7HPC+L/9AF60G3QxO1UaAAAAAElFTkSuQmCC")');
-                    if(allUrl.toString().indexOf(rUrl)==-1)allUrl.push(rUrl);
+                    if(allUrl.toString().indexOf(href)==-1)allUrl.push(href);
                     clone.mouseover(function(e){
-                        offUrl=clone[0].href;
+                        offUrl=href;
                         parentDiv.css("display","block");
                         var basePos=clone.offset();
                         parentDiv.offset({top:basePos.top,left:basePos.left});
