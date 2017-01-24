@@ -75,7 +75,7 @@
 // @include     http*://www.l-sj.cc/*
 // @include     http*://htacg.cc/*
 // @include     http*://www.htacg.cc/*
-// @version     3.21.37
+// @version     3.21.38
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
