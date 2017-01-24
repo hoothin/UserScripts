@@ -398,6 +398,7 @@
                     hgtLink.innerHTML='<img src="/system/screenshots/screenshots/000/006/258/thumb/bg.png">';
                     installLink.parentNode.insertBefore(hgtLink,installLink);
                     installLink.parentNode.insertBefore(document.createElement("br"),installLink);
+                    installLink.parentNode.insertBefore(document.createTextNode("\u8be5\u811a\u672c\u4e0e\u300a\u7409\u795e\u8f6c\u300b\u4e0d\u517c\u5bb9\u54e6"),installLink.nextSibling.nextSibling);
                 }
             }
         }
