@@ -77,7 +77,7 @@
 // @include     http*://www.htacg.cc/*
 // @include     http*://sleazyfork.org/*/scripts/*
 // @include     http*://greasyfork.org/*/scripts/*
-// @version     3.21.40
+// @version     3.21.39
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -388,7 +388,7 @@
     if(/(sleaz|greas)yfork\.org\//.test(location.href)){
         if(/scripts\/23316/.test(location.href)){
             let pos=elementPosition(document.querySelector("#additional-info>div.script-author-description>h2")).y;
-            scrollToControl(pos);
+            scrollTo(0,pos);
         }else{
             if(document.body.innerHTML.indexOf("\u7409\u7483\u795e\u793e")!=-1){
                 var installLink=document.querySelector("a.install-link");
