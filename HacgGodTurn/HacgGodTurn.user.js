@@ -77,7 +77,7 @@
 // @include     http*://www.htacg.cc/*
 // @include     http*://sleazyfork.org/*/scripts/*
 // @include     http*://greasyfork.org/*/scripts/*
-// @version     3.21.42
+// @version     3.21.43
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -393,11 +393,6 @@
             if(document.body.innerHTML.indexOf("\u7409\u7483\u795e\u793e")!=-1){
                 var installLink=document.querySelector("a.install-link");
                 if(installLink){
-                    var hgtLink=document.createElement("a");
-                    hgtLink.href="/scripts/23316/code/%E7%90%89%E7%A5%9E%E8%BD%89.user.js";
-                    hgtLink.innerHTML='<img src="/system/screenshots/screenshots/000/006/258/thumb/bg.png">';
-                    installLink.parentNode.insertBefore(hgtLink,installLink);
-                    installLink.parentNode.insertBefore(document.createElement("br"),installLink);
                     installLink.parentNode.insertBefore(document.createTextNode("\u8be5\u811a\u672c\u4e0e\u300a\u7409\u795e\u8f6c\u300b\u4e0d\u517c\u5bb9\u54e6"),installLink.nextSibling.nextSibling);
                 }
             }
