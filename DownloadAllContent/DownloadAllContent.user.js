@@ -4,7 +4,7 @@
 // @name:zh-TW   懶人小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      1.07
+// @version      1.08
 // @description  Fetch and download main content on current page,provide special support for chinese novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取小說、論壇內容等並保存為TXT文檔
@@ -91,9 +91,6 @@
                 overrideMimeType:"text/html;charset="+document.charset,
                 onload: function(result) {
                     var doc = getDocEle(result.responseText);
-                    if (!doc) {
-                        return;
-                    }
                     processDoc(i, aTag, doc);
                 }
             });
@@ -101,6 +98,7 @@
     }
 
     function getPageContent(doc){
+        if(!doc)return "该段内容获取失败";
         var i,j,k,rStr="",pageData=(doc.body?doc.body:doc).cloneNode(true),delList=[];
         [].forEach.call(pageData.querySelectorAll("script,style,link"),function(item){delList.push(item);});
         [].forEach.call(delList,function(item){item.parentNode.removeChild(item);});
