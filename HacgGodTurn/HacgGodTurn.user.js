@@ -105,7 +105,7 @@
     Ctrl+↑ ↓进入文章内容页或返回
     Alt+F8打开绅士站点列表
     Ctrl+F8打开火箭嗅探窗口
-    Shiftl+F8开启或关闭NSFW模式
+    Ctrl+Z开启或关闭NSFW模式
 
 最ACG快捷键：
     点击图片去除和谐力量
@@ -880,14 +880,6 @@
                 rocketLinks.innerHTML=siteListHtml;
             }else if(e.ctrlKey){
                 launchRocket();
-            }else if(e.shiftKey){
-                if(hideNode.parentNode){
-                    head.removeChild(hideNode);
-                    GM_setValue("hacgGodeTurnHideImg",false);
-                }else{
-                    head.appendChild(hideNode);
-                    GM_setValue("hacgGodeTurnHideImg",true);
-                }
             }else{
                 var i=0;
                 if(curSite)i=config.sites.indexOf(curSite);
@@ -988,6 +980,15 @@
                     }
                 }
             }else if(e.keyCode != 17){
+                if(e.ctrlKey && e.keyCode==90){
+                    if(hideNode.parentNode){
+                        head.removeChild(hideNode);
+                        GM_setValue("hacgGodeTurnHideImg",false);
+                    }else{
+                        head.appendChild(hideNode);
+                        GM_setValue("hacgGodeTurnHideImg",true);
+                    }
+                }
                 curArticle=null;
             }
         }
