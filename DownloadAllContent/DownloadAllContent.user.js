@@ -4,7 +4,7 @@
 // @name:zh-TW   懶人小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      1.06
+// @version      1.07
 // @description  Fetch and download main content on current page,provide special support for chinese novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取小說、論壇內容等並保存為TXT文檔
@@ -47,7 +47,7 @@
         document.body.appendChild(rocketContent);
         rocketContent.outerHTML=`
         <div id="txtDownContent" style="display: none;">
-            <div style="width:300px;height:50px;position:fixed;left:50%;top:50%;margin-top:-25px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;">
+            <div style="width:300px;height:70px;position:fixed;left:50%;top:50%;margin-top:-25px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;">
                 <div id="txtDownWords" style="position:absolute;left:20px;top:10px;width:260px;">
                 </div>
                 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAMAAAAM7l6QAAAA5FBMVEUAAAD+/v7////9/f7////////+/v7+/v7////+/v7+/v7////+/v7+/v7////+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7////////////+/v7+/v7+/v7+/v7+/v4uje3///82ke7s9P3N5PtQoPDI4fqCu/Tu9v5Im+/6/P+VxfZgqPFNnvDp8/3f7fq42Pmnz/d1tPNvsfNkq/JCmO/4+/7X6fz19/rn8PqYx/aNwfV8uPRqrvJZpfFUovAzkO3Q5vu92/mr0fieyva92fWx0vQ6lO5pygFTAAAAJHRSTlMAmfD+RMGwgj2mknlIKR/36+XGnIyHfnJfVDk2My8S4E1CJBvTatKDAAABY0lEQVQoz4WSZ1fCMBRA05ahLPfemkspBUFwgGz3+P//x/hK6ZBzvB/ak96+kZeoGCtFK5eziitqCSfWOnM2CuWUrOyQYPc0bjM2htHXh+/ffQ4lQ6zEPoZ6TwdUp10M56EtAe5MR7y0HGAeX7Ghe6MTzIZwFtTfBrepUzw4UFSGY8CUTTMGLo3eglv58By21pRnB7aNBqTwPfWq/OVey9sH22wZXiWo6Yr3GtRl/f0IRyoPYy14v97YWjVY12BPrcK9XvhaZPUdWCoLbR35yOoW5P7R8eQ3JrmbSp6HVmSrXuTrmNYyUAs2JkL6D6YjG1PgNGXK87F4nWAsUxmL2gyH6oVD7cuhdqFg9CE4T/oPE6CsgvBOP21715AP7ugaDFK+3YD1KyUcAG47bn0TSylxFd8WDTwMMByoBSUHw+jd9/3JbQODnVExygUS7FRUksPVtdDZW8dqCZm8lc1auxcq4gc02GVGTUchmgAAAABJRU5ErkJggg==" id="txtDownQuit" style="position:absolute;right:0px;top:0px;cursor: pointer;" />
@@ -76,7 +76,7 @@
             j++;
             rCats[i]=(aTag.textContent+"\r\n"+getPageContent(doc));
             txtDownContent.style.display="block";
-            txtDownWords.innerHTML="已下载完成 "+j+" 段，剩余 "+(aEles.length-j)+" 段";
+            txtDownWords.innerHTML="已下载完成 "+j+" 段，剩余 "+(aEles.length-j)+" 段"+"<br>正在下载 "+aTag.textContent;
             if(j==aEles.length){
                 txtDownWords.innerHTML="已全部下载完成，共 "+j+" 段";
                 var blob = new Blob([i18n.info+"\r\n"+document.title+"\r\n\r\n"+rCats.join("\r\n\r\n")], {type: "text/plain;charset=utf-8"});
@@ -157,14 +157,17 @@
                 }
             }
         }
+        if(!largestContent)return "该段内容获取失败";
         var childlist=pageData.querySelectorAll(largestContent.tagName+(largestContent.className?"."+largestContent.className.replace(/(^\s*)|(\s*$)/g, '').replace(/\s+/g, '.'):""));
         function getRightStr(ele, noTextEnable){
             let childNodes=ele.childNodes,cStr="\r\n",hasText=false;
             for(let j=0;j<childNodes.length;j++){
                 let childNode=childNodes[j];
                 if(childNode.nodeType==3 && childNode.data && !/^\s*$/.test(childNode.data))hasText=true;
-                if(childNode.tagName=="BR")cStr+="\r\n";
-                else if(childNode.textContent)cStr+=childNode.textContent.replace(/ +/g,"  ").replace(/([^\r]|^)\n([^\r]|$)/g,"$1\r\n$2");
+                if(childNode.textContent){
+                    cStr+=childNode.textContent.replace(/ +/g,"  ").replace(/([^\r]|^)\n([^\r]|$)/g,"$1\r\n$2");
+                }
+                if(childNode.nodeType!=3)cStr+="\r\n";
             }
             if(hasText || noTextEnable || ele==largestContent)rStr+=cStr+"\r\n";
         }
