@@ -8,7 +8,7 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdn.jsdelivr.net/jquery/1.7.2/jquery.min.js
 // @require      https://cdn.jsdelivr.net/hi-base64/0.2.0/base64.min.js
-// @version      1.3.10
+// @version      1.3.11
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -362,6 +362,12 @@
     parentDiv.mouseout(function(e){
         var relatedTarget=(e.relatedTarget||e.fromElement);
         if(relatedTarget && !parentDiv[0].contains(relatedTarget))
+        hideIcons();
+    });
+    parentDiv.mouseover(function(e){
+        e.stopPropagation();
+    });
+    document.addEventListener("mouseover", function(e){
         hideIcons();
     });
     var preNode;

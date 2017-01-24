@@ -75,7 +75,7 @@
 // @include     http*://www.l-sj.cc/*
 // @include     http*://htacg.cc/*
 // @include     http*://www.htacg.cc/*
-// @version     3.21.36
+// @version     3.21.37
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -105,6 +105,7 @@
     Ctrl+↑ ↓进入文章内容页或返回
     Alt+F8打开绅士站点列表
     Ctrl+F8打开火箭嗅探窗口
+    Shiftl+F8开启或关闭NSFW模式
 
 最ACG快捷键：
     点击图片去除和谐力量
@@ -386,11 +387,12 @@
     var t, curSite, curArticle, siteListHtml;
     var originTitile = document.title;
     var isHttps=location.protocol=="https:";
+    var head=document.getElementsByTagName("head")[0];
     if(isHttps){
         var refMeta = document.createElement('meta');
         refMeta.name = 'referrer';
         refMeta.content = 'always';
-        document.getElementsByTagName('head')[0].appendChild(refMeta);
+        head.appendChild(refMeta);
     }else{
         if(document.title=="Service Unavailable - Connection Error"){
             location.href=location.href.replace(/^http:/,"https:");
@@ -856,6 +858,12 @@
         process();
     }
 
+    var hideNode=document.createElement("style");
+    hideNode.id="hideNode";
+    hideNode.innerHTML="img{display:none!important}";
+    if(GM_getValue("hacgGodeTurnHideImg")){
+        head.appendChild(hideNode);
+    }
     document.addEventListener("keydown", function(e) {
         if(curArticle && e.keyCode != 17)curArticle.classList.remove("oD_sel");
         if(e.keyCode == 119) {
@@ -872,6 +880,14 @@
                 rocketLinks.innerHTML=siteListHtml;
             }else if(e.ctrlKey){
                 launchRocket();
+            }else if(e.shiftKey){
+                if(hideNode.parentNode){
+                    head.removeChild(hideNode);
+                    GM_setValue("hacgGodeTurnHideImg",false);
+                }else{
+                    head.appendChild(hideNode);
+                    GM_setValue("hacgGodeTurnHideImg",true);
+                }
             }else{
                 var i=0;
                 if(curSite)i=config.sites.indexOf(curSite);
@@ -987,7 +1003,7 @@
         }
     });
 
-    document.getElementsByTagName("head")[0].appendChild(nod);
+    head.appendChild(nod);
     var rocketContent=document.createElement("div");
     document.body.appendChild(rocketContent);
     rocketContent.outerHTML=rocketStr;
