@@ -77,7 +77,7 @@
 // @include     http*://www.htacg.cc/*
 // @include     http*://sleazyfork.org/*/scripts/*
 // @include     http*://greasyfork.org/*/scripts/*
-// @version     3.21.39
+// @version     3.21.40
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -391,12 +391,14 @@
             scrollToControl(pos);
         }else{
             if(document.body.innerHTML.indexOf("\u7409\u7483\u795e\u793e")!=-1){
-                var hgtLink=document.createElement("a");
-                hgtLink.href="/scripts/23316/code/%E7%90%89%E7%A5%9E%E8%BD%89.user.js";
-                hgtLink.innerHTML='<img src="/system/screenshots/screenshots/000/006/258/thumb/bg.png">';
                 var installLink=document.querySelector("a.install-link");
-                installLink.parentNode.insertBefore(hgtLink,installLink);
-                installLink.parentNode.insertBefore(document.createElement("br"),installLink);
+                if(installLink){
+                    var hgtLink=document.createElement("a");
+                    hgtLink.href="/scripts/23316/code/%E7%90%89%E7%A5%9E%E8%BD%89.user.js";
+                    hgtLink.innerHTML='<img src="/system/screenshots/screenshots/000/006/258/thumb/bg.png">';
+                    installLink.parentNode.insertBefore(hgtLink,installLink);
+                    installLink.parentNode.insertBefore(document.createElement("br"),installLink);
+                }
             }
         }
         return;
