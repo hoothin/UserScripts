@@ -3,7 +3,7 @@
 // @name:zh-CN   代码片段高亮
 // @name:zh-TW   程式碼片斷高亮
 // @namespace    hoothin
-// @version      1.1
+// @version      1.2
 // @description  Add a icon to popup a window that allows syntax highlighting and beautify and word count of source code snippets on current page
 // @description:zh-CN 选择代码片段后点击图标弹出新窗口显示语法高亮美化与格式化后的代码与字数统计
 // @description:zh-TW 選擇程式碼片段後點選圖示彈出新視窗顯示語法高亮美化與格式化後的程式碼與字數統計
@@ -11,6 +11,7 @@
 // @grant        GM_openInTab
 // @compatible   chrome
 // @compatible   firefox
+// @license      MIT License
 // @contributionURL https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
 // @contributionAmount 1
 // @include      *
@@ -30,9 +31,9 @@
             '<script>var code,codeStr;window.onload=function(){code=document.querySelector("#code");codeStr=code.innerHTML.replace(/&amp;/g, "&").replace(/&(nbsp;|amp;|#39;|quot;)/g, "&amp;$1");prettyPrint();'+
             'document.querySelector("body>a:nth-child(1)").onclick=function(){'+
             'code.innerHTML=js_beautify('+
-            'codeStr.replace(/&gt;/g, \'>\').replace(/&lt;/g, \'<\').replace(/\'[^\']*?\'/g, function(word){'+
+            'codeStr.replace(/&gt;/g, \'>\').replace(/&lt;/g, \'<\').replace(/\'(\\\\\'|[^\'])*?\'/g, function(word){'+
             'return word.replace(/>/g, \'&gt;\').replace(/</g, \'&lt;\');}'+
-            ').replace(/\"[^\"]*?\"/g, function(word){'+
+            ').replace(/\"(\\\\\"|[^\"])*?\"/g, function(word){'+
             'return word.replace(/>/g, \'&gt;\').replace(/</g, \'&lt;\');}'+
             '));code.className=\'prettyprint linenums\';prettyPrint();return false;'+
             '};}</script>'+
