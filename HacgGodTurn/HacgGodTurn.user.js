@@ -77,7 +77,7 @@
 // @include     http*://www.htacg.cc/*
 // @include     http*://sleazyfork.org/*/scripts/*
 // @include     http*://greasyfork.org/*/scripts/*
-// @version     3.21.47
+// @version     3.21.50
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -1047,7 +1047,7 @@
     });
     setTimeout(function(){
         if(document.querySelectorAll("#oD_box").length > 1){
-            alert("\u68c0\u6d4b\u5230\u0049\u0044\u51b2\u7a81\uff01\u8bf7\u68c0\u67e5\u662f\u5426\u5b58\u5728\u91cd\u590d\u811a\u672c\u6216\u540c\u7c7b\u811a\u672c");
+            alert("\u68c0\u6d4b\u5230\u0049\u0044\u51b2\u7a81\uff0c\u7409\u795e\u8f6c\u811a\u672c\u5c06\u65e0\u6cd5\u6b63\u5e38\u5de5\u4f5c\uff01\u8bf7\u68c0\u67e5\u662f\u5426\u5b58\u5728\u91cd\u590d\u6216\u540c\u7c7b\u811a\u672c");
         }
     },500);
     var oD_box,oD_text,oD_button;
