@@ -77,7 +77,7 @@
 // @include     http*://www.htacg.cc/*
 // @include     http*://sleazyfork.org/*/scripts/*
 // @include     http*://greasyfork.org/*/scripts/*
-// @version     3.21.50
+// @version     3.22.01
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -394,14 +394,14 @@
                 var installLink=document.querySelector("a.install-link");
                 if(installLink){
                     installLink.onclick=function(){
-                        if(window.confirm('\u8be5\u811a\u672c\u53ef\u80fd\u4e0e\u2605\u7409\u795e\u8f6c\u2605\u4e0d\u517c\u5bb9\u54e6\uff0c\u4f60\u786e\u5b9a\u8981\u5b89\u88c5\u5417\uff1f')){
-                            return true;
-                        }else{
+                        if(window.confirm('\u8be5\u811a\u672c\u53ef\u80fd\u4e0e\u0020\u2605\u7409\u795e\u8f6c\u2605\u0020\u4e0d\u517c\u5bb9\u54e6\uff0c\u662f\u5426\u53d6\u6d88\u5b89\u88c5\uff1f')){
                             return false;
+                        }else{
+                            return true;
                         }
                     };
                     var hgtSign=document.createElement("font");
-                    hgtSign.innerHTML=' <b>\u8be5\u811a\u672c\u53ef\u80fd\u4e0e\u2605\u7409\u795e\u8f6c\u2605\u4e0d\u517c\u5bb9\u54e6</b>';
+                    hgtSign.innerHTML=' <b>\u8be5\u811a\u672c\u53ef\u80fd\u4e0e\u0020\u2605\u7409\u795e\u8f6c\u2605\u0020\u4e0d\u517c\u5bb9\u54e6</b>';
                     installLink.parentNode.insertBefore(hgtSign,installLink.nextSibling.nextSibling);
                 }
             }
