@@ -3,7 +3,7 @@
 // @name:zh-CN   代码片段高亮
 // @name:zh-TW   程式碼片斷高亮
 // @namespace    hoothin
-// @version      1.0
+// @version      1.1
 // @description  Add a icon to popup a window that allows syntax highlighting and beautify and word count of source code snippets on current page
 // @description:zh-CN 选择代码片段后点击图标弹出新窗口显示语法高亮美化与格式化后的代码与字数统计
 // @description:zh-TW 選擇程式碼片段後點選圖示彈出新視窗顯示語法高亮美化與格式化後的程式碼與字數統計
@@ -27,12 +27,20 @@
     codeIcon.onmousedown=function(){
         let html='<title>Code Snippet</title>'+
             '<link rel="stylesheet" href="http'+(isChrome?'s':'')+'://cdn.rawgit.com/google/code-prettify/master/styles/sons-of-obsidian.css"/>'+
-            '<script>var code,codeStr;window.onload=function(){code=document.querySelector("#code");codeStr=code.innerHTML.replace(/&amp;/g, "&").replace(/&(nbsp;|amp;|#39;|quot;)/g, "&amp;$1");prettyPrint();}</script>'+
+            '<script>var code,codeStr;window.onload=function(){code=document.querySelector("#code");codeStr=code.innerHTML.replace(/&amp;/g, "&").replace(/&(nbsp;|amp;|#39;|quot;)/g, "&amp;$1");prettyPrint();'+
+            'document.querySelector("body>a:nth-child(1)").onclick=function(){'+
+            'code.innerHTML=js_beautify('+
+            'codeStr.replace(/&gt;/g, \'>\').replace(/&lt;/g, \'<\').replace(/\'[^\']*?\'/g, function(word){'+
+            'return word.replace(/>/g, \'&gt;\').replace(/</g, \'&lt;\');}'+
+            ').replace(/\"[^\"]*?\"/g, function(word){'+
+            'return word.replace(/>/g, \'&gt;\').replace(/</g, \'&lt;\');}'+
+            '));code.className=\'prettyprint linenums\';prettyPrint();return false;'+
+            '};}</script>'+
             '<script src="http'+(isChrome?'s':'')+'://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js?skin=sons-of-obsidian"></script>'+
             '<script src="http'+(isChrome?'s':'')+'://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.6.4/beautify.min.js"></script>'+
             '<script src="http'+(isChrome?'s':'')+'://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.6.4/beautify-html.min.js"></script>'+
             '<script src="http'+(isChrome?'s':'')+'://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.6.4/beautify-css.min.js"></script>'+
-            'Code formatting: <a href="#" onclick="code.innerHTML=js_beautify(codeStr.replace(/&amp;lt;/g, \'&lt;\').replace(/&amp;gt;/g, \'&gt;\'));code.className=\'prettyprint linenums\';prettyPrint();return false;">Javaspcript</a> '+
+            'Code formatting: <a href="#">Javaspcript</a> '+
             '<a href="#" onclick="code.innerHTML=html_beautify(codeStr);code.className=\'prettyprint linenums\';prettyPrint();return false;">Html</a> '+
             '<a href="#" onclick="code.innerHTML=css_beautify(codeStr);code.className=\'prettyprint linenums\';prettyPrint();return false;">Css</a> '+
             '<a href="#" onclick="code.innerHTML=codeStr;code.className=\'prettyprint linenums\';prettyPrint();return false;">Raw</a> <b style="color:red">('+selStr.length+' words)</b>'+
