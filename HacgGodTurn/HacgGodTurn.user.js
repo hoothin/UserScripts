@@ -442,7 +442,7 @@
     }else if(curSite){
         switch(curSite.name){
             case "绅士二次元":
-                var content=document.querySelector('.entry-content');
+                var content=document.querySelector('.entry');
                 if(content){
                     var plist = content.querySelectorAll("p");
                     var key = "";
