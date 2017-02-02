@@ -5,8 +5,8 @@
 // @namespace    hoothin
 // @version      1.0
 // @description        Just Kill TieBa AD
-// @description:zh-CN  清理百度贴吧（tieba.baidu.com）内adb等未能清理掉的各类广告
-// @description:zh-TW  去除百度貼吧（tieba.baidu.com）内adb等未能清理掉的各類廣告
+// @description:zh-CN  清理百度贴吧（tieba.baidu.com）内的列表伪装，帖内伪装，触点广告，页首广告，推荐应用等各类广告
+// @description:zh-TW  去除百度貼吧（tieba.baidu.com）内的列表偽裝，帖內偽裝，觸點廣告，頁首廣告，推薦應用等各類廣告
 // @author       hoothin
 // @include      http*://tieba.baidu.com/*
 // @grant        none

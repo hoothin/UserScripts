@@ -77,7 +77,7 @@
 // @include     http*://www.htacg.cc/*
 // @include     http*://sleazyfork.org/*/scripts/*
 // @include     http*://greasyfork.org/*/scripts/*
-// @version     3.22.01
+// @version     3.22.02
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -150,7 +150,8 @@
                 url:"https://www.acg.tf/",
                 regex:/acg\.tf/,
                 offset:50,
-                articleSel:"div.dt-news-post"
+                articleSel:".magazine-list>li,.article_list>li",
+                contentArea:".entry"
             },
             {
                 name:"天使二次元",
