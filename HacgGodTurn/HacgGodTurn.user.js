@@ -48,7 +48,7 @@
 // @include     http*://www.acg15.com/*
 // @include     http*://www.acglover.top/*
 // @include     http*://lifanmoe.com/*
-// @include     http*://www.idanmu.co/*
+// @include     http*://www.idanmu.*
 // @include     http*://*.sijihuisuo.club/*
 // @include     http*://sijihuisuo.club/*
 // @include     http*://acg18.us/*
@@ -78,7 +78,7 @@
 // @include     http*://sleazyfork.org/*/scripts/*
 // @include     http*://greasyfork.org/*/scripts/*
 // @include     http*://*yfork.org/*/forum/*discussion*
-// @version     3.22.03
+// @version     3.22.05
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -150,7 +150,7 @@
                 name:"绅士二次元",
                 url:"https://www.acg.tf/",
                 regex:/acg\.tf/,
-                offset:50,
+                offset:60,
                 articleSel:".magazine-list>li,.article_list>li",
                 contentArea:".entry"
             },
@@ -188,7 +188,7 @@
             {
                 name:"爱弹幕",
                 url:"http://www.idanmu.co/",
-                regex:/idanmu\.co/,
+                regex:/idanmu\./,
                 offset:55,
                 articleSel:"section.card"
             },
@@ -238,7 +238,8 @@
                 url:"http://www.jiyue.com/",
                 regex:/(acgmoon|jiyue)\.(org|com)/,
                 offset:50,
-                contentArea:"div.post-content"
+                contentArea:"div.post-content",
+                articleSel:"article"
             },
             {
                 name:"萌幻之乡",
@@ -352,9 +353,10 @@
                 name:"绅士ACG社",
                 url:"http://htacg.cc/",
                 regex:/htacg\.cc/,
-                articleSel:"article.card",
+                articleSel:"section",
+                offset:55,
                 hideOd:true,
-                downloadUrl:/htacg\.cc\/storage\-download\?/
+                downloadUrl:/htacg\.cc\/download\?id/
             },
             {
                 name:"绅士交易",
@@ -426,7 +428,7 @@
                     };
                     var hgtSign=document.createElement("font");
                     hgtSign.innerHTML=' <b>\u8be5\u811a\u672c\u53ef\u80fd\u4e0e\u0020\u2605\u7409\u795e\u8f6c\u2605\u0020\u4e0d\u517c\u5bb9\u54e6</b>';
-                    installLink.parentNode.insertBefore(hgtSign,installLink.nextSibling.nextSibling);
+                    //installLink.parentNode.insertBefore(hgtSign,installLink.nextSibling.nextSibling);
                 }
             }
         }
@@ -857,10 +859,10 @@
                 curSite.preRocket=function(){unsafeWindow.$('#dllist a').mouseenter();};
                 break;
             case "绅士交易":
-                if(location.href=="https://www.acgpy.com/indexlogin.html"){
+                if(location.href=="https://www.acgpy.com/login0202.html"){
                     var date=new Date();
                     date.setTime(date.getTime()+14400*60*1000);
-                    document.cookie="trade=A32; expires="+date.toGMTString();
+                    document.cookie="trade0202=A32; expires="+date.toGMTString();
                     top.location='wpx';
                 }
                 var downBtn=document.querySelector("a.downbtn");
