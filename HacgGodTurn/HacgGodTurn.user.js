@@ -78,7 +78,7 @@
 // @include     http*://sleazyfork.org/*/scripts/*
 // @include     http*://greasyfork.org/*/scripts/*
 // @include     http*://*yfork.org/*/forum/*discussion*
-// @version     3.22.06
+// @version     3.22.07
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -1445,7 +1445,7 @@
         const minLength=256,tg=0.5;
         var lastX, lastY, signs, lastSign;
         function tracer(e) {
-            let curX=e.clientX,curY=e.clientY;
+            let curX=e.changedTouches[0].clientX,curY=e.changedTouches[0].clientY;
             let distanceX=curX-lastX,distanceY=curY-lastY;
             let distance=distanceX*distanceX+distanceY*distanceY;
             if (distance>minLength) {
@@ -1472,14 +1472,14 @@
                 }
             }
         };
-        document.addEventListener("mousedown", function(e) {
-            lastX=e.clientX;
-            lastY=e.clientY;
+        document.addEventListener("touchstart", function(e) {
+            lastX=e.changedTouches[0].clientX;
+            lastY=e.changedTouches[0].clientY;
             lastSign=signs="";
-            document.addEventListener("mousemove", tracer, false);
+            document.addEventListener("touchmove", tracer, false);
         }, false);
-        document.addEventListener("mouseup", function(e) {
-            document.removeEventListener("mousemove", tracer, false);
+        document.addEventListener("touchend", function(e) {
+            document.removeEventListener("touchmove", tracer, false);
             if(signs=="↓→↑←"){
                 e.stopPropagation();
                 e.preventDefault();
