@@ -78,7 +78,7 @@
 // @include     http*://sleazyfork.org/*/scripts/*
 // @include     http*://greasyfork.org/*/scripts/*
 // @include     http*://*yfork.org/*/forum/*discussion*
-// @version     3.22.05
+// @version     3.22.06
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -1422,14 +1422,9 @@
                 }
             });
         });
-        if(!GM_getValue("hazukashii")){
-            p.then(playSound, function(e) {
-                console.error(e);
-            });
-        }
         var command=[72,65,90,85,75,65,83,72,73,73],index=0;//"hazukashii"
         document.addEventListener("keydown", function(e) {
-            if(e.keyCode == command[index]) {
+            if(e.keyCode==command[index]) {
                 if(index==command.length-1){
                     index=0;
                     var nowValue=GM_getValue("hazukashii");
@@ -1446,6 +1441,60 @@
                 index=0;
             }
         });
-        GM_notification(notificationDetails);
+
+        const minLength=256,tg=0.5;
+        var lastX, lastY, signs, lastSign;
+        function tracer(e) {
+            let curX=e.clientX,curY=e.clientY;
+            let distanceX=curX-lastX,distanceY=curY-lastY;
+            let distance=distanceX*distanceX+distanceY*distanceY;
+            if (distance>minLength) {
+                lastX=curX;
+                lastY=curY;
+                let direction="";
+                let slope=Math.abs(distanceY/distanceX);
+                if(slope>tg){
+                    if(distanceY>0) {
+                        direction="↓";
+                    }else{
+                        direction="↑";
+                    }
+                }else if(slope<=1/tg) {
+                    if(distanceX>0) {
+                        direction="→";
+                    }else{
+                        direction="←";
+                    }
+                }
+                if(lastSign!=direction) {
+                    signs+=direction;
+                    lastSign=direction;
+                }
+            }
+        };
+        document.addEventListener("mousedown", function(e) {
+            lastX=e.clientX;
+            lastY=e.clientY;
+            lastSign=signs="";
+            document.addEventListener("mousemove", tracer, false);
+        }, false);
+        document.addEventListener("mouseup", function(e) {
+            document.removeEventListener("mousemove", tracer, false);
+            if(signs=="↓→↑←"){
+                e.stopPropagation();
+                e.preventDefault();
+                if(window.confirm("\u662f\u5426\u7981\u7528\u7f9e\u803b\u0070\u006c\u0061\u0079\u8bed\u97f3\uff1f")){
+                    GM_setValue("hazukashii", true);
+                }else{
+                    GM_setValue("hazukashii", false);
+                }
+            }
+        }, false);
+        if(!GM_getValue("hazukashii")){
+            p.then(playSound, function(e) {
+                console.error(e);
+            });
+            GM_notification(notificationDetails);
+        }
     }
 })();
