@@ -9,7 +9,7 @@
 // @description:zh-CN    迅雷、快车、QQ旋风等专有链解密 Decryption and Display the real URL of the download links.(of xunlei,kuaiche,xuanfeng;thunder,flashget,qqdl)
 // @description:zh-TW    迅雷、快車、QQ旋風等專有鏈解密 Decryption and Display the real URL of the download links.(of xunlei,kuaiche,xuanfeng;thunder,flashget,qqdl)
 // @description:ja       True URL downloads, Decryption and Display the real URL of the download links.(of xunlei,kuaiche,xuanfeng;thunder,flashget,qqdl)
-// @version        1.22.08
+// @version        1.22.09
 // @create         2013-01-05
 // @include        http://*
 // @include        https://*
@@ -130,10 +130,10 @@
                     } else if (lion) {
                         try{
                             link[i].oncontextmenu();
+                            attr = link[i].outerHTML.match(/\w+href=/i).toString().replace(/=/, '');
+                            if(attr)link[i].removeAttribute(attr);
                         }catch(e){
                         }
-                        attr = link[i].outerHTML.match(/\w+href=/i).toString().replace(/=/, '');
-                        if(attr)link[i].removeAttribute(attr);
                         Decryption(link[i]);
                     } //枚举失败后再侦听处理，如网页上有错误
                     link[i].removeAttribute("oncontextmenu");
