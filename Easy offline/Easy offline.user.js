@@ -8,7 +8,7 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdn.jsdelivr.net/jquery/1.7.2/jquery.min.js
 // @require      https://cdn.jsdelivr.net/hi-base64/0.2.0/base64.min.js
-// @version      1.3.12
+// @version      1.3.13
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -689,9 +689,59 @@
         location.href="https://github.com/hoothin/UserScripts/tree/master/Easy offline#一键离线下载";
     }
 
+    function checkSel(e){
+        var sel=document.getSelection();
+        var link=sel.toString();
+        if(link===""){
+            link=prompt("输入需要离线下载的链接：","magnet:?xt=urn:btih:");
+        }else{
+            var focusedElement = sel.focusNode.parentElement;
+            if(focusedElement.tagName == "A"){
+                link=focusedElement.href;
+            }
+        }
+        if(/^(magnet|ed2k:\/\/\|file|https?:|ftp:)/.test(link)){
+            if(!isCssSeted){
+                $("body").append(parentDiv);
+                setCss();
+            }
+            offUrl=link;
+            parentDiv.css("display","block");
+            parentDiv.offset({top:mouseEve.pageY,left:mouseEve.pageX});
+            let j=0;
+            for(var x=0;x<offNodes.length;x++){
+                let node=offNodes[x];
+                let siteConfig=sites[node.attr("name")];
+                if(/^magnet/i.test(offUrl) && siteConfig.noMag){
+                    node.hide();
+                }else if(/^ftp/i.test(offUrl) && siteConfig.noFtp){
+                    node.hide();
+                }else if(/^ed2k:\/\//i.test(offUrl) && siteConfig.noEd2k){
+                    node.hide();
+                }else{
+                    node.show();
+                    node.css("margin-top",-j*25+"px");
+                    j++;
+                    if(siteConfig.directUrl){
+                        node.attr('href', siteConfig.directUrl(offUrl));
+                    }
+                }
+            }
+        }
+    }
+
+    var mouseEve;
+    document.addEventListener("mousemove", function(e) {
+        mouseEve=e;
+    });
+
     document.addEventListener("keydown", function(e) {
         if(e.keyCode == 120) {
-            toggleIcon();
+            if(e.altKey){
+                checkSel(e);
+            }else{
+                toggleIcon();
+            }
         }
     });
     GM_registerMenuCommand(i18n.configure, goSetting);
