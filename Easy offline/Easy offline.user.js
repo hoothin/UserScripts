@@ -8,7 +8,7 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdn.jsdelivr.net/jquery/1.7.2/jquery.min.js
 // @require      https://cdn.jsdelivr.net/hi-base64/0.2.0/base64.min.js
-// @version      1.3.13
+// @version      1.3.15
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -279,10 +279,15 @@
         }
     }
 
-    var isCssSeted=false;
+    var isInited=false;
+    function init(){
+        if(isInited)return;
+        isInited=true;
+        $("body").append(parentDiv);
+        setCss();
+    }
+
     function setCss(){
-        if(isCssSeted)return;
-        isCssSeted=true;
         $('head').append(`
         <style>
             a.whx-a{
@@ -335,7 +340,9 @@
         let siteConfig=sitesArr[x];
         offNode.css("background-color","#"+siteConfig.bgColor).attr("title",i18n[siteConfig.name] ).attr("href", siteConfig.url).attr("name", siteConfig.name);
         offNode.click(function(e){
-            if(!siteConfig.directUrl){
+            if(siteConfig.directUrl){
+                offNode.attr('href', siteConfig.directUrl(offUrl));
+            }else{
                 if(e.ctrlKey && e.shiftKey && siteConfig.canMul)
                     GM_setValue("eoUrl",allUrl);
                 else GM_setValue("eoUrl",offUrl);
@@ -437,11 +444,9 @@
         }
 
         if(nodes.length > 0){
-            $("body").append(parentDiv);
+            init();
             var codeList = [];
-            var listLen = 0;
-            listLen = nodes.length;
-            setCss();
+            var listLen = nodes.length;
             if (listLen !== 0) {
                 for (i = 0; i < listLen; i++) {
                     curNode = nodes[i];
@@ -454,29 +459,8 @@
                     let clone=$("<a></a>").attr("style",curNode.getAttribute("style")).attr("href",href).addClass('whx-a').css("background-color","#e1e1e1").css("background-image",'url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAMAAADzN3VRAAAARVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADc6ur3AAAAFnRSTlMAYM5vMOA/ENGegK2olI6G1b97Z0sXENA+jAAAAKFJREFUKM+FklkSxCAIRHFfss3K/Y86iQSDVqzpH7FfgQpCVfAmGx+gl9JI0qrxrcNLzooEbKUG4EKWdkCiDRV0N0RTrZ5wvdgTTgp4SzCAHxAPZkAM5GOJWuuT7FE5OVPOBFLTYb3Oc2YB5uJ8+G6pgkTGt74ntcCJHiwFLHw10Tdc93jlGXGvSRtsHNpuPs+/o1ODfxAtSL0f7HPC+L/9AF60G3QxO1UaAAAAAElFTkSuQmCC")');
                     if(allUrl.toString().indexOf(href)==-1)allUrl.push(href);
                     clone.mouseover(function(e){
-                        offUrl=href;
-                        parentDiv.css("display","block");
                         var basePos=clone.offset();
-                        parentDiv.offset({top:basePos.top,left:basePos.left});
-                        let j=0;
-                        for(var x=0;x<offNodes.length;x++){
-                            let node=offNodes[x];
-                            let siteConfig=sites[node.attr("name")];
-                            if(/^magnet/i.test(offUrl) && siteConfig.noMag){
-                                node.hide();
-                            }else if(/^ftp/i.test(offUrl) && siteConfig.noFtp){
-                                node.hide();
-                            }else if(/^ed2k:\/\//i.test(offUrl) && siteConfig.noEd2k){
-                                node.hide();
-                            }else{
-                                node.show();
-                                node.css("margin-top",-j*25+"px");
-                                j++;
-                                if(siteConfig.directUrl){
-                                    node.attr('href', siteConfig.directUrl(offUrl));
-                                }
-                            }
-                        }
+                        showDiskIcons(href,basePos.top,basePos.left);
                         e.stopPropagation();
                     });
                     $(curNode).after(clone);
@@ -492,6 +476,32 @@
                     }
                 }
             }
+        }
+    }
+
+    function showDiskIcons(url, top, left){
+        offUrl=url;
+        parentDiv.css("display","block");
+        parentDiv.offset({top:top,left:left});
+        let j=0;
+        for(var x=0;x<offNodes.length;x++){
+            let node=offNodes[x];
+            let siteConfig=sites[node.attr("name")];
+            if(/^magnet/i.test(offUrl) && siteConfig.noMag){
+                node.hide();
+            }else if(/^ftp/i.test(offUrl) && siteConfig.noFtp){
+                node.hide();
+            }else if(/^ed2k:\/\//i.test(offUrl) && siteConfig.noEd2k){
+                node.hide();
+            }else{
+                node.show();
+                node.css("margin-top",-j*25+"px");
+                j++;
+            }
+        }
+        var minTop=$(document).scrollTop()+(j-1)*25;
+        if(top<minTop){
+            parentDiv.offset({top:minTop,left:left});
         }
     }
 
@@ -701,32 +711,8 @@
             }
         }
         if(/^(magnet|ed2k:\/\/\|file|https?:|ftp:)/.test(link)){
-            if(!isCssSeted){
-                $("body").append(parentDiv);
-                setCss();
-            }
-            offUrl=link;
-            parentDiv.css("display","block");
-            parentDiv.offset({top:mouseEve.pageY,left:mouseEve.pageX});
-            let j=0;
-            for(var x=0;x<offNodes.length;x++){
-                let node=offNodes[x];
-                let siteConfig=sites[node.attr("name")];
-                if(/^magnet/i.test(offUrl) && siteConfig.noMag){
-                    node.hide();
-                }else if(/^ftp/i.test(offUrl) && siteConfig.noFtp){
-                    node.hide();
-                }else if(/^ed2k:\/\//i.test(offUrl) && siteConfig.noEd2k){
-                    node.hide();
-                }else{
-                    node.show();
-                    node.css("margin-top",-j*25+"px");
-                    j++;
-                    if(siteConfig.directUrl){
-                        node.attr('href', siteConfig.directUrl(offUrl));
-                    }
-                }
-            }
+            init();
+            showDiskIcons(getRightUrl(link),mouseEve.pageY-10,mouseEve.pageX-10);
         }
     }
 
