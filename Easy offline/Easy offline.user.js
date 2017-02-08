@@ -8,13 +8,10 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdn.jsdelivr.net/jquery/1.7.2/jquery.min.js
 // @require      https://cdn.jsdelivr.net/hi-base64/0.2.0/base64.min.js
-// @version      1.3.15
+// @version      1.3.16
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
-// @exclude      http*://www.baidu.*
-// @exclude      http*://www.google.*
-// @exclude      http*://www.bing.*
 // @include      http*://pan.baidu.com/*
 // @include      http*://115.com/*
 // @include      https://www.furk.net/*
@@ -703,22 +700,30 @@
         var sel=document.getSelection();
         var link=sel.toString();
         if(link===""){
-            link=prompt("输入需要离线下载的链接：","magnet:?xt=urn:btih:");
-        }else{
+            if(targetA) link=targetA.href;
+            else link=prompt("输入需要离线下载的链接：","magnet:?xt=urn:btih:");
+        }/*else{
             var focusedElement = sel.focusNode.parentElement;
             if(focusedElement.tagName == "A"){
                 link=focusedElement.href;
             }
-        }
+        }*/
         if(/^(magnet|ed2k:\/\/\|file|https?:|ftp:)/.test(link)){
             init();
             showDiskIcons(getRightUrl(link),mouseEve.pageY-10,mouseEve.pageX-10);
         }
     }
 
-    var mouseEve;
+    var mouseEve,targetA;
     document.addEventListener("mousemove", function(e) {
         mouseEve=e;
+    });
+    document.addEventListener("mouseover", function(e) {
+        if(e.target && e.target.tagName=="A"){
+            targetA=e.target;
+        }else{
+            targetA=null;
+        }
     });
 
     document.addEventListener("keydown", function(e) {
