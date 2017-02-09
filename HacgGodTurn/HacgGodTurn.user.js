@@ -78,7 +78,7 @@
 // @include     http*://sleazyfork.org/*/scripts/*
 // @include     http*://greasyfork.org/*/scripts/*
 // @include     http*://*yfork.org/*/forum/*discussion*
-// @version     3.22.08
+// @version     3.22.09
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -298,7 +298,7 @@
             },*/
             {
                 name:"次元轨迹",
-                url:"https://www.acggj.com/",
+                url:"https://www.acg44.com/",
                 regex:/www\.(acggj|acg44)\./,
                 downloadUrl:/com\/\?page_id=/,
                 hideOd:true,
@@ -406,13 +406,11 @@
                         var discussTitle=document.querySelector("#Form_Name");
                         var discussBody=document.querySelector("#Form_Body");
                         if(goodBtn.checked==false && ((discussTitle && /声音|语音/.test(discussTitle.value)) || (discussBody && /声音|语音/.test(discussBody.value)))){
-                            alert("\u8f93\u5165\u0068\u0061\u007a\u0075\u006b\u0061\u0073\u0068\u0069\u0069\u5c31\u80fd\u5207\u6362\u8bed\u97f3\uff0c\u7b54\u5e94\u6211\u4e00\u5b9a\u8981\u597d\u597d\u770b\u8bf4\u660e");
+                            if(window.confirm("\u8f93\u5165\u0068\u0061\u007a\u0075\u006b\u0061\u0073\u0068\u0069\u0069\u5c31\u80fd\u5207\u6362\u8bed\u97f3\uff0c\u8be6\u89c1\u8bf4\u660e\u9875\uff0c\u662f\u5426\u7ed9\u4e2a\u597d\u8bc4\uff1f")){
+                                goodBtn.checked=true;
+                            }
                         }
-                        if(okBtn.checked || badBtn.checked){
-                            goodBtn.checked=true;
-                            scrollTo(0,0);
-                        }
-                    }
+                    };
                 }
             }
         }else{
@@ -426,9 +424,6 @@
                             return true;
                         }
                     };
-                    var hgtSign=document.createElement("font");
-                    hgtSign.innerHTML=' <b>\u8be5\u811a\u672c\u53ef\u80fd\u4e0e\u0020\u2605\u7409\u795e\u8f6c\u2605\u0020\u4e0d\u517c\u5bb9\u54e6</b>';
-                    //installLink.parentNode.insertBefore(hgtSign,installLink.nextSibling.nextSibling);
                 }
             }
         }
@@ -1407,7 +1402,7 @@
             source.connect(audioContext.destination);
             source.start(0);
         }
-        var ttss=["有家，有爱，有欧派","未被穿过的胖次是没有价值的","巨乳只有下垂的未来","男人变态有什么错","为什么你会这么熟练啊","德国的科学技术是世界第一","在虚构的故事当中寻求真实感的人脑袋一定有问题"," 胸部什么的，明明只是装饰","勇士喜欢巨乳有什么错","哥哥让开！这样我杀不了那家伙","我们的宇宙充满了质子,中子,电子,还有奶子","有个能干的妹妹真好","只要可爱就算是男孩子也没关系","道歉時露出胸部是常識","我就是叫紫妈怎么了 有本事突然从我背后出现 把我的脸按在键盘上aqswdectfrvtghunijopioijohnuygbyfvtcdesxwedrfvtbguyhiumjiuyvftrssexrybtgnyuhm","反基复奶"];
+        var ttss=["有家，有爱，有欧派","未被穿过的胖次是没有价值的","巨乳只有下垂的未来","男人变态有什么错","为什么你会这么熟练啊","德国的科学技术是世界第一","在虚构的故事当中寻求真实感的人脑袋一定有问题"," 胸部什么的，明明只是装饰","勇士喜欢巨乳有什么错","哥哥让开！这样我杀不了那家伙","我们的宇宙充满了质子,中子,电子,还有奶子","有个能干的妹妹真好","只要可爱就算是男孩子也没关系","道歉時露出胸部是常識","我就是叫紫妈怎么了 有本事突然从我背后出现 把我的脸按在键盘上aqswdectfrvtghunijopioijohnuygbyfvtcdesxwedrfvtbguyhiumjiuyvftrssexrybtgnyuhm","反基复奶","皮皮虾我们走","哼！都怪你，也不哄哄人家，人家超想哭的，捶你胸口，老公！大坏蛋！咩QAQ 捶你胸口，你好讨厌！要抱抱嘤嘤嘤，哼，人家拿小拳拳捶你胸口！大坏蛋，打死你"];
         var ttsRand=Math.floor(Math.random()*ttss.length);
         var tts=ttss[ttsRand];
         var sUrl = "http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=5&text="+tts;//`http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=5&text=${tts}`;
@@ -1442,6 +1437,7 @@
             }
         });
 
+        //refer to "My Mouse Gestures"-ver.0.0.7 of Peer Zeng at [http://userscripts-mirror.org/scripts/show/463904], thanks to him
         const minLength=256,tg=0.5;
         var lastX, lastY, signs, lastSign;
         function tracer(e) {
