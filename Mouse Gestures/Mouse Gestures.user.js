@@ -13,6 +13,10 @@
 // @grant              GM_setValue
 // @grant              GM_getValue
 // @grant              GM_registerMenuCommand
+// @grant              unsafeWindow
+// @license            MIT License
+// @compatible        chrome
+// @compatible        firefox
 // ==/UserScript==
 
 (function() {
@@ -21,7 +25,7 @@
     var lang = navigator.appName=="Netscape"?navigator.language:navigator.userLanguage;
     const minLength=256,tg=0.5,
           defaultFun={
-              close:"window.top.close()",
+              close:"unsafeWindow.opener = null;unsafeWindow.open('', '_self', '');unsafeWindow.close();",
               openNew:"GM_openInTab('about:newtab', false)",
               scrollToTop:"window.scrollTo(0, 0)",
               scrollToBottom:"window.scrollTo(0, 1073741824)",
