@@ -2,7 +2,7 @@
 // @name         百Bing图
 // @name:en      BingBgForBaidu
 // @namespace    hoothin
-// @version      2.2.9
+// @version      2.3.0
 // @description     给百度首页换上Bing的背景图，并添加背景图链接与日历组件
 // @description:en  Just change the background image of baidu.com to bing.com
 // @author       hoothin
@@ -63,6 +63,8 @@
     riliLink.innerHTML="<span class='title' style='text-decoration:overline;cursor:crosshair'>"+date.getFullYear()+"-"+dateMonth+"-"+dateDay+" "+"\u661f\u671f"+week[date.getDay()]+"</span>";
     if(icons)icons.appendChild(riliLink);
     iframe.onload=function(){
+        var contentHead=this.contentWindow.document.querySelector("#head");
+        if(contentHead && contentHead.parentNode)contentHead.parentNode.removeChild(contentHead);
         var $=unsafeWindow.$;
         var iframeDoc=$(iframe.contentDocument);
         var rili=$("div.op-calendar-new",iframe.contentDocument);
