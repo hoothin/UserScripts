@@ -3,7 +3,7 @@
 // @name:zh-CN         鼠标手势
 // @name:zh-TW         滑鼠手勢
 // @namespace          hoothin
-// @version            0.1
+// @version            0.2
 // @description        Just a Mouse Gestures
 // @description:zh-CN  就是个鼠标手势
 // @description:zh-TW  就是個滑鼠手勢
@@ -25,13 +25,13 @@
     var lang = navigator.appName=="Netscape"?navigator.language:navigator.userLanguage;
     const minLength=256,tg=0.5,
           defaultFun={
-              close:"unsafeWindow.opener = null;unsafeWindow.open('', '_self', '');unsafeWindow.close();",
+              close:"unsafeWindow.opener=null;unsafeWindow.open('', '_self', '');unsafeWindow.close();",
               openNew:"GM_openInTab('about:newtab', false)",
-              scrollToTop:"window.scrollTo(0, 0)",
-              scrollToBottom:"window.scrollTo(0, 1073741824)",
-              back:"window.history.back()",
-              forward:"window.history.forward()",
-              reload:"window.location.reload()"
+              scrollToTop:"unsafeWindow.scrollTo(0, 0)",
+              scrollToBottom:"unsafeWindow.scrollTo(0, 1073741824)",
+              back:"unsafeWindow.history.back()",
+              forward:"unsafeWindow.history.forward()",
+              reload:"unsafeWindow.location.reload()"
           };
     switch (lang){
         case "zh-CN":
