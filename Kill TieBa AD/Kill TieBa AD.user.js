@@ -23,7 +23,7 @@
     'use strict';
     var observer, option;
     var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
-    var tcss = "#j_p_postlist>div.clearfix,.j_encourage_entry,#encourage_entry,.tpoint-skin,#pb_adbanner,.iframe_wrapper,div.tpoint-skin,.j_click_stats,#thread_list>li:not(.j_thread_list),#j_p_postlist>div:not(.l_post){display:none !important;}";
+    var tcss = "#j_p_postlist>div.clearfix,.j_encourage_entry,#encourage_entry,.tpoint-skin,#pb_adbanner,.iframe_wrapper,div.tpoint-skin,.j_click_stats,#thread_list>li:not(.j_thread_list):not(.thread_top_list_folder),#j_p_postlist>div:not(.l_post){display:none !important;}";
     var snod = document.createElement('style');
     snod.innerHTML = tcss;
     document.getElementsByTagName("head")[0].appendChild(snod);
