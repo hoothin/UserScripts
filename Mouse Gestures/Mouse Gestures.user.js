@@ -81,7 +81,7 @@
     }
     gestures=GM_getValue("gestures");
     if(!gestures){
-        gestures=[{gesture:"↓→",fun:"close"},{gesture:"→↑",fun:"openNew"},{gesture:"↑",fun:"scrollToTop"},{gesture:"↓",fun:"scrollToBottom"},{gesture:"←",fun:"back"},{gesture:"→",fun:"forward"},{gesture:"→↓",fun:"reload"}];
+        gestures=[{gesture:"↓→",fun:"close"},{gesture:"→↑",fun:"openNew"},{gesture:"↑",fun:"scrollToTop"},{gesture:"↓",fun:"scrollToBottom"},{gesture:"←",fun:"back"},{gesture:"→",fun:"forward"},{gesture:"↑↓",fun:"reload"}];
         GM_setValue("gestures",gestures);
     }
     function tracer(curX,curY) {
