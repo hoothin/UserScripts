@@ -78,7 +78,7 @@
 // @include     http*://sleazyfork.org/*/scripts/*
 // @include     http*://greasyfork.org/*/scripts/*
 // @include     http*://*yfork.org/*/forum/*discussion*
-// @version     3.22.09
+// @version     3.22.10
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -86,7 +86,7 @@
 // @grant       GM_getValue
 // @grant       unsafeWindow
 // @run-at      document-end
-// @require     https://greasyfork.org/scripts/23522/code/od.js?version=173726
+// @require     https://greasyfork.org/scripts/23522/code/od.js?version=174698
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
 // @updateURL   https://greasyfork.org/scripts/23316/code/HacgGodTurn.user.js
@@ -1293,11 +1293,38 @@
                     }
                     obj.parentNode.removeChild(obj.nextSibling);
                 }
-                var data=processTxt(curData);
+                let data=processTxt(curData);
                 if(curData != data){
-                    var newData = document.createElement("p");
-                    obj.parentNode.replaceChild(newData, obj);
-                    newData.outerHTML=data;
+                    let curObj=obj;
+                    setTimeout(function(){
+                        var newData = document.createElement("p");
+                        curObj.parentNode.replaceChild(newData, curObj);
+                        newData.outerHTML=data;
+                    },1);
+                }else if(/B|STRONG/.test(obj.parentNode.tagName)){
+                    let allStrongs=[];
+                    var next=obj.parentNode.nextSibling;
+                    while(next){
+                        if(/B|STRONG/.test(next.tagName)){
+                            allStrongs.push(next);
+                            curData+=next.innerHTML;
+                            next=next.nextSibling;
+                        }else{
+                            break;
+                        }
+                    }
+                    data=processTxt(curData);
+                    if(curData != data){
+                        let curObj=obj;
+                        setTimeout(function(){
+                            allStrongs.forEach(function(item){
+                                item.style.display="none";
+                            });
+                            var newData = document.createElement("p");
+                            curObj.parentNode.replaceChild(newData, curObj);
+                            newData.outerHTML=data;
+                        },1);
+                    }
                 }
             }
         }
@@ -1467,7 +1494,7 @@
                     lastSign=direction;
                 }
             }
-        };
+        }
         document.addEventListener("touchstart", function(e) {
             lastX=e.changedTouches[0].clientX;
             lastY=e.changedTouches[0].clientY;
