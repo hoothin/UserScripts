@@ -3,7 +3,7 @@
 // @name:zh-CN         鼠标手势
 // @name:zh-TW         滑鼠手勢
 // @namespace          hoothin
-// @version            0.2
+// @version            0.3
 // @description        Just a Mouse Gestures
 // @description:zh-CN  就是个鼠标手势
 // @description:zh-TW  就是個滑鼠手勢
@@ -81,7 +81,7 @@
     }
     gestures=GM_getValue("gestures");
     if(!gestures){
-        gestures=[{gesture:"↓→",fun:"close"},{gesture:"→↑",fun:"openNew"}];
+        gestures=[{gesture:"↓→",fun:"close"},{gesture:"→↑",fun:"openNew"},{gesture:"↑",fun:"scrollToTop"},{gesture:"↓",fun:"scrollToBottom"},{gesture:"←",fun:"back"},{gesture:"→",fun:"forward"},{gesture:"→↓",fun:"reload"}];
         GM_setValue("gestures",gestures);
     }
     function tracer(curX,curY) {
@@ -156,7 +156,11 @@
     gesturesContent.innerHTML='<div id="gesturesWords" style="position:absolute;left:20px;top:5px;font:bold 50px \'黑体\';color:#ffffff"></div>';
     var gesturesWords=gesturesContent.querySelector("#gesturesWords");
     if(location.href=="https://github.com/hoothin/UserScripts/tree/master/Mouse%20Gestures"){
-        var entryContent=document.querySelector("article.entry-content");
+        var entryContent=document.querySelector("article.entry-content"),mobile=false;
+        if(!entryContent){
+            mobile=true;
+            entryContent=document.querySelector(".files-list");
+        }
         var configBody=document.createElement("div");
         configBody.id="configBody";
         configBody.style.cssText="opacity:0.65;filter:alpha(opacity=65);box-shadow:5px 5px 20px 0px #000;height:160px";
@@ -182,7 +186,7 @@
         }
         functionArea.appendChild(functionSelect);
         var newOrEditEval=document.createElement("input");
-        newOrEditEval.style.width="600px";
+        newOrEditEval.style.width=(mobile?"230":"750")+"px";
         newOrEditEval.style.display="none";
         functionArea.appendChild(newOrEditEval);
         var newOrEditOkBtn=document.createElement("input");
