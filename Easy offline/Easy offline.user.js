@@ -698,7 +698,7 @@
 
     function checkSel(e){
         var sel=document.getSelection();
-        var link=sel.toString(),validReg=/^(magnet:\?xt=urn:btih:|ed2k:\/\/\|file|https?:|ftp:)/i;
+        var link=sel.toString(),validReg=/^\s*(magnet:\?xt=urn:btih:|ed2k:\/\/\|file|https?:|ftp:)/i;
         if(link==="" || !validReg.test(link)){
             if(targetA) link=targetA.href;
             else link=prompt("输入需要离线下载的链接：","magnet:?xt=urn:btih:");
