@@ -8,7 +8,7 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdn.jsdelivr.net/jquery/1.7.2/jquery.min.js
 // @require      https://cdn.jsdelivr.net/hi-base64/0.2.0/base64.min.js
-// @version      1.3.16
+// @version      1.3.17
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -698,8 +698,8 @@
 
     function checkSel(e){
         var sel=document.getSelection();
-        var link=sel.toString();
-        if(link===""){
+        var link=sel.toString(),validReg=/^(magnet:\?xt=urn:btih:|ed2k:\/\/\|file|https?:|ftp:)/i;
+        if(link==="" || !validReg.test(link)){
             if(targetA) link=targetA.href;
             else link=prompt("输入需要离线下载的链接：","magnet:?xt=urn:btih:");
         }/*else{
@@ -708,7 +708,7 @@
                 link=focusedElement.href;
             }
         }*/
-        if(/^(magnet|ed2k:\/\/\|file|https?:|ftp:)/.test(link)){
+        if(validReg.test(link)){
             init();
             showDiskIcons(getRightUrl(link),mouseEve.pageY-10,mouseEve.pageX-10);
         }
