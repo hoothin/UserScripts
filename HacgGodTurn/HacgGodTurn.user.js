@@ -75,10 +75,11 @@
 // @include     http*://www.l-sj.cc/*
 // @include     http*://htacg.cc/*
 // @include     http*://www.htacg.cc/*
+// @include     http*://www.xiu.moe/*
 // @include     http*://sleazyfork.org/*/scripts/*
 // @include     http*://greasyfork.org/*/scripts/*
 // @include     http*://*yfork.org/*/forum/*discussion*
-// @version     3.22.11
+// @version     3.22.12
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -364,6 +365,15 @@
                 regex:/acgpy\.com/,
                 offset:45,
                 hideOd:true
+            },
+            {
+                name:"咻咻动漫",
+                url:"http://www.xiu.moe/",
+                regex:/xiu\.moe/,
+                contentArea:'#post-content',
+                commArea:'commentlist',
+                offset:55,
+                articleSel:"article"
             }
             /*{
                 name:"梦幻二次元",
