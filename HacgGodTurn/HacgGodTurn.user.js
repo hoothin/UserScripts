@@ -373,7 +373,7 @@
                 contentArea:'#post-content',
                 commArea:'commentlist',
                 offset:55,
-                articleSel:"article"
+                articleSel:"article,.article-link>li"
             }
             /*{
                 name:"梦幻二次元",
