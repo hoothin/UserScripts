@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2017.1.19.1
+// @version        2017.2.14.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -226,7 +226,7 @@
 
                     // 这个网址大图会出错
                     // http://movie.douban.com/subject/25708579/discussion/58950206/
-                    if(/movie\.douban\.com\/subject/.test(location.href)){
+                    if(/movie\.douban\.com\/subject\/\d+\/discussion/.test(location.href)){
                     } else if (pic.test(oldsrc)) {
                         newsrc = oldsrc.replace(pic, '/view/photo/raw/public/');
                     } else if (movieCover.test(oldsrc)) {
@@ -4855,7 +4855,7 @@ left:0px;\
                 this.searchButton=searchButton;
                 var srcs, from;
                 img.onerror=function(e){
-                    setSearchState("原图加载失败，尝试加载下一结果……");
+                    setSearchState(img.src+" 原图加载失败，尝试加载下一结果……");
                     var src=self.srcs.shift();
                     if(src)img.src=src;
                     else{
@@ -8357,7 +8357,7 @@ background-image:url("'+ prefs.icons.magnifier +'");\
             getUrl("https://www.tineye.com/search?url="+encodeURIComponent(imgSrc)+"&sort=size", function(d){
                 let tineyeHtml=document.implementation.createHTMLDocument('');
                 tineyeHtml.documentElement.innerHTML = d.responseText;
-                let searchImg=tineyeHtml.querySelectorAll("div.matches>div>div>div>div>p.hidden-xs>a");
+                let searchImg=tineyeHtml.querySelectorAll("div.matches>div>div>div>div:first-of-type>p.hidden-xs:first-of-type>a");
                 if(searchImg.length>0){
                     srcs=[];
                     for(let img of searchImg){
