@@ -3,7 +3,7 @@
 // @name:zh-CN         鼠标手势
 // @name:zh-TW         滑鼠手勢
 // @namespace          hoothin
-// @version            0.3
+// @version            0.5
 // @description        Just a Mouse Gestures
 // @description:zh-CN  就是个鼠标手势
 // @description:zh-TW  就是個滑鼠手勢
@@ -81,7 +81,17 @@
     }
     gestures=GM_getValue("gestures");
     if(!gestures){
-        gestures=[{gesture:"↓→",fun:"close"},{gesture:"→↑",fun:"openNew"},{gesture:"↑",fun:"scrollToTop"},{gesture:"↓",fun:"scrollToBottom"},{gesture:"←",fun:"back"},{gesture:"→",fun:"forward"},{gesture:"↑↓",fun:"reload"}];
+        gestures=[{gesture:"↓→",fun:"close"},
+                  {gesture:"→↑",fun:"openNew"},
+                  {gesture:"↑",fun:"scrollToTop"},
+                  {gesture:"↓",fun:"scrollToBottom"},
+                  {gesture:"←",fun:"back"},
+                  {gesture:"→",fun:"forward"},
+                  {gesture:"↑↓",fun:"reload"},
+                  {gesture:"↓↑↓",fun:"var element = document.createElement('script');element.id='outfox_seed_js';element.charset='utf-8',element.setAttribute('src','http://fanyi.youdao.com/web2/seed.js?'+Date.parse(new Date()));document.body.appendChild(element);"},
+                  {gesture:"↓↑↓←",fun:'function R(a){ona = "on"+a; if(unsafeWindow.addEventListener) unsafeWindow.addEventListener(a, function (e) { for(var n=e.originalTarget; n; n=n.parentNode) n[ona]=null; }, true); unsafeWindow[ona]=null; document[ona]=null; if(document.body) document.body[ona]=null; } R("contextmenu"); R("click"); R("mousedown"); R("mouseup"); R("selectstart");'},
+                  {gesture:"↓↑↓→",fun:"GM_openInTab('http://just998.com/xiu/photo'+unsafeWindow.location.search,false)"}
+                 ];
         GM_setValue("gestures",gestures);
     }
     function tracer(curX,curY) {
@@ -152,7 +162,7 @@
     var afterGestures;
     var gesturesContent=document.createElement("div");
     gesturesContent.id="gesturesContent";
-    gesturesContent.style.cssText="width:300px;height:70px;position:fixed;left:50%;top:50%;margin-top:-25px;margin-left:-150px;z-index:200000;background-color:#000;border:1px solid;border-radius:10px;opacity:0.65;filter:alpha(opacity=65);box-shadow:5px 5px 20px 0px #000;";
+    gesturesContent.style.cssText="width:300px;height:70px;position:fixed;left:50%;top:50%;margin-top:-25px;margin-left:-150px;z-index:999999999;background-color:#000;border:1px solid;border-radius:10px;opacity:0.65;filter:alpha(opacity=65);box-shadow:5px 5px 20px 0px #000;";
     gesturesContent.innerHTML='<div id="gesturesWords" style="position:absolute;left:20px;top:5px;font:bold 50px \'黑体\';color:#ffffff"></div>';
     var gesturesWords=gesturesContent.querySelector("#gesturesWords");
     if(location.href=="https://github.com/hoothin/UserScripts/tree/master/Mouse%20Gestures"){
