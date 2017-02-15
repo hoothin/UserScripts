@@ -79,7 +79,7 @@
 // @include     http*://sleazyfork.org/*/scripts/*
 // @include     http*://greasyfork.org/*/scripts/*
 // @include     http*://*yfork.org/*/forum/*discussion*
-// @version     3.22.16
+// @version     3.22.17
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -604,10 +604,10 @@
                     changeUrl(true,[["object"],[['http:','https:']]]);
                     changeUrl(true,[["a"],[['http:(.*hacg)','https:$1']]]);
                 }
-                if(/hacg\.(ch|la|at|tw|se)/.test(location.href)){
-                    document.title = document.title.replace(/\u7409\u7483\u795e\u793e/,"\u7409\u7483♂\u795e\u793e");
+                if(document.querySelector(".metaslider-flex")){
+                    document.title = document.title.replace(/\u7409\u7483\u795e\u793e/,"\u7409\u7483 ♂ \u795e\u793e");
                     [].forEach.call(document.querySelectorAll("a"), function(item, index, arr) {
-                        item.innerHTML=item.innerHTML.replace(/\u7409\u7483\u795e\u793e/,"\u7409\u7483♂\u795e\u793e");
+                        item.innerHTML=item.innerHTML.replace(/\u7409\u7483\u795e\u793e/,"\u7409\u7483 ♂ \u795e\u793e");
                     });
                 }
                 var tags=document.querySelectorAll("article>footer>a");
