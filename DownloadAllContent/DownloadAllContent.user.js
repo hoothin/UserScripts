@@ -4,7 +4,7 @@
 // @name:zh-TW   懶人小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      1.12
+// @version      1.13
 // @description  Fetch and download main content on current page, provide special support for chinese novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取小說、論壇內容等並保存為TXT文檔
@@ -113,14 +113,21 @@
             let content=contents[i],hasText=false,allSingle=true,item;
             for(j=content.childNodes.length-1;j>=0;j--){
                 item=content.childNodes[j];
-                if((item.nodeType==3 && /^\s*$/.test(item.data)) || (item.tagName=="FONT" && item.className=="jammer") || (item.style && item.style.display=="none"))
+                if(item.nodeType==3 && /^\s*$/.test(item.data))
                     item.parentNode.removeChild(item);
             }
             for(j=content.childNodes.length-1;j>=0;j--){
                 item=content.childNodes[j];
-                if(item.nodeType==1 && /^\s*$/.test(item.innerHTML))
+                if(item.nodeType==1 && !/^(I|A|STRONG|B|FONT|BR)$/.test(item.tagName) && /^\s*$/.test(item.innerHTML))
                     item.parentNode.removeChild(item);
             }
+            [].forEach.call(content.querySelectorAll("font.jammer"),function(item){
+                item.parentNode.removeChild(item);
+            });
+            [].forEach.call(content.querySelectorAll("span"),function(item){
+                if(item.style && item.style.display=="none")
+                item.parentNode.removeChild(item);
+            });
             [].forEach.call(content.childNodes,function(item){
                 if(item.nodeType==3 && item.data && !/^\s*$/.test(item.data))
                     hasText=true;
@@ -173,11 +180,11 @@
             for(let j=0;j<childNodes.length;j++){
                 let childNode=childNodes[j];
                 if(childNode.nodeType==3 && childNode.data && !/^\s*$/.test(childNode.data))hasText=true;
-                if(childNode.innerHTML){
-                    childNode.innerHTML=childNode.innerHTML.replace(/\<\s*br\s*\>/gi,"\r\n");
-                }
                 if(childNode.textContent){
                     cStr+=childNode.textContent.replace(/ +/g,"  ").replace(/([^\r]|^)\n([^\r]|$)/g,"$1\r\n$2");
+                }
+                if(childNode.innerHTML){
+                    childNode.innerHTML=childNode.innerHTML.replace(/\<\s*br\s*\>/gi,"\r\n");
                 }
                 if(childNode.nodeType!=3 && !/^(I|A|STRONG|B|FONT)$/.test(childNode.tagName))cStr+="\r\n";
             }
