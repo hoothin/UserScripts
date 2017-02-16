@@ -106,7 +106,7 @@
     function getPageContent(doc){
         if(!doc)return i18n.error;
         var i,j,k,rStr="",pageData=(doc.body?doc.body:doc).cloneNode(true),delList=[];
-        [].forEach.call(pageData.querySelectorAll("script,style,link"),function(item){delList.push(item);});
+        [].forEach.call(pageData.querySelectorAll("script,style,link,img"),function(item){delList.push(item);});
         [].forEach.call(delList,function(item){item.parentNode.removeChild(item);});
         var largestContent,contents=pageData.querySelectorAll("span,div,article,p,td");
         for(i=0;i<contents.length;i++){
@@ -114,6 +114,11 @@
             for(j=content.childNodes.length-1;j>=0;j--){
                 item=content.childNodes[j];
                 if((item.nodeType==3 && /^\s*$/.test(item.data)) || (item.tagName=="FONT" && item.className=="jammer") || (item.style && item.style.display=="none"))
+                    item.parentNode.removeChild(item);
+            }
+            for(j=content.childNodes.length-1;j>=0;j--){
+                item=content.childNodes[j];
+                if(item.nodeType==1 && /^\s*$/.test(item.innerHTML))
                     item.parentNode.removeChild(item);
             }
             [].forEach.call(content.childNodes,function(item){
