@@ -4,8 +4,8 @@
 // @name:zh-TW   懶人小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      1.10
-// @description  Fetch and download main content on current page,provide special support for chinese novel
+// @version      1.11
+// @description  Fetch and download main content on current page, provide special support for chinese novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取小說、論壇內容等並保存為TXT文檔
 // @description:ja     ユニバーサルサイトコンテンツクロールツール、クロール、フォーラム内容など
@@ -32,14 +32,18 @@
             i18n={
                 fetch:"开始下载小说或其他【Ctrl+F9】",
                 info:"本文是使用懒人小说下载器（DownloadAllContent）脚本下载的",
-                error:"该段内容获取失败"
+                error:"该段内容获取失败",
+                downloading:"已下载完成 %s 段，剩余 %s 段<br>正在下载 %s",
+                complete:"已全部下载完成，共 %s 段"
             };
             break;
         default:
             i18n={
                 fetch:"Download All Content[Ctrl+F9]",
                 info:"The TXT is downloaded by 'DownloadAllContent'",
-                error:"Failed in downloading current chapter"
+                error:"Failed in downloading current chapter",
+                downloading:"%s pages are downloaded, there are still %s pages left<br>Downloading %s ......",
+                complete:"Completed! The pages totalled %s"
             };
             break;
     }
@@ -78,9 +82,9 @@
             j++;
             rCats[i]=(aTag.textContent+"\r\n"+getPageContent(doc));
             txtDownContent.style.display="block";
-            txtDownWords.innerHTML="已下载完成 "+j+" 段，剩余 "+(aEles.length-j)+" 段"+"<br>正在下载 "+aTag.textContent;
+            txtDownWords.innerHTML=getI18n("downloading",[j,(aEles.length-j),aTag.textContent]);
             if(j==aEles.length){
-                txtDownWords.innerHTML="已全部下载完成，共 "+j+" 段";
+                txtDownWords.innerHTML=getI18n("complete",[j]);
                 var blob = new Blob([i18n.info+"\r\n"+document.title+"\r\n\r\n"+rCats.join("\r\n\r\n")], {type: "text/plain;charset=utf-8"});
                 saveAs(blob, document.title+".txt");
             }
@@ -187,6 +191,16 @@
         return rStr;
     }
 
+    function getI18n(key, args){
+        var resultStr=i18n[key];
+        if(args && args.length>0){
+            args.forEach(function(item){
+                resultStr=resultStr.replace(/%s/,item);
+            });
+        }
+        return resultStr;
+    }
+
     function getDepth(dom){
         var pa=dom,i=0;
         while(pa.parentNode){
@@ -200,7 +214,7 @@
         var aEles=document.querySelectorAll("a"),list=[];
         for(var i=0;i<aEles.length;i++){
             var aEle=aEles[i];
-            if(aEle.href && /第.+[章|节|回|卷|折|篇|幕|集]|序|序\s*言|序\s*章|前\s*言|引\s*言|引\s*子|摘\s*要|楔\s*子|后\s*记|附\s*言|结\s*语|[\d|〇|零|一|二|三|四|五|六|七|八|九|十|百|千|万|萬|-]+(、|）)/.test(aEle.innerHTML)){
+            if(aEle.href && /PART\b|Prologue|Chapter\s*\d+|第.+[章|节|回|卷|折|篇|幕|集]|序|序\s*言|序\s*章|前\s*言|引\s*言|引\s*子|摘\s*要|楔\s*子|后\s*记|附\s*言|结\s*语|[\d|〇|零|一|二|三|四|五|六|七|八|九|十|百|千|万|萬|-]+(、|）)/i.test(aEle.innerHTML)){
                 list.push(aEle);
             }
         }
