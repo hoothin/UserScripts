@@ -8,7 +8,7 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdn.jsdelivr.net/jquery/1.7.2/jquery.min.js
 // @require      https://cdn.jsdelivr.net/hi-base64/0.2.0/base64.min.js
-// @version      1.3.18
+// @version      1.3.19
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -337,6 +337,7 @@
         let siteConfig=sitesArr[x];
         offNode.css("background-color","#"+siteConfig.bgColor).attr("title",i18n[siteConfig.name] ).attr("href", siteConfig.url).attr("name", siteConfig.name);
         offNode.click(function(e){
+            offUrl=getRightUrl(offUrl);
             if(siteConfig.directUrl){
                 offNode.attr('href', siteConfig.directUrl(offUrl));
             }else{
@@ -452,7 +453,7 @@
                         if(sNodes.indexOf(curNode)!=-1)continue;
                         sNodes.push(curNode);
                     }
-                    let href=getRightUrl(curNode.href);
+                    let href=curNode.href;
                     let clone=$("<a></a>").attr("style",curNode.getAttribute("style")).attr("href",href).addClass('whx-a').css("background-color","#e1e1e1").css("background-image",'url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAMAAADzN3VRAAAARVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADc6ur3AAAAFnRSTlMAYM5vMOA/ENGegK2olI6G1b97Z0sXENA+jAAAAKFJREFUKM+FklkSxCAIRHFfss3K/Y86iQSDVqzpH7FfgQpCVfAmGx+gl9JI0qrxrcNLzooEbKUG4EKWdkCiDRV0N0RTrZ5wvdgTTgp4SzCAHxAPZkAM5GOJWuuT7FE5OVPOBFLTYb3Oc2YB5uJ8+G6pgkTGt74ntcCJHiwFLHw10Tdc93jlGXGvSRtsHNpuPs+/o1ODfxAtSL0f7HPC+L/9AF60G3QxO1UaAAAAAElFTkSuQmCC")');
                     if(allUrl.toString().indexOf(href)==-1)allUrl.push(href);
                     clone.mouseover(function(e){
@@ -710,7 +711,7 @@
         }*/
         if(validReg.test(link)){
             init();
-            showDiskIcons(getRightUrl(link),mouseEve.pageY-10,mouseEve.pageX-10);
+            showDiskIcons(link,mouseEve.pageY-10,mouseEve.pageX-10);
         }
     }
 
