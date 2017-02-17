@@ -8,7 +8,7 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdn.jsdelivr.net/jquery/1.7.2/jquery.min.js
 // @require      https://cdn.jsdelivr.net/hi-base64/0.2.0/base64.min.js
-// @version      1.3.19
+// @version      1.5.0
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -212,6 +212,42 @@
                 return this.url+base64.encode(offUrl)+"&src=EasyOffline";
             },
             bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAeFBMVEX4cwD+/v7+/vz+/f7+zKr+mU/++vj93cf8hiv+28T+z6/+z6v8lUv+kkn8gSf+fCL98OP92sH+17z+yqf+yaX+wJX9lk/7mkz8kkb9jj79gyr6hyn9exv++/r+9/X96+H+xJz9v47+mFP+mEr+dh37dhn+dhL+cAw9Nvl9AAAAf0lEQVQY053NWQ6DMAwE0LFNEkqahLK0hdJ9u/8NcXIERpY/nkY2NuVS1zoRwDL/dL9vIkJsXcRgjwqG7uP4fLTcw5NROJGH5iUOFWcw3KBqJ9AOFe1zQzwcBXCBcqPBgc8FuIAoiILTRv4SbI/OTrAdhmuAZk5Y4h/pg2/Clqzm5QVwiFSSmAAAAABJRU5ErkJggg=="
+        },
+        apiv:{
+            regex:/apiv\.ga/,
+            url:"https://apiv.ga/magnet/",
+            bgColor:"35271c",
+            noHttp:true,
+            noEd2k:true,
+            noFtp:true,
+            directUrl:function(offUrl){
+                return this.url+offUrl.replace("magnet:?xt=urn:btih:","");
+            },
+            bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAS1BMVEXq5N+Lgnl/dGw1Jxzt5uDy7eju6eO1rKTk3tdPRDjb1M2vpZ1jWU9WST6+tq+qoJiYkIp4bWNCNCbg2dTIwLi5squroplYT0dFNyua0/V8AAAAA3RSTlP+/v6VFoksAAAAaklEQVQ4y+XSSw6AIAwEUMCC5Svg9/4nFQ/AsDTGWb+kk0nFNMgfQawDsKQ4AOxUReBgZm8BmEWLK1cfEJEx5CMG2riCgG4xudehiQesCp7Qe4AdWJ6oJKUAd2AJh6ItWDS1z/b1j/osuAHroA3qksST5QAAAABJRU5ErkJggg=="
+        },
+        torrent:{
+            regex:/torrent\.org\.cn/,
+            url:"http://www.torrent.org.cn/Home/torrent/download.html?hash=",
+            bgColor:"f2f2f2",
+            noHttp:true,
+            noEd2k:true,
+            noFtp:true,
+            directUrl:function(offUrl){
+                return this.url+offUrl.replace("magnet:?xt=urn:btih:","");
+            },
+            bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAh1BMVEUAAAARzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW6Q4LCTAAAALHRSTlMABCboGRPMNdIrH/Pu6sS+pC/iuZg5CfnaeUWFZD88Dtayq5GLgFz3VE5Jaw0PQwoAAAFJSURBVDjL1ZLZdoQgEERHQBBwAfd9xnW2/v/vSxRNJifOe3JfPC1F0V1w+l+cy2m6C+u9oJYA13wkb5ZF/XBhwdfHggo3PaxQftiADzHLjaKzDwTkAvJRhqsgmw8EtgPg8NYxbRxYpMGygPjyyfKjLoqQ+r7Sos+rB7NT6/cZLGkThiwbtVUXBOqJfmisJKahh3NFUO+aTsMYvcwQe7AyagpfXO67CQrAgJmCF/B9C6nb/0Q6zKoi8vbaMac8M1OGE2IuRDehRwyGYotgwR2QuDEP4EpnW8fbzZ1NygAyas6z4/C1x2vUpEwtLjlZEuhCOpQk6SXIsjDWnmqIvlWqXucgbVtOweoZ8QgMLlXF3KTmrfieBENWm5E3qDAx1njfFosTGb6nLPegWXzBHnaGZLFM2ehgKTEtxMtdEK6Rbe2VzZOEf5Z/hQ9XijJkclXFpgAAAABJRU5ErkJggg=="
+        },
+        btcache:{
+            regex:/btcache\.me/,
+            url:"http://btcache.me/torrent/",
+            bgColor:"f30000",
+            noHttp:true,
+            noEd2k:true,
+            noFtp:true,
+            directUrl:function(offUrl){
+                return this.url+offUrl.replace("magnet:?xt=urn:btih:","");
+            },
+            bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAA9lBMVEUAAACgoqOipKUAAAC4ubq1traXl5jX19g9PT4GBga2t7ixsrOur7Cmp6jMzM1+f39ZWVpnZ2eChIXMzc3BwcKvsrLGxsacnZ3f399zdHS9vr61trZZW1upq6vIysq7vb2nqKliZGTS09O6vLzg4OC2uLhQUVHi4uK+v79OTk4hISHT1NQZGRnf4OCPkpKsra3KysxmZ2d+f3/y8vOUlZW+vr+2tridnp/Z2dmAgYJ4enptbm5YWVn39/fv7/DDw8Td3d7U1dXU1NTOztC4ubuoqamlpaWcnJyYmJp6fHxwcXFTVVX29/bHyMnHx8e3t7qgoaGHiYm1AxJpAAAAL3RSTlMAHhgF4NbW2jQU4uDg3sybVDUkHhcF6Ojk5ODc2dfJycPDra17ezkuLiUlIRUREf6sWL0AAAC0SURBVBjTjY9HEoJAAAQXVwVzAMw5Z5YMgoBizv7/M7JwoLw5t+lD1wzAYVcEPaeXLAgyHvTazTpJtvrDCe5M1nUReiiK/ERZxgNEVLYdy1GFz1uuET54IfGucTq/5qIYRGIKEjcaJ3ggFsEgrp/tnSwZJi/EMSDSqqQeJeNmXk+pwLFHlrg9CPzl16H/7ygmQ0eyCACkMuGODAUBTORzHbJSKlcb3Vw+AfE9uJgWCiNq5rcvfNwgjdumYdQAAAAASUVORK5CYII="
         }
     };
     var enableUrl = 'a[href^="magnet"],[href^="ed2k://|file"],[href$=".torrent"],[href$=".mp4"],[href$=".rar"],[href$=".7z"],[href$=".zip"],[href$=".rmvb"],[href$=".mkv"],[href$=".avi"],[href$=".iso"]';
@@ -232,6 +268,9 @@
                 xunlei:"迅雷离线",
                 xiaomi:"小米路由器",
                 weiyun:"腾讯微云",
+                apiv:"九秒云播",
+                torrent:"Torrent.org种子下载",
+                btcache:"Btcache.me种子下载",
                 enable:"启用",
                 disable:"禁用"
             };
@@ -247,6 +286,9 @@
                 xunlei:"Xunlei",
                 xiaomi:"MiWifi",
                 weiyun:"Weiyun",
+                apiv:"Apiv Online play",
+                torrent:"Torrent download in torrent.org",
+                btcache:"Torrent download in btcache.me",
                 enable:"Enable ",
                 disable:"Disable "
             };
@@ -485,7 +527,9 @@
         for(var x=0;x<offNodes.length;x++){
             let node=offNodes[x];
             let siteConfig=sites[node.attr("name")];
-            if(/^magnet/i.test(offUrl) && siteConfig.noMag){
+            if(/^http/i.test(offUrl) && siteConfig.noHttp){
+                node.hide();
+            }else if(/^magnet/i.test(offUrl) && siteConfig.noMag){
                 node.hide();
             }else if(/^ftp/i.test(offUrl) && siteConfig.noFtp){
                 node.hide();
@@ -590,7 +634,7 @@
                     <div style="text-align:center;font-size: 12px;margin-top: 28px;">自定义需要启用一键下载的链接正则，一行一条</div>
                     <textarea id="configInput" placeholder="例：http:.*\\.php\\?getRes=\\d+" style="position:absolute;left:20px;top:50px;width:260px;height:110px"></textarea>
                     <div style="text-align:center;font-size:12px;margin-top:125px;" title="不需要加'我的网盘/全部文件'">度盘存储路径：<input id="baiduPath" placeholder="例：/av" style="width:170px;"></div>
-                    <div id="icons" style="position:absolute;left:3px;top:202px"></div>
+                    <div id="icons" style="position:absolute;left:0px;top:202px"></div>
                     <label style="position:absolute;left:60px;top:230px;"><input id="showType" type="checkbox"/>仅当鼠标经过时显示图标</label>
                     <button id="configSave" class="whx-btn" type="button" style="position:absolute;left:110px;top:260px;width:80px;height:30px;color:white;border-radius:5px;border:0px;outline:none;">设置</button>
                     <div id="configQuit" class="whx-btn" style="width:28px;height:28px;border-radius:14px;position:absolute;right:2px;top:2px;cursor:pointer;">
@@ -625,7 +669,7 @@
         };
         for(var x = 0; x < sitesArr.length; x++){
             let siteConfig=sitesArr[x];
-            let icon=$("<div style='height:25px;width:25px;float:left;border-radius:50%;background-position:center;background-repeat:no-repeat;background-size:20px;margin-left:10px;cursor:pointer'></div>");
+            let icon=$("<div style='height:25px;width:25px;float:left;border-radius:50%;background-position:center;background-repeat:no-repeat;background-size:20px;margin-left:2px;cursor:pointer'></div>");
             icon.css("background-color","#"+siteConfig.bgColor).attr("title",i18n.disable+i18n[siteConfig.name] ).attr("draggable",true).attr("name",siteConfig.name);
             icon[0].ondragstart=function(e){
                 dragIcon=this;
