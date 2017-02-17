@@ -4,7 +4,7 @@
 // @name:zh-TW   懶人小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      1.13
+// @version      1.15
 // @description  Fetch and download main content on current page, provide special support for chinese novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取小說、論壇內容等並保存為TXT文檔
@@ -108,30 +108,30 @@
         var i,j,k,rStr="",pageData=(doc.body?doc.body:doc).cloneNode(true),delList=[];
         [].forEach.call(pageData.querySelectorAll("script,style,link,img"),function(item){delList.push(item);});
         [].forEach.call(delList,function(item){item.parentNode.removeChild(item);});
-        var largestContent,contents=pageData.querySelectorAll("span,div,article,p,td");
+        [].forEach.call(pageData.querySelectorAll("font.jammer"),function(item){
+            item.parentNode.removeChild(item);
+        });
+        [].forEach.call(pageData.querySelectorAll("span"),function(item){
+            if(item.style && item.style.display=="none")
+                item.parentNode.removeChild(item);
+        });
+        var largestContent,contents=pageData.querySelectorAll("span,div,article,p,td"),largestNum=0;
         for(i=0;i<contents.length;i++){
-            let content=contents[i],hasText=false,allSingle=true,item;
+            let content=contents[i],hasText=false,allSingle=true,item,curNum=0;
             for(j=content.childNodes.length-1;j>=0;j--){
                 item=content.childNodes[j];
-                if(item.nodeType==3 && /^\s*$/.test(item.data))
-                    item.parentNode.removeChild(item);
+                if(item.nodeType==3){
+                    if(/^\s*$/.test(item.data))
+                        item.parentNode.removeChild(item);
+                    else hasText=true;
+
+                }
             }
             for(j=content.childNodes.length-1;j>=0;j--){
                 item=content.childNodes[j];
                 if(item.nodeType==1 && !/^(I|A|STRONG|B|FONT|BR)$/.test(item.tagName) && /^\s*$/.test(item.innerHTML))
                     item.parentNode.removeChild(item);
             }
-            [].forEach.call(content.querySelectorAll("font.jammer"),function(item){
-                item.parentNode.removeChild(item);
-            });
-            [].forEach.call(content.querySelectorAll("span"),function(item){
-                if(item.style && item.style.display=="none")
-                item.parentNode.removeChild(item);
-            });
-            [].forEach.call(content.childNodes,function(item){
-                if(item.nodeType==3 && item.data && !/^\s*$/.test(item.data))
-                    hasText=true;
-            });
             if(content.childNodes.length>1){
                 for(j=0;j<content.childNodes.length;j++){
                     item=content.childNodes[j];
@@ -144,33 +144,25 @@
                              }
                          }
                         if(!allSingle)break;
-                        delList=[];
-                        [].forEach.call(item.childNodes,function(n){if((n.nodeType==3 && /^\s*$/.test(n.data)) || (n.nodeType==1 && /^\s*$/.test(n.textContent)))delList.push(n);});
-                        [].forEach.call(delList,function(n){n.parentNode.removeChild(n);});
                     }
                 }
             }else{
                 allSingle=false;
             }
-            if(!allSingle){
+            if(allSingle){
+                curNum=(navigator.userAgent.toLowerCase().indexOf('firefox')==-1?content.innerText.length:content.textContent.length);
+            }else {
                 if(!hasText)continue;
-                if(content.firstChild && (
-                    (content.firstChild.nodeType!=3 && !/^(I|A|STRONG|B|FONT|BR)$/.test(content.firstChild.tagName)) ||
-                    (content.firstChild.nodeType==3 && /^\s*$/.test(content.firstChild.data) &&
-                     (!content.childNodes[1] || !(content.childNodes[1].nodeType==3 || /^(I|A|STRONG|B|FONT|BR)$/.test(content.childNodes[1].tagName))))
-                ))
-                    continue;
                 if(pageData==document && content.offsetWidth<=0 && content.offsetHeight<=0)
                     continue;
+                [].forEach.call(content.childNodes,function(item){
+                    if(item.nodeType==3)
+                    curNum+=item.data.length;
+                });
             }
-            if(navigator.userAgent.toLowerCase().indexOf('firefox')!=-1){
-                if(!largestContent || largestContent.textContent.length<content.textContent.length){
-                    largestContent=content;
-                }
-            }else{
-                if(!largestContent || largestContent.innerText.length<content.innerText.length){
-                    largestContent=content;
-                }
+            if(curNum>largestNum){
+                largestNum=curNum;
+                largestContent=content;
             }
         }
         if(!largestContent)return i18n.error;
