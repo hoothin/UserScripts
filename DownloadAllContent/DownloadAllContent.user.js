@@ -47,6 +47,7 @@
             };
             break;
     }
+    var firefox=navigator.userAgent.toLowerCase().indexOf('firefox')!=-1;
 
     function indexDownload(aEles){
         var rocketContent=document.createElement("div");
@@ -150,14 +151,14 @@
                 allSingle=false;
             }
             if(allSingle){
-                curNum=(navigator.userAgent.toLowerCase().indexOf('firefox')==-1?content.innerText.length:content.textContent.length);
+                curNum=(firefox?content.textContent.length:content.innerText.length);
             }else {
                 if(!hasText)continue;
                 if(pageData==document && content.offsetWidth<=0 && content.offsetHeight<=0)
                     continue;
                 [].forEach.call(content.childNodes,function(item){
-                    if(item.nodeType==3)
-                    curNum+=item.data.length;
+                    if(item.nodeType==3)curNum+=item.data.length;
+                    else if(/^(I|A|STRONG|B|FONT)$/.test(item.tagName))curNum+=(firefox?item.textContent.length:item.innerText.length);
                 });
             }
             if(curNum>largestNum){
