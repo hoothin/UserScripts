@@ -3,7 +3,7 @@
 // @name:zh-CN         鼠标手势
 // @name:zh-TW         滑鼠手勢
 // @namespace          hoothin
-// @version            0.6
+// @version            0.61
 // @description        Just a Mouse Gestures
 // @description:zh-CN  就是个鼠标手势
 // @description:zh-TW  就是個滑鼠手勢
@@ -89,7 +89,7 @@
                   {gesture:"→",fun:"forward"},
                   {gesture:"↑↓",fun:"reload"},
                   {gesture:"↓↑↓",fun:"var t=((unsafeWindow.getSelection&&unsafeWindow.getSelection())||(document.getSelection&&document.getSelection())||(document.selection&&document.selection.createRange&&document.selection.createRange().text));var e=(document.charset||document.characterSet);if(t!=''){GM_openInTab('http://translate.google.cn/?text='+t+'&hl=zh-CN&langpair=auto|zh-CN&tbb=1&ie='+e,false);}else{GM_openInTab('http://translate.google.cn/translate?u='+encodeURIComponent(location.href)+'&hl=zh-CN&langpair=auto|zh-CN&tbb=1&ie='+e,false);}"},
-                  {gesture:"↓↑↓←",fun:'function R(a){ona = "on"+a; if(unsafeWindow.addEventListener) unsafeWindow.addEventListener(a, function (e) { for(var n=e.originalTarget; n; n=n.parentNode) n[ona]=null; }, true); unsafeWindow[ona]=null; document[ona]=null; if(document.body) document.body[ona]=null; } R("contextmenu"); R("click"); R("mousedown"); R("mouseup"); R("selectstart");'},
+                  {gesture:"↓↑↓←",fun:'function R(a){var ona = "on"+a; if(unsafeWindow.addEventListener) unsafeWindow.addEventListener(a, function (e) { for(var n=e.originalTarget; n; n=n.parentNode) n[ona]=null; }, true); unsafeWindow[ona]=null; document[ona]=null; if(document.body) document.body[ona]=null; } R("contextmenu"); R("click"); R("mousedown"); R("mouseup"); R("selectstart");'},
                   {gesture:"↓↑↓↑",fun:"var d = document, e = d.getElementById('wappalyzer-container') ; if ( e !== null ) { d.body.removeChild(e); } var u = 'https://wappalyzer.com/bookmarklet/', t = new Date().getTime(), c = d.createElement('div'), p = d.createElement('div'), l = d.createElement('link'), s = d.createElement('script') ; c.setAttribute('id', 'wappalyzer-container'); l.setAttribute('rel', 'stylesheet'); l.setAttribute('href', u + 'css/wappalyzer.css'); d.head.appendChild(l); p.setAttribute('id', 'wappalyzer-pending'); p.setAttribute('style', 'background-image: url(' + u + 'images/pending.gif) !important'); c.appendChild(p); s.setAttribute('src', u + 'js/wappalyzer.js?' + t); s.onload = function() { s = d.createElement('script'); s.setAttribute('src', u + 'js/apps.js?' + t); s.onload = function() { s = d.createElement('script'); s.setAttribute('src', u + 'js/driver.js?' + t); c.appendChild(s); }; c.appendChild(s); }; c.appendChild(s); d.body.appendChild(c);"},
                   {gesture:"↓↑↓→",fun:"GM_openInTab('http://just998.com/xiu/photo'+unsafeWindow.location.search,false)"}
                  ];
