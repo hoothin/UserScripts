@@ -8,7 +8,7 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdn.jsdelivr.net/jquery/1.7.2/jquery.min.js
 // @require      https://cdn.jsdelivr.net/hi-base64/0.2.0/base64.min.js
-// @version      1.5.0
+// @version      1.5.1
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -221,7 +221,7 @@
             noEd2k:true,
             noFtp:true,
             directUrl:function(offUrl){
-                return this.url+offUrl.replace("magnet:?xt=urn:btih:","");
+                return this.url+offUrl.split("&")[0].replace("magnet:?xt=urn:btih:","");
             },
             bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAS1BMVEXq5N+Lgnl/dGw1Jxzt5uDy7eju6eO1rKTk3tdPRDjb1M2vpZ1jWU9WST6+tq+qoJiYkIp4bWNCNCbg2dTIwLi5squroplYT0dFNyua0/V8AAAAA3RSTlP+/v6VFoksAAAAaklEQVQ4y+XSSw6AIAwEUMCC5Svg9/4nFQ/AsDTGWb+kk0nFNMgfQawDsKQ4AOxUReBgZm8BmEWLK1cfEJEx5CMG2riCgG4xudehiQesCp7Qe4AdWJ6oJKUAd2AJh6ItWDS1z/b1j/osuAHroA3qksST5QAAAABJRU5ErkJggg=="
         },
