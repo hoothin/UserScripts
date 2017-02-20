@@ -247,7 +247,8 @@
         }
     });
     function setDel(){
-        var selectors=prompt("设置小说干扰码的选择器：",GM_getValue("selectors"));
+        var selValue=GM_getValue("selectors");
+        var selectors=prompt("设置小说干扰码的选择器：",selValue?selValue:"");
         GM_setValue("selectors",selectors);
     }
     GM_registerMenuCommand(i18n.fetch, fetch);
