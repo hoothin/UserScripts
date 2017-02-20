@@ -4,7 +4,7 @@
 // @name:zh-TW   懶人小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      1.15
+// @version      1.16
 // @description  Fetch and download main content on current page, provide special support for chinese novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取小說、論壇內容等並保存為TXT文檔
@@ -13,6 +13,8 @@
 // @include      *
 // @grant        GM_xmlhttpRequest
 // @grant        GM_registerMenuCommand
+// @grant        GM_setValue
+// @grant        GM_getValue
 // @require      https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.3/FileSaver.min.js
 // @license      MIT License
 // @compatible        chrome
@@ -34,7 +36,8 @@
                 info:"本文是使用懒人小说下载器（DownloadAllContent）脚本下载的",
                 error:"该段内容获取失败",
                 downloading:"已下载完成 %s 段，剩余 %s 段<br>正在下载 %s",
-                complete:"已全部下载完成，共 %s 段"
+                complete:"已全部下载完成，共 %s 段",
+                del:"设置小说干扰码"
             };
             break;
         default:
@@ -43,7 +46,8 @@
                 info:"The TXT is downloaded by 'DownloadAllContent'",
                 error:"Failed in downloading current chapter",
                 downloading:"%s pages are downloaded, there are still %s pages left<br>Downloading %s ......",
-                complete:"Completed! The pages totalled %s"
+                complete:"Completed! The pages totalled %s",
+                del:"Set css selectors for delete"
             };
             break;
     }
@@ -112,6 +116,12 @@
         [].forEach.call(pageData.querySelectorAll("font.jammer"),function(item){
             item.parentNode.removeChild(item);
         });
+        var selectors=GM_getValue("selectors");
+        if(selectors){
+            [].forEach.call(pageData.querySelectorAll(selectors),function(item){
+                item.parentNode.removeChild(item);
+            });
+        }
         [].forEach.call(pageData.querySelectorAll("span"),function(item){
             if(item.style && item.style.display=="none")
                 item.parentNode.removeChild(item);
@@ -236,5 +246,10 @@
             fetch();
         }
     });
+    function setDel(){
+        var selectors=prompt("设置小说干扰码的选择器：",GM_getValue("selectors"));
+        GM_setValue("selectors",selectors);
+    }
     GM_registerMenuCommand(i18n.fetch, fetch);
+    GM_registerMenuCommand(i18n.del, setDel);
 })();
