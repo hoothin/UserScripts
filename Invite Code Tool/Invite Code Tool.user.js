@@ -3,7 +3,7 @@
 // @name:en      Tool for register with invite code
 // @name:zh-TW   注冊邀請碼搶碼工具
 // @namespace    hoothin
-// @version      0.2
+// @version      0.3
 // @description  自动遍历论坛注册邀请码得出正确结果
 // @description:en  Just a tool for register with invite code
 // @description:zh-TW  自動遍歷論壇注冊邀請碼得出正確結果
@@ -25,6 +25,7 @@
 (function() {
     'use strict';
     var is1024=document.title.indexOf('\u8349\u69b4') != -1;
+    var firefox=navigator.userAgent.toLowerCase().indexOf('firefox')!=-1;
     var invitecode=document.querySelector((is1024?"#invcode":"#invitecode")),
         chkInvitecode=document.querySelector((is1024?"#check_info_invcode":"#chk_invitecode")),
         codeChar=["0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"],checkFun,checkinvite,preTxt="",codeArr;
@@ -47,6 +48,8 @@
         if(checkFun)clearInterval(checkFun);
         var checkNext=function(){
             if(codeArr.length===0){
+                clearInterval(checkFun);
+                if(checkinvite)clearInterval(checkinvite);
                 alert("沒有找到正確的邀請碼！");
                 return;
             }
@@ -57,18 +60,20 @@
                 unsafeWindow.checkinvite();
             }
         };
+        var checkBtn=invitecode.parentNode.querySelector(".btn");
         checkFun = setInterval(function() {
             if(preTxt!=chkInvitecode.innerHTML){
                 preTxt=chkInvitecode.innerHTML;
                 if(chkInvitecode.innerHTML){
                     if(is1024){
-                        if(checkinvite)clearInterval(checkinvite);
                         if(chkInvitecode.innerHTML.indexOf("green")!=-1){
+                            if(checkinvite)clearInterval(checkinvite);
                             clearInterval(checkFun);
                             alert("已匹配到正確的邀請碼！");
                         }else if(chkInvitecode.innerHTML.indexOf("red")!=-1){
+                            if(checkinvite)clearInterval(checkinvite);
+                            checkinvite=setInterval(function() {checkBtn.click();},2000);
                             checkNext();
-                            checkinvite=setInterval(function() {unsafeWindow.invcodecheck();},2000);
                         }
                     }else{
                         if(chkInvitecode.innerHTML.indexOf("邀请码错误")==-1){
@@ -122,7 +127,7 @@
         });
     }else{
         if(is1024){
-            codeArr=document.body.innerHTML.pmatch(/(?:^|[:：\s])\b([0-9a-z\*]{16})\b/gi);
+            codeArr=(firefox?document.body.textContent:document.body.innerText).pmatch(/(?:^|[:：\s])\b([0-9a-z\*]{16})\b/gi);
             if(codeArr!==0){
                 if(window.confirm("檢測到邀請碼，是否立即前往注冊？")){
                     geneCodeArr();
