@@ -3,12 +3,15 @@
 // @name:en      Tool for register with invite code
 // @name:zh-TW   注冊邀請碼搶碼工具
 // @namespace    hoothin
-// @version      0.1
+// @version      0.2
 // @description  自动遍历论坛注册邀请码得出正确结果
 // @description:en  Just a tool for register with invite code
 // @description:zh-TW  自動遍歷論壇注冊邀請碼得出正確結果
 // @author       hoothin
 // @include      *
+// @exclude      http*://*.baidu.*
+// @exclude      http*://*.bing.*
+// @exclude      http*://*.google.*
 // @grant        GM_registerMenuCommand
 // @grant        GM_setValue
 // @grant        GM_getValue
@@ -119,7 +122,7 @@
         });
     }else{
         if(is1024){
-            codeArr=document.body.innerHTML.pmatch(/(?:^|[^\/])\b([0-9a-z\*]{16})\b/gi);
+            codeArr=document.body.innerHTML.pmatch(/(?:^|[:：\s])\b([0-9a-z\*]{16})\b/gi);
             if(codeArr!==0){
                 if(window.confirm("檢測到邀請碼，是否立即前往注冊？")){
                     geneCodeArr();
