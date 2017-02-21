@@ -54,7 +54,8 @@
 // @include     http*://acg18.us/*
 // @include     http*://*.acg18.us/*
 // @include     http*://*.acg44.com/*
-// @include     http*://zuiacg.com/*
+// @include     http*://zuiacg.*
+// @include     http*://www.zuiacg.*
 // @include     http*://www.galacg.me/*
 // @include     http*://www.mhecy.com/*
 // @include     http*://acgzone.org/*
@@ -76,10 +77,11 @@
 // @include     http*://htacg.cc/*
 // @include     http*://www.htacg.cc/*
 // @include     http*://www.xiu.moe/*
+// @include     http*://www.cld1.net/*
 // @include     http*://sleazyfork.org/*/scripts/*
 // @include     http*://greasyfork.org/*/scripts/*
 // @include     http*://*yfork.org/*/forum/*discussion*
-// @version     3.22.17
+// @version     3.22.18
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -209,7 +211,7 @@
             },
             {
                 name:"最ACG网",
-                url:"http://zuiacg.com/",
+                url:"http://zuiacg.cc/",
                 regex:/zuiacg\./,
                 hideOd:true,
                 offset:75
@@ -226,7 +228,8 @@
                 url:"https://www.oomoe.moe/",
                 regex:/oomoe\.moe/,
                 hideOd:true,
-                offset:10
+                offset:55,
+                articleSel:"section.card"
             },
             {
                 name:"ACG和谐区/里世界/毛站",
@@ -348,6 +351,7 @@
                 regex:/l\-sj\.cc/,
                 articleSel:"section.card",
                 hideOd:true,
+                offset:55,
                 downloadUrl:/l\-sj\.cc\/download\?id=/
             },
             {
@@ -369,7 +373,7 @@
             {
                 name:"咻咻动漫",
                 url:"http://www.xiu.moe/",
-                regex:/xiu\.moe/,
+                regex:/xiu\.moe|cld1\.net/,
                 contentArea:'#post-content',
                 commArea:'commentlist',
                 offset:55,
@@ -688,7 +692,7 @@
                 }
                 var downloadBtn=document.querySelector('a[data-action=download]');
                 if(downloadBtn){
-                    if(/\.com\/download\//.test(location.href)){
+                    if(/\/download\//.test(location.href)){
                         let cd=document.querySelector('div.single-content>p>input');
                         if(cd){
                             downloadBtn.href+="#"+cd.value;
@@ -823,9 +827,7 @@
                             }
                         }
                         var curRegs=style.innerHTML.pmatch(/background\-image:\s*url\('?([^\')]+)'?\)/gi);
-                        for(var curReg of curRegs){
-                            bgUrls+=curReg[0]+"\n";
-                        }
+                        bgUrls=curRegs.join("\n\r")+"\n\r";
                         var rmBg=document.querySelector("div.large");
                         if(rmBg)bgUrls+=getComputedStyle(rmBg).backgroundImage.replace(/url\("?([^"]+)"?\)/,"$1");
                         GM_setClipboard(bgUrls);

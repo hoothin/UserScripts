@@ -8,7 +8,7 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdn.jsdelivr.net/jquery/1.7.2/jquery.min.js
 // @require      https://cdn.jsdelivr.net/hi-base64/0.2.0/base64.min.js
-// @version      1.5.1
+// @version      1.5.2
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -710,7 +710,9 @@
             var regStr=$(configInput).val();
             var baiduPathStr=$(baiduPath).val();
             if(baiduPathStr)GM_setValue("baiduPath",baiduPathStr);
-            if(!/^\s*$/.test(regStr)){
+            if(/^\s*$/.test(regStr)){
+                GM_deleteValue("eoReg");
+            }else{
                 var regStrs=regStr.split("\n");
                 for(var reg of regStrs){
                     try{
