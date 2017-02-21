@@ -3,7 +3,7 @@
 // @name:en      Tool for register with invite code
 // @name:zh-TW   注冊邀請碼搶碼工具
 // @namespace    hoothin
-// @version      0.3
+// @version      0.5
 // @description  自动遍历论坛注册邀请码得出正确结果
 // @description:en  Just a tool for register with invite code
 // @description:zh-TW  自動遍歷論壇注冊邀請碼得出正確結果
@@ -120,7 +120,7 @@
         GM_registerMenuCommand("开始筛选邀请码", function(){
             var codeStr=prompt("输入邀请码：","");
             if(!codeStr)return;
-            codeArr=codeStr.pmatch((is1024?/\b([0-9a-z\*]{16})\b/gi:/\b([0-9a-z]{6})(?:\s|$)/gi));
+            codeArr=codeStr.pmatch((is1024?/\b([0-9a-z\*]{16})\b/gi:/(?:^|c=|[^=])\b([0-9a-z]{6})(?:\s|$)/gi));
             if(codeArr===0)return;
             geneCodeArr();
             checkCode();
