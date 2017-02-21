@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2017.2.16.1
+// @version        2017.2.21.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -503,7 +503,13 @@
              getImage: function() {
                  return this.src.replace(/upload\/small\//,"upload/big/");
              }
-            }
+            },
+            {name: "itunes",
+             url: /itunes\.apple\.com/,
+             getImage: function() {
+                 return this.src.replace(/\d+x\d+bb\./,"1400x1400bb.");
+             }
+            },
         ];
 
         // 通配型规则,无视站点.
@@ -578,11 +584,22 @@
              },
              note: "人人影视的豆瓣脚本需要用到"
             },
-
             // 购物
             {name: "淘宝",
-             r: /((?:img\d\d\.taobaocdn|g(?:[^.]*\.?){1,2}?\.alicdn)\.com\/)(?:img\/|tps\/http:\/\/img\d\d+\.taobaocdn\.com\/)?((?:imgextra|bao\/uploaded)\/.+\.(?:jpe?g|png|gif|bmp))_.+\.jpg$/,
+             r: /((?:img\d\d\.taobaocdn|img(?:[^.]*\.?){1,2}?\.alicdn)\.com\/)(?:img\/|tps\/http:\/\/img\d\d+\.taobaocdn\.com\/)?((?:imgextra|bao\/uploaded)\/.+\.(?:jpe?g|png|gif|bmp))_.+\.jpg$/,
              s: "http://$1$2"
+            },
+            {name: "ali",
+             r: /(.*\.alicdn\.com\/.*)(\.|_)\d+x\d+.*\.jpg$/,
+             s: "$1.jpg"
+            },
+            {name: "1号店",
+             r: /(.*\.yihaodianimg\.com\/.*)_\d+x\d+\.jpg$/,
+             s: "$1.jpg"
+            },
+            {name: "京东",
+             r: /(.*360buyimg\.com\/)n\d\/.+?\_(.*)/,
+             s: "$1imgzone/$2"
             },
             // 电子书
             {name: "当当",
