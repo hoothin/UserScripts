@@ -4,7 +4,7 @@
 // @name:ja      简繁
 // @name:en      Switch Traditional Chinese and Simplified Chinese
 // @namespace    hoothin
-// @version      1.0
+// @version      1.1
 // @description        任意轉換網頁中的簡體中文與繁體中文（默認簡體→繁體）
 // @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体）
 // @description:ja     简繁中国語に変換
@@ -21,7 +21,7 @@
 (function() {
     'use strict';
     var auto=true;//是否自動切換至OS使用的默認語言
-    var shortcutKey=119;//快捷鍵keyCode,禁用設爲0
+    var shortcutKey=119;//快捷鍵keyCode
     var lang = navigator.appName=="Netscape"?navigator.language:navigator.userLanguage;
     lang = lang.toLowerCase();
     var isSimple = (lang === "zh-cn" || lang === "zh-hans" || lang === "zh-sg" || lang === "zh-my");
@@ -96,10 +96,10 @@
     }
 
     function setLanguage(){
-        GM_setValue("action" + location.hostname.toString().replace(/\./g,""), action);
+        GM_setValue("action_" + location.hostname.toString().replace(/\./g,"_"), action);
         switch(action){
             case 1:
-                alert("已切换至原始字符集");
+                alert("已於該網域禁用簡繁切換");
                 location.reload();
                 break;
             case 2:
@@ -125,7 +125,7 @@
         setLanguage();
     }
 
-    var saveAction=GM_getValue("action" + location.hostname.toString().replace(/\./g,""));
+    var saveAction=GM_getValue("action_" + location.hostname.toString().replace(/\./g,"_"));
     action=saveAction?saveAction:(isSimple?2:3);
     if(auto && action > 1){
         setTimeout(function(){
