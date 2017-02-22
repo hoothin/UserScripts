@@ -3,7 +3,7 @@
 // @name:en      Tool for register with invite code
 // @name:zh-TW   注冊邀請碼搶碼工具
 // @namespace    hoothin
-// @version      0.5
+// @version      0.6
 // @description  自动遍历论坛注册邀请码得出正确结果
 // @description:en  Just a tool for register with invite code
 // @description:zh-TW  自動遍歷論壇注冊邀請碼得出正確結果
@@ -50,7 +50,7 @@
             if(codeArr.length===0){
                 clearInterval(checkFun);
                 if(checkinvite)clearInterval(checkinvite);
-                alert("沒有找到正確的邀請碼！");
+                alert("没有找到正确的邀请码！");
                 return;
             }
             invitecode.value=codeArr.shift();
@@ -69,7 +69,7 @@
                         if(chkInvitecode.innerHTML.indexOf("green")!=-1){
                             if(checkinvite)clearInterval(checkinvite);
                             clearInterval(checkFun);
-                            alert("已匹配到正確的邀請碼！");
+                            alert("已匹配到正确的邀请码！");
                         }else if(chkInvitecode.innerHTML.indexOf("red")!=-1){
                             if(checkinvite)clearInterval(checkinvite);
                             checkinvite=setInterval(function() {checkBtn.click();},2000);
@@ -78,7 +78,7 @@
                     }else{
                         if(chkInvitecode.innerHTML.indexOf("邀请码错误")==-1){
                             clearInterval(checkFun);
-                            alert("已匹配到正確的邀請碼！");
+                            alert("已匹配到正确的邀请码！");
                         }else{
                             checkNext();
                         }
@@ -120,7 +120,7 @@
         GM_registerMenuCommand("开始筛选邀请码", function(){
             var codeStr=prompt("输入邀请码：","");
             if(!codeStr)return;
-            codeArr=codeStr.pmatch((is1024?/\b([0-9a-z\*]{16})\b/gi:/(?:^|c=|[^=])\b([0-9a-z]{6})(?:\s|$)/gi));
+            codeArr=codeStr.pmatch((is1024?/\b([0-9a-z\*]{16})\b/gi:/(?:^|c=|[^=\.\/])\b([0-9a-z]{6})(?:\s|$)/gi));
             if(codeArr===0)return;
             geneCodeArr();
             checkCode();
@@ -129,7 +129,7 @@
         if(is1024){
             codeArr=(firefox?document.body.textContent:document.body.innerText).pmatch(/(?:^|[:：\s])\b([0-9a-z\*]{16})\b/gi);
             if(codeArr!==0){
-                if(window.confirm("檢測到邀請碼，是否立即前往注冊？")){
+                if(window.confirm("检测到邀请码，是否立即前往注册？")){
                     geneCodeArr();
                     GM_setValue("copiedCode",codeArr);
                     location.href="/register.php";
