@@ -80,8 +80,9 @@
 // @include     http*://www.cld1.net/*
 // @include     http*://sleazyfork.org/*/scripts/*
 // @include     http*://greasyfork.org/*/scripts/*
-// @include     http*://*yfork.org/*/forum/*discussion*
-// @version     3.22.18
+// @include     http*://sleazyfork.org/*/forum/*discussion*
+// @include     http*://greasyfork.org/*/forum/*discussion*
+// @version     3.22.19
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -128,12 +129,144 @@
             {
                 name:"琉璃神社",
                 url:"https://www.hacg.fi/wp/",
-                regex:/hacg\./
+                regex:/hacg\./,
+                run:function(){
+                    var feiZao,feiZaos=document.querySelectorAll("p1"),i;
+                    for(i=0;i<feiZaos.length;i++){
+                        feiZao=feiZaos[i];
+                        if(feiZao.parentNode)feiZao.parentNode.removeChild(feiZao);
+                    }
+                    var has8=false;
+                    var comm,comms=document.querySelectorAll("span.fn"),commId;
+                    for(i=0;i<comms.length;i++){
+                        comm=comms[i];
+                        if(comm.innerHTML == "\u5c0f\u0038\u9171"){
+                            has8=true;
+                            commId=comm.parentNode.parentNode.parentNode.id;
+                            break;
+                        }
+                    }
+                    if(has8){
+                        var header=document.querySelector("div.entry-meta");
+                        if(header){
+                            header.innerHTML+="</br> <a href=\"#"+commId+"\">\u2605\u0020\u76f4\u8fbe\u8865\u6863\u59ec\u0020\u2605<\/a>";
+                        }
+                    }
+                    if(isHttps){
+                        changeUrl(true,[["iframe"],[['http:','https:']]]);
+                        changeUrl(true,[["object"],[['http:','https:']]]);
+                        changeUrl(true,[["a"],[['http:(.*hacg)','https:$1']]]);
+                    }
+                    if(document.querySelector(".metaslider-flex")){
+                        document.title = document.title.replace(/\u7409\u7483\u795e\u793e/,"\u7409\u7483 ♂ \u795e\u793e");
+                        [].forEach.call(document.querySelectorAll("a"), function(item, index, arr) {
+                            item.innerHTML=item.innerHTML.replace(/\u7409\u7483\u795e\u793e/,"\u7409\u7483 ♂ \u795e\u793e");
+                        });
+                    }
+                    var tags=document.querySelectorAll("article>footer>a");
+                    for(i=0;i<tags.length;i++){
+                        var tag=tags[i];
+                        if(tag.innerHTML == "\u4f2a\u5a18" || tag.innerHTML == "\u53ef\u7231\u7684\u7537\u5b69\u5b50" || tag.innerHTML == "\u5973\u88c5" || tag.innerHTML == "\u7537\u306e\u5a18"){
+                            var articleTitle=document.querySelector(".entry-title");
+                            if(articleTitle){
+                                articleTitle.innerHTML="<font color='red' title='！\u53cd\u9e21\u590d\u5976！'>\u2642\u8def\u897f\u6cd5\u2642</font> "+articleTitle.innerHTML;
+                                originTitile = document.title = document.title.replace(/\u7409\u7483\u795e\u793e/,"\u5927\u5c4c\u795e\u793e");
+                            }
+                            break;
+                        }
+                    }
+                    var embeds=document.querySelectorAll(".wp-embedded-content");
+                    for(i=0;i<embeds.length;i++){
+                        let embed=embeds[i];
+                        embed.onload=function(){
+                            setTimeout(function(){
+                                embed.removeAttribute("data-secret");
+                            },1);
+                        };
+                    }
+                    if(unsafeWindow.quote){
+                        var msg = "…" + unsafeWindow.quote + "…",pos = 0;
+                        function scrollMsg() {
+                            document.title = msg.substring(pos, msg.length) + msg.substring(0, pos);
+                            pos++;
+                            if (pos >  msg.length) {
+                                pos = 0;
+                                document.title = originTitile;
+                            }else{
+                                setTimeout(scrollMsg,250);
+                            }
+                        }
+                        scrollMsg();
+                    }
+                }
             },
             {
                 name:"灵梦御所",
                 url:"https://blog.reimu.net/",
-                regex:/blog\.reimu\./
+                regex:/blog\.reimu\./,
+                run:function(){
+                    var titleTime;
+                    document.addEventListener('visibilitychange', function() {
+                        if (document.hidden) {
+                            document.title = '\u6765\u556a\u0038\u5566~(*´∇｀*) ' + originTitile;
+                            clearTimeout(titleTime);
+                        }
+                        else {
+                            document.title = '\u624d\u4e0d\u7ed9\u556a(╯‵□′)╯︵┻━┻ ' + originTitile;
+                            titleTime = setTimeout(function() {
+                                document.title = originTitile;
+                            }, 2000);
+                        }
+                    });
+                    function createBlockBtn(){
+                        var pre = document.querySelector("pre");
+                        var author = document.querySelector(".author-info");
+                        if (author && !document.querySelector("#blockBtn")) {
+                            var blockBtn=document.createElement("button");
+                            blockBtn.id="blockBtn";
+                            blockBtn.type="button";
+                            blockBtn.textContent="\u597d\u5b69\u5b50\u770b\u4e0d\u5230";
+                            blockBtn.style.cssText="padding:4px 0;position: relative;width:120px;";
+                            if(pre){
+                                pre.parentNode.insertBefore(blockBtn,pre);
+                            }else{
+                                blockBtn.style.cssText="display:none;";
+                                author.appendChild(blockBtn);
+                            }
+                            blockBtn.addEventListener("click", function(){
+                                if(this.nextSibling.style.display == 'block'){
+                                    this.nextSibling.style.display = '';
+                                }else{
+                                    this.nextSibling.style.display = 'block';
+                                }
+                            });
+                        }
+                    }
+                    document.querySelector("#main").addEventListener('DOMNodeInserted', function(e) {
+                        var author = document.querySelector(".author-info");
+                        if (author && !document.querySelector("#blockBtn")) {
+                            createBlockBtn();
+                            process();
+                            var $=unsafeWindow.jQuery;
+                            var toggle=$(".toggle")[0];
+                            if(toggle){
+                                var evts=$._data(toggle, "events");
+                                if(!evts || !evts["click"]){
+                                    $(".toggle-box").hide();
+                                    $(".toggle").toggle(function(){
+                                        $(this).addClass("toggle-active");
+                                    }, function () {
+                                        $(this).removeClass("toggle-active");
+                                    });
+                                    $(".toggle").click(function(){
+                                        $(this).next(".toggle-box").slideToggle();
+                                    });
+                                }
+                            }
+                        }
+                    });
+                    createBlockBtn();
+                }
             },
             {
                 name:"纯爱计划",
@@ -147,7 +280,10 @@
                 url:"http://www.acglover.top/",
                 regex:/acglover\.top/,
                 offset:60,
-                contentArea:".entry-inner"
+                contentArea:".entry-inner",
+                run:function(){
+                    changeUrl(true,[["a","img"],[['acglover\\\.net','acglover\\\.top']]]);
+                }
             },
             {
                 name:"绅士二次元",
@@ -155,7 +291,34 @@
                 regex:/acg\.tf/,
                 offset:60,
                 articleSel:".magazine-list>li,.article_list>li",
-                contentArea:".entry"
+                contentArea:".entry",
+                run:function(){
+                    var content=document.querySelector('.entry');
+                    if(content){
+                        var plist = content.querySelectorAll("p");
+                        var key = "";
+                        for(var i=0;i<plist.length;i++){
+                            var pNode=plist[i];
+                            if(/\u5bc6\u5319[:：]/i.test(pNode.innerHTML)){
+                                var orgStr = pNode.innerHTML.match(/\u5bc6\u5319[:：]\s*\S*/i)[0].replace(/\u5bc6\u5319[:：]\s*/,"").replace('&amp;','&');
+                                key=CryptoJS.enc.Base64.parse(orgStr).toString(CryptoJS.enc.Utf8);
+                                pNode.innerHTML = "";
+                                break;
+                            }
+                        }
+                        if(key !== ""){
+                            var blockquotes = content.querySelectorAll("blockquote");
+                            for(var i=0;i<blockquotes.length;i++){
+                                var blockquote=blockquotes[i];
+                                var target = blockquote.querySelector("p");
+                                if(!target||target.innerText===""||!/^[0-9a-z\+\/=\s]+$/i.test(target.innerText)){continue;}
+                                var result = target.innerHTML.replace(/<br>/g,"").replace(/\s/g,"");
+                                result = CryptoJS.AES.decrypt(result,key).toString(CryptoJS.enc.Utf8);
+                                target.innerHTML = result;
+                            }
+                        }
+                    }
+                }
             },
             {
                 name:"天使二次元",
@@ -170,7 +333,11 @@
                 hideOd:true,
                 downloadUrl:/acg12\.com\/download/,
                 offset:55,
-                articleSel:"section.card"
+                articleSel:"section.card",
+                run:function(){
+                    if(isHttps)
+                        addInsertHandler([["a","img","link","script"],[['p:(\\\/\\\/|\\\\\\/\\\\\\/)(www\\\.|static\\\.)?acg12','ps:$1$2acg12']]]);
+                }
             },
             {
                 name:"风铃窝",
@@ -193,7 +360,22 @@
                 url:"http://www.idanmu.co/",
                 regex:/idanmu\./,
                 offset:55,
-                articleSel:"section.card"
+                articleSel:"section.card",
+                run:function(){
+                    var resets = document.querySelectorAll('body>style');
+                    for(var i=0;i<resets.length;i++){
+                        var reset=resets[i];
+                        if(/\.card-bg\simg|\.content-reset\simg/.test(reset.innerHTML)){
+                            reset.parentNode.removeChild(reset);
+                        }
+                    }
+                    var r10=document.querySelector('#menu-item-12744');
+                    if(r10){
+                        var r18=r10.cloneNode(true);
+                        r18.innerHTML = r18.innerHTML.replace(/\u8d44\u8baf/g, 'R18').replace(/category\/v01/g, 'category/v09/v13');
+                        r10.after(r18);
+                    }
+                }
             },
             {
                 name:"司机会所",
@@ -201,20 +383,83 @@
                 regex:/sijihuisuo\.club/,
                 innerPage:/sijihuisuo\.club\/(sj\/\d|\?p=\d)/,
                 offset:115,
-                contentArea:".ds-comments"
+                contentArea:".ds-comments",
+                run:function(){
+                    if(curSite.innerPage.test(location.href)){
+                        t=window.setInterval(function(){
+                            if(document.querySelector(".ds-comments")){
+                                clearInterval(t);
+                                process();
+                            }
+                        },500);
+                    }
+                    changeUrl(true,[["a"],[['https?:\\\/\\\/[^\\\.]*(\\\.)?sijihuisuo\\\.club\\\/go\\\/\\\?url=','']]]);
+                }
             },
             {
                 name:"幻想次元",
                 url:"https://acg18.us/",
                 regex:/acg18\./,
-                offset:55
+                offset:55,
+                run:function(){
+                    changeUrl(true,[["a"],[['https?:\\\/\\\/[^\\\.]*(\\\.)?acg18\\\.us\\\/go\\\/\\\?url=','']]]);
+                }
             },
             {
                 name:"最ACG网",
                 url:"http://zuiacg.cc/",
                 regex:/zuiacg\./,
                 hideOd:true,
-                offset:75
+                offset:75,
+                run:function(){
+                    let shield=document.querySelector('#shieldclass');
+                    if(shield){
+                        shield.parentNode.removeChild(shield);
+                        let imgs=document.querySelectorAll('p>img');
+                        for(let i=0;i<imgs.length;i++){
+                            let img=imgs[i];
+                            img.onclick=function(){this.className="";};
+                        }
+                    }
+                    var downloadBtn=document.querySelector('a[data-action=download]');
+                    if(downloadBtn){
+                        if(/\/download\//.test(location.href)){
+                            let cd=document.querySelector('div.single-content>p>input');
+                            if(cd){
+                                downloadBtn.href+="#"+cd.value;
+                            }
+                        }else{
+                            downloadBtn.onclick=function(e){
+                                if(e.ctrlKey){
+                                    let newWin=window.open('');
+                                    GM_xmlhttpRequest({
+                                        method: 'GET',
+                                        url: downloadBtn.href.replace(/\/news\//,"/download/"),
+                                        onload: function(d) {
+                                            let html=document.implementation.createHTMLDocument('');
+                                            html.documentElement.innerHTML = d.responseText;
+                                            let dl=html.querySelector('#adddownload>a');
+                                            if(dl){
+                                                let url=dl.href;
+                                                let cd=html.querySelector('div.single-content>p>input');
+                                                if(cd){
+                                                    url+="#"+cd.value;
+                                                }
+                                                newWin.location.href=url;
+                                            }else{
+                                                newWin.close();
+                                            }
+                                        },
+                                        onerror: function(e) {
+                                            newWin.close();
+                                        }
+                                    });
+                                    return false;
+                                }
+                            };
+                        }
+                    }
+                }
             },
             {
                 name:"绅士仓库",
@@ -243,7 +488,41 @@
                 regex:/(acgmoon|jiyue)\.(org|com)/,
                 offset:50,
                 contentArea:"div.post-content",
-                articleSel:"article"
+                articleSel:"article",
+                run:function(){
+                    var postContent=document.querySelector("div.post-content");
+                    if(postContent && postContent.classList.contains("hexie")){
+                        var hexieBtn=document.createElement("button");
+                        hexieBtn.id="hexieBtn";
+                        hexieBtn.type="button";
+                        hexieBtn.textContent="\u597d\u5b69\u5b50\u770b\u4e0d\u5230";
+                        hexieBtn.style.cssText="padding:4px 0;position: relative;width:120px;";
+                        hexieBtn.onclick=function(){
+                            postContent.classList.contains("hexie")?postContent.classList.remove("hexie"):postContent.classList.add("hexie");
+                        };
+                        var warn=document.querySelector("div.kinky-warning");
+                        if(warn)warn.parentNode.insertBefore(hexieBtn,warn.nextSibling);
+                        else postContent.parentNode.insertBefore(hexieBtn,postContent);
+                    }
+                    var ele,eles=document.querySelectorAll(".hexie"),i;
+                    for(i=0;i<eles.length;i++){
+                        ele=eles[i];
+                        if(!ele.classList.contains("post-content"))ele.classList.remove("hexie");
+                    }
+                    eles=document.querySelectorAll("a");
+                    for(i=0;i<eles.length;i++){
+                        ele=eles[i];
+                        if(/pan\.baidu\.com/i.test(ele.href) && /[0-9a-z]{4}/i.test(ele.innerHTML) && !/#/i.test(ele.href)){
+                            ele.href+="#"+ele.innerHTML;
+                        }
+                    }
+                    var $=unsafeWindow.jQuery;
+                    $(document).off("click", ".sora-card .__copy");
+                    $(document).on("click", ".sora-card .__copy", function() {
+                        var code = $(this).children("code").text();
+                        this.href=this.href.split("#")[0]+"#"+code;
+                    });
+                }
             },
             {
                 name:"萌幻之乡",
@@ -266,14 +545,113 @@
                 url:"https://gmgard.com/",
                 regex:/gmgard\.com/,
                 articleSel:"div.post",
-                noScale:true
+                noScale:true,
+                run:function(){
+                    if(isHttps)addInsertHandler([["img"],[['p(:\\\/\\\/static\.gmgard\.com)','ps$1']]]);
+                    curSite.preRocket=function(){unsafeWindow.$('#dllist a').mouseenter();};
+                }
             },
             {
                 name:"MyGalgame - 忧郁的弟弟",
                 url:"https://www.mygalgame.com/",
                 regex:/mygalgame\.com/,
                 articleSel:".article",
-                commArea:'commentlist'
+                commArea:'commentlist',
+                run:function(){
+                    String.prototype.pmatch = function(reg){
+                        if(!(reg instanceof RegExp))return 0;
+                        if(!reg.global){
+                            var a = this.match(reg);
+                            return a? [a.slice(1,a.length)] : 0;
+                        }
+                        var a=[],b;
+                        while(b=reg.exec(this)){
+                            b.shift();
+                            a.push(b);
+                        }
+                        return a.length>0?a:0;
+                    }
+                    var downBtn=document.querySelector("a.hint--right");
+                    if(downBtn){
+                        var innBtn=downBtn.querySelector(".btn-danger");
+                        if(innBtn){
+                            var onclickStr=innBtn.getAttribute("onclick");
+                            if(/\/\/www\.mygalgame\.com\/go\.php\?url\=/.test(onclickStr)){
+                                innBtn.setAttribute("onclick", "");
+                                var href=onclickStr.replace(/.*www\.mygalgame\.com\/go\.php\?url\=([^']+)'.*/,"$1");
+                                downBtn.setAttribute("href", href);
+                                downBtn.setAttribute("target", "_blank")
+                            }
+                        }
+                    }
+                    var bgLi=document.createElement("li");
+                    bgLi.innerHTML="<a><i class='fa fa-star'></i>\u5f53\u524d\u80cc\u666f\u56fe\u7247</a>";
+                    var bgs=document.querySelectorAll(".cb-slideshow>li>span");
+                    bgLi.onclick=function(){
+                        for(var i=0;i<bgs.length;i++){
+                            var bg=bgs[i];
+                            if(getComputedStyle(bg).opacity>.5){
+                                var url=getComputedStyle(bg).backgroundImage.replace(/url\("?([^"]+)"?\)/,"$1");
+                                window.open(url);
+                            }
+                        }
+                    }
+                    bgLi.onmouseover=function(){
+                        bgLi.classList.add("open");
+                    }
+                    bgLi.onmouseout=function(){
+                        bgLi.classList.remove("open");
+                    }
+                    var bgUrls,sum=0,maxCss=5;
+                    var batchBg=document.createElement("ul");
+                    batchBg.classList.add("dropdown-menu");
+                    batchBg.innerHTML="<li><a href=\"javascript:void(0)\">复制当组背景图链接</a></li>";
+                    batchBg.onclick=function(e){
+                        e.stopPropagation();
+                        if(bgUrls==undefined){
+                            bgUrls="";
+                            var style=document.querySelectorAll("style");
+                            for(let j=0;j<=style.length;j++){
+                                if(style[j].innerHTML.indexOf(".cb-slideshow")!=-1){
+                                    style=style[j];
+                                    break;
+                                }
+                            }
+                            var curRegs=style.innerHTML.pmatch(/background\-image:\s*url\('?([^\')]+)'?\)/gi);
+                            bgUrls=curRegs.join("\n\r")+"\n\r";
+                            var rmBg=document.querySelector("div.large");
+                            if(rmBg)bgUrls+=getComputedStyle(rmBg).backgroundImage.replace(/url\("?([^"]+)"?\)/,"$1");
+                            GM_setClipboard(bgUrls);
+                            console.info(bgUrls);
+                            alert("背景图片链接复制完毕");
+                        }else{
+                            if(bgUrls!=""){
+                                GM_setClipboard(bgUrls);
+                                alert("背景图片链接复制完毕");
+                            }
+                        }
+                    }
+                    bgLi.appendChild(batchBg);
+                    document.querySelector("ul.navbar-nav").appendChild(bgLi);
+                    var comments=document.querySelector("#comments"),processing=false;
+                    if(comments)comments.addEventListener('DOMNodeInserted', function(e) {
+                        if(processing)return;
+                        processing=true;
+                        setTimeout(function(){
+                            seriousReplace(commArea);
+                            processing=false;
+                        },500);
+                    });
+                    var picTitle=document.querySelector("h1>a[href='https://www.mygalgame.com/gengxinrizhi.html']");
+                    if(picTitle){
+                        var imgUrl=picTitle.parentNode.parentNode.parentNode.querySelector("div.img>img").src;
+                        var picBtn=document.createElement("a");
+                        picBtn.href=imgUrl;
+                        picBtn.target="_blank";
+                        picBtn.innerHTML="<span class='animated_h1'>封面图</span>";
+                        picTitle.parentNode.appendChild(picBtn);
+                    }
+                }
             },
             {
                 name:"幻天领域",
@@ -282,7 +660,10 @@
                 hideOd:true,
                 offset:55,
                 downloadUrl:/acgnz\.cc\/download/,
-                articleSel:"section.card"
+                articleSel:"section.card",
+                run:function(){
+                    if(isHttps)addInsertHandler([["a","img","link","script"],[['p:(\\\/\\\/|\\\\\\/\\\\\\/)(www\\\.)?acgnz','ps:$1$2acgnz']]]);
+                }
             },
             {
                 name:"萌心次元",
@@ -308,7 +689,14 @@
                 hideOd:true,
                 bbs:/bbs\.acggj\./,
                 offset:55,
-                articleSel:"section.card"
+                articleSel:"section.card",
+                run:function(){
+                    if(isHttps){
+                        changeUrl(true,[["a","img","script","link"],[['p:(\\\/\\\/|\\\\\\/\\\\\\/)(www\\\.|bbs\\\.)?acggj','ps:$1$2acggj']]]);
+                        var baseUrl=document.querySelector('base');
+                        if(baseUrl)baseUrl.href=baseUrl.href.replace(/http:/,"https:");
+                    }
+                }
             },
             {
                 name:"萌口组",
@@ -368,7 +756,40 @@
                 url:"https://www.acgpy.com/wpx/",
                 regex:/acgpy\.com/,
                 offset:45,
-                hideOd:true
+                hideOd:true,
+                run:function(){
+                    if(location.href=="https://www.acgpy.com/login0202.html"){
+                        var date=new Date();
+                        date.setTime(date.getTime()+14400*60*1000);
+                        document.cookie="trade0202=A32; expires="+date.toGMTString();
+                        top.location='wpx';
+                    }
+                    var downBtn=document.querySelector("a.downbtn");
+                    if(downBtn){
+                        GM_xmlhttpRequest({
+                            method: 'GET',
+                            url: downBtn.href,
+                            onload: function(d) {
+                                var doc = null;
+                                try {
+                                    doc = document.implementation.createHTMLDocument('');
+                                    doc.documentElement.innerHTML = d.responseText;
+                                }
+                                catch (e) {
+                                    console.log('parse error');
+                                }
+                                if (!doc) {
+                                    return;
+                                }
+                                downBtn.parentNode.insertBefore(doc.querySelector("div.list"),downBtn);
+                                process();
+                            },
+                            onerror: function(e) {
+                                console.log(e);
+                            }
+                        });
+                    }
+                }
             },
             {
                 name:"咻咻动漫",
@@ -403,6 +824,29 @@
             }
         };
     }
+
+    var t, curSite, curArticle, siteListHtml;
+    var originTitile = document.title;
+    var isHttps=location.protocol=="https:";
+    var head=document.getElementsByTagName("head")[0];
+    if(isHttps){
+        var refMeta = document.createElement('meta');
+        refMeta.name = 'referrer';
+        refMeta.content = 'always';
+        head.appendChild(refMeta);
+    }else{
+        if(document.title=="Service Unavailable - Connection Error"){
+            location.href=location.href.replace(/^http:/,"https:");
+        }
+    }
+    for(var site of config.sites){
+        if(site.regex.test(location.href)){
+            curSite=site;
+            break;
+        }
+    }
+    var contentArea=curSite&&curSite.contentArea?curSite.contentArea:'.entry-content',commArea=curSite&&curSite.commArea?curSite.commArea:"comment-content",articleSel=curSite&&curSite.articleSel?curSite.articleSel:"article";
+
     if(/(sleaz|greas)yfork\.org\//.test(location.href)){
         if(/scripts\/23316/.test(location.href)){
             let pos=elementPosition(document.querySelector("#additional-info>div.script-author-description>h2")).y;
@@ -442,31 +886,7 @@
             }
         }
         return;
-    }
-
-    var t, curSite, curArticle, siteListHtml;
-    var originTitile = document.title;
-    var isHttps=location.protocol=="https:";
-    var head=document.getElementsByTagName("head")[0];
-    if(isHttps){
-        var refMeta = document.createElement('meta');
-        refMeta.name = 'referrer';
-        refMeta.content = 'always';
-        head.appendChild(refMeta);
-    }else{
-        if(document.title=="Service Unavailable - Connection Error"){
-            location.href=location.href.replace(/^http:/,"https:");
-        }
-    }
-    for(var site of config.sites){
-        if(site.regex.test(location.href)){
-            curSite=site;
-            break;
-        }
-    }
-    var contentArea=curSite&&curSite.contentArea?curSite.contentArea:'.entry-content',commArea=curSite&&curSite.commArea?curSite.commArea:"comment-content",articleSel=curSite&&curSite.articleSel?curSite.articleSel:"article";
-
-    if(/^https?:\/\/pan\.baidu\.com/.test(location.href)){
+    }else if(/^https?:\/\/pan\.baidu\.com/.test(location.href)){
         if(location.hash.slice(1)){
             document.querySelector("#accessCode").value=decodeURI(location.hash.slice(1));
             document.querySelector('#submitBtn').click();
@@ -475,430 +895,9 @@
     }else if(config.disableSites.test(location.href)){
         return;
     }else if(curSite){
-        switch(curSite.name){
-            case "绅士二次元":
-                var content=document.querySelector('.entry');
-                if(content){
-                    var plist = content.querySelectorAll("p");
-                    var key = "";
-                    for(var i=0;i<plist.length;i++){
-                        var pNode=plist[i];
-                        if(/\u5bc6\u5319[:：]/i.test(pNode.innerHTML)){
-                            var orgStr = pNode.innerHTML.match(/\u5bc6\u5319[:：]\s*\S*/i)[0].replace(/\u5bc6\u5319[:：]\s*/,"").replace('&amp;','&');
-                            key=CryptoJS.enc.Base64.parse(orgStr).toString(CryptoJS.enc.Utf8);
-                            pNode.innerHTML = "";
-                            break;
-                        }
-                    }
-                    if(key !== ""){
-                        var blockquotes = content.querySelectorAll("blockquote");
-                        for(var i=0;i<blockquotes.length;i++){
-                            var blockquote=blockquotes[i];
-                            var target = blockquote.querySelector("p");
-                            if(!target||target.innerText===""||!/^[0-9a-z\+\/=\s]+$/i.test(target.innerText)){continue;}
-                            var result = target.innerHTML.replace(/<br>/g,"").replace(/\s/g,"");
-                            result = CryptoJS.AES.decrypt(result,key).toString(CryptoJS.enc.Utf8);
-                            target.innerHTML = result;
-                        }
-                    }
-                }
-                break;
-            case "灵梦御所":
-                var titleTime;
-                document.addEventListener('visibilitychange', function() {
-                    if (document.hidden) {
-                        document.title = '\u6765\u556a\u0038\u5566~(*´∇｀*) ' + originTitile;
-                        clearTimeout(titleTime);
-                    }
-                    else {
-                        document.title = '\u624d\u4e0d\u7ed9\u556a(╯‵□′)╯︵┻━┻ ' + originTitile;
-                        titleTime = setTimeout(function() {
-                            document.title = originTitile;
-                        }, 2000);
-                    }
-                });
-                function createBlockBtn(){
-                    var pre = document.querySelector("pre");
-                    var author = document.querySelector(".author-info");
-                    if (author && !document.querySelector("#blockBtn")) {
-                        var blockBtn=document.createElement("button");
-                        blockBtn.id="blockBtn";
-                        blockBtn.type="button";
-                        blockBtn.textContent="\u597d\u5b69\u5b50\u770b\u4e0d\u5230";
-                        blockBtn.style.cssText="padding:4px 0;position: relative;width:120px;";
-                        if(pre){
-                            pre.parentNode.insertBefore(blockBtn,pre);
-                        }else{
-                            blockBtn.style.cssText="display:none;";
-                            author.appendChild(blockBtn);
-                        }
-                        blockBtn.addEventListener("click", function(){
-                            if(this.nextSibling.style.display == 'block'){
-                                this.nextSibling.style.display = '';
-                            }else{
-                                this.nextSibling.style.display = 'block';
-                            }
-                        });
-                    }
-                }
-                document.querySelector("#main").addEventListener('DOMNodeInserted', function(e) {
-                    var author = document.querySelector(".author-info");
-                    if (author && !document.querySelector("#blockBtn")) {
-                        createBlockBtn();
-                        process();
-                        var $=unsafeWindow.jQuery;
-                        var toggle=$(".toggle")[0];
-                        if(toggle){
-                            var evts=$._data(toggle, "events");
-                            if(!evts || !evts["click"]){
-                                $(".toggle-box").hide();
-                                $(".toggle").toggle(function(){
-                                    $(this).addClass("toggle-active");
-                                }, function () {
-                                    $(this).removeClass("toggle-active");
-                                });
-                                $(".toggle").click(function(){
-                                    $(this).next(".toggle-box").slideToggle();
-                                });
-                            }
-                        }
-                    }
-                });
-                createBlockBtn();
-                break;
-            case "ACG调查小队":
-                if(isHttps)
-                    addInsertHandler([["a","img","link","script"],[['p:(\\\/\\\/|\\\\\\/\\\\\\/)(www\\\.|static\\\.)?acg12','ps:$1$2acg12']]]);
-                break;
-            case "司机会所":
-                if(curSite.innerPage.test(location.href)){
-                    t=window.setInterval(function(){
-                        if(document.querySelector(".ds-comments")){
-                            clearInterval(t);
-                            process();
-                        }
-                    },500);
-                }
-                changeUrl(true,[["a"],[['https?:\\\/\\\/[^\\\.]*(\\\.)?sijihuisuo\\\.club\\\/go\\\/\\\?url=','']]]);
-                break;
-            case "琉璃神社":
-                var feiZao,feiZaos=document.querySelectorAll("p1"),i;
-                for(i=0;i<feiZaos.length;i++){
-                    feiZao=feiZaos[i];
-                    if(feiZao.parentNode)feiZao.parentNode.removeChild(feiZao);
-                }
-                var has8=false;
-                var comm,comms=document.querySelectorAll("span.fn"),commId;
-                for(i=0;i<comms.length;i++){
-                    comm=comms[i];
-                    if(comm.innerHTML == "\u5c0f\u0038\u9171"){
-                        has8=true;
-                        commId=comm.parentNode.parentNode.parentNode.id;
-                        break;
-                    }
-                }
-                if(has8){
-                    var header=document.querySelector("div.entry-meta");
-                    if(header){
-                        header.innerHTML+="</br> <a href=\"#"+commId+"\">\u2605\u0020\u76f4\u8fbe\u8865\u6863\u59ec\u0020\u2605<\/a>";
-                    }
-                }
-                if(isHttps){
-                    changeUrl(true,[["iframe"],[['http:','https:']]]);
-                    changeUrl(true,[["object"],[['http:','https:']]]);
-                    changeUrl(true,[["a"],[['http:(.*hacg)','https:$1']]]);
-                }
-                if(document.querySelector(".metaslider-flex")){
-                    document.title = document.title.replace(/\u7409\u7483\u795e\u793e/,"\u7409\u7483 ♂ \u795e\u793e");
-                    [].forEach.call(document.querySelectorAll("a"), function(item, index, arr) {
-                        item.innerHTML=item.innerHTML.replace(/\u7409\u7483\u795e\u793e/,"\u7409\u7483 ♂ \u795e\u793e");
-                    });
-                }
-                var tags=document.querySelectorAll("article>footer>a");
-                for(i=0;i<tags.length;i++){
-                    var tag=tags[i];
-                    if(tag.innerHTML == "\u4f2a\u5a18" || tag.innerHTML == "\u53ef\u7231\u7684\u7537\u5b69\u5b50" || tag.innerHTML == "\u5973\u88c5" || tag.innerHTML == "\u7537\u306e\u5a18"){
-                        var articleTitle=document.querySelector(".entry-title");
-                        if(articleTitle){
-                            articleTitle.innerHTML="<font color='red' title='！\u53cd\u9e21\u590d\u5976！'>\u2642\u8def\u897f\u6cd5\u2642</font> "+articleTitle.innerHTML;
-                            originTitile = document.title = document.title.replace(/\u7409\u7483\u795e\u793e/,"\u5927\u5c4c\u795e\u793e");
-                        }
-                        break;
-                    }
-                }
-                var embeds=document.querySelectorAll(".wp-embedded-content");
-                for(i=0;i<embeds.length;i++){
-                    let embed=embeds[i];
-                    embed.onload=function(){
-                        setTimeout(function(){
-                            embed.removeAttribute("data-secret");
-                        },1);
-                    };
-                }
-                if(unsafeWindow.quote){
-                    var msg = "…" + unsafeWindow.quote + "…",pos = 0;
-                    function scrollMsg() {
-                        document.title = msg.substring(pos, msg.length) + msg.substring(0, pos);
-                        pos++;
-                        if (pos >  msg.length) {
-                            pos = 0;
-                            document.title = originTitile;
-                        }else{
-                            setTimeout(scrollMsg,250);
-                        }
-                    }
-                    scrollMsg();
-                }
-                break;
-            case "萌心次元":
-                break;
-            case "次元轨迹":
-                if(isHttps){
-                    changeUrl(true,[["a","img","script","link"],[['p:(\\\/\\\/|\\\\\\/\\\\\\/)(www\\\.|bbs\\\.)?acggj','ps:$1$2acggj']]]);
-                    var baseUrl=document.querySelector('base');
-                    if(baseUrl)baseUrl.href=baseUrl.href.replace(/http:/,"https:");
-                }
-                break;
-            case "幻天领域":
-                if(isHttps)addInsertHandler([["a","img","link","script"],[['p:(\\\/\\\/|\\\\\\/\\\\\\/)(www\\\.)?acgnz','ps:$1$2acgnz']]]);
-                break;
-            case "次元の圣光":
-                changeUrl(true,[["a","img"],[['acglover\\\.net','acglover\\\.top']]]);
-                break;
-            case "爱弹幕":
-                var resets = document.querySelectorAll('body>style');
-                for(var i=0;i<resets.length;i++){
-                    var reset=resets[i];
-                    if(/\.card-bg\simg|\.content-reset\simg/.test(reset.innerHTML)){
-                        reset.parentNode.removeChild(reset);
-                    }
-                }
-                var r10=document.querySelector('#menu-item-12744');
-                if(r10){
-                    var r18=r10.cloneNode(true);
-                    r18.innerHTML = r18.innerHTML.replace(/\u8d44\u8baf/g, 'R18').replace(/category\/v01/g, 'category/v09/v13');
-                    r10.after(r18);
-                }
-                break;
-            case "最ACG网":
-                let shield=document.querySelector('#shieldclass');
-                if(shield){
-                    shield.parentNode.removeChild(shield);
-                    let imgs=document.querySelectorAll('p>img');
-                    for(let i=0;i<imgs.length;i++){
-                        let img=imgs[i];
-                        img.onclick=function(){this.className="";};
-                    }
-                }
-                var downloadBtn=document.querySelector('a[data-action=download]');
-                if(downloadBtn){
-                    if(/\/download\//.test(location.href)){
-                        let cd=document.querySelector('div.single-content>p>input');
-                        if(cd){
-                            downloadBtn.href+="#"+cd.value;
-                        }
-                    }else{
-                        downloadBtn.onclick=function(e){
-                            if(e.ctrlKey){
-                                let newWin=window.open('');
-                                GM_xmlhttpRequest({
-                                    method: 'GET',
-                                    url: downloadBtn.href.replace(/\/news\//,"/download/"),
-                                    onload: function(d) {
-                                        let html=document.implementation.createHTMLDocument('');
-                                        html.documentElement.innerHTML = d.responseText;
-                                        let dl=html.querySelector('#adddownload>a');
-                                        if(dl){
-                                            let url=dl.href;
-                                            let cd=html.querySelector('div.single-content>p>input');
-                                            if(cd){
-                                                url+="#"+cd.value;
-                                            }
-                                            newWin.location.href=url;
-                                        }else{
-                                            newWin.close();
-                                        }
-                                    },
-                                    onerror: function(e) {
-                                        newWin.close();
-                                    }
-                                });
-                                return false;
-                            }
-                        };
-                    }
-                }
-                break;
-            case "寂月神社":
-                var postContent=document.querySelector("div.post-content");
-                if(postContent && postContent.classList.contains("hexie")){
-                    var hexieBtn=document.createElement("button");
-                    hexieBtn.id="hexieBtn";
-                    hexieBtn.type="button";
-                    hexieBtn.textContent="\u597d\u5b69\u5b50\u770b\u4e0d\u5230";
-                    hexieBtn.style.cssText="padding:4px 0;position: relative;width:120px;";
-                    hexieBtn.onclick=function(){
-                        postContent.classList.contains("hexie")?postContent.classList.remove("hexie"):postContent.classList.add("hexie");
-                    };
-                    var warn=document.querySelector("div.kinky-warning");
-                    if(warn)warn.parentNode.insertBefore(hexieBtn,warn.nextSibling);
-                    else postContent.parentNode.insertBefore(hexieBtn,postContent);
-                }
-                var ele,eles=document.querySelectorAll(".hexie"),i;
-                for(i=0;i<eles.length;i++){
-                    ele=eles[i];
-                    if(!ele.classList.contains("post-content"))ele.classList.remove("hexie");
-                }
-                eles=document.querySelectorAll("a");
-                for(i=0;i<eles.length;i++){
-                    ele=eles[i];
-                    if(/pan\.baidu\.com/i.test(ele.href) && /[0-9a-z]{4}/i.test(ele.innerHTML) && !/#/i.test(ele.href)){
-                        ele.href+="#"+ele.innerHTML;
-                    }
-                }
-                var $=unsafeWindow.jQuery;
-                $(document).off("click", ".sora-card .__copy");
-                $(document).on("click", ".sora-card .__copy", function() {
-                    var code = $(this).children("code").text();
-                    this.href=this.href.split("#")[0]+"#"+code;
-                });
-                break;
-            case "幻想次元":
-                changeUrl(true,[["a"],[['https?:\\\/\\\/[^\\\.]*(\\\.)?acg18\\\.us\\\/go\\\/\\\?url=','']]]);
-                break;
-            case "MyGalgame - 忧郁的弟弟":
-                String.prototype.pmatch = function(reg){
-                    if(!(reg instanceof RegExp))return 0;
-                    if(!reg.global){
-                        var a = this.match(reg);
-                        return a? [a.slice(1,a.length)] : 0;
-                    }
-                    var a=[],b;
-                    while(b=reg.exec(this)){
-                        b.shift();
-                        a.push(b);
-                    }
-                    return a.length>0?a:0;
-                }
-                var downBtn=document.querySelector("a.hint--right");
-                if(downBtn){
-                    var innBtn=downBtn.querySelector(".btn-danger");
-                    if(innBtn){
-                        var onclickStr=innBtn.getAttribute("onclick");
-                        if(/\/\/www\.mygalgame\.com\/go\.php\?url\=/.test(onclickStr)){
-                            innBtn.setAttribute("onclick", "");
-                            var href=onclickStr.replace(/.*www\.mygalgame\.com\/go\.php\?url\=([^']+)'.*/,"$1");
-                            downBtn.setAttribute("href", href);
-                            downBtn.setAttribute("target", "_blank")
-                        }
-                    }
-                }
-                var bgLi=document.createElement("li");
-                bgLi.innerHTML="<a><i class='fa fa-star'></i>\u5f53\u524d\u80cc\u666f\u56fe\u7247</a>";
-                var bgs=document.querySelectorAll(".cb-slideshow>li>span");
-                bgLi.onclick=function(){
-                    for(var i=0;i<bgs.length;i++){
-                        var bg=bgs[i];
-                        if(getComputedStyle(bg).opacity>.5){
-                            var url=getComputedStyle(bg).backgroundImage.replace(/url\("?([^"]+)"?\)/,"$1");
-                            window.open(url);
-                        }
-                    }
-                }
-                bgLi.onmouseover=function(){
-                    bgLi.classList.add("open");
-                }
-                bgLi.onmouseout=function(){
-                    bgLi.classList.remove("open");
-                }
-                var bgUrls,sum=0,maxCss=5;
-                var batchBg=document.createElement("ul");
-                batchBg.classList.add("dropdown-menu");
-                batchBg.innerHTML="<li><a href=\"javascript:void(0)\">复制当组背景图链接</a></li>";
-                batchBg.onclick=function(e){
-                    e.stopPropagation();
-                    if(bgUrls==undefined){
-                        bgUrls="";
-                        var style=document.querySelectorAll("style");
-                        for(let j=0;j<=style.length;j++){
-                            if(style[j].innerHTML.indexOf(".cb-slideshow")!=-1){
-                                style=style[j];
-                                break;
-                            }
-                        }
-                        var curRegs=style.innerHTML.pmatch(/background\-image:\s*url\('?([^\')]+)'?\)/gi);
-                        bgUrls=curRegs.join("\n\r")+"\n\r";
-                        var rmBg=document.querySelector("div.large");
-                        if(rmBg)bgUrls+=getComputedStyle(rmBg).backgroundImage.replace(/url\("?([^"]+)"?\)/,"$1");
-                        GM_setClipboard(bgUrls);
-                        console.info(bgUrls);
-                        alert("背景图片链接复制完毕");
-                    }else{
-                        if(bgUrls!=""){
-                            GM_setClipboard(bgUrls);
-                            alert("背景图片链接复制完毕");
-                        }
-                    }
-                }
-                bgLi.appendChild(batchBg);
-                document.querySelector("ul.navbar-nav").appendChild(bgLi);
-                var comments=document.querySelector("#comments"),processing=false;
-                if(comments)comments.addEventListener('DOMNodeInserted', function(e) {
-                    if(processing)return;
-                    processing=true;
-                    setTimeout(function(){
-                        seriousReplace(commArea);
-                        processing=false;
-                    },500);
-                });
-                var picTitle=document.querySelector("h1>a[href='https://www.mygalgame.com/gengxinrizhi.html']");
-                if(picTitle){
-                    var imgUrl=picTitle.parentNode.parentNode.parentNode.querySelector("div.img>img").src;
-                    var picBtn=document.createElement("a");
-                    picBtn.href=imgUrl;
-                    picBtn.target="_blank";
-                    picBtn.innerHTML="<span class='animated_h1'>封面图</span>";
-                    picTitle.parentNode.appendChild(picBtn);
-                }
-                break;
-            case "紳士の庭":
-                if(isHttps)addInsertHandler([["img"],[['p(:\\\/\\\/static\.gmgard\.com)','ps$1']]]);
-                curSite.preRocket=function(){unsafeWindow.$('#dllist a').mouseenter();};
-                break;
-            case "绅士交易":
-                if(location.href=="https://www.acgpy.com/login0202.html"){
-                    var date=new Date();
-                    date.setTime(date.getTime()+14400*60*1000);
-                    document.cookie="trade0202=A32; expires="+date.toGMTString();
-                    top.location='wpx';
-                }
-                var downBtn=document.querySelector("a.downbtn");
-                if(downBtn){
-                    GM_xmlhttpRequest({
-                        method: 'GET',
-                        url: downBtn.href,
-                        onload: function(d) {
-                            var doc = null;
-                            try {
-                                doc = document.implementation.createHTMLDocument('');
-                                doc.documentElement.innerHTML = d.responseText;
-                            }
-                            catch (e) {
-                                console.log('parse error');
-                            }
-                            if (!doc) {
-                                return;
-                            }
-                            downBtn.parentNode.insertBefore(doc.querySelector("div.list"),downBtn);
-                            process();
-                        },
-                        onerror: function(e) {
-                            console.log(e);
-                        }
-                    });
-                }
-        }
+        if(curSite.run)curSite.run();
     }
+
     if(curSite && curSite.downloadUrl && curSite.downloadUrl.test(location.href)){
         if(!curSite.getDownPass){
             curSite.getDownPass=function(target){
