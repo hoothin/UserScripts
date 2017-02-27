@@ -531,7 +531,7 @@
                  return this.src.replace(/\-\d+x\d+\.jpg/i,"");
              }
             },
-            {name: "太平洋",
+            {name: "太平洋汽车",
              url: /\.pcauto\.com\.cn/,
              getImage: function() {
                  return this.src.replace(/_\d+x\d+\.jpg$/i,".jpg");
