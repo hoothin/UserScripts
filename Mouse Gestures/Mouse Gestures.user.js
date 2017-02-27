@@ -3,7 +3,7 @@
 // @name:zh-CN         鼠标手势
 // @name:zh-TW         滑鼠手勢
 // @namespace          hoothin
-// @version            0.62
+// @version            0.63
 // @description        Just a Mouse Gestures
 // @description:zh-CN  就是个鼠标手势
 // @description:zh-TW  就是個滑鼠手勢
@@ -19,20 +19,57 @@
 // @compatible        firefox
 // ==/UserScript==
 
+var lastX,lastY,lastSign,afterGestures,gesturesWords,gesturesContent,gestures,signs;
+const defaultFun={
+    close:"unsafeWindow.opener=null;unsafeWindow.open('', '_self', '');unsafeWindow.close();",
+    openNew:"GM_openInTab('about:newtab', false)",
+    scrollToTop:"unsafeWindow.scrollTo(0, 0)",
+    scrollToBottom:"unsafeWindow.scrollTo(0, 1073741824)",
+    back:"unsafeWindow.history.back()",
+    forward:"unsafeWindow.history.forward()",
+    reload:"unsafeWindow.location.reload()"
+};
+function initEventListener(start,move,end,tracer,clientX,clientY,startBool){
+    var isMouse=start=="mousedown";
+    var moveFun=function(e){
+        tracer(eval(clientX),eval(clientY),isMouse);
+        gesturesWords.innerHTML=signs;
+        var gesturesWidth=signs.length*51+40;
+        gesturesContent.style.width=gesturesWidth+"px";
+        gesturesContent.style.marginLeft=-gesturesWidth/2+"px";
+    };
+    document.addEventListener(start, function(e) {
+        if(!startBool || eval(startBool)){
+            lastX=eval(clientX);
+            lastY=eval(clientY);
+            lastSign=signs="";
+            document.addEventListener(move, moveFun, false);
+        }
+    }, false);
+    document.addEventListener(end, function(e) {
+        document.removeEventListener(move, moveFun, false);
+        setTimeout(function(){if(gesturesContent.parentNode)gesturesContent.parentNode.removeChild(gesturesContent);},500);
+        if(afterGestures)afterGestures();
+        for(var g of gestures){
+            var gSign=g.gesture;
+            if(signs==gSign){
+                if(!isMouse)document.body.appendChild(gesturesContent);
+                var fun=defaultFun[g.fun];
+                if(fun===undefined || !fun){
+                    eval(g.fun);
+                }else eval(fun);
+                e.stopPropagation();
+                e.preventDefault();
+                break;
+            }
+        }
+    }, false);
+}
 (function() {
     'use strict';
-    var lastX, lastY, signs, lastSign, gestures, i18n;
+    var i18n;
     var lang = navigator.appName=="Netscape"?navigator.language:navigator.userLanguage;
-    const minLength=256,tg=0.5,
-          defaultFun={
-              close:"unsafeWindow.opener=null;unsafeWindow.open('', '_self', '');unsafeWindow.close();",
-              openNew:"GM_openInTab('about:newtab', false)",
-              scrollToTop:"unsafeWindow.scrollTo(0, 0)",
-              scrollToBottom:"unsafeWindow.scrollTo(0, 1073741824)",
-              back:"unsafeWindow.history.back()",
-              forward:"unsafeWindow.history.forward()",
-              reload:"unsafeWindow.location.reload()"
-          };
+    const minLength=256,tg=0.5;
     switch (lang){
         case "zh-CN":
             i18n={
@@ -89,7 +126,7 @@
                   {gesture:"←↑→",fun:"forward"},
                   {gesture:"↑↓",fun:"reload"},
                   {gesture:"↓↑↓",fun:"var t=((unsafeWindow.getSelection&&unsafeWindow.getSelection())||(document.getSelection&&document.getSelection())||(document.selection&&document.selection.createRange&&document.selection.createRange().text));var e=(document.charset||document.characterSet);if(t!=''){GM_openInTab('http://translate.google.cn/?text='+t+'&hl=zh-CN&langpair=auto|zh-CN&tbb=1&ie='+e,false);}else{GM_openInTab('http://translate.google.cn/translate?u='+encodeURIComponent(location.href)+'&hl=zh-CN&langpair=auto|zh-CN&tbb=1&ie='+e,false);}"},
-                  {gesture:"↓↑↓←",fun:'function R(a){var ona = "on"+a; if(unsafeWindow.addEventListener) unsafeWindow.addEventListener(a, function (e) { for(var n=e.originalTarget; n; n=n.parentNode) n[ona]=null; }, true); unsafeWindow[ona]=null; document[ona]=null; if(document.body) document.body[ona]=null; } R("contextmenu"); R("click"); R("mousedown"); R("mouseup"); R("selectstart");'},
+                  {gesture:"↓↑↓←",fun:'var d=document,b=d.body;with(b.onselectstart=b.oncopy=b.onpaste=b.onkeydown=b.oncontextmenu=b.onmousemove=b.ondragstart=d.oncopy=d.onpaste=null,d.onselectstart=d.oncontextmenu=d.onmousedown=d.onkeydown=function(){return!0},d.wrappedJSObject||d)onmouseup=null,onmousedown=null,oncontextmenu=null;for(var a=d.getElementsByTagName("*"),i=a.length-1;i>=0;i--){var o=a[i];with(o.wrappedJSObject||o)onmouseup=null,onmousedown=null}var h=d.getElementsByTagName("head")[0];if(h){var s=d.createElement("style");s.innerHTML="html,*{-webkit-user-select:text!important;-moz-user-select:text!important;}",h.appendChild(s)}unsafeWindow.Event.prototype.preventDefault=function(){};'},
                   {gesture:"↓↑↓↑",fun:"var d = document, e = d.getElementById('wappalyzer-container') ; if ( e !== null ) { d.body.removeChild(e); } var u = 'https://wappalyzer.com/bookmarklet/', t = new Date().getTime(), c = d.createElement('div'), p = d.createElement('div'), l = d.createElement('link'), s = d.createElement('script') ; c.setAttribute('id', 'wappalyzer-container'); l.setAttribute('rel', 'stylesheet'); l.setAttribute('href', u + 'css/wappalyzer.css'); d.head.appendChild(l); p.setAttribute('id', 'wappalyzer-pending'); p.setAttribute('style', 'background-image: url(' + u + 'images/pending.gif) !important'); c.appendChild(p); s.setAttribute('src', u + 'js/wappalyzer.js?' + t); s.onload = function() { s = d.createElement('script'); s.setAttribute('src', u + 'js/apps.js?' + t); s.onload = function() { s = d.createElement('script'); s.setAttribute('src', u + 'js/driver.js?' + t); c.appendChild(s); }; c.appendChild(s); }; c.appendChild(s); d.body.appendChild(c);"},
                   {gesture:"↓↑↓→",fun:"GM_openInTab('http://just998.com/xiu/photo'+unsafeWindow.location.search,false)"}
                  ];
@@ -123,51 +160,13 @@
             }
         }
     }
-    function initEventListener(start,move,end,clientX,clientY,startBool){
-        var isMouse=start=="mousedown";
-        var moveFun=function(e){
-            tracer(eval(clientX),eval(clientY),isMouse);
-            gesturesWords.innerHTML=signs;
-            var gesturesWidth=signs.length*51+40;
-            gesturesContent.style.width=gesturesWidth+"px";
-            gesturesContent.style.marginLeft=-gesturesWidth/2+"px";
-        };
-        document.addEventListener(start, function(e) {
-            if(!startBool || eval(startBool)){
-                lastX=eval(clientX);
-                lastY=eval(clientY);
-                lastSign=signs="";
-                document.addEventListener(move, moveFun, false);
-            }
-        }, false);
-        document.addEventListener(end, function(e) {
-            document.removeEventListener(move, moveFun, false);
-            setTimeout(function(){if(gesturesContent.parentNode)gesturesContent.parentNode.removeChild(gesturesContent);},500);
-            if(afterGestures)afterGestures();
-            for(var g of gestures){
-                var gSign=g.gesture;
-                if(signs==gSign){
-                    if(!isMouse)document.body.appendChild(gesturesContent);
-                    var fun=defaultFun[g.fun];
-                    if(!fun){
-                        eval(g.fun);
-                    }
-                    eval(fun);
-                    e.stopPropagation();
-                    e.preventDefault();
-                    break;
-                }
-            }
-        }, false);
-    }
-    initEventListener("touchstart","touchmove","touchend","e.changedTouches[0].clientX","e.changedTouches[0].clientY");
-    initEventListener("mousedown","mousemove","contextmenu","e.clientX","e.clientY","e.which === 3");
-    var afterGestures;
-    var gesturesContent=document.createElement("div");
+    gesturesContent=document.createElement("div");
     gesturesContent.id="gesturesContent";
     gesturesContent.style.cssText="width:300px;height:70px;position:fixed;left:50%;top:50%;margin-top:-25px;margin-left:-150px;z-index:999999999;background-color:#000;border:1px solid;border-radius:10px;opacity:0.65;filter:alpha(opacity=65);box-shadow:5px 5px 20px 0px #000;";
     gesturesContent.innerHTML='<div id="gesturesWords" style="position:absolute;left:20px;top:5px;font:bold 50px \'黑体\';color:#ffffff"></div>';
-    var gesturesWords=gesturesContent.querySelector("#gesturesWords");
+    gesturesWords=gesturesContent.querySelector("#gesturesWords");
+    initEventListener("touchstart","touchmove","touchend",tracer,"e.changedTouches[0].clientX","e.changedTouches[0].clientY");
+    initEventListener("mousedown","mousemove","contextmenu",tracer,"e.clientX","e.clientY","e.which === 3");
     if(location.href=="https://github.com/hoothin/UserScripts/tree/master/Mouse%20Gestures"){
         var entryContent=document.querySelector("article.entry-content"),mobile=false;
         if(!entryContent){
