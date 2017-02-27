@@ -513,6 +513,30 @@
                  return this.src.replace(/\d+x\d+bb\./,"1400x1400bb.");
              }
             },
+            {name: "汽车之家",
+             url: /\.autohome\.com\.cn/,
+             getImage: function() {
+                 return this.src.replace(/(\?imageView.*|\d+x\d+_\d+_)/,"");
+             }
+            },
+            {name: "易车",
+             url: /\.bitauto\.com/,
+             getImage: function() {
+                 return this.src.replace(/_\d+\.jpg$/i,"_12.jpg");
+             }
+            },
+            {name: "爱卡",
+             url: /\.xcar\.com\.cn/,
+             getImage: function() {
+                 return this.src.replace(/\-\d+x\d+\.jpg/i,"");
+             }
+            },
+            {name: "太平洋",
+             url: /\.pcauto\.com\.cn/,
+             getImage: function() {
+                 return this.src.replace(/_\d+x\d+\.jpg$/i,".jpg");
+             }
+            }
         ];
 
         // 通配型规则,无视站点.
