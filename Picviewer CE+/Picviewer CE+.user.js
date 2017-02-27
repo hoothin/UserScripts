@@ -6,11 +6,14 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2017.2.21.1
+// @version        2017.2.27.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
 // @connect       www.google.com
+// @connect       www.google.com.hk
+// @connect       www.google.co.jp
+// @connect       ipv4.google.com
 // @connect       image.baidu.com
 // @connect       www.tineye.com
 // @grant          GM_getValue
@@ -8317,6 +8320,7 @@ background-image:url("'+ prefs.icons.magnifier +'");\
         if(searchState)searchState.innerHTML=words;
     }
 
+    var searchSort=["Tineye","Google","Baidu"];
     function searchImgByImg(imgSrc, callBack, onError, noneResult, searchFrom){
         let srcs=[];
         var searchBaidu=function(){
@@ -8330,7 +8334,7 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                     setTimeout(function(){
                         setSearchState("");
                     },2000);
-                    if(noneResult)noneResult();
+                    searchNext();
                     return;
                 }
                 if(baiduJson.data[0]){
@@ -8340,13 +8344,13 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                         srcs.push(imgData.objURL);
                     }
                     setSearchState("百度识图结束，共找到"+srcs.length+"张匹配图片");
-                    callBack(srcs, 2);
+                    callBackFun(srcs);
                 }else{
                     setSearchState("未找到原图");
                     setTimeout(function(){
                         setSearchState("");
                     },2000);
-                    if(noneResult)noneResult();
+                    searchNext();
                     return;
                 }
             }, onError);
@@ -8361,6 +8365,7 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                     getUrl("https://www.google.com"+sizeUrl.getAttribute("href"), function(d){
                         googleHtml.documentElement.innerHTML = d.responseText;
                         let imgs=googleHtml.querySelectorAll("div.rg_meta");
+                        if(imgs.length==0){searchNext();return;}
                         srcs=[];
                         for(let img of imgs){
                             if(srcs.length>2)break;
@@ -8368,10 +8373,10 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                             srcs.push(jsonData.ou);
                         }
                         setSearchState("谷歌识图结束，共找到"+srcs.length+"张匹配图片");
-                        callBack(srcs, 3);
+                        callBackFun(srcs);
                     }, onError);
                 }else{
-                    searchBaidu();
+                    searchNext();
                 }
             }, onError);
         };
@@ -8388,26 +8393,38 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                         srcs.push(img.href);
                     }
                     setSearchState("Tineye识图结束，共找到"+srcs.length+"张匹配图片");
-                    callBack(srcs, 1);
+                    callBackFun(srcs);
                 }else{
-                    searchGoogle();
+                    searchNext();
                 }
             }, onError);
         };
-        switch(searchFrom){
-            case 3:
-                searchBaidu();
-                break;
-            case 2:
-                searchGoogle();
-                break;
-            case 1:
-                searchTineye();
-                break;
-            default:
-                searchTineye();
-                break;
-        }
+        var searchNext=function(){
+            searchFrom++;
+            if(searchFrom<=3)switchSearch();
+            else if(noneResult)noneResult();
+        };
+        var callBackFun=function(srcs){
+            callBack(srcs, searchFrom);
+        };
+        if(!searchFrom)searchFrom=1;
+        var switchSearch=function(){
+            switch(searchSort[searchFrom-1]){
+                case "Baidu":
+                    searchBaidu();
+                    break;
+                case "Google":
+                    searchGoogle();
+                    break;
+                case "Tineye":
+                    searchTineye();
+                    break;
+                default:
+                    searchTineye();
+                    break;
+            }
+        };
+        switchSearch();
     }
 
     init2();
