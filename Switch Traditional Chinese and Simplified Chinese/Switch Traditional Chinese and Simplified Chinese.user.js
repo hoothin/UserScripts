@@ -4,7 +4,7 @@
 // @name:ja      简繁
 // @name:en      Switch Traditional Chinese and Simplified Chinese
 // @namespace    hoothin
-// @version      1.1.1
+// @version      1.1.2
 // @description        任意轉換網頁中的簡體中文與繁體中文（默認簡體→繁體）
 // @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体）
 // @description:ja     简繁中国語に変換
@@ -80,6 +80,7 @@
             if(char.charCodeAt(0) > 10000){
                 index=scStr.indexOf(char);
                 if(index != -1)str+=tcStr.charAt(index);
+                else str+=char;
             }
             else str+=char;
         }
@@ -93,6 +94,7 @@
             if(char.charCodeAt(0) > 10000){
                 index=tcStr.indexOf(char);
                 if(index != -1)str+=scStr.charAt(index);
+                else str+=char;
             }
             else str+=char;
         }
