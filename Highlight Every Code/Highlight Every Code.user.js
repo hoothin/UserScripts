@@ -56,7 +56,7 @@
     };
 
     document.addEventListener('mousedown', function(o) {
-        document.body.removeChild(codeIcon);
+        if(codeIcon.parentNode)codeIcon.parentNode.removeChild(codeIcon);
     });
     document.addEventListener('mouseup', function(o) {
         if (o.button === 0 && (o.ctrlKey || o.altKey || o.metaKey || o.shiftKey)) {
