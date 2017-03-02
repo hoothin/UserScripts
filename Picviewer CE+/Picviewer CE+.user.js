@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2017.2.27.1
+// @version        2017.3.2.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -39,10 +39,10 @@
 ;(function(topObject,window,document,unsafeWindow){
     'use strict';
 
+    var prefs;
     function init(topObject,window,document,arrayFn,envir,storage,unsafeWindow){
-
         // 默认设置，请到设置界面修改
-        var prefs={
+        prefs={
             floatBar:{//浮动工具栏相关设置.
                 butonOrder:['actual','gallery','magnifier','current','search'],//按钮排列顺序'actual'(实际的图片),'current'(当前显示的图片),'magnifier'(放大镜观察),'gallery'(图集)
                 showDelay:366,//浮动工具栏显示延时.单位(毫秒)
@@ -134,6 +134,7 @@
             // lowLevel: true,  // 如果有多个图片，优先选择低一级的
 
             debug: false,
+            firstEngine:"Tineye"
         };
 
         //各网站高级规则;
@@ -4928,6 +4929,7 @@ left:0px;\
                     setSearchState("");
                 }
                 searchButton.addEventListener('click',function(e){
+                    sortSearch();
                     searchImgByImg(self.img.src, function(srcs, index){
                         from=index;
                         self.srcs=srcs;
@@ -6504,6 +6506,7 @@ background-color:rgba(255, 0, 0, 0.150);\
                 } else {
                     if (!this.data.xhr) {
                         if(this.buttonType == 'search'){
+                            sortSearch();
                             let from=0;
                             let searchFun=function(){
                                 console.log(self.data.imgSrc);
@@ -8170,6 +8173,16 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                     type: 'checkbox',
                     "default": prefs.debug
                 },
+                'firstEngine': {
+                    label: '首选搜图引擎',
+                    type: 'select',
+                    options: {
+                        "Tineye":"Tineye",
+                        "Google":"Google",
+                        "Baidu":"Baidu"
+                    },
+                    "default": prefs.firstEngine,
+                },
             },
             events: {
                 open: function(doc, win, frame) {
@@ -8345,6 +8358,16 @@ background-image:url("'+ prefs.icons.magnifier +'");\
     }
 
     var searchSort=["Tineye","Google","Baidu"];
+    function sortSearch(){
+        for(var i=0;i<searchSort.length;i++){
+            if(searchSort[i]==prefs.firstEngine){
+                searchSort.splice(i,1);
+                break;
+            }
+        }
+        searchSort.unshift(prefs.firstEngine);
+    }
+
     function searchImgByImg(imgSrc, callBack, onError, noneResult, searchFrom){
         let srcs=[];
         var searchBaidu=function(){
@@ -8381,7 +8404,7 @@ background-image:url("'+ prefs.icons.magnifier +'");\
         };
         var searchGoogle=function(){
             setSearchState("谷歌识图开始……");
-            getUrl("https://www.google.com/searchbyimage?image_url="+encodeURIComponent(imgSrc), function(d){
+            getUrl("https://www.google.com/searchbyimage?safe=off&image_url="+encodeURIComponent(imgSrc), function(d){
                 let googleHtml=document.implementation.createHTMLDocument('');
                 googleHtml.documentElement.innerHTML = d.responseText;
                 let sizeUrl=googleHtml.querySelector("div.card-section>div>div>span.gl>a");
