@@ -3,7 +3,7 @@
 // @name:zh-CN   代码片段高亮
 // @name:zh-TW   程式碼片斷高亮
 // @namespace    hoothin
-// @version      1.2
+// @version      1.3
 // @description  Add a icon to popup a window that allows syntax highlighting and beautify and word count of source code snippets on current page
 // @description:zh-CN 选择代码片段后点击图标弹出新窗口显示语法高亮美化与格式化后的代码与字数统计
 // @description:zh-TW 選擇程式碼片段後點選圖示彈出新視窗顯示語法高亮美化與格式化後的程式碼與字數統計
@@ -22,7 +22,7 @@
     var isChrome=unsafeWindow.chrome;
     var codeIcon=document.createElement("img");
     var codes, selStr, scrollX, scrollY;
-    codeIcon.style.cssText="position:fixed;z-index:99999;display:none;cursor: pointer;";
+    codeIcon.style.cssText="position:fixed;z-index:99999;cursor: pointer;";
     codeIcon.title="Show this code snippet";
     codeIcon.src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAYAgMAAACD0OXYAAAACVBMVEX7+/swMDBTU1MLxgsCAAAAJElEQVQI12MIBYEAGLUKBBbAqAUMQICgAoAqoBQ95JaCnASjAAgXMdk3d5HTAAAAAElFTkSuQmCC";
     codeIcon.onmousedown=function(){
@@ -54,9 +54,9 @@
             GM_openInTab('data:text/html;charset=utf-8,' + encodeURIComponent(html));
         }
     };
-    document.body.appendChild(codeIcon);
+
     document.addEventListener('mousedown', function(o) {
-        codeIcon.style.display="none";
+        document.body.removeChild(codeIcon);
     });
     document.addEventListener('mouseup', function(o) {
         if (o.button === 0 && (o.ctrlKey || o.altKey || o.metaKey || o.shiftKey)) {
@@ -64,7 +64,7 @@
                 selStr=document.getSelection().toString();
                 codes=selStr.replace(/&/g, "&amp;").replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
                 if(codes){
-                    codeIcon.style.display="block";
+                    document.body.appendChild(codeIcon);
                     let pos=getMousePos(o);
                     let left, top;
                     if(isChrome){
