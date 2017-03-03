@@ -554,8 +554,8 @@
                 }
                 if(/\.sinaimg\.cn\/mw\d+\//.test(oldsrc)){
                     newsrc=oldsrc.replace(/\/mw\d+\//,"/large/");
-                }else if(/gravatar.com\/avatar\/.*\?s=/.test(oldsrc)){
-                    newsrc=oldsrc.replace(/(gravatar.com\/avatar\/.*\?s=).*/,"$1100000");
+                }else if(/gravatar\.com\/avatar\/.*\?s=/.test(oldsrc)){
+                    newsrc=oldsrc.replace(/(gravatar\.com\/avatar\/.*\?s=).*/,"$1100000");
                 }
                 return oldsrc != newsrc ? newsrc : null;
             }
