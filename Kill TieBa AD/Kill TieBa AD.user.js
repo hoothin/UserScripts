@@ -3,7 +3,7 @@
 // @name:zh-CN   贴吧广告清理
 // @name:zh-TW   貼吧廣告去除
 // @namespace    hoothin
-// @version      1.3
+// @version      1.3.1
 // @description        Just Kill TieBa AD
 // @description:zh-CN  清理百度贴吧（tieba.baidu.com）内的列表伪装，帖内伪装，触点广告，页首广告，推荐应用等各类广告
 // @description:zh-TW  去除百度貼吧（tieba.baidu.com）内的列表偽裝，帖內偽裝，觸點廣告，頁首廣告，推薦應用等各類廣告
@@ -23,7 +23,7 @@
     'use strict';
     var observer, option;
     var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
-    var tcss = ".j_encourage_entry,#encourage_entry,.tpoint-skin,#pb_adbanner,.iframe_wrapper,div.tpoint-skin,.j_click_stats,#thread_list>li:not(.j_thread_list):not(.thread_top_list_folder),#j_p_postlist>.clearfix:not([data-field*=post_id]){display:none !important;}";
+    var tcss = ".j_encourage_entry,#video_frs_head,#encourage_entry,.tpoint-skin,#pb_adbanner,.iframe_wrapper,div.tpoint-skin,.j_click_stats,#thread_list>li:not(.j_thread_list):not(.thread_top_list_folder),#j_p_postlist>.clearfix:not([data-field*=post_id]){display:none !important;}";
     var snod = document.createElement('style');
     snod.innerHTML = tcss;
     document.getElementsByTagName("head")[0].appendChild(snod);
