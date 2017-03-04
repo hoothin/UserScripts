@@ -555,8 +555,9 @@
                 if(/\.sinaimg\.cn\/mw\d+\//.test(oldsrc)){
                     newsrc=oldsrc.replace(/\/mw\d+\//,"/large/");
                 }else if(/gravatar\.com\/avatar\/.*[\?&]s=/.test(oldsrc)){
-                    console.log(111);
                     newsrc=oldsrc.replace(/(gravatar\.com\/avatar\/.*[\?&]s=).*/,"$1100000");
+                }else if(/uc_server\/avatar\.php\?uid=\d+&size=.*/.test(oldsrc)){
+                    newsrc=oldsrc.replace(/(uc_server\/avatar\.php\?uid=\d+&size=).*/,"$1big");
                 }
                 return oldsrc != newsrc ? newsrc : null;
             }
