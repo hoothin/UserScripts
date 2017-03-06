@@ -82,7 +82,7 @@
 // @include     http*://greasyfork.org/*/scripts/*
 // @include     http*://sleazyfork.org/*/forum/*discussion*
 // @include     http*://greasyfork.org/*/forum/*discussion*
-// @version     3.22.20
+// @version     3.22.21
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -840,14 +840,14 @@
         }
     }
     for(var site of config.sites){
-        if(site.regex.test(location.href)){
+        if(site.regex.test(location.hostname)){
             curSite=site;
             break;
         }
     }
     var contentArea=curSite&&curSite.contentArea?curSite.contentArea:'.entry-content',commArea=curSite&&curSite.commArea?curSite.commArea:"comment-content",articleSel=curSite&&curSite.articleSel?curSite.articleSel:"article";
 
-    if(/(sleaz|greas)yfork\.org\//.test(location.href)){
+    if(/(sleaz|greas)yfork\.org/.test(location.hostname)){
         if(/scripts\/23316/.test(location.href)){
             let pos=elementPosition(document.querySelector("#additional-info>div.script-author-description>h2")).y;
             scrollTo(0,pos);
@@ -886,7 +886,7 @@
             }
         }
         return;
-    }else if(/^https?:\/\/pan\.baidu\.com/.test(location.href)){
+    }else if(location.hostname=="pan.baidu.com"){
         if(location.hash.slice(1)){
             document.querySelector("#accessCode").value=decodeURI(location.hash.slice(1));
             document.querySelector('#submitBtn').click();

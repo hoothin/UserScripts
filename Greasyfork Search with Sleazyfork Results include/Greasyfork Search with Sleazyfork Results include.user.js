@@ -4,7 +4,7 @@
 // @name:zh-TW   大人的Greasyfork
 // @name:ja      大人のGreasyfork
 // @namespace    hoothin
-// @version      0.67
+// @version      0.68
 // @description  Merge adult results of sleazyfork into greasyfork when the script is no longer anonymously available, add rating score and version for scripts then
 // @description:zh-CN 在Greasyfork的搜索结果中添加Sleazyfork上的成人脚本，增加评分与版本号，并在访问匿名不可用脚本时跳转至Sleazyfork
 // @description:zh-TW 在Greasyfork的搜索結果中添加Sleazyfork上的成人腳本，增加評分與版本號，並在訪問匿名不可用腳本時跳轉至Sleazyfork
@@ -26,7 +26,7 @@
 (function() {
     'use strict';
     if(document.querySelector('span.sign-in-link')){
-        var otherSite=/\/\/([^\.]+\.)?greasyfork\.org/.test(location.href)?"sleazyfork":"greasyfork";
+        var otherSite=/greasyfork\.org/.test(location.hostname)?"sleazyfork":"greasyfork";
         if(/scripts\/\d+/.test(location.href)){
             if(!document.querySelector("#script-info") && (otherSite == "greasyfork" || document.querySelector("div.width-constraint>section>p>a"))){
                 location.href=location.href.replace(/\/\/([^\.]+\.)?(greasyfork|sleazyfork)\.org/,"//$1"+otherSite+"\.org");

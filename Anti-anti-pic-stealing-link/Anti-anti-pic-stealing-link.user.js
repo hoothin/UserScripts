@@ -2,7 +2,7 @@
 // @name         反图片防盗链
 // @name:en      Anti-anti-pic-stealing-link
 // @namespace    hoothin
-// @version      0.2
+// @version      0.3
 // @description  破解图片防盗链
 // @description:en  crack Anti-pic-stealing-link to show real picture
 // @author       hoothin
@@ -42,7 +42,7 @@
         for (var i in sites) {
             var sitePatt=new RegExp(sites[i],"i");
             if(sitePatt.test(item.src)){
-                if(!(new RegExp(i,"i")).test(location.href)){
+                if(!(new RegExp(i,"i")).test(location.hostname)){
                     refererChanger(item);
                 }
                 break;

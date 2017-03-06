@@ -17,18 +17,27 @@
 * 某带参mp4视频 `mp4\?[^\/]+$`
 
 ###Update
- - 添加用户设置功能，填入正则表达式可增加支持链接
- - 添加命令菜单，点击快速在当前网站禁用或启用并记录选择
+ - **`Alt + F9`** 自定义下载，选中文本超链则下载文本超链，鼠标指向链接则下载链接，没有选中则弹框输入链接下载
+ - 按住 **`Ctrl + Shift`** 点击批量离线当前页面中所有资源（如果我给该网盘写了批量离线功能的话），实际也没鸟用，度盘批量离线时动不动就网络繁忙了
+ - 添加度盘默认下载路径设置
+ - 添加网盘设置功能，点击图标可设置是否启用网盘
+ - 添加网盘排序功能，设置页面拖拽图标即可进行排序
+ - 添加设置项，填入正则表达式可增加支持链接，可设置是否仅当鼠标经过时显示图标
+ - 按下 **`F9`** 快速在当前网站禁用或启用并记录选择
  - 离线时将32位磁力链接转换为40位磁力链接，便于网盘识别动漫花园之类的资源
  - 修复百度网盘超级vip问题，感谢Psnowy
 
 ---
 ![img1](https://greasyfork.org/system/screenshots/screenshots/000/005/431/original/GIF1.gif?1476097920)
 
-###支持网盘
+###支持服务
 * 百度网盘 http://pan.baidu.com
 * 115 http://115.com
 * Furk http://www.furk.net
 * Seedr http://www.seedr.cc
 * 迅雷离线 http://lixian.xunlei.com
 * Pcloud http://www.pcloud.com
+* 小米路由器 http://miwifi.com
+* 腾讯微云 http://weiyun.com
+* 九秒云播 http://apiv.ga
+* Torrent.org http://torrent.org.cn
