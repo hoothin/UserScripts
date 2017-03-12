@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2017.3.8.1
+// @version        2017.3.12.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -1647,6 +1647,11 @@
                     '<span class="pv-gallery-vertical-align-helper"></span>'+
                     '</span>'+
 
+                     '<span title="加载下一页的图片" class="pv-gallery-head-command pv-gallery-head-command-nextPage">'+
+                    '<span>加载更多</span>'+
+                    '<span class="pv-gallery-vertical-align-helper"></span>'+
+                    '</span>'+
+
                     '<span title="弹出照片进行复杂操作" class="pv-gallery-head-command pv-gallery-head-command-operate">'+
                     '<span>折腾</span>'+
                     '<span class="pv-gallery-vertical-align-helper"></span>'+
@@ -1836,6 +1841,7 @@
                     'head-left-img-info-scaling',
 
                     'head-command-close',
+                    'head-command-nextPage',
                     'head-command-operate',
                     'head-command-slide-show',
                     'head-command-slide-show-button-inner',
@@ -2667,6 +2673,8 @@ padding-left:24px;">'+shareItem.name+'</span>');
                                 new ImgWindowC(this);
                             },
                         });
+                    }else if(eleMaps['head-command-nextPage'].contains(target)){
+                        self.nextPage();
                     }else if(eleMaps['head-command-collect'].contains(target)){
                         if(collection.favorite){
                             collection.remove();
@@ -3319,6 +3327,126 @@ padding-left:24px;">'+shareItem.name+'</span>');
                         btn.classList.remove('fullscreenbtn');
                     }
                 }
+            },
+            curPage:document,
+            getPage:function(){
+                var curPage=this.curPage;
+                let pre=curPage.querySelector("a.prev");
+                let next=curPage.querySelector("a.next");
+                if(!pre)pre=curPage.querySelector(".prev>a");
+                if(!next)next=curPage.querySelector(".next>a");
+                if(!pre && !next){
+                    let aTags=curPage.querySelectorAll("a");
+                    if(!pre){
+                        let pref,pres,pret;
+                        for(var i=0;i<aTags.length;i++){
+                            let aTag=aTags[i];
+                            if(pref && pres && pret)break;
+                            if(!pref){
+                                if(/上一页/.test(aTag.innerHTML)){
+                                    pref=aTag;
+                                }
+                            }
+                            if(!pres){
+                                if(aTag.innerHTML=="&lt;"){
+                                    pres=aTag;
+                                }
+                            }
+                            if(!pret){
+                                if(aTag.innerHTML=="«"){
+                                    pret=aTag;
+                                }
+                            }
+                        }
+                        pre=pref||pres||pret;
+                    }
+                    if(!next){
+                        let nextf,nexts,nextt;
+                        for(var i=0;i<aTags.length;i++){
+                            let aTag=aTags[i];
+                            if(nextf && nexts && nextt)break;
+                            if(!nextf){
+                                if(/下一页/.test(aTag.innerHTML)){
+                                    nextf=aTag;
+                                }
+                            }
+                            if(!nexts){
+                                if(aTag.innerHTML=="&gt;"){
+                                    nexts=aTag;
+                                }
+                            }
+                            if(!nextt){
+                                if(aTag.innerHTML=="»"){
+                                    nextt=aTag;
+                                }
+                            }
+                        }
+                        next=nextf||nexts||nextt;
+                    }
+                }
+                if(!pre && !next){
+                    let pageDiv=curPage.querySelector("div.wp-pagenavi");
+                    if(pageDiv){
+                        var cur=pageDiv.querySelector("span.current");
+                        pre=cur.previousSibling;
+                        next=cur.nextSibling;
+                    }
+                }
+                return {pre:pre,next:next};
+            },
+            canonicalUri:function(src, base_path){
+                var root_page = /^[^?#]*\//.exec(location.href)[0],
+                    root_domain = /^\w+\:\/\/\/?[^\/]+/.exec(root_page)[0],
+                    absolute_regex = /^\w+\:\/\//;
+                if (/^\/\/\/?/.test(src)){
+                    src = location.protocol + src;
+                }
+                else if (!absolute_regex.test(src) && src.charAt(0) != "/"){
+                    src = (base_path || "") + src;
+                }
+                return absolute_regex.test(src) ? src : ((src.charAt(0) == "/" ? root_domain : root_page) + src);
+            },
+            nextPage:function(){
+                var pageObj=this.getPage();
+                if(!pageObj.next)return;
+                var nextUrl=pageObj.next;
+                if(nextUrl.tagName!="A"){
+                    nextUrl=nextUrl.querySelector("a");
+                    if(!nextUrl)return;
+                }
+                var self = this;
+                GM_xmlhttpRequest({
+                    method: 'GET',
+                    url: self.canonicalUri(nextUrl.getAttribute("href")),
+                    onload: function(d) {
+                        let html=document.implementation.createHTMLDocument('');
+                        html.documentElement.innerHTML = d.responseText;
+                        self.curPage=html;
+                        let imgs=html.querySelectorAll('img');
+                        var container = document.querySelector('.pv-gallery-container'),
+                            preloadContainer = document.querySelector('.pv-gallery-preloaded-img-container');
+                        imgs = Array.prototype.slice.call(imgs).filter(function(img){
+                            return !(container.contains(img) || preloadContainer.contains(img));
+                        });
+                        imgs.forEach(function(img) {
+                            var isrc=img.outerHTML.replace(/.*src="(.*?)".*/,"$1");
+                            var nimg = new Image();
+                            nimg.src = isrc;
+                            nimg.onload=function(){
+                                if (self._dataCache[this.src]) return;
+                                var result = findPic(this);
+                                if (result) {
+                                    self.data.push(result);
+                                    self._appendThumbSpans([result]);
+                                }
+                                self._dataCache[this.src] = true;
+                                self.loadThumb();
+                            };
+                        });
+                    },
+                    onerror: function(e) {
+                    }
+                });
             },
             runOnce:function(){//运行一次来获取某些数据。
                 var thumbSpanCS=unsafeWindow.getComputedStyle(this.selected);
@@ -7294,7 +7422,7 @@ background-image:url("'+ prefs.icons.magnifier +'");\
             }
 
             function tag(n) {
-                return n.tagName && n.tagName.toUpperCase();
+                return n && n.tagName && n.tagName.toUpperCase();
             }
 
             function qs(s, n) {
@@ -7305,7 +7433,7 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                 var a, img, url, info;
                 if(tag(node) == 'A') {
                     a = node;
-                } else {
+                } else if(node.parentNode){
                     if(tag(node) == 'IMG') {
                         img = node;
                         if(img.src.substr(0, 5) != 'data:') url = rel2abs(img.src, location.href);
