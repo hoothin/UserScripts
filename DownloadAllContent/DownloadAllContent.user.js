@@ -4,7 +4,7 @@
 // @name:zh-TW   懶人小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      1.16
+// @version      1.17
 // @description  Fetch and download main content on current page, provide special support for chinese novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取小說、論壇內容等並保存為TXT文檔
@@ -52,25 +52,34 @@
             break;
     }
     var firefox=navigator.userAgent.toLowerCase().indexOf('firefox')!=-1;
+    var rocketContent,txtDownContent,txtDownWords,txtDownQuit,txtDownDivInited=false;
 
-    function indexDownload(aEles){
-        var rocketContent=document.createElement("div");
+    function initTxtDownDiv(){
+        if(txtDownDivInited)return;
+        txtDownDivInited=true;
+        rocketContent=document.createElement("div");
         document.body.appendChild(rocketContent);
         rocketContent.outerHTML=`
         <div id="txtDownContent" style="display: none;">
             <div style="width:300px;height:70px;position:fixed;left:50%;top:50%;margin-top:-25px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;">
                 <div id="txtDownWords" style="position:absolute;left:20px;top:10px;width:260px;">
                 </div>
-                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAMAAAAM7l6QAAAA5FBMVEUAAAD+/v7////9/f7////////+/v7+/v7////+/v7+/v7////+/v7+/v7////+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7////////////+/v7+/v7+/v7+/v7+/v4uje3///82ke7s9P3N5PtQoPDI4fqCu/Tu9v5Im+/6/P+VxfZgqPFNnvDp8/3f7fq42Pmnz/d1tPNvsfNkq/JCmO/4+/7X6fz19/rn8PqYx/aNwfV8uPRqrvJZpfFUovAzkO3Q5vu92/mr0fieyva92fWx0vQ6lO5pygFTAAAAJHRSTlMAmfD+RMGwgj2mknlIKR/36+XGnIyHfnJfVDk2My8S4E1CJBvTatKDAAABY0lEQVQoz4WSZ1fCMBRA05ahLPfemkspBUFwgGz3+P//x/hK6ZBzvB/ak96+kZeoGCtFK5eziitqCSfWOnM2CuWUrOyQYPc0bjM2htHXh+/ffQ4lQ6zEPoZ6TwdUp10M56EtAe5MR7y0HGAeX7Ghe6MTzIZwFtTfBrepUzw4UFSGY8CUTTMGLo3eglv58By21pRnB7aNBqTwPfWq/OVey9sH22wZXiWo6Yr3GtRl/f0IRyoPYy14v97YWjVY12BPrcK9XvhaZPUdWCoLbR35yOoW5P7R8eQ3JrmbSp6HVmSrXuTrmNYyUAs2JkL6D6YjG1PgNGXK87F4nWAsUxmL2gyH6oVD7cuhdqFg9CE4T/oPE6CsgvBOP21715AP7ugaDFK+3YD1KyUcAG47bn0TSylxFd8WDTwMMByoBSUHw+jd9/3JbQODnVExygUS7FRUksPVtdDZW8dqCZm8lc1auxcq4gc02GVGTUchmgAAAABJRU5ErkJggg==" id="txtDownQuit" style="position:absolute;right:0px;top:0px;cursor: pointer;" />
+                <div id="txtDownQuit" style="width:28px;height:28px;border-radius:14px;position:absolute;right:2px;top:2px;cursor: pointer;background-color:#3892ed;">
+                    <span style="height:28px;line-height:28px;display:block;color:#FFF;text-align:center;font-size:20px;">╳</span>
+                </div>
             </div>
         </div>`;
-        var txtDownContent=document.querySelector("#txtDownContent");
-        var txtDownWords=document.querySelector("#txtDownWords");
-        var txtDownQuit=document.querySelector("#txtDownQuit");
+        txtDownContent=document.querySelector("#txtDownContent");
+        txtDownWords=document.querySelector("#txtDownWords");
+        txtDownQuit=document.querySelector("#txtDownQuit");
         txtDownQuit.onclick=function(){
             txtDownContent.style.display="none";
             txtDownContent.parentNode.removeChild(txtDownContent);
         };
+    }
+
+    function indexDownload(aEles){
+        initTxtDownDiv();
         var j=0,rCats=[];
         function getDocEle(str){
             var doc = null;
@@ -111,7 +120,7 @@
     function getPageContent(doc){
         if(!doc)return i18n.error;
         var i,j,k,rStr="",pageData=(doc.body?doc.body:doc).cloneNode(true),delList=[];
-        [].forEach.call(pageData.querySelectorAll("script,style,link,img"),function(item){delList.push(item);});
+        [].forEach.call(pageData.querySelectorAll("script,style,link,img,noscript"),function(item){delList.push(item);});
         [].forEach.call(delList,function(item){item.parentNode.removeChild(item);});
         [].forEach.call(pageData.querySelectorAll("font.jammer"),function(item){
             item.parentNode.removeChild(item);
