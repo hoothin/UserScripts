@@ -3429,7 +3429,7 @@ padding-left:24px;">'+shareItem.name+'</span>');
                             return !(container.contains(img) || preloadContainer.contains(img));
                         });
                         imgs.forEach(function(img) {
-                            var isrc=img.outerHTML.replace(/.*src="(.*?)".*/,"$1");
+                            var isrc=img.getAttribute("src");
                             var nimg = new Image();
                             nimg.src = isrc;
                             nimg.onload=function(){
