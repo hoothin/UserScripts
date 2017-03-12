@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name               Greasemonkey Mouse Gestures
-// @name:zh-CN         鼠标手势
-// @name:zh-TW         滑鼠手勢
+// @name:zh-CN         油猴鼠标手势
+// @name:zh-TW         油猴滑鼠手勢
 // @namespace          hoothin
-// @version            0.65
-// @description        Just a Mouse Gestures
-// @description:zh-CN  就是个鼠标手势
-// @description:zh-TW  就是個滑鼠手勢
+// @version            0.66
+// @description        Just a Mouse Gestures script
+// @description:zh-CN  就是个鼠标手势脚本
+// @description:zh-TW  就是個滑鼠手勢脚本
 // @author             hoothin
 // @include            *
 // @grant              GM_openInTab
@@ -14,6 +14,7 @@
 // @grant              GM_getValue
 // @grant              GM_registerMenuCommand
 // @grant              unsafeWindow
+// @grant              GM_info
 // @license            MIT License
 // @compatible        chrome
 // @compatible        firefox
@@ -90,7 +91,8 @@ function initEventListener(start,move,end,tracer,clientX,clientY,startBool){
                 alert1:"请先监听手势",
                 alert2:"还没有绑定功能",
                 alert3:"请输入自定义代码",
-                configure:"鼠标手势设置"
+                configure:"鼠标手势设置",
+                update:"鼠标手势脚本已更新，是否覆盖脚本设置？"
             };
             break;
         default:
@@ -112,13 +114,15 @@ function initEventListener(start,move,end,tracer,clientX,clientY,startBool){
                 alert1:"Please add gesture first",
                 alert2:"Nothing bind",
                 alert3:"Input custom code please",
-                configure:"Mouse Gestures - Configure"
+                configure:"Mouse Gestures - Configure",
+                update:"Greasemonkey Mouse Gestures has updated, recover config?"
             };
             break;
     }
     gestures=GM_getValue("gestures");
-    if(!gestures){
-        gestures=[{gesture:"↓→",fun:"close"},
+    if(GM_info.script.version != GM_getValue("gmMouseGestureVersion")){
+        if(!gestures || window.confirm(i18n.update))
+            gestures=[{gesture:"↓→",fun:"close"},
                   {gesture:"→↑",fun:"openNew"},
                   {gesture:"←↑",fun:"scrollToTop"},
                   {gesture:"←↓",fun:"scrollToBottom"},
@@ -127,10 +131,11 @@ function initEventListener(start,move,end,tracer,clientX,clientY,startBool){
                   {gesture:"↑↓",fun:"reload"},
                   {gesture:"↓↑↓",fun:"var t=((unsafeWindow.getSelection&&unsafeWindow.getSelection())||(document.getSelection&&document.getSelection())||(document.selection&&document.selection.createRange&&document.selection.createRange().text));var e=(document.charset||document.characterSet);if(t!=''){GM_openInTab('http://translate.google.cn/?text='+t+'&hl=zh-CN&langpair=auto|zh-CN&tbb=1&ie='+e,false);}else{GM_openInTab('http://translate.google.cn/translate?u='+encodeURIComponent(location.href)+'&hl=zh-CN&langpair=auto|zh-CN&tbb=1&ie='+e,false);}"},
                   {gesture:"↓↑↓←",fun:'var d=document,b=d.body;with(b.onselectstart=b.oncopy=b.onpaste=b.onkeydown=b.oncontextmenu=b.onmousemove=b.ondragstart=d.oncopy=d.onpaste=null,d.onselectstart=d.oncontextmenu=d.onmousedown=d.onkeydown=function(){return!0},d.wrappedJSObject||d)onmouseup=null,onmousedown=null,oncontextmenu=null;for(var a=d.getElementsByTagName("*"),i=a.length-1;i>=0;i--){var o=a[i];with(o.wrappedJSObject||o)onmouseup=null,onmousedown=null}var h=d.getElementsByTagName("head")[0];if(h){var s=d.createElement("style");s.innerHTML="html,*{user-select:text!important;-moz-user-select:text!important;-webkit-user-select:text!important;-webkit-user-drag:text!important;-khtml-user-select:text!important;-khtml-user-drag:text!important;pointer-events:auto!important;}",h.appendChild(s)}unsafeWindow.Event.prototype.preventDefault=function(){};'},
-                  {gesture:"↓↑↓↑",fun:"var d = document, e = d.getElementById('wappalyzer-container') ; if ( e !== null ) { d.body.removeChild(e); } var u = 'https://wappalyzer.com/bookmarklet/', t = new Date().getTime(), c = d.createElement('div'), p = d.createElement('div'), l = d.createElement('link'), s = d.createElement('script') ; c.setAttribute('id', 'wappalyzer-container'); l.setAttribute('rel', 'stylesheet'); l.setAttribute('href', u + 'css/wappalyzer.css'); d.head.appendChild(l); p.setAttribute('id', 'wappalyzer-pending'); p.setAttribute('style', 'background-image: url(' + u + 'images/pending.gif) !important'); c.appendChild(p); s.setAttribute('src', u + 'js/wappalyzer.js?' + t); s.onload = function() { s = d.createElement('script'); s.setAttribute('src', u + 'js/apps.js?' + t); s.onload = function() { s = d.createElement('script'); s.setAttribute('src', u + 'js/driver.js?' + t); c.appendChild(s); }; c.appendChild(s); }; c.appendChild(s); d.body.appendChild(c);"},
+                  {gesture:"↓↑↓↑",fun:"var d = document, e = d.getElementById('wappalyzer-container') ; if ( e !== null ) { d.body.removeChild(e); } var u = 'https://wappalyzer.com/', t = new Date().getTime(), c = d.createElement('div'), p = d.createElement('div'), l = d.createElement('link'), s = d.createElement('script') ; c.setAttribute('id', 'wappalyzer-container'); l.setAttribute('rel', 'stylesheet'); l.setAttribute('href', u + 'css/bookmarklet.css'); d.head.appendChild(l); p.setAttribute('id', 'wappalyzer-pending'); p.setAttribute('style', 'background-image: url(' + u + 'images/spinner.gif) !important'); c.appendChild(p); s.setAttribute('src', u + 'bookmarklet/wappalyzer.js'); s.onload = function() { s = d.createElement('script'); s.setAttribute('src', u + 'bookmarklet/apps.js'); s.onload = function() { s = d.createElement('script'); s.setAttribute('src', u + 'bookmarklet/driver.js'); c.appendChild(s); }; c.appendChild(s); }; c.appendChild(s); d.body.appendChild(c);"},
                   {gesture:"↓↑↓→",fun:"GM_openInTab('http://just998.com/xiu/photo'+unsafeWindow.location.search,false)"}
                  ];
         GM_setValue("gestures",gestures);
+        GM_setValue("gmMouseGestureVersion",GM_info.script.version);
     }
     function tracer(curX,curY,showSign) {
         let distanceX=curX-lastX,distanceY=curY-lastY;
