@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Bilibili Bangumi Cover
-// @name:zh-CN   哔哩哔哩番剧封面
+// @name:zh-CN   哔哩哔哩(bilibili.com)番剧封面
 // @namespace    hoothin
 // @version      0.6
 // @description        Show Bilibili Bangumi Cover
