@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Bilibili Bangumi Cover
-// @name:zh-CN   哔哩哔哩(bilibili.com)番剧封面
+// @name:zh-CN   哔哩哔哩番剧封面
 // @namespace    hoothin
-// @version      0.5
+// @version      0.6
 // @description        Show Bilibili Bangumi Cover
 // @description:zh-CN  在哔哩哔哩番剧页面中显示封面
 // @grant        GM_xmlhttpRequest
@@ -39,28 +39,15 @@
     function refreshCover(){
         GM_xmlhttpRequest({
             method: 'GET',
-            url: bangumiIndex.href,
+            url: "http://bangumi.bilibili.com/web_api/episode/"+location.hash.slice(1)+".json",
             onload: function(result) {
-                var doc = null;
                 try {
-                    doc = document.implementation.createHTMLDocument('');
-                    doc.documentElement.innerHTML = result.responseText;
-                }
-                catch (e) {
+                    var bangumiData = JSON.parse(result.responseText);
+                    coverLink.href=cover.src=bangumiData.result.currentEpisode.cover;
+                }catch (e) {
                     console.log(e);
-                }
-                if (!doc) {
-                    return;
-                }
-                var img=doc.querySelector("a.v1-complete-text[href='"+location.href.replace(/https?:/,"")+"']>div>img");
-                if(img){
-                    coverLink.href=cover.src=img.getAttribute("src").replace(/\d+_\d+|_\d+x\d+\.jpg/,"");
                 }
             }
         });
-    }
-    var bangumiIndex=document.querySelector(".v1-bangumi-info-title>a");
-    if(bangumiIndex){
-        refreshCover();
     }
 })();
