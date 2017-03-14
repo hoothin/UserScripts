@@ -51,7 +51,7 @@
         {name:"Relon",url:"http://yyygwz.com/index.php?url=%s"},
         {name:"爱看TV",url:"http://aikan-tv.com/tong.php?url=%s"},
         {name:"SO视频",url:"http://parse.colaparse.cc/?url=%s"},
-        {name:"Moondown",url:"http://moon.moondown.net/tong.php?url=%s"},
+        {name:"Moondown",url:"http://moon.moondown.net/?url=%s"},
         {name:"选片网",url:"http://jx.xuanpianwang.com/parse?url=%s"},
         {name:"云上",url:"http://www.ou522.cn/t2/1.php?url=%s"},
         {name:"小海解析",url:"http://jx.ck921.com/?url=%s"},
@@ -67,7 +67,7 @@
     var vipVideoCrackJump=GM_getValue("vipVideoCrackJump");
     var vipVideoCrackUrl=GM_getValue("vipVideoCrackUrl");
     var selectStyle=document.createElement("style");
-    selectStyle.innerHTML=".crackJump{margin-left:5px;color:white;text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;-webkit-text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;-moz-text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;*filter: Glow(color=#000, strength=1);}.vipSelect{background:black;color:white;width:88px;}.crackArea{position:absolute;z-index:999999;left:0px;top:0px;opacity:0.50;filter:alpha(opacity=50);transition:opacity 0.3s ease,width 0.3s ease;width:95px;overflow:hidden;white-space:nowrap;}.crackArea:hover{opacity:1;filter:alpha(opacity=100);width:161px;}";
+    selectStyle.innerHTML=".crackJump{margin-left:10px;color:white;text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;-webkit-text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;-moz-text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;*filter: Glow(color=#000, strength=1);}.vipSelect{background:black;color:white;}.crackArea{position:absolute;z-index:999999;left:0px;top:0px;opacity:0.50;filter:alpha(opacity=50);transition:opacity 0.3s ease,width 0.3s ease;width:95px;overflow:hidden;white-space:nowrap;}.crackArea:hover{opacity:1;filter:alpha(opacity=100);width:200px;}";
     document.getElementsByTagName("head")[0].appendChild(selectStyle);
     var placeholder=document.createElement("div");
     placeholder.style.cssText="width:100%;height:100%;text-align:center;font-size:x-large;cursor:pointer;";
