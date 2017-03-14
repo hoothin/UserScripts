@@ -120,7 +120,6 @@
     crackArea.appendChild(quickAccess);
     function crackJump(){
         if(vipVideoCrackJump){
-            console.log(value);
             var value=vipVideoCrackUrl?vipVideoCrackUrl:cracks[0].url;
             GM_openInTab(value.replace("%s",(iqiyi&&document.querySelector(".sns-icon>li>a")?decodeURIComponent(document.querySelector(".sns-icon>li>a").href.replace(/.*url=(.*)%3Fsrc.*/,"$1")):location.href.replace(/#.*/,""))),false);
             if(video.parentNode && !iqiyi)video.parentNode.replaceChild(placeholder,video);
