@@ -89,7 +89,7 @@
             }else{
                 vipVideoCrackUrl=value;
                 GM_setValue("vipVideoCrackUrl",vipVideoCrackUrl);
-                video.parentNode.removeChild(video);
+                video.parentNode.replaceChild(placeholder,video);
             }
             select.options.selectedIndex=0;
         }
