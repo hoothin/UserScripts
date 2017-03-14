@@ -83,7 +83,7 @@
     select.className="vipSelect";
     select.innerHTML="<option value=''>VIP视频解析</option>";
     if(!GM_getValue("hacgGodTurnVisited")){
-        select.innerHTML+="<option value='https://greasyfork.org/scripts/23316/code/hacg.user.js'>\u2605\u0020\u8001\u53f8\u673a\u811a\u672c\u0020\u2605</option>";
+        select.innerHTML+="<option value='https://greasyfork.org/scripts/23316/code/hacg.user.js'>\u2605\u4e0a\u8f66\u2605</option>";
     }
     cracks.forEach(function(item){
         var optionStr="<option value='"+item.url+"'>"+item.name+"</option>";
@@ -93,7 +93,7 @@
         var value=select.options[select.options.selectedIndex].value;
         if(value){
             window.open(value.replace("%s",(iqiyi?decodeURIComponent(document.querySelector(".sns-icon>li>a").href.replace(/.*url=(.*)%3Fsrc.*/,"$1")):location.href.replace(/#.*/,""))));
-            if(value=="https://greasyfork.org/scripts/23316/code/hacg.user.js"){
+            if(value.indexOf("hacg.user.js")!=-1){
                 GM_setValue("hacgGodTurnVisited",true);
                 select.options.remove(select.options.selectedIndex);
             }else{
