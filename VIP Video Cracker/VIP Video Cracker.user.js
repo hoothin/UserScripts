@@ -2,7 +2,7 @@
 // @name         VIP视频破解
 // @name:en      VIP Video Cracker
 // @namespace    hoothin
-// @version      1.4.2
+// @version      1.5.0
 // @description  解析并破解各大视频站的VIP权限
 // @description:en  Crack VIP permissions of some chinese video sites
 // @author       hoothin
@@ -64,10 +64,11 @@
         {name:"CloudParse",url:"http://api.cloudparse.com/?url=%s"},
         {name:"迷失之梦",url:"http://mt2t.com/yun?url=%s"}
     ],video;
+    var iqiyi=location.hostname.indexOf("iqiyi.com")!=-1;
     var vipVideoCrackJump=GM_getValue("vipVideoCrackJump");
     var vipVideoCrackUrl=GM_getValue("vipVideoCrackUrl");
     var selectStyle=document.createElement("style");
-    selectStyle.innerHTML=".crackJump{margin-left:10px;color:white;text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;-webkit-text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;-moz-text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;*filter: Glow(color=#000, strength=1);}.vipSelect{background:black;color:white;}.crackArea{position:absolute;z-index:999999;left:0px;top:0px;opacity:0.50;filter:alpha(opacity=50);transition:opacity 0.3s ease,width 0.3s ease;width:95px;overflow:hidden;white-space:nowrap;}.crackArea:hover{opacity:1;filter:alpha(opacity=100);width:200px;}";
+    selectStyle.innerHTML=".crackJump{margin-left:5px;color:white;text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;-webkit-text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;-moz-text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;*filter: Glow(color=#000, strength=1);}.vipSelect{background:black;color:white;font-size:12px;}.crackArea{position:absolute;z-index:999999;left:0px;top:0px;opacity:0.50;filter:alpha(opacity=50);transition:opacity 0.3s ease,width 0.3s ease;width:95px;overflow:hidden;white-space:nowrap;}.crackArea:hover{opacity:1;filter:alpha(opacity=100);width:200px;}";
     document.getElementsByTagName("head")[0].appendChild(selectStyle);
     var placeholder=document.createElement("div");
     placeholder.style.cssText="width:100%;height:100%;text-align:center;font-size:x-large;cursor:pointer;";
@@ -97,7 +98,7 @@
             }else{
                 vipVideoCrackUrl=value;
                 GM_setValue("vipVideoCrackUrl",vipVideoCrackUrl);
-                if(video.parentNode)video.parentNode.replaceChild(placeholder,video);
+                if(video.parentNode && !iqiyi)video.parentNode.replaceChild(placeholder,video);
             }
             select.options.selectedIndex=0;
         }
@@ -108,6 +109,7 @@
     quickAccess.innerHTML="<input type='checkbox'>立即跳转";
     var jumpCheck=quickAccess.querySelector("input");
     jumpCheck.onclick=function(){
+        if(iqiyi)jumpCheck.checked=false;
         vipVideoCrackJump=jumpCheck.checked;
         GM_setValue("vipVideoCrackJump",vipVideoCrackJump);
         crackJump();
@@ -120,7 +122,7 @@
         if(vipVideoCrackJump){
             var value=vipVideoCrackUrl?vipVideoCrackUrl:cracks[0].url;
             GM_openInTab(value.replace("%s",location.href),false);
-            if(video.parentNode)video.parentNode.replaceChild(placeholder,video);
+            if(video.parentNode && !iqiyi)video.parentNode.replaceChild(placeholder,video);
         }
     }
     var si=setInterval(function(){
@@ -137,7 +139,7 @@
             var videoParent=video.parentNode;
             videoParent.appendChild(crackArea);
             placeholder.style.lineHeight=getComputedStyle(videoParent).height;
-            if(vipVideoCrackJump){
+            if(vipVideoCrackJump && !iqiyi){
                 jumpCheck.checked=true;
             }
             crackJump();
