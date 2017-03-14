@@ -2,7 +2,7 @@
 // @name         VIP视频破解
 // @name:en      VIP Video Cracker
 // @namespace    hoothin
-// @version      1.4.1
+// @version      1.4.2
 // @description  解析并破解各大视频站的VIP权限
 // @description:en  Crack VIP permissions of some chinese video sites
 // @author       hoothin
@@ -50,8 +50,7 @@
         {name:"10号影院",url:"http://player.gakui.top/?url=%s"},
         {name:"Relon",url:"http://yyygwz.com/index.php?url=%s"},
         {name:"爱看TV",url:"http://aikan-tv.com/tong.php?url=%s"},
-        {name:"迷失之梦",url:"http://mt2t.com/yun?url=%s"},
-        {name:"SO视频",url:"http://parse.colaparse.cc/jx1.php?url=%s"},
+        {name:"SO视频",url:"http://parse.colaparse.cc/?url=%s"},
         {name:"Moondown",url:"http://moon.moondown.net/tong.php?url=%s"},
         {name:"选片网",url:"http://jx.xuanpianwang.com/parse?url=%s"},
         {name:"云上",url:"http://www.ou522.cn/t2/1.php?url=%s"},
@@ -62,13 +61,22 @@
         {name:"眼睛会下雨",url:"http://www.vipjiexi.com/yun.php?url=%s"},
         {name:"土豪网",url:"http://www.tuhao13.com/yunparse/index.php?url=%s"},
         {name:"舞动秋天",url:"http://qtzr.net/s/?qt=%s"},
-        {name:"CloudParse",url:"http://api.cloudparse.com/?url=%s"}
+        {name:"CloudParse",url:"http://api.cloudparse.com/?url=%s"},
+        {name:"迷失之梦",url:"http://mt2t.com/yun?url=%s"}
     ],video;
     var vipVideoCrackJump=GM_getValue("vipVideoCrackJump");
     var vipVideoCrackUrl=GM_getValue("vipVideoCrackUrl");
     var selectStyle=document.createElement("style");
     selectStyle.innerHTML=".crackJump{margin-left:5px;color:white;text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;-webkit-text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;-moz-text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;*filter: Glow(color=#000, strength=1);}.vipSelect{background:black;color:white;width:88px;}.crackArea{position:absolute;z-index:999999;left:0px;top:0px;opacity:0.50;filter:alpha(opacity=50);transition:opacity 0.3s ease,width 0.3s ease;width:95px;overflow:hidden;white-space:nowrap;}.crackArea:hover{opacity:1;filter:alpha(opacity=100);width:161px;}";
     document.getElementsByTagName("head")[0].appendChild(selectStyle);
+    var placeholder=document.createElement("div");
+    placeholder.style.cssText="width:100%;height:100%;text-align:center;font-size:x-large;cursor:pointer;";
+    placeholder.innerHTML="点击恢复视频播放";
+    placeholder.addEventListener("click",function(){
+        if(placeholder.parentNode){
+            placeholder.parentNode.replaceChild(video,placeholder);
+        }
+    });
     var select=document.createElement("select");
     select.className="vipSelect";
     select.innerHTML="<option value=''>VIP视频解析</option>";
@@ -89,7 +97,7 @@
             }else{
                 vipVideoCrackUrl=value;
                 GM_setValue("vipVideoCrackUrl",vipVideoCrackUrl);
-                video.parentNode.replaceChild(placeholder,video);
+                if(video.parentNode)video.parentNode.replaceChild(placeholder,video);
             }
             select.options.selectedIndex=0;
         }
@@ -107,16 +115,11 @@
     crackArea.className="crackArea";
     crackArea.appendChild(select);
     crackArea.appendChild(quickAccess);
-    var placeholder=document.createElement("div");
-    placeholder.style.cssText="width:100%;height:100%;text-align:center;font-size:x-large;cursor:pointer;";
-    placeholder.innerHTML="点击恢复视频播放";
     function crackJump(){
         if(vipVideoCrackJump){
             var value=vipVideoCrackUrl?vipVideoCrackUrl:cracks[0].url;
             GM_openInTab(value.replace("%s",location.href),false);
-            if(video.parentNode){
-                video.parentNode.replaceChild(placeholder,video);
-            }
+            if(video.parentNode)video.parentNode.replaceChild(placeholder,video);
         }
     }
     var si=setInterval(function(){
@@ -132,11 +135,6 @@
             clearInterval(si);
             var videoParent=video.parentNode;
             videoParent.appendChild(crackArea);
-            videoParent.addEventListener("click",function(){
-                if(!video.parentNode){
-                    videoParent.replaceChild(video,placeholder);
-                }
-            });
             placeholder.style.lineHeight=getComputedStyle(videoParent).height;
             if(vipVideoCrackJump){
                 jumpCheck.checked=true;
