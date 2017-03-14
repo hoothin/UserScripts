@@ -82,7 +82,7 @@
 // @include     http*://greasyfork.org/*/scripts/*
 // @include     http*://sleazyfork.org/*/forum/*discussion*
 // @include     http*://greasyfork.org/*/forum/*discussion*
-// @version     3.22.21
+// @version     3.22.22
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -90,7 +90,7 @@
 // @grant       GM_getValue
 // @grant       unsafeWindow
 // @run-at      document-end
-// @require     https://greasyfork.org/scripts/23522/code/od.js?version=177951
+// @require     https://greasyfork.org/scripts/23522/code/od.js?version=180849
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
 // @updateURL   https://greasyfork.org/scripts/23316/code/HacgGodTurn.user.js
