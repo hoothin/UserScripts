@@ -42,6 +42,7 @@
     var cracks=[
         {name:"47影视云",url:"http://api.47ks.com/webcloud/?v=%s"},
         {name:"疯狂解析",url:"http://vip.ifkdy.com/?url=%s"},
+        {name:"小海解析",url:"https://ckplaer.duapp.com/hai.php?url=%s"},
         {name:"无名小站1",url:"http://www.wmxz.wang/video.php?url=%s"},
         {name:"无名小站2",url:"http://www.sfsft.com/admin.php?url=%s"},
         {name:"71ki解析",url:"http://jx.71ki.com/tong.php?url=%s"},
@@ -91,7 +92,7 @@
     select.onchange=function(){
         var value=select.options[select.options.selectedIndex].value;
         if(value){
-            window.open(value.replace("%s",location.href));
+            window.open(value.replace("%s",(iqiyi?decodeURIComponent(document.querySelector(".sns-icon>li>a").href.replace(/.*url=(.*)%3Fsrc.*/,"$1")):location.href.replace(/#.*/,""))));
             if(value=="https://greasyfork.org/scripts/23316/code/hacg.user.js"){
                 GM_setValue("hacgGodTurnVisited",true);
                 select.options.remove(select.options.selectedIndex);
@@ -109,7 +110,6 @@
     quickAccess.innerHTML="<input type='checkbox'>立即跳转";
     var jumpCheck=quickAccess.querySelector("input");
     jumpCheck.onclick=function(){
-        if(iqiyi)jumpCheck.checked=false;
         vipVideoCrackJump=jumpCheck.checked;
         GM_setValue("vipVideoCrackJump",vipVideoCrackJump);
         crackJump();
@@ -120,8 +120,9 @@
     crackArea.appendChild(quickAccess);
     function crackJump(){
         if(vipVideoCrackJump){
+            console.log(value);
             var value=vipVideoCrackUrl?vipVideoCrackUrl:cracks[0].url;
-            GM_openInTab(value.replace("%s",location.href),false);
+            GM_openInTab(value.replace("%s",(iqiyi&&document.querySelector(".sns-icon>li>a")?decodeURIComponent(document.querySelector(".sns-icon>li>a").href.replace(/.*url=(.*)%3Fsrc.*/,"$1")):location.href.replace(/#.*/,""))),false);
             if(video.parentNode && !iqiyi)video.parentNode.replaceChild(placeholder,video);
         }
     }
@@ -139,7 +140,7 @@
             var videoParent=video.parentNode;
             videoParent.appendChild(crackArea);
             placeholder.style.lineHeight=getComputedStyle(videoParent).height;
-            if(vipVideoCrackJump && !iqiyi){
+            if(vipVideoCrackJump){
                 jumpCheck.checked=true;
             }
             crackJump();
@@ -153,6 +154,11 @@
                 setTimeout(function(){crackJump();},1);
                 return replaceState.apply(history, arguments);
             };
+            if(iqiyi){
+                unsafeWindow.addEventListener("hashchange",function(){
+                    crackJump();
+                });
+            }
         }else{
             //console.log("no player!");
         }
