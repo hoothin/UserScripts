@@ -104,6 +104,7 @@
     };
     var quickAccess=document.createElement("label");
     quickAccess.className="crackJump";
+    quickAccess.title="立即跳转到上次选择的站点";
     quickAccess.innerHTML="<input type='checkbox'>立即跳转";
     var jumpCheck=quickAccess.querySelector("input");
     jumpCheck.onclick=function(){
