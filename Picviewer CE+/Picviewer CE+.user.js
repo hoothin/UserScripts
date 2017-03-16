@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2017.3.12.2
+// @version        2017.3.16.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -85,6 +85,7 @@
             },
 
             gallery:{//图库相关设定
+                loadAll:false,//加载更多时是否加载全部页面
                 fitToScreen:true,//图片适应屏幕(适应方式为contain，非cover).
                 sidebarPosition: 'bottom',//'top' 'right' 'bottom' 'left'  四个可能值
                 sidebarSize: 120,//侧栏的高（如果是水平放置）或者宽（如果是垂直放置）
@@ -3452,6 +3453,7 @@ padding-left:24px;">'+shareItem.name+'</span>');
                                 self.loadThumb();
                             };
                         });
+                        if(prefs.gallery.loadAll)self.nextPage();
                     },
                     onerror: function(e) {
                     }
@@ -8188,6 +8190,12 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                     "default": prefs.gallery.fitToScreen,
                     section: ['图库'],
                     title: '适应方式为contain，非cover'
+                },
+                'gallery.loadAll': {
+                    label: '加载更多图片时自动处理至尾页',
+                    type: 'checkbox',
+                    "default": prefs.gallery.loadAll,
+                    title: '若页数过多可能影响体验'
                 },
                 'gallery.sidebarPosition': {
                     label: '缩略图栏位置',
