@@ -2,7 +2,7 @@
 // @name         VIP视频破解
 // @name:en      VIP Video Cracker
 // @namespace    hoothin
-// @version      1.5.1
+// @version      1.5.2
 // @description  解析并破解各大视频站的VIP权限
 // @description:en  Crack VIP permissions of some chinese video sites
 // @author       hoothin
@@ -53,6 +53,13 @@
         {name:"Relon",url:"http://yyygwz.com/index.php?url=%s"},
         {name:"爱看TV",url:"http://aikan-tv.com/tong.php?url=%s"},
         {name:"SO视频",url:"http://parse.colaparse.cc/?url=%s"},
+        {name:"最小品",url:"https://www.zuixiaopin.com/api/cloudVideo?url=%s"},
+        {name:"PPYPP",url:"http://www.ppypp.com/yunparse/?url=%s"},
+        {name:"梦中人",url:"http://www.wpswan.com/mzr/vipparse/index.php?url=%s"},
+        {name:"言朋影院",url:"http://xin.yingyanxinwen.cn/dxl/?url=%s"},
+        {name:"妹儿云",url:"https://www.yymeier.com/api.php?url=%s"},
+        {name:"那片",url:"https://jxapi.nepian.com/ckparse/?url=%s"},
+        {name:"5奇异",url:"http://www.jiexi.cx/5qiyi/?url=%s"},
         {name:"Moondown",url:"http://moon.moondown.net/?url=%s"},
         {name:"选片网",url:"http://jx.xuanpianwang.com/parse?url=%s"},
         {name:"云上",url:"http://www.ou522.cn/t2/1.php?url=%s"},
