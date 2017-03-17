@@ -2,7 +2,7 @@
 // @name         VIP视频破解
 // @name:en      VIP Video Cracker
 // @namespace    hoothin
-// @version      1.5.2
+// @version      1.5.3
 // @description  解析并破解各大视频站的VIP权限
 // @description:en  Crack VIP permissions of some chinese video sites
 // @author       hoothin
@@ -134,7 +134,7 @@
         }
     }
     var si=setInterval(function(){
-        [].every.call(document.querySelectorAll("object,embed"),function(item){
+        [].every.call(document.querySelectorAll("object,embed,video"),function(item){
             var style=getComputedStyle(item, null);
             if(style.width.replace("px","")>100 && style.height.replace("px","")>100){
                 video=item;
@@ -151,16 +151,22 @@
                 jumpCheck.checked=true;
             }
             crackJump();
-            var pushState = unsafeWindow.history.pushState;
-            var replaceState = unsafeWindow.history.replaceState;
-            unsafeWindow.history.pushState=function(state){
-                setTimeout(function(){crackJump();},1);
+            unsafeWindow.eval(`
+            var pushState = window.history.pushState;
+            window.history.pushState=function(a){
+                window.postMessage("pushState","*");
                 return pushState.apply(history, arguments);
             };
-            unsafeWindow.history.replaceState=function(state){
-                setTimeout(function(){crackJump();},1);
-                return replaceState.apply(history, arguments);
-            };
+            var replaceState = window.history.pushState;
+            window.history.replaceState=function(a){
+                window.postMessage("replaceState","*");
+                return pushState.apply(history, arguments);
+            };`);
+            window.addEventListener('message',function(e) {
+                if(e.data=="pushState" || e.data=="replaceState"){
+                    setTimeout(function(){crackJump();},1);
+                }
+            });
             if(iqiyi){
                 document.querySelector('#widget-dramaseries').addEventListener('click', function(e){
                     var target=e.target.parentNode;
@@ -180,9 +186,6 @@
                     crackJump();
                 });
             }
-        }else if(i++>10){
-            clearInterval(si);
-            console.log("no player!");
         }
     },500);
 })();
