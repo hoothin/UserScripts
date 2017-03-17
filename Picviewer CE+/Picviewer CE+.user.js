@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2017.3.17.1
+// @version        2017.3.17.2
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -5364,7 +5364,7 @@ display: block;\
 position: absolute;\
 z-index: 1;\
 color: #ffff00;\
-width: 350px;\
+width: 500px;\
 font-size: large;\
 text-shadow: 1px 0 0 #000,-1px 0 0 #000,0 1px 0 #000,0 -1px 0 #000;\
 -webkit-text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;\
@@ -8551,7 +8551,7 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                         if(srcs.length>2)break;
                         srcs.push(imgData.objURL);
                     }
-                    setSearchState("百度识图结束，共找到"+srcs.length+"张匹配图片");
+                    setSearchState("百度识图结束，共找到"+srcs.length+"张匹配图片，开始加载第一张");
                     callBackFun(srcs);
                 }else{
                     setSearchState("未找到原图");
@@ -8580,7 +8580,7 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                             let jsonData=JSON.parse(imgs[i].innerHTML);
                             srcs.push(jsonData.ou);
                         }
-                        setSearchState("谷歌识图结束，共找到"+srcs.length+"张匹配图片");
+                        setSearchState("谷歌识图结束，共找到"+srcs.length+"张匹配图片，开始加载第一张");
                         callBackFun(srcs);
                     }, onError);
                 }else{
@@ -8600,7 +8600,7 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                         if(srcs.length>2)break;
                         srcs.push(searchImg[i].href);
                     }
-                    setSearchState("Tineye识图结束，共找到"+srcs.length+"张匹配图片");
+                    setSearchState("Tineye识图结束，共找到"+srcs.length+"张匹配图片，开始加载第一张");
                     callBackFun(srcs);
                 }else{
                     searchNext();
