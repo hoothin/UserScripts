@@ -2,7 +2,7 @@
 // @name         VIP视频破解
 // @name:en      VIP Video Cracker
 // @namespace    hoothin
-// @version      1.5.3
+// @version      1.5.5
 // @description  解析并破解各大视频站的VIP权限
 // @description:en  Crack VIP permissions of some chinese video sites
 // @author       hoothin
@@ -41,13 +41,13 @@
 (function() {
     'use strict';
     var cracks=[
-        {name:"47影视云",url:"http://api.47ks.com/webcloud/?v=%s"},
-        {name:"疯狂解析",url:"http://vip.ifkdy.com/?url=%s"},
+        {name:"47影视云",url:"http://api.47ks.com/webcloud/?v=%s",title:"首选"},
         {name:"小海解析",url:"https://ckplaer.duapp.com/hai.php?url=%s"},
         {name:"无名小站1",url:"http://www.wmxz.wang/video.php?url=%s"},
         {name:"无名小站2",url:"http://www.sfsft.com/admin.php?url=%s"},
         {name:"71ki解析",url:"http://jx.71ki.com/tong.php?url=%s"},
         {name:"VIP看看",url:"http://2.jx.72du.com/video.php?url=%s"},
+        {name:"疯狂解析",url:"http://vip.ifkdy.com/?url=%s",title:"这个用的不是自己的服务，仅是简单嵌了47影视云、小海解析等几个解析站"},
         {name:"歪歪电影",url:"http://www.yydy8.com/common/?url=%s"},
         {name:"10号影院",url:"http://player.gakui.top/?url=%s"},
         {name:"Relon",url:"http://yyygwz.com/index.php?url=%s"},
@@ -71,7 +71,7 @@
         {name:"土豪网",url:"http://www.tuhao13.com/yunparse/index.php?url=%s"},
         {name:"舞动秋天",url:"http://qtzr.net/s/?qt=%s"},
         {name:"CloudParse",url:"http://api.cloudparse.com/?url=%s"},
-        {name:"迷失之梦",url:"http://mt2t.com/yun?url=%s"}
+        {name:"迷失之梦",url:"http://mt2t.com/yun?url=%s",title:"这个解析站似乎不大稳定，时常停用接口"}
     ],video,i=0;
     var iqiyi=location.hostname.indexOf("iqiyi.com")!=-1;
     var vipVideoCrackJump=GM_getValue("vipVideoCrackJump");
@@ -94,7 +94,7 @@
         select.innerHTML+="<option value='https://greasyfork.org/scripts/23316/code/hacg.user.js'>\u2605\u4e0a\u8f66\u2605</option>";
     }
     cracks.forEach(function(item){
-        var optionStr="<option value='"+item.url+"'>"+item.name+"</option>";
+        var optionStr="<option value='"+item.url+"'"+(item.title?"title='"+item.title+"'":"")+">"+item.name+"</option>";
         select.innerHTML+=optionStr;
     });
     select.onchange=function(){
