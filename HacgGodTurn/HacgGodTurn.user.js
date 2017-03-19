@@ -82,7 +82,7 @@
 // @include     http*://greasyfork.org/*/scripts/*
 // @include     http*://sleazyfork.org/*/forum/*discussion*
 // @include     http*://greasyfork.org/*/forum/*discussion*
-// @version     3.22.23
+// @version     3.22.25
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -90,7 +90,7 @@
 // @grant       GM_getValue
 // @grant       unsafeWindow
 // @run-at      document-end
-// @require     https://greasyfork.org/scripts/23522/code/od.js?version=181351
+// @require     https://greasyfork.org/scripts/23522/code/od.js?version=181941
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
 // @updateURL   https://greasyfork.org/scripts/23316/code/HacgGodTurn.user.js
@@ -1114,7 +1114,7 @@
             }else if(/\b1[0-9a-z]{6,7}(\b|$)/i.test(oD_hash)){
                 var panMatch=oD_hash.match(/\b1[0-9a-z]{6,7}/i);
                 var ecode=oD_hash.trim(),url="https://pan.baidu.com/s/"+panMatch;
-                var shortMatch=/\b1[0-9a-z]{6,7}\s*([0-9a-z]{4})\b/i.exec(ecode);
+                var shortMatch=/\b1[0-9a-z]{6,7}\s*([0-9a-z!]{4}|[^\s,，：:]{2,4})(\b|$)/i.exec(ecode);
                 if(shortMatch){
                     url+="#"+shortMatch[1];
                 }else{
