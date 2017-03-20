@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2017.3.20.2
+// @version        2017.3.20.3
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -5054,32 +5054,37 @@ left:0px;\
                 this.searchButton=searchButton;
                 var srcs, from;
                 img.onerror=function(e){
-                    setSearchState("原图加载失败，尝试加载下一结果……");
+                    setSearchState("原图加载失败，尝试加载下一结果……",img.parentNode);
                     console.info(img.src+"加载失败");
                     var src=self.srcs.shift();
                     if(src)img.src=src;
                     else{
-                        if(from<3){
+                        if(from<searchSort.length){
                             from++;
-                            searchImgByImg(self.img.src, function(srcs, index){
+                            searchImgByImg(self.img.src, self.img.parentNode, function(srcs, index){
                                 from=index;
                                 self.srcs=srcs;
                                 self.img.src=srcs.shift();
                             },null,null,from);
                         }else{
-                            setSearchState("未找到原图");
+                            setSearchState("未找到原图",img.parentNode);
                             setTimeout(function(){
-                                setSearchState("");
+                                setSearchState("",img.parentNode);
                             },2000);
                         }
                     }
                 };
                 img.onload=function(e){
-                    setSearchState("");
+                    setSearchState("",img.parentNode);
+                    self.imgNaturalSize={
+                        h:img.naturalHeight,
+                        w:img.naturalWidth,
+                    };
+                    self.zoom(1,{x:0,y:0});
                 }
                 searchButton.addEventListener('click',function(e){
                     sortSearch();
-                    searchImgByImg(self.img.src, function(srcs, index){
+                    searchImgByImg(self.img.src, self.img.parentNode, function(srcs, index){
                         from=index;
                         self.srcs=srcs;
                         self.img.src=srcs.shift();
@@ -6659,7 +6664,7 @@ background-color:rgba(255, 0, 0, 0.150);\
                             let from=0;
                             let searchFun=function(){
                                 console.log(self.data.imgSrc);
-                                searchImgByImg(self.data.imgSrc, function(srcs, index){
+                                searchImgByImg(self.data.imgSrc, null, function(srcs, index){
                                     let src=srcs.shift();
                                     if(index==3){
                                         self.loadImg(src, srcs);
@@ -8523,9 +8528,9 @@ background-image:url("'+ prefs.icons.magnifier +'");\
         });
     }
 
-    function setSearchState(words){
+    function setSearchState(words,imgCon){
         if(words)console.info(words);
-        var searchState = document.querySelector('.pv-pic-search-state');
+        var searchState = (imgCon?imgCon:document).querySelector('.pv-pic-search-state');
         if(searchState)searchState.innerHTML=words;
     }
 
@@ -8540,18 +8545,18 @@ background-image:url("'+ prefs.icons.magnifier +'");\
         searchSort.unshift(prefs.firstEngine);
     }
 
-    function searchImgByImg(imgSrc, callBack, onError, noneResult, searchFrom){
+    function searchImgByImg(imgSrc, imgCon, callBack, onError, noneResult, searchFrom){
         let srcs=[];
         var searchBaidu=function(){
-            setSearchState("百度识图开始……");
+            setSearchState("百度识图开始……",imgCon);
             getUrl("http://image.baidu.com/n/same?queryImageUrl="+encodeURIComponent(imgSrc)+"&isguessword=1&rn=30&fr=pc&pn=0&sort=size", function(d){
                 let baiduJson;
                 try{
                     baiduJson=JSON.parse(d.responseText);
                 }catch(e){
-                    setSearchState("未找到原图");
+                    setSearchState("未找到原图",imgCon);
                     setTimeout(function(){
-                        setSearchState("");
+                        setSearchState("",imgCon);
                     },2000);
                     searchNext();
                     return;
@@ -8562,20 +8567,16 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                         if(srcs.length>2)break;
                         srcs.push(imgData.objURL);
                     }
-                    setSearchState("百度识图结束，共找到"+srcs.length+"张匹配图片，开始加载第一张");
+                    setSearchState("百度识图结束，共找到"+srcs.length+"张匹配图片，开始加载第一张",imgCon);
                     callBackFun(srcs);
                 }else{
-                    setSearchState("未找到原图");
-                    setTimeout(function(){
-                        setSearchState("");
-                    },2000);
                     searchNext();
                     return;
                 }
             }, onError);
         };
         var searchGoogle=function(){
-            setSearchState("谷歌识图开始……");
+            setSearchState("谷歌识图开始……",imgCon);
             getUrl("https://www.google.com/searchbyimage?safe=off&image_url="+encodeURIComponent(imgSrc), function(d){
                 let googleHtml=document.implementation.createHTMLDocument('');
                 googleHtml.documentElement.innerHTML = d.responseText;
@@ -8591,7 +8592,7 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                             let jsonData=JSON.parse(imgs[i].innerHTML);
                             srcs.push(jsonData.ou);
                         }
-                        setSearchState("谷歌识图结束，共找到"+srcs.length+"张匹配图片，开始加载第一张");
+                        setSearchState("谷歌识图结束，共找到"+srcs.length+"张匹配图片，开始加载第一张",imgCon);
                         callBackFun(srcs);
                     }, onError);
                 }else{
@@ -8600,7 +8601,7 @@ background-image:url("'+ prefs.icons.magnifier +'");\
             }, onError);
         };
         var searchTineye=function(){
-            setSearchState("Tineye识图开始……");
+            setSearchState("Tineye识图开始……",imgCon);
             getUrl("https://www.tineye.com/search?url="+encodeURIComponent(imgSrc)+"&sort=size", function(d){
                 let tineyeHtml=document.implementation.createHTMLDocument('');
                 tineyeHtml.documentElement.innerHTML = d.responseText;
@@ -8611,7 +8612,7 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                         if(srcs.length>2)break;
                         srcs.push(searchImg[i].href);
                     }
-                    setSearchState("Tineye识图结束，共找到"+srcs.length+"张匹配图片，开始加载第一张");
+                    setSearchState("Tineye识图结束，共找到"+srcs.length+"张匹配图片，开始加载第一张",imgCon);
                     callBackFun(srcs);
                 }else{
                     searchNext();
@@ -8620,8 +8621,14 @@ background-image:url("'+ prefs.icons.magnifier +'");\
         };
         var searchNext=function(){
             searchFrom++;
-            if(searchFrom<=3)switchSearch();
-            else if(noneResult)noneResult();
+            if(searchFrom<=searchSort.length)switchSearch();
+            else{
+                if(noneResult)noneResult();
+                setSearchState("未找到原图",imgCon);
+                setTimeout(function(){
+                    setSearchState("",imgCon);
+                },2000);
+            }
         };
         var callBackFun=function(srcs){
             callBack(srcs, searchFrom);
