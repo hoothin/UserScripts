@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2017.3.17.2
+// @version        2017.3.20.2
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -2006,7 +2006,7 @@
                     scaleSmall: {
                         shown: true,
                         count: 0,
-                        description: '缩放的图片，实际尺寸的高或宽都小于 ' + prefs.gallery.scaleSmallSize + ' 像素',
+                        description: '小尺寸图片，实际尺寸的高和宽都小于 ' + prefs.gallery.scaleSmallSize + ' 像素',
                         name: '小尺寸'
                     },
                 };
@@ -7108,7 +7108,7 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                 },prefs.floatBar.showDelay);
             },
             setButton:function(){
-                if(this.data.type=='force'){
+                if(this.data.isForce){
                     this.buttons['actual'].style.display='none';
                     this.buttons['magnifier'].style.display='none';
                 }else{
@@ -7571,6 +7571,7 @@ background-image:url("'+ prefs.icons.magnifier +'");\
             var src,  // 大图地址
                 srcs,  // 备用的大图地址
                 type,  // 类别
+                isForce = false, //没有原图
                 imgSrc = img.src,  // img 节点的 src
                 xhr,
                 description;  // 图片的注释
@@ -7678,6 +7679,10 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                     if(prefs.floatBar.forceShow.enabled && (imgCS.w>=prefs.floatBar.forceShow.size.w && imgCS.h>=prefs.floatBar.forceShow.size.h)){
                         src=imgSrc;
                         type='force';
+                        isForce=true;
+                        if (imgAS.h < prefs.gallery.scaleSmallSize && imgAS.w < prefs.gallery.scaleSmallSize) {
+                            type = 'scaleSmall';
+                        }
                     };
                 };
             };
@@ -7691,6 +7696,7 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                 imgSrc: imgSrc,            // 处理的图片的src
                 iPASrc: iPASrc,            // 图片的第一个父a元素的链接地址
 
+                isForce:isForce,
                 xhr: xhr,
                 description: description || '',
 
@@ -8202,11 +8208,16 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                     "default": prefs.gallery.loadAll,
                     title: '若页数过多可能影响体验'
                 },
+                'gallery.scaleSmallSize': {
+                    label: '实际尺寸的高和宽都小于 ',
+                    type: 'int',
+                    "default": prefs.gallery.scaleSmallSize,
+                    after: ' 像素则归入小尺寸图片'
+                },
                 'gallery.transition': {
                     label: '显示图库切换图片的特效',
                     type: 'checkbox',
-                    "default": prefs.gallery.transition,
-                    title: ''
+                    "default": prefs.gallery.transition
                 },
                 'gallery.sidebarPosition': {
                     label: '缩略图栏位置',
