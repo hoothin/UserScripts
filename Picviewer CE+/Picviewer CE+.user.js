@@ -7113,7 +7113,7 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                 },prefs.floatBar.showDelay);
             },
             setButton:function(){
-                if(this.data.isForce){
+                if(this.data.noActual){
                     this.buttons['actual'].style.display='none';
                     this.buttons['magnifier'].style.display='none';
                 }else{
@@ -7576,7 +7576,7 @@ background-image:url("'+ prefs.icons.magnifier +'");\
             var src,  // 大图地址
                 srcs,  // 备用的大图地址
                 type,  // 类别
-                isForce = false, //没有原图
+                noActual = false, //没有原图
                 imgSrc = img.src,  // img 节点的 src
                 xhr,
                 description;  // 图片的注释
@@ -7645,13 +7645,14 @@ background-image:url("'+ prefs.icons.magnifier +'");\
             };
 
             if(!src && imgPA){//链接可能是一张图片...
-                if(/\.(?:jpg|jpeg|png|gif|bmp)$/i.test(iPASrc)){
+                if(/\.(?:jpg|jpeg|png|gif|bmp)$/i.test(iPASrc) && iPASrc!=img.src){
                     src=iPASrc;
                 };
                 if(src)type='scale';
             };
 
             if(!src){//本图片是否被缩放.
+                noActual=true;
                 var imgAS={//实际尺寸。
                     h:img.naturalHeight,
                     w:img.naturalWidth,
@@ -7667,27 +7668,21 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                 // if (!isNaN(imgCS.h)) imgCS.h = Math.round(imgCS.h);
                 // if (!isNaN(imgCS.w)) imgCS.w = Math.round(imgCS.w);
 
-                if(!(imgAS.w==imgCS.w && imgAS.h==imgCS.h)){//如果不是两者完全相等,那么被缩放了.
+                if (imgAS.h < prefs.gallery.scaleSmallSize && imgAS.w < prefs.gallery.scaleSmallSize) {
+                    type = 'scaleSmall';
+                }else if(!(imgAS.w==imgCS.w && imgAS.h==imgCS.h)){//如果不是两者完全相等,那么被缩放了.
                     if(imgAS.h > prefs.floatBar.minSizeLimit.h || imgAS.w > prefs.floatBar.minSizeLimit.w){//最小限定判断.
                         src=imgSrc;
                         type='scale';
-
                         // // 图片尺寸相差
                         // if (!isNaN(imgCS.h) && (imgAS.h * imgAS.w / (imgCS.h * imgCS.w) * 100 - 100) < prefs.gallery.zoomresized) {
                         //  type = 'scaleZoomResized'
                         // }
-                        if (imgAS.h < prefs.gallery.scaleSmallSize && imgAS.w < prefs.gallery.scaleSmallSize) {
-                            type = 'scaleSmall';
-                        }
                     };
                 }else{
                     if(prefs.floatBar.forceShow.enabled && (imgCS.w>=prefs.floatBar.forceShow.size.w && imgCS.h>=prefs.floatBar.forceShow.size.h)){
                         src=imgSrc;
                         type='force';
-                        isForce=true;
-                        if (imgAS.h < prefs.gallery.scaleSmallSize && imgAS.w < prefs.gallery.scaleSmallSize) {
-                            type = 'scaleSmall';
-                        }
                     };
                 };
             };
@@ -7701,7 +7696,7 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                 imgSrc: imgSrc,            // 处理的图片的src
                 iPASrc: iPASrc,            // 图片的第一个父a元素的链接地址
 
-                isForce:isForce,
+                noActual:noActual,
                 xhr: xhr,
                 description: description || '',
 
