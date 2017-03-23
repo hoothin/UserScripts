@@ -3,7 +3,7 @@
 // @name:zh-CN         油猴鼠标手势
 // @name:zh-TW         油猴滑鼠手勢
 // @namespace          hoothin
-// @version            0.67
+// @version            0.68
 // @description        Just a Mouse Gestures script
 // @description:zh-CN  就是个鼠标手势脚本
 // @description:zh-TW  就是個滑鼠手勢脚本
@@ -47,24 +47,29 @@ function initEventListener(start,move,end,tracer,clientX,clientY,startBool){
             document.addEventListener(move, moveFun, false);
         }
     }, false);
-    document.addEventListener(end, function(e) {
+    var endFun=function(e) {
         document.removeEventListener(move, moveFun, false);
         setTimeout(function(){if(gesturesContent.parentNode)gesturesContent.parentNode.removeChild(gesturesContent);},500);
-        if(afterGestures)afterGestures();
-        for(var g of gestures){
-            var gSign=g.gesture;
-            if(signs==gSign){
-                if(!isMouse)document.body.appendChild(gesturesContent);
-                var fun=defaultFun[g.fun];
-                if(fun===undefined || !fun){
-                    eval(g.fun);
-                }else eval(fun);
-                e.stopPropagation();
-                e.preventDefault();
-                break;
+        if(signs){
+            if(afterGestures)afterGestures();
+            for(var g of gestures){
+                var gSign=g.gesture;
+                if(signs==gSign){
+                    if(!isMouse)document.body.appendChild(gesturesContent);
+                    var fun=defaultFun[g.fun];
+                    if(fun===undefined || !fun){
+                        eval(g.fun);
+                    }else eval(fun);
+                    e.stopPropagation();
+                    e.preventDefault();
+                    break;
+                }
             }
+            signs="";
         }
-    }, false);
+    };
+    document.addEventListener(end, endFun, false);
+    document.addEventListener("mouseup", endFun, false);
 }
 (function() {
     'use strict';
