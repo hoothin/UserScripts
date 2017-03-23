@@ -3,7 +3,7 @@
 // @name:zh-CN         油猴鼠标手势
 // @name:zh-TW         油猴滑鼠手勢
 // @namespace          hoothin
-// @version            0.66
+// @version            0.67
 // @description        Just a Mouse Gestures script
 // @description:zh-CN  就是个鼠标手势脚本
 // @description:zh-TW  就是個滑鼠手勢脚本
@@ -301,7 +301,7 @@ function initEventListener(start,move,end,tracer,clientX,clientY,startBool){
         };
     }
     function goSetting(){
-        location.href="https://github.com/hoothin/UserScripts/tree/master/Mouse%20Gestures";
+        GM_openInTab("https://github.com/hoothin/UserScripts/tree/master/Mouse%20Gestures", false);
     }
     GM_registerMenuCommand(i18n.configure, goSetting);
 })();
