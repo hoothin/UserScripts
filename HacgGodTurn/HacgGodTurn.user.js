@@ -161,6 +161,7 @@
                         document.title = document.title.replace(/\u7409\u7483\u795e\u793e/,"\u7409\u7483 ♂ \u795e\u793e");
                         [].forEach.call(document.querySelectorAll("a"), function(item, index, arr) {
                             item.innerHTML=item.innerHTML.replace(/\u7409\u7483\u795e\u793e/,"\u7409\u7483 ♂ \u795e\u793e");
+                            item.title="\u630a\u591a\u4f1a\u5bfc\u81f4\u89c6\u7ebf\u6a21\u7cca\uff0c\u8fd9\u662f\u5047\u7ad9\uff01";
                         });
                     }
                     var tags=document.querySelectorAll("article>footer>a");
