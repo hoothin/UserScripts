@@ -82,7 +82,7 @@
 // @include     http*://greasyfork.org/*/scripts/*
 // @include     http*://sleazyfork.org/*/forum/*discussion*
 // @include     http*://greasyfork.org/*/forum/*discussion*
-// @version     3.22.27
+// @version     3.22.28
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -154,6 +154,7 @@
                     }
                     if(isHttps){
                         changeUrl(true,[["iframe"],[['http:','https:']]]);
+                        changeUrl(true,[["embed"],[['http:','https:']]]);
                         changeUrl(true,[["object"],[['http:','https:']]]);
                         changeUrl(true,[["a"],[['http:(.*hacg)','https:$1']]]);
                     }
