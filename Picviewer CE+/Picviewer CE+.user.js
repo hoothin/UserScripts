@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2017.3.23.1
+// @version        2017.3.25.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -28,7 +28,6 @@
 // @contributionURL https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
 // @contributionAmount 1
 // @run-at         document-end
-
 // @include       http://*
 // @include       https://*
 // @exclude       http://www.toodledo.com/tasks/*
@@ -537,6 +536,12 @@
              url: /\.pcauto\.com\.cn/,
              getImage: function() {
                  return this.src.replace(/_\d+x\d+\.jpg$/i,".jpg");
+             }
+            },
+            {name: "greasyfork",
+             url: /(greasyfork|sleazyfork)\.org/,
+             getImage: function() {
+                 return this.src.replace(/\/thumb\//i,"/original/").replace(/\/thumbnails\//i,"/");
              }
             }
         ];
@@ -8052,7 +8057,7 @@ background-image:url("'+ prefs.icons.magnifier +'");\
         GM_config.init({
             id: 'pv-prefs',
             title: GM_config.create('a', {
-                href: 'https://greasyfork.org/zh-CN/scripts/5199-picviewer-ce',
+                href: 'https://greasyfork.org/zh-CN/scripts/24204-picviewer-ce',
                 target: '_blank',
                 textContent: 'picviewerCE 设置',
                 title: '点击此处打开主页'
