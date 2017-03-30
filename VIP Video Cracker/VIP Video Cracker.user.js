@@ -2,7 +2,7 @@
 // @name         VIP视频破解
 // @name:en      VIP Video Cracker
 // @namespace    hoothin
-// @version      1.5.6
+// @version      1.5.7
 // @description  解析并破解各大视频站的VIP权限
 // @description:en  Crack VIP permissions of some chinese video sites
 // @author       hoothin
@@ -45,9 +45,9 @@
         {name:"无名小站1",url:"http://www.wmxz.wang/video.php?url=%s",title:"次选"},
         {name:"无名小站2",url:"http://www.sfsft.com/admin.php?url=%s",title:"无名小站的源码"},
         {name:"小海解析1",url:"https://ckplaer.duapp.com/hai.php?url=%s",title:"播放器似乎放在百度开发者平台"},
-        {name:"小海解析2",url:"http://jx.ck921.com/?url=%s",title:"和上面的用的应该是同样的服务器"},
+        {name:"小海解析2",url:"http://jx.ck921.com/hai.php?url=%s",title:"和上面的用的应该是同样的服务器"},
         {name:"VIP看看",url:"http://2.jx.72du.com/video.php?url=%s",title:"无名小站的源码"},
-        {name:"疯狂解析",url:"http://vip.ifkdy.com/?url=%s",title:"用的不是自己的服务，仅是简单嵌了47影视云、小海解析等几个解析站"},
+        {name:"疯狂解析",url:"http://vip.ifkdy.com/?url=%s",title:"仅是简单嵌了47影视云、小海解析等几个解析站"},
         {name:"歪歪电影",url:"http://www.yydy8.com/common/?url=%s"},
         {name:"10号影院",url:"http://player.gakui.top/?url=%s"},
         {name:"Relon",url:"http://yyygwz.com/index.php?url=%s"},
@@ -80,7 +80,7 @@
     selectStyle.innerHTML=".crackJump{margin-left:5px;color:white;text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;-webkit-text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;-moz-text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;*filter: Glow(color=#000, strength=1);}.vipSelect{background:black;color:white;font-size:12px;}.crackArea{position:absolute;z-index:999999;left:0px;top:0px;opacity:0.50;filter:alpha(opacity=50);transition:opacity 0.3s ease,width 0.3s ease;width:95px;overflow:hidden;white-space:nowrap;}.crackArea:hover{opacity:1;filter:alpha(opacity=100);width:200px;}";
     document.getElementsByTagName("head")[0].appendChild(selectStyle);
     var placeholder=document.createElement("div");
-    placeholder.style.cssText="width:100%;height:100%;text-align:center;font-size:x-large;cursor:pointer;";
+    placeholder.style.cssText="width:100%;height:100%;text-align:center;font-size:x-large;cursor:pointer;color:#666;";
     placeholder.innerHTML="点击恢复视频播放";
     placeholder.addEventListener("click",function(){
         if(placeholder.parentNode){
