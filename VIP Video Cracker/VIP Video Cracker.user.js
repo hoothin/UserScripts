@@ -2,7 +2,7 @@
 // @name         VIP视频破解
 // @name:en      VIP Video Cracker
 // @namespace    hoothin
-// @version      1.5.7
+// @version      1.5.8
 // @description  解析并破解各大视频站的VIP权限
 // @description:en  Crack VIP permissions of some chinese video sites
 // @author       hoothin
@@ -49,6 +49,7 @@
         {name:"VIP看看",url:"http://2.jx.72du.com/video.php?url=%s",title:"无名小站的源码"},
         {name:"疯狂解析",url:"http://vip.ifkdy.com/?url=%s",title:"仅是简单嵌了47影视云、小海解析等几个解析站"},
         {name:"歪歪电影",url:"http://www.yydy8.com/common/?url=%s"},
+        {name:"百域阁",url:"http://api.svip.baiyug.cn/svip/index.php?url=%s"},
         {name:"10号影院",url:"http://player.gakui.top/?url=%s"},
         {name:"Relon",url:"http://yyygwz.com/index.php?url=%s"},
         {name:"爱看TV",url:"http://aikan-tv.com/tong.php?url=%s"},
