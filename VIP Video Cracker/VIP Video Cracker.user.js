@@ -148,6 +148,9 @@
         if(video){
             clearInterval(si);
             var videoParent=video.parentNode;
+            if(location.hostname.indexOf("v.yinyuetai.com")!=-1){
+                videoParent.parentNode.style.position="absolute";
+            }
             videoParent.appendChild(crackArea);
             placeholder.style.lineHeight=getComputedStyle(videoParent).height;
             if(vipVideoCrackJump){
