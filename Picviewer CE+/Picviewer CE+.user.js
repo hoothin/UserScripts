@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2017.3.28.2
+// @version        2017.4.2.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -51,7 +51,7 @@
                     x:-15,//x轴偏移(正值,向右偏移,负值向左)
                     y:-15,//y轴偏移(正值,向下,负值向上)
                 },
-                forceShow:{//在没有被缩放的图片上,但是大小超过下面设定的尺寸时,强制显示浮动框.(以便进行旋转,放大,翻转等等操作)..
+                forceShow:{//在没有被缩放的图片上,但是大小超过下面设定的尺寸时,强制显示浮动框.
                     enabled:true,//启用强制显示.
                     size:{//图片尺寸.单位(像素);
                         w:166,
@@ -8133,11 +8133,11 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                     after: ' 毫秒'
                 },
                 'floatBar.forceShow.size.w': {
-                    label: '非缩放图片，超过该尺寸，强制显示',
+                    label: '非缩放图片，超过该尺寸，显示浮框',
                     type: 'int',
                     className: 'size',
                     "default": prefs.floatBar.forceShow.size.w,
-                    title: '在没有被缩放的图片上,但是大小超过下面设定的尺寸时,强制显示浮动框.(以便进行旋转,放大,翻转等等操作)..',
+                    title: '非缩放的图片大小超过下面设定的尺寸时显示浮动工具栏',
                     line: 'start',
                 },
                 'floatBar.forceShow.size.h': {
@@ -8149,11 +8149,11 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                     line: 'end',
                 },
                 'floatBar.minSizeLimit.w': {
-                    label: '缩放图片，小于该尺寸，不显示',
+                    label: '缩放图片，超过该尺寸，显示浮框',
                     type: 'int',
                     className: 'size',
                     "default": prefs.floatBar.minSizeLimit.w,
-                    title: '就算是图片被缩放了(看到的图片被设定了width或者height限定了大小,这种情4况下),如果没有被缩放的原图片小于设定值,那么也不显示浮动工具栏',
+                    title: '图片被缩放(图片原始大小与实际大小不一致)后,原图长宽大于设定值时显示浮动工具栏',
                     line: 'start',
                 },
                 'floatBar.minSizeLimit.h': {
