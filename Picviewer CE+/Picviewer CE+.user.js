@@ -7601,7 +7601,8 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                     return;
                 } else {
                     try{
-                        src = matchedRule.getImage.call(img,img,imgPA);
+                        var newSrc=matchedRule.getImage.call(img,img,imgPA);
+                        if(imgSrc!=newSrc) src=newSrc;
                     }catch(err){
                         throwErrorInfo(err);
                     }
@@ -7692,7 +7693,7 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                         // }
                     }
                 }else{
-                    if(prefs.floatBar.forceShow.enabled && (imgCS.w>=prefs.floatBar.forceShow.size.w && imgCS.h>=prefs.floatBar.forceShow.size.h)){
+                    if(prefs.floatBar.forceShow.enabled && (imgCS.w>prefs.floatBar.forceShow.size.w && imgCS.h>prefs.floatBar.forceShow.size.h)){
                         src=imgSrc;
                         type='force';
                     }
