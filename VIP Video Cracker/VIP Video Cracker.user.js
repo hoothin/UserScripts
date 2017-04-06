@@ -2,7 +2,7 @@
 // @name         VIP视频破解
 // @name:en      VIP Video Cracker
 // @namespace    hoothin
-// @version      1.5.9
+// @version      1.6.0
 // @description  解析并破解各大视频站的VIP权限
 // @description:en  Crack VIP permissions of some chinese video sites
 // @author       hoothin
@@ -41,13 +41,12 @@
 (function() {
     'use strict';
     var cracks=[
-        {name:"47影视云",url:"http://api.47ks.com/webcloud/?v=%s",title:"首选"},
+        {name:"47影视云",url:"https://api.47ks.com/webcloud/?v=%s",title:"首选"},
         {name:"无名小站1",url:"http://www.wmxz.wang/video.php?url=%s",title:"次选"},
         {name:"无名小站2",url:"http://www.sfsft.com/admin.php?url=%s",title:"无名小站的源码"},
         {name:"小海解析1",url:"https://ckplaer.duapp.com/hai.php?url=%s",title:"播放器似乎放在百度开发者平台"},
         {name:"小海解析2",url:"http://jx.ck921.com/hai.php?url=%s",title:"和上面的用的应该是同样的服务器"},
         {name:"VIP看看",url:"http://2.jx.72du.com/video.php?url=%s",title:"无名小站的源码"},
-        {name:"疯狂解析",url:"http://vip.ifkdy.com/?url=%s",title:"仅是简单嵌了47影视云、小海解析等几个解析站"},
         {name:"歪歪电影",url:"http://www.yydy8.com/common/?url=%s"},
         {name:"石头解析",url:"https://jiexi.071811.cc/jx.php?url=%s"},
         {name:"百域阁",url:"http://api.svip.baiyug.cn/svip/index.php?url=%s"},
@@ -73,14 +72,17 @@
         {name:"舞动秋天",url:"http://qtzr.net/s/?qt=%s"},
         {name:"CloudParse",url:"http://api.cloudparse.com/?url=%s"},
         {name:"迷失之梦",url:"http://mt2t.com/yun?url=%s",title:"这个解析站似乎不大稳定"},
+        {name:"疯狂解析",url:"http://vip.ifkdy.com/?url=%s",title:"仅是简单嵌了47影视云、小海解析等几个解析站"},
         {name:"97在线看",url:"http://www.97zxkan.com/jiexi/97zxkanapi.php?url=%s"},
         {name:"71ki解析",url:"http://jx.71ki.com/tong.php?url=%s"}
-    ],video,i=0;
+    ],video,videoWidth,videoHeight,i=0;
     var iqiyi=location.hostname.indexOf("iqiyi.com")!=-1;
     var vipVideoCrackJump=GM_getValue("vipVideoCrackJump");
+    var vipVideoCrackEmbed=GM_getValue("vipVideoCrackEmbed");
     var vipVideoCrackUrl=GM_getValue("vipVideoCrackUrl");
+    var iframe=document.createElement("iframe");
     var selectStyle=document.createElement("style");
-    selectStyle.innerHTML=".crackJump{font-size:12px;margin-left:5px;color:white;text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;-webkit-text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;-moz-text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;*filter: Glow(color=#000, strength=1);}.crackJump input{vertical-align:middle;}.vipSelect{background:black;color:white;font-size:12px;border:none;}.crackArea{position:absolute;z-index:999999;left:0px;top:0px;opacity:0.50;filter:alpha(opacity=50);transition:opacity 0.3s ease,width 0.3s ease;width:23px;overflow:hidden;white-space:nowrap;border:1px solid #666;background:black;}.crackArea:hover{opacity:1;filter:alpha(opacity=100);width:160px;}";
+    selectStyle.innerHTML=".crackJump{font-size:12px;margin-left:5px;color:white;text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;-webkit-text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;-moz-text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;*filter: Glow(color=#000, strength=1);}.crackJump input{vertical-align:middle;}.vipSelect{background:black;color:white;font-size:12px;border:none;}.crackArea{position:absolute;z-index:999999;left:0px;top:0px;opacity:0.50;filter:alpha(opacity=50);transition:opacity 0.3s ease,width 0.3s ease;width:23px;overflow:hidden;white-space:nowrap;border:1px solid #666;background:black;}.crackArea:hover{opacity:1;filter:alpha(opacity=100);width:230px;}";
     document.getElementsByTagName("head")[0].appendChild(selectStyle);
     var placeholder=document.createElement("div");
     placeholder.style.cssText="width:100%;height:100%;text-align:center;font-size:x-large;cursor:pointer;color:#666;";
@@ -103,38 +105,78 @@
     select.onchange=function(){
         var value=select.options[select.options.selectedIndex].value;
         if(value){
-            window.open(value.replace("%s",(iqiyi&&location.href.indexOf("#")!=-1?decodeURIComponent(document.querySelector(".sns-icon>li>a").href.replace(/.*url=(.*)%3Fsrc.*/,"$1")):location.href)));
-            if(value.indexOf("hacg.user.js")!=-1){
-                GM_setValue("hacgGodTurnVisited",true);
-                select.options.remove(select.options.selectedIndex);
-            }else{
-                vipVideoCrackUrl=value;
-                GM_setValue("vipVideoCrackUrl",vipVideoCrackUrl);
-                if(video.parentNode)video.parentNode.replaceChild(placeholder,video);
+            var url=value.replace("%s",(iqiyi&&location.href.indexOf("#")!=-1?decodeURIComponent(document.querySelector(".sns-icon>li>a").href.replace(/.*url=(.*)%3Fsrc.*/,"$1")):location.href));
+            if(!vipVideoCrackEmbed || !embedCrack(url)){
+                window.open(url);
+                if(value.indexOf("hacg.user.js")!=-1){
+                    GM_setValue("hacgGodTurnVisited",true);
+                    select.options.remove(select.options.selectedIndex);
+                }else{
+                    vipVideoCrackUrl=value;
+                    GM_setValue("vipVideoCrackUrl",vipVideoCrackUrl);
+                    if(video.parentNode)video.parentNode.replaceChild(placeholder,video);
+                }
             }
             select.options.selectedIndex=0;
         }
     };
     var quickAccess=document.createElement("label");
     quickAccess.className="crackJump";
-    quickAccess.title="立即跳转到上次选择的站点";
-    quickAccess.innerHTML="<input type='checkbox'>立即跳转";
+    quickAccess.title="立即利用上次选择的接口破解";
+    quickAccess.innerHTML="<input type='checkbox'>立即破解";
     var jumpCheck=quickAccess.querySelector("input");
     jumpCheck.onclick=function(){
         vipVideoCrackJump=jumpCheck.checked;
         GM_setValue("vipVideoCrackJump",vipVideoCrackJump);
         crackJump();
     };
+    var embedLabel=document.createElement("label");
+    embedLabel.className="crackJump";
+    embedLabel.title="能嵌入当前站点的接口就直接嵌入页面";
+    embedLabel.innerHTML="<input type='checkbox'>能嵌就嵌";
+    var embedCheck=embedLabel.querySelector("input");
+    embedCheck.onclick=function(){
+        vipVideoCrackEmbed=embedCheck.checked;
+        GM_setValue("vipVideoCrackEmbed",vipVideoCrackEmbed);
+        crackJump();
+    };
     var crackArea=document.createElement("div");
     crackArea.className="crackArea";
     crackArea.appendChild(select);
     crackArea.appendChild(quickAccess);
+    crackArea.appendChild(embedLabel);
     function crackJump(){
         if(vipVideoCrackJump){
             var value=vipVideoCrackUrl?vipVideoCrackUrl:cracks[0].url;
-            GM_openInTab(value.replace("%s",(iqiyi?location.href.replace(/#.*/,""):location.href)),false);
-            if(video.parentNode)video.parentNode.replaceChild(placeholder,video);
+            var url=value.replace("%s",(iqiyi?location.href.replace(/#.*/,""):location.href));
+            if(!vipVideoCrackEmbed || !embedCrack(url)){
+                GM_openInTab(url,false);
+                if(video.parentNode)video.parentNode.replaceChild(placeholder,video);
+            }
         }
+    }
+    function embedCrack(url){
+        var canEmbed=false;
+        if(/^https/.test(url)){
+            url=location.protocol+url.slice(6);
+            canEmbed=true;
+        }else if(location.protocol=="http:"){
+            canEmbed=true;
+        }
+        if(canEmbed){
+            iframe.width=videoWidth;
+            iframe.height=videoHeight;
+            iframe.src=url;
+            if(!iframe.parentNode){
+                if(video.parentNode){
+                    video.parentNode.replaceChild(iframe,video);
+                }else{
+                    placeholder.parentNode.replaceChild(iframe,placeholder);
+                }
+                video=iframe;
+            }
+        }
+        return canEmbed;
     }
     var si=setInterval(function(){
         [].every.call(document.querySelectorAll("object,embed,video"),function(item){
@@ -147,6 +189,9 @@
         });
         if(video){
             clearInterval(si);
+            var videoStyle=getComputedStyle(video, null);
+            videoWidth=videoStyle.width;
+            videoHeight=videoStyle.height;
             var videoParent=video.parentNode;
             if(location.hostname.indexOf("v.yinyuetai.com")!=-1){
                 videoParent.parentNode.style.position="absolute";
@@ -155,6 +200,9 @@
             placeholder.style.lineHeight=getComputedStyle(videoParent).height;
             if(vipVideoCrackJump){
                 jumpCheck.checked=true;
+            }
+            if(vipVideoCrackEmbed){
+                embedCheck.checked=true;
             }
             crackJump();
             unsafeWindow.eval(`
