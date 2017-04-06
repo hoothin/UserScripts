@@ -2,7 +2,7 @@
 // @name         VIP视频破解
 // @name:en      VIP Video Cracker
 // @namespace    hoothin
-// @version      1.6.0
+// @version      1.6.1
 // @description  解析并破解各大视频站的VIP权限
 // @description:en  Crack VIP permissions of some chinese video sites
 // @author       hoothin
@@ -49,7 +49,6 @@
         {name:"VIP看看",url:"http://2.jx.72du.com/video.php?url=%s",title:"无名小站的源码"},
         {name:"歪歪电影",url:"http://www.yydy8.com/common/?url=%s"},
         {name:"石头解析",url:"https://jiexi.071811.cc/jx.php?url=%s"},
-        {name:"百域阁",url:"http://api.svip.baiyug.cn/svip/index.php?url=%s"},
         {name:"10号影院",url:"http://player.gakui.top/?url=%s"},
         {name:"Relon",url:"http://yyygwz.com/index.php?url=%s"},
         {name:"爱看TV",url:"http://aikan-tv.com/tong.php?url=%s"},
@@ -74,7 +73,8 @@
         {name:"迷失之梦",url:"http://mt2t.com/yun?url=%s",title:"这个解析站似乎不大稳定"},
         {name:"疯狂解析",url:"http://vip.ifkdy.com/?url=%s",title:"仅是简单嵌了47影视云、小海解析等几个解析站"},
         {name:"97在线看",url:"http://www.97zxkan.com/jiexi/97zxkanapi.php?url=%s"},
-        {name:"71ki解析",url:"http://jx.71ki.com/tong.php?url=%s"}
+        {name:"71ki解析",url:"http://jx.71ki.com/tong.php?url=%s"},
+        //{name:"百域阁",url:"http://api.svip.baiyug.cn/svip/index.php?url=%s"},
     ],video,videoWidth,videoHeight,i=0;
     var iqiyi=location.hostname.indexOf("iqiyi.com")!=-1;
     var vipVideoCrackJump=GM_getValue("vipVideoCrackJump");
@@ -106,16 +106,16 @@
         var value=select.options[select.options.selectedIndex].value;
         if(value){
             var url=value.replace("%s",(iqiyi&&location.href.indexOf("#")!=-1?decodeURIComponent(document.querySelector(".sns-icon>li>a").href.replace(/.*url=(.*)%3Fsrc.*/,"$1")):location.href));
+            if(value.indexOf("hacg.user.js")!=-1){
+                GM_setValue("hacgGodTurnVisited",true);
+                select.options.remove(select.options.selectedIndex);
+            }else{
+                vipVideoCrackUrl=value;
+                GM_setValue("vipVideoCrackUrl",vipVideoCrackUrl);
+                if(video.parentNode)video.parentNode.replaceChild(placeholder,video);
+            }
             if(!vipVideoCrackEmbed || !embedCrack(url)){
                 window.open(url);
-                if(value.indexOf("hacg.user.js")!=-1){
-                    GM_setValue("hacgGodTurnVisited",true);
-                    select.options.remove(select.options.selectedIndex);
-                }else{
-                    vipVideoCrackUrl=value;
-                    GM_setValue("vipVideoCrackUrl",vipVideoCrackUrl);
-                    if(video.parentNode)video.parentNode.replaceChild(placeholder,video);
-                }
             }
             select.options.selectedIndex=0;
         }
