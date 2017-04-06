@@ -2,7 +2,7 @@
 // @name         VIP视频破解
 // @name:en      VIP Video Cracker
 // @namespace    hoothin
-// @version      1.6.1
+// @version      1.6.2
 // @description  解析并破解各大视频站的VIP权限
 // @description:en  Crack VIP permissions of some chinese video sites
 // @author       hoothin
@@ -77,6 +77,7 @@
         //{name:"百域阁",url:"http://api.svip.baiyug.cn/svip/index.php?url=%s"},
     ],video,videoWidth,videoHeight,i=0;
     var iqiyi=location.hostname.indexOf("iqiyi.com")!=-1;
+    var yinyuetai=location.hostname.indexOf("v.yinyuetai.com")!=-1;
     var vipVideoCrackJump=GM_getValue("vipVideoCrackJump");
     var vipVideoCrackEmbed=GM_getValue("vipVideoCrackEmbed");
     var vipVideoCrackUrl=GM_getValue("vipVideoCrackUrl");
@@ -112,7 +113,7 @@
             }else{
                 vipVideoCrackUrl=value;
                 GM_setValue("vipVideoCrackUrl",vipVideoCrackUrl);
-                if(video.parentNode)video.parentNode.replaceChild(placeholder,video);
+                if(video.parentNode && !yinyuetai)video.parentNode.replaceChild(placeholder,video);
             }
             if(!vipVideoCrackEmbed || !embedCrack(url)){
                 window.open(url);
@@ -151,7 +152,7 @@
             var url=value.replace("%s",(iqiyi?location.href.replace(/#.*/,""):location.href));
             if(!vipVideoCrackEmbed || !embedCrack(url)){
                 GM_openInTab(url,false);
-                if(video.parentNode)video.parentNode.replaceChild(placeholder,video);
+                if(video.parentNode && !yinyuetai)video.parentNode.replaceChild(placeholder,video);
             }
         }
     }
@@ -193,8 +194,11 @@
             videoWidth=videoStyle.width;
             videoHeight=videoStyle.height;
             var videoParent=video.parentNode;
-            if(location.hostname.indexOf("v.yinyuetai.com")!=-1){
+            if(yinyuetai){
                 videoParent.parentNode.style.position="absolute";
+                videoStyle=getComputedStyle(videoParent.parentNode, null);
+                videoWidth=videoStyle.width;
+                videoHeight=videoStyle.height;
             }
             videoParent.appendChild(crackArea);
             placeholder.style.lineHeight=getComputedStyle(videoParent).height;
