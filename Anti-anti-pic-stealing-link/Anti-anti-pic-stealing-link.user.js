@@ -32,11 +32,11 @@
         item.parentNode.replaceChild(iframe,item);
     }
     GM_registerMenuCommand("Anti-anti-pic-stealing-link rule", function(){
-        var input=prompt("Set up Anti-anti-pic-stealing-link rule:",customRule?customRule:"");
-        if(input){
+        var input=prompt("Set up Anti-anti-pic-stealing-link rule:",customRule?customRule:"photo\.store\.qq\.com");
+        //if(input){
             customRule=input;
             GM_setValue("aaslr",customRule);
-        }
+        //}
     });
     [].forEach.call(document.querySelectorAll("img"),function(item){
         for (var i in sites) {
