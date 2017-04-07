@@ -3,7 +3,9 @@ managerLinks v0.1
 https://github.com/hoothin/UserScripts/tree/master/True%20URL%20downloads/managerLinks.js
 (c) 2017-2017 by Hoothin Wang. All rights reserved.
 */
-var resReg = /.*(^magnet|^ed2k|\.torrent$|\.mp4$|\.rar$|\.7z$|\.zip$|\.rmvb$|\.mkv$|\.avi$|\.iso$|\.mp3$|\.txt$|\.exe$|\.chm$|\.pdf$|\.ppt$|\.doc$|\.pptx$|\.docx$|\.epub$|\.xlsx$|\.xls$|\.flac$|\.wma$|\.wav$|\.aac$|\.ape$|\.mid$|\.ogg$|\.m4a$|\.dts$|\.dsd$|\.apk$|\.flv$).*/i,
+var specialUrl=/^magnet|^ed2k/i,
+	simplefilter= /\.php|\.htm|\.jsp|\.asp|\/[^\.]+$/i,
+	resReg = /.*(^magnet|^ed2k|\.torrent$|\.mp4$|\.rar$|\.7z$|\.zip$|\.rmvb$|\.mkv$|\.avi$|\.iso$|\.mp3$|\.txt$|\.exe$|\.chm$|\.pdf$|\.ppt$|\.doc$|\.pptx$|\.docx$|\.epub$|\.xlsx$|\.xls$|\.flac$|\.wma$|\.wav$|\.aac$|\.ape$|\.mid$|\.ogg$|\.m4a$|\.dts$|\.dsd$|\.apk$|\.flv$).*/i,
 	linksArr = [],
 	frame;
 var by = function(byName, secName) {
@@ -32,14 +34,26 @@ var by = function(byName, secName) {
 	}
 }
 
+if (!Array.prototype.indexOf) {
+	Array.prototype.indexOf = function (item) {
+		var index = -1;
+		for (var i = 0, length = this.length; i < length; i++) {
+			if (this[i] == item) {
+				index=i;
+			}
+		}
+		return index;
+	};
+}
+
 function getLinks() {
 	[].forEach.call(document.querySelectorAll('a'), function(link){
-		if (link.className!="whx-a" && resReg.test(link.href) && linksArr.toString().indexOf(link.href) == -1) {
+		if (link.className!="whx-a" && (specialUrl.test(link.href) || (!simplefilter.test(link.href) && resReg.test(link.href))) && linksArr.indexOf(link.href) == -1) {
 			linksArr.push(link.href);
 		}
 	});
 	[].forEach.call(document.querySelectorAll('source'), function(link){
-		if (resReg.test(link.src) && linksArr.toString().indexOf(link.src) == -1) {
+		if ((specialUrl.test(link.href) || (!simplefilter.test(link.href) && resReg.test(link.href))) && linksArr.indexOf(link.src) == -1) {
 			linksArr.push(link.src);
 		}
 	});
@@ -154,5 +168,5 @@ function showLinkFrame(callBack,allBtn,selBtn) {
 	frame.show();
 	$("#managerLinksLinks").height($("#managerLinksBody").height() - $("#managerLinksType").height() - $("#managerLinksSortByName").height() * 3 - 20);
 	$("#managerLinksBody").hide();
-	$("#managerLinksBody").show("slow");
+	$("#managerLinksBody").show();
 }
