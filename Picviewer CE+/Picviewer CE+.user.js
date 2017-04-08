@@ -7983,7 +7983,7 @@ background-image:url("'+ prefs.icons.magnifier +'");\
             // }
             if (target.nodeName != 'IMG' && target.className.indexOf("pv-float-bar")==-1){
                 var targetStyle=getComputedStyle(target);
-                if(targetStyle.backgroundImage && targetStyle.backgroundImage!="none"  && targetStyle.backgroundImage!="inherit" && targetStyle.width.replace("px","")>prefs.floatBar.minSizeLimit.w && targetStyle.height.replace("px","")>prefs.floatBar.minSizeLimit.h){
+                if(targetStyle.backgroundImage && /^url/.test(targetStyle.backgroundImage) && targetStyle.width.replace("px","")>prefs.floatBar.minSizeLimit.w && targetStyle.height.replace("px","")>prefs.floatBar.minSizeLimit.h){
                     var src=targetStyle.backgroundImage.replace(/url\(["']?(.*)["']?\)/,"$1");
                     result = {
                         src: src,
