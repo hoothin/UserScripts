@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2017.4.8.1
+// @version        2017.4.8.2
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -86,6 +86,7 @@
             gallery:{//图库相关设定
                 loadAll:false,//加载更多时是否加载全部页面
                 fitToScreen:true,//图片适应屏幕(适应方式为contain，非cover).
+                scrollEndToChange:true,
                 sidebarPosition: 'bottom',//'top' 'right' 'bottom' 'left'  四个可能值
                 sidebarSize: 120,//侧栏的高（如果是水平放置）或者宽（如果是垂直放置）
                 sidebarToggle: true,  // 是否显示隐藏按钮
@@ -2462,19 +2463,29 @@ padding-left:24px;">'+shareItem.name+'</span>');
                     },200);
                 },false);
 
+                var canScroll=true;
+                var scrollToChange=function(next){
+                    if(canScroll){
+                        canScroll=false;
+                        setTimeout(function(){
+                            canScroll=true;
+                        },200);
+                        next ? self.selectNext() : self.selectPrevious();
+                    }
+                }
                 addWheelEvent(eleMaps['body'],function(e){//wheel事件
                     if(e.deltaZ!=0)return;//z轴
                     var target=e.target;
                     e.preventDefault();
                     if(eleMaps['sidebar-container'].contains(target)){//缩略图区滚动滚轮翻图片
-                        var distance=self.thumbSpanOuterSize;
+                        var distance=self.thumbSpanOuterSize/3;
 
                         if(e.deltaY<0 || e.deltaX<0){//向上滚
                             distance=-distance;
                         };
                         thumbScrollbar.scrollBy(distance)
                     }else{//图片区域滚动
-                        var distance=100;
+                        var distance=20;
                         if(e.deltaY!=0){//y轴
                             if(self.img.classList.contains('pv-gallery-img_zoom-out')){//图片可以缩小时，滚动图片，否则切换图片。
                                 if(e.deltaY < 0){
@@ -2483,10 +2494,12 @@ padding-left:24px;">'+shareItem.name+'</span>');
                                 if(eleMaps['img-scrollbar-h'].contains(target)){//如果在横向滚动条上。
                                     imgScrollbarH.scrollBy(distance);
                                 }else{
-                                    imgScrollbarV.scrollBy(distance);
+                                    if(imgScrollbarV.scrollBy(distance) && prefs.gallery.scrollEndToChange){
+                                        scrollToChange(e.deltaY > 0);
+                                    }
                                 };
                             }else{
-                                e.deltaY < 0 ? self.selectPrevious() : self.selectNext();
+                                scrollToChange(e.deltaY > 0);
                             };
                         }else{//x轴
                             if(e.deltaX < 0){
@@ -3687,13 +3700,15 @@ display:none !important;\
 <head>\
 <title>' + title + ' 导出大图</title>\
 <style>\
-div { float: left; max-height: 180px; max-width: 320px; margin: 2px; }\
-img { max-height: 180px; max-width: 320px; }\
+.grid>div { float: left; max-height: 180px; max-width: 320px; margin: 2px; }\
+.grid>div>img { max-height: 180px; max-width: 320px; }\
+.list>div {text-align:center;}\
+.list>div>img { max-width: 100%; }\
 </style>\
 </head>\
-<body>\
+<body class="grid">\
 <p>【图片标题】：' + title + '</p>\
-<p>【图片数量】：' + nodes.length + '</p>\
+<p>【图片数量】：' + nodes.length + ' <input type="checkbox" checked="checked" onclick="document.body.className=(document.body.className==\'grid\'?\'list\':\'grid\')">平铺对齐</p>\
 ';
 
                 html += arr.join('\n') + '</body>'
@@ -4644,7 +4659,7 @@ background-color:red;\
                 this.scrollbar.bar.style.display='none';
             },
             scrollBy:function(distance,handleDistance){
-                this.scroll(this.getScrolled() + (handleDistance?  distance / this.one :  distance));
+                return this.scroll(this.getScrolled() + (handleDistance?  distance / this.one :  distance));
             },
             scrollByPages:function(num){
                 this.scroll(this.getScrolled() + (this.container[(this.isHorizontal ? 'clientWidth' : 'clientHeight')] - 10) * num);
@@ -4700,8 +4715,10 @@ background-color:red;\
                     return;
                 };
 
+                var noScroll=shs[pro[0]]==distance + 'px';
                 shs[pro[0]]=distance + 'px';
                 container[pro[1]]=_distance;
+                return noScroll;
             },
             getScrolled:function(){
                 return  this.container[(this.isHorizontal ? 'scrollLeft' : 'scrollTop')];
@@ -8243,6 +8260,12 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                     "default": prefs.gallery.fitToScreen,
                     section: ['图库'],
                     title: '适应方式为contain，非cover'
+                },
+                'gallery.scrollEndToChange': {
+                    label: '大图滚动到底后切换图片',
+                    type: 'checkbox',
+                    "default": prefs.gallery.scrollEndToChange,
+                    title: '取消上一选项后才有效'
                 },
                 'gallery.loadAll': {
                     label: '加载更多图片时自动处理至尾页',
