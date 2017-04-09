@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2017.4.9.2
+// @version        2017.4.9.3
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -3376,6 +3376,8 @@ padding-left:24px;">'+shareItem.name+'</span>');
                 var curPage=this.curPage;
                 let pre=curPage.querySelector("a.prev");
                 let next=curPage.querySelector("a.next");
+                if(!pre)pre=curPage.querySelector("a#prev");
+                if(!next)next=curPage.querySelector("a#next");
                 if(!pre)pre=curPage.querySelector(".prev>a");
                 if(!next)next=curPage.querySelector(".next>a");
                 if(!pre && !next){
@@ -3714,11 +3716,14 @@ display:none !important;\
 .grid>div>img { max-height: 180px; max-width: 320px; }\
 .list>div {text-align:center;}\
 .list>div>img { max-width: 100%; }\
+.gridBig{margin: 0px;}\
+.gridBig>div { float: left;}\
+.gridBig>div>img { max-width: 100%; }\
 </style>\
 </head>\
 <body class="grid">\
 <p>【图片标题】：' + title + '</p>\
-<p>【图片数量】：' + nodes.length + ' <input type="checkbox" checked="checked" onclick="document.body.className=(document.body.className==\'grid\'?\'list\':\'grid\')">平铺对齐</p>\
+<p>【图片数量】：' + nodes.length + ' <select onchange="document.body.className=this.options[this.options.selectedIndex].value"><option value="grid">平铺排序</option><option value="gridBig">原图平铺</option><option value="list">列表排序</option></select></p>\
 ';
 
                 html += arr.join('\n') + '</body>'
