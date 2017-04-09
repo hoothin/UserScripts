@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2017.4.9.1
+// @version        2017.4.9.2
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -2469,7 +2469,7 @@ padding-left:24px;">'+shareItem.name+'</span>');
                         canScroll=false;
                         setTimeout(function(){
                             canScroll=true;
-                        },200);
+                        },500);
                         next ? self.selectNext() : self.selectPrevious();
                     }
                 }
@@ -2826,7 +2826,9 @@ padding-left:24px;">'+shareItem.name+'</span>');
                 };
                 return ret;
             },
+            previous:false,
             selectPrevious:function(){
+                this.previous=true;
                 this.select(this.getThumSpan(true));
             },
             selectNext:function(){
@@ -3077,6 +3079,10 @@ padding-left:24px;">'+shareItem.name+'</span>');
                     y:0,
                 });
 
+                if(this.previous){
+                    this.previous=false;
+                    this.imgScrollbarV.scrollBy(999999);
+                }
                 this.collection.check();//检查是否在收藏里面。
 
             },
@@ -3160,6 +3166,7 @@ padding-left:24px;">'+shareItem.name+'</span>');
                     this._dataCache = {};
                 }
                 (data || this.data).forEach(function(item) {
+                    if(!item)return;
                     iStatisCopy[item.type].count++;
                     var spanMark=document.createElement("span");
                     thumbnails.appendChild(spanMark);
@@ -3169,7 +3176,7 @@ padding-left:24px;">'+shareItem.name+'</span>');
                         (item.xhr ? '" data-xhr="' + encodeURIComponent(JSON.stringify(item.xhr)) : '') +
                         '" data-description="' + encodeURIComponent(item.description || '') +
                         '" data-thumb-src="' + item.imgSrc +
-                        '" title="' + item.img.title +
+                        '" title="' + (item.img?item.img.title:"") +
                         '">' +
                         '<span class="pv-gallery-vertical-align-helper"></span>' +
                         '<span class="pv-gallery-sidebar-thumb-loading" title="正在读取中......"></span>' +
@@ -3178,6 +3185,7 @@ padding-left:24px;">'+shareItem.name+'</span>');
 
                 var self = this;
                 (data || this.data).forEach(function(d) {
+                    if(!d)return;
                     self._dataCache[d.imgSrc] = true;
                 });
 
@@ -3285,7 +3293,9 @@ padding-left:24px;">'+shareItem.name+'</span>');
             },
 
             unique:function(data){
-                var imgSrc=data.target.src;
+                var imgSrc;
+                if(data.target)
+                imgSrc=data.target.src;
 
                 var data_i,
                     data_i_src,
@@ -6868,6 +6878,7 @@ background-color:rgba(255, 0, 0, 0.150);\
 
                     //删除不能发送的项。
                     var delCantClone=function(obj){
+                        if(!obj)return;
                         delete obj.img;
                         delete obj.imgPA;
                     };
@@ -6908,7 +6919,7 @@ background-color:rgba(255, 0, 0, 0.150);\
                         document.addEventListener('pv-topWindowValid',function(e){
                             topWindowValid=e.detail;
                             if(topWindowValid){//如果顶层窗口有效
-                                openInTop()
+                                openInTop();
                             }else{
                                 self.open();
                             };
@@ -6922,14 +6933,19 @@ background-color:rgba(255, 0, 0, 0.150);\
 
             },
             getAllValidImgs:function(){
-                var imgs=document.getElementsByTagName('img'), // html collection
-                    validImgs=[]
-                ;
-                arrayFn.forEach.call(imgs,function(img,index,imgs){
-                    var result=findPic(img);
-                    if(result){
-                        validImgs.push(result);
-                    };
+                var doc=window.parent==window?document:window.parent.document;
+                var validImgs=[],imgsHandle=function(imgs){
+                    arrayFn.forEach.call(imgs,function(img,index,imgs){
+                        var result=findPic(img);
+                        if(result){
+                            validImgs.push(result);
+                        };
+                    });
+                };
+                imgsHandle(doc.getElementsByTagName('img'));
+                arrayFn.forEach.call(doc.querySelectorAll("iframe"),function(iframe){
+                    if(iframe.src.replace(/\/[^\/]*$/,"").indexOf(location.hostname)!=-1)
+                        imgsHandle(iframe.contentWindow.document.getElementsByTagName('img'));
                 });
                 return validImgs;
             },
@@ -7244,7 +7260,6 @@ background-image:url("'+ prefs.icons.magnifier +'");\
             open:function(e,buttonType){
                 var waitImgLoad = e && e.ctrlKey ? !prefs.waitImgLoad : prefs.waitImgLoad; //按住ctrl取反向值
                 var openInTopWindow = e && e.shiftKey ? !prefs.framesPicOpenInTopWindow : prefs.framesPicOpenInTopWindow; //按住shift取反向值
-
                 if (!waitImgLoad && buttonType == 'magnifier' && !envir.chrome) { //非chrome的background-image需要全部载入后才能显示出来
                     waitImgLoad = true;
                 };
@@ -7790,9 +7805,10 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                             document.dispatchEvent(cusEvent);
                         }break;
                         case 'topWindowValid':{
+                            if(data.from)
                             window.postMessage({
                                 messageID:messageID,
-                                command:'topWindowValid',
+                                command:'topWindowValid_frame',
                                 valid:document.body.nodeName!='FRAMESET',
                                 to:data.from,
                             },'*');
@@ -7832,7 +7848,7 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                         case 'sendFail':{
                             frameSentData=frameSentSuccessData;//frameSentData重置为发送成功的数据。
                         }break;
-                        case 'topWindowValid':{
+                        case 'topWindowValid_frame':{
                             var cusEvent=document.createEvent('CustomEvent');
                             cusEvent.initCustomEvent('pv-topWindowValid',false,false,data.valid);
                             document.dispatchEvent(cusEvent);
@@ -7899,7 +7915,6 @@ background-image:url("'+ prefs.icons.magnifier +'");\
         }
 
         function clikToOpen(data){
-
             var preventDefault = matchedRule.clikToOpen.preventDefault;
 
             function mouseout(){
@@ -7934,7 +7949,7 @@ background-image:url("'+ prefs.icons.magnifier +'");\
             },100);
 
             return function(){
-                mouseout()
+                mouseout();
             };
         }
 
