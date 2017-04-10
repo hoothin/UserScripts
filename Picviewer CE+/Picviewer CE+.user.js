@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2017.4.10.1
+// @version        2017.4.10.2
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -8094,7 +8094,7 @@ background-image:url("'+ prefs.icons.magnifier +'");\
         }
 
         function keydown(event) {
-            if (!prefs.floatBar.keys.enable || event.ctrlKey || event.shiftKey || event.altKey || event.metaKey)
+            if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey)
                 return;
 
             if (floatBar && floatBar.shown && isKeyDownEffectiveTarget(event.target)) {
@@ -8131,12 +8131,6 @@ background-image:url("'+ prefs.icons.magnifier +'");\
 
         document.addEventListener('mouseover', globalMouseoverHandler, true);
 
-        // 注册按键
-        //if (prefs.floatBar.keys.enable) {
-        document.addEventListener('keydown', keydown, false);
-        //}
-
-
         var debug;  // 调试函数
 
         GM_config.init({
@@ -8162,6 +8156,7 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                 "#pv-prefs label.sep-x { margin-right: 5px; }",
                 "#pv-prefs label.floatBar-key { margin-left: 20px; width: 100px; }",
                 "#pv-prefs input.color { width: 120px; }",
+                "#pv-prefs input.order { width: 250px; }",
             ].join('\n'),
             fields: {
                 // 浮动工具栏
@@ -8221,6 +8216,12 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                     after: ' 像素',
                     "default": prefs.floatBar.minSizeLimit.h,
                     line: 'end',
+                },
+                'floatBar.butonOrder': {
+                    label: '工具栏图标排序',
+                    type: 'text',
+                    className: 'order',
+                    "default": prefs.floatBar.butonOrder.join(', '),
                 },
                 // 按键
                 'floatBar.keys.enable': {
@@ -8475,6 +8476,11 @@ background-image:url("'+ prefs.icons.magnifier +'");\
 
         loadPrefs();
 
+        // 注册按键
+        if (prefs.floatBar.keys.enable) {
+            document.addEventListener('keydown', keydown, false);
+        }
+
         function openPrefs() {
             GM_config.open();
         }
@@ -8494,6 +8500,8 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                     // 特殊的
                     if (keyStr == 'magnifier.wheelZoom.range' || keyStr == 'imgWindow.zoom.range') {
                         lastPref[lastKey] = value.split(/[,，]\s*/).map(function(s) { return parseFloat(s)});
+                    } else if(keyStr == 'floatBar.butonOrder') {
+                        lastPref[lastKey] = value.replace(/^\s*|\s*$/g,"").split(/\s*[,，]\s*/);
                     } else {
                         lastPref[lastKey] = value;
                     }
