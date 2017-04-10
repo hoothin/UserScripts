@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2017.4.9.3
+// @version        2017.4.10.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -87,6 +87,7 @@
                 loadAll:false,//加载更多时是否加载全部页面
                 fitToScreen:true,//图片适应屏幕(适应方式为contain，非cover).
                 scrollEndToChange:true,
+                exportType:'grid',
                 sidebarPosition: 'bottom',//'top' 'right' 'bottom' 'left'  四个可能值
                 sidebarSize: 120,//侧栏的高（如果是水平放置）或者宽（如果是垂直放置）
                 sidebarToggle: true,  // 是否显示隐藏按钮
@@ -3453,7 +3454,10 @@ padding-left:24px;">'+shareItem.name+'</span>');
             },
             nextPage:function(){
                 var pageObj=this.getPage();
-                if(!pageObj.next)return;
+                if(!pageObj.next){
+                    alert("已加载至最后一页");
+                    return;
+                }
                 var nextUrl=pageObj.next;
                 if(nextUrl.tagName!="A"){
                     var childA=nextUrl.querySelector("a");
@@ -3663,13 +3667,19 @@ display:none !important;\
             },
             getAllValidImgs:function(newer){
                 var validImgs = [];
-
                 var imgs = document.getElementsByTagName('img'),
                     container = document.querySelector('.pv-gallery-container'),
                     preloadContainer = document.querySelector('.pv-gallery-preloaded-img-container');
 
+                imgs = Array.prototype.slice.call(imgs);
+                arrayFn.forEach.call(document.querySelectorAll("iframe"),function(iframe){
+                    if(iframe.src.replace(/\/[^\/]*$/,"").indexOf(location.hostname)!=-1)
+                        arrayFn.forEach.call(iframe.contentWindow.document.getElementsByTagName('img'),function(img){
+                            imgs.push(img);
+                        });
+                });
                 // 排除库里面的图片
-                imgs = Array.prototype.slice.call(imgs).filter(function(img){
+                imgs = imgs.filter(function(img){
                     return !(container.contains(img) || preloadContainer.contains(img));
                 });
 
@@ -3691,7 +3701,7 @@ display:none !important;\
             },
             scrollToEndAndReload: function() {  // 滚动主窗口到最底部，然后自动重载库的图片
 
-                window.scrollTo(0, 99999);
+                window.scrollTo(0, 9999999);
 
                 var self = this;
                 clearTimeout(self.reloadTimeout);
@@ -3717,13 +3727,13 @@ display:none !important;\
 .list>div {text-align:center;}\
 .list>div>img { max-width: 100%; }\
 .gridBig{margin: 0px;}\
-.gridBig>div { float: left;}\
+.gridBig>div { float: left;margin: 0px 0px 1px 1px;}\
 .gridBig>div>img { max-width: 100%; }\
 </style>\
 </head>\
-<body class="grid">\
+<body class="'+prefs.gallery.exportType+'">\
 <p>【图片标题】：' + title + '</p>\
-<p>【图片数量】：' + nodes.length + ' <select onchange="document.body.className=this.options[this.options.selectedIndex].value"><option value="grid">平铺排序</option><option value="gridBig">原图平铺</option><option value="list">列表排序</option></select></p>\
+<p>【图片数量】：' + nodes.length + ' <select onchange="document.body.className=this.options[this.options.selectedIndex].value"><option value="grid" '+(prefs.gallery.exportType=="grid"?"selected='selected'":"")+'>平铺排序</option><option value="gridBig" '+(prefs.gallery.exportType=="gridBig"?"selected='selected'":"")+'>原图平铺</option><option value="list" '+(prefs.gallery.exportType=="list"?"selected='selected'":"")+'>列表排序</option></select></p>\
 ';
 
                 html += arr.join('\n') + '</body>'
@@ -8084,7 +8094,7 @@ background-image:url("'+ prefs.icons.magnifier +'");\
         }
 
         function keydown(event) {
-            if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey)
+            if (!prefs.floatBar.keys.enable || event.ctrlKey || event.shiftKey || event.altKey || event.metaKey)
                 return;
 
             if (floatBar && floatBar.shown && isKeyDownEffectiveTarget(event.target)) {
@@ -8122,9 +8132,9 @@ background-image:url("'+ prefs.icons.magnifier +'");\
         document.addEventListener('mouseover', globalMouseoverHandler, true);
 
         // 注册按键
-        if (prefs.floatBar.keys.enable) {
-            document.addEventListener('keydown', keydown, false);
-        }
+        //if (prefs.floatBar.keys.enable) {
+        document.addEventListener('keydown', keydown, false);
+        //}
 
 
         var debug;  // 调试函数
@@ -8214,7 +8224,7 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                 },
                 // 按键
                 'floatBar.keys.enable': {
-                    label: '启用以下4个快捷键',
+                    label: '启用以下快捷键',
                     type: 'checkbox',
                     "default": prefs.floatBar.keys.enable
                 },
@@ -8286,6 +8296,16 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                     type: 'checkbox',
                     "default": prefs.gallery.scrollEndToChange,
                     title: '取消上一选项后才有效'
+                },
+                'gallery.exportType': {
+                    label: '图片导出默认排序',
+                    type: 'select',
+                    options: {
+                        'grid': '平铺排序',
+                        'gridBig': '原图平铺',
+                        'list': '列表排序'
+                    },
+                    "default": prefs.gallery.exportType,
                 },
                 'gallery.loadAll': {
                     label: '加载更多图片时自动处理至尾页',
