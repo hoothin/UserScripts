@@ -82,7 +82,7 @@
 // @include     http*://greasyfork.org/*/scripts/*
 // @include     http*://sleazyfork.org/*/forum/*discussion*
 // @include     http*://greasyfork.org/*/forum/*discussion*
-// @version     3.22.30
+// @version     3.22.31
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -90,7 +90,7 @@
 // @grant       GM_getValue
 // @grant       unsafeWindow
 // @run-at      document-end
-// @require     https://greasyfork.org/scripts/23522/code/od.js?version=185413
+// @require     https://greasyfork.org/scripts/23522/code/od.js?version=187400
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
 // @updateURL   https://greasyfork.org/scripts/23316/code/HacgGodTurn.user.js
@@ -1229,65 +1229,70 @@
             processObj(content);
         }
         var link, imgs, i, k;
-        if (document.querySelectorAll) {
-            link = document.querySelectorAll('a');
-            imgs = document.querySelectorAll('img');
-        } else {
-            link = document.getElementsByTagName('a');
-            imgs = document.getElementsByTagName('img');
-        }
-        for (i = 0, k = link.length; i < k; i++) {
-            let target=link[i];
-            target.addEventListener("mousedown", function(){
-                if(/baidu.com/i.test(target.href)&&!/(?:eyun|tieba)\.baidu\.com/i.test(target.href)&&!/#/i.test(target.href)){
-                    if(/\/storage-download/.test(location.href)){
-                        var pass=target.parentNode.parentNode.querySelector('input.pwd');
-                        if(pass&&pass.id.indexOf("download-pwd")!=-1)target.href=target.href.split("#")[0]+'#'+pass.value;
-                    } else if(curSite.downloadUrl && curSite.downloadUrl.test(location.href) && curSite.getDownPass){
-                        curSite.getDownPass(target);
-                    } else if(codeRule.test(target.textContent)){
-                        target.href+='#'+extCode(target);
-                    } else if(target.nextSibling&&codeRule.test(target.nextSibling.textContent)){
-                        if(!/#\S+/i.test(target.href)){
+        setTimeout(function(){
+            if (document.querySelectorAll) {
+                link = document.querySelectorAll('a');
+                imgs = document.querySelectorAll('img');
+            } else {
+                link = document.getElementsByTagName('a');
+                imgs = document.getElementsByTagName('img');
+            }
+            for (i = 0, k = link.length; i < k; i++) {
+                let target=link[i];
+                target.addEventListener("mousedown", function(){
+                    console.log(111);
+                    if(/baidu.com/i.test(target.href)&&!/(?:eyun|tieba)\.baidu\.com/i.test(target.href)&&!/#/i.test(target.href)){
+                        if(/\/storage-download/.test(location.href)){
+                            var pass=target.parentNode.parentNode.querySelector('input.pwd');
+                            if(pass&&pass.id.indexOf("download-pwd")!=-1)target.href=target.href.split("#")[0]+'#'+pass.value;
+                        } else if(curSite.downloadUrl && curSite.downloadUrl.test(location.href) && curSite.getDownPass){
+                            curSite.getDownPass(target);
+                        } else if(codeRule.test(target.textContent)){
+                            target.href+='#'+extCode(target);
+                        } else if(/^\s*[a-z\d]{4}\s*$/i.test(target.textContent)){
+                            target.href+='#'+target.textContent.trim();
+                        } else if(target.nextSibling&&codeRule.test(target.nextSibling.textContent)){
                             target.href+=/#/i.test(target.href)?extCode(target.nextSibling):('#'+extCode(target.nextSibling));
-                        }
-                    } else if(codeRule.test(target.parentNode.textContent)){
-                        if(!/#\S+/i.test(target.href)) target.href+=/#/i.test(target.href)?extCode(target.parentNode):('#'+extCode(target.parentNode));
-                    } else {
-                        var j = 0,
-                            maxParent = 5,
-                            parent = target;
-                        while(j<maxParent) {
-                            j++;
-                            parent = parent.parentNode;
-                            if(parent.tagName=="TR") {
-                                if(codeRule.test(parent.nextElementSibling.textContent)) {
-                                    parent=parent.nextElementSibling;
+                        } else if(target.nextSibling&&/^\s*[a-z\d]{4}\s*$/.test(target.nextSibling.textContent)){
+                            target.href+='#'+target.nextSibling.textContent.trim();
+                        } else if(codeRule.test(target.parentNode.textContent)){
+                            if(!/#\S+/i.test(target.href)) target.href+=/#/i.test(target.href)?extCode(target.parentNode):('#'+extCode(target.parentNode));
+                        } else {
+                            var j = 0,
+                                maxParent = 5,
+                                parent = target;
+                            while(j<maxParent) {
+                                j++;
+                                parent = parent.parentNode;
+                                if(parent.tagName=="TR") {
+                                    if(codeRule.test(parent.nextElementSibling.textContent)) {
+                                        parent=parent.nextElementSibling;
+                                        target.href+='#'+extCode(parent);
+                                        break;
+                                    }
+                                } else if(codeRule.test(parent.textContent)) {
                                     target.href+='#'+extCode(parent);
                                     break;
                                 }
-                            } else if(codeRule.test(parent.textContent)) {
-                                target.href+='#'+extCode(parent);
-                                break;
+                                if(parent==document.body) break;
                             }
-                            if(parent==document.body) break;
                         }
                     }
-                }
-            });
-        }
-        for (i = 0, k = imgs.length; i < k; i++) {
-            let src;
-            for(let imgReg of config.imgRegs){
-                src = imgs[i].src.replace(imgReg[0], imgReg[1]);
-                if(src != imgs[i].src)imgs[i].src = src;
-                if(imgs[i].dataset.src){
-                    src=imgs[i].dataset.src.replace(imgReg[0], imgReg[1]);
-                    if(src != imgs[i].dataset.src)imgs[i].dataset.src = src;
+                });
+            }
+            for (i = 0, k = imgs.length; i < k; i++) {
+                let src;
+                for(let imgReg of config.imgRegs){
+                    src = imgs[i].src.replace(imgReg[0], imgReg[1]);
+                    if(src != imgs[i].src)imgs[i].src = src;
+                    if(imgs[i].dataset.src){
+                        src=imgs[i].dataset.src.replace(imgReg[0], imgReg[1]);
+                        if(src != imgs[i].dataset.src)imgs[i].dataset.src = src;
+                    }
                 }
             }
-        }
-        seriousReplace(commArea);
+            seriousReplace(commArea);
+        },2);
     }
 
     function processObj(obj){
@@ -1442,7 +1447,7 @@
             source.connect(audioContext.destination);
             source.start(0);
         }
-        var ttss=["有家，有爱，有欧派","未被穿过的胖次是没有价值的","巨乳只有下垂的未来","男人变态有什么错","为什么你会这么熟练啊","德国的科学技术是世界第一","在虚构的故事当中寻求真实感的人脑袋一定有问题"," 胸部什么的，明明只是装饰","勇士喜欢巨乳有什么错","哥哥让开！这样我杀不了那家伙","我们的宇宙充满了质子,中子,电子,还有奶子","有个能干的妹妹真好","只要可爱就算是男孩子也没关系","道歉時露出胸部是常識","我就是叫紫妈怎么了 有本事突然从我背后出现 把我的脸按在键盘上aqswdectfrvtghunijopioijohnuygbyfvtcdesxwedrfvtbguyhiumjiuyvftrssexrybtgnyuhm","反基复奶","皮皮虾我们走","哼！都怪你，也不哄哄人家，人家超想哭的，捶你胸口，老公！大坏蛋！咩QAQ 捶你胸口，你好讨厌！要抱抱嘤嘤嘤，哼，人家拿小拳拳捶你胸口！大坏蛋，打死你"];
+        var ttss=["有家，有爱，有欧派","未被穿过的胖次是没有价值的","巨乳只有下垂的未来","男人变态有什么错","为什么你会这么熟练啊","德国的科学技术是世界第一","在虚构的故事当中寻求真实感的人脑袋一定有问题"," 胸部什么的，明明只是装饰","勇士喜欢巨乳有什么错","哥哥让开！这样我杀不了那家伙","我们的宇宙充满了质子,中子,电子,还有奶子","有个能干的妹妹真好","只要可爱就算是男孩子也没关系","道歉時露出胸部是常識","我就是叫紫妈怎么了 有本事突然从我背后出现 把我的脸按在键盘上aqswdectfrvtghunijopioijohnuygbyfvtcdesxwedrfvtbguyhiumjiuyvftrssexrybtgnyuhm","反基复萌，反屌复奶","哼！都怪你，也不哄哄人家，人家超想哭的，捶你胸口，老公！大坏蛋！咩QAQ 捶你胸口，你好讨厌！要抱抱嘤嘤嘤，哼，人家拿小拳拳捶你胸口！大坏蛋，打死你"];
         var ttsRand=Math.floor(Math.random()*ttss.length);
         var tts=ttss[ttsRand];
         var sUrl = "http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=5&text="+tts;//`http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=5&text=${tts}`;
