@@ -2,7 +2,7 @@
 // @name         VIP视频破解
 // @name:en      VIP Video Cracker
 // @namespace    hoothin
-// @version      1.6.8
+// @version      1.6.9
 // @description  解析并破解各大视频站的VIP权限
 // @description:en  Crack VIP permissions of some chinese video sites
 // @author       hoothin
@@ -192,6 +192,12 @@
         });
         if(video){
             clearInterval(si);
+            var videoStyle=unsafeWindow.getComputedStyle(video, null);
+            videoWidth=videoStyle.width;
+            videoHeight=videoStyle.height;
+            var videoParent=video.parentNode;
+            videoParent.appendChild(crackArea);
+            placeholder.style.lineHeight=unsafeWindow.getComputedStyle(videoParent).height;
             if(location.hostname.indexOf("v.yinyuetai.com")!=-1){
                 if (!/^https?:\/\/v\.yinyuetai\.com\/video\/h5\//.test(location.href)) {
                     unsafeWindow.location.href = unsafeWindow.location.href.replace(/^https?:\/\/v\.yinyuetai\.com\/video\//,"http://v.yinyuetai.com/video/h5/");
@@ -204,7 +210,7 @@
                     },1000);
                 }
             }else if(location.hostname.indexOf("v.youku.com")!=-1){
-                if(vipVideoCrackEmbed)video.height="90%";
+                if(vipVideoCrackEmbed)videoHeight="567px";
             }else if(iqiyi){
                 document.querySelector('#widget-dramaseries').addEventListener('click', function(e){
                     var target=e.target.parentNode;
@@ -224,12 +230,6 @@
                     crackJump();
                 });
             }
-            var videoStyle=unsafeWindow.getComputedStyle(video, null);
-            videoWidth=videoStyle.width;
-            videoHeight=videoStyle.height;
-            var videoParent=video.parentNode;
-            videoParent.appendChild(crackArea);
-            placeholder.style.lineHeight=unsafeWindow.getComputedStyle(videoParent).height;
             if(vipVideoCrackJump){
                 jumpCheck.checked=true;
             }
