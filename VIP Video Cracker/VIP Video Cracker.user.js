@@ -2,7 +2,7 @@
 // @name         VIP视频破解
 // @name:en      VIP Video Cracker
 // @namespace    hoothin
-// @version      1.6.6
+// @version      1.6.7
 // @description  解析并破解各大视频站的VIP权限
 // @description:en  Crack VIP permissions of some chinese video sites
 // @author       hoothin
@@ -64,20 +64,19 @@
         {name:"土豪网",url:"http://www.tuhao13.com/yunparse/index.php?url=%s"},
         {name:"舞动秋天",url:"http://qtzr.net/s/?qt=%s"},
         {name:"97在线看",url:"http://www.97zxkan.com/jiexi/97zxkanapi.php?url=%s"},
+        {name:"迷失之梦",url:"http://mt2t.com/yun?url=%s",title:"这个解析站似乎不大稳定"},
         {name:"无名小站源",url:"http://www.sfsft.com/admin.php?url=%s",title:"无名小站的源"},
         {name:"疯狂解析",url:"http://vip.ifkdy.com/?url=%s",title:"仅是简单嵌了47影视云、小海解析等几个解析站"},
         {name:"VIP看看",url:"http://2.jx.72du.com/video.php?url=%s",title:"嵌了无名小站的服务"},
         {name:"歪歪电影",url:"http://www.yydy8.com/common/?url=%s",title:"嵌了47影视云的服务"},
         {name:"梦中人",url:"http://www.wpswan.com/mzr/vipparse/index.php?url=%s",title:"嵌了47影视云的服务"},
-        {name:"迷失之梦",url:"http://mt2t.com/yun?url=%s",title:"这个解析站似乎不大稳定"},
         {name:"71ki解析",url:"http://jx.71ki.com/tong.php?url=%s"},
         {name:"CloudParse",url:"http://api.cloudparse.com/?url=%s"},
         {name:"10号影院",url:"http://player.gakui.top/?url=%s"},
         {name:"PPYPP",url:"http://www.ppypp.com/yunparse/?url=%s"},
-        //{name:"百域阁",url:"http://api.svip.baiyug.cn/svip/index.php?url=%s"},
+        {name:"百域阁",url:"http://api.svip.baiyug.cn/svip/index.php?url=%s"},
     ],video,videoWidth,videoHeight,i=0;
     var iqiyi=location.hostname.indexOf("iqiyi.com")!=-1;
-    var yinyuetai=location.hostname.indexOf("v.yinyuetai.com")!=-1;
     var vipVideoCrackJump=GM_getValue("vipVideoCrackJump");
     var vipVideoCrackEmbed=GM_getValue("vipVideoCrackEmbed");
     var vipVideoCrackUrl=GM_getValue("vipVideoCrackUrl");
@@ -113,7 +112,7 @@
             }else{
                 vipVideoCrackUrl=value;
                 GM_setValue("vipVideoCrackUrl",vipVideoCrackUrl);
-                if(video.parentNode && !yinyuetai)video.parentNode.replaceChild(placeholder,video);
+                if(video.parentNode)video.parentNode.replaceChild(placeholder,video);
             }
             if(!vipVideoCrackEmbed || !embedCrack(url)){
                 unsafeWindow.open(url);
@@ -155,7 +154,7 @@
             var url=value.replace("%s",(iqiyi?location.href.replace(/#.*/,""):location.href));
             if(!vipVideoCrackEmbed || !embedCrack(url)){
                 GM_openInTab(url,false);
-                if(video.parentNode && !yinyuetai)video.parentNode.replaceChild(placeholder,video);
+                if(video.parentNode)video.parentNode.replaceChild(placeholder,video);
             }
         }
     }
@@ -197,11 +196,17 @@
             videoWidth=videoStyle.width;
             videoHeight=videoStyle.height;
             var videoParent=video.parentNode;
-            if(yinyuetai){
-                videoParent.parentNode.style.position="absolute";
-                videoStyle=unsafeWindow.getComputedStyle(videoParent.parentNode, null);
-                videoWidth=videoStyle.width;
-                videoHeight=videoStyle.height;
+            if(location.hostname.indexOf("v.yinyuetai.com")!=-1){
+                if (!/^https?:\/\/v\.yinyuetai\.com\/video\/h5\//.test(location.href)) {
+                    unsafeWindow.location.href = unsafeWindow.location.href.replace(/^https?:\/\/v\.yinyuetai\.com\/video\//,"http://v.yinyuetai.com/video/h5/");
+                }else{
+                    videoParent.parentNode.style.position="absolute";
+                    setTimeout(function(){
+                        videoStyle=unsafeWindow.getComputedStyle(video, null);
+                        videoWidth=videoStyle.width;
+                        videoHeight=videoStyle.height;
+                    },500);
+                }
             }
             videoParent.appendChild(crackArea);
             placeholder.style.lineHeight=unsafeWindow.getComputedStyle(videoParent).height;
