@@ -2,7 +2,7 @@
 // @name         VIP视频破解
 // @name:en      VIP Video Cracker
 // @namespace    hoothin
-// @version      1.6.9
+// @version      1.7.0
 // @description  解析并破解各大视频站的VIP权限
 // @description:en  Crack VIP permissions of some chinese video sites
 // @author       hoothin
@@ -43,8 +43,8 @@
     var cracks=[
         {name:"47影视云",url:"https://api.47ks.com/webcloud/?v=%s",title:"首选"},
         {name:"无名小站",url:"http://www.wmxz.wang/video.php?url=%s",title:"次选"},
-        {name:"小海解析1(s)",url:"https://ckplaer.duapp.com/hai.php?url=%s",title:"播放器似乎放在百度开发者平台"},
-        {name:"小海解析2",url:"http://jx.ck921.com/hai.php?url=%s",title:"和上面的用的应该是同样的服务器"},
+        {name:"小海解析1(s)",url:"https://ckplaer.duapp.com/hai2.php?url=%s",title:"播放器似乎放在百度开发者平台"},
+        {name:"小海解析2",url:"http://jx.ck921.com/hai2.php?url=%s",title:"和上面的用的应该是同样的服务器"},
         {name:"石头解析(s)",url:"https://jiexi.071811.cc/jx.php?url=%s"},
         {name:"爱看TV(s)",url:"https://aikan-tv.com/tong.php?url=%s"},
         {name:"最小品(s)",url:"https://www.zuixiaopin.com/api/cloudVideo?url=%s"},
@@ -82,7 +82,7 @@
     var vipVideoCrackUrl=GM_getValue("vipVideoCrackUrl");
     var iframe=document.createElement("iframe");
     var selectStyle=document.createElement("style");
-    selectStyle.innerHTML=".crackJump{font-size:12px;margin-left:5px;color:white;text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;-webkit-text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;-moz-text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;*filter: Glow(color=#000, strength=1);}.crackJump input{vertical-align:middle;}.vipSelect{background:black;color:white;font-size:12px;border:none;}.crackArea{position:absolute;z-index:999999;left:0px;top:0px;opacity:0.50;filter:alpha(opacity=50);transition:opacity 0.3s ease,width 0.3s ease;width:18px;overflow:hidden;white-space:nowrap;border:1px solid #666;background:black;}.crackArea:hover{opacity:1;filter:alpha(opacity=100);width:230px;}.crackArea>p{display:block;font-size:13px;text-align:center;}.crackArea:hover>p{display:none;}.crackArea>label,.crackArea>select{display:none;}.crackArea:hover>label,.crackArea:hover>select{display:initial;}";
+    selectStyle.innerHTML=".crackJump{font-size:12px;margin-left:5px;color:white;text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;-webkit-text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;-moz-text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;*filter: Glow(color=#000, strength=1);}.crackJump input{vertical-align:middle;}.vipSelect{background:black;color:white;font-size:12px;border:none;}.crackArea{position:absolute;z-index:999999;left:0px;top:0px;opacity:0.50;filter:alpha(opacity=50);transition:opacity 0.3s ease,width 0.3s ease;width:18px;overflow:hidden;white-space:nowrap;border:1px solid #666;background:black;}.crackArea:hover{opacity:1;filter:alpha(opacity=100);width:230px;}.crackArea>p{display:block;font-size:13px;text-align:center;float:left;position:absolute;top:0px;background-color:black;}.crackArea:hover>p{display:none;}.crackArea>label{display:none;}.crackArea:hover>label{display:initial;}";
     document.getElementsByTagName("head")[0].appendChild(selectStyle);
     var placeholder=document.createElement("div");
     placeholder.style.cssText="width:100%;height:100%;text-align:center;font-size:x-large;cursor:pointer;color:#666;";
@@ -144,8 +144,8 @@
     showP.innerHTML="💎";
     var crackArea=document.createElement("div");
     crackArea.className="crackArea";
-    crackArea.appendChild(showP);
     crackArea.appendChild(select);
+    crackArea.appendChild(showP);
     crackArea.appendChild(quickAccess);
     crackArea.appendChild(embedLabel);
     function crackJump(){
