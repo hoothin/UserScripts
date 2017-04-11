@@ -2,7 +2,7 @@
 // @name         VIP视频破解
 // @name:en      VIP Video Cracker
 // @namespace    hoothin
-// @version      1.6.5
+// @version      1.6.6
 // @description  解析并破解各大视频站的VIP权限
 // @description:en  Crack VIP permissions of some chinese video sites
 // @author       hoothin
@@ -116,7 +116,7 @@
                 if(video.parentNode && !yinyuetai)video.parentNode.replaceChild(placeholder,video);
             }
             if(!vipVideoCrackEmbed || !embedCrack(url)){
-                window.open(url);
+                unsafeWindow.open(url);
             }
             select.options.selectedIndex=0;
         }
@@ -184,7 +184,7 @@
     }
     var si=setInterval(function(){
         [].every.call(document.querySelectorAll("object,embed,video"),function(item){
-            var style=getComputedStyle(item, null);
+            var style=unsafeWindow.getComputedStyle(item, null);
             if(style.width.replace("px","")>100 && style.height.replace("px","")>100){
                 video=item;
                 return false;
@@ -193,18 +193,18 @@
         });
         if(video){
             clearInterval(si);
-            var videoStyle=getComputedStyle(video, null);
+            var videoStyle=unsafeWindow.getComputedStyle(video, null);
             videoWidth=videoStyle.width;
             videoHeight=videoStyle.height;
             var videoParent=video.parentNode;
             if(yinyuetai){
                 videoParent.parentNode.style.position="absolute";
-                videoStyle=getComputedStyle(videoParent.parentNode, null);
+                videoStyle=unsafeWindow.getComputedStyle(videoParent.parentNode, null);
                 videoWidth=videoStyle.width;
                 videoHeight=videoStyle.height;
             }
             videoParent.appendChild(crackArea);
-            placeholder.style.lineHeight=getComputedStyle(videoParent).height;
+            placeholder.style.lineHeight=unsafeWindow.getComputedStyle(videoParent).height;
             if(vipVideoCrackJump){
                 jumpCheck.checked=true;
             }
@@ -223,7 +223,7 @@
                 window.postMessage("replaceState","*");
                 return pushState.apply(history, arguments);
             };`);
-            window.addEventListener('message',function(e) {
+            unsafeWindow.addEventListener('message',function(e) {
                 if(e.data=="pushState" || e.data=="replaceState"){
                     setTimeout(function(){crackJump();},1);
                 }
