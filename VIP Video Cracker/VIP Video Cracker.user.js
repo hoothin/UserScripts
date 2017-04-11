@@ -205,7 +205,7 @@
                         videoStyle=unsafeWindow.getComputedStyle(video, null);
                         videoWidth=videoStyle.width;
                         videoHeight=videoStyle.height;
-                    },500);
+                    },1000);
                 }
             }
             videoParent.appendChild(crackArea);
