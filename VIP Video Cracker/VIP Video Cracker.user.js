@@ -2,7 +2,7 @@
 // @name         VIP视频破解
 // @name:en      VIP Video Cracker
 // @namespace    hoothin
-// @version      1.6.7
+// @version      1.6.8
 // @description  解析并破解各大视频站的VIP权限
 // @description:en  Crack VIP permissions of some chinese video sites
 // @author       hoothin
@@ -192,10 +192,6 @@
         });
         if(video){
             clearInterval(si);
-            var videoStyle=unsafeWindow.getComputedStyle(video, null);
-            videoWidth=videoStyle.width;
-            videoHeight=videoStyle.height;
-            var videoParent=video.parentNode;
             if(location.hostname.indexOf("v.yinyuetai.com")!=-1){
                 if (!/^https?:\/\/v\.yinyuetai\.com\/video\/h5\//.test(location.href)) {
                     unsafeWindow.location.href = unsafeWindow.location.href.replace(/^https?:\/\/v\.yinyuetai\.com\/video\//,"http://v.yinyuetai.com/video/h5/");
@@ -207,7 +203,31 @@
                         videoHeight=videoStyle.height;
                     },1000);
                 }
+            }else if(location.hostname.indexOf("v.youku.com")!=-1){
+                if(vipVideoCrackEmbed)video.height="90%";
+            }else if(iqiyi){
+                document.querySelector('#widget-dramaseries').addEventListener('click', function(e){
+                    var target=e.target.parentNode;
+                    if(target.tagName!="LI")return;
+                    GM_xmlhttpRequest({
+                        method: 'GET',
+                        url: "http://cache.video.qiyi.com/jp/vi/"+target.dataset.videolistTvid+"/"+target.dataset.videolistVid+"/?callback=crackIqiyi",
+                        onload: function(result) {
+                            var crackIqiyi=function(d){
+                                location.href=d.vu;
+                            };
+                            eval(result.responseText);
+                        }
+                    });
+                });
+                unsafeWindow.addEventListener("hashchange",function(){
+                    crackJump();
+                });
             }
+            var videoStyle=unsafeWindow.getComputedStyle(video, null);
+            videoWidth=videoStyle.width;
+            videoHeight=videoStyle.height;
+            var videoParent=video.parentNode;
             videoParent.appendChild(crackArea);
             placeholder.style.lineHeight=unsafeWindow.getComputedStyle(videoParent).height;
             if(vipVideoCrackJump){
@@ -233,25 +253,6 @@
                     setTimeout(function(){crackJump();},1);
                 }
             });
-            if(iqiyi){
-                document.querySelector('#widget-dramaseries').addEventListener('click', function(e){
-                    var target=e.target.parentNode;
-                    if(target.tagName!="LI")return;
-                    GM_xmlhttpRequest({
-                        method: 'GET',
-                        url: "http://cache.video.qiyi.com/jp/vi/"+target.dataset.videolistTvid+"/"+target.dataset.videolistVid+"/?callback=crackIqiyi",
-                        onload: function(result) {
-                            var crackIqiyi=function(d){
-                                location.href=d.vu;
-                            };
-                            eval(result.responseText);
-                        }
-                    });
-                });
-                unsafeWindow.addEventListener("hashchange",function(){
-                    crackJump();
-                });
-            }
         }
     },500);
 })();
