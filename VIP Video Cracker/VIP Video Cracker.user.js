@@ -2,31 +2,34 @@
 // @name         VIP视频破解
 // @name:en      VIP Video Cracker
 // @namespace    hoothin
-// @version      1.7.1
+// @version      1.7.2
 // @description  解析并破解各大视频站的VIP权限
 // @description:en  Crack VIP permissions of some chinese video sites
 // @author       hoothin
 // @include       *://v.qq.com/x/*
-// @include       *://*.mgtv.com/b/*
+// @include       *://m.v.qq.com/*
+// @include       *://*.mgtv.com/*b/*
 // @include       *://*.le.com/ptv/vplay/*
+// @include       *://m.le.com/*
 // @include       *://v.youku.com/v_show/*
+// @include       *://m.youku.com/video/*
 // @include       *://*.iqiyi.com/v_*
 // @include       *://*.iqiyi.com/dianying/*
 // @include       *://*.tudou.com/albumplay/*
 // @include       *://*.tudou.com/listplay/*
 // @include       *://*.tudou.com/programs/view/*
-// @include       *://*.wasu.cn/Play/show/id/*
-// @include       *://tv.sohu.com/*
-// @include       *://film.sohu.com/album/*
+// @include       *://*.wasu.cn/*Play/show/id/*
+// @include       *://*tv.sohu.com/*
+// @include       *://*film.sohu.com/album/*
 // @include       *://ddp.vip.pptv.com/vod_detail/*
 // @include       *://*.pptv.com/show/*
-// @include       *://www.acfun.cn/v/*
+// @include       *://*.acfun.cn/v/*
 // @include       *://*.fun.tv/vplay/*
 // @include       *://vip.1905.com/play/*
 // @include       *://vip.pptv.com/show/*
 // @include       *://v.yinyuetai.com/video/*
 // @include       *://v.yinyuetai.com/playlist/*
-// @include       *://www.bilibili.com/video/*
+// @include       *://*.bilibili.com/video/*
 // @exclude       *?url=*
 // @exclude       *?qt=*
 // @exclude       *?v=*
@@ -43,14 +46,14 @@
     var cracks=[
         {name:"47影视云",url:"https://api.47ks.com/webcloud/?v=%s",title:"首选"},
         {name:"无名小站",url:"http://www.wmxz.wang/video.php?url=%s",title:"次选"},
-        {name:"小海解析1(s)",url:"https://ckplaer.duapp.com/hai2.php?url=%s",title:"播放器似乎放在百度开发者平台"},
-        {name:"小海解析2",url:"http://jx.ck921.com/hai2.php?url=%s",title:"和上面的用的应该是同样的服务器"},
         {name:"石头解析(s)",url:"https://jiexi.071811.cc/jx.php?url=%s"},
         {name:"爱看TV(s)",url:"https://aikan-tv.com/tong.php?url=%s"},
         {name:"最小品(s)",url:"https://www.zuixiaopin.com/api/cloudVideo?url=%s"},
         {name:"妹儿云(s)",url:"https://www.yymeier.com/api.php?url=%s"},
         {name:"那片(s)",url:"https://jxapi.nepian.com/ckparse/?url=%s"},
         {name:"眼睛会下雨(s)",url:"https://www.vipjiexi.com/yun.php?url=%s"},
+        {name:"小海解析1(s)",url:"https://ckplaer.duapp.com/hai2.php?url=%s",title:"播放器似乎放在百度开发者平台"},
+        {name:"小海解析2",url:"http://jx.ck921.com/hai2.php?url=%s",title:"和上面的用的应该是同样的服务器"},
         {name:"Relon",url:"http://yyygwz.com/index.php?url=%s"},
         {name:"SO视频",url:"http://parse.colaparse.cc/?url=%s"},
         {name:"言朋影院",url:"http://vip.yingyanxinwen.cn/vip/index.php?url=%s"},
@@ -76,13 +79,27 @@
         {name:"PPYPP",url:"http://www.ppypp.com/yunparse/?url=%s"},
         {name:"百域阁",url:"http://api.svip.baiyug.cn/svip/index.php?url=%s"},
     ],video,videoWidth,videoHeight,i=0;
+    var isMobile=function() {
+        var userAgentInfo = navigator.userAgent.toLowerCase();
+        var Agents=["android", "iphone",
+                      "symbianos", "windows phone",
+                      "ipad", "ipod" ,"midp" ,"ucweb"];
+        var flag=false;
+        for (var v=0; v < Agents.length; v++) {
+            if (userAgentInfo.indexOf(Agents[v]) > 0) {
+                flag=true;
+                break;
+            }
+        }
+        return flag;
+    }();
     var iqiyi=location.hostname.indexOf("iqiyi.com")!=-1;
     var vipVideoCrackJump=GM_getValue("vipVideoCrackJump");
     var vipVideoCrackEmbed=GM_getValue("vipVideoCrackEmbed");
     var vipVideoCrackUrl=GM_getValue("vipVideoCrackUrl");
     var iframe=document.createElement("iframe");
     var selectStyle=document.createElement("style");
-    selectStyle.innerHTML=".crackJump{font-size:12px;margin-left:5px;color:white;text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;-webkit-text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;-moz-text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;*filter: Glow(color=#000, strength=1);}.crackJump input{vertical-align:middle;}.vipSelect{background:black;color:white;font-size:12px;border:none;}.crackArea{position:absolute;z-index:999999;left:0px;top:0px;opacity:0.50;filter:alpha(opacity=50);transition:opacity 0.3s ease,width 0.3s ease;width:18px;overflow:hidden;white-space:nowrap;border:1px solid #666;background:black;}.crackArea:hover{opacity:1;filter:alpha(opacity=100);width:230px;}.crackArea>p{display:block;font-size:13px;text-align:center;float:left;position:absolute;top:0px;background-color:black;width:100%}.crackArea:hover>p{display:none;}.crackArea>label{display:none;}.crackArea:hover>label{display:initial;}";
+    selectStyle.innerHTML=".crackJump{font-size:12px;margin-left:5px;color:white;text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;-webkit-text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;-moz-text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;*filter: Glow(color=#000, strength=1);}.crackJump input{vertical-align:middle;}.vipSelect{background:black;color:white;font-size:12px;border:none;}.crackArea{position:absolute;z-index:999999;left:0px;top:0px;opacity:0.50;filter:alpha(opacity=50);transition:opacity 0.3s ease,width 0.3s ease;width:18px;height:18px;overflow:hidden;white-space:nowrap;border:1px solid #666;background:black;}.crackArea:hover{opacity:1;filter:alpha(opacity=100);width:230px;}.crackArea>p{display:block;font-size:13px;text-align:center;float:left;position:absolute;top:0px;background-color:black;width:100%;height:100%;margin:0 auto}.crackArea:hover>p{display:none;}.crackArea>label{display:none;}.crackArea:hover>label{display:initial;}";
     document.getElementsByTagName("head")[0].appendChild(selectStyle);
     var placeholder=document.createElement("div");
     placeholder.style.cssText="width:100%;height:100%;text-align:center;font-size:x-large;cursor:pointer;color:#666;";
@@ -181,78 +198,83 @@
         }
         return canEmbed;
     }
-    var si=setInterval(function(){
-        [].every.call(document.querySelectorAll("object,embed,video"),function(item){
-            var style=unsafeWindow.getComputedStyle(item, null);
-            if(style.width.replace("px","")>100 && style.height.replace("px","")>100){
-                video=item;
-                return false;
-            }
-            return true;
-        });
-        if(video){
-            clearInterval(si);
-            var videoStyle=unsafeWindow.getComputedStyle(video, null);
-            videoWidth=videoStyle.width;
-            videoHeight=videoStyle.height;
-            var videoParent=video.parentNode;
-            videoParent.appendChild(crackArea);
-            placeholder.style.lineHeight=unsafeWindow.getComputedStyle(videoParent).height;
-            if(location.hostname.indexOf("v.yinyuetai.com")!=-1){
-                if (!/^https?:\/\/v\.yinyuetai\.com\/video\/h5\//.test(location.href)) {
-                    unsafeWindow.location.href = unsafeWindow.location.href.replace(/^https?:\/\/v\.yinyuetai\.com\/video\//,"http://v.yinyuetai.com/video/h5/");
-                }else{
-                    videoParent.parentNode.style.position="absolute";
-                    setTimeout(function(){
-                        videoStyle=unsafeWindow.getComputedStyle(video, null);
-                        videoWidth=videoStyle.width;
-                        videoHeight=videoStyle.height;
-                    },1000);
+    if(isMobile){
+        crackArea.style.position="fixed";
+        document.body.appendChild(crackArea);
+    }else{
+        var si=setInterval(function(){
+            [].every.call(document.querySelectorAll("object,embed,video"),function(item){
+                var style=unsafeWindow.getComputedStyle(item, null);
+                if(style.width.replace("px","")>100 && style.height.replace("px","")>100){
+                    video=item;
+                    return false;
                 }
-            }else if(location.hostname.indexOf("v.youku.com")!=-1){
-                if(vipVideoCrackEmbed)videoHeight="567px";
-            }else if(iqiyi){
-                document.querySelector('#widget-dramaseries').addEventListener('click', function(e){
-                    var target=e.target.parentNode;
-                    if(target.tagName!="LI")return;
-                    GM_xmlhttpRequest({
-                        method: 'GET',
-                        url: "http://cache.video.qiyi.com/jp/vi/"+target.dataset.videolistTvid+"/"+target.dataset.videolistVid+"/?callback=crackIqiyi",
-                        onload: function(result) {
-                            var crackIqiyi=function(d){
-                                location.href=d.vu;
-                            };
-                            eval(result.responseText);
-                        }
-                    });
-                });
-                unsafeWindow.addEventListener("hashchange",function(){
-                    crackJump();
-                });
-            }
-            if(vipVideoCrackJump){
-                jumpCheck.checked=true;
-            }
-            if(vipVideoCrackEmbed){
-                embedCheck.checked=true;
-            }
-            crackJump();
-            unsafeWindow.eval(`
-            var pushState = window.history.pushState;
-            window.history.pushState=function(a){
-                window.postMessage("pushState","*");
-                return pushState.apply(history, arguments);
-            };
-            var replaceState = window.history.pushState;
-            window.history.replaceState=function(a){
-                window.postMessage("replaceState","*");
-                return pushState.apply(history, arguments);
-            };`);
-            unsafeWindow.addEventListener('message',function(e) {
-                if(e.data=="pushState" || e.data=="replaceState"){
-                    setTimeout(function(){crackJump();},1);
-                }
+                return true;
             });
-        }
-    },500);
+            if(video){
+                clearInterval(si);
+                var videoStyle=unsafeWindow.getComputedStyle(video, null);
+                videoWidth=videoStyle.width;
+                videoHeight=videoStyle.height;
+                var videoParent=video.parentNode;
+                videoParent.appendChild(crackArea);
+                placeholder.style.lineHeight=unsafeWindow.getComputedStyle(videoParent).height;
+                if(location.hostname.indexOf("v.yinyuetai.com")!=-1){
+                    if (!/^https?:\/\/v\.yinyuetai\.com\/video\/h5\//.test(location.href)) {
+                        unsafeWindow.location.href = unsafeWindow.location.href.replace(/^https?:\/\/v\.yinyuetai\.com\/video\//,"http://v.yinyuetai.com/video/h5/");
+                    }else{
+                        videoParent.parentNode.style.position="absolute";
+                        setTimeout(function(){
+                            videoStyle=unsafeWindow.getComputedStyle(video, null);
+                            videoWidth=videoStyle.width;
+                            videoHeight=videoStyle.height;
+                        },1000);
+                    }
+                }else if(location.hostname.indexOf("v.youku.com")!=-1){
+                    if(vipVideoCrackEmbed)videoHeight="567px";
+                }else if(iqiyi){
+                    document.querySelector('#widget-dramaseries').addEventListener('click', function(e){
+                        var target=e.target.parentNode;
+                        if(target.tagName!="LI")return;
+                        GM_xmlhttpRequest({
+                            method: 'GET',
+                            url: "http://cache.video.qiyi.com/jp/vi/"+target.dataset.videolistTvid+"/"+target.dataset.videolistVid+"/?callback=crackIqiyi",
+                            onload: function(result) {
+                                var crackIqiyi=function(d){
+                                    location.href=d.vu;
+                                };
+                                eval(result.responseText);
+                            }
+                        });
+                    });
+                    unsafeWindow.addEventListener("hashchange",function(){
+                        crackJump();
+                    });
+                }
+                if(vipVideoCrackJump){
+                    jumpCheck.checked=true;
+                }
+                if(vipVideoCrackEmbed){
+                    embedCheck.checked=true;
+                }
+                crackJump();
+                unsafeWindow.eval(`
+                var pushState = window.history.pushState;
+                window.history.pushState=function(a){
+                    window.postMessage("pushState","*");
+                    return pushState.apply(history, arguments);
+                };
+                var replaceState = window.history.pushState;
+                window.history.replaceState=function(a){
+                    window.postMessage("replaceState","*");
+                    return pushState.apply(history, arguments);
+                };`);
+                unsafeWindow.addEventListener('message',function(e) {
+                    if(e.data=="pushState" || e.data=="replaceState"){
+                        setTimeout(function(){crackJump();},1);
+                    }
+                });
+            }
+        },500);
+    }
 })();
