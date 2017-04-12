@@ -2,7 +2,7 @@
 // @name         VIP视频破解
 // @name:en      VIP Video Cracker
 // @namespace    hoothin
-// @version      1.7.2
+// @version      1.7.3
 // @description  解析并破解各大视频站的VIP权限
 // @description:en  Crack VIP permissions of some chinese video sites
 // @author       hoothin
@@ -56,7 +56,6 @@
         {name:"小海解析2",url:"http://jx.ck921.com/hai2.php?url=%s",title:"和上面的用的应该是同样的服务器"},
         {name:"Relon",url:"http://yyygwz.com/index.php?url=%s"},
         {name:"SO视频",url:"http://parse.colaparse.cc/?url=%s"},
-        {name:"言朋影院",url:"http://vip.yingyanxinwen.cn/vip/index.php?url=%s"},
         {name:"5奇异",url:"http://www.jiexi.cx/5qiyi/?url=%s"},
         {name:"Moondown",url:"http://moon.moondown.net/?url=%s"},
         {name:"选片网",url:"http://jx.xuanpianwang.com/parse?url=%s"},
@@ -67,9 +66,10 @@
         {name:"土豪网",url:"http://www.tuhao13.com/yunparse/index.php?url=%s"},
         {name:"舞动秋天",url:"http://qtzr.net/s/?qt=%s"},
         {name:"97在线看",url:"http://www.97zxkan.com/jiexi/97zxkanapi.php?url=%s"},
+        {name:"百域阁",url:"http://api.svip.baiyug.cn/svip/index.php?url=%s",title:"会检测是否frame,只能跳转不能嵌"},
+        {name:"言朋影院",url:"http://vip.yingyanxinwen.cn/vip/index.php?url=%s",title:"会检测是否frame,只能跳转不能嵌"},
         {name:"迷失之梦",url:"http://mt2t.com/yun?url=%s",title:"这个解析站似乎不大稳定"},
         {name:"无名小站源",url:"http://www.sfsft.com/admin.php?url=%s",title:"无名小站的源"},
-        {name:"疯狂解析",url:"http://vip.ifkdy.com/?url=%s",title:"仅是简单嵌了47影视云、小海解析等几个解析站"},
         {name:"VIP看看",url:"http://2.jx.72du.com/video.php?url=%s",title:"嵌了无名小站的服务"},
         {name:"歪歪电影",url:"http://www.yydy8.com/common/?url=%s",title:"嵌了47影视云的服务"},
         {name:"梦中人",url:"http://www.wpswan.com/mzr/vipparse/index.php?url=%s",title:"嵌了47影视云的服务"},
@@ -77,7 +77,7 @@
         {name:"CloudParse",url:"http://api.cloudparse.com/?url=%s"},
         {name:"10号影院",url:"http://player.gakui.top/?url=%s"},
         {name:"PPYPP",url:"http://www.ppypp.com/yunparse/?url=%s"},
-        {name:"百域阁",url:"http://api.svip.baiyug.cn/svip/index.php?url=%s"},
+        {name:"疯狂解析",url:"http://vip.ifkdy.com/?url=%s",title:"仅是简单嵌了47影视云、小海解析等几个解析站"},
     ],video,videoWidth,videoHeight,i=0;
     var isMobile=function() {
         var userAgentInfo = navigator.userAgent.toLowerCase();
