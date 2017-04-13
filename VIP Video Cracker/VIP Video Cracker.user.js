@@ -2,7 +2,7 @@
 // @name         VIP视频破解
 // @name:en      VIP Video Cracker
 // @namespace    hoothin
-// @version      1.7.3
+// @version      1.7.5
 // @description  解析并破解各大视频站的VIP权限
 // @description:en  Crack VIP permissions of some chinese video sites
 // @author       hoothin
@@ -94,7 +94,7 @@
         return flag;
     }();
     var iqiyi=location.hostname.indexOf("iqiyi.com")!=-1;
-    var vipVideoCrackJump=GM_getValue("vipVideoCrackJump");
+    var vipVideoCrackJump=GM_getValue(location.hostname+"_vipVideoCrackJump");
     var vipVideoCrackEmbed=GM_getValue("vipVideoCrackEmbed");
     var vipVideoCrackUrl=GM_getValue("vipVideoCrackUrl");
     var iframe=document.createElement("iframe");
@@ -144,7 +144,7 @@
     var jumpCheck=quickAccess.querySelector("input");
     jumpCheck.onclick=function(){
         vipVideoCrackJump=jumpCheck.checked;
-        GM_setValue("vipVideoCrackJump",vipVideoCrackJump);
+        GM_setValue(location.hostname+"_vipVideoCrackJump",vipVideoCrackJump);
         crackJump();
     };
     var embedLabel=document.createElement("label");
