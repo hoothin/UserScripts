@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2017.4.13.1
+// @version        2017.4.13.2
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -84,7 +84,7 @@
             },
 
             gallery:{//图库相关设定
-                loadAll:false,//加载更多时是否加载全部页面
+                loadAll:true,//加载更多时是否加载全部页面
                 fitToScreen:true,//图片适应屏幕(适应方式为contain，非cover).
                 scrollEndToChange:true,
                 exportType:'grid',
@@ -96,7 +96,7 @@
                 max:5,//最多预读多少张（前后各多少张）
 
                 zoomresized: 25,  // 图片尺寸最少相差比例，单位：%
-                scaleSmallSize: 200,  // 图库的新类别，缩放的图片，尺寸的高或宽都小于该值
+                scaleSmallSize: 250,  // 图库的新类别，缩放的图片，尺寸的高或宽都小于该值
 
                 scrollEndAndLoad: false, // 滚动主窗口到最底部，然后自动重载库的图片。还有bug，有待进一步测试
                 scrollEndAndLoad_num: 3,  // 最后几张图片执行
@@ -5143,6 +5143,7 @@ left:0px;\
                         h:img.naturalHeight,
                         w:img.naturalWidth,
                     };
+                    self.zoom(1);
                     self.fitToScreen();
                 }
                 searchButton.addEventListener('click',function(e){
