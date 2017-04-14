@@ -2,7 +2,7 @@
 // @name         VIP视频破解
 // @name:en      VIP Video Cracker
 // @namespace    hoothin
-// @version      1.7.5
+// @version      1.7.6
 // @description  解析并破解各大视频站的VIP权限
 // @description:en  Crack VIP permissions of some chinese video sites
 // @author       hoothin
@@ -98,6 +98,7 @@
     var vipVideoCrackEmbed=GM_getValue("vipVideoCrackEmbed");
     var vipVideoCrackUrl=GM_getValue("vipVideoCrackUrl");
     var iframe=document.createElement("iframe");
+    iframe.style.border="0";
     var selectStyle=document.createElement("style");
     selectStyle.innerHTML=".crackJump{font-size:12px;margin-left:5px;color:white;text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;-webkit-text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;-moz-text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;*filter: Glow(color=#000, strength=1);}.crackJump input{vertical-align:middle;}.vipSelect{background:black;color:white;font-size:12px;border:none;}.crackArea{position:absolute;z-index:999999;left:0px;top:0px;opacity:0.50;filter:alpha(opacity=50);transition:opacity 0.3s ease,width 0.3s ease;width:18px;height:18px;overflow:hidden;white-space:nowrap;border:1px solid #666;background:black;}.crackArea:hover{opacity:1;filter:alpha(opacity=100);width:230px;}.crackArea>p{display:block;font-size:13px;text-align:center;float:left;position:absolute;top:0px;background-color:black;width:100%;height:100%;margin:0 auto}.crackArea:hover>p{display:none;}.crackArea>label{display:none;}.crackArea:hover>label{display:initial;}";
     document.getElementsByTagName("head")[0].appendChild(selectStyle);
@@ -231,7 +232,7 @@
                         },1000);
                     }
                 }else if(location.hostname.indexOf("v.youku.com")!=-1){
-                    if(vipVideoCrackEmbed)videoHeight="567px";
+                    if(vipVideoCrackEmbed)videoHeight="580px";
                 }else if(iqiyi){
                     document.querySelector('#widget-dramaseries').addEventListener('click', function(e){
                         var target=e.target.parentNode;
