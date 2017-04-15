@@ -2,7 +2,7 @@
 // @name         VIP视频破解
 // @name:en      VIP Video Cracker
 // @namespace    hoothin
-// @version      1.7.6
+// @version      1.7.7
 // @description  解析并破解各大视频站的VIP权限
 // @description:en  Crack VIP permissions of some chinese video sites
 // @author       hoothin
@@ -39,6 +39,7 @@
 // @grant         unsafeWindow
 // @grant         GM_xmlhttpRequest
 // @license       MIT License
+// @connect       cache.video.qiyi.com
 // ==/UserScript==
 
 (function() {
@@ -235,7 +236,7 @@
                     if(vipVideoCrackEmbed)videoHeight="580px";
                 }else if(iqiyi){
                     document.querySelector('#widget-dramaseries').addEventListener('click', function(e){
-                        var target=e.target.parentNode;
+                        var target=e.target.parentNode.tagName=="LI"?e.target.parentNode:(e.target.parentNode.parentNode.tagName=="LI"?e.target.parentNode.parentNode:e.target.parentNode.parentNode.parentNode);
                         if(target.tagName!="LI")return;
                         GM_xmlhttpRequest({
                             method: 'GET',
