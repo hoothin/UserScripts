@@ -82,7 +82,7 @@
 // @include     http*://greasyfork.org/*/scripts/*
 // @include     http*://sleazyfork.org/*/forum/*discussion*
 // @include     http*://greasyfork.org/*/forum/*discussion*
-// @version     3.22.31
+// @version     3.22.32
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -763,7 +763,8 @@
                     if(/www\.acgpy\.com\/login\d+\.html/.test(location.href)){
                         var date=new Date();
                         date.setTime(date.getTime()+14400*60*1000);
-                        document.cookie="trade"+location.href.replace(/.*.com\/login(\d+)\..*/,"$1")+"=A32; expires="+date.toGMTString();
+                        //document.cookie="trade"+location.href.replace(/.*.com\/login(\d+)\..*/,"$1")+"=A32; expires="+date.toGMTString();
+                        document.cookie="trade0421=A32; expires="+date.toGMTString();
                         top.location='wpx';
                     }
                     var downBtn=document.querySelector("a.downbtn");
