@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2017.4.19.1
+// @version        2017.4.25.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -97,6 +97,7 @@
 
                 zoomresized: 25,  // 图片尺寸最少相差比例，单位：%
                 scaleSmallSize: 250,  // 图库的新类别，缩放的图片，尺寸的高或宽都小于该值
+                showSmallSize:true,//是否默认显示小尺寸图片
 
                 scrollEndAndLoad: false, // 滚动主窗口到最底部，然后自动重载库的图片。还有bug，有待进一步测试
                 scrollEndAndLoad_num: 3,  // 最后几张图片执行
@@ -2030,7 +2031,7 @@
                     //  name: '小缩放'
                     // },
                     scaleSmall: {
-                        shown: true,
+                        shown: prefs.gallery.showSmallSize,
                         count: 0,
                         description: '小尺寸图片，实际尺寸的高和宽都小于 ' + prefs.gallery.scaleSmallSize + ' 像素',
                         name: '小尺寸'
@@ -2311,7 +2312,8 @@
                 //分类下拉列表的点击发生change事件的处理
                 eleMaps['head-command-drop-list-category'].addEventListener('change',function(e){
                     var target=e.target;
-                    self.iStatisCopy[dataset(target,'type')].shown=target.checked;
+                    var type=dataset(target,'type');
+                    self.iStatisCopy[type].shown=target.checked;
                     self.switchThumbVisible();//切换图片类别显隐;
                 },true);
 
@@ -2746,6 +2748,7 @@ padding-left:24px;">'+shareItem.name+'</span>');
 
 
                 this._resizeHandler=this.resizeHandler.bind(this);
+                this._keyDownListener=this.keyDownListener.bind(this);
 
                 //插入动态生成的css数据。
                 this.globalSSheet.insertRule('.pv-gallery-sidebar-thumb-container{'+
@@ -3340,6 +3343,15 @@ padding-left:24px;">'+shareItem.name+'</span>');
                     index:index,
                 };
             },
+            keyDownListener:function(e){
+                switch(e.keyCode){
+                    case 27:
+                        if(prefs.imgWindow.close.escKey){
+                            this.close();
+                        }
+                        break;
+                }
+            },
             show:function(reload){
                 this.shown=true;
                 galleryMode=true;
@@ -3355,8 +3367,10 @@ padding-left:24px;">'+shareItem.name+'</span>');
                     this.gallery.focus();
                     window.addEventListener('resize',this._resizeHandler,true);
                 }
+                document.addEventListener('keydown',this._keyDownListener,true);
             },
             close:function(reload){
+                document.removeEventListener('keydown',this._keyDownListener,true);
                 this.shown=false;
                 this.minimized=false;
 
@@ -8341,6 +8355,11 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                     type: 'int',
                     "default": prefs.gallery.scaleSmallSize,
                     after: ' 像素则归入小尺寸图片'
+                },
+                'gallery.showSmallSize':{
+                    label: '默认显示小尺寸图片',
+                    type: 'checkbox',
+                    "default": prefs.gallery.showSmallSize
                 },
                 'gallery.transition': {
                     label: '显示图库切换图片的特效',
