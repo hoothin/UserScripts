@@ -78,11 +78,12 @@
 // @include     http*://www.htacg.cc/*
 // @include     http*://www.xiu.moe/*
 // @include     http*://www.cld1.net/*
+// @include     http*://sjhs*.*
 // @include     http*://sleazyfork.org/*/scripts/*
 // @include     http*://greasyfork.org/*/scripts/*
 // @include     http*://sleazyfork.org/*/forum/*discussion*
 // @include     http*://greasyfork.org/*/forum/*discussion*
-// @version     3.22.32
+// @version     3.22.33
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -90,7 +91,7 @@
 // @grant       GM_getValue
 // @grant       unsafeWindow
 // @run-at      document-end
-// @require     https://greasyfork.org/scripts/23522/code/od.js?version=187400
+// @require     https://greasyfork.org/scripts/23522/code/od.js?version=190957
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
 // @updateURL   https://greasyfork.org/scripts/23316/code/HacgGodTurn.user.js
@@ -381,7 +382,7 @@
             },
             {
                 name:"司机会所",
-                url:"https://www.sijihuisuo.club/",
+                url:"http://sjhs01.ml",
                 regex:/sijihuisuo\.club/,
                 innerPage:/sijihuisuo\.club\/(sj\/\d|\?p=\d)/,
                 offset:115,
