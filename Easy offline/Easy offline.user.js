@@ -8,7 +8,7 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdn.jsdelivr.net/jquery/1.7.2/jquery.min.js
 // @require      https://cdn.jsdelivr.net/hi-base64/0.2.0/base64.min.js
-// @version      1.5.3
+// @version      1.5.4
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -544,6 +544,10 @@
         var minTop=$(document).scrollTop()+(j-1)*25;
         if(top<minTop){
             parentDiv.offset({top:minTop,left:left});
+            var lastTop=parentDiv.position().top;
+            var lastLeft=parentDiv.position().left;
+            parentDiv.offset({top:top,left:left});
+            parentDiv.animate({top:lastTop+"px",left:lastLeft+"px"});
         }
     }
 
@@ -602,7 +606,7 @@
         setting();
     }else if(!isDisk){
         setTimeout(function(){getAllEnableUrl();},10);
-        var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+        var MutationObserver = unsafeWindow.MutationObserver || unsafeWindow.WebKitMutationObserver || unsafeWindow.MozMutationObserver;
         var observer = new MutationObserver(function(records){
             records.map(function(record) {
                 if(record.addedNodes.length)setTimeout(function(){getAllEnableUrl(record.addedNodes);},501);
