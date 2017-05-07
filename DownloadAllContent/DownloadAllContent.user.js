@@ -4,7 +4,7 @@
 // @name:zh-TW   懶人小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      1.22
+// @version      1.23
 // @description  Fetch and download main content on current page, provide special support for chinese novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取小說、論壇內容等並保存為TXT文檔
@@ -37,7 +37,8 @@
                 error:"该段内容获取失败",
                 downloading:"已下载完成 %s 段，剩余 %s 段<br>正在下载 %s",
                 complete:"已全部下载完成，共 %s 段",
-                del:"设置小说干扰码"
+                del:"设置小说干扰码",
+                setting:"懒人小说下载设置"
             };
             break;
         default:
@@ -47,7 +48,8 @@
                 error:"Failed in downloading current chapter",
                 downloading:"%s pages are downloaded, there are still %s pages left<br>Downloading %s ......",
                 complete:"Completed! The pages totalled %s",
-                del:"Set css selectors for delete"
+                del:"Set css selectors for delete",
+                setting:"DownloadAllContent Setting"
             };
             break;
     }
@@ -250,6 +252,11 @@
             }
         }
         if(list.length>2){
+            if(GM_getValue("contentSort")){
+                list.sort(function(a,b){
+                    return parseInt(a.innerText.replace(/[^0-9]/ig,"")) - parseInt(b.innerText.replace(/[^0-9]/ig,""));
+                });
+            }
             indexDownload(list);
         }else{
             var blob = new Blob([i18n.info+"\r\n"+document.title+"\r\n\r\n"+getPageContent(document)], {type: "text/plain;charset=utf-8"});
@@ -264,9 +271,14 @@
     });
     function setDel(){
         var selValue=GM_getValue("selectors");
-        var selectors=prompt("设置小说干扰码的选择器：",selValue?selValue:"");
+        var selectors=prompt(i18n.del,selValue?selValue:"");
         GM_setValue("selectors",selectors);
+        if(window.confirm("重新排序")){
+            GM_setValue("contentSort", true);
+        }else{
+            GM_setValue("contentSort", false);
+        }
     }
     GM_registerMenuCommand(i18n.fetch, fetch);
-    GM_registerMenuCommand(i18n.del, setDel);
+    GM_registerMenuCommand(i18n.setting, setDel);
 })();
