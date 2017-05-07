@@ -236,8 +236,16 @@
     function fetch(){
         var aEles=document.querySelectorAll("a"),list=[];
         for(var i=0;i<aEles.length;i++){
-            var aEle=aEles[i];
-            if(aEle.href && /^http/i.test(aEle.href) && /PART\b|Prologue|分卷|Chapter\s*\d+|第.+[章|节|回|卷|折|篇|幕|集]|^序$|序\s*言|序\s*章|前\s*言|引\s*言|引\s*子|摘\s*要|楔\s*子|契\s*子|后\s*记|附\s*言|结\s*语|[\d|〇|零|一|二|三|四|五|六|七|八|九|十|百|千|万|萬|-]+(、|）|\.)/i.test(aEle.innerText)){
+            var aEle=aEles[i],has=false;
+            for(var j=0;j<list.length;j++){
+                if(list[j].href==aEle.href){
+                    list.splice(j,1);
+                    list.push(aEle);
+                    has=true;
+                    break;
+                }
+            }
+            if(!has && aEle.href && /^http/i.test(aEle.href) && /PART\b|Prologue|分卷|Chapter\s*\d+|第.+[章|节|回|卷|折|篇|幕|集]|^序$|序\s*言|序\s*章|前\s*言|引\s*言|引\s*子|摘\s*要|楔\s*子|契\s*子|后\s*记|附\s*言|结\s*语|[\d|〇|零|一|二|三|四|五|六|七|八|九|十|百|千|万|萬|-]+(、|）|\.)/i.test(aEle.innerText)){
                 list.push(aEle);
             }
         }
