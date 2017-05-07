@@ -37,7 +37,7 @@
                 error:"该段内容获取失败",
                 downloading:"已下载完成 %s 段，剩余 %s 段<br>正在下载 %s",
                 complete:"已全部下载完成，共 %s 段",
-                del:"设置小说干扰码",
+                del:"设置小说干扰码的CSS选择器",
                 setting:"懒人小说下载设置"
             };
             break;
