@@ -4,7 +4,7 @@
 // @name:zh-TW   懶人小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      1.21
+// @version      1.22
 // @description  Fetch and download main content on current page, provide special support for chinese novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取小說、論壇內容等並保存為TXT文檔
@@ -144,7 +144,7 @@
                     if(/^\s*$/.test(item.data))
                         item.parentNode.removeChild(item);
                     else hasText=true;
-                }else if(/^(I|A|STRONG|B|FONT|P)$/.test(item.tagName))hasText=true;
+                }else if(/^(I|A|STRONG|B|FONT|P|DL|DD|H\d)$/.test(item.tagName))hasText=true;
             }
             for(j=content.childNodes.length-1;j>=0;j--){
                 item=content.childNodes[j];
@@ -176,7 +176,7 @@
                     continue;
                 [].forEach.call(content.childNodes,function(item){
                     if(item.nodeType==3)curNum+=item.data.length;
-                    else if(/^(I|A|STRONG|B|FONT|P)$/.test(item.tagName))curNum+=(firefox?item.textContent.length:item.innerText.length);
+                    else if(/^(I|A|STRONG|B|FONT|P|DL|DD|H\d)$/.test(item.tagName))curNum+=(firefox?item.textContent.length:item.innerText.length);
                 });
             }
             if(curNum>largestNum){
@@ -237,7 +237,7 @@
         var aEles=document.querySelectorAll("a"),list=[];
         for(var i=0;i<aEles.length;i++){
             var aEle=aEles[i];
-            if(aEle.href && /^http/i.test(aEle.href) && /PART\b|Prologue|Chapter\s*\d+|第.+[章|节|回|卷|折|篇|幕|集]|^序$|序\s*言|序\s*章|前\s*言|引\s*言|引\s*子|摘\s*要|楔\s*子|后\s*记|附\s*言|结\s*语|[\d|〇|零|一|二|三|四|五|六|七|八|九|十|百|千|万|萬|-]+(、|）|\.)/i.test(aEle.innerText)){
+            if(aEle.href && /^http/i.test(aEle.href) && /PART\b|Prologue|分卷|Chapter\s*\d+|第.+[章|节|回|卷|折|篇|幕|集]|^序$|序\s*言|序\s*章|前\s*言|引\s*言|引\s*子|摘\s*要|楔\s*子|契\s*子|后\s*记|附\s*言|结\s*语|[\d|〇|零|一|二|三|四|五|六|七|八|九|十|百|千|万|萬|-]+(、|）|\.)/i.test(aEle.innerText)){
                 list.push(aEle);
             }
         }
