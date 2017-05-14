@@ -4,7 +4,7 @@
 // @name:zh-TW   懶人小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      1.23
+// @version      1.25
 // @description  Fetch and download main content on current page, provide special support for chinese novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取小說、論壇內容等並保存為TXT文檔
@@ -121,9 +121,12 @@
 
     function getPageContent(doc){
         if(!doc)return i18n.error;
+        [].forEach.call(doc.querySelectorAll("span,div"),function(item){
+            var thisStyle=doc.defaultView.getComputedStyle(item);
+            if(thisStyle && (thisStyle.display=="none"||thisStyle.fontSize=="0px"))
+                item.parentNode.removeChild(item);
+        });
         var i,j,k,rStr="",pageData=(doc.body?doc.body:doc).cloneNode(true),delList=[];
-        [].forEach.call(pageData.querySelectorAll("script,style,link,img,noscript"),function(item){delList.push(item);});
-        [].forEach.call(delList,function(item){item.parentNode.removeChild(item);});
         [].forEach.call(pageData.querySelectorAll("font.jammer"),function(item){
             item.parentNode.removeChild(item);
         });
@@ -133,10 +136,8 @@
                 item.parentNode.removeChild(item);
             });
         }
-        [].forEach.call(pageData.querySelectorAll("span"),function(item){
-            if(item.style && item.style.display=="none")
-                item.parentNode.removeChild(item);
-        });
+        [].forEach.call(pageData.querySelectorAll("script,style,link,img,noscript"),function(item){delList.push(item);});
+        [].forEach.call(delList,function(item){item.parentNode.removeChild(item);});
         var largestContent,contents=pageData.querySelectorAll("span,div,article,p,td"),largestNum=0;
         for(i=0;i<contents.length;i++){
             let content=contents[i],hasText=false,allSingle=true,item,curNum=0;
@@ -187,7 +188,7 @@
             }
         }
         if(!largestContent)return i18n.error;
-        var childlist=pageData.querySelectorAll(largestContent.tagName+(largestContent.className?"."+largestContent.className.replace(/(^\s*)|(\s*$)/g, '').replace(/\s+/g, '.'):""));
+        var childlist=pageData.querySelectorAll(largestContent.tagName);//+(largestContent.className?"."+largestContent.className.replace(/(^\s*)|(\s*$)/g, '').replace(/\s+/g, '.'):""));
         function getRightStr(ele, noTextEnable){
             let childNodes=ele.childNodes,cStr="\r\n",hasText=false;
             for(let j=0;j<childNodes.length;j++){
@@ -206,7 +207,7 @@
         for(i=0;i<childlist.length;i++){
             var child=childlist[i];
             if(getDepth(child)==getDepth(largestContent)){
-                if(largestContent.className && largestContent.className==child.className){
+                if((largestContent.className && largestContent.className==child.className)||largestContent.parentNode ==child.parentNode){
                     getRightStr(child, true);
                 }else {
                     getRightStr(child, false);
@@ -247,7 +248,7 @@
                     break;
                 }
             }
-            if(!has && aEle.href && /^http/i.test(aEle.href) && /PART\b|Prologue|分卷|Chapter\s*\d+|第.+[章|节|回|卷|折|篇|幕|集]|^序$|序\s*言|序\s*章|前\s*言|引\s*言|引\s*子|摘\s*要|楔\s*子|契\s*子|后\s*记|附\s*言|结\s*语|[\d|〇|零|一|二|三|四|五|六|七|八|九|十|百|千|万|萬|-]+(、|）|\.)/i.test(aEle.innerText)){
+            if(!has && aEle.href && /^http/i.test(aEle.href) && /PART\b|Prologue|-\d+|分卷|Chapter\s*\d+|第.+[章|节|回|卷|折|篇|幕|集]|^序$|序\s*言|序\s*章|前\s*言|引\s*言|引\s*子|摘\s*要|楔\s*子|契\s*子|后\s*记|附\s*言|结\s*语|[\d|〇|零|一|二|三|四|五|六|七|八|九|十|百|千|万|萬|-]+(、|）|\.)/i.test(aEle.innerText)){
                 list.push(aEle);
             }
         }
