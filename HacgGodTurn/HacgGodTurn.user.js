@@ -65,6 +65,7 @@
 // @include     http*://acgmoon.*
 // @include     http*://www.jiyue.*
 // @include     http*://www.moe-acg.*/*
+// @include     http*://huan.moe*
 // @include     http*://www.mygalgame.com/*
 // @include     http*://htai.*
 // @include     http*://gmgard.com/*
@@ -83,7 +84,7 @@
 // @include     http*://greasyfork.org/*/scripts/*
 // @include     http*://sleazyfork.org/*/forum/*discussion*
 // @include     http*://greasyfork.org/*/forum/*discussion*
-// @version     3.22.33
+// @version     3.22.35
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -362,6 +363,7 @@
                 name:"爱弹幕",
                 url:"http://www.idanmu.co/",
                 regex:/idanmu\./,
+                downloadUrl:/idanmu\..*\/download/,
                 offset:55,
                 articleSel:"section.card",
                 run:function(){
@@ -529,8 +531,8 @@
             },
             {
                 name:"萌幻之乡",
-                url:"https://www.moe-acg.us/",
-                regex:/moe-acg\./,
+                url:"https://huan.moe/",
+                regex:/moe-acg\.|huan\.moe/,
                 offset:55,
                 hideOd:true,
                 downloadUrl:/moe-acg\..*\/download/,
