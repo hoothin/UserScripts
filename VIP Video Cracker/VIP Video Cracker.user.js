@@ -2,7 +2,7 @@
 // @name         VIP视频破解
 // @name:en      VIP Video Cracker
 // @namespace    hoothin
-// @version      1.8.0
+// @version      1.8.1
 // @description  解析并破解各大视频站的VIP权限
 // @description:en  Crack VIP permissions of some chinese video sites
 // @author       hoothin
@@ -55,7 +55,7 @@
         {name:"眼睛会下雨(s)",url:"https://www.vipjiexi.com/yun.php?url=%s"},
         {name:"小海解析1(s)",url:"https://ckplaer.duapp.com/hai2.php?url=%s",title:"播放器似乎放在百度开发者平台"},
         {name:"小海解析2",url:"http://jx.ck921.com/hai2.php?url=%s",title:"和上面的用的应该是同样的服务器"},
-        {name:"资源帝",url:"www.ziyuand.cn/jx1/jx.php?url=%s"},
+        {name:"资源帝",url:"http://www.ziyuand.cn/jx1/jx.php?url=%s"},
         {name:"Relon",url:"http://yyygwz.com/index.php?url=%s"},
         {name:"SO视频",url:"http://parse.colaparse.cc/?url=%s"},
         {name:"5奇异",url:"http://www.jiexi.cx/5qiyi/?url=%s"},
