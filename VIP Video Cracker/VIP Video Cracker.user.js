@@ -2,7 +2,7 @@
 // @name         VIP视频破解
 // @name:en      VIP Video Cracker
 // @namespace    hoothin
-// @version      1.7.8
+// @version      1.8.0
 // @description  解析并破解各大视频站的VIP权限
 // @description:en  Crack VIP permissions of some chinese video sites
 // @author       hoothin
@@ -48,13 +48,14 @@
         {name:"47影视云",url:"https://api.47ks.com/webcloud/?v=%s",title:"首选"},
         {name:"无名小站",url:"http://www.wmxz.wang/video.php?url=%s",title:"次选"},
         {name:"石头解析(s)",url:"https://jiexi.071811.cc/jx.php?url=%s"},
-        {name:"爱看TV(s)",url:"https://aikan-tv.com/tong.php?url=%s"},
+        {name:"爱看TV(s)",url:"http://aikan-tv.com/?url=%s"},
         {name:"最小品(s)",url:"https://www.zuixiaopin.com/api/cloudVideo?url=%s"},
         {name:"妹儿云(s)",url:"https://www.yymeier.com/api.php?url=%s"},
         {name:"那片(s)",url:"https://jxapi.nepian.com/ckparse/?url=%s"},
         {name:"眼睛会下雨(s)",url:"https://www.vipjiexi.com/yun.php?url=%s"},
         {name:"小海解析1(s)",url:"https://ckplaer.duapp.com/hai2.php?url=%s",title:"播放器似乎放在百度开发者平台"},
         {name:"小海解析2",url:"http://jx.ck921.com/hai2.php?url=%s",title:"和上面的用的应该是同样的服务器"},
+        {name:"资源帝",url:"www.ziyuand.cn/jx1/jx.php?url=%s"},
         {name:"Relon",url:"http://yyygwz.com/index.php?url=%s"},
         {name:"SO视频",url:"http://parse.colaparse.cc/?url=%s"},
         {name:"5奇异",url:"http://www.jiexi.cx/5qiyi/?url=%s"},
@@ -235,6 +236,19 @@
                 }else if(location.hostname.indexOf("v.youku.com")!=-1){
                     if(vipVideoCrackEmbed)videoHeight="580px";
                 }else if(iqiyi){
+                    var plgcontainer=document.querySelector('[data-player-hook=plgcontainer]');
+                    var videoLoading=document.querySelector('[data-player-hook=videoLoading]');
+                    var isi=setInterval(function(){
+                        var jplayUnderFrame=document.querySelector('.J_play-underFrame');
+                        if(jplayUnderFrame){
+                            clearInterval(isi);
+                            var flashArea_paypop=document.querySelector('#flashArea_paypop');
+                            if(flashArea_paypop)flashArea_paypop.parentNode.parentNode.removeChild(flashArea_paypop.parentNode);
+                            jplayUnderFrame.parentNode.removeChild(jplayUnderFrame);
+                        }
+                    },500);
+                    if(plgcontainer)plgcontainer.parentNode.removeChild(plgcontainer);
+                    if(videoLoading)videoLoading.parentNode.removeChild(videoLoading);
                     document.querySelector('#widget-dramaseries').addEventListener('click', function(e){
                         var target=e.target.parentNode.tagName=="LI"?e.target.parentNode:(e.target.parentNode.parentNode.tagName=="LI"?e.target.parentNode.parentNode:e.target.parentNode.parentNode.parentNode);
                         if(target.tagName!="LI")return;
