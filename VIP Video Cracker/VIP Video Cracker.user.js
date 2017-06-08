@@ -2,7 +2,7 @@
 // @name         VIP视频破解
 // @name:en      VIP Video Cracker
 // @namespace    hoothin
-// @version      1.8.1
+// @version      1.8.2
 // @description  解析并破解各大视频站的VIP权限
 // @description:en  Crack VIP permissions of some chinese video sites
 // @author       hoothin
@@ -185,6 +185,17 @@
             canEmbed=true;
         }else if(location.protocol=="http:"){
             canEmbed=true;
+        }
+        var htmlVideo=document.querySelector("video");
+        if(htmlVideo){
+            var vi=setInterval(function(){
+                if(htmlVideo.src){
+                     setTimeout(function() {
+                         htmlVideo.click();
+                     },1000);
+                    clearInterval(vi);
+                }
+            },500);
         }
         if(canEmbed){
             iframe.width=videoWidth;
