@@ -2,7 +2,7 @@
 // @name         VIP视频破解
 // @name:en      VIP Video Cracker
 // @namespace    hoothin
-// @version      1.8.2
+// @version      1.8.3
 // @description  解析并破解各大视频站的VIP权限
 // @description:en  Crack VIP permissions of some chinese video sites
 // @author       hoothin
@@ -45,16 +45,16 @@
 (function() {
     'use strict';
     var cracks=[
-        {name:"47影视云",url:"https://api.47ks.com/webcloud/?v=%s",title:"首选"},
+        {name:"47影视云(s)",url:"https://api.47ks.com/webcloud/?v=%s",title:"首选"},
         {name:"无名小站",url:"http://www.wmxz.wang/video.php?url=%s",title:"次选"},
         {name:"石头解析(s)",url:"https://jiexi.071811.cc/jx.php?url=%s"},
-        {name:"爱看TV(s)",url:"http://aikan-tv.com/?url=%s"},
         {name:"最小品(s)",url:"https://www.zuixiaopin.com/api/cloudVideo?url=%s"},
         {name:"妹儿云(s)",url:"https://www.yymeier.com/api.php?url=%s"},
         {name:"那片(s)",url:"https://jxapi.nepian.com/ckparse/?url=%s"},
-        {name:"眼睛会下雨(s)",url:"https://www.vipjiexi.com/yun.php?url=%s"},
-        {name:"小海解析1(s)",url:"https://ckplaer.duapp.com/hai2.php?url=%s",title:"播放器似乎放在百度开发者平台"},
-        {name:"小海解析2",url:"http://jx.ck921.com/hai2.php?url=%s",title:"和上面的用的应该是同样的服务器"},
+        {name:"海播(s)",url:"https://www.0335haibo.com/tong.php?url=%s"},
+        {name:"眼睛会下雨",url:"http://www.vipjiexi.com/yun.php?url=%s",title:"域名改成海播了，https证书也没了"},
+        {name:"小海解析(s)",url:"https://ckplaer.duapp.com/hai2.php?url=%s",title:"播放器放在百度开发者平台"},
+        {name:"爱看TV",url:"http://aikan-tv.com/?url=%s"},
         {name:"资源帝",url:"http://www.ziyuand.cn/jx1/jx.php?url=%s"},
         {name:"旋风解析",url:"http://api.xfsub.com/index.php?url=%s"},
         {name:"Relon",url:"http://yyygwz.com/index.php?url=%s"},
