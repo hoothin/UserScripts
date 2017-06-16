@@ -28,6 +28,8 @@
 // @include     http*://hacg.tw/*
 // @include     http*://hacg.at/*
 // @include     http*://hacg.ch/*
+// @include     http*://llss.*
+// @include     http*://www.llss.*
 // @include     http*://www.acgpy.com/*
 // @include     http*://blog.reimu.net/*
 // @include     http*://pan.baidu.com/share/*
@@ -84,7 +86,7 @@
 // @include     http*://greasyfork.org/*/scripts/*
 // @include     http*://sleazyfork.org/*/forum/*discussion*
 // @include     http*://greasyfork.org/*/forum/*discussion*
-// @version     3.22.35
+// @version     3.22.36
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -131,7 +133,7 @@
             {
                 name:"琉璃神社",
                 url:"https://www.hacg.fi/wp/",
-                regex:/hacg\./,
+                regex:/hacg\.|llss\./,
                 run:function(){
                     var feiZao,feiZaos=document.querySelectorAll("p1"),i;
                     for(i=0;i<feiZaos.length;i++){
@@ -271,13 +273,6 @@
                     });
                     createBlockBtn();
                 }
-            },
-            {
-                name:"纯爱计划",
-                url:"https://sexacg.com/",
-                regex:/sexacg\./,
-                contentArea:'article',
-                commArea:'su-quote-inner'
             },
             {
                 name:"次元の圣光",
@@ -766,8 +761,8 @@
                     if(/www\.acgpy\.com\/login\d+\.html/.test(location.href)){
                         var date=new Date();
                         date.setTime(date.getTime()+14400*60*1000);
-                        //document.cookie="trade"+location.href.replace(/.*.com\/login(\d+)\..*/,"$1")+"=A32; expires="+date.toGMTString();
-                        document.cookie="trade0421=A32; expires="+date.toGMTString();
+                        document.cookie="trade"+location.href.replace(/.*.com\/login(\d+)\..*/,"$1")+"=A32; expires="+date.toGMTString();
+                        //document.cookie="trade0421=A32; expires="+date.toGMTString();
                         top.location='wpx';
                     }
                     var downBtn=document.querySelector("a.downbtn");
@@ -805,6 +800,13 @@
                 commArea:'commentlist',
                 offset:55,
                 articleSel:"article,.article-link>li"
+            },
+            {
+                name:"纯爱计划",
+                url:"https://sexacg.com/",
+                regex:/sexacg\./,
+                contentArea:'article',
+                commArea:'su-quote-inner'
             }
             /*{
                 name:"梦幻二次元",
