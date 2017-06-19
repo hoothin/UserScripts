@@ -2,7 +2,7 @@
 // @name         VIP视频破解
 // @name:en      VIP Video Cracker
 // @namespace    hoothin
-// @version      1.8.3
+// @version      1.8.5
 // @description  解析并破解各大视频站的VIP权限
 // @description:en  Crack VIP permissions of some chinese video sites
 // @author       hoothin
@@ -51,10 +51,14 @@
         {name:"最小品(s)",url:"https://www.zuixiaopin.com/api/cloudVideo?url=%s"},
         {name:"妹儿云(s)",url:"https://www.yymeier.com/api.php?url=%s"},
         {name:"那片(s)",url:"https://jxapi.nepian.com/ckparse/?url=%s"},
+        {name:"FlvSP(s)",url:"https://api.flvsp.com/?url=%s"},
         {name:"海播(s)",url:"https://www.0335haibo.com/tong.php?url=%s"},
         {name:"眼睛会下雨",url:"http://www.vipjiexi.com/yun.php?url=%s",title:"域名改成海播了，https证书也没了"},
         {name:"小海解析(s)",url:"https://ckplaer.duapp.com/hai2.php?url=%s",title:"播放器放在百度开发者平台"},
         {name:"爱看TV",url:"http://aikan-tv.com/?url=%s"},
+        {name:"噗噗电影",url:"http://pupudy.com/webcloud/index.php?url=%s"},
+        {name:"米沃",url:"http://jx.mihatv.com/miwo1.php?url=%s"},
+        {name:"速度牛",url:"http://api.wlzhan.com/tong/?url=%s"},
         {name:"资源帝",url:"http://www.ziyuand.cn/jx1/jx.php?url=%s"},
         {name:"旋风解析",url:"http://api.xfsub.com/index.php?url=%s"},
         {name:"Relon",url:"http://yyygwz.com/index.php?url=%s"},
@@ -247,6 +251,13 @@
                     }
                 }else if(location.hostname.indexOf("v.youku.com")!=-1){
                     if(vipVideoCrackEmbed)videoHeight="580px";
+                }else if(location.hostname.indexOf("le.com")!=-1){
+                    document.querySelector('.juji_cnt').addEventListener('click', function(e){
+                        if(!vipVideoCrackJump)return;
+                        var target=e.target;
+                        if(target.tagName!="A")return;
+                        location.href="http://www.le.com/ptv/vplay/"+target.getAttribute("data-vid")+".html";
+                    });
                 }else if(iqiyi){
                     var plgcontainer=document.querySelector('[data-player-hook=plgcontainer]');
                     var videoLoading=document.querySelector('[data-player-hook=videoLoading]');
@@ -262,6 +273,7 @@
                     if(plgcontainer)plgcontainer.parentNode.removeChild(plgcontainer);
                     if(videoLoading)videoLoading.parentNode.removeChild(videoLoading);
                     document.querySelector('#widget-dramaseries').addEventListener('click', function(e){
+                        if(!vipVideoCrackJump)return;
                         var target=e.target.parentNode.tagName=="LI"?e.target.parentNode:(e.target.parentNode.parentNode.tagName=="LI"?e.target.parentNode.parentNode:e.target.parentNode.parentNode.parentNode);
                         if(target.tagName!="LI")return;
                         GM_xmlhttpRequest({

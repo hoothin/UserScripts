@@ -82,11 +82,12 @@
 // @include     http*://www.xiu.moe/*
 // @include     http*://www.cld1.net/*
 // @include     http*://sjhs*.*
+// @include     http*://www.dakashangche.*
 // @include     http*://sleazyfork.org/*/scripts/*
 // @include     http*://greasyfork.org/*/scripts/*
 // @include     http*://sleazyfork.org/*/forum/*discussion*
 // @include     http*://greasyfork.org/*/forum/*discussion*
-// @version     3.22.36
+// @version     3.22.37
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -379,15 +380,15 @@
             },
             {
                 name:"司机会所",
-                url:"http://sjhs01.ml",
-                regex:/sijihuisuo\.club/,
-                innerPage:/sijihuisuo\.club\/(sj\/\d|\?p=\d)/,
+                url:"http://dakashangche.com",
+                regex:/sijihuisuo\.club|dakashangche\./,
+                innerPage:/\/(sj\/\d|\?p=\d)/,
                 offset:115,
-                contentArea:".ds-comments",
+                contentArea:"#commentlist-container",
                 run:function(){
                     if(curSite.innerPage.test(location.href)){
                         t=window.setInterval(function(){
-                            if(document.querySelector(".ds-comments")){
+                            if(document.querySelector(".commentlist")){
                                 clearInterval(t);
                                 process();
                             }
