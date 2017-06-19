@@ -794,6 +794,13 @@
                 }
             },
             {
+                name:"纯爱计划",
+                url:"https://sexacg.com/",
+                regex:/sexacg\./,
+                contentArea:'article',
+                commArea:'su-quote-inner'
+            }
+            /*{
                 name:"咻咻动漫",
                 url:"http://www.xiu.moe/",
                 regex:/xiu\.moe|cld1\.net/,
@@ -803,13 +810,6 @@
                 articleSel:"article,.article-link>li"
             },
             {
-                name:"纯爱计划",
-                url:"https://sexacg.com/",
-                regex:/sexacg\./,
-                contentArea:'article',
-                commArea:'su-quote-inner'
-            }
-            /*{
                 name:"梦幻二次元",
                 url:"http://www.mhecy.com/",
                 regex:/mhecy\./,
