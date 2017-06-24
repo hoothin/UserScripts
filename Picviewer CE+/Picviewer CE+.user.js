@@ -563,12 +563,6 @@
              getImage: function() {
                  return this.src.replace(/\/s\d+x\d+\//i,"/");
              }
-            },
-            {name: "s9tu",
-             url: /s9tu\.com/,
-             getImage: function() {
-                 return this.src.replace(/\.md(\.[^\.]+)$/i,"$1");
-             }
             }
         ];
 
@@ -590,6 +584,8 @@
                     newsrc=oldsrc.replace(/(gravatar\.com\/avatar\/.*[\?&]s=).*/,"$1500");
                 }else if(/uc_server\/avatar\.php\?uid=\d+&size=.*/.test(oldsrc)){
                     newsrc=oldsrc.replace(/(uc_server\/avatar\.php\?uid=\d+&size=).*/,"$1big");
+                }else if(/\.md\.[^\.]+$/.test(oldsrc)){
+                    newsrc=oldsrc.replace(/\.md(\.[^\.]+)$/i,"$1");
                 }
                 return oldsrc != newsrc ? newsrc : null;
             }
