@@ -87,7 +87,7 @@
 // @include     http*://greasyfork.org/*/scripts/*
 // @include     http*://sleazyfork.org/*/forum/*discussion*
 // @include     http*://greasyfork.org/*/forum/*discussion*
-// @version     3.22.37
+// @version     3.22.38
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -291,9 +291,9 @@
                 regex:/acg\.tf/,
                 offset:60,
                 articleSel:".magazine-list>li,.article_list>li",
-                contentArea:".entry",
+                contentArea:".entry,.amp-wp-article-content>.amp-wp-content",
                 run:function(){
-                    var content=document.querySelector('.entry');
+                    var content=document.querySelector('.entry,.amp-wp-article-content>.amp-wp-content');
                     if(content){
                         var plist = content.querySelectorAll("p");
                         var key = "";

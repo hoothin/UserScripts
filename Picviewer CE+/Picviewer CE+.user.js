@@ -7,7 +7,7 @@
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
 // @version        2017.6.11.1
-// @created        2011-6-15
+// @created        2011-6-24
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
 // @connect       www.google.com
@@ -152,7 +152,7 @@
              //鼠标左键点击直接打开..（这个只是当高级规则的getImage()返回图片的时候生效）
              // 无效？只有少数情况下有作用？
              clikToOpen:{
-                 enabled:true,
+                 enabled:false,
                  preventDefault:true,//是否尝试阻止点击的默认行为（比如如果是你点的是一个链接，默认行为是打开这个链接，如果是true，js会尝试阻止链接的打开(如果想临时打开这个链接，请使用右键的打开命令)）
                  type:'actual',//默认的打开方式: 'actual'(弹出,原始图片) 'magnifier'(放大镜) 'current'(弹出,当前图片)
              },
@@ -562,6 +562,12 @@
              url: /\.instagram\.com/,
              getImage: function() {
                  return this.src.replace(/\/s\d+x\d+\//i,"/");
+             }
+            },
+            {name: "s9tu",
+             url: /s9tu\.com/,
+             getImage: function() {
+                 return this.src.replace(/\.md(\.[^\.]+)$/i,"$1");
              }
             }
         ];
@@ -7243,6 +7249,7 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                 };
                 var targetPosi=getContentClientRect(this.data.img);
                 var windowSize=getWindowSize();
+                var img=this.data.img;
 
                 var floatBarPosi=prefs.floatBar.position.toLowerCase().split(/\s+/);
 
@@ -7289,6 +7296,10 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                             offsetX=0;
                         };
                         fbs.left=left + offsetX + 'px';
+                    },
+                    center:function(){
+                        var left=targetPosi.left + scrolled.x + offsetX;
+                        fbs.left=left + img.width/2 + 'px';
                     },
                 };
 
@@ -8213,7 +8224,9 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                         'top left': '图片左上角',
                         'top right': '图片右上角',
                         'bottom right': '图片右下角',
-                        'bottom left': '图片左下角'
+                        'bottom left': '图片左下角',
+                        'top center': '图片正上方',
+                        'bottom center': '图片正下方'
                     },
                     "default": prefs.floatBar.position,
                     section: ['浮动工具栏'],
