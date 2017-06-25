@@ -2,7 +2,7 @@
 // @name         VIP视频破解
 // @name:en      VIP Video Cracker
 // @namespace    hoothin
-// @version      1.8.5
+// @version      1.8.6
 // @description  解析并破解各大视频站的VIP权限
 // @description:en  Crack VIP permissions of some chinese video sites
 // @author       hoothin
@@ -203,6 +203,21 @@
             },500);
         }
         if(canEmbed){
+            if(iqiyi){
+                var plgcontainer=document.querySelector('[data-player-hook=plgcontainer]');
+                var videoLoading=document.querySelector('[data-player-hook=videoLoading]');
+                var isi=setInterval(function(){
+                    var jplayUnderFrame=document.querySelector('.J_play-underFrame');
+                    if(jplayUnderFrame){
+                        clearInterval(isi);
+                        var flashArea_paypop=document.querySelector('#flashArea_paypop');
+                        if(flashArea_paypop)flashArea_paypop.parentNode.parentNode.removeChild(flashArea_paypop.parentNode);
+                        jplayUnderFrame.parentNode.removeChild(jplayUnderFrame);
+                    }
+                },500);
+                if(plgcontainer)plgcontainer.parentNode.removeChild(plgcontainer);
+                if(videoLoading)videoLoading.parentNode.removeChild(videoLoading);
+            }
             iframe.width=videoWidth;
             iframe.height=videoHeight;
             iframe.src=url;
@@ -259,19 +274,6 @@
                         location.href="http://www.le.com/ptv/vplay/"+target.getAttribute("data-vid")+".html";
                     });
                 }else if(iqiyi){
-                    var plgcontainer=document.querySelector('[data-player-hook=plgcontainer]');
-                    var videoLoading=document.querySelector('[data-player-hook=videoLoading]');
-                    var isi=setInterval(function(){
-                        var jplayUnderFrame=document.querySelector('.J_play-underFrame');
-                        if(jplayUnderFrame){
-                            clearInterval(isi);
-                            var flashArea_paypop=document.querySelector('#flashArea_paypop');
-                            if(flashArea_paypop)flashArea_paypop.parentNode.parentNode.removeChild(flashArea_paypop.parentNode);
-                            jplayUnderFrame.parentNode.removeChild(jplayUnderFrame);
-                        }
-                    },500);
-                    if(plgcontainer)plgcontainer.parentNode.removeChild(plgcontainer);
-                    if(videoLoading)videoLoading.parentNode.removeChild(videoLoading);
                     document.querySelector('#widget-dramaseries').addEventListener('click', function(e){
                         if(!vipVideoCrackJump)return;
                         var target=e.target.parentNode.tagName=="LI"?e.target.parentNode:(e.target.parentNode.parentNode.tagName=="LI"?e.target.parentNode.parentNode:e.target.parentNode.parentNode.parentNode);
