@@ -588,6 +588,8 @@
                     newsrc=oldsrc.replace(/\.md(\.[^\.]+)$/i,"$1");
                 }else if(/\.126\.net.*\/\d+\.\d+x\d+\.\d+\.[^\.]+$/.test(oldsrc)){
                     newsrc=oldsrc.replace(/\/\d+\.\d+x\d+\.\d+\.([^\.]+)$/i,"/5.5000x5000.100.$1");
+                }else if(/\.ytimg\.com/.test(oldsrc)){
+                    newsrc=oldsrc.replace(/\?.*$/i,"");
                 }
                 return oldsrc != newsrc ? newsrc : null;
             }
