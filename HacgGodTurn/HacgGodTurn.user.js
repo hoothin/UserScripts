@@ -87,7 +87,7 @@
 // @include     http*://greasyfork.org/*/scripts/*
 // @include     http*://sleazyfork.org/*/forum/*discussion*
 // @include     http*://greasyfork.org/*/forum/*discussion*
-// @version     3.22.38
+// @version     3.22.39
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -95,7 +95,7 @@
 // @grant       GM_getValue
 // @grant       unsafeWindow
 // @run-at      document-end
-// @require     https://greasyfork.org/scripts/23522/code/od.js?version=190957
+// @require     https://greasyfork.org/scripts/23522/code/od.js?version=203739
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
 // @updateURL   https://greasyfork.org/scripts/23316/code/HacgGodTurn.user.js
@@ -1247,7 +1247,6 @@
             for (i = 0, k = link.length; i < k; i++) {
                 let target=link[i];
                 target.addEventListener("mousedown", function(){
-                    console.log(111);
                     if(/baidu.com/i.test(target.href)&&!/(?:eyun|tieba)\.baidu\.com/i.test(target.href)&&!/#/i.test(target.href)){
                         if(/\/storage-download/.test(location.href)){
                             var pass=target.parentNode.parentNode.querySelector('input.pwd');
