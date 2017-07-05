@@ -2,7 +2,7 @@
 // @name         VIP视频破解
 // @name:en      VIP Video Cracker
 // @namespace    hoothin
-// @version      1.8.6
+// @version      1.8.7
 // @description  解析并破解各大视频站的VIP权限
 // @description:en  Crack VIP permissions of some chinese video sites
 // @author       hoothin
@@ -52,7 +52,7 @@
         {name:"妹儿云(s)",url:"https://www.yymeier.com/api.php?url=%s"},
         {name:"那片(s)",url:"https://jxapi.nepian.com/ckparse/?url=%s"},
         {name:"FlvSP(s)",url:"https://api.flvsp.com/?url=%s"},
-        {name:"海播(s)",url:"https://www.0335haibo.com/tong.php?url=%s"},
+        {name:"海播",url:"http://www.0335haibo.com/tong.php?url=%s"},
         {name:"眼睛会下雨",url:"http://www.vipjiexi.com/yun.php?url=%s",title:"域名改成海播了，https证书也没了"},
         {name:"小海解析(s)",url:"https://ckplaer.duapp.com/hai2.php?url=%s",title:"播放器放在百度开发者平台"},
         {name:"爱看TV",url:"http://aikan-tv.com/?url=%s"},
@@ -67,7 +67,7 @@
         {name:"Moondown",url:"http://moon.moondown.net/?url=%s"},
         {name:"选片网",url:"http://jx.xuanpianwang.com/parse?url=%s"},
         {name:"云上",url:"http://www.ou522.cn/t2/1.php?url=%s"},
-        {name:"强强卷",url:"http://000o.cc/jx/ty.php?url==%s"},
+        {name:"强强卷",url:"http://000o.cc/jx/ty.php?url=%s"},
         {name:"Lewei369",url:"http://s1y2.com/?url=%s"},
         {name:"紫狐云",url:"http://yun.zihu.tv/api.php?url=%s"},
         {name:"土豪网",url:"http://www.tuhao13.com/yunparse/index.php?url=%s"},
