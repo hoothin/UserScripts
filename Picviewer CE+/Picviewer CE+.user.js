@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2017.6.25.1
+// @version        2017.7.12.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -1752,7 +1752,7 @@
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="openInNewWindow" title="新窗口打开图片">新窗口打开</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="scrollIntoView" title="滚动到当前图片所在的位置">定位到图片</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="enterCollection" title="查看所有收藏的图片">查看收藏</span>'+
-                    '<span class="pv-gallery-head-command-drop-list-item" data-command="exportImages" title="导出所有图片的链接到新窗口">导出图片</span>'+
+                    '<span class="pv-gallery-head-command-drop-list-item" data-command="exportImages" title="导出所有图片到新窗口">导出图片</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="copyImages" title="复制所有大图的地址">复制图片</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" title="最后几张图片时，滚动主窗口到最底部，然后自动加载新的图片">'+
                     '<input type="checkbox"  data-command="scrollToEndAndReload"/>'+
@@ -3759,7 +3759,7 @@ display:none !important;\
             exportImages: function () {  // 导出所有图片到新窗口
                 var nodes = document.querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]');
                 var arr = [].map.call(nodes, function(node){
-                    return '<div><img src=' + node.dataset.src + ' /></div>'
+                    return '<div onclick="this.classList.toggle(\'select\')"><img src=' + node.dataset.src + ' /></div>'
                 });
 
                 var title = document.title;
@@ -3775,12 +3775,14 @@ display:none !important;\
 .gridBig{margin: 0px;}\
 .gridBig>div { float: left;margin: 0px 0px 1px 1px;}\
 .gridBig>div>img { max-width: 100%; }\
+.select{box-shadow: 0px 0px 5px 3px rgb(255, 0, 0);}\
 </style>\
 </head>\
 <body class="'+prefs.gallery.exportType+'">\
 <p>【图片标题】：' + title + '</p>\
-<p>【图片数量】：' + nodes.length + ' <select onchange="document.body.className=this.options[this.options.selectedIndex].value"><option value="grid" '+(prefs.gallery.exportType=="grid"?"selected='selected'":"")+'>平铺排序</option><option value="gridBig" '+(prefs.gallery.exportType=="gridBig"?"selected='selected'":"")+'>原图平铺</option><option value="list" '+(prefs.gallery.exportType=="list"?"selected='selected'":"")+'>列表排序</option></select></p>\
-';
+<p>【图片数量】：' + nodes.length + ' <select onchange="document.body.className=this.options[this.options.selectedIndex].value"><option value="grid" '+(prefs.gallery.exportType=="grid"?"selected='selected'":"")+'>平铺排序</option><option value="gridBig" '+(prefs.gallery.exportType=="gridBig"?"selected='selected'":"")+'>原图平铺</option><option value="list" '+(prefs.gallery.exportType=="list"?"selected='selected'":"")+'>列表排序</option> </select>\
+<input type="button" value="导出图片链接" onclick="var imgStr=\'\',selList=document.querySelectorAll(\'.select>img\');if(selList.length==0)[].forEach.call(document.querySelectorAll(\'img\'),function(i){imgStr+=i.src+\' \\n\'});else{[].forEach.call(selList,function(i){imgStr+=i.src+\' \\n\'});}window.prompt(\'Ctrl+C复制图片链接\',imgStr);">\
+</p>';
 
                 html += arr.join('\n') + '</body>'
                 GM_openInTab('data:text/html;charset=utf-8,' + encodeURIComponent(html));
