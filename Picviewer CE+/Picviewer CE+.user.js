@@ -3759,7 +3759,8 @@ display:none !important;\
             exportImages: function () {  // 导出所有图片到新窗口
                 var nodes = document.querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]');
                 var arr = [].map.call(nodes, function(node){
-                    return '<div onclick="this.classList.toggle(\'select\')"><img src=' + node.dataset.src + ' /></div>'
+                    if(unsafeWindow.getComputedStyle(node).display=="none")return "";
+                    else return '<div onclick="this.classList.toggle(\'select\')"><img src=' + node.dataset.src + ' /></div>'
                 });
 
                 var title = document.title;
