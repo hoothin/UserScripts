@@ -8468,7 +8468,7 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                     "default": prefs.gallery.exportType,
                 },
                 'gallery.loadAll': {
-                    label: '加载更多图片时自动处理至尾页',
+                    label: '加载更多图片时自动处理全部页',
                     type: 'checkbox',
                     "default": prefs.gallery.loadAll,
                     title: '若页数过多可能影响体验'
