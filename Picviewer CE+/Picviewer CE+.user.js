@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2017.7.25.1
+// @version        2017.7.25.2
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -574,6 +574,18 @@
              url: /baike\.baidu\.com/,
              getImage: function() {
                  return this.src.replace(/.*bdstatic\.com.*\/([^\/]+)\.jpg/i,"http://imgsrc.baidu.com/baike/pic/item/$1.jpg");
+             }
+            },
+            {name: "nvshens",
+             url: /nvshens\.com|onvshen\.com/,
+             getImage: function() {
+                 return this.src.replace(/(\img\.onvshen\.com.*)(?:thumb\/|_s)(.*)/i,"$1$2");
+             }
+            },
+            {name: "24meitu",
+             url: /24meitu\.com|25meinv\.com|aisimeinv\.com|24tupian\.com|24meinv\.me/,
+             getImage: function() {
+                 return this.src.replace(/\/m([^\/]+)$/i,"/$1");
              }
             }
         ];
@@ -2507,7 +2519,7 @@ padding-left:24px;">'+shareItem.name+'</span>');
                     var target=e.target;
                     e.preventDefault();
                     if(eleMaps['sidebar-container'].contains(target)){//缩略图区滚动滚轮翻图片
-                        var distance=self.thumbSpanOuterSize/3;
+                        var distance=self.thumbSpanOuterSize;
 
                         if(e.deltaY<0 || e.deltaX<0){//向上滚
                             distance=-distance;
@@ -3494,12 +3506,85 @@ padding-left:24px;">'+shareItem.name+'</span>');
                 return absolute_regex.test(src) ? src : ((src.charAt(0) == "/" ? root_domain : root_page) + src);
             },
             completePages:[],
-            nextPage:function(){
+            prePage:function(){
                 var pageObj=this.getPage(),self=this,textSpan=this.eleMaps['head-command-nextPage'].querySelector("span");
                 textSpan.innerHTML="正在加载";
                 var loadOver=function(){
                     textSpan.innerHTML="<font color='red'>加载完毕</font>";
                     setTimeout(function(){textSpan.innerHTML="加载更多";},1500);
+                };
+                if(!pageObj.pre){
+                    loadOver();
+                    return;
+                }
+                var preUrl=pageObj.pre;
+                if(preUrl.tagName!="A"){
+                    var childA=preUrl.querySelector("a");
+                    if(childA){
+                        preUrl=childA;
+                    }else{
+                        while(preUrl=preUrl.parentElement){
+                            if(preUrl.nodeName=='A'){
+                                break;
+                            }
+                        }
+                        if(!preUrl)return;
+                    }
+                }
+                var href=preUrl.getAttribute("href");
+                if(self.completePages.indexOf(href)!=-1){
+                    loadOver();
+                    return;
+                }else{
+                    self.completePages.push(href);
+                }
+                GM_xmlhttpRequest({
+                    method: 'GET',
+                    overrideMimeType:"text/html;charset="+document.charset,
+                    url: self.canonicalUri(href),
+                    onload: function(d) {
+                        let html=document.implementation.createHTMLDocument('');
+                        html.documentElement.innerHTML = d.responseText;
+                        self.curPage=html;
+                        let imgs=html.querySelectorAll('img');
+                        var container = document.querySelector('.pv-gallery-container'),
+                            preloadContainer = document.querySelector('.pv-gallery-preloaded-img-container');
+                        imgs = Array.prototype.slice.call(imgs).filter(function(img){
+                            return !(container.contains(img) || preloadContainer.contains(img));
+                        });
+                        imgs.forEach(function(img) {
+                            var isrc=img.getAttribute("src");
+                            var nimg = new Image();
+                            nimg.src = isrc;
+                            nimg.onload=function(){
+                                if (self._dataCache[this.src]) return;
+                                var result = findPic(this);
+                                if (result) {
+                                    self.data.push(result);
+                                    self._appendThumbSpans([result]);
+                                    self.loadThumb();
+                                }
+                                self._dataCache[this.src] = true;
+                            };
+                        });
+                        if(prefs.gallery.loadAll)self.prePage();
+                        else loadOver();
+                    },
+                    onerror: function(e) {
+                    }
+                });
+            },
+            nextPage:function(){
+                var pageObj=this.getPage(),self=this,textSpan=this.eleMaps['head-command-nextPage'].querySelector("span");
+                textSpan.innerHTML="正在加载";
+                var loadOver=function(){
+                    if(prefs.gallery.loadAll){
+                        self.curPage=document;
+                        self.prePage();
+                    }else{
+                        textSpan.innerHTML="<font color='red'>加载完毕</font>";
+                        setTimeout(function(){textSpan.innerHTML="加载更多";},1500);
+                    }
                 };
                 if(!pageObj.next){
                     loadOver();
