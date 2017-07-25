@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2017.7.12.1
+// @version        2017.7.25.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -525,7 +525,7 @@
             {name: "汽车之家",
              url: /\.autohome\.com\.cn/,
              getImage: function() {
-                 return this.src.replace(/(\?imageView.*|\d+x\d+_\d+_)/,"");
+                 return this.src.replace(/(\?imageView.*|\d+x\d+_\d+_|f_m_|t_|s_)/,"");
              }
             },
             {name: "易车",
@@ -546,6 +546,12 @@
                  return this.src.replace(/_\d+x\d+\.jpg$/i,".jpg");
              }
             },
+            {name: "新浪汽车",
+             url: /\.auto\.sina\.com\.cn/,
+             getImage: function() {
+                 return this.src.replace(/_\d+\.jpg$/i,"_src.jpg");
+             }
+            },
             {name: "greasyfork",
              url: /(greasyfork|sleazyfork)\.org/,
              getImage: function() {
@@ -562,6 +568,12 @@
              url: /\.instagram\.com/,
              getImage: function() {
                  return this.src.replace(/\/s\d+x\d+\//i,"/");
+             }
+            },
+            {name: "百度百科",
+             url: /baike\.baidu\.com/,
+             getImage: function() {
+                 return this.src.replace(/.*bdstatic\.com.*\/([^\/]+)\.jpg/i,"http://imgsrc.baidu.com/baike/pic/item/$1.jpg");
              }
             }
         ];
@@ -3781,7 +3793,7 @@ display:none !important;\
 </head>\
 <body class="'+prefs.gallery.exportType+'">\
 <p>【图片标题】：' + title + '</p>\
-<p>【图片数量】：' + nodes.length + ' <select onchange="document.body.className=this.options[this.options.selectedIndex].value"><option value="grid" '+(prefs.gallery.exportType=="grid"?"selected='selected'":"")+'>平铺排序</option><option value="gridBig" '+(prefs.gallery.exportType=="gridBig"?"selected='selected'":"")+'>原图平铺</option><option value="list" '+(prefs.gallery.exportType=="list"?"selected='selected'":"")+'>列表排序</option> </select>\
+<p>【图片数量】：' + nodes.length + ' <select onchange="document.body.className=this.options[this.options.selectedIndex].value"><option value="grid" '+(prefs.gallery.exportType=="grid"?"selected='selected'":"")+'>平铺排序</option><option value="gridBig" '+(prefs.gallery.exportType=="gridBig"?"selected='selected'":"")+'>原图平铺</option><option value="list" '+(prefs.gallery.exportType=="list"?"selected='selected'":"")+'>列表排序</option> </select> \
 <input type="button" value="导出图片链接" onclick="var imgStr=\'\',selList=document.querySelectorAll(\'.select>img\');if(selList.length==0)[].forEach.call(document.querySelectorAll(\'img\'),function(i){imgStr+=i.src+\' \\n\'});else{[].forEach.call(selList,function(i){imgStr+=i.src+\' \\n\'});}window.prompt(\'Ctrl+C复制图片链接\',imgStr);">\
 </p>';
 
