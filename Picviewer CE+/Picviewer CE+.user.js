@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2017.7.26.1
+// @version        2017.7.26.2
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -3434,6 +3434,10 @@ padding-left:24px;">'+shareItem.name+'</span>');
             },
             curPage:document,
             getPage:function(){
+                var pageNum=0;
+                if(/[_\-]\d+(\.html)?$/.test(this.href)){
+                    pageNum=this.href.replace(/.*[\-_](\d+)(\.html)?$/,"$1");
+                }
                 var curPage=this.curPage;
                 let pre=curPage.querySelector("a.prev");
                 let next=curPage.querySelector("a.next");
@@ -3461,6 +3465,12 @@ padding-left:24px;">'+shareItem.name+'</span>');
                             if(!pret){
                                 if(aTag.innerHTML=="«"){
                                     pret=aTag;
+                                }else if(pageNum==1){
+                                    if(aTag.getAttribute("href") && aTag.getAttribute("href").indexOf(this.href.replace(/.*\/([^\/]+)$/,"$1").replace(/[_-]\d+/,""))!=-1){
+                                       pret=aTag;
+                                    }
+                                }else if(aTag.getAttribute("href") && aTag.getAttribute("href").replace(/.*[\-_](\d+)(\.html)?$/,"$1")==pageNum-1){
+                                    pret=aTag;
                                 }
                             }
                         }
@@ -3484,6 +3494,8 @@ padding-left:24px;">'+shareItem.name+'</span>');
                             if(!nextt){
                                 if(aTag.innerHTML=="»"){
                                     nextt=aTag;
+                                }else if(aTag.getAttribute("href").replace(/.*[\-_](\d+)(\.html)?$/,"$1")==parseInt(pageNum)+1){
+                                    nextt=aTag;
                                 }
                             }
                         }
@@ -3504,15 +3516,17 @@ padding-left:24px;">'+shareItem.name+'</span>');
                 var root_page = /^[^?#]*\//.exec(location.href)[0],
                     root_domain = /^\w+\:\/\/\/?[^\/]+/.exec(root_page)[0],
                     absolute_regex = /^\w+\:\/\//;
+                src=src.replace(/\.\//,"");
                 if (/^\/\/\/?/.test(src)){
                     src = location.protocol + src;
                 }
                 else if (!absolute_regex.test(src) && src.charAt(0) != "/"){
                     src = (base_path || "") + src;
                 }
-                return absolute_regex.test(src) ? src : ((src.charAt(0) == "/" ? root_domain : root_page) + src);
+                return (absolute_regex.test(src) ? src : ((src.charAt(0) == "/" ? root_domain : root_page) + src));
             },
             completePages:[],
+            href:location.href,
             prePage:function(){
                 var pageObj=this.getPage(),self=this,textSpan=this.eleMaps['head-command-nextPage'].querySelector("span");
                 textSpan.innerHTML="正在加载";
@@ -3545,10 +3559,11 @@ padding-left:24px;">'+shareItem.name+'</span>');
                 }else{
                     self.completePages.push(href);
                 }
+                self.href=self.canonicalUri(href);
                 GM_xmlhttpRequest({
                     method: 'GET',
                     overrideMimeType:"text/html;charset="+document.charset,
-                    url: self.canonicalUri(href),
+                    url: self.href,
                     onload: function(d) {
                         let html=document.implementation.createHTMLDocument('');
                         html.documentElement.innerHTML = d.responseText;
@@ -3618,10 +3633,11 @@ padding-left:24px;">'+shareItem.name+'</span>');
                 }else{
                     self.completePages.push(href);
                 }
+                self.href=self.canonicalUri(href);
                 GM_xmlhttpRequest({
                     method: 'GET',
                     overrideMimeType:"text/html;charset="+document.charset,
-                    url: self.canonicalUri(href),
+                    url: self.href,
                     onload: function(d) {
                         let html=document.implementation.createHTMLDocument('');
                         html.documentElement.innerHTML = d.responseText;
