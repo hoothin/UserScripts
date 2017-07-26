@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2017.7.25.2
+// @version        2017.7.26.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -7698,6 +7698,19 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                 if(img) return {url:img.src, node:img, rect:rect(img), distinct:true};
             }
 
+            function decodeURIComponentEx(uriComponent){
+                if(!uriComponent){
+                    return  uriComponent;
+                }
+                var ret;
+                try{
+                    ret = decodeURIComponent(uriComponent);
+                }catch(ex){
+                    ret = unescape(uriComponent);
+                }
+                return ret;
+            };
+
             function findInfo(url, node, noHtml, skipHost) {
                 for(var i = 0, len = hosts.length, tn = tag(node), h, m, html, urls, URL, http; i < len && (h = hosts[i]); i++) {
                     if(h.e && !matches(node, h.e) || h == skipHost) continue;
@@ -7718,10 +7731,10 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                     }
                     if(!m || tn == 'IMG' && !('s' in h)) continue;
                     if('s' in h) {
-                        urls = (Array.isArray(h.s) ? h.s : [h.s]).map(function(s) { if(typeof s == 'string') return decodeURIComponent(replace(s, m, h.r, http)); if(typeof s == 'function') return s(m, node); return s; });
+                        urls = (Array.isArray(h.s) ? h.s : [h.s]).map(function(s) { if(typeof s == 'string') return decodeURIComponentEx(replace(s, m, h.r, http)); if(typeof s == 'function') return s(m, node); return s; });
                         if(Array.isArray(urls[0])) urls = urls[0];
                         if(urls[0] === false) continue;
-                        urls = urls.map(function(u) { return u ? decodeURIComponent(u) : u; });
+                        urls = urls.map(function(u) { return u ? decodeURIComponentEx(u) : u; });
                     } else {
                         urls = [m.input];
                     }
@@ -8141,7 +8154,7 @@ background-image:url("'+ prefs.icons.magnifier +'");\
 
             var target = e.target;
 
-            if (!target || target.classList.contains('pv-pic-ignored')) {
+            if (!target || !target.classList || target.classList.contains('pv-pic-ignored')) {
                 return;
             }
 
