@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2017.7.26.2
+// @version        2017.7.27.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -3525,7 +3525,7 @@ padding-left:24px;">'+shareItem.name+'</span>');
                 }
                 return (absolute_regex.test(src) ? src : ((src.charAt(0) == "/" ? root_domain : root_page) + src));
             },
-            completePages:[],
+            completePages:[location.href],
             href:location.href,
             prePage:function(){
                 var pageObj=this.getPage(),self=this,textSpan=this.eleMaps['head-command-nextPage'].querySelector("span");
@@ -3602,6 +3602,7 @@ padding-left:24px;">'+shareItem.name+'</span>');
                 var loadOver=function(){
                     if(prefs.gallery.loadAll){
                         self.curPage=document;
+                        self.href=location.href;
                         self.prePage();
                     }else{
                         textSpan.innerHTML="<font color='red'>加载完毕</font>";
