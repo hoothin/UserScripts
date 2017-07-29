@@ -8,7 +8,7 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdn.jsdelivr.net/jquery/1.7.2/jquery.min.js
 // @require      https://cdn.jsdelivr.net/hi-base64/0.2.0/base64.min.js
-// @version      1.5.4
+// @version      1.5.5
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -37,7 +37,7 @@
             bgColor:"ffffff",
             canMul:true,
             bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAABjFBMVEX////7+/v+/v/8/Pwyf/wzc/w0bvza5f4xffz5+//0+P8ybPz8/f4yevw0cPwza/z39/cwe/UxdfzSPyr4+v/2+f/m7/53nv0vf/wvce9pof1tlPwxf/gzfPYwePPp8f7Z5/7S4v7P4P7L3f7I2f2Gtf2Rr/1hkP0yd/1FiPwygfxAdPxspftYkvUtc/Dg6f7C2f7F1f54oP1flf0/hfwsbu7i7f/w9f7b5v7X5f7V4v6nyv6oxv6jwP6Ns/2Lsf1/rv1+ov1zof1xof10nf1jm/1djP0xe/2NufxalvxHj/xPhvxKgPxHffw+efw0ePyXu/mqxPg5hfiTtvdyo/dgmfdOj/dBhfVflfQvefT+9fOIqvMyefNMhvFIgO9MeePyycVjZbzKb3DaZVa/Q0Dx9f+Bp/1olv1gkPw0dvzg6Pu2zPk0gflNjPctc/c9gfX88/JJfO3n3+ni2unHxuSGktNpdtBJY8paashRW71nXqp7YpyDYJKpaIKPU33AVFXARkTVTTvFQjrUPypKwHq1AAACAklEQVQ4y4WTB3OqQBSFF3BpAk+KIBixJ2rs0fTee68vvbzee+9//O1Cio46npmFPfd8d2cY9gIASMJHUESDKFQmAZJAUKCFKELA/WSr3A3d/tZnAF99C8fVHYhiosbxxflsdr7I15SIWiCe3exA2szGmwOJXTkUkvHaTTQD9NyBLO/t7OzJ8kFObwKs2/bRdrSvL7p9ZNvrjQC/n8/nwngXzuXz+3wDED42zS13u2Wax+EGQD+pmhvudsOsnuj1gBAZSp5+/XRIYkMeVu1XyaGIcAfoycVM4Pn3qx9vcW3gRUcmE8gsJvUboNfyeDyBwLd/6sX7wtNnC45DD6vXBbRx1sOmrQ+/VFX9efomhFzFstLoNa45QKzCijMx/vXZpar+/fKSZecWijwfmxHZSgzFFBgWxXQUIJ39UX9/nhPFngHsomlRHEYxRY6mlCkOl+5fXp2vraV6IgCLm1JSoyQGxhRlUnCAi/PUEwXnWMKkooxhAIxAuNSPS+8+Qgi7GOB3zutfgnAExQSIr0JoMJw2GJSghPLSo4eDGscYEK7Gna/gy7QkLRvTK5JEP2bAgy4vvTJtLCNX5h0AMLNemvbihfqBv3zjZpHDACKM7ntI3RMFgFSYcJ3B3P0sf6kzGOxM+AFwXAK7kuNurz2pcWTt7deuna/t4LQdvbbD23b8/wPY0UTO99dD5gAAAABJRU5ErkJggg==",
-            offFunc:function(){
+            offFunc:function(delLink){
                 document.querySelector('.g-button[data-button-id=b13]').click();
                 var bsi = setInterval(function() {
                     var newTaskBtn = document.querySelector('#_disk_id_2');
@@ -56,6 +56,7 @@
                                         offLink.value = curlink;
                                         curlink="";
                                     }
+                                    delLink();
                                     var baiduPathStr=GM_getValue("baiduPath"),isBt=/^magnet|torrent$/.test(offLink.value);
                                     if(baiduPathStr){
                                         unsafeWindow.require("function-widget-1:offlineDownload/util/newOfflineDialog.js").obtain()._checkPath=baiduPathStr;
@@ -106,7 +107,7 @@
             noEd2k:true,
             noFtp:true,
             bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAXVBMVEX///////8bytT///8fy9UbytQbytQfy9Ufy9UmzNYbytQgy9UizNUbytT///8bytQey9Ufy9Ugy9VG1NxB09sbytRg2uFS194bytT///9G1Nzx/Pzi+PpT19+c6OxZ7rqXAAAAGHRSTlMBG/AHxYAh49O3oWJBMRUR4bOLYV9RQz9fW5zbAAAAbUlEQVQY043MRxLCMBBE0WYkOQcyXybc/5hIhUuww2/3u2pGG1WdYV1VujcyG9ceWdmcM8jDK8bHE0LqCzMQF5Y7NOnNgeE7MATBMQ+fE/q9wCwNkDUetUAZPLVuxq+z3LWlqE9OctOumFL/9QYClwvt3NkDkgAAAABJRU5ErkJggg==",
-            offFunc:function(){
+            offFunc:function(delLink){
                 var psc = setInterval(function() {
                     var upBtn = document.querySelector('div.upload_button');
                     if (upBtn) {
@@ -115,6 +116,7 @@
                         document.querySelector('span.remoteupload-ctrl').click();
                         var remotearea=document.querySelector('textarea.remotearea');
                         remotearea.value=curlink;
+                        delLink();
                         remotearea.nextSibling.click();
                     }
                 }, 500);
@@ -125,7 +127,7 @@
             url:"http://115.com/?tab=offline&mode=wangpan",
             bgColor:"21458a",
             bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAASFBMVEUhRYr///+XqcjV3OmJnMFTb6QoS45PbKLu8fbZ4OvBy95xiLRifKxbdqlXcqYxU5P3+Prh5u/O1uXH0eK6xduks89/lLtGZJ4ysMfhAAAAVUlEQVQY04WPSQ6AMAwD6ySkdKHs8P+fckyDhPBtRoojhyG4GP6FEjPvxhGZiKKJPM7uoAHYSif0Lgdw+tppQfOGIF4ILsea3CetvMa+UaRq+Mh7/gPkxAHFh9WDUQAAAABJRU5ErkJggg==",
-            offFunc:function(){
+            offFunc:function(delLink){
                 var rsc = setInterval(function() {
                     if (document.readyState == 'complete') {
                         clearInterval(rsc);
@@ -133,6 +135,7 @@
                             unsafeWindow.Core.OFFL5Plug.OpenLink();
                             setTimeout(function() {
                                 $('#js_offline_new_add').val(curlink);
+                                delLink();
                             }, 1);
                         }, 1000);
                     }
@@ -145,9 +148,11 @@
             bgColor:"fff",
             hide:false,
             bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAAuCAMAAABgZ9sFAAAAflBMVEX///+CuuaGv+rjXKniTaiDu+d3tufiXq/nUqxAn9+t1vGiz/FOnt/sj8nol8bhcLJRo97b7vp5uOpCoeGQw+m31/XW6/er0++Iwe330uZUpuHssNjni8Tqf7/o9Pn68PSUx+732eucyuvzzuJjq+H0v97sm8q12vDto8/rcrjt831UAAABmUlEQVRIx+2T6W6DMBCE8dr4aEgw0KS5kzZH2/d/we7aliJlN6KR+rNjgYwYfxrwuPrXXwkeaC7ba1nqU7YrWfV83N6rm95G7ZCWlNnL6Kfa20zBA7tNEl7KSsjl5In/rsBOnqArtfx1GGXVGH112Wwuq2KnMMDp2nnUtaquOsttchik15yeLGZ68tpp7403elXo4pZn5Ld3zpg03VWFjkOme51kcGj/nu1p7wF6QPU0cjKDVIyBRrfbtdptM4XYqYIoSKP+KHQ04X17wKfDF8JJYJUt9cqrVH2sUOg0hJ4Ju5rNRSWMIb9r70uA4a2lRRSrx9stDF6ne7tCrz12XbdfLPbdAicVCdFEr5gdQGq306Qt6wz5gR81+t2tmXI6SbLT5sx4ga1YMdNidM/sAMQXOmOoBVPxeMidaaUwFsSjbVBa+NS0RdyequgYXS0pjhSmlegWcKxfRbrmdFBwjpHbMblEV+cQwiDSnUBfD8PQNMDtVBpOH2IYhjVInZHosYkxBh7GGZEeGpRg161Ib0ITQhTCMPrz+gG1shF4koHETAAAAABJRU5ErkJggg==",
-            offFunc:function(){
+            offFunc:function(delLink){
                 setTimeout(function() {
+                    if(!$('#url').length)return;
                     $('#url').val(curlink);
+                    delLink();
                     $(":submit[value='Add download']").click();
                 }, 500);
             }
@@ -158,12 +163,13 @@
             bgColor:"ca2a15",
             hide:false,
             bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAllBMVEXGKBPGKBPGKBPGKBPORDLJMh3uv7nQTDvILRjprKPmoZjbdmnLOyjKNSHtvLbrtK3opp3lm5Hhj4Tac2XZb2HXalvUXEzLOibGKBPGKBPGKBPqsarjlovehHjXaFnTWkrMQC3GKBPGKBPGKBP////44+H77u323Nj01dHxycP88vH66+n23dr019Tyz8rxzMfvw73vwrxYVj9BAAAAJHRSTlP7yb+j+/v9+/v9/f37+/39/f39/f39+/uxmSj9/f37+/uXNR2Gd9E6AAAAmUlEQVQY003NVxKDMAxFUQVsbHqv6YkMIT3731wEZoD7oZl3fgQXY7PKaKACKn93BxirwaArWsQXH8EcYYeUu4BnDRAsUKgBWjZDeqfduXKGmHbPT3YiJ9giPtj+qUJWavghxoUSHFxLAz3JIgcAypsGBzF3bAJvAvHB5PiVnm8HGoBZIffTVvWMoIIhX4KIMg5whsbcrKqvf29uDBcu2+SAAAAAAElFTkSuQmCC",
-            offFunc:function(){
+            offFunc:function(delLink){
                 var sdi = setInterval(function() {
                     if($('#upload-button').css("display") != "none"){
                         window.clearInterval(sdi);
                         setTimeout(function() {
                             $(':text[name="torrent"]').val(curlink);
+                            delLink();
                             $('#upload-button').click();
                         }, 500);
                     }
@@ -175,7 +181,7 @@
             url:"https://www.weiyun.com/disk/index.html",
             bgColor:"3c95ee",
             bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAV1BMVEUed9E4htg2hNI2g84KJkMSKkMJIjwHEBr///8lh+k5k+49lu4hhegyj+wri+s/lu+s0vfg7vzX6vy/3PlWou+w1PicyfaWxvXf7fzB3fmHvfSBuvNfp/GhDGXVAAAACHRSTlPm5uDeSkhCHO7HIjkAAAB4SURBVBjTZYuJDsIwDEM9TnfDodc2rv//TtoKITqeosR+UnAcrj/szhimjj2mDRgbM8nYEj59GRfOX/Fg3a+2IUWSUh0vCfKhRUbFaiAqs1L0PVAw2vrM3sx8sFJgieUGWwNzzXAukTeSqX46B7fhX+DSARzQ9dMbRIkLk61eQagAAAAASUVORK5CYII=",
-            offFunc:function(){
+            offFunc:function(delLink){
                 var offBtn=document.querySelector('li[data-action=offline_download]');
                 setTimeout(function(){
                     offBtn.click();
@@ -186,6 +192,7 @@
                             tab.click();
                             var textarea=document.querySelector('textarea.copyurl');
                             textarea.innerHTML=curlink;
+                            delLink();
                             var event = document.createEvent('HTMLEvents');
                             event.initEvent("change", false, true);
                             textarea.dispatchEvent(event);
@@ -384,8 +391,8 @@
                 offNode.attr('href', siteConfig.directUrl(offUrl));
             }else{
                 if(e.ctrlKey && e.shiftKey && siteConfig.canMul)
-                    GM_setValue("eoUrl",allUrl);
-                else GM_setValue("eoUrl",offUrl);
+                    GM_setValue(siteConfig.name+":eoUrl",allUrl);
+                else GM_setValue(siteConfig.name+":eoUrl",offUrl);
             }
             e.stopPropagation();
         });
@@ -587,15 +594,15 @@
     }
 
     var i=0;
-    var curlink=GM_getValue('eoUrl');
+    var curlink;
     var isDisk=false;
     for(x = 0; x < sitesArr.length; x++){
         let siteConfig=sitesArr[x];
         if(siteConfig.regex.test(location.hostname)){
             isDisk=true;
+            curlink=GM_getValue(siteConfig.name+':eoUrl');
             if(curlink){
-                if(siteConfig.offFunc)siteConfig.offFunc();
-                GM_deleteValue('eoUrl');
+                if(siteConfig.offFunc)siteConfig.offFunc(function(){GM_deleteValue(siteConfig.name+':eoUrl');});
             }
             break;
         }
