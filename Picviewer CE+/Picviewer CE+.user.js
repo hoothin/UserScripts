@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2017.7.27.2
+// @version        2017.7.31.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -1786,6 +1786,7 @@
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="scrollIntoView" title="滚动到当前图片所在的位置">定位到图片</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="enterCollection" title="查看所有收藏的图片">查看收藏</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="exportImages" title="导出所有图片到新窗口">导出图片</span>'+
+                    '<span class="pv-gallery-head-command-drop-list-item" data-command="downloadImage" title="下载图片">下载图片</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="copyImages" title="复制所有大图的地址">复制图片</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" title="最后几张图片时，滚动主窗口到最底部，然后自动加载新的图片">'+
                     '<input type="checkbox"  data-command="scrollToEndAndReload"/>'+
@@ -2357,6 +2358,7 @@
                 },true);
 
 
+                var downloadEle=document.createElement("a"),srcSplit;
                 //命令下拉列表的点击处理
                 eleMaps['head-command-drop-list-others'].addEventListener('click',function(e){
                     if(e.button!=0)return;//左键
@@ -2413,6 +2415,12 @@
                         }break;
                         case 'exportImages':
                             self.exportImages();
+                            break;
+                        case 'downloadImage':
+                            srcSplit=self.src.split("/");
+                            downloadEle.href=self.src;
+                            downloadEle.setAttribute("download",srcSplit[srcSplit.length-1]);
+                            downloadEle.click();
                             break;
                         case 'copyImages':
                             self.copyImages(true);
@@ -3574,7 +3582,7 @@ padding-left:24px;">'+shareItem.name+'</span>');
                         var container = document.querySelector('.pv-gallery-container'),
                             preloadContainer = document.querySelector('.pv-gallery-preloaded-img-container');
                         imgs = Array.prototype.slice.call(imgs).filter(function(img){
-                            return !(container.contains(img) || preloadContainer.contains(img));
+                            return !(container.contains(img) || (preloadContainer&&preloadContainer.contains(img)));
                         });
                         imgs.forEach(function(img) {
                             var isrc=img.getAttribute("src");
@@ -3649,7 +3657,7 @@ padding-left:24px;">'+shareItem.name+'</span>');
                         var container = document.querySelector('.pv-gallery-container'),
                             preloadContainer = document.querySelector('.pv-gallery-preloaded-img-container');
                         imgs = Array.prototype.slice.call(imgs).filter(function(img){
-                            return !(container.contains(img) || preloadContainer.contains(img));
+                            return !(container.contains(img) || (preloadContainer&&preloadContainer.contains(img)));
                         });
                         imgs.forEach(function(img) {
                             var isrc=img.getAttribute("src");
@@ -3849,7 +3857,7 @@ display:none !important;\
                 });
                 // 排除库里面的图片
                 imgs = imgs.filter(function(img){
-                    return !(container.contains(img) || preloadContainer.contains(img));
+                    return !(container.contains(img) || (preloadContainer&&preloadContainer.contains(img)));
                 });
 
                 // 已经在图库里面的
@@ -8290,21 +8298,34 @@ background-image:url("'+ prefs.icons.magnifier +'");\
         }
 
         function keydown(event) {
-            if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey)
-                return;
+            var key = String.fromCharCode(event.keyCode).toLowerCase();
+            if(event.ctrlKey && key==prefs.floatBar.keys['gallery']){
+                if(!gallery){
+                    gallery=new GalleryC();
+                }
+                gallery.data=[];
+                var allData=gallery.getAllValidImgs();
+                if(allData.length<1)return true;
+                gallery.data=allData;
+                gallery.load(gallery.data);
+                event.stopPropagation();
+                event.preventDefault();
+                return true;
+            }else{
+                if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey)
+                    return;
 
-            if (floatBar && floatBar.shown && isKeyDownEffectiveTarget(event.target)) {
-                var key = String.fromCharCode(event.keyCode).toLowerCase();
-
-                Object.keys(prefs.floatBar.keys).some(function(action) {
-                    if (action == 'enable') return;
-                    if (key == prefs.floatBar.keys[action]) {
-                        floatBar.open(null, action);
-                        event.stopPropagation();
-                        event.preventDefault();
-                        return true;
-                    }
-                })
+                if (floatBar && floatBar.shown && isKeyDownEffectiveTarget(event.target)) {
+                    Object.keys(prefs.floatBar.keys).some(function(action) {
+                        if (action == 'enable') return;
+                        if (key == prefs.floatBar.keys[action]) {
+                            floatBar.open(null, action);
+                            event.stopPropagation();
+                            event.preventDefault();
+                            return true;
+                        }
+                    })
+                }
             }
         }
 
