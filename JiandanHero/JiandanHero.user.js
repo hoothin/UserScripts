@@ -3,10 +3,11 @@
 // @name:en      Jiandan Hero
 // @name:zh-TW   煎蛋俠
 // @namespace    hoothin
-// @version      1.5
-// @description  为煎蛋jandan.net提供左右方向键快捷翻页、鼠标悬停显示大图、屏蔽指定用户发言等功能
+// @version      1.6
+// @icon         http://cdn.jandan.net/static/img/favicon.ico
+// @description  为煎蛋jandan.net提供左右方向键快捷翻页、上下方向键快捷切图、鼠标悬停显示大图、屏蔽指定用户发言等功能
 // @description:en  Tools for jandan.net
-// @description:zh-TW  為煎蛋jandan.net提供左右方向鍵快捷翻頁、鼠標懸停顯示大圖、屏蔽指定用戶發言等功能
+// @description:zh-TW  為煎蛋jandan.net提供左右方向鍵快捷翻頁、上下方向鍵快捷切圖、鼠標懸停顯示大圖、屏蔽指定用戶發言等功能
 // @author       hoothin
 // @include      http*://jandan.net/*
 // @grant        GM_setValue
@@ -46,9 +47,47 @@
                 var pre=document.querySelector("span#nav_prev>a");
                 if(pre)pre.click();
                 break;
+            case 38://↑
+                if(/jandan\.net\/(ooxx|pic)/.test(location.href)){
+                    moveToPic(false);
+                }
+                break;
+            case 40://↓
+                if(/jandan\.net\/(ooxx|pic)/.test(location.href)){
+                    moveToPic(true);
+                }
+                break;
         }
     });
-    var authors=document.querySelectorAll("div.author"),i;
+
+    var pics=document.querySelectorAll(".commentlist .text img"),i;
+    var currentPic;
+    for(i=0;i<pics.length;i++){
+        var pic=pics[i];
+        if($(window).scrollTop() < ($(pic).offset().top + $(pic).outerHeight()) &&
+           ($(window).scrollTop() + $(window).height()) > $(pic).offset().top){
+            currentPic=pic;
+            break;
+        }
+    }
+    if(!currentPic)currentPic=pics[0];
+
+    function moveToPic(d){
+        for(var i=0;i<pics.length;i++){
+            var pic=pics[i];
+            if(currentPic==pic){
+                if(d && pics.length>(i+1)){
+                    currentPic=pics[i+1];
+                }else if(!d && i>0){
+                    currentPic=pics[i-1];
+                }
+                if(currentPic.parentNode.style.display=="none")moveToPic(d);
+                else currentPic.click();
+                break;
+            }
+        }
+    }
+    var authors=document.querySelectorAll("div.author");
     var isHttps=location.protocol=="https:";
     for(i=0;i<authors.length;i++){
         let author=authors[i];
