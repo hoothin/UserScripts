@@ -2,7 +2,7 @@
 // @name               Kill Baidu AD
 // @name:zh-CN         百度广告(首尾推广及右侧广告)清理
 // @namespace          hoothin
-// @version            0.83
+// @version            0.85
 // @description        Just Kill Baidu AD
 // @description:zh-CN  彻底清理百度搜索(www.baidu.com)结果首尾的推广广告、二次顽固广告与右侧广告，并防止反复
 // @author             hoothin
@@ -64,4 +64,5 @@
             }
         }
     }
+    setTimeout(()=>{clearAD();},2000);
 })();
