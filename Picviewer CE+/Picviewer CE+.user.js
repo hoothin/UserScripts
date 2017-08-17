@@ -8728,7 +8728,7 @@ background-image:url("'+ prefs.icons.magnifier +'");\
         loadPrefs();
 
         if(prefs.gallery.autoOpenSites && new RegExp(prefs.gallery.autoOpenSites).test(location.href)){
-            setTimeout(()=>{openGallery();},1000);
+            setTimeout(()=>{openGallery();},1500);
         }
 
         // 注册按键
