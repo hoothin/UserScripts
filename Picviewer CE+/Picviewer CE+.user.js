@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2017.8.14.1
+// @version        2017.8.17.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -8315,17 +8315,21 @@ background-image:url("'+ prefs.icons.magnifier +'");\
             return true;
         }
 
+        function openGallery(){
+            if(!gallery){
+                gallery=new GalleryC();
+            }
+            gallery.data=[];
+            var allData=gallery.getAllValidImgs();
+            if(allData.length<1)return true;
+            gallery.data=allData;
+            gallery.load(gallery.data);
+        }
+
         function keydown(event) {
             var key = String.fromCharCode(event.keyCode).toLowerCase();
             if(event.ctrlKey && key==prefs.floatBar.keys['gallery']){
-                if(!gallery){
-                    gallery=new GalleryC();
-                }
-                gallery.data=[];
-                var allData=gallery.getAllValidImgs();
-                if(allData.length<1)return true;
-                gallery.data=allData;
-                gallery.load(gallery.data);
+                openGallery();
                 event.stopPropagation();
                 event.preventDefault();
                 return true;
@@ -8373,7 +8377,7 @@ background-image:url("'+ prefs.icons.magnifier +'");\
             title: GM_config.create('a', {
                 href: 'https://greasyfork.org/zh-CN/scripts/24204-picviewer-ce',
                 target: '_blank',
-                textContent: 'picviewerCE 设置',
+                textContent: 'Picviewer CE+ 设置',
                 title: '点击此处打开主页'
             }),
             isTabs: true,
@@ -8605,6 +8609,11 @@ background-image:url("'+ prefs.icons.magnifier +'");\
                     "default": prefs.gallery.descriptionLength,
                     after: ' 个字符'
                 },
+                'gallery.autoOpenSites': {
+                    label: '自动打开图库的网站正则',
+                    type: 'textarea',
+                    "default": prefs.gallery.autoOpenSites
+                },
 
                 // 图片窗口
                 'imgWindow.fitToScreen': {
@@ -8714,9 +8723,13 @@ background-image:url("'+ prefs.icons.magnifier +'");\
         });
 
 
-        GM_registerMenuCommand('picviewerCE 设置', openPrefs);
+        GM_registerMenuCommand('Picviewer CE+ 设置', openPrefs);
 
         loadPrefs();
+
+        if(prefs.gallery.autoOpenSites && new RegExp(prefs.gallery.autoOpenSites).test(location.href)){
+            setTimeout(()=>{openGallery();},1000);
+        }
 
         // 注册按键
         if (prefs.floatBar.keys.enable) {
