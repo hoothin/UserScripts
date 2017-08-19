@@ -705,7 +705,7 @@
              s: "http://$1$2"
             },
             {name: "ali",
-             r: /(.*\.alicdn\.com\/.*?)((.jpg)?(\.|_)\d+x\d+.*|\.search)\.jpg$/,
+             r: /(.*\.alicdn\.com\/.*?)((.jpg)?(\.|_)\d+x\d+.*|\.search)\.jpg(_\.webp)?$/,
              s: "$1.jpg"
             },
             {name: "1号店",
