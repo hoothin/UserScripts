@@ -59,6 +59,7 @@
 // @include     http*://zuiacg.*
 // @include     http*://www.zuiacg.*
 // @include     http*://www.galacg.me/*
+// @include     http*://cangku.in/*
 // @include     http*://www.mhecy.com/*
 // @include     http*://acgzone.org/*
 // @include     http*://www.acgzone.org/*
@@ -87,7 +88,7 @@
 // @include     http*://greasyfork.org/*/scripts/*
 // @include     http*://sleazyfork.org/*/forum/*discussion*
 // @include     http*://greasyfork.org/*/forum/*discussion*
-// @version     3.22.41
+// @version     3.22.42
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -380,7 +381,7 @@
             },
             {
                 name:"司机会所",
-                url:"http://dakashangche.com",
+                url:"https://dakashangche.net",
                 regex:/sijihuisuo\.club|dakashangche\./,
                 innerPage:/\/(sj\/\d|\?p=\d)/,
                 offset:115,
@@ -464,10 +465,15 @@
             },
             {
                 name:"绅士仓库",
-                url:"http://www.galacg.me/",
-                regex:/galacg\./,
+                url:"https://cangku.in/",
+                regex:/galacg\.|cangku\.in/,
                 hideOd:true,
-                articleSel:"div.article"
+                articleSel:"section.post-wrap",
+                run:function(){
+                    window.setTimeout(function(){
+                        process();
+                    },500);
+                }
             },
             {
                 name:"樱花漫舍",
@@ -759,7 +765,7 @@
                 offset:45,
                 hideOd:true,
                 run:function(){
-                    if(/www\.acgpy\.com\/login\d+\.html/.test(location.href)){
+                    if(/www\.acgpy\.com\/login\d+\./.test(location.href)){
                         var date=new Date();
                         date.setTime(date.getTime()+14400*60*1000);
                         document.cookie="trade"+location.href.replace(/.*.com\/login(\d+)\..*/,"$1")+"=A32; expires="+date.toGMTString();
@@ -1360,7 +1366,7 @@
         if(!pre)pre=document.querySelector(".prev>a");
         if(!next)next=document.querySelector(".next>a");
         if(!pre && !next){
-            let aTags=document.querySelectorAll("a");
+            let aTags=document.querySelectorAll("a,button>span");
             if(!pre){
                 let pref,pres,pret;
                 for(var i=0;i<aTags.length;i++){
