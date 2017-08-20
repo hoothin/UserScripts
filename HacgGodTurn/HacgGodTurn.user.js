@@ -472,6 +472,11 @@
                 run:function(){
                     window.setTimeout(function(){
                         process();
+                        [].forEach.call(document.querySelectorAll(".r18-mask"),function(item){
+                            item.onclick=function(e){
+                                e.currentTarget.classList.remove("r18-mask");
+                            }
+                        });
                     },500);
                 }
             },
