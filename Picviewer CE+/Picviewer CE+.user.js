@@ -593,7 +593,7 @@
              url: /tumblr\.com/,
              getImage: function() {
                  if(/\/avatar_/.test(this.src))return this.src.replace(/(media\.tumblr\.com.*_)[^_]+(\.[^\.]+)$/i,"$1512$2");
-                 else return this.src.replace(/[^\/]*(media\.tumblr\.com.*_)[^_]+(\.[^\.]+)$/i,"$1raw$2");
+                 else return this.src.replace(/[^\/]*(media\.tumblr\.com.*_)\d+(\.[^\.]+)$/i,"$1raw$2");
              }
             },
             {name: "Acgget",
