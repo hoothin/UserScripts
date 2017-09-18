@@ -4,7 +4,7 @@
 // @name:zh-TW   大人的Greasyfork
 // @name:ja      大人のGreasyfork
 // @namespace    hoothin
-// @version      0.81
+// @version      0.82
 // @description  Merge adult results of sleazyfork into greasyfork when the script is no longer anonymously available, add rating score and version for scripts then
 // @description:zh-CN 在Greasyfork的搜索结果中添加Sleazyfork上的成人脚本，增加评分与版本号，并在访问匿名不可用脚本时跳转至Sleazyfork
 // @description:zh-TW 在Greasyfork的搜索結果中添加Sleazyfork上的成人腳本，增加評分與版本號，並在訪問匿名不可用腳本時跳轉至Sleazyfork
@@ -88,7 +88,7 @@
             score.innerHTML=script.getAttribute("data-script-rating-score");
             separator.parentNode.insertBefore(score,separator);
         }
-        if(description)description.innerHTML+="<strong>Ver."+script.getAttribute("data-script-version")+"</strong>"+'<div id="install-area" style="display:none;float: right;position: relative;"><a class="install-link" href="'+script.querySelector('h2>a').href+'/code/script.user.js">Install</a></div>';
+        if(description)description.innerHTML+="<strong>Ver."+script.getAttribute("data-script-version")+"</strong>"+'<div id="install-area" style="display:none;float: right;position: relative;"><a class="install-link" href="'+script.querySelector('h2>a').href.replace(/(\d)-.*/,"$1")+'/code/script.user.js">Install</a></div>';
         var installArea=script.querySelector("#install-area");
         if(installArea){
             script.onmouseover=function(e){
