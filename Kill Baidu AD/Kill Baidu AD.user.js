@@ -20,49 +20,55 @@
 // ==/UserScript==
 
 (function() {
-    'use strict';
-    var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
-    var observer = new MutationObserver(function(records){
-        clearAD();
-    });
-    var option = {
-        'childList': true,
-        'subtree': true
-    };
-    observer.observe(document.body, option);
+	'use strict';
 
-    function clearAD(){
-        var mAds=document.querySelectorAll(".ec_wise_ad,.ec_youxuan_card"),i;
-        for(i=0;i<mAds.length;i++){
-            var mAd=mAds[i];
-            mAd.remove();
-        }
-        var list=document.body.querySelectorAll("#content_left>div,#content_left>table");
-        for(i=0;i<list.length;i++){
-            let item = list[i];
-            let s = item.getAttribute("style");
-            if (s && /display:(table|block)\s!important/.test(s)) {
-                item.remove();
-            }else{
-                var span=item.querySelector("div>span");
-                if(span && span.innerHTML=="广告"){
-                    item.remove();
-                }
-                [].forEach.call(item.querySelectorAll("a>span"),function(span){
-                    if(span && (span.innerHTML=="广告" || span.getAttribute("data-tuiguang"))){
-                        item.remove();
-                    }
-                });
-            }
-        }
+	var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+	var observer = new MutationObserver(function(records){
+		try{
+			clearAD();}
+		catch(e){}
+	});
+	var option = {
+		'childList': true,
+		'subtree': true
+	};
+	window.onload = function(){
+		observer.observe(document.body, option);
+		//observer.observe(document.all, option);
+	};
 
-        var eb = document.querySelectorAll("#content_right>table>tbody>tr>td>div");
-        for(i=0;i<eb.length;i++){
-            let d = eb[i];
-            if (d.id!="con-ar") {
-                d.remove();
-            }
-        }
-    }
-    setTimeout(()=>{clearAD();},2000);
+	function clearAD(){
+		var mAds=document.querySelectorAll(".ec_wise_ad,.ec_youxuan_card"),i;
+		for(i=0;i<mAds.length;i++){
+			var mAd=mAds[i];
+			mAd.remove();
+		}
+		var list=document.body.querySelectorAll("#content_left>div,#content_left>table");
+		for(i=0;i<list.length;i++){
+			let item = list[i];
+			let s = item.getAttribute("style");
+			if (s && /display:(table|block)\s!important/.test(s)) {
+				item.remove();
+			}else{
+				var span=item.querySelector("div>span");
+				if(span && span.innerHTML.indexOf("广告")!=-1){
+					item.remove();
+				}
+				[].forEach.call(item.querySelectorAll("a>span"),function(span){
+					if(span && (span.innerHTML.indexOf("广告")!=-1 || span.getAttribute("data-tuiguang"))){
+						item.remove();
+					}
+				});
+			}
+		}
+
+		var eb = document.querySelectorAll("#content_right>table>tbody>tr>td>div");
+		for(i=0;i<eb.length;i++){
+			let d = eb[i];
+			if (d.id!="con-ar") {
+				d.remove();
+			}
+		}
+	}
+	setTimeout(()=>{clearAD();},2000);
 })();
