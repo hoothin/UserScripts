@@ -2,7 +2,7 @@
 // @name         百Bing图
 // @name:en      BingBgForBaidu
 // @namespace    hoothin
-// @version      2.3.5
+// @version      2.3.6
 // @description     给百度首页换上Bing的背景图，并添加背景图链接与日历组件
 // @description:en  Just change the background image of baidu.com to bing.com
 // @author       hoothin
@@ -80,7 +80,7 @@
         var height=rili.height();
         iframe.width=width===0?538:width;
         iframe.height=height===0?370:height;
-        var today=$(".op-calendar-new-table-today",iframe.contentDocument);
+        var today=$(".op-calendar-new-table-border",iframe.contentDocument);
         var t;
         riliLink.innerHTML="<span class='title' style='text-decoration:overline;cursor:crosshair'>"+$(".op-calendar-new-right-date",iframe.contentDocument).html()+"</span>";
         riliLink.onmouseover=function(){
@@ -97,8 +97,9 @@
             $(iframe).hide(500);
         };
         if(today[0].classList.contains("op-calendar-new-table-festival")){
-            riliLink.innerHTML+=today[0].title?" <font color='#FFFF66' style='background-color:#e02d2d;font-weight:bold'>("+today[0].title+")</font>":"";
-            riliLink.title=today[0].title;
+            var title=today[0].title || $(".op-calendar-new-table-almanac",today).text();
+            riliLink.innerHTML+=title?" <font color='#FFFF66' style='background-color:#e02d2d;font-weight:bold'>("+title+")</font>":"";
+            riliLink.title=title;
         }
     };
     var skinContainer=document.querySelector(".s-skin-container");
@@ -142,7 +143,7 @@
                 bgUrl="url(\""+bgUrl+"\")";
                 if(!bingImg)skinContainer.style.backgroundImage = bgUrl;
                 var logo=document.querySelector("#s_lg_img");
-                if(logo && logo.src)logo.src=logo.src.replace(/\/[^\/]+\.png$/,"/logo_white.png");
+                if(logo && logo.src)logo.src=logo.src.replace(/\/bd_logo.*$/,"/logo_white.png");
                 else{
                     logo=document.querySelector("#lg>img");
                     if(logo && logo.src)logo.src=logo.src.replace(/.*\/img\/bd_logo1\.png/,"//ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/logo_white.png");
