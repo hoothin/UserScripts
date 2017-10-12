@@ -803,7 +803,7 @@
             // GithubAvatars
             {name: "GithubAvatars",
              d: "github.com",
-             r: /(avatars\d+\.githubusercontent\.com.*)\?.*$/i,
+             r: /(avatars\d*\.githubusercontent\.com.*)\?.*$/i,
              s: "$1",
              example: "https://avatars2.githubusercontent.com/u/3233275/",
             },
