@@ -227,7 +227,7 @@
                 getImage:function(){
                     var oldsrc = this.src,
                         newsrc = oldsrc;
-                    var pic = /\/view\/photo\/(?:photo|albumcover|albumicon|thumb)\/public\//i;
+                    var pic = /\/view\/photo\/(?:photo|albumcover|albumicon|thumb|sqxs)\/public\//i;
                     var movieCover = /\/view\/movie_poster_cover\/[si]pst\/public\//i;
                     var bookCover = /\/view\/ark_article_cover\/cut\/public\//i;
                     var spic = /(img\d+.douban.com)\/[sm]pic\//i
