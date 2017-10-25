@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2017.10.25.1
+// @version        2017.10.25.2
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -714,9 +714,13 @@
              r: /((?:img\d\d\.taobaocdn|img(?:[^.]*\.?){1,2}?\.alicdn)\.com\/)(?:img\/|tps\/http:\/\/img\d\d+\.taobaocdn\.com\/)?((?:imgextra|bao\/uploaded)\/.+\.(?:jpe?g|png|gif|bmp))_.+\.jpg$/,
              s: "http://$1$2"
             },
-            {name: "ali",
-             r: /(.*\.alicdn\.com\/.*?)((.jpg|.png)?(\.|_)\d+x\d+.*|\.search)\.jpg(_\.webp)?$/,
+            {name: "ali1",
+             r: /(.*\.alicdn\.com\/.*?)((.jpg|.png)(\.|_)\d+x\d+.*|\.search)\.jpg(_\.webp)?$/,
              s: "$1$3"
+            },
+            {name: "ali2",
+             r: /(.*\.alicdn\.com\/.*?)((\.|_)\d+x\d+.*|\.search)\.jpg(_\.webp)?$/,
+             s: "$1.jpg"
             },
             {name: "1号店",
              r: /(.*\.yihaodianimg\.com\/.*)_\d+x\d+\.jpg$/,
