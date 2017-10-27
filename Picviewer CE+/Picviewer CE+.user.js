@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2017.10.27.1
+// @version        2017.10.27.2
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -105,6 +105,7 @@
 
                 autoZoom: true,  // 如果有放大，则把图片及 sidebar 部分的缩放改回 100%，增大可视面积（仅在 chrome 下有效）
                 descriptionLength: 32,  // 注释的最大宽度
+                editSite: "Pixlr"
             },
 
             imgWindow:{// 图片窗相关设置
@@ -1822,7 +1823,7 @@
                     '<span class="pv-gallery-vertical-align-helper"></span>'+
                     '</span>'+
                     '<span class="pv-gallery-head-command-drop-list pv-gallery-head-command-drop-list-others">'+
-                    '<span class="pv-gallery-head-command-drop-list-item" data-command="psImage" title="使用Pixlr在线编辑该图片">在线编辑</span>'+
+                    '<span class="pv-gallery-head-command-drop-list-item" data-command="psImage" title="使用'+prefs.gallery.editSite+'在线编辑该图片">在线编辑</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="openInNewWindow" title="新窗口打开图片">新窗口打开</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="scrollIntoView" title="滚动到当前图片所在的位置">定位到图片</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="enterCollection" title="查看所有收藏的图片">查看收藏</span>'+
@@ -2411,7 +2412,7 @@
                             window.open(self.src,'_blank');
                         }break;
                         case 'psImage':{
-                            window.open('https://pixlr.com/editor/?image='+self.src,'_blank');
+                            window.open((prefs.gallery.editSite=='Pixlr'?'https://pixlr.com/editor/?image=':'https://www.toolpic.com/apieditor.html?image=')+self.src,'_blank');
                         }break;
                         case 'scrollIntoView':{
                             if(collection.mMode){
@@ -8601,6 +8602,15 @@ left: -45px;\
                     label: '自动打开图库的网站正则',
                     type: 'textarea',
                     "default": prefs.gallery.autoOpenSites
+                },
+                'gallery.editSite': {
+                    label: '在线编辑',
+                    type: 'select',
+                    options: {
+                        'Pixlr': 'Pixlr',
+                        'Toolpic': 'Toolpic'
+                    },
+                    "default": prefs.gallery.editSite,
                 },
 
                 // 图片窗口
