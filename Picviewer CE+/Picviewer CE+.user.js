@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2017.10.27.2
+// @version        2017.11.03.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -38,6 +38,205 @@
 ;(function(topObject,window,document,unsafeWindow){
     'use strict';
 
+    var lang = navigator.appName=="Netscape"?navigator.language:navigator.userLanguage;
+    var i18nData={};
+    switch (lang){
+        case "zh-CN":
+            i18nData={
+                share:"分享",
+                loadAll:"加载更多",
+                loadedAll:"加载完毕",
+                loading:"正在加载",
+                loadAllTip:"加载下一页的图片",
+                fiddle:"折腾",
+                fiddleTip:"弹出图片进行复杂操作",
+                collect:"收藏",
+                collected:"已收藏",
+                exitCollection:"退出收藏",
+                exitCollectionTip:"点击退出收藏模式",
+                noCollectionYet:"你还木有收藏任何图片",
+                collectDetail:"描述",
+                collectDetailTip:"给收藏的图片添加一些描述吧",
+                playSlide:"播放幻灯片",
+                slideGap:"间隔(s)",
+                slideGapTip:"间隔时间，单位(秒)",
+                slideBack:"后退",
+                slideBackTip:"从后往前播放",
+                slideWait:"等待图片读取",
+                slideWaitTip:"从每张图片完全读取完成后才开始倒计时",
+                slideSkipError:"跳过错误图片",
+                slideSkipErrorTip:"快速跳过读取错误的图片",
+                type:"类别",
+                typeTip:"选择图片类别",
+                advancedRules:"高级规则",
+                advancedRulesTip:"由高级规则匹配出来的",
+                tpRules:"通配规则",
+                tpRulesTip:"由通配规则匹配出来的",
+                scaleRules:"缩放过的",
+                scaleRulesTip:"js自动查找，相对页面显示的图片有缩放过的",
+                noScaleRules:"无缩放过",
+                noScaleRulesTip:"js自动查找，无缩放过的，但是满足一定的大小",
+                smallRules:"小尺寸的",
+                smallRulesTip:"小尺寸图片，实际尺寸的高和宽都小于#t#像素",
+                command:"命令",
+                commandTip:"命令菜单",
+                onlineEdit:"在线编辑",
+                onlineEditTip:"使用#t#在线编辑该图片",
+                openInNewWindow:"新窗口打开",
+                openInNewWindowTip:"新窗口打开图片",
+                findInPage:"定位到图片",
+                findInPageTip:"滚动到当前图片所在的位置",
+                viewCollection:"查看收藏",
+                viewCollectionTip:"查看所有收藏的图片",
+                inCollection:"收藏模式中，无法使用",
+                cantFind:"图片不在文档中，或者被隐藏了，无法定位！",
+                exportImages:"导出大图",
+                exportImagesTip:"导出所有图片到新窗口",
+                downloadImage:"下载图片",
+                downloadImageTip:"下载当前图片",
+                copyImagesUrl:"复制图片",
+                copyImagesUrlTip:"复制所有大图地址",
+                copySuccess:"已成功复制 #t# 张大图地址",
+                autoRefresh:"自动重载",
+                autoRefreshTip:"最后几张图片时，滚动主窗口到最底部，然后自动加载新的图片",
+                enterFullsc:"进入全屏",
+                exitFullsc:"退出全屏",
+                config:"设置",
+                closeGallery:"关闭库",
+                returnToGallery:"回到库",
+                picInfo:"图片信息",
+                picNote:"图片注释",
+                resolution:"分辨率",
+                picNum:"图片张数",
+                scaleRatio:"缩放比",
+                similarImage:"以图搜图",
+                scale:"缩放",
+                horizontalFlip:"水平翻转",
+                verticalFlip:"垂直翻转",
+                actualBtn:'查看原始(A)',
+                searchBtn:'查找原图(S)',
+                galleryBtn:'查看库(G)',
+                currentBtn:'查看当前(C)',
+                magnifierBtn:'放大镜(M)',
+                picTitle:"图片标题",
+                picNum:"图片数量",
+                exportImagesUrl:"导出图片链接",
+                exportImagesUrlPop:"Ctrl+C复制图片链接",
+                beginSearchImg:"#t#识图开始……",
+                findNoPic:"未找到原图",
+                findOverBeginLoad:"#t#识图结束，共找到#t#张匹配图片，开始加载第一张",
+                loadNextSimilar:"原图加载失败，尝试加载下一结果……",
+                loadError:"加载失败",
+                openHomePage:"点击此处打开主页",
+                position:"显示位置",
+                topLeft: '图片左上角',
+                topRight: '图片右上角',
+                bottomRight: '图片右下角',
+                bottomLeft: '图片左下角',
+                topCenter: '图片正上方',
+                bottomCenter: '图片正下方',
+                floatBar:"浮动工具栏",
+                showDelay:"显示延时",
+                ms:"毫秒",
+                hideDelay:"隐藏延时",
+                forceShow:"非缩放图片，超过该尺寸，显示浮框",
+                forceShowTip:"非缩放的图片大小超过下面设定的尺寸时显示浮动工具栏",
+                px:"像素",
+                minSizeLimit:"缩放图片，超过该尺寸，显示浮框",
+                minSizeLimitTip:"图片被缩放(图片原始大小与实际大小不一致)后,原图长宽大于设定值时显示浮动工具栏",
+                listenBg:"监听背景图",
+                listenBgTip:"在有背景图的元素上显示悬浮框",
+                butonOrder:"工具栏图标排序",
+                keysEnable:"启用以下快捷键",
+                keysActual:"打开大图",
+                keysActualTip:"当出现悬浮条时按下此按键打开大图",
+                keysSearch:"查找原图",
+                keysSearchTip:"当出现悬浮条时按下此按键查找原图",
+                keysCurrent:"打开当前图片",
+                keysCurrentTip:"当出现悬浮条时按下此按键打开当前显示的图片",
+                keysMagnifier:"打开放大镜观察",
+                keysMagnifierTip:"当出现悬浮条时按下此按键打开放大镜观察",
+                keysGallery:"打开图库",
+                keysGalleryTip:"当出现悬浮条时按下此按键打开图库",
+                magnifier:"放大镜",
+                magnifierRadius:"默认半径",
+                magnifierWheelZoomEnabled:"启用滚轮缩放",
+                magnifierWheelZoomRange:"滚轮缩放的倍率",
+                gallery:"图库",
+                galleryFitToScreen:"对图片进行缩放以适应屏幕",
+                galleryFitToScreenTip:"适应方式为contain，非cover",
+                galleryScrollEndToChange:"大图滚动到底后切换图片",
+                galleryScrollEndToChangeTip:"取消上一选项后才有效",
+                galleryExportType:"图片导出默认排序",
+                grid:'平铺排序',
+                gridBig:'原图平铺',
+                list:'列表排序',
+                galleryLoadAll:"加载更多图片时自动处理全部页",
+                galleryLoadAllTip:"若页数过多可能影响体验",
+                galleryScaleSmallSize1:"实际尺寸的高和宽都小于 ",
+                galleryScaleSmallSize2:" 像素则归入小尺寸图片",
+                galleryShowSmallSize:"默认显示小尺寸图片",
+                galleryTransition:"显示图库切换图片的特效",
+                gallerySidebarPosition:"缩略图栏位置",
+                bottom:'底部',
+                right:'右侧',
+                left:'左侧',
+                top:'顶部',
+                gallerySidebarSize:"高度",
+                gallerySidebarSizeTip:"缩略图栏的高（如果是水平放置）或者宽（如果是垂直放置）",
+                galleryMax1:"最多预读 ",
+                galleryMax2:" 张图片（前后各多少张）",
+                galleryAutoZoom:"缩放改回 100%（chrome）",
+                galleryAutoZoomTip:"如果有放大，则把图片及 sidebar 部分的缩放改回 100%，增大可视面积（仅在 chrome 下有效）",
+                galleryDescriptionLength1:"注释的最大宽度",
+                galleryDescriptionLength2:" 个字符",
+                galleryAutoOpenSites:"自动打开图库的网站正则",
+                galleryEditSite:"在线编辑站点",
+                imgWindow:"图片窗口",
+                imgWindowFitToScreen:"适应屏幕，并且水平垂直居中",
+                imgWindowFitToScreenTip:"适应方式为contain，非cover",
+                imgWindowDefaultTool:"打开窗口时默认选择的工具",
+                hand:'抓手',
+                rotate:'旋转',
+                zoom:'放大镜',
+                imgWindowEscKey:"Esc键关闭",
+                imgWindowDblClickImgWindow:"双击图片窗口关闭",
+                imgWindowClickOutside:"点击图片外部关闭",
+                none:'无',
+                click:'单击',
+                dblclick:'双击',
+                imgWindowOverlayerShown:"覆盖层",
+                imgWindowOverlayerColor:"颜色和不透明度",
+                imgWindowShiftRotateStep1:"旋转时，按住shift键，旋转的步进",
+                imgWindowShiftRotateStep2:" 度",
+                imgWindowMouseWheelZoom:"滚轮缩放",
+                imgWindowZoomRange:"滚轮缩放比例",
+                imgWindowZoomRangeTip:"缩放比例(必须为正数)",
+                others:"其它",
+                waitImgLoad:"等图片完全载入后，才开始执行弹出放大等操作",
+                waitImgLoadTip:"按住ctrl键的时候,可以临时执行和这个设定相反的设定",
+                debug:"调试模式",
+                firstEngine:"首选搜图引擎",
+                refreshWhenError:"读取错误，点击重载",
+                switchSlide:"开关侧边栏",
+                countDown:"倒计时",
+            };
+            break;
+        default:
+            i18nData={
+            };
+            break;
+    }
+    function i18n(key,inserts){
+        var result=i18nData[key],i;
+        if(inserts){
+            if(typeof inserts!="object")inserts=[inserts];
+            for(i=0;i<inserts.length;i++){
+                result=result.replace("#t#",inserts[i]);
+            }
+        }
+        return result;
+    }
     var prefs;
     function init(topObject,window,document,arrayFn,envir,storage,unsafeWindow){
         // 默认设置，请到设置界面修改
@@ -255,10 +454,10 @@
              url:/^https?:\/\/(?:[^.]+\.)*weibo\.com/i,
              getImage:function(img){
                  var oldsrc=this.src;
-                 var pic=/(\.sinaimg\.cn\/)(?:bmiddle)/i;//微博内容图片.
-                 var pic2=/(\.sinaimg\.cn\/)(?:square|thumbnail)/i;// 微博内容图片2.
-                 var head=/(\.sinaimg\.cn\/\d+)\/50\//i;//头像.
-                 var photoList=/\.sinaimg\.cn\/thumb\d+\/\w+/i//相册
+                 var pic=/(\.sinaimg\.(cn|com)\/)(?:bmiddle)/i;//微博内容图片.
+                 var pic2=/(\.sinaimg\.(cn|com)\/)(?:square|thumbnail)/i;// 微博内容图片2.
+                 var head=/(\.sinaimg\.(cn|com)\/\d+)\/50\//i;//头像.
+                 var photoList=/\.sinaimg\.(cn|com)\/thumb\d+\/\w+/i//相册
                  var newsrc;
                  if(pic.test(oldsrc)){
                      newsrc=oldsrc.replace(pic,'$1large');  // large 不是每一张图片都有的
@@ -317,7 +516,7 @@
                      newsrc=this.parentNode.parentNode.parentNode.dataset.superFullImg;
                  }
                  if(!newsrc)
-                     newsrc = a.getAttribute('data-super-img') || a.getAttribute('data-super-full-img')
+                     newsrc = a.getAttribute('data-super-img') || a.getAttribute('data-super-full-img') || a.parentNode.getAttribute('data-super-img') || a.parentNode.getAttribute('data-super-full-img')
                          || oldsrc.replace(/(http:\/\/[^\/]+\/fs\d+\/)200H\/(.*)/i,'$1$2');
                  return newsrc==oldsrc? '' : newsrc;
              },
@@ -640,8 +839,8 @@
                 }
                 var original=this.getAttribute('data-original');
                 if(original)return original;
-                else if(/\.sinaimg\.cn\/mw\d+\//.test(oldsrc)){
-                    newsrc=oldsrc.replace(/.*(https?:\/\/[^\.]+\.sinaimg\.cn)\/mw\d+\//,"$1/large/");
+                else if(/\.sinaimg\.(cn|com)\/mw\d+\//.test(oldsrc)){
+                    newsrc=oldsrc.replace(/.*(https?:\/\/[^\.]+\.sinaimg\.(cn|com))\/mw\d+\//,"$1/large/");
                 }else if(/gravatar\.com\/avatar\/.*[\?&]s=/.test(oldsrc)){
                     newsrc=oldsrc.replace(/(gravatar\.com\/avatar\/.*[\?&]s=).*/,"$1500");
                 }else if(/uc_server\/avatar\.php\?uid=\d+&size=.*/.test(oldsrc)){
@@ -1740,27 +1939,27 @@
                 container.innerHTML=
                     '<span class="pv-gallery-head">'+
                     '<span class="pv-gallery-head-float-left">'+
-                    '<span title="图片信息" class="pv-gallery-head-left-img-info">'+
-                    '<span class="pv-gallery-head-left-img-info-resolution" title="分辨率">0 x 0</span>'+
-                    '<span class="pv-gallery-head-left-img-info-count" title="图片张数">（1 / 1）</span>'+
-                    '<span class="pv-gallery-head-left-img-info-scaling" title="缩放比">（100%）</span>'+
+                    '<span title="'+i18n("picInfo")+'" class="pv-gallery-head-left-img-info">'+
+                    '<span class="pv-gallery-head-left-img-info-resolution" title="'+i18n("resolution")+'">0 x 0</span>'+
+                    '<span class="pv-gallery-head-left-img-info-count" title="'+i18n("picNum")+'">（1 / 1）</span>'+
+                    '<span class="pv-gallery-head-left-img-info-scaling" title="'+i18n("scaleRatio")+'">（100%）</span>'+
                     '<span class="pv-gallery-vertical-align-helper"></span>'+
-                    '<span class="pv-gallery-head-left-img-info-description" title="图片注释"></span>'+
+                    '<span class="pv-gallery-head-left-img-info-description" title="'+i18n("picNote")+'"></span>'+
                     '</span>'+
                     '</span>'+
 
-                    '<span title="点击退出收藏模式" class="pv-gallery-head-command pv-gallery-head-command-exit-collection">'+
-                    '<span>退出收藏</span>'+
+                    '<span title="'+i18n("exitCollectionTip")+'" class="pv-gallery-head-command pv-gallery-head-command-exit-collection">'+
+                    '<span>'+i18n("exitCollection")+'</span>'+
                     '<span class="pv-gallery-vertical-align-helper"></span>'+
                     '</span>'+
 
-                     '<span title="加载下一页的图片" class="pv-gallery-head-command pv-gallery-head-command-nextPage">'+
-                    '<span>加载更多</span>'+
+                     '<span title="'+i18n("loadAllTip")+'" class="pv-gallery-head-command pv-gallery-head-command-nextPage">'+
+                    '<span>'+i18n("loadAll")+'</span>'+
                     '<span class="pv-gallery-vertical-align-helper"></span>'+
                     '</span>'+
 
-                    '<span title="弹出照片进行复杂操作" class="pv-gallery-head-command pv-gallery-head-command-operate">'+
-                    '<span>折腾</span>'+
+                    '<span title="'+i18n("fiddleTip")+'" class="pv-gallery-head-command pv-gallery-head-command-operate">'+
+                    '<span>'+i18n("fiddle")+'</span>'+
                     '<span class="pv-gallery-vertical-align-helper"></span>'+
                     '</span>'+
 
@@ -1771,46 +1970,46 @@
                     '<span class="pv-gallery-vertical-align-helper"></span>'+
                     '</span>'+
                     '<span class="pv-gallery-head-command-drop-list pv-gallery-head-command-drop-list-collect">'+
-                    '<span title="给收藏的图片添加一些描述吧" class="pv-gallery-head-command-drop-list-item pv-gallery-head-command-drop-list-item-collect-description">'+
-                    '<span>描述：</span>'+
+                    '<span title="'+i18n("collectDetailTip")+'" class="pv-gallery-head-command-drop-list-item pv-gallery-head-command-drop-list-item-collect-description">'+
+                    '<span>'+i18n("collectDetail")+'：</span>'+
                     '<textarea data-prefs="description" cols="25" rows="5"></textarea>'+
                     '</span>'+
                     '</span>'+
                     '</span>'+
 
                     '<span class="pv-gallery-head-command-container">'+
-                    '<span title="播放幻灯片" class="pv-gallery-head-command pv-gallery-head-command-slide-show">'+
+                    '<span title="'+i18n("playSlide")+'" class="pv-gallery-head-command pv-gallery-head-command-slide-show">'+
                     '<span class="pv-gallery-head-command_overlayer"></span>'+
                     '<span class="pv-gallery-head-command-slide-show-button">'+
                     '<span class="pv-gallery-head-command-slide-show-button-inner"></span>'+
                     '<span class="pv-gallery-vertical-align-helper"></span>'+
                     '</span>'+
-                    '<span class="pv-gallery-head-command-slide-show-countdown" title="倒计时"></span>'+
+                    '<span class="pv-gallery-head-command-slide-show-countdown" title="'+i18n("countDown")+'"></span>'+
                     '<span class="pv-gallery-vertical-align-helper"></span>'+
                     '</span>'+
                     '<span class="pv-gallery-head-command-drop-list pv-gallery-head-command-drop-list-slide-show">'+
-                    '<span class="pv-gallery-head-command-drop-list-item" title="间隔时间，单位（秒）">'+
+                    '<span class="pv-gallery-head-command-drop-list-item" title="'+i18n("slideGapTip")+'">'+
                     '<input data-prefs="interval" step="1" min="1" type="number" value="5" />'+
-                    '<span>间隔(s)</span>'+
+                    '<span>'+i18n("slideGap")+'</span>'+
                     '</span>'+
-                    '<span class="pv-gallery-head-command-drop-list-item"  title="从后往前播放">'+
+                    '<span class="pv-gallery-head-command-drop-list-item"  title="'+i18n("slideBackTip")+'">'+
                     '<input id="pv-gallery-head-command-drop-list-item-slide-show-backward" data-prefs="backward" type="checkbox" />'+
-                    '<label for="pv-gallery-head-command-drop-list-item-slide-show-backward">后退　　　</label>'+
+                    '<label for="pv-gallery-head-command-drop-list-item-slide-show-backward">'+i18n("slideBack")+'　　　</label>'+
                     '</span>'+
-                    '<span class="pv-gallery-head-command-drop-list-item"  title="从每张图片完全读取完成后才开始倒计时">'+
+                    '<span class="pv-gallery-head-command-drop-list-item"  title="'+i18n("slideWaitTip")+'">'+
                     '<input id="pv-gallery-head-command-drop-list-item-slide-show-wait" data-prefs="wait" type="checkbox" checked="checked" />'+
-                    '<label for="pv-gallery-head-command-drop-list-item-slide-show-wait">等待图片读取</label>'+
+                    '<label for="pv-gallery-head-command-drop-list-item-slide-show-wait">'+i18n("slideWait")+'</label>'+
                     '</span>'+
-                    '<span class="pv-gallery-head-command-drop-list-item"  title="快速跳过读取错误的图片">'+
+                    '<span class="pv-gallery-head-command-drop-list-item"  title="'+i18n("slideSkipErrorTip")+'">'+
                     '<input id="pv-gallery-head-command-drop-list-item-slide-show-skipErrorImg" data-prefs="skipErrorImg" type="checkbox" checked="checked" />'+
-                    '<label for="pv-gallery-head-command-drop-list-item-slide-show-skipErrorImg">跳过错误图片</label>'+
+                    '<label for="pv-gallery-head-command-drop-list-item-slide-show-skipErrorImg">'+i18n("slideSkipError")+'</label>'+
                     '</span>'+
                     '</span>'+
                     '</span>'+
 
                     '<span class="pv-gallery-head-command-container">'+
-                    '<span title="选择图片类别" class="pv-gallery-head-command pv-gallery-head-command-category">'+
-                    '<span>类别</span>'+
+                    '<span title="'+i18n("typeTip")+'" class="pv-gallery-head-command pv-gallery-head-command-category">'+
+                    '<span>'+i18n("type")+'</span>'+
                     '<span class="pv-gallery-vertical-align-helper"></span>'+
                     '</span>'+
                     '<span class="pv-gallery-head-command-drop-list pv-gallery-head-command-drop-list-category">'+
@@ -1818,37 +2017,37 @@
                     '</span>'+
 
                     '<span class="pv-gallery-head-command-container">'+
-                    '<span title="一些命令菜单" class="pv-gallery-head-command pv-gallery-head-command-others">'+
-                    '<span>命令</span>'+
+                    '<span title="'+i18n("commandTip")+'" class="pv-gallery-head-command pv-gallery-head-command-others">'+
+                    '<span>'+i18n("command")+'</span>'+
                     '<span class="pv-gallery-vertical-align-helper"></span>'+
                     '</span>'+
                     '<span class="pv-gallery-head-command-drop-list pv-gallery-head-command-drop-list-others">'+
-                    '<span class="pv-gallery-head-command-drop-list-item" data-command="psImage" title="使用'+prefs.gallery.editSite+'在线编辑该图片">在线编辑</span>'+
-                    '<span class="pv-gallery-head-command-drop-list-item" data-command="openInNewWindow" title="新窗口打开图片">新窗口打开</span>'+
-                    '<span class="pv-gallery-head-command-drop-list-item" data-command="scrollIntoView" title="滚动到当前图片所在的位置">定位到图片</span>'+
-                    '<span class="pv-gallery-head-command-drop-list-item" data-command="enterCollection" title="查看所有收藏的图片">查看收藏</span>'+
-                    '<span class="pv-gallery-head-command-drop-list-item" data-command="exportImages" title="导出所有图片到新窗口">导出图片</span>'+
-                    '<span class="pv-gallery-head-command-drop-list-item" data-command="downloadImage" title="下载图片">下载图片</span>'+
-                    '<span class="pv-gallery-head-command-drop-list-item" data-command="copyImages" title="复制所有大图的地址">复制图片</span>'+
-                    '<span class="pv-gallery-head-command-drop-list-item" title="最后几张图片时，滚动主窗口到最底部，然后自动加载新的图片">'+
+                    '<span class="pv-gallery-head-command-drop-list-item" data-command="psImage" title="'+i18n("onlineEditTip",prefs.gallery.editSite)+'">'+i18n("onlineEdit")+'</span>'+
+                    '<span class="pv-gallery-head-command-drop-list-item" data-command="openInNewWindow" title="'+i18n("openInNewWindowTip")+'">'+i18n("openInNewWindow")+'</span>'+
+                    '<span class="pv-gallery-head-command-drop-list-item" data-command="scrollIntoView" title="'+i18n("findInPageTip")+'">'+i18n("findInPage")+'</span>'+
+                    '<span class="pv-gallery-head-command-drop-list-item" data-command="enterCollection" title="'+i18n("viewCollectionTip")+'">'+i18n("viewCollection")+'</span>'+
+                    '<span class="pv-gallery-head-command-drop-list-item" data-command="exportImages" title="'+i18n("exportImagesTip")+'">'+i18n("exportImages")+'</span>'+
+                    '<span class="pv-gallery-head-command-drop-list-item" data-command="downloadImage" title="'+i18n("downloadImageTip")+'">'+i18n("downloadImage")+'</span>'+
+                    '<span class="pv-gallery-head-command-drop-list-item" data-command="copyImages" title="'+i18n("copyImagesUrlTip")+'">'+i18n("copyImagesUrl")+'</span>'+
+                    '<span class="pv-gallery-head-command-drop-list-item" title="'+i18n("autoRefreshTip")+'">'+
                     '<input type="checkbox"  data-command="scrollToEndAndReload"/>'+
-                    '<label data-command="scrollToEndAndReload">自动重载</label>'+
+                    '<label data-command="scrollToEndAndReload">'+i18n("autoRefresh")+'</label>'+
                     '</span>'+
-                    '<span id="pv-gallery-fullscreenbtn" class="pv-gallery-head-command-drop-list-item" data-command="fullScreen">进入全屏</span>'+
-                    '<span class="pv-gallery-head-command-drop-list-item" data-command="openPrefs">设置</span>'+
+                    '<span id="pv-gallery-fullscreenbtn" class="pv-gallery-head-command-drop-list-item" data-command="fullScreen">'+i18n("enterFullsc")+'</span>'+
+                    '<span class="pv-gallery-head-command-drop-list-item" data-command="openPrefs">'+i18n("config")+'</span>'+
                     '</span>'+
                     '</span>'+
 
                     '<span class="pv-gallery-head-command-container">'+
-                    '<span title="分享" class="pv-gallery-head-command pv-gallery-head-command-share">'+
-                    '<span>分享</span>'+
+                    '<span title="'+i18n("share")+'" class="pv-gallery-head-command pv-gallery-head-command-share">'+
+                    '<span>'+i18n("share")+'</span>'+
                     '<span class="pv-gallery-vertical-align-helper"></span>'+
                     '</span>'+
                     '<span class="pv-gallery-head-command-drop-list pv-gallery-head-command-drop-list-share">'+
                     '</span>'+
                     '</span>'+
 
-                    '<span title="关闭库" class="pv-gallery-head-command pv-gallery-head-command-close">'+
+                    '<span title="'+i18n("closeGallery")+'" class="pv-gallery-head-command pv-gallery-head-command-close">'+
                     '</span>'+
 
                     '</span>'+
@@ -1859,7 +2058,7 @@
 
                     '<span class="pv-gallery-img-content">'+
                     '<span class="pv-gallery-img-parent">'+
-                    '<img title="读取错误，点击重载" class="pv-gallery-img_broken" src="'+prefs.icons.brokenImg+'" />'+
+                    '<img title="'+i18n("refreshWhenError")+'" class="pv-gallery-img_broken" src="'+prefs.icons.brokenImg+'" />'+
                     '</span>'+
                     '<span class="pv-gallery-vertical-align-helper"></span>'+
                     '</span>'+
@@ -1879,7 +2078,7 @@
                     '</span>'+
                     '</span>'+
 
-                    '<span class="pv-gallery-sidebar-toggle" title="开关侧边栏">'+
+                    '<span class="pv-gallery-sidebar-toggle" title="'+i18n("switchSlide")+'">'+
                     '<span class="pv-gallery-sidebar-toggle-content"></span>'+
                     '<span class="pv-gallery-vertical-align-helper"></span>'+
                     '</span>'+
@@ -1915,7 +2114,7 @@
 
                 var maximizeTrigger=document.createElement('span');
                 this.maximizeTrigger=maximizeTrigger;
-                maximizeTrigger.innerHTML='-回到库-<span class="pv-gallery-maximize-trigger-close" title="关闭库"></span>';
+                maximizeTrigger.innerHTML='-'+i18n("returnToGallery")+'-<span class="pv-gallery-maximize-trigger-close" title="'+i18n("closeGallery")+'"></span>';
                 maximizeTrigger.className='pv-gallery-maximize-trigger';
 
                 document.body.appendChild(maximizeTrigger);
@@ -2083,26 +2282,26 @@
                     rule:{
                         shown:true,
                         count:0,
-                        description:'由高级规则匹配出来的',
-                        name:'高级规则',
+                        description:i18n("advancedRulesTip"),
+                        name:i18n("advancedRules"),
                     },
                     tpRule:{
                         shown:true,
                         count:0,
-                        description:'由通配规则匹配出来的',
-                        name:'通配规则',
+                        description:i18n("tpRulesTip"),
+                        name:i18n("tpRules"),
                     },
                     scale:{
                         shown:true,
                         count:0,
-                        description:'js自动查找，相对页面显示的图片有缩放过的',
-                        name:'缩放过的',
+                        description:i18n("scaleRulesTip"),
+                        name:i18n("scaleRules"),
                     },
                     force:{
                         shown:true,
                         count:0,
-                        description:'js自动查找，无缩放过的，但是满足一定的大小',
-                        name:'无缩放过',
+                        description:i18n("noScaleRulesTip"),
+                        name:i18n("noScaleRules"),
                     },
 
                     // new
@@ -2115,8 +2314,8 @@
                     scaleSmall: {
                         shown: prefs.gallery.showSmallSize,
                         count: 0,
-                        description: '小尺寸图片，实际尺寸的高和宽都小于 ' + prefs.gallery.scaleSmallSize + ' 像素',
-                        name: '小尺寸'
+                        description: i18n("smallRulesTip",prefs.gallery.scaleSmallSize),
+                        name: i18n("smallRules")
                     },
                 };
                 this.imgStatistics=imgStatistics;
@@ -2207,13 +2406,13 @@
                     enter:function(){
 
                         if(this.all.length==0){
-                            alert('你还木有收藏任何图片');
+                            alert(i18n("noCollectionYet"));
                             return;
                         };
 
                         this.mMode=true;
                         var button=this.dropListButton;
-                        button.textContent='退出收藏查看';
+                        button.textContent=i18n("exitCollection");
                         dataset(button,'command','exitCollection');
                         this.headButton.style.display='inline-block';
                         eleMaps['sidebar-thumbnails-container'].classList.add('pv-gallery-sidebar-thumbnails_hide-span');
@@ -2234,7 +2433,7 @@
                                 '" data-thumb-src="' + data_i.thumbSrc +
                                 '">'+
                                 '<span class="pv-gallery-vertical-align-helper"></span>'+
-                                '<span class="pv-gallery-sidebar-thumb-loading" title="正在读取中......"></span>'+
+                                '<span class="pv-gallery-sidebar-thumb-loading" title="'+i18n("loading")+'......"></span>'+
                                 '</span>';
                         };
                         container.innerHTML=spanMark;
@@ -2252,7 +2451,7 @@
 
                         this.mMode=false;
                         var button=this.dropListButton;
-                        button.textContent='查看所有收藏';
+                        button.textContent=i18n("viewCollection");
                         dataset(button,'command','enterCollection');
                         this.headButton.style.display='none';
                         eleMaps['sidebar-thumbnails-container'].removeChild(this.container);
@@ -2416,7 +2615,7 @@
                         }break;
                         case 'scrollIntoView':{
                             if(collection.mMode){
-                                alert('收藏模式中，无法使用');
+                                alert(i18n("inCollection"));
                                 return;
                             };
                             var relatedThumb=self.relatedThumb;
@@ -2425,7 +2624,7 @@
 
                             if(targetImg){
                                 if(!document.documentElement.contains(targetImg) || unsafeWindow.getComputedStyle(targetImg).display=='none'){//图片不存在文档中，或者隐藏了。
-                                    alert('图片不在文档中，或者被隐藏了，无法定位！');
+                                    alert(i18n("cantFind"));
                                     return;
                                 };
                                 self.minimize();
@@ -2439,7 +2638,7 @@
                                 document.addEventListener('pv-navigateToImg',function(e){
                                     //console.log('pv-navigateToImg',e);
                                     if(!e.detail){
-                                        alert('图片不在文档中，或者被隐藏了，无法定位！');
+                                        alert(i18n("cantFind"));
                                         return;
                                     };
                                     self.minimize();
@@ -2479,14 +2678,14 @@
                         case 'fullScreen':
                             if (target.classList.contains('fullscreenbtn')) {
                                 if (cancelFullScreen()) return;
-                                target.textContent = '进入全屏';
+                                target.textContent = i18n("enterFullsc");
                                 target.classList.remove('fullscreenbtn');
                                 return;
                             }
 
                             if (launchFullScreen(document.documentElement)) return;
                             target.classList.toggle('fullscreenbtn');
-                            target.textContent = '退出全屏';
+                            target.textContent = i18n("exitFullsc");
                             target.classList.add('fullscreenbtn');
                             break;
                         case 'openPrefs':
@@ -2512,7 +2711,7 @@
 
                         var btn = document.getElementById("pv-gallery-fullscreenbtn");
                         if (btn) {
-                            btn.textContent = '进入全屏';
+                            btn.textContent = i18n("enterFullsc");
                             btn.removeClass('fullscreenbtn');
                         }
                     }
@@ -3284,7 +3483,7 @@
                         '" title="' + (item.img?item.img.title:"") +
                         '">' +
                         '<span class="pv-gallery-vertical-align-helper"></span>' +
-                        '<span class="pv-gallery-sidebar-thumb-loading" title="正在读取中......"></span>' +
+                        '<span class="pv-gallery-sidebar-thumb-loading" title="'+i18n("loading")+'......"></span>' +
                         '</span>';
                 });
 
@@ -3482,7 +3681,7 @@
                     var btn = document.getElementById('pv-gallery-fullscreenbtn');
                     if (btn.classList.contains('fullscreenbtn')) {
                         cancelFullScreen();
-                        btn.textContent = '进入全屏';
+                        btn.textContent = i18n("enterFullsc");
                         btn.classList.remove('fullscreenbtn');
                     }
                 }
@@ -3584,10 +3783,10 @@
             href:location.href,
             prePage:function(){
                 var pageObj=this.getPage(),self=this,textSpan=this.eleMaps['head-command-nextPage'].querySelector("span");
-                textSpan.innerHTML="正在加载";
+                textSpan.innerHTML=i18n("loading");
                 var loadOver=function(){
-                    textSpan.innerHTML="<font color='red'>加载完毕</font>";
-                    setTimeout(function(){textSpan.innerHTML="加载更多";},1500);
+                    textSpan.innerHTML="<font color='red'>"+i18n("loadedAll")+"</font>";
+                    setTimeout(function(){textSpan.innerHTML=i18n("loadAll");},1500);
                 };
                 if(!pageObj.pre){
                     loadOver();
@@ -3653,15 +3852,15 @@
             },
             nextPage:function(){
                 var pageObj=this.getPage(),self=this,textSpan=this.eleMaps['head-command-nextPage'].querySelector("span");
-                textSpan.innerHTML="正在加载";
+                textSpan.innerHTML=i18n("loading");
                 var loadOver=function(){
                     if(prefs.gallery.loadAll){
                         self.curPage=document;
                         self.href=location.href;
                         self.prePage();
                     }else{
-                        textSpan.innerHTML="<font color='red'>加载完毕</font>";
-                        setTimeout(function(){textSpan.innerHTML="加载更多";},1500);
+                        textSpan.innerHTML="<font color='red'>"+i18n("loadedAll")+"</font>";
+                        setTimeout(function(){textSpan.innerHTML=i18n("loadAll");},1500);
                     }
                 };
                 if(!pageObj.next){
@@ -3774,8 +3973,8 @@
 
                 //写入style;
                 style.textContent=styleText.join(',') + '{\
-display:none !important;\
-}';
+                    display:none !important;\
+                    }';
 
                 //初始化缩略图区的滚动条
                 this.thumbScrollbar.reset();
@@ -3943,7 +4142,7 @@ display:none !important;\
 
                 var html = '\
                  <head>\
-                 <title>' + title + ' 导出大图</title>\
+                 <title>' + title + ' '+i18n("exportImages")+'</title>\
                  <style>\
                  .grid>div { float: left; max-height: 180px; max-width: 320px; margin: 2px; }\
                  .grid>div>img { max-height: 180px; max-width: 320px; }\
@@ -3956,9 +4155,9 @@ display:none !important;\
                  </style>\
                  </head>\
                  <body class="'+prefs.gallery.exportType+'">\
-                 <p>【图片标题】：' + title + '</p>\
-                 <p>【图片数量】：' + nodes.length + ' <select onchange="document.body.className=this.options[this.options.selectedIndex].value"><option value="grid" '+(prefs.gallery.exportType=="grid"?"selected='selected'":"")+'>平铺排序</option><option value="gridBig" '+(prefs.gallery.exportType=="gridBig"?"selected='selected'":"")+'>原图平铺</option><option value="list" '+(prefs.gallery.exportType=="list"?"selected='selected'":"")+'>列表排序</option> </select> \
-                 <input type="button" value="导出图片链接" onclick="var imgStr=\'\',selList=document.querySelectorAll(\'.select>img\');if(selList.length==0)[].forEach.call(document.querySelectorAll(\'img\'),function(i){imgStr+=i.src+\' \\n\'});else{[].forEach.call(selList,function(i){imgStr+=i.src+\' \\n\'});}window.prompt(\'Ctrl+C复制图片链接\',imgStr);">\
+                 <p>【'+i18n("picTitle")+'】：' + title + '</p>\
+                 <p>【'+i18n("picNum")+'】：' + nodes.length + ' <select onchange="document.body.className=this.options[this.options.selectedIndex].value"><option value="grid" '+(prefs.gallery.exportType=="grid"?"selected='selected'":"")+'>'+i18n("grid")+'</option><option value="gridBig" '+(prefs.gallery.exportType=="gridBig"?"selected='selected'":"")+'>'+i18n("gridBig")+'</option><option value="list" '+(prefs.gallery.exportType=="list"?"selected='selected'":"")+'>'+i18n("list")+'</option> </select> \
+                 <input type="button" value="'+i18n("exportImagesUrl")+'" onclick="var imgStr=\'\',selList=document.querySelectorAll(\'.select>img\');if(selList.length==0)[].forEach.call(document.querySelectorAll(\'img\'),function(i){imgStr+=i.src+\' \\n\'});else{[].forEach.call(selList,function(i){imgStr+=i.src+\' \\n\'});}window.prompt(\''+i18n("exportImagesUrlPop")+'\',imgStr);">\
                  </p>';
 
                 html += arr.join('\n') + '</body>'
@@ -3973,7 +4172,7 @@ display:none !important;\
                 GM_setClipboard(urls.join('\n'));
 
                 if (isAlert) {
-                    alert('已成功复制 ' + urls.length + ' 张大图地址');
+                    alert(i18n("copySuccess",urls.length));
                 }
             },
 
@@ -4156,13 +4355,13 @@ display:none !important;\
                     background:transparent url("' + prefs.icons.fivePointedStar + '") 0 0 no-repeat;\
                     }\
                     .pv-gallery-head-command-collect-icon ~ .pv-gallery-head-command-collect-text::after{\
-                    content:"收藏";\
+                    content:"'+i18n("collect")+'";\
                     }\
                     .pv-gallery-head-command-collect-favorite > .pv-gallery-head-command-collect-icon{\
                     background-position:-40px 0 !important;\
                     }\
                     .pv-gallery-head-command-collect-favorite > .pv-gallery-head-command-collect-text::after{\
-                    content:"已收藏";\
+                    content:"'+i18n("collected")+'";\
                     }\
                     .pv-gallery-head-command-exit-collection{\
                     color:#939300 !important;\
@@ -5281,7 +5480,7 @@ display:none !important;\
                     '</span>'+
                     '<span class="pv-pic-window-rotate-overlayer"></span>'+
                     '<span class="pv-pic-window-toolbar" unselectable="on">'+
-                    '<span class="pv-pic-window-tb-hand pv-pic-window-tb-tool" title="抓手"></span>'+
+                    '<span class="pv-pic-window-tb-hand pv-pic-window-tb-tool" title="'+i18n("hand")+'"></span>'+
                     '<span class="pv-pic-window-tb-tool-badge-container pv-pic-window-tb-tool-extend-menu-container">'+
                     '<span class="pv-pic-window-tb-rotate pv-pic-window-tb-tool" title="旋转"></span>'+
                     '<span class="pv-pic-window-tb-tool-badge">0</span>'+
@@ -5292,7 +5491,7 @@ display:none !important;\
                     '</span>'+
                     '</span>'+
                     '<span class="pv-pic-window-tb-tool-badge-container pv-pic-window-tb-tool-extend-menu-container">'+
-                    '<span class="pv-pic-window-tb-zoom pv-pic-window-tb-tool" title="缩放"></span>'+
+                    '<span class="pv-pic-window-tb-zoom pv-pic-window-tb-tool" title="'+i18n("scale")+'"></span>'+
                     '<span class="pv-pic-window-tb-tool-badge">0</span>'+
                     '<span class="pv-pic-window-tb-tool-extend-menu pv-pic-window-tb-tool-extend-menu-zoom">'+
                     '<span class="pv-pic-window-tb-tool-extend-menu-item">1</span>'+
@@ -5300,11 +5499,11 @@ display:none !important;\
                     '<span class="pv-pic-window-tb-tool-extend-menu-item">-0.1</span>'+
                     '</span>'+
                     '</span>'+
-                    '<span class="pv-pic-window-tb-flip-horizontal pv-pic-window-tb-command" title="水平翻转"></span>'+
-                    '<span class="pv-pic-window-tb-flip-vertical pv-pic-window-tb-command" title="垂直翻转"></span>'+
+                    '<span class="pv-pic-window-tb-flip-horizontal pv-pic-window-tb-command" title="'+i18n("horizontalFlip")+'"></span>'+
+                    '<span class="pv-pic-window-tb-flip-vertical pv-pic-window-tb-command" title="'+i18n("verticalFlip")+'"></span>'+
                     '</span>'+
                     '<span class="pv-pic-window-close"></span>' +
-                    '<span class="pv-pic-window-search" title="以图搜图"></span>' +
+                    '<span class="pv-pic-window-search" title="'+i18n("similarImage")+'"></span>' +
                     '<span class="pv-pic-window-range"></span>' +
                     '<span class="pv-pic-window-description"></span>'+
                     '<span class="pv-pic-search-state"></span>';
@@ -5336,8 +5535,8 @@ display:none !important;\
                 this.searchButton=searchButton;
                 var srcs, from;
                 img.onerror=function(e){
-                    setSearchState("原图加载失败，尝试加载下一结果……",img.parentNode);
-                    console.info(img.src+"加载失败");
+                    setSearchState(i18n("loadNextSimilar"),img.parentNode);
+                    console.info(img.src+i18n("loadError"));
                     var src=self.srcs.shift();
                     if(src)img.src=src;
                     else{
@@ -5349,7 +5548,7 @@ display:none !important;\
                                 self.img.src=srcs.shift();
                             },null,null,from);
                         }else{
-                            setSearchState("未找到原图",img.parentNode);
+                            setSearchState(i18n("findNoPic"),img.parentNode);
                             setTimeout(function(){
                                 setSearchState("",img.parentNode);
                             },2000);
@@ -6917,7 +7116,7 @@ left: -45px;\
                 container.className='pv-loading-container';
                 this.loadingAnim=container;
 
-                container.title='正在加载:' + this.data.src;
+                container.title=i18n("loading")+':' + this.data.src;
                 container.innerHTML=
                     '<span class="pv-loading-button pv-loading-retry" title="重试"></span>'+
                     '<span class="pv-loading-button pv-loading-cancle" title="取消"></span>';
@@ -7032,7 +7231,7 @@ left: -45px;\
                 background-image:none;\
                 }\
                 .pv-loading-container_error::after{\
-                content:"加载失败";\
+                content:"'+i18n("loadError")+'";\
                 line-height: 24px;\
                 color: red;\
                 font-size: 14px;\
@@ -7238,11 +7437,11 @@ left: -45px;\
 
                 arrayFn.forEach.call(this.children,function(child,index){
                     var titleMap={
-                        actual:'查看原始(A)',
-                        search:'查找原图(S)',
-                        gallery:'查看库(G)',
-                        current:'查看当前(C)',
-                        magnifier:'放大镜(M)',
+                        actual:i18n("actualBtn"),
+                        search:i18n("searchBtn"),
+                        gallery:i18n("galleryBtn"),
+                        current:i18n("currentBtn"),
+                        magnifier:i18n("magnifierBtn"),
                     };
                     var buttonName=prefs.floatBar.butonOrder[index];
                     buttons[buttonName]=child;
@@ -8360,8 +8559,8 @@ left: -45px;\
             title: GM_config.create('a', {
                 href: 'https://greasyfork.org/zh-CN/scripts/24204-picviewer-ce',
                 target: '_blank',
-                textContent: 'Picviewer CE+ 设置',
-                title: '点击此处打开主页'
+                textContent: 'Picviewer CE+ '+i18n("config"),
+                title: i18n("openHomePage")
             }),
             isTabs: true,
             skin: 'tab',
@@ -8383,228 +8582,228 @@ left: -45px;\
             fields: {
                 // 浮动工具栏
                 'floatBar.position': {
-                    label: '显示位置',
+                    label: i18n("position"),
                     type: 'select',
                     options: {
-                        'top left': '图片左上角',
-                        'top right': '图片右上角',
-                        'bottom right': '图片右下角',
-                        'bottom left': '图片左下角',
-                        'top center': '图片正上方',
-                        'bottom center': '图片正下方'
+                        'top left': i18n("topLeft"),
+                        'top right': i18n("topRight"),
+                        'bottom right': i18n("bottomRight"),
+                        'bottom left': i18n("bottomLeft"),
+                        'top center': i18n("topCenter"),
+                        'bottom center': i18n("bottomCenter")
                     },
                     "default": prefs.floatBar.position,
-                    section: ['浮动工具栏'],
+                    section: [i18n("floatBar")],
                 },
                 'floatBar.showDelay': {
-                    label: '显示延时',
+                    label: i18n("showDelay"),
                     type: 'int',
                     "default": prefs.floatBar.showDelay,
-                    after: ' 毫秒',
+                    after: ' '+i18n("ms"),
                 },
                 'floatBar.hideDelay': {
-                    label: '隐藏延时',
+                    label: i18n("hideDelay"),
                     type: 'int',
                     className: 'hideDelay',
                     "default": prefs.floatBar.hideDelay,
-                    after: ' 毫秒'
+                    after: ' '+i18n("ms")
                 },
                 'floatBar.forceShow.size.w': {
-                    label: '非缩放图片，超过该尺寸，显示浮框',
+                    label: i18n("forceShow"),
                     type: 'int',
                     className: 'size',
                     "default": prefs.floatBar.forceShow.size.w,
-                    title: '非缩放的图片大小超过下面设定的尺寸时显示浮动工具栏',
+                    title: i18n("forceShowTip"),
                     line: 'start',
                 },
                 'floatBar.forceShow.size.h': {
                     label: ' x ',
                     type: 'int',
                     className: 'sep-x',
-                    after: ' 像素',
+                    after: ' '+i18n("px"),
                     "default": prefs.floatBar.forceShow.size.h,
                     line: 'end',
                 },
                 'floatBar.minSizeLimit.w': {
-                    label: '缩放图片，超过该尺寸，显示浮框',
+                    label: i18n("minSizeLimit"),
                     type: 'int',
                     className: 'size',
                     "default": prefs.floatBar.minSizeLimit.w,
-                    title: '图片被缩放(图片原始大小与实际大小不一致)后,原图长宽大于设定值时显示浮动工具栏',
+                    title: i18n("minSizeLimitTip"),
                     line: 'start',
                 },
                 'floatBar.minSizeLimit.h': {
                     label: ' x ',
                     type: 'int',
                     className: 'sep-x',
-                    after: ' 像素',
+                    after: ' '+i18n("px"),
                     "default": prefs.floatBar.minSizeLimit.h,
                     line: 'end',
                 },
                 'floatBar.butonOrder': {
-                    label: '工具栏图标排序',
+                    label: i18n("butonOrder"),
                     type: 'text',
                     className: 'order',
                     "default": prefs.floatBar.butonOrder.join(', '),
                 },
                 'floatBar.listenBg': {
-                    label: '监听背景图',
+                    label: i18n("listenBg"),
                     type: 'checkbox',
                     "default": prefs.floatBar.listenBg,
-                    title: '在有背景图的元素上显示悬浮框'
+                    title: i18n("listenBgTip")
                 },
                 // 按键
                 'floatBar.keys.enable': {
-                    label: '启用以下快捷键',
+                    label: i18n("keysEnable"),
                     type: 'checkbox',
                     "default": prefs.floatBar.keys.enable
                 },
                 'floatBar.keys.actual': {
-                    label: '打开大图',
+                    label: i18n("keysActual"),
                     type: 'text',
                     className: 'floatBar-key',
                     "default": prefs.floatBar.keys.actual,
-                    title: '当出现悬浮条时按下此按键打开大图'
+                    title: i18n("keysActualTip")
                 },
                 'floatBar.keys.search': {
-                    label: '查找原图',
+                    label: i18n("keysSearch"),
                     type: 'text',
                     className: 'floatBar-key',
                     "default": prefs.floatBar.keys.search,
-                    title: '当出现悬浮条时按下此按键查找原图'
+                    title: i18n("keysSearchTip")
                 },
                 'floatBar.keys.current': {
-                    label: '打开当前图片',
+                    label: i18n("keysCurrent"),
                     type: 'text',
                     className: 'floatBar-key',
                     "default": prefs.floatBar.keys.current,
-                    title: '当出现悬浮条时按下此按键打开当前显示的图片'
+                    title: i18n("keysCurrentTip")
                 },
                 'floatBar.keys.magnifier': {
-                    label: '打开放大镜观察',
+                    label: i18n("keysMagnifier"),
                     type: 'text',
                     className: 'floatBar-key',
                     "default": prefs.floatBar.keys.magnifier,
-                    title: '当出现悬浮条时按下此按键打开放大镜观察'
+                    title: i18n("keysMagnifierTip")
                 },
                 'floatBar.keys.gallery': {
-                    label: '打开图库',
+                    label: i18n("keysGallery"),
                     type: 'text',
                     className: 'floatBar-key',
                     "default": prefs.floatBar.keys.gallery,
-                    title: '当出现悬浮条时按下此按键打开图库'
+                    title: i18n("keysGalleryTip")
                 },
 
                 // 放大镜
                 'magnifier.radius': {
-                    label: '默认半径',
+                    label: i18n("magnifierRadius"),
                     type: 'int',
                     "default": prefs.magnifier.radius,
-                    section: ['放大镜'],
-                    after: ' 像素'
+                    section: [i18n("magnifier")],
+                    after: ' '+i18n("px")
                 },
                 'magnifier.wheelZoom.enabled': {
-                    label: '启用滚轮缩放',
+                    label: i18n("magnifierWheelZoomEnabled"),
                     type: 'checkbox',
                     "default": prefs.magnifier.wheelZoom.enabled,
                 },
                 'magnifier.wheelZoom.range': {
-                    label: '滚轮缩放的倍率',
+                    label: i18n("magnifierWheelZoomRange"),
                     type: 'textarea',
                     "default": prefs.magnifier.wheelZoom.range.join(', '),
                 },
 
                 // 图库
                 'gallery.fitToScreen': {
-                    label: '对图片进行缩放以适应屏幕',
+                    label: i18n("galleryFitToScreen"),
                     type: 'checkbox',
                     "default": prefs.gallery.fitToScreen,
-                    section: ['图库'],
-                    title: '适应方式为contain，非cover'
+                    section: [i18n("gallery")],
+                    title: i18n("galleryFitToScreenTip")
                 },
                 'gallery.scrollEndToChange': {
-                    label: '大图滚动到底后切换图片',
+                    label: i18n("galleryScrollEndToChange"),
                     type: 'checkbox',
                     "default": prefs.gallery.scrollEndToChange,
-                    title: '取消上一选项后才有效'
+                    title: i18n("galleryScrollEndToChangeTip")
                 },
                 'gallery.exportType': {
-                    label: '图片导出默认排序',
+                    label: i18n("galleryExportType"),
                     type: 'select',
                     options: {
-                        'grid': '平铺排序',
-                        'gridBig': '原图平铺',
-                        'list': '列表排序'
+                        'grid': i18n("grid"),
+                        'gridBig': i18n("gridBig"),
+                        'list': i18n("list")
                     },
                     "default": prefs.gallery.exportType,
                 },
                 'gallery.loadAll': {
-                    label: '加载更多图片时自动处理全部页',
+                    label: i18n("galleryLoadAll"),
                     type: 'checkbox',
                     "default": prefs.gallery.loadAll,
-                    title: '若页数过多可能影响体验'
+                    title: i18n("galleryLoadAllTip")
                 },
                 'gallery.scaleSmallSize': {
-                    label: '实际尺寸的高和宽都小于 ',
+                    label: i18n("galleryScaleSmallSize1"),
                     type: 'int',
                     "default": prefs.gallery.scaleSmallSize,
-                    after: ' 像素则归入小尺寸图片'
+                    after: i18n("galleryScaleSmallSize2")
                 },
                 'gallery.showSmallSize':{
-                    label: '默认显示小尺寸图片',
+                    label: i18n("galleryShowSmallSize"),
                     type: 'checkbox',
                     "default": prefs.gallery.showSmallSize
                 },
                 'gallery.transition': {
-                    label: '显示图库切换图片的特效',
+                    label: i18n("galleryTransition"),
                     type: 'checkbox',
                     "default": prefs.gallery.transition
                 },
                 'gallery.sidebarPosition': {
-                    label: '缩略图栏位置',
+                    label: i18n("gallerySidebarPosition"),
                     type: 'select',
                     options: {
-                        'bottom': '底部',
-                        'right': '右侧',
-                        'left': '左侧',
-                        'top': '顶部'
+                        'bottom': i18n("bottom"),
+                        'right': i18n("right"),
+                        'left': i18n("left"),
+                        'top': i18n("top")
                     },
                     "default": prefs.gallery.sidebarPosition,
                     line: 'start',
                 },
                 'gallery.sidebarSize': {
-                    label: '高度',
+                    label: i18n("gallerySidebarSize"),
                     type: 'int',
                     "default": prefs.gallery.sidebarSize,
-                    title: '缩略图栏的高（如果是水平放置）或者宽（如果是垂直放置）',
-                    after: ' 像素',
+                    title: i18n("gallerySidebarSizeTip"),
+                    after: ' '+i18n("px"),
                     line: 'end',
                 },
                 'gallery.max': {
-                    label: '最多预读 ',
+                    label: i18n("galleryMax1"),
                     type: 'number',
                     "default": prefs.gallery.max,
-                    after: ' 张图片（前后各多少张）'
+                    after: i18n("galleryMax2")
                 },
                 'gallery.autoZoom': {
-                    label: '缩放改回 100%（chrome）',
+                    label: i18n("galleryAutoZoom"),
                     type: 'checkbox',
                     "default": prefs.gallery.autoZoom,
-                    title: '如果有放大，则把图片及 sidebar 部分的缩放改回 100%，增大可视面积（仅在 chrome 下有效）'
+                    title: i18n("galleryAutoZoomTip")
                 },
                 'gallery.descriptionLength': {
-                    label: '注释的最大宽度',
+                    label: i18n("galleryDescriptionLength1"),
                     type: 'int',
                     "default": prefs.gallery.descriptionLength,
-                    after: ' 个字符'
+                    after: i18n("galleryDescriptionLength2")
                 },
                 'gallery.autoOpenSites': {
-                    label: '自动打开图库的网站正则',
+                    label: i18n("galleryAutoOpenSites"),
                     type: 'textarea',
                     "default": prefs.gallery.autoOpenSites
                 },
                 'gallery.editSite': {
-                    label: '在线编辑',
+                    label: i18n("galleryEditSite"),
                     type: 'select',
                     options: {
                         'Pixlr': 'Pixlr',
@@ -8615,73 +8814,73 @@ left: -45px;\
 
                 // 图片窗口
                 'imgWindow.fitToScreen': {
-                    label: '适应屏幕，并且水平垂直居中',
+                    label: i18n("imgWindowFitToScreen"),
                     type: 'checkbox',
                     "default": prefs.imgWindow.fitToScreen,
-                    section: ['图片窗口'],
-                    title: '适应方式为contain，非cover',
+                    section: [i18n("imgWindow")],
+                    title: i18n("imgWindowFitToScreenTip"),
                 },
                 'imgWindow.close.defaultTool': {
-                    label: '打开窗口时默认选择的工具',
+                    label: i18n("imgWindowDefaultTool"),
                     type: 'select',
                     options: {
-                        'hand': '抓手',
-                        'rotate': '旋转',
-                        'zoom': '放大镜',
+                        'hand': i18n("hand"),
+                        'rotate': i18n("rotate"),
+                        'zoom': i18n("zoom"),
                     },
                     "default": prefs.imgWindow.close.defaultTool,
                 },
                 'imgWindow.close.escKey': {
-                    label: 'Esc键关闭',
+                    label: i18n("imgWindowEscKey"),
                     type: 'checkbox',
                     "default": prefs.imgWindow.close.escKey,
                     line: 'start',
                 },
                 'imgWindow.close.dblClickImgWindow': {
-                    label: '双击图片窗口关闭',
+                    label: i18n("imgWindowDblClickImgWindow"),
                     type: 'checkbox',
                     "default": prefs.imgWindow.close.dblClickImgWindow,
                 },
                 'imgWindow.close.clickOutside': {
-                    label: '点击图片外部关闭',
+                    label: i18n("imgWindowClickOutside"),
                     type: 'select',
                     options: {
-                        '': '无',
-                        'click': '单击',
-                        'dblclick': '双击',
+                        '': i18n("none"),
+                        'click': i18n("click"),
+                        'dblclick': i18n("dblclick"),
                     },
                     "default": prefs.imgWindow.close.clickOutside,
                     line: 'end',
                 },
                 'imgWindow.overlayer.shown': {
-                    label: '覆盖层',
+                    label: i18n("imgWindowOverlayerShown"),
                     type: 'checkbox',
                     "default": prefs.imgWindow.overlayer.shown,
                     line: 'start',
                 },
                 'imgWindow.overlayer.color': {
-                    label: '颜色和不透明度',
+                    label: i18n("imgWindowOverlayerColor"),
                     type: 'text',
                     className: 'color',
                     "default": prefs.imgWindow.overlayer.color,
                     line: 'end'
                 },
                 'imgWindow.shiftRotateStep': {
-                    label: '旋转时，按住shift键，旋转的步进',
+                    label: i18n("imgWindowShiftRotateStep1"),
                     type: 'int',
                     "default": prefs.imgWindow.shiftRotateStep,
-                    after: ' 度'
+                    after: i18n("imgWindowShiftRotateStep2")
                 },
                 'imgWindow.zoom.mouseWheelZoom': {
-                    label: '滚轮缩放',
+                    label: i18n("imgWindowMouseWheelZoom"),
                     type: 'checkbox',
                     "default": prefs.imgWindow.zoom.mouseWheelZoom,
                 },
                 'imgWindow.zoom.range': {
-                    label: '滚轮缩放比例',
+                    label: i18n("imgWindowZoomRange"),
                     type: 'textarea',
                     "default": prefs.imgWindow.zoom.range.join(', '),
-                    title: '缩放比例.(不要出现负数,谢谢-_-!~)',
+                    title: i18n("imgWindowZoomRangeTip"),
                     attr: {
                         "spellcheck": "false"
                     }
@@ -8689,19 +8888,19 @@ left: -45px;\
 
                 // 其它
                 'waitImgLoad': {
-                    label: '等图片完全载入后，才开始执行弹出放大等操作',
+                    label: i18n("waitImgLoad"),
                     type: 'checkbox',
                     "default": prefs.waitImgLoad,
-                    section: ['其它'],
-                    title: '按住ctrl键的时候,可以临时执行和这个设定相反的设定'
+                    section: [i18n("others")],
+                    title: i18n("waitImgLoadTip")
                 },
                 'debug': {
-                    label: '调试模式',
+                    label: i18n("debug"),
                     type: 'checkbox',
                     "default": prefs.debug
                 },
                 'firstEngine': {
-                    label: '首选搜图引擎',
+                    label: i18n("firstEngine"),
                     type: 'select',
                     options: {
                         "Tineye":"Tineye",
@@ -8721,7 +8920,7 @@ left: -45px;\
         });
 
 
-        GM_registerMenuCommand('Picviewer CE+ 设置', openPrefs);
+        GM_registerMenuCommand('Picviewer CE+ '+i18n("config"), openPrefs);
 
         loadPrefs();
 
@@ -8909,13 +9108,13 @@ left: -45px;\
     function searchImgByImg(imgSrc, imgCon, callBack, onError, noneResult, searchFrom){
         let srcs=[];
         var searchBaidu=function(){
-            setSearchState("百度识图开始……",imgCon);
+            setSearchState(i18n("beginSearchImg","百度"),imgCon);
             getUrl("http://image.baidu.com/n/same?queryImageUrl="+encodeURIComponent(imgSrc)+"&isguessword=1&rn=30&fr=pc&pn=0&sort=size", function(d){
                 let baiduJson;
                 try{
                     baiduJson=JSON.parse(d.responseText);
                 }catch(e){
-                    setSearchState("未找到原图",imgCon);
+                    setSearchState(i18n("findNoPic"),imgCon);
                     setTimeout(function(){
                         setSearchState("",imgCon);
                     },2000);
@@ -8928,7 +9127,7 @@ left: -45px;\
                         if(srcs.length>2)break;
                         srcs.push(imgData.objURL);
                     }
-                    setSearchState("百度识图结束，共找到"+srcs.length+"张匹配图片，开始加载第一张",imgCon);
+                    setSearchState(i18n("findOverBeginLoad",["百度",srcs.length]),imgCon);
                     callBackFun(srcs);
                 }else{
                     searchNext();
@@ -8937,7 +9136,7 @@ left: -45px;\
             }, onError);
         };
         var searchGoogle=function(){
-            setSearchState("谷歌识图开始……",imgCon);
+            setSearchState(i18n("beginSearchImg","Google"),imgCon);
             getUrl("https://www.google.com/searchbyimage?safe=off&image_url="+encodeURIComponent(imgSrc), function(d){
                 let googleHtml=document.implementation.createHTMLDocument('');
                 googleHtml.documentElement.innerHTML = d.responseText;
@@ -8953,7 +9152,7 @@ left: -45px;\
                             let jsonData=JSON.parse(imgs[i].innerHTML);
                             srcs.push(jsonData.ou);
                         }
-                        setSearchState("谷歌识图结束，共找到"+srcs.length+"张匹配图片，开始加载第一张",imgCon);
+                        setSearchState(i18n("findOverBeginLoad",["Google",srcs.length]),imgCon);
                         callBackFun(srcs);
                     }, onError);
                 }else{
@@ -8962,7 +9161,7 @@ left: -45px;\
             }, onError);
         };
         var searchTineye=function(){
-            setSearchState("Tineye识图开始……",imgCon);
+            setSearchState(i18n("beginSearchImg","Tineye"),imgCon);
             getUrl("https://www.tineye.com/search?url="+encodeURIComponent(imgSrc)+"&sort=size", function(d){
                 let tineyeHtml=document.implementation.createHTMLDocument('');
                 tineyeHtml.documentElement.innerHTML = d.responseText;
@@ -8973,7 +9172,7 @@ left: -45px;\
                         if(srcs.length>2)break;
                         srcs.push(searchImg[i].href);
                     }
-                    setSearchState("Tineye识图结束，共找到"+srcs.length+"张匹配图片，开始加载第一张",imgCon);
+                    setSearchState(i18n("findOverBeginLoad",["Tineye",srcs.length]),imgCon);
                     callBackFun(srcs);
                 }else{
                     searchNext();
@@ -8985,7 +9184,7 @@ left: -45px;\
             if(searchFrom<=searchSort.length)switchSearch();
             else{
                 if(noneResult)noneResult();
-                setSearchState("未找到原图",imgCon);
+                setSearchState(i18n("findNoPic"),imgCon);
                 setTimeout(function(){
                     setSearchState("",imgCon);
                 },2000);
