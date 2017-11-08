@@ -16,7 +16,7 @@
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @require      https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.3/FileSaver.min.js
-// @license      MIT License
+// @license      MIT
 // @compatible        chrome
 // @compatible        firefox
 // @compatible        opera 未测试

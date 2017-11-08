@@ -38,7 +38,7 @@
 // @grant         GM_openInTab
 // @grant         unsafeWindow
 // @grant         GM_xmlhttpRequest
-// @license       MIT License
+// @license       MIT
 // @connect       cache.video.qiyi.com
 // ==/UserScript==
 
