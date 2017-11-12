@@ -999,6 +999,12 @@
                  }
                  return this.src.replace(/\?.*/i,"");
              }
+            },
+            {name: "sohu",
+             url: /(sohu|sohucs)\.com/,
+             getImage: function() {
+                 return this.src.replace(/(sohucs\.com\/).*\/(images\/|os\/)/i,"$1$2");
+             }
             }
         ];
 
