@@ -48,7 +48,7 @@
 // @include     http*://www.oomoe.moe/*
 // @include     http*://www.kaze5.com/*
 // @include     http*://www.acg15.com/*
-// @include     http*://www.acglover.top/*
+// @include     http*://www.acglover.*
 // @include     http*://lifanmoe.com/*
 // @include     http*://www.idanmu.*
 // @include     http*://*.sijihuisuo.club/*
@@ -278,12 +278,12 @@
             },
             {
                 name:"次元の圣光",
-                url:"http://www.acglover.top/",
-                regex:/acglover\.top/,
+                url:"https://www.acglover.pw/",
+                regex:/acglover\./,
                 offset:60,
                 contentArea:".entry-inner",
                 run:function(){
-                    changeUrl(true,[["a","img"],[['acglover\\\.net','acglover\\\.top']]]);
+                    changeUrl(true,[["a","img"],[['acglover\\\.net','acglover\\\.pw']]]);
                 }
             },
             {
@@ -291,10 +291,10 @@
                 url:"https://www.acg.tf/",
                 regex:/acg\.tf/,
                 offset:60,
-                articleSel:".magazine-list>li,.article_list>li",
-                contentArea:".entry,.amp-wp-article-content>.amp-wp-content",
+                articleSel:".magazine-list>li,.article_list>li,.jeg_post",
+                contentArea:".entry,.amp-wp-article-content>.amp-wp-content,.content-inner",
                 run:function(){
-                    var content=document.querySelector('.entry,.amp-wp-article-content>.amp-wp-content');
+                    var content=document.querySelector('.entry,.amp-wp-article-content>.amp-wp-content,.content-inner');
                     if(content){
                         var plist = content.querySelectorAll("p");
                         var key = "";
