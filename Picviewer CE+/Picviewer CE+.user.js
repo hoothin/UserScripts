@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2017.11.15.1
+// @version        2017.11.29.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -3224,6 +3224,7 @@
 
                 this._resizeHandler=this.resizeHandler.bind(this);
                 this._keyDownListener=this.keyDownListener.bind(this);
+                this._keyUpListener=this.keyUpListener.bind(this);
 
                 //插入动态生成的css数据。
                 this.globalSSheet.insertRule('.pv-gallery-sidebar-thumb-container{'+
@@ -3827,6 +3828,22 @@
                         break;
                 }
             },
+            keyUpListener:function(e){
+                switch(e.keyCode){
+                    case 82:
+                        var img=this.img;
+                        var cssTransform=img.style[support.cssTransform];
+                        var iTransform=cssTransform.replace(/rotate\([^)]*\)/i,'');
+                        var rotatedRadians=cssTransform.indexOf("rotate")!=-1?cssTransform.replace(/.*rotate\(([\d\.]+).*/i,'$1'):0;
+                        var PI=Math.PI;
+                        var origin=parseFloat(rotatedRadians) + 90 * PI/180;
+                        if(origin>=2*PI){
+                            origin=0;
+                        }
+                        img.style[support.cssTransform] = ' rotate('+ origin +'rad) ' + iTransform;
+                        break;
+                }
+            },
             show:function(reload){
                 this.shown=true;
                 galleryMode=true;
@@ -3843,9 +3860,11 @@
                     window.addEventListener('resize',this._resizeHandler,true);
                 }
                 document.addEventListener('keydown',this._keyDownListener,true);
+                document.addEventListener('keyup',this._keyUpListener,true);
             },
             close:function(reload){
                 document.removeEventListener('keydown',this._keyDownListener,true);
+                document.removeEventListener('keyup',this._keyUpListener,true);
                 this.shown=false;
                 this.minimized=false;
 
@@ -7187,7 +7206,17 @@ left: -45px;\
             selectTool:function(tool){
                 var command=['fv','fh'];
                 if(command.indexOf(tool)==-1){//工具选择
-                    if(this.selectedTool==tool)return;
+                    if(this.selectedTool==tool){
+                        if(tool=="rotate"){
+                            var PI=Math.PI;
+                            var value=this.rotatedRadians + 90 * PI/180;
+                            if(value>=2*PI){
+                                value-=2*PI;
+                            }
+                            this.rotate(value,true);
+                        }
+                        return;
+                    }
                     var selectedTool=this.selectedTool;
                     this.selectedTool=tool;
                     if(this.tempHand || this.tempZoom){//临时工具中。不变鼠标
