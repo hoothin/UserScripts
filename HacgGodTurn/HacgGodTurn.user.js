@@ -908,8 +908,8 @@
         return;
     }else if(location.hostname=="pan.baidu.com"){
         if(location.hash.slice(1)){
-            document.querySelector("#accessCode").value=decodeURI(location.hash.slice(1).split("?")[0]);
-            document.querySelector('#submitBtn').click();
+            document.querySelector(".pickpw input,#accessCode").value=decodeURI(location.hash.slice(1).split("?")[0]);
+            document.querySelector('.g-button,#submitBtn').click();
         }
         return;
     }else if(config.disableSites.test(location.href)){
