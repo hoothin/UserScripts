@@ -4018,7 +4018,7 @@
                 self.href=self.canonicalUri(href);
                 GM_xmlhttpRequest({
                     method: 'GET',
-                    overrideMimeType:"text/html;charset="+document.charset,
+                    headers:{"Referer": + window.location.href},
                     url: self.href,
                     onload: function(d) {
                         let html=document.implementation.createHTMLDocument('');
@@ -4032,12 +4032,10 @@
                         });
                         imgs.forEach(function(img) {
                             var isrc=img.getAttribute("src");
+                            if (self._dataCache[isrc]) return;
                             var nimg = new Image();
                             nimg.src = isrc;
-                            nimg.style.display="none";
-                            document.body.appendChild(nimg);
                             nimg.onload=function(){
-                                if (self._dataCache[this.src]) return;
                                 var result = findPic(this);
                                 if (result) {
                                     self.data.push(result);
@@ -4045,7 +4043,6 @@
                                     self.loadThumb();
                                 }
                                 self._dataCache[this.src] = true;
-                                document.body.removeChild(nimg);
                             };
                         });
                         if(prefs.gallery.loadAll)self.prePage();
@@ -4096,8 +4093,8 @@
                 self.href=self.canonicalUri(href);
                 GM_xmlhttpRequest({
                     method: 'GET',
-                    overrideMimeType:"text/html;charset="+document.charset,
                     url: self.href,
+                    headers:{"Referer": + window.location.href},
                     onload: function(d) {
                         let html=document.implementation.createHTMLDocument('');
                         html.documentElement.innerHTML = d.responseText;
@@ -4110,12 +4107,10 @@
                         });
                         imgs.forEach(function(img) {
                             var isrc=img.getAttribute("src");
+                            if (self._dataCache[isrc]) return;
                             var nimg = new Image();
                             nimg.src = isrc;
-                            nimg.style.display="none";
-                            document.body.appendChild(nimg);
                             nimg.onload=function(){
-                                if (self._dataCache[this.src]) return;
                                 var result = findPic(this);
                                 if (result) {
                                     self.data.push(result);
@@ -4123,7 +4118,6 @@
                                     self.loadThumb();
                                 }
                                 self._dataCache[this.src] = true;
-                                document.body.removeChild(this);
                             };
                         });
                         if(prefs.gallery.loadAll)self.nextPage();
