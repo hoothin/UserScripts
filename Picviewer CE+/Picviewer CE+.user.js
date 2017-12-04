@@ -4034,6 +4034,8 @@
                             var isrc=img.getAttribute("src");
                             var nimg = new Image();
                             nimg.src = isrc;
+                            nimg.style.display="none";
+                            document.body.appendChild(nimg);
                             nimg.onload=function(){
                                 if (self._dataCache[this.src]) return;
                                 var result = findPic(this);
@@ -4043,6 +4045,7 @@
                                     self.loadThumb();
                                 }
                                 self._dataCache[this.src] = true;
+                                document.body.removeChild(nimg);
                             };
                         });
                         if(prefs.gallery.loadAll)self.prePage();
@@ -4109,6 +4112,8 @@
                             var isrc=img.getAttribute("src");
                             var nimg = new Image();
                             nimg.src = isrc;
+                            nimg.style.display="none";
+                            document.body.appendChild(nimg);
                             nimg.onload=function(){
                                 if (self._dataCache[this.src]) return;
                                 var result = findPic(this);
@@ -4118,6 +4123,7 @@
                                     self.loadThumb();
                                 }
                                 self._dataCache[this.src] = true;
+                                document.body.removeChild(this);
                             };
                         });
                         if(prefs.gallery.loadAll)self.nextPage();
