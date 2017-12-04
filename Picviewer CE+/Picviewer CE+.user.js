@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2017.11.29.1
+// @version        2017.12.4.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -3834,10 +3834,10 @@
                         var img=this.img;
                         var cssTransform=img.style[support.cssTransform];
                         var iTransform=cssTransform.replace(/rotate\([^)]*\)/i,'');
-                        var rotatedRadians=cssTransform.indexOf("rotate")!=-1?cssTransform.replace(/.*rotate\(([\d\.]+).*/i,'$1'):0;
+                        var rotatedRadians=cssTransform.indexOf("rotate")!=-1?cssTransform.replace(/.*rotate\(([-\d\.]+).*/i,'$1'):0;
                         var PI=Math.PI;
-                        var origin=parseFloat(rotatedRadians) + 90 * PI/180;
-                        if(origin>=2*PI){
+                        var origin=parseFloat(rotatedRadians) +(e.shiftKey?-90:90) * PI/180;
+                        if(origin>=2*PI || origin<=-2*PI ||(-0.1<origin && origin<0.1)){
                             origin=0;
                         }
                         img.style[support.cssTransform] = ' rotate('+ origin +'rad) ' + iTransform;
