@@ -850,10 +850,10 @@
     var isHttps=location.protocol=="https:";
     var head=document.getElementsByTagName("head")[0];
     if(isHttps){
-        var refMeta = document.createElement('meta');
+        /*var refMeta = document.createElement('meta');
         refMeta.name = 'referrer';
         refMeta.content = 'always';
-        head.appendChild(refMeta);
+        head.appendChild(refMeta);*/
     }else{
         if(document.title=="Service Unavailable - Connection Error"){
             location.href=location.href.replace(/^http:/,"https:");
