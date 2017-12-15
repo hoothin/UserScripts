@@ -14,9 +14,12 @@
 // @include     http*://hacg.*/wordpress/*
 // @include     http*://www.hacg.*/wp/*
 // @include     http*://hacg.*/wp/*
+// @include     http*://loli.cool/*
+// @include     http*://www.nicemoe.*
 // @include     http*://www.hacg.lol/*
 // @include     http*://hacg.lol/*
 // @include     http*://hacg.riwee.com/*
+// @include     http*://9iacg.*
 // @include     http*://hacg.me/*
 // @include     http*://hacg.in/*
 // @include     http*://hacg.be/*
@@ -45,11 +48,12 @@
 // @include     http*://www.acgnz.cc/*
 // @include     http*://nacg.me/*
 // @include     http*://www.tianshit.com/*
-// @include     http*://www.oomoe.moe/*
+// @include     http*://www.tianshif.com/*
+// @include     http*://www.oomoe.*
 // @include     http*://www.kaze5.com/*
 // @include     http*://www.acg15.com/*
 // @include     http*://www.acglover.*
-// @include     http*://lifanmoe.com/*
+// @include     http*://lifanmoe.*
 // @include     http*://www.idanmu.*
 // @include     http*://*.sijihuisuo.club/*
 // @include     http*://sijihuisuo.club/*
@@ -88,7 +92,7 @@
 // @include     http*://greasyfork.org/*/scripts/*
 // @include     http*://sleazyfork.org/*/forum/*discussion*
 // @include     http*://greasyfork.org/*/forum/*discussion*
-// @version     3.22.43
+// @version     3.22.45
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -323,8 +327,8 @@
             },
             {
                 name:"天使二次元",
-                url:"https://www.tianshit.com/",
-                regex:/tianshit\./,
+                url:"https://www.tianshif.com/",
+                regex:/tianshi.\./,
                 contentArea:'.article-content'
             },
             {
@@ -350,9 +354,9 @@
             },
             {
                 name:"里番萌",
-                url:"http://lifanmoe.com/",
+                url:"http://lifanmoe.mobi/",
                 regex:/lifanmoe\./,
-                downloadUrl:/lifanmoe\.com\/download/,
+                downloadUrl:/lifanmoe\.mobi\/download/,
                 offset:55,
                 articleSel:"section.card"
             },
@@ -482,8 +486,8 @@
             },
             {
                 name:"樱花漫舍",
-                url:"https://www.oomoe.moe/",
-                regex:/oomoe\.moe/,
+                url:"https://www.oomoe.org/",
+                regex:/oomoe\./,
                 hideOd:true,
                 offset:55,
                 articleSel:"section.card"
@@ -810,6 +814,40 @@
                 regex:/sexacg\./,
                 contentArea:'article',
                 commArea:'su-quote-inner'
+            },
+            {
+                name:"梦幻二次元",
+                url:"http://www.mhecy.com/",
+                regex:/mhecy\./,
+                downloadUrl:/www\.mhecy\.com\/\?download\?id=/,
+                hideOd:true,
+                offset:55,
+                articleSel:"section.card"
+            },
+            {
+                name:"里次元",
+                url:"http://loli.cool/",
+                regex:/loli\.cool/,
+                hideOd:true,
+                offset:55,
+                articleSel:"article.post",
+            },
+            {
+                name:"玖爱萌",
+                url:"https://9iacg.com/",
+                regex:/9iacg\./,
+                hideOd:true,
+                offset:55,
+                articleSel:"article.card",
+            },
+            {
+                name:"好萌",
+                url:"https://www.nicemoe.com/",
+                regex:/nicemoe\./,
+                hideOd:true,
+                offset:55,
+                downloadUrl:/\/\?download\?id=/,
+                articleSel:"section.card"
             }
             /*{
                 name:"咻咻动漫",
@@ -819,15 +857,6 @@
                 commArea:'commentlist',
                 offset:55,
                 articleSel:"article,.article-link>li"
-            },
-            {
-                name:"梦幻二次元",
-                url:"http://www.mhecy.com/",
-                regex:/mhecy\./,
-                downloadUrl:/www\.mhecy\.com\/\?page_id=\d+/,
-                hideOd:true,
-                offset:55,
-                articleSel:"section.card"
             }*/
         ],
         rocketReg:/magnet:\?xt|pan\.baidu\.com\/s|yunpan\.cn|howfile\.com\/file|mega\.|ed2k:\/\/\|file|bt\.cosxcos\.com\/view|du\.acgget\.com\/go\/|\.mediafire\.com\/download\/|\.torrent$/,

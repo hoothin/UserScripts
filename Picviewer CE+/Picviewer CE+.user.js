@@ -1011,7 +1011,7 @@
         // 通配型规则,无视站点.
         var tprules=[
             function(img, a) { // 解决新的dz论坛的原图获取方式.
-                var regs = [/(.+\/attachments?\/.+)\.thumb\.\w{2,5}$/i,/(wp-content\/uploads\/.*)\-\d+x\d+/i,/.*(?:url|src)=(https?:\/\/.*\.(?:jpg|jpeg|png|gif|bmp)).*/i];
+                var regs = [/(.+\/attachments?\/.+)\.thumb\.\w{2,5}$/i,/(wp-content\/uploads\/.*)\-\d+x\d+/i,/.*(?:url|src)=(https?:\/\/.*\.(?:jpg|jpeg|png|gif|bmp)).*/i,/.*thumb\.php\?src=([^&]*).*/i];
                 var oldsrc = this.src,newsrc = this.src;
                 if (oldsrc){
                     for(let reg of regs){
@@ -1021,7 +1021,7 @@
                     }
                 }
                 var original=this.getAttribute('data-original');
-                if(original)return original;
+                if(original && original!=oldsrc)return original;
                 else if(/\.sinaimg\.(cn|com)\/mw\d+\//.test(oldsrc)){
                     newsrc=oldsrc.replace(/.*(https?:\/\/[^\.]+\.sinaimg\.(cn|com))\/mw\d+\//,"$1/large/");
                 }else if(/gravatar\.com\/avatar\/.*[\?&]s=/.test(oldsrc)){
@@ -6476,6 +6476,7 @@ left: -45px;\
                 var shiftRotateStep=prefs.imgWindow.shiftRotateStep / (180/Math.PI);//转成弧度
 
                 var moveHandler=function(e){
+                    self.rotateIndicator.style.display='block';
                     var radians=lastRotatedRadians + Math.atan2( e.clientY - origin.y, e.clientX - origin.x );
                     if(radians>=2*PI){
                         radians-=2*PI;
@@ -7113,7 +7114,7 @@ left: -45px;\
                             };
 
                             var rIS=this.rotateIndicator.style;
-                            rIS.display='block';
+                            //rIS.display='block';
                             rIS.top=origin.y + 'px';
                             rIS.left=origin.x + 'px';
 
