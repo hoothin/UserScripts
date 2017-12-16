@@ -8397,7 +8397,7 @@ left: -45px;\
             if(!src)return;
 
             var ret = {
-                src: src,                  // 得到的src
+                src: decodeURIComponent(src),                  // 得到的src
                 srcs: srcs,                // 多个 src，失败了会尝试下一个
                 type: type,                // 通过哪种方式得到的
                 imgSrc: imgSrc,            // 处理的图片的src
