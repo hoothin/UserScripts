@@ -3899,8 +3899,6 @@
                 let next=curPage.querySelector("a.next");
                 if(!pre)pre=curPage.querySelector("a#prev");
                 if(!next)next=curPage.querySelector("a#next");
-                if(!pre)pre=curPage.querySelector(".prev>a");
-                if(!next)next=curPage.querySelector(".next>a");
                 if(!pre || !next){
                     let aTags=curPage.querySelectorAll("a");
                     if(!pre){
@@ -3958,6 +3956,8 @@
                         next=nextf||nexts||nextt;
                     }
                 }
+                if(!pre)pre=curPage.querySelector(".prev>a");
+                if(!next)next=curPage.querySelector(".next>a");
                 if(!pre && !next){
                     let pageDiv=curPage.querySelector("div.wp-pagenavi");
                     if(pageDiv){
