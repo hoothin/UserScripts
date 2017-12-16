@@ -3191,6 +3191,12 @@
                             },
                         });
                     }else if(eleMaps['head-command-nextPage'].contains(target)){
+                        var textSpan=eleMaps['head-command-nextPage'].querySelector("span");
+                        if(textSpan.innerHTML==i18n("loading")){
+                            textSpan.innerHTML=i18n("loadAll");
+                            return;
+                        }
+                        textSpan.innerHTML=i18n("loading");
                         self.completePages=[];
                         self.nextPage();
                     }else if(eleMaps['head-command-collect'].contains(target)){
@@ -3985,7 +3991,9 @@
             href:location.href,
             prePage:function(){
                 var pageObj=this.getPage(),self=this,textSpan=this.eleMaps['head-command-nextPage'].querySelector("span");
-                textSpan.innerHTML=i18n("loading");
+                if(textSpan.innerHTML!=i18n("loading")){
+                    return;
+                }
                 var loadOver=function(){
                     textSpan.innerHTML="<font color='red'>"+i18n("loadedAll")+"</font>";
                     setTimeout(function(){textSpan.innerHTML=i18n("loadAll");},1500);
@@ -4056,7 +4064,9 @@
             },
             nextPage:function(){
                 var pageObj=this.getPage(),self=this,textSpan=this.eleMaps['head-command-nextPage'].querySelector("span");
-                textSpan.innerHTML=i18n("loading");
+                if(textSpan.innerHTML!=i18n("loading")){
+                    return;
+                }
                 var loadOver=function(){
                     if(prefs.gallery.loadAll){
                         self.curPage=document;
