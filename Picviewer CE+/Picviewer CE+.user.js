@@ -4032,6 +4032,8 @@
                         });
                         imgs.forEach(function(img) {
                             var isrc=img.getAttribute("src");
+                            if(!isrc)return;
+                            isrc=self.canonicalUri(isrc);
                             if (self._dataCache[isrc]) return;
                             var nimg = new Image();
                             nimg.src = isrc;
@@ -4107,6 +4109,8 @@
                         });
                         imgs.forEach(function(img) {
                             var isrc=img.getAttribute("src");
+                            if(!isrc)return;
+                            isrc=self.canonicalUri(isrc);
                             if (self._dataCache[isrc]) return;
                             var nimg = new Image();
                             nimg.src = isrc;
