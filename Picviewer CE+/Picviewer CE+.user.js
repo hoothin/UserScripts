@@ -8370,12 +8370,12 @@ left: -45px;\
                 if(src)type='scale';
             };
 
+            var imgAS={//实际尺寸。
+                h:img.naturalHeight,
+                w:img.naturalWidth,
+            };
             if(!src || src==imgSrc){//本图片是否被缩放.
                 noActual=true;
-                var imgAS={//实际尺寸。
-                    h:img.naturalHeight,
-                    w:img.naturalWidth,
-                };
 
                 var imgCStyle=unsafeWindow.getComputedStyle(img);
                 var imgCS={
@@ -8393,12 +8393,12 @@ left: -45px;\
                         type='force';
                     }
                 }
-                if (imgAS.h < prefs.gallery.scaleSmallSize && imgAS.w < prefs.gallery.scaleSmallSize) {
-                    type = 'scaleSmall';
-                }
             };
 
             if(!src)return;
+            if (imgAS.h < prefs.gallery.scaleSmallSize && imgAS.w < prefs.gallery.scaleSmallSize) {
+                type = 'scaleSmall';
+            }
 
             var ret = {
                 src: decodeURIComponent(src),                  // 得到的src
