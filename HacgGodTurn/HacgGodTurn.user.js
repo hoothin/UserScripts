@@ -532,12 +532,12 @@
                             ele.href+="#"+ele.innerHTML;
                         }
                     }
-                    var $=unsafeWindow.jQuery;
+                    /*var $=unsafeWindow.jQuery;
                     $(document).off("click", ".sora-card .__copy");
                     $(document).on("click", ".sora-card .__copy", function() {
                         var code = $(this).children("code").text();
                         this.href=this.href.split("#")[0]+"#"+code;
-                    });
+                    });*/
                 }
             },
             {
