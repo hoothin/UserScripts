@@ -166,7 +166,7 @@
                         changeUrl(true,[["iframe"],[['http:','https:']]]);
                         changeUrl(true,[["embed"],[['http:','https:']]]);
                         changeUrl(true,[["object"],[['http:','https:']]]);
-                        changeUrl(true,[["a"],[['http:(.*hacg)','https:$1']]]);
+                        changeUrl(true,[["a"],[['http:(.*(hacg|llss))','https:$1']]]);
                     }
                     if(document.querySelector(".metaslider-flex")){
                         document.title = document.title.replace(/\u7409\u7483\u795e\u793e/,"\u7409\u7483 ♂ \u795e\u793e");
