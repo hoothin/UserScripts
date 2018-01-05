@@ -138,7 +138,7 @@
         sites:[
             {
                 name:"琉璃神社",
-                url:"https://www.llss.fun/wp/",
+                url:"https://www.llss.tv/wp/",
                 regex:/hacg\.|llss\./,
                 run:function(){
                     var feiZao,feiZaos=document.querySelectorAll("p1"),i;
