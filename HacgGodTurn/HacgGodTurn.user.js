@@ -33,7 +33,7 @@
 // @include     http*://hacg.ch/*
 // @include     http*://llss.*
 // @include     http*://www.llss.*
-// @include     http*://www.acgpy.com/*
+// @include     http*://www.acgpy.*
 // @include     http*://blog.reimu.net/*
 // @include     http*://pan.baidu.com/share/*
 // @include     http*://pan.baidu.com/s/*
@@ -769,15 +769,15 @@
             },
             {
                 name:"绅士交易",
-                url:"https://www.acgpy.com/wpx/",
-                regex:/acgpy\.com/,
+                url:"https://www.acgpy.net/wpx/",
+                regex:/acgpy\./,
                 offset:45,
                 hideOd:true,
                 run:function(){
-                    if(/www\.acgpy\.com\/login\d+\./.test(location.href)){
+                    if(/www\.acgpy\.[^\.]+\/login\d+\./.test(location.href)){
                         var date=new Date();
                         date.setTime(date.getTime()+14400*60*1000);
-                        document.cookie="trade"+location.href.replace(/.*.com\/login(\d+)\..*/,"$1")+"=A32; expires="+date.toGMTString();
+                        document.cookie="trade"+location.href.replace(/.*.[^\.]+\/login(\d+)\..*/,"$1")+"=A32; expires="+date.toGMTString();
                         //document.cookie="trade0421=A32; expires="+date.toGMTString();
                         top.location='wpx';
                     }
