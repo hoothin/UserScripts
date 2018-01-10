@@ -972,7 +972,7 @@
     }
     document.addEventListener("keydown", function(e) {
         if(curArticle && e.keyCode != 17)curArticle.classList.remove("oD_sel");
-        if(e.keyCode == 119) {
+        if(e.keyCode == 192) {
             if(e.altKey){
                 rocketContent.style.display="block";
                 var rocketLinks=document.querySelector("div#rocketLinks");
