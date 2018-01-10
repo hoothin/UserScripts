@@ -70,3 +70,19 @@
     }
     setTimeout(()=>{clearAD();},2000);
 })();
+//2017-12-26 重新修改代码，追加代码写在最后，经过傲游、360、chrome测试OK
+// 移除搜索结果头部"广告" #shadow-root ppim  id=1
+document.addEventListener('DOMSubtreeModified',function(){
+        //傲游保留
+        Array.prototype.forEach.call(document.body.querySelectorAll(".c-container /deep/ .c-container"), function(e) {
+            e.parentNode.removeChild(e);
+        });
+        //chrome系列
+        Array.prototype.forEach.call(document.body.querySelectorAll(".m"), function(e) {
+            if(e.innerText=='广告')
+            {
+                e=e.parentNode.parentNode;
+                e.parentNode.removeChild(e);
+            }
+        });
+},false);
