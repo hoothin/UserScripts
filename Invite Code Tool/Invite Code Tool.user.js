@@ -17,7 +17,7 @@
 // @grant        GM_getValue
 // @grant        GM_deleteValue
 // @grant        unsafeWindow
-// @license      MIT License
+// @license      MIT
 // @compatible        chrome
 // @compatible        firefox
 // ==/UserScript==

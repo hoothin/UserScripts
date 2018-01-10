@@ -10,7 +10,7 @@
 // @include            http*://m.baidu.com/*
 // @grant              none
 // @run-at             document-start
-// @license            MIT License
+// @license            MIT
 // @compatible         chrome 测试通过
 // @compatible         firefox 测试通过
 // @compatible         opera 未测试

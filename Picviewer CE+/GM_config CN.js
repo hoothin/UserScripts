@@ -10,7 +10,7 @@
 // @grant       GM_getValue
 // @grant       GM_setValue
 // @grant       GM_deleteValue
-// @license     LGPL 3
+// @license     LGPL-3.0+
 // ==/UserScript==
 
 /*

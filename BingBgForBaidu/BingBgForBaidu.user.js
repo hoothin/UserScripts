@@ -13,7 +13,7 @@
 // @grant        unsafeWindow
 // @connect      global.bing.com
 // @connect      cn.bing.com
-// @license      MIT License
+// @license      MIT
 // @include      *://www.baidu.com/
 // @include      *://www.baidu.com/home*
 // @include      *://www.baidu.com/?tn=*
