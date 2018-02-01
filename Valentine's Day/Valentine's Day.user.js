@@ -8,7 +8,7 @@
 // @description:zh-CN 伪装成百度新闻的情人节惊喜
 // @description:zh-TW 僞裝成百度新聞的情人節驚喜
 // @author       hoothin
-// @license      MIT
+// @license      MIT License
 // @include      *://www.baidu.com/
 // @include      *://www.baidu.com/home*
 // @include      *://www.baidu.com/?tn=*
@@ -24,7 +24,7 @@
     var valentinName="AAA";    //情人名字
     var myName="BBB";    //自己名字
     var time="2007 1 12";    //纪念日
-
+    
     var date=new Date();
     var dateDay=date.getDate(),dateMonth=date.getMonth()+1;
     if(dateDay!=14||dateMonth!=2)return;

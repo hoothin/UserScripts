@@ -11,7 +11,7 @@
 // @grant        GM_openInTab
 // @compatible   chrome
 // @compatible   firefox
-// @license      MIT
+// @license      MIT License
 // @contributionURL https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
 // @contributionAmount 1
 // @include      *

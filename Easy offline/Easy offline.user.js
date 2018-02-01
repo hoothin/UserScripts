@@ -22,7 +22,7 @@
 // @grant        GM_deleteValue
 // @grant        unsafeWindow
 // @supportURL   http://www.hoothin.com
-// @license      MIT
+// @license      MIT License
 // @compatible        chrome
 // @compatible        firefox
 // @contributionURL https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation

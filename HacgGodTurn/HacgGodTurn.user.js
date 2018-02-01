@@ -105,7 +105,7 @@
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
 // @updateURL   https://greasyfork.org/scripts/23316/code/HacgGodTurn.user.js
 // @downloadURL https://greasyfork.org/scripts/23316/code/HacgGodTurn.user.js
-// @license     MIT
+// @license     MIT License
 // @connect     tts.baidu.com
 // @compatible        chrome
 // @compatible        firefox

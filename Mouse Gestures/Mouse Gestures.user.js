@@ -15,7 +15,7 @@
 // @grant              GM_registerMenuCommand
 // @grant              unsafeWindow
 // @grant              GM_info
-// @license            MIT
+// @license            MIT License
 // @compatible        chrome
 // @compatible        firefox
 // ==/UserScript==
