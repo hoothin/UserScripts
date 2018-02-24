@@ -20,7 +20,7 @@
 // @grant          GM_setClipboard
 // @license        MIT License
 // @require        https://cdn.jsdelivr.net/jquery/1.7.2/jquery.min.js
-// @require        https://greasyfork.org/scripts/26615-managerlinks/code/managerLinks.js?version=186539
+// @require        https://greasyfork.org/scripts/26615-managerlinks/code/managerLinks.js
 // @contributionURL https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
 // @contributionAmount 1
 // ==/UserScript==
