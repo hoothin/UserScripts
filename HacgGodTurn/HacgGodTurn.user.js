@@ -54,6 +54,7 @@
 // @include     http*://www.acg15.com/*
 // @include     http*://www.acglover.*
 // @include     http*://lifanmoe.*
+// @include     http*://www.yhacg.*
 // @include     http*://www.idanmu.*
 // @include     http*://*.sijihuisuo.club/*
 // @include     http*://sijihuisuo.club/*
@@ -92,7 +93,7 @@
 // @include     http*://greasyfork.org/*/scripts/*
 // @include     http*://sleazyfork.org/*/forum/*discussion*
 // @include     http*://greasyfork.org/*/forum/*discussion*
-// @version     3.22.48
+// @version     3.22.49
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -409,6 +410,15 @@
                 offset:55,
                 run:function(){
                     changeUrl(true,[["a"],[['https?:\\\/\\\/[^\\\.]*(\\\.)?acg18\\\.us\\\/go\\\/\\\?url=','']]]);
+                }
+            },
+            {
+                name:"樱花御所",
+                url:"https://www.yhacg.us",
+                regex:/yhacg\./,
+                offset:55,
+                run:function(){
+                    changeUrl(true,[["a"],[['https?:\\\/\\\/[^\\\.]*(\\\.)?yhacg\\\.us\\\/go\\\/\\\?url=','']]]);
                 }
             },
             {
