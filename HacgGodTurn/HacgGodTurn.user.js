@@ -93,7 +93,7 @@
 // @include     http*://greasyfork.org/*/scripts/*
 // @include     http*://sleazyfork.org/*/forum/*discussion*
 // @include     http*://greasyfork.org/*/forum/*discussion*
-// @version     3.22.49
+// @version     3.22.50
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -233,7 +233,7 @@
                     });
                     function createBlockBtn(){
                         var pre = document.querySelector("pre");
-                        var author = document.querySelector(".author-info");
+                        var author = document.querySelector(".author-info,.entry-footer");
                         if (author && !document.querySelector("#blockBtn")) {
                             var blockBtn=document.createElement("button");
                             blockBtn.id="blockBtn";
