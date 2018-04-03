@@ -961,9 +961,9 @@
              }
             },
             {name: "24meitu",
-             url: /24meitu\.com|25meinv\.com|aisimeinv\.com|24tupian\.com|24meinv\.me/,
+             url: /24meitu\.com|25meinv\.com|aisimeinv\.com|24tupian\.com|24meinv\./,
              getImage: function() {
-                 return this.src.replace(/\/m([^\/]+)$/i,"/$1");
+                 return this.src.replace(/\/m([^\/]+)$/i,"/$1").replace(/imgs\./i,"bimg.");
              }
             },
             {name: "Tumblr",
