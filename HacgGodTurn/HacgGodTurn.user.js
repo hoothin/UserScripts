@@ -93,7 +93,7 @@
 // @include     http*://greasyfork.org/*/scripts/*
 // @include     http*://sleazyfork.org/*/forum/*discussion*
 // @include     http*://greasyfork.org/*/forum/*discussion*
-// @version     3.22.51
+// @version     3.22.52
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -101,7 +101,7 @@
 // @grant       GM_getValue
 // @grant       unsafeWindow
 // @run-at      document-end
-// @require     https://greasyfork.org/scripts/23522/code/od.js?version=263087
+// @require     https://greasyfork.org/scripts/23522/code/od.js?version=264106
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
 // @updateURL   https://greasyfork.org/scripts/23316/code/HacgGodTurn.user.js
@@ -1199,7 +1199,7 @@
                 }else{
                     oD_link.href="magnet:?xt=urn:btih:"+oD_hash;
                     oD_link.textContent="磁链";
-                    oD_link2.href="http://www.torrent.org.cn/Home/torrent/download.html?hash="+oD_hash;
+                    oD_link2.href="http://www.torrent.org.cn/home/convert/magnet2torrent.html?hash="+oD_hash;
                     oD_link2.textContent="种子";
                     oD_link2.style.cssText="margin-left:20px";
                     oD_link3.href="https://btso.pw/magnet/detail/hash/"+oD_hash;
