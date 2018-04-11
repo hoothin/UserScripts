@@ -2,7 +2,7 @@
 // @name         百Bing图
 // @name:en      BingBgForBaidu
 // @namespace    hoothin
-// @version      2.3.9
+// @version      2.3.10
 // @description     给百度首页换上Bing的背景图，并添加背景图链接与日历组件
 // @description:en  Just change the background image of baidu.com to bing.com
 // @author       hoothin
@@ -121,7 +121,7 @@
                 jsonData = JSON.parse(result.responseText);
                 var bgUrl=jsonData.images[0].url;
                 if(!/^https?:\/\//.test(bgUrl)){
-                    bgUrl="http://global.bing.com"+bgUrl;
+                    bgUrl="http://cn.bing.com"+bgUrl;
                 }
                 bingBgLink.title=jsonData.images[0].copyright;
                 bingBgLink.href=bgUrl;
