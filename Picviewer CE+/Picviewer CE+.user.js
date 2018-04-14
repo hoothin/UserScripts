@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2018.4.7.1
+// @version        2018.4.14.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -94,7 +94,7 @@
                 exportImagesTip:"导出所有图片到新窗口",
                 downloadImage:"下载图片",
                 downloadImageTip:"下载当前图片",
-                copyImagesUrl:"复制图片",
+                copyImagesUrl:"复制所有",
                 copyImagesUrlTip:"复制所有大图地址",
                 copySuccess:"已成功复制 #t# 张大图地址",
                 autoRefresh:"自动重载",
@@ -2131,6 +2131,7 @@
                     '<span class="pv-gallery-head-left-img-info-scaling" title="'+i18n("scaleRatio")+'">（100%）</span>'+
                     '<span class="pv-gallery-vertical-align-helper"></span>'+
                     '<span class="pv-gallery-head-left-img-info-description" title="'+i18n("picNote")+'"></span>'+
+                    '<input type="range" id="minsize" min="0" max="100" value="0">'+
                     '</span>'+
                     '</span>'+
 
@@ -2210,11 +2211,11 @@
                     '<span class="pv-gallery-head-command-drop-list pv-gallery-head-command-drop-list-others">'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="psImage" title="'+i18n("onlineEditTip",prefs.gallery.editSite)+'">'+i18n("onlineEdit")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="openInNewWindow" title="'+i18n("openInNewWindowTip")+'">'+i18n("openInNewWindow")+'</span>'+
+                    '<span class="pv-gallery-head-command-drop-list-item" data-command="copyImages" title="'+i18n("copyImagesUrlTip")+'">'+i18n("copyImagesUrl")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="scrollIntoView" title="'+i18n("findInPageTip")+'">'+i18n("findInPage")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="enterCollection" title="'+i18n("viewCollectionTip")+'">'+i18n("viewCollection")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="exportImages" title="'+i18n("exportImagesTip")+'">'+i18n("exportImages")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="downloadImage" title="'+i18n("downloadImageTip")+'">'+i18n("downloadImage")+'</span>'+
-                    '<span class="pv-gallery-head-command-drop-list-item" data-command="copyImages" title="'+i18n("copyImagesUrlTip")+'">'+i18n("copyImagesUrl")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" title="'+i18n("autoRefreshTip")+'">'+
                     '<input type="checkbox"  data-command="scrollToEndAndReload"/>'+
                     '<label data-command="scrollToEndAndReload">'+i18n("autoRefresh")+'</label>'+
@@ -2298,6 +2299,8 @@
                     '</span>';
                 document.body.appendChild(container);
 
+                var self=this;
+                container.querySelector("#minsize").oninput=function(){self.changeMinView();};
                 var maximizeTrigger=document.createElement('span');
                 this.maximizeTrigger=maximizeTrigger;
                 maximizeTrigger.innerHTML='-'+i18n("returnToGallery")+'-<span class="pv-gallery-maximize-trigger-close" title="'+i18n("closeGallery")+'"></span>';
@@ -3250,6 +3253,30 @@
                 this.initZoom();
             },
 
+            changeMinView:function(){
+                var maxSize=0;
+                var sizeInput=this.gallery.querySelector("#minsize");
+                sizeInput.title=sizeInput.value+"px";
+                this.data.forEach(function(item) {
+                    if(!item)return;
+                    if(item.size>maxSize)
+                        maxSize=item.size;
+                });
+                if(maxSize!=sizeInput.max)
+                    this.gallery.querySelector("#minsize").max=maxSize;
+                else{
+                    this.data.forEach(function(item) {
+                        if(!item)return;
+                        var spanMark=document.querySelector("span.pv-gallery-sidebar-thumb-container[data-src='"+item.src+"']");
+                        if(spanMark){
+                            if(item.size<sizeInput.value){
+                                spanMark.style.display="none";
+                            }else
+                                spanMark.style.display="";
+                        }
+                    });
+                }
+            },
             initToggleBar: function() {  // 是否显示切换 sidebar 按钮
                 /**
          * TODO：仿造下面的链接重新改造过？
@@ -4371,8 +4398,8 @@
                  <head>\
                  <title>' + title + ' '+i18n("exportImages")+'</title>\
                  <style>\
-                 .grid>div { float: left; max-height: 180px; max-width: 320px; margin: 2px; }\
-                 .grid>div>img { max-height: 180px; max-width: 320px; }\
+                 .grid>div { float: left; max-height: 600px; max-width: 350px; margin: 2px; }\
+                 .grid>div>img { max-height: 600px; max-width: 350px; }\
                  .list>div {text-align:center;}\
                  .list>div>img { max-width: 100%; }\
                  .gridBig{margin: 0px;}\
@@ -4392,11 +4419,13 @@
             },
             copyImages: function(isAlert) {
                 var nodes = document.querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]');
-                var urls = [].map.call(nodes, function(node){
-                    return node.dataset.src;
+                var urls = [];
+                [].forEach.call(nodes, function(node){
+                    if(getComputedStyle(node).display!="none")
+                        urls.push(node.dataset.src);
                 });
 
-                GM_setClipboard(urls.join('\n'));
+                GM_setClipboard(urls.join("\n"));
 
                 if (isAlert) {
                     alert(i18n("copySuccess",urls.length));
@@ -8431,6 +8460,7 @@ left: -45px;\
                 type: type,                // 通过哪种方式得到的
                 imgSrc: imgSrc,            // 处理的图片的src
                 iPASrc: iPASrc,            // 图片的第一个父a元素的链接地址
+                size:imgAS.h+imgAS.w,
 
                 noActual:noActual,
                 xhr: xhr,
