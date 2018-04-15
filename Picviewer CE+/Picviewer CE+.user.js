@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2018.4.15.1
+// @version        2018.4.15.2
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -4388,7 +4388,7 @@
                 var nodes = document.querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]');
                 var arr = [].map.call(nodes, function(node){
                     if(unsafeWindow.getComputedStyle(node).display=="none")return "";
-                    else return '<div onclick="this.classList.toggle(\'select\')"><img src=' + node.dataset.src + ' /></div>'
+                    else return '<div><img src=' + node.dataset.src + '></div>'
                 });
 
                 var title = document.title;
@@ -4397,23 +4397,34 @@
                  <head>\
                  <title>' + title + ' '+i18n("exportImages")+'</title>\
                  <style>\
-                 .grid>div { float: left; max-height: 600px; max-width: 350px; margin: 2px; }\
-                 .grid>div>img { max-height: 600px; max-width: 350px; }\
+                 .grid{-moz-column-count:4;-webkit-column-count:4;column-count:4;-moz-column-gap: 1em;-webkit-column-gap: 1em;column-gap: 1em;}\
+                 .grid>div{padding: 1em;margin: 0 0 1em 0;-moz-page-break-inside: avoid;-webkit-column-break-inside: avoid;break-inside: avoid;border: 1px solid #000;}\
+                 .grid>div>img{width: 100%;margin-bottom:10px;}\
                  .list>div {text-align:center;}\
                  .list>div>img { max-width: 100%; }\
                  .gridBig{margin: 0px;}\
                  .gridBig>div { float: left;margin: 0px 0px 1px 1px;}\
                  .gridBig>div>img { max-width: 100%; }\
-                 .select{box-shadow: 0px 0px 5px 3px rgb(255, 0, 0);}\
+                 .select{opacity: 0.33;}\
                  </style>\
                  </head>\
                  <body class="'+prefs.gallery.exportType+'">\
+                 <img id="bigImg" style="pointer-events:none;position:fixed;z-index:999;max-height:100vh;">\
                  <p>【'+i18n("picTitle")+'】：' + title + '</p>\
                  <p>【'+i18n("picNum")+'】：' + nodes.length + ' <select onchange="document.body.className=this.options[this.options.selectedIndex].value"><option value="grid" '+(prefs.gallery.exportType=="grid"?"selected='selected'":"")+'>'+i18n("grid")+'</option><option value="gridBig" '+(prefs.gallery.exportType=="gridBig"?"selected='selected'":"")+'>'+i18n("gridBig")+'</option><option value="list" '+(prefs.gallery.exportType=="list"?"selected='selected'":"")+'>'+i18n("list")+'</option> </select> \
                  <input type="button" value="'+i18n("exportImagesUrl")+'" onclick="var imgStr=\'\',selList=document.querySelectorAll(\'.select>img\');if(selList.length==0)[].forEach.call(document.querySelectorAll(\'img\'),function(i){imgStr+=i.src+\' \\n\'});else{[].forEach.call(selList,function(i){imgStr+=i.src+\' \\n\'});}window.prompt(\''+i18n("exportImagesUrlPop")+'\',imgStr);">\
                  </p>';
 
-                html += arr.join('\n') + '</body>'
+                html += arr.join('\n') +
+                '<script type="text/javascript">\
+                 [].forEach.call(document.querySelectorAll("div>img"),function(i){\
+                 i.onmouseover=i.onmousemove=function(e){if(e.ctrlKey)document.querySelector("#bigImg").src=this.src;};\
+                 i.onmouseout=function(e){document.querySelector("#bigImg").src="";}\
+                 });\
+                 [].forEach.call(document.querySelectorAll("body>div"),function(i){\
+                 i.onclick=function(){this.classList.toggle("select")}\
+                 });\
+                 </script></body>'
                 GM_openInTab('data:text/html;charset=utf-8,' + encodeURIComponent(html));
             },
             copyImages: function(isAlert) {
