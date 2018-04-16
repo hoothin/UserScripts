@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2018.4.16.1
+// @version        2018.4.16.2
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -4581,6 +4581,9 @@
                  <head>\
                  <title>' + title + ' '+i18n("exportImages")+'</title>\
                  <style>\
+                 .toTop{width:28px;height:28px;border-radius:14px;position: fixed;right:2px;bottom: 2px;cursor: pointer;background-color:#000;opacity:.3;padding:0em!important;border:0px!important;}\
+                 .toTop:hover{opacity:1}\
+                 .toTop>span{height:28px;line-height:28px;display:block;color:#FFF;text-align:center;font-size:20px;}\
                  .grid{-moz-column-count:4;-webkit-column-count:4;column-count:4;-moz-column-gap: 1em;-webkit-column-gap: 1em;column-gap: 1em;}\
                  .grid>div{padding: 1em;margin: 0 0 1em 0;-moz-page-break-inside: avoid;-webkit-column-break-inside: avoid;break-inside: avoid;border: 1px solid #000;}\
                  .grid>div>img{width: 100%;margin-bottom:10px;}\
@@ -4592,8 +4595,11 @@
                  .select{opacity: 0.33;}\
                  </style>\
                  </head>\
+                 <div class="toTop">\
+                    <span>￪</span>\
+                 </div>\
                  <body class="'+prefs.gallery.exportType+'">\
-                 <img id="bigImg" style="pointer-events:none;position:fixed;z-index:999;max-height:100vh;">\
+                 <img id="bigImg" style="pointer-events:none;position:fixed;z-index:999;max-height:100vh;top:0px;">\
                  <p>【'+i18n("picTitle")+'】：' + title + '</p>\
                  <p>【'+i18n("picNum")+'】：' + nodes.length + ' <select onchange="document.body.className=this.options[this.options.selectedIndex].value"><option value="grid" '+(prefs.gallery.exportType=="grid"?"selected='selected'":"")+'>'+i18n("grid")+'</option><option value="gridBig" '+(prefs.gallery.exportType=="gridBig"?"selected='selected'":"")+'>'+i18n("gridBig")+'</option><option value="list" '+(prefs.gallery.exportType=="list"?"selected='selected'":"")+'>'+i18n("list")+'</option> </select> \
                  <input type="button" value="'+i18n("exportImagesUrl")+'" onclick="var imgStr=\'\',selList=document.querySelectorAll(\'.select>img\');if(selList.length==0)[].forEach.call(document.querySelectorAll(\'img\'),function(i){imgStr+=i.src+\' \\n\'});else{[].forEach.call(selList,function(i){imgStr+=i.src+\' \\n\'});}window.prompt(\''+i18n("exportImagesUrlPop")+'\',imgStr);">\
@@ -4601,6 +4607,9 @@
 
                 html += arr.join('\n') +
                 '<script type="text/javascript">\
+                 document.querySelector(".toTop").addEventListener("click", function(){\
+                 document.body.scrollIntoView();\
+                 });\
                  [].forEach.call(document.querySelectorAll("div>img"),function(i){\
                  i.onmouseover=i.onmousemove=function(e){if(e.ctrlKey)document.querySelector("#bigImg").src=this.src;};\
                  i.onmouseout=function(e){document.querySelector("#bigImg").src="";}\
