@@ -12,8 +12,6 @@
 // @icon        https://www.llss.fun/favicon.ico
 // @include     http*://www.hacg.*/wordpress/*
 // @include     http*://hacg.*/wordpress/*
-// @include     http*://www.hacg.*/wp/*
-// @include     http*://hacg.*/wp/*
 // @include     http*://loli.cool/*
 // @include     http*://www.nicemoe.*
 // @include     http*://www.hacg.lol/*
@@ -31,8 +29,12 @@
 // @include     http*://hacg.tw/*
 // @include     http*://hacg.at/*
 // @include     http*://hacg.ch/*
-// @include     http*://llss.*
-// @include     http*://www.llss.*
+// @include     http*://llss.*/wp/*
+// @include     http*://*.llss.*/wp/*
+// @include     http*://liuli.*/wp/*
+// @include     http*://*.liuli.*/wp/*
+// @include     http*://hacg.*/wp/*
+// @include     http*://*.hacg.*/wp/*
 // @include     http*://www.acgpy.*
 // @include     http*://blog.reimu.net/*
 // @include     http*://pan.baidu.com/share/*
@@ -93,7 +95,7 @@
 // @include     http*://greasyfork.org/*/scripts/*
 // @include     http*://sleazyfork.org/*/forum/*discussion*
 // @include     http*://greasyfork.org/*/forum/*discussion*
-// @version     3.22.52
+// @version     3.22.53
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -139,8 +141,8 @@
         sites:[
             {
                 name:"琉璃神社",
-                url:"https://www.llss.pw/wp/",
-                regex:/hacg\.|llss\./,
+                url:"https://www.liuli.pw/wp/",
+                regex:/hacg\.|llss\.|liuli\./,
                 run:function(){
                     var feiZao,feiZaos=document.querySelectorAll("p1"),i;
                     for(i=0;i<feiZaos.length;i++){
