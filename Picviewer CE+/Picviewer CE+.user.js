@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2018.4.16.3
+// @version        2018.4.28.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -1296,6 +1296,14 @@
             {name: "京东",
              r: /(.*360buyimg\.com\/)n\d\/.+?\_(.*)/,
              s: "$1imgzone/$2"
+            },
+            {name: "京东1",
+             r: /(.*360buyimg\.com\/)n\d\/(.*)/,
+             s: "$1n0/$2"
+            },
+            {name: "京东2",
+             r: /(.*360buyimg\.com\/.*)s\d+x\d+_(.*)/,
+             s: "$1$2"
             },
             // 电子书
             {name: "当当",
@@ -8910,7 +8918,7 @@ left: -45px;\
             var result;
             if (target.nodeName != 'IMG' && typeof target.className === 'string' && target.className.indexOf("pv-float-bar")==-1){
                 var targetStyle=getComputedStyle(target);
-                if(prefs.floatBar.listenBg && targetStyle.backgroundImage && /^url/.test(targetStyle.backgroundImage) && targetStyle.width.replace("px","")>prefs.floatBar.minSizeLimit.w && targetStyle.height.replace("px","")>prefs.floatBar.minSizeLimit.h){
+                if(prefs.floatBar.listenBg && targetStyle.backgroundImage && /^url/.test(targetStyle.backgroundImage) && targetStyle.backgroundImage.indexOf("about:blank")==-1 && targetStyle.width.replace("px","")>prefs.floatBar.minSizeLimit.w && targetStyle.height.replace("px","")>prefs.floatBar.minSizeLimit.h){
                     var src=targetStyle.backgroundImage.replace(/url\(["'](.*)["']\)/,"$1"),nsrc=src,noActual=true,type="scale";
                     var img={src:src};
                     tprules._find(function(rule,index,array){
