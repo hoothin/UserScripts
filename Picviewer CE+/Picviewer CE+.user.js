@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2018.5.1.1
+// @version        2018.5.4.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -164,6 +164,7 @@
                 magnifierWheelZoomRange:"滚轮缩放的倍率",
                 gallery:"图库",
                 galleryFitToScreen:"对图片进行缩放以适应屏幕",
+                galleryFitToScreenSmall:"小图也缩放以适应屏幕",
                 galleryFitToScreenTip:"适应方式为contain，非cover",
                 galleryScrollEndToChange:"大图滚动到底后切换图片",
                 galleryScrollEndToChangeTip:"取消上一选项后才有效",
@@ -345,6 +346,7 @@
                 magnifierWheelZoomRange:"滾輪縮放的倍率",
                 gallery:"圖庫",
                 galleryFitToScreen:"對圖片進行縮放以適應屏幕",
+                galleryFitToScreenSmall:"小圖也縮放以適應屏幕",
                 galleryFitToScreenTip:"適應方式為contain，非cover",
                 galleryScrollEndToChange:"大圖滾動到底後切換圖片",
                 galleryScrollEndToChangeTip:"取消上一選項後才有效",
@@ -526,6 +528,7 @@
                 magnifierWheelZoomRange:"magnifierWheelZoomRange",
                 gallery:"gallery",
                 galleryFitToScreen:"galleryFitToScreen",
+                galleryFitToScreenSmall:"galleryFitToScreenSmall",
                 galleryFitToScreenTip:"galleryFitToScreenTip",
                 galleryScrollEndToChange:"galleryScrollEndToChange",
                 galleryScrollEndToChangeTip:"galleryScrollEndToChangeTip",
@@ -644,6 +647,7 @@
             gallery:{//图库相关设定
                 loadAll:true,//加载更多时是否加载全部页面
                 fitToScreen:true,//图片适应屏幕(适应方式为contain，非cover).
+                fitToScreenSmall:false,
                 scrollEndToChange:true,
                 exportType:'grid',
                 sidebarPosition: 'bottom',//'top' 'right' 'bottom' 'left'  四个可能值
@@ -3841,7 +3845,19 @@
                             scaled=width/this.imgNaturalSize.w;
                         };
                         scaled=(scaled*100).toFixed(2) + '%';
-                    };
+                    }else if(prefs.gallery.fitToScreenSmall){
+                        if(contentSSize.h/contentSSize.w >=containerSize.h/containerSize.w){
+                            var height=contentSSize.h-50;
+                            height=height<0?contentSSize.h:height;
+                            imgSty.height=height + 'px';
+                            scaled=height/this.imgNaturalSize.h;
+                        }else{
+                            var width=contentSSize.w-50;
+                            width=width<0?contentSSize.w:width;
+                            imgSty.width=width + 'px';
+                            scaled=width/this.imgNaturalSize.w;
+                        };
+                    }
                 }else{//不做尺寸调整
                     this.imgScrollbarV.reset();
                     this.imgScrollbarH.reset();
@@ -9218,7 +9234,14 @@ left: -45px;\
                     type: 'checkbox',
                     "default": prefs.gallery.fitToScreen,
                     section: [i18n("gallery")],
-                    title: i18n("galleryFitToScreenTip")
+                    title: i18n("galleryFitToScreenTip"),
+                    line: 'start',
+                },
+                'gallery.fitToScreenSmall': {
+                    label: i18n("galleryFitToScreenSmall"),
+                    type: 'checkbox',
+                    "default": prefs.gallery.fitToScreenSmall,
+                    line: 'end',
                 },
                 'gallery.scrollEndToChange': {
                     label: i18n("galleryScrollEndToChange"),
