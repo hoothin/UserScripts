@@ -3,7 +3,7 @@
 // @name:zh-CN         油猴鼠标手势
 // @name:zh-TW         油猴滑鼠手勢
 // @namespace          hoothin
-// @version            0.68
+// @version            0.69
 // @description        Just a Mouse Gestures script
 // @description:zh-CN  就是个鼠标手势脚本
 // @description:zh-TW  就是個滑鼠手勢脚本
@@ -299,6 +299,7 @@ function initEventListener(start,move,end,tracer,clientX,clientY,startBool){
             for(var index in gestures){
                 if(gestures[index].gesture==value){
                     gestures.splice(index,1);
+                    GM_setValue("gestures",gestures);
                     break;
                 }
             }
