@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2018.5.7.1
+// @version        2018.5.12.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -2317,7 +2317,8 @@
                     '<span class="pv-gallery-head-left-img-info-scaling" title="'+i18n("scaleRatio")+'">（100%）</span>'+
                     '<span class="pv-gallery-vertical-align-helper"></span>'+
                     '<span class="pv-gallery-head-left-img-info-description" title="'+i18n("picNote")+'"></span>'+
-                    '<input type="range" id="minsize" min="0" max="100" value="0">'+
+                    '<input type="range" id="minsizeW" min="0" max="100" value="0" title="Width"> '+
+                    '<input type="range" id="minsizeH" min="0" max="100" value="0" title="Height">'+
                     '</span>'+
                     '</span>'+
 
@@ -2486,7 +2487,8 @@
                 document.body.appendChild(container);
 
                 var self=this;
-                container.querySelector("#minsize").oninput=function(){self.changeMinView();};
+                container.querySelector("#minsizeW").oninput=function(){self.changeMinView();};
+                container.querySelector("#minsizeH").oninput=function(){self.changeMinView();};
                 var maximizeTrigger=document.createElement('span');
                 this.maximizeTrigger=maximizeTrigger;
                 maximizeTrigger.innerHTML='-'+i18n("returnToGallery")+'-<span class="pv-gallery-maximize-trigger-close" title="'+i18n("closeGallery")+'"></span>';
@@ -3441,30 +3443,40 @@
 
             changeMinView:function(){
                 var maxSize=0,minSize=0;
-                var sizeInput=this.gallery.querySelector("#minsize");
-                sizeInput.title=sizeInput.value+"px";
+                var sizeInputW=this.gallery.querySelector("#minsizeW");
+                sizeInputW.title=sizeInputW.value+"px";
                 this.data.forEach(function(item) {
                     if(!item)return;
-                    if(item.size>maxSize)
-                        maxSize=item.size;
-                    if(item.size<minSize || minSize==0)
-                        minSize=item.size;
+                    if(item.sizeW>maxSize)
+                        maxSize=item.sizeW;
+                    if(item.sizeW<minSize || minSize==0)
+                        minSize=item.sizeW;
                 });
-                if(maxSize!=sizeInput.max){
-                    sizeInput.max=maxSize;
-                    sizeInput.min=minSize;
-                }else{
-                    this.data.forEach(function(item) {
-                        if(!item)return;
-                        var spanMark=document.querySelector("span.pv-gallery-sidebar-thumb-container[data-src='"+item.src+"']");
-                        if(spanMark){
-                            if(item.size<sizeInput.value){
-                                spanMark.style.display="none";
-                            }else
-                                spanMark.style.display="";
-                        }
-                    });
-                }
+                sizeInputW.max=maxSize;
+                sizeInputW.min=minSize;
+                maxSize=0;minSize=0;
+                var sizeInputH=this.gallery.querySelector("#minsizeH");
+                sizeInputH.title=sizeInputH.value+"px";
+                this.data.forEach(function(item) {
+                    if(!item)return;
+                    if(item.sizeH>maxSize)
+                        maxSize=item.sizeH;
+                    if(item.sizeH<minSize || minSize==0)
+                        minSize=item.sizeH;
+                });
+                sizeInputH.max=maxSize;
+                sizeInputH.min=minSize;
+
+                this.data.forEach(function(item) {
+                    if(!item)return;
+                    var spanMark=document.querySelector("span.pv-gallery-sidebar-thumb-container[data-src='"+item.src+"']");
+                    if(spanMark){
+                        if(item.sizeW<sizeInputW.value || item.sizeH<sizeInputH.value){
+                            spanMark.style.display="none";
+                        }else
+                            spanMark.style.display="";
+                    }
+                });
             },
             initToggleBar: function() {  // 是否显示切换 sidebar 按钮
                 /**
@@ -3851,6 +3863,7 @@
                             imgSty.width=width + 'px';
                             scaled=width/this.imgNaturalSize.w;
                         };
+                        scaled=(scaled*100).toFixed(2) + '%';
                     }
                 }else{//不做尺寸调整
                     this.imgScrollbarV.reset();
@@ -8684,7 +8697,8 @@ left: -45px;\
                 type: type,                // 通过哪种方式得到的
                 imgSrc: imgSrc,            // 处理的图片的src
                 iPASrc: iPASrc,            // 图片的第一个父a元素的链接地址
-                size:imgAS.h+imgAS.w,
+                sizeH:imgAS.h,
+                sizeW:imgAS.w,
 
                 noActual:noActual,
                 xhr: xhr,
