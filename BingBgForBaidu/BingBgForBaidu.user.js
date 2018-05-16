@@ -2,7 +2,7 @@
 // @name         百Bing图
 // @name:en      BingBgForBaidu
 // @namespace    hoothin
-// @version      2.3.11
+// @version      2.3.12
 // @description     给百度首页换上Bing的背景图，并添加背景图链接与日历组件
 // @description:en  Just change the background image of baidu.com to bing.com
 // @author       hoothin
@@ -71,23 +71,23 @@
         var rili=$("div.op-calendar-new",iframe.contentDocument);
         rili.after("<br/><br/>");
         $("#head,.head_nums_cont_outer",iframe.contentDocument).hide();
-        var top=rili.offset().top;
-        var left=rili.offset().left;
-        iframeDoc.scrollTop(top);
-        iframeDoc.scrollLeft(left);
         iframe.setAttribute("scrolling","no");
-        var width=rili.width();
-        var height=rili.height();
-        iframe.width=width===0?538:width;
-        iframe.height=height===0?366:height;
         var today=$(".op-calendar-new-table-border,.op-calendar-new-table-today",iframe.contentDocument);
         var t;
         riliLink.innerHTML="<span class='title' style='text-decoration:overline;cursor:crosshair'>"+$(".op-calendar-new-right-date",iframe.contentDocument).html()+"</span>";
         riliLink.onmouseover=function(){
             t=setTimeout(function(){
                 $(iframe).show(200);
-                if(top===0)iframeDoc.scrollTop(138);
-                if(left===0)iframeDoc.scrollLeft(121);
+                var top=rili.offset().top;
+                var left=rili.offset().left;
+                if(top===0)top=138;
+                iframeDoc.scrollTop(top);
+                if(left===0)left=121;
+                iframeDoc.scrollLeft(left);
+                var width=rili.width();
+                var height=rili.height();
+                iframe.width=width===0?538:width;
+                iframe.height=height===0?366:height;
             },500);
         };
         riliLink.onmouseout=function(){
