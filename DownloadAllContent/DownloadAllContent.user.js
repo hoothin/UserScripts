@@ -4,7 +4,7 @@
 // @name:zh-TW   懶人小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      1.25
+// @version      1.26
 // @description  Fetch and download main content on current page, provide special support for chinese novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取小說、論壇內容等並保存為TXT文檔
@@ -38,6 +38,8 @@
                 downloading:"已下载完成 %s 段，剩余 %s 段<br>正在下载 %s",
                 complete:"已全部下载完成，共 %s 段",
                 del:"设置小说干扰码的CSS选择器",
+                custom:"自定义网址下载",
+                reSort:"按标题名重新排序",
                 setting:"懒人小说下载设置"
             };
             break;
@@ -49,6 +51,8 @@
                 downloading:"%s pages are downloaded, there are still %s pages left<br>Downloading %s ......",
                 complete:"Completed! The pages totalled %s",
                 del:"Set css selectors for delete",
+                custom:"Custom url for download",
+                reSort:"ReSort by title",
                 setting:"DownloadAllContent Setting"
             };
             break;
@@ -81,6 +85,7 @@
     }
 
     function indexDownload(aEles){
+        if(aEles.length<1)return;
         initTxtDownDiv();
         var j=0,rCats=[];
         function getDocEle(str){
@@ -208,6 +213,7 @@
         for(i=0;i<childlist.length;i++){
             var child=childlist[i];
             if(getDepth(child)==getDepth(largestContent)){
+                if(!largestContent.className && child.className)continue;
                 if((largestContent.className && largestContent.className==child.className)||largestContent.parentNode ==child.parentNode){
                     getRightStr(child, true);
                 }else {
@@ -275,10 +281,36 @@
         var selValue=GM_getValue("selectors");
         var selectors=prompt(i18n.del,selValue?selValue:"");
         GM_setValue("selectors",selectors);
-        if(window.confirm("重新排序")){
+        if(window.confirm(i18n.reSort)){
             GM_setValue("contentSort", true);
         }else{
             GM_setValue("contentSort", false);
+        }
+        var urls=window.prompt(i18n.custom,"https://xxx.xxx/book-[20-99].html, https://xxx.xxx/book-[01-10].html");
+        if(urls){
+            var processEles=[];
+            [].forEach.call(urls.split(","),function(i){
+                var varNum=/\[\d+\-\d+\]/.exec(i)[0].trim();
+                var num1=/\[(\d+)/.exec(varNum)[1].trim();
+                var num2=/(\d+)\]/.exec(varNum)[1].trim();
+                var num1Int=parseInt(num1);
+                var num2Int=parseInt(num2);
+                var numLen=num1.length;
+                var needAdd=num1.charAt(0)=="0";
+                if(num1Int>=num2Int)return;
+                for(var j=num1Int;j<=num2Int;j++){
+                    var urlIndex=j.toString();
+                    if(needAdd){
+                        while(urlIndex.length<numLen)urlIndex="0"+urlIndex;
+                    }
+                    var curUrl=i.replace(/\[\d+\-\d+\]/,urlIndex).trim();
+                    var curEle=document.createElement("a");
+                    curEle.href=curUrl;
+                    processEles.push(curEle);
+                    curEle.innerText=processEles.length.toString();
+                }
+            });
+            indexDownload(processEles);
         }
     }
     GM_registerMenuCommand(i18n.fetch, fetch);
