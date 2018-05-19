@@ -9,7 +9,7 @@
 // @description:zh-TW   老司機工具箱，支持琉璃神社、靈夢禦所、純愛計劃、紳士二次元、萌心次元、次元軌跡、ACG調查小隊、幻天領域、天使二次元、櫻花漫舍、風鈴窩、次元の聖光、愛彈幕、幻想次元、司機會所、裏番萌、最ACG、紳士倉庫、紳士圖書館、ACG和諧區/裏世界、寂月神社、萌幻之鄕、紳士の庭、萌口組、九妖萌、CE家族社、喵窩、次元老司機、紳士ACG社等，神秘代碼轉換成下載鏈接，網盤自動填寫提取密碼，F8、Shift+F8站點切換，Alt+F8列表瀏覽，左右方向鍵文章跳轉，Ctrl+左右快捷翻頁，Ctrl+上下跳入跳出，下載鏈接嗅探，繞過重定向跳轉，各種和諧補丁
 // @description:ja      琉璃神社工具セット、秋の名山老運転手専用
 // @author      hoothin
-// @icon        https://www.llss.fun/favicon.ico
+// @icon        https://www.liuli.pw/favicon.ico
 // @include     http*://www.hacg.*/wordpress/*
 // @include     http*://hacg.*/wordpress/*
 // @include     http*://loli.cool/*
@@ -95,7 +95,7 @@
 // @include     http*://greasyfork.org/*/scripts/*
 // @include     http*://sleazyfork.org/*/forum/*discussion*
 // @include     http*://greasyfork.org/*/forum/*discussion*
-// @version     3.22.53
+// @version     3.22.55
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -103,7 +103,7 @@
 // @grant       GM_getValue
 // @grant       unsafeWindow
 // @run-at      document-end
-// @require     https://greasyfork.org/scripts/23522/code/od.js?version=264106
+// @require     https://greasyfork.org/scripts/23522/code/od.js?version=598400
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
 // @updateURL   https://greasyfork.org/scripts/23316/code/HacgGodTurn.user.js
@@ -285,12 +285,12 @@
             },
             {
                 name:"次元の圣光",
-                url:"https://www.acglover.pw/",
+                url:"https://www.acglover.me/",
                 regex:/acglover\./,
                 offset:60,
                 contentArea:".entry-inner",
                 run:function(){
-                    changeUrl(true,[["a","img"],[['acglover\\\.net','acglover\\\.pw']]]);
+                    changeUrl(true,[["a","img"],[['acglover\\\.net','acglover\\\.me']]]);
                 }
             },
             {
@@ -303,26 +303,25 @@
                 run:function(){
                     var content=document.querySelector('.entry,.amp-wp-article-content>.amp-wp-content,.content-inner');
                     if(content){
-                        var plist = content.querySelectorAll("p");
+                        var plist = content.querySelectorAll("p,div");
                         var key = "";
                         for(var i=0;i<plist.length;i++){
                             var pNode=plist[i];
-                            if(/\u5bc6\u5319[:：]/i.test(pNode.innerHTML)){
-                                var orgStr = pNode.innerHTML.match(/\u5bc6\u5319[:：]\s*\S*/i)[0].replace(/\u5bc6\u5319[:：]\s*/,"").replace('&amp;','&');
+                            if(/\u5bc6\u5319[:：]?/i.test(pNode.innerHTML)){
+                                var orgStr = pNode.innerText.match(/\u5bc6\u5319[:：]?\s*\S*/i)[0].replace(/\u5bc6\u5319[:：]?\s*/,"").replace('&amp;','&');
                                 key=CryptoJS.enc.Base64.parse(orgStr).toString(CryptoJS.enc.Utf8);
                                 pNode.innerHTML = "";
                                 break;
                             }
                         }
                         if(key !== ""){
-                            var blockquotes = content.querySelectorAll("blockquote");
+                            var blockquotes = content.querySelectorAll("blockquote>p,div.alert-success");
                             for(var i=0;i<blockquotes.length;i++){
                                 var blockquote=blockquotes[i];
-                                var target = blockquote.querySelector("p");
-                                if(!target||target.innerText===""||!/^[0-9a-z\+\/=\s]+$/i.test(target.innerText)){continue;}
-                                var result = target.innerHTML.replace(/<br>/g,"").replace(/\s/g,"");
+                                if(!blockquote||blockquote.innerText===""||!/^[0-9a-z\+\/=\s]+$/i.test(blockquote.innerText)){continue;}
+                                var result = blockquote.innerHTML.replace(/<br>/g,"").replace(/\s/g,"");
                                 result = CryptoJS.AES.decrypt(result,key).toString(CryptoJS.enc.Utf8);
-                                target.innerHTML = result;
+                                blockquote.innerHTML = result;
                             }
                         }
                     }
@@ -1246,7 +1245,7 @@
         for(let j=0;j<links.length;j++){
             let link=links[j];
             if(config.rocketReg.test(link.href)&&link.className.indexOf("whx-a")==-1){
-                if(rocketLinks.innerHTML.indexOf(link.outerHTML)!=-1)continue;
+                if(rocketLinks.innerHTML.indexOf(link.outerHTML)!=-1 || window.getComputedStyle(link).display=="none" || (link.firstElementChild&&window.getComputedStyle(link.firstElementChild).display=="none"))continue;
                 rocketLinks.innerHTML+="<a id='rocketBack' style='font-weight:bold;color:red;' href='javascript:void(0)'>"+(++i)+"<img src='"+preImgData+"'></a>: ";
                 rocketLinks.appendChild(link.cloneNode(true));
                 rocketLinks.innerHTML+="<br/>";
