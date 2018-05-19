@@ -58,6 +58,7 @@
 // @include     http*://lifanmoe.*
 // @include     http*://www.yhacg.*
 // @include     http*://www.idanmu.*
+// @include     http*://idanmu.*
 // @include     http*://*.sijihuisuo.club/*
 // @include     http*://sijihuisuo.club/*
 // @include     http*://acg18.us/*
@@ -356,7 +357,7 @@
             },
             {
                 name:"里番萌",
-                url:"http://lifanmoe.mobi/",
+                url:"http://lifan.moe/",
                 regex:/lifanmoe\./,
                 downloadUrl:/lifanmoe\.mobi\/download/,
                 offset:55,
@@ -387,7 +388,7 @@
             },
             {
                 name:"司机会所",
-                url:"https://dakashangche.org",
+                url:"https://dakashangche.info",
                 regex:/sijihuisuo\.club|dakashangche\./,
                 innerPage:/\/(sj\/\d|\?p=\d)/,
                 offset:115,
@@ -424,7 +425,7 @@
             },
             {
                 name:"最ACG网",
-                url:"http://zuiacg.cc/",
+                url:"http://zuiacg.com/",
                 regex:/zuiacg\./,
                 hideOd:true,
                 offset:75,
