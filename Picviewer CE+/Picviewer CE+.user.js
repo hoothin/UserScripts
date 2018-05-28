@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2018.5.27.1
+// @version        2018.5.28.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -3773,9 +3773,36 @@
                 img.className='pv-gallery-img';
 
                 if(error){
-                    this.imgError=true;
-                    this.img.style.display='none';
-                    this.eleMaps['img_broken'].style.display='inline-block';
+                    if(relatedThumb.querySelector("img").src==this.img.src){
+                        this.imgError=true;
+                        this.img.style.display='none';
+                        this.eleMaps['img_broken'].style.display='inline-block';
+                    }else{
+                        var srcs=dataset(relatedThumb, 'srcs').split(",");
+                        var self=this;
+                        this.img.onload=function(){
+                            var imgNaturalSize={
+                                h:this.naturalHeight,
+                                w:this.naturalWidth,
+                            };
+
+                            self.imgNaturalSize=imgNaturalSize;
+                            self.fitToScreen();
+                        }
+                        if(srcs){
+                            var src=srcs.shift();
+                            dataset(relatedThumb, 'srcs',srcs.join(","));
+                            if(src){
+                                dataset(relatedThumb, 'src',src);
+                                this.img.onerror=function(e){
+                                    this.src=relatedThumb.querySelector("img").src;
+                                    dataset(relatedThumb, 'src',this.src);
+                                }
+                                this.img.src=src;
+                            }
+                        }
+                        else this.img.src=relatedThumb.querySelector("img").src;
+                    }
                 }else{
                     this.imgError=false;
                     this.eleMaps['img_broken'].style.display='';
@@ -3853,7 +3880,7 @@
                         };
                         scaled=(scaled*100).toFixed(2) + '%';
                     }else if(prefs.gallery.fitToScreenSmall){
-                        if(contentSSize.h/contentSSize.w >=containerSize.h/containerSize.w){
+                        if(this.imgNaturalSize.h/this.imgNaturalSize.w >=containerSize.h/containerSize.w){
                             var height=contentSSize.h-50;
                             height=height<0?contentSSize.h:height;
                             imgSty.height=height + 'px';
@@ -3912,6 +3939,7 @@
                     spanMark.outerHTML = '<span class="pv-gallery-sidebar-thumb-container' +
                         '" data-type="' + item.type +
                         '" data-src="' + item.src +
+                        '" data-srcs="' + (item.srcs?item.srcs.join(","):"") +
                         (item.xhr ? '" data-xhr="' + encodeURIComponent(JSON.stringify(item.xhr)) : '') +
                         '" data-description="' + encodeURIComponent(item.description || '') +
                         '" data-thumb-src="' + item.imgSrc +
@@ -4652,7 +4680,7 @@
                  [].forEach.call(document.querySelectorAll("body>div"),function(i){\
                  i.onclick=function(){this.classList.toggle("select")}\
                  });\
-                 </script></body>'
+                 </script></body>';
                 GM_openInTab('data:text/html;charset=utf-8,' + encodeURIComponent(html));
             },
             copyImages: function(isAlert) {
