@@ -807,7 +807,7 @@
                         newsrc = oldsrc.replace(spic, '$1/lpic/');
                     }
 
-                    return newsrc == oldsrc ? null : newsrc;
+                    return newsrc == oldsrc ? null : [newsrc,newsrc.replace(/photo\/raw/,"photo/photo")];
                 }
             },
             {name:"新浪微博",
