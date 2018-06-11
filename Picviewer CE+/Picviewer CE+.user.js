@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2018.5.30.1
+// @version        2018.6.11.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -138,6 +138,7 @@
                 floatBar:"浮动工具栏",
                 showDelay:"显示延时",
                 ms:"毫秒",
+                hide:"隐藏",
                 hideDelay:"隐藏延时",
                 forceShow:"非缩放图片，超过该尺寸，显示浮框",
                 forceShowTip:"非缩放的图片大小超过下面设定的尺寸时显示浮动工具栏",
@@ -320,6 +321,7 @@
                 floatBar:"浮動工具欄",
                 showDelay:"顯示延時",
                 ms:"毫秒",
+                hide:"隱藏",
                 hideDelay:"隱藏延時",
                 forceShow:"非縮放圖片，超過該尺寸，顯示浮框",
                 forceShowTip:"非縮放的圖片大小超過下面設定的尺寸時顯示浮動工具欄",
@@ -502,6 +504,7 @@
                 floatBar:"floatBar",
                 showDelay:"showDelay",
                 ms:"ms",
+                hide:"hide",
                 hideDelay:"hideDelay",
                 forceShow:"forceShow",
                 forceShowTip:"forceShowTip",
@@ -7700,7 +7703,7 @@ left: -45px;\
                             };
                             searchFun();
                         }else{
-                            this.loadImg(this.data.src, this.data.srcs);
+                            this.loadImg(this.data.src||this.data.imgSrc, this.data.srcs);
                         }
                     } else {
                         xhrLoad.load({
@@ -8177,6 +8180,7 @@ left: -45px;\
                 var fbs=this.floatBar.style;
                 var setPosition={
                     top:function(){
+                        fbs.opacity=1;
                         var top=targetPosi.top + scrolled.y;
                         if(targetPosi.top + offsetY < 0){//满足图标被遮住的条件.
                             top=scrolled.y;
@@ -8185,6 +8189,7 @@ left: -45px;\
                         fbs.top=top + offsetY + 'px';
                     },
                     right:function(){
+                        fbs.opacity=1;
                         var right=windowSize.w - targetPosi.right;
                         if(right < offsetX){
                             right= -scrolled.x;
@@ -8195,6 +8200,7 @@ left: -45px;\
                         fbs.right=right - offsetX + 'px';
                     },
                     bottom:function(){
+                        fbs.opacity=1;
                         var bottom=windowSize.h - targetPosi.bottom;
                         if(bottom <= offsetY){
                             bottom=-scrolled.y;
@@ -8205,6 +8211,7 @@ left: -45px;\
                         fbs.bottom=bottom - offsetY + 'px';
                     },
                     left:function(){
+                        fbs.opacity=1;
                         var left=targetPosi.left + scrolled.x;
                         if(targetPosi.left + offsetX < 0){
                             left=scrolled.x;
@@ -8213,12 +8220,17 @@ left: -45px;\
                         fbs.left=left + offsetX + 'px';
                     },
                     center:function(){
+                        fbs.opacity=1;
                         var left=targetPosi.left + scrolled.x + offsetX;
                         fbs.left=left + img.width/2 + 'px';
+                    },
+                    hide:function(){
+                        fbs.opacity=0;
                     },
                 };
 
                 setPosition[floatBarPosi[0]]();
+                if(floatBarPosi.length>1)
                 setPosition[floatBarPosi[1]]();
             },
             show:function(){
@@ -9148,7 +9160,8 @@ left: -45px;\
                         'bottom right': i18n("bottomRight"),
                         'bottom left': i18n("bottomLeft"),
                         'top center': i18n("topCenter"),
-                        'bottom center': i18n("bottomCenter")
+                        'bottom center': i18n("bottomCenter"),
+                        'hide': i18n("hide")
                     },
                     "default": prefs.floatBar.position,
                     section: [i18n("floatBar")],
