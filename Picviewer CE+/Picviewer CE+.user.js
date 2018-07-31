@@ -1229,6 +1229,8 @@
                     newsrc=oldsrc.replace(/\/\d+\.\d+x\d+\.\d+\.([^\.]+)$/i,"/5.5000x5000.100.$1");
                 }else if(/\.ytimg\.com/.test(oldsrc)){
                     newsrc=oldsrc.replace(/\?.*$/i,"");
+                }else if(/meituan\.net\/.*\/avatar\//.test(oldsrc)){
+                    newsrc=oldsrc.replace(/\/avatar\/\w{2}/i,"/avatar/o0");
                 }
                 return oldsrc != newsrc ? newsrc : null;
             }
