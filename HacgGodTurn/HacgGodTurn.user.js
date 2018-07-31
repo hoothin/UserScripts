@@ -75,6 +75,7 @@
 // @include     http*://www.uraban.me/*
 // @include     http*://acgmoon.*
 // @include     http*://www.jiyue.*
+// @include     http*://jiyue.*
 // @include     http*://www.moe-acg.*/*
 // @include     http*://huan.moe*
 // @include     http*://www.mygalgame.com/*
@@ -92,11 +93,12 @@
 // @include     http*://www.cld1.net/*
 // @include     http*://sjhs*.*
 // @include     http*://www.dakashangche.*
+// @include     http*://xiuxiqu.xyz*
 // @include     http*://sleazyfork.org/*/scripts/*
 // @include     http*://greasyfork.org/*/scripts/*
 // @include     http*://sleazyfork.org/*/forum/*discussion*
 // @include     http*://greasyfork.org/*/forum/*discussion*
-// @version     3.22.55
+// @version     3.22.56
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -388,8 +390,8 @@
             },
             {
                 name:"司机会所",
-                url:"https://dakashangche.info",
-                regex:/sijihuisuo\.club|dakashangche\./,
+                url:"https://xiuxiqu.xyz",
+                regex:/sijihuisuo\.club|dakashangche\.|xiuxiqu\.xyz/,
                 innerPage:/\/(sj\/\d|\?p=\d)/,
                 offset:115,
                 contentArea:"#commentlist-container",
@@ -513,7 +515,7 @@
             {
                 name:"寂月神社",
                 url:"http://www.jiyue.com/",
-                regex:/(acgmoon|jiyue)\.(org|com)/,
+                regex:/(acgmoon|jiyue)\.(org|com|moe)/,
                 offset:50,
                 contentArea:"div.post-content",
                 articleSel:"article",
