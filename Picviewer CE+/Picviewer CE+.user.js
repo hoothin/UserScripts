@@ -1232,7 +1232,7 @@
                 }else if(/meituan\.net\/.*\/avatar\//.test(oldsrc)){
                     newsrc=oldsrc.replace(/\/avatar\/\w{2}/i,"/avatar/o0");
                 }else if(/hdslb\.com\//.test(oldsrc)){
-                    newsrc=oldsrc.replace(/@.*\.webp/i,"");
+                    newsrc=oldsrc.replace(/@.*/i,"");
                 }
                 return oldsrc != newsrc ? newsrc : null;
             }
