@@ -8,7 +8,7 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdn.jsdelivr.net/jquery/1.7.2/jquery.min.js
 // @require      https://cdn.jsdelivr.net/hi-base64/0.2.0/base64.min.js
-// @version      1.5.6
+// @version      1.5.7
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -182,23 +182,55 @@
             bgColor:"3c95ee",
             bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAV1BMVEUed9E4htg2hNI2g84KJkMSKkMJIjwHEBr///8lh+k5k+49lu4hhegyj+wri+s/lu+s0vfg7vzX6vy/3PlWou+w1PicyfaWxvXf7fzB3fmHvfSBuvNfp/GhDGXVAAAACHRSTlPm5uDeSkhCHO7HIjkAAAB4SURBVBjTZYuJDsIwDEM9TnfDodc2rv//TtoKITqeosR+UnAcrj/szhimjj2mDRgbM8nYEj59GRfOX/Fg3a+2IUWSUh0vCfKhRUbFaiAqs1L0PVAw2vrM3sx8sFJgieUGWwNzzXAukTeSqX46B7fhX+DSARzQ9dMbRIkLk61eQagAAAAASUVORK5CYII=",
             offFunc:function(delLink){
-                var offBtn=document.querySelector('li[data-action=offline_download]');
-                setTimeout(function(){
-                    offBtn.click();
-                    var wsc = setInterval(function() {
-                        var tab=document.querySelector('li.link[data-id=offline_tab]');
-                        if(tab){
-                            clearInterval(wsc);
-                            tab.click();
-                            var textarea=document.querySelector('textarea.copyurl');
-                            textarea.innerHTML=curlink;
-                            delLink();
-                            var event = document.createEvent('HTMLEvents');
-                            event.initEvent("change", false, true);
-                            textarea.dispatchEvent(event);
-                            document.querySelector('div[data-btn-id=OK]').click();
-                        }
-                    },200);
+                var rsc = setInterval(function(){
+                    var offBtn=document.querySelector('.icon-bt-s');
+                    if(offBtn){
+                        clearInterval(rsc);
+                        var wsc = setInterval(function() {
+                            offBtn.click();
+                            var textarea=document.querySelector('textarea.input-block');
+                            if(textarea){
+                                clearInterval(wsc);
+                                document.querySelector(".modal-dialog-bt ul>li:nth-child(2)").click();
+                                setTimeout(function() {
+                                    textarea.value=curlink;
+                                    delLink();
+                                    var event = document.createEvent('HTMLEvents');
+                                    event.initEvent("input", false, true);
+                                    textarea.dispatchEvent(event);
+                                    document.querySelector('div.modal-dialog-ft>button:nth-child(2)').click();
+                                    setTimeout(function() {
+                                        document.querySelector('div.modal-dialog-ft>button:nth-child(2)').click();
+                                    }, 1000);
+                                }, 500);
+                            }
+                        },200);
+                    }
+                },1000);
+            }
+        },
+        bitqiu:{
+            regex:/pan\.bitqiu\.com/,
+            url:"https://pan.bitqiu.com",
+            bgColor:"ffffff",
+            bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAASFBMVEUAAAARsPUSr/QWsfkTsvUWuv8RsvkSr/URsPUSsPQr1f8RsPUSsPYRr/USr/USr/USsfQSsPUTsPURsPURsfYSsPUTsPgRr/UxdyaHAAAAF3RSTlMA1LsuMw0q8pSPBrSK28ygeHJqZjqqRB/r5Z8AAACRSURBVBjTZc9bFoMgDARQogRFBMpDZ/877UDtl/PHPTAkZsR52Tbxzvxy7HiyH/PsBFLu3hKwDNnX5dRy5aof3uF7EE6rNkRLccYTwuwKURO8EYKdYFEbxGwEnaDIHRuh5/+NZSUIWn06BghLk8YwfgGBpSvwsRGMnATHwSha81WUsI/RFyC1fheBuOO93Gv9Lw0KCbAF32RQAAAAAElFTkSuQmCC",
+            offFunc:function(delLink){
+                var rsc = setInterval(function(){
+                    var offBtn=document.querySelector('.js-cloud-download');
+                    if(offBtn){
+                        clearInterval(rsc);
+                        offBtn.click();
+                        var wsc = setInterval(function() {
+                            var tab=document.querySelector('.cloud-download-container');
+                            if(tab){
+                                clearInterval(wsc);
+                                var textarea=tab.querySelector('textarea');
+                                textarea.innerHTML=curlink;
+                                delLink();
+                                document.querySelector('.js-confirm').click();
+                            }
+                        },200);
+                    }
                 },1000);
             }
         },
@@ -276,6 +308,7 @@
                 xunlei:"迅雷离线",
                 xiaomi:"小米路由器",
                 weiyun:"腾讯微云",
+                bitqiu:"比特球",
                 apiv:"九秒云播",
                 torrent:"Torrent.org种子下载",
                 btcache:"Btcache.me种子下载",
@@ -294,6 +327,7 @@
                 xunlei:"Xunlei",
                 xiaomi:"MiWifi",
                 weiyun:"Weiyun",
+                bitqiu:"bitqiu",
                 apiv:"Apiv Online play",
                 torrent:"Torrent download in torrent.org",
                 btcache:"Torrent download in btcache.me",
