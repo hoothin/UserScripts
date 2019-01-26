@@ -3,10 +3,10 @@
 // @name:en            Kill Baidu AD
 // @name:zh-TW         百度廣告(首尾推廣及右側廣告)清理
 // @namespace          hoothin
-// @version            0.91
-// @description        彻底清理百度搜索(www.baidu.com)结果首尾的推广广告、二次顽固广告与右侧广告，并防止反复
+// @version            0.92
+// @description        彻底清理百度搜索(www.baidu.com)结果首尾的推广广告、二次顽固广告、右侧广告与百家号信息，并防止反复
 // @description:en     Just Kill Baidu AD
-// @description:zh-TW  徹底清理百度搜索(www.baidu.com)結果首尾的推廣廣告、二次頑固廣告與右側廣告，並防止反復
+// @description:zh-TW  徹底清理百度搜索(www.baidu.com)結果首尾的推廣廣告、二次頑固廣告、右側廣告與百家號信息，並防止反復
 // @author             hoothin
 // @include            http*://www.baidu.com/*
 // @include            http*://m.baidu.com/*
@@ -62,7 +62,7 @@
                     }
                 });
                 [].forEach.call(item.querySelectorAll("a>span>img"),function(img){
-                    if(img && (img.classList.contains("source-icon"))){
+                    if(img && img.classList.contains("source-icon") && !item.querySelector("span.c-pingjia") && item.querySelector("span.newTimeFactor_before_abs")){
                         item.remove();
                     }
                 });
