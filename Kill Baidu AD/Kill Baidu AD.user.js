@@ -176,8 +176,8 @@
     }
     setTimeout(()=>{clearAD();},2000);
     if(killBaijiaType==1){
-        if(location.href.indexOf("+-baijiahao")==-1){
-            location.href=location.href.replace(/(&wd=.*?)(&|$)/,'$1+-baijiahao&');
+        if(location.href.split("wd=")[1].split("&")[0].indexOf("+-baijiahao")==-1){
+            location.href=location.href.replace(/((&|\?)wd=.*?)(&|$)/,'$1+-baijiahao&');
         }
         document.addEventListener('DOMContentLoaded', function () {
             if(location.href.indexOf("+-baijiahao")!=-1){
