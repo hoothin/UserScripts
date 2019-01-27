@@ -3,7 +3,7 @@
 // @name:en            Kill Baidu AD
 // @name:zh-TW         百度廣告(首尾推廣及右側廣告)清理
 // @namespace          hoothin
-// @version            1.1
+// @version            1.21
 // @description        彻底清理百度搜索(www.baidu.com)结果首尾的推广广告、二次顽固广告、右侧广告与百家号信息，并防止反复
 // @description:en     Just Kill Baidu AD
 // @description:zh-TW  徹底清理百度搜索(www.baidu.com)結果首尾的推廣廣告、二次頑固廣告、右側廣告與百家號信息，並防止反復
@@ -178,6 +178,8 @@
     if(killBaijiaType==1){
         if(location.href.split("wd=")[1].split("&")[0].indexOf("+-baijiahao")==-1){
             location.href=location.href.replace(/((&|\?)wd=.*?)(&|$)/,'$1+-baijiahao&');
+        }else{
+            document.title=document.title.replace(" -baijiahao","");
         }
         document.addEventListener('DOMContentLoaded', function () {
             if(location.href.indexOf("+-baijiahao")!=-1){
