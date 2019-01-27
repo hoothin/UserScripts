@@ -61,8 +61,8 @@
 // @include     http*://idanmu.*
 // @include     http*://*.sijihuisuo.club/*
 // @include     http*://sijihuisuo.club/*
-// @include     http*://acg18.us/*
-// @include     http*://*.acg18.us/*
+// @include     http*://acg18.*
+// @include     http*://*.acg18.*
 // @include     http*://*.acg44.com/*
 // @include     http*://zuiacg.*
 // @include     http*://www.zuiacg.*
@@ -96,12 +96,12 @@
 // @include     http*://*kisssub.*
 // @include     http*://*miobt.*
 // @include     http*://www.dakashangche.*
-// @include     http*://xiuxiqu.xyz*
+// @include     http*://xiuxiqu.*
 // @include     http*://sleazyfork.org/*/scripts/*
 // @include     http*://greasyfork.org/*/scripts/*
 // @include     http*://sleazyfork.org/*/forum/*discussion*
 // @include     http*://greasyfork.org/*/forum/*discussion*
-// @version     3.22.57
+// @version     3.22.58
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -393,8 +393,8 @@
             },
             {
                 name:"司机会所",
-                url:"https://xiuxiqu.org",
-                regex:/sijihuisuo\.club|dakashangche\.|xiuxiqu\.xyz/,
+                url:"https://xiuxiqu.top",
+                regex:/sijihuisuo\.club|dakashangche\.|xiuxiqu\./,
                 innerPage:/\/(sj\/\d|\?p=\d)/,
                 offset:115,
                 contentArea:"#commentlist-container",
@@ -412,7 +412,7 @@
             },
             {
                 name:"幻想次元",
-                url:"https://acg18.us/",
+                url:"https://acg18.life/",
                 regex:/acg18\./,
                 offset:55,
                 run:function(){
