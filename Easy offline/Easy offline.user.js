@@ -8,7 +8,7 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdn.jsdelivr.net/jquery/1.7.2/jquery.min.js
 // @require      https://cdn.jsdelivr.net/hi-base64/0.2.0/base64.min.js
-// @version      1.5.7
+// @version      1.5.8
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -38,61 +38,67 @@
             canMul:true,
             bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAABjFBMVEX////7+/v+/v/8/Pwyf/wzc/w0bvza5f4xffz5+//0+P8ybPz8/f4yevw0cPwza/z39/cwe/UxdfzSPyr4+v/2+f/m7/53nv0vf/wvce9pof1tlPwxf/gzfPYwePPp8f7Z5/7S4v7P4P7L3f7I2f2Gtf2Rr/1hkP0yd/1FiPwygfxAdPxspftYkvUtc/Dg6f7C2f7F1f54oP1flf0/hfwsbu7i7f/w9f7b5v7X5f7V4v6nyv6oxv6jwP6Ns/2Lsf1/rv1+ov1zof1xof10nf1jm/1djP0xe/2NufxalvxHj/xPhvxKgPxHffw+efw0ePyXu/mqxPg5hfiTtvdyo/dgmfdOj/dBhfVflfQvefT+9fOIqvMyefNMhvFIgO9MeePyycVjZbzKb3DaZVa/Q0Dx9f+Bp/1olv1gkPw0dvzg6Pu2zPk0gflNjPctc/c9gfX88/JJfO3n3+ni2unHxuSGktNpdtBJY8paashRW71nXqp7YpyDYJKpaIKPU33AVFXARkTVTTvFQjrUPypKwHq1AAACAklEQVQ4y4WTB3OqQBSFF3BpAk+KIBixJ2rs0fTee68vvbzee+9//O1Cio46npmFPfd8d2cY9gIASMJHUESDKFQmAZJAUKCFKELA/WSr3A3d/tZnAF99C8fVHYhiosbxxflsdr7I15SIWiCe3exA2szGmwOJXTkUkvHaTTQD9NyBLO/t7OzJ8kFObwKs2/bRdrSvL7p9ZNvrjQC/n8/nwngXzuXz+3wDED42zS13u2Wax+EGQD+pmhvudsOsnuj1gBAZSp5+/XRIYkMeVu1XyaGIcAfoycVM4Pn3qx9vcW3gRUcmE8gsJvUboNfyeDyBwLd/6sX7wtNnC45DD6vXBbRx1sOmrQ+/VFX9efomhFzFstLoNa45QKzCijMx/vXZpar+/fKSZecWijwfmxHZSgzFFBgWxXQUIJ39UX9/nhPFngHsomlRHEYxRY6mlCkOl+5fXp2vraV6IgCLm1JSoyQGxhRlUnCAi/PUEwXnWMKkooxhAIxAuNSPS+8+Qgi7GOB3zutfgnAExQSIr0JoMJw2GJSghPLSo4eDGscYEK7Gna/gy7QkLRvTK5JEP2bAgy4vvTJtLCNX5h0AMLNemvbihfqBv3zjZpHDACKM7ntI3RMFgFSYcJ3B3P0sf6kzGOxM+AFwXAK7kuNurz2pcWTt7deuna/t4LQdvbbD23b8/wPY0UTO99dD5gAAAABJRU5ErkJggg==",
             offFunc:function(delLink){
-                document.querySelector('.g-button[data-button-id=b35]').click();
-                var bsi = setInterval(function() {
-                    var newTaskBtn = document.querySelector('#_disk_id_2');
-                    if(newTaskBtn){
-                        clearInterval(bsi);
-                        newTaskBtn.click();
-                        var bsl = setInterval(function() {
-                            var offLink=document.querySelector('#share-offline-link');
-                            if(offLink){
-                                clearInterval(bsl);
-                                var beginOffline=function(){
-                                    if(curlink.length===0)return;
-                                    if(Object.prototype.toString.call(curlink) === '[object Array]')
-                                        offLink.value = curlink.shift();
-                                    else{
-                                        offLink.value = curlink;
-                                        curlink="";
-                                    }
-                                    delLink();
-                                    var baiduPathStr=GM_getValue("baiduPath"),isBt=/^magnet|torrent$/.test(offLink.value);
-                                    if(baiduPathStr){
-                                        unsafeWindow.require("function-widget-1:offlineDownload/util/newOfflineDialog.js").obtain()._checkPath=baiduPathStr;
-                                    }
-                                    $("#newoffline-dialog").find("span:contains('确定')[class='text']").click();
-                                    if(isBt)
-                                        var i=0, bsb = setInterval(function(){
-                                            var btList=document.querySelector('#offlinebtlist-dialog');
-                                            if(btList && btList.style.display!="none"){
-                                                clearInterval(bsb);
-                                                if($(".content-title-name").html()=="文件名")$("a.checked-all")[0].click();
-                                                btList.querySelectorAll('.dialog-footer>.g-button')[1].click();
-                                            }else if(++i>50){
-                                                clearInterval(bsb);
+                var gsi = setInterval(function() {
+                    var newOffBtn = document.querySelector('.g-button[data-button-id=b35]');
+                    if(newOffBtn){
+                        clearInterval(gsi);
+                        newOffBtn.click();
+                        var bsi = setInterval(function() {
+                            var newTaskBtn = document.querySelector('#_disk_id_2');
+                            if(newTaskBtn){
+                                clearInterval(bsi);
+                                newTaskBtn.click();
+                                var bsl = setInterval(function() {
+                                    var offLink=document.querySelector('#share-offline-link');
+                                    if(offLink){
+                                        clearInterval(bsl);
+                                        var beginOffline=function(){
+                                            if(curlink.length===0)return;
+                                            if(Object.prototype.toString.call(curlink) === '[object Array]')
+                                                offLink.value = curlink.shift();
+                                            else{
+                                                offLink.value = curlink;
+                                                curlink="";
                                             }
-                                        }, 200);
-                                    var ckeckEnd=function(){
-                                        var bck=setInterval(function(){
-                                            if(document.querySelector("#offlinelist-dialog").style.display!="none"){
-                                                clearInterval(bck);
-                                                beginOffline();
-                                            }else if(document.querySelector("#dialog1").style.display!="none"){
-                                                clearInterval(bck);
-                                                var inputCode=$("#dialog1").find(".input-code");
-                                                inputCode.focus();
-                                                bck=setInterval(function(){
-                                                    if(inputCode.val().length==4){
-                                                        clearInterval(bck);
-                                                        $("#dialog1").find("span:contains('确定')[class='text']").click();
-                                                        ckeckEnd();
+                                            delLink();
+                                            var baiduPathStr=GM_getValue("baiduPath"),isBt=/^magnet|torrent$/.test(offLink.value);
+                                            if(baiduPathStr){
+                                                unsafeWindow.require("function-widget-1:offlineDownload/util/newOfflineDialog.js").obtain()._checkPath=baiduPathStr;
+                                            }
+                                            $("#newoffline-dialog").find("span:contains('确定')[class='text']").click();
+                                            if(isBt)
+                                                var i=0, bsb = setInterval(function(){
+                                                    var btList=document.querySelector('#offlinebtlist-dialog');
+                                                    if(btList && btList.style.display!="none"){
+                                                        clearInterval(bsb);
+                                                        if($(".content-title-name").html()=="文件名")$("a.checked-all")[0].click();
+                                                        btList.querySelectorAll('.dialog-footer>.g-button')[1].click();
+                                                    }else if(++i>50){
+                                                        clearInterval(bsb);
                                                     }
-                                                },200);
-                                            }
-                                        },500);
-                                    };ckeckEnd();
-                                };beginOffline();
+                                                }, 200);
+                                            var ckeckEnd=function(){
+                                                var bck=setInterval(function(){
+                                                    if(document.querySelector("#offlinelist-dialog").style.display!="none"){
+                                                        clearInterval(bck);
+                                                        beginOffline();
+                                                    }else if(document.querySelector("#dialog1").style.display!="none"){
+                                                        clearInterval(bck);
+                                                        var inputCode=$("#dialog1").find(".input-code");
+                                                        inputCode.focus();
+                                                        bck=setInterval(function(){
+                                                            if(inputCode.val().length==4){
+                                                                clearInterval(bck);
+                                                                $("#dialog1").find("span:contains('确定')[class='text']").click();
+                                                                ckeckEnd();
+                                                            }
+                                                        },200);
+                                                    }
+                                                },500);
+                                            };ckeckEnd();
+                                        };beginOffline();
+                                    }
+                                }, 500);
                             }
                         }, 500);
                     }
