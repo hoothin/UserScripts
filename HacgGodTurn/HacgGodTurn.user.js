@@ -79,6 +79,7 @@
 // @include     http*://www.moe-acg.*/*
 // @include     http*://huan.moe*
 // @include     http*://www.mygalgame.com/*
+// @include     http*://www.mmgal.com/*
 // @include     http*://htai.*
 // @include     http*://gmgard.com/*
 // @include     http*://*.gmgard.com/*
@@ -101,7 +102,7 @@
 // @include     http*://greasyfork.org/*/scripts/*
 // @include     http*://sleazyfork.org/*/forum/*discussion*
 // @include     http*://greasyfork.org/*/forum/*discussion*
-// @version     3.22.58
+// @version     3.22.59
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -586,8 +587,8 @@
             },
             {
                 name:"MyGalgame - 忧郁的弟弟",
-                url:"https://www.mygalgame.com/",
-                regex:/mygalgame\.com/,
+                url:"https://www.mmgal.com/",
+                regex:/(mmgal|mygalgame)\.com/,
                 articleSel:".article",
                 commArea:'commentlist',
                 run:function(){
@@ -609,9 +610,9 @@
                         var innBtn=downBtn.querySelector(".btn-danger");
                         if(innBtn){
                             var onclickStr=innBtn.getAttribute("onclick");
-                            if(/\/\/www\.mygalgame\.com\/go\.php\?url\=/.test(onclickStr)){
+                            if(/\.com\/go\.php\?url\=/.test(onclickStr)){
                                 innBtn.setAttribute("onclick", "");
-                                var href=onclickStr.replace(/.*www\.mygalgame\.com\/go\.php\?url\=([^']+)'.*/,"$1");
+                                var href=onclickStr.replace(/.*\.com\/go\.php\?url\=([^']+)'.*/,"$1");
                                 downBtn.setAttribute("href", href);
                                 downBtn.setAttribute("target", "_blank")
                             }
