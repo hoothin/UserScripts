@@ -67,7 +67,7 @@
 // @include     http*://zuiacg.*
 // @include     http*://www.zuiacg.*
 // @include     http*://www.galacg.me/*
-// @include     http*://cangku.in/*
+// @include     http*://cangku.*
 // @include     http*://www.mhecy.com/*
 // @include     http*://acgzone.org/*
 // @include     http*://www.acgzone.org/*
@@ -102,7 +102,7 @@
 // @include     http*://greasyfork.org/*/scripts/*
 // @include     http*://sleazyfork.org/*/forum/*discussion*
 // @include     http*://greasyfork.org/*/forum/*discussion*
-// @version     3.22.59
+// @version     3.22.60
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -487,8 +487,8 @@
             },
             {
                 name:"绅士仓库",
-                url:"https://cangku.in/",
-                regex:/galacg\.|cangku\.in/,
+                url:"https://cangku.moe/",
+                regex:/galacg\.|cangku\./,
                 hideOd:true,
                 articleSel:"section.post-wrap",
                 run:function(){
