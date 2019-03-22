@@ -29,6 +29,7 @@
     'use strict';
     var lang = navigator.appName=="Netscape"?navigator.language:navigator.userLanguage;
     var i18n={};
+    var rCats=[];
     switch (lang){
         case "zh-CN":
             i18n={
@@ -67,12 +68,15 @@
         document.body.appendChild(rocketContent);
         rocketContent.outerHTML=`
         <div id="txtDownContent" style="display: none;">
-            <div style="width:300px;height:70px;position:fixed;left:50%;top:50%;margin-top:-25px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;">
-                <div id="txtDownWords" style="position:absolute;left:20px;top:10px;width:260px;">
+            <div style="width:360px;height:70px;position:fixed;left:50%;top:50%;margin-top:-25px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;">
+                <div id="txtDownWords" style="position:absolute;width:280px;height: 50px;border: 1px solid #f3f1f1;padding: 8px;border-radius: 10px;">
                 </div>
-                <div id="txtDownQuit" style="width:28px;height:28px;border-radius:14px;position:absolute;right:2px;top:2px;cursor: pointer;background-color:#3892ed;">
+                <div id="txtDownQuit" style="width:36px;height:28px;border-radius:10px;position:absolute;right:2px;top:2px;cursor: pointer;background-color:#ff5a5a;">
                     <span style="height:28px;line-height:28px;display:block;color:#FFF;text-align:center;font-size:20px;">╳</span>
                 </div>
+				<div style="position:absolute;right:2px;bottom:2px;cursor: pointer;">
+					<button id="tempSaveTxt" style="background: #008aff;border: 0;padding: 5px;border-radius: 10px;color: white;">保存</button>
+				</div>
             </div>
         </div>`;
         txtDownContent=document.querySelector("#txtDownContent");
@@ -82,12 +86,22 @@
             txtDownContent.style.display="none";
             txtDownContent.parentNode.removeChild(txtDownContent);
         };
+        initTempSave();
+    }
+
+    function initTempSave(){
+        var tempSavebtn = document.getElementById('tempSaveTxt');
+        tempSavebtn.onclick = function(){
+            var blob = new Blob([i18n.info+"\r\n"+document.title+"\r\n\r\n"+rCats.join("\r\n\r\n")], {type: "text/plain;charset=utf-8"});
+            saveAs(blob, document.title+".txt");
+        }
     }
 
     function indexDownload(aEles){
         if(aEles.length<1)return;
         initTxtDownDiv();
-        var j=0,rCats=[];
+        // var j=0,rCats=[];
+        var j=0;
         function getDocEle(str){
             var doc = null;
             try {
