@@ -9,7 +9,7 @@
 // @description:zh-TW   老司機工具箱，支持琉璃神社、靈夢禦所、純愛計劃、紳士二次元、萌心次元、次元軌跡、ACG調查小隊、幻天領域、天使二次元、櫻花漫舍、風鈴窩、次元の聖光、愛彈幕、幻想次元、司機會所、裏番萌、最ACG、紳士倉庫、紳士圖書館、ACG和諧區/裏世界、寂月神社、萌幻之鄕、紳士の庭、萌口組、九妖萌、CE家族社、喵窩、次元老司機、紳士ACG社等，神秘代碼轉換成下載鏈接，網盤自動填寫提取密碼，F8、Shift+F8站點切換，Alt+F8列表瀏覽，左右方向鍵文章跳轉，Ctrl+左右快捷翻頁，Ctrl+上下跳入跳出，下載鏈接嗅探，繞過重定向跳轉，各種和諧補丁
 // @description:ja      琉璃神社工具セット、秋の名山老運転手専用
 // @author      hoothin
-// @icon        https://www.liuli.pw/favicon.ico
+// @icon        https://www.liuli.in/favicon.ico
 // @include     http*://www.hacg.*/wordpress/*
 // @include     http*://hacg.*/wordpress/*
 // @include     http*://loli.cool/*
@@ -83,6 +83,8 @@
 // @include     http*://htai.*
 // @include     http*://gmgard.com/*
 // @include     http*://*.gmgard.com/*
+// @include     http*://hggard.com/*
+// @include     http*://*.hggard.com/*
 // @include     http*://www.kou.moe/*
 // @include     http*://www.91moe.com/*
 // @include     http*://cefamilie.com/*
@@ -102,7 +104,7 @@
 // @include     http*://greasyfork.org/*/scripts/*
 // @include     http*://sleazyfork.org/*/forum/*discussion*
 // @include     http*://greasyfork.org/*/forum/*discussion*
-// @version     3.22.60
+// @version     3.22.61
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -148,7 +150,7 @@
         sites:[
             {
                 name:"琉璃神社",
-                url:"https://www.liuli.eu/wp/",
+                url:"https://www.liuli.in/wp/",
                 regex:/hacg\.|llss\.|liuli\./,
                 run:function(){
                     var feiZao,feiZaos=document.querySelectorAll("p1"),i;
@@ -394,7 +396,7 @@
             },
             {
                 name:"司机会所",
-                url:"https://xiuxiqu.top",
+                url:"https://xiuxiqu.wtf",
                 regex:/sijihuisuo\.club|dakashangche\.|xiuxiqu\./,
                 innerPage:/\/(sj\/\d|\?p=\d)/,
                 offset:115,
@@ -413,7 +415,7 @@
             },
             {
                 name:"幻想次元",
-                url:"https://acg18.life/",
+                url:"https://acg18.us/",
                 regex:/acg18\./,
                 offset:55,
                 run:function(){
@@ -576,12 +578,12 @@
             },
             {
                 name:"紳士の庭",
-                url:"https://gmgard.com/",
-                regex:/gmgard\.com/,
+                url:"https://hggard.com/",
+                regex:/(gmgard|hggard)\.com/,
                 articleSel:"div.post",
                 noScale:true,
                 run:function(){
-                    if(isHttps)addInsertHandler([["img"],[['p(:\\\/\\\/static\.gmgard\.com)','ps$1']]]);
+                    if(isHttps)addInsertHandler([["img"],[['p(:\\\/\\\/static\.hggard\.com)','ps$1']]]);
                     curSite.preRocket=function(){unsafeWindow.$('#dllist a').mouseenter();};
                 }
             },
