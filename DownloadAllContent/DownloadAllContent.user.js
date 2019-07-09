@@ -4,7 +4,7 @@
 // @name:zh-TW   懶人小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      1.27
+// @version      1.28
 // @description  Fetch and download main content on current page, provide special support for chinese novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取小說、論壇內容等並保存為TXT文檔
@@ -74,9 +74,9 @@
                 <div id="txtDownQuit" style="width:36px;height:28px;border-radius:10px;position:absolute;right:2px;top:2px;cursor: pointer;background-color:#ff5a5a;">
                     <span style="height:28px;line-height:28px;display:block;color:#FFF;text-align:center;font-size:20px;">╳</span>
                 </div>
-				<div style="position:absolute;right:2px;bottom:2px;cursor: pointer;">
-					<button id="tempSaveTxt" style="background: #008aff;border: 0;padding: 5px;border-radius: 10px;color: white;">保存</button>
-				</div>
+                <div style="position:absolute;right:2px;bottom:2px;cursor: pointer;">
+                    <button id="tempSaveTxt" style="background: #008aff;border: 0;padding: 5px;border-radius: 10px;color: white;">保存</button>
+                </div>
             </div>
         </div>`;
         txtDownContent=document.querySelector("#txtDownContent");
@@ -269,7 +269,7 @@
                     break;
                 }
             }
-            if(!has && aEle.href && /^http/i.test(aEle.href) && /PART\b|Prologue|-\d+|分卷|Chapter\s*\d+|第.+[章|节|節|回|卷|折|篇|幕|集|话|話]|^序$|序\s*言|序\s*章|前\s*言|引\s*言|引\s*子|摘\s*要|楔\s*子|契\s*子|后\s*记|後\s*記|附\s*言|结\s*语|結\s*語|最終話|最终话|[\d|〇|零|一|二|三|四|五|六|七|八|九|十|百|千|万|萬|-]+(、|）|\.\D)/i.test(aEle.innerText)){
+            if(!has && aEle.href && /^http/i.test(aEle.href) && /PART\b|Prologue|-\d+|分卷|Chapter\s*\d+|^\s*序\s*$|序\s*言|序\s*章|前\s*言|引\s*言|引\s*子|摘\s*要|楔\s*子|契\s*子|后\s*记|後\s*記|附\s*言|结\s*语|結\s*語|最終話|最终话|[\d|〇|零|一|二|三|四|五|六|七|八|九|十|百|千|万|萬|-]+\s*(、|）|\.\D|章|节|節|回|卷|折|篇|幕|集|话|話)/i.test(aEle.innerText)){
                 list.push(aEle);
             }
         }
