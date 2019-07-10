@@ -104,7 +104,7 @@
 // @include     http*://greasyfork.org/*/scripts/*
 // @include     http*://sleazyfork.org/*/forum/*discussion*
 // @include     http*://greasyfork.org/*/forum/*discussion*
-// @version     3.22.61
+// @version     3.22.62
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -415,11 +415,11 @@
             },
             {
                 name:"幻想次元",
-                url:"https://acg18.us/",
+                url:"https://acg18.world/",
                 regex:/acg18\./,
                 offset:55,
                 run:function(){
-                    changeUrl(true,[["a"],[['https?:\\\/\\\/[^\\\.]*(\\\.)?acg18\\\.us\\\/go\\\/\\\?url=','']]]);
+                    changeUrl(true,[["a"],[['https?:\\\/\\\/[^\\\.]*(\\\.)?acg18\\\.(us|world)\\\/go\\\/\\\?url=','']]]);
                 }
             },
             {
@@ -492,7 +492,7 @@
                 url:"https://cangku.moe/",
                 regex:/galacg\.|cangku\./,
                 hideOd:true,
-                articleSel:"section.post-wrap",
+                articleSel:".post-card-wrap",
                 run:function(){
                     window.setTimeout(function(){
                         process();
@@ -600,7 +600,7 @@
                             var a = this.match(reg);
                             return a? [a.slice(1,a.length)] : 0;
                         }
-                        a=[],b;
+                        a=[];var b;
                         while(b=reg.exec(this)){
                             b.shift();
                             a.push(b);
@@ -1276,12 +1276,13 @@
         oD_button.style.cssText="padding:4px 0;position: absolute;top:-1px;right:0px;width:40px;height:35px";
         oD_button.onclick=function (){
             oD_link.textContent=oD_link2.textContent=oD_link3.textContent="";
-            var oD_hash=oD_text.value;
+            var oD_hash=oD_text.value,url;
             if(oD_hash===""){
                 alert("请输入hash值、网盘或Base64密文");
             }else if(/\b1[0-9a-z]{6,7}(\b|$)/i.test(oD_hash)){
                 var panMatch=oD_hash.match(/\b1[0-9a-z]{6,7}/i);
-                var ecode=oD_hash.trim(),url="https://pan.baidu.com/s/"+panMatch;
+                var ecode=oD_hash.trim();
+                url="https://pan.baidu.com/s/"+panMatch;
                 var shortMatch=/\b1[0-9a-z]{6,7}\s*([0-9a-z!]{4}|[^\s,，：:]{2,4})(\b|$)/i.exec(ecode);
                 if(shortMatch){
                     url+="#"+shortMatch[1];
@@ -1291,7 +1292,10 @@
                 }
                 window.open(url);
             }else if(/^\s*(https|ftp)?:\/\//.test(oD_hash)){
-                var url=oD_hash.replace(/[^a-z0-9:\/%\?&\._\-\+\*]/gi,"");
+                url=oD_hash.replace(/[^a-z0-9:\/%\?&\._\-\+\*]/gi,"");
+                window.open(url);
+            }else if(/^\d{8}$/.test(oD_hash)){
+                url="https://www.pixiv.net/member_illust.php?mode=medium&illust_id="+oD_hash;
                 window.open(url);
             }else{
                 oD_hash=oD_hash.replace(/(\[.*\])|[\W_]/g,"");
