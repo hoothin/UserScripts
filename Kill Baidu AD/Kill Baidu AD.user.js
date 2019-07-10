@@ -23,7 +23,7 @@
 
 (function() {
     'use strict';
-    var killBaijiaType=1;//1：添加-baijiahao ；2：嗅探真实url
+    var killBaijiaType=0;//1：添加-baijiahao ；2：嗅探真实url
     var MO = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
     if(MO){
         var observer = new MO(function(records){
