@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2019.7.4.1
+// @version        2019.7.11.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -172,6 +172,7 @@
                 grid:'平铺排序',
                 gridBig:'原图平铺',
                 list:'列表排序',
+                galleryAutoLoad:"自动加载更多图片",
                 galleryLoadAll:"加载更多图片时自动处理全部页",
                 galleryLoadAllTip:"若页数过多可能影响体验",
                 galleryScaleSmallSize1:"实际尺寸的高和宽都小于 ",
@@ -354,6 +355,7 @@
                 grid:'平鋪排序',
                 gridBig:'原圖平鋪',
                 list:'列表排序',
+                galleryAutoLoad:"自動載入更多圖片",
                 galleryLoadAll:"載入更多圖片時自動處理全部頁",
                 galleryLoadAllTip:"若頁數過多可能影響體驗",
                 galleryScaleSmallSize1:"實際尺寸的高和寬都小於 ",
@@ -536,6 +538,7 @@
                 grid:"Tile sorting",
                 gridBig:"The original picture is tiled",
                 list:"List sorting",
+                galleryAutoLoad:"Automatically load more images",
                 galleryLoadAll:"Automatically process all pages when loading more images",
                 galleryLoadAllTip:"If too many pages may affect the experience",
                 galleryScaleSmallSize1:"The actual size is less than the height and width",
@@ -645,6 +648,7 @@
             },
 
             gallery:{//图库相关设定
+                loadMore:false,
                 loadAll:true,//加载更多时是否加载全部页面
                 fitToScreen:true,//图片适应屏幕(适应方式为contain，非cover).
                 fitToScreenSmall:false,
@@ -2522,8 +2526,14 @@
                 document.body.appendChild(container);
 
                 var self=this;
-                container.querySelector("#minsizeW").oninput=function(){self.changeMinView();};
-                container.querySelector("#minsizeH").oninput=function(){self.changeMinView();};
+                var clickSign=true;
+                container.querySelector("#minsizeW").oninput=function(){self.changeMinViewW();clickSign=false};
+                container.querySelector("#minsizeH").oninput=function(){self.changeMinViewH();clickSign=false};
+
+                container.querySelector("#minsizeW").onmousedown=function(){clickSign=true;};
+                container.querySelector("#minsizeH").onmousedown=function(){clickSign=true;};
+                container.querySelector("#minsizeW").onmouseup=function(){if(clickSign){var inputW=window.prompt("Width:","");if(!inputW)return;self.changeMinViewW(inputW);};};
+                container.querySelector("#minsizeH").onmouseup=function(){if(clickSign){var inputH=window.prompt("Height:","");if(!inputH)return;self.changeMinViewH(inputH);};};
                 var maximizeTrigger=document.createElement('span');
                 this.maximizeTrigger=maximizeTrigger;
                 maximizeTrigger.innerHTML='-'+i18n("returnToGallery")+'-<span class="pv-gallery-maximize-trigger-close" title="'+i18n("closeGallery")+'"></span>';
@@ -3476,31 +3486,71 @@
                 this.initZoom();
             },
 
-            changeMinView:function(){
-                var maxSize=0,minSize=0;
-                var sizeInputW=this.gallery.querySelector("#minsizeW");
-                sizeInputW.title=sizeInputW.value+"px";
-                this.data.forEach(function(item) {
-                    if(!item)return;
-                    if(item.sizeW>maxSize)
-                        maxSize=item.sizeW;
-                    if(item.sizeW<minSize || minSize==0)
-                        minSize=item.sizeW;
-                });
-                sizeInputW.max=maxSize;
-                sizeInputW.min=minSize;
-                maxSize=0;minSize=0;
+            changeMinViewH:function(v=0){
+                var maxSizeH=0,minSizeH=0,maxSizeW=0,minSizeW=0;
                 var sizeInputH=this.gallery.querySelector("#minsizeH");
-                sizeInputH.title=sizeInputH.value+"px";
+                var sizeInputW=this.gallery.querySelector("#minsizeW");
+                if(!v)v=sizeInputH.value;
                 this.data.forEach(function(item) {
                     if(!item)return;
-                    if(item.sizeH>maxSize)
-                        maxSize=item.sizeH;
-                    if(item.sizeH<minSize || minSize==0)
-                        minSize=item.sizeH;
+                    if(item.sizeH>maxSizeH)
+                        maxSizeH=item.sizeH;
+                    if(item.sizeH<minSizeH || minSizeH==0)
+                        minSizeH=item.sizeH;
+                    if(item.sizeH>=v){
+                        if(item.sizeW>maxSizeW)
+                            maxSizeW=item.sizeW;
+                        if(item.sizeW<minSizeW || minSizeW==0)
+                            minSizeW=item.sizeW;
+                    }
                 });
-                sizeInputH.max=maxSize;
-                sizeInputH.min=minSize;
+                sizeInputH.max=maxSizeH;
+                sizeInputH.min=minSizeH;
+                sizeInputH.value=v;
+
+                sizeInputW.max=maxSizeW;
+                sizeInputW.min=minSizeW;
+                sizeInputW.title=sizeInputW.value+"px";
+                sizeInputH.title=sizeInputH.value+"px";
+
+                this.data.forEach(function(item) {
+                    if(!item)return;
+                    var spanMark=document.querySelector("span.pv-gallery-sidebar-thumb-container[data-src='"+item.src+"']");
+                    if(spanMark){
+                        if(item.sizeW<sizeInputW.value || item.sizeH<sizeInputH.value){
+                            spanMark.style.display="none";
+                        }else
+                            spanMark.style.display="";
+                    }
+                });
+            },
+
+            changeMinViewW:function(v=0){
+                var maxSizeH=0,minSizeH=0,maxSizeW=0,minSizeW=0;
+                var sizeInputH=this.gallery.querySelector("#minsizeH");
+                var sizeInputW=this.gallery.querySelector("#minsizeW");
+                if(!v)v=sizeInputW.value;
+                this.data.forEach(function(item) {
+                    if(!item)return;
+                    if(item.sizeW>maxSizeW)
+                        maxSizeW=item.sizeW;
+                    if(item.sizeW<minSizeW || minSizeW==0)
+                        minSizeW=item.sizeW;
+                    if(item.sizeW>=v){
+                        if(item.sizeH>maxSizeH)
+                            maxSizeH=item.sizeH;
+                        if(item.sizeH<minSizeH || minSizeH==0)
+                            minSizeH=item.sizeH;
+                    }
+                });
+                sizeInputW.max=maxSizeW;
+                sizeInputW.min=minSizeW;
+                sizeInputW.value=v;
+
+                sizeInputH.max=maxSizeH;
+                sizeInputH.min=minSizeH;
+                sizeInputH.title=sizeInputH.value+"px";
+                sizeInputW.title=sizeInputW.value+"px";
 
                 this.data.forEach(function(item) {
                     if(!item)return;
@@ -4174,6 +4224,10 @@
                 }
                 document.addEventListener('keydown',this._keyDownListener,true);
                 document.addEventListener('keyup',this._keyUpListener,true);
+
+                if(prefs.gallery.loadMore){
+                    this.eleMaps['head-command-nextPage'].click();
+                }
             },
             close:function(reload){
                 document.removeEventListener('keydown',this._keyDownListener,true);
@@ -9330,6 +9384,11 @@ left: -45px;\
                         'list': i18n("list")
                     },
                     "default": prefs.gallery.exportType,
+                },
+                'gallery.loadMore': {
+                    label: i18n("galleryAutoLoad"),
+                    type: 'checkbox',
+                    "default": prefs.gallery.loadMore
                 },
                 'gallery.loadAll': {
                     label: i18n("galleryLoadAll"),
