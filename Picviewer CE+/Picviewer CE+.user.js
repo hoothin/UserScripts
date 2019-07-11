@@ -2526,14 +2526,14 @@
                 document.body.appendChild(container);
 
                 var self=this;
-                var clickSign=true;
-                container.querySelector("#minsizeW").oninput=function(){self.changeMinViewW();clickSign=false};
-                container.querySelector("#minsizeH").oninput=function(){self.changeMinViewH();clickSign=false};
+                var minsizeW=0,minsizeH=0;
+                container.querySelector("#minsizeW").oninput=function(){minsizeW=this.value;};
+                container.querySelector("#minsizeH").oninput=function(){minsizeH=this.value};
 
-                container.querySelector("#minsizeW").onmousedown=function(){clickSign=true;};
-                container.querySelector("#minsizeH").onmousedown=function(){clickSign=true;};
-                container.querySelector("#minsizeW").onmouseup=function(){if(clickSign){var inputW=window.prompt("Width:","");if(!inputW)return;self.changeMinViewW(inputW);};};
-                container.querySelector("#minsizeH").onmouseup=function(){if(clickSign){var inputH=window.prompt("Height:","");if(!inputH)return;self.changeMinViewH(inputH);};};
+                container.querySelector("#minsizeW").onmousedown=function(){minsizeW=0;};
+                container.querySelector("#minsizeH").onmousedown=function(){minsizeH=0;};
+                container.querySelector("#minsizeW").onmouseup=function(){if(!minsizeW)minsizeW=window.prompt("Width:",this.value);if(!minsizeW)return;self.changeMinViewW(minsizeW);};
+                container.querySelector("#minsizeH").onmouseup=function(){if(!minsizeH)minsizeH=window.prompt("Height:",this.value);if(!minsizeH)return;self.changeMinViewH(minsizeH);};
                 var maximizeTrigger=document.createElement('span');
                 this.maximizeTrigger=maximizeTrigger;
                 maximizeTrigger.innerHTML='-'+i18n("returnToGallery")+'-<span class="pv-gallery-maximize-trigger-close" title="'+i18n("closeGallery")+'"></span>';
@@ -4228,6 +4228,9 @@
                 if(prefs.gallery.loadMore){
                     this.eleMaps['head-command-nextPage'].click();
                 }
+
+                this.changeMinViewW();
+                this.changeMinViewH();
             },
             close:function(reload){
                 document.removeEventListener('keydown',this._keyDownListener,true);
