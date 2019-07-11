@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2019.7.11.1
+// @version        2019.7.11.2
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -2526,14 +2526,32 @@
                 document.body.appendChild(container);
 
                 var self=this;
-                var minsizeW=0,minsizeH=0;
-                container.querySelector("#minsizeW").oninput=function(){minsizeW=this.value;};
-                container.querySelector("#minsizeH").oninput=function(){minsizeH=this.value};
+                var inputAction=false;
+                container.querySelector("#minsizeW").oninput=function(){self.changeMinView();};
+                container.querySelector("#minsizeH").oninput=function(){self.changeMinView();};
 
-                container.querySelector("#minsizeW").onmousedown=function(){minsizeW=0;};
-                container.querySelector("#minsizeH").onmousedown=function(){minsizeH=0;};
-                container.querySelector("#minsizeW").onmouseup=function(){if(!minsizeW)minsizeW=window.prompt("Width:",this.value);if(!minsizeW)return;self.changeMinViewW(minsizeW);};
-                container.querySelector("#minsizeH").onmouseup=function(){if(!minsizeH)minsizeH=window.prompt("Height:",this.value);if(!minsizeH)return;self.changeMinViewH(minsizeH);};
+                container.querySelector("#minsizeW").onmousedown=function(){
+                    inputAction=true;
+                    setTimeout(function(){inputAction=false},300);
+                };
+                container.querySelector("#minsizeH").onmousedown=function(){
+                    inputAction=true;
+                    setTimeout(function(){inputAction=false},300);
+                };
+                container.querySelector("#minsizeW").onmouseup=function(){
+                    self.changeSizeInputW();
+                    if(!inputAction)return;
+                    var minsizeW=window.prompt("Width:",this.value);
+                    if(!minsizeW)return;
+                    self.changeMinView();
+                };
+                container.querySelector("#minsizeH").onmouseup=function(){
+                    self.changeSizeInputH();
+                    if(!inputAction)return;
+                    var minsizeH=window.prompt("Height:",this.value);
+                    if(!minsizeH)return;
+                    self.changeMinView();
+                };
                 var maximizeTrigger=document.createElement('span');
                 this.maximizeTrigger=maximizeTrigger;
                 maximizeTrigger.innerHTML='-'+i18n("returnToGallery")+'-<span class="pv-gallery-maximize-trigger-close" title="'+i18n("closeGallery")+'"></span>';
@@ -3486,32 +3504,11 @@
                 this.initZoom();
             },
 
-            changeMinViewH:function(v=0){
-                var maxSizeH=0,minSizeH=0,maxSizeW=0,minSizeW=0;
+            changeMinView:function(){
                 var sizeInputH=this.gallery.querySelector("#minsizeH");
                 var sizeInputW=this.gallery.querySelector("#minsizeW");
-                if(!v)v=sizeInputH.value;
-                this.data.forEach(function(item) {
-                    if(!item)return;
-                    if(item.sizeH>maxSizeH)
-                        maxSizeH=item.sizeH;
-                    if(item.sizeH<minSizeH || minSizeH==0)
-                        minSizeH=item.sizeH;
-                    if(item.sizeH>=v){
-                        if(item.sizeW>maxSizeW)
-                            maxSizeW=item.sizeW;
-                        if(item.sizeW<minSizeW || minSizeW==0)
-                            minSizeW=item.sizeW;
-                    }
-                });
-                sizeInputH.max=maxSizeH;
-                sizeInputH.min=minSizeH;
-                sizeInputH.value=v;
-
-                sizeInputW.max=maxSizeW;
-                sizeInputW.min=minSizeW;
-                sizeInputW.title=sizeInputW.value+"px";
                 sizeInputH.title=sizeInputH.value+"px";
+                sizeInputW.title=sizeInputW.value+"px";
 
                 this.data.forEach(function(item) {
                     if(!item)return;
@@ -3525,43 +3522,44 @@
                 });
             },
 
-            changeMinViewW:function(v=0){
+            changeSizeInputW:function(){
                 var maxSizeH=0,minSizeH=0,maxSizeW=0,minSizeW=0;
                 var sizeInputH=this.gallery.querySelector("#minsizeH");
                 var sizeInputW=this.gallery.querySelector("#minsizeW");
-                if(!v)v=sizeInputW.value;
                 this.data.forEach(function(item) {
                     if(!item)return;
-                    if(item.sizeW>maxSizeW)
-                        maxSizeW=item.sizeW;
-                    if(item.sizeW<minSizeW || minSizeW==0)
-                        minSizeW=item.sizeW;
-                    if(item.sizeW>=v){
+                    if(item.sizeW>=sizeInputW.value){
                         if(item.sizeH>maxSizeH)
                             maxSizeH=item.sizeH;
                         if(item.sizeH<minSizeH || minSizeH==0)
                             minSizeH=item.sizeH;
                     }
                 });
-                sizeInputW.max=maxSizeW;
-                sizeInputW.min=minSizeW;
-                sizeInputW.value=v;
-
+                var isMin=(sizeInputH.min==sizeInputH.value);
                 sizeInputH.max=maxSizeH;
                 sizeInputH.min=minSizeH;
+                if(isMin)sizeInputH.value=sizeInputH.min;
                 sizeInputH.title=sizeInputH.value+"px";
-                sizeInputW.title=sizeInputW.value+"px";
+            },
 
+            changeSizeInputH:function(){
+                var maxSizeH=0,minSizeH=0,maxSizeW=0,minSizeW=0;
+                var sizeInputH=this.gallery.querySelector("#minsizeH");
+                var sizeInputW=this.gallery.querySelector("#minsizeW");
                 this.data.forEach(function(item) {
                     if(!item)return;
-                    var spanMark=document.querySelector("span.pv-gallery-sidebar-thumb-container[data-src='"+item.src+"']");
-                    if(spanMark){
-                        if(item.sizeW<sizeInputW.value || item.sizeH<sizeInputH.value){
-                            spanMark.style.display="none";
-                        }else
-                            spanMark.style.display="";
+                    if(item.sizeH>=sizeInputH.value){
+                        if(item.sizeW>maxSizeW)
+                            maxSizeW=item.sizeW;
+                        if(item.sizeW<minSizeW || minSizeW==0)
+                            minSizeW=item.sizeW;
                     }
                 });
+                var isMin=(sizeInputW.min==sizeInputW.value);
+                sizeInputW.max=maxSizeW;
+                sizeInputW.min=minSizeW;
+                if(isMin)sizeInputW.value=sizeInputW.min;
+                sizeInputW.title=sizeInputW.value+"px";
             },
             initToggleBar: function() {  // 是否显示切换 sidebar 按钮
                 /**
@@ -4229,8 +4227,8 @@
                     this.eleMaps['head-command-nextPage'].click();
                 }
 
-                this.changeMinViewW();
-                this.changeMinViewH();
+                this.changeSizeInputH();
+                this.changeSizeInputW();
             },
             close:function(reload){
                 document.removeEventListener('keydown',this._keyDownListener,true);
