@@ -2526,30 +2526,20 @@
                 document.body.appendChild(container);
 
                 var self=this;
-                var inputAction=false;
                 container.querySelector("#minsizeW").oninput=function(){self.changeMinView();};
                 container.querySelector("#minsizeH").oninput=function(){self.changeMinView();};
-
-                container.querySelector("#minsizeW").onmousedown=function(){
-                    inputAction=true;
-                    setTimeout(function(){inputAction=false},300);
-                };
-                container.querySelector("#minsizeH").onmousedown=function(){
-                    inputAction=true;
-                    setTimeout(function(){inputAction=false},300);
-                };
-                container.querySelector("#minsizeW").onmouseup=function(){
+                container.querySelector("#minsizeWSpan").onclick=function(){
                     //self.changeSizeInputW();
-                    if(!inputAction)return;
                     var minsizeW=window.prompt("Width:",this.value);
                     if(!minsizeW)return;
+                    container.querySelector("#minsizeW").value=minsizeW;
                     self.changeMinView();
                 };
-                container.querySelector("#minsizeH").onmouseup=function(){
+                container.querySelector("#minsizeHSpan").onclick=function(){
                     //self.changeSizeInputH();
-                    if(!inputAction)return;
                     var minsizeH=window.prompt("Height:",this.value);
                     if(!minsizeH)return;
+                    container.querySelector("#minsizeH").value=minsizeH;
                     self.changeMinView();
                 };
                 var maximizeTrigger=document.createElement('span');
