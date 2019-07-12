@@ -3539,11 +3539,11 @@
                             minSizeH=item.sizeH;
                     }
                 });
-                var isMin=(sizeInputH.min==sizeInputH.value);
                 sizeInputH.max=maxSizeH;
                 sizeInputH.min=minSizeH;
-                if(isMin)sizeInputH.value=sizeInputH.min;
                 sizeInputH.title=sizeInputH.value+"px";
+                var sizeInputHSpan=this.gallery.querySelector("#minsizeHSpan");
+                sizeInputHSpan.innerHTML=sizeInputH.value+"px";
             },
 
             changeSizeInputH:function(){
@@ -3559,11 +3559,11 @@
                             minSizeW=item.sizeW;
                     }
                 });
-                var isMin=(sizeInputW.min==sizeInputW.value);
                 sizeInputW.max=maxSizeW;
                 sizeInputW.min=minSizeW;
-                if(isMin)sizeInputW.value=sizeInputW.min;
                 sizeInputW.title=sizeInputW.value+"px";
+                var sizeInputWSpan=this.gallery.querySelector("#minsizeWSpan");
+                sizeInputWSpan.innerHTML=sizeInputW.value+"px";
             },
             initToggleBar: function() {  // 是否显示切换 sidebar 按钮
                 /**
