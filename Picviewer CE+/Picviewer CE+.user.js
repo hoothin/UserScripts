@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2019.7.11.2
+// @version        2019.7.12.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -2356,8 +2356,8 @@
                     '<span class="pv-gallery-head-left-img-info-scaling" title="'+i18n("scaleRatio")+'">（100%）</span>'+
                     '<span class="pv-gallery-vertical-align-helper"></span>'+
                     '<span class="pv-gallery-head-left-img-info-description" title="'+i18n("picNote")+'"></span>'+
-                    '<input type="range" id="minsizeW" min="0" max="100" value="0" title="Width"> '+
-                    '<input type="range" id="minsizeH" min="0" max="100" value="0" title="Height">'+
+                    '<input type="range" id="minsizeW" min="0" max="100" value="0" title="Width"> <span id="minsizeWSpan">0px</span> '+
+                    '<input type="range" id="minsizeH" min="0" max="100" value="0" title="Height"> <span id="minsizeHSpan">0px</span>'+
                     '</span>'+
                     '</span>'+
 
@@ -2539,14 +2539,14 @@
                     setTimeout(function(){inputAction=false},300);
                 };
                 container.querySelector("#minsizeW").onmouseup=function(){
-                    self.changeSizeInputW();
+                    //self.changeSizeInputW();
                     if(!inputAction)return;
                     var minsizeW=window.prompt("Width:",this.value);
                     if(!minsizeW)return;
                     self.changeMinView();
                 };
                 container.querySelector("#minsizeH").onmouseup=function(){
-                    self.changeSizeInputH();
+                    //self.changeSizeInputH();
                     if(!inputAction)return;
                     var minsizeH=window.prompt("Height:",this.value);
                     if(!minsizeH)return;
@@ -3507,8 +3507,12 @@
             changeMinView:function(){
                 var sizeInputH=this.gallery.querySelector("#minsizeH");
                 var sizeInputW=this.gallery.querySelector("#minsizeW");
+                var sizeInputHSpan=this.gallery.querySelector("#minsizeHSpan");
+                var sizeInputWSpan=this.gallery.querySelector("#minsizeWSpan");
                 sizeInputH.title=sizeInputH.value+"px";
+                sizeInputHSpan.innerHTML=sizeInputH.value+"px";
                 sizeInputW.title=sizeInputW.value+"px";
+                sizeInputWSpan.innerHTML=sizeInputW.value+"px";
 
                 this.data.forEach(function(item) {
                     if(!item)return;
