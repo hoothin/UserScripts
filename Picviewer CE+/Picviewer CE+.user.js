@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
 // @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
 // @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2019.7.26.1
+// @version        2019.7.31.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -1249,7 +1249,7 @@
                     newsrc=oldsrc.replace(/\.md(\.[^\.]+)$/i,"$1");
                 }else if(/\.126\.net.*\/\d+\.\d+x\d+\.\d+\.[^\.]+$/.test(oldsrc)){
                     newsrc=oldsrc.replace(/\/\d+\.\d+x\d+\.\d+\.([^\.]+)$/i,"/5.5000x5000.100.$1");
-                }else if(/\.ytimg\.com/.test(oldsrc)){
+                }else if(/\.ytimg\.com/.test(oldsrc) && !/mqdefault_6s/.test(oldsrc)){
                     newsrc=oldsrc.replace(/\?.*$/i,"");
                 }else if(/meituan\.net\/.*\/avatar\//.test(oldsrc)){
                     newsrc=oldsrc.replace(/\/avatar\/\w{2}/i,"/avatar/o0");
@@ -8814,7 +8814,9 @@ left: -45px;\
             try{
                 src=decodeURIComponent(src);
             }catch(e){}
-
+            if(!srcs && imgSrc!=src){
+                srcs=[imgSrc];
+            }
             var ret = {
                 src: src,                  // 得到的src
                 srcs: srcs,                // 多个 src，失败了会尝试下一个
