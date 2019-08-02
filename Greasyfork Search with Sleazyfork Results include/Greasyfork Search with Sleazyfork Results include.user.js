@@ -4,7 +4,7 @@
 // @name:zh-TW   大人的Greasyfork
 // @name:ja      大人のGreasyfork
 // @namespace    hoothin
-// @version      0.85
+// @version      0.86
 // @description  Merge adult results of sleazyfork into greasyfork when the script is no longer anonymously available, add rating score and version for scripts then
 // @description:zh-CN 在Greasyfork的搜索结果中添加Sleazyfork上的成人脚本，增加评分与版本号，并在访问匿名不可用脚本时跳转至Sleazyfork
 // @description:zh-TW 在Greasyfork的搜索結果中添加Sleazyfork上的成人腳本，增加評分與版本號，並在訪問匿名不可用腳本時跳轉至Sleazyfork
@@ -53,7 +53,7 @@
                         if(!ml){
                             ml=document.createElement("ol");
                             ml.setAttribute("class","script-list");
-                            var list=document.querySelector('body>div.width-constraint');
+                            var list=document.querySelector('.sidebarred-main-content');
                             var ps=list.querySelectorAll("p");
                             for(let i=0;i<ps.length;i++){
                                 let p=ps[i];
