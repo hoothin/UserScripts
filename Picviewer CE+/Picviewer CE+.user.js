@@ -1077,6 +1077,12 @@
                  return this.src.replace(/_(b|xs|s|l|\d+x\d+)\./,".");
              }
             },
+            {name: '500px',
+             url: /500px\./,
+             getImage: function() {
+                 return this.src.replace(/h%3D450\/v2.*/,"m%3D2000/v2").replace(/^((?:(?:pp?cdn|s\\d\\.amazonaws\\.com\/photos|gp\\d+\\.wac\\.edgecastcdn\\.net\/806614\/photos\/photos)\\.500px|djlhggipcyllo\\.cloudfront)\\.(?:net|org)\/\\d+\/[\\da-f]{40}\/)\\d+\\./,"$12048.jpg");
+             }
+            },
             {name: 'Nyaa',
              url: /nyaa\.se/,
              getImage: function() {
@@ -1295,11 +1301,6 @@
              d: 'pixiv.net',
              r: /(pixiv.net\/img\d+\/img\/.+\/\d+)_[ms]\.(\w{2,5})$/i,
              s: 'r;$1.$2'
-            },
-            {name: "500px",  // 规则来自 imagus，只有一半
-             d: "500px.com",
-             r: "^((?:(?:pp?cdn|s\\d\\.amazonaws\\.com/photos|gp\\d+\\.wac\\.edgecastcdn\\.net/806614/photos/photos)\\.500px|djlhggipcyllo\\.cloudfront)\\.(?:net|org)/\\d+/[\\da-f]{40}/)\\d+\\.",
-             s: "$12048.jpg"
             },
 
             // 常用站点
@@ -8812,7 +8813,7 @@ left: -45px;\
             }
 
             try{
-                src=decodeURIComponent(src);
+                //src=decodeURIComponent(src);
             }catch(e){}
             if(!srcs && imgSrc!=src){
                 srcs=[imgSrc];
