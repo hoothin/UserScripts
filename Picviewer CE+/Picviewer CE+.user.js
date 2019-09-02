@@ -1080,7 +1080,7 @@
             {name: '500px',
              url: /500px\./,
              getImage: function() {
-                 return this.src.replace(/h%3D450\/v2.*/,"m%3D2000/v2").replace(/^((?:(?:pp?cdn|s\\d\\.amazonaws\\.com\/photos|gp\\d+\\.wac\\.edgecastcdn\\.net\/806614\/photos\/photos)\\.500px|djlhggipcyllo\\.cloudfront)\\.(?:net|org)\/\\d+\/[\\da-f]{40}\/)\\d+\\./,"$12048.jpg");
+                 return this.src.replace(/h%3D\d+\/v2.*/,"m%3D2000/v2").replace(/^((?:(?:pp?cdn|s\\d\\.amazonaws\\.com\/photos|gp\\d+\\.wac\\.edgecastcdn\\.net\/806614\/photos\/photos)\\.500px|djlhggipcyllo\\.cloudfront)\\.(?:net|org)\/\\d+\/[\\da-f]{40}\/)\\d+\\./,"$12048.jpg");
              }
             },
             {name: 'Nyaa',
