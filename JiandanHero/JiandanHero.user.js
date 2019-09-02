@@ -3,7 +3,7 @@
 // @name:en      Jiandan Hero
 // @name:zh-TW   煎蛋俠
 // @namespace    hoothin
-// @version      1.6
+// @version      1.7
 // @icon         http://cdn.jandan.net/static/img/favicon.ico
 // @description  为煎蛋jandan.net提供左右方向键快捷翻页、上下方向键快捷切图、鼠标悬停显示大图、屏蔽指定用户发言等功能
 // @description:en  Tools for jandan.net
@@ -133,7 +133,7 @@
     for(i=0;i<imgs.length;i++){
         let img=imgs[i];
         img.onmouseover=function(e){
-            src=img.src.replace(/\b(custom|square)\b/,"medium").replace(/\.sinaimg\.cn\/(mw600|thumb\d+)/,".sinaimg.cn/large");
+            src=img.src.replace(/\b(!square)\b/,"").replace(/\b(custom|square)\b/,"medium").replace(/\.sinaimg\.cn\/thumb\d+/,".sinaimg.cn/large");
             src=isHttps?src.replace(/http\:\/\//,"https://"):src.replace(/https\:\/\//,"http://");
             bigImg.src=img.src;
             bigImg.src=src;
@@ -163,7 +163,7 @@
         };
     }
     $("p").on("mouseover","div.gif-mask",function(e){
-        src=this.previousSibling.getAttribute("org_src").replace(/\b(custom|square)\b/,"medium").replace(/\.sinaimg\.cn\/(mw600|thumb\d+)/,".sinaimg.cn/large");
+        src=this.previousSibling.getAttribute("org_src").replace(/\b(!square)\b/,"").replace(/\b(custom|square)\b/,"medium").replace(/\.sinaimg\.cn\/(mw600|thumb\d+)/,".sinaimg.cn/large");
         src=isHttps?src.replace(/http\:\/\//,"https://"):src.replace(/https\:\/\//,"http://");
         bigImg.src=this.previousSibling.src;
         bigImg.src=src;
