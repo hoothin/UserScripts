@@ -3,10 +3,10 @@
 // @name:zh-CN         Picviewer CE+
 // @name:zh-TW         Picviewer CE+
 // @author         NLF && ywzhaiqi && hoothin
-// @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
-// @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图
-// @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖
-// @version        2019.9.19.1
+// @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
+// @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
+// @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
+// @version        2019.9.19.2
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -85,7 +85,7 @@
                 onlineEditTip:"使用#t#在线编辑该图片",
                 openInNewWindow:"新窗口打开",
                 openInNewWindowTip:"新窗口打开图片",
-                findInPage:"定位到图片",
+                findInPage:"定位到图",
                 findInPageTip:"滚动到当前图片所在的位置",
                 viewCollection:"查看收藏",
                 viewCollectionTip:"查看所有收藏的图片",
@@ -93,8 +93,8 @@
                 cantFind:"图片不在文档中，或者被隐藏了，无法定位！",
                 exportImages:"导出大图",
                 exportImagesTip:"导出所有图片到新窗口",
-                downloadImage:"下载所有图片",
-                downloadImageTip:"下载当前所有显示图片",
+                downloadImage:"下载所有",
+                downloadImageTip:"下载当前库中所有显示图片",
                 copyImagesUrl:"复制所有",
                 copyImagesUrlTip:"复制所有大图地址",
                 copySuccess:"已成功复制 #t# 张大图地址",
@@ -268,7 +268,7 @@
                 onlineEditTip:"使用#t#在線編輯該圖片",
                 openInNewWindow:"新窗口打開",
                 openInNewWindowTip:"新窗口打開圖片",
-                findInPage:"定位到圖片",
+                findInPage:"定位到圖",
                 findInPageTip:"滾動到當前圖片所在的位置",
                 viewCollection:"查看收藏",
                 viewCollectionTip:"查看所有收藏的圖片",
@@ -276,8 +276,8 @@
                 cantFind:"圖片不在文檔中，或者被隱藏了，無法定位！",
                 exportImages:"導出大圖",
                 exportImagesTip:"導出所有圖片到新窗口",
-                downloadImage:"下載所有圖片",
-                downloadImageTip:"下載當前所有顯示圖片",
+                downloadImage:"下載所有",
+                downloadImageTip:"下載當前庫中所有顯示圖片",
                 copyImagesUrl:"複製所有",
                 copyImagesUrlTip:"複製所有大圖地址",
                 copySuccess:"已成功複製 #t# 張大圖地址",
@@ -607,7 +607,7 @@
         // 默认设置，请到设置界面修改
         prefs={
             floatBar:{//浮动工具栏相关设置.
-                butonOrder:['actual','current','gallery','magnifier','search'],//按钮排列顺序'actual'(实际的图片),'current'(当前显示的图片),'magnifier'(放大镜观察),'gallery'(图集)
+                butonOrder:['actual','current','gallery','magnifier'],//按钮排列顺序'actual'(实际的图片),'current'(当前显示的图片),'magnifier'(放大镜观察),'gallery'(图集),'search'(搜索原图)
                 listenBg:true,//监听背景图
                 showDelay:366,//浮动工具栏显示延时.单位(毫秒)
                 hideDelay:566,//浮动工具栏隐藏延时.单位(毫秒)
@@ -6115,7 +6115,7 @@
                     '<span class="pv-pic-window-tb-flip-vertical pv-pic-window-tb-command" title="'+i18n("verticalFlip")+'"></span>'+
                     '</span>'+
                     '<span class="pv-pic-window-close"></span>' +
-                    '<span class="pv-pic-window-search" title="'+i18n("similarImage")+'"></span>' +
+                    //'<span class="pv-pic-window-search" title="'+i18n("similarImage")+'"></span>' +
                     '<span class="pv-pic-window-range"></span>' +
                     '<span class="pv-pic-window-description"></span>'+
                     '<span class="pv-pic-search-state"></span>';
@@ -6142,9 +6142,9 @@
                     self.remove();
                 },false);
 
-                var searchButton=container.querySelector('.pv-pic-window-search');
-                searchButton.style.cssText='top: -24px;right: 50px;';
-                this.searchButton=searchButton;
+                //var searchButton=container.querySelector('.pv-pic-window-search');
+                //searchButton.style.cssText='top: -24px;right: 50px;';
+                //this.searchButton=searchButton;
                 var srcs, from;
                 img.onerror=function(e){
                     setSearchState(i18n("loadNextSimilar"),img.parentNode);
@@ -6176,14 +6176,14 @@
                     self.zoom(1);
                     self.fitToScreen();
                 }
-                searchButton.addEventListener('click',function(e){
+                /*searchButton.addEventListener('click',function(e){
                     sortSearch();
                     searchImgByImg(self.img.src, self.img.parentNode, function(srcs, index){
                         from=index;
                         self.srcs=srcs;
                         self.img.src=srcs.shift();
                     });
-                },false);
+                },false);*/
 
                 /**
          * 说明
@@ -6740,7 +6740,7 @@ left: -45px;\
                 };
 
                 keepSI(this.closeButton,['top','right'],[-24,0]);
-                keepSI(this.searchButton,['top','right'],[-24,50]);
+                //keepSI(this.searchButton,['top','right'],[-24,50]);
                 keepSI(this.toolbar,['top','left'],[0,-45]);
 
                 // 保持注释在图片里面
@@ -7278,7 +7278,7 @@ left: -45px;\
                 imgWindow.classList.remove('pv-pic-window-container_focus');
                 this.toolbar.classList.remove('pv-pic-window-toolbar_focus');
                 this.closeButton.classList.remove('pv-pic-window-close_focus');
-                this.searchButton.classList.remove('pv-pic-window-search_focus');
+                //this.searchButton.classList.remove('pv-pic-window-search_focus');
                 this.img.classList.remove('pv-pic-window-pic_focus');
                 document.removeEventListener('mousedown',this._blur,true);
                 document.removeEventListener('keydown',this._focusedKeydown,true);
@@ -7292,7 +7292,7 @@ left: -45px;\
                 this.imgWindow.classList.add('pv-pic-window-container_focus');
                 this.toolbar.classList.add('pv-pic-window-toolbar_focus');
                 this.closeButton.classList.add('pv-pic-window-close_focus');
-                this.searchButton.classList.add('pv-pic-window-search_focus');
+                //this.searchButton.classList.add('pv-pic-window-search_focus');
                 this.img.classList.add('pv-pic-window-pic_focus');
                 this.imgWindow.style.zIndex= ImgWindowC.styleZIndex;
                 this.zIndex=ImgWindowC.styleZIndex;
@@ -8050,7 +8050,7 @@ left: -45px;\
                     '<span class="pv-float-bar-button"></span>'+
                     '<span class="pv-float-bar-button"></span>'+
                     '<span class="pv-float-bar-button"></span>'+
-                    '<span class="pv-float-bar-button"></span>'+
+                    //'<span class="pv-float-bar-button"></span>'+
                     '<span class="pv-float-bar-button"></span>';
                 document.body.appendChild(container);
 
@@ -9309,13 +9309,13 @@ left: -45px;\
                     "default": prefs.floatBar.keys.actual,
                     title: i18n("keysActualTip")
                 },
-                'floatBar.keys.search': {
+                /*'floatBar.keys.search': {
                     label: i18n("keysSearch"),
                     type: 'text',
                     className: 'floatBar-key',
                     "default": prefs.floatBar.keys.search,
                     title: i18n("keysSearchTip")
-                },
+                },*/
                 'floatBar.keys.current': {
                     label: i18n("keysCurrent"),
                     type: 'text',
@@ -9555,7 +9555,7 @@ left: -45px;\
                     type: 'checkbox',
                     "default": prefs.debug
                 },
-                'firstEngine': {
+                /*'firstEngine': {
                     label: i18n("firstEngine"),
                     type: 'select',
                     options: {
@@ -9564,7 +9564,7 @@ left: -45px;\
                         "Baidu":"Baidu"
                     },
                     "default": prefs.firstEngine,
-                },
+                },*/
             },
             events: {
                 open: function(doc, win, frame) {
