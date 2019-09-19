@@ -4,9 +4,9 @@
 // @name:zh-TW         Picviewer CE+
 // @author         NLF && ywzhaiqi && hoothin
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures or find the HD original picture automatically
-// @description:zh-CN    NLF 的围观图修改版，增加高清原图查找显示（在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图）
-// @description:zh-TW    NLF 的圍觀圖修改版，增加高清原圖查詢顯示（線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖）
-// @version        2019.9.2.1
+// @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存、查找原图
+// @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存、查詢原圖
+// @version        2019.9.19.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -27,6 +27,7 @@
 // @require        https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
 // @contributionURL https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
 // @contributionAmount 1
+// @require      https://cdn.jsdelivr.net/npm/file-saver@2.0.2/dist/FileSaver.min.js
 // @run-at         document-end
 // @include       http://*
 // @include       https://*
@@ -92,8 +93,8 @@
                 cantFind:"图片不在文档中，或者被隐藏了，无法定位！",
                 exportImages:"导出大图",
                 exportImagesTip:"导出所有图片到新窗口",
-                downloadImage:"下载图片",
-                downloadImageTip:"下载当前图片",
+                downloadImage:"下载所有图片",
+                downloadImageTip:"下载当前所有显示图片",
                 copyImagesUrl:"复制所有",
                 copyImagesUrlTip:"复制所有大图地址",
                 copySuccess:"已成功复制 #t# 张大图地址",
@@ -275,8 +276,8 @@
                 cantFind:"圖片不在文檔中，或者被隱藏了，無法定位！",
                 exportImages:"導出大圖",
                 exportImagesTip:"導出所有圖片到新窗口",
-                downloadImage:"下載圖片",
-                downloadImageTip:"下載當前圖片",
+                downloadImage:"下載所有圖片",
+                downloadImageTip:"下載當前所有顯示圖片",
                 copyImagesUrl:"複製所有",
                 copyImagesUrlTip:"複製所有大圖地址",
                 copySuccess:"已成功複製 #t# 張大圖地址",
@@ -458,8 +459,8 @@
                 cantFind:"The image is not in the document, or it is hidden and cannot be located!",
                 exportImages:"Export big Images",
                 exportImagesTip:"Export all images to new window",
-                downloadImage:"Download Image",
-                downloadImageTip:"Download the current picture",
+                downloadImage:"Download all shown Images",
+                downloadImageTip:"Download the current shown pictures",
                 copyImagesUrl:"Copy all images Urls",
                 copyImagesUrlTip:"Copy all large image Urls",
                 copySuccess:"Successfully copied #t# Url",
@@ -2439,9 +2440,9 @@
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="psImage" title="'+i18n("onlineEditTip",prefs.gallery.editSite)+'">'+i18n("onlineEdit")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="exportImages" title="'+i18n("exportImagesTip")+'">'+i18n("exportImages")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="copyImages" title="'+i18n("copyImagesUrlTip")+'">'+i18n("copyImagesUrl")+'</span>'+
+                    '<span class="pv-gallery-head-command-drop-list-item" data-command="downloadImage" title="'+i18n("downloadImageTip")+'">'+i18n("downloadImage")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="scrollIntoView" title="'+i18n("findInPageTip")+'">'+i18n("findInPage")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="enterCollection" title="'+i18n("viewCollectionTip")+'">'+i18n("viewCollection")+'</span>'+
-                    '<span class="pv-gallery-head-command-drop-list-item" data-command="downloadImage" title="'+i18n("downloadImageTip")+'">'+i18n("downloadImage")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="openInNewWindow" title="'+i18n("openInNewWindowTip")+'">'+i18n("openInNewWindow")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" title="'+i18n("autoRefreshTip")+'">'+
                     '<input type="checkbox"  data-command="scrollToEndAndReload"/>'+
@@ -3030,7 +3031,7 @@
                 },true);
 
 
-                var downloadEle=document.createElement("a"),srcSplit;
+                var srcSplit;
                 //命令下拉列表的点击处理
                 eleMaps['head-command-drop-list-others'].addEventListener('click',function(e){
                     if(e.button!=0)return;//左键
@@ -3092,10 +3093,14 @@
                             self.exportImages();
                             break;
                         case 'downloadImage':
-                            srcSplit=self.src.split("/");
-                            downloadEle.href=self.src;
-                            downloadEle.setAttribute("download",srcSplit[srcSplit.length-1]);
-                            downloadEle.click();
+                            var nodes = document.querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]');
+                            var urls = [];
+                            [].forEach.call(nodes, function(node){
+                                if(getComputedStyle(node).display!="none"){
+                                    srcSplit=node.dataset.src.split("/");
+                                    saveAs(node.dataset.src, srcSplit[srcSplit.length-1]);
+                                }
+                            });
                             break;
                         case 'copyImages':
                             self.copyImages(true);
