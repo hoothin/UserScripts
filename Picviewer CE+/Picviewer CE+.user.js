@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version        2019.9.21.1
+// @version        2019.9.22.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -205,6 +205,7 @@
                 imgWindowEscKey:"Esc键关闭",
                 imgWindowDblClickImgWindow:"双击图片窗口关闭",
                 imgWindowClickOutside:"点击图片外部关闭",
+                imgWindowClickOutsideTip:"仅当覆盖层显示时生效",
                 none:'无',
                 click:'单击',
                 dblclick:'双击',
@@ -388,6 +389,7 @@
                 imgWindowEscKey:"Esc鍵關閉",
                 imgWindowDblClickImgWindow:"雙擊圖片窗口關閉",
                 imgWindowClickOutside:"點擊圖片外部關閉",
+                imgWindowClickOutsideTip:"僅當覆蓋層顯示時生效",
                 none:'無',
                 click:'單擊',
                 dblclick:'雙擊',
@@ -571,6 +573,7 @@
                 imgWindowEscKey:"Esc key is off",
                 imgWindowDblClickImgWindow:"Double click on the image window to close",
                 imgWindowClickOutside:"Click on the image to close externally",
+                imgWindowClickOutsideTip:"Only enable when Overlayer is shown",
                 none:"None",
                 click:"Click",
                 dblclick:"Double click",
@@ -6324,7 +6327,7 @@ left: -45px;\
                 };
 
                 //是否点击图片外部关闭
-                if(prefs.imgWindow.close.clickOutside){
+                if(prefs.imgWindow.overlayer.shown && prefs.imgWindow.close.clickOutside){
                     var clickOutside=function(e){
                         var target=e.target;
                         if(!container.contains(target)){
@@ -7690,11 +7693,6 @@ left: -45px;\
                 this.img.src= prefs.icons.brokenImg_small;//如果在加载中取消，图片也取消读取。
 
                 this.imgWindow.parentNode.removeChild(this.imgWindow);
-
-                //点击点击外部关闭的监听
-                if(prefs.imgWindow.close.clickOutside.enabled){
-                    document.removeEventListener(prefs.imgWindow.close.clickOutside,this.clickOutside,true);
-                };
 
                 var index=ImgWindowC.all.indexOf(this);
                 ImgWindowC.all.splice(index,1);
@@ -9507,6 +9505,7 @@ left: -45px;\
                         'dblclick': i18n("dblclick"),
                     },
                     "default": prefs.imgWindow.close.clickOutside,
+                    title: i18n("imgWindowClickOutsideTip"),
                     line: 'end',
                 },
                 'imgWindow.overlayer.shown': {
