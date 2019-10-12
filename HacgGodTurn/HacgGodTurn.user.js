@@ -111,6 +111,7 @@
 // @grant       GM_setValue
 // @grant       GM_getValue
 // @grant       unsafeWindow
+// @grant       GM_registerMenuCommand
 // @run-at      document-end
 // @require     https://greasyfork.org/scripts/23522/code/od.js?version=598400
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
@@ -146,6 +147,21 @@
 */
 (function(){
     'use strict';
+    /**
+     * 支持通过菜单全局禁用声音（默认启用已和旧版本保持一致的行为）
+     */
+    ;(()=>{
+      const DisableAudioKey = 'disableAudio';
+      const disableAudio = GM_getValue(DisableAudioKey) || false
+      // 显示切换菜单
+      GM_registerMenuCommand(disableAudio ? '启用声音' : '禁用声音', function() {
+        // 添加到禁用 URL 列表
+        GM_setValue(DisableAudioKey, !disableAudio)
+        GM_setValue('hazukashii', !disableAudio);
+        location.reload()
+      })
+    })()
+
     var config={
         sites:[
             {
