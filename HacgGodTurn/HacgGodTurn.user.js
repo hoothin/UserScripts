@@ -9,7 +9,7 @@
 // @description:zh-TW   老司機工具箱，支持琉璃神社、靈夢禦所、純愛計劃、紳士二次元、萌心次元、次元軌跡、ACG調查小隊、幻天領域、天使二次元、櫻花漫舍、風鈴窩、次元の聖光、愛彈幕、幻想次元、司機會所、裏番萌、最ACG、紳士倉庫、紳士圖書館、ACG和諧區/裏世界、寂月神社、萌幻之鄕、紳士の庭、萌口組、九妖萌、CE家族社、喵窩、次元老司機、紳士ACG社等，神秘代碼轉換成下載鏈接，網盤自動填寫提取密碼，F8、Shift+F8站點切換，Alt+F8列表瀏覽，左右方向鍵文章跳轉，Ctrl+左右快捷翻頁，Ctrl+上下跳入跳出，下載鏈接嗅探，繞過重定向跳轉，各種和諧補丁
 // @description:ja      琉璃神社工具セット、秋の名山老運転手専用
 // @author      hoothin
-// @icon        https://www.liuli.uk/favicon.ico
+// @icon        https://www.liuli.in/favicon.ico
 // @include     http*://www.hacg.*/wordpress/*
 // @include     http*://hacg.*/wordpress/*
 // @include     http*://loli.cool/*
@@ -78,9 +78,6 @@
 // @include     http*://jiyue.*
 // @include     http*://www.moe-acg.*/*
 // @include     http*://huan.moe*
-// @include     http*://*.hmoe.moe/*
-// @include     http*://*.hentaiclub.net*
-// @include     http*://*.sshs.cc/*
 // @include     http*://www.mygalgame.com/*
 // @include     http*://www.mmgal.com/*
 // @include     http*://htai.*
@@ -107,7 +104,7 @@
 // @include     http*://greasyfork.org/*/scripts/*
 // @include     http*://sleazyfork.org/*/forum/*discussion*
 // @include     http*://greasyfork.org/*/forum/*discussion*
-// @version     3.22.63
+// @version     3.22.62
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -118,6 +115,8 @@
 // @require     https://greasyfork.org/scripts/23522/code/od.js?version=598400
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
+// @updateURL   https://greasyfork.org/scripts/23316/code/HacgGodTurn.user.js
+// @downloadURL https://greasyfork.org/scripts/23316/code/HacgGodTurn.user.js
 // @license     MIT License
 // @connect     tts.baidu.com
 // @compatible        chrome
@@ -151,7 +150,7 @@
         sites:[
             {
                 name:"琉璃神社",
-                url:"https://www.liuli.uk/wp/",
+                url:"https://www.liuli.in/wp/",
                 regex:/hacg\.|llss\.|liuli\./,
                 run:function(){
                     var feiZao,feiZaos=document.querySelectorAll("p1"),i;
@@ -563,11 +562,11 @@
             },
             {
                 name:"萌幻之乡",
-                url:"https://www.hmoe.moe/",
-                regex:/moe-acg\.|huan\.moe|hmoe\.moe/,
+                url:"https://huan.moe/",
+                regex:/moe-acg\.|huan\.moe/,
                 offset:55,
                 hideOd:true,
-                downloadUrl:/(moe-acg|hmoe\.moe)\..*\/download/,
+                downloadUrl:/moe-acg\..*\/download/,
                 articleSel:"section.card"
             },
             {
@@ -789,17 +788,6 @@
                 downloadUrl:/htacg\.cc\/download\?id/
             },
             {
-                name:"绅士会所",
-                url:"https://www.hentaiclub.net/",
-                regex:/hentaiclub\.net/,
-                articleSel:"article",
-                offset:20,
-                run:function(){
-                    var dlBox=document.querySelector("#dl-box");
-                    if(dlBox)document.querySelector("#dl-box").style.display="block";
-                }
-            },
-            {
                 name:"绅士交易",
                 url:"https://www.acgpy.net/wpx/",
                 regex:/acgpy\./,
@@ -994,7 +982,7 @@
         disableSites:/hacg.*about\.html/,
         imgRegs:[[/^(?:https:)?(\/\/img\.2dfan|www\.moxtu\.cc|(?:pic|tc)\.(?:ffsky|rpgsky)|\/\/i\.tianshi\.info)/,'http:$1'],[/http(:\/\/(?:[^\.]*\.)?loli\.io)/,'https$1'],[/^https:\/\/galacg.me/,'https://www.galacg.me/'],[/^http:\/\/www\.moepicx\.cc/,'https://www.moepicx.cc']]
     };
-    /*if (!Array.prototype.findSite) {
+    if (!Array.prototype.findSite) {
         Array.prototype.findSite = function (siteName) {
             var arr = this;
             for (var i = 0, length = arr.length; i < length; i++) {
@@ -1003,7 +991,7 @@
                 }
             }
         };
-    }*/
+    }
 
     var t, curSite, curArticle, siteListHtml;
     var originTitile = document.title;
@@ -1067,10 +1055,9 @@
         }
         return;
     }else if(location.hostname=="pan.baidu.com"){
-        var submitBtn=document.querySelector('.g-button,#submitBtn');
-        if(location.hash.slice(1) && submitBtn){
+        if(location.hash.slice(1)){
             document.querySelector(".pickpw input,#accessCode").value=decodeURI(location.hash.slice(1).split("?")[0]);
-            submitBtn.click();
+            document.querySelector('.g-button,#submitBtn').click();
         }
         return;
     }else if(config.disableSites.test(location.href)){
