@@ -1183,7 +1183,7 @@
             {name: "Wallhaven",
              url: /wallhaven\./,
              getImage: function() {
-                 return this.src.replace(/wallpapers\/thumb\/small\/th/i,"wallpapers/full/wallhaven");
+                 return this.src.replace(/wallpapers\/thumb\/small\/th/i,"wallpapers/full/wallhaven").replace(/th\.wallhaven\.cc\/small\/(.*)?\//i,"w.wallhaven.cc/full/$1/wallhaven-");
              }
             },
             {name: "lofter",
