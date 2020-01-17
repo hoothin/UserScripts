@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version        2019.9.22.1
+// @version        2020.1.17.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -770,7 +770,7 @@
                  }else if(result){//小图的时候
                      return result[1]+result[2];
                  }else{//小图点击之后的较大图，或者帖子内容页面的图片。
-                     var prefix = 'http://imgsrc.baidu.com/forum/pic/item/';
+                     var prefix = 'http://tiebapic.baidu.com/forum/pic/item/';
                      var reg2 = /\/sign=\w+\/([\w.]+)$/;
                      var sign = src.match(reg2);
                      return  sign ? prefix + sign[1] : null;
