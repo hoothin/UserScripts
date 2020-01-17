@@ -761,7 +761,7 @@
              url:/^https?:\/\/tieba\.baidu\.[^\/]+\//i,
              getImage:function(img){
                  var src=img.src;
-                 var reg=/^(http:\/\/imgsrc\.baidu\.com\/forum\/)ab(pic\/item\/[\w.]+)/i ;
+                 var reg=/^(http:\/\/tiebapic\.baidu\.com\/forum\/)ab(pic\/item\/[\w.]+)/i ;
                  var portrait=/\/sys\/portrait/;
                  var result=src.match(reg);
                  //帖子列表页面
