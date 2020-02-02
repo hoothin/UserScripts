@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version        2020.1.17.1
+// @version        2020.2.2.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -1154,7 +1154,7 @@
              }
             },
             {name: "24meitu",
-             url: /24meitu\.com|25meinv\.com|aisimeinv\.com|24tupian\.com|24meinv\./,
+             url: /24meitu\.com|25meinv\.com|aisimeinv\.com|24tupian\.com|24meinv\.|24mntp\.|24cos\.|24fh\.|24shipin\.|24mn\./,
              getImage: function() {
                  return this.src.replace(/\/m([^\/]+)$/i,"/$1").replace(/imgs\./i,"bimg.");
              }
@@ -4414,7 +4414,7 @@
                             return !(container.contains(img) || (preloadContainer&&preloadContainer.contains(img)));
                         });
                         imgs.forEach(function(img) {
-                            var isrc=img.getAttribute("src");
+                            var isrc=img.getAttribute("src").trim();
                             if(!isrc)return;
                             isrc=self.canonicalUri(isrc);
                             if (self._dataCache[isrc]) return;
@@ -4494,7 +4494,7 @@
                             return !(container.contains(img) || (preloadContainer&&preloadContainer.contains(img)));
                         });
                         imgs.forEach(function(img) {
-                            var isrc=img.getAttribute("src");
+                            var isrc=img.getAttribute("src").trim();
                             if(!isrc)return;
                             isrc=self.canonicalUri(isrc);
                             if (self._dataCache[isrc]) return;
