@@ -2,7 +2,7 @@
 // @name         百Bing图
 // @name:en      BingBgForBaidu
 // @namespace    hoothin
-// @version      2.3.15
+// @version      2.3.16
 // @description     给百度首页换上Bing的背景图，并添加背景图链接与日历组件
 // @description:en  Just change the background image of baidu.com to bing.com
 // @author       hoothin
@@ -68,13 +68,13 @@
         if(contentHead && contentHead.parentNode)contentHead.parentNode.removeChild(contentHead);
         var $=unsafeWindow.$;
         var iframeDoc=$(iframe.contentDocument);
-        var rili=$("div.op-calendar-new",iframe.contentDocument);
+        var rili=$("div.op-calendar-new,div.op-calendar-pc",iframe.contentDocument);
         rili.after("<br/><br/>");
         $("#head,.head_nums_cont_outer",iframe.contentDocument).hide();
         iframe.setAttribute("scrolling","no");
-        var today=$(".op-calendar-new-table-border,.op-calendar-new-table-today",iframe.contentDocument);
+        var today=$(".op-calendar-new-table-border,.op-calendar-new-table-today,.op-calendar-pc-table-border,.op-calendar-pc-table-today",iframe.contentDocument);
         var t;
-        riliLink.innerHTML="<span class='title' style='text-decoration:overline;cursor:crosshair'>"+$(".op-calendar-new-right-date",iframe.contentDocument).html()+"</span>";
+        //riliLink.innerHTML="<span class='title' style='text-decoration:overline;cursor:crosshair'>"+$(".op-calendar-new-right-date,.op-calendar-pc-right-date",iframe.contentDocument).html()+"</span>";
         riliLink.onmouseover=function(){
             t=setTimeout(function(){
                 $(iframe).show(200);
@@ -96,8 +96,8 @@
         iframe.onmouseout=function(){
             $(iframe).hide(500);
         };
-        if(today[0].classList.contains("op-calendar-new-table-festival")){
-            var title=today[0].title || $(".op-calendar-new-table-almanac",today).text();
+        if(today[0].classList.contains("op-calendar-new-table-festival") || today[0].classList.contains("op-calendar-pc-table-festival")){
+            var title=today[0].title || $(".op-calendar-new-table-almanac,.op-calendar-pc-table-almanac",today).text();
             riliLink.innerHTML+=title?" <font color='#FFFF66' style='background-color:#e02d2d;font-weight:bold'>("+title+")</font>":"";
             riliLink.title=title;
         }
