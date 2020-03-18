@@ -41,6 +41,7 @@
                 del:"设置小说干扰码的CSS选择器",
                 custom:"自定义网址下载",
                 reSort:"按标题名重新排序",
+                reSortUrl:"按网址重新排序（优先）",
                 setting:"懒人小说下载设置"
             };
             break;
@@ -53,7 +54,8 @@
                 complete:"Completed! The pages totalled %s",
                 del:"Set css selectors for delete",
                 custom:"Custom url for download",
-                reSort:"ReSort by title",
+                reSort:"Resort by titles",
+                reSortUrl:"Resort by URLs (higher priority)",
                 setting:"DownloadAllContent Setting"
             };
             break;
@@ -279,6 +281,11 @@
                     return parseInt(a.innerText.replace(/[^0-9]/ig,"")) - parseInt(b.innerText.replace(/[^0-9]/ig,""));
                 });
             }
+            if(GM_getValue("contentSortUrl")){
+                list.sort(function(a,b){
+                    return parseInt(a.href.replace(/[^0-9]/ig,"")) - parseInt(b.href.replace(/[^0-9]/ig,""));
+                });
+            }
             indexDownload(list);
         }else{
             var blob = new Blob([i18n.info+"\r\n"+document.title+"\r\n\r\n"+getPageContent(document)], {type: "text/plain;charset=utf-8"});
@@ -295,11 +302,8 @@
         var selValue=GM_getValue("selectors");
         var selectors=prompt(i18n.del,selValue?selValue:"");
         GM_setValue("selectors",selectors);
-        if(window.confirm(i18n.reSort)){
-            GM_setValue("contentSort", true);
-        }else{
-            GM_setValue("contentSort", false);
-        }
+        GM_setValue("contentSort",window.confirm(i18n.reSort));
+        GM_setValue("contentSortUrl",window.confirm(i18n.reSortUrl));
         var urls=window.prompt(i18n.custom,"https://xxx.xxx/book-[20-99].html, https://xxx.xxx/book-[01-10].html");
         if(urls){
             var processEles=[];
