@@ -2,7 +2,7 @@
 // @name         百Bing图
 // @name:en      BingBgForBaidu
 // @namespace    hoothin
-// @version      2.3.16
+// @version      2.3.17
 // @description     给百度首页换上Bing的背景图，并添加背景图链接与日历组件
 // @description:en  Just change the background image of baidu.com to bing.com
 // @author       hoothin
@@ -105,7 +105,7 @@
     var skinContainer=document.querySelector(".s-skin-container");
     if(!skinContainer){
         skinContainer=document.getElementsByTagName("body")[0];
-        GM_addStyle("body{position:fixed;_position:absolute;top:0;left:0;height:100%;width:100%;min-width:1000px;z-index:-10;background-position:center 0;background-repeat:no-repeat;background-size:cover;-webkit-background-size:cover;-o-background-size:cover;zoom:1;}#u1 a:not(.bri),#qrcode .qrcode-text b{-webkit-text-shadow:#fff 0.5px 0 0,#fff 0 0.5px 0,#fff -0.5px 0 0,#fff 0 -0.5px 0;-moz-text-shadow:#fff 0.5px 0 0,#fff 0 0.5px 0,#fff -0.5px 0 0,#fff 0 -0.5px 0;text-shadow:#fff 0.5px 0 0,#fff 0 0.5px 0,#fff -0.5px 0 0,#fff 0 -0.5px 0;*filter: Glow(Color=#fff, Strength=1);}");
+        GM_addStyle(".s_ipt{margin:0!important;}.s_ipt_wr{border-radius: 10px 4px 4px 10px;border-radius: 10px 0 0 10px;background: #fff!important;}#qrcodeCon{display:none}body{position:fixed;_position:absolute;top:0;left:0;height:100%;width:100%;min-width:1000px;z-index:-10;background-position:center 0;background-repeat:no-repeat;background-size:cover;-webkit-background-size:cover;-o-background-size:cover;zoom:1;}#u1 a:not(.bri){font-weight: 700;-webkit-text-shadow:#fff 0.5px 0 0,#fff 0 0.5px 0,#fff -0.5px 0 0,#fff 0 -0.5px 0;-moz-text-shadow:#fff 0.5px 0 0,#fff 0 0.5px 0,#fff -0.5px 0 0,#fff 0 -0.5px 0;text-shadow:#fff 0.5px 0 0,#fff 0 0.5px 0,#fff -0.5px 0 0,#fff 0 -0.5px 0;*filter: Glow(Color=#fff, Strength=1);}");
         document.querySelector("input#su").addEventListener("click",function(){skinContainer.style.backgroundImage="";});
     }
     var bingImg=GM_getValue("bingImg");
