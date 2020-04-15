@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version        2020.2.2.1
+// @version        2020.4.15.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -144,7 +144,7 @@
                 forceShowTip:"非缩放的图片大小超过下面设定的尺寸时显示浮动工具栏",
                 px:"像素",
                 minSizeLimit:"缩放图片，超过该尺寸，显示浮框",
-                minSizeLimitTip:"图片被缩放(图片原始大小与实际大小不一致)后,原图长宽大于设定值时显示浮动工具栏",
+                minSizeLimitTip:"图片被缩放(图片原始大小与实际大小不一致)后,显示长宽大于设定值时显示浮动工具栏",
                 listenBg:"监听背景图",
                 listenBgTip:"在有背景图的元素上显示悬浮框",
                 butonOrder:"工具栏图标排序",
@@ -328,7 +328,7 @@
                 forceShowTip:"非縮放的圖片大小超過下面設定的尺寸時顯示浮動工具欄",
                 px:"像素",
                 minSizeLimit:"縮放圖片，超過該尺寸，顯示浮框",
-                minSizeLimitTip:"圖片被縮放(圖片原始大小與實際大小不一致)後,原圖長寬大於設定值時顯示浮動工具欄",
+                minSizeLimitTip:"圖片被縮放(圖片原始大小與實際大小不一致)後,顯示長寬大於設定值時顯示浮動工具欄",
                 listenBg:"監聽背景圖",
                 listenBgTip:"在有背景圖的元素上顯示懸浮框",
                 butonOrder:"工具欄圖標排序",
@@ -512,7 +512,7 @@
                 forceShowTip:"Floating toolbar when non-scaled image size exceeds the size set below",
                 px:"px",
                 minSizeLimit:"Zoom the image, beyond that size, display the float frame",
-                minSizeLimitTip:"After the image is scaled (the original size of the image does not match the actual size), the floating toolbar is displayed when the original image length is greater than the set value.",
+                minSizeLimitTip:"After the image is scaled (the original size of the image does not match the actual size), the floating toolbar is displayed when the shown image length is greater than the set value.",
                 listenBg:"Listening background image",
                 listenBgTip:"Show the hover box on the element with the background image",
                 butonOrder:"Sort of toolbar icons",
@@ -622,11 +622,11 @@
                 forceShow:{//在没有被缩放的图片上,但是大小超过下面设定的尺寸时,强制显示浮动框.
                     enabled:true,//启用强制显示.
                     size:{//图片尺寸.单位(像素);
-                        w:166,
-                        h:166,
+                        w:155,
+                        h:155,
                     },
                 },
-                minSizeLimit:{//就算是图片被缩放了(看到的图片被设定了width或者height限定了大小,这种情况下),如果没有被缩放的原图片小于设定值,那么也不显示浮动工具栏.
+                minSizeLimit:{//就算是图片被缩放了(看到的图片被设定了width或者height限定了大小,这种情况下),如果图片显示大小小于设定值,那么也不显示浮动工具栏.
                     w:100,
                     h:100,
                 },
@@ -3101,7 +3101,7 @@
                             [].forEach.call(nodes, function(node){
                                 if(getComputedStyle(node).display!="none"){
                                     srcSplit=node.dataset.src.split("/");
-                                    saveAs(node.dataset.src, srcSplit[srcSplit.length-1]);
+                                    saveAs(node.dataset.src, location.host+"-"+srcSplit[srcSplit.length-1]);
                                 }
                             });
                             break;
@@ -8713,7 +8713,24 @@ left: -45px;\
                 imgSrc = img.src||img.srcset,  // img 节点的 src
                 xhr,
                 description;  // 图片的注释
-
+            var imgCStyle=unsafeWindow.getComputedStyle(img);
+            var imgCS={
+                h: parseFloat(imgCStyle.height),
+                w: parseFloat(imgCStyle.width),
+            };
+            var imgAS={//实际尺寸。
+                h:img.naturalHeight,
+                w:img.naturalWidth,
+            };
+            if(!(imgAS.w==imgCS.w && imgAS.h==imgCS.h)){//如果不是两者完全相等,那么被缩放了.
+                if(imgCS.h <= prefs.floatBar.minSizeLimit.h || imgCS.w <= prefs.floatBar.minSizeLimit.w){//最小限定判断.
+                    return;
+                }
+            }else{
+                if(imgCS.w <= prefs.floatBar.forceShow.size.w || imgCS.h <= prefs.floatBar.forceShow.size.h){
+                    return;
+                }
+            }
             if(!src && matchedRule && !base64Img){// 通过高级规则获取.
                 // 排除
                 if (matchedRule.exclude && matchedRule.exclude.test(imgSrc)) {
@@ -8786,20 +8803,10 @@ left: -45px;\
                 if(src)type='scale';
             };
 
-            var imgAS={//实际尺寸。
-                h:img.naturalHeight,
-                w:img.naturalWidth,
-            };
             if(!src || src==imgSrc){//本图片是否被缩放.
                 noActual=true;
-
-                var imgCStyle=unsafeWindow.getComputedStyle(img);
-                var imgCS={
-                    h: parseFloat(imgCStyle.height),
-                    w: parseFloat(imgCStyle.width),
-                };
                 if(!(imgAS.w==imgCS.w && imgAS.h==imgCS.h)){//如果不是两者完全相等,那么被缩放了.
-                    if(imgAS.h > prefs.floatBar.minSizeLimit.h && imgAS.w > prefs.floatBar.minSizeLimit.w){//最小限定判断.
+                    if(imgCS.h > prefs.floatBar.minSizeLimit.h && imgCS.w > prefs.floatBar.minSizeLimit.w){//最小限定判断.
                         src=imgSrc;
                         type='scale';
                     }
