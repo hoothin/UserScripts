@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version        2020.4.15.1
+// @version        2020.4.16.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -627,8 +627,8 @@
                     },
                 },
                 minSizeLimit:{//就算是图片被缩放了(看到的图片被设定了width或者height限定了大小,这种情况下),如果图片显示大小小于设定值,那么也不显示浮动工具栏.
-                    w:100,
-                    h:100,
+                    w:20,
+                    h:20,
                 },
 
                 // 按键，感觉用不太到，默认禁用
@@ -9079,11 +9079,11 @@ left: -45px;\
                 }
             }
 
-            var result;
-            if (target.nodeName != 'IMG' && typeof target.className === 'string' && target.className.indexOf("pv-float-bar")==-1){
-                var targetStyle=getComputedStyle(target);
-                if(prefs.floatBar.listenBg && targetStyle.backgroundImage && /^url/.test(targetStyle.backgroundImage) && targetStyle.backgroundImage.indexOf("about:blank")==-1 && targetStyle.width.replace("px","")>prefs.floatBar.minSizeLimit.w && targetStyle.height.replace("px","")>prefs.floatBar.minSizeLimit.h){
-                    var src=targetStyle.backgroundImage.replace(/url\(["'](.*)["']\)/,"$1"),nsrc=src,noActual=true,type="scale";
+            var result,hasBg=function(node){var nodeStyle=getComputedStyle(node);return node&&nodeStyle.backgroundImage&&/^url/.test(nodeStyle.backgroundImage)&&nodeStyle.backgroundImage.indexOf("about:blank")==-1&&nodeStyle.width.replace("px","")>prefs.floatBar.minSizeLimit.w&&nodeStyle.height.replace("px","")>prefs.floatBar.minSizeLimit.h;};
+            if (target.nodeName != 'IMG' && typeof target.className === 'string' && target.className.indexOf("pv-float-bar")==-1 && target.className.indexOf("ks-imagezoom-lens")==-1){
+                var targetBg=getComputedStyle(target).backgroundImage.replace(/url\(["'](.*)["']\)/,"$1");
+                if(prefs.floatBar.listenBg && hasBg(target)){
+                    var src=targetBg,nsrc=src,noActual=true,type="scale";
                     var img={src:src};
                     result = {
                         src: nsrc,
@@ -9097,6 +9097,18 @@ left: -45px;\
                 }else if(target.parentNode){
                     if(target.parentNode.nodeName=='IMG'){
                         target=target.parentNode;
+                    }else if(hasBg(target.parentNode)){
+                        target=target.parentNode;
+                        var targetBg=getComputedStyle(target).backgroundImage.replace(/url\(["'](.*)["']\)/,"$1");
+                        var src=targetBg,nsrc=src,noActual=true,type="scale";
+                        var img={src:src};
+                        result = {
+                            src: nsrc,
+                            type: type,
+                            imgSrc: src,
+                            noActual:noActual,
+                            img: target
+                        };
                     }else{
                         if(unsafeWindow.getComputedStyle(target).position=="absolute"){
                             var imgChild=target.parentNode.querySelectorAll('img');
