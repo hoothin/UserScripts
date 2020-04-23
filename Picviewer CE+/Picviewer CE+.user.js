@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version        2020.4.16.1
+// @version        2020.4.23.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -142,6 +142,7 @@
                 hideDelay:"隐藏延时",
                 forceShow:"非缩放图片，超过该尺寸，显示浮框",
                 forceShowTip:"非缩放的图片大小超过下面设定的尺寸时显示浮动工具栏",
+                sizeLimitOr:"以上长宽条件只需满足其一",
                 px:"像素",
                 minSizeLimit:"缩放图片，超过该尺寸，显示浮框",
                 minSizeLimitTip:"图片被缩放(图片原始大小与实际大小不一致)后,显示长宽大于设定值时显示浮动工具栏",
@@ -326,6 +327,7 @@
                 hideDelay:"隱藏延時",
                 forceShow:"非縮放圖片，超過該尺寸，顯示浮框",
                 forceShowTip:"非縮放的圖片大小超過下面設定的尺寸時顯示浮動工具欄",
+                sizeLimitOr:"以上長寬條件只需滿足其一",
                 px:"像素",
                 minSizeLimit:"縮放圖片，超過該尺寸，顯示浮框",
                 minSizeLimitTip:"圖片被縮放(圖片原始大小與實際大小不一致)後,顯示長寬大於設定值時顯示浮動工具欄",
@@ -510,6 +512,7 @@
                 hideDelay:"Hide Delay",
                 forceShow:"Non-zoomed image, beyond that size, shows the float frame",
                 forceShowTip:"Floating toolbar when non-scaled image size exceeds the size set below",
+                sizeLimitOr:"effected by height or width",
                 px:"px",
                 minSizeLimit:"Zoom the image, beyond that size, display the float frame",
                 minSizeLimitTip:"After the image is scaled (the original size of the image does not match the actual size), the floating toolbar is displayed when the shown image length is greater than the set value.",
@@ -630,6 +633,7 @@
                     w:20,
                     h:20,
                 },
+                sizeLimitOr:false,
 
                 // 按键，感觉用不太到，默认禁用
                 keys: {
@@ -8723,12 +8727,24 @@ left: -45px;\
                 w:img.naturalWidth,
             };
             if(!(imgAS.w==imgCS.w && imgAS.h==imgCS.h)){//如果不是两者完全相等,那么被缩放了.
-                if(imgCS.h <= prefs.floatBar.minSizeLimit.h || imgCS.w <= prefs.floatBar.minSizeLimit.w){//最小限定判断.
-                    return;
+                if(prefs.floatBar.sizeLimitOr){
+                    if(imgCS.h <= prefs.floatBar.minSizeLimit.h && imgCS.w <= prefs.floatBar.minSizeLimit.w){//最小限定判断.
+                        return;
+                    }
+                }else{
+                    if(imgCS.h <= prefs.floatBar.minSizeLimit.h || imgCS.w <= prefs.floatBar.minSizeLimit.w){//最小限定判断.
+                        return;
+                    }
                 }
             }else{
-                if(imgCS.w <= prefs.floatBar.forceShow.size.w || imgCS.h <= prefs.floatBar.forceShow.size.h){
-                    return;
+                if(prefs.floatBar.sizeLimitOr){
+                    if(imgCS.w <= prefs.floatBar.forceShow.size.w && imgCS.h <= prefs.floatBar.forceShow.size.h){
+                        return;
+                    }
+                }else{
+                    if(imgCS.w <= prefs.floatBar.forceShow.size.w || imgCS.h <= prefs.floatBar.forceShow.size.h){
+                        return;
+                    }
                 }
             }
             if(!src && matchedRule && !base64Img){// 通过高级规则获取.
@@ -8806,15 +8822,11 @@ left: -45px;\
             if(!src || src==imgSrc){//本图片是否被缩放.
                 noActual=true;
                 if(!(imgAS.w==imgCS.w && imgAS.h==imgCS.h)){//如果不是两者完全相等,那么被缩放了.
-                    if(imgCS.h > prefs.floatBar.minSizeLimit.h && imgCS.w > prefs.floatBar.minSizeLimit.w){//最小限定判断.
-                        src=imgSrc;
-                        type='scale';
-                    }
+                    src=imgSrc;
+                    type='scale';
                 }else{
-                    if(prefs.floatBar.forceShow.enabled && (imgCS.w>prefs.floatBar.forceShow.size.w && imgCS.h>prefs.floatBar.forceShow.size.h)){
-                        src=imgSrc;
-                        type='force';
-                    }
+                    src=imgSrc;
+                    type='force';
                 }
             };
 
@@ -9301,6 +9313,11 @@ left: -45px;\
                     after: ' '+i18n("px"),
                     "default": prefs.floatBar.minSizeLimit.h,
                     line: 'end',
+                },
+                'floatBar.sizeLimitOr': {
+                    label: i18n("sizeLimitOr"),
+                    type: "checkbox",
+                    "default": false
                 },
                 'floatBar.butonOrder': {
                     label: i18n("butonOrder"),
