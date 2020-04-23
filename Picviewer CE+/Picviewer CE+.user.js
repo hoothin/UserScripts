@@ -1179,7 +1179,7 @@
             {name: "Pixiv",
              url: /pixiv\.net|pximg\.net/,
              getImage: function() {
-                 var preStr=this.src.replace(/pximg\.net\/c\/\d+x\d+\/img-master\/img\/(.*)_[^_]+(\.[a-z]+)$/i,"pximg.net/img-original/img/$1");
+                 var preStr=this.src.replace(/pximg\.net\/c\/\d+x\d+.*\/img\/(.*)_.*$/i,"pximg.net/img-original/img/$1");
                  if(preStr!=this.src)
                  return [preStr+".jpg",preStr+".png"];
              }
