@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version        2020.4.25.1
+// @version        2020.5.9.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -1235,6 +1235,12 @@
              url: /discordapp\.com/,
              getImage: function() {
                  return this.src.replace(/\?width=\d+&height=\d+$/i,"");
+             }
+            },
+            {name: "推特",
+             url: /twitter\.com/,
+             getImage: function() {
+                 return this.src.replace(/&name=\d+x\d+/i,"");
              }
             }
         ];

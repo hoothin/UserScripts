@@ -2,7 +2,7 @@
 // @name         百Bing图
 // @name:en      BingBgForBaidu
 // @namespace    hoothin
-// @version      2.3.19
+// @version      2.3.20
 // @description     给百度首页换上Bing的背景图，并添加背景图链接与日历组件
 // @description:en  Just change the background image of baidu.com to bing.com
 // @author       hoothin
@@ -105,7 +105,7 @@
     var skinContainer=document.querySelector(".s-skin-container");
     if(!skinContainer){
         skinContainer=document.getElementsByTagName("body")[0];
-        GM_addStyle(".s_ipt{margin:0!important;}.s_ipt_wr{border-radius: 10px 4px 4px 10px;border-radius: 10px 0 0 10px;background: #fff!important;}#qrcodeCon{display:none}body{position:fixed;_position:absolute;top:0;left:0;height:100%;width:100%;min-width:1000px;z-index:-10;background-position:center 0;background-repeat:no-repeat;background-size:cover;-webkit-background-size:cover;-o-background-size:cover;zoom:1;}#u1 a:not(.bri):not(.c-btn-primary):not(.c-color-red){color:#fff;font-weight: 700;-webkit-text-shadow:#00000080 0.5px 0 2px,#00000080 0 0.5px 2px,#00000080 -0.5px 0 2px,#00000080 0 -0.5px 2px;-moz-text-shadow:#00000080 0.5px 0 2px,#00000080 0 0.5px 2px,#00000080 -0.5px 0 2px,#00000080 0 -0.5px 2px;text-shadow:#00000080 0.5px 0 2px,#00000080 0 0.5px 2px,#00000080 -0.5px 0 2px,#00000080 0 -0.5px 2px;*filter: Glow(Color=#000, Strength=1);}");
+        GM_addStyle(".s-isindex-wrap .c-link{background-color:#f0f8ffc9;}.s_ipt{margin:0!important;}.s_ipt_wr{border-radius: 10px 4px 4px 10px;border-radius: 10px 0 0 10px;background: #fff!important;}#qrcodeCon{display:none}body{position:fixed;_position:absolute;top:0;left:0;height:100%;width:100%;min-width:1000px;z-index:-10;background-position:center 0;background-repeat:no-repeat;background-size:cover;-webkit-background-size:cover;-o-background-size:cover;zoom:1;}#u1 a:not(.bri):not(.c-btn-primary):not(.c-color-red){color:#fff;font-weight: 700;-webkit-text-shadow:#00000080 0.5px 0 2px,#00000080 0 0.5px 2px,#00000080 -0.5px 0 2px,#00000080 0 -0.5px 2px;-moz-text-shadow:#00000080 0.5px 0 2px,#00000080 0 0.5px 2px,#00000080 -0.5px 0 2px,#00000080 0 -0.5px 2px;text-shadow:#00000080 0.5px 0 2px,#00000080 0 0.5px 2px,#00000080 -0.5px 0 2px,#00000080 0 -0.5px 2px;*filter: Glow(Color=#000, Strength=1);}");
         document.querySelector("input#su").addEventListener("click",function(){skinContainer.style.backgroundImage="";});
     }
     var bingImg=GM_getValue("bingImg");
