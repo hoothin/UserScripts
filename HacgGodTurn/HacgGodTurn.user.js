@@ -988,11 +988,34 @@
                 regex:/reddit\.com/,
                 hideOd:true,
                 run:function(){
-                    window.setTimeout(function(){
-                        var article=document.querySelector(".RichTextJSON-root");
-                        var a=article.innerHTML.match(/[\da-z\/\+\=]{50,}/i);
-                        article.innerHTML=article.innerHTML.replace(/[\da-z\/\+\=]{50,}/i,"<pre>"+CryptoJS.enc.Base64.parse(a[0]).toString(CryptoJS.enc.Utf8)+"</pre>");
-                    },3000);
+                    function decodeBase64(){
+                        window.setTimeout(function(){
+                            var article=document.querySelector("[data-test-id=post-content]");
+                            if(!article)return;
+                            var a=article.innerHTML.match(/[\da-z\/\+\=]{50,}/i);
+                            if(!a || a.length<1)return;
+                            article.innerHTML=article.innerHTML.replace(/[\da-z\/\+\=]{50,}/i,"<pre>"+CryptoJS.enc.Base64.parse(a[0]).toString(CryptoJS.enc.Utf8)+"</pre>");
+                        },3000);
+                    }
+                    decodeBase64();
+                    var _wr = function(type) {
+                        var orig = history[type];
+                        return function() {
+                            var rv = orig.apply(this, arguments);
+                            var e = new Event(type);
+                            e.arguments = arguments;
+                            window.dispatchEvent(e);
+                            return rv;
+                        };
+                    };
+                    history.pushState = _wr('pushState');
+                    history.replaceState = _wr('replaceState');
+                    window.addEventListener('replaceState', function(e) {
+                        decodeBase64();
+                    });
+                    window.addEventListener('pushState', function(e) {
+                        decodeBase64();
+                    });
                 }
             }
             /*{
