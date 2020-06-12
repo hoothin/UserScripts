@@ -103,11 +103,12 @@
 // @include     http*://*miobt.*
 // @include     http*://www.dakashangche.*
 // @include     http*://xiuxiqu.*
+// @include     https://www.reddit.com/*
 // @include     http*://sleazyfork.org/*/scripts/*
 // @include     http*://greasyfork.org/*/scripts/*
 // @include     http*://sleazyfork.org/*/forum/*discussion*
 // @include     http*://greasyfork.org/*/forum/*discussion*
-// @version     3.22.65
+// @version     3.22.66
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -979,6 +980,19 @@
                                 register_qrcode_event('#qrcode_download', '#qrcode_download_enlarged'); }); } else if (Config['user_script']['platform'] == 'mobile') { $('#torrent_url').attr('href', torrent_url.full).text('种子下载').click(function() { return (prompt('确认下载该种子', torrent_url.full) ? true : false); });
                             $('#magnet_url').attr('href', magnet_url.full).text('磁力下载').click(function() { return (prompt('确认下载磁链', magnet_url.full) ? true : false); }); } else { return false; }
                     })(jQuery);
+                }
+            },
+            {
+                name:"Reddit",
+                url:"https://www.reddit.com/r/SwitchNSPs",
+                regex:/reddit\.com/,
+                hideOd:true,
+                run:function(){
+                    window.setTimeout(function(){
+                        var article=document.querySelector(".RichTextJSON-root");
+                        var a=article.innerHTML.match(/[\da-z\/\+\=]{50,}/i);
+                        article.innerHTML=article.innerHTML.replace(/[\da-z\/\+\=]{50,}/i,"<pre>"+CryptoJS.enc.Base64.parse(a[0]).toString(CryptoJS.enc.Utf8)+"</pre>");
+                    },3000);
                 }
             }
             /*{
