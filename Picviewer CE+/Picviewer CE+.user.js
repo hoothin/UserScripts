@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version        2021.2.19.2
+// @version        2021.8.20.2
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -626,8 +626,8 @@
                 forceShow:{//在没有被缩放的图片上,但是大小超过下面设定的尺寸时,强制显示浮动框.
                     enabled:true,//启用强制显示.
                     size:{//图片尺寸.单位(像素);
-                        w:50,
-                        h:50,
+                        w:45,
+                        h:45,
                     },
                 },
                 minSizeLimit:{//就算是图片被缩放了(看到的图片被设定了width或者height限定了大小,这种情况下),如果图片显示大小小于设定值,那么也不显示浮动工具栏.
@@ -854,7 +854,7 @@
              url:/^https?:\/\/[^.]+\.bilibili.com/i,
              getImage:function(img){
                  var oldsrc=this.src;
-                 var pic=/\d+_\d+\/|\d+_x\d+\.jpg$|@\d+w_\d+h\.webp$|_\d+x\d+\.jpg$/i;
+                 var pic=/\d+_\d+\/|\d+_x\d+\.jpg$|@\d+w_\d+h.*\.webp$|_\d+x\d+\.jpg$/i;
                  var newsrc;
                  if(pic.test(oldsrc)){
                      newsrc=oldsrc.replace(pic,'');
@@ -4774,7 +4774,7 @@
                  </div>\
                  <body class="'+prefs.gallery.exportType+'">\
                  <p style="width:100vw;display:flex;flex-direction:column;">\
-                 <img id="bigImg" style="pointer-events:none;position:fixed;z-index:999;max-height:100vh;top:0px;align-self:center;"></p>\
+                 <img id="bigImg" style="pointer-events:none;position:fixed;z-index:999;width:100vw;top:0px;align-self:center;"></p>\
                  <p>【'+i18n("picTitle")+'】：' + title + '</p>\
                  <p>【'+i18n("picNum")+'】：' + nodes.length + ' <select onchange="document.body.className=this.options[this.options.selectedIndex].value"><option value="grid" '+(prefs.gallery.exportType=="grid"?"selected='selected'":"")+'>'+i18n("grid")+'</option><option value="gridBig" '+(prefs.gallery.exportType=="gridBig"?"selected='selected'":"")+'>'+i18n("gridBig")+'</option><option value="list" '+(prefs.gallery.exportType=="list"?"selected='selected'":"")+'>'+i18n("list")+'</option> </select> \
                  <input type="button" value="'+i18n("exportImagesUrl")+'" onclick="var imgStr=\'\',selList=document.querySelectorAll(\'.select>img\');if(selList.length==0)[].forEach.call(document.querySelectorAll(\'img\'),function(i){imgStr+=i.src+\' \\n\'});else{[].forEach.call(selList,function(i){imgStr+=i.src+\' \\n\'});}window.prompt(\''+i18n("exportImagesUrlPop")+'\',imgStr);">\
@@ -4786,7 +4786,7 @@
                  document.body.scrollIntoView();\
                  });\
                  [].forEach.call(document.querySelectorAll("div>img"),function(i){\
-                 i.onmouseover=i.onmousemove=function(e){document.querySelector("#bigImg").src=e.ctrlKey?this.src:"";};\
+                 i.onmouseover=i.onmousemove=function(e){var bigImg=document.querySelector("#bigImg"),body=document.body;bigImg.style.top=(this.width/this.height>body.clientWidth/body.clientHeight?10+(body.clientHeight*0.95-body.clientWidth*this.height/this.width)*e.offsetY/this.height:10-(body.clientWidth*this.height/this.width-body.clientHeight*0.95)*e.offsetY/this.height);bigImg.src=e.ctrlKey?this.src:"";bigImg.style.display=e.ctrlKey?"":"none";};\
                  i.onmouseout=function(e){document.querySelector("#bigImg").src="";}\
                  });\
                  [].forEach.call(document.querySelectorAll("body>div"),function(i){\
