@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version        2021.8.20.2
+// @version        2021.8.21.2
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -4785,12 +4785,14 @@
                  document.querySelector(".toTop").addEventListener("click", function(){\
                  document.body.scrollIntoView();\
                  });\
+                 var bigImg=document.querySelector("#bigImg"),body=document.body;\
                  [].forEach.call(document.querySelectorAll("div>img"),function(i){\
-                 i.onmouseover=i.onmousemove=function(e){var bigImg=document.querySelector("#bigImg"),body=document.body;bigImg.style.top=(this.width/this.height>body.clientWidth/body.clientHeight?10+(body.clientHeight*0.95-body.clientWidth*this.height/this.width)*e.offsetY/this.height:10-(body.clientWidth*this.height/this.width-body.clientHeight*0.95)*e.offsetY/this.height);bigImg.src=e.ctrlKey?this.src:"";bigImg.style.display=e.ctrlKey?"":"none";};\
-                 i.onmouseout=function(e){document.querySelector("#bigImg").src="";}\
+                 i.onerror=function(e){i.style.display="none"};\
+                 i.onmouseover=i.onmousemove=function(e){bigImg.style.top=(this.width/this.height>body.clientWidth/body.clientHeight?10+(body.clientHeight*0.95-body.clientWidth*this.height/this.width)*e.offsetY/this.height:10-(body.clientWidth*this.height/this.width-body.clientHeight*0.95)*e.offsetY/this.height);bigImg.src=e.ctrlKey?this.src:"";bigImg.style.display=e.ctrlKey?"":"none";};\
+                 i.onmouseout=function(e){bigImg.style.display="none";}\
                  });\
                  [].forEach.call(document.querySelectorAll("body>div"),function(i){\
-                 i.onclick=function(){this.classList.toggle("select")}\
+                 i.onclick=function(e){if(e.ctrlKey&&i.firstChild.src){window.open(i.firstChild.src,"_blank")}else{this.classList.toggle("select")}}\
                  });\
                  </script></body>';
                 GM_openInTab('data:text/html;charset=utf-8,' + encodeURIComponent(html));
