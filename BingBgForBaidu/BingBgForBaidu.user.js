@@ -2,7 +2,7 @@
 // @name         百Bing图
 // @name:en      BingBgForBaidu
 // @namespace    hoothin
-// @version      2.3.21
+// @version      2.3.22
 // @description     给百度首页换上Bing的背景图，并添加背景图链接与日历组件
 // @description:en  Just change the background image of baidu.com to bing.com
 // @author       hoothin
@@ -68,11 +68,11 @@
         if(contentHead && contentHead.parentNode)contentHead.parentNode.removeChild(contentHead);
         var $=unsafeWindow.$;
         var iframeDoc=$(iframe.contentDocument);
-        var rili=$("div.op-calendar-new,div.op-calendar-pc",iframe.contentDocument);
+        var rili=$("div.op-calendar-new,div.op-calendar-pc,div.result-op.c-container.xpath-log.new-pmd>div",iframe.contentDocument);
         rili.after("<br/><br/>");
         $("#head,.head_nums_cont_outer",iframe.contentDocument).hide();
         iframe.setAttribute("scrolling","no");
-        var today=$(".op-calendar-new-table-border,.op-calendar-new-table-today,.op-calendar-pc-table-border,.op-calendar-pc-table-today",iframe.contentDocument);
+        var today=$(".op-calendar-new-table-border,.op-calendar-new-table-today,.op-calendar-pc-table-border,.op-calendar-pc-table-today,.cell-today",iframe.contentDocument);
         var t;
         //riliLink.innerHTML="<span class='title' style='text-decoration:overline;cursor:crosshair'>"+$(".op-calendar-new-right-date,.op-calendar-pc-right-date",iframe.contentDocument).html()+"</span>";
         riliLink.onmouseover=function(){
@@ -96,8 +96,10 @@
         iframe.onmouseout=function(){
             $(iframe).hide(500);
         };
-        if(today[0].classList.contains("op-calendar-new-table-festival") || today[0].classList.contains("op-calendar-pc-table-festival")){
-            var title=today[0].title || $(".op-calendar-new-table-almanac,.op-calendar-pc-table-almanac",today).text();
+        var holiday=$('[class*="calendar-right-holiday"]',iframe.contentDocument)[0];
+        if(holiday || today[0].classList.contains("op-calendar-new-table-festival") || today[0].classList.contains("op-calendar-pc-table-festival")){
+            var title=holiday.innerHTML;
+            title=title || today[0].title || $(".op-calendar-new-table-almanac,.op-calendar-pc-table-almanac",today).text();
             if(!/^(一|二|三|四|五|六|七|八|九|十|初|廿)+$/.test(title)){
                 riliLink.innerHTML+=title?" <font color='#FFFF66' style='background-color:#e02d2d;font-weight:bold'>("+title+")</font>":"";
                 riliLink.title=title;
