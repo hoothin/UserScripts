@@ -47,6 +47,8 @@
     iframe.style.left="0px";
     iframe.style.position="absolute";
     iframe.style.zIndex="999";
+    iframe.style.borderRadius="16px";
+    iframe.style.border="none";
     var sUpfuncMenus=document.querySelector("#s_upfunc_menus");
     if(!sUpfuncMenus){
         sUpfuncMenus=document.querySelector(".head_wrapper");
