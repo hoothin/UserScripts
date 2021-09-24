@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version        2021.8.21.2
+// @version        2021.9.24.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -1248,6 +1248,15 @@
              url: /fandom\.com/,
              getImage: function() {
                  return this.src.replace(/scale\-to\-width\-down\/\d+/i,"").replace(/smart\/width\/\d+\/height\/\d+/i,"");
+             }
+            },
+            {name: "yande",
+             url: /yande\.re/,
+             getImage: function() {
+                 if(this && this.parentNode && this.parentNode.parentNode && this.parentNode.parentNode.nextSibling && this.parentNode.parentNode.nextSibling.classList && this.parentNode.parentNode.nextSibling.classList.contains("largeimg")){
+                     return this.parentNode.parentNode.nextSibling.href;
+                 }
+                 return this.src;
              }
             }
         ];
@@ -4743,11 +4752,17 @@
                 }, 1000);
             },
             exportImages: function () {  // 导出所有图片到新窗口
-                var nodes = document.querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]');
-                var arr = [].map.call(nodes, function(node){
-                    if(unsafeWindow.getComputedStyle(node).display=="none")return "";
-                    else return '<div><img src=' + node.dataset.src + '></div>'
-                });
+                var nodes = document.querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]'),i;
+                //var arr = Array.prototype.map.call(nodes, function(node){
+                //    if(unsafeWindow.getComputedStyle(node).display=="none")return "";
+                //    else return '<div><img src=' + node.dataset.src + '></div>'
+                //});
+
+                var arr=[];
+                for (i = 0; i < nodes.length; ++i) {
+                    if(unsafeWindow.getComputedStyle(nodes[i]).display=="none")arr.push("");
+                    else arr.push('<div><img src=' + nodes[i].dataset.src + '></div>');
+                }
 
                 var title = document.title;
 
