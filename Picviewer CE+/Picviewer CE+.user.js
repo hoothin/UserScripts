@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version        2021.12.9.2
+// @version        2021.12.9.3
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -2570,6 +2570,11 @@
                 document.body.appendChild(container);
 
                 var self=this;
+
+                var hideBodyStyle=document.createElement('style');
+                this.hideBodyStyle=hideBodyStyle;
+                hideBodyStyle.textContent=`body>*:not([class^="pv-"]) img,body>img{display:none}`;
+
                 container.querySelector("#minsizeW").oninput=function(){self.changeMinView();};
                 container.querySelector("#minsizeH").oninput=function(){self.changeMinView();};
                 container.querySelector("#minsizeWSpan").onclick=function(){
@@ -3261,6 +3266,7 @@
                 }
                 addWheelEvent(eleMaps['body'],function(e){//wheel事件
                     if(e.deltaZ!=0)return;//z轴
+                    if(eleMaps['sidebar-toggle'].style.visibility == 'hidden')return;
                     var target=e.target;
                     //e.preventDefault();
                     if(eleMaps['sidebar-container'].contains(target)){//缩略图区滚动滚轮翻图片
@@ -3661,14 +3667,19 @@
                         return words.join(" ");
                     };
                 if(alreadyShow){
+                    if(this.hideBodyStyle.parentNode)
+                        this.hideBodyStyle.parentNode.removeChild(this.hideBodyStyle);
                     imgPre.style.visibility = imgNext.style.visibility = toggleBar.style.visibility = sidebarContainer.style.visibility = 'visible';
                     imgCon.style['border' + capitalize(sidebarPosition)] = prefs.gallery.sidebarSize + 'px solid transparent';
                     toggleBar.style[sidebarPosition] = '-5px';
-                    maximizeContainer.innerHTML = "";
+                    while (maximizeContainer.firstChild) {
+                        maximizeContainer.removeChild(maximizeContainer.firstChild);
+                    }
                     viewmoreBar.innerHTML = '✚';
 
                     toggleBar.innerHTML = '▼';
                 }else{
+                    document.head.appendChild(this.hideBodyStyle);
                     imgPre.style.visibility = imgNext.style.visibility = toggleBar.style.visibility = sidebarContainer.style.visibility = 'hidden';
                     imgCon.style['border' + capitalize(sidebarPosition)] = '0';
                     toggleBar.style[sidebarPosition] = '0';
@@ -4334,6 +4345,8 @@
                 this.changeSizeInputW();
             },
             close:function(reload){
+                if(this.hideBodyStyle.parentNode)
+                    this.hideBodyStyle.parentNode.removeChild(this.hideBodyStyle);
                 document.removeEventListener('keydown',this._keyDownListener,true);
                 document.removeEventListener('keyup',this._keyUpListener,true);
                 this.shown=false;
