@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version        2021.12.9.1
+// @version        2021.12.9.2
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -121,6 +121,7 @@
                 magnifierBtn:'放大镜(M)',
                 picTitle:"图片标题",
                 picNum:"图片数量",
+                picTips:"按住Ctrl看大图",
                 exportImagesUrl:"导出图片链接",
                 exportImagesUrlPop:"Ctrl+C复制图片链接",
                 beginSearchImg:"#t#识图开始……",
@@ -307,6 +308,7 @@
                 magnifierBtn:'放大鏡(M)',
                 picTitle:"圖片標題",
                 picNum:"圖片數量",
+                picTips:"按住Ctrl看大圖",
                 exportImagesUrl:"導出圖片鏈接",
                 exportImagesUrlPop:"Ctrl+C複製圖片鏈接",
                 beginSearchImg:"#t#識圖開始……",
@@ -482,6 +484,7 @@
                 picNote:"Img annotation",
                 resolution:"Img Resolution",
                 picNum:"Number of pictures",
+                picTips:"View pictures with CTRL key",
                 scaleRatio:"Scaling ratio",
                 similarImage:"Searching by image",
                 scale:"Zoom",
@@ -4862,7 +4865,7 @@
                  <p>【'+i18n("picTitle")+'】：' + title + '</p>\
                  <p>【'+i18n("picNum")+'】：' + nodes.length + ' <select onchange="document.body.className=this.options[this.options.selectedIndex].value"><option value="grid" '+(prefs.gallery.exportType=="grid"?"selected='selected'":"")+'>'+i18n("grid")+'</option><option value="gridBig" '+(prefs.gallery.exportType=="gridBig"?"selected='selected'":"")+'>'+i18n("gridBig")+'</option><option value="list" '+(prefs.gallery.exportType=="list"?"selected='selected'":"")+'>'+i18n("list")+'</option> </select> \
                  <input type="button" value="'+i18n("exportImagesUrl")+'" onclick="var imgStr=\'\',selList=document.querySelectorAll(\'.select>img\');if(selList.length==0)[].forEach.call(document.querySelectorAll(\'img\'),function(i){imgStr+=i.src+\' \\n\'});else{[].forEach.call(selList,function(i){imgStr+=i.src+\' \\n\'});}window.prompt(\''+i18n("exportImagesUrlPop")+'\',imgStr);">\
-                 </p>';
+                  ('+i18n("picTips")+')</p>';
 
                 html += arr.join('\n') +
                 '<script type="text/javascript">\
@@ -4873,7 +4876,6 @@
                  [].forEach.call(document.querySelectorAll("div>img"),function(i){\
                  i.onerror=function(e){i.style.display="none"};\
                  i.onmouseover=i.onmousemove=function(e){bigImg.style.top=(this.width/this.height>body.clientWidth/body.clientHeight?10+(body.clientHeight*0.95-body.clientWidth*this.height/this.width)*e.offsetY/this.height:10-(body.clientWidth*this.height/this.width-body.clientHeight*0.95)*e.offsetY/this.height);bigImg.src=e.ctrlKey?this.src:"";bigImg.style.display=e.ctrlKey?"":"none";};\
-                 i.onmouseout=function(e){bigImg.style.display="none";}\
                  });\
                  [].forEach.call(document.querySelectorAll("body>div"),function(i){\
                  i.onclick=function(e){if(e.ctrlKey&&i.firstChild.src){window.open(i.firstChild.src,"_blank")}else{this.classList.toggle("select")}}\
