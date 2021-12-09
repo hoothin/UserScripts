@@ -3242,6 +3242,11 @@
                     window.open(param.url,'_blank','height='+param.wSize.h+',width='+param.wSize.w+',left=30,top=30,location=no,status=no,toolbar=no,menubar=no,scrollbars=yes');
                 },true);
 
+                eleMaps['head'].addEventListener('click',function(e){
+                    if(e.target.classList.contains('pv-gallery-head-command-close'))return;
+                    self.closeViewMore();
+                });
+
 
 
                 var loadThumbsTimer;
@@ -3649,6 +3654,37 @@
                     }
                 }
             },
+            closeViewMore: function() {
+                var toggleBar = this.eleMaps['sidebar-toggle'],
+                    imgCon = this.eleMaps['img-container'],
+                    viewmoreBar = this.eleMaps['sidebar-viewmore'],
+                    imgPre = this.eleMaps['img-controler-pre'],
+                    imgNext = this.eleMaps['img-controler-next'],
+                    alreadyShow = toggleBar.style.visibility == 'hidden';
+                if(!alreadyShow) return;
+                var sidebarContainer = this.eleMaps['sidebar-container'];
+                var maximizeContainer = this.eleMaps['maximize-container'];
+                var sidebarPosition = prefs.gallery.sidebarPosition,
+                    capitalize = function(string) { // 将字符串中每个单词首字母大写
+                        var words = string.split(" ");
+                        for (var i = 0; i < words.length; i++) {
+                            words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
+                        }
+                        return words.join(" ");
+                    };
+                maximizeContainer.style.minHeight = 0;
+                if(this.hideBodyStyle.parentNode)
+                    this.hideBodyStyle.parentNode.removeChild(this.hideBodyStyle);
+                imgPre.style.visibility = imgNext.style.visibility = toggleBar.style.visibility = sidebarContainer.style.visibility = 'visible';
+                imgCon.style['border' + capitalize(sidebarPosition)] = prefs.gallery.sidebarSize + 'px solid transparent';
+                toggleBar.style[sidebarPosition] = '-5px';
+                while (maximizeContainer.firstChild) {
+                    maximizeContainer.removeChild(maximizeContainer.firstChild);
+                }
+                viewmoreBar.innerHTML = '✚';
+
+                toggleBar.innerHTML = '▼';
+            },
             maximizeSidebar: function() {
                 var toggleBar = this.eleMaps['sidebar-toggle'],
                     imgCon = this.eleMaps['img-container'],
@@ -3667,18 +3703,7 @@
                         return words.join(" ");
                     };
                 if(alreadyShow){
-                    maximizeContainer.style.minHeight = 0;
-                    if(this.hideBodyStyle.parentNode)
-                        this.hideBodyStyle.parentNode.removeChild(this.hideBodyStyle);
-                    imgPre.style.visibility = imgNext.style.visibility = toggleBar.style.visibility = sidebarContainer.style.visibility = 'visible';
-                    imgCon.style['border' + capitalize(sidebarPosition)] = prefs.gallery.sidebarSize + 'px solid transparent';
-                    toggleBar.style[sidebarPosition] = '-5px';
-                    while (maximizeContainer.firstChild) {
-                        maximizeContainer.removeChild(maximizeContainer.firstChild);
-                    }
-                    viewmoreBar.innerHTML = '✚';
-
-                    toggleBar.innerHTML = '▼';
+                    this.closeViewMore();
                 }else{
                     maximizeContainer.style.minHeight = "100%";
                     document.head.appendChild(this.hideBodyStyle);
