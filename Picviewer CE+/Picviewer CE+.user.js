@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version        2021.10.13.1
+// @version        2021.12.9.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -159,7 +159,7 @@
                 keysCurrentTip:"当出现悬浮条时按下此按键打开当前显示的图片",
                 keysMagnifier:"打开放大镜观察",
                 keysMagnifierTip:"当出现悬浮条时按下此按键打开放大镜观察",
-                keysGallery:"打开图库",
+                keysGallery:"打开图库（加CTRL为全局）",
                 keysGalleryTip:"当出现悬浮条时按下此按键打开图库",
                 magnifier:"放大镜",
                 magnifierRadius:"默认半径",
@@ -225,6 +225,7 @@
                 firstEngine:"首选搜图引擎",
                 refreshWhenError:"读取错误，点击重载",
                 switchSlide:"开关侧边栏",
+                viewmore:"展开更多",
                 countDown:"倒计时"
             };
             break;
@@ -344,7 +345,7 @@
                 keysCurrentTip:"當出現懸浮條時按下此按鍵打開當前顯示的圖片",
                 keysMagnifier:"打開放大鏡觀察",
                 keysMagnifierTip:"當出現懸浮條時按下此按鍵打開放大鏡觀察",
-                keysGallery:"打開圖庫",
+                keysGallery:"打開圖庫（加CTRL為全局）",
                 keysGalleryTip:"當出現懸浮條時按下此按鍵打開圖庫",
                 magnifier:"放大鏡",
                 magnifierRadius:"默認半徑",
@@ -410,6 +411,7 @@
                 firstEngine:"首選搜圖引擎",
                 refreshWhenError:"讀取錯誤，點擊重載",
                 switchSlide:"開關側邊欄",
+                viewmore:"展開更多",
                 countDown:"倒計時"
             };
             break;
@@ -529,7 +531,7 @@
                 keysCurrentTip:"Press this button to open the currently displayed image when the floating bar appears",
                 keysMagnifier:"Open the magnifying glass to observe",
                 keysMagnifierTip:"Press this button to open the magnifying glass when the floating bar appears",
-                keysGallery:"Open Gallery",
+                keysGallery:"Open Gallery（Global with Ctrl）",
                 keysGalleryTip:"Press this button to open the Gallery when a floating bar appears",
                 magnifier:"Zoom",
                 magnifierRadius:"Default radius",
@@ -595,6 +597,7 @@
                 firstEngine:"Preferred (first) search engine",
                 refreshWhenError:"Read error, click overload",
                 switchSlide:"Switch sidebar",
+                viewmore:"View more",
                 countDown:"CountDown"
             };
             break;
@@ -2525,7 +2528,12 @@
                     '</span>'+
 
                     '<span class="pv-gallery-sidebar-toggle" title="'+i18n("switchSlide")+'">'+
-                    '<span class="pv-gallery-sidebar-toggle-content"></span>'+
+                    '<span class="pv-gallery-sidebar-toggle-content">▼</span>'+
+                    '<span class="pv-gallery-vertical-align-helper"></span>'+
+                    '</span>'+
+
+                    '<span class="pv-gallery-sidebar-viewmore" title="'+i18n("viewmore")+'">'+
+                    '<span class="pv-gallery-sidebar-viewmore-content">✚</span>'+
                     '<span class="pv-gallery-vertical-align-helper"></span>'+
                     '</span>'+
 
@@ -2554,7 +2562,7 @@
 
                     '</span>'+
                     '</span>'+
-
+                    '<span class="pv-gallery-maximize-scroll"><span class="pv-gallery-maximize-container"></span></span>'+
                     '</span>';
                 document.body.appendChild(container);
 
@@ -2656,6 +2664,9 @@
 
                     'sidebar-toggle',
                     'sidebar-toggle-content',
+                    'sidebar-viewmore',
+                    'sidebar-viewmore-content',
+                    'maximize-container',
 
                     'sidebar-container',
                     'sidebar-content',
@@ -2676,6 +2687,7 @@
                 var posClass=[//需要添加'top bottom left right'class的元素
                     'img-container',
                     'sidebar-toggle',
+                    'sidebar-viewmore',
                     'sidebar-container',
                     'sidebar-thumbnails-container',
                 ];
@@ -2686,6 +2698,8 @@
                 var hvClass=[//需要添加'v h'class的元素
                     'sidebar-toggle',
                     'sidebar-toggle-content',
+                    'sidebar-viewmore',
+                    'sidebar-viewmore-content',
                     'sidebar-container',
                     'sidebar-content',
                     'sidebar-controler-pre',
@@ -3245,7 +3259,7 @@
                 addWheelEvent(eleMaps['body'],function(e){//wheel事件
                     if(e.deltaZ!=0)return;//z轴
                     var target=e.target;
-                    e.preventDefault();
+                    //e.preventDefault();
                     if(eleMaps['sidebar-container'].contains(target)){//缩略图区滚动滚轮翻图片
                         var distance=self.thumbSpanOuterSize;
 
@@ -3600,8 +3614,12 @@
                 if (prefs.gallery.sidebarToggle) {
                     var toggleBar = this.eleMaps['sidebar-toggle'];
                     toggleBar.style.display = 'block';
-                    toggleBar.style.height = '12px';
+                    toggleBar.style.height = '16px';
                     toggleBar.addEventListener('click', this.showHideBottom.bind(this), false);
+
+                    var viewmoreBar = this.eleMaps['sidebar-viewmore'];
+                    viewmoreBar.style.display = 'block';
+                    viewmoreBar.addEventListener('click', this.maximizeSidebar.bind(this), false);
 
                     // 顶部圆角
                     switch (prefs.gallery.sidebarPosition) {
@@ -3620,6 +3638,56 @@
                             toggleBar.style.borderRadius = '8px 0 0 8px';
                             break;
                     }
+                }
+            },
+            maximizeSidebar: function() {
+                var toggleBar = this.eleMaps['sidebar-toggle'],
+                    imgCon = this.eleMaps['img-container'],
+                    viewmoreBar = this.eleMaps['sidebar-viewmore'],
+                    imgPre = this.eleMaps['img-controler-pre'],
+                    imgNext = this.eleMaps['img-controler-next'],
+                    alreadyShow = toggleBar.style.visibility == 'hidden';
+                var sidebarContainer = this.eleMaps['sidebar-container'];
+                var maximizeContainer = this.eleMaps['maximize-container'];
+                var sidebarPosition = prefs.gallery.sidebarPosition,
+                    capitalize = function(string) { // 将字符串中每个单词首字母大写
+                        var words = string.split(" ");
+                        for (var i = 0; i < words.length; i++) {
+                            words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
+                        }
+                        return words.join(" ");
+                    };
+                if(alreadyShow){
+                    imgPre.style.visibility = imgNext.style.visibility = toggleBar.style.visibility = sidebarContainer.style.visibility = 'visible';
+                    imgCon.style['border' + capitalize(sidebarPosition)] = prefs.gallery.sidebarSize + 'px solid transparent';
+                    toggleBar.style[sidebarPosition] = '-5px';
+                    maximizeContainer.innerHTML = "";
+                    viewmoreBar.innerHTML = '✚';
+
+                    toggleBar.innerHTML = '▼';
+                }else{
+                    imgPre.style.visibility = imgNext.style.visibility = toggleBar.style.visibility = sidebarContainer.style.visibility = 'hidden';
+                    imgCon.style['border' + capitalize(sidebarPosition)] = '0';
+                    toggleBar.style[sidebarPosition] = '0';
+                    maximizeContainer.innerHTML = "";
+                    viewmoreBar.innerHTML = '✖';
+
+                    var nodes = document.querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]');
+                    [].forEach.call(nodes, function(node){
+                        if(getComputedStyle(node).display!="none"){
+                            var imgSpan = document.createElement('span');
+                            imgSpan.className = "maximizeChild";
+                            imgSpan.innerHTML = '<img src="'+node.dataset.src+'">';
+                            imgSpan.addEventListener("click", function(e){
+                                imgReady(node.dataset.src,{
+                                    ready:function(){
+                                        new ImgWindowC(this);
+                                    },
+                                });
+                            });
+                            maximizeContainer.appendChild(imgSpan);
+                        }
+                    });
                 }
             },
             showHideBottom: function() {  // 显示隐藏 sidebar-container
@@ -3643,6 +3711,7 @@
                 '0';
                 // 修正底部距离
                 this.eleMaps['sidebar-toggle'].style[sidebarPosition] = isHidden ? '-5px' : '0';
+                this.eleMaps['sidebar-toggle'].innerHTML = isHidden ? '▼' : '▲';
             },
             initZoom: function() {  // 如果有放大，则把图片及 sidebar 部分缩放比率改为 1
                 if (prefs.gallery.autoZoom && document.body.style.zoom != undefined) {
@@ -5305,7 +5374,57 @@
                     z-index:1;\
                     display:none;\
                     }\
-                    .pv-gallery-sidebar-toggle:hover{\
+                    .pv-gallery-sidebar-viewmore{\
+                    position:absolute;\
+                    line-height:0;\
+                    text-align:center;\
+                    background-color:rgb(0,0,0);\
+                    color:#757575;\
+                    white-space:nowrap;\
+                    cursor:pointer;\
+                    z-index:1;\
+                    display:none;\
+                    height: 30px;\
+                    width:30px;\
+                    border-radius: 15px;\
+                    line-height: 2 !important;\
+                    }\
+                    .pv-gallery-maximize-container{\
+                    column-count: 5;\
+                    -moz-column-count: 5;\
+                    -webkit-column-count: 5;\
+                    width: 100%;\
+                    display: block;\
+                    background: black;\
+                    }\
+                    .pv-gallery-maximize-container span{\
+                    -moz-page-break-inside: avoid;\
+                    -webkit-column-break-inside: avoid;\
+                    break-inside: avoid;\
+                    float: left;\
+                    margin-bottom: 15px;\
+                    margin-right: 15px;\
+                    overflow: hidden;\
+                    }\
+                    .pv-gallery-maximize-container img{\
+                    width:100%;\
+                    transition: transform .3s ease 0s;\
+                    transform: scale3d(1, 1, 1);\
+                    cursor: zoom-in;\
+                    }\
+                    .pv-gallery-maximize-container img:hover {\
+                    transform: scale3d(1.1, 1.1, 1.1);\
+                    opacity: .9;\
+                    }\
+                    .pv-gallery-maximize-scroll{\
+                    overflow-y: scroll;\
+                    height: 100%;\
+                    width: 100%;\
+                    position: absolute;\
+                    top: 0;\
+                    left: 0;\
+                    }\
+                    .pv-gallery-sidebar-toggle:hover,.pv-gallery-sidebar-viewmore:hover{\
                     color:#ccc;\
                     }\
                     .pv-gallery-sidebar-toggle-h{\
@@ -5313,21 +5432,35 @@
                     margin-left:-40px;\
                     left:50%;\
                     }\
+                    .pv-gallery-sidebar-viewmore-h{\
+                    margin-left:-15px;\
+                    left:50%;\
+                    }\
                     .pv-gallery-sidebar-toggle-v{\
                     height:80px;\
                     margin-top:-40px;\
                     top:50%;\
                     }\
+                    .pv-gallery-sidebar-viewmore-v{\
+                    height:30px;\
+                    top:6%;\
+                    }\
                     .pv-gallery-sidebar-toggle-top{\
                     top:-5px;\
                     }\
-                    .pv-gallery-sidebar-toggle-right{\
+                    .pv-gallery-sidebar-viewmore-top{\
+                    top:15px;\
+                    }\
+                    .pv-gallery-sidebar-toggle-right,.pv-gallery-sidebar-viewmore-right{\
                     right:-5px;\
                     }\
                     .pv-gallery-sidebar-toggle-bottom{\
                     bottom:-5px;\
                     }\
-                    .pv-gallery-sidebar-toggle-left{\
+                    .pv-gallery-sidebar-viewmore-bottom{\
+                    bottom:12px;\
+                    }\
+                    .pv-gallery-sidebar-toggle-left,.pv-gallery-sidebar-viewmore-left{\
                     left:-5px;\
                     }\
                     .pv-gallery-sidebar-toggle-content{\
@@ -5339,9 +5472,19 @@
                     line-height:1.1;\
                     font-size:12px;\
                     text-align:center;\
-                    margin:2px;\
+                    margin-bottom:8px;\
                     }\
-                    .pv-gallery-sidebar-toggle-content-v{\
+                    .pv-gallery-sidebar-viewmore-content{\
+                    display:inline-block;\
+                    vertical-align:middle;\
+                    white-space:normal;\
+                    word-wrap:break-word;\
+                    overflow-wrap:break-word;\
+                    line-height:1.1;\
+                    font-size:16px;\
+                    text-align:center;\
+                    }\
+                    .pv-gallery-sidebar-toggle-content-v,.pv-gallery-sidebar-viewmore-content-v{\
                     width:1.1em;\
                     }\
                     /*侧边栏开始*/\
