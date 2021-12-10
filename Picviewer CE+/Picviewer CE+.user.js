@@ -6325,9 +6325,9 @@
                     '<span class="pv-pic-window-tb-rotate pv-pic-window-tb-tool" title="'+i18n("rotate")+'"></span>'+
                     '<span class="pv-pic-window-tb-tool-badge">0</span>'+
                     '<span class="pv-pic-window-tb-tool-extend-menu pv-pic-window-tb-tool-extend-menu-rotate">'+
-                    '<span class="pv-pic-window-tb-tool-extend-menu-item">0</span>'+
-                    '<span class="pv-pic-window-tb-tool-extend-menu-item">+90</span>'+
-                    '<span class="pv-pic-window-tb-tool-extend-menu-item">-90</span>'+
+                    '<span class="pv-pic-window-tb-tool-extend-menu-item" title="0">0</span>'+
+                    '<span class="pv-pic-window-tb-tool-extend-menu-item" title="+90">⭮</span>'+
+                    '<span class="pv-pic-window-tb-tool-extend-menu-item" title="-90">⭯</span>'+
                     '</span>'+
                     '</span>'+
                     '<span class="pv-pic-window-tb-tool-badge-container pv-pic-window-tb-tool-extend-menu-container">'+
@@ -6479,7 +6479,7 @@ left: -45px;\
                 //旋转工具的扩展菜单
                 container.querySelector('.pv-pic-window-tb-tool-extend-menu-rotate').addEventListener('click',function(e){
                     var target=e.target;
-                    var text=target.textContent;
+                    var text=target.title;
                     var value;
                     function convert(deg){
                         return deg * Math.PI/180;
