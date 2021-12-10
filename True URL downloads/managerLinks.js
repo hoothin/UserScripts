@@ -66,18 +66,18 @@ function showLinkFrame(callBack,allBtn,selBtn) {
 	if(!selBtn)selBtn="复制选中";
 	if (!frame) {
 		$('<style>#managerLinksContent input{border-width:2px;border-style:outset;border-color:buttonface;border-image:initial;font-size:12px}#managerLinksBody>.sort>input{width:33.3%}#managerLinksBody>.addTxt>input{width: 48%;}#managerLinksBody>.fun>input{width: 33.3%;}#managerLinksLinks>div{width:100%;height:20px;overflow:hidden}</style>').appendTo('head');
-		frame = $('<div id="managerLinksContent" style="display:none;">
-		<div style="height:100%; width:100%; position:fixed; top:0; z-index:99998; opacity:0.3; filter: alpha(opacity=30); background-color:#000;"></div>
-		<div id="managerLinksBody" style="width:300px;height:300px;position:fixed;left:50%;top:50%;margin-top:-150px;margin-left:-150px;z-index:99998;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;">
-			<div id="managerLinksType" style="width:290px;margin-left:5px;"></div>
-			<div class="sort"><input id="managerLinksSortByName" value="按文件名排序" type="button"><input id="managerLinksSortByUrl" value="按网址排序" type="button"><input id="managerLinksSortByType" value="按扩展名排序" type="button">
-			</div>
-			<div id="managerLinksLinks" style="width:100%;overflow:auto;word-wrap:break-word;"></div>
-			<div title="%i代表递增 %n代表文件名" class="addTxt"><input id="managerLinksPre" type="text" placeholder="批量前缀"><input id="managerLinksAfter" type="text" placeholder="批量后缀">
-			</div>
-			<div class="fun"><input id="managerLinksCopyAll" value="'+allBtn+'" type="button"><input id="managerLinksCopySel" value="'+selBtn+'" type="button"><input id="managerLinksClose" value="关闭" type="button">
-			</div>
-		</div>
+		frame = $('<div id="managerLinksContent" style="display:none;">\
+		<div style="height:100%; width:100%; position:fixed; top:0; z-index:99998; opacity:0.3; filter: alpha(opacity=30); background-color:#000;"></div>\
+		<div id="managerLinksBody" style="width:300px;height:300px;position:fixed;left:50%;top:50%;margin-top:-150px;margin-left:-150px;z-index:99998;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;">\
+			<div id="managerLinksType" style="width:290px;margin-left:5px;"></div>\
+			<div class="sort"><input id="managerLinksSortByName" value="按文件名排序" type="button"><input id="managerLinksSortByUrl" value="按网址排序" type="button"><input id="managerLinksSortByType" value="按扩展名排序" type="button">\
+			</div>\
+			<div id="managerLinksLinks" style="width:100%;overflow:auto;word-wrap:break-word;"></div>\
+			<div title="%i代表递增 %n代表文件名" class="addTxt"><input id="managerLinksPre" type="text" placeholder="批量前缀"><input id="managerLinksAfter" type="text" placeholder="批量后缀">\
+			</div>\
+			<div class="fun"><input id="managerLinksCopyAll" value="'+allBtn+'" type="button"><input id="managerLinksCopySel" value="'+selBtn+'" type="button"><input id="managerLinksClose" value="关闭" type="button">\
+			</div>\
+		</div>\
 		</div>');
 		$(document.body).append(frame);
 		$("#managerLinksSortByName").click(function() {
