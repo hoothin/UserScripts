@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version        2021.12.10.2
+// @version        2021.12.10.3
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -2395,8 +2395,8 @@
                     '<span class="pv-gallery-head-left-img-info-scaling" title="'+i18n("scaleRatio")+'">（100%）</span>'+
                     '<span class="pv-gallery-vertical-align-helper"></span>'+
                     '<span class="pv-gallery-head-left-img-info-description" title="'+i18n("picNote")+'"></span>'+
-                    '<input type="range" id="minsizeW" min="0" max="100" value="0" title="Width"> <span id="minsizeWSpan">0px</span> '+
-                    '<input type="range" id="minsizeH" min="0" max="100" value="0" title="Height"> <span id="minsizeHSpan">0px</span>'+
+                    '<div class="pv-gallery-range-box"><input type="range" id="minsizeW" min="0" max="100" value="0" title="Width"> <span id="minsizeWSpan">0px</span> '+
+                    '<input type="range" id="minsizeH" min="0" max="100" value="0" title="Height"> <span id="minsizeHSpan">0px</span></div>'+
                     '</span>'+
                     '</span>'+
 
@@ -5053,6 +5053,9 @@
                     .pv-gallery-head-left-img-info-description {\
                     margin-left: 10px;\
                     }\
+                    .pv-gallery-range-box{\
+                    display: inline-flex;\
+                    }\
                     /*顶栏里面的按钮样式-开始*/\
                     .pv-gallery-head-command{\
                     display:inline-block;\
@@ -5324,7 +5327,7 @@
                     }\
                     .pv-gallery-scrollbar-h:hover,\
                     .pv-gallery-scrollbar-v:hover{\
-                    background-color:rgba(100,100,100,1)\
+                    background-color:rgba(100,100,100,0.9);\
                     z-index:2;\
                     }\
                     .pv-gallery-scrollbar-h-track,\
@@ -5340,7 +5343,7 @@
                     .pv-gallery-scrollbar-h-handle,\
                     .pv-gallery-scrollbar-v-handle{\
                     position:absolute;\
-                    background-color:rgba(0,0,0,0.3);\
+                    background-color:rgba(0,0,0,0.5);\
                     }\
                     .pv-gallery-scrollbar-h-handle{\
                     height:100%;\
