@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version        2021.12.9.5
+// @version        2021.12.10.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -3673,6 +3673,7 @@
                         return words.join(" ");
                     };
                 maximizeContainer.style.minHeight = 0;
+                maximizeContainer.parentNode.style.visibility = "hidden";
                 if(this.hideBodyStyle.parentNode)
                     this.hideBodyStyle.parentNode.removeChild(this.hideBodyStyle);
                 imgPre.style.visibility = imgNext.style.visibility = toggleBar.style.visibility = sidebarContainer.style.visibility = 'visible';
@@ -3706,6 +3707,7 @@
                     this.closeViewMore();
                 }else{
                     maximizeContainer.style.minHeight = "100%";
+                    maximizeContainer.parentNode.style.visibility = "visible";
                     document.head.appendChild(this.hideBodyStyle);
                     imgPre.style.visibility = imgNext.style.visibility = toggleBar.style.visibility = sidebarContainer.style.visibility = 'hidden';
                     imgCon.style['border' + capitalize(sidebarPosition)] = '0';
@@ -5463,6 +5465,7 @@
                     height: 100%;\
                     width: 100%;\
                     position: absolute;\
+                    visibility: hidden;\
                     top: 0;\
                     left: 0;\
                     }\
