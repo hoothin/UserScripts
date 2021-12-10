@@ -83,7 +83,7 @@
 // @include     http*://jiyue.*
 // @include     http*://www.moe-acg.*/*
 // @include     http*://huan.moe*
-// @include     http*://*.hmoe.moe/*
+// @include     http*://*.hmoe*
 // @include     http*://*.hentaiclub.net*
 // @include     http*://*.sshs.cc/*
 // @include     http*://www.mygalgame.com/*
@@ -114,7 +114,7 @@
 // @include     http*://greasyfork.org/*/scripts/*
 // @include     http*://sleazyfork.org/*/forum/*discussion*
 // @include     http*://greasyfork.org/*/forum/*discussion*
-// @version     3.22.67
+// @version     3.22.68
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -301,7 +301,7 @@
                     createBlockBtn();
                 }
             },
-            {
+            /*{
                 name:"次元の圣光",
                 url:"https://www.acglover.me/",
                 regex:/acglover\./,
@@ -310,8 +310,8 @@
                 run:function(){
                     changeUrl(true,[["a","img"],[['acglover\\\.net','acglover\\\.me']]]);
                 }
-            },
-            {
+            },*/
+            /*{
                 name:"绅士二次元",
                 url:"https://www.acg.tf/",
                 regex:/acg\.tf/,
@@ -326,7 +326,7 @@
                         for(var i=0;i<plist.length;i++){
                             var pNode=plist[i];
                             if(/\u5bc6\u5319[:：]?/i.test(pNode.innerHTML)){
-                                var orgStr = pNode.innerText.match(/\u5bc6\u5319[:：]?\s*\S*/i)[0].replace(/\u5bc6\u5319[:：]?\s*/,"").replace('&amp;','&');
+                                var orgStr = pNode.innerText.match(/\u5bc6\u5319[:：]?\s*\S*\b/i)[0].replace(/\u5bc6\u5319[:：]?\s*\b/,"").replace('&amp;','&');
                                 key=CryptoJS.enc.Base64.parse(orgStr).toString(CryptoJS.enc.Utf8);
                                 pNode.innerHTML = "";
                                 break;
@@ -344,7 +344,7 @@
                         }
                     }
                 }
-            },
+            },*/
             {
                 name:"天使二次元",
                 url:"https://www.tianshie.com/",
@@ -356,30 +356,25 @@
                 url:"https://acgso1.com/",
                 regex:/acgso1\./,
                 hideOd:true,
-                downloadUrl:/acgso1\.com\/download/,
                 offset:55,
-                articleSel:"section.card",
-                run:function(){
-                    if(isHttps)
-                        addInsertHandler([["a","img","link","script"],[['p:(\\\/\\\/|\\\\\\/\\\\\\/)(www\\\.|static\\\.)?acgso1','ps:$1$2acgso1']]]);
-                }
+                articleSel:"section.card"
             },
-            {
+            /*{
                 name:"风铃窝",
                 url:"http://www.acg15.com/",
                 regex:/acg15\.com/,
                 hideOd:true,
                 offset:55,
                 articleSel:"section.card"
-            },
-            {
+            },*/
+            /*{
                 name:"里番萌",
-                url:"http://lifan.moe/",
+                url:"https://lifan.moe/",
                 regex:/lifanmoe\./,
                 downloadUrl:/lifanmoe\.mobi\/download/,
                 offset:55,
                 articleSel:"section.card"
-            },
+            },*/
             {
                 name:"爱弹幕",
                 url:"http://www.idanmu.co/",
@@ -395,10 +390,10 @@
                             reset.parentNode.removeChild(reset);
                         }
                     }
-                    var r10=document.querySelector('#menu-item-12744');
+                    var r10=document.querySelector('#menu-header>li');
                     if(r10){
                         var r18=r10.cloneNode(true);
-                        r18.innerHTML = r18.innerHTML.replace(/\u8d44\u8baf/g, 'R18').replace(/category\/v01/g, 'category/v09/v13');
+                        r18.innerHTML = r18.innerHTML.replace("资讯", 'R18').replace(/category\/v01/g, 'category/v09/v13');
                         r10.after(r18);
                     }
                 }
@@ -424,14 +419,14 @@
             },
             {
                 name:"幻想次元",
-                url:"https://acg18.world/",
+                url:"https://acg18.icu/",
                 regex:/acg18\./,
                 offset:55,
                 run:function(){
-                    changeUrl(true,[["a"],[['https?:\\\/\\\/[^\\\.]*(\\\.)?acg18\\\.(us|world)\\\/go\\\/\\\?url=','']]]);
+                    changeUrl(true,[["a"],[['https?:\\\/\\\/[^\\\.]*(\\\.)?acg18\\\.[a-z]+\\\/go\\\/\\\?url=','']]]);
                 }
             },
-            {
+            /*{
                 name:"樱花御所",
                 url:"https://www.yhacg.us",
                 regex:/yhacg\./,
@@ -439,7 +434,7 @@
                 run:function(){
                     changeUrl(true,[["a"],[['https?:\\\/\\\/[^\\\.]*(\\\.)?yhacg\\\.us\\\/go\\\/\\\?url=','']]]);
                 }
-            },
+            },*/
             {
                 name:"最ACG网",
                 url:"http://zuiacg.com/",
@@ -498,7 +493,7 @@
             },
             {
                 name:"绅士仓库",
-                url:"https://cangku.moe/",
+                url:"https://cangku.io/",
                 regex:/galacg\.|cangku\./,
                 hideOd:true,
                 articleSel:".post-card-wrap",
@@ -513,21 +508,21 @@
                     },500);
                 }
             },
-            {
+            /*{
                 name:"樱花漫舍",
                 url:"https://www.oomoe.org/",
                 regex:/oomoe\./,
                 hideOd:true,
                 offset:55,
                 articleSel:"section.card"
-            },
-            {
+            },*/
+            /*{
                 name:"ACG和谐区/里世界/毛站",
                 url:"http://www.uraban.me/wp/",
                 regex:/acgzone\.org|uraban\.me/,
                 contentArea:'article'
-            },
-            {
+            },*/
+            /*{
                 name:"寂月神社",
                 url:"http://www.jiyue.com/",
                 regex:/(acgmoon|jiyue)\.(org|com|moe)/,
@@ -561,30 +556,30 @@
                             ele.href+="#"+ele.innerHTML;
                         }
                     }
-                    /*var $=unsafeWindow.jQuery;
+                    var $=unsafeWindow.jQuery;
                     $(document).off("click", ".sora-card .__copy");
                     $(document).on("click", ".sora-card .__copy", function() {
                         var code = $(this).children("code").text();
                         this.href=this.href.split("#")[0]+"#"+code;
-                    });*/
+                    });
                 }
-            },
+            },*/
             {
                 name:"萌幻之乡",
-                url:"https://www.hmoe.moe/",
-                regex:/moe-acg\.|huan\.moe|hmoe\.moe/,
+                url:"https://hmoe.top/",
+                regex:/moe-acg\.|huan\.moe|hmoe\.moe|hmoe\d+\./,
                 offset:55,
                 hideOd:true,
-                downloadUrl:/(moe-acg|hmoe\.moe)\..*\/download/,
-                articleSel:"section.card"
+                downloadUrl:/\/download/,
+                articleSel:"section.card,article.is-type-post"
             },
-            {
+            /*{
                 name:"绅士图书馆",
                 url:"http://htai.co/",
                 regex:/htai\.(co|me)/,
                 contentArea:"div.post_content",
                 commArea:'commentlist'
-            },
+            },*/
             {
                 name:"紳士の庭",
                 url:"https://hggard.com/",
@@ -687,7 +682,7 @@
                             processing=false;
                         },500);
                     });
-                    var picTitle=document.querySelector("h1>a[href='https://www.mygalgame.com/gengxinrizhi.html']");
+                    var picTitle=document.querySelector("h1>a[href='"+location.origin+"/gengxinrizhi.html']");
                     if(picTitle){
                         var imgUrl=picTitle.parentNode.parentNode.parentNode.querySelector("div.img>img").src;
                         var picBtn=document.createElement("a");
@@ -698,7 +693,7 @@
                     }
                 }
             },
-            {
+            /*{
                 name:"幻天领域",
                 url:"http://www.acgnz.cc/",
                 regex:/acgnz\.cc/,
@@ -709,15 +704,15 @@
                 run:function(){
                     if(isHttps)addInsertHandler([["a","img","link","script"],[['p:(\\\/\\\/|\\\\\\/\\\\\\/)(www\\\.)?acgnz','ps:$1$2acgnz']]]);
                 }
-            },
-            {
+            },*/
+            /*{
                 name:"萌心次元",
                 url:"https://moxacg.moe/",
                 regex:/moxacg\./,
                 hideOd:true,
                 offset:55,
                 articleSel:"section.card"
-            },
+            },*/
             /*{
                 name:"轻萌社",
                 url:"http://nacg.me/",
@@ -726,7 +721,7 @@
                 offset:65,
                 contentArea:'.content'
             },*/
-            {
+            /*{
                 name:"次元轨迹",
                 url:"https://www.acg44.com/",
                 regex:/www\.(acggj|acg44)\./,
@@ -742,16 +737,16 @@
                         if(baseUrl)baseUrl.href=baseUrl.href.replace(/http:/,"https:");
                     }
                 }
-            },
+            },*/
             {
                 name:"萌口组",
                 url:"http://www.kou.moe/",
                 regex:/kou\.moe/,
                 offset:35,
-                articleSel:".arrow_box",
-                contentArea:'.article_content'
+                articleSel:"article",
+                contentArea:'.entry-content'
             },
-            {
+            /*{
                 name:"九妖萌",
                 url:"http://www.91moe.com/",
                 regex:/91moe\.com/,
@@ -760,7 +755,7 @@
                 downloadUrl:/91moe\.com\/download/,
                 articleSel:"section.card",
                 contentArea:'.article_content'
-            },
+            },*/
             {
                 name:"CE家族社",
                 url:"https://cefamilie.com/",
@@ -769,7 +764,7 @@
                 contentArea:'#post_content',
                 commArea:"commentlist"
             },
-            {
+            /*{
                 name:"喵窝",
                 url:"http://yui-nya.com/",
                 regex:/yui\-nya\.com/,
@@ -777,8 +772,8 @@
                 contentArea:'.article-content',
                 offset:50,
                 commArea:"commentlist"
-            },
-            {
+            },*/
+            /*{
                 name:"次元老司机",
                 url:"http://www.l-sj.cc/",
                 regex:/l\-sj\.cc/,
@@ -786,8 +781,8 @@
                 hideOd:true,
                 offset:55,
                 downloadUrl:/l\-sj\.cc\/download\?id=/
-            },
-            {
+            },*/
+            /*{
                 name:"绅士ACG社",
                 url:"http://htacg.cc/",
                 regex:/htacg\.cc/,
@@ -795,7 +790,7 @@
                 offset:55,
                 hideOd:true,
                 downloadUrl:/htacg\.cc\/download\?id/
-            },
+            },*/
             {
                 name:"绅士会所",
                 url:"https://www.hentaiclub.net/",
@@ -807,7 +802,7 @@
                     if(dlBox)document.querySelector("#dl-box").style.display="block";
                 }
             },
-            {
+            /*{
                 name:"绅士交易",
                 url:"https://www.acgpy.net/wpx/",
                 regex:/acgpy\./,
@@ -817,7 +812,7 @@
                     if(/www\.acgpy\.[^\.]+\/login\d+\./.test(location.href)){
                         var date=new Date();
                         date.setTime(date.getTime()+14400*60*1000);
-                        document.cookie="trade"+location.href.replace(/.*.[^\.]+\/login(\d+)\..*/,"$1")+"=A32; expires="+date.toGMTString();
+                        document.cookie="trade"+location.href.replace(/.*.[^\.]+\/login(\d+)\..+/,"$1")+"=A32; expires="+date.toGMTString();
                         //document.cookie="trade0421=A32; expires="+date.toGMTString();
                         top.location='wpx';
                     }
@@ -847,15 +842,15 @@
                         });
                     }
                 }
-            },
-            {
+            },*/
+            /*{
                 name:"纯爱计划",
                 url:"https://sexacg.com/",
                 regex:/sexacg\./,
                 contentArea:'article',
                 commArea:'su-quote-inner'
-            },
-            {
+            },*/
+            /*{
                 name:"梦幻二次元",
                 url:"http://www.mhecy.com/",
                 regex:/mhecy\./,
@@ -863,24 +858,24 @@
                 hideOd:true,
                 offset:55,
                 articleSel:"section.card"
-            },
-            {
+            },*/
+            /*{
                 name:"里次元",
                 url:"http://loli.cool/",
                 regex:/loli\.cool/,
                 hideOd:true,
                 offset:55,
                 articleSel:"article.post",
-            },
-            {
+            },*/
+            /*{
                 name:"玖爱萌",
                 url:"https://9iacg.com/",
                 regex:/9iacg\./,
                 hideOd:true,
                 offset:55,
                 articleSel:"article.card",
-            },
-            {
+            },*/
+            /*{
                 name:"好萌",
                 url:"https://www.nicemoe.com/",
                 regex:/nicemoe\./,
@@ -888,7 +883,7 @@
                 offset:55,
                 downloadUrl:/\/\?download\?id=/,
                 articleSel:"section.card"
-            },
+            },*/
             {
                 name:"爱恋动漫",
                 url:"http://kisssub.org/",
