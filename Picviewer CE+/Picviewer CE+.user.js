@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version        2021.12.10.1
+// @version        2021.12.10.2
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -5296,7 +5296,6 @@
                     .pv-gallery-scrollbar-v{\
                     display:none;\
                     z-index:1;\
-                    opacity:0.3;\
                     position:absolute;\
                     margin:0;\
                     padding:0;\
@@ -5317,14 +5316,15 @@
                     margin:2px 0;\
                     }\
                     .pv-gallery-scrollbar-h:hover{\
-                    height:15px;\
+                    height:25px;\
+                    bottom:0;\
                     }\
                     .pv-gallery-scrollbar-v:hover{\
-                    width:15px;\
+                    width:25px;\
                     }\
                     .pv-gallery-scrollbar-h:hover,\
                     .pv-gallery-scrollbar-v:hover{\
-                    opacity:0.9;\
+                    background-color:rgba(100,100,100,1)\
                     z-index:2;\
                     }\
                     .pv-gallery-scrollbar-h-track,\
@@ -5334,13 +5334,13 @@
                     left:0;\
                     right:0;\
                     bottom:0;\
-                    background-color:rgba(100,100,100,1);\
+                    background-color:rgba(100,100,100,0.3);\
                     border:2px solid transparent;\
                     }\
                     .pv-gallery-scrollbar-h-handle,\
                     .pv-gallery-scrollbar-v-handle{\
                     position:absolute;\
-                    background-color:black;\
+                    background-color:rgba(0,0,0,0.3);\
                     }\
                     .pv-gallery-scrollbar-h-handle{\
                     height:100%;\
@@ -5350,11 +5350,13 @@
                     }\
                     .pv-gallery-scrollbar-h-handle:hover,\
                     .pv-gallery-scrollbar-v-handle:hover{\
-                    background-color:#502121;\
+                    background-color:rgba(80,33,33,1);\
+                    border: 2px solid #585757;\
                     }\
                     .pv-gallery-scrollbar-h-handle:active,\
                     .pv-gallery-scrollbar-v-handle:active{\
-                    background-color:#391A1A;\
+                    background-color:rgba(57,26,26,1);\
+                    border: 2px solid #878484;\
                     }\
                     /*滚动条样式--结束*/\
                     .pv-gallery-img-content{\
@@ -6325,18 +6327,18 @@
                     '<span class="pv-pic-window-tb-rotate pv-pic-window-tb-tool" title="'+i18n("rotate")+'"></span>'+
                     '<span class="pv-pic-window-tb-tool-badge">0</span>'+
                     '<span class="pv-pic-window-tb-tool-extend-menu pv-pic-window-tb-tool-extend-menu-rotate">'+
-                    '<span class="pv-pic-window-tb-tool-extend-menu-item" title="0">0</span>'+
                     '<span class="pv-pic-window-tb-tool-extend-menu-item" title="+90">⭮</span>'+
                     '<span class="pv-pic-window-tb-tool-extend-menu-item" title="-90">⭯</span>'+
+                    '<span class="pv-pic-window-tb-tool-extend-menu-item" title="0">🗘</span>'+
                     '</span>'+
                     '</span>'+
                     '<span class="pv-pic-window-tb-tool-badge-container pv-pic-window-tb-tool-extend-menu-container">'+
                     '<span class="pv-pic-window-tb-zoom pv-pic-window-tb-tool" title="'+i18n("scale")+'"></span>'+
                     '<span class="pv-pic-window-tb-tool-badge">0</span>'+
                     '<span class="pv-pic-window-tb-tool-extend-menu pv-pic-window-tb-tool-extend-menu-zoom">'+
-                    '<span class="pv-pic-window-tb-tool-extend-menu-item">1</span>'+
-                    '<span class="pv-pic-window-tb-tool-extend-menu-item">+0.1</span>'+
-                    '<span class="pv-pic-window-tb-tool-extend-menu-item">-0.1</span>'+
+                    '<span id="pv-pic-zoom-in" class="pv-pic-window-tb-tool-extend-menu-item" title="+0.1"></span>'+
+                    '<span id="pv-pic-zoom-out" class="pv-pic-window-tb-tool-extend-menu-item" title="-0.1"></span>'+
+                    '<span class="pv-pic-window-tb-tool-extend-menu-item" title="1">🗘</span>'+
                     '</span>'+
                     '</span>'+
                     '<span class="pv-pic-window-tb-flip-horizontal pv-pic-window-tb-command" title="'+i18n("horizontalFlip")+'"></span>'+
@@ -6458,7 +6460,7 @@ left: -45px;\
                 //缩放工具的扩展菜单
                 container.querySelector('.pv-pic-window-tb-tool-extend-menu-zoom').addEventListener('click',function(e){
                     var target=e.target;
-                    var text=target.textContent;
+                    var text=target.title;
                     var value;
                     switch(text){
                         case '1':{
@@ -6796,6 +6798,8 @@ left: -45px;\
                     border: none;\
                     border-right: 2px solid transparent;\
                     border-bottom: 1px solid #868686;\
+                    font-family: lg;\
+                    font-size: 20px;\
                     }\
                     .pv-pic-window-tb-tool-extend-menu-item:last-child{\
                     border-bottom: none;\
@@ -6825,6 +6829,12 @@ left: -45px;\
                     border-top-color:transparent;\
                     border-left-color:transparent;\
                     opacity:0.5;\
+                    }\
+                    #pv-pic-zoom-in:after{\
+                    content: "\\e311";\
+                    }\
+                    #pv-pic-zoom-out:after{\
+                    content: "\\e312";\
                     }\
                     .pv-pic-window-overlayer{\
                     height:100%;\
