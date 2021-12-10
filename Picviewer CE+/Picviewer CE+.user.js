@@ -4841,6 +4841,7 @@
                 // 已经在图库里面的
                 var self = this;
                 imgs.forEach(function(img) {
+                    if(!img.getAttribute("src")) return;
                     if (newer && self._dataCache[img.src]) return;
 
                     var result = findPic(img);
