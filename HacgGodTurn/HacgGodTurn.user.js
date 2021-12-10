@@ -9,7 +9,7 @@
 // @description:zh-TW   老司機工具箱，支持琉璃神社、靈夢禦所、純愛計劃、紳士二次元、萌心次元、次元軌跡、ACG調查小隊、幻天領域、天使二次元、櫻花漫舍、風鈴窩、次元の聖光、愛彈幕、幻想次元、司機會所、裏番萌、最ACG、紳士倉庫、紳士圖書館、ACG和諧區/裏世界、寂月神社、萌幻之鄕、紳士の庭、萌口組、九妖萌、CE家族社、喵窩、次元老司機、紳士ACG社等，神秘代碼轉換成下載鏈接，網盤自動填寫提取密碼，F8、Shift+F8站點切換，Alt+F8列表瀏覽，左右方向鍵文章跳轉，Ctrl+左右快捷翻頁，Ctrl+上下跳入跳出，下載鏈接嗅探，繞過重定向跳轉，各種和諧補丁
 // @description:ja      琉璃神社工具セット、秋の名山老運転手専用
 // @author      hoothin
-// @icon        https://www.liuli.se/favicon.ico
+// @icon        https://www.hacg.me/favicon.ico
 // @include     http*://www.hacg.*/wordpress/*
 // @include     http*://hacg.*/wordpress/*
 // @include     http*://loli.cool/*
@@ -18,6 +18,10 @@
 // @include     http*://hacg.lol/*
 // @include     http*://hacg.riwee.com/*
 // @include     http*://9iacg.*
+// @include     http*://okloli.*
+// @include     http*://www.okloli.*
+// @include     http*://kuaishangche.*
+// @include     http*://www.kuaishangche.*
 // @include     http*://hacg.me/*
 // @include     http*://hacg.in/*
 // @include     http*://hacg.be/*
@@ -45,12 +49,13 @@
 // @include     http*://www.moxacg.com/*
 // @include     http*://moxacg.*
 // @include     http*://*.acggj.com/*
-// @include     http*://acg12.com/*
-// @include     http*://*.acg12.com/*
+// @include     http*://acgso1.com/*
+// @include     http*://*.acgso1.com/*
 // @include     http*://www.acgnz.cc/*
 // @include     http*://nacg.me/*
 // @include     http*://www.tianshit.com/*
 // @include     http*://www.tianshif.com/*
+// @include     http*://www.tianshie.com/*
 // @include     http*://www.oomoe.*
 // @include     http*://www.kaze5.com/*
 // @include     http*://www.acg15.com/*
@@ -102,13 +107,14 @@
 // @include     http*://*kisssub.*
 // @include     http*://*miobt.*
 // @include     http*://www.dakashangche.*
+// @include     http*://www.dakaba.*
 // @include     http*://xiuxiqu.*
 // @include     https://www.reddit.com/*
 // @include     http*://sleazyfork.org/*/scripts/*
 // @include     http*://greasyfork.org/*/scripts/*
 // @include     http*://sleazyfork.org/*/forum/*discussion*
 // @include     http*://greasyfork.org/*/forum/*discussion*
-// @version     3.22.66
+// @version     3.22.67
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -116,7 +122,7 @@
 // @grant       GM_getValue
 // @grant       unsafeWindow
 // @run-at      document-end
-// @require     https://cdn.jsdelivr.net/gh/hoothin/UserScripts@master/HacgGodTurn/od.js
+// @require     https://greasyfork.org/scripts/23522/code/od.js
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
 // @license     MIT License
@@ -154,7 +160,7 @@
                 name:"琉璃神社",
                 url:"https://www.liuli.uk/wp/",
                 regex:/hacg\.|llss\.|liuli\./,
-                commArea:"wc-thread-wrapper",
+                commArea:"comments-area",
                 run:function(){
                     var feiZao,feiZaos=document.querySelectorAll("p1"),i;
                     for(i=0;i<feiZaos.length;i++){
@@ -341,21 +347,21 @@
             },
             {
                 name:"天使二次元",
-                url:"https://www.tianshif.com/",
+                url:"https://www.tianshie.com/",
                 regex:/tianshi.\./,
                 contentArea:'.article-content'
             },
             {
                 name:"ACG调查小队",
-                url:"https://acg12.com/",
-                regex:/acg12\./,
+                url:"https://acgso1.com/",
+                regex:/acgso1\./,
                 hideOd:true,
-                downloadUrl:/acg12\.com\/download/,
+                downloadUrl:/acgso1\.com\/download/,
                 offset:55,
                 articleSel:"section.card",
                 run:function(){
                     if(isHttps)
-                        addInsertHandler([["a","img","link","script"],[['p:(\\\/\\\/|\\\\\\/\\\\\\/)(www\\\.|static\\\.)?acg12','ps:$1$2acg12']]]);
+                        addInsertHandler([["a","img","link","script"],[['p:(\\\/\\\/|\\\\\\/\\\\\\/)(www\\\.|static\\\.)?acgso1','ps:$1$2acgso1']]]);
                 }
             },
             {
@@ -399,8 +405,8 @@
             },
             {
                 name:"司机会所",
-                url:"https://xiuxiqu.wtf",
-                regex:/sijihuisuo\.club|dakashangche\.|xiuxiqu\./,
+                url:"https://kuaishangche.club/",
+                regex:/sijihuisuo\.club|dakashangche\.|xiuxiqu\.|dakaba\.|kuaishangche\./,
                 innerPage:/\/(sj\/\d|\?p=\d)/,
                 offset:115,
                 contentArea:"#commentlist-container",
@@ -592,8 +598,8 @@
             },
             {
                 name:"MyGalgame - 忧郁的弟弟",
-                url:"https://www.mmgal.com/",
-                regex:/(mmgal|mygalgame)\.com/,
+                url:"https://okloli.com/",
+                regex:/(mmgal|mygalgame|okloli)\.com/,
                 articleSel:".article",
                 commArea:'commentlist',
                 run:function(){
