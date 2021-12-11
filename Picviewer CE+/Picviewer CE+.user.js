@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version        2021.12.10.3
+// @version        2021.12.11.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -46,6 +46,7 @@
         case "zh-CN":
             i18nData={
                 share:"分享",
+                globalkeys:"预览功能键组合: ",
                 loadAll:"加载更多",
                 loadedAll:"加载完毕",
                 loading:"正在加载",
@@ -160,7 +161,7 @@
                 keysCurrentTip:"当出现悬浮条时按下此按键打开当前显示的图片",
                 keysMagnifier:"打开放大镜观察",
                 keysMagnifierTip:"当出现悬浮条时按下此按键打开放大镜观察",
-                keysGallery:"打开图库（加CTRL为全局）",
+                keysGallery:"打开图库（加功能键为全局）",
                 keysGalleryTip:"当出现悬浮条时按下此按键打开图库",
                 magnifier:"放大镜",
                 magnifierRadius:"默认半径",
@@ -233,6 +234,7 @@
         case "zh-TW":
             i18nData={
                 share:"分享",
+                globalkeys:"預覽功能鍵組合: ",
                 loadAll:"載入更多",
                 loadedAll:"載入完畢",
                 loading:"正在載入",
@@ -347,7 +349,7 @@
                 keysCurrentTip:"當出現懸浮條時按下此按鍵打開當前顯示的圖片",
                 keysMagnifier:"打開放大鏡觀察",
                 keysMagnifierTip:"當出現懸浮條時按下此按鍵打開放大鏡觀察",
-                keysGallery:"打開圖庫（加CTRL為全局）",
+                keysGallery:"打開圖庫（加功能鍵為全局）",
                 keysGalleryTip:"當出現懸浮條時按下此按鍵打開圖庫",
                 magnifier:"放大鏡",
                 magnifierRadius:"默認半徑",
@@ -420,6 +422,7 @@
         default:
             i18nData={
                 share:"Share",
+                globalkeys:"Global keys for preview: ",
                 loadAll:"Load more",
                 loadedAll:"Load completed",
                 loading:"Loading ...",
@@ -534,7 +537,7 @@
                 keysCurrentTip:"Press this button to open the currently displayed image when the floating bar appears",
                 keysMagnifier:"Open the magnifying glass to observe",
                 keysMagnifierTip:"Press this button to open the magnifying glass when the floating bar appears",
-                keysGallery:"Open Gallery（Global with Ctrl）",
+                keysGallery:"Open Gallery（Global with funcKeys）",
                 keysGalleryTip:"Press this button to open the Gallery when a floating bar appears",
                 magnifier:"Zoom",
                 magnifierRadius:"Default radius",
@@ -651,6 +654,12 @@
                     magnifier: 'm',
                     gallery: 'g',
                 },
+                globalkeys: {
+                    ctrl: true,
+                    alt: false,
+                    shift: false,
+                    command: false
+                }
             },
 
             magnifier:{//放大镜的设置.
@@ -6408,6 +6417,8 @@
                     };
                     self.zoom(1);
                     self.fitToScreen();
+                    self.center(true,true);
+                    self.keepScreenInside();
                 }
                 /*searchButton.addEventListener('click',function(e){
                     sortSearch();
@@ -6437,9 +6448,9 @@
 
                 var toolbar=container.querySelector('.pv-pic-window-toolbar');
                 toolbar.style.cssText='\
-top: 0px;\
-left: -45px;\
-';
+                top: 0px;\
+                left: -45px;\
+                ';
                 this.toolbar=toolbar;
 
                 this.selectedToolClass='pv-pic-window-tb-tool-selected';
@@ -6611,6 +6622,8 @@ left: -45px;\
                     line-height: 0;\
                     text-align: left;\
                     box-sizing: content-box;\
+                    -webkit-transition: opacity 0.3s ease-in-out;\
+                    transition: opacity 0.3s ease-in-out;\
                     }\
                     .pv-pic-window-container_focus {\
                     box-shadow: 0 0 10px rgba(0,0,0,0.6);\
@@ -7928,9 +7941,12 @@ left: -45px;\
                 if(this.removed)return;
                 this.removed=true;
                 this.blur(true);
-                this.img.src= prefs.icons.brokenImg_small;//如果在加载中取消，图片也取消读取。
-
-                this.imgWindow.parentNode.removeChild(this.imgWindow);
+                this.imgWindow.style.opacity=0;
+                let self = this;
+                setTimeout(function(){
+                    self.img.src= prefs.icons.brokenImg_small;//如果在加载中取消，图片也取消读取。
+                    self.imgWindow.parentNode.removeChild(self.imgWindow);
+                },300);
 
                 var index=ImgWindowC.all.indexOf(this);
                 ImgWindowC.all.splice(index,1);
@@ -8450,6 +8466,18 @@ left: -45px;\
                     self.hideTimer=setTimeout(function(){
                         self.hide();
                     },prefs.floatBar.hideDelay);
+                    if(uniqueImgWin){
+                        if(!((!e.ctrlKey && prefs.floatBar.globalkeys.ctrl)||
+                             (!e.altKey && prefs.floatBar.globalkeys.alt)||
+                             (!e.shiftKey && prefs.floatBar.globalkeys.shift)||
+                             (!e.metaKey && prefs.floatBar.globalkeys.command)||
+                             (!prefs.floatBar.globalkeys.ctrl && !prefs.floatBar.globalkeys.alt && !prefs.floatBar.globalkeys.shift && !prefs.floatBar.globalkeys.command)))
+                            uniqueImgWin.remove();
+                        else{
+                            uniqueImgWin.imgWindow.style.pointerEvents = "auto";
+                            uniqueImgWin.focus();
+                        }
+                    }
                 };
 
                 clearTimeout(this.globarOutTimer);
@@ -8465,18 +8493,18 @@ left: -45px;\
             setButton:function(){
                 if(this.data.noActual){
                     this.buttons['actual'].style.display='none';
-                    this.buttons['magnifier'].style.display='none';
                 }else{
                     this.buttons['actual'].style.removeProperty('display');
-                    this.buttons['magnifier'].style.removeProperty('display');
                 };
 
                 if (this.data.img.nodeName != 'IMG') {
                     this.buttons['gallery'].style.display = 'none';
                     //this.buttons['current'].style.display = 'none';
+                    this.buttons['magnifier'].style.display='none';
                 } else {
                     this.buttons['gallery'].style.removeProperty('display');
                     //this.buttons['current'].style.removeProperty('display');
+                    this.buttons['magnifier'].style.removeProperty('display');
                 }
             },
             setPosition:function(){
@@ -8499,7 +8527,7 @@ left: -45px;\
                 var fbs=this.floatBar.style;
                 var setPosition={
                     top:function(){
-                        fbs.opacity=1;
+                        fbs.opacity="";
                         var top=targetPosi.top + scrolled.y;
                         if(targetPosi.top + offsetY < 0){//满足图标被遮住的条件.
                             top=scrolled.y;
@@ -8508,7 +8536,7 @@ left: -45px;\
                         fbs.top=top + offsetY + 'px';
                     },
                     right:function(){
-                        fbs.opacity=1;
+                        fbs.opacity="";
                         var right=windowSize.w - targetPosi.right;
                         if(right < offsetX){
                             right= -scrolled.x;
@@ -8519,7 +8547,7 @@ left: -45px;\
                         fbs.right=right - offsetX + 'px';
                     },
                     bottom:function(){
-                        fbs.opacity=1;
+                        fbs.opacity="";
                         var bottom=windowSize.h - targetPosi.bottom;
                         if(bottom <= offsetY){
                             bottom=-scrolled.y;
@@ -8530,7 +8558,7 @@ left: -45px;\
                         fbs.bottom=bottom - offsetY + 'px';
                     },
                     left:function(){
-                        fbs.opacity=1;
+                        fbs.opacity="";
                         var left=targetPosi.left + scrolled.x;
                         if(targetPosi.left + offsetX < 0){
                             left=scrolled.x;
@@ -8539,7 +8567,7 @@ left: -45px;\
                         fbs.left=left + offsetX + 'px';
                     },
                     center:function(){
-                        fbs.opacity=1;
+                        fbs.opacity="";
                         var left=targetPosi.left + scrolled.x + offsetX;
                         fbs.left=left + img.width/2 + 'px';
                     },
@@ -9288,10 +9316,9 @@ left: -45px;\
         }
 
         //监听 mouseover
-        var canclePreCTO;
+        var canclePreCTO,uniqueImgWin;
         function globalMouseoverHandler(e){
 
-            if(e.altKey)return;
             //console.log(e);
             if(galleryMode)return;//库模式全屏中......
 
@@ -9390,7 +9417,30 @@ left: -45px;\
                     };
                     canclePreCTO=clikToOpen(result);
                 };
-                floatBar.start(result);//出现悬浮工具栏
+                if(!e.altKey)
+                    floatBar.start(result);//出现悬浮工具栏
+                //metaKey altKey shiftKey ctrlKey
+                if(!((!e.ctrlKey && prefs.floatBar.globalkeys.ctrl)||
+                     (!e.altKey && prefs.floatBar.globalkeys.alt)||
+                     (!e.shiftKey && prefs.floatBar.globalkeys.shift)||
+                     (!e.metaKey && prefs.floatBar.globalkeys.command)||
+                     (!prefs.floatBar.globalkeys.ctrl && !prefs.floatBar.globalkeys.alt && !prefs.floatBar.globalkeys.shift && !prefs.floatBar.globalkeys.command))){
+                    if(!uniqueImgWin || uniqueImgWin.removed){
+                        var img = document.createElement('img');
+                        img.src = result.src;
+                        uniqueImgWin = new ImgWindowC(img, result);
+                        uniqueImgWin.imgWindow.style.pointerEvents = "none";
+                    }
+                    if(uniqueImgWin.src != result.src){
+                        uniqueImgWin.src = result.src;
+                        uniqueImgWin.data = result;
+                        uniqueImgWin.img.src = result.src;
+                        uniqueImgWin.fitToScreen();
+                        uniqueImgWin.center(true,true);
+                        uniqueImgWin.keepScreenInside();
+                    }
+                    uniqueImgWin.blur(e);
+                }
             };
         }
 
@@ -9572,6 +9622,32 @@ left: -45px;\
                     type: 'checkbox',
                     "default": prefs.floatBar.listenBg,
                     title: i18n("listenBgTip")
+                },
+                'floatBar.globalkeys.ctrl': {
+                    label: i18n("globalkeys"),
+                    type: 'checkbox',
+                    after: "CTRL"+" +",
+                    "default": true,
+                    line: 'start'
+                },
+                'floatBar.globalkeys.alt': {
+                    after: "ALT"+" +",
+                    type: 'checkbox',
+                    className: 'sep-x',
+                    "default": false,
+                },
+                'floatBar.globalkeys.shift': {
+                    after: "SHIFT"+" +",
+                    type: 'checkbox',
+                    className: 'sep-x',
+                    "default": false,
+                },
+                'floatBar.globalkeys.command': {
+                    after: "COMMAND",
+                    type: 'checkbox',
+                    className: 'sep-x',
+                    "default": false,
+                    line: 'end',
                 },
                 // 按键
                 'floatBar.keys.enable': {
