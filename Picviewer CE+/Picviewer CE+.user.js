@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version        2021.12.11.1
+// @version        2021.12.11.2
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -8466,18 +8466,6 @@
                     self.hideTimer=setTimeout(function(){
                         self.hide();
                     },prefs.floatBar.hideDelay);
-                    if(uniqueImgWin){
-                        if(!((!e.ctrlKey && prefs.floatBar.globalkeys.ctrl)||
-                             (!e.altKey && prefs.floatBar.globalkeys.alt)||
-                             (!e.shiftKey && prefs.floatBar.globalkeys.shift)||
-                             (!e.metaKey && prefs.floatBar.globalkeys.command)||
-                             (!prefs.floatBar.globalkeys.ctrl && !prefs.floatBar.globalkeys.alt && !prefs.floatBar.globalkeys.shift && !prefs.floatBar.globalkeys.command)))
-                            uniqueImgWin.remove();
-                        else{
-                            uniqueImgWin.imgWindow.style.pointerEvents = "auto";
-                            uniqueImgWin.focus();
-                        }
-                    }
                 };
 
                 clearTimeout(this.globarOutTimer);
@@ -9516,6 +9504,21 @@
         addPageScript();
 
         document.addEventListener('mouseover', globalMouseoverHandler, true);
+
+        document.addEventListener('mouseout',e=>{
+            if(uniqueImgWin){
+                if(!((!e.ctrlKey && prefs.floatBar.globalkeys.ctrl)||
+                     (!e.altKey && prefs.floatBar.globalkeys.alt)||
+                     (!e.shiftKey && prefs.floatBar.globalkeys.shift)||
+                     (!e.metaKey && prefs.floatBar.globalkeys.command)||
+                     (!prefs.floatBar.globalkeys.ctrl && !prefs.floatBar.globalkeys.alt && !prefs.floatBar.globalkeys.shift && !prefs.floatBar.globalkeys.command)))
+                    uniqueImgWin.remove();
+                else{
+                    uniqueImgWin.imgWindow.style.pointerEvents = "auto";
+                    uniqueImgWin.focus();
+                }
+            }
+        },true);
 
         var debug;  // 调试函数
 
