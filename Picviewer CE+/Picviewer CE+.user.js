@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version        2021.12.12.1
+// @version        2021.12.12.2
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -132,6 +132,7 @@
                 loadError:"加载失败",
                 openHomePage:"点击此处打开主页",
                 position:"显示位置",
+                positionTips:"按住ALT隐藏",
                 topLeft: '图片左上角',
                 topRight: '图片右上角',
                 bottomRight: '图片右下角',
@@ -320,6 +321,7 @@
                 loadError:"載入失敗",
                 openHomePage:"點擊此處打開主頁",
                 position:"顯示位置",
+                positionTips:"按住ALT隱藏",
                 topLeft: '圖片左上角',
                 topRight: '圖片右上角',
                 bottomRight: '圖片右下角',
@@ -508,6 +510,7 @@
                 loadError:"Load failed",
                 openHomePage:"Open Home page",
                 position:"Display position",
+                positionTips:"Hold ALT to hide",
                 topLeft:"The top left corner of the picture",
                 topRight:"The top right corner of the picture",
                 bottomRight:"The bottom right corner of the picture",
@@ -640,8 +643,8 @@
                     },
                 },
                 minSizeLimit:{//就算是图片被缩放了(看到的图片被设定了width或者height限定了大小,这种情况下),如果图片显示大小小于设定值,那么也不显示浮动工具栏.
-                    w:20,
-                    h:20,
+                    w:15,
+                    h:15,
                 },
                 sizeLimitOr:false,
 
@@ -3588,6 +3591,7 @@
                             spanMark.style.display="";
                     }
                 });
+                this.switchThumbVisible();
             },
 
             changeSizeInputW:function(){
@@ -3631,9 +3635,9 @@
             },
             initToggleBar: function() {  // 是否显示切换 sidebar 按钮
                 /**
-         * TODO：仿造下面的链接重新改造过？
-         * http://image.baidu.com/detail/newindex?col=%E8%B5%84%E8%AE%AF&tag=%E4%BD%93%E8%82%B2&pn=0&pid=5123662821688142478&aid=&user_id=10086&setid=-1&sort=0&newsPn=4&star=&fr=hotword&from=1
-         */
+                * TODO：仿造下面的链接重新改造过？
+                * http://image.baidu.com/detail/newindex?col=%E8%B5%84%E8%AE%AF&tag=%E4%BD%93%E8%82%B2&pn=0&pid=5123662821688142478&aid=&user_id=10086&setid=-1&sort=0&newsPn=4&star=&fr=hotword&from=1
+                */
                 if (prefs.gallery.sidebarToggle) {
                     var toggleBar = this.eleMaps['sidebar-toggle'];
                     toggleBar.style.display = 'block';
@@ -9411,8 +9415,7 @@
                     };
                     canclePreCTO=clikToOpen(result);
                 };
-                if(!e.altKey)
-                    floatBar.start(result);//出现悬浮工具栏
+
                 //metaKey altKey shiftKey ctrlKey
                 if(!((!e.ctrlKey && prefs.floatBar.globalkeys.ctrl)||
                      (!e.altKey && prefs.floatBar.globalkeys.alt)||
@@ -9434,7 +9437,8 @@
                         uniqueImgWin.keepScreenInside();
                     }
                     uniqueImgWin.blur(e);
-                }
+                }else if(!e.altKey)
+                    floatBar.start(result);//出现悬浮工具栏
             };
         }
 
@@ -9561,6 +9565,7 @@
                 // 浮动工具栏
                 'floatBar.position': {
                     label: i18n("position"),
+                    title: i18n("positionTips"),
                     type: 'select',
                     options: {
                         'top left': i18n("topLeft"),
