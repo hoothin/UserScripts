@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version        2021.12.12.3
+// @version        2021.12.12.5
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -6042,11 +6042,11 @@
 
         MagnifierC.all=[];
         MagnifierC.styleZIndex=900000000;//全局z-index;
-        MagnifierC.zoomRange=prefs.magnifier.wheelZoom.range.slice(0).sort();//升序
-        MagnifierC.zoomRangeR=MagnifierC.zoomRange.slice(0).reverse();//降序
 
         MagnifierC.prototype={
             init:function(){
+                MagnifierC.zoomRange=prefs.magnifier.wheelZoom.range.slice(0).sort();//升序
+                MagnifierC.zoomRangeR=MagnifierC.zoomRange.slice(0).reverse();//降序
                 this.addStyle();
                 MagnifierC.all.push(this);
                 var container=document.createElement('span');
@@ -6294,13 +6294,13 @@
 
         ImgWindowC.all=[];//所有的窗口对象
         ImgWindowC.styleZIndex=2147483647;//全局z-index;
-        ImgWindowC.zoomRange=prefs.imgWindow.zoom.range.slice(0).sort();//升序
-        ImgWindowC.zoomRangeR=ImgWindowC.zoomRange.slice(0).reverse();//降序
         ImgWindowC.overlayer=null;
 
 
         ImgWindowC.prototype={
             init:function(){
+                ImgWindowC.zoomRange=prefs.imgWindow.zoom.range.slice(0).sort();//升序
+                ImgWindowC.zoomRangeR=ImgWindowC.zoomRange.slice(0).reverse();//降序
                 var self=this;
                 if(/^data:image/.test(self.src))self.imgWindow.style.display="none";
                 //图片是否已经被打开
