@@ -3297,7 +3297,7 @@
                     }else{//图片区域滚动
                         var distance=100;
                         if(e.deltaY!=0){//y轴
-                            if(self.img.classList.contains('pv-gallery-img_zoom-out')){//图片可以缩小时，滚动图片，否则切换图片。
+                            if(self.img && self.img.classList.contains('pv-gallery-img_zoom-out')){//图片可以缩小时，滚动图片，否则切换图片。
                                 if(e.deltaY < 0){
                                     distance=-distance;
                                 };
@@ -6023,7 +6023,7 @@
                     return;
                 };
 
-                var noScroll=shs[pro[0]]==distance + 'px';
+                var noScroll=shs[pro[0]].replace(/(\.\d*)?\s*px/,"")==Math.floor(distance);
                 shs[pro[0]]=distance + 'px';
                 container[pro[1]]=_distance;
                 return noScroll;
