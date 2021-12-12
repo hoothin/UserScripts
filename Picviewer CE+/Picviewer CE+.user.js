@@ -8493,16 +8493,18 @@
                     this.buttons['actual'].style.display='none';
                 }else{
                     this.buttons['actual'].style.removeProperty('display');
-                };
-
+                }
+                if(this.data.type != "force" && this.data.img.nodeName == 'IMG'){
+                    this.buttons['magnifier'].style.removeProperty('display');
+                }else{
+                    this.buttons['magnifier'].style.display='none';
+                }
                 if (this.data.img.nodeName != 'IMG') {
                     this.buttons['gallery'].style.display = 'none';
                     //this.buttons['current'].style.display = 'none';
-                    this.buttons['magnifier'].style.display='none';
                 } else {
                     this.buttons['gallery'].style.removeProperty('display');
                     //this.buttons['current'].style.removeProperty('display');
-                    this.buttons['magnifier'].style.removeProperty('display');
                 }
             },
             setPosition:function(){
