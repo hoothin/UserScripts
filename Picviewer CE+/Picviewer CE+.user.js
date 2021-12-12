@@ -6046,7 +6046,7 @@
 
         MagnifierC.prototype={
             init:function(){
-                MagnifierC.zoomRange=prefs.magnifier.wheelZoom.range.slice(0).sort();//升序
+                MagnifierC.zoomRange=prefs.magnifier.wheelZoom.range.slice(0).sort((a, b)=>{return a - b});
                 MagnifierC.zoomRangeR=MagnifierC.zoomRange.slice(0).reverse();//降序
                 this.addStyle();
                 MagnifierC.all.push(this);
@@ -6300,7 +6300,7 @@
 
         ImgWindowC.prototype={
             init:function(){
-                ImgWindowC.zoomRange=prefs.imgWindow.zoom.range.slice(0).sort();//升序
+                ImgWindowC.zoomRange=prefs.imgWindow.zoom.range.slice(0).sort((a, b)=>{return a - b});
                 ImgWindowC.zoomRangeR=ImgWindowC.zoomRange.slice(0).reverse();//降序
                 var self=this;
                 //图片是否已经被打开
