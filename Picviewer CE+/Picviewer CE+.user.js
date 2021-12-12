@@ -6303,6 +6303,9 @@
                 ImgWindowC.zoomRange=prefs.imgWindow.zoom.range.slice(0).sort((a, b)=>{return a - b});
                 ImgWindowC.zoomRangeR=ImgWindowC.zoomRange.slice(0).reverse();//降序
                 var self=this;
+                if(uniqueImgWin && !uniqueImgWin.removed){
+                    uniqueImgWin.remove();
+                }
                 //图片是否已经被打开
                 if(ImgWindowC.all._find(function(iwin){
                     if(iwin.src==self.src){
@@ -9519,7 +9522,7 @@
         document.addEventListener('mouseover', globalMouseoverHandler, true);
 
         document.addEventListener('mouseout',e=>{
-            if(uniqueImgWin){
+            if(uniqueImgWin && !uniqueImgWin.removed){
                 if(!((!e.ctrlKey && prefs.floatBar.globalkeys.ctrl)||
                      (!e.altKey && prefs.floatBar.globalkeys.alt)||
                      (!e.shiftKey && prefs.floatBar.globalkeys.shift)||
