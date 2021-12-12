@@ -6374,7 +6374,6 @@
                 container.insertBefore(img,container.firstChild);
 
                 this.imgWindow=container;
-                if(/^data:image/.test(self.src))self.imgWindow.style.display="none";
 
                 var toolMap={
                     'hand':container.querySelector('.pv-pic-window-tb-hand'),
@@ -6433,7 +6432,6 @@
                     self.zoom(1);
                     self.fitToScreen();
                     self.center(true,true);
-                    self.keepScreenInside();
                     self.imgWindow.style.opacity=1;
                 }
                 /*searchButton.addEventListener('click',function(e){
@@ -6623,6 +6621,21 @@
 
                 this.firstOpen();
                 self.imgWindow.style.opacity=1;
+                if(/^data:image/.test(self.src)){
+                    if(img.naturalHeight <=1 && img.naturalWidth <=1){
+                        self.imgWindow.style.display="none";
+                        self.remove();
+                        return;
+                    }
+                    self.zoomLevel = 0;
+                    self.imgNaturalSize={
+                        h:img.naturalHeight,
+                        w:img.naturalWidth,
+                    };
+                    self.zoom(1);
+                    self.fitToScreen();
+                    self.center(true,true);
+                }
             },
 
 
