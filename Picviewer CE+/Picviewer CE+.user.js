@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version        2021.12.11.2
+// @version        2021.12.12.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -6298,6 +6298,7 @@
         ImgWindowC.prototype={
             init:function(){
                 var self=this;
+                if(/^data:image/.test(self.src))self.imgWindow.style.display="none";
                 //图片是否已经被打开
                 if(ImgWindowC.all._find(function(iwin){
                     if(iwin.src==self.src){
@@ -6410,6 +6411,11 @@
                     }
                 };
                 img.onload=function(e){
+                    if(img.naturalHeight <=1 && img.naturalWidth <=1){
+                        self.remove();
+                    }else{
+                        self.imgWindow.style.display="";
+                    }
                     setSearchState("",img.parentNode);
                     self.imgNaturalSize={
                         h:img.naturalHeight,
@@ -6430,10 +6436,10 @@
                 },false);*/
 
                 /**
-         * 说明
-         * 1、对原来的适应屏幕等功能会有影响，暂时禁用。
-         * 2、分为 absolute 和默认的2种情况
-         */
+                * 说明
+                * 1、对原来的适应屏幕等功能会有影响，暂时禁用。
+                * 2、分为 absolute 和默认的2种情况
+                */
                 if (this.data) {
                     var descriptionSpan = container.querySelector('.pv-pic-window-description');
                     // descriptionSpan.style.cssText = '\
@@ -9358,9 +9364,9 @@
                 }else if(target.parentNode){
                     if(target.parentNode.nodeName=='IMG'){
                         target=target.parentNode;
-                    }else if(hasBg(target.parentNode)){
+                    }else if(prefs.floatBar.listenBg && hasBg(target.parentNode)){
                         target=target.parentNode;
-                        var targetBg=getComputedStyle(target).backgroundImage.replace(/url\(["'](.*)["']\)/,"$1");
+                        targetBg=getComputedStyle(target).backgroundImage.replace(/url\(["'](.*)["']\)/,"$1");
                         var src=targetBg,nsrc=src,noActual=true,type="scale";
                         var img={src:src};
                         result = {
@@ -9463,7 +9469,11 @@
 
         function keydown(event) {
             var key = String.fromCharCode(event.keyCode).toLowerCase();
-            if(event.ctrlKey && key==prefs.floatBar.keys['gallery']){
+            if(!((!event.ctrlKey && prefs.floatBar.globalkeys.ctrl)||
+                     (!event.altKey && prefs.floatBar.globalkeys.alt)||
+                     (!event.shiftKey && prefs.floatBar.globalkeys.shift)||
+                     (!event.metaKey && prefs.floatBar.globalkeys.command)||
+                     (!prefs.floatBar.globalkeys.ctrl && !prefs.floatBar.globalkeys.alt && !prefs.floatBar.globalkeys.shift && !prefs.floatBar.globalkeys.command)) && key==prefs.floatBar.keys['gallery']){
                 openGallery();
                 event.stopPropagation();
                 event.preventDefault();
