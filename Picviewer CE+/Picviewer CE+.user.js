@@ -6303,7 +6303,6 @@
                 ImgWindowC.zoomRange=prefs.imgWindow.zoom.range.slice(0).sort();//升序
                 ImgWindowC.zoomRangeR=ImgWindowC.zoomRange.slice(0).reverse();//降序
                 var self=this;
-                if(/^data:image/.test(self.src))self.imgWindow.style.display="none";
                 //图片是否已经被打开
                 if(ImgWindowC.all._find(function(iwin){
                     if(iwin.src==self.src){
@@ -6372,6 +6371,7 @@
                 container.insertBefore(img,container.firstChild);
 
                 this.imgWindow=container;
+                if(/^data:image/.test(self.src))self.imgWindow.style.display="none";
 
                 var toolMap={
                     'hand':container.querySelector('.pv-pic-window-tb-hand'),
@@ -9412,7 +9412,7 @@
             if(result){
                 if(!floatBar){
                     floatBar=new FloatBarC();
-                };
+                }
                 if(result.type=='rule' && matchedRule.clikToOpen && matchedRule.clikToOpen.enabled){
                     if(canclePreCTO){//取消上次的，防止一次点击打开多张图片
                         canclePreCTO();
