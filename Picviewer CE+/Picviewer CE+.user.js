@@ -697,7 +697,7 @@
 
                 autoZoom: true,  // 如果有放大，则把图片及 sidebar 部分的缩放改回 100%，增大可视面积（仅在 chrome 下有效）
                 descriptionLength: 32,  // 注释的最大宽度
-                editSite: "Pixlr"
+                editSite: "Lunapic"
             },
 
             imgWindow:{// 图片窗相关设置
@@ -3108,7 +3108,8 @@
                             window.open(self.src,'_blank');
                         }break;
                         case 'psImage':{
-                            window.open((prefs.gallery.editSite=='Pixlr'?'https://pixlr.com/editor/?image=':'https://www.toolpic.com/apieditor.html?image=')+self.src,'_blank');
+                            //window.open((prefs.gallery.editSite=='Pixlr'?'https://pixlr.com/editor/?image=':'https://www.toolpic.com/apieditor.html?image=')+self.src,'_blank');
+                            window.open('https://www.lunapic.com/editor/index.php?action=url&url='+self.src,'_blank');
                         }break;
                         case 'scrollIntoView':{
                             if(collection.mMode){
@@ -9834,7 +9835,7 @@
                     type: 'textarea',
                     "default": prefs.gallery.autoOpenSites
                 },
-                'gallery.editSite': {
+                /*'gallery.editSite': {
                     label: i18n("galleryEditSite"),
                     type: 'select',
                     options: {
@@ -9842,7 +9843,7 @@
                         'Toolpic': 'Toolpic'
                     },
                     "default": prefs.gallery.editSite,
-                },
+                },*/
 
                 // 图片窗口
                 'imgWindow.fitToScreen': {
