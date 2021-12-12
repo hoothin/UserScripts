@@ -6354,8 +6354,8 @@
                     '<span class="pv-pic-window-tb-zoom pv-pic-window-tb-tool" title="'+i18n("scale")+'"></span>'+
                     '<span class="pv-pic-window-tb-tool-badge">0</span>'+
                     '<span class="pv-pic-window-tb-tool-extend-menu pv-pic-window-tb-tool-extend-menu-zoom">'+
-                    '<span id="pv-pic-zoom-in" class="pv-pic-window-tb-tool-extend-menu-item" title="+0.1"></span>'+
-                    '<span id="pv-pic-zoom-out" class="pv-pic-window-tb-tool-extend-menu-item" title="-0.1"></span>'+
+                    '<span id="pv-pic-zoom-in" class="pv-pic-window-tb-tool-extend-menu-item" title="+0.1">✚</span>'+
+                    '<span id="pv-pic-zoom-out" class="pv-pic-window-tb-tool-extend-menu-item" title="-0.1">━</span>'+
                     '<span class="pv-pic-window-tb-tool-extend-menu-item" title="1">🗘</span>'+
                     '</span>'+
                     '</span>'+
@@ -6828,7 +6828,6 @@
                     border: none;\
                     border-right: 2px solid transparent;\
                     border-bottom: 1px solid #868686;\
-                    font-family: lg;\
                     font-size: 20px;\
                     }\
                     .pv-pic-window-tb-tool-extend-menu-item:last-child{\
@@ -6859,12 +6858,6 @@
                     border-top-color:transparent;\
                     border-left-color:transparent;\
                     opacity:0.5;\
-                    }\
-                    #pv-pic-zoom-in:after{\
-                    content: "\\e311";\
-                    }\
-                    #pv-pic-zoom-out:after{\
-                    content: "\\e312";\
                     }\
                     .pv-pic-window-overlayer{\
                     height:100%;\
