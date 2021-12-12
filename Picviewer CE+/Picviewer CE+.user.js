@@ -9418,7 +9418,7 @@
                         canclePreCTO();
                     };
                     canclePreCTO=clikToOpen(result);
-                };
+                }
 
                 //metaKey altKey shiftKey ctrlKey
                 if(!((!e.ctrlKey && prefs.floatBar.globalkeys.ctrl)||
@@ -9428,14 +9428,14 @@
                      (!prefs.floatBar.globalkeys.ctrl && !prefs.floatBar.globalkeys.alt && !prefs.floatBar.globalkeys.shift && !prefs.floatBar.globalkeys.command))){
                     if(!uniqueImgWin || uniqueImgWin.removed){
                         var img = document.createElement('img');
-                        img.src = result.src;
+                        img.src = location.protocol == "https"?result.src.replace(/^https?:/,""):result.src;
                         uniqueImgWin = new ImgWindowC(img, result);
                         uniqueImgWin.imgWindow.style.pointerEvents = "none";
                     }
                     if(uniqueImgWin.src != result.src){
                         uniqueImgWin.src = result.src;
                         uniqueImgWin.data = result;
-                        uniqueImgWin.img.src = result.src;
+                        uniqueImgWin.img.src = location.protocol == "https"?result.src.replace(/^https?:/,""):result.src;
                         uniqueImgWin.fitToScreen();
                         uniqueImgWin.center(true,true);
                         uniqueImgWin.keepScreenInside();
