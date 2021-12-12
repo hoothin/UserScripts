@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version        2021.12.12.5
+// @version        2021.12.12.6
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -122,7 +122,7 @@
                 magnifierBtn:'放大镜(M)',
                 picTitle:"图片标题",
                 picNum:"图片数量",
-                picTips:"按住Ctrl看大图",
+                picTips:"按住Ctrl放大",
                 exportImagesUrl:"导出图片链接",
                 exportImagesUrlPop:"Ctrl+C复制图片链接",
                 beginSearchImg:"#t#识图开始……",
@@ -311,7 +311,7 @@
                 magnifierBtn:'放大鏡(M)',
                 picTitle:"圖片標題",
                 picNum:"圖片數量",
-                picTips:"按住Ctrl看大圖",
+                picTips:"按住Ctrl放大",
                 exportImagesUrl:"導出圖片鏈接",
                 exportImagesUrlPop:"Ctrl+C複製圖片鏈接",
                 beginSearchImg:"#t#識圖開始……",
@@ -4909,7 +4909,7 @@
                  .gridBig{margin: 0px;}\
                  .gridBig>div { float: left;margin: 0px 0px 1px 1px;}\
                  .gridBig>div>img { max-width: 100%; }\
-                 .select{opacity: 0.33;}\
+                 .select{opacity: 0.8;border: 5px solid red!important;}\
                  </style>\
                  </head>\
                  <div class="toTop">\
