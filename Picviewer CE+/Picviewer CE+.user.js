@@ -7774,6 +7774,7 @@
                     if(e.type == "click" && !this.moving){
                         this.imgWindow.style.height=this.imgWindow.style.height=="100%"?"":"100%";
                         this.imgWindow.style.overflow=this.imgWindow.style.overflow=="scroll"?"":"scroll";
+                        this.keepScreenInside();
                     }
                 }
                 e.stopPropagation();
