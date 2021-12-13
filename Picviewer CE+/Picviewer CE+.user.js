@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version        2021.12.13.2
+// @version        2021.12.13.3
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -820,7 +820,7 @@
             },
             {name:"豆瓣",
                 siteExample:"http://movie.douban.com/photos/photo/1000656155/",
-                enabled: false,
+                enabled: true,
                 url:/^https?:\/\/[^.]*\.douban\.com/i,
                 getImage:function(){
                     var oldsrc = this.src,
@@ -848,7 +848,7 @@
             },
             {name:"新浪微博",
              siteExample:"http://weibo.com/pub/?source=toptray",
-             enabled:true,
+             enabled:false,
              url:/^https?:\/\/(?:[^.]+\.)*weibo\.(com|cn)/i,
              getImage:function(img){
                  var oldsrc=this.src;
@@ -1281,6 +1281,21 @@
                  }
                  return this.src;
              }
+            },
+            {name: "E621",
+             url: /e621\.net/,
+             getImage: function() {
+                 if(this && this.parentNode && this.parentNode.parentNode && this.parentNode.parentNode.parentNode && this.parentNode.parentNode.parentNode.dataset.fileUrl){
+                     return this.parentNode.parentNode.parentNode.dataset.fileUrl;
+                 }
+                 return this.src;
+             }
+            },
+            {name: "Pinterest",
+             url: /pinterest\.com/,
+             getImage: function() {
+                 return this.src.replace("/\d+x/","/736x/");
+             }
             }
         ];
 
@@ -1300,8 +1315,21 @@
                 if(original && original!=oldsrc)return original;
                 else if(/attachment\.php\?attachmentid=\d+/.test(oldsrc)){
                      newsrc=oldsrc.replace(/(attachment\.php\?attachmentid=\d+).*/,"$1");
-                }else if(/\.sinaimg\.(cn|com)\/mw\d+\//.test(oldsrc)){
-                    newsrc=oldsrc.replace(/.*(https?:\/\/[^\.]+\.sinaimg\.(cn|com))\/mw\d+\//,"$1/large/");
+                }else if(/\.sinaimg\.(cn|com)\//.test(oldsrc)){
+                    //newsrc=oldsrc.replace(/.*(https?:\/\/[^\.]+\.sinaimg\.(cn|com))\/mw\d+\//,"$1/large/");
+                    var pic=/(\.sinaimg\.(cn|com)\/)(?:bmiddle|orj360|mw\d+)/i;//微博内容图片.
+                    var pic2=/(\.sinaimg\.(cn|com)\/)(?:square|thumbnail)/i;// 微博内容图片2.
+                    var head=/(\.sinaimg\.(cn|com)\/\d+)\/50\//i;//头像.
+                    var photoList=/\.sinaimg\.(cn|com)\/thumb\d+\/\w+/i//相册
+                    if(pic.test(oldsrc)){
+                        newsrc=oldsrc.replace(pic,'$1large');  // large 不是每一张图片都有的
+                    } else if (pic2.test(oldsrc)) {
+                        newsrc=oldsrc.replace(pic2,'$1mw1024');
+                    } else if(head.test(oldsrc)){
+                        newsrc=oldsrc.replace(head,'$1/180/');
+                    }else if(photoList.test(oldsrc)){
+                        newsrc=oldsrc.replace(/thumb\d+/,'mw690');
+                    }
                 }else if(/gravatar\.com\/avatar\/.*[\?&]s=/.test(oldsrc)){
                     newsrc=oldsrc.replace(/(gravatar\.com\/avatar\/.*[\?&]s=).*/,"$1500");
                 }else if(/uc_server\/avatar\.php\?uid=\d+&size=.*/.test(oldsrc)){
@@ -1316,6 +1344,12 @@
                     newsrc=oldsrc.replace(/\/avatar\/\w{2}/i,"/avatar/o0");
                 }else if(/hdslb\.com\//.test(oldsrc)){
                     newsrc=oldsrc.replace(/@.*/i,"");
+                }else if(/\.coolapk\.com\//.test(oldsrc)){
+                    newsrc=oldsrc.replace(/\.s\.\w+$/i,"");
+                }else if(/\.aicdn\.com\//.test(oldsrc)){
+                    newsrc=oldsrc.replace(/_fw\d+$/i,"");
+                }else if(/duitang\.com\//.test(oldsrc)){
+                    newsrc=oldsrc.replace(/.thumb.(\d+_)?\d*\./i,".");
                 }
                 return oldsrc != newsrc ? newsrc : null;
             }
@@ -6291,11 +6325,14 @@
 
         //图片窗口
         function ImgWindowC(img, data){
+            this.loaded=false;
             this.img=img;
-            this.src=img.src;
+            this.src=data?data.src:img.src;
             this.data = data;
 
             this.init();
+            if(data)
+                this.img.src = location.protocol == "https"?data.src.replace(/^https?:/,""):data.src;
         };
 
         ImgWindowC.all=[];//所有的窗口对象
@@ -6405,14 +6442,14 @@
                 img.onerror=function(e){
                     setSearchState(i18n("loadNextSimilar"),img.parentNode);
                     console.info(img.src+i18n("loadError"));
-                    var src=self.srcs.shift();
+                    var src=self.data.srcs.shift();
                     if(src)img.src=src;
                     else{
                         if(from<searchSort.length){
                             from++;
                             searchImgByImg(self.img.src, self.img.parentNode, function(srcs, index){
                                 from=index;
-                                self.srcs=srcs;
+                                self.data.srcs=srcs;
                                 self.img.src=srcs.shift();
                             },null,null,from);
                         }else{
@@ -6424,6 +6461,7 @@
                     }
                 };
                 img.onload=function(e){
+                    self.loaded=true;
                     if(img.naturalHeight <=1 && img.naturalWidth <=1){
                         self.remove();
                         return;
@@ -6628,21 +6666,6 @@
 
                 this.firstOpen();
                 self.imgWindow.style.opacity=1;
-                if(/^data:image/.test(self.src)){
-                    if(img.naturalHeight <=1 && img.naturalWidth <=1){
-                        self.imgWindow.style.display="none";
-                        self.remove();
-                        return;
-                    }
-                    self.zoomLevel = 0;
-                    self.imgNaturalSize={
-                        h:img.naturalHeight,
-                        w:img.naturalWidth,
-                    };
-                    self.zoom(1);
-                    self.fitToScreen();
-                    self.center(true,true);
-                }
             },
 
 
@@ -9160,7 +9183,7 @@
 
         function getMatchedRule() {
             var rule = siteInfo._find(function(site, index, array) {
-                if (site.url && toRE(site.url).test(URL)) {
+                if (site.enabled != false && site.url && toRE(site.url).test(URL)) {
                     return true;
                 }
             });
@@ -9445,20 +9468,29 @@
                      (!prefs.floatBar.globalkeys.ctrl && !prefs.floatBar.globalkeys.alt && !prefs.floatBar.globalkeys.shift && !prefs.floatBar.globalkeys.command))){
                     if(!uniqueImgWin || uniqueImgWin.removed){
                         var img = document.createElement('img');
-                        img.src = location.protocol == "https"?result.src.replace(/^https?:/,""):result.src;
                         uniqueImgWin = new ImgWindowC(img, result);
                         uniqueImgWin.imgWindow.style.pointerEvents = "none";
                     }
                     if(uniqueImgWin.src != result.src){
-                        uniqueImgWin.src = result.src;
+                        uniqueImgWin.loaded = false;
                         uniqueImgWin.data = result;
+                        uniqueImgWin.src = result.src;
                         uniqueImgWin.img.src = location.protocol == "https"?result.src.replace(/^https?:/,""):result.src;
-                        uniqueImgWin.fitToScreen();
-                        uniqueImgWin.center(true,true);
-                        uniqueImgWin.keepScreenInside();
                     }
-                    uniqueImgWin.imgWindow.style.display = "none";
-                    uniqueImgWin.imgWindow.style.opacity = 0;
+                    if(!uniqueImgWin.loaded){
+                        if(prefs.waitImgLoad){
+                            uniqueImgWin.imgWindow.style.display = "none";
+                            uniqueImgWin.imgWindow.style.opacity = 0;
+                        }else{
+                            var centerInterval=setInterval(function(){
+                                if(!uniqueImgWin || uniqueImgWin.removed || uniqueImgWin.loaded)
+                                    clearInterval(centerInterval);
+                                else{
+                                    uniqueImgWin.center(true,true);
+                                }
+                            },100);
+                        }
+                    }
                     uniqueImgWin.blur(e);
                     return true;
                 }else return false;
