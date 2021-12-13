@@ -6440,12 +6440,13 @@
                 //this.searchButton=searchButton;
                 var srcs, from;
                 img.onerror=function(e){
-                    return;
-                    setSearchState(i18n("loadNextSimilar"),img.parentNode);
+                    //setSearchState(i18n("loadNextSimilar"),img.parentNode);
                     console.info(img.src+i18n("loadError"));
                     var src=self.data.srcs.shift();
                     if(src)img.src=src;
                     else{
+                        img.src=self.data.src;
+                        return;
                         if(from<searchSort.length){
                             from++;
                             searchImgByImg(self.img.src, self.img.parentNode, function(srcs, index){
