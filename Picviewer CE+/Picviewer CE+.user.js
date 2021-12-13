@@ -6442,10 +6442,13 @@
                 img.onerror=function(e){
                     //setSearchState(i18n("loadNextSimilar"),img.parentNode);
                     console.info(img.src+i18n("loadError"));
-                    var src=self.data.srcs.shift();
+                    var src;
+                    if(self.data.srcs)
+                        src=self.data.srcs.shift();
                     if(src)img.src=src;
                     else{
-                        img.src=self.data.imgSrc;
+                        if(img.src!=self.data.imgSrc)
+                            img.src=self.data.imgSrc;
                         return;
                         if(from<searchSort.length){
                             from++;
@@ -9380,7 +9383,7 @@
         }
 
         //监听 mouseover
-        var canclePreCTO,uniqueImgWin;
+        var canclePreCTO,uniqueImgWin,centerInterval;
         function globalMouseoverHandler(e){
 
             //console.log(e);
@@ -9523,7 +9526,6 @@
                     if(!uniqueImgWin || uniqueImgWin.removed){
                         var img = document.createElement('img');
                         uniqueImgWin = new ImgWindowC(img, result);
-                        uniqueImgWin.imgWindow.style.pointerEvents = "none";
                     }
                     if(uniqueImgWin.src != result.src){
                         uniqueImgWin.loaded = false;
@@ -9531,12 +9533,15 @@
                         uniqueImgWin.src = result.src;
                         uniqueImgWin.img.src = location.protocol == "https"?result.src.replace(/^https?:/,""):result.src;
                     }
+                    uniqueImgWin.imgWindow.style.pointerEvents = "none";
+                    uniqueImgWin.blur(e);
                     if(!uniqueImgWin.loaded){
                         if(prefs.waitImgLoad){
                             uniqueImgWin.imgWindow.style.display = "none";
                             uniqueImgWin.imgWindow.style.opacity = 0;
                         }else{
-                            var centerInterval=setInterval(function(){
+                            if(centerInterval)clearInterval(centerInterval);
+                            centerInterval=setInterval(function(){
                                 if(!uniqueImgWin || uniqueImgWin.removed || uniqueImgWin.loaded)
                                     clearInterval(centerInterval);
                                 else{
@@ -9545,7 +9550,6 @@
                             },100);
                         }
                     }
-                    uniqueImgWin.blur(e);
                     return true;
                 }else return false;
             };
