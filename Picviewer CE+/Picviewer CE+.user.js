@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version        2021.12.12.6
+// @version        2021.12.13.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -35,6 +35,7 @@
 // @exclude       http*://maps.google.com*/*
 // @exclude       *://www.google.*/_/chrome/newtab*
 // @exclude       *://mega.*/*
+// @exclude       *://*.mega.*/*
 // ==/UserScript==
 
 ;(function(topObject,window,document,unsafeWindow){
@@ -46,6 +47,7 @@
         case "zh-CN":
             i18nData={
                 share:"分享",
+                suitLongImg:"长图在滚动窗口显示",
                 globalkeys:"预览功能键组合: ",
                 loadAll:"加载更多",
                 loadedAll:"加载完毕",
@@ -209,7 +211,7 @@
                 zoom:'放大镜',
                 imgWindowEscKey:"Esc键关闭",
                 imgWindowDblClickImgWindow:"双击图片窗口关闭",
-                imgWindowClickOutside:"点击图片外部关闭",
+                imgWindowClickOutside:"点击图片外部（覆盖层）关闭",
                 imgWindowClickOutsideTip:"仅当覆盖层显示时生效",
                 none:'无',
                 click:'单击',
@@ -235,6 +237,7 @@
         case "zh-TW":
             i18nData={
                 share:"分享",
+                suitLongImg:"長圖在滾動窗口顯示",
                 globalkeys:"預覽功能鍵組合: ",
                 loadAll:"載入更多",
                 loadedAll:"載入完畢",
@@ -398,7 +401,7 @@
                 zoom:'放大鏡',
                 imgWindowEscKey:"Esc鍵關閉",
                 imgWindowDblClickImgWindow:"雙擊圖片窗口關閉",
-                imgWindowClickOutside:"點擊圖片外部關閉",
+                imgWindowClickOutside:"點擊圖片外部關閉（覆蓋層）",
                 imgWindowClickOutsideTip:"僅當覆蓋層顯示時生效",
                 none:'無',
                 click:'單擊',
@@ -424,6 +427,7 @@
         default:
             i18nData={
                 share:"Share",
+                suitLongImg:"Suit long pics in scroll window",
                 globalkeys:"Global keys for preview: ",
                 loadAll:"Load more",
                 loadedAll:"Load completed",
@@ -587,7 +591,7 @@
                 zoom:"Magnifier",
                 imgWindowEscKey:"Esc key is off",
                 imgWindowDblClickImgWindow:"Double click on the image window to close",
-                imgWindowClickOutside:"Click on the image to close externally",
+                imgWindowClickOutside:"Click on the image overlayer to close externally",
                 imgWindowClickOutsideTip:"Only enable when Overlayer is shown",
                 none:"None",
                 click:"Click",
@@ -701,6 +705,7 @@
             },
 
             imgWindow:{// 图片窗相关设置
+                suitLongImg: true,
                 fitToScreen: false,//适应屏幕,并且水平垂直居中(适应方式为contain，非cover).
                 syncSelectedTool:true,//同步当前选择的工具，如果开了多个图片窗口，其中修改一个会反映到其他的上面。
                 defaultTool:'hand',//"hand","rotate","zoom";打开窗口的时候默认选择的工具
@@ -3162,7 +3167,7 @@
                             var nodes = document.querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]');
                             var urls = [];
                             [].forEach.call(nodes, function(node){
-                                if(getComputedStyle(node).display!="none"){
+                                if(unsafeWindow.getComputedStyle(node).display!="none"){
                                     srcSplit=node.dataset.src.split("/");
                                     saveAs(node.dataset.src, location.host+"-"+srcSplit[srcSplit.length-1]);
                                 }
@@ -3731,7 +3736,7 @@
 
                     var nodes = document.querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]');
                     [].forEach.call(nodes, function(node){
-                        if(getComputedStyle(node).display!="none"){
+                        if(unsafeWindow.getComputedStyle(node).display!="none"){
                             var imgSpan = document.createElement('span');
                             imgSpan.className = "maximizeChild";
                             imgSpan.innerHTML = '<img src="'+node.dataset.src+'">';
@@ -4944,7 +4949,7 @@
                 var nodes = document.querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]');
                 var urls = [];
                 [].forEach.call(nodes, function(node){
-                    if(getComputedStyle(node).display!="none")
+                    if(unsafeWindow.getComputedStyle(node).display!="none")
                         urls.push(node.dataset.src);
                 });
 
@@ -6430,7 +6435,8 @@
                         w:img.naturalWidth,
                     };
                     self.zoom(1);
-                    self.fitToScreen();
+                    if(prefs.imgWindow.fitToScreen)
+                        self.fitToScreen();
                     self.center(true,true);
                     self.imgWindow.style.opacity=1;
                 }
@@ -6923,6 +6929,8 @@
                     padding:0;\
                     background-color:rgba(255, 0, 0, 0.150);\
                     }\
+                    .pv-pic-window-container::-webkit-scrollbar { width: 0 !important }\
+                    .pv-pic-window-container { -ms-overflow-style: none;overflow: -moz-scrollbars-none; }\
                     ';
                 document.head.appendChild(style);
             },
@@ -6935,23 +6943,26 @@
                 imgWindow.style.left=-5 + scrolled.x + 'px';
                 imgWindow.style.top=-5 + scrolled.y + 'px';
 
-                if(prefs.imgWindow.fitToScreen){
+                //window的尺寸
+                var wSize=getWindowSize();
+                //空隙
+                wSize.h -= 16;
+                wSize.w -= 16;
+
+                var imgWindowCS=unsafeWindow.getComputedStyle(imgWindow);
+                var rectSize={
+                    h:parseFloat(imgWindowCS.height),
+                    w:parseFloat(imgWindowCS.width),
+                };
+                this.isLongImg=rectSize.h > wSize.h && rectSize.h/rectSize.w >3.5;
+                if(prefs.imgWindow.suitLongImg && this.isLongImg){
+                    this.center(rectSize.w <= wSize.w , rectSize.h <= wSize.h);
+                    this.imgWindow.style.height="100%";
+                    this.imgWindow.style.overflow="scroll";
+                }else if(prefs.imgWindow.fitToScreen){
                     this.fitToScreen();
                     this.center(true,true);
                 }else{
-                    //window的尺寸
-                    var wSize=getWindowSize();
-                    //空隙
-                    wSize.h -= 16;
-                    wSize.w -= 16;
-
-                    var imgWindowCS=unsafeWindow.getComputedStyle(imgWindow);
-
-                    var rectSize={
-                        h:parseFloat(imgWindowCS.height),
-                        w:parseFloat(imgWindowCS.width),
-                    };
-
                     this.center(rectSize.w <= wSize.w , rectSize.h <= wSize.h);
                 };
 
@@ -7754,12 +7765,21 @@
                 };
             },
             imgWindowEventHandler:function(e){
+                var selectedTool=this.selectedTool;
+                if(selectedTool == "hand" && prefs.imgWindow.suitLongImg && this.isLongImg){
+                    if(e.type == "wheel")
+                        return;
+                    if(e.type == "click"){
+                        this.imgWindow.style.height=this.imgWindow.style.height=="100%"?"":"100%";
+                        this.imgWindow.style.overflow=this.imgWindow.style.overflow=="scroll"?"":"scroll";
+                    }
+                }
                 e.stopPropagation();
                 switch(e.type){
                     case 'click':{//阻止opera的图片保存
                         if(e.ctrlKey && e.target.nodeName=='IMG'){
                             e.preventDefault();
-                        };
+                        }
                     }break;
                     case 'mousedown':{
                         if(!this.focused){//如果没有focus，先focus
@@ -7784,7 +7804,6 @@
 
                         if(e.button!=0 || (target!=this.imgWindow && target!=this.img && target!=this.rotateOverlayer))return;
                         e.preventDefault();
-                        var selectedTool=this.selectedTool;
                         if(this.tempHand){
                             this.move(e);
                         }else if(this.tempZoom){
@@ -8751,7 +8770,7 @@
 
             var hosts = Rule.MPIV;
 
-            var d = document, wn = window;
+            var d = document, wn = unsafeWindow;
             var cfg = {
                 thumbsonly: true,
             };
@@ -9365,9 +9384,9 @@
                     if (!target) return;
                 }
             }
-            var result,hasBg=function(node){if(node.nodeName=="HTML" || node.nodeName=="#document")return false;let nodeStyle=getComputedStyle(node);return node&&nodeStyle.backgroundImage&&/^url/.test(nodeStyle.backgroundImage)&&nodeStyle.backgroundImage.indexOf("about:blank")==-1&&nodeStyle.width.replace("px","")>prefs.floatBar.minSizeLimit.w&&nodeStyle.height.replace("px","")>prefs.floatBar.minSizeLimit.h;};
+            var result,hasBg=function(node){if(node.nodeName=="HTML" || node.nodeName=="#document")return false;let nodeStyle=unsafeWindow.getComputedStyle(node);return node&&nodeStyle.backgroundImage&&/^url/.test(nodeStyle.backgroundImage)&&nodeStyle.backgroundImage.indexOf("about:blank")==-1&&nodeStyle.width.replace("px","")>prefs.floatBar.minSizeLimit.w&&nodeStyle.height.replace("px","")>prefs.floatBar.minSizeLimit.h;};
             if (target.nodeName != 'IMG' && typeof target.className === 'string' && target.className.indexOf("pv-float-bar")==-1 && target.className.indexOf("ks-imagezoom-lens")==-1){
-                var targetBg=getComputedStyle(target).backgroundImage.replace(/url\(["'](.*)["']\)/,"$1");
+                var targetBg=unsafeWindow.getComputedStyle(target).backgroundImage.replace(/url\(["'](.*)["']\)/,"$1");
                 if(prefs.floatBar.listenBg && hasBg(target)){
                     var src=targetBg,nsrc=src,noActual=true,type="scale";
                     var img={src:src};
@@ -9385,7 +9404,7 @@
                         target=target.parentNode;
                     }else if(prefs.floatBar.listenBg && hasBg(target.parentNode)){
                         target=target.parentNode;
-                        targetBg=getComputedStyle(target).backgroundImage.replace(/url\(["'](.*)["']\)/,"$1");
+                        targetBg=unsafeWindow.getComputedStyle(target).backgroundImage.replace(/url\(["'](.*)["']\)/,"$1");
                         var src=targetBg,nsrc=src,noActual=true,type="scale";
                         var img={src:src};
                         result = {
@@ -9396,14 +9415,14 @@
                             img: target
                         };
                     }else{
-                        if(getComputedStyle(target).position=="absolute"){
+                        if(unsafeWindow.getComputedStyle(target).position=="absolute"){
                             var imgChild=target.parentNode.querySelectorAll('img');
                             if(imgChild.length==1){
                                 target=imgChild[0];
                             }else if(imgChild.length > 1){
                                 var availableImgs = [];
                                 [].forEach.call(imgChild, function(img){
-                                    if(getComputedStyle(img).width > 200 || getComputedStyle(img).position != "absolute"){
+                                    if(unsafeWindow.getComputedStyle(img).width > 200 || unsafeWindow.getComputedStyle(img).position != "absolute"){
                                         availableImgs.push(img);
                                     }
                                 });
@@ -9863,6 +9882,11 @@
                     "default": prefs.imgWindow.fitToScreen,
                     section: [i18n("imgWindow")],
                     title: i18n("imgWindowFitToScreenTip"),
+                },
+                'imgWindow.suitLongImg': {
+                    label: i18n("suitLongImg"),
+                    type: 'checkbox',
+                    "default": prefs.imgWindow.suitLongImg
                 },
                 'imgWindow.close.defaultTool': {
                     label: i18n("imgWindowDefaultTool"),
