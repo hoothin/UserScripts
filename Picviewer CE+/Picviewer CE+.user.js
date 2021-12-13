@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version        2021.12.13.3
+// @version        2021.12.13.2
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -9101,7 +9101,7 @@
                         }
                     }
                 }
-            };
+            }
 
             if (!src && !base64Img) { // 兼容 MPIV 脚本规则
                 var info = MPIV.parseNode(img);
@@ -9130,7 +9130,7 @@
                     };
                 });
                 if(src)type='tpRule';
-            };
+            }
 
             if(!src && imgPA){//链接可能是一张图片...
                 if(/\.(?:jpg|jpeg|png|gif|bmp)(\?[^\?]*)?$/i.test(iPASrc) && iPASrc!=img.src){
@@ -9138,7 +9138,7 @@
                     srcs=[imgSrc];
                 };
                 if(src)type='scale';
-            };
+            }
 
             if(!src || src==imgSrc){//本图片是否被缩放.
                 noActual=true;
@@ -9149,7 +9149,7 @@
                     src=imgSrc;
                     type='force';
                 }
-            };
+            }
 
             if(!src)return;
             if (imgAS.h < prefs.gallery.scaleSmallSize && imgAS.w < prefs.gallery.scaleSmallSize) {
@@ -9332,7 +9332,9 @@
             };
 
             pageScript.textContent='(' + pageScriptText.toString() + ')('+ JSON.stringify(messageID) +')';
-            document.head.appendChild(pageScript);
+            try{
+                document.head.appendChild(pageScript);
+            }catch(e){}
         }
 
         function clikToOpen(data){
@@ -9458,6 +9460,55 @@
                         }
                     }
                 }
+                if(result && !/^data:[^;]+;base64,/i.test(result.src)){
+                    if(matchedRule && target.nodeName != 'IMG'){
+                        if (matchedRule.exclude && matchedRule.exclude.test(result.src)) {
+                            return;
+                        } else {
+                            let src=result.src,img={src:src},type,imgSrc=src;
+                            try{
+                                var newSrc=matchedRule.getImage.call(img,img);
+                                if(imgSrc!=newSrc) {
+                                    src=newSrc;
+                                    if (Array.isArray(src)) {
+                                        srcs = src;
+                                        src = srcs.shift();
+                                    }
+                                    type = 'rule';
+
+                                    if (matchedRule.description) {
+                                        var node = getElementMix(matchedRule.description, img);
+                                        if (node) {
+                                            description = node.getAttribute('title') || node.textContent;
+                                        }
+                                    }
+                                    result.src=src;
+                                    result.type=type;
+                                    result.noActual=false;
+                                    result.xhr=matchedRule.xhr;
+                                    result.description=description || '';
+                                }
+                            }catch(err){
+                            }
+                        }
+                    }
+                    if(result.type!="rule"){
+                        tprules._find(function(rule,index,array){
+                            try{
+                                src=rule.call(img,img);
+                                if(src){
+                                    return true;
+                                };
+                            }catch(err){
+                            }
+                        });
+                        if(src){
+                            result.src=src;
+                            result.type="tpRule";
+                            result.noActual=false;
+                        }
+                    }
+                }
             }
             var checkUniqueImgWin=function(){
                 //metaKey altKey shiftKey ctrlKey
@@ -9496,7 +9547,8 @@
                 }else return false;
             };
 
-            if (!target || !result && target.nodeName != 'IMG') {
+            if(!target)return;
+            else if (!result && target.nodeName != 'IMG') {
                 if(target.nodeName == 'A' && /\.(jpg|png|jpeg)\b/.test(target.href)){
                     result = {
                         src: target.href,
