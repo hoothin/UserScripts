@@ -1308,6 +1308,18 @@
              getImage: function() {
                  return this.src.replace(/\/\/preview\.redd.it\/([^\?]+)?.*/,"https://i.redd.it/$1");
              }
+            },
+            {name: "Rule34hentai",
+             url: /rule34hentai\.net/,
+             getImage: function() {
+                 return this.src.replace("/_thumbs/","/_images/");
+             }
+            },
+            {name: "Photosight",
+             url: /photosight\.ru/,
+             getImage: function() {
+                 return this.src.replace(/(cdny\.de.*\/)t\//,"$1x/");
+             }
             }
         ];
 
