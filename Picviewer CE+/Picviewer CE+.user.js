@@ -2297,8 +2297,8 @@
                 };
 
 
-                img.addEventListener('load',loadHandler,true);
                 img.addEventListener('error',errorHandler,true);
+                img.addEventListener('load',loadHandler,true);
 
 
                 if(ready){
@@ -6332,7 +6332,7 @@
 
             this.init();
             if(data)
-                this.img.src = location.protocol == "https"?data.src.replace(/^https?:/,""):data.src;
+                this.img.src = location.protocol == "https"?data.src.replace(/^http:/,"https:"):data.src;
         };
 
         ImgWindowC.all=[];//所有的窗口对象
@@ -6440,6 +6440,7 @@
                 //this.searchButton=searchButton;
                 var srcs, from;
                 img.onerror=function(e){
+                    return;
                     setSearchState(i18n("loadNextSimilar"),img.parentNode);
                     console.info(img.src+i18n("loadError"));
                     var src=self.data.srcs.shift();
@@ -6462,7 +6463,7 @@
                 };
                 img.onload=function(e){
                     self.loaded=true;
-                    if(img.naturalHeight <=1 && img.naturalWidth <=1){
+                    if(img.naturalHeight ==1 && img.naturalWidth ==1){
                         self.remove();
                         return;
                     }
@@ -8352,6 +8353,7 @@
                     case 'search':;
                     case 'current':;
                     case 'original':{//original 是为了兼容以前的规则
+                        if(this.data.src!=this.img.src)this.data.src=this.img.src;
                         new ImgWindowC(this.img, this.data);
                     }break;
                 };
