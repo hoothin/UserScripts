@@ -9565,7 +9565,7 @@
                     uniqueImgWin.remove();
                 else{
                     uniqueImgWin.imgWindow.style.pointerEvents = "auto";
-                    uniqueImgWin.focus();
+                    //uniqueImgWin.focus();
                 }
             }
         },true);
