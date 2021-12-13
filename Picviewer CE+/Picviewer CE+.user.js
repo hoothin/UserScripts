@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version        2021.12.13.1
+// @version        2021.12.13.2
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -6490,6 +6490,7 @@
                 this.ctrlKeyUp=true;
                 this.altKeyUp=true;
                 this.shiftKeyUp=true;
+                this.moving=false;
 
                 //缩放工具的扩展菜单
                 container.querySelector('.pv-pic-window-tb-tool-extend-menu-zoom').addEventListener('click',function(e){
@@ -7096,6 +7097,7 @@
                     imgWStyle.left=oriOffset.left+ e.pageX-mouseCoor.x +'px';
                     imgWStyle.top=oriOffset.top + e.pageY-mouseCoor.y +'px';
                     self.keepScreenInside();
+                    self.moving=true;
                 };
                 var mouseupHandler=function(){
                     e.preventDefault();
@@ -7769,7 +7771,7 @@
                 if(selectedTool == "hand" && prefs.imgWindow.suitLongImg && this.isLongImg){
                     if(e.type == "wheel")
                         return;
-                    if(e.type == "click"){
+                    if(e.type == "click" && !this.moving){
                         this.imgWindow.style.height=this.imgWindow.style.height=="100%"?"":"100%";
                         this.imgWindow.style.overflow=this.imgWindow.style.overflow=="scroll"?"":"scroll";
                     }
@@ -7777,6 +7779,7 @@
                 e.stopPropagation();
                 switch(e.type){
                     case 'click':{//阻止opera的图片保存
+                        this.moving=false;
                         if(e.ctrlKey && e.target.nodeName=='IMG'){
                             e.preventDefault();
                         }
@@ -9397,8 +9400,8 @@
                         noActual:noActual,
                         img: target
                     };
-                }else if(target.children.length<=2 && target.querySelectorAll("img").length==1){
-                    target=target.children[0];
+                }else if(target.childNodes.length<=2 && target.querySelectorAll("img").length==1){
+                    target=target.querySelector("img");
                 }else if(target.parentNode){
                     if(target.parentNode.nodeName=='IMG'){
                         target=target.parentNode;
@@ -9432,24 +9435,7 @@
                     }
                 }
             }
-
-            if (!target || !result && target.nodeName != 'IMG') return;
-
-            if (!result) {
-                result = findPic(target);
-            }
-
-            if(result){
-                if(!floatBar){
-                    floatBar=new FloatBarC();
-                }
-                if(result.type=='rule' && matchedRule.clikToOpen && matchedRule.clikToOpen.enabled){
-                    if(canclePreCTO){//取消上次的，防止一次点击打开多张图片
-                        canclePreCTO();
-                    };
-                    canclePreCTO=clikToOpen(result);
-                }
-
+            var checkUniqueImgWin=function(){
                 //metaKey altKey shiftKey ctrlKey
                 if(!((!e.ctrlKey && prefs.floatBar.globalkeys.ctrl)||
                      (!e.altKey && prefs.floatBar.globalkeys.alt)||
@@ -9473,7 +9459,49 @@
                     uniqueImgWin.imgWindow.style.display = "none";
                     uniqueImgWin.imgWindow.style.opacity = 0;
                     uniqueImgWin.blur(e);
-                }else if(!e.altKey)
+                    return true;
+                }else return false;
+            };
+
+            if (!target || !result && target.nodeName != 'IMG') {
+                if(target.nodeName == 'A' && /\.(jpg|png|jpeg)\b/.test(target.href)){
+                    result = {
+                        src: target.href,
+                        type: "",
+                        imgSrc: target.href,
+                        noActual:true,
+                        img: target
+                    };
+                    checkUniqueImgWin();
+                }else if(target.parentNode.nodeName == 'A' && /\.(jpg|png|jpeg)\b/.test(target.parentNode.href)){
+                    result = {
+                        src: target.parentNode.href,
+                        type: "",
+                        imgSrc: target.parentNode.href,
+                        noActual:true,
+                        img: target.parentNode
+                    };
+                    checkUniqueImgWin();
+                }
+                return;
+            }
+
+            if (!result) {
+                result = findPic(target);
+            }
+
+            if(result){
+                if(!floatBar){
+                    floatBar=new FloatBarC();
+                }
+                if(result.type=='rule' && matchedRule.clikToOpen && matchedRule.clikToOpen.enabled){
+                    if(canclePreCTO){//取消上次的，防止一次点击打开多张图片
+                        canclePreCTO();
+                    };
+                    canclePreCTO=clikToOpen(result);
+                }
+
+               if(!checkUniqueImgWin() && !e.altKey)
                     floatBar.start(result);//出现悬浮工具栏
             };
         }
