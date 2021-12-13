@@ -1296,6 +1296,12 @@
              getImage: function() {
                  return this.src.replace("/\d+x/","/736x/");
              }
+            },
+            {name: "Zhisheji",
+             url: /zhisheji\.com/,
+             getImage: function() {
+                 return this.src.replace(/thumbnail\/.*/,"");
+             }
             }
         ];
 
