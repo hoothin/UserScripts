@@ -9691,7 +9691,6 @@
                         uniqueImgWin.src = result.src;
                         uniqueImgWin.img.src = location.protocol == "https"?result.src.replace(/^https?:/,""):result.src;
                     }
-                    uniqueImgWin.imgWindow.style.pointerEvents = "none";
                     uniqueImgWin.blur(e);
                     if(!uniqueImgWin.loaded){
                         if(prefs.waitImgLoad){
@@ -9705,9 +9704,10 @@
                                 else{
                                     uniqueImgWin.center(true,true);
                                 }
-                            },100);
+                            },500);
                         }
                     }
+                    uniqueImgWin.imgWindow.style.pointerEvents = "none";
                     return true;
                 }else {
                     if(uniqueImgWin && !uniqueImgWin.removed)
@@ -9851,7 +9851,7 @@
                     //uniqueImgWin.focus();
                 }
             }
-        },true);
+        }, true);
 
         var debug;  // 调试函数
 
