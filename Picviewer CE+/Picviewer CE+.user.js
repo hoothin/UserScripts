@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version        2021.12.14.1
+// @version        2021.12.14.2
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -1337,6 +1337,12 @@
              url: /photosight\.ru/,
              getImage: function() {
                  return this.src.replace(/(cdny\.de.*\/)t\//,"$1x/");
+             }
+            },
+            {name: "Xiaohongshu",
+             url: /xiaohongshu\.com/,
+             getImage: function() {
+                 return this.src.replace(/\/w\/\d+\/(h\/\d+\/)?(q\/\d+\/)?/,"/w/1080/");
              }
             }
         ];
@@ -3394,8 +3400,10 @@
                 },true);
 
                 eleMaps['head'].addEventListener('click',function(e){
-                    if(e.target.classList.contains('pv-gallery-head-command-close'))return;
-                    self.closeViewMore();
+                    if(e.target.classList.contains('pv-gallery-head-command-close'))
+                        return;
+                    else if(e.target.classList.contains('pv-gallery-head-command'))
+                        self.closeViewMore();
                 });
 
 
@@ -3729,6 +3737,12 @@
                         }else
                             spanMark.style.display="";
                     }
+                });
+                [].forEach.call(document.querySelectorAll(".maximizeChild>img"),function(item){
+                    if(item.naturalWidth<sizeInputW.value || item.naturalHeight<sizeInputH.value){
+                        item.style.display="none";
+                    }else
+                        item.style.display="";
                 });
                 this.switchThumbVisible();
             },
@@ -6566,6 +6580,7 @@
                 };
                 img.onload=function(e){
                     self.loaded=true;
+                    self.imgWindow.classList.remove("transition-all");
                     if(img.naturalHeight ==1 && img.naturalWidth ==1){
                         self.remove();
                         return;
@@ -6581,6 +6596,7 @@
                         self.fitToScreen();
                     self.center(true,true);
                     self.imgWindow.style.opacity=1;
+                    self.keepScreenInside();
                 }
                 /*searchButton.addEventListener('click',function(e){
                     sortSearch();
@@ -6770,6 +6786,7 @@
 
                 this.firstOpen();
                 self.imgWindow.style.opacity=1;
+                self.imgWindow.classList.add("transition-all");
             },
 
 
@@ -6788,6 +6805,10 @@
                     box-sizing: content-box;\
                     -webkit-transition: opacity 0.3s ease-in-out;\
                     transition: opacity 0.3s ease-in-out;\
+                    }\
+                    .transition-all{\
+                    -webkit-transition: all 0.5s ease-in-out;\
+                    transition: all 0.5s ease-in-out;\
                     }\
                     .pv-pic-window-container_focus {\
                     box-shadow: 0 0 10px rgba(0,0,0,0.6);\
@@ -8696,8 +8717,10 @@
                         if(targetPosi.top + offsetY < 0){//满足图标被遮住的条件.
                             top=scrolled.y;
                             offsetY=0;
-                        };
-                        fbs.top=top + offsetY + 'px';
+                        }
+                        top=top + offsetY;
+                        if(targetPosi.height<=50)top-=10;
+                        fbs.top=top + 'px';
                     },
                     right:function(){
                         fbs.opacity="";
@@ -8707,8 +8730,10 @@
                             offsetX=0;
                         }else{
                             right -=scrolled.x;
-                        };
-                        fbs.right=right - offsetX + 'px';
+                        }
+                        right=right - offsetX;
+                        if(targetPosi.width<=50)right+=10;
+                        fbs.right=right + 'px';
                     },
                     bottom:function(){
                         fbs.opacity="";
@@ -8718,8 +8743,10 @@
                             offsetY=0;
                         }else{
                             bottom -= scrolled.y;
-                        };
-                        fbs.bottom=bottom - offsetY + 'px';
+                        }
+                        bottom=bottom - offsetY;
+                        if(targetPosi.height<=50)bottom+=10;
+                        fbs.bottom=bottom + 'px';
                     },
                     left:function(){
                         fbs.opacity="";
@@ -8727,8 +8754,10 @@
                         if(targetPosi.left + offsetX < 0){
                             left=scrolled.x;
                             offsetX=0;
-                        };
-                        fbs.left=left + offsetX + 'px';
+                        }
+                        left=left + offsetX;
+                        if(targetPosi.width<=50)left-=10;
+                        fbs.left=left + 'px';
                     },
                     center:function(){
                         fbs.opacity="";
@@ -9236,12 +9265,16 @@
                 });
                 if(src)type='tpRule';
             }
+            if(!src && img._lazyrias && img._lazyrias.srcset){
+                src=img._lazyrias.srcset[img._lazyrias.srcset.length-1];
+                if(src)type='tpRule';
+            }
 
             if(!src && imgPA){//链接可能是一张图片...
                 if(/\.(?:jpg|jpeg|png|gif|bmp)(\?[^\?]*)?$/i.test(iPASrc) && iPASrc!=img.src){
                     src=iPASrc;
                     srcs=[imgSrc];
-                };
+                }
                 if(src)type='scale';
             }
 
@@ -9550,12 +9583,17 @@
                         };
                     }else{
                         if(unsafeWindow.getComputedStyle(target).position=="absolute"){
-                            var imgChild=target.parentNode.querySelectorAll('img');
-                            if(imgChild.length==1){
-                                target=imgChild[0];
-                            }else if(imgChild.length > 1){
+                            var imgChildren=[];
+                            [].forEach.call(target.parentNode.querySelectorAll('img'),function(img){
+                                if(unsafeWindow.getComputedStyle(img).display != "none"){
+                                    imgChildren.push(img);
+                                }
+                            });
+                            if(imgChildren.length==1){
+                                target=imgChildren[0];
+                            }else if(imgChildren.length > 1){
                                 var availableImgs = [];
-                                [].forEach.call(imgChild, function(img){
+                                [].forEach.call(imgChildren, function(img){
                                     if(unsafeWindow.getComputedStyle(img).width > 200 || unsafeWindow.getComputedStyle(img).position != "absolute"){
                                         availableImgs.push(img);
                                     }
