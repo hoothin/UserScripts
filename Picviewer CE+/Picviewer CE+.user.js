@@ -9709,7 +9709,11 @@
                         }
                     }
                     return true;
-                }else return false;
+                }else {
+                    if(uniqueImgWin && !uniqueImgWin.removed)
+                        uniqueImgWin.imgWindow.style.pointerEvents = "auto";
+                    return false;
+                }
             };
 
             if(!target)return;
@@ -9843,7 +9847,7 @@
                     uniqueImgWin.remove();
                 else{
                     if(e.target.tagName!="IMG")return;
-                    uniqueImgWin.imgWindow.style.pointerEvents = "auto";
+                    //uniqueImgWin.imgWindow.style.pointerEvents = "auto";
                     //uniqueImgWin.focus();
                 }
             }
