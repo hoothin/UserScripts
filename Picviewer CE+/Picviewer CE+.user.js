@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version        2021.12.14.5
+// @version        2021.12.14.6
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -837,32 +837,32 @@
              }
             },
             {name:"豆瓣",
-                siteExample:"http://movie.douban.com/photos/photo/1000656155/",
-                enabled: true,
-                url:/^https?:\/\/[^.]*\.douban\.com/i,
-                getImage:function(){
-                    var oldsrc = this.src,
-                        newsrc = oldsrc;
-                    var pic = /\/view\/photo\/(?:photo|albumcover|albumicon|thumb|sqxs)\/public\//i;
-                    var movieCover = /\/view\/movie_poster_cover\/[si]pst\/public\//i;
-                    var bookCover = /\/view\/ark_article_cover\/cut\/public\//i;
-                    var spic = /(img\d+.douban.com)\/[sm]pic\//i
+             siteExample:"http://movie.douban.com/photos/photo/1000656155/",
+             enabled: true,
+             url:/^https?:\/\/[^.]*\.douban\.com/i,
+             getImage:function(){
+                 var oldsrc = this.src,
+                     newsrc = oldsrc;
+                 var pic = /\/view\/photo\/(?:photo|albumcover|albumicon|thumb|sqxs)\/public\//i;
+                 var movieCover = /\/view\/movie_poster_cover\/[si]pst\/public\//i;
+                 var bookCover = /\/view\/ark_article_cover\/cut\/public\//i;
+                 var spic = /(img\d+.douban.com)\/[sm]pic\//i
 
-                    // 这个网址大图会出错
-                    // http://movie.douban.com/subject/25708579/discussion/58950206/
-                    if(/movie\.douban\.com\/subject\/\d+\/discussion/.test(location.href)){
-                    } else if (pic.test(oldsrc)) {
-                        newsrc = oldsrc.replace(pic, '/view/photo/raw/public/');
-                    } else if (movieCover.test(oldsrc)) {
-                        newsrc = oldsrc.replace(movieCover, '/view/photo/raw/public/');
-                    } else if (bookCover.test(oldsrc)) {
-                        newsrc = oldsrc.replace(bookCover, '/view/ark_article_cover/retina/public/');
-                    } else if (spic.test(oldsrc)) {
-                        newsrc = oldsrc.replace(spic, '$1/lpic/');
-                    }
+                 // 这个网址大图会出错
+                 // http://movie.douban.com/subject/25708579/discussion/58950206/
+                 if(/movie\.douban\.com\/subject\/\d+\/discussion/.test(location.href)){
+                 } else if (pic.test(oldsrc)) {
+                     newsrc = oldsrc.replace(pic, '/view/photo/raw/public/');
+                 } else if (movieCover.test(oldsrc)) {
+                     newsrc = oldsrc.replace(movieCover, '/view/photo/raw/public/');
+                 } else if (bookCover.test(oldsrc)) {
+                     newsrc = oldsrc.replace(bookCover, '/view/ark_article_cover/retina/public/');
+                 } else if (spic.test(oldsrc)) {
+                     newsrc = oldsrc.replace(spic, '$1/lpic/');
+                 }
 
-                    return newsrc == oldsrc ? null : [newsrc,newsrc.replace(/photo\/raw/,"photo/photo")];
-                }
+                 return newsrc == oldsrc ? null : [newsrc,newsrc.replace(/photo\/raw/,"photo/photo")];
+             }
             },
             {name:"新浪微博",
              siteExample:"http://weibo.com/pub/?source=toptray",
@@ -893,6 +893,7 @@
             {name:"bilibili",
              enabled:true,
              url:/^https?:\/\/[^.]+\.bilibili.com/i,
+             ext: 'previous-2',
              getImage:function(img){
                  var oldsrc=this.src;
                  var pic=/\d+_\d+\/|\d+_x\d+\.jpg$|@\d+w_\d+h.*\.webp$|_\d+x\d+\.jpg$/i;
@@ -1343,6 +1344,16 @@
              url: /xiaohongshu\.com/,
              getImage: function() {
                  return this.src.replace(/\/w\/\d+\/(h\/\d+\/)?(q\/\d+\/)?/,"/w/1080/");
+             }
+            },
+            {name: "Youtube",
+             url: /youtube\.com/,
+             getImage: function() {
+                 var newsrc=this.src;
+                 if(this.classList.contains('ytd-moving-thumbnail-renderer')){
+                     newsrc = this.parentNode.parentNode.parentNode.querySelector("img").src
+                 }
+                 return newsrc.replace(/\?.*$/i,"");
              }
             }
         ];
@@ -9654,22 +9665,22 @@
                                 }
                             }catch(err){
                             }
-                        }
-                    }
-                    if(result.type!="rule"){
-                        tprules._find(function(rule,index,array){
-                            try{
-                                src=rule.call(img,img);
-                                if(src){
-                                    return true;
-                                };
-                            }catch(err){
+                            if(result.type!="rule"){
+                                tprules._find(function(rule,index,array){
+                                    try{
+                                        src=rule.call(img,img);
+                                        if(src){
+                                            return true;
+                                        };
+                                    }catch(err){
+                                    }
+                                });
+                                if(src && src != imgSrc){
+                                    result.src=src;
+                                    result.type="tpRule";
+                                    result.noActual=false;
+                                }
                             }
-                        });
-                        if(src){
-                            result.src=src;
-                            result.type="tpRule";
-                            result.noActual=false;
                         }
                     }
                 }
