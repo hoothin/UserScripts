@@ -9822,6 +9822,7 @@
                      (!prefs.floatBar.globalkeys.ctrl && !prefs.floatBar.globalkeys.alt && !prefs.floatBar.globalkeys.shift && !prefs.floatBar.globalkeys.command)))
                     uniqueImgWin.remove();
                 else{
+                    if(e.target.tagName!="IMG")return;
                     uniqueImgWin.imgWindow.style.pointerEvents = "auto";
                     //uniqueImgWin.focus();
                 }
