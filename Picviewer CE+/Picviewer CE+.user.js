@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version        2021.12.14.3
+// @version        2021.12.14.5
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -1430,7 +1430,7 @@
              s: function($, node) {
                  return [
                      // 'http://' + $[1] + ($[4] ? $[4] + '=' : $[2]) + 's0' + ($[3] || ''),    // 原图
-                     'http://' + $[1] + ($[4] ? $[4] + '=' : $[2]) + 's1024' + ($[3] || '')  // 1024 大小
+                     'http://' + $[1] + ($[4] ? $[4] + '=' : $[2]) + 's2634' + ($[3] || '')  // 2643 大小
                  ];
              },
             },
@@ -3728,23 +3728,45 @@
                 sizeInputW.title=sizeInputW.value+"px";
                 sizeInputWSpan.innerHTML=sizeInputW.value+"px";
 
-                this.data.forEach(function(item) {
-                    if(!item)return;
-                    var spanMark=document.querySelector("span.pv-gallery-sidebar-thumb-container[data-src='"+item.src+"']");
-                    if(spanMark){
-                        if(item.sizeW<sizeInputW.value || item.sizeH<sizeInputH.value){
-                            spanMark.style.display="none";
+                var viewmoreShow = this.eleMaps['sidebar-toggle'].style.visibility == 'hidden';
+                if(viewmoreShow){
+                    var maxSizeH=0,minSizeH=0,maxSizeW=0,minSizeW=0;
+                    [].forEach.call(document.querySelectorAll(".maximizeChild>img"),function(item){
+                        if(item.naturalWidth<sizeInputW.value || item.naturalHeight<sizeInputH.value){
+                            item.style.display="none";
                         }else
-                            spanMark.style.display="";
-                    }
-                });
-                [].forEach.call(document.querySelectorAll(".maximizeChild>img"),function(item){
-                    if(item.naturalWidth<sizeInputW.value || item.naturalHeight<sizeInputH.value){
-                        item.style.display="none";
-                    }else
-                        item.style.display="";
-                });
-                this.switchThumbVisible();
+                            item.style.display="";
+                        if(item.naturalHeight>maxSizeH)
+                            maxSizeH=item.naturalHeight;
+                        if(item.naturalHeight<minSizeH || minSizeH==0)
+                            minSizeH=item.naturalHeight;
+                        if(item.naturalWidth>maxSizeW)
+                            maxSizeW=item.naturalWidth;
+                        if(item.naturalWidth<minSizeW || minSizeW==0)
+                            minSizeW=item.naturalWidth;
+                    });
+                    sizeInputH.max=maxSizeH;
+                    sizeInputH.min=minSizeH;
+                    sizeInputH.title=sizeInputH.value+"px";
+                    sizeInputHSpan.innerHTML=sizeInputH.value+"px";
+
+                    sizeInputW.max=maxSizeW;
+                    sizeInputW.min=minSizeW;
+                    sizeInputW.title=sizeInputW.value+"px";
+                    sizeInputWSpan.innerHTML=sizeInputW.value+"px";
+                }else{
+                    this.data.forEach(function(item) {
+                        if(!item)return;
+                        var spanMark=document.querySelector("span.pv-gallery-sidebar-thumb-container[data-src='"+item.src+"']");
+                        if(spanMark){
+                            if(item.sizeW<sizeInputW.value || item.sizeH<sizeInputH.value){
+                                spanMark.style.display="none";
+                            }else
+                                spanMark.style.display="";
+                        }
+                    });
+                    this.switchThumbVisible();
+                }
             },
 
             changeSizeInputW:function(){
@@ -3753,12 +3775,10 @@
                 var sizeInputW=this.gallery.querySelector("#minsizeW");
                 this.data.forEach(function(item) {
                     if(!item)return;
-                    if(item.sizeW>=sizeInputW.value){
-                        if(item.sizeH>maxSizeH)
-                            maxSizeH=item.sizeH;
-                        if(item.sizeH<minSizeH || minSizeH==0)
-                            minSizeH=item.sizeH;
-                    }
+                    if(item.sizeH>maxSizeH)
+                        maxSizeH=item.sizeH;
+                    if(item.sizeH<minSizeH || minSizeH==0)
+                        minSizeH=item.sizeH;
                 });
                 sizeInputH.max=maxSizeH;
                 sizeInputH.min=minSizeH;
@@ -3773,12 +3793,10 @@
                 var sizeInputW=this.gallery.querySelector("#minsizeW");
                 this.data.forEach(function(item) {
                     if(!item)return;
-                    if(item.sizeH>=sizeInputH.value){
-                        if(item.sizeW>maxSizeW)
-                            maxSizeW=item.sizeW;
-                        if(item.sizeW<minSizeW || minSizeW==0)
-                            minSizeW=item.sizeW;
-                    }
+                    if(item.sizeW>maxSizeW)
+                        maxSizeW=item.sizeW;
+                    if(item.sizeW<minSizeW || minSizeW==0)
+                        minSizeW=item.sizeW;
                 });
                 sizeInputW.max=maxSizeW;
                 sizeInputW.min=minSizeW;
@@ -3851,6 +3869,8 @@
                 viewmoreBar.innerHTML = '✚';
 
                 toggleBar.innerHTML = '▼';
+                this.changeSizeInputH();
+                this.changeSizeInputW();
             },
             maximizeSidebar: function() {
                 var toggleBar = this.eleMaps['sidebar-toggle'],
