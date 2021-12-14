@@ -9605,11 +9605,12 @@
                 if(node.nodeName == "HTML" || node.nodeName == "#document")
                     return false;
                 let nodeStyle = unsafeWindow.getComputedStyle(node);
-                return node && nodeStyle.backgroundImage && /^url/.test(nodeStyle.backgroundImage) && nodeStyle.backgroundImage.indexOf("about:blank") == -1 && nodeStyle.width.replace("px","") > prefs.floatBar.minSizeLimit.w && nodeStyle.height.replace("px","") > prefs.floatBar.minSizeLimit.h;
+                return node && nodeStyle.backgroundImage && /^url/.test(nodeStyle.backgroundImage) && nodeStyle.backgroundImage.indexOf("about:blank") == -1 && parseFloat(nodeStyle.width) > prefs.floatBar.minSizeLimit.w && parseFloat(nodeStyle.height) > prefs.floatBar.minSizeLimit.h;
             };
             if (target.nodeName != 'IMG'){
-                var targetBg=unsafeWindow.getComputedStyle(target).backgroundImage.replace(/url\(["'](.*)["']\)/,"$1");
+                var targetBg;
                 if(prefs.floatBar.listenBg && hasBg(target)){
+                    targetBg = unsafeWindow.getComputedStyle(target).backgroundImage.replace(/url\(["'](.*)["']\)/,"$1");
                     var src=targetBg,nsrc=src,noActual=true,type="scale";
                     var img={src:src};
                     result = {
@@ -9636,30 +9637,26 @@
                             noActual:noActual,
                             img: target
                         };
-                    }else{
-                        if(unsafeWindow.getComputedStyle(target).position=="absolute"){
-                            var imgChildren=[];
-                            [].forEach.call(target.parentNode.querySelectorAll('img'),function(img){
-                                if(unsafeWindow.getComputedStyle(img).display != "none"){
-                                    imgChildren.push(img);
+                    }else if(unsafeWindow.getComputedStyle(target).position=="absolute"){
+                        var imgChildren=[],availableImgs = [];
+                        [].forEach.call(target.parentNode.querySelectorAll('img'),function(img){
+                            var imgStyle=unsafeWindow.getComputedStyle(img);
+                            if(imgStyle.display != "none"){
+                                imgChildren.push(img);
+                                if(imgStyle.width > 200 || imgStyle.position != "absolute"){
+                                    availableImgs.push(img);
                                 }
-                            });
-                            if(imgChildren.length==1){
-                                target=imgChildren[0];
-                            }else if(imgChildren.length > 1){
-                                var availableImgs = [];
-                                [].forEach.call(imgChildren, function(img){
-                                    if(unsafeWindow.getComputedStyle(img).width > 200 || unsafeWindow.getComputedStyle(img).position != "absolute"){
-                                        availableImgs.push(img);
-                                    }
-                                });
-                                if(availableImgs.length == 1)target=availableImgs[0];
                             }
+                        });
+                        if(imgChildren.length == 1){
+                            target=imgChildren[0];
+                        }else if(availableImgs.length == 1){
+                            target=availableImgs[0];
                         }
                     }
                 }
                 if(result && !/^data:[^;]+;base64,/i.test(result.src)){
-                    if(matchedRule){
+                    if(matchedRule && target.nodeName != 'IMG'){
                         if (matchedRule.exclude && matchedRule.exclude.test(result.src)) {
                             return;
                         } else {
