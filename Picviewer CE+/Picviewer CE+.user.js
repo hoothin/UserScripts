@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version        2021.12.14.2
+// @version        2021.12.14.3
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -6580,7 +6580,7 @@
                 };
                 img.onload=function(e){
                     self.loaded=true;
-                    self.imgWindow.classList.remove("transition-all");
+                    self.imgWindow.classList.remove("pv-pic-window-transition-all");
                     if(img.naturalHeight ==1 && img.naturalWidth ==1){
                         self.remove();
                         return;
@@ -6786,7 +6786,7 @@
 
                 this.firstOpen();
                 self.imgWindow.style.opacity=1;
-                self.imgWindow.classList.add("transition-all");
+                self.imgWindow.classList.add("pv-pic-window-transition-all");
             },
 
 
@@ -6806,7 +6806,7 @@
                     -webkit-transition: opacity 0.3s ease-in-out;\
                     transition: opacity 0.3s ease-in-out;\
                     }\
-                    .transition-all{\
+                    .pv-pic-window-transition-all{\
                     -webkit-transition: all 0.5s ease-in-out;\
                     transition: all 0.5s ease-in-out;\
                     }\
@@ -8134,6 +8134,7 @@
             remove:function(){
                 if(this.removed)return;
                 this.removed=true;
+                this.imgWindow.classList.remove("pv-pic-window-transition-all");
                 this.blur(true);
                 this.imgWindow.style.opacity=0;
                 let self = this;
