@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version        2021.12.13.6
+// @version        2021.12.14.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -46,6 +46,12 @@
     switch (lang){
         case "zh-CN":
             i18nData={
+                saveBtn:"确定",
+                saveBtnTips:"部分选项需要刷新页面才能生效",
+                closeBtn:"取消",
+                closeBtnTips:"取消本次设置，所有选项还原",
+                resetLink:"恢复默认设置",
+                resetLinkTips:"恢复所有设置的内容为默认值",
                 share:"分享",
                 suitLongImg:"长图在滚动窗口显示",
                 globalkeys:"预览功能键组合: ",
@@ -236,6 +242,12 @@
             break;
         case "zh-TW":
             i18nData={
+                saveBtn:"確定",
+                saveBtnTips:"部分選項需要刷新頁面才能生效",
+                closeBtn:"取消",
+                closeBtnTips:"取消本次設置，所有選項還原",
+                resetLink:"恢復默認設置",
+                resetLinkTips:"恢復所有設置的內容為默認值",
                 share:"分享",
                 suitLongImg:"長圖在滾動窗口顯示",
                 globalkeys:"預覽功能鍵組合: ",
@@ -426,10 +438,16 @@
             break;
         default:
             i18nData={
+                saveBtn: "OK",
+                saveBtnTips: "some options need to refresh the page to take effect",
+                closeBtn: "Cancel",
+                closeBtnTips: "cancel this setting and restore all options",
+                resetLink: "Restore default settings",
+                resetLinkTips: "restore all settings to default values",
                 share:"Share",
                 suitLongImg:"Suit long pics in scroll window",
                 globalkeys:"Global keys for preview: ",
-                loadAll:"Load more",
+                loadAll:"Load more pages",
                 loadedAll:"Load completed",
                 loading:"Loading ...",
                 loadAllTip:"Load the picture on the next page",
@@ -439,7 +457,7 @@
                 collected:"Has been collected",
                 exitCollection:"Exit collection",
                 exitCollectionTip:"Click to exit the collection mode",
-                noCollectionYet:"You still have any pictures in the wood",
+                noCollectionYet:"You have no picture in the collection",
                 collectDetail:"Description",
                 collectDetailTip:"Add some descriptions to your favorite pictures",
                 playSlide:"Play slideshow",
@@ -449,8 +467,8 @@
                 slideBackTip:"Play from back to front",
                 slideWait:"Wait for image reading",
                 slideWaitTip:"The countdown starts after each image is completely read.",
-                slideSkipError:"Skip error picture",
-                slideSkipErrorTip:"Quickly skip reading the wrong picture",
+                slideSkipError:"Skip error pictures",
+                slideSkipErrorTip:"Quickly skip to read the error pictures",
                 type:"Category",
                 typeTip:"Select image category",
                 advancedRules:"Advanced Rules",
@@ -458,9 +476,9 @@
                 tpRules:"Wildcard rules",
                 tpRulesTip:"Matched by wildcard rules",
                 scaleRules:"Zoomed",
-                scaleRulesTip:"JS automatically finds, the image displayed relative to the page has been scaled",
+                scaleRulesTip:"The image which is finded automatically but scaled",
                 noScaleRules:"No scaling",
-                noScaleRulesTip:"JS auto find, no scaling, but meets a certain size",
+                noScaleRulesTip:"The image which is finded automatically but without scale",
                 smallRules:"Small size",
                 smallRulesTip:"Small size image, the actual size of the height and width are less than #t# pixels",
                 command:"Command",
@@ -470,7 +488,7 @@
                 openInNewWindow:"Open in new window",
                 openInNewWindowTip:"Open image in new window",
                 findInPage:"Find In Page",
-                findInPageTip:"Scroll to the location of the current image",
+                findInPageTip:"Scroll to the current image in page",
                 viewCollection:"View Collection",
                 viewCollectionTip:"View all collected images",
                 inCollection:"Unable to use in Collection mode",
@@ -481,9 +499,9 @@
                 downloadImageTip:"Download the current shown pictures",
                 copyImagesUrl:"Copy all images Urls",
                 copyImagesUrlTip:"Copy all large image Urls",
-                copySuccess:"Successfully copied #t# Url",
+                copySuccess:"Copied #t# Urls successfully",
                 autoRefresh:"Auto overload",
-                autoRefreshTip:"When the last few images, scroll the main window to the bottom, then automatically load the new image",
+                autoRefreshTip:"When the last few images are viewed, scroll the window to the bottom, then automatically load the new images",
                 enterFullsc:"Enter full screen",
                 exitFullsc:"Exit full screen",
                 config:"Settings",
@@ -501,12 +519,12 @@
                 verticalFlip:"Vertical flip",
                 actualBtn:"View original (A)",
                 searchBtn:"Find the original image (S)",
-                galleryBtn:"View Gallery (G)",
+                galleryBtn:"View gallery (G)",
                 currentBtn:"View current (C)",
                 magnifierBtn:"Magnifier / ZooM (M)",
                 picTitle:"Picture Title",
                 exportImagesUrl:"Export image Url",
-                exportImagesUrlPop:"Ctrl+C copy image Url",
+                exportImagesUrlPop:"Ctrl+C to copy image Url",
                 beginSearchImg:"#t# begin Search Img ...",
                 findNoPic:"The original image was not found",
                 findOverBeginLoad:"#t# end of the map, find #t# matching pictures, start loading the first one",
@@ -526,47 +544,47 @@
                 ms:"ms",
                 hide:"Hide",
                 hideDelay:"Hide Delay",
-                forceShow:"Non-zoomed image, beyond that size, shows the float frame",
-                forceShowTip:"Floating toolbar when non-scaled image size exceeds the size set below",
-                sizeLimitOr:"effected by height or width",
+                forceShow:"Show toolbar over Non-zoomed image beyond that size, ",
+                forceShowTip:"Show floating toolbar when non-scaled image size exceeds the size set below",
+                sizeLimitOr:"effected by height OR width",
                 px:"px",
-                minSizeLimit:"Zoom the image, beyond that size, display the float frame",
+                minSizeLimit:"Show toolbar over Zoomed image beyond that size",
                 minSizeLimitTip:"After the image is scaled (the original size of the image does not match the actual size), the floating toolbar is displayed when the shown image length is greater than the set value.",
                 listenBg:"Listening background image",
-                listenBgTip:"Show the hover box on the element with the background image",
+                listenBgTip:"Show toolbar on the element with the background image",
                 butonOrder:"Sort of toolbar icons",
-                keysEnable:"Enable the following shortcuts",
+                keysEnable:"Enable shortcuts",
                 keysActual:"Open the big picture",
-                keysActualTip:"Press this button to open a large image when a floating bar appears",
+                keysActualTip:"Press this button to open a large image when floating bar appears",
                 keysSearch:"Find the original image",
-                keysSearchTip:"Press this button to find the original image when the floating bar appears",
+                keysSearchTip:"Press this button to find the original image when floating bar appears",
                 keysCurrent:"Open the current picture",
-                keysCurrentTip:"Press this button to open the currently displayed image when the floating bar appears",
-                keysMagnifier:"Open the magnifying glass to observe",
-                keysMagnifierTip:"Press this button to open the magnifying glass when the floating bar appears",
+                keysCurrentTip:"Press this button to open the current image when floating bar appears",
+                keysMagnifier:"Open the magnifier to observe",
+                keysMagnifierTip:"Press this button to open the magnifier when floating bar appears",
                 keysGallery:"Open Gallery（Global with funcKeys）",
-                keysGalleryTip:"Press this button to open the Gallery when a floating bar appears",
+                keysGalleryTip:"Press this button to open the Gallery when floating bar appears",
                 magnifier:"Zoom",
                 magnifierRadius:"Default radius",
                 magnifierWheelZoomEnabled:"Enable wheel zoom",
-                magnifierWheelZoomRange:"Wheel zoom magnification",
+                magnifierWheelZoomRange:"Zoom ratio for magnifier",
                 gallery:"Gallery",
                 galleryFitToScreen:"Scale the image to fit the screen",
-                galleryFitToScreenSmall:"The small image is also scaled to fit the screen",
+                galleryFitToScreenSmall:"Scale the small image also",
                 galleryFitToScreenTip:"Adapt to be contain, not cover",
                 galleryScrollEndToChange:"Switch the image after the big picture scrolls to the end",
                 galleryScrollEndToChangeTip:"Valid after canceling the previous option",
-                galleryExportType:"Image export default sort",
+                galleryExportType:"Default sort when images exported",
                 grid:"Tile sorting",
-                gridBig:"The original picture is tiled",
+                gridBig:"original sorting",
                 list:"List sorting",
-                galleryAutoLoad:"Automatically load more images",
+                galleryAutoLoad:"Automatically load more images on next page",
                 galleryLoadAll:"Automatically process all pages when loading more images",
-                galleryLoadAllTip:"If too many pages may affect the experience",
+                galleryLoadAllTip:"Too many pages may affect the experience",
                 galleryScaleSmallSize1:"The actual size is less than the height and width",
                 galleryScaleSmallSize2:"Pixels are grouped into small size images",
                 galleryShowSmallSize:"Show small size pictures by default",
-                galleryTransition:"Show special effects of gallery switching images",
+                galleryTransition:"Show effects when gallery switch",
                 gallerySidebarPosition:"Thumbnail bar position",
                 bottom:"Bottom",
                 right:"Right",
@@ -575,40 +593,40 @@
                 gallerySidebarSize:"Height",
                 gallerySidebarSizeTip:"The height of the thumbnail bar (if it is horizontal) or the width (if it is vertical)",
                 galleryMax1:"Maximum read-ahead",
-                galleryMax2:"Pictures (how many before and after)",
+                galleryMax2:"Pictures (before and after)",
                 galleryAutoZoom:"Zoom changes back to 100% (chrome)",
                 galleryAutoZoomTip:"If you zoom in, change the zoom of the image and sidebar sections back to 100% and increase the viewable area (only valid under chrome)",
                 galleryDescriptionLength1:"Maximum width of annotation",
                 galleryDescriptionLength2:"Characters",
-                galleryAutoOpenSites:"Automatically open the website's website regulars",
+                galleryAutoOpenSites:"Regulars of website for open automatically",
                 galleryEditSite:"Online editing site",
                 imgWindow:"ImgWindow",
-                imgWindowFitToScreen:"Adapt to the screen and center horizontally vertically",
+                imgWindowFitToScreen:"Adapt to the screen",
                 imgWindowFitToScreenTip:"Adapt to be contain, not cover",
                 imgWindowDefaultTool:"The tool selected by default when opening the window",
                 hand:"Hand",
                 rotate:"Rotate",
                 zoom:"Magnifier",
-                imgWindowEscKey:"Esc key is off",
-                imgWindowDblClickImgWindow:"Double click on the image window to close",
-                imgWindowClickOutside:"Click on the image overlayer to close externally",
+                imgWindowEscKey:"Esc key to close",
+                imgWindowDblClickImgWindow:"Double click to close",
+                imgWindowClickOutside:"Click overlayer to close",
                 imgWindowClickOutsideTip:"Only enable when Overlayer is shown",
                 none:"None",
                 click:"Click",
                 dblclick:"Double click",
                 imgWindowOverlayerShown:"Overlay",
                 imgWindowOverlayerColor:"Color and Opacity",
-                imgWindowShiftRotateStep1:"When rotating, hold down the Shift key, rotate the step",
+                imgWindowShiftRotateStep1:"Rotate when hold down the Shift key on every ",
                 imgWindowShiftRotateStep2:"Degree",
                 imgWindowMouseWheelZoom:"MouseWheel Zoom",
                 imgWindowZoomRange:"Zoom Range",
-                imgWindowZoomRangeTip:"Zoom (must be positive)",
+                imgWindowZoomRangeTip:"Zoom ratio (must be positive)",
                 others:"Other",
-                waitImgLoad:"When the image is completely loaded, it will start to perform operations such as pop-up zooming",
-                waitImgLoadTip:"When holding down the Ctrl key, you can temporarily execute the setting opposite to this setting",
+                waitImgLoad:"Start to perform operations such as zooming when image is loaded",
+                waitImgLoadTip:"When holding down the Ctrl key, you can temporarily execute opposite to this setting",
                 debug:"Debug mode",
                 firstEngine:"Preferred (first) search engine",
-                refreshWhenError:"Read error, click overload",
+                refreshWhenError:"Read error, click to overload",
                 switchSlide:"Switch sidebar",
                 viewmore:"View more",
                 countDown:"CountDown"
@@ -1584,6 +1602,7 @@
             weibo:{
                 disabled:false,
                 name:'新浪微博',
+                limitLang:'zh-CN',
                 icon:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsSAAALEgHS3X78AAACfklEQVQ4ja2ST2iTBxjGf++Xr0va2qqt02ntEkxo025DqUpjdeAOdj0YxIPgxYOKePHmwag77bDL0IlMKgoeeqgIQrapSOtFpFOc4GWb1n+kNqLWKNqmSZs03/fs4CplXjbcc3oP7/vjfZ/3gQ+U/dvGZ0f5POjSBeSGn3Ol6zsm/xNg4gQ/SGwyY5mEB+ycv4+L7wF+Wh4Org5VbwfWApeaHw5fBrhxCOezJrqAx8AuIFWu0OnOHR6Jtn4VMDsjKWxmJqkHiAFUnlQ3acn0cQJaAWw2Y01VgP3vNsjG4ruBk8Bc6J/AMeBrHC10GkqnardmI848byXwK7DXBRiNtm4DTkkyM0N/F5Lazey0JJlv5uWCi7yXwZTVFktmLJCYtNuRWPhj1/0dqLN5tdQkNxPs7CTwyRI0NUX5zh2K59NUMhmAa07jdLLp5sjEi2Os+cil3rKx+GlJu0Pru6zhyPfKuwHr7+9XLpezZDKpjo4O08yMXh/6xgrpn2Vmr3xpS/jRveuzt798umGjvEJBY2NjikQiAuQ4jlzX1dDQkCTJy08q2/aFsrG4srH41VmTHKAuuH6dnJoa+vr61NzcTG9vr3p6eqhUKhoYGHjrSSiIVVUJQFJ5LmBg5u6wyfdpbGy0RCJBPB63wcFBHMex7u5uzMwKZ8+hYtEAX3Dk3Z9+i0SbRqOt914dPKzym3E/lUqppaXFTyQSSqfTvlcoavz4j362pV2j0dZSNhbfMzc7BnBhebhuVaj6gNXX7wl9uWGxG/4UfJ9KZoTp6zdQPl8Cfsl73rftmQd/vAeY1dHFSwMrg6FVDYFAG1ALVMpS5n65dGvHsyf5f8b+f9FfksATEF5LDZgAAAAASUVORK5CYII=',
                 api:function(args){
                     var url='http://service.weibo.com/share/share.php?'+
@@ -1601,6 +1620,7 @@
             },
             t:{
                 name:'腾讯微博',
+                limitLang:'zh-CN',
                 icon:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsSAAALEgHS3X78AAADL0lEQVQ4jXWTS2hcVQCGv3PuuffOTJJxEslkNElRm5hoRZOKjyKKSEWwqNWFWLsQqRbc1UfVLLoRXbgqiCh0IYoPaCnWWqlQN6mpIPXRaqkk9ZGOJS+SmQzjZO7j3HOOi4jFhR/8m3/5/3xC+H4YPLhzX//9j+zq6S1XfClBAI7/8k+nrWV1aXFubvLLT5JjH+xTwUNPvbHx8WdefPaW6+j0PSwObRyZsWhr0NaROkdqITaOyBhWK339Ybl/7+8gxYa3Plt9YeuW0om5OlFmcc4yWAjYNdLH7b1d5D1JtZVwtFrjSLWOEAIpBT6CXy78WleFru6SdNBopTgc2wa7eWlsgKmFJm/+eImldsqNPQV2DJW5u6/IxLeztBJLIiAf5PLKGEsr1cRxwmh3gYnNg7x2epbPZ2v/TnF6ocHB6UX23zPMxPgAz0/9hhCCzDohE21oRpp2onn6hgpfVescnF4kSzQ7h8u8Oj7AplKe2lrC3skZ7qhcwWBe0Y5SkkxIqbWhESVEUcLm3iKHp+eJ4pQnR/rYMz7IY0Nl3rlvlNBZLjbW+G6hwdiVnURxSpZlQqba0mglxLGmK/BYaETE7ZThYoix6w92+B7lUBHHmno7xXOOONboDCnraynzzTYrrYiZWotrijmaUcJwTxepMXhSMvVnnZN/LLPSjNhYKjC9/Be1VkQ91kI561htJxjj+PjnSxhreP3eUU5WV3jgwxn6i3l+mG+AEDx8fYWru3Icn1nAGAfOCiU8wZo2eL7i7e8v0tcR8MpdI4wdmKSVGZaXW3i+x45NA7y77WZ2f/ETLevwlMQ4nBICIuNQykM7x547hzhwtoq2jo+234on4barShRDn+eOn+PTC0soXwHg0tQpqQSpBBUosJat1/byxLGzdHaGnKiuUAwV75+f48xSk2ZqUDl/XQ0HRidWSavbTnoFP/DIedCT96mupeApjszWLoslPPycd1ky55Btk0h37tQhbTNyoWJDqYOltqazEFDI++TyAUHoE+Z8wlARBoowVHi+xDiDO//NYYEf5PxHd++XN23ZLrpKFZwDIdbzP7hmbc6c+fpQdvS9l/8GEfOFXVv7AEQAAAAASUVORK5CYII=',
                 api:function(args){
                     var url='http://v.t.qq.com/share/share.php?'+
@@ -1618,6 +1638,7 @@
             },
             qZone:{
                 name:'QQ空间',
+                limitLang:'zh-CN',
                 icon:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsSAAALEgHS3X78AAACD0lEQVQ4jbWQvWsTcRyHn7vf5bVJ2kaSplXQKL5QUUPzBzhUXBQcFRw6CAFBpzooFKRQkCIBxa3SoSCoOHXIInQSFBELRShC1b7Q1qTBNJdLTO5ydz8H29BgDTj42b7wfR4+fOB/xsjFs0Yunu30o3SAo8Dqznk4fGmrtN+f2kF+S0TCIREJh4Cb/9TAyMUDwKrnYCIGkuZGobjTot5RoM/GzgAx4KrWHcp4+k8jrXXsHzq2Xp0CXgLF7ivFTy1B4dWAqyAdQEP97VNUlej5xzjlHLI2D0B1pYS0baQEXBegAawpxecHksBc8OSFpLfvLGrgFLVnT7EWPlCtOViWxGpIjk8ebTU1t3TMrcoyMKwA5GeiCWDOn4gMBgZ6ABDx66CqfB4Zb4Prm2Ua+coiMJwYKeVbG6xP9USB18GB7vSu5OvYMscmkm3wz039I3DxUKZc+mPElSeRhOoR3/suT7KUuYPXr+DzKXQFBSIVwvBUcJtO/5Hblfwuo+0V2Kab1IQHM/+GEzOzALhmEdncpr70CPdLFdtsJoG/CWRKBAX1tffUvr3F3K4B4OvtQtUEEoFtyhTwbn+B5aa9rsBYK9PYNqrAQ8Cpbup3/b3hkKoJbMtN72XaBI7lpoyNkgNMA/fPPTDzAAv3fNO1gj4O3ABSe5nWiPOjXi/wAhgbylqL7JP5Ue8gMAFcG8paFsAvetnTGCl2Yn0AAAAASUVORK5CYII=',
                 api:function(args){
                     var url='http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?'+
@@ -1635,6 +1656,7 @@
             },
             fanfou:{
                 name:'饭否',
+                limitLang:'zh-CN',
                 icon:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsSAAALEgHS3X78AAABb0lEQVQ4jaWTXy4DURTGf9OOCkljTBNCiEksgB3oEliBLmF2oHYwVmC6Auyg3psYPJGIIqm0aXVkpI3SHA/HmDKtB77k5px7c+53/hvrlyLdIX/CfBbM1jtEnwS+A34HqlHa2MpCMa8HwH2ANwFzykgMdgvJ581Z8FbAMmFj5jtZpaNyygDDDkSe3qFUgEMn7bnyGVF9AEEPwpF0bRPM+OIuqjyNYCsPz0OYy05OKWEJRIpXIiIiXlOkdKu635aJKDdEqInYgUgmzr/Sgc0ZTeU0Us8x7gaw/6jnJzIAxyGU6hp69QWK14nBeV9luQFeU/Wg94PgN/htWMuBk4Nt6w8EXksLWl7WQp/3tSMxzHGfSoXEW0yyt6T6zs132xSBu6DtAzgJVdZfJ0c4NoWDlspqBN6qDthJqOEfrevbF+xAe0pNZ8C5SM9A3HfrTOS4q2/uvc6BkT8TicZso5MDZ1rDHy0aaH2qEQwB47/r/AEuq9/lRZUysAAAAABJRU5ErkJggg==',
                 api:function(args){
                     var url='http://fanfou.com/sharer/image?'+
@@ -1652,6 +1674,7 @@
             },
             tieba:{
                 name:'百度贴吧',
+                limitLang:'zh-CN',
                 icon:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsSAAALEgHS3X78AAAB6ElEQVQ4jaWTy2sTURTGfzOdSbFNpQRbX1DjYyPFlYyuogtFEcFtBSldFhc1IMFFQYpd+CjYhW4UXAkiRPSPUEEqiNKmPhKSSUIbzYM0bRaZV3JchMRE46b9Nvdwzz0/Pu53rxIyTGEH0gDefgxua/jMqTRqr0YibnNvvkhsxQLATDmYKacnpCfg2ZNNXj6v8vB+GTPlMHU1R/h6viekC1DZqLfr4UCzVSo29xxX2nWntFaRzbjMzRbx+1UeP93H4kKJi5eGGD/RTzgSoPPc2CH9DyFkmCIiEn1RkWMHEhIyTIktWyIiUqvVpaVU0pbJiTWZnFiTTNoREZGQYUrbQfCoj/0HNfaOamTSLgODCosPyvTpEL4Z4HW0yreYQ2WjTv6X13bRBhindxGOBCjkPY6P+5iZzpOM2+i6SrlU587dEZbe1yCos2ek7987ALh8xc/PnMetGwV+fLUBsKwGH97VmI0UWHg0SjbtcviIr3cKyYTLzHSeL5+b+XseaFpzXV1xmL9dYiyod450A95Et1hdtvG8v6LSoLrV4NOSRTbt9o4RQNPBthooqoLjgDQEG1BUBYBarUFu3fs/4NrUMLn1OvHvDruHVM6eH2g6e1WlutngpNHPuQuD3fZa72A7ChmmKDv9zr8BrHscNfGR3bQAAAAASUVORK5CYII=',
                 api:function(args){
                     var url = 'http://tieba.baidu.com/f/commit/share/openShareApi?'+
@@ -1669,6 +1692,7 @@
             },
             renren:{
                 name:'人人网',
+                limitLang:'zh-CN',
                 icon:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsSAAALEgHS3X78AAAC10lEQVQ4jXWTTWhUVxTHf/M+nSTjTCax+dAkxk5lGo2ttMUGBJt0FEFUsJa0i0JXQpFu7KLFgIsKUgpdlRYMFApZKtRNrYkLKYUKFiWQtgq1nUAmkGgMiZN5M++9e+/pIvURIv3DWdxz7v93uPdwUmySndk56O04esbJFYec3EuviY4jXZ2dUU+mbzbmfhqX+mJ5s2ddKcv2d42O5Y5cC/3PZ2T8VkVERMJYy/itimy5MC3Zw1eq3o6jZzbaHICU7aVbXr84pYffPvi02IZZ1ZhmGwDPsTDNNo32DPHp/S3+3xcvOzdfPRxMf/keYrQFkB44+616a+RgUGjDPAphvkZlNU66VFZjmF9DVzVBcRuU3jnt7xodA7DsXHHI3n/yw3p3HuYCWIogUDSUSQANZaCm4HEIcwGNrizpF0fHrPS2XsfvOfZR2L0VlgKoKxDAGCIjCSAyAsaA0lA1GGMIX+7y3IcjH1hO274RZblQ06AADSihVMgmgFIhC0qSGlVF7Pu4L7xxzLL81k4TGVAGjIAROtsdju9uTQDHd7fS2e4kdZRBa7CbuwpWynZsQgXarEeoKR3IPzfl0oE8hHrDPQWApYPH81ao/iMLfdtdJk70PQeYONFH33Z3/QlGsBsxOlgsW3p55menFoISero97pwbSEznr89y/vpscr5zboCebg+U4K41iB/99iN2rjiUOTkpg1/fl4VaJM+0UI0kf2pS8qcmZaG6IV+LZM9Xv0vuyLUwle7ot/TKg9v6n6mJfWFER5ObdBu+dI/lMMVymGL40r0k39HksjeOaZSvfCH1xbINoJ7cvVFe6T306/yW3j39Gd789DYPH6xBtgl8h6XyU77/pcIrOzOc/eYPpn64erX+5+WPQSSVoFOW7fe/+1m68P6FuuV5qiWNTnsA2EGEW6vj69pa/f53n0SVG+OJbfNvP1tnN7/3kL21fxBArfx19//W+V9oRmy7yi+Z7gAAAABJRU5ErkJggg==',
                 api:function(args){
                     var url='http://widget.renren.com/dialog/share?'+
@@ -1686,6 +1710,7 @@
             },
             douban:{
                 name:'豆瓣',
+                limitLang:'zh-CN',
                 icon:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsSAAALEgHS3X78AAABj0lEQVQ4jZ2TzSuEURTGf/edUT42XiJFMY2o2RA1ioXUKDtssaEs/AHMzlZZTllMFnY2FsxOzAIxoRTJ1/iYKPmenWy8cyzueM1FwlmdTs95es5zn6uaIx2yc73Lf6q5shFF2JZ/bbsVtiU03SN/rdB0jxC2xQtwdJ9kfGkCBEAQ+V6UUsrtj26TIOScIBAorwcBETHAYM4O705AAQq874DWmiAbI4u/urptqovE1bZJ4GQcAM6fUnTP9H27GBucxV/qw3EcfW4ugWgDeHx+4uDmGCylZebU43Maf6nP8MglUFm0XVBMoKIePJ+2Abuw2MAaBF5Lt3VltRyMbv7ogdfjcXsjSCF/O8vD8wAEJlvIz8tHoXh5feFwdAuAzmgv8dMVfaKVowAgfrZKKn2Jr6Sa04cLXnG0UVl1qfQl8eSK4Y9laFMwtx8DYCg4oEEWDAX7AZjbW3BnHzaEbYlsRP8c5ch6VBjLRnktlaC8qAxEyIj8mEQrO187T+gou985gw6HCKivT/iJDZSiqaqBNySK8rrw6ad1AAAAAElFTkSuQmCC',
                 api:function(args){
                     var url='http://shuo.douban.com/%21service/share?'+
@@ -1701,6 +1726,55 @@
                     };
                 },
             },
+            facebook:{
+                name:'Facebook',
+                icon:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAvVBMVEUAAAD///8OkPMPlPQMivEKhfAHfuwFd+oEcugCbOUVp/0To/sRmfYXq/7h8f0Ige36/P7s9f3G5/3b6vsSnvgSnfh0rfAdfugdqPsYpvsZo/ZKqvVmr/MhpfNEovMqmfN1svIXkPIWl/AJge4eh+0MeuUIbuHy+f7Y6/yl2vzb6/u53/vb6fpTufqZ0PltwPlCsfmw1fiKxvgUnvh3wPdet/ctpPZ/u/Vvs/RdrvQ0ofQvku4ckesXheccduSckMFkAAAAAXRSTlMAQObYZgAAAKBJREFUGNNFyFcWgkAQRNFqwyiKJMEsGcw5x/0vyx7mqPenXjcK4xYb42fQKAy+d1Pq93r9prpdz/MO25njrFwXLNbZ2SGija7HwLMsnSbWYj3kAEqFo2XcVaHComBPhh9EslFlN8Mmy5gOZcM0hRiRZPtmkph4CSEe1x3Zl1HKCSCrsZDmqdwMrM5CanfloqBpWocfPICSq0eOvw4t36o+GHANGQygnDcAAAAASUVORK5CYII=',
+                api:function(args){
+                    var url='https://www.facebook.com/sharer/sharer.php?'+
+                        'u='+encodeURIComponent(args.url)+
+                        '&t='+args.title;
+                    return {
+                        url:url,
+                        wSize:{
+                            h:436,
+                            w:626,
+                        },
+                    };
+                },
+            },
+            twitter:{
+                name:'Twitter',
+                icon:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAllBMVEUAAAAcmu98gIMdme58gINGjsBgh6MUnPceme1gh6Jkhp5phpgSnfoXnPURnfsXm/Qhmekjl+chl+hgiKNeiKRtg5Jlhpt3gogUnPgcmvAUnPgYnPMRnPsemewVnPUmluI1k9I7kcsplt8xlNg0ktJFj8E1kdFSi7Fhh6JFj8E9kMhWiq0dmu4cmvAXm/USnfobm/ENnv8KO1KbAAAALHRSTlMA/QP6BVIl/vhAHA/38e3iwpyRUDIVCQjy7+TZz8y0p5KEe3NsX05JRzksIGD09Y0AAACcSURBVBjTZY4HDsMwCEVxbGfv2b13sZ3e/3IlSdtE6pOQHh8JgB+iER+zqEYbsYsSoO7kRCMB51CH2/xBgffaVQBBhC6qxR1IlzrZexeNjLeHbo2/cVGbCJXiWvZBjJwjKsbQKSkQIBPOCErWor9dr1qmlGLcSBi4phwZc3U2tEHlH+cclcma4dNnHhvHmaVy8rRX3Gz4w5o68fU3RC4LI5L0wcgAAAAASUVORK5CYII=',
+                api:function(args){
+                    var url='https://twitter.com/intent/tweet?'+
+                        'url='+args.url+
+                        '&text='+args.title;
+                    return {
+                        url:url,
+                        wSize:{
+                            h:350,
+                            w:600,
+                        },
+                    };
+                },
+            },
+            pinterest:{
+                name:'Pinterest',
+                icon:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAq1BMVEUAAADkABfmASPkAB7////kABTmBCbmASDkABv97O/nGjnnDy/lARv61tv60NfuU2rsNFHpHz3tFzfnCCrvAiTwASPiASH73uP5xs73ucLqPljqKkfoFjTmCyz+9ff2prH0k6LzkJzxc4fvZ3zsRF7mAB7jAAv++fv++fr97/H86Oz86Ov74uf62d72rrn2qbT1nqz0m6jygJPyfY7xe4ztTGXtSmLrPFfsLUuclYq1AAAAAXRSTlMAQObYZgAAAL1JREFUGNM9jteywjAQQ73FLXY6aSShw+29/v+X4UmA87SakVYSE8u8LPOluBEpDKjoqhcE4D0ALWZd1eZv3Tx3qa6ryU/mm5PtNuYPNEX4p+DAn1Ke/Ib3oIXIEboX2CU9OJsQZWJE87TRK/4FbG1JTiiE+A0fVgOppkHtQkTuOHrsQPb8DiGSoS6/fjgZh/a+N8epVp32HNs7m3oq5mF+bV2aDqauLtMhfpVSUph+oWgPUulj8N/4H102X2eAaAyI9S5e9gAAAABJRU5ErkJggg==',
+                api:function(args){
+                    var url='https://pinterest.com/pin/create/button/?'+
+                        'url='+args.url+
+                        '&media='+encodeURIComponent(args.pic)+
+                        '&description='+encodeURIComponent(args.title);
+                    return {
+                        url:url,
+                        wSize:{
+                            h:350,
+                            w:600,
+                        },
+                    };
+                },
+            }
         };
 
         if (typeof String.prototype.startsWith != 'function') {
@@ -3291,6 +3365,7 @@
                 for(var i in prefs.share){
                     if(!prefs.share.hasOwnProperty(i))continue;
                     shareItem=prefs.share[i];
+                    if(shareItem.limitLang && shareItem.limitLang.indexOf(lang)==-1)continue;
                     if(shareItem.disabled)continue;
                     shareMark+=(
                         '<span class="pv-gallery-head-command-drop-list-item" data-site="'+i+'" style="\
@@ -10125,6 +10200,15 @@
             },
             events: {
                 open: function(doc, win, frame) {
+                    let saveBtn=doc.querySelector("#"+this.id+"_saveBtn");
+                    let closeBtn=doc.querySelector("#"+this.id+"_closeBtn");
+                    let resetLink=doc.querySelector("#"+this.id+"_resetLink");
+                    saveBtn.textContent=i18n("saveBtn");
+                    saveBtn.title=i18n("saveBtnTips");
+                    closeBtn.textContent=i18n("closeBtn");
+                    closeBtn.title=i18n("closeBtnTips");
+                    resetLink.textContent=i18n("resetLink");
+                    resetLink.title=i18n("resetLinkTips");
                 },
                 save: function() {
                     loadPrefs();
