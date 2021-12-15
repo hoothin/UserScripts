@@ -22,11 +22,14 @@
     }else if(dcsignin){
         if(dcsignin.style.background.indexOf("signin_yes") != -1)return;
         unsafeWindow.showWindow('sign', 'plugin.php?id=dc_signin:sign')
-        setTimeout(function(){
-            document.querySelector("#emot_8").click();
-            document.querySelector('#content').value = '君子有四时，朝以听政，昼以访问，夕以修令，夜以安身。';
-            document.querySelector("button[name=signpn]").click();
-            unsafeWindow.hideWindow('sign');
-        },1000);
+        let signInterval=setInterval(()=>{
+            let emotIndex=parseInt(Math.random() * 10) + 1;
+            if(document.querySelector("#emot_" + emotIndex)){
+                document.querySelector("#emot_" + emotIndex).click();
+                //document.querySelector('#content').value = '君子有四时，朝以听政，昼以访问，夕以修令，夜以安身。';
+                document.querySelector("button[name=signpn]").click();
+                unsafeWindow.hideWindow('sign');
+            }
+        }, 300);
     }
 })();
