@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version        2021.12.15.1
+// @version        2021.12.15.2
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -55,6 +55,9 @@
                 share:"分享",
                 suitLongImg:"长图在滚动窗口显示",
                 globalkeys:"预览功能键组合: ",
+                globalkeysPress:"敲击开关预览",
+                globalkeysHold:"按住开启预览",
+                globalkeysType:"预览触发方式：",
                 loadAll:"加载更多",
                 loadedAll:"加载完毕",
                 loading:"正在加载",
@@ -251,6 +254,9 @@
                 share:"分享",
                 suitLongImg:"長圖在滾動窗口顯示",
                 globalkeys:"預覽功能鍵組合: ",
+                globalkeysPress:"敲擊開關預覽",
+                globalkeysHold:"按住開啟預覽",
+                globalkeysType:"預覽觸發方式：",
                 loadAll:"載入更多",
                 loadedAll:"載入完畢",
                 loading:"正在載入",
@@ -447,6 +453,9 @@
                 share:"Share",
                 suitLongImg:"Suit long pics in scroll window",
                 globalkeys:"Global keys for preview: ",
+                globalkeysPress:"Press to toggle preview",
+                globalkeysHold:"Hold to enable preview",
+                globalkeysType:"Method to enable preview",
                 loadAll:"Load more pages",
                 loadedAll:"Load completed",
                 loading:"Loading ...",
@@ -683,7 +692,8 @@
                     ctrl: true,
                     alt: false,
                     shift: false,
-                    command: false
+                    command: false,
+                    type: "hold"
                 }
             },
 
@@ -6604,7 +6614,8 @@
                 var srcs, from;
                 img.onerror=function(e){
                     //setSearchState(i18n("loadNextSimilar"),img.parentNode);
-                    console.info(img.src+i18n("loadError"));
+                    console.info(img.src+" "+i18n("loadError"));
+                    if(self.removed || !self.data)return;
                     var src;
                     if(self.data.srcs)
                         src=self.data.srcs.shift();
@@ -9573,8 +9584,21 @@
             };
         }
 
+        var canclePreCTO,uniqueImgWin,centerInterval,removeUniqueWinTimer,globalFuncEnabled=false;
+        function checkGlobalKeydown(e){
+            return(!((!e.ctrlKey && prefs.floatBar.globalkeys.ctrl)||
+                     (!e.altKey && prefs.floatBar.globalkeys.alt)||
+                     (!e.shiftKey && prefs.floatBar.globalkeys.shift)||
+                     (!e.metaKey && prefs.floatBar.globalkeys.command)||
+                     (!prefs.floatBar.globalkeys.ctrl && !prefs.floatBar.globalkeys.alt && !prefs.floatBar.globalkeys.shift && !prefs.floatBar.globalkeys.command)));
+        }
+
+        function checkPreview(e){
+            return (prefs.floatBar.globalkeys.type == "hold" && checkGlobalKeydown(e)) ||
+                (prefs.floatBar.globalkeys.type == "press" && globalFuncEnabled);
+        }
+
         //监听 mouseover
-        var canclePreCTO,uniqueImgWin,centerInterval,removeUniqueWinTimer;
         function globalMouseoverHandler(e){
 
             //console.log(e);
@@ -9582,7 +9606,7 @@
 
             var target = e.target;
 
-            if (!target || !target.classList || target.classList.contains('pv-pic-ignored') || target.id=="pv-float-bar-container" || target.classList.contains('pv-float-bar-button') || target.className.indexOf("ks-imagezoom-lens")!=-1) {
+            if (!target || !target.classList || target.classList.contains('pv-pic-ignored') || target.id=="pv-float-bar-container" || target.classList.contains('pv-float-bar-button') || target.classList.contains("ks-imagezoom-lens")) {
                 return;
             }
 
@@ -9714,11 +9738,7 @@
             }
             var checkUniqueImgWin=function(){
                 //metaKey altKey shiftKey ctrlKey
-                if(!((!e.ctrlKey && prefs.floatBar.globalkeys.ctrl)||
-                     (!e.altKey && prefs.floatBar.globalkeys.alt)||
-                     (!e.shiftKey && prefs.floatBar.globalkeys.shift)||
-                     (!e.metaKey && prefs.floatBar.globalkeys.command)||
-                     (!prefs.floatBar.globalkeys.ctrl && !prefs.floatBar.globalkeys.alt && !prefs.floatBar.globalkeys.shift && !prefs.floatBar.globalkeys.command))){
+                if(checkPreview(e)){
                     if(removeUniqueWinTimer)clearTimeout(removeUniqueWinTimer);
                     if(!uniqueImgWin || uniqueImgWin.removed){
                         var img = document.createElement('img');
@@ -9733,12 +9753,12 @@
                             uniqueImgWin.imgWindow.style.display = "none";
                             uniqueImgWin.imgWindow.style.opacity = 0;
                         }else{
+                            uniqueImgWin.center(true,true);
                             if(centerInterval)clearInterval(centerInterval);
                             centerInterval=setInterval(function(){
                                 if(!uniqueImgWin || uniqueImgWin.removed || uniqueImgWin.loaded)
                                     clearInterval(centerInterval);
                                 else{
-                                    uniqueImgWin.fitToScreen();
                                     uniqueImgWin.center(true,true);
                                 }
                             },300);
@@ -9792,7 +9812,7 @@
                 }
 
                if(!checkUniqueImgWin() && !e.altKey)
-                    floatBar.start(result);//出现悬浮工具栏
+                   floatBar.start(result);//出现悬浮工具栏
             };
         }
 
@@ -9827,18 +9847,19 @@
 
         function keydown(event) {
             var key = String.fromCharCode(event.keyCode).toLowerCase();
-            if(!((!event.ctrlKey && prefs.floatBar.globalkeys.ctrl)||
-                     (!event.altKey && prefs.floatBar.globalkeys.alt)||
-                     (!event.shiftKey && prefs.floatBar.globalkeys.shift)||
-                     (!event.metaKey && prefs.floatBar.globalkeys.command)||
-                     (!prefs.floatBar.globalkeys.ctrl && !prefs.floatBar.globalkeys.alt && !prefs.floatBar.globalkeys.shift && !prefs.floatBar.globalkeys.command)) && key==prefs.floatBar.keys['gallery']){
-                openGallery();
-                event.stopPropagation();
-                event.preventDefault();
+            if(checkGlobalKeydown(event)){
+                if(key==prefs.floatBar.keys['gallery']){
+                    openGallery();
+                    event.stopPropagation();
+                    event.preventDefault();
+                }
+                if(prefs.floatBar.globalkeys.type == "press"){
+                    globalFuncEnabled = !globalFuncEnabled;
+                }
                 return true;
             }else{
                 if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey)
-                    return;
+                    return false;
 
                 if (floatBar && floatBar.shown && isKeyDownEffectiveTarget(event.target)) {
                     Object.keys(prefs.floatBar.keys).some(function(action) {
@@ -9875,11 +9896,7 @@
 
         document.addEventListener('mouseout',e=>{
             if(uniqueImgWin && !uniqueImgWin.removed){
-                if(!((!e.ctrlKey && prefs.floatBar.globalkeys.ctrl)||
-                     (!e.altKey && prefs.floatBar.globalkeys.alt)||
-                     (!e.shiftKey && prefs.floatBar.globalkeys.shift)||
-                     (!e.metaKey && prefs.floatBar.globalkeys.command)||
-                     (!prefs.floatBar.globalkeys.ctrl && !prefs.floatBar.globalkeys.alt && !prefs.floatBar.globalkeys.shift && !prefs.floatBar.globalkeys.command))){
+                if(checkPreview(e)){
                     if(removeUniqueWinTimer)clearTimeout(removeUniqueWinTimer);
                     removeUniqueWinTimer = setTimeout(()=>{uniqueImgWin.remove()},100);
                 }else{
@@ -10022,6 +10039,15 @@
                     className: 'sep-x',
                     "default": false,
                     line: 'end',
+                },
+                'floatBar.globalkeys.type': {
+                    label: i18n("globalkeysType"),
+                    type: 'select',
+                    options: {
+                        'press': i18n("globalkeysPress"),
+                        'hold': i18n("globalkeysHold")
+                    },
+                    "default": prefs.floatBar.globalkeys.type
                 },
                 // 按键
                 'floatBar.keys.enable': {
