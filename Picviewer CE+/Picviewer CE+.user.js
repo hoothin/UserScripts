@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version        2021.12.14.7
+// @version        2021.12.15.1
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -6492,8 +6492,10 @@
             this.data = data;
 
             this.init();
-            if(data)
+            if(data){
+                this.imgWindow.classList.add("pv-pic-window-transition-all");
                 this.img.src = location.protocol == "https"?data.src.replace(/^http:/,"https:"):data.src;
+            }
         };
 
         ImgWindowC.all=[];//所有的窗口对象
@@ -6628,17 +6630,18 @@
                 };
                 img.onload=function(e){
                     self.loaded=true;
-                    self.imgWindow.classList.remove("pv-pic-window-transition-all");
                     if(img.naturalHeight ==1 && img.naturalWidth ==1){
                         self.remove();
                         return;
                     }
+                    self.imgWindow.classList.remove("pv-pic-window-transition-all");
                     self.imgWindow.style.display="";
                     setSearchState("",img.parentNode);
                     self.imgNaturalSize={
                         h:img.naturalHeight,
                         w:img.naturalWidth,
                     };
+                    self.zoomLevel=0;
                     self.zoom(1);
                     if(prefs.imgWindow.fitToScreen)
                         self.fitToScreen();
@@ -6833,11 +6836,17 @@
                 this.selectTool(prefs.imgWindow.defaultTool);
 
                 this.firstOpen();
-                self.imgWindow.style.opacity=1;
-                self.imgWindow.classList.add("pv-pic-window-transition-all");
+                this.imgWindow.style.opacity=1;
             },
-
-
+            changeData:function(result){
+                if(this.src != result.src){
+                    this.imgWindow.classList.add("pv-pic-window-transition-all");
+                    this.loaded = false;
+                    this.data = result;
+                    this.src = result.src;
+                    this.img.src = location.protocol == "https"?result.src.replace(/^https?:/,""):result.src;
+                }
+            },
             addStyle:function(){
                 if(ImgWindowC.style)return;
                 var style=document.createElement('style');
@@ -9565,7 +9574,7 @@
         }
 
         //监听 mouseover
-        var canclePreCTO,uniqueImgWin,centerInterval;
+        var canclePreCTO,uniqueImgWin,centerInterval,removeUniqueWinTimer;
         function globalMouseoverHandler(e){
 
             //console.log(e);
@@ -9573,8 +9582,7 @@
 
             var target = e.target;
 
-            if(target.id=="pv-float-bar-container")return;
-            if (!target || !target.classList || target.classList.contains('pv-pic-ignored') || target.className.indexOf("pv-float-bar")!=-1 || target.className.indexOf("ks-imagezoom-lens")!=-1) {
+            if (!target || !target.classList || target.classList.contains('pv-pic-ignored') || target.id=="pv-float-bar-container" || target.classList.contains('pv-float-bar-button') || target.className.indexOf("ks-imagezoom-lens")!=-1) {
                 return;
             }
 
@@ -9584,11 +9592,11 @@
                 if (_type == 'string') {
                     switch (matchedRule.ext) {
                         case 'previous':
-                            target = target.previousElementSibling;
+                            target = target.previousElementSibling || target;
                             break;
                         case 'previous-2':
-                            target = target.previousElementSibling &&
-                                target.previousElementSibling.previousElementSibling;
+                            target = (target.previousElementSibling &&
+                                target.previousElementSibling.previousElementSibling) || target;
                             break;
                     }
                 } else if (_type == 'function') {
@@ -9711,15 +9719,13 @@
                      (!e.shiftKey && prefs.floatBar.globalkeys.shift)||
                      (!e.metaKey && prefs.floatBar.globalkeys.command)||
                      (!prefs.floatBar.globalkeys.ctrl && !prefs.floatBar.globalkeys.alt && !prefs.floatBar.globalkeys.shift && !prefs.floatBar.globalkeys.command))){
+                    if(removeUniqueWinTimer)clearTimeout(removeUniqueWinTimer);
                     if(!uniqueImgWin || uniqueImgWin.removed){
                         var img = document.createElement('img');
                         uniqueImgWin = new ImgWindowC(img, result);
                     }
-                    if(uniqueImgWin.src != result.src){
-                        uniqueImgWin.loaded = false;
-                        uniqueImgWin.data = result;
-                        uniqueImgWin.src = result.src;
-                        uniqueImgWin.img.src = location.protocol == "https"?result.src.replace(/^https?:/,""):result.src;
+                    if(uniqueImgWin.src != result.src && (!result.srcs || !result.srcs.includes(uniqueImgWin.src))){
+                        uniqueImgWin.changeData(result);
                     }
                     uniqueImgWin.blur(e);
                     if(!uniqueImgWin.loaded){
@@ -9732,9 +9738,10 @@
                                 if(!uniqueImgWin || uniqueImgWin.removed || uniqueImgWin.loaded)
                                     clearInterval(centerInterval);
                                 else{
+                                    uniqueImgWin.fitToScreen();
                                     uniqueImgWin.center(true,true);
                                 }
-                            },500);
+                            },300);
                         }
                     }
                     uniqueImgWin.imgWindow.style.pointerEvents = "none";
@@ -9746,8 +9753,7 @@
                 }
             };
 
-            if(!target)return;
-            else if (!result && target.nodeName != 'IMG') {
+            if (!result && target.nodeName != 'IMG') {
                 if(target.nodeName == 'A' && /\.(jpg|png|jpeg)\b/.test(target.href)){
                     result = {
                         src: target.href,
@@ -9873,9 +9879,10 @@
                      (!e.altKey && prefs.floatBar.globalkeys.alt)||
                      (!e.shiftKey && prefs.floatBar.globalkeys.shift)||
                      (!e.metaKey && prefs.floatBar.globalkeys.command)||
-                     (!prefs.floatBar.globalkeys.ctrl && !prefs.floatBar.globalkeys.alt && !prefs.floatBar.globalkeys.shift && !prefs.floatBar.globalkeys.command)))
-                    uniqueImgWin.remove();
-                else{
+                     (!prefs.floatBar.globalkeys.ctrl && !prefs.floatBar.globalkeys.alt && !prefs.floatBar.globalkeys.shift && !prefs.floatBar.globalkeys.command))){
+                    if(removeUniqueWinTimer)clearTimeout(removeUniqueWinTimer);
+                    removeUniqueWinTimer = setTimeout(()=>{uniqueImgWin.remove()},100);
+                }else{
                     //if(e.target.tagName!="IMG")return;
                     //uniqueImgWin.imgWindow.style.pointerEvents = "auto";
                     //uniqueImgWin.focus();
