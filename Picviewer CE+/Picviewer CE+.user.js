@@ -6,7 +6,7 @@
 // @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version        2021.12.15.2
+// @version        2021.12.15.3
 // @created        2011-6-15
 // @namespace      http://userscripts.org/users/NLF
 // @homepage       http://hoothin.com
@@ -118,7 +118,7 @@
                 config:"设置",
                 closeGallery:"关闭库",
                 returnToGallery:"回到库",
-                picInfo:"图片信息",
+                picInfo:"点击修改",
                 picNote:"图片注释",
                 resolution:"分辨率",
                 scaleRatio:"缩放比",
@@ -317,7 +317,7 @@
                 config:"設置",
                 closeGallery:"關閉庫",
                 returnToGallery:"回到庫",
-                picInfo:"圖片信息",
+                picInfo:"點擊修改",
                 picNote:"圖片注釋",
                 resolution:"解析度",
                 scaleRatio:"縮放比",
@@ -516,7 +516,7 @@
                 config:"Settings",
                 closeGallery:"Close Gallery",
                 returnToGallery:"Back to the Gallery",
-                picInfo:"Img information",
+                picInfo:"Click to change",
                 picNote:"Img annotation",
                 resolution:"Img Resolution",
                 picNum:"Number of pictures",
@@ -4482,6 +4482,10 @@
                 this.runOnce();
 
                 this.switchThumbVisible();
+
+                var pageObj = this.getPage(),textSpan = this.eleMaps['head-command-nextPage'].querySelector("span");
+                var haveMorePage = pageObj.pre || pageObj.next;
+                textSpan.style.color=haveMorePage?"#ffe000":"#757575";
             },
             clear:function(){
                 this._dataCache = {};
@@ -4628,8 +4632,8 @@
             curPage:document,
             getPage:function(){
                 var pageNum=0;
-                if(/[_\-]\d+(\.html)?$/.test(this.href)){
-                    pageNum=this.href.replace(/.*[\-_](\d+)(\.html)?$/,"$1");
+                if(/[a-zA-Z0-9][_\-]\d+(\.html)?$/.test(this.href)){
+                    pageNum=this.href.replace(/.*[a-zA-Z0-9][\-_](\d+)(\.html)?$/,"$1");
                 }
                 var curPage=this.curPage;
                 let pre=curPage.querySelector("a.prev");
@@ -4662,7 +4666,7 @@
                                     if(aTag.getAttribute("href") && aTag.getAttribute("href").indexOf(this.href.replace(/.*\/([^\/]+)$/,"$1").replace(/[_-]\d+/,""))!=-1){
                                        pret=aTag;
                                     }
-                                }else if(aTag.getAttribute("href") && aTag.getAttribute("href").replace(/.*[\-_](\d+)(\.html)?$/,"$1")==pageNum-1){
+                                }else if(aTag.getAttribute("href") && aTag.getAttribute("href").replace(/.*[a-zA-Z0-9][\-_](\d+)(\.html)?$/,"$1")==pageNum-1){
                                     pret=aTag;
                                 }
                             }
@@ -4687,7 +4691,7 @@
                             if(!nextt){
                                 if(aTag.innerHTML=="»"){
                                     nextt=aTag;
-                                }else if(aTag.hasAttribute("href") && aTag.getAttribute("href").replace(/.*[\-_](\d+)(\.html)?$/,"$1")==parseInt(pageNum)+1){
+                                }else if(aTag.hasAttribute("href") && aTag.getAttribute("href").replace(/.*[a-zA-Z0-9][\-_](\d+)(\.html)?$/,"$1")==parseInt(pageNum)+1){
                                     nextt=aTag;
                                 }
                             }
@@ -5279,6 +5283,9 @@
                     }\
                     .pv-gallery-range-box{\
                     display: inline-flex;\
+                    }\
+                    .pv-gallery-range-box>span{\
+                    padding: 0 5px 0 5px;\
                     }\
                     /*顶栏里面的按钮样式-开始*/\
                     .pv-gallery-head-command{\
