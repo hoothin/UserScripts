@@ -114,7 +114,7 @@
 // @include     http*://greasyfork.org/*/scripts/*
 // @include     http*://sleazyfork.org/*/forum/*discussion*
 // @include     http*://greasyfork.org/*/forum/*discussion*
-// @version     3.22.68
+// @version     3.22.69
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -122,7 +122,7 @@
 // @grant       GM_getValue
 // @grant       unsafeWindow
 // @run-at      document-end
-// @require     https://greasyfork.org/scripts/23522/code/od.js
+// @require     https://greasyfork.org/scripts/23522/code/od.js?version=997431
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
 // @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
 // @license     MIT License
@@ -914,7 +914,7 @@
                             $(document).ready(function() { register_qrcode_event('#qrcode_magnet', '#qrcode_magnet_enlarged');
                                 register_qrcode_event('#qrcode_download', '#qrcode_download_enlarged'); }); } else if (Config['user_script']['platform'] == 'mobile') { $('#torrent_url').attr('href', torrent_url.full).text('种子下载').click(function() { return (prompt('确认下载该种子', torrent_url.full) ? true : false); });
                             $('#magnet_url').attr('href', magnet_url.full).text('磁力下载').click(function() { return (prompt('确认下载磁链', magnet_url.full) ? true : false); }); } else { return false; }
-                    })(jQuery);
+                    })(unsafeWindow.jQuery);
                 }
             },
             {
@@ -947,7 +947,7 @@
                             $(document).ready(function() { register_qrcode_event('#qrcode_magnet', '#qrcode_magnet_enlarged');
                                 register_qrcode_event('#qrcode_download', '#qrcode_download_enlarged'); }); } else if (Config['user_script']['platform'] == 'mobile') { $('#torrent_url').attr('href', torrent_url.full).text('种子下载').click(function() { return (prompt('确认下载该种子', torrent_url.full) ? true : false); });
                             $('#magnet_url').attr('href', magnet_url.full).text('磁力下载').click(function() { return (prompt('确认下载磁链', magnet_url.full) ? true : false); }); } else { return false; }
-                    })(jQuery);
+                    })(unsafeWindow.jQuery);
                 }
             },
             {
@@ -955,35 +955,94 @@
                 url:"http://comicat.org/",
                 regex:/comicat\./,
                 run:function(){
-                    var acgscript_config = { "miobt": { "4": { "api_url": "http://v2.uploadbt.com" } } };
                     (function($) {
-                        if (acgscript_config['miobt']['4']['loaded']) { return false; }
+                        var acgscript_config = {
+                            "miobt": {
+                                "4": {
+                                    "api_url": "http://v2.uploadbt.com",
+                                    "source": "cdn.acgscript.com"
+                                }
+                            }
+                        };
+                        if (acgscript_config['miobt']['4']['loaded']) {
+                            return false;
+                        }
                         acgscript_config['miobt']['4']['loaded'] = true;
                         var log_name = 'acgscript/miobt/bt_download';
-                        console.log([log_name, { 'loaded': acgscript_config['miobt']['4']['loaded'], 'api_url': acgscript_config['miobt']['4']['api_url'], 'mika_mode': Config['mika_mode']['enabled'], 'in_script': Config['in_script'], 'platform': Config['user_script']['platform'] }]);
-                        if (!Config['mika_mode']['enabled']) { return false; }
-                        if (Config['in_script'] !== 'show') { return false; }
-                        if (!$('#box_download')) { return false; }
+                        console.log([log_name, {
+                            'source': acgscript_config['miobt']['4']['source'],
+                            'loaded': acgscript_config['miobt']['4']['loaded'],
+                            'api_url': acgscript_config['miobt']['4']['api_url'],
+                            'mika_mode': Config['mika_mode']['enabled'],
+                            'in_script': Config['in_script'],
+                            'platform': Config['user_script']['platform']
+                        }]);
+                        if (!Config['mika_mode']['enabled']) {
+                            return false;
+                        }
+                        if (Config['in_script'] !== 'show') {
+                            return false;
+                        }
+                        if (!$('#box_download')) {
+                            return false;
+                        }
                         var api_url = acgscript_config['miobt']['4']['api_url'];
-                        var torrent_url = { "lite": api_url + '/?r=down&hash=' + Config['hash_id'], 'full': api_url + '/?r=down&hash=' + Config['hash_id'] + '&name=' + Config['down_torrent_format'].replace('%s', Config['bt_data_title']) };
-                        var magnet_url = { 'lite': 'magnet:?xt=urn:btih:' + Config['hash_id'], 'full': 'magnet:?xt=urn:btih:' + Config['hash_id'] + '&tr=' + Config['announce'] };
-                        if (Config['user_script']['platform'] == 'desktop') { $('#box_download h2.title').text('下载地址');
+                        var torrent_url = {
+                            "lite": api_url + '/?r=down&hash=' + Config['hash_id'],
+                            'full': api_url + '/?r=down&hash=' + Config['hash_id'] + '&name=' + Config['down_torrent_format'].replace('%s', Config['bt_data_title'])
+                        };
+                        var magnet_url = {
+                            'lite': 'magnet:?xt=urn:btih:' + Config['hash_id'],
+                            'full': 'magnet:?xt=urn:btih:' + Config['hash_id'] + '&tr=' + Config['announce']
+                        };
+                        if (Config['user_script']['platform'] == 'desktop') {
+                            $('#box_download h2.title').text('下载地址');
                             $('#magnet').attr('href', magnet_url.full).text('磁链下载');
                             $('#download').attr('href', torrent_url.full).text('种子下载');
                             $('#qrcode_magnet').removeAttr('href').text('磁链扫码');
                             $('#qrcode_download').removeAttr('href').text('种子扫码');
                             $('#qrcode_magnet_enlarged').attr('qr_content', magnet_url.full);
-                            $('#qrcode_download_enlarged').attr('qr_content', torrent_url.lite); var register_qrcode_event = function(sel, sel_enlarged) { $(sel).click(function() { $('.qrcode_enlarged').html('').hide();
-                                    $(sel_enlarged).qrcode({ render: "canvas", size: 256, fill: '#0480BE', background: '#FFF', quiet: 1, mode: 2, minVersion: 10, label: $(sel_enlarged).attr('qr_label'), fontname: '"Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Heiti SC", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif', fontcolor: 'darkorange', text: $(sel_enlarged).attr('qr_content') });
-                                    $(sel_enlarged).fadeIn(200); });
-                                $(sel_enlarged).click(function() { $(this).hide(); }); };
-                            $(document).ready(function() { register_qrcode_event('#qrcode_magnet', '#qrcode_magnet_enlarged');
-                                register_qrcode_event('#qrcode_download', '#qrcode_download_enlarged'); }); } else if (Config['user_script']['platform'] == 'mobile') { $('#torrent_url').attr('href', torrent_url.full).text('种子下载').click(function() { return (prompt('确认下载该种子', torrent_url.full) ? true : false); });
-                            $('#magnet_url').attr('href', magnet_url.full).text('磁力下载').click(function() { return (prompt('确认下载磁链', magnet_url.full) ? true : false); }); } else { return false; }
-                    })(jQuery);
+                            $('#qrcode_download_enlarged').attr('qr_content', torrent_url.lite);
+                            var register_qrcode_event = function(sel, sel_enlarged) {
+                                $(sel).click(function() {
+                                    $('.qrcode_enlarged').html('').hide();
+                                    $(sel_enlarged).qrcode({
+                                        render: "canvas",
+                                        size: 256,
+                                        fill: '#0480BE',
+                                        background: '#FFF',
+                                        quiet: 1,
+                                        mode: 2,
+                                        minVersion: 10,
+                                        label: $(sel_enlarged).attr('qr_label'),
+                                        fontname: '"Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Heiti SC", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif',
+                                        fontcolor: 'darkorange',
+                                        text: $(sel_enlarged).attr('qr_content')
+                                    });
+                                    $(sel_enlarged).fadeIn(200);
+                                });
+                                $(sel_enlarged).click(function() {
+                                    $(this).hide();
+                                });
+                            };
+                            $(document).ready(function() {
+                                register_qrcode_event('#qrcode_magnet', '#qrcode_magnet_enlarged');
+                                register_qrcode_event('#qrcode_download', '#qrcode_download_enlarged');
+                            });
+                        } else if (Config['user_script']['platform'] == 'mobile') {
+                            $('#torrent_url').attr('href', torrent_url.full).text('种子下载').click(function() {
+                                return (prompt('确认下载该种子', torrent_url.full) ? true : false);
+                            });
+                            $('#magnet_url').attr('href', magnet_url.full).text('磁力下载').click(function() {
+                                return (prompt('确认下载磁链', magnet_url.full) ? true : false);
+                            });
+                        } else {
+                            return false;
+                        }
+                    })(unsafeWindow.jQuery);
                 }
-            },
-            {
+            }
+            /*{
                 name:"Reddit",
                 url:"https://www.reddit.com/r/SwitchNSPs",
                 regex:/reddit\.com/,
@@ -1018,7 +1077,7 @@
                         decodeBase64();
                     });
                 }
-            }
+            }*/
             /*{
                 name:"咻咻动漫",
                 url:"http://www.xiu.moe/",
