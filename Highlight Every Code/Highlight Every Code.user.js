@@ -3,7 +3,7 @@
 // @name:zh-CN   代码片段高亮
 // @name:zh-TW   程式碼片斷高亮
 // @namespace    hoothin
-// @version      1.3
+// @version      1.5
 // @description  Add a icon to popup a window that allows syntax highlighting and beautify and word count of source code snippets on current page
 // @description:zh-CN 选择代码片段后点击图标弹出新窗口显示语法高亮美化与格式化后的代码与字数统计
 // @description:zh-TW 選擇程式碼片段後點選圖示彈出新視窗顯示語法高亮美化與格式化後的程式碼與字數統計
@@ -22,7 +22,7 @@
     var isChrome=unsafeWindow.chrome;
     var codeIcon=document.createElement("img");
     var codes, selStr, scrollX, scrollY;
-    codeIcon.style.cssText="position:fixed;z-index:99999;cursor: pointer;";
+    codeIcon.style.cssText="position:fixed;z-index:99999;cursor:pointer;transition:opacity 0.5s ease-in-out 0s;opacity:0;border:5px solid rgba(0, 0, 0, 0.2);border-radius:10px;";
     codeIcon.title="Show this code snippet";
     codeIcon.src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAYAgMAAACD0OXYAAAACVBMVEX7+/swMDBTU1MLxgsCAAAAJElEQVQI12MIBYEAGLUKBBbAqAUMQICgAoAqoBQ95JaCnASjAAgXMdk3d5HTAAAAAElFTkSuQmCC";
     codeIcon.onmousedown=function(){
@@ -56,6 +56,7 @@
     };
 
     document.addEventListener('mousedown', function(o) {
+        codeIcon.style.opacity=0;
         if(codeIcon.parentNode)codeIcon.parentNode.removeChild(codeIcon);
     });
     document.addEventListener('mouseup', function(o) {
@@ -68,12 +69,13 @@
                     let pos=getMousePos(o);
                     let left, top;
                     if(isChrome){
-                        top=pos.y>document.documentElement.clientHeight-50?(pos.y-25):(pos.y+15);
-                        left=pos.x>document.documentElement.clientWidth-50?(pos.x-25):(pos.x+15);
+                        top=pos.y>document.documentElement.clientHeight-50?(pos.y-30):(pos.y+20);
+                        left=pos.x>document.documentElement.clientWidth-50?(pos.x-30):(pos.x+20);
                     }else{
-                        top=pos.y-25;
+                        top=pos.y-30;
                         left=pos.x+15;
                     }
+                    codeIcon.style.opacity=0.9;
                     codeIcon.style.top=top+"px";
                     codeIcon.style.left=left+"px";
                 }
