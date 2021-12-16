@@ -101,9 +101,9 @@
                 <div id="txtDownQuit" style="width:36px;height:28px;border-radius:10px;position:absolute;right:2px;top:2px;cursor: pointer;background-color:#ff5a5a;">
                     <span style="height:28px;line-height:28px;display:block;color:#FFF;text-align:center;font-size:20px;">╳</span>
                 </div>
-                <div style="position:absolute;right:0px;bottom:2px;cursor: pointer;width:68px">
-                    <button id="abortRequest" style="background: #008aff;border: 0;padding: 5px;border-radius: 10px;color: white;float: right;margin: 1px;">${getI18n('abort')}</button>
-                    <button id="tempSaveTxt" style="background: #008aff;border: 0;padding: 5px;border-radius: 10px;color: white;float: right;margin: 1px;">${getI18n('save')}</button>
+                <div style="position:absolute;right:0px;bottom:2px;cursor: pointer;max-width:85px">
+                    <button id="abortRequest" style="background: #008aff;border: 0;padding: 5px;border-radius: 10px;color: white;float: right;margin: 1px;height: 25px;">${getI18n('abort')}</button>
+                    <button id="tempSaveTxt" style="background: #008aff;border: 0;padding: 5px;border-radius: 10px;color: white;float: right;margin: 1px;height: 25px;">${getI18n('save')}</button>
                 </div>
             </div>
         </div>`;
