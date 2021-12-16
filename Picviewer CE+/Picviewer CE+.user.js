@@ -6875,7 +6875,7 @@
                     background-color: rgba(40,40,40,0.9);\
                     padding: 8px;\
                     border: 5px solid #ccc;\
-                    border-radius: 15px;\
+                    border-radius: 12px;\
                     line-height: 0;\
                     text-align: left;\
                     box-sizing: content-box;\
