@@ -4,7 +4,7 @@
 // @name:zh-TW   懶人小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.1
+// @version      2.2
 // @description  Fetch and download main content on current page, provide special support for chinese novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取小說、論壇內容等並保存為TXT文檔
@@ -28,7 +28,7 @@
 (function() {
     'use strict';
     var downThreadNum = 20;//下載綫程數
-    var indexReg=/PART\b|Prologue|-\d+|分卷|Chapter\s*[\-_]?\d+|^序$|序\s*言|序\s*章|前\s*言|引\s*言|引\s*子|摘\s*要|楔\s*子|契\s*子|后\s*记|後\s*記|附\s*言|结\s*语|結\s*語|最終話|最终话|番\s*外|[\d|〇|零|一|二|三|四|五|六|七|八|九|十|百|千|万|萬|-]+\s*(、|）|\.\D|章|节|節|回|卷|折|篇|幕|集|话|話)/i;
+    var indexReg=/PART\b|Prologue|^\D+\-\d+|分卷|Chapter\s*[\-_]?\d+|^序$|序\s*言|序\s*章|前\s*言|引\s*言|引\s*子|摘\s*要|楔\s*子|契\s*子|后\s*记|後\s*記|附\s*言|结\s*语|結\s*語|最終話|最终话|番\s*外|[\d|〇|零|一|二|三|四|五|六|七|八|九|十|百|千|万|萬|-]+\s*(、|）|\.\D|章|节|節|回|卷|折|篇|幕|集|话|話)/i;
     var innerNextPage=/下一(页|张)|next page/i;
     var lang = navigator.appName=="Netscape"?navigator.language:navigator.userLanguage;
     var i18n={};
