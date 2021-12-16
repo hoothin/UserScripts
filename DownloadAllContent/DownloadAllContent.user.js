@@ -4,7 +4,7 @@
 // @name:zh-TW   懶人小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.0
+// @version      2.1
 // @description  Fetch and download main content on current page, provide special support for chinese novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取小說、論壇內容等並保存為TXT文檔
@@ -96,13 +96,13 @@
         rocketContent.outerHTML=`
         <div id="txtDownContent" style="display: none;">
             <div style="width:360px;height:90px;position:fixed;left:50%;top:50%;margin-top:-25px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;">
-                <div id="txtDownWords" style="position:absolute;width:275px;height: 100%;border: 1px solid #f3f1f1;padding: 8px;border-radius: 10px;overflow: auto;">
+                <div id="txtDownWords" style="position:absolute;width:275px;max-height: 90%;border: 1px solid #f3f1f1;padding: 8px;border-radius: 10px;overflow: auto;">
                 </div>
                 <div id="txtDownQuit" style="width:36px;height:28px;border-radius:10px;position:absolute;right:2px;top:2px;cursor: pointer;background-color:#ff5a5a;">
                     <span style="height:28px;line-height:28px;display:block;color:#FFF;text-align:center;font-size:20px;">╳</span>
                 </div>
                 <div style="position:absolute;right:0px;bottom:2px;cursor: pointer;max-width:85px">
-                    <button id="abortRequest" style="background: #008aff;border: 0;padding: 5px;border-radius: 10px;color: white;float: right;margin: 1px;height: 25px;">${getI18n('abort')}</button>
+                    <button id="abortRequest" style="background: #008aff;border: 0;padding: 5px;border-radius: 10px;color: white;float: right;margin: 1px;height: 25px;display:none;">${getI18n('abort')}</button>
                     <button id="tempSaveTxt" style="background: #008aff;border: 0;padding: 5px;border-radius: 10px;color: white;float: right;margin: 1px;height: 25px;">${getI18n('save')}</button>
                 </div>
             </div>
@@ -126,7 +126,7 @@
         }
         abortbtn.onclick = function(){
             let curRequest = curRequests.pop();
-            if(curRequest)curRequest.abort();
+            if(curRequest)curRequest[1].abort();
         }
     }
 
@@ -144,6 +144,8 @@
                 return [curIndex,GM_xmlhttpRequest({
                     method: 'GET',
                     url: aTag.href,
+                    headers:{referer:aTag.href},
+                    timeout:15000,
                     overrideMimeType:"text/html;charset="+document.charset,
                     onload: function(result) {
                         var doc = getDocEle(result.responseText);
@@ -185,8 +187,8 @@
                         let request=downOnce();
                         if(request)curRequests.push(request);
                     },
-                    onabort: function(e) {
-                        console.warn("abort:");
+                    ontimeout: function(e) {
+                        console.warn("timeout:");
                         console.log(e);
                         downIndex++;
                         downNum++;
@@ -479,7 +481,8 @@
                     }
                 });
             }else{
-                [].forEach.call(document.querySelectorAll(urls),function(item){
+                let urlsArr=urls.split("@@");
+                [].forEach.call(document.querySelectorAll(urlsArr[0]),function(item){
                     let has=false;
                     for(var j=0;j<processEles.length;j++){
                         if(processEles[j].href==item.href){
@@ -490,9 +493,14 @@
                         }
                     }
                     if(!has && item.href && /^http/i.test(item.href)){
-                        processEles.push(item);
+                        processEles.push(item.cloneNode());
                     }
                 });
+                if(urlsArr.length>1){
+                    processEles.forEach(ele=>{
+                        ele.href=ele.href.replace(new RegExp(urlsArr[1]), urlsArr[2]);
+                    });
+                }
             }
             if(GM_getValue("contentSort")){
                 processEles.sort(function(a,b){
