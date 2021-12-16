@@ -493,7 +493,7 @@
                         }
                     }
                     if(!has && item.href && /^http/i.test(item.href)){
-                        processEles.push(item.cloneNode());
+                        processEles.push(item.cloneNode(1));
                     }
                 });
                 if(urlsArr.length>1){
