@@ -4,7 +4,7 @@
 // @name:zh-TW   懶人小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      1.28
+// @version      2.0
 // @description  Fetch and download main content on current page, provide special support for chinese novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取小說、論壇內容等並保存為TXT文檔
@@ -27,22 +27,45 @@
 
 (function() {
     'use strict';
+    var downThreadNum = 20;//下載綫程數
+    var indexReg=/PART\b|Prologue|-\d+|分卷|Chapter\s*[\-_]?\d+|^序$|序\s*言|序\s*章|前\s*言|引\s*言|引\s*子|摘\s*要|楔\s*子|契\s*子|后\s*记|後\s*記|附\s*言|结\s*语|結\s*語|最終話|最终话|番\s*外|[\d|〇|零|一|二|三|四|五|六|七|八|九|十|百|千|万|萬|-]+\s*(、|）|\.\D|章|节|節|回|卷|折|篇|幕|集|话|話)/i;
+    var innerNextPage=/下一(页|张)|next page/i;
     var lang = navigator.appName=="Netscape"?navigator.language:navigator.userLanguage;
     var i18n={};
     var rCats=[];
     switch (lang){
         case "zh-CN":
+        case "zh-SG":
             i18n={
                 fetch:"开始下载小说或其他【Ctrl+F9】",
-                info:"本文是使用懒人小说下载器（DownloadAllContent）脚本下载的",
+                info:"本文是使用懒人小说下载器（DownloadAllContent）下载的",
                 error:"该段内容获取失败",
                 downloading:"已下载完成 %s 段，剩余 %s 段<br>正在下载 %s",
                 complete:"已全部下载完成，共 %s 段",
-                del:"设置小说干扰码的CSS选择器",
-                custom:"自定义网址下载",
+                del:"设置文本干扰码的CSS选择器",
+                custom:"自定义下载",
+                customInfo:"输入网址或者章节CSS选择器",
                 reSort:"按标题名重新排序",
-                reSortUrl:"按网址重新排序（优先）",
-                setting:"懒人小说下载设置"
+                setting:"懒人小说下载设置",
+                abort:"跳过此章",
+                save:"临时保存"
+            };
+            break;
+        case "zh-TW":
+        case "zh-HK":
+            i18n={
+                fetch:"開始下載小說或其他【Ctrl+F9】",
+                info:"本文是使用懶人小說下載器（DownloadAllContent）下載的",
+                error:"該段內容獲取失敗",
+                downloading:"已下載完成 %s 段，剩餘 %s 段<br>正在下載 %s",
+                complete:"已全部下載完成，共 %s 段",
+                del:"設置文本干擾碼的CSS選擇器",
+                custom:"自定義下載",
+                customInfo:"輸入網址或者章節CSS選擇器",
+                reSort:"按標題名重新排序",
+                setting:"懶人小說下載設置",
+                abort:"跳過此章",
+                save:"保存當前"
             };
             break;
         default:
@@ -51,16 +74,18 @@
                 info:"The TXT is downloaded by 'DownloadAllContent'",
                 error:"Failed in downloading current chapter",
                 downloading:"%s pages are downloaded, there are still %s pages left<br>Downloading %s ......",
-                complete:"Completed! The pages totalled %s",
-                del:"Set css selectors for delete",
-                custom:"Custom url for download",
-                reSort:"Resort by titles",
-                reSortUrl:"Resort by URLs (higher priority)",
-                setting:"DownloadAllContent Setting"
+                complete:"Completed! Get %s pages in total",
+                del:"Set css selectors for ignore",
+                custom:"Custom to download",
+                customInfo:"Input urls OR sss selectors for chapter links",
+                reSort:"ReSort by title",
+                setting:"DownloadAllContent Setting",
+                abort:"Abort",
+                save:"Save"
             };
             break;
     }
-    var firefox=navigator.userAgent.toLowerCase().indexOf('firefox')!=-1;
+    var firefox=navigator.userAgent.toLowerCase().indexOf('firefox')!=-1,curRequests=[];
     var rocketContent,txtDownContent,txtDownWords,txtDownQuit,txtDownDivInited=false;
 
     function initTxtDownDiv(){
@@ -70,14 +95,15 @@
         document.body.appendChild(rocketContent);
         rocketContent.outerHTML=`
         <div id="txtDownContent" style="display: none;">
-            <div style="width:360px;height:70px;position:fixed;left:50%;top:50%;margin-top:-25px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;">
-                <div id="txtDownWords" style="position:absolute;width:280px;height: 50px;border: 1px solid #f3f1f1;padding: 8px;border-radius: 10px;">
+            <div style="width:360px;height:90px;position:fixed;left:50%;top:50%;margin-top:-25px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;">
+                <div id="txtDownWords" style="position:absolute;width:275px;height: 100%;border: 1px solid #f3f1f1;padding: 8px;border-radius: 10px;overflow: auto;">
                 </div>
                 <div id="txtDownQuit" style="width:36px;height:28px;border-radius:10px;position:absolute;right:2px;top:2px;cursor: pointer;background-color:#ff5a5a;">
                     <span style="height:28px;line-height:28px;display:block;color:#FFF;text-align:center;font-size:20px;">╳</span>
                 </div>
-                <div style="position:absolute;right:2px;bottom:2px;cursor: pointer;">
-                    <button id="tempSaveTxt" style="background: #008aff;border: 0;padding: 5px;border-radius: 10px;color: white;">保存</button>
+                <div style="position:absolute;right:0px;bottom:2px;cursor: pointer;width:68px">
+                    <button id="abortRequest" style="background: #008aff;border: 0;padding: 5px;border-radius: 10px;color: white;float: right;margin: 1px;">${getI18n('abort')}</button>
+                    <button id="tempSaveTxt" style="background: #008aff;border: 0;padding: 5px;border-radius: 10px;color: white;float: right;margin: 1px;">${getI18n('save')}</button>
                 </div>
             </div>
         </div>`;
@@ -93,17 +119,96 @@
 
     function initTempSave(){
         var tempSavebtn = document.getElementById('tempSaveTxt');
+        var abortbtn = document.getElementById('abortRequest');
         tempSavebtn.onclick = function(){
             var blob = new Blob([i18n.info+"\r\n"+document.title+"\r\n\r\n"+rCats.join("\r\n\r\n")], {type: "text/plain;charset=utf-8"});
             saveAs(blob, document.title+".txt");
+        }
+        abortbtn.onclick = function(){
+            let curRequest = curRequests.pop();
+            if(curRequest)curRequest.abort();
         }
     }
 
     function indexDownload(aEles){
         if(aEles.length<1)return;
         initTxtDownDiv();
+        rCats=[];
+        var insertSigns=[];
         // var j=0,rCats=[];
-        var j=0;
+        var downIndex=0,downNum=0,downOnce=function(){
+            if(downNum>=aEles.length)return;
+            let curIndex=downIndex;
+            let aTag=aEles[curIndex];
+            let request=(aTag, curIndex)=>{
+                return [curIndex,GM_xmlhttpRequest({
+                    method: 'GET',
+                    url: aTag.href,
+                    overrideMimeType:"text/html;charset="+document.charset,
+                    onload: function(result) {
+                        var doc = getDocEle(result.responseText);
+                        let nextPage=checkNextPage(doc);
+                        if(nextPage){
+                            nextPage.innerText=aTag.innerText+"\t>>";
+                            aEles.push(nextPage);
+                            let targetIndex = curIndex;
+                            for(let a=0;a<insertSigns.length;a++){
+                                let signs=insertSigns[a],breakSign=false;
+                                if(signs){
+                                    for(let b=0;b<signs.length;b++){
+                                        let sign=signs[b];
+                                        if(sign==curIndex){
+                                            targetIndex=a;
+                                            breakSign=true;
+                                            break;
+                                        }
+                                    }
+                                }
+                                if(breakSign)break;
+                            }
+                            let insertSign = insertSigns[targetIndex];
+                            if(!insertSign)insertSigns[targetIndex] = [];
+                            insertSigns[targetIndex].push(aEles.length-1);
+                        }
+                        downIndex++;
+                        downNum++;
+                        processDoc(curIndex, aTag, doc);
+                        let request=downOnce();
+                        if(request)curRequests.push(request);
+                    },
+                    onerror: function(e) {
+                        console.warn("error:");
+                        console.log(e);
+                        downIndex++;
+                        downNum++;
+                        processDoc(curIndex, aTag, null);
+                        let request=downOnce();
+                        if(request)curRequests.push(request);
+                    },
+                    onabort: function(e) {
+                        console.warn("abort:");
+                        console.log(e);
+                        downIndex++;
+                        downNum++;
+                        processDoc(curIndex, aTag, null);
+                        let request=downOnce();
+                        if(request)curRequests.push(request);
+                    },
+                })];
+            }
+            if(!aTag){
+                let waitAtagReadyInterval=setInterval(function(){
+                    if(downNum>=aEles.length)clearInterval(waitAtagReadyInterval);
+                    aTag=aEles[curIndex];
+                    if(aTag){
+                        clearInterval(waitAtagReadyInterval);
+                        request(aTag, curIndex);
+                    }
+                },1000);
+                return null;
+            }
+            return request(aTag, curIndex);
+        };
         function getDocEle(str){
             var doc = null;
             try {
@@ -115,18 +220,50 @@
             }
             return doc;
         }
+        function sortInnerPage(){
+            var pageArrs=[],maxIndex=0,i,j;
+            for(i=0;i<insertSigns.length;i++){
+                var signs=insertSigns[i];
+                if(signs){
+                    for(j=0;j<signs.length;j++){
+                        var sign=signs[j];
+                        var cat=rCats[sign];
+                        rCats[sign]=null;
+                        if(!pageArrs[i])pageArrs[i]=[];
+                        pageArrs[i].push(cat);
+                    }
+                }
+            }
+            for(i=pageArrs.length-1;i>=0;i--){
+                let pageArr=pageArrs[i];
+                if(pageArr){
+                    for(j=pageArr.length-1;j>=0;j--){
+                        rCats.splice(i+1, 0, pageArr[j]);
+                    }
+                }
+            }
+            rCats = rCats.filter(function(e){return e!=null});
+        }
         function processDoc(i, aTag, doc){
-            j++;
+            curRequests = curRequests.filter(function(e){return e[0]!=i});
             rCats[i]=(aTag.innerText+"\r\n"+getPageContent(doc));
             txtDownContent.style.display="block";
-            txtDownWords.innerHTML=getI18n("downloading",[j,(aEles.length-j),aTag.innerText]);
-            if(j==aEles.length){
-                txtDownWords.innerHTML=getI18n("complete",[j]);
+            txtDownWords.innerHTML=getI18n("downloading",[downNum,(aEles.length-downNum),aTag.innerText]);
+            if(downNum==aEles.length){
+                txtDownWords.innerHTML=getI18n("complete",[downNum]);
+                sortInnerPage();
                 var blob = new Blob([i18n.info+"\r\n"+document.title+"\r\n\r\n"+rCats.join("\r\n\r\n")], {type: "text/plain;charset=utf-8"});
                 saveAs(blob, document.title+".txt");
             }
         }
-        for(let i=0;i<aEles.length;i++){
+        for(var i=0;i<downThreadNum;i++){
+            let request=downOnce();
+            if(request)curRequests.push(request);
+            if(downIndex>=aEles.length-1)break;
+            if(downIndex<downThreadNum-1)downIndex++;
+        }
+
+        /*for(let i=0;i<aEles.length;i++){
             let aTag=aEles[i];
             GM_xmlhttpRequest({
                 method: 'GET',
@@ -137,7 +274,19 @@
                     processDoc(i, aTag, doc);
                 }
             });
+        }*/
+    }
+
+    function checkNextPage(doc){
+        let aTags=doc.querySelectorAll("a"),nextPage=null;
+        for(var i=0;i<aTags.length;i++){
+            let aTag=aTags[i];
+            if(innerNextPage.test(aTag.innerText) && /^http/i.test(aTag.href)){
+                nextPage=aTag;
+                break;
+            }
         }
+        return nextPage;
     }
 
     function getPageContent(doc){
@@ -271,7 +420,7 @@
                     break;
                 }
             }
-            if(!has && aEle.href && /^http/i.test(aEle.href) && /PART\b|Prologue|-\d+|分卷|Chapter\s*\d+|^\s*序\s*$|序\s*言|序\s*章|前\s*言|引\s*言|引\s*子|摘\s*要|楔\s*子|契\s*子|后\s*记|後\s*記|附\s*言|结\s*语|結\s*語|最終話|最终话|[\d|〇|零|一|二|三|四|五|六|七|八|九|十|百|千|万|萬|-]+\s*(、|）|\.\D|章|节|節|回|卷|折|篇|幕|集|话|話)/i.test(aEle.innerText)){
+            if(!has && aEle.href && /^http/i.test(aEle.href) && (indexReg.test(aEle.innerText) || /chapter[\-_]?\d/.test(aEle.href))){
                 list.push(aEle);
             }
         }
@@ -279,11 +428,6 @@
             if(GM_getValue("contentSort")){
                 list.sort(function(a,b){
                     return parseInt(a.innerText.replace(/[^0-9]/ig,"")) - parseInt(b.innerText.replace(/[^0-9]/ig,""));
-                });
-            }
-            if(GM_getValue("contentSortUrl")){
-                list.sort(function(a,b){
-                    return parseInt(a.href.replace(/[^0-9]/ig,"")) - parseInt(b.href.replace(/[^0-9]/ig,""));
                 });
             }
             indexDownload(list);
@@ -302,35 +446,63 @@
         var selValue=GM_getValue("selectors");
         var selectors=prompt(i18n.del,selValue?selValue:"");
         GM_setValue("selectors",selectors);
-        GM_setValue("contentSort",window.confirm(i18n.reSort));
-        GM_setValue("contentSortUrl",window.confirm(i18n.reSortUrl));
-        var urls=window.prompt(i18n.custom,"https://xxx.xxx/book-[20-99].html, https://xxx.xxx/book-[01-10].html");
+        if(window.confirm(i18n.reSort)){
+            GM_setValue("contentSort", true);
+        }else{
+            GM_setValue("contentSort", false);
+        }
+    }
+    function customDown(){
+        var urls=window.prompt(i18n.customInfo,"https://xxx.xxx/book-[20-99].html, https://xxx.xxx/book-[01-10].html");
         if(urls){
             var processEles=[];
-            [].forEach.call(urls.split(","),function(i){
-                var varNum=/\[\d+\-\d+\]/.exec(i)[0].trim();
-                var num1=/\[(\d+)/.exec(varNum)[1].trim();
-                var num2=/(\d+)\]/.exec(varNum)[1].trim();
-                var num1Int=parseInt(num1);
-                var num2Int=parseInt(num2);
-                var numLen=num1.length;
-                var needAdd=num1.charAt(0)=="0";
-                if(num1Int>=num2Int)return;
-                for(var j=num1Int;j<=num2Int;j++){
-                    var urlIndex=j.toString();
-                    if(needAdd){
-                        while(urlIndex.length<numLen)urlIndex="0"+urlIndex;
+            if(/^http|^ftp/.test(urls)){
+                [].forEach.call(urls.split(","),function(i){
+                    var varNum=/\[\d+\-\d+\]/.exec(i)[0].trim();
+                    var num1=/\[(\d+)/.exec(varNum)[1].trim();
+                    var num2=/(\d+)\]/.exec(varNum)[1].trim();
+                    var num1Int=parseInt(num1);
+                    var num2Int=parseInt(num2);
+                    var numLen=num1.length;
+                    var needAdd=num1.charAt(0)=="0";
+                    if(num1Int>=num2Int)return;
+                    for(var j=num1Int;j<=num2Int;j++){
+                        var urlIndex=j.toString();
+                        if(needAdd){
+                            while(urlIndex.length<numLen)urlIndex="0"+urlIndex;
+                        }
+                        var curUrl=i.replace(/\[\d+\-\d+\]/,urlIndex).trim();
+                        var curEle=document.createElement("a");
+                        curEle.href=curUrl;
+                        processEles.push(curEle);
+                        curEle.innerText=processEles.length.toString();
                     }
-                    var curUrl=i.replace(/\[\d+\-\d+\]/,urlIndex).trim();
-                    var curEle=document.createElement("a");
-                    curEle.href=curUrl;
-                    processEles.push(curEle);
-                    curEle.innerText=processEles.length.toString();
-                }
-            });
+                });
+            }else{
+                [].forEach.call(document.querySelectorAll(urls),function(item){
+                    let has=false;
+                    for(var j=0;j<processEles.length;j++){
+                        if(processEles[j].href==item.href){
+                            processEles.splice(j,1);
+                            processEles.push(item);
+                            has=true;
+                            break;
+                        }
+                    }
+                    if(!has && item.href && /^http/i.test(item.href)){
+                        processEles.push(item);
+                    }
+                });
+            }
+            if(GM_getValue("contentSort")){
+                processEles.sort(function(a,b){
+                    return parseInt(a.innerText.replace(/[^0-9]/ig,"")) - parseInt(b.innerText.replace(/[^0-9]/ig,""));
+                });
+            }
             indexDownload(processEles);
         }
     }
     GM_registerMenuCommand(i18n.fetch, fetch);
+    GM_registerMenuCommand(i18n.custom, customDown);
     GM_registerMenuCommand(i18n.setting, setDel);
 })();
