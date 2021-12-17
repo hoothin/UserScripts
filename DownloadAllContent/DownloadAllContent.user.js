@@ -4,7 +4,7 @@
 // @name:zh-TW   懶人小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.3
+// @version      2.5
 // @description  Fetch and download main content on current page, provide special support for chinese novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取小說、論壇內容等並保存為TXT文檔
@@ -27,9 +27,8 @@
 
 (function() {
     'use strict';
-    var downThreadNum = 20;//下載綫程數
-    var indexReg=/PART\b|Prologue|^\D+\-\d+|分卷|Chapter\s*[\-_]?\d+|^序$|序\s*言|序\s*章|前\s*言|引\s*言|引\s*子|摘\s*要|楔\s*子|契\s*子|后\s*记|後\s*記|附\s*言|结\s*语|結\s*語|最終話|最终话|番\s*外|[第^\s][\d|〇|零|一|二|三|四|五|六|七|八|九|十|百|千|万|萬|-]+\s*(、|）|\.\D|章|节|節|回|卷|折|篇|幕|集|话|話)/i;
-    var innerNextPage=/下一(页|张)|next page/i;
+    var indexReg=/PART\b|Prologue|^\D+\-\d+|分卷|Chapter\s*[\-_]?\d+|^序$|序\s*言|序\s*章|前\s*言|引\s*言|引\s*子|摘\s*要|楔\s*子|契\s*子|后\s*记|後\s*記|附\s*言|结\s*语|結\s*語|尾\s*声|最終話|最终话|番\s*外|[第^\s（][\d〇零一二三四五六七八九十百千万萬-]+\s*(、|）|\.\D|章|节|節|回|卷|折|篇|幕|集|话|話)/i;
+    var innerNextPage=/下一(页|张)|next\s*page/i;
     var lang = navigator.appName=="Netscape"?navigator.language:navigator.userLanguage;
     var i18n={};
     var rCats=[];
@@ -48,7 +47,8 @@
                 reSort:"按标题名重新排序",
                 setting:"懒人小说下载设置",
                 abort:"跳过此章",
-                save:"临时保存"
+                save:"临时保存",
+                downThreadNum:"设置同时下载的线程数"
             };
             break;
         case "zh-TW":
@@ -65,7 +65,8 @@
                 reSort:"按標題名重新排序",
                 setting:"懶人小說下載設置",
                 abort:"跳過此章",
-                save:"保存當前"
+                save:"保存當前",
+                downThreadNum:"設置同時下載的綫程數"
             };
             break;
         default:
@@ -81,7 +82,8 @@
                 reSort:"ReSort by title",
                 setting:"DownloadAllContent Setting",
                 abort:"Abort",
-                save:"Save"
+                save:"Save",
+                downThreadNum:"Set threadNum for download"
             };
             break;
     }
@@ -94,9 +96,10 @@
         rocketContent=document.createElement("div");
         document.body.appendChild(rocketContent);
         rocketContent.outerHTML=`
-        <div id="txtDownContent" style="display: none;">
+        <div id="txtDownContent">
             <div style="width:360px;height:90px;position:fixed;left:50%;top:50%;margin-top:-25px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;">
                 <div id="txtDownWords" style="position:absolute;width:275px;max-height: 90%;border: 1px solid #f3f1f1;padding: 8px;border-radius: 10px;overflow: auto;">
+                    Downloading......
                 </div>
                 <div id="txtDownQuit" style="width:36px;height:28px;border-radius:10px;position:absolute;right:2px;top:2px;cursor: pointer;background-color:#ff5a5a;">
                     <span style="height:28px;line-height:28px;display:block;color:#FFF;text-align:center;font-size:20px;">╳</span>
@@ -133,6 +136,11 @@
     function indexDownload(aEles){
         if(aEles.length<1)return;
         initTxtDownDiv();
+        if(GM_getValue("contentSort")){
+            aEles.sort(function(a,b){
+                return parseInt(a.innerText.replace(/[^0-9]/ig,"")) - parseInt(b.innerText.replace(/[^0-9]/ig,""));
+            });
+        }
         rCats=[];
         var insertSigns=[];
         // var j=0,rCats=[];
@@ -258,11 +266,13 @@
                 saveAs(blob, document.title+".txt");
             }
         }
+        var downThreadNum = parseInt(GM_getValue("downThreadNum"));
+        downThreadNum=downThreadNum>0?downThreadNum:20;
         for(var i=0;i<downThreadNum;i++){
             let request=downOnce();
             if(request)curRequests.push(request);
-            if(downIndex>=aEles.length-1)break;
-            if(downIndex<downThreadNum-1)downIndex++;
+            if(downIndex>=aEles.length-1 || downIndex>=downThreadNum-1)break;
+            else downIndex++;
         }
 
         /*for(let i=0;i<aEles.length;i++){
@@ -296,7 +306,7 @@
         if(doc.defaultView)
         [].forEach.call(doc.querySelectorAll("span,div"),function(item){
             var thisStyle=doc.defaultView.getComputedStyle(item);
-            if(thisStyle && (thisStyle.display=="none"||thisStyle.fontSize=="0px"))
+            if(thisStyle && (thisStyle.display=="none" || (item.tagName=="SPAN" && thisStyle.fontSize=="0px")))
                 item.parentNode.removeChild(item);
         });
         var i,j,k,rStr="",pageData=(doc.body?doc.body:doc).cloneNode(true),delList=[];
@@ -427,11 +437,6 @@
             }
         }
         if(list.length>2){
-            if(GM_getValue("contentSort")){
-                list.sort(function(a,b){
-                    return parseInt(a.innerText.replace(/[^0-9]/ig,"")) - parseInt(b.innerText.replace(/[^0-9]/ig,""));
-                });
-            }
             indexDownload(list);
         }else{
             var blob = new Blob([i18n.info+"\r\n"+document.title+"\r\n\r\n"+getPageContent(document)], {type: "text/plain;charset=utf-8"});
@@ -448,6 +453,9 @@
         var selValue=GM_getValue("selectors");
         var selectors=prompt(i18n.del,selValue?selValue:"");
         GM_setValue("selectors",selectors);
+        selValue=GM_getValue("downThreadNum");
+        var downThreadNum=prompt(i18n.downThreadNum,selValue?selValue:"20");
+        GM_setValue("downThreadNum",downThreadNum);
         if(window.confirm(i18n.reSort)){
             GM_setValue("contentSort", true);
         }else{
@@ -501,11 +509,6 @@
                         ele.href=ele.href.replace(new RegExp(urlsArr[1]), urlsArr[2]);
                     });
                 }
-            }
-            if(GM_getValue("contentSort")){
-                processEles.sort(function(a,b){
-                    return parseInt(a.innerText.replace(/[^0-9]/ig,"")) - parseInt(b.innerText.replace(/[^0-9]/ig,""));
-                });
             }
             indexDownload(processEles);
         }
