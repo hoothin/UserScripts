@@ -651,9 +651,12 @@
     }
     if(location.href.indexOf("pan.baidu.com/wap/home") != -1){
         if(curlink)location.href="https://pan.baidu.com/disk/home";
-    }else if(location.href.indexOf("github.com/hoothin/UserScripts/tree/master/Easy%20offline") != -1 || /greasyfork\.org\/.*scripts\/22590/.test(location.href)){
+    }else if(location.href.indexOf("github.com/hoothin/UserScripts/tree/master/Easy%20offline") != -1){
         setting();
     }else if(!isDisk){
+        if(/greasyfork\.org\/.*scripts\/22590/.test(location.href)){
+            setting();
+        }
         setTimeout(function(){getAllEnableUrl();},10);
         var MutationObserver = unsafeWindow.MutationObserver || unsafeWindow.WebKitMutationObserver || unsafeWindow.MozMutationObserver;
         var observer = new MutationObserver(function(records){
