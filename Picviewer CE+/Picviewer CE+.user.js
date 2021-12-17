@@ -6,7 +6,7 @@
 // @description     Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version         2021.12.17.1
+// @version         2021.12.17.2
 // @created         2011-6-15
 // @namespace       http://userscripts.org/users/NLF
 // @homepage        http://hoothin.com
@@ -47,6 +47,7 @@
         case "zh-CN":
             i18nData={
                 saveBtn:"确定",
+                download:"下载",
                 saveBtnTips:"部分选项需要刷新页面才能生效",
                 closeBtn:"取消",
                 closeBtnTips:"取消本次设置，所有选项还原",
@@ -134,6 +135,7 @@
                 picTitle:"图片标题",
                 picNum:"图片数量",
                 picTips:"按住Ctrl放大",
+                savePageTips:"使用“网页另存为”即可保存所有图片",
                 exportImagesUrl:"导出图片链接",
                 exportImagesUrlPop:"Ctrl+C复制图片链接",
                 beginSearchImg:"#t#识图开始……",
@@ -246,6 +248,7 @@
         case "zh-TW":
             i18nData={
                 saveBtn:"確定",
+                download:"下載",
                 saveBtnTips:"部分選項需要刷新頁面才能生效",
                 closeBtn:"取消",
                 closeBtnTips:"取消本次設置，所有選項還原",
@@ -333,6 +336,7 @@
                 picTitle:"圖片標題",
                 picNum:"圖片數量",
                 picTips:"按住Ctrl放大",
+                savePageTips:"使用「網頁另存為」即可保存所有圖片",
                 exportImagesUrl:"導出圖片鏈接",
                 exportImagesUrlPop:"Ctrl+C複製圖片鏈接",
                 beginSearchImg:"#t#識圖開始……",
@@ -445,6 +449,7 @@
         default:
             i18nData={
                 saveBtn: "OK",
+                download:"Download",
                 saveBtnTips: "some options need to refresh the page to take effect",
                 closeBtn: "Cancel",
                 closeBtnTips: "cancel this setting and restore all options",
@@ -521,6 +526,7 @@
                 resolution:"Img Resolution",
                 picNum:"Number of pictures",
                 picTips:"View pictures with CTRL key",
+                savePageTips:"Save this page to download all pics",
                 scaleRatio:"Scaling ratio",
                 similarImage:"Searching by image",
                 scale:"Zoom",
@@ -3440,7 +3446,7 @@
                 eleMaps['head'].addEventListener('click',function(e){
                     if(e.target.classList.contains('pv-gallery-head-command-close'))
                         return;
-                    else if(e.target.classList.contains('pv-gallery-head-command'))
+                    else if(e.target.className.indexOf('pv-gallery-head-command')!=-1)
                         self.closeViewMore();
                 });
 
@@ -3941,7 +3947,8 @@
 
                     var nodes = document.querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]');
                     [].forEach.call(nodes, function(node){
-                        if(unsafeWindow.getComputedStyle(node).display!="none"){
+                        var nodeStyle=unsafeWindow.getComputedStyle(node);
+                        if(nodeStyle.display!="none"){
                             var imgSpan = document.createElement('span');
                             imgSpan.className = "maximizeChild";
                             imgSpan.innerHTML = '<img src="'+node.dataset.src+'">';
@@ -3953,6 +3960,16 @@
                                 });
                             });
                             maximizeContainer.appendChild(imgSpan);
+                            var dlSpan = document.createElement('p');
+                            dlSpan.innerHTML=i18n("download");
+                            dlSpan.src=node.dataset.src;
+                            dlSpan.title=node.title||document.title;
+                            dlSpan.onclick=(e)=>{
+                                saveAs(e.target.src,e.target.title);
+                                e.stopPropagation();
+                                return true;
+                            };
+                            imgSpan.appendChild(dlSpan);
                         }
                     });
                 }
@@ -5113,11 +5130,11 @@
                  <head>\
                  <title>' + title + ' '+i18n("exportImages")+'</title>\
                  <style>\
-                 .toTop{width:28px;height:28px;border-radius:14px;position: fixed;right:2px;bottom: 2px;cursor: pointer;background-color:#000;opacity:.3;padding:0em!important;border:0px!important;}\
+                 .toTop{width:28px;height:28px;border-radius:14px;position: fixed;right:2px;bottom: 2px;cursor: pointer;background-color:#000;opacity:.3;padding:0em!important;border:0px!important;z-index:1}\
                  .toTop:hover{opacity:1}\
                  .toTop>span{height:28px;line-height:28px;display:block;color:#FFF;text-align:center;font-size:20px;}\
                  .grid{-moz-column-count:4;-webkit-column-count:4;column-count:4;-moz-column-gap: 1em;-webkit-column-gap: 1em;column-gap: 1em;}\
-                 .grid>div{padding: 1em;margin: 0 0 1em 0;-moz-page-break-inside: avoid;-webkit-column-break-inside: avoid;break-inside: avoid;border: 1px solid #000;}\
+                 .grid>div{padding: 1em;margin: 0 0 1em 0;-moz-page-break-inside: avoid;-webkit-column-break-inside: avoid;break-inside: avoid;}\
                  .grid>div>img{width: 100%;margin-bottom:10px;}\
                  .list>div {text-align:center;}\
                  .list>div>img { max-width: 100%; }\
@@ -5125,18 +5142,21 @@
                  .gridBig>div { float: left;margin: 0px 0px 1px 1px;}\
                  .gridBig>div>img { max-width: 100%; }\
                  .select{opacity: 0.8;border: 5px solid red!important;}\
+                 body>div{border: 5px solid black;margin: 1px;}\
+                 body>div:hover{border: 5px solid #dbdbdb;}\
+                 body>div{position:relative;}\
                  </style>\
                  </head>\
-                 <div class="toTop">\
+                 <span class="toTop">\
                     <span>￪</span>\
-                 </div>\
+                 </span>\
                  <body class="'+prefs.gallery.exportType+'">\
                  <p style="width:100vw;display:flex;flex-direction:column;">\
                  <img id="bigImg" style="pointer-events:none;position:fixed;z-index:999;width:100vw;top:0px;align-self:center;"></p>\
                  <p>【'+i18n("picTitle")+'】：' + title + '</p>\
                  <p>【'+i18n("picNum")+'】：' + nodes.length + ' <select onchange="document.body.className=this.options[this.options.selectedIndex].value"><option value="grid" '+(prefs.gallery.exportType=="grid"?"selected='selected'":"")+'>'+i18n("grid")+'</option><option value="gridBig" '+(prefs.gallery.exportType=="gridBig"?"selected='selected'":"")+'>'+i18n("gridBig")+'</option><option value="list" '+(prefs.gallery.exportType=="list"?"selected='selected'":"")+'>'+i18n("list")+'</option> </select> \
                  <input type="button" value="'+i18n("exportImagesUrl")+'" onclick="var imgStr=\'\',selList=document.querySelectorAll(\'.select>img\');if(selList.length==0)[].forEach.call(document.querySelectorAll(\'img\'),function(i){imgStr+=i.src+\' \\n\'});else{[].forEach.call(selList,function(i){imgStr+=i.src+\' \\n\'});}window.prompt(\''+i18n("exportImagesUrlPop")+'\',imgStr);">\
-                  ('+i18n("picTips")+')</p>';
+                  ('+i18n("picTips")+')</p><p>'+i18n("savePageTips")+"</p>";
 
                 html += arr.join('\n') +
                 '<script type="text/javascript">\
@@ -5686,6 +5706,7 @@
                     margin-bottom: 15px;\
                     margin-right: 15px;\
                     overflow: hidden;\
+                    position: relative;\
                     }\
                     .pv-gallery-maximize-container img{\
                     width:100%;\
@@ -5696,6 +5717,29 @@
                     .pv-gallery-maximize-container img:hover {\
                     transform: scale3d(1.1, 1.1, 1.1);\
                     opacity: .9;\
+                    }\
+                    .pv-gallery-maximize-container span>p{\
+                    position: absolute;\
+                    bottom: 0;\
+                    width: 100%;\
+                    height: 30px;\
+                    max-height: 40%;\
+                    font-size: 16px;\
+                    line-height: 30px;\
+                    text-align: center;\
+                    background: #000;\
+                    color: #fff;\
+                    opacity: 0;\
+                    left: 0;\
+                    user-select: none;\
+                    cursor: pointer;\
+                    display: table;\
+                    }\
+                    .pv-gallery-maximize-container span:hover>p{\
+                    opacity: 0.6;\
+                    }\
+                    .pv-gallery-maximize-container span>p:hover{\
+                    color:red;\
                     }\
                     .pv-gallery-maximize-scroll{\
                     overflow-y: scroll;\
