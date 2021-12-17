@@ -8,7 +8,7 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdn.jsdelivr.net/jquery/1.7.2/jquery.min.js
 // @require      https://cdn.jsdelivr.net/hi-base64/0.2.0/base64.min.js
-// @version      1.5.9
+// @version      1.6.0
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -39,7 +39,7 @@
             bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAABjFBMVEX////7+/v+/v/8/Pwyf/wzc/w0bvza5f4xffz5+//0+P8ybPz8/f4yevw0cPwza/z39/cwe/UxdfzSPyr4+v/2+f/m7/53nv0vf/wvce9pof1tlPwxf/gzfPYwePPp8f7Z5/7S4v7P4P7L3f7I2f2Gtf2Rr/1hkP0yd/1FiPwygfxAdPxspftYkvUtc/Dg6f7C2f7F1f54oP1flf0/hfwsbu7i7f/w9f7b5v7X5f7V4v6nyv6oxv6jwP6Ns/2Lsf1/rv1+ov1zof1xof10nf1jm/1djP0xe/2NufxalvxHj/xPhvxKgPxHffw+efw0ePyXu/mqxPg5hfiTtvdyo/dgmfdOj/dBhfVflfQvefT+9fOIqvMyefNMhvFIgO9MeePyycVjZbzKb3DaZVa/Q0Dx9f+Bp/1olv1gkPw0dvzg6Pu2zPk0gflNjPctc/c9gfX88/JJfO3n3+ni2unHxuSGktNpdtBJY8paashRW71nXqp7YpyDYJKpaIKPU33AVFXARkTVTTvFQjrUPypKwHq1AAACAklEQVQ4y4WTB3OqQBSFF3BpAk+KIBixJ2rs0fTee68vvbzee+9//O1Cio46npmFPfd8d2cY9gIASMJHUESDKFQmAZJAUKCFKELA/WSr3A3d/tZnAF99C8fVHYhiosbxxflsdr7I15SIWiCe3exA2szGmwOJXTkUkvHaTTQD9NyBLO/t7OzJ8kFObwKs2/bRdrSvL7p9ZNvrjQC/n8/nwngXzuXz+3wDED42zS13u2Wax+EGQD+pmhvudsOsnuj1gBAZSp5+/XRIYkMeVu1XyaGIcAfoycVM4Pn3qx9vcW3gRUcmE8gsJvUboNfyeDyBwLd/6sX7wtNnC45DD6vXBbRx1sOmrQ+/VFX9efomhFzFstLoNa45QKzCijMx/vXZpar+/fKSZecWijwfmxHZSgzFFBgWxXQUIJ39UX9/nhPFngHsomlRHEYxRY6mlCkOl+5fXp2vraV6IgCLm1JSoyQGxhRlUnCAi/PUEwXnWMKkooxhAIxAuNSPS+8+Qgi7GOB3zutfgnAExQSIr0JoMJw2GJSghPLSo4eDGscYEK7Gna/gy7QkLRvTK5JEP2bAgy4vvTJtLCNX5h0AMLNemvbihfqBv3zjZpHDACKM7ntI3RMFgFSYcJ3B3P0sf6kzGOxM+AFwXAK7kuNurz2pcWTt7deuna/t4LQdvbbD23b8/wPY0UTO99dD5gAAAABJRU5ErkJggg==",
             offFunc:function(delLink){
                 var gsi = setInterval(function() {
-                    var newOffBtn = document.querySelector('.g-button[data-button-id=b37]');
+                    var newOffBtn = document.querySelector('.g-button[node-type=offlineDownload]');
                     if(newOffBtn){
                         clearInterval(gsi);
                         newOffBtn.click();
@@ -115,7 +115,7 @@
             bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAXVBMVEX///////8bytT///8fy9UbytQbytQfy9Ufy9UmzNYbytQgy9UizNUbytT///8bytQey9Ufy9Ugy9VG1NxB09sbytRg2uFS194bytT///9G1Nzx/Pzi+PpT19+c6OxZ7rqXAAAAGHRSTlMBG/AHxYAh49O3oWJBMRUR4bOLYV9RQz9fW5zbAAAAbUlEQVQY043MRxLCMBBE0WYkOQcyXybc/5hIhUuww2/3u2pGG1WdYV1VujcyG9ceWdmcM8jDK8bHE0LqCzMQF5Y7NOnNgeE7MATBMQ+fE/q9wCwNkDUetUAZPLVuxq+z3LWlqE9OctOumFL/9QYClwvt3NkDkgAAAABJRU5ErkJggg==",
             offFunc:function(delLink){
                 var psc = setInterval(function() {
-                    var upBtn = document.querySelector('div.upload_button');
+                    var upBtn = document.querySelector('div.uploadfiles');
                     if (upBtn) {
                         clearInterval(psc);
                         upBtn.click();
@@ -142,6 +142,7 @@
                             setTimeout(function() {
                                 $('#js_offline_new_add').val(curlink);
                                 delLink();
+                                $('[data-btn=start]').click();
                             }, 1);
                         }, 1000);
                     }
@@ -174,7 +175,7 @@
                     if($('#upload-button').css("display") != "none"){
                         window.clearInterval(sdi);
                         setTimeout(function() {
-                            $(':text[name="torrent"]').val(curlink);
+                            $(':text[name="link"]').val(curlink);
                             delLink();
                             $('#upload-button').click();
                         }, 500);
@@ -222,7 +223,7 @@
             bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAASFBMVEUAAAARsPUSr/QWsfkTsvUWuv8RsvkSr/URsPUSsPQr1f8RsPUSsPYRr/USr/USr/USsfQSsPUTsPURsPURsfYSsPUTsPgRr/UxdyaHAAAAF3RSTlMA1LsuMw0q8pSPBrSK28ygeHJqZjqqRB/r5Z8AAACRSURBVBjTZc9bFoMgDARQogRFBMpDZ/877UDtl/PHPTAkZsR52Tbxzvxy7HiyH/PsBFLu3hKwDNnX5dRy5aof3uF7EE6rNkRLccYTwuwKURO8EYKdYFEbxGwEnaDIHRuh5/+NZSUIWn06BghLk8YwfgGBpSvwsRGMnATHwSha81WUsI/RFyC1fheBuOO93Gv9Lw0KCbAF32RQAAAAAElFTkSuQmCC",
             offFunc:function(delLink){
                 var rsc = setInterval(function(){
-                    var offBtn=document.querySelector('.js-cloud-download');
+                    var offBtn=document.querySelector('a[data-track=clouddown]');
                     if(offBtn){
                         clearInterval(rsc);
                         offBtn.click();
@@ -272,14 +273,14 @@
             bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAS1BMVEXq5N+Lgnl/dGw1Jxzt5uDy7eju6eO1rKTk3tdPRDjb1M2vpZ1jWU9WST6+tq+qoJiYkIp4bWNCNCbg2dTIwLi5squroplYT0dFNyua0/V8AAAAA3RSTlP+/v6VFoksAAAAaklEQVQ4y+XSSw6AIAwEUMCC5Svg9/4nFQ/AsDTGWb+kk0nFNMgfQawDsKQ4AOxUReBgZm8BmEWLK1cfEJEx5CMG2riCgG4xudehiQesCp7Qe4AdWJ6oJKUAd2AJh6ItWDS1z/b1j/osuAHroA3qksST5QAAAABJRU5ErkJggg=="
         },
         torrent:{
-            regex:/torrent\.org\.cn/,
-            url:"http://www.torrent.org.cn/Home/torrent/download.html?hash=",
+            regex:/itorrents\.org/,
+            url:"https://itorrents.org/torrent/",
             bgColor:"f2f2f2",
             noHttp:true,
             noEd2k:true,
             noFtp:true,
             directUrl:function(offUrl){
-                return this.url+offUrl.replace("magnet:?xt=urn:btih:","");
+                return this.url+offUrl.replace("magnet:?xt=urn:btih:","").replace(/&.*/,"")+".torrent";
             },
             bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAh1BMVEUAAAARzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW4RzW6Q4LCTAAAALHRSTlMABCboGRPMNdIrH/Pu6sS+pC/iuZg5CfnaeUWFZD88Dtayq5GLgFz3VE5Jaw0PQwoAAAFJSURBVDjL1ZLZdoQgEERHQBBwAfd9xnW2/v/vSxRNJifOe3JfPC1F0V1w+l+cy2m6C+u9oJYA13wkb5ZF/XBhwdfHggo3PaxQftiADzHLjaKzDwTkAvJRhqsgmw8EtgPg8NYxbRxYpMGygPjyyfKjLoqQ+r7Sos+rB7NT6/cZLGkThiwbtVUXBOqJfmisJKahh3NFUO+aTsMYvcwQe7AyagpfXO67CQrAgJmCF/B9C6nb/0Q6zKoi8vbaMac8M1OGE2IuRDehRwyGYotgwR2QuDEP4EpnW8fbzZ1NygAyas6z4/C1x2vUpEwtLjlZEuhCOpQk6SXIsjDWnmqIvlWqXucgbVtOweoZ8QgMLlXF3KTmrfieBENWm5E3qDAx1njfFosTGb6nLPegWXzBHnaGZLFM2ehgKTEtxMtdEK6Rbe2VzZOEf5Z/hQ9XijJkclXFpgAAAABJRU5ErkJggg=="
         },
@@ -291,7 +292,7 @@
             noEd2k:true,
             noFtp:true,
             directUrl:function(offUrl){
-                return this.url+offUrl.replace("magnet:?xt=urn:btih:","");
+                return this.url+offUrl.replace("magnet:?xt=urn:btih:","").replace(/&.*/,"");
             },
             bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAA9lBMVEUAAACgoqOipKUAAAC4ubq1traXl5jX19g9PT4GBga2t7ixsrOur7Cmp6jMzM1+f39ZWVpnZ2eChIXMzc3BwcKvsrLGxsacnZ3f399zdHS9vr61trZZW1upq6vIysq7vb2nqKliZGTS09O6vLzg4OC2uLhQUVHi4uK+v79OTk4hISHT1NQZGRnf4OCPkpKsra3KysxmZ2d+f3/y8vOUlZW+vr+2tridnp/Z2dmAgYJ4enptbm5YWVn39/fv7/DDw8Td3d7U1dXU1NTOztC4ubuoqamlpaWcnJyYmJp6fHxwcXFTVVX29/bHyMnHx8e3t7qgoaGHiYm1AxJpAAAAL3RSTlMAHhgF4NbW2jQU4uDg3sybVDUkHhcF6Ojk5ODc2dfJycPDra17ezkuLiUlIRUREf6sWL0AAAC0SURBVBjTjY9HEoJAAAQXVwVzAMw5Z5YMgoBizv7/M7JwoLw5t+lD1wzAYVcEPaeXLAgyHvTazTpJtvrDCe5M1nUReiiK/ERZxgNEVLYdy1GFz1uuET54IfGucTq/5qIYRGIKEjcaJ3ggFsEgrp/tnSwZJi/EMSDSqqQeJeNmXk+pwLFHlrg9CPzl16H/7ygmQ0eyCACkMuGODAUBTORzHbJSKlcb3Vw+AfE9uJgWCiNq5rcvfNwgjdumYdQAAAAASUVORK5CYII="
         }
@@ -316,7 +317,7 @@
                 weiyun:"腾讯微云",
                 bitqiu:"比特球",
                 apiv:"九秒云播",
-                torrent:"Torrent.org种子下载",
+                torrent:"Itorrents种子下载",
                 btcache:"Btcache.me种子下载",
                 enable:"启用",
                 disable:"禁用"
@@ -335,7 +336,7 @@
                 weiyun:"Weiyun",
                 bitqiu:"bitqiu",
                 apiv:"Apiv Online play",
-                torrent:"Torrent download in torrent.org",
+                torrent:"Torrent download in itorrent.org",
                 btcache:"Torrent download in btcache.me",
                 enable:"Enable ",
                 disable:"Disable "
@@ -380,9 +381,9 @@
             a.whx-a{
                 display:inline-block;
                 margin-left:5px;
-                background-size:20px;
+                background-size:20px!important;
                 border-radius:50%;
-                border:0px;
+                border:0px!important;
                 vertical-align:middle;
                 transition:margin-top 0.25s ease;
                 outline:none!important;
