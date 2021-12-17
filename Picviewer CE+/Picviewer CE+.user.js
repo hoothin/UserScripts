@@ -1,41 +1,41 @@
 // ==UserScript==
-// @name           Picviewer CE+
+// @name            Picviewer CE+
 // @name:zh-CN         Picviewer CE+
 // @name:zh-TW         Picviewer CE+
-// @author         NLF && ywzhaiqi && hoothin
-// @description    Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
+// @author          NLF && ywzhaiqi && hoothin
+// @description     Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version        2021.12.16.1
-// @created        2011-6-15
-// @namespace      http://userscripts.org/users/NLF
-// @homepage       http://hoothin.com
-// @connect       www.google.com
-// @connect       www.google.com.hk
-// @connect       www.google.co.jp
-// @connect       ipv4.google.com
-// @connect       image.baidu.com
-// @connect       www.tineye.com
-// @grant          GM_getValue
-// @grant          GM_setValue
-// @grant          GM_addStyle
-// @grant          GM_openInTab
-// @grant          GM_setClipboard
-// @grant          GM_xmlhttpRequest
-// @grant          GM_registerMenuCommand
-// @grant          unsafeWindow
-// @require        https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
+// @version         2021.12.17.1
+// @created         2011-6-15
+// @namespace       http://userscripts.org/users/NLF
+// @homepage        http://hoothin.com
+// @connect         www.google.com
+// @connect         www.google.com.hk
+// @connect         www.google.co.jp
+// @connect         ipv4.google.com
+// @connect         image.baidu.com
+// @connect         www.tineye.com
+// @grant           GM_getValue
+// @grant           GM_setValue
+// @grant           GM_addStyle
+// @grant           GM_openInTab
+// @grant           GM_setClipboard
+// @grant           GM_xmlhttpRequest
+// @grant           GM_registerMenuCommand
+// @grant           unsafeWindow
+// @require         https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
 // @contributionURL https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
 // @contributionAmount 1
-// @require      https://cdn.jsdelivr.net/npm/file-saver@2.0.2/dist/FileSaver.min.js
-// @run-at         document-end
-// @include       http://*
-// @include       https://*
-// @exclude       http://www.toodledo.com/tasks/*
-// @exclude       http*://maps.google.com*/*
-// @exclude       *://www.google.*/_/chrome/newtab*
-// @exclude       *://mega.*/*
-// @exclude       *://*.mega.*/*
+// @require         https://cdn.jsdelivr.net/npm/file-saver@2.0.2/dist/FileSaver.min.js
+// @run-at          document-end
+// @include         http://*
+// @include         https://*
+// @exclude         http://www.toodledo.com/tasks/*
+// @exclude         http*://maps.google.com*/*
+// @exclude         *://www.google.*/_/chrome/newtab*
+// @exclude         *://mega.*/*
+// @exclude         *://*.mega.*/*
 // ==/UserScript==
 
 ;(function(topObject,window,document,unsafeWindow){
@@ -98,17 +98,17 @@
                 onlineEditTip:"使用#t#在线编辑该图片",
                 openInNewWindow:"新窗口打开",
                 openInNewWindowTip:"新窗口打开图片",
-                findInPage:"定位到图",
+                findInPage:"定位到图片",
                 findInPageTip:"滚动到当前图片所在的位置",
                 viewCollection:"查看收藏",
                 viewCollectionTip:"查看所有收藏的图片",
                 inCollection:"收藏模式中，无法使用",
                 cantFind:"图片不在文档中，或者被隐藏了，无法定位！",
-                exportImages:"导出大图",
+                exportImages:"导出所有大图",
                 exportImagesTip:"导出所有图片到新窗口",
                 downloadImage:"下载所有",
                 downloadImageTip:"下载当前库中所有显示图片",
-                copyImagesUrl:"复制所有",
+                copyImagesUrl:"复制所有大图",
                 copyImagesUrlTip:"复制所有大图地址",
                 copySuccess:"已成功复制 #t# 张大图地址",
                 autoRefresh:"自动重载",
@@ -297,17 +297,17 @@
                 onlineEditTip:"使用#t#在線編輯該圖片",
                 openInNewWindow:"新窗口打開",
                 openInNewWindowTip:"新窗口打開圖片",
-                findInPage:"定位到圖",
+                findInPage:"定位到圖片",
                 findInPageTip:"滾動到當前圖片所在的位置",
                 viewCollection:"查看收藏",
                 viewCollectionTip:"查看所有收藏的圖片",
                 inCollection:"收藏模式中，無法使用",
                 cantFind:"圖片不在文檔中，或者被隱藏了，無法定位！",
-                exportImages:"導出大圖",
+                exportImages:"導出全部大圖",
                 exportImagesTip:"導出所有圖片到新窗口",
                 downloadImage:"下載所有",
                 downloadImageTip:"下載當前庫中所有顯示圖片",
-                copyImagesUrl:"複製所有",
+                copyImagesUrl:"複製全部大圖",
                 copyImagesUrlTip:"複製所有大圖地址",
                 copySuccess:"已成功複製 #t# 張大圖地址",
                 autoRefresh:"自動重載",
@@ -2670,7 +2670,7 @@
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="psImage" title="'+i18n("onlineEditTip",prefs.gallery.editSite)+'">'+i18n("onlineEdit")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="exportImages" title="'+i18n("exportImagesTip")+'">'+i18n("exportImages")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="copyImages" title="'+i18n("copyImagesUrlTip")+'">'+i18n("copyImagesUrl")+'</span>'+
-                    '<span class="pv-gallery-head-command-drop-list-item" data-command="downloadImage" title="'+i18n("downloadImageTip")+'">'+i18n("downloadImage")+'</span>'+
+                    //'<span class="pv-gallery-head-command-drop-list-item" data-command="downloadImage" title="'+i18n("downloadImageTip")+'">'+i18n("downloadImage")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="scrollIntoView" title="'+i18n("findInPageTip")+'">'+i18n("findInPage")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="enterCollection" title="'+i18n("viewCollectionTip")+'">'+i18n("viewCollection")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="openInNewWindow" title="'+i18n("openInNewWindowTip")+'">'+i18n("openInNewWindow")+'</span>'+
