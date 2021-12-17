@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            Picviewer CE+
-// @name:zh-CN         Picviewer CE+
-// @name:zh-TW         Picviewer CE+
+// @name:zh-CN      Picviewer CE+
+// @name:zh-TW      Picviewer CE+
 // @author          NLF && ywzhaiqi && hoothin
 // @description     Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
@@ -105,11 +105,11 @@
                 inCollection:"收藏模式中，无法使用",
                 cantFind:"图片不在文档中，或者被隐藏了，无法定位！",
                 exportImages:"导出所有大图",
-                exportImagesTip:"导出所有图片到新窗口",
+                exportImagesTip:"导出所有显示中的图片到新窗口",
                 downloadImage:"下载所有",
                 downloadImageTip:"下载当前库中所有显示图片",
                 copyImagesUrl:"复制所有大图",
-                copyImagesUrlTip:"复制所有大图地址",
+                copyImagesUrlTip:"复制所有显示中的大图地址",
                 copySuccess:"已成功复制 #t# 张大图地址",
                 autoRefresh:"自动重载",
                 autoRefreshTip:"最后几张图片时，滚动主窗口到最底部，然后自动加载新的图片",
@@ -304,11 +304,11 @@
                 inCollection:"收藏模式中，無法使用",
                 cantFind:"圖片不在文檔中，或者被隱藏了，無法定位！",
                 exportImages:"導出全部大圖",
-                exportImagesTip:"導出所有圖片到新窗口",
+                exportImagesTip:"導出所有顯示中的圖片到新窗口",
                 downloadImage:"下載所有",
                 downloadImageTip:"下載當前庫中所有顯示圖片",
                 copyImagesUrl:"複製全部大圖",
-                copyImagesUrlTip:"複製所有大圖地址",
+                copyImagesUrlTip:"複製所有顯示中的大圖地址",
                 copySuccess:"已成功複製 #t# 張大圖地址",
                 autoRefresh:"自動重載",
                 autoRefreshTip:"最後幾張圖片時，滾動主窗口到最底部，然後自動載入新的圖片",
