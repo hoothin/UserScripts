@@ -4,7 +4,7 @@
 // @name:zh-TW   懶人小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.5.2
+// @version      2.5.3
 // @description  Fetch and download main content on current page, provide special support for chinese novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取小說、論壇內容等並保存為TXT文檔
@@ -27,7 +27,7 @@
 
 (function() {
     'use strict';
-    var indexReg=/PART\b|^Prologue|^\D+\-\d+|分卷|Chapter\s*[\-_]?\d+|^序$|^序\s*言|^序\s*章|^前\s*言|^引\s*言|^引\s*子|^摘\s*要|^楔\s*子|^契\s*子|^后\s*记|^後\s*記|^附\s*言|^结\s*语|^結\s*語|^尾\s*声|^最終話|^最终话|^番\s*外|^\d+\s+\D+$|[第^\s（][\d〇零一二三四五六七八九十百千万萬-]+\s*(、|）|\.\D|章|节|節|回|卷|折|篇|幕|集|话|話)/i;
+    var indexReg=/PART\b|^Prologue|^\D+\-\d+|分卷|Chapter\s*[\-_]?\d+|^序$|^序\s*言|^序\s*章|^前\s*言|^引\s*言|^引\s*子|^摘\s*要|^楔\s*子|^契\s*子|^后\s*记|^後\s*記|^附\s*言|^结\s*语|^結\s*語|^尾\s*声|^最終話|^最终话|^番\s*外|^\d+\s+\D+$|^[第（][\d〇零一二三四五六七八九十百千万萬-]+\s*(、|）|\.\D|章|节|節|回|卷|折|篇|幕|集|话|話)/i;
     var innerNextPage=/下一(页|张)|next\s*page/i;
     var lang = navigator.appName=="Netscape"?navigator.language:navigator.userLanguage;
     var i18n={};
@@ -97,7 +97,7 @@
         document.body.appendChild(rocketContent);
         rocketContent.outerHTML=`
         <div id="txtDownContent">
-            <div style="width:360px;height:90px;position:fixed;left:50%;top:50%;margin-top:-25px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;">
+            <div style="font-size:16px;width:360px;height:90px;position:fixed;left:50%;top:50%;margin-top:-25px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;">
                 <div id="txtDownWords" style="position:absolute;width:275px;max-height: 90%;border: 1px solid #f3f1f1;padding: 8px;border-radius: 10px;overflow: auto;">
                     Downloading......
                 </div>
