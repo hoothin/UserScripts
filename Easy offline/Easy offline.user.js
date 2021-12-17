@@ -21,6 +21,7 @@
 // @grant        GM_registerMenuCommand
 // @grant        GM_deleteValue
 // @grant        unsafeWindow
+// @run-at       document-end
 // @supportURL   http://www.hoothin.com
 // @license      MIT License
 // @compatible        chrome
@@ -654,7 +655,7 @@
     }else if(location.href.indexOf("github.com/hoothin/UserScripts/tree/master/Easy%20offline") != -1){
         setting();
     }else if(!isDisk){
-        if(/greasyfork\.org\/.*scripts\/22590/.test(location.href)){
+        if(/greasyfork\.org\/.*scripts\/22590[^\/]*$/.test(location.href)){
             setting();
         }
         setTimeout(function(){getAllEnableUrl();},10);
