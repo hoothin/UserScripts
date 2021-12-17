@@ -390,7 +390,7 @@
         for(i=0;i<childlist.length;i++){
             var child=childlist[i];
             if(getDepth(child)==getDepth(largestContent)){
-                if((!largestContent.className && child.className) || (largestContent.className && !child.className))continue;
+                if((!largestContent.className && child.className) || (largestContent.className && !child.className) || (largestContent.className && child.className && largestContent.className != child.className))continue;
                 if((largestContent.className && largestContent.className==child.className)||largestContent.parentNode ==child.parentNode){
                     getRightStr(child, true);
                 }else {
