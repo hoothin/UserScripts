@@ -6,7 +6,7 @@
 // @description     Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version         2021.12.17.2
+// @version         2021.12.18.1
 // @created         2011-6-15
 // @namespace       http://userscripts.org/users/NLF
 // @homepage        http://hoothin.com
@@ -1384,6 +1384,32 @@
                      newsrc = this.parentNode.parentNode.parentNode.querySelector("img").src
                  }
                  return newsrc.replace(/\?.*$/i,"");
+             }
+            },
+            {name: "588ku",
+             url: /588ku\.com/,
+             getImage: function() {
+                 return this.src.replace(/!\/fw.*/,"");
+             }
+            },
+            {name: "ibaotu",
+             url: /ibaotu\.com/,
+             ext: 'previous',
+             getImage: function() {
+                 return this.src.replace(/!fwc238/,"!ww7002");
+             }
+            },
+            {name: "58pic",
+             url: /58pic\.com/,
+             ext: function(target){
+                 if(target.className=="no-login" && target.style.opacity==""){
+                     target.style.opacity=0.99;
+                     setTimeout(()=>{target.style.display="none";},1000);
+                 }
+                 return null;
+             },
+             getImage: function() {
+                 return this.src.replace(/!.*/,"!w1024");
              }
             }
         ];
@@ -3956,20 +3982,26 @@
                                 imgReady(node.dataset.src,{
                                     ready:function(){
                                         new ImgWindowC(this);
-                                    },
+                                    }
                                 });
                             });
+                            imgReady(imgSpan.querySelector("img"),{
+                                ready:function(){
+                                    if(this.width>=88 && this.height>=88){
+                                        var dlSpan = document.createElement('p');
+                                        dlSpan.innerHTML=i18n("download");
+                                        dlSpan.src=node.dataset.src;
+                                        dlSpan.title=node.title||document.title;
+                                        dlSpan.onclick=(e)=>{
+                                            saveAs(e.target.src,e.target.title);
+                                            e.stopPropagation();
+                                            return true;
+                                        };
+                                        imgSpan.appendChild(dlSpan);
+                                    }
+                                }
+                            });
                             maximizeContainer.appendChild(imgSpan);
-                            var dlSpan = document.createElement('p');
-                            dlSpan.innerHTML=i18n("download");
-                            dlSpan.src=node.dataset.src;
-                            dlSpan.title=node.title||document.title;
-                            dlSpan.onclick=(e)=>{
-                                saveAs(e.target.src,e.target.title);
-                                e.stopPropagation();
-                                return true;
-                            };
-                            imgSpan.appendChild(dlSpan);
                         }
                     });
                 }
@@ -5724,8 +5756,8 @@
                     width: 100%;\
                     height: 30px;\
                     max-height: 40%;\
-                    font-size: 16px;\
-                    line-height: 30px;\
+                    font-size: 18px;\
+                    line-height: 40px;\
                     text-align: center;\
                     background: #000;\
                     color: #fff;\
@@ -5740,6 +5772,7 @@
                     }\
                     .pv-gallery-maximize-container span>p:hover{\
                     color:red;\
+                    font-weight:bold;\
                     }\
                     .pv-gallery-maximize-scroll{\
                     overflow-y: scroll;\
@@ -9668,6 +9701,9 @@
                     switch (matchedRule.ext) {
                         case 'previous':
                             target = target.previousElementSibling || target;
+                            break;
+                        case 'next':
+                            target = target.nextElementSibling || target;
                             break;
                         case 'previous-2':
                             target = (target.previousElementSibling &&
