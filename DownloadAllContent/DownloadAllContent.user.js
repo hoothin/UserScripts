@@ -4,7 +4,7 @@
 // @name:zh-TW   懶人小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.5.3
+// @version      2.5.5
 // @description  Fetch and download main content on current page, provide special support for chinese novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取小說、論壇內容等並保存為TXT文檔
@@ -159,26 +159,35 @@
                         var doc = getDocEle(result.responseText);
                         let nextPage=checkNextPage(doc);
                         if(nextPage){
-                            nextPage.innerText=aTag.innerText+"\t>>";
-                            aEles.push(nextPage);
-                            let targetIndex = curIndex;
-                            for(let a=0;a<insertSigns.length;a++){
-                                let signs=insertSigns[a],breakSign=false;
-                                if(signs){
-                                    for(let b=0;b<signs.length;b++){
-                                        let sign=signs[b];
-                                        if(sign==curIndex){
-                                            targetIndex=a;
-                                            breakSign=true;
-                                            break;
+                            var inArr=false;
+                            for(var ai=0;ai<aEles.length;ai++){
+                                if(aEles[ai].href==nextPage.href){
+                                    inArr=true;
+                                    break;
+                                }
+                            }
+                            if(!inArr){
+                                nextPage.innerText=aTag.innerText+"\t>>";
+                                aEles.push(nextPage);
+                                let targetIndex = curIndex;
+                                for(let a=0;a<insertSigns.length;a++){
+                                    let signs=insertSigns[a],breakSign=false;
+                                    if(signs){
+                                        for(let b=0;b<signs.length;b++){
+                                            let sign=signs[b];
+                                            if(sign==curIndex){
+                                                targetIndex=a;
+                                                breakSign=true;
+                                                break;
+                                            }
                                         }
                                     }
+                                    if(breakSign)break;
                                 }
-                                if(breakSign)break;
+                                let insertSign = insertSigns[targetIndex];
+                                if(!insertSign)insertSigns[targetIndex] = [];
+                                insertSigns[targetIndex].push(aEles.length-1);
                             }
-                            let insertSign = insertSigns[targetIndex];
-                            if(!insertSign)insertSigns[targetIndex] = [];
-                            insertSigns[targetIndex].push(aEles.length-1);
                         }
                         downIndex++;
                         downNum++;
@@ -304,23 +313,23 @@
     function getPageContent(doc){
         if(!doc)return i18n.error;
         if(doc.defaultView)
-        [].forEach.call(doc.querySelectorAll("span,div"),function(item){
+        [].forEach.call(doc.querySelectorAll("span,div,ul"),function(item){
             var thisStyle=doc.defaultView.getComputedStyle(item);
             if(thisStyle && (thisStyle.display=="none" || (item.tagName=="SPAN" && thisStyle.fontSize=="0px")))
-                item.parentNode.removeChild(item);
+                item.innerHTML="";
         });
         var i,j,k,rStr="",pageData=(doc.body?doc.body:doc).cloneNode(true),delList=[];
         [].forEach.call(pageData.querySelectorAll("font.jammer"),function(item){
-            item.parentNode.removeChild(item);
+            item.innerHTML="";
         });
         var selectors=GM_getValue("selectors");
         if(selectors){
             [].forEach.call(pageData.querySelectorAll(selectors),function(item){
-                item.parentNode.removeChild(item);
+                item.innerHTML="";
             });
         }
         [].forEach.call(pageData.querySelectorAll("script,style,link,img,noscript,iframe"),function(item){delList.push(item);});
-        [].forEach.call(delList,function(item){item.parentNode.removeChild(item);});
+        [].forEach.call(delList,function(item){item.innerHTML="";});
         var largestContent,contents=pageData.querySelectorAll("span,div,article,p,td"),largestNum=0;
         for(i=0;i<contents.length;i++){
             let content=contents[i],hasText=false,allSingle=true,item,curNum=0;
@@ -328,14 +337,14 @@
                 item=content.childNodes[j];
                 if(item.nodeType==3){
                     if(/^\s*$/.test(item.data))
-                        item.parentNode.removeChild(item);
+                        item.innerHTML="";
                     else hasText=true;
                 }else if(/^(I|A|STRONG|B|FONT|P|DL|DD|H\d)$/.test(item.tagName))hasText=true;
             }
             for(j=content.childNodes.length-1;j>=0;j--){
                 item=content.childNodes[j];
-                if(item.nodeType==1 && !/^(I|A|STRONG|B|FONT|BR)$/.test(item.tagName) && /^\s*$/.test(item.innerHTML))
-                    item.parentNode.removeChild(item);
+                if(item.nodeType==1 && !/^(I|A|STRONG|B|FONT|BR)$/.test(item.tagName) && /^[\s\-\_\?\>\|]*$/.test(item.innerHTML))
+                    item.innerHTML="";
             }
             if(content.childNodes.length>1){
                 for(j=0;j<content.childNodes.length;j++){
@@ -376,7 +385,7 @@
             let childNodes=ele.childNodes,cStr="\r\n",hasText=false;
             for(let j=0;j<childNodes.length;j++){
                 let childNode=childNodes[j];
-                if(childNode.nodeType==3 && childNode.data && !/^\s*$/.test(childNode.data))hasText=true;
+                if(childNode.nodeType==3 && childNode.data && !/^[\s\-\_\?\>\|]*$/.test(childNode.data))hasText=true;
                 if(childNode.innerHTML){
                     childNode.innerHTML=childNode.innerHTML.replace(/\<\s*br\s*\>/gi,"\r\n").replace(/\n+/gi,"\n").replace(/\r+/gi,"\r");
                 }
