@@ -6,7 +6,7 @@
 // @description     Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version         2021.12.18.2
+// @version         2021.12.18.3
 // @created         2011-6-15
 // @namespace       http://userscripts.org/users/NLF
 // @homepage        http://hoothin.com
@@ -947,7 +947,8 @@
              enabled:true,
              url:/^https?:\/\/[^.]*\.deviantart\.com/i,
              getImage:function(img, a){
-                 var oldsrc=this.src;
+                 return this.src.replace(/\/v1\/.*?token/,"?token");
+                 /*var oldsrc=this.src;
                  var newsrc;
                  if(this.parentNode && this.parentNode.parentNode && this.parentNode.parentNode.parentNode && this.parentNode.parentNode.parentNode.dataset && this.parentNode.parentNode.parentNode.dataset.superFullImg){
                      newsrc=this.parentNode.parentNode.parentNode.dataset.superFullImg;
@@ -955,7 +956,7 @@
                  if(!newsrc)
                      newsrc = a.getAttribute('data-super-img') || a.getAttribute('data-super-full-img') || a.parentNode.getAttribute('data-super-img') || a.parentNode.getAttribute('data-super-full-img')
                          || oldsrc.replace(/(http:\/\/[^\/]+\/fs\d+\/)200H\/(.*)/i,'$1$2');
-                 return newsrc==oldsrc? '' : newsrc;
+                 return newsrc==oldsrc? '' : newsrc;*/
              },
             },
             {name: '花瓣网',
@@ -1410,6 +1411,13 @@
              },
              getImage: function() {
                  return this.src.replace(/!.*/,"!w1024");
+             }
+            },
+            {name: "gelbooru",
+             url: /gelbooru\.com/,
+             getImage: function() {
+                 var _isrc=this.src.replace(/.*\/thumbnails\/(.*)\/thumbnail_(.*)\..*/,"https://img3.gelbooru.com/images/$1/$2");
+                 return [_isrc+".png", _isrc+".jpg"];
              }
             }
         ];
@@ -7006,7 +7014,7 @@
                     background-color: rgba(40,40,40,0.9);\
                     padding: 8px;\
                     border: 5px solid #ccc;\
-                    border-radius: 12px;\
+                    border-radius: 1px;\
                     line-height: 0;\
                     text-align: left;\
                     box-sizing: content-box;\
