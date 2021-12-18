@@ -513,7 +513,7 @@
                 if(ruleArr[6]) siteConfig.bgImg=ruleArr[6];
                 else siteConfig.bgImg=downIconBg;
                 if(ruleArr[7]) siteConfig.bgColor=ruleArr[7];
-                else siteConfig.bgColor="a3e1fb";
+                else siteConfig.bgColor="f2f2f2";
                 sites[ruleArr[1]]=siteConfig;
             }
         });
