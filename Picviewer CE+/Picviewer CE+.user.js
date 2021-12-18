@@ -6,7 +6,7 @@
 // @description     Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version         2021.12.18.1
+// @version         2021.12.18.2
 // @created         2011-6-15
 // @namespace       http://userscripts.org/users/NLF
 // @homepage        http://hoothin.com
@@ -3972,39 +3972,93 @@
                     viewmoreBar.innerHTML = '✖';
 
                     var nodes = document.querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]');
+                    var self=this;
                     [].forEach.call(nodes, function(node){
                         var nodeStyle=unsafeWindow.getComputedStyle(node);
                         if(nodeStyle.display!="none"){
-                            var imgSpan = document.createElement('span');
+                            let curNode=node;
+                            let imgSpan = document.createElement('span');
                             imgSpan.className = "maximizeChild";
-                            imgSpan.innerHTML = '<img src="'+node.dataset.src+'">';
+                            imgSpan.innerHTML = '<img src="'+curNode.dataset.src+'">';
                             imgSpan.addEventListener("click", function(e){
-                                imgReady(node.dataset.src,{
+                                imgReady(curNode.dataset.src,{
                                     ready:function(){
                                         new ImgWindowC(this);
                                     }
                                 });
                             });
-                            imgReady(imgSpan.querySelector("img"),{
-                                ready:function(){
-                                    if(this.width>=88 && this.height>=88){
-                                        var dlSpan = document.createElement('p');
-                                        dlSpan.innerHTML=i18n("download");
-                                        dlSpan.src=node.dataset.src;
-                                        dlSpan.title=node.title||document.title;
-                                        dlSpan.onclick=(e)=>{
+                            let img=imgSpan.querySelector("img");
+                            var addDlSpan=(img, imgSpan, curNode, clickCb)=>{
+                                var dlSpan = document.createElement('p');
+                                dlSpan.innerHTML=i18n("download");
+                                dlSpan.src=curNode.dataset.src;
+                                dlSpan.title=curNode.title||document.title;
+                                dlSpan.onclick=clickCb;
+                                imgSpan.appendChild(dlSpan);
+                            };
+                            fetch(curNode.dataset.src)
+                            .then(response=>{
+                                return response.blob();
+                            })
+                            .then(blob=>{
+                                if(img.width>=88 && img.height>=88){
+                                    addDlSpan(img, imgSpan, curNode, e=>{
+                                        e.stopPropagation();
+                                        if(blob.type=="image/webp"){
+                                            self.blobToCanvas(blob, canvas=>{
+                                                canvas.toBlob(blob=>{
+                                                    saveAs(blob,e.target.title);
+                                                }, "image/png");
+                                            });
+                                        }else{
                                             saveAs(e.target.src,e.target.title);
-                                            e.stopPropagation();
-                                            return true;
-                                        };
-                                        imgSpan.appendChild(dlSpan);
-                                    }
+                                        }
+                                        return true;
+                                    });
                                 }
+                            })
+                            .catch(e=>{
+                                imgReady(img,{
+                                    ready:function(){
+                                        if(img.width>=88 && img.height>=88){
+                                            addDlSpan(img, imgSpan, curNode, e=>{
+                                                e.stopPropagation();
+                                                saveAs(e.target.src,e.target.title);
+                                                return true;
+                                            });
+                                        }
+                                    }
+                                });
                             });
                             maximizeContainer.appendChild(imgSpan);
                         }
                     });
                 }
+            },
+            dataURLToCanvas:function (dataurl, cb){
+                var canvas = document.createElement('CANVAS');
+                var ctx = canvas.getContext('2d');
+                var img = new Image();
+                img.onload = function(){
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+                    cb(canvas);
+                };
+                img.src = dataurl;
+            },
+            blobToDataURL:function(blob, cb){
+                var a = new FileReader();
+                a.readAsDataURL(blob);
+                a.onload = function (e){
+                    cb(e.target.result);
+                };
+            },
+            blobToCanvas: function (blob, cb){
+                var self=this;
+                this.blobToDataURL(blob, function (dataurl){
+                    self.dataURLToCanvas(dataurl, cb);
+                });
             },
             showHideBottom: function() {  // 显示隐藏 sidebar-container
                 var sidebarContainer = this.eleMaps['sidebar-container'],
@@ -5101,7 +5155,7 @@
 
                 imgs = Array.prototype.slice.call(imgs);
                 arrayFn.forEach.call(document.querySelectorAll("iframe"),function(iframe){
-                    if(iframe.src.replace(/\/[^\/]*$/,"").indexOf(location.hostname)!=-1)
+                    if(iframe.src && iframe.src.replace(/\/[^\/]*$/,"").indexOf(location.hostname)!=-1)
                         try{
                             arrayFn.forEach.call(iframe.contentWindow.document.getElementsByTagName('img'),function(img){
                                 imgs.push(img);
