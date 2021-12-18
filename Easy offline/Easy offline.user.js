@@ -8,7 +8,7 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdn.jsdelivr.net/jquery/1.7.2/jquery.min.js
 // @require      https://cdn.jsdelivr.net/hi-base64/0.2.0/base64.min.js
-// @version      1.6.1
+// @version      1.7.0
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -301,51 +301,59 @@
     var enableUrl = 'a[href^="magnet"],[href^="ed2k://|file"],[href$=".torrent"],[href$=".mp4"],[href$=".rar"],[href$=".7z"],[href$=".zip"],[href$=".rmvb"],[href$=".mkv"],[href$=".avi"],[href$=".iso"]';
     var disableUrl=[".torrentkitty.","bt.box.n0808.com"];
     var lang = navigator.appName=="Netscape"?navigator.language:navigator.userLanguage;
-    var i18n={};
+    var i18n=(name)=>{
+        var config={};
+        switch (lang){
+            case "zh-CN":
+                config={
+                    configure:"一键离线下载设置",
+                    yyw:"115网盘",
+                    baidu:"百度网盘",
+                    furk:"Furk网盘",
+                    seedr:"Seedr网盘",
+                    pcloud:"Pcloud网盘",
+                    xunlei:"迅雷离线",
+                    xiaomi:"小米路由器",
+                    weiyun:"腾讯微云",
+                    bitqiu:"比特球",
+                    apiv:"九秒云播",
+                    torrent:"Itorrents种子下载",
+                    btcache:"Btcache.me种子下载",
+                    enable:"启用",
+                    disable:"禁用",
+                    addIcon:"添加站点"
+                };
+                break;
+            default:
+                config={
+                    configure:"EasyOffline - Configure",
+                    yyw:"115",
+                    baidu:"BaiduPan",
+                    furk:"Furk",
+                    seedr:"Seedr",
+                    pcloud:"Pcloud",
+                    xunlei:"Xunlei",
+                    xiaomi:"MiWifi",
+                    weiyun:"Weiyun",
+                    bitqiu:"bitqiu",
+                    apiv:"Apiv Online play",
+                    torrent:"Torrent download in itorrent.org",
+                    btcache:"Torrent download in btcache.me",
+                    enable:"Enable ",
+                    disable:"Disable ",
+                    addIcon:"Add new site"
+                };
+                break;
+        }
+        return config[name]?config[name]:name;
+    };
     var showType=!!GM_getValue("showType");
     $=jQuery;
-    switch (lang){
-        case "zh-CN":
-            i18n={
-                configure:"一键离线下载设置",
-                yyw:"115网盘",
-                baidu:"百度网盘",
-                furk:"Furk网盘",
-                seedr:"Seedr网盘",
-                pcloud:"Pcloud网盘",
-                xunlei:"迅雷离线",
-                xiaomi:"小米路由器",
-                weiyun:"腾讯微云",
-                bitqiu:"比特球",
-                apiv:"九秒云播",
-                torrent:"Itorrents种子下载",
-                btcache:"Btcache.me种子下载",
-                enable:"启用",
-                disable:"禁用"
-            };
-            break;
-        default:
-            i18n={
-                configure:"EasyOffline - Configure",
-                yyw:"115",
-                baidu:"BaiduPan",
-                furk:"Furk",
-                seedr:"Seedr",
-                pcloud:"Pcloud",
-                xunlei:"Xunlei",
-                xiaomi:"MiWifi",
-                weiyun:"Weiyun",
-                bitqiu:"bitqiu",
-                apiv:"Apiv Online play",
-                torrent:"Torrent download in itorrent.org",
-                btcache:"Torrent download in btcache.me",
-                enable:"Enable ",
-                disable:"Disable "
-            };
-            break;
-    }
 
+    var addIconBg="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZBAMAAAA2x5hQAAAALVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADBoCg+AAAADnRSTlMAYK1vMOA/ENJ/zmdLF4e4IG4AAACPSURBVBjTYwAB9uTJ6QwwwLju3bt3C6Eclrh3IBAC4cm9gwABsLp3UPAQxPMDMh4pgbgOQB5IFwMDH5BcAFII4UGUciB4rxgY6hC8dwUMeUA2EID5CQx27x5BeEzv3hkwzEPiTUCRm4Ci7wCKmReQ7XuK4pbHKO4MwPADwn/ofkeESws0mLj7gJxGEAs1PAEp8ZbkUx9Q7gAAAABJRU5ErkJggg==";
+    var downIconBg="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAMAAADzN3VRAAAARVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADc6ur3AAAAFnRSTlMAYM5vMOA/ENGegK2olI6G1b97Z0sXENA+jAAAAKFJREFUKM+FklkSxCAIRHFfss3K/Y86iQSDVqzpH7FfgQpCVfAmGx+gl9JI0qrxrcNLzooEbKUG4EKWdkCiDRV0N0RTrZ5wvdgTTgp4SzCAHxAPZkAM5GOJWuuT7FE5OVPOBFLTYb3Oc2YB5uJ8+G6pgkTGt74ntcCJHiwFLHw10Tdc93jlGXGvSRtsHNpuPs+/o1ODfxAtSL0f7HPC+L/9AF60G3QxO1UaAAAAAElFTkSuQmCC";
     var sitesArr=[],siteSort=GM_getValue("siteSort"),siteName;
+    addCustomSites();
     if(!siteSort)siteSort=["baidu","yyw","furk","seedr"];
     siteSort.forEach(function(item) {
         var siteConfig=sites[item];
@@ -389,10 +397,11 @@
                 transition:margin-top 0.25s ease;
                 outline:none!important;
                 padding:0px!important;
-                height:25px!important;
-                width:25px!important;
+                height:26px!important;
+                width:26px!important;
                 left:0px!important;
                 top:0px!important;
+                cursor: pointer;
                 background-position:center!important;
                 background-repeat:no-repeat!important;
             }
@@ -427,7 +436,7 @@
         let offNode=$("<a></a>");
         offNode.addClass('whx-a').css("position","absolute").css("margin-top","0px").css("margin-left","0px").attr("target","_blank");
         let siteConfig=sitesArr[x];
-        offNode.css("background-color","#"+siteConfig.bgColor).attr("title",i18n[siteConfig.name] ).attr("href", siteConfig.url).attr("name", siteConfig.name);
+        offNode.css("background-color","#"+siteConfig.bgColor).attr("title",i18n(siteConfig.name) ).attr("href", siteConfig.url).attr("name", siteConfig.name);
         offNode.click(function(e){
             offUrl=getRightUrl(offUrl);
             if(siteConfig.directUrl){
@@ -475,7 +484,7 @@
     }
 
     var sNodes=[];
-    if(!Array.prototype.indexOf)
+    if(!Array.prototype.indexOf){
         Array.prototype.indexOf = function(e){
             for(var i=0;i<this.length;i++){
                 if(e===this[i]){
@@ -484,6 +493,31 @@
             }
             return -1;
         };
+    }
+
+    function addCustomSites(){
+        var siteRule=GM_getValue("siteRule");
+        var rules=siteRule.split("\n");
+        rules.forEach(rule=>{
+            var ruleArr=rule.split("@@");
+            if(ruleArr[1] && (ruleArr[0].indexOf("$url")!=-1 || ruleArr[0].indexOf("$hash")!=-1)){
+                var siteConfig={};
+                siteConfig.directUrl=function(offUrl){
+                    var hash=offUrl.replace("magnet:?xt=urn:btih:","").replace(/&.*/,"");
+                    return ruleArr[0].replace("$url", offUrl).replace("$hash", hash);
+                };
+                if(ruleArr[2] == "1")siteConfig.noFtp=true;
+                if(ruleArr[3] == "1")siteConfig.noHttp=true;
+                if(ruleArr[4] == "1")siteConfig.noMag=true;
+                if(ruleArr[5] == "1")siteConfig.noEd2k=true;
+                if(ruleArr[6]) siteConfig.bgImg=ruleArr[6];
+                else siteConfig.bgImg=downIconBg;
+                if(ruleArr[7]) siteConfig.bgColor=ruleArr[7];
+                else siteConfig.bgColor="a3e1fb";
+                sites[ruleArr[1]]=siteConfig;
+            }
+        });
+    }
     function getAllEnableUrl(target) {
         if(GM_getValue('eoDisable_'+document.domain))return;
         var rawnodes=(target?$(target).find(enableUrl):$(enableUrl)).get(),customnodes=[];
@@ -546,7 +580,7 @@
                         sNodes.push(curNode);
                     }
                     let href=curNode.href;
-                    let clone=$("<a></a>").attr("style",curNode.getAttribute("style")).attr("href",href).addClass('whx-a').css("background-color","#e1e1e1").css("background-image",'url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAMAAADzN3VRAAAARVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADc6ur3AAAAFnRSTlMAYM5vMOA/ENGegK2olI6G1b97Z0sXENA+jAAAAKFJREFUKM+FklkSxCAIRHFfss3K/Y86iQSDVqzpH7FfgQpCVfAmGx+gl9JI0qrxrcNLzooEbKUG4EKWdkCiDRV0N0RTrZ5wvdgTTgp4SzCAHxAPZkAM5GOJWuuT7FE5OVPOBFLTYb3Oc2YB5uJ8+G6pgkTGt74ntcCJHiwFLHw10Tdc93jlGXGvSRtsHNpuPs+/o1ODfxAtSL0f7HPC+L/9AF60G3QxO1UaAAAAAElFTkSuQmCC")');
+                    let clone=$("<a></a>").attr("style",curNode.getAttribute("style")).attr("href",href).addClass('whx-a').css("background-color","#e1e1e1").css("background-image",'url("'+downIconBg+'")');
                     if(allUrl.toString().indexOf(href)==-1)allUrl.push(href);
                     clone.mouseover(function(e){
                         var basePos=clone.offset();
@@ -641,7 +675,7 @@
     var isDisk=false;
     for(x = 0; x < sitesArr.length; x++){
         let siteConfig=sitesArr[x];
-        if(siteConfig.regex.test(location.hostname)){
+        if(siteConfig.regex && siteConfig.regex.test(location.hostname)){
             isDisk=true;
             curlink=GM_getValue(siteConfig.name+':eoUrl');
             if(curlink){
@@ -687,13 +721,13 @@
         document.body.appendChild(configContent);
         configContent.outerHTML=`
             <div id="configContent" style="display: none;">
-                <div style="width:300px;height:300px;position:fixed;left:50%;top:50%;margin-top:-150px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;color:#6e7070;">
+                <div style="width:300px;min-height:300px;position:fixed;left:50%;top:50%;margin-top:-150px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;color:#6e7070;">
                     <div style="text-align:center;font-size: 12px;margin-top: 28px;">自定义需要启用一键下载的链接正则，一行一条</div>
-                    <textarea id="configInput" placeholder="例如：\nhttp:.*\\.php\\?getRes=\\d+\n\.doc$\n\.xls$" style="position:absolute;left:20px;top:50px;width:260px;height:110px;background-color:white;color:black;"></textarea>
+                    <textarea id="configInput" placeholder="例如：\nhttp:.*\\.php\\?getRes=\\d+\n\.doc$\n\.xls$" style="position:absolute;left:18px;top:50px;width:260px;height:110px;background-color:white;color:black;"></textarea>
                     <div style="text-align:center;font-size:12px;margin-top:125px;" title="不需要加'我的网盘/全部文件'">度盘存储路径：<input id="baiduPath" placeholder="例：/av" style="width:170px;border-width:1px;"></div>
-                    <div id="icons" style="position:absolute;left:0px;top:202px"></div>
-                    <label style="position:absolute;left:60px;top:230px;"><input id="showType" type="checkbox"/>仅当鼠标经过时显示图标</label>
-                    <button id="configSave" class="whx-btn" type="button" style="position:absolute;left:110px;top:260px;width:80px;height:30px;color:white;border-radius:5px;border:0px;outline:none;">设置</button>
+                    <div id="icons" style="position: static; display: inline-block; margin-top: 10px;width: 100%;margin-left: 10px;"></div>
+                    <label style="position: static; width: 300px; margin-left: 50px;"><input id="showType" type="checkbox"/>仅当鼠标经过时显示图标</label>
+                    <button id="configSave" class="whx-btn" type="button" style="position:static;width:80px;height:30px;color:white;border-radius:5px;border:0px;outline:none;cursor:pointer;margin: 10px 110px 10px;">设置</button>
                     <div id="configQuit" class="whx-btn" style="width:28px;height:28px;border-radius:14px;position:absolute;right:2px;top:2px;cursor:pointer;">
                         <span style="height:28px;line-height:28px;display:block;color:#FFF;text-align:center;font-size:20px;">╳</span>
                     </div>
@@ -709,7 +743,7 @@
             var nextIcon;
             $("#icons>div").each(function(){
                 nextIcon=$(this);
-                if(e.pageX<nextIcon.offset().left){
+                if(e.pageX<nextIcon.offset().left+25 && e.pageY<nextIcon.offset().top+25){
                     if(this!=dragIcon)
                         nextIcon.before(dragIcon);
                     return false;
@@ -727,14 +761,14 @@
         for(var x = 0; x < sitesArr.length; x++){
             let siteConfig=sitesArr[x];
             if(siteConfig.hide)continue;
-            let icon=$("<div style='height:25px;width:25px;float:left;border-radius:50%;background-position:center;background-repeat:no-repeat;background-size:20px;margin-left:2px;cursor:pointer'></div>");
-            icon.css("background-color","#"+siteConfig.bgColor).attr("title",i18n.disable+i18n[siteConfig.name] ).attr("draggable",true).attr("name",siteConfig.name);
+            let icon=$("<div style='height:26px;width:26px;float:left;border-radius:50%;background-position:center;background-repeat:no-repeat;background-size:20px;margin-left:2px;cursor:pointer'></div>");
+            icon.css("background-color","#"+siteConfig.bgColor).attr("title",i18n("disable")+i18n(siteConfig.name) ).attr("draggable",true).attr("name",siteConfig.name);
             icon[0].ondragstart=function(e){
                 dragIcon=this;
             };
             if(GM_getValue("eoHide"+siteConfig.name)){
                 icon.css("opacity","0.2");
-                icon.attr("title",i18n.enable+i18n[siteConfig.name] );
+                icon.attr("title",i18n("enable")+i18n(siteConfig.name) );
             }
             if(siteConfig.bgImg)icon.css("background-image","url(\""+siteConfig.bgImg+"\")");
             icon.on("click", function(){
@@ -754,10 +788,36 @@
                 }
                 GM_setValue("eoHide"+siteConfig.name, !eoHide);
                 icon.css("opacity",eoHide?"1":"0.2");
-                icon.attr("title",(eoHide?i18n.disable:i18n.enable)+i18n[siteConfig.name] );
+                icon.attr("title",(eoHide?i18n("disable"):i18n("enable"))+i18n(siteConfig.name) );
             });
             icons.append(icon);
         }
+        var addSiteRules=document.createElement("div");
+        addSiteRules.innerHTML=`
+                <div style="width:300px;min-height: 300px;position:fixed;left:50%;top:50%;margin-top:-150px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;color:#6e7070;">
+                    <div style="text-align:center;font-size: 12px;margin-top: 28px;">自定义新增站点规则，一行一条</div>
+                    <textarea id="siteRuleInput" placeholder="站点@@ 站名@@ 禁ftp@@ 禁http@@ 禁磁链@@ 禁电驴@@ 图标base64@@ 图标背景颜色\n\n@@ 分隔，目标站点中用 $url 代替目标链接，$hash 代表目标磁链的 hash 值\n\n例如：http://192.168.2.1/d2r?u=$url@@路由器下载\nhttp://xxx.com/magnet/$hash@@磁链下载@@1@@1@@0@@1@@data:image/png;base64,AAA@@ffffff" style="position: absolute;left: 18px;top: 55px;width: 260px;height: 180px;background-color: white;color: black;margin-top: 0px;margin-bottom: 0px;"></textarea>
+                    <button id="siteRuleSave" class="whx-btn" type="button" style="position: absolute;width:80px;height:30px;bottom: 10px;color:white;border-radius:5px;border:0px;outline:none;margin: 10px 110px 10px;cursor:pointer;">设置</button>
+                    <div id="siteRuleQuit" class="whx-btn" style="width:28px;height:28px;border-radius:14px;position:absolute;right:2px;top:2px;cursor:pointer;">
+                        <span style="height:28px;line-height:28px;display:block;color:#FFF;text-align:center;font-size:20px;">╳</span>
+                    </div>
+                </div>`;
+        let addIcon=$("<span style='height:26px;width:26px;float:left;border-radius:50%;background-position:center;background-repeat:no-repeat;background-size:20px;margin-left:2px;cursor:pointer;animation: rotateAni 2s infinite; animation-direction: alternate; -webkit-animation: rotateAni 2s infinite; -webkit-animation-direction: alternate;'></span>");
+        addIcon.attr("title",i18n("addIcon")).css("background-image","url(\""+addIconBg+"\")");
+        addIcon[0].onclick=function(e){
+            document.body.appendChild(addSiteRules);
+        };
+        icons.append(addIcon);
+        if(GM_getValue("siteRule"))$("#siteRuleInput", addSiteRules).val(GM_getValue("siteRule"));
+        $("#siteRuleQuit", addSiteRules).click(function (event) {
+            if(addSiteRules.parentNode)addSiteRules.parentNode.removeChild(addSiteRules);
+        });
+        $("#siteRuleSave", addSiteRules).click(function (event) {
+            GM_setValue("siteRule", $("#siteRuleInput", addSiteRules).val());
+            alert("设置成功，刷新生效");
+            if(addSiteRules.parentNode)addSiteRules.parentNode.removeChild(addSiteRules);
+        });
+
         configContent=document.querySelector("#configContent");
         configContent.style.display="block";
         if(GM_getValue("eoReg"))$(configInput).val(GM_getValue("eoReg").join("\n"));
@@ -840,5 +900,5 @@
             }
         }
     });
-    GM_registerMenuCommand(i18n.configure, goSetting);
+    GM_registerMenuCommand(i18n("configure"), goSetting);
 })();
