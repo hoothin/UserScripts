@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         91wii
 // @namespace    hoothin
-// @version      0.1
+// @version      0.2
 // @description  91wii签到
 // @author       hoothin
 // @match        https://*.91wii.com/*
@@ -23,6 +23,7 @@
         if(dcsignin.style.background.indexOf("signin_yes") != -1)return;
         unsafeWindow.showWindow('sign', 'plugin.php?id=dc_signin:sign')
         let signInterval=setInterval(()=>{
+            clearInterval(signInterval);
             let emotIndex=parseInt(Math.random() * 10) + 1;
             if(document.querySelector("#emot_" + emotIndex)){
                 document.querySelector("#emot_" + emotIndex).click();
