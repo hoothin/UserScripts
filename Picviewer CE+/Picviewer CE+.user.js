@@ -6,7 +6,7 @@
 // @description     Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version         2021.12.18.3
+// @version         2021.12.19.1
 // @created         2011-6-15
 // @namespace       http://userscripts.org/users/NLF
 // @homepage        http://hoothin.com
@@ -107,8 +107,8 @@
                 cantFind:"图片不在文档中，或者被隐藏了，无法定位！",
                 exportImages:"导出所有大图",
                 exportImagesTip:"导出所有显示中的图片到新窗口",
-                downloadImage:"下载所有",
-                downloadImageTip:"下载当前库中所有显示图片",
+                downloadImage:"下载当前所有",
+                downloadImageTip:"下载当前库中所有显示图片，注意无法下载跨域图片",
                 copyImagesUrl:"复制所有大图",
                 copyImagesUrlTip:"复制所有显示中的大图地址",
                 copySuccess:"已成功复制 #t# 张大图地址",
@@ -308,8 +308,8 @@
                 cantFind:"圖片不在文檔中，或者被隱藏了，無法定位！",
                 exportImages:"導出全部大圖",
                 exportImagesTip:"導出所有顯示中的圖片到新窗口",
-                downloadImage:"下載所有",
-                downloadImageTip:"下載當前庫中所有顯示圖片",
+                downloadImage:"下載當前所有",
+                downloadImageTip:"下載當前庫中所有顯示圖片，注意無法下載跨域圖片",
                 copyImagesUrl:"複製全部大圖",
                 copyImagesUrlTip:"複製所有顯示中的大圖地址",
                 copySuccess:"已成功複製 #t# 張大圖地址",
@@ -510,7 +510,7 @@
                 exportImages:"Export big Images",
                 exportImagesTip:"Export all images to new window",
                 downloadImage:"Download all shown Images",
-                downloadImageTip:"Download the current shown pictures",
+                downloadImageTip:"Download the current shown pictures, support no cross-origin",
                 copyImagesUrl:"Copy all images Urls",
                 copyImagesUrlTip:"Copy all large image Urls",
                 copySuccess:"Copied #t# Urls successfully",
@@ -2710,7 +2710,7 @@
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="psImage" title="'+i18n("onlineEditTip",prefs.gallery.editSite)+'">'+i18n("onlineEdit")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="exportImages" title="'+i18n("exportImagesTip")+'">'+i18n("exportImages")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="copyImages" title="'+i18n("copyImagesUrlTip")+'">'+i18n("copyImagesUrl")+'</span>'+
-                    //'<span class="pv-gallery-head-command-drop-list-item" data-command="downloadImage" title="'+i18n("downloadImageTip")+'">'+i18n("downloadImage")+'</span>'+
+                    '<span class="pv-gallery-head-command-drop-list-item" data-command="downloadImage" title="'+i18n("downloadImageTip")+'">'+i18n("downloadImage")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="scrollIntoView" title="'+i18n("findInPageTip")+'">'+i18n("findInPage")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="enterCollection" title="'+i18n("viewCollectionTip")+'">'+i18n("viewCollection")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="openInNewWindow" title="'+i18n("openInNewWindowTip")+'">'+i18n("openInNewWindow")+'</span>'+
@@ -3381,13 +3381,31 @@
                             break;
                         case 'downloadImage':
                             var nodes = document.querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]');
-                            var urls = [];
+                            var saveParams = [];
                             [].forEach.call(nodes, function(node){
                                 if(unsafeWindow.getComputedStyle(node).display!="none"){
                                     srcSplit=node.dataset.src.split("/");
-                                    saveAs(node.dataset.src, location.host+"-"+srcSplit[srcSplit.length-1]);
+                                    var picName=srcSplit[srcSplit.length-1],hostArr=location.host.split(".");
+                                    var host=hostArr[hostArr.length-2];
+                                    if(/\.[\da-z]+$/i.test(picName))picName=host+"-"+picName;
+                                    else picName=host;
+                                    saveParams.push([node.dataset.src, picName]);
+                                    //saveAs(node.dataset.src, location.host+"-"+srcSplit[srcSplit.length-1]);
                                 }
                             });
+                            let download5Times=function(){
+                                for(let i=0;i<5;i++){
+                                    let saveParam=saveParams.shift();
+                                    if(saveParam)saveAs(saveParam[0], saveParam[1]);
+                                    else break;
+                                }
+                                if(saveParams.length>0){
+                                    setTimeout(()=>{
+                                        download5Times();
+                                    },1000);
+                                }
+                            };
+                            download5Times();
                             break;
                         case 'copyImages':
                             self.copyImages(true);
@@ -6649,7 +6667,6 @@
 
             this.init();
             if(data){
-                this.imgWindow.classList.add("pv-pic-window-transition-all");
                 this.img.src = location.protocol == "https"?data.src.replace(/^http:/,"https:"):data.src;
             }
         };
@@ -8543,7 +8560,7 @@
             error:function(msg,img,e){
                 if(msg)console.debug(msg);
                 this.loadingAnim.classList.add('pv-loading-container_error');
-                console.debug('picviewer CE 载入大图错误：%o', this.data);
+                console.debug('Picviewer CE+ 载入大图错误：%o', this.data);
 
                 var self=this;
                 setTimeout(function(){
@@ -9892,6 +9909,7 @@
                     if(!uniqueImgWin || uniqueImgWin.removed){
                         var img = document.createElement('img');
                         uniqueImgWin = new ImgWindowC(img, result);
+                        uniqueImgWin.imgWindow.classList.add("pv-pic-window-transition-all");
                     }
                     if(uniqueImgWin.src != result.src && (!result.srcs || !result.srcs.includes(uniqueImgWin.src))){
                         uniqueImgWin.changeData(result);
