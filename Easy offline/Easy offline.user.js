@@ -8,7 +8,7 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdn.jsdelivr.net/jquery/1.7.2/jquery.min.js
 // @require      https://cdn.jsdelivr.net/hi-base64/0.2.0/base64.min.js
-// @version      1.7.0
+// @version      1.7.1
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -707,7 +707,8 @@
     }
 
     function setting(){
-         $('head').append(`
+        init();
+        $('head').append(`
             <style>
                 .whx-btn{
                     background-color:#3892ed;
