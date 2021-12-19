@@ -6,7 +6,7 @@
 // @description     Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version         2021.12.19.3
+// @version         2021.12.19.5
 // @created         2011-6-15
 // @namespace       http://userscripts.org/users/NLF
 // @homepage        http://hoothin.com
@@ -4029,21 +4029,25 @@
                                 return response.blob();
                             })
                             .then(blob=>{
-                                if(img.width>=88 && img.height>=88){
-                                    addDlSpan(img, imgSpan, curNode, e=>{
-                                        e.stopPropagation();
-                                        if(blob.type=="image/webp"){
-                                            self.blobToCanvas(blob, canvas=>{
-                                                canvas.toBlob(blob=>{
-                                                    saveAs(blob,e.target.title);
-                                                }, "image/png");
+                                imgReady(img,{
+                                    ready:function(){
+                                        if(img.width>=88 && img.height>=88){
+                                            addDlSpan(img, imgSpan, curNode, e=>{
+                                                e.stopPropagation();
+                                                if(blob.type=="image/webp"){
+                                                    self.blobToCanvas(blob, canvas=>{
+                                                        canvas.toBlob(blob=>{
+                                                            saveAs(blob,e.target.title);
+                                                        }, "image/png");
+                                                    });
+                                                }else{
+                                                    saveAs(e.target.src,e.target.title);
+                                                }
+                                                return true;
                                             });
-                                        }else{
-                                            saveAs(e.target.src,e.target.title);
                                         }
-                                        return true;
-                                    });
-                                }
+                                    }
+                                });
                             })
                             .catch(e=>{
                                 imgReady(img,{
@@ -8690,7 +8694,7 @@
                 };
                 imgsHandle(doc.getElementsByTagName('img'));
                 arrayFn.forEach.call(doc.querySelectorAll("iframe"),function(iframe){
-                    if(iframe.src.replace(/\/[^\/]*$/,"").indexOf(location.hostname)!=-1)
+                    if(iframe.src && iframe.src.replace(/\/[^\/]*$/,"").indexOf(location.hostname)!=-1)
                         try{
                             imgsHandle(iframe.contentWindow.document.getElementsByTagName('img'));
                         }catch(e){
