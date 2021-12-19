@@ -8,7 +8,7 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdn.jsdelivr.net/jquery/1.7.2/jquery.min.js
 // @require      https://cdn.jsdelivr.net/hi-base64/0.2.0/base64.min.js
-// @version      1.7.3
+// @version      1.7.5
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -83,7 +83,7 @@
                                                     if(document.querySelector("#offlinelist-dialog").style.display!="none"){
                                                         clearInterval(bck);
                                                         beginOffline();
-                                                    }else if(document.querySelector("#dialog1").style.display!="none"){
+                                                    }else if(document.querySelector("#dialog1") && document.querySelector("#dialog1").style.display!="none"){
                                                         clearInterval(bck);
                                                         var inputCode=$("#dialog1").find(".input-code");
                                                         inputCode.focus();
