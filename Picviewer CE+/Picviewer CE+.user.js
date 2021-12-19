@@ -5547,6 +5547,9 @@
                     max-width:50px;\
                     height:20px;\
                     }\
+                    .pv-gallery-head-command-drop-list-item input[type=checkbox]{\
+                    width:20px\
+                    }\
                     .pv-gallery-head-command-drop-list-item > * {\
                     vertical-align:middle;\
                     }\
