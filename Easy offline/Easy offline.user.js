@@ -8,7 +8,7 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdn.jsdelivr.net/jquery/1.7.2/jquery.min.js
 // @require      https://cdn.jsdelivr.net/hi-base64/0.2.0/base64.min.js
-// @version      1.7.1
+// @version      1.7.3
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -580,7 +580,7 @@
                         sNodes.push(curNode);
                     }
                     let href=curNode.href;
-                    let clone=$("<a></a>").attr("style",curNode.getAttribute("style")).attr("href",href).addClass('whx-a').css("background-color","#e1e1e1").css("background-image",'url("'+downIconBg+'")');
+                    let clone=$("<a></a>").attr("style",curNode.getAttribute("style")).attr("href",href).addClass('whx-a').addClass('whx-a-node').css("background-color","#e1e1e1").css("background-image",'url("'+downIconBg+'")');
                     if(allUrl.toString().indexOf(href)==-1)allUrl.push(href);
                     clone.mouseover(function(e){
                         var basePos=clone.offset();
@@ -673,6 +673,8 @@
     var i=0;
     var curlink;
     var isDisk=false;
+    var configContent;
+    var easyOfflineDisable;
     for(x = 0; x < sitesArr.length; x++){
         let siteConfig=sitesArr[x];
         if(siteConfig.regex && siteConfig.regex.test(location.hostname)){
@@ -694,21 +696,24 @@
         }
         setTimeout(function(){getAllEnableUrl();},10);
         var MutationObserver = unsafeWindow.MutationObserver || unsafeWindow.WebKitMutationObserver || unsafeWindow.MozMutationObserver;
-        var observer = new MutationObserver(function(records){
-            records.map(function(record) {
-                if(record.addedNodes.length)setTimeout(function(){getAllEnableUrl(record.addedNodes);},501);
+        if(MutationObserver){
+            var observer = new MutationObserver(function(records){
+                records.map(function(record) {
+                    if(record.addedNodes.length)setTimeout(function(){getAllEnableUrl(record.addedNodes);},501);
+                });
             });
-        });
-        var option = {
-            'childList': true,
-            'subtree': true
-        };
-        observer.observe(document.body, option);
+            var option = {
+                'childList': true,
+                'subtree': true
+            };
+            observer.observe(document.body, option);
+        }
     }
 
     function setting(){
         init();
-        $('head').append(`
+        if(!configContent){
+            $('head').append(`
             <style>
                 .whx-btn{
                     background-color:#3892ed;
@@ -718,148 +723,162 @@
                     background-color:#83c1ff;
                 }
             </style>`);
-        var configContent=document.createElement("div");
-        document.body.appendChild(configContent);
-        configContent.outerHTML=`
-            <div id="configContent" style="display: none;">
-                <div style="width:300px;min-height:300px;position:fixed;left:50%;top:50%;margin-top:-150px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;color:#6e7070;">
-                    <div style="text-align:center;font-size: 12px;margin-top: 28px;">自定义需要启用一键下载的链接正则，一行一条</div>
-                    <textarea id="configInput" placeholder="例如：\nhttp:.*\\.php\\?getRes=\\d+\n\.doc$\n\.xls$" style="position:absolute;left:18px;top:50px;width:260px;height:110px;background-color:white;color:black;"></textarea>
+            configContent=document.createElement("div");
+            configContent.id="configContent";
+            configContent.style.display="none";
+            document.body.appendChild(configContent);
+            configContent.innerHTML=`
+                <div style="text-align: center;width:300px;min-height:300px;position:fixed;left:50%;top:50%;margin-top:-150px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;color:#6e7070;">
+                    <a href="https://greasyfork.org/scripts/22590#additional-info" style="color: #5c5c5c; position: absolute; width: 100%; left: 0; text-decoration: underline;">一键离线下载</a>
+                    <a id="easyOfflineDisable" href="#" style="color: red;top: 18px; position: absolute; width: 100%; left: 0; text-decoration: underline;display:none;">已于此站点禁用，点击启用</a>
+                    <div style="text-align:center;font-size: 12px;margin-top: 38px;">自定义需要启用一键下载的链接正则，一行一条</div>
+                    <textarea id="configInput" placeholder="例如：\nhttp:.*\\.php\\?getRes=\\d+\n\.doc$\n\.xls$" style="position:absolute;left:18px;top:60px;width:260px;height:110px;background-color:white;color:black;"></textarea>
                     <div style="text-align:center;font-size:12px;margin-top:125px;" title="不需要加'我的网盘/全部文件'">度盘存储路径：<input id="baiduPath" placeholder="例：/av" style="width:170px;border-width:1px;"></div>
                     <div id="icons" style="position: static; display: inline-block; margin-top: 10px;width: 100%;margin-left: 10px;"></div>
-                    <label style="position: static; width: 300px; margin-left: 50px;"><input id="showType" type="checkbox"/>仅当鼠标经过时显示图标</label>
+                    <label style="position: static; width: 300px;"><input id="showType" type="checkbox"/>仅当鼠标经过时显示图标</label>
                     <button id="configSave" class="whx-btn" type="button" style="position:static;width:80px;height:30px;color:white;border-radius:5px;border:0px;outline:none;cursor:pointer;margin: 10px 110px 10px;">设置</button>
                     <div id="configQuit" class="whx-btn" style="width:28px;height:28px;border-radius:14px;position:absolute;right:2px;top:2px;cursor:pointer;">
                         <span style="height:28px;line-height:28px;display:block;color:#FFF;text-align:center;font-size:20px;">╳</span>
                     </div>
-                </div>
-            </div>`;
-        var configInput=document.querySelector("#configInput");
-        var configQuit=document.querySelector("#configQuit");
-        var configSave=document.querySelector("#configSave");
-        var showTypeCheck=document.querySelector("#showType");
-        var baiduPath=document.querySelector("#baiduPath");
-        var icons=$("#icons"),dragIcon;
-        icons[0].ondrop=function(e){
-            var nextIcon;
-            $("#icons>div").each(function(){
-                nextIcon=$(this);
-                if(e.pageX<nextIcon.offset().left+25 && e.pageY<nextIcon.offset().top+25){
-                    if(this!=dragIcon)
-                        nextIcon.before(dragIcon);
-                    return false;
-                }
+                </div>`;
+            var configInput=configContent.querySelector("#configInput");
+            var configQuit=configContent.querySelector("#configQuit");
+            var configSave=configContent.querySelector("#configSave");
+            var showTypeCheck=configContent.querySelector("#showType");
+            var baiduPath=configContent.querySelector("#baiduPath");
+            var icons=$("#icons"),dragIcon;
+            easyOfflineDisable = configContent.querySelector("#easyOfflineDisable");
+            $(easyOfflineDisable).click(function (event) {
+                easyOfflineDisable.style.display="none";
+                toggleIcon("enable");
             });
-            siteSort=[];
-            $("#icons>div").each(function(){
-                siteSort.push($(this).attr("name"));
-            });
-            GM_setValue("siteSort",siteSort);
-        };
-        icons[0].ondragover=function(e){
-            e.preventDefault();
-        };
-        for(var x = 0; x < sitesArr.length; x++){
-            let siteConfig=sitesArr[x];
-            if(siteConfig.hide)continue;
-            let icon=$("<div style='height:26px;width:26px;float:left;border-radius:50%;background-position:center;background-repeat:no-repeat;background-size:20px;margin-left:2px;cursor:pointer'></div>");
-            icon.css("background-color","#"+siteConfig.bgColor).attr("title",i18n("disable")+i18n(siteConfig.name) ).attr("draggable",true).attr("name",siteConfig.name);
-            icon[0].ondragstart=function(e){
-                dragIcon=this;
-            };
-            if(GM_getValue("eoHide"+siteConfig.name)){
-                icon.css("opacity","0.2");
-                icon.attr("title",i18n("enable")+i18n(siteConfig.name) );
-            }
-            if(siteConfig.bgImg)icon.css("background-image","url(\""+siteConfig.bgImg+"\")");
-            icon.on("click", function(){
-                var eoHide=GM_getValue("eoHide"+siteConfig.name);
-                if(!eoHide){
-                    var allHide=true;
-                    $("#icons>div").each(function(){
-                        if(this!=icon[0] && $(this).css("opacity")!="0.2"){
-                            allHide=false;
-                            return false;
-                        }
-                    });
-                    if(allHide){
-                        alert("不能全部禁用！");
-                        return;
+            icons[0].ondrop=function(e){
+                var nextIcon;
+                $("#icons>div").each(function(){
+                    nextIcon=$(this);
+                    if(e.pageX<nextIcon.offset().left+25 && e.pageY<nextIcon.offset().top+25){
+                        if(this!=dragIcon)
+                            nextIcon.before(dragIcon);
+                        return false;
                     }
+                });
+                siteSort=[];
+                $("#icons>div").each(function(){
+                    siteSort.push($(this).attr("name"));
+                });
+                GM_setValue("siteSort",siteSort);
+            };
+            icons[0].ondragover=function(e){
+                e.preventDefault();
+            };
+            for(var x = 0; x < sitesArr.length; x++){
+                let siteConfig=sitesArr[x];
+                if(siteConfig.hide)continue;
+                let icon=$("<div style='height:26px;width:26px;float:left;border-radius:50%;background-position:center;background-repeat:no-repeat;background-size:20px;margin-left:2px;cursor:pointer'></div>");
+                icon.css("background-color","#"+siteConfig.bgColor).attr("title",i18n("disable")+i18n(siteConfig.name) ).attr("draggable",true).attr("name",siteConfig.name);
+                icon[0].ondragstart=function(e){
+                    dragIcon=this;
+                };
+                if(GM_getValue("eoHide"+siteConfig.name)){
+                    icon.css("opacity","0.2");
+                    icon.attr("title",i18n("enable")+i18n(siteConfig.name) );
                 }
-                GM_setValue("eoHide"+siteConfig.name, !eoHide);
-                icon.css("opacity",eoHide?"1":"0.2");
-                icon.attr("title",(eoHide?i18n("disable"):i18n("enable"))+i18n(siteConfig.name) );
-            });
-            icons.append(icon);
-        }
-        var addSiteRules=document.createElement("div");
-        addSiteRules.innerHTML=`
+                if(siteConfig.bgImg)icon.css("background-image","url(\""+siteConfig.bgImg+"\")");
+                icon.on("click", function(){
+                    var eoHide=GM_getValue("eoHide"+siteConfig.name);
+                    if(!eoHide){
+                        var allHide=true;
+                        $("#icons>div").each(function(){
+                            if(this!=icon[0] && $(this).css("opacity")!="0.2"){
+                                allHide=false;
+                                return false;
+                            }
+                        });
+                        if(allHide){
+                            alert("不能全部禁用！");
+                            return;
+                        }
+                    }
+                    GM_setValue("eoHide"+siteConfig.name, !eoHide);
+                    icon.css("opacity",eoHide?"1":"0.2");
+                    icon.attr("title",(eoHide?i18n("disable"):i18n("enable"))+i18n(siteConfig.name) );
+                });
+                icons.append(icon);
+            }
+            var addSiteRules=document.createElement("div");
+            addSiteRules.innerHTML=`
                 <div style="width:300px;min-height: 300px;position:fixed;left:50%;top:50%;margin-top:-150px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;color:#6e7070;">
                     <div style="text-align:center;font-size: 12px;margin-top: 28px;">自定义新增站点规则，一行一条</div>
                     <textarea id="siteRuleInput" placeholder="站点@@ 站名@@ 禁ftp@@ 禁http@@ 禁磁链@@ 禁电驴@@ 图标base64@@ 图标背景颜色\n\n@@ 分隔，目标站点中用 $url 代替目标链接，$hash 代表目标磁链的 hash 值\n\n例如：http://192.168.2.1/d2r?u=$url@@路由器下载\nhttp://xxx.com/magnet/$hash@@磁链下载@@1@@1@@0@@1@@data:image/png;base64,AAA@@ffffff" style="position: absolute;left: 18px;top: 55px;width: 260px;height: 180px;background-color: white;color: black;margin-top: 0px;margin-bottom: 0px;"></textarea>
-                    <button id="siteRuleSave" class="whx-btn" type="button" style="position: absolute;width:80px;height:30px;bottom: 10px;color:white;border-radius:5px;border:0px;outline:none;margin: 10px 110px 10px;cursor:pointer;">设置</button>
+                    <button id="siteRuleSave" class="whx-btn" type="button" style="position: absolute;width:80px;height:30px;bottom: 10px;color:white;border-radius:5px;border:0px;outline:none;margin: 10px 110px 10px;cursor:pointer;left:0;">设置</button>
                     <div id="siteRuleQuit" class="whx-btn" style="width:28px;height:28px;border-radius:14px;position:absolute;right:2px;top:2px;cursor:pointer;">
                         <span style="height:28px;line-height:28px;display:block;color:#FFF;text-align:center;font-size:20px;">╳</span>
                     </div>
                 </div>`;
-        let addIcon=$("<span style='height:26px;width:26px;float:left;border-radius:50%;background-position:center;background-repeat:no-repeat;background-size:20px;margin-left:2px;cursor:pointer;animation: rotateAni 2s infinite; animation-direction: alternate; -webkit-animation: rotateAni 2s infinite; -webkit-animation-direction: alternate;'></span>");
-        addIcon.attr("title",i18n("addIcon")).css("background-image","url(\""+addIconBg+"\")");
-        addIcon[0].onclick=function(e){
-            document.body.appendChild(addSiteRules);
-        };
-        icons.append(addIcon);
-        if(GM_getValue("siteRule"))$("#siteRuleInput", addSiteRules).val(GM_getValue("siteRule"));
-        $("#siteRuleQuit", addSiteRules).click(function (event) {
-            if(addSiteRules.parentNode)addSiteRules.parentNode.removeChild(addSiteRules);
-        });
-        $("#siteRuleSave", addSiteRules).click(function (event) {
-            GM_setValue("siteRule", $("#siteRuleInput", addSiteRules).val());
-            alert("设置成功，刷新生效");
-            if(addSiteRules.parentNode)addSiteRules.parentNode.removeChild(addSiteRules);
-        });
+            let addIcon=$("<span style='height:26px;width:26px;float:left;border-radius:50%;background-position:center;background-repeat:no-repeat;background-size:20px;margin-left:2px;cursor:pointer;animation: rotateAni 2s infinite; animation-direction: alternate; -webkit-animation: rotateAni 2s infinite; -webkit-animation-direction: alternate;'></span>");
+            addIcon.attr("title",i18n("addIcon")).css("background-image","url(\""+addIconBg+"\")");
+            addIcon[0].onclick=function(e){
+                document.body.appendChild(addSiteRules);
+            };
+            icons.append(addIcon);
+            if(GM_getValue("siteRule"))$("#siteRuleInput", addSiteRules).val(GM_getValue("siteRule"));
+            $("#siteRuleQuit", addSiteRules).click(function (event) {
+                if(addSiteRules.parentNode)addSiteRules.parentNode.removeChild(addSiteRules);
+            });
+            $("#siteRuleSave", addSiteRules).click(function (event) {
+                GM_setValue("siteRule", $("#siteRuleInput", addSiteRules).val());
+                alert("设置成功，刷新生效");
+                if(addSiteRules.parentNode)addSiteRules.parentNode.removeChild(addSiteRules);
+            });
 
-        configContent=document.querySelector("#configContent");
-        configContent.style.display="block";
-        if(GM_getValue("eoReg"))$(configInput).val(GM_getValue("eoReg").join("\n"));
-        if(GM_getValue("baiduPath"))$(baiduPath).val(GM_getValue("baiduPath"));
-        if(GM_getValue("showType"))showTypeCheck.checked=true;
-        $(configQuit).click(function (event) {configContent.style.display="none";});
-        $(configSave).click(function (event) {
-            var regStr=$(configInput).val();
-            var baiduPathStr=$(baiduPath).val();
-            if(baiduPathStr)GM_setValue("baiduPath",/^\//.test(baiduPathStr)?baiduPathStr:("/"+baiduPathStr));
-            if(/^\s*$/.test(regStr)){
-                GM_deleteValue("eoReg");
-            }else{
-                var regStrs=regStr.split("\n");
-                for(var reg of regStrs){
-                    try{
-                        new RegExp(reg);
-                    }catch(e){
-                        alert("含有无效正则，请重新输入");
-                        return;
+            configContent.style.display="block";
+            if(GM_getValue("eoReg"))$(configInput).val(GM_getValue("eoReg").join("\n"));
+            if(GM_getValue("baiduPath"))$(baiduPath).val(GM_getValue("baiduPath"));
+            if(GM_getValue("showType"))showTypeCheck.checked=true;
+            $(configQuit).click(function (event) {configContent.style.display="none";});
+            $(configSave).click(function (event) {
+                var regStr=$(configInput).val();
+                var baiduPathStr=$(baiduPath).val();
+                if(baiduPathStr)GM_setValue("baiduPath",/^\//.test(baiduPathStr)?baiduPathStr:("/"+baiduPathStr));
+                if(/^\s*$/.test(regStr)){
+                    GM_deleteValue("eoReg");
+                }else{
+                    var regStrs=regStr.split("\n");
+                    for(var reg of regStrs){
+                        try{
+                            new RegExp(reg);
+                        }catch(e){
+                            alert("含有无效正则，请重新输入");
+                            return;
+                        }
                     }
+                    GM_setValue("eoReg",regStrs);
                 }
-                GM_setValue("eoReg",regStrs);
-            }
-            GM_setValue("showType", showTypeCheck.checked);
-            alert("设置成功");
-        });
+                GM_setValue("showType", showTypeCheck.checked);
+                alert("设置成功");
+            });
+        }
+        configContent.style.display="block";
+        if(GM_getValue('eoDisable_'+document.domain)){
+            easyOfflineDisable.style.display="block";
+        }else{
+            easyOfflineDisable.style.display="none";
+        }
     }
 
-    function toggleIcon(){
+    function toggleIcon(force){
         $('.whx-a').toggle(500);
-        if(GM_getValue('eoDisable_'+document.domain)){
+        if(force=="enable" || GM_getValue('eoDisable_'+document.domain)){
             GM_deleteValue('eoDisable_'+document.domain);
-            if($('.whx-a').length<1)getAllEnableUrl();
+            if($('.whx-a-node').length<1)getAllEnableUrl();
         }else{
             GM_setValue('eoDisable_'+document.domain,true);
         }
     }
 
     function goSetting(){
-        location.href="https://github.com/hoothin/UserScripts/tree/master/Easy offline#一键离线下载";
+        setting();
+        //location.href="https://github.com/hoothin/UserScripts/tree/master/Easy offline#一键离线下载";
     }
 
     function checkSel(e){
