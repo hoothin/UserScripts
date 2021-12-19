@@ -9777,7 +9777,7 @@
 
             var target = e.target;
 
-            if (!target || !target.classList || target.classList.contains('pv-pic-ignored') || target.id=="pv-float-bar-container" || target.classList.contains('pv-float-bar-button') || target.classList.contains("ks-imagezoom-lens")) {
+            if (!target || !target.classList || target.classList.contains('pv-pic-ignored') || target.id=="pv-float-bar-container" || target.classList.contains('pv-float-bar-button') || target.classList.contains('pv-loading-container') || target.classList.contains('pv-loading-button') || target.classList.contains("ks-imagezoom-lens")) {
                 return;
             }
 
