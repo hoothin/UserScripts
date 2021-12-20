@@ -8,7 +8,7 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Base64/0.2.0/base64.min.js
-// @version      1.7.6
+// @version      1.7.7
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -357,8 +357,10 @@
     if(!siteSort)siteSort=["baidu","yyw","furk","seedr"];
     siteSort.forEach(function(item) {
         var siteConfig=sites[item];
-        siteConfig.name=item;
-        sitesArr.push(siteConfig);
+        if(siteConfig){
+            siteConfig.name=item;
+            sitesArr.push(siteConfig);
+        }
     });
     for(siteName in sites){
         var hasSite=false;
@@ -418,6 +420,14 @@
             @-webkit-keyframes rotateAni{
                 from {transform: rotate(0deg);}
                 to {transform: rotate(360deg);}
+            }
+            @keyframes rotateAdd{
+                from {box-shadow: 0 0 5px 0px #505050;}
+                to {box-shadow: 0 0 8px 2px #505050;}
+            }
+            @-webkit-keyframes rotateAdd{
+                from {box-shadow: 0 0 5px 0px #505050;}
+                to {box-shadow: 0 0 8px 2px #505050;}
             }
         </style>`);
     }
@@ -815,7 +825,7 @@
                         <span style="height:28px;line-height:28px;display:block;color:#FFF;text-align:center;font-size:20px;">╳</span>
                     </div>
                 </div>`;
-            let addIcon=$("<span style='height:26px;width:26px;float:left;border-radius:50%;background-position:center;background-repeat:no-repeat;background-size:20px;margin-left:2px;cursor:pointer;animation: rotateAni 2s infinite; animation-direction: alternate; -webkit-animation: rotateAni 2s infinite; -webkit-animation-direction: alternate;'></span>");
+            let addIcon=$("<span style='height:26px;width:26px;float:left;border-radius:50%;background-position:center;background-repeat:no-repeat;background-size:20px;margin-left:2px;cursor:pointer;animation: rotateAdd 1s infinite; animation-direction: alternate; -webkit-animation: rotateAdd 1s infinite; -webkit-animation-direction: alternate;'></span>");
             addIcon.attr("title",i18n("addIcon")).css("background-image","url(\""+addIconBg+"\")");
             addIcon[0].onclick=function(e){
                 document.body.appendChild(addSiteRules);
