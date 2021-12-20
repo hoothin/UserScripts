@@ -6,7 +6,7 @@
 // @description     Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version         2021.12.20.2
+// @version         2021.12.20.3
 // @created         2011-6-15
 // @namespace       http://userscripts.org/users/NLF
 // @homepage        http://hoothin.com
@@ -6575,6 +6575,7 @@ Ascii2D | https://ascii2d.net/search/url/#t#`;
                 this._remove=this.remove.bind(this);
                 this._pause=this.pause.bind(this);
                 this._zoom=this.zoom.bind(this);
+                this._clickOut=this.clickOut.bind(this);
 
                 if(prefs.magnifier.wheelZoom.enabled){
                     this.zoomLevel=1;
@@ -6589,6 +6590,7 @@ Ascii2D | https://ascii2d.net/search/url/#t#`;
 
 
                 document.addEventListener('mousemove',this._move,true);
+                document.addEventListener('mouseup',this._clickOut,true);
             },
             addStyle:function(){
                 if(MagnifierC.style)return;
@@ -6614,6 +6616,11 @@ Ascii2D | https://ascii2d.net/search/url/#t#`;
                     }\
                     ';
                 document.head.appendChild(style);
+            },
+            clickOut:function(){
+                if(!this.magnifier.classList.contains("pv-magnifier-container_focus")){
+                    this.remove();
+                }
             },
             focus:function(){
                 this.magnifier.classList.add('pv-magnifier-container_focus');
