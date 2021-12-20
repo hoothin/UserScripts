@@ -8,7 +8,7 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Base64/0.2.0/base64.min.js
-// @version      1.7.8
+// @version      1.7.9
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -572,7 +572,7 @@
         var siteRule=GM_getValue("siteRule");
         var rules=siteRule.split("\n");
         rules.forEach(rule=>{
-            var ruleArr=rule.split("@@");
+            var ruleArr=rule.replace(/\s/g,"").split("@@");
             if(ruleArr[1] && (ruleArr[0].indexOf("$url")!=-1 || ruleArr[0].indexOf("$hash")!=-1)){
                 var siteConfig={};
                 siteConfig.directUrl=function(offUrl){
@@ -601,6 +601,7 @@
             var aTags = (target?$(target).find("a"):$("a")).get();
             for(var aTag of aTags){
                 for(var reg of regs){
+                    reg=reg.trim();
                     if(reg==="")continue;
                     var patt=new RegExp(reg);
                     if(patt.test(aTag.href) && $.inArray(aTag, rawnodes)==-1){
@@ -911,7 +912,7 @@
             $(configQuit).click(function (event) {configContent.style.display="none";});
             $(configSave).click(function (event) {
                 var regStr=$(configInput).val();
-                var baiduPathStr=$(baiduPath).val();
+                var baiduPathStr=$(baiduPath).val().trim();
                 if(baiduPathStr)GM_setValue("baiduPath",/^\//.test(baiduPathStr)?baiduPathStr:("/"+baiduPathStr));
                 if(/^\s*$/.test(regStr)){
                     GM_deleteValue("eoReg");
