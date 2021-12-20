@@ -125,13 +125,14 @@
                                     }else{
                                         installLink.innerHTML="Reinstall version "+version;
                                     }
+
+                                    if(!info.enabled){
+                                        installLink.style.backgroundColor="#6a6a6a";
+                                    }else{
+                                        installLink.style.backgroundColor="";
+                                    }
                                 }else{
                                     installLink.innerHTML="Install version "+version;
-                                }
-                                if(!info.enabled){
-                                    installLink.style.backgroundColor="#6a6a6a";
-                                }else{
-                                    installLink.style.backgroundColor="";
                                 }
                             };
                             if(window.external.Tampermonkey){
