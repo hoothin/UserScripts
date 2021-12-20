@@ -8,7 +8,7 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Base64/0.2.0/base64.min.js
-// @version      1.7.7
+// @version      1.7.8
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -305,6 +305,7 @@
         var config={};
         switch (lang){
             case "zh-CN":
+            case "zh-SG":
                 config={
                     configure:"一键离线下载设置",
                     yyw:"115网盘",
@@ -321,9 +322,57 @@
                     btcache:"Btcache.me种子下载",
                     enable:"启用",
                     disable:"禁用",
-                    addIcon:"添加站点"
+                    addIcon:"添加站点",
+                    settingTitle:"一键离线下载",
+                    urlRegexpTips:"自定义需要启用一键下载的链接正则，一行一条",
+                    disableOnSite:"已于此站点禁用，点击启用",
+                    bdPathTips:"不需要加'我的网盘/全部文件'",
+                    bdPathTitle:"度盘存储路径：",
+                    settingMouseOver:"仅当鼠标经过时显示图标",
+                    settingBtn:"设置",
+                    allDisableError:"不能全部禁用！",
+                    siteRuleSetOK:"设置成功，刷新生效",
+                    setOK:"设置成功",
+                    regExpError:"含有无效正则，请重新输入",
+                    addSiteRuleTitle:"自定义新增站点规则，一行一条",
+                    siteRulePlaceholder:"站点@@ 站名@@ 禁ftp@@ 禁http@@ 禁磁链@@ 禁电驴@@ 图标base64@@ 图标背景颜色\n\n@@ 分隔，目标站点中用 $url 代替目标链接，$hash 代表目标磁链的 hash 值\n\n例如：http://192.168.2.1/d2r?u=$url@@路由器下载\nhttp://xxx.com/magnet/$hash@@磁链下载@@1@@1@@0@@1@@data:image/png;base64,AAA@@ffffff",
+                    inputLink:"输入需要离线下载的链接："
                 };
                 break;
+            case "zh-TW":
+            case "zh-HK":
+                config={
+                    configure:"一鍵離線下載設置",
+                    yyw:"115網盤",
+                    baidu:"百度網盤",
+                    furk:"Furk網盤",
+                    seedr:"Seedr網盤",
+                    pcloud:"Pcloud網盤",
+                    xunlei:"迅雷離線",
+                    xiaomi:"小米路由器",
+                    weiyun:"騰訊微雲",
+                    bitqiu:"比特球",
+                    apiv:"九秒雲播",
+                    torrent:"Itorrents種子下載",
+                    btcache:"Btcache.me種子下載",
+                    enable:"啟用",
+                    disable:"禁用",
+                    addIcon:"添加站點",
+                    settingTitle:"一鍵離線下載",
+                    urlRegexpTips:"自定義需要啟用一鍵下載的連結正則，一行一條",
+                    disableOnSite:"已於此站點禁用，點擊啟用",
+                    bdPathTips:"不需要加'我的網盤/全部文件'",
+                    bdPathTitle:"度盤存儲路徑：",
+                    settingMouseOver:"僅當滑鼠經過時顯示圖標",
+                    settingBtn:"設置",
+                    allDisableError:"不能全部禁用！",
+                    siteRuleSetOK:"設置成功，刷新生效",
+                    setOK:"設置成功",
+                    regExpError:"含有無效正則，請重新輸入",
+                    addSiteRuleTitle:"自定義新增站點規則，一行一條",
+                    siteRulePlaceholder:"站點@@ 站名@@ 禁ftp@@ 禁http@@ 禁磁鏈@@ 禁電驢@@ 圖標base64@@ 圖標背景顏色\n\n@@ 分隔，目標站點中用 $url 代替目標連結，$hash 代表目標磁鏈的 hash 值\n\n例如：http://192.168.2.1/d2r?u=$url@@路由器下載\nhttp://xxx.com/magnet/$hash@@磁鏈下載@@1@@1@@0@@1@@data:image/png;base64,AAA@@ffffff",
+                    inputLink:"輸入需要離線下載的連結："
+                };
             default:
                 config={
                     configure:"EasyOffline - Configure",
@@ -341,7 +390,21 @@
                     btcache:"Torrent download in btcache.me",
                     enable:"Enable ",
                     disable:"Disable ",
-                    addIcon:"Add new site"
+                    addIcon:"Add new site",
+                    settingTitle: "Easy Offline",
+                    urlRegexpTips: "Customize the Link Regexp, one per line",
+                    disableOnSite: "Disabled currently, click to enable",
+                    bdPathTips: "No need to add'/all files'",
+                    bdPathTitle: "Path of BDpan:",
+                    settingMouseOver: "Display the icon only when the mouse passes over",
+                    settingBtn: "Save",
+                    allDisableError: "Cannot disable all!",
+                    siteRuleSetOK: "Set successfully, refresh takes effect",
+                    setOK: "Set successfully",
+                    regExpError: "Contains invalid regularity, please re-enter",
+                    addSiteRuleTitle: "Customize new site rules, one per line",
+                    siteRulePlaceholder: "site@@ sitename@@ no ftp@@ no http@@ no magnet@@ no ed2k@@ icon base64@@ icon background color\n\nUse @@ to separated, use $url for the target Link, $hash for the hash of the target magnet link\n\nFor example: http://192.168.2.1/d2r?u=$url@@MyRouter\nhttp://xxx.com/magnet/$hash@@MyMagnetLinkDownload@@1@@1@@0@@1@@data:image/png;base64,AAA@@ffffff",
+                    inputLink: "Enter the link that needs to be downloaded with this:"
                 };
                 break;
         }
@@ -739,14 +802,14 @@
             document.body.appendChild(configContent);
             configContent.innerHTML=`
                 <div style="text-align: center;width:300px;min-height:300px;position:fixed;left:50%;top:50%;margin-top:-150px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;color:#6e7070;">
-                    <a href="https://greasyfork.org/scripts/22590#additional-info" style="color: #5c5c5c; position: absolute; width: 100%; left: 0; text-decoration: underline;">一键离线下载</a>
-                    <a id="easyOfflineDisable" href="#" style="color: red;top: 18px; position: absolute; width: 100%; left: 0; text-decoration: underline;display:none;">已于此站点禁用，点击启用</a>
-                    <div style="text-align:center;font-size: 12px;margin-top: 38px;">自定义需要启用一键下载的链接正则，一行一条</div>
-                    <textarea id="configInput" placeholder="例如：\nhttp:.*\\.php\\?getRes=\\d+\n\.doc$\n\.xls$" style="position:absolute;left:18px;top:60px;width:260px;height:110px;background-color:white;color:black;"></textarea>
-                    <div style="text-align:center;font-size:12px;margin-top:125px;" title="不需要加'我的网盘/全部文件'">度盘存储路径：<input id="baiduPath" placeholder="例：/av" style="width:170px;border-width:1px;"></div>
+                    <a href="https://greasyfork.org/scripts/22590#additional-info" style="color: #5c5c5c; position: absolute; width: 100%; left: 0; text-decoration: underline;">${i18n("settingTitle")}</a>
+                    <a id="easyOfflineDisable" href="#" style="color: red;top: 18px; position: absolute; width: 100%; left: 0; text-decoration: underline;display:none;">${i18n("disableOnSite")}</a>
+                    <div style="text-align:center;font-size: 12px;margin-top: 38px;">${i18n("urlRegexpTips")}</div>
+                    <textarea id="configInput" placeholder="http:.*\\.php\\?getRes=\\d+\n\.doc$\n\.xls$" style="position:absolute;left:18px;top:60px;width:260px;height:110px;background-color:white;color:black;"></textarea>
+                    <div style="text-align:center;font-size:12px;margin-top:125px;" title="${i18n("bdPathTips")}">${i18n("bdPathTitle")}<input id="baiduPath" placeholder="例：/av" style="width:170px;border-width:1px;"></div>
                     <div id="icons" style="position: static; display: inline-block; margin-top: 10px;width: 100%;margin-left: 10px;"></div>
-                    <label style="position: static; width: 300px;"><input id="showType" type="checkbox"/>仅当鼠标经过时显示图标</label>
-                    <button id="configSave" class="whx-btn" type="button" style="position:static;width:80px;height:30px;color:white;border-radius:5px;border:0px;outline:none;cursor:pointer;margin: 10px 110px 10px;">设置</button>
+                    <label style="position: static; width: 300px;"><input id="showType" type="checkbox"/>${i18n("settingMouseOver")}</label>
+                    <button id="configSave" class="whx-btn" type="button" style="position:static;width:80px;height:30px;color:white;border-radius:5px;border:0px;outline:none;cursor:pointer;margin: 10px 110px 10px;">${i18n("settingBtn")}</button>
                     <div id="configQuit" class="whx-btn" style="width:28px;height:28px;border-radius:14px;position:absolute;right:2px;top:2px;cursor:pointer;">
                         <span style="height:28px;line-height:28px;display:block;color:#FFF;text-align:center;font-size:20px;">╳</span>
                     </div>
@@ -805,7 +868,7 @@
                             }
                         });
                         if(allHide){
-                            alert("不能全部禁用！");
+                            alert(i18n("allDisableError"));
                             return;
                         }
                     }
@@ -818,9 +881,9 @@
             var addSiteRules=document.createElement("div");
             addSiteRules.innerHTML=`
                 <div style="width:300px;min-height: 300px;position:fixed;left:50%;top:50%;margin-top:-150px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;color:#6e7070;">
-                    <div style="text-align:center;font-size: 12px;margin-top: 28px;">自定义新增站点规则，一行一条</div>
-                    <textarea id="siteRuleInput" placeholder="站点@@ 站名@@ 禁ftp@@ 禁http@@ 禁磁链@@ 禁电驴@@ 图标base64@@ 图标背景颜色\n\n@@ 分隔，目标站点中用 $url 代替目标链接，$hash 代表目标磁链的 hash 值\n\n例如：http://192.168.2.1/d2r?u=$url@@路由器下载\nhttp://xxx.com/magnet/$hash@@磁链下载@@1@@1@@0@@1@@data:image/png;base64,AAA@@ffffff" style="position: absolute;left: 18px;top: 55px;width: 260px;height: 180px;background-color: white;color: black;margin-top: 0px;margin-bottom: 0px;"></textarea>
-                    <button id="siteRuleSave" class="whx-btn" type="button" style="position: absolute;width:80px;height:30px;bottom: 10px;color:white;border-radius:5px;border:0px;outline:none;margin: 10px 110px 10px;cursor:pointer;left:0;">设置</button>
+                    <div style="text-align:center;font-size: 12px;margin-top: 28px;">${i18n("addSiteRuleTitle")}</div>
+                    <textarea id="siteRuleInput" placeholder="${i18n("siteRulePlaceholder")}" style="position: absolute;left: 18px;top: 55px;width: 260px;height: 180px;background-color: white;color: black;margin-top: 0px;margin-bottom: 0px;"></textarea>
+                    <button id="siteRuleSave" class="whx-btn" type="button" style="position: absolute;width:80px;height:30px;bottom: 10px;color:white;border-radius:5px;border:0px;outline:none;margin: 10px 110px 10px;cursor:pointer;left:0;">${i18n("settingBtn")}</button>
                     <div id="siteRuleQuit" class="whx-btn" style="width:28px;height:28px;border-radius:14px;position:absolute;right:2px;top:2px;cursor:pointer;">
                         <span style="height:28px;line-height:28px;display:block;color:#FFF;text-align:center;font-size:20px;">╳</span>
                     </div>
@@ -837,7 +900,7 @@
             });
             $("#siteRuleSave", addSiteRules).click(function (event) {
                 GM_setValue("siteRule", $("#siteRuleInput", addSiteRules).val());
-                alert("设置成功，刷新生效");
+                alert(i18n("siteRuleSetOK"));
                 if(addSiteRules.parentNode)addSiteRules.parentNode.removeChild(addSiteRules);
             });
 
@@ -858,14 +921,14 @@
                         try{
                             new RegExp(reg);
                         }catch(e){
-                            alert("含有无效正则，请重新输入");
+                            alert(i18n("regExpError"));
                             return;
                         }
                     }
                     GM_setValue("eoReg",regStrs);
                 }
                 GM_setValue("showType", showTypeCheck.checked);
-                alert("设置成功");
+                alert(i18n("setOK"));
             });
         }
         configContent.style.display="block";
@@ -896,7 +959,7 @@
         var link=sel.toString(),validReg=/^\s*(magnet:\?xt=urn:btih:|ed2k:\/\/\|file|https?:|ftp:)/i;
         if(link==="" || !validReg.test(link)){
             if(targetA) link=targetA.href;
-            else link=prompt("输入需要离线下载的链接：","magnet:?xt=urn:btih:");
+            else link=prompt(i18n("inputLink"),"magnet:?xt=urn:btih:");
         }/*else{
             var focusedElement = sel.focusNode.parentElement;
             if(focusedElement.tagName == "A"){
