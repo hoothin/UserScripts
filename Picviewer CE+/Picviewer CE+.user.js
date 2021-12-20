@@ -6,7 +6,7 @@
 // @description     Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version         2021.12.20.1
+// @version         2021.12.20.2
 // @created         2011-6-15
 // @namespace       http://userscripts.org/users/NLF
 // @homepage        http://hoothin.com
@@ -45,6 +45,7 @@
     var i18nData={};
     switch (lang){
         case "zh-CN":
+        case "zh-SG":
             i18nData={
                 saveBtn:"确定",
                 download:"下载",
@@ -171,6 +172,8 @@
                 keysActualTip:"当出现悬浮条时按下此按键打开大图",
                 keysSearch:"查找原图",
                 keysSearchTip:"当出现悬浮条时按下此按键查找原图",
+                headSearchTip:"搜图",
+                headSearchAll:"搜索以上全部",
                 keysCurrent:"打开当前图片",
                 keysCurrentTip:"当出现悬浮条时按下此按键打开当前显示的图片",
                 keysMagnifier:"打开放大镜观察",
@@ -212,6 +215,7 @@
                 galleryDescriptionLength1:"注释的最大宽度",
                 galleryDescriptionLength2:" 个字符",
                 galleryAutoOpenSites:"自动打开图库的网站正则",
+                gallerySearchData:"搜图站点设置，清空还原",
                 galleryEditSite:"在线编辑站点",
                 imgWindow:"图片窗口",
                 imgWindowFitToScreen:"适应屏幕，并且水平垂直居中",
@@ -246,6 +250,7 @@
             };
             break;
         case "zh-TW":
+        case "zh-HK":
             i18nData={
                 saveBtn:"確定",
                 download:"下載",
@@ -372,6 +377,8 @@
                 keysActualTip:"當出現懸浮條時按下此按鍵打開大圖",
                 keysSearch:"查找原圖",
                 keysSearchTip:"當出現懸浮條時按下此按鍵查找原圖",
+                headSearchTip:"搜圖",
+                headSearchAll:"搜索以上全部",
                 keysCurrent:"打開當前圖片",
                 keysCurrentTip:"當出現懸浮條時按下此按鍵打開當前顯示的圖片",
                 keysMagnifier:"打開放大鏡觀察",
@@ -413,6 +420,7 @@
                 galleryDescriptionLength1:"注釋的最大寬度",
                 galleryDescriptionLength2:" 個字元",
                 galleryAutoOpenSites:"自動打開圖庫的網站正則",
+                gallerySearchData:"搜圖站點設置，清空還原",
                 galleryEditSite:"在線編輯站點",
                 imgWindow:"圖片窗口",
                 imgWindowFitToScreen:"適應屏幕，並且水平垂直居中",
@@ -573,6 +581,8 @@
                 keysActualTip:"Press this button to open a large image when floating bar appears",
                 keysSearch:"Find the original image",
                 keysSearchTip:"Press this button to find the original image when floating bar appears",
+                headSearchTip:"Search by image",
+                headSearchAll:"Search All",
                 keysCurrent:"Open the current picture",
                 keysCurrentTip:"Press this button to open the current image when floating bar appears",
                 keysMagnifier:"Open the magnifier to observe",
@@ -614,6 +624,7 @@
                 galleryDescriptionLength1:"Maximum width of annotation",
                 galleryDescriptionLength2:"Characters",
                 galleryAutoOpenSites:"Regulars of website for open automatically",
+                gallerySearchData:"Site rules for search, empty it to restore",
                 galleryEditSite:"Online editing site",
                 imgWindow:"ImgWindow",
                 imgWindowFitToScreen:"Adapt to the screen",
@@ -656,8 +667,21 @@
                 result=result.replace("#t#",inserts[i]);
             }
         }
-        return result;
+        return result?result:key;
     }
+    var defaultSearchData=`{//sbi.ccloli.com/img/upload.php}
+Google | https://www.google.com/searchbyimage?image_url=#t#
+Baidu | https://graph.baidu.com/details?isfromtusoupc=1&tn=pc&carousel=0&promotion_name=pc_image_shituindex&extUiData%5bisLogoShow%5d=1&image=#t#
+Bing | https://www.bing.com/images/searchbyimage?cbir=sbi&iss=sbi&imgurl=#t#
+TinEye | https://www.tineye.com/search?url=#t#
+Yandex | https://yandex.com/images/search?rpt=imageview&url=#t#
+Sogou | https://pic.sogou.com/ris?query=#t#&flag=1&drag=0
+360 ShiTu | http://st.so.com/stu?imgurl=#t#
+SauceNAO | https://saucenao.com/search.php?db=999&url=#t#
+IQDB | https://iqdb.org/?url=#t#
+3D IQDB | https://3d.iqdb.org/?url=#t#
+WhatAnime | https://trace.moe/?url=#t#
+Ascii2D | https://ascii2d.net/search/url/#t#`;
     var prefs;
     function init(topObject,window,document,arrayFn,envir,storage,unsafeWindow){
         // 默认设置，请到设置界面修改
@@ -735,7 +759,8 @@
 
                 autoZoom: true,  // 如果有放大，则把图片及 sidebar 部分的缩放改回 100%，增大可视面积（仅在 chrome 下有效）
                 descriptionLength: 32,  // 注释的最大宽度
-                editSite: "Lunapic"
+                editSite: "Lunapic",
+                searchData:defaultSearchData
             },
 
             imgWindow:{// 图片窗相关设置
@@ -2724,6 +2749,16 @@
                     '</span>'+
 
                     '<span class="pv-gallery-head-command-container">'+
+                    '<span title="'+i18n("headSearchTip")+'" class="pv-gallery-head-command pv-gallery-head-command-search">'+
+                    '<span>'+i18n("headSearchTip")+'</span>'+
+                    '<span class="pv-gallery-vertical-align-helper"></span>'+
+                    '</span>'+
+                    '<span class="pv-gallery-head-command-drop-list pv-gallery-head-command-drop-list-search">'+
+                    '<span class="pv-gallery-head-command-drop-list-item" id="headSearchAll" data-command="headSearchAll">'+i18n("headSearchAll")+'</span>'+
+                    '</span>'+
+                    '</span>'+
+
+                    '<span class="pv-gallery-head-command-container">'+
                     '<span title="'+i18n("share")+'" class="pv-gallery-head-command pv-gallery-head-command-share">'+
                     '<span>'+i18n("share")+'</span>'+
                     '<span class="pv-gallery-vertical-align-helper"></span>'+
@@ -2875,6 +2910,7 @@
                     'head-command-drop-list-share',
                     'head-command-drop-list-slide-show',
                     'head-command-drop-list-collect',
+                    'head-command-drop-list-search',
 
                     'body',
 
@@ -3500,6 +3536,33 @@
                         return;
                     else if(e.target.className.indexOf('pv-gallery-head-command')!=-1)
                         self.closeViewMore();
+                });
+
+                if(!prefs.gallery.searchData)prefs.gallery.searchData=defaultSearchData;
+                var searchRules=prefs.gallery.searchData.split("\n"),searchUploadUrl,searchItems=[];
+                var searchAll=eleMaps['head-command-drop-list-search'].querySelector("#headSearchAll");
+                searchRules.forEach(rule=>{
+                    if(!searchUploadUrl){
+                        var uploadMatch=rule.match(/\s*{(.*)}\s*/);
+                        if(uploadMatch){
+                            searchUploadUrl=uploadMatch[1];
+                            return;
+                        }
+                    }
+                    let ruleArr=rule.trim().split("|");
+                    if(ruleArr.length==2){
+                        var item=document.createElement('span');
+                        item.className="pv-gallery-head-command-drop-list-item";
+                        item.innerHTML=ruleArr[0];
+                        item.addEventListener('click',function(e){
+                            window.open(ruleArr[1].replace("#t#", encodeURIComponent(self.src)), "_blank", "width=1024, height=768, toolbar=1");
+                        });
+                        searchItems.push(item);
+                        eleMaps['head-command-drop-list-search'].insertBefore(item, searchAll);
+                    }
+                });
+                searchAll.addEventListener('click',function(e){
+                    searchItems.forEach(item=>{item.click()});
                 });
 
 
@@ -5521,6 +5584,7 @@
                     padding:10px;\
                     color:#ccc;\
                     margin-top:-1px;\
+                    z-index:9;\
                     }\
                     .pv-gallery-head-command-drop-list-item{\
                     display:block;\
@@ -9780,7 +9844,7 @@
 
             var target = e.target;
 
-            if (!target || !target.classList || target.classList.contains('pv-pic-ignored') || target.id=="pv-float-bar-container" || target.classList.contains('pv-float-bar-button') || target.classList.contains('pv-loading-container') || target.classList.contains('pv-loading-button') || target.classList.contains("ks-imagezoom-lens")) {
+            if (!target || !target.classList || target.id=="pv-float-bar-container" || target.className.indexOf('pv-') != -1 || target.classList.contains("ks-imagezoom-lens")) {
                 return;
             }
 
@@ -10389,6 +10453,11 @@
                     type: 'textarea',
                     "default": prefs.gallery.autoOpenSites
                 },
+                'gallery.searchData': {
+                    label: i18n("gallerySearchData"),
+                    type: 'textarea',
+                    "default": prefs.gallery.searchData
+                },
                 /*'gallery.editSite': {
                     label: i18n("galleryEditSite"),
                     type: 'select',
@@ -10514,6 +10583,10 @@
                     closeBtn.title=i18n("closeBtnTips");
                     resetLink.textContent=i18n("resetLink");
                     resetLink.title=i18n("resetLinkTips");
+                    let searchData=doc.getElementById(this.id+"_field_gallery.searchData");
+                    if(searchData && searchData.value==""){
+                        searchData.value=defaultSearchData;
+                    }
                 },
                 save: function() {
                     loadPrefs();
