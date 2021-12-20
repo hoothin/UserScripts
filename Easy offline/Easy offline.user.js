@@ -6,9 +6,9 @@
 // @description:zh-CN 一键自动将磁链、bt种子或其他下载资源离线下载至网盘
 // @description:zh-TW 一鍵自動將磁鏈、bt種子或其他下載資源離綫下載至網盤
 // @namespace    http://tampermonkey.net/
-// @require      https://cdn.jsdelivr.net/jquery/1.7.2/jquery.min.js
-// @require      https://cdn.jsdelivr.net/hi-base64/0.2.0/base64.min.js
-// @version      1.7.5
+// @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/Base64/0.2.0/base64.min.js
+// @version      1.7.6
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*

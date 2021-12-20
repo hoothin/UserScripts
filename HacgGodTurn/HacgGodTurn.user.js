@@ -123,8 +123,8 @@
 // @grant       unsafeWindow
 // @run-at      document-end
 // @require     https://greasyfork.org/scripts/23522/code/od.js?version=997431
-// @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/components/core-min.js
-// @require     https://cdn.jsdelivr.net/crypto-js/3.1.2/rollups/aes.js
+// @require     https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/core-min.js
+// @require     https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js
 // @license     MIT License
 // @connect     tts.baidu.com
 // @compatible        chrome
