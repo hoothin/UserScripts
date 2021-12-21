@@ -4,7 +4,7 @@
 // @name:zh-TW   懶人小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.5.6
+// @version      2.5.7
 // @description  Fetch and download main content on current page, provide special support for chinese novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取小說、論壇內容等並保存為TXT文檔
@@ -27,7 +27,7 @@
 
 (function() {
     'use strict';
-    var indexReg=/PART\b|^Prologue|^\D+\-\d+|分卷|Chapter\s*[\-_]?\d+|^序$|^序\s*言|^序\s*章|^前\s*言|^引\s*言|^引\s*子|^摘\s*要|^楔\s*子|^契\s*子|^后\s*记|^後\s*記|^附\s*言|^结\s*语|^結\s*語|^尾\s*声|^最終話|^最终话|^番\s*外|^\d+\s+\D+$|^[第（][\d〇零一二三四五六七八九十百千万萬-]+\s*(、|）|\.\D|章|节|節|回|卷|折|篇|幕|集|话|話)/i;
+    var indexReg=/PART\b|^Prologue|^\D+\-\d+$|分卷|Chapter\s*[\-_]?\d+|^序$|^序\s*言|^序\s*章|^前\s*言|^引\s*言|^引\s*子|^摘\s*要|^楔\s*子|^契\s*子|^后\s*记|^後\s*記|^附\s*言|^结\s*语|^結\s*語|^尾\s*声|^最終話|^最终话|^番\s*外|^\d+\s*\D+$|^[第（][\d〇零一二三四五六七八九十百千万萬-]+\s*(、|）|\.\D|章|节|節|回|卷|折|篇|幕|集|话|話)/i;
     var innerNextPage=/下一(页|张)|next\s*page/i;
     var lang = navigator.appName=="Netscape"?navigator.language:navigator.userLanguage;
     var i18n={};
@@ -429,7 +429,7 @@
         return i;
     }
 
-    function fetch(){
+    function fetch(forceSingle){
         var aEles=document.querySelectorAll("a"),list=[];
         for(var i=0;i<aEles.length;i++){
             var aEle=aEles[i],has=false;
@@ -445,7 +445,7 @@
                 list.push(aEle);
             }
         }
-        if(list.length>2){
+        if(list.length>2 && !forceSingle){
             indexDownload(list);
         }else{
             var blob = new Blob([i18n.info+"\r\n"+document.title+"\r\n\r\n"+getPageContent(document)], {type: "text/plain;charset=utf-8"});
@@ -455,7 +455,7 @@
 
     document.addEventListener("keydown", function(e) {
         if(e.keyCode == 120 && e.ctrlKey) {
-            fetch();
+            fetch(e.shiftKey);
         }
     });
     function setDel(){
