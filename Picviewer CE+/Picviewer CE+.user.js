@@ -9850,7 +9850,7 @@ Ascii2D | https://ascii2d.net/search/url/#t#`;
 
             var target = e.target;
 
-            if (!target || !target.classList || target.id=="pv-float-bar-container" || target.className.indexOf('pv-') != -1 || target.classList.contains("ks-imagezoom-lens")) {
+            if (!target || !target.classList || !target.className || target.id=="pv-float-bar-container" || target.className.indexOf('pv-') != -1 || target.classList.contains("ks-imagezoom-lens")) {
                 return;
             }
 
