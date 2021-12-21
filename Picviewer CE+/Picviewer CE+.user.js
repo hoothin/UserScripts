@@ -6,7 +6,7 @@
 // @description     Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version         2021.12.20.3
+// @version         2021.12.21.1
 // @created         2011-6-15
 // @namespace       http://userscripts.org/users/NLF
 // @homepage        http://hoothin.com
@@ -669,17 +669,16 @@
         }
         return result?result:key;
     }
-    var defaultSearchData=`{//sbi.ccloli.com/img/upload.php}
-Google | https://www.google.com/searchbyimage?image_url=#t#
-Baidu | https://graph.baidu.com/details?isfromtusoupc=1&tn=pc&carousel=0&promotion_name=pc_image_shituindex&extUiData%5bisLogoShow%5d=1&image=#t#
-Bing | https://www.bing.com/images/searchbyimage?cbir=sbi&iss=sbi&imgurl=#t#
-TinEye | https://www.tineye.com/search?url=#t#
-Yandex | https://yandex.com/images/search?rpt=imageview&url=#t#
-Sogou | https://pic.sogou.com/ris?query=#t#&flag=1&drag=0
-360 ShiTu | http://st.so.com/stu?imgurl=#t#
+    var defaultSearchData=`Google | https://www.google.com/searchbyimage?image_url=#t#
+Yandex | https://yandex.com/images/search?source=collections&rpt=imageview&url=#t#
 SauceNAO | https://saucenao.com/search.php?db=999&url=#t#
 IQDB | https://iqdb.org/?url=#t#
 3D IQDB | https://3d.iqdb.org/?url=#t#
+Baidu | https://graph.baidu.com/details?isfromtusoupc=1&tn=pc&carousel=0&promotion_name=pc_image_shituindex&extUiData%5bisLogoShow%5d=1&image=#t#
+Bing | https://www.bing.com/images/searchbyimage?view=detailv2&cbir=sbi&iss=sbi&imgurl=#t#
+TinEye | https://www.tineye.com/search?url=#t#
+Sogou | https://pic.sogou.com/ris?query=#t#
+360 | http://st.so.com/stu?imgurl=#t#
 WhatAnime | https://trace.moe/?url=#t#
 Ascii2D | https://ascii2d.net/search/url/#t#`;
     var prefs;
@@ -3543,7 +3542,7 @@ Ascii2D | https://ascii2d.net/search/url/#t#`;
                 var searchAll=eleMaps['head-command-drop-list-search'].querySelector("#headSearchAll");
                 searchRules.forEach(rule=>{
                     if(!searchUploadUrl){
-                        var uploadMatch=rule.match(/\s*{(.*)}\s*/);
+                        var uploadMatch=rule.match(/\s*{(.*)}\s*/);//todo: upload 2 search, need a Long-Term Servicing server for base64 to url like ainoob.com/api/uploadImage/
                         if(uploadMatch){
                             searchUploadUrl=uploadMatch[1];
                             return;
