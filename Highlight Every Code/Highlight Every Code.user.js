@@ -3,7 +3,7 @@
 // @name:zh-CN   代码片段高亮
 // @name:zh-TW   程式碼片斷高亮
 // @namespace    hoothin
-// @version      1.5
+// @version      1.6
 // @description  Add a icon to popup a window that allows syntax highlighting and beautify and word count of source code snippets on current page
 // @description:zh-CN 选择代码片段后点击图标弹出新窗口显示语法高亮美化与格式化后的代码与字数统计
 // @description:zh-TW 選擇程式碼片段後點選圖示彈出新視窗顯示語法高亮美化與格式化後的程式碼與字數統計
@@ -21,13 +21,17 @@
     'use strict';
     var isChrome=unsafeWindow.chrome;
     var codeIcon=document.createElement("img");
-    var codes, selStr, scrollX, scrollY;
+    var codes, selStr, scrollX, scrollY, customInput=false;
     codeIcon.style.cssText="position:fixed;z-index:99999;cursor:pointer;transition:opacity 0.5s ease-in-out 0s;opacity:0;border:5px solid rgba(0, 0, 0, 0.2);border-radius:10px;";
     codeIcon.title="Show this code snippet";
     codeIcon.src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAYAgMAAACD0OXYAAAACVBMVEX7+/swMDBTU1MLxgsCAAAAJElEQVQI12MIBYEAGLUKBBbAqAUMQICgAoAqoBQ95JaCnASjAAgXMdk3d5HTAAAAAElFTkSuQmCC";
     codeIcon.onmousedown=function(){
+        if(customInput){
+            selStr=prompt("Input code here","");
+            codes=selStr.replace(/&/g, "&amp;").replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+        }
         let html='<title>Code Snippet</title>'+
-            '<link rel="stylesheet" href="http'+(isChrome?'s':'')+'://cdn.rawgit.com/google/code-prettify/master/styles/sons-of-obsidian.css"/>'+
+            '<link rel="stylesheet" href="https://cdn.rawgit.com/google/code-prettify/master/styles/sons-of-obsidian.css"/>'+
             '<script>var code,codeStr;window.onload=function(){code=document.querySelector("#code");codeStr=code.innerHTML.replace(/&amp;/g, "&").replace(/&(nbsp;|amp;|#39;|quot;)/g, "&amp;$1");prettyPrint();'+
             'document.querySelector("body>a:nth-child(1)").onclick=function(){'+
             'code.innerHTML=js_beautify('+
@@ -37,10 +41,10 @@
             'return word.replace(/>/g, \'&gt;\').replace(/</g, \'&lt;\');}'+
             '));code.className=\'prettyprint linenums\';prettyPrint();return false;'+
             '};}</script>'+
-            '<script src="http'+(isChrome?'s':'')+'://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js?skin=sons-of-obsidian"></script>'+
-            '<script src="http'+(isChrome?'s':'')+'://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.6.4/beautify.min.js"></script>'+
-            '<script src="http'+(isChrome?'s':'')+'://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.6.4/beautify-html.min.js"></script>'+
-            '<script src="http'+(isChrome?'s':'')+'://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.6.4/beautify-css.min.js"></script>'+
+            '<script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.js?skin=sons-of-obsidian"></script>'+
+            '<script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.6.4/beautify.min.js"></script>'+
+            '<script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.6.4/beautify-html.min.js"></script>'+
+            '<script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.6.4/beautify-css.min.js"></script>'+
             'Code formatting: <a href="#">Javaspcript</a> '+
             '<a href="#" onclick="code.innerHTML=html_beautify(codeStr);code.className=\'prettyprint linenums\';prettyPrint();return false;">Html</a> '+
             '<a href="#" onclick="code.innerHTML=css_beautify(codeStr);code.className=\'prettyprint linenums\';prettyPrint();return false;">Css</a> '+
@@ -57,14 +61,19 @@
 
     document.addEventListener('mousedown', function(o) {
         codeIcon.style.opacity=0;
+        customInput=false;
         if(codeIcon.parentNode)codeIcon.parentNode.removeChild(codeIcon);
     });
     document.addEventListener('mouseup', function(o) {
         if (o.button === 0 && (o.ctrlKey || o.altKey || o.metaKey || o.shiftKey)) {
+            var customInputKey=(o.ctrlKey && o.shiftKey);
             setTimeout(function(){
                 selStr=document.getSelection().toString();
                 codes=selStr.replace(/&/g, "&amp;").replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
-                if(codes){
+                if(!codes && customInputKey){
+                    customInput=true;
+                }
+                if(codes || customInputKey){
                     document.body.appendChild(codeIcon);
                     let pos=getMousePos(o);
                     let left, top;
