@@ -675,7 +675,7 @@ SauceNAO | https://saucenao.com/search.php?db=999&url=#t#
 IQDB | https://iqdb.org/?url=#t#
 3D IQDB | https://3d.iqdb.org/?url=#t#
 Baidu | https://graph.baidu.com/details?isfromtusoupc=1&tn=pc&carousel=0&promotion_name=pc_image_shituindex&extUiData%5bisLogoShow%5d=1&image=#t#
-Bing | https://www.bing.com/images/searchbyimage?view=detailv2&cbir=sbi&iss=sbi&imgurl=#t#
+Bing | https://www.bing.com/images/search?view=detailv2&iss=sbi&form=SBIVSP&sbisrc=UrlPaste&q=imgurl:#t#
 TinEye | https://www.tineye.com/search?url=#t#
 Sogou | https://pic.sogou.com/ris?query=#t#
 360 | http://st.so.com/stu?imgurl=#t#
