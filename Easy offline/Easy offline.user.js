@@ -8,7 +8,7 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Base64/0.2.0/base64.min.js
-// @version      1.7.9
+// @version      1.8.0
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -334,8 +334,8 @@
                     siteRuleSetOK:"设置成功，刷新生效",
                     setOK:"设置成功",
                     regExpError:"含有无效正则，请重新输入",
-                    addSiteRuleTitle:"自定义新增站点规则，一行一条",
-                    siteRulePlaceholder:"站点@@ 站名@@ 禁ftp@@ 禁http@@ 禁磁链@@ 禁电驴@@ 图标base64@@ 图标背景颜色\n\n@@ 分隔，目标站点中用 $url 代替目标链接，$hash 代表目标磁链的 hash 值\n\n例如：http://192.168.2.1/d2r?u=$url@@路由器下载\nhttp://xxx.com/magnet/$hash@@磁链下载@@1@@1@@0@@1@@data:image/png;base64,AAA@@ffffff",
+                    addSiteRuleTitle:"自定义新增图标规则，一行一条",
+                    siteRulePlaceholder:"站点 @@ 站名 @@ 禁ftp @@ 禁http @@ 禁磁链 @@ 禁电驴 @@ 图标base64 @@ 图标背景颜色\n\n@@ 分隔，目标站点中用 $url 代替目标链接，$hash 代表目标磁链的 hash 值\n\n例如：http://192.168.2.1/d2r?u=$url@@路由器下载\nhttp://xxx.com/magnet/$hash@@磁链下载@@1@@1@@0@@1@@data:image/png;base64,AAA@@ffffff",
                     inputLink:"输入需要离线下载的链接："
                 };
                 break;
@@ -369,8 +369,8 @@
                     siteRuleSetOK:"設置成功，刷新生效",
                     setOK:"設置成功",
                     regExpError:"含有無效正則，請重新輸入",
-                    addSiteRuleTitle:"自定義新增站點規則，一行一條",
-                    siteRulePlaceholder:"站點@@ 站名@@ 禁ftp@@ 禁http@@ 禁磁鏈@@ 禁電驢@@ 圖標base64@@ 圖標背景顏色\n\n@@ 分隔，目標站點中用 $url 代替目標連結，$hash 代表目標磁鏈的 hash 值\n\n例如：http://192.168.2.1/d2r?u=$url@@路由器下載\nhttp://xxx.com/magnet/$hash@@磁鏈下載@@1@@1@@0@@1@@data:image/png;base64,AAA@@ffffff",
+                    addSiteRuleTitle:"自定義新增圖標規則，一行一條",
+                    siteRulePlaceholder:"站點 @@ 站名 @@ 禁ftp @@ 禁http @@ 禁磁鏈 @@ 禁電驢 @@ 圖標base64 @@ 圖標背景顏色\n\n@@ 分隔，目標站點中用 $url 代替目標連結，$hash 代表目標磁鏈的 hash 值\n\n例如：http://192.168.2.1/d2r?u=$url@@路由器下載\nhttp://xxx.com/magnet/$hash@@磁鏈下載@@1@@1@@0@@1@@data:image/png;base64,AAA@@ffffff",
                     inputLink:"輸入需要離線下載的連結："
                 };
             default:
@@ -402,8 +402,8 @@
                     siteRuleSetOK: "Set successfully, refresh takes effect",
                     setOK: "Set successfully",
                     regExpError: "Contains invalid regularity, please re-enter",
-                    addSiteRuleTitle: "Customize new site rules, one per line",
-                    siteRulePlaceholder: "site@@ sitename@@ no ftp@@ no http@@ no magnet@@ no ed2k@@ icon base64@@ icon background color\n\nUse @@ to separated, use $url for the target Link, $hash for the hash of the target magnet link\n\nFor example: http://192.168.2.1/d2r?u=$url@@MyRouter\nhttp://xxx.com/magnet/$hash@@MyMagnetLinkDownload@@1@@1@@0@@1@@data:image/png;base64,AAA@@ffffff",
+                    addSiteRuleTitle: "Customize new icon rules, one per line",
+                    siteRulePlaceholder: "site @@ sitename @@ no ftp @@ no http @@ no magnet @@ no ed2k @@ icon base64 @@ icon background color\n\nUse @@ to separated, use $url for the target Link, $hash for the hash of the target magnet link\n\nFor example: http://192.168.2.1/d2r?u=$url@@MyRouter\nhttp://xxx.com/magnet/$hash@@MyMagnetLinkDownload@@1@@1@@0@@1@@data:image/png;base64,AAA@@ffffff",
                     inputLink: "Enter the link that needs to be downloaded with this:"
                 };
                 break;
