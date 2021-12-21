@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         91wii
 // @namespace    hoothin
-// @version      0.2
+// @version      0.3
 // @description  91wii签到
 // @author       hoothin
 // @match        https://*.91wii.com/*
@@ -23,9 +23,9 @@
         if(dcsignin.style.background.indexOf("signin_yes") != -1)return;
         unsafeWindow.showWindow('sign', 'plugin.php?id=dc_signin:sign')
         let signInterval=setInterval(()=>{
-            clearInterval(signInterval);
             let emotIndex=parseInt(Math.random() * 10) + 1;
             if(document.querySelector("#emot_" + emotIndex)){
+                clearInterval(signInterval);
                 document.querySelector("#emot_" + emotIndex).click();
                 //document.querySelector('#content').value = '君子有四时，朝以听政，昼以访问，夕以修令，夜以安身。';
                 document.querySelector("button[name=signpn]").click();
