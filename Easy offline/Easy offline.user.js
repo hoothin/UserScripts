@@ -67,7 +67,7 @@
                                                 unsafeWindow.require("function-widget-1:offlineDownload/util/newOfflineDialog.js").obtain()._checkPath=baiduPathStr;
                                             }
                                             $("#newoffline-dialog").find("span:contains('确定')[class='text']").click();
-                                            if(isBt)
+                                            if(isBt){
                                                 var i=0, bsb = setInterval(function(){
                                                     var btList=document.querySelector('#offlinebtlist-dialog');
                                                     if(btList && btList.style.display!="none"){
@@ -78,11 +78,12 @@
                                                         clearInterval(bsb);
                                                     }
                                                 }, 200);
+                                            }
                                             var ckeckEnd=function(){
                                                 var bck=setInterval(function(){
                                                     if(document.querySelector("#offlinelist-dialog").style.display!="none"){
                                                         clearInterval(bck);
-                                                        beginOffline();
+                                                        setTimeout(()=>{beginOffline();},1500);
                                                     }else if(document.querySelector("#dialog1") && document.querySelector("#dialog1").style.display!="none"){
                                                         clearInterval(bck);
                                                         var inputCode=$("#dialog1").find(".input-code");
