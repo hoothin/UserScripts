@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name           True URL downloads
 // @name:zh-TW     True URL downloads
-// @name:en        True URL downloads
-// @description    迅雷、快车、QQ旋风等专有链解密，嗅探下载链接并批量管理
+// @name:zh-CN     True URL downloads
+// @description    Decryption and Display the real URL of the download links and then manager them.(thunder,flashget,qqdl)
+// @description:zh-CN    迅雷、快车、QQ旋风等专有链解密，嗅探下载链接并批量管理
 // @description:zh-TW    迅雷、快車、QQ旋風等專有鏈解密，嗅探下載鏈接並批量管理
-// @description:en       Decryption and Display the real URL of the download links and then manager them.(thunder,flashget,qqdl)
 // @author         Yulei, Hoothin
 // @namespace      Yuleigq@gmail.com
 // @version        1.22.11
