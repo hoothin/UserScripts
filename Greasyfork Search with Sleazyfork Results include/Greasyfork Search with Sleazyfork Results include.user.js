@@ -4,7 +4,7 @@
 // @name:zh-TW   大人的Greasyfork
 // @name:ja      大人のGreasyfork
 // @namespace    hoothin
-// @version      0.92
+// @version      0.93
 // @description  Merge adult results of sleazyfork into greasyfork when the script is no longer anonymously available, add rating score and version for scripts then
 // @description:zh-CN 在Greasyfork的搜索结果中添加Sleazyfork上的成人脚本，增加评分与版本号，并在访问匿名不可用脚本时跳转至Sleazyfork
 // @description:zh-TW 在Greasyfork的搜索結果中添加Sleazyfork上的成人腳本，增加評分與版本號，並在訪問匿名不可用腳本時跳轉至Sleazyfork
@@ -91,9 +91,10 @@
         if(description){
             var scriptHref=script.querySelector('h2>a').href;
             let version=script.dataset.scriptVersion;
+            let format=script.dataset.scriptLanguage;
             description.innerHTML+=`<strong>Ver.${version}</strong>
             <div id="install-area" class="list-install-area" style="display:none;float: right;position: relative;">
-            <a class="install-link" data-install-format="js" data-ping-url href="${scriptHref.replace(/\.org\/.*\/scripts\//,".org/scripts/")}/code/script.user.js">Install</a><a style="cursor:pointer;" class="install-help-link refresh-info" title="Check info" rel="nofollow"><span>🗘</span></a>
+            <a class="install-link" data-install-format="${format}" data-ping-url href="${scriptHref.replace(/\.org\/.*\/scripts\//,".org/scripts/")}/code/script.user.js">Install</a><a style="cursor:pointer;" class="install-help-link refresh-info" title="Check info" rel="nofollow"><span>🗘</span></a>
             </div><div id="installation-instructions-modal-js" aria-hidden="true"><p class="installation-instructions-modal-content-bypass"><a href="#"></a></p></div><div id="installation-instructions-modal-css" aria-hidden="true"><p class="installation-instructions-modal-content-bypass"><a href="#"></a></p></div>`;
             var installArea=description.querySelector("#install-area");
             let installLink=installArea.querySelector(".install-link");
