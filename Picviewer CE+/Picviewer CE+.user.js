@@ -6,7 +6,7 @@
 // @description     Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version         2021.12.22.2
+// @version         2021.12.22.3
 // @created         2011-6-15
 // @namespace       http://userscripts.org/users/NLF
 // @homepage        http://hoothin.com
@@ -214,7 +214,7 @@
                 galleryAutoZoomTip:"如果有放大，则把图片及 sidebar 部分的缩放改回 100%，增大可视面积（仅在 chrome 下有效）",
                 galleryDescriptionLength1:"注释的最大宽度",
                 galleryDescriptionLength2:" 个字符",
-                galleryAutoOpenSites:"自动打开图库的网站正则",
+                galleryAutoOpenSites:"自动打开图库的网址正则，一行一条，若开头加@则自动展开图库",
                 gallerySearchData:"搜图站点设置，清空还原",
                 galleryEditSite:"在线编辑站点",
                 imgWindow:"图片窗口",
@@ -419,7 +419,7 @@
                 galleryAutoZoomTip:"如果有放大，則把圖片及 sidebar 部分的縮放改回 100%，增大可視面積（僅在 chrome 下有效）",
                 galleryDescriptionLength1:"注釋的最大寬度",
                 galleryDescriptionLength2:" 個字元",
-                galleryAutoOpenSites:"自動打開圖庫的網站正則",
+                galleryAutoOpenSites:"自動打開圖庫的網址正則，一行一條，若前綴@則自動展開圖庫",
                 gallerySearchData:"搜圖站點設置，清空還原",
                 galleryEditSite:"在線編輯站點",
                 imgWindow:"圖片窗口",
@@ -617,13 +617,13 @@
                 top:"Top",
                 gallerySidebarSize:"Height",
                 gallerySidebarSizeTip:"The height of the thumbnail bar (if it is horizontal) or the width (if it is vertical)",
-                galleryMax1:"Maximum read-ahead",
+                galleryMax1:"Maximum prefetch",
                 galleryMax2:"Pictures (before and after)",
                 galleryAutoZoom:"Zoom changes back to 100% (chrome)",
                 galleryAutoZoomTip:"If you zoom in, change the zoom of the image and sidebar sections back to 100% and increase the viewable area (only valid under chrome)",
-                galleryDescriptionLength1:"Maximum width of annotation",
+                galleryDescriptionLength1:"Maximum of annotation is",
                 galleryDescriptionLength2:"Characters",
-                galleryAutoOpenSites:"Regulars of website for open automatically",
+                galleryAutoOpenSites:"Regulars of urls for auto open gallery, one per line, start with @ for ViewMore",
                 gallerySearchData:"Site rules for search, empty it to restore",
                 galleryEditSite:"Online editing site",
                 imgWindow:"ImgWindow",
@@ -10126,6 +10126,7 @@ Ascii2D | https://ascii2d.net/search/url/#t#`;
             if(allData.length<1)return true;
             gallery.data=allData;
             gallery.load(gallery.data);
+            return gallery;
         }
 
         function keydown(event) {
@@ -10640,8 +10641,20 @@ Ascii2D | https://ascii2d.net/search/url/#t#`;
 
         loadPrefs();
 
-        if(prefs.gallery.autoOpenSites && new RegExp(prefs.gallery.autoOpenSites).test(location.href)){
-            setTimeout(function(){openGallery();},2000);
+        if(prefs.gallery.autoOpenSites){
+            var sitesArr=prefs.gallery.autoOpenSites.split("\n");
+            for(var s=0;s<sitesArr.length;s++){
+                var siteReg=sitesArr[s].trim();
+                var autoViewMore=siteReg[0]=="@";
+                if(autoViewMore)siteReg=siteReg.substr(1);
+                if(new RegExp(siteReg).test(location.href)){
+                    setTimeout(function(){
+                        var gallery = openGallery();
+                        if(autoViewMore)gallery.maximizeSidebar();
+                    },2000);
+                    break;
+                }
+            }
         }
 
         // 注册按键
