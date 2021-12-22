@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         loliconSexPic
 // @namespace    hoothin
-// @version      0.2
+// @version      0.3
 // @description  lolicon色图
 // @author       hoothin
 // @match        https://api.lolicon.app/setu/*
@@ -72,10 +72,12 @@
                 img.style.zIndex=0;
                 img.style.width="100%";
                 img.style.position="";
+                img.style.left="";
             }else{
                 img.style.zIndex=1;
                 img.style.width="";
                 img.style.position="absolute";
+                img.style.left=0;
             }
         };
         imgCon.appendChild(img);
