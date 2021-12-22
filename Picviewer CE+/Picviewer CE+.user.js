@@ -6,7 +6,7 @@
 // @description     Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version         2021.12.22.5
+// @version         2021.12.22.6
 // @created         2011-6-15
 // @namespace       http://userscripts.org/users/NLF
 // @homepage        http://hoothin.com
@@ -117,7 +117,7 @@
                 autoRefreshTip:"最后几张图片时，滚动主窗口到最底部，然后自动加载新的图片",
                 enterFullsc:"进入全屏",
                 exitFullsc:"退出全屏",
-                config:"设置",
+                config:"打开设置",
                 closeGallery:"关闭库",
                 returnToGallery:"回到库",
                 picInfo:"点击修改",
@@ -322,7 +322,7 @@
                 autoRefreshTip:"最後幾張圖片時，滾動主窗口到最底部，然後自動載入新的圖片",
                 enterFullsc:"進入全屏",
                 exitFullsc:"退出全屏",
-                config:"設置",
+                config:"打開設置",
                 closeGallery:"關閉庫",
                 returnToGallery:"回到庫",
                 picInfo:"點擊修改",
@@ -526,7 +526,7 @@
                 autoRefreshTip:"When the last few images are viewed, scroll the window to the bottom, then automatically load the new images",
                 enterFullsc:"Enter full screen",
                 exitFullsc:"Exit full screen",
-                config:"Settings",
+                config:"Open settings",
                 closeGallery:"Close Gallery",
                 returnToGallery:"Back to the Gallery",
                 picInfo:"Click to change",
