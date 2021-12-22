@@ -66,6 +66,7 @@
     datas.forEach(function(data){
         let img=document.createElement("img");
         img.src=data.urls?data.urls.original:data.url;
+        img.title=data.title+" - "+data.author;
         img.style.width="100%";
         img.onclick=()=>{
             if(img.style.zIndex==1){
