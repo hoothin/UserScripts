@@ -6,7 +6,7 @@
 // @description     Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version         2021.12.21.2
+// @version         2021.12.22.1
 // @created         2011-6-15
 // @namespace       http://userscripts.org/users/NLF
 // @homepage        http://hoothin.com
@@ -3827,6 +3827,7 @@ Ascii2D | https://ascii2d.net/search/url/#t#`;
                         }
                         textSpan.innerHTML=i18n("loading");
                         self.completePages=[];
+                        self.pageAllReady=false;
                         self.nextPage();
                     }else if(eleMaps['head-command-collect'].contains(target)){
                         if(collection.favorite){
@@ -4683,7 +4684,7 @@ Ascii2D | https://ascii2d.net/search/url/#t#`;
 
                 var pageObj = this.getPage(),textSpan = this.eleMaps['head-command-nextPage'].querySelector("span");
                 var haveMorePage = pageObj.pre || pageObj.next;
-                textSpan.style.color=haveMorePage?"#ffe000":"#757575";
+                textSpan.style.color=haveMorePage?"#e9cccc":"#757575";
             },
             clear:function(){
                 this._dataCache = {};
@@ -4931,14 +4932,23 @@ Ascii2D | https://ascii2d.net/search/url/#t#`;
             },
             completePages:[location.href],
             href:location.href,
+            pageAllReady:false,
+            londingImgNum:0,
+            pageImgReady:function(){
+                var textSpan=this.eleMaps['head-command-nextPage'].querySelector("span");
+                if(this.pageAllReady && this.londingImgNum<=0){
+                    textSpan.innerHTML="<font color='red'>"+i18n("loadedAll")+"</font>";
+                    setTimeout(function(){textSpan.innerHTML=i18n("loadAll");},1500);
+                }
+            },
             prePage:function(){
                 var pageObj=this.getPage(),self=this,textSpan=this.eleMaps['head-command-nextPage'].querySelector("span");
                 if(textSpan.innerHTML!=i18n("loading")){
                     return;
                 }
                 var loadOver=function(){
-                    textSpan.innerHTML="<font color='red'>"+i18n("loadedAll")+"</font>";
-                    setTimeout(function(){textSpan.innerHTML=i18n("loadAll");},1500);
+                    self.pageAllReady=true;
+                    self.pageImgReady();
                 };
                 if(!pageObj.pre){
                     loadOver();
@@ -4986,9 +4996,12 @@ Ascii2D | https://ascii2d.net/search/url/#t#`;
                             if(!isrc)return;
                             isrc=self.canonicalUri(isrc);
                             if (self._dataCache[isrc]) return;
+                            self.londingImgNum++;
                             var nimg = new Image();
                             nimg.src = isrc;
                             nimg.onload=function(){
+                                self.londingImgNum--;
+                                self.pageImgReady();
                                 var result = findPic(this);
                                 if (result && !self._dataCache[this.src]) {
                                     self.data.push(result);
@@ -4997,11 +5010,17 @@ Ascii2D | https://ascii2d.net/search/url/#t#`;
                                 }
                                 self._dataCache[this.src] = true;
                             };
+                            nimg.onerror=function(){
+                                self.londingImgNum--;
+                                self.pageImgReady();
+                            };
                         });
                         if(prefs.gallery.loadAll)self.prePage();
                         else loadOver();
                     },
                     onerror: function(e) {
+                        if(prefs.gallery.loadAll)self.prePage();
+                        else loadOver();
                     }
                 });
             },
@@ -5016,8 +5035,8 @@ Ascii2D | https://ascii2d.net/search/url/#t#`;
                         self.href=location.href;
                         self.prePage();
                     }else{
-                        textSpan.innerHTML="<font color='red'>"+i18n("loadedAll")+"</font>";
-                        setTimeout(function(){textSpan.innerHTML=i18n("loadAll");},1500);
+                        self.pageAllReady=true;
+                        self.pageImgReady();
                     }
                 };
                 if(!pageObj.next){
@@ -5067,8 +5086,11 @@ Ascii2D | https://ascii2d.net/search/url/#t#`;
                             isrc=self.canonicalUri(isrc);
                             if (self._dataCache[isrc]) return;
                             var nimg = new Image();
+                            self.londingImgNum++;
                             nimg.src = isrc;
                             nimg.onload=function(){
+                                self.londingImgNum--;
+                                self.pageImgReady();
                                 var result = findPic(this);
                                 if (result && !self._dataCache[this.src]) {
                                     self.data.push(result);
@@ -5077,11 +5099,17 @@ Ascii2D | https://ascii2d.net/search/url/#t#`;
                                 }
                                 self._dataCache[this.src] = true;
                             };
+                            nimg.onerror=function(){
+                                self.londingImgNum--;
+                                self.pageImgReady();
+                            };
                         });
                         if(prefs.gallery.loadAll)self.nextPage();
                         else loadOver();
                     },
                     onerror: function(e) {
+                        if(prefs.gallery.loadAll)self.nextPage();
+                        else loadOver();
                     }
                 });
             },
