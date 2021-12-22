@@ -6,7 +6,7 @@
 // @description     Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version         2021.12.22.3
+// @version         2021.12.22.5
 // @created         2011-6-15
 // @namespace       http://userscripts.org/users/NLF
 // @homepage        http://hoothin.com
@@ -9922,6 +9922,7 @@ Ascii2D | https://ascii2d.net/search/url/#t#`;
                 return node && nodeStyle.backgroundImage && /^url/.test(nodeStyle.backgroundImage) && nodeStyle.backgroundImage.indexOf("about:blank") == -1 && parseFloat(nodeStyle.width) > prefs.floatBar.minSizeLimit.w && parseFloat(nodeStyle.height) > prefs.floatBar.minSizeLimit.h;
             };
             if (target.nodeName != 'IMG'){
+                if(target.nodeName == "AREA")target=target.parentNode;
                 var targetBg;
                 if(prefs.floatBar.listenBg && hasBg(target)){
                     targetBg = unsafeWindow.getComputedStyle(target).backgroundImage.replace(/url\(["'](.*)["']\)/,"$1");
@@ -9951,7 +9952,7 @@ Ascii2D | https://ascii2d.net/search/url/#t#`;
                             noActual:noActual,
                             img: target
                         };
-                    }else if(unsafeWindow.getComputedStyle(target).position=="absolute"){
+                    }else if(unsafeWindow.getComputedStyle(target).position=="absolute" || target.nodeName == "MAP"){
                         var imgChildren=[],availableImgs = [];
                         [].forEach.call(target.parentNode.querySelectorAll('img'),function(img){
                             var imgStyle=unsafeWindow.getComputedStyle(img);
@@ -10217,6 +10218,8 @@ Ascii2D | https://ascii2d.net/search/url/#t#`;
                 "#pv-prefs label.floatBar-key { margin-left: 20px; width: 100px; }",
                 "#pv-prefs input.color { width: 120px; }",
                 "#pv-prefs input.order { width: 250px; }",
+                "#pv-prefs .config_header>a { border-bottom: solid 2px; }",
+                "#pv-prefs .config_header>a:hover { color: #9f9f9f; }",,
             ].join('\n'),
             fields: {
                 // 浮动工具栏
