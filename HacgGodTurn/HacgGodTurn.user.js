@@ -114,7 +114,7 @@
 // @include     http*://greasyfork.org/*/scripts/*
 // @include     http*://sleazyfork.org/*/forum/*discussion*
 // @include     http*://greasyfork.org/*/forum/*discussion*
-// @version     3.22.69
+// @version     3.22.70
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -400,13 +400,13 @@
             },
             {
                 name:"司机会所",
-                url:"https://kuaishangche.club/",
+                url:"https://kuaishangche.link/",
                 regex:/sijihuisuo\.club|dakashangche\.|xiuxiqu\.|dakaba\.|kuaishangche\./,
-                innerPage:/\/(sj\/\d|\?p=\d)/,
+                //innerPage:/\/(sj\/\d|\?p=\d)/,
                 offset:115,
                 contentArea:"#commentlist-container",
                 run:function(){
-                    if(curSite.innerPage.test(location.href)){
+                    /*if(curSite.innerPage.test(location.href)){
                         t=window.setInterval(function(){
                             if(document.querySelector(".commentlist")){
                                 clearInterval(t);
@@ -414,7 +414,22 @@
                             }
                         },500);
                     }
-                    changeUrl(true,[["a"],[['https?:\\\/\\\/[^\\\.]*(\\\.)?sijihuisuo\\\.club\\\/go\\\/\\\?url=','']]]);
+                    changeUrl(true,[["a"],[['https?:\\\/\\\/[^\\\.]*(\\\.)?sijihuisuo\\\.club\\\/go\\\/\\\?url=','']]]);*/
+                    var MutationObserver = unsafeWindow.MutationObserver || unsafeWindow.WebKitMutationObserver || unsafeWindow.MozMutationObserver;
+                    if(MutationObserver){
+                        var observer = new MutationObserver(function(records){
+                            records.map(function(record) {
+                                if(record.addedNodes.length && record.addedNodes[0].className=="commentlist"){
+                                    processObj(record.addedNodes[0]);
+                                }
+                            });
+                        });
+                        var option = {
+                            'childList': true,
+                            'subtree': true
+                        };
+                        observer.observe(document.querySelector("#commentlist-container"), option);
+                    }
                 }
             },
             {
