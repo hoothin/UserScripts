@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         RandomSexPic
 // @namespace    hoothin
-// @version      0.5
+// @version      0.6
 // @description  随机色图
 // @author       hoothin
 // @match        https://api.lolicon.app/setu*
@@ -69,8 +69,8 @@
             name:"Taobao Buyers Show",
             url:"https://api.uomg.com/api/rand.img3?format=json&num=5",
             run:()=>{
-                var searchNum=getSearchParam("num");
                 r18Check.style.display=sfwCheck.style.display=r18CheckLabel.style.display=sfwCheckLabel.style.display="none";
+                var searchNum=getSearchParam("num");
                 for(var i=0;i<searchNum;i++){
                     createImg("https://api.uomg.com/api/rand.img3?r="+Math.random());
                 }
@@ -87,10 +87,9 @@
             name:"Cosplay Show",
             url:"https://huanmengii.xyz/ZY/aCOS/cos/cos.php?num=5",
             run:()=>{
-                var searchNum=getSearchParam("num");
-                r18Check.style.display=sfwCheck.style.display=r18CheckLabel.style.display=sfwCheckLabel.style.display="none";
                 document.body.innerHTML="";
-                document.title="Cosplay Show";
+                r18Check.style.display=sfwCheck.style.display=r18CheckLabel.style.display=sfwCheckLabel.style.display="none";
+                var searchNum=getSearchParam("num");
                 for(var i=0;i<searchNum;i++){
                     createImg("https://huanmengii.xyz/ZY/aCOS/cos/index.php?r="+Math.random());
                 }
@@ -104,7 +103,8 @@
             }
         }
     };
-    var curConfig=setuConfig[document.domain],jsonData;
+    var curConfig=setuConfig[document.domain],jsonData,hasFloatImg=false;
+    document.title=curConfig.name;
     try{
         jsonData=JSON.parse(document.body.innerText);
     }catch{}
@@ -117,6 +117,12 @@
     var sfwCheckLabel=document.createElement("label");
     var submit=document.createElement("button");
     var referrerMeta=document.createElement("meta");
+    for(var name in setuConfig){
+        var siteA=document.createElement("a");
+        siteA.href=setuConfig[name].url;
+        siteA.innerHTML=setuConfig[name].name;
+        btns.appendChild(siteA);
+    }
     btns.appendChild(numInput);
     btns.appendChild(r18Check);
     btns.appendChild(r18CheckLabel);
@@ -135,16 +141,25 @@
         img.src=url;
         img.style.width="100%";
         img.onclick=()=>{
-            if(img.style.zIndex==1){
+            window.scrollTo(0,0);
+            if(img.style.zIndex==2){
                 img.style.zIndex=0;
                 img.style.width="100%";
                 img.style.position="";
-                img.style.left="";
-            }else{
-                img.style.zIndex=1;
+                hasFloatImg=false;
+            }else if(img.style.zIndex==1){
                 img.style.width="";
+                img.style.zIndex=2;
+            }else{
+                if(hasFloatImg)return;
+                hasFloatImg=true;
+                if(img.naturalWidth>document.documentElement.clientWidth){
+                    img.style.zIndex=1;
+                }else{
+                    img.style.width="";
+                    img.style.zIndex=2;
+                }
                 img.style.position="absolute";
-                img.style.left=0;
             }
         };
         imgCon.appendChild(img);
@@ -160,14 +175,22 @@
         return null;
     }
 
-    for(var name in setuConfig){
-        var siteA=document.createElement("a");
-        siteA.href=setuConfig[name].url;
-        siteA.innerHTML=setuConfig[name].name;
-        btns.appendChild(siteA);
+    function submitParam(){
+        var num=numInput.value;
+        var r18=2;
+        if(sfwCheck.checked && !r18Check.checked){
+            r18=0;
+        }else if(!sfwCheck.checked && r18Check.checked){
+            r18=1;
+        }
+        if(numInput.value != ""){
+            location.href=curConfig.getSearch(r18, num);
+        }else{
+            location.reload();
+        }
     }
 
-    GM_addStyle(".img-con{column-count: 5;-moz-column-count: 5;-webkit-column-count: 5;width: 100%;display: block;}img{-webkit-column-break-inside: avoid; break-inside: avoid; float: left; margin-bottom: 15px; margin-right: 15px; overflow: hidden; position: relative;}.btns{padding-bottom: 10px;}.btns>a{padding: 5px;}");
+    GM_addStyle(".img-con{column-count: 5;-moz-column-count: 5;-webkit-column-count: 5;width: 100%;display: block;}img{-webkit-column-break-inside: avoid; break-inside: avoid; float: left; margin-bottom: 15px; margin-right: 15px; overflow: hidden; position: relative; top: 0; left: 0; right: 0; margin: auto;}.btns{padding-bottom: 10px;}.btns>a{padding: 5px;}");
 
     btns.className="btns";
     document.body.appendChild(btns);
@@ -181,18 +204,12 @@
     sfwCheckLabel.innerHTML="SFW ";
     sfwCheckLabel.htmlFor="sfwCheck";
     submit.innerHTML="Refresh";
-    submit.onclick=()=>{
-        var num=numInput.value;
-        var r18=2;
-        if(sfwCheck.checked && !r18Check.checked){
-            r18=0;
-        }else if(!sfwCheck.checked && r18Check.checked){
-            r18=1;
-        }
-        if(numInput.value != ""){
-            location.href=curConfig.getSearch(r18, num);
-        }else{
-            location.reload();
+    submit.onclick=submitParam;
+    document.onkeyup = function(e) {
+        var event = e || window.event;
+        var key = event.which || event.keyCode || event.charCode;
+        if (key == 13) {
+            submitParam();
         }
     };
 
