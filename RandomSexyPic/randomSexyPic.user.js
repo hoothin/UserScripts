@@ -2,7 +2,7 @@
 // @name         RandomSexyPic
 // @namespace    hoothin
 // @version      0.6
-// @description  随机色图
+// @description  Random Sexy Pictures
 // @author       hoothin
 // @match        https://api.lolicon.app/setu*
 // @match        https://api.nyan.xyz/httpapi/sexphoto*
@@ -14,6 +14,7 @@
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
 // @grant        GM_addStyle
 // @run-at       document-start
+// @license      MIT
 // ==/UserScript==
 
 
