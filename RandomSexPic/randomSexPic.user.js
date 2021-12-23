@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         randomSexPic
+// @name         RandomSexPic
 // @namespace    hoothin
 // @version      0.5
 // @description  随机色图
@@ -70,7 +70,7 @@
             url:"https://api.uomg.com/api/rand.img3?format=json&num=5",
             run:()=>{
                 var searchNum=getSearchParam("num");
-                r18Check.style.display=sfwCheck.style.display="none";
+                r18Check.style.display=sfwCheck.style.display=r18CheckLabel.style.display=sfwCheckLabel.style.display="none";
                 for(var i=0;i<searchNum;i++){
                     createImg("https://api.uomg.com/api/rand.img3?r="+Math.random());
                 }
@@ -88,7 +88,7 @@
             url:"https://huanmengii.xyz/ZY/aCOS/cos/cos.php?num=5",
             run:()=>{
                 var searchNum=getSearchParam("num");
-                r18Check.style.display=sfwCheck.style.display="none";
+                r18Check.style.display=sfwCheck.style.display=r18CheckLabel.style.display=sfwCheckLabel.style.display="none";
                 document.body.innerHTML="";
                 document.title="Cosplay Show";
                 for(var i=0;i<searchNum;i++){
