@@ -6,7 +6,7 @@
 // @description     Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version         2021.12.22.6
+// @version         2021.12.23.1
 // @created         2011-6-15
 // @namespace       http://userscripts.org/users/NLF
 // @homepage        http://hoothin.com
@@ -7151,12 +7151,12 @@ Ascii2D | https://ascii2d.net/search/url/#t#`;
                     line-height: 0;\
                     text-align: left;\
                     box-sizing: content-box;\
-                    -webkit-transition: opacity 0.3s ease-in-out;\
-                    transition: opacity 0.3s ease-in-out;\
+                    -webkit-transition: opacity 0.3s ease-out;\
+                    transition: opacity 0.3s ease-out;\
                     }\
                     .pv-pic-window-transition-all{\
-                    -webkit-transition: all 0.5s ease-in-out;\
-                    transition: all 0.5s ease-in-out;\
+                    -webkit-transition: all 0.5s ease-out;\
+                    transition: all 0.5s ease-out;\
                     }\
                     .pv-pic-window-container_focus {\
                     box-shadow: 0 0 10px rgba(0,0,0,0.6);\
@@ -10058,7 +10058,7 @@ Ascii2D | https://ascii2d.net/search/url/#t#`;
             };
 
             if (!result && target.nodeName != 'IMG') {
-                if(target.nodeName == 'A' && /\.(jpg|png|jpeg)\b/.test(target.href)){
+                if(target.nodeName == 'A' && /\.(jpg|png|jpeg|gif|webp)\b/.test(target.href)){
                     result = {
                         src: target.href,
                         type: "",
@@ -10067,7 +10067,7 @@ Ascii2D | https://ascii2d.net/search/url/#t#`;
                         img: target
                     };
                     checkUniqueImgWin();
-                }else if(target.parentNode.nodeName == 'A' && /\.(jpg|png|jpeg)\b/.test(target.parentNode.href)){
+                }else if(target.parentNode.nodeName == 'A' && /\.(jpg|png|jpeg|gif|webp)\b/.test(target.parentNode.href)){
                     result = {
                         src: target.parentNode.href,
                         type: "",
