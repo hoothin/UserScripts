@@ -10186,8 +10186,8 @@ Ascii2D | https://ascii2d.net/search/url/#t#`;
                     removeUniqueWinTimer = setTimeout(()=>{uniqueImgWin.remove()},100);
                 }else{
                     //if(e.target.tagName!="IMG")return;
-                    //uniqueImgWin.imgWindow.style.pointerEvents = "auto";
-                    //uniqueImgWin.focus();
+                    uniqueImgWin.imgWindow.style.pointerEvents = "auto";
+                    uniqueImgWin.focus();
                 }
             }
         }, true);
