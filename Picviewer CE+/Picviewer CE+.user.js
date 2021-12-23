@@ -680,7 +680,8 @@ TinEye | https://www.tineye.com/search?url=#t#
 Sogou | https://pic.sogou.com/ris?query=#t#
 360 | http://st.so.com/stu?imgurl=#t#
 WhatAnime | https://trace.moe/?url=#t#
-Ascii2D | https://ascii2d.net/search/url/#t#`;
+Ascii2D | https://ascii2d.net/search/url/#t#
+Trace Moe | https://trace.moe/?url=#t#`;
     var prefs;
     function init(topObject,window,document,arrayFn,envir,storage,unsafeWindow){
         // 默认设置，请到设置界面修改
