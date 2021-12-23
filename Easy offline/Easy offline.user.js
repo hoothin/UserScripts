@@ -8,7 +8,7 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Base64/0.2.0/base64.min.js
-// @version      1.8.0
+// @version      1.8.1
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -797,6 +797,13 @@
                 .whx-btn:hover{
                     background-color:#83c1ff;
                 }
+                #configContent a{
+                    color:#5c5c5c;
+                    transition: color 0.25s ease-out;
+                }
+                #configContent a:hover{
+                    color:red;
+                }
             </style>`);
             configContent=document.createElement("div");
             configContent.id="configContent";
@@ -804,10 +811,10 @@
             document.body.appendChild(configContent);
             configContent.innerHTML=`
                 <div style="text-align: center;width:300px;min-height:300px;position:fixed;left:50%;top:50%;margin-top:-150px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;color:#6e7070;">
-                    <a href="https://greasyfork.org/scripts/22590#additional-info" style="color: #5c5c5c; position: absolute; width: 100%; left: 0; text-decoration: underline;">${i18n("settingTitle")}</a>
+                    <a href="https://greasyfork.org/scripts/22590#additional-info" style="position: absolute; width: 100%; left: 0; text-decoration: underline;">${i18n("settingTitle")}</a>
                     <a id="easyOfflineDisable" href="#" style="color: red;top: 18px; position: absolute; width: 100%; left: 0; text-decoration: underline;display:none;">${i18n("disableOnSite")}</a>
                     <div style="text-align:center;font-size: 12px;margin-top: 38px;">${i18n("urlRegexpTips")}</div>
-                    <textarea id="configInput" placeholder="http:.*\\.php\\?getRes=\\d+\n\.doc$\n\.xls$" style="position:absolute;left:18px;top:60px;width:260px;height:110px;background-color:white;color:black;"></textarea>
+                    <textarea id="configInput" placeholder="http:.*\\.php\\?getRes=\\d+\n\\.doc$\n\\.xls$\n\\.ppt$" style="position:absolute;left:18px;top:60px;width:260px;height:110px;background-color:white;color:black;"></textarea>
                     <div style="text-align:center;font-size:12px;margin-top:125px;" title="${i18n("bdPathTips")}">${i18n("bdPathTitle")}<input id="baiduPath" placeholder="例：/av" style="width:170px;border-width:1px;"></div>
                     <div id="icons" style="position: static; display: inline-block; margin-top: 10px;width: 100%;margin-left: 10px;"></div>
                     <label style="position: static; width: 300px;"><input id="showType" type="checkbox"/>${i18n("settingMouseOver")}</label>
