@@ -10,6 +10,7 @@
 // @match        https://huanmengii.xyz/ZY/aCOS/cos*
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
 // @grant        GM_addStyle
+// @run-at       document-start
 // ==/UserScript==
 
 
@@ -20,11 +21,15 @@
             name:"Lolicon ACG SexPic",
             url:"https://api.lolicon.app/setu/v2?r18=1&num=5",
             run:()=>{
-                var datas=jsonData.data;
-                datas.forEach(function(data){
-                    let img=createImg(data.urls?data.urls.original:data.url);
-                    img.title=data.title+" - "+data.author;
-                });
+                if(jsonData){
+                    var datas=jsonData.data;
+                    datas.forEach(function(data){
+                        let img=createImg(data.urls?data.urls.original:data.url);
+                        img.title=data.title+" - "+data.author;
+                    });
+                }else{
+                    location.href=curConfig.url;
+                }
             },
             getSearch:(r18, num)=>{
                 return `v2?r18=${r18}&num=${num}`;
@@ -80,7 +85,6 @@
         },
         "huanmengii.xyz":{
             name:"Cosplay Show",
-            nojson:true,
             url:"https://huanmengii.xyz/ZY/aCOS/cos/cos.php?num=5",
             run:()=>{
                 var searchNum=getSearchParam("num");
@@ -101,7 +105,9 @@
         }
     };
     var curConfig=setuConfig[document.domain],jsonData;
-    if(!curConfig.nojson)jsonData=JSON.parse(document.body.innerText);
+    try{
+        jsonData=JSON.parse(document.body.innerText);
+    }catch{}
     var imgCon=document.createElement("div");
     var btns=document.createElement("div");
     var numInput=document.createElement("input");
@@ -117,6 +123,9 @@
     btns.appendChild(sfwCheck);
     btns.appendChild(sfwCheckLabel);
     btns.appendChild(submit);
+    referrerMeta.name="referrer";
+    referrerMeta.content="never";
+    document.head.appendChild(referrerMeta);
 
     curConfig.run();
     if(curConfig.initSearch)curConfig.initSearch();
@@ -159,9 +168,6 @@
     }
 
     GM_addStyle(".img-con{column-count: 5;-moz-column-count: 5;-webkit-column-count: 5;width: 100%;display: block;}img{-webkit-column-break-inside: avoid; break-inside: avoid; float: left; margin-bottom: 15px; margin-right: 15px; overflow: hidden; position: relative;}.btns{padding-bottom: 10px;}.btns>a{padding: 5px;}");
-    referrerMeta.name="referrer";
-    referrerMeta.content="never";
-    document.head.appendChild(referrerMeta);
 
     btns.className="btns";
     document.body.appendChild(btns);
