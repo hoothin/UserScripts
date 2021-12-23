@@ -473,7 +473,7 @@
                 loadedAll:"Load completed",
                 loading:"Loading ...",
                 loadAllTip:"Load the picture on the next page",
-                fiddle:"Toss",
+                fiddle:"Operate",
                 fiddleTip:"Pop-up pictures for complex operations",
                 collect:"Collection",
                 collected:"Has been collected",
@@ -517,13 +517,13 @@
                 cantFind:"The image is not in the document, or it is hidden and cannot be located!",
                 exportImages:"Export all Images",
                 exportImagesTip:"Export all shown big size images to new window",
-                downloadImage:"Download all shown Images",
+                downloadImage:"Download all shown",
                 downloadImageTip:"Download the current shown pictures, support no cross-origin",
                 copyImagesUrl:"Copy all images Urls",
                 copyImagesUrlTip:"Copy all shown big size image Urls",
                 copySuccess:"Copied #t# Urls successfully",
-                autoRefresh:"Auto overload",
-                autoRefreshTip:"When the last few images are viewed, scroll the window to the bottom, then automatically load the new images",
+                autoRefresh:"Auto load page",
+                autoRefreshTip:"When the last few images are viewed, scroll the window to the bottom, so that some webpage will load the new images",
                 enterFullsc:"Enter full screen",
                 exitFullsc:"Exit full screen",
                 config:"Open settings",
@@ -569,7 +569,7 @@
                 hideDelay:"Hide Delay",
                 forceShow:"Show toolbar over Non-zoomed image beyond that size, ",
                 forceShowTip:"Show floating toolbar when non-scaled image size exceeds the size set below",
-                sizeLimitOr:"effected by height OR width",
+                sizeLimitOr:"Effected by height OR width only",
                 px:"px",
                 minSizeLimit:"Show toolbar over Zoomed image beyond that size",
                 minSizeLimitTip:"After the image is scaled (the original size of the image does not match the actual size), the floating toolbar is displayed when the shown image length is greater than the set value.",
@@ -2735,9 +2735,9 @@ Ascii2D | https://ascii2d.net/search/url/#t#`;
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="exportImages" title="'+i18n("exportImagesTip")+'">'+i18n("exportImages")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="copyImages" title="'+i18n("copyImagesUrlTip")+'">'+i18n("copyImagesUrl")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="downloadImage" title="'+i18n("downloadImageTip")+'">'+i18n("downloadImage")+'</span>'+
-                    '<span class="pv-gallery-head-command-drop-list-item" data-command="scrollIntoView" title="'+i18n("findInPageTip")+'">'+i18n("findInPage")+'</span>'+
-                    '<span class="pv-gallery-head-command-drop-list-item" data-command="enterCollection" title="'+i18n("viewCollectionTip")+'">'+i18n("viewCollection")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="openInNewWindow" title="'+i18n("openInNewWindowTip")+'">'+i18n("openInNewWindow")+'</span>'+
+                    '<span class="pv-gallery-head-command-drop-list-item" data-command="enterCollection" title="'+i18n("viewCollectionTip")+'">'+i18n("viewCollection")+'</span>'+
+                    '<span class="pv-gallery-head-command-drop-list-item" data-command="scrollIntoView" title="'+i18n("findInPageTip")+'">'+i18n("findInPage")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" title="'+i18n("autoRefreshTip")+'">'+
                     '<input type="checkbox"  data-command="scrollToEndAndReload"/>'+
                     '<label data-command="scrollToEndAndReload">'+i18n("autoRefresh")+'</label>'+
