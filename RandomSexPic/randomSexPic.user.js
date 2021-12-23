@@ -6,8 +6,11 @@
 // @author       hoothin
 // @match        https://api.lolicon.app/setu*
 // @match        https://api.nyan.xyz/httpapi/sexphoto*
-// @match        https://api.uomg.com/api/rand.img3*
 // @match        https://huanmengii.xyz/ZY/aCOS/cos*
+// @match        https://api.uomg.com/api/rand.img3*
+// @match        https://api.vvhan.com/api/tao*
+// @match        https://www.hlapi.cn/api/mjx*
+// @match        https://api.ghser.com/tao*
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
 // @grant        GM_addStyle
 // @run-at       document-start
@@ -65,29 +68,34 @@
                 sfwCheck.checked=searchR18=="false";
             }
         },
-        "api.uomg.com":{
+        "buyersShow":{
             name:"Taobao Buyers Show",
-            url:"https://api.uomg.com/api/rand.img3?format=json&num=5",
+            url:"https://api.uomg.com/api/rand.img3?format=json&num=10",
             run:()=>{
+                var buyersShowApis=["https://api.uomg.com/api/rand.img3","https://api.vvhan.com/api/tao","https://www.hlapi.cn/api/mjx","https://api.ghser.com/tao"];
                 r18Check.style.display=sfwCheck.style.display=r18CheckLabel.style.display=sfwCheckLabel.style.display="none";
                 var searchNum=getSearchParam("num");
                 for(var i=0;i<searchNum;i++){
-                    createImg("https://api.uomg.com/api/rand.img3?r="+Math.random());
+                    var randomApi=Math.floor(Math.random()*buyersShowApis.length);
+                    createImg(buyersShowApis[randomApi]+"?r="+Math.random());
                 }
             },
             getSearch:(r18, num)=>{
-                return "rand.img3?format=json&num="+num;
+                return location.pathname+"?format=json&num="+num;
             },
             initSearch:()=>{
                 var searchNum=getSearchParam("num");
                 numInput.value=searchNum;
             }
         },
+        "api.uomg.com":"buyersShow",
+        "api.vvhan.com":"buyersShow",
+        "www.hlapi.cn":"buyersShow",
+        "api.ghser.com":"buyersShow",
         "huanmengii.xyz":{
             name:"Cosplay Show",
-            url:"https://huanmengii.xyz/ZY/aCOS/cos/cos.php?num=5",
+            url:"https://huanmengii.xyz/ZY/aCOS/cos/cos.php?num=10",
             run:()=>{
-                document.body.innerHTML="";
                 r18Check.style.display=sfwCheck.style.display=r18CheckLabel.style.display=sfwCheckLabel.style.display="none";
                 var searchNum=getSearchParam("num");
                 for(var i=0;i<searchNum;i++){
@@ -104,10 +112,12 @@
         }
     };
     var curConfig=setuConfig[document.domain],jsonData,hasFloatImg=false;
+    if(!curConfig.run)curConfig=setuConfig[curConfig];
     document.title=curConfig.name;
     try{
         jsonData=JSON.parse(document.body.innerText);
     }catch{}
+    document.body.innerHTML="";
     var imgCon=document.createElement("div");
     var btns=document.createElement("div");
     var numInput=document.createElement("input");
@@ -118,6 +128,7 @@
     var submit=document.createElement("button");
     var referrerMeta=document.createElement("meta");
     for(var name in setuConfig){
+        if(!setuConfig[name].run)continue;
         var siteA=document.createElement("a");
         siteA.href=setuConfig[name].url;
         siteA.innerHTML=setuConfig[name].name;
@@ -147,6 +158,7 @@
                 img.style.width="100%";
                 img.style.position="";
                 hasFloatImg=false;
+                img.scrollIntoView();
             }else if(img.style.zIndex==1){
                 img.style.width="";
                 img.style.zIndex=2;
