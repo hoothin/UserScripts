@@ -4,7 +4,7 @@
 // @name:zh-TW   大人的Greasyfork
 // @name:ja      大人のGreasyfork
 // @namespace    hoothin
-// @version      0.95
+// @version      0.96
 // @description  Merge adult results of sleazyfork into greasyfork when the script is no longer anonymously available, add rating score and version for scripts then
 // @description:zh-CN 在Greasyfork的搜索结果中添加Sleazyfork上的成人脚本，增加评分与版本号，并在访问匿名不可用脚本时跳转至Sleazyfork
 // @description:zh-TW 在Greasyfork的搜索結果中添加Sleazyfork上的成人腳本，增加評分與版本號，並在訪問匿名不可用腳本時跳轉至Sleazyfork
@@ -149,6 +149,9 @@
                     }
                 });
             };
+            if(!window.external.Tampermonkey && !window.external.Violentmonkey){
+                checkInfo.style.display="none";
+            }
         }
     }
     var sortDiv=document.querySelector("#script-list-sort");
@@ -183,6 +186,7 @@
             let script=scripts[i];
             addScore(script);
         }
+        //Modify from GreasyFork Bullshit Filter,Thanks to darkred
         var style = document.createElement('style');
         style.textContent = `
         li.filtered {
@@ -214,7 +218,6 @@
         }`;
         style.type = 'text/css';
         document.querySelector('head').appendChild(style);
-        //Modify from GreasyFork Bullshit Filter,Thanks to darkred
         var bullshit=/vip.*视频|网课|刷课|(mooc|考试|学习).*(答题|挂机)|(网盘|網盤|云盘).*(vip|直链)|优惠劵|AntiGame|split|Agar|\.io(\b|:|\/|\.|$)|ExtencionRipXChetoMalo|AposBot|DFxLite|ZTx-Lite|AposFeedingBot|AposLoader|Blah Blah|Orc Clan Script|Astro\s*Empires|^\s*Attack|^\s*Battle|BiteFight|Blood\s*Wars|Bots|Bots4|Brawler|\bBvS\b|Business\s*Tycoon|Castle\s*Age|City\s*Ville|Comunio|Conquer\s*Club|CosmoPulse|Dark\s*Orbit|Dead\s*Frontier|\bDOA\b|DotD|Dossergame|Dragons\s*of\s*Atlantis|Dugout|\bDS[a-z]+\n|Empire\s*Board|eRep(ublik)?|Epic.*War|ExoPlanet|Falcon Tools|Feuerwache|Farming|FarmVille|Fightinfo|Frontier\s*Ville|Ghost\s*Trapper|Gladiatus|Goalline|Gondal|Grepolis|Hobopolis|\bhwm(\b|_)|Ikariam|\bIT2\b|Jellyneo|Kapi\s*Hospital|Kings\s*Age|Kingdoms?\s*of|knastv(ö|oe)gel|Knight\s*Fight|\b(Power)?KoC(Atta?ck)?\b|\bKOL\b|Kongregate|Last\s*Emperor|Legends?\s*of|Light\s*Rising|Lockerz|\bLoU\b|Mafia\s*(Wars|Mofo)|Menelgame|Mob\s*Wars|Mouse\s*Hunt|Molehill\s*Empire|NeoQuest|MyFreeFarm|Neopets|Nemexia|\bOGame\b|Ogar(io)?|Pardus|Pennergame|Pigskin\s*Empire|PlayerScripts|Popmundo|Po?we?r\s*(Bot|Tools)|PsicoTSI|Ravenwood|Schulterglatze|slitheriogameplay|SpaceWars|\bSW_[a-z]+\n|\bSnP\b|The\s*Crims|The\s*West|Travian|Treasure\s*Isl(and|e)|Tribal\s*Wars|TW.?PRO|Vampire\s*Wars|War\s*of\s*Ninja|West\s*Wars|\bWoD\b|World\s*of\s*Dungeons|wtf\s*battles|Wurzelimperium/i;
         var filterName="Enable Filter",filteredNum=0;
         var filter=function(t){
