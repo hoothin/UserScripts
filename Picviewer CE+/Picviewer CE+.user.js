@@ -6,7 +6,7 @@
 // @description     Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version         2021.12.23.1
+// @version         2021.12.23.2
 // @created         2011-6-15
 // @namespace       http://userscripts.org/users/NLF
 // @homepage        http://hoothin.com
@@ -1442,6 +1442,12 @@ Ascii2D | https://ascii2d.net/search/url/#t#`;
              getImage: function() {
                  var _isrc=this.src.replace(/.*\/thumbnails\/(.*)\/thumbnail_(.*)\..*/,"https://img3.gelbooru.com/images/$1/$2");
                  return [_isrc+".png", _isrc+".jpg"];
+             }
+            },
+            {name: "erosberry",
+             url: /erosberry\.com/,
+             getImage: function() {
+                 return this.src.replace(/(\/\d+\/)tn_(\d+\.[^\/]+)$/,"$1$2");
              }
             }
         ];
