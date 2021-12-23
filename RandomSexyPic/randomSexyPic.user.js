@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         RandomSexPic
+// @name         RandomSexyPic
 // @namespace    hoothin
 // @version      0.6
 // @description  随机色图
@@ -21,7 +21,7 @@
     'use strict';
     var setuConfig={
         "api.lolicon.app":{
-            name:"Lolicon ACG SexPic",
+            name:"Lolicon ACG SexyPic",
             url:"https://api.lolicon.app/setu/v2?r18=1&num=5",
             run:()=>{
                 if(jsonData){
@@ -46,7 +46,7 @@
             }
         },
         "api.nyan.xyz":{
-            name:"Nyan ACG SexPic",
+            name:"Nyan ACG SexyPic",
             url:"https://api.nyan.xyz/httpapi/sexphoto/?r18=true&num=5",
             run:()=>{
                 var urls=jsonData.data.url;
