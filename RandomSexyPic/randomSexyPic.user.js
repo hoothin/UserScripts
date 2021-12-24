@@ -172,6 +172,7 @@
                 document.body.style.overflow="";
                 overMask.style.display="none";
             }else if(img.style.zIndex==1){
+                img.style.bottom="";
                 img.style.width="";
                 img.style.maxWidth="";
                 img.style.maxHeight="";
@@ -181,9 +182,7 @@
                 if(hasFloatImg)return;
                 hasFloatImg=true;
                 document.body.style.overflow="hidden";
-                if(img.naturalHeight<document.documentElement.clientHeight){
-                    img.style.bottom=0;
-                }
+                img.style.bottom=0;
                 if(img.naturalWidth>document.documentElement.clientWidth || img.naturalHeight>document.documentElement.clientHeight){
                     img.style.zIndex=1;
                     img.style.maxWidth="100%";
