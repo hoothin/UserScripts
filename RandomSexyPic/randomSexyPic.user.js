@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         RandomSexyPic
 // @namespace    hoothin
-// @version      0.6
+// @version      0.7
 // @description  Random Sexy Pictures
 // @author       hoothin
 // @match        https://api.lolicon.app/setu/v2*
@@ -128,6 +128,8 @@
     var sfwCheckLabel=document.createElement("label");
     var submit=document.createElement("button");
     var referrerMeta=document.createElement("meta");
+    var viewportMeta=document.createElement("meta");
+    var overMask=document.createElement("div");
     for(var name in setuConfig){
         if(!setuConfig[name].run)continue;
         var siteA=document.createElement("a");
@@ -141,9 +143,14 @@
     btns.appendChild(sfwCheck);
     btns.appendChild(sfwCheckLabel);
     btns.appendChild(submit);
+    overMask.className="over-mask";
+    imgCon.appendChild(overMask);
     referrerMeta.name="referrer";
     referrerMeta.content="never";
     document.head.appendChild(referrerMeta);
+    viewportMeta.name="viewport";
+    viewportMeta.content="width=device-width, initial-scale=1";
+    document.head.appendChild(viewportMeta);
 
     curConfig.run();
     if(curConfig.initSearch)curConfig.initSearch();
@@ -155,24 +162,41 @@
         img.onclick=()=>{
             window.scrollTo(0,0);
             if(img.style.zIndex==2){
+                hasFloatImg=false;
                 img.style.zIndex=0;
+                img.style.bottom="";
                 img.style.width="100%";
                 img.style.position="";
-                hasFloatImg=false;
+                img.style.margin="";
                 img.scrollIntoView();
+                document.body.style.overflow="";
+                overMask.style.display="none";
             }else if(img.style.zIndex==1){
                 img.style.width="";
+                img.style.maxWidth="";
+                img.style.maxHeight="";
                 img.style.zIndex=2;
+                document.body.style.overflow="";
             }else{
                 if(hasFloatImg)return;
                 hasFloatImg=true;
-                if(img.naturalWidth>document.documentElement.clientWidth){
-                    img.style.zIndex=1;
-                }else{
-                    img.style.width="";
-                    img.style.zIndex=2;
+                document.body.style.overflow="hidden";
+                if(img.naturalHeight<document.documentElement.clientHeight){
+                    img.style.bottom=0;
                 }
+                if(img.naturalWidth>document.documentElement.clientWidth || img.naturalHeight>document.documentElement.clientHeight){
+                    img.style.zIndex=1;
+                    img.style.maxWidth="100%";
+                    img.style.maxHeight="100%";
+                }else{
+                    img.style.zIndex=2;
+                    img.style.maxWidth="";
+                    img.style.maxHeight="";
+                }
+                img.style.width="";
                 img.style.position="absolute";
+                img.style.margin="auto";
+                overMask.style.display="block";
             }
         };
         imgCon.appendChild(img);
@@ -203,7 +227,7 @@
         }
     }
 
-    GM_addStyle(".img-con{column-count: 5;-moz-column-count: 5;-webkit-column-count: 5;width: 100%;display: block;}img{-webkit-column-break-inside: avoid; break-inside: avoid; float: left; margin-bottom: 15px; margin-right: 15px; overflow: hidden; position: relative; top: 0; left: 0; right: 0; margin: auto;}.btns{padding-bottom: 10px;}.btns>a{padding: 5px;}");
+    GM_addStyle("@media screen and (min-width: 1024px) {.img-con{column-count: 5;-moz-column-count: 5;-webkit-column-count: 5;width: 100%;display: block;}}@media screen and (max-width: 1024px) {.img-con{column-count: 2;-moz-column-count: 2;-webkit-column-count: 2;width: 100%;display: block;}}.over-mask{display:none;width: 100%; height: 100%; background-color: #000000e6; position: fixed; z-index: 1; top: 0; left: 0;}img{-webkit-column-break-inside: avoid; break-inside: avoid; float: left; margin-bottom: 15px; margin-right: 15px; overflow: hidden; position: relative; top: 0; left: 0; right: 0;}.btns{padding-bottom: 10px;}.btns>a{padding: 5px;}");
 
     btns.className="btns";
     document.body.appendChild(btns);
