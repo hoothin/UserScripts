@@ -7466,10 +7466,11 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     h:parseFloat(imgWindowCS.height),
                     w:parseFloat(imgWindowCS.width),
                 };
-                this.isLongImg=rectSize.h > wSize.h && rectSize.h/rectSize.w >3.5;
+                this.isLongImg=rectSize.h > wSize.h && rectSize.h/rectSize.w > 3.5;
                 if(prefs.imgWindow.suitLongImg && this.isLongImg){
-                    this.center(rectSize.w <= wSize.w , rectSize.h <= wSize.h);
+                    this.center(rectSize.w <= wSize.w,false);
                     this.imgWindow.style.height="100%";
+                    this.imgWindow.style.maxWidth="100%";
                     this.imgWindow.style.overflow="scroll";
                 }else if(prefs.imgWindow.fitToScreen){
                     this.fitToScreen();
@@ -8284,7 +8285,9 @@ Trace Moe | https://trace.moe/?url=#t#`;
                         return;
                     if(e.type == "click" && !this.moving){
                         this.imgWindow.style.height=this.imgWindow.style.height=="100%"?"":"100%";
+                        this.imgWindow.style.maxWidth=this.imgWindow.style.maxWidth=="100%"?"":"100%";
                         this.imgWindow.style.overflow=this.imgWindow.style.overflow=="scroll"?"":"scroll";
+                        this.center(true , true);
                         this.keepScreenInside();
                     }
                 }
