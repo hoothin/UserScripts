@@ -71,7 +71,7 @@
         },
         "buyersShow":{
             name:"Taobao Buyers Show",
-            url:"https://api.uomg.com/api/rand.img3?format=json&num=10",
+            url:"https://api.uomg.com/api/rand.img3?format=json&num=15",
             run:()=>{
                 var buyersShowApis=["https://api.uomg.com/api/rand.img3","https://api.vvhan.com/api/tao","https://www.hlapi.cn/api/mjx","https://api.ghser.com/tao"];
                 r18Check.style.display=sfwCheck.style.display=r18CheckLabel.style.display=sfwCheckLabel.style.display="none";
@@ -95,7 +95,7 @@
         "api.ghser.com":"buyersShow",
         "huanmengii.xyz":{
             name:"Cosplay Show",
-            url:"https://huanmengii.xyz/ZY/aCOS/cos/cos.php?num=10",
+            url:"https://huanmengii.xyz/ZY/aCOS/cos/cos.php?num=15",
             run:()=>{
                 r18Check.style.display=sfwCheck.style.display=r18CheckLabel.style.display=sfwCheckLabel.style.display="none";
                 var searchNum=getSearchParam("num");
