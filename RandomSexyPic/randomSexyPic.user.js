@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         RandomSexyPic
 // @namespace    hoothin
-// @version      0.7
+// @version      0.8
 // @description  Random Sexy Pictures
 // @author       hoothin
 // @match        https://api.lolicon.app/setu/v2*
@@ -11,6 +11,7 @@
 // @match        https://api.vvhan.com/api/tao*
 // @match        https://www.hlapi.cn/api/mjx*
 // @match        https://api.ghser.com/tao*
+// @match        https://3650000.xyz/api/?*
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
 // @grant        GM_addStyle
 // @run-at       document-start
@@ -35,8 +36,8 @@
                     location.href=curConfig.url;
                 }
             },
-            getSearch:(r18, num)=>{
-                return `v2?r18=${r18}&num=${num}`;
+            getSearch:(param)=>{
+                return `v2?r18=${param.r18}&num=${param.num}`;
             },
             initSearch:()=>{
                 var searchNum=getSearchParam("num");
@@ -58,8 +59,8 @@
                     createImg(data);
                 });
             },
-            getSearch:(r18, num)=>{
-                return `?r18=${r18!=0?"true":"false"}&num=${num}`;
+            getSearch:(param)=>{
+                return `?r18=${param.r18!=0?"true":"false"}&num=${param.num}`;
             },
             initSearch:()=>{
                 var searchNum=getSearchParam("num");
@@ -81,18 +82,14 @@
                     createImg(buyersShowApis[randomApi]+"?r="+Math.random());
                 }
             },
-            getSearch:(r18, num)=>{
-                return location.pathname+"?format=json&num="+num;
+            getSearch:(param)=>{
+                return `${location.pathname}?format=json&num=${param.num}`;
             },
             initSearch:()=>{
                 var searchNum=getSearchParam("num");
                 numInput.value=searchNum;
             }
         },
-        "api.uomg.com":"buyersShow",
-        "api.vvhan.com":"buyersShow",
-        "www.hlapi.cn":"buyersShow",
-        "api.ghser.com":"buyersShow",
         "huanmengii.xyz":{
             name:"Cosplay Show",
             url:"https://huanmengii.xyz/ZY/aCOS/cos/cos.php?num=15",
@@ -103,14 +100,74 @@
                     createImg("https://huanmengii.xyz/ZY/aCOS/cos/index.php?r="+Math.random());
                 }
             },
-            getSearch:(r18, num)=>{
-                return "cos.php?num="+num;
+            getSearch:(param)=>{
+                return "cos.php?num="+param.num;
             },
             initSearch:()=>{
                 var searchNum=getSearchParam("num");
                 numInput.value=searchNum;
             }
-        }
+        },
+        "3650000.xyz":{
+            name:"3650000",
+            url:"https://3650000.xyz/api/?type=json&mode=7&num=15",
+            run:()=>{
+                r18Check.style.display=sfwCheck.style.display=r18CheckLabel.style.display=sfwCheckLabel.style.display="none";
+                var searchNum=getSearchParam("num");
+                var searchMode=getSearchParam("mode");
+                var sleep=(fn,param,time)=>{
+                    return new Promise((resolve) => {
+                        setTimeout(() => resolve(fn(param)), time)
+                    })
+                }
+                async function createImgs(num) {
+                    while(num>0){
+                        var loadNum=5;
+                        if(num<5)loadNum=num;
+                        num-=loadNum;
+                        const slow = await sleep(loadNum=>{
+                            for(let i=0;i<loadNum;i++){
+                                createImg(`http://3650000.xyz/api/?mode=${searchMode}&r=${Math.random()}`);
+                            }
+                        },loadNum,1000);
+                    }
+                }
+                createImgs(searchNum);
+            },
+            getSearch:(param)=>{
+                return location.pathname+`?type=json&mode=${param.mode}&num=${param.num}`;
+            },
+            initSearch:()=>{
+                var searchNum=getSearchParam("num");
+                var searchMode=getSearchParam("mode");
+                var modeObj=[
+                    ["Public",""],
+                    ["Weibo","1"],
+                    ["Instagram","2"],
+                    ["Cosplay","3"],
+                    ["Nsfw","66"],
+                    ["Mtcos","5"],
+                    ["Legs","7"],
+                    ["MoreCoser","8"],
+                    ["Tuwan","9"]
+                ];
+                modeObj.forEach(item=>{
+                    var option=document.createElement("option");
+                    option.value=item[1];
+                    option.innerHTML=item[0];
+                    if(item[1]==searchMode){
+                        option.selected=true;
+                    }
+                    modeSelect.appendChild(option);
+                });
+                modeSelect.style.display="inline";
+                numInput.value=searchNum;
+            }
+        },
+        "api.uomg.com":"buyersShow",
+        "api.vvhan.com":"buyersShow",
+        "www.hlapi.cn":"buyersShow",
+        "api.ghser.com":"buyersShow"
     };
     var curConfig=setuConfig[document.domain],jsonData,hasFloatImg=false;
     if(!curConfig.run)curConfig=setuConfig[curConfig];
@@ -126,6 +183,7 @@
     var r18CheckLabel=document.createElement("label");
     var sfwCheck=document.createElement("input");
     var sfwCheckLabel=document.createElement("label");
+    var modeSelect=document.createElement("select");
     var submit=document.createElement("button");
     var referrerMeta=document.createElement("meta");
     var viewportMeta=document.createElement("meta");
@@ -142,6 +200,7 @@
     btns.appendChild(r18CheckLabel);
     btns.appendChild(sfwCheck);
     btns.appendChild(sfwCheckLabel);
+    btns.appendChild(modeSelect);
     btns.appendChild(submit);
     overMask.className="over-mask";
     imgCon.appendChild(overMask);
@@ -170,6 +229,8 @@
                 img.style.margin="";
                 img.scrollIntoView();
                 document.body.style.overflow="";
+                imgCon.style.maxHeight="";
+                imgCon.style.maxWidth="";
                 overMask.style.display="none";
             }else if(img.style.zIndex==1){
                 img.style.bottom="";
@@ -178,6 +239,8 @@
                 img.style.maxHeight="";
                 img.style.zIndex=2;
                 document.body.style.overflow="";
+                imgCon.style.maxHeight="100vh";
+                imgCon.style.maxWidth="100vw";
             }else{
                 if(hasFloatImg)return;
                 hasFloatImg=true;
@@ -208,11 +271,12 @@
         if (r != null) {
             return decodeURIComponent(r[2]);
         };
-        return null;
+        return "";
     }
 
     function submitParam(){
         var num=numInput.value;
+        var mode=modeSelect.options[modeSelect.selectedIndex].value;
         var r18=2;
         if(sfwCheck.checked && !r18Check.checked){
             r18=0;
@@ -220,13 +284,13 @@
             r18=1;
         }
         if(numInput.value != ""){
-            location.href=curConfig.getSearch(r18, num);
+            location.href=curConfig.getSearch({"r18":r18, "num":num, "mode":mode});
         }else{
             location.reload();
         }
     }
 
-    GM_addStyle("@media screen and (min-width: 1024px) {.img-con{column-count: 5;-moz-column-count: 5;-webkit-column-count: 5;width: 100%;display: block;}}@media screen and (max-width: 1024px) {.img-con{column-count: 2;-moz-column-count: 2;-webkit-column-count: 2;width: 100%;display: block;}}.over-mask{display:none;width: 100%; height: 100%; background-color: #000000e6; position: fixed; z-index: 1; top: 0; left: 0;}img{-webkit-column-break-inside: avoid; break-inside: avoid; float: left; margin-bottom: 15px; margin-right: 15px; overflow: hidden; position: relative; top: 0; left: 0; right: 0;}.btns{padding-bottom: 10px;}.btns>a{padding: 5px;}");
+    GM_addStyle("@media screen and (min-width: 1024px) {.img-con{overflow: auto;column-count: 5;-moz-column-count: 5;-webkit-column-count: 5;width: 100%;display: block;}}@media screen and (max-width: 1024px) {.img-con{overflow: auto;column-count: 2;-moz-column-count: 2;-webkit-column-count: 2;width: 100%;display: block;}}select{display:none;}.over-mask{display:none;width: 100%; height: 100%; background-color: #000000e6; position: fixed; z-index: 1; top: 0; left: 0;}img{-webkit-column-break-inside: avoid; break-inside: avoid; float: left; margin-bottom: 15px; margin-right: 15px; overflow: hidden; position: relative; top: 0; left: 0; right: 0;}.btns{padding-bottom: 10px;}.btns>a{padding: 5px;}");
 
     btns.className="btns";
     document.body.appendChild(btns);
