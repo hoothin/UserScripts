@@ -6947,7 +6947,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                         h:img.naturalHeight,
                         w:img.naturalWidth,
                     };
-                    if(imgWindow.style.overflow!="scroll"){
+                    if(self.imgWindow.style.overflow!="scroll"){
                         self.zoomLevel=0;
                         self.zoom(1);
                     }
