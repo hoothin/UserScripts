@@ -6,7 +6,7 @@
 // @description     Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version         2021.12.24.1
+// @version         2021.12.23.3
 // @created         2011-6-15
 // @namespace       http://userscripts.org/users/NLF
 // @homepage        http://hoothin.com
@@ -6944,8 +6944,10 @@ Trace Moe | https://trace.moe/?url=#t#`;
                         h:img.naturalHeight,
                         w:img.naturalWidth,
                     };
-                    self.zoomLevel=0;
-                    self.zoom(1);
+                    if(imgWindow.style.overflow!="scroll"){
+                        self.zoomLevel=0;
+                        self.zoom(1);
+                    }
                     if(prefs.imgWindow.fitToScreen)
                         self.fitToScreen();
                     self.center(true,true);
@@ -7546,13 +7548,13 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 // keepSI(this.descriptionSpan,['bottom', 'left'],[-40, 10]);
             },
             fitToScreen:function(){
-                if(!prefs.imgWindow.fitToScreen)return;
+                var imgWindow=this.imgWindow;
+                if(!prefs.imgWindow.fitToScreen || imgWindow.style.overflow=="scroll")return;
                 var wSize=getWindowSize();
                 //空隙
                 wSize.h -= 16;
                 wSize.w -= 16;
 
-                var imgWindow=this.imgWindow;
                 var imgWindowCS=unsafeWindow.getComputedStyle(imgWindow);
                 var rectSize={
                     h:parseFloat(imgWindowCS.height),
@@ -8278,7 +8280,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
             imgWindowEventHandler:function(e){
                 var selectedTool=this.selectedTool;
                 if(selectedTool == "hand" && prefs.imgWindow.suitLongImg && this.isLongImg){
-                    if(e.type == "wheel")
+                    if(e.type == "wheel" && this.imgWindow.style.overflow=="scroll")
                         return;
                     if(e.type == "click" && !this.moving){
                         this.imgWindow.style.height=this.imgWindow.style.height=="100%"?"":"100%";
