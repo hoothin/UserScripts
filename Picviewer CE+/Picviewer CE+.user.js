@@ -7171,6 +7171,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     box-sizing: content-box;\
                     -webkit-transition: opacity 0.3s ease-out;\
                     transition: opacity 0.3s ease-out;\
+                    overscroll-behavior: none;\
                     }\
                     .pv-pic-window-transition-all{\
                     -webkit-transition: all 0.5s ease-out;\
@@ -7472,9 +7473,10 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 this.isLongImg=rectSize.h > wSize.h && rectSize.h/rectSize.w > 3.5;
                 if(prefs.imgWindow.suitLongImg && this.isLongImg){
                     this.center(rectSize.w <= wSize.w,false);
+                    this.imgWindow.style.overflow="scroll";
                     this.imgWindow.style.height="100%";
                     this.imgWindow.style.maxWidth="100%";
-                    this.imgWindow.style.overflow="scroll";
+                    this.closeButton.style.display="none";
                 }else if(prefs.imgWindow.fitToScreen){
                     this.fitToScreen();
                     this.center(true,true);
@@ -8282,19 +8284,21 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 };
             },
             imgWindowEventHandler:function(e){
+                e.stopPropagation();
                 var selectedTool=this.selectedTool;
                 if(selectedTool == "hand" && prefs.imgWindow.suitLongImg && this.isLongImg){
-                    if(e.type == "wheel" && this.imgWindow.style.overflow=="scroll")
+                    var inScroll=this.imgWindow.style.overflow=="scroll";
+                    if(e.type == "wheel" && inScroll)
                         return;
                     if(e.type == "click" && !this.moving){
-                        this.imgWindow.style.height=this.imgWindow.style.height=="100%"?"":"100%";
-                        this.imgWindow.style.maxWidth=this.imgWindow.style.maxWidth=="100%"?"":"100%";
-                        this.imgWindow.style.overflow=this.imgWindow.style.overflow=="scroll"?"":"scroll";
+                        this.imgWindow.style.height=inScroll?"":"100%";
+                        this.imgWindow.style.maxWidth=inScroll?"":"100%";
+                        this.imgWindow.style.overflow=inScroll?"":"scroll";
+                        this.closeButton.style.display=inScroll?"":"none";
                         this.center(true , true);
                         this.keepScreenInside();
                     }
                 }
-                e.stopPropagation();
                 switch(e.type){
                     case 'click':{//阻止opera的图片保存
                         this.moving=false;
