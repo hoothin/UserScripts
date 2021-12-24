@@ -4,7 +4,7 @@
 // @version      0.6
 // @description  Random Sexy Pictures
 // @author       hoothin
-// @match        https://api.lolicon.app/setu*
+// @match        https://api.lolicon.app/setu/v2*
 // @match        https://api.nyan.xyz/httpapi/sexphoto*
 // @match        https://huanmengii.xyz/ZY/aCOS/cos*
 // @match        https://api.uomg.com/api/rand.img3*
