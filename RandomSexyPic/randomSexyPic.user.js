@@ -92,7 +92,7 @@
         },
         "huanmengii.xyz":{
             name:"Cosplay Show",
-            url:"https://huanmengii.xyz/ZY/aCOS/cos/cos.php?num=15",
+            url:"https://huanmengii.xyz/ZY/aCOS/cos/?type=json&num=15",
             run:()=>{
                 r18Check.style.display=sfwCheck.style.display=r18CheckLabel.style.display=sfwCheckLabel.style.display="none";
                 var searchNum=getSearchParam("num");
@@ -101,7 +101,7 @@
                 }
             },
             getSearch:(param)=>{
-                return "cos.php?num="+param.num;
+                return "?type=json&num="+param.num;
             },
             initSearch:()=>{
                 var searchNum=getSearchParam("num");
@@ -275,8 +275,10 @@
     }
 
     function submitParam(){
-        var num=numInput.value;
-        var mode=modeSelect.options[modeSelect.selectedIndex].value;
+        var num=numInput.value,mode;
+        if(modeSelect.options.length>0){
+            mode=modeSelect.options[modeSelect.selectedIndex].value;
+        }
         var r18=2;
         if(sfwCheck.checked && !r18Check.checked){
             r18=0;
