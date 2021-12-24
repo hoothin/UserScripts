@@ -815,12 +815,12 @@
                     <a id="easyOfflineDisable" href="#" style="color: red;top: 18px; position: absolute; width: 100%; left: 0; text-decoration: underline;display:none;">${i18n("disableOnSite")}</a>
                     <div style="text-align:center;font-size: 12px;margin-top: 38px;">${i18n("urlRegexpTips")}</div>
                     <textarea id="configInput" placeholder="http:.*\\.php\\?getRes=\\d+\n\\.doc$\n\\.xls$\n\\.ppt$" style="position:absolute;left:18px;top:60px;width:260px;height:110px;background-color:white;color:black;"></textarea>
-                    <div style="text-align:center;font-size:12px;margin-top:125px;" title="${i18n("bdPathTips")}">${i18n("bdPathTitle")}<input id="baiduPath" placeholder="例：/av" style="width:170px;border-width:1px;"></div>
+                    <div style="text-align:center;font-size:12px;margin-top:125px;" title="${i18n("bdPathTips")}">${i18n("bdPathTitle")}<input id="baiduPath" placeholder="例：/av" style="width:170px;border-width:1px;border:solid 1px;"></div>
                     <div id="icons" style="position: static; display: inline-block; margin-top: 10px;width: 100%;margin-left: 10px;"></div>
                     <label style="position: static; width: 300px;"><input id="showType" type="checkbox"/>${i18n("settingMouseOver")}</label>
                     <button id="configSave" class="whx-btn" type="button" style="position:static;width:80px;height:30px;color:white;border-radius:5px;border:0px;outline:none;cursor:pointer;margin: 10px 110px 10px;">${i18n("settingBtn")}</button>
                     <div id="configQuit" class="whx-btn" style="width:28px;height:28px;border-radius:14px;position:absolute;right:2px;top:2px;cursor:pointer;">
-                        <span style="height:28px;line-height:28px;display:block;color:#FFF;text-align:center;font-size:20px;">╳</span>
+                        <span style="height:28px;line-height:28px;display:block;color:#FFF;text-align:center;font-size:10px;">╳</span>
                     </div>
                 </div>`;
             var configInput=configContent.querySelector("#configInput");
@@ -894,7 +894,7 @@
                     <textarea id="siteRuleInput" placeholder="${i18n("siteRulePlaceholder")}" style="position: absolute;left: 18px;top: 55px;width: 260px;height: 180px;background-color: white;color: black;margin-top: 0px;margin-bottom: 0px;"></textarea>
                     <button id="siteRuleSave" class="whx-btn" type="button" style="position: absolute;width:80px;height:30px;bottom: 10px;color:white;border-radius:5px;border:0px;outline:none;margin: 10px 110px 10px;cursor:pointer;left:0;">${i18n("settingBtn")}</button>
                     <div id="siteRuleQuit" class="whx-btn" style="width:28px;height:28px;border-radius:14px;position:absolute;right:2px;top:2px;cursor:pointer;">
-                        <span style="height:28px;line-height:28px;display:block;color:#FFF;text-align:center;font-size:20px;">╳</span>
+                        <span style="height:28px;line-height:28px;display:block;color:#FFF;text-align:center;font-size:10px;">╳</span>
                     </div>
                 </div>`;
             let addIcon=$("<span style='height:26px;width:26px;float:left;border-radius:50%;background-position:center;background-repeat:no-repeat;background-size:20px;margin-left:2px;cursor:pointer;animation: rotateAdd 1s infinite; animation-direction: alternate; -webkit-animation: rotateAdd 1s infinite; -webkit-animation-direction: alternate;'></span>");
