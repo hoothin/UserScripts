@@ -14,7 +14,7 @@
 // @match        https://3650000.xyz/api/?*
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
 // @grant        GM_addStyle
-// @run-at       document-start
+// @run-at       document-body
 // @license      MIT
 // ==/UserScript==
 
