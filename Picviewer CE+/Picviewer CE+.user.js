@@ -6,7 +6,7 @@
 // @description     Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version         2021.12.23.3
+// @version         2021.12.23.5
 // @created         2011-6-15
 // @namespace       http://userscripts.org/users/NLF
 // @homepage        http://hoothin.com
@@ -1513,6 +1513,8 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     newsrc=oldsrc.replace(/_fw\d+$/i,"");
                 }else if(/duitang\.com\//.test(oldsrc)){
                     newsrc=oldsrc.replace(/.thumb.(\d+_)?\d*\./i,".");
+                }else if(/imgur\.com\//.test(oldsrc)){
+                    newsrc=oldsrc.replace(/h(\.[^\/]+)$/,"$1").replace(/maxwidth=\d+/i,"maxwidth=99999");
                 }
                 return oldsrc != newsrc ? newsrc : null;
             }
@@ -5666,6 +5668,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     }\
                     .pv-gallery-head-command-drop-list-item label {\
                     font-weight: normal;\
+                    display:inline\
                     }\
                     .pv-gallery-head-command-drop-list-item:hover{\
                     background-color:#404040;\
