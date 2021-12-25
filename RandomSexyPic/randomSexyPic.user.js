@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         RandomSexyPic
 // @namespace    hoothin
-// @version      0.9
+// @version      1.0
 // @description  Random Sexy Pictures
 // @author       hoothin
 // @match        https://api.lolicon.app/setu/v2*
@@ -13,6 +13,7 @@
 // @match        https://3650000.xyz/api/?*
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
 // @grant        GM_addStyle
+// @grant        GM_xmlhttpRequest
 // @run-at       document-end
 // @license      MIT
 // ==/UserScript==
@@ -25,15 +26,32 @@
             name:"Lolicon ACG SexyPic",
             url:"https://api.lolicon.app/setu/v2?r18=1&num=5",
             run:()=>{
+                var searchNum=getSearchParam("num");
+                var leftNum=searchNum;
                 if(jsonData){
-                    var datas=jsonData.data;
+                    let datas=jsonData.data;
                     datas.forEach(function(data){
+                        leftNum--;
                         let img=createImg(data.urls?data.urls.original:data.url);
                         img.title=data.title+" - "+data.author;
                     });
                 }else{
                     location.href=curConfig.url;
                 }
+                processByTime(leftNum,loadNum=>{
+                    GM_xmlhttpRequest({
+                        method: 'GET',
+                        url: curConfig.url.replace("num=5","num="+loadNum),
+                        timeout:15000,
+                        onload: function(result) {
+                            let datas=JSON.parse(result.responseText).data;
+                            datas.forEach(function(data){
+                                let img=createImg(data.urls?data.urls.original:data.url);
+                                img.title=data.title+" - "+data.author;
+                            });
+                        }
+                    });
+                },5,1000);
             },
             getSearch:(param)=>{
                 return `v2?r18=${param.r18}&num=${param.num}`;
@@ -50,13 +68,29 @@
             name:"Nyan ACG SexyPic",
             url:"https://api.nyan.xyz/httpapi/sexphoto/?r18=true&num=5",
             run:()=>{
+                var searchNum=getSearchParam("num");
+                var leftNum=searchNum;
                 var urls=jsonData.data.url;
                 if(!urls instanceof Array){
                     urls=[urls];
                 }
                 urls.forEach(function(data){
+                    leftNum--;
                     createImg(data);
                 });
+                processByTime(leftNum,loadNum=>{
+                    GM_xmlhttpRequest({
+                        method: 'GET',
+                        url: curConfig.url.replace("num=5","num="+loadNum),
+                        timeout:15000,
+                        onload: function(result) {
+                            urls=JSON.parse(result.responseText).data.url;
+                            urls.forEach(function(data){
+                                createImg(data);
+                            });
+                        }
+                    });
+                },5,1000);
             },
             getSearch:(param)=>{
                 return `?r18=${param.r18!=0?"true":"false"}&num=${param.num}`;
@@ -77,9 +111,11 @@
             run:()=>{
                 r18Check.style.display=sfwCheck.style.display=r18CheckLabel.style.display=sfwCheckLabel.style.display="none";
                 var searchNum=getSearchParam("num");
-                for(var i=0;i<searchNum;i++){
-                    createImg(location.href.replace(/1?\?.*/,"?")+"r="+Math.random());
-                }
+                processByTime(searchNum,loadNum=>{
+                    for(let i=0;i<loadNum;i++){
+                        createImg(location.href.replace(/1?\?.*/,"?")+"r="+Math.random());
+                    }
+                },5,1000);
             },
             getSearch:(param)=>{
                 return location.href.replace(/\d+$/,"")+param.num;
@@ -95,9 +131,11 @@
             run:()=>{
                 r18Check.style.display=sfwCheck.style.display=r18CheckLabel.style.display=sfwCheckLabel.style.display="none";
                 var searchNum=getSearchParam("num");
-                for(var i=0;i<searchNum;i++){
-                    createImg("https://huanmengii.xyz/ZY/aCOS/cos/index.php?r="+Math.random());
-                }
+                processByTime(searchNum,loadNum=>{
+                    for(let i=0;i<loadNum;i++){
+                        createImg("https://huanmengii.xyz/ZY/aCOS/cos/index.php?r="+Math.random());
+                    }
+                },5,1000);
             },
             getSearch:(param)=>{
                 return "?type=json&num="+param.num;
@@ -114,24 +152,11 @@
                 r18Check.style.display=sfwCheck.style.display=r18CheckLabel.style.display=sfwCheckLabel.style.display="none";
                 var searchNum=getSearchParam("num");
                 var searchMode=getSearchParam("mode");
-                var sleep=(fn,param,time)=>{
-                    return new Promise((resolve) => {
-                        setTimeout(() => resolve(fn(param)), time)
-                    })
-                }
-                async function createImgs(num) {
-                    while(num>0){
-                        var loadNum=5;
-                        if(num<5)loadNum=num;
-                        num-=loadNum;
-                        const slow = await sleep(loadNum=>{
-                            for(let i=0;i<loadNum;i++){
-                                createImg(`http://3650000.xyz/api/?mode=${searchMode}&r=${Math.random()}`);
-                            }
-                        },loadNum,1000);
+                processByTime(searchNum,loadNum=>{
+                    for(let i=0;i<loadNum;i++){
+                        createImg(`http://3650000.xyz/api/?mode=${searchMode}&r=${Math.random()}`);
                     }
-                }
-                createImgs(searchNum);
+                },5,1000);
             },
             getSearch:(param)=>{
                 return location.pathname+`?type=json&mode=${param.mode}&num=${param.num}`;
@@ -221,6 +246,20 @@
 
     curConfig.run();
     if(curConfig.initSearch)curConfig.initSearch();
+
+    function sleep(fn,param,time) {
+        return new Promise((resolve) => {
+            setTimeout(() => resolve(fn(param)), time)
+        })
+    }
+    async function processByTime(num,fn,limit,time) {
+        while(num>0){
+            var loadNum=limit;
+            if(num<limit)loadNum=num;
+            num-=loadNum;
+            await sleep(fn,loadNum,time);
+        }
+    }
 
     function createImg(url){
         let img=document.createElement("img");
