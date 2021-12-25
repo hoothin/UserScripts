@@ -6,7 +6,7 @@
 // @description     Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version         2021.12.23.5
+// @version         2021.12.25.1
 // @created         2011-6-15
 // @namespace       http://userscripts.org/users/NLF
 // @homepage        http://hoothin.com
@@ -526,7 +526,7 @@
                 autoRefreshTip:"When the last few images are viewed, scroll the window to the bottom, so that some webpage will load the new images",
                 enterFullsc:"Enter full screen",
                 exitFullsc:"Exit full screen",
-                config:"Open settings",
+                config:"Settings",
                 closeGallery:"Close Gallery",
                 returnToGallery:"Back to the Gallery",
                 picInfo:"Click to change",
@@ -597,7 +597,7 @@
                 galleryFitToScreen:"Scale the image to fit the screen",
                 galleryFitToScreenSmall:"Scale the small image also",
                 galleryFitToScreenTip:"Adapt to be contain, not cover",
-                galleryScrollEndToChange:"Switch the image after the big picture scrolls to the end",
+                galleryScrollEndToChange:"Switch the image after the long picture scrolls to the end",
                 galleryScrollEndToChangeTip:"Valid after canceling the previous option",
                 galleryExportType:"Default sort when images exported",
                 grid:"Tile sorting",
@@ -1451,10 +1451,22 @@ Trace Moe | https://trace.moe/?url=#t#`;
                  return this.src.replace(/(\/\d+\/)tn_(\d+\.[^\/]+)$/,"$1$2");
              }
             },
-            {name: "dmm",
-             url: /javlibrary\.|javlib\.|dmm\.co\.jp/,
+            {name: "javdb",
+             url: /javdb/,
              getImage: function() {
-                 return this.src.replace(/(\/[^\/]+)ps\.jpg$/,"$1pl.jpg");
+                 return this.src.replace("/thumbs/","/covers/");
+             }
+            },
+            {name: "javbus",
+             url: /javbus\.|busjav\./,
+             getImage: function() {
+                 return this.src.replace(/\/thumb(\/\w+)\.jpg$/,"/cover$1_b.jpg");
+             }
+            },
+            {name: "avmoo",
+             url: /avmoo\./,
+             getImage: function() {
+                 return this.src.replace("ps.jpg","pl.jpg");
              }
             }
         ];
@@ -1515,6 +1527,8 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     newsrc=oldsrc.replace(/.thumb.(\d+_)?\d*\./i,".");
                 }else if(/imgur\.com\//.test(oldsrc)){
                     newsrc=oldsrc.replace(/h(\.[^\/]+)$/,"$1").replace(/maxwidth=\d+/i,"maxwidth=99999");
+                }else if(/pics\.dmm\.co\.jp/.test(oldsrc)){
+                    newsrc=oldsrc.replace("ps.jpg","pl.jpg");
                 }
                 return oldsrc != newsrc ? newsrc : null;
             }
@@ -3546,9 +3560,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 },true);
 
                 eleMaps['head'].addEventListener('click',function(e){
-                    if(e.target.classList.contains('pv-gallery-head-command-close'))
-                        return;
-                    else if(e.target.className.indexOf('pv-gallery-head-command')!=-1)
+                    if(e.target.className.indexOf('pv-gallery-head-command')!=-1)
                         self.closeViewMore();
                 });
 
@@ -10222,7 +10234,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
         GM_config.init({
             id: 'pv-prefs',
             title: GM_config.create('a', {
-                href: 'https://greasyfork.org/zh-CN/scripts/24204-picviewer-ce',
+                href: 'https://greasyfork.org/scripts/24204-picviewer-ce',
                 target: '_blank',
                 textContent: 'Picviewer CE+ '+i18n("config"),
                 title: i18n("openHomePage")
