@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         RandomSexyPic
 // @namespace    hoothin
-// @version      0.8
+// @version      0.9
 // @description  Random Sexy Pictures
 // @author       hoothin
 // @match        https://api.lolicon.app/setu/v2*
@@ -10,11 +10,10 @@
 // @match        https://api.uomg.com/api/rand.img3*
 // @match        https://api.vvhan.com/api/tao*
 // @match        https://www.hlapi.cn/api/mjx*
-// @match        https://api.ghser.com/tao*
 // @match        https://3650000.xyz/api/?*
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
 // @grant        GM_addStyle
-// @run-at       document-body
+// @run-at       document-end
 // @license      MIT
 // ==/UserScript==
 
@@ -72,18 +71,18 @@
         },
         "buyersShow":{
             name:"Taobao Buyers Show",
-            url:"https://api.uomg.com/api/rand.img3?format=json&num=15",
+            urls:["https://api.uomg.com/api/rand.img3?format=json&num=15",
+                 "https://api.vvhan.com/api/tao?type=json&num=15",
+                 "https://www.hlapi.cn/api/mjx1?type=json&num=15"],
             run:()=>{
-                var buyersShowApis=["https://api.uomg.com/api/rand.img3","https://api.vvhan.com/api/tao","https://www.hlapi.cn/api/mjx","https://api.ghser.com/tao"];
                 r18Check.style.display=sfwCheck.style.display=r18CheckLabel.style.display=sfwCheckLabel.style.display="none";
                 var searchNum=getSearchParam("num");
                 for(var i=0;i<searchNum;i++){
-                    var randomApi=Math.floor(Math.random()*buyersShowApis.length);
-                    createImg(buyersShowApis[randomApi]+"?r="+Math.random());
+                    createImg(location.href.replace(/1?\?.*/,"?")+"r="+Math.random());
                 }
             },
             getSearch:(param)=>{
-                return `${location.pathname}?format=json&num=${param.num}`;
+                return location.href.replace(/\d+$/,"")+param.num;
             },
             initSearch:()=>{
                 var searchNum=getSearchParam("num");
@@ -188,11 +187,19 @@
     var referrerMeta=document.createElement("meta");
     var viewportMeta=document.createElement("meta");
     var overMask=document.createElement("div");
+    var homepage=document.createElement("a");
     for(var name in setuConfig){
-        if(!setuConfig[name].run)continue;
+        var config=setuConfig[name];
+        if(!config.run)continue;
         var siteA=document.createElement("a");
-        siteA.href=setuConfig[name].url;
-        siteA.innerHTML=setuConfig[name].name;
+        var url=config.url;
+        if(config.urls){
+            var randomIndex=Math.floor(Math.random()*config.urls.length);
+            url=config.urls[randomIndex];
+            config.url=url;
+        }
+        siteA.href=url;
+        siteA.innerHTML=config.name;
         btns.appendChild(siteA);
     }
     btns.appendChild(numInput);
@@ -202,6 +209,7 @@
     btns.appendChild(sfwCheckLabel);
     btns.appendChild(modeSelect);
     btns.appendChild(submit);
+    btns.appendChild(homepage);
     overMask.className="over-mask";
     imgCon.appendChild(overMask);
     referrerMeta.name="referrer";
@@ -296,6 +304,9 @@
 
     btns.className="btns";
     document.body.appendChild(btns);
+    homepage.innerHTML="Homepage";
+    homepage.href="https://sleazyfork.org/en/users/8227-hoothin";
+    homepage.target="_blank";
     numInput.placeholder="Number of Sex pics";
     r18Check.type="checkbox";
     r18Check.id="r18Check";
