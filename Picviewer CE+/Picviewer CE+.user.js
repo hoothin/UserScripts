@@ -6,7 +6,7 @@
 // @description     Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version         2021.12.25.3
+// @version         2021.12.25.5
 // @created         2011-6-15
 // @namespace       http://userscripts.org/users/NLF
 // @homepage        http://hoothin.com
@@ -164,6 +164,7 @@
                 px:"像素",
                 minSizeLimit:"缩放图片，超过该尺寸，显示浮框",
                 minSizeLimitTip:"图片被缩放(图片原始大小与实际大小不一致)后,显示长宽大于设定值时显示浮动工具栏",
+                defaultSizeLimit:"图库默认筛选尺寸",
                 listenBg:"监听背景图",
                 listenBgTip:"在有背景图的元素上显示悬浮框",
                 butonOrder:"工具栏图标排序",
@@ -180,6 +181,7 @@
                 keysMagnifierTip:"当出现悬浮条时按下此按键打开放大镜观察",
                 keysGallery:"打开图库（加功能键为全局）",
                 keysGalleryTip:"当出现悬浮条时按下此按键打开图库",
+                openGallery:"打开图库",
                 magnifier:"放大镜",
                 magnifierRadius:"默认半径",
                 magnifierWheelZoomEnabled:"启用滚轮缩放",
@@ -369,6 +371,7 @@
                 px:"像素",
                 minSizeLimit:"縮放圖片，超過該尺寸，顯示浮框",
                 minSizeLimitTip:"圖片被縮放(圖片原始大小與實際大小不一致)後,顯示長寬大於設定值時顯示浮動工具欄",
+                defaultSizeLimit:"圖庫默認篩選尺寸",
                 listenBg:"監聽背景圖",
                 listenBgTip:"在有背景圖的元素上顯示懸浮框",
                 butonOrder:"工具欄圖標排序",
@@ -385,6 +388,7 @@
                 keysMagnifierTip:"當出現懸浮條時按下此按鍵打開放大鏡觀察",
                 keysGallery:"打開圖庫（加功能鍵為全局）",
                 keysGalleryTip:"當出現懸浮條時按下此按鍵打開圖庫",
+                openGallery:"打開圖庫",
                 magnifier:"放大鏡",
                 magnifierRadius:"默認半徑",
                 magnifierWheelZoomEnabled:"啟用滾輪縮放",
@@ -573,6 +577,7 @@
                 px:"px",
                 minSizeLimit:"Show toolbar over Zoomed image beyond that size",
                 minSizeLimitTip:"After the image is scaled (the original size of the image does not match the actual size), the floating toolbar is displayed when the shown image length is greater than the set value.",
+                defaultSizeLimit:"Default size limit for gallery",
                 listenBg:"Listening background image",
                 listenBgTip:"Show toolbar on the element with the background image",
                 butonOrder:"Sort of toolbar icons",
@@ -589,6 +594,7 @@
                 keysMagnifierTip:"Press this button to open the magnifier when floating bar appears",
                 keysGallery:"Open Gallery（Global with funcKeys）",
                 keysGalleryTip:"Press this button to open the Gallery when floating bar appears",
+                openGallery:"Open Gallery",
                 magnifier:"Zoom",
                 magnifierRadius:"Default radius",
                 magnifierWheelZoomEnabled:"Enable wheel zoom",
@@ -760,6 +766,10 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 autoZoom: true,  // 如果有放大，则把图片及 sidebar 部分的缩放改回 100%，增大可视面积（仅在 chrome 下有效）
                 descriptionLength: 32,  // 注释的最大宽度
                 editSite: "Lunapic",
+                defaultSizeLimit:{
+                    w:200,
+                    h:200
+                },
                 searchData:defaultSearchData
             },
 
@@ -2883,19 +2893,18 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 container.querySelector("#minsizeW").oninput=function(){self.changeMinView();};
                 container.querySelector("#minsizeH").oninput=function(){self.changeMinView();};
                 container.querySelector("#minsizeWSpan").onclick=function(){
-                    //self.changeSizeInputW();
                     var minsizeW=window.prompt("Width:",this.value);
                     if(!minsizeW)return;
                     container.querySelector("#minsizeW").value=minsizeW;
                     self.changeMinView();
                 };
                 container.querySelector("#minsizeHSpan").onclick=function(){
-                    //self.changeSizeInputH();
                     var minsizeH=window.prompt("Height:",this.value);
                     if(!minsizeH)return;
                     container.querySelector("#minsizeH").value=minsizeH;
                     self.changeMinView();
                 };
+
                 var maximizeTrigger=document.createElement('span');
                 this.maximizeTrigger=maximizeTrigger;
                 maximizeTrigger.innerHTML='-'+i18n("returnToGallery")+'-<span class="pv-gallery-maximize-trigger-close" title="'+i18n("closeGallery")+'"></span>';
@@ -3954,47 +3963,62 @@ Trace Moe | https://trace.moe/?url=#t#`;
                         if(!item)return;
                         var spanMark=document.querySelector("span.pv-gallery-sidebar-thumb-container[data-src='"+item.src+"']");
                         if(spanMark){
-                            if(item.sizeW<sizeInputW.value || item.sizeH<sizeInputH.value){
+                            var naturalSize=spanMark.dataset.naturalSize,itemW=item.sizeW,itemH=item.sizeH;
+                            if(naturalSize){
+                                naturalSize=JSON.parse(naturalSize);
+                                itemW=naturalSize.w;
+                                itemH=naturalSize.h;
+                                if(itemW>sizeInputW.max)sizeInputW.max=itemW;
+                                if(itemH>sizeInputH.max)sizeInputH.max=itemH;
+                            }else if(!item.noActual){
+                                itemW=99999;
+                                itemH=99999;
+                            }
+                            if(itemW<sizeInputW.value || itemH<sizeInputH.value){
                                 spanMark.style.display="none";
-                            }else
+                            }else{
                                 spanMark.style.display="";
+                            }
                         }
                     });
                     this.switchThumbVisible();
                 }
             },
-
-            changeSizeInputW:function(){
+            changeSizeInputReset:function(){
                 var maxSizeH=0,minSizeH=0,maxSizeW=0,minSizeW=0;
                 var sizeInputH=this.gallery.querySelector("#minsizeH");
                 var sizeInputW=this.gallery.querySelector("#minsizeW");
                 this.data.forEach(function(item) {
                     if(!item)return;
-                    if(item.sizeH>maxSizeH)
-                        maxSizeH=item.sizeH;
-                    if(item.sizeH<minSizeH || minSizeH==0)
-                        minSizeH=item.sizeH;
+                    var itemW=item.sizeW,itemH=item.sizeH;
+                    var spanMark=document.querySelector("span.pv-gallery-sidebar-thumb-container[data-src='"+item.src+"']");
+                    if(spanMark){
+                        var naturalSize=spanMark.dataset.naturalSize;
+                        if(naturalSize){
+                            naturalSize=JSON.parse(naturalSize);
+                            itemW=naturalSize.w;
+                            itemH=naturalSize.h;
+                        }
+                    }
+                    if(itemH>maxSizeH)
+                        maxSizeH=itemH;
+                    if(itemH<minSizeH || minSizeH==0)
+                        minSizeH=itemH;
+                    if(itemW>maxSizeW)
+                        maxSizeW=itemW;
+                    if(itemW<minSizeW || minSizeW==0)
+                        minSizeW=itemW;
                 });
                 sizeInputH.max=maxSizeH;
                 sizeInputH.min=minSizeH;
+                sizeInputH.value=prefs.gallery.defaultSizeLimit.h;
                 sizeInputH.title=sizeInputH.value+"px";
                 var sizeInputHSpan=this.gallery.querySelector("#minsizeHSpan");
                 sizeInputHSpan.innerHTML=sizeInputH.value+"px";
-            },
 
-            changeSizeInputH:function(){
-                var maxSizeH=0,minSizeH=0,maxSizeW=0,minSizeW=0;
-                var sizeInputH=this.gallery.querySelector("#minsizeH");
-                var sizeInputW=this.gallery.querySelector("#minsizeW");
-                this.data.forEach(function(item) {
-                    if(!item)return;
-                    if(item.sizeW>maxSizeW)
-                        maxSizeW=item.sizeW;
-                    if(item.sizeW<minSizeW || minSizeW==0)
-                        minSizeW=item.sizeW;
-                });
                 sizeInputW.max=maxSizeW;
                 sizeInputW.min=minSizeW;
+                sizeInputW.value=prefs.gallery.defaultSizeLimit.w;
                 sizeInputW.title=sizeInputW.value+"px";
                 var sizeInputWSpan=this.gallery.querySelector("#minsizeWSpan");
                 sizeInputWSpan.innerHTML=sizeInputW.value+"px";
@@ -4065,8 +4089,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 viewmoreBar.parentNode.style.backgroundColor = "#000000";
 
                 toggleBar.innerHTML = '▼';
-                this.changeSizeInputH();
-                this.changeSizeInputW();
+                this.changeSizeInputReset();
             },
             maximizeSidebar: function() {
                 var toggleBar = this.eleMaps['sidebar-toggle'],
@@ -4609,6 +4632,8 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     index = Array.prototype.slice.call(this.imgSpans).indexOf(this.selected);
                 }
 
+                var sizeInputH=this.gallery.querySelector("#minsizeH");
+                var sizeInputW=this.gallery.querySelector("#minsizeW");
                 var thumbnails = this.eleMaps['sidebar-thumbnails-container'];
                 // 如果是新的，则添加，否则重置并添加。
                 if (!data){
@@ -4631,6 +4656,11 @@ Trace Moe | https://trace.moe/?url=#t#`;
                         spanMark.title=(item.img?item.img.title:"");
                         spanMark.innerHTML='<span class="pv-gallery-vertical-align-helper"></span>' +
                             '<span class="pv-gallery-sidebar-thumb-loading" title="'+i18n("loading")+'......"></span>';
+                        if(item.noActual && (item.sizeW<sizeInputW.value || item.sizeH<sizeInputH.value)){
+                            spanMark.style.display="none";
+                        }else{
+                            spanMark.style.display="";
+                        }
                     }catch(e){};
                 });
 
@@ -4665,6 +4695,14 @@ Trace Moe | https://trace.moe/?url=#t#`;
 
                 this.thumbScrollbar.reset();
 
+                for(var j in this.imgSpans){
+                    if (!this.imgSpans.hasOwnProperty(j)) continue;
+                    var curSpan=this.imgSpans[j];
+                    if(curSpan.style.display!="none"){
+                        this.select(curSpan, true);
+                        return;
+                    }
+                }
                 this.select(this.imgSpans[index], true);
             },
             load:function(data, from, reload){
@@ -4833,8 +4871,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     this.eleMaps['head-command-nextPage'].click();
                 }
 
-                this.changeSizeInputH();
-                this.changeSizeInputW();
+                this.changeSizeInputReset();
             },
             close:function(reload){
                 if(this.hideBodyStyle.parentNode)
@@ -10444,11 +10481,26 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 },
 
                 // 图库
+                'gallery.defaultSizeLimit.w': {
+                    label: i18n("defaultSizeLimit"),
+                    type: 'int',
+                    className: 'size',
+                    section: [i18n("gallery")],
+                    "default": prefs.gallery.defaultSizeLimit.w,
+                    line: 'start',
+                },
+                'gallery.defaultSizeLimit.h': {
+                    label: ' x ',
+                    type: 'int',
+                    className: 'sep-x',
+                    after: ' '+i18n("px"),
+                    "default": prefs.gallery.defaultSizeLimit.h,
+                    line: 'end',
+                },
                 'gallery.fitToScreen': {
                     label: i18n("galleryFitToScreen"),
                     type: 'checkbox',
                     "default": prefs.gallery.fitToScreen,
-                    section: [i18n("gallery")],
                     title: i18n("galleryFitToScreenTip"),
                     line: 'start',
                 },
@@ -10687,6 +10739,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
 
 
         GM_registerMenuCommand('Picviewer CE+ '+i18n("config"), openPrefs);
+        GM_registerMenuCommand(i18n("openGallery"), openGallery);
 
         loadPrefs();
 
