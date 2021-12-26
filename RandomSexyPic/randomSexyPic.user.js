@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         RandomSexyPic
 // @namespace    hoothin
-// @version      1.3.3
+// @version      1.3.5
 // @description  Random Sexy Pictures
 // @author       hoothin
 // @include      https://api.lolicon.app/setu/v2*
@@ -286,13 +286,13 @@
         img.style.width="100%";
         img.style.position="";
         img.style.margin="";
-        img.scrollIntoView();
         document.body.style.overflow="";
         imgCon.style.maxHeight="";
         imgCon.style.maxWidth="";
         overMask.style.display="none";
         overMask.style.opacity=0;
         img.className="list-show";
+        img.scrollIntoView();
     }
 
     function createImg(url){
