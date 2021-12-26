@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         RandomSexyPic
 // @namespace    hoothin
-// @version      1.3.5
+// @version      1.3.3
 // @description  Random Sexy Pictures
 // @author       hoothin
 // @include      https://api.lolicon.app/setu/v2*
@@ -505,7 +505,7 @@
       border-radius: 5px;
       font-weight: bold;
       text-decoration: none;
-      padding: 6px;
+      padding: 7px 5px 5px 5px;
       margin: 0px 10px 0 10px;
       border: 0;
     }`);
@@ -536,6 +536,6 @@
     };
 
     imgCon.className="img-con";
-    imgCon.style.paddingTop=unsafeWindow.getComputedStyle(btns).height;
+    imgCon.style.paddingTop=parseInt(unsafeWindow.getComputedStyle(btns).height.replace("px",""))+20+"px";
     document.body.appendChild(imgCon);
 })();
