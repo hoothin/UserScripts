@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         RandomSexyPic
 // @namespace    hoothin
-// @version      1.1
+// @version      1.2
 // @description  Random Sexy Pictures
 // @author       hoothin
 // @match        https://api.lolicon.app/setu/v2*
@@ -272,6 +272,26 @@
         }
     }
 
+    overMask.onclick=e=>{
+        if(hasFloatImg){
+            restoreImg(hasFloatImg);
+        }
+    };
+
+    function restoreImg(img){
+        hasFloatImg=false;
+        img.style.zIndex=0;
+        img.style.bottom="";
+        img.style.width="100%";
+        img.style.position="";
+        img.style.margin="";
+        img.scrollIntoView();
+        document.body.style.overflow="";
+        imgCon.style.maxHeight="";
+        imgCon.style.maxWidth="";
+        overMask.style.display="none";
+    }
+
     function createImg(url){
         let img=document.createElement("img");
         img.src=url;
@@ -279,17 +299,7 @@
         img.onclick=()=>{
             window.scrollTo(0,0);
             if(img.style.zIndex==2){
-                hasFloatImg=false;
-                img.style.zIndex=0;
-                img.style.bottom="";
-                img.style.width="100%";
-                img.style.position="";
-                img.style.margin="";
-                img.scrollIntoView();
-                document.body.style.overflow="";
-                imgCon.style.maxHeight="";
-                imgCon.style.maxWidth="";
-                overMask.style.display="none";
+                restoreImg(img);
             }else if(img.style.zIndex==1){
                 img.style.bottom="";
                 img.style.width="";
@@ -301,7 +311,7 @@
                 imgCon.style.maxWidth="100vw";
             }else{
                 if(hasFloatImg)return;
-                hasFloatImg=true;
+                hasFloatImg=img;
                 document.body.style.overflow="hidden";
                 img.style.bottom=0;
                 if(img.naturalWidth>document.documentElement.clientWidth || img.naturalHeight>document.documentElement.clientHeight){
