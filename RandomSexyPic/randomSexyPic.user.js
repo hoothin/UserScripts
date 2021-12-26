@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         RandomSexyPic
 // @namespace    hoothin
-// @version      1.3
+// @version      1.3.1
 // @description  Random Sexy Pictures
 // @author       hoothin
 // @match        https://api.lolicon.app/setu/v2*
@@ -291,11 +291,13 @@
         imgCon.style.maxWidth="";
         overMask.style.display="none";
         overMask.style.opacity=0;
+        img.className="list-show";
     }
 
     function createImg(url){
         let img=document.createElement("img");
         img.src=url;
+        img.className="list-show";
         img.style.width="100%";
         img.onclick=()=>{
             window.scrollTo(0,0);
@@ -317,8 +319,8 @@
                 img.style.bottom=0;
                 if(img.naturalWidth>document.documentElement.clientWidth || img.naturalHeight>document.documentElement.clientHeight){
                     img.style.zIndex=1;
-                    img.style.maxWidth="100%";
-                    img.style.maxHeight="100%";
+                    img.style.maxWidth="99%";
+                    img.style.maxHeight="99%";
                 }else{
                     img.style.zIndex=2;
                     img.style.maxWidth="";
@@ -328,6 +330,7 @@
                 img.style.position="absolute";
                 img.style.margin="auto";
                 overMask.style.display="block";
+                img.className="";
                 setTimeout(()=>{
                     overMask.style.opacity=1;
                 }, 0);
@@ -413,6 +416,15 @@
       z-index: 1;
       top: 0;
       left: 0;
+      transition: opacity .3s ease-in-out;
+      -moz-transition: opacity .3s ease-in-out;
+      -webkit-transition: opacity .3s ease-in-out;
+    }
+    .list-show:hover{
+      opacity: 1;
+    }
+    .list-show{
+      opacity: 0.6;
       transition: opacity .3s ease-in-out;
       -moz-transition: opacity .3s ease-in-out;
       -webkit-transition: opacity .3s ease-in-out;
