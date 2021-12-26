@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         RandomSexyPic
 // @namespace    hoothin
-// @version      1.2
+// @version      1.3
 // @description  Random Sexy Pictures
 // @author       hoothin
 // @match        https://api.lolicon.app/setu/v2*
@@ -290,6 +290,7 @@
         imgCon.style.maxHeight="";
         imgCon.style.maxWidth="";
         overMask.style.display="none";
+        overMask.style.opacity=0;
     }
 
     function createImg(url){
@@ -327,6 +328,9 @@
                 img.style.position="absolute";
                 img.style.margin="auto";
                 overMask.style.display="block";
+                setTimeout(()=>{
+                    overMask.style.opacity=1;
+                }, 0);
             }
         };
         imgCon.appendChild(img);
@@ -400,7 +404,8 @@
       vertical-align: top;
     }
     .over-mask{
-      display:none;
+      display: none;
+      opacity: 0;
       width: 100%;
       height: 100%;
       background-color: #000000e6;
@@ -408,6 +413,9 @@
       z-index: 1;
       top: 0;
       left: 0;
+      transition: opacity .3s ease-in-out;
+      -moz-transition: opacity .3s ease-in-out;
+      -webkit-transition: opacity .3s ease-in-out;
     }
     img{
       -webkit-column-break-inside: avoid;
@@ -492,7 +500,7 @@
     homepage.href="https://sleazyfork.org/en/users/8227-hoothin";
     homepage.target="_blank";
     numInput.type="number";
-    numInput.placeholder="Number of Sex pics";
+    numInput.title=numInput.placeholder="Number of sexy pictures";
     r18Check.type="checkbox";
     r18Check.id="r18Check";
     r18CheckLabel.innerHTML="R18 ";
