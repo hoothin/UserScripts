@@ -350,13 +350,138 @@
         }
     }
 
-    GM_addStyle("@media screen and (min-width: 1024px) {.img-con{overflow: auto;column-count: 5;-moz-column-count: 5;-webkit-column-count: 5;width: 100%;display: block;}}@media screen and (max-width: 1024px) {.img-con{overflow: auto;column-count: 2;-moz-column-count: 2;-webkit-column-count: 2;width: 100%;display: block;}}select{display:none;}.over-mask{display:none;width: 100%; height: 100%; background-color: #000000e6; position: fixed; z-index: 1; top: 0; left: 0;}img{-webkit-column-break-inside: avoid; break-inside: avoid; float: left; margin-bottom: 15px; margin-right: 15px; overflow: hidden; position: relative; top: 0; left: 0; right: 0;}.btns{padding-bottom: 10px;}.btns>a{padding: 5px;}");
+    GM_addStyle(`
+    @media screen and (min-width: 1024px) {
+      .img-con{
+        overflow: auto;column-count: 5;
+        -moz-column-count: 5;
+        -webkit-column-count: 5;
+        width: 100%;
+        display: block;
+      }
+    }
+    @media screen and (max-width: 1024px) {
+      .img-con{
+        overflow: auto;
+        column-count: 2;
+        -moz-column-count: 2;
+        -webkit-column-count: 2;
+        width: 100%;
+        display: block;
+      }
+    }
+    body{
+      background: black;
+    }
+    select{
+      display: none;
+      height: 29px;
+      border-radius: 3px 0 0 3px;
+      -moz-border-radius: 3px 0 0 3px;
+      -webkit-border-radius: 3px 0 0 3px;
+      -ms-border-radius: 3px 0 0 3px;
+      -o-border-radius: 3px 0 0 3px;
+      border: none;
+      color: #cacaca;
+      background-color: #363636;
+      font-size: 14px;
+      outline: 0;
+      padding: 2px 5px;
+      vertical-align: top;
+    }
+    .over-mask{
+      display:none;
+      width: 100%;
+      height: 100%;
+      background-color: #000000e6;
+      position: fixed;
+      z-index: 1;
+      top: 0;
+      left: 0;
+    }
+    img{
+      -webkit-column-break-inside: avoid;
+      break-inside: avoid;
+      float: left;
+      margin-bottom: 15px;
+      margin-right: 15px;
+      overflow: hidden;
+      position: relative;
+      top: 0;
+      left: 0;
+      right: 0;
+    }
+    .btns{
+      padding: 10px 0;
+      text-align: center;
+      line-height: 30px;
+      position: fixed;
+      z-index: 1;
+      width: 100%;
+      top: 0;
+      background: #000000de;
+    }
+    .btns>a{
+      padding: 5px;
+      background: #f8981e;
+      color: black;
+      border-radius: 5px;
+      font-weight: bold;
+      text-decoration: none;
+      margin: 1px;
+    }
+    .btns>a:hover{
+      background: #ffa31a;
+    }
+    label{
+      background: #f8981e;
+      color: black;
+      border-radius: 5px;
+      font-weight: bold;
+      text-decoration: none;
+      padding: 3px;
+    }
+    input[type=checkbox]{
+      width:20px;
+      height:20px;
+      vertical-align: top;
+    }
+    input[type=number]{
+      width: 50px;
+      height: 25px;
+      border-radius: 3px 0 0 3px;
+      -moz-border-radius: 3px 0 0 3px;
+      -webkit-border-radius: 3px 0 0 3px;
+      -ms-border-radius: 3px 0 0 3px;
+      -o-border-radius: 3px 0 0 3px;
+      border: none;
+      color: #cacaca;
+      background-color: #363636;
+      display: inline-block;
+      font-size: 14px;
+      outline: 0;
+      padding: 2px 5px;
+      vertical-align: top;
+      margin: 0 5px;
+    }
+    button{
+      cursor: pointer;
+      background: #0075ff;
+      color: white;
+      border-radius: 5px;
+      font-weight: bold;
+      text-decoration: none;
+      padding: 6px;
+      margin: 0px 10px 0 10px;
+      border: 0;
+    }`);
 
     btns.className="btns";
     document.body.appendChild(btns);
     homepage.innerHTML="Homepage";
     homepage.href="https://sleazyfork.org/en/users/8227-hoothin";
     homepage.target="_blank";
+    numInput.type="number";
     numInput.placeholder="Number of Sex pics";
     r18Check.type="checkbox";
     r18Check.id="r18Check";
