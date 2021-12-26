@@ -6,7 +6,7 @@
 // @description     Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version         2021.12.25.5
+// @version         2021.12.26.1
 // @created         2011-6-15
 // @namespace       http://userscripts.org/users/NLF
 // @homepage        http://hoothin.com
@@ -1393,6 +1393,13 @@ Trace Moe | https://trace.moe/?url=#t#`;
                  return this.src.replace("/_thumbs/","/_images/");
              }
             },
+            {name: "Rule34",
+             url: /rule34\.xxx/,
+             getImage: function() {
+                 var _isrc=this.src.replace(/\/(thumbnails|samples)\/(.*)\/(thumbnail|sample)_(.*)\..*/,"/images/$2/$4");
+                 return _isrc==this.src?this.src:[_isrc+".jpeg",_isrc+".png", _isrc+".jpg"];
+             }
+            },
             {name: "Photosight",
              url: /photosight\.ru/,
              getImage: function() {
@@ -1454,8 +1461,8 @@ Trace Moe | https://trace.moe/?url=#t#`;
             {name: "gelbooru",
              url: /gelbooru\.com/,
              getImage: function() {
-                 var _isrc=this.src.replace(/.*\/thumbnails\/(.*)\/thumbnail_(.*)\..*/,"https://img3.gelbooru.com/images/$1/$2");
-                 return [_isrc+".png", _isrc+".jpg"];
+                 var _isrc=this.src.replace(/.*\/(thumbnails|samples)\/(.*)\/(thumbnail|sample)_(.*)\..*/,"https://img3.gelbooru.com/images/$2/$4");
+                 return _isrc==this.src?this.src:[_isrc+".png", _isrc+".jpg"];
              }
             },
             {name: "erosberry",
