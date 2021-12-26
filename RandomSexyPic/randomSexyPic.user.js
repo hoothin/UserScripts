@@ -390,7 +390,7 @@
     body{
       background: black;
     }
-    select{
+    .btns>select{
       display: none;
       height: 29px;
       border-radius: 3px 0 0 3px;
@@ -429,7 +429,7 @@
       -moz-transition: opacity .3s ease-in-out;
       -webkit-transition: opacity .3s ease-in-out;
     }
-    img{
+    .img-con>img{
       -webkit-column-break-inside: avoid;
       break-inside: avoid;
       float: left;
@@ -464,7 +464,7 @@
     .btns>a:hover{
       background: #ffa31a;
     }
-    label{
+    .btns>label{
       background: #f8981e;
       color: black;
       border-radius: 5px;
@@ -472,12 +472,12 @@
       text-decoration: none;
       padding: 3px;
     }
-    input[type=checkbox]{
+    .btns>input[type=checkbox]{
       width:20px;
       height:20px;
       vertical-align: top;
     }
-    input[type=number]{
+    .btns>input[type=number]{
       width: 50px;
       height: 25px;
       border-radius: 3px 0 0 3px;
@@ -495,7 +495,7 @@
       vertical-align: top;
       margin: 0 5px;
     }
-    button{
+    .btns>button{
       cursor: pointer;
       background: #0075ff;
       color: white;
