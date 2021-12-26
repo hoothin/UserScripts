@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         RandomSexyPic
 // @namespace    hoothin
-// @version      1.3.3
+// @version      1.3.6
 // @description  Random Sexy Pictures
 // @author       hoothin
 // @include      https://api.lolicon.app/setu/v2*
