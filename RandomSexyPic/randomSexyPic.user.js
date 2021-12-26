@@ -498,6 +498,9 @@
       vertical-align: top;
       margin: 0 5px;
     }
+    .btns>button:hover{
+      transform: scale3d(1.1, 1.1, 1.1);
+    }
     .btns>button{
       cursor: pointer;
       background: #0075ff;
@@ -505,9 +508,11 @@
       border-radius: 5px;
       font-weight: bold;
       text-decoration: none;
-      padding: 7px 5px 5px 5px;
+      padding: 8px 5px 5px 5px;
       margin: 0px 10px 0 10px;
       border: 0;
+      transition: transform .3s ease 0s;
+      transform: scale3d(1, 1, 1);
     }`);
 
     btns.className="btns";
