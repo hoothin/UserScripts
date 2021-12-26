@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         RandomSexyPic
 // @namespace    hoothin
-// @version      1.0
+// @version      1.1
 // @description  Random Sexy Pictures
 // @author       hoothin
 // @match        https://api.lolicon.app/setu/v2*
@@ -28,7 +28,7 @@
             run:()=>{
                 var searchNum=getSearchParam("num");
                 var leftNum=searchNum;
-                if(jsonData){
+                if(jsonData != "Forbidden"){
                     let datas=jsonData.data;
                     datas.forEach(function(data){
                         leftNum--;
@@ -197,8 +197,19 @@
     if(!curConfig.run)curConfig=setuConfig[curConfig];
     document.title=curConfig.name;
     try{
-        jsonData=JSON.parse(document.body.innerText);
-    }catch{}
+        var firstText = "";
+        for (var i = 0; i < document.body.childNodes.length; i++) {
+            var curNode = document.body.childNodes[i];
+            if (curNode.nodeType == 1 || curNode.nodeName == "PRE") {
+                firstText = curNode.nodeValue || curNode.innerText;
+                break;
+            }
+        }
+        jsonData=JSON.parse(firstText);
+    }catch(e){
+        console.log(e);
+        jsonData = firstText;
+    }
     document.body.innerHTML="";
     var imgCon=document.createElement("div");
     var btns=document.createElement("div");
