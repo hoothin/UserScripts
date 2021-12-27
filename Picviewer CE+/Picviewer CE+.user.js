@@ -10060,7 +10060,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 if(target.nodeName == "AREA")target=target.parentNode;
                 var targetBg;
                 if(prefs.floatBar.listenBg && hasBg(target)){
-                    targetBg = unsafeWindow.getComputedStyle(target).backgroundImage.replace(/url\(["'](.*)["']\)/i,"$1");
+                    targetBg = unsafeWindow.getComputedStyle(target).backgroundImage.replace(/.*url\(["'](.*)["']\)/i,"$1");
                     var src=targetBg,nsrc=src,noActual=true,type="scale";
                     var img={src:src};
                     result = {
@@ -10077,7 +10077,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                         target=target.parentNode;
                     }else if(prefs.floatBar.listenBg && hasBg(target.parentNode)){
                         target=target.parentNode;
-                        targetBg=unsafeWindow.getComputedStyle(target).backgroundImage.replace(/url\(["'](.*)["']\)/i,"$1");
+                        targetBg=unsafeWindow.getComputedStyle(target).backgroundImage.replace(/.*url\(["'](.*)["']\)/i,"$1");
                         var src=targetBg,nsrc=src,noActual=true,type="scale";
                         var img={src:src};
                         result = {
