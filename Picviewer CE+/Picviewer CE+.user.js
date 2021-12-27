@@ -10054,13 +10054,13 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 if(node.nodeName == "HTML" || node.nodeName == "#document")
                     return false;
                 let nodeStyle = unsafeWindow.getComputedStyle(node);
-                return node && nodeStyle.backgroundImage && /^url/.test(nodeStyle.backgroundImage) && nodeStyle.backgroundImage.indexOf("about:blank") == -1 && parseFloat(nodeStyle.width) > prefs.floatBar.minSizeLimit.w && parseFloat(nodeStyle.height) > prefs.floatBar.minSizeLimit.h;
+                return node && nodeStyle.backgroundImage && /url\(/i.test(nodeStyle.backgroundImage) && nodeStyle.backgroundImage.indexOf("about:blank") == -1 && parseFloat(nodeStyle.width) > prefs.floatBar.minSizeLimit.w && parseFloat(nodeStyle.height) > prefs.floatBar.minSizeLimit.h;
             };
             if (target.nodeName != 'IMG'){
                 if(target.nodeName == "AREA")target=target.parentNode;
                 var targetBg;
                 if(prefs.floatBar.listenBg && hasBg(target)){
-                    targetBg = unsafeWindow.getComputedStyle(target).backgroundImage.replace(/url\(["'](.*)["']\)/,"$1");
+                    targetBg = unsafeWindow.getComputedStyle(target).backgroundImage.replace(/url\(["'](.*)["']\)/i,"$1");
                     var src=targetBg,nsrc=src,noActual=true,type="scale";
                     var img={src:src};
                     result = {
@@ -10077,7 +10077,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                         target=target.parentNode;
                     }else if(prefs.floatBar.listenBg && hasBg(target.parentNode)){
                         target=target.parentNode;
-                        targetBg=unsafeWindow.getComputedStyle(target).backgroundImage.replace(/url\(["'](.*)["']\)/,"$1");
+                        targetBg=unsafeWindow.getComputedStyle(target).backgroundImage.replace(/url\(["'](.*)["']\)/i,"$1");
                         var src=targetBg,nsrc=src,noActual=true,type="scale";
                         var img={src:src};
                         result = {
