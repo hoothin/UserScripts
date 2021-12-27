@@ -6078,7 +6078,8 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     left: 0;\
                     user-select: none;\
                     cursor: pointer;\
-                    display: table;\
+                    word-break: break-all;\
+                    display: inline;\
                     }\
                     .pv-gallery-maximize-container span:hover>p{\
                     opacity: 0.6;\
