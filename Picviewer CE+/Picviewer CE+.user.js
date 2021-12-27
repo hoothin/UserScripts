@@ -1187,7 +1187,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
             {name: '500px',
              url: /500px\./,
              getImage: function() {
-                 return this.src.replace(/w%3D\d+_h%3D\d+\/v2.*/,"m%3D2048_k%3D1_of%3D1/v2").replace(/^((?:(?:pp?cdn|s\\d\\.amazonaws\\.com\/photos|gp\\d+\\.wac\\.edgecastcdn\\.net\/806614\/photos\/photos)\\.500px|djlhggipcyllo\\.cloudfront)\\.(?:net|org)\/\\d+\/[\\da-f]{40}\/)\\d+\\./,"$12048.jpg");
+                 return this.src.replace(/\/w%3D\d+_h%3D\d+\/v2.*/,"/m%3D2048_k%3D1_of%3D1/v2").replace(/^((?:(?:pp?cdn|s\\d\\.amazonaws\\.com\/photos|gp\\d+\\.wac\\.edgecastcdn\\.net\/806614\/photos\/photos)\\.500px|djlhggipcyllo\\.cloudfront)\\.(?:net|org)\/\\d+\/[\\da-f]{40}\/)\\d+\\./,"$12048.jpg");
              }
             },
             {name: 'Nyaa',
@@ -9761,7 +9761,6 @@ Trace Moe | https://trace.moe/?url=#t#`;
             if(!src && imgPA){//链接可能是一张图片...
                 if(/\.(?:jpg|jpeg|png|gif|bmp)(\?[^\?]*)?$/i.test(iPASrc) && iPASrc!=img.src){
                     src=iPASrc;
-                    srcs=[imgSrc];
                 }
                 if(src)type='scale';
             }
@@ -9785,9 +9784,6 @@ Trace Moe | https://trace.moe/?url=#t#`;
             try{
                 //src=decodeURIComponent(src);
             }catch(e){}
-            if(!srcs && imgSrc!=src){
-                srcs=[imgSrc];
-            }
             var ret = {
                 src: src,                  // 得到的src
                 srcs: srcs,                // 多个 src，失败了会尝试下一个
@@ -10224,6 +10220,15 @@ Trace Moe | https://trace.moe/?url=#t#`;
             }
 
             if(result){
+                if(!result.noActual){
+                    if(!result.srcs){
+                        result.srcs=[result.imgSrc];
+                    }else{
+                        if(result.imgSrc && result.srcs.join(" ").indexOf(result.imgSrc)==-1){
+                            result.srcs.push(result.imgSrc);
+                        }
+                    }
+                }
                 if(!floatBar){
                     floatBar=new FloatBarC();
                 }
