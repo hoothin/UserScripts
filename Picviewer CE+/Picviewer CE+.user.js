@@ -6067,7 +6067,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     position: absolute;\
                     bottom: 0;\
                     width: 100%;\
-                    height: 30px;\
+                    height: 35px;\
                     max-height: 40%;\
                     font-size: 18px;\
                     line-height: 40px;\
