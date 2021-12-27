@@ -1187,7 +1187,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
             {name: '500px',
              url: /500px\./,
              getImage: function() {
-                 return this.src.replace(/h%3D\d+\/v2.*/,"m%3D2000/v2").replace(/^((?:(?:pp?cdn|s\\d\\.amazonaws\\.com\/photos|gp\\d+\\.wac\\.edgecastcdn\\.net\/806614\/photos\/photos)\\.500px|djlhggipcyllo\\.cloudfront)\\.(?:net|org)\/\\d+\/[\\da-f]{40}\/)\\d+\\./,"$12048.jpg");
+                 return this.src.replace(/w%3D\d+_h%3D\d+\/v2.*/,"m%3D2048_k%3D1_of%3D1/v2").replace(/^((?:(?:pp?cdn|s\\d\\.amazonaws\\.com\/photos|gp\\d+\\.wac\\.edgecastcdn\\.net\/806614\/photos\/photos)\\.500px|djlhggipcyllo\\.cloudfront)\\.(?:net|org)\/\\d+\/[\\da-f]{40}\/)\\d+\\./,"$12048.jpg");
              }
             },
             {name: 'Nyaa',
