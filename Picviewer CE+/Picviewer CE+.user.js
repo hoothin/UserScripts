@@ -6,7 +6,7 @@
 // @description     Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version         2021.12.26.1
+// @version         2021.12.27.1
 // @created         2011-6-15
 // @namespace       http://userscripts.org/users/NLF
 // @homepage        http://hoothin.com
@@ -1494,6 +1494,47 @@ Trace Moe | https://trace.moe/?url=#t#`;
              getImage: function() {
                  return this.src.replace("_t.",".");
              }
+            },
+            {name: "jianshu",
+             url: /jianshu\.com/,
+             getImage: function() {
+                 return this.src.replace(/(upload-images\.jianshu\.io\/.*)\?.*/,"$1");
+             }
+            },
+            {name: "artstation",
+             ext: 'next',
+             url: /artstation\.com/,
+             getImage: function() {
+                 return this.src.replace(/\/(\d{14}\/)?smaller_square\//,"/large/");
+             }
+            },
+            {name: "123rf",
+             url: /123rf\.com/,
+             getImage: function() {
+                 return this.src.replace(/us\.123rf\.com\/\d+wm\//,"previews.123rf.com/images/");
+             }
+            },
+            {name: "flickr",
+             url: /flickr\.com/,
+             ext: function(target){
+                 if(target.nodeName=="A" && target.className=="overlay" && target.parentNode && target.parentNode.parentNode && target.parentNode.parentNode.parentNode){
+                     return target.parentNode.parentNode.parentNode;
+                 }else if(target.nodeName=="DIV" && target.classList.contains("photo-notes-scrappy-view")){
+                     return target.previousElementSibling.querySelector(".main-photo");
+                 }else if(target.classList.contains("context-thumb")){
+                     return target;
+                 }
+                 return null;
+             },
+             getImage: function() {
+                 return this.src.replace(/_\w\./,"_c.");
+             }
+            },
+            {name: "wikiart",
+             url: /wikiart\.org/,
+             getImage: function() {
+                 return this.src.replace(/!.*/,"");
+             }
             }
         ];
 
@@ -1555,6 +1596,8 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     newsrc=oldsrc.replace(/h(\.[^\/]+)$/,"$1").replace(/maxwidth=\d+/i,"maxwidth=99999");
                 }else if(/pics\.dmm\.co\.jp/.test(oldsrc)){
                     newsrc=oldsrc.replace("ps.jpg","pl.jpg");
+                }else if(/\/w\/\d+\/h\/\d+($|\/|\?)/.test(oldsrc)){
+                    newsrc=oldsrc.replace(/\/w\/\d+\/h\/\d+/,"");
                 }
                 return oldsrc != newsrc ? newsrc : null;
             }
@@ -9608,7 +9651,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 srcs,  // 备用的大图地址
                 type,  // 类别
                 noActual = false, //没有原图
-                imgSrc = img.src||img.srcset,  // img 节点的 src
+                imgSrc = img.src||img.currentSrc,  // img 节点的 src
                 xhr,
                 description;  // 图片的注释
             var imgCStyle=unsafeWindow.getComputedStyle(img);
@@ -9648,7 +9691,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 } else {
                     try{
                         var newSrc=matchedRule.getImage.call(img,img,imgPA);
-                        if(imgSrc!=newSrc) src=newSrc;
+                        if(newSrc && imgSrc!=newSrc) src=newSrc;
                     }catch(err){
                         throwErrorInfo(err);
                     }
@@ -9706,6 +9749,11 @@ Trace Moe | https://trace.moe/?url=#t#`;
             }
             if(!src && img._lazyrias && img._lazyrias.srcset){
                 src=img._lazyrias.srcset[img._lazyrias.srcset.length-1];
+                if(src)type='tpRule';
+            }
+            if(!src && img.srcset){
+                var srcs=img.srcset.split(",");
+                src=srcs[srcs.length-1].trim().split(" ")[0];
                 if(src)type='tpRule';
             }
 
