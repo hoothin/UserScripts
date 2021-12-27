@@ -28,9 +28,9 @@
 // @contributionURL https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
 // @contributionAmount 1
 // @require         https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.2/FileSaver.min.js
-// @run-at          document-end
 // @include         http://*
 // @include         https://*
+// @include         ftp://*
 // @exclude         http://www.toodledo.com/tasks/*
 // @exclude         http*://maps.google.com*/*
 // @exclude         *://www.google.*/_/chrome/newtab*
