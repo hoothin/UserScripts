@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         RandomSexyPic
 // @namespace    hoothin
-// @version      1.3.7
+// @version      1.3.8
 // @description  Random Sexy Pictures
 // @author       hoothin
 // @include      https://api.lolicon.app/setu/v2*
@@ -13,7 +13,11 @@
 // @include      https://3650000.xyz/api/?*
 // @icon         data:image/jpg;base64,/9j/4AAQSkZJRgABAQEBLAEsAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBYQERMUFRUVDA8XGBYUGBIUFRT/2wBDAQMEBAUEBQkFBQkUDQsNFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBT/wAARCAAgACADASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAABgcICQX/xAAsEAABAwMEAQIFBQEAAAAAAAABAgMEBQYRAAcSITEIQRMUIjJRIyRCYYHB/8QAFgEBAQEAAAAAAAAAAAAAAAAABgQF/8QAIxEAAgEDBAEFAAAAAAAAAAAAAQMCABESBCFBUQUVMWHB8P/aAAwDAQACEQMRAD8AHNrPQdFYZlXBX6fJuRqns/NhptIUmSodhCG0nsdeCcqOAPOnVLvK3r227YVFjy6OEpLaWavEMKU2cY4utn7eseMjAHeq7vuaxtDs/VnaRSG6nIp9MffjwnMhD7jTKlpQsgZ7KcfnWQFv+sO6d0txKOxcFuw7ibqUpDUmPT4vwnWStQT+ksKJPHOfqB6Hf50Qd4vUOjlKWUj3x8Dik6PIJhO2Nojr7qo6fGtG1YUVNSrcJMl7PAzpjcZtPXkKUQCP+6CNz7Ttq+rdmP1iOKnDhq5iTBd5OMjoFbS0+evbvIGmfbm2dgVrcmq29W4MauJSwWYqpzaHUK4r+ocVAgE9eOzpmVnYaj2zt4qZQ4saOWnlhuBGYRHa+AnyPhoAGcknx3qD05qEiUY2MeR+vWgNeljTAm4l3T6vCDG3k2YffoFQfDdRhplQ5UNYK1j7hxPvyHX+6yhqm3tV2XuqrV2mJpLkpt1TiXFMltb5UMlOBnifOR1351f3owrEmgekbb52mKXVG2qU0ostjms9q5cO++8jGkp6lrQtLca6H7lp8gUCsrBcqESYSxyUPKig/wAseT76ZLcJQBB3omV4zsfapo2gq993nuhR6vUGl01EV/5pNOhO/uJCgfpSpRGG289n+vfV/wBs3LMNoNxn1olzo6HEvSgrkyHVrJWEqx2lOeIPvjU02Kzbe3VBkvPzIkl+SOSni5kke3+f1jXN3i9Vsdi2GqDakOUoBHFElCShAI8qB/GfbUmoeFrMb7mrFJLGAgbCv//Z
 // @grant        GM_addStyle
+// @grant        GM_setValue
+// @grant        GM_getValue
+// @grant        GM_deleteValue
 // @grant        GM_xmlhttpRequest
+// @grant        GM_registerMenuCommand
 // @run-at       document-idle
 // @license      MIT
 // ==/UserScript==
@@ -209,9 +213,73 @@
         "www.hlapi.cn":"buyersShow",
         "api.ghser.com":"buyersShow"
     };
+    GM_registerMenuCommand("Parse current api", customSet);
     var curConfig=setuConfig[document.domain],jsonData,hasFloatImg=false;
-    if(!curConfig.run)curConfig=setuConfig[curConfig];
-    document.title=curConfig.name;
+    if(!curConfig){
+        var customRule=GM_getValue("RSPrules_"+document.domain);
+        if(customRule){
+            curConfig={run:()=>{
+                var searchNum=getSearchParam("num");
+                var leftNum=searchNum;
+                r18Check.style.display=sfwCheck.style.display=r18CheckLabel.style.display=sfwCheckLabel.style.display="none";
+                let parsePics=(data)=>{
+                    let picUrls=[],urlReg=/(https?|ftp|file):\/\/[\-A-Za-z0-9\+&@#/%?=~_\|!:,\.;]+[\-A-Za-z0-9\+&@#/%=~_\|]/g;
+                    if(typeof data == "string"){
+                        picUrls=data.match(urlReg);
+                    }else{
+                        let checkJson=obj=>{
+                            for(let i in obj){
+                                if(typeof obj[i] == "string"){
+                                    let pics=obj[i].match(urlReg);
+                                    if(pics)picUrls=picUrls.concat(pics);
+                                }else checkJson(obj[i]);
+                            }
+                        };
+                        checkJson(data);
+                    }
+                    if(picUrls){
+                        picUrls.forEach(url=>{
+                            leftNum--;
+                            createImg(unescape(url));
+                        });
+                    }
+                }
+                parsePics(jsonData);
+                processByTime(leftNum,loadNum=>{
+                    GM_xmlhttpRequest({
+                        method: 'GET',
+                        url: location.href.replace(/num=\d+/,"num="+loadNum),
+                        timeout:15000,
+                        onload: function(result) {
+                            var parseData;
+                            try{
+                                parseData=JSON.parse(result.responseText);
+                            }catch(e){
+                                parseData=result.responseText;
+                            }
+                            parsePics(parseData);
+                        }
+                    });
+                },5,1000);
+            },
+            getSearch:(param)=>{
+                var href=location.href;
+                if(/\bnum=/.test(href)){
+                    href=href.replace(/\bnum=\d+/,"num="+param.num);
+                }else{
+                    href+=(href.indexOf("?")==-1?"?":"&")+"num="+param.num;
+                }
+                return href;
+            },
+            initSearch:()=>{
+                var searchNum=getSearchParam("num");
+                numInput.value=searchNum;
+            }};
+        }else return;
+    }else if(!curConfig.run){
+        curConfig=setuConfig[curConfig];
+        document.title=curConfig.name;
+    }
     try{
         var firstText = "";
         for (var i = 0; i < document.body.childNodes.length; i++) {
@@ -242,7 +310,7 @@
     var homepage=document.createElement("a");
     for(var name in setuConfig){
         var config=setuConfig[name];
-        if(!config.run)continue;
+        if(!config.name)continue;
         var siteA=document.createElement("a");
         var url=config.url;
         if(config.urls){
@@ -383,6 +451,15 @@
         }
     }
 
+    function customSet(){
+        if(window.confirm("Parse current api?")){
+            GM_setValue("RSPrules_"+document.domain, true);
+        }else{
+            GM_deleteValue("RSPrules_"+document.domain)
+        }
+        location.reload();
+    }
+
     GM_addStyle(`
     @media screen and (min-width: 1024px) {
       .img-con{
@@ -511,7 +588,7 @@
       vertical-align: top;
     }
     .btns>input[type=number]{
-      width: 50px;
+      width: 48px;
       height: 25px;
       border-radius: 3px 0 0 3px;
       -moz-border-radius: 3px 0 0 3px;
@@ -551,7 +628,7 @@
     homepage.href="https://sleazyfork.org/en/users/8227-hoothin";
     homepage.target="_blank";
     numInput.type="number";
-    numInput.title=numInput.placeholder="Number of sexy pictures";
+    numInput.title=numInput.placeholder="Num of sexy pictures";
     r18Check.type="checkbox";
     r18Check.id="r18Check";
     r18CheckLabel.innerHTML="R18 ";
