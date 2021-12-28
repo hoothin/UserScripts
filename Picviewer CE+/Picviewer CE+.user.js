@@ -9165,10 +9165,10 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     this.buttons['magnifier'].style.display='none';
                 }
                 if (this.data.img.nodeName != 'IMG') {
-                    this.buttons['gallery'].style.display = 'none';
+                    //this.buttons['gallery'].style.display = 'none';
                     //this.buttons['current'].style.display = 'none';
                 } else {
-                    this.buttons['gallery'].style.removeProperty('display');
+                    //this.buttons['gallery'].style.removeProperty('display');
                     //this.buttons['current'].style.removeProperty('display');
                 }
             },
