@@ -5413,7 +5413,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 var bgReg=/.*url\(\s*["']?(.+?)["']?\s*\)/i;
                 var bgImgs=Array.from(document.querySelectorAll('*'))
                     .reduce((total, node) => {
-                        if(!node.className || !node.className.indexOf || node.className.indexOf("pv-")==-1){
+                        if(!node.src && (!node.className || !node.className.indexOf || node.className.indexOf("pv-")==-1)){
                             let prop = unsafeWindow.getComputedStyle(node).backgroundImage;
                             let match = bgReg.exec(prop)
                             if (match) {
