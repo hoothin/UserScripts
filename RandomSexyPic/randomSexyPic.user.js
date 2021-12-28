@@ -1,14 +1,14 @@
 // ==UserScript==
-// @name         RandomSexyPic
-// @name:zh-CN   RandomSexyPic
-// @name:zh-TW   RandomSexyPic
-// @name:ja      RandomSexyPic
+// @name         RandomSexyPicParser
+// @name:zh-CN   软瑟盘
+// @name:zh-TW   軟瑟盤
+// @name:ja      RandomSexyPicParser
 // @namespace    hoothin
 // @version      1.3.8
-// @description        Random Sexy Pictures
-// @description:zh-CN  Random Sexy Pictures
-// @description:zh-TW  Random Sexy Pictures
-// @description:ja     Random Sexy Pictures
+// @description        Random Sexy Pictures Parser
+// @description:zh-CN  随机色图
+// @description:zh-TW  隨機色圖
+// @description:ja     Random Sexy Pictures Parser
 // @author       hoothin
 // @include      https://api.lolicon.app/setu/v2*
 // @include      https://api.nyan.xyz/httpapi/sexphoto*
