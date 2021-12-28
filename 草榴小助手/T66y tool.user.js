@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         草榴小助手
 // @namespace    hoothin
-// @version      0.5
-// @description  提供“加亮今日帖子”、“移除viidii跳转”、“图片自动缩放”、“种子链接转磁力链”、“预览整页图片”、“游客站内搜索”、“返回顶部”等功能！
+// @version      0.6
+// @description  草榴小助手修复，提供“加亮今日帖子”、“移除viidii跳转”、“图片自动缩放”、“种子链接转磁力链”、“预览整页图片”、“游客站内搜索”、“返回顶部”等功能！
 // @author       NewType & hoothin
 // @match        *://*.t66y.com/*
 // @run-at       document-end
@@ -112,19 +112,24 @@
                 var newHref = href.replace('http://www.viidii.com/?', '').replace('http://www.viidii.info/?', '').replace(/______/g, '.').replace(/&z/g, '');
                 $(this).attr('href', newHref);
             });
+            $("a[href*=\'.redircdn.\']").each(function() {
+                var href = $(this).attr('href');
+                var newHref = href.replace('https://to.redircdn.com/?', '').replace(/______/g, '.').replace(/&z/g, '');
+                $(this).attr('href', newHref);
+            });
 
             // 种子链接转磁力链
-			var torLink = $("a[href*=\'?hash\=\']");
-			if( torLink.length > 0 ){
-				var tmpNode = '<summary>本页共有 ' + torLink.length + ' 个磁力链！</summary>';
-				torLink.each(function() {
-					var torrent = $(this).attr('href');
-					var hash = helper.hash(torrent);
-					var magnet = 'magnet:?xt=urn:btih:' + hash;
-					tmpNode += '<p><a target="_blank" href="' + magnet + '">【 磁力链:　' + magnet + ' 】</a>　　<a target="_blank" href="' + torrent + '">【 下载种子 】</a>　　<a target="_blank" href="http://apiv.ga/magnet/' + hash + '">【 九秒磁力云播 】</a></p>';
-				});
-				$('body').append('<div style="position:fixed;top:0px;background:#def7d4;width:100%;padding:4px;text-align:center;"><details>' + tmpNode + '</details></div>');
-			}
+            var torLink = $("a[href*=\'?hash\=\']");
+            if( torLink.length > 0 ){
+                var tmpNode = '<summary>本页共有 ' + torLink.length + ' 个磁力链！</summary>';
+                torLink.each(function() {
+                    var torrent = $(this).attr('href');
+                    var hash = helper.hash(torrent);
+                    var magnet = 'magnet:?xt=urn:btih:' + hash;
+                    tmpNode += '<p><a target="_blank" href="' + magnet + '">【 磁力链:　' + magnet + ' 】</a>　　<a target="_blank" href="' + torrent + '">【 下载种子 】</a>　　<a target="_blank" href="http://apiv.ga/magnet/' + hash + '">【 九秒磁力云播 】</a></p>';
+                });
+                $('body').append('<div style="position:fixed;top:0px;background:#def7d4;width:100%;padding:4px;text-align:center;"><details>' + tmpNode + '</details></div>');
+            }
         }
 
         /*-------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -148,13 +153,13 @@
 
             helper.addCss('.viewer{position:fixed; top:7px; right:7px; cursor:pointer;}');
             helper.addScript('function Viewer(){ $("#lightgallery").lightGallery(); $("div#viewer,div#main,div#footer").fadeToggle(300); }');
-            $('body').append('<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAAB4CAMAAAAOusbgAAAAS1BMVEUAAAAAAALX19fCwsPOzs6urq9FRUZUVFSdnZ4iIiO6uroTExOWlpZ9fX5oaGguLi6lpaU0NDSMjI2CgoJra2thYWELCwt0dHQ8PD3knOIqAAAAAXRSTlMAQObYZgAAAo1JREFUaN7t24uOojAAheFzoOUmd0V9/yfdTHY3DQOVYjh0MvF7gV9aCzUWfESRiGGNabILxS5ZYzCX5DxJPrvumicaXbflqVr8c+MGUbnm6WoASBhB4hlouRsARgFYRmHRMIoGGaPIcGcUdzCST9jnE/6EyWuKL2Ys6XV8+F7AqQauUYRzzF25pAg3+K7ngiB8w1LBOUU4w5qJM4qwwSrOCMIT1o10JOEUHnc6ijB8Mm14AjbHWhK+wsfSEYRr+KR0BOEiJPyrhrqFT83/ftdyooHHhY4i/MC6go4kzCTggiXhHGsenFGEOWKp4gbwAHVAVxLmI+SLpdneVnDMk9vAg5SFwZekz7hhZ3i6lVvtbuhKOoeEy8B9Oo8OA8uyPuwWTE4/RbgM2C1LwoVbKvRRhLuAx7sk3MPxTbMiPGCm4wpJuIfjm2ZFuAvYW0jCPb67cUEQLrE0cE4S7rGUcE4RvgCbOxtJ2GJVQzqK8AUeHR1FuMf2DwVFuITjm2ZJ2MLH7QoU4Q4Li8eFJGzh+KZZER7wmiEpCVtsKEhFOMOmVhK22FZyxVTYpns/nCFAwoWnwZfH2+EKIQrv5328GX4iTOtdCcN74QqBOt891rwVHhAq8d7qinfCKYJZ7/Tk+8MDdhi962B/uMIefen5G8juDT+xU1X3CVZMO8MVjrIvnOEw6a5wiuM8doQzHGkID6c4UhIcznGsIjSc4mBTWDjH4cLCBoezIeEcAm1A2EDhvhnOIWE2wwYa141wB5XydXiEin0d7iFzeRnO4aEOs4LIlTPLBTbZVMDmnLlHOxAa7QhsvEO/YBTRDnZHO8oe8/A+0PJkbewXNICRJxoBx+Q8SW5+xmtHfyVi+IjhD9b+NQukWJmNAAAAAElFTkSuQmCC" class="viewer" onclick="Viewer()" title="预览整页图片">');
+            $('body').append(`<svg class="viewer" onmousedown="this.style.opacity=0;" onclick="Viewer();this.style.opacity=1;" title="预览整页图片" style="width: 50px;height: 50px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1152 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6334"><path d="M871.125 433.75a119.85 119.85 0 1 0 0-239.66 119.85 119.85 0 0 0 0 239.66z m209.622-399.318H102.272c-38.955 0-69.93 31.701-69.93 70.656v817.067c0 38.954 30.975 70.656 69.93 70.656h978.475c38.954 0 69.93-31.702 69.93-70.656V105.088c0-38.955-30.976-70.656-69.93-70.656z m-257.28 493.44a42.837 42.837 0 0 0-31.958-15.488c-12.714 0-21.674 5.973-31.957 14.208l-46.677 39.467c-9.728 6.997-17.494 11.733-28.672 11.733a41.301 41.301 0 0 1-27.478-10.24 338.09 338.09 0 0 1-10.752-10.24L511.701 412.075a55.04 55.04 0 0 0-41.685-18.774c-16.725 0-32.213 8.278-41.941 19.499L112.213 793.643V143.53c2.475-16.982 15.702-29.227 32.683-29.227h892.928c17.237 0 31.19 12.757 32.213 29.952l0.726 649.899L823.38 527.872z" p-id="6335"></path></svg>`);
         }
 
         /*-------------------------------------------------------------------------------------------------------------------------------------------*/
 
         // 返回顶部
-        $('body').append('<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAA6CAMAAADBRyrTAAAAilBMVEUAAAAvLy8CAgIwMDAwMDAnJycICAglJSUqKiotLS0CAgIjIyMoKCgqKiohISEsLCwgICAdHR0pKSkeHh4xMTEyMjIfHx8zMzMCAgIuLi4pKSkzMzMwMDAaGhoXFxcUFBQPDw8MDAwHBwcdHR0jIyMmJiYJCQkEBAQfHx8BAQEpKSksLCwREREAAABcq+4VAAAAHHRSTlMA1O9W+08f79+fn39vLw/v7+/Pr39fXz8vDw9/wCn67QAAAPlJREFUSMfF0FcWgjAURdGXSFGw94JdLETnPz1dWIKU5KLLuP3NMbnQJyrMCgAWqzzOB7B7wfCAxYGFB1bpG0pvKP2V/mk0G1EZg9ubB4Trxyv7hKoFdzWCTJh4YhPgfKN6OxnEPyGqDdKxWyKpZZNaXaTV1XOjLMX0aTfK050Wzo3yFUy33bCIa+fNDVWy0/1QzU+/Z6fz/qqmqw3c5tuDdnp+8oL2Ua+duGJ4RAxl0NsiejLoQEFHBlsMPTlzDL38PlhgTAZLjMngjJHBCmMyWGNMBnvMF8EGYzLgBwSXgQcFngwcftLjDkljfcHHlOR4/KLCvcf/XwGr6PAF6bw0ygAAAABJRU5ErkJggg==" onclick="$(document.body).animate({scrollTop:0},300);$(document.documentElement).animate({scrollTop:0},300);" style="position:fixed; bottom:20px; right:10px; cursor:pointer;}" title="返回顶部">');
+        $('body').append('<svg class="icon" onclick="$(document.body).animate({scrollTop:0},300);$(document.documentElement).animate({scrollTop:0},300);" title="返回顶部" style="position:fixed; bottom:20px; right:10px; cursor:pointer; width: 50px;height: 50px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6473"><path d="M256 170.666667h512v85.333333H256z m213.333333 426.666666v256h85.333334v-256h213.333333l-256-256-256 256z" p-id="6474"></path></svg>');
 
         /*-------------------------------------------------------------------------------------------------------------------------------------------*/
 
