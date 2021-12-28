@@ -1,8 +1,14 @@
 // ==UserScript==
 // @name         RandomSexyPic
+// @name:zh-CN   RandomSexyPic
+// @name:zh-TW   RandomSexyPic
+// @name:ja      RandomSexyPic
 // @namespace    hoothin
 // @version      1.3.8
-// @description  Random Sexy Pictures
+// @description        Random Sexy Pictures
+// @description:zh-CN  Random Sexy Pictures
+// @description:zh-TW  Random Sexy Pictures
+// @description:ja     Random Sexy Pictures
 // @author       hoothin
 // @include      https://api.lolicon.app/setu/v2*
 // @include      https://api.nyan.xyz/httpapi/sexphoto*
