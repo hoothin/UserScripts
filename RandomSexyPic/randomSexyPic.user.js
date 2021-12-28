@@ -280,8 +280,8 @@
         }else return;
     }else if(!curConfig.run){
         curConfig=setuConfig[curConfig];
-        document.title=curConfig.name;
     }
+    document.title=curConfig.name?curConfig.name:"Random Sexy Pictures";
     try{
         var firstText = "";
         for (var i = 0; i < document.body.childNodes.length; i++) {
