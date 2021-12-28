@@ -4745,12 +4745,14 @@ Trace Moe | https://trace.moe/?url=#t#`;
 
                 this.thumbScrollbar.reset();
 
-                for(var j in this.imgSpans){
-                    if (!this.imgSpans.hasOwnProperty(j)) continue;
-                    var curSpan=this.imgSpans[j];
-                    if(curSpan.style.display!="none"){
-                        this.select(curSpan, true);
-                        return;
+                if(this.imgSpans[index].style.display=="none"){
+                    for(var j in this.imgSpans){
+                        if (!this.imgSpans.hasOwnProperty(j)) continue;
+                        var curSpan=this.imgSpans[j];
+                        if(curSpan.style.display!="none"){
+                            this.select(curSpan, true);
+                            return;
+                        }
                     }
                 }
                 this.select(this.imgSpans[index], true);
