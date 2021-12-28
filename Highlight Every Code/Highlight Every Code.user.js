@@ -3,7 +3,7 @@
 // @name:zh-CN   代码片段高亮
 // @name:zh-TW   程式碼片斷高亮
 // @namespace    hoothin
-// @version      1.7
+// @version      1.8
 // @description  Add a icon to popup a window that allows syntax highlighting and beautify and word count of source code snippets on current page
 // @description:zh-CN 选择代码片段后点击图标弹出新窗口显示语法高亮美化与格式化后的代码与字数统计
 // @description:zh-TW 選擇程式碼片段後點選圖示彈出新視窗顯示語法高亮美化與格式化後的程式碼與字數統計
@@ -28,6 +28,7 @@
     codeIcon.onmousedown=function(){
         if(customInput){
             selStr=prompt("Input code here","");
+            if(!selStr)return;
             codes=selStr.replace(/&/g, "&amp;").replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
         }
         let html='<title>Code Snippet</title>'+
@@ -66,28 +67,28 @@
     });
     document.addEventListener('mouseup', function(o) {
         if (o.button === 0 && (o.ctrlKey || o.altKey || o.metaKey || o.shiftKey)) {
-            var customInputKey=(o.ctrlKey && o.shiftKey);
+            //var customInputKey=(o.ctrlKey && o.shiftKey);
             setTimeout(function(){
                 selStr=document.getSelection().toString();
                 codes=selStr.replace(/&/g, "&amp;").replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
-                if(!codes && customInputKey){
+                if(!codes){
                     customInput=true;
                 }
-                if(codes || customInputKey){
-                    document.body.appendChild(codeIcon);
-                    let pos=getMousePos(o);
-                    let left, top;
-                    if(isChrome){
-                        top=pos.y>document.documentElement.clientHeight-50?(pos.y-30):(pos.y+20);
-                        left=pos.x>document.documentElement.clientWidth-50?(pos.x-30):(pos.x+20);
-                    }else{
-                        top=pos.y-30;
-                        left=pos.x+15;
-                    }
-                    codeIcon.style.opacity=0.9;
-                    codeIcon.style.top=top+"px";
-                    codeIcon.style.left=left+"px";
+                //if(codes || customInputKey){
+                document.body.appendChild(codeIcon);
+                let pos=getMousePos(o);
+                let left, top;
+                if(isChrome){
+                    top=pos.y>document.documentElement.clientHeight-50?(pos.y-30):(pos.y+20);
+                    left=pos.x>document.documentElement.clientWidth-50?(pos.x-30):(pos.x+20);
+                }else{
+                    top=pos.y-30;
+                    left=pos.x+15;
                 }
+                codeIcon.style.opacity=0.9;
+                codeIcon.style.top=top+"px";
+                codeIcon.style.left=left+"px";
+                //}
             },1);
         }
     },false);
