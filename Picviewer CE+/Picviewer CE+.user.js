@@ -6,7 +6,7 @@
 // @description     Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version         2021.12.27.1
+// @version         2021.12.28.1
 // @created         2011-6-15
 // @namespace       http://userscripts.org/users/NLF
 // @homepage        http://hoothin.com
@@ -5410,6 +5410,20 @@ Trace Moe | https://trace.moe/?url=#t#`;
                             console.log(e.toString());
                         }
                 });
+                var bgReg=/.*url\(\s*["']?(.+?)["']?\s*\)/i;
+                var bgImgs=Array.from(document.querySelectorAll('*'))
+                    .reduce((total, node) => {
+                        if(!node.className || !node.className.indexOf || node.className.indexOf("pv-")==-1){
+                            let prop = unsafeWindow.getComputedStyle(node).backgroundImage;
+                            let match = bgReg.exec(prop)
+                            if (match) {
+                                node.src=match[1];
+                                total.push(node);
+                            }
+                        }
+                        return total;
+                }, []);
+                if(bgImgs)imgs=imgs.concat(bgImgs);
                 // 排除库里面的图片
                 imgs = imgs.filter(function(img){
                     return !(container.contains(img) || (preloadContainer&&preloadContainer.contains(img)));
@@ -5418,7 +5432,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 // 已经在图库里面的
                 var self = this;
                 imgs.forEach(function(img) {
-                    if(!img.getAttribute("src")) return;
+                    if(!img.src) return;
                     if (newer && self._dataCache[img.src]) return;
 
                     var result = findPic(img);
@@ -8861,7 +8875,11 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 var buttonType=this.buttonType;
 
                 if(buttonType=='gallery'){
-                    var allData=this.getAllValidImgs();
+                    if(!gallery){
+                        gallery=new GalleryC();
+                        gallery.data=[];
+                    }
+                    var allData=gallery.getAllValidImgs();
                     allData.target=this.data;
                     this.data=allData;
                 };
@@ -8923,27 +8941,6 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 };
 
 
-            },
-            getAllValidImgs:function(){
-                var doc=window.parent==window?document:window.parent.document;
-                var validImgs=[],imgsHandle=function(imgs){
-                    arrayFn.forEach.call(imgs,function(img,index,imgs){
-                        var result=findPic(img);
-                        if(result){
-                            validImgs.push(result);
-                        };
-                    });
-                };
-                imgsHandle(doc.getElementsByTagName('img'));
-                arrayFn.forEach.call(doc.querySelectorAll("iframe"),function(iframe){
-                    if(iframe.src && iframe.src.replace(/\/[^\/]*$/,"").indexOf(location.hostname)!=-1)
-                        try{
-                            imgsHandle(iframe.contentWindow.document.getElementsByTagName('img'));
-                        }catch(e){
-                            console.log(e.toString());
-                        }
-                });
-                return validImgs;
             },
             open:function(){
                 switch(this.buttonType){
@@ -9661,30 +9658,9 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 w: parseFloat(imgCStyle.width),
             };
             var imgAS={//实际尺寸。
-                h:img.naturalHeight,
-                w:img.naturalWidth,
+                h:img.naturalHeight||imgCS.h,
+                w:img.naturalWidth||imgCS.w,
             };
-            if(!(imgAS.w==imgCS.w && imgAS.h==imgCS.h)){//如果不是两者完全相等,那么被缩放了.
-                if(prefs.floatBar.sizeLimitOr){
-                    if(imgCS.h <= prefs.floatBar.minSizeLimit.h && imgCS.w <= prefs.floatBar.minSizeLimit.w){//最小限定判断.
-                        return;
-                    }
-                }else{
-                    if(imgCS.h <= prefs.floatBar.minSizeLimit.h || imgCS.w <= prefs.floatBar.minSizeLimit.w){//最小限定判断.
-                        return;
-                    }
-                }
-            }else{
-                if(prefs.floatBar.sizeLimitOr){
-                    if(imgCS.w <= prefs.floatBar.forceShow.size.w && imgCS.h <= prefs.floatBar.forceShow.size.h){
-                        return;
-                    }
-                }else{
-                    if(imgCS.w <= prefs.floatBar.forceShow.size.w || imgCS.h <= prefs.floatBar.forceShow.size.h){
-                        return;
-                    }
-                }
-            }
             if(!src && matchedRule && !base64Img){// 通过高级规则获取.
                 // 排除
                 if (matchedRule.exclude && matchedRule.exclude.test(imgSrc)) {
@@ -9792,6 +9768,8 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 iPASrc: iPASrc,            // 图片的第一个父a元素的链接地址
                 sizeH:imgAS.h,
                 sizeW:imgAS.w,
+                imgCS:imgCS,
+                imgAS:imgAS,
 
                 noActual:noActual,
                 xhr: xhr,
@@ -10020,7 +9998,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
 
             var target = e.target;
 
-            if (!target || target.id=="pv-float-bar-container" || (target.className && (target.className.indexOf('pv-') != -1 || target.classList.contains("ks-imagezoom-lens")))) {
+            if (!target || target.id=="pv-float-bar-container" || (target.className && target.className.indexOf && (target.className.indexOf('pv-') != -1 || target.classList.contains("ks-imagezoom-lens")))) {
                 return;
             }
 
@@ -10059,8 +10037,9 @@ Trace Moe | https://trace.moe/?url=#t#`;
             if (target.nodeName != 'IMG'){
                 if(target.nodeName == "AREA")target=target.parentNode;
                 var targetBg;
+                var bgReg=/.*url\(\s*["']?(.+?)["']?\s*\)/i;
                 if(prefs.floatBar.listenBg && hasBg(target)){
-                    targetBg = unsafeWindow.getComputedStyle(target).backgroundImage.replace(/.*url\(["'](.*)["']\)/i,"$1");
+                    targetBg = unsafeWindow.getComputedStyle(target).backgroundImage.replace(bgReg,"$1");
                     var src=targetBg,nsrc=src,noActual=true,type="scale";
                     var img={src:src};
                     result = {
@@ -10077,7 +10056,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                         target=target.parentNode;
                     }else if(prefs.floatBar.listenBg && hasBg(target.parentNode)){
                         target=target.parentNode;
-                        targetBg=unsafeWindow.getComputedStyle(target).backgroundImage.replace(/.*url\(["'](.*)["']\)/i,"$1");
+                        targetBg=unsafeWindow.getComputedStyle(target).backgroundImage.replace(bgReg,"$1");
                         var src=targetBg,nsrc=src,noActual=true,type="scale";
                         var img={src:src};
                         result = {
@@ -10217,6 +10196,27 @@ Trace Moe | https://trace.moe/?url=#t#`;
 
             if (!result) {
                 result = findPic(target);
+                if(!(result.imgAS.w==result.imgCS.w && result.imgAS.h==result.imgCS.h)){//如果不是两者完全相等,那么被缩放了.
+                    if(prefs.floatBar.sizeLimitOr){
+                        if(result.imgCS.h <= prefs.floatBar.minSizeLimit.h && result.imgCS.w <= prefs.floatBar.minSizeLimit.w){//最小限定判断.
+                            return;
+                        }
+                    }else{
+                        if(result.imgCS.h <= prefs.floatBar.minSizeLimit.h || result.imgCS.w <= prefs.floatBar.minSizeLimit.w){//最小限定判断.
+                            return;
+                        }
+                    }
+                }else{
+                    if(prefs.floatBar.sizeLimitOr){
+                        if(result.imgCS.w <= prefs.floatBar.forceShow.size.w && result.imgCS.h <= prefs.floatBar.forceShow.size.h){
+                            return;
+                        }
+                    }else{
+                        if(result.imgCS.w <= prefs.floatBar.forceShow.size.w || result.imgCS.h <= prefs.floatBar.forceShow.size.h){
+                            return;
+                        }
+                    }
+                }
             }
 
             if(result){
@@ -10265,8 +10265,8 @@ Trace Moe | https://trace.moe/?url=#t#`;
         function openGallery(){
             if(!gallery){
                 gallery=new GalleryC();
+                gallery.data=[];
             }
-            gallery.data=[];
             var allData=gallery.getAllValidImgs();
             if(allData.length<1)return true;
             gallery.data=allData;
