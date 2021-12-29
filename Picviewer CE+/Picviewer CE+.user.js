@@ -6,7 +6,7 @@
 // @description     Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version         2021.12.28.2
+// @version         2021.12.29.1
 // @created         2011-6-15
 // @namespace       http://userscripts.org/users/NLF
 // @homepage        http://hoothin.com
@@ -982,7 +982,38 @@ Trace Moe | https://trace.moe/?url=#t#`;
              enabled:true,
              url:/^https?:\/\/[^.]*\.deviantart\.com/i,
              getImage:function(img, a){
-                 return this.src.replace(/\/v1\/.*?token/,"?token");
+                 let id;
+                 if(img.parentNode?.parentNode?.dataset.hook=="deviation_link"){
+                     id=img.parentNode.parentNode.href.replace(/.*?(\d+)$/,"$1");
+                 }else if(img.parentNode?.parentNode?.parentNode?.dataset.hook=="deviation_link"){
+                     id=img.parentNode.parentNode.parentNode.href.replace(/.*?(\d+)$/,"$1");
+                 }
+                 if(/\?token/.test(img.src)){
+                     if(!img.dataset.pvsrc && id){
+                         img.dataset.pvsrc="t";
+                         GM_xmlhttpRequest({
+                             method: 'get',
+                             responseType: "json",
+                             url: `/_napi/shared_api/deviation/extended_fetch?deviationid=${id}&type=art&include_session=false`,
+                             onload: function(d) {
+                                 var media = d?.response?.deviation?.media
+                                 var fullview = media?.types.pop();
+                                 if(media?.baseUri && fullview && media.token){
+                                     var resultUrl=media.baseUri+(fullview.c?"/"+fullview.c.replace("<prettyName>",media.prettyName).replace(/,q_\d+/,",q_100"):"")+"?token="+media.token[0];
+                                     img.dataset.pvsrc=resultUrl;
+                                     if(!floatBar){
+                                         floatBar=new FloatBarC();
+                                     }
+                                     floatBar.update(img, img.dataset.pvsrc);
+                                 }
+                             }
+                         });
+                     }else if(img.dataset.pvsrc!="t" && id){
+                         return img.dataset.pvsrc;
+                     }
+                     //return this.src.replace(/\/v1\/.*\?token/,"?token");
+                 }
+                 return null;
                  /*var oldsrc=this.src;
                  var newsrc;
                  if(this.parentNode && this.parentNode.parentNode && this.parentNode.parentNode.parentNode && this.parentNode.parentNode.parentNode.dataset && this.parentNode.parentNode.parentNode.dataset.superFullImg){
@@ -4243,6 +4274,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 var canvas = document.createElement('CANVAS');
                 var ctx = canvas.getContext('2d');
                 var img = new Image();
+                img.setAttribute("crossOrigin","anonymous");
                 img.onload = function(){
                     canvas.width = img.width;
                     canvas.height = img.height;
@@ -9285,21 +9317,31 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 };
                 new LoadingAnimC(this.data, buttonType, waitImgLoad, openInTopWindow);
             },
+            update:function(img,src){
+                if(this.data.img==img && this.data.imgSrc!=src){
+                    this.data.src=src;
+                    this.data.noActual=false;
+                    this.data.type="rule";
+                    if(this.shown){
+                        this.setButton();
+                    }
+                }
+            }
         };
 
         /**
         * 提取自 Mouseover Popup Image Viewer 脚本，用于 xhr 方式的获取
         */
-            var xhrLoad = function() {
+        var xhrLoad = function() {
             var _ = {};
 
             var caches = {};
             var handleError;
 
             /**
-     * @param  q  图片的选择器或函数
-     * @param  c  图片说明的选择器或函数
-     */
+            * @param  q  图片的选择器或函数
+            * @param  c  图片说明的选择器或函数
+            */
             function parsePage(url, q, c, post, cb) {
                 downloadPage(url, post, function(html) {
                     var iurl, iurls = [], cap, doc = createDoc(html);
