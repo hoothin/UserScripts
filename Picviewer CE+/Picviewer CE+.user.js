@@ -1001,10 +1001,9 @@ Trace Moe | https://trace.moe/?url=#t#`;
                                  if(media?.baseUri && fullview && media.token){
                                      var resultUrl=media.baseUri+(fullview.c?"/"+fullview.c.replace("<prettyName>",media.prettyName).replace(/,q_\d+/,",q_100"):"")+"?token="+media.token[0];
                                      img.dataset.pvsrc=resultUrl;
-                                     if(!floatBar){
-                                         floatBar=new FloatBarC();
+                                     if(floatBar){
+                                         floatBar.update(img, img.dataset.pvsrc);
                                      }
-                                     floatBar.update(img, img.dataset.pvsrc);
                                  }
                              }
                          });
