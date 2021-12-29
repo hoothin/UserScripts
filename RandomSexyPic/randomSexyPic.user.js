@@ -4,7 +4,7 @@
 // @name:zh-TW   軟瑟盤
 // @name:ja      RandomSexyPicParser
 // @namespace    hoothin
-// @version      1.3.8
+// @version      1.3.9
 // @description        Random Sexy Pictures Parser
 // @description:zh-CN  随机色图
 // @description:zh-TW  隨機色圖
@@ -388,6 +388,9 @@
 
     function createImg(url){
         let img=document.createElement("img");
+        img.onerror=e=>{
+            img.style.display="none";
+        };
         img.src=url;
         img.className="list-show";
         img.style.width="100%";
