@@ -4,7 +4,7 @@
 // @name:zh-TW   軟瑟盤
 // @name:ja      RandomSexyPicParser
 // @namespace    hoothin
-// @version      1.3.9
+// @version      1.3.10
 // @description        Random Sexy Pictures Parser
 // @description:zh-CN  随机色图
 // @description:zh-TW  隨機色圖
@@ -222,7 +222,7 @@
         "api.ghser.com":"buyersShow"
     };
     GM_registerMenuCommand("Parse current api", customSet);
-    var curConfig=setuConfig[document.domain],jsonData,hasFloatImg=false;
+    var curConfig=setuConfig[document.domain],jsonData,hasFloatImg=false,grabed=false,oClient;
     if(!curConfig){
         var customRule=GM_getValue("RSPrules_"+document.domain);
         if(customRule){
@@ -370,6 +370,38 @@
         }
     };
 
+    function mousedownHandler(e){
+        let img=e.target;
+        img.addEventListener("mouseup",mouseupHandler);
+        img.addEventListener("mousemove",mousemoveHandler);
+        img.style.cursor="grabbing";
+        oClient={
+            x:window.scrollX+e.clientX,
+            y:window.scrollY+e.clientY,
+        };
+        e.stopPropagation();
+        e.preventDefault();
+        e.returnValue=false;
+    }
+    function mousemoveHandler(e){
+        let img=e.target;
+        grabed=true;
+        window.scrollTo(oClient.x-e.clientX, oClient.y-e.clientY);
+    }
+    function mouseupHandler(e){
+        let img=e.target;
+        img.removeEventListener("mouseup",mouseupHandler);
+        img.removeEventListener("mousemove",mousemoveHandler);
+        img.style.cursor="grab";
+    }
+    function grabHandler(img,add){
+        if(add){
+            img.addEventListener("mousedown",mousedownHandler);
+        }else{
+            img.removeEventListener("mousedown",mousedownHandler);
+        }
+    }
+
     function restoreImg(img){
         hasFloatImg=false;
         img.style.zIndex=0;
@@ -383,6 +415,8 @@
         overMask.style.display="none";
         overMask.style.opacity=0;
         img.className="list-show";
+        grabHandler(img,false);
+        img.style.cursor="";
         img.scrollIntoView();
     }
 
@@ -395,6 +429,10 @@
         img.className="list-show";
         img.style.width="100%";
         img.onclick=()=>{
+            if(grabed){
+                grabed=false;
+                return;
+            }
             window.scrollTo(0,0);
             if(img.style.zIndex==2){
                 restoreImg(img);
@@ -404,9 +442,11 @@
                 img.style.maxWidth="";
                 img.style.maxHeight="";
                 img.style.zIndex=2;
+                img.style.cursor="grab";
+                grabHandler(img,true);
                 document.body.style.overflow="";
-                imgCon.style.maxHeight="100vh";
                 imgCon.style.maxWidth="100vw";
+                imgCon.style.maxHeight="100vh";
             }else{
                 if(hasFloatImg)return;
                 hasFloatImg=img;
