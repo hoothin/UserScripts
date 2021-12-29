@@ -6,7 +6,7 @@
 // @description     Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version         2021.12.29.1
+// @version         2021.12.29.2
 // @created         2011-6-15
 // @namespace       http://userscripts.org/users/NLF
 // @homepage        http://hoothin.com
@@ -28,6 +28,7 @@
 // @contributionURL https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
 // @contributionAmount 1
 // @require         https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.2/FileSaver.min.js
+// @require         https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.js
 // @include         http://*
 // @include         https://*
 // @include         ftp://*
@@ -199,6 +200,7 @@
                 galleryAutoLoad:"自动加载更多图片",
                 galleryLoadAll:"加载更多图片时自动处理全部页",
                 galleryLoadAllTip:"若页数过多可能影响体验",
+                galleryDownloadWithZip:"下载所有时打包成zip",
                 galleryScaleSmallSize1:"实际尺寸的高和宽都小于 ",
                 galleryScaleSmallSize2:" 像素则归入小尺寸图片",
                 galleryShowSmallSize:"默认显示小尺寸图片",
@@ -406,6 +408,7 @@
                 galleryAutoLoad:"自動載入更多圖片",
                 galleryLoadAll:"載入更多圖片時自動處理全部頁",
                 galleryLoadAllTip:"若頁數過多可能影響體驗",
+                galleryDownloadWithZip:"下載所有時打包成zip",
                 galleryScaleSmallSize1:"實際尺寸的高和寬都小於 ",
                 galleryScaleSmallSize2:" 像素則歸入小尺寸圖片",
                 galleryShowSmallSize:"默認顯示小尺寸圖片",
@@ -612,6 +615,7 @@
                 galleryAutoLoad:"Automatically load more images on next page",
                 galleryLoadAll:"Automatically process all pages when loading more images",
                 galleryLoadAllTip:"Too many pages may affect the experience",
+                galleryDownloadWithZip:"Compress to ZIP when download all",
                 galleryScaleSmallSize1:"The actual size is less than the height and width",
                 galleryScaleSmallSize2:"Pixels are grouped into small size images",
                 galleryShowSmallSize:"Show small size pictures by default",
@@ -770,7 +774,8 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     w:200,
                     h:200
                 },
-                searchData:defaultSearchData
+                searchData:defaultSearchData,
+                downloadWithZip:false
             },
 
             imgWindow:{// 图片窗相关设置
@@ -3479,7 +3484,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 },true);
 
 
-                var srcSplit;
+                var srcSplit,downloading=false;
                 //命令下拉列表的点击处理
                 eleMaps['head-command-drop-list-others'].addEventListener('click',function(e){
                     if(e.button!=0)return;//左键
@@ -3542,6 +3547,8 @@ Trace Moe | https://trace.moe/?url=#t#`;
                             self.exportImages();
                             break;
                         case 'downloadImage':
+                            if(downloading)break;
+                            downloading=true;
                             var nodes = document.querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]');
                             var saveParams = [];
                             [].forEach.call(nodes, function(node){
@@ -3555,11 +3562,35 @@ Trace Moe | https://trace.moe/?url=#t#`;
                                     //saveAs(node.dataset.src, location.host+"-"+srcSplit[srcSplit.length-1]);
                                 }
                             });
+                            if(prefs.gallery.downloadWithZip){
+                                var zip = new JSZip(),downloaded=0;
+                                var fileName = document.title + ".zip";
+                                for(let i=0; i<saveParams.length; i++){
+                                    self.dataURLToCanvas(saveParams[i][0], canvas=>{
+                                        canvas.toBlob(blob=>{
+                                            zip.file(saveParams[i][1].replace(/\.[^\.]+$/,"")+'.jpg',blob);
+                                            downloaded++;
+                                            if(downloaded == saveParams.length){
+                                                zip.generateAsync({type:"blob"}).then(function(content){
+                                                    saveAs(content, fileName);
+                                                    downloading=false;
+                                                })
+                                            }
+                                        }, "image/jpg");
+                                    });
+                                };
+                                break;
+                            }
+
                             let download5Times=function(){
                                 for(let i=0;i<5;i++){
                                     let saveParam=saveParams.shift();
-                                    if(saveParam)saveAs(saveParam[0], saveParam[1]);
-                                    else break;
+                                    if(saveParam){
+                                        saveAs(saveParam[0], saveParam[1]);
+                                    }else{
+                                        downloading=false;
+                                        break;
+                                    }
                                 }
                                 if(saveParams.length>0){
                                     setTimeout(()=>{
@@ -10651,6 +10682,11 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     type: 'checkbox',
                     "default": prefs.gallery.loadAll,
                     title: i18n("galleryLoadAllTip")
+                },
+                'gallery.downloadWithZip': {
+                    label: i18n("galleryDownloadWithZip"),
+                    type: 'checkbox',
+                    "default": prefs.gallery.downloadWithZip
                 },
                 'gallery.scaleSmallSize': {
                     label: i18n("galleryScaleSmallSize1"),
