@@ -4041,7 +4041,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 }else{
                     this.data.forEach(function(item) {
                         if(!item)return;
-                        var spanMark=document.querySelector("span.pv-gallery-sidebar-thumb-container[data-src='"+item.src+"']");
+                        var spanMark=document.querySelector("span.pv-gallery-sidebar-thumb-container[data-thumb-src='"+item.imgSrc+"']");
                         if(spanMark){
                             var naturalSize=spanMark.dataset.naturalSize,itemW=item.sizeW,itemH=item.sizeH;
                             if(naturalSize){
@@ -9697,8 +9697,8 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 description;  // 图片的注释
             var imgCStyle=unsafeWindow.getComputedStyle(img);
             var imgCS={
-                h: parseFloat(imgCStyle.height),
-                w: parseFloat(imgCStyle.width),
+                h: parseFloat(imgCStyle.height)||img.height,
+                w: parseFloat(imgCStyle.width)||img.width,
             };
             var imgAS={//实际尺寸。
                 h:img.naturalHeight||imgCS.h,
@@ -9768,13 +9768,19 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 if(src)type='tpRule';
             }
             if(!src && img._lazyrias && img._lazyrias.srcset){
-                src=img._lazyrias.srcset[img._lazyrias.srcset.length-1];
-                if(src)type='tpRule';
+                var nsrc=img._lazyrias.srcset[img._lazyrias.srcset.length-1];
+                if(nsrc && nsrc!=imgSrc){
+                    src=nsrc;
+                    type='tpRule';
+                }
             }
             if(!src && img.srcset){
                 var srcs=img.srcset.split(",");
-                src=srcs[srcs.length-1].trim().split(" ")[0];
-                if(src)type='tpRule';
+                var nsrc=srcs[srcs.length-1].trim().split(" ")[0];
+                if(nsrc && nsrc!=imgSrc){
+                    src=nsrc;
+                    type='tpRule';
+                }
             }
 
             if(!src && imgPA){//链接可能是一张图片...
@@ -9995,9 +10001,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 if(e.button!=0)return;
                 FloatBarC.prototype.open.call({
                     data:data,
-                },
-                                              e,
-                                              matchedRule.clikToOpen.type);
+                },e,matchedRule.clikToOpen.type);
             };
 
             function clickA(e){//阻止a的默认行为
@@ -10041,7 +10045,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
 
             var target = e.target;
 
-            if (!target || target.id=="pv-float-bar-container" || (target.className && target.className.indexOf && (target.className.indexOf('pv-') != -1 || target.classList.contains("ks-imagezoom-lens")))) {
+            if (!target || target.id=="pv-float-bar-container" || (target.className?.indexOf('pv-') != -1 || target.classList?.contains("ks-imagezoom-lens"))) {
                 return;
             }
 
