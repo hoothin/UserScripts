@@ -439,6 +439,9 @@
         var aEles=document.querySelectorAll("a"),list=[];
         for(var i=0;i<aEles.length;i++){
             var aEle=aEles[i],has=false;
+            if((!aEle.href || aEle.href.indexOf("javascript")!=-1) && aEle.dataset.href){
+                aEle.href=aEle.dataset.href;
+            }
             for(var j=0;j<list.length;j++){
                 if(list[j].href==aEle.href){
                     list.splice(j,1);
@@ -517,6 +520,9 @@
                             has=true;
                             break;
                         }
+                    }
+                    if((!item.href || item.href.indexOf("javascript")!=-1) && item.dataset.href){
+                        item.href=item.dataset.href;
                     }
                     if(!has && item.href && /^http/i.test(item.href)){
                         processEles.push(item.cloneNode(1));
