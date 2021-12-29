@@ -4016,10 +4016,17 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 if(viewmoreShow){
                     var maxSizeH=0,minSizeH=0,maxSizeW=0,minSizeW=0;
                     [].forEach.call(document.querySelectorAll(".maximizeChild>img"),function(item){
+                        var spanMark=document.querySelector("span.pv-gallery-sidebar-thumb-container[data-src='"+item.src+"']");
+                        if(!spanMark.dataset.naturalSize && item.naturalWidth && item.naturalHeight){
+                            spanMark.dataset.naturalSize=JSON.stringify({w:item.naturalWidth,h:item.naturalHeight});
+                        }
                         if(item.naturalWidth<sizeInputW.value || item.naturalHeight<sizeInputH.value){
                             item.style.display="none";
-                        }else
+                            spanMark.style.display="none";
+                        }else{
                             item.style.display="";
+                            spanMark.style.display="";
+                        }
                         if(item.naturalHeight>maxSizeH)
                             maxSizeH=item.naturalHeight;
                         if(item.naturalHeight<minSizeH || minSizeH==0)
