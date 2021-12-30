@@ -782,7 +782,7 @@
         setting();
     }else if(!isDisk){
         if(/greasyfork\.org\/.*scripts\/22590[^\/]*$/.test(location.href)){
-            setting();
+            //setting();
         }
         if(/greasyfork\.org\/.*scripts\/22590\b|github\.com\/hoothin\/UserScripts\/issues\//.test(location.href)){
             $("pre").click(e=>{
