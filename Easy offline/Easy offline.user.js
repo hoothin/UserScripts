@@ -8,7 +8,7 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Base64/0.2.0/base64.min.js
-// @version      1.8.1
+// @version      1.8.2
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -336,8 +336,10 @@
                     setOK:"设置成功",
                     regExpError:"含有无效正则，请重新输入",
                     addSiteRuleTitle:"自定义新增图标规则，一行一条",
-                    siteRulePlaceholder:"站点 @@ 站名 @@ 禁ftp @@ 禁http @@ 禁磁链 @@ 禁电驴 @@ 图标base64 @@ 图标背景颜色\n\n@@ 分隔，目标站点中用 $url 代替目标链接，$hash 代表目标磁链的 hash 值\n\n例如：http://192.168.2.1/d2r?u=$url@@路由器下载\nhttp://xxx.com/magnet/$hash@@磁链下载@@1@@1@@0@@1@@data:image/png;base64,AAA@@ffffff",
-                    inputLink:"输入需要离线下载的链接："
+                    siteRulePlaceholder:"站点 @@ 站名 @@ 下载链接正则 @@ 图标base64 @@ 图标背景颜色\n\n@@ 分隔，目标站点中用 $url 代替目标链接，$hash 代表目标磁链的 hash 值，${reg}用正则提取\n\n例如：http://192.168.2.1/d2r?u=$url@@路由器下载\nhttp://xxx.com/magnet/$hash@@磁链下载@@^magnet@@data:image/png;base64,AAA@@ffffff",
+                    inputLink:"输入需要离线下载的链接：",
+                    importCustomAlert:"点击确定追加规则，点击取消覆盖规则",
+                    importOver:"规则导入完毕!"
                 };
                 break;
             case "zh-TW":
@@ -371,9 +373,12 @@
                     setOK:"設置成功",
                     regExpError:"含有無效正則，請重新輸入",
                     addSiteRuleTitle:"自定義新增圖標規則，一行一條",
-                    siteRulePlaceholder:"站點 @@ 站名 @@ 禁ftp @@ 禁http @@ 禁磁鏈 @@ 禁電驢 @@ 圖標base64 @@ 圖標背景顏色\n\n@@ 分隔，目標站點中用 $url 代替目標連結，$hash 代表目標磁鏈的 hash 值\n\n例如：http://192.168.2.1/d2r?u=$url@@路由器下載\nhttp://xxx.com/magnet/$hash@@磁鏈下載@@1@@1@@0@@1@@data:image/png;base64,AAA@@ffffff",
-                    inputLink:"輸入需要離線下載的連結："
+                    siteRulePlaceholder:"站點 @@ 站名 @@ 下載鏈接正則 @@ 圖標base64 @@ 圖標背景顏色\n\n@@ 分隔，目標站點中用 $url 代替目標連結，$hash 代表目標磁鏈的 hash 值，${reg}用正则提取\n\n例如：http://192.168.2.1/d2r?u=$url@@路由器下載\nhttp://xxx.com/magnet/$hash@@磁鏈下載@@^magnet@@data:image/png;base64,AAA@@ffffff",
+                    inputLink:"輸入需要離線下載的連結：",
+                    importCustomAlert:"點擊確定追加規則，點擊取消覆蓋規則",
+                    importOver:"規則導入完畢!"
                 };
+                break;
             default:
                 config={
                     configure:"EasyOffline - Configure",
@@ -404,8 +409,10 @@
                     setOK: "Set successfully",
                     regExpError: "Contains invalid regularity, please re-enter",
                     addSiteRuleTitle: "Customize new icon rules, one per line",
-                    siteRulePlaceholder: "site @@ sitename @@ no ftp @@ no http @@ no magnet @@ no ed2k @@ icon base64 @@ icon background color\n\nUse @@ to separated, use $url for the target Link, $hash for the hash of the target magnet link\n\nFor example: http://192.168.2.1/d2r?u=$url@@MyRouter\nhttp://xxx.com/magnet/$hash@@MyMagnetLinkDownload@@1@@1@@0@@1@@data:image/png;base64,AAA@@ffffff",
-                    inputLink: "Enter the link that needs to be downloaded with this:"
+                    siteRulePlaceholder: "site @@ sitename @@ link regexp @@ icon base64 @@ icon background color\n\nUse @@ to separated, use $url for the target Link, $hash for the hash of the target magnet link, ${reg} for regexp result on link\n\nFor example: http://192.168.2.1/d2r?u=$url@@MyRouter\nhttp://xxx.com/magnet/$hash@@MyMagnetLinkDownload@@^magnet@@data:image/png;base64,AAA@@ffffff",
+                    inputLink: "Enter the link that needs to be downloaded with this:",
+                    importCustomAlert:"Ok to add rule，Cancel to cover rule",
+                    importOver:"Rules import over!"
                 };
                 break;
         }
@@ -574,19 +581,25 @@
         var rules=siteRule.split("\n");
         rules.forEach(rule=>{
             var ruleArr=rule.replace(/\s/g,"").split("@@");
-            if(ruleArr[1] && (ruleArr[0].indexOf("$url")!=-1 || ruleArr[0].indexOf("$hash")!=-1)){
+            if(ruleArr[1] && (ruleArr[0].indexOf("$url")!=-1 || ruleArr[0].indexOf("$hash")!=-1 || ruleArr[0].indexOf("${")!=-1)){
                 var siteConfig={};
                 siteConfig.directUrl=function(offUrl){
+                    if(ruleArr[0].indexOf("${")!=-1){
+                        var strMatch=ruleArr[0].match(/\${(.*?)}/);
+                        var regStr=strMatch?strMatch[1]:"";
+                        if(!regStr)return;
+                        var linkReg=new RegExp(regStr,"i");
+                        var linkMatch=offUrl.match(linkReg);
+                        var linkResult=linkMatch[1]||linkMatch[0];
+                        return linkResult?ruleArr[0].replace(/\${.*?}/,linkResult):ruleArr[0];
+                    }
                     var hash=offUrl.replace("magnet:?xt=urn:btih:","").replace(/&.*/,"");
                     return ruleArr[0].replace("$url", offUrl).replace("$hash", hash);
                 };
-                if(ruleArr[2] == "1")siteConfig.noFtp=true;
-                if(ruleArr[3] == "1")siteConfig.noHttp=true;
-                if(ruleArr[4] == "1")siteConfig.noMag=true;
-                if(ruleArr[5] == "1")siteConfig.noEd2k=true;
-                if(ruleArr[6]) siteConfig.bgImg=ruleArr[6];
+                if(ruleArr[2]) siteConfig.linkRegExp=new RegExp(ruleArr[2],"i");
+                if(ruleArr[3]) siteConfig.bgImg=ruleArr[3];
                 else siteConfig.bgImg=downIconBg;
-                if(ruleArr[7]) siteConfig.bgColor=ruleArr[7];
+                if(ruleArr[4]) siteConfig.bgColor=ruleArr[4];
                 else siteConfig.bgColor="f2f2f2";
                 sites[ruleArr[1]]=siteConfig;
             }
@@ -604,7 +617,7 @@
                 for(var reg of regs){
                     reg=reg.trim();
                     if(reg==="")continue;
-                    var patt=new RegExp(reg);
+                    var patt=new RegExp(reg,"i");
                     if(patt.test(aTag.href) && $.inArray(aTag, rawnodes)==-1){
                         customnodes.push(aTag);
                         break;
@@ -694,6 +707,8 @@
                 node.hide();
             }else if(/^ed2k:\/\//i.test(offUrl) && siteConfig.noEd2k){
                 node.hide();
+            }else if(siteConfig.linkRegExp && !siteConfig.linkRegExp.test(offUrl)){
+                node.hide();
             }else{
                 node.show();
                 node.css("margin-top",-j*25+"px");
@@ -768,6 +783,21 @@
     }else if(!isDisk){
         if(/greasyfork\.org\/.*scripts\/22590[^\/]*$/.test(location.href)){
             setting();
+        }
+        if(/greasyfork\.org\/.*scripts\/22590\b|github\.com\/hoothin\/UserScripts\/issues\//.test(location.href)){
+            $("code").click(e=>{
+                if(e.target.innerHTML.indexOf("@@")!=-1){
+                    var siteRule=GM_getValue("siteRule");
+                    if(siteRule == e.target.innerHTML.trim())return;
+                    if(siteRule && window.confirm(i18n("importCustomAlert"))){
+                        siteRule=siteRule.trim()+"\n"+e.target.innerHTML.trim();
+                    }else{
+                        siteRule=e.target.innerHTML.trim();
+                    }
+                    GM_setValue("siteRule", siteRule);
+                    alert(i18n("importOver"));
+                }
+            });
         }
         setTimeout(function(){getAllEnableUrl();},10);
         var MutationObserver = unsafeWindow.MutationObserver || unsafeWindow.WebKitMutationObserver || unsafeWindow.MozMutationObserver;
@@ -928,7 +958,7 @@
                     var regStrs=regStr.split("\n");
                     for(var reg of regStrs){
                         try{
-                            new RegExp(reg);
+                            new RegExp(reg,"i");
                         }catch(e){
                             alert(i18n("regExpError"));
                             return;
