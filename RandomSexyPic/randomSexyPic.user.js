@@ -4,7 +4,7 @@
 // @name:zh-TW   軟瑟盤
 // @name:ja      RandomSexyPicParser
 // @namespace    hoothin
-// @version      1.3.11
+// @version      1.3.12
 // @description        Random Sexy Pictures Parser
 // @description:zh-CN  随机色图
 // @description:zh-TW  隨機色圖
@@ -37,6 +37,9 @@
         "api.lolicon.app":{
             name:"Lolicon ACG SexyPic",
             url:"https://api.lolicon.app/setu/v2?r18=1&num=5",
+            luckyUrl:["https://api.lolicon.app/setu/v2?r18=0&num=5",
+                     "https://api.lolicon.app/setu/v2?r18=1&num=5",
+                     "https://api.lolicon.app/setu/v2?r18=2&num=5"],
             run:()=>{
                 var searchNum=getSearchParam("num");
                 var leftNum=searchNum;
@@ -79,6 +82,8 @@
         "api.nyan.xyz":{
             name:"Nyan ACG SexyPic",
             url:"https://api.nyan.xyz/httpapi/sexphoto/?r18=true&num=5",
+            luckyUrl:["https://api.nyan.xyz/httpapi/sexphoto/?r18=true&num=5",
+                     "https://api.nyan.xyz/httpapi/sexphoto/?r18=false&num=5"],
             run:()=>{
                 var searchNum=getSearchParam("num");
                 var leftNum=searchNum;
@@ -168,6 +173,15 @@
         "3650000.xyz":{
             name:"3650000",
             url:"https://3650000.xyz/api/?type=json&mode=7&num=15",
+            luckyUrl:["https://3650000.xyz/api/?type=json&num=15",
+                     "https://3650000.xyz/api/?type=json&mode=1&num=15",
+                     "https://3650000.xyz/api/?type=json&mode=2&num=15",
+                     "https://3650000.xyz/api/?type=json&mode=3&num=15",
+                     "https://3650000.xyz/api/?type=json&mode=66&num=15",
+                     "https://3650000.xyz/api/?type=json&mode=5&num=15",
+                     "https://3650000.xyz/api/?type=json&mode=7&num=15",
+                     "https://3650000.xyz/api/?type=json&mode=8&num=15",
+                     "https://3650000.xyz/api/?type=json&mode=9&num=15"],
             run:()=>{
                 r18Check.style.display=sfwCheck.style.display=r18CheckLabel.style.display=sfwCheckLabel.style.display="none";
                 var searchNum=getSearchParam("num");
@@ -221,9 +235,25 @@
         "www.hlapi.cn":"buyersShow",
         "api.ghser.com":"buyersShow"
     };
-    GM_registerMenuCommand("Parse current api", customSet);
+    GM_registerMenuCommand("I'm feeling lucky", ()=>{
+        var luckyUrls=[],targetUrl;
+        for(var i in setuConfig){
+            let sc=setuConfig[i];
+            if(sc.luckyUrl){
+                luckyUrls=luckyUrls.concat(sc.luckyUrl);
+            }else if(sc.urls){
+                luckyUrls=luckyUrls.concat(sc.urls);
+            }else if(sc.url){
+                luckyUrls.push(sc.url);
+            }
+        }
+        var randomIndex=Math.floor(Math.random()*luckyUrls.length);
+        targetUrl=luckyUrls[randomIndex];
+        location.href=targetUrl;
+    });
     var curConfig=setuConfig[document.domain],jsonData,hasFloatImg=false,grabed=false,oClient;
     if(!curConfig){
+        GM_registerMenuCommand("Parse current api", customSet);
         var customRule=GM_getValue("RSPrules_"+document.domain);
         if(customRule){
             curConfig={run:()=>{
