@@ -776,6 +776,22 @@
             break;
         }
     }
+    if(/greasyfork\.org\/.*scripts\/22590\b|github\.com\/hoothin\/UserScripts\//.test(location.href)){
+        $("pre").click(e=>{
+            if(e.target.innerHTML.indexOf("@@")!=-1){
+                var siteRule=GM_getValue("siteRule");
+                if(siteRule != e.target.innerHTML.trim()){
+                    if(siteRule && window.confirm(i18n("importCustomAlert"))){
+                        siteRule=siteRule.trim()+"\n"+e.target.innerHTML.trim();
+                    }else{
+                        siteRule=e.target.innerHTML.trim();
+                    }
+                    GM_setValue("siteRule", siteRule);
+                }
+                alert(i18n("importOver"));
+            }
+        });
+    }
     if(location.href.indexOf("pan.baidu.com/wap/home") != -1){
         if(curlink)location.href="https://pan.baidu.com/disk/home";
     }else if(location.href.indexOf("github.com/hoothin/UserScripts/tree/master/Easy%20offline") != -1){
@@ -783,22 +799,6 @@
     }else if(!isDisk){
         if(/greasyfork\.org\/.*scripts\/22590[^\/]*$/.test(location.href)){
             //setting();
-        }
-        if(/greasyfork\.org\/.*scripts\/22590\b|github\.com\/hoothin\/UserScripts\/issues\//.test(location.href)){
-            $("pre").click(e=>{
-                if(e.target.innerHTML.indexOf("@@")!=-1){
-                    var siteRule=GM_getValue("siteRule");
-                    if(siteRule != e.target.innerHTML.trim()){
-                        if(siteRule && window.confirm(i18n("importCustomAlert"))){
-                            siteRule=siteRule.trim()+"\n"+e.target.innerHTML.trim();
-                        }else{
-                            siteRule=e.target.innerHTML.trim();
-                        }
-                        GM_setValue("siteRule", siteRule);
-                    }
-                    alert(i18n("importOver"));
-                }
-            });
         }
         setTimeout(function(){getAllEnableUrl();},10);
         var MutationObserver = unsafeWindow.MutationObserver || unsafeWindow.WebKitMutationObserver || unsafeWindow.MozMutationObserver;
