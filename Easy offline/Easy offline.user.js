@@ -785,7 +785,7 @@
             setting();
         }
         if(/greasyfork\.org\/.*scripts\/22590\b|github\.com\/hoothin\/UserScripts\/issues\//.test(location.href)){
-            $("code").click(e=>{
+            $("pre").click(e=>{
                 if(e.target.innerHTML.indexOf("@@")!=-1){
                     var siteRule=GM_getValue("siteRule");
                     if(siteRule == e.target.innerHTML.trim())return;
