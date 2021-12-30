@@ -16,6 +16,16 @@
 * 某ftp `^ftp:\/\/user:pass@127\.0\.0\.1`
 * 某带参mp4视频 `mp4\?[^\/]+$`
 
+### 站点服务自定义例子 - Github镜像加速下载，点击下方导入，有其他规则用`<pre>`标签分享到issues也可点击导入
+<pre>
+https://download.fastgit.org/${https?://[^/]+(.*)}@@Fastgit@@github\.com.*(releases\/download|archive\/refs\/)
+https://pd.zwc365.com/seturl/$url@@ZWC365@@github\.com.*(releases\/download|archive\/refs\/)
+https://gh.api.99988866.xyz/$url@@99988866@@github\.com.*(releases\/download|archive\/refs\/)
+https://ghproxy.com/$url@@Ghproxy@@github\.com.*(releases\/download|archive\/refs\/)
+https://github.rc1844.workers.dev${https?://[^/]+(.*)}@@RC1844@@github\.com.*(releases\/download|archive\/refs\/)
+https://ghproxy.fsou.cc/$url@@Fsou@@github\.com.*(releases\/download|archive\/refs\/)
+</pre>
+
 ### Update
  - **`Alt + F9`** 自定义下载，选中文本超链则下载文本超链，鼠标指向链接则下载链接，没有选中则弹框输入链接下载
  - 按住 **`Ctrl + Shift`** 点击批量离线当前页面中所有资源（如果我给该网盘写了批量离线功能的话），实际也没鸟用，度盘批量离线时动不动就网络繁忙了
@@ -28,7 +38,7 @@
  - 修复百度网盘超级vip问题，感谢Psnowy
 
 ---
-![img1](https://greasyfork.org/system/screenshots/screenshots/000/005/431/original/GIF1.gif?1476097920)
+![img1](https://greasyfork.s3.us-east-2.amazonaws.com/s1beg1iderkn42jq7yl8ogg3z4pr)
 
 ### 支持服务
 * 百度网盘 http://pan.baidu.com
