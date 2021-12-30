@@ -6,7 +6,7 @@
 // @description     Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version         2021.12.29.3
+// @version         2021.12.30.1
 // @created         2011-6-15
 // @namespace       http://userscripts.org/users/NLF
 // @homepage        http://hoothin.com
@@ -1792,7 +1792,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
             // GithubAvatars
             {name: "GithubAvatars",
              d: "github.com",
-             r: /(avatars\d+\.githubusercontent\.com.*)\?.*$/i,
+             r: /(avatars\d*\.githubusercontent\.com.*)\?.*$/i,
              s: "$1",
              example: "https://avatars2.githubusercontent.com/u/3233275/",
             },
@@ -9972,8 +9972,16 @@ Trace Moe | https://trace.moe/?url=#t#`;
         //通讯逻辑..A页面的contentscript发送到A页面的pagescript，pagescript转交给B页面的contentscript
         var messageID='pv-0.5106795670312598';
 
+        function isunsafe(){
+            try {
+                return eval("false");
+            } catch (e) {
+                return true;
+            }
+        }
         function addPageScript() {
 
+            if(isunsafe())return;
             var pageScript=document.createElement('script');
             pageScript.id = 'picviewer-page-script';
 
@@ -10019,9 +10027,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
             };
 
             pageScript.textContent='(' + pageScriptText.toString() + ')('+ JSON.stringify(messageID) +')';
-            try{
-                document.head.appendChild(pageScript);
-            }catch(e){}
+            document.head.appendChild(pageScript);
         }
 
         function clikToOpen(data){
@@ -10083,7 +10089,10 @@ Trace Moe | https://trace.moe/?url=#t#`;
 
             var target = e.target;
 
-            if (!target || target.id=="pv-float-bar-container" || (target.className?.indexOf('pv-') != -1 || target.classList?.contains("ks-imagezoom-lens"))) {
+            if (!target || target.id=="pv-float-bar-container" ||
+                (target.className?.indexOf &&
+                 (target.className.indexOf('pv-') != -1 ||
+                  target.classList.contains("ks-imagezoom-lens")))) {
                 return;
             }
 
