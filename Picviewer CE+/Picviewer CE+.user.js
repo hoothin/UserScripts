@@ -9817,8 +9817,15 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 type='tpRule';
             }
             if(!src && img.srcset){
-                var srcs=img.srcset.split(",");
-                var nsrc=srcs[srcs.length-1].trim().split(" ")[0];
+                var srcs=img.srcset.split(","),largeSize=0,nsrc;
+                srcs.forEach(srci=>{
+                    let srcInfo=srci.trim().split(" "),curSize=parseInt(srcInfo[1]);
+                    if(srcInfo[1] && curSize>largeSize){
+                        largeSize=curSize;
+                        nsrc=srcInfo[0];
+                    }
+                });
+                //var nsrc=srcs[srcs.length-1].trim().split(" ")[0];
                 if(nsrc && nsrc!=imgSrc){
                     src=nsrc;
                     type='tpRule';
