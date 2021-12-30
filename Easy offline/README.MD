@@ -18,12 +18,12 @@
 
 ### 站点服务自定义例子 - Github镜像加速下载，点击下方导入，有其他规则用`<pre>`标签分享到issues也可点击导入
 <pre>
-https://download.fastgit.org/${https?://[^/]+(.*)}@@Fastgit@@github\.com.*(releases\/download|archive\/refs\/)
-https://pd.zwc365.com/seturl/$url@@ZWC365@@github\.com.*(releases\/download|archive\/refs\/)
-https://gh.api.99988866.xyz/$url@@99988866@@github\.com.*(releases\/download|archive\/refs\/)
-https://ghproxy.com/$url@@Ghproxy@@github\.com.*(releases\/download|archive\/refs\/)
-https://github.rc1844.workers.dev${https?://[^/]+(.*)}@@RC1844@@github\.com.*(releases\/download|archive\/refs\/)
-https://ghproxy.fsou.cc/$url@@Fsou@@github\.com.*(releases\/download|archive\/refs\/)
+https://download.fastgit.org/${https?://[^/]+(.*)}@@Fastgit@@github\.com.*(releases\/download|archive\/refs\/)@@@@ffff9f
+https://pd.zwc365.com/seturl/$url@@ZWC365@@github\.com.*(releases\/download|archive\/refs\/)@@@@0fffff
+https://gh.api.99988866.xyz/$url@@99988866@@github\.com.*(releases\/download|archive\/refs\/)@@@@9fffff
+https://ghproxy.com/$url@@Ghproxy@@github\.com.*(releases\/download|archive\/refs\/)@@@@ff0fff
+https://github.rc1844.workers.dev${https?://[^/]+(.*)}@@RC1844@@github\.com.*(releases\/download|archive\/refs\/)@@@@ff9fff
+https://ghproxy.fsou.cc/$url@@Fsou@@github\.com.*(releases\/download|archive\/refs\/)@@@@ffff0f
 </pre>
 
 ### Update
