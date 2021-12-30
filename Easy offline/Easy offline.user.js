@@ -424,6 +424,7 @@
     var addIconBg="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZBAMAAAA2x5hQAAAALVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADBoCg+AAAADnRSTlMAYK1vMOA/ENJ/zmdLF4e4IG4AAACPSURBVBjTYwAB9uTJ6QwwwLju3bt3C6Eclrh3IBAC4cm9gwABsLp3UPAQxPMDMh4pgbgOQB5IFwMDH5BcAFII4UGUciB4rxgY6hC8dwUMeUA2EID5CQx27x5BeEzv3hkwzEPiTUCRm4Ci7wCKmReQ7XuK4pbHKO4MwPADwn/ofkeESws0mLj7gJxGEAs1PAEp8ZbkUx9Q7gAAAABJRU5ErkJggg==";
     var downIconBg="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAMAAADzN3VRAAAARVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADc6ur3AAAAFnRSTlMAYM5vMOA/ENGegK2olI6G1b97Z0sXENA+jAAAAKFJREFUKM+FklkSxCAIRHFfss3K/Y86iQSDVqzpH7FfgQpCVfAmGx+gl9JI0qrxrcNLzooEbKUG4EKWdkCiDRV0N0RTrZ5wvdgTTgp4SzCAHxAPZkAM5GOJWuuT7FE5OVPOBFLTYb3Oc2YB5uJ8+G6pgkTGt74ntcCJHiwFLHw10Tdc93jlGXGvSRtsHNpuPs+/o1ODfxAtSL0f7HPC+L/9AF60G3QxO1UaAAAAAElFTkSuQmCC";
     var sitesArr=[],siteSort=GM_getValue("siteSort"),siteName;
+    var regs=GM_getValue("eoReg")||[];
     addCustomSites();
     if(!siteSort)siteSort=["baidu","yyw","furk","seedr"];
     siteSort.forEach(function(item) {
@@ -504,7 +505,6 @@
     }
 
     var parentDiv=$("<div style='display:none;position:absolute;z-index:99999;overflow:visible;text-align:left;'></div>");
-    var regs=GM_getValue("eoReg");
     function hideIcons(){
         parentDiv.css("display","none");
         for(var node of offNodes){
@@ -583,11 +583,14 @@
             var ruleArr=rule.replace(/\s/g,"").split("@@");
             if(ruleArr[1] && (ruleArr[0].indexOf("$url")!=-1 || ruleArr[0].indexOf("$hash")!=-1 || ruleArr[0].indexOf("${")!=-1)){
                 var siteConfig={};
+                let regStr;
+                if(ruleArr[0].indexOf("${")!=-1){
+                    var strMatch=ruleArr[0].match(/\${(.*?)}/);
+                    regStr=strMatch?strMatch[1]:"";
+                    if(regStr)regs.push(regStr);
+                }
                 siteConfig.directUrl=function(offUrl){
-                    if(ruleArr[0].indexOf("${")!=-1){
-                        var strMatch=ruleArr[0].match(/\${(.*?)}/);
-                        var regStr=strMatch?strMatch[1]:"";
-                        if(!regStr)return;
+                    if(regStr){
                         var linkReg=new RegExp(regStr,"i");
                         var linkMatch=offUrl.match(linkReg);
                         var linkResult=linkMatch[1]||linkMatch[0];
