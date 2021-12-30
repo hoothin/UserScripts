@@ -4,7 +4,7 @@
 // @name:zh-TW   軟瑟盤
 // @name:ja      RandomSexyPicParser
 // @namespace    hoothin
-// @version      1.3.10
+// @version      1.3.11
 // @description        Random Sexy Pictures Parser
 // @description:zh-CN  随机色图
 // @description:zh-TW  隨機色圖
@@ -105,7 +105,7 @@
                 },5,1000);
             },
             getSearch:(param)=>{
-                return `?r18=${param.r18!=0?"true":"false"}&num=${param.num}`;
+                return `?r18=${param.r18==1?"true":"false"}&num=${param.num}`;
             },
             initSearch:()=>{
                 var searchNum=getSearchParam("num");
@@ -576,6 +576,7 @@
       -webkit-transition: opacity .3s ease-in-out;
     }
     .img-con{
+        overflow-x: hidden;
         overflow: auto;
         width: 100%;
         display: block;
