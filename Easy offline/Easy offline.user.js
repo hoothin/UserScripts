@@ -788,13 +788,14 @@
             $("pre").click(e=>{
                 if(e.target.innerHTML.indexOf("@@")!=-1){
                     var siteRule=GM_getValue("siteRule");
-                    if(siteRule == e.target.innerHTML.trim())return;
-                    if(siteRule && window.confirm(i18n("importCustomAlert"))){
-                        siteRule=siteRule.trim()+"\n"+e.target.innerHTML.trim();
-                    }else{
-                        siteRule=e.target.innerHTML.trim();
+                    if(siteRule != e.target.innerHTML.trim()){
+                        if(siteRule && window.confirm(i18n("importCustomAlert"))){
+                            siteRule=siteRule.trim()+"\n"+e.target.innerHTML.trim();
+                        }else{
+                            siteRule=e.target.innerHTML.trim();
+                        }
+                        GM_setValue("siteRule", siteRule);
                     }
-                    GM_setValue("siteRule", siteRule);
                     alert(i18n("importOver"));
                 }
             });
