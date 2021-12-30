@@ -583,14 +583,11 @@
             var ruleArr=rule.replace(/\s/g,"").split("@@");
             if(ruleArr[1] && (ruleArr[0].indexOf("$url")!=-1 || ruleArr[0].indexOf("$hash")!=-1 || ruleArr[0].indexOf("${")!=-1)){
                 var siteConfig={};
-                let regStr;
-                if(ruleArr[0].indexOf("${")!=-1){
-                    var strMatch=ruleArr[0].match(/\${(.*?)}/);
-                    regStr=strMatch?strMatch[1]:"";
-                    if(regStr)regs.push(regStr);
-                }
                 siteConfig.directUrl=function(offUrl){
-                    if(regStr){
+                    if(ruleArr[0].indexOf("${")!=-1){
+                        var strMatch=ruleArr[0].match(/\${(.*?)}/);
+                        var regStr=strMatch?strMatch[1]:"";
+                        if(!regStr)return;
                         var linkReg=new RegExp(regStr,"i");
                         var linkMatch=offUrl.match(linkReg);
                         var linkResult=linkMatch[1]||linkMatch[0];
@@ -599,7 +596,10 @@
                     var hash=offUrl.replace("magnet:?xt=urn:btih:","").replace(/&.*/,"");
                     return ruleArr[0].replace("$url", offUrl).replace("$hash", hash);
                 };
-                if(ruleArr[2]) siteConfig.linkRegExp=new RegExp(ruleArr[2],"i");
+                if(ruleArr[2]) {
+                    siteConfig.linkRegExp=new RegExp(ruleArr[2],"i");
+                    regs.push(ruleArr[2]);
+                }
                 if(ruleArr[3]) siteConfig.bgImg=ruleArr[3];
                 else siteConfig.bgImg=downIconBg;
                 if(ruleArr[4]) siteConfig.bgColor=ruleArr[4];
