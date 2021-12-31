@@ -9208,7 +9208,6 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     };
                 }))return;
 
-                this.data=data;
                 var self=this;
                 clearTimeout(this.hideTimer);
 
@@ -9228,6 +9227,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
 
                 clearTimeout(this.showTimer);
                 this.showTimer=setTimeout(function(){
+                    self.data=data;
                     self.show();
                 },prefs.floatBar.showDelay);
             },
