@@ -9111,6 +9111,8 @@ Trace Moe | https://trace.moe/?url=#t#`;
 
                 addCusMouseEvent('mouseenter',container,function(e){
                     clearTimeout(self.hideTimer);
+                    clearTimeout(self.showTimer);
+                    clearTimeout(self.globarOutTimer);
                 });
 
                 this._scrollHandler=this.scrollHandler.bind(this);
