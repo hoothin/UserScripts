@@ -6,7 +6,7 @@
 // @description     Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version         2021.12.30.2
+// @version         2021.12.31.1
 // @created         2011-6-15
 // @namespace       http://userscripts.org/users/NLF
 // @homepage        http://hoothin.com
@@ -1576,7 +1576,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
         // 通配型规则,无视站点.
         var tprules=[
             function(img, a) { // 解决新的dz论坛的原图获取方式.
-                var regs = [/(.+\/attachments?\/.+)\.thumb\.\w{2,5}$/i,/((wp-content|moecdn\.org)\/uploads\/.*)\-\d+x\d+/i,/.*(?:url|src)=(https?:\/\/.*\.(?:jpg|jpeg|png|gif|bmp)).*/i,/.*thumb\.php\?src=([^&]*).*/i];
+                var regs = [/(.+\/attachments?\/.+)\.thumb\.\w{2,5}$/i,/((wp-content|moecdn\.org)\/uploads\/.*)\-\d+x\d+(-c)?/i,/.*(?:url|src)=(https?:\/\/.*\.(?:jpg|jpeg|png|gif|bmp)).*/i,/.*thumb\.php\?src=([^&]*).*/i];
                 var oldsrc = this.src,newsrc = this.src;
                 if (oldsrc){
                     for(let reg of regs){
@@ -4675,6 +4675,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
 
                 var img=this.img;
 
+                if(!img.classList)return;
                 img.classList.remove('pv-gallery-img_zoom-in');
                 img.classList.remove('pv-gallery-img_zoom-out');
 
@@ -4744,6 +4745,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
             },
 
             _dataCache: {},
+            _spanMarkPool: {},
             _appendThumbSpans: function(data, index) {  // 添加缩略图栏的 spans
                 var iStatisCopy = this.iStatisCopy;
 
@@ -4759,28 +4761,33 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     thumbnails.innerHTML = "";
                     this._dataCache = {};
                 }
+                var self=this;
                 (data || this.data).forEach(function(item) {
                     if(!item)return;
                     iStatisCopy[item.type].count++;
-                    var spanMark=document.createElement("span");
+                    var spanMark=self._spanMarkPool[item.imgSrc];
+                    if(!spanMark){
+                        spanMark = document.createElement("span");
+                        try{
+                            spanMark.className="pv-gallery-sidebar-thumb-container";
+                            spanMark.dataset.type=item.type;
+                            spanMark.dataset.src=item.src;
+                            spanMark.dataset.srcs=item.srcs;
+                            if(item.xhr)spanMark.dataset.xhr=encodeURIComponent(JSON.stringify(item.xhr));
+                            spanMark.dataset.description=encodeURIComponent(item.description || '');
+                            spanMark.dataset.thumbSrc=item.imgSrc;
+                            spanMark.title=(item.img?item.img.title:"");
+                            spanMark.innerHTML='<span class="pv-gallery-vertical-align-helper"></span>' +
+                                '<span class="pv-gallery-sidebar-thumb-loading" title="'+i18n("loading")+'......"></span>';
+                        }catch(e){};
+                        self._spanMarkPool[item.imgSrc] = spanMark;
+                    }
+                    if(item.noActual && (item.sizeW<sizeInputW.value || item.sizeH<sizeInputH.value)){
+                        spanMark.style.display="none";
+                    }else{
+                        spanMark.style.display="";
+                    }
                     thumbnails.appendChild(spanMark);
-                    try{
-                        spanMark.className="pv-gallery-sidebar-thumb-container";
-                        spanMark.dataset.type=item.type;
-                        spanMark.dataset.src=item.src;
-                        spanMark.dataset.srcs=item.srcs;
-                        if(item.xhr)spanMark.dataset.xhr=encodeURIComponent(JSON.stringify(item.xhr));
-                        spanMark.dataset.description=encodeURIComponent(item.description || '');
-                        spanMark.dataset.thumbSrc=item.imgSrc;
-                        spanMark.title=(item.img?item.img.title:"");
-                        spanMark.innerHTML='<span class="pv-gallery-vertical-align-helper"></span>' +
-                            '<span class="pv-gallery-sidebar-thumb-loading" title="'+i18n("loading")+'......"></span>';
-                        if(item.noActual && (item.sizeW<sizeInputW.value || item.sizeH<sizeInputH.value)){
-                            spanMark.style.display="none";
-                        }else{
-                            spanMark.style.display="";
-                        }
-                    }catch(e){};
                 });
 
                 var self = this;
@@ -9854,6 +9861,9 @@ Trace Moe | https://trace.moe/?url=#t#`;
             if (imgAS.h < prefs.gallery.scaleSmallSize && imgAS.w < prefs.gallery.scaleSmallSize) {
                 type = 'scaleSmall';
             }
+            if(img.dataset.lazySrc && (!imgSrc || /^\s*data:image/.test(imgSrc))){
+                imgSrc=img.dataset.lazySrc;
+            }
 
             try{
                 //src=decodeURIComponent(src);
@@ -10402,8 +10412,8 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     openGallery();
                     event.stopPropagation();
                     event.preventDefault();
-                }
-                if(prefs.floatBar.globalkeys.type == "press"){
+                    globalFuncEnabled = !globalFuncEnabled;
+                }else if(prefs.floatBar.globalkeys.type == "press"){
                     globalFuncEnabled = !globalFuncEnabled;
                 }
                 return true;
