@@ -266,7 +266,7 @@
              left: 2px;
         }
         #script-list-sort li>span>span{
-             margin: 0 2px;
+             margin: 0 0 0 2px;
         }
         .script-list>li .list-install-area{
              display: none;
