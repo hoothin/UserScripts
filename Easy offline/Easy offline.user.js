@@ -8,7 +8,7 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Base64/0.2.0/base64.min.js
-// @version      1.8.2
+// @version      1.8.3
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -784,7 +784,7 @@
             if(e.target.innerHTML.indexOf("@@")!=-1){
                 var siteRule=GM_getValue("siteRule");
                 if(siteRule != e.target.innerHTML.trim()){
-                    if(siteRule && window.confirm(i18n("importCustomAlert"))){
+                    if(siteRule && window.confirm(i18n("importCustomAlert")) && siteRule.indexOf(e.target.innerHTML.trim())==-1){
                         siteRule=siteRule.trim()+"\n"+e.target.innerHTML.trim();
                     }else{
                         siteRule=e.target.innerHTML.trim();
