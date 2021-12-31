@@ -65,8 +65,8 @@ function initEventListener(start,move,end,tracer,clientX,clientY,startBool){
                     e.stopPropagation();
                     e.preventDefault();
                     e.returnValue=false;
-                    e.cancelBubble();
-                    break;
+                    e.cancelBubble=true;
+                    return false;
                 }
             }
             signs="";
