@@ -109,21 +109,16 @@
             checkInfo.onclick=()=>{
                 GM_xmlhttpRequest({
                     method: 'GET',
-                    url: scriptHref,
+                    url: scriptHref.replace(/(.*)-.*/,"$1.json"),
                     onload: function(result) {
-                        var doc = null;
+                        var data = null;
                         try {
-                            doc = document.implementation.createHTMLDocument('');
-                            doc.documentElement.innerHTML = result.responseText;
+                            data = JSON.parse(result.responseText);
                         }
                         catch (e) {
                             console.log('parse error');
                         }
-                        if (!doc) {
-                            return;
-                        }
-                        var installInfo=doc.querySelector("#install-area>.install-link");
-                        if(installInfo){
+                        if(data){
                             let setInfo=info=>{
                                 if(info.installed){
                                     if(parseFloat(info.version) < parseFloat(version)){
@@ -144,11 +139,11 @@
                                 }
                             };
                             if(window.external.Tampermonkey){
-                                window.external.Tampermonkey.isInstalled(installInfo.dataset.scriptName, installInfo.dataset.scriptNamespace, e=>{
+                                window.external.Tampermonkey.isInstalled(data.name, data.namespace, e=>{
                                     setInfo(e);
                                 });
                             }else if(window.external.Violentmonkey){
-                                window.external.Violentmonkey.isInstalled(installInfo.dataset.scriptName, installInfo.dataset.scriptNamespace).then(e=>{
+                                window.external.Violentmonkey.isInstalled(data.name, data.namespace).then(e=>{
                                     setInfo(e);
                                 });
                             }
