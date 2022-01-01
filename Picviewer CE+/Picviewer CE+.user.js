@@ -5054,7 +5054,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                             let aTag=aTags[i];
                             if(pref && pres && pret)break;
                             if(!pref){
-                                if(/上一页/.test(aTag.innerHTML)){
+                                if(/上[一1]?[页|頁|张|張]|previous page/i.test(aTag.innerHTML)){
                                     pref=aTag;
                                 }
                             }
@@ -5083,7 +5083,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                             let aTag=aTags[i];
                             if(nextf && nexts && nextt)break;
                             if(!nextf){
-                                if(/下一(页|张)/.test(aTag.innerHTML)){
+                                if(/下[一1]?[页|頁|张|張]|next page/i.test(aTag.innerHTML)){
                                     nextf=aTag;
                                 }
                             }
