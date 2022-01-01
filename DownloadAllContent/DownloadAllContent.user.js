@@ -515,7 +515,7 @@
                 let urlsArr=urls.split("@@"),eles=document.querySelectorAll(urlsArr[0]);
                 if(eles.length==0){
                     eles=[];
-                    var eleTxts=urlsArr[0].split(/(?<=[^\\]),/),exmpEles=[];
+                    var eleTxts=urlsArr[0].split(/(?<=[^\\])[,，]/),exmpEles=[];
                     [].forEach.call(document.querySelectorAll("a"),function(item){
                         eleTxts.forEach(txt=>{
                             if(item.innerText.indexOf(txt)!=-1){
