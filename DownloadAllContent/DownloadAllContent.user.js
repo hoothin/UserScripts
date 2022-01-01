@@ -4,7 +4,7 @@
 // @name:zh-TW   懶人小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.6.1
+// @version      2.6.2
 // @description  Fetch and download main content on current page, provide special support for chinese novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取小說、論壇內容等並保存為TXT文檔
@@ -15,6 +15,7 @@
 // @grant        GM_registerMenuCommand
 // @grant        GM_setValue
 // @grant        GM_getValue
+// @grant        unsafeWindow
 // @require      https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.min.js
 // @license      MIT License
 // @compatible        chrome
@@ -511,8 +512,32 @@
                     }
                 });
             }else{
-                let urlsArr=urls.split("@@");
-                [].forEach.call(document.querySelectorAll(urlsArr[0]),function(item){
+                let urlsArr=urls.split("@@"),eles=document.querySelectorAll(urlsArr[0]);
+                if(eles.length==0){
+                    eles=[];
+                    var eleTxts=urlsArr[0].split(/(?<=[^\\]),/),exmpEles=[];
+                    [].forEach.call(document.querySelectorAll("a"),function(item){
+                        eleTxts.forEach(txt=>{
+                            if(item.innerText.indexOf(txt)!=-1){
+                                exmpEles.push(item);
+                            }
+                        });
+                    })
+                    exmpEles.forEach(e=>{
+                        var cssSelStr="a",pa=e.parentNode;
+                        if(e.className)cssSelStr+="."+CSS.escape(e.className);
+                        while(pa && pa.nodeName!="BODY"){
+                            cssSelStr=pa.nodeName+">"+cssSelStr;
+                            pa=pa.parentNode;
+                        }
+                        [].forEach.call(document.querySelectorAll(cssSelStr),function(item){
+                            if(eles.indexOf(item)==-1){
+                                eles.push(item);
+                            }
+                        });
+                    });
+                }
+                [].forEach.call(eles,function(item){
                     let has=false;
                     for(var j=0;j<processEles.length;j++){
                         if(processEles[j].href==item.href){
@@ -536,6 +561,11 @@
                 }
                 if(urlsArr[3]){
                     processFunc=data=>{return eval(urlsArr[3])};
+                }else{
+                    var win=(typeof unsafeWindow=='undefined'? window : unsafeWindow);
+                    if(win.dacProcess){
+                        processFunc=win.dacProcess;
+                    }
                 }
             }
             indexDownload(processEles);
