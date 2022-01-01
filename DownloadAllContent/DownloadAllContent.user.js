@@ -29,7 +29,7 @@
 (function() {
     'use strict';
     var indexReg=/PART\b|^Prologue|分卷|Chapter\s*[\-_]?\d+|^序$|^序\s*言|^序\s*章|^前\s*言|^引\s*言|^引\s*子|^摘\s*要|^楔\s*子|^契\s*子|^后\s*记|^後\s*記|^附\s*言|^结\s*语|^結\s*語|^尾\s*声|^最終話|^最终话|^番\s*外|^\d+\s*\D*[^\d#\.]$|^[第（][\d〇零一二三四五六七八九十百千万萬-]+\s*(、|）|章|节|節|回|卷|折|篇|幕|集|话|話)/i;
-    var innerNextPage=/下一(页|张)|next\s*page/i;
+    var innerNextPage=/下一[页頁张張]|next\s*page|次のページ/i;
     var lang = navigator.appName=="Netscape"?navigator.language:navigator.userLanguage;
     var i18n={};
     var rCats=[];
