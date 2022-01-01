@@ -6,7 +6,7 @@
 // @description     Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version         2021.12.31.1
+// @version         2022.1.1.1
 // @created         2011-6-15
 // @namespace       http://userscripts.org/users/NLF
 // @homepage        http://hoothin.com
@@ -201,6 +201,7 @@
                 galleryLoadAll:"加载更多图片时自动处理全部页",
                 galleryLoadAllTip:"若页数过多可能影响体验",
                 galleryDownloadWithZip:"下载所有时打包成zip",
+                galleryDownloadWithZipAlert:"点击确定开始打包，请耐心等候数十秒",
                 galleryScaleSmallSize1:"实际尺寸的高和宽都小于 ",
                 galleryScaleSmallSize2:" 像素则归入小尺寸图片",
                 galleryShowSmallSize:"默认显示小尺寸图片",
@@ -409,6 +410,7 @@
                 galleryLoadAll:"載入更多圖片時自動處理全部頁",
                 galleryLoadAllTip:"若頁數過多可能影響體驗",
                 galleryDownloadWithZip:"下載所有時打包成zip",
+                galleryDownloadWithZipAlert:"點擊確定開始打包，請耐心等候數十秒",
                 galleryScaleSmallSize1:"實際尺寸的高和寬都小於 ",
                 galleryScaleSmallSize2:" 像素則歸入小尺寸圖片",
                 galleryShowSmallSize:"默認顯示小尺寸圖片",
@@ -616,6 +618,7 @@
                 galleryLoadAll:"Automatically process all pages when loading more images",
                 galleryLoadAllTip:"Too many pages may affect the experience",
                 galleryDownloadWithZip:"Compress to ZIP when download all",
+                galleryDownloadWithZipAlert:"Click OK to start, wait for a while then",
                 galleryScaleSmallSize1:"The actual size is less than the height and width",
                 galleryScaleSmallSize2:"Pixels are grouped into small size images",
                 galleryShowSmallSize:"Show small size pictures by default",
@@ -3563,6 +3566,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                                 }
                             });
                             if(prefs.gallery.downloadWithZip){
+                                alert(i18n("galleryDownloadWithZipAlert"));
                                 var zip = new JSZip(),downloaded=0;
                                 var fileName = document.title + ".zip";
                                 for(let i=0; i<saveParams.length; i++){
