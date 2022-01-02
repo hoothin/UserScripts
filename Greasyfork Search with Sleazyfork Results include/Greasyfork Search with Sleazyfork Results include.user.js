@@ -256,7 +256,7 @@
         }
         #script-list-sort li>span{
              position: absolute;
-             top: 5px;
+             top: 4px;
              right: 2px;
              pointer-events: none;
              font-weight: 500;
