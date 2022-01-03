@@ -330,7 +330,7 @@
             relocBigImg(left, top);
         };
     }*/
-    $("p").on("mouseover","div.gif-mask",function(e){
+    $("body").on("mouseover","div.gif-mask",function(e){
         if(isMobile)return;
         src=this.previousSibling.getAttribute("org_src").replace(/\b(!(custom|square))\b/,"").replace(/\b(custom|square)\b/,"medium").replace(/\.sinaimg\.cn\/(mw600|thumb\d+)/,".sinaimg.cn/large");
         src=isHttps?src.replace(/http\:\/\//,"https://"):src.replace(/https\:\/\//,"http://");
@@ -347,7 +347,7 @@
             relocBigImg(left, top);
         };
     });
-    $("p").on("mouseout","div.gif-mask",function(e){
+    $("body").on("mouseout","div.gif-mask",function(e){
         if(isMobile)return;
         if(bigImg.parentNode){
             bigImg.style.opacity=0;
@@ -356,7 +356,7 @@
         bigImg.removeAttribute("height");
         bigImg.removeAttribute("width");
     });
-    $("p").on("mousemove","div.gif-mask",function(e){
+    $("body").on("mousemove","div.gif-mask",function(e){
         if(isMobile)return;
         if(e){
             left=e.clientX;
