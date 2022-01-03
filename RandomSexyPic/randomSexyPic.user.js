@@ -235,7 +235,7 @@
         "www.hlapi.cn":"buyersShow",
         "api.ghser.com":"buyersShow"
     };
-    GM_registerMenuCommand("I'm feeling lucky", ()=>{
+    GM_registerMenuCommand("I am feeling lucky", ()=>{
         var luckyUrls=[],targetUrl;
         for(var i in setuConfig){
             let sc=setuConfig[i];
