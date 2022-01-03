@@ -112,7 +112,7 @@
                 author.appendChild(changeBtn);
             }else if(isTucao){
                 authorId=author.querySelector(".tucao-author").innerText;
-                author.appendChild(changeBtn);
+                author.insertBefore(changeBtn,author.querySelector(".tucao-author").nextSibling);
             }else{
                 authorId=isTop?author.querySelector("strong").innerText:author.querySelector("strong").title.replace(/防伪码：/,"");
                 author.insertBefore(changeBtn,author.querySelector("br"));
