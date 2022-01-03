@@ -3,7 +3,7 @@
 // @name:en      Jiandan Hero
 // @name:zh-TW   煎蛋俠
 // @namespace    hoothin
-// @version      1.9
+// @version      2.0
 // @icon         http://cdn.jandan.net/static/img/favicon.ico
 // @description  为煎蛋jandan.net提供左右方向键快捷翻页、上下方向键快捷切图、鼠标悬停显示大图、屏蔽指定用户发言等功能
 // @description:en  Tools for jandan.net
@@ -40,7 +40,6 @@
     };
 
     document.addEventListener("keyup", function(e) {
-        //console.log(e.keyCode);
         if(/INPUT|TEXTAREA/.test(document.activeElement.tagName))return;
         switch(e.keyCode){
             case 37://←
@@ -96,20 +95,22 @@
             }
         }
     }
-    var isHttps=location.protocol=="https:";
+    var isHttps=location.protocol=="https:",selector;
     var isTucao=document.querySelector(".tucao-list")!=null;
     var isTop=location.href.indexOf("jandan.net/top")!=-1;
     var isMobile=location.href.indexOf("i.jandan.net")!=-1;
-    $("body").on("mouseover", "div.author,.tucao-author-bar,.commentlist>li>b", e=>{
-        let author=e.currentTarget,authorId;
+
+    function checkBan(author){
+        let authorId;
         let changeBtn = author.querySelector("#changeBtn");
         if(changeBtn == null){
             changeBtn=document.createElement("a");
             changeBtn.href=`javascript:void(0);`;
             changeBtn.id="changeBtn";
             if(isMobile){
-                authorId=author.childNodes[0].nodeValue;
-                author.appendChild(changeBtn);
+                authorId=author.querySelector("b").innerText;
+                author.insertBefore(changeBtn,author.querySelector(".righttext"));
+                author=author.querySelector("b");
             }else if(isTucao){
                 authorId=author.querySelector(".tucao-author").innerText;
                 author.insertBefore(changeBtn,author.querySelector(".tucao-author").nextSibling);
@@ -159,13 +160,42 @@
                 changeBtn.innerHTML="隐";
             }
         }
-        changeBtn.style.display="";
+        return changeBtn;
+    }
+
+    if(isMobile){
+        selector=".commentlist>li";
+    }else{
+        selector="div.author,.tucao-author-bar";
+    }
+    [].forEach.call(document.querySelectorAll(selector), item=>{
+        checkBan(item);
+    });
+    var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+    var observer = new MutationObserver(function(records){
+        records.map(function(record) {
+            for(var i=0;i<record.addedNodes.length;i++){
+                var curNode=record.addedNodes[i];
+                if(curNode.className=="tucao-row"){
+                    checkBan(curNode.querySelector(selector));
+                }
+            }
+        });
+    });
+    var option = {
+        'childList': true
+    };
+    var tucaoList=document.querySelector("div.tucao-list");
+    if(tucaoList)observer.observe(tucaoList, option);
+    $("body").on("mouseover", selector, e=>{
+        let changeBtn=checkBan(e.currentTarget);
+        changeBtn.style.display="initial";
         //console.log(e);
     });
-    $("body").on("mouseout", "div.author,.tucao-author-bar,.commentlist>li>b", e=>{
+    $("body").on("mouseout", selector, e=>{
         let author=e.currentTarget;
         let changeBtn = author.querySelector("#changeBtn");
-        if(changeBtn)changeBtn.style.display="none";
+        if(changeBtn)changeBtn.style.display="";
     });
     /*for(i=0;i<authors.length;i++){
         let author=authors[i];
@@ -369,6 +399,9 @@
     }
     .tucao-author-bar #changeBtn{
       padding: 0 10px;
+    }
+    #changeBtn{
+      display: none;
     }
     .big_img{
       pointer-events: none;
