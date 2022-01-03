@@ -108,9 +108,10 @@
             changeBtn.href=`javascript:void(0);`;
             changeBtn.id="changeBtn";
             if(isMobile){
-                authorId=author.querySelector("b").innerText;
-                author.insertBefore(changeBtn,author.querySelector(".righttext"));
                 author=author.querySelector("b");
+                if(!author)return;
+                authorId=author.innerText;
+                author.parentNode.insertBefore(changeBtn,author.parentNode.querySelector(".righttext"));
             }else if(isTucao){
                 authorId=author.querySelector(".tucao-author").innerText;
                 author.insertBefore(changeBtn,author.querySelector(".tucao-author").nextSibling);
