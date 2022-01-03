@@ -3,7 +3,9 @@
 // @name:zh-CN   简繁自由切换
 // @name:ja      简繁
 // @name:en      Switch Traditional Chinese and Simplified Chinese
-// @namespace    https://github.com/hoothin/UserScripts
+// @namespace    hoothin
+// @supportURL   https://github.com/hoothin/UserScripts
+// @homepageURL  https://github.com/hoothin/UserScripts
 // @version      1.1.2
 // @description        任意轉換網頁中的簡體中文與繁體中文（默認簡體→繁體）
 // @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体）
