@@ -4,7 +4,7 @@
 // @name:zh-TW   懶人小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.6.2
+// @version      2.6.3
 // @description  Fetch and download main content on current page, provide special support for chinese novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取小說、論壇內容等並保存為TXT文檔
@@ -47,6 +47,7 @@
                 custom:"自定义下载",
                 customInfo:"输入网址或者章节CSS选择器",
                 reSort:"按标题名重新排序",
+                reSortUrl:"按网址重新排序",
                 setting:"懒人小说下载设置",
                 abort:"跳过此章",
                 save:"临时保存",
@@ -65,6 +66,7 @@
                 custom:"自定義下載",
                 customInfo:"輸入網址或者章節CSS選擇器",
                 reSort:"按標題名重新排序",
+                reSortUrl:"按網址重新排序",
                 setting:"懶人小說下載設置",
                 abort:"跳過此章",
                 save:"保存當前",
@@ -82,6 +84,7 @@
                 custom:"Custom to download",
                 customInfo:"Input urls OR sss selectors for chapter links",
                 reSort:"ReSort by title",
+                reSortUrl:"Resort by URLs",
                 setting:"DownloadAllContent Setting",
                 abort:"Abort",
                 save:"Save",
@@ -141,6 +144,11 @@
         if(GM_getValue("contentSort")){
             aEles.sort(function(a,b){
                 return parseInt(a.innerText.replace(/[^0-9]/ig,"")) - parseInt(b.innerText.replace(/[^0-9]/ig,""));
+            });
+        }
+        if(GM_getValue("contentSortUrl")){
+            aEles.sort(function(a,b){
+                return parseInt(a.href.replace(/[^0-9]/ig,"")) - parseInt(b.href.replace(/[^0-9]/ig,""));
             });
         }
         rCats=[];
@@ -476,11 +484,8 @@
         selValue=GM_getValue("downThreadNum");
         var downThreadNum=prompt(i18n.downThreadNum,selValue?selValue:"20");
         GM_setValue("downThreadNum",downThreadNum);
-        if(window.confirm(i18n.reSort)){
-            GM_setValue("contentSort", true);
-        }else{
-            GM_setValue("contentSort", false);
-        }
+        GM_setValue("contentSort",window.confirm(i18n.reSort));
+        GM_setValue("contentSortUrl",window.confirm(i18n.reSortUrl));
     }
     function customDown(){
         processFunc=null;
