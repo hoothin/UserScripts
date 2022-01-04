@@ -6,7 +6,7 @@
 // @description     Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version         2022.1.1.1
+// @version         2022.1.4.1
 // @created         2011-6-15
 // @namespace       http://userscripts.org/users/NLF
 // @homepage        http://hoothin.com
@@ -991,9 +991,14 @@ Trace Moe | https://trace.moe/?url=#t#`;
              url:/^https?:\/\/[^.]*\.deviantart\.com/i,
              getImage:function(img, a){
                  let id;
-                 if(img.parentNode?.parentNode?.dataset.hook=="deviation_link"){
+                 if(img.parentNode &&
+                    img.parentNode.parentNode &&
+                    img.parentNode.parentNode.dataset.hook=="deviation_link"){
                      id=img.parentNode.parentNode.href.replace(/.*?(\d+)$/,"$1");
-                 }else if(img.parentNode?.parentNode?.parentNode?.dataset.hook=="deviation_link"){
+                 }else if(img.parentNode &&
+                          img.parentNode.parentNode &&
+                          img.parentNode.parentNode.parentNode &&
+                          img.parentNode.parentNode.parentNode.dataset.hook=="deviation_link"){
                      id=img.parentNode.parentNode.parentNode.href.replace(/.*?(\d+)$/,"$1");
                  }
                  if(/\?token/.test(img.src)){
@@ -1002,11 +1007,11 @@ Trace Moe | https://trace.moe/?url=#t#`;
                          GM_xmlhttpRequest({
                              method: 'get',
                              responseType: "json",
-                             url: `/_napi/shared_api/deviation/extended_fetch?deviationid=${id}&type=art&include_session=false`,
+                             url: '/_napi/shared_api/deviation/extended_fetch?deviationid='+id+'&type=art&include_session=false',
                              onload: function(d) {
-                                 var media = d?.response?.deviation?.media
-                                 var fullview = media?.types.pop();
-                                 if(media?.baseUri && fullview && media.token){
+                                 var media = (d.response && d.response.deviation)?d.response.deviation.media:null;
+                                 var fullview = media && media.types && media.types.pop();
+                                 if(media && media.baseUri && fullview && media.token){
                                      var resultUrl=media.baseUri+(fullview.c?"/"+fullview.c.replace("<prettyName>",media.prettyName).replace(/,q_\d+/,",q_100"):"")+"?token="+media.token[0];
                                      img.dataset.pvsrc=resultUrl;
                                      if(floatBar){
@@ -1392,7 +1397,11 @@ Trace Moe | https://trace.moe/?url=#t#`;
             {name: "yande",
              url: /yande\.re/,
              getImage: function() {
-                 if(this && this.parentNode && this.parentNode.parentNode && this.parentNode.parentNode.nextSibling && this.parentNode.parentNode.nextSibling.classList && this.parentNode.parentNode.nextSibling.classList.contains("largeimg")){
+                 if(this.parentNode &&
+                    this.parentNode.parentNode &&
+                    this.parentNode.parentNode.nextSibling &&
+                    this.parentNode.parentNode.nextSibling.classList &&
+                    this.parentNode.parentNode.nextSibling.classList.contains("largeimg")){
                      return this.parentNode.parentNode.nextSibling.href;
                  }
                  return this.src;
@@ -1401,7 +1410,10 @@ Trace Moe | https://trace.moe/?url=#t#`;
             {name: "E621",
              url: /e621\.net/,
              getImage: function() {
-                 if(this && this.parentNode && this.parentNode.parentNode && this.parentNode.parentNode.parentNode && this.parentNode.parentNode.parentNode.dataset.fileUrl){
+                 if(this.parentNode &&
+                    this.parentNode.parentNode &&
+                    this.parentNode.parentNode.parentNode &&
+                    this.parentNode.parentNode.parentNode.dataset.fileUrl){
                      return this.parentNode.parentNode.parentNode.dataset.fileUrl;
                  }
                  return this.src;
@@ -1579,7 +1591,10 @@ Trace Moe | https://trace.moe/?url=#t#`;
         // 通配型规则,无视站点.
         var tprules=[
             function(img, a) { // 解决新的dz论坛的原图获取方式.
-                var regs = [/(.+\/attachments?\/.+)\.thumb\.\w{2,5}$/i,/((wp-content|moecdn\.org)\/uploads\/.*)\-\d+x\d+(-c)?/i,/.*(?:url|src)=(https?:\/\/.*\.(?:jpg|jpeg|png|gif|bmp)).*/i,/.*thumb\.php\?src=([^&]*).*/i];
+                var regs = [/(.+\/attachments?\/.+)\.thumb\.\w{2,5}$/i,
+                            /((wp-content|moecdn\.org)\/uploads\/.*)\-\d+x\d+(-c)?/i,
+                            /.*(?:url|src)=(https?:\/\/.*\.(?:jpg|jpeg|png|gif|bmp)).*/i,
+                            /.*thumb\.php\?src=([^&]*).*/i];
                 var oldsrc = this.src,newsrc = this.src;
                 if (oldsrc){
                     for(let reg of regs){
@@ -1642,10 +1657,6 @@ Trace Moe | https://trace.moe/?url=#t#`;
         ];
 
         var Rule = {};
-
-        // 兼容 Imagus 扩展的规则，自定义部分
-        Rule.Imagus = {};
-
         /**
          * 兼容 Mouseover Popup Image Viewer 脚本的规则（非完全）
          * 1、新增了特殊的替换模式：以 r; 开头。
@@ -10117,7 +10128,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
             var target = e.target;
 
             if (!target || target.id=="pv-float-bar-container" ||
-                (target.className?.indexOf &&
+                (target.className && target.className.indexOf &&
                  (target.className.indexOf('pv-') != -1 ||
                   target.classList.contains("ks-imagezoom-lens")))) {
                 return;
