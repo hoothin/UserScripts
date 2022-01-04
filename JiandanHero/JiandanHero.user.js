@@ -64,41 +64,62 @@
     });
 
     var pic,pics,currentPic,i;
-
-    function moveToPic(d){
-        pics=document.querySelectorAll(".commentlist .text img,.tucao-list img");
-        for(i=0;i<pics.length;i++){
-            pic=pics[i];
-            if(($(window).scrollTop() + $(window).height() / 2) < ($(pic).offset().top + $(pic).outerHeight()) &&
-               ($(window).scrollTop() + $(window).height() / 2) > $(pic).offset().top){
-                currentPic=pic;
-                break;
-            }
-        }
-        if(!currentPic && pics)currentPic=pics[0];
-        for(var i=0;i<pics.length;i++){
-            pic=pics[i];
-            if(currentPic==pic){
-                if(d && pics.length>(i+1)){
-                    currentPic=pics[i+1];
-                }else if(!d && i>0){
-                    currentPic=pics[i-1];
-                }
-                if(currentPic.parentNode.style.display=="none")moveToPic(d);
-                else{
-                    setTimeout(()=>{
-                        currentPic.scrollIntoView({behavior: "smooth", block: "center", inline: "center"});
-                        currentPic.click();
-                    },100);
-                }
-                break;
-            }
-        }
-    }
     var isHttps=location.protocol=="https:",selector;
     var isTucao=document.querySelector(".tucao-list")!=null;
     var isTop=location.href.indexOf("jandan.net/top")!=-1;
     var isMobile=location.href.indexOf("i.jandan.net")!=-1;
+
+    function moveToPic(d){
+        pics=document.querySelectorAll(".commentlist .text img,.tucao-list img");
+        if(!currentPic && pics)currentPic=pics[0];
+        else{
+            for(i=0;i<pics.length;i++){
+                pic=pics[i];
+                if(isTucao){
+                    if(($(window).scrollTop() + $(window).height() / 2) < ($(pic).offset().top + $(pic).outerHeight()) &&
+                       ($(window).scrollTop() + $(window).height() / 2) > $(pic).offset().top){
+                        currentPic=pic;
+                        break;
+                    }
+                }else{
+                    if($(window).scrollTop() < ($(pic).offset().top + $(pic).outerHeight()) &&
+                       ($(window).scrollTop() + $(window).height()) > $(pic).offset().top){
+                        currentPic=pic;
+                        break;
+                    }
+                }
+            }
+            if(!currentPic)return;
+            for(var i=0;i<pics.length;i++){
+                pic=pics[i];
+                var pi;
+                if(currentPic==pic){
+                    if(d && pics.length>(i+1)){
+                        pi=i+1;
+                        currentPic=pics[pi];
+                        while($(currentPic).is(":hidden") && ++pi<pics.length){
+                            currentPic=pics[pi];
+                        }
+                    }else if(!d && i>0){
+                        pi=i-1;
+                        currentPic=pics[pi];
+                        while($(currentPic).is(":hidden") && --pi>0){
+                            currentPic=pics[pi];
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        setTimeout(()=>{
+            if(isTucao){
+                currentPic.scrollIntoView({behavior: "smooth", block: "center", inline: "center"});
+            }else if(currentPic.nextSibling && currentPic.nextSibling.className=="gif-mask"){
+                currentPic.nextSibling.click();
+            }
+            currentPic.click();
+        },100);
+    }
 
     function checkBan(author){
         let authorId;
