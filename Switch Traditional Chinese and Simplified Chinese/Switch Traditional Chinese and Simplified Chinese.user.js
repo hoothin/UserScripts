@@ -22,7 +22,7 @@
 
 (function() {
     'use strict';
-    var auto=true;//是否自動切換至OS使用的默認語言
+    var auto=false;//是否自動切換至OS使用的默認語言
     var shortcutKey=119;//快捷鍵keyCode
     var lang = navigator.appName=="Netscape"?navigator.language:navigator.userLanguage;
     lang = lang.toLowerCase();
@@ -243,8 +243,8 @@
     }
 
     var saveAction=GM_getValue("action_" + location.hostname.toString().replace(/\./g,"_"));
-    action=saveAction?saveAction:(isSimple?2:3);
-    if(auto && action > 1){
+    action=saveAction?saveAction:(isSimple?(auto?2:3):(auto?3:2));
+    if((auto||saveAction) && action > 1){
         setTimeout(function(){
             stranBody();
             var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
