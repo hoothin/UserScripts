@@ -4,7 +4,7 @@
 // @name:zh-TW   懶人小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.6.3
+// @version      2.6.5
 // @description  Fetch and download main content on current page, provide special support for chinese novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取小說、論壇內容等並保存為TXT文檔
@@ -28,7 +28,7 @@
 
 (function() {
     'use strict';
-    var indexReg=/PART\b|^Prologue|分卷|Chapter\s*[\-_]?\d+|^序$|^序\s*言|^序\s*章|^前\s*言|^引\s*言|^引\s*子|^摘\s*要|^楔\s*子|^契\s*子|^后\s*记|^後\s*記|^附\s*言|^结\s*语|^結\s*語|^尾\s*声|^最終話|^最终话|^番\s*外|^\d+\s*\D*[^\d#\.]$|^[第（][\d〇零一二三四五六七八九十百千万萬-]+\s*(、|）|章|节|節|回|卷|折|篇|幕|集|话|話)/i;
+    var indexReg=/PART\b|^Prologue|Chapter\s*[\-_]?\d+|分卷|^序$|^序\s*言|^序\s*章|^前\s*言|^附\s*[录錄]|^引\s*[言子]|^摘\s*要|^[楔契]\s*子|^后\s*记|^後\s*記|^附\s*言|^结\s*语|^結\s*語|^尾\s*[声聲]|^最終話|^最终话|^番\s*外|^\d+\s*\D*[^\d#\.]$|^[第（][\d〇零一二三四五六七八九十百千万萬-]+\s*[、）章节節回卷折篇幕集话話]/i;
     var innerNextPage=/下一[页頁张張]|next\s*page|次のページ/i;
     var lang = navigator.appName=="Netscape"?navigator.language:navigator.userLanguage;
     var i18n={};
@@ -517,26 +517,38 @@
                     }
                 });
             }else{
-                let urlsArr=urls.split("@@"),eles=document.querySelectorAll(urlsArr[0]);
+                let urlsArr=urls.split("@@"),eles=[];
+                try{
+                    eles=document.querySelectorAll(urlsArr[0]);
+                }catch(e){}
                 if(eles.length==0){
                     eles=[];
-                    var eleTxts=urlsArr[0].split(/(?<=[^\\])[,，]/),exmpEles=[];
+                    var eleTxts=urlsArr[0].split(/(?<=[^\\])[,，]/),exmpEles=[],excludeTxts={};
                     [].forEach.call(document.querySelectorAll("a"),function(item){
                         eleTxts.forEach(txt=>{
-                            if(item.innerText.indexOf(txt)!=-1){
+                            var txtArr=txt.split("!");
+                            if(item.innerText.indexOf(txtArr[0])!=-1){
                                 exmpEles.push(item);
+                                excludeTxts[item]=txtArr.splice(1);
                             }
                         });
                     })
                     exmpEles.forEach(e=>{
-                        var cssSelStr="a",pa=e.parentNode;
+                        var cssSelStr="a",pa=e.parentNode,excludeTxt=excludeTxts[e];
                         if(e.className)cssSelStr+="."+CSS.escape(e.className);
                         while(pa && pa.nodeName!="BODY"){
                             cssSelStr=pa.nodeName+">"+cssSelStr;
                             pa=pa.parentNode;
                         }
                         [].forEach.call(document.querySelectorAll(cssSelStr),function(item){
-                            if(eles.indexOf(item)==-1){
+                            var isExclude=false;
+                            for(var t in excludeTxt){
+                                if(item.innerText.indexOf(excludeTxt[t])!=-1){
+                                    isExclude=true;
+                                    break;
+                                }
+                            }
+                            if(!isExclude && eles.indexOf(item)==-1){
                                 eles.push(item);
                             }
                         });
