@@ -2825,6 +2825,49 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     this.blur();
                 });
 
+                var lastX,lastY;
+                const minLength=200,tg=0.5;
+                function tracer(e) {
+                    let curX=e.changedTouches[0].clientX;
+                    let curY=e.changedTouches[0].clientY;
+                    let distanceX=curX-lastX,distanceY=curY-lastY;
+                    let distance=distanceX*distanceX+distanceY*distanceY;
+                    if (distance>minLength) {
+                        lastX=curX;
+                        lastY=curY;
+                        let direction="";
+                        let slope=Math.abs(distanceY/distanceX);
+                        if(slope>tg){
+                            if(distanceY>0) {
+                                direction="↓";
+                            }else{
+                                direction="↑";
+                            }
+                        }else if(slope<=1/tg) {
+                            if(distanceX>0) {
+                                direction="→";
+                            }else{
+                                direction="←";
+                            }
+                        }
+                        if(direction=="↑" || direction=="←"){
+                            self.selectPrevious();
+                            stop=self.simpleSlideShow(true);
+                        }else{
+                            self.selectNext();
+                            stop=self.simpleSlideShow();
+                        }
+                    }
+                }
+                document.addEventListener('touchstart',function(e){
+                    lastX=e.changedTouches[0].clientX;
+                    lastY=e.changedTouches[0].clientY;
+                    document.addEventListener('touchmove',tracer);
+                });
+                document.addEventListener('touchend',function(e){
+                    document.removeEventListener('touchmove',tracer);
+                });
+
                 //上下左右切换图片,空格键模拟滚动一页
 
                 var validKeyCode=[38,39,40,37,32,9]//上右下左,32空格,tab禁止焦点切换。
@@ -4720,13 +4763,20 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     .pv-gallery-maximize-trigger-close:hover{\
                     background-color:#333;\
                     }\
+                    @media screen and (max-width: 800px) {\
+                    .pv-gallery-range-box>input {\
+                    display: none;\
+                    }\
+                    }\
                     /*顶栏*/\
                     .pv-gallery-head {\
                     position: absolute;\
                     top: 0;\
                     left: 0;\
                     width: 100%;\
-                    height:30px;\
+                    flex-wrap: wrap;\
+                    min-height: 30px;\
+                    height: auto;\
                     z-index:1;\
                     background-color:rgb(0,0,0);\
                     border:none;\
