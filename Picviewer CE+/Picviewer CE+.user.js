@@ -2588,8 +2588,8 @@ Trace Moe | https://trace.moe/?url=#t#`;
                             var saveParams = [];
                             [].forEach.call(nodes, function(node){
                                 if(unsafeWindow.getComputedStyle(node).display!="none"){
-                                    srcSplit=node.dataset.src.split("/");
-                                    var picName=srcSplit[srcSplit.length-1],hostArr=location.host.split(".");
+                                    srcSplit=node.dataset.src.replace(/[\?#].*/,"").split("/");
+                                    var picName=(node.dataset.title?document.title + "-" + node.dataset.title:document.title) + "-" + srcSplit[srcSplit.length-1],hostArr=location.host.split(".");
                                     var host=hostArr[hostArr.length-2];
                                     if(/\.[\da-z]+$/i.test(picName))picName=host+"-"+picName;
                                     else picName=host;
