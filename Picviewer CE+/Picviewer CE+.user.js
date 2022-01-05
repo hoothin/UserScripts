@@ -4781,10 +4781,10 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     display: none;\
                     }\
                     .pv-gallery-maximize-container{\
-                    column-count: 2;\
-                    -moz-column-count: 2;\
-                    -webkit-column-count: 2;\
-                    padding-top: 80px;\
+                    column-count: 2!important;\
+                    -moz-column-count: 2!important;\
+                    -webkit-column-count: 2!important;\
+                    padding-top: 80px!important;\
                     }\
                     }\
                     /*顶栏*/\
