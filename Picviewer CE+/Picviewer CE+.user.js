@@ -2591,8 +2591,6 @@ Trace Moe | https://trace.moe/?url=#t#`;
                                     srcSplit=node.dataset.src.replace(/[\?#].*/,"").split("/");
                                     var picName=(node.dataset.title?document.title + "-" + node.dataset.title:document.title) + "-" + srcSplit[srcSplit.length-1],hostArr=location.host.split(".");
                                     var host=hostArr[hostArr.length-2];
-                                    if(/\.[\da-z]+$/i.test(picName))picName=host+"-"+picName;
-                                    else picName=host;
                                     saveParams.push([node.dataset.src, picName]);
                                     //saveAs(node.dataset.src, location.host+"-"+srcSplit[srcSplit.length-1]);
                                 }
@@ -2603,6 +2601,16 @@ Trace Moe | https://trace.moe/?url=#t#`;
                                 var fileName = document.title + ".zip";
                                 for(let i=0; i<saveParams.length; i++){
                                     self.dataURLToCanvas(saveParams[i][0], canvas=>{
+                                        if(!canvas){
+                                            downloaded++;
+                                            if(downloaded == saveParams.length){
+                                                zip.generateAsync({type:"blob"}).then(function(content){
+                                                    saveAs(content, fileName);
+                                                    downloading=false;
+                                                })
+                                            }
+                                            return;
+                                        }
                                         canvas.toBlob(blob=>{
                                             zip.file(saveParams[i][1].replace(/\.[^\.]+$/,"")+'.jpg',blob);
                                             downloaded++;
@@ -3385,6 +3393,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 }
             },
             dataURLToCanvas:function (dataurl, cb){
+                if(!dataurl)return cb(null);
                 var canvas = document.createElement('CANVAS');
                 var ctx = canvas.getContext('2d');
                 var img = new Image();
@@ -3395,6 +3404,9 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     ctx.drawImage(img, 0, 0);
                     cb(canvas);
                 };
+                img.onerror = function(){
+                    cb(null);
+                };
                 img.src = dataurl;
             },
             blobToDataURL:function(blob, cb){
@@ -3403,6 +3415,9 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 a.onload = function (e){
                     cb(e.target.result);
                 };
+                a.onerror = function (e){
+                    cb(null);
+                }
             },
             blobToCanvas: function (blob, cb){
                 var self=this;
