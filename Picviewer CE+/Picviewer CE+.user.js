@@ -4784,7 +4784,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     column-count: 2!important;\
                     -moz-column-count: 2!important;\
                     -webkit-column-count: 2!important;\
-                    padding-top: 80px!important;\
+                    padding-top: 200px!important;\
                     }\
                     }\
                     /*顶栏*/\
