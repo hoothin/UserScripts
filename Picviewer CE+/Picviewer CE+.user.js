@@ -4780,6 +4780,12 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     .pv-gallery-range-box>input {\
                     display: none;\
                     }\
+                    .pv-gallery-maximize-container{\
+                    column-count: 2;\
+                    -moz-column-count: 2;\
+                    -webkit-column-count: 2;\
+                    padding-top: 80px;\
+                    }\
                     }\
                     /*顶栏*/\
                     .pv-gallery-head {\
@@ -5233,6 +5239,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     width: 100%;\
                     display: block;\
                     background: black;\
+                    padding-top: 30px;\
                     }\
                     .pv-gallery-maximize-container span{\
                     -moz-page-break-inside: avoid;\
