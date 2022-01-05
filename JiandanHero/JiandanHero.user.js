@@ -89,7 +89,7 @@
                     }
                 }
             }
-            if(!currentPic)return;
+            if(!currentPic && pics)currentPic=pics[0];
             for(var i=0;i<pics.length;i++){
                 pic=pics[i];
                 var pi;
