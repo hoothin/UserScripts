@@ -4781,9 +4781,9 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     display: none;\
                     }\
                     .pv-gallery-maximize-container{\
-                    column-count: 3!important;\
-                    -moz-column-count: 3!important;\
-                    -webkit-column-count: 3!important;\
+                    column-count: 2!important;\
+                    -moz-column-count: 2!important;\
+                    -webkit-column-count: 2!important;\
                     padding-top: 200px!important;\
                     }\
                     }\
