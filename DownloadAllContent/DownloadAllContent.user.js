@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DownloadAllContent
-// @name:zh-CN   懒人小说下载器
-// @name:zh-TW   懶人小説下載器
+// @name:zh-CN   怠惰小说下载器
+// @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
 // @version      2.6.5
@@ -39,7 +39,7 @@
         case "zh-SG":
             i18n={
                 fetch:"开始下载小说或其他【Ctrl+F9】",
-                info:"本文是使用懒人小说下载器（DownloadAllContent）下载的",
+                info:"本文是使用怠惰小说下载器（DownloadAllContent）下载的",
                 error:"该段内容获取失败",
                 downloading:"已下载完成 %s 段，剩余 %s 段<br>正在下载 %s",
                 complete:"已全部下载完成，共 %s 段",
@@ -58,7 +58,7 @@
         case "zh-HK":
             i18n={
                 fetch:"開始下載小說或其他【Ctrl+F9】",
-                info:"本文是使用懶人小說下載器（DownloadAllContent）下載的",
+                info:"本文是使用怠惰小說下載器（DownloadAllContent）下載的",
                 error:"該段內容獲取失敗",
                 downloading:"已下載完成 %s 段，剩餘 %s 段<br>正在下載 %s",
                 complete:"已全部下載完成，共 %s 段",
