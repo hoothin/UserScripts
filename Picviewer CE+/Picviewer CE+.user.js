@@ -6,7 +6,7 @@
 // @description     Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version         2022.1.4.1
+// @version         2022.1.5.1
 // @created         2011-6-15
 // @namespace       http://userscripts.org/users/NLF
 // @homepage        http://hoothin.com
@@ -23,12 +23,14 @@
 // @grant           GM_setClipboard
 // @grant           GM_xmlhttpRequest
 // @grant           GM_registerMenuCommand
+// @grant           GM_notification
 // @grant           unsafeWindow
 // @require         https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
 // @contributionURL https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
 // @contributionAmount 1
 // @require         https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.2/FileSaver.min.js
 // @require         https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.js
+// @require         https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1005390
 // @include         http://*
 // @include         https://*
 // @include         ftp://*
@@ -201,7 +203,7 @@
                 galleryLoadAll:"加载更多图片时自动处理全部页",
                 galleryLoadAllTip:"若页数过多可能影响体验",
                 galleryDownloadWithZip:"下载所有时打包成zip",
-                galleryDownloadWithZipAlert:"点击确定开始打包，请耐心等候数十秒",
+                galleryDownloadWithZipAlert:"正在打包，请耐心等候数十秒",
                 galleryScaleSmallSize1:"实际尺寸的高和宽都小于 ",
                 galleryScaleSmallSize2:" 像素则归入小尺寸图片",
                 galleryShowSmallSize:"默认显示小尺寸图片",
@@ -410,7 +412,7 @@
                 galleryLoadAll:"載入更多圖片時自動處理全部頁",
                 galleryLoadAllTip:"若頁數過多可能影響體驗",
                 galleryDownloadWithZip:"下載所有時打包成zip",
-                galleryDownloadWithZipAlert:"點擊確定開始打包，請耐心等候數十秒",
+                galleryDownloadWithZipAlert:"正在打包，請耐心等候數十秒",
                 galleryScaleSmallSize1:"實際尺寸的高和寬都小於 ",
                 galleryScaleSmallSize2:" 像素則歸入小尺寸圖片",
                 galleryShowSmallSize:"默認顯示小尺寸圖片",
@@ -618,7 +620,7 @@
                 galleryLoadAll:"Automatically process all pages when loading more images",
                 galleryLoadAllTip:"Too many pages may affect the experience",
                 galleryDownloadWithZip:"Compress to ZIP when download all",
-                galleryDownloadWithZipAlert:"Click OK to start, wait for a while then",
+                galleryDownloadWithZipAlert:"Compressing, wait for a while please",
                 galleryScaleSmallSize1:"The actual size is less than the height and width",
                 galleryScaleSmallSize2:"Pixels are grouped into small size images",
                 galleryShowSmallSize:"Show small size pictures by default",
@@ -816,1000 +818,27 @@ Trace Moe | https://trace.moe/?url=#t#`;
             firstEngine:"Tineye"
         };
 
-        //各网站高级规则;
-        var siteInfo=[
-            {name: "google 图片搜索",
-             //网址例子.(方便测试.查看.之类的)
-             siteExample:"http://www.google.com.hk/search?q=firefox&tbm=isch",
-             //是否启用
-             enabled:true,
-             //站点正则
-             url:/https?:\/\/www.google(\.\w{1,3}){1,3}\/search\?.*&tbm=isch/,
-             //鼠标左键点击直接打开..（这个只是当高级规则的getImage()返回图片的时候生效）
-             // 无效？只有少数情况下有作用？
-             clikToOpen:{
-                 enabled:false,
-                 preventDefault:true,//是否尝试阻止点击的默认行为（比如如果是你点的是一个链接，默认行为是打开这个链接，如果是true，js会尝试阻止链接的打开(如果想临时打开这个链接，请使用右键的打开命令)）
-                 type:'actual',//默认的打开方式: 'actual'(弹出,原始图片) 'magnifier'(放大镜) 'current'(弹出,当前图片)
-             },
-             //获取图片实际地址的处理函数,
-             //this 为当前鼠标悬浮图片的引用,
-             //第一个参数和this相同，也是当前鼠标悬浮图片的引用,
-             //第二个参数为包裹当前图片的第一个a元素(可能不存在).
-             getImage:function(img,a){
-                 if(!a)return;
-                 if (a.href.match(/imgurl=(.*?\.\w{1,5})&/i)) {
-                     return decodeURIComponent(RegExp.$1);
-                 }
-             },
-
-             // ====== 我新增的 ======
-             // 自定义样式
-             css: '',
-             // 排除的图片正则
-             // exclude: /weixin_code\.png$/i,
-            },
-            {name: "Bing 图片搜索",
-             siteExample:"http://cn.bing.com/images/search?q=%E7%BE%8E%E5%A5%B3",
-             enabled:true,
-             url: /^https?:\/\/[^.]*\.bing\.com\/images\//i,
-             getImage:function(img, a){
-                 if (!a) return;
-                 var oldsrc=this.src;
-                 var $ = /,imgurl:"([^"]+)/.exec(a.getAttribute('m'));
-                 var newsrc= $ ? $[1] : '';
-                 if(newsrc!=oldsrc)return newsrc;
-             }
-            },
-            {name:"百度贴吧",
-             enabled:true,
-             url:/^https?:\/\/tieba\.baidu\.[^\/]+\//i,
-             getImage:function(img){
-                 var src=img.src;
-                 var reg=/^(http:\/\/tiebapic\.baidu\.com\/forum\/)ab(pic\/item\/[\w.]+)/i ;
-                 var portrait=/\/sys\/portrait/;
-                 var result=src.match(reg);
-                 //帖子列表页面
-                 if(portrait.test(src)){
-                     return src.replace(/\/sys\/portrait/,"/sys/portraitl");
-                 }else if(result){//小图的时候
-                     return result[1]+result[2];
-                 }else{//小图点击之后的较大图，或者帖子内容页面的图片。
-                     var prefix = 'http://tiebapic.baidu.com/forum/pic/item/';
-                     var reg2 = /\/sign=\w+\/([\w.]+)$/;
-                     var sign = src.match(reg2);
-                     return  sign ? prefix + sign[1] : null;
-                 };
-             },
-            },
-            // 百度自身的全屏查看方式更加好，跟这个脚本的库查看类似。
-            {name: "百度图片搜索",
-             siteExample: "http://image.baidu.com/i?ie=utf-8&word=%E9%A3%8E%E6%99%AF&oq=%E9%A3%8E%E6%99",
-             enabled: true,
-             url: /^https?:\/\/image\.baidu\.com\/.*&word=/i,
-             getImage: function(img, a) {
-                 if (!a) return;
-                 var reg = /&objurl=(http.*?\.(?:jpg|jpeg|png|gif|bmp))/i;
-                 if (a.href.match(reg)) {
-                     return decodeURIComponent(RegExp.$1);
-                 }
-             }
-            },
-            {name:"豆瓣",
-             siteExample:"http://movie.douban.com/photos/photo/1000656155/",
-             enabled: true,
-             url:/^https?:\/\/[^.]*\.douban\.com/i,
-             getImage:function(){
-                 var oldsrc = this.src,
-                     newsrc = oldsrc;
-                 var pic = /\/view\/photo\/(?:photo|albumcover|albumicon|thumb|sqxs)\/public\//i;
-                 var movieCover = /\/view\/movie_poster_cover\/[si]pst\/public\//i;
-                 var bookCover = /\/view\/ark_article_cover\/cut\/public\//i;
-                 var spic = /(img\d+.douban.com)\/[sm]pic\//i
-
-                 // 这个网址大图会出错
-                 // http://movie.douban.com/subject/25708579/discussion/58950206/
-                 if(/movie\.douban\.com\/subject\/\d+\/discussion/.test(location.href)){
-                 } else if (pic.test(oldsrc)) {
-                     newsrc = oldsrc.replace(pic, '/view/photo/raw/public/');
-                 } else if (movieCover.test(oldsrc)) {
-                     newsrc = oldsrc.replace(movieCover, '/view/photo/raw/public/');
-                 } else if (bookCover.test(oldsrc)) {
-                     newsrc = oldsrc.replace(bookCover, '/view/ark_article_cover/retina/public/');
-                 } else if (spic.test(oldsrc)) {
-                     newsrc = oldsrc.replace(spic, '$1/lpic/');
-                 }
-
-                 return newsrc == oldsrc ? null : [newsrc,newsrc.replace(/photo\/raw/,"photo/photo")];
-             }
-            },
-            {name:"新浪微博",
-             siteExample:"http://weibo.com/pub/?source=toptray",
-             enabled:false,
-             url:/^https?:\/\/(?:[^.]+\.)*weibo\.(com|cn)/i,
-             getImage:function(img){
-                 var oldsrc=this.src;
-                 var pic=/(\.sinaimg\.(cn|com)\/)(?:bmiddle|orj360)/i;//微博内容图片.
-                 var pic2=/(\.sinaimg\.(cn|com)\/)(?:square|thumbnail)/i;// 微博内容图片2.
-                 var head=/(\.sinaimg\.(cn|com)\/\d+)\/50\//i;//头像.
-                 var photoList=/\.sinaimg\.(cn|com)\/thumb\d+\/\w+/i;//相册
-                 var sport=/k\.sinaimg\.cn\/n\//i;
-                 var newsrc;
-                 if(pic.test(oldsrc)){
-                     newsrc=oldsrc.replace(pic,'$1large');  // large 不是每一张图片都有的
-                     return newsrc==oldsrc? '' : newsrc;
-                 } else if (pic2.test(oldsrc)) {
-                     newsrc=oldsrc.replace(pic2,'$1mw1024');
-                     return newsrc==oldsrc? '' : newsrc;
-                 } else if(head.test(oldsrc)){
-                     newsrc=oldsrc.replace(head,'$1/180/');
-                     return newsrc==oldsrc? '' : newsrc;
-                 }else if(photoList.test(oldsrc)){
-                     newsrc=oldsrc.replace(/thumb\d+/,'mw690');
-                     return newsrc==oldsrc? '' : newsrc;
-                 }else if(sport.test(oldsrc)){
-                     newsrc=oldsrc.replace(/k\.sinaimg\.cn\/n\/(.*)\/w\d+h\d+[^\/]+$/,'n.sinaimg.cn/$1');
-                     return newsrc==oldsrc? '' : newsrc;
-                 }
-             },
-            },
-            {name:"bilibili",
-             enabled:true,
-             url:/^https?:\/\/[^.]+\.bilibili.com/i,
-             ext: 'previous-2',
-             getImage:function(img){
-                 var oldsrc=this.src;
-                 var pic=/\d+_\d+\/|\d+_x\d+\.jpg$|@\d+w_\d+h.*\.webp$|_\d+x\d+\.jpg$/i;
-                 var newsrc;
-                 if(pic.test(oldsrc)){
-                     newsrc=oldsrc.replace(pic,'');
-                     return newsrc==oldsrc? '' : newsrc;
-                 }
-             }
-            },
-            {name:"腾讯微博",
-             siteExample:"http://t.qq.com/p/news",
-             enabled:true,
-             url:/^http:\/\/[^\/]*t\.qq\.com\//i,
-             getImage:function(img){
-                 var pic=/(\.qpic\.cn\/mblogpic\/\w+)\/\d+/i;//图片
-                 var head=/(\.qlogo\.cn\/mbloghead\/\w+)\/\d+/i;//头像.
-                 var oldsrc=this.src;
-                 var newsrc;
-                 if(pic.test(oldsrc)){
-                     newsrc=oldsrc.replace(pic,'$1/2000');
-                     return newsrc==oldsrc? '' : newsrc;;
-                 }else if(head.test(oldsrc)){
-                     newsrc=oldsrc.replace(head,'$1/0');
-                     return newsrc==oldsrc? '' : newsrc;;
-                 };
-             },
-            },
-            {name: "deviantart",
-             siteExample: "http://www.deviantart.com",
-             enabled:true,
-             url:/^https?:\/\/[^.]*\.deviantart\.com/i,
-             getImage:function(img, a){
-                 let id;
-                 if(img.parentNode &&
-                    img.parentNode.parentNode &&
-                    img.parentNode.parentNode.dataset.hook=="deviation_link"){
-                     id=img.parentNode.parentNode.href.replace(/.*?(\d+)$/,"$1");
-                 }else if(img.parentNode &&
-                          img.parentNode.parentNode &&
-                          img.parentNode.parentNode.parentNode &&
-                          img.parentNode.parentNode.parentNode.dataset.hook=="deviation_link"){
-                     id=img.parentNode.parentNode.parentNode.href.replace(/.*?(\d+)$/,"$1");
-                 }
-                 if(/\?token/.test(img.src)){
-                     if(!img.dataset.pvsrc && id){
-                         img.dataset.pvsrc="t";
-                         GM_xmlhttpRequest({
-                             method: 'get',
-                             responseType: "json",
-                             url: '/_napi/shared_api/deviation/extended_fetch?deviationid='+id+'&type=art&include_session=false',
-                             onload: function(d) {
-                                 var media = (d.response && d.response.deviation)?d.response.deviation.media:null;
-                                 var fullview = media && media.types && media.types.pop();
-                                 if(media && media.baseUri && fullview && media.token){
-                                     var resultUrl=media.baseUri+(fullview.c?"/"+fullview.c.replace("<prettyName>",media.prettyName).replace(/,q_\d+/,",q_100"):"")+"?token="+media.token[0];
-                                     img.dataset.pvsrc=resultUrl;
-                                     if(floatBar){
-                                         floatBar.update(img, img.dataset.pvsrc);
-                                     }
-                                 }
-                             }
-                         });
-                     }else if(img.dataset.pvsrc!="t" && id){
-                         return img.dataset.pvsrc;
-                     }
-                     //return this.src.replace(/\/v1\/.*\?token/,"?token");
-                 }
-                 return null;
-                 /*var oldsrc=this.src;
-                 var newsrc;
-                 if(this.parentNode && this.parentNode.parentNode && this.parentNode.parentNode.parentNode && this.parentNode.parentNode.parentNode.dataset && this.parentNode.parentNode.parentNode.dataset.superFullImg){
-                     newsrc=this.parentNode.parentNode.parentNode.dataset.superFullImg;
-                 }
-                 if(!newsrc)
-                     newsrc = a.getAttribute('data-super-img') || a.getAttribute('data-super-full-img') || a.parentNode.getAttribute('data-super-img') || a.parentNode.getAttribute('data-super-full-img')
-                         || oldsrc.replace(/(http:\/\/[^\/]+\/fs\d+\/)200H\/(.*)/i,'$1$2');
-                 return newsrc==oldsrc? '' : newsrc;*/
-             },
-            },
-            {name: '花瓣网',
-             enabled: true,
-             url: /^https?:\/\/huaban\.com\//i,
-             ext: 'previous-2',
-             // ext: function(target) {
-             //     if (target.className == 'cover') {
-             //         return target.parentNode.querySelector('img');
-             //     }
-             // },
-             getImage: function() {
-                 var pic = /(.*img.hb.aicdn.com\/.*)_fw(?:236|320)$/i
-                 if (this.src.match(pic)) {
-                     return RegExp.$1 + '_fw658';
-                 }
-             },
-             description: './../following-sibling::p[@class="description"]',
-             // css: '.pin a.img .cover { display: none; }',
-             exclude: /weixin_code\.png$/i,
-            },
-            // 其它
-            {name: "wikipedia",
-             enabled:true,
-             url:/^https?:\/\/[^.]+.wikipedia.org\//i,
-             getImage:function(){
-                 var src=this.src;
-                 var ret=src.replace('/thumb/','/');
-                 if(src==ret)return;//非缩略图
-                 return (ret.match(/(https?:\/\/.*)\/\d+px-.*/) || [])[1];
-             },
-            },
-            {name:"沪江碎碎",
-             enabled:true,
-             url:/^https?:\/\/([^.]+\.)*(?:yeshj\.com|hjenglish\.com|hujiang\.com)/i,
-             getImage:function(img){
-                 var oldsrc=this.src;
-                 var reg=/^(https?:\/\/(?:[^.]+\.)*hjfile.cn\/.+)(_(?:s|m))(\.\w+)$/i;
-                 if(reg.test(oldsrc)){
-                     return oldsrc.replace(reg,'$1$3');
-                 };
-             },
-            },
-            {name: '大众点评',
-             siteExample: 'http://www.dianping.com/shop/17873296/photos',
-             url: /^https?:\/\/www.dianping.com\/shop/i,
-             getImage: function() {
-                 var oldsrc = this.src,
-                     newsrc;
-                 var pic = /(.+?dpfile\.com\/.+)\(240c180\)\/(thumb\..+)/;
-                 if (pic.test(oldsrc)) {
-                     return oldsrc.replace(pic, '$1(700x700)/$2');
-                 }
-             }
-            },
-            // 视频网站
-            {name: 'trakt.tv',
-             url: /^http:\/\/trakt\.tv\//i,
-             siteExample: 'http://trakt.tv/shows',
-             getImage: function() {
-                 var oldsrc = this.src;
-                 if (oldsrc.match(/(.*\/images\/posters\/\d+)-(?:300|138)\.jpg\?(\d+)$/)) {
-                     return RegExp.$1 + '.jpg?' + RegExp.$2;
-                 }
-             }
-            },
-            // Music
-            {name: '网易云音乐',
-             url: 'http://music.163.com/*',
-             ext: 'previous',  // 扩展模式，检查前面一个是否为 img
-             getImage: function() {
-                 var oldsrc = this.src;
-                 if(this.data){
-                     var newsrc = this.data('src');
-                     if (oldsrc != newsrc) {
-                         return newsrc;
-                     }
-                 }
-                 if (oldsrc.match(/(.*)\?param=\d+y\d+$/)) {
-                     return RegExp.$1;
-                 }
-             }
-            },
-            // 美女
-            {name: "美女薄情馆",  // 这个网站有限制，每天只能看多少张
-             url: /^http:\/\/boqingguan\.com\//i,
-             siteExample: 'http://boqingguan.com/Picture/31637',
-             lazyAttr: 'data-original',  // 由于采用了延迟加载技术，所以图片可能为 loading.gif
-             getImage: function(img, a) {
-                 var oldsrc = this.getAttribute('data-original') || this.src;
-                 if (oldsrc) {
-                     var newsrc = oldsrc.replace(/![a-z\d]+$/, '');
-                     return newsrc == oldsrc ? '' : newsrc;
-                 }
-             }
-            },
-            // 游戏
-            {name:"178.com",
-             enabled:true,
-             url:/^https?:\/\/(?:\w+\.)+178\.com\//i,
-             clikToOpen:{
-                 enabled:true,
-                 preventDefault:true,
-                 type:'actual',
-             },
-             getImage:function(img,a){
-                 if(!a)return;
-                 var reg=/^https?:\/\/(?:\w+\.)+178\.com\/.+?(https?:\/\/img\d*.178.com\/[^.]+\.(?:jpg|jpeg|png|gif|bmp))/i;
-                 return (a.href.match(reg) || [])[1];
-             },
-            },
-
-            // 论坛
-            {name:"极限主题社区",
-             enabled:true,
-             url:/^https?:\/\/bbs\.themex\.net\/.+/i,
-             clikToOpen:{
-                 enabled:true,
-                 preventDefault:true,
-                 type:'actual',
-             },
-             getImage:function(){
-                 var reg=/^(https?:\/\/bbs\.themex\.net\/attachment\.php\?.+)&thumb=1(.+)/i;
-                 var src=this.src;
-                 var ret=src.replace(reg,'$1$2');
-                 return ret!=src? ret : '';
-             },
-            },
-            {name:"opera官方论坛",
-             siteExample:"http://bbs.operachina.com",
-             enabled:true,
-             url:/^http:\/\/bbs\.operachina\.com/i,
-             getImage:function(){
-                 var src=this.src;
-                 if(/file.php\?id=\d+$/i.test(src)){
-                     return src+'&mode=view';
-                 };
-             },
-            },
-
-            // 特殊的需要修正
-            {name: 'github 修正',
-             url: /^https?:\/\/github\.com\//i,
-             clikToOpen: {
-                 enabled: true,
-                 preventDefault: true,
-                 type: 'actual',
-             },
-             getImage: function(img, a) {
-                 if (a && a.href.indexOf('/blob/master/') > 0) {
-                     return this.src;
-                 }
-             }
-            },
-
-            // 需要 xhr 获取的
-            {name: '优美图',
-             url: /http:\/\/(?:www\.)?topit\.me\//,
-             getImage: function(img, a) {  // 如果有 xhr，则应该返回 xhr 的 url
-                 if (a && a.href.match(/topit\.me\/item\/\d+/)) {
-                     return a.href;
-                 }
-             },
-             lazyAttr: 'data-original',  // 延迟加载技术让后面的图片是 blank.gif
-             xhr: {
-                 q: ['a[download]', 'a#item-tip'],
-             }
-            },
-            {name: '半次元',
-             url: /^https?:\/\/bcy\.net\//,
-             getImage: function() {
-                 return this.src.replace(/\/\dX\d$|\/w\d+$/,"").replace(/\/cover\//,"/post/").replace(/\/(middle|small)\.jpg/,"/big.jpg");
-             }
-            },
-            {name: 'Steampowered',
-             url: /\.steampowered\.com/,
-             getImage: function() {
-                 return this.src.replace(/\.\d+x\d+\.jpg/,".jpg");
-             }
-            },
-            {name: 'Steamcommunity',
-             url: /steamcommunity\.com/,
-             getImage: function() {
-                 return this.src.replace(/output\-quality=\d+&fit=inside\|\d+\:\d+/,"output-quality=100&fit=inside|0:0");
-             }
-            },
-            {name: '知乎',
-             url: /zhihu\.com/,
-             getImage: function() {
-                 return this.src.replace(/_(b|xs|s|l|\d+x\d+)\./,".");
-             }
-            },
-            {name: '500px',
-             url: /500px\./,
-             getImage: function() {
-                 return this.src.replace(/\/w%3D\d+_h%3D\d+\/v2.*/,"/m%3D2048_k%3D1_of%3D1/v2").replace(/^((?:(?:pp?cdn|s\\d\\.amazonaws\\.com\/photos|gp\\d+\\.wac\\.edgecastcdn\\.net\/806614\/photos\/photos)\\.500px|djlhggipcyllo\\.cloudfront)\\.(?:net|org)\/\\d+\/[\\da-f]{40}\/)\\d+\\./,"$12048.jpg");
-             }
-            },
-            {name: 'Nyaa',
-             url: /nyaa\.se/,
-             getImage: function() {
-                 return /upload\/small\//.test(this.src)?this.src.replace(/upload\/small\//,"upload/big/"):null;
-             }
-            },
-            {name: "itunes",
-             url: /itunes\.apple\.com/,
-             getImage: function() {
-                 return this.src.replace(/\d+x\d+bb\./,"1400x1400bb.");
-             }
-            },
-            {name: "汽车之家",
-             url: /\.autohome\.com\.cn/,
-             getImage: function() {
-                 return this.src.replace(/(\?imageView.*|\d+x\d+_\d+_|f_m_|t_|s_)/,"");
-             }
-            },
-            {name: "易车",
-             url: /\.bitauto\.com/,
-             getImage: function() {
-                 return this.src.replace(/_\d+\.jpg$/i,"_12.jpg");
-             }
-            },
-            {name: "爱卡",
-             url: /\.xcar\.com\.cn/,
-             getImage: function() {
-                 return this.src.replace(/\-\d+x\d+\.jpg/i,"");
-             }
-            },
-            {name: "太平洋汽车",
-             url: /\.pcauto\.com\.cn/,
-             getImage: function() {
-                 return this.src.replace(/_\d+x\d+\.jpg$/i,".jpg");
-             }
-            },
-            {name: "新浪汽车",
-             url: /\.auto\.sina\.com\.cn/,
-             getImage: function() {
-                 return this.src.replace(/_\d+\.jpg$/i,"_src.jpg");
-             }
-            },
-            {name: "greasyfork",
-             url: /(greasyfork|sleazyfork)\.org/,
-             getImage: function() {
-                 if(this.parentNode.nodeName=="A" && /amazonaws\.com/.test(this.parentNode.href)){
-                     return this.parentNode.href;
-                 }
-                 return this.src.replace(/\/thumb\//i,"/original/").replace(/\/thumbnails\//i,"/").replace(/(\/forum\/uploads\/userpics\/.*\/)n([^\/]+)$/,"$1p$2");
-             }
-            },
-            {name: "dribbble",
-             url: /dribbble\.com/,
-             getImage: function() {
-                 return this.src.replace(/_teaser(.[^\.]+)$/i,"$1").replace(/_1x\./,".").replace(/\?compress=.*/,"");
-             }
-            },
-            {name: "百度百科",
-             url: /baike\.baidu\.com/,
-             getImage: function() {
-                 return this.src.replace(/.*bdstatic\.com.*\/([^\/]+)\.jpg/i,"http://imgsrc.baidu.com/baike/pic/item/$1.jpg").replace(/(.*bkimg\.cdn\.bcebos\.com.*\?x-bce-process=image).*/i,"$1");
-             }
-            },
-            {name: "nvshens",
-             url: /nvshens\.com|onvshen\.com/,
-             getImage: function() {
-                 return this.src.replace(/(\img\.onvshen\.com.*)(?:thumb\/|_s)(.*)/i,"$1$2");
-             }
-            },
-            {name: "24meitu",
-             url: /24meitu\.com|25meinv\.com|aisimeinv\.com|24tupian\.com|24meinv\.|24mntp\.|24cos\.|24fh\.|24shipin\.|24mn\./,
-             getImage: function() {
-                 return this.src.replace(/\/m([^\/]+)$/i,"/$1").replace(/imgs\./i,"bimg.");
-             }
-            },
-            {name: "Tumblr",
-             url: /tumblr\.com/,
-             getImage: function() {
-                 if(/\/avatar_/.test(this.src))return this.src.replace(/(media\.tumblr\.com.*_)[^_]+(\.[^\.]+)$/i,"$1512$2");
-                 else return this.src.replace(/[^\/]*(media\.tumblr\.com.*_)\d+(\.[^\.]+)$/i,"$1raw$2");
-             }
-            },
-            {name: "Acgget",
-             url: /acg18\.us|acgget\./,
-             getImage: function() {
-                 return this.getAttribute('data-original') || this.src.replace(/(pic\.acgget\.com\/thumb\/)w\d+_h\d+\//i,"$1w9999_h9999/");
-             }
-            },
-            {name: "Pixiv",
-             url: /pixiv\.net|pximg\.net/,
-             getImage: function() {
-                 var preStr=this.src.replace(/pximg\.net\/c\/\d+x\d+.*\/img\/(.*)_.*$/i,"pximg.net/img-original/img/$1");
-                 if(preStr!=this.src)
-                 return [preStr+".jpg",preStr+".png"];
-             }
-            },
-            {name: "Wallhaven",
-             url: /wallhaven\./,
-             getImage: function() {
-                 var preStr=this.src.replace(/wallpapers\/thumb\/small\/th(.*)\./i,"wallpapers/full/wallhaven$1").replace(/th\.wallhaven\.cc\/(small|lg)\/(.*)?\/(.*)\..*/i,"w.wallhaven.cc/full/$2/wallhaven-$3");
-                 if(preStr!=this.src)
-                 return [preStr+".jpg",preStr+".png"];
-             }
-            },
-            {name: "lofter",
-             url: /lofter\./,
-             getImage: function(img, a) {
-                 if(a && a.href && a.hasAttribute("bigimgsrc")){
-                     return a.getAttribute("bigimgsrc");
-                 }
-                 return this.src.replace(/\?.*/i,"");
-             }
-            },
-            {name: "sohu",
-             url: /(sohu|sohucs)\.com/,
-             getImage: function() {
-                 return this.src.replace(/(sohucs\.com\/).*\/(images\/|os\/)/i,"$1$2");
-             }
-            },
-            {name: "moegirl",
-             url: /(moegirl|mengniang)\.org/,
-             getImage: function() {
-                 return this.src.replace(/(common)\/thumb(.*)\/[^\/]+/i,"$1$2");
-             }
-            },
-            {name: "fanfou",
-             url: /fanfou\.com/,
-             getImage: function() {
-                 return this.src.replace(/@.+/i,"");
-             }
-            },
-            {name: "meitudata",
-             url: /meipai\.com/,
-             getImage: function() {
-                 return this.src.replace(/!thumb.+/i,"");
-             }
-            },
-            {name: "mafengwo",
-             url: /mafengwo\.cn/,
-             getImage: function() {
-                 return this.src.replace(/\?imageMogr.*/i,"");
-             }
-            },
-            {name: "discordapp",
-             url: /discordapp\.com/,
-             getImage: function() {
-                 return this.src.replace(/\?width=\d+&height=\d+$/i,"");
-             }
-            },
-            {name: "推特",
-             url: /twitter\.com/,
-             getImage: function() {
-                 return this.src.replace(/&name=.*/i,"");
-             }
-            },
-            {name: "Fandom",
-             url: /fandom\.com/,
-             getImage: function() {
-                 return this.src.replace(/scale\-to\-width\-down\/\d+/i,"").replace(/smart\/width\/\d+\/height\/\d+/i,"");
-             }
-            },
-            {name: "yande",
-             url: /yande\.re/,
-             getImage: function() {
-                 if(this.parentNode &&
-                    this.parentNode.parentNode &&
-                    this.parentNode.parentNode.nextSibling &&
-                    this.parentNode.parentNode.nextSibling.classList &&
-                    this.parentNode.parentNode.nextSibling.classList.contains("largeimg")){
-                     return this.parentNode.parentNode.nextSibling.href;
-                 }
-                 return this.src;
-             }
-            },
-            {name: "E621",
-             url: /e621\.net/,
-             getImage: function() {
-                 if(this.parentNode &&
-                    this.parentNode.parentNode &&
-                    this.parentNode.parentNode.parentNode &&
-                    this.parentNode.parentNode.parentNode.dataset.fileUrl){
-                     return this.parentNode.parentNode.parentNode.dataset.fileUrl;
-                 }
-                 return this.src;
-             }
-            },
-            {name: "Pinterest",
-             url: /pinterest\.com/,
-             getImage: function() {
-                 return this.src.replace(/\/\d+x\//,"/736x/");
-             }
-            },
-            {name: "Zhisheji",
-             url: /zhisheji\.com/,
-             getImage: function() {
-                 return this.src.replace(/thumbnail\/.*/,"");
-             }
-            },
-            {name: "Reddit",
-             url: /reddit\.com|redd\.it/,
-             getImage: function() {
-                 return this.src.replace(/\/\/preview\.redd.it\/([^\?]+)?.*/,"https://i.redd.it/$1");
-             }
-            },
-            {name: "Rule34hentai",
-             url: /rule34hentai\.net/,
-             getImage: function() {
-                 return this.src.replace("/_thumbs/","/_images/");
-             }
-            },
-            {name: "Rule34",
-             url: /rule34\.xxx/,
-             getImage: function() {
-                 var _isrc=this.src.replace(/\/(thumbnails|samples)\/(.*)\/(thumbnail|sample)_(.*)\..*/,"/images/$2/$4");
-                 return _isrc==this.src?this.src:[_isrc+".jpeg",_isrc+".png", _isrc+".jpg"];
-             }
-            },
-            {name: "Photosight",
-             url: /photosight\.ru/,
-             getImage: function() {
-                 return this.src.replace(/(cdny\.de.*\/)t\//,"$1x/");
-             }
-            },
-            {name: "Xiaohongshu",
-             url: /xiaohongshu\.com/,
-             ext: function(target) {
-                 if (target.className == 'change-pic') {
-                     var imgs=target.previousElementSibling.querySelectorAll('li'),i=0;
-                     for(i=0;i<imgs.length;i++){
-                         if(imgs[i].style.display!="none")
-                             return imgs[i].childNodes[0];
-                     }
-                 }
-                 return target;
-             },
-             getImage: function() {
-                 return this.src.replace(/\/w\/\d+\/(h\/\d+\/)?(q\/\d+\/)?/,"/w/1080/");
-             }
-            },
-            {name: "Youtube",
-             url: /youtube\.com/,
-             getImage: function() {
-                 var newsrc=this.src;
-                 if(this.classList.contains('ytd-moving-thumbnail-renderer')){
-                     newsrc = this.parentNode.parentNode.parentNode.querySelector("img").src
-                 }
-                 return newsrc.replace(/\?.*$/i,"");
-             }
-            },
-            {name: "588ku",
-             url: /588ku\.com/,
-             getImage: function() {
-                 return this.src.replace(/!\/fw.*/,"");
-             }
-            },
-            {name: "ibaotu",
-             url: /ibaotu\.com/,
-             ext: 'previous',
-             getImage: function() {
-                 return this.src.replace(/!fwc238/,"!ww7002");
-             }
-            },
-            {name: "58pic",
-             url: /58pic\.com/,
-             ext: function(target){
-                 if(target.className=="no-login" && target.style.opacity==""){
-                     target.style.opacity=0.99;
-                     setTimeout(()=>{target.style.display="none";},1000);
-                 }
-                 return null;
-             },
-             getImage: function() {
-                 return this.src.replace(/!.*/,"!w1024");
-             }
-            },
-            {name: "gelbooru",
-             url: /gelbooru\.com/,
-             getImage: function() {
-                 var _isrc=this.src.replace(/.*\/(thumbnails|samples)\/(.*)\/(thumbnail|sample)_(.*)\..*/,"https://img3.gelbooru.com/images/$2/$4");
-                 return _isrc==this.src?this.src:[_isrc+".png", _isrc+".jpg"];
-             }
-            },
-            {name: "erosberry",
-             url: /erosberry\.com/,
-             getImage: function() {
-                 return this.src.replace(/(\/\d+\/)tn_(\d+\.[^\/]+)$/,"$1$2");
-             }
-            },
-            {name: "javdb",
-             url: /javdb/,
-             getImage: function() {
-                 return this.src.replace("/thumbs/","/covers/");
-             }
-            },
-            {name: "javbus",
-             url: /javbus\.|busjav\./,
-             getImage: function() {
-                 return this.src.replace(/\/thumb(\/\w+)\.jpg$/,"/cover$1_b.jpg");
-             }
-            },
-            {name: "avmoo",
-             url: /avmoo\./,
-             getImage: function() {
-                 return this.src.replace("ps.jpg","pl.jpg");
-             }
-            },
-            {name: "asiansister",
-             url: /asiansister\.com/,
-             getImage: function() {
-                 return this.src.replace("_t.",".");
-             }
-            },
-            {name: "jianshu",
-             url: /jianshu\.com/,
-             getImage: function() {
-                 return this.src.replace(/(upload-images\.jianshu\.io\/.*)\?.*/,"$1");
-             }
-            },
-            {name: "artstation",
-             ext: 'next',
-             url: /artstation\.com/,
-             getImage: function() {
-                 return this.src.replace(/\/(\d{14}\/)?smaller_square\//,"/large/");
-             }
-            },
-            {name: "123rf",
-             url: /123rf\.com/,
-             getImage: function() {
-                 return this.src.replace(/us\.123rf\.com\/\d+wm\//,"previews.123rf.com/images/");
-             }
-            },
-            {name: "flickr",
-             url: /flickr\.com/,
-             ext: function(target){
-                 if(target.nodeName=="A" && target.className=="overlay" && target.parentNode && target.parentNode.parentNode && target.parentNode.parentNode.parentNode){
-                     return target.parentNode.parentNode.parentNode;
-                 }else if(target.nodeName=="DIV" && target.classList.contains("photo-notes-scrappy-view")){
-                     return target.previousElementSibling.querySelector(".main-photo");
-                 }else if(target.classList.contains("context-thumb")){
-                     return target;
-                 }
-                 return null;
-             },
-             getImage: function() {
-                 return this.src.replace(/_\w\./,"_c.");
-             }
-            },
-            {name: "wikiart",
-             url: /wikiart\.org/,
-             getImage: function() {
-                 return this.src.replace(/!.*/,"");
-             }
-            }
-        ];
-
-        // 通配型规则,无视站点.
         var tprules=[
-            function(img, a) { // 解决新的dz论坛的原图获取方式.
-                var regs = [/(.+\/attachments?\/.+)\.thumb\.\w{2,5}$/i,
-                            /((wp-content|moecdn\.org)\/uploads\/.*)\-\d+x\d+(-c)?/i,
-                            /.*(?:url|src)=(https?:\/\/.*\.(?:jpg|jpeg|png|gif|bmp)).*/i,
-                            /.*thumb\.php\?src=([^&]*).*/i];
+            function(a) {
                 var oldsrc = this.src,newsrc = this.src;
-                if (oldsrc){
-                    for(let reg of regs){
-                        if (reg.test(oldsrc)) {
-                            newsrc = oldsrc.replace(reg, '$1');
+                if(this.dataset && this.dataset.original){
+                    newsrc=this.dataset.original;
+                }else if(this._lazyrias && this._lazyrias.srcset){
+                    newsrc=this._lazyrias.srcset[this._lazyrias.srcset.length-1];
+                }else if(this.dataset && this.dataset.origFile){
+                    newsrc=this.dataset.origFile;
+                }else if(this.srcset){
+                    var srcs=this.srcset.split(","),largeSize=0;
+                    srcs.forEach(srci=>{
+                        let srcInfo=srci.trim().split(" "),curSize=parseInt(srcInfo[1]);
+                        if(srcInfo[1] && curSize>largeSize){
+                            largeSize=curSize;
+                            newsrc=srcInfo[0];
                         }
-                    }
-                }
-                var original=this.getAttribute?this.getAttribute('data-original'):"";
-                if(original && original!=oldsrc)return original;
-                else if(/attachment\.php\?attachmentid=\d+/.test(oldsrc)){
-                     newsrc=oldsrc.replace(/(attachment\.php\?attachmentid=\d+).*/,"$1");
-                }else if(/\.sinaimg\.(cn|com)\//.test(oldsrc)){
-                    //newsrc=oldsrc.replace(/.*(https?:\/\/[^\.]+\.sinaimg\.(cn|com))\/mw\d+\//,"$1/large/");
-                    var pic=/(\.sinaimg\.(cn|com)\/)(?:bmiddle|orj360|mw\d+)/i;//微博内容图片.
-                    var pic2=/(\.sinaimg\.(cn|com)\/)(?:square|thumbnail)/i;// 微博内容图片2.
-                    var head=/(\.sinaimg\.(cn|com)\/\d+)\/50\//i;//头像.
-                    var photoList=/\.sinaimg\.(cn|com)\/thumb\d+\/\w+/i;//相册
-                    var sport=/k\.sinaimg\.cn\/n\//i;
-                    if(pic.test(oldsrc)){
-                        newsrc=oldsrc.replace(pic,'$1large');  // large 不是每一张图片都有的
-                    } else if (pic2.test(oldsrc)) {
-                        newsrc=oldsrc.replace(pic2,'$1mw1024');
-                    } else if(head.test(oldsrc)){
-                        newsrc=oldsrc.replace(head,'$1/180/');
-                    }else if(photoList.test(oldsrc)){
-                        newsrc=oldsrc.replace(/thumb\d+/,'mw690');
-                    }else if(sport.test(oldsrc)){
-                        newsrc=oldsrc.replace(/k\.sinaimg\.cn\/n\/(.*)\/w\d+h\d+[^\/]+$/,'n.sinaimg.cn/$1');
-                    }
-                }else if(/gravatar\.com\/avatar\/.*[\?&]s=/.test(oldsrc)){
-                    newsrc=oldsrc.replace(/(gravatar\.com\/avatar\/.*[\?&]s=).*/,"$1500");
-                }else if(/uc_server\/avatar\.php\?uid=\d+&size=.*/.test(oldsrc)){
-                    newsrc=oldsrc.replace(/(uc_server\/avatar\.php\?uid=\d+&size=).*/,"$1big");
-                }else if(/\.md\.[^\.]+$/.test(oldsrc)){
-                    newsrc=oldsrc.replace(/\.md(\.[^\.]+)$/i,"$1");
-                }else if(/\.126\.net.*\/\d+\.\d+x\d+\.\d+\.[^\.]+$/.test(oldsrc)){
-                    newsrc=oldsrc.replace(/\/\d+\.\d+x\d+\.\d+\.([^\.]+)$/i,"/5.5000x5000.100.$1");
-                }else if(/\.ytimg\.com/.test(oldsrc) && !/mqdefault_6s/.test(oldsrc)){
-                    newsrc=oldsrc.replace(/\?.*$/i,"");
-                }else if(/meituan\.net\/.*\/avatar\//.test(oldsrc)){
-                    newsrc=oldsrc.replace(/\/avatar\/\w{2}/i,"/avatar/o0");
-                }else if(/hdslb\.com\//.test(oldsrc)){
-                    newsrc=oldsrc.replace(/@.*/i,"");
-                }else if(/\.coolapk\.com\//.test(oldsrc)){
-                    newsrc=oldsrc.replace(/\.s\.\w+$/i,"");
-                }else if(/\.aicdn\.com\//.test(oldsrc)){
-                    newsrc=oldsrc.replace(/_fw\d+$/i,"");
-                }else if(/duitang\.com\//.test(oldsrc)){
-                    newsrc=oldsrc.replace(/.thumb.(\d+_)?\d*\./i,".");
-                }else if(/imgur\.com\//.test(oldsrc)){
-                    newsrc=oldsrc.replace(/h(\.[^\/]+)$/,"$1").replace(/maxwidth=\d+/i,"maxwidth=99999");
-                }else if(/pics\.dmm\.co\.jp/.test(oldsrc)){
-                    newsrc=oldsrc.replace("ps.jpg","pl.jpg");
-                }else if(/\/w\/\d+\/h\/\d+($|\/|\?)/.test(oldsrc)){
-                    newsrc=oldsrc.replace(/\/w\/\d+\/h\/\d+/,"");
+                    });
                 }
                 return oldsrc != newsrc ? newsrc : null;
             }
-        ];
-
-        var Rule = {};
-        /**
-         * 兼容 Mouseover Popup Image Viewer 脚本的规则（非完全）
-         * 1、新增了特殊的替换模式：以 r; 开头。
-         * 2、已去除 http:// 头，后面会加上。
-         */
-        Rule.MPIV = [
-            // 图片
-            {name: "百度图片、贴吧等",
-             r: "(hiphotos|imgsrc)\\.baidu\\.com/(.+?)/.+?([0-9a-f]{40})",
-             s: "r;$1.baidu.com/$2/pic/item/$3"
-            },
-            // {name: "百度图片2",
-            //  d: "image.baidu.com",  // imgt8.bdstatic.com 类型的图片链接
-            //  r: "image\\.baidu\\.com/detail/newindex\\?",
-            //  q: 'img[alt="preloading"][src*="/pic/item/"]',
-            //  // description: './../../following-sibling::div[@class="ext-info"]/a',
-            // },
-            {name: "GoogleContent",  // 来自 Imagus 扩展
-             r: "^((?:(?:lh|gp|yt)\\d+\\.g(?:oogleuserconten|gph)|\\d\\.bp\\.blogspo)t\\.com/)(?:([_-](?:[\\w\\-]{11}/){4})[^/]+(/[^?#]+)?|([^=]+)).*",
-             s: function($, node) {
-                 return [
-                     // 'http://' + $[1] + ($[4] ? $[4] + '=' : $[2]) + 's0' + ($[3] || ''),    // 原图
-                     'http://' + $[1] + ($[4] ? $[4] + '=' : $[2]) + 's2634' + ($[3] || '')  // 2643 大小
-                 ];
-             },
-            },
-            {name: "pixiv（部分）",
-             d: 'pixiv.net',
-             r: /(pixiv.net\/img\d+\/img\/.+\/\d+)_[ms]\.(\w{2,5})$/i,
-             s: 'r;$1.$2'
-            },
-
-            // 常用站点
-            {name: '豆瓣',
-             r: "(img\\d+\\.douban\\.com/)(?:(view/)(?:photo|movie_poster_cover)/(?!large)[^/]+|(icon/u(?=\\d))|[sm](?=pic/))(.*)",
-             s: function(m, node) {
-                 return [
-                     // 'http://' + m[1] + (m[2] ? m[2] + 'photo/raw' : ((m[3]||'') + 'l')) + m[4],
-                     'http://' + m[1] + (m[2] ? m[2] + 'photo/photo' : ((m[3]||'') + 'l')) + m[4]
-                 ];
-             },
-             note: "人人影视的豆瓣脚本需要用到"
-            },
-            // 购物
-            {name: "淘宝",
-             r: /((?:img\d\d\.taobaocdn|img(?:[^.]*\.?){1,2}?\.alicdn)\.com\/)(?:img\/|tps\/http:\/\/img\d\d+\.taobaocdn\.com\/)?((?:imgextra|bao\/uploaded)\/.+\.(?:jpe?g|png|gif|bmp))_.+\.jpg$/,
-             s: "http://$1$2"
-            },
-            {name: "ali1",
-             r: /(.*\.alicdn\.com\/.*?)((.jpg|.png)(\.|_)\d+x\d+.*)\.jpg(_\.webp)?$/,
-             s: "$1$3"
-            },
-            {name: "ali2",
-             r: /(.*\.alicdn\.com\/.*?)((\.|_)\d+x\d+.*|\.search|\.summ)\.jpg(_\.webp)?$/,
-             s: "$1.jpg"
-            },
-            {name: "1号店",
-             r: /(.*\.yihaodianimg\.com\/.*)_\d+x\d+\.jpg$/,
-             s: "$1.jpg"
-            },
-            {name: "京东",
-             r: /(.*360buyimg\.com\/)n\d\/.+?\_(.*)/,
-             s: "$1imgzone/$2"
-            },
-            {name: "京东1",
-             r: /(.*360buyimg\.com\/)n\d\/(.*)/,
-             s: "$1n0/$2"
-            },
-            {name: "京东2",
-             r: /(.*360buyimg\.com\/.*)s\d+x\d+_(.*)/,
-             s: "$1$2"
-            },
-            // 电子书
-            {name: "当当",
-             d: "dangdang.com",
-             r: /(.*ddimg.cn\/.*?)_[bw]_(\d+\.jpg$)/,
-             s: "$1_e_$2"
-            },
-            {name: "多看阅读",
-             d: "duokan.com",
-             r: /(cover.read.duokan.com.*?\.jpg)!\w+$/,
-             s: "$1"
-            },
-
-            // 视频、新闻
-            // {name: "优酷电视剧",
-            //  d: "youku.com",
-            //  r: "www\\.youku\\.com\\/show_page\\/id_.*\\.html",
-            //  q: ".baseinfo > .thumb > img",
-            //  example: 'http://www.youku.com/v_olist/c_97.html',
-            // },
-            {name: "人人影视",
-             d: "yyets.com",
-             r: "^(res\\.yyets\\.com.*?/ftp/(?:attachment/)?\\d+/\\d+)/[ms]_(.*)",
-             s: "http://$1/$2"
-            },
-
-            // 论坛 BBS
-            {name: "firefox 扩展中心",
-             d: "addons.mozilla.org",
-             r: "addons.cdn.mozilla.net/user-media/previews/thumbs/",
-             s: "/thumbs/full/",
-            },
-            {name: "firefox 中文社区",
-             d: "firefox.net.cn",
-             r: "www.firefox.net.cn/attachment/thumb/",
-             s: "r;www.firefox.net.cn/attachment/"
-            },
-
-            // 软件 SoftWare
-            {name: "非凡软件站",
-             d: "www.crsky.com",
-             r: /pic\.crsky\.com.*_s\.gif$/i,
-             s: '/_s././',
-             example: "http://www.crsky.com/soft/5357.html",
-            },
-
-            {name: "zol",
-             d: "detail.zol.com.cn",
-             r: /(\w+\.zol-img\.com\.cn\/product\/\d+)_\d+x\d+\/(.*\.jpg)/i,
-             s: "$1/$2",
-             // s: "$1_800x600/$2",
-             example: "http://detail.zol.com.cn/240/239857/pic.shtml"
-            },
-            // 游戏 Game
-            {name: "天极网",
-             d: "game.yesky.com",
-             r: /_\d+x\d+\.([a-z]+)$/i,
-             s: 'r;.$1',
-             example: "http://game.yesky.com/tupian/165/37968665.shtml",
-            },
-            {name: "超级玩家",
-             d: "dota2.sgamer.com",
-             r: /\/s([^\.\/]+\.[a-z]+$)/i,
-             s: "r;/$1",
-             example: "http://dota2.sgamer.com/albums/201407/8263_330866.html",
-            },
-
-            // 漫画
-            {name: "nhentai",
-             d: "nhentai.net",
-             r: /\/(\d+)t(\.[a-z]+)$/i,
-             s: "r;/$1$2",
-             example: "http://nhentai.net/g/113475/",
-            },
-
-            // GithubAvatars
-            {name: "GithubAvatars",
-             d: "github.com",
-             r: /(avatars\d*\.githubusercontent\.com.*)\?.*$/i,
-             s: "$1",
-             example: "https://avatars2.githubusercontent.com/u/3233275/",
-            },
         ];
 
         //图标
@@ -1845,14 +874,6 @@ Trace Moe | https://trace.moe/?url=#t#`;
             brokenImg_small:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NUZFMjU2OUM0QjI4MTFFMkJDMkU4RUREMjg3OEVCMjIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NUZFMjU2OUQ0QjI4MTFFMkJDMkU4RUREMjg3OEVCMjIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo1RkUyNTY5QTRCMjgxMUUyQkMyRThFREQyODc4RUIyMiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo1RkUyNTY5QjRCMjgxMUUyQkMyRThFREQyODc4RUIyMiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PuqVBnIAAATpSURBVHjarFV9TNRlHP/87v04zuMEhDsQEATithNEjRcnIqSHprxo09VUEC3zj5zNLG211lpuDVtzOWvWrOZcm6tpBkvI0HaKpFlwJcIhd8DxKl2Hx8u9cff0/R1YHqNWW8/2+T3P8/09z+f7fb7P5/v7cfir7ScI8d+an1BH6HrUyBgLWbSfDE6C79/A55qYGuzrfqBUhr9Je1NnE4tmRSB2e9yiWx2/QyEXg3fs9njh9/vh8U73Xp8PzB/AuMuLLYXp86wWy5G4+IVCj8dzhvZ3PCSaTcz9eM+Bguc/R4RaBlW4FPPkEigV0uBYLBDA4ZrCKn0cPqq7g3CFEmWr08VWq/UVnU4nGh0d/Yw47oYQa7TaWLfbJVmi4bC+SI/yXC3UCjECFHYgwCjSAPwCCaoMqai/cBYvnauGZ9wzvVejEfX22g5mL80U3Ouy8OR3uJmc6FvN5uas9PQwfm4bGcYXzZPotPRBKuIwRUf3QYIju3Ow/YnHYbxxC3k5y1HbdAtfX2zCA8dv0EYpkLRAPrYid+UbxPeegB5Zza2t13jS7w0G1BcWYmF0DMqyOMjnR8E0MI4Oux8HK3OwrSgbsvZODFZVQWm+hw35y5G1Kh9n2+S40jEBj3tS+mdSjUajkw+6yWBg7bt2sV8qK9nFwkJeL6zTamY1DXY2OMXY0swMZlCr2N0dO5hp505mq65m66RitnqZjplHGDt+wUQxMjfte5FXhSAjI+Mm7+Ci2cznBK6pKSQlJKCuaA1SF6Vh7aIRFOnTEN83hOObyjAeCATz3n//Pho8Prz29lFcahmETBKqAkFkZOST5KH+nf5+nLh8GUqRCG6SVXz8QlwqLkZW6mNId4yhZmMpxsgeVAaR5tbW4qqxEY6YtbAOOKBRhYUScxzHX22pra+v7RxFU1NfHyT3EokmLg7GigocLSnBGJ1EQqT24WGsoTXGpmvwLliJ/v4hxKnFkMrEIcRBuRG5l7qPKfKaiMhIob+xEa+uXw8nx0Eik2GMXsokEtgHBlDc0IC2ti5IYpJh6weyE5Lh9jJEhruDApurQPi6943a7UJyBM2pU8iYMfJNQdhGeOv9D3Bd/B2ePZgCmWD66yJVClGcvh1fpn2KuYj5s0hEKhXKaVBA4OUSeGThJ4RdL+zDjRsmnDz8Ia6aGiEXhkEukFOx+ENzPFMgYYMOx76wqChBudOJ3WQbJ8gJfBrmzThQEU4T8vKWYHG3Dos1abhp/QHXu4ywTw6FEhMpf8pvNWp1yia7Hc+Fh4OLj0eEVhv8ouzlhcmTyuWQkQxjY2ODka8rKUCufTUqsrfA4XyACc9EKHFPT88Vyml+NU0O5edDRQqIzczET3RRL/MRk2Z1ZVux1+WCglQRXVAA/ebN+EooRGn5WizrXoqt2Vsx4hwJJR4aGkrkB3pCAklLq9fjm7o6HKb5rzYLVryrw7ZjTyG5ZAM2d3eD2WxI2rgRKTk5UPOpOUOXHJeBtOi00AqhVCS39/QM8sPjhGPTkmFztaeplKPoXbNGw+ZT/0xV1ewlroclLaI0WGiQZ+rs/HlJamoE74zK1pGQmHjC1tvreDQIs8VikIhEhtzTp1G9Zw/2HzhQS/sb//HnZTKZUlpaWnqot9y+fTuJTNK54HK5Xj9//jybnJw89Hdr+Ii52T++/6v9IcAACHxjGrCZJqsAAAAASUVORK5CYII=',
         };
 
-        //分享api；有需求的照着添加
-        //api项，请返回给一个{url:url,wSize:{w:,h:}}，脚本会自动调用window.open打开，如果不返回任何的话，脚本将不做任何其他事情。
-        //api的参数
-        /*{
-    title
-    pic
-    url
-} */
         prefs.share={
             weibo:{
                 disabled:false,
@@ -3305,7 +2326,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     enter:function(){
 
                         if(this.all.length==0){
-                            alert(i18n("noCollectionYet"));
+                            GM_notification(i18n("noCollectionYet"));
                             return;
                         };
 
@@ -3515,7 +2536,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                         }break;
                         case 'scrollIntoView':{
                             if(collection.mMode){
-                                alert(i18n("inCollection"));
+                                GM_notification(i18n("inCollection"));
                                 return;
                             };
                             var relatedThumb=self.relatedThumb;
@@ -3524,7 +2545,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
 
                             if(targetImg){
                                 if(!document.documentElement.contains(targetImg) || unsafeWindow.getComputedStyle(targetImg).display=='none'){//图片不存在文档中，或者隐藏了。
-                                    alert(i18n("cantFind"));
+                                    GM_notification(i18n("cantFind"));
                                     return;
                                 };
                                 self.minimize();
@@ -3538,7 +2559,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                                 document.addEventListener('pv-navigateToImg',function(e){
                                     //console.log('pv-navigateToImg',e);
                                     if(!e.detail){
-                                        alert(i18n("cantFind"));
+                                        GM_notification(i18n("cantFind"));
                                         return;
                                     };
                                     self.minimize();
@@ -3577,7 +2598,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                                 }
                             });
                             if(prefs.gallery.downloadWithZip){
-                                alert(i18n("galleryDownloadWithZipAlert"));
+                                GM_notification(i18n("galleryDownloadWithZipAlert"));
                                 var zip = new JSZip(),downloaded=0;
                                 var fileName = document.title + ".zip";
                                 for(let i=0; i<saveParams.length; i++){
@@ -4860,7 +3881,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     };
 
                     if(this.minimized){
-                        alert('请先关掉当前已经打开的库');
+                        GM_notification('请先关掉当前已经打开的库');
                         flashEle(this.maximizeTrigger);
                     };
                     return;
@@ -5624,7 +4645,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 GM_setClipboard(urls.join("\n"));
 
                 if (isAlert) {
-                    alert(i18n("copySuccess",urls.length));
+                    GM_notification(i18n("copySuccess",urls.length));
                 }
             },
 
@@ -9508,228 +8529,6 @@ Trace Moe | https://trace.moe/?url=#t#`;
         }();
 
 
-        /**
-         * 兼容 Mousever Popup Image Viewer 脚本规则
-         * 规则说明地址：http://w9p.co/userscripts/mpiv/host_rules.html
-         */
-        var MPIV = (function() {
-
-            var hosts = Rule.MPIV;
-
-            var d = document, wn = unsafeWindow;
-            var cfg = {
-                thumbsonly: true,
-            };
-            // 我新加的
-            var rgxHTTPs = /^https?:\/\/(?:www\.)?/;
-
-            function loadRule() {
-                var rules = Rule.MPIV;
-
-                var isStringFn = function(a) {
-                    return typeof a == 'string' && a.indexOf('return ') > -1;
-                };
-
-                rules.forEach(function(h) {
-                    try {
-                        if(h.r) h.r = toRE(h.r, 'i');
-                        if(isStringFn(h.s)) h.s = new Function('m', 'node', h.s);
-                        if(isStringFn(h.q)) h.q = new Function('text', 'doc', h.q);
-                        if(isStringFn(h.c)) h.c = new Function('text', 'doc', h.c);
-                    } catch(ex) {
-                        console.error('MPIV 规则无效: %o', h, ex);
-                    }
-                });
-
-                var filter = function(hn, h) {
-                    return !h.d || hn.indexOf(h.d) > -1;
-                };
-
-                hosts = rules.filter(filter.bind(null, location.hostname));
-
-                return hosts;
-            }
-
-            function hasBg(node) {
-                return node ? wn.getComputedStyle(node).backgroundImage != 'none' && node.className.indexOf('YTLT-') < 0 : false;
-            }
-
-            function rel2abs(rel, abs) {
-                if(rel.indexOf('//') === 0) rel = 'http:' + rel;
-                var re = /^([a-z]+:)?\/\//;
-                if(re.test(rel))  return rel;
-                if(!re.exec(abs)) return;
-                if(rel[0] == '/') return abs.substr(0, abs.indexOf('/', RegExp.lastMatch.length)) + rel;
-                return abs.substr(0, abs.lastIndexOf('/')) + '/' + rel;
-            }
-
-            /**
-             * 我新增了特殊的替换模式
-             * 规则：
-             *   {"r":"hotimg\\.com/image", "s":"/image/direct/"}
-             *   把 image 替换为 direct ，就是 .replace(/image/, "direct")
-             */
-            function replace(s, m, r, http) {
-                if(!m) return s;
-
-                if (r && s.startsWith('r;')) {  // 特殊的替换模式
-                    s = m.input.replace(r, s.slice(2));
-                } else if(s.indexOf('/') === 0) {
-                    var mid = /[^\\]\//.exec(s).index+1;
-                    var end = s.lastIndexOf('/');
-                    var re = new RegExp(s.substring(1, mid), s.substr(end+1));
-                    s = m.input.replace(re, s.substring(mid+1, end));
-                } else {
-                    for(var i = m.length; i--;) {
-                        s = s.replace('$'+i, m[i]);
-                    }
-                }
-
-                if (!s.startsWith('http') && http) {
-                    return http + s;
-                }
-
-                return s;
-            }
-
-            function rect(node, q) {
-                if(q) {
-                    var n = node;
-                    while(tag(n = n.parentNode) != 'BODY') {
-                        if(matches(n, q)) return n.getBoundingClientRect();
-                    }
-                }
-                var nodes = node.querySelectorAll('*');
-                for(var i = nodes.length; i-- && (n = nodes[i]);) {
-                    if(n.offsetHeight > node.offsetHeight) node = n;
-                }
-                return node.getBoundingClientRect();
-            }
-
-            function matches(n, q) {
-                var p = Element.prototype, m = p.mozMatchesSelector || p.webkitMatchesSelector || p.oMatchesSelector || p.matchesSelector || p.matches;
-                if(m) return m.call(n, q);
-            }
-
-            function tag(n) {
-                return n && n.tagName && n.tagName.toUpperCase();
-            }
-
-            function qs(s, n) {
-                return n.querySelector(s);
-            }
-
-            function parseNode(node) {
-                var a, img, url, info;
-                if(tag(node) == 'A') {
-                    a = node;
-                } else if(node.parentNode){
-                    if(tag(node) == 'IMG') {
-                        img = node;
-                        if(img.src.substr(0, 5) != 'data:') url = rel2abs(img.src, location.href);
-                    }
-                    info = findInfo(url, node);
-                    if(info) return info;
-                    a = tag(node.parentNode) == 'A' ? node.parentNode : (tag(node.parentNode.parentNode) == 'A' ? node.parentNode.parentNode : false);
-                }
-                if(a) {
-                    if(cfg.thumbsonly && !(img || qs('i', a) || a.rel == 'theater') && !hasBg(a) && !hasBg(a.parentNode) && !hasBg(a.firstElementChild)) return;
-                    url = a.getAttribute('data-expanded-url') || a.getAttribute('data-full-url') || a.getAttribute('data-url') || a.href;
-                    if(url.substr(0, 5) == 'data:') url = false;
-                    else if(url.indexOf('//t.co/') > -1) url = 'http://' + a.textContent;
-                    info = findInfo(url, a);
-                    if(info) return info;
-                }
-                if(img) return {url:img.src, node:img, rect:rect(img), distinct:true};
-            }
-
-            function decodeURIComponentEx(uriComponent){
-                if(!uriComponent){
-                    return  uriComponent;
-                }
-                var ret;
-                try{
-                    ret = decodeURIComponent(uriComponent);
-                }catch(ex){
-                    ret = unescape(uriComponent);
-                }
-                return ret;
-            };
-
-            function findInfo(url, node, noHtml, skipHost) {
-                for(var i = 0, len = hosts.length, tn = tag(node), h, m, html, urls, URL, http; i < len && (h = hosts[i]); i++) {
-                    if(h.e && !matches(node, h.e) || h == skipHost) continue;
-                    if(h.r) {
-                        if(h.html && !noHtml && (tn == 'A' || tn == 'IMG' || h.e)) {
-                            if(!html) html = node.outerHTML;
-                            m = h.r.exec(html)
-                        } else if(url) {
-                            // 去掉前面的 https://
-                            URL = url.replace(rgxHTTPs, '');
-                            http = url.slice(0, url.length - URL.length);
-                            m = h.r.exec(URL);
-                        } else {
-                            m = null;
-                        }
-                    } else {
-                        m = url ? /.*/.exec(url) : [];
-                    }
-                    if(!m || tn == 'IMG' && !('s' in h)) continue;
-                    if('s' in h) {
-                        urls = (Array.isArray(h.s) ? h.s : [h.s]).map(function(s) { if(typeof s == 'string') return decodeURIComponentEx(replace(s, m, h.r, http)); if(typeof s == 'function') return s(m, node); return s; });
-                        if(Array.isArray(urls[0])) urls = urls[0];
-                        if(urls[0] === false) continue;
-                        urls = urls.map(function(u) { return u ? decodeURIComponentEx(u) : u; });
-                    } else {
-                        urls = [m.input];
-                    }
-                    if((h.follow === true || typeof h.follow == 'function' && h.follow(urls[0])) && !h.q) return findInfo(urls[0], node, false, h);
-
-                    // debug('MPIV 找到的规则是 %o', h);
-                    return {
-                        node: node,
-                        url: urls.shift(),
-                        urls: urls,
-                        r: h.r,
-                        s: h.s,
-                        q: h.q,
-                        c: h.c,
-                        // g: h.g ? loadGalleryParser(h.g) : h.g,
-                        xhr: h.xhr,
-                        post: typeof h.post == 'function' ? h.post(m) : h.post,
-                        follow: h.follow,
-                        css: h.css,
-                        // manual: h.manual,
-                        distinct: h.distinct,
-                        // rect: rect(node, h.rect)
-                    };
-                };
-            }
-
-            // TODO
-            function rulesToString(rules) {
-                var newRules = [];
-
-                rules.forEach(function(h) {
-                    var newInfo = {}
-                    Object.keys(h).forEach(function(key) {
-                        if (key == 'r') {
-                            newInfo.r = h.r instanceof RegExp ?
-                                h.r.toString() : null;
-                        }
-
-                    });
-                });
-            }
-
-            return {
-                parseNode: parseNode,
-                findInfo: findInfo,
-                loadRule: loadRule,
-            }
-
-        })();
-
         // ------------------- run -------------------------
 
         var matchedRule,
@@ -9737,15 +8536,22 @@ Trace Moe | https://trace.moe/?url=#t#`;
             floatBar;
 
         function findPic(img){
-            //获取包裹img的第一个a元素。
             var imgPN=img;
-            var imgPA;
+            var imgPA,imgPE=[];
             while(imgPN=imgPN.parentElement){
                 if(imgPN.nodeName=='A'){
                     imgPA=imgPN;
                     break;
-                };
-            };
+                }
+            }
+            imgPN=img;
+            while(imgPN=imgPN.parentElement){
+                if(imgPN.nodeName=='BODY'){
+                    break;
+                }else{
+                    imgPE.push(imgPN);
+                }
+            }
 
             var iPASrc=imgPA? imgPA.href : '';
             //base64字符串过长导致正则匹配卡死浏览器
@@ -9768,49 +8574,31 @@ Trace Moe | https://trace.moe/?url=#t#`;
             };
             if(!src && matchedRule && !base64Img){// 通过高级规则获取.
                 // 排除
-                if (matchedRule.exclude && matchedRule.exclude.test(imgSrc)) {
-                    return;
-                } else {
-                    try{
-                        var newSrc=matchedRule.getImage.call(img,img,imgPA);
-                        if(newSrc && imgSrc!=newSrc) src=newSrc;
-                    }catch(err){
-                        throwErrorInfo(err);
-                    }
-
-                    if(src) {
-                        if (Array.isArray(src)) {
-                            srcs = src;
-                            src = srcs.shift();
-                        }
-
-                        type = 'rule';
-                        xhr = matchedRule.xhr;
-
-                        if (matchedRule.lazyAttr) {  // 由于采用了延迟加载技术，所以图片可能为 loading.gif
-                            imgSrc = img.getAttribute(matchedRule.lazyAttr) || img.src;
-                        }
-
-                        if (matchedRule.description) {
-                            var node = getElementMix(matchedRule.description, img);
-                            if (node) {
-                                description = node.getAttribute('title') || node.textContent;
-                            }
-                        }
-                    }
+                try{
+                    var newSrc=matchedRule.getImage(img,imgPA,imgPE);
+                    if(newSrc && imgSrc!=newSrc) src=newSrc;
+                }catch(err){
+                    throwErrorInfo(err);
                 }
-            }
 
-            if (!src && !base64Img) { // 兼容 MPIV 脚本规则
-                var info = MPIV.parseNode(img);
-                if (info && info.url && (info.url != imgSrc)) {
+                if(src) {
+                    if (Array.isArray(src)) {
+                        srcs = src;
+                        src = srcs.shift();
+                    }
+
                     type = 'rule';
-                    src = info.url;
-                    srcs = info.urls;
-                    if (info.q) {
-                        xhr = {
-                            q: info.q
-                        };
+                    xhr = matchedRule.xhr;
+
+                    if (matchedRule.lazyAttr) {  // 由于采用了延迟加载技术，所以图片可能为 loading.gif
+                        imgSrc = img.getAttribute(matchedRule.lazyAttr) || img.src;
+                    }
+
+                    if (matchedRule.description) {
+                        var node = getElementMix(matchedRule.description, img);
+                        if (node) {
+                            description = node.getAttribute('title') || node.textContent;
+                        }
                     }
                 }
             }
@@ -9818,7 +8606,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
             if(!src && !base64Img){//遍历通配规则
                 tprules._find(function(rule,index,array){
                     try{
-                        src=rule.call(img,img,imgPA);
+                        src=rule.call(img,imgPA);
                         if(src){
                             //console.log('匹配的通配规则',rule);
                             return true;
@@ -9828,32 +8616,6 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     };
                 });
                 if(src)type='tpRule';
-            }
-            if(!src && img._lazyrias && img._lazyrias.srcset){
-                var nsrc=img._lazyrias.srcset[img._lazyrias.srcset.length-1];
-                if(nsrc && nsrc!=imgSrc){
-                    src=nsrc;
-                    type='tpRule';
-                }
-            }
-            if(!src && img.dataset.origFile && imgSrc!=img.dataset.origFile){
-                src=img.dataset.origFile;
-                type='tpRule';
-            }
-            if(!src && img.srcset){
-                var srcs=img.srcset.split(","),largeSize=0,nsrc;
-                srcs.forEach(srci=>{
-                    let srcInfo=srci.trim().split(" "),curSize=parseInt(srcInfo[1]);
-                    if(srcInfo[1] && curSize>largeSize){
-                        largeSize=curSize;
-                        nsrc=srcInfo[0];
-                    }
-                });
-                //var nsrc=srcs[srcs.length-1].trim().split(" ")[0];
-                if(nsrc && nsrc!=imgSrc){
-                    src=nsrc;
-                    type='tpRule';
-                }
             }
 
             if(!src && imgPA){//链接可能是一张图片...
@@ -9882,9 +8644,6 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 imgSrc=img.dataset.lazySrc;
             }
 
-            try{
-                //src=decodeURIComponent(src);
-            }catch(e){}
             var ret = {
                 src: src,                  // 得到的src
                 srcs: srcs,                // 多个 src，失败了会尝试下一个
@@ -9907,7 +8666,9 @@ Trace Moe | https://trace.moe/?url=#t#`;
         }
 
         function getMatchedRule() {
-            var rule = siteInfo._find(function(site, index, array) {
+            var rules=new MatchedRuleC();
+            return rules.rules.length>0?rules:false;
+            /*var rule = siteInfo._find(function(site, index, array) {
                 if (site.enabled != false && site.url && toRE(site.url).test(URL)) {
                     return true;
                 }
@@ -9915,20 +8676,106 @@ Trace Moe | https://trace.moe/?url=#t#`;
 
             rule = rule ? rule[0] : false;
 
-            return rule;
+            return rule;*/
         }
 
+        function MatchedRuleC(){
+            this.init();
+        }
+
+        MatchedRuleC.prototype={
+            init:function(){
+                var self=this;
+                self.rules=[];
+                siteInfo.forEach(site=>{
+                    if (site.enabled != false && (!site.url || toRE(site.url).test(URL))) {
+                        if(site.url){
+                            if(site.css){
+                                var style = document.createElement('style');
+                                style.type = 'text/css';
+                                style.id = 'gm-picviewer-site-style';
+                                style.textContent = site.css;
+                                document.head.appendChild(style);
+                            }
+                            if(site.xhr){
+                                self.xhr=site.xhr;
+                            }
+                            if(site.lazyAttr){
+                                self.lazyAttr=site.lazyAttr;
+                            }
+                            if(site.description){
+                                self.description=site.description;
+                            }
+                            if(site.clikToOpen){
+                                self.clikToOpen=site.clikToOpen;
+                            }
+                            if(site.ext){
+                                self.ext=site.ext;
+                            }
+                        }
+                        self.rules.push(site);
+                    }
+                });
+            },
+            replace:function(str, r, s){
+                var results=[],rt;
+                if(Array.isArray(s)){
+                    s.forEach(_s=>{
+                        rt=str.replace(r, _s);
+                        if(rt && rt!=str)results.push(rt);
+                    });
+                }else{
+                    rt=str.replace(r, s);
+                    if(rt && rt!=str)return str.replace(r, s);
+                }
+                return results;
+            },
+            getImage:function(img, a, p){
+                var newSrc,rule;
+                for(var i in this.rules){
+                    rule=this.rules[i];
+                    if(rule.src && !rule.src.test(img.src))continue;
+                    if(rule.exclude && rule.exclude.test(img.src))continue;
+                    if(rule.getImage){
+                        newSrc = rule.getImage.call(img, a, p);
+                    }else{
+                        if(rule.r){
+                            if(Array.isArray(rule.r)){//r最多一层
+                                for(var j in rule.r){
+                                    var _r=rule.r[j];
+                                    if(_r.test(img.src)){
+                                        if(Array.isArray(rule.s)){//s对上r最多两层
+                                            var _s=rule.s[j];
+                                            newSrc=this.replace(img.src, _r, _s);
+                                        }else{
+                                            newSrc=this.replace(img.src, _r, rule.s);
+                                        }
+                                        break;
+                                    }
+                                }
+                            }else{
+                                if(rule.r.test(img.src)){
+                                    newSrc=this.replace(img.src, rule.r, rule.s);
+                                }
+                            }
+                        }
+                    }
+                    if(newSrc && newSrc.length>0 && newSrc!=img.src)break;
+                }
+                return newSrc;
+            }
+        };
+
         var isFrame=window!=window.parent;
-        var topWindowValid;//frameset的窗口这个标记为false
+        var topWindowValid;
         var frameSentData;
         var frameSentSuccessData;
-        function handleMessage(e){ // contentscript里面的message监听，监听来自别的窗口的数据。
+        function handleMessage(e){
             var data=e.data;
-            if( !data || !data.messageID || data.messageID != messageID )return;//通信ID认证
+            if( !data || !data.messageID || data.messageID != messageID )return;
             var source=e.source;
-            //chrome中所有window窗口的引用都是undefined
-            if(typeof source=='undefined' || source!==window){//来自别的窗口
-                if(!isFrame){//顶层窗口
+            if(typeof source=='undefined' || source!==window){
+                if(!isFrame){
                     var command=data.command;
                     switch(command){
                         case 'open':{
@@ -9941,7 +8788,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                                         img:img,
                                         data:data.data,
                                         buttonType:data.buttonType,
-                                        from:data.from,//来自哪个窗口
+                                        from:data.from,
                                     });
                                 },
                             });
@@ -9962,7 +8809,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                         }break;
                     };
 
-                }else{//frame窗口
+                }else{
                     var command=data.command;
                     switch(command){
                         case 'navigateToImg':{
@@ -9976,7 +8823,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                             var exist=(document.documentElement.contains(targetImg) && unsafeWindow.getComputedStyle(targetImg).display!='none');
 
                             if(exist){
-                                if(gallery && gallery.shown){//frame里面也打开了一个呢。
+                                if(gallery && gallery.shown){
                                     gallery.minimize();
                                 };
                                 setTimeout(function(){
@@ -9992,7 +8839,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                             },'*');
                         }break;
                         case 'sendFail':{
-                            frameSentData=frameSentSuccessData;//frameSentData重置为发送成功的数据。
+                            frameSentData=frameSentSuccessData;
                         }break;
                         case 'topWindowValid_frame':{
                             var cusEvent=document.createEvent('CustomEvent');
@@ -10234,48 +9081,44 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 }
                 if(result && !/^data:[^;]+;base64,/i.test(result.src)){
                     if(matchedRule && target.nodeName != 'IMG'){
-                        if (matchedRule.exclude && matchedRule.exclude.test(result.src)) {
-                            return;
-                        } else {
-                            let src=result.src,img={src:src},type,imgSrc=src;
-                            try{
-                                var newSrc=matchedRule.getImage.call(img,img);
-                                if(imgSrc!=newSrc) {
-                                    src=newSrc;
-                                    if (Array.isArray(src)) {
-                                        srcs = src;
-                                        src = srcs.shift();
-                                    }
-                                    type = 'rule';
+                        let src=result.src,img={src:src},type,imgSrc=src;
+                        try{
+                            var newSrc=matchedRule.getImage(img);
+                            if(imgSrc!=newSrc) {
+                                src=newSrc;
+                                if (Array.isArray(src)) {
+                                    srcs = src;
+                                    src = srcs.shift();
+                                }
+                                type = 'rule';
 
-                                    if (matchedRule.description) {
-                                        var node = getElementMix(matchedRule.description, img);
-                                        if (node) {
-                                            description = node.getAttribute('title') || node.textContent;
-                                        }
+                                if (matchedRule.description) {
+                                    var node = getElementMix(matchedRule.description, img);
+                                    if (node) {
+                                        description = node.getAttribute('title') || node.textContent;
                                     }
-                                    result.src=src;
-                                    result.type=type;
-                                    result.noActual=false;
-                                    result.xhr=matchedRule.xhr;
-                                    result.description=description || '';
                                 }
-                            }catch(err){}
-                            if(result.type!="rule"){
-                                tprules._find(function(rule,index,array){
-                                    try{
-                                        src=rule.call(img,img);
-                                        if(src){
-                                            return true;
-                                        };
-                                    }catch(err){
-                                    }
-                                });
-                                if(src && src != imgSrc){
-                                    result.src=src;
-                                    result.type="tpRule";
-                                    result.noActual=false;
+                                result.src=src;
+                                result.type=type;
+                                result.noActual=false;
+                                result.xhr=matchedRule.xhr;
+                                result.description=description || '';
+                            }
+                        }catch(err){}
+                        if(result.type!="rule"){
+                            tprules._find(function(rule,index,array){
+                                try{
+                                    src=rule.call(img);
+                                    if(src){
+                                        return true;
+                                    };
+                                }catch(err){
                                 }
+                            });
+                            if(src && src != imgSrc){
+                                result.src=src;
+                                result.type="tpRule";
+                                result.noActual=false;
                             }
                         }
                     }
@@ -10383,7 +9226,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 if(result.type=='rule' && matchedRule.clikToOpen && matchedRule.clikToOpen.enabled){
                     if(canclePreCTO){//取消上次的，防止一次点击打开多张图片
                         canclePreCTO();
-                    };
+                    }
                     canclePreCTO=clikToOpen(result);
                 }
 
@@ -10453,17 +9296,6 @@ Trace Moe | https://trace.moe/?url=#t#`;
         }
 
         matchedRule = getMatchedRule();
-
-        // 添加自定义样式
-        if (matchedRule && matchedRule.css) {
-            var style = document.createElement('style');
-            style.type = 'text/css';
-            style.id = 'gm-picviewer-site-style';
-            style.textContent = matchedRule.css;
-            document.head.appendChild(style);
-        }
-
-        MPIV.loadRule();
 
         window.addEventListener('message', handleMessage, true);
 
@@ -11048,8 +9880,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     var i = 0,
                         l = this.length,
                         value,
-                        hasOwnProperty=Object.prototype.hasOwnProperty
-                    ;
+                        hasOwnProperty=Object.prototype.hasOwnProperty;
 
 
                     while(i<l){
