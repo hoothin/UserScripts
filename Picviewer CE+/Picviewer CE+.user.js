@@ -2826,7 +2826,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 });
 
                 var lastX,lastY;
-                const minLength=200,tg=0.5;
+                const minLength=10000,tg=0.5;
                 function tracer(e) {
                     let curX=e.changedTouches[0].clientX;
                     let curY=e.changedTouches[0].clientY;
@@ -2850,12 +2850,10 @@ Trace Moe | https://trace.moe/?url=#t#`;
                                 direction="←";
                             }
                         }
-                        if(direction=="↑" || direction=="←"){
+                        if(direction=="↓" || direction=="→"){
                             self.selectPrevious();
-                            stop=self.simpleSlideShow(true);
                         }else{
                             self.selectNext();
-                            stop=self.simpleSlideShow();
                         }
                     }
                 }
