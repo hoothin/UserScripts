@@ -3116,9 +3116,9 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 var sizeInputHSpan=this.gallery.querySelector("#minsizeHSpan");
                 var sizeInputWSpan=this.gallery.querySelector("#minsizeWSpan");
                 sizeInputH.title=sizeInputH.value+"px";
-                sizeInputHSpan.innerHTML=sizeInputH.value+"px";
+                sizeInputHSpan.innerHTML=Math.floor(sizeInputH.value)+"px";
                 sizeInputW.title=sizeInputW.value+"px";
-                sizeInputWSpan.innerHTML=sizeInputW.value+"px";
+                sizeInputWSpan.innerHTML=Math.floor(sizeInputW.value)+"px";
 
                 var viewmoreShow = this.eleMaps['sidebar-toggle'].style.visibility == 'hidden';
                 if(viewmoreShow){
@@ -3147,12 +3147,12 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     sizeInputH.max=maxSizeH;
                     sizeInputH.min=minSizeH;
                     sizeInputH.title=sizeInputH.value+"px";
-                    sizeInputHSpan.innerHTML=sizeInputH.value+"px";
+                    sizeInputHSpan.innerHTML=Math.floor(sizeInputH.value)+"px";
 
                     sizeInputW.max=maxSizeW;
                     sizeInputW.min=minSizeW;
                     sizeInputW.title=sizeInputW.value+"px";
-                    sizeInputWSpan.innerHTML=sizeInputW.value+"px";
+                    sizeInputWSpan.innerHTML=Math.floor(sizeInputW.value)+"px";
                 }else{
                     this.data.forEach(function(item) {
                         if(!item)return;
@@ -3209,14 +3209,14 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 sizeInputH.value=prefs.gallery.defaultSizeLimit.h;
                 sizeInputH.title=sizeInputH.value+"px";
                 var sizeInputHSpan=this.gallery.querySelector("#minsizeHSpan");
-                sizeInputHSpan.innerHTML=sizeInputH.value+"px";
+                sizeInputHSpan.innerHTML=Math.floor(sizeInputH.value)+"px";
 
                 sizeInputW.max=maxSizeW;
                 sizeInputW.min=minSizeW;
                 sizeInputW.value=prefs.gallery.defaultSizeLimit.w;
                 sizeInputW.title=sizeInputW.value+"px";
                 var sizeInputWSpan=this.gallery.querySelector("#minsizeWSpan");
-                sizeInputWSpan.innerHTML=sizeInputW.value+"px";
+                sizeInputWSpan.innerHTML=Math.floor(sizeInputW.value)+"px";
             },
             initToggleBar: function() {  // 是否显示切换 sidebar 按钮
                 /**
