@@ -120,7 +120,8 @@
                 autoRefreshTip:"最后几张图片时，滚动主窗口到最底部，然后自动加载新的图片",
                 enterFullsc:"进入全屏",
                 exitFullsc:"退出全屏",
-                config:"打开设置",
+                config:"设置",
+                openConfig:"打开设置",
                 closeGallery:"关闭库",
                 returnToGallery:"回到库",
                 picInfo:"点击修改",
@@ -329,7 +330,8 @@
                 autoRefreshTip:"最後幾張圖片時，滾動主窗口到最底部，然後自動載入新的圖片",
                 enterFullsc:"進入全屏",
                 exitFullsc:"退出全屏",
-                config:"打開設置",
+                config:"設置",
+                openConfig:"打開設置",
                 closeGallery:"關閉庫",
                 returnToGallery:"回到庫",
                 picInfo:"點擊修改",
@@ -538,6 +540,7 @@
                 enterFullsc:"Enter full screen",
                 exitFullsc:"Exit full screen",
                 config:"Settings",
+                openConfig:"Open Settings",
                 closeGallery:"Close Gallery",
                 returnToGallery:"Back to the Gallery",
                 picInfo:"Click to change",
@@ -1902,11 +1905,11 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="enterCollection" title="'+i18n("viewCollectionTip")+'">'+i18n("viewCollection")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="scrollIntoView" title="'+i18n("findInPageTip")+'">'+i18n("findInPage")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" title="'+i18n("autoRefreshTip")+'">'+
-                    '<input type="checkbox"  data-command="scrollToEndAndReload"/>'+
                     '<label data-command="scrollToEndAndReload">'+i18n("autoRefresh")+'</label>'+
+                    '<input type="checkbox"  data-command="scrollToEndAndReload"/>'+
                     '</span>'+
                     '<span id="pv-gallery-fullscreenbtn" class="pv-gallery-head-command-drop-list-item" data-command="fullScreen">'+i18n("enterFullsc")+'</span>'+
-                    '<span class="pv-gallery-head-command-drop-list-item" data-command="openPrefs">'+i18n("config")+'</span>'+
+                    '<span class="pv-gallery-head-command-drop-list-item" data-command="openPrefs">'+i18n("openConfig")+'</span>'+
                     '</span>'+
                     '</span>'+
 
@@ -2633,8 +2636,10 @@ Trace Moe | https://trace.moe/?url=#t#`;
                             self.copyImages(true);
                             break;
                         case 'scrollToEndAndReload':
-                            var checkbox = target.parentNode.firstChild;
-                            checkbox.checked = !checkbox.checked;
+                            var checkbox = target.parentNode.querySelector("input");
+                            if(target.nodeName=="LABEL"){
+                                checkbox.checked = !checkbox.checked;
+                            }
 
                             prefs.gallery.scrollEndAndLoad = checkbox.checked;
                             break;
