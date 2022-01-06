@@ -3,7 +3,7 @@
 // @name:zh-CN   代码片段高亮
 // @name:zh-TW   程式碼片斷高亮
 // @namespace    hoothin
-// @version      1.8
+// @version      1.9
 // @description  Add a icon to popup a window that allows syntax highlighting and beautify and word count of source code snippets on current page
 // @description:zh-CN 选择代码片段后点击图标弹出新窗口显示语法高亮美化与格式化后的代码与字数统计
 // @description:zh-TW 選擇程式碼片段後點選圖示彈出新視窗顯示語法高亮美化與格式化後的程式碼與字數統計
@@ -19,7 +19,6 @@
 
 (function() {
     'use strict';
-    var isChrome=unsafeWindow.chrome;
     var codeIcon=document.createElement("img");
     var codes, selStr, scrollX, scrollY, customInput=false;
     codeIcon.style.cssText="position:fixed;z-index:99999;cursor:pointer;transition:opacity 0.5s ease-in-out 0s;opacity:0;border:5px solid rgba(0, 0, 0, 0.2);border-radius:10px;";
@@ -51,15 +50,27 @@
             '<a href="#" onclick="code.innerHTML=css_beautify(codeStr);code.className=\'prettyprint linenums\';prettyPrint();return false;">Css</a> '+
             '<a href="#" onclick="code.innerHTML=codeStr;code.className=\'prettyprint linenums\';prettyPrint();return false;">Raw</a> <b style="color:red">('+selStr.replace(/\s/g,"").length+' words)</b>'+
             '<pre id="code" class="prettyprint linenums" style="word-wrap: break-word; white-space: pre-wrap;border: 1px solid rgb(136, 136, 204);border-radius: 8px;">' + codes + "</pre>";
-        if(isChrome){
-            let c = window.open("", "_blank", "width=750, height=400, location=0, resizable=1, menubar=0, scrollbars=0");
-            c.document.write(html);
-            c.document.close();
-        }else{
-            GM_openInTab('data:text/html;charset=utf-8,' + encodeURIComponent(html));
-        }
+
+        let c = window.open("", "_blank", "width=750, height=400, location=0, resizable=1, menubar=0, scrollbars=0");
+        c.document.write(html);
+        c.document.close();
     };
 
+    document.addEventListener('mouseover', function(o) {
+        if(o.target.nodeName!="PRE" && o.target.nodeName!="CODE")return;
+        selStr=o.target.innerText;
+        if(!selStr)return;
+        codes=selStr.replace(/&/g, "&amp;").replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
+        document.body.appendChild(codeIcon);
+        let pos=getMousePos(o);
+        let clientH=(document.documentElement && document.documentElement.clientHeight) || 0;
+        let clientW=(document.documentElement && document.documentElement.clientWidth) || 0;
+        let top=pos.y>clientH-50?(pos.y-30):(pos.y+20);
+        let left=pos.x>clientW-50?(pos.x-30):(pos.x+20);
+        codeIcon.style.opacity=0.9;
+        codeIcon.style.top=top+"px";
+        codeIcon.style.left=left+"px";
+    });
     document.addEventListener('mousedown', function(o) {
         codeIcon.style.opacity=0;
         customInput=false;
@@ -77,14 +88,10 @@
                 //if(codes || customInputKey){
                 document.body.appendChild(codeIcon);
                 let pos=getMousePos(o);
-                let left, top;
-                if(isChrome){
-                    top=pos.y>document.documentElement.clientHeight-50?(pos.y-30):(pos.y+20);
-                    left=pos.x>document.documentElement.clientWidth-50?(pos.x-30):(pos.x+20);
-                }else{
-                    top=pos.y-30;
-                    left=pos.x+15;
-                }
+                let clientH=(document.documentElement && document.documentElement.clientHeight) || 0;
+                let clientW=(document.documentElement && document.documentElement.clientWidth) || 0;
+                let top=pos.y>clientH-50?(pos.y-30):(pos.y+20);
+                let left=pos.x>clientW-50?(pos.x-30):(pos.x+20);
                 codeIcon.style.opacity=0.9;
                 codeIcon.style.top=top+"px";
                 codeIcon.style.left=left+"px";
