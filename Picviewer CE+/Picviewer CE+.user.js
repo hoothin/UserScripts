@@ -4793,6 +4793,9 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     transform: scale(3.5);\
                     bottom: 50px;\
                     }\
+                    .pv-gallery-maximize-container span>p{\
+                    opacity: 0.6!important;\
+                    }\
                     }\
                     /*顶栏*/\
                     .pv-gallery-head {\
