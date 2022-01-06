@@ -3864,11 +3864,11 @@ Trace Moe | https://trace.moe/?url=#t#`;
                             spanMark.className="pv-gallery-sidebar-thumb-container";
                             spanMark.dataset.type=item.type;
                             spanMark.dataset.src=item.src;
-                            spanMark.dataset.srcs=item.srcs;
+                            spanMark.dataset.srcs=item.srcs||"";
                             if(item.xhr)spanMark.dataset.xhr=encodeURIComponent(JSON.stringify(item.xhr));
                             spanMark.dataset.description=encodeURIComponent(item.description || '');
                             spanMark.dataset.thumbSrc=item.imgSrc;
-                            spanMark.title=(item.img?(item.img.title||item.img.alt):"");
+                            spanMark.title=(item.img?(item.img.title||item.img.alt||""):"");
                             spanMark.innerHTML='<span class="pv-gallery-vertical-align-helper"></span>' +
                                 '<span class="pv-gallery-sidebar-thumb-loading" title="'+i18n("loading")+'......"></span>';
                         }catch(e){};
@@ -4285,7 +4285,8 @@ Trace Moe | https://trace.moe/?url=#t#`;
                             return !(container.contains(img) || (preloadContainer&&preloadContainer.contains(img)));
                         });
                         imgs.forEach(function(img) {
-                            var isrc=img.getAttribute("src").trim();
+                            if(!img.src)return;
+                            var isrc=img.src.trim();
                             if(!isrc)return;
                             isrc=self.canonicalUri(isrc);
                             if (self._dataCache[isrc]) return;
@@ -4374,7 +4375,8 @@ Trace Moe | https://trace.moe/?url=#t#`;
                             return !(container.contains(img) || (preloadContainer&&preloadContainer.contains(img)));
                         });
                         imgs.forEach(function(img) {
-                            var isrc=img.getAttribute("src").trim();
+                            if(!img.src)return;
+                            var isrc=img.src.trim();
                             if(!isrc)return;
                             isrc=self.canonicalUri(isrc);
                             if (self._dataCache[isrc]) return;
