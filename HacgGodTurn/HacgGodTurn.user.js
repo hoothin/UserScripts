@@ -5,7 +5,7 @@
 // @name:ja     琉璃神社工具セット
 // @namespace   hoothin
 // @description         老司机工具箱，支持琉璃神社、灵梦御所、纯爱计划、绅士二次元、萌心次元、次元轨迹、ACG调查小队、幻天领域、天使二次元、樱花漫舍、风铃窝、次元の圣光、爱弹幕、幻想次元、司机会所、里番萌、最ACG、绅士仓库、绅士图书馆、ACG和谐区/里世界、寂月神社、萌幻之乡、绅士之庭、萌口组、九妖萌、CE家族社、喵窝、次元老司机、绅士ACG社等，神秘代码转换成下载链接，网盘自动填写提取密码，F8、Shift+F8站点切换，Alt+F8列表浏览，左右方向键文章跳转，Ctrl+左右快捷翻页，Ctrl+上下跳入跳出，下载链接嗅探，绕过重定向跳转，各种和谐补丁
-// @description:en      Tools for adult (Just a joke, you won't want to read forward) gentleman sites as glazed shrine, reimu imperial, pure love plan, gentleman two dimension, dimension and dimension trajectory, adorable heart ACG survey team, the magic day in the field, light agency, two dimensional, adorable Angel Sakura diffuse homes, Shengguang, love nest, Campanula dimension barrage, fantasy element, our opportunities, some adorable, mysterious code into the download link, F8 & shift+F8 switching sites, Baidu disk automation, harmonious patch
+// @description:en      Tools for OLD DRIVER to adult gentleman sites (Just a joke, you won't want to read forward) as glazed shrine, reimu imperial, pure love plan, gentleman two dimension, dimension and dimension trajectory, adorable heart ACG survey team, the magic day in the field, light agency, two dimensional, adorable Angel Sakura diffuse homes, Shengguang, love nest, Campanula dimension barrage, fantasy element, our opportunities, some adorable
 // @description:zh-TW   老司機工具箱，支持琉璃神社、靈夢禦所、純愛計劃、紳士二次元、萌心次元、次元軌跡、ACG調查小隊、幻天領域、天使二次元、櫻花漫舍、風鈴窩、次元の聖光、愛彈幕、幻想次元、司機會所、裏番萌、最ACG、紳士倉庫、紳士圖書館、ACG和諧區/裏世界、寂月神社、萌幻之鄕、紳士の庭、萌口組、九妖萌、CE家族社、喵窩、次元老司機、紳士ACG社等，神秘代碼轉換成下載鏈接，網盤自動填寫提取密碼，F8、Shift+F8站點切換，Alt+F8列表瀏覽，左右方向鍵文章跳轉，Ctrl+左右快捷翻頁，Ctrl+上下跳入跳出，下載鏈接嗅探，繞過重定向跳轉，各種和諧補丁
 // @description:ja      琉璃神社工具セット、秋の名山老運転手専用
 // @author      hoothin
@@ -68,6 +68,7 @@
 // @include     http*://sijihuisuo.club/*
 // @include     http*://acg18.*
 // @include     http*://*.acg18.*
+// @include     http*://hxcy.*
 // @include     http*://*.acg44.com/*
 // @include     http*://zuiacg.*
 // @include     http*://www.zuiacg.*
@@ -114,7 +115,7 @@
 // @include     http*://greasyfork.org/*/scripts/*
 // @include     http*://sleazyfork.org/*/forum/*discussion*
 // @include     http*://greasyfork.org/*/forum/*discussion*
-// @version     3.22.71
+// @version     3.22.72
 // @grant       GM_notification
 // @grant       GM_xmlhttpRequest
 // @grant       GM_setClipboard
@@ -357,7 +358,7 @@
                 regex:/acgso1\./,
                 hideOd:true,
                 offset:55,
-                articleSel:"section.card"
+                articleSel:"article,section.card"
             },
             /*{
                 name:"风铃窝",
@@ -428,17 +429,18 @@
                             'childList': true,
                             'subtree': true
                         };
-                        observer.observe(document.querySelector("#commentlist-container"), option);
+                        var commentlist=document.querySelector("#commentlist-container");
+                        if(commentlist)observer.observe(commentlist, option);
                     }
                 }
             },
             {
                 name:"幻想次元",
-                url:"https://acg18.icu/",
-                regex:/acg18\./,
+                url:"https://hxcy.moe/",
+                regex:/acg18\.|hxcy\./,
                 offset:55,
                 run:function(){
-                    changeUrl(true,[["a"],[['https?:\\\/\\\/[^\\\.]*(\\\.)?acg18\\\.[a-z]+\\\/go\\\/\\\?url=','']]]);
+                    changeUrl(true,[["a"],[['https?:\\\/\\\/[^\\\.]*(\\\.)?(acg18|hxcy)\\\.[a-z]+\\\/go\\\/\\\?url=','']]]);
                 }
             },
             /*{
