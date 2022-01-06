@@ -4290,6 +4290,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                             if(!isrc)return;
                             isrc=self.canonicalUri(isrc);
                             if (self._dataCache[isrc]) return;
+                            self._dataCache[isrc] = true;
                             self.londingImgNum++;
                             var nimg = new Image();
                             nimg.src = isrc;
@@ -4297,12 +4298,11 @@ Trace Moe | https://trace.moe/?url=#t#`;
                                 self.londingImgNum--;
                                 self.pageImgReady();
                                 var result = findPic(this);
-                                if (result && !self._dataCache[this.src]) {
+                                if (result) {
                                     self.data.push(result);
                                     self._appendThumbSpans([result]);
                                     self.loadThumb();
                                 }
-                                self._dataCache[this.src] = true;
                             };
                             nimg.onerror=function(){
                                 self.londingImgNum--;
@@ -4380,6 +4380,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                             if(!isrc)return;
                             isrc=self.canonicalUri(isrc);
                             if (self._dataCache[isrc]) return;
+                            self._dataCache[isrc] = true;
                             var nimg = new Image();
                             self.londingImgNum++;
                             nimg.src = isrc;
@@ -4387,12 +4388,11 @@ Trace Moe | https://trace.moe/?url=#t#`;
                                 self.londingImgNum--;
                                 self.pageImgReady();
                                 var result = findPic(this);
-                                if (result && !self._dataCache[this.src]) {
+                                if (result) {
                                     self.data.push(result);
                                     self._appendThumbSpans([result]);
                                     self.loadThumb();
                                 }
-                                self._dataCache[this.src] = true;
                             };
                             nimg.onerror=function(){
                                 self.londingImgNum--;
