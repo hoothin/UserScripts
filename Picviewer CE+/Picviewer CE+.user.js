@@ -1257,7 +1257,6 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 sProName=(p_i+proName).replace(/-([A-z])/g,function(a,b){
                     return b.toUpperCase();
                 });
-                //console.log(sProName);
                 if(sProName in elem)return sProName;
             };
         };
@@ -1292,7 +1291,6 @@ Trace Moe | https://trace.moe/?url=#t#`;
                         };
                         return b;
                     });
-                    //console.log(camelPro);
                     if(camelPro in style){
                         return camelPro;
                     }
@@ -1350,7 +1348,6 @@ Trace Moe | https://trace.moe/?url=#t#`;
         function imgReHover(img){
             //要检查的图片，是当前悬浮的。
             if(!floatBar.shown || floatBar.data.img != img)return;
-            //console.log(img);
 
             var mHover=document.createEvent('MouseEvent');
             var cr=img.getBoundingClientRect();
@@ -1460,7 +1457,6 @@ Trace Moe | https://trace.moe/?url=#t#`;
         };
 
 
-        //console.log('浏览器的一些对象支持情况:',support);
 
         //动画算法
         /*
@@ -1499,7 +1495,6 @@ Trace Moe | https://trace.moe/?url=#t#`;
                         ii--;
                     };
                 };
-                //console.log('checkReady',iRReadyFn.length)
                 if(iRReadyFn.length==0){
                     clearInterval(iRInterval);
                     iRInterval=null;
@@ -2498,7 +2493,6 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     };
                     slideShow.opts[prefs]=value;
                     slideShow.run('change');
-                    //console.log(slideShow.opts);
                 },true);
 
 
@@ -2549,7 +2543,6 @@ Trace Moe | https://trace.moe/?url=#t#`;
                             }else{//frame发送过来的时候删除了不能传送的图片
 
                                 document.addEventListener('pv-navigateToImg',function(e){
-                                    //console.log('pv-navigateToImg',e);
                                     if(!e.detail){
                                         GM_notification(i18n("cantFind"));
                                         return;
@@ -3642,7 +3635,6 @@ Trace Moe | https://trace.moe/?url=#t#`;
 
                         self.slideShow.run('loadEnd');
 
-                        //console.log(this,'预读开始');
                         if(prefs.gallery.preload){
                             if(self.preloading){//结束上次的预读。
                                 self.preloading.abort();
@@ -4416,7 +4408,6 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 this.selected.offsetHeight + parseFloat(thumbSpanCS.marginTop) + parseFloat(thumbSpanCS.marginBottom);
 
 
-                //console.log(this.thumbSpanOuterSize);
 
                 this.runOnce=function(){
                 };
@@ -5630,16 +5621,13 @@ Trace Moe | https://trace.moe/?url=#t#`;
             preload:function(){
                 var ele=this.getPreloadEle();
                 if(!ele){
-                    //console.log('预读正常结束');
                     return;
                 };
 
-                //console.log('正在预读：',ele);
                 var self=this;
                 this.imgReady=imgReady(dataset(ele,'src'),{
                     loadEnd:function(){
                         if(self.aborted){
-                            //console.log('强制终止了');
                             return;
                         };
                         dataset(ele,'preloaded','true')
@@ -5931,7 +5919,6 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     h:imgH,
                 };
                 this.imgRange=imgRange;
-                //console.log(this.imgRange,this.imgSize);
 
                 this.setMouseRange();
 
@@ -6030,7 +6017,6 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 var imgNaturalSize=this.imgNaturalSize;
                 var px=-((mouseCoor.x-imgRange.x[0])/imgSize.w * imgNaturalSize.w) + radius +'px';
                 var py=-((mouseCoor.y-imgRange.y[0])/imgSize.h * imgNaturalSize.h) + radius +'px';
-                //console.log(px,py);
                 ms.backgroundPosition=px + ' ' + py;
             },
             getNextZoomLevel:function(){
@@ -6874,7 +6860,6 @@ Trace Moe | https://trace.moe/?url=#t#`;
                                 }
                             }break;
                         };
-                        //console.log(newValue);
                         objStyle[oD]=newValue + 'px';
 
                     };
@@ -7151,7 +7136,6 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     img.height=afterImgSize.h;
 
                     var afterimgRectSize=self.getRotatedImgRectSize( self.rotatedRadians, afterImgSize );
-                    //console.log(afterimgRectSize);
                     imgWindow.style.width=afterimgRectSize.w +'px';
                     imgWindow.style.height=afterimgRectSize.h + 'px';
                     self.setImgWindowOffset(rectOffset,imgRectSize,afterimgRectSize,ratio);
@@ -9088,7 +9072,6 @@ Trace Moe | https://trace.moe/?url=#t#`;
         //监听 mouseover
         function globalMouseoverHandler(e){
 
-            //console.log(e);
             if(galleryMode)return;//库模式全屏中......
 
             var target = e.target;
