@@ -6278,6 +6278,11 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     self.center(true,true);
                     self.imgWindow.style.opacity=1;
                     self.keepScreenInside();
+
+                    var wSize=getWindowSize();
+                    wSize.h -= 16;
+                    wSize.w -= 16;
+                    self.isLongImg=self.imgNaturalSize.h >= wSize.h && self.imgNaturalSize.h/self.imgNaturalSize.w > 3.5;
                 }
                 /*searchButton.addEventListener('click',function(e){
                     sortSearch();
