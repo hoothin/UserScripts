@@ -4580,7 +4580,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                                 imgs.push(img);
                             });
                         }catch(e){
-                            console.log(e.toString());
+                            debug(e.toString());
                         }
                 });
                 var bgReg=/.*url\(\s*["']?(.+?)["']?\s*\)/i;
@@ -8052,9 +8052,9 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 };
             },
             error:function(msg,img,e){
-                if(msg)console.debug(msg);
+                if(msg)debug(msg);
                 this.loadingAnim.classList.add('pv-loading-container_error');
-                console.debug('Picviewer CE+ 载入大图错误：%o', this.data);
+                debug('Picviewer CE+ 载入大图错误：%o', this.data);
 
                 var self=this;
                 setTimeout(function(){
@@ -8724,7 +8724,6 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     try{
                         src=rule.call(img,imgPA);
                         if(src){
-                            //console.log('匹配的通配规则',rule);
                             return true;
                         };
                     }catch(err){
@@ -8853,6 +8852,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     if(rule.src && !rule.src.test(img.src))continue;
                     if(rule.exclude && rule.exclude.test(img.src))continue;
                     if(rule.getImage){
+                        debug(rule);
                         newSrc = rule.getImage.call(img, a, p);
                     }else{
                         if(rule.r){
@@ -8876,7 +8876,10 @@ Trace Moe | https://trace.moe/?url=#t#`;
                             }
                         }
                     }
-                    if(newSrc && newSrc.length>0 && newSrc!=img.src)break;
+                    if(newSrc && newSrc.length>0 && newSrc!=img.src){
+                        debug(rule);
+                        break;
+                    }
                 }
                 return newSrc;
             }
@@ -9200,7 +9203,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                         let src=result.src,img={src:src},type,imgSrc=src;
                         try{
                             var newSrc=matchedRule.getImage(img);
-                            if(imgSrc!=newSrc) {
+                            if(newSrc && imgSrc!=newSrc) {
                                 src=newSrc;
                                 if (Array.isArray(src)) {
                                     srcs = src;
@@ -9327,6 +9330,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
             }
 
             if(result){
+                debug(result);
                 if(!result.noActual){
                     if(!result.srcs){
                         result.srcs=[result.imgSrc];
