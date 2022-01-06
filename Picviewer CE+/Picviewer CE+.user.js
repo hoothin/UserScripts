@@ -2573,11 +2573,16 @@ Trace Moe | https://trace.moe/?url=#t#`;
                             if(downloading)break;
                             downloading=true;
                             var nodes = document.querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]');
-                            var saveParams = [];
+                            var saveParams = [],saveIndex=0;
                             [].forEach.call(nodes, function(node){
                                 if(unsafeWindow.getComputedStyle(node).display!="none"){
+                                    saveIndex++;
                                     srcSplit=node.dataset.src.replace(/[\?#].*/,"").split("/");
-                                    var picName=(node.title?document.title + "-" + node.title:document.title) + "-" + srcSplit[srcSplit.length-1],hostArr=location.host.split(".");
+                                    srcSplit=srcSplit[srcSplit.length-1];
+                                    if(srcSplit.length>30 && (srcSplit.indexOf(".")==-1 || /[&\?=,]/i.test(srcSplit))){
+                                        srcSplit="";
+                                    }
+                                    var picName=document.title + "-" + (saveIndex<10?"00"+saveIndex:(saveIndex<100?"0"+saveIndex:saveIndex)) + (node.title?"-" + node.title:"") + "-" + srcSplit,hostArr=location.host.split(".");
                                     var host=hostArr[hostArr.length-2];
                                     saveParams.push([node.dataset.src, picName]);
                                     //saveAs(node.dataset.src, location.host+"-"+srcSplit[srcSplit.length-1]);
