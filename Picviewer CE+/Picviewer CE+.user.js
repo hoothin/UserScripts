@@ -2581,7 +2581,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                             [].forEach.call(nodes, function(node){
                                 if(unsafeWindow.getComputedStyle(node).display!="none"){
                                     srcSplit=node.dataset.src.replace(/[\?#].*/,"").split("/");
-                                    var picName=(node.dataset.title?document.title + "-" + node.dataset.title:document.title) + "-" + srcSplit[srcSplit.length-1],hostArr=location.host.split(".");
+                                    var picName=(node.title?document.title + "-" + node.title:document.title) + "-" + srcSplit[srcSplit.length-1],hostArr=location.host.split(".");
                                     var host=hostArr[hostArr.length-2];
                                     saveParams.push([node.dataset.src, picName]);
                                     //saveAs(node.dataset.src, location.host+"-"+srcSplit[srcSplit.length-1]);
@@ -3871,7 +3871,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                             if(item.xhr)spanMark.dataset.xhr=encodeURIComponent(JSON.stringify(item.xhr));
                             spanMark.dataset.description=encodeURIComponent(item.description || '');
                             spanMark.dataset.thumbSrc=item.imgSrc;
-                            spanMark.title=(item.img?item.img.title:"");
+                            spanMark.title=(item.img?(item.img.title||item.img.alt):"");
                             spanMark.innerHTML='<span class="pv-gallery-vertical-align-helper"></span>' +
                                 '<span class="pv-gallery-sidebar-thumb-loading" title="'+i18n("loading")+'......"></span>';
                         }catch(e){};
@@ -7624,11 +7624,25 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     if(e.type == "wheel" && inScroll)
                         return;
                     if(e.type == "click" && !this.moving){
+                        var wSize=getWindowSize();
+                        var imgWindow=this.imgWindow;
+                        var scrolled=getScrolled();
+                        var origTop=parseFloat(imgWindow.style.top);
+                        if(inScroll){
+                            imgWindow.style.top = parseFloat(imgWindow.style.top) - getScrolled(imgWindow).y +'px';
+                        }
                         this.imgWindow.style.height=inScroll?"":"100%";
                         this.imgWindow.style.maxWidth=inScroll?"":"100%";
                         this.imgWindow.style.overflow=inScroll?"":"scroll";
                         this.closeButton.style.display=inScroll?"":"none";
-                        this.center(true , true);
+                        //this.center(true , true);
+                        if(!inScroll){
+                            imgWindow.style.top= (wSize.h - imgWindow.offsetHeight)/2 + scrolled.y +'px';
+                            var scrollTop=parseFloat(imgWindow.style.top)-origTop;
+                            if(this.imgWindow.scrollTop)this.imgWindow.scrollTop = scrollTop;
+                            else if(this.imgWindow.pageYOffset)this.imgWindow.pageYOffset = scrollTop;
+                            else if(this.imgWindow.scrollY)this.imgWindow.scrollY = scrollTop;
+                        }
                         this.keepScreenInside();
                     }
                 }
