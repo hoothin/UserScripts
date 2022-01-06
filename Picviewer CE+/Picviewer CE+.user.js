@@ -24,6 +24,7 @@
 // @grant           GM_xmlhttpRequest
 // @grant           GM_registerMenuCommand
 // @grant           GM_notification
+// @grant           GM_download
 // @grant           unsafeWindow
 // @require         https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
 // @contributionURL https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
@@ -2623,7 +2624,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                                 for(let i=0;i<5;i++){
                                     let saveParam=saveParams.shift();
                                     if(saveParam){
-                                        saveAs(saveParam[0], saveParam[1]);
+                                        GM_download(saveParam[0], saveParam[1]);
                                     }else{
                                         downloading=false;
                                         break;
@@ -3372,7 +3373,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                                                         }, "image/png");
                                                     });
                                                 }else{
-                                                    saveAs(e.target.src,e.target.title);
+                                                    GM_download(e.target.src,e.target.title);
                                                 }
                                                 return true;
                                             });
@@ -3386,7 +3387,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                                         if(img.width>=88 && img.height>=88){
                                             addDlSpan(img, imgSpan, curNode, e=>{
                                                 e.stopPropagation();
-                                                saveAs(e.target.src,e.target.title);
+                                                GM_download(e.target.src,e.target.title);
                                                 return true;
                                             });
                                         }
