@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         91wii
 // @namespace    hoothin
-// @version      0.3
+// @version      0.5
 // @description  91wii签到
 // @author       hoothin
 // @match        https://*.91wii.com/*
@@ -21,8 +21,17 @@
         },10);
     }else if(dcsignin){
         if(dcsignin.style.background.indexOf("signin_yes") != -1)return;
-        unsafeWindow.showWindow('sign', 'plugin.php?id=dc_signin:sign')
+        unsafeWindow.showWindow('sign', 'plugin.php?id=dc_signin:sign');
+        var checkTimes=0;
         let signInterval=setInterval(()=>{
+            var signWin=document.querySelector("#fwin_sign");
+            if(signWin){
+                signWin.style.display="none";
+            }
+            var dialogWin=document.querySelector("#fwin_dialog");
+            if(dialogWin){
+                dialogWin.style.display="none";
+            }
             let emotIndex=parseInt(Math.random() * 10) + 1;
             if(document.querySelector("#emot_" + emotIndex)){
                 clearInterval(signInterval);
@@ -30,7 +39,10 @@
                 //document.querySelector('#content').value = '君子有四时，朝以听政，昼以访问，夕以修令，夜以安身。';
                 document.querySelector("button[name=signpn]").click();
                 unsafeWindow.hideWindow('sign');
+            }else if(checkTimes++>15){
+                clearInterval(signInterval);
+                unsafeWindow.hideWindow('sign');
             }
-        }, 300);
+        }, 100);
     }
 })();
