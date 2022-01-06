@@ -8,7 +8,7 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Base64/0.2.0/base64.min.js
-// @version      1.8.3
+// @version      1.8.5
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -578,6 +578,7 @@
 
     function addCustomSites(){
         var siteRule=GM_getValue("siteRule");
+        if(!siteRule)return;
         var rules=siteRule.split("\n");
         rules.forEach(rule=>{
             var ruleArr=rule.replace(/\s/g,"").split("@@");
