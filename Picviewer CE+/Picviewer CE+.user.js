@@ -8647,12 +8647,8 @@ Trace Moe | https://trace.moe/?url=#t#`;
 
         function pretreatment(img){
             if(img.nodeName != "IMG" || img.src)return;
-            if(img.dataset && img.dataset.original){
-                img.src=img.dataset.original;
-            }else if(img._lazyrias && img._lazyrias.srcset){
+            if(img._lazyrias && img._lazyrias.srcset){
                 img.src=img._lazyrias.srcset[0];
-            }else if(img.dataset && img.dataset.origFile){
-                img.src=img.dataset.origFile;
             }else if(img.srcset){
                 var srcs=img.srcset.split(","),minSize=0,newSrc;
                 srcs.forEach(srci=>{
@@ -8663,6 +8659,8 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     }
                 });
                 if(newSrc)img.src=newSrc;
+            }else if(img.currentSrc){
+                img.src=img.currentSrc;
             }
         }
 
