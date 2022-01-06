@@ -6,7 +6,7 @@
 // @description     Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version         2022.1.5.1
+// @version         2022.1.6.1
 // @created         2011-6-15
 // @namespace       http://userscripts.org/users/NLF
 // @homepage        http://hoothin.com
@@ -2160,9 +2160,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     bar:eleMaps['img-scrollbar-h'],
                     handle:eleMaps['img-scrollbar-h-handle'],
                     track:eleMaps['img-scrollbar-h-track'],
-                },
-                                                     eleMaps['img-content'],
-                                                     true);
+                },eleMaps['img-content'],true);
                 this.imgScrollbarH=imgScrollbarH;
 
                 //图片区域垂直方向的滚动条
@@ -2170,9 +2168,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     bar:eleMaps['img-scrollbar-v'],
                     handle:eleMaps['img-scrollbar-v-handle'],
                     track:eleMaps['img-scrollbar-v-track'],
-                },
-                                                     eleMaps['img-content'],
-                                                     false);
+                },eleMaps['img-content'],false);
                 this.imgScrollbarV=imgScrollbarV;
 
                 //缩略图区域的滚动条
@@ -2182,17 +2178,13 @@ Trace Moe | https://trace.moe/?url=#t#`;
                         bar:eleMaps['thumb-scrollbar-h'],
                         handle:eleMaps['thumb-scrollbar-h-handle'],
                         track:eleMaps['thumb-scrollbar-h-track'],
-                    },
-                                                      eleMaps['sidebar-thumbnails-container'],
-                                                      true);
+                    },eleMaps['sidebar-thumbnails-container'],true);
                 }else{
                     thumbScrollbar=new this.Scrollbar({
                         bar:eleMaps['thumb-scrollbar-v'],
                         handle:eleMaps['thumb-scrollbar-v-handle'],
                         track:eleMaps['thumb-scrollbar-v-track'],
-                    },
-                                                      eleMaps['sidebar-thumbnails-container'],
-                                                      false);
+                    },eleMaps['sidebar-thumbnails-container'],false);
                 };
                 this.thumbScrollbar=thumbScrollbar;
 
@@ -2858,20 +2850,30 @@ Trace Moe | https://trace.moe/?url=#t#`;
                                 direction="←";
                             }
                         }
-                        if(direction=="↓" || direction=="→"){
-                            self.selectPrevious();
-                        }else{
-                            self.selectNext();
+                        switch(direction){
+                            case "←":
+                                self.selectNext();
+                                break;
+                            case "→":
+                                self.selectPrevious();
+                                break;
+                            case "↑":
+                                if(self.eleMaps['sidebar-toggle'].style.visibility != 'hidden'){
+                                    self.maximizeSidebar();
+                                }
+                                break;
+                            default:
+                                break;
                         }
                     }
                 }
-                document.addEventListener('touchstart',function(e){
+                self.eleMaps['img-content'].addEventListener('touchstart',function(e){
                     lastX=e.changedTouches[0].clientX;
                     lastY=e.changedTouches[0].clientY;
-                    document.addEventListener('touchmove',tracer);
+                    self.eleMaps['img-content'].addEventListener('touchmove',tracer);
                 });
-                document.addEventListener('touchend',function(e){
-                    document.removeEventListener('touchmove',tracer);
+                self.eleMaps['img-content'].addEventListener('touchend',function(e){
+                    self.eleMaps['img-content'].removeEventListener('touchmove',tracer);
                 });
 
                 //上下左右切换图片,空格键模拟滚动一页
@@ -2879,7 +2881,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 var validKeyCode=[38,39,40,37,32,9]//上右下左,32空格,tab禁止焦点切换。
                 var keyDown;
 
-                document.addEventListener('keydown',function(e){
+                container.addEventListener('keydown',function(e){
                     var keyCode=e.keyCode;
                     var index=validKeyCode.indexOf(keyCode);
                     if(index==-1)return;
@@ -2914,11 +2916,11 @@ Trace Moe | https://trace.moe/?url=#t#`;
 
                     function keyUpHandler(e){
                         if(e.keyCode!=validKeyCode[index])return;
-                        document.removeEventListener('keyup',keyUpHandler,false);
+                        container.removeEventListener('keyup',keyUpHandler,false);
                         keyDown=false;
                         stop();
                     };
-                    document.addEventListener('keyup',keyUpHandler,false);
+                    container.addEventListener('keyup',keyUpHandler,false);
 
                 },true);
 
@@ -3289,7 +3291,8 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     maximizeContainer.removeChild(maximizeContainer.firstChild);
                 }
                 viewmoreBar.innerHTML = '✚';
-                viewmoreBar.parentNode.style.backgroundColor = "#000000";
+                viewmoreBar.parentNode.classList.remove("showmore");
+                //viewmoreBar.parentNode.style.backgroundColor = "#000000";
 
                 toggleBar.innerHTML = '▼';
                 this.changeSizeInputReset();
@@ -3322,7 +3325,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     toggleBar.style[sidebarPosition] = '0';
                     maximizeContainer.innerHTML = "";
                     viewmoreBar.innerHTML = '✖';
-                    viewmoreBar.parentNode.style.backgroundColor = "#2a2a2a";
+                    viewmoreBar.parentNode.classList.add("showmore");//.backgroundColor = "#2a2a2a";
 
                     var nodes = document.querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]');
                     var self=this;
@@ -4786,6 +4789,10 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     -webkit-column-count: 2!important;\
                     padding-top: 200px!important;\
                     }\
+                    .pv-gallery-sidebar-viewmore-bottom.showmore{\
+                    transform: scale(3.5);\
+                    bottom: 50px;\
+                    }\
                     }\
                     /*顶栏*/\
                     .pv-gallery-head {\
@@ -5329,7 +5336,12 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     bottom:-5px;\
                     }\
                     .pv-gallery-sidebar-viewmore-bottom{\
+                    display: block;\
+                    background-color: #000000;\
                     bottom:12px;\
+                    }\
+                    .pv-gallery-sidebar-viewmore-bottom.showmore{\
+                    background-color: rgb(42, 42, 42);\
                     }\
                     .pv-gallery-sidebar-toggle-left,.pv-gallery-sidebar-viewmore-left{\
                     left:-5px;\
@@ -6389,6 +6401,10 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     self.imgWindowEventHandler(e);
                 },false);
 
+                container.addEventListener('touchstart',function(e){//当按下的时，执行平移，缩放，旋转操作
+                    self.imgWindowEventHandler(e);
+                },false);
+
                 container.addEventListener('click',function(e){//阻止opera ctrl+点击保存图片
                     self.imgWindowEventHandler(e);
                 },false);
@@ -6910,8 +6926,8 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 this.changeCursor('handing');
 
                 var mouseCoor={
-                    x:e.pageX,
-                    y:e.pageY,
+                    x:e.pageX || e.touches[0].pageX,
+                    y:e.pageY || e.touches[0].pageY,
                 };
                 var imgWindow=this.imgWindow;
                 var imgWStyle=imgWindow.style;
@@ -6921,8 +6937,8 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 };
                 var self=this;
                 var moveHandler=function(e){
-                    imgWStyle.left=oriOffset.left+ e.pageX-mouseCoor.x +'px';
-                    imgWStyle.top=oriOffset.top + e.pageY-mouseCoor.y +'px';
+                    imgWStyle.left=oriOffset.left+ (e.pageX || e.touches[0].pageX)-mouseCoor.x +'px';
+                    imgWStyle.top=oriOffset.top + (e.pageY || e.touches[0].pageY)-mouseCoor.y +'px';
                     self.keepScreenInside();
                     self.moving=true;
                 };
@@ -6936,9 +6952,13 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     };
                     document.removeEventListener('mousemove',moveHandler,true);
                     document.removeEventListener('mouseup',mouseupHandler,true);
+                    document.removeEventListener('touchmove',moveHandler,true);
+                    document.removeEventListener('touchend',mouseupHandler,true);
                 };
                 document.addEventListener('mousemove',moveHandler,true);
                 document.addEventListener('mouseup',mouseupHandler,true);
+                document.addEventListener('touchmove',moveHandler,true);
+                document.addEventListener('touchend',mouseupHandler,true);
             },
             rotate:function(origin,topLeft){
 
@@ -7616,7 +7636,8 @@ Trace Moe | https://trace.moe/?url=#t#`;
                             e.preventDefault();
                         }
                     }break;
-                    case 'mousedown':{
+                    case 'mousedown':
+                    case 'touchstart':{
                         if(!this.focused){//如果没有focus，先focus
                             this.focus();
                             this.keepScreenInside();
@@ -7637,7 +7658,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                             return;
                         };
 
-                        if(e.button!=0 || (target!=this.imgWindow && target!=this.img && target!=this.rotateOverlayer))return;
+                        if((e.button!=0 && e.type!="touchstart") || (target!=this.imgWindow && target!=this.img && target!=this.rotateOverlayer))return;
                         e.preventDefault();
                         if(this.tempHand){
                             this.move(e);
