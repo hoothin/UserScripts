@@ -6,7 +6,7 @@
 // @description     Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version         2022.1.6.1
+// @version         2022.1.6.2
 // @created         2011-6-15
 // @namespace       http://userscripts.org/users/NLF
 // @homepage        http://hoothin.com
@@ -4285,6 +4285,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                             return !(container.contains(img) || (preloadContainer&&preloadContainer.contains(img)));
                         });
                         imgs.forEach(function(img) {
+                            pretreatment(img);
                             if(!img.src)return;
                             var isrc=img.src.trim();
                             if(!isrc)return;
@@ -4375,6 +4376,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                             return !(container.contains(img) || (preloadContainer&&preloadContainer.contains(img)));
                         });
                         imgs.forEach(function(img) {
+                            pretreatment(img);
                             if(!img.src)return;
                             var isrc=img.src.trim();
                             if(!isrc)return;
@@ -4603,6 +4605,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 // 已经在图库里面的
                 var self = this;
                 imgs.forEach(function(img) {
+                    pretreatment(img);
                     if(!img.src) return;
                     if (newer && self._dataCache[img.src]) return;
 
@@ -8642,6 +8645,27 @@ Trace Moe | https://trace.moe/?url=#t#`;
             URL=location.href,
             floatBar;
 
+        function pretreatment(img){
+            if(img.nodeName != "IMG" || img.src)return;
+            if(img.dataset && img.dataset.original){
+                img.src=img.dataset.original;
+            }else if(img._lazyrias && img._lazyrias.srcset){
+                img.src=img._lazyrias.srcset[0];
+            }else if(img.dataset && img.dataset.origFile){
+                img.src=img.dataset.origFile;
+            }else if(img.srcset){
+                var srcs=img.srcset.split(","),minSize=0,newSrc;
+                srcs.forEach(srci=>{
+                    let srcInfo=srci.trim().split(" "),curSize=parseInt(srcInfo[1]);
+                    if(srcInfo[1] && (curSize<minSize || minSize==0)){
+                        minSize=curSize;
+                        newsrc=srcInfo[0];
+                    }
+                });
+                if(newSrc)img.src=newSrc;
+            }
+        }
+
         function findPic(img){
             var imgPN=img;
             var imgPA,imgPE=[];
@@ -9295,6 +9319,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
             }
 
             if (!result) {
+                pretreatment(target)
                 result = findPic(target);
                 if(!(result.imgAS.w==result.imgCS.w && result.imgAS.h==result.imgCS.h)){//如果不是两者完全相等,那么被缩放了.
                     if(prefs.floatBar.sizeLimitOr){
