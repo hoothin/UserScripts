@@ -6,7 +6,7 @@
 // @description     Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version         2022.1.6.2
+// @version         2022.1.6.3
 // @created         2011-6-15
 // @namespace       http://userscripts.org/users/NLF
 // @homepage        http://hoothin.com
@@ -3143,10 +3143,10 @@ Trace Moe | https://trace.moe/?url=#t#`;
                             spanMark.dataset.naturalSize=JSON.stringify({w:item.naturalWidth,h:item.naturalHeight});
                         }
                         if(item.naturalWidth<sizeInputW.value || item.naturalHeight<sizeInputH.value){
-                            item.style.display="none";
+                            item.parentNode.style.display="none";
                             if(spanMark)spanMark.style.display="none";
                         }else{
-                            item.style.display="";
+                            item.parentNode.style.display="";
                             if(spanMark)spanMark.style.display="";
                         }
                         if(item.naturalHeight>maxSizeH)
@@ -3335,67 +3335,63 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     var self=this;
                     [].forEach.call(nodes, function(node){
                         var nodeStyle=unsafeWindow.getComputedStyle(node);
-                        if(nodeStyle.display!="none"){
-                            let curNode=node;
-                            let imgSpan = document.createElement('span');
-                            imgSpan.className = "maximizeChild";
-                            imgSpan.innerHTML = '<img src="'+curNode.dataset.src+'">';
-                            imgSpan.addEventListener("click", function(e){
-                                imgReady(curNode.dataset.src,{
-                                    ready:function(){
-                                        new ImgWindowC(this);
-                                    }
-                                });
+                        let curNode=node;
+                        let imgSpan = document.createElement('span');
+                        imgSpan.style.display=nodeStyle.display;
+                        imgSpan.className = "maximizeChild";
+                        imgSpan.innerHTML = '<img src="'+curNode.dataset.src+'">';
+                        imgSpan.addEventListener("click", function(e){
+                            imgReady(curNode.dataset.src,{
+                                ready:function(){
+                                    new ImgWindowC(this);
+                                }
                             });
-                            let img=imgSpan.querySelector("img");
-                            var addDlSpan=(img, imgSpan, curNode, clickCb)=>{
-                                var dlSpan = document.createElement('p');
-                                dlSpan.innerHTML='<svg class="icon" style="width: 20px;height: 20px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1100"><path d="M768 768q0-14.857143-10.857143-25.714286t-25.714286-10.857143-25.714285 10.857143-10.857143 25.714286 10.857143 25.714286 25.714285 10.857143 25.714286-10.857143 10.857143-25.714286z m146.285714 0q0-14.857143-10.857143-25.714286t-25.714285-10.857143-25.714286 10.857143-10.857143 25.714286 10.857143 25.714286 25.714286 10.857143 25.714285-10.857143 10.857143-25.714286z m73.142857-128v182.857143q0 22.857143-16 38.857143t-38.857142 16H91.428571q-22.857143 0-38.857142-16t-16-38.857143v-182.857143q0-22.857143 16-38.857143t38.857142-16h265.714286l77.142857 77.714286q33.142857 32 77.714286 32t77.714286-32l77.714285-77.714286h265.142858q22.857143 0 38.857142 16t16 38.857143z m-185.714285-325.142857q9.714286 23.428571-8 40l-256 256q-10.285714 10.857143-25.714286 10.857143t-25.714286-10.857143L230.285714 354.857143q-17.714286-16.571429-8-40 9.714286-22.285714 33.714286-22.285714h146.285714V36.571429q0-14.857143 10.857143-25.714286t25.714286-10.857143h146.285714q14.857143 0 25.714286 10.857143t10.857143 25.714286v256h146.285714q24 0 33.714286 22.285714z" p-id="1101"></path></svg> '+i18n("download");
-                                dlSpan.src=curNode.dataset.src;
-                                dlSpan.title=curNode.title||document.title;
-                                dlSpan.onclick=clickCb;
-                                imgSpan.appendChild(dlSpan);
-                            };
-                            fetch(curNode.dataset.src)
-                            .then(response=>{
-                                return response.blob();
-                            })
-                            .then(blob=>{
-                                imgReady(img,{
-                                    ready:function(){
-                                        if(img.width>=88 && img.height>=88){
-                                            addDlSpan(img, imgSpan, curNode, e=>{
-                                                e.stopPropagation();
-                                                if(blob.type=="image/webp"){
-                                                    self.blobToCanvas(blob, canvas=>{
-                                                        canvas.toBlob(blob=>{
-                                                            saveAs(blob,e.target.title);
-                                                        }, "image/png");
-                                                    });
-                                                }else{
-                                                    GM_download(e.target.src,e.target.title);
-                                                }
-                                                return true;
-                                            });
-                                        }
-                                    }
-                                });
-                            })
-                            .catch(e=>{
-                                imgReady(img,{
-                                    ready:function(){
-                                        if(img.width>=88 && img.height>=88){
-                                            addDlSpan(img, imgSpan, curNode, e=>{
-                                                e.stopPropagation();
+                        });
+                        let img=imgSpan.querySelector("img");
+                        var addDlSpan=(img, imgSpan, curNode, clickCb)=>{
+                            var dlSpan = document.createElement('p');
+                            dlSpan.innerHTML='<svg class="icon" style="width: 20px;height: 20px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1100"><path d="M768 768q0-14.857143-10.857143-25.714286t-25.714286-10.857143-25.714285 10.857143-10.857143 25.714286 10.857143 25.714286 25.714285 10.857143 25.714286-10.857143 10.857143-25.714286z m146.285714 0q0-14.857143-10.857143-25.714286t-25.714285-10.857143-25.714286 10.857143-10.857143 25.714286 10.857143 25.714286 25.714286 10.857143 25.714285-10.857143 10.857143-25.714286z m73.142857-128v182.857143q0 22.857143-16 38.857143t-38.857142 16H91.428571q-22.857143 0-38.857142-16t-16-38.857143v-182.857143q0-22.857143 16-38.857143t38.857142-16h265.714286l77.142857 77.714286q33.142857 32 77.714286 32t77.714286-32l77.714285-77.714286h265.142858q22.857143 0 38.857142 16t16 38.857143z m-185.714285-325.142857q9.714286 23.428571-8 40l-256 256q-10.285714 10.857143-25.714286 10.857143t-25.714286-10.857143L230.285714 354.857143q-17.714286-16.571429-8-40 9.714286-22.285714 33.714286-22.285714h146.285714V36.571429q0-14.857143 10.857143-25.714286t25.714286-10.857143h146.285714q14.857143 0 25.714286 10.857143t10.857143 25.714286v256h146.285714q24 0 33.714286 22.285714z" p-id="1101"></path></svg> '+i18n("download");
+                            dlSpan.src=curNode.dataset.src;
+                            dlSpan.title=curNode.title||document.title;
+                            dlSpan.onclick=clickCb;
+                            imgSpan.appendChild(dlSpan);
+                        };
+                        fetch(curNode.dataset.src).then(response=>{
+                            return response.blob();
+                        }).then(blob=>{
+                            imgReady(img,{
+                                ready:function(){
+                                    if(img.width>=88 && img.height>=88){
+                                        addDlSpan(img, imgSpan, curNode, e=>{
+                                            e.stopPropagation();
+                                            if(blob.type=="image/webp"){
+                                                self.blobToCanvas(blob, canvas=>{
+                                                    canvas.toBlob(blob=>{
+                                                        saveAs(blob,e.target.title);
+                                                    }, "image/png");
+                                                });
+                                            }else{
                                                 GM_download(e.target.src,e.target.title);
-                                                return true;
-                                            });
-                                        }
+                                            }
+                                            return true;
+                                        });
                                     }
-                                });
+                                }
                             });
-                            maximizeContainer.appendChild(imgSpan);
-                        }
+                        }).catch(e=>{
+                            imgReady(img,{
+                                ready:function(){
+                                    if(img.width>=88 && img.height>=88){
+                                        addDlSpan(img, imgSpan, curNode, e=>{
+                                            e.stopPropagation();
+                                            GM_download(e.target.src,e.target.title);
+                                            return true;
+                                        });
+                                    }
+                                }
+                            });
+                        });
+                        maximizeContainer.appendChild(imgSpan);
                     });
                 }
             },
