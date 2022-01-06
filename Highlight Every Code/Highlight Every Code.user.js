@@ -56,6 +56,15 @@
         c.document.close();
     };
 
+    document.addEventListener('DOMMouseScroll', function(o) {
+        hideIcon();
+    });
+    document.addEventListener('wheel', function(o) {
+        hideIcon();
+    });
+    document.addEventListener('mousewheel', function(o) {
+        hideIcon();
+    });
     document.addEventListener('mouseover', function(o) {
         if(o.target.nodeName!="PRE" && o.target.nodeName!="CODE")return;
         selStr=o.target.innerText;
@@ -63,18 +72,16 @@
         codes=selStr.replace(/&/g, "&amp;").replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
         document.body.appendChild(codeIcon);
         let pos=getMousePos(o);
-        let clientH=(document.documentElement && document.documentElement.clientHeight) || 0;
-        let clientW=(document.documentElement && document.documentElement.clientWidth) || 0;
-        let top=pos.y>clientH-50?(pos.y-30):(pos.y+20);
-        let left=pos.x>clientW-50?(pos.x-30):(pos.x+20);
+        scrollX = document.documentElement.scrollLeft || document.body.scrollLeft;
+        scrollY = document.documentElement.scrollTop || document.body.scrollTop;
+        let top=o.target.offsetTop-scrollY;
+        let left=o.target.offsetLeft-scrollX;
         codeIcon.style.opacity=0.9;
         codeIcon.style.top=top+"px";
         codeIcon.style.left=left+"px";
     });
     document.addEventListener('mousedown', function(o) {
-        codeIcon.style.opacity=0;
-        customInput=false;
-        if(codeIcon.parentNode)codeIcon.parentNode.removeChild(codeIcon);
+        hideIcon();
     });
     document.addEventListener('mouseup', function(o) {
         if (o.button === 0 && (o.ctrlKey || o.altKey || o.metaKey || o.shiftKey)) {
@@ -100,6 +107,11 @@
         }
     },false);
 
+    function hideIcon(){
+        codeIcon.style.opacity=0;
+        customInput=false;
+        if(codeIcon.parentNode)codeIcon.parentNode.removeChild(codeIcon);
+    }
     function getMousePos(event) {
         var e = event || window.event;
         scrollX = document.documentElement.scrollLeft || document.body.scrollLeft;
