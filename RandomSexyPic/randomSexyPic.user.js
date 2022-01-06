@@ -4,7 +4,7 @@
 // @name:zh-TW   軟瑟盤
 // @name:ja      RandomSexyPicParser
 // @namespace    hoothin
-// @version      1.3.12
+// @version      1.3.13
 // @description        Random Sexy Pictures Parser
 // @description:zh-CN  随机色图
 // @description:zh-TW  隨機色圖
@@ -35,6 +35,7 @@
     'use strict';
     var setuConfig={
         "api.lolicon.app":{
+            include: /setu\/v2/i,
             name:"Lolicon ACG SexyPic",
             url:"https://api.lolicon.app/setu/v2?r18=1&num=5",
             luckyUrl:["https://api.lolicon.app/setu/v2?r18=0&num=5",
@@ -80,6 +81,7 @@
             }
         },
         "api.nyan.xyz":{
+            include: /httpapi\/sexphoto/i,
             name:"Nyan ACG SexyPic",
             url:"https://api.nyan.xyz/httpapi/sexphoto/?r18=true&num=5",
             luckyUrl:["https://api.nyan.xyz/httpapi/sexphoto/?r18=true&num=5",
@@ -121,6 +123,7 @@
             }
         },
         "buyersShow":{
+            include: /api\/(rand|tao|mjx1)/i,
             name:"Taobao Buyers Show",
             urls:["https://api.uomg.com/api/rand.img3?format=json&num=15",
                  "https://api.vvhan.com/api/tao?type=json&num=15",
@@ -143,6 +146,7 @@
             }
         },
         "huanmengii.xyz":{
+            include: /ZY\/aCOS\/cos/i,
             name:"Cosplay Show",
             url:"https://huanmengii.xyz/ZY/aCOS/cos/?type=json&num=15",
             run:()=>{
@@ -171,6 +175,7 @@
             }
         },
         "3650000.xyz":{
+            include: /\/api\/\?type=json/i,
             name:"3650000",
             url:"https://3650000.xyz/api/?type=json&mode=7&num=15",
             luckyUrl:["https://3650000.xyz/api/?type=json&num=15",
@@ -254,7 +259,7 @@
     var curConfig=setuConfig[document.domain],jsonData,hasFloatImg=false,grabed=false,oClient;
     if(!curConfig){
         GM_registerMenuCommand("Parse current api", customSet);
-        var customRule=GM_getValue("RSPrules_"+document.domain);
+        var customRule=GM_getValue("RSPrules_"+document.domain+location.pathname);
         if(customRule){
             curConfig={run:()=>{
                 var searchNum=getSearchParam("num");
@@ -316,6 +321,9 @@
         }else return;
     }else if(!curConfig.run){
         curConfig=setuConfig[curConfig];
+    }
+    if(curConfig && curConfig.include && !curConfig.include.test(location.href)){
+        return;
     }
     document.title=curConfig.name?curConfig.name:"Random Sexy Pictures";
     try{
@@ -534,9 +542,9 @@
 
     function customSet(){
         if(window.confirm("Parse current api?")){
-            GM_setValue("RSPrules_"+document.domain, true);
+            GM_setValue("RSPrules_"+document.domain+location.pathname, true);
         }else{
-            GM_deleteValue("RSPrules_"+document.domain)
+            GM_deleteValue("RSPrules_"+document.domain+location.pathname)
         }
         location.reload();
     }
