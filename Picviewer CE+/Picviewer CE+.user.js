@@ -6,9 +6,9 @@
 // @description     Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version         2022.1.6.3
+// @version         2022.1.7.1
 // @created         2011-6-15
-// @namespace       http://userscripts.org/users/NLF
+// @namespace       https://github.com/hoothin/UserScripts
 // @homepage        http://hoothin.com
 // @connect         www.google.com
 // @connect         www.google.com.hk
@@ -45,7 +45,7 @@
 ;(function(topObject,window,document,unsafeWindow){
     'use strict';
 
-    var lang = navigator.appName=="Netscape"?navigator.language:navigator.userLanguage;
+    var lang = navigator.appName=="Netscape"?navigator.language:navigator.userLanguage,debug;
     var i18nData={};
     switch (lang){
         case "zh-CN":
@@ -701,6 +701,14 @@ Sogou | https://pic.sogou.com/ris?query=#t#
 WhatAnime | https://trace.moe/?url=#t#
 Ascii2D | https://ascii2d.net/search/url/#t#
 Trace Moe | https://trace.moe/?url=#t#`;
+
+    if(typeof GM_addStyle=='undefined')var GM_addStyle=(s)=>{};
+    if(typeof GM_openInTab=='undefined')var GM_openInTab=(s)=>{};
+    if(typeof GM_setClipboard=='undefined')var GM_setClipboard=(s)=>{};
+    if(typeof GM_xmlhttpRequest=='undefined')var GM_xmlhttpRequest=(f)=>{};
+    if(typeof GM_registerMenuCommand=='undefined')var GM_registerMenuCommand=(s,f)=>{};
+    if(typeof GM_notification=='undefined')var GM_notification=(s)=>{};
+    if(typeof GM_download=='undefined')var GM_download=(u,n)=>{};
     var prefs;
     function init(topObject,window,document,arrayFn,envir,storage,unsafeWindow){
         // 默认设置，请到设置界面修改
@@ -9450,8 +9458,6 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 }
             }
         }, true);
-
-        var debug;  // 调试函数
 
         GM_config.init({
             id: 'pv-prefs',
