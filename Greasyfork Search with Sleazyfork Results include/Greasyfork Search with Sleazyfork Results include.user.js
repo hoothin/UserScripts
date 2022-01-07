@@ -30,20 +30,28 @@
 // @contributionAmount 1
 // ==/UserScript==
 
-(async function() {
+(function() {
     'use strict';
-    if(typeof GM_getValue=='undefined' && GM && GM.getValue){
-        var GM_getValue=GM.getValue;
-        var GM_setValue=GM.setValue;
-        var GM_xmlhttpRequest=GM.xmlhttpRequest;
-        var GM_registerMenuCommand=GM.registerMenuCommand;
-        var GM_notification=GM.notification;
+    var _GM_getValue,_GM_setValue,_GM_xmlhttpRequest,_GM_registerMenuCommand,_GM_notification;
+    if(typeof GM_getValue!='undefined'){
+        _GM_getValue=GM_getValue;
+        _GM_setValue=GM_setValue;
+        _GM_xmlhttpRequest=GM_xmlhttpRequest;
+        _GM_registerMenuCommand=GM_registerMenuCommand;
+        _GM_notification=GM_notification;
+    }else if(GM && typeof GM.getValue!='undefined'){
+        _GM_getValue=GM.getValue;
+        _GM_setValue=GM.setValue;
+        _GM_xmlhttpRequest=GM.xmlhttpRequest;
+        _GM_registerMenuCommand=GM.registerMenuCommand;
+        _GM_notification=GM.notification;
     }
-    if(typeof GM_xmlhttpRequest=='undefined')GM_xmlhttpRequest=(f)=>{};
-    if(typeof GM_registerMenuCommand=='undefined')GM_registerMenuCommand=(s,f)=>{};
-    if(typeof GM_notification=='undefined')GM_notification=(s)=>{};
+    if(typeof _GM_xmlhttpRequest=='undefined')_GM_xmlhttpRequest=(f)=>{};
+    if(typeof _GM_registerMenuCommand=='undefined')_GM_registerMenuCommand=(s,f)=>{};
+    if(typeof _GM_notification=='undefined')_GM_notification=(s)=>{};
     var storage={
         supportGM: typeof GM_getValue=='function' && typeof GM_getValue('a','b')!='undefined',
+        supportGMPromise: GM && typeof GM.getValue=='function' && typeof GM.getValue('a','b')!='undefined',
         mxAppStorage:(function(){
             try{
                 return window.external.mxGetRuntime().storage;
@@ -61,13 +69,13 @@
                 this.operaUJSStorage.setItem(key,value);
             }else if(this.mxAppStorage){
                 this.mxAppStorage.setConfig(key,value);
-            }else if(this.supportGM){
-                GM_setValue(key,value);
+            }else if(this.supportGM || this.supportGMPromise){
+                _GM_setValue(key,value);
             }else if(window.localStorage){
                 window.localStorage.setItem(key,value);
             };
         },
-        getItem:function(key){
+        getItem:function(key,cb){
             var value;
             if(this.operaUJSStorage){
                 value=this.operaUJSStorage.getItem(key);
@@ -75,10 +83,13 @@
                 value=this.mxAppStorage.getConfig(key);
             }else if(this.supportGM){
                 value=GM_getValue(key);
+            }else if(this.supportGMPromise){
+                value=GM.getValue(key).then(v=>{cb(v)});
+                return;
             }else if(window.localStorage){
                 value=window.localStorage.getItem(key);
             };
-            return value;
+            cb(value);
         },
     };
     if(document.querySelector('span.sign-in-link')){
@@ -88,7 +99,7 @@
                 location.href=location.href.replace(/\/\/([^\.]+\.)?(greasyfork|sleazyfork)\.org/,"//$1"+otherSite+"\.org");
             }
         }else if(/\/(scripts|users)(\/|.*(\?|&)q=|.*\?set=)/.test(location.href)){
-            GM_xmlhttpRequest({
+            _GM_xmlhttpRequest({
                 method: 'GET',
                 url: location.href.replace(/\/\/([^\.]+\.)?(greasyfork|sleazyfork)\.org/,"//$1"+otherSite+"\.org"),
                 onload: function(result) {
@@ -135,40 +146,43 @@
             });
         }
     }
-    var bullshit=await storage.getItem("GeasyforkBullshit"),bullshit_o=`vip.*视频|网课|刷课|(mooc|考试|学习).*(答题|挂机)|(网盘|網盤|云盘).*(vip|直链)|优惠劵|AntiGame|split|Agar|\\.io(\\b|:|\\/|\\.|$)|ExtencionRipXChetoMalo|AposBot|DFxLite|ZTx-Lite|AposFeedingBot|AposLoader|Blah Blah|Orc Clan Script|Astro\\s*Empires|^\\s*Attack|^\\s*Battle|BiteFight|Blood\\s*Wars|Bots|Bots4|Brawler|\\bBvS\\b|Business\\s*Tycoon|Castle\\s*Age|City\\s*Ville|Comunio|Conquer\\s*Club|CosmoPulse|Dark\\s*Orbit|Dead\\s*Frontier|\\bDOA\\b|DotD|Dossergame|Dragons\\s*of\\s*Atlantis|Dugout|\\bDS[a-z]+\\n|Empire\\s*Board|eRep(ublik)?|Epic.*War|ExoPlanet|Falcon Tools|Feuerwache|Farming|FarmVille|Fightinfo|Frontier\\s*Ville|Ghost\\s*Trapper|Gladiatus|Goalline|Gondal|Grepolis|Hobopolis|\\bhwm(\\b|_)|Ikariam|\\bIT2\\b|Jellyneo|Kapi\\s*Hospital|Kings\\s*Age|Kingdoms?\\s*of|knastv(ö|oe)gel|Knight\\s*Fight|\\b(Power)?KoC(Atta?ck)?\\b|\\bKOL\\b|Kongregate|Last\\s*Emperor|Legends?\\s*of|Light\\s*Rising|Lockerz|\\bLoU\\b|Mafia\\s*(Wars|Mofo)|Menelgame|Mob\\s*Wars|Mouse\\s*Hunt|Molehill\\s*Empire|NeoQuest|MyFreeFarm|Neopets|Nemexia|\\bOGame\\b|Ogar(io)?|Pardus|Pennergame|Pigskin\\s*Empire|PlayerScripts|Popmundo|Po?we?r\\s*(Bot|Tools)|PsicoTSI|Ravenwood|Schulterglatze|slitheriogameplay|SpaceWars|\\bSW_[a-z]+\\n|\\bSnP\\b|The\\s*Crims|The\\s*West|Travian|Treasure\\s*Isl(and|e)|Tribal\\s*Wars|TW.?PRO|Vampire\\s*Wars|War\\s*of\\s*Ninja|West\\s*Wars|\\bWoD\\b|World\\s*of\\s*Dungeons|wtf\\s*battles|Wurzelimperium`;
-    if(!bullshit)bullshit=bullshit_o;
-    if(/greasyfork\.org\/.*\/scripts\/23840[^\/]*$/.test(location.href)){
-        var p=document.createElement("p"),_bullshit;
-        p.style.width="90%";
-        p.innerHTML="<b>Filter RegExp string Config</b><button id='ok' style='margin-left: 20px;'>OK</button><button id='reset' style='margin-left: 20px;'>Reset</button>";
-        var okBtn=p.querySelector("#ok");
-        var resetBtn=p.querySelector("#reset");
-        var filterTextarea=document.createElement("pre");
-        var prettifyScript=document.createElement("script");
-        prettifyScript.src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js?lang=js&skin=sunburst";
-        document.head.appendChild(prettifyScript);
-        filterTextarea.contentEditable="true";
-        filterTextarea.className="prettyprint lang-js";
-        filterTextarea.style.whiteSpace="pre-wrap";
-        filterTextarea.style.overflowWrap="break-word";
-        filterTextarea.innerHTML=bullshit;
-        var additionalInfo=document.querySelector("#additional-info");
-        p.appendChild(filterTextarea);
-        additionalInfo.insertBefore(p,additionalInfo.firstChild);
-        prettifyScript.onload=()=>{PR.prettyPrint();};
-        okBtn.onclick=()=>{
-            _bullshit=filterTextarea.innerText;
-            storage.setItem("GeasyforkBullshit", _bullshit);
-            alert("Saved");
-            //GM_notification("Saved");
-        };
-        resetBtn.onclick=()=>{
-            storage.setItem("GeasyforkBullshit", bullshit_o);
-            alert("Reset over");
-            location.reload();
-            //GM_notification("Reset over");
-        };
-    }
+    var bullshit,bullshit_o=`vip.*视频|网课|刷课|(mooc|考试|学习).*(答题|挂机)|(网盘|網盤|云盘).*(vip|直链)|优惠劵|AntiGame|split|Agar|\\.io(\\b|:|\\/|\\.|$)|ExtencionRipXChetoMalo|AposBot|DFxLite|ZTx-Lite|AposFeedingBot|AposLoader|Blah Blah|Orc Clan Script|Astro\\s*Empires|^\\s*Attack|^\\s*Battle|BiteFight|Blood\\s*Wars|Bots|Bots4|Brawler|\\bBvS\\b|Business\\s*Tycoon|Castle\\s*Age|City\\s*Ville|Comunio|Conquer\\s*Club|CosmoPulse|Dark\\s*Orbit|Dead\\s*Frontier|\\bDOA\\b|DotD|Dossergame|Dragons\\s*of\\s*Atlantis|Dugout|\\bDS[a-z]+\\n|Empire\\s*Board|eRep(ublik)?|Epic.*War|ExoPlanet|Falcon Tools|Feuerwache|Farming|FarmVille|Fightinfo|Frontier\\s*Ville|Ghost\\s*Trapper|Gladiatus|Goalline|Gondal|Grepolis|Hobopolis|\\bhwm(\\b|_)|Ikariam|\\bIT2\\b|Jellyneo|Kapi\\s*Hospital|Kings\\s*Age|Kingdoms?\\s*of|knastv(ö|oe)gel|Knight\\s*Fight|\\b(Power)?KoC(Atta?ck)?\\b|\\bKOL\\b|Kongregate|Last\\s*Emperor|Legends?\\s*of|Light\\s*Rising|Lockerz|\\bLoU\\b|Mafia\\s*(Wars|Mofo)|Menelgame|Mob\\s*Wars|Mouse\\s*Hunt|Molehill\\s*Empire|NeoQuest|MyFreeFarm|Neopets|Nemexia|\\bOGame\\b|Ogar(io)?|Pardus|Pennergame|Pigskin\\s*Empire|PlayerScripts|Popmundo|Po?we?r\\s*(Bot|Tools)|PsicoTSI|Ravenwood|Schulterglatze|slitheriogameplay|SpaceWars|\\bSW_[a-z]+\\n|\\bSnP\\b|The\\s*Crims|The\\s*West|Travian|Treasure\\s*Isl(and|e)|Tribal\\s*Wars|TW.?PRO|Vampire\\s*Wars|War\\s*of\\s*Ninja|West\\s*Wars|\\bWoD\\b|World\\s*of\\s*Dungeons|wtf\\s*battles|Wurzelimperium`;
+    storage.getItem("GeasyforkBullshit",v=>{
+        bullshit=v;
+        if(!bullshit)bullshit=bullshit_o;
+        if(/greasyfork\.org\/.*\/scripts\/23840[^\/]*$/.test(location.href)){
+            var p=document.createElement("p"),_bullshit;
+            p.style.width="90%";
+            p.innerHTML="<b>Filter RegExp string Config</b><button id='ok' style='margin-left: 20px;'>OK</button><button id='reset' style='margin-left: 20px;'>Reset</button>";
+            var okBtn=p.querySelector("#ok");
+            var resetBtn=p.querySelector("#reset");
+            var filterTextarea=document.createElement("pre");
+            var prettifyScript=document.createElement("script");
+            prettifyScript.src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js?lang=js&skin=sunburst";
+            document.head.appendChild(prettifyScript);
+            filterTextarea.contentEditable="true";
+            filterTextarea.className="prettyprint lang-js";
+            filterTextarea.style.whiteSpace="pre-wrap";
+            filterTextarea.style.overflowWrap="break-word";
+            filterTextarea.innerHTML=bullshit;
+            var additionalInfo=document.querySelector("#additional-info");
+            p.appendChild(filterTextarea);
+            additionalInfo.insertBefore(p,additionalInfo.firstChild);
+            prettifyScript.onload=()=>{PR.prettyPrint();};
+            okBtn.onclick=()=>{
+                _bullshit=filterTextarea.innerText;
+                storage.setItem("GeasyforkBullshit", _bullshit);
+                alert("Saved");
+                //_GM_notification("Saved");
+            };
+            resetBtn.onclick=()=>{
+                storage.setItem("GeasyforkBullshit", bullshit_o);
+                alert("Reset over");
+                location.reload();
+                //_GM_notification("Reset over");
+            };
+        }
+    });
 
     function addScore(script){
         var separator=script.querySelector('h2>span.name-description-separator');
@@ -198,7 +212,7 @@
                 checkInfo.removeChild(refreshIcon);
             };
             checkInfo.onclick=()=>{
-                GM_xmlhttpRequest({
+                _GM_xmlhttpRequest({
                     method: 'GET',
                     url: scriptHref.replace(/(.*)-.*/,"$1.json"),
                     onload: function(result) {
@@ -265,7 +279,7 @@
         ratingSpan.style.display=totalInstalls.style.display=dailyInstalls.style.display="";
     }
 
-    GM_registerMenuCommand("Configure the Filter", ()=>{
+    _GM_registerMenuCommand("Configure the Filter", ()=>{
         location.href="https://greasyfork.org/scripts/23840#additional-info";
         /*var _bullshit=window.prompt("Configure the Filter", bullshit);
         if(_bullshit == ""){
@@ -302,7 +316,11 @@
         goodRating.innerHTML=okRating.innerHTML=badRating.innerHTML=totalInstalls.innerHTML=dailyInstalls.innerHTML="0";
     }
     if(sortDiv){
-        var switchFilter=document.createElement("div"),enableFilter=!storage.getItem("disableFilter");
+        var switchFilter=document.createElement("div");
+        var enableFilter;
+        storage.getItem("disableFilter",v=>{
+            enableFilter=!v;
+        });
         var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
         var observer = new MutationObserver(function(records){
             records.map(function(record) {
