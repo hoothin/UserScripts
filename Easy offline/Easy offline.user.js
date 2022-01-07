@@ -424,7 +424,7 @@
     };
 
     if(typeof GM_registerMenuCommand=='undefined')GM_registerMenuCommand=(s,f)=>{};
-    if(typeof unsafeWindow=='undefined')var unsafeWindow=window;
+    if(typeof unsafeWindow=='undefined')unsafeWindow=window;
     var storage={
         supportGM: typeof GM_getValue=='function' && typeof GM_getValue('a','b')!='undefined',
         mxAppStorage:(function(){
