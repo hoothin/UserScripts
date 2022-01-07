@@ -720,7 +720,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
         _GM_xmlhttpRequest=GM_xmlhttpRequest;
         _GM_registerMenuCommand=GM_registerMenuCommand;
         _GM_notification=GM_notification;
-    }else if(GM && typeof GM.getValue!='undefined'){
+    }else if(typeof GM!='undefined' && typeof GM.getValue!='undefined'){
         _GM_openInTab=GM.openInTab;
         _GM_setClipboard=GM.setClipboard;
         _GM_xmlhttpRequest=GM.xmlhttpRequest;
