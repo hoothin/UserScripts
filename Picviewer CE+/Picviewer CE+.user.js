@@ -4160,6 +4160,8 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 var pageNum=0;
                 if(/[a-zA-Z0-9][_\-]\d+(\.html)?$/.test(this.href)){
                     pageNum=this.href.replace(/.*[a-zA-Z0-9][\-_](\d+)(\.html)?$/,"$1");
+                }else if(/[\?&]p(age)?=\d+[$#]/.test(this.href)){
+                    pageNum=this.href.replace(/.*[\?&]p(age)=(\d+)($|#.*)/,"$2");
                 }
                 var curPage=this.curPage;
                 let pre=curPage.querySelector("a.prev");
@@ -4168,12 +4170,15 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 if(!next)next=curPage.querySelector("a#next");
                 if(!pre)pre=curPage.querySelector("a#leftFix");
                 if(!next)next=curPage.querySelector("a#rightFix");
+                if(pre && (!pre.href || /javascript:/.test(pre.href)))pre=null;
+                if(next && (!next.href || /javascript:/.test(next.href)))next=null;
                 if(!pre || !next){
                     let aTags=curPage.querySelectorAll("a");
                     if(!pre){
                         let pref,pres,pret;
                         for(var i=0;i<aTags.length;i++){
                             let aTag=aTags[i];
+                            if(!aTag.href || /javascript:/.test(aTag.href))continue;
                             if(pref && pres && pret)break;
                             if(!pref){
                                 if(/上[一1]?[页頁张張]|previous page|前のページ/i.test(aTag.innerHTML)){
@@ -4189,10 +4194,12 @@ Trace Moe | https://trace.moe/?url=#t#`;
                                 if(aTag.innerHTML=="«"){
                                     pret=aTag;
                                 }else if(pageNum==1){
-                                    if(aTag.getAttribute("href") && aTag.getAttribute("href").indexOf(this.href.replace(/.*\/([^\/]+)$/,"$1").replace(/[_-]\d+/,""))!=-1){
+                                    if(aTag.href.indexOf(this.href.replace(/.*\/([^\/]+)$/,"$1").replace(/[_-]\d+/,""))!=-1){
                                        pret=aTag;
                                     }
-                                }else if(aTag.getAttribute("href") && aTag.getAttribute("href").replace(/.*[a-zA-Z0-9][\-_](\d+)(\.html)?$/,"$1")==pageNum-1){
+                                }else if(aTag.href.replace(/.*[a-zA-Z0-9][\-_](\d+)(\.html)?$/,"$1")==pageNum-1){
+                                    pret=aTag;
+                                }else if(aTag.href.replace(/.*[\?&]p(age)?=(\d+)($|#.*)/,"$2")==pageNum-1){
                                     pret=aTag;
                                 }
                             }
@@ -4203,6 +4210,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                         let nextf,nexts,nextt;
                         for(var i=0;i<aTags.length;i++){
                             let aTag=aTags[i];
+                            if(!aTag.href || /javascript:/.test(aTag.href))continue;
                             if(nextf && nexts && nextt)break;
                             if(!nextf){
                                 if(/下[一1]?[页頁张張]|next page|次のページ/i.test(aTag.innerHTML)){
@@ -4217,7 +4225,9 @@ Trace Moe | https://trace.moe/?url=#t#`;
                             if(!nextt){
                                 if(aTag.innerHTML=="»"){
                                     nextt=aTag;
-                                }else if(aTag.hasAttribute("href") && aTag.getAttribute("href").replace(/.*[a-zA-Z0-9][\-_](\d+)(\.html)?$/,"$1")==parseInt(pageNum)+1){
+                                }else if(aTag.href.replace(/.*[a-zA-Z0-9][\-_](\d+)(\.html)?$/,"$1")==parseInt(pageNum)+1){
+                                    nextt=aTag;
+                                }else if(aTag.href.replace(/.*[\?&]p(age)?=(\d+)($|#.*)/,"$2")==parseInt(pageNum)+1){
                                     nextt=aTag;
                                 }
                             }
