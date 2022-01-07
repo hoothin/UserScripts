@@ -9977,6 +9977,11 @@ Trace Moe | https://trace.moe/?url=#t#`;
 
         function openPrefs() {
             GM_config.open();
+            setTimeout(()=>{
+                if(GM_config.frame && GM_config.frame.style && GM_config.frame.style.display=="none"){
+                    GM_config.frame.src="";
+                }
+            },500);
         }
 
         function loadPrefs() {
