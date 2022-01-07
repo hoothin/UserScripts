@@ -25,6 +25,14 @@
 // @grant           GM_registerMenuCommand
 // @grant           GM_notification
 // @grant           GM_download
+// @grant           GM.getValue
+// @grant           GM.setValue
+// @grant           GM.addStyle
+// @grant           GM.openInTab
+// @grant           GM.setClipboard
+// @grant           GM.xmlhttpRequest
+// @grant           GM.registerMenuCommand
+// @grant           GM.notification
 // @grant           unsafeWindow
 // @require         https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
 // @contributionURL https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
@@ -702,13 +710,13 @@ WhatAnime | https://trace.moe/?url=#t#
 Ascii2D | https://ascii2d.net/search/url/#t#
 Trace Moe | https://trace.moe/?url=#t#`;
 
-    if(typeof GM_addStyle=='undefined')var GM_addStyle=(s)=>{};
-    if(typeof GM_openInTab=='undefined')var GM_openInTab=(s)=>{};
-    if(typeof GM_setClipboard=='undefined')var GM_setClipboard=(s)=>{};
-    if(typeof GM_xmlhttpRequest=='undefined')var GM_xmlhttpRequest=(f)=>{};
-    if(typeof GM_registerMenuCommand=='undefined')var GM_registerMenuCommand=(s,f)=>{};
-    if(typeof GM_notification=='undefined')var GM_notification=(s)=>{};
-    if(typeof GM_download=='undefined')var GM_download=(u,n)=>{};
+    if(typeof GM_addStyle=='undefined')var GM_addStyle=GM&&GM.addStyle?GM.addStyle:(s)=>{};
+    if(typeof GM_openInTab=='undefined')var GM_openInTab=GM&&GM.openInTab?GM.openInTab:(s)=>{};
+    if(typeof GM_setClipboard=='undefined')var GM_setClipboard=GM&&GM.setClipboard?GM.setClipboard:(s)=>{};
+    if(typeof GM_xmlhttpRequest=='undefined')var GM_xmlhttpRequest=GM&&GM.xmlhttpRequest?GM.xmlhttpRequest:(f)=>{};
+    if(typeof GM_registerMenuCommand=='undefined')var GM_registerMenuCommand=GM&&GM.registerMenuCommand?GM.registerMenuCommand:(s,f)=>{};
+    if(typeof GM_notification=='undefined')var GM_notification=GM&&GM.notification?GM.notification:(s)=>{};
+    if(typeof GM_download=='undefined')var GM_download=(u,n)=>{saveAs(u,n)};
     var prefs;
     function init(topObject,window,document,arrayFn,envir,storage,unsafeWindow){
         // 默认设置，请到设置界面修改
@@ -10056,6 +10064,10 @@ Trace Moe | https://trace.moe/?url=#t#`;
     })();
 
 
+    if(typeof GM_getValue=='undefined' && GM && GM.getValue){
+        var GM_getValue=GM.getValue;
+        var GM_setValue=GM.setValue;
+    }
     var storage={
         supportGM: typeof GM_getValue=='function' && typeof GM_getValue('a','b')!='undefined',//chrome的gm函数式空函数
         mxAppStorage:(function(){//傲游扩展储存接口
