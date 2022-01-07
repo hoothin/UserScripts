@@ -39,7 +39,7 @@
         _GM_xmlhttpRequest=GM_xmlhttpRequest;
         _GM_registerMenuCommand=GM_registerMenuCommand;
         _GM_notification=GM_notification;
-    }else if(GM && typeof GM.getValue!='undefined'){
+    }else if(typeof GM!='undefined' && typeof GM.getValue!='undefined'){
         _GM_getValue=GM.getValue;
         _GM_setValue=GM.setValue;
         _GM_xmlhttpRequest=GM.xmlhttpRequest;
@@ -51,7 +51,7 @@
     if(typeof _GM_notification=='undefined')_GM_notification=(s)=>{};
     var storage={
         supportGM: typeof GM_getValue=='function' && typeof GM_getValue('a','b')!='undefined',
-        supportGMPromise: GM && typeof GM.getValue=='function' && typeof GM.getValue('a','b')!='undefined',
+        supportGMPromise: typeof GM!='undefined' && typeof GM.getValue=='function' && typeof GM.getValue('a','b')!='undefined',
         mxAppStorage:(function(){
             try{
                 return window.external.mxGetRuntime().storage;
