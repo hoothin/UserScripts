@@ -8,7 +8,7 @@
 // @namespace    http://tampermonkey.net/
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Base64/0.2.0/base64.min.js
-// @version      1.8.5
+// @version      1.8.6
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -62,7 +62,7 @@
                                                 curlink="";
                                             }
                                             delLink();
-                                            var baiduPathStr=GM_getValue("baiduPath"),isBt=/^magnet|torrent$/.test(offLink.value);
+                                            var baiduPathStr=storage.getItem("baiduPath"),isBt=/^magnet|torrent$/.test(offLink.value);
                                             if(baiduPathStr){
                                                 unsafeWindow.require("function-widget-1:offlineDownload/util/newOfflineDialog.js").obtain()._checkPath=baiduPathStr;
                                             }
@@ -418,13 +418,66 @@
         }
         return config[name]?config[name]:name;
     };
-    var showType=!!GM_getValue("showType");
+
+    if(typeof GM_registerMenuCommand=='undefined')var GM_registerMenuCommand=(s,f)=>{};
+    if(typeof unsafeWindow=='undefined')var unsafeWindow=window;
+    var storage={
+        supportGM: typeof GM_getValue=='function' && typeof GM_getValue('a','b')!='undefined',
+        mxAppStorage:(function(){
+            try{
+                return window.external.mxGetRuntime().storage;
+            }catch(e){
+            }
+        })(),
+        operaUJSStorage:(function(){
+            try{
+                return window.opera.scriptStorage;
+            }catch(e){
+            }
+        })(),
+        setItem:function(key,value){
+            if(this.operaUJSStorage){
+                this.operaUJSStorage.setItem(key,value);
+            }else if(this.mxAppStorage){
+                this.mxAppStorage.setConfig(key,value);
+            }else if(this.supportGM){
+                GM_setValue(key,value);
+            }else if(window.localStorage){
+                window.localStorage.setItem(key,value);
+            }
+        },
+        getItem:function(key){
+            var value;
+            if(this.operaUJSStorage){
+                value=this.operaUJSStorage.getItem(key);
+            }else if(this.mxAppStorage){
+                value=this.mxAppStorage.getConfig(key);
+            }else if(this.supportGM){
+                value=GM_getValue(key);
+            }else if(window.localStorage){
+                value=window.localStorage.getItem(key);
+            }
+            return value;
+        },
+        delItem:function(key){
+            if(this.operaUJSStorage){
+                this.operaUJSStorage.setItem(key,"");
+            }else if(this.mxAppStorage){
+                this.mxAppStorage.setConfig(key,"");
+            }else if(this.supportGM){
+                GM_deleteValue(key);
+            }else if(window.localStorage){
+                window.localStorage.setItem(key,"");
+            }
+        }
+    };
+    var showType=!!storage.getItem("showType");
     $=jQuery;
 
     var addIconBg="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZBAMAAAA2x5hQAAAALVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADBoCg+AAAADnRSTlMAYK1vMOA/ENJ/zmdLF4e4IG4AAACPSURBVBjTYwAB9uTJ6QwwwLju3bt3C6Eclrh3IBAC4cm9gwABsLp3UPAQxPMDMh4pgbgOQB5IFwMDH5BcAFII4UGUciB4rxgY6hC8dwUMeUA2EID5CQx27x5BeEzv3hkwzEPiTUCRm4Ci7wCKmReQ7XuK4pbHKO4MwPADwn/ofkeESws0mLj7gJxGEAs1PAEp8ZbkUx9Q7gAAAABJRU5ErkJggg==";
     var downIconBg="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAMAAADzN3VRAAAARVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADc6ur3AAAAFnRSTlMAYM5vMOA/ENGegK2olI6G1b97Z0sXENA+jAAAAKFJREFUKM+FklkSxCAIRHFfss3K/Y86iQSDVqzpH7FfgQpCVfAmGx+gl9JI0qrxrcNLzooEbKUG4EKWdkCiDRV0N0RTrZ5wvdgTTgp4SzCAHxAPZkAM5GOJWuuT7FE5OVPOBFLTYb3Oc2YB5uJ8+G6pgkTGt74ntcCJHiwFLHw10Tdc93jlGXGvSRtsHNpuPs+/o1ODfxAtSL0f7HPC+L/9AF60G3QxO1UaAAAAAElFTkSuQmCC";
-    var sitesArr=[],siteSort=GM_getValue("siteSort"),siteName;
-    var regs=GM_getValue("eoReg")||[];
+    var sitesArr=[],siteSort=storage.getItem("siteSort"),siteName;
+    var regs=storage.getItem("eoReg")||[];
     addCustomSites();
     if(!siteSort)siteSort=["baidu","yyw","furk","seedr"];
     siteSort.forEach(function(item) {
@@ -524,13 +577,13 @@
                 offNode.attr('href', siteConfig.directUrl(offUrl));
             }else{
                 if(e.ctrlKey && e.shiftKey && siteConfig.canMul)
-                    GM_setValue(siteConfig.name+":eoUrl",allUrl);
-                else GM_setValue(siteConfig.name+":eoUrl",offUrl);
+                    storage.setItem(siteConfig.name+":eoUrl",allUrl);
+                else storage.setItem(siteConfig.name+":eoUrl",offUrl);
             }
             e.stopPropagation();
         });
         if(siteConfig.bgImg)offNode.css("background-image","url(\""+siteConfig.bgImg+"\")");
-        if(siteConfig.hide || GM_getValue("eoHide"+siteConfig.name))continue;
+        if(siteConfig.hide || storage.getItem("eoHide"+siteConfig.name))continue;
         offNodes.push(offNode);
         parentDiv.prepend(offNode);
     }
@@ -577,7 +630,7 @@
     }
 
     function addCustomSites(){
-        var siteRule=GM_getValue("siteRule");
+        var siteRule=storage.getItem("siteRule");
         if(!siteRule)return;
         var rules=siteRule.split("\n");
         rules.forEach(rule=>{
@@ -610,7 +663,7 @@
         });
     }
     function getAllEnableUrl(target) {
-        if(GM_getValue('eoDisable_'+document.domain))return;
+        if(storage.getItem('eoDisable_'+document.domain))return;
         var rawnodes=(target?$(target).find(enableUrl):$(enableUrl)).get(),customnodes=[];
         var nodes = [];
         var i;
@@ -773,9 +826,9 @@
         let siteConfig=sitesArr[x];
         if(siteConfig.regex && siteConfig.regex.test(location.hostname)){
             isDisk=true;
-            curlink=GM_getValue(siteConfig.name+':eoUrl');
+            curlink=storage.getItem(siteConfig.name+':eoUrl');
             if(curlink){
-                if(siteConfig.offFunc)siteConfig.offFunc(function(){GM_deleteValue(siteConfig.name+':eoUrl');});
+                if(siteConfig.offFunc)siteConfig.offFunc(function(){storage.delItem(siteConfig.name+':eoUrl');});
             }
             break;
         }
@@ -783,14 +836,14 @@
     if(/greasyfork\.org\/.*scripts\/22590\b|github\.com\/hoothin\/UserScripts\//.test(location.href)){
         $("pre").click(e=>{
             if(e.target.innerHTML.indexOf("@@")!=-1){
-                var siteRule=GM_getValue("siteRule");
+                var siteRule=storage.getItem("siteRule");
                 if(siteRule != e.target.innerHTML.trim()){
                     if(siteRule && window.confirm(i18n("importCustomAlert")) && siteRule.indexOf(e.target.innerHTML.trim())==-1){
                         siteRule=siteRule.trim()+"\n"+e.target.innerHTML.trim();
                     }else{
                         siteRule=e.target.innerHTML.trim();
                     }
-                    GM_setValue("siteRule", siteRule);
+                    storage.setItem("siteRule", siteRule);
                 }
                 alert(i18n("importOver"));
             }
@@ -883,7 +936,7 @@
                 $("#icons>div").each(function(){
                     siteSort.push($(this).attr("name"));
                 });
-                GM_setValue("siteSort",siteSort);
+                storage.setItem("siteSort",siteSort);
             };
             icons[0].ondragover=function(e){
                 e.preventDefault();
@@ -896,13 +949,13 @@
                 icon[0].ondragstart=function(e){
                     dragIcon=this;
                 };
-                if(GM_getValue("eoHide"+siteConfig.name)){
+                if(storage.getItem("eoHide"+siteConfig.name)){
                     icon.css("opacity","0.2");
                     icon.attr("title",i18n("enable")+i18n(siteConfig.name) );
                 }
                 if(siteConfig.bgImg)icon.css("background-image","url(\""+siteConfig.bgImg+"\")");
                 icon.on("click", function(){
-                    var eoHide=GM_getValue("eoHide"+siteConfig.name);
+                    var eoHide=storage.getItem("eoHide"+siteConfig.name);
                     if(!eoHide){
                         var allHide=true;
                         $("#icons>div").each(function(){
@@ -916,7 +969,7 @@
                             return;
                         }
                     }
-                    GM_setValue("eoHide"+siteConfig.name, !eoHide);
+                    storage.setItem("eoHide"+siteConfig.name, !eoHide);
                     icon.css("opacity",eoHide?"1":"0.2");
                     icon.attr("title",(eoHide?i18n("disable"):i18n("enable"))+i18n(siteConfig.name) );
                 });
@@ -938,27 +991,27 @@
                 document.body.appendChild(addSiteRules);
             };
             icons.append(addIcon);
-            if(GM_getValue("siteRule"))$("#siteRuleInput", addSiteRules).val(GM_getValue("siteRule"));
+            if(storage.getItem("siteRule"))$("#siteRuleInput", addSiteRules).val(storage.getItem("siteRule"));
             $("#siteRuleQuit", addSiteRules).click(function (event) {
                 if(addSiteRules.parentNode)addSiteRules.parentNode.removeChild(addSiteRules);
             });
             $("#siteRuleSave", addSiteRules).click(function (event) {
-                GM_setValue("siteRule", $("#siteRuleInput", addSiteRules).val());
+                storage.setItem("siteRule", $("#siteRuleInput", addSiteRules).val());
                 alert(i18n("siteRuleSetOK"));
                 if(addSiteRules.parentNode)addSiteRules.parentNode.removeChild(addSiteRules);
             });
 
             configContent.style.display="block";
-            if(GM_getValue("eoReg"))$(configInput).val(GM_getValue("eoReg").join("\n"));
-            if(GM_getValue("baiduPath"))$(baiduPath).val(GM_getValue("baiduPath"));
-            if(GM_getValue("showType"))showTypeCheck.checked=true;
+            if(storage.getItem("eoReg"))$(configInput).val(storage.getItem("eoReg").join("\n"));
+            if(storage.getItem("baiduPath"))$(baiduPath).val(storage.getItem("baiduPath"));
+            if(storage.getItem("showType"))showTypeCheck.checked=true;
             $(configQuit).click(function (event) {configContent.style.display="none";});
             $(configSave).click(function (event) {
                 var regStr=$(configInput).val();
                 var baiduPathStr=$(baiduPath).val().trim();
-                if(baiduPathStr)GM_setValue("baiduPath",/^\//.test(baiduPathStr)?baiduPathStr:("/"+baiduPathStr));
+                if(baiduPathStr)storage.setItem("baiduPath",/^\//.test(baiduPathStr)?baiduPathStr:("/"+baiduPathStr));
                 if(/^\s*$/.test(regStr)){
-                    GM_deleteValue("eoReg");
+                    storage.delItem("eoReg");
                 }else{
                     var regStrs=regStr.split("\n");
                     for(var reg of regStrs){
@@ -969,14 +1022,14 @@
                             return;
                         }
                     }
-                    GM_setValue("eoReg",regStrs);
+                    storage.setItem("eoReg",regStrs);
                 }
-                GM_setValue("showType", showTypeCheck.checked);
+                storage.setItem("showType", showTypeCheck.checked);
                 alert(i18n("setOK"));
             });
         }
         configContent.style.display="block";
-        if(GM_getValue('eoDisable_'+document.domain)){
+        if(storage.getItem('eoDisable_'+document.domain)){
             easyOfflineDisable.style.display="block";
         }else{
             easyOfflineDisable.style.display="none";
@@ -985,11 +1038,11 @@
 
     function toggleIcon(force){
         $('.whx-a').toggle(500);
-        if(force=="enable" || GM_getValue('eoDisable_'+document.domain)){
-            GM_deleteValue('eoDisable_'+document.domain);
+        if(force=="enable" || storage.getItem('eoDisable_'+document.domain)){
+            storage.delItem('eoDisable_'+document.domain);
             if($('.whx-a-node').length<1)getAllEnableUrl();
         }else{
-            GM_setValue('eoDisable_'+document.domain,true);
+            storage.setItem('eoDisable_'+document.domain,true);
         }
     }
 
