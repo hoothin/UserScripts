@@ -4,7 +4,7 @@
 // @name:zh-TW   大人的Greasyfork
 // @name:ja      大人のGreasyfork
 // @namespace    hoothin
-// @version      1.1
+// @version      1.2
 // @description  Merge adult results of sleazyfork into greasyfork when the script is no longer anonymously available, add rating score and version for scripts then
 // @description:zh-CN 在Greasyfork的搜索结果中添加Sleazyfork上的成人脚本，增加评分与版本号，并在访问匿名不可用脚本时跳转至Sleazyfork
 // @description:zh-TW 在Greasyfork的搜索結果中添加Sleazyfork上的成人腳本，增加評分與版本號，並在訪問匿名不可用腳本時跳轉至Sleazyfork
@@ -19,6 +19,11 @@
 // @grant        GM_getValue
 // @grant        GM_registerMenuCommand
 // @grant        GM_notification
+// @grant        GM.xmlhttpRequest
+// @grant        GM.setValue
+// @grant        GM.getValue
+// @grant        GM.registerMenuCommand
+// @grant        GM.notification
 // @connect      greasyfork.org
 // @connect      sleazyfork.org
 // @contributionURL https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
@@ -27,6 +32,55 @@
 
 (function() {
     'use strict';
+    if(typeof GM_getValue=='undefined' && GM && GM.getValue){
+        var GM_getValue=GM.getValue;
+        var GM_setValue=GM.setValue;
+        var GM_xmlhttpRequest=GM.xmlhttpRequest;
+        var GM_registerMenuCommand=GM.registerMenuCommand;
+        var GM_notification=GM.notification;
+    }
+    if(typeof GM_xmlhttpRequest=='undefined')GM_xmlhttpRequest=(f)=>{};
+    if(typeof GM_registerMenuCommand=='undefined')GM_registerMenuCommand=(s,f)=>{};
+    if(typeof GM_notification=='undefined')GM_notification=(s)=>{};
+    var storage={
+        supportGM: typeof GM_getValue=='function' && typeof GM_getValue('a','b')!='undefined',
+        mxAppStorage:(function(){
+            try{
+                return window.external.mxGetRuntime().storage;
+            }catch(e){
+            };
+        })(),
+        operaUJSStorage:(function(){
+            try{
+                return window.opera.scriptStorage;
+            }catch(e){
+            };
+        })(),
+        setItem:function(key,value){
+            if(this.operaUJSStorage){
+                this.operaUJSStorage.setItem(key,value);
+            }else if(this.mxAppStorage){
+                this.mxAppStorage.setConfig(key,value);
+            }else if(this.supportGM){
+                GM_setValue(key,value);
+            }else if(window.localStorage){
+                window.localStorage.setItem(key,value);
+            };
+        },
+        getItem:function(key){
+            var value;
+            if(this.operaUJSStorage){
+                value=this.operaUJSStorage.getItem(key);
+            }else if(this.mxAppStorage){
+                value=this.mxAppStorage.getConfig(key);
+            }else if(this.supportGM){
+                value=GM_getValue(key);
+            }else if(window.localStorage){
+                value=window.localStorage.getItem(key);
+            };
+            return value;
+        },
+    };
     if(document.querySelector('span.sign-in-link')){
         var otherSite=/greasyfork\.org/.test(location.hostname)?"sleazyfork":"greasyfork";
         if(/scripts\/\d+/.test(location.href)){
@@ -81,7 +135,7 @@
             });
         }
     }
-    var bullshit=GM_getValue("GeasyforkBullshit"),bullshit_o=`vip.*视频|网课|刷课|(mooc|考试|学习).*(答题|挂机)|(网盘|網盤|云盘).*(vip|直链)|优惠劵|AntiGame|split|Agar|\\.io(\\b|:|\\/|\\.|$)|ExtencionRipXChetoMalo|AposBot|DFxLite|ZTx-Lite|AposFeedingBot|AposLoader|Blah Blah|Orc Clan Script|Astro\\s*Empires|^\\s*Attack|^\\s*Battle|BiteFight|Blood\\s*Wars|Bots|Bots4|Brawler|\\bBvS\\b|Business\\s*Tycoon|Castle\\s*Age|City\\s*Ville|Comunio|Conquer\\s*Club|CosmoPulse|Dark\\s*Orbit|Dead\\s*Frontier|\\bDOA\\b|DotD|Dossergame|Dragons\\s*of\\s*Atlantis|Dugout|\\bDS[a-z]+\\n|Empire\\s*Board|eRep(ublik)?|Epic.*War|ExoPlanet|Falcon Tools|Feuerwache|Farming|FarmVille|Fightinfo|Frontier\\s*Ville|Ghost\\s*Trapper|Gladiatus|Goalline|Gondal|Grepolis|Hobopolis|\\bhwm(\\b|_)|Ikariam|\\bIT2\\b|Jellyneo|Kapi\\s*Hospital|Kings\\s*Age|Kingdoms?\\s*of|knastv(ö|oe)gel|Knight\\s*Fight|\\b(Power)?KoC(Atta?ck)?\\b|\\bKOL\\b|Kongregate|Last\\s*Emperor|Legends?\\s*of|Light\\s*Rising|Lockerz|\\bLoU\\b|Mafia\\s*(Wars|Mofo)|Menelgame|Mob\\s*Wars|Mouse\\s*Hunt|Molehill\\s*Empire|NeoQuest|MyFreeFarm|Neopets|Nemexia|\\bOGame\\b|Ogar(io)?|Pardus|Pennergame|Pigskin\\s*Empire|PlayerScripts|Popmundo|Po?we?r\\s*(Bot|Tools)|PsicoTSI|Ravenwood|Schulterglatze|slitheriogameplay|SpaceWars|\\bSW_[a-z]+\\n|\\bSnP\\b|The\\s*Crims|The\\s*West|Travian|Treasure\\s*Isl(and|e)|Tribal\\s*Wars|TW.?PRO|Vampire\\s*Wars|War\\s*of\\s*Ninja|West\\s*Wars|\\bWoD\\b|World\\s*of\\s*Dungeons|wtf\\s*battles|Wurzelimperium`;
+    var bullshit=storage.getItem("GeasyforkBullshit"),bullshit_o=`vip.*视频|网课|刷课|(mooc|考试|学习).*(答题|挂机)|(网盘|網盤|云盘).*(vip|直链)|优惠劵|AntiGame|split|Agar|\\.io(\\b|:|\\/|\\.|$)|ExtencionRipXChetoMalo|AposBot|DFxLite|ZTx-Lite|AposFeedingBot|AposLoader|Blah Blah|Orc Clan Script|Astro\\s*Empires|^\\s*Attack|^\\s*Battle|BiteFight|Blood\\s*Wars|Bots|Bots4|Brawler|\\bBvS\\b|Business\\s*Tycoon|Castle\\s*Age|City\\s*Ville|Comunio|Conquer\\s*Club|CosmoPulse|Dark\\s*Orbit|Dead\\s*Frontier|\\bDOA\\b|DotD|Dossergame|Dragons\\s*of\\s*Atlantis|Dugout|\\bDS[a-z]+\\n|Empire\\s*Board|eRep(ublik)?|Epic.*War|ExoPlanet|Falcon Tools|Feuerwache|Farming|FarmVille|Fightinfo|Frontier\\s*Ville|Ghost\\s*Trapper|Gladiatus|Goalline|Gondal|Grepolis|Hobopolis|\\bhwm(\\b|_)|Ikariam|\\bIT2\\b|Jellyneo|Kapi\\s*Hospital|Kings\\s*Age|Kingdoms?\\s*of|knastv(ö|oe)gel|Knight\\s*Fight|\\b(Power)?KoC(Atta?ck)?\\b|\\bKOL\\b|Kongregate|Last\\s*Emperor|Legends?\\s*of|Light\\s*Rising|Lockerz|\\bLoU\\b|Mafia\\s*(Wars|Mofo)|Menelgame|Mob\\s*Wars|Mouse\\s*Hunt|Molehill\\s*Empire|NeoQuest|MyFreeFarm|Neopets|Nemexia|\\bOGame\\b|Ogar(io)?|Pardus|Pennergame|Pigskin\\s*Empire|PlayerScripts|Popmundo|Po?we?r\\s*(Bot|Tools)|PsicoTSI|Ravenwood|Schulterglatze|slitheriogameplay|SpaceWars|\\bSW_[a-z]+\\n|\\bSnP\\b|The\\s*Crims|The\\s*West|Travian|Treasure\\s*Isl(and|e)|Tribal\\s*Wars|TW.?PRO|Vampire\\s*Wars|War\\s*of\\s*Ninja|West\\s*Wars|\\bWoD\\b|World\\s*of\\s*Dungeons|wtf\\s*battles|Wurzelimperium`;
     if(!bullshit)bullshit=bullshit_o;
     if(/greasyfork\.org\/.*\/scripts\/23840[^\/]*$/.test(location.href)){
         var p=document.createElement("p"),_bullshit;
@@ -104,12 +158,12 @@
         prettifyScript.onload=()=>{PR.prettyPrint();};
         okBtn.onclick=()=>{
             _bullshit=filterTextarea.innerText;
-            GM_setValue("GeasyforkBullshit", _bullshit);
+            storage.setItem("GeasyforkBullshit", _bullshit);
             alert("Saved");
             //GM_notification("Saved");
         };
         resetBtn.onclick=()=>{
-            GM_setValue("GeasyforkBullshit", bullshit_o);
+            storage.setItem("GeasyforkBullshit", bullshit_o);
             alert("Reset over");
             location.reload();
             //GM_notification("Reset over");
@@ -216,11 +270,11 @@
         /*var _bullshit=window.prompt("Configure the Filter", bullshit);
         if(_bullshit == ""){
             bullshit=bullshit_o;
-            GM_setValue("GeasyforkBullshit", bullshit);
+            storage.setItem("GeasyforkBullshit", bullshit);
             location.reload();
         }else if(_bullshit != null){
             bullshit=_bullshit;
-            GM_setValue("GeasyforkBullshit", bullshit);
+            storage.setItem("GeasyforkBullshit", bullshit);
             location.reload();
         }*/
     });
@@ -248,7 +302,7 @@
         goodRating.innerHTML=okRating.innerHTML=badRating.innerHTML=totalInstalls.innerHTML=dailyInstalls.innerHTML="0";
     }
     if(sortDiv){
-        var switchFilter=document.createElement("div"),enableFilter=!GM_getValue("disableFilter");
+        var switchFilter=document.createElement("div"),enableFilter=!storage.getItem("disableFilter");
         var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
         var observer = new MutationObserver(function(records){
             records.map(function(record) {
@@ -359,7 +413,7 @@
                 filter(document);
                 switchFilterLabel.innerHTML=filterName+' ('+filteredNum+' filtered)';
             }
-            GM_setValue("disableFilter",enableFilter);
+            storage.setItem("disableFilter",enableFilter);
             enableFilter=!enableFilter;
         };
         sortDiv.insertBefore(switchFilter,sortDiv.firstChild);
