@@ -427,6 +427,7 @@
     };
 
     var _GM_getValue,_GM_setValue,_GM_deleteValue,_GM_registerMenuCommand;
+    var _unsafeWindow=(typeof unsafeWindow=='undefined')?window:unsafeWindow;
     if(typeof GM_getValue!='undefined'){
         _GM_getValue=GM_getValue;
         _GM_setValue=GM_setValue;
@@ -439,7 +440,6 @@
         _GM_registerMenuCommand=GM.registerMenuCommand;
     }
     if(typeof _GM_registerMenuCommand=='undefined')_GM_registerMenuCommand=(s,f)=>{};
-    var _unsafeWindow=(typeof unsafeWindow=='undefined')?window:unsafeWindow;
     var storage={
         supportGM: typeof GM_getValue=='function' && typeof GM_getValue('a','b')!='undefined',
         supportGMPromise: GM && typeof GM.getValue=='function' && typeof GM.getValue('a','b')!='undefined',
@@ -488,7 +488,7 @@
             }else if(this.mxAppStorage){
                 this.mxAppStorage.setConfig(key,"");
             }else if(this.supportGM){
-                GM_deleteValue(key);
+                _GM_deleteValue(key);
             }else if(window.localStorage){
                 window.localStorage.setItem(key,"");
             }
