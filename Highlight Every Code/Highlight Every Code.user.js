@@ -3,12 +3,13 @@
 // @name:zh-CN   代码片段高亮
 // @name:zh-TW   程式碼片斷高亮
 // @namespace    hoothin
-// @version      1.9
+// @version      2.0
 // @description  Add a icon to popup a window that allows syntax highlighting and beautify and word count of source code snippets on current page
 // @description:zh-CN 选择代码片段后点击图标弹出新窗口显示语法高亮美化与格式化后的代码与字数统计
 // @description:zh-TW 選擇程式碼片段後點選圖示彈出新視窗顯示語法高亮美化與格式化後的程式碼與字數統計
 // @author       Hoothin
 // @grant        GM_openInTab
+// @grant        unsafeWindow
 // @compatible   chrome
 // @compatible   firefox
 // @license      MIT License
@@ -21,6 +22,7 @@
     'use strict';
     var codeIcon=document.createElement("img");
     var codes, selStr, scrollX, scrollY, customInput=false;
+    var _unsafeWindow=(typeof unsafeWindow=='undefined'? window : unsafeWindow);
     codeIcon.style.cssText="position:fixed;z-index:99999;cursor:pointer;transition:opacity 0.5s ease-in-out 0s;opacity:0;border:5px solid rgba(0, 0, 0, 0.2);border-radius:10px;";
     codeIcon.title="Show this code snippet";
     codeIcon.src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAYAgMAAACD0OXYAAAACVBMVEX7+/swMDBTU1MLxgsCAAAAJElEQVQI12MIBYEAGLUKBBbAqAUMQICgAoAqoBQ95JaCnASjAAgXMdk3d5HTAAAAAElFTkSuQmCC";
@@ -51,7 +53,7 @@
             '<a href="#" onclick="code.innerHTML=codeStr;code.className=\'prettyprint linenums\';prettyPrint();return false;">Raw</a> <b style="color:red">('+selStr.replace(/\s/g,"").length+' words)</b>'+
             '<pre id="code" class="prettyprint linenums" style="word-wrap: break-word; white-space: pre-wrap;border: 1px solid rgb(136, 136, 204);border-radius: 8px;">' + codes + "</pre>";
 
-        let c = window.open("", "_blank", "width=750, height=400, location=0, resizable=1, menubar=0, scrollbars=0");
+        let c = _unsafeWindow.open("", "_blank", "width=750, height=400, location=0, resizable=1, menubar=0, scrollbars=0");
         c.document.write(html);
         c.document.close();
     };
