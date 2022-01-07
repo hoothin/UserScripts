@@ -111,6 +111,7 @@
         resetBtn.onclick=()=>{
             GM_setValue("GeasyforkBullshit", bullshit_o);
             alert("Reset over");
+            location.reload();
             //GM_notification("Reset over");
         };
     }
