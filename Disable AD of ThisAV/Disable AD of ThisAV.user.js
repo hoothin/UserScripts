@@ -15,7 +15,7 @@
 
 (function() {
     'use strict';
-    if(typeof unsafeWindow=='undefined')var unsafeWindow=window;
+    var _unsafeWindow=(typeof unsafeWindow=='undefined')?window:unsafeWindow;
     document.onclick=null;
     var tabsmenus=document.querySelectorAll("#slidetabsmenu>ul>li>a");
     for(var i=0;i<tabsmenus.length;i++){
@@ -31,12 +31,12 @@
         ratingText.style.marginLeft="5px";
         var downBtn=document.createElement("a");
         downBtn.style.display="flex";
-        if(unsafeWindow.so){
-            downBtn.href=unsafeWindow.so.variables.file;
-        }else if(unsafeWindow.jwplayer){
-            downBtn.href=unsafeWindow.jwplayer("myElement").config.file;
-        }else if(unsafeWindow.videojs){
-            var vplayer = unsafeWindow.videojs('my-video', {
+        if(_unsafeWindow.so){
+            downBtn.href=_unsafeWindow.so.variables.file;
+        }else if(_unsafeWindow.jwplayer){
+            downBtn.href=_unsafeWindow.jwplayer("myElement").config.file;
+        }else if(_unsafeWindow.videojs){
+            var vplayer = _unsafeWindow.videojs('my-video', {
                 techOrder: ['shaka', 'html5'],
                 plugins: {
                     videoJsResolutionSwitcher: {
