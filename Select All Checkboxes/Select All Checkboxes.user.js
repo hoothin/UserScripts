@@ -31,8 +31,10 @@
     }else{
         langStr = "SelectAll";
     }
-    if(typeof GM_registerMenuCommand=='undefined')var GM_registerMenuCommand=GM&&GM.registerMenuCommand?GM.registerMenuCommand:(s,f)=>{};
-    GM_registerMenuCommand(langStr, selectAll);
+    var _GM_registerMenuCommand;
+    if(typeof GM_registerMenuCommand=='undefined')=GM&&GM.registerMenuCommand?GM.registerMenuCommand:(s,f)=>{};
+    else _GM_registerMenuCommand=GM_registerMenuCommand;
+    _GM_registerMenuCommand(langStr, selectAll);
     var selector="input:checkbox:enabled,.checkbox";
 
     function selectAll(){
