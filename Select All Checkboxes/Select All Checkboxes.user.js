@@ -10,7 +10,8 @@
 // @author       Hoothin
 // @include      http*://*/*
 // @require      http://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js
-// @grant       GM_registerMenuCommand
+// @grant        GM_registerMenuCommand
+// @grant        GM.registerMenuCommand
 // @contributionURL https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
 // @contributionAmount 1
 // ==/UserScript==
@@ -30,6 +31,7 @@
     }else{
         langStr = "SelectAll";
     }
+    if(typeof GM_registerMenuCommand=='undefined')var GM_registerMenuCommand=GM&&GM.registerMenuCommand?GM.registerMenuCommand:(s,f)=>{};
     GM_registerMenuCommand(langStr, selectAll);
     var selector="input:checkbox:enabled,.checkbox";
 
