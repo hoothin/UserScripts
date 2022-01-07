@@ -20,6 +20,10 @@
 // @grant        GM_getValue
 // @grant        GM_registerMenuCommand
 // @grant        GM_deleteValue
+// @grant        GM.setValue
+// @grant        GM.getValue
+// @grant        GM.registerMenuCommand
+// @grant        GM.deleteValue
 // @grant        unsafeWindow
 // @run-at       document-end
 // @supportURL   http://www.hoothin.com
@@ -419,7 +423,13 @@
         return config[name]?config[name]:name;
     };
 
-    if(typeof GM_registerMenuCommand=='undefined')var GM_registerMenuCommand=(s,f)=>{};
+    if(typeof GM_getValue=='undefined' && GM && GM.getValue){
+        var GM_getValue=GM.getValue;
+        var GM_setValue=GM.setValue;
+        var GM_deleteValue=GM.deleteValue;
+        var GM_registerMenuCommand=GM.registerMenuCommand;
+    }
+    if(typeof GM_registerMenuCommand=='undefined')GM_registerMenuCommand=(s,f)=>{};
     if(typeof unsafeWindow=='undefined')var unsafeWindow=window;
     var storage={
         supportGM: typeof GM_getValue=='function' && typeof GM_getValue('a','b')!='undefined',
