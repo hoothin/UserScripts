@@ -69,6 +69,7 @@
     });
     document.addEventListener('mouseover', function(o) {
         if(o.target.nodeName!="PRE" && o.target.nodeName!="CODE")return;
+        if(o.target.offsetWidth && o.target.offsetWidth<100)return;
         selStr=o.target.innerText;
         if(!selStr)return;
         codes=selStr.replace(/&/g, "&amp;").replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
