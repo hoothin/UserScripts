@@ -78,6 +78,7 @@
                 loadAllTip:"加载下一页的图片",
                 fiddle:"折腾",
                 fiddleTip:"弹出图片进行复杂操作",
+                closeFirst:"请先关掉当前已经打开的库",
                 collect:"收藏",
                 collected:"已收藏",
                 exitCollection:"退出收藏",
@@ -288,6 +289,7 @@
                 loadAllTip:"載入下一頁的圖片",
                 fiddle:"折騰",
                 fiddleTip:"彈出圖片進行複雜操作",
+                closeFirst:"請先關閉當前已經打開的庫",
                 collect:"收藏",
                 collected:"已收藏",
                 exitCollection:"退出收藏",
@@ -497,6 +499,7 @@
                 loadAllTip:"Load the picture on the next page",
                 fiddle:"Operate",
                 fiddleTip:"Pop-up pictures for complex operations",
+                closeFirst:"Close the existing Gallery first",
                 collect:"Collection",
                 collected:"Has been collected",
                 exitCollection:"Exit collection",
@@ -710,23 +713,26 @@ WhatAnime | https://trace.moe/?url=#t#
 Ascii2D | https://ascii2d.net/search/url/#t#
 Trace Moe | https://trace.moe/?url=#t#`;
 
-    if(typeof GM_getValue=='undefined' && GM && GM.getValue){
-        var GM_getValue=GM.getValue;
-        var GM_setValue=GM.setValue;
-        var GM_addStyle=GM.addStyle;
-        var GM_openInTab=GM.openInTab;
-        var GM_setClipboard=GM.setClipboard;
-        var GM_xmlhttpRequest=GM.xmlhttpRequest;
-        var GM_registerMenuCommand=GM.registerMenuCommand;
-        var GM_notification=GM.notification;
+    var _GM_openInTab,_GM_setClipboard,_GM_xmlhttpRequest,_GM_registerMenuCommand,_GM_notification;
+    if(typeof GM_getValue!='undefined'){
+        _GM_openInTab=GM_openInTab;
+        _GM_setClipboard=GM_setClipboard;
+        _GM_xmlhttpRequest=GM_xmlhttpRequest;
+        _GM_registerMenuCommand=GM_registerMenuCommand;
+        _GM_notification=GM_notification;
+    }else if(GM && typeof GM.getValue!='undefined'){
+        _GM_openInTab=GM.openInTab;
+        _GM_setClipboard=GM.setClipboard;
+        _GM_xmlhttpRequest=GM.xmlhttpRequest;
+        _GM_registerMenuCommand=GM.registerMenuCommand;
+        _GM_notification=GM.notification;
     }
-    if(typeof GM_addStyle=='undefined')GM_addStyle=(s)=>{};
-    if(typeof GM_openInTab=='undefined')GM_openInTab=(s)=>{};
-    if(typeof GM_setClipboard=='undefined')GM_setClipboard=(s)=>{};
-    if(typeof GM_xmlhttpRequest=='undefined')GM_xmlhttpRequest=(f)=>{};
-    if(typeof GM_registerMenuCommand=='undefined')GM_registerMenuCommand=(s,f)=>{};
-    if(typeof GM_notification=='undefined')GM_notification=(s)=>{};
-    if(typeof GM_download=='undefined')GM_download=(u,n)=>{saveAs(u,n)};
+    if(typeof _GM_openInTab=='undefined')_GM_openInTab=(s)=>{};
+    if(typeof _GM_setClipboard=='undefined')_GM_setClipboard=(s)=>{};
+    if(typeof _GM_xmlhttpRequest=='undefined')_GM_xmlhttpRequest=(f)=>{};
+    if(typeof _GM_registerMenuCommand=='undefined')_GM_registerMenuCommand=(s,f)=>{};
+    if(typeof _GM_notification=='undefined')_GM_notification=(s)=>{};
+    var _GM_download=(typeof GM_download=='undefined')?saveAs:GM_download;
     var prefs;
     function init(topObject,window,document,arrayFn,envir,storage,unsafeWindow){
         // 默认设置，请到设置界面修改
@@ -2343,7 +2349,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     enter:function(){
 
                         if(this.all.length==0){
-                            GM_notification(i18n("noCollectionYet"));
+                            _GM_notification(i18n("noCollectionYet"));
                             return;
                         };
 
@@ -2552,7 +2558,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                         }break;
                         case 'scrollIntoView':{
                             if(collection.mMode){
-                                GM_notification(i18n("inCollection"));
+                                _GM_notification(i18n("inCollection"));
                                 return;
                             };
                             var relatedThumb=self.relatedThumb;
@@ -2561,7 +2567,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
 
                             if(targetImg){
                                 if(!document.documentElement.contains(targetImg) || unsafeWindow.getComputedStyle(targetImg).display=='none'){//图片不存在文档中，或者隐藏了。
-                                    GM_notification(i18n("cantFind"));
+                                    _GM_notification(i18n("cantFind"));
                                     return;
                                 };
                                 self.minimize();
@@ -2574,7 +2580,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
 
                                 document.addEventListener('pv-navigateToImg',function(e){
                                     if(!e.detail){
-                                        GM_notification(i18n("cantFind"));
+                                        _GM_notification(i18n("cantFind"));
                                         return;
                                     };
                                     self.minimize();
@@ -2616,7 +2622,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                                 }
                             });
                             if(prefs.gallery.downloadWithZip){
-                                GM_notification(i18n("galleryDownloadWithZipAlert"));
+                                _GM_notification(i18n("galleryDownloadWithZipAlert"));
                                 var zip = new JSZip(),downloaded=0;
                                 var fileName = document.title + ".zip";
                                 for(let i=0; i<saveParams.length; i++){
@@ -2650,7 +2656,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                                 for(let i=0;i<5;i++){
                                     let saveParam=saveParams.shift();
                                     if(saveParam){
-                                        GM_download(saveParam[0], saveParam[1]);
+                                        _GM_download(saveParam[0], saveParam[1]);
                                     }else{
                                         downloading=false;
                                         break;
@@ -3397,7 +3403,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                                                     }, "image/png");
                                                 });
                                             }else{
-                                                GM_download(e.target.src,e.target.title);
+                                                _GM_download(e.target.src,e.target.title);
                                             }
                                             return true;
                                         });
@@ -3410,7 +3416,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                                     if(img.width>=88 && img.height>=88){
                                         addDlSpan(img, imgSpan, curNode, e=>{
                                             e.stopPropagation();
-                                            GM_download(e.target.src,e.target.title);
+                                            _GM_download(e.target.src,e.target.title);
                                             return true;
                                         });
                                     }
@@ -3965,7 +3971,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     };
 
                     if(this.minimized){
-                        GM_notification('请先关掉当前已经打开的库');
+                        _GM_notification(i18n('closeFirst'));
                         flashEle(this.maximizeTrigger);
                     };
                     return;
@@ -4297,7 +4303,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     self.completePages.push(href);
                 }
                 self.href=self.canonicalUri(href);
-                GM_xmlhttpRequest({
+                _GM_xmlhttpRequest({
                     method: 'GET',
                     headers:{"Referer": + window.location.href},
                     url: self.href,
@@ -4388,7 +4394,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     self.completePages.push(href);
                 }
                 self.href=self.canonicalUri(href);
-                GM_xmlhttpRequest({
+                _GM_xmlhttpRequest({
                     method: 'GET',
                     url: self.href,
                     headers:{"Referer": + window.location.href},
@@ -4720,7 +4726,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                  i.onclick=function(e){if(e.ctrlKey&&i.firstChild.src){window.open(i.firstChild.src,"_blank")}else{this.classList.toggle("select")}}\
                  });\
                  </script></body>';
-                GM_openInTab('data:text/html;charset=utf-8,' + encodeURIComponent(html));
+                _GM_openInTab('data:text/html;charset=utf-8,' + encodeURIComponent(html));
             },
             copyImages: function(isAlert) {
                 var nodes = document.querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]');
@@ -4730,10 +4736,10 @@ Trace Moe | https://trace.moe/?url=#t#`;
                         urls.push(node.dataset.src);
                 });
 
-                GM_setClipboard(urls.join("\n"));
+                _GM_setClipboard(urls.join("\n"));
 
                 if (isAlert) {
-                    GM_notification(i18n("copySuccess",urls.length));
+                    _GM_notification(i18n("copySuccess",urls.length));
                 }
             },
 
@@ -8616,7 +8622,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     opts.headers = {'Content-Type':'application/x-www-form-urlencoded','Referer':url};
                 }
 
-                GM_xmlhttpRequest(opts);
+                _GM_xmlhttpRequest(opts);
             }
 
             function createDoc(text) {
@@ -9943,8 +9949,8 @@ Trace Moe | https://trace.moe/?url=#t#`;
         });
 
 
-        GM_registerMenuCommand('Picviewer CE+ '+i18n("config"), openPrefs);
-        GM_registerMenuCommand(i18n("openGallery"), openGallery);
+        _GM_registerMenuCommand(i18n("openConfig"), openPrefs);
+        _GM_registerMenuCommand(i18n("openGallery"), openGallery);
 
         loadPrefs();
 
@@ -10114,7 +10120,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
     };
 
     function getUrl(url, callback, onError){
-        GM_xmlhttpRequest({
+        _GM_xmlhttpRequest({
             method: 'GET',
             url: url,
             onload: callback,
