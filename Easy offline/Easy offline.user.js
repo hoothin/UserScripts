@@ -66,10 +66,13 @@
                                                 curlink="";
                                             }
                                             delLink();
-                                            var baiduPathStr=storage.getItem("baiduPath"),isBt=/^magnet|torrent$/.test(offLink.value);
-                                            if(baiduPathStr){
-                                                unsafeWindow.require("function-widget-1:offlineDownload/util/newOfflineDialog.js").obtain()._checkPath=baiduPathStr;
-                                            }
+                                            var baiduPathStr,isBt=/^magnet|torrent$/.test(offLink.value);
+                                            storage.getItem("baiduPath",v=>{
+                                                baiduPathStr=v;
+                                                if(baiduPathStr){
+                                                    _unsafeWindow.require("function-widget-1:offlineDownload/util/newOfflineDialog.js").obtain()._checkPath=baiduPathStr;
+                                                }
+                                            });
                                             $("#newoffline-dialog").find("span:contains('确定')[class='text']").click();
                                             if(isBt){
                                                 var i=0, bsb = setInterval(function(){
@@ -144,7 +147,7 @@
                     if (document.readyState == 'complete') {
                         clearInterval(rsc);
                         setTimeout(function() {
-                            unsafeWindow.Core.OFFL5Plug.OpenLink();
+                            _unsafeWindow.Core.OFFL5Plug.OpenLink();
                             setTimeout(function() {
                                 $('#js_offline_new_add').val(curlink);
                                 delLink();
@@ -423,10 +426,23 @@
         return config[name]?config[name]:name;
     };
 
-    if(typeof GM_registerMenuCommand=='undefined')GM_registerMenuCommand=(s,f)=>{};
-    if(typeof unsafeWindow=='undefined')unsafeWindow=window;
+    var _GM_getValue,_GM_setValue,_GM_deleteValue,_GM_registerMenuCommand;
+    if(typeof GM_getValue!='undefined'){
+        _GM_getValue=GM_getValue;
+        _GM_setValue=GM_setValue;
+        _GM_deleteValue=GM_deleteValue;
+        _GM_registerMenuCommand=GM_registerMenuCommand;
+    }else if(GM && typeof GM.getValue!='undefined'){
+        _GM_getValue=GM.getValue;
+        _GM_setValue=GM.setValue;
+        _GM_deleteValue=GM.deleteValue;
+        _GM_registerMenuCommand=GM.registerMenuCommand;
+    }
+    if(typeof _GM_registerMenuCommand=='undefined')_GM_registerMenuCommand=(s,f)=>{};
+    var _unsafeWindow=(typeof unsafeWindow=='undefined')?window:unsafeWindow;
     var storage={
         supportGM: typeof GM_getValue=='function' && typeof GM_getValue('a','b')!='undefined',
+        supportGMPromise: GM && typeof GM.getValue=='function' && typeof GM.getValue('a','b')!='undefined',
         mxAppStorage:(function(){
             try{
                 return window.external.mxGetRuntime().storage;
@@ -444,13 +460,13 @@
                 this.operaUJSStorage.setItem(key,value);
             }else if(this.mxAppStorage){
                 this.mxAppStorage.setConfig(key,value);
-            }else if(this.supportGM){
-                GM_setValue(key,value);
+            }else if(this.supportGM || this.supportGMPromise){
+                _GM_setValue(key,value);
             }else if(window.localStorage){
                 window.localStorage.setItem(key,value);
             }
         },
-        getItem:function(key){
+        getItem:function(key,cb){
             var value;
             if(this.operaUJSStorage){
                 value=this.operaUJSStorage.getItem(key);
@@ -458,10 +474,13 @@
                 value=this.mxAppStorage.getConfig(key);
             }else if(this.supportGM){
                 value=GM_getValue(key);
+            }else if(this.supportGMPromise){
+                value=GM.getValue(key).then(v=>{cb(v)});
+                return;
             }else if(window.localStorage){
                 value=window.localStorage.getItem(key);
-            }
-            return value;
+            };
+            cb(value);
         },
         delItem:function(key){
             if(this.operaUJSStorage){
@@ -475,30 +494,71 @@
             }
         }
     };
-    var showType=!!storage.getItem("showType");
-    $=jQuery;
+    var showType;
+    //$=jQuery;
 
     var addIconBg="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZBAMAAAA2x5hQAAAALVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADBoCg+AAAADnRSTlMAYK1vMOA/ENJ/zmdLF4e4IG4AAACPSURBVBjTYwAB9uTJ6QwwwLju3bt3C6Eclrh3IBAC4cm9gwABsLp3UPAQxPMDMh4pgbgOQB5IFwMDH5BcAFII4UGUciB4rxgY6hC8dwUMeUA2EID5CQx27x5BeEzv3hkwzEPiTUCRm4Ci7wCKmReQ7XuK4pbHKO4MwPADwn/ofkeESws0mLj7gJxGEAs1PAEp8ZbkUx9Q7gAAAABJRU5ErkJggg==";
     var downIconBg="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAMAAADzN3VRAAAARVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADc6ur3AAAAFnRSTlMAYM5vMOA/ENGegK2olI6G1b97Z0sXENA+jAAAAKFJREFUKM+FklkSxCAIRHFfss3K/Y86iQSDVqzpH7FfgQpCVfAmGx+gl9JI0qrxrcNLzooEbKUG4EKWdkCiDRV0N0RTrZ5wvdgTTgp4SzCAHxAPZkAM5GOJWuuT7FE5OVPOBFLTYb3Oc2YB5uJ8+G6pgkTGt74ntcCJHiwFLHw10Tdc93jlGXGvSRtsHNpuPs+/o1ODfxAtSL0f7HPC+L/9AF60G3QxO1UaAAAAAElFTkSuQmCC";
-    var sitesArr=[],siteSort=storage.getItem("siteSort"),siteName;
-    var regs=storage.getItem("eoReg")||[];
-    addCustomSites();
-    if(!siteSort)siteSort=["baidu","yyw","furk","seedr"];
-    siteSort.forEach(function(item) {
-        var siteConfig=sites[item];
-        if(siteConfig){
-            siteConfig.name=item;
-            sitesArr.push(siteConfig);
-        }
-    });
-    for(siteName in sites){
-        var hasSite=false;
-        siteSort.forEach(function(item){if(item==siteName)hasSite=true;});
-        if(hasSite)continue;
-        var siteConfig=sites[siteName];
-        siteConfig.name=siteName;
-        sitesArr.push(siteConfig);
+    var sitesArr=[],siteSort,siteName,regs;
+    var isInited=false;
+    var offNodes=[];
+    var offUrl,allUrl=[];
+    var i=0;
+    var curlink;
+    var isDisk=false;
+    var configContent;
+    var easyOfflineDisable;
+    var preNode;
+    var sNodes=[];
+    var parentDiv=$("<div style='display:none;position:absolute;z-index:99999;overflow:visible;text-align:left;'></div>");
+
+    if(typeof(HTMLElement)!="undefined"){
+        HTMLElement.prototype.contains=function(obj) {
+            while(obj){
+                if(obj==this)
+                    return true;
+                obj=obj.parentNode;
+            }
+            return false;
+        };
     }
+
+    if(!Array.prototype.indexOf){
+        Array.prototype.indexOf = function(e){
+            for(var i=0;i<this.length;i++){
+                if(e===this[i]){
+                    return i;
+                }
+            }
+            return -1;
+        };
+    }
+    storage.getItem("eoReg",v=>{
+        regs=v||[];
+        addCustomSites(()=>{
+            storage.getItem("siteSort",v=>{
+                siteSort=v;
+                if(!siteSort)siteSort=["baidu","yyw","furk","seedr"];
+                siteSort.forEach(function(item) {
+                    var siteConfig=sites[item];
+                    if(siteConfig){
+                        siteConfig.name=item;
+                        sitesArr.push(siteConfig);
+                    }
+                });
+                for(siteName in sites){
+                    var hasSite=false;
+                    siteSort.forEach(function(item){if(item==siteName)hasSite=true;});
+                    if(hasSite)continue;
+                    var siteConfig=sites[siteName];
+                    siteConfig.name=siteName;
+                    sitesArr.push(siteConfig);
+                }
+                pageRun();
+            });
+        });
+    });
+
     function include(things,obj) {
         for (var i = things.length - 1; i >= 0; i--) {
             if ($(things[i]).attr('href')===$(obj).attr('href')){
@@ -507,7 +567,6 @@
         }
     }
 
-    var isInited=false;
     function init(){
         if(isInited)return;
         isInited=true;
@@ -561,195 +620,137 @@
         </style>`);
     }
 
-    var parentDiv=$("<div style='display:none;position:absolute;z-index:99999;overflow:visible;text-align:left;'></div>");
     function hideIcons(){
         parentDiv.css("display","none");
         for(var node of offNodes){
             node.css("margin-top","0px");
         }
     }
-    var offNodes=[];
-    var offUrl,allUrl=[];
-    for(var x = 0; x < sitesArr.length; x++){
-        let offNode=$("<a></a>");
-        offNode.addClass('whx-a').css("position","absolute").css("margin-top","0px").css("margin-left","0px").attr("target","_blank");
-        let siteConfig=sitesArr[x];
-        offNode.css("background-color","#"+siteConfig.bgColor).attr("title",i18n(siteConfig.name) ).attr("href", siteConfig.url).attr("name", siteConfig.name);
-        offNode.click(function(e){
-            offUrl=getRightUrl(offUrl);
-            if(siteConfig.directUrl){
-                offNode.attr('href', siteConfig.directUrl(offUrl));
-            }else{
-                if(e.ctrlKey && e.shiftKey && siteConfig.canMul)
-                    storage.setItem(siteConfig.name+":eoUrl",allUrl);
-                else storage.setItem(siteConfig.name+":eoUrl",offUrl);
-            }
-            e.stopPropagation();
-        });
-        if(siteConfig.bgImg)offNode.css("background-image","url(\""+siteConfig.bgImg+"\")");
-        if(siteConfig.hide || storage.getItem("eoHide"+siteConfig.name))continue;
-        offNodes.push(offNode);
-        parentDiv.prepend(offNode);
-    }
-    if(typeof(HTMLElement)!="undefined"){
-        HTMLElement.prototype.contains=function(obj) {
-            while(obj){
-                if(obj==this)
-                    return true;
-                obj=obj.parentNode;
-            }
-            return false;
-        };
-    }
-    var marginTop=offNodes.length*25;
-    parentDiv.prepend($('<div style="position:absolute;width:25px;height:'+marginTop+'px;margin-top:-'+(marginTop-25)+'px;background-color:white;opacity:0.001;"></div>'));
-    parentDiv.mouseout(function(e){
-        var relatedTarget=(e.relatedTarget||e.fromElement);
-        if(relatedTarget && !parentDiv[0].contains(relatedTarget))
-        hideIcons();
-    });
-    parentDiv.mouseover(function(e){
-        e.stopPropagation();
-    });
-    document.addEventListener("mouseover", function(e){
-        if(parentDiv.css("display")!="none")hideIcons();
-    });
-    var preNode;
-    if(showType){
-        document.addEventListener("click", function(){
-            if(preNode)preNode.hide(300);
-        });
-    }
 
-    var sNodes=[];
-    if(!Array.prototype.indexOf){
-        Array.prototype.indexOf = function(e){
-            for(var i=0;i<this.length;i++){
-                if(e===this[i]){
-                    return i;
-                }
-            }
-            return -1;
-        };
-    }
-
-    function addCustomSites(){
-        var siteRule=storage.getItem("siteRule");
-        if(!siteRule)return;
-        var rules=siteRule.split("\n");
-        rules.forEach(rule=>{
-            var ruleArr=rule.replace(/\s/g,"").split("@@");
-            if(ruleArr[1] && (ruleArr[0].indexOf("$url")!=-1 || ruleArr[0].indexOf("$hash")!=-1 || ruleArr[0].indexOf("${")!=-1)){
-                var siteConfig={};
-                siteConfig.directUrl=function(offUrl){
-                    if(ruleArr[0].indexOf("${")!=-1){
-                        var strMatch=ruleArr[0].match(/\${(.*?)}/);
-                        var regStr=strMatch?strMatch[1]:"";
-                        if(!regStr)return;
-                        var linkReg=new RegExp(regStr,"i");
-                        var linkMatch=offUrl.match(linkReg);
-                        var linkResult=linkMatch[1]||linkMatch[0];
-                        return linkResult?ruleArr[0].replace(/\${.*?}/,linkResult):ruleArr[0];
+    function addCustomSites(cb){
+        storage.getItem("siteRule",v=>{
+            var siteRule=v;
+            if(!siteRule)return;
+            var rules=siteRule.split("\n");
+            rules.forEach(rule=>{
+                var ruleArr=rule.replace(/\s/g,"").split("@@");
+                if(ruleArr[1] && (ruleArr[0].indexOf("$url")!=-1 || ruleArr[0].indexOf("$hash")!=-1 || ruleArr[0].indexOf("${")!=-1)){
+                    var siteConfig={};
+                    siteConfig.directUrl=function(offUrl){
+                        if(ruleArr[0].indexOf("${")!=-1){
+                            var strMatch=ruleArr[0].match(/\${(.*?)}/);
+                            var regStr=strMatch?strMatch[1]:"";
+                            if(!regStr)return;
+                            var linkReg=new RegExp(regStr,"i");
+                            var linkMatch=offUrl.match(linkReg);
+                            var linkResult=linkMatch[1]||linkMatch[0];
+                            return linkResult?ruleArr[0].replace(/\${.*?}/,linkResult):ruleArr[0];
+                        }
+                        var hash=offUrl.replace("magnet:?xt=urn:btih:","").replace(/&.*/,"");
+                        return ruleArr[0].replace("$url", offUrl).replace("$hash", hash);
+                    };
+                    if(ruleArr[2]) {
+                        siteConfig.linkRegExp=new RegExp(ruleArr[2],"i");
+                        regs.push(ruleArr[2]);
                     }
-                    var hash=offUrl.replace("magnet:?xt=urn:btih:","").replace(/&.*/,"");
-                    return ruleArr[0].replace("$url", offUrl).replace("$hash", hash);
-                };
-                if(ruleArr[2]) {
-                    siteConfig.linkRegExp=new RegExp(ruleArr[2],"i");
-                    regs.push(ruleArr[2]);
+                    if(ruleArr[3]) siteConfig.bgImg=ruleArr[3];
+                    else siteConfig.bgImg=downIconBg;
+                    if(ruleArr[4]) siteConfig.bgColor=ruleArr[4];
+                    else siteConfig.bgColor="f2f2f2";
+                    sites[ruleArr[1]]=siteConfig;
                 }
-                if(ruleArr[3]) siteConfig.bgImg=ruleArr[3];
-                else siteConfig.bgImg=downIconBg;
-                if(ruleArr[4]) siteConfig.bgColor=ruleArr[4];
-                else siteConfig.bgColor="f2f2f2";
-                sites[ruleArr[1]]=siteConfig;
-            }
+            });
+            cb();
         });
     }
+
     function getAllEnableUrl(target) {
-        if(storage.getItem('eoDisable_'+document.domain))return;
-        var rawnodes=(target?$(target).find(enableUrl):$(enableUrl)).get(),customnodes=[];
-        var nodes = [];
-        var i;
-        var curNode;
-        if(regs){
-            var aTags = (target?$(target).find("a"):$("a")).get();
-            for(var aTag of aTags){
-                for(var reg of regs){
-                    reg=reg.trim();
-                    if(reg==="")continue;
-                    var patt=new RegExp(reg,"i");
-                    if(patt.test(aTag.href) && $.inArray(aTag, rawnodes)==-1){
-                        customnodes.push(aTag);
-                        break;
-                    }
-                }
-            }
-        }
-
-        if(rawnodes.length > 0){
-            for (i = 0; i < rawnodes.length; i++) {
-                var disable = false;
-                curNode = rawnodes[i];
-                if(!/^magnet|^ed2k:\/\//.test(curNode.href)){
-                    if(/[#\?]|\/\.[^\.]+$/.test(curNode.href))continue;
-                    for(var j = 0; j < disableUrl.length; j++){
-                        var temp = disableUrl[j];
-                        if(curNode.href.indexOf(temp)!=-1){
-                            disable = true;
-                            break;
+        storage.getItem('eoDisable_'+document.domain,v=>{
+            if(!v){
+                var rawnodes=(target?$(target).find(enableUrl):$(enableUrl)).get(),customnodes=[];
+                var nodes = [];
+                var i;
+                var curNode;
+                if(regs){
+                    var aTags = (target?$(target).find("a"):$("a")).get();
+                    for(var aTag of aTags){
+                        for(var reg of regs){
+                            reg=reg.trim();
+                            if(reg==="")continue;
+                            var patt=new RegExp(reg,"i");
+                            if(patt.test(aTag.href) && $.inArray(aTag, rawnodes)==-1){
+                                customnodes.push(aTag);
+                                break;
+                            }
                         }
                     }
-                    if(disable)continue;
                 }
-                if(!include(nodes,curNode)){
-                    nodes.push(curNode);
-                }
-            }
-        }
-        if(customnodes.length > 0){
-            for (i = 0; i < customnodes.length; i++) {
-                curNode = customnodes[i];
-                if(!include(nodes,curNode)){
-                    nodes.push(curNode);
-                }
-            }
-        }
 
-        if(nodes.length > 0){
-            init();
-            var codeList = [];
-            var listLen = nodes.length;
-            if (listLen !== 0) {
-                for (i = 0; i < listLen; i++) {
-                    curNode = nodes[i];
-                    if(curNode.classList.contains("whx-a"))continue;
-                    if(target){
-                        if(sNodes.indexOf(curNode)!=-1)continue;
-                        sNodes.push(curNode);
-                    }
-                    let href=curNode.href;
-                    let clone=$("<a></a>").attr("style",curNode.getAttribute("style")).attr("href",href).addClass('whx-a').addClass('whx-a-node').css("background-color","#e1e1e1").css("background-image",'url("'+downIconBg+'")');
-                    if(allUrl.toString().indexOf(href)==-1)allUrl.push(href);
-                    clone.mouseover(function(e){
-                        var basePos=clone.offset();
-                        showDiskIcons(href,basePos.top,basePos.left);
-                        e.stopPropagation();
-                    });
-                    $(curNode).after(clone);
-                    if(showType){
-                        clone.hide();
-                        $(curNode).mouseover(function(){
-                            if(clone.is(':hidden')){
-                                if(preNode)preNode.hide(300);
-                                clone.show(500);
-                                preNode=clone;
+                if(rawnodes.length > 0){
+                    for (i = 0; i < rawnodes.length; i++) {
+                        var disable = false;
+                        curNode = rawnodes[i];
+                        if(!/^magnet|^ed2k:\/\//.test(curNode.href)){
+                            if(/[#\?]|\/\.[^\.]+$/.test(curNode.href))continue;
+                            for(var j = 0; j < disableUrl.length; j++){
+                                var temp = disableUrl[j];
+                                if(curNode.href.indexOf(temp)!=-1){
+                                    disable = true;
+                                    break;
+                                }
                             }
-                        });
+                            if(disable)continue;
+                        }
+                        if(!include(nodes,curNode)){
+                            nodes.push(curNode);
+                        }
+                    }
+                }
+                if(customnodes.length > 0){
+                    for (i = 0; i < customnodes.length; i++) {
+                        curNode = customnodes[i];
+                        if(!include(nodes,curNode)){
+                            nodes.push(curNode);
+                        }
+                    }
+                }
+
+                if(nodes.length > 0){
+                    init();
+                    var codeList = [];
+                    var listLen = nodes.length;
+                    if (listLen !== 0) {
+                        for (i = 0; i < listLen; i++) {
+                            curNode = nodes[i];
+                            if(curNode.classList.contains("whx-a"))continue;
+                            if(target){
+                                if(sNodes.indexOf(curNode)!=-1)continue;
+                                sNodes.push(curNode);
+                            }
+                            let href=curNode.href;
+                            let clone=$("<a></a>").attr("style",curNode.getAttribute("style")).attr("href",href).addClass('whx-a').addClass('whx-a-node').css("background-color","#e1e1e1").css("background-image",'url("'+downIconBg+'")');
+                            if(allUrl.toString().indexOf(href)==-1)allUrl.push(href);
+                            clone.mouseover(function(e){
+                                var basePos=clone.offset();
+                                showDiskIcons(href,basePos.top,basePos.left);
+                                e.stopPropagation();
+                            });
+                            $(curNode).after(clone);
+                            if(showType){
+                                clone.hide();
+                                $(curNode).mouseover(function(){
+                                    if(clone.is(':hidden')){
+                                        if(preNode)preNode.hide(300);
+                                        clone.show(500);
+                                        preNode=clone;
+                                    }
+                                });
+                            }
+                        }
                     }
                 }
             }
-        }
+        });
     }
 
     function showDiskIcons(url, top, left){
@@ -821,59 +822,104 @@
         return returnStr;
     }
 
-    var i=0;
-    var curlink;
-    var isDisk=false;
-    var configContent;
-    var easyOfflineDisable;
-    for(x = 0; x < sitesArr.length; x++){
-        let siteConfig=sitesArr[x];
-        if(siteConfig.regex && siteConfig.regex.test(location.hostname)){
-            isDisk=true;
-            curlink=storage.getItem(siteConfig.name+':eoUrl');
-            if(curlink){
-                if(siteConfig.offFunc)siteConfig.offFunc(function(){storage.delItem(siteConfig.name+':eoUrl');});
-            }
-            break;
-        }
-    }
-    if(/greasyfork\.org\/.*scripts\/22590\b|github\.com\/hoothin\/UserScripts\//.test(location.href)){
-        $("pre").click(e=>{
-            if(e.target.innerHTML.indexOf("@@")!=-1){
-                var siteRule=storage.getItem("siteRule");
-                if(siteRule != e.target.innerHTML.trim()){
-                    if(siteRule && window.confirm(i18n("importCustomAlert")) && siteRule.indexOf(e.target.innerHTML.trim())==-1){
-                        siteRule=siteRule.trim()+"\n"+e.target.innerHTML.trim();
-                    }else{
-                        siteRule=e.target.innerHTML.trim();
-                    }
-                    storage.setItem("siteRule", siteRule);
+    function pageRun(){
+        for(var x = 0; x < sitesArr.length; x++){
+            let offNode=$("<a></a>");
+            offNode.addClass('whx-a').css("position","absolute").css("margin-top","0px").css("margin-left","0px").attr("target","_blank");
+            let siteConfig=sitesArr[x];
+            offNode.css("background-color","#"+siteConfig.bgColor).attr("title",i18n(siteConfig.name) ).attr("href", siteConfig.url).attr("name", siteConfig.name);
+            offNode.click(function(e){
+                offUrl=getRightUrl(offUrl);
+                if(siteConfig.directUrl){
+                    offNode.attr('href', siteConfig.directUrl(offUrl));
+                }else{
+                    if(e.ctrlKey && e.shiftKey && siteConfig.canMul)
+                        storage.setItem(siteConfig.name+":eoUrl",allUrl);
+                    else storage.setItem(siteConfig.name+":eoUrl",offUrl);
                 }
-                alert(i18n("importOver"));
+                e.stopPropagation();
+            });
+            if(siteConfig.bgImg)offNode.css("background-image","url(\""+siteConfig.bgImg+"\")");
+            if(siteConfig.hide)continue;
+            storage.getItem("eoHide"+siteConfig.name,v=>{
+                if(!v){
+                    offNodes.push(offNode);
+                    parentDiv.prepend(offNode);
+                }
+            });
+        }
+        var marginTop=offNodes.length*25;
+        parentDiv.prepend($('<div style="position:absolute;width:25px;height:'+marginTop+'px;margin-top:-'+(marginTop-25)+'px;background-color:white;opacity:0.001;"></div>'));
+        parentDiv.mouseout(function(e){
+            var relatedTarget=(e.relatedTarget||e.fromElement);
+            if(relatedTarget && !parentDiv[0].contains(relatedTarget))
+                hideIcons();
+        });
+        parentDiv.mouseover(function(e){
+            e.stopPropagation();
+        });
+        document.addEventListener("mouseover", function(e){
+            if(parentDiv.css("display")!="none")hideIcons();
+        });
+        storage.getItem("showType",v=>{
+            showType=!!v;
+            if(showType){
+                document.addEventListener("click", function(){
+                    if(preNode)preNode.hide(300);
+                });
             }
         });
-    }
-    if(location.href.indexOf("pan.baidu.com/wap/home") != -1){
-        if(curlink)location.href="https://pan.baidu.com/disk/home";
-    }else if(location.href.indexOf("github.com/hoothin/UserScripts/tree/master/Easy%20offline") != -1){
-        setting();
-    }else if(!isDisk){
-        if(/greasyfork\.org\/.*scripts\/22590[^\/]*$/.test(location.href)){
-            //setting();
-        }
-        setTimeout(function(){getAllEnableUrl();},10);
-        var MutationObserver = unsafeWindow.MutationObserver || unsafeWindow.WebKitMutationObserver || unsafeWindow.MozMutationObserver;
-        if(MutationObserver){
-            var observer = new MutationObserver(function(records){
-                records.map(function(record) {
-                    if(record.addedNodes.length)setTimeout(function(){getAllEnableUrl(record.addedNodes);},501);
+        for(x = 0; x < sitesArr.length; x++){
+            let siteConfig=sitesArr[x];
+            if(siteConfig.regex && siteConfig.regex.test(location.hostname)){
+                isDisk=true;
+                storage.getItem(siteConfig.name+':eoUrl',v=>{
+                    curlink=v;
+                    if(curlink){
+                        if(siteConfig.offFunc)siteConfig.offFunc(function(){storage.delItem(siteConfig.name+':eoUrl');});
+                    }
                 });
+                break;
+            }
+        }
+        if(/greasyfork\.org\/.*scripts\/22590\b|github\.com\/hoothin\/UserScripts\//.test(location.href)){
+            $("pre").click(e=>{
+                if(e.target.innerHTML.indexOf("@@")!=-1){
+                    storage.getItem("siteRule",v=>{
+                        var siteRule=v;
+                        if(siteRule != e.target.innerHTML.trim()){
+                            if(siteRule && window.confirm(i18n("importCustomAlert")) && siteRule.indexOf(e.target.innerHTML.trim())==-1){
+                                siteRule=siteRule.trim()+"\n"+e.target.innerHTML.trim();
+                            }else{
+                                siteRule=e.target.innerHTML.trim();
+                            }
+                            storage.setItem("siteRule", siteRule);
+                        }
+                        alert(i18n("importOver"));
+                    });
+                }
             });
-            var option = {
-                'childList': true,
-                'subtree': true
-            };
-            observer.observe(document.body, option);
+        }
+        if(location.href.indexOf("github.com/hoothin/UserScripts/tree/master/Easy%20offline") != -1){
+            setting();
+        }else if(!isDisk){
+            if(/greasyfork\.org\/.*scripts\/22590[^\/]*$/.test(location.href)){
+                //setting();
+            }
+            setTimeout(function(){getAllEnableUrl();},10);
+            var MutationObserver = _unsafeWindow.MutationObserver || _unsafeWindow.WebKitMutationObserver || _unsafeWindow.MozMutationObserver;
+            if(MutationObserver){
+                var observer = new MutationObserver(function(records){
+                    records.map(function(record) {
+                        if(record.addedNodes.length)setTimeout(function(){getAllEnableUrl(record.addedNodes);},501);
+                    });
+                });
+                var option = {
+                    'childList': true,
+                    'subtree': true
+                };
+                observer.observe(document.body, option);
+            }
         }
     }
 
@@ -953,29 +999,33 @@
                 icon[0].ondragstart=function(e){
                     dragIcon=this;
                 };
-                if(storage.getItem("eoHide"+siteConfig.name)){
-                    icon.css("opacity","0.2");
-                    icon.attr("title",i18n("enable")+i18n(siteConfig.name) );
-                }
+                storage.getItem("eoHide"+siteConfig.name,v=>{
+                    if(v){
+                        icon.css("opacity","0.2");
+                        icon.attr("title",i18n("enable")+i18n(siteConfig.name) );
+                    }
+                });
                 if(siteConfig.bgImg)icon.css("background-image","url(\""+siteConfig.bgImg+"\")");
                 icon.on("click", function(){
-                    var eoHide=storage.getItem("eoHide"+siteConfig.name);
-                    if(!eoHide){
-                        var allHide=true;
-                        $("#icons>div").each(function(){
-                            if(this!=icon[0] && $(this).css("opacity")!="0.2"){
-                                allHide=false;
-                                return false;
+                    storage.getItem("eoHide"+siteConfig.name,v=>{
+                        var eoHide=v;
+                        if(!eoHide){
+                            var allHide=true;
+                            $("#icons>div").each(function(){
+                                if(this!=icon[0] && $(this).css("opacity")!="0.2"){
+                                    allHide=false;
+                                    return false;
+                                }
+                            });
+                            if(allHide){
+                                alert(i18n("allDisableError"));
+                                return;
                             }
-                        });
-                        if(allHide){
-                            alert(i18n("allDisableError"));
-                            return;
                         }
-                    }
-                    storage.setItem("eoHide"+siteConfig.name, !eoHide);
-                    icon.css("opacity",eoHide?"1":"0.2");
-                    icon.attr("title",(eoHide?i18n("disable"):i18n("enable"))+i18n(siteConfig.name) );
+                        storage.setItem("eoHide"+siteConfig.name, !eoHide);
+                        icon.css("opacity",eoHide?"1":"0.2");
+                        icon.attr("title",(eoHide?i18n("disable"):i18n("enable"))+i18n(siteConfig.name) );
+                    });
                 });
                 icons.append(icon);
             }
@@ -995,7 +1045,9 @@
                 document.body.appendChild(addSiteRules);
             };
             icons.append(addIcon);
-            if(storage.getItem("siteRule"))$("#siteRuleInput", addSiteRules).val(storage.getItem("siteRule"));
+            storage.getItem("siteRule",v=>{
+                if(v)$("#siteRuleInput", addSiteRules).val(v);
+            });
             $("#siteRuleQuit", addSiteRules).click(function (event) {
                 if(addSiteRules.parentNode)addSiteRules.parentNode.removeChild(addSiteRules);
             });
@@ -1006,9 +1058,9 @@
             });
 
             configContent.style.display="block";
-            if(storage.getItem("eoReg"))$(configInput).val(storage.getItem("eoReg").join("\n"));
-            if(storage.getItem("baiduPath"))$(baiduPath).val(storage.getItem("baiduPath"));
-            if(storage.getItem("showType"))showTypeCheck.checked=true;
+            storage.getItem("eoReg",v=>{if(v)$(configInput).val(v.join("\n"))});
+            storage.getItem("baiduPath",v=>{if(v)$(baiduPath).val(v)});
+            storage.getItem("showType",v=>{if(v)showTypeCheck.checked=true});
             $(configQuit).click(function (event) {configContent.style.display="none";});
             $(configSave).click(function (event) {
                 var regStr=$(configInput).val();
@@ -1033,21 +1085,21 @@
             });
         }
         configContent.style.display="block";
-        if(storage.getItem('eoDisable_'+document.domain)){
-            easyOfflineDisable.style.display="block";
-        }else{
-            easyOfflineDisable.style.display="none";
-        }
+        storage.getItem('eoDisable_'+document.domain,v=>{
+            easyOfflineDisable.style.display=v?"block":"none";
+        });
     }
 
     function toggleIcon(force){
         $('.whx-a').toggle(500);
-        if(force=="enable" || storage.getItem('eoDisable_'+document.domain)){
-            storage.delItem('eoDisable_'+document.domain);
-            if($('.whx-a-node').length<1)getAllEnableUrl();
-        }else{
-            storage.setItem('eoDisable_'+document.domain,true);
-        }
+        storage.getItem('eoDisable_'+document.domain,v=>{
+            if(force=="enable" || v){
+                storage.delItem('eoDisable_'+document.domain);
+                if($('.whx-a-node').length<1)getAllEnableUrl();
+            }else{
+                storage.setItem('eoDisable_'+document.domain,true);
+            }
+        });
     }
 
     function goSetting(){
@@ -1094,5 +1146,5 @@
             }
         }
     });
-    GM_registerMenuCommand(i18n("configure"), goSetting);
+    _GM_registerMenuCommand(i18n("configure"), goSetting);
 })();
