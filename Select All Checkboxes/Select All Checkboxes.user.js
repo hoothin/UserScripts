@@ -32,7 +32,7 @@
         langStr = "SelectAll";
     }
     var _GM_registerMenuCommand;
-    if(typeof GM_registerMenuCommand=='undefined')_GM_registerMenuCommand=GM&&GM.registerMenuCommand?GM.registerMenuCommand:(s,f)=>{};
+    if(typeof GM_registerMenuCommand=='undefined')_GM_registerMenuCommand=typeof GM!='undefined'&&GM.registerMenuCommand?GM.registerMenuCommand:(s,f)=>{};
     else _GM_registerMenuCommand=GM_registerMenuCommand;
     _GM_registerMenuCommand(langStr, selectAll);
     var selector="input:checkbox:enabled,.checkbox";
