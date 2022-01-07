@@ -433,7 +433,7 @@
         _GM_setValue=GM_setValue;
         _GM_deleteValue=GM_deleteValue;
         _GM_registerMenuCommand=GM_registerMenuCommand;
-    }else if(GM && typeof GM.getValue!='undefined'){
+    }else if(typeof GM!='undefined' && typeof GM.getValue!='undefined'){
         _GM_getValue=GM.getValue;
         _GM_setValue=GM.setValue;
         _GM_deleteValue=GM.deleteValue;
@@ -442,7 +442,7 @@
     if(typeof _GM_registerMenuCommand=='undefined')_GM_registerMenuCommand=(s,f)=>{};
     var storage={
         supportGM: typeof GM_getValue=='function' && typeof GM_getValue('a','b')!='undefined',
-        supportGMPromise: GM && typeof GM.getValue=='function' && typeof GM.getValue('a','b')!='undefined',
+        supportGMPromise: typeof GM!='undefined' && typeof GM.getValue=='function' && typeof GM.getValue('a','b')!='undefined',
         mxAppStorage:(function(){
             try{
                 return window.external.mxGetRuntime().storage;
