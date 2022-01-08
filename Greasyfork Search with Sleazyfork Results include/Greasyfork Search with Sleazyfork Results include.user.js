@@ -318,126 +318,126 @@
     }
 
     function initFilter(){
+        var enableFilter;
         if(sortDiv){
-            var switchFilter=document.createElement("div");
-            var enableFilter;
             storage.getItem("disableFilter",v=>{
                 enableFilter=!v;
-            });
-            var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
-            var observer = new MutationObserver(function(records){
-                records.map(function(record) {
-                    for(var i=0;i<record.addedNodes.length;i++){
-                        var curNode=record.addedNodes[i];
-                        if(curNode.className=="script-list"){
-                            var scripts=curNode.querySelectorAll('li');
-                            for(let i=0;i<scripts.length;i++){
-                                let script=scripts[i];
-                                addScore(script);
+                var switchFilter=document.createElement("div");
+                var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+                var observer = new MutationObserver(function(records){
+                    records.map(function(record) {
+                        for(var i=0;i<record.addedNodes.length;i++){
+                            var curNode=record.addedNodes[i];
+                            if(curNode.className=="script-list"){
+                                var scripts=curNode.querySelectorAll('li');
+                                for(let i=0;i<scripts.length;i++){
+                                    let script=scripts[i];
+                                    addScore(script);
+                                }
+                                if(enableFilter)filter(curNode);
+                            }else if(curNode.tagName=="LI"){
+                                addScore(curNode);
+                                if(enableFilter)filter(curNode);
                             }
-                            if(enableFilter)filter(curNode);
-                        }else if(curNode.tagName=="LI"){
-                            addScore(curNode);
-                            if(enableFilter)filter(curNode);
                         }
-                    }
-                });
-            });
-            var option = {
-                'childList': true
-            };
-            observer.observe(document.querySelector("body>.width-constraint .sidebarred-main-content"), option);
-            var scriptList=document.querySelector("#browse-script-list,#user-script-list,ol.script-list");
-            if(scriptList)observer.observe(scriptList, option);
-            var scripts=document.querySelectorAll('ol.script-list>li');
-            for(let i=0;i<scripts.length;i++){
-                let script=scripts[i];
-                addScore(script);
-            }
-            //Modify from GreasyFork Bullshit Filter,Thanks to darkred
-            var style = document.createElement('style');
-            style.textContent = `
-        li.filtered {
-             display: none !important;
-        }
-        .list-option{
-             position: relative;
-        }
-        #script-list-sort li>span{
-             position: absolute;
-             top: 4px;
-             right: 2px;
-             pointer-events: none;
-             font-weight: 500;
-        }
-        #script-list-sort li>span:lang(ar), #script-list-sort li>span:lang(he), #script-list-sort li>span:lang(ug){
-             right: unset;
-             left: 2px;
-        }
-        #script-list-sort li>span>span{
-             margin: 0 0 0 2px;
-        }
-        .script-list>li .list-install-area{
-             display: none;
-             float: right;
-             position: relative;
-        }
-        .script-list>li:hover .list-install-area {
-             display: block;
-        }
-        @-webkit-keyframes spin {
-             from {
-                 -webkit-transform: rotate(0deg);
-             }
-             to {
-                 -webkit-transform: rotate(360deg);
-             }
-        }
-        @keyframes spin {
-             from {
-                 transform: rotate(0deg);
-             }
-             to {
-                 transform: rotate(360deg);
-             }
-        }
-        .refresh-info:hover>span {
-             display: block;
-             -webkit-animation: spin 1s linear 1s 5 alternate;
-             animation: spin 1s linear infinite;
-        }`;
-            style.type = 'text/css';
-            document.querySelector('head').appendChild(style);
-            var bullshitReg=new RegExp(bullshit,"i");
-            var filterName="Enable Filter",filteredNum=0;
-            var filter=function(t){
-                [].forEach.call(t.querySelectorAll('article>h2'), function(item) {
-                    if(bullshitReg.test(item.innerText.replace("\n"," "))){
-                        item.parentNode.parentNode.classList.add('filtered');
-                        filteredNum++;
-                    }
-                });
-            };
-            if(enableFilter)filter(document);
-            switchFilter.innerHTML='<input type="checkBox" name="switchFilter" id="switchFilter"/><label for="switchFilter">'+filterName+(filteredNum?' ('+filteredNum+' filtered)':'')+'</label>';
-            var switchFilterCheckbox=switchFilter.querySelector('#switchFilter');
-            var switchFilterLabel=switchFilterCheckbox.nextSibling;
-            switchFilterCheckbox.checked=enableFilter;
-            switchFilterCheckbox.onclick=function(){
-                if(enableFilter){
-                    [].forEach.call(document.querySelectorAll('li.filtered'), function(item) {
-                        item.classList.remove('filtered');
                     });
-                    switchFilterLabel.innerHTML=filterName;
-                }else{
-                    filteredNum=0;
-                    filter(document);
-                    switchFilterLabel.innerHTML=filterName+' ('+filteredNum+' filtered)';
+                });
+                var option = {
+                    'childList': true
+                };
+                observer.observe(document.querySelector("body>.width-constraint .sidebarred-main-content"), option);
+                var scriptList=document.querySelector("#browse-script-list,#user-script-list,ol.script-list");
+                if(scriptList)observer.observe(scriptList, option);
+                var scripts=document.querySelectorAll('ol.script-list>li');
+                for(let i=0;i<scripts.length;i++){
+                    let script=scripts[i];
+                    addScore(script);
                 }
-                storage.setItem("disableFilter",enableFilter);
-                enableFilter=!enableFilter;
-            };
-            sortDiv.insertBefore(switchFilter,sortDiv.firstChild);
+                //Modify from GreasyFork Bullshit Filter,Thanks to darkred
+                var style = document.createElement('style');
+                style.textContent = `
+                li.filtered {
+                     display: none !important;
+                }
+                .list-option{
+                     position: relative;
+                }
+                #script-list-sort li>span{
+                     position: absolute;
+                     top: 4px;
+                     right: 2px;
+                     pointer-events: none;
+                     font-weight: 500;
+                }
+                #script-list-sort li>span:lang(ar), #script-list-sort li>span:lang(he), #script-list-sort li>span:lang(ug){
+                     right: unset;
+                     left: 2px;
+                }
+                #script-list-sort li>span>span{
+                     margin: 0 0 0 2px;
+                }
+                .script-list>li .list-install-area{
+                     display: none;
+                     float: right;
+                     position: relative;
+                }
+                .script-list>li:hover .list-install-area {
+                     display: block;
+                }
+                @-webkit-keyframes spin {
+                 from {
+                     -webkit-transform: rotate(0deg);
+                 }
+                 to {
+                     -webkit-transform: rotate(360deg);
+                 }
+                }
+                @keyframes spin {
+                 from {
+                     transform: rotate(0deg);
+                 }
+                 to {
+                     transform: rotate(360deg);
+                 }
+                }
+                .refresh-info:hover>span {
+                     display: block;
+                     -webkit-animation: spin 1s linear 1s 5 alternate;
+                     animation: spin 1s linear infinite;
+                }`;
+                style.type = 'text/css';
+                document.querySelector('head').appendChild(style);
+                var bullshitReg=new RegExp(bullshit,"i");
+                var filterName="Enable Filter",filteredNum=0;
+                var filter=function(t){
+                    [].forEach.call(t.querySelectorAll('article>h2'), function(item) {
+                        if(bullshitReg.test(item.innerText.replace("\n"," "))){
+                            item.parentNode.parentNode.classList.add('filtered');
+                            filteredNum++;
+                        }
+                    });
+                };
+                if(enableFilter)filter(document);
+                switchFilter.innerHTML='<input type="checkBox" name="switchFilter" id="switchFilter"/><label for="switchFilter">'+filterName+(filteredNum?' ('+filteredNum+' filtered)':'')+'</label>';
+                var switchFilterCheckbox=switchFilter.querySelector('#switchFilter');
+                var switchFilterLabel=switchFilterCheckbox.nextSibling;
+                switchFilterCheckbox.checked=enableFilter;
+                switchFilterCheckbox.onclick=function(){
+                    if(enableFilter){
+                        [].forEach.call(document.querySelectorAll('li.filtered'), function(item) {
+                            item.classList.remove('filtered');
+                        });
+                        switchFilterLabel.innerHTML=filterName;
+                    }else{
+                        filteredNum=0;
+                        filter(document);
+                        switchFilterLabel.innerHTML=filterName+' ('+filteredNum+' filtered)';
+                    }
+                    storage.setItem("disableFilter",enableFilter);
+                    enableFilter=!enableFilter;
+                };
+                sortDiv.insertBefore(switchFilter,sortDiv.firstChild);
+            });
         }
     }
 })();
