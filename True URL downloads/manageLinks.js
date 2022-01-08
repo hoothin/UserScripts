@@ -1,5 +1,5 @@
 /*
-managerLinks v0.1
+manageLinks v0.1
 https://github.com/hoothin/UserScripts/tree/master/True%20URL%20downloads/managerLinks.js
 (c) 2017-2017 by Hoothin Wang. All rights reserved.
 */
@@ -171,7 +171,7 @@ function showLinkFrame(callBack) {
 		if (typeHtml.indexOf(type) == -1) {
 			typeHtml += '<a href="javascript:void(0);">' + type + "</a> ";
 		}
-		var linkItem = $('<div><input type="checkbox"/><a href="' + link + '">' + decodeURIComponent(linkName) + '</a></div>');
+		var linkItem = $('<div title="' + link + '"><input type="checkbox"/><a href="' + link + '">' + decodeURIComponent(linkName) + '</a></div>');
 		$("#managerLinksLinks").append(linkItem);
 		linkItems.push({
 			item: linkItem,
