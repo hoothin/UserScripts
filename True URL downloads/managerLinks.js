@@ -3,7 +3,7 @@ managerLinks v0.1
 https://github.com/hoothin/UserScripts/tree/master/True%20URL%20downloads/managerLinks.js
 (c) 2017-2017 by Hoothin Wang. All rights reserved.
 */
-var specialUrl=/^magnet|^ed2k/i,
+var specialUrl=/^thunder|^magnet|^ed2k/i,
 	simplefilter= /\.php|\.htm|\.jsp|\.asp|\/[^\.]+$/i,
 	resReg = /.*(^thunder|^magnet|^ed2k|\.torrent$|\.mp4$|\.rar$|\.7z$|\.zip$|\.rmvb$|\.mkv$|\.avi$|\.iso$|\.mp3$|\.txt$|\.exe$|\.chm$|\.pdf$|\.ppt$|\.doc$|\.pptx$|\.docx$|\.epub$|\.xlsx$|\.xls$|\.flac$|\.wma$|\.wav$|\.aac$|\.ape$|\.mid$|\.ogg$|\.m4a$|\.dts$|\.dsd$|\.apk$|\.flv$).*/i,
 	linksArr = [],frame,
