@@ -4,7 +4,7 @@
 // @name:zh-TW   大人的Greasyfork
 // @name:ja      大人のGreasyfork
 // @namespace    hoothin
-// @version      1.3
+// @version      1.5
 // @description  Merge adult results of sleazyfork into greasyfork when the script is no longer anonymously available, add rating score and version for scripts then
 // @description:zh-CN 在Greasyfork的搜索结果中添加Sleazyfork上的成人脚本，增加评分与版本号，并在访问匿名不可用脚本时跳转至Sleazyfork
 // @description:zh-TW 在Greasyfork的搜索結果中添加Sleazyfork上的成人腳本，增加評分與版本號，並在訪問匿名不可用腳本時跳轉至Sleazyfork
@@ -32,20 +32,23 @@
 
 (function() {
     'use strict';
-    var _GM_getValue,_GM_setValue,_GM_xmlhttpRequest,_GM_registerMenuCommand,_GM_notification;
-    if(typeof GM_getValue!='undefined'){
-        _GM_getValue=GM_getValue;
-        _GM_setValue=GM_setValue;
+    var _GM_xmlhttpRequest,_GM_registerMenuCommand,_GM_notification;
+    if(typeof GM_xmlhttpRequest!='undefined'){
         _GM_xmlhttpRequest=GM_xmlhttpRequest;
-        _GM_registerMenuCommand=GM_registerMenuCommand;
-        _GM_notification=GM_notification;
-    }else if(typeof GM!='undefined' && typeof GM.getValue!='undefined'){
-        _GM_getValue=GM.getValue;
-        _GM_setValue=GM.setValue;
+    }else if(typeof GM!='undefined' && typeof GM.xmlhttpRequest!='undefined'){
         _GM_xmlhttpRequest=GM.xmlhttpRequest;
+    }
+    if(typeof GM_registerMenuCommand!='undefined'){
+        _GM_registerMenuCommand=GM_registerMenuCommand;
+    }else if(typeof GM!='undefined' && typeof GM.registerMenuCommand!='undefined'){
         _GM_registerMenuCommand=GM.registerMenuCommand;
+    }
+    if(typeof GM_notification!='undefined'){
+        _GM_notification=GM_notification;
+    }else if(typeof GM!='undefined' && typeof GM.notification!='undefined'){
         _GM_notification=GM.notification;
     }
+
     if(typeof _GM_xmlhttpRequest=='undefined')_GM_xmlhttpRequest=(f)=>{};
     if(typeof _GM_registerMenuCommand=='undefined')_GM_registerMenuCommand=(s,f)=>{};
     if(typeof _GM_notification=='undefined')_GM_notification=(s)=>{};
@@ -69,8 +72,10 @@
                 this.operaUJSStorage.setItem(key,value);
             }else if(this.mxAppStorage){
                 this.mxAppStorage.setConfig(key,value);
-            }else if(this.supportGM || this.supportGMPromise){
-                _GM_setValue(key,value);
+            }else if(this.supportGM){
+                GM_setValue(key,value);
+            }else if(this.supportGMPromise){
+                GM.setValue(key,value);
             }else if(window.localStorage){
                 window.localStorage.setItem(key,value);
             };
