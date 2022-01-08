@@ -7,7 +7,7 @@
 // @description:zh-TW    迅雷、快車、QQ旋風等專有鏈解密，嗅探下載鏈接並批量管理
 // @author         Yulei, Hoothin
 // @namespace      Yuleigq@gmail.com
-// @version        1.22.11
+// @version        1.22.12
 // @create         2013-01-05
 // @include        http://*
 // @include        https://*
@@ -15,7 +15,11 @@
 // @run-at         document-body
 // @copyright      2013+, Yulei, Hoothin
 // @grant          GM_registerMenuCommand
+// @grant          GM_notification
 // @grant          GM_setClipboard
+// @grant          GM.registerMenuCommand
+// @grant          GM.notification
+// @grant          GM.setClipboard
 // @license        MIT License
 // @require        https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @require        https://greasyfork.org/scripts/436827-managerlinkslib/code/managerLinksLib.js?version=996735
@@ -112,10 +116,11 @@
 
         //开始寻找所有链接地址
         function seekUrl() {
+            var link;
             if (document.querySelectorAll) {
-                var link = document.querySelectorAll('a');
+                link = document.querySelectorAll('a');
             } else {
-                var link = document.getElementsByTagName('a');
+                link = document.getElementsByTagName('a');
             }
             for (var i = 0, k = link.length; i < k; i++) {
                 if (/\w+href/i.test(link[i].outerHTML)) { //枚举所有专用链属性
@@ -152,18 +157,6 @@
                 },500);
             }
         });
-        function copyLink() {
-            showLinkFrame(function(r){
-                if(r){
-                    GM_setClipboard(r);
-                    alert("复制成功！");
-                }else{
-                    alert("当前页面没有资源！");
-                }
-            });
-        }
-        //GM_registerMenuCommand("True url downloads seek", seekUrl);
-        GM_registerMenuCommand("True url links copy", copyLink);
         document.addEventListener("keydown", function(e) {
             if(e.keyCode == 88 && e.altKey) {
                 copyLink();
@@ -296,6 +289,29 @@
             } while (i < input.length);
             return output;
         }
+
+        var _GM_setClipboard,_GM_notification,_GM_registerMenuCommand;
+        if(typeof GM_setClipboard!='undefined'){
+            _GM_setClipboard=GM_setClipboard;
+            _GM_notification=GM_notification;
+            _GM_registerMenuCommand=GM_registerMenuCommand;
+        }else if(typeof GM!='undefined' && typeof GM.setClipboard!='undefined'){
+            _GM_setClipboard=GM.setClipboard;
+            _GM_notification=GM.notification;
+            _GM_registerMenuCommand=GM.registerMenuCommand;
+        }
+        if(typeof _GM_registerMenuCommand=='undefined')_GM_registerMenuCommand=(s,f)=>{};
+        function copyLink() {
+            showLinkFrame(function(r){
+                if(r){
+                    _GM_setClipboard(r);
+                    _GM_notification("复制成功！");
+                }else{
+                    _GM_notification("当前页面没有资源！");
+                }
+            });
+        }
+        _GM_registerMenuCommand("True url links copy", copyLink);
     }
     if (!window.chrome) {
         window.addEventListener('DOMContentLoaded', Yu, false);
