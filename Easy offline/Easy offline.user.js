@@ -7,8 +7,8 @@
 // @description:zh-TW 一鍵自動將磁鏈、bt種子或其他下載資源離綫下載至網盤
 // @namespace    https://github.com/hoothin/UserScripts/tree/master/Easy%20offline
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
-// @require      https://cdnjs.cloudflare.com/ajax/libs/Base64/0.2.0/base64.min.js
-// @version      1.8.6
+// @require      https://cdn.jsdelivr.net/gh/emn178/hi-base64/build/base64.min.js
+// @version      1.8.7
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -251,11 +251,30 @@
             }
         },
         xunlei:{
-            regex:/lixian\.vip\.xunlei\.com/,
-            url:"http://lixian.vip.xunlei.com/?furl=",
+            regex:/lixian.*\.xunlei\.com/,
+            url:"http://lixian.xunlei.com/",
             bgColor:"2e71f1",
-            directUrl:function(offUrl){
-                return this.url+offUrl;
+            offFunc:function(delLink){
+                var rsc = setInterval(function(){
+                    var offBtn=document.querySelector('.ico_add');
+                    if(offBtn){
+                        clearInterval(rsc);
+                        var wsc = setInterval(function() {
+                            offBtn.parentNode.parentNode.click();
+                            var tab=document.querySelector('.pop_task');
+                            if(tab){
+                                clearInterval(wsc);
+                                var textarea=tab.querySelector('textarea');
+                                textarea.value=curlink;
+                                var event = document.createEvent('HTMLEvents');
+                                event.initEvent("input", false, true);
+                                textarea.dispatchEvent(event);
+                                document.querySelector('.j-com-sub').click();
+                                delLink();
+                            }
+                        },200);
+                    }
+                },1000);
             },
             bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAMAAADzN3VRAAABC1BMVEUAAAArcPUscPQkavJSd79UdrhTdrled6kjae8ucfAqbOwoa+0pa+xTd71WdrNad61dea4pbO4vcvEsb/Aqbe8sbu8ucfArbu8ucfEpbe0oa+4vcPH///4ZYe7j8fne7fknbPAkaO41dfDa6vgcY+/o8/rV6PchZ+4bZO79//3u+fklavIiaO8VXu3x9/3t9fve7veLsfYqcfZNhvE5d/AfZO36/fz0+/ry+vrb6PrG2vnR5fbL4faXufbG3fWqyPWjw/WErPWixPR4pPR0ovOIsfJsnPJYj+9Bfe/1+v3l7f3p8Pzg7fq+0/mlw/fY6/aQtPaHrfZnl/S41fORt/KAqvKZvvFJhO8eZe4RVCzFAAAAEXRSTlMA+P74gnpzWP329OrohXJgXOQVaEcAAAFOSURBVCjPZczneoIwGIbhqNXuEQORYGIBQXDvvbfde5z/kfSTi1Kx9798z/UGIXQQUuJBSiiGwDmEPUklFIVFDcI/4doVqilUCSIFArdjlAxQFE1Ir41EMhlGlFKiEerRhPFy29O3byiyUTccx9HiVBbxYYm3jAL1ilyvPlerhl1wFnec83mRuoUQSgr2lPP7Bn3g2dJNtm6TLSggUXzMZrtdXi6X+dCR/QLEtGV1SpZltXvfGtkt5qSdcnXmpmlit8guc5K79vTHK0OCk1eaq1x6q2LlUunBUsZQEi5sj3MZMJp9bLCuynCCjUvX3yuVzKBRFLqK4TNvA+Qj8TV7Si1E4heSfKZYj/pUlzxQfFjQt2XRL/iPJDXVz43tvRBmO6SmsdaZS0N5zHZnOpMwYNoJiuU1pu5j+fwhQtGIynAQUyMXCFyeqntFPYPFD095Qx8x+n7CAAAAAElFTkSuQmCC"
         },
