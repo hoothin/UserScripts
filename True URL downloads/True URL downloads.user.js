@@ -7,7 +7,7 @@
 // @description:zh-TW    迅雷、快車、QQ旋風等專有鏈解密，嗅探下載鏈接並批量管理
 // @author         Yulei, Hoothin
 // @namespace      https://github.com/hoothin/UserScripts
-// @version        1.22.15
+// @version        1.22.16
 // @create         2013-01-05
 // @include        http://*
 // @include        https://*
@@ -26,7 +26,7 @@
 // @grant          GM.getValue
 // @license        MIT License
 // @require        https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
-// @require        https://greasyfork.org/scripts/436827-managerlinkslib/code/managerLinksLib.js?version=1006404
+// @require        https://greasyfork.org/scripts/436827-managelinkslib/code/manageLinksLib.js?version=1006417
 // @contributionURL https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
 // @contributionAmount 1
 // ==/UserScript==
@@ -288,11 +288,17 @@
         var _GM_setClipboard,_GM_notification,_GM_registerMenuCommand;
         if(typeof GM_setClipboard!='undefined'){
             _GM_setClipboard=GM_setClipboard;
-            _GM_notification=GM_notification;
-            _GM_registerMenuCommand=GM_registerMenuCommand;
         }else if(typeof GM!='undefined' && typeof GM.setClipboard!='undefined'){
             _GM_setClipboard=GM.setClipboard;
+        }
+        if(typeof GM_notification!='undefined'){
+            _GM_notification=GM_notification;
+        }else if(typeof GM!='undefined' && typeof GM.notification!='undefined'){
             _GM_notification=GM.notification;
+        }
+        if(typeof GM_registerMenuCommand!='undefined'){
+            _GM_registerMenuCommand=GM_registerMenuCommand;
+        }else if(typeof GM!='undefined' && typeof GM.registerMenuCommand!='undefined'){
             _GM_registerMenuCommand=GM.registerMenuCommand;
         }
         if(typeof _GM_registerMenuCommand=='undefined')_GM_registerMenuCommand=(s,f)=>{};
@@ -339,17 +345,6 @@
                     value=window.localStorage.getItem(key);
                 };
                 cb(value);
-            },
-            delItem:function(key){
-                if(this.operaUJSStorage){
-                    this.operaUJSStorage.setItem(key,"");
-                }else if(this.mxAppStorage){
-                    this.mxAppStorage.setConfig(key,"");
-                }else if(this.supportGM){
-                    _GM_deleteValue(key);
-                }else if(window.localStorage){
-                    window.localStorage.setItem(key,"");
-                }
             }
         };
         storage.getItem("dontDecode",v=>{
