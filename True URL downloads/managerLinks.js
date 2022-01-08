@@ -3,20 +3,20 @@ managerLinks v0.1
 https://github.com/hoothin/UserScripts/tree/master/True%20URL%20downloads/managerLinks.js
 (c) 2017-2017 by Hoothin Wang. All rights reserved.
 */
-var specialUrl=/^thunder|^magnet|^ed2k/i,
-	simplefilter= /\.php|\.htm|\.jsp|\.asp|\/[^\.]+$/i,
+var specialUrl = /^thunder|^magnet|^ed2k/i,
+	simplefilter = /\.php|\.htm|\.jsp|\.asp|\/[^\.]+$/i,
 	resReg = /.*(^thunder|^magnet|^ed2k|\.torrent$|\.mp4$|\.rar$|\.7z$|\.zip$|\.rmvb$|\.mkv$|\.avi$|\.iso$|\.mp3$|\.txt$|\.exe$|\.chm$|\.pdf$|\.ppt$|\.doc$|\.pptx$|\.docx$|\.epub$|\.xlsx$|\.xls$|\.flac$|\.wma$|\.wav$|\.aac$|\.ape$|\.mid$|\.ogg$|\.m4a$|\.dts$|\.dsd$|\.apk$|\.flv$).*/i,
-	linksArr = [],frame,
-	copyAll="全部复制",
-	copySel="复制选中",
-	addTips="%i代表递增 %n代表文件名",
-	sortByName="按文件名排序",
-	sortByUrl="按网址排序",
-	sortByType="按扩展名排序",
-	preHolder="批量前缀",
-	nextHolder="批量后缀",
-	closeBtn="关闭",
-	typeHead="类型：";
+	linksArr = [],frame,linkPair = {},
+	copyAll = "全部复制",
+	copySel = "复制选中",
+	addTips = "%i代表递增 %n代表文件名",
+	sortByName = "按文件名排序",
+	sortByUrl = "按网址排序",
+	sortByType = "按扩展名排序",
+	preHolder = "批量前缀",
+	nextHolder = "批量后缀",
+	closeBtn = "关闭",
+	typeHead = "类型：";
 
 var by = function(byName, secName) {
 	var compare = function(o, p, name) {
@@ -49,7 +49,7 @@ if (!Array.prototype.indexOf) {
 		var index = -1;
 		for (var i = 0, length = this.length; i < length; i++) {
 			if (this[i] == item) {
-				index=i;
+				index = i;
 			}
 		}
 		return index;
@@ -58,29 +58,31 @@ if (!Array.prototype.indexOf) {
 
 function getLinks() {
 	[].forEach.call(document.querySelectorAll('a'), function(link){
-		if (link.className!="whx-a" && (specialUrl.test(link.href) || (!simplefilter.test(link.href) && resReg.test(link.href))) && linksArr.indexOf(link.href) == -1) {
+		if (link.className != "whx-a" && (specialUrl.test(link.href) || (!simplefilter.test(link.href) && resReg.test(link.href))) && linksArr.indexOf(link.href) == -1) {
 			linksArr.push(link.href);
+			linkPair[link.href]=link;
 		}
 	});
 	[].forEach.call(document.querySelectorAll('source'), function(link){
 		if ((specialUrl.test(link.href) || (!simplefilter.test(link.href) && resReg.test(link.href))) && linksArr.indexOf(link.src) == -1) {
 			linksArr.push(link.src);
+			linkPair[link.href]=link;
 		}
 	});
 }
 
 function initLang(lang){
-	if(!lang)return;
-	if(lang.copyAll)copyAll=lang.copyAll;
-	if(lang.copySel)copySel=lang.copySel;
-	if(lang.addTips)addTips=lang.addTips;
-	if(lang.sortByName)sortByName=lang.sortByName;
-	if(lang.sortByUrl)sortByUrl=lang.sortByUrl;
-	if(lang.sortByType)sortByType=lang.sortByType;
-	if(lang.preHolder)preHolder=lang.preHolder;
-	if(lang.nextHolder)nextHolder=lang.nextHolder;
-	if(lang.closeBtn)closeBtn=lang.closeBtn;
-	if(lang.typeHead)typeHead=lang.typeHead;
+	if (!lang) return;
+	if (lang.copyAll) copyAll = lang.copyAll;
+	if (lang.copySel) copySel = lang.copySel;
+	if (lang.addTips) addTips = lang.addTips;
+	if (lang.sortByName) sortByName = lang.sortByName;
+	if (lang.sortByUrl) sortByUrl = lang.sortByUrl;
+	if (lang.sortByType) sortByType = lang.sortByType;
+	if (lang.preHolder) preHolder = lang.preHolder;
+	if (lang.nextHolder) nextHolder = lang.nextHolder;
+	if (lang.closeBtn) closeBtn = lang.closeBtn;
+	if (lang.typeHead) typeHead = lang.typeHead;
 }
 
 function showLinkFrame(callBack) {
@@ -129,7 +131,7 @@ function showLinkFrame(callBack) {
 			var resultStr = "",i=0;
 			linkItems.forEach(function(item) {
 				i++;
-				var linkName=decodeURIComponent(item.linkName);
+				var linkName = decodeURIComponent(item.linkName);
 				resultStr += (pre.replace(/%i/g,i+"").replace(/%n/g,linkName) + item.href + after.replace(/%i/g,i+"").replace(/%n/g,linkName) + "\n");
 			});
 			callBack(resultStr);
@@ -141,11 +143,11 @@ function showLinkFrame(callBack) {
 			linkItems.forEach(function(item) {
 				i++;
 				if (item.item.children("input")[0].checked) {
-					var linkName=decodeURIComponent(item.linkName);
+					var linkName = decodeURIComponent(item.linkName);
 					resultStr += (pre.replace(/%i/g,i+"").replace(/%n/g,linkName) + item.href + after.replace(/%i/g,i+"").replace(/%n/g,linkName) + "\n");
 				}
 			});
-			if(resultStr!="")
+			if(resultStr != "")
 			callBack(resultStr);
 		});
 		$("#managerLinksClose").click(function() {
@@ -156,14 +158,16 @@ function showLinkFrame(callBack) {
 		};
 	}
 	getLinks();
-	if(linksArr.length==0){
+	if(linksArr.length == 0){
 		callBack();
 		return;
 	}
 	$("#managerLinksLinks").html("");
 	linksArr.forEach(function(link) {
 		var type = link.replace(resReg, "$1");
-		var linkName = type.indexOf(".") == -1 ? link : link.replace(/.*\/([^\/]+)$/i, "$1");
+		var linkName = linkPair[link].innerText;
+		if (linkName) linkName = linkName.trim();
+		if (!linkName) linkName = type.indexOf(".") == -1 ? link : link.replace(/.*\/([^\/]+)$/i, "$1");
 		if (typeHtml.indexOf(type) == -1) {
 			typeHtml += '<a href="javascript:void(0);">' + type + "</a> ";
 		}
