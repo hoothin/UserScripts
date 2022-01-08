@@ -8,7 +8,7 @@
 // @namespace    https://github.com/hoothin/UserScripts/tree/master/Easy%20offline
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Base64/0.2.0/base64.min.js
-// @version      1.8.7
+// @version      1.8.8
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -904,7 +904,7 @@
         }
         if(/greasyfork\.org\/.*scripts\/22590\b|github\.com\/hoothin\/UserScripts\//.test(location.href)){
             $("pre").click(e=>{
-                if(e.target.innerHTML.indexOf("@@")!=-1){
+                if(e.target.childNodes.length==1 && e.target.innerHTML.indexOf("@@")!=-1){
                     storage.getItem("siteRule",v=>{
                         var siteRule=v;
                         if(siteRule != e.target.innerHTML.trim()){
