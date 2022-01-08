@@ -7,7 +7,7 @@
 // @description:zh-TW 一鍵自動將磁鏈、bt種子或其他下載資源離綫下載至網盤
 // @namespace    https://github.com/hoothin/UserScripts/tree/master/Easy%20offline
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
-// @require      https://cdn.jsdelivr.net/gh/emn178/hi-base64/build/base64.min.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/Base64/0.2.0/base64.min.js
 // @version      1.8.7
 // @author       Hoothin
 // @mail         rixixi@gmail.com
@@ -283,7 +283,7 @@
             url:"http://d.miwifi.com/d2r/?url=",
             bgColor:"f97306",
             directUrl:function(offUrl){
-                return this.url+base64.encode(offUrl)+"&src=EasyOffline";
+                return this.url+btoa(offUrl)+"&src=EasyOffline";
             },
             bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAeFBMVEX4cwD+/v7+/vz+/f7+zKr+mU/++vj93cf8hiv+28T+z6/+z6v8lUv+kkn8gSf+fCL98OP92sH+17z+yqf+yaX+wJX9lk/7mkz8kkb9jj79gyr6hyn9exv++/r+9/X96+H+xJz9v47+mFP+mEr+dh37dhn+dhL+cAw9Nvl9AAAAf0lEQVQY053NWQ6DMAwE0LFNEkqahLK0hdJ9u/8NcXIERpY/nkY2NuVS1zoRwDL/dL9vIkJsXcRgjwqG7uP4fLTcw5NROJGH5iUOFWcw3KBqJ9AOFe1zQzwcBXCBcqPBgc8FuIAoiILTRv4SbI/OTrAdhmuAZk5Y4h/pg2/Clqzm5QVwiFSSmAAAAABJRU5ErkJggg=="
         },
