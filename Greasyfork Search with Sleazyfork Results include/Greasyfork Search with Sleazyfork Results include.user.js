@@ -4,7 +4,7 @@
 // @name:zh-TW   大人的Greasyfork
 // @name:ja      大人のGreasyfork
 // @namespace    hoothin
-// @version      1.2
+// @version      1.3
 // @description  Merge adult results of sleazyfork into greasyfork when the script is no longer anonymously available, add rating score and version for scripts then
 // @description:zh-CN 在Greasyfork的搜索结果中添加Sleazyfork上的成人脚本，增加评分与版本号，并在访问匿名不可用脚本时跳转至Sleazyfork
 // @description:zh-TW 在Greasyfork的搜索結果中添加Sleazyfork上的成人腳本，增加評分與版本號，並在訪問匿名不可用腳本時跳轉至Sleazyfork
@@ -182,6 +182,7 @@
                 //_GM_notification("Reset over");
             };
         }
+        initFilter();
     });
 
     function addScore(script){
@@ -315,45 +316,47 @@
         ratingSpan.style.display=totalInstalls.style.display=dailyInstalls.style.display="none";
         goodRating.innerHTML=okRating.innerHTML=badRating.innerHTML=totalInstalls.innerHTML=dailyInstalls.innerHTML="0";
     }
-    if(sortDiv){
-        var switchFilter=document.createElement("div");
-        var enableFilter;
-        storage.getItem("disableFilter",v=>{
-            enableFilter=!v;
-        });
-        var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
-        var observer = new MutationObserver(function(records){
-            records.map(function(record) {
-                for(var i=0;i<record.addedNodes.length;i++){
-                    var curNode=record.addedNodes[i];
-                    if(curNode.className=="script-list"){
-                        var scripts=curNode.querySelectorAll('li');
-                        for(let i=0;i<scripts.length;i++){
-                            let script=scripts[i];
-                            addScore(script);
-                        }
-                        if(enableFilter)filter(curNode);
-                    }else if(curNode.tagName=="LI"){
-                        addScore(curNode);
-                        if(enableFilter)filter(curNode);
-                    }
-                }
+
+    function initFilter(){
+        if(sortDiv){
+            var switchFilter=document.createElement("div");
+            var enableFilter;
+            storage.getItem("disableFilter",v=>{
+                enableFilter=!v;
             });
-        });
-        var option = {
-            'childList': true
-        };
-        observer.observe(document.querySelector("body>.width-constraint .sidebarred-main-content"), option);
-        var scriptList=document.querySelector("#browse-script-list,#user-script-list,ol.script-list");
-        if(scriptList)observer.observe(scriptList, option);
-        var scripts=document.querySelectorAll('ol.script-list>li');
-        for(let i=0;i<scripts.length;i++){
-            let script=scripts[i];
-            addScore(script);
-        }
-        //Modify from GreasyFork Bullshit Filter,Thanks to darkred
-        var style = document.createElement('style');
-        style.textContent = `
+            var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+            var observer = new MutationObserver(function(records){
+                records.map(function(record) {
+                    for(var i=0;i<record.addedNodes.length;i++){
+                        var curNode=record.addedNodes[i];
+                        if(curNode.className=="script-list"){
+                            var scripts=curNode.querySelectorAll('li');
+                            for(let i=0;i<scripts.length;i++){
+                                let script=scripts[i];
+                                addScore(script);
+                            }
+                            if(enableFilter)filter(curNode);
+                        }else if(curNode.tagName=="LI"){
+                            addScore(curNode);
+                            if(enableFilter)filter(curNode);
+                        }
+                    }
+                });
+            });
+            var option = {
+                'childList': true
+            };
+            observer.observe(document.querySelector("body>.width-constraint .sidebarred-main-content"), option);
+            var scriptList=document.querySelector("#browse-script-list,#user-script-list,ol.script-list");
+            if(scriptList)observer.observe(scriptList, option);
+            var scripts=document.querySelectorAll('ol.script-list>li');
+            for(let i=0;i<scripts.length;i++){
+                let script=scripts[i];
+                addScore(script);
+            }
+            //Modify from GreasyFork Bullshit Filter,Thanks to darkred
+            var style = document.createElement('style');
+            style.textContent = `
         li.filtered {
              display: none !important;
         }
@@ -403,37 +406,38 @@
              -webkit-animation: spin 1s linear 1s 5 alternate;
              animation: spin 1s linear infinite;
         }`;
-        style.type = 'text/css';
-        document.querySelector('head').appendChild(style);
-        var bullshitReg=new RegExp(bullshit,"i");
-        var filterName="Enable Filter",filteredNum=0;
-        var filter=function(t){
-            [].forEach.call(t.querySelectorAll('article>h2'), function(item) {
-                if(bullshitReg.test(item.innerText.replace("\n"," "))){
-                    item.parentNode.parentNode.classList.add('filtered');
-                    filteredNum++;
-                }
-            });
-        };
-        if(enableFilter)filter(document);
-        switchFilter.innerHTML='<input type="checkBox" name="switchFilter" id="switchFilter"/><label for="switchFilter">'+filterName+(filteredNum?' ('+filteredNum+' filtered)':'')+'</label>';
-        var switchFilterCheckbox=switchFilter.querySelector('#switchFilter');
-        var switchFilterLabel=switchFilterCheckbox.nextSibling;
-        switchFilterCheckbox.checked=enableFilter;
-        switchFilterCheckbox.onclick=function(){
-            if(enableFilter){
-                [].forEach.call(document.querySelectorAll('li.filtered'), function(item) {
-                    item.classList.remove('filtered');
+            style.type = 'text/css';
+            document.querySelector('head').appendChild(style);
+            var bullshitReg=new RegExp(bullshit,"i");
+            var filterName="Enable Filter",filteredNum=0;
+            var filter=function(t){
+                [].forEach.call(t.querySelectorAll('article>h2'), function(item) {
+                    if(bullshitReg.test(item.innerText.replace("\n"," "))){
+                        item.parentNode.parentNode.classList.add('filtered');
+                        filteredNum++;
+                    }
                 });
-                switchFilterLabel.innerHTML=filterName;
-            }else{
-                filteredNum=0;
-                filter(document);
-                switchFilterLabel.innerHTML=filterName+' ('+filteredNum+' filtered)';
-            }
-            storage.setItem("disableFilter",enableFilter);
-            enableFilter=!enableFilter;
-        };
-        sortDiv.insertBefore(switchFilter,sortDiv.firstChild);
+            };
+            if(enableFilter)filter(document);
+            switchFilter.innerHTML='<input type="checkBox" name="switchFilter" id="switchFilter"/><label for="switchFilter">'+filterName+(filteredNum?' ('+filteredNum+' filtered)':'')+'</label>';
+            var switchFilterCheckbox=switchFilter.querySelector('#switchFilter');
+            var switchFilterLabel=switchFilterCheckbox.nextSibling;
+            switchFilterCheckbox.checked=enableFilter;
+            switchFilterCheckbox.onclick=function(){
+                if(enableFilter){
+                    [].forEach.call(document.querySelectorAll('li.filtered'), function(item) {
+                        item.classList.remove('filtered');
+                    });
+                    switchFilterLabel.innerHTML=filterName;
+                }else{
+                    filteredNum=0;
+                    filter(document);
+                    switchFilterLabel.innerHTML=filterName+' ('+filteredNum+' filtered)';
+                }
+                storage.setItem("disableFilter",enableFilter);
+                enableFilter=!enableFilter;
+            };
+            sortDiv.insertBefore(switchFilter,sortDiv.firstChild);
+        }
     }
 })();
