@@ -235,7 +235,7 @@ var siteInfo=[
     {name: 'github 修正',
      url: /^https?:\/\/github\.com\//i,
      clikToOpen: {
-         enabled: true,
+         enabled: false,
          preventDefault: true,
          type: 'actual',
      },
