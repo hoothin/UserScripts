@@ -39,7 +39,7 @@
 // @contributionAmount 1
 // @require         https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.2/FileSaver.min.js
 // @require         https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.js
-// @require         https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1005390
+// @require         https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1006719
 // @include         http://*
 // @include         https://*
 // @include         ftp://*
@@ -260,6 +260,7 @@
                 waitImgLoad:"等图片完全载入后，才开始执行弹出放大等操作",
                 waitImgLoadTip:"按住ctrl键的时候,可以临时执行和这个设定相反的设定",
                 debug:"调试模式",
+                customRules:"自定义大图规则",
                 firstEngine:"首选搜图引擎",
                 refreshWhenError:"读取错误，点击重载",
                 switchSlide:"开关侧边栏",
@@ -471,6 +472,7 @@
                 waitImgLoad:"等圖片完全載入後，才開始執行彈出放大等操作",
                 waitImgLoadTip:"按住ctrl鍵的時候,可以臨時執行和這個設定相反的設定",
                 debug:"調試模式",
+                customRules:"自定義大圖規則",
                 firstEngine:"首選搜圖引擎",
                 refreshWhenError:"讀取錯誤，點擊重載",
                 switchSlide:"開關側邊欄",
@@ -681,6 +683,7 @@
                 waitImgLoad:"Start to perform operations such as zooming when image is loaded",
                 waitImgLoadTip:"When holding down the Ctrl key, you can temporarily execute opposite to this setting",
                 debug:"Debug mode",
+                customRules:"Custom rules for large image",
                 firstEngine:"Preferred (first) search engine",
                 refreshWhenError:"Read error, click to overload",
                 switchSlide:"Switch sidebar",
@@ -863,6 +866,31 @@ Trace Moe | https://trace.moe/?url=#t#`;
             // lowLevel: true,  // 如果有多个图片，优先选择低一级的
 
             debug: false,
+            customRules:`[
+//{
+//name: "Google picture",
+//example: "http://www.google.com.hk/search?q=firefox",
+//enabled: true,
+//url: /https?:\/\/www.google(\.\w{1,3}){1,3}\/search\?.*/,
+//clikToOpen: {
+// enabled: false,
+// preventDefault: true,
+// type: 'actual',
+//},
+//getImage: function(a){
+// if (!a) return;
+// if (a.href.match(/imgurl=(.*?\.\w{1,5})&/i)) {
+//     return decodeURIComponent(RegExp.$1);
+// }
+//},
+//css: '',
+//ext: 'previous-2',
+//exclude: /weixin_code\.png$/i,
+//src: /avatar/i,
+//r: /\?.*$/i,
+//s: ''
+//}
+]`,
             firstEngine:"Tineye"
         };
 
@@ -8869,6 +8897,13 @@ Trace Moe | https://trace.moe/?url=#t#`;
 
         MatchedRuleC.prototype={
             init:function(){
+                try{
+                    var customRules=eval(prefs.customRules);
+                    if(Array.isArray(customRules)){
+                        siteInfo=customRules.concat(siteInfo);
+                    }
+                }catch(e){}
+
                 var self=this;
                 self.rules=[];
                 siteInfo.forEach(site=>{
@@ -9484,8 +9519,6 @@ Trace Moe | https://trace.moe/?url=#t#`;
             }
         }
 
-        matchedRule = getMatchedRule();
-
         window.addEventListener('message', handleMessage, true);
 
         addPageScript();
@@ -9937,6 +9970,11 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     type: 'checkbox',
                     "default": prefs.debug
                 },
+                'customRules': {
+                    label: i18n("customRules"),
+                    type: 'textarea',
+                    "default": prefs.customRules
+                }
                 /*'firstEngine': {
                     label: i18n("firstEngine"),
                     type: 'select',
@@ -9975,6 +10013,8 @@ Trace Moe | https://trace.moe/?url=#t#`;
         _GM_registerMenuCommand(i18n("openGallery"), openGallery);
 
         loadPrefs();
+
+        matchedRule = getMatchedRule();
 
         if(prefs.gallery.autoOpenSites){
             var sitesArr=prefs.gallery.autoOpenSites.split("\n");
