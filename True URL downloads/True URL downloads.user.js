@@ -26,7 +26,7 @@
 // @grant          GM.getValue
 // @license        MIT License
 // @require        https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
-// @require        https://greasyfork.org/scripts/436827-managelinkslib/code/manageLinksLib.js?version=1006417
+// @require        https://greasyfork.org/scripts/436827-managelinkslib/code/manageLinksLib.js?version=1006643
 // @contributionURL https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
 // @contributionAmount 1
 // ==/UserScript==
