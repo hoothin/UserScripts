@@ -802,5 +802,10 @@ var siteInfo=[
      r: /(avatars\d*\.githubusercontent\.com.*)\?.*$/i,
      s: "$1",
      example: "https://avatars2.githubusercontent.com/u/3233275/"
+    },
+    {name: "ggpht",
+     src: /ggpht\.com/i,
+     r: /=s\d+.*/i,
+     s: "=s9999",
     }
 ];
