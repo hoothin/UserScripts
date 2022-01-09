@@ -8,7 +8,7 @@
 // @namespace    https://github.com/hoothin/UserScripts/tree/master/Easy%20offline
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Base64/0.2.0/base64.min.js
-// @version      1.8.8
+// @version      1.8.9
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -445,19 +445,14 @@
         return config[name]?config[name]:name;
     };
 
-    var _GM_getValue,_GM_setValue,_GM_deleteValue,_GM_registerMenuCommand;
+    var _GM_registerMenuCommand;
     var _unsafeWindow=(typeof unsafeWindow=='undefined')?window:unsafeWindow;
-    if(typeof GM_getValue!='undefined'){
-        _GM_getValue=GM_getValue;
-        _GM_setValue=GM_setValue;
-        _GM_deleteValue=GM_deleteValue;
+    if(typeof GM_registerMenuCommand!='undefined'){
         _GM_registerMenuCommand=GM_registerMenuCommand;
-    }else if(typeof GM!='undefined' && typeof GM.getValue!='undefined'){
-        _GM_getValue=GM.getValue;
-        _GM_setValue=GM.setValue;
-        _GM_deleteValue=GM.deleteValue;
+    }else if(typeof GM!='undefined' && typeof GM.registerMenuCommand!='undefined'){
         _GM_registerMenuCommand=GM.registerMenuCommand;
     }
+
     if(typeof _GM_registerMenuCommand=='undefined')_GM_registerMenuCommand=(s,f)=>{};
     var storage={
         supportGM: typeof GM_getValue=='function' && typeof GM_getValue('a','b')!='undefined',
@@ -479,8 +474,10 @@
                 this.operaUJSStorage.setItem(key,value);
             }else if(this.mxAppStorage){
                 this.mxAppStorage.setConfig(key,value);
-            }else if(this.supportGM || this.supportGMPromise){
-                _GM_setValue(key,value);
+            }else if(this.supportGM){
+                GM_setValue(key,value);
+            }else if(this.supportGMPromise){
+                GM.setValue(key,value);
             }else if(window.localStorage){
                 window.localStorage.setItem(key,value);
             }
@@ -507,7 +504,9 @@
             }else if(this.mxAppStorage){
                 this.mxAppStorage.setConfig(key,"");
             }else if(this.supportGM){
-                _GM_deleteValue(key);
+                GM_deleteValue(key);
+            }else if(this.supportGMPromise){
+                GM.deleteValue(key);
             }else if(window.localStorage){
                 window.localStorage.setItem(key,"");
             }
@@ -653,7 +652,7 @@
                 var rules=siteRule.split("\n");
                 rules.forEach(rule=>{
                     var ruleArr=rule.replace(/\s/g,"").split("@@");
-                    if(ruleArr[1] && (ruleArr[0].indexOf("$url")!=-1 || ruleArr[0].indexOf("$hash")!=-1 || ruleArr[0].indexOf("${")!=-1)){
+                    if(ruleArr[1] && (ruleArr[0].indexOf("$url")!=-1 || ruleArr[0].indexOf("$hash")!=-1 || ruleArr[0].indexOf("${")!=-1 || ruleArr[0].indexOf("$base64")!=-1)){
                         var siteConfig={};
                         siteConfig.directUrl=function(offUrl){
                             if(ruleArr[0].indexOf("${")!=-1){
@@ -666,7 +665,8 @@
                                 return linkResult?ruleArr[0].replace(/\${.*?}/,linkResult):ruleArr[0];
                             }
                             var hash=offUrl.replace("magnet:?xt=urn:btih:","").replace(/&.*/,"");
-                            return ruleArr[0].replace("$url", offUrl).replace("$hash", hash);
+                            var base64Str=btoa(offUrl);
+                            return ruleArr[0].replace("$url", offUrl).replace("$hash", hash).replace("$base64", base64Str);
                         };
                         if(ruleArr[2]) {
                             siteConfig.linkRegExp=new RegExp(ruleArr[2],"i");
