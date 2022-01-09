@@ -8928,7 +8928,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                             if(Array.isArray(rule.r)){//r最多一层
                                 for(var j in rule.r){
                                     var _r=rule.r[j];
-                                    if(_r.test(img.src)){
+                                    if(_r && _r.test && _r.test(img.src)){
                                         if(Array.isArray(rule.s)){//s对上r最多两层
                                             var _s=rule.s[j];
                                             newSrc=this.replace(img.src, _r, _s);
