@@ -6,7 +6,7 @@
 // @description     Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version         2022.1.7.1
+// @version         2022.1.9.1
 // @created         2011-6-15
 // @namespace       https://github.com/hoothin/UserScripts
 // @homepage        http://hoothin.com
@@ -714,17 +714,29 @@ Ascii2D | https://ascii2d.net/search/url/#t#
 Trace Moe | https://trace.moe/?url=#t#`;
 
     var _GM_openInTab,_GM_setClipboard,_GM_xmlhttpRequest,_GM_registerMenuCommand,_GM_notification;
-    if(typeof GM_getValue!='undefined'){
+    if(typeof GM_openInTab!='undefined'){
         _GM_openInTab=GM_openInTab;
-        _GM_setClipboard=GM_setClipboard;
-        _GM_xmlhttpRequest=GM_xmlhttpRequest;
-        _GM_registerMenuCommand=GM_registerMenuCommand;
-        _GM_notification=GM_notification;
-    }else if(typeof GM!='undefined' && typeof GM.getValue!='undefined'){
+    }else if(typeof GM!='undefined' && typeof GM.openInTab!='undefined'){
         _GM_openInTab=GM.openInTab;
+    }
+    if(typeof GM_setClipboard!='undefined'){
+        _GM_setClipboard=GM_setClipboard;
+    }else if(typeof GM!='undefined' && typeof GM.setClipboard!='undefined'){
         _GM_setClipboard=GM.setClipboard;
+    }
+    if(typeof GM_xmlhttpRequest!='undefined'){
+        _GM_xmlhttpRequest=GM_xmlhttpRequest;
+    }else if(typeof GM!='undefined' && typeof GM.xmlhttpRequest!='undefined'){
         _GM_xmlhttpRequest=GM.xmlhttpRequest;
+    }
+    if(typeof GM_registerMenuCommand!='undefined'){
+        _GM_registerMenuCommand=GM_registerMenuCommand;
+    }else if(typeof GM!='undefined' && typeof GM.registerMenuCommand!='undefined'){
         _GM_registerMenuCommand=GM.registerMenuCommand;
+    }
+    if(typeof GM_notification!='undefined'){
+        _GM_notification=GM_notification;
+    }else if(typeof GM!='undefined' && typeof GM.notification!='undefined'){
         _GM_notification=GM.notification;
     }
     if(typeof _GM_openInTab=='undefined')_GM_openInTab=(s)=>{};
