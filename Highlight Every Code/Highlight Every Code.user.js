@@ -3,7 +3,7 @@
 // @name:zh-CN   代码片段高亮
 // @name:zh-TW   程式碼片斷高亮
 // @namespace    hoothin
-// @version      2.1
+// @version      2.2
 // @description  Add a icon to popup a window that allows syntax highlighting and beautify and word count of source code snippets on current page
 // @description:zh-CN 选择代码片段后点击图标弹出新窗口显示语法高亮美化与格式化后的代码与字数统计
 // @description:zh-TW 選擇程式碼片段後點選圖示彈出新視窗顯示語法高亮美化與格式化後的程式碼與字數統計
@@ -128,14 +128,10 @@
         return { 'x': x, 'y': y };
     }
 
-    var _GM_getValue,_GM_setValue,_GM_registerMenuCommand;
-    if(typeof GM_getValue!='undefined'){
-        _GM_getValue=GM_getValue;
-        _GM_setValue=GM_setValue;
+    var _GM_registerMenuCommand;
+    if(typeof GM_registerMenuCommand!='undefined'){
         _GM_registerMenuCommand=GM_registerMenuCommand;
-    }else if(typeof GM!='undefined' && typeof GM.getValue!='undefined'){
-        _GM_getValue=GM.getValue;
-        _GM_setValue=GM.setValue;
+    }else if(typeof GM!='undefined' && typeof GM.registerMenuCommand!='undefined'){
         _GM_registerMenuCommand=GM.registerMenuCommand;
     }
     if(typeof _GM_registerMenuCommand=='undefined')_GM_registerMenuCommand=(s,f)=>{};
@@ -159,8 +155,10 @@
                 this.operaUJSStorage.setItem(key,value);
             }else if(this.mxAppStorage){
                 this.mxAppStorage.setConfig(key,value);
-            }else if(this.supportGM || this.supportGMPromise){
-                _GM_setValue(key,value);
+            }else if(this.supportGM){
+                GM_setValue(key,value);
+            }else if(this.supportGMPromise){
+                GM.setValue(key,value);
             }else if(window.localStorage){
                 window.localStorage.setItem(key,value);
             };
@@ -232,7 +230,7 @@
         }
     });
 
-    _GM_registerMenuCommand("Highlight", ()=>{
+    _GM_registerMenuCommand("Custom input to highlight", ()=>{
         selStr=document.getSelection().toString();
         codes=selStr.replace(/&/g, "&amp;").replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
         if(!codes){
