@@ -87,7 +87,7 @@ function initLang(lang){
 
 function showLinkFrame(callBack) {
 	var linkItems = [];
-	var typeHtml = typeHead;
+	var typeHtml = typeHead+" ";
 	if (!frame) {
 		$('<style>#managerLinksLinks>div{display: inline-block;width: 100%;}#managerLinksLinks>div:nth-of-type(odd){ background:#ffffff;}#managerLinksLinks>div:nth-of-type(even){ background:#f5f5f5;}#managerLinksContent input{border-width:2px;border-style:outset;border-color:buttonface;border-image:initial;border: 1px #DADADA solid;padding: 5px;border-radius: 8px;font-weight: bold;font-size: 9pt;outline: none;}#managerLinksContent input[type=button]:hover {border: 1px #C6C6C6 solid;box-shadow: 1px 1px 1px #EAEAEA;color: #333333;background: #F7F7F7;}#managerLinksContent input[type=button]:active {box-shadow: inset 1px 1px 1px #DFDFDF;   }#managerLinksLinks>div>input{float:left;height: 20px;}#managerLinksLinks>div>a{width:230px;display:block;overflow:hidden;word-break:keep-all;white-space:nowrap;text-overflow:ellipsis;float:left;}#managerLinksLinks{display:block;width:100%;overflow:auto;word-wrap:break-word;}#managerLinksType>a{text-decoration:none;}#managerLinksType{width:290px;margin-left:5px;}.managerLinksOverlay{height:100%; width:100%; position:fixed; top:0; z-index:99998; opacity:0.3; filter: alpha(opacity=30); background-color:#000;}.managerLinksBody{width:300px;height:300px;position:fixed;left:50%;top:50%;margin-top:-150px;margin-left:-150px;z-index:99998;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;}.managerLinksBody>.sort>input{width:33.3%}.managerLinksBody>.addTxt{white-space: nowrap;}.managerLinksBody>.addTxt>input{width: 136px;margin: 1px;border-radius: 2px;}.managerLinksBody>.fun>input{width: 33.3%;}.managerLinksLinks>div{width:100%;height:20px;overflow:hidden;}</style>').appendTo('head');
 		frame = $(`<div id="managerLinksContent" style="display:none;">
@@ -192,7 +192,7 @@ function showLinkFrame(callBack) {
 		});
 	});
 	frame.show();
-	$("#managerLinksLinks").height($(".managerLinksBody").height() - $("#managerLinksType").height() - $("#managerLinksSortByName").height() * 3 - 37);
+	$("#managerLinksLinks").height($(".managerLinksBody").height() - $("#managerLinksType").height() - $("#managerLinksSortByName").height() * 3 - 38);
 	$(".managerLinksBody").hide();
 	$(".managerLinksBody").show();
 }
