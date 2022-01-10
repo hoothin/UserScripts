@@ -8,7 +8,7 @@
 // @namespace    https://github.com/hoothin/UserScripts/tree/master/Easy%20offline
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Base64/0.2.0/base64.min.js
-// @version      1.9.0
+// @version      1.9.1
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -371,7 +371,8 @@
                     importCustomAlert:"点击确定追加规则，点击取消覆盖规则",
                     importOver:"规则导入完毕!",
                     postOver:"发送成功，返回消息：",
-                    postError:"发送失败，错误内容："
+                    postError:"发送失败，错误内容：",
+                    importCustomSame:"存在同名规则，是否覆盖？"
                 };
                 break;
             case "zh-TW":
@@ -410,7 +411,8 @@
                     importCustomAlert:"點擊確定追加規則，點擊取消覆蓋規則",
                     importOver:"規則導入完畢!",
                     postOver:"發送成功，返回消息：",
-                    postError:"發送失敗，錯誤内容："
+                    postError:"發送失敗，錯誤内容：",
+                    importCustomSame:"存在同名規則，是否覆蓋？"
                 };
                 break;
             default:
@@ -448,7 +450,8 @@
                     importCustomAlert:"Ok to add rule，Cancel to cover rule",
                     importOver:"Rules import over!",
                     postOver:"Post over, return: ",
-                    postError:"Fail in post, error: "
+                    postError:"Fail in post, error: ",
+                    importCustomSame:"Rule exists, overwritten?"
                 };
                 break;
         }
@@ -534,7 +537,7 @@
             }
         }
     };
-    var showType;
+    var showType,siteRule;
     //$=jQuery;
 
     var addIconBg="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZBAMAAAA2x5hQAAAALVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADBoCg+AAAADnRSTlMAYK1vMOA/ENJ/zmdLF4e4IG4AAACPSURBVBjTYwAB9uTJ6QwwwLju3bt3C6Eclrh3IBAC4cm9gwABsLp3UPAQxPMDMh4pgbgOQB5IFwMDH5BcAFII4UGUciB4rxgY6hC8dwUMeUA2EID5CQx27x5BeEzv3hkwzEPiTUCRm4Ci7wCKmReQ7XuK4pbHKO4MwPADwn/ofkeESws0mLj7gJxGEAs1PAEp8ZbkUx9Q7gAAAABJRU5ErkJggg==";
@@ -669,7 +672,7 @@
 
     function addCustomSites(cb){
         storage.getItem("siteRule",v=>{
-            var siteRule=v;
+            siteRule=v;
             if(siteRule){
                 var rules=siteRule.split("\n");
                 rules.forEach(rule=>{
@@ -966,19 +969,36 @@
         }
         if(/greasyfork\.org\/.*scripts\/22590\b|github\.com\/hoothin\/UserScripts\//.test(location.href)){
             $("pre").click(e=>{
-                if(e.target.childNodes.length==1 && e.target.innerText.indexOf("@@")!=-1){
-                    storage.getItem("siteRule",v=>{
-                        var siteRule=v;
-                        if(siteRule != e.target.innerText.trim()){
-                            if(siteRule && window.confirm(i18n("importCustomAlert")) && siteRule.indexOf(e.target.innerText.trim())==-1){
-                                siteRule=siteRule.trim()+"\n"+e.target.innerText.trim();
+                let targetText=e.target.innerText.trim();
+                if(e.target.childNodes.length==1 && targetText.indexOf("@@")!=-1){
+                    if(siteRule != targetText && siteRule.indexOf(targetText)==-1){
+                        if(siteRule && window.confirm(i18n("importCustomAlert"))){
+                            let rules=targetText.split("\n"),sameArr=[],diffArr=[];
+                            rules.forEach(rule=>{
+                                var ruleArr=rule.replace(/\s/g,"").split("@@");
+                                if(ruleArr[1] && sites[ruleArr[1]]){
+                                    sameArr.push(rule);
+                                }else{
+                                    diffArr.push(rule);
+                                }
+                            });
+                            if(sameArr.length>0){
+                                if(window.confirm(i18n("importCustomSame"))){
+                                    sameArr.forEach(sameRule=>{
+                                        var sArr=sameRule.replace(/\s/g,"").split("@@");
+                                        siteRule = siteRule.replace(new RegExp("\\S+@@"+sArr[1]+"\\S+"),sameRule);
+                                    });
+                                }
+                                siteRule=siteRule.trim()+"\n"+diffArr.join("\n");
                             }else{
-                                siteRule=e.target.innerText.trim();
+                                siteRule=siteRule.trim()+"\n"+targetText;
                             }
-                            storage.setItem("siteRule", siteRule);
+                        }else{
+                            siteRule=targetText;
                         }
-                        alert(i18n("importOver"));
-                    });
+                        storage.setItem("siteRule", siteRule);
+                    }
+                    alert(i18n("importOver"));
                 }
             });
         }
@@ -1127,9 +1147,7 @@
                 document.body.appendChild(addSiteRules);
             };
             icons.append(addIcon);
-            storage.getItem("siteRule",v=>{
-                if(v)$("#siteRuleInput", addSiteRules).val(v);
-            });
+            $("#siteRuleInput", addSiteRules).val(siteRule);
             $("#siteRuleQuit", addSiteRules).click(function (event) {
                 if(addSiteRules.parentNode)addSiteRules.parentNode.removeChild(addSiteRules);
             });
