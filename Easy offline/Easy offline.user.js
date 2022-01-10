@@ -8,7 +8,7 @@
 // @namespace    https://github.com/hoothin/UserScripts/tree/master/Easy%20offline
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Base64/0.2.0/base64.min.js
-// @version      1.8.9
+// @version      1.9.0
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -20,10 +20,14 @@
 // @grant        GM_getValue
 // @grant        GM_registerMenuCommand
 // @grant        GM_deleteValue
+// @grant        GM_xmlhttpRequest
+// @grant        GM_notification
 // @grant        GM.setValue
 // @grant        GM.getValue
 // @grant        GM.registerMenuCommand
 // @grant        GM.deleteValue
+// @grant        GM.xmlhttpRequest
+// @grant        GM.notification
 // @grant        unsafeWindow
 // @run-at       document-end
 // @supportURL   http://www.hoothin.com
@@ -365,7 +369,9 @@
                     siteRulePlaceholder:"站点 @@ 站名 @@ 下载链接正则 @@ 图标base64 @@ 图标背景颜色\n\n@@ 分隔，目标站点中用 $url 代替目标链接，$hash 代表目标磁链的 hash 值，${reg}用正则提取\n\n例如：http://192.168.2.1/d2r?u=$url@@路由器下载\nhttp://xxx.com/magnet/$hash@@磁链下载@@^magnet@@data:image/png;base64,AAA@@ffffff",
                     inputLink:"输入需要离线下载的链接：",
                     importCustomAlert:"点击确定追加规则，点击取消覆盖规则",
-                    importOver:"规则导入完毕!"
+                    importOver:"规则导入完毕!",
+                    postOver:"发送成功，返回消息：",
+                    postError:"发送失败，错误内容："
                 };
                 break;
             case "zh-TW":
@@ -402,7 +408,9 @@
                     siteRulePlaceholder:"站點 @@ 站名 @@ 下載鏈接正則 @@ 圖標base64 @@ 圖標背景顏色\n\n@@ 分隔，目標站點中用 $url 代替目標連結，$hash 代表目標磁鏈的 hash 值，${reg}用正则提取\n\n例如：http://192.168.2.1/d2r?u=$url@@路由器下載\nhttp://xxx.com/magnet/$hash@@磁鏈下載@@^magnet@@data:image/png;base64,AAA@@ffffff",
                     inputLink:"輸入需要離線下載的連結：",
                     importCustomAlert:"點擊確定追加規則，點擊取消覆蓋規則",
-                    importOver:"規則導入完畢!"
+                    importOver:"規則導入完畢!",
+                    postOver:"發送成功，返回消息：",
+                    postError:"發送失敗，錯誤内容："
                 };
                 break;
             default:
@@ -438,22 +446,36 @@
                     siteRulePlaceholder: "site @@ sitename @@ link regexp @@ icon base64 @@ icon background color\n\nUse @@ to separated, use $url for the target Link, $hash for the hash of the target magnet link, ${reg} for regexp result on link\n\nFor example: http://192.168.2.1/d2r?u=$url@@MyRouter\nhttp://xxx.com/magnet/$hash@@MyMagnetLinkDownload@@^magnet@@data:image/png;base64,AAA@@ffffff",
                     inputLink: "Enter the link that needs to be downloaded with this:",
                     importCustomAlert:"Ok to add rule，Cancel to cover rule",
-                    importOver:"Rules import over!"
+                    importOver:"Rules import over!",
+                    postOver:"Post over, return: ",
+                    postError:"Fail in post, error: "
                 };
                 break;
         }
         return config[name]?config[name]:name;
     };
 
-    var _GM_registerMenuCommand;
-    var _unsafeWindow=(typeof unsafeWindow=='undefined')?window:unsafeWindow;
+    var _GM_xmlhttpRequest,_GM_registerMenuCommand,_GM_notification;
+    if(typeof GM_xmlhttpRequest!='undefined'){
+        _GM_xmlhttpRequest=GM_xmlhttpRequest;
+    }else if(typeof GM!='undefined' && typeof GM.xmlhttpRequest!='undefined'){
+        _GM_xmlhttpRequest=GM.xmlhttpRequest;
+    }
     if(typeof GM_registerMenuCommand!='undefined'){
         _GM_registerMenuCommand=GM_registerMenuCommand;
     }else if(typeof GM!='undefined' && typeof GM.registerMenuCommand!='undefined'){
         _GM_registerMenuCommand=GM.registerMenuCommand;
     }
+    if(typeof GM_notification!='undefined'){
+        _GM_notification=GM_notification;
+    }else if(typeof GM!='undefined' && typeof GM.notification!='undefined'){
+        _GM_notification=GM.notification;
+    }
 
+    if(typeof _GM_xmlhttpRequest=='undefined')_GM_xmlhttpRequest=(f)=>{};
     if(typeof _GM_registerMenuCommand=='undefined')_GM_registerMenuCommand=(s,f)=>{};
+    if(typeof _GM_notification=='undefined')_GM_notification=(s)=>{};
+    var _unsafeWindow=(typeof unsafeWindow=='undefined')?window:unsafeWindow;
     var storage={
         supportGM: typeof GM_getValue=='function' && typeof GM_getValue('a','b')!='undefined',
         supportGMPromise: typeof GM!='undefined' && typeof GM.getValue=='function' && typeof GM.getValue('a','b')!='undefined',
@@ -666,7 +688,7 @@
                             }
                             var hash=offUrl.replace("magnet:?xt=urn:btih:","").replace(/&.*/,"");
                             var base64Str=btoa(offUrl);
-                            return ruleArr[0].replace("$url", offUrl).replace("$hash", hash).replace("$base64", base64Str);
+                            return ruleArr[0].replace("$url", offUrl).replace("$hash", hash).replace("$base64", base64Str).replace("$random", Math.random());
                         };
                         if(ruleArr[2]) {
                             siteConfig.linkRegExp=new RegExp(ruleArr[2],"i");
@@ -842,6 +864,26 @@
         return returnStr;
     }
 
+    function urlArgs(query){
+        let args = {};
+        let pairs = query.split('&');
+        pairs.forEach((item) => {
+            let pos = item.indexOf('=');
+            if (pos != -1) {
+                let name = item.substr(0,pos);
+                let value = item.substr(pos+1);
+                value = decodeURIComponent(value);
+                if(/^[\[{]/.test(value)){
+                    try{
+                        value = JSON.parse(value);
+                    }catch(e){}
+                }
+                args[name] = value;
+            }
+        })
+        return args;
+    }
+
     function pageRun(){
         for(var x = 0; x < sitesArr.length; x++){
             let offNode=$("<a></a>");
@@ -851,7 +893,27 @@
             offNode.click(function(e){
                 offUrl=getRightUrl(offUrl);
                 if(siteConfig.directUrl){
-                    offNode.attr('href', siteConfig.directUrl(offUrl));
+                    let url=siteConfig.directUrl(offUrl);
+                    if(/^p:/.test(url)){
+                        url=url.match(/p:(.*)\?(.*)/);
+                        if(!url)return;
+                        let postData=JSON.stringify(urlArgs(url[2]));
+                        url=url[1];
+                        _GM_xmlhttpRequest({
+                            method: "POST", url, data: postData,
+                            onload: (d) => {
+                                _GM_notification(i18n("postOver")+d.statusText);
+                            },
+                            onerror: (e) => {
+                                _GM_notification(i18n("postError")+e.toString());
+                            },
+                            ontimeout: (e) => {
+                                _GM_notification(i18n("postError")+e.toString());
+                            }
+                        });
+                    }else{
+                        offNode.attr('href', url);
+                    }
                 }else{
                     if(e.ctrlKey && e.shiftKey && siteConfig.canMul)
                         storage.setItem(siteConfig.name+":eoUrl",allUrl);
