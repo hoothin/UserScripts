@@ -4,7 +4,7 @@
 // @name:zh-TW   大人的Greasyfork
 // @name:ja      大人のGreasyfork
 // @namespace    hoothin
-// @version      1.6
+// @version      1.6.1
 // @description  Merge adult results of sleazyfork into greasyfork when the script is no longer anonymously available, add rating score and version for scripts then
 // @description:zh-CN 在Greasyfork的搜索结果中添加Sleazyfork上的成人脚本，增加评分与版本号，并在访问匿名不可用脚本时跳转至Sleazyfork
 // @description:zh-TW 在Greasyfork的搜索結果中添加Sleazyfork上的成人腳本，增加評分與版本號，並在訪問匿名不可用腳本時跳轉至Sleazyfork
@@ -181,8 +181,8 @@
         if(!bullshit)bullshit=bullshit_o;
         if(/greasyfork\.org\/.*\/scripts\/23840[^\/]*$/.test(location.href)){
             var p=document.createElement("p"),_bullshit;
-            p.style.width="90%";
-            p.innerHTML="<b>Filter RegExp string Config</b><button id='ok' style='margin-left: 20px;'>OK</button><button id='reset' style='margin-left: 20px;'>Reset</button>";
+            p.style.width="99%";
+            p.innerHTML="<b>Filter RegExp Config</b><button id='ok' style='margin-left: 20px;'>Save</button><button id='reset' style='margin-left: 20px;'>Reset</button>";
             var okBtn=p.querySelector("#ok");
             var resetBtn=p.querySelector("#reset");
             var filterTextarea=document.createElement("pre");
