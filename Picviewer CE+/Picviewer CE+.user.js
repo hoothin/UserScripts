@@ -6,7 +6,7 @@
 // @description     Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version         2022.1.9.2
+// @version         2022.1.10.1
 // @created         2011-6-15
 // @namespace       https://github.com/hoothin/UserScripts
 // @homepage        http://hoothin.com
@@ -39,7 +39,7 @@
 // @contributionAmount 1
 // @require         https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.2/FileSaver.min.js
 // @require         https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.js
-// @require         https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1006753
+// @require         https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1007109
 // @include         http://*
 // @include         https://*
 // @include         ftp://*
@@ -8974,9 +8974,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                                     }
                                 }
                             }else{
-                                if(rule.r.test(img.src)){
-                                    newSrc=this.replace(img.src, rule.r, rule.s);
-                                }
+                                newSrc=this.replace(img.src, rule.r, rule.s);
                             }
                         }
                     }
