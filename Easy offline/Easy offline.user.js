@@ -966,14 +966,14 @@
         }
         if(/greasyfork\.org\/.*scripts\/22590\b|github\.com\/hoothin\/UserScripts\//.test(location.href)){
             $("pre").click(e=>{
-                if(e.target.childNodes.length==1 && e.target.innerHTML.indexOf("@@")!=-1){
+                if(e.target.childNodes.length==1 && e.target.innerText.indexOf("@@")!=-1){
                     storage.getItem("siteRule",v=>{
                         var siteRule=v;
-                        if(siteRule != e.target.innerHTML.trim()){
-                            if(siteRule && window.confirm(i18n("importCustomAlert")) && siteRule.indexOf(e.target.innerHTML.trim())==-1){
-                                siteRule=siteRule.trim()+"\n"+e.target.innerHTML.trim();
+                        if(siteRule != e.target.innerText.trim()){
+                            if(siteRule && window.confirm(i18n("importCustomAlert")) && siteRule.indexOf(e.target.innerText.trim())==-1){
+                                siteRule=siteRule.trim()+"\n"+e.target.innerText.trim();
                             }else{
-                                siteRule=e.target.innerHTML.trim();
+                                siteRule=e.target.innerText.trim();
                             }
                             storage.setItem("siteRule", siteRule);
                         }
