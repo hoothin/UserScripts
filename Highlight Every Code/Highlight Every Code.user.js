@@ -105,7 +105,7 @@
                 let clientW=(document.documentElement && document.documentElement.clientWidth) || 0;
                 let top=pos.y>clientH-50?(pos.y-30):(pos.y+20);
                 let left=pos.x>clientW-50?(pos.x-30):(pos.x+20);
-                codeIcon.style.opacity=0.9;
+                codeIcon.style.opacity="";
                 codeIcon.style.top=top+"px";
                 codeIcon.style.left=left+"px";
             },1);
