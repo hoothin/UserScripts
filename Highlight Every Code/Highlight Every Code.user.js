@@ -3,7 +3,7 @@
 // @name:zh-CN   代码片段高亮
 // @name:zh-TW   程式碼片斷高亮
 // @namespace    hoothin
-// @version      2.2
+// @version      2.2.1
 // @description  Add a icon to popup a window that allows syntax highlighting and beautify and word count of source code snippets on current page
 // @description:zh-CN 选择代码片段后点击图标弹出新窗口显示语法高亮美化与格式化后的代码与字数统计
 // @description:zh-TW 選擇程式碼片段後點選圖示彈出新視窗顯示語法高亮美化與格式化後的程式碼與字數統計
@@ -28,10 +28,31 @@
     var codeIcon=document.createElement("img");
     var codes, selStr, scrollX, scrollY, customInput=false,altKey=true,ctrlKey=true,shiftKey=true,metaKey=true;
     var _unsafeWindow=(typeof unsafeWindow=='undefined'? window : unsafeWindow);
-    codeIcon.style.cssText="position:fixed;z-index:99999;cursor:pointer;transition:opacity 0.5s ease-in-out 0s;opacity:0;border:5px solid rgba(0, 0, 0, 0.2);border-radius:10px;";
+    codeIcon.className="codeIcon";
+    codeIcon.style.opacity=0;
     codeIcon.title="Show this code snippet";
     codeIcon.src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAYAgMAAACD0OXYAAAACVBMVEX7+/swMDBTU1MLxgsCAAAAJElEQVQI12MIBYEAGLUKBBbAqAUMQICgAoAqoBQ95JaCnASjAAgXMdk3d5HTAAAAAElFTkSuQmCC";
     codeIcon.onmousedown=highlight;
+    var style = document.createElement('style');
+    style.textContent = `
+    .codeIcon{
+     position:fixed;
+     z-index:99999;
+     cursor:pointer;
+     transition:opacity 0.3s ease-in-out 0s;
+     opacity:0.3;
+     border:5px solid rgba(0, 0, 0, 0.2);
+     border-radius:10px;
+     max-width:30px;
+     max-height:30px;
+     overflow:hidden;
+    }
+    .codeIcon:hover{
+     opacity:0.9;
+    }
+    `;
+    style.type = 'text/css';
+    document.head.appendChild(style);
 
     document.addEventListener('DOMMouseScroll', function(o) {
         hideIcon();
@@ -43,18 +64,26 @@
         hideIcon();
     });
     document.addEventListener('mouseover', function(o) {
-        if(o.target.nodeName!="PRE" && o.target.nodeName!="CODE")return;
-        if(o.target.offsetWidth && o.target.offsetWidth<110)return;
-        selStr=o.target.innerText;
+        var target=o.target,hasCode=false;
+        while(target.nodeName!="BODY"){
+            if(target.nodeName=="PRE" || target.nodeName=="CODE"){
+                hasCode=true;
+                break;
+            }
+            target=target.parentNode;
+        }
+        if(!hasCode)return;
+        if(target.offsetWidth && target.offsetWidth<110)return;
+        selStr=target.innerText;
         if(!selStr)return;
         codes=selStr.replace(/&/g, "&amp;").replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
         document.body.appendChild(codeIcon);
         let pos=getMousePos(o);
         scrollX = document.documentElement.scrollLeft || document.body.scrollLeft;
         scrollY = document.documentElement.scrollTop || document.body.scrollTop;
-        let top=o.target.offsetTop-scrollY;
-        let left=o.target.offsetLeft-scrollX;
-        codeIcon.style.opacity=0.9;
+        let top=target.offsetTop-scrollY;
+        let left=target.offsetLeft-scrollX;
+        codeIcon.style.opacity="";
         codeIcon.style.top=top+"px";
         codeIcon.style.left=left+"px";
     });
