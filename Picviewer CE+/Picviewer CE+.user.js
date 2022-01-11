@@ -1,53 +1,53 @@
 // ==UserScript==
-// @name            Picviewer CE+
-// @name:zh-CN      Picviewer CE+
-// @name:zh-TW      Picviewer CE+
-// @author          NLF && ywzhaiqi && hoothin
-// @description     Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
+// @name                 Picviewer CE+
+// @name:zh-CN           Picviewer CE+
+// @name:zh-TW           Picviewer CE+
+// @author               NLF && ywzhaiqi && hoothin
+// @description          Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version         2022.1.10.1
-// @created         2011-6-15
-// @namespace       https://github.com/hoothin/UserScripts
-// @homepage        http://hoothin.com
-// @connect         www.google.com
-// @connect         www.google.com.hk
-// @connect         www.google.co.jp
-// @connect         ipv4.google.com
-// @connect         image.baidu.com
-// @connect         www.tineye.com
-// @grant           GM_getValue
-// @grant           GM_setValue
-// @grant           GM_addStyle
-// @grant           GM_openInTab
-// @grant           GM_setClipboard
-// @grant           GM_xmlhttpRequest
-// @grant           GM_registerMenuCommand
-// @grant           GM_notification
-// @grant           GM_download
-// @grant           GM.getValue
-// @grant           GM.setValue
-// @grant           GM.addStyle
-// @grant           GM.openInTab
-// @grant           GM.setClipboard
-// @grant           GM.xmlhttpRequest
-// @grant           GM.registerMenuCommand
-// @grant           GM.notification
-// @grant           unsafeWindow
-// @require         https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
-// @contributionURL https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
-// @contributionAmount 1
-// @require         https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.2/FileSaver.min.js
-// @require         https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.js
-// @require         https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1007109
-// @include         http://*
-// @include         https://*
-// @include         ftp://*
-// @exclude         http://www.toodledo.com/tasks/*
-// @exclude         http*://maps.google.com*/*
-// @exclude         *://www.google.*/_/chrome/newtab*
-// @exclude         *://mega.*/*
-// @exclude         *://*.mega.*/*
+// @version              2022.1.11.1
+// @created              2011-6-15
+// @namespace            https://github.com/hoothin/UserScripts
+// @homepage             http://hoothin.com
+// @connect              www.google.com
+// @connect              www.google.com.hk
+// @connect              www.google.co.jp
+// @connect              ipv4.google.com
+// @connect              image.baidu.com
+// @connect              www.tineye.com
+// @grant                GM_getValue
+// @grant                GM_setValue
+// @grant                GM_addStyle
+// @grant                GM_openInTab
+// @grant                GM_setClipboard
+// @grant                GM_xmlhttpRequest
+// @grant                GM_registerMenuCommand
+// @grant                GM_notification
+// @grant                GM_download
+// @grant                GM.getValue
+// @grant                GM.setValue
+// @grant                GM.addStyle
+// @grant                GM.openInTab
+// @grant                GM.setClipboard
+// @grant                GM.xmlhttpRequest
+// @grant                GM.registerMenuCommand
+// @grant                GM.notification
+// @grant                unsafeWindow
+// @require              https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.2/FileSaver.min.js
+// @require              https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.js
+// @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
+// @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1007499
+// @contributionURL      https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
+// @contributionAmount   1
+// @include              http://*
+// @include              https://*
+// @include              ftp://*
+// @exclude              http://www.toodledo.com/tasks/*
+// @exclude              http*://maps.google.com*/*
+// @exclude              *://www.google.*/_/chrome/newtab*
+// @exclude              *://mega.*/*
+// @exclude              *://*.mega.*/*
 // ==/UserScript==
 
 ;(function(topObject,window,document,unsafeWindow){
@@ -872,7 +872,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
 //example: "http://www.google.com.hk/search?q=firefox",
 //enabled: true,
 //url: /https?:\/\/www.google(\.\w{1,3}){1,3}\/search\?.*/,
-//clikToOpen: {
+//clickToOpen: {
 // enabled: false,
 // preventDefault: true,
 // type: 'actual',
@@ -8842,6 +8842,9 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 if(!(imgAS.w==imgCS.w && imgAS.h==imgCS.h)){//如果不是两者完全相等,那么被缩放了.
                     src=imgSrc;
                     type='scale';
+                    if (imgAS.h < prefs.gallery.scaleSmallSize && imgAS.w < prefs.gallery.scaleSmallSize) {
+                        type='scaleSmall';
+                    }
                 }else{
                     src=imgSrc;
                     type='force';
@@ -8849,9 +8852,6 @@ Trace Moe | https://trace.moe/?url=#t#`;
             }
 
             if(!src)return;
-            if (imgAS.h < prefs.gallery.scaleSmallSize && imgAS.w < prefs.gallery.scaleSmallSize) {
-                type = 'scaleSmall';
-            }
             if(img.dataset.lazySrc && (!imgSrc || /^\s*data:image/.test(imgSrc))){
                 imgSrc=img.dataset.lazySrc;
             }
@@ -8900,7 +8900,20 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 try{
                     var customRules=eval(prefs.customRules);
                     if(Array.isArray(customRules)){
-                        siteInfo=customRules.concat(siteInfo);
+                        customRules.forEach(rule=>{
+                            let hasRule = false;
+                            for(let s in siteInfo){
+                                if(siteInfo[s].name == rule.name){
+                                    hasRule = true;
+                                    for(let si in rule){
+                                        siteInfo[s][si]=rule[si];
+                                    }
+                                    break;
+                                }
+                            }
+                            if(!hasRule)siteInfo.unshift(rule);
+                        })
+                        //siteInfo=customRules.concat(siteInfo);
                     }
                 }catch(e){}
 
@@ -8925,8 +8938,8 @@ Trace Moe | https://trace.moe/?url=#t#`;
                             if(site.description){
                                 self.description=site.description;
                             }
-                            if(site.clikToOpen){
-                                self.clikToOpen=site.clikToOpen;
+                            if(site.clickToOpen){
+                                self.clickToOpen=site.clickToOpen;
                             }
                             if(site.ext){
                                 self.ext=site.ext;
@@ -8956,7 +8969,6 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     if(rule.src && !rule.src.test(img.src))continue;
                     if(rule.exclude && rule.exclude.test(img.src))continue;
                     if(rule.getImage){
-                        debug(rule);
                         newSrc = rule.getImage.call(img, a, p);
                     }else{
                         if(rule.r){
@@ -9136,8 +9148,8 @@ Trace Moe | https://trace.moe/?url=#t#`;
             document.head.appendChild(pageScript);
         }
 
-        function clikToOpen(data){
-            var preventDefault = matchedRule.clikToOpen.preventDefault;
+        function clickToOpen(data){
+            var preventDefault = matchedRule.clickToOpen.preventDefault;
 
             function mouseout(){
                 document.removeEventListener('mouseout',mouseout,true);
@@ -9151,7 +9163,12 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 if(e.button!=0)return;
                 FloatBarC.prototype.open.call({
                     data:data,
-                },e,matchedRule.clikToOpen.type);
+                },e,matchedRule.clickToOpen.type);
+                if(preventDefault){
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
             };
 
             function clickA(e){//阻止a的默认行为
@@ -9445,11 +9462,11 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 if(!floatBar){
                     floatBar=new FloatBarC();
                 }
-                if(result.type=='rule' && matchedRule.clikToOpen && matchedRule.clikToOpen.enabled){
+                if(result.type=='rule' && matchedRule.clickToOpen && matchedRule.clickToOpen.enabled){
                     if(canclePreCTO){//取消上次的，防止一次点击打开多张图片
                         canclePreCTO();
                     }
-                    canclePreCTO=clikToOpen(result);
+                    canclePreCTO=clickToOpen(result);
                 }
 
                if(!checkUniqueImgWin() && !e.altKey)
