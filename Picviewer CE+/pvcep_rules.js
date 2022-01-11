@@ -16,7 +16,7 @@ Licenced under the MIT license.
  name:
  getImage:
 }
-其他參數項按需添加即可，需要注意 css/ext/xhr/lazyAttr/description/clikToOpen 在指定站點 url 之後方可使用
+其他參數項按需添加即可，需要注意 css/ext/xhr/lazyAttr/description/clickToOpen 在指定站點 url 之後方可使用
  */
 var siteInfo=[
 {
@@ -28,7 +28,7 @@ var siteInfo=[
  //站点正则
  url:/https?:\/\/www.google(\.\w{1,3}){1,3}\/search\?.*&tbm=isch/,
  //鼠标左键点击直接打开..（这个只是当高级规则的getImage()返回图片的时候生效）
- clikToOpen:{
+ clickToOpen:{
      enabled:false,
      preventDefault:true,//是否尝试阻止点击的默认行为（比如如果是你点的是一个链接，默认行为是打开这个链接，如果是true，js会尝试阻止链接的打开(如果想临时打开这个链接，请使用右键的打开命令)）
      type:'actual',//默认的打开方式: 'actual'(弹出,原始图片) 'magnifier'(放大镜) 'current'(弹出,当前图片)
@@ -59,7 +59,41 @@ var siteInfo=[
  // s: ''
 },
 {
- name: "Bing 图片搜索",
+ name: "123rf",
+ url: /123rf\.com/,
+ r: /us\.123rf\.com\/\d+wm\//i,
+ s: "previews.123rf.com/images/"
+},
+{
+ name: "126",
+ src: /\.126\.net/i,
+ r: /\/\d+\.\d+x\d+\.\d+\.([^\.]+)$/i,
+ s: '/5.5000x5000.100.$1'
+},
+{
+ name:"178.com",
+ enabled:true,
+ url:/^https?:\/\/(?:\w+\.)+178\.com\//i,
+ clickToOpen:{
+     enabled:true,
+     preventDefault:true,
+     type:'actual',
+ },
+ getImage:function(a){
+     if(!a)return;
+     var reg=/^https?:\/\/(?:\w+\.)+178\.com\/.+?(https?:\/\/img\d*.178.com\/[^.]+\.(?:jpg|jpeg|png|gif|bmp))/i;
+     return (a.href.match(reg) || [])[1];
+ }
+},
+{
+ name: "24meitu",
+ url: /24meitu\.com|25meinv\.com|aisimeinv\.com|24tupian\.com|24meinv\.|24mntp\.|24cos\.|24fh\.|24shipin\.|24mn\./,
+ r: [/\/m([^\/]+)$/i,
+    /imgs\./i],
+ s: ["/$1","bimg."]
+},
+{
+ name: "bing 图片搜索",
  example:"http://cn.bing.com/images/search?q=%E7%BE%8E%E5%A5%B3",
  enabled:true,
  url: /^https?:\/\/[^.]*\.bing\.com\/images\//i,
@@ -234,25 +268,10 @@ var siteInfo=[
  }
 },
 {
- name:"178.com",
- enabled:true,
- url:/^https?:\/\/(?:\w+\.)+178\.com\//i,
- clikToOpen:{
-     enabled:true,
-     preventDefault:true,
-     type:'actual',
- },
- getImage:function(a){
-     if(!a)return;
-     var reg=/^https?:\/\/(?:\w+\.)+178\.com\/.+?(https?:\/\/img\d*.178.com\/[^.]+\.(?:jpg|jpeg|png|gif|bmp))/i;
-     return (a.href.match(reg) || [])[1];
- },
-},
-{
  name:"极限主题社区",
  enabled:true,
  url:/^https?:\/\/bbs\.themex\.net\/.+/i,
- clikToOpen:{
+ clickToOpen:{
      enabled:true,
      preventDefault:true,
      type:'actual',
@@ -272,7 +291,7 @@ var siteInfo=[
 {
  name: 'github 修正',
  url: /^https?:\/\/github\.com\//i,
- clikToOpen: {
+ clickToOpen: {
      enabled: false,
      preventDefault: true,
      type: 'actual',
@@ -403,13 +422,6 @@ var siteInfo=[
  url: /nvshens\.com|onvshen\.com/,
  r: /(\img\.onvshen\.com.*)(?:thumb\/|_s)(.*)/i,
  s: "$1$2"
-},
-{
- name: "24meitu",
- url: /24meitu\.com|25meinv\.com|aisimeinv\.com|24tupian\.com|24meinv\.|24mntp\.|24cos\.|24fh\.|24shipin\.|24mn\./,
- r: [/\/m([^\/]+)$/i,
-    /imgs\./i],
- s: ["/$1","bimg."]
 },
 {
  name: "Tumblr",
@@ -668,12 +680,6 @@ var siteInfo=[
  s: "/large/"
 },
 {
- name: "123rf",
- url: /123rf\.com/,
- r: /us\.123rf\.com\/\d+wm\//i,
- s: "previews.123rf.com/images/"
-},
-{
  name: "flickr",
  url: /flickr\.com/,
  ext: function(target){
@@ -746,12 +752,6 @@ var siteInfo=[
  name: "md",
  r: /\.md(\.[^\.]+)$/i,
  s: '$1'
-},
-{
- name: "126",
- src: /\.126\.net/i,
- r: /\/\d+\.\d+x\d+\.\d+\.([^\.]+)$/i,
- s: '/5.5000x5000.100.$1'
 },
 {
  name: "ytimg",
