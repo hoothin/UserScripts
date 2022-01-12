@@ -3,7 +3,7 @@
 // @name:zh-CN   代码片段高亮
 // @name:zh-TW   程式碼片斷高亮
 // @namespace    hoothin
-// @version      2.2.1
+// @version      2.2.2
 // @description  Add a icon to popup a window that allows syntax highlighting and beautify and word count of source code snippets on current page
 // @description:zh-CN 选择代码片段后点击图标弹出新窗口显示语法高亮美化与格式化后的代码与字数统计
 // @description:zh-TW 選擇程式碼片段後點選圖示彈出新視窗顯示語法高亮美化與格式化後的程式碼與字數統計
@@ -65,7 +65,7 @@
     });
     document.addEventListener('mouseover', function(o) {
         var target=o.target,hasCode=false;
-        while(target.nodeName!="BODY"){
+        while(target && target.nodeName!="BODY"){
             if(target.nodeName=="PRE" || target.nodeName=="CODE"){
                 hasCode=true;
                 break;
