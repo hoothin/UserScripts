@@ -8097,7 +8097,7 @@ ImgOps | https://imgops.com/#b#`;
                 border: none;\
                 padding: 1px 30px 1px 2px;\
                 margin: 0;\
-                opacity: 0.7;\
+                opacity: 0.5;\
                 height: 24px;\
                 min-width: 24px;\
                 box-shadow: 2px 2px 0px #666;\
