@@ -752,6 +752,16 @@ ImgOps | https://imgops.com/#b#`;
     if(typeof _GM_notification=='undefined')_GM_notification=(s)=>{};
     var _GM_download=(typeof GM_download=='undefined')?saveAs:GM_download;
     var prefs;
+    var escapeHTMLPolicy;
+    if (unsafeWindow.trustedTypes && unsafeWindow.trustedTypes.createPolicy) {
+        escapeHTMLPolicy=unsafeWindow.trustedTypes.createPolicy('default', {
+            createHTML: (string, sink) => string
+        });
+    }
+
+    function createHTML(html){
+        return escapeHTMLPolicy?escapeHTMLPolicy.createHTML(html):html;
+    }
     function init(topObject,window,document,arrayFn,envir,storage,unsafeWindow){
         // 默认设置，请到设置界面修改
         prefs={
@@ -1452,17 +1462,6 @@ ImgOps | https://imgops.com/#b#`;
                 }).toString() +')()';
                 document.head.appendChild(s);
             })();
-        }
-
-        var escapeHTMLPolicy;
-        if (unsafeWindow.trustedTypes && unsafeWindow.trustedTypes.createPolicy) {
-            escapeHTMLPolicy=unsafeWindow.trustedTypes.createPolicy('default', {
-                createHTML: (string, sink) => string
-            });
-        }
-
-        function createHTML(html){
-            return escapeHTMLPolicy?escapeHTMLPolicy.createHTML(html):html;
         }
 
 
@@ -6358,7 +6357,7 @@ ImgOps | https://imgops.com/#b#`;
                         self.remove();
                         return;
                     }
-                    self.imgWindow.classList.remove("pv-pic-window-transition-all");
+                    //self.imgWindow.classList.remove("pv-pic-window-transition-all");
                     self.imgWindow.style.display="";
                     setSearchState("",img.parentNode);
                     self.imgNaturalSize={
@@ -6575,7 +6574,7 @@ ImgOps | https://imgops.com/#b#`;
             },
             changeData:function(result){
                 if(this.src != result.src){
-                    this.imgWindow.classList.add("pv-pic-window-transition-all");
+                    //this.imgWindow.classList.add("pv-pic-window-transition-all");
                     this.loaded = false;
                     this.data = result;
                     this.src = result.src;
@@ -6596,13 +6595,13 @@ ImgOps | https://imgops.com/#b#`;
                     line-height: 0;\
                     text-align: left;\
                     box-sizing: content-box;\
-                    -webkit-transition: opacity 0.3s ease-out;\
-                    transition: opacity 0.3s ease-out;\
+                    -webkit-transition: opacity 0.1s ease-out;\
+                    transition: opacity 0.1s ease-out;\
                     overscroll-behavior: none;\
                     }\
                     .pv-pic-window-transition-all{\
-                    -webkit-transition: all 0.5s ease-out;\
-                    transition: all 0.5s ease-out;\
+                    -webkit-transition: all 0.3s ease-out;\
+                    transition: all 0.3s ease-out;\
                     }\
                     .pv-pic-window-container_focus {\
                     box-shadow: 0 0 10px rgba(0,0,0,0.6);\
@@ -7954,7 +7953,7 @@ ImgOps | https://imgops.com/#b#`;
             remove:function(){
                 if(this.removed)return;
                 this.removed=true;
-                this.imgWindow.classList.remove("pv-pic-window-transition-all");
+                //this.imgWindow.classList.remove("pv-pic-window-transition-all");
                 this.blur(true);
                 this.imgWindow.style.opacity=0;
                 let self = this;
@@ -9398,7 +9397,7 @@ ImgOps | https://imgops.com/#b#`;
                     if(!uniqueImgWin || uniqueImgWin.removed){
                         var img = document.createElement('img');
                         uniqueImgWin = new ImgWindowC(img, result);
-                        uniqueImgWin.imgWindow.classList.add("pv-pic-window-transition-all");
+                        //uniqueImgWin.imgWindow.classList.add("pv-pic-window-transition-all");
                     }
                     if(uniqueImgWin.src != result.src && (!result.srcs || !result.srcs.includes(uniqueImgWin.src))){
                         uniqueImgWin.changeData(result);
