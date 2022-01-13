@@ -8020,6 +8020,9 @@ ImgOps | https://imgops.com/#b#`;
                     '<span class="pv-loading-button pv-loading-retry" title="重试"></span>'+
                     '<span class="pv-loading-button pv-loading-cancle" title="取消"></span>';*/
 
+                if (this.buttonType == 'popup'){
+                    container.style.pointerEvents="none";
+                }
                 document.body.appendChild(container);
 
                 var self = this;
@@ -8154,6 +8157,7 @@ ImgOps | https://imgops.com/#b#`;
             },
             error:function(msg,img,e){
                 if(msg)debug(msg);
+                this.loadingAnim.style.pointerEvents="";
                 this.loadingAnim.classList.add('pv-loading-container_error');
                 debug('Picviewer CE+ 载入大图错误：%o', this.data);
 
