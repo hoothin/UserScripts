@@ -510,7 +510,7 @@ var siteInfo=[
 {
  name: "推特",
  url: /twitter\.com/,
- r: /&name=.*/i,
+ r: /&name=.*|_normal/i,
  s: ""
 },
 {
