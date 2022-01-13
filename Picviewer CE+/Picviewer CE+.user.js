@@ -8889,8 +8889,8 @@ ImgOps | https://imgops.com/#b#`;
                 if(src)type='tpRule';
             }
 
-            if(!src && imgPA){//链接可能是一张图片...
-                if(/\.(?:jpg|jpeg|png|gif|bmp)(\?[^\?]*)?$/i.test(iPASrc) && iPASrc!=img.src){
+            if(!src && iPASrc){//链接可能是一张图片...
+                if(iPASrc!=img.src && /\.(jpg|jpeg|png|gif|bmp)(\?[^\?]*)?$/i.test(iPASrc)){
                     src=iPASrc;
                 }
                 if(src)type='scale';
