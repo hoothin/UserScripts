@@ -511,7 +511,14 @@ var siteInfo=[
  name: "推特",
  url: /twitter\.com/,
  r: /&name=.*|_normal/i,
- s: ""
+ s: "",
+ ext: function(target) {
+    if(target.parentNode && target.parentNode.previousElementSibling){
+        let imgs=target.parentNode.previousElementSibling.querySelectorAll("img");
+        if(imgs.length==1)return imgs[0];
+    }
+    return null;
+ }
 },
 {
  name: "Fandom",
