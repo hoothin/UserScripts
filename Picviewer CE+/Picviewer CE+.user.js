@@ -8911,7 +8911,7 @@ ImgOps | https://imgops.com/#b#`;
             }
 
             if(!src)return;
-            if(img.dataset.lazySrc && (!imgSrc || /^\s*data:image/.test(imgSrc))){
+            if(img.dataset.lazySrc && (!imgSrc || base64Img)){
                 imgSrc=img.dataset.lazySrc;
             }
 
