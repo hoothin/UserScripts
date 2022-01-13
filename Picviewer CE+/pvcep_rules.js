@@ -947,6 +947,20 @@ var siteInfo=[
  name: "ggpht",
  src: /ggpht\.com/i,
  r: /=s\d+.*/i,
- s: "=s9999",
+ s: "=s9999"
+},
+{
+ name: "kodansha",
+ url: /kodansha\.co\.jp/i,
+ src: /kodansha\.co\.jp/i,
+ r: 't_og_image_center',
+ s: 'c_limit'
+},
+{
+ name: "fanseven",
+ url: /fanseven\.com/i,
+ src: /fanseven\.com/i,
+ r: /w=\d+&h=\d+/i,
+ s: 'w=9999&h=9999'
 }
 ];
