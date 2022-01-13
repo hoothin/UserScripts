@@ -9026,7 +9026,7 @@ ImgOps | https://imgops.com/#b#`;
                 var base64Img=/^data:[^;]+;base64,/i.test(img.src);
                 for(var i in this.rules){
                     rule=this.rules[i];
-                    if(!rule.url && base64Img)continue;
+                    if((!rule.url || !rule.getImage) && base64Img)continue;
                     if(rule.src && !rule.src.test(img.src))continue;
                     if(rule.exclude && rule.exclude.test(img.src))continue;
                     if(rule.getImage){
