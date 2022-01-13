@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.6.5
+// @version      2.6.6
 // @description  Fetch and download main content on current page, provide special support for chinese novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取小說、論壇內容等並保存為TXT文檔
@@ -38,7 +38,7 @@
         case "zh-CN":
         case "zh-SG":
             i18n={
-                fetch:"开始下载小说或其他【Ctrl+F9】",
+                fetch:"开始下载小说【Ctrl+F9】",
                 info:"本文是使用怠惰小说下载器（DownloadAllContent）下载的",
                 error:"该段内容获取失败",
                 downloading:"已下载完成 %s 段，剩余 %s 段<br>正在下载 %s",
@@ -48,7 +48,7 @@
                 customInfo:"输入网址或者章节CSS选择器",
                 reSort:"按标题名重新排序",
                 reSortUrl:"按网址重新排序",
-                setting:"懒人小说下载设置",
+                setting:"选项设置",
                 abort:"跳过此章",
                 save:"临时保存",
                 downThreadNum:"设置同时下载的线程数"
@@ -57,7 +57,7 @@
         case "zh-TW":
         case "zh-HK":
             i18n={
-                fetch:"開始下載小說或其他【Ctrl+F9】",
+                fetch:"開始下載小說【Ctrl+F9】",
                 info:"本文是使用怠惰小說下載器（DownloadAllContent）下載的",
                 error:"該段內容獲取失敗",
                 downloading:"已下載完成 %s 段，剩餘 %s 段<br>正在下載 %s",
@@ -67,7 +67,7 @@
                 customInfo:"輸入網址或者章節CSS選擇器",
                 reSort:"按標題名重新排序",
                 reSortUrl:"按網址重新排序",
-                setting:"懶人小說下載設置",
+                setting:"選項設置",
                 abort:"跳過此章",
                 save:"保存當前",
                 downThreadNum:"設置同時下載的綫程數"
@@ -75,7 +75,7 @@
             break;
         default:
             i18n={
-                fetch:"Download All Content[Ctrl+F9]",
+                fetch:"Download [Ctrl+F9]",
                 info:"The TXT is downloaded by 'DownloadAllContent'",
                 error:"Failed in downloading current chapter",
                 downloading:"%s pages are downloaded, there are still %s pages left<br>Downloading %s ......",
@@ -85,7 +85,7 @@
                 customInfo:"Input urls OR sss selectors for chapter links",
                 reSort:"ReSort by title",
                 reSortUrl:"Resort by URLs",
-                setting:"DownloadAllContent Setting",
+                setting:"Open Setting",
                 abort:"Abort",
                 save:"Save",
                 downThreadNum:"Set threadNum for download"
@@ -210,7 +210,7 @@
                         console.log(e);
                         downIndex++;
                         downNum++;
-                        processDoc(curIndex, aTag, null);
+                        processDoc(curIndex, aTag, null, ' : NETWORK ERROR '+e.toString());
                         let request=downOnce();
                         if(request)curRequests.push(request);
                     },
@@ -219,7 +219,7 @@
                         console.log(e);
                         downIndex++;
                         downNum++;
-                        processDoc(curIndex, aTag, null);
+                        processDoc(curIndex, aTag, null, ' : TIMEOUT '+e.toString());
                         let request=downOnce();
                         if(request)curRequests.push(request);
                     },
@@ -273,9 +273,9 @@
             }
             rCats = rCats.filter(function(e){return e!=null});
         }
-        function processDoc(i, aTag, doc){
+        function processDoc(i, aTag, doc, cause){
             curRequests = curRequests.filter(function(e){return e[0]!=i});
-            rCats[i]=(aTag.innerText+"\r\n"+getPageContent(doc));
+            rCats[i]=(aTag.innerText.trim()+"\r\n"+getPageContent(doc) + (cause||''));
             txtDownContent.style.display="block";
             txtDownWords.innerHTML=getI18n("downloading",[downNum,(aEles.length-downNum),aTag.innerText]);
             if(downNum==aEles.length){
@@ -394,7 +394,7 @@
                 largestContent=content;
             }
         }
-        if(!largestContent)return i18n.error;
+        if(!largestContent)return i18n.error+" : NO TEXT CONTENT";
         var childlist=pageData.querySelectorAll(largestContent.tagName);//+(largestContent.className?"."+largestContent.className.replace(/(^\s*)|(\s*$)/g, '').replace(/\s+/g, '.'):""));
         function getRightStr(ele, noTextEnable){
             let childNodes=ele.childNodes,cStr="\r\n",hasText=false;
@@ -454,6 +454,7 @@
             }
             for(var j=0;j<list.length;j++){
                 if(list[j].href==aEle.href){
+                    aEle=list[j];
                     list.splice(j,1);
                     list.push(aEle);
                     has=true;
