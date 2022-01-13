@@ -8010,11 +8010,11 @@ ImgOps | https://imgops.com/#b#`;
                 container.title=i18n("loading")+':' + this.data.src;
                 let retrySpan=document.createElement('span');
                 retrySpan.className='pv-loading-button pv-loading-retry';
-                retrySpan.title='重试';
+                retrySpan.title='Retry';
                 container.appendChild(retrySpan);
                 let cancelSpan=document.createElement('span');
                 cancelSpan.className='pv-loading-button pv-loading-cancle';
-                cancelSpan.title='取消';
+                cancelSpan.title='Cancel';
                 container.appendChild(cancelSpan);
                 /*container.innerHTML=
                     '<span class="pv-loading-button pv-loading-retry" title="重试"></span>'+
@@ -8275,22 +8275,49 @@ ImgOps | https://imgops.com/#b#`;
             },
             open:function(){
                 switch(this.buttonType){
-                    case 'gallery':{
+                    case 'popup':
+                        if(!uniqueImgWin || uniqueImgWin.removed){
+                            uniqueImgWin = new ImgWindowC(this.img, this.data);
+                            //uniqueImgWin.imgWindow.classList.add("pv-pic-window-transition-all");
+                        }
+                        if(uniqueImgWin.src != this.data.src && (!this.data.srcs || !this.data.srcs.includes(uniqueImgWin.src))){
+                            uniqueImgWin.changeData(this.data);
+                        }
+                        uniqueImgWin.blur({target:this.data.img});
+                        if(!uniqueImgWin.loaded){
+                            if(prefs.waitImgLoad){
+                                uniqueImgWin.imgWindow.style.display = "none";
+                                uniqueImgWin.imgWindow.style.opacity = 0;
+                            }else{
+                                uniqueImgWin.center(true,true);
+                                if(centerInterval)clearInterval(centerInterval);
+                                centerInterval=setInterval(function(){
+                                    if(!uniqueImgWin || uniqueImgWin.removed || uniqueImgWin.loaded)
+                                        clearInterval(centerInterval);
+                                    else{
+                                        uniqueImgWin.center(true,true);
+                                    }
+                                },300);
+                            }
+                        }
+                        uniqueImgWin.imgWindow.style.pointerEvents = "none";
+                        break;
+                    case 'gallery':
                         if(!gallery){
                             gallery=new GalleryC();
                         };
                         gallery.load(this.data,this.from);
-                    }break;
-                    case 'magnifier':{
+                        break;
+                    case 'magnifier':
                         new MagnifierC(this.img,this.data);
-                    }break;
+                        break;
                     case 'actual':;
                     case 'search':;
                     case 'current':;
-                    case 'original':{//original 是为了兼容以前的规则
+                    case 'original'://original 是为了兼容以前的规则
                         if(this.data.src!=this.img.src)this.data.src=this.img.src;
                         new ImgWindowC(this.img, this.data);
-                    }break;
+                        break;
                 };
             },
         };
@@ -9394,32 +9421,7 @@ ImgOps | https://imgops.com/#b#`;
                 //metaKey altKey shiftKey ctrlKey
                 if(checkPreview(e)){
                     if(removeUniqueWinTimer)clearTimeout(removeUniqueWinTimer);
-                    if(!uniqueImgWin || uniqueImgWin.removed){
-                        var img = document.createElement('img');
-                        uniqueImgWin = new ImgWindowC(img, result);
-                        //uniqueImgWin.imgWindow.classList.add("pv-pic-window-transition-all");
-                    }
-                    if(uniqueImgWin.src != result.src && (!result.srcs || !result.srcs.includes(uniqueImgWin.src))){
-                        uniqueImgWin.changeData(result);
-                    }
-                    uniqueImgWin.blur(e);
-                    if(!uniqueImgWin.loaded){
-                        if(prefs.waitImgLoad){
-                            uniqueImgWin.imgWindow.style.display = "none";
-                            uniqueImgWin.imgWindow.style.opacity = 0;
-                        }else{
-                            uniqueImgWin.center(true,true);
-                            if(centerInterval)clearInterval(centerInterval);
-                            centerInterval=setInterval(function(){
-                                if(!uniqueImgWin || uniqueImgWin.removed || uniqueImgWin.loaded)
-                                    clearInterval(centerInterval);
-                                else{
-                                    uniqueImgWin.center(true,true);
-                                }
-                            },300);
-                        }
-                    }
-                    uniqueImgWin.imgWindow.style.pointerEvents = "none";
+                    new LoadingAnimC(result, 'popup', prefs.waitImgLoad, prefs.framesPicOpenInTopWindow);
                     return true;
                 }else {
                     if(uniqueImgWin && !uniqueImgWin.removed)
