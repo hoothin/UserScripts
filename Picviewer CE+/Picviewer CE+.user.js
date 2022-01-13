@@ -9421,6 +9421,7 @@ ImgOps | https://imgops.com/#b#`;
                 //metaKey altKey shiftKey ctrlKey
                 if(checkPreview(e)){
                     if(removeUniqueWinTimer)clearTimeout(removeUniqueWinTimer);
+                    if(uniqueImgWin && !uniqueImgWin.removed) uniqueImgWin.remove();
                     new LoadingAnimC(result, 'popup', prefs.waitImgLoad, prefs.framesPicOpenInTopWindow);
                     return true;
                 }else {
