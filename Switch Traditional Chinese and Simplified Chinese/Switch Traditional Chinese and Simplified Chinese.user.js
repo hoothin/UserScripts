@@ -6,7 +6,7 @@
 // @namespace    hoothin
 // @supportURL   https://github.com/hoothin/UserScripts
 // @homepageURL  https://github.com/hoothin/UserScripts
-// @version      1.2
+// @version      1.2.1
 // @description        任意轉換網頁中的簡體中文與繁體中文（默認簡體→繁體）
 // @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体）
 // @description:ja     简繁中国語に変換
@@ -340,26 +340,36 @@
             char=orgStr.charAt(i);
             let search=sc2tcCombTree[char],searchIndex=i,hasMatch=false;
             while(search && searchIndex<orgStr.length){
-                if(search.end){
+                let downTree=null;
+                if(searchIndex<orgStr.length-1){
+                    downTree=search[orgStr.charAt(searchIndex+1)];
+                }
+                if(!downTree && search.end){
                     hasMatch=true;
                     i=searchIndex;
                     str+=search.end;
                     break;
                 }
-                search=search[orgStr.charAt(++searchIndex)];
+                searchIndex++;
+                search=downTree;
             }
             if(hasMatch){
                 continue;
             }
             search=fuckIlliteracyTree[char];searchIndex=i;
             while(search && searchIndex<orgStr.length){
-                if(search.end){
+                let downTree=null;
+                if(searchIndex<orgStr.length-1){
+                    downTree=search[orgStr.charAt(searchIndex+1)];
+                }
+                if(!downTree && search.end){
                     hasMatch=true;
                     i=searchIndex;
                     str+=search.end;
                     break;
                 }
-                search=search[orgStr.charAt(++searchIndex)];
+                searchIndex++;
+                search=downTree;
             }
             if(hasMatch){
                 continue;
@@ -431,7 +441,11 @@
             }
             search=fuckIlliteracyTree[char];searchIndex=i;
             while(search && searchIndex<orgStr.length){
-                if(search.end){
+                let downTree=null;
+                if(searchIndex<orgStr.length-1){
+                    downTree=search[orgStr.charAt(searchIndex+1)];
+                }
+                if(!downTree && search.end){
                     hasMatch=true;
                     i=searchIndex;
                     for(let s=0;s<search.end.length;s++){
@@ -440,7 +454,8 @@
                     }
                     break;
                 }
-                search=search[orgStr.charAt(++searchIndex)];
+                searchIndex++;
+                search=downTree;
             }
             if(hasMatch){
                 continue;
