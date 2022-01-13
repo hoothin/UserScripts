@@ -6,7 +6,7 @@
 // @description          Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version              2022.1.11.1
+// @version              2022.1.13.1
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -714,7 +714,10 @@ Sogou | https://pic.sogou.com/ris?query=#t#
 360 | http://st.so.com/stu?imgurl=#t#
 WhatAnime | https://trace.moe/?url=#t#
 Ascii2D | https://ascii2d.net/search/url/#t#
-Trace Moe | https://trace.moe/?url=#t#`;
+Trace Moe | https://trace.moe/?url=#t#
+KarmaDecay | http://karmadecay.com/#t#
+ZXing QRCode | https://zxing.org/w/decode?full=true&u=#t#
+ImgOps | https://imgops.com/#b#`;
 
     var _GM_openInTab,_GM_setClipboard,_GM_xmlhttpRequest,_GM_registerMenuCommand,_GM_notification;
     if(typeof GM_openInTab!='undefined'){
@@ -1449,7 +1452,18 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 }).toString() +')()';
                 document.head.appendChild(s);
             })();
-        };
+        }
+
+        var escapeHTMLPolicy;
+        if (unsafeWindow.trustedTypes && unsafeWindow.trustedTypes.createPolicy) {
+            escapeHTMLPolicy=unsafeWindow.trustedTypes.createPolicy('default', {
+                createHTML: (string, sink) => string
+            });
+        }
+
+        function createHTML(html){
+            return escapeHTMLPolicy?escapeHTMLPolicy.createHTML(html):html;
+        }
 
 
         //抛出错误到错误控制台
@@ -1882,7 +1896,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 this.gallery=container;
                 container.className='pv-gallery-container';
                 container.tabIndex=1;//为了获取焦点，来截获键盘事件
-                container.innerHTML=
+                container.innerHTML=createHTML(
                     '<span class="pv-gallery-head">'+
                     '<span class="pv-gallery-head-float-left">'+
                     '<span title="'+i18n("picInfo")+'" class="pv-gallery-head-left-img-info">'+
@@ -2072,7 +2086,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     '</span>'+
                     '</span>'+
                     '<span class="pv-gallery-maximize-scroll"><span class="pv-gallery-maximize-container"></span></span>'+
-                    '</span>';
+                    '</span>');
                 document.body.appendChild(container);
 
                 var self=this;
@@ -2098,7 +2112,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
 
                 var maximizeTrigger=document.createElement('span');
                 this.maximizeTrigger=maximizeTrigger;
-                maximizeTrigger.innerHTML='-'+i18n("returnToGallery")+'-<span class="pv-gallery-maximize-trigger-close" title="'+i18n("closeGallery")+'"></span>';
+                maximizeTrigger.innerHTML=createHTML('-'+i18n("returnToGallery")+'-<span class="pv-gallery-maximize-trigger-close" title="'+i18n("closeGallery")+'"></span>');
                 maximizeTrigger.className='pv-gallery-maximize-trigger';
 
                 document.body.appendChild(maximizeTrigger);
@@ -2315,7 +2329,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                         '<label for="pv-gallery-head-command-drop-list-item-category-'+i+'">'+imgStatistics_i.name+'</label>'+
                         '</span>';
                 };
-                eleMaps['head-command-drop-list-category'].innerHTML=typeMark;
+                eleMaps['head-command-drop-list-category'].innerHTML=createHTML(typeMark);
 
 
                 //收藏相关
@@ -2419,7 +2433,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                                 '<span class="pv-gallery-sidebar-thumb-loading" title="'+i18n("loading")+'......"></span>'+
                                 '</span>';
                         };
-                        container.innerHTML=spanMark;
+                        container.innerHTML=createHTML(spanMark);
                         eleMaps['sidebar-thumbnails-container'].appendChild(container);
 
 
@@ -2782,7 +2796,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                         padding-left:24px;">'+shareItem.name+'</span>');
                 };
 
-                eleMaps['head-command-drop-list-share'].innerHTML=shareMark;
+                eleMaps['head-command-drop-list-share'].innerHTML=createHTML(shareMark);
 
                 //分享下拉列表的点击处理
                 eleMaps['head-command-drop-list-share'].addEventListener('click',function(e){
@@ -2805,7 +2819,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                         self.closeViewMore();
                 });
 
-                if(!prefs.gallery.searchData)prefs.gallery.searchData=defaultSearchData;
+                if(!prefs.gallery.searchData || defaultSearchData.indexOf(prefs.gallery.searchData)!=-1)prefs.gallery.searchData=defaultSearchData;
                 var searchRules=prefs.gallery.searchData.split("\n"),searchUploadUrl,searchItems=[];
                 var searchAll=eleMaps['head-command-drop-list-search'].querySelector("#headSearchAll");
                 searchRules.forEach(rule=>{
@@ -2820,9 +2834,11 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     if(ruleArr.length==2){
                         var item=document.createElement('span');
                         item.className="pv-gallery-head-command-drop-list-item";
-                        item.innerHTML=ruleArr[0];
+                        item.innerHTML=createHTML(ruleArr[0]);
                         item.addEventListener('click',function(e){
-                            window.open(ruleArr[1].replace("#t#", encodeURIComponent(self.src)), "_blank", "width=1024, height=768, toolbar=1");
+                            let url=encodeURIComponent(self.src);
+                            let urlb=self.src.replace(/https?:\/\//i,"");
+                            window.open(ruleArr[1].replace("#b#", urlb).replace("#t#", url), "_blank", "width=1024, height=768, toolbar=1");
                         });
                         searchItems.push(item);
                         eleMaps['head-command-drop-list-search'].insertBefore(item, searchAll);
@@ -3141,10 +3157,10 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     }else if(eleMaps['head-command-nextPage'].contains(target)){
                         var textSpan=eleMaps['head-command-nextPage'].querySelector("span");
                         if(textSpan.innerHTML==i18n("loading")){
-                            textSpan.innerHTML=i18n("loadAll");
+                            textSpan.innerHTML=createHTML(i18n("loadAll"));
                             return;
                         }
-                        textSpan.innerHTML=i18n("loading");
+                        textSpan.innerHTML=createHTML(i18n("loading"));
                         self.completePages=[];
                         self.pageAllReady=false;
                         self.nextPage();
@@ -3202,9 +3218,9 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 var sizeInputHSpan=this.gallery.querySelector("#minsizeHSpan");
                 var sizeInputWSpan=this.gallery.querySelector("#minsizeWSpan");
                 sizeInputH.title=sizeInputH.value+"px";
-                sizeInputHSpan.innerHTML=Math.floor(sizeInputH.value)+"px";
+                sizeInputHSpan.innerHTML=createHTML(Math.floor(sizeInputH.value)+"px");
                 sizeInputW.title=sizeInputW.value+"px";
-                sizeInputWSpan.innerHTML=Math.floor(sizeInputW.value)+"px";
+                sizeInputWSpan.innerHTML=createHTML(Math.floor(sizeInputW.value)+"px");
 
                 var viewmoreShow = this.eleMaps['sidebar-toggle'].style.visibility == 'hidden';
                 if(viewmoreShow){
@@ -3233,12 +3249,12 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     sizeInputH.max=maxSizeH;
                     sizeInputH.min=minSizeH;
                     sizeInputH.title=sizeInputH.value+"px";
-                    sizeInputHSpan.innerHTML=Math.floor(sizeInputH.value)+"px";
+                    sizeInputHSpan.innerHTML=createHTML(Math.floor(sizeInputH.value)+"px");
 
                     sizeInputW.max=maxSizeW;
                     sizeInputW.min=minSizeW;
                     sizeInputW.title=sizeInputW.value+"px";
-                    sizeInputWSpan.innerHTML=Math.floor(sizeInputW.value)+"px";
+                    sizeInputWSpan.innerHTML=createHTML(Math.floor(sizeInputW.value)+"px");
                 }else{
                     this.data.forEach(function(item) {
                         if(!item)return;
@@ -3295,14 +3311,14 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 sizeInputH.value=prefs.gallery.defaultSizeLimit.h;
                 sizeInputH.title=sizeInputH.value+"px";
                 var sizeInputHSpan=this.gallery.querySelector("#minsizeHSpan");
-                sizeInputHSpan.innerHTML=Math.floor(sizeInputH.value)+"px";
+                sizeInputHSpan.innerHTML=createHTML(Math.floor(sizeInputH.value)+"px");
 
                 sizeInputW.max=maxSizeW;
                 sizeInputW.min=minSizeW;
                 sizeInputW.value=prefs.gallery.defaultSizeLimit.w;
                 sizeInputW.title=sizeInputW.value+"px";
                 var sizeInputWSpan=this.gallery.querySelector("#minsizeWSpan");
-                sizeInputWSpan.innerHTML=Math.floor(sizeInputW.value)+"px";
+                sizeInputWSpan.innerHTML=createHTML(Math.floor(sizeInputW.value)+"px");
             },
             initToggleBar: function() {  // 是否显示切换 sidebar 按钮
                 /**
@@ -3366,11 +3382,11 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 while (maximizeContainer.firstChild) {
                     maximizeContainer.removeChild(maximizeContainer.firstChild);
                 }
-                viewmoreBar.innerHTML = '✚';
+                viewmoreBar.innerHTML = createHTML('✚');
                 viewmoreBar.parentNode.classList.remove("showmore");
                 //viewmoreBar.parentNode.style.backgroundColor = "#000000";
 
-                toggleBar.innerHTML = '▼';
+                toggleBar.innerHTML = createHTML('▼');
                 this.changeSizeInputReset();
             },
             maximizeSidebar: function() {
@@ -3399,8 +3415,8 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     imgPre.style.visibility = imgNext.style.visibility = toggleBar.style.visibility = sidebarContainer.style.visibility = 'hidden';
                     imgCon.style['border' + capitalize(sidebarPosition)] = '0';
                     toggleBar.style[sidebarPosition] = '0';
-                    maximizeContainer.innerHTML = "";
-                    viewmoreBar.innerHTML = '✖';
+                    maximizeContainer.innerHTML = createHTML("");
+                    viewmoreBar.innerHTML = createHTML('✖');
                     viewmoreBar.parentNode.classList.add("showmore");//.backgroundColor = "#2a2a2a";
 
                     var nodes = document.querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]');
@@ -3411,7 +3427,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                         let imgSpan = document.createElement('span');
                         imgSpan.style.display=nodeStyle.display;
                         imgSpan.className = "maximizeChild";
-                        imgSpan.innerHTML = '<img src="'+curNode.dataset.src+'">';
+                        imgSpan.innerHTML = createHTML('<img src="'+curNode.dataset.src+'">');
                         imgSpan.addEventListener("click", function(e){
                             imgReady(curNode.dataset.src,{
                                 ready:function(){
@@ -3422,7 +3438,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                         let img=imgSpan.querySelector("img");
                         var addDlSpan=(img, imgSpan, curNode, clickCb)=>{
                             var dlSpan = document.createElement('p');
-                            dlSpan.innerHTML='<svg class="icon" style="width: 20px;height: 20px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1100"><path d="M768 768q0-14.857143-10.857143-25.714286t-25.714286-10.857143-25.714285 10.857143-10.857143 25.714286 10.857143 25.714286 25.714285 10.857143 25.714286-10.857143 10.857143-25.714286z m146.285714 0q0-14.857143-10.857143-25.714286t-25.714285-10.857143-25.714286 10.857143-10.857143 25.714286 10.857143 25.714286 25.714286 10.857143 25.714285-10.857143 10.857143-25.714286z m73.142857-128v182.857143q0 22.857143-16 38.857143t-38.857142 16H91.428571q-22.857143 0-38.857142-16t-16-38.857143v-182.857143q0-22.857143 16-38.857143t38.857142-16h265.714286l77.142857 77.714286q33.142857 32 77.714286 32t77.714286-32l77.714285-77.714286h265.142858q22.857143 0 38.857142 16t16 38.857143z m-185.714285-325.142857q9.714286 23.428571-8 40l-256 256q-10.285714 10.857143-25.714286 10.857143t-25.714286-10.857143L230.285714 354.857143q-17.714286-16.571429-8-40 9.714286-22.285714 33.714286-22.285714h146.285714V36.571429q0-14.857143 10.857143-25.714286t25.714286-10.857143h146.285714q14.857143 0 25.714286 10.857143t10.857143 25.714286v256h146.285714q24 0 33.714286 22.285714z" p-id="1101"></path></svg> '+i18n("download");
+                            dlSpan.innerHTML=createHTML('<svg class="icon" style="width: 20px;height: 20px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1100"><path d="M768 768q0-14.857143-10.857143-25.714286t-25.714286-10.857143-25.714285 10.857143-10.857143 25.714286 10.857143 25.714286 25.714285 10.857143 25.714286-10.857143 10.857143-25.714286z m146.285714 0q0-14.857143-10.857143-25.714286t-25.714285-10.857143-25.714286 10.857143-10.857143 25.714286 10.857143 25.714286 25.714286 10.857143 25.714285-10.857143 10.857143-25.714286z m73.142857-128v182.857143q0 22.857143-16 38.857143t-38.857142 16H91.428571q-22.857143 0-38.857142-16t-16-38.857143v-182.857143q0-22.857143 16-38.857143t38.857142-16h265.714286l77.142857 77.714286q33.142857 32 77.714286 32t77.714286-32l77.714285-77.714286h265.142858q22.857143 0 38.857142 16t16 38.857143z m-185.714285-325.142857q9.714286 23.428571-8 40l-256 256q-10.285714 10.857143-25.714286 10.857143t-25.714286-10.857143L230.285714 354.857143q-17.714286-16.571429-8-40 9.714286-22.285714 33.714286-22.285714h146.285714V36.571429q0-14.857143 10.857143-25.714286t25.714286-10.857143h146.285714q14.857143 0 25.714286 10.857143t10.857143 25.714286v256h146.285714q24 0 33.714286 22.285714z" p-id="1101"></path></svg> '+i18n("download"));
                             dlSpan.src=curNode.dataset.src;
                             dlSpan.title=curNode.title||document.title;
                             dlSpan.onclick=clickCb;
@@ -3521,7 +3537,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 '0';
                 // 修正底部距离
                 this.eleMaps['sidebar-toggle'].style[sidebarPosition] = isHidden ? '-5px' : '0';
-                this.eleMaps['sidebar-toggle'].innerHTML = isHidden ? '▼' : '▲';
+                this.eleMaps['sidebar-toggle'].innerHTML = createHTML(isHidden ? '▼' : '▲');
                 this.eleMaps['sidebar-viewmore'].style.visibility = isHidden ? 'visible' : 'hidden';
             },
             initZoom: function() {  // 如果有放大，则把图片及 sidebar 部分缩放比率改为 1
@@ -3924,7 +3940,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 var thumbnails = this.eleMaps['sidebar-thumbnails-container'];
                 // 如果是新的，则添加，否则重置并添加。
                 if (!data){
-                    thumbnails.innerHTML = "";
+                    thumbnails.innerHTML = createHTML("");
                     this._dataCache = {};
                 }
                 var self=this;
@@ -3943,8 +3959,8 @@ Trace Moe | https://trace.moe/?url=#t#`;
                             spanMark.dataset.description=encodeURIComponent(item.description || '');
                             spanMark.dataset.thumbSrc=item.imgSrc;
                             spanMark.title=(item.img?(item.img.title||item.img.alt||""):"");
-                            spanMark.innerHTML='<span class="pv-gallery-vertical-align-helper"></span>' +
-                                '<span class="pv-gallery-sidebar-thumb-loading" title="'+i18n("loading")+'......"></span>';
+                            spanMark.innerHTML=createHTML('<span class="pv-gallery-vertical-align-helper"></span>' +
+                                '<span class="pv-gallery-sidebar-thumb-loading" title="'+i18n("loading")+'......"></span>');
                         }catch(e){};
                         self._spanMarkPool[item.imgSrc] = spanMark;
                     }
@@ -4067,7 +4083,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 //读取错误的图片占位符
                 this.eleMaps['img_broken'].style.display='';
                 //清空dom
-                this.eleMaps['sidebar-thumbnails-container'].innerHTML='';
+                this.eleMaps['sidebar-thumbnails-container'].innerHTML=createHTML('');
                 this.eleMaps['head-left-img-info-resolution'].textContent='0 x 0';
                 this.eleMaps['head-left-img-info-count'].textContent='（1 / 1）';
                 this.eleMaps['head-left-img-info-scaling'].textContent='（100%）';
@@ -4314,8 +4330,8 @@ Trace Moe | https://trace.moe/?url=#t#`;
             pageImgReady:function(){
                 var textSpan=this.eleMaps['head-command-nextPage'].querySelector("span");
                 if(this.pageAllReady && this.londingImgNum<=0){
-                    textSpan.innerHTML="<font color='red'>"+i18n("loadedAll")+"</font>";
-                    setTimeout(function(){textSpan.innerHTML=i18n("loadAll");},1500);
+                    textSpan.innerHTML=createHTML("<font color='red'>"+i18n("loadedAll")+"</font>");
+                    setTimeout(function(){textSpan.innerHTML=createHTML(i18n("loadAll"));},1500);
                 }
             },
             prePage:function(){
@@ -6249,7 +6265,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                  opacity:0\
                  ';
                 container.className='pv-pic-window-container';
-                container.innerHTML=
+                container.innerHTML=createHTML(
                     '<span class="pv-pic-window-rotate-indicator">'+
                     '<span class="pv-pic-window-rotate-indicator-pointer"></span>'+
                     '</span>'+
@@ -6281,7 +6297,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                     //'<span class="pv-pic-window-search" title="'+i18n("similarImage")+'"></span>' +
                     '<span class="pv-pic-window-range"></span>' +
                     '<span class="pv-pic-window-description"></span>'+
-                    '<span class="pv-pic-search-state"></span>';
+                    '<span class="pv-pic-search-state"></span>');
 
                 container.insertBefore(img,container.firstChild);
 
@@ -7993,9 +8009,17 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 this.loadingAnim=container;
 
                 container.title=i18n("loading")+':' + this.data.src;
-                container.innerHTML=
+                let retrySpan=document.createElement('span');
+                retrySpan.className='pv-loading-button pv-loading-retry';
+                retrySpan.title='重试';
+                container.appendChild(retrySpan);
+                let cancelSpan=document.createElement('span');
+                cancelSpan.className='pv-loading-button pv-loading-cancle';
+                cancelSpan.title='取消';
+                container.appendChild(cancelSpan);
+                /*container.innerHTML=
                     '<span class="pv-loading-button pv-loading-retry" title="重试"></span>'+
-                    '<span class="pv-loading-button pv-loading-cancle" title="取消"></span>';
+                    '<span class="pv-loading-button pv-loading-cancle" title="取消"></span>';*/
 
                 document.body.appendChild(container);
 
@@ -8282,13 +8306,18 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 this.addStyle();
                 var container=document.createElement('span');
                 container.id='pv-float-bar-container';
-                container.innerHTML=
+                document.body.appendChild(container);
+                for(let i=0;i<4;i++){
+                    let spanChild=document.createElement('span');
+                    spanChild.className='pv-float-bar-button';
+                    container.appendChild(spanChild);
+                }
+                /*container.innerHTML=
                     '<span class="pv-float-bar-button"></span>'+
                     '<span class="pv-float-bar-button"></span>'+
                     '<span class="pv-float-bar-button"></span>'+
                     //'<span class="pv-float-bar-button"></span>'+
-                    '<span class="pv-float-bar-button"></span>';
-                document.body.appendChild(container);
+                    '<span class="pv-float-bar-button"></span>';*/
 
                 var buttons={
                 };
@@ -8676,7 +8705,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
             }
 
             function createDoc(text) {
-                var doc = document.implementation.createHTMLDocument('picViewerCE');
+                var doc = document.implementation.createHTMLDocument('PicViewerCE');
                 doc.documentElement.innerHTML = text;
                 return doc;
             }
@@ -8785,7 +8814,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                 h:img.naturalHeight||imgCS.h,
                 w:img.naturalWidth||imgCS.w,
             };
-            if(!src && matchedRule && !base64Img){// 通过高级规则获取.
+            if(!src && matchedRule){// 通过高级规则获取.
                 // 排除
                 try{
                     var newSrc=matchedRule.getImage(img,imgPA,imgPE);
@@ -8995,6 +9024,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
                         break;
                     }
                 }
+                if(newSrc && newSrc.length==0)newSrc=null;
                 return newSrc;
             }
         };
@@ -10213,7 +10243,7 @@ Trace Moe | https://trace.moe/?url=#t#`;
     function setSearchState(words,imgCon){
         if(words)console.info(words);
         var searchState = (imgCon?imgCon:document).querySelector('.pv-pic-search-state');
-        if(searchState)searchState.innerHTML=words;
+        if(searchState)searchState.innerHTML=createHTML(words);
     }
 
     var searchSort=["Tineye","Google","Baidu"];
