@@ -39,6 +39,8 @@ var siteInfo=[
  //第二个参数为保存当前图片所有父元素的数组
  getImage:function(a){
      if(!a)return;
+     var fakeEvent = new MouseEvent('mousedown', {bubbles: true});
+     a.dispatchEvent(fakeEvent);
      if (a.href.match(/imgurl=(.*?\.\w{1,5})&/i)) {
          return decodeURIComponent(RegExp.$1);
      }
