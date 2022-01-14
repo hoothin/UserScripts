@@ -6,7 +6,7 @@
 // @description          Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version              2022.1.13.1
+// @version              2022.1.14.1
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -1272,12 +1272,12 @@ ImgOps | https://imgops.com/#b#`;
         //获取窗口大小.
         function getWindowSize(){
             /*
-        //包含滚动条
-        return {
-            h:window.innerHeight,
-            w:window.innerWidth,
-        };
-    */
+            //包含滚动条
+             return {
+                 h:window.innerHeight,
+                 w:window.innerWidth,
+             };
+            */
 
             //去除滚动条的窗口大小
             var de=document.documentElement;
@@ -3162,7 +3162,7 @@ ImgOps | https://imgops.com/#b#`;
                         textSpan.innerHTML=createHTML(i18n("loading"));
                         self.completePages=[];
                         self.pageAllReady=false;
-                        self.nextPage();
+                        self.pageAction(true);
                     }else if(eleMaps['head-command-collect'].contains(target)){
                         if(collection.favorite){
                             collection.remove();
@@ -4212,11 +4212,17 @@ ImgOps | https://imgops.com/#b#`;
             },
             curPage:document,
             getPage:function(){
-                var pageNum=0;
-                if(/[a-zA-Z0-9][_\-]\d+(\.html)?$/.test(this.href)){
-                    pageNum=this.href.replace(/.*[a-zA-Z0-9][\-_](\d+)(\.html)?$/,"$1");
-                }else if(/[\?&]p(age)?=\d+[$#]/.test(this.href)){
-                    pageNum=this.href.replace(/.*[\?&]p(age)=(\d+)($|#.*)/,"$2");
+                let pageNum=0,preStr="",afterStr="";
+                let pageMatch1=this.href.match(/(.*[a-zA-Z0-9][\-_])(\d+)(\.html?$|$)/i);
+                let pageMatch2=this.href.match(/(.*[\?&]p(?:age)?=)(\d+)($|#.*)/i);
+                if(pageMatch1){
+                    preStr=pageMatch1[1];
+                    pageNum=pageMatch1[2];
+                    afterStr=pageMatch1[3];
+                }else if(pageMatch2){
+                    preStr=pageMatch2[1];
+                    pageNum=pageMatch2[2];
+                    afterStr=pageMatch2[3];
                 }
                 var curPage=this.curPage;
                 let pre=curPage.querySelector("a.prev");
@@ -4252,9 +4258,7 @@ ImgOps | https://imgops.com/#b#`;
                                     if(aTag.href.indexOf(this.href.replace(/.*\/([^\/]+)$/,"$1").replace(/[_-]\d+/,""))!=-1){
                                        pret=aTag;
                                     }
-                                }else if(aTag.href.replace(/.*[a-zA-Z0-9][\-_](\d+)(\.html)?$/,"$1")==pageNum-1){
-                                    pret=aTag;
-                                }else if(aTag.href.replace(/.*[\?&]p(age)?=(\d+)($|#.*)/,"$2")==pageNum-1){
+                                }else if(aTag.href.replace(preStr,"").replace(afterStr,"")==pageNum-1){
                                     pret=aTag;
                                 }
                             }
@@ -4280,9 +4284,7 @@ ImgOps | https://imgops.com/#b#`;
                             if(!nextt){
                                 if(aTag.innerHTML=="»"){
                                     nextt=aTag;
-                                }else if(aTag.href.replace(/.*[a-zA-Z0-9][\-_](\d+)(\.html)?$/,"$1")==parseInt(pageNum)+1){
-                                    nextt=aTag;
-                                }else if(aTag.href.replace(/.*[\?&]p(age)?=(\d+)($|#.*)/,"$2")==parseInt(pageNum)+1){
+                                }else if(aTag.href.replace(preStr,"").replace(afterStr,"")==parseInt(pageNum)+1){
                                     nextt=aTag;
                                 }
                             }
@@ -4333,125 +4335,40 @@ ImgOps | https://imgops.com/#b#`;
                     setTimeout(function(){textSpan.innerHTML=createHTML(i18n("loadAll"));},1500);
                 }
             },
-            prePage:function(){
+            pageAction:function(next){
                 var pageObj=this.getPage(),self=this,textSpan=this.eleMaps['head-command-nextPage'].querySelector("span");
                 if(textSpan.innerHTML!=i18n("loading")){
                     return;
                 }
                 var loadOver=function(){
-                    self.pageAllReady=true;
-                    self.pageImgReady();
-                };
-                if(!pageObj.pre){
-                    loadOver();
-                    return;
-                }
-                var preUrl=pageObj.pre;
-                if(preUrl.tagName!="A"){
-                    var childA=preUrl.querySelector("a");
-                    if(childA){
-                        preUrl=childA;
-                    }else{
-                        while(preUrl=preUrl.parentElement){
-                            if(preUrl.nodeName=='A'){
-                                break;
-                            }
-                        }
-                        if(!preUrl)return;
-                    }
-                }
-                var href=preUrl.getAttribute("href");
-                if(self.completePages.indexOf(href)!=-1){
-                    loadOver();
-                    return;
-                }else{
-                    self.completePages.push(href);
-                }
-                self.href=self.canonicalUri(href);
-                _GM_xmlhttpRequest({
-                    method: 'GET',
-                    headers:{"Referer": + window.location.href},
-                    url: self.href,
-                    overrideMimeType:"text/html;charset="+document.charset,
-                    onload: function(d) {
-                        let html=document.implementation.createHTMLDocument('');
-                        html.documentElement.innerHTML = d.responseText;
-                        self.curPage=html;
-                        let imgs=html.querySelectorAll('img');
-                        var container = document.querySelector('.pv-gallery-container'),
-                            preloadContainer = document.querySelector('.pv-gallery-preloaded-img-container');
-                        imgs = Array.prototype.slice.call(imgs).filter(function(img){
-                            return !(container.contains(img) || (preloadContainer&&preloadContainer.contains(img)));
-                        });
-                        imgs.forEach(function(img) {
-                            pretreatment(img);
-                            if(!img.src)return;
-                            var isrc=img.src.trim();
-                            if(!isrc)return;
-                            isrc=self.canonicalUri(isrc);
-                            if (self._dataCache[isrc]) return;
-                            self._dataCache[isrc] = true;
-                            self.londingImgNum++;
-                            var nimg = new Image();
-                            nimg.src = isrc;
-                            nimg.onload=function(){
-                                self.londingImgNum--;
-                                self.pageImgReady();
-                                var result = findPic(this);
-                                if (result) {
-                                    self.data.push(result);
-                                    self._appendThumbSpans([result]);
-                                    self.loadThumb();
-                                }
-                            };
-                            nimg.onerror=function(){
-                                self.londingImgNum--;
-                                self.pageImgReady();
-                            };
-                        });
-                        if(prefs.gallery.loadAll)self.prePage();
-                        else loadOver();
-                    },
-                    onerror: function(e) {
-                        if(prefs.gallery.loadAll)self.prePage();
-                        else loadOver();
-                    }
-                });
-            },
-            nextPage:function(){
-                var pageObj=this.getPage(),self=this,textSpan=this.eleMaps['head-command-nextPage'].querySelector("span");
-                if(textSpan.innerHTML!=i18n("loading")){
-                    return;
-                }
-                var loadOver=function(){
-                    if(prefs.gallery.loadAll){
-                        self.curPage=document;
-                        self.href=location.href;
-                        self.prePage();
-                    }else{
+                    if(!next || !prefs.gallery.loadAll){
                         self.pageAllReady=true;
                         self.pageImgReady();
+                    }else{
+                        self.curPage=document;
+                        self.href=location.href;
+                        self.pageAction(false);
                     }
                 };
-                if(!pageObj.next){
+                if((next && !pageObj.next) || (!next && !pageObj.pre)){
                     loadOver();
                     return;
                 }
-                var nextUrl=pageObj.next;
-                if(nextUrl.tagName!="A"){
-                    var childA=nextUrl.querySelector("a");
+                var targetUrl=next?pageObj.next:pageObj.pre;
+                if(targetUrl.tagName!="A"){
+                    var childA=targetUrl.querySelector("a");
                     if(childA){
-                        nextUrl=childA;
+                        targetUrl=childA;
                     }else{
-                        while(nextUrl=nextUrl.parentElement){
-                            if(nextUrl.nodeName=='A'){
+                        while(targetUrl=targetUrl.parentElement){
+                            if(targetUrl.nodeName=='A'){
                                 break;
                             }
                         }
-                        if(!nextUrl)return;
+                        if(!targetUrl)return;
                     }
                 }
-                var href=nextUrl.getAttribute("href");
+                var href=targetUrl.getAttribute("href");
                 if(self.completePages.indexOf(href)!=-1){
                     loadOver();
                     return;
@@ -4500,11 +4417,11 @@ ImgOps | https://imgops.com/#b#`;
                                 self.pageImgReady();
                             };
                         });
-                        if(prefs.gallery.loadAll)self.nextPage();
+                        if(prefs.gallery.loadAll)self.pageAction(next);
                         else loadOver();
                     },
                     onerror: function(e) {
-                        if(prefs.gallery.loadAll)self.nextPage();
+                        if(prefs.gallery.loadAll)self.pageAction(next);
                         else loadOver();
                     }
                 });
@@ -8915,6 +8832,11 @@ ImgOps | https://imgops.com/#b#`;
                 imgSrc=img.dataset.lazySrc;
             }
 
+            if(/^blob/i.test(imgSrc)){
+                imgSrc=drawTobase64(img);
+                src=imgSrc;
+            }
+
             var ret = {
                 src: src,                  // 得到的src
                 srcs: srcs,                // 多个 src，失败了会尝试下一个
@@ -10126,6 +10048,15 @@ ImgOps | https://imgops.com/#b#`;
         }
 
     };
+
+    function drawTobase64(img){
+        let canvas = document.createElement('CANVAS');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        let ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+        return canvas.toDataURL("image/png");
+    }
 
     function init2(){
         init(topObject,window,document,arrayFn,envir,storage,unsafeWindow);
