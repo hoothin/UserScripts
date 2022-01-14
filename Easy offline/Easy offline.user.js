@@ -8,7 +8,7 @@
 // @namespace    https://github.com/hoothin/UserScripts/tree/master/Easy%20offline
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Base64/0.2.0/base64.min.js
-// @version      1.9.1
+// @version      1.9.2
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -257,7 +257,7 @@
         xunlei:{
             regex:/lixian.*\.xunlei\.com/,
             url:"http://lixian.xunlei.com/",
-            bgColor:"2e71f1",
+            bgColor:"328fec",
             offFunc:function(delLink){
                 var rsc = setInterval(function(){
                     var offBtn=document.querySelector('.ico_add');
@@ -274,6 +274,33 @@
                                 event.initEvent("input", false, true);
                                 textarea.dispatchEvent(event);
                                 document.querySelector('.j-com-sub').click();
+                                delLink();
+                            }
+                        },200);
+                    }
+                },1000);
+            },
+            bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAACSVBMVEUAAABcZmwsMTUqO0U5PUH5+vvx+v665fZUhaAzTV4bLzwbLDY8P0Hg+P4Bh9pKcoRNgZ86U2OU2PoFk+QBi+AKs/5jwPKr3fS68frS7vqU0++EyO0JfMMmMTcXICfK+f+x6P4FqPuj3/q05PlPvPdVt/Cr4fpPw/qx4PYQmuyh2fb09/iw5fcGjuCq3PEJitiZ2PGYzuCKtMtkpcV6p8Beip1pkqpEcYpJZXQbT2pVi6sTNUg/YHVldX+G6//8/PzY8Po3wvmY0/QAgdbF5/Ywq+/s9/l/zflzw/GG0vag1/Afk9g2ot95v+ak2OhPreJEvOxwtd6ax9zb6fMCaKd1udWSv9G5yNGDqLUOYZaQqrh2n7M3dJcLXIsWWX60ydY9bIdieoqYq7did4IiRVo0UmM1RE5idIFVbHiSnaWCjJM/SlJV0v9kz/tI4PwcwPyK2/sAe8ly2/yb7Pk3rO/E6ewMleYOg8wAZ7Pb7vHr8PPi5+q72+eKwNsymdGu0dzL2eJoqtEwoM3E0dlYq8ywvsaXsL6tusGjrbR4nKeHpbREeptrjpt6iY8ddJdxeX9OaXp0hI7////u+v/1/f/f9P7K7v36/f/b9P0Bkenp9/7Y8f3S8P3j9f7D6/wAme3n+P7D/v+x8v+36v6u5f4CnfCo5/8Do/u65fktrvIbo+619f+98//j/f6X3/0AmvoBofYKofMUoPIAlO4AhNfs///I///Z/P8oyP8rtv6C0vscsPhlxvZ0yfQmnuOX8v+n8f9u7/+MzvJIjWZiAAAAknRSTlMAIhZGD/r++rZkTD0I/v6PbGz+/v79/fz6+fPx7zQh/v7+/v7+/vz8/Pz7+fn49/b15MvJxrOyn4B0cFpVMPz8/Pz8/Pv6+ff39vb19PDu7uri3tjX1dLPy764t7CvmJaNiIZ+fn1gXUI8Myz+/v39/f38+PT09PT08/Ls6+ni29HRzMvLyMC9ta+ppJ6enZF0b+TVr9MAAAKHSURBVDjLvZLlcxpBGIcPDoIFTXDi7u7ubo27e93d3Xt3HBxpcEloPMTTVP6y7lFKJzN8zrOzX/b3vO+8u7PQmeNPmZudnaPQfGZg04Kmx4aHx77AVN/lQVOfXj9rb3/86oOQ40sJGn1xL4EOSLjz6D3sf6q2aAaG2ePdGOJhL41P9vjfe/xtX9/L7rv/cmz3Wief481pnMme+3I5F0VK6Al0DVZCr5b9KH5e4BWKRntucFe5O5jmLwjixyj+1Zrnvex0OmN1Z1VdjaJ+GJAwICRevVj2keMxqLlpIXtaLteIug0MRRA0/Pz+pacjMNWds7KSQ3B5qVq9qCMVVKdBjJf3xeLWDP7UPMgLM5stely+oAWG0agDYBr8gtghjqlLy/wcDLH51l0LA/8KBLexiGKYeq0sbD0sZs1kzy6A+P1mk4WhJw2yx6IWRXThMUeOdUfk2oq98x2U2ZUoiyAFYACBHGLp+CjMsb4ZVR4br2yD0s9Fh0ZH6HG3sbCgw3RL35c3Nja2tyTx0vK6GiCEWqKlS8AAAm6NwEG+abMZCGetNFZUUwv1d63I4uulsYzKylKt9ThSIgG5gQhMamxKThQ1PYFy38hM9nBrqAWMoT9ctjmdNoPBQBAnUb+tZlHGCMTJbTZ9M4NlClkRRcUR2yANILa3Ig/t5p/KHDZEg7MfKFJTFYr65FRJVRxBEAEBgbyKhhalQtnGZFHBU7IncrKYTGZWdkZLVdzNpKSUFJ6qo3eAycyZYAdDJMEwSygUsiYHGg+coNrlutIxlMcSskDsgUYBzBcMnhxs8Vy8wIrbg4Xkyel/C4YZeni9QaW6laLqzaNAPqDMCPLzBQJBvqCwCDpL/gAILu9mqnp+uQAAAABJRU5ErkJggg=="
+        },
+        xunleipan:{
+            regex:/pan\.xunlei\.com/,
+            url:"http://pan.xunlei.com/",
+            bgColor:"2e71f1",
+            offFunc:function(delLink){
+                var rsc = setInterval(function(){
+                    var offBtn=document.querySelector('.pan-dropdown-menu.plus-menu>a:nth-child(2)');
+                    if(offBtn){
+                        clearInterval(rsc);
+                        var wsc = setInterval(function() {
+                            offBtn.click();
+                            var textarea=document.querySelector('.fileurl-input__container>textarea');
+                            if(textarea){
+                                clearInterval(wsc);
+                                textarea.value=curlink;
+                                var event = document.createEvent('HTMLEvents');
+                                event.initEvent("input", false, true);
+                                textarea.dispatchEvent(event);
+                                document.querySelector('.pan-dialog-btn__primary').click();
                                 delLink();
                             }
                         },200);
@@ -345,6 +372,7 @@
                     seedr:"Seedr网盘",
                     pcloud:"Pcloud网盘",
                     xunlei:"迅雷离线",
+                    xunleipan:"迅雷网盘",
                     xiaomi:"小米路由器",
                     weiyun:"腾讯微云",
                     bitqiu:"比特球",
@@ -385,6 +413,7 @@
                     seedr:"Seedr網盤",
                     pcloud:"Pcloud網盤",
                     xunlei:"迅雷離線",
+                    xunleipan:"迅雷網盤",
                     xiaomi:"小米路由器",
                     weiyun:"騰訊微雲",
                     bitqiu:"比特球",
@@ -424,6 +453,7 @@
                     seedr:"Seedr",
                     pcloud:"Pcloud",
                     xunlei:"Xunlei",
+                    xunleipan:"XunleiPan",
                     xiaomi:"MiWifi",
                     weiyun:"Weiyun",
                     bitqiu:"bitqiu",
