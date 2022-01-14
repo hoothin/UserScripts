@@ -6,7 +6,7 @@
 // @description          Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version              2022.1.14.1
+// @version              2022.1.14.2
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -72,7 +72,7 @@
                 globalkeysPress:"敲击开关预览",
                 globalkeysHold:"按住开启预览",
                 globalkeysType:"预览触发方式：",
-                loadAll:"加载更多",
+                loadAll:"加载更多页",
                 loadedAll:"加载完毕",
                 loading:"正在加载",
                 loadAllTip:"加载下一页的图片",
@@ -594,7 +594,7 @@
                 showDelay:"Show delay",
                 ms:"ms",
                 hide:"Hide",
-                hideDelay:"Hide Delay",
+                hideDelay:"Hide delay",
                 forceShow:"Show toolbar over Non-zoomed image beyond that size, ",
                 forceShowTip:"Show floating toolbar when non-scaled image size exceeds the size set below",
                 sizeLimitOr:"Effected by height OR width only",
@@ -667,7 +667,7 @@
                 zoom:"Magnifier",
                 imgWindowEscKey:"Esc key to close",
                 imgWindowDblClickImgWindow:"Double click to close",
-                imgWindowClickOutside:"Click overlayer to close",
+                imgWindowClickOutside:"Click overlayer to close by",
                 imgWindowClickOutsideTip:"Only enable when Overlayer is shown",
                 none:"None",
                 click:"Click",
@@ -680,7 +680,7 @@
                 imgWindowZoomRange:"Zoom Range",
                 imgWindowZoomRangeTip:"Zoom ratio (must be positive)",
                 others:"Other",
-                waitImgLoad:"Start to perform operations such as zooming when image is loaded",
+                waitImgLoad:"Start to perform operations such as zooming until image is loaded",
                 waitImgLoadTip:"When holding down the Ctrl key, you can temporarily execute opposite to this setting",
                 debug:"Debug mode",
                 customRules:"Custom rules for large image",
@@ -891,14 +891,10 @@ ImgOps | https://imgops.com/#b#`;
 // type: 'actual',
 //},
 //getImage: function(a){
-// if (!a) return;
-// if (a.href.match(/imgurl=(.*?\.\w{1,5})&/i)) {
-//     return decodeURIComponent(RegExp.$1);
-// }
 //},
 //css: '',
 //ext: 'previous-2',
-//exclude: /weixin_code\.png$/i,
+//exclude: /_code\.png$/i,
 //src: /avatar/i,
 //r: /\?.*$/i,
 //s: ''
@@ -3856,7 +3852,7 @@ ImgOps | https://imgops.com/#b#`;
 
                 var img=this.img;
 
-                if(!img.classList)return;
+                if(!img || !img.classList)return;
                 img.classList.remove('pv-gallery-img_zoom-in');
                 img.classList.remove('pv-gallery-img_zoom-out');
 
@@ -4074,7 +4070,7 @@ ImgOps | https://imgops.com/#b#`;
 
                 this.allLoading=[];//读取中的图片数组
                 this.iStatisCopy=cloneObject(this.imgStatistics,true);//图片统计副本
-                this.selected==null;
+                this.selected=null;
                 if(this.img){
                     this.img.style.display='none';
                     this.img=null;
