@@ -8906,7 +8906,7 @@ ImgOps | https://imgops.com/#b#`;
         MatchedRuleC.prototype={
             init:function(){
                 try{
-                    var customRules=eval(prefs.customRules);
+                    var customRules=unsafeWindow.eval(prefs.customRules);
                     if(Array.isArray(customRules)){
                         customRules.forEach(rule=>{
                             let hasRule = false;
