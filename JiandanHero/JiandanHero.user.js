@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         煎蛋侠
-// @name:en      Jiandan Hero
+// @name:en      Jandan Hero
 // @name:zh-TW   煎蛋俠
 // @namespace    hoothin
 // @version      2.0
