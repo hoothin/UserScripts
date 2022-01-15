@@ -8,7 +8,7 @@
 // @namespace    https://github.com/hoothin/UserScripts/tree/master/Easy%20offline
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Base64/0.2.0/base64.min.js
-// @version      1.9.2
+// @version      1.9.3
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -650,7 +650,7 @@
     function setCss(){
         $('head').append(`
         <style>
-            a.whx-a{
+            a.whx-a,a.whx-a-node{
                 display:inline-block;
                 margin-left:5px;
                 background-size:20px!important;
@@ -673,13 +673,14 @@
                 animation-direction:alternate;
                 -webkit-animation:rotateAni 2s infinite;
                 -webkit-animation-direction:alternate;
+                z-index:1;
             }
             @keyframes rotateAni{
-                from {transform: rotate(0deg);}
+                from {transform: rotate(0deg) scale3d(1.2, 1.2, 1.2);}
                 to {transform: rotate(360deg);}
             }
             @-webkit-keyframes rotateAni{
-                from {transform: rotate(0deg);}
+                from {transform: rotate(0deg) scale3d(1.2, 1.2, 1.2);}
                 to {transform: rotate(360deg);}
             }
             @keyframes rotateAdd{
@@ -803,7 +804,7 @@
                                 sNodes.push(curNode);
                             }
                             let href=curNode.href;
-                            let clone=$("<a></a>").attr("style",curNode.getAttribute("style")).attr("href",href).addClass('whx-a').addClass('whx-a-node').css("background-color","#e1e1e1").css("background-image",'url("'+downIconBg+'")');
+                            let clone=$("<a></a>").attr("style",curNode.getAttribute("style")).attr("href",href).addClass('whx-a-node').css("background-color","#e1e1e1").css("background-image",'url("'+downIconBg+'")');
                             if(allUrl.toString().indexOf(href)==-1)allUrl.push(href);
                             clone.mouseover(function(e){
                                 var basePos=clone.offset();
