@@ -660,8 +660,8 @@
         });
     }
 
-    function createPageBar(url, page){
-        let pageBar=document.createElement("div");
+    function createPageBar(url, page, inTable){
+        let pageBar=document.createElement(inTable?"tr":"div");
         let upSpan=document.createElement("span");
         let downSpan=document.createElement("span");
         let pageText=document.createElement("a");
@@ -682,6 +682,15 @@
         pageBar.appendChild(upSpan);
         pageBar.appendChild(pageText);
         pageBar.appendChild(downSpan);
+        if(inTable){
+            pageBar.style.display="table-row";
+            let td=document.createElement("td");
+            td.colspan=99;
+            td.appendChild(upSpan);
+            td.appendChild(pageText);
+            td.appendChild(downSpan);
+            pageBar.appendChild(td);
+        }
 
         upSpan.addEventListener("click", e=>{
             changeStop(true);
@@ -717,8 +726,8 @@
                     if(!insert || !insert.parentNode)return;
                     isLoading=false;
                     loading.style.display="none";
-                    var pageBar=createPageBar(nextLink.href, ++curPage);
-                    pageBar.style.width=parseInt(_unsafeWindow.getComputedStyle(insert.parentNode).width)-20+"px";
+                    var pageBar=createPageBar(nextLink.href, ++curPage, insert.tagName=="TR" || insert.previousElementSibling.tagName=="TR");
+                    pageBar.style.width=(insert.nodeType==1?parseInt(_unsafeWindow.getComputedStyle(insert).width):parseInt(_unsafeWindow.getComputedStyle(insert.previousElementSibling).width))-20+"px";
                     insert.parentNode.insertBefore(pageBar, insert);
                 });
             }else{
