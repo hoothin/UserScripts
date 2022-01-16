@@ -201,9 +201,10 @@
             this.findPageElementSelector="";
         }
 
-        initSavedRules(){
+        initSavedRules(callback){
             storage.getItem("rules", rules=>{
-                this.rules=this.rules.concat(rules);
+                if(rules)this.rules=rules;
+                callback();
             });
         }
 
@@ -249,23 +250,21 @@
         addRuleByUrl(url, from, callback) {
             this.requestJSON(url, json=>{
                 this.addRules(json, from);
+                storage.setItem("rules", this.rules);
                 callback();
             });
         }
 
         addRules(rules, from) {
-            rules.forEach(item=>{
-                let rule=this.formatRule(item, from);
-                if(rule){
-                    for(let i=0;i<this.rules.length;i++){
-                        if(this.rules[i].name==rule.name){
-                            //this.rules.splice(i,1);
-                            break;
-                        }
+            if(rules && rules.length>0){
+                this.rules=this.rules.filter(item=>{item.from!=from});
+                rules.forEach(item=>{
+                    let rule=this.formatRule(item, from);
+                    if(rule){
+                        this.rules.push(rule);
                     }
-                    this.rules.push(rule);
-                }
-            });
+                });
+            }
         }
 
         getRule() {
@@ -483,12 +482,12 @@
                 from:0
             },
             {
-                url:'https://github.com/hoothin/UserScripts/raw/master/Pagetual/pagetualRules.json',
+                url:'https://raw.githubusercontent.com/hoothin/UserScripts/master/Pagetual/pagetualRules.json',
                 from:1
             }
         ],i=0;
 
-        storage.getItem("rules", rules=>{
+        ruleParser.initSavedRules(()=>{
             storage.getItem("importRuleUrl", urls=>{
                 if(urls)ruleUrls=ruleUrls.concat(urls);
                 storage.getItem("ruleLastUpdate", date=>{
