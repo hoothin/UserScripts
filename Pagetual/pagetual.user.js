@@ -165,7 +165,7 @@
          name
          url
          enable
-         type 0 div 1 iframe
+         type 0 div 1 iframe 2強行塞入
          nextLink 下一頁的xpath或者selector
          pageElement //頁面主體的xpath或者selector
          lazyImgSrc //圖片延後加載的屬性直接賦值到src
@@ -174,6 +174,9 @@
          insertPos: 1, 1 之前 2 裏面最後
          pageAction:(document, eles) //對每一個插入的頁面進行修剪
          init:(document) // 對主頁面進行處理
+        */
+        /*
+        有規則就用規則，否則先嘗試尋找下一頁與主框架，沒有下一頁就結束。有下一頁的話，主框架找不到就用body，獲取主框架選擇器，在下一頁中尋找
         */
         constructor() {
             this.rules=[
@@ -462,7 +465,7 @@
             this.curUrl=url;
             this.pageAction(doc, eles);
             var self=this;
-            if(!eles || eles.length==0){
+            if(!eles || eles.length==0 || !self.insert || !self.insert.parentNode){
             }else{
                 [].forEach.call(eles, ele=>{
                     if(self.curSiteRule.insertPos==2){
@@ -711,6 +714,7 @@
                 isLoading=true;
                 loading.style.display="";
                 requestDoc(nextLink.href, ()=>{
+                    if(!insert || !insert.parentNode)return;
                     isLoading=false;
                     loading.style.display="none";
                     var pageBar=createPageBar(nextLink.href, ++curPage);
