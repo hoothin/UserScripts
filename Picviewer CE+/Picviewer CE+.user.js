@@ -9414,6 +9414,7 @@ ImgOps | https://imgops.com/#b#`;
             if (!result) {
                 pretreatment(target)
                 result = findPic(target);
+                if(!result)return;
                 if(!(result.imgAS.w==result.imgCS.w && result.imgAS.h==result.imgCS.h)){//如果不是两者完全相等,那么被缩放了.
                     if(prefs.floatBar.sizeLimitOr){
                         if(result.imgCS.h <= prefs.floatBar.minSizeLimit.h && result.imgCS.w <= prefs.floatBar.minSizeLimit.w){//最小限定判断.
