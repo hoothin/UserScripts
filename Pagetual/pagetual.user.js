@@ -685,7 +685,7 @@
         if(inTable){
             pageBar.style.display="table-row";
             let td=document.createElement("td");
-            td.colspan=99;
+            td.colSpan=99;
             td.appendChild(upSpan);
             td.appendChild(pageText);
             td.appendChild(downSpan);
