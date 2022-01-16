@@ -727,7 +727,7 @@
                     isLoading=false;
                     loading.style.display="none";
                     var pageBar=createPageBar(nextLink.href, ++curPage, insert.tagName=="TR" || insert.previousElementSibling.tagName=="TR");
-                    pageBar.style.width=(insert.nodeType==1?parseInt(_unsafeWindow.getComputedStyle(insert).width):parseInt(_unsafeWindow.getComputedStyle(insert.previousElementSibling).width))-20+"px";
+                    pageBar.style.width=parseInt(_unsafeWindow.getComputedStyle(insert.parentNode).width)-20+"px";
                     insert.parentNode.insertBefore(pageBar, insert);
                 });
             }else{
