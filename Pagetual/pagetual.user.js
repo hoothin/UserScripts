@@ -215,7 +215,9 @@
                     let json=null;
                     try{
                         json=JSON.parse(res.response);
-                    }catch(e){}
+                    }catch(e){
+                        console.log(e);
+                    }
                     callback(json);
                 }
             });
@@ -712,7 +714,7 @@
     function nextPage(){
         let nextLink=ruleParser.getNextLink();
         let insert=ruleParser.getInsert();
-        if(nextLink){
+        if(nextLink && insert){
             if(nextLink.href){
                 isLoading=true;
                 loading.style.display="";
