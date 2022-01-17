@@ -22,6 +22,8 @@
 // @grant        GM.getValue
 // @grant        GM.setValue
 // @grant        GM.addStyle
+// @connect      wedata.net
+// @connect      githubusercontent.com
 // ==/UserScript==
 
 (function() {
@@ -301,10 +303,22 @@
 
         geneSelector(ele){
             let selector=ele.tagName;
-            if(ele.id) selector += '#' + ele.id;
-            if(ele.classList) selector += [].map.call(ele.classList,d=>'.'+d).join('');
+            //Google id class都是隨機
+            //if(ele.id) selector += '#' + ele.id;
+            //if(ele.classList) selector += [].map.call(ele.classList,d=>'.'+d).join('');
             let parent = ele.parentElement;
-            if(parent) selector = this.geneSelector(parent) + ' > ' + selector +`:nth-child(${[].indexOf.call(parent.children,ele)+1})` ;
+            if(parent){
+                let i,j=0;
+                for(i=0;i<parent.children.length;i++){
+                    if(parent.children[i].tagName==selector){
+                        j++;
+                        if(parent.children[i]==ele){
+                            break;
+                        }
+                    }
+                }
+                selector = this.geneSelector(parent) + ' > ' + selector + (parent.tagName=="HTML"?"":`:nth-of-type(${j})`);
+            }
             return selector;
         }
 
@@ -326,15 +340,24 @@
                         self.findPageElementSelector=self.geneSelector(ele.parentNode)+">"+ele.tagName;
                         return [ele];
                     }
-                    let i,maxHeight=curHeight*0.3;
+                    let i,maxHeight=curHeight*0.35,curMaxEle=null,curMaxArea=0;
                     for(i=0;i<ele.children.length;i++){
                         let curNode=ele.children[i];
-                        curHeight=parseInt(_unsafeWindow.getComputedStyle(curNode).height);
-                        if(curHeight>maxHeight){
-                            return checkElement(curNode);
+                        let h=parseInt(_unsafeWindow.getComputedStyle(curNode).height);
+                        let w=parseInt(_unsafeWindow.getComputedStyle(curNode).width);
+                        if(isNaN(h) || isNaN(w))continue;
+                        let a=h*w+h;
+                        if(curMaxEle==null || curMaxArea<a){
+                            curHeight=h;
+                            curMaxArea=a;
+                            curMaxEle=curNode;
                         }
                     }
+                    if(curHeight>maxHeight){
+                        return checkElement(curMaxEle);
+                    }
                     self.findPageElementSelector=self.geneSelector(ele)+">*";
+                    console.log(self.findPageElementSelector);
                     return ele.children;
                 }
                 pageElement=checkElement(body);
@@ -497,7 +520,7 @@
                 if(urls)ruleUrls=ruleUrls.concat(urls);
                 storage.getItem("ruleLastUpdate", date=>{
                     let now=new Date().getTime();
-                    if(!date || now-date>24*60*60*1000){
+                    if(!date || now-date>3*24*60*60*1000){
                         ruleUrls.forEach(rule=>{
                             ruleParser.addRuleByUrl(rule.url, rule.from, ()=>{
                                 if(++i==ruleUrls.length){
@@ -529,12 +552,14 @@
                 let pageElement=ruleParser.getPageElement(doc);
                 //只有1的話怕不是圖片哦
                 if(pageElement && pageElement.length>1){
-                    callback();
+                    callback(pageElement);
                     ruleParser.insertPage(doc, pageElement, url);
                 }else{
                     requestFromIframe(url, (doc, eles)=>{
-                        callback();
-                        ruleParser.insertPage(doc, eles, url);
+                        callback(eles);
+                        if(eles){
+                            ruleParser.insertPage(doc, eles, url);
+                        }
                     });
                 }
             }
@@ -574,6 +599,9 @@
                 let eles=ruleParser.getPageElement(doc);
                 if(eles && eles.length>0){
                     callback(doc, eles);
+                }else{
+                    isPause=true;
+                    callback(false, false);
                 }
                 document.body.removeChild(iframe);
             }
@@ -626,7 +654,7 @@
 
     var upSvg=`<svg style="position:absolute;cursor: pointer;margin: 0 -45px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6364"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a" p-id="6365"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a" p-id="6366"></path></svg>`;
     var downSvg=`<svg style="position:absolute;cursor: pointer;margin: 0 15px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;transform: rotate(180deg);" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6364"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a" p-id="6365"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a" p-id="6366"></path></svg>`;
-    var pageBarStyle=`border-radius: 20px;background-color: rgb(240 240 240 / 80%);visibility: visible; position: initial; width: auto; height: 30px; float: none; clear: both; margin: 1px auto; text-align: center; display: block;`;
+    var pageBarStyle=`box-shadow: 0px 0px 10px 0px #000000cc;border-radius: 20px;background-color: rgb(240 240 240 / 80%);visibility: visible; position: initial; width: auto; height: 30px; float: none; clear: both; margin: 1px auto; text-align: center; display: block;`;
     var pageTextStyle=`line-height: 30px;text-decoration: none;user-select: none;visibility: visible;position: initial;width: auto;height: auto;float: none;clear: both;margin: 0px auto;text-align: center;display: inline;font-weight: bold;font-style: normal;font-size: 16px;letter-spacing: initial;vertical-align: super;color: rgb(85, 85, 95);`;
 
     var isPause=false,isLoading=false,curPage=1;
@@ -666,6 +694,7 @@
         let downSpan=document.createElement("span");
         let pageText=document.createElement("a");
         pageBar.className="pagetual_pageBar";
+        pageBar.id="pagetual_pageBar";
         if(isPause){
             pageBar.classList.add("stop");
         }
@@ -722,12 +751,12 @@
             if(nextLink.href){
                 isLoading=true;
                 loading.style.display="";
-                requestDoc(nextLink.href, ()=>{
-                    if(!insert || !insert.parentNode)return;
+                requestDoc(nextLink.href, (eles)=>{
                     isLoading=false;
                     loading.style.display="none";
+                    if(!insert || !insert.parentNode || !eles)return;
                     var pageBar=createPageBar(nextLink.href, ++curPage, insert.tagName=="TR" || insert.previousElementSibling.tagName=="TR");
-                    pageBar.style.width=parseInt(_unsafeWindow.getComputedStyle(insert.parentNode).width)-20+"px";
+                    pageBar.style.width=parseInt(_unsafeWindow.getComputedStyle(insert.parentNode).width)*.8+"px";
                     insert.parentNode.insertBefore(pageBar, insert);
                 });
             }else{
