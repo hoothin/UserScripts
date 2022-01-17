@@ -3,7 +3,7 @@
 // @name:zh-CN   东方永页机
 // @name:zh-TW   東方永頁機
 // @namespace    hoothin
-// @version      0.1
+// @version      0.2
 // @description  Simple Auto Page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -47,20 +47,90 @@
     }
 
     const lang = navigator.appName=="Netscape"?navigator.language:navigator.userLanguage;
-    var i18n=(name)=>{
+    var i18n=(name, param)=>{
         let config={};
         switch (lang){
             case "zh-CN":
             case "zh-SG":
+                config={
+                    saveCurrent:"保存当前设置",
+                    disable:"暂时禁用",
+                    enable:"启用翻页",
+                    toTop:"回到顶部",
+                    toBottom:"前往页尾",
+                    current:"当前页",
+                    forceIframe:"强制拼接",
+                    configure:"打开配置页",
+                    update:"立即更新规则",
+                    passSec:"更新于 #t# 秒前",
+                    passMin:"更新于 #t# 分钟前",
+                    passHour:"更新于 #t# 小时前",
+                    passDay:"更新于 #t# 天前",
+                    cantDel:"无法删除内置规则",
+                    confirmDel:"是否确认要删除此规则？",
+                    updateSucc:"更新成功",
+                    beginUpdate:"正在更新，请稍候",
+                    customUrls:"导入规则url，一行一条，AutoPagerize 格式规则需要以\"0|\"开头",
+                    customRules:"输入【东方永页机】格式的自定义规则",
+                    save:"保存设置"
+                };
+                break;
             case "zh-TW":
             case "zh-HK":
+                config={
+                    disable:"暫時禁用",
+                    enable:"啟用翻頁",
+                    toTop:"回到頂部",
+                    toBottom:"前往頁尾",
+                    current:"當前頁",
+                    forceIframe:"強制拼接",
+                    configure:"打開配置頁",
+                    update:"立即更新規則",
+                    passSec:"更新于 #t# 秒前",
+                    passMin:"更新于 #t# 分鐘前",
+                    passHour:"更新于 #t# 小時前",
+                    passDay:"更新于 #t# 天前",
+                    cantDel:"無法刪除内置規則",
+                    confirmDel:"是否確認要刪除此規則？",
+                    updateSucc:"更新成功",
+                    beginUpdate:"正在更新，請稍候",
+                    customUrls:"導入規則url，一行一條，AutoPagerize 格式規則需要以\"0|\"開頭",
+                    customRules:"輸入【東方永頁機】格式的自定義規則",
+                    save:"存儲設置"
+                };
+                break;
             default:
                 config={
-                    configure:"Configure"
+                    disable:"Disable",
+                    enable:"Enable",
+                    toTop:"To Top",
+                    toBottom:"To Bottom",
+                    current:"Current Page",
+                    forceIframe:"Force to join",
+                    configure:"Configure",
+                    update:"Update rules from url now",
+                    passSec:"Updated #t# seconds ago",
+                    passMin:"Updated #t# minutes ago",
+                    passHour:"Updated #t# hours ago",
+                    passDay:"Updated #t# days ago",
+                    cantDel:"Can't delete buildin rules",
+                    confirmDel:"Are you sure you want to delete this rule?",
+                    updateSucc:"Update succeeded",
+                    beginUpdate:"Begin update, wait a minute please",
+                    customUrls:"Import rule url, One url per line, rules on AutoPagerize format need to start with \"0|\"",
+                    customRules:"Input custom rules with [Pagetual] format",
+                    save:"Save"
                 };
                 break;
         }
-        return config[name]?config[name]:name;
+        return config[name]?config[name].replace("#t#",param):name;
+    };
+
+    var enableDebug=true;
+    var debug=str=>{
+        if(enableDebug){
+            console.debug(str);
+        }
     };
 
     var _GM_xmlhttpRequest,_GM_registerMenuCommand,_GM_notification,_GM_addStyle;
@@ -134,6 +204,18 @@
             cb(value);
         }
     };
+    _GM_registerMenuCommand(i18n("forceIframe"), ()=>{
+        if(ruleParser.curSiteRule.action==2){
+            ruleParser.curSiteRule.action=0;
+        }else{
+            ruleParser.curSiteRule.action=2;
+        }
+        ruleParser.saveCurSiteRule();
+        location.reload();
+    });
+    _GM_registerMenuCommand(i18n("configure"), ()=>{
+        location.href="https://github.com/hoothin/UserScripts/tree/master/Pagetual";
+    });
 
     function getElementByXpath(xpath, contextNode, doc){
         doc = doc || document;
@@ -179,7 +261,7 @@
          init:(document) // 對主頁面進行處理
         */
         constructor() {
-            this.rules=[
+            this.customRules=[
                 {
                     from:2,
                     name:"yande",
@@ -200,16 +282,28 @@
                     nextLink:".next.pagination-item "
                 }
             ];
+            this.rules=[];
             this.pageDoc=document;
             this.curUrl=location.href;
             this.curSiteRule={};
         }
 
         initSavedRules(callback){
-            storage.getItem("rules", rules=>{
-                if(rules)this.rules=rules;
-                callback();
+            var self=this;
+            storage.getItem("customRules", customRules=>{
+                if(customRules)self.customRules=customRules;
+                storage.getItem("rules", rules=>{
+                    if(rules)this.rules=rules;
+                    callback();
+                });
             });
+        }
+
+        saveCurSiteRule(){
+            if(!this.curSiteRule || !this.curSiteRule.url)return;
+            this.customRules=this.customRules.filter(item=>{return item.url!=this.curSiteRule.url});
+            this.customRules.push(this.curSiteRule);
+            storage.setItem("customRules", this.customRules);
         }
 
         requestJSON(url, callback){
@@ -220,7 +314,7 @@
                     try{
                         json=JSON.parse(res.response);
                     }catch(e){
-                        console.log(e);
+                        debug(e);
                     }
                     callback(json);
                 }
@@ -280,8 +374,28 @@
                 return this.curSiteRule;
             }
             var self=this;
+            for(let i in this.customRules){
+                let rule=this.customRules[i];
+                if(rule.enable==0)continue;
+                let urlReg=new RegExp(rule.url, "i");
+                if(urlReg.test(location.href)){
+                    let pageElement,nextLink,insert;
+                    if(rule.pageElement)pageElement=document.querySelector(rule.pageElement);
+                    if(rule.nextLink)nextLink=document.querySelector(rule.nextLink);
+                    if(rule.insert)insert=document.querySelector(rule.insert);
+                    if((rule.pageElement && !pageElement) ||
+                       (rule.nextLink && !nextLink) ||
+                       (rule.insert && !insert)){
+                        continue;
+                    }
+                    this.curSiteRule=rule;
+                    debug(rule);
+                    return rule;
+                }
+            }
             for(let i in this.rules){
                 let rule=this.rules[i];
+                if(rule.enable==0)continue;
                 let urlReg=new RegExp(rule.url, "i");
                 if(urlReg.test(location.href)){
                     let pageElement,nextLink,insert;
@@ -294,7 +408,7 @@
                         continue;
                     }
                     this.curSiteRule=rule;
-                    console.log(rule);
+                    debug(rule);
                     return rule;
                 }
             }
@@ -338,7 +452,7 @@
                     if(ele.children.length==0){
                         self.curSiteRule.pageElement=self.geneSelector(ele.parentNode)+">"+ele.tagName;
                         self.curSiteRule.type=1;
-                        console.log(self.curSiteRule.pageElement);
+                        debug(self.curSiteRule.pageElement);
                         return [ele];
                     }
                     let i,maxHeight=curHeight*0.35,curMaxEle=null,curMaxArea=0;
@@ -359,10 +473,11 @@
                     }
                     self.curSiteRule.pageElement=self.geneSelector(ele)+">*";
                     self.curSiteRule.type=1;
-                    console.log(self.curSiteRule.pageElement);
+                    debug(self.curSiteRule.pageElement);
                     return ele.children;
                 }
                 pageElement=checkElement(body);
+                if(pageElement)this.saveCurSiteRule();
             }
             return pageElement;
         }
@@ -451,6 +566,7 @@
             if(nextLink && !this.curSiteRule.nextLink){
                 this.curSiteRule.nextLink=this.geneSelector(nextLink);
                 this.curSiteRule.type=1;
+                this.saveCurSiteRule();
             }
             return nextLink;
         }
@@ -519,38 +635,270 @@
     }
     var ruleParser = new RuleParser();
 
+    var rulesDate={},ruleUrls,updateDate;
+    function initConfig(){
+        _GM_registerMenuCommand(i18n(isDisabled?"enable":"disable"), ()=>{
+            storage.setItem("disable_"+location.host, !isDisabled);
+            location.reload();
+        });
+        var configCon;
+        if(location.href=="https://github.com/hoothin/UserScripts/tree/master/Pagetual"){
+            _GM_addStyle(`
+             p>span:nth-child(1),p>span:nth-child(2),p>span:nth-child(3){
+              cursor: pointer;
+              user-select: none;
+             }
+             p>span:nth-child(1):hover,p>span:nth-child(2):hover,p>span:nth-child(3):hover{
+              color:red;
+             }
+             .updateDate{
+              cursor: pointer;
+              user-select: none;
+             }
+             .updateDate:hover{
+              color:red;
+             }
+            `);
+            configCon=document.querySelector(".markdown-body");
+        }else if(location.href=="https://github.com/hoothin/UserScripts/tree/master/Pagetual"){
+        }else return;
+        class Rulebar {
+            init(ruleUrl){
+                this.ruleUrl=ruleUrl;
+                this.item=document.createElement("p");
+                this.item.title=ruleUrl.type==0?"AutoPagerize Rules":"Pagetual Rules";
+                this.item.dataset.id=this.ruleUrl.id;
+                let url=document.createElement("span");
+                url.innerHTML=ruleUrl.url;
+                let up=document.createElement("span");
+                up.innerHTML="↑ ";
+                let down=document.createElement("span");
+                down.innerHTML="↓ ";
+                let del=document.createElement("span");
+                del.innerHTML="× ";
+                up.onclick=e=>{
+                    this.moveUp();
+                };
+                down.onclick=e=>{
+                    this.moveDown();
+                };
+                del.onclick=e=>{
+                    this.del();
+                };
+                this.item.appendChild(up);
+                this.item.appendChild(down);
+                this.item.appendChild(del);
+                this.item.appendChild(url);
+                configCon.appendChild(this.item);
+            }
+            saveSort(){
+                let sort=[];
+                [].forEach.call(this.item.parentNode.querySelectorAll("p[data-id]"), i=>{
+                    sort.push(i.dataset.id);
+                });
+                rulesDate.sort=sort;
+                storage.setItem("importRuleUrl", rulesDate);
+            }
+            moveUp(){
+                let preE=this.item.previousElementSibling;
+                if(preE.tagName=="P" && preE.children.length>1){
+                    this.item.parentNode.insertBefore(this.item,preE);
+                    this.saveSort();
+                }
+            }
+            moveDown(){
+                let nextE=this.item.nextElementSibling;
+                if(nextE.tagName=="P" && nextE.children.length>1){
+                    this.item.parentNode.insertBefore(nextE,this.item);
+                    this.saveSort();
+                }
+            }
+            del(){
+                if(this.ruleUrl.id<2){
+                    alert(i18n("cantDel"));
+                }else if(window.confirm(i18n("confirmDel"))){
+                    for(let u=0;u<rulesDate.urls.length;u++){
+                        if(this.ruleUrl.id==rulesDate.urls[u].id){
+                            rulesDate.urls.splice(u,1);
+                            break;
+                        }
+                    }
+                    for(let u=0;u<rulesDate.sort.length;u++){
+                        if(this.ruleUrl.id==rulesDate.sort[u]){
+                            rulesDate.sort.splice(u,1);
+                            break;
+                        }
+                    }
+                    storage.setItem("importRuleUrl", rulesDate);
+                    ruleParser.rules=ruleParser.rules.filter(item=>{return item.from!=this.ruleUrl.id});
+                    storage.setItem("rules", ruleParser.rules);
+                    location.reload();
+                }
+            }
+        }
+        let updateP=document.createElement("p"),i=0;
+        let now=new Date().getTime(),inUpdate=false;
+        updateP.className="updateDate";
+        updateP.innerHTML=updateDate;
+        updateP.title=i18n("update");
+        updateP.onclick=e=>{
+            if(inUpdate)return;
+            inUpdate=true;
+            ruleUrls.forEach(rule=>{
+                ruleParser.addRuleByUrl(rule.url, rule.type, rule.id, ()=>{
+                    if(++i==ruleUrls.length){
+                        storage.setItem("ruleLastUpdate", now);
+                        alert(i18n("updateSucc"));
+                        inUpdate=false;
+                    }
+                })
+            });
+            alert(i18n("beginUpdate"));
+        };
+        configCon.appendChild(updateP);
+        if(ruleUrls){
+            ruleUrls.forEach(ruleUrl=>{
+                var rulebar=new Rulebar();
+                rulebar.init(ruleUrl);
+            });
+        }
+        let customUrlsTitle=document.createElement("h2");
+        customUrlsTitle.innerHTML=i18n("customUrls")
+        configCon.appendChild(customUrlsTitle);
+        let customUrlsInput=document.createElement("textarea");
+        customUrlsInput.style.width="100%";
+        customUrlsInput.placeholder="0|http://wedata.net/databases/AutoPagerize/items_all.json";
+        configCon.appendChild(customUrlsInput);
+        let customRulesTitle=document.createElement("h2");
+        customRulesTitle.innerHTML=i18n("customRules")
+        configCon.appendChild(customRulesTitle);
+        let customRulesInput=document.createElement("textarea");
+        customRulesInput.style.width="100%";
+        customRulesInput.style.height="500px";
+        customRulesInput.placeholder=`[\n{\n    "type":"1",\n    "name":"yande",\n    "action":"0",\n    "url":"^https:\/\/yande\\.re\/",\n    "pageElement":"ul#post-list-posts>li",\n    "nextLink":"a.next_page",\n    "css":".javascript-hide {display: inline-block !important;}"\n},\n{\n    "type":"1",\n    "name":"tieba",\n    "action":"1",\n    "url":"^https:\/\/tieba\\.baidu.com\/f\\?kw=",\n    "pageElement":"ul#thread_list>li",\n    "nextLink":".next.pagination-item "\n}\n]`;
+        customRulesInput.value=JSON.stringify(ruleParser.customRules);
+        configCon.appendChild(customRulesInput);
+        let saveBtn=document.createElement("button");
+        saveBtn.innerHTML=i18n("save");
+        saveBtn.style.width="100%";
+        configCon.appendChild(saveBtn);
+        saveBtn.onclick=e=>{
+            try{
+                let customRules=JSON.parse(customRulesInput.value);
+                debug(customRules);
+                storage.setItem("customRules", customRules);
+            }catch(e){
+                debug(e);
+                alert("JSON error!");
+            }
+            let customUrls=customUrlsInput.value.trim();
+            if(customUrls){
+                customUrls=customUrls.split(/\n/);
+                for(let c=0;c<customUrls.length;c++){
+                    let urlArr=customUrls[c].split("|"),url,type=1;
+                    if(urlArr.length==1){
+                        url=urlArr[0].trim();
+                        if(!/http/.test(url)){
+                            alert("Wrong url");
+                            break;
+                        }
+                    }else if(urlArr.length==2){
+                        type=urlArr[0].trim();
+                        url=urlArr[1].trim();
+                    }else{
+                        break;
+                    }
+                    let maxId=0,hasUrl=false;;
+                    if(!rulesDate.urls){
+                        rulesDate.urls=[];
+                        maxId=1;
+                    }else{
+                        rulesDate.urls.forEach(u=>{
+                            if(maxId<u.id){
+                                maxId=u.id;
+                            }
+                            if(u.url==url){
+                                hasUrl=true;
+                            }
+                        });
+                        if(hasUrl)break;
+                    }
+                    rulesDate.urls.push({id:maxId+1,url:url,type:type});
+                    rulesDate.sort.push(maxId+1);
+                    storage.setItem("importRuleUrl", rulesDate);
+                }
+            }
+            alert("over");
+        };
+    }
+
+    function getTimeStr(date){
+        let now=new Date().getTime();
+        let passTime=(now-date)/1000;
+        if(passTime<60){
+            updateDate=i18n("passSec", passTime);
+        }else if(passTime<60*60){
+            updateDate=i18n("passMin", parseInt(passTime/60));
+        }else if(passTime<60*60*24){
+            updateDate=i18n("passHour", parseInt(passTime/3600));
+        }else{
+            updateDate=i18n("passDay", parseInt(passTime/86400));
+        }
+    }
+
     function initRules(callback) {
         /*0 wedata格式，1 pagetual格式*/
-        var ruleUrls=[
+        ruleUrls=[
             {
+                id:0,
                 url:'http://wedata.net/databases/AutoPagerize/items_all.json',
                 type:0,
             },
             {
+                id:1,
                 url:'https://raw.githubusercontent.com/hoothin/UserScripts/master/Pagetual/pagetualRules.json',
                 type:1
             }
-        ],i=0,j=0;
+        ];var i=0,j=0;
 
         ruleParser.initSavedRules(()=>{
-            storage.getItem("importRuleUrl", urls=>{
-                if(urls)ruleUrls=ruleUrls.concat(urls);
-                storage.getItem("ruleLastUpdate", date=>{
-                    let now=new Date().getTime();
-                    if(!date || now-date>3*24*60*60*1000){
-                        ruleUrls.forEach(rule=>{
-                            setTimeout(()=>{
-                                ruleParser.addRuleByUrl(rule.url, rule.type, j++, ()=>{
+            storage.getItem("importRuleUrl", data=>{
+                if(data){
+                    rulesDate=data;
+                    if(data.urls)ruleUrls=ruleUrls.concat(data.urls);
+                    if(data.sort){
+                        let urls=[];
+                        data.sort.forEach(id=>{
+                            for(let s=0;s<ruleUrls.length;s++){
+                                if(id==ruleUrls[s].id){
+                                    urls.push(ruleUrls[s]);
+                                    break;
+                                }
+                            }
+                        });
+                        ruleUrls=urls;
+                    }
+                }
+                storage.getItem("disable_"+location.host, v=>{
+                    storage.getItem("ruleLastUpdate", date=>{
+                        isDisabled=v==true;
+                        getTimeStr(date);
+                        initConfig();
+                        if(isDisabled)return;
+                        let now=new Date().getTime();
+                        if(!date || now-date>3*24*60*60*1000){
+                            ruleUrls.forEach(rule=>{
+                                ruleParser.addRuleByUrl(rule.url, rule.type, rule.id, ()=>{
                                     if(++i==ruleUrls.length){
                                         storage.setItem("ruleLastUpdate", now);
                                         callback();
                                     }
                                 })
-                            },(j+1)*500);
-                        });
-                    }else{
-                        callback();
-                    }
+                            });
+                        }else{
+                            callback();
+                        }
+                    });
                 });
             });
         });
@@ -566,7 +914,7 @@
                     doc.documentElement.innerHTML=res.response;
                 }
                 catch (e) {
-                    console.log('parse error');
+                    debug('parse error'+e.toString());
                 }
                 let pageElement=ruleParser.getPageElement(doc);
                 //只有1的話怕不是圖片哦
@@ -658,7 +1006,7 @@
     var pageBarStyle=`box-shadow: 0px 0px 10px 0px #000000aa;border-radius: 20px;background-color: rgb(240 240 240 / 80%);visibility: visible; position: initial; width: auto; height: 30px; float: none; clear: both; margin: 20px auto; text-align: center; display: block;`;
     var pageTextStyle=`line-height: 30px;text-decoration: none;user-select: none;visibility: visible;position: initial;width: auto;height: auto;float: none;clear: both;margin: 0px auto;text-align: center;display: inline;font-weight: bold;font-style: normal;font-size: 16px;letter-spacing: initial;vertical-align: super;color: rgb(85, 85, 95);`;
 
-    var isPause=false,isLoading=false,curPage=1;
+    var isPause=false,isLoading=false,curPage=1,isDisabled=false;
 
     function changeStop(stop){
         isPause=stop;
