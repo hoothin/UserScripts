@@ -177,9 +177,6 @@
          pageAction:(document, eles) //對每一個插入的頁面進行修剪
          init:(document) // 對主頁面進行處理
         */
-        /*
-        有規則就用規則，否則先嘗試尋找下一頁與主框架，沒有下一頁就結束。有下一頁的話，主框架找不到就用body，獲取主框架選擇器，在下一頁中尋找
-        */
         constructor() {
             this.rules=[
                 {
@@ -303,7 +300,7 @@
 
         geneSelector(ele){
             let selector=ele.tagName;
-            //Google id class都是隨機
+            //Google id class都是隨機。百度更過分，style script順序都是隨機的
             //if(ele.id) selector += '#' + ele.id;
             //if(ele.classList) selector += [].map.call(ele.classList,d=>'.'+d).join('');
             let parent = ele.parentElement;
@@ -441,7 +438,7 @@
         }
 
         getInsert(refresh) {
-            if(this.insert && !refresh)return this.insert;
+            if(this.insert && !refresh && this.insert.parentNode)return this.insert;
             if(this.curSiteRule.insert){
                 this.insert=this.curSiteRule.from==0?getElementByXpath(this.curSiteRule.insert,document):document.querySelector(this.curSiteRule.insert);
             }else{
@@ -487,6 +484,7 @@
             this.pageDoc=doc;
             this.curUrl=url;
             this.pageAction(doc, eles);
+            this.getInsert();
             var self=this;
             if(!eles || eles.length==0 || !self.insert || !self.insert.parentNode){
             }else{
@@ -590,21 +588,24 @@
         iframe.frameBorder = '0';
         iframe.style.cssText = 'margin:0!important;padding:0!important;visibility:hidden!important;';
         iframe.addEventListener("load", e=>{
-            let doc=iframe.contentWindow.document;
-            if(nextlinkSel){
-                orgPage=doc.querySelector(pageSel);
-                doc.querySelector(nextlinkSel).click();
-                checkPage(doc);
-            }else{
-                let eles=ruleParser.getPageElement(doc);
-                if(eles && eles.length>0){
-                    callback(doc, eles);
+            setTimeout(()=>{
+                //可能會延遲加載
+                let doc=iframe.contentWindow.document;
+                if(nextlinkSel){
+                    orgPage=doc.querySelector(pageSel);
+                    doc.querySelector(nextlinkSel).click();
+                    checkPage(doc);
                 }else{
-                    isPause=true;
-                    callback(false, false);
+                    let eles=ruleParser.getPageElement(doc);
+                    if(eles && eles.length>0){
+                        callback(doc, eles);
+                    }else{
+                        isPause=true;
+                        callback(false, false);
+                    }
+                    document.body.removeChild(iframe);
                 }
-                document.body.removeChild(iframe);
-            }
+            },300);
         });
         iframe.src=url;
         document.body.appendChild(iframe);
@@ -745,6 +746,7 @@
     }
 
     function nextPage(){
+        if(isPause)return;
         let nextLink=ruleParser.getNextLink();
         let insert=ruleParser.getInsert();
         if(nextLink && insert){
@@ -754,6 +756,7 @@
                 requestDoc(nextLink.href, (eles)=>{
                     isLoading=false;
                     loading.style.display="none";
+                    insert=ruleParser.getInsert();
                     if(!insert || !insert.parentNode || !eles)return;
                     var pageBar=createPageBar(nextLink.href, ++curPage, insert.tagName=="TR" || insert.previousElementSibling.tagName=="TR");
                     pageBar.style.width=parseInt(_unsafeWindow.getComputedStyle(insert.parentNode).width)*.9+"px";
