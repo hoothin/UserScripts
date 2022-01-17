@@ -385,21 +385,29 @@
             if(next && (!next.href || /javascript:/.test(next.href)))next=null;
             if(!next){
                 let aTags=curPage.querySelectorAll("a");
-                let nextf,nexts,nextt;
+                let nextf,nexts,nextt,nextfo;
                 for(i=0;i<aTags.length;i++){
                     let aTag=aTags[i];
-                    if(!aTag.href || /javascript:/.test(aTag.href))continue;
                     if(nextf && nexts && nextt)break;
                     if(!nextf){
                         if(/下[一1]?[页頁张張]|next( page)?|次のページ/i.test(aTag.innerHTML)){
-                            nextf=aTag;
+                            if(!aTag.href || /javascript:/.test(aTag.href)){
+                                nextfo=aTag;
+                            }else{
+                                nextf=aTag;
+                            }
                         }
                     }
                     if(!nexts){
                         if(aTag.innerHTML=="&gt;"){
-                            nexts=aTag;
+                            if(!aTag.href || /javascript:/.test(aTag.href)){
+                                nextfo=aTag;
+                            }else{
+                                nexts=aTag;
+                            }
                         }
                     }
+                    if(!aTag.href || /javascript:/.test(aTag.href))continue;
                     if(!nextt){
                         if(aTag.innerHTML=="»"){
                             nextt=aTag;
@@ -410,7 +418,7 @@
                         }
                     }
                 }
-                next=nextf||nexts||nextt;
+                next=nextf||nexts||nextt||nextfo;
             }
             if(!next)next=curPage.querySelector(".next>a");
             if(!next){
@@ -564,24 +572,9 @@
         });
     }
 
-    function requestFromIframe(url, callback, nextlinkSel, pageSel){
+    function requestFromIframe(url, callback){
         let orgPage,curPage;
         let iframe = document.createElement('iframe');
-        function checkPage(doc){
-            //todo: 無法獲取跳轉之後的url
-            curPage=doc.querySelector(pageSel);
-            if(orgPage == curPage){
-                setTimeout(()=>{
-                    checkPage();
-                },500);
-            }else{
-                let eles=ruleParser.getPageElement(doc);
-                if(eles && eles.length>0){
-                    callback(doc, eles);
-                }
-                document.body.removeChild(iframe);
-            }
-        }
         iframe.name = 'pagetual-iframe';
         iframe.width = '100%';
         iframe.height = '0';
@@ -591,20 +584,14 @@
             setTimeout(()=>{
                 //可能會延遲加載
                 let doc=iframe.contentWindow.document;
-                if(nextlinkSel){
-                    orgPage=doc.querySelector(pageSel);
-                    doc.querySelector(nextlinkSel).click();
-                    checkPage(doc);
+                let eles=ruleParser.getPageElement(doc);
+                if(eles && eles.length>0){
+                    callback(doc, eles);
                 }else{
-                    let eles=ruleParser.getPageElement(doc);
-                    if(eles && eles.length>0){
-                        callback(doc, eles);
-                    }else{
-                        isPause=true;
-                        callback(false, false);
-                    }
-                    document.body.removeChild(iframe);
+                    isPause=true;
+                    callback(false, false);
                 }
+                document.body.removeChild(iframe);
             },300);
         });
         iframe.src=url;
@@ -745,14 +732,58 @@
         return pageBar;
     }
 
+    var emuIframe;
+    function emuPage(url, callback, pageSel, nextlinkSel){
+        let orgPage,curPage,iframeDoc;
+        function checkPage(doc){
+            curPage=doc.querySelector(pageSel);
+            if(orgPage == curPage){
+                setTimeout(()=>{
+                    checkPage(doc);
+                },500);
+            }else{
+                let eles=ruleParser.getPageElement(doc);
+                if(eles && eles.length>0){
+                    callback(doc, eles);
+                }else{
+                    isPause=true;
+                    callback(false, false);
+                }
+            }
+        }
+        if(!emuIframe){
+            emuIframe = document.createElement('iframe');
+            emuIframe.name = 'pagetual-iframe';
+            emuIframe.width = '100%';
+            emuIframe.height = '0';
+            emuIframe.frameBorder = '0';
+            emuIframe.style.cssText = 'margin:0!important;padding:0!important;visibility:hidden!important;';
+            emuIframe.addEventListener("load", e=>{
+                iframeDoc=emuIframe.contentDocument || emuIframe.contentWindow.document;
+                setTimeout(()=>{
+                    orgPage=iframeDoc.querySelector(pageSel);
+                    iframeDoc.querySelector(nextlinkSel).click();
+                    checkPage(iframeDoc);
+                },300);
+            });
+            emuIframe.src=url;
+            document.body.appendChild(emuIframe);
+        }else{
+            iframeDoc=emuIframe.contentDocument || emuIframe.contentWindow.document;
+            orgPage=iframeDoc.querySelector(pageSel);
+            iframeDoc.querySelector(nextlinkSel).click();
+            checkPage(iframeDoc);
+        }
+    }
+
     function nextPage(){
-        if(isPause)return;
+        if(isPause || isLoading)return;
         let nextLink=ruleParser.getNextLink();
         let insert=ruleParser.getInsert();
         if(nextLink && insert){
+            isLoading=true;
+            loading.style.display="";
             if(nextLink.href){
-                isLoading=true;
-                loading.style.display="";
                 requestDoc(nextLink.href, (eles)=>{
                     isLoading=false;
                     loading.style.display="none";
@@ -763,6 +794,18 @@
                     insert.parentNode.insertBefore(pageBar, insert);
                 });
             }else{
+                emuPage(location.href, (doc, eles)=>{
+                    isLoading=false;
+                    loading.style.display="none";
+                    insert=ruleParser.getInsert();
+                    if(!insert || !insert.parentNode || !eles)return;
+                    var pageBar=createPageBar(nextLink.href, ++curPage, insert.tagName=="TR" || insert.previousElementSibling.tagName=="TR");
+                    pageBar.style.width=parseInt(_unsafeWindow.getComputedStyle(insert.parentNode).width)*.9+"px";
+                    insert.parentNode.insertBefore(pageBar, insert);
+                    if(eles){
+                        ruleParser.insertPage(doc, eles, "");
+                    }
+                }, ruleParser.geneSelector(nextLink), ruleParser.geneSelector(nextLink));
             }
         }
     }
