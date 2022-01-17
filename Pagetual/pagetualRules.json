@@ -1,8 +1,9 @@
 [
 {
     "from":"1",
+    "type":"1",
     "name":"yande",
-    "type":"0",
+    "action":"0",
     "url":"^https:\/\/yande\\.re\/",
     "pageElement":"ul#post-list-posts>li",
     "nextLink":"a.next_page",
@@ -10,8 +11,9 @@
 },
 {
     "from":"1",
-    "name":"tieba",
     "type":"1",
+    "name":"tieba",
+    "action":"1",
     "url":"^https:\/\/tieba\\.baidu.com\/f\\?kw=",
     "pageElement":"ul#thread_list>li",
     "nextLink":".next.pagination-item "

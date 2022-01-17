@@ -167,7 +167,8 @@
          name
          url
          enable
-         type 0 div 1 iframe 2強行塞入
+         type
+         action 0 div 1 iframe 2強行塞入
          nextLink 下一頁的xpath或者selector
          pageElement //頁面主體的xpath或者selector
          lazyImgSrc //圖片延後加載的屬性直接賦值到src
@@ -180,18 +181,20 @@
         constructor() {
             this.rules=[
                 {
-                    from:1,
+                    from:2,
                     name:"yande",
-                    type:0,
+                    type:1,
+                    action:0,
                     url:"^https:\/\/yande\.re\/",
                     pageElement:"ul#post-list-posts>li",
                     nextLink:"a.next_page",
                     css:".javascript-hide {display: inline-block !important;}"
                 },
                 {
-                    from:1,
+                    from:2,
                     name:"tieba",
                     type:1,
+                    action:1,
                     url:"^https:\/\/tieba\.baidu.com\/f\?kw=",
                     pageElement:"ul#thread_list>li",
                     nextLink:".next.pagination-item "
@@ -200,7 +203,6 @@
             this.pageDoc=document;
             this.curUrl=location.href;
             this.curSiteRule={};
-            this.findPageElementSelector="";
         }
 
         initSavedRules(callback){
@@ -225,13 +227,14 @@
             });
         }
 
-        formatRule(item, from){
-            switch(from){
+        formatRule(item, type, from){
+            switch(type){
                 case 0:
                     return {
                         from:from,
+                        type:type,
                         name:item.name,
-                        type:item.data.forceIframe=="true"?1:0,
+                        action:item.data.forceIframe=="true"?1:0,
                         url:item.data.url,
                         pageElement:item.data.pageElement,
                         nextLink:item.data.nextLink,
@@ -245,25 +248,26 @@
                 case 1:
                 default:
                     item.from=from;
+                    item.type=type;
                     return item;
                     break;
             }
             return null;
         }
 
-        addRuleByUrl(url, from, callback) {
+        addRuleByUrl(url, type, from, callback) {
             this.requestJSON(url, json=>{
-                this.addRules(json, from);
+                this.addRules(json, type, from);
                 storage.setItem("rules", this.rules);
                 callback();
             });
         }
 
-        addRules(rules, from) {
+        addRules(rules, type, from) {
             if(rules && rules.length>0){
-                this.rules=this.rules.filter(item=>{item.from!=from});
+                this.rules=this.rules.filter(item=>{return item.from!=from});
                 rules.forEach(item=>{
-                    let rule=this.formatRule(item, from);
+                    let rule=this.formatRule(item, type, from);
                     if(rule){
                         this.rules.push(rule);
                     }
@@ -281,9 +285,9 @@
                 let urlReg=new RegExp(rule.url, "i");
                 if(urlReg.test(location.href)){
                     let pageElement,nextLink,insert;
-                    if(rule.pageElement)pageElement=rule.from==0?getElementByXpath(rule.pageElement):document.querySelector(rule.pageElement);
-                    if(rule.nextLink)nextLink=rule.from==0?getElementByXpath(rule.nextLink):document.querySelector(rule.nextLink);
-                    if(rule.insert)insert=rule.from==0?getElementByXpath(rule.insert):document.querySelector(rule.insert);
+                    if(rule.pageElement)pageElement=rule.type==0?getElementByXpath(rule.pageElement):document.querySelector(rule.pageElement);
+                    if(rule.nextLink)nextLink=rule.type==0?getElementByXpath(rule.nextLink):document.querySelector(rule.nextLink);
+                    if(rule.insert)insert=rule.type==0?getElementByXpath(rule.insert):document.querySelector(rule.insert);
                     if((rule.pageElement && !pageElement) ||
                        (rule.nextLink && !nextLink) ||
                        (rule.insert && !insert)){
@@ -295,6 +299,7 @@
                 }
             }
             this.curSiteRule={};
+            this.curSiteRule.url=location.href.replace(/\./g,"\\.");
             return null;
         }
 
@@ -323,10 +328,7 @@
             let pageElement=null;
             let self=this;
             if(this.curSiteRule.pageElement){
-                pageElement=this.curSiteRule.from==0?getAllElementsByXpath(this.curSiteRule.pageElement,doc):doc.querySelectorAll(this.curSiteRule.pageElement);
-            }
-            if(!pageElement && this.findPageElementSelector){
-                pageElement=doc.querySelectorAll(this.findPageElementSelector);
+                pageElement=this.curSiteRule.type==0?getAllElementsByXpath(this.curSiteRule.pageElement,doc):doc.querySelectorAll(this.curSiteRule.pageElement);
             }
             if(!pageElement && !this.curSiteRule.pageElement){
                 let body=doc.body,bodyHeight=parseInt(_unsafeWindow.getComputedStyle(body).height);
@@ -334,7 +336,9 @@
                     let curHeight=parseInt(_unsafeWindow.getComputedStyle(ele).height);
                     if(curHeight/bodyHeight<=0.6)return null;
                     if(ele.children.length==0){
-                        self.findPageElementSelector=self.geneSelector(ele.parentNode)+">"+ele.tagName;
+                        self.curSiteRule.pageElement=self.geneSelector(ele.parentNode)+">"+ele.tagName;
+                        self.curSiteRule.type=1;
+                        console.log(self.curSiteRule.pageElement);
                         return [ele];
                     }
                     let i,maxHeight=curHeight*0.35,curMaxEle=null,curMaxArea=0;
@@ -353,8 +357,9 @@
                     if(curHeight>maxHeight){
                         return checkElement(curMaxEle);
                     }
-                    self.findPageElementSelector=self.geneSelector(ele)+">*";
-                    console.log(self.findPageElementSelector);
+                    self.curSiteRule.pageElement=self.geneSelector(ele)+">*";
+                    self.curSiteRule.type=1;
+                    console.log(self.curSiteRule.pageElement);
                     return ele.children;
                 }
                 pageElement=checkElement(body);
@@ -436,11 +441,16 @@
             return next;
         }
 
-        getNextLink() {
+        getNextLink(doc) {
             let nextLink=null;
-            if(this.curSiteRule.nextLink)nextLink=this.curSiteRule.from==0?getElementByXpath(this.curSiteRule.nextLink,this.pageDoc):this.pageDoc.querySelector(this.curSiteRule.nextLink);
+            let curDoc=doc||this.pageDoc;
+            if(this.curSiteRule.nextLink)nextLink=this.curSiteRule.type==0?getElementByXpath(this.curSiteRule.nextLink,curDoc):curDoc.querySelector(this.curSiteRule.nextLink);
             if(!nextLink){
                 nextLink=this.getPage();
+            }
+            if(nextLink && !this.curSiteRule.nextLink){
+                this.curSiteRule.nextLink=this.geneSelector(nextLink);
+                this.curSiteRule.type=1;
             }
             return nextLink;
         }
@@ -448,9 +458,9 @@
         getInsert(refresh) {
             if(this.insert && !refresh && this.insert.parentNode)return this.insert;
             if(this.curSiteRule.insert){
-                this.insert=this.curSiteRule.from==0?getElementByXpath(this.curSiteRule.insert,document):document.querySelector(this.curSiteRule.insert);
+                this.insert=this.curSiteRule.type==0?getElementByXpath(this.curSiteRule.insert,document):document.querySelector(this.curSiteRule.insert);
             }else{
-                let pageElement=this.getPageElement(document);
+                let pageElement=this.basePageElement;
                 if(pageElement && pageElement.length>0){
                     var pELast = pageElement[pageElement.length - 1];
                     this.insert = pELast.nextSibling ? pELast.nextSibling : pELast.parentNode.appendChild(document.createTextNode(' '));
@@ -486,6 +496,7 @@
             if(code){
                 _unsafeWindow.eval(code);
             }
+            this.basePageElement=this.getPageElement(document);
         }
 
         insertPage(doc, eles, url){
@@ -513,13 +524,13 @@
         var ruleUrls=[
             {
                 url:'http://wedata.net/databases/AutoPagerize/items_all.json',
-                from:0
+                type:0,
             },
             {
                 url:'https://raw.githubusercontent.com/hoothin/UserScripts/master/Pagetual/pagetualRules.json',
-                from:1
+                type:1
             }
-        ],i=0;
+        ],i=0,j=0;
 
         ruleParser.initSavedRules(()=>{
             storage.getItem("importRuleUrl", urls=>{
@@ -528,12 +539,14 @@
                     let now=new Date().getTime();
                     if(!date || now-date>3*24*60*60*1000){
                         ruleUrls.forEach(rule=>{
-                            ruleParser.addRuleByUrl(rule.url, rule.from, ()=>{
-                                if(++i==ruleUrls.length){
-                                    storage.setItem("ruleLastUpdate", now);
-                                    callback();
-                                }
-                            });
+                            setTimeout(()=>{
+                                ruleParser.addRuleByUrl(rule.url, rule.type, j++, ()=>{
+                                    if(++i==ruleUrls.length){
+                                        storage.setItem("ruleLastUpdate", now);
+                                        callback();
+                                    }
+                                })
+                            },(j+1)*500);
                         });
                     }else{
                         callback();
@@ -676,7 +689,13 @@
         });
     }
 
-    function createPageBar(url, page, inTable){
+    function createPageBar(url){
+        isLoading=false;
+        loading.style.display="none";
+        let insert=ruleParser.getInsert();
+        if(!insert || !insert.parentNode)return;
+        curPage++;
+        let inTable=insert.tagName=="TR" || insert.previousElementSibling.tagName=="TR";
         let pageBar=document.createElement(inTable?"tr":"div");
         let upSpan=document.createElement("span");
         let downSpan=document.createElement("span");
@@ -694,7 +713,7 @@
         downSpan.title="To Bottom";
         pageText.href=url;
         pageText.style=pageTextStyle;
-        pageText.innerHTML="Page "+page;
+        pageText.innerHTML="Page "+curPage;
         pageText.title="Current Page";
         pageBar.appendChild(upSpan);
         pageBar.appendChild(pageText);
@@ -729,20 +748,21 @@
         pageText.addEventListener("click", e=>{
             e.stopPropagation();
         });
+        pageBar.style.width=parseInt(_unsafeWindow.getComputedStyle(insert.parentNode).width)*.9+"px";
+        insert.parentNode.insertBefore(pageBar, insert);
         return pageBar;
     }
 
     var emuIframe;
-    function emuPage(url, callback, pageSel, nextlinkSel){
+    function emuPage(callback){
         let orgPage,curPage,iframeDoc;
         function checkPage(doc){
-            curPage=doc.querySelector(pageSel);
-            if(orgPage == curPage){
+            let eles=ruleParser.getPageElement(doc);
+            if(orgPage == eles[0]){
                 setTimeout(()=>{
                     checkPage(doc);
                 },500);
             }else{
-                let eles=ruleParser.getPageElement(doc);
                 if(eles && eles.length>0){
                     callback(doc, eles);
                 }else{
@@ -761,19 +781,46 @@
             emuIframe.addEventListener("load", e=>{
                 iframeDoc=emuIframe.contentDocument || emuIframe.contentWindow.document;
                 setTimeout(()=>{
-                    orgPage=iframeDoc.querySelector(pageSel);
-                    iframeDoc.querySelector(nextlinkSel).click();
+                    orgPage=ruleParser.getPageElement(iframeDoc)[0];
+                    ruleParser.getNextLink(iframeDoc).click();
                     checkPage(iframeDoc);
                 },300);
             });
-            emuIframe.src=url;
+            emuIframe.src=location.href;
             document.body.appendChild(emuIframe);
         }else{
             iframeDoc=emuIframe.contentDocument || emuIframe.contentWindow.document;
-            orgPage=iframeDoc.querySelector(pageSel);
-            iframeDoc.querySelector(nextlinkSel).click();
+            orgPage=ruleParser.getPageElement(iframeDoc)[0];
+            ruleParser.getNextLink(iframeDoc).click();
             checkPage(iframeDoc);
         }
+    }
+
+    function forceIframe(url, callback){
+        let curIframe = document.createElement('iframe');
+        curIframe.name = 'pagetual-iframe';
+        curIframe.frameBorder = '0';
+        curIframe.scrolling="no";
+        curIframe.style.cssText = 'display: block; visibility: visible; float: none; clear: both; width: 100%;height:0;background: initial; border: 0px; border-radius: 0px; margin: 0px 0px 2rem; padding: 0px; z-index: 2147483647;';
+        curIframe.addEventListener("load", e=>{
+            let iframeDoc=curIframe.contentDocument || curIframe.contentWindow.document;
+            let eles=ruleParser.getPageElement(iframeDoc);
+            if(eles && eles.length>0){
+                ruleParser.insertPage(iframeDoc, [], url);
+                callback(curIframe, eles);
+                curIframe.style.height=iframeDoc.body.scrollHeight+"px";
+                curIframe.style.width=iframeDoc.body.scrollWidth+"px";
+                curIframe.scrollIntoView();
+            }else{
+                isPause=true;
+                callback(false, false);
+                curIframe.parentNode.removeChild(curIframe);
+            }
+        });
+        curIframe.src=url;
+        let insert=ruleParser.getInsert();
+        document.body.appendChild(curIframe);
+        return curIframe;
     }
 
     function nextPage(){
@@ -783,29 +830,36 @@
         if(nextLink && insert){
             isLoading=true;
             loading.style.display="";
-            if(nextLink.href){
-                requestDoc(nextLink.href, (eles)=>{
-                    isLoading=false;
-                    loading.style.display="none";
-                    insert=ruleParser.getInsert();
-                    if(!insert || !insert.parentNode || !eles)return;
-                    var pageBar=createPageBar(nextLink.href, ++curPage, insert.tagName=="TR" || insert.previousElementSibling.tagName=="TR");
-                    pageBar.style.width=parseInt(_unsafeWindow.getComputedStyle(insert.parentNode).width)*.9+"px";
-                    insert.parentNode.insertBefore(pageBar, insert);
+            if(ruleParser.curSiteRule.action==1 && nextLink.href){
+                requestFromIframe(nextLink.href, (doc, eles)=>{
+                    if(eles){
+                        createPageBar(nextLink.href);
+                        ruleParser.insertPage(doc, eles, nextLink.href);
+                    }
+                });
+            }else if(ruleParser.curSiteRule.action==2 && nextLink.href){
+                forceIframe(nextLink.href, (iframe, eles)=>{
+                    if(!eles)return;
+                    if(eles){
+                        let pageBar=createPageBar(nextLink.href);
+                        iframe.parentNode.insertBefore(pageBar, iframe);
+                    }
                 });
             }else{
-                emuPage(location.href, (doc, eles)=>{
-                    isLoading=false;
-                    loading.style.display="none";
-                    insert=ruleParser.getInsert();
-                    if(!insert || !insert.parentNode || !eles)return;
-                    var pageBar=createPageBar(nextLink.href, ++curPage, insert.tagName=="TR" || insert.previousElementSibling.tagName=="TR");
-                    pageBar.style.width=parseInt(_unsafeWindow.getComputedStyle(insert.parentNode).width)*.9+"px";
-                    insert.parentNode.insertBefore(pageBar, insert);
-                    if(eles){
-                        ruleParser.insertPage(doc, eles, "");
-                    }
-                }, ruleParser.geneSelector(nextLink), ruleParser.geneSelector(nextLink));
+                if(nextLink.href){
+                    requestDoc(nextLink.href, (eles)=>{
+                        if(!eles)return;
+                        createPageBar(nextLink.href);
+                    });
+                }else{
+                    emuPage((doc, eles)=>{
+                        if(!eles)return;
+                        createPageBar(nextLink.href);
+                        if(eles){
+                            ruleParser.insertPage(doc, eles, "");
+                        }
+                    });
+                }
             }
         }
     }
