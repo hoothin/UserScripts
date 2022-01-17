@@ -9,6 +9,7 @@
 // @description:zh-TW  自動翻頁
 // @author       hoothin
 // @include      http*
+// @license      MIT
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
 // @grant        GM_xmlhttpRequest
 // @grant        GM_registerMenuCommand
