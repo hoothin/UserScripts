@@ -71,6 +71,7 @@ Which position you want to insert
 insertPos
 --
 1 means insert before, 2 means just append to the bottom of target
+
 pageAction:(document, eles)
 --
 The js code to run with every page inserted
