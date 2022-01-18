@@ -3,7 +3,7 @@
 // @name:zh-CN   东方永页机
 // @name:zh-TW   東方永頁機
 // @namespace    hoothin
-// @version      0.3.2
+// @version      0.3.3
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -446,7 +446,7 @@
             if(this.curSiteRule.pageElement){
                 pageElement=this.curSiteRule.type==0?getAllElementsByXpath(this.curSiteRule.pageElement,doc):doc.querySelectorAll(this.curSiteRule.pageElement);
             }
-            if(!pageElement && !this.curSiteRule.pageElement){
+            if(!pageElement){
                 let body=doc.body,bodyHeight=parseInt(_unsafeWindow.getComputedStyle(body).height);
                 function checkElement(ele){
                     let curHeight=parseInt(_unsafeWindow.getComputedStyle(ele).height);
@@ -485,7 +485,7 @@
         }
 
         getPage(){
-            let canSave=false;
+            let canSave=false;//發現頁碼選擇器在其他頁對不上，還是別保存了
             let url=this.curUrl;
             let doc=this.pageDoc;
             let pageNum=0,preStr="",afterStr="";
