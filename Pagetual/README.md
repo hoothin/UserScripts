@@ -71,5 +71,10 @@ Which position you want to insert
 insertPos
 --
 1 means insert before, 2 means just append to the bottom of target
-pageAction:(document, eles) //對每一個插入的頁面進行修剪
-init:(document) // 對主頁面進行處理
+pageAction:(document, eles)
+--
+The js code to run with every page inserted
+
+init:(document)
+--
+The js code to run with current main page
