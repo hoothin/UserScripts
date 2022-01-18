@@ -3,7 +3,7 @@
 // @name:zh-CN   东方永页机
 // @name:zh-TW   東方永頁機
 // @namespace    hoothin
-// @version      0.3.3
+// @version      0.3.4
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -479,7 +479,7 @@
                     return ele.children;
                 }
                 pageElement=checkElement(body);
-                if(pageElement)this.saveCurSiteRule();
+                //if(pageElement)this.saveCurSiteRule();
             }
             return pageElement;
         }
@@ -563,7 +563,11 @@
         getNextLink(doc) {
             let nextLink=null,page;
             let curDoc=doc||this.pageDoc;
-            if(this.curSiteRule.nextLink)nextLink=this.curSiteRule.type==0?getElementByXpath(this.curSiteRule.nextLink,curDoc):curDoc.querySelector(this.curSiteRule.nextLink);
+            if(this.curSiteRule.nextLinkByUrl){
+                nextLink=this.curUrl.replace(this.curSiteRule.nextLinkByUrl[0],this.curSiteRule.nextLinkByUrl[1]);
+            }else if(this.curSiteRule.nextLink){
+                nextLink=this.curSiteRule.type==0?getElementByXpath(this.curSiteRule.nextLink,curDoc):curDoc.querySelector(this.curSiteRule.nextLink);
+            }
             if(!nextLink){
                 page=this.getPage();
                 nextLink=page.next;
@@ -953,6 +957,7 @@
         iframe.width = '100%';
         iframe.height = '0';
         iframe.frameBorder = '0';
+        iframe.sandbox="allow-same-origin allow-scripts allow-popups allow-forms";
         iframe.style.cssText = 'margin:0!important;padding:0!important;visibility:hidden!important;';
         iframe.addEventListener("load", e=>{
             setTimeout(()=>{
@@ -1116,15 +1121,16 @@
     var emuIframe;
     function emuPage(callback){
         let orgPage,curPage,iframeDoc;
-        function checkPage(doc){
-            let eles=ruleParser.getPageElement(doc);
+        function checkPage(){
+            iframeDoc=emuIframe.contentDocument || emuIframe.contentWindow.document;
+            let eles=ruleParser.getPageElement(iframeDoc);
             if(orgPage == eles[0]){
                 setTimeout(()=>{
-                    checkPage(doc);
+                    checkPage(iframeDoc);
                 },500);
             }else{
                 if(eles && eles.length>0){
-                    callback(doc, eles);
+                    callback(iframeDoc, eles);
                 }else{
                     isPause=true;
                     callback(false, false);
@@ -1134,6 +1140,7 @@
         if(!emuIframe){
             emuIframe = document.createElement('iframe');
             emuIframe.name = 'pagetual-iframe';
+            emuIframe.sandbox="allow-same-origin allow-scripts allow-popups allow-forms";
             emuIframe.width = '100%';
             emuIframe.height = '0';
             emuIframe.frameBorder = '0';
@@ -1190,7 +1197,7 @@
         if(nextLink && insert){
             isLoading=true;
             loading.style.display="";
-            if(ruleParser.curSiteRule.action==1 && nextLink.href){
+            if(ruleParser.curSiteRule.action==1 && /^http/.test(nextLink.href)){
                 requestFromIframe(nextLink.href, (doc, eles)=>{
                     isLoading=false;
                     loading.style.display="none";
@@ -1199,7 +1206,7 @@
                         ruleParser.insertPage(doc, eles, nextLink.href);
                     }
                 });
-            }else if(ruleParser.curSiteRule.action==2 && nextLink.href){
+            }else if(ruleParser.curSiteRule.action==2 && /^http/.test(nextLink.href)){
                 forceIframe(nextLink.href, (iframe, eles)=>{
                     isLoading=false;
                     loading.style.display="none";
@@ -1209,7 +1216,7 @@
                     }
                 });
             }else{
-                if(nextLink.href){
+                if(/^http/.test(nextLink.href)){
                     requestDoc(nextLink.href, (eles)=>{
                         isLoading=false;
                         loading.style.display="none";
