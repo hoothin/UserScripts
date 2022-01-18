@@ -485,7 +485,7 @@
         }
 
         getPage(){
-            let canSave=true;
+            let canSave=false;
             let url=this.curUrl;
             let doc=this.pageDoc;
             let pageNum=0,preStr="",afterStr="";
@@ -535,10 +535,8 @@
                         if(aTag.innerHTML=="»"){
                             nextt=aTag;
                         }else if(aTag.href.replace(preStr,"").replace(afterStr,"")==parseInt(pageNum)+1){
-                            canSave=false;
                             nextt=aTag;
                         }else if(aTag.href.indexOf(url)!=-1 && /^[\/\?&]?[_-]?p(age)?=?\d/i.test(aTag.href.replace(url,""))){
-                            canSave=false;
                             nextt=aTag;
                         }
                     }
@@ -547,7 +545,6 @@
             }
             if(!next)next=curPage.querySelector(".next>a");
             if(!next){
-                canSave=false;
                 let pageDiv=curPage.querySelector("div.wp-pagenavi");
                 if(pageDiv){
                     cur=pageDiv.querySelector("span.current");
