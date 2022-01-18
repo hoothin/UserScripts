@@ -3,7 +3,7 @@
 // @name:zh-CN   东方永页机
 // @name:zh-TW   東方永頁機
 // @namespace    hoothin
-// @version      0.3.4
+// @version      0.3.5
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -282,6 +282,15 @@
                     url:"^https:\/\/tieba\.baidu.com\/f\?kw=",
                     pageElement:"ul#thread_list>li",
                     nextLink:".next.pagination-item "
+                },
+                {
+                    from:2,
+                    name:"xxgame",
+                    type:1,
+                    action:0,
+                    url:"^http:\/\/www\.xxgame\.net/",
+                    pageElement:"div.layui-row>div.layui-col-md4",
+                    nextLinkByUrl:["(http://www\\.xxgame\\.net/chinese/?(?:\\?page=|$))(\\d*)","$1{$2+1}"]
                 }
             ];
             this.rules=[];
@@ -564,7 +573,18 @@
             let nextLink=null,page;
             let curDoc=doc||this.pageDoc;
             if(this.curSiteRule.nextLinkByUrl){
-                nextLink=this.curUrl.replace(this.curSiteRule.nextLinkByUrl[0],this.curSiteRule.nextLinkByUrl[1]);
+                let targetUrl=this.curUrl.replace(new RegExp(this.curSiteRule.nextLinkByUrl[0]), this.curSiteRule.nextLinkByUrl[1]);
+                if(targetUrl != this.curUrl){
+                    let reps=targetUrl.match(/{.*?}/g);
+                    if(reps){
+                        reps.forEach(rep=>{
+                            let code=rep.replace("{","").replace("}","");
+                            let result=_unsafeWindow.eval(code);
+                            targetUrl=targetUrl.replace(rep, result);
+                        });
+                    }
+                }
+                nextLink={href:targetUrl};
             }else if(this.curSiteRule.nextLink){
                 nextLink=this.curSiteRule.type==0?getElementByXpath(this.curSiteRule.nextLink,curDoc):curDoc.querySelector(this.curSiteRule.nextLink);
             }
