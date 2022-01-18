@@ -512,7 +512,7 @@
                     let aTag=aTags[i];
                     if(nextf && nexts && nextt)break;
                     if(!nextf){
-                        if(/下[一1]?[页頁张張]|next( page)?[\s$]|次のページ/i.test(aTag.innerHTML)){
+                        if(/下[一1]?[页頁张張]|^next( page)?[\s$]|次のページ/i.test(aTag.innerHTML)){
                             if(!aTag.href || /javascript:/.test(aTag.href)){
                                 nextfo=aTag;
                             }else{
@@ -1047,8 +1047,6 @@
     }
 
     function createPageBar(url){
-        isLoading=false;
-        loading.style.display="none";
         let insert=ruleParser.getInsert();
         if(!insert || !insert.parentNode)return;
         curPage++;
@@ -1189,6 +1187,8 @@
             loading.style.display="";
             if(ruleParser.curSiteRule.action==1 && nextLink.href){
                 requestFromIframe(nextLink.href, (doc, eles)=>{
+                    isLoading=false;
+                    loading.style.display="none";
                     if(eles){
                         createPageBar(nextLink.href);
                         ruleParser.insertPage(doc, eles, nextLink.href);
@@ -1196,7 +1196,8 @@
                 });
             }else if(ruleParser.curSiteRule.action==2 && nextLink.href){
                 forceIframe(nextLink.href, (iframe, eles)=>{
-                    if(!eles)return;
+                    isLoading=false;
+                    loading.style.display="none";
                     if(eles){
                         let pageBar=createPageBar(nextLink.href);
                         iframe.parentNode.insertBefore(pageBar, iframe);
@@ -1205,14 +1206,18 @@
             }else{
                 if(nextLink.href){
                     requestDoc(nextLink.href, (eles)=>{
-                        if(!eles)return;
-                        createPageBar(nextLink.href);
+                        isLoading=false;
+                        loading.style.display="none";
+                        if(eles){
+                            createPageBar(nextLink.href);
+                        }
                     });
                 }else{
                     emuPage((doc, eles)=>{
-                        if(!eles)return;
-                        createPageBar(nextLink.href);
+                        isLoading=false;
+                        loading.style.display="none";
                         if(eles){
+                            createPageBar(nextLink.href);
                             ruleParser.insertPage(doc, eles, "");
                         }
                     });
