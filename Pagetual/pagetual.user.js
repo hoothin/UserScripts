@@ -1061,15 +1061,15 @@
             pageBar.classList.add("stop");
         }
         pageBar.style.cssText=pageBarStyle;
-        pageBar.title="Disable";
+        pageBar.title=i18n(isPause?"enable":"disable");
         upSpan.innerHTML=upSvg;
-        upSpan.title="To Top";
+        upSpan.title=i18n("toTop");
         downSpan.innerHTML=downSvg;
-        downSpan.title="To Bottom";
+        downSpan.title=i18n("toBottom");
         pageText.href=url;
         pageText.style=pageTextStyle;
         pageText.innerHTML="Page "+curPage;
-        pageText.title="Current Page";
+        pageText.title=i18n("currentPage");
         pageBar.appendChild(upSpan);
         pageBar.appendChild(pageText);
         pageBar.appendChild(downSpan);
@@ -1099,6 +1099,7 @@
         });
         pageBar.addEventListener("click", e=>{
             changeStop(!isPause);
+            pageBar.title=i18n(isPause?"enable":"disable");
         });
         pageText.addEventListener("click", e=>{
             e.stopPropagation();
