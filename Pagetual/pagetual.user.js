@@ -1215,6 +1215,9 @@
         let nextLink=ruleParser.getNextLink();
         let insert=ruleParser.getInsert();
         if(nextLink && insert){
+            if(location.protocol="https:" && /^http:/.test(nextLink.href)){
+                nextLink.href=nextLink.href.replace(/^http/,"https");
+            }
             isLoading=true;
             loading.style.display="";
             if(ruleParser.curSiteRule.action==1 && /^http/.test(nextLink.href)){
