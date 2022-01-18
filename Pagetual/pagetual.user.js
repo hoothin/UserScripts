@@ -512,7 +512,7 @@
                     let aTag=aTags[i];
                     if(nextf && nexts && nextt)break;
                     if(!nextf){
-                        if(/下[一1]?[页頁张張]|next( page)?|次のページ/i.test(aTag.innerHTML)){
+                        if(/下[一1]?[页頁张張]|next( page)?[\s$]|次のページ/i.test(aTag.innerHTML)){
                             if(!aTag.href || /javascript:/.test(aTag.href)){
                                 nextfo=aTag;
                             }else{
