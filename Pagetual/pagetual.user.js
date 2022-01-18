@@ -647,7 +647,7 @@
             storage.setItem("disable_"+location.host, !isDisabled);
             location.reload();
         });
-        var configCon;
+        var configCon,insertPos;
         if(location.href=="https://github.com/hoothin/UserScripts/tree/master/Pagetual"){
             _GM_addStyle(`
              p>span:nth-child(1),p>span:nth-child(2),p>span:nth-child(3){
@@ -666,6 +666,7 @@
              }
             `);
             configCon=document.querySelector(".markdown-body");
+            insertPos=configCon.querySelector("hr");
         }else if(location.href=="https://github.com/hoothin/UserScripts/tree/master/Pagetual"){
         }else return;
         class Rulebar {
@@ -695,7 +696,7 @@
                 this.item.appendChild(down);
                 this.item.appendChild(del);
                 this.item.appendChild(url);
-                configCon.appendChild(this.item);
+                configCon.insertBefore(this.item, insertPos);
             }
             saveSort(){
                 let sort=[];
@@ -762,7 +763,7 @@
             });
             alert(i18n("beginUpdate"));
         };
-        configCon.appendChild(updateP);
+        configCon.insertBefore(updateP, insertPos);
         if(ruleUrls){
             ruleUrls.forEach(ruleUrl=>{
                 var rulebar=new Rulebar();
@@ -771,24 +772,24 @@
         }
         let customUrlsTitle=document.createElement("h2");
         customUrlsTitle.innerHTML=i18n("customUrls")
-        configCon.appendChild(customUrlsTitle);
+        configCon.insertBefore(customUrlsTitle, insertPos);
         let customUrlsInput=document.createElement("textarea");
         customUrlsInput.style.width="100%";
         customUrlsInput.placeholder="0|http://wedata.net/databases/AutoPagerize/items_all.json";
-        configCon.appendChild(customUrlsInput);
+        configCon.insertBefore(customUrlsInput, insertPos);
         let customRulesTitle=document.createElement("h2");
         customRulesTitle.innerHTML=i18n("customRules")
-        configCon.appendChild(customRulesTitle);
+        configCon.insertBefore(customRulesTitle, insertPos);
         let customRulesInput=document.createElement("textarea");
         customRulesInput.style.width="100%";
         customRulesInput.style.height="500px";
         customRulesInput.placeholder=`[\n{\n    "type":"1",\n    "name":"yande",\n    "action":"0",\n    "url":"^https:\/\/yande\\.re\/",\n    "pageElement":"ul#post-list-posts>li",\n    "nextLink":"a.next_page",\n    "css":".javascript-hide {display: inline-block !important;}"\n},\n{\n    "type":"1",\n    "name":"tieba",\n    "action":"1",\n    "url":"^https:\/\/tieba\\.baidu.com\/f\\?kw=",\n    "pageElement":"ul#thread_list>li",\n    "nextLink":".next.pagination-item "\n}\n]`;
         customRulesInput.value=JSON.stringify(ruleParser.customRules);
-        configCon.appendChild(customRulesInput);
+        configCon.insertBefore(customRulesInput, insertPos);
         let saveBtn=document.createElement("button");
         saveBtn.innerHTML=i18n("save");
         saveBtn.style.width="100%";
-        configCon.appendChild(saveBtn);
+        configCon.insertBefore(saveBtn, insertPos);
         saveBtn.onclick=e=>{
             try{
                 let customRules=JSON.parse(customRulesInput.value);
