@@ -3,8 +3,8 @@
 // @name:zh-CN   东方永页机
 // @name:zh-TW   東方永頁機
 // @namespace    hoothin
-// @version      0.2
-// @description  Simple Auto Page
+// @version      0.3
+// @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
 // @author       hoothin
@@ -25,6 +25,7 @@
 // @grant        GM.addStyle
 // @connect      wedata.net
 // @connect      githubusercontent.com
+// @run-at       document-idle
 // ==/UserScript==
 
 (function() {
