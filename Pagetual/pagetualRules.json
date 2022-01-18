@@ -1,6 +1,5 @@
 [
 {
-    "from":"1",
     "type":"1",
     "name":"yande",
     "action":"0",
@@ -10,12 +9,19 @@
     "css":".javascript-hide {display: inline-block !important;}"
 },
 {
-    "from":"1",
     "type":"1",
     "name":"tieba",
     "action":"1",
     "url":"^https:\/\/tieba\\.baidu.com\/f\\?kw=",
     "pageElement":"ul#thread_list>li",
     "nextLink":".next.pagination-item "
+},
+{
+    "type":1,
+    "name":"xxgame",
+    "action":0,
+    "url":"^http:\/\/www\\.xxgame\\.net/",
+    "pageElement":"div.layui-row>div.layui-col-md4",
+    "nextLinkByUrl":["(http://www\\.xxgame\\.net/chinese/?)(?:\\?page=|$)(\\d*)","$1?page={$2+1}"]
 }
 ]
