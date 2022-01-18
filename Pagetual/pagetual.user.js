@@ -535,7 +535,7 @@
                             nextt=aTag;
                         }else if(aTag.href.replace(preStr,"").replace(afterStr,"")==parseInt(pageNum)+1){
                             nextt=aTag;
-                        }else if(aTag.href.indexOf(url)!=-1 && /[^\/\?&][_-]?p(age)?=?\d/i.test(aTag.href.replace(url,""))){
+                        }else if(aTag.href.indexOf(url)!=-1 && /[\/\?&^][_-]?p(age)?=?\d/i.test(aTag.href.replace(url,""))){
                             nextt=aTag;
                         }
                     }
