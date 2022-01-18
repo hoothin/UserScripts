@@ -819,9 +819,13 @@
         configCon.insertBefore(saveBtn, insertPos);
         saveBtn.onclick=e=>{
             try{
-                let customRules=JSON.parse(customRulesInput.value);
-                debug(customRules);
-                storage.setItem("customRules", customRules);
+                if(customRulesInput.value==""){
+                    storage.setItem("customRules", "");
+                }else{
+                    let customRules=JSON.parse(customRulesInput.value);
+                    debug(customRules);
+                    storage.setItem("customRules", customRules);
+                }
             }catch(e){
                 debug(e);
                 alert("JSON error!");
