@@ -547,6 +547,7 @@
             }
             if(!next)next=curPage.querySelector(".next>a");
             if(!next){
+                canSave=false;
                 let pageDiv=curPage.querySelector("div.wp-pagenavi");
                 if(pageDiv){
                     cur=pageDiv.querySelector("span.current");
