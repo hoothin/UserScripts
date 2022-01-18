@@ -450,7 +450,7 @@
                 let body=doc.body,bodyHeight=parseInt(_unsafeWindow.getComputedStyle(body).height);
                 function checkElement(ele){
                     let curHeight=parseInt(_unsafeWindow.getComputedStyle(ele).height);
-                    if(curHeight/bodyHeight<=0.6)return null;
+                    if(curHeight/bodyHeight<=0.48)return null;
                     if(ele.children.length==0){
                         self.curSiteRule.pageElement=self.geneSelector(ele.parentNode)+">"+ele.tagName;
                         self.curSiteRule.type=1;
