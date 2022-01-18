@@ -6,7 +6,7 @@
 // @description          Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version              2022.1.16.1
+// @version              2022.1.18.1
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -4238,7 +4238,7 @@ ImgOps | https://imgops.com/#b#`;
             curPage:document,
             getPage:function(){
                 let pageNum=0,preStr="",afterStr="";
-                let pageMatch1=this.href.match(/(.*[a-zA-Z0-9][\-_])(\d+)(\.html?$|$)/i);
+                let pageMatch1=this.href.match(/(.*[a-zA-Z0-9\/][\-_](?:p|page)?)(\d+)(\.html?$|$)/i);
                 let pageMatch2=this.href.match(/(.*[\?&]p(?:age)?=)(\d+)($|#.*)/i);
                 if(pageMatch1){
                     preStr=pageMatch1[1];
@@ -4254,10 +4254,9 @@ ImgOps | https://imgops.com/#b#`;
                 let next=curPage.querySelector("a.next");
                 if(!pre)pre=curPage.querySelector("a#prev");
                 if(!next)next=curPage.querySelector("a#next");
-                if(!pre)pre=curPage.querySelector('[rel="prev"],[rel="previous"]');
-                if(!next)next=curPage.querySelector('[rel="next"]');
                 if(!pre)pre=curPage.querySelector("a#leftFix");
                 if(!next)next=curPage.querySelector("a#rightFix");
+                if(!next)next=curPage.querySelector("a.next_page");
                 if(pre && (!pre.href || /javascript:/.test(pre.href)))pre=null;
                 if(next && (!next.href || /javascript:/.test(next.href)))next=null;
                 if(!pre || !next){
@@ -4269,7 +4268,7 @@ ImgOps | https://imgops.com/#b#`;
                             if(!aTag.href || /javascript:/.test(aTag.href))continue;
                             if(pref && pres && pret)break;
                             if(!pref){
-                                if(/上[一1]?[页頁张張]|previous( page)?|前のページ/i.test(aTag.innerHTML)){
+                                if(/(\s|^)上[一1]?[页頁张張]|^previous( page)?\s*$|前のページ/i.test(aTag.innerHTML)){
                                     pref=aTag;
                                 }
                             }
@@ -4299,7 +4298,7 @@ ImgOps | https://imgops.com/#b#`;
                             if(!aTag.href || /javascript:/.test(aTag.href))continue;
                             if(nextf && nexts && nextt)break;
                             if(!nextf){
-                                if(/下[一1]?[页頁张張]|next( page)?|次のページ/i.test(aTag.innerHTML)){
+                                if(/(\s|^)下[一1]?[页頁张張]|^next( page)?\s*$|次のページ/i.test(aTag.innerHTML)){
                                     nextf=aTag;
                                 }
                             }
@@ -4313,7 +4312,7 @@ ImgOps | https://imgops.com/#b#`;
                                     nextt=aTag;
                                 }else if(aTag.href.replace(preStr,"").replace(afterStr,"")==parseInt(pageNum)+1){
                                     nextt=aTag;
-                                }else if(aTag.href.indexOf(this.href)!=-1 && /[\?&]p(age)?=/i.test(aTag.href.replace(this.href,""))){
+                                }else if(aTag.href.indexOf(this.href)!=-1 && /^[\/\?&]?[_-]?p(age)?=?\d/i.test(aTag.href.replace(this.href,""))){
                                     nextt=aTag;
                                 }
                             }
@@ -4337,6 +4336,8 @@ ImgOps | https://imgops.com/#b#`;
                         }
                     }
                 }
+                if(!pre)pre=curPage.querySelector('[rel="prev"],[rel="previous"]');
+                if(!next)next=curPage.querySelector('[rel="next"]');
                 return {pre:pre,next:next};
             },
             canonicalUri:function(src, base_path){
