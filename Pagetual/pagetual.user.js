@@ -3,7 +3,7 @@
 // @name:zh-CN   东方永页机
 // @name:zh-TW   東方永頁機
 // @namespace    hoothin
-// @version      0.3
+// @version      0.3.1
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -916,6 +916,7 @@
     function requestDoc(url, callback){
         _GM_xmlhttpRequest({
             url: url,
+            overrideMimeType:"text/html;charset="+document.charset,
             onload: function(res) {
                 var doc=null;
                 try {
