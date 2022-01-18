@@ -273,24 +273,6 @@
                     pageElement:"ul#post-list-posts>li",
                     nextLink:"a.next_page",
                     css:".javascript-hide {display: inline-block !important;}"
-                },
-                {
-                    from:2,
-                    name:"tieba",
-                    type:1,
-                    action:1,
-                    url:"^https:\/\/tieba\.baidu.com\/f\?kw=",
-                    pageElement:"ul#thread_list>li",
-                    nextLink:".next.pagination-item "
-                },
-                {
-                    from:2,
-                    name:"xxgame",
-                    type:1,
-                    action:0,
-                    url:"^http:\/\/www\.xxgame\.net/",
-                    pageElement:"div.layui-row>div.layui-col-md4",
-                    nextLinkByUrl:["(http://www\\.xxgame\\.net/chinese/?)(?:\\?page=|$)(\\d*)","$1?page={$2+1}"]
                 }
             ];
             this.rules=[];
