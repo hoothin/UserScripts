@@ -488,7 +488,7 @@
             let url=this.curUrl;
             let doc=this.pageDoc;
             let pageNum=0,preStr="",afterStr="";
-            let pageMatch1=url.match(/(.*[a-zA-Z0-9][\-_])(\d+)(\.html?$|$)/i);
+            let pageMatch1=url.match(/(.*[a-zA-Z0-9\/][\-_](?:p|page)?)(\d+)(\.html?$|$)/i);
             let pageMatch2=url.match(/(.*[\?&]p(?:age)?=)(\d+)($|#.*)/i);
             if(pageMatch1){
                 preStr=pageMatch1[1];
@@ -535,7 +535,7 @@
                             nextt=aTag;
                         }else if(aTag.href.replace(preStr,"").replace(afterStr,"")==parseInt(pageNum)+1){
                             nextt=aTag;
-                        }else if(aTag.href.indexOf(url)!=-1 && /[\?&]p(age)?=/i.test(aTag.href.replace(url,""))){
+                        }else if(aTag.href.indexOf(url)!=-1 && /[^\?&]p(age)?=/i.test(aTag.href.replace(url,""))){
                             nextt=aTag;
                         }
                     }
