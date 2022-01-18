@@ -27,6 +27,14 @@ Rules
     "url":"^https:\/\/tieba\\.baidu.com\/f\\?kw=",
     "pageElement":"ul#thread_list>li",
     "nextLink":".next.pagination-item "
+},
+{
+    type:1,
+    name:"xxgame",
+    action:0,
+    url:"^http:\/\/www\.xxgame\.net/",
+    pageElement:"div.layui-row>div.layui-col-md4",
+    nextLinkByUrl:["(http://www\\.xxgame\\.net/chinese/?(?:\\?page=|$))(\\d*)","$1{$2+1}"]
 }
 ]
 </pre>
@@ -54,6 +62,10 @@ action
 nextLink
 --
 Selector of next page link
+
+nextLinkByUrl
+--
+If there is no next element, you can use this to generate a href from current url, [0] means RegExp string, [1] means replace string, you can use {} to eval simple code
 
 pageElement
 --
