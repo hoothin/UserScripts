@@ -631,9 +631,9 @@
             }else{
                 [].forEach.call(eles, ele=>{
                     if(self.curSiteRule.insertPos==2){
-                        self.insert.appendChild(ele);
+                        self.insert.appendChild(ele.cloneNode(true));
                     }else{
-                        self.insert.parentNode.insertBefore(ele, self.insert);
+                        self.insert.parentNode.insertBefore(ele.cloneNode(true), self.insert);
                     }
                 });
             }
