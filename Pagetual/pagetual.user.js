@@ -290,7 +290,7 @@
                     action:0,
                     url:"^http:\/\/www\.xxgame\.net/",
                     pageElement:"div.layui-row>div.layui-col-md4",
-                    nextLinkByUrl:["(http://www\\.xxgame\\.net/chinese/?(?:\\?page=|$))(\\d*)","$1{$2+1}"]
+                    nextLinkByUrl:["(http://www\\.xxgame\\.net/chinese/?)(?:\\?page=|$)(\\d*)","$1?page={$2+1}"]
                 }
             ];
             this.rules=[];
