@@ -564,10 +564,15 @@
             if(!nextLink){
                 nextLink=this.getPage();
             }
-            if(nextLink && !this.curSiteRule.nextLink){
-                this.curSiteRule.nextLink=this.geneSelector(nextLink);
-                this.curSiteRule.type=1;
-                this.saveCurSiteRule();
+            if(nextLink){
+                if(!this.basePageElement){
+                    this.basePageElement=this.getPageElement(document);
+                }
+                if(!this.curSiteRule.nextLink){
+                    this.curSiteRule.nextLink=this.geneSelector(nextLink);
+                    this.curSiteRule.type=1;
+                    this.saveCurSiteRule();
+                }
             }
             return nextLink;
         }
@@ -613,7 +618,6 @@
             if(code){
                 _unsafeWindow.eval(code);
             }
-            this.basePageElement=this.getPageElement(document);
         }
 
         insertPage(doc, eles, url){
@@ -733,7 +737,8 @@
                     storage.setItem("importRuleUrl", rulesDate);
                     ruleParser.rules=ruleParser.rules.filter(item=>{return item.from!=this.ruleUrl.id});
                     storage.setItem("rules", ruleParser.rules);
-                    location.reload();
+                    this.item.parentNode.removeChild(this.item);
+                    //location.reload();
                 }
             }
         }
@@ -830,6 +835,7 @@
                 }
             }
             alert("over");
+            location.reload();
         };
     }
 
