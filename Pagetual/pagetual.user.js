@@ -1068,7 +1068,7 @@
                     let scrolly=window.scrollY;
                     let windowHeight=window.innerHeight;
                     let scrollH=Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
-                    if(scrollH-scrolly-windowHeight<500){
+                    if(scrollH-scrolly-windowHeight<800){
                         nextPage();
                     }
                 }
