@@ -503,8 +503,8 @@
             var curPage=doc,i,cur;
             let next=curPage.querySelector("a.next");
             if(!next)next=curPage.querySelector("a#next");
-            if(!next)next=curPage.querySelector('[rel="next"]');
             if(!next)next=curPage.querySelector("a#rightFix");
+            if(!next)next=curPage.querySelector("a.next_page");
             if(next && (!next.href || /javascript:/.test(next.href)))next=null;
             if(!next){
                 let aTags=curPage.querySelectorAll("a");
@@ -513,7 +513,7 @@
                     let aTag=aTags[i];
                     if(nextf && nexts && nextt)break;
                     if(!nextf){
-                        if(/[\s^]下[一1]?[页頁张張]|^next( page)?\s*$|次のページ/i.test(aTag.innerHTML)){
+                        if(/(\s|^)下[一1]?[页頁张張]|^next( page)?\s*$|次のページ/i.test(aTag.innerHTML)){
                             if(!aTag.href || /javascript:/.test(aTag.href)){
                                 nextfo=aTag;
                             }else{
@@ -537,7 +537,7 @@
                         }else if(aTag.href.replace(preStr,"").replace(afterStr,"")==parseInt(pageNum)+1){
                             canSave=false;
                             nextt=aTag;
-                        }else if(aTag.href.indexOf(url)!=-1 && /[\/\?&^][_-]?p(age)?=?\d/i.test(aTag.href.replace(url,""))){
+                        }else if(aTag.href.indexOf(url)!=-1 && /^[\/\?&]?[_-]?p(age)?=?\d/i.test(aTag.href.replace(url,""))){
                             canSave=false;
                             nextt=aTag;
                         }
@@ -558,6 +558,7 @@
                     }
                 }
             }
+            if(!next)next=curPage.querySelector('[rel="next"]');
             return {next:next,canSave:canSave};
         }
 
