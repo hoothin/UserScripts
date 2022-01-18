@@ -239,7 +239,7 @@
                 checkInfo.appendChild(refreshIcon);
             };
             script.onmouseleave=e=>{
-                checkInfo.removeChild(refreshIcon);
+                if(refreshIcon && refreshIcon.parentNode)refreshIcon.parentNode.removeChild(refreshIcon);
             };
             checkInfo.onclick=()=>{
                 _GM_xmlhttpRequest({
