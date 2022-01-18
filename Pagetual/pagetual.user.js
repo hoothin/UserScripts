@@ -415,7 +415,7 @@
                 }
             }
             this.curSiteRule={};
-            this.curSiteRule.url=location.href.replace(/\./g,"\\.");
+            this.curSiteRule.url=location.origin.replace(/\./g,"\\.");
             return null;
         }
 
