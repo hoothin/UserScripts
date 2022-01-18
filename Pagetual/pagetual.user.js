@@ -3,7 +3,7 @@
 // @name:zh-CN   东方永页机
 // @name:zh-TW   東方永頁機
 // @namespace    hoothin
-// @version      0.3.1
+// @version      0.3.2
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -485,6 +485,7 @@
         }
 
         getPage(){
+            let canSave=true;
             let url=this.curUrl;
             let doc=this.pageDoc;
             let pageNum=0,preStr="",afterStr="";
@@ -534,8 +535,10 @@
                         if(aTag.innerHTML=="»"){
                             nextt=aTag;
                         }else if(aTag.href.replace(preStr,"").replace(afterStr,"")==parseInt(pageNum)+1){
+                            canSave=false;
                             nextt=aTag;
                         }else if(aTag.href.indexOf(url)!=-1 && /[\/\?&^][_-]?p(age)?=?\d/i.test(aTag.href.replace(url,""))){
+                            canSave=false;
                             nextt=aTag;
                         }
                     }
@@ -555,21 +558,22 @@
                     }
                 }
             }
-            return next;
+            return {next:next,canSave:canSave};
         }
 
         getNextLink(doc) {
-            let nextLink=null;
+            let nextLink=null,page;
             let curDoc=doc||this.pageDoc;
             if(this.curSiteRule.nextLink)nextLink=this.curSiteRule.type==0?getElementByXpath(this.curSiteRule.nextLink,curDoc):curDoc.querySelector(this.curSiteRule.nextLink);
             if(!nextLink){
-                nextLink=this.getPage();
+                page=this.getPage();
+                nextLink=page.next;
             }
             if(nextLink){
                 if(!this.basePageElement){
                     this.basePageElement=this.getPageElement(document);
                 }
-                if(!this.curSiteRule.nextLink){
+                if(!this.curSiteRule.nextLink && page && page.canSave){
                     this.curSiteRule.nextLink=this.geneSelector(nextLink);
                     this.curSiteRule.type=1;
                     this.saveCurSiteRule();
