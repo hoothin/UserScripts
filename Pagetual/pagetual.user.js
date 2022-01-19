@@ -3,7 +3,7 @@
 // @name:zh-CN   东方永页机
 // @name:zh-TW   東方永頁機
 // @namespace    hoothin
-// @version      0.3.6
+// @version      0.3.7
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -213,12 +213,7 @@
         }
     };
     _GM_registerMenuCommand(i18n("forceIframe"), ()=>{
-        if(ruleParser.curSiteRule.action==2){
-            ruleParser.curSiteRule.action=0;
-        }else{
-            ruleParser.curSiteRule.action=2;
-        }
-        ruleParser.saveCurSiteRule();
+        storage.setItem("forceState_"+location.host, (forceState==2?0:2));
         location.reload();
     });
     _GM_registerMenuCommand(i18n("configure"), ()=>{
@@ -658,8 +653,8 @@
 
     var rulesDate={},ruleUrls,updateDate;
     function initConfig(){
-        _GM_registerMenuCommand(i18n(isDisabled?"enable":"disable"), ()=>{
-            storage.setItem("disable_"+location.host, !isDisabled);
+        _GM_registerMenuCommand(i18n(forceState==1?"enable":"disable"), ()=>{
+            storage.setItem("forceState_"+location.host, (forceState==1?0:1));
             location.reload();
         });
         var configCon,insertPos;
@@ -937,12 +932,12 @@
                         ruleUrls=urls;
                     }
                 }
-                storage.getItem("disable_"+location.host, v=>{
+                storage.getItem("forceState_"+location.host, v=>{
                     storage.getItem("ruleLastUpdate", date=>{
-                        isDisabled=v==true;
+                        forceState=v||0;
                         getTimeStr(date);
                         initConfig();
-                        if(isDisabled)return;
+                        if(forceState==1)return;
                         let now=new Date().getTime();
                         if(!date || now-date>3*24*60*60*1000){
                             ruleUrls.forEach(rule=>{
@@ -1066,7 +1061,7 @@
     var pageBarStyle=`box-shadow: 0px 0px 10px 0px #000000aa;border-radius: 20px;background-color: rgb(240 240 240 / 80%);visibility: visible; position: initial; width: auto; height: 30px; float: none; clear: both; margin: 20px auto; text-align: center; display: block;`;
     var pageTextStyle=`line-height: 30px;text-decoration: none;user-select: none;visibility: visible;position: initial;width: auto;height: auto;float: none;clear: both;margin: 0px auto;text-align: center;display: inline;font-weight: bold;font-style: normal;font-size: 16px;letter-spacing: initial;vertical-align: super;color: rgb(85, 85, 95);`;
 
-    var isPause=false,isLoading=false,curPage=1,isDisabled=false;
+    var isPause=false,isLoading=false,curPage=1,forceState=0;
 
     function changeStop(stop){
         isPause=stop;
@@ -1208,6 +1203,7 @@
     function forceIframe(url, callback){
         let curIframe = document.createElement('iframe');
         curIframe.name = 'pagetual-iframe';
+        curIframe.sandbox="allow-same-origin allow-scripts allow-popups allow-forms";
         curIframe.frameBorder = '0';
         curIframe.scrolling="no";
         curIframe.style.cssText = 'display: block; visibility: visible; float: none; clear: both; width: 100%;height:0;background: initial; border: 0px; border-radius: 0px; margin: 0px 0px 2rem; padding: 0px; z-index: 2147483647;';
@@ -1252,7 +1248,7 @@
                         ruleParser.insertPage(doc, eles, nextLink.href);
                     }
                 });
-            }else if(ruleParser.curSiteRule.action==2 && !isJs){
+            }else if(forceState==2 && !isJs){
                 forceIframe(nextLink.href, (iframe, eles)=>{
                     isLoading=false;
                     loading.style.display="none";
