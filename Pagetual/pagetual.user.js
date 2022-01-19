@@ -3,7 +3,7 @@
 // @name:zh-CN   东方永页机
 // @name:zh-TW   東方永頁機
 // @namespace    hoothin
-// @version      0.3.8.4
+// @version      0.3.8.5
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -622,7 +622,7 @@
             }
             [].forEach.call(eles, ele=>{
                 [].forEach.call(ele.querySelectorAll("img"), img=>{
-                    if(img.src==""){
+                    //if(img.src==""){
                         let realSrc;
                         if(img.dataset && img.dataset.original){
                             realSrc=img.dataset.original;
@@ -643,7 +643,7 @@
                             });
                         }
                         if(realSrc)img.src=realSrc;
-                    }
+                    //}
                 });
             });
             let lazyImgSrc=this.curSiteRule.lazyImgSrc;
