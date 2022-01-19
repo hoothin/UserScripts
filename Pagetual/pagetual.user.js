@@ -1068,7 +1068,7 @@
                     callback(false, false);
                 }
                 document.body.removeChild(iframe);
-            },300);
+            },500);
         });
         iframe.src=url;
         document.body.appendChild(iframe);
