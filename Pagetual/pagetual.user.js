@@ -3,7 +3,7 @@
 // @name:zh-CN   东方永页机
 // @name:zh-TW   東方永頁機
 // @namespace    hoothin
-// @version      0.3.5
+// @version      0.3.6
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -34,7 +34,7 @@
     if (window.name === 'pagetual-iframe') {
         var domloaded = function (){
             window.scroll(window.scrollX, 99999);
-            window.parent.postMessage('pagetual-iframe:DOMLoaded', '*');
+            //window.parent.postMessage('pagetual-iframe:DOMLoaded', '*');
         };
         if(window.opera){
             document.addEventListener('DOMContentLoaded', domloaded, false);
@@ -793,7 +793,7 @@
         customRulesInput.style.width="100%";
         customRulesInput.style.height="500px";
         customRulesInput.placeholder=`[\n{\n    "type":"1",\n    "name":"yande",\n    "action":"0",\n    "url":"^https:\/\/yande\\.re\/",\n    "pageElement":"ul#post-list-posts>li",\n    "nextLink":"a.next_page",\n    "css":".javascript-hide {display: inline-block !important;}"\n},\n{\n    "type":"1",\n    "name":"tieba",\n    "action":"1",\n    "url":"^https:\/\/tieba\\.baidu.com\/f\\?kw=",\n    "pageElement":"ul#thread_list>li",\n    "nextLink":".next.pagination-item "\n}\n]`;
-        customRulesInput.value=JSON.stringify(ruleParser.customRules);
+        customRulesInput.value=getFormatJSON(ruleParser.customRules);
         configCon.insertBefore(customRulesInput, insertPos);
         let saveBtn=document.createElement("button");
         saveBtn.innerHTML=i18n("save");
@@ -810,7 +810,8 @@
                 }
             }catch(e){
                 debug(e);
-                alert("JSON error!");
+                alert("JSON error, check again!");
+                return;
             }
             let customUrls=customUrlsInput.value.trim();
             if(customUrls){
@@ -819,13 +820,17 @@
                     let urlArr=customUrls[c].split("|"),url,type=1;
                     if(urlArr.length==1){
                         url=urlArr[0].trim();
-                        if(!/http/.test(url)){
-                            alert("Wrong url");
-                            break;
+                        if(!/^http/.test(url)){
+                            alert("Wrong url, check again!");
+                            return;
                         }
                     }else if(urlArr.length==2){
                         type=urlArr[0].trim();
                         url=urlArr[1].trim();
+                        if(!/^http/.test(url)){
+                            alert("Wrong url, check again!");
+                            return;
+                        }
                     }else{
                         break;
                     }
@@ -849,9 +854,34 @@
                     storage.setItem("importRuleUrl", rulesDate);
                 }
             }
-            alert("over");
+            alert("Modified successfully");
             location.reload();
         };
+    }
+
+    function objIsArr(obj) {
+        return obj &&
+            typeof obj === 'object' &&
+            typeof obj.length === 'number' &&
+            !(obj.propertyIsEnumerable('length'));
+    }
+
+    function getFormatJSON(obj){
+        if(!objIsArr(obj))return "";
+        let ret="[\n";
+        let len=obj.length,i=0,isLast;
+        obj.forEach(item=>{
+            ret+="  {\n";
+            let iLen=Object.keys(item).length,j=0;
+            for(let key in item){
+                isLast=(++j)==iLen;
+                ret+="    \""+key+"\":\""+item[key]+"\""+(isLast?"":",")+"\n";
+            }
+            isLast=(++i)==len;
+            ret+="  }"+(isLast?"":",")+"\n";
+        });
+        ret+="]";
+        return ret;
     }
 
     function getTimeStr(date){
@@ -1084,7 +1114,7 @@
         pageText.href=url;
         pageText.style=pageTextStyle;
         pageText.innerHTML="Page "+curPage;
-        pageText.title=i18n("currentPage");
+        pageText.title=i18n("current");
         pageBar.appendChild(upSpan);
         pageBar.appendChild(pageText);
         pageBar.appendChild(downSpan);
