@@ -3,7 +3,7 @@
 // @name:zh-CN   东方永页机
 // @name:zh-TW   東方永頁機
 // @namespace    hoothin
-// @version      0.3.8.7
+// @version      0.3.8.8
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -360,7 +360,7 @@
             }
         }
 
-        getRule() {
+        getRule(callback) {
             if(this.curSiteRule && this.curSiteRule.url){
                 return this.curSiteRule;
             }
@@ -384,28 +384,42 @@
                     return rule;
                 }
             }
-            for(let i in this.rules){
-                let rule=this.rules[i];
-                if(rule.enable==0)continue;
-                let urlReg=new RegExp(rule.url, "i");
-                if(urlReg.test(location.href)){
-                    let pageElement,nextLink,insert;
-                    if(rule.pageElement)pageElement=rule.type==0?getElementByXpath(rule.pageElement):document.querySelector(rule.pageElement);
-                    if(rule.nextLink)nextLink=rule.type==0?getElementByXpath(rule.nextLink):document.querySelector(rule.nextLink);
-                    if(rule.insert)insert=rule.type==0?getElementByXpath(rule.insert):document.querySelector(rule.insert);
-                    if((rule.pageElement && !pageElement) ||
-                       (rule.nextLink && !nextLink) ||
-                       (rule.insert && !insert)){
-                        continue;
+            let r=0;
+            function searchByTime(){
+                setTimeout(()=>{
+                    let end=r+100;
+                    end=end>self.rules.length?self.rules.length:end;
+                    for(;r<end;r++){
+                        let rule=self.rules[r];
+                        if(rule.enable==0)continue;
+                        let urlReg=new RegExp(rule.url, "i");
+                        if(urlReg.test(location.href)){
+                            let pageElement,nextLink,insert;
+                            if(rule.pageElement)pageElement=rule.type==0?getElementByXpath(rule.pageElement):document.querySelector(rule.pageElement);
+                            if(rule.nextLink)nextLink=rule.type==0?getElementByXpath(rule.nextLink):document.querySelector(rule.nextLink);
+                            if(rule.insert)insert=rule.type==0?getElementByXpath(rule.insert):document.querySelector(rule.insert);
+                            if((rule.pageElement && !pageElement) ||
+                               (rule.nextLink && !nextLink) ||
+                               (rule.insert && !insert)){
+                                continue;
+                            }
+                            self.curSiteRule=rule;
+                            debug(rule);
+                            callback();
+                            return;
+                        }
                     }
-                    this.curSiteRule=rule;
-                    debug(rule);
-                    return rule;
-                }
+                    if(end>=self.rules.length){
+                        self.curSiteRule={};
+                        self.curSiteRule.url=location.origin.replace(/\./g,"\\.");
+                        callback();
+                        return;
+                    }else{
+                        searchByTime();
+                    }
+                },50);
             }
-            this.curSiteRule={};
-            this.curSiteRule.url=location.origin.replace(/\./g,"\\.");
-            return null;
+            searchByTime();
         }
 
         geneSelector(ele){
@@ -665,8 +679,11 @@
             }
         }
 
-        initPage(){
-            this.getRule();
+        initPage(callback){
+            let self=this;
+            this.getRule(()=>{
+                callback();
+            });
             let code=this.curSiteRule.init;
             if(code){
                 _unsafeWindow.eval(code);
@@ -1077,9 +1094,10 @@
     }
 
     function initPage(){
-        ruleParser.initPage()
-        nextPage();
-        initListener();
+        ruleParser.initPage(()=>{
+            initListener();
+        });
+        //nextPage();
     }
 
     function initView(){
