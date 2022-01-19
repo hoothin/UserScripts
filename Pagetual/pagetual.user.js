@@ -1181,6 +1181,7 @@
         if(inLi){
             let line=document.createElement("li");
             line.innerHTML=curPage;
+            line.style.cssText="width: 100%; text-align: center; background: aliceblue;";
             insert.parentNode.insertBefore(line, insert);
             return line;
         }
