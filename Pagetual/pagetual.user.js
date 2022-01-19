@@ -3,7 +3,7 @@
 // @name:zh-CN   东方永页机
 // @name:zh-TW   東方永頁機
 // @namespace    hoothin
-// @version      0.3.8.5
+// @version      0.3.8.6
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -1016,7 +1016,7 @@
                 }
                 let pageElement=ruleParser.getPageElement(doc);
                 //只有1的話怕不是圖片哦
-                if(pageElement && pageElement.length>1){
+                if(pageElement && (pageElement.length>1 || (pageElement.length==1 && pageElement[0].tagName!="IMG") )){
                     callback(pageElement);
                     ruleParser.insertPage(doc, pageElement, url);
                 }else{
