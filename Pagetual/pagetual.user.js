@@ -506,6 +506,26 @@
             if(!next)next=curPage.querySelector("a#rightFix");
             if(!next)next=curPage.querySelector("a.next_page");
             if(next && (!next.href || /javascript:/.test(next.href)))next=null;
+            if(!next)next=curPage.querySelector(".next>a");
+            if(!next){
+                let pageDiv=curPage.querySelector("div.wp-pagenavi");
+                if(pageDiv){
+                    cur=pageDiv.querySelector("span.current");
+                    next=cur.nextSibling;
+                }else{
+                    cur=curPage.querySelector("div.article-paging>span");
+                    if(cur){
+                        next=cur.nextElementSibling;
+                    }
+                }
+            }
+            if(!next){
+                let pageDiv=curPage.querySelector("div.pages>ul");
+                if(pageDiv){
+                    cur=pageDiv.querySelector("li>b");
+                    if(cur)next=cur.parentNode.nextElementSibling.querySelector("a");
+                }
+            }
             if(!next){
                 let aTags=curPage.querySelectorAll("a");
                 let nextf,nexts,nextt,nextfo;
@@ -532,10 +552,10 @@
                     }
                     if(!aTag.href || /javascript:/.test(aTag.href))continue;
                     if(!nextt){
+                        aTag.href=aTag.href.replace(/\?&/,"?");
                         if(aTag.innerText=="»"){
                             nextt=aTag;
-                        }else if(aTag.href.replace(/\?&/,"?").replace(preStr,"").replace(afterStr,"")==parseInt(pageNum)+1){
-                            aTag.href=aTag.href.replace(/\?&/,"?");
+                        }else if(aTag.href.replace(preStr,"").replace(afterStr,"")==parseInt(pageNum)+1){
                             nextt=aTag;
                         }else if(aTag.href.indexOf(url)!=-1 && /^[\/\?&]?[_-]?p(age)?=?[12](\?|&|$)/i.test(aTag.href.replace(url,""))){
                             nextt=aTag;
@@ -543,19 +563,6 @@
                     }
                 }
                 next=nextf||nexts||nextt||nextfo;
-            }
-            if(!next)next=curPage.querySelector(".next>a");
-            if(!next){
-                let pageDiv=curPage.querySelector("div.wp-pagenavi");
-                if(pageDiv){
-                    cur=pageDiv.querySelector("span.current");
-                    next=cur.nextSibling;
-                }else{
-                    cur=curPage.querySelector("div.article-paging>span");
-                    if(cur){
-                        next=cur.nextElementSibling;
-                    }
-                }
             }
             if(!next)next=curPage.querySelector('[rel="next"]');
             return {next:next,canSave:canSave};
