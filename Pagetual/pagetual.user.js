@@ -3,7 +3,7 @@
 // @name:zh-CN   东方永页机
 // @name:zh-TW   東方永頁機
 // @namespace    hoothin
-// @version      0.3.8
+// @version      0.3.7
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -536,7 +536,8 @@
                     if(!nextt){
                         if(aTag.innerText=="»"){
                             nextt=aTag;
-                        }else if(aTag.href.replace(preStr,"").replace(afterStr,"")==parseInt(pageNum)+1){
+                        }else if(aTag.href.replace(/\?&(amp;)?/,"?").replace(preStr,"").replace(afterStr,"")==parseInt(pageNum)+1){
+                            aTag.href=aTag.href.replace(/\?&(amp;)?/,"?");
                             nextt=aTag;
                         }else if(aTag.href.indexOf(url)!=-1 && /^[\/\?&]?[_-]?p(age)?=?[12](\?|&|$)/i.test(aTag.href.replace(url,""))){
                             nextt=aTag;
