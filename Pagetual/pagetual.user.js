@@ -453,7 +453,7 @@
                 let body=doc.body,bodyHeight=parseInt(_unsafeWindow.getComputedStyle(body).height);
                 function checkElement(ele){
                     let curHeight=parseInt(_unsafeWindow.getComputedStyle(ele).height);
-                    if(curHeight/bodyHeight<=0.48)return null;
+                    if(curHeight/bodyHeight<=0.35)return null;
                     if(ele.children.length==0){
                         self.curSiteRule.pageElement=self.geneSelector(ele.parentNode)+">"+ele.tagName;
                         self.curSiteRule.type=1;
@@ -571,7 +571,7 @@
                             nextt=aTag;
                         }else if(aTag.href.replace(preStr,"").replace(afterStr,"")==parseInt(pageNum)+1){
                             nextt=aTag;
-                        }else if(aTag.href.indexOf(url)!=-1 && /^[\/\?&]?[_-]?p(age)?=?[12](\?|&|$)/i.test(aTag.href.replace(url,""))){
+                        }else if(aTag.href.indexOf(url)!=-1 && /^[\/\?&]?[_-]?(p|page)?=?[12](\?|&|$)/i.test(aTag.href.replace(url,""))){
                             nextt=aTag;
                         }
                     }
@@ -1177,6 +1177,13 @@
         if(!insert || !insert.parentNode)return;
         curPage++;
         let inTable=insert.tagName=="TR" || insert.previousElementSibling.tagName=="TR";
+        let inLi=insert.tagName=="LI" || insert.previousElementSibling.tagName=="LI";
+        if(inLi){
+            let line=document.createElement("li");
+            line.innerHTML=curPage;
+            insert.parentNode.insertBefore(line, insert);
+            return line;
+        }
         let pageBar=document.createElement(inTable?"tr":"div");
         let upSpan=document.createElement("span");
         let downSpan=document.createElement("span");
