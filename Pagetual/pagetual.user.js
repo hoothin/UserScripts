@@ -574,7 +574,7 @@
                 }
                 nextLink={href:targetUrl};
             }else if(this.curSiteRule.nextLink){
-                nextLink=this.curSiteRule.type==0?getElementByXpath(this.curSiteRule.nextLink,curDoc):curDoc.querySelector(this.curSiteRule.nextLink);
+                nextLink=this.curSiteRule.type==0?getElementByXpath(this.curSiteRule.nextLink,curDoc,curDoc):curDoc.querySelector(this.curSiteRule.nextLink);
             }
             if(!nextLink){
                 page=this.getPage();
