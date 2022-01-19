@@ -622,6 +622,30 @@
             if(css){
                 _GM_addStyle(css);
             }
+            [].forEach.call(eles, ele=>{
+                [].forEach.call(ele.querySelectorAll("img"), img=>{
+                    if(img.src==""){
+                        let realSrc;
+                        if(img.dataset && img.dataset.original){
+                            realSrc=img.dataset.original;
+                        }else if(img._lazyrias && img._lazyrias.srcset){
+                            realSrc=img._lazyrias.srcset[img._lazyrias.srcset.length-1];
+                        }else if(img.dataset && img.dataset.origFile){
+                            realSrc=img.dataset.origFile;
+                        }else if(img.srcset){
+                            var srcs=img.srcset.split(","),largeSize=0;
+                            srcs.forEach(srci=>{
+                                let srcInfo=srci.trim().split(" "),curSize=parseInt(srcInfo[1]);
+                                if(srcInfo[1] && curSize>largeSize){
+                                    largeSize=curSize;
+                                    realSrc=srcInfo[0];
+                                }
+                            });
+                        }
+                        if(realSrc)img.src=realSrc;
+                    }
+                });
+            });
             let lazyImgSrc=this.curSiteRule.lazyImgSrc;
             if(lazyImgSrc){
                 [].forEach.call(eles, ele=>{
