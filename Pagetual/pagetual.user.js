@@ -62,6 +62,7 @@
                     toBottom:"前往页尾",
                     current:"当前页",
                     forceIframe:"强制拼接",
+                    cancelForceIframe:"取消强制拼接",
                     configure:"打开配置页",
                     update:"立即更新规则",
                     passSec:"更新于 #t# 秒前",
@@ -86,6 +87,7 @@
                     toBottom:"前往頁尾",
                     current:"當前頁",
                     forceIframe:"強制拼接",
+                    cancelForceIframe:"取消强制拼接",
                     configure:"打開配置頁",
                     update:"立即更新規則",
                     passSec:"更新于 #t# 秒前",
@@ -109,6 +111,7 @@
                     toBottom:"To Bottom",
                     current:"Current Page",
                     forceIframe:"Force to join",
+                    cancelForceIframe:"Cancel Force join",
                     configure:"Configure",
                     update:"Update rules from url now",
                     passSec:"Updated #t# seconds ago",
@@ -212,10 +215,6 @@
             cb(value);
         }
     };
-    _GM_registerMenuCommand(i18n("forceIframe"), ()=>{
-        storage.setItem("forceState_"+location.host, (forceState==2?0:2));
-        location.reload();
-    });
     _GM_registerMenuCommand(i18n("configure"), ()=>{
         location.href="https://github.com/hoothin/UserScripts/tree/master/Pagetual";
     });
@@ -655,6 +654,11 @@
     function initConfig(){
         _GM_registerMenuCommand(i18n(forceState==1?"enable":"disable"), ()=>{
             storage.setItem("forceState_"+location.host, (forceState==1?0:1));
+            location.reload();
+        });
+
+        _GM_registerMenuCommand(i18n(forceState==2?"cancelForceIframe":"forceIframe"), ()=>{
+            storage.setItem("forceState_"+location.host, (forceState==2?0:2));
             location.reload();
         });
         var configCon,insertPos;
