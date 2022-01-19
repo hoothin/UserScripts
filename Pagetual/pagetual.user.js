@@ -1034,6 +1034,9 @@
                         }
                     });
                 }
+            },
+            onerror: function(e){
+                debug(e);
             }
         });
     }
