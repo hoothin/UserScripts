@@ -3,7 +3,7 @@
 // @name:zh-CN   东方永页机
 // @name:zh-TW   東方永頁機
 // @namespace    hoothin
-// @version      0.3.7
+// @version      0.3.8
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -451,6 +451,7 @@
                     let i,maxHeight=curHeight*0.35,curMaxEle=null,curMaxArea=0;
                     for(i=0;i<ele.children.length;i++){
                         let curNode=ele.children[i];
+                        if(curNode.innerText=="")continue;
                         let comStyle=_unsafeWindow.getComputedStyle(curNode);
                         let h=parseInt(comStyle.height);
                         let w=parseInt(comStyle.width);
@@ -460,7 +461,9 @@
                             comStyle=_unsafeWindow.getComputedStyle(moreChild);
                             let ch=parseInt(comStyle.height);
                             let cw=parseInt(comStyle.width);
-                            a+=ch*cw;
+                            if(moreChild.innerText!="" && !isNaN(ch) && !isNaN(cw)){
+                                a+=ch*cw;
+                            }
                             moreChild=moreChild.nextElementSibling;
                         }
                         if(curMaxEle==null || curMaxArea<a){
@@ -512,7 +515,7 @@
                     let aTag=aTags[i];
                     if(nextf && nexts && nextt)break;
                     if(!nextf){
-                        if(/(\s|^)下[一1]?[页頁张張]|^next( page)?\s*$|次のページ/i.test(aTag.innerHTML)){
+                        if(/(\s|^)下[一1]?[页頁张張]|^next( page)?\s*$|次のページ/i.test(aTag.innerText)){
                             if(!aTag.href || /javascript:/.test(aTag.href)){
                                 nextfo=aTag;
                             }else{
@@ -521,7 +524,7 @@
                         }
                     }
                     if(!nexts){
-                        if(aTag.innerHTML=="&gt;"){
+                        if(aTag.innerText=="&gt;"){
                             if(!aTag.href || /javascript:/.test(aTag.href)){
                                 nextfo=aTag;
                             }else{
@@ -531,11 +534,11 @@
                     }
                     if(!aTag.href || /javascript:/.test(aTag.href))continue;
                     if(!nextt){
-                        if(aTag.innerHTML=="»"){
+                        if(aTag.innerText=="»"){
                             nextt=aTag;
                         }else if(aTag.href.replace(preStr,"").replace(afterStr,"")==parseInt(pageNum)+1){
                             nextt=aTag;
-                        }else if(aTag.href.indexOf(url)!=-1 && /^[\/\?&]?[_-]?p(age)?=?\d/i.test(aTag.href.replace(url,""))){
+                        }else if(aTag.href.indexOf(url)!=-1 && /^[\/\?&]?[_-]?p(age)?=?[12](\?|&|$)/i.test(aTag.href.replace(url,""))){
                             nextt=aTag;
                         }
                     }
