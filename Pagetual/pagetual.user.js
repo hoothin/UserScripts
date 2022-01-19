@@ -1237,12 +1237,13 @@
         let nextLink=ruleParser.getNextLink();
         let insert=ruleParser.getInsert();
         if(nextLink && insert){
-            if(location.protocol=="https:" && /^http:/.test(nextLink.href)){
+            let isJs=/^(javascript|#)/.test(nextLink.href);
+            if(location.protocol=="https:" && !isJs){
                 nextLink.href=nextLink.href.replace(/^http/,"https");
             }
             isLoading=true;
             loading.style.display="";
-            if(ruleParser.curSiteRule.action==1 && /^http/.test(nextLink.href)){
+            if(ruleParser.curSiteRule.action==1 && !isJs){
                 requestFromIframe(nextLink.href, (doc, eles)=>{
                     isLoading=false;
                     loading.style.display="none";
@@ -1251,7 +1252,7 @@
                         ruleParser.insertPage(doc, eles, nextLink.href);
                     }
                 });
-            }else if(ruleParser.curSiteRule.action==2 && /^http/.test(nextLink.href)){
+            }else if(ruleParser.curSiteRule.action==2 && !isJs){
                 forceIframe(nextLink.href, (iframe, eles)=>{
                     isLoading=false;
                     loading.style.display="none";
@@ -1261,7 +1262,7 @@
                     }
                 });
             }else{
-                if(/^http/.test(nextLink.href)){
+                if(!isJs){
                     requestDoc(nextLink.href, (eles)=>{
                         isLoading=false;
                         loading.style.display="none";
