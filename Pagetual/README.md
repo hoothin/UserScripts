@@ -80,10 +80,10 @@ insertPos
 --
 1 means insert before, 2 means just append to the bottom of target
 
-pageAction:(document, eles)
+pageAction [ :(document, eles) ]
 --
-The js code to run with every page inserted
+The js code to run with every page inserted with document:(document of every page) and eles:(elements finded with rule)
 
-init:(document)
+init [ :(document) ]
 --
-The js code to run with current main page
+The js code to run with current main page with document:(document of main page)
