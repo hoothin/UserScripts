@@ -1202,7 +1202,7 @@
 
     function forceIframe(url, callback){
         let curIframe = document.createElement('iframe');
-        curIframe.name = 'pagetual-iframe';
+        //curIframe.name = 'pagetual-iframe';
         curIframe.sandbox="allow-same-origin allow-scripts allow-popups allow-forms";
         curIframe.frameBorder = '0';
         curIframe.scrolling="no";
