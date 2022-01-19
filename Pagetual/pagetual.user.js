@@ -265,7 +265,6 @@
         constructor() {
             this.customRules=[
                 {
-                    from:2,
                     name:"yande",
                     type:1,
                     action:0,
