@@ -3,7 +3,7 @@
 // @name:zh-CN   东方永页机
 // @name:zh-TW   東方永頁機
 // @namespace    hoothin
-// @version      0.3.8.2
+// @version      0.3.8.3
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -982,10 +982,10 @@
                         if(forceState==1)return;
                         let now=new Date().getTime();
                         if(!date || now-date>3*24*60*60*1000){
+                            storage.setItem("ruleLastUpdate", now);
                             ruleUrls.forEach(rule=>{
                                 ruleParser.addRuleByUrl(rule.url, rule.type, rule.id, ()=>{
                                     if(++i==ruleUrls.length){
-                                        storage.setItem("ruleLastUpdate", now);
                                         callback();
                                     }
                                 })
