@@ -3,7 +3,7 @@
 // @name:zh-CN   东方永页机
 // @name:zh-TW   東方永頁機
 // @namespace    hoothin
-// @version      0.3.8.1
+// @version      0.3.8.2
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -831,7 +831,7 @@
         let customRulesInput=document.createElement("textarea");
         customRulesInput.style.width="100%";
         customRulesInput.style.height="500px";
-        customRulesInput.placeholder=`[\n{\n    "type":"1",\n    "name":"yande",\n    "action":"0",\n    "url":"^https:\/\/yande\\.re\/",\n    "pageElement":"ul#post-list-posts>li",\n    "nextLink":"a.next_page",\n    "css":".javascript-hide {display: inline-block !important;}"\n},\n{\n    "type":"1",\n    "name":"tieba",\n    "action":"1",\n    "url":"^https:\/\/tieba\\.baidu.com\/f\\?kw=",\n    "pageElement":"ul#thread_list>li",\n    "nextLink":".next.pagination-item "\n}\n]`;
+        customRulesInput.placeholder=`[\n{\n    "name":"yande",\n    "action":"0",\n    "url":"^https:\/\/yande\\.re\/",\n    "pageElement":"ul#post-list-posts>li",\n    "nextLink":"a.next_page",\n    "css":".javascript-hide {display: inline-block !important;}"\n},\n{\n    "name":"tieba",\n    "action":"1",\n    "url":"^https:\/\/tieba\\.baidu.com\/f\\?kw=",\n    "pageElement":"ul#thread_list>li",\n    "nextLink":".next.pagination-item "\n}\n]`;
         customRulesInput.value=getFormatJSON(ruleParser.customRules);
         configCon.insertBefore(customRulesInput, insertPos);
         let saveBtn=document.createElement("button");
@@ -1275,6 +1275,7 @@
         let nextLink=ruleParser.getNextLink();
         let insert=ruleParser.getInsert();
         if(nextLink && insert){
+            debug(nextLink);
             let isJs=/^(javascript|#)/.test(nextLink.href);
             if(location.protocol=="https:" && /^http:/.test(nextLink.href)){
                 nextLink.href=nextLink.href.replace(/^http/,"https");
