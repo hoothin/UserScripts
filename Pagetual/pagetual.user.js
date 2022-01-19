@@ -1060,7 +1060,7 @@
                     if(eles && eles.length>0){
                         callback(doc, eles);
                     }else{
-                        isPause=true;
+                        //isPause=true;
                         callback(false, false);
                     }
                 }catch(e){
@@ -1068,7 +1068,7 @@
                     callback(false, false);
                 }
                 document.body.removeChild(iframe);
-            },500);
+            },300);
         });
         iframe.src=url;
         document.body.appendChild(iframe);
