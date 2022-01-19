@@ -3,7 +3,7 @@
 // @name:zh-CN   东方永页机
 // @name:zh-TW   東方永頁機
 // @namespace    hoothin
-// @version      0.3.8
+// @version      0.3.8.1
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -915,7 +915,11 @@
             let iLen=Object.keys(item).length,j=0;
             for(let key in item){
                 isLast=(++j)==iLen;
-                ret+="    \""+key+"\":\""+item[key]+"\""+(isLast?"":",")+"\n";
+                let value=item[key];
+                if(typeof value=="string"){
+                    value=value.replace("\\","\\\\");
+                }
+                ret+="    \""+key+"\":\""+value+"\""+(isLast?"":",")+"\n";
             }
             isLast=(++i)==len;
             ret+="  }"+(isLast?"":",")+"\n";
