@@ -3,7 +3,7 @@
 // @name:zh-CN   东方永页机
 // @name:zh-TW   東方永頁機
 // @namespace    hoothin
-// @version      0.3.7
+// @version      0.3.8
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -492,7 +492,7 @@
             let doc=this.pageDoc;
             let pageNum=0,preStr="",afterStr="";
             let pageMatch1=url.match(/(.*[a-zA-Z0-9\/][\-_](?:p|page)?)(\d+)(\.html?$|$)/i);
-            let pageMatch2=url.match(/(.*[\?&]p(?:age)?=)(\d+)($|#.*)/i);
+            let pageMatch2=url.match(/(.*[\?&]p(?:age)?=)(\d+)($|[#&].*)/i);
             if(pageMatch1){
                 preStr=pageMatch1[1];
                 pageNum=pageMatch1[2];
@@ -536,8 +536,8 @@
                     if(!nextt){
                         if(aTag.innerText=="»"){
                             nextt=aTag;
-                        }else if(aTag.href.replace(/\?&(amp;)?/,"?").replace(preStr,"").replace(afterStr,"")==parseInt(pageNum)+1){
-                            aTag.href=aTag.href.replace(/\?&(amp;)?/,"?");
+                        }else if(aTag.href.replace(/\?&/,"?").replace(preStr,"").replace(afterStr,"")==parseInt(pageNum)+1){
+                            aTag.href=aTag.href.replace(/\?&/,"?");
                             nextt=aTag;
                         }else if(aTag.href.indexOf(url)!=-1 && /^[\/\?&]?[_-]?p(age)?=?[12](\?|&|$)/i.test(aTag.href.replace(url,""))){
                             nextt=aTag;
