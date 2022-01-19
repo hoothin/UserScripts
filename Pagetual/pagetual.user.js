@@ -1238,7 +1238,7 @@
         let insert=ruleParser.getInsert();
         if(nextLink && insert){
             let isJs=/^(javascript|#)/.test(nextLink.href);
-            if(location.protocol=="https:" && !isJs){
+            if(location.protocol=="https:" && /^http:/.test(nextLink.href)){
                 nextLink.href=nextLink.href.replace(/^http/,"https");
             }
             isLoading=true;
