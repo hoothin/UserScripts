@@ -387,7 +387,7 @@
             let r=0;
             function searchByTime(){
                 setTimeout(()=>{
-                    let end=r+50;
+                    let end=r+80;
                     end=end>self.rules.length?self.rules.length:end;
                     for(;r<end;r++){
                         let rule=self.rules[r];
@@ -683,11 +683,11 @@
             let self=this;
             this.getRule(()=>{
                 callback();
+                let code=self.curSiteRule.init;
+                if(code){
+                    _unsafeWindow.eval(code);
+                }
             });
-            let code=this.curSiteRule.init;
-            if(code){
-                _unsafeWindow.eval(code);
-            }
         }
 
         insertPage(doc, eles, url){
