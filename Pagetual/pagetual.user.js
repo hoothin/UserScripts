@@ -1096,8 +1096,8 @@
     function initPage(){
         ruleParser.initPage(()=>{
             initListener();
+            nextPage();
         });
-        //nextPage();
     }
 
     function initView(){
