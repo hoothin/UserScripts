@@ -155,6 +155,12 @@
         _GM_addStyle=GM_addStyle;
     }else if(typeof GM!='undefined' && typeof GM.addStyle!='undefined'){
         _GM_addStyle=GM.addStyle;
+    }else{
+        _GM_addStyle=cssStr=>{
+            let styleEle=document.createElement("style");
+            styleEle.innerHTML=cssStr;
+            document.head.appendChild(styleEle);
+        };
     }
 
     if(typeof _GM_xmlhttpRequest=='undefined')_GM_xmlhttpRequest=(f)=>{};
@@ -435,7 +441,7 @@
             let pageElement=null;
             let self=this;
             if(this.curSiteRule.pageElement){
-                pageElement=this.curSiteRule.type==0?getAllElementsByXpath(this.curSiteRule.pageElement,doc):doc.querySelectorAll(this.curSiteRule.pageElement);
+                pageElement=this.curSiteRule.type==0?getAllElementsByXpath(this.curSiteRule.pageElement,doc,doc):doc.querySelectorAll(this.curSiteRule.pageElement);
             }
             if(!pageElement){
                 let body=doc.body,bodyHeight=parseInt(_unsafeWindow.getComputedStyle(body).height);
