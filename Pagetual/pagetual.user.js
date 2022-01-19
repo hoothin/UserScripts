@@ -451,10 +451,18 @@
                     let i,maxHeight=curHeight*0.35,curMaxEle=null,curMaxArea=0;
                     for(i=0;i<ele.children.length;i++){
                         let curNode=ele.children[i];
-                        let h=parseInt(_unsafeWindow.getComputedStyle(curNode).height);
-                        let w=parseInt(_unsafeWindow.getComputedStyle(curNode).width);
+                        let comStyle=_unsafeWindow.getComputedStyle(curNode);
+                        let h=parseInt(comStyle.height);
+                        let w=parseInt(comStyle.width);
                         if(isNaN(h) || isNaN(w))continue;
-                        let a=h*w+h;
+                        let a=h*w+h,moreChild=curNode.children[0];
+                        while(moreChild){
+                            comStyle=_unsafeWindow.getComputedStyle(moreChild);
+                            let ch=parseInt(comStyle.height);
+                            let cw=parseInt(comStyle.width);
+                            a+=ch*cw;
+                            moreChild=moreChild.nextElementSibling;
+                        }
                         if(curMaxEle==null || curMaxArea<a){
                             curHeight=h;
                             curMaxArea=a;
