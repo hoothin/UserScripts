@@ -1061,7 +1061,9 @@
                         callback(doc, eles);
                     }else{
                         //isPause=true;
-                        callback(false, false);
+                        setTimeout(()=>{
+                            callback(false, false);
+                        },1000);
                     }
                 }catch(e){
                     isPause=true;
