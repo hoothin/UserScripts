@@ -12,7 +12,6 @@ Rules
 <pre>
 [
 {
-    "type":"1",
     "name":"yande",
     "action":"0",
     "url":"^https:\/\/yande\\.re\/",
@@ -21,7 +20,6 @@ Rules
     "css":".javascript-hide {display: inline-block !important;}"
 },
 {
-    "type":"1",
     "name":"tieba",
     "action":"1",
     "url":"^https:\/\/tieba\\.baidu.com\/f\\?kw=",
@@ -29,7 +27,6 @@ Rules
     "nextLink":".next.pagination-item "
 },
 {
-    "type":1,
     "name":"xxgame",
     "action":0,
     "url":"^http://www\\.xxgame\\.net/chinese",
@@ -50,10 +47,6 @@ Regexp of the url of target site
 enable
 --
 0 means disable
-
-type
---
-0 means xpath format, 1 means selector
 
 action
 --
