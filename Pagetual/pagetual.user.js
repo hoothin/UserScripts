@@ -387,7 +387,7 @@
             let r=0;
             function searchByTime(){
                 setTimeout(()=>{
-                    let end=r+100;
+                    let end=r+150;
                     end=end>self.rules.length?self.rules.length:end;
                     for(;r<end;r++){
                         let rule=self.rules[r];
