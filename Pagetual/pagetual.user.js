@@ -266,7 +266,6 @@
             this.customRules=[
                 {
                     name:"yande",
-                    type:1,
                     action:0,
                     url:"^https:\/\/yande\\.re\/",
                     pageElement:"ul#post-list-posts>li",
