@@ -3,7 +3,7 @@
 // @name:zh-CN   东方永页机
 // @name:zh-TW   東方永頁機
 // @namespace    hoothin
-// @version      0.3.8.6
+// @version      0.3.8.7
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -1037,6 +1037,7 @@
             },
             onerror: function(e){
                 debug(e);
+                callback(false);
             }
         });
     }
@@ -1053,11 +1054,16 @@
         iframe.addEventListener("load", e=>{
             setTimeout(()=>{
                 //可能會延遲加載
-                let doc=iframe.contentWindow.document;
-                let eles=ruleParser.getPageElement(doc);
-                if(eles && eles.length>0){
-                    callback(doc, eles);
-                }else{
+                try{
+                    let doc=iframe.contentWindow.document;
+                    let eles=ruleParser.getPageElement(doc);
+                    if(eles && eles.length>0){
+                        callback(doc, eles);
+                    }else{
+                        isPause=true;
+                        callback(false, false);
+                    }
+                }catch(e){
                     isPause=true;
                     callback(false, false);
                 }
@@ -1211,8 +1217,13 @@
 
     var emuIframe;
     function emuPage(callback){
-        let orgPage,curPage,iframeDoc;
+        let orgPage,curPage,iframeDoc,times=0;
         function checkPage(){
+            if(times++ > 20){
+                isPause=true;
+                callback(false, false);
+                return;
+            }
             iframeDoc=emuIframe.contentDocument || emuIframe.contentWindow.document;
             let eles=ruleParser.getPageElement(iframeDoc);
             if(orgPage == eles[0]){
@@ -1237,12 +1248,12 @@
             emuIframe.frameBorder = '0';
             emuIframe.style.cssText = 'margin:0!important;padding:0!important;visibility:hidden!important;';
             emuIframe.addEventListener("load", e=>{
-                iframeDoc=emuIframe.contentDocument || emuIframe.contentWindow.document;
                 setTimeout(()=>{
                     orgPage=ruleParser.getPageElement(iframeDoc)[0];
                     ruleParser.getNextLink(iframeDoc).click();
                     checkPage(iframeDoc);
                 },300);
+                iframeDoc=emuIframe.contentDocument || emuIframe.contentWindow.document;
             });
             emuIframe.src=location.href;
             document.body.appendChild(emuIframe);
