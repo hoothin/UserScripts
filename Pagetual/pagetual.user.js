@@ -2,13 +2,16 @@
 // @name         Pagetual
 // @name:zh-CN   东方永页机
 // @name:zh-TW   東方永頁機
+// @name:jp      東方永頁機
 // @namespace    hoothin
 // @version      0.4.0
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
+// @description:jp     Webページを自動で読み込み継ぎ足し表示を行うブラウザ拡張です。
 // @author       hoothin
-// @include      http*
+// @include      http://*
+// @include      https://*
 // @license      MIT
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAdVBMVEUAAADZHQbYHQXaHQbYHgbZHATYHgbYHgbZHQXYHgXZHgbZHgfYHQXYHQbXHQDYHgbYHgbYHQXZHgbYHgbYHgbYHgXaHQbYHQbYHQbZHgbZHgbZHQbZHgbYHgbYHQbYHQXYHgfaHwDZHQXZHQbYHwTVHQrYHgbCqWmRAAAAJnRSTlMAUL8oyD/el2cy1CCPcg/35euggPG6FajOr4Z617OdXkkIi1g4GcTbfAwAAAJDSURBVFjD7dbXtqpADADQ0NsA0hHQY83/f+K9rqNOCzPwfvaTugimjEH4s86739yX0+3n8dwd7dQh/seiaWbHscUqCnZEP24LvrXjXLyyaVJMp2RbeFajZInhJWCHcurB7idEVfS+89SGsS28qJFwyN59ZcgsnXeRVrwvSNLFNJEA1/jfDqW4Po8Z1+XwsX6HGA1Cft1Y0ndw0OjCrwxDj4hPDqgYXbGlZ35pj0fQ1dr0C4DM5++lZHMt/qLNXq2rAG5qtWPdoaL5/ZwXloHAP1onUKs3SOSOO5YEsFNLkJN2T/IRRt0gj6ZUUpZTyMmzUx/Vw8wVhwgEI9pog2PiHRO0OhTq2hLnytBK3yRdsKeCGjRnoagKLRbQNfwsXdGiAkLMu5ihWUSvr5S/tPWPlIV8kxvn58CKatMu7Ly1+Kzcsgwj0wqXlgnNMT7CrFPwwaTp+OsSKS4Y1UJ5Phl/BSM3F7JBQmKO78UGJWT/zWJpTae7E4CTtJcnVJ2E7dV4RAWlY36uM96gFnHQT0HFe0zOIZYbnGsVRJZHc/DZFS15pu54URfUSgYJvVJ8BgpPWWu3TwfJUxkvPahylAzy573ybXfQHVEUFt/2uC67KgWcybPp602gndMMKF647bfIUg9oQYmCH6B1PF7jHFDQk2n6PJ7gDcil1FekowdGuVBGqw7rGZXNFSweLnJRJo4pD4cENphb/CoH57O6o8q/wzbJtCBXuXVz7sqQBbBDMJ9a6e+SA/tlzjx0Q3TLL0/4Y/QPSYfEIomUUSEAAAAASUVORK5CYII=
 // @grant        GM_xmlhttpRequest
@@ -55,7 +58,6 @@
             case "zh-CN":
             case "zh-SG":
                 config={
-                    saveCurrent:"保存当前设置",
                     disable:"暂时禁用",
                     enable:"启用翻页",
                     toTop:"回到顶部",
@@ -103,6 +105,31 @@
                     customRules:"輸入【東方永頁機】格式的自定義規則",
                     save:"存儲設置",
                     loadingText:"少女祈禱中..."
+                };
+                break;
+            case "jp":
+                config = {
+                    disable: "一時的に無効にする",
+                    enable: "ページめくりを有効にする",
+                    toTop: "トップに戻る",
+                    toBottom: "ページの下部に移動",
+                    current: "現在のページ",
+                    forceIframe: "強制ステッチ",
+                    cancelForceIframe: "強制ステッチをキャンセル",
+                    configure: "設定ページを開く",
+                    update: "今すぐルールを更新してください",
+                    passSec: "＃t＃秒前に更新",
+                    passMin: "＃t＃分前に更新",
+                    passHour: "＃t＃時間前に更新",
+                    passDay: "＃t＃日前に更新",
+                    cantDel: "組み込みルールを削除できません",
+                    confirmDel: "このルールを削除してもよろしいですか？",
+                    updateSucc: "更新に成功しました",
+                    beginUpdate: "更新中、お待ちください",
+                    customUrls: "インポートルールのURL、1行に1つ、AutoPagerizeフォーマットルールは\"0|\"で始まる必要があります",
+                    customRules: "【東方永頁機】の形式でカスタムルールを入力してください",
+                    save: "設定を保存",
+                    loadingText: "少女祈祷中..."
                 };
                 break;
             default:
