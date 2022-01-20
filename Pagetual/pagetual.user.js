@@ -1091,6 +1091,7 @@
         });
     }
 
+    var failFromIframe=0;
     function requestFromIframe(url, callback){
         let orgPage,curPage;
         let iframe = document.createElement('iframe');
@@ -1108,6 +1109,10 @@
                     let eles=ruleParser.getPageElement(doc, iframe.contentWindow);
                     if(eles && eles.length>0){
                         callback(doc, eles);
+                    }else if(failFromIframe++ > 3){
+                        failFromIframe=0;
+                        isPause=true;
+                        callback(false, false);
                     }else{
                         //isPause=true;
                         setTimeout(()=>{
