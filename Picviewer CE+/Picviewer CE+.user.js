@@ -6,7 +6,7 @@
 // @description          Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version              2022.1.18.1
+// @version              2022.1.20.1
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -30,7 +30,7 @@
 // @grant                GM.addStyle
 // @grant                GM.openInTab
 // @grant                GM.setClipboard
-// @grant                GM.xmlhttpRequest
+// @grant                GM.xmlHttpRequest
 // @grant                GM.registerMenuCommand
 // @grant                GM.notification
 // @grant                unsafeWindow
@@ -735,8 +735,8 @@ ImgOps | https://imgops.com/#b#`;
     }
     if(typeof GM_xmlhttpRequest!='undefined'){
         _GM_xmlhttpRequest=GM_xmlhttpRequest;
-    }else if(typeof GM!='undefined' && typeof GM.xmlhttpRequest!='undefined'){
-        _GM_xmlhttpRequest=GM.xmlhttpRequest;
+    }else if(typeof GM!='undefined' && typeof GM.xmlHttpRequest!='undefined'){
+        _GM_xmlhttpRequest=GM.xmlHttpRequest;
     }
     if(typeof GM_registerMenuCommand!='undefined'){
         _GM_registerMenuCommand=GM_registerMenuCommand;
@@ -4239,7 +4239,7 @@ ImgOps | https://imgops.com/#b#`;
             getPage:function(){
                 let pageNum=0,preStr="",afterStr="";
                 let pageMatch1=this.href.match(/(.*[a-zA-Z0-9\/][\-_](?:p|page)?)(\d+)(\.html?$|$)/i);
-                let pageMatch2=this.href.match(/(.*[\?&]p(?:age)?=)(\d+)($|#.*)/i);
+                let pageMatch2=this.href.match(/(.*[\?&]p(?:age)?=)(\d+)($|[#&].*)/i);
                 if(pageMatch1){
                     preStr=pageMatch1[1];
                     pageNum=pageMatch1[2];
@@ -4256,16 +4256,33 @@ ImgOps | https://imgops.com/#b#`;
                 if(!next)next=curPage.querySelector("a#next");
                 if(!pre)pre=curPage.querySelector("a#leftFix");
                 if(!next)next=curPage.querySelector("a#rightFix");
+                if(!pre)pre=curPage.querySelector("a.prev_page");
                 if(!next)next=curPage.querySelector("a.next_page");
-                if(pre && (!pre.href || /javascript:/.test(pre.href)))pre=null;
-                if(next && (!next.href || /javascript:/.test(next.href)))next=null;
+                if(!pre)pre=curPage.querySelector(".prev>a");
+                if(!next)next=curPage.querySelector(".next>a");
+                if(!pre && !next){
+                    let pageDiv=curPage.querySelector("div.wp-pagenavi");
+                    if(pageDiv){
+                        var cur=pageDiv.querySelector("span.current");
+                        pre=cur.previousSibling;
+                        next=cur.nextSibling;
+                    }else{
+                        var cur=curPage.querySelector("div.article-paging>span");
+                        if(cur){
+                            pre=cur.previousElementSibling;
+                            next=cur.nextElementSibling;
+                        }
+                    }
+                }
+                if(pre && (!pre.href || /javascript:/.test(pre.href.trim())))pre=null;
+                if(next && (!next.href || /javascript:/.test(next.href.trim())))next=null;
                 if(!pre || !next){
                     let aTags=curPage.querySelectorAll("a");
                     if(!pre){
                         let pref,pres,pret;
                         for(var i=0;i<aTags.length;i++){
                             let aTag=aTags[i];
-                            if(!aTag.href || /javascript:/.test(aTag.href))continue;
+                            if(!aTag.href || /javascript:/.test(aTag.href.trim()))continue;
                             if(pref && pres && pret)break;
                             if(!pref){
                                 if(/(\s|^)上[一1]?[页頁张張]|^previous( page)?\s*$|前のページ/i.test(aTag.innerHTML)){
@@ -4295,7 +4312,7 @@ ImgOps | https://imgops.com/#b#`;
                         let nextf,nexts,nextt;
                         for(var i=0;i<aTags.length;i++){
                             let aTag=aTags[i];
-                            if(!aTag.href || /javascript:/.test(aTag.href))continue;
+                            if(!aTag.href || /^\s*javascript:/.test(aTag.href.trim()))continue;
                             if(nextf && nexts && nextt)break;
                             if(!nextf){
                                 if(/(\s|^)下[一1]?[页頁张張]|^next( page)?\s*$|次のページ/i.test(aTag.innerHTML)){
@@ -4312,28 +4329,12 @@ ImgOps | https://imgops.com/#b#`;
                                     nextt=aTag;
                                 }else if(aTag.href.replace(preStr,"").replace(afterStr,"")==parseInt(pageNum)+1){
                                     nextt=aTag;
-                                }else if(aTag.href.indexOf(this.href)!=-1 && /^[\/\?&]?[_-]?p(age)?=?\d/i.test(aTag.href.replace(this.href,""))){
+                                }else if(aTag.href.indexOf(this.href)!=-1 && /^[\/\?&]?[_-]?(p|page)?=?[12](\?|&|$)/i.test(aTag.href.replace(this.href,""))){
                                     nextt=aTag;
                                 }
                             }
                         }
                         next=nextf||nexts||nextt;
-                    }
-                }
-                if(!pre)pre=curPage.querySelector(".prev>a");
-                if(!next)next=curPage.querySelector(".next>a");
-                if(!pre && !next){
-                    let pageDiv=curPage.querySelector("div.wp-pagenavi");
-                    if(pageDiv){
-                        var cur=pageDiv.querySelector("span.current");
-                        pre=cur.previousSibling;
-                        next=cur.nextSibling;
-                    }else{
-                        var cur=curPage.querySelector("div.article-paging>span");
-                        if(cur){
-                            pre=cur.previousElementSibling;
-                            next=cur.nextElementSibling;
-                        }
                     }
                 }
                 if(!pre)pre=curPage.querySelector('[rel="prev"],[rel="previous"]');
