@@ -41,5 +41,14 @@
     "url":"^https?://(www|manhua)\\.(dmzj|178)\\.com/\\w+/\\d+\\.shtml",
     "nextLinkByUrl":["(.*#@page=)(\\d+)","$1{$2+1}"],
     "pageElement":"div#center_box>img"
+  },
+  {
+    "name":"smzdm",
+    "action":"0",
+    "url":"^https://.*\\.smzdm\\.com",
+    "pageElement":"ul#feed-main-list>li",
+    "nextLink":".pagenation-list>li.current+li>a",
+    "insert":"ul#feed-main-list",
+    "insertPos":"2"
   }
 ]
