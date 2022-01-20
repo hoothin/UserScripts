@@ -8,7 +8,7 @@
 // @namespace    https://github.com/hoothin/UserScripts/tree/master/Easy%20offline
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Base64/0.2.0/base64.min.js
-// @version      1.9.3
+// @version      1.9.5
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -26,7 +26,7 @@
 // @grant        GM.getValue
 // @grant        GM.registerMenuCommand
 // @grant        GM.deleteValue
-// @grant        GM.xmlhttpRequest
+// @grant        GM.xmlHttpRequest
 // @grant        GM.notification
 // @grant        unsafeWindow
 // @run-at       document-end
@@ -491,8 +491,8 @@
     var _GM_xmlhttpRequest,_GM_registerMenuCommand,_GM_notification;
     if(typeof GM_xmlhttpRequest!='undefined'){
         _GM_xmlhttpRequest=GM_xmlhttpRequest;
-    }else if(typeof GM!='undefined' && typeof GM.xmlhttpRequest!='undefined'){
-        _GM_xmlhttpRequest=GM.xmlhttpRequest;
+    }else if(typeof GM!='undefined' && typeof GM.xmlHttpRequest!='undefined'){
+        _GM_xmlhttpRequest=GM.xmlHttpRequest;
     }
     if(typeof GM_registerMenuCommand!='undefined'){
         _GM_registerMenuCommand=GM_registerMenuCommand;
