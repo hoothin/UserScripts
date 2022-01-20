@@ -3,7 +3,7 @@
 // @name:zh-CN   东方永页机
 // @name:zh-TW   東方永頁機
 // @namespace    hoothin
-// @version      0.3.8.11
+// @version      0.3.8.12
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -1202,9 +1202,11 @@
         pageBar.appendChild(pageText);
         pageBar.appendChild(downSpan);
         if(inTable){
+            let example=(insert.tagName=="TR" || insert.tagName=="TBODY")?insert:insert.previousElementSibling;
+            let tdNum=example.tagName=="TR"?example.children.length:example.querySelector("tr").children.length;
             pageBar.style.display="table-row";
             let td=document.createElement("td");
-            td.colSpan=99;
+            td.colSpan=tdNum;
             td.appendChild(upSpan);
             td.appendChild(pageText);
             td.appendChild(downSpan);
