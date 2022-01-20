@@ -11,28 +11,28 @@ Rules
 ==
 <pre>
 [
-{
+  {
     "name":"yande",
     "action":"0",
     "url":"^https:\/\/yande\\.re\/",
     "pageElement":"ul#post-list-posts>li",
     "nextLink":"a.next_page",
     "css":".javascript-hide {display: inline-block !important;}"
-},
-{
+  },
+  {
     "name":"tieba",
     "action":"1",
     "url":"^https:\/\/tieba\\.baidu.com\/f\\?kw=",
     "pageElement":"ul#thread_list>li",
     "nextLink":".next.pagination-item "
-},
-{
+  },
+  {
     "name":"xxgame",
     "action":0,
     "url":"^http://www\\.xxgame\\.net/chinese",
     "pageElement":"div.layui-row>div.layui-col-md4:not(div:nth-child(5),div:nth-child(6),div:nth-child(7))",
     "nextLinkByUrl":["(http://www\\.xxgame\\.net/chinese/?)(?:\\?page=|$)(\\d*)","$1?page={(0$2||1)+1}"]
-}
+  }
 ]
 </pre>
 
