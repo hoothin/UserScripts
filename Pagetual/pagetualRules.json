@@ -34,5 +34,12 @@
     "url":"^https://www\\.appinn\\.com",
     "pageElement":"#latest-posts>article",
     "nextLink":"a.next"
+  },
+  {
+    "name":"动漫之家",
+    "action":"1",
+    "url":"^https?://(www|manhua)\\.(dmzj|178)\\.com/\\w+/\\d+\\.shtml",
+    "nextLinkByUrl":["(.*#@page=)(\\d+)","$1{$2+1}"],
+    "pageElement":"div#center_box>img"
   }
 ]
