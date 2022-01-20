@@ -19,7 +19,7 @@
 // @grant        GM_getValue
 // @grant        GM_registerMenuCommand
 // @grant        GM_notification
-// @grant        GM.xmlhttpRequest
+// @grant        GM.xmlHttpRequest
 // @grant        GM.setValue
 // @grant        GM.getValue
 // @grant        GM.registerMenuCommand
@@ -35,8 +35,8 @@
     var _GM_xmlhttpRequest,_GM_registerMenuCommand,_GM_notification;
     if(typeof GM_xmlhttpRequest!='undefined'){
         _GM_xmlhttpRequest=GM_xmlhttpRequest;
-    }else if(typeof GM!='undefined' && typeof GM.xmlhttpRequest!='undefined'){
-        _GM_xmlhttpRequest=GM.xmlhttpRequest;
+    }else if(typeof GM!='undefined' && typeof GM.xmlHttpRequest!='undefined'){
+        _GM_xmlhttpRequest=GM.xmlHttpRequest;
     }
     if(typeof GM_registerMenuCommand!='undefined'){
         _GM_registerMenuCommand=GM_registerMenuCommand;
