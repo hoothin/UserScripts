@@ -4,7 +4,7 @@
 // @name:zh-TW   東方永頁機
 // @name:ja      東方永頁機
 // @namespace    hoothin
-// @version      0.4.1
+// @version      0.4.2
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -305,6 +305,7 @@
             ];
             this.rules=[];
             this.pageDoc=document;
+            this.nextLinkHref=null;
             this.curUrl=location.href;
             this.curSiteRule={};
         }
@@ -530,10 +531,9 @@
             return pageElement;
         }
 
-        getPage(){
+        getPage(doc){
             let canSave=false;//發現頁碼選擇器在其他頁對不上，還是別保存了
             let url=this.curUrl;
-            let doc=this.pageDoc;
             let pageNum=0,preStr="",afterStr="";
             let pageMatch1=url.match(/(.*[a-zA-Z0-9\/][\-_](?:p|page)?)(\d+)(\.html?$|$)/i);
             let pageMatch2=url.match(/(.*[\?&]p(?:age)?=)(\d+)($|[#&].*)/i);
@@ -616,7 +616,6 @@
 
         getNextLink(doc) {
             let nextLink=null,page;
-            let curDoc=doc||this.pageDoc;
             if(this.curSiteRule.nextLinkByUrl){
                 let targetUrl=this.curUrl.replace(new RegExp(this.curSiteRule.nextLinkByUrl[0]), this.curSiteRule.nextLinkByUrl[1]);
                 if(targetUrl != this.curUrl){
@@ -631,10 +630,10 @@
                 }
                 nextLink={href:targetUrl};
             }else if(this.curSiteRule.nextLink){
-                nextLink=this.curSiteRule.type==0?getElementByXpath(this.curSiteRule.nextLink,curDoc,curDoc):curDoc.querySelector(this.curSiteRule.nextLink);
+                nextLink=this.curSiteRule.type==0?getElementByXpath(this.curSiteRule.nextLink,doc,doc):doc.querySelector(this.curSiteRule.nextLink);
             }
             if(!nextLink){
-                page=this.getPage();
+                page=this.getPage(doc);
                 nextLink=page.next;
             }
             if(nextLink){
@@ -647,6 +646,8 @@
                     this.saveCurSiteRule();
                 }
             }
+            if(nextLink)debug(nextLink);
+            this.nextLinkHref=nextLink?nextLink.href:false;
             return nextLink;
         }
 
@@ -714,6 +715,7 @@
         initPage(callback){
             let self=this;
             this.getRule(()=>{
+                self.getNextLink(document);
                 callback();
                 let code=self.curSiteRule.init;
                 if(code){
@@ -724,6 +726,7 @@
 
         insertPage(doc, eles, url){
             this.pageDoc=doc;
+            this.getNextLink(doc);
             this.curUrl=url;
             this.pageAction(doc, eles);
             this.getInsert();
@@ -1373,41 +1376,40 @@
 
     function nextPage(){
         if(isPause || isLoading)return;
-        let nextLink=ruleParser.getNextLink();
+        let nextLink=ruleParser.nextLinkHref;
         let insert=ruleParser.getInsert();
         if(nextLink && insert){
-            debug(nextLink);
-            let isJs=/^(javascript|#)/.test(nextLink.href);
-            if(location.protocol=="https:" && /^http:/.test(nextLink.href)){
-                nextLink.href=nextLink.href.replace(/^http/,"https");
+            let isJs=/^(javascript|#)/.test(nextLink);
+            if(location.protocol=="https:" && /^http:/.test(nextLink)){
+                nextLink=nextLink.replace(/^http/,"https");
             }
             isLoading=true;
             loading.style.display="";
             if(ruleParser.curSiteRule.action==1 && !isJs){
-                requestFromIframe(nextLink.href, (doc, eles)=>{
+                requestFromIframe(nextLink, (doc, eles)=>{
                     isLoading=false;
                     loading.style.display="none";
                     if(eles){
-                        createPageBar(nextLink.href);
-                        ruleParser.insertPage(doc, eles, nextLink.href);
+                        createPageBar(nextLink);
+                        ruleParser.insertPage(doc, eles, nextLink);
                     }
                 });
             }else if(forceState==2 && !isJs){
-                forceIframe(nextLink.href, (iframe, eles)=>{
+                forceIframe(nextLink, (iframe, eles)=>{
                     isLoading=false;
                     loading.style.display="none";
                     //if(eles){
-                    let pageBar=createPageBar(nextLink.href);
+                    let pageBar=createPageBar(nextLink);
                     iframe.parentNode.insertBefore(pageBar, iframe);
                     //}
                 });
             }else{
                 if(!isJs){
-                    requestDoc(nextLink.href, (eles)=>{
+                    requestDoc(nextLink, (eles)=>{
                         isLoading=false;
                         loading.style.display="none";
                         if(eles){
-                            createPageBar(nextLink.href);
+                            createPageBar(nextLink);
                         }
                     });
                 }else{
@@ -1415,7 +1417,7 @@
                         isLoading=false;
                         loading.style.display="none";
                         if(eles){
-                            createPageBar(nextLink.href);
+                            createPageBar(nextLink);
                             ruleParser.insertPage(doc, eles, "");
                         }
                     });
