@@ -4,7 +4,7 @@
 // @name:zh-TW   東方永頁機
 // @name:ja      東方永頁機
 // @namespace    hoothin
-// @version      0.4.0
+// @version      0.4.1
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -474,16 +474,17 @@
             return selector;
         }
 
-        getPageElement(doc) {
+        getPageElement(doc, curWin) {
             let pageElement=null;
             let self=this;
             if(this.curSiteRule.pageElement){
                 pageElement=this.curSiteRule.type==0?getAllElementsByXpath(this.curSiteRule.pageElement,doc,doc):doc.querySelectorAll(this.curSiteRule.pageElement);
             }
             if(!pageElement){
-                let body=doc.body,bodyHeight=parseInt(_unsafeWindow.getComputedStyle(body).height);
+                if(!curWin)curWin=_unsafeWindow;
+                let body=doc.body,bodyHeight=parseInt(curWin.getComputedStyle(body).height);
                 function checkElement(ele){
-                    let curHeight=parseInt(_unsafeWindow.getComputedStyle(ele).height);
+                    let curHeight=parseInt(curWin.getComputedStyle(ele).height);
                     if(curHeight/bodyHeight<=0.35)return null;
                     if(ele.children.length==0){
                         self.curSiteRule.pageElement=self.geneSelector(ele.parentNode)+">"+ele.tagName;
@@ -495,13 +496,13 @@
                     for(i=0;i<ele.children.length;i++){
                         let curNode=ele.children[i];
                         if(curNode.innerText=="")continue;
-                        let comStyle=_unsafeWindow.getComputedStyle(curNode);
+                        let comStyle=curWin.getComputedStyle(curNode);
                         let h=parseInt(comStyle.height);
                         let w=parseInt(comStyle.width);
                         if(isNaN(h) || isNaN(w))continue;
                         let a=h*w+h,moreChild=curNode.children[0];
                         while(moreChild){
-                            comStyle=_unsafeWindow.getComputedStyle(moreChild);
+                            comStyle=curWin.getComputedStyle(moreChild);
                             let ch=parseInt(comStyle.height);
                             let cw=parseInt(comStyle.width);
                             if(moreChild.innerText!="" && !isNaN(ch) && !isNaN(cw)){
@@ -1104,7 +1105,7 @@
                 //可能會延遲加載
                 try{
                     let doc=iframe.contentWindow.document;
-                    let eles=ruleParser.getPageElement(doc);
+                    let eles=ruleParser.getPageElement(doc, iframe.contentWindow);
                     if(eles && eles.length>0){
                         callback(doc, eles);
                     }else{
@@ -1292,7 +1293,7 @@
                 return;
             }
             iframeDoc=emuIframe.contentDocument || emuIframe.contentWindow.document;
-            let eles=ruleParser.getPageElement(iframeDoc);
+            let eles=ruleParser.getPageElement(iframeDoc, emuIframe.contentWindow);
             if(orgPage == eles[0]){
                 setTimeout(()=>{
                     checkPage(iframeDoc);
@@ -1316,7 +1317,7 @@
             emuIframe.style.cssText = 'margin:0!important;padding:0!important;visibility:hidden!important;';
             emuIframe.addEventListener("load", e=>{
                 setTimeout(()=>{
-                    orgPage=ruleParser.getPageElement(iframeDoc)[0];
+                    orgPage=ruleParser.getPageElement(iframeDoc, emuIframe.contentWindow)[0];
                     ruleParser.getNextLink(iframeDoc).click();
                     checkPage(iframeDoc);
                 },300);
@@ -1326,7 +1327,7 @@
             document.body.appendChild(emuIframe);
         }else{
             iframeDoc=emuIframe.contentDocument || emuIframe.contentWindow.document;
-            orgPage=ruleParser.getPageElement(iframeDoc)[0];
+            orgPage=ruleParser.getPageElement(iframeDoc, emuIframe.contentWindow)[0];
             ruleParser.getNextLink(iframeDoc).click();
             checkPage(iframeDoc);
         }
@@ -1334,25 +1335,29 @@
 
     function forceIframe(url, callback){
         let curIframe = document.createElement('iframe');
-        //curIframe.name = 'pagetual-iframe';
+        curIframe.name = 'pagetual-iframe';
         curIframe.sandbox="allow-same-origin allow-scripts allow-popups allow-forms";
         curIframe.frameBorder = '0';
         curIframe.scrolling="no";
         curIframe.style.cssText = 'display: block; visibility: visible; float: none; clear: both; width: 100%;height:0;background: initial; border: 0px; border-radius: 0px; margin: 0px 0px 2rem; padding: 0px; z-index: 2147483647;';
         curIframe.addEventListener("load", e=>{
             let iframeDoc=curIframe.contentDocument || curIframe.contentWindow.document;
-            let eles=ruleParser.getPageElement(iframeDoc);
-            if(eles && eles.length>0){
-                ruleParser.insertPage(iframeDoc, [], url);
-                callback(curIframe, eles);
+            //let eles=ruleParser.getPageElement(iframeDoc, curIframe.contentWindow);
+            //if(eles && eles.length>0){
+            ruleParser.insertPage(iframeDoc, [], url);
+            callback(curIframe, true);
+            curIframe.style.height=iframeDoc.body.scrollHeight+"px";
+            curIframe.style.width=iframeDoc.body.scrollWidth+"px";
+            setTimeout(()=>{
                 curIframe.style.height=iframeDoc.body.scrollHeight+"px";
                 curIframe.style.width=iframeDoc.body.scrollWidth+"px";
-                curIframe.scrollIntoView();
-            }else{
+            },300);
+            //curIframe.scrollIntoView();
+            /*}else{
                 isPause=true;
                 callback(false, false);
                 curIframe.parentNode.removeChild(curIframe);
-            }
+            }*/
         });
         curIframe.src=url;
         let insert=ruleParser.getInsert();
@@ -1385,10 +1390,10 @@
                 forceIframe(nextLink.href, (iframe, eles)=>{
                     isLoading=false;
                     loading.style.display="none";
-                    if(eles){
-                        let pageBar=createPageBar(nextLink.href);
-                        iframe.parentNode.insertBefore(pageBar, iframe);
-                    }
+                    //if(eles){
+                    let pageBar=createPageBar(nextLink.href);
+                    iframe.parentNode.insertBefore(pageBar, iframe);
+                    //}
                 });
             }else{
                 if(!isJs){
