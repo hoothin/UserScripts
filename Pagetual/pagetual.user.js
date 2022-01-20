@@ -4,7 +4,7 @@
 // @name:zh-TW   東方永頁機
 // @name:ja      東方永頁機
 // @namespace    hoothin
-// @version      0.4.6
+// @version      0.4.7
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -624,7 +624,11 @@
                     if(reps){
                         reps.forEach(rep=>{
                             let code=rep.replace("{","").replace("}","");
-                            let result=_unsafeWindow.eval(code);
+                            let result=code.match(/^(\d+)\+1$/);
+                            if(result){
+                                result=parseInt(result[1])+1;
+                            }
+                            else result=_unsafeWindow.eval(code);
                             targetUrl=targetUrl.replace(rep, result);
                         });
                     }
