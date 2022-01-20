@@ -2,13 +2,13 @@
 // @name         Pagetual
 // @name:zh-CN   东方永页机
 // @name:zh-TW   東方永頁機
-// @name:jp      東方永頁機
+// @name:ja      東方永頁機
 // @namespace    hoothin
 // @version      0.4.0
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
-// @description:jp     Webページを自動で読み込み継ぎ足し表示を行うブラウザ拡張です。
+// @description:ja     Webページを自動で読み込み継ぎ足し表示を行うブラウザ拡張です。
 // @author       hoothin
 // @include      http://*
 // @include      https://*
@@ -107,7 +107,7 @@
                     loadingText:"少女祈禱中..."
                 };
                 break;
-            case "jp":
+            case "ja":
                 config = {
                     disable: "一時的に無効にする",
                     enable: "ページめくりを有効にする",
