@@ -4,7 +4,7 @@
 // @name:zh-TW   東方永頁機
 // @name:ja      東方永頁機
 // @namespace    hoothin
-// @version      0.4.3
+// @version      0.4.5
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -720,20 +720,20 @@
         initPage(callback){
             let self=this;
             this.getRule(()=>{
-                self.getNextLink(document);
                 callback();
                 let code=self.curSiteRule.init;
                 if(code){
                     _unsafeWindow.eval(code);
                 }
+                self.getNextLink(document);
             });
         }
 
         insertPage(doc, eles, url){
             this.pageDoc=doc;
-            this.getNextLink(doc);
             this.curUrl=url;
             this.pageAction(doc, eles);
+            this.getNextLink(doc);
             this.getInsert();
             var self=this;
             if(!eles || eles.length==0 || !self.insert || !self.insert.parentNode){
@@ -982,10 +982,20 @@
             for(let key in item){
                 isLast=(++j)==iLen;
                 let value=item[key];
-                if(typeof value=="string"){
-                    value=value.replace(/\\/g,"\\\\");
+                if(objIsArr(value)){
+                    let vstr="[",v=0,vIsLast=false;
+                    value.forEach(vi=>{
+                        vIsLast=(++v)==value.length;
+                        vstr+="\""+vi.replace(/\\/g,"\\\\")+"\""+(vIsLast?"":",");
+                    });
+                    vstr+="]";
+                    ret+="    \""+key+"\":"+vstr+""+(isLast?"":",")+"\n";
+                }else{
+                    if(typeof value=="string"){
+                        value=value.replace(/\\/g,"\\\\");
+                    }
+                    ret+="    \""+key+"\":\""+value+"\""+(isLast?"":",")+"\n";
                 }
-                ret+="    \""+key+"\":\""+value+"\""+(isLast?"":",")+"\n";
             }
             isLast=(++i)==len;
             ret+="  }"+(isLast?"":",")+"\n";
