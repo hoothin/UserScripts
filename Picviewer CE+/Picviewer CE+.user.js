@@ -6,7 +6,7 @@
 // @description          Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version              2022.1.20.1
+// @version              2022.1.20.2
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -8775,7 +8775,7 @@ ImgOps | https://imgops.com/#b#`;
 
             var iPASrc=imgPA? imgPA.href : '';
             //base64字符串过长导致正则匹配卡死浏览器
-            var base64Img=/^data:[^;]+;base64,/i.test(img.src);
+            var base64Img=/^data:/i.test(img.src);
             var src,  // 大图地址
                 srcs,  // 备用的大图地址
                 type,  // 类别
@@ -8792,7 +8792,7 @@ ImgOps | https://imgops.com/#b#`;
                 h:img.naturalHeight||imgCS.h,
                 w:img.naturalWidth||imgCS.w,
             };
-            if(!src && matchedRule){// 通过高级规则获取.
+            if(!src && matchedRule.rules.length>0){// 通过高级规则获取.
                 // 排除
                 try{
                     var newSrc=matchedRule.getImage(img,imgPA,imgPE);
@@ -8890,8 +8890,7 @@ ImgOps | https://imgops.com/#b#`;
         }
 
         function getMatchedRule() {
-            var rules=new MatchedRuleC();
-            return rules.rules.length>0?rules:false;
+            return new MatchedRuleC();
             /*var rule = siteInfo._find(function(site, index, array) {
                 if (site.enabled != false && site.url && toRE(site.url).test(URL)) {
                     return true;
@@ -8929,37 +8928,48 @@ ImgOps | https://imgops.com/#b#`;
                     }
                 }catch(e){}
 
-                var self=this;
+                var self=this,r=0;
                 self.rules=[];
-                siteInfo.forEach(site=>{
-                    if (site.enabled != false && (!site.url || toRE(site.url).test(URL))) {
-                        if(site.url){
-                            if(site.css){
-                                var style = document.createElement('style');
-                                style.type = 'text/css';
-                                style.id = 'gm-picviewer-site-style';
-                                style.textContent = site.css;
-                                document.head.appendChild(style);
-                            }
-                            if(site.xhr){
-                                self.xhr=site.xhr;
-                            }
-                            if(site.lazyAttr){
-                                self.lazyAttr=site.lazyAttr;
-                            }
-                            if(site.description){
-                                self.description=site.description;
-                            }
-                            if(site.clickToOpen){
-                                self.clickToOpen=site.clickToOpen;
-                            }
-                            if(site.ext){
-                                self.ext=site.ext;
+                function searchByTime(){
+                    setTimeout(()=>{
+                        let end=r+80;
+                        end=end>siteInfo.length?siteInfo.length:end;
+                        for(;r<end;r++){
+                            let site=siteInfo[r];
+                            if (site.enabled != false && (!site.url || toRE(site.url).test(URL))) {
+                                if(site.url){
+                                    if(site.css){
+                                        var style = document.createElement('style');
+                                        style.type = 'text/css';
+                                        style.id = 'gm-picviewer-site-style';
+                                        style.textContent = site.css;
+                                        document.head.appendChild(style);
+                                    }
+                                    if(site.xhr){
+                                        self.xhr=site.xhr;
+                                    }
+                                    if(site.lazyAttr){
+                                        self.lazyAttr=site.lazyAttr;
+                                    }
+                                    if(site.description){
+                                        self.description=site.description;
+                                    }
+                                    if(site.clickToOpen){
+                                        self.clickToOpen=site.clickToOpen;
+                                    }
+                                    if(site.ext){
+                                        self.ext=site.ext;
+                                    }
+                                }
+                                self.rules.push(site);
                             }
                         }
-                        self.rules.push(site);
-                    }
-                });
+                        if(end<=siteInfo.length){
+                            searchByTime();
+                        }
+                    },20);
+                }
+                searchByTime();
             },
             replace:function(str, r, s){
                 var results=[],rt;
@@ -9234,7 +9244,7 @@ ImgOps | https://imgops.com/#b#`;
             }
 
             // 扩展模式，检查前面一个是否为 img
-            if (target.nodeName != 'IMG' && matchedRule && matchedRule.ext) {
+            if (target.nodeName != 'IMG' && matchedRule.rules.length>0 && matchedRule.ext) {
                 var _type = typeof matchedRule.ext;
                 if (_type == 'string') {
                     switch (matchedRule.ext) {
@@ -9331,8 +9341,8 @@ ImgOps | https://imgops.com/#b#`;
                         }
                     }
                 }
-                if(result && !/^data:[^;]+;base64,/i.test(result.src)){
-                    if(matchedRule && target.nodeName != 'IMG'){
+                if(result && !/^data:/i.test(result.src)){
+                    if(matchedRule.rules.length>0 && target.nodeName != 'IMG'){
                         let src=result.src,img={src:src},type,imgSrc=src;
                         try{
                             var newSrc=matchedRule.getImage(img);
