@@ -4,7 +4,7 @@
 // @name:zh-TW   東方永頁機
 // @name:ja      東方永頁機
 // @namespace    hoothin
-// @version      0.4.2
+// @version      0.4.3
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -646,8 +646,12 @@
                     this.saveCurSiteRule();
                 }
             }
-            if(nextLink)debug(nextLink);
-            this.nextLinkHref=nextLink?nextLink.href:false;
+            if(nextLink){
+                this.nextLinkHref=nextLink.href?nextLink.href:"#";
+                debug(nextLink);
+            }else{
+                this.nextLinkHref=false;
+            }
             return nextLink;
         }
 
