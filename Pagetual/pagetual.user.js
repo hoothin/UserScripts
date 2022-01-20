@@ -943,7 +943,7 @@
                 isLast=(++j)==iLen;
                 let value=item[key];
                 if(typeof value=="string"){
-                    value=value.replace("\\","\\\\");
+                    value=value.replace(/\\/g,"\\\\");
                 }
                 ret+="    \""+key+"\":\""+value+"\""+(isLast?"":",")+"\n";
             }
