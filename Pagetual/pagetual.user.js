@@ -3,7 +3,7 @@
 // @name:zh-CN   东方永页机
 // @name:zh-TW   東方永頁機
 // @namespace    hoothin
-// @version      0.3.8.9
+// @version      0.3.8.10
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -1178,13 +1178,6 @@
         curPage++;
         let inTable=insert.tagName=="TR" || insert.previousElementSibling.tagName=="TR" || insert.tagName=="TBODY" || insert.previousElementSibling.tagName=="TBODY";
         let inLi=insert.tagName=="LI" || insert.previousElementSibling.tagName=="LI";
-        if(inLi){
-            let line=document.createElement("li");
-            line.innerHTML=curPage;
-            line.style.cssText="width: 100%; text-align: center; background: aliceblue;";
-            insert.parentNode.insertBefore(line, insert);
-            return line;
-        }
         let pageBar=document.createElement(inTable?"tr":"div");
         let upSpan=document.createElement("span");
         let downSpan=document.createElement("span");
@@ -1239,7 +1232,15 @@
             e.stopPropagation();
         });
         pageBar.style.width=parseInt(_unsafeWindow.getComputedStyle(insert.parentNode).width)*.9+"px";
-        insert.parentNode.insertBefore(pageBar, insert);
+        if(inLi){
+            pageBar.style.width="auto";
+            pageBar.style.minWidth="200px";
+            let line=document.createElement("li");
+            line.appendChild(pageBar);
+            insert.parentNode.insertBefore(line, insert);
+        }else{
+            insert.parentNode.insertBefore(pageBar, insert);
+        }
         return pageBar;
     }
 
