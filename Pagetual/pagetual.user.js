@@ -331,6 +331,7 @@
         requestJSON(url, callback){
             _GM_xmlhttpRequest({
                 url: url,
+                method: 'GET',
                 onload: function(res) {
                     let json=null;
                     try{
@@ -1068,6 +1069,7 @@
     function requestDoc(url, callback){
         _GM_xmlhttpRequest({
             url: url,
+            method: 'GET',
             overrideMimeType:"text/html;charset="+document.charset,
             onload: function(res) {
                 var doc=null;
