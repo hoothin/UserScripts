@@ -3,7 +3,7 @@
 // @name:zh-CN   东方永页机
 // @name:zh-TW   東方永頁機
 // @namespace    hoothin
-// @version      0.3.8.10
+// @version      0.3.8.11
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -216,7 +216,7 @@
         }
     };
     _GM_registerMenuCommand(i18n("configure"), ()=>{
-        location.href="https://github.com/hoothin/UserScripts/tree/master/Pagetual";
+        window.open("https://github.com/hoothin/UserScripts/tree/master/Pagetual", "_blank");
     });
 
     function getElementByXpath(xpath, contextNode, doc){
@@ -381,6 +381,7 @@
                     }
                     this.curSiteRule=rule;
                     debug(rule);
+                    callback();
                     return rule;
                 }
             }
