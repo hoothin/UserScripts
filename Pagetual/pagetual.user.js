@@ -3,7 +3,7 @@
 // @name:zh-CN   东方永页机
 // @name:zh-TW   東方永頁機
 // @namespace    hoothin
-// @version      0.3.8.12
+// @version      0.3.9
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -1108,6 +1108,9 @@
            filter: invert(100%);
            opacity: 1;
          }
+         .pagetual_pageBar.hide {
+           display: none!important;
+         }
          .pagetual_pageBar {
            opacity: 0.1;
          }
@@ -1144,13 +1147,15 @@
 
     var isPause=false,isLoading=false,curPage=1,forceState=0;
 
-    function changeStop(stop){
+    function changeStop(stop, hide){
         isPause=stop;
         [].forEach.call(document.querySelectorAll(".pagetual_pageBar"), bar=>{
             if(isPause){
                 bar.classList.add("stop");
+                if(hide)bar.classList.add("hide");
             }else{
                 bar.classList.remove("stop");
+                if(hide)bar.classList.remove("hide");
             }
         });
     }
@@ -1162,14 +1167,14 @@
                     let scrolly=window.scrollY;
                     let windowHeight=window.innerHeight;
                     let scrollH=Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
-                    if(scrollH-scrolly-windowHeight<800){
+                    if(scrollH-scrolly-windowHeight<1000){
                         nextPage();
                     }
                 }
             },100);
         }, false);
         document.addEventListener('dblclick', e=>{
-            changeStop(!isPause);
+            changeStop(!isPause, true);
         });
     }
 
