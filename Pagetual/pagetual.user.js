@@ -4,7 +4,7 @@
 // @name:zh-TW   東方永頁機
 // @name:ja      東方永頁機
 // @namespace    hoothin
-// @version      0.4.7
+// @version      0.4.8
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -59,6 +59,7 @@
             case "zh-SG":
                 config={
                     disable:"暂时禁用",
+                    disableSite:"在此站禁用",
                     enable:"启用翻页",
                     toTop:"回到顶部",
                     toBottom:"前往页尾",
@@ -85,6 +86,7 @@
             case "zh-HK":
                 config={
                     disable:"暫時禁用",
+                    disableSite:"在此站禁用",
                     enable:"啟用翻頁",
                     toTop:"回到頂部",
                     toBottom:"前往頁尾",
@@ -110,6 +112,7 @@
             case "ja":
                 config = {
                     disable: "一時的に無効にする",
+                    disableSite:"このサイト無効",
                     enable: "ページめくりを有効にする",
                     toTop: "トップに戻る",
                     toBottom: "ページの下部に移動",
@@ -135,6 +138,7 @@
             default:
                 config={
                     disable:"Disable",
+                    disableSite:"Disable in the site",
                     enable:"Enable",
                     toTop:"To Top",
                     toBottom:"To Bottom",
@@ -756,7 +760,7 @@
 
     var rulesDate={},ruleUrls,updateDate;
     function initConfig(){
-        _GM_registerMenuCommand(i18n(forceState==1?"enable":"disable"), ()=>{
+        _GM_registerMenuCommand(i18n(forceState==1?"enable":"disableSite"), ()=>{
             storage.setItem("forceState_"+location.host, (forceState==1?0:1));
             location.reload();
         });
