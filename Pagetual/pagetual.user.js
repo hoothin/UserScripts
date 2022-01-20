@@ -864,6 +864,7 @@
                         storage.setItem("ruleLastUpdate", now);
                         alert(i18n("updateSucc"));
                         inUpdate=false;
+                        updateP.innerHTML=i18n("passSec", 0);
                     }
                 })
             });
