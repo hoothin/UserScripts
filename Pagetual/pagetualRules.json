@@ -50,5 +50,13 @@
     "nextLink":".pagenation-list>li.current+li>a",
     "insert":"ul#feed-main-list",
     "insertPos":"2"
+  },
+  {
+    "name":"mhgui",
+    "action":"0",
+    "url":"^https://www\\.mhgui\\.com/comic/\\d+",
+    "pageElementByJs":"let link=document.querySelector('#mangaBox>img').src; let match=link.match(/(.*)(\\d{3})(\\.jpg.*)/); window.i=window.i||parseInt(match[2]);window.i++; let src=match[1]+(window.i>99?window.i:(window.i>9?'0'+window.i:'00'+window.i))+match[3]; let img=document.createElement('img');img.src=src;[img];",
+    "insert":"#mangaBox",
+    "insertPos":"2"
   }
 ]
