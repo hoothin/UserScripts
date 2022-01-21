@@ -113,7 +113,7 @@ var siteInfo=[
  url:/^https?:\/\/tieba\.baidu\.[^\/]+\//i,
  r: [/\/sys\/portrait/i,
      /^(http:\/\/tiebapic\.baidu\.com\/forum\/)ab(pic\/item\/[\w.]+)/i,
-     /\/sign=\w+\/([\w.]+)$/i],
+     /.*\/sign=\w+\/([\w.]+)$/i],
  s: ["/sys/portraitl", "$1$2", 'http://tiebapic.baidu.com/forum/pic/item/$1']
 },
 {
