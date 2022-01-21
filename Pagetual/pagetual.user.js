@@ -4,7 +4,7 @@
 // @name:zh-TW   東方永頁機
 // @name:ja      東方永頁機
 // @namespace    hoothin
-// @version      0.4.9
+// @version      0.5
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -26,6 +26,8 @@
 // @grant        GM.getValue
 // @grant        GM.setValue
 // @grant        GM.addStyle
+// @downloadURL  https://greasyfork.org/scripts/438684-pagetual/code/Pagetual.user.js
+// @updateURL    https://greasyfork.org/scripts/438684-pagetual/code/Pagetual.user.js
 // @connect      wedata.net
 // @connect      githubusercontent.com
 // @run-at       document-idle
@@ -486,8 +488,7 @@
             if(this.curSiteRule.pageElement){
                 pageElement=this.curSiteRule.type==0?getAllElementsByXpath(this.curSiteRule.pageElement,doc,doc):doc.querySelectorAll(this.curSiteRule.pageElement);
             }
-            if(!pageElement){
-                if(!curWin)curWin=_unsafeWindow;
+            if((!pageElement || pageElement.length==0) && curWin){
                 let body=doc.body,bodyHeight=parseInt(curWin.getComputedStyle(body).height);
                 function checkElement(ele){
                     let curHeight=parseInt(curWin.getComputedStyle(ele).height);
@@ -647,7 +648,7 @@
             }
             if(nextLink){
                 if(!this.basePageElement){
-                    this.basePageElement=this.getPageElement(document);
+                    this.basePageElement=this.getPageElement(document, _unsafeWindow);
                 }
                 if(!this.curSiteRule.nextLink && page && page.canSave){
                     this.curSiteRule.nextLink=this.geneSelector(nextLink);
