@@ -4,7 +4,7 @@
 // @name:zh-TW   東方永頁機
 // @name:ja      東方永頁機
 // @namespace    hoothin
-// @version      0.5.1
+// @version      0.5.2
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -288,7 +288,7 @@
          url
          enable
          type
-         action 0 div 1 iframe 2強行塞入
+         action 0 div 1 iframe 2 強行塞入
          nextLink 下一頁的xpath或者selector
          pageElement //頁面主體的xpath或者selector
          lazyImgSrc //圖片延後加載的屬性直接賦值到src
@@ -621,7 +621,13 @@
 
         getNextLink(doc) {
             let nextLink=null,page;
-            if(this.curSiteRule.nextLinkByUrl){
+            if(this.curSiteRule.pageElementByJs){
+                this.nextLinkHref="#";
+                return true;
+            }else if(this.curSiteRule.nextLinkByJs){
+                let targetUrl=_unsafeWindow.eval(this.curSiteRule.nextLinkByJs);
+                nextLink={href:targetUrl};
+            }else if(this.curSiteRule.nextLinkByUrl){
                 let targetUrl=this.curUrl.replace(new RegExp(this.curSiteRule.nextLinkByUrl[0]), this.curSiteRule.nextLinkByUrl[1]);
                 if(targetUrl != this.curUrl){
                     let reps=targetUrl.match(/{.*?}/g);
@@ -1417,7 +1423,15 @@
             }
             isLoading=true;
             loading.style.display="";
-            if(ruleParser.curSiteRule.action==1 && !isJs){
+            if(ruleParser.curSiteRule.pageElementByJs){
+                isLoading=false;
+                loading.style.display="none";
+                let ele=_unsafeWindow.eval(ruleParser.curSiteRule.pageElementByJs);
+                if(ele){
+                    createPageBar(nextLink);
+                    ruleParser.insertPage(null, ele, null);
+                }
+            }else if(ruleParser.curSiteRule.action==1 && !isJs){
                 requestFromIframe(nextLink, (doc, eles)=>{
                     isLoading=false;
                     loading.style.display="none";
