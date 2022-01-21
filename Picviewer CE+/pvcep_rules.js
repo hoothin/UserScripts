@@ -759,6 +759,7 @@ var siteInfo=[
 },
 {
  name: "md",
+ src: /\.md\./i,
  r: /\.md(\.[^\.]+)$/i,
  s: '$1'
 },
@@ -771,7 +772,7 @@ var siteInfo=[
 },
 {
  name: "meituan",
- src: /\.meituan\.net/i,
+ url: /\.meituan\.net/i,
  r: /\/avatar\/\w{2}/i,
  s: '/avatar/o0'
 },
@@ -783,7 +784,7 @@ var siteInfo=[
 },
 {
  name: "coolapk",
- src: /\.coolapk\.com\//i,
+ url: /\.coolapk\.com\//i,
  r: /\.s\.\w+$/i,
  s: ''
 },
@@ -840,7 +841,7 @@ var siteInfo=[
 },
 {
  name: "douban",
- src: /douban\.com/i,
+ url: /douban\.com/i,
  getImage:function(){
      var $ = /(img\d+\.douban\.com\/)(?:(view\/)(?:photo|movie_poster_cover)\/(?!large)[^\/]+|(icon\/u(?=\d))|[sm](?=pic\/))(.*)/i.exec(this.src);
      var newsrc= $ ? ('http://' + $[1] + ($[2] ? $[2] + 'photo/photo' : (($[3]||'') + 'l')) + $[4]) : '';
@@ -859,12 +860,14 @@ var siteInfo=[
 },
 {
  name: "yihaodianimg",
+ url: /yhd\.com/i,
  src: /yihaodianimg\.com/i,
  r: /(.*\.yihaodianimg\.com\/.*)_\d+x\d+\.jpg$/i,
  s: "$1.jpg"
 },
 {
  name: "jd",
+ url: /jd\.com/i,
  src: /360buyimg\.com/i,
  r: [/(.*360buyimg\.com\/)n\d\/.+?\_(.*)/i,
     /(.*360buyimg\.com\/)n\d\/(.*)/i,
@@ -873,6 +876,7 @@ var siteInfo=[
 },
 {
  name: "dangdang",
+ url: /dangdang\.com/i,
  src: /ddimg\.cn/i,
  r: /(.*ddimg.cn\/.*?)_[bw]_(\d+\.jpg$)/i,
  s: "$1_e_$2"
