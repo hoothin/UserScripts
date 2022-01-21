@@ -6,7 +6,7 @@
 // @description          Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version              2022.1.20.2
+// @version              2022.1.21.1
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -8964,7 +8964,7 @@ ImgOps | https://imgops.com/#b#`;
                                 self.rules.push(site);
                             }
                         }
-                        if(end<=siteInfo.length){
+                        if(end<siteInfo.length){
                             searchByTime();
                         }
                     },20);
