@@ -60,9 +60,17 @@ nextLinkByUrl
 --
 If there is no next element, you can use this to generate a href from current url, [0] means RegExp string, [1] means replace string, you can use {} to eval simple code
 
+nextLinkByJs
+--
+Use this to eval js code and return target url of next page
+
 pageElement
 --
 Selector of page main content which need to insert
+
+pageElementByJs
+--
+Use this to eval js code and create the elements whatever you want to insert
 
 lazyImgSrc
 --
