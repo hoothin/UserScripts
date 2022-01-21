@@ -8932,7 +8932,7 @@ ImgOps | https://imgops.com/#b#`;
                 self.rules=[];
                 function searchByTime(){
                     setTimeout(()=>{
-                        let end=r+80;
+                        let end=r+30;
                         end=end>siteInfo.length?siteInfo.length:end;
                         for(;r<end;r++){
                             let site=siteInfo[r];
@@ -8967,7 +8967,7 @@ ImgOps | https://imgops.com/#b#`;
                         if(end<siteInfo.length){
                             searchByTime();
                         }
-                    },20);
+                    },10);
                 }
                 searchByTime();
             },
