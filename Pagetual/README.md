@@ -68,9 +68,9 @@ pageElement
 --
 Selector of page main content which need to insert
 
-pageElementByJs
+pageElementByJs [ :(over) ]
 --
-Use this to eval js code and create the elements whatever you want to insert, a over() is needed to return with elements array for insert
+Use this to eval js code and create the elements whatever you want to insert, a over() is needed to callback with elements array for insert
 
 lazyImgSrc
 --
