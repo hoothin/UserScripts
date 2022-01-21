@@ -283,21 +283,6 @@
     }
 
     class RuleParser {
-        /*
-         name
-         url
-         enable
-         type
-         action 0 div 1 iframe 2 強行塞入
-         nextLink 下一頁的xpath或者selector
-         pageElement //頁面主體的xpath或者selector
-         lazyImgSrc //圖片延後加載的屬性直接賦值到src
-         css //添加樣式
-         insert: '//div[@id="res"]',
-         insertPos: 1, 1 之前 2 裏面最後
-         pageAction:(document, eles) //對每一個插入的頁面進行修剪
-         init:(document) // 對主頁面進行處理
-        */
         constructor() {
             this.customRules=[
                 {
