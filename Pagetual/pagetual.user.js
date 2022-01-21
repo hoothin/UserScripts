@@ -4,7 +4,7 @@
 // @name:zh-TW   東方永頁機
 // @name:ja      東方永頁機
 // @namespace    hoothin
-// @version      0.5
+// @version      0.5.1
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -502,7 +502,6 @@
                     let i,maxHeight=curHeight*0.35,curMaxEle=null,curMaxArea=0;
                     for(i=0;i<ele.children.length;i++){
                         let curNode=ele.children[i];
-                        if(curNode.innerText=="")continue;
                         let comStyle=curWin.getComputedStyle(curNode);
                         let h=parseInt(comStyle.height);
                         let w=parseInt(comStyle.width);
