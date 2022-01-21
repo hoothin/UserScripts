@@ -60,9 +60,9 @@ nextLinkByUrl
 --
 If there is no next element, you can use this to generate a href from current url, [0] means RegExp string, [1] means replace string, you can use {} to eval simple code
 
-nextLinkByJs
+nextLinkByJs [ :(doc) ]
 --
-Use this to eval js code and return target url of next page
+Use this to eval js code and return target url of next page with doc (document of page)
 
 pageElement
 --
