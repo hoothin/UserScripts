@@ -969,7 +969,7 @@ var siteInfo=[
  getImage:function(){
     if(this.parentNode.nodeName=="PICTURE"){
         let source=this.parentNode.querySelector("source:last-of-type");
-        return src=source.srcset.split(", ")[1].split(" ")[0];
+        return source.srcset.split(", ")[1].split(" ")[0];
     }
     return null;
  }
