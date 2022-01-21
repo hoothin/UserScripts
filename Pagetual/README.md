@@ -90,7 +90,7 @@ insertPos
 
 pageAction [ :(doc, eles) ]
 --
-The js code to run with every page inserted with document:(document of every page) and eles:(elements found with rule)
+The js code to run with every page inserted with doc:(document of every page) and eles:(elements found with rule)
 
 init [ :(document) ]
 --
