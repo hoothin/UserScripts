@@ -4,7 +4,7 @@
 // @name:zh-TW   東方永頁機
 // @name:ja      東方永頁機
 // @namespace    hoothin
-// @version      0.5.2
+// @version      0.5.3
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -625,7 +625,7 @@
                 this.nextLinkHref="#";
                 return true;
             }else if(this.curSiteRule.nextLinkByJs){
-                let targetUrl=_unsafeWindow.eval(this.curSiteRule.nextLinkByJs);
+                let targetUrl=Function("doc",'"use strict";' + this.curSiteRule.nextLinkByJs)(doc);;
                 nextLink={href:targetUrl};
             }else if(this.curSiteRule.nextLinkByUrl){
                 let targetUrl=this.curUrl.replace(new RegExp(this.curSiteRule.nextLinkByUrl[0]), this.curSiteRule.nextLinkByUrl[1]);
@@ -638,7 +638,7 @@
                             if(result){
                                 result=parseInt(result[1])+1;
                             }
-                            else result=_unsafeWindow.eval(code);
+                            else result=Function('"use strict";return ' + code)();;
                             targetUrl=targetUrl.replace(rep, result);
                         });
                     }
@@ -684,10 +684,10 @@
             return this.insert;
         }
 
-        pageAction(document,eles){
+        pageAction(doc,eles){
             let code=this.curSiteRule.pageAction;
             if(code){
-                _unsafeWindow.eval(code);
+                Function("doc","eles",'"use strict";' + code)(doc,eles);
             }
             let css=this.curSiteRule.css;
             if(css){
@@ -736,7 +736,7 @@
             this.getRule(()=>{
                 let code=self.curSiteRule.init;
                 if(code){
-                    _unsafeWindow.eval(code);
+                    Function('"use strict";' + code)();
                 }
                 self.getNextLink(document);
                 callback();
@@ -1424,13 +1424,17 @@
             isLoading=true;
             loading.style.display="";
             if(ruleParser.curSiteRule.pageElementByJs){
-                isLoading=false;
-                loading.style.display="none";
-                let ele=_unsafeWindow.eval(ruleParser.curSiteRule.pageElementByJs);
-                if(ele){
-                    createPageBar(nextLink);
-                    ruleParser.insertPage(null, ele, null);
-                }
+                var over=ele=>{
+                    isLoading=false;
+                    loading.style.display="none";
+                    if(ele){
+                        createPageBar(nextLink);
+                        ruleParser.insertPage(null, ele, null);
+                    }else{
+                        isPause=true;
+                    }
+                };
+                Function("over",'"use strict";' + ruleParser.curSiteRule.pageElementByJs)(over);
             }else if(ruleParser.curSiteRule.action==1 && !isJs){
                 requestFromIframe(nextLink, (doc, eles)=>{
                     isLoading=false;
