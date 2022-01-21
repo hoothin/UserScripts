@@ -68,9 +68,9 @@ pageElement
 --
 Selector of page main content which need to insert
 
-pageElementByJs
+pageElementByJs [ :(over) ]
 --
-Use this to eval js code and create the elements whatever you want to insert
+Use this to eval js code and create the elements whatever you want to insert, a over() is needed to callback with elements array for insert
 
 lazyImgSrc
 --
@@ -88,9 +88,9 @@ insertPos
 --
 1 means insert before, 2 means just append to the bottom of target
 
-pageAction [ :(document, eles) ]
+pageAction [ :(doc, eles) ]
 --
-The js code to run with every page inserted with document:(document of every page) and eles:(elements found with rule)
+The js code to run with every page inserted with doc:(document of every page) and eles:(elements found with rule)
 
 init [ :(document) ]
 --
