@@ -4,7 +4,7 @@
 // @name:zh-TW   東方永頁機
 // @name:ja      東方永頁機
 // @namespace    hoothin
-// @version      0.5.3
+// @version      0.5.5
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -749,7 +749,7 @@
     }
     var ruleParser = new RuleParser();
 
-    var rulesDate={},ruleUrls,updateDate;
+    var rulesData={},ruleUrls,updateDate;
     function initConfig(){
         _GM_registerMenuCommand(i18n(forceState==1?"enable":"disableSite"), ()=>{
             storage.setItem("forceState_"+location.host, (forceState==1?0:1));
@@ -816,8 +816,8 @@
                 [].forEach.call(this.item.parentNode.querySelectorAll("p[data-id]"), i=>{
                     sort.push(i.dataset.id);
                 });
-                rulesDate.sort=sort;
-                storage.setItem("importRuleUrl", rulesDate);
+                rulesData.sort=sort;
+                storage.setItem("importRuleUrl", rulesData);
             }
             moveUp(){
                 let preE=this.item.previousElementSibling;
@@ -837,19 +837,19 @@
                 if(this.ruleUrl.id<2){
                     alert(i18n("cantDel"));
                 }else if(window.confirm(i18n("confirmDel"))){
-                    for(let u=0;u<rulesDate.urls.length;u++){
-                        if(this.ruleUrl.id==rulesDate.urls[u].id){
-                            rulesDate.urls.splice(u,1);
+                    for(let u=0;u<rulesData.urls.length;u++){
+                        if(this.ruleUrl.id==rulesData.urls[u].id){
+                            rulesData.urls.splice(u,1);
                             break;
                         }
                     }
-                    for(let u=0;u<rulesDate.sort.length;u++){
-                        if(this.ruleUrl.id==rulesDate.sort[u]){
-                            rulesDate.sort.splice(u,1);
+                    for(let u=0;u<rulesData.sort.length;u++){
+                        if(this.ruleUrl.id==rulesData.sort[u]){
+                            rulesData.sort.splice(u,1);
                             break;
                         }
                     }
-                    storage.setItem("importRuleUrl", rulesDate);
+                    storage.setItem("importRuleUrl", rulesData);
                     ruleParser.rules=ruleParser.rules.filter(item=>{return item.from!=this.ruleUrl.id});
                     storage.setItem("rules", ruleParser.rules);
                     this.item.parentNode.removeChild(this.item);
@@ -860,8 +860,8 @@
         let updateP=document.createElement("p"),i=0;
         let now=new Date().getTime(),inUpdate=false;
         updateP.className="updateDate";
-        updateP.innerHTML=updateDate;
-        updateP.title=i18n("update");
+        updateP.innerHTML=updateDate[0];
+        updateP.title=i18n("update")+" - "+updateDate[1];
         updateP.onclick=e=>{
             if(inUpdate)return;
             inUpdate=true;
@@ -940,11 +940,11 @@
                         break;
                     }
                     let maxId=0,hasUrl=false;;
-                    if(!rulesDate.urls){
-                        rulesDate.urls=[];
+                    if(!rulesData.urls){
+                        rulesData.urls=[];
                         maxId=1;
                     }else{
-                        rulesDate.urls.forEach(u=>{
+                        rulesData.urls.forEach(u=>{
                             if(maxId<u.id){
                                 maxId=u.id;
                             }
@@ -954,9 +954,9 @@
                         });
                         if(hasUrl)break;
                     }
-                    rulesDate.urls.push({id:maxId+1,url:url,type:type});
-                    rulesDate.sort.push(maxId+1);
-                    storage.setItem("importRuleUrl", rulesDate);
+                    rulesData.urls.push({id:maxId+1,url:url,type:type});
+                    rulesData.sort.push(maxId+1);
+                    storage.setItem("importRuleUrl", rulesData);
                 }
             }
             alert("Modified successfully");
@@ -1004,6 +1004,7 @@
     }
 
     function getTimeStr(date){
+        let pastDate=(new Date(date)).toString();
         let now=new Date().getTime();
         let passTime=(now-date)/1000;
         if(passTime<60){
@@ -1015,6 +1016,7 @@
         }else{
             updateDate=i18n("passDay", parseInt(passTime/86400));
         }
+        updateDate=[updateDate, pastDate];
     }
 
     function initRules(callback) {
@@ -1035,7 +1037,7 @@
         ruleParser.initSavedRules(()=>{
             storage.getItem("importRuleUrl", data=>{
                 if(data){
-                    rulesDate=data;
+                    rulesData=data;
                     if(data.urls)ruleUrls=ruleUrls.concat(data.urls);
                     if(data.sort){
                         let urls=[];
