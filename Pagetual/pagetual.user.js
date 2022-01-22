@@ -4,7 +4,7 @@
 // @name:zh-TW   東方永頁機
 // @name:ja      東方永頁機
 // @namespace    hoothin
-// @version      0.5.5
+// @version      0.5.6
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -859,9 +859,24 @@
         }
         let updateP=document.createElement("p"),i=0;
         let now=new Date().getTime(),inUpdate=false;
+
+
+        let pastDate=(new Date(updateDate)).toString(),passStr;
+        let passTime=(now-updateDate)/1000;
+        if(passTime<60){
+            passStr=i18n("passSec", passTime);
+        }else if(passTime<60*60){
+            passStr=i18n("passMin", parseInt(passTime/60));
+        }else if(passTime<60*60*24){
+            passStr=i18n("passHour", parseInt(passTime/3600));
+        }else{
+            passStr=i18n("passDay", parseInt(passTime/86400));
+        }
+
+
         updateP.className="updateDate";
-        updateP.innerHTML=updateDate[0];
-        updateP.title=i18n("update")+" - "+updateDate[1];
+        updateP.innerHTML=passStr;
+        updateP.title=i18n("update")+" - "+pastDate;
         updateP.onclick=e=>{
             if(inUpdate)return;
             inUpdate=true;
@@ -1003,22 +1018,6 @@
         return ret;
     }
 
-    function getTimeStr(date){
-        let pastDate=(new Date(date)).toString();
-        let now=new Date().getTime();
-        let passTime=(now-date)/1000;
-        if(passTime<60){
-            updateDate=i18n("passSec", passTime);
-        }else if(passTime<60*60){
-            updateDate=i18n("passMin", parseInt(passTime/60));
-        }else if(passTime<60*60*24){
-            updateDate=i18n("passHour", parseInt(passTime/3600));
-        }else{
-            updateDate=i18n("passDay", parseInt(passTime/86400));
-        }
-        updateDate=[updateDate, pastDate];
-    }
-
     function initRules(callback) {
         /*0 wedata格式，1 pagetual格式*/
         ruleUrls=[
@@ -1055,7 +1054,7 @@
                 storage.getItem("forceState_"+location.host, v=>{
                     storage.getItem("ruleLastUpdate", date=>{
                         forceState=v||0;
-                        getTimeStr(date);
+                        updateDate=date;
                         initConfig();
                         if(forceState==1)return;
                         let now=new Date().getTime();
