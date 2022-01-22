@@ -7,7 +7,7 @@
 // @name:de      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      0.5.7
+// @version      0.5.8
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -471,7 +471,9 @@
                 pageElement=this.curSiteRule.type==0?getAllElementsByXpath(this.curSiteRule.pageElement,doc,doc):doc.querySelectorAll(this.curSiteRule.pageElement);
             }
             if((!pageElement || pageElement.length==0) && curWin){
-                let body=doc.body,bodyHeight=parseInt(curWin.getComputedStyle(body).height);
+                let body=doc.body;
+                if(!body)return null;
+                let bodyHeight=parseInt(curWin.getComputedStyle(body).height);
                 function checkElement(ele){
                     let curHeight=parseInt(curWin.getComputedStyle(ele).height);
                     if(curHeight/bodyHeight<=0.35)return null;
@@ -534,12 +536,16 @@
                 afterStr=pageMatch2[3];
             }
             var curPage=doc,i,cur;
-            let next=curPage.querySelector("a.next");
+            let next=curPage.querySelector("a.next"),jsNext;
             if(!next)next=curPage.querySelector("a#next");
             if(!next)next=curPage.querySelector("a#rightFix");
             if(!next)next=curPage.querySelector("a.next_page");
-            if(next && (!next.href || /javascript:/.test(next.href)))next=null;
             if(!next)next=curPage.querySelector(".next>a");
+            if(!next)next=curPage.querySelector("#next_page");
+            if(next && (!next.href || /javascript:/.test(next.href))){
+                jsNext=next;
+                next=null;
+            }
             if(!next){
                 let pageDiv=curPage.querySelector("div.wp-pagenavi");
                 if(pageDiv){
@@ -597,7 +603,7 @@
                 }
                 next=nextf||nexts||nextt||nextfo;
             }
-            if(!next)next=curPage.querySelector('[rel="next"]');
+            if(!next)next=jsNext||curPage.querySelector('[rel="next"]');
             return {next:next,canSave:canSave};
         }
 
@@ -635,6 +641,10 @@
             }
             if(nextLink){
                 if(!this.basePageElement){
+                    let nextLinkStyle=_unsafeWindow.getComputedStyle(nextLink);
+                    if(nextLinkStyle && nextLinkStyle.display=="none"){
+                        nextLink=null;
+                    }
                     this.basePageElement=this.getPageElement(document, _unsafeWindow);
                 }
                 if(!this.curSiteRule.nextLink && page && page.canSave){
@@ -1323,10 +1333,10 @@
                 return;
             }
             iframeDoc=emuIframe.contentDocument || emuIframe.contentWindow.document;
-            let eles=ruleParser.getPageElement(iframeDoc, emuIframe.contentWindow);
-            if(orgPage == eles[0]){
+            let eles=ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView);
+            if(eles && orgPage == eles[0]){
                 setTimeout(()=>{
-                    checkPage(iframeDoc);
+                    checkPage();
                 },500);
             }else{
                 if(eles && eles.length>0){
@@ -1347,9 +1357,22 @@
             emuIframe.style.cssText = 'margin:0!important;padding:0!important;visibility:hidden!important;';
             emuIframe.addEventListener("load", e=>{
                 setTimeout(()=>{
-                    orgPage=ruleParser.getPageElement(iframeDoc, emuIframe.contentWindow)[0];
-                    ruleParser.getNextLink(iframeDoc).click();
-                    checkPage(iframeDoc);
+                    orgPage=ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView);
+                    if(orgPage)orgPage=orgPage[0];
+                    let nextLink=ruleParser.getNextLink(iframeDoc);
+                    if(orgPage && nextLink){
+                        let display=iframeDoc.defaultView.getComputedStyle(nextLink).display;
+                        if(display=="none"){
+                            isPause=true;
+                            callback(false, false);
+                        }else{
+                            nextLink.click();
+                            checkPage();
+                        }
+                    }else{
+                        isPause=true;
+                        callback(false, false);
+                    }
                 },300);
                 iframeDoc=emuIframe.contentDocument || emuIframe.contentWindow.document;
             });
@@ -1357,9 +1380,23 @@
             document.body.appendChild(emuIframe);
         }else{
             iframeDoc=emuIframe.contentDocument || emuIframe.contentWindow.document;
-            orgPage=ruleParser.getPageElement(iframeDoc, emuIframe.contentWindow)[0];
-            ruleParser.getNextLink(iframeDoc).click();
-            checkPage(iframeDoc);
+            orgPage=ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView);
+            if(orgPage)orgPage=orgPage[0];
+            let nextLink=ruleParser.getNextLink(iframeDoc);
+            if(orgPage && nextLink){
+                let display=iframeDoc.defaultView.getComputedStyle(nextLink).display;
+                if(display=="none"){
+                    isPause=true;
+                    callback(false, false);
+                }else{
+                    nextLink.click();
+                    checkPage();
+                }
+            }else{
+                isPause=true;
+                callback(false, false);
+            }
+
         }
     }
 
