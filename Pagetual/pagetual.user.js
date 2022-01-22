@@ -3,12 +3,18 @@
 // @name:zh-CN   东方永页机
 // @name:zh-TW   東方永頁機
 // @name:ja      東方永頁機
+// @name:ru      Пейджетуал
+// @name:de      Pagetual
+// @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      0.5.6
+// @version      0.5.7
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
-// @description:ja     Webページを自動で読み込み継ぎ足し表示を行うブラウザ拡張です。
+// @description:ja     Webページを自動で読み込み継ぎ足し表示を行うブラウザ拡張です
+// @description:ru     Просто автоматически загрузите следующую страницу
+// @description:de     Laden Sie einfach automatisch die nächste Seite
+// @description:ko     다음 페이지를 자동으로 로드하세요
 // @author       hoothin
 // @include      http://*
 // @include      https://*
@@ -284,16 +290,7 @@
 
     class RuleParser {
         constructor() {
-            this.customRules=[
-                {
-                    name:"yande",
-                    action:0,
-                    url:"^https:\/\/yande\\.re\/",
-                    pageElement:"ul#post-list-posts>li",
-                    nextLink:"a.next_page",
-                    css:".javascript-hide {display: inline-block !important;}"
-                }
-            ];
+            this.customRules=[];
             this.rules=[];
             this.pageDoc=document;
             this.nextLinkHref=null;
