@@ -58,5 +58,12 @@
     "pageElementByJs":"let link=document.querySelector('#mangaBox>img').src; let match=link.match(/(.*)(\\d{3})(\\.jpg.*)/); window.i=window.i||parseInt(match[2]);window.i++; let src=match[1]+(window.i>99?window.i:(window.i>9?'0'+window.i:'00'+window.i))+match[3]; let img=document.createElement('img');img.onload=()=>{over([img])};img.onerror=e=>{over()};img.src=src;",
     "insert":"#mangaBox",
     "insertPos":"2"
+  },
+  {
+    "name":"javdb",
+    "action":"0",
+    "url":"^https://javdb\\.com/",
+    "pageElement":"#videos.video-container",
+    "css":".grid.columns{display: flex; flex-wrap: wrap;}"
   }
 ]
