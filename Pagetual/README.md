@@ -62,15 +62,15 @@ If there is no next element, you can use this to generate a href from current ur
 
 nextLinkByJs [ :(doc) ]
 --
-Use this to eval js code and return target url of next page with doc (document of page)
+Use this to eval js code and return target url of next page with doc (document of every page loaded)
 
 pageElement
 --
-Selector of page main content which need to insert
+Selector of main content which need to insert
 
 pageElementByJs [ :(over) ]
 --
-Use this to eval js code and create the elements whatever you want to insert, a over() is needed to callback with elements array for insert
+Use this to eval js code and create the elements whatever you want to insert, a over([]) is needed to callback with elements array for insert
 
 lazyImgSrc
 --
@@ -90,7 +90,7 @@ insertPos
 
 pageAction [ :(doc, eles) ]
 --
-The js code to run with every page inserted with doc:(document of every page) and eles:(elements found with rule)
+The js code to run with every page inserted with doc:(document of every page loaded) and eles:(elements found with rule)
 
 init [ :(document) ]
 --
