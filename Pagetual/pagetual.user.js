@@ -1333,6 +1333,7 @@
             }catch(e){
                 isPause=true;
                 callback(false, false);
+                return;
             }
             if(!orgPage){
                 orgPage=ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView, true);
