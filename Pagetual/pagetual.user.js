@@ -394,7 +394,7 @@
             var self=this;
             for(let i in this.hpRules){
                 let rule=this.hpRules[i];
-                if(rule.enable==0)continue;
+                if(!rule || rule.enable==0)continue;
                 let urlReg=new RegExp(rule.url, "i");
                 if(urlReg.test(location.href)){
                     this.curSiteRule=rule;
