@@ -7,7 +7,7 @@
 // @name:de      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      0.6.6
+// @version      0.6.7
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -413,9 +413,9 @@
                 let urlReg=new RegExp(rule.url, "i");
                 if(urlReg.test(location.href)){
                     let pageElement,nextLink,insert;
-                    if(rule.pageElement)pageElement=document.querySelector(rule.pageElement);
-                    if(rule.nextLink)nextLink=document.querySelector(rule.nextLink);
-                    if(rule.insert)insert=document.querySelector(rule.insert);
+                    if(rule.pageElement)pageElement=rule.type==0?getElementByXpath(rule.pageElement):document.querySelector(rule.pageElement);
+                    if(rule.nextLink)nextLink=rule.type==0?getElementByXpath(rule.nextLink):document.querySelector(rule.nextLink);
+                    if(rule.insert)insert=rule.type==0?getElementByXpath(rule.insert):document.querySelector(rule.insert);
                     if((rule.pageElement && !pageElement) ||
                        (rule.nextLink && !nextLink) ||
                        (rule.insert && !insert)){
