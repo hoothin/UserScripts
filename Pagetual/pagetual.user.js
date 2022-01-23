@@ -7,7 +7,7 @@
 // @name:de      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      0.6.8
+// @version      0.6.9
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -39,6 +39,52 @@
 // @connect      wedata.net
 // @connect      githubusercontent.com
 // @run-at       document-idle
+// @exclude      http://www.toodledo.com/tasks/*
+// @exclude      http*://maps.google.com*/*
+// @exclude      *://www.google.*/_/chrome/newtab*
+// @exclude      *://mega.*/*
+// @exclude      *://*.mega.*/*
+// @exclude      *://*.youku.com/v_*
+// @exclude      *://*pan.baidu.com
+// @exclude      *://*.iqiyi.com/v_*
+// @exclude      *://*.iqiyi.com/w_*
+// @exclude      *://*.iqiyi.com/a_*
+// @exclude      *://*.le.com/ptv/vplay/*
+// @exclude      *://v.qq.com/x/cover/*
+// @exclude      *://v.qq.com/x/page/*
+// @exclude      *://v.qq.com/tv/*
+// @exclude      *://*.tudou.com/listplay/*
+// @exclude      *://*.tudou.com/albumplay/*
+// @exclude      *://*.tudou.com/programs/view/*
+// @exclude      *://*.mgtv.com/b/*
+// @exclude      *://film.sohu.com/album/*
+// @exclude      *://tv.sohu.com/v/*
+// @exclude      *://*.bilibili.com/video/*
+// @exclude      *://*.bilibili.com/bangumi/play/*
+// @exclude      *://*.baofeng.com/play/*
+// @exclude      *://vip.pptv.com/show/*
+// @exclude      *://v.pptv.com/show/*
+// @exclude      *://www.le.com/ptv/vplay/*
+// @exclude      *://www.wasu.cn/Play/show/*
+// @exclude      *://m.v.qq.com/x/cover/*
+// @exclude      *://m.v.qq.com/x/page/*
+// @exclude      *://m.v.qq.com/*
+// @exclude      *://m.iqiyi.com/*
+// @exclude      *://m.iqiyi.com/kszt/*
+// @exclude      *://m.youku.com/alipay_video/*
+// @exclude      *://m.mgtv.com/b/*
+// @exclude      *://m.tv.sohu.com/v/*
+// @exclude      *://m.film.sohu.com/album/*
+// @exclude      *://m.le.com/ptv/vplay/*
+// @exclude      *://m.pptv.com/show/*
+// @exclude      *://m.acfun.cn/v/*
+// @exclude      *://m.bilibili.com/video/*
+// @exclude      *://m.bilibili.com/anime/*
+// @exclude      *://m.bilibili.com/bangumi/play/*
+// @exclude      *://m.wasu.cn/Play/show/*
+// @exclude      *://www.youtube.com
+// @exclude      *://www.youtube.com/
+// @exclude      *://www.youtube.com/watch*
 // ==/UserScript==
 
 (function() {
