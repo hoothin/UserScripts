@@ -7,7 +7,7 @@
 // @name:de      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      0.5.9
+// @version      0.6
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -1328,7 +1328,12 @@
         let orgPage,curPage,iframeDoc,times=0;
         function checkPage(){
             if(isPause)return;
-            iframeDoc=emuIframe.contentDocument || emuIframe.contentWindow.document;
+            try{
+                iframeDoc=emuIframe.contentDocument || emuIframe.contentWindow.document;
+            }catch(e){
+                isPause=true;
+                callback(false, false);
+            }
             if(!orgPage){
                 orgPage=ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView, true);
                 if(orgPage)orgPage=orgPage[0];
@@ -1424,7 +1429,7 @@
         let nextLink=ruleParser.nextLinkHref;
         let insert=ruleParser.getInsert();
         if(nextLink && insert){
-            let isJs=/^(javascript|#)/.test(nextLink);
+            let isJs=/^(javascript|#)/.test(nextLink.replace(location.href,""));
             if(location.protocol=="https:" && /^http:/.test(nextLink)){
                 nextLink=nextLink.replace(/^http/,"https");
             }
