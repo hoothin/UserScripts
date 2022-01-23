@@ -6,7 +6,7 @@
 // @description          Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version              2022.1.23.1
+// @version              2022.1.23.3
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -3605,7 +3605,7 @@ ImgOps | https://imgops.com/#b#`;
                 if(this.selected){
                     this.selected.classList.remove(this.selectedClassName);
                     this.selected.classList.remove('pv-gallery-sidebar-thumb_selected');
-                };
+                }
                 ele.classList.add(this.selectedClassName);
                 ele.classList.add('pv-gallery-sidebar-thumb_selected');
 
@@ -4108,6 +4108,10 @@ ImgOps | https://imgops.com/#b#`;
 
                 this.allLoading=[];//读取中的图片数组
                 this.iStatisCopy=cloneObject(this.imgStatistics,true);//图片统计副本
+                if(this.selected){
+                    this.selected.classList.remove(this.selectedClassName);
+                    this.selected.classList.remove('pv-gallery-sidebar-thumb_selected');
+                }
                 this.selected=null;
                 if(this.img){
                     this.img.style.display='none';
@@ -8789,7 +8793,7 @@ ImgOps | https://imgops.com/#b#`;
                 srcs,  // 备用的大图地址
                 type,  // 类别
                 noActual = false, //没有原图
-                imgSrc = img.currentSrc||img.src,  // img 节点的 src
+                imgSrc = img.currentSrc||img.dataset.lazySrc||img.src,  // img 节点的 src
                 xhr,
                 description;  // 图片的注释
             var imgCStyle=unsafeWindow.getComputedStyle(img);
@@ -8868,9 +8872,6 @@ ImgOps | https://imgops.com/#b#`;
             }
 
             if(!src)return;
-            if(img.dataset.lazySrc && (!imgSrc || base64Img)){
-                imgSrc=img.dataset.lazySrc;
-            }
 
             if(/^blob/i.test(imgSrc)){
                 imgSrc=drawTobase64(img);
