@@ -7,7 +7,7 @@
 // @name:de      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      0.6.1
+// @version      0.6.2
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -290,6 +290,7 @@
 
     class RuleParser {
         constructor() {
+            this.hpRules=[];
             this.customRules=[];
             this.rules=[];
             this.pageDoc=document;
@@ -300,20 +301,26 @@
 
         initSavedRules(callback){
             var self=this;
-            storage.getItem("customRules", customRules=>{
-                if(customRules)self.customRules=customRules;
-                storage.getItem("rules", rules=>{
-                    if(rules)this.rules=rules;
-                    callback();
+            storage.getItem("hpRules", hpRules=>{
+                if(hpRules)self.hpRules=hpRules;
+                storage.getItem("customRules", customRules=>{
+                    if(customRules)self.customRules=customRules;
+                    storage.getItem("rules", rules=>{
+                        if(rules)this.rules=rules;
+                        callback();
+                    });
                 });
             });
         }
 
         saveCurSiteRule(){
             if(!this.curSiteRule || !this.curSiteRule.url)return;
-            this.customRules=this.customRules.filter(item=>{return item.url!=this.curSiteRule.url});
-            this.customRules.push(this.curSiteRule);
-            storage.setItem("customRules", this.customRules);
+            this.hpRules=this.hpRules.filter(item=>{return item.url!=this.curSiteRule.url});
+            this.hpRules.unshift(this.curSiteRule);
+            if(this.hpRules.length>30){
+                this.hpRules.pop();
+            }
+            storage.setItem("hpRules", this.hpRules);
         }
 
         requestJSON(url, callback){
@@ -385,6 +392,17 @@
                 return this.curSiteRule;
             }
             var self=this;
+            for(let i in this.hpRules){
+                let rule=this.hpRules[i];
+                if(rule.enable==0)continue;
+                let urlReg=new RegExp(rule.url, "i");
+                if(urlReg.test(location.href)){
+                    this.curSiteRule=rule;
+                    debug(rule);
+                    callback();
+                    return rule;
+                }
+            }
             for(let i in this.customRules){
                 let rule=this.customRules[i];
                 if(rule.enable==0)continue;
@@ -515,7 +533,7 @@
                     return ele.children;
                 }
                 pageElement=checkElement(body);
-                //if(pageElement)this.saveCurSiteRule();
+                if(pageElement)this.saveCurSiteRule();
             }
             return pageElement;
         }
@@ -726,6 +744,13 @@
         initPage(callback){
             let self=this;
             this.getRule(()=>{
+                self.hpRules=self.hpRules.filter(item=>{return item.url!=self.curSiteRule.url});
+                self.hpRules.unshift(self.curSiteRule);
+                if(self.hpRules.length>30){
+                    self.hpRules.pop();
+                }
+                storage.setItem("hpRules", self.hpRules);
+
                 let code=self.curSiteRule.init;
                 if(code){
                     Function('"use strict";' + code)();
@@ -887,16 +912,23 @@
         updateP.onclick=e=>{
             if(inUpdate)return;
             inUpdate=true;
-            ruleUrls.forEach(rule=>{
-                ruleParser.addRuleByUrl(rule.url, rule.type, rule.id, ()=>{
-                    if(++i==ruleUrls.length){
-                        storage.setItem("ruleLastUpdate", now);
-                        alert(i18n("updateSucc"));
-                        inUpdate=false;
-                        updateP.innerHTML=i18n("passSec", 0);
-                    }
-                })
-            });
+            let ruleIndex=0;
+            storage.setItem("hpRules", []);
+            function addNextRule(){
+                if(ruleIndex>=ruleUrls.length){
+                    storage.setItem("ruleLastUpdate", now);
+                    alert(i18n("updateSucc"));
+                    inUpdate=false;
+                    updateP.innerHTML=i18n("passSec", 0);
+                    updateP.title=i18n("update");
+                }else{
+                    let rule=ruleUrls[ruleIndex++];
+                    ruleParser.addRuleByUrl(rule.url, rule.type, rule.id, ()=>{
+                        addNextRule();
+                    })
+                }
+            }
+            addNextRule();
             alert(i18n("beginUpdate"));
         };
         configCon.insertBefore(updateP, insertPos);
@@ -928,6 +960,7 @@
         configCon.insertBefore(saveBtn, insertPos);
         saveBtn.onclick=e=>{
             try{
+                storage.setItem("hpRules", []);
                 if(customRulesInput.value==""){
                     storage.setItem("customRules", "");
                 }else{
@@ -1029,12 +1062,12 @@
         /*0 wedata格式，1 pagetual格式*/
         ruleUrls=[
             {
-                id:0,
+                id:1,
                 url:'http://wedata.net/databases/AutoPagerize/items_all.json',
                 type:0,
             },
             {
-                id:1,
+                id:0,
                 url:'https://raw.githubusercontent.com/hoothin/UserScripts/master/Pagetual/pagetualRules.json',
                 type:1
             }
@@ -1067,13 +1100,18 @@
                         let now=new Date().getTime();
                         if(!date || now-date>3*24*60*60*1000){
                             storage.setItem("ruleLastUpdate", now);
-                            ruleUrls.forEach(rule=>{
-                                ruleParser.addRuleByUrl(rule.url, rule.type, rule.id, ()=>{
-                                    if(++i==ruleUrls.length){
-                                        callback();
-                                    }
-                                })
-                            });
+                            let ruleIndex=0;
+                            function addNextRule(){
+                                if(ruleIndex>=ruleUrls.length){
+                                    callback();
+                                }else{
+                                    let rule=ruleUrls[ruleIndex++];
+                                    ruleParser.addRuleByUrl(rule.url, rule.type, rule.id, ()=>{
+                                        addNextRule();
+                                    })
+                                }
+                            }
+                            addNextRule();
                         }else{
                             callback();
                         }
