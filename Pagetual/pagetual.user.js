@@ -744,12 +744,14 @@
         initPage(callback){
             let self=this;
             this.getRule(()=>{
-                self.hpRules=self.hpRules.filter(item=>{return item.url!=self.curSiteRule.url});
-                self.hpRules.unshift(self.curSiteRule);
-                if(self.hpRules.length>30){
-                    self.hpRules.pop();
+                if(self.curSiteRule){
+                    self.hpRules=self.hpRules.filter(item=>{return item.url!=self.curSiteRule.url});
+                    self.hpRules.unshift(self.curSiteRule);
+                    if(self.hpRules.length>30){
+                        self.hpRules.pop();
+                    }
+                    storage.setItem("hpRules", self.hpRules);
                 }
-                storage.setItem("hpRules", self.hpRules);
 
                 let code=self.curSiteRule.init;
                 if(code){
