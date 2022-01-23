@@ -7,7 +7,7 @@
 // @name:de      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      0.6.3
+// @version      0.6.5
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -454,7 +454,7 @@
                     }
                     if(end>=self.rules.length){
                         self.curSiteRule={};
-                        self.curSiteRule.url=location.origin.replace(/\./g,"\\.");
+                        self.curSiteRule.url=location.href.replace(/[^\/]*$/,"").replace(/\./g,"\\.");
                         callback();
                         return;
                     }else{
@@ -528,7 +528,7 @@
                             curMaxEle=curNode;
                         }
                     }
-                    if(curHeight>maxHeight){
+                    if(curMaxEle && curHeight>maxHeight){
                         return checkElement(curMaxEle);
                     }
                     self.curSiteRule.pageElement=self.geneSelector(ele)+">*";
@@ -662,13 +662,6 @@
                 nextLink=page.next;
             }
             if(nextLink){
-                if(!this.basePageElement){
-                    let nextLinkStyle=_unsafeWindow.getComputedStyle(nextLink);
-                    if(nextLinkStyle && nextLinkStyle.display=="none"){
-                        //nextLink=null;
-                    }
-                    this.basePageElement=this.getPageElement(document, _unsafeWindow);
-                }
                 if(!this.curSiteRule.nextLink && page && page.canSave){
                     this.curSiteRule.nextLink=this.geneSelector(nextLink);
                     this.curSiteRule.type=1;
@@ -685,11 +678,11 @@
         }
 
         getInsert(refresh) {
-            if(this.insert && !refresh && this.insert.parentNode)return this.insert;
+            if(this.insert && !refresh && this.insert.parentNode && this.insert.parentNode.parentNode)return this.insert;
             if(this.curSiteRule.insert){
                 this.insert=this.curSiteRule.type==0?getElementByXpath(this.curSiteRule.insert,document):document.querySelector(this.curSiteRule.insert);
             }else{
-                let pageElement=this.basePageElement;
+                let pageElement=this.getPageElement(document, _unsafeWindow);
                 if(pageElement && pageElement.length>0){
                     var pELast = pageElement[pageElement.length - 1];
                     this.insert = pELast.nextSibling ? pELast.nextSibling : pELast.parentNode.appendChild(document.createTextNode(' '));
