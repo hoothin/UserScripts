@@ -50,7 +50,7 @@ enable
 
 type
 --
-0 means xpath, 1 means css selector
+0 means xpath, 1 or undifined means css selector
 
 action
 --
