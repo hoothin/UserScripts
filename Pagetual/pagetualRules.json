@@ -73,5 +73,12 @@
     "pageElement":"id('rso')/div|id('center_col')/style[contains(.,'relative')]|id('search')/div/div/style[1]",
     "type":"0",
     "url":"^https?://[^./]+\\.google(?:\\.[^./]{2,3}){1,2}/(?:c(?:se|ustom)|search|webhp|m|#)"
+  },
+  {
+    "name":"bilibili",
+    "action":"0",
+    "url":"^https://search\\.bilibili\\.com",
+    "pageElement":"ul>li.video-item",
+    "nextLinkByUrl":["(.*\\?keyword=.*)(?:\\&page=|$)(\\d*)","$1&page={(0$2||1)+1}"]
   }
 ]
