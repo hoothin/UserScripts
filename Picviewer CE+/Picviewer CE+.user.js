@@ -6,7 +6,7 @@
 // @description          Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version              2022.1.22.1
+// @version              2022.1.23.1
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -69,7 +69,7 @@
                 share:"分享",
                 suitLongImg:"长图在滚动窗口显示",
                 globalkeys:"预览功能键组合: ",
-                globalkeysPress:"敲击开关预览",
+                globalkeysPress:"敲击切换预览",
                 globalkeysHold:"按住开启预览",
                 globalkeysType:"预览触发方式：",
                 loadAll:"加载更多页",
@@ -282,7 +282,7 @@
                 share:"分享",
                 suitLongImg:"長圖在滾動窗口顯示",
                 globalkeys:"預覽功能鍵組合: ",
-                globalkeysPress:"敲擊開關預覽",
+                globalkeysPress:"敲擊切換預覽",
                 globalkeysHold:"按住開啟預覽",
                 globalkeysType:"預覽觸發方式：",
                 loadAll:"載入更多",
@@ -3241,7 +3241,12 @@ ImgOps | https://imgops.com/#b#`;
                 if(viewmoreShow){
                     var maxSizeH=0,minSizeH=0,maxSizeW=0,minSizeW=0;
                     [].forEach.call(document.querySelectorAll(".maximizeChild>img"),function(item){
-                        var spanMark=document.querySelector("span.pv-gallery-sidebar-thumb-container[data-src='"+item.src+"']");
+                        var spanMark;
+                        try{
+                            spanMark=document.querySelector('span.pv-gallery-sidebar-thumb-container[data-src="'+item.src+'"]');
+                        }catch(e){
+                            spanMark=document.querySelector("span.pv-gallery-sidebar-thumb-container[data-src='"+item.src+"']");
+                        }
                         if(spanMark && !spanMark.dataset.naturalSize && item.naturalWidth && item.naturalHeight){
                             spanMark.dataset.naturalSize=JSON.stringify({w:item.naturalWidth,h:item.naturalHeight});
                         }
@@ -3303,7 +3308,12 @@ ImgOps | https://imgops.com/#b#`;
                 this.data.forEach(function(item) {
                     if(!item)return;
                     var itemW=item.sizeW,itemH=item.sizeH;
-                    var spanMark=document.querySelector("span.pv-gallery-sidebar-thumb-container[data-src='"+item.src+"']");
+                    var spanMark;
+                    try{
+                        spanMark=document.querySelector('span.pv-gallery-sidebar-thumb-container[data-src="'+item.src+'"]');
+                    }catch(e){
+                        spanMark=document.querySelector("span.pv-gallery-sidebar-thumb-container[data-src='"+item.src+"']");
+                    }
                     if(spanMark){
                         var naturalSize=spanMark.dataset.naturalSize;
                         if(naturalSize){
