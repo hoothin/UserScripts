@@ -315,7 +315,7 @@
 
         saveCurSiteRule(){
             if(!this.curSiteRule || !this.curSiteRule.url)return;
-            this.hpRules=this.hpRules.filter(item=>{return item.url!=this.curSiteRule.url});
+            this.hpRules=this.hpRules.filter(item=>{return item&&item.url!=this.curSiteRule.url});
             this.hpRules.unshift(this.curSiteRule);
             if(this.hpRules.length>30){
                 this.hpRules.pop();
@@ -745,7 +745,7 @@
             let self=this;
             this.getRule(()=>{
                 if(self.curSiteRule){
-                    self.hpRules=self.hpRules.filter(item=>{return item.url!=self.curSiteRule.url});
+                    self.hpRules=self.hpRules.filter(item=>{return item&&item.url!=self.curSiteRule.url});
                     self.hpRules.unshift(self.curSiteRule);
                     if(self.hpRules.length>30){
                         self.hpRules.pop();
@@ -1102,6 +1102,7 @@
                         let now=new Date().getTime();
                         if(!date || now-date>3*24*60*60*1000){
                             storage.setItem("ruleLastUpdate", now);
+                            storage.setItem("hpRules", []);
                             let ruleIndex=0;
                             function addNextRule(){
                                 if(ruleIndex>=ruleUrls.length){
