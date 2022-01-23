@@ -7,7 +7,7 @@
 // @name:de      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      0.6.2
+// @version      0.6.3
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -87,7 +87,8 @@
                     customUrls:"导入规则url，一行一条，AutoPagerize 格式规则需要以\"0|\"开头",
                     customRules:"输入【东方永页机】格式的自定义规则",
                     save:"保存设置",
-                    loadingText:"少女祈祷中..."
+                    loadingText:"少女祈祷中...",
+                    opacity:"分页隔条透明值"
                 };
                 break;
             case "zh-TW":
@@ -114,7 +115,8 @@
                     customUrls:"導入規則url，一行一條，AutoPagerize 格式規則需要以\"0|\"開頭",
                     customRules:"輸入【東方永頁機】格式的自定義規則",
                     save:"存儲設置",
-                    loadingText:"少女祈禱中..."
+                    loadingText:"少女祈禱中...",
+                    opacity:"分頁隔條透明值"
                 };
                 break;
             case "ja":
@@ -140,7 +142,8 @@
                     customUrls: "インポートルールのURL、1行に1つ、AutoPagerizeフォーマットルールは\"0|\"で始まる必要があります",
                     customRules: "【東方永頁機】の形式でカスタムルールを入力してください",
                     save: "設定を保存",
-                    loadingText: "少女祈祷中..."
+                    loadingText: "少女祈祷中...",
+                    opacity:"ページネーションバーの透明値"
                 };
                 break;
             default:
@@ -166,7 +169,8 @@
                     customUrls:"Import rule url, One url per line, rules on AutoPagerize format need to start with \"0|\"",
                     customRules:"Input custom rules with [Pagetual] format",
                     save:"Save",
-                    loadingText:"Shojo Now Loading..."
+                    loadingText:"Shojo Now Loading...",
+                    opacity:"Pagination spacer opacity"
                 };
                 break;
         }
@@ -941,12 +945,23 @@
             });
         }
         let customUrlsTitle=document.createElement("h2");
-        customUrlsTitle.innerHTML=i18n("customUrls")
+        customUrlsTitle.innerHTML=i18n("customUrls");
         configCon.insertBefore(customUrlsTitle, insertPos);
         let customUrlsInput=document.createElement("textarea");
         customUrlsInput.style.width="100%";
         customUrlsInput.placeholder="0|http://wedata.net/databases/AutoPagerize/items_all.json";
         configCon.insertBefore(customUrlsInput, insertPos);
+
+        let opacityTitle=document.createElement("h2");
+        opacityTitle.innerHTML=i18n("opacity");
+        let opacityInput=document.createElement("input");
+        opacityInput.value=(rulesData.opacity||0.3)*100;
+        opacityInput.type="number";
+        opacityInput.style.width="50px";
+        opacityInput.style.margin="0 0 0 10px";
+        opacityTitle.appendChild(opacityInput);
+        configCon.insertBefore(opacityTitle, insertPos);
+
         let customRulesTitle=document.createElement("h2");
         customRulesTitle.innerHTML=i18n("customRules")
         configCon.insertBefore(customRulesTitle, insertPos);
@@ -975,6 +990,8 @@
                 alert("JSON error, check again!");
                 return;
             }
+            rulesData.opacity=(opacityInput.value?opacityInput.value/100:0.3);
+            storage.setItem("importRuleUrl", rulesData);
             let customUrls=customUrlsInput.value.trim();
             if(customUrls){
                 customUrls=customUrls.split(/\n/);
@@ -1216,7 +1233,7 @@
            display: none!important;
          }
          .pagetual_pageBar {
-           opacity: 0.1;
+           opacity: ${rulesData.opacity||"0.3"};
          }
          .pagetual_pageBar:hover {
            opacity: 1;
@@ -1533,8 +1550,8 @@
     }
 
     function init(){
-        initView();
         initRules(()=>{
+            initView();
             initPage();
         });
     }
