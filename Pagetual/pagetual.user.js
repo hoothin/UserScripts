@@ -7,7 +7,7 @@
 // @name:de      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      0.6.7
+// @version      0.6.8
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -26,12 +26,14 @@
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_addStyle
+// @grant        GM_openInTab
 // @grant        GM.xmlHttpRequest
 // @grant        GM.registerMenuCommand
 // @grant        GM.notification
 // @grant        GM.getValue
 // @grant        GM.setValue
 // @grant        GM.addStyle
+// @grant        GM.openInTab
 // @downloadURL  https://greasyfork.org/scripts/438684-pagetual/code/Pagetual.user.js
 // @updateURL    https://greasyfork.org/scripts/438684-pagetual/code/Pagetual.user.js
 // @connect      wedata.net
@@ -184,7 +186,7 @@
         }
     };
 
-    var _GM_xmlhttpRequest,_GM_registerMenuCommand,_GM_notification,_GM_addStyle;
+    var _GM_xmlhttpRequest,_GM_registerMenuCommand,_GM_notification,_GM_addStyle,_GM_openInTab;
     if(typeof GM_xmlhttpRequest!='undefined'){
         _GM_xmlhttpRequest=GM_xmlhttpRequest;
     }else if(typeof GM!='undefined' && typeof GM.xmlHttpRequest!='undefined'){
@@ -199,6 +201,11 @@
         _GM_notification=GM_notification;
     }else if(typeof GM!='undefined' && typeof GM.notification!='undefined'){
         _GM_notification=GM.notification;
+    }
+    if(typeof GM_openInTab!='undefined'){
+        _GM_openInTab=GM_openInTab;
+    }else if(typeof GM!='undefined' && typeof GM.openInTab!='undefined'){
+        _GM_openInTab=GM.openInTab;
     }
     if(typeof GM_addStyle!='undefined'){
         _GM_addStyle=GM_addStyle;
@@ -262,7 +269,7 @@
         }
     };
     _GM_registerMenuCommand(i18n("configure"), ()=>{
-        window.open("https://github.com/hoothin/UserScripts/tree/master/Pagetual", "_blank");
+        _GM_openInTab("https://github.com/hoothin/UserScripts/tree/master/Pagetual");
     });
 
     function getElementByXpath(xpath, contextNode, doc){
