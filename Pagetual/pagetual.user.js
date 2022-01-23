@@ -661,7 +661,7 @@
                 if(!this.basePageElement){
                     let nextLinkStyle=_unsafeWindow.getComputedStyle(nextLink);
                     if(nextLinkStyle && nextLinkStyle.display=="none"){
-                        nextLink=null;
+                        //nextLink=null;
                     }
                     this.basePageElement=this.getPageElement(document, _unsafeWindow);
                 }
