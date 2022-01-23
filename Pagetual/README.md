@@ -48,6 +48,10 @@ enable
 --
 0 means disable
 
+type
+--
+0 means xpath, 1 means css selector
+
 action
 --
 0 means load url and insert to div, 1 means load by iframe so that js on page may action, 2 means force insert to bottom
