@@ -7,7 +7,7 @@
 // @name:de      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      0.5.8
+// @version      0.5.9
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -464,13 +464,13 @@
             return selector;
         }
 
-        getPageElement(doc, curWin) {
+        getPageElement(doc, curWin, dontFind) {
             let pageElement=null;
             let self=this;
             if(this.curSiteRule.pageElement){
                 pageElement=this.curSiteRule.type==0?getAllElementsByXpath(this.curSiteRule.pageElement,doc,doc):doc.querySelectorAll(this.curSiteRule.pageElement);
             }
-            if((!pageElement || pageElement.length==0) && curWin){
+            if((!pageElement || pageElement.length==0) && curWin && !dontFind){
                 let body=doc.body;
                 if(!body)return null;
                 let bodyHeight=parseInt(curWin.getComputedStyle(body).height);
@@ -1327,24 +1327,44 @@
     function emuPage(callback){
         let orgPage,curPage,iframeDoc,times=0;
         function checkPage(){
+            if(isPause)return;
+            iframeDoc=emuIframe.contentDocument || emuIframe.contentWindow.document;
+            if(!orgPage){
+                orgPage=ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView, true);
+                if(orgPage)orgPage=orgPage[0];
+                let nextLink=ruleParser.getNextLink(iframeDoc);
+                if(orgPage && nextLink){
+                    let display=iframeDoc.defaultView.getComputedStyle(nextLink).display;
+                    if(display=="none"){
+                        isPause=true;
+                        callback(false, false);
+                    }else{
+                        nextLink.click();
+                        setTimeout(()=>{
+                            checkPage();
+                        },1000);
+                    }
+                }else{
+                    isPause=true;
+                    callback(false, false);
+                }
+                return;
+            }
             if(times++ > 20){
                 isPause=true;
                 callback(false, false);
                 return;
             }
-            iframeDoc=emuIframe.contentDocument || emuIframe.contentWindow.document;
-            let eles=ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView);
-            if(eles && orgPage == eles[0]){
+            let eles=ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView, true);
+            if(!eles || eles.length==0){
+                isPause=true;
+                callback(false, false);
+            }else if(orgPage == eles[0]){
                 setTimeout(()=>{
                     checkPage();
-                },500);
+                },1000);
             }else{
-                if(eles && eles.length>0){
-                    callback(iframeDoc, eles);
-                }else{
-                    isPause=true;
-                    callback(false, false);
-                }
+                callback(iframeDoc, eles);
             }
         }
         if(!emuIframe){
@@ -1357,46 +1377,13 @@
             emuIframe.style.cssText = 'margin:0!important;padding:0!important;visibility:hidden!important;';
             emuIframe.addEventListener("load", e=>{
                 setTimeout(()=>{
-                    orgPage=ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView);
-                    if(orgPage)orgPage=orgPage[0];
-                    let nextLink=ruleParser.getNextLink(iframeDoc);
-                    if(orgPage && nextLink){
-                        let display=iframeDoc.defaultView.getComputedStyle(nextLink).display;
-                        if(display=="none"){
-                            isPause=true;
-                            callback(false, false);
-                        }else{
-                            nextLink.click();
-                            checkPage();
-                        }
-                    }else{
-                        isPause=true;
-                        callback(false, false);
-                    }
+                    checkPage();
                 },300);
-                iframeDoc=emuIframe.contentDocument || emuIframe.contentWindow.document;
             });
             emuIframe.src=location.href;
             document.body.appendChild(emuIframe);
         }else{
-            iframeDoc=emuIframe.contentDocument || emuIframe.contentWindow.document;
-            orgPage=ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView);
-            if(orgPage)orgPage=orgPage[0];
-            let nextLink=ruleParser.getNextLink(iframeDoc);
-            if(orgPage && nextLink){
-                let display=iframeDoc.defaultView.getComputedStyle(nextLink).display;
-                if(display=="none"){
-                    isPause=true;
-                    callback(false, false);
-                }else{
-                    nextLink.click();
-                    checkPage();
-                }
-            }else{
-                isPause=true;
-                callback(false, false);
-            }
-
+            checkPage();
         }
     }
 
