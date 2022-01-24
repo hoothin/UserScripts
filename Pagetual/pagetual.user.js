@@ -7,7 +7,7 @@
 // @name:de      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      0.7.2
+// @version      0.7.5
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -812,7 +812,11 @@
                 if(code){
                     Function('"use strict";' + code)();
                 }
-                self.getNextLink(document);
+                let nextLink=self.getNextLink(document);
+                let nextLinkCs=_unsafeWindow.getComputedStyle(nextLink);
+                if(nextLinkCs.cursor=="not-allowed"){
+                    self.nextLinkHref=false;
+                }
                 callback();
             });
         }
@@ -1244,27 +1248,34 @@
         iframe.style.cssText = 'margin:0!important;padding:0!important;visibility:hidden!important;';
         iframe.addEventListener("load", e=>{
             setTimeout(()=>{
-                //可能會延遲加載
-                try{
-                    let doc=iframe.contentWindow.document;
-                    let eles=ruleParser.getPageElement(doc, iframe.contentWindow);
-                    if(eles && eles.length>0){
-                        callback(doc, eles);
-                    }else if(failFromIframe++ > 3){
-                        failFromIframe=0;
+                let tryTimes=0;
+                function checkIframe(){
+                    try{
+                        let doc=iframe.contentWindow.document;
+                        let eles=ruleParser.getPageElement(doc, iframe.contentWindow);
+                        if(eles && eles.length>0){
+                            callback(doc, eles);
+                        }else if(tryTimes++ < 2){
+                            setTimeout(()=>{
+                                checkIframe();
+                            },500);
+                            return;
+                        }else{
+                            if(failFromIframe++ > 2){
+                                failFromIframe=0;
+                                isPause=true;
+                                callback(false, false);
+                            }else{
+                                callback(false, false);
+                            }
+                        }
+                    }catch(e){
                         isPause=true;
                         callback(false, false);
-                    }else{
-                        //isPause=true;
-                        setTimeout(()=>{
-                            callback(false, false);
-                        },1000);
                     }
-                }catch(e){
-                    isPause=true;
-                    callback(false, false);
+                    document.body.removeChild(iframe);
                 }
-                document.body.removeChild(iframe);
+                checkIframe();
             },300);
         });
         iframe.src=url;
@@ -1473,7 +1484,7 @@
                 }
                 return;
             }
-            if(times++ > 20){
+            if(times++ > 10){
                 isPause=true;
                 callback(false, false);
                 return;
@@ -1485,7 +1496,7 @@
             }else if(orgPage == eles[0]){
                 setTimeout(()=>{
                     checkPage();
-                },1000);
+                },500);
             }else{
                 callback(iframeDoc, eles);
             }
