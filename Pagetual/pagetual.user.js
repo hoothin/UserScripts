@@ -459,7 +459,7 @@
             var self=this;
             for(let i in this.hpRules){
                 let rule=this.hpRules[i];
-                if(!rule || rule.enable==0)continue;
+                if(!rule || rule.enable==0 || !rule.url)continue;
                 if(rule.singleUrl){
                     if(location.origin+location.pathname==rule.url){
                         this.curSiteRule=rule;
@@ -479,7 +479,7 @@
             }
             for(let i in this.customRules){
                 let rule=this.customRules[i];
-                if(rule.enable==0)continue;
+                if(!rule || rule.enable==0 || !rule.url)continue;
                 let urlReg=new RegExp(rule.url, "i");
                 if(urlReg.test(location.href)){
                     let pageElement,nextLink,insert;
@@ -489,7 +489,7 @@
                     if((rule.pageElement && !pageElement) ||
                        (rule.nextLink && !nextLink) ||
                        (rule.insert && !insert)){
-                        continue;
+                        //continue;
                     }
                     this.curSiteRule=rule;
                     debug(rule);
@@ -514,7 +514,7 @@
                             if((rule.pageElement && !pageElement) ||
                                (rule.nextLink && !nextLink) ||
                                (rule.insert && !insert)){
-                                continue;
+                                //continue;
                             }
                             self.curSiteRule=rule;
                             debug(rule);
