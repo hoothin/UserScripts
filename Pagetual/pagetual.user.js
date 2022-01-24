@@ -7,7 +7,7 @@
 // @name:de      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      0.7.1
+// @version      0.7.2
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -1008,7 +1008,7 @@
         let opacityTitle=document.createElement("h2");
         opacityTitle.innerHTML=i18n("opacity");
         let opacityInput=document.createElement("input");
-        opacityInput.value=(rulesData.opacity||0.3)*100;
+        opacityInput.value=rulesData.opacity*100;
         opacityInput.type="number";
         opacityInput.style.width="50px";
         opacityInput.style.margin="0 0 0 10px";
@@ -1043,7 +1043,7 @@
                 alert("JSON error, check again!");
                 return;
             }
-            rulesData.opacity=(opacityInput.value?opacityInput.value/100:0.3);
+            rulesData.opacity=opacityInput.value/100;
             storage.setItem("importRuleUrl", rulesData);
             let customUrls=customUrlsInput.value.trim();
             if(customUrls){
@@ -1162,6 +1162,9 @@
                         });
                         ruleUrls=urls;
                     }
+                }
+                if(typeof(rulesData.opacity)=="undefined"){
+                    rulesData.opacity=0.3;
                 }
                 storage.getItem("forceState_"+location.host, v=>{
                     storage.getItem("ruleLastUpdate", date=>{
@@ -1286,7 +1289,8 @@
            display: none!important;
          }
          .pagetual_pageBar {
-           opacity: ${rulesData.opacity||"0.3"};
+           opacity: ${rulesData.opacity};
+           display: ${rulesData.opacity==0?"none!important":"unset"};
          }
          .pagetual_pageBar:hover {
            opacity: 1;
