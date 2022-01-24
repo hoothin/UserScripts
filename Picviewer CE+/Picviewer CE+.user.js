@@ -6,7 +6,7 @@
 // @description          Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version              2022.1.24.2
+// @version              2022.1.24.3
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -9254,7 +9254,7 @@ ImgOps | https://imgops.com/#b#`;
 
             if (!target || target.id=="pv-float-bar-container" ||
                 (target.className && target.className.indexOf &&
-                 (target.className.indexOf('pv-') != -1 ||
+                 (/^pv\-/.test(target.className) ||
                   target.classList.contains("ks-imagezoom-lens")))) {
                 return;
             }
@@ -9292,12 +9292,12 @@ ImgOps | https://imgops.com/#b#`;
                 if(node.nodeName == "HTML" || node.nodeName == "#document")
                     return false;
                 let nodeStyle = unsafeWindow.getComputedStyle(node);
-                return node && nodeStyle.backgroundImage && /url\(/i.test(nodeStyle.backgroundImage) && nodeStyle.backgroundImage.indexOf("about:blank") == -1 && parseFloat(nodeStyle.width) > prefs.floatBar.minSizeLimit.w && parseFloat(nodeStyle.height) > prefs.floatBar.minSizeLimit.h;
+                return node && nodeStyle.backgroundImage && /^\s*url\(/i.test(nodeStyle.backgroundImage) && !/^\s*url\(\s*['"]?\s*about:blank/i.test(nodeStyle.backgroundImage) && parseFloat(nodeStyle.width) > prefs.floatBar.minSizeLimit.w && parseFloat(nodeStyle.height) > prefs.floatBar.minSizeLimit.h;
             };
             if (target.nodeName != 'IMG'){
                 if(target.nodeName == "AREA")target=target.parentNode;
                 var targetBg;
-                var bgReg=/.*url\(\s*["']?(.+?)["']?\s*\)/i;
+                var bgReg=/^\s*url\(\s*["']?(.+?)["']?\s*\)/i;
                 if(prefs.floatBar.listenBg && hasBg(target)){
                     targetBg = unsafeWindow.getComputedStyle(target).backgroundImage.replace(bgReg,"$1");
                     var src=targetBg,nsrc=src,noActual=true,type="scale";
@@ -9327,7 +9327,7 @@ ImgOps | https://imgops.com/#b#`;
                             img: target
                         };
                     }else if(unsafeWindow.getComputedStyle(target).position=="absolute" || target.nodeName == "MAP"){
-                        var imgChildren=[],availableImgs = [];
+                        /*var imgChildren=[],availableImgs = [];
                         [].forEach.call(target.parentNode.querySelectorAll('img'),function(img){
                             var imgStyle=unsafeWindow.getComputedStyle(img);
                             if(imgStyle.display != "none"){
@@ -9357,7 +9357,7 @@ ImgOps | https://imgops.com/#b#`;
                             }else if(availableImgs.length == 1){
                                 target=availableImgs[0];
                             }
-                        }
+                        }*/
                     }
                 }
                 if(result && !/^data:/i.test(result.src)){
