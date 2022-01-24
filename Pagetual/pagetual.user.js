@@ -460,7 +460,7 @@
             for(let i in this.hpRules){
                 let rule=this.hpRules[i];
                 if(!rule || rule.enable==0)continue;
-                if(rule.singleUrl && location.origin+location.pathname==rule.url)continue;
+                if(rule.singleUrl && location.origin+location.pathname!=rule.url)continue;
                 let urlReg=new RegExp(rule.url, "i");
                 if(urlReg.test(location.href)){
                     this.curSiteRule=rule;
