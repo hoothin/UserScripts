@@ -7,7 +7,7 @@
 // @name:de      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      0.6.9
+// @version      0.7.0
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -417,7 +417,7 @@
                 case 1:
                 default:
                     item.from=from;
-                    item.type=type;
+                    if(typeof(item.type) == "undefined")item.type=type;
                     return item;
                     break;
             }
@@ -617,6 +617,7 @@
             if(!next)next=curPage.querySelector("a.next_page");
             if(!next)next=curPage.querySelector(".next>a");
             if(!next)next=curPage.querySelector("#next_page");
+            if(!next)next=curPage.querySelector(".next>button");
             if(next && (!next.href || /javascript:/.test(next.href))){
                 jsNext=next;
                 next=null;
@@ -1127,14 +1128,14 @@
         /*0 wedata格式，1 pagetual格式*/
         ruleUrls=[
             {
-                id:1,
-                url:'http://wedata.net/databases/AutoPagerize/items_all.json',
-                type:0,
-            },
-            {
                 id:0,
                 url:'https://raw.githubusercontent.com/hoothin/UserScripts/master/Pagetual/pagetualRules.json',
                 type:1
+            },
+            {
+                id:1,
+                url:'http://wedata.net/databases/AutoPagerize/items_all.json',
+                type:0,
             }
         ];var i=0,j=0;
 
