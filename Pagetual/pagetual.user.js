@@ -7,7 +7,7 @@
 // @name:de      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      0.7.0
+// @version      0.7.1
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -136,7 +136,8 @@
                     customRules:"输入【东方永页机】格式的自定义规则",
                     save:"保存设置",
                     loadingText:"少女祈祷中...",
-                    opacity:"分页隔条透明值"
+                    opacity:"分页隔条透明值",
+                    sortTitle:"排序在下次更新规则后生效"
                 };
                 break;
             case "zh-TW":
@@ -164,7 +165,8 @@
                     customRules:"輸入【東方永頁機】格式的自定義規則",
                     save:"存儲設置",
                     loadingText:"少女祈禱中...",
-                    opacity:"分頁隔條透明值"
+                    opacity:"分頁隔條透明值",
+                    sortTitle:"排序在下次更新規則後生效"
                 };
                 break;
             case "ja":
@@ -191,7 +193,8 @@
                     customRules: "【東方永頁機】の形式でカスタムルールを入力してください",
                     save: "設定を保存",
                     loadingText: "少女祈祷中...",
-                    opacity:"ページネーションバーの透明値"
+                    opacity:"ページネーションバーの透明値",
+                    sortTitle:"並べ替えは、次のルールの更新後に有効になります"
                 };
                 break;
             default:
@@ -218,7 +221,8 @@
                     customRules:"Input custom rules with [Pagetual] format",
                     save:"Save",
                     loadingText:"Shojo Now Loading...",
-                    opacity:"Pagination spacer opacity"
+                    opacity:"Pagination spacer opacity",
+                    sortTitle:"Sorting takes effect after the next rule update"
                 };
                 break;
         }
@@ -877,8 +881,10 @@
                 url.innerHTML=ruleUrl.url;
                 let up=document.createElement("span");
                 up.innerHTML="↑ ";
+                up.title=i18n("sortTitle");
                 let down=document.createElement("span");
                 down.innerHTML="↓ ";
+                down.title=i18n("sortTitle");
                 let del=document.createElement("span");
                 del.innerHTML="× ";
                 up.onclick=e=>{
