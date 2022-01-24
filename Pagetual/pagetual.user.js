@@ -720,6 +720,13 @@
             if(!nextLink){
                 page=this.getPage(doc);
                 nextLink=page.next;
+                if(nextLink && doc==document){
+                    let nextLinkCs=_unsafeWindow.getComputedStyle(nextLink);
+                    if(nextLinkCs.cursor=="not-allowed"){
+                        self.nextLinkHref=false;
+                        return null;
+                    }
+                }
             }
             if(nextLink){
                 if(!this.curSiteRule.nextLink && page && page.canSave){
@@ -809,18 +816,11 @@
                     }
                     storage.setItem("hpRules", self.hpRules);
                 }
-
                 let code=self.curSiteRule.init;
                 if(code){
                     Function('"use strict";' + code)();
                 }
-                let nextLink=self.getNextLink(document);
-                if(nextLink && self.nextLinkHref){
-                    let nextLinkCs=_unsafeWindow.getComputedStyle(nextLink);
-                    if(nextLinkCs.cursor=="not-allowed"){
-                        self.nextLinkHref=false;
-                    }
-                }
+                self.getNextLink(document);
                 callback();
             });
         }
