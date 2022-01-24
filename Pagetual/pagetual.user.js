@@ -7,7 +7,7 @@
 // @name:de      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      0.7.5
+// @version      0.7.6
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -511,7 +511,7 @@
                     }
                     if(end>=self.rules.length){
                         self.curSiteRule={};
-                        self.curSiteRule.url=location.href.replace(/[^\/]*$/,"").replace(/\./g,"\\.");
+                        self.curSiteRule.url=(location.origin+location.pathname).replace(/\./g,"\\.");
                         callback();
                         return;
                     }else{
@@ -556,7 +556,7 @@
                 function checkElement(ele){
                     let curHeight=parseInt(curWin.getComputedStyle(ele).height);
                     if(curHeight/bodyHeight<=0.35)return null;
-                    if(ele.children.length==0){
+                    if(ele.children.length==0 && !self.curSiteRule.pageElement){
                         self.curSiteRule.pageElement=self.geneSelector(ele.parentNode)+">"+ele.tagName;
                         self.curSiteRule.type=1;
                         debug(self.curSiteRule.pageElement);
@@ -588,9 +588,11 @@
                     if(curMaxEle && curHeight>maxHeight){
                         return checkElement(curMaxEle);
                     }
-                    self.curSiteRule.pageElement=self.geneSelector(ele)+">*";
-                    self.curSiteRule.type=1;
-                    debug(self.curSiteRule.pageElement);
+                    if(!self.curSiteRule.pageElement){
+                        self.curSiteRule.pageElement=self.geneSelector(ele)+">*";
+                        self.curSiteRule.type=1;
+                        debug(self.curSiteRule.pageElement);
+                    }
                     return ele.children;
                 }
                 pageElement=checkElement(body);
