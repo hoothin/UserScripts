@@ -8,7 +8,7 @@
 // @namespace    https://github.com/hoothin/UserScripts/tree/master/Easy%20offline
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Base64/0.2.0/base64.min.js
-// @version      1.9.6
+// @version      1.9.7
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -441,7 +441,7 @@
                     setOK:"设置成功",
                     regExpError:"含有无效正则，请重新输入",
                     addSiteRuleTitle:"自定义新增图标规则，一行一条",
-                    siteRulePlaceholder:"站点 @@ 站名 @@ 下载链接正则 @@ 图标base64 @@ 图标背景颜色 @@ 是否隐藏图标\n\n@@ 分隔，目标站点中用 $url 代替目标链接，$hash 代表目标磁链的 hash 值，${reg}用正则提取，$text代表链接文本，$title代表链接title\n\n例如：http://192.168.2.1/d2r?u=$url@@路由器下载\nhttp://xxx.com/magnet/$hash@@磁链下载@@^magnet@@data:image/png;base64,AAA@@ffffff",
+                    siteRulePlaceholder:"站点 @@ 站名 @@ 下载链接正则 @@ 图标base64 @@ 图标背景颜色 @@ 是否隐藏图标\n\n@@ 分隔，目标站点中用 $url 代替目标链接，$hash 代表目标磁链的 hash 值，${reg}用正则提取，$text代表链接文本，$title代表链接title\n\n可用//注释规则\n\n例如：http://192.168.2.1/d2r?u=$url@@路由器下载\nhttp://xxx.com/magnet/$hash@@磁链下载@@^magnet@@data:image/png;base64,AAA@@ffffff",
                     inputLink:"输入需要离线下载的链接：",
                     importCustomAlert:"点击确定追加规则，点击取消覆盖规则",
                     importOver:"规则导入完毕!",
@@ -483,7 +483,7 @@
                     setOK:"設置成功",
                     regExpError:"含有無效正則，請重新輸入",
                     addSiteRuleTitle:"自定義新增圖標規則，一行一條",
-                    siteRulePlaceholder:"站點 @@ 站名 @@ 下載鏈接正則 @@ 圖標base64 @@ 圖標背景顏色 @@ 是否隱藏圖標\n\n@@ 分隔，目標站點中用 $url 代替目標連結，$hash 代表目標磁鏈的 hash 值，${reg}用正则提取，$text代表連結文本，$title代表連結title\n\n例如：http://192.168.2.1/d2r?u=$url@@路由器下載\nhttp://xxx.com/magnet/$hash@@磁鏈下載@@^magnet@@data:image/png;base64,AAA@@ffffff",
+                    siteRulePlaceholder:"站點 @@ 站名 @@ 下載鏈接正則 @@ 圖標base64 @@ 圖標背景顏色 @@ 是否隱藏圖標\n\n@@ 分隔，目標站點中用 $url 代替目標連結，$hash 代表目標磁鏈的 hash 值，${reg}用正则提取，$text代表連結文本，$title代表連結title\n\n可用//注釋規則\n\n例如：http://192.168.2.1/d2r?u=$url@@路由器下載\nhttp://xxx.com/magnet/$hash@@磁鏈下載@@^magnet@@data:image/png;base64,AAA@@ffffff",
                     inputLink:"輸入需要離線下載的連結：",
                     importCustomAlert:"點擊確定追加規則，點擊取消覆蓋規則",
                     importOver:"規則導入完畢!",
@@ -524,7 +524,7 @@
                     setOK: "Set successfully",
                     regExpError: "Contains invalid regularity, please re-enter",
                     addSiteRuleTitle: "Customize new icon rules, one per line",
-                    siteRulePlaceholder: "site @@ sitename @@ link regexp @@ icon base64 @@ icon background color @@ hide icon\n\nUse @@ to separated, use $url for the target Link, $hash for the hash of the target magnet link, ${reg} for regexp result on link, $text for link text, $title for link title\n\nFor example: http://192.168.2.1/d2r?u=$url@@MyRouter\nhttp://xxx.com/magnet/$hash@@MyMagnetLinkDownload@@^magnet@@data:image/png;base64,AAA@@ffffff",
+                    siteRulePlaceholder: "site @@ sitename @@ link regexp @@ icon base64 @@ icon background color @@ hide icon\n\nUse @@ to separated, use $url for the target Link, $hash for the hash of the target magnet link, ${reg} for regexp result on link, $text for link text, $title for link title\n\nUse // to comment rule\n\nFor example: http://192.168.2.1/d2r?u=$url@@MyRouter\nhttp://xxx.com/magnet/$hash@@MyMagnetLinkDownload@@^magnet@@data:image/png;base64,AAA@@ffffff",
                     inputLink: "Enter the link that needs to be downloaded with this:",
                     importCustomAlert:"Ok to add rule，Cancel to cover rule",
                     importOver:"Rules import over!",
@@ -764,6 +764,7 @@
             if(siteRule){
                 var rules=siteRule.split("\n");
                 rules.forEach(rule=>{
+                    if(/^\s*\/\//.test(rule))return;
                     var ruleArr=rule.split(/\s*@@\s*/);
                     if(ruleArr[1] && (ruleArr[0].indexOf("$url")!=-1 || ruleArr[0].indexOf("$hash")!=-1 || ruleArr[0].indexOf("${")!=-1 || ruleArr[0].indexOf("$base64")!=-1)){
                         var siteConfig={};
