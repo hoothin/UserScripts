@@ -8,7 +8,7 @@
 // @namespace    https://github.com/hoothin/UserScripts/tree/master/Easy%20offline
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Base64/0.2.0/base64.min.js
-// @version      1.9.5
+// @version      1.9.6
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -16,18 +16,65 @@
 // @include      http*://115.com/*
 // @include      https://www.furk.net/*
 // @include      https://www.seedr.cc/*
+// @exclude      http://www.toodledo.com/tasks/*
+// @exclude      *://*.google.*/*
+// @exclude      *://mega.*/*
+// @exclude      *://*.mega.*/*
+// @exclude      *://*.youku.com/v_*
+// @exclude      *://*pan.baidu.com
+// @exclude      *://*.iqiyi.com/v_*
+// @exclude      *://*.iqiyi.com/w_*
+// @exclude      *://*.iqiyi.com/a_*
+// @exclude      *://*.le.com/ptv/vplay/*
+// @exclude      *://v.qq.com/x/cover/*
+// @exclude      *://v.qq.com/x/page/*
+// @exclude      *://v.qq.com/tv/*
+// @exclude      *://*.tudou.com/listplay/*
+// @exclude      *://*.tudou.com/albumplay/*
+// @exclude      *://*.tudou.com/programs/view/*
+// @exclude      *://*.mgtv.com/b/*
+// @exclude      *://film.sohu.com/album/*
+// @exclude      *://tv.sohu.com/v/*
+// @exclude      *://*.bilibili.com/video/*
+// @exclude      *://*.bilibili.com/bangumi/play/*
+// @exclude      *://*.baofeng.com/play/*
+// @exclude      *://vip.pptv.com/show/*
+// @exclude      *://v.pptv.com/show/*
+// @exclude      *://www.le.com/ptv/vplay/*
+// @exclude      *://www.wasu.cn/Play/show/*
+// @exclude      *://m.v.qq.com/x/cover/*
+// @exclude      *://m.v.qq.com/x/page/*
+// @exclude      *://m.v.qq.com/*
+// @exclude      *://m.iqiyi.com/*
+// @exclude      *://m.iqiyi.com/kszt/*
+// @exclude      *://m.youku.com/alipay_video/*
+// @exclude      *://m.mgtv.com/b/*
+// @exclude      *://m.tv.sohu.com/v/*
+// @exclude      *://m.film.sohu.com/album/*
+// @exclude      *://m.le.com/ptv/vplay/*
+// @exclude      *://m.pptv.com/show/*
+// @exclude      *://m.acfun.cn/v/*
+// @exclude      *://m.bilibili.com/video/*
+// @exclude      *://m.bilibili.com/anime/*
+// @exclude      *://m.bilibili.com/bangumi/play/*
+// @exclude      *://m.wasu.cn/Play/show/*
+// @exclude      *://www.youtube.com
+// @exclude      *://www.youtube.com/
+// @exclude      *://www.youtube.com/watch*
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_registerMenuCommand
 // @grant        GM_deleteValue
 // @grant        GM_xmlhttpRequest
 // @grant        GM_notification
+// @grant        GM_setClipboard
 // @grant        GM.setValue
 // @grant        GM.getValue
 // @grant        GM.registerMenuCommand
 // @grant        GM.deleteValue
 // @grant        GM.xmlHttpRequest
 // @grant        GM.notification
+// @grant        GM.setClipboard
 // @grant        unsafeWindow
 // @run-at       document-end
 // @supportURL   http://www.hoothin.com
@@ -399,6 +446,7 @@
                     importCustomAlert:"点击确定追加规则，点击取消覆盖规则",
                     importOver:"规则导入完毕!",
                     postOver:"发送成功，返回消息：",
+                    copyOver:"复制成功",
                     postError:"发送失败，错误内容：",
                     importCustomSame:"存在同名规则，是否覆盖？"
                 };
@@ -440,6 +488,7 @@
                     importCustomAlert:"點擊確定追加規則，點擊取消覆蓋規則",
                     importOver:"規則導入完畢!",
                     postOver:"發送成功，返回消息：",
+                    copyOver:"複製成功",
                     postError:"發送失敗，錯誤内容：",
                     importCustomSame:"存在同名規則，是否覆蓋？"
                 };
@@ -480,6 +529,7 @@
                     importCustomAlert:"Ok to add rule，Cancel to cover rule",
                     importOver:"Rules import over!",
                     postOver:"Post over, return: ",
+                    copyOver:"Copy over",
                     postError:"Fail in post, error: ",
                     importCustomSame:"Rule exists, overwritten?"
                 };
@@ -488,7 +538,7 @@
         return config[name]?config[name]:name;
     };
 
-    var _GM_xmlhttpRequest,_GM_registerMenuCommand,_GM_notification;
+    var _GM_xmlhttpRequest,_GM_registerMenuCommand,_GM_notification,_GM_setClipboard;
     if(typeof GM_xmlhttpRequest!='undefined'){
         _GM_xmlhttpRequest=GM_xmlhttpRequest;
     }else if(typeof GM!='undefined' && typeof GM.xmlHttpRequest!='undefined'){
@@ -504,8 +554,14 @@
     }else if(typeof GM!='undefined' && typeof GM.notification!='undefined'){
         _GM_notification=GM.notification;
     }
+    if(typeof GM_setClipboard!='undefined'){
+        _GM_setClipboard=GM_setClipboard;
+    }else if(typeof GM!='undefined' && typeof GM.setClipboard!='undefined'){
+        _GM_setClipboard=GM.setClipboard;
+    }
 
     if(typeof _GM_xmlhttpRequest=='undefined')_GM_xmlhttpRequest=(f)=>{};
+    if(typeof _GM_setClipboard=='undefined')_GM_setClipboard=(f)=>{};
     if(typeof _GM_registerMenuCommand=='undefined')_GM_registerMenuCommand=(s,f)=>{};
     if(typeof _GM_notification=='undefined')_GM_notification=(s)=>{};
     var _unsafeWindow=(typeof unsafeWindow=='undefined')?window:unsafeWindow;
@@ -572,24 +628,25 @@
 
     var addIconBg="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZBAMAAAA2x5hQAAAALVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADBoCg+AAAADnRSTlMAYK1vMOA/ENJ/zmdLF4e4IG4AAACPSURBVBjTYwAB9uTJ6QwwwLju3bt3C6Eclrh3IBAC4cm9gwABsLp3UPAQxPMDMh4pgbgOQB5IFwMDH5BcAFII4UGUciB4rxgY6hC8dwUMeUA2EID5CQx27x5BeEzv3hkwzEPiTUCRm4Ci7wCKmReQ7XuK4pbHKO4MwPADwn/ofkeESws0mLj7gJxGEAs1PAEp8ZbkUx9Q7gAAAABJRU5ErkJggg==";
     var downIconBg="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAMAAADzN3VRAAAARVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADc6ur3AAAAFnRSTlMAYM5vMOA/ENGegK2olI6G1b97Z0sXENA+jAAAAKFJREFUKM+FklkSxCAIRHFfss3K/Y86iQSDVqzpH7FfgQpCVfAmGx+gl9JI0qrxrcNLzooEbKUG4EKWdkCiDRV0N0RTrZ5wvdgTTgp4SzCAHxAPZkAM5GOJWuuT7FE5OVPOBFLTYb3Oc2YB5uJ8+G6pgkTGt74ntcCJHiwFLHw10Tdc93jlGXGvSRtsHNpuPs+/o1ODfxAtSL0f7HPC+L/9AF60G3QxO1UaAAAAAElFTkSuQmCC";
-    var sitesArr=[],siteSort,siteName,regs;
+    var sitesArr=[],siteSort,regs,overRegs=[];
     var isInited=false;
     var offNodes=[];
-    var offUrl,allUrl=[];
+    var offUrl,allUrl=[],nodeDict={};
     var i=0;
     var curlink;
     var isDisk=false;
     var configContent;
     var easyOfflineDisable;
-    var preNode;
+    var preNode,targetNode;
     var sNodes=[];
     var parentDiv=$("<div style='display:none;position:absolute;z-index:99999;overflow:visible;text-align:left;'></div>");
 
     if(typeof(HTMLElement)!="undefined"){
         HTMLElement.prototype.contains=function(obj) {
             while(obj){
-                if(obj==this)
+                if(obj==this){
                     return true;
+                }
                 obj=obj.parentNode;
             }
             return false;
@@ -619,8 +676,8 @@
                         sitesArr.push(siteConfig);
                     }
                 });
-                for(siteName in sites){
-                    var hasSite=false;
+                for(let siteName in sites){
+                    let hasSite=false;
                     siteSort.forEach(function(item){if(item==siteName)hasSite=true;});
                     if(hasSite)continue;
                     var siteConfig=sites[siteName];
@@ -707,10 +764,10 @@
             if(siteRule){
                 var rules=siteRule.split("\n");
                 rules.forEach(rule=>{
-                    var ruleArr=rule.replace(/\s/g,"").split("@@");
+                    var ruleArr=rule.split(/\s*@@\s*/);
                     if(ruleArr[1] && (ruleArr[0].indexOf("$url")!=-1 || ruleArr[0].indexOf("$hash")!=-1 || ruleArr[0].indexOf("${")!=-1 || ruleArr[0].indexOf("$base64")!=-1)){
                         var siteConfig={};
-                        siteConfig.directUrl=function(offUrl){
+                        siteConfig.directUrl=function(offUrl, targetNode){
                             if(ruleArr[0].indexOf("${")!=-1){
                                 var strMatch=ruleArr[0].match(/\${(.*?)}/);
                                 var regStr=strMatch?strMatch[1]:"";
@@ -722,16 +779,21 @@
                             }
                             var hash=offUrl.replace("magnet:?xt=urn:btih:","").replace(/&.*/,"");
                             var base64Str=btoa(offUrl);
-                            return ruleArr[0].replace("$url", offUrl).replace("$hash", hash).replace("$base64", base64Str).replace("$random", Math.random());
+                            return ruleArr[0].replace("$url", offUrl).replace("$hash", hash).replace("$base64", base64Str).replace("$title", targetNode.title||"title").replace("$text", targetNode.innerText||document.title).replace("$random", Math.random());
                         };
-                        if(ruleArr[2]) {
-                            siteConfig.linkRegExp=new RegExp(ruleArr[2],"i");
-                            regs.push(ruleArr[2]);
-                        }
                         if(ruleArr[3]) siteConfig.bgImg=ruleArr[3];
                         else siteConfig.bgImg=downIconBg;
                         if(ruleArr[4]) siteConfig.bgColor=ruleArr[4];
                         else siteConfig.bgColor="f2f2f2";
+                        if(ruleArr[2]) {
+                            siteConfig.linkRegExp=new RegExp(ruleArr[2],"i");
+                            if(ruleArr[5]) {
+                                siteConfig.overToShow=true;
+                                overRegs.push(ruleArr[2]);
+                            }else{
+                                regs.push(ruleArr[2]);
+                            }
+                        }
                         sites[ruleArr[1]]=siteConfig;
                     }
                 });
@@ -748,12 +810,12 @@
                 var i;
                 var curNode;
                 if(regs){
-                    var aTags = (target?$(target).find("a"):$("a")).get();
-                    for(var aTag of aTags){
-                        for(var reg of regs){
+                    let aTags = (target?$(target).find("a"):$("a")).get();
+                    for(let aTag of aTags){
+                        for(let reg of regs){
                             reg=reg.trim();
                             if(reg==="")continue;
-                            var patt=new RegExp(reg,"i");
+                            let patt=new RegExp(reg,"i");
                             if(patt.test(aTag.href) && $.inArray(aTag, rawnodes)==-1){
                                 customnodes.push(aTag);
                                 break;
@@ -791,13 +853,30 @@
                     }
                 }
 
+                let overArr=[];
+                if(overRegs){
+                    let aTags = (target?$(target).find("a"):$("a")).get();
+                    for(let aTag of aTags){
+                        for(let reg of overRegs){
+                            reg=reg.trim();
+                            if(reg==="")continue;
+                            let patt=new RegExp(reg,"i");
+                            if(patt.test(aTag.href) && !include(nodes, aTag)){
+                                nodes.push(aTag);
+                                overArr.push(aTag);
+                                break;
+                            }
+                        }
+                    }
+                }
+
                 if(nodes.length > 0){
                     init();
                     var codeList = [];
                     var listLen = nodes.length;
                     if (listLen !== 0) {
                         for (i = 0; i < listLen; i++) {
-                            curNode = nodes[i];
+                            let curNode = nodes[i];
                             if(curNode.classList.contains("whx-a"))continue;
                             if(target){
                                 if(sNodes.indexOf(curNode)!=-1)continue;
@@ -808,11 +887,13 @@
                             if(allUrl.toString().indexOf(href)==-1)allUrl.push(href);
                             clone.mouseover(function(e){
                                 var basePos=clone.offset();
+                                targetNode=clone[0];
                                 showDiskIcons(href,basePos.top,basePos.left);
                                 e.stopPropagation();
                             });
+                            nodeDict[clone[0]]=curNode;
                             $(curNode).after(clone);
-                            if(showType){
+                            if(showType || include(overArr, curNode)){
                                 clone.hide();
                                 $(curNode).mouseover(function(){
                                     if(clone.is(':hidden')){
@@ -883,7 +964,7 @@
             return str;
         }
         str = str.toUpperCase();
-        var bin =  "", returnStr = "", i;
+        var bin = "", returnStr = "", i;
         for(i = 0;i < str.length;i++){
             var charCode=str.charCodeAt(i);
             if(charCode<65)charCode-=24;
@@ -927,31 +1008,70 @@
             offNode.click(function(e){
                 offUrl=getRightUrl(offUrl);
                 if(siteConfig.directUrl){
-                    let url=siteConfig.directUrl(offUrl);
-                    if(/^p:/.test(url)){
-                        url=url.match(/p:(.*)\?(.*)/);
-                        if(!url)return;
-                        let postData=JSON.stringify(urlArgs(url[2]));
-                        url=url[1];
-                        _GM_xmlhttpRequest({
-                            method: "POST", url, data: postData,
-                            onload: (d) => {
-                                _GM_notification(i18n("postOver")+d.statusText);
-                            },
-                            onerror: (e) => {
-                                _GM_notification(i18n("postError")+e.toString());
-                            },
-                            ontimeout: (e) => {
-                                _GM_notification(i18n("postError")+e.toString());
+                    if(e.ctrlKey && e.shiftKey){
+                        let linkRegExp=siteConfig.linkRegExp || /.*/;
+                        let aTags = $("a.whx-a-node").get(),urlArr=[];
+                        for(let aTag of aTags){
+                            aTag=nodeDict[aTag];
+                            if(!aTag)continue;
+                            if(linkRegExp.test(aTag.href)){
+                                let url=siteConfig.directUrl(getRightUrl(aTag.href), aTag);
+                                if(/^c:/.test(url)){
+                                    urlArr.push(url.replace(/^c:/i,""));
+                                }else if(/^p:/.test(url)){
+                                    url=url.match(/p:(.*)\?(.*)/);
+                                    if(!url)return;
+                                    let postData=JSON.stringify(urlArgs(url[2]));
+                                    url=url[1];
+                                    _GM_xmlhttpRequest({
+                                        method: "POST", url, data: postData,
+                                        onload: (d) => {
+                                            _GM_notification(i18n("postOver")+d.statusText);
+                                        },
+                                        onerror: (e) => {
+                                            _GM_notification(i18n("postError")+e.toString());
+                                        },
+                                        ontimeout: (e) => {
+                                            _GM_notification(i18n("postError")+e.toString());
+                                        }
+                                    });
+                                }
                             }
-                        });
+                        }
+                        if(urlArr.length>0){
+                            _GM_setClipboard(urlArr.join("\n"));
+                            _GM_notification(i18n("copyOver"));
+                        }
                     }else{
-                        offNode.attr('href', url);
+                        let url=siteConfig.directUrl(offUrl, nodeDict[targetNode]);
+                        if(/^c:/.test(url)){
+                            _GM_setClipboard(url.replace(/^c:/i,""));
+                            _GM_notification(i18n("copyOver"));
+                        }else if(/^p:/.test(url)){
+                            url=url.match(/p:(.*)\?(.*)/);
+                            if(!url)return;
+                            let postData=JSON.stringify(urlArgs(url[2]));
+                            url=url[1];
+                            _GM_xmlhttpRequest({
+                                method: "POST", url, data: postData,
+                                onload: (d) => {
+                                    _GM_notification(i18n("postOver")+d.statusText);
+                                },
+                                onerror: (e) => {
+                                    _GM_notification(i18n("postError")+e.toString());
+                                },
+                                ontimeout: (e) => {
+                                    _GM_notification(i18n("postError")+e.toString());
+                                }
+                            });
+                        }else{
+                            offNode.attr('href', url);
+                        }
                     }
                 }else{
-                    if(e.ctrlKey && e.shiftKey && siteConfig.canMul)
+                    if(e.ctrlKey && e.shiftKey && siteConfig.canMul){
                         storage.setItem(siteConfig.name+":eoUrl",allUrl);
-                    else storage.setItem(siteConfig.name+":eoUrl",offUrl);
+                    }else storage.setItem(siteConfig.name+":eoUrl",offUrl);
                 }
                 e.stopPropagation();
             });
@@ -968,8 +1088,9 @@
         parentDiv.prepend($('<div style="position:absolute;width:25px;height:'+marginTop+'px;margin-top:-'+(marginTop-25)+'px;background-color:white;opacity:0.001;"></div>'));
         parentDiv.mouseout(function(e){
             var relatedTarget=(e.relatedTarget||e.fromElement);
-            if(relatedTarget && !parentDiv[0].contains(relatedTarget))
+            if(relatedTarget && !parentDiv[0].contains(relatedTarget)){
                 hideIcons();
+            }
         });
         parentDiv.mouseover(function(e){
             e.stopPropagation();
