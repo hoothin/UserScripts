@@ -695,8 +695,10 @@
                 this.nextLinkHref="#";
                 return true;
             }else if(this.curSiteRule.nextLinkByJs){
-                let targetUrl=Function("doc",'"use strict";' + this.curSiteRule.nextLinkByJs)(doc);;
-                nextLink={href:targetUrl};
+                try{
+                    let targetUrl=Function("doc",'"use strict";' + this.curSiteRule.nextLinkByJs)(doc);;
+                    nextLink={href:targetUrl};
+                }catch(e){}
             }else if(this.curSiteRule.nextLinkByUrl){
                 let targetUrl=this.curUrl.replace(new RegExp(this.curSiteRule.nextLinkByUrl[0]), this.curSiteRule.nextLinkByUrl[1]);
                 if(targetUrl != this.curUrl){
@@ -707,8 +709,11 @@
                             let result=code.match(/^(\d+)\+1$/);
                             if(result){
                                 result=parseInt(result[1])+1;
+                            }else{
+                                try{
+                                    result=Function('"use strict";return ' + code)();;
+                                }catch(e){}
                             }
-                            else result=Function('"use strict";return ' + code)();;
                             targetUrl=targetUrl.replace(rep, result);
                         });
                     }
@@ -761,7 +766,9 @@
         pageAction(doc,eles){
             let code=this.curSiteRule.pageAction;
             if(code){
-                Function("doc","eles",'"use strict";' + code)(doc,eles);
+                try{
+                    Function("doc","eles",'"use strict";' + code)(doc,eles);
+                }catch(e){}
             }
             let css=this.curSiteRule.css;
             if(css){
@@ -818,7 +825,9 @@
                 }
                 let code=self.curSiteRule.init;
                 if(code){
-                    Function('"use strict";' + code)();
+                    try{
+                        Function('"use strict";' + code)();
+                    }catch(e){}
                 }
                 self.getNextLink(document);
                 callback();
@@ -1579,7 +1588,9 @@
                         isPause=true;
                     }
                 };
-                Function("over",'"use strict";' + ruleParser.curSiteRule.pageElementByJs)(over);
+                try{
+                    Function("over",'"use strict";' + ruleParser.curSiteRule.pageElementByJs)(over);
+                }catch(e){}
             }else if(ruleParser.curSiteRule.action==1 && !isJs){
                 requestFromIframe(nextLink, (doc, eles)=>{
                     isLoading=false;
