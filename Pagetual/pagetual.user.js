@@ -815,9 +815,11 @@
                     Function('"use strict";' + code)();
                 }
                 let nextLink=self.getNextLink(document);
-                let nextLinkCs=_unsafeWindow.getComputedStyle(nextLink);
-                if(nextLinkCs.cursor=="not-allowed"){
-                    self.nextLinkHref=false;
+                if(nextLink && self.nextLinkHref){
+                    let nextLinkCs=_unsafeWindow.getComputedStyle(nextLink);
+                    if(nextLinkCs.cursor=="not-allowed"){
+                        self.nextLinkHref=false;
+                    }
                 }
                 callback();
             });
