@@ -471,6 +471,15 @@
                 }
                 let urlReg=new RegExp(rule.url, "i");
                 if(urlReg.test(location.href)){
+                    let pageElement,nextLink,insert;
+                    if(rule.pageElement)pageElement=rule.type==0?getElementByXpath(rule.pageElement):document.querySelector(rule.pageElement);
+                    if(rule.nextLink)nextLink=rule.type==0?getElementByXpath(rule.nextLink):document.querySelector(rule.nextLink);
+                    if(rule.insert)insert=rule.type==0?getElementByXpath(rule.insert):document.querySelector(rule.insert);
+                    if((rule.pageElement && !pageElement) ||
+                       (rule.nextLink && !nextLink) ||
+                       (rule.insert && !insert)){
+                        continue;
+                    }
                     this.curSiteRule=rule;
                     debug(rule);
                     callback();
