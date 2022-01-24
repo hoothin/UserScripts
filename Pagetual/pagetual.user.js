@@ -7,7 +7,7 @@
 // @name:de      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      0.7.6
+// @version      0.7.7
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -137,6 +137,7 @@
                     save:"保存设置",
                     loadingText:"少女祈祷中...",
                     opacity:"分页隔条透明值",
+                    hideBar:"空白处双击隐藏分页隔条",
                     sortTitle:"排序在下次更新规则后生效"
                 };
                 break;
@@ -166,6 +167,7 @@
                     save:"存儲設置",
                     loadingText:"少女祈禱中...",
                     opacity:"分頁隔條透明值",
+                    hideBar:"空白處雙擊隱藏分頁隔條",
                     sortTitle:"排序在下次更新規則後生效"
                 };
                 break;
@@ -194,6 +196,7 @@
                     save: "設定を保存",
                     loadingText: "少女祈祷中...",
                     opacity:"ページネーションバーの透明値",
+                    hideBar:"空白部分をダブルクリックして、ページ区切り文字を非表示にします",
                     sortTitle:"並べ替えは、次のルールの更新後に有効になります"
                 };
                 break;
@@ -222,6 +225,7 @@
                     save:"Save",
                     loadingText:"Shojo Now Loading...",
                     opacity:"Pagination spacer opacity",
+                    hideBar:"Double-click on the blank space to hide the paging spacer",
                     sortTitle:"Sorting takes effect after the next rule update"
                 };
                 break;
@@ -1032,6 +1036,17 @@
         opacityTitle.appendChild(opacityInput);
         configCon.insertBefore(opacityTitle, insertPos);
 
+
+        let hideBarTitle=document.createElement("h2");
+        hideBarTitle.innerHTML=i18n("hideBar");
+        let hideBarInput=document.createElement("input");
+        hideBarInput.type="checkbox";
+        hideBarInput.style.width="50px";
+        hideBarInput.style.height="20px";
+        hideBarInput.checked=rulesData.hideBar;
+        hideBarTitle.appendChild(hideBarInput);
+        configCon.insertBefore(hideBarTitle, insertPos);
+
         let customRulesTitle=document.createElement("h2");
         customRulesTitle.innerHTML=i18n("customRules")
         configCon.insertBefore(customRulesTitle, insertPos);
@@ -1061,6 +1076,7 @@
                 return;
             }
             rulesData.opacity=opacityInput.value/100;
+            rulesData.hideBar=hideBarInput.checked;
             storage.setItem("importRuleUrl", rulesData);
             let customUrls=customUrlsInput.value.trim();
             if(customUrls){
@@ -1182,6 +1198,9 @@
                 }
                 if(typeof(rulesData.opacity)=="undefined"){
                     rulesData.opacity=0.3;
+                }
+                if(typeof(rulesData.hideBar)=="undefined"){
+                    rulesData.hideBar=true;
                 }
                 storage.getItem("forceState_"+location.host, v=>{
                     storage.getItem("ruleLastUpdate", date=>{
@@ -1344,7 +1363,7 @@
 
     var upSvg=`<svg style="position:absolute;cursor: pointer;margin: 0 -45px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6364"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a" p-id="6365"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a" p-id="6366"></path></svg>`;
     var downSvg=`<svg style="position:absolute;cursor: pointer;margin: 0 15px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;transform: rotate(180deg);" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6364"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a" p-id="6365"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a" p-id="6366"></path></svg>`;
-    var pageBarStyle=`box-shadow: 0px 0px 10px 0px #000000aa;border-radius: 20px;background-color: rgb(240 240 240 / 80%);visibility: visible; position: initial; width: auto; height: 30px; float: none; clear: both; margin: 20px auto; text-align: center; display: block;`;
+    var pageBarStyle=`padding:0;box-shadow: 0px 0px 10px 0px #000000aa;border-radius: 20px;background-color: rgb(240 240 240 / 80%);visibility: visible; position: initial; width: auto; height: 30px; float: none; clear: both; margin: 20px auto; text-align: center; display: block;`;
     var pageTextStyle=`line-height: 30px;text-decoration: none;user-select: none;visibility: visible;position: initial;width: auto;height: auto;float: none;clear: both;margin: 0px auto;text-align: center;display: inline;font-weight: bold;font-style: normal;font-size: 16px;letter-spacing: initial;vertical-align: super;color: rgb(85, 85, 95);`;
 
     var isPause=false,isLoading=false,curPage=1,forceState=0;
@@ -1377,8 +1396,8 @@
         }, false);
         document.addEventListener('dblclick', e=>{
             setTimeout(()=>{
-                changeStop(!isPause, true);
-            },300);
+                changeStop(!isPause, rulesData.hideBar);
+            },200);
         });
     }
 
