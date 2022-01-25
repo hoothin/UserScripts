@@ -7,7 +7,7 @@
 // @name:de      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      0.8.1
+// @version      0.8.2
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -580,6 +580,7 @@
                     let curHeight=parseInt(curWin.getComputedStyle(ele).height);
                     if(curHeight/bodyHeight<=0.35)return null;
                     if(ele.children.length==0 && !self.curSiteRule.pageElement){
+                        if(ele.parentNode.tagName=="P")ele=ele.parentNode;
                         self.curSiteRule.pageElement=self.geneSelector(ele.parentNode)+">"+ele.tagName;
                         self.curSiteRule.type=1;
                         debug(self.curSiteRule.pageElement);
@@ -612,6 +613,7 @@
                         return checkElement(curMaxEle);
                     }
                     if(!self.curSiteRule.pageElement){
+                        if(ele.tagName=="P")ele=ele.parentNode;
                         self.curSiteRule.pageElement=self.geneSelector(ele)+">*";
                         self.curSiteRule.type=1;
                         debug(self.curSiteRule.pageElement);
@@ -628,8 +630,8 @@
             if(_unsafeWindow.Discourse)return {next:null,canSave:false};
             let canSave=false;//發現頁碼選擇器在其他頁對不上，還是別保存了
             let url=this.curUrl;
-            let pageNum=0,preStr="",afterStr="";
-            let pageMatch1=url.match(/(.*[a-zA-Z0-9\/][\-_](?:p|page)?)(\d+)(\.html?$|$)/i);
+            let pageNum=1,preStr="",afterStr="";
+            let pageMatch1=url.match(/(.*[a-z\/\-_](?:p|page)?)(\d+)(\.html?$|$)/i);
             let pageMatch2=url.match(/(.*[\?&]p(?:age)?=)(\d+)($|[#&].*)/i);
             if(pageMatch1){
                 preStr=pageMatch1[1];
@@ -702,7 +704,7 @@
                             nextt=aTag;
                         }else if(aTag.href.replace(preStr,"").replace(afterStr,"")==parseInt(pageNum)+1){
                             nextt=aTag;
-                        }else if(aTag.href.indexOf(url)!=-1 && /^[\/\?&]?[_-]?(p|page)?=?2(\?|&|$)/i.test(aTag.href.replace(url,""))){
+                        }else if(aTag.href.indexOf(url)!=-1 && /^[\/\?&]?[_-]?(p|page)?=?2(\?|&|$)/i.test(aTag.href.replace(url,"").replace(/\.html?$/i,""))){
                             nextt=aTag;
                         }
                     }
@@ -1621,7 +1623,8 @@
     function nextPage(){
         if(isPause || isLoading)return;
         let nextLink=ruleParser.nextLinkHref;
-        let insert=ruleParser.getInsert();
+        let insert;
+        if(nextLink)insert=ruleParser.getInsert();
         if(nextLink && insert){
             let isJs=/^(javascript|#)/.test(nextLink.replace(location.href,""));
             if(location.protocol=="https:" && /^http:/.test(nextLink)){
