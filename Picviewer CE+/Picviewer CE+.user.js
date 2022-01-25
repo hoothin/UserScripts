@@ -9293,7 +9293,7 @@ ImgOps | https://imgops.com/#b#`;
                 if(node.nodeName == "HTML" || node.nodeName == "#document")
                     return false;
                 let nodeStyle = unsafeWindow.getComputedStyle(node);
-                return node && nodeStyle.backgroundImage && /^\s*url\(/i.test(nodeStyle.backgroundImage) && !/^\s*url\(\s*['"]?\s*about:blank/i.test(nodeStyle.backgroundImage) && parseFloat(nodeStyle.width) > prefs.floatBar.minSizeLimit.w && parseFloat(nodeStyle.height) > prefs.floatBar.minSizeLimit.h;
+                return node && nodeStyle.backgroundImage && /^\s*url\(\s*['"]?\s*[^a\s]/i.test(nodeStyle.backgroundImage) && parseFloat(nodeStyle.width) > prefs.floatBar.minSizeLimit.w && parseFloat(nodeStyle.height) > prefs.floatBar.minSizeLimit.h;
             };
             if (target.nodeName != 'IMG'){
                 if(target.nodeName == "AREA")target=target.parentNode;
@@ -9310,6 +9310,10 @@ ImgOps | https://imgops.com/#b#`;
                         noActual:noActual,
                         img: target
                     };
+                }else if(target.previousElementSibling && target.previousElementSibling.tagName=="IMG"){
+                    if(unsafeWindow.getComputedStyle(target).position=="absolute" || target.nodeName == "MAP"){
+                        target=target.previousElementSibling;
+                    }
                 }else if(target.childNodes.length<=2 && target.querySelectorAll("img").length==1){
                     target=target.querySelector("img");
                 }else if(target.parentNode){
@@ -9327,8 +9331,8 @@ ImgOps | https://imgops.com/#b#`;
                             noActual:noActual,
                             img: target
                         };
-                    }else if(unsafeWindow.getComputedStyle(target).position=="absolute" || target.nodeName == "MAP"){
-                        /*var imgChildren=[],availableImgs = [];
+                    }/*else if(unsafeWindow.getComputedStyle(target).position=="absolute" || target.nodeName == "MAP"){
+                        var imgChildren=[],availableImgs = [];
                         [].forEach.call(target.parentNode.querySelectorAll('img'),function(img){
                             var imgStyle=unsafeWindow.getComputedStyle(img);
                             if(imgStyle.display != "none"){
@@ -9358,8 +9362,8 @@ ImgOps | https://imgops.com/#b#`;
                             }else if(availableImgs.length == 1){
                                 target=availableImgs[0];
                             }
-                        }*/
-                    }
+                        }
+                    }*/
                 }
                 if(result && !/^data:/i.test(result.src)){
                     if(matchedRule.rules.length>0 && target.nodeName != 'IMG'){
