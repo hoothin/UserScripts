@@ -9262,6 +9262,11 @@ ImgOps | https://imgops.com/#b#`;
             if (target.nodeName=="PICTURE"){
                 target=target.querySelector("img");
             }
+            if(e.type=="mousemove"){
+                if(target.nodeName != 'IMG' || !checkPreview(e) || (uniqueImgWin && !uniqueImgWin.removed)){
+                    return;
+                }
+            }
 
             // 扩展模式，检查前面一个是否为 img
             if (target.nodeName != 'IMG' && matchedRule.rules.length>0 && matchedRule.ext) {
@@ -9565,6 +9570,7 @@ ImgOps | https://imgops.com/#b#`;
         addPageScript();
 
         document.addEventListener('mouseover', globalMouseoverHandler, true);
+        document.addEventListener('mousemove', globalMouseoverHandler, true);
 
         document.addEventListener('mouseout',e=>{
             if(uniqueImgWin && !uniqueImgWin.removed){
