@@ -7,7 +7,7 @@
 // @name:de      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      0.8.2
+// @version      0.8.3
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -631,7 +631,7 @@
             let canSave=false;//發現頁碼選擇器在其他頁對不上，還是別保存了
             let url=this.curUrl;
             let pageNum=1,preStr="",afterStr="";
-            let pageMatch1=url.match(/(.*[a-z\/\-_](?:p|page)?)(\d+)(\.html?$|$)/i);
+            let pageMatch1=url.match(/(.*[a-z\/\-_](?:p|page)?\/?)(\d+)(\.html?$|$|\/$)/i);
             let pageMatch2=url.match(/(.*[\?&]p(?:age)?=)(\d+)($|[#&].*)/i);
             if(pageMatch1){
                 preStr=pageMatch1[1];
@@ -704,7 +704,7 @@
                             nextt=aTag;
                         }else if(aTag.href.replace(preStr,"").replace(afterStr,"")==parseInt(pageNum)+1){
                             nextt=aTag;
-                        }else if(aTag.href.indexOf(url)!=-1 && /^[\/\?&]?[_-]?(p|page)?=?2(\?|&|$)/i.test(aTag.href.replace(url,"").replace(/\.html?$/i,""))){
+                        }else if(aTag.href.indexOf(url)!=-1 && /^[\/\?&]?[_-]?(p|page)?=?\/?2(\/|\?|&|$)/i.test(aTag.href.replace(url,"").replace(/\.html?$/i,""))){
                             nextt=aTag;
                         }
                     }
