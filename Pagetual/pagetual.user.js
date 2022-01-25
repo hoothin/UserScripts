@@ -1475,6 +1475,7 @@
 
         upSpan.addEventListener("click", e=>{
             changeStop(true);
+            pageBar.title=i18n(isPause?"enable":"disable");
             document.body.scrollTop=0;
             document.documentElement.scrollTop=0;
             e.preventDefault();
@@ -1482,6 +1483,7 @@
         });
         downSpan.addEventListener("click", e=>{
             changeStop(true);
+            pageBar.title=i18n(isPause?"enable":"disable");
             document.body.scrollTop=9999999;
             document.documentElement.scrollTop=9999999;
             e.preventDefault();
