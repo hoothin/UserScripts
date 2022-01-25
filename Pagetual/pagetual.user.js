@@ -7,7 +7,7 @@
 // @name:de      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      0.8.0
+// @version      0.8.1
 // @description  Simply auto load the next page
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -625,6 +625,7 @@
         }
 
         getPage(doc){
+            if(_unsafeWindow.Discourse)return {next:null,canSave:false};
             let canSave=false;//發現頁碼選擇器在其他頁對不上，還是別保存了
             let url=this.curUrl;
             let pageNum=0,preStr="",afterStr="";
