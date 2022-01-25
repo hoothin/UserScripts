@@ -8,7 +8,7 @@
 // @namespace    https://github.com/hoothin/UserScripts/tree/master/Easy%20offline
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Base64/0.2.0/base64.min.js
-// @version      1.9.7
+// @version      1.9.8
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -894,14 +894,18 @@
                             });
                             nodeDict[clone[0]]=curNode;
                             $(curNode).after(clone);
-                            if(showType || include(overArr, curNode)){
+                            let mouseOverType=include(overArr, curNode);
+                            if(showType || mouseOverType){
                                 clone.hide();
-                                $(curNode).mouseover(function(){
-                                    if(clone.is(':hidden')){
+                                $(curNode).mouseover(function(e){
+                                    if(clone.is(':hidden') && (!mouseOverType || e.ctrlKey)){
                                         if(preNode)preNode.hide(100);
                                         clone.show(100);
                                         preNode=clone;
                                     }
+                                });
+                                clone.mouseout(function(e){
+                                    clone.hide();
                                 });
                             }
                         }
