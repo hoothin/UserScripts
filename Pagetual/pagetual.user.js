@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      0.8.6
+// @version      0.8.7
 // @description  Simply auto loading paginated web pages
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -385,7 +385,7 @@
         }
 
         saveCurSiteRule(){
-            if(!this.curSiteRule || !this.curSiteRule.url)return;
+            if(!this.curSiteRule || !this.curSiteRule.url || this.curSiteRule.singleUrl)return;
             this.hpRules=this.hpRules.filter(item=>{return item&&item.url!=this.curSiteRule.url});
             this.hpRules.unshift(this.curSiteRule);
             if(this.hpRules.length>30){
@@ -582,8 +582,8 @@
                 let body=doc.body;
                 if(!body)return null;
                 let bodyHeight=parseInt(curWin.getComputedStyle(body).height);
+                let curHeight=bodyHeight;
                 function checkElement(ele){
-                    let curHeight=parseInt(curWin.getComputedStyle(ele).height);
                     if(curHeight/bodyHeight<=0.35)return null;
                     if(ele.children.length==0 && !self.curSiteRule.pageElement){
                         if(ele.parentNode.tagName=="P")ele=ele.parentNode;
@@ -610,7 +610,7 @@
                             moreChild=moreChild.nextElementSibling;
                         }
                         if(curMaxEle==null || curMaxArea<a){
-                            curHeight=h;
+                            if(h>0)curHeight=h;
                             curMaxArea=a;
                             curMaxEle=curNode;
                         }
