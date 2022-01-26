@@ -81,5 +81,15 @@
     "url":"^https://www\\.dm5\\.com/m",
     "pageElement":".view-main>.item",
     "nextLink":"span.current+a"
+  },
+  {
+    "name":"动漫啦",
+    "url":"https://www\\.dongman\\.la/manhua/chapter/",
+    "pageElement":".chapter-images img",
+    "nextLink":".mdui-bottom-nav>a+a",
+    "init":"let is=document.querySelectorAll('.chapter-images img'),j=document.querySelector('.lazyBox');is.forEach(i=>{i.src=i.dataset.srcset;j.appendChild(i);})",
+    "pageAction":"let j=document.querySelector('.lazyBox');eles.forEach(i=>{i.src=i.dataset.srcset;})",
+    "insert":".lazyBox",
+    "insertPos":"2"
   }
 ]
