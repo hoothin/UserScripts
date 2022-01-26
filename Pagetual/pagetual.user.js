@@ -860,7 +860,7 @@
         initPage(callback){
             let self=this;
             this.getRule(()=>{
-                if(self.curSiteRule){
+                if(self.curSiteRule && !self.curSiteRule.singleUrl){
                     self.hpRules=self.hpRules.filter(item=>{return item&&item.url!=self.curSiteRule.url});
                     self.hpRules.unshift(self.curSiteRule);
                     if(self.hpRules.length>30){
