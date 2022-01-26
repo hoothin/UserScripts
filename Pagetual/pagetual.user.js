@@ -1250,7 +1250,7 @@
                         initConfig();
                         if(forceState==1)return;
                         let now=new Date().getTime();
-                        if(!date || now-date>3*24*60*60*1000){
+                        if(!date || now-date>2*24*60*60*1000){
                             storage.setItem("ruleLastUpdate", now);
                             storage.setItem("hpRules", []);
                             let ruleIndex=0;
