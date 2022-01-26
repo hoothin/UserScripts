@@ -477,6 +477,14 @@
                 }
                 let urlReg=new RegExp(rule.url, "i");
                 if(urlReg.test(location.href)){
+                    if(rule.wait){
+                        setTimeout(()=>{
+                            self.curSiteRule=rule;
+                            debug(rule);
+                            callback();
+                        },parseInt(rule.wait));
+                        return;
+                    }
                     let pageElement,nextLink,insert;
                     if(rule.pageElement)pageElement=rule.type==0?getElementByXpath(rule.pageElement):document.querySelector(rule.pageElement);
                     if(rule.nextLink)nextLink=rule.type==0?getElementByXpath(rule.nextLink):document.querySelector(rule.nextLink);
@@ -497,6 +505,14 @@
                 if(!rule || rule.enable==0 || !rule.url)continue;
                 let urlReg=new RegExp(rule.url, "i");
                 if(urlReg.test(location.href)){
+                    if(rule.wait){
+                        setTimeout(()=>{
+                            self.curSiteRule=rule;
+                            debug(rule);
+                            callback();
+                        },parseInt(rule.wait));
+                        return;
+                    }
                     let pageElement,nextLink,insert;
                     if(rule.pageElement)pageElement=rule.type==0?getElementByXpath(rule.pageElement):document.querySelector(rule.pageElement);
                     if(rule.nextLink)nextLink=rule.type==0?getElementByXpath(rule.nextLink):document.querySelector(rule.nextLink);
@@ -522,6 +538,14 @@
                         if(rule.enable==0)continue;
                         let urlReg=new RegExp(rule.url, "i");
                         if(urlReg.test(location.href)){
+                            if(rule.wait){
+                                setTimeout(()=>{
+                                    self.curSiteRule=rule;
+                                    debug(rule);
+                                    callback();
+                                },parseInt(rule.wait));
+                                return;
+                            }
                             let pageElement,nextLink,insert;
                             if(rule.pageElement)pageElement=rule.type==0?getElementByXpath(rule.pageElement):document.querySelector(rule.pageElement);
                             if(rule.nextLink)nextLink=rule.type==0?getElementByXpath(rule.nextLink):document.querySelector(rule.nextLink);
@@ -1559,7 +1583,7 @@
                         nextLink.click();
                         setTimeout(()=>{
                             checkPage();
-                        },1000);
+                        },500);
                     }
                 }else{
                     isPause=true;
@@ -1573,10 +1597,7 @@
                 return;
             }
             let eles=ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView, true);
-            if(!eles || eles.length==0){
-                isPause=true;
-                callback(false, false);
-            }else if(orgPage == eles[0]){
+            if(!eles || eles.length==0 || orgPage == eles[0]){
                 setTimeout(()=>{
                     checkPage();
                 },500);
