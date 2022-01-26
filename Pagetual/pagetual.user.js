@@ -581,7 +581,7 @@
             if((!pageElement || pageElement.length==0) && curWin && !dontFind){
                 let body=doc.body;
                 if(!body)return null;
-                let bodyHeight=parseInt(curWin.getComputedStyle(body).height);
+                let bodyHeight=parseInt(body.scrollHeight);
                 let curHeight=bodyHeight;
                 function checkElement(ele){
                     if(curHeight/bodyHeight<=0.35)return null;
@@ -596,13 +596,13 @@
                     for(i=0;i<ele.children.length;i++){
                         let curNode=ele.children[i];
                         let comStyle=curWin.getComputedStyle(curNode);
-                        let h=parseInt(comStyle.height);
+                        let h=parseInt(curNode.scrollHeight);
                         let w=parseInt(comStyle.width);
                         if(isNaN(h) || isNaN(w))continue;
                         let a=h*w+h,moreChild=curNode.children[0];
                         while(moreChild){
                             comStyle=curWin.getComputedStyle(moreChild);
-                            let ch=parseInt(comStyle.height);
+                            let ch=parseInt(moreChild.scrollHeight);
                             let cw=parseInt(comStyle.width);
                             if(moreChild.innerText!="" && !isNaN(ch) && !isNaN(cw)){
                                 a+=ch*cw;
