@@ -6,7 +6,7 @@
 // @description          Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version              2022.1.25.1
+// @version              2022.1.26.1
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -234,6 +234,7 @@
                 galleryDescriptionLength1:"注释的最大宽度",
                 galleryDescriptionLength2:" 个字符",
                 galleryAutoOpenSites:"自动打开图库的网址正则，一行一条，若开头加@则自动展开图库",
+                autoOpenViewmore:"打开图库时自动展开",
                 gallerySearchData:"搜图站点设置，清空还原",
                 galleryEditSite:"在线编辑站点",
                 imgWindow:"图片窗口",
@@ -447,6 +448,7 @@
                 galleryDescriptionLength1:"注釋的最大寬度",
                 galleryDescriptionLength2:" 個字元",
                 galleryAutoOpenSites:"自動打開圖庫的網址正則，一行一條，若前綴@則自動展開圖庫",
+                autoOpenViewmore:"打開圖庫時自動展開",
                 gallerySearchData:"搜圖站點設置，清空還原",
                 galleryEditSite:"在線編輯站點",
                 imgWindow:"圖片窗口",
@@ -659,6 +661,7 @@
                 galleryDescriptionLength1:"Maximum of annotation is",
                 galleryDescriptionLength2:"Characters",
                 galleryAutoOpenSites:"Regulars of urls for auto open gallery, one per line, start with @ for ViewMore",
+                autoOpenViewmore:"Auto view more when open gallery",
                 gallerySearchData:"Site rules for search, empty it to restore",
                 galleryEditSite:"Online editing site",
                 imgWindow:"ImgWindow",
@@ -847,7 +850,8 @@ ImgOps | https://imgops.com/#b#`;
                     h:200
                 },
                 searchData:defaultSearchData,
-                downloadWithZip:false
+                downloadWithZip:false,
+                autoOpenViewmore:false
             },
 
             imgWindow:{// 图片窗相关设置
@@ -2679,54 +2683,9 @@ ImgOps | https://imgops.com/#b#`;
                                     //saveAs(node.dataset.src, location.host+"-"+srcSplit[srcSplit.length-1]);
                                 }
                             });
-                            if(prefs.gallery.downloadWithZip){
-                                _GM_notification(i18n("galleryDownloadWithZipAlert"));
-                                var zip = new JSZip(),downloaded=0;
-                                var fileName = document.title + ".zip";
-                                for(let i=0; i<saveParams.length; i++){
-                                    self.dataURLToCanvas(saveParams[i][0], canvas=>{
-                                        if(!canvas){
-                                            downloaded++;
-                                            if(downloaded == saveParams.length){
-                                                zip.generateAsync({type:"blob"}).then(function(content){
-                                                    saveAs(content, fileName);
-                                                    downloading=false;
-                                                })
-                                            }
-                                            return;
-                                        }
-                                        canvas.toBlob(blob=>{
-                                            zip.file(saveParams[i][1].replace(/\.[^\.]+$/,"")+'.jpg',blob);
-                                            downloaded++;
-                                            if(downloaded == saveParams.length){
-                                                zip.generateAsync({type:"blob"}).then(function(content){
-                                                    saveAs(content, fileName);
-                                                    downloading=false;
-                                                })
-                                            }
-                                        }, "image/jpg");
-                                    });
-                                };
-                                break;
-                            }
-
-                            let download5Times=function(){
-                                for(let i=0;i<5;i++){
-                                    let saveParam=saveParams.shift();
-                                    if(saveParam){
-                                        _GM_download(saveParam[0], saveParam[1]);
-                                    }else{
-                                        downloading=false;
-                                        break;
-                                    }
-                                }
-                                if(saveParams.length>0){
-                                    setTimeout(()=>{
-                                        download5Times();
-                                    },1000);
-                                }
-                            };
-                            download5Times();
+                            self.batchDownload(saveParams, ()=>{
+                                downloading=false;
+                            });
                             break;
                         case 'copyImages':
                             self.copyImages(true);
@@ -3232,7 +3191,57 @@ ImgOps | https://imgops.com/#b#`;
                 this.initToggleBar();
                 this.initZoom();
             },
+            batchDownload:function(saveParams, callback){
+                var self=this;
+                if(prefs.gallery.downloadWithZip){
+                    _GM_notification(i18n("galleryDownloadWithZipAlert"));
+                    var zip = new JSZip(),downloaded=0;
+                    var fileName = document.title + ".zip";
+                    for(let i=0; i<saveParams.length; i++){
+                        self.dataURLToCanvas(saveParams[i][0], canvas=>{
+                            if(!canvas){
+                                downloaded++;
+                                if(downloaded == saveParams.length){
+                                    zip.generateAsync({type:"blob"}).then(function(content){
+                                        saveAs(content, fileName);
+                                        callback();
+                                    })
+                                }
+                                return;
+                            }
+                            canvas.toBlob(blob=>{
+                                zip.file(saveParams[i][1].replace(/\.[^\.]+$/,"")+'.jpg',blob);
+                                downloaded++;
+                                if(downloaded == saveParams.length){
+                                    zip.generateAsync({type:"blob"}).then(function(content){
+                                        saveAs(content, fileName);
+                                        callback();
+                                    })
+                                }
+                            }, "image/jpg");
+                        });
+                    };
+                    return;
+                }
 
+                let download5Times=function(){
+                    for(let i=0;i<5;i++){
+                        let saveParam=saveParams.shift();
+                        if(saveParam){
+                            _GM_download(saveParam[0], saveParam[1]);
+                        }else{
+                            callback();
+                            break;
+                        }
+                    }
+                    if(saveParams.length>0){
+                        setTimeout(()=>{
+                            download5Times();
+                        },1000);
+                    }
+                };
+                download5Times();
+            },
             changeMinView:function(){
                 var sizeInputH=this.gallery.querySelector("#minsizeH");
                 var sizeInputW=this.gallery.querySelector("#minsizeW");
@@ -3441,11 +3450,66 @@ ImgOps | https://imgops.com/#b#`;
                     });
                     let img=imgSpan.querySelector("img");
                     var addDlSpan=(img, imgSpan, curNode, clickCb)=>{
-                        var dlSpan = document.createElement('p');
+                        var dlSpan=document.createElement('p');
                         dlSpan.innerHTML=createHTML('<svg class="icon" style="width: 20px;height: 20px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1100"><path d="M768 768q0-14.857143-10.857143-25.714286t-25.714286-10.857143-25.714285 10.857143-10.857143 25.714286 10.857143 25.714286 25.714285 10.857143 25.714286-10.857143 10.857143-25.714286z m146.285714 0q0-14.857143-10.857143-25.714286t-25.714285-10.857143-25.714286 10.857143-10.857143 25.714286 10.857143 25.714286 25.714286 10.857143 25.714285-10.857143 10.857143-25.714286z m73.142857-128v182.857143q0 22.857143-16 38.857143t-38.857142 16H91.428571q-22.857143 0-38.857142-16t-16-38.857143v-182.857143q0-22.857143 16-38.857143t38.857142-16h265.714286l77.142857 77.714286q33.142857 32 77.714286 32t77.714286-32l77.714285-77.714286h265.142858q22.857143 0 38.857142 16t16 38.857143z m-185.714285-325.142857q9.714286 23.428571-8 40l-256 256q-10.285714 10.857143-25.714286 10.857143t-25.714286-10.857143L230.285714 354.857143q-17.714286-16.571429-8-40 9.714286-22.285714 33.714286-22.285714h146.285714V36.571429q0-14.857143 10.857143-25.714286t25.714286-10.857143h146.285714q14.857143 0 25.714286 10.857143t10.857143 25.714286v256h146.285714q24 0 33.714286 22.285714z" p-id="1101"></path></svg> '+i18n("download"));
                         dlSpan.src=curNode.dataset.src;
                         dlSpan.title=curNode.title||document.title;
                         dlSpan.onclick=clickCb;
+                        var checkBox=document.createElement('input');
+                        checkBox.type="checkbox";
+                        checkBox.onclick=function(e){
+                            let checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input:checked");
+                            if(!self.batchDl || self.batchDl.parentNode!=maximizeContainer){
+                                self.batchDl=document.createElement('p');
+                                let batchDlBtn=document.createElement('input');
+                                let cancelBtn=document.createElement('input');
+                                batchDlBtn.value="下載";
+                                cancelBtn.value="取消";
+                                batchDlBtn.type="button";
+                                cancelBtn.type="button";
+                                cancelBtn.onclick=function(e){
+                                    checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input:checked");
+                                    if(checkBoxs.length<1)return;
+                                    [].forEach.call(checkBoxs, i=>{
+                                        i.checked=false;
+                                    });
+                                    maximizeContainer.removeChild(self.batchDl);
+                                    maximizeContainer.classList.remove("checked");
+                                };
+                                batchDlBtn.onclick=function(e){
+                                    checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input:checked");
+                                    if(checkBoxs.length<1)return;
+
+                                    var saveParams = [],saveIndex=0;
+                                    [].forEach.call(checkBoxs, function(node){
+                                        saveIndex++;
+                                        let imgSrc=node.previousElementSibling.src;
+                                        let title=node.nextElementSibling.title;
+                                        let srcSplit=imgSrc.replace(/[\?#].*/,"").split("/");
+                                        srcSplit=srcSplit[srcSplit.length-1];
+                                        if(srcSplit.length>30 && (srcSplit.indexOf(".")==-1 || /[&\?=,]/i.test(srcSplit))){
+                                            srcSplit="";
+                                        }
+                                        var picName=document.title + "-" + (saveIndex<10?"00"+saveIndex:(saveIndex<100?"0"+saveIndex:saveIndex)) + (title==document.title?"":"-" + title) + "-" + srcSplit;
+                                        saveParams.push([imgSrc, picName]);
+                                    });
+                                    self.batchDownload(saveParams, ()=>{
+                                    });
+                                };
+                                self.batchDl.appendChild(batchDlBtn);
+                                self.batchDl.appendChild(cancelBtn);
+                                maximizeContainer.appendChild(self.batchDl);
+                            }
+                            if(checkBoxs.length>0){
+                                maximizeContainer.appendChild(self.batchDl);
+                                maximizeContainer.classList.add("checked");
+                            }else{
+                                maximizeContainer.removeChild(self.batchDl);
+                                maximizeContainer.classList.remove("checked");
+                            }
+                            e.stopPropagation();
+                        };
+                        imgSpan.appendChild(checkBox);
                         imgSpan.appendChild(dlSpan);
                     };
                     fetch(curNode.dataset.src).then(response=>{
@@ -4226,6 +4290,13 @@ ImgOps | https://imgops.com/#b#`;
                 }
 
                 this.changeSizeInputReset();
+
+                var self=this;
+                if(prefs.gallery.autoOpenViewmore){
+                    setTimeout(function(){
+                        self.maximizeSidebar();
+                    },1);
+                }
             },
             close:function(reload){
                 if(this.hideBodyStyle.parentNode)
@@ -5309,6 +5380,26 @@ ImgOps | https://imgops.com/#b#`;
                     border-radius: 15px;\
                     line-height: 2 !important;\
                     font-family: auto;\
+                    opacity: 0.5;\
+                    }\
+                    .pv-gallery-sidebar-viewmore:hover{\
+                    opacity: 1;\
+                    }\
+                    .pv-gallery-maximize-container>p{\
+                    position: fixed;\
+                    width: 100%;\
+                    text-align: center;\
+                    pointer-events: none;\
+                    }\
+                    .pv-gallery-maximize-container>p>input{\
+                    pointer-events: all;\
+                    color: white;\
+                    background-color: black;\
+                    border: 0;\
+                    opacity: 0.8;\
+                    padding: 5px 10px;\
+                    cursor: pointer;\
+                    margin: 1px;\
                     }\
                     .pv-gallery-maximize-container{\
                     column-count: 5;\
@@ -5363,6 +5454,21 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-gallery-maximize-container span>p:hover{\
                     color:red;\
                     font-weight:bold;\
+                    }\
+                    .pv-gallery-maximize-container span>input{\
+                    position: absolute;\
+                    top: 0;\
+                    width: 20px;\
+                    height: 20px;\
+                    opacity: 0;\
+                    left: 0;\
+                    display: inline;\
+                    }\
+                    .pv-gallery-maximize-container.checked span>input{\
+                    opacity: 1;\
+                    }\
+                    .pv-gallery-maximize-container span:hover>input{\
+                    opacity: 1;\
                     }\
                     .pv-gallery-maximize-scroll{\
                     overflow-y: scroll;\
@@ -9908,6 +10014,11 @@ ImgOps | https://imgops.com/#b#`;
                     type: 'int',
                     "default": prefs.gallery.descriptionLength,
                     after: i18n("galleryDescriptionLength2")
+                },
+                'gallery.autoOpenViewmore': {
+                    label: i18n("autoOpenViewmore"),
+                    type: 'checkbox',
+                    "default": prefs.gallery.autoOpenViewmore
                 },
                 'gallery.autoOpenSites': {
                     label: i18n("galleryAutoOpenSites"),
