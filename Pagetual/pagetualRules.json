@@ -16,7 +16,7 @@
   },
   {
     "name":"xxgame",
-    "action":0,
+    "action":"0",
     "url":"^http://www\\.xxgame\\.net/chinese",
     "pageElement":"div.layui-row>div.layui-col-md4:not(div:nth-child(5),div:nth-child(6),div:nth-child(7))",
     "nextLinkByUrl":["(http://www\\.xxgame\\.net/chinese/?)(?:\\?page=|$)(\\d*)","$1?page={(0$2||1)+1}"]
@@ -60,8 +60,8 @@
     "css":".grid.columns{display: flex; flex-wrap: wrap;}"
   },
   {
-    "action":"0",
     "name":"Google Search",
+    "action":"0",
     "nextLink":"id('pnnext')|id('navbar navcnt nav')//td[span]/following-sibling::td[1]/a|id('nn')/parent::a",
     "pageElement":"id('rso')/div|id('center_col')/style[contains(.,'relative')]|id('search')/div/div/style[1]",
     "type":"0",
