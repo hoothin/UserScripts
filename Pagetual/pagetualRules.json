@@ -91,5 +91,12 @@
     "pageAction":"let j=document.querySelector('.lazyBox');eles.forEach(i=>{i.src=i.dataset.srcset;})",
     "insert":".lazyBox",
     "insertPos":"2"
+  },
+  {
+    "name":"Google cse",
+    "nextLink":".gsc-cursor-current-page+div",
+    "pageElement":".gsc-expansionArea>.gsc-result",
+    "url":"^https://cse\\.google\\.com/.*&gsc\\.q=\\d",
+    "wait":"2000"
   }
 ]
