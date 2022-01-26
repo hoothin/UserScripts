@@ -461,7 +461,7 @@
                 let rule=this.hpRules[i];
                 if(!rule || rule.enable==0 || !rule.url)continue;
                 if(rule.singleUrl){
-                    if(location.origin+location.pathname==rule.url){
+                    if(location.origin+location.pathname.replace(/[^\/]+\.[^\/]+/,"")==rule.url){
                         this.curSiteRule=rule;
                         debug(rule);
                         callback();
@@ -533,7 +533,7 @@
                     }
                     if(end>=self.rules.length){
                         self.curSiteRule={};
-                        self.curSiteRule.url=location.origin+location.pathname;
+                        self.curSiteRule.url=location.origin+location.pathname.replace(/[^\/]+\.[^\/]+/,"");
                         self.curSiteRule.singleUrl=true;
                         callback();
                         return;
