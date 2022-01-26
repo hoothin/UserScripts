@@ -1530,7 +1530,7 @@
             actualTop += current.offsetTop;
             current = current.offsetParent;
         }
-        bottomGap=scrollH-actualTop+500;
+        bottomGap=scrollH-actualTop+800;
         return pageBar;
     }
 
