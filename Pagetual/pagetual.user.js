@@ -5,15 +5,21 @@
 // @name:ja      東方永頁機
 // @name:ru      Пейджетуал
 // @name:de      Pagetual
+// @name:es      Pagetual
+// @name:fr      Pagetual
+// @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
 // @version      0.8.6
-// @description  Simply auto load the next page
+// @description  Simply auto loading paginated web pages
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
 // @description:ja     Webページを自動で読み込み継ぎ足し表示を行うブラウザ拡張です
 // @description:ru     Просто автоматически загрузите следующую страницу
 // @description:de     Laden Sie einfach automatisch die nächste Seite
+// @description:es     Carga automática de páginas web paginadas
+// @description:fr     Chargement automatique des pages Web paginées
+// @description:it     Caricamento automatico di pagine Web impaginate
 // @description:ko     다음 페이지를 자동으로 로드하세요
 // @author       hoothin
 // @include      http://*
