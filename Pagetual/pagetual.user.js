@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      0.8.7
+// @version      0.8.8
 // @description  Simply auto loading paginated web pages
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -1404,7 +1404,7 @@
     var pageBarStyle;
     var pageTextStyle=`line-height: 30px;text-decoration: none;user-select: none;visibility: visible;position: initial;width: auto;height: auto;float: none;clear: both;margin: 0px auto;text-align: center;display: inline;font-weight: bold;font-style: normal;font-size: 16px;letter-spacing: initial;vertical-align: super;color: rgb(85, 85, 95);`;
 
-    var isPause=false,isLoading=false,curPage=1,forceState=0;
+    var isPause=false,isLoading=false,curPage=1,forceState=0,bottomGap=1000;
 
     function changeStop(stop, hide){
         isPause=stop;
@@ -1426,7 +1426,7 @@
                     let scrolly=window.scrollY;
                     let windowHeight=window.innerHeight;
                     let scrollH=Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
-                    if(scrollH-scrolly-windowHeight<1000){
+                    if(scrollH-scrolly-windowHeight<bottomGap){
                         nextPage();
                     }
                 }
@@ -1520,6 +1520,15 @@
                 insert.parentNode.insertBefore(pageBar, insert);
             }
         }
+
+        let scrollH=Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+        let actualTop = pageBar.offsetTop;
+        let current = pageBar.parentNode.offsetParent;
+        while (current !== null){
+            actualTop += current.offsetTop;
+            current = current.offsetParent;
+        }
+        bottomGap=scrollH-actualTop+200;
         return pageBar;
     }
 
