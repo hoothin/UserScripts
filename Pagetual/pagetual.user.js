@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      0.9.0
+// @version      0.9.1
 // @description  Simply auto loading paginated web pages
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -891,7 +891,7 @@
 
         initPage(callback){
             let self=this;
-            if(this.curSiteRule.url && !this.curSiteRule.singleUrl)return;
+            //if(this.curSiteRule.url && !this.curSiteRule.singleUrl)return;
             this.curSiteRule={};
             this.getRule(()=>{
                 if(self.curSiteRule && !self.curSiteRule.singleUrl){
@@ -1644,8 +1644,6 @@
         curIframe.style.cssText = 'display: block; visibility: visible; float: none; clear: both; width: 100%;height:0;background: initial; border: 0px; border-radius: 0px; margin: 0px 0px 2rem; padding: 0px; z-index: 2147483647;';
         curIframe.addEventListener("load", e=>{
             let iframeDoc=curIframe.contentDocument || curIframe.contentWindow.document;
-            //let eles=ruleParser.getPageElement(iframeDoc, curIframe.contentWindow);
-            //if(eles && eles.length>0){
             ruleParser.insertPage(iframeDoc, [], url);
             callback(curIframe, true);
             curIframe.style.height=iframeDoc.body.scrollHeight+"px";
@@ -1654,12 +1652,6 @@
                 curIframe.style.height=iframeDoc.body.scrollHeight+"px";
                 curIframe.style.width=iframeDoc.body.scrollWidth+"px";
             },300);
-            //curIframe.scrollIntoView();
-            /*}else{
-                isPause=true;
-                callback(false, false);
-                curIframe.parentNode.removeChild(curIframe);
-            }*/
         });
         curIframe.src=url;
         let insert=ruleParser.getInsert();
@@ -1706,10 +1698,8 @@
                 forceIframe(nextLink, (iframe, eles)=>{
                     isLoading=false;
                     loading.style.display="none";
-                    //if(eles){
                     let pageBar=createPageBar(nextLink);
                     iframe.parentNode.insertBefore(pageBar, iframe);
-                    //}
                 });
             }else{
                 if(!isJs){
@@ -1749,6 +1739,9 @@
         setTimeout(()=>{
             initPage();
         },1);
+        setTimeout(()=>{
+            initView();
+        },1000);
     });
     function init(){
         initRules(()=>{
