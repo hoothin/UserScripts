@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      0.8.9
+// @version      0.9.0
 // @description  Simply auto loading paginated web pages
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -33,6 +33,7 @@
 // @grant        GM_setValue
 // @grant        GM_addStyle
 // @grant        GM_openInTab
+// @grant        GM_deleteValue
 // @grant        GM.xmlHttpRequest
 // @grant        GM.registerMenuCommand
 // @grant        GM.notification
@@ -40,6 +41,7 @@
 // @grant        GM.setValue
 // @grant        GM.addStyle
 // @grant        GM.openInTab
+// @grant        GM.deleteValue
 // @downloadURL  https://greasyfork.org/scripts/438684-pagetual/code/Pagetual.user.js
 // @updateURL    https://greasyfork.org/scripts/438684-pagetual/code/Pagetual.user.js
 // @connect      wedata.net
@@ -305,8 +307,14 @@
                 this.mxAppStorage.setConfig(key,value);
             }else if(this.supportGM){
                 GM_setValue(key,value);
+                if(value=="" && typeof GM_deleteValue!='undefined'){
+                    GM_deleteValue(key);
+                }
             }else if(this.supportGMPromise){
                 GM.setValue(key,value);
+                if(value=="" && typeof GM!='undefined' && typeof GM.deleteValue!='undefined'){
+                    GM.deleteValue(key);
+                }
             }else if(window.localStorage){
                 window.localStorage.setItem(key,value);
             }
@@ -467,7 +475,7 @@
                 let rule=this.hpRules[i];
                 if(!rule || rule.enable==0 || !rule.url)continue;
                 if(rule.singleUrl){
-                    if(location.origin+location.pathname.replace(/[^\/]+\.[^\/]+/,"")==rule.url){
+                    if(location.origin+location.pathname==rule.url){
                         this.curSiteRule=rule;
                         debug(rule);
                         callback();
@@ -563,7 +571,7 @@
                     }
                     if(end>=self.rules.length){
                         self.curSiteRule={};
-                        self.curSiteRule.url=location.origin+location.pathname.replace(/[^\/]+\.[^\/]+/,"");
+                        self.curSiteRule.url=location.origin+location.pathname;
                         self.curSiteRule.singleUrl=true;
                         callback();
                         return;
@@ -883,6 +891,8 @@
 
         initPage(callback){
             let self=this;
+            if(this.curSiteRule.url && !this.curSiteRule.singleUrl)return;
+            this.curSiteRule={};
             this.getRule(()=>{
                 if(self.curSiteRule && !self.curSiteRule.singleUrl){
                     self.hpRules=self.hpRules.filter(item=>{return item&&item.url!=self.curSiteRule.url});
@@ -927,12 +937,12 @@
     var rulesData={},ruleUrls,updateDate;
     function initConfig(){
         _GM_registerMenuCommand(i18n(forceState==1?"enable":"disableSite"), ()=>{
-            storage.setItem("forceState_"+location.host, (forceState==1?0:1));
+            storage.setItem("forceState_"+location.host, (forceState==1?"":1));
             location.reload();
         });
 
         _GM_registerMenuCommand(i18n(forceState==2?"cancelForceIframe":"forceIframe"), ()=>{
-            storage.setItem("forceState_"+location.host, (forceState==2?0:2));
+            storage.setItem("forceState_"+location.host, (forceState==2?"":2));
             location.reload();
         });
         var configCon,insertPos;
@@ -994,7 +1004,7 @@
                     sort.push(i.dataset.id);
                 });
                 rulesData.sort=sort;
-                storage.setItem("importRuleUrl", rulesData);
+                storage.setItem("rulesData", rulesData);
             }
             moveUp(){
                 let preE=this.item.previousElementSibling;
@@ -1026,7 +1036,7 @@
                             break;
                         }
                     }
-                    storage.setItem("importRuleUrl", rulesData);
+                    storage.setItem("rulesData", rulesData);
                     ruleParser.rules=ruleParser.rules.filter(item=>{return item.from!=this.ruleUrl.id});
                     storage.setItem("rules", ruleParser.rules);
                     this.item.parentNode.removeChild(this.item);
@@ -1142,7 +1152,7 @@
             }
             rulesData.opacity=opacityInput.value/100;
             rulesData.hideBar=hideBarInput.checked;
-            storage.setItem("importRuleUrl", rulesData);
+            storage.setItem("rulesData", rulesData);
             let customUrls=customUrlsInput.value.trim();
             if(customUrls){
                 customUrls=customUrls.split(/\n/);
@@ -1181,7 +1191,7 @@
                     }
                     rulesData.urls.push({id:maxId+1,url:url,type:type});
                     rulesData.sort.push(maxId+1);
-                    storage.setItem("importRuleUrl", rulesData);
+                    storage.setItem("rulesData", rulesData);
                 }
             }
             alert("Modified successfully");
@@ -1244,7 +1254,7 @@
         ];var i=0,j=0;
 
         ruleParser.initSavedRules(()=>{
-            storage.getItem("importRuleUrl", data=>{
+            storage.getItem("rulesData", data=>{
                 if(data){
                     rulesData=data;
                     if(data.urls)ruleUrls=ruleUrls.concat(data.urls);
@@ -1724,6 +1734,22 @@
         }
     }
 
+    var _wr = function(type) {
+        var orig = history[type];
+        return function() {
+            var rv = orig.apply(this, arguments);
+            var e = new Event(type);
+            e.arguments = arguments;
+            window.dispatchEvent(e);
+            return rv;
+        };
+    };
+    history.pushState = _wr('pushState');
+    window.addEventListener('pushState', function(e) {
+        setTimeout(()=>{
+            initPage();
+        },1);
+    });
     function init(){
         initRules(()=>{
             initView();
