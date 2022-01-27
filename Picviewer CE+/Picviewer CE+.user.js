@@ -6,7 +6,7 @@
 // @description          Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version              2022.1.26.1
+// @version              2022.1.27.1
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -3463,8 +3463,8 @@ ImgOps | https://imgops.com/#b#`;
                                 self.batchDl=document.createElement('p');
                                 let batchDlBtn=document.createElement('input');
                                 let cancelBtn=document.createElement('input');
-                                batchDlBtn.value="下載";
-                                cancelBtn.value="取消";
+                                batchDlBtn.value=i18n("download");
+                                cancelBtn.value=i18n("closeBtn");
                                 batchDlBtn.type="button";
                                 cancelBtn.type="button";
                                 cancelBtn.onclick=function(e){
@@ -5400,6 +5400,7 @@ ImgOps | https://imgops.com/#b#`;
                     padding: 5px 10px;\
                     cursor: pointer;\
                     margin: 1px;\
+                    font-size: 20px;\
                     }\
                     .pv-gallery-maximize-container{\
                     column-count: 5;\
