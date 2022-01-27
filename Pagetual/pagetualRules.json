@@ -96,7 +96,7 @@
     "name":"Google cse",
     "nextLink":".gsc-cursor-current-page+div",
     "pageElement":".gsc-expansionArea>.gsc-result",
-    "url":"^https://cse\\.google\\.com/.*&gsc\\.q=",
+    "url":"^https://cse\\.google\\.com.*&gsc\\.q=",
     "wait":"2000"
   }
 ]
