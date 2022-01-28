@@ -19,7 +19,7 @@
     "action":"0",
     "url":"^http://www\\.xxgame\\.net/chinese",
     "pageElement":"div.layui-row>div.layui-col-md4:not(div:nth-child(5),div:nth-child(6),div:nth-child(7))",
-    "nextLinkByUrl":["(http://www\\.xxgame\\.net/chinese/?)(?:\\?page=|$)(\\d*)","$1?page={(0$2||1)+1}"]
+    "nextLinkByUrl":["(http://www\\.xxgame\\.net/chinese/?)(?:\\?page=|$)(\\d*)","$1?page={($2.0||1)+1}"]
   },
   {
     "name":"masuit",
@@ -72,7 +72,7 @@
     "action":"0",
     "url":"^https://search\\.bilibili\\.com",
     "pageElement":"ul>li.video-item",
-    "nextLinkByUrl":["(.*\\?keyword=.*)(?:\\&page=|$)(\\d*)","$1&page={(0$2||1)+1}"],
+    "nextLinkByUrl":["(.*\\?keyword=.*)(?:\\&page=|$)(\\d*)","$1&page={($2.0||1)+1}"],
     "pageAction":"let script=doc.querySelector('body>script:not([src])');if(!script)return;script=script.innerHTML.replace(/window\\.__INITIAL_STATE__=({.*});.*/,'$1');script=JSON.parse(script);script=script.flow;script=script[script.fields[0]].result;for(let i=0;i<eles.length;i++){let ele=eles[i];ele.querySelector('.lazy-img>img').src=script[i].pic;}"
   },
   {
@@ -98,5 +98,19 @@
     "pageElement":".gsc-expansionArea>.gsc-result",
     "url":"^https://cse\\.google\\.com.*&gsc\\.q=",
     "wait":"2000"
+  },
+  {
+    "name":"bookmarkearth",
+    "action":"0",
+    "url":"^https://www\\.bookmarkearth\\.com(?:/?$|/page\\?currentPage=)",
+    "pageElement":".source>.document-piece",
+    "nextLinkByUrl":["(.*\\.com)(?:/?$|/page\\?currentPage=)(\\d*)","$1/page?currentPage={($2.0||1)+1}"]
+  },
+  {
+    "name":"bookmarkearth search",
+    "action":"0",
+    "url":"^https://www\\.bookmarkearth\\.com/s/search\\?q=",
+    "pageElement":".source>.document-piece",
+    "nextLinkByUrl":["(.*/s/search\\?q=.*&currentPage=)(\\d*)","$1{$2+1}"]
   }
 ]
