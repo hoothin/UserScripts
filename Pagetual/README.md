@@ -46,7 +46,11 @@ Regexp of the url of target site
 
 enable
 --
-0 means disable
+0 means stop action when all matched
+
+wait
+--
+The time to wait for page ready when you are sure the url match the site
 
 type
 --
