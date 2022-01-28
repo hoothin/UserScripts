@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      0.9.2
+// @version      0.9.3
 // @description  Simply auto loading paginated web pages
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -700,7 +700,6 @@
         }
 
         getPage(doc){
-            if(_unsafeWindow.Discourse)return {next:null,canSave:false};
             let canSave=false;//發現頁碼選擇器在其他頁對不上，還是別保存了
             let url=this.curUrl;
             let pageNum=1,preStr="",afterStr="";
@@ -784,7 +783,7 @@
                 }
                 next=nextf||nexts||nextt||nextfo;
             }
-            if(!next)next=jsNext||curPage.querySelector('[rel="next"]');
+            if(!next)next=jsNext||curPage.querySelector('a[rel="next"]');
             return {next:next,canSave:canSave};
         }
 
