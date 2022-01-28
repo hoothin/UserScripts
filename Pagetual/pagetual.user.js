@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      0.9.1
+// @version      0.9.2
 // @description  Simply auto loading paginated web pages
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -211,7 +211,7 @@
             default:
                 config={
                     disable:"Disable",
-                    disableSite:"Disable in the site",
+                    disableSite:"Disable on the site",
                     enable:"Enable",
                     toTop:"To Top",
                     toBottom:"To Bottom",
@@ -473,7 +473,7 @@
             var self=this;
             for(let i in this.hpRules){
                 let rule=this.hpRules[i];
-                if(!rule || rule.enable==0 || !rule.url)continue;
+                if(!rule || !rule.url)continue;
                 if(rule.singleUrl){
                     if(location.origin+location.pathname==rule.url){
                         this.curSiteRule=rule;
@@ -486,11 +486,23 @@
                 let urlReg=new RegExp(rule.url, "i");
                 if(urlReg.test(location.href)){
                     if(rule.wait){
-                        setTimeout(()=>{
-                            self.curSiteRule=rule;
-                            debug(rule);
-                            callback();
-                        },parseInt(rule.wait));
+                        let checkReady=()=>{
+                            setTimeout(()=>{
+                                if(rule.pageElement)pageElement=rule.type==0?getElementByXpath(rule.pageElement):document.querySelector(rule.pageElement);
+                                if(rule.nextLink)nextLink=rule.type==0?getElementByXpath(rule.nextLink):document.querySelector(rule.nextLink);
+                                if(rule.insert)insert=rule.type==0?getElementByXpath(rule.insert):document.querySelector(rule.insert);
+                                if((rule.pageElement && !pageElement) ||
+                                   (rule.nextLink && !nextLink) ||
+                                   (rule.insert && !insert)){
+                                    checkReady();
+                                }else{
+                                    self.curSiteRule=rule;
+                                    debug(rule);
+                                    callback();
+                                }
+                            },parseInt(rule.wait));
+                        };
+                        checkReady();
                         return;
                     }
                     let pageElement,nextLink,insert;
@@ -510,15 +522,27 @@
             }
             for(let i in this.customRules){
                 let rule=this.customRules[i];
-                if(!rule || rule.enable==0 || !rule.url)continue;
+                if(!rule || !rule.url)continue;
                 let urlReg=new RegExp(rule.url, "i");
                 if(urlReg.test(location.href)){
                     if(rule.wait){
-                        setTimeout(()=>{
-                            self.curSiteRule=rule;
-                            debug(rule);
-                            callback();
-                        },parseInt(rule.wait));
+                        let checkReady=()=>{
+                            setTimeout(()=>{
+                                if(rule.pageElement)pageElement=rule.type==0?getElementByXpath(rule.pageElement):document.querySelector(rule.pageElement);
+                                if(rule.nextLink)nextLink=rule.type==0?getElementByXpath(rule.nextLink):document.querySelector(rule.nextLink);
+                                if(rule.insert)insert=rule.type==0?getElementByXpath(rule.insert):document.querySelector(rule.insert);
+                                if((rule.pageElement && !pageElement) ||
+                                   (rule.nextLink && !nextLink) ||
+                                   (rule.insert && !insert)){
+                                    checkReady();
+                                }else{
+                                    self.curSiteRule=rule;
+                                    debug(rule);
+                                    callback();
+                                }
+                            },parseInt(rule.wait));
+                        };
+                        checkReady();
                         return;
                     }
                     let pageElement,nextLink,insert;
@@ -543,15 +567,26 @@
                     end=end>self.rules.length?self.rules.length:end;
                     for(;r<end;r++){
                         let rule=self.rules[r];
-                        if(rule.enable==0)continue;
                         let urlReg=new RegExp(rule.url, "i");
                         if(urlReg.test(location.href)){
                             if(rule.wait){
-                                setTimeout(()=>{
-                                    self.curSiteRule=rule;
-                                    debug(rule);
-                                    callback();
-                                },parseInt(rule.wait));
+                                let checkReady=()=>{
+                                    setTimeout(()=>{
+                                        if(rule.pageElement)pageElement=rule.type==0?getElementByXpath(rule.pageElement):document.querySelector(rule.pageElement);
+                                        if(rule.nextLink)nextLink=rule.type==0?getElementByXpath(rule.nextLink):document.querySelector(rule.nextLink);
+                                        if(rule.insert)insert=rule.type==0?getElementByXpath(rule.insert):document.querySelector(rule.insert);
+                                        if((rule.pageElement && !pageElement) ||
+                                           (rule.nextLink && !nextLink) ||
+                                           (rule.insert && !insert)){
+                                            checkReady();
+                                        }else{
+                                            self.curSiteRule=rule;
+                                            debug(rule);
+                                            callback();
+                                        }
+                                    },parseInt(rule.wait));
+                                };
+                                checkReady();
                                 return;
                             }
                             let pageElement,nextLink,insert;
@@ -680,7 +715,7 @@
                 pageNum=pageMatch2[2];
                 afterStr=pageMatch2[3];
             }
-            var curPage=doc,i,cur;
+            let curPage=doc,i,cur;
             let next=curPage.querySelector("a.next"),jsNext;
             if(!next)next=curPage.querySelector("a#next");
             if(!next)next=curPage.querySelector("a#rightFix");
@@ -894,6 +929,10 @@
             //if(this.curSiteRule.url && !this.curSiteRule.singleUrl)return;
             this.curSiteRule={};
             this.getRule(()=>{
+                if(self.curSiteRule.enable==0){
+                    isPause=true;
+                    return;
+                }
                 if(self.curSiteRule && !self.curSiteRule.singleUrl){
                     self.hpRules=self.hpRules.filter(item=>{return item&&item.url!=self.curSiteRule.url});
                     self.hpRules.unshift(self.curSiteRule);
@@ -1391,6 +1430,7 @@
 
     function initPage(){
         ruleParser.initPage(()=>{
+            curPage=1;
             initListener();
             nextPage();
         });
