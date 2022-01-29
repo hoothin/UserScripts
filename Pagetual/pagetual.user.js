@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      0.9.7
+// @version      0.9.8
 // @description  Simply auto loading paginated web pages
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -955,7 +955,7 @@
             });
         }
 
-        insertPage(doc, eles, url){
+        insertPage(doc, eles, url, callback){
             this.pageDoc=doc;
             this.curUrl=url;
             this.pageAction(doc, eles);
@@ -963,6 +963,7 @@
             if(!this.nextLinkHref && this.curSiteRule.singleUrl && this.curSiteRule.pageElement){
                 return false;
             }
+            if(callback)callback(eles);
             this.getInsert();
             var self=this;
             if(!eles || eles.length==0 || !self.insert || !self.insert.parentNode){
@@ -1371,22 +1372,18 @@
                 let pageElement=ruleParser.getPageElement(doc);
                 //只有1的話怕不是圖片哦
                 if(pageElement && (pageElement.length>1 || (pageElement.length==1 && pageElement[0].tagName!="IMG") )){
-                    let result=ruleParser.insertPage(doc, pageElement, url);
+                    let result=ruleParser.insertPage(doc, pageElement, url, callback);
                     if(!result){
                         requestFromIframe(url, (doc, eles)=>{
-                            callback(eles);
                             if(eles){
-                                ruleParser.insertPage(doc, eles, url);
+                                ruleParser.insertPage(doc, eles, url, callback);
                             }
                         });
-                    }else{
-                        callback(pageElement);
                     }
                 }else{
                     requestFromIframe(url, (doc, eles)=>{
-                        callback(eles);
                         if(eles){
-                            ruleParser.insertPage(doc, eles, url);
+                            ruleParser.insertPage(doc, eles, url, callback);
                         }
                     });
                 }
@@ -1652,7 +1649,7 @@
         pageBar.style.width=parseInt(_unsafeWindow.getComputedStyle(insert.parentNode).width)*.9+"px";
         if(inLi){
             pageBar.style.width="auto";
-            pageBar.style.minWidth="200px";
+            pageBar.style.minWidth="150px";
             let line=document.createElement("li");
             line.appendChild(pageBar);
             if(ruleParser.curSiteRule.insertPos==2){
