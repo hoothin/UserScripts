@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      0.9.4
+// @version      0.9.5
 // @description  Simply auto loading paginated web pages
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -1492,8 +1492,39 @@
         });
     }
 
+    function isInViewPort(element) {
+        const viewWidth = window.innerWidth || document.documentElement.clientWidth;
+        const viewHeight = window.innerHeight || document.documentElement.clientHeight;
+        const {
+            top,
+            right,
+            bottom,
+            left,
+        } = element.getBoundingClientRect();
+
+        return (
+            top >= 0 &&
+            left >= 0 &&
+            right <= viewWidth &&
+            bottom <= viewHeight
+        );
+    }
+
     function initListener(){
+        let loadmoreBtn,buttons=document.querySelectorAll("input,button,a"),loadmoreReg=/^\s*(加载更多|加載更多|load\s*more|もっと読み込む)\s*$/i,loading=false;
+        for(let i=0;i<buttons.length;i++){
+            let button=buttons[i];
+            if(button && loadmoreReg.test(button.innerText)){
+                loadmoreBtn=button;
+                break;
+            }
+        }
         document.addEventListener('scroll', e=>{
+            if(!loading && loadmoreBtn && isInViewPort(loadmoreBtn)){
+                loadmoreBtn.click();
+                loading=true;
+                setTimeout(()=>{loading=false},2000);
+            }
             setTimeout(()=>{
                 if(!isPause && !isLoading){
                     let scrolly=window.scrollY;
@@ -1504,7 +1535,7 @@
                     }
                 }
             },100);
-        }, false);
+        }, true);
         document.addEventListener('dblclick', e=>{
             setTimeout(()=>{
                 changeStop(!isPause, rulesData.hideBar);
