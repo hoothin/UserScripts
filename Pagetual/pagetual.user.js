@@ -1574,6 +1574,9 @@
         document.addEventListener('dblclick', e=>{
             setTimeout(()=>{
                 changeStop(!isPause, rulesData.hideBar);
+                if(!isPause){
+                    nextPage();
+                }
             },200);
         });
     }
