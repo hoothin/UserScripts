@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      0.9.6
+// @version      0.9.7
 // @description  Simply auto loading paginated web pages
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -651,7 +651,7 @@
                 let bodyHeight=parseInt(body.scrollHeight);
                 let curHeight=bodyHeight;
                 function checkElement(ele){
-                    if(curHeight/bodyHeight<=0.35)return null;
+                    if(curHeight/bodyHeight<=0.30)return null;
                     if(ele.children.length==0 && !self.curSiteRule.pageElement){
                         if(ele.parentNode.tagName=="P")ele=ele.parentNode;
                         self.curSiteRule.pageElement=self.geneSelector(ele.parentNode)+">"+ele.tagName;
@@ -703,7 +703,7 @@
             let canSave=false;//發現頁碼選擇器在其他頁對不上，還是別保存了
             let url=this.curUrl.replace("#!","");
             let pageNum=1,preStr="",afterStr="";
-            let pageMatch1=url.match(/(.*[a-z\/\-_](?:p|page)?\/?)(\d+)(\.html?$|$|\/$)/i);
+            let pageMatch1=url.match(/(.*[a-z\/\-_](?:p|page)?\/?)(\d+)(\.s?html?$|$|\/$)/i);
             let pageMatch2=url.match(/(.*[\?&]p(?:age)?=)(\d+)($|[#&].*)/i);
             if(pageMatch1){
                 preStr=pageMatch1[1];
@@ -960,6 +960,9 @@
             this.curUrl=url;
             this.pageAction(doc, eles);
             this.getNextLink(doc);
+            if(!this.nextLinkHref && this.curSiteRule.singleUrl && this.curSiteRule.pageElement){
+                return false;
+            }
             this.getInsert();
             var self=this;
             if(!eles || eles.length==0 || !self.insert || !self.insert.parentNode){
@@ -972,6 +975,7 @@
                     }
                 });
             }
+            return true;
         }
     }
     var ruleParser = new RuleParser();
@@ -1367,8 +1371,17 @@
                 let pageElement=ruleParser.getPageElement(doc);
                 //只有1的話怕不是圖片哦
                 if(pageElement && (pageElement.length>1 || (pageElement.length==1 && pageElement[0].tagName!="IMG") )){
-                    callback(pageElement);
-                    ruleParser.insertPage(doc, pageElement, url);
+                    let result=ruleParser.insertPage(doc, pageElement, url);
+                    if(!result){
+                        requestFromIframe(url, (doc, eles)=>{
+                            callback(eles);
+                            if(eles){
+                                ruleParser.insertPage(doc, eles, url);
+                            }
+                        });
+                    }else{
+                        callback(pageElement);
+                    }
                 }else{
                     requestFromIframe(url, (doc, eles)=>{
                         callback(eles);
@@ -1591,6 +1604,8 @@
         upSpan.title=i18n("toTop");
         downSpan.innerHTML=downSvg;
         downSpan.title=i18n("toBottom");
+        upSpan.style.right=upSpan.style.left=upSpan.style.top=upSpan.style.bottom="unset";
+        downSpan.style.right=downSpan.style.left=downSpan.style.top=downSpan.style.bottom="unset";
         pageText.href=url;
         pageText.style=pageTextStyle;
         pageText.innerHTML="Page "+curPage;
