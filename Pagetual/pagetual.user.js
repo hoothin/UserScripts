@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      0.9.5
+// @version      0.9.6
 // @description  Simply auto loading paginated web pages
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -774,7 +774,7 @@
                         aTag.href=aTag.href.replace(/\?&/,"?");
                         if(aTag.innerText=="»"){
                             nextt=aTag;
-                        }else if(aTag.href.replace(preStr,"").replace(afterStr,"")==parseInt(pageNum)+1){
+                        }else if(aTag.href.replace("#!","").replace(preStr,"").replace(afterStr,"")==parseInt(pageNum)+1){
                             nextt=aTag;
                         }else if(aTag.href.indexOf(url)!=-1 && /^[\/\?&]?[_-]?(p|page)?=?\/?2(\/|\?|&|$)/i.test(aTag.href.replace(url,"").replace(/\.html?$/i,""))){
                             nextt=aTag;
@@ -925,8 +925,12 @@
 
         initPage(callback){
             let self=this;
+            curPage=1;
             //if(this.curSiteRule.url && !this.curSiteRule.singleUrl)return;
             this.curSiteRule={};
+            this.pageDoc=document;
+            this.nextLinkHref=null;
+            this.curUrl=location.href;
             this.getRule(()=>{
                 if(self.curSiteRule.enable==0){
                     isPause=true;
@@ -1429,7 +1433,6 @@
 
     function initPage(){
         ruleParser.initPage(()=>{
-            curPage=1;
             initListener();
             nextPage();
         });
@@ -1511,15 +1514,37 @@
     }
 
     function initListener(){
-        let loadmoreBtn,buttons=document.querySelectorAll("input,button,a"),loadmoreReg=/^\s*(加载更多|加載更多|load\s*more|もっと読み込む)\s*$/i,loading=false;
+        var urlChanged=false;
+        var _wr = function(type) {
+            var orig = history[type];
+            return function() {
+                var rv = orig.apply(this, arguments);
+                var e = new Event(type);
+                e.arguments = arguments;
+                window.dispatchEvent(e);
+                return rv;
+            };
+        };
+        history.pushState = _wr('pushState');
+        window.addEventListener('pushState', function(e) {
+            urlChanged=true;
+        });
+        let loadmoreBtn,buttons=document.querySelectorAll("input,button,a"),loadmoreReg=/^\s*(加载更多|加載更多|load\s*more|もっと読み込む)\s*$/i,loading=true;
         for(let i=0;i<buttons.length;i++){
             let button=buttons[i];
             if(button && loadmoreReg.test(button.innerText)){
                 loadmoreBtn=button;
+                loadmoreBtn.click();
                 break;
             }
         }
+        if(loadmoreBtn)setTimeout(()=>{loading=false},2000);
         document.addEventListener('scroll', e=>{
+            if(urlChanged){
+                ruleParser.initPage(()=>{});
+                initView();
+                urlChanged=false;
+            }
             if(!loading && loadmoreBtn && isInViewPort(loadmoreBtn)){
                 loadmoreBtn.click();
                 loading=true;
@@ -1795,25 +1820,6 @@
         }
     }
 
-    var _wr = function(type) {
-        var orig = history[type];
-        return function() {
-            var rv = orig.apply(this, arguments);
-            var e = new Event(type);
-            e.arguments = arguments;
-            window.dispatchEvent(e);
-            return rv;
-        };
-    };
-    history.pushState = _wr('pushState');
-    window.addEventListener('pushState', function(e) {
-        setTimeout(()=>{
-            initPage();
-        },1);
-        setTimeout(()=>{
-            initView();
-        },1000);
-    });
     function init(){
         initRules(()=>{
             initView();
