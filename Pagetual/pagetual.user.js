@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      0.9.3
+// @version      0.9.4
 // @description  Simply auto loading paginated web pages
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -701,7 +701,7 @@
 
         getPage(doc){
             let canSave=false;//發現頁碼選擇器在其他頁對不上，還是別保存了
-            let url=this.curUrl;
+            let url=this.curUrl.replace("#!","");
             let pageNum=1,preStr="",afterStr="";
             let pageMatch1=url.match(/(.*[a-z\/\-_](?:p|page)?\/?)(\d+)(\.html?$|$|\/$)/i);
             let pageMatch2=url.match(/(.*[\?&]p(?:age)?=)(\d+)($|[#&].*)/i);
@@ -1548,6 +1548,7 @@
             pageBar.style.display="table-row";
             let td=document.createElement("td");
             td.colSpan=tdNum;
+            td.style.textAlign="center";
             td.appendChild(upSpan);
             td.appendChild(pageText);
             td.appendChild(downSpan);
