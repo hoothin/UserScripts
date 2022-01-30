@@ -961,7 +961,8 @@
             this.curUrl=url;
             this.pageAction(doc, eles);
             this.getNextLink(doc);
-            if(!tried && !this.nextLinkHref && this.curSiteRule.singleUrl && this.curSiteRule.pageElement){
+            if(curPage==1 && !tried && !this.nextLinkHref && this.curSiteRule.singleUrl && this.curSiteRule.pageElement){
+                this.curSiteRule.action=1;
                 return false;
             }
             if(callback)callback(eles);
@@ -1373,7 +1374,7 @@
                 let pageElement=ruleParser.getPageElement(doc);
                 //只有1的話怕不是圖片哦
                 if(pageElement && (pageElement.length>1 || (pageElement.length==1 && pageElement[0].tagName!="IMG") )){
-                    let result=ruleParser.insertPage(doc, pageElement, url, callback);
+                    let result=ruleParser.insertPage(doc, pageElement, url, callback, false);
                     if(!result){
                         requestFromIframe(url, (doc, eles)=>{
                             if(eles){
@@ -1384,7 +1385,7 @@
                 }else{
                     requestFromIframe(url, (doc, eles)=>{
                         if(eles){
-                            ruleParser.insertPage(doc, eles, url, callback);
+                            ruleParser.insertPage(doc, eles, url, callback, true);
                         }
                     });
                 }
@@ -1756,7 +1757,7 @@
         curIframe.style.cssText = 'display: block; visibility: visible; float: none; clear: both; width: 100%;height:0;background: initial; border: 0px; border-radius: 0px; margin: 0px 0px 2rem; padding: 0px; z-index: 2147483647;';
         curIframe.addEventListener("load", e=>{
             let iframeDoc=curIframe.contentDocument || curIframe.contentWindow.document;
-            ruleParser.insertPage(iframeDoc, [], url);
+            ruleParser.insertPage(iframeDoc, [], url, true);
             callback(curIframe, true);
             curIframe.style.height=iframeDoc.body.scrollHeight+"px";
             curIframe.style.width=iframeDoc.body.scrollWidth+"px";
@@ -1789,7 +1790,7 @@
                     loading.style.display="none";
                     if(ele){
                         createPageBar(nextLink);
-                        ruleParser.insertPage(null, ele, null);
+                        ruleParser.insertPage(null, ele, null, true);
                     }else{
                         isPause=true;
                     }
@@ -1803,7 +1804,7 @@
                     loading.style.display="none";
                     if(eles){
                         createPageBar(nextLink);
-                        ruleParser.insertPage(doc, eles, nextLink);
+                        ruleParser.insertPage(doc, eles, nextLink, true);
                     }
                 });
             }else if(forceState==2 && !isJs){
@@ -1828,7 +1829,7 @@
                         loading.style.display="none";
                         if(eles){
                             createPageBar(nextLink);
-                            ruleParser.insertPage(doc, eles, "");
+                            ruleParser.insertPage(doc, eles, "", true);
                         }
                     });
                 }
