@@ -700,7 +700,7 @@
         }
 
         getPage(doc){
-            if(window.Discourse)return {};
+            if(_unsafeWindow.Discourse)return {};
             let canSave=false;//發現頁碼選擇器在其他頁對不上，還是別保存了
             let url=this.curUrl.replace("#!","");
             let pageNum=1,preStr="",afterStr="";
@@ -779,7 +779,7 @@
                             nextt=aTag;
                         }else if(aTag.href.replace("#!","").replace(preStr,"").replace(afterStr,"")==parseInt(pageNum)+1){
                             nextt=aTag;
-                        }else if(aTag.href.indexOf(url)!=-1 && /^[\/\?&]?[_-]?(p|page)?=?\/?2(\/|\?|&|$)/i.test(aTag.href.replace(url,"").replace(/\.html?$/i,""))){
+                        }else if(aTag.href.indexOf(url)!=-1 && /^[\/\?&]?[_-]?(p|page)?=?\/?2(\/|\?|&|$)/i.test(aTag.href.replace(url,"").replace(/\.s?html?$/i,""))){
                             nextt=aTag;
                         }
                     }
