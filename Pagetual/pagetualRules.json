@@ -112,5 +112,12 @@
     "url":"^https://www\\.bookmarkearth\\.com/s/search\\?q=",
     "pageElement":".source>.document-piece",
     "nextLinkByUrl":["(.*/s/search\\?q=.*&currentPage=)(\\d*)","$1{$2+1}"]
+  },
+  {
+    "name":"深圳人社局通知公告",
+    "action":"0",
+    "url":"^http://hrss\\.sz\\.gov\\.cn/tzgg",
+    "pageElement":".newsList>ul",
+    "nextLink":"a.next"
   }
 ]
