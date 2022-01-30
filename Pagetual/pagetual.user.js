@@ -1757,7 +1757,7 @@
         curIframe.style.cssText = 'display: block; visibility: visible; float: none; clear: both; width: 100%;height:0;background: initial; border: 0px; border-radius: 0px; margin: 0px 0px 2rem; padding: 0px; z-index: 2147483647;';
         curIframe.addEventListener("load", e=>{
             let iframeDoc=curIframe.contentDocument || curIframe.contentWindow.document;
-            ruleParser.insertPage(iframeDoc, [], url, true);
+            ruleParser.insertPage(iframeDoc, [], url, null, true);
             callback(curIframe, true);
             curIframe.style.height=iframeDoc.body.scrollHeight+"px";
             curIframe.style.width=iframeDoc.body.scrollWidth+"px";
@@ -1790,7 +1790,7 @@
                     loading.style.display="none";
                     if(ele){
                         createPageBar(nextLink);
-                        ruleParser.insertPage(null, ele, null, true);
+                        ruleParser.insertPage(null, ele, nextLink, null, true);
                     }else{
                         isPause=true;
                     }
@@ -1804,7 +1804,7 @@
                     loading.style.display="none";
                     if(eles){
                         createPageBar(nextLink);
-                        ruleParser.insertPage(doc, eles, nextLink, true);
+                        ruleParser.insertPage(doc, eles, nextLink, null, true);
                     }
                 });
             }else if(forceState==2 && !isJs){
@@ -1829,7 +1829,7 @@
                         loading.style.display="none";
                         if(eles){
                             createPageBar(nextLink);
-                            ruleParser.insertPage(doc, eles, "", true);
+                            ruleParser.insertPage(doc, eles, "", null, true);
                         }
                     });
                 }
