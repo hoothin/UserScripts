@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.0
+// @version      1.0.1
 // @description  Simply auto loading paginated web pages
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -700,6 +700,7 @@
         }
 
         getPage(doc){
+            if(window.Discourse)return {};
             let canSave=false;//發現頁碼選擇器在其他頁對不上，還是別保存了
             let url=this.curUrl.replace("#!","");
             let pageNum=1,preStr="",afterStr="";
