@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.0.1
+// @version      1.0.2
 // @description  Simply auto loading paginated web pages
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -93,6 +93,7 @@
 // @exclude      *://www.youtube.com
 // @exclude      *://www.youtube.com/
 // @exclude      *://www.youtube.com/watch*
+// @exclude      *://baike.baidu.com/*
 // ==/UserScript==
 
 (function() {
