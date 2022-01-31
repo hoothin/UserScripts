@@ -1394,7 +1394,7 @@
                             }
                         });
                     }
-                }else{
+                }else if(ruleParser.curSiteRule.singleUrl){
                     requestFromIframe(url, (doc, eles)=>{
                         if(eles){
                             ruleParser.insertPage(doc, eles, url, callback, true);
@@ -1424,7 +1424,7 @@
                 let tryTimes=0;
                 function checkIframe(){
                     try{
-                        let doc=iframe.contentWindow.document;
+                        let doc=iframe.contentDocument || iframe.contentWindow.document;
                         let eles=ruleParser.getPageElement(doc, iframe.contentWindow);
                         if(eles && eles.length>0){
                             callback(doc, eles);
@@ -1770,7 +1770,14 @@
         curIframe.scrolling="no";
         curIframe.style.cssText = 'display: block; visibility: visible; float: none; clear: both; width: 100%;height:0;background: initial; border: 0px; border-radius: 0px; margin: 0px 0px 2rem; padding: 0px; z-index: 2147483647;';
         curIframe.addEventListener("load", e=>{
-            let iframeDoc=curIframe.contentDocument || curIframe.contentWindow.document;
+            let iframeDoc;
+            try{
+                iframeDoc=curIframe.contentDocument || curIframe.contentWindow.document;
+            }catch(e){
+                isPause=true;
+                callback(false, false);
+                return;
+            }
             ruleParser.insertPage(iframeDoc, [], url, null, true);
             callback(curIframe, true);
             curIframe.style.height=iframeDoc.body.scrollHeight+"px";
