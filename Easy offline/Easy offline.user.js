@@ -8,7 +8,7 @@
 // @namespace    https://github.com/hoothin/UserScripts/tree/master/Easy%20offline
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Base64/0.2.0/base64.min.js
-// @version      1.9.8
+// @version      1.9.9
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -79,6 +79,7 @@
 // @run-at       document-end
 // @supportURL   http://www.hoothin.com
 // @license      MIT License
+// @require      https://greasyfork.org/scripts/436827-managelinkslib/code/manageLinksLib.js?version=1006643
 // @compatible        chrome
 // @compatible        firefox
 // @contributionURL https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
@@ -405,6 +406,7 @@
     };
     var enableUrl = 'a[href^="magnet"],[href^="ed2k://|file"],[href$=".torrent"],[href$=".mp4"],[href$=".rar"],[href$=".7z"],[href$=".zip"],[href$=".rmvb"],[href$=".mkv"],[href$=".avi"],[href$=".iso"]';
     var disableUrl=[".torrentkitty.","bt.box.n0808.com"];
+    var manageLinksLang={};
     var lang = navigator.appName=="Netscape"?navigator.language:navigator.userLanguage;
     var i18n=(name)=>{
         var config={};
@@ -446,9 +448,23 @@
                     importCustomAlert:"点击确定追加规则，点击取消覆盖规则",
                     importOver:"规则导入完毕!",
                     postOver:"发送成功，返回消息：",
-                    copyOver:"复制成功",
+                    copyOver:"复制成功！",
                     postError:"发送失败，错误内容：",
-                    importCustomSame:"存在同名规则，是否覆盖？"
+                    importCustomSame:"存在同名规则，是否覆盖？",
+                    copyLinks:"嗅探下载资源[Alt+x]",
+                    noLinks:"当前页面没有资源！"
+                };
+                manageLinksLang={
+                    copyAll:"全部复制",
+                    copySel:"复制选中",
+                    addTips:"%i代表递增 %n代表文件名",
+                    sortByName:"按文件名排序",
+                    sortByUrl:"按网址排序",
+                    sortByType:"按扩展名排序",
+                    preHolder:"批量前缀",
+                    nextHolder:"批量后缀",
+                    closeBtn:"关闭",
+                    typeHead:"类型："
                 };
                 break;
             case "zh-TW":
@@ -488,9 +504,23 @@
                     importCustomAlert:"點擊確定追加規則，點擊取消覆蓋規則",
                     importOver:"規則導入完畢!",
                     postOver:"發送成功，返回消息：",
-                    copyOver:"複製成功",
+                    copyOver:"複製成功！",
                     postError:"發送失敗，錯誤内容：",
-                    importCustomSame:"存在同名規則，是否覆蓋？"
+                    importCustomSame:"存在同名規則，是否覆蓋？",
+                    copyLinks:"嗅探下載資源[Alt+x]",
+                    noLinks:"當前頁面沒有資源！"
+                };
+                manageLinksLang={
+                    copyAll:"全部複製",
+                    copySel:"複製選中",
+                    addTips:"%i代表遞增 %n代表文件名",
+                    sortByName:"按文件名排序",
+                    sortByUrl:"按網址排序",
+                    sortByType:"按擴展名排序",
+                    preHolder:"批量前綴",
+                    nextHolder:"批量後綴",
+                    closeBtn:"關閉",
+                    typeHead:"類型："
                 };
                 break;
             default:
@@ -529,9 +559,23 @@
                     importCustomAlert:"Ok to add rule，Cancel to cover rule",
                     importOver:"Rules import over!",
                     postOver:"Post over, return: ",
-                    copyOver:"Copy over",
+                    copyOver:"Copy over!",
                     postError:"Fail in post, error: ",
-                    importCustomSame:"Rule exists, overwritten?"
+                    importCustomSame:"Rule exists, overwritten?",
+                    copyLinks:"Seek links[Alt+x]",
+                    noLinks:"No links！"
+                };
+                manageLinksLang={
+                    copyAll: "Copy all",
+                    copySel: "Copy selected",
+                    addTips: "%i means increment, %n means file name",
+                    sortByName: "Sort by name",
+                    sortByUrl: "Sort by URL",
+                    sortByType: "Sort by type",
+                    preHolder: "Batch Prefix",
+                    nextHolder: "Batch Suffix",
+                    closeBtn: "Close",
+                    typeHead: "Type:"
                 };
                 break;
         }
@@ -1381,6 +1425,17 @@
             showDiskIcons(link,mouseEve.pageY-10,mouseEve.pageX-10);
         }
     }
+    initLang(manageLinksLang);
+    function copyLink() {
+        showLinkFrame(function(r){
+            if(r){
+                _GM_setClipboard(r);
+                _GM_notification(i18n("copyOver"));
+            }else{
+                _GM_notification(i18n("noLinks"));
+            }
+        });
+    }
 
     var mouseEve,targetA;
     document.addEventListener("mousemove", function(e) {
@@ -1393,7 +1448,6 @@
             targetA=null;
         }
     });
-
     document.addEventListener("keydown", function(e) {
         if(e.keyCode == 120) {
             if(e.altKey){
@@ -1401,7 +1455,11 @@
             }else{
                 toggleIcon();
             }
+        }else if(e.keyCode == 88 && e.altKey) {
+            copyLink();
+            e.stopPropagation();
         }
     });
     _GM_registerMenuCommand(i18n("configure"), goSetting);
+    _GM_registerMenuCommand(i18n("copyLinks"), copyLink);
 })();
