@@ -714,7 +714,7 @@
             let canSave=false;//發現頁碼選擇器在其他頁對不上，還是別保存了
             let url=this.curUrl.replace("#!","");
             let pageNum=1,preStr="",afterStr="";
-            let pageMatch1=url.match(/(.*[a-z\/\-_](?:p|page)?\/?)(\d+)(\.s?html?$|$|\/$)/i);
+            let pageMatch1=url.match(/(.*[a-z\/\-_](?:p|page)?\/?)(\d+)(\.s?html?$|\/?$)/i);
             let pageMatch2=url.match(/(.*[\?&]p(?:age)?=)(\d+)($|[#&].*)/i);
             if(pageMatch1){
                 preStr=pageMatch1[1];
