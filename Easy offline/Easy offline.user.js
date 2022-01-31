@@ -1463,7 +1463,7 @@
             copyLink();
             e.stopPropagation();
         }
-    });
+    },true);
     _GM_registerMenuCommand(i18n("configure"), goSetting);
     _GM_registerMenuCommand(i18n("copyLinks"), copyLink);
 })();
