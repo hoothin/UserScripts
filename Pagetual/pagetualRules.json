@@ -119,5 +119,12 @@
     "url":"^http://hrss\\.sz\\.gov\\.cn/tzgg",
     "pageElement":".newsList>ul",
     "nextLink":"a.next"
+  },
+  {
+    "name":"什么值得买社区",
+    "action":"0",
+    "url":"^https://post\\.smzdm\\.com/p",
+    "pageElement":"#comment",
+    "nextLink":".pagedown>a"
   }
 ]
