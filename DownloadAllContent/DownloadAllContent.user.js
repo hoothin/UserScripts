@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.6.6
+// @version      2.6.7
 // @description  Fetch and download main content on current page, provide special support for chinese novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取小說、論壇內容等並保存為TXT文檔
@@ -497,7 +497,16 @@
             var processEles=[];
             if(/^http|^ftp/.test(urls)){
                 [].forEach.call(urls.split(","),function(i){
-                    var varNum=/\[\d+\-\d+\]/.exec(i)[0].trim();
+                    var curEle;
+                    var varNum=/\[\d+\-\d+\]/.exec(i);
+                    if(varNum){
+                        varNum=varNum[0].trim();
+                    }else{
+                        curEle=document.createElement("a");
+                        curEle.href=i;
+                        processEles.push(curEle);
+                        return;
+                    }
                     var num1=/\[(\d+)/.exec(varNum)[1].trim();
                     var num2=/(\d+)\]/.exec(varNum)[1].trim();
                     var num1Int=parseInt(num1);
@@ -511,7 +520,7 @@
                             while(urlIndex.length<numLen)urlIndex="0"+urlIndex;
                         }
                         var curUrl=i.replace(/\[\d+\-\d+\]/,urlIndex).trim();
-                        var curEle=document.createElement("a");
+                        curEle=document.createElement("a");
                         curEle.href=curUrl;
                         processEles.push(curEle);
                         curEle.innerText=processEles.length.toString();
@@ -519,8 +528,9 @@
                 });
             }else{
                 let urlsArr=urls.split("@@"),eles=[];
+                let urlSel=urlsArr[0].split(">>");
                 try{
-                    eles=document.querySelectorAll(urlsArr[0]);
+                    eles=document.querySelectorAll(urlSel[0]);
                 }catch(e){}
                 if(eles.length==0){
                     eles=[];
@@ -556,6 +566,9 @@
                     });
                 }
                 [].forEach.call(eles,function(item){
+                    if(urlSel[1]){
+                        item=Function("item",urlSel[1])(item);
+                    }
                     let has=false;
                     for(var j=0;j<processEles.length;j++){
                         if(processEles[j].href==item.href){
