@@ -140,5 +140,10 @@
     "url":"^https://www\\.51yuansu\\.com",
     "pageElement":".f-content",
     "nextLink":"a.nextpage"
+  },
+  {
+    "name":"Asian Sister",
+    "url":"^https://asiansister\\.com/",
+    "pageElement":"div.itemBox,div.itemBox_video"
   }
 ]
