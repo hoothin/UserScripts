@@ -1562,9 +1562,8 @@
         window.addEventListener('pushState', function(e) {
             urlChanged=true;
         });
-        let loadmoreBtn=getLoadMore(document),hasLoadMore=false;
+        let loadmoreBtn=getLoadMore(document),loading=true;
         if(loadmoreBtn){
-            hasLoadMore=true;
             loadmoreBtn.click();
             setTimeout(()=>{loading=false},2000);
         }
@@ -1574,7 +1573,7 @@
                 initView();
                 urlChanged=false;
             }
-            if(!loading && hasLoadMore){
+            if(!loading){
                 loading=true;
                 if(!loadmoreBtn || !loadmoreBtn.parentNode){
                     loadmoreBtn=getLoadMore(document);
@@ -1610,8 +1609,9 @@
     }
 
     function getLoadMore(doc){
-        let loadmoreBtn=doc.querySelector(".LoadMore"),buttons=doc.querySelectorAll("input,button,a"),loadmoreReg=/^\s*(加载更多|加載更多|load\s*more|もっと読み込む)\s*$/i,loading=true;
+        let loadmoreBtn=doc.querySelector(".LoadMore,.result--more>a");
         if(!loadmoreBtn){
+            let buttons=doc.querySelectorAll("input,button,a"),loadmoreReg=/^\s*(加载更多|加載更多|load\s*more|もっと読み込む)\s*$/i;
             for(let i=0;i<buttons.length;i++){
                 let button=buttons[i];
                 if(button && loadmoreReg.test(button.innerText)){
