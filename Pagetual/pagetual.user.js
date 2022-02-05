@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.0.9
+// @version      1.0.10
 // @description  Simply auto loading paginated web pages
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -407,6 +407,7 @@
             _GM_xmlhttpRequest({
                 url: url,
                 method: 'GET',
+                timeout: 10000,
                 onload: function(res) {
                     let json=null;
                     try{
@@ -415,6 +416,9 @@
                         debug(e);
                     }
                     callback(json);
+                },
+                onerror: function() {
+                    callback(null);
                 }
             });
         }
@@ -736,6 +740,7 @@
             if(!next)next=curPage.querySelector(".next>button");
             if(!next)next=curPage.querySelector("a[alt=next]");
             if(!next)next=curPage.querySelector("[title=next]");
+            if(!next)next=curPage.querySelector("[aria-label='Next']");
             if(!next)next=curPage.querySelector("[aria-label='Next page']");
             if(!next)next=curPage.querySelector(".nextPage");
             if(next && (!next.href || /javascript:/.test(next.href))){
@@ -1379,7 +1384,11 @@
         _GM_xmlhttpRequest({
             url: url,
             method: 'GET',
-            overrideMimeType:"text/html;charset="+document.charset,
+            overrideMimeType: 'text/html;charset='+document.charset,
+            headers: {
+                'Referer': location.href
+            },
+            timeout: 5000,
             onload: function(res) {
                 var doc=null;
                 try {
