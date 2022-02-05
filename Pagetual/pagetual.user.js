@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.0.8
+// @version      1.0.9
 // @description  Simply auto loading paginated web pages
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -1562,17 +1562,9 @@
         window.addEventListener('pushState', function(e) {
             urlChanged=true;
         });
-        let loadmoreBtn=document.querySelector(".LoadMore"),buttons=document.querySelectorAll("input,button,a"),loadmoreReg=/^\s*(加载更多|加載更多|load\s*more|もっと読み込む)\s*$/i,loading=true;
-        if(!loadmoreBtn){
-            for(let i=0;i<buttons.length;i++){
-                let button=buttons[i];
-                if(button && loadmoreReg.test(button.innerText)){
-                    loadmoreBtn=button;
-                    break;
-                }
-            }
-        }
+        let loadmoreBtn=getLoadMore(document),hasLoadMore=false;
         if(loadmoreBtn){
+            hasLoadMore=true;
             loadmoreBtn.click();
             setTimeout(()=>{loading=false},2000);
         }
@@ -1582,10 +1574,19 @@
                 initView();
                 urlChanged=false;
             }
-            if(!loading && loadmoreBtn && isInViewPort(loadmoreBtn)){
-                loadmoreBtn.click();
+            if(!loading && hasLoadMore){
                 loading=true;
-                setTimeout(()=>{loading=false},2000);
+                if(!loadmoreBtn || !loadmoreBtn.parentNode){
+                    loadmoreBtn=getLoadMore(document);
+                }
+                if(loadmoreBtn){
+                    loading=false;
+                    if(isInViewPort(loadmoreBtn)){
+                        loadmoreBtn.click();
+                    }
+                }else{
+                    setTimeout(()=>{loading=false},500);
+                }
             }
             setTimeout(()=>{
                 if(!isPause && !isLoading){
@@ -1606,6 +1607,20 @@
                 }
             },200);
         });
+    }
+
+    function getLoadMore(doc){
+        let loadmoreBtn=doc.querySelector(".LoadMore"),buttons=doc.querySelectorAll("input,button,a"),loadmoreReg=/^\s*(加载更多|加載更多|load\s*more|もっと読み込む)\s*$/i,loading=true;
+        if(!loadmoreBtn){
+            for(let i=0;i<buttons.length;i++){
+                let button=buttons[i];
+                if(button && loadmoreReg.test(button.innerText)){
+                    loadmoreBtn=button;
+                    break;
+                }
+            }
+        }
+        return loadmoreBtn;
     }
 
     function createPageBar(url){
@@ -1682,6 +1697,7 @@
             pageBar.style.minWidth="150px";
             pageBar.style.display="inline-block";
             let line=document.createElement("li");
+            line.style.textAlign="center";
             line.appendChild(pageBar);
             if(ruleParser.curSiteRule.insertPos==2){
                 insert.appendChild(line);
@@ -1721,21 +1737,12 @@
             }
             if(!orgPage){
                 if(!loadmoreEnd){
-                    loadmoreBtn=iframeDoc.querySelector(".LoadMore");
-                    let buttons=iframeDoc.querySelectorAll("input,button,a"),loadmoreReg=/^\s*(加载更多|加載更多|load\s*more|もっと読み込む)\s*$/i;
-                    if(!loadmoreBtn){
-                        for(let i=0;i<buttons.length;i++){
-                            let button=buttons[i];
-                            if(button && loadmoreReg.test(button.innerText)){
-                                loadmoreBtn=button;
-                                break;
-                            }
-                        }
-                    }
+                    loadmoreBtn=getLoadMore(iframeDoc);
                     if(loadmoreBtn){
                         loadmoreBtn.click();
                         let intv=setInterval(()=>{
-                            if(!loadmoreBtn.parentNode || iframeDoc.defaultView.getComputedStyle(loadmoreBtn).display=="none"){
+                            loadmoreBtn=getLoadMore(iframeDoc);
+                            if(!loadmoreBtn || !loadmoreBtn.parentNode || iframeDoc.defaultView.getComputedStyle(loadmoreBtn).display=="none"){
                                 clearInterval(intv);
                                 loadmoreEnd=true;
                                 setTimeout(()=>{
