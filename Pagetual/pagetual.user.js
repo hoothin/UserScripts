@@ -848,10 +848,15 @@
                     self.nextLinkHref=false;
                     return null;
                 }else if(nextLink && doc==document){
-                    let nextLinkCs=_unsafeWindow.getComputedStyle(nextLink);
-                    if(nextLinkCs.cursor=="not-allowed"){
+                    if(!isVisible(nextLink, _unsafeWindow)){
                         self.nextLinkHref=false;
                         return null;
+                    }else{
+                        let nextLinkCs=_unsafeWindow.getComputedStyle(nextLink);
+                        if(nextLinkCs.cursor=="not-allowed"){
+                            self.nextLinkHref=false;
+                            return null;
+                        }
                     }
                 }
             }
@@ -1276,6 +1281,21 @@
             typeof obj === 'object' &&
             typeof obj.length === 'number' &&
             !(obj.propertyIsEnumerable('length'));
+    }
+
+    function isVisible(el, win) {
+        var loopable = true,
+            visible = win.getComputedStyle(el).display != 'none' && win.getComputedStyle(el).visibility != 'hidden';
+        while(loopable && visible) {
+            el = el.parentNode;
+
+            if(el && el.tagName!="BODY") {
+                visible = win.getComputedStyle(el).display != 'none' && win.getComputedStyle(el).visibility != 'hidden';
+            }else {
+                loopable = false;
+            }
+        }
+        return visible;
     }
 
     function getFormatJSON(obj){
@@ -1751,7 +1771,7 @@
                         loadmoreBtn.click();
                         let intv=setInterval(()=>{
                             loadmoreBtn=getLoadMore(iframeDoc);
-                            if(!loadmoreBtn || !loadmoreBtn.parentNode || iframeDoc.defaultView.getComputedStyle(loadmoreBtn).display=="none"){
+                            if(!loadmoreBtn || !loadmoreBtn.parentNode || !isVisible(loadmoreBtn, iframeDoc.defaultView)){
                                 clearInterval(intv);
                                 loadmoreEnd=true;
                                 setTimeout(()=>{
@@ -1776,8 +1796,7 @@
                 if(orgPage && orgPage.tagName=="UL")orgPage=orgPage.children[0];
                 let nextLink=ruleParser.getNextLink(iframeDoc);
                 if(orgPage && nextLink){
-                    let display=iframeDoc.defaultView.getComputedStyle(nextLink).display;
-                    if(display=="none"){
+                    if(!isVisible(nextLink, iframeDoc.defaultView)){
                         isPause=true;
                         callback(false, false);
                     }else{
