@@ -799,7 +799,7 @@
                 }
                 next=nextf||nexts||nextt||nextfo;
             }
-            if(!next)next=jsNext||curPage.querySelector('a[rel="next"]');
+            if(!next)next=jsNext;
             return {next:next,canSave:canSave};
         }
 
