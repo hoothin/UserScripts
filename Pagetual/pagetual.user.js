@@ -777,7 +777,7 @@
                         }
                     }
                     if(!nexts){
-                        if(aTag.innerText=="&gt;"){
+                        if(aTag.innerText=="&gt;" || aTag.innerText=="▶"){
                             if(!aTag.href || /javascript:/.test(aTag.href)){
                                 nextfo=aTag;
                             }else{
