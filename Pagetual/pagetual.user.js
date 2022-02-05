@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.0.6
+// @version      1.0.7
 // @description  Simply auto loading paginated web pages
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -1523,6 +1523,8 @@
     }
 
     function isInViewPort(element) {
+        if(!element.parentNode)return false;
+        if(_unsafeWindow.getComputedStyle(element).display=="none")return false;
         const viewWidth = window.innerWidth || document.documentElement.clientWidth;
         const viewHeight = window.innerHeight || document.documentElement.clientHeight;
         const {
@@ -1556,16 +1558,20 @@
         window.addEventListener('pushState', function(e) {
             urlChanged=true;
         });
-        let loadmoreBtn,buttons=document.querySelectorAll("input,button,a"),loadmoreReg=/^\s*(加载更多|加載更多|load\s*more|もっと読み込む)\s*$/i,loading=true;
-        for(let i=0;i<buttons.length;i++){
-            let button=buttons[i];
-            if(button && loadmoreReg.test(button.innerText)){
-                loadmoreBtn=button;
-                loadmoreBtn.click();
-                break;
+        let loadmoreBtn=document.querySelector(".LoadMore"),buttons=document.querySelectorAll("input,button,a"),loadmoreReg=/^\s*(加载更多|加載更多|load\s*more|もっと読み込む)\s*$/i,loading=true;
+        if(!loadmoreBtn){
+            for(let i=0;i<buttons.length;i++){
+                let button=buttons[i];
+                if(button && loadmoreReg.test(button.innerText)){
+                    loadmoreBtn=button;
+                    break;
+                }
             }
         }
-        if(loadmoreBtn)setTimeout(()=>{loading=false},2000);
+        if(loadmoreBtn){
+            loadmoreBtn.click();
+            setTimeout(()=>{loading=false},2000);
+        }
         document.addEventListener('scroll', e=>{
             if(urlChanged){
                 ruleParser.initPage(()=>{});
@@ -1699,7 +1705,7 @@
 
     var emuIframe;
     function emuPage(callback){
-        let orgPage,curPage,iframeDoc,times=0;
+        let orgPage,curPage,iframeDoc,times=0,loadmoreBtn,loadmoreEnd=false;
         function checkPage(){
             if(isPause)return;
             try{
@@ -1710,8 +1716,43 @@
                 return;
             }
             if(!orgPage){
+                if(!loadmoreEnd){
+                    loadmoreBtn=iframeDoc.querySelector(".LoadMore");
+                    let buttons=iframeDoc.querySelectorAll("input,button,a"),loadmoreReg=/^\s*(加载更多|加載更多|load\s*more|もっと読み込む)\s*$/i;
+                    if(!loadmoreBtn){
+                        for(let i=0;i<buttons.length;i++){
+                            let button=buttons[i];
+                            if(button && loadmoreReg.test(button.innerText)){
+                                loadmoreBtn=button;
+                                break;
+                            }
+                        }
+                    }
+                    if(loadmoreBtn){
+                        loadmoreBtn.click();
+                        let intv=setInterval(()=>{
+                            if(!loadmoreBtn.parentNode || iframeDoc.defaultView.getComputedStyle(loadmoreBtn).display=="none"){
+                                clearInterval(intv);
+                                loadmoreEnd=true;
+                                setTimeout(()=>{
+                                    checkPage();
+                                },500);
+                            }else{
+                                loadmoreBtn.click();
+                            }
+                        },200);
+                        return;
+                    }else{
+                        loadmoreEnd=true;
+                    }
+                }
                 orgPage=ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView, true);
-                if(orgPage)orgPage=orgPage[0];
+                if(!orgPage || orgPage.length==0){
+                    isPause=true;
+                    callback(false, false);
+                    return;
+                }
+                orgPage=orgPage[parseInt(orgPage.length/2)];
                 if(orgPage && orgPage.tagName=="UL")orgPage=orgPage.children[0];
                 let nextLink=ruleParser.getNextLink(iframeDoc);
                 if(orgPage && nextLink){
