@@ -128,6 +128,12 @@
     "nextLink":"a.next"
   },
   {
+    "name":"SkrBT",
+    "url":"^https://skrbt",
+    "pageElement":"ul..list-unstyled",
+    "nextLinkByJs":"let form=doc.querySelector('#search-form'),params=[];if(!form)return null;[].forEach.call(form.querySelectorAll('input'),input=>{params.push(input.name+'='+(input.name=='p'?parseInt(input.value)+1:input.value))});return form.action+'?'+params.join('&')"
+  },
+  {
     "name":"什么值得买社区",
     "action":"0",
     "url":"^https://post\\.smzdm\\.com/p",
