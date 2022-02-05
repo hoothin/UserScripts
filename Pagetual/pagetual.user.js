@@ -736,6 +736,7 @@
             if(!next)next=curPage.querySelector(".next>button");
             if(!next)next=curPage.querySelector("a[alt=next]");
             if(!next)next=curPage.querySelector("[title=next]");
+            if(!next)next=curPage.querySelector("[aria-label='Next page']");
             if(next && (!next.href || /javascript:/.test(next.href))){
                 jsNext=next;
                 next=null;
