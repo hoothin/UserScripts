@@ -811,7 +811,7 @@
             }else if(this.curSiteRule.nextLinkByJs){
                 try{
                     let targetUrl=Function("doc",'"use strict";' + this.curSiteRule.nextLinkByJs)(doc);;
-                    nextLink={href:targetUrl};
+                    if(targetUrl)nextLink={href:targetUrl};
                 }catch(e){}
             }else if(this.curSiteRule.nextLinkByUrl){
                 let targetUrl=this.curUrl.replace(new RegExp(this.curSiteRule.nextLinkByUrl[0]), this.curSiteRule.nextLinkByUrl[1]);
