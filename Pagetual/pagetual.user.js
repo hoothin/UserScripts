@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.0.7
+// @version      1.0.8
 // @description  Simply auto loading paginated web pages
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -737,6 +737,7 @@
             if(!next)next=curPage.querySelector("a[alt=next]");
             if(!next)next=curPage.querySelector("[title=next]");
             if(!next)next=curPage.querySelector("[aria-label='Next page']");
+            if(!next)next=curPage.querySelector(".nextPage");
             if(next && (!next.href || /javascript:/.test(next.href))){
                 jsNext=next;
                 next=null;
@@ -838,7 +839,10 @@
             if(!nextLink){
                 page=this.getPage(doc);
                 nextLink=page.next;
-                if(nextLink && doc==document){
+                if(nextLink && nextLink.classList.contains("noClick")){
+                    self.nextLinkHref=false;
+                    return null;
+                }else if(nextLink && doc==document){
                     let nextLinkCs=_unsafeWindow.getComputedStyle(nextLink);
                     if(nextLinkCs.cursor=="not-allowed"){
                         self.nextLinkHref=false;
