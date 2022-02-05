@@ -130,7 +130,7 @@
   {
     "name":"SkrBT",
     "url":"^https://skrbt",
-    "pageElement":"ul..list-unstyled",
+    "pageElement":"ul.list-unstyled",
     "nextLinkByJs":"let form=doc.querySelector('#search-form'),params=[];if(!form)return null;[].forEach.call(form.querySelectorAll('input'),input=>{params.push(input.name+'='+(input.name=='p'?parseInt(input.value)+1:input.value))});return form.action+'?'+params.join('&')"
   },
   {
