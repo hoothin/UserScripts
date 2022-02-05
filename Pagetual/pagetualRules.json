@@ -145,5 +145,11 @@
     "name":"Asian Sister",
     "url":"^https://asiansister\\.com/",
     "pageElement":"div.itemBox,div.itemBox_video"
+  },
+  {
+    "name":"Startpage",
+    "url":"^https://www\\.startpage\\.com/",
+    "pageElement":"section.w-gl>div.w-gl__result",
+    "nextLinkByJs":"let nextBtn=doc.querySelector('button.next'),params=[];if(!nextBtn)return null;let form=nextBtn.parentNode;[].forEach.call(form.querySelectorAll('input'),input=>{params.push(input.name+'='+input.value)});return form.action+'?'+params.join('&')"
   }
 ]
