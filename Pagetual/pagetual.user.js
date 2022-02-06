@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.0.12
+// @version      1.0.13
 // @description  Simply auto loading paginated web pages
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -1207,6 +1207,16 @@
         hideBarTitle.appendChild(hideBarInput);
         configCon.insertBefore(hideBarTitle, insertPos);
 
+        let dbClick2StopTitle=document.createElement("h2");
+        dbClick2StopTitle.innerHTML=i18n("dbClick2Stop");
+        let dbClick2StopInput=document.createElement("input");
+        dbClick2StopInput.type="checkbox";
+        dbClick2StopInput.style.width="50px";
+        dbClick2StopInput.style.height="20px";
+        dbClick2StopInput.checked=rulesData.dbClick2Stop;
+        dbClick2StopTitle.appendChild(dbClick2StopInput);
+        configCon.insertBefore(dbClick2StopTitle, insertPos);
+
         let customRulesTitle=document.createElement("h2");
         customRulesTitle.innerHTML=i18n("customRules")
         configCon.insertBefore(customRulesTitle, insertPos);
@@ -1237,6 +1247,7 @@
             }
             rulesData.opacity=opacityInput.value/100;
             rulesData.hideBar=hideBarInput.checked;
+            rulesData.dbClick2Stop=dbClick2StopInput.checked;
             storage.setItem("rulesData", rulesData);
             let customUrls=customUrlsInput.value.trim();
             if(customUrls){
@@ -1376,6 +1387,9 @@
                 }
                 if(typeof(rulesData.hideBar)=="undefined"){
                     rulesData.hideBar=true;
+                }
+                if(typeof(rulesData.dbClick2Stop)=="undefined"){
+                    rulesData.dbClick2Stop=true;
                 }
                 storage.getItem("forceState_"+location.host, v=>{
                     storage.getItem("ruleLastUpdate", date=>{
@@ -1548,7 +1562,7 @@
     var initStyle=`right: unset;left: unset;top: unset;bottom: unset;inset: unset;clear: both;cy: initial;d: initial;dominant-baseline: initial;empty-cells: initial;fill: initial;fill-opacity: initial;fill-rule: initial;filter: initial;flex: initial;flex-flow: initial;float: initial;flood-color: initial;flood-opacity: initial;grid: initial;grid-area: initial;height: initial;hyphens: initial;image-orientation: initial;image-rendering: initial;inline-size: initial;inset-block: initial;inset-inline: initial;isolation: initial;letter-spacing: initial;lighting-color: initial;line-break: initial;list-style: initial;margin-block: initial;margin: 0px auto;margin-inline: initial;marker: initial;mask: initial;mask-type: initial;max-block-size: initial;max-height: initial;max-inline-size: initial;max-width: initial;min-block-size: initial;min-height: initial;min-inline-size: initial;min-width: initial;mix-blend-mode: initial;object-fit: initial;object-position: initial;offset: initial;opacity: initial;order: initial;orphans: initial;outline: initial;outline-offset: initial;overflow-anchor: initial;overflow-clip-margin: initial;overflow-wrap: initial;overflow: initial;overscroll-behavior-block: initial;overscroll-behavior-inline: initial;overscroll-behavior: initial;padding-block: initial;padding: initial;padding-inline: initial;page: initial;page-orientation: initial;paint-order: initial;perspective: initial;perspective-origin: initial;pointer-events: initial;position: initial;quotes: initial;r: initial;resize: initial;ruby-position: initial;rx: initial;ry: initial;scroll-behavior: initial;scroll-margin-block: initial;scroll-margin: initial;scroll-margin-inline: initial;scroll-padding-block: initial;scroll-padding: initial;scroll-padding-inline: initial;scroll-snap-align: initial;scroll-snap-stop: initial;scroll-snap-type: initial;scrollbar-gutter: initial;shape-image-threshold: initial;shape-margin: initial;shape-outside: initial;shape-rendering: initial;size: initial;speak: initial;stop-color: initial;stop-opacity: initial;stroke: initial;stroke-dasharray: initial;stroke-dashoffset: initial;stroke-linecap: initial;stroke-linejoin: initial;stroke-miterlimit: initial;stroke-opacity: initial;stroke-width: initial;tab-size: initial;table-layout: initial;text-align: initial;text-align-last: initial;text-anchor: initial;text-combine-upright: initial;text-decoration: initial;text-decoration-skip-ink: initial;text-indent: initial;text-overflow: initial;text-shadow: initial;text-size-adjust: initial;text-transform: initial;text-underline-offset: initial;text-underline-position: initial;touch-action: initial;transform: initial;transform-box: initial;transform-origin: initial;transform-style: initial;transition: initial;user-select: initial;vector-effect: initial;vertical-align: initial;visibility: initial;border-spacing: initial;-webkit-border-image: initial;-webkit-box-align: initial;-webkit-box-decoration-break: initial;-webkit-box-direction: initial;-webkit-box-flex: initial;-webkit-box-ordinal-group: initial;-webkit-box-orient: initial;-webkit-box-pack: initial;-webkit-box-reflect: initial;-webkit-highlight: initial;-webkit-hyphenate-character: initial;-webkit-line-break: initial;-webkit-line-clamp: initial;-webkit-mask-box-image: initial;-webkit-mask: initial;-webkit-mask-composite: initial;-webkit-perspective-origin-x: initial;-webkit-perspective-origin-y: initial;-webkit-print-color-adjust: initial;-webkit-rtl-ordering: initial;-webkit-ruby-position: initial;-webkit-tap-highlight-color: initial;-webkit-text-combine: initial;-webkit-text-decorations-in-effect: initial;-webkit-text-emphasis: initial;-webkit-text-emphasis-position: initial;-webkit-text-fill-color: initial;-webkit-text-security: initial;-webkit-text-stroke: initial;-webkit-transform-origin-x: initial;-webkit-transform-origin-y: initial;-webkit-transform-origin-z: initial;-webkit-user-drag: initial;-webkit-user-modify: initial;white-space: initial;widows: initial;width: initial;will-change: initial;word-break: initial;word-spacing: initial;x: initial;y: initial;`;
     var pageTextStyle=`line-height: 30px;text-decoration: none;user-select: none;visibility: visible;position: initial;width: auto;height: auto;float: none;clear: both;margin: 0px auto;text-align: center;display: inline;font-weight: bold;font-style: normal;font-size: 16px;letter-spacing: initial;vertical-align: super;color: rgb(85, 85, 95);`;
 
-    var isPause=false,isLoading=false,curPage=1,forceState=0,bottomGap=1000,dbClick2Stop=true;
+    var isPause=false,isLoading=false,curPage=1,forceState=0,bottomGap=1000;
 
     function changeStop(stop, hide){
         isPause=stop;
@@ -1636,12 +1650,19 @@
             },100);
         }, true);
         document.addEventListener('dblclick', e=>{
-            setTimeout(()=>{
-                changeStop(!isPause, rulesData.hideBar);
-                if(!isPause){
-                    nextPage();
-                }
-            },200);
+            if(rulesData.dbClick2Stop){
+                setTimeout(()=>{
+                    changeStop(!isPause, rulesData.hideBar);
+                    if(!isPause){
+                        let scrolly=window.scrollY;
+                        let windowHeight=window.innerHeight;
+                        let scrollH=Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+                        if(scrollH-scrolly-windowHeight<bottomGap){
+                            nextPage();
+                        }
+                    }
+                },200);
+            }
         });
     }
 
