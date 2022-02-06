@@ -157,5 +157,12 @@
     "url":"^https://www\\.startpage\\.com/",
     "pageElement":"section.w-gl>div.w-gl__result",
     "nextLinkByJs":"let nextBtn=doc.querySelector('button.next'),params=[];if(!nextBtn)return null;let form=nextBtn.parentNode;[].forEach.call(form.querySelectorAll('input'),input=>{params.push(input.name+'='+input.value)});return form.action+'?'+params.join('&')"
+  },
+  {
+    "name":"参考消息手机版",
+    "action":"1",
+    "url":"^http://m\\.cankaoxiaoxi\\.com/",
+    "pageElement":"div.content",
+    "nextLink":"li.next>a"
   }
 ]
