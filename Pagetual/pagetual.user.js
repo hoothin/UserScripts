@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.0.10
+// @version      1.0.11
 // @description  Simply auto loading paginated web pages
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -743,7 +743,7 @@
             if(!next)next=curPage.querySelector("[aria-label='Next']");
             if(!next)next=curPage.querySelector("[aria-label='Next page']");
             if(!next)next=curPage.querySelector(".nextPage");
-            if(next && (!next.href || /javascript:/.test(next.href))){
+            if(next && (!next.href || /^javascript:/.test(next.href))){
                 jsNext=next;
                 next=null;
             }
@@ -774,7 +774,7 @@
                     if(nextf && nexts && nextt)break;
                     if(!nextf){
                         if(/(\s|^)下[一1]?[页頁张張]|^next( page)?\s*$|次のページ/i.test(aTag.innerText)){
-                            if(!aTag.href || /javascript:/.test(aTag.href)){
+                            if(!aTag.href || /^javascript:/.test(aTag.href)){
                                 nextfo=aTag;
                             }else{
                                 nextf=aTag;
@@ -783,14 +783,14 @@
                     }
                     if(!nexts){
                         if(aTag.innerText=="&gt;" || aTag.innerText=="▶"){
-                            if(!aTag.href || /javascript:/.test(aTag.href)){
+                            if(!aTag.href || /^javascript:/.test(aTag.href)){
                                 nextfo=aTag;
                             }else{
                                 nexts=aTag;
                             }
                         }
                     }
-                    if(!aTag.href || /javascript:/.test(aTag.href))continue;
+                    if(!aTag.href || /^javascript:/.test(aTag.href))continue;
                     if(!nextt){
                         aTag.href=aTag.href.replace(/\?&/,"?");
                         if(aTag.innerText=="»"){
@@ -861,6 +861,9 @@
                 }
             }
             if(nextLink){
+                if(nextLink.href=="javascript:;" && (this.curSiteRule.action==0 || this.curSiteRule.action==1)){
+                    nextLink=null;
+                }
                 if(!this.curSiteRule.nextLink && page && page.canSave){
                     this.curSiteRule.nextLink=this.geneSelector(nextLink);
                     this.curSiteRule.type=1;
