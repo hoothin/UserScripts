@@ -3,10 +3,10 @@
 // @name:en            Kill Baidu AD
 // @name:zh-TW         百度廣告(首尾推廣及右側廣告)清理
 // @namespace          hoothin
-// @version            1.21
-// @description        彻底清理百度搜索(www.baidu.com)结果首尾的推广广告、二次顽固广告、右侧广告与百家号信息，并防止反复
+// @version            1.22
+// @description        彻底清理百度搜索(www.baidu.com)结果首尾的推广广告、二次顽固广告、右侧广告，并防止反复
 // @description:en     Just Kill Baidu AD
-// @description:zh-TW  徹底清理百度搜索(www.baidu.com)結果首尾的推廣廣告、二次頑固廣告、右側廣告與百家號信息，並防止反復
+// @description:zh-TW  徹底清理百度搜索(www.baidu.com)結果首尾的推廣廣告、二次頑固廣告、右側廣告，並防止反復
 // @author             hoothin
 // @include            http*://www.baidu.com/*
 // @include            http*://m.baidu.com/*
@@ -23,7 +23,7 @@
 
 (function() {
     'use strict';
-    var killBaijiaType=1;//1：添加-baijiahao ；2：嗅探真实url
+    var killBaijiaType=2;
     var MO = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
     if(MO){
         var observer = new MO(function(records){
@@ -66,7 +66,7 @@
     }
 
     function clearAD(){
-        if(!document.querySelectorAll || !document.parentNode)return;
+        if(!document.querySelectorAll)return;
         var mAds=document.querySelectorAll(".ec_wise_ad,.ec_youxuan_card,.page-banner"),i;
         for(i=0;i<mAds.length;i++){
             var mAd=mAds[i];
@@ -83,15 +83,16 @@
                 if(span && span.innerHTML=="广告"){
                     item.remove();
                 }
-                [].forEach.call(item.querySelectorAll("a>span"),function(span){
+                [].forEach.call(item.querySelectorAll("span,a"),function(span){
                     if(span && (span.innerHTML=="广告" || span.getAttribute("data-tuiguang"))){
                         item.remove();
                     }
                 });
                 if(killBaijiaType==2){
-                    [].forEach.call(item.querySelectorAll("a>span>img"),function(img){
-                        if(img && img.classList.contains("source-icon") && !item.querySelector("span.c-pingjia")){
-                            checkBaijia(item);
+                    [].forEach.call(item.querySelectorAll("a>div>span+img"),function(img){
+                        if(img && /^https?:\/\/pic\.rmb\.bdstatic\.com/.test(img.src)){
+                            //checkBaijia(item);
+                            item.remove();
                         }
                     });
                 }
@@ -121,7 +122,7 @@
 
     function clearOneAD(ele){
         if(ele.nodeType!=1)return;
-        if(ele.classList.contains("ec_wise_ad") || ele.classList.contains("ec_youxuan_card") || ele.classList.contains("page-banner")){
+        if(ele.classList.contains("ec-tuiguang") || ele.classList.contains("ec_wise_ad") || ele.classList.contains("ec_youxuan_card") || ele.classList.contains("page-banner")){
             ele.remove();
             return;
         }
@@ -134,22 +135,21 @@
                 if(span && span.innerHTML=="广告"){
                     ele.remove();
                 }
-                [].forEach.call(ele.querySelectorAll("a>span"),function(span){
+                [].forEach.call(ele.querySelectorAll("span,a"),function(span){
                     if(span && (span.innerHTML=="广告" || span.getAttribute("data-tuiguang"))){
                         ele.remove();
                     }
                 });
                 if(killBaijiaType==2){
-                    [].forEach.call(ele.querySelectorAll("a>span>img"),function(img){
-                        if(img && img.classList.contains("source-icon") && !ele.querySelector("span.c-pingjia")){
-                            checkBaijia(ele);
+                    [].forEach.call(ele.querySelectorAll("a>div>span+img"),function(img){
+                        if(img && /^https?:\/\/pic\.rmb\.bdstatic\.com/.test(img.src)){
+                            //checkBaijia(ele);
+                            ele.remove();
                         }
                     });
                 }
             }
-        }
-
-        if(ele.parentNode && ele.parentNode.id=="content_right"){
+        }else if(ele.parentNode && ele.parentNode.id=="content_right"){
             if(ele.nodeName=="TABLE"){
                 var eb = ele.querySelectorAll("tbody>tr>td>div");
                 for(var i=0;i<eb.length;i++){
@@ -172,19 +172,10 @@
                     }
                 }
             }
+        }else{
+            let eles=ele.querySelectorAll("#content_left>div,#content_left>table");
+            [].forEach.call(eles, e=>{clearOneAD(e)});
         }
     }
     setTimeout(()=>{clearAD();},2000);
-    if(killBaijiaType==1){
-        if(location.href.split("wd=")[1].split("&")[0].indexOf("+-baijiahao")==-1){
-            location.href=location.href.replace(/((&|\?)wd=.*?)(&|$)/,'$1+-baijiahao&');
-        }else{
-            document.title=document.title.replace(" -baijiahao","");
-        }
-        document.addEventListener('DOMContentLoaded', function () {
-            if(location.href.indexOf("+-baijiahao")!=-1){
-                $("input#kw").val($("input#kw").val().replace(" -baijiahao",""));
-            }
-        }, false);
-    }
 })();
