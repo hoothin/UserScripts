@@ -1641,7 +1641,8 @@
     }
 
     function getLoadMore(doc){
-        let loadmoreBtn=doc.querySelector(".LoadMore,.result--more>a");
+        let btnSel=ruleParser.curSiteRule.loadMore||".LoadMore,.result--more>a";
+        let loadmoreBtn=doc.querySelector(btnSel);
         if(!loadmoreBtn){
             let buttons=doc.querySelectorAll("input,button,a"),loadmoreReg=/^\s*(加载更多|加載更多|load\s*more|もっと読み込む)\s*$/i;
             for(let i=0;i<buttons.length;i++){
