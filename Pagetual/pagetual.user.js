@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.0.13
+// @version      1.0.15
 // @description  Simply auto loading paginated web pages
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -101,7 +101,7 @@
 
     if (window.name === 'pagetual-iframe') {
         var domloaded = function (){
-            window.scroll(window.scrollX, 99999);
+            window.scroll(window.scrollX, 999999);
             //window.parent.postMessage('pagetual-iframe:DOMLoaded', '*');
         };
         if(window.opera){
@@ -289,6 +289,7 @@
     if(typeof _GM_xmlhttpRequest=='undefined')_GM_xmlhttpRequest=(f)=>{};
     if(typeof _GM_registerMenuCommand=='undefined')_GM_registerMenuCommand=(s,f)=>{};
     if(typeof _GM_notification=='undefined')_GM_notification=(s)=>{};
+    if(typeof _GM_openInTab=='undefined')_GM_openInTab=(s)=>{window.open(s)};
     var _unsafeWindow=(typeof unsafeWindow=='undefined')?window:unsafeWindow;
     var storage={
         supportGM: typeof GM_getValue=='function' && typeof GM_getValue('a','b')!='undefined',
@@ -480,6 +481,7 @@
                 return this.curSiteRule;
             }
             var self=this;
+            let waitTimes=10;
             for(let i in this.hpRules){
                 let rule=this.hpRules[i];
                 if(!rule || !rule.url)continue;
@@ -497,6 +499,7 @@
                     let pageElement,nextLink,insert;
                     if(rule.wait){
                         let checkReady=()=>{
+                            if(waitTimes--<=0)return;
                             setTimeout(()=>{
                                 if(rule.pageElement)pageElement=rule.type==0?getElementByXpath(rule.pageElement):document.querySelector(rule.pageElement);
                                 if(rule.nextLink)nextLink=rule.type==0?getElementByXpath(rule.nextLink):document.querySelector(rule.nextLink);
@@ -537,6 +540,7 @@
                     let pageElement,nextLink,insert;
                     if(rule.wait){
                         let checkReady=()=>{
+                            if(waitTimes--<=0)return;
                             setTimeout(()=>{
                                 if(rule.pageElement)pageElement=rule.type==0?getElementByXpath(rule.pageElement):document.querySelector(rule.pageElement);
                                 if(rule.nextLink)nextLink=rule.type==0?getElementByXpath(rule.nextLink):document.querySelector(rule.nextLink);
@@ -581,6 +585,7 @@
                             let pageElement,nextLink,insert;
                             if(rule.wait){
                                 let checkReady=()=>{
+                                    if(waitTimes--<=0)return;
                                     setTimeout(()=>{
                                         if(rule.pageElement)pageElement=rule.type==0?getElementByXpath(rule.pageElement):document.querySelector(rule.pageElement);
                                         if(rule.nextLink)nextLink=rule.type==0?getElementByXpath(rule.nextLink):document.querySelector(rule.nextLink);
@@ -1007,10 +1012,18 @@
             if(!eles || eles.length==0 || !self.insert || !self.insert.parentNode){
             }else{
                 [].forEach.call(eles, ele=>{
+                    let newEle=ele.cloneNode(true);
+                    let oldCanvass=ele.querySelectorAll("canvas");
+                    let newCanvass=newEle.querySelectorAll("canvas");
+                    for(let i=0;i<oldCanvass.length;i++){
+                        let oldCanvas=oldCanvass[i];
+                        let newCanvas=newCanvass[i];
+                        newCanvas.getContext('2d').drawImage(oldCanvas, 0, 0);
+                    }
                     if(self.curSiteRule.insertPos==2){
-                        self.insert.appendChild(ele.cloneNode(true));
+                        self.insert.appendChild(newEle);
                     }else{
-                        self.insert.parentNode.insertBefore(ele.cloneNode(true), self.insert);
+                        self.insert.parentNode.insertBefore(newEle, self.insert);
                     }
                 });
             }
@@ -1615,7 +1628,7 @@
         });
         let loadmoreBtn=getLoadMore(document),loading=true;
         if(loadmoreBtn){
-            loadmoreBtn.click();
+            emuClick(loadmoreBtn);
             setTimeout(()=>{loading=false},2000);
         }
         document.addEventListener('scroll', e=>{
@@ -1632,7 +1645,7 @@
                 if(loadmoreBtn){
                     loading=false;
                     if(isInViewPort(loadmoreBtn)){
-                        loadmoreBtn.click();
+                        emuClick(loadmoreBtn);
                     }
                 }else{
                     setTimeout(()=>{loading=false},500);
@@ -1785,9 +1798,46 @@
         return pageBar;
     }
 
+    function emuClick(btn){
+        if(!PointerEvent)return btn.click();
+        let eventParam={
+            isTrusted: true,
+            altKey: false,
+            azimuthAngle: 0,
+            bubbles: true,
+            button: 0,
+            buttons: 0,
+            clientX: 1,
+            clientY: 1,
+            cancelBubble: false,
+            cancelable: true,
+            composed: true,
+            ctrlKey: false,
+            defaultPrevented: false,
+            detail: 1,
+            eventPhase: 2,
+            fromElement: null,
+            height: 1,
+            isPrimary: false,
+            metaKey: false,
+            pointerId: 1,
+            pointerType: "mouse",
+            pressure: 0,
+            relatedTarget: null,
+            returnValue: true,
+            shiftKey: false,
+            toElement: null,
+            twist: 0,
+            type: "click",
+            which: 1
+        };
+        var mouseclick = new PointerEvent("click",eventParam);
+        btn.dispatchEvent(mouseclick);
+    }
+
     var emuIframe;
     function emuPage(callback){
-        let orgPage,curPage,iframeDoc,times=0,loadmoreBtn,loadmoreEnd=false;
+        let orgPage,curPage,iframeDoc,times=0,loadmoreBtn,loadmoreEnd=false,waitTimes=10;
         function checkPage(){
             if(isPause)return;
             try{
@@ -1797,11 +1847,12 @@
                 callback(false, false);
                 return;
             }
+            let nextLink=ruleParser.getNextLink(iframeDoc);
             if(!orgPage){
                 if(!loadmoreEnd){
                     loadmoreBtn=getLoadMore(iframeDoc);
                     if(loadmoreBtn){
-                        loadmoreBtn.click();
+                        emuClick(loadmoreBtn);
                         let intv=setInterval(()=>{
                             loadmoreBtn=getLoadMore(iframeDoc);
                             if(!loadmoreBtn || !loadmoreBtn.parentNode || !isVisible(loadmoreBtn, iframeDoc.defaultView)){
@@ -1811,7 +1862,7 @@
                                     checkPage();
                                 },500);
                             }else{
-                                loadmoreBtn.click();
+                                emuClick(loadmoreBtn);
                             }
                         },200);
                         return;
@@ -1819,7 +1870,16 @@
                         loadmoreEnd=true;
                     }
                 }
-                orgPage=ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView, true);
+                let pageEle=ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView, true);
+                if(!nextLink || !pageEle){
+                    if(ruleParser.curSiteRule.wait && waitTimes-->0){
+                        setTimeout(()=>{
+                            checkPage();
+                        },parseInt(ruleParser.curSiteRule.wait));
+                        return;
+                    }
+                }
+                orgPage=pageEle;
                 if(!orgPage || orgPage.length==0){
                     isPause=true;
                     callback(false, false);
@@ -1827,13 +1887,12 @@
                 }
                 orgPage=orgPage[parseInt(orgPage.length/2)];
                 if(orgPage && orgPage.tagName=="UL")orgPage=orgPage.children[0];
-                let nextLink=ruleParser.getNextLink(iframeDoc);
                 if(orgPage && nextLink){
                     if(!isVisible(nextLink, iframeDoc.defaultView)){
                         isPause=true;
                         callback(false, false);
                     }else{
-                        nextLink.click();
+                        emuClick(nextLink);
                         setTimeout(()=>{
                             checkPage();
                         },500);
@@ -1844,18 +1903,28 @@
                 }
                 return;
             }
-            if(times++ > 10){
+            if(times++ > 20){
+                emuClick(nextLink);
                 isPause=true;
                 callback(false, false);
                 return;
             }
+            iframeDoc.body.scrollTop=9999999;
+            iframeDoc.documentElement.scrollTop=9999999;
             let eles=ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView, true);
             if(!eles || eles.length==0 || orgPage == eles[0]){
                 setTimeout(()=>{
                     checkPage();
                 },500);
             }else{
-                callback(iframeDoc, eles);
+                if(ruleParser.curSiteRule.wait){
+                    setTimeout(()=>{
+                        let eles=ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView, true);
+                        callback(iframeDoc, eles);
+                    },parseInt(ruleParser.curSiteRule.wait));
+                }else{
+                    callback(iframeDoc, eles);
+                }
             }
         }
         if(!emuIframe){
