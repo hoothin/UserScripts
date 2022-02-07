@@ -1,6 +1,6 @@
 東方永頁機 [Wiki](https://hoothin.github.io/PagetualGuide)
 ==
-Auto Page for 90% of all web sites !
+Pagetual - Perpetual pages. Auto Page for 90% of all web sites !
 
 ---
 
