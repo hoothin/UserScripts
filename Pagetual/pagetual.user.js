@@ -494,6 +494,7 @@
                 }
                 let urlReg=new RegExp(rule.url, "i");
                 if(urlReg.test(location.href)){
+                    let pageElement,nextLink,insert;
                     if(rule.wait){
                         let checkReady=()=>{
                             setTimeout(()=>{
@@ -514,7 +515,6 @@
                         checkReady();
                         return;
                     }
-                    let pageElement,nextLink,insert;
                     if(rule.pageElement)pageElement=rule.type==0?getElementByXpath(rule.pageElement):document.querySelector(rule.pageElement);
                     if(rule.nextLink)nextLink=rule.type==0?getElementByXpath(rule.nextLink):document.querySelector(rule.nextLink);
                     if(rule.insert)insert=rule.type==0?getElementByXpath(rule.insert):document.querySelector(rule.insert);
@@ -534,6 +534,7 @@
                 if(!rule || !rule.url)continue;
                 let urlReg=new RegExp(rule.url, "i");
                 if(urlReg.test(location.href)){
+                    let pageElement,nextLink,insert;
                     if(rule.wait){
                         let checkReady=()=>{
                             setTimeout(()=>{
@@ -554,7 +555,6 @@
                         checkReady();
                         return;
                     }
-                    let pageElement,nextLink,insert;
                     if(rule.pageElement)pageElement=rule.type==0?getElementByXpath(rule.pageElement):document.querySelector(rule.pageElement);
                     if(rule.nextLink)nextLink=rule.type==0?getElementByXpath(rule.nextLink):document.querySelector(rule.nextLink);
                     if(rule.insert)insert=rule.type==0?getElementByXpath(rule.insert):document.querySelector(rule.insert);
@@ -578,6 +578,7 @@
                         let rule=self.rules[r];
                         let urlReg=new RegExp(rule.url, "i");
                         if(urlReg.test(location.href)){
+                            let pageElement,nextLink,insert;
                             if(rule.wait){
                                 let checkReady=()=>{
                                     setTimeout(()=>{
@@ -598,7 +599,6 @@
                                 checkReady();
                                 return;
                             }
-                            let pageElement,nextLink,insert;
                             if(rule.pageElement)pageElement=rule.type==0?getElementByXpath(rule.pageElement):document.querySelector(rule.pageElement);
                             if(rule.nextLink)nextLink=rule.type==0?getElementByXpath(rule.nextLink):document.querySelector(rule.nextLink);
                             if(rule.insert)insert=rule.type==0?getElementByXpath(rule.insert):document.querySelector(rule.insert);
@@ -1667,7 +1667,7 @@
     }
 
     function getLoadMore(doc){
-        let btnSel=ruleParser.curSiteRule.loadMore||".LoadMore,.result--more>a";
+        let btnSel=ruleParser.curSiteRule.loadMore||".LoadMore";
         let loadmoreBtn=doc.querySelector(btnSel);
         if(!loadmoreBtn){
             let buttons=doc.querySelectorAll("input,button,a"),loadmoreReg=/^\s*(加载更多|加載更多|load\s*more|もっと読み込む)\s*$/i;
