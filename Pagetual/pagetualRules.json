@@ -128,9 +128,14 @@
     "nextLink":"a.next"
   },
   {
-    "name":"expreview",
-    "url":"https://www\\.expreview\\.com/",
+    "name":"Expreview",
+    "url":"^https://www\\.expreview\\.com/",
     "loadMore":"span.load"
+  },
+  {
+    "name":"Duckduckgo",
+    "url":"^https://duckduckgo\\.com/\\?",
+    "loadMore":".result--more>a"
   },
   {
     "name":"SkrBT",
