@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.0.15
+// @version      1.0.16
 // @description  Simply auto loading paginated web pages
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -1745,12 +1745,13 @@
         if(inTable){
             let example=(insert.tagName=="TR" || insert.tagName=="TBODY")?insert:insert.previousElementSibling;
             let tdNum=0;
-            [].forEach.call(example.querySelectorAll("td"), td=>{
+            [].forEach.call(example.querySelectorAll("td,th"), td=>{
                 tdNum+=td.colSpan||1;
             });
             pageBar.style.display="table-row";
             let td=document.createElement("td");
             td.colSpan=tdNum||1;
+            td.style.padding="0 0";
             td.style.textAlign="center";
             td.appendChild(upSpan);
             td.appendChild(pageText);
