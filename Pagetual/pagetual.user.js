@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.0.16
+// @version      1.0.17
 // @description  Simply auto loading paginated web pages
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -149,7 +149,13 @@
                     opacity:"分页隔条不透明值",
                     hideBar:"空白处双击隐藏分页隔条",
                     dbClick2Stop:"空白处双击暂停翻页",
-                    sortTitle:"排序在下次更新规则后生效"
+                    sortTitle:"排序在下次更新规则后生效",
+                    showPageUpDown:"显示翻屏按钮",
+                    pageUp:"上翻一屏",
+                    pageDown:"下翻一屏",
+                    showRealPage:"显示真实页数",
+                    modifyImage:"修改按钮图标，一行一条，依次为[页首][页尾][上翻][下翻]",
+                    btnCss:"添加按钮CSS"
                 };
                 break;
             case "zh-TW":
@@ -180,7 +186,13 @@
                     opacity:"分頁隔條不透明值",
                     hideBar:"空白處雙擊隱藏分頁隔條",
                     dbClick2Stop:"空白處雙擊暫停翻頁",
-                    sortTitle:"排序在下次更新規則後生效"
+                    sortTitle:"排序在下次更新規則後生效",
+                    showPageUpDown:"顯示翻屏按鈕",
+                    pageUp:"上翻一屏",
+                    pageDown:"下翻一屏",
+                    showRealPage:"顯示真實頁數",
+                    modifyImage:"修改按鈕圖標，一行一條，依次為[頁首][頁尾][上翻][下翻]",
+                    btnCss:"添加按鈕CSS"
                 };
                 break;
             case "ja":
@@ -1749,6 +1761,7 @@
                 tdNum+=td.colSpan||1;
             });
             pageBar.style.display="table-row";
+            pageBar.style.backgroundColor="";
             let td=document.createElement("td");
             td.colSpan=tdNum||1;
             td.style.padding="0 0";
@@ -1760,8 +1773,8 @@
         }
 
         upSpan.addEventListener("click", e=>{
-            changeStop(true);
-            pageBar.title=i18n(isPause?"enable":"disable");
+            //changeStop(true);
+            //pageBar.title=i18n(isPause?"enable":"disable");
             document.body.scrollTop=0;
             document.documentElement.scrollTop=0;
             e.preventDefault();
