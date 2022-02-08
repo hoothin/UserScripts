@@ -94,6 +94,7 @@
 // @exclude      *://www.youtube.com/
 // @exclude      *://www.youtube.com/watch*
 // @exclude      *://baike.baidu.com/*
+// @exclude      *://*.instagram.com/*
 // ==/UserScript==
 
 (function() {
@@ -750,8 +751,22 @@
             if(!next)next=curPage.querySelector(".next>button");
             if(!next)next=curPage.querySelector("a[alt=next]");
             if(!next)next=curPage.querySelector("[title=next]");
-            if(!next)next=curPage.querySelector("[aria-label='Next']");
-            if(!next)next=curPage.querySelector("[aria-label='Next page']");
+            if(!next){
+                next=curPage.querySelectorAll("[aria-label='Next']");
+                if(next && next.length==1){
+                    next=next[0];
+                }else{
+                    next=null;
+                }
+            }
+            if(!next){
+                next=curPage.querySelectorAll("[aria-label='Next page']");
+                if(next && next.length==1){
+                    next=next[0];
+                }else{
+                    next=null;
+                }
+            }
             if(!next)next=curPage.querySelector(".nextPage");
             if(next && (!next.href || /^javascript:/.test(next.href))){
                 jsNext=next;
