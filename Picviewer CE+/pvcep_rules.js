@@ -981,5 +981,15 @@ var siteInfo=[
     }
     return null;
  }
+},
+{
+ name:"instagram",
+ url:/^https?:\/\/[^.]+\.instagram.com/i,
+ ext: function(target) {
+    if(target && target.previousElementSibling){
+        let imgs=target.previousElementSibling.querySelectorAll("img");
+        if(imgs && imgs.length==1)return imgs[0];
+    }
+ }
 }
 ];
