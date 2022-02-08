@@ -6,7 +6,7 @@
 // @description          Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version              2022.1.30.1
+// @version              2022.2.8.1
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -37,7 +37,7 @@
 // @require              https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.2/FileSaver.min.js
 // @require              https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.js
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
-// @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1011929
+// @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1016378
 // @contributionURL      https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
 // @contributionAmount   1
 // @include              http://*
@@ -889,19 +889,9 @@ ImgOps | https://imgops.com/#b#`;
             customRules:`[
 //{
 //name: "Google picture",
-//example: "http://www.google.com.hk/search?q=firefox",
-//enabled: true,
 //url: /https?:\/\/www.google(\.\w{1,3}){1,3}\/search\?.*/,
-//clickToOpen: {
-// enabled: false,
-// preventDefault: true,
-// type: 'actual',
-//},
 //getImage: function(a){
 //},
-//css: '',
-//ext: 'previous-2',
-//exclude: /_code\.png$/i,
 //src: /avatar/i,
 //r: /\?.*$/i,
 //s: ''
