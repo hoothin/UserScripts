@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.0.17
+// @version      1.0.18
 // @description  Simply auto loading paginated web pages
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -686,7 +686,7 @@
                         debug(self.curSiteRule.pageElement);
                         return [ele];
                     }
-                    let i,maxHeight=curHeight*0.5,curMaxEle=null,curMaxArea=0,maxWidth=0;
+                    let i,maxHeight=curHeight*0.6,curMaxEle=null,curMaxArea=0,maxWidth=0;
                     let isHori=true;
                     let offsetTop=ele.children[0].offsetTop;
                     for(i=0;i<ele.children.length;i++){
@@ -1572,11 +1572,11 @@
          .pagetual_pageBar:hover {
            opacity: 1!important;
          }
-         .pagetual_pageBar>span {
+         .pagetual_pageBar span {
            vertical-align: super;
          }
 
-         .pagetual_pageBar>span>svg:hover {
+         .pagetual_pageBar span>svg:hover {
            animation: touhouAni 1s infinite;
          }
 
