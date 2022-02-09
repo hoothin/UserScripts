@@ -138,6 +138,14 @@
     "loadMore":".result--more>a"
   },
   {
+    "name":"goddessfantasy",
+    "type":"0",
+    "url":"^https://www\\.goddessfantasy\\.net/bbs/",
+    "pageElement":"//div[@id='messageindex']|//form[@id='quickModForm']",
+    "nextLink":"//div[@class='pagelinks']/a[text()='»']",
+    "pinUrl":true
+  },
+  {
     "name":"SkrBT",
     "url":"^https://skrbt",
     "pageElement":"ul.list-unstyled",
