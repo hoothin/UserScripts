@@ -6,7 +6,7 @@
 // @description          Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version              2022.2.8.1
+// @version              2022.2.9.1
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -772,7 +772,7 @@ ImgOps | https://imgops.com/#b#`;
         // 默认设置，请到设置界面修改
         prefs={
             floatBar:{//浮动工具栏相关设置.
-                butonOrder:['actual','current','gallery','magnifier'],//按钮排列顺序'actual'(实际的图片),'current'(当前显示的图片),'magnifier'(放大镜观察),'gallery'(图集),'search'(搜索原图)
+                butonOrder:['actual','gallery','current','magnifier'],//按钮排列顺序'actual'(实际的图片),'current'(当前显示的图片),'magnifier'(放大镜观察),'gallery'(图集),'search'(搜索原图)
                 listenBg:true,//监听背景图
                 showDelay:366,//浮动工具栏显示延时.单位(毫秒)
                 hideDelay:566,//浮动工具栏隐藏延时.单位(毫秒)
@@ -4030,6 +4030,21 @@ ImgOps | https://imgops.com/#b#`;
                 var sizeInputH=this.gallery.querySelector("#minsizeH");
                 var sizeInputW=this.gallery.querySelector("#minsizeW");
                 var thumbnails=this.eleMaps['sidebar-thumbnails-container'];
+                var selectData=this.data[index];
+                if(selectData.noActual){
+                    if(selectData.sizeW<sizeInputW.value){
+                        var sizeInputWSpan=this.gallery.querySelector("#minsizeWSpan");
+                        sizeInputW.value=selectData.sizeW;
+                        sizeInputW.title=sizeInputW.value+"px";
+                        sizeInputWSpan.innerHTML=createHTML(Math.floor(sizeInputW.value)+"px");
+                    }
+                    if(selectData.sizeH<sizeInputH.value){
+                        var sizeInputHSpan=this.gallery.querySelector("#minsizeHSpan");
+                        sizeInputH.value=selectData.sizeH;
+                        sizeInputH.title=sizeInputH.value+"px";
+                        sizeInputHSpan.innerHTML=createHTML(Math.floor(sizeInputH.value)+"px");
+                    }
+                }
                 // 如果是新的，则添加，否则重置并添加。
                 if (!data){
                     thumbnails.innerHTML = createHTML("");
@@ -4097,14 +4112,14 @@ ImgOps | https://imgops.com/#b#`;
                 this.thumbScrollbar.reset();
 
                 if(this.imgSpans[index].style.display=="none"){
-                    for(var j in this.imgSpans){
+                    /*for(var j in this.imgSpans){
                         if (!this.imgSpans.hasOwnProperty(j)) continue;
                         var curSpan=this.imgSpans[j];
                         if(curSpan.style.display!="none"){
                             this.select(curSpan, true);
                             return;
                         }
-                    }
+                    }*/
                 }
                 this.select(this.imgSpans[index], true);
             },
