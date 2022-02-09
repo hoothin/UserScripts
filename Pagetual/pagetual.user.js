@@ -1792,8 +1792,10 @@
                 tdNum+=td.colSpan||1;
             });
             pageBar.style.display="table-row";
-            pageBar.style.backgroundColor="";
+            pageBar.style.backgroundColor="unset";
             let td=document.createElement("td");
+            td.style.backgroundColor="rgb(240 240 240 / 80%)";
+            td.style.borderRadius="20px";
             td.colSpan=tdNum||1;
             td.style.padding="0 0";
             td.style.textAlign="center";
