@@ -312,7 +312,7 @@
         let aTags=doc.querySelectorAll("a"),nextPage=null;
         for(var i=0;i<aTags.length;i++){
             let aTag=aTags[i];
-            if(innerNextPage.test(aTag.innerText) && /^http/i.test(aTag.href)){
+            if(innerNextPage.test(aTag.innerText) && aTag.href.indexOf("javascript")==-1){
                 nextPage=aTag;
                 break;
             }
