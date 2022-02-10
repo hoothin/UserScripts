@@ -846,7 +846,7 @@
                     if(!nextf){
                         if(/(\s|^)下[一1]?[页頁张張章]|^next( page)?\s*$|次のページ/i.test(aTag.innerText)){
                             if(!aTag.href || /^javascript:/.test(aTag.href)){
-                                if(!nextfo)nextfo=aTag;
+                                if(!nextfo && aTag.style.display!="none")nextfo=aTag;
                             }else{
                                 nextf=aTag;
                             }
@@ -855,7 +855,7 @@
                     if(!nexts){
                         if(aTag.innerText=="&gt;" || aTag.innerText=="▶"){
                             if(!aTag.href || /^javascript:/.test(aTag.href)){
-                                if(!nextfo)nextfo=aTag;
+                                if(!nextfo && aTag.style.display!="none")nextfo=aTag;
                             }else{
                                 nexts=aTag;
                             }
@@ -1059,7 +1059,7 @@
             this.pageDoc=doc;
             this.curUrl=url;
             this.pageAction(doc, eles);
-            this.getNextLink(doc);
+            let nextLink=this.getNextLink(doc);
             if(curPage==1 && !tried && !this.nextLinkHref && this.curSiteRule.singleUrl && this.curSiteRule.pageElement){
                 this.curSiteRule.action=1;
                 return false;
@@ -1084,6 +1084,10 @@
                         self.insert.parentNode.insertBefore(newEle, self.insert);
                     }
                 });
+            }
+            let nextLinkCs=_unsafeWindow.getComputedStyle(nextLink);
+            if(nextLinkCs.cursor=="not-allowed" || !isVisible(nextLink)){
+                self.nextLinkHref=false;
             }
             return true;
         }
