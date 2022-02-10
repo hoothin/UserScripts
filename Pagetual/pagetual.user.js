@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.0.20
+// @version      1.0.21
 // @description  Simply auto loading paginated web pages
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -95,6 +95,8 @@
 // @exclude      *://www.youtube.com/watch*
 // @exclude      *://baike.baidu.com/*
 // @exclude      *://*.instagram.com/*
+// @exclude      *://pagetual.hoothin.com/*
+// @exclude      *://hoothin.github.io/PagetualGuide/*
 // ==/UserScript==
 
 (function() {
@@ -2045,9 +2047,9 @@
     function nextPage(){
         if(isPause || isLoading)return;
         let nextLink=ruleParser.nextLinkHref;
-        let insert;
-        if(nextLink)insert=ruleParser.getInsert();
-        if(nextLink && insert){
+        if(!nextLink)return;
+        let insert=ruleParser.getInsert();
+        if(insert){
             let isJs=/^(javascript|#)/.test(nextLink.replace(location.href,""));
             if(location.protocol=="https:" && /^http:/.test(nextLink)){
                 nextLink=nextLink.replace(/^http/,"https");
