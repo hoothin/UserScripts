@@ -508,110 +508,70 @@
                 return this.curSiteRule;
             }
             var self=this;
+
+            function setRule(r){
+                self.curSiteRule=r;
+                debug(r);
+                callback();
+            }
+
+            function ruleMatch(r){
+                let pageElement,nextLink,insert;
+                if(r.pageElement)pageElement=r.type==0?getElementByXpath(r.pageElement):document.querySelector(r.pageElement);
+                if(r.nextLink)nextLink=r.type==0?getElementByXpath(r.nextLink):document.querySelector(r.nextLink);
+                if(r.insert)insert=r.type==0?getElementByXpath(r.insert):document.querySelector(r.insert);
+                return !((r.pageElement && !pageElement) ||
+                        (r.nextLink && !nextLink) ||
+                        (r.insert && !insert));
+            }
+
+            function checkRule(r){
+                let urlReg=new RegExp(r.url, "i");
+                if(urlReg.test(location.href)){
+                    if(r.wait){
+                        let waitTimes=10;
+                        let checkReady=()=>{
+                            if(waitTimes--<=0)return true;
+                            setTimeout(()=>{
+                                if(!ruleMatch(r)){
+                                    checkReady();
+                                }else{
+                                    setRule(r);
+                                }
+                            },parseInt(r.wait));
+                        };
+                        checkReady();
+                        return true;
+                    }
+                    if(r.pinUrl){
+                        setRule(r);
+                        return true;
+                    }
+                    if(!ruleMatch(r)){
+                        return false;
+                    }
+                    setRule(r);
+                    return true;
+                }
+                return false;
+            }
+
             for(let i in this.hpRules){
                 let rule=this.hpRules[i];
                 if(!rule || !rule.url)continue;
                 if(rule.singleUrl){
                     if(location.origin+location.pathname==rule.url){
-                        this.curSiteRule=rule;
-                        debug(rule);
-                        callback();
-                        return rule;
+                        setRule(rule);
+                        return;
                     }
                     continue;
                 }
-                let urlReg=new RegExp(rule.url, "i");
-                if(urlReg.test(location.href)){
-                    let pageElement,nextLink,insert;
-                    if(rule.wait){
-                        let waitTimes=10;
-                        let checkReady=()=>{
-                            if(waitTimes--<=0)return;
-                            setTimeout(()=>{
-                                if(rule.pageElement)pageElement=rule.type==0?getElementByXpath(rule.pageElement):document.querySelector(rule.pageElement);
-                                if(rule.nextLink)nextLink=rule.type==0?getElementByXpath(rule.nextLink):document.querySelector(rule.nextLink);
-                                if(rule.insert)insert=rule.type==0?getElementByXpath(rule.insert):document.querySelector(rule.insert);
-                                if((rule.pageElement && !pageElement) ||
-                                   (rule.nextLink && !nextLink) ||
-                                   (rule.insert && !insert)){
-                                    checkReady();
-                                }else{
-                                    self.curSiteRule=rule;
-                                    debug(rule);
-                                    callback();
-                                }
-                            },parseInt(rule.wait));
-                        };
-                        checkReady();
-                        return;
-                    }
-                    if(rule.pinUrl){
-                        self.curSiteRule=rule;
-                        debug(rule);
-                        callback();
-                        return;
-                    }
-                    if(rule.pageElement)pageElement=rule.type==0?getElementByXpath(rule.pageElement):document.querySelector(rule.pageElement);
-                    if(rule.nextLink)nextLink=rule.type==0?getElementByXpath(rule.nextLink):document.querySelector(rule.nextLink);
-                    if(rule.insert)insert=rule.type==0?getElementByXpath(rule.insert):document.querySelector(rule.insert);
-                    if((rule.pageElement && !pageElement) ||
-                       (rule.nextLink && !nextLink) ||
-                       (rule.insert && !insert)){
-                        continue;
-                    }
-                    this.curSiteRule=rule;
-                    debug(rule);
-                    callback();
-                    return rule;
-                }
+                if(checkRule(rule))return;
             }
             for(let i in this.customRules){
                 let rule=this.customRules[i];
                 if(!rule || !rule.url)continue;
-                let urlReg=new RegExp(rule.url, "i");
-                if(urlReg.test(location.href)){
-                    let pageElement,nextLink,insert;
-                    if(rule.wait){
-                        let waitTimes=10;
-                        let checkReady=()=>{
-                            if(waitTimes--<=0)return;
-                            setTimeout(()=>{
-                                if(rule.pageElement)pageElement=rule.type==0?getElementByXpath(rule.pageElement):document.querySelector(rule.pageElement);
-                                if(rule.nextLink)nextLink=rule.type==0?getElementByXpath(rule.nextLink):document.querySelector(rule.nextLink);
-                                if(rule.insert)insert=rule.type==0?getElementByXpath(rule.insert):document.querySelector(rule.insert);
-                                if((rule.pageElement && !pageElement) ||
-                                   (rule.nextLink && !nextLink) ||
-                                   (rule.insert && !insert)){
-                                    checkReady();
-                                }else{
-                                    self.curSiteRule=rule;
-                                    debug(rule);
-                                    callback();
-                                }
-                            },parseInt(rule.wait));
-                        };
-                        checkReady();
-                        return;
-                    }
-                    if(rule.pinUrl){
-                        self.curSiteRule=rule;
-                        debug(rule);
-                        callback();
-                        return;
-                    }
-                    if(rule.pageElement)pageElement=rule.type==0?getElementByXpath(rule.pageElement):document.querySelector(rule.pageElement);
-                    if(rule.nextLink)nextLink=rule.type==0?getElementByXpath(rule.nextLink):document.querySelector(rule.nextLink);
-                    if(rule.insert)insert=rule.type==0?getElementByXpath(rule.insert):document.querySelector(rule.insert);
-                    if((rule.pageElement && !pageElement) ||
-                       (rule.nextLink && !nextLink) ||
-                       (rule.insert && !insert)){
-                        continue;
-                    }
-                    this.curSiteRule=rule;
-                    debug(rule);
-                    callback();
-                    return rule;
-                }
+                if(checkRule(rule))return;
             }
             let r=0;
             function searchByTime(){
@@ -620,50 +580,7 @@
                     end=end>self.rules.length?self.rules.length:end;
                     for(;r<end;r++){
                         let rule=self.rules[r];
-                        let urlReg=new RegExp(rule.url, "i");
-                        if(urlReg.test(location.href)){
-                            let pageElement,nextLink,insert;
-                            if(rule.wait){
-                                let waitTimes=10;
-                                let checkReady=()=>{
-                                    if(waitTimes--<=0)return;
-                                    setTimeout(()=>{
-                                        if(rule.pageElement)pageElement=rule.type==0?getElementByXpath(rule.pageElement):document.querySelector(rule.pageElement);
-                                        if(rule.nextLink)nextLink=rule.type==0?getElementByXpath(rule.nextLink):document.querySelector(rule.nextLink);
-                                        if(rule.insert)insert=rule.type==0?getElementByXpath(rule.insert):document.querySelector(rule.insert);
-                                        if((rule.pageElement && !pageElement) ||
-                                           (rule.nextLink && !nextLink) ||
-                                           (rule.insert && !insert)){
-                                            checkReady();
-                                        }else{
-                                            self.curSiteRule=rule;
-                                            debug(rule);
-                                            callback();
-                                        }
-                                    },parseInt(rule.wait));
-                                };
-                                checkReady();
-                                return;
-                            }
-                            if(rule.pinUrl){
-                                self.curSiteRule=rule;
-                                debug(rule);
-                                callback();
-                                return;
-                            }
-                            if(rule.pageElement)pageElement=rule.type==0?getElementByXpath(rule.pageElement):document.querySelector(rule.pageElement);
-                            if(rule.nextLink)nextLink=rule.type==0?getElementByXpath(rule.nextLink):document.querySelector(rule.nextLink);
-                            if(rule.insert)insert=rule.type==0?getElementByXpath(rule.insert):document.querySelector(rule.insert);
-                            if((rule.pageElement && !pageElement) ||
-                               (rule.nextLink && !nextLink) ||
-                               (rule.insert && !insert)){
-                                continue;
-                            }
-                            self.curSiteRule=rule;
-                            debug(rule);
-                            callback();
-                            return;
-                        }
+                        if(checkRule(rule))return;
                     }
                     if(end>=self.rules.length){
                         self.curSiteRule={};
@@ -741,6 +658,7 @@
                             comStyle=curWin.getComputedStyle(moreChild);
                             let ch=parseInt(moreChild.scrollHeight);
                             let cw=parseInt(moreChild.scrollWidth);
+                            if(h<ch)h=ch;
                             if(moreChild.innerText!="" && !isNaN(ch) && !isNaN(cw)){
                                 a+=ch*cw;
                             }
