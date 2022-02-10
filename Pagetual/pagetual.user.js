@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.0.21
+// @version      1.0.22
 // @description  Simply auto loading paginated web pages
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -839,41 +839,49 @@
             }
             if(!next){
                 let aTags=curPage.querySelectorAll("a");
-                let nextf,nexts,nextt,nextfo;
-                for(i=0;i<aTags.length;i++){
+                let next1,next2,next3,next4,nextJs1,nextJs2,nextJs3;
+                for(i=aTags.length-1;i>=0;i--){
                     let aTag=aTags[i];
-                    if(nextf && nexts && nextt)break;
-                    if(!nextf){
-                        if(/(\s|^)下[一1]?[页頁张張章]|^next( page)?\s*$|次のページ/i.test(aTag.innerText)){
+                    if(aTag.style.display=="none")continue;
+                    if(next1 && next2 && next3 && next4)break;
+                    if(!next1){
+                        if(/^\s*下[一1]?[页頁张張]|^next( page)?\s*$|次のページ/i.test(aTag.innerText)){
                             if(!aTag.href || /^javascript:/.test(aTag.href)){
-                                if(!nextfo && aTag.style.display!="none")nextfo=aTag;
+                                if(!nextJs1)nextJs1=aTag;
                             }else{
-                                nextf=aTag;
+                                next1=aTag;
                             }
                         }
                     }
-                    if(!nexts){
-                        if(aTag.innerText=="&gt;" || aTag.innerText=="▶"){
+                    if(!next2){
+                        if(/^\s*下[一1]?[章]/i.test(aTag.innerText)){
                             if(!aTag.href || /^javascript:/.test(aTag.href)){
-                                if(!nextfo && aTag.style.display!="none")nextfo=aTag;
+                                if(!nextJs2)nextJs2=aTag;
                             }else{
-                                nexts=aTag;
+                                next2=aTag;
+                            }
+                        }
+                    }
+                    if(!next3){
+                        if(aTag.innerText=="&gt;" || aTag.innerText=="▶" || aTag.innerText=="»"){
+                            if(!aTag.href || /^javascript:/.test(aTag.href)){
+                                if(!nextJs3)nextJs3=aTag;
+                            }else{
+                                next3=aTag;
                             }
                         }
                     }
                     if(!aTag.href || /^javascript:/.test(aTag.href))continue;
-                    if(!nextt){
+                    if(!next4){
                         aTag.href=aTag.href.replace(/\?&/,"?");
-                        if(aTag.innerText=="»"){
-                            nextt=aTag;
-                        }else if(aTag.href.replace("#!","").replace(preStr,"").replace(afterStr,"")==parseInt(pageNum)+1){
-                            nextt=aTag;
+                        if(aTag.href.replace("#!","").replace(preStr,"").replace(afterStr,"")==parseInt(pageNum)+1){
+                            next4=aTag;
                         }else if(aTag.href.indexOf(url)!=-1 && /^[\/\?&]?[_-]?(p|page)?=?\/?2(\/|\?|&|$)/i.test(aTag.href.replace(url,"").replace(/\.s?html?$/i,""))){
-                            nextt=aTag;
+                            next4=aTag;
                         }
                     }
                 }
-                next=nextf||nexts||nextt||nextfo;
+                next=next1||next2||next3||next4||nextJs1||nextJs2||nextJs3;
             }
             if(!next)next=jsNext;
             return {next:next,canSave:canSave};
@@ -1982,7 +1990,7 @@
             iframeDoc.body.scrollTop=9999999;
             iframeDoc.documentElement.scrollTop=9999999;
             let eles=ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView, true);
-            if(!eles || eles.length==0 || orgPage == eles[0]){
+            if(!eles || eles.length==0 || orgPage == eles[parseInt(eles.length/2)]){
                 setTimeout(()=>{
                     checkPage();
                 },500);
