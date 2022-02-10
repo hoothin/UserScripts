@@ -787,8 +787,8 @@
                 pageNum=pageMatch2[2];
                 afterStr=pageMatch2[3];
             }
-            let curPage=doc,i,cur;
-            let next=curPage.querySelector("a.next"),jsNext;
+            let curPage=doc,i,cur,jsNext;
+            let next=curPage.querySelector("a.next");
             if(!next)next=curPage.querySelector("a#next");
             if(!next)next=curPage.querySelector("a#rightFix");
             if(!next)next=curPage.querySelector("a.next_page");
@@ -1094,7 +1094,7 @@
                 });
             }
             let nextLinkCs=_unsafeWindow.getComputedStyle(nextLink);
-            if(nextLinkCs.cursor=="not-allowed" || !isVisible(nextLink)){
+            if(nextLinkCs.cursor=="not-allowed" || !isVisible(nextLink, _unsafeWindow)){
                 self.nextLinkHref=false;
             }
             return true;
