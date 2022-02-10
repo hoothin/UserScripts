@@ -13,7 +13,7 @@ Rules
 [
   {
     "name":"yande",
-    "action":"0",
+    "action":0,
     "url":"^https:\/\/yande\\.re\/",
     "pageElement":"ul#post-list-posts>li",
     "nextLink":"a.next_page",
@@ -21,7 +21,7 @@ Rules
   },
   {
     "name":"tieba",
-    "action":"1",
+    "action":1,
     "url":"^https:\/\/tieba\\.baidu.com\/f\\?kw=",
     "pageElement":"ul#thread_list>li",
     "nextLink":".next.pagination-item "
@@ -43,6 +43,10 @@ Name of the target site
 url
 --
 Regexp of the url of target site
+
+pinUrl
+--
+Sometimes the next link and page element will be inexistence, set this to true so you can select the rule just with url
 
 enable
 --
@@ -103,3 +107,7 @@ The js code to run with every page inserted with doc:(document of every page loa
 init [ :(document) ]
 --
 The js code to run with current main page with document:(document of main page)
+
+loadMore
+--
+Selector of load more button 
