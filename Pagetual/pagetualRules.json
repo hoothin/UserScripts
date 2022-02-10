@@ -182,5 +182,30 @@
     "url":"^http://m\\.cankaoxiaoxi\\.com/",
     "pageElement":"div.content",
     "nextLink":"li.next>a"
+  },
+  {
+    "name":"playstation",
+    "action":1,
+    "css":".psw-visually-hide{opacity:1!important}.pagetual_loading{display:none!important}",
+    "wait":2000,
+    "url":"^https://store\\.playstation\\.com/.*/\\d+$",
+    "pageElement":"ul.psw-grid-list",
+    "nextLinkByUrl":["(.*/)(\\d+)$","$1{$2+1}"]
+  },
+  {
+    "name":"Baidu",
+    "css":"span.c-img-radius-large.c-img-border{display:none}",
+    "from":1,
+    "insertPos":1,
+    "nextLink":"//*[@id=\"page\"]/div/a[last()]",
+    "pageElement":"//*[@id=\"content_left\"]/*",
+    "type":0,
+    "url":"^https://www\\.baidu\\.com/s"
+  },
+  {
+    "name":"58pic",
+    "url":"^https://www\\.58pic\\.com/tupian/",
+    "css":".card-lazy{display:none}.pagetual_pageBar{margin-bottom: 20px!important;}",
+    "pageElement":"div.search-v3-content>.card-grid-box"
   }
 ]
