@@ -74,11 +74,8 @@
 // @exclude      *://v.pptv.com/show/*
 // @exclude      *://www.le.com/ptv/vplay/*
 // @exclude      *://www.wasu.cn/Play/show/*
-// @exclude      *://m.v.qq.com/x/cover/*
-// @exclude      *://m.v.qq.com/x/page/*
 // @exclude      *://m.v.qq.com/*
 // @exclude      *://m.iqiyi.com/*
-// @exclude      *://m.iqiyi.com/kszt/*
 // @exclude      *://m.youku.com/alipay_video/*
 // @exclude      *://m.mgtv.com/b/*
 // @exclude      *://m.tv.sohu.com/v/*
