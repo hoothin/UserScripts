@@ -186,11 +186,12 @@
   {
     "name":"playstation",
     "action":1,
-    "css":".psw-visually-hide{opacity:1!important}.pagetual_loading{display:none!important}",
-    "wait":2000,
+    "css":".psw-visually-hide{opacity:1!important}.pagetual_loading{display:none!important}[name='pagetual-iframe']{display:none}",
     "url":"^https://store\\.playstation\\.com/.*/\\d+$",
     "pageElement":"ul.psw-grid-list",
-    "nextLinkByUrl":["(.*/)(\\d+)$","$1{$2+1}"]
+    "wait":500,
+    "nextLinkByUrl":["(.*/)(\\d+)$","$1{$2+1}"],
+    "pageAction":"[].forEach.call(eles[0].querySelectorAll('[loading=lazy]'),img=>{img.src=img.src.replace('w=54&thumb=true','w=230&thumb=false');img.classList.remove('psw-blur')});"
   },
   {
     "name":"Baidu",
