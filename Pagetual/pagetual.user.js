@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.0.22
+// @version      1.0.23
 // @description  Simply auto loading paginated web pages
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -955,6 +955,7 @@
             this.curUrl=location.href;
             this.getRule(()=>{
                 if(self.curSiteRule.enable==0){
+                    debug("Stop as rule disable");
                     isPause=true;
                     return;
                 }
@@ -1011,9 +1012,11 @@
                     }
                 });
             }
-            let nextLinkCs=_unsafeWindow.getComputedStyle(nextLink);
-            if(nextLinkCs.cursor=="not-allowed" || !isVisible(nextLink, _unsafeWindow)){
-                self.nextLinkHref=false;
+            if(nextLink.tagName){
+                let nextLinkCs=_unsafeWindow.getComputedStyle(nextLink);
+                if(nextLinkCs.cursor=="not-allowed" || !isVisible(nextLink, _unsafeWindow)){
+                    self.nextLinkHref=false;
+                }
             }
             return true;
         }
@@ -1495,6 +1498,7 @@
                         }else{
                             if(failFromIframe++ > 2){
                                 failFromIframe=0;
+                                debug("Stop as failFromIframe");
                                 isPause=true;
                                 callback(false, false);
                             }else{
@@ -1502,6 +1506,7 @@
                             }
                         }
                     }catch(e){
+                        debug("Stop as cors");
                         isPause=true;
                         callback(false, false);
                     }
@@ -1618,8 +1623,8 @@
         });
         let loadmoreBtn=getLoadMore(document),loading=true;
         if(loadmoreBtn){
-            emuClick(loadmoreBtn);
-            setTimeout(()=>{loading=false},2000);
+            //emuClick(loadmoreBtn);
+            setTimeout(()=>{loading=false},500);
         }
         document.addEventListener('scroll', e=>{
             if(urlChanged){
@@ -1839,6 +1844,7 @@
             try{
                 iframeDoc=emuIframe.contentDocument || emuIframe.contentWindow.document;
             }catch(e){
+                debug("Stop as cors");
                 isPause=true;
                 callback(false, false);
                 return;
@@ -1877,6 +1883,7 @@
                 }
                 orgPage=pageEle;
                 if(!orgPage || orgPage.length==0){
+                    debug("Stop as no page when emu");
                     isPause=true;
                     callback(false, false);
                     return;
@@ -1885,6 +1892,7 @@
                 if(orgPage && orgPage.tagName=="UL")orgPage=orgPage.children[0];
                 if(orgPage && nextLink){
                     if(!isVisible(nextLink, iframeDoc.defaultView)){
+                        debug("Stop as next hide when emu");
                         isPause=true;
                         callback(false, false);
                     }else{
@@ -1894,13 +1902,15 @@
                         },500);
                     }
                 }else{
+                    debug("Stop as no next when emu");
                     isPause=true;
                     callback(false, false);
                 }
                 return;
             }
             if(times++ > 20){
-                emuClick(nextLink);
+                //emuClick(nextLink);
+                debug("Stop as timeout when emu");
                 isPause=true;
                 callback(false, false);
                 return;
@@ -1955,6 +1965,7 @@
             try{
                 iframeDoc=curIframe.contentDocument || curIframe.contentWindow.document;
             }catch(e){
+                debug("Stop as cors");
                 isPause=true;
                 callback(false, false);
                 return;
@@ -1994,6 +2005,7 @@
                         createPageBar(nextLink);
                         ruleParser.insertPage(null, ele, nextLink, null, true);
                     }else{
+                        debug("Stop as no page when get by js");
                         isPause=true;
                     }
                 };
