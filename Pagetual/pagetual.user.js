@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.0.23
+// @version      1.0.24
 // @description  Simply auto loading paginated web pages
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -529,16 +529,22 @@
                 let urlReg=new RegExp(r.url, "i");
                 if(urlReg.test(location.href)){
                     if(r.wait){
+                        let waitTime=500,checkEval;
+                        if(isNaN(r.wait)){
+                            checkEval=Function("doc",'"use strict";' + r.wait);
+                        }else{
+                            waitTime=r.wait;
+                        }
                         let waitTimes=10;
                         let checkReady=()=>{
                             if(waitTimes--<=0)return true;
                             setTimeout(()=>{
-                                if(!ruleMatch(r)){
+                                if(!ruleMatch(r) || (checkEval && !checkEval(document))){
                                     checkReady();
                                 }else{
                                     setRule(r);
                                 }
-                            },parseInt(r.wait));
+                            },parseInt(waitTime));
                         };
                         checkReady();
                         return true;
@@ -812,7 +818,7 @@
                 return true;
             }else if(this.curSiteRule.nextLinkByJs){
                 try{
-                    let targetUrl=Function("doc",'"use strict";' + this.curSiteRule.nextLinkByJs)(doc);;
+                    let targetUrl=Function("doc",'"use strict";' + this.curSiteRule.nextLinkByJs)(doc);
                     if(targetUrl)nextLink={href:targetUrl};
                 }catch(e){}
             }else if(this.curSiteRule.nextLinkByUrl){
@@ -1482,18 +1488,26 @@
         iframe.sandbox="allow-same-origin allow-scripts allow-popups allow-forms";
         iframe.style.cssText = 'margin:0!important;padding:0!important;visibility:hidden!important;';
         iframe.addEventListener("load", e=>{
+            let waitTime=500,checkEval;
+            if(ruleParser.curSiteRule.wait){
+                if(isNaN(ruleParser.curSiteRule.wait)){
+                    checkEval=Function("doc",'"use strict";' + ruleParser.curSiteRule.wait);
+                }else{
+                    waitTime=ruleParser.curSiteRule.wait;
+                }
+            }
             setTimeout(()=>{
                 let tryTimes=0;
                 function checkIframe(){
                     try{
                         let doc=iframe.contentDocument || iframe.contentWindow.document;
                         let eles=ruleParser.getPageElement(doc, iframe.contentWindow);
-                        if(eles && eles.length>0){
+                        if(eles && eles.length>0 && (!checkEval || checkEval(doc))){
                             callback(doc, eles);
-                        }else if(tryTimes++ < 2){
+                        }else if(tryTimes++ < 10){
                             setTimeout(()=>{
                                 checkIframe();
-                            },500);
+                            },waitTime);
                             return;
                         }else{
                             if(failFromIframe++ > 2){
@@ -1513,7 +1527,7 @@
                     document.body.removeChild(iframe);
                 }
                 checkIframe();
-            },ruleParser.curSiteRule.wait);
+            },waitTime);
         });
         iframe.src=url;
         document.body.appendChild(iframe);
@@ -1849,7 +1863,17 @@
                 callback(false, false);
                 return;
             }
+
             let nextLink=ruleParser.getNextLink(iframeDoc);
+            let waitTime=500,checkEval;
+            if(ruleParser.curSiteRule.wait){
+                if(isNaN(ruleParser.curSiteRule.wait)){
+                    checkEval=Function("doc",'"use strict";' + ruleParser.curSiteRule.wait);
+                }else{
+                    waitTime=ruleParser.curSiteRule.wait;
+                }
+            }
+
             if(!orgPage){
                 if(!loadmoreEnd){
                     loadmoreBtn=getLoadMore(iframeDoc);
@@ -1873,11 +1897,11 @@
                     }
                 }
                 let pageEle=ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView, true);
-                if(!nextLink || !pageEle){
+                if(!nextLink || !pageEle || (checkEval && !checkEval(iframeDoc))){
                     if(ruleParser.curSiteRule.wait && waitTimes-->0){
                         setTimeout(()=>{
                             checkPage();
-                        },parseInt(ruleParser.curSiteRule.wait));
+                        },waitTime);
                         return;
                     }
                 }
@@ -1918,19 +1942,12 @@
             iframeDoc.body.scrollTop=9999999;
             iframeDoc.documentElement.scrollTop=9999999;
             let eles=ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView, true);
-            if(!eles || eles.length==0 || orgPage == eles[parseInt(eles.length/2)]){
+            if(!eles || eles.length==0 || orgPage == eles[parseInt(eles.length/2)] || (checkEval && !checkEval(iframeDoc))){
                 setTimeout(()=>{
                     checkPage();
-                },500);
+                },waitTime);
             }else{
-                if(ruleParser.curSiteRule.wait){
-                    setTimeout(()=>{
-                        let eles=ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView, true);
-                        callback(iframeDoc, eles);
-                    },parseInt(ruleParser.curSiteRule.wait));
-                }else{
-                    callback(iframeDoc, eles);
-                }
+                callback(iframeDoc, eles);
             }
         }
         if(!emuIframe){
