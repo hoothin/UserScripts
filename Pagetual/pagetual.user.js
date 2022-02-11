@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.0.25
+// @version      1.0.26
 // @description  Simply auto loading paginated web pages
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -794,10 +794,9 @@
                     }
                     if(!aTag.href || /^javascript:/.test(aTag.href))continue;
                     if(!next4){
-                        aTag.href=aTag.href.replace(/\?&/,"?");
-                        if(aTag.href.replace("#!","").replace(preStr,"").replace(afterStr,"")==parseInt(pageNum)+1){
+                        if(aTag.href.replace("?&","?").replace("#!","").replace(preStr,"").replace(afterStr,"")==parseInt(pageNum)+1){
                             next4=aTag;
-                        }else if(aTag.href.indexOf(url)!=-1 && /^[\/\?&]?[_-]?(p|page)?=?\/?2(\/|\?|&|$)/i.test(aTag.href.replace(url,"").replace(/\.s?html?$/i,""))){
+                        }else if(aTag.href.replace("?&","?").indexOf(url)!=-1 && /^[\/\?&]?[_-]?(p|page)?=?\/?2(\/|\?|&|$)/i.test(aTag.href.replace(url,"").replace(/\.s?html?$/i,""))){
                             next4=aTag;
                         }
                     }
@@ -1026,7 +1025,7 @@
     }
     var ruleParser = new RuleParser();
 
-    var rulesData={},ruleUrls,updateDate;
+    var rulesData={},ruleUrls,updateDate,configPage="https://github.com/hoothin/UserScripts/tree/master/Pagetual";
     function initConfig(){
         _GM_registerMenuCommand(i18n(forceState==1?"enable":"disableSite"), ()=>{
             storage.setItem("forceState_"+location.host, (forceState==1?"":1));
@@ -1057,7 +1056,7 @@
             `);
             configCon=document.querySelector(".markdown-body");
             insertPos=configCon.querySelector("hr");
-        }else if(location.href=="https://github.com/hoothin/UserScripts/tree/master/Pagetual"){
+        }else if(location.href==configPage){
         }else return;
         class Rulebar {
             init(ruleUrl){
@@ -1631,6 +1630,11 @@
         history.pushState = _wr('pushState');
         window.addEventListener('pushState', function(e) {
             urlChanged=true;
+            setTimeout(()=>{
+                if(location.href==configPage){
+                    location.reload();
+                }
+            },1);
         });
         let loadmoreBtn=getLoadMore(document),loading=true;
         if(loadmoreBtn){
