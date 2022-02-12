@@ -1,11 +1,8 @@
 東方永頁機 [Wiki](https://hoothin.github.io/PagetualGuide)
 ==
-Pagetual - Perpetual pages. Auto loading paginated web pages for 90% of all web sites !
+*Pagetual - Perpetual pages. Auto loading paginated web pages for 90% of all web sites !*
 
 ---
-
-[Buy me a coffee if it helps you with PayPal.Me](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation)
-![donate](https://s2.loli.net/2022/01/06/lEqKWLHG7UBO6AY.jpg)
 
 Rules
 ==
@@ -36,6 +33,9 @@ Rules
 ]
 </pre>
 
+[Buy me a coffee if it helps you with PayPal.Me](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation)
+![donate](https://s2.loli.net/2022/01/06/lEqKWLHG7UBO6AY.jpg)
+
 name
 --
 Name of the target site
@@ -54,7 +54,7 @@ enable
 
 wait
 --
-The time to wait for page ready when you are sure the url match the site
+The time to wait for page ready when you are sure the url match the site, you can also use a js code which return a boolean to check if the page is ready instead
 
 type
 --
