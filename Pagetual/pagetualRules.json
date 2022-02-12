@@ -1,7 +1,7 @@
 [
   {
     "name":"yande",
-    "action":"0",
+    "action":0,
     "url":"^https://yande\\.re/",
     "pageElement":"ul#post-list-posts>li",
     "nextLink":"a.next_page",
@@ -9,67 +9,67 @@
   },
   {
     "name":"tieba",
-    "action":"1",
+    "action":1,
     "url":"^https://tieba\\.baidu\\.com/f\\?kw=",
     "pageElement":"ul#thread_list>li",
     "nextLink":".next.pagination-item "
   },
   {
     "name":"xxgame",
-    "action":"0",
+    "action":0,
     "url":"^http://www\\.xxgame\\.net/chinese",
     "pageElement":"div.layui-row>div.layui-col-md4:not(div:nth-child(5),div:nth-child(6),div:nth-child(7))",
     "nextLinkByUrl":["(http://www\\.xxgame\\.net/chinese/?)(?:\\?page=|$)(\\d*)","$1?page={($2.0||1)+1}"]
   },
   {
     "name":"masuit",
-    "action":"0",
+    "action":0,
     "url":"^https://masuit\\.com/",
     "pageElement":".ibox.wow",
     "nextLink":"a[aria-label=Next]"
   },
   {
     "name":"动漫之家",
-    "action":"1",
+    "action":1,
     "url":"^https?://(www|manhua)\\.(dmzj|178)\\.com/\\w+/\\d+\\.shtml",
     "nextLinkByUrl":["(.*#@page=)(\\d+)","$1{$2+1}"],
     "pageElement":"div#center_box>img"
   },
   {
     "name":"smzdm",
-    "action":"0",
+    "action":0,
     "url":"^https://.*\\.smzdm\\.com",
     "pageElement":"ul#feed-main-list>li",
     "nextLink":".pagenation-list>li.current+li>a",
     "insert":"ul#feed-main-list",
-    "insertPos":"2"
+    "insertPos":2
   },
   {
     "name":"mhgui",
-    "action":"0",
+    "action":0,
     "url":"^https://.*\\.(mhgui|manhuagui)\\.com/comic/\\d+",
     "pageElementByJs":"let link=document.querySelector('#mangaBox>img').src; let match=link.match(/(.*)(\\d{3})(\\.jpg.*)/); window.i=window.i||parseInt(match[2]);window.i++; let src=match[1]+(window.i>99?window.i:(window.i>9?'0'+window.i:'00'+window.i))+match[3]; let img=document.createElement('img');img.onload=()=>{over([img])};img.onerror=e=>{over()};img.src=src;",
     "insert":"#mangaBox",
-    "insertPos":"2"
+    "insertPos":2
   },
   {
     "name":"javdb",
-    "action":"0",
+    "action":0,
     "url":"^https://javdb\\.com/",
     "pageElement":"#videos.video-container",
     "css":".grid.columns{display: flex; flex-wrap: wrap;}"
   },
   {
     "name":"Google Search",
-    "action":"1",
+    "action":1,
     "nextLink":"id('pnnext')|id('navbar navcnt nav')//td[span]/following-sibling::td[1]/a|id('nn')/parent::a",
     "pageElement":"id('rso')/div|id('center_col')/style[contains(.,'relative')]|id('search')/div/div/style[1]",
-    "type":"0",
+    "type":0,
     "url":"^https?://[^./]+\\.google(?:\\.[^./]{2,3}){1,2}/(?:c(?:se|ustom)|search|webhp|m|#)"
   },
   {
     "name":"bilibili",
-    "action":"0",
+    "action":0,
     "url":"^https://search\\.bilibili\\.com",
     "pageElement":"ul>li.video-item",
     "nextLinkByUrl":["(.*\\?keyword=.*)(?:\\&page=|$)(\\d*)","$1&page={($2.0||1)+1}"],
@@ -77,7 +77,7 @@
   },
   {
     "name":"动漫屋",
-    "action":"1",
+    "action":1,
     "url":"^https://www\\.dm5\\.com/m",
     "pageElement":".view-main>.item",
     "nextLink":"span.current+a"
@@ -90,39 +90,39 @@
     "init":"let is=document.querySelectorAll('.chapter-images img'),j=document.querySelector('.lazyBox');is.forEach(i=>{i.src=i.dataset.srcset;j.appendChild(i);})",
     "pageAction":"let j=document.querySelector('.lazyBox');eles.forEach(i=>{i.src=i.dataset.srcset;})",
     "insert":".lazyBox",
-    "insertPos":"2"
+    "insertPos":2
   },
   {
     "name":"Google cse",
     "nextLink":".gsc-cursor-current-page+div",
     "pageElement":".gsc-expansionArea>.gsc-result",
     "url":"^https://cse\\.google\\.com.*&gsc\\.q=",
-    "wait":"2000"
+    "wait":2000
   },
   {
     "name":"bookmarkearth",
-    "action":"0",
+    "action":0,
     "url":"^https://www\\.bookmarkearth\\.com(?:/?$|/page\\?currentPage=)",
     "pageElement":".source>.document-piece",
     "nextLinkByUrl":["(.*\\.com)(?:/?$|/page\\?currentPage=)(\\d*)","$1/page?currentPage={($2.0||1)+1}"]
   },
   {
     "name":"音范丝",
-    "action":"1",
+    "action":1,
     "url":"^https://www\\.yinfans\\.me/",
     "pageElement":"#post_container",
     "nextLink":"a.next"
   },
   {
     "name":"bookmarkearth search",
-    "action":"0",
+    "action":0,
     "url":"^https://www\\.bookmarkearth\\.com/s/search\\?q=",
     "pageElement":".source>.document-piece",
     "nextLinkByUrl":["(.*/s/search\\?q=.*&currentPage=)(\\d*)","$1{$2+1}"]
   },
   {
     "name":"深圳人社局通知公告",
-    "action":"0",
+    "action":0,
     "url":"^http://hrss\\.sz\\.gov\\.cn/tzgg",
     "pageElement":".newsList>ul",
     "nextLink":"a.next"
@@ -139,7 +139,7 @@
   },
   {
     "name":"goddessfantasy",
-    "type":"0",
+    "type":0,
     "url":"^https://www\\.goddessfantasy\\.net/bbs/",
     "pageElement":"//div[@id='messageindex']|//form[@id='quickModForm']",
     "nextLink":"//div[@class='pagelinks']/a[text()='»']",
@@ -153,14 +153,14 @@
   },
   {
     "name":"什么值得买社区",
-    "action":"0",
+    "action":0,
     "url":"^https://post\\.smzdm\\.com/p",
     "pageElement":"#comment",
     "nextLink":".pagedown>a"
   },
   {
     "name":"51元素",
-    "action":"1",
+    "action":1,
     "url":"^https://www\\.51yuansu\\.com",
     "pageElement":".f-content",
     "nextLink":"a.nextpage"
@@ -185,7 +185,7 @@
   },
   {
     "name":"参考消息手机版",
-    "action":"1",
+    "action":1,
     "url":"^http://m\\.cankaoxiaoxi\\.com/",
     "pageElement":"div.content",
     "nextLink":"li.next>a"
