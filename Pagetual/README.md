@@ -4,9 +4,6 @@
 
 ---
 
-[Buy me a coffee if it helps you with PayPal.Me](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation)
-![donate](https://s2.loli.net/2022/01/06/lEqKWLHG7UBO6AY.jpg)
-
 Rules
 ==
 <pre>
@@ -35,6 +32,9 @@ Rules
   }
 ]
 </pre>
+
+[Buy me a coffee if it helps you with PayPal.Me](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation)
+![donate](https://s2.loli.net/2022/01/06/lEqKWLHG7UBO6AY.jpg)
 
 name
 --
