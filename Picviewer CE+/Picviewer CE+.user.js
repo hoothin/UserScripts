@@ -6,7 +6,7 @@
 // @description          Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version              2022.2.12.1
+// @version              2022.2.12.2
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -2265,7 +2265,7 @@ ImgOps | https://imgops.com/#b#`;
                 };
                 this.thumbScrollbar=thumbScrollbar;
 
-                var self=this;
+                self=this;
 
                 var imgStatistics={//图片的总类，统计,初始化值
                     rule:{
@@ -2736,7 +2736,7 @@ ImgOps | https://imgops.com/#b#`;
                 //生成分享的下拉列表
                 var shareMark='';
                 var shareItem;
-                for(var i in prefs.share){
+                for(let i in prefs.share){
                     if(!prefs.share.hasOwnProperty(i))continue;
                     shareItem=prefs.share[i];
                     if(shareItem.limitLang && shareItem.limitLang.indexOf(lang)==-1)continue;
@@ -2829,14 +2829,14 @@ ImgOps | https://imgops.com/#b#`;
                     var target=e.target;
                     //e.preventDefault();
                     if(eleMaps['sidebar-container'].contains(target)){//缩略图区滚动滚轮翻图片
-                        var distance=self.thumbSpanOuterSize;
+                        let distance=self.thumbSpanOuterSize;
 
                         if(e.deltaY<0 || e.deltaX<0){//向上滚
                             distance=-distance;
                         };
                         thumbScrollbar.scrollBy(distance)
                     }else{//图片区域滚动
-                        var distance=100;
+                        let distance=100;
                         if(e.deltaY!=0){//y轴
                             if(self.img && self.img.classList.contains('pv-gallery-img_zoom-out')){//图片可以缩小时，滚动图片，否则切换图片。
                                 if(e.deltaY < 0){
@@ -3971,23 +3971,23 @@ ImgOps | https://imgops.com/#b#`;
                     if(larger){
                         img.classList.add('pv-gallery-img_zoom-in');
                         if(contentSSize.h/contentSSize.w >=containerSize.h/containerSize.w){
-                            var height=this.imgNaturalSize.h-(contentSSize.h - containerSize.h);
+                            let height=this.imgNaturalSize.h-(contentSSize.h - containerSize.h);
                             imgSty.height=height + 'px';
                             scaled=height/this.imgNaturalSize.h;
                         }else{
-                            var width=this.imgNaturalSize.w-(contentSSize.w - containerSize.w);
+                            let width=this.imgNaturalSize.w-(contentSSize.w - containerSize.w);
                             imgSty.width=width + 'px';
                             scaled=width/this.imgNaturalSize.w;
                         };
                         scaled=(scaled*100).toFixed(2) + '%';
                     }else if(prefs.gallery.fitToScreenSmall){
                         if(this.imgNaturalSize.h/this.imgNaturalSize.w >=containerSize.h/containerSize.w){
-                            var height=contentSSize.h-50;
+                            let height=contentSSize.h-50;
                             height=height<0?contentSSize.h:height;
                             imgSty.height=height + 'px';
                             scaled=height/this.imgNaturalSize.h;
                         }else{
-                            var width=contentSSize.w-50;
+                            let width=contentSSize.w-50;
                             width=width<0?contentSSize.w:width;
                             imgSty.width=width + 'px';
                             scaled=width/this.imgNaturalSize.w;
@@ -4110,15 +4110,15 @@ ImgOps | https://imgops.com/#b#`;
 
                 this.thumbScrollbar.reset();
 
-                if(this.imgSpans[index].style.display=="none"){
-                    /*for(var j in this.imgSpans){
+                if(this.imgSpans[index].style.display=="none" && !selectData){
+                    for(var j in this.imgSpans){
                         if (!this.imgSpans.hasOwnProperty(j)) continue;
                         var curSpan=this.imgSpans[j];
                         if(curSpan.style.display!="none"){
                             this.select(curSpan, true);
                             return;
                         }
-                    }*/
+                    }
                 }
                 this.select(this.imgSpans[index], true);
             },
@@ -4358,11 +4358,11 @@ ImgOps | https://imgops.com/#b#`;
                 if(!pre && !next){
                     let pageDiv=curPage.querySelector("div.wp-pagenavi");
                     if(pageDiv){
-                        var cur=pageDiv.querySelector("span.current");
+                        let cur=pageDiv.querySelector("span.current");
                         pre=cur.previousSibling;
                         next=cur.nextSibling;
                     }else{
-                        var cur=curPage.querySelector("div.article-paging>span");
+                        let cur=curPage.querySelector("div.article-paging>span");
                         if(cur){
                             pre=cur.previousElementSibling;
                             next=cur.nextElementSibling;
@@ -4375,7 +4375,7 @@ ImgOps | https://imgops.com/#b#`;
                     let aTags=curPage.querySelectorAll("a");
                     if(!pre){
                         let pref,pres,pret;
-                        for(var i=0;i<aTags.length;i++){
+                        for(let i=0;i<aTags.length;i++){
                             let aTag=aTags[i];
                             if(!aTag.href || /javascript:/.test(aTag.href.trim()))continue;
                             if(pref && pres && pret)break;
@@ -4405,7 +4405,7 @@ ImgOps | https://imgops.com/#b#`;
                     }
                     if(!next){
                         let nextf,nexts,nextt;
-                        for(var i=0;i<aTags.length;i++){
+                        for(let i=0;i<aTags.length;i++){
                             let aTag=aTags[i];
                             if(!aTag.href || /^\s*javascript:/.test(aTag.href.trim()))continue;
                             if(nextf && nexts && nextt)break;
@@ -5869,14 +5869,14 @@ ImgOps | https://imgops.com/#b#`;
                     var track=self.scrollbar.track;
                     switch(target){
                         case handle:{//手柄；功能，拖动手柄来滚动窗口
-                            var pro=self.isHorizontal ? ['left','clientX'] : ['top','clientY'];
+                            let pro=self.isHorizontal ? ['left','clientX'] : ['top','clientY'];
                             var oHOffset=parseFloat(handle.style[pro[0]]);
                             var oClient=e[pro[1]];
 
                             var moveHandler=function(e){
                                 self.scroll(oHOffset + e[pro[1]] - oClient,true);
                             };
-                            var upHandler=function(){
+                            let upHandler=function(){
                                 document.removeEventListener('mousemove',moveHandler,true);
                                 document.removeEventListener('mouseup',upHandler,true);
                             };
@@ -5884,7 +5884,7 @@ ImgOps | https://imgops.com/#b#`;
                             document.addEventListener('mouseup',upHandler,true);
                         }break;
                         case track:{//轨道；功能，按住不放来连续滚动一个页面的距离
-                            var pro=self.isHorizontal ? ['left','offsetX','layerX','clientWidth','offsetWidth'] : ['top' , 'offsetY' ,'layerY','clientHeight','offsetHeight'];
+                            let pro=self.isHorizontal ? ['left','offsetX','layerX','clientWidth','offsetWidth'] : ['top' , 'offsetY' ,'layerY','clientHeight','offsetHeight'];
                             var clickOffset=typeof e[pro[1]]=='undefined' ?  e[pro[2]] : e[pro[1]];
                             var handleOffset=parseFloat(handle.style[pro[0]]);
                             var handleSize=handle[pro[4]];
@@ -5918,7 +5918,7 @@ ImgOps | https://imgops.com/#b#`;
 
                             checkStop();
 
-                            var upHandler=function(){
+                            let upHandler=function(){
                                 clearTimeout(scrollTimeout);
                                 clearInterval(scrollInterval);
                                 document.removeEventListener('mouseup',upHandler,true);
@@ -6601,7 +6601,7 @@ ImgOps | https://imgops.com/#b#`;
                 if(prefs.imgWindow.overlayer.shown){//是否显示覆盖层
                     var overlayer=ImgWindowC.overlayer;
                     if(!overlayer){
-                        var overlayer=document.createElement('span');
+                        overlayer=document.createElement('span');
                         ImgWindowC.overlayer=overlayer;
                         overlayer.className='pv-pic-window-overlayer';
                         document.body.appendChild(overlayer);
@@ -9159,10 +9159,10 @@ ImgOps | https://imgops.com/#b#`;
         function handleMessage(e){
             var data=e.data;
             if( !data || !data.messageID || data.messageID != messageID )return;
-            var source=e.source;
+            var source=e.source,command,cusEvent;
             if(typeof source=='undefined' || source!==window){
                 if(!isFrame){
-                    var command=data.command;
+                    command=data.command;
                     switch(command){
                         case 'open':{
                             var img=document.createElement('img');
@@ -9180,7 +9180,7 @@ ImgOps | https://imgops.com/#b#`;
                             });
                         }break;
                         case 'navigateToImg':{
-                            var cusEvent=document.createEvent('CustomEvent');
+                            cusEvent=document.createEvent('CustomEvent');
                             cusEvent.initCustomEvent('pv-navigateToImg',false,false,data.exist);
                             document.dispatchEvent(cusEvent);
                         }break;
@@ -9196,7 +9196,7 @@ ImgOps | https://imgops.com/#b#`;
                     };
 
                 }else{
-                    var command=data.command;
+                    command=data.command;
                     switch(command){
                         case 'navigateToImg':{
 
@@ -9228,7 +9228,7 @@ ImgOps | https://imgops.com/#b#`;
                             frameSentData=frameSentSuccessData;
                         }break;
                         case 'topWindowValid_frame':{
-                            var cusEvent=document.createEvent('CustomEvent');
+                            cusEvent=document.createEvent('CustomEvent');
                             cusEvent.initCustomEvent('pv-topWindowValid',false,false,data.valid);
                             document.dispatchEvent(cusEvent);
                         }break;
@@ -9417,8 +9417,8 @@ ImgOps | https://imgops.com/#b#`;
                 var bgReg=/^\s*url\(\s*["']?(.+?)["']?\s*\)/i;
                 if(prefs.floatBar.listenBg && hasBg(target)){
                     targetBg = unsafeWindow.getComputedStyle(target).backgroundImage.replace(bgReg,"$1");
-                    var src=targetBg,nsrc=src,noActual=true,type="scale";
-                    var img={src:src};
+                    let src=targetBg,nsrc=src,noActual=true,type="scale";
+                    let img={src:src};
                     result = {
                         src: nsrc,
                         type: type,
@@ -9438,8 +9438,8 @@ ImgOps | https://imgops.com/#b#`;
                     }else if(prefs.floatBar.listenBg && hasBg(target.parentNode)){
                         target=target.parentNode;
                         targetBg=unsafeWindow.getComputedStyle(target).backgroundImage.replace(bgReg,"$1");
-                        var src=targetBg,nsrc=src,noActual=true,type="scale";
-                        var img={src:src};
+                        let src=targetBg,nsrc=src,noActual=true,type="scale";
+                        let img={src:src};
                         result = {
                             src: nsrc,
                             type: type,
