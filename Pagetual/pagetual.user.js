@@ -1243,6 +1243,10 @@
                     storage.setItem("customRules", "");
                 }else{
                     let customRules=JSON.parse(customRulesInput.value);
+                    if(Array && Array.isArray && !Array.isArray(customRules)){
+                        alert("Rules must be a Array!");
+                        return;
+                    }
                     debug(customRules);
                     storage.setItem("customRules", customRules);
                 }
