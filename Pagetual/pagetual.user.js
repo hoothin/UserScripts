@@ -44,6 +44,7 @@
 // @grant        GM.deleteValue
 // @downloadURL  https://greasyfork.org/scripts/438684-pagetual/code/Pagetual.user.js
 // @updateURL    https://greasyfork.org/scripts/438684-pagetual/code/Pagetual.user.js
+// @supportURL   https://github.com/hoothin/UserScripts/issues
 // @connect      wedata.net
 // @connect      githubusercontent.com
 // @run-at       document-idle
