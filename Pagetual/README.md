@@ -1,6 +1,6 @@
 東方永頁機 [Wiki](https://hoothin.github.io/PagetualGuide)
 ==
-Pagetual - Perpetual pages. Auto loading paginated web pages for 90% of all web sites !
+*Pagetual - Perpetual pages. Auto loading paginated web pages for 90% of all web sites !*
 
 ---
 
@@ -54,7 +54,7 @@ enable
 
 wait
 --
-The time to wait for page ready when you are sure the url match the site
+The time to wait for page ready when you are sure the url match the site, you can also use a js code which return a boolean to check if the page is ready instead
 
 type
 --
