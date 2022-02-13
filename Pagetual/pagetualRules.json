@@ -78,7 +78,7 @@
   {
     "name":"动漫屋",
     "action":1,
-    "url":"^https://www\\.dm5\\.com/m",
+    "url":"^https?://www\\.(dm5|1kkk)\\.(com|cn)/(m|ch)",
     "pageElement":".view-main>.item",
     "nextLink":"span.current+a"
   },
