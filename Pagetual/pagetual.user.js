@@ -803,7 +803,7 @@
                         }
                     }
                 }
-                next=next1||next2||next3||next4||nextJs1||nextJs2||nextJs3;
+                next=next1||next3||next4||next2||nextJs1||nextJs3||nextJs2;
             }
             if(!next)next=jsNext;
             return {next:next,canSave:canSave};
@@ -1698,7 +1698,7 @@
     }
 
     function getLoadMore(doc){
-        let btnSel=ruleParser.curSiteRule.loadMore||".LoadMore";
+        let btnSel=ruleParser.curSiteRule.loadMore||".LoadMore,.load-more";
         let loadmoreBtn=doc.querySelector(btnSel);
         if(!loadmoreBtn){
             let buttons=doc.querySelectorAll("input,button,a"),loadmoreReg=/^\s*(加载更多|加載更多|load\s*more|もっと読み込む)\s*$/i;
