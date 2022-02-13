@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.0.26
+// @version      1.0.27
 // @description  Simply auto loading paginated web pages
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -1487,7 +1487,7 @@
         iframe.width = '100%';
         iframe.height = '0';
         iframe.frameBorder = '0';
-        iframe.sandbox="allow-same-origin allow-scripts allow-popups allow-forms";
+        //iframe.sandbox="allow-same-origin allow-scripts allow-popups allow-forms";
         iframe.style.cssText = 'margin:0!important;padding:0!important;visibility:hidden!important;';
         iframe.addEventListener("load", e=>{
             let waitTime=500,checkEval;
@@ -1621,27 +1621,28 @@
         );
     }
 
-    function initListener(){
-        var urlChanged=false;
-        var _wr = function(type) {
-            var orig = history[type];
-            return function() {
-                var rv = orig.apply(this, arguments);
-                var e = new Event(type);
-                e.arguments = arguments;
-                window.dispatchEvent(e);
-                return rv;
-            };
+    var urlChanged=false;
+    var _wr = function(type) {
+        var orig = history[type];
+        return function() {
+            var rv = orig.apply(this, arguments);
+            var e = new Event(type);
+            e.arguments = arguments;
+            window.dispatchEvent(e);
+            return rv;
         };
-        history.pushState = _wr('pushState');
-        window.addEventListener('pushState', function(e) {
-            urlChanged=true;
-            setTimeout(()=>{
-                if(location.href==configPage){
-                    location.reload();
-                }
-            },1);
-        });
+    };
+    history.pushState = _wr('pushState');
+    window.addEventListener('pushState', function(e) {
+        urlChanged=true;
+        setTimeout(()=>{
+            if(location.href==configPage){
+                location.reload();
+            }
+        },1);
+    });
+
+    function initListener(){
         let loadmoreBtn=getLoadMore(document),loading=true;
         if(loadmoreBtn){
             //emuClick(loadmoreBtn);
