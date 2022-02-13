@@ -367,8 +367,9 @@
             cb(value);
         }
     };
+    var rulesData={},ruleUrls,updateDate,configPage="https://github.com/hoothin/UserScripts/tree/master/Pagetual";
     _GM_registerMenuCommand(i18n("configure"), ()=>{
-        _GM_openInTab("https://github.com/hoothin/UserScripts/tree/master/Pagetual");
+        _GM_openInTab(configPage);
     });
 
     function getElementByXpath(xpath, contextNode, doc){
@@ -1026,7 +1027,6 @@
     }
     var ruleParser = new RuleParser();
 
-    var rulesData={},ruleUrls,updateDate,configPage="https://github.com/hoothin/UserScripts/tree/master/Pagetual";
     function initConfig(){
         _GM_registerMenuCommand(i18n(forceState==1?"enable":"disableSite"), ()=>{
             storage.setItem("forceState_"+location.host, (forceState==1?"":1));
@@ -1038,7 +1038,7 @@
             location.reload();
         });
         var configCon,insertPos;
-        if(location.href=="https://github.com/hoothin/UserScripts/tree/master/Pagetual"){
+        if(location.href==configPage){
             _GM_addStyle(`
              p>span:nth-child(1),p>span:nth-child(2),p>span:nth-child(3){
               cursor: pointer;
@@ -1058,7 +1058,7 @@
             configCon=document.querySelector(".markdown-body");
             insertPos=configCon.querySelector("hr");
         }else if(location.href==configPage){
-        }else return;
+        }else return false;
         class Rulebar {
             init(ruleUrl){
                 this.ruleUrl=ruleUrl;
@@ -1304,6 +1304,7 @@
             alert("Modified successfully");
             location.reload();
         };
+        return true;
     }
 
     function objIsArr(obj) {
@@ -1407,7 +1408,7 @@
                     storage.getItem("ruleLastUpdate", date=>{
                         forceState=v||0;
                         updateDate=date;
-                        initConfig();
+                        if(initConfig())return;
                         if(forceState==1)return;
                         let now=new Date().getTime();
                         if(!date || now-date>2*24*60*60*1000){
