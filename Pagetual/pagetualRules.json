@@ -215,5 +215,29 @@
     "url":"^https://www\\.58pic\\.com/tupian/",
     "css":".card-lazy{display:none}.pagetual_pageBar{margin-bottom: 20px!important;}",
     "pageElement":"div.search-v3-content>.card-grid-box"
+  },
+  {
+    "name":"淘股吧内贴",
+    "url":"^https://www\\.taoguba\\.com\\.cn/Article/\\d+/\\d+",
+    "pageElement":"#new_wrap_container",
+    "nextLinkByJs":"let pageSpan=doc.querySelector('.t_page>.left>span:last-child');if(!pageSpan)return false;let maxPage=pageSpan.innerText.replace(/.*\\/(\\d+).*/,'$1'),curPage=pageSpan.querySelector('b').innerText.trim();if(parseInt(curPage)<parseInt(maxPage))return location.href.replace(/(.*?)\\d+$/,'$1')+(parseInt(curPage)+1);else return false;"
+  },
+  {
+    "name":"淘股吧列表页1",
+    "url":"^https://www\\.taoguba\\.com\\.cn/(bbs|zongban|ttcl)",
+    "pageElement":".kuaixun,.Notspmatch,.p_list,#contents",
+    "nextLinkByJs":"let pageSpan=doc.querySelector('.t_page>.left>span:last-child');if(!pageSpan)return false;let maxPage=pageSpan.innerText.replace(/.*\\/(\\d+).*/,'$1'),curPage=pageSpan.querySelector('b').innerText.trim();if(parseInt(curPage)<parseInt(maxPage))return location.href.replace(/(\\D+)\\d*(.*)$/,'$1')+(parseInt(curPage)+1)+'/0';else return false;"
+  },
+  {
+    "name":"淘股吧列表页2",
+    "url":"^https://www\\.taoguba\\.com\\.cn/(jinghua|dianzan)",
+    "pageElement":".kuaixun,.Notspmatch,.p_list,#contents",
+    "nextLinkByJs":"let pageSpan=doc.querySelector('.t_page>.left>span:last-child');if(!pageSpan)return false;let maxPage=pageSpan.innerText.replace(/.*\\/(\\d+).*/,'$1'),curPage=pageSpan.querySelector('b').innerText.trim();if(parseInt(curPage)<parseInt(maxPage))return location.href.replace(/(\\D+)\\d*(.*)$/,'$1')+(parseInt(curPage)+1)+'-0';else return false;"
+  },
+  {
+    "name":"淘股吧生活吧",
+    "url":"^https://www\\.taoguba\\.com\\.cn/shenghuoba/",
+    "pageElement":".lifeContent-topicList-item",
+    "nextLinkByJs":"let pageSpan=doc.querySelector('#N_go_pageBtn');if(!pageSpan)return false;let maxPage=pageSpan.dataset.total,curPage=pageSpan.dataset.now;if(parseInt(curPage)<parseInt(maxPage))return location.href.replace(/(\\D+\\/)[^\\/]*$/,'$1')+'H-'+(parseInt(curPage)+1);else return false;"
   }
 ]
