@@ -61,7 +61,6 @@
   },
   {
     "name":"Google Search",
-    "action":1,
     "nextLink":"id('pnnext')|id('navbar navcnt nav')//td[span]/following-sibling::td[1]/a|id('nn')/parent::a",
     "pageElement":"id('rso')/div|id('center_col')/style[contains(.,'relative')]|id('search')/div/div/style[1]",
     "type":0,
