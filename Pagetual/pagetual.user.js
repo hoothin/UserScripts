@@ -669,7 +669,18 @@
                             }
                             moreChild=moreChild.nextElementSibling;
                         }
-                        if(curMaxEle==null || (isHori?maxWidth<w:curMaxArea<a)){
+                        let isMax=false;
+                        if(isHori){
+                            if(maxWidth<w){
+                                isMax=true;
+                            }
+                            if(maxWidth==w && curMaxArea<a){
+                                isMax=true;
+                            }
+                        }else{
+                            isMax=curMaxArea<a;
+                        }
+                        if(curMaxEle==null || isMax){
                             if(h>0)curHeight=h;
                             curMaxArea=a;
                             maxWidth=w;
@@ -686,7 +697,7 @@
                         self.curSiteRule.type=1;
                         debug(self.curSiteRule.pageElement);
                     }
-                    return ele.tagName=="UL"?ele:ele.children;
+                    return ele.tagName=="UL"?[ele]:ele.children;
                 }
                 pageElement=checkElement(body);
                 if(pageElement)this.saveCurSiteRule();
@@ -1922,9 +1933,9 @@
                     callback(false, false);
                     return;
                 }
-                orgPage=orgPage[parseInt(orgPage.length/2)];
-                if(orgPage && orgPage.tagName=="UL")orgPage=orgPage.children[0];
+                if(orgPage && orgPage[0].tagName=="UL")orgPage=orgPage[0].children;
                 if(orgPage && nextLink){
+                    orgPage=orgPage[parseInt(orgPage.length/2)];
                     if(!isVisible(nextLink, iframeDoc.defaultView)){
                         debug("Stop as next hide when emu");
                         isPause=true;
@@ -1950,6 +1961,7 @@
                 return;
             }
             let eles=ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView, true);
+            if(eles && eles[0].tagName=="UL")eles=eles[0].children;
             if(!eles || eles.length==0 || orgPage == eles[parseInt(eles.length/2)] || (checkEval && !checkEval(iframeDoc))){
                 setTimeout(()=>{
                     checkPage();
@@ -1971,7 +1983,7 @@
             emuIframe.addEventListener("load", e=>{
                 setTimeout(()=>{
                     checkPage();
-                },300);
+                },500);
             });
             emuIframe.src=location.href;
             document.body.appendChild(emuIframe);
