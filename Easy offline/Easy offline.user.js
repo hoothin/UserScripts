@@ -699,7 +699,7 @@
     var easyOfflineDisable;
     var preNode,targetNode;
     var sNodes=[];
-    var parentDiv=$("<div style='display:none;position:absolute;z-index:99999;overflow:visible;text-align:left;'></div>");
+    var parentDiv=$("<div style='display:none;position:absolute;z-index:9999999;overflow:visible;text-align:left;'></div>");
 
     var funcKey="alt";
 
@@ -1522,6 +1522,7 @@
         var sel=document.getSelection().toString();
         if(sel && checkKey(e)){
             checkSel(e);
+            parentDiv.offset({top:mouseEve.pageY-38,left:mouseEve.pageX-10});
         }
     });
     document.addEventListener("keydown", function(e) {
