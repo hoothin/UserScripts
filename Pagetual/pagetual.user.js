@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.0.30
+// @version      1.1.0
 // @description  Simply auto loading paginated web pages
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -151,12 +151,6 @@
                     hideBar:"空白处双击隐藏分页隔条",
                     dbClick2Stop:"空白处双击暂停翻页",
                     sortTitle:"排序在下次更新规则后生效",
-                    showPageUpDown:"显示翻屏按钮",
-                    pageUp:"上翻一屏",
-                    pageDown:"下翻一屏",
-                    showRealPage:"显示真实页数",
-                    modifyImage:"修改按钮图标，一行一条，依次为[页首][页尾][上翻][下翻]",
-                    btnCss:"添加按钮CSS",
                     autoRun:"自动启用"
                 };
                 break;
@@ -189,12 +183,6 @@
                     hideBar:"空白處雙擊隱藏分頁隔條",
                     dbClick2Stop:"空白處雙擊暫停翻頁",
                     sortTitle:"排序在下次更新規則後生效",
-                    showPageUpDown:"顯示翻屏按鈕",
-                    pageUp:"上翻一屏",
-                    pageDown:"下翻一屏",
-                    showRealPage:"顯示真實頁數",
-                    modifyImage:"修改按鈕圖標，一行一條，依次為[頁首][頁尾][上翻][下翻]",
-                    btnCss:"添加按鈕CSS",
                     autoRun:"自動啓用"
                 };
                 break;
@@ -226,12 +214,6 @@
                     hideBar:"空白部分をダブルクリックして、ページ区切り文字を非表示にします",
                     dbClick2Stop:"空白部分をダブルクリックしてページめくりを一時停止します",
                     sortTitle:"並べ替えは、次のルールの更新後に有効になります",
-                    showPageUpDown:"ページめくりボタンを表示",
-                    pageUp:"ページアップ",
-                    pageDown:"ページダウン",
-                    showRealPage:"実際のページ数を表示する",
-                    modifyImage:"ボタンアイコンを変更し、[toTop][toBottom][pageUp][pageDown]の順に1行に1つのアイコンを書き込みます",
-                    btnCss:"ボタンCSSを追加",
                     autoRun:"自動的に有効"
                 };
                 break;
@@ -263,12 +245,6 @@
                     hideBar:"Double-click on the blank space to hide the paging spacer",
                     dbClick2Stop:"Double-click on the blank space to stop",
                     sortTitle:"Sorting takes effect after the next rule update",
-                    showPageUpDown:"Show pageUp/pageDown button",
-                    pageUp: "Page up",
-                    pageDown: "Page down",
-                    showRealPage:"Show real page count",
-                    modifyImage: "Modify button icons, one per line, in order of [toTop][toBottom][pageUp][pageDown]",
-                    btnCss:"Add button CSS",
                     autoRun:"Auto run"
                 };
                 break;
@@ -784,7 +760,7 @@
                     if(aTag.style.display=="none")continue;
                     if(next1 && next2 && next3 && next4)break;
                     if(!next1){
-                        if(/^\s*下[一1]?[页頁张張]|^next( page)?\s*$|次のページ/i.test(aTag.innerText)){
+                        if(/^\s*[下后後][一1]?[页頁张張]|^next( page)?\s*$|次のページ/i.test(aTag.innerText)){
                             if(!aTag.href || /^javascript:/.test(aTag.href)){
                                 if(!nextJs1)nextJs1=aTag;
                             }else{
@@ -793,7 +769,7 @@
                         }
                     }
                     if(!next2){
-                        if(/^\s*下[一1]?[章话話]/i.test(aTag.innerText)){
+                        if(/^\s*[下后後][一1]?[章话話]/i.test(aTag.innerText)){
                             if(!aTag.href || /^javascript:/.test(aTag.href)){
                                 if(!nextJs2)nextJs2=aTag;
                             }else{
@@ -1572,6 +1548,7 @@
 
     function initPage(){
         ruleParser.initPage(()=>{
+            if(ruleParser.nextLinkHref)initView();
             initListener();
             nextPage();
         });
@@ -1687,8 +1664,9 @@
         },300);
         document.addEventListener('scroll', e=>{
             if(urlChanged){
-                ruleParser.initPage(()=>{});
-                initView();
+                ruleParser.initPage(()=>{
+                    if(ruleParser.nextLinkHref)initView();
+                });
                 urlChanged=false;
                 isPause=false;
             }
@@ -2116,7 +2094,6 @@
 
     function init(){
         initRules(()=>{
-            initView();
             initPage();
         });
     }
