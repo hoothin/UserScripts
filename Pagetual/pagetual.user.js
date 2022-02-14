@@ -1657,11 +1657,13 @@
     });
 
     function initListener(){
-        let loadmoreBtn=getLoadMore(document),loading=true;
-        if(loadmoreBtn){
-            //emuClick(loadmoreBtn);
-            setTimeout(()=>{loading=false},500);
-        }
+        let loadmoreBtn,loading=true;
+        setTimeout(()=>{
+            loadmoreBtn=getLoadMore(document);
+            if(loadmoreBtn){
+                loading=false;
+            }
+        },300);
         document.addEventListener('scroll', e=>{
             if(urlChanged){
                 ruleParser.initPage(()=>{});
