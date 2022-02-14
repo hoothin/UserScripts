@@ -95,6 +95,7 @@
 // @exclude      *://*.instagram.com/*
 // @exclude      *://pagetual.hoothin.com/*
 // @exclude      *://hoothin.github.io/PagetualGuide/*
+// @connect      *
 // ==/UserScript==
 
 (function() {
@@ -1960,9 +1961,9 @@
                 callback(false, false);
                 return;
             }
-            let eles=ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView, true);
-            if(eles && eles[0].tagName=="UL")eles=eles[0].children;
-            if(!eles || eles.length==0 || orgPage == eles[parseInt(eles.length/2)] || (checkEval && !checkEval(iframeDoc))){
+            let eles=ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView, true),checkItem=eles;
+            if(eles && eles[0].tagName=="UL")checkItem=eles[0].children;
+            if(!eles || eles.length==0 || orgPage == checkItem[parseInt(checkItem.length/2)] || (checkEval && !checkEval(iframeDoc))){
                 setTimeout(()=>{
                     checkPage();
                 },waitTime);
