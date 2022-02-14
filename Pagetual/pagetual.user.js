@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.0.28
+// @version      1.0.29
 // @description  Simply auto loading paginated web pages
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -156,7 +156,8 @@
                     pageDown:"下翻一屏",
                     showRealPage:"显示真实页数",
                     modifyImage:"修改按钮图标，一行一条，依次为[页首][页尾][上翻][下翻]",
-                    btnCss:"添加按钮CSS"
+                    btnCss:"添加按钮CSS",
+                    autoRun:"自动启用"
                 };
                 break;
             case "zh-TW":
@@ -193,7 +194,8 @@
                     pageDown:"下翻一屏",
                     showRealPage:"顯示真實頁數",
                     modifyImage:"修改按鈕圖標，一行一條，依次為[頁首][頁尾][上翻][下翻]",
-                    btnCss:"添加按鈕CSS"
+                    btnCss:"添加按鈕CSS",
+                    autoRun:"自動啓用"
                 };
                 break;
             case "ja":
@@ -229,7 +231,8 @@
                     pageDown:"ページダウン",
                     showRealPage:"実際のページ数を表示する",
                     modifyImage:"ボタンアイコンを変更し、[toTop][toBottom][pageUp][pageDown]の順に1行に1つのアイコンを書き込みます",
-                    btnCss:"ボタンCSSを追加"
+                    btnCss:"ボタンCSSを追加",
+                    autoRun:"自動的に有効"
                 };
                 break;
             default:
@@ -265,7 +268,8 @@
                     pageDown: "Page down",
                     showRealPage:"Show real page count",
                     modifyImage: "Modify button icons, one per line, in order of [toTop][toBottom][pageUp][pageDown]",
-                    btnCss:"Add button CSS"
+                    btnCss:"Add button CSS",
+                    autoRun:"Auto run"
                 };
                 break;
         }
@@ -339,12 +343,12 @@
                 this.mxAppStorage.setConfig(key,value);
             }else if(this.supportGM){
                 GM_setValue(key,value);
-                if(value=="" && typeof GM_deleteValue!='undefined'){
+                if(value==="" && typeof GM_deleteValue!='undefined'){
                     GM_deleteValue(key);
                 }
             }else if(this.supportGMPromise){
                 GM.setValue(key,value);
-                if(value=="" && typeof GM!='undefined' && typeof GM.deleteValue!='undefined'){
+                if(value==="" && typeof GM!='undefined' && typeof GM.deleteValue!='undefined'){
                     GM.deleteValue(key);
                 }
             }else if(window.localStorage){
@@ -370,7 +374,7 @@
     };
     var rulesData={},ruleUrls,updateDate,configPage="https://github.com/hoothin/UserScripts/tree/master/Pagetual";
     _GM_registerMenuCommand(i18n("configure"), ()=>{
-        _GM_openInTab(configPage);
+        _GM_openInTab(configPage,{active:true});
     });
 
     function getElementByXpath(xpath, contextNode, doc){
@@ -1041,7 +1045,7 @@
 
     function initConfig(){
         _GM_registerMenuCommand(i18n(forceState==1?"enable":"disableSite"), ()=>{
-            storage.setItem("forceState_"+location.host, (forceState==1?"":1));
+            storage.setItem("forceState_"+location.host, (forceState==1?0:1));
             location.reload();
         });
 
@@ -1236,6 +1240,16 @@
         dbClick2StopTitle.appendChild(dbClick2StopInput);
         configCon.insertBefore(dbClick2StopTitle, insertPos);
 
+        let enableWhiteListTitle=document.createElement("h2");
+        enableWhiteListTitle.innerHTML=i18n("autoRun");
+        let enableWhiteListInput=document.createElement("input");
+        enableWhiteListInput.type="checkbox";
+        enableWhiteListInput.style.width="50px";
+        enableWhiteListInput.style.height="20px";
+        enableWhiteListInput.checked=rulesData.enableWhiteList!=true;
+        enableWhiteListTitle.appendChild(enableWhiteListInput);
+        configCon.insertBefore(enableWhiteListTitle, insertPos);
+
         let customRulesTitle=document.createElement("h2");
         customRulesTitle.innerHTML=i18n("customRules")
         configCon.insertBefore(customRulesTitle, insertPos);
@@ -1271,6 +1285,7 @@
             rulesData.opacity=opacityInput.value/100;
             rulesData.hideBar=hideBarInput.checked;
             rulesData.dbClick2Stop=dbClick2StopInput.checked;
+            rulesData.enableWhiteList=!enableWhiteListInput.checked;
             storage.setItem("rulesData", rulesData);
             let customUrls=customUrlsInput.value.trim();
             if(customUrls){
@@ -1416,9 +1431,15 @@
                 if(typeof(rulesData.dbClick2Stop)=="undefined"){
                     rulesData.dbClick2Stop=true;
                 }
+                if(typeof(rulesData.enableWhiteList)=="undefined"){
+                    rulesData.enableWhiteList=false;
+                }
                 storage.getItem("forceState_"+location.host, v=>{
                     storage.getItem("ruleLastUpdate", date=>{
-                        forceState=v||0;
+                        if(typeof(v)=="undefined"){
+                            v=(rulesData.enableWhiteList?1:0);
+                        }
+                        forceState=v;
                         updateDate=date;
                         if(initConfig())return;
                         if(forceState==1)return;
