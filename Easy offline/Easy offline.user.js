@@ -1206,7 +1206,7 @@
             e.stopPropagation();
         });
         document.addEventListener("mouseover", function(e){
-            if(parentDiv.css("display")!="none")hideIcons();
+            //if(parentDiv.css("display")!="none")hideIcons();
         });
         storage.getItem("showType",v=>{
             showType=!!v;
