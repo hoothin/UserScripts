@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.1.3
+// @version      1.1.4
 // @description  Simply auto loading paginated web pages
 // @description:zh-CN  ⚔️最强自动翻页脚本，自动加载并拼接分页（例如论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页！
 // @description:zh-TW  自動翻頁
@@ -688,9 +688,11 @@
             }
             if(this.insert && pageElement && pageElement[0]){
                 let example=this.insertPos==2?this.insert.children[0]:this.insert;
-                let inTable=example.tagName=="TR" ||
+                let inTable=example.parentNode.tagName=="TABLE" ||
+                    example.tagName=="TR" ||
+                    example.tagName=="TBODY" ||
                     (example.previousElementSibling && example.previousElementSibling.tagName=="TR") ||
-                    example.tagName=="TBODY" || (example.previousElementSibling && example.previousElementSibling.tagName=="TBODY");
+                    (example.previousElementSibling && example.previousElementSibling.tagName=="TBODY");
                 if(inTable && pageElement[0].tagName!="TR" && pageElement[0].tagName!="TBODY"){
                     pageElement=null;
                 }
@@ -853,18 +855,23 @@
             }else{
                 page=this.getPage(doc);
                 nextLink=page.next;
-                if(nextLink && nextLink.classList.contains("noClick")){
-                    self.nextLinkHref=false;
-                    return null;
-                }else if(nextLink && doc==document){
-                    if((!nextLink.href || /^javascript:/.test(nextLink.href)) && !isVisible(nextLink, _unsafeWindow)){
+                if(nextLink){
+                    if(nextLink.href && nextLink.href==this.curUrl){
                         self.nextLinkHref=false;
                         return null;
-                    }else{
-                        let nextLinkCs=_unsafeWindow.getComputedStyle(nextLink);
-                        if(nextLinkCs.cursor=="not-allowed"){
+                    }else if(nextLink.classList.contains("noClick")){
+                        self.nextLinkHref=false;
+                        return null;
+                    }else if(doc==document){
+                        if((!nextLink.href || /^javascript:/.test(nextLink.href)) && !isVisible(nextLink, _unsafeWindow)){
                             self.nextLinkHref=false;
                             return null;
+                        }else{
+                            let nextLinkCs=_unsafeWindow.getComputedStyle(nextLink);
+                            if(nextLinkCs.cursor=="not-allowed"){
+                                self.nextLinkHref=false;
+                                return null;
+                            }
                         }
                     }
                 }
@@ -1765,9 +1772,11 @@
         if(!insert || !insert.parentNode)return;
         curPage++;
         let example=ruleParser.curSiteRule.insertPos==2?insert.children[0]:insert;
-        let inTable=example.tagName=="TR" ||
+        let inTable=example.parentNode.tagName=="TABLE" ||
+            example.tagName=="TR" ||
+            example.tagName=="TBODY" ||
             (example.previousElementSibling && example.previousElementSibling.tagName=="TR") ||
-            example.tagName=="TBODY" || (example.previousElementSibling && example.previousElementSibling.tagName=="TBODY");
+            (example.previousElementSibling && example.previousElementSibling.tagName=="TBODY");
         let inLi=example.tagName=="LI" || (example.previousElementSibling && example.previousElementSibling.tagName=="LI");
         let pageBar=document.createElement(inTable?"tr":"div");
         let upSpan=document.createElement("span");
@@ -2076,59 +2085,62 @@
             }
             isLoading=true;
             loading.style.display="";
-            if(ruleParser.curSiteRule.pageElementByJs){
-                var over=ele=>{
-                    isLoading=false;
-                    loading.style.display="none";
-                    if(ele){
-                        createPageBar(nextLink);
-                        ruleParser.insertPage(null, ele, nextLink, null, true);
-                    }else{
-                        debug("Stop as no page when get by js");
-                        isPause=true;
+            let sleep=ruleParser.curSiteRule.sleep||0;
+            setTimeout(()=>{
+                if(ruleParser.curSiteRule.pageElementByJs){
+                    var over=ele=>{
+                        isLoading=false;
+                        loading.style.display="none";
+                        if(ele){
+                            createPageBar(nextLink);
+                            ruleParser.insertPage(null, ele, nextLink, null, true);
+                        }else{
+                            debug("Stop as no page when get by js");
+                            isPause=true;
+                        }
+                    };
+                    try{
+                        Function("over",'"use strict";' + ruleParser.curSiteRule.pageElementByJs)(over);
+                    }catch(e){
+                        debug(e);
                     }
-                };
-                try{
-                    Function("over",'"use strict";' + ruleParser.curSiteRule.pageElementByJs)(over);
-                }catch(e){
-                    debug(e);
-                }
-            }else if(ruleParser.curSiteRule.action==1 && !isJs){
-                requestFromIframe(nextLink, (doc, eles)=>{
-                    isLoading=false;
-                    loading.style.display="none";
-                    if(eles){
-                        createPageBar(nextLink);
-                        ruleParser.insertPage(doc, eles, nextLink, null, true);
-                    }
-                });
-            }else if(forceState==2 && !isJs){
-                forceIframe(nextLink, (iframe, eles)=>{
-                    isLoading=false;
-                    loading.style.display="none";
-                    let pageBar=createPageBar(nextLink);
-                    iframe.parentNode.insertBefore(pageBar, iframe);
-                });
-            }else{
-                if(!isJs){
-                    requestDoc(nextLink, (eles)=>{
+                }else if(ruleParser.curSiteRule.action==1 && !isJs){
+                    requestFromIframe(nextLink, (doc, eles)=>{
                         isLoading=false;
                         loading.style.display="none";
                         if(eles){
                             createPageBar(nextLink);
+                            ruleParser.insertPage(doc, eles, nextLink, null, true);
                         }
+                    });
+                }else if(forceState==2 && !isJs){
+                    forceIframe(nextLink, (iframe, eles)=>{
+                        isLoading=false;
+                        loading.style.display="none";
+                        let pageBar=createPageBar(nextLink);
+                        iframe.parentNode.insertBefore(pageBar, iframe);
                     });
                 }else{
-                    emuPage((doc, eles)=>{
-                        isLoading=false;
-                        loading.style.display="none";
-                        if(eles){
-                            createPageBar(nextLink);
-                            ruleParser.insertPage(doc, eles, "", null, true);
-                        }
-                    });
+                    if(!isJs){
+                        requestDoc(nextLink, (eles)=>{
+                            isLoading=false;
+                            loading.style.display="none";
+                            if(eles){
+                                createPageBar(nextLink);
+                            }
+                        });
+                    }else{
+                        emuPage((doc, eles)=>{
+                            isLoading=false;
+                            loading.style.display="none";
+                            if(eles){
+                                createPageBar(nextLink);
+                                ruleParser.insertPage(doc, eles, "", null, true);
+                            }
+                        });
+                    }
                 }
-            }
+            },sleep);
         }
     }
 
