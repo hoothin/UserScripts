@@ -8,7 +8,7 @@
 // @namespace    https://github.com/hoothin/UserScripts/tree/master/Easy%20offline
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Base64/0.2.0/base64.min.js
-// @version      1.9.11
+// @version      1.9.12
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -931,6 +931,10 @@
                     for (i = 0; i < rawnodes.length; i++) {
                         var disable = false;
                         curNode = rawnodes[i];
+                        if(curNode.className=="whx-a-node")continue;
+                        if(curNode.nextElementSibling && curNode.nextElementSibling.className=="whx-a-node" && curNode.nextElementSibling.parentNode){
+                            curNode.nextElementSibling.parentNode.removeChild(curNode.nextElementSibling);
+                        }
                         if(!/^magnet|^ed2k:\/\//.test(curNode.href)){
                             if(/[#\?]|\/\.[^\.]+$/.test(curNode.href))continue;
                             for(var j = 0; j < disableUrl.length; j++){
