@@ -82,6 +82,12 @@
     "nextLink":"span.current+a"
   },
   {
+    "name":"异次元",
+    "url":"^https://www\\.iplaysoft\\.com/",
+    "pageElement":"#postlist",
+    "nextLink":".pagenavi>a[title='下一页']"
+  },
+  {
     "name":"动漫啦",
     "url":"https://www\\.dongman\\.la/manhua/chapter/",
     "pageElement":".chapter-images img",
