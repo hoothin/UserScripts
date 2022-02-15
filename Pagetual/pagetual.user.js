@@ -1519,6 +1519,10 @@
             onerror: function(e){
                 debug(e);
                 callback(false);
+            },
+            ontimeout: function(e){
+                debug(e);
+                callback(false);
             }
         });
     }
