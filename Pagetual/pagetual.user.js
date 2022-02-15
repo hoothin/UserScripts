@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.1.2
+// @version      1.1.3
 // @description  Simply auto loading paginated web pages
 // @description:zh-CN  最强自动翻页脚本，无需规则自动支持所有网页！
 // @description:zh-TW  自動翻頁
@@ -466,7 +466,6 @@
         addRuleByUrl(url, type, from, callback) {
             this.requestJSON(url, json=>{
                 this.addRules(json, type, from);
-                storage.setItem("rules", this.rules);
                 callback();
             });
         }
@@ -686,6 +685,15 @@
                 }
                 pageElement=checkElement(body);
                 if(pageElement)this.saveCurSiteRule();
+            }
+            if(this.insert && pageElement && pageElement[0]){
+                let example=this.insertPos==2?this.insert.children[0]:this.insert;
+                let inTable=example.tagName=="TR" ||
+                    (example.previousElementSibling && example.previousElementSibling.tagName=="TR") ||
+                    example.tagName=="TBODY" || (example.previousElementSibling && example.previousElementSibling.tagName=="TBODY");
+                if(inTable && pageElement[0].tagName!="TR" && pageElement[0].tagName!="TBODY"){
+                    pageElement=null;
+                }
             }
             return pageElement;
         }
@@ -1170,6 +1178,7 @@
             function addNextRule(){
                 if(ruleIndex>=ruleUrls.length){
                     storage.setItem("ruleLastUpdate", now);
+                    storage.setItem("rules", ruleParser.rules);
                     alert(i18n("updateSucc"));
                     inUpdate=false;
                     updateP.innerHTML=i18n("passSec", 0);
@@ -1440,6 +1449,7 @@
                             let ruleIndex=0;
                             function addNextRule(){
                                 if(ruleIndex>=ruleUrls.length){
+                                    storage.setItem("rules", ruleParser.rules);
                                     callback();
                                 }else{
                                     let rule=ruleUrls[ruleIndex++];
@@ -1482,6 +1492,8 @@
                     let result=ruleParser.insertPage(doc, pageElement, url, callback, false);
                     if(!result){
                         requestFromIframe(url, (doc, eles)=>{
+                            isLoading=false;
+                            loading.style.display="none";
                             if(eles){
                                 ruleParser.insertPage(doc, eles, url, callback, true);
                             }
@@ -1489,6 +1501,8 @@
                     }
                 }else if(ruleParser.curSiteRule.singleUrl){
                     requestFromIframe(url, (doc, eles)=>{
+                        isLoading=false;
+                        loading.style.display="none";
                         if(eles){
                             ruleParser.insertPage(doc, eles, url, callback, true);
                         }
@@ -1750,10 +1764,11 @@
         let insert=ruleParser.getInsert();
         if(!insert || !insert.parentNode)return;
         curPage++;
-        let inTable=insert.tagName=="TR" ||
-            (insert.previousElementSibling && insert.previousElementSibling.tagName=="TR") ||
-            insert.tagName=="TBODY" || (insert.previousElementSibling && insert.previousElementSibling.tagName=="TBODY");
-        let inLi=insert.tagName=="LI" || (insert.previousElementSibling && insert.previousElementSibling.tagName=="LI");
+        let example=ruleParser.curSiteRule.insertPos==2?insert.children[0]:insert;
+        let inTable=example.tagName=="TR" ||
+            (example.previousElementSibling && example.previousElementSibling.tagName=="TR") ||
+            example.tagName=="TBODY" || (example.previousElementSibling && example.previousElementSibling.tagName=="TBODY");
+        let inLi=example.tagName=="LI" || (example.previousElementSibling && example.previousElementSibling.tagName=="LI");
         let pageBar=document.createElement(inTable?"tr":"div");
         let upSpan=document.createElement("span");
         let downSpan=document.createElement("span");
@@ -1779,7 +1794,8 @@
         pageBar.appendChild(pageText);
         pageBar.appendChild(downSpan);
         if(inTable){
-            let example=(insert.tagName=="TR" || insert.tagName=="TBODY")?insert:insert.previousElementSibling;
+            example=(insert.tagName=="TR" || insert.tagName=="TBODY")?insert:insert.previousElementSibling;
+            if(example.previousElementSibling)example=example.previousElementSibling;
             let tdNum=0;
             [].forEach.call(example.querySelectorAll("td,th"), td=>{
                 tdNum+=td.colSpan||1;
