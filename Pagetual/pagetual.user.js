@@ -12,7 +12,7 @@
 // @namespace    hoothin
 // @version      1.1.2
 // @description  Simply auto loading paginated web pages
-// @description:zh-CN  自动翻页
+// @description:zh-CN  最强自动翻页脚本，无需规则自动支持所有网页！
 // @description:zh-TW  自動翻頁
 // @description:ja     Webページを自動で読み込み継ぎ足し表示を行うブラウザ拡張です
 // @description:ru     Просто автоматически загрузите следующую страницу
