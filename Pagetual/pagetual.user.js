@@ -761,6 +761,7 @@
                 let next1,next2,next3,next4,nextJs1,nextJs2,nextJs3;
                 for(i=aTags.length-1;i>=0;i--){
                     let aTag=aTags[i];
+                    if(aTag.innerText=="§")continue;
                     if(aTag.style.display=="none")continue;
                     if(next1 && next2 && next3 && next4)break;
                     if(!next1){
