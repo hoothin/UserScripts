@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.1.1
+// @version      1.1.2
 // @description  Simply auto loading paginated web pages
 // @description:zh-CN  自动翻页
 // @description:zh-TW  自動翻頁
@@ -511,7 +511,11 @@
                     if(r.wait){
                         let waitTime=500,checkEval;
                         if(isNaN(r.wait)){
-                            checkEval=Function("doc",'"use strict";' + r.wait);
+                            try{
+                                checkEval=Function("doc",'"use strict";' + r.wait);
+                            }catch(e){
+                                debug(e);
+                            }
                         }else{
                             waitTime=r.wait;
                         }
@@ -810,7 +814,9 @@
                 try{
                     let targetUrl=Function("doc",'"use strict";' + this.curSiteRule.nextLinkByJs)(doc);
                     if(targetUrl)nextLink={href:targetUrl};
-                }catch(e){}
+                }catch(e){
+                    debug(e);
+                }
             }else if(this.curSiteRule.nextLinkByUrl){
                 let targetUrl=this.curUrl.replace(new RegExp(this.curSiteRule.nextLinkByUrl[0]), this.curSiteRule.nextLinkByUrl[1]);
                 if(targetUrl != this.curUrl){
@@ -824,7 +830,9 @@
                             }else{
                                 try{
                                     result=Function('"use strict";return ' + code)();;
-                                }catch(e){}
+                                }catch(e){
+                                    debug(e);
+                                }
                             }
                             targetUrl=targetUrl.replace(rep, result);
                         });
@@ -898,7 +906,9 @@
             if(code){
                 try{
                     Function("doc","eles",'"use strict";' + code)(doc,eles);
-                }catch(e){}
+                }catch(e){
+                    debug(e);
+                }
             }
             [].forEach.call(eles, ele=>{
                 [].forEach.call(ele.querySelectorAll("img"), img=>{
@@ -971,7 +981,9 @@
                 if(code){
                     try{
                         Function('"use strict";' + code)();
-                    }catch(e){}
+                    }catch(e){
+                        debug(e);
+                    }
                 }
                 self.getNextLink(document);
                 callback();
@@ -981,7 +993,6 @@
         insertPage(doc, eles, url, callback, tried){
             this.pageDoc=doc;
             this.curUrl=url;
-            this.pageAction(doc, eles);
             let nextLink=this.getNextLink(doc);
             if(curPage==1 && !tried && !this.nextLinkHref && this.curSiteRule.singleUrl && this.curSiteRule.pageElement){
                 this.curSiteRule.action=1;
@@ -989,7 +1000,7 @@
             }
             if(callback)callback(eles);
             this.getInsert();
-            var self=this;
+            var self=this,newEles=[];
             if(!eles || eles.length==0 || !self.insert || !self.insert.parentNode){
             }else{
                 [].forEach.call(eles, ele=>{
@@ -1006,8 +1017,10 @@
                     }else{
                         self.insert.parentNode.insertBefore(newEle, self.insert);
                     }
+                    newEles.push(newEle);
                 });
             }
+            this.pageAction(doc, newEles);
             if(nextLink && nextLink.tagName){
                 let nextLinkCs=_unsafeWindow.getComputedStyle(nextLink);
                 if(nextLinkCs.cursor=="not-allowed" || !isVisible(nextLink, _unsafeWindow)){
@@ -1504,7 +1517,11 @@
             let waitTime=500,checkEval;
             if(ruleParser.curSiteRule.wait){
                 if(isNaN(ruleParser.curSiteRule.wait)){
-                    checkEval=Function("doc",'"use strict";' + ruleParser.curSiteRule.wait);
+                    try{
+                        checkEval=Function("doc",'"use strict";' + ruleParser.curSiteRule.wait);
+                    }catch(e){
+                        debug(e);
+                    }
                 }else{
                     waitTime=ruleParser.curSiteRule.wait;
                 }
@@ -1891,7 +1908,11 @@
             let waitTime=500,checkEval;
             if(ruleParser.curSiteRule.wait){
                 if(isNaN(ruleParser.curSiteRule.wait)){
-                    checkEval=Function("doc",'"use strict";' + ruleParser.curSiteRule.wait);
+                    try{
+                        checkEval=Function("doc",'"use strict";' + ruleParser.curSiteRule.wait);
+                    }catch(e){
+                        debug(e);
+                    }
                 }else{
                     waitTime=ruleParser.curSiteRule.wait;
                 }
@@ -2052,7 +2073,9 @@
                 };
                 try{
                     Function("over",'"use strict";' + ruleParser.curSiteRule.pageElementByJs)(over);
-                }catch(e){}
+                }catch(e){
+                    debug(e);
+                }
             }else if(ruleParser.curSiteRule.action==1 && !isJs){
                 requestFromIframe(nextLink, (doc, eles)=>{
                     isLoading=false;
