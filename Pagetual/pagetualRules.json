@@ -88,6 +88,12 @@
     "nextLink":".pagenavi>a[title='下一页']"
   },
   {
+    "name":"南+",
+    "url":"^https://south-plus\\.org/",
+    "action":1,
+    "sleep":1000
+  },
+  {
     "name":"动漫啦",
     "url":"https://www\\.dongman\\.la/manhua/chapter/",
     "pageElement":".chapter-images img",
