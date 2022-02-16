@@ -89,7 +89,7 @@
   },
   {
     "name":"南+",
-    "url":"^https://(south|snow)\\-plus\\.",
+    "url":"^https://.*(south|snow)\\-plus\\.",
     "action":1,
     "sleep":1000
   },
