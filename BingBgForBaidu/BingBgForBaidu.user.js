@@ -2,7 +2,7 @@
 // @name         百Bing图
 // @name:en      BingBgForBaidu
 // @namespace    hoothin
-// @version      2.3.27
+// @version      2.3.28
 // @description     给百度首页换上Bing的背景图，并添加背景图链接与日历组件
 // @description:en  Just change the background image of baidu.com to bing.com
 // @author       hoothin
@@ -18,6 +18,10 @@
 // @include      *://www.baidu.com/home*
 // @include      *://www.baidu.com/?tn=*
 // @include      *://www.baidu.com/index.php*
+// @include      *://ipv6.baidu.com/
+// @include      *://ipv6.baidu.com/home*
+// @include      *://ipv6.baidu.com/?tn=*
+// @include      *://ipv6.baidu.com/index.php*
 // ==/UserScript==
 
 (function() {
