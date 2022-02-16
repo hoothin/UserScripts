@@ -11,7 +11,7 @@
 // @name:ko      東方永頁機
 // @namespace    hoothin
 // @version      1.1.7
-// @description  Most compatible Auto pager script ever. Simply auto loading paginated web pages!
+// @description  Most compatible Auto pager script ever! Simply auto loading paginated web pages.
 // @description:zh-CN  ⚔️最强自动翻页脚本，自动加载并拼接下一分页内容（例如论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页！
 // @description:zh-TW  自動翻頁
 // @description:ja     Webページを自動で読み込み継ぎ足し表示を行うブラウザ拡張です
@@ -134,6 +134,7 @@
                     forceIframe:"强制拼接",
                     cancelForceIframe:"取消强制拼接",
                     configure:"打开配置页",
+                    firstUpdate:"点击此处初始化规则",
                     update:"立即更新规则",
                     passSec:"更新于 #t# 秒前",
                     passMin:"更新于 #t# 分钟前",
@@ -166,6 +167,7 @@
                     forceIframe:"強制拼接",
                     cancelForceIframe:"取消强制拼接",
                     configure:"打開配置頁",
+                    firstUpdate:"點擊此處初始化規則",
                     update:"立即更新規則",
                     passSec:"更新于 #t# 秒前",
                     passMin:"更新于 #t# 分鐘前",
@@ -197,6 +199,7 @@
                     forceIframe: "強制ステッチ",
                     cancelForceIframe: "強制ステッチをキャンセル",
                     configure: "設定ページを開く",
+                    firstUpdate:"ここをクリックしてルールを初期化します",
                     update: "今すぐルールを更新してください",
                     passSec: "＃t＃秒前に更新",
                     passMin: "＃t＃分前に更新",
@@ -228,6 +231,7 @@
                     forceIframe:"Force to join",
                     cancelForceIframe:"Cancel Force join",
                     configure:"Configure",
+                    firstUpdate:"Click here to initialize the rules",
                     update:"Update rules from url now",
                     passSec:"Updated #t# seconds ago",
                     passMin:"Updated #t# minutes ago",
@@ -1166,8 +1170,10 @@
 
         let pastDate=(new Date(updateDate)).toString(),passStr;
         let passTime=(now-updateDate)/1000;
-        if(passTime<60){
-            passStr=i18n("passSec", passTime);
+        if(isNaN(passTime)){
+            passStr=i18n("firstUpdate");
+        }else if(passTime<60){
+            passStr=i18n("passSec", parseInt(passTime));
         }else if(passTime<60*60){
             passStr=i18n("passMin", parseInt(passTime/60));
         }else if(passTime<60*60*24){
