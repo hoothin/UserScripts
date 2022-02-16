@@ -250,5 +250,19 @@
     "url":"^https://www\\.taoguba\\.com\\.cn/shenghuoba/",
     "pageElement":".lifeContent-topicList-item",
     "nextLinkByJs":"let pageSpan=doc.querySelector('#N_go_pageBtn');if(!pageSpan)return false;let maxPage=pageSpan.dataset.total,curPage=pageSpan.dataset.now;if(parseInt(curPage)<parseInt(maxPage))return location.href.replace(/(\\D+\\/)[^\\/]*$/,'$1')+'H-'+(parseInt(curPage)+1);else return false;"
+  },
+  {
+    "name":"K.F. 绯月列表页",
+    "url":"^https://(bbs\\.9shenmi\\.com|kf\\.miaola\\.work)/thread.php",
+    "pageElement":"//table[@class=\"thread1\"]/tbody/tr[position()>3]",
+    "type":0,
+    "nextLink":"//ul[@class=\"pages\"]/li/a[contains(text(),'下一页')]"
+  },
+  {
+    "name":"K.F. 绯月阅读页",
+    "url":"^https://(bbs\\.9shenmi\\.com|kf\\.miaola\\.work)/read.php",
+    "pageElement":"//form/div[@class=\"readlou\"]|//form/div[@class=\"readtext\"]|//form/div[@class=\"c\"]",
+    "type":0,
+    "nextLink":"//ul[@class=\"pages\"]/li/a[contains(text(),'下一页')]"
   }
 ]
