@@ -896,6 +896,9 @@
         }
 
         getInsert(refresh) {
+            if(refresh){
+                this.insert=null;
+            }
             if(this.insert && !refresh){
                 let parent=this.insert;
                 while(parent && parent.nodeName!="BODY"){
@@ -1579,6 +1582,7 @@
                         debug("Stop as cors");
                         //isPause=true;
                         ruleParser.curSiteRule.pageElement="body>*";
+                        ruleParser.getInsert(true);
                         callback(false, false);
                     }
                     document.body.removeChild(iframe);
