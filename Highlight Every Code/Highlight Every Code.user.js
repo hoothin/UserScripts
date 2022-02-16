@@ -3,7 +3,7 @@
 // @name:zh-CN   代码片段高亮
 // @name:zh-TW   程式碼片斷高亮
 // @namespace    hoothin
-// @version      2.2.2
+// @version      2.2.3
 // @description  Add a icon to popup a window that allows syntax highlighting and beautify and word count of source code snippets on current page
 // @description:zh-CN 选择代码片段后点击图标弹出新窗口显示语法高亮美化与格式化后的代码与字数统计
 // @description:zh-TW 選擇程式碼片段後點選圖示彈出新視窗顯示語法高亮美化與格式化後的程式碼與字數統計
@@ -26,7 +26,7 @@
 (function() {
     'use strict';
     var codeIcon=document.createElement("img");
-    var codes, selStr, scrollX, scrollY, customInput=false,altKey=true,ctrlKey=true,shiftKey=true,metaKey=true;
+    var codes, selStr, scrollX, scrollY, customInput=false,altKey=true,ctrlKey=true,shiftKey=true,metaKey=true,hiding=false;
     var _unsafeWindow=(typeof unsafeWindow=='undefined'? window : unsafeWindow);
     codeIcon.className="codeIcon";
     codeIcon.style.opacity=0;
@@ -64,6 +64,7 @@
         hideIcon();
     });
     document.addEventListener('mouseover', function(o) {
+        if(hiding)return;
         var target=o.target,hasCode=false;
         while(target && target.nodeName!="BODY"){
             if(target.nodeName=="PRE" || target.nodeName=="CODE"){
@@ -88,6 +89,8 @@
         codeIcon.style.left=left+"px";
     });
     document.addEventListener('mousedown', function(o) {
+        hiding=true;
+        setTimeout(()=>{hiding=false},1000);
         hideIcon();
     });
     document.addEventListener('mouseup', function(o) {
