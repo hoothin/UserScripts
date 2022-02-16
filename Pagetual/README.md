@@ -40,6 +40,14 @@ name
 --
 Name of the target site
 
+author
+--
+Author of this rule
+
+example
+--
+Example url of this rule
+
 url
 --
 Regexp of the url of target site
@@ -111,3 +119,7 @@ The js code to run with current main page with document:(document of main page)
 loadMore
 --
 Selector of load more button 
+
+sleep
+--
+Sleep time when get next page if site is limited
