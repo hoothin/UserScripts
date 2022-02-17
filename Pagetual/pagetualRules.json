@@ -228,6 +228,13 @@
     "pageElement":"div.search-v3-content>.card-grid-box"
   },
   {
+    "name":"Pixiv",
+    "url":"^https://www\\.pixiv\\.net/",
+    "action":2,
+    "nextLink":"a[class*='filterProps-Styled-Component']:last-child",
+    "wait":1000
+  },
+  {
     "name":"淘股吧内贴",
     "url":"^https://www\\.taoguba\\.com\\.cn/Article/\\d+/\\d+",
     "pageElement":"#new_wrap_container",
