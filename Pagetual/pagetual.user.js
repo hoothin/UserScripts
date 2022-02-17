@@ -880,8 +880,7 @@
             if(nextLink){
                 if(nextLink.href && nextLink.href==this.curUrl){
                     nextLink=null;
-                }
-                if(/^javascript:/.test(nextLink.href) && (this.curSiteRule.action==0 || this.curSiteRule.action==1)){
+                }else if(/^javascript:/.test(nextLink.href) && (this.curSiteRule.action==0 || this.curSiteRule.action==1)){
                     nextLink=null;
                 }
                 /*if(!this.curSiteRule.nextLink && page && page.canSave){
