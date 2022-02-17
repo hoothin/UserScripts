@@ -625,7 +625,6 @@
                     if(ele.children.length==0 && !self.curSiteRule.pageElement){
                         if(ele.parentNode.tagName=="P")ele=ele.parentNode;
                         self.curSiteRule.pageElement=self.geneSelector(ele.parentNode)+">"+ele.tagName;
-                        self.curSiteRule.type=1;
                         debug(self.curSiteRule.pageElement);
                         return [ele];
                     }
@@ -681,7 +680,6 @@
                         if(ele.tagName=="P")ele=ele.parentNode;
                         self.curSiteRule.pageElement=self.geneSelector(ele);
                         if(ele.children.length>1 && ele.tagName!="UL")self.curSiteRule.pageElement+=">*";
-                        self.curSiteRule.type=1;
                         debug(self.curSiteRule.pageElement);
                     }
                     return (ele.tagName=="UL"||ele.children.length==1)?[ele]:ele.children;
