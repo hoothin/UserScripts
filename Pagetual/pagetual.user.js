@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.1.8
+// @version      1.1.9
 // @description  Most compatible Auto pager script ever! Simply auto loading paginated web pages.
 // @description:zh-CN  ⚔️最强自动翻页脚本，自动加载并拼接下一分页内容（例如论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页！
 // @description:zh-TW  自動翻頁
@@ -2057,14 +2057,13 @@
     }
 
     function forceIframe(url, callback){
-        let curIframe = document.createElement('iframe');
+        let curIframe = document.createElement('iframe'),iframeDoc;
         curIframe.name = 'pagetual-iframe';
         curIframe.sandbox="allow-same-origin allow-scripts allow-popups allow-forms";
         curIframe.frameBorder = '0';
         curIframe.scrolling="no";
         curIframe.style.cssText = 'display: block; visibility: visible; float: none; clear: both; width: 100%;height:0;background: initial; border: 0px; border-radius: 0px; margin: 0px 0px 2rem; padding: 0px; z-index: 2147483647;';
         curIframe.addEventListener("load", e=>{
-            let iframeDoc;
             try{
                 iframeDoc=curIframe.contentDocument || curIframe.contentWindow.document;
             }catch(e){
@@ -2077,11 +2076,28 @@
             callback(curIframe, true);
             curIframe.style.height=iframeDoc.body.scrollHeight+"px";
             curIframe.style.width=iframeDoc.body.scrollWidth+"px";
+        });
+        let inAction=false;
+        let forceRefresh=e=>{
+            if(inAction || !iframeDoc)return;
+            inAction=true;
             setTimeout(()=>{
+                inAction=false;
                 curIframe.style.height=iframeDoc.body.scrollHeight+"px";
                 curIframe.style.width=iframeDoc.body.scrollWidth+"px";
-            },300);
-        });
+                if(!ruleParser.nextLinkHref){
+                    ruleParser.getNextLink(iframeDoc);
+                    if(ruleParser.nextLinkHref){
+                        document.removeEventListener("scroll", forceRefresh);
+                    }
+                }else{
+                    document.removeEventListener("scroll", forceRefresh);
+                }
+            },500);
+            curIframe.style.height=iframeDoc.body.scrollHeight+"px";
+            curIframe.style.width=iframeDoc.body.scrollWidth+"px";
+        };
+        document.addEventListener("scroll", forceRefresh);
         curIframe.src=url;
         let insert=ruleParser.getInsert();
         document.body.insertBefore(curIframe, loading);
