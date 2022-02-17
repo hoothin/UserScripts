@@ -523,9 +523,7 @@
                         }else{
                             waitTime=r.wait;
                         }
-                        let waitTimes=10;
                         let checkReady=()=>{
-                            if(waitTimes--<=0)return true;
                             setTimeout(()=>{
                                 if(!ruleMatch(r) || (checkEval && !checkEval(document))){
                                     checkReady();
@@ -1358,11 +1356,11 @@
 
     function isVisible(el, win) {
         var loopable = true,
-            visible = win.getComputedStyle(el).display != 'none' && win.getComputedStyle(el).visibility != 'hidden';
+            visible = el.tagName && win.getComputedStyle(el).display != 'none' && win.getComputedStyle(el).visibility != 'hidden';
         while(loopable && visible) {
             el = el.parentNode;
 
-            if(el && el.tagName!="BODY") {
+            if(el && el.tagName && el.tagName!="BODY") {
                 visible = win.getComputedStyle(el).display != 'none' && win.getComputedStyle(el).visibility != 'hidden';
             }else {
                 loopable = false;
@@ -1724,7 +1722,8 @@
                 urlChanged=false;
                 isPause=false;
             }
-            if(!loading && !isPause){
+            if(isPause)return;
+            if(!loading){
                 loading=true;
                 if(!loadmoreBtn || !loadmoreBtn.parentNode){
                     loadmoreBtn=getLoadMore(document);
@@ -1739,7 +1738,7 @@
                 }
             }
             setTimeout(()=>{
-                if(!isPause && !isLoading){
+                if(!isLoading){
                     let scrolly=window.scrollY;
                     let windowHeight=window.innerHeight;
                     let scrollH=Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
@@ -2144,7 +2143,7 @@
                             ruleParser.insertPage(doc, eles, nextLink, null, true);
                         }
                     });
-                }else if(forceState==2 && !isJs){
+                }else if((forceState==2||ruleParser.curSiteRule.action==2) && !isJs){
                     forceIframe(nextLink, (iframe, eles)=>{
                         isLoading=false;
                         loading.style.display="none";
