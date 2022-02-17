@@ -353,6 +353,7 @@
         }
     };
     var rulesData={},ruleUrls,updateDate,configPage="https://github.com/hoothin/UserScripts/tree/master/Pagetual";
+    var allOfBody="body>*";
     _GM_registerMenuCommand(i18n("configure"), ()=>{
         _GM_openInTab(configPage,{active:true});
     });
@@ -1016,7 +1017,7 @@
             this.pageDoc=doc;
             this.curUrl=url;
             let nextLink=this.getNextLink(doc);
-            if(curPage==1 && !tried && !this.nextLinkHref && this.curSiteRule.singleUrl && this.curSiteRule.pageElement){
+            if(curPage==1 && !tried && !this.nextLinkHref && this.curSiteRule.singleUrl && this.curSiteRule.pageElement && this.curSiteRule.pageElement!=allOfBody){
                 this.curSiteRule.action=1;
                 return false;
             }
@@ -1586,7 +1587,7 @@
                     }catch(e){
                         debug("Stop as cors");
                         //isPause=true;
-                        ruleParser.curSiteRule.pageElement="body>*";
+                        ruleParser.curSiteRule.pageElement=allOfBody;
                         ruleParser.getInsert(true);
                         callback(false, false);
                     }
