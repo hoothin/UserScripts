@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.1.9
+// @version      1.2.0
 // @description  Most compatible Auto pager script ever! Simply auto loading paginated web pages.
 // @description:zh-CN  ⚔️最强自动翻页脚本，自动加载并拼接下一分页内容（例如论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页！
 // @description:zh-TW  自動翻頁
@@ -932,7 +932,9 @@
             [].forEach.call(eles, ele=>{
                 [].forEach.call(ele.querySelectorAll("img"), img=>{
                     let realSrc;
-                    if(img.dataset && img.dataset.original){
+                    if(img.getAttribute("_src") && !img.src){
+                        realSrc=img.getAttribute("_src");
+                    }else if(img.dataset && img.dataset.original){
                         realSrc=img.dataset.original;
                     }else if(img.dataset && img.dataset.src){
                         realSrc=img.dataset.src;
@@ -962,8 +964,8 @@
             if(lazyImgSrc){
                 [].forEach.call(eles, ele=>{
                     [].forEach.call(ele.querySelectorAll("img"), img=>{
-                        if(img[lazyImgSrc]){
-                            img.src=img[lazyImgSrc];
+                        if(img.getAttribute(lazyImgSrc)){
+                            img.src=img.getAttribute(lazyImgSrc);
                         }
                     });
                 });
@@ -1040,12 +1042,6 @@
                 });
             }
             this.pageAction(doc, newEles);
-            if(nextLink && nextLink.tagName){
-                let nextLinkCs=_unsafeWindow.getComputedStyle(nextLink);
-                if(nextLinkCs.cursor=="not-allowed" || !isVisible(nextLink, _unsafeWindow)){
-                    self.nextLinkHref=false;
-                }
-            }
             return true;
         }
     }
@@ -1877,6 +1873,13 @@
                 insert.appendChild(pageBar);
             }else{
                 insert.parentNode.insertBefore(pageBar, insert);
+            }
+        }
+        if(ruleParser.curSiteRule.pageBar){
+            try{
+                Function("pageBar",'"use strict";' + ruleParser.curSiteRule.pageBar)(pageBar);
+            }catch(e){
+                debug(e);
             }
         }
 
