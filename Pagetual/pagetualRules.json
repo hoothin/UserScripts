@@ -236,6 +236,12 @@
     "url":"^https://www\\.baidu\\.com/(s|baidu)"
   },
   {
+    "name":"手机百度",
+    "url":"https://(m|www)\\.baidu\\.com/s",
+    "nextLink":"a.new-nextpage-only,a.new-nextpage",
+    "pageElement":"#results>.result"
+  },
+  {
     "name":"58pic",
     "url":"^https://www\\.58pic\\.com/tupian/",
     "css":".card-lazy{display:none}.pagetual_pageBar{margin-bottom: 20px!important;}",
