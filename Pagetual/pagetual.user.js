@@ -1001,7 +1001,7 @@
                 let code=self.curSiteRule.init;
                 if(code){
                     try{
-                        Function('doc','"use strict";' + code)(document);
+                        Function('doc','"use strict";' + code)(null);
                     }catch(e){
                         debug(e);
                     }
@@ -2046,7 +2046,15 @@
             emuIframe.style.cssText = 'margin:0!important;padding:0!important;visibility:hidden!important;';
             emuIframe.addEventListener("load", e=>{
                 setTimeout(()=>{
-                    let code=ruleParser.curSiteRule.pageAction;
+                    try{
+                        iframeDoc=emuIframe.contentDocument || emuIframe.contentWindow.document;
+                    }catch(e){
+                        debug("Stop as cors");
+                        isPause=true;
+                        callback(false, false);
+                        return;
+                    }
+                    let code=ruleParser.curSiteRule.init;
                     if(code){
                         try{
                             Function('doc','"use strict";' + code)(iframeDoc);
