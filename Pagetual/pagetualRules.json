@@ -242,6 +242,16 @@
     "pageElement":"div.search-v3-content>.card-grid-box"
   },
   {
+    "name":"中国大学MOOC课程评论区",
+    "url":"^https://www\\.icourse163\\.org/course/",
+    "action":1,
+    "wait":1000,
+    "type":0,
+    "init":"if(doc)doc.querySelector('#review-tag-button').click()",
+    "nextLink":"//ul[@class='ux-pager']/li/a[text()='下一页']",
+    "pageElement":"//div[@class='ux-mooc-comment-course-comment_comment-list']/div[@class='ux-mooc-comment-course-comment_comment-list_item']"
+  },
+  {
     "name":"Pixiv",
     "url":"^https://www\\.pixiv\\.net/",
     "action":2,
