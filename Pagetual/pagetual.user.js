@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.2.0
+// @version      1.2.1
 // @description  Most compatible Auto pager script ever! Simply auto loading paginated web pages.
 // @description:zh-CN  ⚔️最强自动翻页脚本，自动加载并拼接下一分页内容（例如论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页！
 // @description:zh-TW  自動翻頁
@@ -1001,7 +1001,7 @@
                 let code=self.curSiteRule.init;
                 if(code){
                     try{
-                        Function('"use strict";' + code)();
+                        Function('doc','"use strict";' + code)(document);
                     }catch(e){
                         debug(e);
                     }
@@ -2046,6 +2046,14 @@
             emuIframe.style.cssText = 'margin:0!important;padding:0!important;visibility:hidden!important;';
             emuIframe.addEventListener("load", e=>{
                 setTimeout(()=>{
+                    let code=ruleParser.curSiteRule.pageAction;
+                    if(code){
+                        try{
+                            Function('doc','"use strict";' + code)(iframeDoc);
+                        }catch(e){
+                            debug(e);
+                        }
+                    }
                     checkPage();
                 },500);
             });
