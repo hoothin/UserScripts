@@ -233,7 +233,7 @@
     "nextLink":"//*[@id=\"page\"]/div/a[contains(text(),'下一页')]",
     "pageElement":"//*[@id=\"content_left\"]/*",
     "type":0,
-    "url":"^https://www\\.baidu\\.com/s"
+    "url":"^https://www\\.baidu\\.com/(s|baidu)"
   },
   {
     "name":"58pic",
