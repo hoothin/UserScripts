@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.2.1
+// @version      1.2.2
 // @description  Most compatible Auto pager script ever! Simply auto loading paginated web pages.
 // @description:zh-CN  ⚔️最强自动翻页脚本，自动加载并拼接下一分页内容（例如论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页！
 // @description:zh-TW  自動翻頁
@@ -794,7 +794,7 @@
                         }
                     }
                     if(!next3){
-                        if(aTag.innerText=="&gt;" || aTag.innerText=="▶" || aTag.innerText=="»"){
+                        if(aTag.innerText=="&gt;" || aTag.innerText=="▶" || aTag.innerText=="»" || /nextpage/i.test(aTag.className)){
                             if(!aTag.href || /^javascript:/.test(aTag.href)){
                                 if(!nextJs3)nextJs3=aTag;
                             }else{
