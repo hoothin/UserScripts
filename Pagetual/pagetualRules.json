@@ -235,6 +235,12 @@
     "wait":1000
   },
   {
+    "name":"铅笔小说",
+    "nextLinkByJs":"let script=doc.querySelector('body>.mlfy_main>script:nth-of-type(2)');if(!script)return null;return location.origin+script.innerText.match(/.*url_next:'([^']+)'.*/i)[1]",
+    "pageElement":"#mlfy_main_text",
+    "url":"^https://www\\.23qb\\.net/book/"
+  },
+  {
     "name":"淘股吧内贴",
     "url":"^https://www\\.taoguba\\.com\\.cn/Article/\\d+/\\d+",
     "pageElement":"#new_wrap_container",
