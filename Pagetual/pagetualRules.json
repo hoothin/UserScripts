@@ -37,6 +37,12 @@
     "nextLink":"a[aria-label=Next]"
   },
   {
+    "name":"佛弟子文库",
+    "url":"https?://www\\.fodizi\\.net/",
+    "nextLink":"a.current+a",
+    "pageElement":"div.wrap>*:not(.page)"
+  },
+  {
     "name":"动漫之家",
     "action":1,
     "url":"^https?://(www|manhua)\\.(dmzj|178)\\.com/\\w+/\\d+\\.shtml",
