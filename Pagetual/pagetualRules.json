@@ -277,6 +277,13 @@
     "pageElement":"div#postlist"
   },
   {
+    "name":"NGA",
+    "url":"^https?://.*\\.nga\\.cn/read\\.php",
+    "nextLink":"a[title='下一页']",
+    "action":1,
+    "pageElement":"div#m_posts"
+  },
+  {
     "name":"淘股吧内贴",
     "url":"^https://www\\.taoguba\\.com\\.cn/Article/\\d+/\\d+",
     "pageElement":"#new_wrap_container",
