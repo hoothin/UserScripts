@@ -307,5 +307,12 @@
     "pageElement":"//form/div[@class=\"readlou\"]|//form/div[@class=\"readtext\"]|//form/div[@class=\"c\"]",
     "type":0,
     "nextLink":"//ul[@class=\"pages\"]/li/a[contains(text(),'下一页')]"
+  },
+  {
+    "name":"chevereto",
+    "url":"(/explore/recent|/album/|/search/)",
+    "nextLink":"a[data-pagination='next']",
+    "pageAction":"let w=document.querySelector('.list-item').style.width;let content=eles[0].querySelector('.pad-content-listing');content.style.display='flex';content.style.flexFlow='row wrap';[].forEach.call(eles[0].querySelectorAll('.list-item'),i=>{i.style.display='block';i.style.width=w;i.style.position='sticky';i.querySelector('.list-item-image').style.height=w;})",
+    "pageElement":"div#content-listing-tabs"
   }
 ]
