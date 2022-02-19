@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.2.3
+// @version      1.2.4
 // @description  Most compatible Auto pager script ever! Simply auto loading paginated web pages.
 // @description:zh-CN  ⚔️最强自动翻页脚本，自动加载并拼接下一分页内容（例如论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页！
 // @description:zh-TW  自動翻頁
@@ -136,6 +136,7 @@
                     configure:"打开配置页",
                     firstUpdate:"点击此处初始化规则",
                     update:"点击立即更新规则",
+                    noNext:"没有找到下一页，请新建规则",
                     passSec:"更新于 #t# 秒前",
                     passMin:"更新于 #t# 分钟前",
                     passHour:"更新于 #t# 小时前",
@@ -169,6 +170,7 @@
                     configure:"打開配置頁",
                     firstUpdate:"點擊此處初始化規則",
                     update:"點擊立即更新規則",
+                    noNext:"沒有找到下一頁，請新建規則",
                     passSec:"更新于 #t# 秒前",
                     passMin:"更新于 #t# 分鐘前",
                     passHour:"更新于 #t# 小時前",
@@ -201,6 +203,7 @@
                     configure: "設定ページを開く",
                     firstUpdate:"ここをクリックしてルールを初期化します",
                     update: "今すぐルールを更新してください",
+                    noNext:"次のページが見つかりません、新しいルールを作成してください",
                     passSec: "＃t＃秒前に更新",
                     passMin: "＃t＃分前に更新",
                     passHour: "＃t＃時間前に更新",
@@ -233,6 +236,7 @@
                     configure:"Configure",
                     firstUpdate:"Click here to initialize the rules",
                     update:"Click to update rules from url now",
+                    noNext:"No next link found, please create a new rule",
                     passSec:"Updated #t# seconds ago",
                     passMin:"Updated #t# minutes ago",
                     passHour:"Updated #t# hours ago",
@@ -1066,6 +1070,10 @@
         });
 
         _GM_registerMenuCommand(i18n(forceState==2?"cancelForceIframe":"forceIframe"), ()=>{
+            if(!ruleParser.nextLinkHref){
+                alert(i18n("noNext"));
+                return;
+            }
             storage.setItem("forceState_"+location.host, (forceState==2?"":2));
             location.reload();
         });
@@ -1207,7 +1215,7 @@
                     let rule=ruleUrls[ruleIndex++];
                     ruleParser.addRuleByUrl(rule.url, rule.type, rule.id, (json)=>{
                         if(!json){
-                            alert("Update "+rule.url+" rules fail!")
+                            alert("Update "+rule.url+" rules fail!");
                         }
                         addNextRule();
                     })
