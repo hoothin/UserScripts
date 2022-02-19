@@ -272,9 +272,15 @@
   },
   {
     "name":"论坛帖内1",
-    "url":"/thread",
+    "url":"/t",
     "nextLink":"a.nxt",
     "pageElement":"div#postlist"
+  },
+  {
+    "name":"论坛列表1",
+    "url":"/f",
+    "nextLink":"a.nxt",
+    "pageElement":"div#threadlist"
   },
   {
     "name":"NGA",
