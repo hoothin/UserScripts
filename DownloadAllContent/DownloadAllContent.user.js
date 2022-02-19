@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.6.8
+// @version      2.6.9
 // @description  Fetch and download main content on current page, provide special support for chinese novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取小說、論壇內容等並保存為TXT文檔
@@ -129,7 +129,7 @@
         var tempSavebtn = document.getElementById('tempSaveTxt');
         var abortbtn = document.getElementById('abortRequest');
         tempSavebtn.onclick = function(){
-            var blob = new Blob([i18n.info+"\r\n"+document.title+"\r\n\r\n"+rCats.join("\r\n\r\n")], {type: "text/plain;charset=utf-8"});
+            var blob = new Blob([i18n.info+"\r\n\r\n"+document.title+"\r\n\r\n"+rCats.join("\r\n\r\n")], {type: "text/plain;charset=utf-8"});
             saveAs(blob, document.title+".txt");
         }
         abortbtn.onclick = function(){
@@ -222,7 +222,7 @@
                         processDoc(curIndex, aTag, null, ' : TIMEOUT '+e.toString());
                         let request=downOnce();
                         if(request)curRequests.push(request);
-                    },
+                    }
                 })];
             }
             if(!aTag){
@@ -281,7 +281,7 @@
             if(downNum==aEles.length){
                 txtDownWords.innerHTML=getI18n("complete",[downNum]);
                 sortInnerPage();
-                var blob = new Blob([i18n.info+"\r\n"+document.title+"\r\n\r\n"+rCats.join("\r\n\r\n")], {type: "text/plain;charset=utf-8"});
+                var blob = new Blob([i18n.info+"\r\n\r\n"+document.title+"\r\n\r\n"+rCats.join("\r\n\r\n")], {type: "text/plain;charset=utf-8"});
                 saveAs(blob, document.title+".txt");
             }
         }
@@ -422,7 +422,7 @@
                 }
             }
         }
-        return rStr.replace(/[\n\r]+$/,"");
+        return rStr.replace(/[\n\r]+/g,"\n\r");
     }
 
     function getI18n(key, args){
@@ -468,7 +468,7 @@
         if(list.length>2 && !forceSingle){
             indexDownload(list);
         }else{
-            var blob = new Blob([i18n.info+"\r\n"+document.title+"\r\n\r\n"+getPageContent(document)], {type: "text/plain;charset=utf-8"});
+            var blob = new Blob([i18n.info+"\r\n\r\n"+document.title+"\r\n\r\n"+getPageContent(document)], {type: "text/plain;charset=utf-8"});
             saveAs(blob, document.title+".txt");
         }
     }
