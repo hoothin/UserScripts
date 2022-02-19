@@ -271,6 +271,12 @@
     "url":"^https://www\\.23qb\\.net/book/"
   },
   {
+    "name":"论坛帖内1",
+    "url":"/thread",
+    "nextLink":"a.nxt",
+    "pageElement":"div#postlist"
+  },
+  {
     "name":"淘股吧内贴",
     "url":"^https://www\\.taoguba\\.com\\.cn/Article/\\d+/\\d+",
     "pageElement":"#new_wrap_container",
