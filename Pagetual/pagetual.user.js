@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.2.8
+// @version      1.2.9
 // @description  Most compatible Auto pager script ever! Simply auto loading paginated web pages.
 // @description:zh-CN  ⚔️最强自动翻页脚本，自动加载并拼接下一分页内容（例如论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页！
 // @description:zh-TW  自動加載並拼接下一分頁內容（例如論壇、漫畫站、小說站、資訊站、博客等），無需規則支持所有網頁
@@ -731,7 +731,7 @@
         getPage(doc){
             if(_unsafeWindow.Discourse)return {};
             let canSave=false;//發現頁碼選擇器在其他頁對不上，還是別保存了
-            let url=this.curUrl.replace("#!","");
+            let url=this.curUrl.replace("#!","").replace("index.php?","?");
             let pageNum=1,preStr="",afterStr="";
             let pageMatch1=url.match(/(.*[a-z\/\-_](?:p|page)?\/?)(\d+)(\.s?html?$|\/?$)/i);
             let pageMatch2=url.match(/(.*[\?&]p(?:age)?=)(\d+)($|[#&].*)/i);
@@ -832,9 +832,9 @@
                     }
                     if(!aTag.href || /^javascript:/.test(aTag.href))continue;
                     if(!next4){
-                        if(aTag.href.replace("?&","?").replace("#!","").replace(preStr,"").replace(afterStr,"")==parseInt(pageNum)+1){
+                        if(aTag.href.replace("?&","?").replace("#!","").replace("index.php?","?").replace(preStr,"").replace(afterStr,"")==parseInt(pageNum)+1){
                             next4=aTag;
-                        }else if(aTag.href.replace("?&","?").indexOf(url)!=-1 && /^[\/\?&]?[_-]?(p|page)?=?\/?2(\/|\?|&|$)/i.test(aTag.href.replace(url,"").replace(/\.s?html?$/i,""))){
+                        }else if(aTag.href.replace("?&","?").replace("index.php?","?").indexOf(url)!=-1 && /^[\/\?&]?[_-]?(p|page)?=?\/?2(\/|\?|&|$)/i.test(aTag.href.replace(url,"").replace(/\.s?html?$/i,""))){
                             next4=aTag;
                         }
                     }
