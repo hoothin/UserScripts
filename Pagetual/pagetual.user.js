@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.2.5
+// @version      1.2.6
 // @description  Most compatible Auto pager script ever! Simply auto loading paginated web pages.
 // @description:zh-CN  ⚔️最强自动翻页脚本，自动加载并拼接下一分页内容（例如论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页！
 // @description:zh-TW  自動加載並拼接下一分頁內容（例如論壇、漫畫站、小說站、資訊站、博客等），無需規則支持所有網頁
@@ -115,7 +115,7 @@
     }
 
     if(window.top != window.self){
-        return;
+        //return;
     }
 
     const lang = navigator.appName=="Netscape"?navigator.language:navigator.userLanguage;
@@ -135,7 +135,10 @@
                     cancelForceIframe:"取消强制拼接",
                     configure:"打开配置页",
                     firstUpdate:"点击此处初始化规则",
-                    update:"点击立即更新规则",
+                    update:"更新规则",
+                    click2update:"点击立即更新规则",
+                    loadNow:"立即翻页",
+                    loadConfirm:"要翻几页？（0为不间断）",
                     noNext:"没有找到下一页，请新建规则",
                     passSec:"更新于 #t# 秒前",
                     passMin:"更新于 #t# 分钟前",
@@ -169,7 +172,10 @@
                     cancelForceIframe:"取消强制拼接",
                     configure:"打開配置頁",
                     firstUpdate:"點擊此處初始化規則",
-                    update:"點擊立即更新規則",
+                    update:"更新規則",
+                    click2update:"點擊立即更新規則",
+                    loadNow:"立即翻頁",
+                    loadConfirm:"要翻几頁？（0為不間斷）",
                     noNext:"沒有找到下一頁，請新建規則",
                     passSec:"更新于 #t# 秒前",
                     passMin:"更新于 #t# 分鐘前",
@@ -202,7 +208,10 @@
                     cancelForceIframe: "強制ステッチをキャンセル",
                     configure: "設定ページを開く",
                     firstUpdate:"ここをクリックしてルールを初期化します",
-                    update: "今すぐルールを更新してください",
+                    update: "更新ルール",
+                    click2update:"今すぐルールを更新してください",
+                    loadNow:"今すぐページをめくる",
+                    loadConfirm:"数ページめくりたいですか？（0は途切れない）",
                     noNext:"次のページが見つかりません、新しいルールを作成してください",
                     passSec: "＃t＃秒前に更新",
                     passMin: "＃t＃分前に更新",
@@ -235,7 +244,10 @@
                     cancelForceIframe:"Cancel Force join",
                     configure:"Configure",
                     firstUpdate:"Click here to initialize the rules",
-                    update:"Click to update rules from url now",
+                    update:"Update rules",
+                    click2update:"Click to update rules from url now",
+                    loadNow:"Load next now",
+                    loadConfirm:"How much pages do you want to load? (0 means infinite)",
                     noNext:"No next link found, please create a new rule",
                     passSec:"Updated #t# seconds ago",
                     passMin:"Updated #t# minutes ago",
@@ -1069,14 +1081,6 @@
             location.reload();
         });
 
-        _GM_registerMenuCommand(i18n(forceState==2?"cancelForceIframe":"forceIframe"), ()=>{
-            if(!ruleParser.nextLinkHref){
-                alert(i18n("noNext"));
-                return;
-            }
-            storage.setItem("forceState_"+location.host, (forceState==2?"":2));
-            location.reload();
-        });
         var configCon,insertPos;
         if(location.href==configPage){
             _GM_addStyle(`
@@ -1185,13 +1189,13 @@
         if(isNaN(passTime)){
             passStr=i18n("firstUpdate");
         }else if(passTime<60){
-            passStr=i18n("passSec", parseInt(passTime))+" ← "+i18n("update");
+            passStr=i18n("passSec", parseInt(passTime))+" ← "+i18n("click2update");
         }else if(passTime<60*60){
-            passStr=i18n("passMin", parseInt(passTime/60))+" ← "+i18n("update");
+            passStr=i18n("passMin", parseInt(passTime/60))+" ← "+i18n("click2update");
         }else if(passTime<60*60*24){
-            passStr=i18n("passHour", parseInt(passTime/3600))+" ← "+i18n("update");
+            passStr=i18n("passHour", parseInt(passTime/3600))+" ← "+i18n("click2update");
         }else{
-            passStr=i18n("passDay", parseInt(passTime/86400))+" ← "+i18n("update");
+            passStr=i18n("passDay", parseInt(passTime/86400))+" ← "+i18n("click2update");
         }
 
 
@@ -1199,29 +1203,13 @@
         updateP.innerHTML=passStr;
         updateP.title=i18n("update")+" - "+pastDate;
         updateP.onclick=e=>{
-            if(inUpdate)return;
-            inUpdate=true;
-            let ruleIndex=0;
-            storage.setItem("hpRules", []);
-            function addNextRule(){
-                if(ruleIndex>=ruleUrls.length){
-                    storage.setItem("ruleLastUpdate", now);
-                    storage.setItem("rules", ruleParser.rules);
-                    alert(i18n("updateSucc"));
-                    inUpdate=false;
-                    updateP.innerHTML=i18n("passSec", 0);
-                    updateP.title=i18n("update");
-                }else{
-                    let rule=ruleUrls[ruleIndex++];
-                    ruleParser.addRuleByUrl(rule.url, rule.type, rule.id, (json)=>{
-                        if(!json){
-                            alert("Update "+rule.url+" rules fail!");
-                        }
-                        addNextRule();
-                    })
-                }
-            }
-            addNextRule();
+            updateRules(()=>{
+                alert(i18n("updateSucc"));
+                updateP.innerHTML=i18n("passSec", 0);
+                updateP.title=i18n("update");
+            },rule=>{
+                alert("Update "+rule.url+" rules fail!");
+            });
             alert(i18n("beginUpdate"));
         };
         configCon.insertBefore(updateP, insertPos);
@@ -1364,6 +1352,32 @@
         return true;
     }
 
+    var inUpdate=false;
+    function updateRules(success,fail){
+        if(inUpdate)return;
+        inUpdate=true;
+        let ruleIndex=0;
+        storage.setItem("hpRules", []);
+        function addNextRule(){
+            if(ruleIndex>=ruleUrls.length){
+                let now=new Date().getTime();
+                storage.setItem("ruleLastUpdate", now);
+                storage.setItem("rules", ruleParser.rules);
+                inUpdate=false;
+                success();
+            }else{
+                let rule=ruleUrls[ruleIndex++];
+                ruleParser.addRuleByUrl(rule.url, rule.type, rule.id, (json)=>{
+                    if(!json){
+                        fail(rule);
+                    }
+                    addNextRule();
+                })
+            }
+        }
+        addNextRule();
+    }
+
     function objIsArr(obj) {
         return obj &&
             typeof obj === 'object' &&
@@ -1476,20 +1490,9 @@
                         let now=new Date().getTime();
                         if(!date || now-date>2*24*60*60*1000){
                             storage.setItem("ruleLastUpdate", now);
-                            storage.setItem("hpRules", []);
-                            let ruleIndex=0;
-                            function addNextRule(){
-                                if(ruleIndex>=ruleUrls.length){
-                                    storage.setItem("rules", ruleParser.rules);
-                                    callback();
-                                }else{
-                                    let rule=ruleUrls[ruleIndex++];
-                                    ruleParser.addRuleByUrl(rule.url, rule.type, rule.id, (json)=>{
-                                        addNextRule();
-                                    })
-                                }
-                            }
-                            addNextRule();
+                            updateRules(()=>{
+                                callback();
+                            },rule=>{});
                         }else{
                             callback();
                         }
@@ -1617,7 +1620,29 @@
 
     function initPage(){
         ruleParser.initPage(()=>{
-            if(ruleParser.nextLinkHref)initView();
+            if(ruleParser.nextLinkHref){
+                initView();
+                _GM_registerMenuCommand(i18n(forceState==2?"cancelForceIframe":"forceIframe"), ()=>{
+                    storage.setItem("forceState_"+location.host, (forceState==2?"":2));
+                    location.reload();
+                });
+                _GM_registerMenuCommand(i18n("update"), ()=>{
+                    updateRules(()=>{
+                        alert(i18n("updateSucc"));
+                        location.reload();
+                    },rule=>{
+                        alert("Update "+rule.url+" rules fail!");
+                    });
+                    alert(i18n("beginUpdate"));
+                });
+                _GM_registerMenuCommand(i18n("loadNow"), ()=>{
+                    let pageNum=window.prompt(i18n("loadConfirm"), "1");
+                    if(pageNum==="" || pageNum===null)return;
+                    pageNum=Math.abs(parseInt(pageNum));
+                    autoLoadNum=pageNum;
+                    nextPage();
+                });
+            }
             initListener();
             nextPage();
         });
@@ -1667,7 +1692,7 @@
     var initStyle=`display: initial;right: unset;left: unset;top: unset;bottom: unset;inset: unset;clear: both;cy: initial;d: initial;dominant-baseline: initial;empty-cells: initial;fill: initial;fill-opacity: initial;fill-rule: initial;filter: initial;flex: initial;flex-flow: initial;float: initial;flood-color: initial;flood-opacity: initial;grid: initial;grid-area: initial;height: initial;hyphens: initial;image-orientation: initial;image-rendering: initial;inline-size: initial;inset-block: initial;inset-inline: initial;isolation: initial;letter-spacing: initial;lighting-color: initial;line-break: initial;list-style: initial;margin-block: initial;margin: 0px auto;margin-inline: initial;marker: initial;mask: initial;mask-type: initial;max-block-size: initial;max-height: initial;max-inline-size: initial;max-width: initial;min-block-size: initial;min-height: initial;min-inline-size: initial;min-width: initial;mix-blend-mode: initial;object-fit: initial;object-position: initial;offset: initial;opacity: initial;order: initial;orphans: initial;outline: initial;outline-offset: initial;overflow-anchor: initial;overflow-clip-margin: initial;overflow-wrap: initial;overflow: initial;overscroll-behavior-block: initial;overscroll-behavior-inline: initial;overscroll-behavior: initial;padding-block: initial;padding: initial;padding-inline: initial;page: initial;page-orientation: initial;paint-order: initial;perspective: initial;perspective-origin: initial;pointer-events: initial;position: initial;quotes: initial;r: initial;resize: initial;ruby-position: initial;rx: initial;ry: initial;scroll-behavior: initial;scroll-margin-block: initial;scroll-margin: initial;scroll-margin-inline: initial;scroll-padding-block: initial;scroll-padding: initial;scroll-padding-inline: initial;scroll-snap-align: initial;scroll-snap-stop: initial;scroll-snap-type: initial;scrollbar-gutter: initial;shape-image-threshold: initial;shape-margin: initial;shape-outside: initial;shape-rendering: initial;size: initial;speak: initial;stop-color: initial;stop-opacity: initial;stroke: initial;stroke-dasharray: initial;stroke-dashoffset: initial;stroke-linecap: initial;stroke-linejoin: initial;stroke-miterlimit: initial;stroke-opacity: initial;stroke-width: initial;tab-size: initial;table-layout: initial;text-align: initial;text-align-last: initial;text-anchor: initial;text-combine-upright: initial;text-decoration: initial;text-decoration-skip-ink: initial;text-indent: initial;text-overflow: initial;text-shadow: initial;text-size-adjust: initial;text-transform: initial;text-underline-offset: initial;text-underline-position: initial;touch-action: initial;transform: initial;transform-box: initial;transform-origin: initial;transform-style: initial;transition: initial;user-select: initial;vector-effect: initial;vertical-align: initial;visibility: initial;border-spacing: initial;-webkit-border-image: initial;-webkit-box-align: initial;-webkit-box-decoration-break: initial;-webkit-box-direction: initial;-webkit-box-flex: initial;-webkit-box-ordinal-group: initial;-webkit-box-orient: initial;-webkit-box-pack: initial;-webkit-box-reflect: initial;-webkit-highlight: initial;-webkit-hyphenate-character: initial;-webkit-line-break: initial;-webkit-line-clamp: initial;-webkit-mask-box-image: initial;-webkit-mask: initial;-webkit-mask-composite: initial;-webkit-perspective-origin-x: initial;-webkit-perspective-origin-y: initial;-webkit-print-color-adjust: initial;-webkit-rtl-ordering: initial;-webkit-ruby-position: initial;-webkit-tap-highlight-color: initial;-webkit-text-combine: initial;-webkit-text-decorations-in-effect: initial;-webkit-text-emphasis: initial;-webkit-text-emphasis-position: initial;-webkit-text-fill-color: initial;-webkit-text-security: initial;-webkit-text-stroke: initial;-webkit-transform-origin-x: initial;-webkit-transform-origin-y: initial;-webkit-transform-origin-z: initial;-webkit-user-drag: initial;-webkit-user-modify: initial;white-space: initial;widows: initial;width: initial;will-change: initial;word-break: initial;word-spacing: initial;x: initial;y: initial;`;
     var pageTextStyle=`line-height: 30px;text-decoration: none;user-select: none;visibility: visible;position: initial;width: auto;height: auto;float: none;clear: both;margin: 0px auto;text-align: center;display: inline;font-weight: bold;font-style: normal;font-size: 16px;letter-spacing: initial;vertical-align: super;color: rgb(85, 85, 95);`;
 
-    var isPause=false,isLoading=false,curPage=1,forceState=0,bottomGap=1000;
+    var isPause=false,isLoading=false,curPage=1,forceState=0,bottomGap=1000,autoLoadNum=-1;
 
     function changeStop(stop, hide){
         isPause=stop;
@@ -1730,7 +1755,7 @@
             if(loadmoreBtn && isVisible(loadmoreBtn, _unsafeWindow)){
                 loading=false;
             }
-        },300);
+        },500);
         document.addEventListener('scroll', e=>{
             if(urlChanged){
                 ruleParser.initPage(()=>{
@@ -2165,6 +2190,13 @@
                         if(ele){
                             createPageBar(nextLink);
                             ruleParser.insertPage(null, ele, nextLink, null, true);
+                            if(autoLoadNum>=0){
+                                if(autoLoadNum!=0 && --autoLoadNum==0){
+                                    autoLoadNum=-1;
+                                }else{
+                                    nextPage();
+                                }
+                            }
                         }else{
                             debug("Stop as no page when get by js");
                             isPause=true;
@@ -2182,6 +2214,13 @@
                         if(eles){
                             createPageBar(nextLink);
                             ruleParser.insertPage(doc, eles, nextLink, null, true);
+                            if(autoLoadNum>=0){
+                                if(autoLoadNum!=0 && --autoLoadNum==0){
+                                    autoLoadNum=-1;
+                                }else{
+                                    nextPage();
+                                }
+                            }
                         }
                     });
                 }else if((forceState==2||ruleParser.curSiteRule.action==2) && !isJs){
@@ -2190,6 +2229,13 @@
                         loading.style.display="none";
                         let pageBar=createPageBar(nextLink);
                         iframe.parentNode.insertBefore(pageBar, iframe);
+                        if(autoLoadNum>=0){
+                            if(autoLoadNum!=0 && --autoLoadNum==0){
+                                autoLoadNum=-1;
+                            }else{
+                                nextPage();
+                            }
+                        }
                     });
                 }else{
                     if(!isJs){
@@ -2198,6 +2244,13 @@
                             loading.style.display="none";
                             if(eles){
                                 createPageBar(nextLink);
+                                if(autoLoadNum>=0){
+                                    if(autoLoadNum!=0 && --autoLoadNum==0){
+                                        autoLoadNum=-1;
+                                    }else{
+                                        nextPage();
+                                    }
+                                }
                             }
                         });
                     }else{
@@ -2207,6 +2260,13 @@
                             if(eles){
                                 createPageBar(nextLink);
                                 ruleParser.insertPage(doc, eles, "", null, true);
+                                if(autoLoadNum>=0){
+                                    if(autoLoadNum!=0 && --autoLoadNum==0){
+                                        autoLoadNum=-1;
+                                    }else{
+                                        nextPage();
+                                    }
+                                }
                             }
                         });
                     }
