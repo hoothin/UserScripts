@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.2.2
+// @version      1.2.3
 // @description  Most compatible Auto pager script ever! Simply auto loading paginated web pages.
 // @description:zh-CN  ⚔️最强自动翻页脚本，自动加载并拼接下一分页内容（例如论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页！
 // @description:zh-TW  自動翻頁
@@ -135,7 +135,7 @@
                     cancelForceIframe:"取消强制拼接",
                     configure:"打开配置页",
                     firstUpdate:"点击此处初始化规则",
-                    update:"立即更新规则",
+                    update:"点击立即更新规则",
                     passSec:"更新于 #t# 秒前",
                     passMin:"更新于 #t# 分钟前",
                     passHour:"更新于 #t# 小时前",
@@ -168,7 +168,7 @@
                     cancelForceIframe:"取消强制拼接",
                     configure:"打開配置頁",
                     firstUpdate:"點擊此處初始化規則",
-                    update:"立即更新規則",
+                    update:"點擊立即更新規則",
                     passSec:"更新于 #t# 秒前",
                     passMin:"更新于 #t# 分鐘前",
                     passHour:"更新于 #t# 小時前",
@@ -232,7 +232,7 @@
                     cancelForceIframe:"Cancel Force join",
                     configure:"Configure",
                     firstUpdate:"Click here to initialize the rules",
-                    update:"Update rules from url now",
+                    update:"Click to update rules from url now",
                     passSec:"Updated #t# seconds ago",
                     passMin:"Updated #t# minutes ago",
                     passHour:"Updated #t# hours ago",
@@ -436,6 +436,9 @@
                 },
                 onerror: function() {
                     callback(null);
+                },
+                ontimeout: function() {
+                    callback(null);
                 }
             });
         }
@@ -469,9 +472,17 @@
         }
 
         addRuleByUrl(url, type, from, callback) {
+            if(url.indexOf("?")==-1){
+                url=url+"?"+Date.now();
+            }else{
+                url=url+"&"+Date.now();
+            }
             this.requestJSON(url, json=>{
+                if(!json){
+                    debug("Update "+url+" rules fail!");
+                }
                 this.addRules(json, type, from);
-                callback();
+                callback(json);
             });
         }
 
@@ -726,6 +737,7 @@
             if(!next)next=curPage.querySelector("#next_page");
             if(!next)next=curPage.querySelector(".next>button");
             if(!next)next=curPage.querySelector("a[alt=next]");
+            if(!next)next=curPage.querySelector("a[data-pagination=next]");
             if(!next)next=curPage.querySelector("[title=next]");
             if(!next){
                 next=curPage.querySelectorAll("[aria-label='Next']");
@@ -1165,13 +1177,13 @@
         if(isNaN(passTime)){
             passStr=i18n("firstUpdate");
         }else if(passTime<60){
-            passStr=i18n("passSec", parseInt(passTime));
+            passStr=i18n("passSec", parseInt(passTime))+" ← "+i18n("update");
         }else if(passTime<60*60){
-            passStr=i18n("passMin", parseInt(passTime/60));
+            passStr=i18n("passMin", parseInt(passTime/60))+" ← "+i18n("update");
         }else if(passTime<60*60*24){
-            passStr=i18n("passHour", parseInt(passTime/3600));
+            passStr=i18n("passHour", parseInt(passTime/3600))+" ← "+i18n("update");
         }else{
-            passStr=i18n("passDay", parseInt(passTime/86400));
+            passStr=i18n("passDay", parseInt(passTime/86400))+" ← "+i18n("update");
         }
 
 
@@ -1193,7 +1205,10 @@
                     updateP.title=i18n("update");
                 }else{
                     let rule=ruleUrls[ruleIndex++];
-                    ruleParser.addRuleByUrl(rule.url, rule.type, rule.id, ()=>{
+                    ruleParser.addRuleByUrl(rule.url, rule.type, rule.id, (json)=>{
+                        if(!json){
+                            alert("Update "+rule.url+" rules fail!")
+                        }
                         addNextRule();
                     })
                 }
@@ -1461,7 +1476,7 @@
                                     callback();
                                 }else{
                                     let rule=ruleUrls[ruleIndex++];
-                                    ruleParser.addRuleByUrl(rule.url, rule.type, rule.id, ()=>{
+                                    ruleParser.addRuleByUrl(rule.url, rule.type, rule.id, (json)=>{
                                         addNextRule();
                                     })
                                 }
@@ -1704,7 +1719,7 @@
         let loadmoreBtn,loading=true;
         setTimeout(()=>{
             loadmoreBtn=getLoadMore(document);
-            if(loadmoreBtn){
+            if(loadmoreBtn && isVisible(loadmoreBtn, _unsafeWindow)){
                 loading=false;
             }
         },300);
@@ -1962,7 +1977,7 @@
             if(!orgPage){
                 if(!loadmoreEnd){
                     loadmoreBtn=getLoadMore(iframeDoc);
-                    if(loadmoreBtn){
+                    if(loadmoreBtn && isVisible(loadmoreBtn, iframeDoc.defaultView)){
                         emuClick(loadmoreBtn);
                         let intv=setInterval(()=>{
                             loadmoreBtn=getLoadMore(iframeDoc);
