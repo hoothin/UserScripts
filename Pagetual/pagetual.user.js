@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.2.6
+// @version      1.2.7
 // @description  Most compatible Auto pager script ever! Simply auto loading paginated web pages.
 // @description:zh-CN  ⚔️最强自动翻页脚本，自动加载并拼接下一分页内容（例如论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页！
 // @description:zh-TW  自動加載並拼接下一分頁內容（例如論壇、漫畫站、小說站、資訊站、博客等），無需規則支持所有網頁
@@ -885,6 +885,14 @@
                 page=this.getPage(doc);
                 nextLink=page.next;
                 if(nextLink){
+                    if(nextLink.tagName=="INPUT" && nextLink.parentNode.tagName=="FORM"){
+                        let params=[];
+                        let form=nextLink.parentNode;
+                        [].forEach.call(form.querySelectorAll("input"), input=>{
+                            params.push(input.name+'='+input.value);
+                        });
+                        nextLink.href=form.action+'?'+params.join('&');
+                    }
                     if(nextLink.classList.contains("noClick")){
                         this.nextLinkHref=false;
                         return null;
@@ -1079,6 +1087,15 @@
         _GM_registerMenuCommand(i18n(forceState==1?"enable":"disableSite"), ()=>{
             storage.setItem("forceState_"+location.host, (forceState==1?0:1));
             location.reload();
+        });
+        _GM_registerMenuCommand(i18n("update"), ()=>{
+            updateRules(()=>{
+                alert(i18n("updateSucc"));
+                location.reload();
+            },rule=>{
+                alert("Update "+rule.url+" rules fail!");
+            });
+            alert(i18n("beginUpdate"));
         });
 
         var configCon,insertPos;
@@ -1625,15 +1642,6 @@
                 _GM_registerMenuCommand(i18n(forceState==2?"cancelForceIframe":"forceIframe"), ()=>{
                     storage.setItem("forceState_"+location.host, (forceState==2?"":2));
                     location.reload();
-                });
-                _GM_registerMenuCommand(i18n("update"), ()=>{
-                    updateRules(()=>{
-                        alert(i18n("updateSucc"));
-                        location.reload();
-                    },rule=>{
-                        alert("Update "+rule.url+" rules fail!");
-                    });
-                    alert(i18n("beginUpdate"));
                 });
                 _GM_registerMenuCommand(i18n("loadNow"), ()=>{
                     let pageNum=window.prompt(i18n("loadConfirm"), "1");
