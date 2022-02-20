@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.2.11
+// @version      1.2.12
 // @description  Most compatible Auto pager script ever! Simply auto loading paginated web pages.
 // @description:zh-CN  ⚔最强自动翻页脚本，自动加载并拼接下一分页内容（例如论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页
 // @description:zh-TW  自動加載並拼接下一分頁內容（例如論壇、漫畫站、小說站、資訊站、博客等），無需規則支持所有網頁
@@ -285,21 +285,29 @@
         _GM_xmlhttpRequest=GM_xmlhttpRequest;
     }else if(typeof GM!='undefined' && typeof GM.xmlHttpRequest!='undefined'){
         _GM_xmlhttpRequest=GM.xmlHttpRequest;
+    }else{
+        _GM_xmlhttpRequest=(f)=>{};
     }
     if(typeof GM_registerMenuCommand!='undefined'){
         _GM_registerMenuCommand=GM_registerMenuCommand;
     }else if(typeof GM!='undefined' && typeof GM.registerMenuCommand!='undefined'){
         _GM_registerMenuCommand=GM.registerMenuCommand;
+    }else{
+        _GM_registerMenuCommand=(s,f)=>{};
     }
     if(typeof GM_notification!='undefined'){
         _GM_notification=GM_notification;
     }else if(typeof GM!='undefined' && typeof GM.notification!='undefined'){
         _GM_notification=GM.notification;
+    }else{
+        _GM_notification=(s)=>{};
     }
     if(typeof GM_openInTab!='undefined'){
         _GM_openInTab=GM_openInTab;
     }else if(typeof GM!='undefined' && typeof GM.openInTab!='undefined'){
         _GM_openInTab=GM.openInTab;
+    }else{
+        _GM_openInTab=(s)=>{window.open(s)};
     }
     if(typeof GM_addStyle!='undefined'){
         _GM_addStyle=GM_addStyle;
@@ -312,12 +320,7 @@
             document.head.appendChild(styleEle);
         };
     }
-
-    if(typeof _GM_xmlhttpRequest=='undefined')_GM_xmlhttpRequest=(f)=>{};
-    if(typeof _GM_registerMenuCommand=='undefined')_GM_registerMenuCommand=(s,f)=>{};
-    if(typeof _GM_notification=='undefined')_GM_notification=(s)=>{};
-    if(typeof _GM_openInTab=='undefined')_GM_openInTab=(s)=>{window.open(s)};
-    var _unsafeWindow=(typeof unsafeWindow=='undefined')?window:unsafeWindow;
+    var _unsafeWindow=unsafeWindow||window;
     var storage={
         supportGM: typeof GM_getValue=='function' && typeof GM_getValue('a','b')!='undefined',
         supportGMPromise: typeof GM!='undefined' && typeof GM.getValue=='function' && typeof GM.getValue('a','b')!='undefined',
@@ -1418,6 +1421,7 @@
     }
 
     function isVisible(el, win) {
+        if(!el.offsetParent)return false;
         var loopable = true,
             visible = el.tagName && win.getComputedStyle(el).display != 'none' && win.getComputedStyle(el).visibility != 'hidden';
         while(loopable && visible) {
@@ -1558,8 +1562,7 @@
                     let result=ruleParser.insertPage(doc, pageElement, url, callback, false);
                     if(!result){
                         requestFromIframe(url, (doc, eles)=>{
-                            isLoading=false;
-                            document.body.removeChild(loadingDiv);
+                            loadPageOver();
                             if(eles){
                                 ruleParser.insertPage(doc, eles, url, callback, true);
                             }
@@ -1567,8 +1570,7 @@
                     }
                 }else if(ruleParser.curSiteRule.singleUrl){
                     requestFromIframe(url, (doc, eles)=>{
-                        isLoading=false;
-                        document.body.removeChild(loadingDiv);
+                        loadPageOver();
                         if(eles){
                             ruleParser.insertPage(doc, eles, url, callback, true);
                         }
@@ -1778,6 +1780,14 @@
                 loading=false;
             }
         },500);
+        let checkScrollReach=()=>{
+            let scrolly=window.scrollY;
+            let windowHeight=window.innerHeight || document.documentElement.clientHeight;
+            let scrollH=Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+            if(scrollH-scrolly-windowHeight<bottomGap){
+                nextPage();
+            }
+        };
         document.addEventListener('scroll', e=>{
             if(urlChanged){
                 ruleParser.initPage(()=>{
@@ -1803,12 +1813,7 @@
             }
             setTimeout(()=>{
                 if(!isLoading){
-                    let scrolly=window.scrollY;
-                    let windowHeight=window.innerHeight;
-                    let scrollH=Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
-                    if(scrollH-scrolly-windowHeight<bottomGap){
-                        nextPage();
-                    }
+                    checkScrollReach();
                 }
             },100);
         }, true);
@@ -1817,12 +1822,7 @@
                 setTimeout(()=>{
                     changeStop(!isPause, rulesData.hideBar);
                     if(!isPause){
-                        let scrolly=window.scrollY;
-                        let windowHeight=window.innerHeight;
-                        let scrollH=Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
-                        if(scrollH-scrolly-windowHeight<bottomGap){
-                            nextPage();
-                        }
+                        checkScrollReach();
                     }
                 },200);
             }
@@ -2191,6 +2191,19 @@
         return curIframe;
     }
 
+    function loadPageOver(){
+        isLoading=false;
+        if(loadingDiv.parentNode){
+            loadingDiv.parentNode.removeChild(loadingDiv);
+        }
+        setTimeout(()=>{
+            let scrollH=Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+            if(scrollH < (window.innerHeight || document.documentElement.clientHeight)){
+                nextPage();
+            }
+        },1);
+    }
+
     function nextPage(){
         if(isPause || isLoading)return;
         let nextLink=ruleParser.nextLinkHref;
@@ -2207,8 +2220,7 @@
             setTimeout(()=>{
                 if(ruleParser.curSiteRule.pageElementByJs){
                     var over=ele=>{
-                        isLoading=false;
-                        document.body.removeChild(loadingDiv);
+                        loadPageOver();
                         if(ele){
                             createPageBar(nextLink);
                             ruleParser.insertPage(null, ele, nextLink, null, true);
@@ -2231,8 +2243,7 @@
                     }
                 }else if(ruleParser.curSiteRule.action==1 && !isJs){
                     requestFromIframe(nextLink, (doc, eles)=>{
-                        isLoading=false;
-                        document.body.removeChild(loadingDiv);
+                        loadPageOver();
                         if(eles){
                             createPageBar(nextLink);
                             ruleParser.insertPage(doc, eles, nextLink, null, true);
@@ -2247,8 +2258,7 @@
                     });
                 }else if((forceState==2||ruleParser.curSiteRule.action==2) && !isJs){
                     forceIframe(nextLink, (iframe, eles)=>{
-                        isLoading=false;
-                        document.body.removeChild(loadingDiv);
+                        loadPageOver();
                         let pageBar=createPageBar(nextLink);
                         iframe.parentNode.insertBefore(pageBar, iframe);
                         if(autoLoadNum>=0){
@@ -2262,8 +2272,7 @@
                 }else{
                     if(!isJs){
                         requestDoc(nextLink, (eles)=>{
-                            isLoading=false;
-                            document.body.removeChild(loadingDiv);
+                            loadPageOver();
                             if(eles){
                                 createPageBar(nextLink);
                                 if(autoLoadNum>=0){
@@ -2277,8 +2286,7 @@
                         });
                     }else{
                         emuPage((doc, eles)=>{
-                            isLoading=false;
-                            document.body.removeChild(loadingDiv);
+                            loadPageOver();
                             if(eles){
                                 createPageBar(nextLink);
                                 ruleParser.insertPage(doc, eles, "", null, true);
