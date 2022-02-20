@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.2.12
+// @version      1.2.13
 // @description  Most compatible Auto pager script ever! Simply auto loading paginated web pages.
 // @description:zh-CN  ⚔最强自动翻页脚本，自动加载并拼接下一分页内容（例如论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页
 // @description:zh-TW  自動加載並拼接下一分頁內容（例如論壇、漫畫站、小說站、資訊站、博客等），無需規則支持所有網頁
@@ -286,7 +286,7 @@
     }else if(typeof GM!='undefined' && typeof GM.xmlHttpRequest!='undefined'){
         _GM_xmlhttpRequest=GM.xmlHttpRequest;
     }else{
-        _GM_xmlhttpRequest=(f)=>{};
+        _GM_xmlhttpRequest=(f)=>{fetch(f.url).then(response=>response.text()).then(data=>{let res={response:data};f.onload(res)}).catch(f.onerror())};
     }
     if(typeof GM_registerMenuCommand!='undefined'){
         _GM_registerMenuCommand=GM_registerMenuCommand;
@@ -300,7 +300,7 @@
     }else if(typeof GM!='undefined' && typeof GM.notification!='undefined'){
         _GM_notification=GM.notification;
     }else{
-        _GM_notification=(s)=>{};
+        _GM_notification=(s)=>{alert(s)};
     }
     if(typeof GM_openInTab!='undefined'){
         _GM_openInTab=GM_openInTab;
@@ -1656,10 +1656,13 @@
         ruleParser.initPage(()=>{
             if(ruleParser.nextLinkHref){
                 initView();
-                _GM_registerMenuCommand(i18n(forceState==2?"cancelForceIframe":"forceIframe"), ()=>{
-                    storage.setItem("forceState_"+location.host, (forceState==2?"":2));
-                    location.reload();
-                });
+                let isJs=/^(javascript|#)/.test(ruleParser.nextLinkHref.replace(location.href,""));
+                if(!isJs){
+                    _GM_registerMenuCommand(i18n(forceState==2?"cancelForceIframe":"forceIframe"), ()=>{
+                        storage.setItem("forceState_"+location.host, (forceState==2?"":2));
+                        location.reload();
+                    });
+                }
                 _GM_registerMenuCommand(i18n("loadNow"), ()=>{
                     let pageNum=window.prompt(i18n("loadConfirm"), "1");
                     if(pageNum==="" || pageNum===null)return;
