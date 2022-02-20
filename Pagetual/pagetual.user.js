@@ -10,9 +10,9 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.2.10
+// @version      1.2.11
 // @description  Most compatible Auto pager script ever! Simply auto loading paginated web pages.
-// @description:zh-CN  ⚔️最强自动翻页脚本，自动加载并拼接下一分页内容（例如论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页！
+// @description:zh-CN  ⚔最强自动翻页脚本，自动加载并拼接下一分页内容（例如论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页
 // @description:zh-TW  自動加載並拼接下一分頁內容（例如論壇、漫畫站、小說站、資訊站、博客等），無需規則支持所有網頁
 // @description:ja     Webページを自動で読み込み継ぎ足し表示を行うブラウザ拡張です
 // @description:ru     Просто автоматически загрузите следующую страницу
@@ -687,8 +687,7 @@
                         if(isHori){
                             if(maxWidth<w){
                                 isMax=true;
-                            }
-                            if(maxWidth==w && curMaxArea<a){
+                            }else if(maxWidth==w && curMaxArea<a){
                                 isMax=true;
                             }
                         }else{
@@ -746,16 +745,16 @@
                 afterStr=pageMatch2[3];
             }
             let curPage=doc,i,cur,jsNext;
-            let next=curPage.querySelector("a.next");
-            if(!next)next=curPage.querySelector("a#next");
-            if(!next)next=curPage.querySelector("a#rightFix");
-            if(!next)next=curPage.querySelector("a.next_page");
-            if(!next)next=curPage.querySelector(".next>a");
-            if(!next)next=curPage.querySelector("#next_page");
-            if(!next)next=curPage.querySelector(".next>button");
-            if(!next)next=curPage.querySelector("a[alt=next]");
-            if(!next)next=curPage.querySelector("a[data-pagination=next]");
-            if(!next)next=curPage.querySelector("[title=next]");
+            let next=curPage.querySelector("a.next")||
+                curPage.querySelector("a#next")||
+                curPage.querySelector("a#rightFix")||
+                curPage.querySelector("a.next_page")||
+                curPage.querySelector(".next>a")||
+                curPage.querySelector("#next_page")||
+                curPage.querySelector(".next>button")||
+                curPage.querySelector("a[alt=next]")||
+                curPage.querySelector("a[data-pagination=next]")||
+                curPage.querySelector("[title=next]");
             if(!next){
                 next=curPage.querySelectorAll("[aria-label='Next']");
                 if(next && next.length==1){
@@ -846,6 +845,21 @@
             return {next:next,canSave:canSave};
         }
 
+        canonicalUri(src, base_path) {
+            if(src.charAt(0)=="#")return location.href+src;
+            var root_page = /^[^?#]*\//.exec(location.href)[0],
+                root_domain = /^\w+\:\/\/\/?[^\/]+/.exec(root_page)[0],
+                absolute_regex = /^\w+\:\/\//;
+            src=src.replace(/\.\//,"");
+            if (/^\/\/\/?/.test(src)){
+                src = location.protocol + src;
+            }
+            else if (!absolute_regex.test(src) && src.charAt(0) != "/"){
+                src = (base_path || "") + src;
+            }
+            return (absolute_regex.test(src) ? src : ((src.charAt(0) == "/" ? root_domain : root_page) + src));
+        }
+
         getNextLink(doc) {
             let nextLink=null,page;
             if(this.curSiteRule.pageElementByJs){
@@ -924,7 +938,7 @@
                 }*/
             }
             if(nextLink){
-                this.nextLinkHref=nextLink.href?nextLink.href:"#";
+                this.nextLinkHref=nextLink.href?this.canonicalUri(nextLink.href):"#";
                 debug(nextLink);
             }else{
                 this.nextLinkHref=false;
@@ -2174,7 +2188,6 @@
         curIframe.src=url;
         let insert=ruleParser.getInsert();
         document.body.appendChild(curIframe);
-        document.body.appendChild(loadingDiv);
         return curIframe;
     }
 
