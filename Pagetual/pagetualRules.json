@@ -24,6 +24,17 @@
     "url":"^https://tieba\\.baidu\\.com/p/.+"
   },
   {
+    "name":"水木桌面端",
+    "url":"https://www\\.mysmth\\.net/nForum/#!article/",
+    "nextLink":"a[title='下一页']",
+    "pageElement":"div.b-content"
+  },
+  {
+    "name":"水木移动端",
+    "url":"https://m\\.mysmth\\.net/article/",
+    "pageElement":"#m_main>ul.list"
+  },
+  {
     "name":"煎蛋吐槽",
     "url":"https?://jandan\\.net/",
     "nextLink":"a.previous-comment-page",
