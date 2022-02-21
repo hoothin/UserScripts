@@ -38,6 +38,14 @@
     "nextLinkByUrl":["(http://www\\.xxgame\\.net/chinese/?)(?:\\?page=|$)(\\d*)","$1?page={($2.0||1)+1}"]
   },
   {
+    "name":"斗鱼",
+    "url":"https://www\\.douyu\\.com/directory/",
+    "nextLink":"li.dy-Pagination-next[aria-disabled='false']",
+    "pageElement":"ul.layout-Cover-list",
+    "wait":1000,
+    "enable":0
+  },
+  {
     "name":"masuit",
     "action":0,
     "url":"^https://masuit\\.com/",
