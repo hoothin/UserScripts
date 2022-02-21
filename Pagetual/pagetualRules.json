@@ -24,6 +24,13 @@
     "url":"^https://tieba\\.baidu\\.com/p/.+"
   },
   {
+    "name":"煎蛋吐槽",
+    "url":"https?://jandan\\.net/",
+    "nextLink":"a.previous-comment-page",
+    "pageElement":"ol.commentlist>li",
+    "pageAction":"[].forEach.call(eles,e=>{let tucao=e.querySelector('a.tucao-btn');tucao.onclick=e=>{ var n = $(e.currentTarget); var m = n.data('id'); var o = n.closest('li'); var l = o.find('div.jandan-tucao'); if (l.length) { l.slideToggle('fast') } else { tucao_load_content(o, m) } };})"
+  },
+  {
     "name":"xxgame",
     "action":0,
     "url":"^http://www\\.xxgame\\.net/chinese",
