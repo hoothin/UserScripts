@@ -46,6 +46,12 @@
     "enable":0
   },
   {
+    "name":"站酷",
+    "url":"https://www\\.zcool\\.com\\.cn/search/content",
+    "action":2,
+    "nextLinkByUrl":["(.*/content\\?&?word=[^&]+)(?:&page=|$)(\\d*)","$1&page={($2.0||1)+1}"]
+  },
+  {
     "name":"masuit",
     "action":0,
     "url":"^https://masuit\\.com/",
