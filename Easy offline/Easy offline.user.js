@@ -8,7 +8,7 @@
 // @namespace    https://github.com/hoothin/UserScripts/tree/master/Easy%20offline
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Base64/0.2.0/base64.min.js
-// @version      1.9.13
+// @version      1.9.15
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -603,28 +603,32 @@
         _GM_xmlhttpRequest=GM_xmlhttpRequest;
     }else if(typeof GM!='undefined' && typeof GM.xmlHttpRequest!='undefined'){
         _GM_xmlhttpRequest=GM.xmlHttpRequest;
+    }else{
+        _GM_xmlhttpRequest=(f)=>{fetch(f.url).then(response=>response.text()).then(data=>{let res={response:data};f.onload(res)}).catch(f.onerror())};
     }
     if(typeof GM_registerMenuCommand!='undefined'){
         _GM_registerMenuCommand=GM_registerMenuCommand;
     }else if(typeof GM!='undefined' && typeof GM.registerMenuCommand!='undefined'){
         _GM_registerMenuCommand=GM.registerMenuCommand;
+    }else{
+        _GM_registerMenuCommand=(s,f)=>{};
     }
     if(typeof GM_notification!='undefined'){
         _GM_notification=GM_notification;
     }else if(typeof GM!='undefined' && typeof GM.notification!='undefined'){
         _GM_notification=GM.notification;
+    }else{
+        _GM_notification=(s)=>{alert(s)};
     }
     if(typeof GM_setClipboard!='undefined'){
         _GM_setClipboard=GM_setClipboard;
     }else if(typeof GM!='undefined' && typeof GM.setClipboard!='undefined'){
         _GM_setClipboard=GM.setClipboard;
+    }else{
+        _GM_setClipboard=(f)=>{};
     }
 
-    if(typeof _GM_xmlhttpRequest=='undefined')_GM_xmlhttpRequest=(f)=>{};
-    if(typeof _GM_setClipboard=='undefined')_GM_setClipboard=(f)=>{};
-    if(typeof _GM_registerMenuCommand=='undefined')_GM_registerMenuCommand=(s,f)=>{};
-    if(typeof _GM_notification=='undefined')_GM_notification=(s)=>{};
-    var _unsafeWindow=(typeof unsafeWindow=='undefined')?window:unsafeWindow;
+    var _unsafeWindow=unsafeWindow||window;
     var storage={
         supportGM: typeof GM_getValue=='function' && typeof GM_getValue('a','b')!='undefined',
         supportGMPromise: typeof GM!='undefined' && typeof GM.getValue=='function' && typeof GM.getValue('a','b')!='undefined',
@@ -857,10 +861,17 @@
                                 var strMatch=ruleArr[0].match(/\${(.*?)}/);
                                 var regStr=strMatch?strMatch[1]:"";
                                 if(!regStr)return;
-                                var linkReg=new RegExp(regStr,"i");
-                                var linkMatch=offUrl.match(linkReg);
-                                var linkResult=linkMatch[1]||linkMatch[0];
-                                return linkResult?ruleArr[0].replace(/\${.*?}/,linkResult):ruleArr[0];
+                                //全匹配为提取模式
+                                var linkReg=new RegExp("^"+regStr+"$","i");
+                                var linkMatch=offUrl.match(linkReg),linkResult;
+                                if(linkMatch){
+                                    linkResult=linkMatch[1]||linkMatch[0];
+                                    return linkResult?ruleArr[0].replace(/\${.*?}/,linkResult):ruleArr[0];
+                                }else{
+                                    //部分匹配为替换模式
+                                    linkReg=new RegExp(regStr,"gi");
+                                    return offUrl.replace(linkReg,"");
+                                }
                             }
                             var hash=offUrl.replace("magnet:?xt=urn:btih:","").replace(/&.*/,"");
                             var base64Str=btoa(offUrl);
@@ -882,6 +893,23 @@
                         sites[ruleArr[1]]=siteConfig;
                     }else if(ruleArr[1] && ruleArr[0].indexOf("$text")!=-1){
                         siteConfig.directUrl=function(offUrl, targetNode){
+                            ruleArr[0]=ruleArr[0].replace("$text{","${");
+                            if(ruleArr[0].indexOf("${")!=-1){
+                                var strMatch=ruleArr[0].match(/\${(.*?)}/);
+                                var regStr=strMatch?strMatch[1]:"";
+                                if(!regStr)return;
+                                //全匹配为提取模式
+                                var linkReg=new RegExp("^"+regStr+"$","i");
+                                var linkMatch=offUrl.match(linkReg),linkResult;
+                                if(linkMatch){
+                                    linkResult=linkMatch[1]||linkMatch[0];
+                                    return linkResult?ruleArr[0].replace(/\${.*?}/,linkResult):ruleArr[0];
+                                }else{
+                                    //部分匹配为替换模式
+                                    linkReg=new RegExp(regStr,"gi");
+                                    return offUrl.replace(linkReg,"");
+                                }
+                            }
                             return ruleArr[0].replace("$text", offUrl).replace("$random", Math.random());
                         };
                         if(ruleArr[3]) siteConfig.bgImg=ruleArr[3];
@@ -1236,7 +1264,8 @@
                 break;
             }
         }
-        if(/greasyfork\.org\/.*scripts\/22590\b|github\.com\/hoothin\/UserScripts\//.test(location.href)){
+        if(/greasyfork\.org\/.*scripts\/22590[^\/]*(\/discussions|\/?$)|github\.com\/hoothin\/UserScripts\/(tree\/master\/Easy%20offline|issues)/.test(location.href)){
+            $("pre").attr("contentEditable", true);
             $("pre").click(e=>{
                 if(!window.confirm(i18n("importOrNot")))return;
                 let targetText=e.target.innerText.trim();
