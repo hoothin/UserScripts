@@ -24,6 +24,12 @@
     "url":"^https://tieba\\.baidu\\.com/p/.+"
   },
   {
+    "name":"搜狗wap",
+    "url":"https://wap\\.sogou\\.com/web/searchList\\.jsp",
+    "loadMore":"#ajax_next_page",
+    "nextLink":0
+  },
+  {
     "name":"水木桌面端",
     "url":"https://www\\.mysmth\\.net/nForum/#!article/",
     "nextLink":"a[title='下一页']",
