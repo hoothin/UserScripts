@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.2.17
+// @version      1.2.18
 // @description  Most compatible Auto pager script ever! Simply auto loading paginated web pages.
 // @description:zh-CN  ⚔最强自动翻页脚本，自动加载并拼接下一分页内容（例如论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页
 // @description:zh-TW  自動加載並拼接下一分頁內容（例如論壇、漫畫站、小說站、資訊站、博客等），無需規則支持所有網頁
@@ -25,7 +25,7 @@
 // @include      http://*
 // @include      https://*
 // @license      MIT
-// @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAdVBMVEUAAADZHQbYHQXaHQbYHgbZHATYHgbYHgbZHQXYHgXZHgbZHgfYHQXYHQbXHQDYHgbYHgbYHQXZHgbYHgbYHgbYHgXaHQbYHQbYHQbZHgbZHgbZHQbZHgbYHgbYHQbYHQXYHgfaHwDZHQXZHQbYHwTVHQrYHgbCqWmRAAAAJnRSTlMAUL8oyD/el2cy1CCPcg/35euggPG6FajOr4Z617OdXkkIi1g4GcTbfAwAAAJDSURBVFjD7dbXtqpADADQ0NsA0hHQY83/f+K9rqNOCzPwfvaTugimjEH4s86739yX0+3n8dwd7dQh/seiaWbHscUqCnZEP24LvrXjXLyyaVJMp2RbeFajZInhJWCHcurB7idEVfS+89SGsS28qJFwyN59ZcgsnXeRVrwvSNLFNJEA1/jfDqW4Po8Z1+XwsX6HGA1Cft1Y0ndw0OjCrwxDj4hPDqgYXbGlZ35pj0fQ1dr0C4DM5++lZHMt/qLNXq2rAG5qtWPdoaL5/ZwXloHAP1onUKs3SOSOO5YEsFNLkJN2T/IRRt0gj6ZUUpZTyMmzUx/Vw8wVhwgEI9pog2PiHRO0OhTq2hLnytBK3yRdsKeCGjRnoagKLRbQNfwsXdGiAkLMu5ihWUSvr5S/tPWPlIV8kxvn58CKatMu7Ly1+Kzcsgwj0wqXlgnNMT7CrFPwwaTp+OsSKS4Y1UJ5Phl/BSM3F7JBQmKO78UGJWT/zWJpTae7E4CTtJcnVJ2E7dV4RAWlY36uM96gFnHQT0HFe0zOIZYbnGsVRJZHc/DZFS15pu54URfUSgYJvVJ8BgpPWWu3TwfJUxkvPahylAzy573ybXfQHVEUFt/2uC67KgWcybPp602gndMMKF647bfIUg9oQYmCH6B1PF7jHFDQk2n6PJ7gDcil1FekowdGuVBGqw7rGZXNFSweLnJRJo4pD4cENphb/CoH57O6o8q/wzbJtCBXuXVz7sqQBbBDMJ9a6e+SA/tlzjx0Q3TLL0/4Y/QPSYfEIomUUSEAAAAASUVORK5CYII=
+// @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAdVBMVEUAAAD3VU33VU32VEz8U073VU32VU33VU32VUz0Uk/3VE32VU32VUz2VU32VU32VU32VU33VU33U0z2VU34Wkv3VE32VUz/mpj/nJj2VUz2VU32VE33VEz2VU32VU32VUz3VE32VEz3VE3/mZf2Vkz2VU3/mpilFFolAAAAJXRSTlMA3Lp/GvTBT5YQLuawZ/DOyZwlPQeKc21N04+FX1bqpm9DNoB4T68ePwAAAitJREFUWMPt1tuasiAUBuCFCG5Rs3QybTPV1/1f4v/3PDkyIojn8x5qBrI+ltAfh32/yysmBKvyXb+njb6bDL9kzTd5SzjDAsYT8nFoGSxYe6BVqoNDp2jFDit25BRgVUAODB4YWcETWVTwVNGiGN5iWtBgg4YMCpsoI38dNunmmWyxUTvbPwwbsYR0fIzZLQ0pTG8eieRmBLMmpdH9uimQEf6TNRnXXKLZHixpJtywLzOgMHtFCqdM64DahHRnOE1dsrekm9wr2WtLcAlpdHwcp1pAJySXYnERclzp4+v19jXdmcTvQUJtz+ZaI4i05/V/UGYrCxbaAsOYoNfIKEQxpqQuzCgJJJ/3f42O8ywEZuMVWi/8hODxGj3GW2b0udkbGULLDOjimAG0S3fLGlBnXQM9irG1CiQdVQi0dqQsOSDlyEEz7Vy9OxxfR71VCXsSB23jMrKJYZXSjw57sqgLn5Z0wolsOCz0RyJkyeYjgz7pwwVq20eboZwtVUl2EnN5gJ50dQZFdryATvABRTr/tJXkUMdaAK5pwtCapwtFLskguwuyMh/Sd9WChQ4sIvIUYSk3PYqQvCQlOC04IfN7PkdjOyRKWhdKXMmiAFt9i3sJ5jxoRuR0vqAghxxwHuqfQE5OHGDKOrwEnqs1DgAZ2e4Eev1d45TN7JfhrQLKgfwMFYAsvp33dXII073aVQLI2gN5S58lfmGnKKFtah7nkgnBZB7zlP7Y/QNiTM6sYNzawwAAAABJRU5ErkJggg==
 // @grant        GM_xmlhttpRequest
 // @grant        GM_registerMenuCommand
 // @grant        GM_notification
@@ -993,36 +993,52 @@
                     debug(e);
                 }
             }
+            let setLazyImg=img=>{
+                let realSrc;
+                if(img.getAttribute("_src") && !img.src){
+                    realSrc=img.getAttribute("_src");
+                }else if(img.dataset && img.dataset.original){
+                    realSrc=img.dataset.original;
+                }else if(img.dataset && img.dataset.src){
+                    realSrc=img.dataset.src;
+                }else if(img._lazyrias && img._lazyrias.srcset){
+                    realSrc=img._lazyrias.srcset[img._lazyrias.srcset.length-1];
+                }else if(img.dataset && img.dataset.origFile){
+                    realSrc=img.dataset.origFile;
+                }else if(img.srcset){
+                    var srcs=img.srcset.split(","),largeSize=0;
+                    srcs.forEach(srci=>{
+                        let srcInfo=srci.trim().split(" "),curSize=parseInt(srcInfo[1]);
+                        if(srcInfo[1] && curSize>largeSize){
+                            largeSize=curSize;
+                            realSrc=srcInfo[0];
+                        }
+                    });
+                }
+                if(realSrc){
+                    img.src=realSrc;
+                    img.style.display="block";
+                }
+            };
             [].forEach.call(eles, ele=>{
-                [].forEach.call(ele.querySelectorAll("img"), img=>{
-                    let realSrc;
-                    if(img.getAttribute("_src") && !img.src){
-                        realSrc=img.getAttribute("_src");
-                    }else if(img.dataset && img.dataset.original){
-                        realSrc=img.dataset.original;
-                    }else if(img.dataset && img.dataset.src){
-                        realSrc=img.dataset.src;
-                    }else if(img._lazyrias && img._lazyrias.srcset){
-                        realSrc=img._lazyrias.srcset[img._lazyrias.srcset.length-1];
-                    }else if(img.dataset && img.dataset.origFile){
-                        realSrc=img.dataset.origFile;
-                    }else if(img.srcset){
-                        var srcs=img.srcset.split(","),largeSize=0;
-                        srcs.forEach(srci=>{
-                            let srcInfo=srci.trim().split(" "),curSize=parseInt(srcInfo[1]);
-                            if(srcInfo[1] && curSize>largeSize){
-                                largeSize=curSize;
-                                realSrc=srcInfo[0];
-                            }
-                        });
+                if(ele.tagName=="IMG"){
+                    setLazyImg(ele);
+                }else{
+                    [].forEach.call(ele.querySelectorAll("img"), img=>{
+                        setLazyImg(img);
+                    });
+                }
+                if(ele.tagName=="A" && ele.classList.contains("lazyload")){
+                    if(ele.dataset.original){
+                        ele.style.backgroundImage='url("'+ele.dataset.original+'")';
                     }
-                    if(realSrc)img.src=realSrc;
-                });
-                [].forEach.call(ele.querySelectorAll("a.lazyload"), a=>{
-                    if(a.dataset.original){
-                        a.style.backgroundImage='url("'+a.dataset.original+'")';
-                    }
-                });
+                }else{
+                    [].forEach.call(ele.querySelectorAll("a.lazyload"), a=>{
+                        if(a.dataset.original){
+                            a.style.backgroundImage='url("'+a.dataset.original+'")';
+                        }
+                    });
+                }
             });
             let lazyImgSrc=this.curSiteRule.lazyImgSrc;
             if(lazyImgSrc){
@@ -1974,7 +1990,7 @@
             actualTop += current.offsetTop;
             current = current.offsetParent;
         }
-        bottomGap=scrollH-actualTop+800;
+        bottomGap=scrollH-actualTop+(window.innerHeight || document.documentElement.clientHeight)*(ruleParser.curSiteRule.rate||1);
         return pageBar;
     }
 
