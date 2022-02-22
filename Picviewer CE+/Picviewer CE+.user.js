@@ -6,7 +6,7 @@
 // @description          Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version              2022.2.20.1
+// @version              2022.2.22.1
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -64,6 +64,7 @@
                 download:"下载",
                 saveBtnTips:"部分选项需要刷新页面才能生效",
                 closeBtn:"取消",
+                invertBtn:"反选",
                 closeBtnTips:"取消本次设置，所有选项还原",
                 resetLink:"恢复默认设置",
                 resetLinkTips:"恢复所有设置的内容为默认值",
@@ -138,6 +139,8 @@
                 returnToGallery:"回到库",
                 picInfo:"点击修改",
                 picNote:"图片注释",
+                urlFilter:"过滤链接",
+                urlFilterTip:"输入关键字或正则表达式过滤链接",
                 resolution:"分辨率",
                 scaleRatio:"缩放比",
                 similarImage:"以图搜图",
@@ -278,6 +281,7 @@
                 download:"下載",
                 saveBtnTips:"部分選項需要刷新頁面才能生效",
                 closeBtn:"取消",
+                invertBtn:"反選",
                 closeBtnTips:"取消本次設置，所有選項還原",
                 resetLink:"恢復默認設置",
                 resetLinkTips:"恢復所有設置的內容為默認值",
@@ -352,6 +356,8 @@
                 returnToGallery:"回到庫",
                 picInfo:"點擊修改",
                 picNote:"圖片注釋",
+                urlFilter:"過濾連結",
+                urlFilterTip:"輸入關鍵字或正則表達式過濾連結",
                 resolution:"解析度",
                 scaleRatio:"縮放比",
                 similarImage:"以圖搜圖",
@@ -491,6 +497,7 @@
                 download:"Download",
                 saveBtnTips: "some options need to refresh the page to take effect",
                 closeBtn: "Cancel",
+                invertBtn:"Invert",
                 closeBtnTips: "cancel this setting and restore all options",
                 resetLink: "Restore default settings",
                 resetLinkTips: "restore all settings to default values",
@@ -565,6 +572,8 @@
                 returnToGallery:"Back to the Gallery",
                 picInfo:"Click to change",
                 picNote:"Img annotation",
+                urlFilter:"Url filter",
+                urlFilterTip:"Input key words or Regexp to filter Urls",
                 resolution:"Img Resolution",
                 picNum:"Number of pictures",
                 picTips:"View pictures with CTRL key",
@@ -909,8 +918,12 @@ ImgOps | https://imgops.com/#b#`;
         var tprules=[
             function(a) {
                 var oldsrc = this.src,newsrc = this.src;
-                if(this.dataset && this.dataset.original){
+                if(this.getAttribute("_src") && !this.src){
+                    newsrc=this.getAttribute("_src");
+                }else if(this.dataset && this.dataset.original){
                     newsrc=this.dataset.original;
+                }else if(this.dataset && this.dataset.src){
+                    newsrc=this.dataset.src;
                 }else if(this._lazyrias && this._lazyrias.srcset){
                     newsrc=this._lazyrias.srcset[this._lazyrias.srcset.length-1];
                 }else if(this.dataset && this.dataset.origFile){
@@ -1913,8 +1926,13 @@ ImgOps | https://imgops.com/#b#`;
                     '<span class="pv-gallery-vertical-align-helper"></span>'+
                     '</span>'+
 
-                     '<span title="'+i18n("loadAllTip")+'" class="pv-gallery-head-command pv-gallery-head-command-nextPage">'+
+                    '<span title="'+i18n("loadAllTip")+'" class="pv-gallery-head-command pv-gallery-head-command-nextPage">'+
                     '<span>'+i18n("loadAll")+'</span>'+
+                    '<span class="pv-gallery-vertical-align-helper"></span>'+
+                    '</span>'+
+
+                    '<span title="'+i18n("urlFilterTip")+'" class="pv-gallery-head-command pv-gallery-head-command-urlFilter">'+
+                    '<span>'+i18n("urlFilter")+'</span>'+
                     '<span class="pv-gallery-vertical-align-helper"></span>'+
                     '</span>'+
 
@@ -2148,6 +2166,7 @@ ImgOps | https://imgops.com/#b#`;
                     'head-command-close',
                     'head-command-nextPage',
                     'head-command-operate',
+                    'head-command-urlFilter',
                     'head-command-slide-show',
                     'head-command-slide-show-button-inner',
                     'head-command-slide-show-countdown',
@@ -2774,8 +2793,9 @@ ImgOps | https://imgops.com/#b#`;
                 },true);
 
                 eleMaps['head'].addEventListener('click',function(e){
-                    if(e.target.className.indexOf('pv-gallery-head-command')!=-1)
+                    if(e.target.className.indexOf('pv-gallery-head-command')!=-1){
                         self.closeViewMore();
+                    }
                 });
 
                 if(!prefs.gallery.searchData || defaultSearchData.indexOf(prefs.gallery.searchData)!=-1)prefs.gallery.searchData=defaultSearchData;
@@ -3118,6 +3138,7 @@ ImgOps | https://imgops.com/#b#`;
                         }
                     })
                 }
+                self.urlFilter="";
 
                 eleMaps['head'].addEventListener('click',function(e){//顶栏上面的命令
                     if(e.button!=0)return;
@@ -3140,6 +3161,23 @@ ImgOps | https://imgops.com/#b#`;
                         self.completePages=[];
                         self.pageAllReady=false;
                         self.pageAction(true);
+                    }else if(eleMaps['head-command-urlFilter'].contains(target)){
+                        let urlFilterSpan=eleMaps['head-command-urlFilter'];
+                        let textSpan = urlFilterSpan.querySelector("span");
+                        if(self.urlFilter){
+                            self.urlFilter="";
+                            textSpan.style.color="";
+                            urlFilterSpan.title=i18n("urlFilterTip");
+                            self.changeMinView();
+                        }else{
+                            let regStr=prompt(i18n("urlFilterTip"));
+                            if(regStr){
+                                self.urlFilter=regStr;
+                                textSpan.style.color="#e9cccc";
+                                urlFilterSpan.title=regStr;
+                                self.changeMinView();
+                            }
+                        }
                     }else if(eleMaps['head-command-collect'].contains(target)){
                         if(collection.favorite){
                             collection.remove();
@@ -3239,6 +3277,7 @@ ImgOps | https://imgops.com/#b#`;
                 download5Times();
             },
             changeMinView:function(){
+                var urlReg=new RegExp(this.urlFilter);
                 var sizeInputH=this.gallery.querySelector("#minsizeH");
                 var sizeInputW=this.gallery.querySelector("#minsizeW");
                 var sizeInputHSpan=this.gallery.querySelector("#minsizeHSpan");
@@ -3261,7 +3300,7 @@ ImgOps | https://imgops.com/#b#`;
                         if(spanMark && !spanMark.dataset.naturalSize && item.naturalWidth && item.naturalHeight){
                             spanMark.dataset.naturalSize=JSON.stringify({w:item.naturalWidth,h:item.naturalHeight});
                         }
-                        if(item.naturalWidth<sizeInputW.value || item.naturalHeight<sizeInputH.value){
+                        if(item.naturalWidth<sizeInputW.value || item.naturalHeight<sizeInputH.value || !urlReg.test(item.src)){
                             item.parentNode.style.display="none";
                             if(spanMark)spanMark.style.display="none";
                         }else{
@@ -3302,7 +3341,7 @@ ImgOps | https://imgops.com/#b#`;
                                 itemW=99999;
                                 itemH=99999;
                             }
-                            if(itemW<sizeInputW.value || itemH<sizeInputH.value){
+                            if(itemW<sizeInputW.value || itemH<sizeInputH.value || !urlReg.test(item.src)){
                                 spanMark.style.display="none";
                             }else{
                                 spanMark.style.display="";
@@ -3447,10 +3486,15 @@ ImgOps | https://imgops.com/#b#`;
                     let img=imgSpan.querySelector("img");
                     var addDlSpan=(img, imgSpan, curNode, clickCb)=>{
                         var dlSpan=document.createElement('p');
+                        dlSpan.className="bottom-banner";
                         dlSpan.innerHTML=createHTML('<svg class="icon" style="width: 20px;height: 20px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1100"><path d="M768 768q0-14.857143-10.857143-25.714286t-25.714286-10.857143-25.714285 10.857143-10.857143 25.714286 10.857143 25.714286 25.714285 10.857143 25.714286-10.857143 10.857143-25.714286z m146.285714 0q0-14.857143-10.857143-25.714286t-25.714285-10.857143-25.714286 10.857143-10.857143 25.714286 10.857143 25.714286 25.714286 10.857143 25.714285-10.857143 10.857143-25.714286z m73.142857-128v182.857143q0 22.857143-16 38.857143t-38.857142 16H91.428571q-22.857143 0-38.857142-16t-16-38.857143v-182.857143q0-22.857143 16-38.857143t38.857142-16h265.714286l77.142857 77.714286q33.142857 32 77.714286 32t77.714286-32l77.714285-77.714286h265.142858q22.857143 0 38.857142 16t16 38.857143z m-185.714285-325.142857q9.714286 23.428571-8 40l-256 256q-10.285714 10.857143-25.714286 10.857143t-25.714286-10.857143L230.285714 354.857143q-17.714286-16.571429-8-40 9.714286-22.285714 33.714286-22.285714h146.285714V36.571429q0-14.857143 10.857143-25.714286t25.714286-10.857143h146.285714q14.857143 0 25.714286 10.857143t10.857143 25.714286v256h146.285714q24 0 33.714286 22.285714z" p-id="1101"></path></svg> '+i18n("download"));
                         dlSpan.src=curNode.dataset.src;
                         dlSpan.title=curNode.title||document.title;
                         dlSpan.onclick=clickCb;
+                        var topP=document.createElement('p');
+                        topP.className="top-banner";
+                        topP.innerHTML=createHTML(img.naturalWidth+' x '+img.naturalHeight);
+                        topP.title=img.src;
                         var checkBox=document.createElement('input');
                         checkBox.type="checkbox";
                         checkBox.onclick=function(e){
@@ -3459,19 +3503,13 @@ ImgOps | https://imgops.com/#b#`;
                                 self.batchDl=document.createElement('p');
                                 let batchDlBtn=document.createElement('input');
                                 let cancelBtn=document.createElement('input');
+                                let invertBtn=document.createElement('input');
                                 batchDlBtn.value=i18n("download");
                                 cancelBtn.value=i18n("closeBtn");
+                                invertBtn.value=i18n("invertBtn");
                                 batchDlBtn.type="button";
                                 cancelBtn.type="button";
-                                cancelBtn.onclick=function(e){
-                                    checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input:checked");
-                                    if(checkBoxs.length<1)return;
-                                    [].forEach.call(checkBoxs, i=>{
-                                        i.checked=false;
-                                    });
-                                    maximizeContainer.removeChild(self.batchDl);
-                                    maximizeContainer.classList.remove("checked");
-                                };
+                                invertBtn.type="button";
                                 batchDlBtn.onclick=function(e){
                                     checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input:checked");
                                     if(checkBoxs.length<1)return;
@@ -3492,8 +3530,30 @@ ImgOps | https://imgops.com/#b#`;
                                     self.batchDownload(saveParams, ()=>{
                                     });
                                 };
+                                cancelBtn.onclick=function(e){
+                                    checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input:checked");
+                                    if(checkBoxs.length<1)return;
+                                    [].forEach.call(checkBoxs, i=>{
+                                        i.checked=false;
+                                    });
+                                    maximizeContainer.removeChild(self.batchDl);
+                                    maximizeContainer.classList.remove("checked");
+                                };
+                                invertBtn.onclick=function(e){
+                                    checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input");
+                                    if(checkBoxs.length<1)return;
+                                    [].forEach.call(checkBoxs, i=>{
+                                        i.checked=!i.checked;
+                                    });
+                                    checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input:checked");
+                                    if(checkBoxs.length==0){
+                                        maximizeContainer.removeChild(self.batchDl);
+                                        maximizeContainer.classList.remove("checked");
+                                    }
+                                };
                                 self.batchDl.appendChild(batchDlBtn);
                                 self.batchDl.appendChild(cancelBtn);
+                                self.batchDl.appendChild(invertBtn);
                                 maximizeContainer.appendChild(self.batchDl);
                             }
                             if(checkBoxs.length>0){
@@ -3505,6 +3565,7 @@ ImgOps | https://imgops.com/#b#`;
                             }
                             e.stopPropagation();
                         };
+                        imgSpan.appendChild(topP);
                         imgSpan.appendChild(checkBox);
                         imgSpan.appendChild(dlSpan);
                     };
@@ -4181,7 +4242,7 @@ ImgOps | https://imgops.com/#b#`;
 
                 var pageObj = this.getPage(),textSpan = this.eleMaps['head-command-nextPage'].querySelector("span");
                 this.haveMorePage = !!pageObj.pre || !!pageObj.next;
-                textSpan.style.color=this.haveMorePage?"#e9cccc":"#757575";
+                textSpan.style.color=this.haveMorePage?"#e9cccc":"";
             },
             haveMorePage:false,
             clear:function(){
@@ -4840,7 +4901,7 @@ ImgOps | https://imgops.com/#b#`;
                  i.onclick=function(e){if(e.ctrlKey&&i.firstChild.src){window.open(i.firstChild.src,"_blank")}else{this.classList.toggle("select")}}\
                  });\
                  </script></body>';
-                _GM_openInTab('data:text/html;charset=utf-8,' + encodeURIComponent(html));
+                _GM_openInTab('data:text/html;charset=utf-8,' + encodeURIComponent(html),{active:true});
             },
             copyImages: function(isAlert) {
                 var nodes = document.querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]');
@@ -5401,6 +5462,7 @@ ImgOps | https://imgops.com/#b#`;
                     width: 100%;\
                     text-align: center;\
                     pointer-events: none;\
+                    margin-top: 25px;\
                     }\
                     .pv-gallery-maximize-container>p>input{\
                     pointer-events: all;\
@@ -5444,32 +5506,38 @@ ImgOps | https://imgops.com/#b#`;
                     }\
                     .pv-gallery-maximize-container span>p{\
                     position: absolute;\
-                    bottom: 0;\
                     width: 100%;\
-                    height: 35px;\
                     max-height: 40%;\
                     font-size: 18px;\
-                    line-height: 40px;\
                     text-align: center;\
                     background: #000;\
                     color: #fff;\
                     opacity: 0;\
                     left: 0;\
                     user-select: none;\
-                    cursor: pointer;\
                     word-break: break-all;\
                     display: inline;\
+                    }\
+                    .pv-gallery-maximize-container span>p.bottom-banner{\
+                    bottom: 0;\
+                    height: 35px;\
+                    cursor: pointer;\
+                    line-height: 40px;\
+                    }\
+                    .pv-gallery-maximize-container span>p.top-banner{\
+                    top: 0;\
+                    height: 25px;\
                     }\
                     .pv-gallery-maximize-container span:hover>p{\
                     opacity: 0.6;\
                     }\
-                    .pv-gallery-maximize-container span>p:hover{\
+                    .pv-gallery-maximize-container span>p.bottom-banner:hover{\
                     color:red;\
                     font-weight:bold;\
                     }\
                     .pv-gallery-maximize-container span>input{\
                     position: absolute;\
-                    top: 0;\
+                    top: 2px;\
                     width: 20px;\
                     height: 20px;\
                     opacity: 0;\
@@ -5478,6 +5546,9 @@ ImgOps | https://imgops.com/#b#`;
                     }\
                     .pv-gallery-maximize-container.checked span>input{\
                     opacity: 1;\
+                    }\
+                    .pv-gallery-maximize-container.checked span>.top-banner{\
+                    opacity: 0.6;\
                     }\
                     .pv-gallery-maximize-container span:hover>input{\
                     opacity: 1;\
