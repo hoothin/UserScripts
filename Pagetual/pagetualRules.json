@@ -128,11 +128,21 @@
     "pageAction":"let script=doc.querySelector('body>script:not([src])');if(!script)return;script=script.innerHTML.replace(/window\\.__INITIAL_STATE__=({.*});.*/,'$1');script=JSON.parse(script);script=script.flow;script=script[script.fields[0]].result;for(let i=0;i<eles.length;i++){let ele=eles[i];ele.querySelector('.lazy-img>img').src=script[i].pic;}"
   },
   {
-    "name":"动漫屋",
+    "name":"动漫屋1",
     "action":1,
     "url":"^https?://www\\.(dm5|1kkk)\\.(com|cn)/(m|ch)",
     "pageElement":".view-main>.item",
-    "nextLink":"span.current+a"
+    "nextLink":"span.current+a,div#chapterpager+a+a",
+    "rate":3
+  },
+  {
+    "name":"动漫屋2",
+    "action":1,
+    "type":0,
+    "url":"^https?://www\\.(dm5|1kkk)\\.(com|cn)/(m|ch)",
+    "pageElement":"//div[@id=\"barChapter\"]/img",
+    "nextLink":"//div[@class=\"view-paging\"]/div/a[contains(text(),'下一')]",
+    "rate":3
   },
   {
     "name":"异次元",
