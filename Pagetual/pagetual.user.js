@@ -12,8 +12,8 @@
 // @namespace    hoothin
 // @version      1.2.18
 // @description  Most compatible Auto pager script ever! Simply auto loading paginated web pages.
-// @description:zh-CN  ⚔最强自动翻页脚本，自动加载并拼接下一分页内容（例如论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页
-// @description:zh-TW  自動加載並拼接下一分頁內容（例如論壇、漫畫站、小說站、資訊站、博客等），無需規則支持所有網頁
+// @description:zh-CN  自动加载并拼接下一分页内容（适用于论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页
+// @description:zh-TW  自動加載並拼接下一分頁內容（適用於論壇、漫畫站、小說站、資訊站、博客等），無需規則支持所有網頁
 // @description:ja     Webページを自動で読み込み継ぎ足し表示を行うブラウザ拡張です
 // @description:ru     Просто автоматически загрузите следующую страницу
 // @description:de     Laden Sie einfach automatisch die nächste Seite
@@ -852,7 +852,7 @@
                 next=next1||next3||next4||next2||nextJs1||nextJs3||nextJs2;
             }
             if(!next)next=jsNext;
-            if(next.classList.contains("results-more"))next=null;
+            if(next && next.classList.contains("results-more"))next=null;
             return {next:next,canSave:canSave};
         }
 
@@ -1990,7 +1990,7 @@
             actualTop += current.offsetTop;
             current = current.offsetParent;
         }
-        bottomGap=scrollH-actualTop+(window.innerHeight || document.documentElement.clientHeight)*(ruleParser.curSiteRule.rate||1);
+        bottomGap=scrollH-actualTop+(window.innerHeight||document.documentElement.clientHeight)*(ruleParser.curSiteRule.rate||1);
         return pageBar;
     }
 
