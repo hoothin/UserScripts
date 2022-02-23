@@ -76,7 +76,7 @@ action
 
 nextLink
 --
-Selector of next page link
+Selector of next page link, disable when set to 0
 
 nextLinkByUrl
 --
@@ -125,3 +125,7 @@ Selector of load more button
 sleep
 --
 Sleep time when get next page if site is limited
+
+rate
+--
+The multi-windowHeight which you can set to 2 or 3 while some sites load next page slowly 
