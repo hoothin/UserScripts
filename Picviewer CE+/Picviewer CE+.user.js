@@ -6,7 +6,7 @@
 // @description          Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version              2022.2.22.1
+// @version              2022.2.23.1
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -37,7 +37,7 @@
 // @require              https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.2/FileSaver.min.js
 // @require              https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.js
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
-// @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1016378
+// @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1020667
 // @contributionURL      https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
 // @contributionAmount   1
 // @include              http://*
@@ -3486,13 +3486,13 @@ ImgOps | https://imgops.com/#b#`;
                     let img=imgSpan.querySelector("img");
                     var addDlSpan=(img, imgSpan, curNode, clickCb)=>{
                         var dlSpan=document.createElement('p');
-                        dlSpan.className="bottom-banner";
+                        dlSpan.className="pv-bottom-banner";
                         dlSpan.innerHTML=createHTML('<svg class="icon" style="width: 20px;height: 20px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1100"><path d="M768 768q0-14.857143-10.857143-25.714286t-25.714286-10.857143-25.714285 10.857143-10.857143 25.714286 10.857143 25.714286 25.714285 10.857143 25.714286-10.857143 10.857143-25.714286z m146.285714 0q0-14.857143-10.857143-25.714286t-25.714285-10.857143-25.714286 10.857143-10.857143 25.714286 10.857143 25.714286 25.714286 10.857143 25.714285-10.857143 10.857143-25.714286z m73.142857-128v182.857143q0 22.857143-16 38.857143t-38.857142 16H91.428571q-22.857143 0-38.857142-16t-16-38.857143v-182.857143q0-22.857143 16-38.857143t38.857142-16h265.714286l77.142857 77.714286q33.142857 32 77.714286 32t77.714286-32l77.714285-77.714286h265.142858q22.857143 0 38.857142 16t16 38.857143z m-185.714285-325.142857q9.714286 23.428571-8 40l-256 256q-10.285714 10.857143-25.714286 10.857143t-25.714286-10.857143L230.285714 354.857143q-17.714286-16.571429-8-40 9.714286-22.285714 33.714286-22.285714h146.285714V36.571429q0-14.857143 10.857143-25.714286t25.714286-10.857143h146.285714q14.857143 0 25.714286 10.857143t10.857143 25.714286v256h146.285714q24 0 33.714286 22.285714z" p-id="1101"></path></svg> '+i18n("download"));
                         dlSpan.src=curNode.dataset.src;
                         dlSpan.title=curNode.title||document.title;
                         dlSpan.onclick=clickCb;
                         var topP=document.createElement('p');
-                        topP.className="top-banner";
+                        topP.className="pv-top-banner";
                         topP.innerHTML=createHTML(img.naturalWidth+' x '+img.naturalHeight);
                         topP.title=img.src;
                         var checkBox=document.createElement('input');
@@ -5518,20 +5518,20 @@ ImgOps | https://imgops.com/#b#`;
                     word-break: break-all;\
                     display: inline;\
                     }\
-                    .pv-gallery-maximize-container span>p.bottom-banner{\
+                    .pv-gallery-maximize-container span>p.pv-bottom-banner{\
                     bottom: 0;\
                     height: 35px;\
                     cursor: pointer;\
                     line-height: 40px;\
                     }\
-                    .pv-gallery-maximize-container span>p.top-banner{\
+                    .pv-gallery-maximize-container span>p.pv-top-banner{\
                     top: 0;\
                     height: 25px;\
                     }\
                     .pv-gallery-maximize-container span:hover>p{\
                     opacity: 0.6;\
                     }\
-                    .pv-gallery-maximize-container span>p.bottom-banner:hover{\
+                    .pv-gallery-maximize-container span>p.pv-bottom-banner:hover{\
                     color:red;\
                     font-weight:bold;\
                     }\
@@ -5547,7 +5547,7 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-gallery-maximize-container.checked span>input{\
                     opacity: 1;\
                     }\
-                    .pv-gallery-maximize-container.checked span>.top-banner{\
+                    .pv-gallery-maximize-container.checked span>.pv-top-banner{\
                     opacity: 0.6;\
                     }\
                     .pv-gallery-maximize-container span:hover>input{\
