@@ -3516,8 +3516,10 @@ ImgOps | https://imgops.com/#b#`;
 
                                     var saveParams = [],saveIndex=0;
                                     [].forEach.call(checkBoxs, function(node){
+                                        let conItem=node.parentNode;
+                                        if(conItem.style.display=="none")return;
                                         saveIndex++;
-                                        let imgSrc=node.previousElementSibling.src;
+                                        let imgSrc=conItem.querySelector("img").src;
                                         let title=node.nextElementSibling.title;
                                         let srcSplit=imgSrc.replace(/[\?#].*/,"").split("/");
                                         srcSplit=srcSplit[srcSplit.length-1];
@@ -3543,7 +3545,9 @@ ImgOps | https://imgops.com/#b#`;
                                     checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input");
                                     if(checkBoxs.length<1)return;
                                     [].forEach.call(checkBoxs, i=>{
-                                        i.checked=!i.checked;
+                                        let conItem=i.parentNode;
+                                        if(conItem.style.display=="none")i.checked=false;
+                                        else i.checked=!i.checked;
                                     });
                                     checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input:checked");
                                     if(checkBoxs.length==0){
