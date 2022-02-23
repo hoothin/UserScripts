@@ -2442,6 +2442,7 @@ ImgOps | https://imgops.com/#b#`;
                         while(data_i=this.all[i++]){
                             spanMark +=
                                 '<span class="pv-gallery-sidebar-thumb-container" '+
+                                'data-description="' + data_i.description + '"' +
                                 ' data-natural-size="' + JSON.stringify(data_i.naturalSize).replace(/"/g,'&quot;') +
                                 '" data-src="' + data_i.src +
                                 '" data-thumb-src="' + data_i.thumbSrc +
@@ -3936,6 +3937,7 @@ ImgOps | https://imgops.com/#b#`;
                 description;
 
                 this.img=img;
+                this.img.title=description;
                 this.src=img.src;
                 this.isLoading=false;
 
@@ -5056,6 +5058,7 @@ ImgOps | https://imgops.com/#b#`;
                     }\
                     .pv-gallery-head-left-img-info-description {\
                     margin-left: 10px;\
+                    margin-right: 10px;\
                     }\
                     .pv-gallery-range-box{\
                     display: inline-flex;\
