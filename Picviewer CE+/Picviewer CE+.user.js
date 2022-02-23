@@ -5553,6 +5553,7 @@ ImgOps | https://imgops.com/#b#`;
                     user-select: none;\
                     word-break: break-all;\
                     display: inline;\
+                    margin: 0 auto;\
                     }\
                     .pv-gallery-maximize-container span>p.pv-bottom-banner{\
                     bottom: 0;\
