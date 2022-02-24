@@ -628,7 +628,7 @@
         _GM_setClipboard=(f)=>{};
     }
 
-    var _unsafeWindow=unsafeWindow||window;
+    var _unsafeWindow=(typeof unsafeWindow=='undefined')?window:unsafeWindow;
     var storage={
         supportGM: typeof GM_getValue=='function' && typeof GM_getValue('a','b')!='undefined',
         supportGMPromise: typeof GM!='undefined' && typeof GM.getValue=='function' && typeof GM.getValue('a','b')!='undefined',
