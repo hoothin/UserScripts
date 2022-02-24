@@ -8,7 +8,7 @@
 // @namespace    https://github.com/hoothin/UserScripts/tree/master/Easy%20offline
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Base64/0.2.0/base64.min.js
-// @version      1.9.15
+// @version      1.9.16
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -1177,6 +1177,8 @@
                                             _GM_notification(i18n("postError")+e.toString());
                                         }
                                     });
+                                }else{
+                                    window.open(/:\/\//.test(url)?url:("http://"+url));
                                 }
                             }
                         }
@@ -1207,7 +1209,7 @@
                                 }
                             });
                         }else{
-                            offNode.attr('href', url);
+                            offNode.attr('href', /:\/\//.test(url)?url:("http://"+url));
                         }
                     }
                 }else{
