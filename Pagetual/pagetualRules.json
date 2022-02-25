@@ -113,6 +113,12 @@
     "css":".grid.columns{display: flex; flex-wrap: wrap;}"
   },
   {
+    "name":"喜马拉雅",
+    "url":"https://www\\.ximalaya\\.com/",
+    "action":2,
+    "nextLink":".page-next>a"
+  },
+  {
     "name":"Google Search",
     "nextLink":"id('pnnext')|id('navbar navcnt nav')//td[span]/following-sibling::td[1]/a|id('nn')/parent::a",
     "pageElement":"id('rso')/div|id('center_col')/style[contains(.,'relative')]|id('search')/div/div/style[1]",
