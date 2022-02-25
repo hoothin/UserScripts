@@ -6,7 +6,7 @@
 // @description          Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version              2022.2.23.2
+// @version              2022.2.25.1
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -774,7 +774,7 @@ ImgOps | https://imgops.com/#b#`;
     }else{
         _GM_notification=(s)=>{alert(s)};
     }
-    var _GM_download=GM_download||saveAs;
+    var _GM_download=(typeof GM_download=='undefined')?saveAs:GM_download;
     var prefs;
     var escapeHTMLPolicy;
     if (unsafeWindow.trustedTypes && unsafeWindow.trustedTypes.createPolicy) {
@@ -790,7 +790,7 @@ ImgOps | https://imgops.com/#b#`;
         // 默认设置，请到设置界面修改
         prefs={
             floatBar:{//浮动工具栏相关设置.
-                butonOrder:['actual','gallery','current','magnifier'],//按钮排列顺序'actual'(实际的图片),'current'(当前显示的图片),'magnifier'(放大镜观察),'gallery'(图集),'search'(搜索原图)
+                butonOrder:['actual','current','gallery','magnifier'],//按钮排列顺序'actual'(实际的图片),'current'(当前显示的图片),'magnifier'(放大镜观察),'gallery'(图集),'search'(搜索原图)
                 listenBg:true,//监听背景图
                 showDelay:366,//浮动工具栏显示延时.单位(毫秒)
                 hideDelay:566,//浮动工具栏隐藏延时.单位(毫秒)
@@ -2859,13 +2859,13 @@ ImgOps | https://imgops.com/#b#`;
                     },200);
                 },false);
 
-                var canScroll=true;
+                this.canScroll=true;
                 var scrollToChange=function(next){
-                    if(canScroll){
+                    if(self.canScroll){
                         if(prefs.gallery.transition){
-                            canScroll=false;
+                            self.canScroll=false;
                             setTimeout(function(){
-                                canScroll=true;
+                                self.canScroll=true;
                             },500);
                         }
                         next ? self.selectNext() : self.selectPrevious();
@@ -2905,8 +2905,8 @@ ImgOps | https://imgops.com/#b#`;
                                 distance=-distance;
                             };
                             imgScrollbarH.scrollBy(distance);
-                        };
-                    };
+                        }
+                    }
                 },true);
 
 
@@ -3502,10 +3502,45 @@ ImgOps | https://imgops.com/#b#`;
                     imgSpan.addEventListener("click", function(e){
                         imgReady(curNode.dataset.src,{
                             ready:function(){
-                                new ImgWindowC(this);
+                                let imgwin=new ImgWindowC(this);
+                                self.select(curNode);
+                                if(prefs.imgWindow.overlayer.shown){
+                                    imgwin.blur(true);
+                                    self.curImgWin=imgwin;
+                                    self.curImgSpan=imgSpan;
+                                    if(!self.scrollInit){
+                                        self.scrollInit=true;
+                                        let wheelHandler=function(e){
+                                            if(self.canScroll && self.curImgWin && !self.curImgWin.removed){
+                                                self.canScroll=false;
+                                                setTimeout(function(){
+                                                    self.canScroll=true;
+                                                },300);
+                                                let targetImgSpan=self.curImgSpan;
+                                                while(targetImgSpan){
+                                                    targetImgSpan=e.deltaY<0?targetImgSpan.previousElementSibling:targetImgSpan.nextElementSibling;
+                                                    if(targetImgSpan && targetImgSpan.style.display!="none")break;
+                                                }
+                                                if(targetImgSpan){
+                                                    imgReady(targetImgSpan.querySelector("img").src,{
+                                                        ready:function(){
+                                                            self.curImgWin.remove();
+                                                            let imgwin=new ImgWindowC(this);
+                                                            imgwin.blur(true);
+                                                            self.curImgWin=imgwin;
+                                                            self.curImgSpan=targetImgSpan;
+                                                        }
+                                                    });
+                                                }
+                                            }
+                                        };
+                                        addWheelEvent(document.body,wheelHandler,true);
+                                    }
+                                }
                             }
                         });
                     });
+                    imgSpan.title=curNode.title;
                     let img=imgSpan.querySelector("img");
                     var addDlSpan=(img, imgSpan, curNode, clickCb)=>{
                         var dlSpan=document.createElement('p');
@@ -6713,17 +6748,6 @@ ImgOps | https://imgops.com/#b#`;
                 };
 
 
-                if(prefs.imgWindow.overlayer.shown){//是否显示覆盖层
-                    var overlayer=ImgWindowC.overlayer;
-                    if(!overlayer){
-                        overlayer=document.createElement('span');
-                        ImgWindowC.overlayer=overlayer;
-                        overlayer.className='pv-pic-window-overlayer';
-                        document.body.appendChild(overlayer);
-                        overlayer.style.backgroundColor=prefs.imgWindow.overlayer.color;
-                    };
-                    overlayer.style.display='block';
-                };
 
                 //是否点击图片外部关闭
                 if(prefs.imgWindow.overlayer.shown && prefs.imgWindow.close.clickOutside){
@@ -6749,12 +6773,24 @@ ImgOps | https://imgops.com/#b#`;
                 };
 
 
-                document.body.appendChild(container);
                 ImgWindowC.all.push(this);
 
                 this._blur=this.blur.bind(this);
                 this._focusedKeydown=this.focusedKeydown.bind(this);
                 this._focusedKeyup=this.focusedKeyup.bind(this);
+
+                if(prefs.imgWindow.overlayer.shown){//是否显示覆盖层
+                    var overlayer=ImgWindowC.overlayer;
+                    if(!overlayer){
+                        overlayer=document.createElement('span');
+                        ImgWindowC.overlayer=overlayer;
+                        overlayer.className='pv-pic-window-overlayer';
+                        overlayer.style.backgroundColor=prefs.imgWindow.overlayer.color;
+                    };
+                    document.body.appendChild(overlayer);
+                    overlayer.style.display='block';
+                };
+                document.body.appendChild(container);
 
                 this.rotatedRadians=0;//已经旋转的角度
                 this.zoomLevel=1;//缩放级别
@@ -7024,9 +7060,9 @@ ImgOps | https://imgops.com/#b#`;
                     height:100%;\
                     width:100%;\
                     position:fixed;\
-                    z-index:999999999;\
                     top:0;\
                     left:0;\
+                    z-index: 2147483647;\
                     }\
                     .pv-pic-window-rotate-indicator{\
                     display:none;\
@@ -8557,6 +8593,10 @@ ImgOps | https://imgops.com/#b#`;
                         magnifier:i18n("magnifierBtn"),
                     };
                     var buttonName=prefs.floatBar.butonOrder[index];
+                    if(!buttonName){
+                        child.style.display="none";
+                        return;
+                    }
                     buttons[buttonName]=child;
                     child.title=titleMap[buttonName];
                     child.classList.add('pv-float-bar-button-' + buttonName);
