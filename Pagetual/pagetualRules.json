@@ -115,8 +115,10 @@
   {
     "name":"喜马拉雅",
     "url":"https://www\\.ximalaya\\.com/",
+    "nextLink":".page-next>a",
+    "wait":1000,
     "action":2,
-    "nextLink":".page-next>a"
+    "pageElement":".list-container,.main-content"
   },
   {
     "name":"Google Search",
