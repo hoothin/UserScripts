@@ -126,6 +126,13 @@
     "url":"^https?://[^./]+\\.google(?:\\.[^./]{2,3}){1,2}/(?:c(?:se|ustom)|search|webhp|m|#)"
   },
   {
+    "name":"方正字库",
+    "url":"https://www\\.foundertype\\.com/",
+    "nextLink":"#page>a.on+a",
+    "pageElement":"#fonPar,#chinese_ft1",
+    "action":1
+  },
+  {
     "name":"bilibili",
     "action":0,
     "url":"^https://search\\.bilibili\\.com",
