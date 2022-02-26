@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.3.4
+// @version      1.3.5
 // @description  Most compatible Auto pager script ever! Simply auto loading paginated web pages.
 // @description:zh-CN  自动加载并拼接下一分页内容（适用于论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页
 // @description:zh-TW  自動加載並拼接下一分頁內容（適用於論壇、漫畫站、小說站、資訊站、博客等），無需規則支持所有網頁
@@ -444,21 +444,21 @@
             _GM_xmlhttpRequest({
                 url: url,
                 method: 'GET',
-                timeout: 10000,
+                timeout: 20000,
                 onload: function(res) {
                     let json=null;
                     try{
-                        json=JSON.parse(res.response);
+                        json=JSON.parse(res.response||res.responseText);
                     }catch(e){
                         debug(e);
                     }
                     callback(json);
                 },
-                onerror: function() {
-                    callback(null);
+                onerror: function(e) {
+                    callback(null, e);
                 },
-                ontimeout: function() {
-                    callback(null);
+                ontimeout: function(e) {
+                    callback(null, e);
                 }
             });
         }
@@ -497,12 +497,13 @@
             }else{
                 url=url+"&"+Date.now();
             }
-            this.requestJSON(url, json=>{
+            this.requestJSON(url, (json,err)=>{
                 if(!json){
                     debug("Update "+url+" rules fail!");
+                    debug(err);
                 }
                 this.addRules(json, type, from);
-                callback(json);
+                callback(json, err);
             });
         }
 
@@ -1143,8 +1144,8 @@
             updateRules(()=>{
                 alert(i18n("updateSucc"));
                 location.reload();
-            },rule=>{
-                alert("Update "+rule.url+" rules fail!");
+            },(rule,err)=>{
+                alert("Update "+rule.url+" rules fail! "+err);
             });
             alert(i18n("beginUpdate"));
         });
@@ -1275,8 +1276,8 @@
                 alert(i18n("updateSucc"));
                 updateP.innerHTML=i18n("passSec", 0);
                 updateP.title=i18n("update");
-            },rule=>{
-                alert("Update "+rule.url+" rules fail!");
+            },(rule,err)=>{
+                alert("Update "+rule.url+" rules fail! "+err);
             });
             alert(i18n("beginUpdate"));
         };
@@ -1435,10 +1436,11 @@
                 success();
             }else{
                 let rule=ruleUrls[ruleIndex++];
-                ruleParser.addRuleByUrl(rule.url, rule.type, rule.id, (json)=>{
+                ruleParser.addRuleByUrl(rule.url, rule.type, rule.id, (json,err)=>{
                     if(!json){
-                        fail(rule);
+                        fail(rule,err);
                     }
+                    storage.setItem("rules", ruleParser.rules);
                     addNextRule();
                 })
             }
@@ -1561,7 +1563,7 @@
                             storage.setItem("ruleLastUpdate", now);
                             updateRules(()=>{
                                 callback();
-                            },rule=>{});
+                            },(rule,err)=>{});
                         }else{
                             callback();
                         }
@@ -1836,16 +1838,14 @@
             if(isPause)return;
             if(!loading){
                 loading=true;
+                setTimeout(()=>{loading=false},500);
                 if(!loadmoreBtn || !loadmoreBtn.parentNode){
                     loadmoreBtn=getLoadMore(document);
                 }
                 if(loadmoreBtn){
-                    loading=false;
                     if(isInViewPort(loadmoreBtn)){
                         emuClick(loadmoreBtn);
                     }
-                }else{
-                    setTimeout(()=>{loading=false},500);
                 }
             }
             setTimeout(()=>{
