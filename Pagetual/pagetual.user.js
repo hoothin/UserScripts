@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.3.5
+// @version      1.3.6
 // @description  Most compatible Auto pager script ever! Simply auto loading paginated web pages.
 // @description:zh-CN  自动加载并拼接下一分页内容（适用于论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页
 // @description:zh-TW  自動加載並拼接下一分頁內容（適用於論壇、漫畫站、小說站、資訊站、博客等），無需規則支持所有網頁
@@ -761,18 +761,28 @@
             let next=curPage.querySelector(".page-next>a")||
                 curPage.querySelector("a.next_page")||
                 curPage.querySelector("#next_page")||
+                curPage.querySelector(".nextPage")||
                 curPage.querySelector("a[data-pagination=next]")||
+                curPage.querySelector("a.pageright")||
+                curPage.querySelector("a#rightFix")||
                 curPage.querySelector("a.next")||
                 curPage.querySelector("a#next")||
-                curPage.querySelector("a#rightFix")||
                 curPage.querySelector(".next>a")||
                 curPage.querySelector(".next>button")||
                 curPage.querySelector("a[alt=next]")||
                 curPage.querySelector("[title=next]");
+            if(next && (!next.href || /^javascript:/.test(next.href))){
+                jsNext=next;
+                next=null;
+            }
             if(!next){
                 next=curPage.querySelectorAll("[aria-label='Next']");
                 if(next && next.length==1){
                     next=next[0];
+                    if(!next.href || /^javascript:/.test(next.href)){
+                        jsNext=next;
+                        next=null;
+                    }
                 }else{
                     next=null;
                 }
@@ -781,14 +791,13 @@
                 next=curPage.querySelectorAll("[aria-label='Next page']");
                 if(next && next.length==1){
                     next=next[0];
+                    if(!next.href || /^javascript:/.test(next.href)){
+                        jsNext=next;
+                        next=null;
+                    }
                 }else{
                     next=null;
                 }
-            }
-            if(!next)next=curPage.querySelector(".nextPage");
-            if(next && (!next.href || /^javascript:/.test(next.href))){
-                jsNext=next;
-                next=null;
             }
             if(!next){
                 let pageDiv=curPage.querySelector("div.wp-pagenavi");
