@@ -6,7 +6,7 @@
 // @description          Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version              2022.2.25.1
+// @version              2022.2.26.1
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -3511,7 +3511,7 @@ ImgOps | https://imgops.com/#b#`;
                                     if(!self.scrollInit){
                                         self.scrollInit=true;
                                         let wheelHandler=function(e){
-                                            if(self.canScroll && self.curImgWin && !self.curImgWin.removed){
+                                            if(self.canScroll && self.curImgWin && !self.curImgWin.removed && !self.curImgWin.focused){
                                                 self.canScroll=false;
                                                 setTimeout(function(){
                                                     self.canScroll=true;
@@ -9561,8 +9561,9 @@ ImgOps | https://imgops.com/#b#`;
                 }
             }
             var result, hasBg = node => {
-                if(node.nodeName == "HTML" || node.nodeName == "#document")
+                if(node.nodeName == "HTML" || node.nodeName == "#document"){
                     return false;
+                }
                 let nodeStyle = unsafeWindow.getComputedStyle(node);
                 return node && nodeStyle.backgroundImage && /^\s*url\(\s*['"]?\s*[^a\s]/i.test(nodeStyle.backgroundImage) && parseFloat(nodeStyle.width) > prefs.floatBar.minSizeLimit.w && parseFloat(nodeStyle.height) > prefs.floatBar.minSizeLimit.h;
             };
