@@ -6,7 +6,7 @@
 // @description          Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @version              2022.2.26.2
+// @version              2022.2.27.1
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -244,6 +244,7 @@
                     galleryDescriptionLength2:" 个字符",
                     galleryAutoOpenSites:"自动打开图库的网址正则，一行一条，若开头加@则自动展开图库",
                     autoOpenViewmore:"打开图库时自动展开",
+                    galleryViewmoreLayout:"图库展开之后的布局",
                     gallerySearchData:"搜图站点设置，清空还原",
                     galleryEditSite:"在线编辑站点",
                     imgWindow:"图片窗口",
@@ -464,6 +465,7 @@
                     galleryDescriptionLength2:" 個字元",
                     galleryAutoOpenSites:"自動打開圖庫的網址正則，一行一條，若前綴@則自動展開圖庫",
                     autoOpenViewmore:"打開圖庫時自動展開",
+                    galleryViewmoreLayout:"圖庫展開之後的佈局",
                     gallerySearchData:"搜圖站點設置，清空還原",
                     galleryEditSite:"在線編輯站點",
                     imgWindow:"圖片窗口",
@@ -683,6 +685,7 @@
                     galleryDescriptionLength2:"Characters",
                     galleryAutoOpenSites:"Regulars of urls for auto open gallery, one per line, start with @ for ViewMore",
                     autoOpenViewmore:"Auto view more when open gallery",
+                    galleryViewmoreLayout:"Layout of ViewMore mode",
                     gallerySearchData:"Site rules for search, empty it to restore",
                     galleryEditSite:"Online editing site",
                     imgWindow:"ImgWindow",
@@ -880,7 +883,8 @@ ImgOps | https://imgops.com/#b#`;
                 },
                 searchData:defaultSearchData,
                 downloadWithZip:false,
-                autoOpenViewmore:false
+                autoOpenViewmore:false,
+                viewmoreLayout:0
             },
 
             imgWindow:{// 图片窗相关设置
@@ -3154,6 +3158,9 @@ ImgOps | https://imgops.com/#b#`;
                         self.getImg(self.errorSpan);
                     };
                 },false);
+                if(prefs.gallery.viewmoreLayout==1){
+                    eleMaps['maximize-container'].classList.add("pv-gallery-flex-maximize");
+                }
 
                 if(prefs.gallery.viewmoreEndless){
                     addWheelEvent(eleMaps['maximize-container'],function(e){
@@ -5566,6 +5573,16 @@ ImgOps | https://imgops.com/#b#`;
                     display: block;\
                     background: black;\
                     padding-top: 30px;\
+                    }\
+                    .pv-gallery-maximize-container.pv-gallery-flex-maximize{\
+                    column-count: unset;\
+                    -moz-column-count: unset;\
+                    -webkit-column-count: unset;\
+                    display: flex;\
+                    flex-flow: wrap;\
+                    }\
+                    .pv-gallery-maximize-container.pv-gallery-flex-maximize img{\
+                    width: unset;\
                     }\
                     .pv-gallery-maximize-container span{\
                     -moz-page-break-inside: avoid;\
@@ -10188,6 +10205,15 @@ ImgOps | https://imgops.com/#b#`;
                     type: 'int',
                     "default": prefs.gallery.descriptionLength,
                     after: i18n("galleryDescriptionLength2")
+                },
+                'gallery.viewmoreLayout': {
+                    label: i18n("galleryViewmoreLayout"),
+                    type: 'select',
+                    options: {
+                        '0': "default",
+                        '1': "flex-box"
+                    },
+                    "default": prefs.gallery.viewmoreLayout
                 },
                 'gallery.autoOpenViewmore': {
                     label: i18n("autoOpenViewmore"),
