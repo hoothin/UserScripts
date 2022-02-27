@@ -409,5 +409,12 @@
     "nextLink":"a[data-pagination='next']",
     "pageAction":"let w=document.querySelector('.list-item').style.width;let content=eles[0].querySelector('.pad-content-listing');content.style.display='flex';content.style.flexFlow='row wrap';[].forEach.call(eles[0].querySelectorAll('.list-item'),i=>{i.style.display='block';i.style.width=w;i.style.position='sticky';i.querySelector('.list-item-image').style.height=w;})",
     "pageElement":"div#content-listing-tabs"
+  },
+  {
+    "name":"blog1",
+    "url":".",
+    "pageElement":"section.posts-expand>article.post",
+    "nextLink":"li.pagination-active+li>a",
+    "css":"section.posts-expand>article.post{opacity:1}"
   }
 ]
