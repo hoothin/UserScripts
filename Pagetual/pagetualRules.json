@@ -298,7 +298,7 @@
   },
   {
     "name":"Baidu",
-    "css":"span.c-img-radius-large.c-img-border{display:none}",
+    "css":"span.c-img-radius-large.c-img-border{display:none}.new-pmd .c-img-s.compatible_rxApe{padding-bottom:unset}",
     "from":1,
     "insertPos":1,
     "nextLink":"//*[@id=\"page\"]/div/a[contains(text(),'下一页')]",
