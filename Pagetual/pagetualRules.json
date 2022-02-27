@@ -361,6 +361,11 @@
     "pageElement":"div#m_posts"
   },
   {
+    "name":"淮安新闻网",
+    "url":"http://www\\.hynews\\.net/",
+    "loadMore":"#_more"
+  },
+  {
     "name":"淘股吧内贴",
     "url":"^https://www\\.taoguba\\.com\\.cn/Article/\\d+/\\d+",
     "pageElement":"#new_wrap_container",
