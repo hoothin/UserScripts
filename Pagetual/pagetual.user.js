@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.3.7.2
+// @version      1.3.8
 // @description  Most compatible Auto pager script ever! Simply auto loading paginated web pages.
 // @description:zh-CN  自动加载并拼接下一分页内容（适用于论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页
 // @description:zh-TW  自動加載並拼接下一分頁內容（適用於論壇、漫畫站、小說站、資訊站、博客等），無需規則支持所有網頁
@@ -157,7 +157,8 @@
                     hideBar:"空白处双击隐藏分页隔条",
                     dbClick2Stop:"空白处双击暂停翻页",
                     sortTitle:"排序在下次更新规则后生效",
-                    autoRun:"自动启用"
+                    autoRun:"自动启用",
+                    inputPageNum:"输入页码跳转"
                 };
                 break;
             case "zh-TW":
@@ -194,7 +195,8 @@
                     hideBar:"空白處雙擊隱藏分頁隔條",
                     dbClick2Stop:"空白處雙擊暫停翻頁",
                     sortTitle:"排序在下次更新規則後生效",
-                    autoRun:"自動啓用"
+                    autoRun:"自動啓用",
+                    inputPageNum:"輸入頁碼跳轉"
                 };
                 break;
             case "ja":
@@ -230,7 +232,8 @@
                     hideBar:"空白部分をダブルクリックして、ページ区切り文字を非表示にします",
                     dbClick2Stop:"空白部分をダブルクリックしてページめくりを一時停止します",
                     sortTitle:"並べ替えは、次のルールの更新後に有効になります",
-                    autoRun:"自動的に有効"
+                    autoRun:"自動的に有効",
+                    inputPageNum:"ジャンプするページ番号を入力"
                 };
                 break;
             default:
@@ -266,7 +269,8 @@
                     hideBar:"Double-click on the blank space to hide the paging spacer",
                     dbClick2Stop:"Double-click on the blank space to stop",
                     sortTitle:"Sorting takes effect after the next rule update",
-                    autoRun:"Auto run"
+                    autoRun:"Auto run",
+                    inputPageNum:"Enter page number to jump"
                 };
                 break;
         }
@@ -889,6 +893,30 @@
             return (absolute_regex.test(src) ? src : ((src.charAt(0) == "/" ? root_domain : root_page) + src));
         }
 
+        getLinkByPage(url, pageNum) {
+            if(!url)return;
+            if(this.curSiteRule.pageNum){
+                let result=this.curSiteRule.pageNum;
+                let strMatch=result.match(/\{.*?}/);
+                if(!strMatch)return null;
+                let urlReg=new RegExp("("+result.replace(strMatch[0], ")\\d+(")+")");
+                let code=strMatch[0].replace(/^{/,"").replace(/}$/,"").replace(/\$p/g,pageNum);
+                if(code==pageNum){
+                    result=url.replace(urlReg,"$1"+code+"$2");
+                }else{
+                    try{
+                        code=Function('"use strict";return ' + code)();
+                        result=url.replace(urlReg,"$1"+code+"$2");
+                    }catch(e){
+                        debug(e);
+                    }
+                }
+                return result;
+            }else{
+                return url.replace(/([&\/\?]p(age)?[=\/])\d+/i, "$1"+pageNum);
+            }
+        }
+
         getNextLink(doc) {
             let nextLink=null,page;
             if(this.curSiteRule.pageElementByJs){
@@ -913,7 +941,7 @@
                                 result=parseInt(result[1])+1;
                             }else{
                                 try{
-                                    result=Function('"use strict";return ' + code)();;
+                                    result=Function('"use strict";return ' + code)();
                                 }catch(e){
                                     debug(e);
                                 }
@@ -1405,7 +1433,7 @@
                     }else{
                         break;
                     }
-                    let maxId=0,hasUrl=false;;
+                    let maxId=0,hasUrl=false;
                     if(!rulesData.urls){
                         rulesData.urls=[];
                         maxId=1;
@@ -1922,11 +1950,32 @@
         upSpan.style.cssText=initStyle;
         downSpan.style.cssText=initStyle;
         pageText.href=url;
-        pageText.style=pageTextStyle;
-        pageText.innerHTML="Page "+curPage;
+        pageText.style.cssText=pageTextStyle;
         pageText.title=i18n("current");
         pageBar.appendChild(upSpan);
         pageBar.appendChild(pageText);
+        if(ruleParser.curSiteRule.pageNum || /[&\/\?]p(age)?[=\/]\d+/.test(url)){
+            pageText.innerHTML="Page ";
+            let pageNum=document.createElement("span");
+            pageNum.innerText=curPage;
+            pageNum.title=i18n("inputPageNum");
+            pageNum.style.cssText=pageTextStyle;
+            pageNum.style.cursor="pointer";
+            pageNum.addEventListener("click", e=>{
+                let pageInput=prompt(i18n("inputPageNum"));
+                if(pageInput){
+                    let pageLink=ruleParser.getLinkByPage(url, pageInput);
+                    if(pageLink){
+                        _GM_openInTab(pageLink,{active:true});
+                    }
+                }
+                e.preventDefault();
+                e.stopPropagation();
+            });
+            pageBar.appendChild(pageNum);
+        }else{
+            pageText.innerHTML="Page "+curPage;
+        }
         pageBar.appendChild(downSpan);
         if(inTable){
             example=(insert.tagName=="TR" || insert.tagName=="TBODY")?insert:insert.previousElementSibling;
