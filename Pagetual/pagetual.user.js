@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.3.9.2
+// @version      1.3.9.3
 // @description  Most compatible Auto pager script ever! Simply auto loading paginated web pages.
 // @description:zh-CN  自动加载并拼接下一分页内容（适用于论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页
 // @description:zh-TW  自動加載並拼接下一分頁內容（適用於論壇、漫畫站、小說站、資訊站、博客等），無需規則支持所有網頁
@@ -1465,17 +1465,17 @@
     function updateRules(success,fail){
         if(inUpdate)return;
         inUpdate=true;
-        let ruleIndex=0;
+        let ruleIndex=ruleUrls.length-1;
         storage.setItem("hpRules", []);
         function addNextRule(){
-            if(ruleIndex>=ruleUrls.length){
+            if(ruleIndex<0){
                 let now=new Date().getTime();
                 storage.setItem("ruleLastUpdate", now);
                 storage.setItem("rules", ruleParser.rules);
                 inUpdate=false;
                 success();
             }else{
-                let rule=ruleUrls[ruleIndex++];
+                let rule=ruleUrls[ruleIndex--];
                 ruleParser.addRuleByUrl(rule.url, rule.type, rule.id, (json,err)=>{
                     if(!json){
                         fail(rule,err);
