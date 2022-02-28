@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.3.9.3
+// @version      1.3.9.5
 // @description  Most compatible Auto pager script ever! Simply auto loading paginated web pages.
 // @description:zh-CN  自动加载并拼接下一分页内容（适用于论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页
 // @description:zh-TW  自動加載並拼接下一分頁內容（適用於論壇、漫畫站、小說站、資訊站、博客等），無需規則支持所有網頁
@@ -662,10 +662,10 @@
                         debug(self.curSiteRule.pageElement);
                         return [body];
                     }
-                    if(ele.tagName=="TABLE" || ele.tagName=="UL"){
-                        self.curSiteRule.pageElement=self.geneSelector(ele);
+                    if(ele.tagName=="TBODY" || ele.tagName=="UL"){
+                        self.curSiteRule.pageElement=self.geneSelector(ele)+">*";
                         debug(self.curSiteRule.pageElement);
-                        return [ele];
+                        return ele.children;
                     }
                     if(ele.children.length==0 && !self.curSiteRule.pageElement){
                         if(ele.parentNode.tagName=="P")ele=ele.parentNode;
@@ -1032,6 +1032,17 @@
             return this.insert;
         }
 
+        pageInit(doc,eles){
+            let code=this.curSiteRule.pageInit;
+            if(code){
+                try{
+                    Function("doc","eles",'"use strict";' + code)(doc,eles);
+                }catch(e){
+                    debug(e);
+                }
+            }
+        }
+
         pageAction(doc,eles){
             let code=this.curSiteRule.pageAction;
             if(code){
@@ -1152,6 +1163,7 @@
             var self=this,newEles=[];
             if(!eles || eles.length==0 || !self.insert || !self.insert.parentNode){
             }else{
+                this.pageInit(doc, eles);
                 [].forEach.call(eles, ele=>{
                     let newEle=ele.cloneNode(true);
                     let oldCanvass=ele.querySelectorAll("canvas");
@@ -1933,6 +1945,10 @@
         let insert=ruleParser.getInsert();
         if(!insert || !insert.parentNode)return;
         curPage++;
+        let isJs=/^(javascript|#)/.test(url.replace(location.href,""));
+        if(!isJs){
+            _unsafeWindow.history.replaceState(undefined, undefined, url);
+        }
         let example=ruleParser.curSiteRule.insertPos==2?insert.children[0]:insert;
         let inTable=example.parentNode.tagName=="TABLE" ||
             example.tagName=="TR" ||
@@ -1940,7 +1956,7 @@
             (example.previousElementSibling && example.previousElementSibling.tagName=="TR") ||
             (example.previousElementSibling && example.previousElementSibling.tagName=="TBODY");
         let inLi=example.tagName=="LI" || (example.previousElementSibling && example.previousElementSibling.tagName=="LI");
-        let pageBar=document.createElement(inTable?"tr":"div");
+        let pageBar=document.createElement(inTable?"tr":(inLi?"li":"div"));
         let upSpan=document.createElement("span");
         let downSpan=document.createElement("span");
         let pageText=document.createElement("a");
@@ -2007,11 +2023,11 @@
             td.appendChild(pageText);
             td.appendChild(downSpan);
             pageBar.appendChild(td);
+        }else if(inLi){
+            pageBar.style.minWidth="150px";
         }
 
         upSpan.addEventListener("click", e=>{
-            //changeStop(true);
-            //pageBar.title=i18n(isPause?"enable":"disable");
             document.body.scrollTop=0;
             document.documentElement.scrollTop=0;
             e.preventDefault();
@@ -2034,25 +2050,10 @@
         });
         let parentStyle=_unsafeWindow.getComputedStyle(insert.parentNode);
         pageBar.style.width=parseInt(parentStyle.width)*.99-parseInt(parentStyle.paddingLeft)-parseInt(parentStyle.paddingRight)+"px";
-        if(inLi){
-            pageBar.style.width="90%";
-            pageBar.style.minWidth="150px";
-            pageBar.style.display="inline-block";
-            let line=document.createElement("li");
-            line.style.textAlign="center";
-            line.className=example.tagName=="LI"?example.className:example.previousElementSibling.className;
-            line.appendChild(pageBar);
-            if(ruleParser.curSiteRule.insertPos==2){
-                insert.appendChild(line);
-            }else{
-                insert.parentNode.insertBefore(line, insert);
-            }
+        if(ruleParser.curSiteRule.insertPos==2){
+            insert.appendChild(pageBar);
         }else{
-            if(ruleParser.curSiteRule.insertPos==2){
-                insert.appendChild(pageBar);
-            }else{
-                insert.parentNode.insertBefore(pageBar, insert);
-            }
+            insert.parentNode.insertBefore(pageBar, insert);
         }
         if(ruleParser.curSiteRule.pageBar){
             try{
