@@ -116,7 +116,7 @@
     }
 
     if(window.top != window.self){
-        //return;
+        return;
     }
 
     const lang = navigator.appName=="Netscape"?navigator.language:navigator.userLanguage;
