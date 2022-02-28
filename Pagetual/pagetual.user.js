@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.3.9.5
+// @version      1.3.9.6
 // @description  Most compatible Auto pager script ever! Simply auto loading paginated web pages.
 // @description:zh-CN  自动加载并拼接下一分页内容（适用于论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页
 // @description:zh-TW  自動加載並拼接下一分頁內容（適用於論壇、漫畫站、小說站、資訊站、博客等），無需規則支持所有網頁
@@ -2064,13 +2064,21 @@
         }
 
         let scrollH=Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
-        let actualTop = pageBar.offsetTop;
-        let current = pageBar.parentNode.offsetParent;
-        while (current !== null){
-            actualTop += current.offsetTop;
-            current = current.offsetParent;
+        let posEle=pageBar.nextElementSibling||pageBar;
+        while(posEle && !posEle.offsetParent){
+            posEle=posEle.previousElementSibling||posEle.parentNode;
         }
-        bottomGap=scrollH-actualTop+(window.innerHeight||document.documentElement.clientHeight)*(ruleParser.curSiteRule.rate||1);
+        if(posEle){
+            let actualTop = posEle.offsetTop;
+            let current = posEle.parentNode.offsetParent;
+            while (current !== null){
+                actualTop += current.offsetTop;
+                current = current.offsetParent;
+            }
+            bottomGap=scrollH-actualTop+(window.innerHeight||document.documentElement.clientHeight)*(ruleParser.curSiteRule.rate||1);
+        }else{
+            bottomGap=1000;
+        }
         return pageBar;
     }
 
