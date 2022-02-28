@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.3.8
+// @version      1.3.9
 // @description  Most compatible Auto pager script ever! Simply auto loading paginated web pages.
 // @description:zh-CN  自动加载并拼接下一分页内容（适用于论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页
 // @description:zh-TW  自動加載並拼接下一分頁內容（適用於論壇、漫畫站、小說站、資訊站、博客等），無需規則支持所有網頁
@@ -911,9 +911,9 @@
                         debug(e);
                     }
                 }
-                return result;
+                return result==url?url.replace(/([&\/\?](p=|page[=\/]))\d+/i, "$1"+pageNum):result;
             }else{
-                return url.replace(/([&\/\?]p(age)?[=\/])\d+/i, "$1"+pageNum);
+                return url.replace(/([&\/\?](p=|page[=\/]))\d+/i, "$1"+pageNum);
             }
         }
 
@@ -1769,6 +1769,9 @@
          .pagetual_pageBar span>svg:hover {
            animation: touhouAni 1s infinite;
          }
+         .pagetual_pageBar .pagetual_pageNum:hover{
+           color: #ff6464;
+         }
 
          @keyframes touhouAni{
            from {transform: rotate(0deg) scale3d(1.2, 1.2, 1.2);}
@@ -1921,6 +1924,7 @@
         return loadmoreBtn;
     }
 
+    var hasPageNum=true;
     function createPageBar(url){
         let insert=ruleParser.getInsert();
         if(!insert || !insert.parentNode)return;
@@ -1954,13 +1958,15 @@
         pageText.title=i18n("current");
         pageBar.appendChild(upSpan);
         pageBar.appendChild(pageText);
-        if(ruleParser.curSiteRule.pageNum || /[&\/\?]p(age)?[=\/]\d+/.test(url)){
+        if(ruleParser.curSiteRule.pageNum || (hasPageNum && /[&\/\?](p=|page[=\/])\d+/.test(url))){
             pageText.innerHTML="Page ";
             let pageNum=document.createElement("span");
             pageNum.innerText=curPage;
+            pageNum.className="pagetual_pageNum";
             pageNum.title=i18n("inputPageNum");
             pageNum.style.cssText=pageTextStyle;
             pageNum.style.cursor="pointer";
+            pageNum.style.color="";
             pageNum.addEventListener("click", e=>{
                 let pageInput=prompt(i18n("inputPageNum"));
                 if(pageInput){
@@ -1975,6 +1981,7 @@
             pageBar.appendChild(pageNum);
         }else{
             pageText.innerHTML="Page "+curPage;
+            hasPageNum=false;
         }
         pageBar.appendChild(downSpan);
         if(inTable){
@@ -2029,6 +2036,7 @@
             pageBar.style.display="inline-block";
             let line=document.createElement("li");
             line.style.textAlign="center";
+            line.className=example.tagName=="LI"?example.className:example.previousElementSibling.className;
             line.appendChild(pageBar);
             if(ruleParser.curSiteRule.insertPos==2){
                 insert.appendChild(line);
