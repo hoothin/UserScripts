@@ -421,5 +421,13 @@
     "pageElement":"section.posts-expand>article.post",
     "nextLink":"li.pagination-active+li>a",
     "css":"section.posts-expand>article.post{opacity:1}"
+  },
+  {
+    "name":"alternativeto",
+    "url":"^https://alternativeto\\.net/",
+    "nextLink":"nav[aria-label='Pagination Navigation']>a",
+    "action":1,
+    "pageElement":"div.container>ol>li",
+    "pageInit":"eles.forEach(e=>{let span=e.querySelector('div>div>div>span');if(span)span.onVisible()})"
   }
 ]
