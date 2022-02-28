@@ -1,4 +1,5 @@
 var defaultLang={
+    //English by RX-3200. https://greasyfork.org/users/43-rx-3200
     saveBtn: "OK",
     download:"Download",
     saveBtnTips: "some options need to refresh the page to take effect",
@@ -653,6 +654,7 @@ var zhTWLang={
     defaultLang:"自動選擇"
 };
 var ptLang={
+    //Português by AstroCoelestis. https://greasyfork.org/users/881248-astrocoelestis
     saveBtn: "Salvar",
     download:"Baixar",
     saveBtnTips: "algumas opções precisam atualizar a página para entrar em vigor",
