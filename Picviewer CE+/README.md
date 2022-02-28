@@ -20,7 +20,7 @@ More settings in "Picviewer CE+ config" to be customized, reviewing them is curr
 
 + And so on ...
 
-If you are glad to help me translate Picviewer CE+, [come here](https://greasyfork.org/scripts/24204-picviewer-ce/discussions/115052).
+If you are glad to help me translate Picviewer CE+, [come here](https://github.com/hoothin/UserScripts/blob/master/Picviewer%20CE%2B/pvcep_lang.js#L1).
 It will help the people who speak the same language just like you. Thank you.
 
 If you wish to add more rules for peculiar sites, come to [my Github](https://github.com/hoothin/UserScripts/blob/master/Picviewer%20CE%2B/pvcep_rules.js) and pull requests or open issues.
