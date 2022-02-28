@@ -215,7 +215,8 @@ var defaultLang={
     viewmore:"View more",
     countDown:"CountDown",
     customLang:"Custom language",
-    defaultLang:"Auto detect"
+    defaultLang:"Auto detect",
+    toggleIcon:"Toggle icon"
 };
 var zhCNLang={
     saveBtn:"确定",
@@ -433,7 +434,8 @@ var zhCNLang={
     viewmore:"展开更多",
     countDown:"倒计时",
     customLang:"设定语言",
-    defaultLang:"自动选择"
+    defaultLang:"自动选择",
+    toggleIcon:"隐藏图标"
 };
 var zhTWLang={
     saveBtn:"確定",
@@ -651,7 +653,8 @@ var zhTWLang={
     viewmore:"展開更多",
     countDown:"倒計時",
     customLang:"設定語言",
-    defaultLang:"自動選擇"
+    defaultLang:"自動選擇",
+    toggleIcon:"隱藏圖標"
 };
 var ptLang={
     //Português by AstroCoelestis. https://greasyfork.org/users/881248-astrocoelestis
@@ -870,7 +873,8 @@ var ptLang={
     viewmore:"Ver mais",
     countDown:"Contagem regressiva",
     customLang:"Definir idioma",
-    defaultLang:"Auto"
+    defaultLang:"Auto",
+    toggleIcon:"ícone de alternância"
 };
 var i18nData={};
 function setLang(la){
