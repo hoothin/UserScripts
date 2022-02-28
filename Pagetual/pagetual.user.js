@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.3.9.1
+// @version      1.3.9.2
 // @description  Most compatible Auto pager script ever! Simply auto loading paginated web pages.
 // @description:zh-CN  自动加载并拼接下一分页内容（适用于论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页
 // @description:zh-TW  自動加載並拼接下一分頁內容（適用於論壇、漫畫站、小說站、資訊站、博客等），無需規則支持所有網頁
@@ -517,7 +517,7 @@
                 rules.forEach(item=>{
                     let rule=this.formatRule(item, type, from);
                     if(rule){
-                        this.rules.push(rule);
+                        this.rules.unshift(rule);
                     }
                 });
             }
@@ -1185,7 +1185,7 @@
                 alert(i18n("updateSucc"));
                 location.reload();
             },(rule,err)=>{
-                alert("Update "+rule.url+" rules fail! "+err);
+                alert("Update "+rule.url+" rules fail!");
             });
             alert(i18n("beginUpdate"));
         });
@@ -1317,7 +1317,7 @@
                 updateP.innerHTML=i18n("passSec", 0);
                 updateP.title=i18n("update");
             },(rule,err)=>{
-                alert("Update "+rule.url+" rules fail! "+err);
+                alert("Update "+rule.url+" rules fail!");
             });
             alert(i18n("beginUpdate"));
         };
@@ -1769,6 +1769,9 @@
 
          .pagetual_pageBar span>svg:hover {
            animation: touhouAni 1s infinite;
+         }
+         .pagetual_pageBar .pagetual_pageNum{
+           color: #55555f;
          }
          .pagetual_pageBar .pagetual_pageNum:hover{
            color: #ff6464;
