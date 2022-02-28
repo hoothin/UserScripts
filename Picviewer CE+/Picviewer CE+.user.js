@@ -4411,23 +4411,34 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-gallery-maximize-trigger-close:hover{\
                     background-color:#333;\
                     }\
-                    @media screen and (max-width: 800px) {\
-                    .pv-gallery-range-box>input {\
-                    display: none;\
+                    @media only screen and (max-width: 800px) {\
+                     .pv-gallery-range-box>input {\
+                     display: none;\
+                     }\
+                     .pv-gallery-maximize-container{\
+                     column-count: 2;\
+                     -moz-column-count: 2;\
+                     -webkit-column-count: 2;\
+                     padding-top: 300px;\
+                     }\
+                     .pv-gallery-sidebar-viewmore-bottom.showmore{\
+                     transform: scale(3.5);\
+                     bottom: 50px;\
+                     }\
+                     .pv-gallery-maximize-container span>p{\
+                     opacity: 0.6;\
+                     }\
                     }\
-                    .pv-gallery-maximize-container{\
-                    column-count: 2!important;\
-                    -moz-column-count: 2!important;\
-                    -webkit-column-count: 2!important;\
-                    padding-top: 300px!important;\
-                    }\
-                    .pv-gallery-sidebar-viewmore-bottom.showmore{\
-                    transform: scale(3.5);\
-                    bottom: 50px;\
-                    }\
-                    .pv-gallery-maximize-container span>p{\
-                    opacity: 0.6!important;\
-                    }\
+                    @media only screen and (min-width: 800px) {\
+                     .pv-gallery-maximize-container{\
+                     column-count: 5;\
+                     -moz-column-count: 5;\
+                     -webkit-column-count: 5;\
+                     padding-top: 30px;\
+                     }\
+                     .pv-gallery-maximize-container span>p{\
+                     opacity: 0;\
+                     }\
                     }\
                     /*顶栏*/\
                     .pv-gallery-head {\
@@ -4905,13 +4916,9 @@ ImgOps | https://imgops.com/#b#`;
                     font-size: 20px;\
                     }\
                     .pv-gallery-maximize-container{\
-                    column-count: 5;\
-                    -moz-column-count: 5;\
-                    -webkit-column-count: 5;\
                     width: 100%;\
                     display: block;\
                     background: black;\
-                    padding-top: 30px;\
                     }\
                     .pv-gallery-maximize-container.pv-gallery-flex-maximize{\
                     column-count: unset;\
@@ -4919,6 +4926,10 @@ ImgOps | https://imgops.com/#b#`;
                     -webkit-column-count: unset;\
                     display: flex;\
                     flex-flow: wrap;\
+                    }\
+                    .pv-gallery-maximize-container.pv-gallery-flex-maximize span{\
+                    max-width: 20vw;\
+                    max-height: 50vh;\
                     }\
                     .pv-gallery-maximize-container.pv-gallery-flex-maximize img{\
                     width: unset;\
@@ -4934,8 +4945,6 @@ ImgOps | https://imgops.com/#b#`;
                     margin-right: 15px;\
                     overflow: hidden;\
                     position: relative;\
-                    max-width: 20vw;\
-                    max-height: 50vh;\
                     }\
                     .pv-gallery-maximize-container img{\
                     width:100%;\
@@ -4955,7 +4964,6 @@ ImgOps | https://imgops.com/#b#`;
                     text-align: center;\
                     background: #000;\
                     color: #fff;\
-                    opacity: 0;\
                     left: 0;\
                     user-select: none;\
                     word-break: break-all;\
