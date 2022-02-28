@@ -4922,6 +4922,8 @@ ImgOps | https://imgops.com/#b#`;
                     }\
                     .pv-gallery-maximize-container.pv-gallery-flex-maximize img{\
                     width: unset;\
+                    max-width: 100%;\
+                    max-height: 100%;\
                     }\
                     .pv-gallery-maximize-container span{\
                     -moz-page-break-inside: avoid;\
