@@ -8,7 +8,7 @@
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt       Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
-// @version              2022.2.28.1
+// @version              2022.2.28.2
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -4932,6 +4932,8 @@ ImgOps | https://imgops.com/#b#`;
                     margin-right: 15px;\
                     overflow: hidden;\
                     position: relative;\
+                    max-width: 20vw;\
+                    max-height: 50vh;\
                     }\
                     .pv-gallery-maximize-container img{\
                     width:100%;\
