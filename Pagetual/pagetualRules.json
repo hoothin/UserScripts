@@ -12,6 +12,7 @@
     "action":1,
     "url":"^https://tieba\\.baidu\\.com/f\\?kw=",
     "pageElement":"ul#thread_list>li",
+    "pageNum":"&pn={50*($p-1)}",
     "nextLink":".next.pagination-item "
   },
   {
@@ -21,6 +22,7 @@
     "pageElement":"//div[@class=\"p_postlist\"]/div[starts-with(@class, 'l_post')]",
     "type":0,
     "action":1,
+    "pageNum":"&pn={$p}",
     "url":"^https://tieba\\.baidu\\.com/p/.+"
   },
   {
@@ -125,6 +127,7 @@
     "nextLink":"id('pnnext')|id('navbar navcnt nav')//td[span]/following-sibling::td[1]/a|id('nn')/parent::a",
     "pageElement":"id('rso')/div|id('center_col')/style[contains(.,'relative')]|id('search')/div/div/style[1]",
     "type":0,
+    "pageNum":"&start={10*($p-1)}",
     "url":"^https?://[^./]+\\.google(?:\\.[^./]{2,3}){1,2}/(?:c(?:se|ustom)|search|webhp|m|#)"
   },
   {
@@ -342,15 +345,17 @@
     "url":"^https://www\\.23qb\\.net/book/"
   },
   {
-    "name":"论坛帖内1",
+    "name":"bbsPostlist1",
     "url":"/t",
     "nextLink":"a.nxt",
+    "pageNum":"\\-\\d+\\-{$p}\\-\\d+\\.html",
     "pageElement":"div#postlist"
   },
   {
-    "name":"论坛列表1",
+    "name":"bbsThreadlist1",
     "url":"/f",
     "nextLink":"a.nxt",
+    "pageNum":"\\-\\d+\\-{$p}\\.html",
     "pageElement":"div#threadlist"
   },
   {
