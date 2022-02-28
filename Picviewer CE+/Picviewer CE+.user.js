@@ -144,7 +144,7 @@ ImgOps | https://imgops.com/#b#`;
         prefs={
             floatBar:{//浮动工具栏相关设置.
                 butonOrder:['actual','current','gallery','magnifier'],//按钮排列顺序'actual'(实际的图片),'current'(当前显示的图片),'magnifier'(放大镜观察),'gallery'(图集),'search'(搜索原图)
-                listenBg:false,//监听背景图
+                listenBg:true,//监听背景图
                 showDelay:366,//浮动工具栏显示延时.单位(毫秒)
                 hideDelay:566,//浮动工具栏隐藏延时.单位(毫秒)
                 position:'top left',// 取值为: 'top left'(图片左上角) 或者 'top right'(图片右上角) 'bottom right'(图片右下角) 'bottom left'(图片左下角);
@@ -167,7 +167,7 @@ ImgOps | https://imgops.com/#b#`;
 
                 keys: {
                     enable: true,
-                    actual: 'a',  //  当出现悬浮条时按下 `a` 打开原图
+                    actual: 'a', //  当出现悬浮条时按下 `a` 打开原图
                     search: 's',
                     current: 'c',
                     magnifier: 'm',
@@ -201,20 +201,20 @@ ImgOps | https://imgops.com/#b#`;
                 exportType:'grid',
                 sidebarPosition: 'bottom',//'top' 'right' 'bottom' 'left'  四个可能值
                 sidebarSize: 120,//侧栏的高（如果是水平放置）或者宽（如果是垂直放置）
-                sidebarToggle: true,  // 是否显示隐藏按钮
+                sidebarToggle: true, // 是否显示隐藏按钮
                 transition:true,//大图片区的动画。
                 preload:true,//对附近的图片进行预读。
                 max:5,//最多预读多少张（前后各多少张）
 
-                zoomresized: 25,  // 图片尺寸最少相差比例，单位：%
-                scaleSmallSize: 250,  // 图库的新类别，缩放的图片，尺寸的高或宽都小于该值
+                zoomresized: 25, // 图片尺寸最少相差比例，单位：%
+                scaleSmallSize: 250, // 图库的新类别，缩放的图片，尺寸的高或宽都小于该值
                 showSmallSize:true,//是否默认显示小尺寸图片
 
                 scrollEndAndLoad: false, // 滚动主窗口到最底部，然后自动重载库的图片。还有bug，有待进一步测试
-                scrollEndAndLoad_num: 3,  // 最后几张图片执行
+                scrollEndAndLoad_num: 3, // 最后几张图片执行
 
-                autoZoom: true,  // 如果有放大，则把图片及 sidebar 部分的缩放改回 100%，增大可视面积（仅在 chrome 下有效）
-                descriptionLength: 32,  // 注释的最大宽度
+                autoZoom: true, // 如果有放大，则把图片及 sidebar 部分的缩放改回 100%，增大可视面积（仅在 chrome 下有效）
+                descriptionLength: 32, // 注释的最大宽度
                 editSite: "Lunapic",
                 defaultSizeLimit:{
                     w:200,
