@@ -514,7 +514,7 @@ var siteInfo=[
 {
  name: "推特",
  url: /twitter\.com/,
- r: /&name=.*|_normal/i,
+ r: /&name=\D+|_normal/i,
  s: "",
  ext: function(target) {
     if(target.parentNode && target.parentNode.previousElementSibling){
