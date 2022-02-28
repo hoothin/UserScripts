@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.3.9
+// @version      1.3.9.1
 // @description  Most compatible Auto pager script ever! Simply auto loading paginated web pages.
 // @description:zh-CN  自动加载并拼接下一分页内容（适用于论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页
 // @description:zh-TW  自動加載並拼接下一分頁內容（適用於論壇、漫畫站、小說站、資訊站、博客等），無需規則支持所有網頁
@@ -864,9 +864,11 @@
                     if(!next4){
                         if(aTag.href.replace("?&","?").replace("#!","").replace("index.php?","?").replace(preStr,"").replace(afterStr,"")==parseInt(pageNum)+1){
                             next4=aTag;
-                        }else if(aTag.href.replace("?&","?").replace("index.php?","?").indexOf(url)!=-1 && /^[\/\?&]?[_-]?(p|page)?=?\/?2(\/|\?|&|$)/i.test(aTag.href.replace(url,"").replace(/\.s?html?$/i,""))){
-                            let pageOne=aTag.getAttribute("href").replace(/2(\/|\?|&|$)/,"1$1");
-                            pageOne=curPage.querySelector(`a[href='${pageOne}']`);
+                        }else if(this.curUrl!=aTag.href && aTag.href.replace("?&","?").replace("index.php?","?").indexOf(url)!=-1 && /^[\/\?&]?[_-]?(p|page)?=?\/?2(\/|\?|&|$)/i.test(aTag.href.replace(url,"").replace(/\.s?html?$/i,""))){
+                            let curHref=aTag.getAttribute("href");
+                            let pageOne=curHref.replace(/\/2(\/|\?|&|$)/,"/1$1");
+                            if(pageOne==curHref)pageOne=null;
+                            else pageOne=curPage.querySelector(`a[href='${pageOne}']`);
                             if(!pageOne)next4=aTag;
                         }
                     }
@@ -1737,10 +1739,9 @@
                     });
                 }
                 _GM_registerMenuCommand(i18n("loadNow"), ()=>{
-                    let pageNum=window.prompt(i18n("loadConfirm"), "1");
-                    if(pageNum==="" || pageNum===null)return;
-                    pageNum=Math.abs(parseInt(pageNum));
-                    autoLoadNum=pageNum;
+                    let loadNum=window.prompt(i18n("loadConfirm"), "1");
+                    if(loadNum==="" || loadNum===null)return;
+                    autoLoadNum=Math.abs(parseInt(loadNum));
                     nextPage();
                 });
             }
