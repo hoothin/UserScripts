@@ -144,7 +144,7 @@ ImgOps | https://imgops.com/#b#`;
         prefs={
             floatBar:{//浮动工具栏相关设置.
                 butonOrder:['actual','current','gallery','magnifier'],//按钮排列顺序'actual'(实际的图片),'current'(当前显示的图片),'magnifier'(放大镜观察),'gallery'(图集),'search'(搜索原图)
-                listenBg:true,//监听背景图
+                listenBg:false,//监听背景图
                 showDelay:366,//浮动工具栏显示延时.单位(毫秒)
                 hideDelay:566,//浮动工具栏隐藏延时.单位(毫秒)
                 position:'top left',// 取值为: 'top left'(图片左上角) 或者 'top right'(图片右上角) 'bottom right'(图片右下角) 'bottom left'(图片左下角);
