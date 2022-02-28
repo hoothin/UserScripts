@@ -40,7 +40,7 @@
 // @require              https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.js
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
 // @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1022878
-// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1022794
+// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1022905
 // @contributionURL      https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
 // @contributionAmount   1
 // @include              http://*
@@ -9737,8 +9737,19 @@ ImgOps | https://imgops.com/#b#`;
         });
 
 
+        var hideIcon=false;
+        var hideIconStyle=document.createElement('style');
+        hideIconStyle.textContent=`#pv-float-bar-container{display:none!important}`;
         _GM_registerMenuCommand(i18n("openConfig"), openPrefs);
         _GM_registerMenuCommand(i18n("openGallery"), openGallery);
+        _GM_registerMenuCommand(i18n("toggleIcon"), ()=>{
+            hideIcon=!hideIcon;
+            if(hideIcon){
+                document.head.appendChild(hideIconStyle);
+            }else{
+                document.head.removeChild(hideIconStyle);
+            }
+        });
 
         loadPrefs();
 
