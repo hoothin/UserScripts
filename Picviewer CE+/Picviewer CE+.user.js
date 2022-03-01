@@ -2,13 +2,15 @@
 // @name                 Picviewer CE+
 // @name:zh-CN           Picviewer CE+
 // @name:zh-TW           Picviewer CE+
-// @name:pt              Picviewer CE+
+// @name:pt-BR           Picviewer CE+
+// @name:ru              Picviewer CE+
 // @author               NLF && ywzhaiqi && hoothin
 // @description          Powerful picture viewing tool online, which can popup/scale/rotate/batch save pictures automatically
 // @description:zh-CN    在线看图工具，支持图片翻转、旋转、缩放、弹出大图、批量保存
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
-// @description:pt       Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
-// @version              2022.2.28.2
+// @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
+// @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
+// @version              2022.3.1.1
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -40,7 +42,7 @@
 // @require              https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.js
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
 // @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1022878
-// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1022905
+// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1023273
 // @contributionURL      https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
 // @contributionAmount   1
 // @include              http://*
@@ -9234,6 +9236,12 @@ ImgOps | https://imgops.com/#b#`;
         }, true);
 
         initLang();
+        var customLangOption={
+            'auto': i18n("defaultLang")
+        };
+        for(let key in langList){
+            customLangOption[key]=langList[key];
+        }
         GM_config.init({
             id: 'pv-prefs',
             title: GM_config.create('a', {
@@ -9245,7 +9253,7 @@ ImgOps | https://imgops.com/#b#`;
             isTabs: true,
             skin: 'tab',
             frameStyle: {
-                width: '480px',
+                width: (i18nData.configWidth||480)+'px',
                 zIndex:'2147483648',
             },
             css: [
@@ -9683,13 +9691,7 @@ ImgOps | https://imgops.com/#b#`;
                 'customLang': {
                     label: i18n("customLang"),
                     type: 'select',
-                    options: {
-                        'auto': i18n("defaultLang"),
-                        'en': "English",
-                        'pt': "Português",
-                        'zh-CN': "简体中文",
-                        'zh-TW': "正體中文"
-                    },
+                    options: customLangOption,
                     "default": prefs.customLang,
                     line: 'end',
                 },
