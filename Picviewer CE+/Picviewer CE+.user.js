@@ -766,6 +766,7 @@ ImgOps | https://imgops.com/#b#`;
             var prefix=['','-webkit-','-o-','-moz-','-ms-'];
             elem=elem || document.createElement('div');
             var style=elem.style;
+            if(!style)return false;
             var prefixedValue;
             for(var i=0,ii=prefix.length;i<ii;i++){
                 prefixedValue=prefix[i] + value;
@@ -8833,7 +8834,7 @@ ImgOps | https://imgops.com/#b#`;
             };
 
             pageScript.textContent='(' + pageScriptText.toString() + ')('+ JSON.stringify(messageID) +')';
-            document.head.appendChild(pageScript);
+            if(document.head)document.head.appendChild(pageScript);
         }
 
         function clickToOpen(data){
