@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.3.9.8
+// @version      1.3.9.9
 // @description  Most compatible Auto pager script ever! Simply auto loading paginated web pages.
 // @description:zh-CN  自动加载并拼接下一分页内容（适用于论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页
 // @description:zh-TW  自動加載並拼接下一分頁內容（適用於論壇、漫畫站、小說站、資訊站、博客等），無需規則支持所有網頁
@@ -2015,6 +2015,8 @@
             hasPageNum=false;
         }
         pageBar.appendChild(downSpan);
+        let parentStyle=_unsafeWindow.getComputedStyle(insert.parentNode);
+        pageBar.style.width=parseInt(parentStyle.width)*.99-parseInt(parentStyle.paddingLeft)-parseInt(parentStyle.paddingRight)+"px";
         if(inTable){
             example=(example.tagName=="TR" || example.tagName=="TBODY")?example:example.previousElementSibling;
             if(example.previousElementSibling)example=example.previousElementSibling;
@@ -2048,6 +2050,7 @@
             td.style.minWidth="150px";
             td.appendChild(upSpan);
             td.appendChild(pageText);
+            td.style.width=pageBar.style.width;
             if(pageNum)td.appendChild(pageNum);
             td.appendChild(downSpan);
             pageBar.appendChild(td);
@@ -2074,8 +2077,6 @@
         pageText.addEventListener("click", e=>{
             e.stopPropagation();
         });
-        let parentStyle=_unsafeWindow.getComputedStyle(insert.parentNode);
-        pageBar.style.width=parseInt(parentStyle.width)*.99-parseInt(parentStyle.paddingLeft)-parseInt(parentStyle.paddingRight)+"px";
         if(ruleParser.curSiteRule.insertPos==2){
             insert.appendChild(pageBar);
         }else{
