@@ -429,5 +429,12 @@
     "action":1,
     "pageElement":"div.container>ol>li",
     "pageInit":"eles.forEach(e=>{let span=e.querySelector('div>div>div>span');if(span)span.onVisible()})"
+  },
+  {
+    "name":"getquicker",
+    "url":"^https://getquicker\\.net/",
+    "type":0,
+    "nextLink":"//a[@class=\"page-link\"][contains(text(),'下一页')]",
+    "pageElement":"//table/tbody/tr[not(./th)][position()>1]"
   }
 ]
