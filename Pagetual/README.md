@@ -112,7 +112,11 @@ insertPos
 
 pageAction [ :(doc, eles) ]
 --
-The js code to run with every page inserted with doc:(document of every page loaded) and eles:(elements found with rule)
+The js code to run with every page inserted with doc:(document of every page loaded) and eles:(elements found with rule), run after inserted, you can add functions like click
+
+pageInit [ :(doc, eles) ]
+--
+The js code to run with every page inserted with doc:(document of every page loaded) and eles:(elements found with rule), run before inserted, you can trigger event like onView
 
 init [ :(document) ]
 --
