@@ -356,7 +356,7 @@
     "url":"/f",
     "nextLink":"a.nxt",
     "pageNum":"\\-\\d+\\-{$p}\\.html",
-    "pageElement":"div#threadlist"
+    "pageElement":"div#threadlist>div>form"
   },
   {
     "name":"NGA",
