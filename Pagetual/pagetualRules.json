@@ -349,7 +349,7 @@
     "url":"/t",
     "nextLink":"a.nxt",
     "pageNum":"\\-\\d+\\-{$p}\\-\\d+\\.html",
-    "pageElement":"div#postlist"
+    "pageElement":"div#postlist>*"
   },
   {
     "name":"bbsThreadlist1",
