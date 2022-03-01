@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.3.9.6
+// @version      1.3.9.7
 // @description  Most compatible Auto pager script ever! Simply auto loading paginated web pages.
 // @description:zh-CN  自动加载并拼接下一分页内容（适用于论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页
 // @description:zh-TW  自動加載並拼接下一分頁內容（適用於論壇、漫畫站、小說站、資訊站、博客等），無需規則支持所有網頁
@@ -1151,11 +1151,14 @@
         }
 
         insertPage(doc, eles, url, callback, tried){
+            let oldUrl=this.curUrl;
+            let oldTitle=this.pageDoc.title;
             this.pageDoc=doc;
             this.curUrl=url;
             let nextLink=this.getNextLink(doc);
             if(curPage==1 && !tried && !this.nextLinkHref && this.curSiteRule.singleUrl && this.curSiteRule.pageElement && this.curSiteRule.pageElement!=allOfBody){
                 this.curSiteRule.action=1;
+                this.curUrl=location.href;
                 return false;
             }
             if(callback)callback(eles);
@@ -1182,6 +1185,12 @@
                 });
             }
             this.pageAction(doc, newEles);
+            if(oldUrl!=location.href){
+                let isJs=/^(javascript|#)/.test(oldUrl.replace(location.href,""));
+                if(!isJs){
+                    _unsafeWindow.history.replaceState(undefined, oldTitle, oldUrl);
+                }
+            }
             return true;
         }
     }
@@ -1945,10 +1954,7 @@
         let insert=ruleParser.getInsert();
         if(!insert || !insert.parentNode)return;
         curPage++;
-        let isJs=/^(javascript|#)/.test(url.replace(location.href,""));
-        if(!isJs){
-            _unsafeWindow.history.replaceState(undefined, undefined, url);
-        }
+        if(rulesData.opacity==0)return;
         let example=ruleParser.curSiteRule.insertPos==2?insert.children[0]:insert;
         let inTable=example.parentNode.tagName=="TABLE" ||
             example.tagName=="TR" ||
@@ -1960,6 +1966,7 @@
         let upSpan=document.createElement("span");
         let downSpan=document.createElement("span");
         let pageText=document.createElement("a");
+        let pageNum;
         pageBar.className="pagetual_pageBar";
         pageBar.id="pagetual_pageBar";
         if(isPause){
@@ -1980,7 +1987,7 @@
         pageBar.appendChild(pageText);
         if(ruleParser.curSiteRule.pageNum || (hasPageNum && /[&\/\?](p=|page[=\/])\d+/.test(url))){
             pageText.innerHTML="Page ";
-            let pageNum=document.createElement("span");
+            pageNum=document.createElement("span");
             pageNum.innerText=curPage;
             pageNum.className="pagetual_pageNum";
             pageNum.title=i18n("inputPageNum");
@@ -2005,7 +2012,7 @@
         }
         pageBar.appendChild(downSpan);
         if(inTable){
-            example=(insert.tagName=="TR" || insert.tagName=="TBODY")?insert:insert.previousElementSibling;
+            example=(example.tagName=="TR" || example.tagName=="TBODY")?example:example.previousElementSibling;
             if(example.previousElementSibling)example=example.previousElementSibling;
             let tdNum=0;
             [].forEach.call(example.querySelectorAll("td,th"), td=>{
@@ -2021,10 +2028,25 @@
             td.style.textAlign="center";
             td.appendChild(upSpan);
             td.appendChild(pageText);
+            if(pageNum)td.appendChild(pageNum);
             td.appendChild(downSpan);
             pageBar.appendChild(td);
         }else if(inLi){
+            example=example.tagName=="LI"?example:example.previousElementSibling;
             pageBar.style.minWidth="150px";
+            pageBar.style.display="table-row";
+            pageBar.style.backgroundColor="unset";
+            let td=document.createElement("td");
+            td.style.backgroundColor="rgb(240 240 240 / 80%)";
+            td.style.borderRadius="20px";
+            td.colSpan=example.children.length;
+            td.style.padding="0 0";
+            td.style.textAlign="center";
+            td.appendChild(upSpan);
+            td.appendChild(pageText);
+            if(pageNum)td.appendChild(pageNum);
+            td.appendChild(downSpan);
+            pageBar.appendChild(td);
         }
 
         upSpan.addEventListener("click", e=>{
