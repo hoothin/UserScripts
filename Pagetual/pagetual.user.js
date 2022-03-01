@@ -1675,6 +1675,9 @@
                             ruleParser.insertPage(doc, eles, url, callback, true);
                         }
                     });
+                }else{
+                    isPause=true;
+                    callback(false);
                 }
             },
             onerror: function(e){
