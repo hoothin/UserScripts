@@ -2033,7 +2033,6 @@
             pageBar.appendChild(td);
         }else if(inLi){
             example=example.tagName=="LI"?example:example.previousElementSibling;
-            pageBar.style.minWidth="150px";
             pageBar.style.display="table-row";
             pageBar.style.backgroundColor="unset";
             let td=document.createElement("td");
@@ -2042,6 +2041,7 @@
             td.colSpan=example.children.length;
             td.style.padding="0 0";
             td.style.textAlign="center";
+            td.style.minWidth="150px";
             td.appendChild(upSpan);
             td.appendChild(pageText);
             if(pageNum)td.appendChild(pageNum);
