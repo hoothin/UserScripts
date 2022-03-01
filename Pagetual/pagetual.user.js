@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.3.9.9
+// @version      1.4.0
 // @description  Most compatible Auto pager script ever! Simply auto loading paginated web pages.
 // @description:zh-CN  自动加载并拼接下一分页内容（适用于论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页
 // @description:zh-TW  自動加載並拼接下一分頁內容（適用於論壇、漫畫站、小說站、資訊站、博客等），無需規則支持所有網頁
@@ -126,6 +126,7 @@
             case "zh-CN":
             case "zh-SG":
                 config={
+                    enableDebug:"调试模式",
                     disable:"暂时禁用",
                     disableSite:"在此站禁用",
                     enable:"启用翻页",
@@ -164,6 +165,7 @@
             case "zh-TW":
             case "zh-HK":
                 config={
+                    enableDebug:"調試模式",
                     disable:"暫時禁用",
                     disableSite:"在此站禁用",
                     enable:"啟用翻頁",
@@ -201,6 +203,7 @@
                 break;
             case "ja":
                 config = {
+                    enableDebug:"デバッグモード",
                     disable: "一時的に無効にする",
                     disableSite:"このサイト無効",
                     enable: "ページめくりを有効にする",
@@ -238,6 +241,7 @@
                 break;
             default:
                 config={
+                    enableDebug:"Enable debug output",
                     disable:"Disable",
                     disableSite:"Disable on the site",
                     enable:"Enable",
@@ -1402,6 +1406,17 @@
         enableWhiteListTitle.appendChild(enableWhiteListInput);
         configCon.insertBefore(enableWhiteListTitle, insertPos);
 
+        let enableDebugTitle=document.createElement("h2");
+        enableDebugTitle.innerHTML=i18n("enableDebug");
+        let enableDebugInput=document.createElement("input");
+        enableDebugInput.type="checkbox";
+        enableDebugInput.style.width="50px";
+        enableDebugInput.style.height="20px";
+        enableDebugInput.checked=rulesData.enableDebug!=false;
+        enableDebugTitle.appendChild(enableDebugInput);
+        configCon.insertBefore(enableDebugTitle, insertPos);
+
+
         let customRulesTitle=document.createElement("h2");
         customRulesTitle.innerHTML=i18n("customRules")
         configCon.insertBefore(customRulesTitle, insertPos);
@@ -1438,6 +1453,7 @@
             rulesData.hideBar=hideBarInput.checked;
             rulesData.dbClick2Stop=dbClick2StopInput.checked;
             rulesData.enableWhiteList=!enableWhiteListInput.checked;
+            rulesData.enableDebug=enableDebugInput.checked;
             storage.setItem("rulesData", rulesData);
             let customUrls=customUrlsInput.value.trim();
             if(customUrls){
@@ -1614,6 +1630,10 @@
                 if(typeof(rulesData.enableWhiteList)=="undefined"){
                     rulesData.enableWhiteList=false;
                 }
+                if(typeof(rulesData.enableDebug)=="undefined"){
+                    rulesData.enableDebug=true;
+                }
+                enableDebug=rulesData.enableDebug;
                 storage.getItem("forceState_"+location.host, v=>{
                     storage.getItem("ruleLastUpdate", date=>{
                         if(typeof(v)=="undefined"){
