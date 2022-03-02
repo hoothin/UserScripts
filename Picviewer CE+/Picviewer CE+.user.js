@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.3.1.1
+// @version              2022.3.2.1
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -2882,7 +2882,7 @@ ImgOps | https://imgops.com/#b#`;
                                                 if(targetImgSpan){
                                                     imgReady(targetImgSpan.querySelector("img").src,{
                                                         ready:function(){
-                                                            self.curImgWin.remove();
+                                                            self.curImgWin.remove(true);
                                                             let imgwin=new ImgWindowC(this);
                                                             imgwin.blur(true);
                                                             self.curImgWin=imgwin;
@@ -4371,7 +4371,7 @@ ImgOps | https://imgops.com/#b#`;
                     padding: 0;\
                     margin: 0;\
                     border: none;\
-                    z-index:2147483647;\
+                    z-index:2147483646;\
                     background-color: transparent;\
                     }\
                     /*全局border-box*/\
@@ -6445,7 +6445,7 @@ ImgOps | https://imgops.com/#b#`;
                     position:fixed;\
                     top:0;\
                     left:0;\
-                    z-index: 2147483647;\
+                    z-index: 2147483646;\
                     }\
                     .pv-pic-window-rotate-indicator{\
                     display:none;\
@@ -7563,12 +7563,12 @@ ImgOps | https://imgops.com/#b#`;
 
             },
 
-            remove:function(){
+            remove:function(opacity){
                 if(this.removed)return;
                 this.removed=true;
                 //this.imgWindow.classList.remove("pv-pic-window-transition-all");
                 this.blur(true);
-                this.imgWindow.style.opacity=0;
+                if(!opacity)this.imgWindow.style.opacity=0;
                 let self = this;
                 setTimeout(function(){
                     self.img.src= prefs.icons.brokenImg_small;//如果在加载中取消，图片也取消读取。
