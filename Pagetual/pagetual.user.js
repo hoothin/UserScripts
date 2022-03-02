@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.5.1
+// @version      1.5.2
 // @description  Most compatible Auto pager script ever! Simply auto loading paginated web pages.
 // @description:zh-CN  自动加载并拼接下一分页内容（适用于论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页
 // @description:zh-TW  自動加載並拼接下一分頁內容（適用於論壇、漫畫站、小說站、資訊站、博客等），無需規則支持所有網頁
@@ -159,7 +159,8 @@
                     dbClick2Stop:"空白处双击暂停翻页",
                     sortTitle:"排序在下次更新规则后生效",
                     autoRun:"自动启用",
-                    inputPageNum:"输入页码跳转"
+                    inputPageNum:"输入页码跳转",
+                    enableHistory:"翻页后写入历史记录"
                 };
                 break;
             case "zh-TW":
@@ -198,7 +199,8 @@
                     dbClick2Stop:"空白處雙擊暫停翻頁",
                     sortTitle:"排序在下次更新規則後生效",
                     autoRun:"自動啓用",
-                    inputPageNum:"輸入頁碼跳轉"
+                    inputPageNum:"輸入頁碼跳轉",
+                    enableHistory:"翻頁后寫入歷史記錄"
                 };
                 break;
             case "ja":
@@ -236,7 +238,8 @@
                     dbClick2Stop:"空白部分をダブルクリックしてページめくりを一時停止します",
                     sortTitle:"並べ替えは、次のルールの更新後に有効になります",
                     autoRun:"自動的に有効",
-                    inputPageNum:"ジャンプするページ番号を入力"
+                    inputPageNum:"ジャンプするページ番号を入力",
+                    enableHistory:"ページめくり後の履歴を書く"
                 };
                 break;
             default:
@@ -274,7 +277,8 @@
                     dbClick2Stop:"Double-click on the blank space to stop",
                     sortTitle:"Sorting takes effect after the next rule update",
                     autoRun:"Auto run",
-                    inputPageNum:"Enter page number to jump"
+                    inputPageNum:"Enter page number to jump",
+                    enableHistory:"Write history after page turning"
                 };
                 break;
         }
@@ -1195,7 +1199,7 @@
             this.pageAction(doc, newEles);
             if(oldUrl!=location.href){
                 let isJs=/^(javascript|#)/.test(oldUrl.replace(location.href,""));
-                if(!isJs){
+                if(rulesData.enableHistory && !isJs){
                     _unsafeWindow.history.replaceState(undefined, oldTitle, oldUrl);
                     document.title=oldTitle;
                 }
@@ -1376,47 +1380,24 @@
         opacityTitle.appendChild(opacityInput);
         configCon.insertBefore(opacityTitle, insertPos);
 
+        function createCheckbox(innerText, val){
+            let title=document.createElement("h2");
+            title.innerHTML=innerText;
+            let input=document.createElement("input");
+            input.type="checkbox";
+            input.style.width="50px";
+            input.style.height="20px";
+            input.checked=val;
+            title.appendChild(input);
+            configCon.insertBefore(title, insertPos);
+            return input;
+        }
 
-        let hideBarTitle=document.createElement("h2");
-        hideBarTitle.innerHTML=i18n("hideBar");
-        let hideBarInput=document.createElement("input");
-        hideBarInput.type="checkbox";
-        hideBarInput.style.width="50px";
-        hideBarInput.style.height="20px";
-        hideBarInput.checked=rulesData.hideBar;
-        hideBarTitle.appendChild(hideBarInput);
-        configCon.insertBefore(hideBarTitle, insertPos);
-
-        let dbClick2StopTitle=document.createElement("h2");
-        dbClick2StopTitle.innerHTML=i18n("dbClick2Stop");
-        let dbClick2StopInput=document.createElement("input");
-        dbClick2StopInput.type="checkbox";
-        dbClick2StopInput.style.width="50px";
-        dbClick2StopInput.style.height="20px";
-        dbClick2StopInput.checked=rulesData.dbClick2Stop;
-        dbClick2StopTitle.appendChild(dbClick2StopInput);
-        configCon.insertBefore(dbClick2StopTitle, insertPos);
-
-        let enableWhiteListTitle=document.createElement("h2");
-        enableWhiteListTitle.innerHTML=i18n("autoRun");
-        let enableWhiteListInput=document.createElement("input");
-        enableWhiteListInput.type="checkbox";
-        enableWhiteListInput.style.width="50px";
-        enableWhiteListInput.style.height="20px";
-        enableWhiteListInput.checked=rulesData.enableWhiteList!=true;
-        enableWhiteListTitle.appendChild(enableWhiteListInput);
-        configCon.insertBefore(enableWhiteListTitle, insertPos);
-
-        let enableDebugTitle=document.createElement("h2");
-        enableDebugTitle.innerHTML=i18n("enableDebug");
-        let enableDebugInput=document.createElement("input");
-        enableDebugInput.type="checkbox";
-        enableDebugInput.style.width="50px";
-        enableDebugInput.style.height="20px";
-        enableDebugInput.checked=rulesData.enableDebug!=false;
-        enableDebugTitle.appendChild(enableDebugInput);
-        configCon.insertBefore(enableDebugTitle, insertPos);
-
+        let hideBarInput=createCheckbox(i18n("hideBar"), rulesData.hideBar);
+        let dbClick2StopInput=createCheckbox(i18n("dbClick2Stop"), rulesData.dbClick2Stop);
+        let enableWhiteListInput=createCheckbox(i18n("autoRun"), rulesData.enableWhiteList!=true);
+        let enableDebugInput=createCheckbox(i18n("enableDebug"), rulesData.enableDebug!=false);
+        let enableHistoryInput=createCheckbox(i18n("enableHistory"), rulesData.enableHistory!=false);
 
         let customRulesTitle=document.createElement("h2");
         customRulesTitle.innerHTML=i18n("customRules")
@@ -1455,6 +1436,7 @@
             rulesData.dbClick2Stop=dbClick2StopInput.checked;
             rulesData.enableWhiteList=!enableWhiteListInput.checked;
             rulesData.enableDebug=enableDebugInput.checked;
+            rulesData.enableHistory=enableHistoryInput.checked;
             storage.setItem("rulesData", rulesData);
             let customUrls=customUrlsInput.value.trim();
             if(customUrls){
@@ -1630,6 +1612,9 @@
                 }
                 if(typeof(rulesData.enableWhiteList)=="undefined"){
                     rulesData.enableWhiteList=false;
+                }
+                if(typeof(rulesData.enableHistory)=="undefined"){
+                    rulesData.enableHistory=true;
                 }
                 if(typeof(rulesData.enableDebug)=="undefined"){
                     rulesData.enableDebug=true;
