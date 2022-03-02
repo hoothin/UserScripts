@@ -138,18 +138,18 @@
     "action":1
   },
   {
-    "name":"bilibili",
-    "action":0,
+    "name":"bilibili search",
+    "action":1,
     "url":"^https://search\\.bilibili\\.com",
-    "pageElement":"ul>li.video-item",
-    "nextLinkByUrl":["(.*\\?keyword=.*)(?:\\&page=|$)(\\d*)","$1&page={($2.0||1)+1}"],
-    "pageAction":"let script=doc.querySelector('body>script:not([src])');if(!script)return;script=script.innerHTML.replace(/window\\.__INITIAL_STATE__=({.*});.*/,'$1');script=JSON.parse(script);script=script.flow;script=script[script.fields[0]].result;for(let i=0;i<eles.length;i++){let ele=eles[i];ele.querySelector('.lazy-img>img').src=script[i].pic;}"
+    "pageElement":"ul>li.video-item,div.video-list.row>*",
+    "nextLinkByUrl":["(.*keyword=.*?)(?:&page=|$)(\\d*).*","$1&page={($2.0||1)+1}"],
+    "sandbox":false
   },
   {
     "name":"bilibili space",
     "url":"https://space\\.bilibili\\.com/",
     "sandbox":false,
-    "nextLink":".be-pager-next",
+    "nextLink":".be-pager-next,.next-page",
     "wait":1000
   },
   {
@@ -335,6 +335,7 @@
     "name":"Pixiv",
     "url":"^https://www\\.pixiv\\.net/",
     "action":2,
+    "pageElement":"body>*",
     "nextLink":"a[class*='filterProps-Styled-Component']:last-child",
     "wait":1000
   },
