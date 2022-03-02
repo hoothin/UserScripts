@@ -1094,8 +1094,7 @@ var ruLang={
     countDown: "Обратный отсчёт",
     customLang:"Язык",
     defaultLang:"Автодетект",
-    toggleIcon:"Скрыть иконку",
-    configWidth:800
+    toggleIcon:"Скрыть иконку"
 };
 var langList={
     'en': "English",
