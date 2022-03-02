@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.3.2.1
+// @version              2022.3.2.2
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -518,6 +518,21 @@ ImgOps | https://imgops.com/#b#`;
             String.prototype.startsWith = function(str) {
                 return this.slice(0, str.length) == str;
             };
+        }
+
+        if (typeof String.prototype.visualLength != 'function') {
+            var rulerEle = document.createElement("span");
+            rulerEle.style.visibility = "hidden";
+            rulerEle.style.whiteSpace = "nowrap";
+            String.prototype.visualLength = function(size,family){
+                rulerEle.style.fontSize = size || "inherit";
+                rulerEle.style.fontFamily = family || "inherit";
+                rulerEle.innerText = this;
+                document.body.appendChild(rulerEle);
+                let w = rulerEle.offsetWidth;
+                document.body.removeChild(rulerEle);
+                return w;
+            }
         }
 
         function getMStr(func) {
@@ -9253,7 +9268,8 @@ ImgOps | https://imgops.com/#b#`;
             isTabs: true,
             skin: 'tab',
             frameStyle: {
-                width: (i18nData.configWidth||480)+'px',
+                minWidth: "480px",
+                width: (((i18n("floatBar") + i18n("magnifier") + i18n("gallery") + i18n("imgWindow") + i18n("others")).visualLength("14px","arial,tahoma,myriad pro,sans-serif") + 250) || 480) + 'px',
                 zIndex:'2147483648',
             },
             css: [
