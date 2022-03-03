@@ -753,7 +753,7 @@
                 pageElement=checkElement(body);
                 if(pageElement)this.saveCurSiteRule();
             }
-            if(this.insert && pageElement && pageElement[0]){
+            if(this.insert && this.insert.parentNode && pageElement && pageElement[0]){
                 let example=this.insertPos==2?this.insert.children[0]:this.insert;
                 let inTable=example.parentNode.tagName=="TABLE" ||
                     example.tagName=="TR" ||
