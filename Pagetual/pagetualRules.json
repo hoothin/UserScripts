@@ -86,9 +86,11 @@
   {
     "name":"动漫之家",
     "action":1,
-    "url":"^https?://(www|manhua)\\.(dmzj|178)\\.com/\\w+/\\d+\\.shtml",
-    "nextLinkByUrl":["(.*#@page=)(\\d+)","$1{$2+1}"],
-    "pageElement":"div#center_box>img"
+    "url":"^https?://(www|manhua)\\.(dmzj|178)\\.com/.*/\\d+\\.s?html",
+    "nextLink":"a.btm_chapter_btn.fr",
+    "pageElement":"div.comic_wraCon",
+    "init":"let imgCon=document.querySelector('div.comic_wraCon'),ops=document.querySelectorAll('option');imgCon.innerHTML='';[].forEach.call(ops,op=>{let img=document.createElement('img');img.src=op.value;imgCon.appendChild(img)})",
+    "pageInit":"let imgCon=eles[0],ops=doc.querySelectorAll('option');imgCon.innerHTML='';[].forEach.call(ops,op=>{let img=document.createElement('img');img.src=op.value;imgCon.appendChild(img)})"
   },
   {
     "name":"smzdm",
