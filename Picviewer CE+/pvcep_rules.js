@@ -516,7 +516,7 @@ var siteInfo=[
  url: /twitter\.com/,
  getImage: function(){
      let newsrc=this.src;
-     newsrc=newsrc.replace(/\?format=/i, ".").replace(/\&name=/i, ":").replace(/\.(?=[^.]*$)/, "?format=").replace( /(:large|:medium|:small|:orig|:thumb)/i, "");
+     newsrc=newsrc.replace(/\?format=/i, ".").replace(/\&name=/i, ":").replace(/\.(?=[^.]*$)/, "?format=").replace( /(:large|:medium|:small|:orig|:thumb|:[\dx]+)/i, "");
      if(newsrc!=this.src)return newsrc+"&name=orig";
  },
  ext: function(target) {
