@@ -270,10 +270,17 @@
     "pageElement":"div.itemBox,div.itemBox_video"
   },
   {
-    "name":"小说站",
+    "name":"小说站1",
     "type":0,
     "nextLink":"//a[contains(text(),'下一页')]|//a[contains(text(),'下一頁')]|//a[contains(text(),'下一章')]",
-    "pageElement":"//div[@id='content']|//div[@id='chaptercontent']|//div[@id='BookText']|//div[@class='content']|//div[@class='chaptercontent']",
+    "pageElement":"//div[@id='content']|//div[@id='chaptercontent']|//div[@id='BookText']",
+    "url":"\\d+/\\d+\\.html?$"
+  },
+  {
+    "name":"小说站2",
+    "type":0,
+    "nextLink":"//a[contains(text(),'下一页')]|//a[contains(text(),'下一頁')]|//a[contains(text(),'下一章')]",
+    "pageElement":"//div[@class='content']|//div[@class='chaptercontent']",
     "url":"\\d+/\\d+\\.html?$"
   },
   {
