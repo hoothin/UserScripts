@@ -514,8 +514,11 @@ var siteInfo=[
 {
  name: "推特",
  url: /twitter\.com/,
- r: /&name=\D+|_normal/i,
- s: "",
+ getImage: function(){
+     let newsrc=this.src;
+     newsrc=newsrc.replace(/\?format=/i, ".").replace(/\&name=/i, ":").replace(/\.(?=[^.]*$)/, "?format=").replace( /(:large|:medium|:small|:orig|:thumb)/i, "");
+     if(newsrc!=this.src)return newsrc+"&name=orig";
+ },
  ext: function(target) {
     if(target.parentNode && target.parentNode.previousElementSibling){
         let imgs=target.parentNode.previousElementSibling.querySelectorAll("img");
