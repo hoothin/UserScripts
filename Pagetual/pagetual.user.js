@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.5.3.4
+// @version      1.5.3.5
 // @description  Most compatible Auto pager script ever! Simply auto loading paginated web pages.
 // @description:zh-CN  自动加载并拼接下一分页内容（适用于论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页
 // @description:zh-TW  自動加載並拼接下一分頁內容（適用於論壇、漫畫站、小說站、資訊站、博客等），無需規則支持所有網頁
@@ -445,7 +445,7 @@
                 storage.getItem("customRules", customRules=>{
                     if(customRules)self.customRules=customRules;
                     storage.getItem("rules", rules=>{
-                        if(rules)this.rules=rules;
+                        if(rules)self.rules=rules;
                         callback();
                     });
                 });
@@ -776,11 +776,11 @@
             let pageMatch2=url.match(/(.*[\?&]p(?:age)?=)(\d+)($|[#&].*)/i);
             if(pageMatch1){
                 preStr=pageMatch1[1];
-                pageNum=pageMatch1[2];
+                pageNum=parseInt(pageMatch1[2]);
                 afterStr=pageMatch1[3];
             }else if(pageMatch2){
                 preStr=pageMatch2[1];
-                pageNum=pageMatch2[2];
+                pageNum=parseInt(pageMatch2[2]);
                 afterStr=pageMatch2[3];
             }
             let curPage=doc,i,cur,jsNext;
@@ -885,7 +885,7 @@
                     }
                     if(!aTag.href || /^javascript:/.test(aTag.href))continue;
                     if(!next4){
-                        if(aTag.href.replace("?&","?").replace("#!","").replace("index.php?","?").replace(preStr,"").replace(afterStr,"")==parseInt(pageNum)+1){
+                        if(pageNum<999 && aTag.href.replace("?&","?").replace("#!","").replace("index.php?","?").replace(preStr,"").replace(afterStr,"")==pageNum+1){
                             next4=aTag;
                         }else if(this.curUrl!=aTag.href && aTag.href.replace("?&","?").replace("index.php?","?").indexOf(url)!=-1 && /^[\/\?&]?[_-]?(p|page)?=?\/?2(\/|\?|&|$)/i.test(aTag.href.replace(url,"").replace(/\.s?html?$/i,""))){
                             let curHref=aTag.getAttribute("href");
@@ -1255,7 +1255,7 @@
             `);
             configCon=document.querySelector(".markdown-body");
             insertPos=configCon.querySelector("hr");
-        }else if(location.href==configPage){
+        }else if(location.href==configPage){//2nd todo
         }else return false;
         class Rulebar {
             init(ruleUrl){
