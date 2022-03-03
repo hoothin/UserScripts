@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.5.3.3
+// @version      1.5.3.4
 // @description  Most compatible Auto pager script ever! Simply auto loading paginated web pages.
 // @description:zh-CN  自动加载并拼接下一分页内容（适用于论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页
 // @description:zh-TW  自動加載並拼接下一分頁內容（適用於論壇、漫畫站、小說站、資訊站、博客等），無需規則支持所有網頁
@@ -166,7 +166,8 @@
                     sortTitle:"排序在下次更新规则后生效",
                     autoRun:"自动启用",
                     inputPageNum:"输入页码跳转",
-                    enableHistory:"翻页后写入历史记录"
+                    enableHistory:"翻页后写入历史记录",
+                    initRun:"打开页面后立即尝试翻页"
                 };
                 break;
             case "zh-TW":
@@ -206,7 +207,8 @@
                     sortTitle:"排序在下次更新規則後生效",
                     autoRun:"自動啓用",
                     inputPageNum:"輸入頁碼跳轉",
-                    enableHistory:"翻頁后寫入歷史記錄"
+                    enableHistory:"翻頁后寫入歷史記錄",
+                    initRun:"打開頁面后立即嘗試翻頁"
                 };
                 break;
             case "ja":
@@ -245,7 +247,8 @@
                     sortTitle:"並べ替えは、次のルールの更新後に有効になります",
                     autoRun:"自動的に有効",
                     inputPageNum:"ジャンプするページ番号を入力",
-                    enableHistory:"ページめくり後の履歴を書く"
+                    enableHistory:"ページめくり後の履歴を書く",
+                    initRun:"Webページを開いた直後にページをめくる"
                 };
                 break;
             default:
@@ -284,7 +287,8 @@
                     sortTitle:"Sorting takes effect after the next rule update",
                     autoRun:"Auto run",
                     inputPageNum:"Enter page number to jump",
-                    enableHistory:"Write history after page turning"
+                    enableHistory:"Write history after page turning",
+                    initRun:"Turn pages immediately after opening"
                 };
                 break;
         }
@@ -1405,6 +1409,7 @@
         let enableWhiteListInput=createCheckbox(i18n("autoRun"), rulesData.enableWhiteList!=true);
         let enableDebugInput=createCheckbox(i18n("enableDebug"), rulesData.enableDebug!=false);
         let enableHistoryInput=createCheckbox(i18n("enableHistory"), rulesData.enableHistory!=false);
+        let initRunInput=createCheckbox(i18n("initRun"), rulesData.initRun!=false);
 
         let customRulesTitle=document.createElement("h2");
         customRulesTitle.innerHTML=i18n("customRules")
@@ -1444,6 +1449,7 @@
             rulesData.enableWhiteList=!enableWhiteListInput.checked;
             rulesData.enableDebug=enableDebugInput.checked;
             rulesData.enableHistory=enableHistoryInput.checked;
+            rulesData.initRun=initRunInput.checked;
             storage.setItem("rulesData", rulesData);
             let customUrls=customUrlsInput.value.trim();
             if(customUrls){
@@ -1626,6 +1632,9 @@
                 if(typeof(rulesData.enableDebug)=="undefined"){
                     rulesData.enableDebug=true;
                 }
+                if(typeof(rulesData.initRun)=="undefined"){
+                    rulesData.initRun=true;
+                }
                 enableDebug=rulesData.enableDebug;
                 storage.getItem("forceState_"+location.host, v=>{
                     storage.getItem("ruleLastUpdate", date=>{
@@ -1787,7 +1796,7 @@
                 });
             }
             initListener();
-            nextPage();
+            if(rulesData.initRun)nextPage();
         });
     }
 
@@ -1976,6 +1985,7 @@
         curPage++;
         if(rulesData.opacity==0)return;
         let example=ruleParser.curSiteRule.insertPos==2?insert.children[0]:(insert.previousElementSibling||insert);
+        if(!example || !example.parentNode)example=insert;
         let inTable=example.parentNode.tagName=="TABLE" ||
             example.tagName=="TR" ||
             example.tagName=="TBODY" ||
