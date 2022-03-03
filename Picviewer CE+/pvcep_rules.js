@@ -515,7 +515,8 @@ var siteInfo=[
  name: "推特",
  url: /twitter\.com/,
  getImage: function(){
-     let newsrc=this.src;
+     let newsrc=this.src.replace("_normal.",".");
+     if(newsrc!=this.src)return newsrc;
      newsrc=newsrc.replace(/\?format=/i, ".").replace(/\&name=/i, ":").replace(/\.(?=[^.]*$)/, "?format=").replace( /(:large|:medium|:small|:orig|:thumb|:[\dx]+)/i, "");
      if(newsrc!=this.src)return newsrc+"&name=orig";
  },
