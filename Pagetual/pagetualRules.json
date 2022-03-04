@@ -23,7 +23,8 @@
     "type":0,
     "action":1,
     "pageNum":"&pn={$p}",
-    "url":"^https://tieba\\.baidu\\.com/p/.+"
+    "url":"^https://tieba\\.baidu\\.com/p/.+",
+    "wait":"if(doc==document)return true;let lzl=doc.querySelector('div.hideLzl');return lzl==null"
   },
   {
     "name":"搜狗wap",
