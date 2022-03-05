@@ -8,7 +8,7 @@
 // @namespace    https://github.com/hoothin/UserScripts/tree/master/Easy%20offline
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Base64/0.2.0/base64.min.js
-// @version      1.9.17
+// @version      1.9.18
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -1055,15 +1055,15 @@
         for(var x=0;x<offNodes.length;x++){
             let node=offNodes[x];
             let siteConfig=sites[node.attr("name")];
-            if(/^http/i.test(offUrl) && siteConfig.noHttp){
+            if(/^https?:\/\/\w/i.test(offUrl) && siteConfig.noHttp){
                 node.hide();
-            }else if(/^magnet/i.test(offUrl) && siteConfig.noMag){
+            }else if(/^magnet:\/\/\w/i.test(offUrl) && siteConfig.noMag){
                 node.hide();
-            }else if(/^ftp/i.test(offUrl) && siteConfig.noFtp){
+            }else if(/^ftp:\/\/\w/i.test(offUrl) && siteConfig.noFtp){
                 node.hide();
-            }else if(/^ed2k:\/\//i.test(offUrl) && siteConfig.noEd2k){
+            }else if(/^ed2k:\/\/\w/i.test(offUrl) && siteConfig.noEd2k){
                 node.hide();
-            }else if(!/^(http|magnet|ftp|ed2k)/i.test(offUrl) && siteConfig.noTxt){
+            }else if(!/^(https?|magnet|ftp|ed2k):\/\/\w/i.test(offUrl) && siteConfig.noTxt){
                 node.hide();
             }else if(siteConfig.linkRegExp && !siteConfig.linkRegExp.test(offUrl)){
                 node.hide();
