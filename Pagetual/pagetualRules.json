@@ -179,10 +179,30 @@
     "nextLink":".pagenavi>a[title='下一页']"
   },
   {
-    "name":"南+",
-    "url":"^https://.*(south|snow)\\-plus\\.",
+    "name":"魂+",
+    "url":"^https://.*(soul|white|north|south|snow)\\-plus\\.",
     "action":1,
     "sleep":1000
+  },
+  {
+    "name":"魂+阅读页",
+    "url":"^https://.*(soul|white|north|south|snow)\\-plus\\.",
+    "action":1,
+    "type":0,
+    "pageElement":"//div[@id='main']/form",
+    "nextLink":"//div[@class='pages']/ul/li[.//b]/following-sibling::li/a",
+    "sleep":1000,
+    "pageNum":"page-{$p}.html"
+  },
+  {
+    "name":"魂+列表页",
+    "url":"^https://.*(soul|white|north|south|snow)\\-plus\\.",
+    "action":1,
+    "type":0,
+    "pageElement":"//tr[@align='center']",
+    "nextLink":"//div[@class='pages']/ul/li[.//b]/following-sibling::li/a",
+    "sleep":1000,
+    "pageNum":"page-{$p}.html"
   },
   {
     "name":"动漫啦",
