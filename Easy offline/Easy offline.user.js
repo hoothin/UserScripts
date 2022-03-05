@@ -8,7 +8,7 @@
 // @namespace    https://github.com/hoothin/UserScripts/tree/master/Easy%20offline
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Base64/0.2.0/base64.min.js
-// @version      1.9.16
+// @version      1.9.17
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -1272,7 +1272,7 @@
                 if(!window.confirm(i18n("importOrNot")))return;
                 let targetText=e.target.innerText.trim();
                 if(e.target.childNodes.length==1 && targetText.indexOf("@@")!=-1){
-                    if(siteRule != targetText && siteRule.indexOf(targetText)==-1){
+                    if(siteRule != targetText && (!siteRule || siteRule.indexOf(targetText)==-1)){
                         if(siteRule && window.confirm(i18n("importCustomAlert"))){
                             let rules=targetText.split("\n"),sameArr=[],diffArr=[];
                             rules.forEach(rule=>{
@@ -1503,7 +1503,8 @@
     }
 
     function toggleIcon(force){
-        $('.whx-a').toggle(500);
+        $('.whx-a-node').toggle(500);
+        $('.whx-a-node').mouseout();
         storage.getItem('eoDisable_'+document.domain,v=>{
             if(force=="enable" || v){
                 storage.delItem('eoDisable_'+document.domain);
