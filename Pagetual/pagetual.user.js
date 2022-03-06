@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.5.3.9
+// @version      1.5.3.10
 // @description  Most compatible Auto pager script ever! Simply auto loading paginated web pages.
 // @description:zh-CN  自动加载并拼接下一分页内容（适用于论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页
 // @description:zh-TW  自動加載並拼接下一分頁內容（適用於論壇、漫畫站、小說站、資訊站、博客等），無需規則支持所有網頁
@@ -167,7 +167,8 @@
                     autoRun:"自动启用",
                     inputPageNum:"输入页码跳转",
                     enableHistory:"翻页后写入历史记录",
-                    initRun:"打开页面后立即尝试翻页"
+                    initRun:"打开页面后立即尝试翻页",
+                    preload:"预读下一页"
                 };
                 break;
             case "zh-TW":
@@ -208,7 +209,8 @@
                     autoRun:"自動啓用",
                     inputPageNum:"輸入頁碼跳轉",
                     enableHistory:"翻頁后寫入歷史記錄",
-                    initRun:"打開頁面后立即嘗試翻頁"
+                    initRun:"打開頁面后立即嘗試翻頁",
+                    preload:"預讀下一頁"
                 };
                 break;
             case "ja":
@@ -248,7 +250,8 @@
                     autoRun:"自動的に有効",
                     inputPageNum:"ジャンプするページ番号を入力",
                     enableHistory:"ページめくり後の履歴を書く",
-                    initRun:"Webページを開いた直後にページをめくる"
+                    initRun:"Webページを開いた直後にページをめくる",
+                    preload:"事前に次のページを読む"
                 };
                 break;
             default:
@@ -288,7 +291,8 @@
                     autoRun:"Auto run",
                     inputPageNum:"Enter page number to jump",
                     enableHistory:"Write history after page turning",
-                    initRun:"Turn pages immediately after opening"
+                    initRun:"Turn pages immediately after opening",
+                    preload:"Preload next page"
                 };
                 break;
         }
@@ -1031,11 +1035,85 @@
             }
             if(nextLink){
                 this.nextLinkHref=(nextLink.href && !/^javascript:/.test(nextLink.href))?this.canonicalUri(nextLink.href):"#";
-                debug(nextLink);
+                if(doc==document)debug(nextLink);
             }else{
                 this.nextLinkHref=false;
             }
+            this.preload();
             return nextLink;
+        }
+
+        preload(){
+            if(!rulesData.preload)return;
+            if(!this.nextLinkHref || this.nextLinkHref=="#")return;
+            let self=this;
+            if(this.curSiteRule && this.curSiteRule.action==1){
+                if(!this.preloadIframe){
+                    this.preloadIframe = document.createElement('iframe');
+                    let iframe = this.preloadIframe;
+                    iframe.name = 'pagetual-iframe';
+                    iframe.width = '100%';
+                    iframe.height = '0';
+                    iframe.frameBorder = '0';
+                    if(ruleParser.curSiteRule.sandbox!=false){
+                        iframe.sandbox="allow-same-origin allow-scripts allow-popups allow-forms";
+                    }
+                    iframe.style.cssText = 'margin:0!important;padding:0!important;visibility:hidden!important;';
+                    iframe.addEventListener('load', function (e) {
+                        try{
+                            let doc=iframe.contentDocument || iframe.contentWindow.document;
+                            var body = doc.body;
+                            if (body && body.firstChild) {
+                                self.lazyImgAction(body.children);
+                            }
+                        }catch(e){
+                            return;
+                        }
+                    }, false);
+                    document.body.appendChild(iframe);
+                }
+                this.preloadIframe.src = this.nextLinkHref;
+            }else{
+                _GM_xmlhttpRequest({
+                    url: this.nextLinkHref,
+                    method: 'GET',
+                    overrideMimeType: 'text/html;charset='+document.charset,
+                    headers: {
+                        'Referer': location.href
+                    },
+                    timeout: 5000,
+                    onload: function(res) {
+                        var doc=null;
+                        try {
+                            doc=document.implementation.createHTMLDocument('');
+                            doc.documentElement.innerHTML=res.response;
+                            var body = doc.body;
+                            if (body && body.firstChild) {
+                                self.lazyImgAction(body.children);
+                            }
+                            if(!self.preloadDiv){
+                                self.preloadDiv = document.createElement('div');
+                                self.preloadDiv.id = "pagetual-preload";
+                                self.preloadDiv.style.cssText = 'display:none!important;';
+                                document.body.appendChild(self.preloadDiv);
+                                self.checkedImgs={};
+                            }
+                            [].forEach.call(doc.images, i=>{
+                                let iSrc=i.src;
+                                if(iSrc && !self.checkedImgs[iSrc]){
+                                    self.checkedImgs[iSrc] = true;
+                                    let img = document.createElement('img');
+                                    img.src = iSrc;
+                                    self.preloadDiv.appendChild(img);
+                                }
+                            });
+                        }
+                        catch (e) {
+                            return;
+                        }
+                    }
+                });
+            }
         }
 
         getInsert(refresh) {
@@ -1083,6 +1161,10 @@
                     debug(e);
                 }
             }
+            this.lazyImgAction(eles);
+        }
+
+        lazyImgAction(eles){
             let setLazyImg=img=>{
                 let realSrc;
                 if(img.getAttribute("_src") && !img.src){
@@ -1416,8 +1498,9 @@
         let dbClick2StopInput=createCheckbox(i18n("dbClick2Stop"), rulesData.dbClick2Stop);
         let enableWhiteListInput=createCheckbox(i18n("autoRun"), rulesData.enableWhiteList!=true);
         let enableDebugInput=createCheckbox(i18n("enableDebug"), rulesData.enableDebug!=false);
-        let enableHistoryInput=createCheckbox(i18n("enableHistory"), rulesData.enableHistory!=false);
+        let enableHistoryInput=createCheckbox(i18n("enableHistory"), rulesData.enableHistory===true);
         let initRunInput=createCheckbox(i18n("initRun"), rulesData.initRun!=false);
+        let preloadInput=createCheckbox(i18n("preload"), rulesData.preload);
 
         let customRulesTitle=document.createElement("h2");
         customRulesTitle.innerHTML=i18n("customRules")
@@ -1458,6 +1541,7 @@
             rulesData.enableDebug=enableDebugInput.checked;
             rulesData.enableHistory=enableHistoryInput.checked;
             rulesData.initRun=initRunInput.checked;
+            rulesData.preload=preloadInput.checked;
             storage.setItem("rulesData", rulesData);
             let customUrls=customUrlsInput.value.trim();
             if(customUrls){
@@ -1500,7 +1584,7 @@
                     storage.setItem("rulesData", rulesData);
                 }
             }
-            alert("Modified successfully");
+            alert("The settings are saved");
             location.reload();
         };
         return true;
@@ -1525,7 +1609,6 @@
                     if(!json){
                         fail(rule,err);
                     }
-                    storage.setItem("rules", ruleParser.rules);
                     addNextRule();
                 })
             }
@@ -1635,13 +1718,16 @@
                     rulesData.enableWhiteList=false;
                 }
                 if(typeof(rulesData.enableHistory)=="undefined"){
-                    rulesData.enableHistory=true;
+                    rulesData.enableHistory=false;
                 }
                 if(typeof(rulesData.enableDebug)=="undefined"){
                     rulesData.enableDebug=true;
                 }
                 if(typeof(rulesData.initRun)=="undefined"){
                     rulesData.initRun=true;
+                }
+                if(typeof(rulesData.preload)=="undefined"){
+                    rulesData.preload=false;
                 }
                 enableDebug=rulesData.enableDebug;
                 storage.getItem("forceState_"+location.host, v=>{
@@ -1655,13 +1741,12 @@
                         if(forceState==1)return;
                         let now=new Date().getTime();
                         if(!date || now-date>2*24*60*60*1000){
-                            storage.setItem("ruleLastUpdate", now);
+                            //storage.setItem("ruleLastUpdate", now);
                             updateRules(()=>{
-                                callback();
+                                //callback();
                             },(rule,err)=>{});
-                        }else{
-                            callback();
                         }
+                        callback();
                     });
                 });
             });
@@ -1691,6 +1776,7 @@
                 if(pageElement && (pageElement.length>1 || (pageElement.length==1 && pageElement[0].tagName!="IMG") )){
                     let result=ruleParser.insertPage(doc, pageElement, url, callback, false);
                     if(!result){
+                        ruleParser.curSiteRule.action=1;
                         requestFromIframe(url, (doc, eles)=>{
                             loadPageOver();
                             if(eles){
@@ -1699,6 +1785,7 @@
                         });
                     }
                 }else if(ruleParser.curSiteRule.singleUrl){
+                    ruleParser.curSiteRule.action=1;
                     requestFromIframe(url, (doc, eles)=>{
                         loadPageOver();
                         if(eles){
@@ -1773,6 +1860,7 @@
                         debug("Stop as cors");
                         //isPause=true;
                         ruleParser.curSiteRule.pageElement=allOfBody;
+                        ruleParser.curSiteRule.action=0;
                         ruleParser.getInsert(true);
                         callback(false, false);
                     }
