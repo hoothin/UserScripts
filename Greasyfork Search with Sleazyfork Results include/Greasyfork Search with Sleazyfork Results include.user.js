@@ -187,7 +187,7 @@
             var resetBtn=p.querySelector("#reset");
             var filterTextarea=document.createElement("pre");
             var prettifyScript=document.createElement("script");
-            prettifyScript.src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js?lang=js&skin=sunburst";
+            prettifyScript.src="https://cdn.jsdelivr.net/npm/code-prettify@0.1.0/loader/run_prettify.js?lang=js&skin=sunburst";
             document.head.appendChild(prettifyScript);
             filterTextarea.contentEditable="true";
             filterTextarea.className="prettyprint lang-js";
