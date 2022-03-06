@@ -331,7 +331,7 @@
   },
   {
     "name":"Baidu",
-    "css":"span.c-img-radius-large.c-img-border{display:none}.new-pmd .c-img-s.compatible_rxApe{padding-bottom:unset}",
+    "css":"span.c-img-radius-large.c-img-border{pointer-events: none}",
     "insertPos":1,
     "nextLink":"//*[@id=\"page\"]/div/a[contains(text(),'下一页')]",
     "pageElement":"//*[@id=\"content_left\"]/*",
