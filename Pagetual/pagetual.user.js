@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.5.3.10
+// @version      1.5.3.11
 // @description  Most compatible Auto pager script ever! Simply auto loading paginated web pages.
 // @description:zh-CN  自动加载并拼接下一分页内容（适用于论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页
 // @description:zh-TW  自動加載並拼接下一分頁內容（適用於論壇、漫畫站、小說站、資訊站、博客等），無需規則支持所有網頁
@@ -438,6 +438,7 @@
             this.rules=[];
             this.pageDoc=document;
             this.nextLinkHref=null;
+            this.oldUrl="";
             this.curUrl=location.href;
             this.curSiteRule={};
         }
@@ -1022,20 +1023,14 @@
                 }
             }
             if(nextLink){
-                if(nextLink.href && nextLink.href==this.curUrl){
-                    nextLink=null;
+                if(nextLink.href && (nextLink.href==this.curUrl || nextLink.href==this.oldUrl)){
+                    this.nextLinkHref=false;
                 }else if(/^javascript:/.test(nextLink.href) && (this.curSiteRule.action==0 || this.curSiteRule.action==1)){
-                    nextLink=null;
+                    this.nextLinkHref=false;
+                }else{
+                    this.nextLinkHref=(nextLink.href && !/^javascript:/.test(nextLink.href))?this.canonicalUri(nextLink.href):"#";
+                    if(doc==document)debug(nextLink);
                 }
-                /*if(!this.curSiteRule.nextLink && page && page.canSave){
-                    this.curSiteRule.nextLink=this.geneSelector(nextLink);
-                    this.curSiteRule.type=1;
-                    this.saveCurSiteRule();
-                }*/
-            }
-            if(nextLink){
-                this.nextLinkHref=(nextLink.href && !/^javascript:/.test(nextLink.href))?this.canonicalUri(nextLink.href):"#";
-                if(doc==document)debug(nextLink);
             }else{
                 this.nextLinkHref=false;
             }
@@ -1264,12 +1259,12 @@
         }
 
         insertPage(doc, eles, url, callback, tried){
-            let oldUrl=this.curUrl;
+            this.oldUrl=this.curUrl;
             let oldTitle=this.pageDoc.title;
             this.pageDoc=doc;
             this.curUrl=url;
             let nextLink=this.getNextLink(doc);
-            if(curPage==1 && !tried && !this.nextLinkHref && this.curSiteRule.singleUrl && this.curSiteRule.pageElement && this.curSiteRule.pageElement!=allOfBody){
+            if(curPage==1 && !tried && !nextLink && this.curSiteRule.singleUrl && this.curSiteRule.pageElement && this.curSiteRule.pageElement!=allOfBody){
                 this.curSiteRule.action=1;
                 this.curUrl=location.href;
                 return false;
@@ -1298,10 +1293,10 @@
                 });
             }
             this.pageAction(doc, newEles);
-            if(oldUrl!=location.href){
-                let isJs=/^(javascript|#)/.test(oldUrl.replace(location.href,""));
+            if(this.oldUrl!=location.href){
+                let isJs=/^(javascript|#)/.test(this.oldUrl.replace(location.href,""));
                 if(rulesData.enableHistory && !isJs){
-                    _unsafeWindow.history.replaceState(undefined, oldTitle, oldUrl);
+                    _unsafeWindow.history.replaceState(undefined, oldTitle, this.oldUrl);
                     document.title=oldTitle;
                 }
             }
@@ -1862,6 +1857,7 @@
                         ruleParser.curSiteRule.pageElement=allOfBody;
                         ruleParser.curSiteRule.action=0;
                         ruleParser.getInsert(true);
+                        ruleParser.nextLinkHref=url;
                         callback(false, false);
                     }
                     document.body.removeChild(iframe);
@@ -2121,7 +2117,7 @@
             pageNum.style.cursor="pointer";
             pageNum.style.color="";
             pageNum.addEventListener("click", e=>{
-                let pageInput=prompt(i18n("inputPageNum"));
+                let pageInput=prompt(i18n("inputPageNum"), "1");
                 if(pageInput){
                     let pageLink=ruleParser.getLinkByPage(url, pageInput);
                     if(pageLink){
