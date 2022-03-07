@@ -757,7 +757,7 @@
                     if(!self.curSiteRule.pageElement){
                         if(ele.tagName=="P" || ele.tagName=="BR")ele=ele.parentNode;
                         self.curSiteRule.pageElement=self.geneSelector(ele);
-                        if(ele.children.length>1 && ele.tagName!="UL")self.curSiteRule.pageElement+=">*";
+                        if(ele.children.length>1 && ele.tagName!="UL" && curHeight!=0)self.curSiteRule.pageElement+=">*";
                         debug(self.curSiteRule.pageElement);
                     }
                     return (ele.tagName=="UL"||ele.children.length==1)?[ele]:ele.children;
