@@ -33,7 +33,8 @@
     "nextLink":"a#PageNext",
     "pageElement":".result-table-list tbody>*",
     "init":"if(doc){doc.querySelector('#txt_search').value=document.querySelector('#txt_search').value;doc.querySelector('.search-btn').click()}",
-    "wait":1000
+    "wait":1000,
+    "enable":0
   },
   {
     "name":"搜狗wap",
