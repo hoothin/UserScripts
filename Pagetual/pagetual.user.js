@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.5.6
+// @version      1.5.6.1
 // @description  Most compatible Auto pager script ever! Simply auto loading paginated web pages.
 // @description:zh-CN  自动加载并拼接下一分页内容（适用于论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页
 // @description:zh-TW  自動加載並拼接下一分頁內容（適用於論壇、漫畫站、小說站、資訊站、博客等），無需規則支持所有網頁
@@ -132,7 +132,7 @@
             case "zh-CN":
             case "zh-SG":
                 config={
-                    enableDebug:"调试模式",
+                    enableDebug:"调试模式，输出信息至控制台",
                     disable:"暂时禁用",
                     disableSite:"在此站禁用",
                     enable:"启用翻页",
@@ -164,17 +164,17 @@
                     hideBar:"空白处双击隐藏分页隔条",
                     dbClick2Stop:"空白处双击暂停翻页",
                     sortTitle:"排序在下次更新规则后生效",
-                    autoRun:"自动启用",
+                    autoRun:"自动启用，否则为白名单模式",
                     inputPageNum:"输入页码跳转",
                     enableHistory:"翻页后写入历史记录",
-                    initRun:"打开页面后立即尝试翻页",
-                    preload:"预读下一页"
+                    initRun:"打开页面后立即尝试翻页，否则滚动至页尾再翻页",
+                    preload:"预读下一页，加速浏览"
                 };
                 break;
             case "zh-TW":
             case "zh-HK":
                 config={
-                    enableDebug:"調試模式",
+                    enableDebug:"調試模式，輸出信息至控制台",
                     disable:"暫時禁用",
                     disableSite:"在此站禁用",
                     enable:"啟用翻頁",
@@ -206,11 +206,11 @@
                     hideBar:"空白處雙擊隱藏分頁隔條",
                     dbClick2Stop:"空白處雙擊暫停翻頁",
                     sortTitle:"排序在下次更新規則後生效",
-                    autoRun:"自動啓用",
+                    autoRun:"自動啓用，否則為白名單模式",
                     inputPageNum:"輸入頁碼跳轉",
                     enableHistory:"翻頁后寫入歷史記錄",
-                    initRun:"打開頁面后立即嘗試翻頁",
-                    preload:"預讀下一頁"
+                    initRun:"打開頁面后立即嘗試翻頁，否則滾動至頁尾再翻頁",
+                    preload:"預讀下一頁，加速瀏覽"
                 };
                 break;
             case "ja":
@@ -868,6 +868,7 @@
                     if(aTag.innerText=="§")continue;
                     if(aTag.style.display=="none")continue;
                     if(next1 && next2 && next3 && next4)break;
+                    if(aTag.href && /next$/i.test(aTag.href))continue;
                     if(!next1){
                         if(/^[下后後][一1]?[页頁张張]|^next( page)?\s*›?$|次のページ/i.test(aTag.innerText.trim())){
                             if(aTag.innerText.length>15)continue;
@@ -1706,7 +1707,7 @@
                     rulesData.opacity=0.3;
                 }
                 if(typeof(rulesData.hideBar)=="undefined"){
-                    rulesData.hideBar=true;
+                    rulesData.hideBar=false;
                 }
                 if(typeof(rulesData.dbClick2Stop)=="undefined"){
                     rulesData.dbClick2Stop=true;
