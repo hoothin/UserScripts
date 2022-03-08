@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.5.6.2
+// @version      1.5.6.3
 // @description  Most compatible Auto pager script ever! Simply auto loading paginated web pages.
 // @description:zh-CN  自动加载并拼接下一分页内容（适用于论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页
 // @description:zh-TW  自動加載並拼接下一分頁內容（適用於論壇、漫畫站、小說站、資訊站、博客等），無需規則支持所有網頁
@@ -168,7 +168,7 @@
                     inputPageNum:"输入页码跳转",
                     enableHistory:"翻页后写入历史记录",
                     initRun:"打开页面后立即尝试翻页，否则滚动至页尾再翻页",
-                    preload:"预读下一页，加速浏览"
+                    preload:"翻页前预读下一页，加速浏览"
                 };
                 break;
             case "zh-TW":
@@ -210,7 +210,7 @@
                     inputPageNum:"輸入頁碼跳轉",
                     enableHistory:"翻頁后寫入歷史記錄",
                     initRun:"打開頁面后立即嘗試翻頁，否則滾動至頁尾再翻頁",
-                    preload:"預讀下一頁，加速瀏覽"
+                    preload:"翻頁前預讀下一頁，加速瀏覽"
                 };
                 break;
             case "ja":
@@ -1251,7 +1251,7 @@
                 let code=self.curSiteRule.init;
                 if(code){
                     try{
-                        Function('doc','"use strict";' + code)(null);
+                        Function('doc','win','"use strict";' + code)(null,null);
                     }catch(e){
                         debug(e);
                     }
@@ -1891,7 +1891,7 @@
                 });
             }
             initListener();
-            if(rulesData.initRun)nextPage();
+            if(rulesData.initRun && ruleParser.curSiteRule.initRun!=0)nextPage();
         });
     }
 
@@ -2398,7 +2398,7 @@
                     let code=ruleParser.curSiteRule.init;
                     if(code){
                         try{
-                            Function('doc','"use strict";' + code)(iframeDoc);
+                            Function('doc','win','"use strict";' + code)(iframeDoc, iframeDoc.defaultView);
                         }catch(e){
                             debug(e);
                         }
