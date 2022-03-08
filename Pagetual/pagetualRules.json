@@ -32,9 +32,9 @@
     "url":"https://kns\\.cnki\\.net/kns8/defaultresult/index",
     "nextLink":"a#PageNext",
     "pageElement":".result-table-list tbody>*",
-    "init":"if(doc){doc.querySelector('#txt_search').value=document.querySelector('#txt_search').value;doc.querySelector('.search-btn').click()}",
-    "wait":1000,
-    "enable":0
+    "init":"if(doc){let fn1=window.BriefExtend.setFullTextState;window.BriefExtend.setFullTextState=()=>{fn1();win.$('#PageNext').attr('data-curPage',window.$('#PageNext').attr('data-curPage'))}; win.BriefParam._getSearchPaperArgModel=(isSearch, cPage)=>{return window.BriefParam._getSearchPaperArgModel(isSearch, (!!cPage ? cPage : win.BriefParam._getCurPage()))};doc.querySelector('#txt_search').value=document.querySelector('#txt_search').value;doc.querySelector('.search-btn').click()}",
+    "initRun":0,
+    "wait":1000
   },
   {
     "name":"搜狗wap",
