@@ -25,7 +25,7 @@
     "action":1,
     "pageNum":"&pn={$p}",
     "url":"^https://tieba\\.baidu\\.com/p/.+",
-    "wait":"if(doc==document)return true;let lzl=doc.querySelector('div.hideLzl');return lzl==null"
+    "wait":"if(doc==document)return true;let lzl=doc.querySelector('div.hideLzl');if(lzl){lzl.scrollIntoView();return false}else{return true}"
   },
   {
     "name":"搜狗wap",
