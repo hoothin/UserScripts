@@ -28,6 +28,14 @@
     "wait":"if(doc==document)return true;let lzl=doc.querySelector('div.hideLzl');if(lzl){lzl.scrollIntoView();return false}else{return true}"
   },
   {
+    "name":"中国知网",
+    "url":"https://kns\\.cnki\\.net/kns8/defaultresult/index",
+    "nextLink":"a#PageNext",
+    "pageElement":".result-table-list tbody>*",
+    "init":"if(doc){doc.querySelector('#txt_search').value=document.querySelector('#txt_search').value;doc.querySelector('.search-btn').click()}",
+    "wait":1000
+  },
+  {
     "name":"搜狗wap",
     "url":"https://wap\\.sogou\\.com/web/searchList\\.jsp",
     "loadMore":"#ajax_next_page",
