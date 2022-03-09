@@ -43,6 +43,11 @@
     "nextLink":0
   },
   {
+    "name":"图怪兽",
+    "url":"https://818ps\\.com/",
+    "pageElement":"#masonry"
+  },
+  {
     "name":"水木桌面端",
     "url":"https://www\\.mysmth\\.net/nForum/#!article/",
     "nextLink":"a[title='下一页']",
