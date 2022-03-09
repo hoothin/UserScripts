@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.5.6.6
+// @version      1.5.6.7
 // @description  Most compatible Auto pager script ever! Simply auto loading paginated web pages.
 // @description:zh-CN  自动加载并拼接下一分页内容（适用于论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页
 // @description:zh-TW  自動加載並拼接下一分頁內容（適用於論壇、漫畫站、小說站、資訊站、博客等），無需規則支持所有網頁
@@ -168,7 +168,8 @@
                     inputPageNum:"输入页码跳转",
                     enableHistory:"翻页后写入历史记录",
                     initRun:"打开页面后立即尝试翻页，否则滚动至页尾再翻页",
-                    preload:"翻页前预读下一页，加速浏览"
+                    preload:"翻页前预读下一页，加速浏览",
+                    click2ImportRule:"点击下方添加特殊规则库："
                 };
                 break;
             case "zh-TW":
@@ -210,7 +211,8 @@
                     inputPageNum:"輸入頁碼跳轉",
                     enableHistory:"翻頁后寫入歷史記錄",
                     initRun:"打開頁面后立即嘗試翻頁，否則滾動至頁尾再翻頁",
-                    preload:"翻頁前預讀下一頁，加速瀏覽"
+                    preload:"翻頁前預讀下一頁，加速瀏覽",
+                    click2ImportRule:"點擊下方添加特殊規則庫："
                 };
                 break;
             case "ja":
@@ -251,7 +253,8 @@
                     inputPageNum:"ジャンプするページ番号を入力",
                     enableHistory:"ページめくり後の履歴を書く",
                     initRun:"Webページを開いた直後にページをめくる",
-                    preload:"事前に次のページを読む"
+                    preload:"事前に次のページを読む",
+                    click2ImportRule:"以下をクリックして、ルールベースを追加します："
                 };
                 break;
             default:
@@ -292,7 +295,8 @@
                     inputPageNum:"Enter page number to jump",
                     enableHistory:"Write history after page turning",
                     initRun:"Turn pages immediately after opening",
-                    preload:"Preload next page"
+                    preload:"Preload next page",
+                    click2ImportRule:"Click to import base rules:"
                 };
                 break;
         }
@@ -400,6 +404,7 @@
         }
     };
     var rulesData={},ruleUrls,updateDate,configPage="https://github.com/hoothin/UserScripts/tree/master/Pagetual";
+    var ruleImportUrlReg=/greasyfork\.org\/.*scripts\/438684[^\/]*(\/discussions|\/?$)|github\.com\/hoothin\/UserScripts\/(tree\/master\/Pagetual|issues)/i;
     var allOfBody="body>*";
     _GM_registerMenuCommand(i18n("configure"), ()=>{
         _GM_openInTab(configPage,{active:true});
@@ -1346,6 +1351,72 @@
         });
 
         var configCon,insertPos;
+        if(ruleImportUrlReg.test(location.href)){
+            document.addEventListener("click", e=>{
+                if(e.target.tagName=="PRE"){
+                    let nameAttr=e.target.getAttribute("name");
+                    if(nameAttr=="pagetual" || nameAttr=="user-content-pagetual"){
+                        let rules=e.target.innerText.trim().split("\n");
+                        let diff=false;
+                        for(let c=0;c<rules.length;c++){
+                            let urlArr=rules[c].split("|"),url,type=1;
+                            if(urlArr.length==1){
+                                url=urlArr[0].trim();
+                                if(!/^http/.test(url)){
+                                    alert("Wrong url, check again!");
+                                    return;
+                                }
+                            }else if(urlArr.length==2){
+                                type=urlArr[0].trim();
+                                url=urlArr[1].trim();
+                                if(!/^http/.test(url)){
+                                    alert("Wrong url, check again!");
+                                    return;
+                                }
+                            }else{
+                                break;
+                            }
+                            let maxId=0,hasUrl=false;
+                            if(!rulesData.urls){
+                                rulesData.urls=[];
+                                maxId=1;
+                            }else{
+                                rulesData.urls.forEach(u=>{
+                                    if(maxId<u.id){
+                                        maxId=u.id;
+                                    }
+                                    if(u.url==url){
+                                        hasUrl=true;
+                                    }
+                                });
+                                if(hasUrl)break;
+                            }
+                            diff=true;
+                            if(!rulesData.sort)rulesData.sort=[1];
+                            rulesData.urls.push({id:maxId+1,url:url,type:type});
+                            rulesData.sort.unshift(maxId+1);
+                        }
+                        if(!diff)return;
+                        storage.setItem("rulesData", rulesData);
+
+                        if(rulesData.urls)ruleUrls=ruleUrls.concat(rulesData.urls);
+                        if(rulesData.sort){
+                            let urls=[];
+                            rulesData.sort.forEach(id=>{
+                                for(let s=0;s<ruleUrls.length;s++){
+                                    if(id==ruleUrls[s].id){
+                                        urls.push(ruleUrls[s]);
+                                        break;
+                                    }
+                                }
+                            });
+                            ruleUrls=urls;
+                        }
+                        alert("OK");
+                    }
+                }
+            });
+        }
         if(location.href==configPage){
             _GM_addStyle(`
              p>span:nth-child(1),p>span:nth-child(2),p>span:nth-child(3){
@@ -1363,9 +1434,9 @@
               color:red;
              }
             `);
+            document.querySelector("[name='user-content-click2import']").innerText=i18n("click2ImportRule")
             configCon=document.querySelector(".markdown-body");
             insertPos=configCon.querySelector("hr");
-        }else if(location.href==configPage){//2nd todo
         }else return false;
         class Rulebar {
             init(ruleUrl){
@@ -1599,6 +1670,7 @@
                         });
                         if(hasUrl)break;
                     }
+                    if(!rulesData.sort)rulesData.sort=[1];
                     rulesData.urls.push({id:maxId+1,url:url,type:type});
                     rulesData.sort.push(maxId+1);
                     storage.setItem("rulesData", rulesData);
@@ -1695,11 +1767,6 @@
     function initRules(callback) {
         /*0 wedata格式，1 pagetual格式*/
         ruleUrls=[
-            {
-                id:0,
-                url:'https://raw.githubusercontent.com/hoothin/UserScripts/master/Pagetual/pagetualRules.json',
-                type:1
-            },
             {
                 id:1,
                 url:'http://wedata.net/databases/AutoPagerize/items_all.json',
