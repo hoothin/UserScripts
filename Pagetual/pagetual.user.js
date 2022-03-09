@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.5.6.4
+// @version      1.5.6.5
 // @description  Most compatible Auto pager script ever! Simply auto loading paginated web pages.
 // @description:zh-CN  自动加载并拼接下一分页内容（适用于论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页
 // @description:zh-TW  自動加載並拼接下一分頁內容（適用於論壇、漫畫站、小說站、資訊站、博客等），無需規則支持所有網頁
@@ -299,6 +299,7 @@
         return config[name]?config[name].replace("#t#",param):name;
     };
 
+    var noRuleTest=false;
     var enableDebug=true;
     var debug=str=>{
         if(enableDebug){
@@ -547,6 +548,13 @@
         }
 
         getRule(callback) {
+            if(noRuleTest){
+                this.curSiteRule={};
+                this.curSiteRule.url=location.origin+location.pathname;
+                this.curSiteRule.singleUrl=true;
+                callback();
+                return;
+            }
             if(this.curSiteRule && this.curSiteRule.url){
                 return this.curSiteRule;
             }
@@ -754,13 +762,21 @@
                     if(curMaxEle && (isHori || curHeight>maxHeight)){
                         return checkElement(curMaxEle);
                     }
-                    if(!self.curSiteRule.pageElement){
-                        if(ele.tagName=="P" || ele.tagName=="BR")ele=ele.parentNode;
-                        self.curSiteRule.pageElement=self.geneSelector(ele);
-                        if(ele.children.length>1 && ele.tagName!="UL" && curHeight!=0)self.curSiteRule.pageElement+=">*";
-                        debug(self.curSiteRule.pageElement);
+                    if(ele.tagName=="P" || ele.tagName=="BR")ele=ele.parentNode;
+                    self.curSiteRule.pageElement=self.geneSelector(ele);
+                    if(ele.children.length>1){
+                        let middleChild=ele.children[parseInt(ele.children.length/2)];
+                        if((middleChild.style && middleChild.style.position=="absolute" && middleChild.style.left && middleChild.style.top) || ele.tagName=="UL" || curHeight==0){
+                            ele=[ele];
+                        }else{
+                            self.curSiteRule.pageElement+=">*";
+                            ele=ele.children;
+                        }
+                    }else{
+                        ele=[ele];
                     }
-                    return (ele.tagName=="UL"||ele.children.length==1)?[ele]:ele.children;
+                    debug(self.curSiteRule.pageElement);
+                    return ele;
                 }
                 pageElement=checkElement(body);
                 if(pageElement)this.saveCurSiteRule();
@@ -2419,7 +2435,7 @@
         curIframe.sandbox="allow-same-origin allow-scripts allow-popups allow-forms";
         curIframe.frameBorder = '0';
         curIframe.scrolling="no";
-        curIframe.style.cssText = 'display: block; visibility: visible; float: none; clear: both; width: 100%;height:0;background: initial; border: 0px; border-radius: 0px; margin: 0px 0px 2rem; padding: 0px; z-index: 2147483647;';
+        curIframe.style.cssText = 'display: block; visibility: visible; float: none; clear: both; width: 100%;height:100vh;background: initial; border: 0px; border-radius: 0px; margin: 0px 0px 2rem; padding: 0px; z-index: 2147483647;';
         curIframe.addEventListener("load", e=>{
             try{
                 iframeDoc=curIframe.contentDocument || curIframe.contentWindow.document;
