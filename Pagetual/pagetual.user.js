@@ -2435,7 +2435,7 @@
         curIframe.sandbox="allow-same-origin allow-scripts allow-popups allow-forms";
         curIframe.frameBorder = '0';
         curIframe.scrolling="no";
-        curIframe.style.cssText = 'display: block; visibility: visible; float: none; clear: both; width: 100%;height:100vh;background: initial; border: 0px; border-radius: 0px; margin: 0px 0px 2rem; padding: 0px; z-index: 2147483647;';
+        curIframe.style.cssText = 'display: block; visibility: visible; float: none; clear: both; width: 100%;height:0;background: initial; border: 0px; border-radius: 0px; margin: 0px 0px 2rem; padding: 0px; z-index: 2147483647;';
         curIframe.addEventListener("load", e=>{
             try{
                 iframeDoc=curIframe.contentDocument || curIframe.contentWindow.document;
