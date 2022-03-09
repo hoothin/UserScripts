@@ -2,6 +2,11 @@
 ==
 *Pagetual - Perpetual pages. Auto loading paginated web pages for 90% of all web sites !*
 
+<p name="click2import"></p>
+<pre name="pagetual">
+https://raw.githubusercontent.com/hoothin/UserScripts/master/Pagetual/pagetualRules.json
+</pre>
+
 ---
 
 Rules
