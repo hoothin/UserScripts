@@ -48,6 +48,14 @@
     "pageElement":"#masonry"
   },
   {
+    "name":"创客贴",
+    "url":"https://www\\.chuangkit\\.com/",
+    "type":0,
+    "nextLink":"//div[@class='number']/ul/li[@class='item active']/following-sibling::li/a",
+    "pageElement":"//div[@class='ckt-waterfall-content']",
+    "pageAction":"let infos=doc.querySelector('body>script').innerText.match(/designTemplateId:\\d+,designTemplateImageUrl:\".*?\"/g),infoMap;if(infos){infoMap={};infos.forEach(i=>{let id=i.replace(/designTemplateId:(\\d+).*/,'$1');let src=i.replace(/.*designTemplateImageUrl:\"(.+)\"/,'$1');src=JSON.stringify(src);src=src.replace(/\\\\\\\\/g,'\\\\');src=JSON.parse(src);infoMap[id]=src;})};[].forEach.call(eles[0].querySelectorAll('.temp-sec__bottom>div>a'),a=>{let id=a.href.replace(/.*?(\\d+).*/,'$1');let src=infoMap[id];let img=a.parentNode.parentNode.previousElementSibling.querySelector('img');img.src=src;img.style.opacity=1;})"
+  },
+  {
     "name":"水木桌面端",
     "url":"https://www\\.mysmth\\.net/nForum/#!article/",
     "nextLink":"a[title='下一页']",
