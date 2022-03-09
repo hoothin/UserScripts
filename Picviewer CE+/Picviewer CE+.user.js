@@ -4963,14 +4963,19 @@ ImgOps | https://imgops.com/#b#`;
                     flex-flow: wrap;\
                     }\
                     .pv-gallery-maximize-container.pv-gallery-flex-maximize span{\
-                    vertical-align: middle;\
                     width: 19vw;\
                     height: 30vh;\
                     }\
                     .pv-gallery-maximize-container.pv-gallery-flex-maximize img{\
+                    position: relative;\
                     width: unset;\
                     max-height: 100%;\
                     max-width: 100%;\
+                    top: 50%;\
+                    transform: translateY(-50%) scale3d(1, 1, 1);\
+                    }\
+                    .pv-gallery-maximize-container.pv-gallery-flex-maximize img:hover {\
+                    transform: translateY(-50%) scale3d(1.1, 1.1, 1.1);\
                     }\
                     .pv-gallery-maximize-container span{\
                     -moz-page-break-inside: avoid;\
@@ -4984,6 +4989,8 @@ ImgOps | https://imgops.com/#b#`;
                     }\
                     .pv-gallery-maximize-container>.maximizeChild{\
                     display: inline-block;\
+                    vertical-align: middle;\
+                    text-align: center;\
                     }\
                     .pv-gallery-maximize-container>.maximizeChild.selected{\
                     border: 5px solid #ff0000;\
