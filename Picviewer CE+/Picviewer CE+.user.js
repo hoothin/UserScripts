@@ -3977,10 +3977,10 @@ ImgOps | https://imgops.com/#b#`;
             completePages:[location.href],
             href:location.href,
             pageAllReady:false,
-            londingImgNum:0,
+            loadingImgNum:0,
             pageImgReady:function(){
                 var textSpan=this.eleMaps['head-command-nextPage'].querySelector("span");
-                if(this.pageAllReady && this.londingImgNum<=0){
+                if(this.pageAllReady && this.loadingImgNum<=0){
                     textSpan.innerHTML=createHTML("<font color='red'>"+i18n("loadedAll")+"</font>");
                     setTimeout(function(){textSpan.innerHTML=createHTML(i18n("loadAll"));},1500);
                 }
@@ -4050,10 +4050,9 @@ ImgOps | https://imgops.com/#b#`;
                             if (self._dataCache[isrc]) return;
                             self._dataCache[isrc] = true;
                             var nimg = new Image();
-                            self.londingImgNum++;
-                            nimg.src = isrc;
+                            self.loadingImgNum++;
                             nimg.onload=function(){
-                                self.londingImgNum--;
+                                self.loadingImgNum--;
                                 self.pageImgReady();
                                 var result = findPic(this);
                                 if (result) {
@@ -4063,9 +4062,10 @@ ImgOps | https://imgops.com/#b#`;
                                 }
                             };
                             nimg.onerror=function(){
-                                self.londingImgNum--;
+                                self.loadingImgNum--;
                                 self.pageImgReady();
                             };
+                            nimg.src = isrc;
                         });
                         if(prefs.gallery.loadAll && !single)self.pageAction(next);
                         else loadOver();
