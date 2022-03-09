@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.3.8.1
+// @version              2022.3.9.1
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -8485,17 +8485,17 @@ ImgOps | https://imgops.com/#b#`;
             var iPASrc=imgPA? imgPA.href : '';
             //base64字符串过长导致正则匹配卡死浏览器
             var base64Img=/^data:/i.test(img.src);
-            var src,  // 大图地址
-                srcs,  // 备用的大图地址
-                type,  // 类别
+            var src, // 大图地址
+                srcs, // 备用的大图地址
+                type, // 类别
                 noActual = false, //没有原图
-                imgSrc = img.currentSrc||img.dataset.lazySrc||img.src,  // img 节点的 src
+                imgSrc = img.currentSrc||img.dataset.lazySrc||img.src, // img 节点的 src
                 xhr,
-                description;  // 图片的注释
+                description; // 图片的注释
             var imgCStyle=unsafeWindow.getComputedStyle(img);
             var imgCS={
-                h: parseFloat(imgCStyle.height)||img.height,
-                w: parseFloat(imgCStyle.width)||img.width,
+                h: parseFloat(imgCStyle.height)||img.height||img.offsetHeight,
+                w: parseFloat(imgCStyle.width)||img.width||img.offsetWidth,
             };
             var imgAS={//实际尺寸。
                 h:img.naturalHeight||imgCS.h,
