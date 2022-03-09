@@ -153,6 +153,7 @@
     "nextLink":"id('pnnext')|id('navbar navcnt nav')//td[span]/following-sibling::td[1]/a|id('nn')/parent::a",
     "pageElement":"id('rso')/div|id('center_col')/style[contains(.,'relative')]|id('search')/div/div/style[1]",
     "type":0,
+    "action":1,
     "pageNum":"&start={10*($p-1)}",
     "url":"^https?://[^./]+\\.google(?:\\.[^./]{2,3}){1,2}/(?:c(?:se|ustom)|search|webhp|m|#)"
   },
