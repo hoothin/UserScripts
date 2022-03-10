@@ -8,6 +8,22 @@
     "css":".javascript-hide {display: inline-block !important;}"
   },
   {
+    "name":"Baidu",
+    "css":"span.c-img-radius-large.c-img-border{pointer-events: none}div.c-img-radius-large.compatible_rxApe:not(.c-img3){padding-bottom:unset}",
+    "insertPos":1,
+    "nextLink":"//*[@id=\"page\"]/div/a[contains(text(),'下一页')]",
+    "pageElement":"//*[@id=\"content_left\"]/*",
+    "type":0,
+    "pageNum":"&pn={10*($p-1)}",
+    "url":"^https://www\\.baidu\\.com/(s|baidu)"
+  },
+  {
+    "name":"手机百度",
+    "url":"^https://(m|www|wap)\\.baidu\\.com/",
+    "nextLink":"a.new-nextpage-only,a.new-nextpage",
+    "pageElement":"#results>.result"
+  },
+  {
     "name":"百度贴吧列表",
     "action":1,
     "pageBar":"pageBar.classList.add('j_thread_list');pageBar.dataset.field='{}'",
@@ -28,8 +44,33 @@
     "wait":"if(doc==document)return true;let lzl=doc.querySelector('div.hideLzl');if(lzl){lzl.scrollIntoView();return false}else{return true}"
   },
   {
+    "name":"Bing",
+    "action":1,
+    "url":"^https://.*\\.bing\\.com/",
+    "nextLink":"a[title='Next page']",
+    "pageElement":"ol#b_results>li",
+    "wait":"if(doc==document)return true;doc.documentElement.scrollTop=99999;return doc.querySelector('a[title=\\'Next page\\']')"
+  },
+  {
+    "name":"搜狗wap",
+    "url":"^https://wap\\.sogou\\.com/web/searchList\\.jsp",
+    "loadMore":"#ajax_next_page",
+    "nextLink":0
+  },
+  {
+    "name":"秀人网",
+    "url":"^https://www\\.jpmn8\\.com/",
+    "pageElement":"p>img"
+  },
+  {
+    "name":"雪球",
+    "url":"^https://xueqiu\\.com/",
+    "pageElement":".status-list>article",
+    "nextLink":"a.pagination__next"
+  },
+  {
     "name":"中国知网",
-    "url":"https://kns\\.cnki\\.net/kns8/defaultresult/index",
+    "url":"^https://kns\\.cnki\\.net/kns8/defaultresult/index",
     "nextLink":"a#PageNext",
     "pageElement":".result-table-list tbody>*",
     "init":"if(doc){let fn1=window.BriefExtend.setFullTextState;window.BriefExtend.setFullTextState=()=>{fn1();win.$('#PageNext').attr('data-curPage',window.$('#PageNext').attr('data-curPage'))}; win.BriefParam._getSearchPaperArgModel=(isSearch, cPage)=>{return window.BriefParam._getSearchPaperArgModel(isSearch, (!!cPage ? cPage : win.BriefParam._getCurPage()))};doc.querySelector('#txt_search').value=document.querySelector('#txt_search').value;doc.querySelector('.search-btn').click()}",
@@ -37,19 +78,13 @@
     "wait":1000
   },
   {
-    "name":"搜狗wap",
-    "url":"https://wap\\.sogou\\.com/web/searchList\\.jsp",
-    "loadMore":"#ajax_next_page",
-    "nextLink":0
-  },
-  {
     "name":"图怪兽",
-    "url":"https://818ps\\.com/",
+    "url":"^https://818ps\\.com/",
     "pageElement":"#masonry"
   },
   {
     "name":"创客贴",
-    "url":"https://www\\.chuangkit\\.com/",
+    "url":"^https://www\\.chuangkit\\.com/",
     "type":0,
     "nextLink":"//div[@class='number']/ul/li[@class='item active']/following-sibling::li/a",
     "pageElement":"//div[@class='ckt-waterfall-content']",
@@ -57,18 +92,18 @@
   },
   {
     "name":"水木桌面端",
-    "url":"https://www\\.mysmth\\.net/nForum/#!article/",
+    "url":"^https://www\\.mysmth\\.net/nForum/#!article/",
     "nextLink":"a[title='下一页']",
     "pageElement":"div.b-content"
   },
   {
     "name":"水木移动端",
-    "url":"https://m\\.mysmth\\.net/article/",
+    "url":"^https://m\\.mysmth\\.net/article/",
     "pageElement":"#m_main>ul.list"
   },
   {
     "name":"煎蛋吐槽",
-    "url":"https?://jandan\\.net/",
+    "url":"^https?://jandan\\.net/",
     "nextLink":"a.previous-comment-page",
     "pageElement":"ol.commentlist>li",
     "pageAction":"[].forEach.call(eles,e=>{let tucao=e.querySelector('a.tucao-btn');if(tucao)tucao.onclick=e=>{ var n = $(e.currentTarget); var m = n.data('id'); var o = n.closest('li'); var l = o.find('div.jandan-tucao'); if (l.length) { l.slideToggle('fast') } else { tucao_load_content(o, m) } };})"
@@ -82,7 +117,7 @@
   },
   {
     "name":"斗鱼",
-    "url":"https://www\\.douyu\\.com/directory/",
+    "url":"^https://www\\.douyu\\.com/directory/",
     "nextLink":"li.dy-Pagination-next[aria-disabled='false']",
     "pageElement":"ul.layout-Cover-list",
     "wait":1000,
@@ -90,7 +125,7 @@
   },
   {
     "name":"站酷",
-    "url":"https://www\\.zcool\\.com\\.cn/search/content",
+    "url":"^https://www\\.zcool\\.com\\.cn/search/content",
     "action":2,
     "nextLinkByUrl":["(.*/content\\?&?word=[^&]+)(?:&page=|$)(\\d*)","$1&page={($2.0||1)+1}"]
   },
@@ -103,7 +138,7 @@
   },
   {
     "name":"佛弟子文库",
-    "url":"https?://www\\.fodizi\\.net/",
+    "url":"^https?://www\\.fodizi\\.net/",
     "nextLink":"a.current+a",
     "pageElement":"div.wrap>*:not(.page)"
   },
@@ -142,7 +177,7 @@
   },
   {
     "name":"喜马拉雅",
-    "url":"https://www\\.ximalaya\\.com/",
+    "url":"^https://www\\.ximalaya\\.com/",
     "nextLink":".page-next>a",
     "wait":1000,
     "action":2,
@@ -159,7 +194,7 @@
   },
   {
     "name":"方正字库",
-    "url":"https://www\\.foundertype\\.com/",
+    "url":"^https://www\\.foundertype\\.com/",
     "nextLink":"#page>a.on+a",
     "pageElement":"#fonPar,#chinese_ft1",
     "action":1
@@ -174,7 +209,7 @@
   },
   {
     "name":"bilibili space",
-    "url":"https://space\\.bilibili\\.com/",
+    "url":"^https://space\\.bilibili\\.com/",
     "sandbox":false,
     "pageElement":"ul.cube-list>li",
     "nextLink":".be-pager-next,.next-page",
@@ -231,7 +266,7 @@
   },
   {
     "name":"动漫啦",
-    "url":"https://www\\.dongman\\.la/manhua/chapter/",
+    "url":"^https://www\\.dongman\\.la/manhua/chapter/",
     "pageElement":".chapter-images img",
     "nextLink":".mdui-bottom-nav>a+a",
     "init":"let is=document.querySelectorAll('.chapter-images img'),j=document.querySelector('.lazyBox');is.forEach(i=>{i.src=i.dataset.srcset;j.appendChild(i);})",
@@ -355,22 +390,6 @@
     "pageAction":"[].forEach.call(eles[0].querySelectorAll('[loading=lazy]'),img=>{img.src=img.src.replace('w=54&thumb=true','w=230&thumb=false');img.classList.remove('psw-blur')});"
   },
   {
-    "name":"Baidu",
-    "css":"span.c-img-radius-large.c-img-border{pointer-events: none}div.c-img-radius-large.compatible_rxApe:not(.c-img3){padding-bottom:unset}",
-    "insertPos":1,
-    "nextLink":"//*[@id=\"page\"]/div/a[contains(text(),'下一页')]",
-    "pageElement":"//*[@id=\"content_left\"]/*",
-    "type":0,
-    "pageNum":"&pn={10*($p-1)}",
-    "url":"^https://www\\.baidu\\.com/(s|baidu)"
-  },
-  {
-    "name":"手机百度",
-    "url":"https://(m|www|wap)\\.baidu\\.com/",
-    "nextLink":"a.new-nextpage-only,a.new-nextpage",
-    "pageElement":"#results>.result"
-  },
-  {
     "name":"58pic",
     "url":"^https://www\\.58pic\\.com/tupian/",
     "css":".card-lazy{display:none}.pagetual_pageBar{margin-bottom: 20px!important;}",
@@ -423,7 +442,7 @@
   },
   {
     "name":"淮安新闻网",
-    "url":"http://www\\.hynews\\.net/",
+    "url":"^http://www\\.hynews\\.net/",
     "loadMore":"#_more"
   },
   {
