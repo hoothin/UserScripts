@@ -8,7 +8,7 @@
 // @namespace    https://github.com/hoothin/UserScripts/tree/master/Easy%20offline
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Base64/0.2.0/base64.min.js
-// @version      1.9.18
+// @version      1.9.19
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -1268,7 +1268,17 @@
         }
         if(/greasyfork\.org\/.*scripts\/22590[^\/]*(\/discussions|\/?$)|github\.com\/hoothin\/UserScripts\/(tree\/master\/Easy%20offline|issues)/.test(location.href)){
             $("pre").attr("contentEditable", true);
-            $("pre").click(e=>{
+            $("pre").mousedown(e=>{
+                let selObj=document.getSelection().anchorNode;
+                if(selObj && selObj.parentNode){
+                    selObj=selObj.parentNode;
+                    if(selObj.tagName=="CODE"){
+                        selObj=selObj.parentNode;
+                    }
+                    if(selObj==e.currentTarget && selObj.tagName=="PRE"){
+                        return;
+                    }
+                }
                 if(!window.confirm(i18n("importOrNot")))return;
                 let targetText=e.target.innerText.trim();
                 if(e.target.childNodes.length==1 && targetText.indexOf("@@")!=-1){
