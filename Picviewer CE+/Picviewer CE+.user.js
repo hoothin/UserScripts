@@ -4964,7 +4964,7 @@ ImgOps | https://imgops.com/#b#`;
                     flex-flow: wrap;\
                     }\
                     .pv-gallery-maximize-container.pv-gallery-flex-maximize span{\
-                    width: 19vw;\
+                    width: 18.8vw;\
                     height: 30vh;\
                     }\
                     .pv-gallery-maximize-container.pv-gallery-flex-maximize img{\
