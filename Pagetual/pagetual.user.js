@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.5.6.9
+// @version      1.5.6.10
 // @description  Most compatible Auto pager script ever! Simply auto loading paginated web pages.
 // @description:zh-CN  自动加载并拼接下一分页内容（适用于论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页
 // @description:zh-TW  自動加載並拼接下一分頁內容（適用於論壇、漫畫站、小說站、資訊站、博客等），無需規則支持所有網頁
@@ -2366,7 +2366,7 @@
 
     var emuIframe;
     function emuPage(callback){
-        let orgPage,curPage,iframeDoc,times=0,loadmoreBtn,loadmoreEnd=false,waitTimes=10;
+        let orgPage=null,curPage,iframeDoc,times=0,loadmoreBtn,loadmoreEnd=false,waitTimes=10;
         function checkPage(){
             if(isPause)return;
             try{
@@ -2457,9 +2457,15 @@
                 callback(false, false);
                 return;
             }
-            let eles=ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView, true),checkItem=eles;
-            if(eles && eles.length>0 && eles[0].tagName=="UL")checkItem=eles[0].children;
-            if(!eles || eles.length==0 || orgPage == checkItem[parseInt(checkItem.length/2)] || (checkEval && !checkEval(iframeDoc))){
+            let eles=ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView, true),checkItem;
+            if(eles && eles.length>0){
+                checkItem=eles;
+                if(eles[0].tagName=="UL"){
+                    checkItem=eles[0].children;
+                }
+                checkItem=checkItem[parseInt(checkItem.length/2)];
+            }
+            if(!checkItem || orgPage == checkItem || (checkEval && !checkEval(iframeDoc))){
                 setTimeout(()=>{
                     checkPage();
                 },waitTime);
@@ -2468,6 +2474,7 @@
             }
         }
         if(!emuIframe){
+            let loaded=false;
             emuIframe = document.createElement('iframe');
             emuIframe.name = 'pagetual-iframe';
             if(ruleParser.curSiteRule.sandbox!=false){
@@ -2495,6 +2502,8 @@
                             debug(e);
                         }
                     }
+                    if(loaded)return;
+                    loaded=true;
                     checkPage();
                 },500);
             });
