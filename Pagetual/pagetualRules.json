@@ -203,9 +203,10 @@
     "name":"bilibili search",
     "action":1,
     "url":"^https://search\\.bilibili\\.com",
-    "pageElement":"ul>li.video-item,div.video-list.row>*",
+    "pageElement":"ul>li.video-item,div.video-list.row>*:not(.to_hide_xs)",
     "nextLinkByUrl":["(.*keyword=.*?)(?:&page=|$)(\\d*).*","$1&page={($2.0||1)+1}"],
-    "sandbox":false
+    "sandbox":false,
+    "wait":"return doc.querySelector('.bili-video-card__wrap')"
   },
   {
     "name":"bilibili space",
