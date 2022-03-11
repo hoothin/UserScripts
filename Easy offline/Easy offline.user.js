@@ -8,7 +8,7 @@
 // @namespace    https://github.com/hoothin/UserScripts/tree/master/Easy%20offline
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Base64/0.2.0/base64.min.js
-// @version      1.9.19
+// @version      1.9.20
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -415,6 +415,110 @@
                 return this.url+offUrl.replace("magnet:?xt=urn:btih:","").replace(/&.*/,"");
             },
             bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAA9lBMVEUAAACgoqOipKUAAAC4ubq1traXl5jX19g9PT4GBga2t7ixsrOur7Cmp6jMzM1+f39ZWVpnZ2eChIXMzc3BwcKvsrLGxsacnZ3f399zdHS9vr61trZZW1upq6vIysq7vb2nqKliZGTS09O6vLzg4OC2uLhQUVHi4uK+v79OTk4hISHT1NQZGRnf4OCPkpKsra3KysxmZ2d+f3/y8vOUlZW+vr+2tridnp/Z2dmAgYJ4enptbm5YWVn39/fv7/DDw8Td3d7U1dXU1NTOztC4ubuoqamlpaWcnJyYmJp6fHxwcXFTVVX29/bHyMnHx8e3t7qgoaGHiYm1AxJpAAAAL3RSTlMAHhgF4NbW2jQU4uDg3sybVDUkHhcF6Ojk5ODc2dfJycPDra17ezkuLiUlIRUREf6sWL0AAAC0SURBVBjTjY9HEoJAAAQXVwVzAMw5Z5YMgoBizv7/M7JwoLw5t+lD1wzAYVcEPaeXLAgyHvTazTpJtvrDCe5M1nUReiiK/ERZxgNEVLYdy1GFz1uuET54IfGucTq/5qIYRGIKEjcaJ3ggFsEgrp/tnSwZJi/EMSDSqqQeJeNmXk+pwLFHlrg9CPzl16H/7ygmQ0eyCACkMuGODAUBTORzHbJSKlcb3Vw+AfE9uJgWCiNq5rcvfNwgjdumYdQAAAAASUVORK5CYII="
+        },
+        PikPak:{
+            regex:/mypikpak\.com/,
+            url:"http://user.mypikpak.com/",
+            bgColor:"2265ff",
+            noTxt:true,
+            linkRegExp: /^magnet:\?xt|^PikPak:\/\/|\.(torrent|mp4|mp3|rar|7z|zip|rmvb|mkv|avi|iso)$/i,
+            directUrl:function(offUrl){
+                //此段代码引用自 mumuchenchen 大佬的 PikPak 保存助手 https://greasyfork.org/scripts/435219
+                //mumuchenchen 的第三方 Pikpak 网页客户端 推荐大家前往 fork https://github.com/mumuchenchen/pikpak
+                storage.getItem("pikpakUserInfo",info=>{
+                    var userName,userPass;
+                    if(!info){
+                        userName=prompt("userName");
+                        if(!userName)return;
+                        userPass=prompt("userPass");
+                        if(!userPass)return;
+                        info={userName:userName,userPass:userPass};
+                        storage.setItem("pikpakUserInfo",info);
+                    }
+                    var postUrl=()=>{
+                        let postData;
+                        if(offUrl.indexOf('PikPak://') === 0) {
+                            const urlData = offUrl.substring(9).split('|')
+                            postData = {
+                                kind: "drive#file",
+                                name: urlData[0],
+                                size: urlData[1],
+                                hash: urlData[2],
+                                upload_type: "UPLOAD_TYPE_RESUMABLE",
+                                objProvider: {
+                                    provider: "UPLOAD_TYPE_UNKNOWN"
+                                }
+                            }
+                        } else {
+                            postData = {
+                                kind: "drive#file",
+                                name: "",
+                                upload_type: "UPLOAD_TYPE_URL",
+                                url: {
+                                    url: offUrl
+                                },
+                                params: {"from":"file"},
+                                folder_type: "DOWNLOAD"
+                            }
+                        }
+                        _GM_xmlhttpRequest({
+                            method: 'POST',
+                            url: 'https://api-drive.mypikpak.com/drive/v1/files',
+                            data: JSON.stringify(postData),
+                            headers: {
+                                authorization: info.loginInfo.token_type + ' ' + info.loginInfo.access_token
+                            },
+                            onload: (res) => {
+                                if(res.status === 200) {
+                                    alert("ok");
+                                } else if(res.status === 401) {
+                                    alert("401");
+                                } else if(res.status === 400) {
+                                    const msg = JSON.parse(res.responseText).error_description;
+                                    alert(msg);
+                                } else if(res.status === 403) {
+                                    const msg = JSON.parse(res.responseText).error_description;
+                                    alert(msg);
+                                }
+                            }
+                        })
+                    };
+                    if(!info.loginInfo || info.loginInfo.expires < new Date().getTime() + 1000 * 10 * 60){
+                        _GM_xmlhttpRequest({
+                            method: 'POST',
+                            url: 'https://user.mypikpak.com/v1/auth/signin',
+                            data: JSON.stringify({
+                                "client_id": "YNxT9w7GMdWvEOKa",
+                                "client_secret": "dbw2OtmVEeuUvIptb1Coyg",
+                                "password": userPass,
+                                "username": userName
+                            }),
+                            headers: {
+                                'user-agent': 'accessmode/ devicename/Netease_Mumu appname/android-com.pikcloud.pikpak cmd/login appid/ action_type/ clientid/YNxT9w7GMdWvEOKa deviceid/56e000d71f4660700ca974f2305171c5 refresh_token/ grant_type/ networktype/WIFI devicemodel/MuMu accesstype/ sessionid/ osversion/6.0.1 datetime/1636364470779 sdkversion/1.0.1.101600 protocolversion/200 clientversion/ providername/NONE clientip/ session_origin/ devicesign/div101.56e000d71f4660700ca974f2305171c5b94c3d4196a9dd74e49d7710a7af873d platformversion/10 usrno/null'
+                            },
+                            onload: (res) => {
+                                if(res.status === 200) {
+                                    info.loginInfo=JSON.parse(res.responseText);
+                                    storage.setItem("pikpakUserInfo",info);
+                                    postUrl();
+                                } else if(res.status === 401) {
+                                    alert("401");
+                                } else if(res.status === 400) {
+                                    const msg = JSON.parse(res.responseText).error_description;
+                                    alert(msg);
+                                } else if(res.status === 403) {
+                                    const msg = JSON.parse(res.responseText).error_description;
+                                    alert(msg);
+                                }
+                            }
+                        })
+                    }else{
+                        postUrl();
+                    }
+                });
+                return false;
+            },
+            bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAYFBMVEUAAAArbP5MdNFMdNIrbP4sbP1QdctQdcwvbv////8dYf8sbP9smP/09/8qaf/V4f8iZf/u8/+lwP+duv+UtP+PsP9hkP92n/9nlP/K2v/F1v+7z/+Ytv9Wif9Aef91nv9e7pgKAAAACHRSTlMA+puT/PWHhQBB7XEAAACQSURBVBjTTY8JCsQwCEWdrjFm37p37n/LMdAJfSTgf4IoAPQf8fDpgek4N9NxnwQZJx0/w+UMNd/XV6nluqsBQbRp79Xqvd7ICBCuaHuElMJhdXEspMKGko/YA2LYXyKuiGt8Ca3rfwm052nbjILV1IyFBZFZck4xppwXQ8Srk2wQzXzcIBpDB8w0/vM4AfwACl4LKjajMX0AAAAASUVORK5CYII="
         }
     };
     var enableUrl = 'a[href^="magnet"],[href^="ed2k://|file"],[href$=".torrent"],[href$=".mp4"],[href$=".rar"],[href$=".7z"],[href$=".zip"],[href$=".rmvb"],[href$=".mkv"],[href$=".avi"],[href$=".iso"]';
@@ -1166,7 +1270,7 @@
                                     let postData=JSON.stringify(urlArgs(url[2]));
                                     url=url[1];
                                     _GM_xmlhttpRequest({
-                                        method: "POST", url, data: postData,
+                                        method: "POST", url: url, data: postData,
                                         onload: (d) => {
                                             _GM_notification(i18n("postOver")+d.statusText);
                                         },
@@ -1177,8 +1281,11 @@
                                             _GM_notification(i18n("postError")+e.toString());
                                         }
                                     });
-                                }else{
+                                    e.preventDefault();
+                                }else if(url){
                                     window.open(/:\/\//.test(url)?url:("http://"+url));
+                                }else{
+                                    e.preventDefault();
                                 }
                             }
                         }
@@ -1197,7 +1304,7 @@
                             let postData=JSON.stringify(urlArgs(url[2]));
                             url=url[1];
                             _GM_xmlhttpRequest({
-                                method: "POST", url, data: postData,
+                                method: "POST", url: url, data: postData,
                                 onload: (d) => {
                                     _GM_notification(i18n("postOver")+d.statusText);
                                 },
@@ -1208,8 +1315,11 @@
                                     _GM_notification(i18n("postError")+e.toString());
                                 }
                             });
-                        }else{
+                            e.preventDefault();
+                        }else if(url){
                             offNode.attr('href', /:\/\//.test(url)?url:("http://"+url));
+                        }else{
+                            e.preventDefault();
                         }
                     }
                 }else{
