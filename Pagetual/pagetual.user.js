@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.5.6.10
+// @version      1.5.6.11
 // @description  Most compatible Auto pager script ever! Simply auto loading paginated web pages.
 // @description:zh-CN  自动加载并拼接下一分页内容（适用于论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页
 // @description:zh-TW  自動加載並拼接下一分頁內容（適用於論壇、漫畫站、小說站、資訊站、博客等），無需規則支持所有網頁
@@ -828,12 +828,24 @@
                 curPage.querySelector("a[title='Next page']")||
                 curPage.querySelector("a.pageright")||
                 curPage.querySelector("a#rightFix")||
-                curPage.querySelector("a.next")||
                 curPage.querySelector("a#next")||
                 curPage.querySelector(".next>a")||
                 curPage.querySelector(".next>button")||
                 curPage.querySelector("a[alt=next]")||
                 curPage.querySelector("[title=next]");
+            if(!next){
+                let nexts=curPage.querySelectorAll("a.next");
+                if(nexts.length>0){
+                    if(nexts.length==1){
+                        next=nexts[0];
+                        if(/^([上前首][一1]?[页頁张張]|previous(\s*page)?\s*›?$|前のページ)/i.test(next.innerText.trim())){
+                            next=null;
+                        }
+                    }else{
+                        next=nexts[nexts.length-1];
+                    }
+                }
+            }
             if(next && (!next.href || /^javascript:/.test(next.href))){
                 jsNext=next;
                 next=null;
@@ -1297,7 +1309,7 @@
             this.pageDoc=doc;
             this.curUrl=url;
             let nextLink=this.getNextLink(doc);
-            if(curPage==1 && !tried && !nextLink && this.curSiteRule.singleUrl && this.curSiteRule.pageElement && this.curSiteRule.pageElement!=allOfBody){
+            if(curPage==1 && !tried && !nextLink && this.curSiteRule.singleUrl && this.curSiteRule.pageElement && this.curSiteRule.action!=0){
                 this.curSiteRule.action=1;
                 this.curUrl=location.href;
                 return false;
@@ -1949,11 +1961,12 @@
                     }catch(e){
                         debug("Stop as cors");
                         //isPause=true;
-                        ruleParser.curSiteRule.pageElement=allOfBody;
+                        if(!ruleParser.curSiteRule.pageElement)ruleParser.curSiteRule.pageElement=allOfBody;
                         ruleParser.curSiteRule.action=0;
                         ruleParser.getInsert(true);
                         ruleParser.nextLinkHref=url;
                         callback(false, false);
+                        nextPage();
                     }
                     document.body.removeChild(iframe);
                 }
