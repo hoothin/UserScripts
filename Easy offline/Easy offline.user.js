@@ -1275,10 +1275,10 @@
                                             _GM_notification(i18n("postOver")+d.statusText);
                                         },
                                         onerror: (e) => {
-                                            _GM_notification(i18n("postError")+e.toString());
+                                            _GM_notification(i18n("postError")+(e.statusText||e.error));
                                         },
                                         ontimeout: (e) => {
-                                            _GM_notification(i18n("postError")+e.toString());
+                                            _GM_notification(i18n("postError")+(e.statusText||e.error));
                                         }
                                     });
                                     e.preventDefault();
@@ -1309,10 +1309,10 @@
                                     _GM_notification(i18n("postOver")+d.statusText);
                                 },
                                 onerror: (e) => {
-                                    _GM_notification(i18n("postError")+e.toString());
+                                    _GM_notification(i18n("postError")+(e.statusText||e.error));
                                 },
                                 ontimeout: (e) => {
-                                    _GM_notification(i18n("postError")+e.toString());
+                                    _GM_notification(i18n("postError")+(e.statusText||e.error));
                                 }
                             });
                             e.preventDefault();
