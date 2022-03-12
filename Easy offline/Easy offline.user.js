@@ -8,7 +8,7 @@
 // @namespace    https://github.com/hoothin/UserScripts/tree/master/Easy%20offline
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Base64/0.2.0/base64.min.js
-// @version      1.9.20
+// @version      1.9.21
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -426,11 +426,10 @@
                 //此段代码引用自 mumuchenchen 大佬的 PikPak 保存助手 https://greasyfork.org/scripts/435219
                 //mumuchenchen 的第三方 Pikpak 网页客户端 推荐大家前往 fork https://github.com/mumuchenchen/pikpak
                 storage.getItem("pikpakUserInfo",info=>{
-                    var userName,userPass;
                     if(!info){
-                        userName=prompt("userName");
+                        let userName=prompt("userName");
                         if(!userName)return;
-                        userPass=prompt("userPass");
+                        let userPass=prompt("userPass");
                         if(!userPass)return;
                         info={userName:userName,userPass:userPass};
                         storage.setItem("pikpakUserInfo",info);
@@ -470,9 +469,12 @@
                             },
                             onload: (res) => {
                                 if(res.status === 200) {
-                                    alert("ok");
+                                    alert("OK");
                                 } else if(res.status === 401) {
-                                    alert("401");
+                                    info.loginInfo=null;
+                                    storage.setItem("pikpakUserInfo",info);
+                                    const msg = JSON.parse(res.responseText).error_description;
+                                    alert(msg);
                                 } else if(res.status === 400) {
                                     const msg = JSON.parse(res.responseText).error_description;
                                     alert(msg);
@@ -490,8 +492,8 @@
                             data: JSON.stringify({
                                 "client_id": "YNxT9w7GMdWvEOKa",
                                 "client_secret": "dbw2OtmVEeuUvIptb1Coyg",
-                                "password": userPass,
-                                "username": userName
+                                "password": info.userPass,
+                                "username": info.userName
                             }),
                             headers: {
                                 'user-agent': 'accessmode/ devicename/Netease_Mumu appname/android-com.pikcloud.pikpak cmd/login appid/ action_type/ clientid/YNxT9w7GMdWvEOKa deviceid/56e000d71f4660700ca974f2305171c5 refresh_token/ grant_type/ networktype/WIFI devicemodel/MuMu accesstype/ sessionid/ osversion/6.0.1 datetime/1636364470779 sdkversion/1.0.1.101600 protocolversion/200 clientversion/ providername/NONE clientip/ session_origin/ devicesign/div101.56e000d71f4660700ca974f2305171c5b94c3d4196a9dd74e49d7710a7af873d platformversion/10 usrno/null'
@@ -502,7 +504,10 @@
                                     storage.setItem("pikpakUserInfo",info);
                                     postUrl();
                                 } else if(res.status === 401) {
-                                    alert("401");
+                                    info.loginInfo=null;
+                                    storage.setItem("pikpakUserInfo",info);
+                                    const msg = JSON.parse(res.responseText).error_description;
+                                    alert(msg);
                                 } else if(res.status === 400) {
                                     const msg = JSON.parse(res.responseText).error_description;
                                     alert(msg);
