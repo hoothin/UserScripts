@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.5.6.15
+// @version      1.5.6.16
 // @description  Most compatible Auto Pager script ever. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动加载并拼接下一分页内容（适用于论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页
 // @description:zh-TW  自動加載並拼接下一分頁內容（適用於論壇、漫畫站、小說站、資訊站、博客等），無需規則支持所有網頁
@@ -170,7 +170,8 @@
                     enableHistory:"翻页后写入历史记录",
                     initRun:"打开页面后立即尝试翻页，否则滚动至页尾再翻页",
                     preload:"翻页前预读下一页，加速浏览",
-                    click2ImportRule:"点击下方添加特殊规则库，添加后再行更新："
+                    click2ImportRule:"点击下方添加特殊规则库，添加后再行更新：",
+                    forceAllBody:"是否拼接整个页面？"
                 };
                 break;
             case "zh-TW":
@@ -213,7 +214,8 @@
                     enableHistory:"翻頁后寫入歷史記錄",
                     initRun:"打開頁面后立即嘗試翻頁，否則滾動至頁尾再翻頁",
                     preload:"翻頁前預讀下一頁，加速瀏覽",
-                    click2ImportRule:"點擊下方添加特殊規則庫，添加後再行更新："
+                    click2ImportRule:"點擊下方添加特殊規則庫，添加後再行更新：",
+                    forceAllBody:"是否拼接整個頁面？"
                 };
                 break;
             case "ja":
@@ -255,7 +257,8 @@
                     enableHistory:"ページめくり後の履歴を書く",
                     initRun:"Webページを開いた直後にページをめくる",
                     preload:"事前に次のページを読む",
-                    click2ImportRule:"以下をクリックして、ルールベースを追加します："
+                    click2ImportRule:"以下をクリックして、ルールベースを追加します：",
+                    forceAllBody:"フルページ埋め込み？"
                 };
                 break;
             default:
@@ -297,7 +300,8 @@
                     enableHistory:"Write history after page turning",
                     initRun:"Turn pages immediately after opening",
                     preload:"Preload next page for speeding up",
-                    click2ImportRule:"Click to import base rules link, then click to update rules:"
+                    click2ImportRule:"Click to import base rules link, then click to update rules:",
+                    forceAllBody:"Join full body of page?"
                 };
                 break;
         }
@@ -1979,8 +1983,14 @@
                 initView();
                 let isJs=/^(javascript|#)/.test(ruleParser.nextLinkHref.replace(location.href,""));
                 if(!isJs){
-                    _GM_registerMenuCommand(i18n(forceState==2?"cancelForceIframe":"forceIframe"), ()=>{
-                        storage.setItem("forceState_"+location.host, (forceState==2?"":2));
+                    let inForce=(forceState == 2 || forceState == 3);
+                    _GM_registerMenuCommand(i18n(inForce?"cancelForceIframe":"forceIframe"), ()=>{
+                        if(inForce){
+                            storage.setItem("forceState_"+location.host, "");
+                        }else{
+                            let _state=confirm(i18n("forceAllBody"))?2:3;
+                            storage.setItem("forceState_"+location.host, _state);
+                        }
                         location.reload();
                     });
                 }
@@ -2188,6 +2198,9 @@
             (example.previousElementSibling && example.previousElementSibling.tagName=="TR") ||
             (example.previousElementSibling && example.previousElementSibling.tagName=="TBODY");
         let inLi=example.tagName=="LI" || (example.previousElementSibling && example.previousElementSibling.tagName=="LI");
+        if(forceState==2){
+            inTable=inLi=false;
+        }
         let pageBar=document.createElement(inTable?"tr":(inLi?"li":"div"));
         let upSpan=document.createElement("span");
         let downSpan=document.createElement("span");
@@ -2623,7 +2636,7 @@
                     }catch(e){
                         debug(e);
                     }
-                }else if(ruleParser.curSiteRule.action==1 && !isJs){
+                }else if((forceState==3||ruleParser.curSiteRule.action==1) && !isJs){
                     requestFromIframe(nextLink, (doc, eles)=>{
                         loadPageOver();
                         if(eles){
