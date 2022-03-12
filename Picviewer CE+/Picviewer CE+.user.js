@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.3.11.1
+// @version              2022.3.12.1
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -2737,8 +2737,8 @@ ImgOps | https://imgops.com/#b#`;
                                 if(itemW>sizeInputW.max)sizeInputW.max=itemW;
                                 if(itemH>sizeInputH.max)sizeInputH.max=itemH;
                             }else if(!item.noActual){
-                                itemW=99999;
-                                itemH=99999;
+                                //itemW=99999;
+                                //itemH=99999;
                             }
                             if(itemW<sizeInputW.value || itemH<sizeInputH.value || !urlReg.test(item.src) || (self.lockMaxSize && (itemW>self.lockMaxSize.w || itemH>self.lockMaxSize.h))){
                                 spanMark.style.display="none";
@@ -2754,15 +2754,11 @@ ImgOps | https://imgops.com/#b#`;
                 var maxSizeH=0,minSizeH=0,maxSizeW=0,minSizeW=0;
                 var sizeInputH=this.gallery.querySelector("#minsizeH");
                 var sizeInputW=this.gallery.querySelector("#minsizeW");
+                let self=this;
                 this.data.forEach(function(item) {
                     if(!item)return;
                     var itemW=item.sizeW,itemH=item.sizeH;
-                    var spanMark;
-                    try{
-                        spanMark=document.querySelector('span.pv-gallery-sidebar-thumb-container[data-src="'+item.src+'"]');
-                    }catch(e){
-                        spanMark=document.querySelector("span.pv-gallery-sidebar-thumb-container[data-src='"+item.src+"']");
-                    }
+                    var spanMark=self._spanMarkPool[item.imgSrc];
                     if(spanMark){
                         var naturalSize=spanMark.dataset.naturalSize;
                         if(naturalSize){
@@ -3554,18 +3550,25 @@ ImgOps | https://imgops.com/#b#`;
                 var sizeInputW=this.gallery.querySelector("#minsizeW");
                 var thumbnails=this.eleMaps['sidebar-thumbnails-container'];
                 var selectData=this.data[index];
-                if(selectData && selectData.noActual){
-                    if(selectData.sizeW<sizeInputW.value){
-                        var sizeInputWSpan=this.gallery.querySelector("#minsizeWSpan");
-                        sizeInputW.value=selectData.sizeW;
-                        sizeInputW.title=sizeInputW.value+"px";
-                        sizeInputWSpan.innerHTML=createHTML(Math.floor(sizeInputW.value)+"px");
-                    }
-                    if(selectData.sizeH<sizeInputH.value){
-                        var sizeInputHSpan=this.gallery.querySelector("#minsizeHSpan");
-                        sizeInputH.value=selectData.sizeH;
-                        sizeInputH.title=sizeInputH.value+"px";
-                        sizeInputHSpan.innerHTML=createHTML(Math.floor(sizeInputH.value)+"px");
+                if(selectData){
+                    let spanMark=this._spanMarkPool[selectData.imgSrc];
+                    if(spanMark && spanMark.dataset.naturalSize){
+                        let naturalSize=JSON.parse(spanMark.dataset.naturalSize);
+                        selectData.sizeW=naturalSize.w;
+                        selectData.sizeH=naturalSize.h;
+                    }else{
+                        if(selectData.sizeW<sizeInputW.value){
+                            var sizeInputWSpan=this.gallery.querySelector("#minsizeWSpan");
+                            sizeInputW.value=selectData.sizeW;
+                            sizeInputW.title=sizeInputW.value+"px";
+                            sizeInputWSpan.innerHTML=createHTML(Math.floor(sizeInputW.value)+"px");
+                        }
+                        if(selectData.sizeH<sizeInputH.value){
+                            var sizeInputHSpan=this.gallery.querySelector("#minsizeHSpan");
+                            sizeInputH.value=selectData.sizeH;
+                            sizeInputH.title=sizeInputH.value+"px";
+                            sizeInputHSpan.innerHTML=createHTML(Math.floor(sizeInputH.value)+"px");
+                        }
                     }
                 }
                 // 如果是新的，则添加，否则重置并添加。
@@ -3595,7 +3598,12 @@ ImgOps | https://imgops.com/#b#`;
                         }catch(e){};
                         self._spanMarkPool[item.imgSrc] = spanMark;
                     }
-                    if(item.noActual && (item.sizeW<sizeInputW.value || item.sizeH<sizeInputH.value)){
+                    if(spanMark.dataset.naturalSize){
+                        let naturalSize=JSON.parse(spanMark.dataset.naturalSize);
+                        item.sizeW=naturalSize.w;
+                        item.sizeH=naturalSize.h;
+                    }
+                    if(item.sizeW<sizeInputW.value || item.sizeH<sizeInputH.value){
                         spanMark.style.display="none";
                     }else{
                         spanMark.style.display="";
