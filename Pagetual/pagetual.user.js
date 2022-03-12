@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Pagetual - Perpetual pages
-// @name:zh-CN   东方永页机
-// @name:zh-TW   東方永頁機
+// @name:zh-CN   东方永页机 - 自动翻页脚本
+// @name:zh-TW   東方永頁機 - 自動翻頁脚本
 // @name:ja      東方永頁機
 // @name:ru      Пейджетуал
 // @name:de      Pagetual
