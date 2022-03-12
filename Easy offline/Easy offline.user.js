@@ -8,7 +8,7 @@
 // @namespace    https://github.com/hoothin/UserScripts/tree/master/Easy%20offline
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Base64/0.2.0/base64.min.js
-// @version      1.9.23
+// @version      1.9.24
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -1175,13 +1175,13 @@
             let siteConfig=sites[node.attr("name")];
             if(/^https?:\/\/\w/i.test(offUrl) && siteConfig.noHttp){
                 node.hide();
-            }else if(/^magnet:\/\/\w/i.test(offUrl) && siteConfig.noMag){
+            }else if(/^magnet:\?/i.test(offUrl) && siteConfig.noMag){
                 node.hide();
             }else if(/^ftp:\/\/\w/i.test(offUrl) && siteConfig.noFtp){
                 node.hide();
             }else if(/^ed2k:\/\/\w/i.test(offUrl) && siteConfig.noEd2k){
                 node.hide();
-            }else if(!/^(https?|magnet|ftp|ed2k):\/\/\w/i.test(offUrl) && siteConfig.noTxt){
+            }else if(!/^(https?|ftp|ed2k):\/\/\w|^magnet:\?/i.test(offUrl) && siteConfig.noTxt){
                 node.hide();
             }else if(siteConfig.linkRegExp && !siteConfig.linkRegExp.test(offUrl)){
                 node.hide();
