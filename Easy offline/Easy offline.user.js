@@ -8,7 +8,7 @@
 // @namespace    https://github.com/hoothin/UserScripts/tree/master/Easy%20offline
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Base64/0.2.0/base64.min.js
-// @version      1.9.21
+// @version      1.9.22
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -469,7 +469,7 @@
                             },
                             onload: (res) => {
                                 if(res.status === 200) {
-                                    alert("OK");
+                                    _GM_notification("Task OK");
                                 } else if(res.status === 401) {
                                     info.loginInfo=null;
                                     storage.setItem("pikpakUserInfo",info);
