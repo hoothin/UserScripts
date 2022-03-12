@@ -96,6 +96,7 @@
 // @exclude      *://order.jd.com/*
 // @exclude      *://pagetual.hoothin.com/*
 // @exclude      *://hoothin.github.io/PagetualGuide/*
+// @exclude      *://wenku.baidu.com/view/*
 // @connect      *
 // ==/UserScript==
 
@@ -105,7 +106,6 @@
     if (window.name === 'pagetual-iframe' || (window.frameElement && window.frameElement.name === 'pagetual-iframe')) {
         var domloaded = function (){
             window.scroll(window.scrollX, 999999);
-            window.scroll(window.scrollY, 999999);
             //window.parent.postMessage('pagetual-iframe:DOMLoaded', '*');
         };
         if(window.opera){
