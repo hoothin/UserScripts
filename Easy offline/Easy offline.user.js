@@ -504,8 +504,7 @@
                                     storage.setItem("pikpakUserInfo",info);
                                     postUrl();
                                 } else if(res.status === 401) {
-                                    info.loginInfo=null;
-                                    storage.setItem("pikpakUserInfo",info);
+                                    storage.setItem("pikpakUserInfo","");
                                     const msg = JSON.parse(res.responseText).error_description;
                                     alert(msg);
                                 } else if(res.status === 400) {
