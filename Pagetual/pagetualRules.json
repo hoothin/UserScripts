@@ -505,5 +505,11 @@
     "action":1,
     "pageElement":"div.container>ol>li",
     "pageInit":"eles.forEach(e=>{let span=e.querySelector('div>div>div>span');if(span)span.onVisible()})"
+  },
+  {
+    "name":"不死鸟",
+    "url":"^https://iao\\.su/",
+    "pageElement":"#index>article",
+    "action":1
   }
 ]
