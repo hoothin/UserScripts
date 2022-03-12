@@ -9,7 +9,7 @@ https://raw.githubusercontent.com/hoothin/UserScripts/master/Pagetual/pagetualRu
 
 ---
 
-Rules
+Rules example
 ==
 <pre>
 [
