@@ -8,7 +8,7 @@
 // @namespace    https://github.com/hoothin/UserScripts/tree/master/Easy%20offline
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Base64/0.2.0/base64.min.js
-// @version      1.9.22
+// @version      1.9.23
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -427,9 +427,9 @@
                 //mumuchenchen 的第三方 Pikpak 网页客户端 推荐大家前往 fork https://github.com/mumuchenchen/pikpak
                 storage.getItem("pikpakUserInfo",info=>{
                     if(!info){
-                        let userName=prompt("userName");
+                        let userName=prompt(i18n("userName"));
                         if(!userName)return;
-                        let userPass=prompt("userPass");
+                        let userPass=prompt(i18n("userPass"));
                         if(!userPass)return;
                         info={userName:userName,userPass:userPass};
                         storage.setItem("pikpakUserInfo",info);
@@ -574,7 +574,10 @@
                     postError:"发送失败，错误内容：",
                     importCustomSame:"存在同名规则，是否覆盖？",
                     copyLinks:"嗅探下载资源[Alt+x]",
-                    noLinks:"当前页面没有资源！"
+                    noLinks:"当前页面没有资源！",
+                    userName:"请输入用户账号",
+                    userPass:"请输入用户密码",
+                    seekKey:"嗅探快捷键："
                 };
                 manageLinksLang={
                     copyAll:"全部复制",
@@ -631,7 +634,10 @@
                     postError:"發送失敗，錯誤内容：",
                     importCustomSame:"存在同名規則，是否覆蓋？",
                     copyLinks:"嗅探下載資源[Alt+x]",
-                    noLinks:"當前頁面沒有資源！"
+                    noLinks:"當前頁面沒有資源！",
+                    userName:"請輸入用戶賬號",
+                    userPass:"請輸入用戶密碼",
+                    seekKey:"嗅探快捷鍵："
                 };
                 manageLinksLang={
                     copyAll:"全部複製",
@@ -687,7 +693,10 @@
                     postError:"Fail in post, error: ",
                     importCustomSame:"Rule exists, overwritten?",
                     copyLinks:"Seek links[Alt+x]",
-                    noLinks:"No links！"
+                    noLinks:"No links！",
+                    userName:"Input user name",
+                    userPass:"Input user pass",
+                    seekKey:"Seek key: "
                 };
                 manageLinksLang={
                     copyAll: "Copy all",
@@ -814,6 +823,7 @@
     var parentDiv=$("<div style='display:none;position:absolute;z-index:9999999;overflow:visible;text-align:left;'></div>");
 
     var funcKey="alt";
+    var seekKey="x";
 
     if(typeof(HTMLElement)!="undefined"){
         HTMLElement.prototype.contains=function(obj) {
@@ -1367,6 +1377,10 @@
         storage.getItem("funcKey",v=>{
             funcKey=v||"alt";
         });
+        storage.getItem("seekKey",v=>{
+            seekKey=v||"x";
+        });
+
         for(x = 0; x < sitesArr.length; x++){
             let siteConfig=sitesArr[x];
             if(siteConfig.regex && siteConfig.regex.test(location.hostname)){
@@ -1490,6 +1504,7 @@
                         <option value="meta">Meta key</option>
                         <option value="noKey">No key</option>
                     </select>
+                    <div style="text-align:center;font-size:12px;">${i18n("seekKey")}<input id="seekKey" placeholder="x" style="width:20px;border-width:1px;border:solid 1px;" value="x"></div>
                     <button id="configSave" class="whx-btn" type="button" style="position:static;width:80px;height:30px;color:white;border-radius:5px;border:0px;outline:none;cursor:pointer;margin: 10px 110px 10px;">${i18n("settingBtn")}</button>
                     <div id="configQuit" class="whx-btn" style="width:28px;height:28px;border-radius:14px;position:absolute;right:2px;top:2px;cursor:pointer;">
                         <span style="height:28px;line-height:28px;display:block;color:#FFF;text-align:center;font-size:10px;">╳</span>
@@ -1501,6 +1516,7 @@
             var showTypeCheck=configContent.querySelector("#showType");
             var baiduPath=configContent.querySelector("#baiduPath");
             var funcKeySelect=configContent.querySelector("#funcKey");
+            var seekKeyInput=configContent.querySelector("#seekKey");
             var icons=$("#icons"),dragIcon;
             easyOfflineDisable = configContent.querySelector("#easyOfflineDisable");
             $(easyOfflineDisable).click(function (event) {
@@ -1593,6 +1609,7 @@
             configContent.style.display="block";
             storage.getItem("eoReg",v=>{if(v)$(configInput).val(v.join("\n"))});
             storage.getItem("baiduPath",v=>{if(v)$(baiduPath).val(v)});
+            storage.getItem("seekKey",v=>{if(v)$(seekKeyInput).val(v)});
             storage.getItem("funcKey",v=>{if(v)$(funcKeySelect).val(v)});
             storage.getItem("showType",v=>{if(v)showTypeCheck.checked=true});
             $(configQuit).click(function (event) {configContent.style.display="none";});
@@ -1615,8 +1632,10 @@
                     storage.setItem("eoReg",regStrs);
                 }
                 storage.setItem("showType", showTypeCheck.checked);
-                storage.setItem("funcKey", funcKeySelect.value);
                 funcKey=funcKeySelect.value;
+                storage.setItem("funcKey", funcKey);
+                seekKey=seekKeyInput.value;
+                storage.setItem("seekKey", seekKey);
                 alert(i18n("setOK"));
             });
         }
@@ -1688,12 +1707,12 @@
     });
     document.addEventListener("keydown", function(e) {
         if(e.keyCode == 120) {
-            if(e.altKey){
+            if(checkKey(e)){
                 checkSel(e);
             }else{
                 toggleIcon();
             }
-        }else if(e.keyCode == 88 && e.altKey) {
+        }else if(String.fromCharCode(e.keyCode).toLowerCase() == seekKey && checkKey(e)) {
             copyLink();
             e.stopPropagation();
         }
