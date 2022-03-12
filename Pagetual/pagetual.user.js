@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Pagetual
+// @name         Pagetual - Perpetual pages
 // @name:zh-CN   东方永页机
 // @name:zh-TW   東方永頁機
 // @name:ja      東方永頁機
@@ -10,8 +10,8 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.5.6.13
-// @description  Most compatible Auto pager script ever! Simply auto loading paginated web pages.
+// @version      1.5.6.14
+// @description  Most compatible Auto Pager script ever. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动加载并拼接下一分页内容（适用于论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页
 // @description:zh-TW  自動加載並拼接下一分頁內容（適用於論壇、漫畫站、小說站、資訊站、博客等），無需規則支持所有網頁
 // @description:ja     Webページを自動で読み込み継ぎ足し表示を行うブラウザ拡張です
@@ -170,7 +170,7 @@
                     enableHistory:"翻页后写入历史记录",
                     initRun:"打开页面后立即尝试翻页，否则滚动至页尾再翻页",
                     preload:"翻页前预读下一页，加速浏览",
-                    click2ImportRule:"点击下方添加特殊规则库："
+                    click2ImportRule:"点击下方添加特殊规则库，添加后再行更新："
                 };
                 break;
             case "zh-TW":
@@ -213,7 +213,7 @@
                     enableHistory:"翻頁后寫入歷史記錄",
                     initRun:"打開頁面后立即嘗試翻頁，否則滾動至頁尾再翻頁",
                     preload:"翻頁前預讀下一頁，加速瀏覽",
-                    click2ImportRule:"點擊下方添加特殊規則庫："
+                    click2ImportRule:"點擊下方添加特殊規則庫，添加後再行更新："
                 };
                 break;
             case "ja":
@@ -292,12 +292,12 @@
                     hideBar:"Double-click on the blank space to hide the paging spacer",
                     dbClick2Stop:"Double-click on the blank space to stop",
                     sortTitle:"Sorting takes effect after the next rule update",
-                    autoRun:"Auto run",
+                    autoRun:"Auto run(black list mode)",
                     inputPageNum:"Enter page number to jump",
                     enableHistory:"Write history after page turning",
                     initRun:"Turn pages immediately after opening",
-                    preload:"Preload next page",
-                    click2ImportRule:"Click to import base rules:"
+                    preload:"Preload next page for speeding up",
+                    click2ImportRule:"Click to import base rules link, then click to update rules:"
                 };
                 break;
         }
