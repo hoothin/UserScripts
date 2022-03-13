@@ -216,7 +216,8 @@ var defaultLang={
     countDown:"CountDown",
     customLang:"Custom language",
     defaultLang:"Auto detect",
-    toggleIcon:"Toggle icon"
+    toggleIcon:"Toggle icon",
+    initShow:"Invert Shortcut to show preview by default"
 };
 var zhCNLang={
     saveBtn:"确定",
@@ -435,7 +436,8 @@ var zhCNLang={
     countDown:"倒计时",
     customLang:"设定语言",
     defaultLang:"自动选择",
-    toggleIcon:"隐藏图标"
+    toggleIcon:"隐藏图标",
+    initShow:"反转快捷键，默认显示预览"
 };
 var zhTWLang={
     saveBtn:"確定",
@@ -654,7 +656,8 @@ var zhTWLang={
     countDown:"倒計時",
     customLang:"設定語言",
     defaultLang:"自動選擇",
-    toggleIcon:"隱藏圖標"
+    toggleIcon:"隱藏圖標",
+    initShow:"反轉快捷鍵，默認顯示預覽"
 };
 var ptLang={
     //Português by AstroCoelestis. https://greasyfork.org/users/881248-astrocoelestis
@@ -874,7 +877,8 @@ var ptLang={
     countDown:"Contagem regressiva",
     customLang:"Definir idioma",
     defaultLang:"Auto",
-    toggleIcon:"ícone de alternância"
+    toggleIcon:"ícone de alternância",
+    initShow:"Inverter atalho para mostrar a visualização por padrão"
 };
 var ruLang={
     //Русский перевод by RX-3200. https://greasyfork.org/users/43-rx-3200
@@ -1094,7 +1098,8 @@ var ruLang={
     countDown: "Обратный отсчёт",
     customLang:"Язык",
     defaultLang:"Автодетект",
-    toggleIcon:"Скрыть иконку"
+    toggleIcon:"Скрыть иконку",
+    initShow:"Инвертировать ярлык для предварительного просмотра по умолчанию"
 };
 var langList={
     'en': "English",
