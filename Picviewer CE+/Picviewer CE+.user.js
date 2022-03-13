@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.3.12.1
+// @version              2022.3.13.1
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -42,7 +42,7 @@
 // @require              https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.js
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
 // @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1023785
-// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1023273
+// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1027618
 // @contributionURL      https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
 // @contributionAmount   1
 // @include              http://*
@@ -176,6 +176,7 @@ ImgOps | https://imgops.com/#b#`;
                     gallery: 'g',
                 },
                 globalkeys: {
+                    invertInitShow: false,
                     ctrl: true,
                     alt: false,
                     shift: false,
@@ -8948,8 +8949,9 @@ ImgOps | https://imgops.com/#b#`;
         }
 
         function checkPreview(e){
-            return (prefs.floatBar.globalkeys.type == "hold" && checkGlobalKeydown(e)) ||
+            let keyActive=(prefs.floatBar.globalkeys.type == "hold" && checkGlobalKeydown(e)) ||
                 (prefs.floatBar.globalkeys.type == "press" && globalFuncEnabled);
+            return prefs.floatBar.globalkeys.invertInitShow?!keyActive:keyActive;
         }
 
         //监听 mouseover
@@ -9441,6 +9443,11 @@ ImgOps | https://imgops.com/#b#`;
                         'hold': i18n("globalkeysHold")
                     },
                     "default": prefs.floatBar.globalkeys.type
+                },
+                'floatBar.globalkeys.invertInitShow': {
+                    label: i18n("initShow"),
+                    type: 'checkbox',
+                    "default": prefs.floatBar.globalkeys.invertInitShow
                 },
                 // 按键
                 'floatBar.keys.enable': {
