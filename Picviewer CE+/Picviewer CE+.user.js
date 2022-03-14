@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.3.13.1
+// @version              2022.3.14.1
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -521,7 +521,7 @@ ImgOps | https://imgops.com/#b#`;
             };
         }
 
-        if (typeof String.prototype.visualLength != 'function') {
+        /*if (typeof String.prototype.visualLength != 'function') {
             var rulerEle = document.createElement("span");
             rulerEle.style.visibility = "hidden";
             rulerEle.style.whiteSpace = "nowrap";
@@ -534,6 +534,19 @@ ImgOps | https://imgops.com/#b#`;
                 document.body.removeChild(rulerEle);
                 return w;
             }
+        }*/
+
+        var rulerEle = document.createElement("span");
+        rulerEle.style.visibility = "hidden";
+        rulerEle.style.whiteSpace = "nowrap";
+        function visualLength(str,size,family) {
+            rulerEle.style.fontSize = size || "inherit";
+            rulerEle.style.fontFamily = family || "inherit";
+            rulerEle.innerText = str;
+            document.body.appendChild(rulerEle);
+            let w = rulerEle.offsetWidth;
+            document.body.removeChild(rulerEle);
+            return w;
         }
 
         function getMStr(func) {
@@ -9313,7 +9326,7 @@ ImgOps | https://imgops.com/#b#`;
             skin: 'tab',
             frameStyle: {
                 minWidth: "480px",
-                width: (((i18n("floatBar") + i18n("magnifier") + i18n("gallery") + i18n("imgWindow") + i18n("others")).visualLength("14px","arial,tahoma,myriad pro,sans-serif") + 250) || 480) + 'px',
+                width: ((visualLength((i18n("floatBar") + i18n("magnifier") + i18n("gallery") + i18n("imgWindow") + i18n("others")),"14px","arial,tahoma,myriad pro,sans-serif") + 250) || 480) + 'px',
                 zIndex:'2147483648',
             },
             css: [
