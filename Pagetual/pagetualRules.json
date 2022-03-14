@@ -19,9 +19,9 @@
     "name":"Bing",
     "action":1,
     "url":"^https://.*\\.bing\\.com/",
-    "nextLink":"a[title='Next page']",
-    "pageElement":"ol#b_results>li",
-    "wait":"if(doc==document)return true;doc.documentElement.scrollTop=99999;return doc.querySelector('a[title=\\'Next page\\']')"
+    "nextLink":"a[title='Next page'],a.sb_pagN,a.sb_halfnext,a.sb_fullnpl",
+    "pageElement":"ol#b_results>li.b_algo",
+    "wait":"if(doc==document)return true;doc.documentElement.scrollTop=99999;return doc.querySelector('a[title=\\'Next page\\'],a.sb_pagN,a.sb_halfnext,a.sb_fullnpl')"
   },
   {
     "name":"Duckduckgo",
