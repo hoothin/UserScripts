@@ -8,7 +8,7 @@
 // @namespace    https://github.com/hoothin/UserScripts/tree/master/Easy%20offline
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Base64/0.2.0/base64.min.js
-// @version      1.9.24
+// @version      1.9.26
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -97,70 +97,66 @@
             bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAABjFBMVEX////7+/v+/v/8/Pwyf/wzc/w0bvza5f4xffz5+//0+P8ybPz8/f4yevw0cPwza/z39/cwe/UxdfzSPyr4+v/2+f/m7/53nv0vf/wvce9pof1tlPwxf/gzfPYwePPp8f7Z5/7S4v7P4P7L3f7I2f2Gtf2Rr/1hkP0yd/1FiPwygfxAdPxspftYkvUtc/Dg6f7C2f7F1f54oP1flf0/hfwsbu7i7f/w9f7b5v7X5f7V4v6nyv6oxv6jwP6Ns/2Lsf1/rv1+ov1zof1xof10nf1jm/1djP0xe/2NufxalvxHj/xPhvxKgPxHffw+efw0ePyXu/mqxPg5hfiTtvdyo/dgmfdOj/dBhfVflfQvefT+9fOIqvMyefNMhvFIgO9MeePyycVjZbzKb3DaZVa/Q0Dx9f+Bp/1olv1gkPw0dvzg6Pu2zPk0gflNjPctc/c9gfX88/JJfO3n3+ni2unHxuSGktNpdtBJY8paashRW71nXqp7YpyDYJKpaIKPU33AVFXARkTVTTvFQjrUPypKwHq1AAACAklEQVQ4y4WTB3OqQBSFF3BpAk+KIBixJ2rs0fTee68vvbzee+9//O1Cio46npmFPfd8d2cY9gIASMJHUESDKFQmAZJAUKCFKELA/WSr3A3d/tZnAF99C8fVHYhiosbxxflsdr7I15SIWiCe3exA2szGmwOJXTkUkvHaTTQD9NyBLO/t7OzJ8kFObwKs2/bRdrSvL7p9ZNvrjQC/n8/nwngXzuXz+3wDED42zS13u2Wax+EGQD+pmhvudsOsnuj1gBAZSp5+/XRIYkMeVu1XyaGIcAfoycVM4Pn3qx9vcW3gRUcmE8gsJvUboNfyeDyBwLd/6sX7wtNnC45DD6vXBbRx1sOmrQ+/VFX9efomhFzFstLoNa45QKzCijMx/vXZpar+/fKSZecWijwfmxHZSgzFFBgWxXQUIJ39UX9/nhPFngHsomlRHEYxRY6mlCkOl+5fXp2vraV6IgCLm1JSoyQGxhRlUnCAi/PUEwXnWMKkooxhAIxAuNSPS+8+Qgi7GOB3zutfgnAExQSIr0JoMJw2GJSghPLSo4eDGscYEK7Gna/gy7QkLRvTK5JEP2bAgy4vvTJtLCNX5h0AMLNemvbihfqBv3zjZpHDACKM7ntI3RMFgFSYcJ3B3P0sf6kzGOxM+AFwXAK7kuNurz2pcWTt7deuna/t4LQdvbbD23b8/wPY0UTO99dD5gAAAABJRU5ErkJggg==",
             offFunc:function(delLink){
                 var gsi = setInterval(function() {
-                    var newOffBtn = document.querySelector('.g-button[node-type=offlineDownload]');
+                    var newOffBtn = document.querySelector('div[data-id=downloadLink]>span');
                     if(newOffBtn){
                         clearInterval(gsi);
                         newOffBtn.click();
-                        var bsi = setInterval(function() {
-                            var newTaskBtn = document.querySelector('#_disk_id_2');
-                            if(newTaskBtn){
-                                clearInterval(bsi);
-                                newTaskBtn.click();
-                                var bsl = setInterval(function() {
-                                    var offLink=document.querySelector('#share-offline-link');
-                                    if(offLink){
-                                        clearInterval(bsl);
-                                        var beginOffline=function(){
-                                            if(curlink.length===0)return;
-                                            if(Object.prototype.toString.call(curlink) === '[object Array]')
-                                                offLink.value = curlink.shift();
-                                            else{
-                                                offLink.value = curlink;
-                                                curlink="";
-                                            }
-                                            delLink();
-                                            var baiduPathStr,isBt=/^magnet|torrent$/.test(offLink.value);
-                                            storage.getItem("baiduPath",v=>{
-                                                baiduPathStr=v;
-                                                if(baiduPathStr){
-                                                    _unsafeWindow.require("function-widget-1:offlineDownload/util/newOfflineDialog.js").obtain()._checkPath=baiduPathStr;
-                                                }
-                                            });
-                                            $("#newoffline-dialog").find("span:contains('确定')[class='text']").click();
-                                            if(isBt){
-                                                var i=0, bsb = setInterval(function(){
-                                                    var btList=document.querySelector('#offlinebtlist-dialog');
-                                                    if(btList && btList.style.display!="none"){
-                                                        clearInterval(bsb);
-                                                        if($(".content-title-name").html()=="文件名")$("a.checked-all")[0].click();
-                                                        btList.querySelectorAll('.dialog-footer>.g-button')[1].click();
-                                                    }else if(++i>50){
-                                                        clearInterval(bsb);
-                                                    }
-                                                }, 200);
-                                            }
-                                            var ckeckEnd=function(){
-                                                var bck=setInterval(function(){
-                                                    if(document.querySelector("#offlinelist-dialog").style.display!="none"){
-                                                        clearInterval(bck);
-                                                        setTimeout(()=>{beginOffline();},1500);
-                                                    }else if(document.querySelector("#dialog1") && document.querySelector("#dialog1").style.display!="none"){
-                                                        clearInterval(bck);
-                                                        var inputCode=$("#dialog1").find(".input-code");
-                                                        inputCode.focus();
-                                                        bck=setInterval(function(){
-                                                            if(inputCode.val().length==4){
-                                                                clearInterval(bck);
-                                                                $("#dialog1").find("span:contains('确定')[class='text']").click();
-                                                                ckeckEnd();
-                                                            }
-                                                        },200);
-                                                    }
-                                                },500);
-                                            };ckeckEnd();
-                                        };beginOffline();
+                        var bsl = setInterval(function() {
+                            var offLink=document.querySelector('div.nd-download-link div[role=dialog] input');
+                            if(offLink){
+                                clearInterval(bsl);
+                                var beginOffline=function(){
+                                    if(curlink.length===0)return;
+                                    if(Object.prototype.toString.call(curlink) === '[object Array]')
+                                        offLink.value = curlink.shift();
+                                    else{
+                                        offLink.value = curlink;
+                                        curlink="";
                                     }
-                                }, 500);
+                                    var event = document.createEvent('HTMLEvents');
+                                    event.initEvent("input", false, true);
+                                    offLink.dispatchEvent(event);
+                                    delLink();
+                                    var baiduPathStr,isBt=/^magnet|torrent$/.test(offLink.value);
+                                    storage.getItem("baiduPath",v=>{
+                                        baiduPathStr=v;
+                                        if(baiduPathStr){
+                                            _unsafeWindow.require("function-widget-1:offlineDownload/util/newOfflineDialog.js").obtain()._checkPath=baiduPathStr;
+                                        }
+                                    });
+                                    $("div.nd-download-link div[role=dialog]").find("button.nd-download-link__action>span:contains('确定')").click();
+                                    if(isBt){
+                                        var i=0, bsb = setInterval(function(){
+                                            var btList=document.querySelector('div[aria-label="链接任务"]');
+                                            if(btList && !$(btList).is(":hidden")){
+                                                clearInterval(bsb);
+                                                if($(".nd-remote-download__list-select>span").html()=="全选")$(".nd-remote-download__file-list .u-checkbox__original")[0].click();
+                                                btList.querySelectorAll('button.nd-remote-download__save-btn')[0].click();
+                                            }else if(++i>50){
+                                                clearInterval(bsb);
+                                            }
+                                        }, 200);
+                                    }
+                                    /*var ckeckEnd=function(){
+                                        var bck=setInterval(function(){
+                                            if(document.querySelector("div.nd-download-link div[role=dialog]").style.display!="none"){
+                                                clearInterval(bck);
+                                                setTimeout(()=>{beginOffline();},1500);
+                                            }else if(document.querySelector("#dialog1") && document.querySelector("#dialog1").style.display!="none"){
+                                                clearInterval(bck);
+                                                var inputCode=$("#dialog1").find(".input-code");
+                                                inputCode.focus();
+                                                bck=setInterval(function(){
+                                                    if(inputCode.val().length==4){
+                                                        clearInterval(bck);
+                                                        $("#dialog1").find("span:contains('确定')").click();
+                                                        ckeckEnd();
+                                                    }
+                                                },200);
+                                            }
+                                        },500);
+                                    };ckeckEnd();*/
+                                };beginOffline();
                             }
                         }, 500);
                     }
@@ -485,7 +481,7 @@
                             }
                         })
                     };
-                    if(!info.loginInfo || info.loginInfo.expires < new Date().getTime() + 1000 * 10 * 60){
+                    if(!info.loginInfo || info.loginInfo.expires > new Date().getTime()){
                         _GM_xmlhttpRequest({
                             method: 'POST',
                             url: 'https://user.mypikpak.com/v1/auth/signin',
@@ -501,6 +497,9 @@
                             onload: (res) => {
                                 if(res.status === 200) {
                                     info.loginInfo=JSON.parse(res.responseText);
+                                    if(!info.loginInfo.expires && info.loginInfo.expires_in){
+                                        info.loginInfo.expires = new Date().getTime() + 1000 * info.loginInfo.expires_in;
+                                    }
                                     storage.setItem("pikpakUserInfo",info);
                                     postUrl();
                                 } else if(res.status === 401) {
@@ -508,9 +507,11 @@
                                     const msg = JSON.parse(res.responseText).error_description;
                                     alert(msg);
                                 } else if(res.status === 400) {
+                                    storage.setItem("pikpakUserInfo","");
                                     const msg = JSON.parse(res.responseText).error_description;
                                     alert(msg);
                                 } else if(res.status === 403) {
+                                    storage.setItem("pikpakUserInfo","");
                                     const msg = JSON.parse(res.responseText).error_description;
                                     alert(msg);
                                 }
