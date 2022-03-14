@@ -8,7 +8,7 @@
 // @namespace    https://github.com/hoothin/UserScripts/tree/master/Easy%20offline
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/Base64/0.2.0/base64.min.js
-// @version      1.9.26
+// @version      1.9.27
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -202,9 +202,9 @@
                             setTimeout(function() {
                                 $('#js_offline_new_add').val(curlink);
                                 delLink();
-                                $('[data-btn=start]').click();
+                                document.querySelector('[data-btn=start]').click();
                             }, 1);
-                        }, 1000);
+                        }, 500);
                     }
                 }, 300);
             }
