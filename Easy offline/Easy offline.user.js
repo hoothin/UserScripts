@@ -481,7 +481,7 @@
                             }
                         })
                     };
-                    if(!info.loginInfo || info.loginInfo.expires > new Date().getTime()){
+                    if(!info.loginInfo || info.loginInfo.expires < new Date().getTime()){
                         _GM_xmlhttpRequest({
                             method: 'POST',
                             url: 'https://user.mypikpak.com/v1/auth/signin',
