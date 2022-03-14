@@ -2257,7 +2257,8 @@
         }
         pageBar.appendChild(downSpan);
         let parentStyle=_unsafeWindow.getComputedStyle(example.parentNode);
-        pageBar.style.width=parseInt(parentStyle.width)-parseInt(parentStyle.paddingLeft)-parseInt(parentStyle.paddingRight)-10+"px";
+        let parentWidth=example.parentNode.scrollWidth||parseInt(parentStyle.width);
+        pageBar.style.width=parentWidth-parseInt(parentStyle.paddingLeft)-parseInt(parentStyle.paddingRight)-10+"px";
         if(parentStyle.display=="grid" || parentStyle.display=="inline-grid"){
             pageBar.style.gridColumnStart=1;
             pageBar.style.gridColumnEnd=1+parseInt(example.parentNode.offsetWidth/example.offsetWidth);
