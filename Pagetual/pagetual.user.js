@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Pagetual - Perpetual pages
 // @name:zh-CN   东方永页机 - 自动翻页脚本
-// @name:zh-TW   東方永頁機 - 自動翻頁脚本
+// @name:zh-TW   東方永頁機
 // @name:ja      東方永頁機
 // @name:ru      Пейджетуал
 // @name:de      Pagetual
@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.5.6.17
+// @version      1.5.6.18
 // @description  Most compatible Auto Pager script ever. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动加载并拼接下一分页内容（适用于论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页
 // @description:zh-TW  自動加載並拼接下一分頁內容（適用於論壇、漫畫站、小說站、資訊站、博客等），無需規則支持所有網頁
@@ -295,7 +295,7 @@
                     hideBar:"Double-click on the blank space to hide the paging spacer",
                     dbClick2Stop:"Double-click on the blank space to stop",
                     sortTitle:"Sorting takes effect after the next rule update",
-                    autoRun:"Auto run(black list mode)",
+                    autoRun:"Auto run (black list mode)",
                     inputPageNum:"Enter page number to jump",
                     enableHistory:"Write history after page turning",
                     initRun:"Turn pages immediately after opening",
@@ -1069,13 +1069,13 @@
                 let href=nextLink.getAttribute?nextLink.getAttribute("href"):nextLink.href;
                 if(href==="" && needUrl){
                     this.nextLinkHref=false;
-                }else if(href && (nextLink.href==this.curUrl || nextLink.href==this.oldUrl) && needUrl){
-                    this.nextLinkHref=false;
                 }else if(/^javascript:|#/.test(href) && needUrl){
                     this.nextLinkHref=false;
                 }else{
                     this.nextLinkHref=(href && !/^javascript:|#/.test(href) && nextLink.href!=location.href)?this.canonicalUri(nextLink.href):"#";
-                    if(doc==document)debug(nextLink);
+                    if(href && (this.nextLinkHref==this.curUrl || this.nextLinkHref==this.curUrl+"#" || this.nextLinkHref==this.oldUrl || this.nextLinkHref==this.oldUrl+"#") && needUrl){
+                        this.nextLinkHref=false;
+                    }else if(doc==document)debug(nextLink);
                 }
             }else{
                 this.nextLinkHref=false;
