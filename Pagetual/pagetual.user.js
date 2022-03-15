@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.5.6.22
+// @version      1.5.6.23
 // @description  Most compatible Auto Pager script ever. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动加载并拼接下一分页内容（适用于论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页
 // @description:zh-TW  自動加載並拼接下一分頁內容（適用於論壇、漫畫站、小說站、資訊站、博客等），無需規則支持所有網頁
@@ -946,12 +946,12 @@
                     if(!next4){
                         if(pageNum<999 && aTag.href.replace("?&","?").replace("#!","").replace("index.php?","?").replace(preStr,"").replace(afterStr,"")==pageNum+1){
                             next4=aTag;
-                        }else if(this.curUrl!=aTag.href && aTag.href.replace("?&","?").replace("index.php?","?").indexOf(url)!=-1 && /^[\/\?&]?[_-]?(p|page)?=?\/?2(\/|\?|&|$)/i.test(aTag.href.replace(url,"").replace(/\.s?html?$/i,""))){
+                        }else if(this.curUrl!=aTag.href && aTag.href.replace("?&","?").replace("index.php?","?").indexOf(url.replace(/\.s?html?$/i,""))!=-1 && /^[\/\?&]?[_-]?(p|page)?=?\/?2(\/|\?|&|$)/i.test(aTag.href.replace(url.replace(/\.s?html?$/i,""),"").replace(/\.s?html?$/i,""))){
                             let curHref=aTag.getAttribute("href");
                             let pageOne=curHref.replace(/\/2(\/|\?|&|$)/,"/1$1");
                             if(pageOne==curHref)pageOne=null;
                             else pageOne=curPage.querySelector(`a[href='${pageOne}']`);
-                            if(!pageOne)next4=aTag;
+                            if(!pageOne || pageOne.className!=curHref.className)next4=aTag;
                         }
                     }
                 }
