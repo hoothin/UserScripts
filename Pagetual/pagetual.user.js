@@ -915,7 +915,7 @@
                     if(next1 && next2 && next3 && next4)break;
                     if(aTag.href && /next$/i.test(aTag.href))continue;
                     if(!next1){
-                        if(/^[下后後][一1]?[页頁张張]|^next([ _-]?page)?\s*[›>→»]?$|次のページ|^次へ?$|/i.test(aTag.innerText.trim())){
+                        if(/^[下后後][一1]?[页頁张張]|^next([ _-]?page)?\s*[›>→»]?$|次のページ|^次へ?$/i.test(aTag.innerText.trim())){
                             if(aTag.innerText.length>15)continue;
                             if(!aTag.href || /^javascript:/.test(aTag.href)){
                                 if(!nextJs1)nextJs1=aTag;
