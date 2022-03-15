@@ -875,6 +875,16 @@
                     next=null;
                 }
             }
+            if(next && /^[下后後][一1]?[章话話]/i.test(next.innerText.trim())){
+                next2=next;
+                next=null;
+            }
+            if(!next){
+                next=curPage.querySelector("a.curr");
+                if(next){
+                    next=next.nextSibling;
+                }
+            }
             if(!next){
                 let pageDiv=curPage.querySelector("div.wp-pagenavi");
                 if(pageDiv){
@@ -901,10 +911,6 @@
                 cur=curPage.querySelector(".number>ul>li.active");
                 if(cur)next=cur.nextElementSibling;
                 if(next)next=next.querySelector("a");
-            }
-            if(next && /^[下后後][一1]?[章话話]/i.test(next.innerText.trim())){
-                next2=next;
-                next=null;
             }
             if(!next){
                 let aTags=curPage.querySelectorAll("a");
