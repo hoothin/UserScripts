@@ -822,6 +822,7 @@
                 afterStr=pageMatch2[3];
             }
             let curPage=doc,i,cur,jsNext;
+            let next1,next2,next3,next4,nextJs1,nextJs2,nextJs3;
             let next=curPage.querySelector(".page-next>a")||
                 curPage.querySelector("a.next_page")||
                 curPage.querySelector("#next_page")||
@@ -901,9 +902,12 @@
                 if(cur)next=cur.nextElementSibling;
                 if(next)next=next.querySelector("a");
             }
+            if(next && /^[下后後][一1]?[章话話]/i.test(next.innerText.trim())){
+                next2=next;
+                next=null;
+            }
             if(!next){
                 let aTags=curPage.querySelectorAll("a");
-                let next1,next2,next3,next4,nextJs1,nextJs2,nextJs3;
                 for(i=aTags.length-1;i>=0;i--){
                     let aTag=aTags[i];
                     if(aTag.innerText=="§")continue;
@@ -911,7 +915,7 @@
                     if(next1 && next2 && next3 && next4)break;
                     if(aTag.href && /next$/i.test(aTag.href))continue;
                     if(!next1){
-                        if(/^[下后後][一1]?[页頁张張]|^next( page)?\s*›?$|次のページ/i.test(aTag.innerText.trim())){
+                        if(/^[下后後][一1]?[页頁张張]|^next([ _-]?page)?\s*[›>→»]?$|次のページ|^次へ?$|/i.test(aTag.innerText.trim())){
                             if(aTag.innerText.length>15)continue;
                             if(!aTag.href || /^javascript:/.test(aTag.href)){
                                 if(!nextJs1)nextJs1=aTag;
@@ -930,7 +934,7 @@
                         }
                     }
                     if(!next3){
-                        if(aTag.innerText=="&gt;" || aTag.innerText=="▶" || aTag.innerText==">" || aTag.innerText=="›" || /nextpage/i.test(aTag.className)){
+                        if(aTag.innerText=="&gt;" || aTag.innerText=="▶" || aTag.innerText==">" || aTag.innerText=="›" || aTag.innerText=="→" || aTag.innerText=="»" || /nextpage/i.test(aTag.className)){
                             if(!aTag.href || /^javascript:/.test(aTag.href)){
                                 if(!nextJs3)nextJs3=aTag;
                             }else{
@@ -951,7 +955,7 @@
                         }
                     }
                 }
-                next=next1||next3||next4||next2||nextJs1||nextJs3||nextJs2;
+                next=next1||next4||next3||next2||nextJs1||nextJs3||nextJs2;
             }
             if(!next)next=jsNext;
             if(next && next.classList.contains("results-more"))next=null;
