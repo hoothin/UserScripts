@@ -115,7 +115,7 @@
     "pageElement":"//*[@id=\"content_left\"]/*",
     "type":0,
     "pageNum":"&pn={10*($p-1)}",
-    "url":"^https://www\\.baidu\\.com/(s|baidu)"
+    "url":"^https?://www\\.baidu\\.com/(s|baidu)"
   },
   {
     "name":"手机百度",
@@ -127,7 +127,7 @@
     "name":"百度贴吧列表",
     "action":1,
     "pageBar":"pageBar.classList.add('j_thread_list');pageBar.dataset.field='{}'",
-    "url":"^https://tieba\\.baidu\\.com/f\\?kw=",
+    "url":"^https?://tieba\\.baidu\\.com/f\\?kw=",
     "pageElement":"ul#thread_list>li",
     "pageNum":"&pn={50*($p-1)}",
     "nextLink":".next.pagination-item "
@@ -140,12 +140,12 @@
     "type":0,
     "action":1,
     "pageNum":"&pn={$p}",
-    "url":"^https://tieba\\.baidu\\.com/p/.+",
+    "url":"^https?://tieba\\.baidu\\.com/p/.+",
     "wait":"if(doc==document)return true;let lzl=doc.querySelector('div.hideLzl');if(lzl){lzl.scrollIntoView();return false}else{return true}"
   },
   {
     "name":"搜狗wap",
-    "url":"^https://wap\\.sogou\\.com/web/searchList\\.jsp",
+    "url":"^https?://wap\\.sogou\\.com/web/searchList\\.jsp",
     "loadMore":"#ajax_next_page",
     "nextLink":0
   },
