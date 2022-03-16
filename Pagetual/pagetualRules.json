@@ -537,5 +537,24 @@
     "pageElement":"//div[@class='t t2']",
     "sleep":2000,
     "nextLink":"//div[@class='pages']/a[u]/following-sibling::a[1]"
+  },
+  {
+    "name":"phpwind read",
+    "url":"/read\\.php\\?",
+    "pageElement":".main-box>.bbs-read-subbox"
+  },
+  {
+    "name":"phpwind old read",
+    "url":"/read\\.php\\?",
+    "pageElement":"form[name='delatc']>a[name]",
+    "nextLink":"td>b+a",
+    "insert":"form[name='delatc']>a:last-child>table:nth-child(2)",
+    "insertPos":1
+  },
+  {
+    "name":"phpwind old list",
+    "url":"/thread\\.php\\?",
+    "pageElement":"tr.t_two",
+    "nextLink":"td>b+a"
   }
 ]
