@@ -10,9 +10,9 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.5.8.2
+// @version      1.5.8.3
 // @description  Most compatible Auto Pager script ever. Auto loading next paginated web pages and inserting into current page.
-// @description:zh-CN  自动加载并拼接下一分页内容，无需规则支持所有网页 - 适用于搜索引擎【谷歌/百度/必应等】、论坛【贴吧/豆瓣/水木社区等】、图站【deviantArt/Pixiv/Chevereto等】、漫画站【动漫之家/漫画柜/动漫屋等】、小说站【笔趣阁等】、资讯站【腾讯新闻/煎蛋等】、博客【异次元/小众软件等】及其他
+// @description:zh-CN  自动加载并拼接下一分页内容，无需规则支持所有网页 —— 适用于搜索引擎【谷歌/百度/必应等】、论坛【贴吧/豆瓣/水木社区等】、图站【deviantArt/Pixiv/Chevereto等】、漫画站【动漫之家/漫画柜/动漫屋等】、小说站【笔趣阁等】、资讯站【腾讯新闻/煎蛋等】、博客【异次元/小众软件等】及其他
 // @description:zh-TW  自動加載並拼接下一分頁內容（適用於論壇、漫畫站、小說站、資訊站、博客等），無需規則支持所有網頁
 // @description:ja     Webページを自動で読み込み継ぎ足し表示を行うブラウザ拡張です
 // @description:ru     Просто автоматически загрузите следующую страницу
@@ -578,12 +578,19 @@
 
             function ruleMatch(r){
                 let pageElement,nextLink,insert;
-                if(r.pageElement)pageElement=r.type==0?getElementByXpath(r.pageElement):document.querySelector(r.pageElement);
-                if(r.nextLink)nextLink=r.type==0?getElementByXpath(r.nextLink):document.querySelector(r.nextLink);
-                if(r.insert)insert=r.type==0?getElementByXpath(r.insert):document.querySelector(r.insert);
-                return !((r.pageElement && !pageElement) ||
-                        (r.nextLink && !nextLink) ||
-                        (r.insert && !insert));
+                if(r.nextLink){
+                    nextLink=r.type==0?getElementByXpath(r.nextLink):document.querySelector(r.nextLink);
+                    if(!nextLink)return false;
+                }
+                if(r.pageElement){
+                    pageElement=r.type==0?getElementByXpath(r.pageElement):document.querySelector(r.pageElement);
+                    if(!pageElement)return false;
+                }
+                if(r.insert){
+                    insert=r.type==0?getElementByXpath(r.insert):document.querySelector(r.insert);
+                    if(!insert)return false;
+                }
+                return true;
             }
 
             function checkRule(r){
