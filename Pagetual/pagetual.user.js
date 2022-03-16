@@ -10,9 +10,9 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.5.8.1
+// @version      1.5.8.2
 // @description  Most compatible Auto Pager script ever. Auto loading next paginated web pages and inserting into current page.
-// @description:zh-CN  自动加载并拼接下一分页内容（适用于论坛、漫画站、小说站、资讯站、博客等），无需规则支持所有网页
+// @description:zh-CN  自动加载并拼接下一分页内容，无需规则支持所有网页 - 适用于搜索引擎【谷歌/百度/必应等】、论坛【贴吧/豆瓣/水木社区等】、图站【deviantArt/Pixiv/Chevereto等】、漫画站【动漫之家/漫画柜/动漫屋等】、小说站【笔趣阁等】、资讯站【腾讯新闻/煎蛋等】、博客【异次元/小众软件等】及其他
 // @description:zh-TW  自動加載並拼接下一分頁內容（適用於論壇、漫畫站、小說站、資訊站、博客等），無需規則支持所有網頁
 // @description:ja     Webページを自動で読み込み継ぎ足し表示を行うブラウザ拡張です
 // @description:ru     Просто автоматически загрузите следующую страницу
@@ -842,6 +842,7 @@
                 curPage.querySelector(".next>a")||
                 curPage.querySelector(".next>button")||
                 curPage.querySelector("a[alt=next]")||
+                curPage.querySelector("button.next")||
                 curPage.querySelector("[title=next]");
             if(!next){
                 let nexts=curPage.querySelectorAll("a.next");
@@ -918,7 +919,7 @@
                 if(next)next=next.querySelector("a");
             }
             if(!next){
-                let aTags=curPage.querySelectorAll("a");
+                let aTags=curPage.querySelectorAll("a,button");
                 for(i=aTags.length-1;i>=0;i--){
                     let aTag=aTags[i];
                     if(aTag.innerText=="§")continue;
@@ -1240,7 +1241,7 @@
                 }else if(img.dataset && img.dataset.origFile){
                     realSrc=img.dataset.origFile;
                 }else if(img.srcset){
-                    var srcs=img.srcset.split(","),largeSize=0;
+                    var srcs=img.srcset.split(/[xw],/),largeSize=0;
                     srcs.forEach(srci=>{
                         let srcInfo=srci.trim().split(" "),curSize=parseInt(srcInfo[1]);
                         if(srcInfo[1] && curSize>largeSize){
@@ -2495,8 +2496,8 @@
                     }
                 }
                 let pageEle=ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView, true);
-                if(!nextLink || !pageEle || (checkEval && !checkEval(iframeDoc))){
-                    if(ruleParser.curSiteRule.wait && waitTimes-->0){
+                if(!nextLink || !pageEle || pageEle.length==0 || (checkEval && !checkEval(iframeDoc))){
+                    if(waitTimes-->0){
                         setTimeout(()=>{
                             checkPage();
                         },waitTime);
