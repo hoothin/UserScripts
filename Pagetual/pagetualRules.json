@@ -522,5 +522,12 @@
     "url":"^https://www\\.douban\\.com/group/topic/",
     "pageElement":"ul#comments>li",
     "pageNum":"start={100*($p-1)}"
+  },
+  {
+    "name":"360搜索",
+    "url":"^https://www\\.so\\.com/s",
+    "lazyImgSrc":"data-isrc",
+    "css":".so-lazyimg{opacity:1!important}",
+    "pageNum":"pn={$p}"
   }
 ]
