@@ -529,5 +529,13 @@
     "lazyImgSrc":"data-isrc",
     "css":".so-lazyimg{opacity:1!important}.so-rich-news .pics li{float:left;margin-right:17px;}",
     "pageNum":"pn={$p}"
+  },
+  {
+    "name":"草榴社區",
+    "type":0,
+    "url":"htm_data/\\d+/\\d+/\\d+\\.html",
+    "pageElement":"//div[@class='t t2']",
+    "sleep":2000,
+    "nextLink":"//div[@class='pages']/a[u]/following-sibling::a[1]"
   }
 ]
