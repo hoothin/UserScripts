@@ -511,5 +511,10 @@
     "url":"^https://iao\\.su/",
     "pageElement":"#index>article",
     "action":1
+  },
+  {
+    "name":"deviantArt",
+    "url":"^https://www\\.deviantart\\.com/search",
+    "pageElement":"div[data-hook='all_content']>div>div>div:not([class])"
   }
 ]
