@@ -527,7 +527,7 @@
     "name":"360搜索",
     "url":"^https://www\\.so\\.com/s",
     "lazyImgSrc":"data-isrc",
-    "css":".so-lazyimg{opacity:1!important}",
+    "css":".so-lazyimg{opacity:1!important}.so-rich-news .pics li{float:left;margin-right:17px;}",
     "pageNum":"pn={$p}"
   }
 ]
