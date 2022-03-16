@@ -516,5 +516,11 @@
     "name":"deviantArt",
     "url":"^https://www\\.deviantart\\.com/search",
     "pageElement":"div[data-hook='all_content']>div>div>div:not([class])"
+  },
+  {
+    "name":"豆瓣小组内页",
+    "url":"^https://www\\.douban\\.com/group/topic/",
+    "pageElement":"ul#comments>li",
+    "pageNum":"start={100*($p-1)}"
   }
 ]
