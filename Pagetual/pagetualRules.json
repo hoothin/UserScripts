@@ -450,7 +450,7 @@
   },
   {
     "name":"NGA",
-    "url":"^https?://.*\\.nga\\.cn/read\\.php",
+    "url":"^https?://(.*\\.nga\\.cn|nga\\.178\\.com)/read\\.php",
     "nextLink":"a[title='下一页']",
     "action":1,
     "pageElement":"div#m_posts"
