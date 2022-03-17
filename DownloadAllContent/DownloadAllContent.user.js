@@ -4,10 +4,10 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.7.0
+// @version      2.7.1
 // @description  Fetch and download main content on current page, provide special support for chinese novel
-// @description:zh-CN  通用网站内容抓取工具，可批量抓取小说、论坛内容等并保存为TXT文档
-// @description:zh-TW  通用網站內容抓取工具，可批量抓取小說、論壇內容等並保存為TXT文檔
+// @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
+// @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
 // @description:ja     ユニバーサルサイトコンテンツクロールツール、クロール、フォーラム内容など
 // @author       hoothin
 // @include      *
@@ -569,6 +569,14 @@
                 [].forEach.call(eles,function(item){
                     if(urlSel[1]){
                         item=Function("item",urlSel[1])(item);
+                        if(!item || !item.href)return;
+                        if(!item.tagName || item.tagName!="A"){
+                            let href=item.href;
+                            let innerText=item.innerText;
+                            item=document.createElement("a");
+                            item.href=href;
+                            item.innerText=innerText;
+                        }
                     }
                     let has=false;
                     for(var j=0;j<processEles.length;j++){
@@ -592,7 +600,13 @@
                     });
                 }
                 if(urlsArr[3]){
-                    processFunc=data=>{return eval(urlsArr[3])};
+                    processFunc=data=>{
+                        if(urlsArr[3].indexOf("return ")==-1){
+                            return eval(urlsArr[3])
+                        }else{
+                            return Function("data",urlsArr[3])(data);
+                        }
+                    };
                 }else{
                     var win=(typeof unsafeWindow=='undefined'? window : unsafeWindow);
                     if(win.dacProcess){
