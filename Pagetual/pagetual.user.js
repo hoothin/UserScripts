@@ -10,10 +10,10 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.5.8.3
+// @version      1.5.8.4
 // @description  Most compatible Auto Pager script ever. Auto loading next paginated web pages and inserting into current page.
-// @description:zh-CN  自动加载并拼接下一分页内容，无需规则支持所有网页 —— 适用于搜索引擎【谷歌/百度/必应等】、论坛【贴吧/豆瓣/水木社区等】、图站【deviantArt/Pixiv/Chevereto等】、漫画站【动漫之家/漫画柜/动漫屋等】、小说站【笔趣阁等】、资讯站【腾讯新闻/煎蛋等】、博客【异次元/小众软件等】及其他
-// @description:zh-TW  自動加載並拼接下一分頁內容（適用於論壇、漫畫站、小說站、資訊站、博客等），無需規則支持所有網頁
+// @description:zh-CN  自动加载并拼接下一分页内容，无需规则即可支持任何网页 —— 适用于搜索引擎【谷歌/百度/必应等】、论坛【贴吧/豆瓣/水木社区等】、图站【deviantArt/Pixiv/Chevereto等】、漫画站【动漫之家/漫画柜/动漫屋等】、小说站【笔趣阁/起点/晋江等】、资讯站【腾讯新闻/煎蛋/雪球等】、博客【异次元/小众软件/异次元等】及其他
+// @description:zh-TW  自動加載並拼接下一分頁內容（適用於論壇、漫畫站、小說站、資訊站、博客等），無需規則即可支持任意網頁
 // @description:ja     Webページを自動で読み込み継ぎ足し表示を行うブラウザ拡張です
 // @description:ru     Просто автоматически загрузите следующую страницу
 // @description:de     Laden Sie einfach automatisch die nächste Seite
@@ -1919,6 +1919,11 @@
                     debug('parse error'+e.toString());
                 }
                 let pageElement=ruleParser.getPageElement(doc);
+                if(inCors && (!pageElement || pageElement.length==0)){
+                    ruleParser.curSiteRule.pageElement=allOfBody;
+                    pageElement=ruleParser.getPageElement(doc);
+                    ruleParser.getInsert(true);
+                }
                 //只有1的話怕不是圖片哦
                 ruleParser.curSiteRule.action=0;
                 if(pageElement && (pageElement.length>1 || (pageElement.length==1 && pageElement[0].tagName!="IMG") )){
@@ -1957,6 +1962,7 @@
     }
 
     var failFromIframe=0;
+    var inCors=false;
     function requestFromIframe(url, callback){
         let orgPage,curPage;
         let iframe = document.createElement('iframe');
@@ -2006,10 +2012,13 @@
                         }
                     }catch(e){
                         debug("Stop as cors");
+                        inCors=true;
                         //isPause=true;
-                        if(!ruleParser.curSiteRule.pageElement)ruleParser.curSiteRule.pageElement=allOfBody;
+                        if(!ruleParser.curSiteRule.pageElement){
+                            ruleParser.curSiteRule.pageElement=allOfBody;
+                            ruleParser.getInsert(true);
+                        }
                         ruleParser.curSiteRule.action=0;
-                        ruleParser.getInsert(true);
                         ruleParser.nextLinkHref=url;
                         callback(false, false);
                         nextPage();
