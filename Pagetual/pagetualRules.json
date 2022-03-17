@@ -109,10 +109,10 @@
   },
   {
     "name":"Baidu",
-    "css":"span.c-img-radius-large.c-img-border{pointer-events: none}div.c-img-radius-large.compatible_rxApe:not(.c-img3){padding-bottom:unset}",
+    "css":"span.c-img-radius-large.c-img-border{pointer-events: none}",
     "insertPos":1,
     "nextLink":"//*[@id=\"page\"]/div/a[contains(text(),'下一页')]",
-    "pageElement":"//*[@id=\"content_left\"]/*",
+    "pageElement":"//*[@id=\"content_style\"]|//*[@id=\"content_left\"]/*",
     "type":0,
     "pageNum":"&pn={10*($p-1)}",
     "url":"^https?://www\\.baidu\\.com/(s|baidu)"
