@@ -12,8 +12,8 @@
 // @namespace    hoothin
 // @version      1.5.8.5
 // @description  Most compatible Auto Pager script ever. Auto loading next paginated web pages and inserting into current page.
-// @description:zh-CN  自动加载并拼接下一分页内容，无需规则即可支持任何网页 —— 适用于搜索引擎【谷歌/百度/必应等】、论坛【贴吧/豆瓣/水木社区等】、图站【deviantArt/Pixiv/Chevereto等】、漫画站【动漫之家/漫画柜/动漫屋等】、小说站【笔趣阁/起点/晋江等】、资讯站【腾讯新闻/煎蛋/雪球等】、博客【异次元/小众软件/异次元等】及其他
-// @description:zh-TW  自動加載並拼接下一分頁內容（適用於論壇、漫畫站、小說站、資訊站、博客等），無需規則即可支持任意網頁
+// @description:zh-CN  自动加载并拼接下一分页内容，无需规则即可支持任何网页
+// @description:zh-TW  自動加載並拼接下一分頁內容，無需規則即可支持任意網頁
 // @description:ja     Webページを自動で読み込み継ぎ足し表示を行うブラウザ拡張です
 // @description:ru     Просто автоматически загрузите следующую страницу
 // @description:de     Laden Sie einfach automatisch die nächste Seite
@@ -696,11 +696,13 @@
         getPageElement(doc, curWin, dontFind) {
             let pageElement=null;
             let self=this;
+            let body=doc.body;
             if(this.curSiteRule.pageElement){
                 pageElement=this.curSiteRule.type==0?getAllElementsByXpath(this.curSiteRule.pageElement,doc,doc):doc.querySelectorAll(this.curSiteRule.pageElement);
+            }else if(!this.curSiteRule.singleUrl && this.curSiteRule.type==0){
+                pageElement=[body];
             }
             if((!pageElement || pageElement.length==0) && curWin && !dontFind){
-                let body=doc.body;
                 if(!body)return null;
                 let bodyHeight=parseInt(body.scrollHeight);
                 let curHeight=bodyHeight;
