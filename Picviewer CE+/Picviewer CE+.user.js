@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.3.18.1
+// @version              2022.3.19.1
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -20,6 +20,7 @@
 // @connect              ipv4.google.com
 // @connect              image.baidu.com
 // @connect              www.tineye.com
+// @connect              *
 // @grant                GM_getValue
 // @grant                GM_setValue
 // @grant                GM_addStyle
@@ -42,7 +43,7 @@
 // @require              https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.js
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
 // @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1023785
-// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1027618
+// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1029834
 // @contributionURL      https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
 // @contributionAmount   1
 // @include              http://*
@@ -2101,6 +2102,7 @@ ImgOps | https://imgops.com/#b#`;
                                     if(srcSplit.length>30 && (srcSplit.indexOf(".")==-1 || /[&\?=,]/i.test(srcSplit))){
                                         srcSplit="";
                                     }
+                                    if(srcSplit.length>50)srcSplit=srcSplit.substring(0,50);
                                     var picName=document.title + "-" + (saveIndex<10?"00"+saveIndex:(saveIndex<100?"0"+saveIndex:saveIndex)) + (node.title?"-" + node.title:"") + "-" + srcSplit,hostArr=location.host.split(".");
                                     var host=hostArr[hostArr.length-2];
                                     saveParams.push([node.dataset.src, picName]);
@@ -2644,29 +2646,49 @@ ImgOps | https://imgops.com/#b#`;
                     var zip = new JSZip(),downloaded=0;
                     var fileName = document.title + ".zip";
                     for(let i=0; i<saveParams.length; i++){
-                        self.dataURLToCanvas(saveParams[i][0], canvas=>{
-                            if(!canvas){
+                        let imgSrc=saveParams[i][0];
+                        if(imgSrc.split("/")[2]==document.domain){
+                            self.dataURLToCanvas(imgSrc, canvas=>{
+                                console.debug(downloaded+1+"/"+saveParams.length);
+                                if(!canvas){
+                                    console.debug("error: "+imgSrc);
+                                    downloaded++;
+                                    if(downloaded == saveParams.length){
+                                        console.debug("Begin compress to ZIP...");
+                                        zip.generateAsync({type:"blob"}, meta=>{console.debug(meta)}).then(function(content){
+                                            saveAs(content, fileName);
+                                            callback();
+                                        })
+                                    }
+                                    return;
+                                }
+                                canvas.toBlob(blob=>{
+                                    zip.file(saveParams[i][1].replace(/\//g,"").replace(/\.[^\.]+$/,"")+'.jpg',blob);
+                                    downloaded++;
+                                    if(downloaded == saveParams.length){
+                                        console.debug("Begin compress to ZIP...");
+                                        zip.generateAsync({type:"blob"}, meta=>{console.debug(meta)}).then(function(content){
+                                            saveAs(content, fileName);
+                                            callback();
+                                        })
+                                    }
+                                }, "image/jpg");
+                            });
+                        }else{
+                            self.corsUrlToBlob(imgSrc, blob=>{
+                                if(blob)zip.file(saveParams[i][1].replace(/\//g,"").replace(/\.[^\.]+$/,"")+'.jpg',blob);
+                                else console.debug("error: "+imgSrc);
                                 downloaded++;
+                                console.debug(downloaded+"/"+saveParams.length);
                                 if(downloaded == saveParams.length){
-                                    _GM_notification("CORS error while downloading pictures, try to uncheck saveAsZip");
-                                    zip.generateAsync({type:"blob"}).then(function(content){
+                                    console.debug("Begin compress to ZIP...");
+                                    zip.generateAsync({type:"blob"}, meta=>{console.debug(meta)}).then(function(content){
                                         saveAs(content, fileName);
                                         callback();
                                     })
                                 }
-                                return;
-                            }
-                            canvas.toBlob(blob=>{
-                                zip.file(saveParams[i][1].replace(/\.[^\.]+$/,"")+'.jpg',blob);
-                                downloaded++;
-                                if(downloaded == saveParams.length){
-                                    zip.generateAsync({type:"blob"}).then(function(content){
-                                        saveAs(content, fileName);
-                                        callback();
-                                    })
-                                }
-                            }, "image/jpg");
-                        });
+                            });
+                        }
                     };
                     return;
                 }
@@ -2988,6 +3010,7 @@ ImgOps | https://imgops.com/#b#`;
                                         if(srcSplit.length>30 && (srcSplit.indexOf(".")==-1 || /[&\?=,]/i.test(srcSplit))){
                                             srcSplit="";
                                         }
+                                        if(srcSplit.length>50)srcSplit=srcSplit.substring(0,50);
                                         var picName=document.title + "-" + (saveIndex<10?"00"+saveIndex:(saveIndex<100?"0"+saveIndex:saveIndex)) + (title==document.title?"":"-" + title) + "-" + srcSplit;
                                         saveParams.push([imgSrc, picName]);
                                     });
@@ -3106,6 +3129,29 @@ ImgOps | https://imgops.com/#b#`;
                     var nodes = document.querySelectorAll('.pv-gallery-sidebar-thumb-container[data-src]');
                     this.addViewmoreItem(nodes);
                 }
+            },
+            corsUrlToBlob:function (url, cb){
+                if(!url)return cb(null);
+                let urlSplit=url.split("/");
+                _GM_xmlhttpRequest({
+                    method: 'GET',
+                    url: url,
+                    responseType:'ArrayBuffer',
+                    headers: {
+                        origin: urlSplit[0]+"//"+urlSplit[2],
+                        referer: url,
+                        accept: "*/*"
+                    },
+                    onload: function(d) {
+                        cb(d.response);
+                    },
+                    onerror: function(){
+                        cb(null);
+                    },
+                    ontimeout: function(){
+                        cb(null);
+                    }
+                });
             },
             dataURLToCanvas:function (dataurl, cb){
                 if(!dataurl)return cb(null);
