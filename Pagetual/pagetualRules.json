@@ -141,7 +141,7 @@
     "action":1,
     "pageNum":"&pn={$p}",
     "url":"^https?://tieba\\.baidu\\.com/p/.+",
-    "wait":"if(doc==document)return true;let lzl=doc.querySelector('div.hideLzl');if(lzl){lzl.scrollIntoView();return false}else{return true}"
+    "wait":"if(doc==document)return true;let lzl=doc.querySelector('div.hideLzl');if(lzl){var actualTop=lzl.offsetTop;var current=lzl.offsetParent;while(current!==null){actualTop+=current.offsetTop;current=current.offsetParent;}doc.body.scrollTop=actualTop;doc.documentElement.scrollTop=actualTop;return false}else{return true}"
   },
   {
     "name":"搜狗wap",
