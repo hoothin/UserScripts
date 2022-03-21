@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.5.8.9
+// @version      1.5.9
 // @description  Most compatible Auto Pager script ever. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动加载并拼接下一分页内容，无需规则即可支持任何网页
 // @description:zh-TW  自動加載並拼接下一分頁內容，無需規則即可支持任意網頁
@@ -1021,9 +1021,9 @@
                         debug(e);
                     }
                 }
-                return result==url?url.replace(/([&\/\?](p=|page[=\/]))\d+/i, "$1"+pageNum).replace(/([_-])\d+\./i, "$1"+pageNum+"."):result;
+                return result==url?url.replace(/([&\/\?](p=|page[=\/-]))\d+/i, "$1"+pageNum).replace(/([_-])\d+\./i, "$1"+pageNum+"."):result;
             }else{
-                return url.replace(/([&\/\?](p=|page[=\/]))\d+/i, "$1"+pageNum).replace(/([_-])\d+\./i, "$1"+pageNum+".");
+                return url.replace(/([&\/\?](p=|page[=\/-]))\d+/i, "$1"+pageNum).replace(/([_-])\d+\./i, "$1"+pageNum+".");
             }
         }
 
@@ -2314,7 +2314,7 @@
         pageText.title=i18n("current");
         pageBar.appendChild(upSpan);
         pageBar.appendChild(pageText);
-        if(ruleParser.curSiteRule.pageNum || (hasPageNum && /[&\/\?](p=|page[=\/])\d+|[_-]\d+\./.test(url))){
+        if(ruleParser.curSiteRule.pageNum || (hasPageNum && /[&\/\?](p=|page[=\/-])\d+|[_-]\d+\./.test(url))){
             pageText.innerHTML="Page ";
             pageNum=document.createElement("span");
             pageNum.innerText=curPage;
