@@ -2356,6 +2356,7 @@
             });
             pageBar.style.display="table-row";
             pageBar.style.backgroundColor="unset";
+            pageBar.style.lineHeight="20px";
             let td=document.createElement("td");
             td.style.backgroundColor="rgb(240 240 240 / 80%)";
             td.style.borderRadius="20px";
