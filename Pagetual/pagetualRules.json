@@ -561,6 +561,6 @@
     "name":"虎扑",
     "url":"^https?://bbs\\.hupu\\.com/\\d+",
     "pageElement":".bbs-post-wrapper-content",
-    "nextLink":"li.hupu-rc-pagination-next>a"
+    "nextLink":"li.hupu-rc-pagination-next>a:not([disabled])"
   }
 ]
