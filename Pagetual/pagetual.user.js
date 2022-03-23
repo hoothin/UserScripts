@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.6.2
+// @version      1.6.2.1
 // @description  Most compatible Auto Pager script ever. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动加载并拼接下一分页内容，无需规则即可支持任何网页
 // @description:zh-TW  自動加載並拼接下一分頁內容，無需規則即可支持任意網頁
@@ -936,6 +936,7 @@
                 for(i=aTags.length-1;i>=0;i--){
                     let aTag=aTags[i];
                     if(aTag.innerText=="§")continue;
+                    if(aTag.innerText.length>50)continue;
                     if(aTag.style.display=="none")continue;
                     if(next1 && next2 && next3 && next4)break;
                     if(aTag.href && /next$/i.test(aTag.href))continue;
@@ -970,7 +971,10 @@
                     if(!aTag.href || /^javascript:/.test(aTag.href))continue;
                     if(!next4 && aTag.href.length<100){
                         let _aHref=aTag.href.replace("?&","?").replace("#!","").replace("index.php?","?");
-                        if(pageNum<999 && _aHref.replace(preStr,"").replace(afterStr,"")==pageNum+1){
+                        let _aHrefTrim=_aHref;
+                        if(preStr)_aHrefTrim=_aHrefTrim.replace(preStr,"");
+                        if(afterStr)_aHrefTrim=_aHrefTrim.replace(afterStr,"");
+                        if(pageNum<999 && _aHrefTrim==pageNum+1){
                             next4=aTag;
                         }else if(this.curUrl!=aTag.href){
                             let _url=url.replace(/\.s?html?$/i,"");
