@@ -10,6 +10,16 @@
 * 鏡像文件 `iso`
 * 視頻文件 `mp4 rmvb mkv avi`
 
+### 用法
+ - 按下 **`F9`** 快速在當前網站禁用或啓用並記錄選擇
+ - **`Alt + F9`** 自定義下載，選中文本則下載文字對應的鏈接，鼠標指向鏈接則下載該鏈接，沒有選中則彈框粘貼鏈接下載
+ - 按住 **`Ctrl + Shift`** 點擊批量離線當前頁面中所有資源（如果我給該網盤寫了批量離線功能的話），實際也沒鳥用，度盤批量離線時動不動就網絡繁忙了
+ - 網盤排序功能，設置頁面拖拽圖標即可進行排序
+ - 網盤設置功能，點擊圖標可設置是否啓用網盤
+ - 度盤默認下載路徑設置
+ - 設置頁面填入正則表達式可增加支持鏈接，可設置是否僅當鼠標經過時顯示圖標
+ - **`Alt + x`** 批量複製頁面資源
+
 ### 自定義設置示例
 * 安卓安裝包 `\.apk$`
 * 某服裝擴展 `\.Outfit\d{4}\.txx$`
@@ -17,7 +27,7 @@
 * 某帶參mp4視頻 `mp4\?[^\/]+$`
 
 ### 自定義例子 - Github鏡像加速下載，點擊下方導入
-配置方法在設置項内，有其他規則用`<pre>`標簽分享到反饋亦可點擊導入。例如此處的下載圖標：[Github](https://github.com/hoothin/imgCodeCheck/releases/tag/0.1)
+配置方法在設置項内，有其他規則用`<pre>`標簽分享到 [反饋](https://github.com/hoothin/UserScripts/issues) 亦可點擊導入。例如此處的下載圖標：[Github](https://github.com/hoothin/imgCodeCheck/releases/tag/0.1)
 <pre>
 https://download.fastgit.org/${https?://[^/]+(.*)}@@Fastgit@@github\.com.*(releases\/download|archive\/refs\/)@@@@ffff9f
 https://pd.zwc365.com/seturl/$url@@ZWC365@@github\.com.*(releases\/download|archive\/refs\/)@@@@0fffff
@@ -40,9 +50,22 @@ p:http://192.168.32.1:6800/jsonrpc?id=$random&jsonrpc=2.0&method=aria2.addUri&am
 </pre>
 導入后需要自行修改網址与 token 密鑰
 
-### 自定義例子4 - 複製所有包含 “22590-easy-offline” 的連結為 markdown 格式（按住 ctrl 顯示圖標，使用 ctrl + shift 複製全部）
+### 自定義例子4 - 複製所有包含 “22590-easy-offline” 的連結為 markdown 格式
+（按住 Alt 顯示圖標，使用 ctrl + shift 複製全部）
 <pre>
 c:[$text "$title"]($url)@@Markdown@@22590-easy-offline@@@@df2a00@@1
+</pre>
+
+### 自定義例子5 - 谷歌翻譯選中文本
+默認是按住Alt鍵划選
+<pre>
+https://translate.google.com/?client=gtx&dj=1&q=$text&sl=auto&tl=zh-CN&hl=zh-CN&ie=UTF-8&oe=UTF-8&source=icon&dt=t&dt=bd@@Translate@@@@data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAAAlC+aJAAAACXBIWXMAAAsTAAALEwEAmpwYAAAExklEQVRoge2Y+08UVxTH/dNmtYRHwNKHDW1tIWl/sK1QbFoSitXa9i642wWxKIK0ysOCLBSwBSWQslpboD54SGVNbAkB0cqjIIic+5jTH2b2gczM7o7DzpLsyfeHzeydmfM5994z555dEoEdrV22e5AEsNuDJIDdHiQB7PYgCRBpRJoLDtazggbzym9g+fX0je+oDQCfXGDL62iJCRlbhnhcAdLdsPzUGu+D9uVPLH4A+Q00Gp/WNnBhFRfXogLoGRUJB1DZyyUC+05GNbjvThLANEDPmChqYVuVU0UlAqnHoaiZBfVZQO5unigAtQNmckhuDU0UgJ9HxKEmFlShjjLcIBHI9EBhEytsZKWXEmYGojEuMKucSgTc3Szh9kA0dmdGVu69fk8kNMBXHSzDDVkeeLQsh193dzOJwMsVFLQnIGEARqfVSJdfDnm6sIppLpAInOrnejcmCgAiHmpiEoGXSuHvf9VJIF1MIpBSBg83T0uCAvjn5D2lIBH44BxlHPsnhIOARKCyVzf8iQWAgW+wRKDEy1KPg0TgtUq6Yli9xhWgIBLAM4q5NaEqf7cThu5rJx97AAobdVJJwGaX5APnQgBpLuif0AaQA5qal1sGeTRqHuTFFyPX3iYBGMeLwyLdHYq98iOlDB6vGFPHZq3DEeqXmAG4wF//EuErp7iVPViSm37naS4gXREmLVaTEd85Y3QWjQFgbQM7b25yfW857R0XwZQ5syiPTOsmUNNW2Gi0kGIAuOYXjsBScTiBdLEoT2GJAoCI3/v4nlIo8TL/nPWRjgeAkHFhFSnHF2lVzD/BsWl5bFqemJE3oigXzQN8rLWJKccSL3v3DJ1fNTkJ4Y2JlkGjz/aLAmz9EiveK//ur6bzT2JmWFzDlLLQK/JqI0+BeYC3TtNwB8O9N81w4Q81r795Ss1mE7MRnmAeQCLQfoPreW+CQZbx7dNUIpBdQe8+kJXiT+/sZg2Ag8DRdtY7Lr5oYxKBTI/GmP3V1Dcprk6Kq5NidskI5taUWghV93NE/PA8lQhkuOEpbBvAc+qbEAUNRo9r+9NoU37dySQCDidML8iI+MuIytM9alQCWglw/Z5YBzRgMABYWUel5D5Yr27ctQ31BPfReaNVZCXANb9AxHXAombth3qHdQHab6jbtycs3sohzuGEqXndtWclwG9+9d2M42GtPf3KCfrPY21X3q+jEoH0zSv+9pR6tq7q0yXfFgCFQYnfVoa5/55n8M+pju47Sb/t4UG5urlyLs2uoFQHwUqADDfdWx5Slke70M2pog83M1RcjtyWHLirvZWtBIheOVU02Jt4RlFBdRA4cYWf9fE6H6/z8doBXjvAP29V/fv0R+2tbA+AwvBoRUbEK+Nqujzwg0bhsLKOqS6QCOx2wta1ZydAbg1VDgz5gbTbdUt7mX/TqQ6o82kMsAcgt4YuriIizizKWeWQ6YHsCtDruAzdF5keyPRAXi0VW+bABoC8QOwtsXgDBGO/IwHyauiCpd7HG8C4mNsBAMWtFveFgOGrlWb7QibkINBxM0J7NCbvnZcidBe3JQu9d5Ye62DhOtqurcNtrMTLSrzsyObrxzrYkXb2umHstxEgnkoC2K0kgN1KAtitJIDd+h//4oa1H68RnAAAAABJRU5ErkJggg==@@4085f9
+</pre>
+
+### 自定義例子6 - 去除選中連結中的表情漢字並跳轉
+默認是按住Alt鍵劃選，比如h❤ttps://補丁baidu.😀com
+<pre>
+$text{[^\w\-_\.~!\*'();:@&=\+\$,\/\?#\[\]%]}@@GetLink@@@@@@f9ff9f
 </pre>
 
 

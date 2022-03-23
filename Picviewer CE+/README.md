@@ -1,18 +1,19 @@
-This script can popup/scale/rotate/batch save pictures and load pictures from next pages automatically. 
+# Popup/scale/rotate/batch save pictures and load pictures from next pages automatically. 
 
 Press CTRL+g to enter gallery quickly. Hold CTRL to view larger picture when mouse over images or links.
 
 More settings in "Picviewer CE+ config" to be customized, reviewing them is currently the best way to learn about what the script is capable of. try to seach more functions by yourself ! 
 
-+ Scale/rotate/batch save every picture
++ **Adjust:** Scale/rotate/batch save every picture
 
-+ Find and popup large version for pictures with click or mouse over
++ **View:** Find and popup large version for pictures with click or mouse over
 
-+ Auto parse next pages and show all pics
++ **Fetch:** Auto load and parse next paginated web
+ pages and show ALL pics
 
-+ Pictures export
++ **Download:** Pictures export to page or package into ZIP
 
-+ Search image by picture
++ **Search:** Search similar image by picture
 
 + View long image by scroll
 
@@ -25,7 +26,31 @@ It will help the people who speak the same language just like you. Thank you.
 
 If you wish to add more rules for peculiar sites, come to [my Github](https://github.com/hoothin/UserScripts/blob/master/Picviewer%20CE%2B/pvcep_rules.js) and pull requests or open issues.
 
+### Custom rules example for config:
 
+**1.**
+This can add click-to-open for existing asiansister rule. Place it into the '[]' of rule textarea.
+<pre>
+{
+&nbsp;name: "asiansister",
+&nbsp;clickToOpen:{
+&nbsp;&nbsp;enabled:true,
+&nbsp;&nbsp;preventDefault:true,
+&nbsp;&nbsp;type:'actual'
+&nbsp;}
+}
+</pre> 
+<br>
+<b>2.</b>
+This can add large-image rule for dmm to view high-definition original images or download them.
+<pre>
+{
+&nbsp;name: "dmm",
+&nbsp;src: /pics\.dmm\.co\.jp/i,
+&nbsp;r: "ps.jpg",
+&nbsp;s: "pl.jpg"
+}
+</pre>
 
 *Buy me a coffee with [PayPal.Me](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation) to keep my scripts always up to date.*
 

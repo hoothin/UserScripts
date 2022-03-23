@@ -22,11 +22,9 @@ Rules example
     "css":".javascript-hide {display: inline-block !important;}"
   },
   {
-    "name":"tieba",
-    "action":1,
-    "url":"^https:\/\/tieba\\.baidu.com\/f\\?kw=",
-    "pageElement":"ul#thread_list>li",
-    "nextLink":".next.pagination-item "
+    "name":"beauty",
+    "url":"^https://www\\.jpmn8\\.com/",
+    "pageElement":"p>img"
   },
   {
     "name":"xxgame",
