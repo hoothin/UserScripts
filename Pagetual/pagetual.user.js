@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.6
+// @version      1.6.1
 // @description  Most compatible Auto Pager script ever. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动加载并拼接下一分页内容，无需规则即可支持任何网页
 // @description:zh-TW  自動加載並拼接下一分頁內容，無需規則即可支持任意網頁
@@ -171,7 +171,8 @@
                     initRun:"打开页面后立即尝试翻页，否则滚动至页尾再翻页",
                     preload:"翻页前预读下一页，加速浏览",
                     click2ImportRule:"点击下方添加特殊规则库，添加后再行更新：",
-                    forceAllBody:"是否拼接整个页面？"
+                    forceAllBody:"是否拼接整个页面？",
+                    openInNewTab:"使拼接页面的内容在新页面打开"
                 };
                 break;
             case "zh-TW":
@@ -215,7 +216,8 @@
                     initRun:"打開頁面后立即嘗試翻頁，否則滾動至頁尾再翻頁",
                     preload:"翻頁前預讀下一頁，加速瀏覽",
                     click2ImportRule:"點擊下方添加特殊規則庫，添加後再行更新：",
-                    forceAllBody:"是否拼接整個頁面？"
+                    forceAllBody:"是否拼接整個頁面？",
+                    openInNewTab:"使拼接頁面的内容在新頁面打開"
                 };
                 break;
             case "ja":
@@ -258,7 +260,8 @@
                     initRun:"Webページを開いた直後にページをめくる",
                     preload:"事前に次のページを読む",
                     click2ImportRule:"以下をクリックして、ルールベースを追加します：",
-                    forceAllBody:"フルページ埋め込み？"
+                    forceAllBody:"フルページ埋め込み？",
+                    openInNewTab:"スプライスされたページのコンテンツを新しいページで開きます"
                 };
                 break;
             default:
@@ -301,7 +304,8 @@
                     initRun:"Turn pages immediately after opening",
                     preload:"Preload next page for speeding up",
                     click2ImportRule:"Click to import base rules link, then click to update rules:",
-                    forceAllBody:"Join full body of page?"
+                    forceAllBody:"Join full body of page?",
+                    openInNewTab:"Open urls of additions in new tab"
                 };
                 break;
         }
@@ -1234,6 +1238,24 @@
                 }
             }
             this.lazyImgAction(eles);
+            this.openInNewTab(eles);
+        }
+
+        openInNewTab(eles){
+            if(rulesData.openInNewTab){
+                [].forEach.call(eles, ele=>{
+                    if(ele.tagName=="A" && ele.href && !/^(mailto:|javascript:|#)/.test(ele.href)){
+                        ele.setAttribute('target', '_blank');
+                    }else{
+                        [].forEach.call(ele.querySelectorAll('a[href]:not([href^="mailto:"]):not([href^="javascript:"]):not([href^="#"])'), a=>{
+                            a.setAttribute('target', '_blank');
+                            if (a.getAttribute('onclick') == 'atarget(this)') {
+                                a.removeAttribute('onclick');
+                            }
+                        });
+                    }
+                });
+            }
         }
 
         lazyImgAction(eles){
@@ -1642,6 +1664,7 @@
         let enableWhiteListInput=createCheckbox(i18n("autoRun"), rulesData.enableWhiteList!=true);
         let enableDebugInput=createCheckbox(i18n("enableDebug"), rulesData.enableDebug!=false);
         let enableHistoryInput=createCheckbox(i18n("enableHistory"), rulesData.enableHistory===true);
+        let openInNewTabInput=createCheckbox(i18n("openInNewTab"), rulesData.openInNewTab===true);
         let initRunInput=createCheckbox(i18n("initRun"), rulesData.initRun!=false);
         let preloadInput=createCheckbox(i18n("preload"), rulesData.preload);
 
@@ -1683,6 +1706,7 @@
             rulesData.enableWhiteList=!enableWhiteListInput.checked;
             rulesData.enableDebug=enableDebugInput.checked;
             rulesData.enableHistory=enableHistoryInput.checked;
+            rulesData.openInNewTab=openInNewTabInput.checked;
             rulesData.initRun=initRunInput.checked;
             rulesData.preload=preloadInput.checked;
             storage.setItem("rulesData", rulesData);
@@ -1868,6 +1892,9 @@
                 }
                 if(typeof(rulesData.enableHistory)=="undefined"){
                     rulesData.enableHistory=false;
+                }
+                if(typeof(rulesData.openInNewTab)=="undefined"){
+                    rulesData.openInNewTab=false;
                 }
                 if(typeof(rulesData.enableDebug)=="undefined"){
                     rulesData.enableDebug=true;
