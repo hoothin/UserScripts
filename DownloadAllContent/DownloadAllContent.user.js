@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.7.3
+// @version      2.7.3.1
 // @description  Fetch and download main content on current page, provide special support for chinese novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -161,7 +161,8 @@
             let curIndex=downIndex;
             let aTag=aEles[curIndex];
             let request=(aTag, curIndex)=>{
-                return [curIndex,GM_xmlhttpRequest({
+                let tryTimes=0;
+                let requestBody={
                     method: 'GET',
                     url: aTag.href,
                     headers:{referer:aTag.href},
@@ -217,15 +218,19 @@
                         if(request)curRequests.push(request);
                     },
                     ontimeout: function(e) {
-                        console.warn("timeout:");
-                        console.log(e);
+                        console.warn("timeout: times="+tryTimes+" url="+aTag.href);
+                        //console.log(e);
+                        if(++tryTimes<3){
+                            return GM_xmlhttpRequest(requestBody);
+                        }
                         downIndex++;
                         downNum++;
-                        processDoc(curIndex, aTag, null, ' : TIMEOUT '+(e.response||e.responseText));
+                        processDoc(curIndex, aTag, null, ' : TIMEOUT '+aTag.href);
                         let request=downOnce();
                         if(request)curRequests.push(request);
                     }
-                })];
+                };
+                return [curIndex,GM_xmlhttpRequest(requestBody)];
             }
             if(!aTag){
                 let waitAtagReadyInterval=setInterval(function(){
