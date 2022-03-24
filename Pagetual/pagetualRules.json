@@ -569,6 +569,7 @@
     "pageElement":"div.img-box",
     "nextLink":"div.vue_pagination_next",
     "wait":"let preload=doc.querySelector('.v-image__image--preload');if(preload){var actualTop=preload.offsetTop;var current=preload.offsetParent;while(current!==null){actualTop+=current.offsetTop;current=current.offsetParent;}doc.documentElement.scrollTop=actualTop;return false;}return doc.querySelector('div.vue_pagination_next');",
-    "init":"if(iframe){iframe.style.position='fixed';iframe.style.top=0;iframe.height=1000;let mask=doc.querySelector('div.mask');setInterval(()=>{if(mask.style.display!='none'){iframe.style.visibility='';}else{iframe.style.visibility='hidden'}},1000)}"
+    "init":"if(iframe){iframe.style.position='fixed';iframe.style.top=0;iframe.height=1000;let mask=doc.querySelector('div.mask');setInterval(()=>{if(mask.style.display!='none'){iframe.style.visibility='';}else{iframe.style.visibility='hidden'}},1000)}",
+    "enable":0
   }
 ]
