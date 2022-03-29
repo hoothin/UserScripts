@@ -127,7 +127,7 @@
     "name":"百度贴吧列表",
     "action":1,
     "pageBar":"pageBar.classList.add('j_thread_list');pageBar.dataset.field='{}'",
-    "url":"^https?://tieba\\.baidu\\.com/f\\?kw=",
+    "url":"^https?://tieba\\.baidu\\.com/.+",
     "pageElement":"ul#thread_list>li",
     "pageNum":"&pn={50*($p-1)}",
     "nextLink":".next.pagination-item "
