@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.3.26.1
+// @version              2022.3.31.1
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -42,7 +42,7 @@
 // @require              https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js
 // @require              https://cdn.jsdelivr.net/npm/jszip@3.7.1/dist/jszip.min.js
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
-// @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1023785
+// @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1034248
 // @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1029834
 // @contributionURL      https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
 // @contributionAmount   1
@@ -175,6 +175,7 @@ ImgOps | https://imgops.com/#b#`;
                     current: 'c',
                     magnifier: 'm',
                     gallery: 'g',
+                    download: 'd'
                 },
                 globalkeys: {
                     invertInitShow: false,
@@ -8356,8 +8357,9 @@ ImgOps | https://imgops.com/#b#`;
                 };
 
                 setPosition[floatBarPosi[0]]();
-                if(floatBarPosi.length>1)
-                setPosition[floatBarPosi[1]]();
+                if(floatBarPosi.length>1){
+                    setPosition[floatBarPosi[1]]();
+                }
             },
             show:function(){
                 if(this.setPosition())return;
@@ -8382,6 +8384,10 @@ ImgOps | https://imgops.com/#b#`;
                 },100);
             },
             open:function(e,buttonType){
+                if(buttonType=='download'){
+                    _GM_download(this.data.src||this.data.imgSrc, this.data.img.alt||document.title);
+                    return;
+                }
                 var waitImgLoad = e && e.ctrlKey ? !prefs.waitImgLoad : prefs.waitImgLoad; //按住ctrl取反向值
                 var openInTopWindow = e && e.shiftKey ? !prefs.framesPicOpenInTopWindow : prefs.framesPicOpenInTopWindow; //按住shift取反向值
                 if (!waitImgLoad && buttonType == 'magnifier' && !envir.chrome) { //非chrome的background-image需要全部载入后才能显示出来
@@ -9311,7 +9317,7 @@ ImgOps | https://imgops.com/#b#`;
         function keydown(event) {
             var key = String.fromCharCode(event.keyCode).toLowerCase();
             if(checkGlobalKeydown(event)){
-                if(key==prefs.floatBar.keys['gallery']){
+                if(key==prefs.floatBar.keys.gallery){
                     openGallery();
                     event.stopPropagation();
                     event.preventDefault();
@@ -9321,8 +9327,9 @@ ImgOps | https://imgops.com/#b#`;
                 }
                 return true;
             }else{
-                if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey)
+                if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey){
                     return false;
+                }
 
                 if (floatBar && floatBar.shown && isKeyDownEffectiveTarget(event.target)) {
                     Object.keys(prefs.floatBar.keys).some(function(action) {
@@ -9553,6 +9560,12 @@ ImgOps | https://imgops.com/#b#`;
                     className: 'floatBar-key',
                     "default": prefs.floatBar.keys.gallery,
                     title: i18n("keysGalleryTip")
+                },
+                'floatBar.keys.download': {
+                    label: i18n("download"),
+                    type: 'text',
+                    className: 'floatBar-key',
+                    "default": prefs.floatBar.keys.download
                 },
 
                 // 放大镜
