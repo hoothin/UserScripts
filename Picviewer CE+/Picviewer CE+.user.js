@@ -8759,7 +8759,7 @@ ImgOps | https://imgops.com/#b#`;
                         if(end<siteInfo.length){
                             searchByTime();
                         }
-                    },50);
+                    },5);
                 }
                 if(window.self == window.top){
                     searchByTime();
