@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.6.3
+// @version      1.6.4
 // @description  Most compatible Auto Pager script ever. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动加载并拼接下一分页内容，无需规则即可支持任何网页
 // @description:zh-TW  自動加載並拼接下一分頁內容，無需規則即可支持任意網頁
@@ -582,7 +582,7 @@
 
             function ruleMatch(r){
                 let pageElement,nextLink,insert;
-                if(r.nextLink){
+                if(r.nextLink && r.nextLink!="0" && r.nextLink!=0){
                     nextLink=r.type==0?getElementByXpath(r.nextLink):document.querySelector(r.nextLink);
                     if(!nextLink)return false;
                 }
@@ -871,7 +871,7 @@
                 next=null;
             }
             if(!next){
-                next=curPage.querySelectorAll("[aria-label='Next']");
+                next=curPage.querySelectorAll("[aria-label='Next page']");
                 if(next && next.length==1){
                     next=next[0];
                     if(!next.href || /^javascript:/.test(next.href)){
@@ -883,7 +883,7 @@
                 }
             }
             if(!next){
-                next=curPage.querySelectorAll("[aria-label='Next page']");
+                next=curPage.querySelectorAll("[aria-label='Next']");
                 if(next && next.length==1){
                     next=next[0];
                     if(!next.href || /^javascript:/.test(next.href)){
@@ -1070,7 +1070,7 @@
                 }
                 nextLink={href:targetUrl};
             }else if(this.curSiteRule.nextLink){
-                if(this.curSiteRule.nextLink!="0"){
+                if(this.curSiteRule.nextLink!="0" && this.curSiteRule.nextLink!=0){
                     nextLink=this.curSiteRule.type==0?getElementByXpath(this.curSiteRule.nextLink,doc,doc):doc.querySelector(this.curSiteRule.nextLink);
                 }
             }else{
@@ -1814,7 +1814,7 @@
     function getElementTop(ele) {
         var actualTop = ele.offsetTop;
         var current = ele.offsetParent;
-        while (current !== null) {
+        while (current) {
             actualTop += current.offsetTop;
             current = current.offsetParent;
         }
