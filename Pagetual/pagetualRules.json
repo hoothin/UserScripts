@@ -578,5 +578,11 @@
     "pinUrl":"true",
     "nextLink":"a.next:not(.disabled)",
     "pageElement":"#table_wrapper-table>tbody>tr"
+  },
+  {
+    "name":"mikuclub",
+    "url":"^https://www\\.mikuclub\\.cc/",
+    "loadMore":"button.get-next-page",
+    "nextLink":"0"
   }
 ]
