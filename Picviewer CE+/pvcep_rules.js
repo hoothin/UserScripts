@@ -113,13 +113,10 @@ var siteInfo=[
  name:"百度贴吧",
  enabled:true,
  url:/^https?:\/\/tieba\.baidu\.[^\/]+\//i,
- getImage:function(){
-     var oldsrc=this.src;
-     var newsrc=this.getAttribute("bpic") || this.getAttribute("data-original") || oldsrc;
-     if(!newsrc)return;
-     newsrc=newsrc.replace(/\/sys\/portrait/i, "/sys/portraitl").replace(/^(http:\/\/tiebapic\.baidu\.com\/forum\/)ab(pic\/item\/[\w.]+)/i, "$1$2").replace(/.*\/sign=\w+\/([\w.]+)$/i, 'http://tiebapic.baidu.com/forum/pic/item/$1');
-     if(newsrc!=oldsrc)return newsrc;
- }
+ r: [/\/sys\/portrait/i,
+     /^(http:\/\/tiebapic\.baidu\.com\/forum\/)ab(pic\/item\/[\w.]+)/i,
+     /.*\/sign=\w+\/([\w\.]+)(\?|$)/i],
+ s: ["/sys/portraitl", "$1$2", 'http://tiebapic.baidu.com/forum/pic/item/$1']
 },
 {
  name: "百度图片搜索",
