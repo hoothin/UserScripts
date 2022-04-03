@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.4.1.2
+// @version              2022.4.3.2
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -43,7 +43,7 @@
 // @require              https://cdn.jsdelivr.net/npm/jszip@3.7.1/dist/jszip.min.js
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
 // @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1034546
-// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1029834
+// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1035403
 // @contributionURL      https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
 // @contributionAmount   1
 // @include              http://*
@@ -151,6 +151,7 @@ ImgOps | https://imgops.com/#b#`;
                 showDelay:366,//浮动工具栏显示延时.单位(毫秒)
                 hideDelay:566,//浮动工具栏隐藏延时.单位(毫秒)
                 position:'top left',// 取值为: 'top left'(图片左上角) 或者 'top right'(图片右上角) 'bottom right'(图片右下角) 'bottom left'(图片左下角);
+                stayOut:false,
                 offset:{//浮动工具栏偏移.单位(像素)
                     x:-15,//x轴偏移(正值,向右偏移,负值向左)
                     y:-15,//y轴偏移(正值,向下,负值向上)
@@ -295,7 +296,9 @@ ImgOps | https://imgops.com/#b#`;
                     var srcs=this.srcset.split(","),largeSize=0;
                     srcs.forEach(srci=>{
                         let srcInfo=srci.trim().split(" "),curSize=parseInt(srcInfo[1]);
-                        if(srcInfo[1] && curSize>largeSize){
+                        if(!srcInfo[1]){
+                            newsrc=srcInfo[0];
+                        }else if(curSize>largeSize){
                             largeSize=curSize;
                             newsrc=srcInfo[0];
                         }
@@ -8309,7 +8312,11 @@ ImgOps | https://imgops.com/#b#`;
                             top=scrolled.y;
                             offsetY=0;
                         }
-                        top=top + offsetY;
+                        if(prefs.floatBar.stayOut){
+                            top=top + offsetY - 10;
+                        }else{
+                            top=top + offsetY;
+                        }
                         if(targetPosi.height<=50)top-=10;
                         fbs.top=top + 'px';
                     },
@@ -8335,7 +8342,11 @@ ImgOps | https://imgops.com/#b#`;
                         }else{
                             bottom -= scrolled.y;
                         }
-                        bottom=bottom - offsetY;
+                        if(prefs.floatBar.stayOut){
+                            bottom=bottom - offsetY - 50;
+                        }else{
+                            bottom=bottom - offsetY - 30;
+                        }
                         if(targetPosi.height<=50)bottom+=10;
                         fbs.bottom=bottom + 'px';
                     },
@@ -9422,6 +9433,11 @@ ImgOps | https://imgops.com/#b#`;
                     },
                     "default": prefs.floatBar.position,
                     section: [i18n("floatBar")],
+                },
+                'floatBar.stayOut': {
+                    label: i18n("stayOut"),
+                    type: 'checkbox',
+                    "default": prefs.floatBar.stayOut,
                 },
                 'floatBar.showDelay': {
                     label: i18n("showDelay"),
