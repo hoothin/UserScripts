@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.4.3.2
+// @version              2022.4.4.1
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -152,6 +152,7 @@ ImgOps | https://imgops.com/#b#`;
                 hideDelay:566,//浮动工具栏隐藏延时.单位(毫秒)
                 position:'top left',// 取值为: 'top left'(图片左上角) 或者 'top right'(图片右上角) 'bottom right'(图片右下角) 'bottom left'(图片左下角);
                 stayOut:false,
+                stayOutOffset:0,
                 offset:{//浮动工具栏偏移.单位(像素)
                     x:-15,//x轴偏移(正值,向右偏移,负值向左)
                     y:-15,//y轴偏移(正值,向下,负值向上)
@@ -8313,7 +8314,7 @@ ImgOps | https://imgops.com/#b#`;
                             offsetY=0;
                         }
                         if(prefs.floatBar.stayOut){
-                            top=top + offsetY - 10;
+                            top=top + offsetY - 10 - prefs.floatBar.stayOutOffset;
                         }else{
                             top=top + offsetY;
                         }
@@ -8343,7 +8344,7 @@ ImgOps | https://imgops.com/#b#`;
                             bottom -= scrolled.y;
                         }
                         if(prefs.floatBar.stayOut){
-                            bottom=bottom - offsetY - 50;
+                            bottom=bottom - offsetY - 40 - prefs.floatBar.stayOutOffset;
                         }else{
                             bottom=bottom - offsetY - 30;
                         }
@@ -9438,6 +9439,13 @@ ImgOps | https://imgops.com/#b#`;
                     label: i18n("stayOut"),
                     type: 'checkbox',
                     "default": prefs.floatBar.stayOut,
+                    line: 'start'
+                },
+                'floatBar.stayOutOffset': {
+                    type: 'int',
+                    "default": prefs.floatBar.stayOutOffset,
+                    after: ' '+i18n("px"),
+                    line: 'end'
                 },
                 'floatBar.showDelay': {
                     label: i18n("showDelay"),
