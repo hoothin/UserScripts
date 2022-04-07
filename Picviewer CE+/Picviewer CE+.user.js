@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.4.6.1
+// @version              2022.4.7.1
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -5982,7 +5982,7 @@ ImgOps | https://imgops.com/#b#`;
                 this.addStyle();
 
                 var img=this.img;
-                img.className='pv-pic-window-pic pv-pic-ignored';
+                img.className='pv-pic-window-pic pv-pic-ignored transition-transform';
                 img.style.cssText='\
                  top:0px;\
                  left:0px;\
@@ -6435,6 +6435,9 @@ ImgOps | https://imgops.com/#b#`;
                     -webkit-text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;\
                     -moz-text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;\
                     }\
+                    .transition-transform{\
+                    transition: transform 0.3s ease;\
+                    }\
                     .pv-pic-window-pic {\
                     position: relative;\
                     display:inline-block;\/*opera把图片设置display:block会出现渲染问题，会有残影，还会引发其他各种问题，吓尿*/\
@@ -6837,7 +6840,16 @@ ImgOps | https://imgops.com/#b#`;
 
                 var rotate=function (radians){
                     if(self.rotatedRadians==radians)return;
-                    img.style[support.cssTransform] = ' rotate('+ radians +'rad) ' + iTransform;//旋转图片
+                    if(Math.abs(self.rotatedRadians-radians)==1.5*PI){
+                        img.classList.remove("transition-transform");
+                        img.style[support.cssTransform] = ' rotate('+ (self.rotatedRadians<radians?self.rotatedRadians+2*PI:self.rotatedRadians-2*PI) +'rad) ' + iTransform;
+                        setTimeout(()=>{
+                            img.classList.add("transition-transform");
+                            img.style[support.cssTransform] = ' rotate('+ radians +'rad) ' + iTransform;
+                        },1);
+                    }else{
+                        img.style[support.cssTransform] = ' rotate('+ radians +'rad) ' + iTransform;//旋转图片
+                    }
                     self.rotateIPointer.style[support.cssTransform]='rotate('+ radians +'rad)';//旋转指示器
 
                     self.rotatedRadians=radians;
@@ -6889,8 +6901,10 @@ ImgOps | https://imgops.com/#b#`;
                     self.rotateIndicator.style.display='none';
                     document.removeEventListener('mousemove',moveHandler,true);
                     document.removeEventListener('mouseup',mouseupHandler,true);
+                    self.img.classList.add("transition-transform");
                 };
 
+                self.img.classList.remove("transition-transform");
                 document.addEventListener('mousemove',moveHandler,true);
                 document.addEventListener('mouseup',mouseupHandler,true);
             },
