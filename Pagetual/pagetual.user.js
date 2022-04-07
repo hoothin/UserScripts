@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.6.6.2
+// @version      1.6.6.3
 // @description  Most compatible Auto Pager script ever. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动加载并拼接下一分页内容，无需规则即可支持任何网页
 // @description:zh-TW  自動加載並拼接下一分頁內容，無需規則即可支持任意網頁
@@ -2724,6 +2724,14 @@
 
     function nextPage(){
         if(isPause || isLoading)return;
+        if(ruleParser.curSiteRule.delay){
+            try{
+                let checkDelay=Function('"use strict";' + ruleParser.curSiteRule.delay)();
+                if(!checkDelay)return;
+            }catch(e){
+                debug(e);
+            }
+        }
         let nextLink=ruleParser.nextLinkHref;
         if(!nextLink){
             if(ruleParser.curSiteRule.pinUrl && curPage==1){
