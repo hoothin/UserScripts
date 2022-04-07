@@ -4821,7 +4821,7 @@ ImgOps | https://imgops.com/#b#`;
                     height: 100%;\
                     width: 100%;\
                     background-clip: padding-box;\
-                    background-color: rgba(20,20,20,0.96);\
+                    background-color: rgba(20,20,20,0.75);\
                     position:relative;\
                     }\
                     .pv-gallery-img-container-top {\
