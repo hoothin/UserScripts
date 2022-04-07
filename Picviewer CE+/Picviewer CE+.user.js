@@ -9353,7 +9353,7 @@ ImgOps | https://imgops.com/#b#`;
         function keydown(event) {
             var key = String.fromCharCode(event.keyCode).toLowerCase();
             if(checkGlobalKeydown(event)){
-                if(key==prefs.floatBar.keys.gallery){
+                if(prefs.floatBar.keys.enable && key==prefs.floatBar.keys.gallery){
                     openGallery();
                     event.stopPropagation();
                     event.preventDefault();
@@ -9363,7 +9363,7 @@ ImgOps | https://imgops.com/#b#`;
                 }
                 return true;
             }else{
-                if (event.ctrlKey || event.shiftKey || event.altKey || event.metaKey){
+                if (!prefs.floatBar.keys.enable || event.ctrlKey || event.shiftKey || event.altKey || event.metaKey){
                     return false;
                 }
 
@@ -9965,9 +9965,7 @@ ImgOps | https://imgops.com/#b#`;
         }
 
         // 注册按键
-        if (prefs.floatBar.keys.enable) {
-            document.addEventListener('keydown', keydown, false);
-        }
+        document.addEventListener('keydown', keydown, false);
 
         function openPrefs() {
             GM_config.open();
