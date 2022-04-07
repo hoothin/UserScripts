@@ -589,5 +589,15 @@
     "name":"imn5",
     "url":"https://www\\.imn5\\.net/",
     "pageElement":"div.imgwebp>p"
+  },
+  {
+    "name":"smzdm jingxuan",
+    "action":0,
+    "url":"^https://.*\\.smzdm\\.com/jingxuan",
+    "pageElement":"ul#feed-main-list>li",
+    "nextLinkByUrl":["(.*jingxuan)(/p)?(\\d*)","$1/p{($3.0||1)+3}"],
+    "insert":"ul#feed-main-list",
+    "insertPos":2,
+    "delay":"let curpage=location.href.match(/\\d+$/);if(curpage)curpage=parseInt(curpage[0])+2;else curpage=3;return document.querySelector('#J_feed_pagenation>li.current').innerText>=curpage&&document.querySelector('#J_feed_loading').style.display=='none'"
   }
 ]
