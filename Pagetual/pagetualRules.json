@@ -584,5 +584,10 @@
     "url":"^https://www\\.mikuclub\\.cc/",
     "loadMore":"button.get-next-page",
     "nextLink":"0"
+  },
+  {
+    "name":"imn5",
+    "url":"https://www\\.imn5\\.net/",
+    "pageElement":"div.imgwebp>p"
   }
 ]
