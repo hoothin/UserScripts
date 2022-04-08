@@ -4989,6 +4989,7 @@ ImgOps | https://imgops.com/#b#`;
                     -webkit-transform:scale(1.2);\
                     -moz-transform:scale(1.2);\
                     transform:scale(1.2);\
+                    background-color: #282828cc;\
                     '+
                     (prefs.gallery.transition ? ('\
                     -webkit-transition: opacity 0.15s ease-in-out,\
