@@ -587,7 +587,7 @@
   },
   {
     "name":"imn5",
-    "url":"https://www\\.imn5\\.net/",
+    "url":"^https://www\\.imn5\\.net/",
     "pageElement":"div.imgwebp>p"
   },
   {
