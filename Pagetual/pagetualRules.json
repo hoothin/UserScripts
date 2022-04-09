@@ -599,5 +599,15 @@
     "insert":"ul#feed-main-list",
     "insertPos":2,
     "delay":"let curpage=location.href.match(/\\d+$/);if(curpage)curpage=parseInt(curpage[0])+2;else curpage=3;return document.querySelector('#J_feed_pagenation>li.current').innerText>=curpage&&document.querySelector('#J_feed_loading').style.display=='none'"
+  },
+  {
+    "name":"天涯列表页",
+    "url":"^http://bbs\\.tianya\\.cn/list",
+    "pageElement":"table.tab-bbs-list>tbody:not(tbody:nth-of-type(1))"
+  },
+  {
+    "name":"天涯内容页",
+    "url":"^http://bbs\\.tianya\\.cn/post",
+    "pageElement":".atl-main>.atl-item"
   }
 ]
