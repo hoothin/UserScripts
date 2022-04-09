@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.6.6.3
+// @version      1.6.6.4
 // @description  Most compatible Auto Pager script ever. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动加载并拼接下一分页内容，无需规则即可支持任何网页
 // @description:zh-TW  自動加載並拼接下一分頁內容，無需規則即可支持任意網頁
@@ -750,7 +750,7 @@
                     for(i=0;i<ele.children.length;i++){
                         let curNode=ele.children[i];
                         if(curNode.tagName=="CANVAS")continue;
-                        if(curNode.tagName!="IMG" && curNode.innerHTML=="")continue;
+                        if(curNode.tagName!="IMG" && /^\s*$/.test(curNode.innerText))continue;
                         if(needCheckNext && !curNode.contains(self.initNext) && getElementTop(curNode)>windowHeight){
                             continue;
                         }
@@ -809,17 +809,6 @@
                 pageElement=checkElement(body);
                 if(pageElement)this.saveCurSiteRule();
             }
-            /*if(this.insert && this.insert.parentNode && pageElement && pageElement[0]){
-                let example=this.insertPos==2?this.insert.children[0]:this.insert;
-                let inTable=example.parentNode.tagName=="TABLE" ||
-                    example.tagName=="TR" ||
-                    example.tagName=="TBODY" ||
-                    (example.previousElementSibling && example.previousElementSibling.tagName=="TR") ||
-                    (example.previousElementSibling && example.previousElementSibling.tagName=="TBODY");
-                if(inTable && pageElement[0].tagName!="TR" && pageElement[0].tagName!="TBODY"){
-                    pageElement=null;
-                }
-            }*/
             return pageElement;
         }
 
@@ -2292,7 +2281,7 @@
 
     function getLoadMore(doc){
         if(ruleParser.curSiteRule.loadMore==="")return null;
-        let btnSel=ruleParser.curSiteRule.loadMore||".LoadMore,.load-more";
+        let btnSel=ruleParser.curSiteRule.loadMore||".LoadMore,.load-more,.button-show-more";
         let loadmoreBtn=doc.querySelector(btnSel);
         if(!loadmoreBtn){
             let buttons=doc.querySelectorAll("input,button,a,div[onclick]"),loadmoreReg=/^\s*(加载更多|加載更多|load\s*more|もっと読み込む)\s*$/i;
