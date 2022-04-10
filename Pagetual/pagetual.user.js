@@ -706,7 +706,7 @@
             }else if(!this.curSiteRule.singleUrl && this.curSiteRule.type==0){
                 pageElement=[body];
             }
-            if(this.curSiteRule.singleUrl && (!pageElement || pageElement.length==0) && curWin && !dontFind){
+            if((this.curSiteRule.singleUrl || !this.curSiteRule.pageElement) && (!pageElement || pageElement.length==0) && curWin && !dontFind){
                 if(!body)return null;
                 let bodyHeight=parseInt(body.scrollHeight);
                 let curHeight=bodyHeight;
