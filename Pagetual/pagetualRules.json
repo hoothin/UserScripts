@@ -609,5 +609,13 @@
     "name":"天涯内容页",
     "url":"^http://bbs\\.tianya\\.cn/post",
     "pageElement":".atl-main>.atl-item"
+  },
+  {
+    "name":"Fiction.live",
+    "url":"^https://fiction\\.live/",
+    "pageElement":"#storyPosts>div>article.chapter",
+    "nextLink":".nextChapter",
+    "action":1,
+    "wait":500
   }
 ]
