@@ -1,5 +1,5 @@
 var defaultLang={
-    //English by RX-3200. https://greasyfork.org/users/43-rx-3200
+    //English by RX-3200.
     saveBtn: "OK",
     download:"Download",
     saveBtnTips: "some options need to refresh the page to take effect",
@@ -663,7 +663,7 @@ var zhTWLang={
     stayOut:"使浮動工具欄顯示在圖片外部"
 };
 var ptLang={
-    //Português by AstroCoelestis. https://greasyfork.org/users/881248-astrocoelestis
+    //Português by AstroCoelestis.
     saveBtn: "Salvar",
     download:"Baixar",
     saveBtnTips: "algumas opções precisam atualizar a página para entrar em vigor",
@@ -885,7 +885,7 @@ var ptLang={
     stayOut:"Deixe a barra flutuante ficar fora da imagem"
 };
 var ruLang={
-    //Русский перевод by RX-3200 и vanja-san. https://greasyfork.org/users/43-rx-3200
+    //Русский перевод by RX-3200 и vanja-san.
     saveBtn: "OK",
     download:"Скачать",
     saveBtnTips: "Некоторые параметры требуют обновления страницы, чтобы применить изменения",
