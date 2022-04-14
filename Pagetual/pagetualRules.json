@@ -3,7 +3,7 @@
     "name":"google search mobile",
     "type":0,
     "action":0,
-    "url":"^https://(?:www\\.)?google\\.com/search",
+    "url":"^https://(?:www\\.)?google\\..*/search",
     "pageElement":"id('rso')/div|id('rso')/style",
     "insert":"//div[@role=\"progressbar\"]/following-sibling::a[@role=\"button\"]|id(\"extrares\")//span[count(a)>0]/span/following-sibling::a",
     "nextLink":0,
