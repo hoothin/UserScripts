@@ -1,5 +1,15 @@
 [
   {
+    "name":"google search mobile",
+    "type":0,
+    "action":0,
+    "url":"^https://(?:www\\.)?google\\.com/search",
+    "pageElement":"id('rso')/div|id('rso')/style",
+    "insert":"//div[@role=\"progressbar\"]/following-sibling::a[@role=\"button\"]|id(\"extrares\")//span[count(a)>0]/span/following-sibling::a",
+    "nextLink":0,
+    "loadMore":"div[role='progressbar']+a[role='button']"
+  },
+  {
     "name":"Google Search",
     "nextLink":"id('pnnext')|id('navbar navcnt nav')//td[span]/following-sibling::td[1]/a|id('nn')/parent::a",
     "pageElement":"id('rso')/div|id('center_col')//style[contains(.,'relative')]|id('search')/div/div/style[1]",
