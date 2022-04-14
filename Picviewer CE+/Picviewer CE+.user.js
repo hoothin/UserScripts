@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.4.12.1
+// @version              2022.4.14.1
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -152,7 +152,8 @@ ImgOps | https://imgops.com/#b#`;
                 hideDelay:566,//浮动工具栏隐藏延时.单位(毫秒)
                 position:'top left',// 取值为: 'top left'(图片左上角) 或者 'top right'(图片右上角) 'bottom right'(图片右下角) 'bottom left'(图片左下角);
                 stayOut:false,
-                stayOutOffset:0,
+                stayOutOffsetX:0,
+                stayOutOffsetY:0,
                 offset:{//浮动工具栏偏移.单位(像素)
                     x:-15,//x轴偏移(正值,向右偏移,负值向左)
                     y:-15,//y轴偏移(正值,向下,负值向上)
@@ -8356,14 +8357,13 @@ ImgOps | https://imgops.com/#b#`;
                 var fbs=this.floatBar.style;
                 var setPosition={
                     top:function(){
-                        fbs.opacity="";
                         var top=targetPosi.top + scrolled.y;
                         if(targetPosi.top + offsetY < 0){//满足图标被遮住的条件.
                             top=scrolled.y;
                             offsetY=0;
                         }
                         if(prefs.floatBar.stayOut){
-                            top=top + offsetY - 10 - prefs.floatBar.stayOutOffset;
+                            top=top + offsetY - 10 - prefs.floatBar.stayOutOffsetY;
                         }else{
                             top=top + offsetY;
                         }
@@ -8371,7 +8371,6 @@ ImgOps | https://imgops.com/#b#`;
                         fbs.top=top + 'px';
                     },
                     right:function(){
-                        fbs.opacity="";
                         var right=windowSize.w - targetPosi.right;
                         if(right < offsetX){
                             right= -scrolled.x;
@@ -8379,12 +8378,15 @@ ImgOps | https://imgops.com/#b#`;
                         }else{
                             right -=scrolled.x;
                         }
-                        right=right - offsetX;
+                        if(prefs.floatBar.stayOut){
+                            right=right - offsetX - prefs.floatBar.stayOutOffsetX;
+                        }else{
+                            right=right - offsetX;
+                        }
                         if(targetPosi.width<=50)right+=10;
                         fbs.right=right + 'px';
                     },
                     bottom:function(){
-                        fbs.opacity="";
                         var bottom=windowSize.h - targetPosi.bottom;
                         if(bottom <= offsetY){
                             bottom=-scrolled.y;
@@ -8393,7 +8395,7 @@ ImgOps | https://imgops.com/#b#`;
                             bottom -= scrolled.y;
                         }
                         if(prefs.floatBar.stayOut){
-                            bottom=bottom - offsetY - 40 - prefs.floatBar.stayOutOffset;
+                            bottom=bottom - offsetY - 40 - prefs.floatBar.stayOutOffsetY;
                         }else{
                             bottom=bottom - offsetY - 30;
                         }
@@ -8401,24 +8403,45 @@ ImgOps | https://imgops.com/#b#`;
                         fbs.bottom=bottom + 'px';
                     },
                     left:function(){
-                        fbs.opacity="";
                         var left=targetPosi.left + scrolled.x;
                         if(targetPosi.left + offsetX < 0){
                             left=scrolled.x;
                             offsetX=0;
                         }
-                        left=left + offsetX;
+                        if(prefs.floatBar.stayOut){
+                            left=left + offsetX - prefs.floatBar.stayOutOffsetX;
+                        }else{
+                            left=left + offsetX;
+                        }
                         if(targetPosi.width<=50)left-=10;
                         fbs.left=left + 'px';
                     },
                     center:function(){
-                        fbs.opacity="";
                         var left=targetPosi.left + scrolled.x + offsetX;
                         fbs.left=left + img.width/2 + 'px';
                     },
                     hide:function(){
-                        fbs.opacity=0;
-                        fbs.display="none";
+                        var top=targetPosi.top + scrolled.y;
+                        if(targetPosi.top + offsetY < 0){
+                            top=scrolled.y;
+                            offsetY=0;
+                        }
+                        var left=targetPosi.left + scrolled.x;
+                        if(targetPosi.left + offsetX < 0){
+                            left=scrolled.x;
+                            offsetX=0;
+                        }
+                        if(prefs.floatBar.stayOut){
+                            top=top + offsetY - 10 - prefs.floatBar.stayOutOffsetY;
+                            left=left + offsetX - prefs.floatBar.stayOutOffsetX;
+                        }else{
+                            top=top + offsetY;
+                            left=left + offsetX;
+                        }
+                        if(targetPosi.height<=50)top-=10;
+                        fbs.top=top + 'px';
+                        if(targetPosi.width<=50)left-=10;
+                        fbs.left=left + 'px';
                     },
                 };
 
@@ -9345,8 +9368,17 @@ ImgOps | https://imgops.com/#b#`;
                     canclePreCTO=clickToOpen(result);
                 }
 
-               if(!checkUniqueImgWin() && !e.altKey)
-                   floatBar.start(result);//出现悬浮工具栏
+                var keyHide=prefs.floatBar.position=="hide"?!e.altKey:e.altKey;
+                if(keyHide){
+                    floatBar.floatBar.style.opacity=0;
+                    floatBar.floatBar.style.display="none";
+                }else{
+                    floatBar.floatBar.style.opacity="";
+                    floatBar.floatBar.style.display="";
+                }
+                if(!checkUniqueImgWin()){
+                    floatBar.start(result);//出现悬浮工具栏
+                }
             };
         }
 
@@ -9490,9 +9522,15 @@ ImgOps | https://imgops.com/#b#`;
                     "default": prefs.floatBar.stayOut,
                     line: 'start'
                 },
-                'floatBar.stayOutOffset': {
+                'floatBar.stayOutOffsetX': {
+                    label: 'X:',
                     type: 'int',
-                    "default": prefs.floatBar.stayOutOffset,
+                    "default": prefs.floatBar.stayOutOffsetX
+                },
+                'floatBar.stayOutOffsetY': {
+                    label: 'Y:',
+                    type: 'int',
+                    "default": prefs.floatBar.stayOutOffsetY,
                     after: ' '+i18n("px"),
                     line: 'end'
                 },
