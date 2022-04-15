@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.6.6.6
+// @version      1.6.6.7
 // @description  Most compatible Auto Pager script ever. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动加载并拼接下一分页内容，无需规则即可支持任何网页
 // @description:zh-TW  自動加載並拼接下一分頁內容，無需規則即可支持任意網頁
@@ -22,8 +22,8 @@
 // @description:it     Caricamento automatico di pagine Web impaginate
 // @description:ko     다음 페이지를 자동으로 로드하세요
 // @author       hoothin
-// @include      http://*
-// @include      https://*
+// @match        http://*/*
+// @match        https://*/*
 // @license      MIT
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAdVBMVEUAAAD3VU33VU32VEz8U073VU32VU33VU32VUz0Uk/3VE32VU32VUz2VU32VU32VU32VU33VU33U0z2VU34Wkv3VE32VUz/mpj/nJj2VUz2VU32VE33VEz2VU32VU32VUz3VE32VEz3VE3/mZf2Vkz2VU3/mpilFFolAAAAJXRSTlMA3Lp/GvTBT5YQLuawZ/DOyZwlPQeKc21N04+FX1bqpm9DNoB4T68ePwAAAitJREFUWMPt1tuasiAUBuCFCG5Rs3QybTPV1/1f4v/3PDkyIojn8x5qBrI+ltAfh32/yysmBKvyXb+njb6bDL9kzTd5SzjDAsYT8nFoGSxYe6BVqoNDp2jFDit25BRgVUAODB4YWcETWVTwVNGiGN5iWtBgg4YMCpsoI38dNunmmWyxUTvbPwwbsYR0fIzZLQ0pTG8eieRmBLMmpdH9uimQEf6TNRnXXKLZHixpJtywLzOgMHtFCqdM64DahHRnOE1dsrekm9wr2WtLcAlpdHwcp1pAJySXYnERclzp4+v19jXdmcTvQUJtz+ZaI4i05/V/UGYrCxbaAsOYoNfIKEQxpqQuzCgJJJ/3f42O8ywEZuMVWi/8hODxGj3GW2b0udkbGULLDOjimAG0S3fLGlBnXQM9irG1CiQdVQi0dqQsOSDlyEEz7Vy9OxxfR71VCXsSB23jMrKJYZXSjw57sqgLn5Z0wolsOCz0RyJkyeYjgz7pwwVq20eboZwtVUl2EnN5gJ50dQZFdryATvABRTr/tJXkUMdaAK5pwtCapwtFLskguwuyMh/Sd9WChQ4sIvIUYSk3PYqQvCQlOC04IfN7PkdjOyRKWhdKXMmiAFt9i3sJ5jxoRuR0vqAghxxwHuqfQE5OHGDKOrwEnqs1DgAZ2e4Eev1d45TN7JfhrQLKgfwMFYAsvp33dXII073aVQLI2gN5S58lfmGnKKFtah7nkgnBZB7zlP7Y/QNiTM6sYNzawwAAAABJRU5ErkJggg==
 // @grant        GM_xmlhttpRequest
@@ -453,6 +453,7 @@
             this.rules=[];
             this.pageDoc=document;
             this.nextLinkHref=null;
+            this.nextTitle="";
             this.oldUrl="";
             this.curUrl=location.href;
             this.curSiteRule={};
@@ -1356,6 +1357,18 @@
             this.pageDoc=doc;
             this.curUrl=url;
             let nextLink=this.getNextLink(doc);
+            this.nextTitle="";
+            if(this.curSiteRule.pageBarText){
+                if(this.curSiteRule.pageBarText==1){
+                    this.nextTitle=doc.title;
+                }else{
+                    try{
+                        this.nextTitle=Function("doc",'"use strict";' + this.curSiteRule.pageBarText)(doc);
+                    }catch(e){
+                        debug(e);
+                    }
+                }
+            }
             if(curPage==1 && !tried && !nextLink && this.curSiteRule.singleUrl && this.curSiteRule.pageElement && this.curSiteRule.action!=0){
                 this.curSiteRule.action=1;
                 this.curUrl=location.href;
@@ -2339,8 +2352,11 @@
         pageText.title=i18n("current");
         pageBar.appendChild(upSpan);
         pageBar.appendChild(pageText);
+        if(ruleParser.nextTitle){
+            pageText.innerHTML=ruleParser.nextTitle+" ";
+        }
         if(ruleParser.curSiteRule.pageNum || (hasPageNum && /[&\/\?](p=|page[=\/-])\d+|[_-]\d+\./.test(url))){
-            pageText.innerHTML="Page ";
+            pageText.innerHTML+="Page ";
             pageNum=document.createElement("span");
             pageNum.innerText=curPage;
             pageNum.className="pagetual_pageNum";
@@ -2361,7 +2377,7 @@
             });
             pageBar.appendChild(pageNum);
         }else{
-            pageText.innerHTML="Page "+curPage;
+            pageText.innerHTML+="Page "+curPage;
             hasPageNum=false;
         }
         pageBar.appendChild(downSpan);
