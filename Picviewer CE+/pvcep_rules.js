@@ -142,7 +142,8 @@ var siteInfo=[
      var pic = /\/view\/photo\/(?:photo|albumcover|albumicon|thumb|sqxs)\/public\//i;
      var movieCover = /\/view\/movie_poster_cover\/[si]pst\/public\//i;
      var bookCover = /\/view\/ark_article_cover\/cut\/public\//i;
-     var spic = /(img\d+.douban.com)\/[sm]pic\//i
+     var spic = /(img\d+.douban.com)\/[sm]pic\//i;
+     var ratio = /s_ratio_poster/i;
      if(/\/subject\/\d+\/discussion/.test(location.href)){
      } else if (pic.test(oldsrc)) {
          newsrc = oldsrc.replace(pic, '/view/photo/raw/public/');
@@ -152,6 +153,8 @@ var siteInfo=[
          newsrc = oldsrc.replace(bookCover, '/view/ark_article_cover/retina/public/');
      } else if (spic.test(oldsrc)) {
          newsrc = oldsrc.replace(spic, '$1/lpic/');
+     } else if (ratio.test(oldsrc)) {
+         newsrc = oldsrc.replace(ratio, 'l');
      }
      return newsrc == oldsrc ? null : [newsrc,newsrc.replace(/photo\/raw/,"photo/photo")];
  }
