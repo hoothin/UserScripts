@@ -501,8 +501,8 @@
         processFunc=null;
         var customRules=GM_getValue("DACrules_"+document.domain);
         var urls=window.prompt(i18n.customInfo,customRules?customRules:"https://xxx.xxx/book-[20-99].html, https://xxx.xxx/book-[01-10].html");
-        urls=decodeURIComponent(urls);
         if(urls){
+            urls=decodeURIComponent(urls);
             GM_setValue("DACrules_"+document.domain, urls);
             var processEles=[];
             let urlsArr=urls.split("@@"),eles=[];
