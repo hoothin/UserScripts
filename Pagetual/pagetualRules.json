@@ -636,5 +636,11 @@
     "pageElement":"#pl_feedlist_index>div>div.card-wrap",
     "action":1,
     "pageAction":"eles.forEach(e=>{let vc=e.querySelector('a.WB_video_h5');if(vc){let v=vc.querySelector('video');let b=vc.querySelector('button.wbpv-big-play-button');b.onclick=e=>{v.style.zIndex=9;v.controls=true;v.play()}}})"
+  },
+  {
+    "name":"某小说站",
+    "url":"^https://yuyan\\.pw/novel/\\d+/\\d+",
+    "pageElement":"#nr>div",
+    "pageAction":"eles[0].innerHTML='　　'+eval(doc.querySelector('body>script:nth-of-type(8)').innerHTML.match(/var chapter =(.*?);\\n/)[1]);"
   }
 ]
