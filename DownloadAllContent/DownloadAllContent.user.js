@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.7.3.2
+// @version      2.7.3.3
 // @description  Fetch and download main content on current page, provide special support for chinese novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -133,6 +133,7 @@
         tempSavebtn.onclick = function(){
             var blob = new Blob([i18n.info+"\r\n\r\n"+document.title+"\r\n\r\n"+rCats.join("\r\n\r\n")], {type: "text/plain;charset=utf-8"});
             _GM_download(blob, document.title+".txt");
+            console.log(curRequests);
         }
         abortbtn.onclick = function(){
             let curRequest = curRequests.pop();
@@ -169,6 +170,8 @@
                     timeout:15000,
                     overrideMimeType:"text/html;charset="+document.charset,
                     onload: function(result) {
+                        downIndex++;
+                        downNum++;
                         var doc = getDocEle(result.responseText);
                         let nextPage=checkNextPage(doc);
                         if(nextPage){
@@ -202,8 +205,6 @@
                                 insertSigns[targetIndex].push(aEles.length-1);
                             }
                         }
-                        downIndex++;
-                        downNum++;
                         processDoc(curIndex, aTag, doc);
                         let request=downOnce();
                         if(request)curRequests.push(request);
@@ -230,7 +231,7 @@
                         if(request)curRequests.push(request);
                     }
                 };
-                return [curIndex,GM_xmlhttpRequest(requestBody)];
+                return [curIndex,GM_xmlhttpRequest(requestBody),aTag.href];
             }
             if(!aTag){
                 let waitAtagReadyInterval=setInterval(function(){
@@ -500,11 +501,13 @@
         processFunc=null;
         var customRules=GM_getValue("DACrules_"+document.domain);
         var urls=window.prompt(i18n.customInfo,customRules?customRules:"https://xxx.xxx/book-[20-99].html, https://xxx.xxx/book-[01-10].html");
+        urls=decodeURIComponent(urls);
         if(urls){
             GM_setValue("DACrules_"+document.domain, urls);
             var processEles=[];
-            if(/^http|^ftp/.test(urls)){
-                [].forEach.call(urls.split(","),function(i){
+            let urlsArr=urls.split("@@"),eles=[];
+            if(/^http|^ftp/.test(urlsArr[0])){
+                [].forEach.call(urlsArr[0].split(","),function(i){
                     var curEle;
                     var varNum=/\[\d+\-\d+\]/.exec(i);
                     if(varNum){
@@ -530,12 +533,11 @@
                         var curUrl=i.replace(/\[\d+\-\d+\]/,urlIndex).trim();
                         curEle=document.createElement("a");
                         curEle.href=curUrl;
-                        processEles.push(curEle);
                         curEle.innerText=processEles.length.toString();
+                        processEles.push(curEle);
                     }
                 });
             }else{
-                let urlsArr=urls.split("@@"),eles=[];
                 let urlSel=urlsArr[0].split(">>");
                 try{
                     eles=document.querySelectorAll(urlSel[0]);
@@ -601,24 +603,24 @@
                         processEles.push(item.cloneNode(1));
                     }
                 });
-                if(urlsArr[1]){
-                    processEles.forEach(ele=>{
-                        ele.href=ele.href.replace(new RegExp(urlsArr[1]), urlsArr[2]);
-                    });
-                }
-                if(urlsArr[3]){
-                    processFunc=data=>{
-                        if(urlsArr[3].indexOf("return ")==-1){
-                            return eval(urlsArr[3])
-                        }else{
-                            return Function("data",urlsArr[3])(data);
-                        }
-                    };
-                }else{
-                    var win=(typeof unsafeWindow=='undefined'? window : unsafeWindow);
-                    if(win.dacProcess){
-                        processFunc=win.dacProcess;
+            }
+            if(urlsArr[1]){
+                processEles.forEach(ele=>{
+                    ele.href=ele.href.replace(new RegExp(urlsArr[1]), urlsArr[2]);
+                });
+            }
+            if(urlsArr[3]){
+                processFunc=data=>{
+                    if(urlsArr[3].indexOf("return ")==-1){
+                        return eval(urlsArr[3])
+                    }else{
+                        return Function("data",urlsArr[3])(data);
                     }
+                };
+            }else{
+                var win=(typeof unsafeWindow=='undefined'? window : unsafeWindow);
+                if(win.dacProcess){
+                    processFunc=win.dacProcess;
                 }
             }
             indexDownload(processEles);
