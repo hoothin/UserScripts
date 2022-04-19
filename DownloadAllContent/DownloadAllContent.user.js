@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.7.3.3
+// @version      2.7.3.5
 // @description  Fetch and download main content on current page, provide special support for chinese novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -112,8 +112,8 @@
                     <span style="height:28px;line-height:28px;display:block;color:#FFF;text-align:center;font-size:20px;">╳</span>
                 </div>
                 <div style="position:absolute;right:0px;bottom:2px;cursor: pointer;max-width:85px">
-                    <button id="abortRequest" style="background: #008aff;border: 0;padding: 5px;border-radius: 10px;color: white;float: right;margin: 1px;height: 25px;display:none;line-height: 20px;">${getI18n('abort')}</button>
-                    <button id="tempSaveTxt" style="background: #008aff;border: 0;padding: 5px;border-radius: 10px;color: white;float: right;margin: 1px;height: 25px;line-height: 20px;">${getI18n('save')}</button>
+                    <button id="abortRequest" style="background: #008aff;border: 0;padding: 5px;border-radius: 10px;color: white;float: right;margin: 1px;height: 25px;display:none;line-height: 15px;">${getI18n('abort')}</button>
+                    <button id="tempSaveTxt" style="background: #008aff;border: 0;padding: 5px;border-radius: 10px;color: white;float: right;margin: 1px;height: 25px;line-height: 15px;">${getI18n('save')}</button>
                 </div>
             </div>
         </div>`;
@@ -166,7 +166,10 @@
                 let requestBody={
                     method: 'GET',
                     url: aTag.href,
-                    headers:{referer:aTag.href},
+                    headers:{
+                        referer:aTag.href,
+                        "Content-Type":"text/html;charset="+document.charset,
+                    },
                     timeout:15000,
                     overrideMimeType:"text/html;charset="+document.charset,
                     onload: function(result) {
@@ -282,15 +285,23 @@
             rCats = rCats.filter(function(e){return e!=null});
         }
         function processDoc(i, aTag, doc, cause){
-            curRequests = curRequests.filter(function(e){return e[0]!=i});
-            rCats[i]=(aTag.innerText.trim()+"\r\n"+getPageContent(doc) + (cause||''));
-            txtDownContent.style.display="block";
-            txtDownWords.innerHTML=getI18n("downloading",[downNum,(aEles.length-downNum),aTag.innerText]);
-            if(downNum==aEles.length){
-                txtDownWords.innerHTML=getI18n("complete",[downNum]);
-                sortInnerPage();
-                var blob = new Blob([i18n.info+"\r\n\r\n"+document.title+"\r\n\r\n"+rCats.join("\r\n\r\n")], {type: "text/plain;charset=utf-8"});
-                _GM_download(blob, document.title+".txt");
+            let contentResult=getPageContent(doc, content=>{
+                cbFunc(content);
+            });
+            let cbFunc=content=>{
+                rCats[i]=(aTag.innerText.trim() + "\r\n" + content + (cause || ''));
+                curRequests = curRequests.filter(function(e){return e[0]!=i});
+                txtDownContent.style.display="block";
+                txtDownWords.innerHTML=getI18n("downloading",[downNum,(aEles.length-downNum),aTag.innerText]);
+                if(downNum==aEles.length){
+                    txtDownWords.innerHTML=getI18n("complete",[downNum]);
+                    sortInnerPage();
+                    var blob = new Blob([i18n.info+"\r\n\r\n"+document.title+"\r\n\r\n"+rCats.join("\r\n\r\n")], {type: "text/plain;charset=utf-8"});
+                    _GM_download(blob, document.title+".txt");
+                }
+            };
+            if(contentResult!==false){
+                cbFunc(contentResult);
             }
         }
         var downThreadNum = parseInt(GM_getValue("downThreadNum"));
@@ -328,10 +339,10 @@
         return nextPage;
     }
 
-    function getPageContent(doc){
+    function getPageContent(doc, cb){
         if(!doc)return i18n.error;
         if(processFunc){
-            return processFunc(doc);
+            return processFunc(doc, cb);
         }
         if(doc.defaultView){
             [].forEach.call(doc.querySelectorAll("span,div,ul"),function(item){
@@ -502,7 +513,7 @@
         var customRules=GM_getValue("DACrules_"+document.domain);
         var urls=window.prompt(i18n.customInfo,customRules?customRules:"https://xxx.xxx/book-[20-99].html, https://xxx.xxx/book-[01-10].html");
         if(urls){
-            urls=decodeURIComponent(urls);
+            urls=decodeURIComponent(urls.replace(/%/g,'%25'));
             GM_setValue("DACrules_"+document.domain, urls);
             var processEles=[];
             let urlsArr=urls.split("@@"),eles=[];
@@ -610,11 +621,11 @@
                 });
             }
             if(urlsArr[3]){
-                processFunc=data=>{
+                processFunc=(data, cb)=>{
                     if(urlsArr[3].indexOf("return ")==-1){
                         return eval(urlsArr[3])
                     }else{
-                        return Function("data",urlsArr[3])(data);
+                        return Function("data","cb",urlsArr[3])(data, cb);
                     }
                 };
             }else{
