@@ -643,5 +643,12 @@
     "url":"^https://yuyan\\.pw/novel/\\d+/\\d+",
     "pageElement":"#nr>div",
     "pageAction":"eles[0].innerHTML='　　'+eval(doc.querySelector('body>script:nth-of-type(8)').innerHTML.match(/var chapter =(.*?);\\n/)[1]);"
+  },
+  {
+    "name":"翠微居",
+    "url":"^https://www\\.cuiwei\\.org/book/\\d+/\\d+\\.html",
+    "action":1,
+    "nextLink":"a.next",
+    "pageElement":"#chapter-content>p"
   }
 ]
