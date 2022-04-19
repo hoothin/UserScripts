@@ -125,7 +125,8 @@
     "pageElement":"//*[@id=\"content_style\"]|//*[@id=\"content_left\"]/*",
     "type":0,
     "pageNum":"&pn={10*($p-1)}",
-    "url":"^https?://www\\.baidu\\.com/(s|baidu)"
+    "url":"^https?://www\\.baidu\\.com/(s|baidu)",
+    "init":"let rs=document.querySelector('div.result-molecule[tpl=\\'app/rs\\']');document.querySelector('#content_right').appendChild(rs);"
   },
   {
     "name":"手机百度",
