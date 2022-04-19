@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.6.6.9
+// @version      1.6.7
 // @description  Most compatible Auto Pager script ever. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动加载并拼接下一分页内容，无需规则即可支持任何网页
 // @description:zh-TW  自動加載並拼接下一分頁內容，無需規則即可支持任意網頁
@@ -931,8 +931,8 @@
                     if(next1 && next2 && next3 && next4)break;
                     if(aTag.href && /next$/i.test(aTag.href))continue;
                     if(!next1){
+                        if(aTag.innerText.length>15)continue;
                         if(/^[下后後][一1]?[页頁张張]|^next([ _-]?page)?\s*[›>→»]?$|次のページ|^次へ?$/i.test(aTag.innerText.trim())){
-                            if(aTag.innerText.length>15)continue;
                             if(!aTag.href || /^javascript:/.test(aTag.href)){
                                 if(!nextJs1)nextJs1=aTag;
                             }else{
@@ -941,7 +941,8 @@
                         }
                     }
                     if(!next2){
-                        if(/^[下后後][一1]?[章话話]/i.test(aTag.innerText.trim())){
+                        if(aTag.innerText.length>15)continue;
+                        if(/^[下后後][一1]?[章话話]/i.test(aTag.innerText.trim()) || /nextpage/i.test(aTag.className)){
                             if(!aTag.href || /^javascript:/.test(aTag.href)){
                                 if(!nextJs2)nextJs2=aTag;
                             }else{
@@ -950,7 +951,8 @@
                         }
                     }
                     if(!next3){
-                        if(aTag.innerText=="&gt;" || aTag.innerText=="▶" || aTag.innerText==">" || aTag.innerText=="›" || aTag.innerText=="→" || aTag.innerText=="»" || /nextpage/i.test(aTag.className)){
+                        if(aTag.innerText.length>15)continue;
+                        if(aTag.innerText=="&gt;" || aTag.innerText=="▶" || aTag.innerText==">" || aTag.innerText=="›" || aTag.innerText=="→" || aTag.innerText=="»"){
                             if(!aTag.href || /^javascript:/.test(aTag.href)){
                                 if(!nextJs3)nextJs3=aTag;
                             }else{
@@ -978,6 +980,10 @@
                             }
                         }
                     }
+                }
+                if(next3){
+                    let eles=getAllElementsByXpath(`//a[text()='${next3.innerText}']`,curPage,curPage);
+                    if(eles.length>1)next3=null;
                 }
                 next=next1||next4||next3||next2||nextJs1||nextJs3||nextJs2;
             }
