@@ -6338,11 +6338,11 @@ ImgOps | https://imgops.com/#b#`;
                 this.zoomLevel=1;//缩放级别
                 this.setToolBadge('zoom',1);
 
-                //选中默认工具
-                this.selectTool(prefs.imgWindow.defaultTool);
-
                 this.firstOpen();
                 this.imgWindow.style.opacity=1;
+
+                //选中默认工具
+                this.selectTool(prefs.imgWindow.defaultTool);
             },
             changeData:function(result){
                 if(this.src != result.src){
@@ -9874,7 +9874,7 @@ ImgOps | https://imgops.com/#b#`;
                     type: 'checkbox',
                     "default": prefs.imgWindow.suitLongImg
                 },
-                'imgWindow.close.defaultTool': {
+                'imgWindow.defaultTool': {
                     label: i18n("imgWindowDefaultTool"),
                     type: 'select',
                     options: {
@@ -9882,7 +9882,7 @@ ImgOps | https://imgops.com/#b#`;
                         'rotate': i18n("rotate"),
                         'zoom': i18n("zoom"),
                     },
-                    "default": prefs.imgWindow.close.defaultTool,
+                    "default": prefs.imgWindow.defaultTool,
                 },
                 'imgWindow.close.escKey': {
                     label: i18n("imgWindowEscKey"),
