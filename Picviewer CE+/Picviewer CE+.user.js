@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.4.18.1
+// @version              2022.4.20.1
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -40,7 +40,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js
-// @require              https://cdn.jsdelivr.net/npm/jszip@3.7.1/dist/jszip.min.js
+// @require              https://cdn.jsdelivr.net/npm/jszip@3.9.1/dist/jszip.min.js
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
 // @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1040560
 // @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1039136
@@ -253,6 +253,7 @@ ImgOps | https://imgops.com/#b#`;
                     range:[0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,1.1,1.2,1.3,1.4,1.5,1.7,1.9,2,2.5,3.0,4.0],//缩放比例.(不要出现负数,谢谢-_-!~)
                     mouseWheelZoom:true,//是否允许使用滚轮缩放。
                 },
+                zIndex: 2147483646
             },
 
             //等图片完全载入后,才开始执行弹出,放大等等操作,
@@ -2680,7 +2681,7 @@ ImgOps | https://imgops.com/#b#`;
                     var fileName = document.title + ".zip";
                     for(let i=0; i<saveParams.length; i++){
                         let imgSrc=saveParams[i][0];
-                        if(imgSrc.split("/")[2]==document.domain){
+                        if(/^data:/.test(imgSrc) || imgSrc.split("/")[2]==document.domain){
                             self.dataURLToCanvas(imgSrc, canvas=>{
                                 console.debug(downloaded+1+"/"+saveParams.length);
                                 if(!canvas){
@@ -3169,7 +3170,7 @@ ImgOps | https://imgops.com/#b#`;
                 _GM_xmlhttpRequest({
                     method: 'GET',
                     url: url,
-                    responseType:'ArrayBuffer',
+                    responseType:'arraybuffer',
                     headers: {
                         origin: urlSplit[0]+"//"+urlSplit[2],
                         referer: url,
@@ -5989,7 +5990,6 @@ ImgOps | https://imgops.com/#b#`;
         };
 
         ImgWindowC.all=[];//所有的窗口对象
-        ImgWindowC.styleZIndex=2147483647;//全局z-index;
         ImgWindowC.overlayer=null;
 
 
@@ -6607,7 +6607,7 @@ ImgOps | https://imgops.com/#b#`;
                     position:fixed;\
                     top:0;\
                     left:0;\
-                    z-index: 2147483646;\
+                    z-index: '+prefs.imgWindow.zIndex+';\
                     }\
                     .pv-pic-window-rotate-indicator{\
                     display:none;\
@@ -7310,6 +7310,8 @@ ImgOps | https://imgops.com/#b#`;
                 document.removeEventListener('keyup',this._focusedKeyup,true);
                 this.changeCursor('default');
                 ImgWindowC.selectedTool=this.selectedTool;
+                this.imgWindow.style.zIndex= prefs.imgWindow.zIndex;
+                this.zIndex=prefs.imgWindow.zIndex;
                 this.focused=false;
             },
             focus:function(){
@@ -7319,9 +7321,8 @@ ImgOps | https://imgops.com/#b#`;
                 this.closeButton.classList.add('pv-pic-window-close_focus');
                 //this.searchButton.classList.add('pv-pic-window-search_focus');
                 this.img.classList.add('pv-pic-window-pic_focus');
-                this.imgWindow.style.zIndex= ImgWindowC.styleZIndex;
-                this.zIndex=ImgWindowC.styleZIndex;
-                ImgWindowC.styleZIndex ++;
+                this.imgWindow.style.zIndex=prefs.imgWindow.zIndex+1;
+                this.zIndex=prefs.imgWindow.zIndex+1;
                 document.addEventListener('keydown',this._focusedKeydown,true);
                 document.addEventListener('keyup',this._focusedKeyup,true);
                 document.addEventListener('mousedown',this._blur,true);
@@ -9938,6 +9939,11 @@ ImgOps | https://imgops.com/#b#`;
                     attr: {
                         "spellcheck": "false"
                     }
+                },
+                'imgWindow.zIndex': {
+                    label: "z-Index",
+                    "default": prefs.imgWindow.zIndex,
+                    type: 'int',
                 },
 
                 // 其它
