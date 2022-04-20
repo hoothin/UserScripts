@@ -4511,7 +4511,7 @@ ImgOps | https://imgops.com/#b#`;
                     padding: 0;\
                     margin: 0;\
                     border: none;\
-                    z-index:2147483646;\
+                    z-index:'+prefs.imgWindow.zIndex+';\
                     background-color: transparent;\
                     }\
                     /*全局border-box*/\
