@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.4.21.1
+// @version              2022.4.21.2
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -2869,7 +2869,7 @@ ImgOps | https://imgops.com/#b#`;
                 if (prefs.gallery.sidebarToggle) {
                     var toggleBar = this.eleMaps['sidebar-toggle'];
                     toggleBar.style.display = 'block';
-                    toggleBar.style.height = '16px';
+                    toggleBar.style.height = '12px';
                     toggleBar.addEventListener('click', this.showHideBottom.bind(this), false);
 
                     var viewmoreBar = this.eleMaps['sidebar-viewmore'];
@@ -2897,6 +2897,7 @@ ImgOps | https://imgops.com/#b#`;
             },
             closeViewMore: function() {
                 var toggleBar = this.eleMaps['sidebar-toggle'],
+                    toggleBarContent = this.eleMaps['sidebar-toggle-content'],
                     imgCon = this.eleMaps['img-container'],
                     viewmoreBar = this.eleMaps['sidebar-viewmore-content'],
                     imgPre = this.eleMaps['img-controler-pre'],
@@ -2919,7 +2920,7 @@ ImgOps | https://imgops.com/#b#`;
                     this.hideBodyStyle.parentNode.removeChild(this.hideBodyStyle);
                 imgPre.style.visibility = imgNext.style.visibility = toggleBar.style.visibility = sidebarContainer.style.visibility = 'visible';
                 imgCon.style['border' + capitalize(sidebarPosition)] = prefs.gallery.sidebarSize + 'px solid transparent';
-                toggleBar.style[sidebarPosition] = '-5px';
+                toggleBar.style[sidebarPosition] = '-3px';
                 while (maximizeContainer.firstChild) {
                     maximizeContainer.removeChild(maximizeContainer.firstChild);
                 }
@@ -2927,7 +2928,7 @@ ImgOps | https://imgops.com/#b#`;
                 viewmoreBar.parentNode.classList.remove("showmore");
                 //viewmoreBar.parentNode.style.backgroundColor = "#000000";
 
-                toggleBar.innerHTML = createHTML('▼');
+                toggleBarContent.innerHTML = createHTML('▼');
                 this.changeSizeInputReset();
             },
             selectViewmore: function(imgSpan, src) {
@@ -3240,8 +3241,13 @@ ImgOps | https://imgops.com/#b#`;
                     prefs.gallery.sidebarSize + 'px solid transparent' :
                 '0';
                 // 修正底部距离
-                this.eleMaps['sidebar-toggle'].style[sidebarPosition] = isHidden ? '-5px' : '0';
-                this.eleMaps['sidebar-toggle'].innerHTML = createHTML(isHidden ? '▼' : '▲');
+                this.eleMaps['sidebar-toggle'].style[sidebarPosition] = isHidden ? '-3px' : '0';
+                if(isHidden){
+                    this.eleMaps['sidebar-toggle'].classList.remove("pv-gallery-sidebar-toggle-hide");
+                }else{
+                    this.eleMaps['sidebar-toggle'].classList.add("pv-gallery-sidebar-toggle-hide");
+                }
+                this.eleMaps['sidebar-toggle-content'].innerHTML = createHTML(isHidden ? '▼' : '▲');
                 this.eleMaps['sidebar-viewmore'].style.visibility = isHidden ? 'visible' : 'hidden';
             },
             initZoom: function() {  // 如果有放大，则把图片及 sidebar 部分缩放比率改为 1
@@ -4988,7 +4994,7 @@ ImgOps | https://imgops.com/#b#`;
                     height:auto;\
                     padding:0;\
                     border:5px solid #313131;\
-                    margin:10px;\
+                    margin:1px;\
                     opacity:0.6;\
                     -webkit-transform:scale(1.2);\
                     -moz-transform:scale(1.2);\
@@ -5010,9 +5016,9 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-gallery-img_zoom-in{\
                     cursor:'+support.cssCursorValue.zoomIn+';\
                     }\
-                    .pv-gallery-sidebar-toggle{\
+                    span.pv-gallery-sidebar-toggle{\
                     position:absolute;\
-                    line-height:0;\
+                    line-height:12px;\
                     text-align:center;\
                     background-color:rgb(0,0,0);\
                     color:#757575;\
@@ -5020,6 +5026,12 @@ ImgOps | https://imgops.com/#b#`;
                     cursor:pointer;\
                     z-index:1;\
                     display:none;\
+                    }\
+                    span.pv-gallery-sidebar-toggle-hide{\
+                    opacity: 0.5;\
+                    }\
+                    span.pv-gallery-sidebar-toggle-hide:hover{\
+                    opacity: 1;\
                     }\
                     .pv-gallery-sidebar-viewmore{\
                     position:absolute;\
@@ -5194,16 +5206,16 @@ ImgOps | https://imgops.com/#b#`;
                     top:6%;\
                     }\
                     .pv-gallery-sidebar-toggle-top{\
-                    top:-5px;\
+                    top:-3px;\
                     }\
                     .pv-gallery-sidebar-viewmore-top{\
                     top:15px;\
                     }\
                     .pv-gallery-sidebar-toggle-right,.pv-gallery-sidebar-viewmore-right{\
-                    right:-5px;\
+                    right:-3px;\
                     }\
                     .pv-gallery-sidebar-toggle-bottom{\
-                    bottom:-5px;\
+                    bottom:-3px;\
                     }\
                     .pv-gallery-sidebar-viewmore-bottom{\
                     display: block;\
@@ -5214,9 +5226,9 @@ ImgOps | https://imgops.com/#b#`;
                     background-color: rgb(42, 42, 42);\
                     }\
                     .pv-gallery-sidebar-toggle-left,.pv-gallery-sidebar-viewmore-left{\
-                    left:-5px;\
+                    left:-3px;\
                     }\
-                    .pv-gallery-sidebar-toggle-content{\
+                    span.pv-gallery-sidebar-toggle-content{\
                     display:inline-block;\
                     vertical-align:middle;\
                     white-space:normal;\
