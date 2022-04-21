@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.4.20.1
+// @version              2022.4.21.1
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -2263,7 +2263,7 @@ ImgOps | https://imgops.com/#b#`;
                             self.canScroll=false;
                             setTimeout(function(){
                                 self.canScroll=true;
-                            },500);
+                            },200);
                         }
                         next ? self.selectNext() : self.selectPrevious();
                     }
@@ -6390,7 +6390,7 @@ ImgOps | https://imgops.com/#b#`;
                     position: absolute;\
                     background-color: #535353;\
                     padding: 0;\
-                    opacity: 0.9;\
+                    opacity: 0.7;\
                     display: none;\
                     cursor: default;\
                     -o-user-select: none;\
@@ -6412,7 +6412,7 @@ ImgOps | https://imgops.com/#b#`;
                     background: url("'+prefs.icons.close+'") no-repeat center bottom;\
                     height: 17px;\
                     width: 46px;\
-                    opacity: 0.9;\
+                    opacity: 0.7;\
                     border:none;\
                     padding:0;\
                     padding-top:2px;\
@@ -6761,8 +6761,8 @@ ImgOps | https://imgops.com/#b#`;
                 if(!prefs.imgWindow.fitToScreen || imgWindow.style.overflow=="scroll")return;
                 var wSize=getWindowSize();
                 //空隙
-                wSize.h -= 16;
-                wSize.w -= 16;
+                wSize.h -= 26;
+                wSize.w -= 26;
 
                 var imgWindowCS=unsafeWindow.getComputedStyle(imgWindow);
                 var rectSize={
@@ -8147,12 +8147,12 @@ ImgOps | https://imgops.com/#b#`;
 
                 arrayFn.forEach.call(this.children,function(child,index){
                     var titleMap={
-                        actual:i18n("actualBtn"),
-                        search:i18n("searchBtn"),
-                        gallery:i18n("galleryBtn"),
-                        current:i18n("currentBtn"),
-                        magnifier:i18n("magnifierBtn"),
-                        download:i18n("download"),
+                        actual:i18n("actualBtn").replace(/ ?\(A\)/,` (${prefs.floatBar.keys.actual.toUpperCase()})`),
+                        search:i18n("searchBtn").replace(/ ?\(S\)/,` (${prefs.floatBar.keys.search.toUpperCase()})`),
+                        gallery:i18n("galleryBtn").replace(/ ?\(G\)/,` (${prefs.floatBar.keys.gallery.toUpperCase()})`),
+                        current:i18n("currentBtn").replace(/ ?\(C\)/,` (${prefs.floatBar.keys.current.toUpperCase()})`),
+                        magnifier:i18n("magnifierBtn").replace(/ ?\(M\)/,` (${prefs.floatBar.keys.magnifier.toUpperCase()})`),
+                        download:i18n("download")+` (${prefs.floatBar.keys.download.toUpperCase()})`,
                     };
                     var buttonName=prefs.floatBar.butonOrder[index];
                     if(!buttonName){
@@ -8212,7 +8212,7 @@ ImgOps | https://imgops.com/#b#`;
                     padding: 5px;\
                     margin: 0;\
                     border: none;\
-                    opacity: 0.6;\
+                    opacity: 0.35;\
                     line-height: 0;\
                     -webkit-transition: opacity 0.2s ease-in-out;\
                     transition: opacity 0.2s ease-in-out;\
