@@ -10,7 +10,9 @@
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
 // @description:ja     ユニバーサルサイトコンテンツクロールツール、クロール、フォーラム内容など
 // @author       hoothin
-// @include      *
+// @match        http://*/*
+// @match        https://*/*
+// @match        ftp://*/*
 // @grant        GM_xmlhttpRequest
 // @grant        GM_registerMenuCommand
 // @grant        GM_setValue
