@@ -1000,5 +1000,11 @@ var siteInfo=[
         if(imgs && imgs.length==1)return imgs[0];
     }
  }
+},
+{
+ name: "hentai-cosplays",
+ url: /^https:\/\/(.*\.)?(hentai\-cosplays|porn\-images\-xxx)\.com/,
+ r: /\/p=[\dx]+(\/\d+\.\w+)$/i,
+ s: '$1'
 }
 ];
