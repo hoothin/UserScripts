@@ -11,5 +11,5 @@
 
 (function() {
     'use strict';
-    GM_addStyle(".results{overflow: overlay;padding: 10px;}");
+    GM_addStyle(".results{overflow: overlay;padding: 10px;width: 380px;}.result_wrap{width: 380px;}");
 })();
