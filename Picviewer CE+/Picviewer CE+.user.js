@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.4.21.2
+// @version              2022.4.22.1
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -42,8 +42,8 @@
 // @require              https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js
 // @require              https://cdn.jsdelivr.net/npm/jszip@3.9.1/dist/jszip.min.js
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
-// @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1040560
-// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1039136
+// @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1042734
+// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1039575
 // @contributionURL      https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
 // @contributionAmount   1
 // @match                http://*/*
@@ -285,7 +285,9 @@ ImgOps | https://imgops.com/#b#`;
         var tprules=[
             function(a) {
                 var oldsrc = this.src,newsrc = this.src;
-                if(this.getAttribute("_src") && !this.src){
+                if(this.getAttribute("lazysrc")){
+                    newsrc=this.getAttribute("lazysrc");
+                }else if(this.getAttribute("_src") && !this.src){
                     newsrc=this.getAttribute("_src");
                 }else if(this.dataset && this.dataset.original){
                     newsrc=this.dataset.original;
@@ -3652,30 +3654,31 @@ ImgOps | https://imgops.com/#b#`;
                 var sizeInputH=this.gallery.querySelector("#minsizeH");
                 var sizeInputW=this.gallery.querySelector("#minsizeW");
                 var thumbnails=this.eleMaps['sidebar-thumbnails-container'];
-                var selectData=this.data[index];
-                if(selectData){
-                    let spanMark=this._spanMarkPool[selectData.imgSrc];
-                    if(spanMark && spanMark.dataset.naturalSize){
-                        let naturalSize=JSON.parse(spanMark.dataset.naturalSize);
-                        selectData.sizeW=naturalSize.w;
-                        selectData.sizeH=naturalSize.h;
-                    }else{
-                        if(selectData.sizeW<sizeInputW.value){
-                            var sizeInputWSpan=this.gallery.querySelector("#minsizeWSpan");
-                            sizeInputW.value=selectData.sizeW;
-                            sizeInputW.title=sizeInputW.value+"px";
-                            sizeInputWSpan.innerHTML=createHTML(Math.floor(sizeInputW.value)+"px");
-                        }
-                        if(selectData.sizeH<sizeInputH.value){
-                            var sizeInputHSpan=this.gallery.querySelector("#minsizeHSpan");
-                            sizeInputH.value=selectData.sizeH;
-                            sizeInputH.title=sizeInputH.value+"px";
-                            sizeInputHSpan.innerHTML=createHTML(Math.floor(sizeInputH.value)+"px");
-                        }
-                    }
-                }
+                var selectData;
                 // 如果是新的，则添加，否则重置并添加。
                 if (!data){
+                    selectData=this.data[index];
+                    if(selectData){
+                        let spanMark=this._spanMarkPool[selectData.imgSrc];
+                        if(spanMark && spanMark.dataset.naturalSize){
+                            let naturalSize=JSON.parse(spanMark.dataset.naturalSize);
+                            selectData.sizeW=naturalSize.w;
+                            selectData.sizeH=naturalSize.h;
+                        }else{
+                            if(selectData.sizeW<sizeInputW.value){
+                                var sizeInputWSpan=this.gallery.querySelector("#minsizeWSpan");
+                                sizeInputW.value=selectData.sizeW;
+                                sizeInputW.title=sizeInputW.value+"px";
+                                sizeInputWSpan.innerHTML=createHTML(Math.floor(sizeInputW.value)+"px");
+                            }
+                            if(selectData.sizeH<sizeInputH.value){
+                                var sizeInputHSpan=this.gallery.querySelector("#minsizeHSpan");
+                                sizeInputH.value=selectData.sizeH;
+                                sizeInputH.title=sizeInputH.value+"px";
+                                sizeInputHSpan.innerHTML=createHTML(Math.floor(sizeInputH.value)+"px");
+                            }
+                        }
+                    }
                     thumbnails.innerHTML = createHTML("");
                     this._dataCache = {};
                     this.eleMaps['maximize-container'].innerHTML = createHTML("");
@@ -4161,25 +4164,30 @@ ImgOps | https://imgops.com/#b#`;
                             var isrc=img.src.trim();
                             if(!isrc)return;
                             isrc=self.canonicalUri(isrc);
-                            if (self._dataCache[isrc]) return;
-                            self._dataCache[isrc] = true;
-                            var nimg = new Image();
-                            self.loadingImgNum++;
-                            nimg.onload=function(){
-                                self.loadingImgNum--;
-                                self.pageImgReady();
-                                var result = findPic(this);
-                                if (result) {
-                                    self.data.push(result);
-                                    self._appendThumbSpans([result]);
-                                    self.loadThumb();
-                                }
-                            };
-                            nimg.onerror=function(){
-                                self.loadingImgNum--;
-                                self.pageImgReady();
-                            };
-                            nimg.src = isrc;
+                            var result = findPic(img);
+                            if (result && result.src) {
+                                if (self._dataCache[result.src]) return;
+                                self._dataCache[result.src] = true;
+                                img.src = result.src;
+                                self.loadingImgNum++;
+                                setTimeout(()=>{
+                                    imgReady(img,{
+                                        ready:function(){
+                                            result = findPic(img);
+                                            self.loadingImgNum--;
+                                            self.data.push(result);
+                                            self._appendThumbSpans([result]);
+                                            self.loadThumb();
+                                            self.pageImgReady();
+                                        },
+                                        error:function(){
+                                            self.loadingImgNum--;
+                                            self.pageImgReady();
+                                        }
+                                    });
+                                },0);
+                                preloadContainer.appendChild(img);
+                            }
                         });
                         if(prefs.gallery.loadAll && !single)self.pageAction(next);
                         else loadOver();
