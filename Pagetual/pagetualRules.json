@@ -650,5 +650,20 @@
     "action":1,
     "nextLink":"a.next",
     "pageElement":"#chapter-content>p"
+  },
+  {
+    "name":"套图吧",
+    "url":"^https://www\\.192tp\\.com/",
+    "pageElement":".picsboxcenter"
+  },
+  {
+    "name":"Wndfx",
+    "url":"^https://www\\.wndfx\\.com/",
+    "pageElement":"article.article-content"
+  },
+  {
+    "name":"蕾丝猫",
+    "url":"^https://www\\.lesmao\\.org/",
+    "pageElement":"#thread-pic>ul>li"
   }
 ]
