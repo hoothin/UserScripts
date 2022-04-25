@@ -1504,6 +1504,7 @@ ImgOps | https://imgops.com/#b#`;
                     '</span>'+
                     '</span>'+
                     '<span class="pv-gallery-maximize-scroll"><span class="pv-gallery-maximize-container"></span></span>'+
+                    '<span class="pv-gallery-tipsWords"></span>'+
                     '</span>');
                 document.body.appendChild(container);
 
@@ -1631,6 +1632,7 @@ ImgOps | https://imgops.com/#b#`;
                     'sidebar-viewmore',
                     'sidebar-viewmore-content',
                     'maximize-container',
+                    'tipsWords',
 
                     'sidebar-container',
                     'sidebar-content',
@@ -1839,7 +1841,7 @@ ImgOps | https://imgops.com/#b#`;
                     enter:function(){
 
                         if(this.all.length==0){
-                            _GM_notification(i18n("noCollectionYet"));
+                            self.showTips(i18n("noCollectionYet"));
                             return;
                         };
 
@@ -2055,7 +2057,7 @@ ImgOps | https://imgops.com/#b#`;
                         }break;
                         case 'scrollIntoView':{
                             if(collection.mMode){
-                                _GM_notification(i18n("inCollection"));
+                                self.showTips(i18n("inCollection"));
                                 return;
                             };
                             var relatedThumb=self.relatedThumb;
@@ -2064,7 +2066,7 @@ ImgOps | https://imgops.com/#b#`;
 
                             if(targetImg){
                                 if(!document.documentElement.contains(targetImg) || unsafeWindow.getComputedStyle(targetImg).display=='none'){//图片不存在文档中，或者隐藏了。
-                                    _GM_notification(i18n("cantFind"));
+                                    self.showTips(i18n("cantFind"));
                                     return;
                                 };
                                 self.minimize();
@@ -2077,7 +2079,7 @@ ImgOps | https://imgops.com/#b#`;
 
                                 document.addEventListener('pv-navigateToImg',function(e){
                                     if(!e.detail){
-                                        _GM_notification(i18n("cantFind"));
+                                        self.showTips(i18n("cantFind"));
                                         return;
                                     };
                                     self.minimize();
@@ -2675,10 +2677,21 @@ ImgOps | https://imgops.com/#b#`;
                 this.initToggleBar();
                 this.initZoom();
             },
+            showTips:function(content){
+                var tipsWords=this.eleMaps["tipsWords"];
+                tipsWords.style.opacity=0.8;
+                tipsWords.innerText=content;
+                tipsWords.style.marginLeft=-tipsWords.offsetWidth/2+"px";
+                setTimeout(()=>{tipsWords.style.opacity=0},1000);
+            },
+            showCompressProgress:function(meta){
+                console.debug(meta);
+                this.showTips(parseInt(meta.percent)+"% Compress "+meta.currentFile);
+            },
             batchDownload:function(saveParams, callback){
                 var self=this;
                 if(prefs.gallery.downloadWithZip){
-                    _GM_notification(i18n("galleryDownloadWithZipAlert"));
+                    self.showTips(i18n("galleryDownloadWithZipAlert"));
                     var zip = new JSZip(),downloaded=0;
                     var fileName = document.title + ".zip";
                     for(let i=0; i<saveParams.length; i++){
@@ -2690,8 +2703,9 @@ ImgOps | https://imgops.com/#b#`;
                                     console.debug("error: "+imgSrc);
                                     downloaded++;
                                     if(downloaded == saveParams.length){
+                                        self.showTips("Begin compress to ZIP...");
                                         console.debug("Begin compress to ZIP...");
-                                        zip.generateAsync({type:"blob"}, meta=>{console.debug(meta)}).then(function(content){
+                                        zip.generateAsync({type:"blob"}, meta=>{self.showCompressProgress(meta)}).then(function(content){
                                             saveAs(content, fileName);
                                             callback();
                                         })
@@ -2702,8 +2716,9 @@ ImgOps | https://imgops.com/#b#`;
                                     zip.file(saveParams[i][1].replace(/\//g,"").replace(/\.[^\.]+$/,"")+'.jpg',blob);
                                     downloaded++;
                                     if(downloaded == saveParams.length){
+                                        self.showTips("Begin compress to ZIP...");
                                         console.debug("Begin compress to ZIP...");
-                                        zip.generateAsync({type:"blob"}, meta=>{console.debug(meta)}).then(function(content){
+                                        zip.generateAsync({type:"blob"}, meta=>{self.showCompressProgress(meta)}).then(function(content){
                                             saveAs(content, fileName);
                                             callback();
                                         })
@@ -2717,8 +2732,9 @@ ImgOps | https://imgops.com/#b#`;
                                 downloaded++;
                                 console.debug(downloaded+"/"+saveParams.length);
                                 if(downloaded == saveParams.length){
+                                    self.showTips("Begin compress to ZIP...");
                                     console.debug("Begin compress to ZIP...");
-                                    zip.generateAsync({type:"blob"}, meta=>{console.debug(meta)}).then(function(content){
+                                    zip.generateAsync({type:"blob"}, meta=>{self.showCompressProgress(meta)}).then(function(content){
                                         saveAs(content, fileName);
                                         callback();
                                     })
@@ -4493,7 +4509,7 @@ ImgOps | https://imgops.com/#b#`;
                 _GM_setClipboard(urls.join("\n"));
 
                 if (isAlert) {
-                    _GM_notification(i18n("copySuccess",urls.length));
+                    this.showTips(i18n("copySuccess",urls.length));
                 }
             },
 
@@ -4596,6 +4612,36 @@ ImgOps | https://imgops.com/#b#`;
                      .pv-gallery-maximize-container span>p{\
                      opacity: 0;\
                      }\
+                    }\
+                    span.pv-gallery-tipsWords{\
+                    font-size: 50px;\
+                    font-weight: bold;\
+                    font-family: "黑体", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",\
+                      "Oxygen", "Ubuntu", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji",\
+                      "Segoe UI Emoji", "Segoe UI Symbol";\
+                    color: #ffffff;\
+                    height: 70px;\
+                    line-height: 70px;\
+                    position: fixed;\
+                    left: 50%;\
+                    top: 10%;\
+                    margin-left: -150px;\
+                    padding: 0 10px;\
+                    z-index: 999999999;\
+                    background-color: #000;\
+                    border: 1px solid black;\
+                    border-radius: 10px;\
+                    opacity: 0;\
+                    filter: alpha(opacity=65);\
+                    box-shadow: 5px 5px 20px 0px #000;\
+                    -moz-transition:opacity 0.3s ease-in-out 0s;\
+                    -webkit-transition:opacity 0.3s ease-in-out 0s;\
+                    transition:opacity 0.3s ease-in-out 0s;\
+                    pointer-events: none;\
+                    overflow: hidden;\
+                    text-overflow: ellipsis;\
+                    white-space: nowrap;\
+                    max-width: 800px;\
                     }\
                     /*顶栏*/\
                     .pv-gallery-head {\
