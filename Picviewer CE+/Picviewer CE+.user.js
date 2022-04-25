@@ -2686,7 +2686,7 @@ ImgOps | https://imgops.com/#b#`;
             },
             showCompressProgress:function(meta){
                 console.debug(meta);
-                this.showTips(parseInt(meta.percent)+"% Compress "+meta.currentFile);
+                this.showTips(parseInt(meta.percent)+"% Compress "+(meta.currentFile||""));
             },
             batchDownload:function(saveParams, callback){
                 var self=this;
