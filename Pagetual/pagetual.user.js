@@ -2135,7 +2135,7 @@
              "Segoe UI Emoji", "Segoe UI Symbol";
            color: #ffffff;
            height: 70px;
-           line-height: 50px;
+           line-height: 70px;
            position: fixed;
            left: 50%;
            top: 10%;
