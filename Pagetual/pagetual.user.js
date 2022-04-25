@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.6.8.2
+// @version      1.6.8.3
 // @description  Most compatible Auto Pager script ever. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动加载并拼接下一分页内容，无需规则即可支持任何网页
 // @description:zh-TW  自動加載並拼接下一分頁內容，無需規則即可支持任意網頁
@@ -2442,35 +2442,45 @@
             pageBar.style.display="table-row";
             pageBar.style.backgroundColor="unset";
             pageBar.style.lineHeight="20px";
+            pageBar.style.boxShadow="";
             let td=document.createElement("td");
-            td.style.backgroundColor="rgb(240 240 240 / 80%)";
-            td.style.borderRadius="20px";
             td.colSpan=tdNum||1;
-            td.style.padding="0 0";
-            td.style.lineHeight="20px";
-            td.style.textAlign="center";
-            td.appendChild(upSpan);
-            td.appendChild(pageText);
-            if(pageNum)td.appendChild(pageNum);
-            td.appendChild(downSpan);
+            let inTd=document.createElement("div");
+            inTd.style.backgroundColor="rgb(240 240 240 / 80%)";
+            inTd.style.borderRadius="20px";
+            inTd.style.padding="0 0";
+            inTd.style.margin="10px";
+            inTd.style.lineHeight="20px";
+            inTd.style.textAlign="center";
+            inTd.style.boxShadow="rgb(0 0 0 / 67%) 0px 0px 10px 0px";
+            inTd.appendChild(upSpan);
+            inTd.appendChild(pageText);
+            if(pageNum)inTd.appendChild(pageNum);
+            inTd.appendChild(downSpan);
+            td.appendChild(inTd);
             pageBar.appendChild(td);
         }else if(inLi){
             example=example.tagName=="LI"?example:example.previousElementSibling;
             pageBar.style.display="table-row";
             pageBar.style.backgroundColor="unset";
             pageBar.style.lineHeight="20px";
+            pageBar.style.boxShadow="";
             let td=document.createElement("td");
-            td.style.backgroundColor="rgb(240 240 240 / 80%)";
-            td.style.borderRadius="20px";
             td.colSpan=example.children.length;
-            td.style.padding="0 0";
-            td.style.textAlign="center";
-            td.style.minWidth="150px";
-            td.appendChild(upSpan);
-            td.appendChild(pageText);
-            td.style.width=pageBar.style.width;
-            if(pageNum)td.appendChild(pageNum);
-            td.appendChild(downSpan);
+            let inTd=document.createElement("div");
+            inTd.style.backgroundColor="rgb(240 240 240 / 80%)";
+            inTd.style.borderRadius="20px";
+            inTd.style.margin="10px"
+            inTd.style.padding="0 0";
+            inTd.style.textAlign="center";
+            inTd.style.minWidth="150px";
+            inTd.appendChild(upSpan);
+            inTd.appendChild(pageText);
+            inTd.style.width=parseInt(pageBar.style.width)-20+"px";
+            inTd.style.boxShadow="rgb(0 0 0 / 67%) 0px 0px 10px 0px";
+            if(pageNum)inTd.appendChild(pageNum);
+            inTd.appendChild(downSpan);
+            td.appendChild(inTd);
             pageBar.appendChild(td);
         }
 
