@@ -1417,6 +1417,7 @@
     var ruleParser = new RuleParser();
 
     function initConfig(){
+        initView();
         _GM_registerMenuCommand(i18n(forceState==1?"enable":"disableSite"), ()=>{
             storage.setItem("forceState_"+location.host, (forceState==1?0:1));
             location.reload();
@@ -2893,7 +2894,6 @@
     }
 
     function init(){
-        initView();
         initRules(()=>{
             initPage();
         });
