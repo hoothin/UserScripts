@@ -2698,6 +2698,7 @@ ImgOps | https://imgops.com/#b#`;
                         let imgSrc=saveParams[i][0];
                         if(/^data:/.test(imgSrc) || imgSrc.split("/")[2]==document.domain){
                             self.dataURLToCanvas(imgSrc, canvas=>{
+                                self.showTips("Downloading "+downloaded+1+"/"+saveParams.length);
                                 console.debug(downloaded+1+"/"+saveParams.length);
                                 if(!canvas){
                                     console.debug("error: "+imgSrc);
@@ -2730,6 +2731,7 @@ ImgOps | https://imgops.com/#b#`;
                                 if(blob)zip.file(saveParams[i][1].replace(/\//g,"").replace(/\.[^\.]+$/,"")+'.jpg',blob);
                                 else console.debug("error: "+imgSrc);
                                 downloaded++;
+                                self.showTips("Downloading "+downloaded+"/"+saveParams.length);
                                 console.debug(downloaded+"/"+saveParams.length);
                                 if(downloaded == saveParams.length){
                                     self.showTips("Begin compress to ZIP...");
