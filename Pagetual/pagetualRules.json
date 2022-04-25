@@ -665,5 +665,10 @@
     "name":"蕾丝猫",
     "url":"^https://www\\.lesmao\\.org/",
     "pageElement":"#thread-pic>ul>li"
+  },
+  {
+    "name":"昵图网",
+    "url":"^https://www\\.nipic\\.com/",
+    "css":"a.new-works-img-box>span>img{display:initial!important}"
   }
 ]
