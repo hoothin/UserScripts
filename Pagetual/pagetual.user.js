@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.6.8.1
+// @version      1.6.8.2
 // @description  Most compatible Auto Pager script ever. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动加载并拼接下一分页内容，无需规则即可支持任何网页
 // @description:zh-TW  自動加載並拼接下一分頁內容，無需規則即可支持任意網頁
@@ -340,7 +340,7 @@
     }else if(typeof GM!='undefined' && typeof GM.notification!='undefined'){
         _GM_notification=GM.notification;
     }else{
-        _GM_notification=(s)=>{alert(s)};
+        _GM_notification=(s)=>{showTips(s)};
     }
     if(typeof GM_openInTab!='undefined'){
         _GM_openInTab=GM_openInTab;
@@ -1444,14 +1444,14 @@
                             if(urlArr.length==1){
                                 url=urlArr[0].trim();
                                 if(!/^http/.test(url)){
-                                    alert("Wrong url, check again!");
+                                    showTips("Wrong url, check again!");
                                     return;
                                 }
                             }else if(urlArr.length==2){
                                 type=urlArr[0].trim();
                                 url=urlArr[1].trim();
                                 if(!/^http/.test(url)){
-                                    alert("Wrong url, check again!");
+                                    showTips("Wrong url, check again!");
                                     return;
                                 }
                             }else{
@@ -1493,7 +1493,7 @@
                             });
                             ruleUrls=urls;
                         }
-                        alert("OK");
+                        showTips("OK");
                     }
                 }
             });
@@ -1579,7 +1579,7 @@
             }
             del(){
                 if(this.ruleUrl.id<2){
-                    alert(i18n("cantDel"));
+                    showTips(i18n("cantDel"));
                 }else if(window.confirm(i18n("confirmDel"))){
                     for(let u=0;u<rulesData.urls.length;u++){
                         if(this.ruleUrl.id==rulesData.urls[u].id){
@@ -1625,13 +1625,13 @@
         updateP.title=i18n("update")+" - "+pastDate;
         updateP.onclick=e=>{
             updateRules(()=>{
-                alert(i18n("updateSucc"));
+                showTips(i18n("updateSucc"));
                 updateP.innerHTML=i18n("passSec", 0);
                 updateP.title=i18n("update");
             },(rule,err)=>{
-                alert("Update "+rule.url+" rules fail!");
+                showTips("Update "+rule.url+" rules fail!");
             });
-            alert(i18n("beginUpdate"));
+            showTips(i18n("beginUpdate"));
         };
         configCon.insertBefore(updateP, insertPos);
         if(ruleUrls){
@@ -1701,7 +1701,7 @@
                 }else{
                     let customRules=JSON.parse(customRulesInput.value);
                     if(Array && Array.isArray && !Array.isArray(customRules)){
-                        alert("Rules must be a Array!");
+                        showTips("Rules must be a Array!");
                         return;
                     }
                     debug(customRules);
@@ -1709,7 +1709,7 @@
                 }
             }catch(e){
                 debug(e);
-                alert("JSON error, check again!");
+                showTips("JSON error, check again!");
                 return;
             }
             rulesData.opacity=opacityInput.value/100;
@@ -1730,14 +1730,14 @@
                     if(urlArr.length==1){
                         url=urlArr[0].trim();
                         if(!/^http/.test(url)){
-                            alert("Wrong url, check again!");
+                            showTips("Wrong url, check again!");
                             return;
                         }
                     }else if(urlArr.length==2){
                         type=urlArr[0].trim();
                         url=urlArr[1].trim();
                         if(!/^http/.test(url)){
-                            alert("Wrong url, check again!");
+                            showTips("Wrong url, check again!");
                             return;
                         }
                     }else{
@@ -1764,7 +1764,7 @@
                     storage.setItem("rulesData", rulesData);
                 }
             }
-            alert("The settings are saved");
+            showTips("The settings are saved");
             location.reload();
         };
         return true;
@@ -2075,7 +2075,6 @@
     function initPage(){
         ruleParser.initPage(()=>{
             if(ruleParser.nextLinkHref){
-                initView();
                 let isJs=/^(javascript|#)/.test(ruleParser.nextLinkHref.replace(location.href,""));
                 if(!isJs){
                     let inForce=(forceState == 2 || forceState == 3);
@@ -2136,7 +2135,7 @@
              "Segoe UI Emoji", "Segoe UI Symbol";
            color: #ffffff;
            height: 70px;
-           line-height: 70px;
+           line-height: 50px;
            position: fixed;
            left: 50%;
            top: 10%;
@@ -2894,6 +2893,7 @@
     }
 
     function init(){
+        initView();
         initRules(()=>{
             initPage();
         });
