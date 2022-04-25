@@ -2141,7 +2141,7 @@
            left: 50%;
            top: 10%;
            margin-left: -150px;
-           padding: 10px;
+           padding: 0 10px;
            z-index: 999999999;
            background-color: #000;
            border: 1px solid black;
@@ -2149,9 +2149,10 @@
            opacity: 0;
            filter: alpha(opacity=65);
            box-shadow: 5px 5px 20px 0px #000;
-           -moz-transition:opacity 0.3s ease-in-out 0s;\
-           -webkit-transition:opacity 0.3s ease-in-out 0s;\
-           transition:opacity 0.3s ease-in-out 0s;\
+           -moz-transition:opacity 0.3s ease-in-out 0s;
+           -webkit-transition:opacity 0.3s ease-in-out 0s;
+           transition:opacity 0.3s ease-in-out 0s;
+           pointer-events: none;
          }
 
          @keyframes touhouAni{
