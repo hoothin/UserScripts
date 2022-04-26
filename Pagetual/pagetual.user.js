@@ -725,7 +725,7 @@
                         debug(self.curSiteRule.pageElement);
                         return [body];
                     }
-                    if(ele.tagName=="TBODY" || ele.tagName=="UL" || ele.tagName=="FORM"){
+                    if(ele.tagName=="TBODY" || ele.tagName=="FORM"){
                         self.curSiteRule.pageElement=self.geneSelector(ele)+">*";
                         if(ele.children.length>0 && ele.children[0].querySelector("th")){
                             self.curSiteRule.pageElement+=":not(:first-child)";
