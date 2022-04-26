@@ -446,6 +446,12 @@
     "pageElement":"div.search-v3-content>.card-grid-box"
   },
   {
+    "name":"千库网",
+    "url":"^https://588ku\\.com/",
+    "action":1,
+    "pageElement":".data-box>.data-list"
+  },
+  {
     "name":"中国大学MOOC课程评论区",
     "url":"^https://www\\.icourse163\\.org/course/",
     "action":1,
