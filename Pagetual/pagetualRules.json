@@ -676,5 +676,18 @@
     "name":"昵图网",
     "url":"^https://www\\.nipic\\.com/",
     "css":"a.new-works-img-box>span>img{display:initial!important}"
+  },
+  {
+    "name":"inoveltranslation",
+    "url":"^https://inoveltranslation\\.com/",
+    "pageElement":".chakra-skeleton>p",
+    "insert":"#chapterreadtrck",
+    "nextLink":"button[aria-label='next chapter']"
+  },
+  {
+    "name":"lightnovelstranslations",
+    "url":"^https://lightnovelstranslations\\.com/",
+    "nextLink":"p.alignright>a",
+    "pageElement":".entry-content>p"
   }
 ]
