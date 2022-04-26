@@ -140,3 +140,7 @@ The multi-windowHeight which you can set to 2 or 3 while some sites load next pa
 pageNum
 --
 Point the page number with $p in current url, you can use{} to target result string from page number
+
+pageBarText
+--
+Set to 1 so the title of next page will be shown on pagebar
