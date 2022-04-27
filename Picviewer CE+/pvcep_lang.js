@@ -218,7 +218,8 @@ var defaultLang={
     defaultLang:"Auto detect",
     toggleIcon:"Toggle icon",
     initShow:"Invert Shortcut to show preview by default",
-    stayOut:"Let float bar stay out of the image"
+    stayOut:"Let float bar stay out of the image",
+    galleryDownloadGap:"Download interval"
 };
 var zhCNLang={
     saveBtn:"确定",
@@ -439,7 +440,8 @@ var zhCNLang={
     defaultLang:"自动选择",
     toggleIcon:"隐藏图标",
     initShow:"反转快捷键，默认显示预览",
-    stayOut:"使浮动工具栏显示在图片外部"
+    stayOut:"使浮动工具栏显示在图片外部",
+    galleryDownloadGap:"下载间隔时间"
 };
 var zhTWLang={
     saveBtn:"確定",
@@ -660,7 +662,8 @@ var zhTWLang={
     defaultLang:"自動選擇",
     toggleIcon:"隱藏圖標",
     initShow:"反轉快捷鍵，默認顯示預覽",
-    stayOut:"使浮動工具欄顯示在圖片外部"
+    stayOut:"使浮動工具欄顯示在圖片外部",
+    galleryDownloadGap:"下載間隔時間"
 };
 var ptLang={
     //Português by AstroCoelestis.
@@ -882,7 +885,8 @@ var ptLang={
     defaultLang:"Auto",
     toggleIcon:"ícone de alternância",
     initShow:"Inverter atalho para mostrar a visualização por padrão",
-    stayOut:"Deixe a barra flutuante ficar fora da imagem"
+    stayOut:"Deixe a barra flutuante ficar fora da imagem",
+    galleryDownloadGap:"Intervalo de descarga"
 };
 var ruLang={
     //Русский перевод by RX-3200 и vanja-san.
@@ -1104,7 +1108,8 @@ var ruLang={
     defaultLang:"Автоопределение",
     toggleIcon:"Переключение иконки",
     initShow:"Инвертировать ярлык, чтобы по умолчанию показывать предпросмотр",
-    stayOut:"Плавающая панель за пределами изображения"
+    stayOut:"Плавающая панель за пределами изображения",
+    galleryDownloadGap:"Интервал загрузки"
 };
 var langList={
     'en': "English",
