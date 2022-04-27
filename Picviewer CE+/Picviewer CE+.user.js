@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.4.25.1
+// @version              2022.4.27.1
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -43,7 +43,7 @@
 // @require              https://cdn.jsdelivr.net/npm/jszip@3.9.1/dist/jszip.min.js
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
 // @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1042734
-// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1039575
+// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1044551
 // @contributionURL      https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
 // @contributionAmount   1
 // @match                http://*/*
@@ -231,7 +231,8 @@ ImgOps | https://imgops.com/#b#`;
                 searchData:defaultSearchData,
                 downloadWithZip:false,
                 autoOpenViewmore:false,
-                viewmoreLayout:0
+                viewmoreLayout:0,
+                downloadGap:0
             },
 
             imgWindow:{// 图片窗相关设置
@@ -2682,7 +2683,7 @@ ImgOps | https://imgops.com/#b#`;
                 tipsWords.style.opacity=0.8;
                 tipsWords.innerText=content;
                 tipsWords.style.marginLeft=-tipsWords.offsetWidth/2+"px";
-                setTimeout(()=>{tipsWords.style.opacity=0},1000);
+                setTimeout(()=>{tipsWords.style.opacity=0},1500);
             },
             showCompressProgress:function(meta){
                 console.debug(meta);
@@ -2694,18 +2695,16 @@ ImgOps | https://imgops.com/#b#`;
                     self.showTips(i18n("galleryDownloadWithZipAlert"));
                     var zip = new JSZip(),downloaded=0;
                     var fileName = document.title + ".zip";
-                    for(let i=0; i<saveParams.length; i++){
-                        let imgSrc=saveParams[i][0];
+                    var len = saveParams.length;
+                    function downloadOne(imgSrc, imgName){
                         if(/^data:/.test(imgSrc) || imgSrc.split("/")[2]==document.domain){
                             self.dataURLToCanvas(imgSrc, canvas=>{
-                                self.showTips("Downloading "+downloaded+1+"/"+saveParams.length);
-                                console.debug(downloaded+1+"/"+saveParams.length);
+                                self.showTips("Downloading "+(downloaded+1)+"/"+len);
                                 if(!canvas){
                                     console.debug("error: "+imgSrc);
                                     downloaded++;
-                                    if(downloaded == saveParams.length){
+                                    if(downloaded == len){
                                         self.showTips("Begin compress to ZIP...");
-                                        console.debug("Begin compress to ZIP...");
                                         zip.generateAsync({type:"blob"}, meta=>{self.showCompressProgress(meta)}).then(function(content){
                                             saveAs(content, fileName);
                                             callback();
@@ -2714,11 +2713,10 @@ ImgOps | https://imgops.com/#b#`;
                                     return;
                                 }
                                 canvas.toBlob(blob=>{
-                                    zip.file(saveParams[i][1].replace(/\//g,"").replace(/\.[^\.]+$/,"")+'.jpg',blob);
+                                    zip.file(imgName.replace(/\//g,"").replace(/\.[^\.]+$/,"")+'.jpg',blob);
                                     downloaded++;
-                                    if(downloaded == saveParams.length){
+                                    if(downloaded == len){
                                         self.showTips("Begin compress to ZIP...");
-                                        console.debug("Begin compress to ZIP...");
                                         zip.generateAsync({type:"blob"}, meta=>{self.showCompressProgress(meta)}).then(function(content){
                                             saveAs(content, fileName);
                                             callback();
@@ -2728,14 +2726,12 @@ ImgOps | https://imgops.com/#b#`;
                             });
                         }else{
                             self.corsUrlToBlob(imgSrc, blob=>{
-                                if(blob)zip.file(saveParams[i][1].replace(/\//g,"").replace(/\.[^\.]+$/,"")+'.jpg',blob);
+                                if(blob)zip.file(imgName.replace(/\//g,"").replace(/\.[^\.]+$/,"")+'.jpg',blob);
                                 else console.debug("error: "+imgSrc);
                                 downloaded++;
-                                self.showTips("Downloading "+downloaded+"/"+saveParams.length);
-                                console.debug(downloaded+"/"+saveParams.length);
-                                if(downloaded == saveParams.length){
+                                self.showTips("Downloading "+downloaded+"/"+len);
+                                if(downloaded == len){
                                     self.showTips("Begin compress to ZIP...");
-                                    console.debug("Begin compress to ZIP...");
                                     zip.generateAsync({type:"blob"}, meta=>{self.showCompressProgress(meta)}).then(function(content){
                                         saveAs(content, fileName);
                                         callback();
@@ -2743,7 +2739,18 @@ ImgOps | https://imgops.com/#b#`;
                                 }
                             });
                         }
-                    };
+                    }
+                    if(prefs.gallery.downloadGap > 0){
+                        let downIntv=setInterval(()=>{
+                            let saveParam=saveParams.shift();
+                            if(!saveParam)clearInterval(downIntv);
+                            else downloadOne(saveParam[0], saveParam[1]);
+                        },prefs.gallery.downloadGap);
+                    }else{
+                        for(let i=0; i<len; i++){
+                            downloadOne(saveParams[i][0], saveParams[i][1]);
+                        }
+                    }
                     return;
                 }
 
@@ -4113,6 +4120,7 @@ ImgOps | https://imgops.com/#b#`;
             href:location.href,
             pageAllReady:false,
             loadingImgNum:0,
+            loadingImgs:[],
             pageImgReady:function(){
                 var textSpan=this.eleMaps['head-command-nextPage'].querySelector("span");
                 if(this.pageAllReady && this.loadingImgNum<=0){
@@ -4174,39 +4182,62 @@ ImgOps | https://imgops.com/#b#`;
                         var container = document.querySelector('.pv-gallery-container'),
                             preloadContainer = document.querySelector('.pv-gallery-preloaded-img-container');
                         imgs = Array.prototype.slice.call(imgs).filter(function(img){
-                            return !(container.contains(img) || (preloadContainer&&preloadContainer.contains(img)));
-                        });
-                        imgs.forEach(function(img) {
+                            if(container.contains(img) || (preloadContainer&&preloadContainer.contains(img))){
+                                return false;
+                            }
                             pretreatment(img);
-                            if(!img.src)return;
+                            if(!img.src)return false;
                             var isrc=img.src.trim();
-                            if(!isrc)return;
-                            isrc=self.canonicalUri(isrc);
+                            if(!isrc)return false;
                             var result = findPic(img);
                             if (result && result.src) {
-                                if (self._dataCache[result.src]) return;
+                                if (self._dataCache[result.src]){
+                                    return false;
+                                }
                                 self._dataCache[result.src] = true;
-                                img.src = result.src;
-                                self.loadingImgNum++;
-                                setTimeout(()=>{
-                                    imgReady(img,{
-                                        ready:function(){
-                                            result = findPic(img);
-                                            self.loadingImgNum--;
-                                            self.data.push(result);
-                                            self._appendThumbSpans([result]);
-                                            self.loadThumb();
-                                            self.pageImgReady();
-                                        },
-                                        error:function(){
-                                            self.loadingImgNum--;
-                                            self.pageImgReady();
-                                        }
-                                    });
-                                },0);
-                                preloadContainer.appendChild(img);
+                                return true;
                             }
+                            return false;
                         });
+                        function loadImg(img){
+                            var result = findPic(img);
+                            img.src = result.src;
+                            self.loadingImgNum++;
+                            setTimeout(()=>{
+                                imgReady(img,{
+                                    ready:function(){
+                                        result = findPic(img);
+                                        self.loadingImgNum--;
+                                        self.data.push(result);
+                                        self._appendThumbSpans([result]);
+                                        self.loadThumb();
+                                        self.pageImgReady();
+                                    },
+                                    error:function(){
+                                        self.loadingImgNum--;
+                                        self.pageImgReady();
+                                    }
+                                });
+                            },0);
+                            if(!preloadContainer)preloadContainer = document.querySelector('.pv-gallery-preloaded-img-container');
+                            preloadContainer.appendChild(img);
+                        }
+                        if(prefs.gallery.downloadGap > 0){
+                            self.loadingImgs=self.loadingImgs.concat(imgs);
+                            if(!self.loadIntv){
+                                self.loadIntv=setInterval(()=>{
+                                    let img=self.loadingImgs.shift();
+                                    if(!img){
+                                        clearInterval(self.loadIntv);
+                                        self.loadIntv=null;
+                                    }else loadImg(img);
+                                },prefs.gallery.downloadGap);
+                            }
+                        }else{
+                            imgs.forEach(function(img) {
+                                loadImg(img);
+                            });
+                        }
                         if(prefs.gallery.loadAll && !single)self.pageAction(next);
                         else loadOver();
                     },
@@ -9840,6 +9871,12 @@ ImgOps | https://imgops.com/#b#`;
                     label: i18n("galleryDownloadWithZip"),
                     type: 'checkbox',
                     "default": prefs.gallery.downloadWithZip
+                },
+                'gallery.downloadGap': {
+                    label: i18n("galleryDownloadGap"),
+                    type: 'int',
+                    "default": prefs.gallery.downloadGap,
+                    after: ' ms',
                 },
                 'gallery.scaleSmallSize': {
                     label: i18n("galleryScaleSmallSize1"),
