@@ -144,3 +144,7 @@ Point the page number with $p in current url, you can use{} to target result str
 pageBarText
 --
 Set to 1 so the title of next page will be shown on pagebar
+
+autoClick
+--
+The css selector or xpath of element which you want to click automatically
