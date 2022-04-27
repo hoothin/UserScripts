@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.6.8.8
+// @version      1.6.8.9
 // @description  Most compatible Auto Pager script ever. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动加载并拼接下一分页内容，无需规则即可支持任何网页
 // @description:zh-TW  自動加載並拼接下一分頁內容，無需規則即可支持任意網頁
@@ -1344,6 +1344,18 @@
                 if(css){
                     _GM_addStyle(css);
                 }
+                let autoClick=self.curSiteRule.autoClick;
+                if(autoClick){
+                    let autoClickBtn;
+                    try{
+                        autoClickBtn=document.querySelector(autoClick);
+                    }catch(e){
+                        autoClickBtn=getElementByXpath(autoClick);
+                    }
+                    if(autoClickBtn){
+                        emuClick(autoClickBtn);
+                    }
+                }
                 let code=self.curSiteRule.init;
                 if(code){
                     try{
@@ -2342,8 +2354,14 @@
 
     function getLoadMore(doc){
         if(ruleParser.curSiteRule.loadMore==="")return null;
-        let btnSel=ruleParser.curSiteRule.loadMore||".LoadMore,.load-more,.button-show-more";
-        let loadmoreBtn=doc.querySelector(btnSel);
+        let btnSel=ruleParser.curSiteRule.loadMore||".LoadMore,.load-more,.button-show-more",loadmoreBtn;
+        if(btnSel){
+            try{
+                loadmoreBtn=doc.querySelector(btnSel);
+            }catch(e){
+                loadmoreBtn=getElementByXpath(btnSel,doc,doc);
+            }
+        }
         if(!loadmoreBtn){
             let buttons=doc.querySelectorAll("input,button,a,div[onclick]"),loadmoreReg=/^\s*(加载更多|加載更多|load\s*more|もっと読み込む)\s*$/i;
             for(let i=0;i<buttons.length;i++){
@@ -2438,6 +2456,7 @@
         }
         if(inTable){
             example=(example.tagName=="TR" || example.tagName=="TBODY")?example:example.previousElementSibling;
+            if(example.tagName=="TBODY")example=example.querySelector("tr");
             if(example.previousElementSibling)example=example.previousElementSibling;
             let tdNum=0;
             [].forEach.call(example.children, el=>{
