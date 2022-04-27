@@ -1,4 +1,4 @@
-東方永頁機 [Wiki](https://hoothin.github.io/PagetualGuide)
+東方永頁機 [Wiki](https://hoothin.github.io/PagetualGuide/en)
 ==
 *Pagetual - Perpetual pages. Auto loading paginated web pages for 90% of all web sites !*
 
