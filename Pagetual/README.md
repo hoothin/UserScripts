@@ -39,6 +39,7 @@ Rules example
 [More examples of rule](pagetualRules.json)
 
 Buy me a coffee if it helps you with [PayPal.Me](https://paypal.me/hoothin) or [BuyMeACoffee](https://buymeacoffee.com/hoothin)
+
 ![donate](https://s2.loli.net/2022/01/06/lEqKWLHG7UBO6AY.jpg)
 
 name
