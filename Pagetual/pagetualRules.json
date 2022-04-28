@@ -689,5 +689,10 @@
     "url":"^https://lightnovelstranslations\\.com/",
     "nextLink":"p.alignright>a",
     "pageElement":".entry-content>p"
+  },
+  {
+    "name":"书山有路",
+    "url":"^https?://www\\.ssylu\\.com/",
+    "nextLink":".pagenavi>span.current+a"
   }
 ]
