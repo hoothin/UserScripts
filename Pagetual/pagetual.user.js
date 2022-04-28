@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.6.8.10
+// @version      1.6.8.11
 // @description  Most compatible Auto Pager script ever. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动加载并拼接下一分页内容，无需规则即可支持任何网页
 // @description:zh-TW  自動加載並拼接下一分頁內容，無需規則即可支持任意網頁
@@ -1661,7 +1661,7 @@
         configCon.insertBefore(customUrlsTitle, insertPos);
         let customUrlsInput=document.createElement("textarea");
         customUrlsInput.style.width="100%";
-        customUrlsInput.placeholder="0|http://wedata.net/databases/AutoPagerize/items_all.json";
+        customUrlsInput.placeholder="0 | http://wedata.net/databases/AutoPagerize/items_all.json";
         configCon.insertBefore(customUrlsInput, insertPos);
 
         let opacityTitle=document.createElement("h2");
@@ -1674,16 +1674,25 @@
         opacityTitle.appendChild(opacityInput);
         configCon.insertBefore(opacityTitle, insertPos);
 
+        let configTable=document.createElement("table");
+        configTable.appendChild(document.createElement("tbody"));
+        configCon.insertBefore(configTable, insertPos);
         function createCheckbox(innerText, val){
-            let title=document.createElement("h2");
+            let title=document.createElement("h3");
             title.innerHTML=innerText;
             let input=document.createElement("input");
             input.type="checkbox";
             input.style.width="50px";
             input.style.height="20px";
             input.checked=val;
-            title.appendChild(input);
-            configCon.insertBefore(title, insertPos);
+            let tr=document.createElement("tr");
+            let td=document.createElement("td");
+            td.appendChild(input);
+            tr.appendChild(td);
+            td=document.createElement("td");
+            td.appendChild(title);
+            tr.appendChild(td);
+            configTable.children[0].appendChild(tr);
             return input;
         }
 
