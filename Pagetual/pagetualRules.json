@@ -694,5 +694,10 @@
     "name":"书山有路",
     "url":"^https?://www\\.ssylu\\.com/",
     "nextLink":".pagenavi>span.current+a"
+  },
+  {
+    "name":"bjav",
+    "url":"^https://thebjav\\.com/|^https://sexbjcam\\.com/",
+    "css":"img[data-src]{opacity: 1;}"
   }
 ]
