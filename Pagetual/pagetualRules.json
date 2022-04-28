@@ -13,6 +13,7 @@
     "name":"Google Search",
     "nextLink":"id('pnnext')|id('navbar navcnt nav')//td[span]/following-sibling::td[1]/a|id('nn')/parent::a",
     "pageElement":"id('rso')/div|id('center_col')//style[contains(.,'relative')]|id('search')/div/div/style[1]",
+    "insert":"id('center_col')/div[@role='navigation']",
     "type":0,
     "action":1,
     "pageNum":"&start={10*($p-1)}",
