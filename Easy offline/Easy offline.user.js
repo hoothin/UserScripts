@@ -7,7 +7,7 @@
 // @description:zh-TW 一鍵自動將磁鏈、bt種子或其他下載資源離綫下載至網盤
 // @namespace    https://github.com/hoothin/UserScripts/tree/master/Easy%20offline
 // @require      http://code.jquery.com/jquery-1.7.2.min.js
-// @version      1.9.29
+// @version      1.9.30
 // @author       Hoothin
 // @mail         rixixi@gmail.com
 // @include      http*://*/*
@@ -1407,38 +1407,36 @@
                         return;
                     }
                 }
-                if(!window.confirm(i18n("importOrNot")))return;
                 let targetText=e.target.innerText.trim();
-                if(e.target.childNodes.length==1 && targetText.indexOf("@@")!=-1){
-                    if(siteRule != targetText && (!siteRule || siteRule.indexOf(targetText)==-1)){
-                        if(siteRule && window.confirm(i18n("importCustomAlert"))){
-                            let rules=targetText.split("\n"),sameArr=[],diffArr=[];
-                            rules.forEach(rule=>{
-                                var ruleArr=rule.replace(/\s/g,"").split("@@");
-                                if(ruleArr[1] && sites[ruleArr[1]]){
-                                    sameArr.push(rule);
-                                }else{
-                                    diffArr.push(rule);
-                                }
-                            });
-                            if(sameArr.length>0){
-                                if(window.confirm(i18n("importCustomSame"))){
-                                    sameArr.forEach(sameRule=>{
-                                        var sArr=sameRule.replace(/\s/g,"").split("@@");
-                                        siteRule = siteRule.replace(new RegExp("\\S+@@"+sArr[1]+"\\S+"),sameRule);
-                                    });
-                                }
-                                siteRule=siteRule.trim()+"\n"+diffArr.join("\n");
+                if(e.target.childNodes.length!=1 || targetText.indexOf("@@")==-1 || !window.confirm(i18n("importOrNot")))return;
+                if(siteRule != targetText && (!siteRule || siteRule.indexOf(targetText)==-1)){
+                    if(siteRule && window.confirm(i18n("importCustomAlert"))){
+                        let rules=targetText.split("\n"),sameArr=[],diffArr=[];
+                        rules.forEach(rule=>{
+                            var ruleArr=rule.replace(/\s/g,"").split("@@");
+                            if(ruleArr[1] && sites[ruleArr[1]]){
+                                sameArr.push(rule);
                             }else{
-                                siteRule=siteRule.trim()+"\n"+targetText;
+                                diffArr.push(rule);
                             }
+                        });
+                        if(sameArr.length>0){
+                            if(window.confirm(i18n("importCustomSame"))){
+                                sameArr.forEach(sameRule=>{
+                                    var sArr=sameRule.replace(/\s/g,"").split("@@");
+                                    siteRule = siteRule.replace(new RegExp("\\S+@@"+sArr[1]+"\\S+"),sameRule);
+                                });
+                            }
+                            siteRule=siteRule.trim()+"\n"+diffArr.join("\n");
                         }else{
-                            siteRule=targetText;
+                            siteRule=siteRule.trim()+"\n"+targetText;
                         }
-                        storage.setItem("siteRule", siteRule);
+                    }else{
+                        siteRule=targetText;
                     }
-                    alert(i18n("importOver"));
+                    storage.setItem("siteRule", siteRule);
                 }
+                alert(i18n("importOver"));
             });
         }
         if(location.href.indexOf("github.com/hoothin/UserScripts/tree/master/Easy%20offline") != -1){
