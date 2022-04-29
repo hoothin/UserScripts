@@ -700,5 +700,10 @@
     "name":"bjav",
     "url":"^https://thebjav\\.com/|^https://sexbjcam\\.com/",
     "css":"img[data-src]{opacity: 1;}"
+  },
+  {
+    "name":"scribblehub",
+    "url":"^https://www\\.scribblehub\\.com/read",
+    "pageElement":"#chp_raw"
   }
 ]
