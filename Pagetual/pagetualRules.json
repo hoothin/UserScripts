@@ -704,6 +704,7 @@
   {
     "name":"scribblehub",
     "url":"^https://www\\.scribblehub\\.com/read",
-    "pageElement":"#chp_raw"
+    "pageElement":"#chp_raw",
+    "nextLink":"a.btn-next"
   }
 ]
