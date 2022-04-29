@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.6.8.11
+// @version      1.6.8.12
 // @description  Most compatible Auto Pager script ever. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动加载并拼接下一分页内容，无需规则即可支持任何网页
 // @description:zh-TW  自動加載並拼接下一分頁內容，無需規則即可支持任意網頁
@@ -1452,64 +1452,89 @@
             document.addEventListener("click", e=>{
                 if(e.target.tagName=="PRE"){
                     let nameAttr=e.target.getAttribute("name");
-                    if(nameAttr=="pagetual" || nameAttr=="user-content-pagetual"){
-                        let rules=e.target.innerText.trim().split("\n");
-                        let diff=false;
-                        for(let c=0;c<rules.length;c++){
-                            let urlArr=rules[c].split("|"),url,type=1;
-                            if(urlArr.length==1){
-                                url=urlArr[0].trim();
-                                if(!/^http/.test(url)){
-                                    showTips("Wrong url, check again!");
-                                    return;
-                                }
-                            }else if(urlArr.length==2){
-                                type=urlArr[0].trim();
-                                url=urlArr[1].trim();
-                                if(!/^http/.test(url)){
-                                    showTips("Wrong url, check again!");
-                                    return;
-                                }
-                            }else{
-                                break;
-                            }
-                            let maxId=0,hasUrl=false;
-                            if(!rulesData.urls){
-                                rulesData.urls=[];
-                                maxId=1;
-                            }else{
-                                rulesData.urls.forEach(u=>{
-                                    if(maxId<u.id){
-                                        maxId=u.id;
-                                    }
-                                    if(u.url==url){
-                                        hasUrl=true;
-                                    }
-                                });
-                                if(hasUrl)break;
-                            }
-                            diff=true;
-                            if(!rulesData.sort)rulesData.sort=[1];
-                            rulesData.urls.push({id:maxId+1,url:url,type:type});
-                            rulesData.sort.unshift(maxId+1);
-                        }
-                        if(!diff)return;
-                        storage.setItem("rulesData", rulesData);
-
-                        if(rulesData.urls)ruleUrls=ruleUrls.concat(rulesData.urls);
-                        if(rulesData.sort){
-                            let urls=[];
-                            rulesData.sort.forEach(id=>{
-                                for(let s=0;s<ruleUrls.length;s++){
-                                    if(id==ruleUrls[s].id){
-                                        urls.push(ruleUrls[s]);
+                    if(nameAttr=="pagetual" || nameAttr=="user-content-pagetual" || location.href.indexOf("greasyfork.org") != -1){
+                        let rules=e.target.innerText.trim();
+                        let isContent=/['"]name['"]/i.test(rules);
+                        if(isContent){
+                            let ruleList=JSON.parse(`[${rules}]`);
+                            for(let i in ruleList){
+                                let hasRule = false;
+                                let r = ruleList[i];
+                                for(let j in ruleParser.customRules){
+                                    if(ruleParser.customRules[j].name == r.name){
+                                        ruleParser.customRules[j] = r;
+                                        hasRule = true;
                                         break;
                                     }
                                 }
+                                if(!hasRule)ruleParser.customRules.push(r);
+                            }
+                            storage.setItem("customRules", ruleParser.customRules);
+                            showTips("OK");
+                        }else{
+                            rules=rules.split("\n");
+                            let diff=false;
+                            for(let c=0;c<rules.length;c++){
+                                let urlArr=rules[c].split("|"),url,type=1;
+                                if(urlArr.length==1){
+                                    url=urlArr[0].trim();
+                                    if(!/^http/.test(url)){
+                                        showTips("Wrong url, check again!");
+                                        return;
+                                    }
+                                }else if(urlArr.length==2){
+                                    type=urlArr[0].trim();
+                                    url=urlArr[1].trim();
+                                    if(!/^http/.test(url)){
+                                        showTips("Wrong url, check again!");
+                                        return;
+                                    }
+                                }else{
+                                    break;
+                                }
+                                let maxId=0,hasUrl=false;
+                                if(!rulesData.urls){
+                                    rulesData.urls=[];
+                                    maxId=1;
+                                }else{
+                                    rulesData.urls.forEach(u=>{
+                                        if(maxId<u.id){
+                                            maxId=u.id;
+                                        }
+                                        if(u.url==url){
+                                            hasUrl=true;
+                                        }
+                                    });
+                                    if(hasUrl)break;
+                                }
+                                diff=true;
+                                if(!rulesData.sort)rulesData.sort=[1];
+                                rulesData.urls.push({id:maxId+1,url:url,type:type});
+                                rulesData.sort.unshift(maxId+1);
+                            }
+                            if(!diff)return;
+                            storage.setItem("rulesData", rulesData);
+
+                            if(rulesData.urls)ruleUrls=ruleUrls.concat(rulesData.urls);
+                            if(rulesData.sort){
+                                let urls=[];
+                                rulesData.sort.forEach(id=>{
+                                    for(let s=0;s<ruleUrls.length;s++){
+                                        if(id==ruleUrls[s].id){
+                                            urls.push(ruleUrls[s]);
+                                            break;
+                                        }
+                                    }
+                                });
+                                ruleUrls=urls;
+                            }
+                            updateRules(()=>{
+                                showTips(i18n("updateSucc"));
+                            },(rule,err)=>{
+                                showTips("Update "+rule.url+" rules fail!");
                             });
-                            ruleUrls=urls;
+                            showTips(i18n("beginUpdate"));
                         }
-                        showTips("OK");
                     }
                 }
             });
