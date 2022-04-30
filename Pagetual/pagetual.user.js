@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.6.8.12
+// @version      1.6.8.13
 // @description  Most compatible Auto Pager script ever. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动加载并拼接下一分页内容，无需规则即可支持任何网页
 // @description:zh-TW  自動加載並拼接下一分頁內容，無需規則即可支持任意網頁
@@ -172,7 +172,8 @@
                     preload:"翻页前预读下一页，加速浏览",
                     click2ImportRule:"点击下方添加特殊规则库，添加后再行更新：",
                     forceAllBody:"是否拼接整个页面？",
-                    openInNewTab:"使拼接页面的内容在新页面打开"
+                    openInNewTab:"使拼接页面的内容在新页面打开",
+                    importSucc:"导入成功"
                 };
                 break;
             case "zh-TW":
@@ -217,7 +218,8 @@
                     preload:"翻頁前預讀下一頁，加速瀏覽",
                     click2ImportRule:"點擊下方添加特殊規則庫，添加後再行更新：",
                     forceAllBody:"是否拼接整個頁面？",
-                    openInNewTab:"使拼接頁面的内容在新頁面打開"
+                    openInNewTab:"使拼接頁面的内容在新頁面打開",
+                    importSucc:"導入成功"
                 };
                 break;
             case "ja":
@@ -261,7 +263,8 @@
                     preload:"事前に次のページを読む",
                     click2ImportRule:"以下をクリックして、ルールベースを追加します：",
                     forceAllBody:"フルページ埋め込み？",
-                    openInNewTab:"スプライスされたページのコンテンツを新しいページで開きます"
+                    openInNewTab:"スプライスされたページのコンテンツを新しいページで開きます",
+                    importSucc:"インポート完了"
                 };
                 break;
             default:
@@ -305,7 +308,8 @@
                     preload:"Preload next page for speeding up",
                     click2ImportRule:"Click to import base rules link, then click to update rules:",
                     forceAllBody:"Join full body of page?",
-                    openInNewTab:"Open urls of additions in new tab"
+                    openInNewTab:"Open urls of additions in new tab",
+                    importSucc:"Import completed"
                 };
                 break;
         }
@@ -1398,7 +1402,6 @@
             if(!eles || eles.length==0 || !self.insert || !self.insert.parentNode){
             }else{
                 this.pageInit(doc, eles);
-                let scrollTop=document.body.scrollTop||document.documentElement.scrollTop;
                 [].forEach.call(eles, ele=>{
                     let newEle=ele.cloneNode(true);
                     let oldCanvass=ele.querySelectorAll("canvas");
@@ -1415,8 +1418,6 @@
                     }
                     newEles.push(newEle);
                 });
-                document.body.scrollTop=scrollTop;
-                document.documentElement.scrollTop=scrollTop;
             }
             this.pageAction(doc, newEles);
             if(this.oldUrl!=location.href){
@@ -1470,7 +1471,7 @@
                                 if(!hasRule)ruleParser.customRules.push(r);
                             }
                             storage.setItem("customRules", ruleParser.customRules);
-                            showTips("OK");
+                            showTips(i18n("importSucc"));
                         }else{
                             rules=rules.split("\n");
                             let diff=false;
@@ -2314,7 +2315,7 @@
     });
 
     function initListener(){
-        let loadmoreBtn,loading=true;
+        let loadmoreBtn,loading=true,lastScroll;
         setTimeout(()=>{
             loadmoreBtn=getLoadMore(document);
             if(loadmoreBtn && isVisible(loadmoreBtn, _unsafeWindow)){
@@ -2353,11 +2354,18 @@
                     setTimeout(()=>{loading=false},200);
                 }
             }
-            setTimeout(()=>{
-                if(!isLoading){
-                    checkScrollReach();
+            if(!isLoading){
+                checkScrollReach();
+            }
+            if(ruleParser.curSiteRule.lockScroll){
+                let curScroll=document.body.scrollTop||document.documentElement.scrollTop;
+                if(isLoading && Math.abs(lastScroll-curScroll)>100){
+                    document.body.scrollTop=lastScroll;
+                    document.documentElement.scrollTop=lastScroll;
+                }else{
+                    lastScroll=curScroll;
                 }
-            },100);
+            }
         }, true);
         document.addEventListener('dblclick', e=>{
             let selStr=document.getSelection().toString().trim();
@@ -2717,7 +2725,6 @@
                 return;
             }
             if(times++ > 20){
-                //emuClick(nextLink);
                 debug("Stop as timeout when emu");
                 isPause=true;
                 callback(false, false);
