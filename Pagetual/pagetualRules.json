@@ -706,5 +706,11 @@
     "url":"^https://www\\.scribblehub\\.com/read",
     "pageElement":"#chp_raw",
     "nextLink":"a.btn-next"
+  },
+  {
+    "name":"淘宝已买到的宝贝",
+    "url":"^https://buyertrade.taobao.com/",
+    "pageElement":"table[data-reactid]",
+    "lockScroll":true
   }
 ]
