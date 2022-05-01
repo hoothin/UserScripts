@@ -712,5 +712,10 @@
     "url":"^https://buyertrade\\.taobao\\.com/",
     "pageElement":"table[data-reactid]",
     "lockScroll":true
+  },
+  {
+    "name":"奔跑的奶酪",
+    "url":"^https://www\\.runningcheese\\.com/",
+    "pageElement":"ul.ajaxposts>li"
   }
 ]
