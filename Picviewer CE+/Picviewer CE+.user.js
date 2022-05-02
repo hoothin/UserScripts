@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.4.27.1
+// @version              2022.5.2.1
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -44,7 +44,7 @@
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
 // @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1042734
 // @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1044551
-// @contributionURL      https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
+// @contributionURL      https://www.buymeacoffee.com/hoothin
 // @contributionAmount   1
 // @match                http://*/*
 // @match                https://*/*
@@ -265,13 +265,11 @@ ImgOps | https://imgops.com/#b#`;
             //按住shift键，可以临时执行和这个设定相反的设定
             framesPicOpenInTopWindow: true,
 
-            // lowLevel: true,  // 如果有多个图片，优先选择低一级的
-
             debug: false,
             customLang:'auto',
             customRules:`[
 //{
-//name: "Google picture",
+//name: "Example",
 //url: /https?:\/\/www.google(\.\w{1,3}){1,3}\/search\?.*/,
 //getImage: function(a){
 //},
@@ -533,21 +531,6 @@ ImgOps | https://imgops.com/#b#`;
             };
         }
 
-        /*if (typeof String.prototype.visualLength != 'function') {
-            var rulerEle = document.createElement("span");
-            rulerEle.style.visibility = "hidden";
-            rulerEle.style.whiteSpace = "nowrap";
-            String.prototype.visualLength = function(size,family){
-                rulerEle.style.fontSize = size || "inherit";
-                rulerEle.style.fontFamily = family || "inherit";
-                rulerEle.innerText = this;
-                document.body.appendChild(rulerEle);
-                let w = rulerEle.offsetWidth;
-                document.body.removeChild(rulerEle);
-                return w;
-            }
-        }*/
-
         var rulerEle = document.createElement("span");
         rulerEle.style.visibility = "hidden";
         rulerEle.style.whiteSpace = "nowrap";
@@ -701,7 +684,7 @@ ImgOps | https://imgops.com/#b#`;
                 w:backCompat? body.clientWidth : de.clientWidth,
             };
 
-        };
+        }
 
         //获取已滚动的距离
         function getScrolled(container){
@@ -710,19 +693,19 @@ ImgOps | https://imgops.com/#b#`;
                     x:container.scrollLeft,
                     y:container.scrollTop,
                 };
-            };
+            }
             return {
                 x:'scrollX' in window ? window.scrollX : ('pageXOffset' in window ? window.pageXOffset : document.documentElement.scrollLeft || document.body.scrollLeft),
                 y:'scrollY' in window ? window.scrollY : ('pageYOffset' in window ? window.pageYOffset :  document.documentElement.scrollTop || document.body.scrollTop),
             };
-        };
+        }
 
         //xpath 获取单个元素
         function getElementByXpath(xpath,contextNode,doc){
             doc=doc || document;
             contextNode=contextNode || doc;
             return doc.evaluate(xpath,contextNode,null,9,null).singleNodeValue;
-        };
+        }
 
 
         //事件支持检测.
@@ -741,9 +724,9 @@ ImgOps | https://imgops.com/#b#`;
                 };
                 isSupported = typeof elem[eventName] == "function";
                 if(setAttr)elem.removeAttribute(eventName);
-            };
+            }
             return isSupported;
-        };
+        }
 
 
         //检测属性支持.dom属性
@@ -760,8 +743,8 @@ ImgOps | https://imgops.com/#b#`;
                     return b.toUpperCase();
                 });
                 if(sProName in elem)return sProName;
-            };
-        };
+            }
+        }
 
 
         //css属性支持
@@ -802,7 +785,7 @@ ImgOps | https://imgops.com/#b#`;
             if(!capitalize)return;
             return cssProSupported(proName,elem,false);
 
-        };
+        }
 
         //css属性值支持
         function cssValueSupported(proName,value,elem){
@@ -816,9 +799,9 @@ ImgOps | https://imgops.com/#b#`;
                 style[proName]=prefixedValue;
                 if(style[proName]==prefixedValue){
                     return prefixedValue;
-                };
-            };
-        };
+                }
+            }
+        }
 
 
         //elem.dataset的兼容实现
@@ -946,7 +929,7 @@ ImgOps | https://imgops.com/#b#`;
 
                 count++;
             },80);
-        };
+        }
 
         //支持情况.
         var support={
@@ -6227,7 +6210,7 @@ ImgOps | https://imgops.com/#b#`;
                     }
                     //self.imgWindow.classList.remove("pv-pic-window-transition-all");
                     self.imgWindow.style.display="";
-                    setSearchState("",img.parentNode);
+                    setSearchState(img.naturalWidth+"x"+img.naturalHeight,img.parentNode);
                     self.imgNaturalSize={
                         h:img.naturalHeight,
                         w:img.naturalWidth,
@@ -6246,6 +6229,9 @@ ImgOps | https://imgops.com/#b#`;
                     wSize.h -= 16;
                     wSize.w -= 16;
                     self.isLongImg=self.imgNaturalSize.h >= wSize.h && self.imgNaturalSize.h/self.imgNaturalSize.w > 3.5;
+                }
+                if(imgNaturalSize.h && imgNaturalSize.w){
+                    setSearchState(img.naturalWidth+"x"+img.naturalHeight,img.parentNode);
                 }
                 /*searchButton.addEventListener('click',function(e){
                     sortSearch();
@@ -6551,21 +6537,34 @@ ImgOps | https://imgops.com/#b#`;
                     margin-top: 20px;\
                     min-height: 20px;\
                     }\
+                    .pv-pic-window-container:hover>.pv-pic-search-state{\
+                    opacity:0.8;\
+                    }\
                     .pv-pic-search-state {\
-                    top: 10px;\
-                    left: 10px;\
+                    top: 9px;\
+                    left: 9px;\
                     display: block;\
                     position: absolute;\
                     z-index: 1;\
                     color: #ffff00;\
-                    width: 500px;\
-                    font-size: large;\
-                    text-shadow: 1px 0 0 #000,-1px 0 0 #000,0 1px 0 #000,0 -1px 0 #000;\
-                    -webkit-text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;\
-                    -moz-text-shadow:#000 1px 0 0,#000 0 1px 0,#000 -1px 0 0,#000 0 -1px 0;\
+                    height: 20px;\
+                    line-height: 20px;\
+                    background: rgb(0 0 0 / 50%);\
+                    border-radius: 5px;\
+                    padding: 1px 8px;\
+                    max-width: 50%;\
+                    max-height: 30%;\
+                    overflow: hidden;\
+                    opacity:0.3;\
+                    font-size: small;\
+                    pointer-events: none;\
+                    transition: all 0.3s ease;\
                     }\
                     .transition-transform{\
                     transition: transform 0.3s ease;\
+                    }\
+                    .transition-all{\
+                    transition: all 0.3s ease;\
                     }\
                     .pv-pic-window-pic {\
                     position: relative;\
@@ -6973,12 +6972,17 @@ ImgOps | https://imgops.com/#b#`;
                         img.classList.remove("transition-transform");
                         img.style[support.cssTransform] = ' rotate('+ (self.rotatedRadians<radians?self.rotatedRadians+2*PI:self.rotatedRadians-2*PI) +'rad) ' + iTransform;
                         setTimeout(()=>{
+                            img.classList.add("transition-all");
                             img.classList.add("transition-transform");
                             img.style[support.cssTransform] = ' rotate('+ radians +'rad) ' + iTransform;
-                        },1);
+                        },0);
                     }else{
+                        img.classList.add("transition-all");
                         img.style[support.cssTransform] = ' rotate('+ radians +'rad) ' + iTransform;//旋转图片
                     }
+                    setTimeout(()=>{
+                        img.classList.remove("transition-all");
+                    },300);
                     self.rotateIPointer.style[support.cssTransform]='rotate('+ radians +'rad)';//旋转指示器
 
                     self.rotatedRadians=radians;
@@ -10319,7 +10323,6 @@ ImgOps | https://imgops.com/#b#`;
     }
 
     function setSearchState(words,imgCon){
-        if(words)console.info(words);
         var searchState = (imgCon?imgCon:document).querySelector('.pv-pic-search-state');
         if(searchState)searchState.innerHTML=createHTML(words);
     }
