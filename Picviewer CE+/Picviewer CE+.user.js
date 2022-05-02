@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.5.2.2
+// @version              2022.5.2.3
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -6971,7 +6971,9 @@ ImgOps | https://imgops.com/#b#`;
 
                 var rotate=function (radians){
                     if(self.rotatedRadians==radians)return;
-                    if(Math.abs(self.rotatedRadians-radians)==1.5*PI){
+                    if(self.working){
+                        img.style[support.cssTransform] = ' rotate('+ radians +'rad) ' + iTransform;
+                    }else if(Math.abs(self.rotatedRadians-radians)==1.5*PI){
                         img.classList.remove("transition-transform");
                         img.style[support.cssTransform] = ' rotate('+ (self.rotatedRadians<radians?self.rotatedRadians+2*PI:self.rotatedRadians-2*PI) +'rad) ' + iTransform;
                         setTimeout(()=>{
