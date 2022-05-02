@@ -127,7 +127,7 @@
     "type":0,
     "pageNum":"&pn={10*($p-1)}",
     "url":"^https?://www\\.baidu\\.com/(s|baidu)",
-    "init":"let rs=document.querySelector('div.result-molecule[tpl=\\'app/rs\\']');document.querySelector('#content_right').appendChild(rs);let tp=document.querySelector('.c-font-medium>div');let t;if(tp)t=tp.children[0];[].forEach.call(rs.querySelectorAll('tr>td'),rp=>{if(tp){rp.className=tp.className;rp.children[0].className=t.className}})"
+    "init":"let rs=document.querySelector('div.result-molecule[tpl=\\'app/rs\\']');document.querySelector('#content_right').appendChild(rs);let tp=document.querySelector('.c-font-medium>div');let t;if(tp)t=tp.children[0];[].forEach.call(rs.querySelectorAll('tr>td'),rp=>{if(tp&&t){rp.className=tp.className;rp.children[0].className=t.className}})"
   },
   {
     "name":"手机百度",
