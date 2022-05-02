@@ -7,14 +7,11 @@
 // @description:zh-TW 一鍵自動將磁鏈、bt種子或其他下載資源離綫下載至網盤
 // @namespace    https://github.com/hoothin/UserScripts/tree/master/Easy%20offline
 // @require      http://code.jquery.com/jquery-1.7.2.min.js
-// @version      1.9.30
+// @version      1.9.31
 // @author       Hoothin
-// @mail         rixixi@gmail.com
-// @include      http*://*/*
-// @include      http*://pan.baidu.com/*
-// @include      http*://115.com/*
-// @include      https://www.furk.net/*
-// @include      https://www.seedr.cc/*
+// @match        http://*/*
+// @match        https://*/*
+// @match        ftp://*/*
 // @exclude      http://www.toodledo.com/tasks/*
 // @exclude      *://*.google.*/*
 // @exclude      *://mega.*/*
@@ -79,10 +76,6 @@
 // @supportURL   http://www.hoothin.com
 // @license      MIT License
 // @require      https://greasyfork.org/scripts/436827-managelinkslib/code/manageLinksLib.js?version=1006643
-// @compatible        chrome
-// @compatible        firefox
-// @contributionURL https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
-// @contributionAmount 1
 // ==/UserScript==
 (function() {
     'use strict';
