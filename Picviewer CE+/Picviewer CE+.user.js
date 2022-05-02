@@ -6561,6 +6561,7 @@ ImgOps | https://imgops.com/#b#`;
                     opacity:0.3;\
                     font-size: small;\
                     transition: all 0.3s ease;\
+                    user-select: none;\
                     }\
                     .transition-transform{\
                     transition: transform 0.3s ease;\
