@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.5.2.1
+// @version              2022.5.2.2
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -6210,7 +6210,7 @@ ImgOps | https://imgops.com/#b#`;
                     }
                     //self.imgWindow.classList.remove("pv-pic-window-transition-all");
                     self.imgWindow.style.display="";
-                    setSearchState(img.naturalWidth+"x"+img.naturalHeight,img.parentNode);
+                    setSearchState(img.naturalWidth+" x "+img.naturalHeight,img.parentNode);
                     self.imgNaturalSize={
                         h:img.naturalHeight,
                         w:img.naturalWidth,
@@ -6231,7 +6231,7 @@ ImgOps | https://imgops.com/#b#`;
                     self.isLongImg=self.imgNaturalSize.h >= wSize.h && self.imgNaturalSize.h/self.imgNaturalSize.w > 3.5;
                 }
                 if(imgNaturalSize.h && imgNaturalSize.w){
-                    setSearchState(img.naturalWidth+"x"+img.naturalHeight,img.parentNode);
+                    setSearchState(img.naturalWidth+" x "+img.naturalHeight,img.parentNode);
                 }
                 /*searchButton.addEventListener('click',function(e){
                     sortSearch();
@@ -6540,6 +6540,9 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-pic-window-container:hover>.pv-pic-search-state{\
                     opacity:0.8;\
                     }\
+                    .pv-pic-window-container>span.pv-pic-search-state:hover{\
+                    opacity:0;\
+                    }\
                     .pv-pic-search-state {\
                     top: 9px;\
                     left: 9px;\
@@ -6549,7 +6552,7 @@ ImgOps | https://imgops.com/#b#`;
                     color: #ffff00;\
                     height: 20px;\
                     line-height: 20px;\
-                    background: rgb(0 0 0 / 50%);\
+                    background: rgb(0 0 0 / 80%);\
                     border-radius: 5px;\
                     padding: 1px 8px;\
                     max-width: 50%;\
@@ -6557,7 +6560,6 @@ ImgOps | https://imgops.com/#b#`;
                     overflow: hidden;\
                     opacity:0.3;\
                     font-size: small;\
-                    pointer-events: none;\
                     transition: all 0.3s ease;\
                     }\
                     .transition-transform{\
