@@ -6852,51 +6852,53 @@ ImgOps | https://imgops.com/#b#`;
                     while(offsetDirection.length){
                         var oD=offsetDirection[0];
                         var oDV=defaultValue[0];
+                        var outV=0;
+                        if(out)outV=out.shift();
                         offsetDirection.shift();
                         defaultValue.shift();
                         var oValue=parseFloat(objStyle[oD]);
                         var newValue;
                         switch(oD){
-                            case 'top':{
-                                newValue=oValue - objRect.top;
-                                if(objRect.top<0){
+                            case 'top':
+                                newValue=oValue - objRect.top - outV;
+                                if(objRect.top-outV<=0){
                                     newValue=Math.min(newValue,imgWindowFullSize.h);
                                 }else{
                                     newValue=Math.max(newValue,oDV);
                                 };
-                            }break;
-                            case 'right':{
-                                newValue=oValue + (objRect.right - windowSize.w);
-                                if(objRect.right > windowSize.w){//屏幕外
+                                break;
+                            case 'right':
+                                newValue=oValue + (objRect.right - windowSize.w) + outV;
+                                if(objRect.right+outV >= windowSize.w){//屏幕外
                                     newValue=Math.min(newValue,imgWindowFullSize.w);
                                 }else{
                                     newValue=Math.max(newValue,oDV);
                                 };
-                            }break;
-                            case 'bottom':{
-                                newValue=oValue + (objRect.bottom - windowSize.h);
-                                if(objRect.bottom > windowSize.h){//屏幕外
+                                break;
+                            case 'bottom':
+                                newValue=oValue + (objRect.bottom - windowSize.h) + outV;
+                                if(objRect.bottom+outV >= windowSize.h){//屏幕外
                                     newValue=Math.min(newValue,imgWindowFullSize.h);
                                 }else{
                                     newValue=Math.max(newValue,oDV);
                                 };
-                            }break;
-                            case 'left':{
-                                newValue=oValue - objRect.left;
-                                if(objRect.left<0){
+                                break;
+                            case 'left':
+                                newValue=oValue - objRect.left - outV;
+                                if(objRect.left-outV<=0){
                                     newValue=Math.min(newValue,imgWindowFullSize.w);
                                 }else{
                                     newValue=Math.max(newValue,oDV);
                                 }
-                            }break;
-                        };
+                                break;
+                        }
                         objStyle[oD]=newValue + 'px';
 
-                    };
-                };
+                    }
+                }
 
                 keepSI(this.closeButton,['top','right'],[-24,0]);
-                keepSI(this.maxButton,['top','right'],[-24,46]);
+                keepSI(this.maxButton,['top','right'],[-24,46],[0,46]);
                 //keepSI(this.searchButton,['top','right'],[-24,50]);
                 keepSI(this.toolbar,['top','left'],[0,-45]);
 
