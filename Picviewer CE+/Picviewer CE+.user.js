@@ -6595,7 +6595,7 @@ ImgOps | https://imgops.com/#b#`;
                     z-index: 1;\
                     color: #ffff00;\
                     height: 20px;\
-                    line-height: 18px;\
+                    line-height: 20px;\
                     background: rgb(0 0 0 / 80%);\
                     border-radius: 8px;\
                     padding: 1px 5px;\
