@@ -6936,8 +6936,9 @@ ImgOps | https://imgops.com/#b#`;
             },
             center:function(horizontal,vertical){
                 if(!horizontal && !vertical)return;
-                var wSize=getWindowSize();
                 var imgWindow=this.imgWindow;
+                if(!imgWindow)return;
+                var wSize=getWindowSize();
                 var scrolled=getScrolled();
                 if(horizontal)imgWindow.style.left= (wSize.w - imgWindow.offsetWidth)/2 + scrolled.x +'px';
                 if(vertical)imgWindow.style.top= (wSize.h - imgWindow.offsetHeight)/2 + scrolled.y +'px';
@@ -9441,8 +9442,9 @@ ImgOps | https://imgops.com/#b#`;
                     new LoadingAnimC(result, 'popup', prefs.waitImgLoad, prefs.framesPicOpenInTopWindow);
                     return true;
                 }else {
-                    if(uniqueImgWin && !uniqueImgWin.removed)
+                    if(uniqueImgWin && uniqueImgWin.imgWindow && !uniqueImgWin.removed){
                         uniqueImgWin.imgWindow.style.pointerEvents = "auto";
+                    }
                     return false;
                 }
             };
