@@ -1,14 +1,15 @@
 // ==UserScript==
-// @name         Easy offline
-// @name:zh-CN   一键离线下载
-// @name:zh-TW   一鍵離綫下載
+// @name         Easicon offline
+// @name:zh-CN   全载 - 一键离线下载
+// @name:zh-TW   全載 - 一鍵離綫下載
 // @description  Find out all magnet links and torrents and video links in current page, and stream them from cloud storage automatically.
 // @description:zh-CN 一键自动将磁链、bt种子或其他下载资源离线下载至网盘
 // @description:zh-TW 一鍵自動將磁鏈、bt種子或其他下載資源離綫下載至網盤
 // @namespace    https://github.com/hoothin/UserScripts/tree/master/Easy%20offline
 // @require      http://code.jquery.com/jquery-1.7.2.min.js
-// @version      1.9.31
+// @version      1.9.32
 // @author       Hoothin
+// @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAZlBMVEUAAAAzMzMzMzMzMzMzMzM0NDQzMzMzMzMyMjI0NDQzMzMzMzMzMzMyMjIzMzMzMzMyMjIzMzMyMjI0NDQzMzMzMzMzMzMyMjIzMzM3NzczMzMyMjIzMzMzMzMzMzMzMzMzMzMzMzPr002rAAAAIXRSTlMAvlVA5xLeq4gZ99Kje047KPHGspqQdGE0DNltZ0jMIwexMKlzAAAA/klEQVQ4y8WR2bKDIBBEGVFUcME1amKS/v+fvIIUVxLzmpwHranuWWFfJsq6OE7L6oOsUzhafqZnQFfpedZVB/Tv+gBEvlWD8lVfje6pBSYWIsKcCOoY5qOCmoOEFmrMfcEFUBcWcCVgcctUEs4ckJSQ9iLP9jBeTcQPg5D5lSjYYT/Imw8LmMYpat8YlszXQ7p9YyT/txqBK3zJBLE1PPawRxMxgK2NSTQ8rKGD2zBtOTMGNt1diRvIPtKdeazBQ3acPEZxbsggkn1d9Pm7QRPMizmHFEQ05LthpQ0hAX+R5yBgmHbDBYalT4LLc861azHzjUA93eJ3BiL2df4A97IVIHhv+eIAAAAASUVORK5CYII=
 // @match        http://*/*
 // @match        https://*/*
 // @match        ftp://*/*
@@ -129,25 +130,6 @@
                                             }
                                         }, 200);
                                     }
-                                    /*var ckeckEnd=function(){
-                                        var bck=setInterval(function(){
-                                            if(document.querySelector("div.nd-download-link div[role=dialog]").style.display!="none"){
-                                                clearInterval(bck);
-                                                setTimeout(()=>{beginOffline();},1500);
-                                            }else if(document.querySelector("#dialog1") && document.querySelector("#dialog1").style.display!="none"){
-                                                clearInterval(bck);
-                                                var inputCode=$("#dialog1").find(".input-code");
-                                                inputCode.focus();
-                                                bck=setInterval(function(){
-                                                    if(inputCode.val().length==4){
-                                                        clearInterval(bck);
-                                                        $("#dialog1").find("span:contains('确定')").click();
-                                                        ckeckEnd();
-                                                    }
-                                                },200);
-                                            }
-                                        },500);
-                                    };ckeckEnd();*/
                                 };beginOffline();
                             }
                         }, 500);
@@ -587,6 +569,7 @@
                 break;
             case "zh-TW":
             case "zh-HK":
+            case "zh-MO":
                 config={
                     configure:"一鍵離線下載設置",
                     yyw:"115網盤",
