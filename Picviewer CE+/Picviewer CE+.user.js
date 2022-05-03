@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.5.2.3
+// @version              2022.5.3.1
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -148,7 +148,7 @@ ImgOps | https://imgops.com/#b#`;
             floatBar:{//浮动工具栏相关设置.
                 butonOrder:['actual','current','gallery','magnifier','download'],//按钮排列顺序'actual'(实际的图片),'current'(当前显示的图片),'magnifier'(放大镜观察),'gallery'(图集),'search'(搜索原图)
                 listenBg:true,//监听背景图
-                showDelay:366,//浮动工具栏显示延时.单位(毫秒)
+                showDelay:100,//浮动工具栏显示延时.单位(毫秒)
                 hideDelay:566,//浮动工具栏隐藏延时.单位(毫秒)
                 position:'top left',// 取值为: 'top left'(图片左上角) 或者 'top right'(图片右上角) 'bottom right'(图片右下角) 'bottom left'(图片左下角);
                 stayOut:false,
@@ -166,8 +166,8 @@ ImgOps | https://imgops.com/#b#`;
                     },
                 },
                 minSizeLimit:{//就算是图片被缩放了(看到的图片被设定了width或者height限定了大小,这种情况下),如果图片显示大小小于设定值,那么也不显示浮动工具栏.
-                    w:15,
-                    h:15,
+                    w:25,
+                    h:25,
                 },
                 sizeLimitOr:false,
 
@@ -195,7 +195,7 @@ ImgOps | https://imgops.com/#b#`;
                 wheelZoom:{//滚轮缩放.
                     enabled:true,
                     pauseFirst:true,//需要暂停(单击暂停)后,才能缩放.(推荐,否则因为放大镜会跟着鼠标,如果放大镜过大,那么会影响滚动.)..
-                    range:[0.4,0.5,0.6,0.7,0.8,0.9,1,1.1,1.2,1.3,1.4,1.5,1.7,1.9,2,2.5,3.0,4.0],//缩放的范围
+                    range:[0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,1.1,1.2,1.3,1.4,1.5,1.7,1.9,2,2.5,3.0,4.0,5.0,6.0,7.0,8.0,9.0],//缩放的范围
                 },
             },
 
@@ -251,7 +251,7 @@ ImgOps | https://imgops.com/#b#`;
                 },
                 shiftRotateStep:15,// 旋转的时候，按住shift键时,旋转的步进.单位:度.
                 zoom:{//滚轮缩放
-                    range:[0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,1.1,1.2,1.3,1.4,1.5,1.7,1.9,2,2.5,3.0,4.0],//缩放比例.(不要出现负数,谢谢-_-!~)
+                    range:[0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,1.1,1.2,1.3,1.4,1.5,1.7,1.9,2,2.5,3.0,4.0,5.0,6.0,7.0,8.0,9.0],//缩放比例.(不要出现负数,谢谢-_-!~)
                     mouseWheelZoom:true,//是否允许使用滚轮缩放。
                 },
                 zIndex: 2147483646
@@ -344,13 +344,14 @@ ImgOps | https://imgops.com/#b#`;
             lock:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAMAAAC6V+0/AAAAOVBMVEUAAAB2dnZ3d3d3d3d5eXl8fHxzc3N0dHR5eXl5eXl+fn53d3dzc3NxcXF2dnZ0dHR9fX13d3d9fX2pDWFRAAAAE3RSTlMAqXCZJy6vvllLNWXZooyCFXsZospBZQAAAG9JREFUGNN9z0sOgCAMBFAEWql89f6HNdKAxSCzYJK3YEAt41JyHyoYnYtYBoz5OXOUBsiNIJASdyK5krmz2PIh7DUh+GbaABw1AEYref04qTb7ot0GJJrgqWfoJ3gVxuWQfFJDj7oH+5fI9JD6yw3ZiwMeFNafHgAAAABJRU5ErkJggg==',
             brokenImg:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MkZCM0M0MkM0OTg2MTFFMjkyRUJDMzk3ODcyM0MwOEUiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MkZCM0M0MkQ0OTg2MTFFMjkyRUJDMzk3ODcyM0MwOEUiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDoyRkIzQzQyQTQ5ODYxMUUyOTJFQkMzOTc4NzIzQzA4RSIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDoyRkIzQzQyQjQ5ODYxMUUyOTJFQkMzOTc4NzIzQzA4RSIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pne+/t8AAA/4SURBVHjazFp5XFXV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',
             brokenImg_small:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NUZFMjU2OUM0QjI4MTFFMkJDMkU4RUREMjg3OEVCMjIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NUZFMjU2OUQ0QjI4MTFFMkJDMkU4RUREMjg3OEVCMjIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo1RkUyNTY5QTRCMjgxMUUyQkMyRThFREQyODc4RUIyMiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo1RkUyNTY5QjRCMjgxMUUyQkMyRThFREQyODc4RUIyMiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PuqVBnIAAATpSURBVHjarFV9TNRlHP/87v04zuMEhDsQEATithNEjRcnIqSHprxo09VUEC3zj5zNLG211lpuDVtzOWvWrOZcm6tpBkvI0HaKpFlwJcIhd8DxKl2Hx8u9cff0/R1YHqNWW8/2+T3P8/09z+f7fb7P5/v7cfir7ScI8d+an1BH6HrUyBgLWbSfDE6C79/A55qYGuzrfqBUhr9Je1NnE4tmRSB2e9yiWx2/QyEXg3fs9njh9/vh8U73Xp8PzB/AuMuLLYXp86wWy5G4+IVCj8dzhvZ3PCSaTcz9eM+Bguc/R4RaBlW4FPPkEigV0uBYLBDA4ZrCKn0cPqq7g3CFEmWr08VWq/UVnU4nGh0d/Yw47oYQa7TaWLfbJVmi4bC+SI/yXC3UCjECFHYgwCjSAPwCCaoMqai/cBYvnauGZ9wzvVejEfX22g5mL80U3Ouy8OR3uJmc6FvN5uas9PQwfm4bGcYXzZPotPRBKuIwRUf3QYIju3Ow/YnHYbxxC3k5y1HbdAtfX2zCA8dv0EYpkLRAPrYid+UbxPeegB5Zza2t13jS7w0G1BcWYmF0DMqyOMjnR8E0MI4Oux8HK3OwrSgbsvZODFZVQWm+hw35y5G1Kh9n2+S40jEBj3tS+mdSjUajkw+6yWBg7bt2sV8qK9nFwkJeL6zTamY1DXY2OMXY0swMZlCr2N0dO5hp505mq65m66RitnqZjplHGDt+wUQxMjfte5FXhSAjI+Mm7+Ci2cznBK6pKSQlJKCuaA1SF6Vh7aIRFOnTEN83hOObyjAeCATz3n//Pho8Prz29lFcahmETBKqAkFkZOST5KH+nf5+nLh8GUqRCG6SVXz8QlwqLkZW6mNId4yhZmMpxsgeVAaR5tbW4qqxEY6YtbAOOKBRhYUScxzHX22pra+v7RxFU1NfHyT3EokmLg7GigocLSnBGJ1EQqT24WGsoTXGpmvwLliJ/v4hxKnFkMrEIcRBuRG5l7qPKfKaiMhIob+xEa+uXw8nx0Eik2GMXsokEtgHBlDc0IC2ti5IYpJh6weyE5Lh9jJEhruDApurQPi6943a7UJyBM2pU8iYMfJNQdhGeOv9D3Bd/B2ePZgCmWD66yJVClGcvh1fpn2KuYj5s0hEKhXKaVBA4OUSeGThJ4RdL+zDjRsmnDz8Ia6aGiEXhkEukFOx+ENzPFMgYYMOx76wqChBudOJ3WQbJ8gJfBrmzThQEU4T8vKWYHG3Dos1abhp/QHXu4ywTw6FEhMpf8pvNWp1yia7Hc+Fh4OLj0eEVhv8ouzlhcmTyuWQkQxjY2ODka8rKUCufTUqsrfA4XyACc9EKHFPT88Vyml+NU0O5edDRQqIzczET3RRL/MRk2Z1ZVux1+WCglQRXVAA/ebN+EooRGn5WizrXoqt2Vsx4hwJJR4aGkrkB3pCAklLq9fjm7o6HKb5rzYLVryrw7ZjTyG5ZAM2d3eD2WxI2rgRKTk5UPOpOUOXHJeBtOi00AqhVCS39/QM8sPjhGPTkmFztaeplKPoXbNGw+ZT/0xV1ewlroclLaI0WGiQZ+rs/HlJamoE74zK1pGQmHjC1tvreDQIs8VikIhEhtzTp1G9Zw/2HzhQS/sb//HnZTKZUlpaWnqot9y+fTuJTNK54HK5Xj9//jybnJw89Hdr+Ii52T++/6v9IcAACHxjGrCZJqsAAAAASUVORK5CYII=',
+            maxBtn:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC4AAAARBAMAAABQu4N8AAAAHlBMVEVYWFhmZmZpaWliYmJUVFRbW1tfX1/l5eVra2szMzOUEp7mAAAAaElEQVQY02PowA4YlLADnOKCMCA5EwgmwngI8XIQQIgbQ4EhWHwyiAUWN4QC43KQnskgFgjA1UPFQSxhIGBIgwGw+DQgIxkkhyEOBQyhMAC2dyqQEYZFHM5jwASsYHFSgQsGcECIYwIACZtXpfywXDUAAAAASUVORK5CYII='
         };
 
         prefs.share={
             weibo:{
                 disabled:false,
                 name:'新浪微博',
-                limitLang:'zh-CN',
+                limitLang:'zh-CN,zh-TW',
                 icon:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsSAAALEgHS3X78AAACfklEQVQ4ja2ST2iTBxjGf++Xr0va2qqt02ntEkxo025DqUpjdeAOdj0YxIPgxYOKePHmwag77bDL0IlMKgoeeqgIQrapSOtFpFOc4GWb1n+kNqLWKNqmSZs03/fs4CplXjbcc3oP7/vjfZ/3gQ+U/dvGZ0f5POjSBeSGn3Ol6zsm/xNg4gQ/SGwyY5mEB+ycv4+L7wF+Wh4Org5VbwfWApeaHw5fBrhxCOezJrqAx8AuIFWu0OnOHR6Jtn4VMDsjKWxmJqkHiAFUnlQ3acn0cQJaAWw2Y01VgP3vNsjG4ruBk8Bc6J/AMeBrHC10GkqnardmI848byXwK7DXBRiNtm4DTkkyM0N/F5Lazey0JJlv5uWCi7yXwZTVFktmLJCYtNuRWPhj1/0dqLN5tdQkNxPs7CTwyRI0NUX5zh2K59NUMhmAa07jdLLp5sjEi2Os+cil3rKx+GlJu0Pru6zhyPfKuwHr7+9XLpezZDKpjo4O08yMXh/6xgrpn2Vmr3xpS/jRveuzt798umGjvEJBY2NjikQiAuQ4jlzX1dDQkCTJy08q2/aFsrG4srH41VmTHKAuuH6dnJoa+vr61NzcTG9vr3p6eqhUKhoYGHjrSSiIVVUJQFJ5LmBg5u6wyfdpbGy0RCJBPB63wcFBHMex7u5uzMwKZ8+hYtEAX3Dk3Z9+i0SbRqOt914dPKzym3E/lUqppaXFTyQSSqfTvlcoavz4j362pV2j0dZSNhbfMzc7BnBhebhuVaj6gNXX7wl9uWGxG/4UfJ9KZoTp6zdQPl8Cfsl73rftmQd/vAeY1dHFSwMrg6FVDYFAG1ALVMpS5n65dGvHsyf5f8b+f9FfksATEF5LDZgAAAAASUVORK5CYII=',
                 api:function(args){
                     var url='http://service.weibo.com/share/share.php?'+
@@ -3502,7 +3503,9 @@ ImgOps | https://imgops.com/#b#`;
                 img.className='pv-gallery-img';
 
                 if(error){
-                    if(relatedThumb.querySelector("img").src==this.img.src){
+                    let relatedImg=relatedThumb.querySelector("img");
+                    if(!relatedImg)return;
+                    if(relatedImg.src==this.img.src){
                         this.imgError=true;
                         this.img.style.display='none';
                         this.eleMaps['img_broken'].style.display='inline-block';
@@ -3525,13 +3528,13 @@ ImgOps | https://imgops.com/#b#`;
                             if(src){
                                 dataset(relatedThumb, 'src',src);
                                 this.img.onerror=function(e){
-                                    this.src=relatedThumb.querySelector("img").src;
+                                    this.src=relatedImg.src;
                                     dataset(relatedThumb, 'src',this.src);
                                 }
                                 this.img.src=src;
                             }
                         }
-                        else this.img.src=relatedThumb.querySelector("img").src;
+                        else this.img.src=relatedImg.src;
                     }
                 }else{
                     this.imgError=false;
@@ -3693,7 +3696,7 @@ ImgOps | https://imgops.com/#b#`;
                 }
                 var self=this;
                 (data || this.data).forEach(function(item) {
-                    if(!item)return;
+                    if(!item || !item.type)return;
                     iStatisCopy[item.type].count++;
                     var spanMark=self._spanMarkPool[item.imgSrc];
                     if(!spanMark){
@@ -4169,7 +4172,7 @@ ImgOps | https://imgops.com/#b#`;
                                 return false;
                             }
                             pretreatment(img);
-                            if(!img.src)return false;
+                            if(!img.src || (img.getAttribute && !img.getAttribute("src")))return false;
                             var isrc=img.src.trim();
                             if(!isrc)return false;
                             var result = findPic(img);
@@ -4425,7 +4428,7 @@ ImgOps | https://imgops.com/#b#`;
                 var self = this;
                 imgs.forEach(function(img) {
                     pretreatment(img);
-                    if(!img.src) return;
+                    if(!img.src || (img.getAttribute && !img.getAttribute("src"))) return;
                     if (newer && self._dataCache[img.src]) return;
 
                     var result = findPic(img);
@@ -6142,6 +6145,7 @@ ImgOps | https://imgops.com/#b#`;
                     '<span class="pv-pic-window-tb-flip-horizontal pv-pic-window-tb-command" title="'+i18n("horizontalFlip")+'"></span>'+
                     '<span class="pv-pic-window-tb-flip-vertical pv-pic-window-tb-command" title="'+i18n("verticalFlip")+'"></span>'+
                     '</span>'+
+                    '<span class="pv-pic-window-max"></span>' +
                     '<span class="pv-pic-window-close"></span>' +
                     //'<span class="pv-pic-window-search" title="'+i18n("similarImage")+'"></span>' +
                     '<span class="pv-pic-window-range"></span>' +
@@ -6167,6 +6171,22 @@ ImgOps | https://imgops.com/#b#`;
                 closeButton.style.cssText='top: -24px;right: 0px;';
                 this.closeButton=closeButton;
                 closeButton.addEventListener('click',function(e){
+                    self.remove();
+                },false);
+
+                var maxButton=container.querySelector('.pv-pic-window-max');
+                maxButton.style.cssText='top: -24px;right: 46px;';
+                this.maxButton=maxButton;
+                maxButton.addEventListener('click',function(e){
+                    if(!gallery){
+                        gallery=new GalleryC();
+                        gallery.data=[];
+                    }
+                    var allData=gallery.getAllValidImgs();
+                    if(allData.length<1)return;
+                    allData.target={src:img.src};
+                    gallery.data=allData;
+                    gallery.load(gallery.data);
                     self.remove();
                 },false);
 
@@ -6465,6 +6485,7 @@ ImgOps | https://imgops.com/#b#`;
                     box-sizing: content-box;\
                     }\
                     .pv-pic-window-close,\
+                    .pv-pic-window-max,\
                     .pv-pic-window-search,\
                     .pv-pic-window-toolbar,\
                     .pv-pic-window-tb-tool-extend-menu{\
@@ -6486,7 +6507,7 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-pic-window-toolbar:hover {\
                     opacity: 1;\
                     }\
-                    .pv-pic-window-toolbar_focus {\
+                    .pv-pic-window-container_focus>.pv-pic-window-toolbar {\
                     display: block;\
                     }\
                     .pv-pic-window-close {\
@@ -6508,7 +6529,7 @@ ImgOps | https://imgops.com/#b#`;
                     background-color:red;\
                     opacity: 1;\
                     }\
-                    .pv-pic-window-close_focus {\
+                    .pv-pic-window-container_focus>.pv-pic-window-close {\
                     display: block;\
                     }\
                     .pv-pic-window-search {\
@@ -6526,11 +6547,34 @@ ImgOps | https://imgops.com/#b#`;
                     background-color:#1771FF;\
                     display: none;\
                     }\
+                    .pv-pic-window-max {\
+                    cursor: pointer;\
+                    position: absolute;\
+                    right: 46px;\
+                    top: -24px;\
+                    background: url("'+prefs.icons.maxBtn+'") no-repeat center bottom;\
+                    height: 17px;\
+                    width: 46px;\
+                    opacity: 0.7;\
+                    border:none;\
+                    border-right: 1px solid #868686;\
+                    padding:0;\
+                    padding-top:2px;\
+                    background-color:#1771FF;\
+                    display: none;\
+                    }\
+                    .pv-pic-window-max:hover {\
+                    background-color:red;\
+                    opacity: 1;\
+                    }\
+                    .pv-pic-window-container_focus>.pv-pic-window-max {\
+                    display: block;\
+                    }\
                     .pv-pic-window-search:hover {\
                     background-color:red;\
                     opacity: 1;\
                     }\
-                    .pv-pic-window-search_focus {\
+                    .pv-pic-window-container_focus>.pv-pic-window-search {\
                     display: block;\
                     }\
                     .pv-pic-window-description {\
@@ -6551,10 +6595,10 @@ ImgOps | https://imgops.com/#b#`;
                     z-index: 1;\
                     color: #ffff00;\
                     height: 20px;\
-                    line-height: 20px;\
+                    line-height: 18px;\
                     background: rgb(0 0 0 / 80%);\
-                    border-radius: 5px;\
-                    padding: 1px 8px;\
+                    border-radius: 8px;\
+                    padding: 1px 5px;\
                     max-width: 50%;\
                     max-height: 30%;\
                     overflow: hidden;\
@@ -6581,7 +6625,7 @@ ImgOps | https://imgops.com/#b#`;
                     border:none;\
                     vertical-align:middle;\
                     }\
-                    .pv-pic-window-pic_focus {\
+                    .pv-pic-window-container_focus>.pv-pic-window-pic {\
                     box-shadow: 0 0 6px black;\
                     }\
                     .pv-pic-window-tb-tool,\
@@ -6782,6 +6826,7 @@ ImgOps | https://imgops.com/#b#`;
                     this.imgWindow.style.height="100%";
                     this.imgWindow.style.maxWidth="100%";
                     this.closeButton.style.display="none";
+                    this.maxButton.style.display="none";
                 }else if(prefs.imgWindow.fitToScreen){
                     this.fitToScreen();
                     this.center(true,true);
@@ -6851,6 +6896,7 @@ ImgOps | https://imgops.com/#b#`;
                 };
 
                 keepSI(this.closeButton,['top','right'],[-24,0]);
+                keepSI(this.maxButton,['top','right'],[-24,46]);
                 //keepSI(this.searchButton,['top','right'],[-24,50]);
                 keepSI(this.toolbar,['top','left'],[0,-45]);
 
@@ -7409,10 +7455,6 @@ ImgOps | https://imgops.com/#b#`;
                 //点击imgWinodw的外部的时候失去焦点
                 if(e!==true && imgWindow.contains(e.target))return;
                 imgWindow.classList.remove('pv-pic-window-container_focus');
-                this.toolbar.classList.remove('pv-pic-window-toolbar_focus');
-                this.closeButton.classList.remove('pv-pic-window-close_focus');
-                //this.searchButton.classList.remove('pv-pic-window-search_focus');
-                this.img.classList.remove('pv-pic-window-pic_focus');
                 document.removeEventListener('mousedown',this._blur,true);
                 document.removeEventListener('keydown',this._focusedKeydown,true);
                 document.removeEventListener('keyup',this._focusedKeyup,true);
@@ -7425,10 +7467,6 @@ ImgOps | https://imgops.com/#b#`;
             focus:function(){
                 if(this.focused)return;
                 this.imgWindow.classList.add('pv-pic-window-container_focus');
-                this.toolbar.classList.add('pv-pic-window-toolbar_focus');
-                this.closeButton.classList.add('pv-pic-window-close_focus');
-                //this.searchButton.classList.add('pv-pic-window-search_focus');
-                this.img.classList.add('pv-pic-window-pic_focus');
                 this.imgWindow.style.zIndex=prefs.imgWindow.zIndex+1;
                 this.zIndex=prefs.imgWindow.zIndex+1;
                 document.addEventListener('keydown',this._focusedKeydown,true);
@@ -7629,6 +7667,7 @@ ImgOps | https://imgops.com/#b#`;
                         this.imgWindow.style.maxWidth=inScroll?"":"100%";
                         this.imgWindow.style.overflow=inScroll?"":"scroll";
                         this.closeButton.style.display=inScroll?"":"none";
+                        this.maxButton.style.display=inScroll?"":"none";
                         //this.center(true , true);
                         if(!inScroll){
                             imgWindow.style.top= (wSize.h - imgWindow.offsetHeight)/2 + scrolled.y +'px';
@@ -8214,9 +8253,9 @@ ImgOps | https://imgops.com/#b#`;
                     case 'magnifier':
                         new MagnifierC(this.img,this.data);
                         break;
-                    case 'actual':;
-                    case 'search':;
-                    case 'current':;
+                    case 'actual':
+                    case 'search':
+                    case 'current':
                     case 'original'://original 是为了兼容以前的规则
                         if(this.data.src!=this.img.src)this.data.src=this.img.src;
                         new ImgWindowC(this.img, this.data);
