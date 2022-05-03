@@ -9274,7 +9274,7 @@ ImgOps | https://imgops.com/#b#`;
             var target = e.target;
 
             if (!target || target.id=="pv-float-bar-container" ||
-                target.parentNode.id=="icons" ||
+                (target.parentNode && target.parentNode.id=="icons") ||
                 (target.className && target.className.indexOf &&
                  (/^pv\-/.test(target.className) ||
                   target.className=="whx-a" ||
