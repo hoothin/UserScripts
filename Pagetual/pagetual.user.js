@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name         Pagetual - Perpetual pages
-// @name:zh-CN   东方永页机 - 自动翻页脚本
+// @name         Pagetual
+// @name:zh-CN   东方永页机
 // @name:zh-TW   東方永頁機
 // @name:ja      東方永頁機
 // @name:ru      Пейджетуал
@@ -10,10 +10,10 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.6.8.13
-// @description  Most compatible Auto Pager script ever. Auto loading next paginated web pages and inserting into current page.
-// @description:zh-CN  自动加载并拼接下一分页内容，无需规则即可支持任何网页
-// @description:zh-TW  自動加載並拼接下一分頁內容，無需規則即可支持任意網頁
+// @version      1.6.8.15
+// @description  Perpetual pages - Most powerful Auto Pager script. Auto loading next paginated web pages and inserting into current page.
+// @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
+// @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
 // @description:ja     Webページを自動で読み込み継ぎ足し表示を行うブラウザ拡張です
 // @description:ru     Просто автоматически загрузите следующую страницу
 // @description:de     Laden Sie einfach automatisch die nächste Seite
@@ -24,6 +24,7 @@
 // @author       hoothin
 // @match        http://*/*
 // @match        https://*/*
+// @match        ftp://*/*
 // @license      MIT
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAdVBMVEUAAAD3VU33VU32VEz8U073VU32VU33VU32VUz0Uk/3VE32VU32VUz2VU32VU32VU32VU33VU33U0z2VU34Wkv3VE32VUz/mpj/nJj2VUz2VU32VE33VEz2VU32VU32VUz3VE32VEz3VE3/mZf2Vkz2VU3/mpilFFolAAAAJXRSTlMA3Lp/GvTBT5YQLuawZ/DOyZwlPQeKc21N04+FX1bqpm9DNoB4T68ePwAAAitJREFUWMPt1tuasiAUBuCFCG5Rs3QybTPV1/1f4v/3PDkyIojn8x5qBrI+ltAfh32/yysmBKvyXb+njb6bDL9kzTd5SzjDAsYT8nFoGSxYe6BVqoNDp2jFDit25BRgVUAODB4YWcETWVTwVNGiGN5iWtBgg4YMCpsoI38dNunmmWyxUTvbPwwbsYR0fIzZLQ0pTG8eieRmBLMmpdH9uimQEf6TNRnXXKLZHixpJtywLzOgMHtFCqdM64DahHRnOE1dsrekm9wr2WtLcAlpdHwcp1pAJySXYnERclzp4+v19jXdmcTvQUJtz+ZaI4i05/V/UGYrCxbaAsOYoNfIKEQxpqQuzCgJJJ/3f42O8ywEZuMVWi/8hODxGj3GW2b0udkbGULLDOjimAG0S3fLGlBnXQM9irG1CiQdVQi0dqQsOSDlyEEz7Vy9OxxfR71VCXsSB23jMrKJYZXSjw57sqgLn5Z0wolsOCz0RyJkyeYjgz7pwwVq20eboZwtVUl2EnN5gJ50dQZFdryATvABRTr/tJXkUMdaAK5pwtCapwtFLskguwuyMh/Sd9WChQ4sIvIUYSk3PYqQvCQlOC04IfN7PkdjOyRKWhdKXMmiAFt9i3sJ5jxoRuR0vqAghxxwHuqfQE5OHGDKOrwEnqs1DgAZ2e4Eev1d45TN7JfhrQLKgfwMFYAsvp33dXII073aVQLI2gN5S58lfmGnKKFtah7nkgnBZB7zlP7Y/QNiTM6sYNzawwAAAABJRU5ErkJggg==
 // @grant        GM_xmlhttpRequest
@@ -1029,9 +1030,9 @@
                         debug(e);
                     }
                 }
-                return result==url?url.replace(/([&\/\?](p=|page[=\/-]))\d+/i, "$1"+pageNum).replace(/([_-])\d+\./i, "$1"+pageNum+"."):result;
+                return result==url?url.replace(/([&\/\?](p=|page[=\/_-]?))\d+/i, "$1"+pageNum).replace(/([_-])\d+\./i, "$1"+pageNum+"."):result;
             }else{
-                return url.replace(/([&\/\?](p=|page[=\/-]))\d+/i, "$1"+pageNum).replace(/([_-])\d+\./i, "$1"+pageNum+".");
+                return url.replace(/([&\/\?](p=|page[=\/_-]?))\d+/i, "$1"+pageNum).replace(/([_-])\d+\./i, "$1"+pageNum+".");
             }
         }
 
@@ -2463,7 +2464,7 @@
         if(ruleParser.nextTitle){
             pageText.innerHTML=ruleParser.nextTitle+" ";
         }
-        if(ruleParser.curSiteRule.pageNum || (hasPageNum && /[&\/\?](p=|page[=\/-])\d+|[_-]\d+\./.test(url))){
+        if(ruleParser.curSiteRule.pageNum || (hasPageNum && /[&\/\?](p=|page[=\/_-]?)\d+|[_-]\d+\./.test(url))){
             pageText.innerHTML+="Page ";
             pageNum=document.createElement("span");
             pageNum.innerText=curPage;
