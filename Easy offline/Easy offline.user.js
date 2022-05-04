@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Easy offline
+// @name         Easy Offline
 // @name:zh-CN   全载
 // @name:zh-TW   全載
 // @description  Find out all magnet links and torrents and video links in current page, and stream them from cloud storage automatically.
