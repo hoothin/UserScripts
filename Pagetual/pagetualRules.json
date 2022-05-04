@@ -466,7 +466,7 @@
     "name":"铅笔小说",
     "nextLinkByJs":"let script=doc.querySelector('body>.mlfy_main>script:nth-of-type(2)');if(!script)return null;return location.origin+script.innerText.match(/.*url_next:'([^']+)'.*/i)[1]",
     "pageElement":"#mlfy_main_text",
-    "url":"^https://www\\.23qb\\.net/book/"
+    "url":"^https://www\\.23qb\\.(net|com)/book/"
   },
   {
     "name":"NGA",
