@@ -1463,7 +1463,7 @@
             configContent.style.display="none";
             document.body.appendChild(configContent);
             configContent.innerHTML=`
-                <div style="text-align: center;width:300px;min-height:300px;position:fixed;left:50%;top:50%;margin-top:-150px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;color:#6e7070;">
+                <div style="text-align: center;width:300px;min-height:300px;position:fixed;left:50%;top:50%;margin-top:-250px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;color:#6e7070;">
                     <a href="https://greasyfork.org/scripts/22590#additional-info" style="position: absolute; width: 100%; left: 0; text-decoration: underline;">${i18n("settingTitle")}</a>
                     <a id="easyOfflineDisable" href="#" style="color: red;top: 18px; position: absolute; width: 100%; left: 0; text-decoration: underline;display:none;">${i18n("disableOnSite")}</a>
                     <div style="text-align:center;font-size: 12px;margin-top: 38px;">${i18n("urlRegexpTips")}</div>
@@ -1556,10 +1556,10 @@
             }
             var addSiteRules=document.createElement("div");
             addSiteRules.innerHTML=`
-                <div style="width:300px;min-height: 300px;position:fixed;left:50%;top:50%;margin-top:-150px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;color:#6e7070;">
+                <div style="width:300px;min-height: 455px;position:fixed;left:50%;top:50%;margin-top:-250px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;color:#6e7070;">
                     <div style="text-align:center;font-size: 12px;margin-top: 28px;">${i18n("addSiteRuleTitle")}</div>
-                    <textarea id="siteRuleInput" placeholder="${i18n("siteRulePlaceholder")}" style="position: absolute;left: 18px;top: 55px;width: 260px;height: 180px;background-color: white;color: black;margin-top: 0px;margin-bottom: 0px;"></textarea>
-                    <button id="siteRuleSave" class="whx-btn" type="button" style="position: absolute;width:80px;height:30px;bottom: 10px;color:white;border-radius:5px;border:0px;outline:none;margin: 10px 110px 10px;cursor:pointer;left:0;">${i18n("settingBtn")}</button>
+                    <button id="siteRuleSave" class="whx-btn" type="button" style="position: absolute;width:80px;height:30px;bottom: 0px;color:white;border-radius:5px;border:0px;outline:none;margin: 10px 110px 10px;cursor:pointer;left:0;">${i18n("settingBtn")}</button>
+                    <textarea id="siteRuleInput" placeholder="${i18n("siteRulePlaceholder")}" style="resize: auto;position: absolute;left: 18px;top: 55px;width: 260px;height: 350px;background-color: white;color: black;margin-top: 0px;margin-bottom: 0px;"></textarea>
                     <div id="siteRuleQuit" class="whx-btn" style="width:28px;height:28px;border-radius:14px;position:absolute;right:2px;top:2px;cursor:pointer;">
                         <span style="height:28px;line-height:28px;display:block;color:#FFF;text-align:center;font-size:10px;">╳</span>
                     </div>
