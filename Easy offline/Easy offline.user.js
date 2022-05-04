@@ -1,15 +1,15 @@
 // ==UserScript==
-// @name         Easicon offline
-// @name:zh-CN   全载 - 一键离线下载
-// @name:zh-TW   全載 - 一鍵離綫下載
+// @name         Easy offline
+// @name:zh-CN   全载
+// @name:zh-TW   全載
 // @description  Find out all magnet links and torrents and video links in current page, and stream them from cloud storage automatically.
-// @description:zh-CN 一键自动将磁链、bt种子或其他下载资源离线下载至网盘
-// @description:zh-TW 一鍵自動將磁鏈、bt種子或其他下載資源離綫下載至網盤
+// @description:zh-CN 一键离线下载 - 一键自动将磁链、bt种子或其他下载资源离线下载至网盘
+// @description:zh-TW 一鍵離綫下載 - 一鍵自動將磁鏈、bt種子或其他下載資源離綫下載至網盤
 // @namespace    https://github.com/hoothin/UserScripts/tree/master/Easy%20offline
 // @require      http://code.jquery.com/jquery-1.7.2.min.js
-// @version      1.9.32
+// @version      1.9.33
 // @author       Hoothin
-// @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAZlBMVEUAAAAzMzMzMzMzMzMzMzM0NDQzMzMzMzMyMjI0NDQzMzMzMzMzMzMyMjIzMzMzMzMyMjIzMzMyMjI0NDQzMzMzMzMzMzMyMjIzMzM3NzczMzMyMjIzMzMzMzMzMzMzMzMzMzMzMzPr002rAAAAIXRSTlMAvlVA5xLeq4gZ99Kje047KPHGspqQdGE0DNltZ0jMIwexMKlzAAAA/klEQVQ4y8WR2bKDIBBEGVFUcME1amKS/v+fvIIUVxLzmpwHranuWWFfJsq6OE7L6oOsUzhafqZnQFfpedZVB/Tv+gBEvlWD8lVfje6pBSYWIsKcCOoY5qOCmoOEFmrMfcEFUBcWcCVgcctUEs4ckJSQ9iLP9jBeTcQPg5D5lSjYYT/Imw8LmMYpat8YlszXQ7p9YyT/txqBK3zJBLE1PPawRxMxgK2NSTQ8rKGD2zBtOTMGNt1diRvIPtKdeazBQ3acPEZxbsggkn1d9Pm7QRPMizmHFEQ05LthpQ0hAX+R5yBgmHbDBYalT4LLc861azHzjUA93eJ3BiL2df4A97IVIHhv+eIAAAAASUVORK5CYII=
+// @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAQlBMVEUAAAD///////////////////////////////////////////////////////////////////////////////////8IX9KGAAAAFXRSTlMAwT7hFahN0LZWJgqIavB7YJuRdDPJsaCPAAAA6ElEQVQ4y8WRW5aEIAxEDUGgAQUftf+tjgYOjcPMb3d96Im5pkIxfVgmOuY5mX/afkYVqb/6EXDGh+CNA7axvwOvZrUiDfalX6UY5y+AkZ687Ut9WNgw9SLYQ3cDYfNz4kIAq2Z/wYN0AiSRQN16iroMXnD3K2F+f1oBLK2ckeWpmjFEsc2Tfxn6ndUBLGgjNVgAX8oNa56AO8dKeAEccnW89ruB6bQVWGTL2IcmQJOTdXSdOAIRrMtxsekR8AQ5XyHARLTrAhi6xH0iYWfcOguQpeAtPJJXSvlqEdSl4XaGHb4HEE0f1w+Jcw2XCZjSwgAAAABJRU5ErkJggg==
 // @match        http://*/*
 // @match        https://*/*
 // @match        ftp://*/*
@@ -510,7 +510,7 @@
             case "zh-CN":
             case "zh-SG":
                 config={
-                    configure:"一键离线下载设置",
+                    configure:"全载设置",
                     yyw:"115网盘",
                     baidu:"百度网盘",
                     furk:"Furk网盘",
@@ -527,7 +527,7 @@
                     enable:"启用",
                     disable:"禁用",
                     addIcon:"添加站点",
-                    settingTitle:"一键离线下载",
+                    settingTitle:"全载",
                     urlRegexpTips:"自定义需要启用一键下载的链接正则，一行一条",
                     disableOnSite:"已于此站点禁用，点击启用",
                     bdPathTips:"不需要加'我的网盘/全部文件'",
@@ -571,7 +571,7 @@
             case "zh-HK":
             case "zh-MO":
                 config={
-                    configure:"一鍵離線下載設置",
+                    configure:"全載設置",
                     yyw:"115網盤",
                     baidu:"百度網盤",
                     furk:"Furk網盤",
@@ -588,7 +588,7 @@
                     enable:"啟用",
                     disable:"禁用",
                     addIcon:"添加站點",
-                    settingTitle:"一鍵離線下載",
+                    settingTitle:"全載",
                     urlRegexpTips:"自定義需要啟用一鍵下載的連結正則，一行一條",
                     disableOnSite:"已於此站點禁用，點擊啟用",
                     bdPathTips:"不需要加'我的網盤/全部文件'",
@@ -630,7 +630,7 @@
                 break;
             default:
                 config={
-                    configure:"EasyOffline - Configure",
+                    configure:"Easy-Offline Configure",
                     yyw:"115",
                     baidu:"BaiduPan",
                     furk:"Furk",
