@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.6.8.15
+// @version      1.6.8.16
 // @description  Perpetual pages - Most powerful Auto Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -2813,21 +2813,30 @@
         let forceRefresh=e=>{
             if(inAction || !iframeDoc)return;
             inAction=true;
-            setTimeout(()=>{
-                inAction=false;
+            let foundNext=()=>{
                 curIframe.style.height=iframeDoc.body.scrollHeight+"px";
                 curIframe.style.width=iframeDoc.body.scrollWidth+"px";
+                let code=ruleParser.curSiteRule.init;
+                if(code){
+                    try{
+                        Function('doc','win','iframe','"use strict";' + code)(iframeDoc,iframeDoc.defaultView,curIframe);
+                    }catch(e){
+                        debug(e);
+                    }
+                }
+                document.removeEventListener("scroll", forceRefresh);
+            }
+            setTimeout(()=>{
+                inAction=false;
                 if(!ruleParser.nextLinkHref){
                     ruleParser.getNextLink(iframeDoc);
                     if(ruleParser.nextLinkHref){
-                        document.removeEventListener("scroll", forceRefresh);
+                        foundNext();
                     }
                 }else{
-                    document.removeEventListener("scroll", forceRefresh);
+                    foundNext();
                 }
-            },500);
-            curIframe.style.height=iframeDoc.body.scrollHeight+"px";
-            curIframe.style.width=iframeDoc.body.scrollWidth+"px";
+            },100);
         };
         document.addEventListener("scroll", forceRefresh);
         curIframe.src=url;
