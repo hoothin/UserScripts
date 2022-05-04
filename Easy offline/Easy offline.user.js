@@ -1055,7 +1055,7 @@
                         curNode = rawnodes[i];
                         if(curNode.className=="whx-a-node")continue;
                         if(curNode.nextElementSibling && curNode.nextElementSibling.className=="whx-a-node" && curNode.nextElementSibling.parentNode){
-                            curNode.nextElementSibling.parentNode.removeChild(curNode.nextElementSibling);
+                            continue;
                         }
                         if(!/^magnet|^ed2k:\/\//.test(curNode.href)){
                             if(/[#\?]|\/\.[^\.]+$/.test(curNode.href))continue;
@@ -1426,7 +1426,7 @@
             if(MutationObserver){
                 var observer = new MutationObserver(function(records){
                     records.map(function(record) {
-                        if(record.addedNodes.length)setTimeout(function(){getAllEnableUrl(record.addedNodes);},501);
+                        if(record.addedNodes.length && record.addedNodes[0].className!="whx-a-node")setTimeout(function(){getAllEnableUrl(record.addedNodes);},501);
                     });
                 });
                 var option = {
