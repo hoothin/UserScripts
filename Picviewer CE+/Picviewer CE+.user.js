@@ -8468,9 +8468,9 @@ ImgOps | https://imgops.com/#b#`;
                 clearTimeout(this.showTimer);
                 if(!this.shown || self.data.img!=data.img)this.floatBar.style.opacity=0;
                 this.showTimer=setTimeout(function(){
-                    self.floatBar.style.opacity="";
                     self.data=data;
                     self.show();
+                    self.floatBar.style.opacity="";
                 },prefs.floatBar.showDelay);
             },
             setButton:function(){
