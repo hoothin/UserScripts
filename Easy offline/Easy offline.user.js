@@ -1146,6 +1146,7 @@
     function showDiskIcons(url, top, left){
         offUrl=url;
         let j=0;
+        parentDiv.css("display","block");
         for(var x=0;x<offNodes.length;x++){
             let node=offNodes[x];
             let siteConfig=sites[node.attr("name")];
@@ -1167,8 +1168,10 @@
                 j++;
             }
         }
-        if(j==0)return;
-        parentDiv.css("display","block");
+        if(j==0){
+            parentDiv.css("display","none");
+            return;
+        }
         parentDiv.offset({top:top,left:left});
         var minTop=$(document).scrollTop()+(j-1)*25;
         if(top<minTop){
