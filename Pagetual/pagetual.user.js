@@ -2836,6 +2836,12 @@
             }
             ruleParser.insertPage(iframeDoc, [], url, null, true);
             callback(curIframe, true);
+            let css=ruleParser.curSiteRule.css;
+            if(css){
+                let styleEle=iframeDoc.createElement("style");
+                styleEle.innerHTML=css;
+                iframeDoc.head.appendChild(styleEle);
+            }
             setPosition();
             let code=ruleParser.curSiteRule.init;
             if(code){
