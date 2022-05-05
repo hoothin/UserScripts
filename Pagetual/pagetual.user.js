@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.6.8.18
+// @version      1.6.8.19
 // @description  Perpetual pages - Most powerful Auto Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -730,11 +730,8 @@
                         debug(self.curSiteRule.pageElement);
                         return [body];
                     }
-                    if(ele.tagName=="TBODY" || ele.tagName=="FORM"){
+                    if(ele.tagName=="FORM"){
                         self.curSiteRule.pageElement=self.geneSelector(ele)+">*";
-                        if(ele.children.length>0 && ele.children[0].querySelector("th")){
-                            self.curSiteRule.pageElement+=":not(:first-child)";
-                        }
                         debug(self.curSiteRule.pageElement);
                         return ele.children;
                     }
@@ -797,6 +794,14 @@
                         return checkElement(curMaxEle);
                     }
                     if(ele.tagName=="P" || ele.tagName=="BR")ele=ele.parentNode;
+                    if(ele.tagName=="TBODY"){
+                        self.curSiteRule.pageElement=self.geneSelector(ele)+">*";
+                        if(ele.children.length>0 && ele.children[0].querySelector("th")){
+                            self.curSiteRule.pageElement+=":not(:first-child)";
+                        }
+                        debug(self.curSiteRule.pageElement);
+                        return ele.children;
+                    }
                     self.curSiteRule.pageElement=self.geneSelector(ele);
                     if(ele.children.length>1){
                         let middleChild=ele.children[parseInt(ele.children.length/2)];
