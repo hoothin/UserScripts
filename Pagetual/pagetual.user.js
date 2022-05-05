@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.6.8.17
+// @version      1.6.8.18
 // @description  Perpetual pages - Most powerful Auto Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -2790,6 +2790,36 @@
 
     function forceIframe(url, callback){
         let curIframe = document.createElement('iframe'),iframeDoc;
+        let setPosition = ()=>{
+            if(ruleParser.curSiteRule.singleUrl){
+                curIframe.style.height=iframeDoc.body.scrollHeight+"px";
+                curIframe.style.width=iframeDoc.body.scrollWidth+"px";
+            }else{
+                let pageElement = ruleParser.getPageElement(iframeDoc,iframeDoc.defaultView);
+                if(pageElement){
+                    let targetElement = pageElement[0];
+                    if(pageElement.length > 1){
+                        targetElement = targetElement.parentNode;
+                    }
+                    curIframe.style.height=targetElement.scrollHeight+"px";
+                    curIframe.style.width=targetElement.scrollWidth+"px";
+                    //pageElement[0].scrollIntoView();
+                    iframeDoc.documentElement.scrollTop = 0;
+                    iframeDoc.documentElement.scrollLeft = 0;
+                    while(targetElement && targetElement.offsetParent){
+                        targetElement.offsetParent.scrollTop = targetElement.offsetTop;
+                        if(targetElement.offsetParent.scrollTop == 0){
+                            iframeDoc.documentElement.scrollTop += targetElement.offsetTop;
+                        }
+                        targetElement.offsetParent.scrollLeft = targetElement.offsetLeft;
+                        if(targetElement.offsetParent.scrollLeft == 0){
+                            iframeDoc.documentElement.scrollLeft += targetElement.offsetLeft;
+                        }
+                        targetElement = targetElement.offsetParent;
+                    }
+                }
+            }
+        };
         curIframe.name = 'pagetual-iframe';
         curIframe.sandbox="allow-same-origin allow-scripts allow-popups allow-forms";
         curIframe.frameBorder = '0';
@@ -2806,25 +2836,23 @@
             }
             ruleParser.insertPage(iframeDoc, [], url, null, true);
             callback(curIframe, true);
-            curIframe.style.height=iframeDoc.body.scrollHeight+"px";
-            curIframe.style.width=iframeDoc.body.scrollWidth+"px";
+            setPosition();
+            let code=ruleParser.curSiteRule.init;
+            if(code){
+                try{
+                    Function('doc','win','iframe','"use strict";' + code)(iframeDoc,iframeDoc.defaultView,curIframe);
+                }catch(e){
+                    debug(e);
+                }
+            }
         });
         let inAction=false,checkTimes=0;
         let forceRefresh=e=>{
             if(inAction || !iframeDoc)return;
             inAction=true;
             let foundNext=()=>{
-                curIframe.style.height=iframeDoc.body.scrollHeight+"px";
-                curIframe.style.width=iframeDoc.body.scrollWidth+"px";
-                let code=ruleParser.curSiteRule.init;
-                if(code){
-                    try{
-                        Function('doc','win','iframe','"use strict";' + code)(iframeDoc,iframeDoc.defaultView,curIframe);
-                    }catch(e){
-                        debug(e);
-                    }
-                }
                 document.removeEventListener("scroll", forceRefresh);
+                setPosition();
             }
             setTimeout(()=>{
                 inAction=false;
@@ -2844,7 +2872,13 @@
         document.addEventListener("scroll", forceRefresh);
         curIframe.src=url;
         let insert=ruleParser.getInsert();
-        document.body.appendChild(curIframe);
+        if(ruleParser.curSiteRule.singleUrl){
+            document.body.appendChild(curIframe);
+        }else if(ruleParser.curSiteRule.insertPos==2){
+            ruleParser.insert.appendChild(curIframe);
+        }else{
+            ruleParser.insert.parentNode.insertBefore(curIframe, ruleParser.insert);
+        }
         return curIframe;
     }
 
