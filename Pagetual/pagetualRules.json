@@ -49,6 +49,11 @@
     "css":"@media (min-width: 1000px) {@supports (display:grid)  {.krFoBL { grid-template-columns: repeat(6, 184px); }}}"
   },
   {
+    "name":"Z-Library",
+    "url":"^https?://.*(1lib\\.(to|us|org)|z-lib\\.org|booksc\\.(org|eu)|bookfi\\.net|b\\-ok\\.(asia|africa)|1lib\\.pl|sg1lib\\.org|2lib\\.org|book4you\\.org)/s/",
+    "pageElement":"#searchResultBox"
+  },
+  {
     "name":"Startpage",
     "url":"^https://www\\.startpage\\.com/",
     "pageElement":"section.w-gl>div.w-gl__result",
