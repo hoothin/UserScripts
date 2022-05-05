@@ -43,7 +43,7 @@
     "name":"Pixiv",
     "url":"^https://www\\.pixiv\\.net/",
     "action":2,
-    "pageElement":"div.sc-l7cibp-0.juyBTC,div.sc-1eop7y7-0.cJYTWr,section>div>ul",
+    "pageElement":"section>div>ul,div.sc-l7cibp-0.juyBTC>*,div.sc-1eop7y7-0.cJYTWr>*",
     "nextLink":"a[class*='filterProps-Styled-Component']:last-child",
     "wait":500
   },
