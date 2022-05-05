@@ -1728,7 +1728,7 @@
         let enableWhiteListInput=createCheckbox(i18n("autoRun"), rulesData.enableWhiteList!=true);
         let enableDebugInput=createCheckbox(i18n("enableDebug"), rulesData.enableDebug!=false);
         let enableHistoryInput=createCheckbox(i18n("enableHistory"), rulesData.enableHistory===true);
-        let openInNewTabInput=createCheckbox(i18n("openInNewTab"), rulesData.openInNewTab===true);
+        let openInNewTabInput=createCheckbox(i18n("openInNewTab"), rulesData.openInNewTab!=false);
         let initRunInput=createCheckbox(i18n("initRun"), rulesData.initRun!=false);
         let preloadInput=createCheckbox(i18n("preload"), rulesData.preload!=false);
 
@@ -1958,7 +1958,7 @@
                     rulesData.enableHistory=false;
                 }
                 if(typeof(rulesData.openInNewTab)=="undefined"){
-                    rulesData.openInNewTab=false;
+                    rulesData.openInNewTab=true;
                 }
                 if(typeof(rulesData.enableDebug)=="undefined"){
                     rulesData.enableDebug=true;
