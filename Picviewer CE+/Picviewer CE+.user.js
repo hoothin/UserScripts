@@ -6599,8 +6599,7 @@ ImgOps | https://imgops.com/#b#`;
                     background: rgb(0 0 0 / 80%);\
                     border-radius: 8px;\
                     padding: 1px 5px;\
-                    max-width: 50%;\
-                    max-height: 30%;\
+                    white-space: nowrap;\
                     overflow: hidden;\
                     opacity:0.3;\
                     font-size: small;\
