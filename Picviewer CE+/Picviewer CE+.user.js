@@ -8466,6 +8466,7 @@ ImgOps | https://imgops.com/#b#`;
 
                 clearTimeout(this.showTimer);
                 if(!this.shown || self.data.img!=data.img){
+                    this.floatBar.style.transition="unset";
                     this.floatBar.style.opacity=0.01;
                 }
                 this.showTimer=setTimeout(function(){
@@ -8610,6 +8611,7 @@ ImgOps | https://imgops.com/#b#`;
                 this.shown=true;
                 this.setButton();
                 if(this.floatBar.style.opacity!=="0"){
+                    this.floatBar.style.transition="";
                     this.floatBar.style.display='block';
                     this.floatBar.style.opacity="";
                 }
