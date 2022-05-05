@@ -43,10 +43,9 @@
     "name":"Pixiv",
     "url":"^https://www\\.pixiv\\.net/",
     "action":2,
-    "pageElement":"body>*",
+    "pageElement":"div.sc-l7cibp-0.juyBTC,div.sc-1eop7y7-0.cJYTWr,section ul",
     "nextLink":"a[class*='filterProps-Styled-Component']:last-child",
-    "wait":1000,
-    "init":"if(iframe){iframe.style.height=doc.querySelector('div.sc-l7cibp-0.juyBTC,div.sc-1eop7y7-0.cJYTWr').scrollHeight+100+'px';doc.documentElement.scrollTop=500}"
+    "wait":500
   },
   {
     "name":"Startpage",
