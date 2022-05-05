@@ -8466,11 +8466,12 @@ ImgOps | https://imgops.com/#b#`;
                 },150);
 
                 clearTimeout(this.showTimer);
-                if(!this.shown || self.data.img!=data.img)this.floatBar.style.opacity=0;
+                if(!this.shown || self.data.img!=data.img){
+                    this.floatBar.style.opacity=0.01;
+                }
                 this.showTimer=setTimeout(function(){
                     self.data=data;
                     self.show();
-                    self.floatBar.style.opacity="";
                 },prefs.floatBar.showDelay);
             },
             setButton:function(){
@@ -8609,13 +8610,17 @@ ImgOps | https://imgops.com/#b#`;
                 if(this.setPosition())return;
                 this.shown=true;
                 this.setButton();
-                if(this.floatBar.style.opacity!=="0")this.floatBar.style.display='block';
+                if(this.floatBar.style.opacity!=="0"){
+                    this.floatBar.style.display='block';
+                    this.floatBar.style.opacity="";
+                }
                 clearTimeout(this.hideTimer);
                 window.removeEventListener('scroll',this._scrollHandler,true);
                 window.addEventListener('scroll',this._scrollHandler,true);
             },
             hide:function(){
                 clearTimeout(this.showTimer);
+                this.floatBar.style.opacity=0.01;
                 this.shown=false;
                 this.floatBar.style.display='none';
                 window.removeEventListener('scroll',this._scrollHandler,true);
