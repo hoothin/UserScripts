@@ -7,7 +7,7 @@
 // @description:zh-TW 一鍵離綫下載 - 一鍵自動將磁鏈、bt種子或其他下載資源離綫下載至網盤
 // @namespace    https://github.com/hoothin/UserScripts/tree/master/Easy%20offline
 // @require      http://code.jquery.com/jquery-1.7.2.min.js
-// @version      1.9.33
+// @version      1.9.34
 // @author       Hoothin
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAQlBMVEUAAAD///////////////////////////////////////////////////////////////////////////////////8IX9KGAAAAFXRSTlMAwT7hFahN0LZWJgqIavB7YJuRdDPJsaCPAAAA6ElEQVQ4y8WRW5aEIAxEDUGgAQUftf+tjgYOjcPMb3d96Im5pkIxfVgmOuY5mX/afkYVqb/6EXDGh+CNA7axvwOvZrUiDfalX6UY5y+AkZ687Ut9WNgw9SLYQ3cDYfNz4kIAq2Z/wYN0AiSRQN16iroMXnD3K2F+f1oBLK2ckeWpmjFEsc2Tfxn6ndUBLGgjNVgAX8oNa56AO8dKeAEccnW89ruB6bQVWGTL2IcmQJOTdXSdOAIRrMtxsekR8AQ5XyHARLTrAhi6xH0iYWfcOguQpeAtPJJXSvlqEdSl4XaGHb4HEE0f1w+Jcw2XCZjSwgAAAABJRU5ErkJggg==
 // @match        http://*/*
@@ -1424,20 +1424,22 @@
             if(/greasyfork\.org\/.*scripts\/22590[^\/]*$/.test(location.href)){
                 //setting();
             }
-            setTimeout(function(){getAllEnableUrl();},10);
-            var MutationObserver = _unsafeWindow.MutationObserver || _unsafeWindow.WebKitMutationObserver || _unsafeWindow.MozMutationObserver;
-            if(MutationObserver){
-                var observer = new MutationObserver(function(records){
-                    records.map(function(record) {
-                        if(record.addedNodes.length && record.addedNodes[0].className!="whx-a-node")setTimeout(function(){getAllEnableUrl(record.addedNodes);},501);
+            setTimeout(function(){
+                getAllEnableUrl();
+                var MutationObserver = _unsafeWindow.MutationObserver || _unsafeWindow.WebKitMutationObserver || _unsafeWindow.MozMutationObserver;
+                if(MutationObserver){
+                    var observer = new MutationObserver(function(records){
+                        records.map(function(record) {
+                            if(record.addedNodes.length && record.addedNodes[0].className!="whx-a-node")setTimeout(function(){getAllEnableUrl(record.addedNodes);},501);
+                        });
                     });
-                });
-                var option = {
-                    'childList': true,
-                    'subtree': true
-                };
-                observer.observe(document.body, option);
-            }
+                    var option = {
+                        'childList': true,
+                        'subtree': true
+                    };
+                    observer.observe(document.body, option);
+                }
+            },1000);
         }
     }
 
