@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.5.5.1
+// @version              2022.5.6.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
@@ -8465,6 +8465,11 @@ ImgOps | https://imgops.com/#b#`;
                 },150);
 
                 clearTimeout(this.showTimer);
+                if(prefs.floatBar.position=="hide"){
+                    self.data=data;
+                    self.show();
+                    return;
+                }
                 if(!this.shown || self.data.img!=data.img){
                     this.floatBar.style.transition="unset";
                     this.floatBar.style.opacity=0.01;
@@ -8610,7 +8615,7 @@ ImgOps | https://imgops.com/#b#`;
                 if(this.setPosition())return;
                 this.shown=true;
                 this.setButton();
-                if(this.floatBar.style.opacity!=="0"){
+                if(prefs.floatBar.position!=="hide"){
                     this.floatBar.style.transition="";
                     this.floatBar.style.display='block';
                     this.floatBar.style.opacity="";
