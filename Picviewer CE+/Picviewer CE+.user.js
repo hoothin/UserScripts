@@ -6605,6 +6605,8 @@ ImgOps | https://imgops.com/#b#`;
                     font-size: small;\
                     transition: all 0.3s ease;\
                     user-select: none;\
+                    -webkit-box-sizing: content-box;\
+                    box-sizing: content-box;\
                     }\
                     .transition-transform{\
                     transition: transform 0.3s ease;\
