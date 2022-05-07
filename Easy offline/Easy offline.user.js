@@ -10,9 +10,7 @@
 // @version      1.9.35
 // @author       Hoothin
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAQlBMVEUAAAD///////////////////////////////////////////////////////////////////////////////////8IX9KGAAAAFXRSTlMAwT7hFahN0LZWJgqIavB7YJuRdDPJsaCPAAAA6ElEQVQ4y8WRW5aEIAxEDUGgAQUftf+tjgYOjcPMb3d96Im5pkIxfVgmOuY5mX/afkYVqb/6EXDGh+CNA7axvwOvZrUiDfalX6UY5y+AkZ687Ut9WNgw9SLYQ3cDYfNz4kIAq2Z/wYN0AiSRQN16iroMXnD3K2F+f1oBLK2ckeWpmjFEsc2Tfxn6ndUBLGgjNVgAX8oNa56AO8dKeAEccnW89ruB6bQVWGTL2IcmQJOTdXSdOAIRrMtxsekR8AQ5XyHARLTrAhi6xH0iYWfcOguQpeAtPJJXSvlqEdSl4XaGHb4HEE0f1w+Jcw2XCZjSwgAAAABJRU5ErkJggg==
-// @match        http://*/*
-// @match        https://*/*
-// @match        ftp://*/*
+// @match        *://*/*
 // @exclude      http://www.toodledo.com/tasks/*
 // @exclude      *://*.google.*/*
 // @exclude      *://mega.*/*
