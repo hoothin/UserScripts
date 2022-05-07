@@ -166,9 +166,9 @@ function showLinkFrame(callBack) {
 			type = link.replace(resReg, "$1");
 		}else{
 			type = link;
-			link = link.match(customReg);
-			if(link){
-				type = link[1] || link[0];
+			let matchs = link.match(customReg);
+			if(matchs){
+				type = matchs[1] || matchs[0];
 			}
 			if(type && type.length > 10){
 				type = type.substr(0, 10);
