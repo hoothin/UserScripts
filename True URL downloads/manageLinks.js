@@ -78,7 +78,7 @@ function initLang(l){
 	lang = l;
 }
 
-function setCustomReg(r){
+function setLinkCustomReg(r){
 	customReg = r;
 }
 
@@ -165,7 +165,11 @@ function showLinkFrame(callBack) {
 		if(resReg.test(link)){
 			type = link.replace(resReg, "$1");
 		}else{
-			type = link.replace(customReg, "$1");
+			type = link;
+			link = link.match(customReg);
+			if(link){
+				type = link[1] || link[0];
+			}
 			if(type && type.length > 10){
 				type = type.substr(0, 10);
 			}
