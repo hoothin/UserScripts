@@ -12,7 +12,6 @@
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
 // @version              2022.5.6.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
-// @created              2011-6-15
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
 // @connect              www.google.com
@@ -45,16 +44,15 @@
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
 // @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1042734
 // @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1044551
-// @contributionURL      https://www.buymeacoffee.com/hoothin
-// @contributionAmount   1
-// @match                http://*/*
-// @match                https://*/*
-// @match                ftp://*/*
+// @match                *://*/*
 // @exclude              http://www.toodledo.com/tasks/*
 // @exclude              http*://maps.google.com*/*
 // @exclude              *://www.google.*/_/chrome/newtab*
 // @exclude              *://mega.*/*
 // @exclude              *://*.mega.*/*
+// @created              2011-6-15
+// @contributionURL      https://www.buymeacoffee.com/hoothin
+// @contributionAmount   1
 // ==/UserScript==
 
 ;(function(topObject,window,document,unsafeWindow){
@@ -230,7 +228,7 @@ ImgOps | https://imgops.com/#b#`;
                     h:200
                 },
                 searchData:defaultSearchData,
-                downloadWithZip:false,
+                downloadWithZip:true,
                 autoOpenViewmore:false,
                 viewmoreLayout:0,
                 downloadGap:0
