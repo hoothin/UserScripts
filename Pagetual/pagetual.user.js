@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.6.8.19
+// @version      1.6.8.20
 // @description  Perpetual pages - Most powerful Auto Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -711,6 +711,24 @@
                 pageElement=this.curSiteRule.type==0?getAllElementsByXpath(this.curSiteRule.pageElement,doc,doc):doc.querySelectorAll(this.curSiteRule.pageElement);
             }else if(!this.curSiteRule.singleUrl && this.curSiteRule.type==0){
                 pageElement=[body];
+            }
+            if(this.curSiteRule.singleUrl && pageElement && pageElement.length>0 && pageElement[0].tagName=="TR"){
+                let mainTr=this.insert.previousElementSibling,mainTdNum=0,newTdNum=0;
+                [].forEach.call(mainTr.children, el=>{
+                    if(el.tagName=="TD" || el.tagName=="TH"){
+                        mainTdNum+=el.colSpan||1;
+                    }
+                });
+                [].forEach.call(pageElement[0].children, el=>{
+                    if(el.tagName=="TD" || el.tagName=="TH"){
+                        newTdNum+=el.colSpan||1;
+                    }
+                });
+                if(mainTdNum!=newTdNum){
+                    this.curSiteRule.pageElement=allOfBody;
+                    pageElement=[body];
+                    this.getInsert(true);
+                }
             }
             if((this.curSiteRule.singleUrl || !this.curSiteRule.pageElement) && (!pageElement || pageElement.length==0) && curWin && !dontFind){
                 if(!body)return null;
