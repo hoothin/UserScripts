@@ -6,17 +6,19 @@ https://github.com/hoothin/UserScripts/tree/master/True%20URL%20downloads/manage
 var specialUrl = /^thunder|^magnet|^ed2k/i,
 	simplefilter = /\.php|\.htm|\.jsp|\.asp|\/[^\.]+$/i,
 	resReg = /.*(^thunder|^magnet|^ed2k|\.torrent$|\.mp4$|\.rar$|\.7z$|\.zip$|\.rmvb$|\.mkv$|\.avi$|\.iso$|\.mp3$|\.txt$|\.exe$|\.chm$|\.pdf$|\.ppt$|\.doc$|\.pptx$|\.docx$|\.epub$|\.xlsx$|\.xls$|\.flac$|\.wma$|\.wav$|\.aac$|\.ape$|\.mid$|\.ogg$|\.m4a$|\.dts$|\.dsd$|\.apk$|\.flv$).*/i,
-	linksArr = [],frame,linkPair = {},
-	copyAll = "全部复制",
-	copySel = "复制选中",
-	addTips = "%i代表递增 %n代表文件名",
-	sortByName = "按文件名排序",
-	sortByUrl = "按网址排序",
-	sortByType = "按扩展名排序",
-	preHolder = "批量前缀",
-	nextHolder = "批量后缀",
-	closeBtn = "关闭",
-	typeHead = "类型：";
+	linksArr = [],frame,linkPair = {},customReg,
+	lang = {
+		copyAll : "全部复制",
+		copySel : "复制选中",
+		addTips : "%i代表递增 %n代表文件名",
+		sortByName : "按文件名排序",
+		sortByUrl : "按网址排序",
+		sortByType : "按扩展名排序",
+		preHolder : "批量前缀",
+		nextHolder : "批量后缀",
+		closeBtn : "关闭",
+		typeHead : "类型："
+	};
 
 var by = function(byName, secName) {
 	var compare = function(o, p, name) {
@@ -58,48 +60,43 @@ if (!Array.prototype.indexOf) {
 
 function getLinks() {
 	[].forEach.call(document.querySelectorAll('a'), function(link){
-		if (link.className != "whx-a" && (specialUrl.test(link.href) || (!simplefilter.test(link.href) && resReg.test(link.href))) && linksArr.indexOf(link.href) == -1) {
+		if (link.className != "whx-a" && ((customReg && customReg.test(link.href)) || specialUrl.test(link.href) || (!simplefilter.test(link.href) && resReg.test(link.href))) && linksArr.indexOf(link.href) == -1) {
 			linksArr.push(link.href);
 			linkPair[link.href]=link;
 		}
 	});
 	[].forEach.call(document.querySelectorAll('source'), function(link){
-		if ((specialUrl.test(link.href) || (!simplefilter.test(link.href) && resReg.test(link.href))) && linksArr.indexOf(link.src) == -1) {
+		if (((customReg && customReg.test(link.href)) || specialUrl.test(link.href) || (!simplefilter.test(link.href) && resReg.test(link.href))) && linksArr.indexOf(link.src) == -1) {
 			linksArr.push(link.src);
 			linkPair[link.href]=link;
 		}
 	});
 }
 
-function initLang(lang){
-	if (!lang) return;
-	if (lang.copyAll) copyAll = lang.copyAll;
-	if (lang.copySel) copySel = lang.copySel;
-	if (lang.addTips) addTips = lang.addTips;
-	if (lang.sortByName) sortByName = lang.sortByName;
-	if (lang.sortByUrl) sortByUrl = lang.sortByUrl;
-	if (lang.sortByType) sortByType = lang.sortByType;
-	if (lang.preHolder) preHolder = lang.preHolder;
-	if (lang.nextHolder) nextHolder = lang.nextHolder;
-	if (lang.closeBtn) closeBtn = lang.closeBtn;
-	if (lang.typeHead) typeHead = lang.typeHead;
+function initLang(l){
+	if (!l) return;
+	lang = l;
+}
+
+function setCustomReg(r){
+	customReg = r;
 }
 
 function showLinkFrame(callBack) {
 	var linkItems = [];
-	var typeHtml = typeHead+" ";
+	var typeHtml = lang.typeHead+" ";
 	if (!frame) {
-		$('<style>#managerLinksLinks>div{display: inline-block;width: 100%;}#managerLinksLinks>div:nth-of-type(odd){ background:#ffffff;}#managerLinksLinks>div:nth-of-type(even){ background:#f5f5f5;}#managerLinksContent input{border-width:2px;border-style:outset;border-color:buttonface;border-image:initial;border: 1px #DADADA solid;padding: 5px;border-radius: 8px;font-weight: bold;font-size: 9pt;outline: none;}#managerLinksContent input[type=button]:hover {border: 1px #C6C6C6 solid;box-shadow: 1px 1px 1px #EAEAEA;color: #333333;background: #F7F7F7;}#managerLinksContent input[type=button]:active {box-shadow: inset 1px 1px 1px #DFDFDF;   }#managerLinksLinks>div>input{float:left;height: 20px;}#managerLinksLinks>div>a{width:230px;display:block;overflow:hidden;word-break:keep-all;white-space:nowrap;text-overflow:ellipsis;float:left;}#managerLinksLinks{display:block;width:100%;overflow:auto;word-wrap:break-word;}#managerLinksType>a{text-decoration:none;}#managerLinksType{width:290px;margin-left:5px;}.managerLinksOverlay{height:100%; width:100%; position:fixed; top:0; z-index:99998; opacity:0.3; filter: alpha(opacity=30); background-color:#000;}.managerLinksBody{width:300px;height:300px;position:fixed;left:50%;top:50%;margin-top:-150px;margin-left:-150px;z-index:99998;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;}.managerLinksBody>.sort>input{width:33.3%}.managerLinksBody>.addTxt{white-space: nowrap;}.managerLinksBody>.addTxt>input{width: 136px;margin: 1px;border-radius: 2px;}.managerLinksBody>.fun>input{width: 33.3%;}.managerLinksLinks>div{width:100%;height:20px;overflow:hidden;}</style>').appendTo('head');
+		$('<style>#managerLinksLinks>div{display: inline-block;width: 100%;}#managerLinksLinks>div:nth-of-type(odd){ background:#ffffff;}#managerLinksLinks>div:nth-of-type(even){ background:#f5f5f5;}#managerLinksContent input{border-width:2px;border-style:outset;border-color:buttonface;border-image:initial;border: 1px #DADADA solid;padding: 5px;border-radius: 8px;font-weight: bold;font-size: 9pt;outline: none;}#managerLinksContent input[type=button]:hover {border: 1px #C6C6C6 solid;box-shadow: 1px 1px 1px #EAEAEA;color: #333333;background: #F7F7F7;}#managerLinksContent input[type=button]:active {box-shadow: inset 1px 1px 1px #DFDFDF;   }#managerLinksLinks>div>input{float:left;height: 20px;}#managerLinksLinks>div>a{width:230px;display:block;overflow:hidden;word-break:keep-all;white-space:nowrap;text-overflow:ellipsis;float:left;}#managerLinksLinks{display:block;width:100%;overflow:auto;word-wrap:break-word;}#managerLinksType>a{text-decoration:none;}#managerLinksType{width:290px;margin-left:5px;}.managerLinksOverlay{height:100%; width:100%; position:fixed; top:0; z-index:99998; opacity:0.3; filter: alpha(opacity=30); background-color:#000;}.managerLinksBody{width:300px;height:auto;position:fixed;left:50%;top:50%;margin-top:-150px;margin-left:-150px;z-index:99998;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;}.managerLinksBody>.sort>input{width:33.3%}.managerLinksBody>.addTxt{white-space: nowrap;}.managerLinksBody>.addTxt>input{width: 136px;margin: 1px;border-radius: 2px;}.managerLinksBody>.fun>input{width: 33.3%;}.managerLinksLinks>div{width:100%;height:20px;overflow:hidden;}</style>').appendTo('head');
 		frame = $(`<div id="managerLinksContent" style="display:none;">
 		<div class="managerLinksOverlay"></div>
 		<div class="managerLinksBody">
 			<div id="managerLinksType"></div>
-			<div class="sort"><input id="managerLinksSortByName" value="${sortByName}" type="button"><input id="managerLinksSortByUrl" value="${sortByUrl}" type="button"><input id="managerLinksSortByType" value="${sortByType}" type="button">
+			<div class="sort"><input id="managerLinksSortByName" value="${lang.sortByName}" type="button"><input id="managerLinksSortByUrl" value="${lang.sortByUrl}" type="button"><input id="managerLinksSortByType" value="${lang.sortByType}" type="button">
 			</div>
 			<div id="managerLinksLinks"></div>
-			<div title="${addTips}" class="addTxt"><input id="managerLinksPre" type="text" placeholder="${preHolder}"><input id="managerLinksAfter" type="text" placeholder="${nextHolder}">
+			<div title="${lang.addTips}" class="addTxt"><input id="managerLinksPre" type="text" placeholder="${lang.preHolder}"><input id="managerLinksAfter" type="text" placeholder="${lang.nextHolder}">
 			</div>
-			<div class="fun"><input id="managerLinksCopyAll" value="${copyAll}" type="button"><input id="managerLinksCopySel" value="${copySel}" type="button"><input id="managerLinksClose" value="${closeBtn}" type="button">
+			<div class="fun"><input id="managerLinksCopyAll" value="${lang.copyAll}" type="button"><input id="managerLinksCopySel" value="${lang.copySel}" type="button"><input id="managerLinksClose" value="${lang.closeBtn}" type="button">
 			</div>
 		</div>
 		</div>`);
@@ -164,7 +161,15 @@ function showLinkFrame(callBack) {
 	}
 	$("#managerLinksLinks").html("");
 	linksArr.forEach(function(link) {
-		var type = link.replace(resReg, "$1");
+		var type;
+		if(resReg.test(link)){
+			type = link.replace(resReg, "$1");
+		}else{
+			type = link.replace(customReg, "$1");
+			if(type && type.length > 10){
+				type = type.substr(0, 10);
+			}
+		}
 		var linkName = linkPair[link].innerText;
 		if (linkName) linkName = linkName.trim();
 		if (!linkName) linkName = type.indexOf(".") == -1 ? link : link.replace(/.*\/([^\/]+)$/i, "$1");
