@@ -723,7 +723,7 @@
     "name":"淘宝店铺1",
     "url":"^https?://.*\\.taobao\\.com/search\\.htm",
     "pageElement":".skin-box-bd>.grid>.item3line1",
-    "pageElementPre":"return decodeURI(response).replace(/[\\\\]/g,'')",
+    "pagePre":"return decodeURI(response).replace(/[\\\\]/g,'')",
     "nextLinkByJs":"let n=doc.querySelector('.pagination>a.next');if(!n)return;return n.href.replace(/(.*)\\/search\\.htm\\?(.*)/,'$1/i/asynSearch.htm?$2').replace(/&callback=.*?&/,'&')",
     "wait":500
   },
