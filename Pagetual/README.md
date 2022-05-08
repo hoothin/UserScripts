@@ -114,17 +114,21 @@ insertPos
 --
 1 means insert before, 2 means just append to the bottom of target
 
-pageAction [ :(doc, eles) ]
+init [ :(document) ]
 --
-The js code to run with every page inserted with doc:(document of every page loaded) and eles:(elements found with rule), run after inserted, you can add functions like click
+The js code to run only with current main page with document:(document of main page)
+
+pagePre [ :(response) ]
+--
+The js code to run after get response from next link, you can modify the response content and return it
 
 pageInit [ :(doc, eles) ]
 --
 The js code to run with every page inserted with doc:(document of every page loaded) and eles:(elements found with rule), run before inserted, you can trigger event like onView
 
-init [ :(document) ]
+pageAction [ :(doc, eles) ]
 --
-The js code to run with current main page with document:(document of main page)
+The js code to run with every page inserted with doc:(document of every page loaded) and eles:(elements found with rule), run after inserted, you can add functions like click
 
 loadMore
 --
