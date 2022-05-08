@@ -726,7 +726,7 @@
     "pageElementPre":"return decodeURI(response).replace(/[\\\\]/g,'')",
     "nextLinkByJs":"let n=doc.querySelector('.pagination>a.next');if(!n)return;return n.href.replace(/(.*)\\/search\\.htm\\?(.*)/,'$1/i/asynSearch.htm?$2').replace(/&callback=.*?&/,'&')",
     "wait":500
-  }
+  },
   {
     "name":"奔跑的奶酪",
     "url":"^https://www\\.runningcheese\\.com/",
