@@ -2024,7 +2024,7 @@
             timeout: 5000,
             onload: function(res) {
                 var doc=null,response=res.response;
-                let preCode=ruleParser.curSiteRule.pageElementPre;
+                let preCode=ruleParser.curSiteRule.pageElementPre || ruleParser.curSiteRule.pagePre;
                 if(preCode){
                     try{
                         response=Function("response",'"use strict";' + preCode)(response);
