@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.6.8.21
+// @version      1.6.8.22
 // @description  Perpetual pages - Most powerful Auto Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -685,18 +685,22 @@
             //Google id class都是隨機。百度更過分，style script順序都是隨機的
             //if(ele.id) selector += '#' + ele.id;
             //if(ele.classList) selector += [].map.call(ele.classList,d=>'.'+d).join('');
+            if(ele.classList) selector += [].map.call(ele.classList,d=>'.'+d).join('');
             let parent = ele.parentElement;
             if(parent){
-                let i,j=0;
-                for(i=0;i<parent.children.length;i++){
-                    if(parent.children[i].tagName==selector){
-                        j++;
-                        if(parent.children[i]==ele){
-                            break;
+                selector = this.geneSelector(parent) + ' > ' + selector;
+                if(!ele.classList){
+                    let i,j=0;
+                    for(i=0;i<parent.children.length;i++){
+                        if(parent.children[i].tagName==ele.tagName){
+                            j++;
+                            if(parent.children[i]==ele){
+                                break;
+                            }
                         }
                     }
+                    selector += (parent.tagName=="HTML"?"":`:nth-of-type(${j})`);
                 }
-                selector = this.geneSelector(parent) + ' > ' + selector + (parent.tagName=="HTML"?"":`:nth-of-type(${j})`);
             }
             return selector;
         }
@@ -882,7 +886,7 @@
                     }
                 }
             }
-            if(next && (!next.href || /^javascript:/.test(next.href))){
+            if(next && (!next.href || /^javascript:/.test(next.href) || next.getAttribute("href")=="#")){
                 jsNext=next;
                 next=null;
             }
@@ -890,7 +894,7 @@
                 next=curPage.querySelectorAll("[aria-label='Next page']");
                 if(next && next.length==1){
                     next=next[0];
-                    if(!next.href || /^javascript:/.test(next.href)){
+                    if(!next.href || /^javascript:/.test(next.href) || next.getAttribute("href")=="#"){
                         jsNext=next;
                         next=null;
                     }
@@ -902,7 +906,7 @@
                 next=curPage.querySelectorAll("[aria-label='Next']");
                 if(next && next.length==1){
                     next=next[0];
-                    if(!next.href || /^javascript:/.test(next.href)){
+                    if(!next.href || /^javascript:/.test(next.href) || next.getAttribute("href")=="#"){
                         jsNext=next;
                         next=null;
                     }
@@ -959,7 +963,7 @@
                     if(!next1){
                         if(aTag.innerText.length>15)continue;
                         if(/^[下后後][一1]?[页頁张張]|^next([ _-]?page)?\s*[›>→»]?$|次のページ|^次へ?$/i.test(aTag.innerText.trim())){
-                            if(!aTag.href || /^javascript:/.test(aTag.href)){
+                            if(!aTag.href || /^javascript:/.test(aTag.href) || aTag.getAttribute("href")=="#"){
                                 if(!nextJs1)nextJs1=aTag;
                             }else{
                                 next1=aTag;
@@ -969,7 +973,7 @@
                     if(!next2){
                         if(aTag.innerText.length>15)continue;
                         if(/^[下后後][一1]?[章话話]/i.test(aTag.innerText.trim()) || /nextpage/i.test(aTag.className)){
-                            if(!aTag.href || /^javascript:/.test(aTag.href)){
+                            if(!aTag.href || /^javascript:/.test(aTag.href) || aTag.getAttribute("href")=="#"){
                                 if(!nextJs2)nextJs2=aTag;
                             }else{
                                 next2=aTag;
@@ -979,14 +983,14 @@
                     if(!next3){
                         if(aTag.innerText.length>15)continue;
                         if(aTag.innerText=="&gt;" || aTag.innerText=="▶" || aTag.innerText==">" || aTag.innerText=="›" || aTag.innerText=="→" || aTag.innerText=="»"){
-                            if(!aTag.href || /^javascript:/.test(aTag.href)){
+                            if(!aTag.href || /^javascript:/.test(aTag.href) || aTag.getAttribute("href")=="#"){
                                 if(!nextJs3)nextJs3=aTag;
                             }else{
                                 next3=aTag;
                             }
                         }
                     }
-                    if(!aTag.href || /^javascript:/.test(aTag.href))continue;
+                    if(!aTag.href || /^javascript:/.test(aTag.href) || aTag.getAttribute("href")=="#")continue;
                     if(!next4 && aTag.href.length<100){
                         let _aHref=aTag.href.replace("?&","?").replace("#!","").replace("index.php?","?");
                         let _aHrefTrim=_aHref;
