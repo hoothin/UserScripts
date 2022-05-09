@@ -223,7 +223,7 @@ var siteInfo=[
 {
  name: "wikipedia",
  enabled:true,
- url:/^https?:\/\/[^.]+.wikipedia.org\//i,
+ url:/^https?:\/\/.+\.wikipedia\.org\//i,
  r: /(https?:\/\/.*)\/thumb(\/.*)\/\d+px-.*/i,
  s: "$1$2"
 },
