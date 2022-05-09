@@ -737,5 +737,11 @@
     "url":"^https://www\\.yxssp\\.com/",
     "pageElement":".td-modules-container",
     "nextLink":"span.current+a"
+  },
+  {
+    "name":"bt1207",
+    "url":"^https://bt1207ao\\.xyz/",
+    "nextLinkByJs":"let n=doc.querySelector('ul.pagination>li.active+li>a');if(!n)return null;let params=[]; let form=doc.querySelector('#search-form'); [].forEach.call(form.querySelectorAll('input'), input=>{ if(input.name=='p')params.push('p='+n.innerText);else params.push(input.name+'='+input.value); }); return form.action+'?'+params.join('&');",
+    "pageElement":"ul.list-unstyled"
   }
 ]
