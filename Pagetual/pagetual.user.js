@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.6.8.23
+// @version      1.6.8.24
 // @description  Perpetual pages - Most powerful Auto Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -685,21 +685,23 @@
             //Google id class都是隨機。百度更過分，style script順序都是隨機的
             //if(ele.id) selector += '#' + ele.id;
             //if(ele.classList) selector += [].map.call(ele.classList,d=>'.'+d).join('');
-            if(ele.classList) selector += [].map.call(ele.classList,d=>'.'+d).join('');
-            let parent = ele.parentElement;
-            if(parent){
-                selector = this.geneSelector(parent) + ' > ' + selector;
-                if(!ele.classList){
-                    let i,j=0;
-                    for(i=0;i<parent.children.length;i++){
-                        if(parent.children[i].tagName==ele.tagName){
-                            j++;
-                            if(parent.children[i]==ele){
-                                break;
+            if(ele.tagName!="HTML" && ele.tagName!="BODY"){
+                if(ele.classList) selector += [].map.call(ele.classList,d=>'.'+d).join('');
+                let parent = ele.parentElement;
+                if(parent){
+                    selector = this.geneSelector(parent) + ' > ' + selector;
+                    if(!ele.classList){
+                        let i,j=0;
+                        for(i=0;i<parent.children.length;i++){
+                            if(parent.children[i].tagName==ele.tagName){
+                                j++;
+                                if(parent.children[i]==ele){
+                                    break;
+                                }
                             }
                         }
+                        selector += (parent.tagName=="HTML"?"":`:nth-of-type(${j})`);
                     }
-                    selector += (parent.tagName=="HTML"?"":`:nth-of-type(${j})`);
                 }
             }
             return selector;
@@ -866,6 +868,7 @@
                 curPage.querySelector("#next_page")||
                 curPage.querySelector(".nextPage")||
                 curPage.querySelector("a[data-pagination=next]")||
+                curPage.querySelector("ul.pagination>li.active+li>a")||
                 curPage.querySelector(".pagination a[rel=next]")||
                 curPage.querySelector(".pagination-nav__item--next>a")||
                 curPage.querySelector("a[title='Next page']")||
@@ -895,7 +898,7 @@
                 if(next && next.length==1){
                     next=next[0];
                     if(!next.href || /^javascript:/.test(next.href) || next.getAttribute("href")=="#"){
-                        jsNext=next;
+                        if(!jsNext)jsNext=next;
                         next=null;
                     }
                 }else{
@@ -907,7 +910,7 @@
                 if(next && next.length==1){
                     next=next[0];
                     if(!next.href || /^javascript:/.test(next.href) || next.getAttribute("href")=="#"){
-                        jsNext=next;
+                        if(!jsNext)jsNext=next;
                         next=null;
                     }
                 }else{
@@ -1004,9 +1007,8 @@
                     let eles=getAllElementsByXpath(`//a[text()='${next3.innerText}']`,curPage,curPage);
                     if(eles.length>1)next3=null;
                 }
-                next=next1||next4||next3||next2||nextJs1||nextJs3||nextJs2;
             }
-            if(!next)next=jsNext;
+            if(!next)next=next1||next4||next3||next2||jsNext||nextJs1||nextJs3||nextJs2;
             if(next && next.classList.contains("results-more"))next=null;
             return {next:next,canSave:canSave};
         }
@@ -1051,7 +1053,18 @@
         }
 
         getNextLink(doc) {
-            let nextLink=null,page;
+            let nextLink=null,page,href;
+            let getNextLinkByForm=(form,n)=>{
+                let params=[];
+                [].forEach.call(form.querySelectorAll("input"), input=>{
+                    if(n && /^(p|page)$/i.test(input.name)){
+                        params.push('p='+n);
+                    }else{
+                        params.push(input.name+'='+input.value);
+                    }
+                });
+                return form.action+'?'+params.join('&');
+            };
             if(this.curSiteRule.pageElementByJs){
                 this.nextLinkHref="#";
                 return true;
@@ -1093,12 +1106,8 @@
                 nextLink=page.next;
                 if(nextLink){
                     if(nextLink.tagName=="INPUT" && nextLink.parentNode.tagName=="FORM"){
-                        let params=[];
                         let form=nextLink.parentNode;
-                        [].forEach.call(form.querySelectorAll("input"), input=>{
-                            params.push(input.name+'='+input.value);
-                        });
-                        nextLink.href=form.action+'?'+params.join('&');
+                        nextLink.href=getNextLinkByForm(form);
                     }
                     if(nextLink.parentNode.style.display=="none" || nextLink.style.display=="none" || nextLink.classList.contains("noClick") || nextLink.hasAttribute("disabled")){
                         this.nextLinkHref=false;
@@ -1116,17 +1125,24 @@
                             this.initNext=nextLink;
                         }
                     }
+                    let form=doc.querySelector('#search-form');
+                    if(!nextLink.href && nextLink.hasAttribute("onclick") && form){
+                        if(form && /^\d+$/.test(nextLink.innerText)){
+                            href=getNextLinkByForm(form, nextLink.innerText);
+                        }
+                    }
                 }
             }
             if(nextLink){
                 let needUrl=(this.curSiteRule.action==0 || this.curSiteRule.action==1);
-                let href=nextLink.getAttribute?nextLink.getAttribute("href"):nextLink.href;
+                if(!href)href=nextLink.getAttribute?nextLink.getAttribute("href"):nextLink.href;
+
                 if((href===""||href===null) && needUrl){
                     this.nextLinkHref=false;
                 }else if(/^(javascript:|#)/.test(href) && needUrl){
                     this.nextLinkHref=false;
                 }else{
-                    this.nextLinkHref=(href && !/^(javascript:|#)/.test(href))?this.canonicalUri(nextLink.href):"#";
+                    this.nextLinkHref=(href && !/^(javascript:|#)/.test(href))?this.canonicalUri(href):"#";
                     if(this.nextLinkHref!="#" && (this.nextLinkHref==this.curUrl || this.nextLinkHref==this.curUrl+"#" || this.nextLinkHref==this.oldUrl || this.nextLinkHref==this.oldUrl+"#")){
                         this.nextLinkHref=false;
                     }else if(doc==document)debug(nextLink);
