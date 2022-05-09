@@ -731,5 +731,11 @@
     "name":"奔跑的奶酪",
     "url":"^https://www\\.runningcheese\\.com/",
     "pageElement":"ul.ajaxposts>li"
+  },
+  {
+    "name":"异星软件",
+    "url":"^https://www\\.yxssp\\.com/",
+    "pageElement":".td-modules-container",
+    "nextLink":"span.current+a"
   }
 ]
