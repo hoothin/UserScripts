@@ -1002,7 +1002,7 @@
                         }
                     }
                     if(!aTag.href || /^javascript:/.test(aTag.href) || aTag.getAttribute("href")=="#")continue;
-                    if(!next4 && aTag.href.length<200){
+                    if(!next4 && aTag.href.length<250){
                         let _aHref=aTag.href.replace("?&","?").replace("#!","").replace("index.php?","?");
                         let _aHrefTrim=_aHref;
                         if(preStr)_aHrefTrim=_aHrefTrim.replace(preStr,"");
