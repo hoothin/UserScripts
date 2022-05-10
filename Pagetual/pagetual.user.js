@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.6.8.25
+// @version      1.6.8.26
 // @description  Perpetual pages - Most powerful Auto Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -172,7 +172,8 @@
                     click2ImportRule:"点击下方添加特殊规则库，添加后再行更新：",
                     forceAllBody:"是否拼接整个页面？",
                     openInNewTab:"使拼接页面的内容在新页面打开",
-                    importSucc:"导入成功"
+                    importSucc:"导入成功",
+                    editCurrent:"自定义此站规则"
                 };
                 break;
             case "zh-TW":
@@ -218,7 +219,8 @@
                     click2ImportRule:"點擊下方添加特殊規則庫，添加後再行更新：",
                     forceAllBody:"是否拼接整個頁面？",
                     openInNewTab:"使拼接頁面的内容在新頁面打開",
-                    importSucc:"導入成功"
+                    importSucc:"導入成功",
+                    editCurrent:"自定義此站規則"
                 };
                 break;
             case "ja":
@@ -263,7 +265,8 @@
                     click2ImportRule:"以下をクリックして、ルールベースを追加します：",
                     forceAllBody:"フルページ埋め込み？",
                     openInNewTab:"スプライスされたページのコンテンツを新しいページで開きます",
-                    importSucc:"インポート完了"
+                    importSucc:"インポート完了",
+                    editCurrent:"現在のルールの編集"
                 };
                 break;
             default:
@@ -308,7 +311,8 @@
                     click2ImportRule:"Click to import base rules link, then click to update rules:",
                     forceAllBody:"Join full body of page?",
                     openInNewTab:"Open urls of additions in new tab",
-                    importSucc:"Import completed"
+                    importSucc:"Import completed",
+                    editCurrent:"Edit rule for current"
                 };
                 break;
         }
@@ -419,6 +423,21 @@
     var ruleImportUrlReg=/greasyfork\.org\/.*scripts\/438684[^\/]*(\/discussions|\/?$)|github\.com\/hoothin\/UserScripts\/(tree\/master\/Pagetual|issues)/i;
     var allOfBody="body>*";
     _GM_registerMenuCommand(i18n("configure"), ()=>{
+        _GM_openInTab(configPage,{active:true});
+    });
+    _GM_registerMenuCommand(i18n("editCurrent"), ()=>{
+        let editTemp;
+        if(ruleParser.curSiteRule.url && !ruleParser.curSiteRule.singleUrl){
+            editTemp=ruleParser.curSiteRule;
+        }else{
+            editTemp={
+                name: document.title,
+                url: "^"+location.origin.replace(/\./g,"\\."),
+                pageElement: ruleParser.curSiteRule.pageElement||""
+            };
+        }
+        rulesData.editTemp=editTemp;
+        storage.setItem("rulesData", rulesData);
         _GM_openInTab(configPage,{active:true});
     });
 
@@ -1763,14 +1782,29 @@
         let preloadInput=createCheckbox(i18n("preload"), rulesData.preload!=false);
 
         let customRulesTitle=document.createElement("h2");
-        customRulesTitle.innerHTML=i18n("customRules")
+        customRulesTitle.innerHTML=i18n("customRules");
         configCon.insertBefore(customRulesTitle, insertPos);
         let customRulesInput=document.createElement("textarea");
+        configCon.insertBefore(customRulesInput, insertPos);
+        if(rulesData.editTemp){
+            if(!ruleParser.customRules){
+                ruleParser.customRules=[];
+            }
+            for(let i in ruleParser.customRules){
+                if(ruleParser.customRules[i].url==rulesData.editTemp.url){
+                    ruleParser.customRules.splice(i, 1);
+                    break;
+                }
+            }
+            ruleParser.customRules.unshift(rulesData.editTemp);
+            rulesData.editTemp=null;
+            storage.setItem("rulesData", rulesData);
+            customRulesInput.scrollIntoView();
+        }
         customRulesInput.style.width="100%";
         customRulesInput.style.height="500px";
         customRulesInput.placeholder=`[\n  {\n    "name":"yande",\n    "action":"0",\n    "url":"^https:\/\/yande\\.re\/",\n    "pageElement":"ul#post-list-posts>li",\n    "nextLink":"a.next_page",\n    "css":".javascript-hide {display: inline-block !important;}"\n  },\n  {\n    "name":"tieba",\n    "action":"1",\n    "url":"^https:\/\/tieba\\.baidu.com\/f\\?kw=",\n    "pageElement":"ul#thread_list>li",\n    "nextLink":".next.pagination-item "\n  }\n]`;
         customRulesInput.value=getFormatJSON(ruleParser.customRules);
-        configCon.insertBefore(customRulesInput, insertPos);
         let saveBtn=document.createElement("button");
         saveBtn.innerHTML=i18n("save");
         saveBtn.style.width="100%";
@@ -2464,7 +2498,6 @@
         let insert=ruleParser.getInsert();
         if(!insert || !insert.parentNode)return;
         curPage++;
-        if(rulesData.opacity==0)return;
         let example=ruleParser.curSiteRule.insertPos==2?insert.children[0]:(insert.previousElementSibling||insert);
         if(!example || !example.parentNode)example=insert;
         let inTable=example.parentNode.tagName=="TABLE" ||
@@ -2638,6 +2671,7 @@
         }else{
             bottomGap=1000;
         }
+        if(rulesData.opacity==0)pageBar.style.display="none";
         return pageBar;
     }
 
