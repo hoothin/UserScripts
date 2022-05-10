@@ -936,7 +936,7 @@
                     next=null;
                 }
             }
-            if(next && /^[下后後][一1]?[章话話]/i.test(next.innerText.trim())){
+            if(next && /^[下后後][一1]?[章话話篇]/i.test(next.innerText.trim())){
                 next2=next;
                 next=null;
             }
@@ -983,7 +983,7 @@
                     }
                     if(!next2){
                         if(aTag.innerText.length>15)continue;
-                        if(/^[下后後][一1]?[章话話]/i.test(aTag.innerText.trim()) || /nextpage/i.test(aTag.className)){
+                        if(/^[下后後][一1]?[章话話篇]/i.test(aTag.innerText.trim()) || /nextpage/i.test(aTag.className)){
                             if(!aTag.href || /^javascript:/.test(aTag.href) || aTag.getAttribute("href")=="#"){
                                 if(!nextJs2)nextJs2=aTag;
                             }else{
