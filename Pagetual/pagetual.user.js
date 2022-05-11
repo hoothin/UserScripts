@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.6.9.1
+// @version      1.6.9.2
 // @description  Perpetual pages - Most powerful Auto Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -173,7 +173,8 @@
                     forceAllBody:"是否拼接整个页面？",
                     openInNewTab:"使拼接页面的内容在新页面打开",
                     importSucc:"导入成功",
-                    editCurrent:"自定义此站规则"
+                    editCurrent:"自定义此站规则",
+                    editBlacklist:"编辑黑名单网址，一行一条，支持? *通配符"
                 };
                 break;
             case "zh-TW":
@@ -220,7 +221,8 @@
                     forceAllBody:"是否拼接整個頁面？",
                     openInNewTab:"使拼接頁面的内容在新頁面打開",
                     importSucc:"導入成功",
-                    editCurrent:"自定義此站規則"
+                    editCurrent:"自定義此站規則",
+                    editBlacklist:"編輯黑名單網址，一行一條，支持? *通配符"
                 };
                 break;
             case "ja":
@@ -266,7 +268,8 @@
                     forceAllBody:"フルページ埋め込み？",
                     openInNewTab:"スプライスされたページのコンテンツを新しいページで開きます",
                     importSucc:"インポート完了",
-                    editCurrent:"現在のルールの編集"
+                    editCurrent:"現在のルールの編集",
+                    editBlacklist:"ブラックリストのURLを編集し、1行ずつ、サポート? *ワイルドカード"
                 };
                 break;
             default:
@@ -312,7 +315,8 @@
                     forceAllBody:"Join full body of page?",
                     openInNewTab:"Open urls of additions in new tab",
                     importSucc:"Import completed",
-                    editCurrent:"Edit rule for current"
+                    editCurrent:"Edit rule for current",
+                    editBlacklist:"Edit the blacklist urls, line by line, Support ? * for wildcard"
                 };
                 break;
         }
@@ -1806,6 +1810,20 @@
         customRulesInput.style.height="500px";
         customRulesInput.placeholder=`[\n  {\n    "name":"yande",\n    "action":"0",\n    "url":"^https:\/\/yande\\.re\/",\n    "pageElement":"ul#post-list-posts>li",\n    "nextLink":"a.next_page",\n    "css":".javascript-hide {display: inline-block !important;}"\n  },\n  {\n    "name":"tieba",\n    "action":"1",\n    "url":"^https:\/\/tieba\\.baidu.com\/f\\?kw=",\n    "pageElement":"ul#thread_list>li",\n    "nextLink":".next.pagination-item "\n  }\n]`;
         customRulesInput.value=getFormatJSON(ruleParser.customRules);
+        let blacklistInput=document.createElement("textarea");
+        blacklistInput.style.width="100%";
+        blacklistInput.style.height="500px";
+        blacklistInput.style.display="none";
+        blacklistInput.placeholder="http://*.xxx.com/*/y";
+        blacklistInput.value=rulesData.blacklist?rulesData.blacklist.join("\n"):"";
+        let blacklistBtn=document.createElement("button");
+        blacklistBtn.innerText=i18n("editBlacklist");
+        blacklistBtn.style.width="100%";
+        blacklistBtn.onclick=e=>{
+            blacklistInput.style.display=blacklistInput.style.display=="none"?"":"none";
+        };
+        configCon.insertBefore(blacklistBtn, insertPos);
+        configCon.insertBefore(blacklistInput, insertPos);
         let saveBtn=document.createElement("button");
         saveBtn.innerHTML=i18n("save");
         saveBtn.style.width="100%";
@@ -1830,6 +1848,7 @@
                 return;
             }
             rulesData.opacity=opacityInput.value/100;
+            rulesData.blacklist=blacklistInput.value?blacklistInput.value.split("\n"):"";
             rulesData.hideBar=hideBarInput.checked;
             rulesData.dbClick2Stop=dbClick2StopInput.checked;
             rulesData.enableWhiteList=!enableWhiteListInput.checked;
@@ -1979,6 +1998,31 @@
         return ret;
     }
 
+    function globMatch(first, second) {
+        if (first.length == 0 && second.length == 0){
+            return true;
+        }
+
+        if (first.length > 1 && first[0] == '*' &&
+            second.length == 0){
+            return false;
+        }
+
+        if ((first.length > 1 && first[0] == '?') ||
+            (first.length != 0 && second.length != 0 &&
+             first[0] == second[0])){
+            return globMatch(first.substring(1),
+                         second.substring(1));
+        }
+
+        if (first.length > 0 && first[0] == '*'){
+            return globMatch(first.substring(1), second) ||
+                globMatch(first, second.substring(1));
+        }
+
+        return false;
+    }
+
     function initRules(callback) {
         /*0 wedata格式，1 pagetual格式*/
         ruleUrls=[
@@ -2033,6 +2077,14 @@
                 }
                 if(typeof(rulesData.preload)=="undefined"){
                     rulesData.preload=true;
+                }
+                if(rulesData.blacklist && rulesData.blacklist.length>0){
+                    for(let b in rulesData.blacklist){
+                        let curGlob=rulesData.blacklist[b];
+                        if(globMatch(curGlob, location.href)){
+                            return;
+                        }
+                    }
                 }
                 enableDebug=rulesData.enableDebug;
                 storage.getItem("forceState_"+location.host, v=>{
@@ -2973,7 +3025,7 @@
         }
         setTimeout(()=>{
             let scrollH=Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
-            if(scrollH < (window.innerHeight || document.documentElement.clientHeight)){
+            if(scrollH <= (window.innerHeight || document.documentElement.clientHeight)){
                 nextPage();
             }
         },1);
@@ -3108,5 +3160,5 @@
     }
     setTimeout(()=>{
         init();
-    },300);
+    },100);
 })();
