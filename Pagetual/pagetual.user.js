@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.6.9.3
+// @version      1.6.9.4
 // @description  Perpetual pages - Most powerful Auto Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -1039,7 +1039,7 @@
         canonicalUri(src) {
             if(src.charAt(0)=="#")return location.href+src;
             var root_page = /^[^?#]*\//.exec(location.href)[0],
-                base_path = /^[^?#]*\/([^?#\/]*)/.exec(location.href)[1],
+                base_path = location.pathname.replace(/\/[^\/]+\.[^\/]+$/, "/"),
                 root_domain = /^\w+\:\/\/\/?[^\/]+/.exec(root_page)[0],
                 absolute_regex = /^\w+\:\/\//;
             src=src.replace(/\.\//,"");
@@ -1159,7 +1159,13 @@
             }
             if(nextLink){
                 let needUrl=(this.curSiteRule.action==0 || this.curSiteRule.action==1);
-                if(!href)href=nextLink.getAttribute?nextLink.getAttribute("href"):nextLink.href;
+                if(!href)href=nextLink.href;
+                if(href){
+                    let _href=href.replace(location.href, "");
+                    if(!_href || _href.charAt(0)=="#"){
+                        href=_href;
+                    }
+                }
 
                 if((href===""||href===null) && needUrl){
                     this.nextLinkHref=false;
