@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.5.12.1
+// @version              2022.5.14.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -42,7 +42,7 @@
 // @require              https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js
 // @require              https://cdn.jsdelivr.net/npm/jszip@3.9.1/dist/jszip.min.js
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
-// @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1048565
+// @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1050096
 // @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1044551
 // @match                *://*/*
 // @exclude              http://www.toodledo.com/tasks/*
@@ -58,6 +58,7 @@
 ;(function(topObject,window,document,unsafeWindow){
     'use strict';
 
+    //var siteInfo = [{}];
     var debug;
     var lang;
     function initLang(){
@@ -4089,7 +4090,7 @@ ImgOps | https://imgops.com/#b#`;
             canonicalUri:function(src){
                 if(src.charAt(0)=="#")return location.href+src;
                 var root_page = /^[^?#]*\//.exec(location.href)[0],
-                    base_path = /^[^?#]*\/([^?#\/]*)/.exec(location.href)[1],
+                    base_path = location.pathname.replace(/\/[^\/]+\.[^\/]+$/, "/"),
                     root_domain = /^\w+\:\/\/\/?[^\/]+/.exec(root_page)[0],
                     absolute_regex = /^\w+\:\/\//;
                 src=src.replace(/\.\//,"");
@@ -8795,9 +8796,9 @@ ImgOps | https://imgops.com/#b#`;
                 var srcs=img.srcset.split(","),minSize=0,newSrc;
                 srcs.forEach(srci=>{
                     let srcInfo=srci.trim().split(" "),curSize=parseInt(srcInfo[1]);
-                    if(srcInfo[1] && (curSize<minSize || minSize==0)){
+                    if(srcInfo[1] && (curSize>minSize || minSize==0)){
                         minSize=curSize;
-                        newsrc=srcInfo[0];
+                        newSrc=srcInfo[0];
                     }
                 });
                 if(newSrc)img.src=newSrc;
