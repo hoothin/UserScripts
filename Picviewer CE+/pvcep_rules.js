@@ -565,7 +565,7 @@ var siteInfo=[
  name: "Pinterest",
  url: /pinterest\.com/,
  getImage: function(a, p) {
-     if(this.srcset){
+    if(this.srcset){
         var srcs=this.srcset.split(","),minSize=0,newSrc;
         srcs.forEach(srci=>{
             let srcInfo=srci.trim().split(" "),curSize=parseInt(srcInfo[1]);
@@ -576,7 +576,7 @@ var siteInfo=[
         });
         if(newSrc)return newSrc;
     }
-     return this.src.replace(/\/\d+x\//i, "/736x/");
+    return this.src.replace(/\/\d+x\//i, "/736x/");
  }
 },
 {
