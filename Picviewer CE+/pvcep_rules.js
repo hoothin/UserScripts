@@ -564,8 +564,20 @@ var siteInfo=[
 {
  name: "Pinterest",
  url: /pinterest\.com/,
- r: /\/\d+x\//i,
- s: "/736x/"
+ getImage: function(a, p) {
+     if(this.srcset){
+        var srcs=this.srcset.split(","),minSize=0,newSrc;
+        srcs.forEach(srci=>{
+            let srcInfo=srci.trim().split(" "),curSize=parseInt(srcInfo[1]);
+            if(srcInfo[1] && (curSize>minSize || minSize==0)){
+                minSize=curSize;
+                newSrc=srcInfo[0];
+            }
+        });
+        if(newSrc)return newSrc;
+    }
+     return this.src.replace(/\/\d+x\//i, "/736x/");
+ }
 },
 {
  name: "Zhisheji",
