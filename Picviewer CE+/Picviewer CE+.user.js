@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.5.14.1
+// @version              2022.5.16.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -43,7 +43,7 @@
 // @require              https://cdn.jsdelivr.net/npm/jszip@3.9.1/dist/jszip.min.js
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
 // @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1050096
-// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1044551
+// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1050741
 // @match                *://*/*
 // @exclude              http://www.toodledo.com/tasks/*
 // @exclude              http*://maps.google.com*/*
@@ -247,8 +247,9 @@ ImgOps | https://imgops.com/#b#`;
                 },
                 overlayer:{// 覆盖层.
                     shown:false,//显示
-                    color:'rgba(0,0,0,0.8)',//颜色和不透明度设置.
+                    color:'rgba(200,200,200,0.3)',//颜色和不透明度设置.
                 },
+                backgroundColor:'rgba(40,40,40,0.8)',
                 shiftRotateStep:15,// 旋转的时候，按住shift键时,旋转的步进.单位:度.
                 zoom:{//滚轮缩放
                     range:[0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,1.1,1.2,1.3,1.4,1.5,1.7,1.9,2,2.5,3.0,4.0,5.0,6.0,7.0,8.0,9.0],//缩放比例.(不要出现负数,谢谢-_-!~)
@@ -6432,11 +6433,14 @@ ImgOps | https://imgops.com/#b#`;
                         overlayer=document.createElement('span');
                         ImgWindowC.overlayer=overlayer;
                         overlayer.className='pv-pic-window-overlayer';
-                        overlayer.style.backgroundColor=prefs.imgWindow.overlayer.color;
                     };
+                    overlayer.style.backgroundColor=prefs.imgWindow.overlayer.color;
                     document.body.appendChild(overlayer);
                     overlayer.style.display='block';
                 };
+                if(prefs.imgWindow.backgroundColor){
+                    this.imgWindow.style.backgroundColor=prefs.imgWindow.backgroundColor;
+                }
                 document.body.appendChild(container);
 
                 this.rotatedRadians=0;//已经旋转的角度
@@ -10082,6 +10086,13 @@ ImgOps | https://imgops.com/#b#`;
                     "default": prefs.imgWindow.close.clickOutside,
                     title: i18n("imgWindowClickOutsideTip"),
                     line: 'end',
+                },
+                'imgWindow.backgroundColor': {
+                    label: i18n("backgroundColor"),
+                    type: 'text',
+                    className: 'color',
+                    "default": prefs.imgWindow.backgroundColor,
+                    line: 'end'
                 },
                 'imgWindow.overlayer.shown': {
                     label: i18n("imgWindowOverlayerShown"),
