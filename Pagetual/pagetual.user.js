@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.6.9.5
+// @version      1.6.9.6
 // @description  Perpetual pages - Most powerful Auto Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -1161,7 +1161,7 @@
                 let needUrl=(this.curSiteRule.action==0 || this.curSiteRule.action==1);
                 if(!href)href=nextLink.href;
                 if(href){
-                    let _href=href.replace(location.href, "");
+                    let _href=nextLink.getAttribute?nextLink.getAttribute("href"):"";
                     if(!_href || _href.charAt(0)=="#"){
                         href=_href;
                     }
@@ -2452,13 +2452,16 @@
     });
 
     function initListener(){
-        let loadmoreBtn,loading=true,lastScroll;
-        setTimeout(()=>{
+        let loadmoreBtn,loading=true,lastScroll=0,checkLoadMoreTimes=0;
+        let checkLoadMore=setInterval(()=>{
             loadmoreBtn=getLoadMore(document);
             if(loadmoreBtn && isVisible(loadmoreBtn, _unsafeWindow)){
                 loading=false;
+                clearInterval(checkLoadMore);
+            }else if(checkLoadMoreTimes>10){
+                clearInterval(checkLoadMore);
             }
-        },500);
+        },300);
         let checkScrollReach=()=>{
             let scrolly=window.scrollY;
             let windowHeight=window.innerHeight || document.documentElement.clientHeight;
@@ -2496,7 +2499,7 @@
             }
             if(ruleParser.curSiteRule.lockScroll){
                 let curScroll=document.body.scrollTop||document.documentElement.scrollTop;
-                if(isLoading && Math.abs(lastScroll-curScroll)>100){
+                if(lastScroll!=0 && isLoading && Math.abs(lastScroll-curScroll)>100){
                     document.body.scrollTop=lastScroll;
                     document.documentElement.scrollTop=lastScroll;
                 }else{
@@ -2504,7 +2507,9 @@
                 }
             }
         };
-        document.addEventListener('scroll', scrollHandler, true);
+        if(!ruleParser.curSiteRule.wheel){
+            document.addEventListener('scroll', scrollHandler, true);
+        }
         document.addEventListener('wheel', scrollHandler, true);
         document.addEventListener('dblclick', e=>{
             if(e.target.tagName!="BODY"){
