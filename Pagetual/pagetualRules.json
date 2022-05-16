@@ -750,5 +750,19 @@
     "type":0,
     "pageElement":"//div[@class='article-fulltext']",
     "nextLink":"//span[.//a[@class='pagination-link is-current']]/following-sibling::span/a"
+  },
+  {
+    "name":"Alibaba",
+    "url":"^https://www\\.alibaba\\.com/trade/search",
+    "pageElement":".organic-list>*",
+    "nextLink":".seb-pagination__pages>span+a",
+    "action":1,
+    "pageAction":"eles.forEach(ele=>{let img=ele.querySelector('div[data-image]>img');if(!img)return;img.src=img.parentNode.dataset.image})",
+    "wait":"return doc.querySelector('.seb-pagination__pages') && !doc.querySelector('.organic-list>p>i.ui2-icon-loading')"
+  },
+  {
+    "name":"豆瓣电影",
+    "url":"^https://movie\\.douban\\.com",
+    "wheel":true
   }
 ]
