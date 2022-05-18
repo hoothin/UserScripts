@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.6.9.7
+// @version      1.6.9.8
 // @description  Perpetual pages - Most powerful Auto Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -2270,7 +2270,7 @@
                         if(inForce){
                             storage.setItem("forceState_"+location.host, "");
                         }else{
-                            let _state=confirm(i18n("forceAllBody"))?2:3;
+                            let _state=ruleParser.curSiteRule.action>0 || confirm(i18n("forceAllBody"))?2:3;
                             storage.setItem("forceState_"+location.host, _state);
                         }
                         location.reload();
@@ -2936,36 +2936,71 @@
         }
     }
 
+    var scrollToResizeInited = false;
+    var resizePool = [];
+    function scrollToResize() {
+        if (scrollToResizeInited) return;
+        scrollToResizeInited = true;
+        var scrollingToResize = false;
+        document.addEventListener("scroll", e => {
+            if (scrollingToResize) return;
+            else {
+                scrollingToResize = true;
+                setTimeout(() => {scrollingToResize = false}, 500);
+            }
+            resizePool.forEach(resizeArr => {
+                let iframe = resizeArr[1]();
+                let frameDoc = resizeArr[2]();
+                if(ruleParser.curSiteRule.singleUrl){
+                    iframe.style.height=frameDoc.body.scrollHeight+"px";
+                    iframe.style.width=frameDoc.body.scrollWidth+"px";
+                }else{
+                    let pageEle = resizeArr[0]();
+                    if(pageEle){
+                        let targetElement = pageEle[0];
+                        if(pageEle.length > 1){
+                            targetElement = targetElement.parentNode;
+                        }
+                        iframe.style.height=targetElement.scrollHeight+"px";
+                        frameDoc.documentElement.scrollTop = 0;
+                        frameDoc.documentElement.scrollLeft = 0;
+                        while(targetElement && targetElement.offsetParent){
+                            targetElement.offsetParent.scrollTop = targetElement.offsetTop;
+                            if(targetElement.offsetParent.scrollTop == 0){
+                                frameDoc.documentElement.scrollTop += targetElement.offsetTop;
+                            }
+                            targetElement.offsetParent.scrollLeft = targetElement.offsetLeft;
+                            if(targetElement.offsetParent.scrollLeft == 0){
+                                frameDoc.documentElement.scrollLeft += targetElement.offsetLeft;
+                            }
+                            targetElement = targetElement.offsetParent;
+                        }
+                    }
+                }
+            });
+        });
+    }
+
     function forceIframe(url, callback){
         let curIframe = document.createElement('iframe'),iframeDoc;
         let setPosition = ()=>{
+            let getIframe = () => {
+                return curIframe;
+            };
+            let getFrameDoc = () => {
+                return iframeDoc;
+            };
             if(ruleParser.curSiteRule.singleUrl){
-                curIframe.style.height=iframeDoc.body.scrollHeight+"px";
-                curIframe.style.width=iframeDoc.body.scrollWidth+"px";
+                resizePool.push([() => {}, getIframe, getFrameDoc]);
             }else{
                 let pageElement = ruleParser.getPageElement(iframeDoc,iframeDoc.defaultView);
-                if(pageElement){
-                    let targetElement = pageElement[0];
-                    if(pageElement.length > 1){
-                        targetElement = targetElement.parentNode;
+                let getPageEle = () => {
+                    if (!pageElement) {
+                        pageElement = ruleParser.getPageElement(iframeDoc,iframeDoc.defaultView);
                     }
-                    curIframe.style.height=targetElement.scrollHeight+"px";
-                    curIframe.style.width=targetElement.scrollWidth+"px";
-                    //pageElement[0].scrollIntoView();
-                    iframeDoc.documentElement.scrollTop = 0;
-                    iframeDoc.documentElement.scrollLeft = 0;
-                    while(targetElement && targetElement.offsetParent){
-                        targetElement.offsetParent.scrollTop = targetElement.offsetTop;
-                        if(targetElement.offsetParent.scrollTop == 0){
-                            iframeDoc.documentElement.scrollTop += targetElement.offsetTop;
-                        }
-                        targetElement.offsetParent.scrollLeft = targetElement.offsetLeft;
-                        if(targetElement.offsetParent.scrollLeft == 0){
-                            iframeDoc.documentElement.scrollLeft += targetElement.offsetLeft;
-                        }
-                        targetElement = targetElement.offsetParent;
-                    }
-                }
+                    return pageElement;
+                };
+                resizePool.push([getPageEle, getIframe, getFrameDoc]);
             }
         };
         curIframe.name = 'pagetual-iframe';
@@ -3006,7 +3041,6 @@
             inAction=true;
             let foundNext=()=>{
                 document.removeEventListener("scroll", forceRefresh);
-                setPosition();
             }
             setTimeout(()=>{
                 inAction=false;
@@ -3033,6 +3067,7 @@
         }else{
             ruleParser.insert.parentNode.insertBefore(curIframe, ruleParser.insert);
         }
+        scrollToResize();
         return curIframe;
     }
 
