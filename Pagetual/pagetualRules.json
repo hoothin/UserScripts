@@ -478,8 +478,9 @@
     "name":"NGA",
     "url":"^https?://(.*\\.nga\\.cn|nga\\.178\\.com)/read\\.php",
     "nextLink":"a[title='下一页']",
-    "action":1,
-    "pageElement":"div#m_posts"
+    "action":2,
+    "pageElement":"div#m_posts",
+    "init":"doc&&doc.addEventListener('mouseover',e=>{e.preventDefault();e.stopPropagation()},true)"
   },
   {
     "name":"淮安新闻网",
