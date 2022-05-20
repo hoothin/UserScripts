@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      0.6
+// @version      0.6.1
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本
 // @description:zh-TW  又一個搜尋引擎跳轉脚本
@@ -831,7 +831,7 @@
     //const configPage = 'http://localhost:3000/';
     const configPage = 'https://hoothin.github.io/SearchJumper/';
 
-    const importPageReg = /^https:\/\/github\.com\/hoothin\/SearchJumper\/issues\/|^https:\/\/greasyfork\.org\/.*\/scripts\/445274\//i;
+    const importPageReg = /^https:\/\/github\.com\/hoothin\/SearchJumper\/issues\/|^https:\/\/greasyfork\.org\/.*\/scripts\/445274[\-\/]/i;
 
     class SearchBar {
         constructor() {
