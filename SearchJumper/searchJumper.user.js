@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      0.1
+// @version      0.2
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本
 // @description:zh-TW  又一個搜尋引擎跳轉脚本
@@ -22,6 +22,8 @@
 // @grant        GM_notification
 // @grant        GM.setClipboard
 // @grant        GM_setClipboard
+// @grant        GM.openInTab
+// @grant        GM_openInTab
 // @grant        unsafeWindow
 // @run-at       document-start
 // ==/UserScript==
@@ -517,20 +519,23 @@
         case "zh-SG":
             config = {
                 scriptName: '搜索酱',
-                importOrNot: '是否导入配置？'
+                importOrNot: '是否导入配置？',
+                settings: '配置脚本'
             };
             break;
         case "zh-TW":
         case "zh-HK":
             config = {
                 scriptName: "搜索醬",
-                importOrNot: '是否導入配置？'
+                importOrNot: '是否導入配置？',
+                settings: '配置脚本'
             };
             break;
         default:
             config = {
                 scriptName: "Search Jumper",
-                importOrNot: 'Do you want to import this config?'
+                importOrNot: 'Do you want to import this config?',
+                settings: 'Settings'
             };
             break;
     }
@@ -545,7 +550,7 @@
         }
     };
 
-    var _GM_registerMenuCommand, _GM_notification, _GM_setClipboard;
+    var _GM_registerMenuCommand, _GM_notification, _GM_setClipboard, _GM_openInTab;
     if (typeof GM_registerMenuCommand != 'undefined') {
         _GM_registerMenuCommand = GM_registerMenuCommand;
     } else if (typeof GM != 'undefined' && typeof GM.registerMenuCommand != 'undefined') {
@@ -553,19 +558,26 @@
     } else {
         _GM_registerMenuCommand = (s, f) => {};
     }
-    if(typeof GM_notification!='undefined'){
-        _GM_notification=GM_notification;
-    }else if(typeof GM!='undefined' && typeof GM.notification!='undefined'){
-        _GM_notification=GM.notification;
+    if(typeof GM_notification != 'undefined'){
+        _GM_notification = GM_notification;
+    }else if(typeof GM != 'undefined' && typeof GM.notification != 'undefined') {
+        _GM_notification = GM.notification;
     }else{
-        _GM_notification=(s)=>{alert(s)};
+        _GM_notification = (s) => {alert(s)};
     }
-    if(typeof GM_setClipboard!='undefined'){
-        _GM_setClipboard=GM_setClipboard;
-    }else if(typeof GM!='undefined' && typeof GM.setClipboard!='undefined'){
-        _GM_setClipboard=GM.setClipboard;
+    if(typeof GM_setClipboard != 'undefined'){
+        _GM_setClipboard = GM_setClipboard;
+    }else if(typeof GM != 'undefined' && typeof GM.setClipboard != 'undefined') {
+        _GM_setClipboard = GM.setClipboard;
     }else{
-        _GM_setClipboard=(s)=>{};
+        _GM_setClipboard = (s) => {};
+    }
+    if(typeof GM_openInTab != 'undefined'){
+        _GM_openInTab = GM_openInTab;
+    }else if(typeof GM != 'undefined' && typeof GM.openInTab != 'undefined') {
+        _GM_openInTab = GM.openInTab;
+    }else{
+        _GM_openInTab = (s) => {};
     }
     var _unsafeWindow = (typeof unsafeWindow == 'undefined') ? window : unsafeWindow;
     var storage = {
@@ -1286,6 +1298,9 @@
     }
 
     function initListener() {
+        _GM_registerMenuCommand(i18n('settings'), () => {
+            _GM_openInTab(configPage)
+        });
         let logoSvg = logoBtn.children[0];
         let inGrab = false;
         let mouseUpHandler = e => {
