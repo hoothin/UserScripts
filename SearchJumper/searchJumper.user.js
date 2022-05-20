@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      0.6.1
+// @version      0.6.2
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本
 // @description:zh-TW  又一個搜尋引擎跳轉脚本
@@ -353,7 +353,8 @@
                 charset: "utf-8"
             }, {
                 name: "百度",
-                url: "https://www.baidu.com/s?wd=%s&ie=%e"
+                url: "https://www.baidu.com/s?wd=%s&ie=%e",
+                match: "https://www\\.baidu\\.com/.*wd="
             }, {
                 name: "You",
                 url: "https://you.com/search?q=%s",
