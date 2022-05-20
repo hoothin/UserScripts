@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      0.3
+// @version      0.4
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本
 // @description:zh-TW  又一個搜尋引擎跳轉脚本
@@ -30,14 +30,8 @@
 
 (function() {
     'use strict';
-    if(window.top != window.self) {
-        try {
-            if (top.location.hostname != window.location.hostname || window.top != window.parent) {
-                return;
-            }
-        } catch(e) {
-            return;
-        }
+    if (window.top != window.self) {
+        return;
     }
     var searchData = {};
     /**
