@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      0.4
+// @version      0.5
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本
 // @description:zh-TW  又一個搜尋引擎跳轉脚本
@@ -354,6 +354,10 @@
             }, {
                 name: "百度",
                 url: "https://www.baidu.com/s?wd=%s&ie=%e"
+            }, {
+                name: "You",
+                url: "https://you.com/search?q=%s",
+                icon: "https://you.com/favicon/favicon-32x32.png"
             }, {
                 name: "头条搜索",
                 url: "https://so.toutiao.com/search/?dvpf=%c&keyword=%s"
@@ -789,6 +793,12 @@
          border-radius: 20px;
          overflow: hidden;
          transition:width 0.25s ease, height 0.25s;
+         pointer-events: none;
+     }
+     .search-jumper-searchBar:hover>.search-jumper-type {
+         margin-top: 0;
+         opacity: 0.9;
+         pointer-events: all;
      }
      .search-jumper-word {
          background: black;
