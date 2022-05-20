@@ -815,7 +815,7 @@
     //const configPage = 'http://localhost:3000/';
     const configPage = 'https://hoothin.github.io/SearchJumper/';
 
-    const githubPageReg = /https:\/\/github\.com\/hoothin\/SearchJumper\/issues\//i;
+    const importPageReg = /^https:\/\/github\.com\/hoothin\/SearchJumper\/issues\/|^https:\/\/greasyfork\.org\/.*\/scripts\/445274\//i;
 
     class SearchBar {
         constructor() {
@@ -1397,7 +1397,7 @@
                 _GM_setClipboard(JSON.stringify(_unsafeWindow.searchData, null, 2));
                 _GM_notification('Configuration copied successfully!');
             });
-        } else if (githubPageReg.test(location.href)) {
+        } else if (importPageReg.test(location.href)) {
             document.addEventListener("mousedown", e => {
                 if (e.target.tagName === "PRE") {
                     let hasMove = false;
