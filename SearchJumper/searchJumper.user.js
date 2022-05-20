@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      0.2
+// @version      0.3
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本
 // @description:zh-TW  又一個搜尋引擎跳轉脚本
@@ -348,7 +348,7 @@
             } ]
         },
         {
-            type: "Search",
+            type: "搜索",
             icon: "search",
             sites: [ {
                 name: "Google",
@@ -1303,9 +1303,25 @@
         });
         let logoSvg = logoBtn.children[0];
         let inGrab = false;
+        let clientX = e => {
+            if (e.type.indexOf('mouse') === 0) {
+                return e.clientX;
+            } else {
+                return e.changedTouches[0].clientX;
+            }
+        };
+        let clientY = e => {
+            if (e.type.indexOf('mouse') === 0) {
+                return e.clientY;
+            } else {
+                return e.changedTouches[0].clientY;
+            }
+        };
         let mouseUpHandler = e => {
             document.removeEventListener('mouseup', mouseUpHandler, false);
             document.removeEventListener('mousemove', mouseMoveHandler, false);
+            document.removeEventListener('touchend', mouseUpHandler, false);
+            document.removeEventListener('touchmove', mouseMoveHandler, false);
             if (!inGrab) return;
             inGrab = false;
             let viewWidth = window.innerWidth || document.documentElement.clientWidth;
@@ -1313,17 +1329,17 @@
             let baseWidth = viewWidth / 3;
             let baseHeight = viewHeight / 3;
             let relX, relY, posX, posY;
-            if (e.clientX < baseWidth) {
+            if (clientX(e) < baseWidth) {
                 relX = "left";
                 posX = parseInt(searchBar.bar.style.left) > 0?parseInt(searchBar.bar.style.left):"0";
-            } else if (e.clientX < baseWidth * 2) {
+            } else if (clientX(e) < baseWidth * 2) {
                 relX = "center";
                 posX = parseInt(searchBar.bar.style.left) - viewWidth / 2;
             } else {
                 relX = "right";
                 posX = viewWidth - parseInt(searchBar.bar.style.left) - searchBar.bar.scrollWidth;
             }
-            if (e.clientY < viewHeight / 2) {
+            if (clientY(e) < viewHeight / 2) {
                 relY = "top";
                 posY = parseInt(searchBar.bar.style.top);
             } else {
@@ -1346,18 +1362,22 @@
                 searchBar.bar.style.marginTop = "";
                 searchBar.bar.style.right = "";
                 searchBar.bar.style.bottom = "";
-                searchBar.bar.style.left = e.clientX - searchBar.bar.scrollWidth + 20 + "px";
-                searchBar.bar.style.top = e.clientY - searchBar.bar.scrollHeight + 40 + "px";
-                searchBar.bar.style.pointerEvents = "none";
+                searchBar.bar.style.left = clientX(e) - searchBar.bar.scrollWidth + 20 + "px";
+                searchBar.bar.style.top = clientY(e) - searchBar.bar.scrollHeight + 40 + "px";
                 searchBar.bar.parentNode.classList.remove("search-jumper-scroll");
+                setTimeout(() => {searchBar.bar.style.pointerEvents = "none"}, 100);
             }
             inGrab = true;
-            searchBar.bar.style.left = e.clientX - searchBar.bar.scrollWidth + 20 + "px";
-            searchBar.bar.style.top = e.clientY - searchBar.bar.scrollHeight + 40 + "px";
+            searchBar.bar.style.left = clientX(e) - searchBar.bar.scrollWidth + 20 + "px";
+            searchBar.bar.style.top = clientY(e) - searchBar.bar.scrollHeight + 40 + "px";
         };
         logoBtn.addEventListener('mousedown', e => {
             document.addEventListener('mouseup', mouseUpHandler, false);
             document.addEventListener('mousemove', mouseMoveHandler, false);
+        }, false);
+        logoBtn.addEventListener('touchstart', e => {
+            document.addEventListener('touchend', mouseUpHandler, false);
+            document.addEventListener('touchmove', mouseMoveHandler, false);
         }, false);
 
         if (searchData.prefConfig.enableInPage) {
