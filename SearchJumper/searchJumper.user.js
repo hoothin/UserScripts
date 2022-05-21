@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      0.7
+// @version      0.7.1
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本
 // @description:zh-TW  又一個搜尋引擎跳轉脚本
@@ -1194,7 +1194,7 @@
                 setClass("");
                 self.bar.style.position = "relative";
             } else if (relX == "left" && relY == "top") {
-                if (posX >= posY) {
+                if (posX > posY) {
                     //上左
                     setClass("");
                     self.bar.style.position = "fixed";
@@ -1206,7 +1206,7 @@
                     self.bar.style.top = posY + "px";
                 }
             } else if (relX == "right" && relY == "top") {
-                if (posX >= posY) {
+                if (posX > posY) {
                     //上右
                     setClass("");
                     self.bar.style.position = "fixed";
