@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      0.7.1
+// @version      0.8
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本
 // @description:zh-TW  又一個搜尋引擎跳轉脚本
@@ -509,7 +509,8 @@
         altKey: false,
         ctrlKey: false,
         shiftKey: false,
-        metaKey: false
+        metaKey: false,
+        autoClose: false
     };
     const lang = navigator.appName == "Netscape" ? navigator.language : navigator.userLanguage;
     let config = {};
@@ -641,7 +642,7 @@
         return escapeHTMLPolicy?escapeHTMLPolicy.createHTML(html):html;
     }
 
-    var logoBtn, searchBar, searchTypes = [], currentSite = false;
+    var logoBtn, searchBar, searchTypes = [], currentSite = false, cacheKeywords;
     var logoBtnSvg = `<svg class="search-jumper-logoBtnSvg" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><title>${i18n("scriptName")}</title><path d="M.736 510.464c0-281.942 228.335-510.5 510-510.5 135.26 0 264.981 53.784 360.625 149.522 95.643 95.737 149.375 225.585 149.375 360.978 0 281.94-228.335 510.5-510 510.5-281.665 0-510-228.56-510-510.5zm510-510.5v1021m-510-510.5h1020" fill="#fefefe"/><path d="M237.44 346.624a48.64 48.64 0 1 0 97.28 0 48.64 48.64 0 1 0-97.28 0zM699.904 346.624a48.64 48.64 0 1 0 97.28 0 48.64 48.64 0 1 0-97.28 0zM423.296 759.296c-64 0-115.712-52.224-115.712-115.712 0-26.624 9.216-52.224 25.6-72.704 9.216-11.776 26.112-13.312 37.888-4.096s13.312 26.112 4.096 37.888c-9.216 11.264-13.824 24.576-13.824 38.912 0 34.304 27.648 61.952 61.952 61.952s61.952-27.648 61.952-61.952c0-4.096-.512-8.192-1.024-11.776-2.56-14.848 6.656-28.672 21.504-31.744 14.848-2.56 28.672 6.656 31.744 21.504 1.536 7.168 2.048 14.336 2.048 22.016-.512 63.488-52.224 115.712-116.224 115.712z" fill="#333"/><path d="M602.08 760.296c-64 0-115.712-52.224-115.712-115.712 0-14.848 12.288-27.136 27.136-27.136s27.136 12.288 27.136 27.136c0 34.304 27.648 61.952 61.952 61.952s61.952-27.648 61.952-61.952c0-15.36-5.632-30.208-15.872-41.472-9.728-11.264-9.216-28.16 2.048-37.888 11.264-9.728 28.16-9.216 37.888 2.048 19.456 21.504 29.696 48.64 29.696 77.824 0 62.976-52.224 115.2-116.224 115.2z" fill="#333"/><ellipse ry="58" rx="125" cy="506.284" cx="201.183" fill="#faf"/><ellipse ry="58" rx="125" cy="506.284" cx="823.183" fill="#faf"/></svg>`;
     var cssText = `
      .search-jumper-searchBarCon {
@@ -893,6 +894,23 @@
                     font.style.fontSize = '';
                 });
             });
+
+            if (searchData.prefConfig.autoClose) {
+                var hideHandler = () => {
+                    let openType = this.bar.querySelector('.search-jumper-type:not(.search-jumper-hide)>span');
+                    if (openType) {
+                        let mouseDownEvent = new PointerEvent("mousedown");
+                        openType.dispatchEvent(mouseDownEvent);
+                    }
+                };
+                var hideTimeout = setTimeout(hideHandler, 2000);
+                this.bar.addEventListener('mouseenter', e => {
+                    clearTimeout(hideTimeout);
+                }, false);
+                this.bar.addEventListener('mouseleave', e => {
+                    hideTimeout = setTimeout(hideHandler, 2000);
+                }, false);
+            }
         }
 
         waitForFontAwesome(callback) {
@@ -1089,18 +1107,21 @@
             if (openInNewTab || searchData.prefConfig.openInNewTab) {
                 ele.setAttribute("target", "_blank");
             }
+            if (!ele.dataset.url) {
+                ele.dataset.url = data.url.replace('%e', document.charset).replace('%c', (isMobile?"mobile":"pc")).replace('%u', location.href).replace('%h', location.host);
+            }
             if (data.charset) {
                 ele.href = data.url;
                 ele.onclick = e => {
                     let keywords = getKeywords();
-                    let url = data.url.replace(/%t/g, targetImgSrc).replace(/%b/g, targetImgBaseSrc).replace(/%s/g, keywords).replace(/%e/g, document.charset).replace(/%c/g, (isMobile?"mobile":"pc")).replace(/%u/g, location.href).replace(/%h/g, location.host);
+                    let url = ele.dataset.url.replace('%t', targetImgSrc).replace('%b', targetImgBaseSrc).replace('%s', keywords);
                     this.encodeToSubmit(data.charset, url, ele.getAttribute("target") || '_self');
                     return false;
                 };
             } else {
                 ele.addEventListener('mousedown', e => {
                     let keywords = getKeywords();
-                    ele.href = data.url.replace(/%t/g, targetImgSrc).replace(/%b/g, targetImgBaseSrc).replace(/%s/g, keywords).replace(/%e/g, document.charset).replace(/%c/g, (isMobile?"mobile":"pc")).replace(/%u/g, location.href).replace(/%h/g, location.host);
+                    ele.href = ele.dataset.url.replace('%t', targetImgSrc).replace('%b', targetImgBaseSrc).replace('%s', keywords);
                 }, false);
             }
             return ele;
@@ -1285,6 +1306,7 @@
             return encodeURIComponent(selStr);
         }
         if (!currentSite) return '';
+        if (cacheKeywords) return cacheKeywords;
         let keywordsMatch, keywords = '';
         if (currentSite.keywords) {
             keywordsMatch = location.href.match(new RegExp(currentSite.keywords));
@@ -1293,12 +1315,9 @@
             }
         } else if (currentSite.url.indexOf("%s") != -1) {
             if (location.href.indexOf("?") != -1) {
-                keywordsMatch = currentSite.url.match(/[\?&]([^&]*?=)%s.*/);
+                keywordsMatch = currentSite.url.match(/[\?&]([^&]*?)=%s.*/);
                 if (keywordsMatch) {
-                    keywordsMatch = location.href.match(new RegExp("[\?&]" + keywordsMatch[1] + "(.*?)(&|$)"));
-                    if (keywordsMatch) {
-                        keywords = keywordsMatch[1].replace(/%20site%3A.*|site%3A.*%20/, "");
-                    }
+                    keywords = new URLSearchParams(location.search).get(keywordsMatch[1]);
                 }
             } else {
                 keywordsMatch = currentSite.url.match(/(.*)%s/);
@@ -1310,6 +1329,7 @@
                 }
             }
         }
+        cacheKeywords = keywords;
         return keywords;
     }
 
