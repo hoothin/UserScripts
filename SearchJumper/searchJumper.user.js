@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      0.6.3
+// @version      0.7
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本
 // @description:zh-TW  又一個搜尋引擎跳轉脚本
@@ -1338,7 +1338,10 @@
             document.removeEventListener('mousemove', mouseMoveHandler, false);
             document.removeEventListener('touchend', mouseUpHandler, false);
             document.removeEventListener('touchmove', mouseMoveHandler, false);
-            if (!inGrab) return;
+            if (!inGrab) {
+                _GM_openInTab(configPage);
+                return;
+            }
             inGrab = false;
             let viewWidth = window.innerWidth || document.documentElement.clientWidth;
             let viewHeight = window.innerHeight || document.documentElement.clientHeight;
@@ -1388,12 +1391,16 @@
             searchBar.bar.style.top = clientY(e) - searchBar.bar.scrollHeight + 40 + "px";
         };
         logoBtn.addEventListener('mousedown', e => {
-            document.addEventListener('mouseup', mouseUpHandler, false);
-            document.addEventListener('mousemove', mouseMoveHandler, false);
+            setTimeout(() => {
+                document.addEventListener('mouseup', mouseUpHandler, false);
+                document.addEventListener('mousemove', mouseMoveHandler, false);
+            }, 1);
         }, false);
         logoBtn.addEventListener('touchstart', e => {
-            document.addEventListener('touchend', mouseUpHandler, false);
-            document.addEventListener('touchmove', mouseMoveHandler, false);
+            setTimeout(() => {
+                document.addEventListener('touchend', mouseUpHandler, false);
+                document.addEventListener('touchmove', mouseMoveHandler, false);
+            }, 1);
         }, false);
 
         if (searchData.prefConfig.enableInPage) {
