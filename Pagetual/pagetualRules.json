@@ -279,6 +279,13 @@
     "insertPos":2
   },
   {
+    "name":"manga1000",
+    "url":"^https://manga1000\\.top/\\d+/\\d+",
+    "pageElement":"div.chapter-content>*",
+    "css":".chapter-content>img{display:unset!important}",
+    "nextLink":"ul.chapter_select a.next"
+  },
+  {
     "name":"javdb",
     "action":0,
     "url":"^https://javdb\\.com/",
