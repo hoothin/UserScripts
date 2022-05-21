@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      0.6.2
+// @version      0.6.3
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本
 // @description:zh-TW  又一個搜尋引擎跳轉脚本
@@ -30,7 +30,7 @@
 
 (function() {
     'use strict';
-    if (window.top != window.self) {
+    if (window.top != window.self || document.getElementById("search-jumper")) {
         return;
     }
     var searchData = {};
@@ -794,12 +794,9 @@
          border-radius: 20px;
          overflow: hidden;
          transition:width 0.25s ease, height 0.25s;
-         pointer-events: none;
      }
-     .search-jumper-searchBar:hover>.search-jumper-type {
-         margin-top: 0;
-         opacity: 0.9;
-         pointer-events: all;
+     .search-jumper-searchBar.disable-pointer>.search-jumper-type {
+         pointer-events: none;
      }
      .search-jumper-word {
          background: black;
@@ -853,8 +850,17 @@
             let bar = document.createElement("span");
             bar.className = "search-jumper-searchBar";
             bar.appendChild(logoBtn);
+            let touchHandler = e => {
+                bar.removeEventListener('touchstart', touchHandler, true);
+                bar.classList.add('disable-pointer');
+                setTimeout(() => {
+                    bar.classList.remove('disable-pointer');
+                }, 250);
+            };
+            bar.addEventListener('touchstart', touchHandler, true);
 
             let searchBarCon = document.createElement("div");
+            searchBarCon.id = "search-jumper";
             searchBarCon.className = "search-jumper-searchBarCon";
             searchBarCon.appendChild(bar);
 
@@ -995,11 +1001,16 @@
                     let viewWidth = window.innerWidth || document.documentElement.clientWidth;
                     let viewHeight = window.innerHeight || document.documentElement.clientHeight;
                     if (self.bar.scrollWidth > viewWidth || self.bar.scrollHeight > viewHeight) {
+                        if (!self.bar.parentNode.classList.contains("search-jumper-scroll")) {
+                            self.bar.style.cssText = "";
+                        }
                         self.bar.parentNode.classList.add("search-jumper-scroll");
                     } else {
+                        if (self.bar.parentNode.classList.contains("search-jumper-scroll")) {
+                            self.bar.style.cssText = "";
+                        }
                         self.bar.parentNode.classList.remove("search-jumper-scroll");
                     }
-                    self.bar.style.cssText = "";
                 }, 250);
             }, false);
             let isCurrent = false;
