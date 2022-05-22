@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      0.8.1
+// @version      0.8.2
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本
 // @description:zh-TW  又一個搜尋引擎跳轉脚本
@@ -1082,34 +1082,41 @@
             } else if (icon) {
                 img.src = icon;
             } else {
-                img.src = data.url.replace(/(https?:\/\/[^\/]*\/).*$/, "$1favicon.ico");
+                img.src = data.url.replace(/^(https?:\/\/[^\/]*\/).*$/, "$1favicon.ico");
             }
-            let urlReg = data.url.replace(/^https?/, "").replace(/\?.*/, "\\?").replace(/\./g, "\\.").replace(/%[secu]/g, ".*");
             if (data.match) {
                 if (new RegExp(data.match).test(location.href)) {
                     ele.dataset.current = true;
                 }
-            } else if (new RegExp(urlReg).test(location.href)) {
-                ele.dataset.current = true;
+            } else if (data.url.indexOf(location.host) != -1) {
+                let urlReg = data.url.match(/[^\/\?&]+(?=%[stb])/g);
+                if (urlReg) {
+                    urlReg = urlReg.join('.*');
+                    if (new RegExp(urlReg).test(location.href)) {
+                        ele.dataset.current = true;
+                    }
+                }
             }
             if (openInNewTab || searchData.prefConfig.openInNewTab) {
                 ele.setAttribute("target", "_blank");
             }
-            if (!ele.dataset.url) {
-                ele.dataset.url = data.url.replace('%e', document.charset).replace('%c', (isMobile?"mobile":"pc")).replace('%u', location.href).replace('%h', location.host);
-            }
+            let getUrl = () => {
+                let keywords = getKeywords();
+                if (!ele.dataset.url) {
+                    ele.dataset.url = data.url.replace('%e', document.charset).replace('%c', (isMobile?"mobile":"pc")).replace('%u', location.href).replace('%h', location.host);
+                }
+                return ele.dataset.url.replace('%t', targetImgSrc).replace('%b', targetImgBaseSrc).replace('%s', keywords);
+            };
             if (data.charset) {
                 ele.href = data.url;
                 ele.onclick = e => {
-                    let keywords = getKeywords();
-                    let url = ele.dataset.url.replace('%t', targetImgSrc).replace('%b', targetImgBaseSrc).replace('%s', keywords);
+                    let url = getUrl();
                     this.encodeToSubmit(data.charset, url, ele.getAttribute("target") || '_self');
                     return false;
                 };
             } else {
                 ele.addEventListener('mousedown', e => {
-                    let keywords = getKeywords();
-                    ele.href = ele.dataset.url.replace('%t', targetImgSrc).replace('%b', targetImgBaseSrc).replace('%s', keywords);
+                    ele.href = getUrl();
                 }, false);
             }
             return ele;
