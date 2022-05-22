@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.5.16.1
+// @version              2022.5.22.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -40,7 +40,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
-// @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1050096
+// @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1053017
 // @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1050741
 // @match                *://*/*
 // @exclude              http://www.toodledo.com/tasks/*
@@ -20001,7 +20001,7 @@ ImgOps | https://imgops.com/#b#`;
                     if(data.img==item.data.img){
                         return true;
                     };
-                }))return;
+                }))return false;
 
 
                 //被放大镜盯上的图片,不要显示浮动栏.
@@ -20009,7 +20009,7 @@ ImgOps | https://imgops.com/#b#`;
                     if(data.img==item.data.img){
                         return true;
                     };
-                }))return;
+                }))return false;
 
                 var self=this;
                 clearTimeout(this.hideTimer);
@@ -20032,7 +20032,7 @@ ImgOps | https://imgops.com/#b#`;
                 if(prefs.floatBar.position=="hide"){
                     self.data=data;
                     self.show();
-                    return;
+                    return false;
                 }
                 if(!this.shown || self.data.img!=data.img){
                     this.floatBar.style.transition="unset";
@@ -20042,6 +20042,7 @@ ImgOps | https://imgops.com/#b#`;
                     self.data=data;
                     self.show();
                 },prefs.floatBar.showDelay);
+                return true;
             },
             setButton:function(){
                 if(this.data.noActual){
@@ -20852,7 +20853,7 @@ ImgOps | https://imgops.com/#b#`;
 
             if (!target || target.id=="pv-float-bar-container" ||
                 (target.parentNode && (target.parentNode.id=="icons" || target.parentNode.className=="search-jumper-btn")) ||
-                (target.className && target.className.indexOf &&
+                (target.className &&
                  (/^pv\-/.test(target.className) ||
                   target.className=="whx-a" ||
                   target.className=="whx-a-node" ||
@@ -20978,6 +20979,7 @@ ImgOps | https://imgops.com/#b#`;
                         try{
                             var newSrc=matchedRule.getImage(img);
                             if(newSrc && imgSrc!=newSrc) {
+                                let srcs, description;
                                 src=newSrc;
                                 if (Array.isArray(src)) {
                                     srcs = src;
@@ -21104,15 +21106,17 @@ ImgOps | https://imgops.com/#b#`;
                 }
 
                 if(!checkUniqueImgWin()){
-                    var keyHide=prefs.floatBar.position=="hide"?!e.altKey:e.altKey;
-                    if(keyHide){
-                        floatBar.floatBar.style.opacity=0;
-                        floatBar.floatBar.style.display="none";
-                    }else{
-                        floatBar.floatBar.style.opacity="";
-                        floatBar.floatBar.style.display="initial";
+                    let canShow=floatBar.start(result);
+                    if(canShow){
+                        var keyHide=prefs.floatBar.position=="hide"?!e.altKey:e.altKey;
+                        if(keyHide){
+                            floatBar.floatBar.style.opacity=0;
+                            floatBar.floatBar.style.display="none";
+                        }else{
+                            floatBar.floatBar.style.opacity="";
+                            floatBar.floatBar.style.display="initial";
+                        }
                     }
-                    floatBar.start(result);
                 }
             };
         }
@@ -21121,16 +21125,19 @@ ImgOps | https://imgops.com/#b#`;
             var localName = target.localName;
 
             // 确保光标不是定位在文字输入框或选择框
-            if (localName == 'textarea' || localName == 'input' || localName == 'select')
+            if (localName == 'textarea' || localName == 'input' || localName == 'select'){
                 return false;
+            }
 
             // 视频播放器
-            if (localName == 'object' || localName == 'embed')
+            if (localName == 'object' || localName == 'embed'){
                 return false;
+            }
 
             // 百度贴吧回复输入的问题
-            if (target.getAttribute('contenteditable') == 'true')
+            if (target.getAttribute('contenteditable') == 'true'){
                 return false;
+            }
 
             return true;
         }
