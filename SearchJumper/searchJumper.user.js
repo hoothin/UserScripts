@@ -916,7 +916,7 @@
         }
 
         waitForFontAwesome(callback) {
-            var retries = 25;
+            var retries = 50;
             var checkReady = function() {
                 var canvas, context;
                 retries -= 1;
