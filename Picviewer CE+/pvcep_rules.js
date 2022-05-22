@@ -772,9 +772,9 @@ var siteInfo=[
 },
 {
  name: "gravatar",
- src: /gravatar\.com\/avatar\//i,
- r: /(gravatar\.com\/avatar\/.*[\?&]s=).*/,
- s: '$1500'
+ src: /gravatar\.com\/avatar\/|\/gravatar\//i,
+ r: /(avatar\/.*[\?&]s=).*/,
+ s: '$11920'
 },
 {
  name: "ucServerAvatar",
