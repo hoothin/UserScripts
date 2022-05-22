@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      0.8
+// @version      0.8.1
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本
 // @description:zh-TW  又一個搜尋引擎跳轉脚本
@@ -510,7 +510,8 @@
         ctrlKey: false,
         shiftKey: false,
         metaKey: false,
-        autoClose: false
+        autoClose: false,
+        autoDelay: 2000
     };
     const lang = navigator.appName == "Netscape" ? navigator.language : navigator.userLanguage;
     let config = {};
@@ -896,6 +897,7 @@
             });
 
             if (searchData.prefConfig.autoClose) {
+                var delay = searchData.prefConfig.autoDelay;
                 var hideHandler = () => {
                     let openType = this.bar.querySelector('.search-jumper-type:not(.search-jumper-hide)>span');
                     if (openType) {
@@ -903,12 +905,12 @@
                         openType.dispatchEvent(mouseDownEvent);
                     }
                 };
-                var hideTimeout = setTimeout(hideHandler, 2000);
+                var hideTimeout = setTimeout(hideHandler, delay);
                 this.bar.addEventListener('mouseenter', e => {
                     clearTimeout(hideTimeout);
                 }, false);
                 this.bar.addEventListener('mouseleave', e => {
-                    hideTimeout = setTimeout(hideHandler, 2000);
+                    hideTimeout = setTimeout(hideHandler, delay);
                 }, false);
             }
         }
@@ -1060,20 +1062,6 @@
             return ele;
         }
 
-        /**
-        * s 搜索关键词
-        * e 编码
-        * c 客户端 pc,mobile
-        * u 当前网站 url
-        * h 当前网站 host
-        *
-        * name 站点名
-        * icon 站点icon
-        * url 站点地址
-        * keywords 站点关键词提取
-        * match 匹配当前站点
-        * charset 站点编码
-        */
         createSiteBtn(name, icon, data, openInNewTab) {
             let ele = document.createElement("a");
             ele.className = "search-jumper-btn";
