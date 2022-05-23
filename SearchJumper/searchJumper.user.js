@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      0.8.4
+// @version      0.8.5
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本
 // @description:zh-TW  又一個搜尋引擎跳轉脚本
@@ -1111,17 +1111,21 @@
                 return ele.dataset.url.replace(/%t/g, targetImgSrc).replace(/%b/g, targetImgBaseSrc).replace(/%s/g, keywords);
             };
             ele.href = data.url;
-            if (data.charset || data.url.indexOf(':p{') != -1) {
-                ele.onclick = e => {
-                    let url = getUrl();
-                    this.submitByForm(data.charset, url, ele.getAttribute("target") || '_self');
-                    return false;
-                };
-            } else {
-                ele.addEventListener('mousedown', e => {
+            ele.addEventListener('mousedown', e => {
+                if (!ele.dataset.postSign) {
+                    ele.dataset.postSign = data.url.indexOf(':p{') === -1 ? 'no' : 'yes';
+                }
+                if (data.charset || ele.dataset.postSign === 'yes') {
+                    if (!ele.onclick) {
+                        ele.onclick = e => {
+                            this.submitByForm(data.charset, getUrl(), ele.getAttribute("target") || '_self');
+                            return false;
+                        };
+                    }
+                } else {
                     ele.href = getUrl();
-                }, false);
-            }
+                }
+            }, false);
             return ele;
         }
 
