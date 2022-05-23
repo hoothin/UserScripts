@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      0.8.5
+// @version      0.8.6
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本
 // @description:zh-TW  又一個搜尋引擎跳轉脚本
@@ -649,7 +649,7 @@
         return escapeHTMLPolicy?escapeHTMLPolicy.createHTML(html):html;
     }
 
-    var logoBtn, searchBar, searchTypes = [], currentSite = false, cacheKeywords;
+    var logoBtn, searchBar, searchTypes = [], currentSite = false, cacheKeywords, localKeywords;
     var logoBtnSvg = `<svg class="search-jumper-logoBtnSvg" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><title>${i18n("scriptName")}</title><path d="M.736 510.464c0-281.942 228.335-510.5 510-510.5 135.26 0 264.981 53.784 360.625 149.522 95.643 95.737 149.375 225.585 149.375 360.978 0 281.94-228.335 510.5-510 510.5-281.665 0-510-228.56-510-510.5zm510-510.5v1021m-510-510.5h1020" fill="#fefefe"/><path d="M237.44 346.624a48.64 48.64 0 1 0 97.28 0 48.64 48.64 0 1 0-97.28 0zM699.904 346.624a48.64 48.64 0 1 0 97.28 0 48.64 48.64 0 1 0-97.28 0zM423.296 759.296c-64 0-115.712-52.224-115.712-115.712 0-26.624 9.216-52.224 25.6-72.704 9.216-11.776 26.112-13.312 37.888-4.096s13.312 26.112 4.096 37.888c-9.216 11.264-13.824 24.576-13.824 38.912 0 34.304 27.648 61.952 61.952 61.952s61.952-27.648 61.952-61.952c0-4.096-.512-8.192-1.024-11.776-2.56-14.848 6.656-28.672 21.504-31.744 14.848-2.56 28.672 6.656 31.744 21.504 1.536 7.168 2.048 14.336 2.048 22.016-.512 63.488-52.224 115.712-116.224 115.712z" fill="#333"/><path d="M602.08 760.296c-64 0-115.712-52.224-115.712-115.712 0-14.848 12.288-27.136 27.136-27.136s27.136 12.288 27.136 27.136c0 34.304 27.648 61.952 61.952 61.952s61.952-27.648 61.952-61.952c0-15.36-5.632-30.208-15.872-41.472-9.728-11.264-9.216-28.16 2.048-37.888 11.264-9.728 28.16-9.216 37.888 2.048 19.456 21.504 29.696 48.64 29.696 77.824 0 62.976-52.224 115.2-116.224 115.2z" fill="#333"/><ellipse ry="58" rx="125" cy="506.284" cx="201.183" fill="#faf"/><ellipse ry="58" rx="125" cy="506.284" cx="823.183" fill="#faf"/></svg>`;
     var cssText = `
      .search-jumper-searchBarCon {
@@ -1105,6 +1105,7 @@
             }
             let getUrl = () => {
                 let keywords = getKeywords();
+                if (keywords && keywords != cacheKeywords) storage.setItem("cacheKeywords", keywords);
                 if (!ele.dataset.url) {
                     ele.dataset.url = data.url.replace(/%e/g, document.charset).replace(/%c/g, (isMobile?"mobile":"pc")).replace(/%u/g, location.href).replace(/%h/g, location.host);
                 }
@@ -1319,7 +1320,9 @@
             return encodeURIComponent(selStr);
         }
         if (!currentSite) return '';
-        if (cacheKeywords) return cacheKeywords;
+        if (localKeywords) return localKeywords;
+        if (localKeywords === '' && cacheKeywords) return cacheKeywords;
+
         let keywordsMatch, keywords = '';
         if (currentSite.keywords) {
             keywordsMatch = location.href.match(new RegExp(currentSite.keywords));
@@ -1342,8 +1345,8 @@
                 }
             }
         }
-        cacheKeywords = keywords;
-        return keywords;
+        localKeywords = keywords;
+        return !localKeywords ? cacheKeywords : localKeywords;
     }
 
     function initListener() {
@@ -1469,7 +1472,7 @@
                     document.removeEventListener('mouseup', mouseUpHandler, false);
                 };
                 document.addEventListener('mouseup', mouseUpHandler, false);
-            }, false);
+            }, true);
             document.oncontextmenu = function (event) {
                 if (shown) event.preventDefault();
             };
@@ -1537,6 +1540,11 @@
         let _searchData = await new Promise((resolve) => {
             storage.getItem("searchData", data => {
                 resolve(data);
+            });
+        });
+        cacheKeywords = await new Promise((resolve) => {
+            storage.getItem("cacheKeywords", data => {
+                resolve(data || '');
             });
         });
         if (_searchData) {
