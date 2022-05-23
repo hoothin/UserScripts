@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      0.8.6
+// @version      0.8.7
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本
 // @description:zh-TW  又一個搜尋引擎跳轉脚本
@@ -40,21 +40,7 @@
     const importPageReg = /^https:\/\/github\.com\/hoothin\/SearchJumper\/issues\/|^https:\/\/greasyfork\.org\/.*\/scripts\/445274[\-\/]/i;
 
     var searchData = {};
-    /**
-     * s 搜索关键词
-     * e 编码
-     * c 客户端 pc,mobile
-     * u 当前网站url
-     * t 图片src
-     * b 图片src去头
-     *
-     * name 站点名
-     * url 站点地址
-     * keywords 站点关键词提取
-     * match 匹配当前站点
-     * icon 站点icon
-     * charset 站点编码
-     */
+
     searchData.sitesConfig = [
         {
             type: "翻译",
@@ -437,7 +423,7 @@
         {
             //右键长按或者当前处于图片搜索网站并存储有图片网址
             type: "以图搜图",
-            icon: "sitemap",
+            icon: "eye",
             selectImg: true,
             openInNewTab: true,
             sites: [ {
@@ -494,11 +480,7 @@
             type: "VIP",
             icon: "diamond",
             match: "://v\\.qq\\.com/x/",
-            sites: [ {
-                name: "52wyb",
-                icon: 0,
-                url: "https://api.52wyb.com/webcloud/?v=%u",
-            } ]
+            sites: []
         }
     ];
     searchData.prefConfig = {
@@ -584,7 +566,7 @@
     }else if(typeof GM != 'undefined' && typeof GM.openInTab != 'undefined') {
         _GM_openInTab = GM.openInTab;
     }else{
-        _GM_openInTab = (s, t) => {};
+        _GM_openInTab = (s, t) => {window.open(s)};
     }
     var _unsafeWindow = (typeof unsafeWindow == 'undefined') ? window : unsafeWindow;
     var storage = {
@@ -673,7 +655,7 @@
          margin-top: -20px;
          opacity: 0.3;
          vertical-align: top;
-         transition:margin-top 0.25s ease, opacity 0.25s;
+         transition:margin-top 0.25s ease, margin-left 0.25s, opacity 0.25s;
          user-select: none;
          box-sizing:content-box;
          text-align: center;
