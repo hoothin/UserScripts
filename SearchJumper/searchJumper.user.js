@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      0.8.7
+// @version      0.8.8
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本
 // @description:zh-TW  又一個搜尋引擎跳轉脚本
@@ -346,7 +346,7 @@
             }, {
                 name: "百度",
                 url: "https://www.baidu.com/s?wd=%s&ie=%e",
-                match: "https://www\\.baidu\\.com/.*wd="
+                match: "https://www\\.baidu\\.com/.*(wd|word)="
             }, {
                 name: "You",
                 url: "https://you.com/search?q=%s",
@@ -1095,10 +1095,7 @@
             };
             ele.href = data.url;
             ele.addEventListener('mousedown', e => {
-                if (!ele.dataset.postSign) {
-                    ele.dataset.postSign = data.url.indexOf(':p{') === -1 ? 'no' : 'yes';
-                }
-                if (data.charset || ele.dataset.postSign === 'yes') {
+                if (data.charset || data.url.indexOf(':p{') !== -1) {
                     if (!ele.onclick) {
                         ele.onclick = e => {
                             this.submitByForm(data.charset, getUrl(), ele.getAttribute("target") || '_self');
@@ -1327,7 +1324,7 @@
                 }
             }
         }
-        localKeywords = keywords;
+        localKeywords = keywords.replace(/site(%3A|:).*?([%&]|$)/, "$2");
         return !localKeywords ? cacheKeywords : localKeywords;
     }
 
