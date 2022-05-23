@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      0.8.3
+// @version      0.8.4
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本
 // @description:zh-TW  又一個搜尋引擎跳轉脚本
@@ -33,6 +33,12 @@
     if (window.top != window.self || document.getElementById("search-jumper")) {
         return;
     }
+
+    //const configPage = 'http://localhost:3000/';
+    const configPage = 'https://hoothin.github.io/SearchJumper/';
+
+    const importPageReg = /^https:\/\/github\.com\/hoothin\/SearchJumper\/issues\/|^https:\/\/greasyfork\.org\/.*\/scripts\/445274[\-\/]/i;
+
     var searchData = {};
     /**
      * s 搜索关键词
@@ -578,7 +584,7 @@
     }else if(typeof GM != 'undefined' && typeof GM.openInTab != 'undefined') {
         _GM_openInTab = GM.openInTab;
     }else{
-        _GM_openInTab = (s) => {};
+        _GM_openInTab = (s, t) => {};
     }
     var _unsafeWindow = (typeof unsafeWindow == 'undefined') ? window : unsafeWindow;
     var storage = {
@@ -827,11 +833,6 @@
      }`;
 
     var targetImgSrc, targetImgBaseSrc;
-
-    //const configPage = 'http://localhost:3000/';
-    const configPage = 'https://hoothin.github.io/SearchJumper/';
-
-    const importPageReg = /^https:\/\/github\.com\/hoothin\/SearchJumper\/issues\/|^https:\/\/greasyfork\.org\/.*\/scripts\/445274[\-\/]/i;
 
     class SearchBar {
         constructor() {
@@ -1105,15 +1106,15 @@
             let getUrl = () => {
                 let keywords = getKeywords();
                 if (!ele.dataset.url) {
-                    ele.dataset.url = data.url.replace('%e', document.charset).replace('%c', (isMobile?"mobile":"pc")).replace('%u', location.href).replace('%h', location.host);
+                    ele.dataset.url = data.url.replace(/%e/g, document.charset).replace(/%c/g, (isMobile?"mobile":"pc")).replace(/%u/g, location.href).replace(/%h/g, location.host);
                 }
-                return ele.dataset.url.replace('%t', targetImgSrc).replace('%b', targetImgBaseSrc).replace('%s', keywords);
+                return ele.dataset.url.replace(/%t/g, targetImgSrc).replace(/%b/g, targetImgBaseSrc).replace(/%s/g, keywords);
             };
             ele.href = data.url;
-            if (data.charset) {
+            if (data.charset || data.url.indexOf(':p{') != -1) {
                 ele.onclick = e => {
                     let url = getUrl();
-                    this.encodeToSubmit(data.charset, url, ele.getAttribute("target") || '_self');
+                    this.submitByForm(data.charset, url, ele.getAttribute("target") || '_self');
                     return false;
                 };
             } else {
@@ -1124,21 +1125,32 @@
             return ele;
         }
 
-        encodeToSubmit(charset, url, target) {
+        submitByForm(charset, url, target) {
             const formId ="searchJumper_form";
             var form = document.getElementById(formId);
             if (!form) {
                 form = document.createElement("form");
                 form.id = formId;
-                form.method = 'get';
                 form.style.display = "none";
                 document.documentElement.appendChild(form);
             }
+            var params;
+            let postBody = url.match(/:p{(.*?)}/);
+            if (postBody) {
+                postBody = postBody[1];
+                url = url.replace(':p{' + postBody + '}', '');
+                form.method = 'post';
+                params = new URLSearchParams(postBody);
+            } else {
+                form.method = 'get';
+                params = new URLSearchParams(new URL(url).search);
+            }
+            if (charset) {
+                form.acceptCharset = charset;
+            }
             form.innerHTML = createHTML('');
             form.target = target;
-            form.acceptCharset = charset;
             form.action = url;
-            var params = new URLSearchParams(new URL(url).search);
             params.forEach((v, k) => {
                 let input = document.createElement("input");
                 input.name = k;
@@ -1332,7 +1344,7 @@
 
     function initListener() {
         _GM_registerMenuCommand(i18n('settings'), () => {
-            _GM_openInTab(configPage)
+            _GM_openInTab(configPage);
         });
         let logoSvg = logoBtn.children[0];
         let inGrab = false;
