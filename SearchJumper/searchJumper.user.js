@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      0.9.1
+// @version      0.9.2
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本
 // @description:zh-TW  又一個搜尋引擎跳轉脚本
@@ -25,7 +25,7 @@
 // @grant        GM.openInTab
 // @grant        GM_openInTab
 // @grant        unsafeWindow
-// @run-at       document-start
+// @run-at       document-body
 // ==/UserScript==
 
 (function() {
