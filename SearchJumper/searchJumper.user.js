@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      0.8.9
+// @version      0.9
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本
 // @description:zh-TW  又一個搜尋引擎跳轉脚本
@@ -1334,6 +1334,7 @@
         });
         let logoSvg = logoBtn.children[0];
         let inGrab = false;
+        let hideTimer;
         let clientX = e => {
             if (e.type.indexOf('mouse') === 0) {
                 return e.clientX;
@@ -1349,6 +1350,7 @@
             }
         };
         let mouseUpHandler = e => {
+            clearTimeout(hideTimer);
             document.removeEventListener('mouseup', mouseUpHandler, false);
             document.removeEventListener('mousemove', mouseMoveHandler, false);
             document.removeEventListener('touchend', mouseUpHandler, false);
@@ -1390,6 +1392,7 @@
         };
         let mouseMoveHandler = e => {
             if (!inGrab) {
+                clearTimeout(hideTimer);
                 logoSvg.style.cursor = "grabbing";
                 searchBar.bar.style.position = "fixed";
                 searchBar.bar.style.marginLeft = "";
@@ -1410,12 +1413,22 @@
                 document.addEventListener('mouseup', mouseUpHandler, false);
                 document.addEventListener('mousemove', mouseMoveHandler, false);
             }, 1);
+            hideTimer = setTimeout(() => {
+                searchBar.bar.style.display = 'none';
+                document.removeEventListener('mouseup', mouseUpHandler, false);
+                document.removeEventListener('mousemove', mouseMoveHandler, false);
+            }, 2000);
         }, false);
         logoBtn.addEventListener('touchstart', e => {
             setTimeout(() => {
                 document.addEventListener('touchend', mouseUpHandler, false);
                 document.addEventListener('touchmove', mouseMoveHandler, false);
             }, 1);
+            hideTimer = setTimeout(() => {
+                searchBar.bar.style.display = 'none';
+                document.removeEventListener('touchend', mouseUpHandler, false);
+                document.removeEventListener('touchmove', mouseMoveHandler, false);
+            }, 2000);
         }, false);
 
         if (searchData.prefConfig.enableInPage) {
