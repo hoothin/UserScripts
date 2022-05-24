@@ -651,7 +651,7 @@
          border: 1px solid #b3b3b3;
          display: inline-flex;
          pointer-events: all;
-         margin-top: -20px;
+         margin-top: -25px;
          opacity: 0.3;
          vertical-align: top;
          transition:margin-top 0.25s ease, margin-left 0.25s, opacity 0.25s;
