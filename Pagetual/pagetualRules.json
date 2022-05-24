@@ -49,6 +49,11 @@
     "css":"@media (min-width: 1000px) {@supports (display:grid)  {.krFoBL { grid-template-columns: repeat(6, 184px); }}}"
   },
   {
+    "name":"DeviantArt",
+    "url":"^https://www\\.deviantart\\.com",
+    "pageElement":"#sub-folder-gallery>div>div:not([class])>div>div>div>div"
+  },
+  {
     "name":"Z-Library",
     "url":"^https?://.*(1lib\\.(to|us|org)|z-lib\\.org|booksc\\.(org|eu)|bookfi\\.net|b\\-ok\\.(asia|africa)|1lib\\.pl|sg1lib\\.org|2lib\\.org|book4you\\.org)/s/",
     "pageElement":"#searchResultBox"
