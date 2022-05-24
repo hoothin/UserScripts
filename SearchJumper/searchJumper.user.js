@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      0.9
+// @version      0.9.1
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本
 // @description:zh-TW  又一個搜尋引擎跳轉脚本
@@ -421,7 +421,6 @@
             } ]
         },
         {
-            //右键长按或者当前处于图片搜索网站并存储有图片网址
             type: "以图搜图",
             icon: "eye",
             selectImg: true,
@@ -1333,7 +1332,7 @@
             _GM_openInTab(configPage);
         });
         let logoSvg = logoBtn.children[0];
-        let inGrab = false;
+        let grabState = 0;//0 未按下 1 已按下 2 已拖动
         let hideTimer;
         let clientX = e => {
             if (e.type.indexOf('mouse') === 0) {
@@ -1355,27 +1354,30 @@
             document.removeEventListener('mousemove', mouseMoveHandler, false);
             document.removeEventListener('touchend', mouseUpHandler, false);
             document.removeEventListener('touchmove', mouseMoveHandler, false);
-            if (!inGrab) {
+            if (grabState === 1) {
+                grabState = 0;
                 _GM_openInTab(configPage);
                 return;
             }
-            inGrab = false;
+            grabState = 0;
             let viewWidth = window.innerWidth || document.documentElement.clientWidth;
             let viewHeight = window.innerHeight || document.documentElement.clientHeight;
             let baseWidth = viewWidth / 3;
             let baseHeight = viewHeight / 3;
             let relX, relY, posX, posY;
-            if (clientX(e) < baseWidth) {
+            let curX = clientX(e) - searchBar.bar.scrollWidth / 2;
+            let curY = clientY(e) - searchBar.bar.scrollHeight / 2;
+            if (curX < baseWidth) {
                 relX = "left";
-                posX = parseInt(searchBar.bar.style.left) > 0?parseInt(searchBar.bar.style.left):"0";
-            } else if (clientX(e) < baseWidth * 2) {
+                posX = parseInt(searchBar.bar.style.left) > 0 ? parseInt(searchBar.bar.style.left) : "0";
+            } else if (curX < baseWidth * 2) {
                 relX = "center";
                 posX = parseInt(searchBar.bar.style.left) - viewWidth / 2;
             } else {
                 relX = "right";
                 posX = viewWidth - parseInt(searchBar.bar.style.left) - searchBar.bar.scrollWidth;
             }
-            if (clientY(e) < viewHeight / 2) {
+            if (curY < viewHeight / 2) {
                 relY = "top";
                 posY = parseInt(searchBar.bar.style.top);
             } else {
@@ -1391,7 +1393,7 @@
             storage.setItem("searchData", searchData);
         };
         let mouseMoveHandler = e => {
-            if (!inGrab) {
+            if (grabState === 1) {
                 clearTimeout(hideTimer);
                 logoSvg.style.cursor = "grabbing";
                 searchBar.bar.style.position = "fixed";
@@ -1400,17 +1402,29 @@
                 searchBar.bar.style.right = "";
                 searchBar.bar.style.bottom = "";
                 searchBar.bar.parentNode.classList.remove("search-jumper-scroll");
-                setTimeout(() => {inGrab && (searchBar.bar.style.pointerEvents = "none")}, 100);
+                setTimeout(() => {grabState === 2 && (searchBar.bar.style.pointerEvents = "none")}, 100);
             }
-            inGrab = true;
+            grabState = 2;
             searchBar.bar.style.left = clientX(e) - searchBar.bar.scrollWidth + 20 + "px";
             searchBar.bar.style.top = clientY(e) - searchBar.bar.scrollHeight + 40 + "px";
         };
+        logoBtn.oncontextmenu = function (event) {
+            searchBar.bar.style.display = 'none';
+            document.removeEventListener('mouseup', mouseUpHandler, false);
+            document.removeEventListener('mousemove', mouseMoveHandler, false);
+            event.preventDefault();
+        };
         logoBtn.addEventListener('mousedown', e => {
+            if (e.which === 3) {
+                return;
+            }
+            grabState = 1;
+            document.addEventListener('mouseup', mouseUpHandler, false);
             setTimeout(() => {
-                document.addEventListener('mouseup', mouseUpHandler, false);
-                document.addEventListener('mousemove', mouseMoveHandler, false);
-            }, 1);
+                if (grabState === 1) {
+                    document.addEventListener('mousemove', mouseMoveHandler, false);
+                }
+            }, 100);
             hideTimer = setTimeout(() => {
                 searchBar.bar.style.display = 'none';
                 document.removeEventListener('mouseup', mouseUpHandler, false);
@@ -1418,10 +1432,13 @@
             }, 2000);
         }, false);
         logoBtn.addEventListener('touchstart', e => {
+            grabState = 1;
+            document.addEventListener('touchend', mouseUpHandler, false);
             setTimeout(() => {
-                document.addEventListener('touchend', mouseUpHandler, false);
-                document.addEventListener('touchmove', mouseMoveHandler, false);
-            }, 1);
+                if (grabState === 1) {
+                    document.addEventListener('touchmove', mouseMoveHandler, false);
+                }
+            }, 100);
             hideTimer = setTimeout(() => {
                 searchBar.bar.style.display = 'none';
                 document.removeEventListener('touchend', mouseUpHandler, false);
