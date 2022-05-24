@@ -1399,8 +1399,6 @@
                 searchBar.bar.style.marginTop = "";
                 searchBar.bar.style.right = "";
                 searchBar.bar.style.bottom = "";
-                searchBar.bar.style.left = clientX(e) - searchBar.bar.scrollWidth + 20 + "px";
-                searchBar.bar.style.top = clientY(e) - searchBar.bar.scrollHeight + 40 + "px";
                 searchBar.bar.parentNode.classList.remove("search-jumper-scroll");
                 setTimeout(() => {inGrab && (searchBar.bar.style.pointerEvents = "none")}, 100);
             }
