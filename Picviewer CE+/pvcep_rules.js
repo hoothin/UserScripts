@@ -192,9 +192,9 @@ var siteInfo=[
                  url: '/_napi/shared_api/deviation/extended_fetch?deviationid='+id+'&type=art&include_session=false',
                  onload: function(d) {
                      var media = (d.response && d.response.deviation)?d.response.deviation.media:null;
-                     var fullview = media && media.types && media.types.pop();
+                     var fullview = media && media.types && media.types.find(t=>{return t.t=='fullview'});
                      if(media && media.baseUri && fullview && media.token){
-                         var resultUrl=media.baseUri+(fullview.c?"/"+fullview.c.replace("<prettyName>",media.prettyName).replace(/,q_\d+/,",q_100"):"")+"?token="+media.token[0];
+                         var resultUrl=media.baseUri+(fullview.c?fullview.c.replace("<prettyName>",media.prettyName).replace(/,q_\d+/,",q_100"):"")+"?token="+media.token[0];
                          self.dataset.pvsrc=resultUrl;
                          if(floatBar){
                              floatBar.update(self, self.dataset.pvsrc);
