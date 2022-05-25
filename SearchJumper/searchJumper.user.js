@@ -761,7 +761,6 @@
      }
      .search-jumper-btn>i {
          line-height: 32px;
-         color: wheat;
      }
      .search-jumper-logoBtnSvg {
          width: 32px;
@@ -876,6 +875,7 @@
                 this.fontPool.forEach(font => {
                     font.innerText = '';
                     font.style.fontSize = '';
+                    font.style.color = '';
                 });
             });
 
@@ -956,6 +956,7 @@
                     i.className = "fa fa-" + icon;
                     i.innerText = type;
                     i.style.fontSize = '14px';
+                    i.style.color = 'wheat';
                     this.fontPool.push(i);
                     typeBtn.appendChild(i);
                     typeBtn.classList.add("search-jumper-word");
