@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      0.9.3
+// @version      0.9.4
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本
 // @description:zh-TW  又一個搜尋引擎跳轉脚本
@@ -1487,8 +1487,10 @@
         }, false);
 
         searchBar.bar.addEventListener(getSupportWheelEventName(), e => {
-            if (searchBar.bar.parentNode.classList.contains('search-jumper-left') ||
-                searchBar.bar.parentNode.classList.contains('search-jumper-right')) return;
+            let targetClassList = searchBar.bar.parentNode.classList;
+            if (!targetClassList.contains('search-jumper-scroll')) return;
+            if (targetClassList.contains('search-jumper-left') ||
+                targetClassList.contains('search-jumper-right')) return;
             var deltaX, deltaY;
             if(e.type !== 'wheel'){
                 var x = 0, y = 0;
