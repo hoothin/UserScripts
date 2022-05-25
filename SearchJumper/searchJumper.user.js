@@ -761,6 +761,7 @@
      }
      .search-jumper-btn>i {
          line-height: 32px;
+         color: wheat;
      }
      .search-jumper-logoBtnSvg {
          width: 32px;
