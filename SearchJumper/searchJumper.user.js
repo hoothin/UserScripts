@@ -1524,16 +1524,16 @@
             let shown = false;
             document.addEventListener('mousedown', e => {
                 shown = false;
-                if ((!getSelectStr() && e.target.tagName != 'IMG') ||
-                    searchData.prefConfig.altKey && !e.altKey ||
-                    searchData.prefConfig.ctrlKey && !e.ctrlKey ||
-                    searchData.prefConfig.shiftKey && !e.shiftKey ||
-                    searchData.prefConfig.metaKey && !e.metaKey) {
+                if (e.which === 1 ||
+                    (searchData.prefConfig.altKey && !e.altKey) ||
+                    (searchData.prefConfig.ctrlKey && !e.ctrlKey) ||
+                    (searchData.prefConfig.shiftKey && !e.shiftKey) ||
+                    (searchData.prefConfig.metaKey && !e.metaKey) ||
+                    (e.target.tagName != 'IMG' && !getSelectStr())) {
                     return;
                 }
                 if (e.target.tagName === 'IMG' &&
-                    (e.target.parentNode.className === 'search-jumper-btn' ||
-                     e.which === 1)) return;
+                    e.target.parentNode.className === 'search-jumper-btn') return;
                 let selectImg = e.target.tagName === 'IMG';
                 if (selectImg) {
                     targetImgSrc = e.target.src;
