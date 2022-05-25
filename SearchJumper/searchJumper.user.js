@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      0.9.2
+// @version      0.9.3
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本
 // @description:zh-TW  又一個搜尋引擎跳轉脚本
@@ -1327,6 +1327,35 @@
         return !localKeywords ? cacheKeywords : localKeywords;
     }
 
+    function eventSupported(eventName, elem) {
+        elem = elem || document.createElement("div");
+        eventName = "on" + eventName;
+        var isSupported = (eventName in elem);
+        if (!isSupported) {
+            if (!elem.setAttribute) {
+                elem = document.createElement("div");
+            };
+            var setAttr;
+            if (!elem.hasAttribute(eventName)) {
+                setAttr = true;
+                elem.setAttribute(eventName, "return;");
+            };
+            isSupported = typeof elem[eventName] == "function";
+            if (setAttr) elem.removeAttribute(eventName);
+        }
+        return isSupported;
+    }
+
+    function getSupportWheelEventName() {
+        var ret = 'DOMMouseScroll';
+        if (eventSupported('wheel')) {
+            ret = 'wheel';
+        } else if (eventSupported('mousewheel')) {
+            ret = 'mousewheel';
+        }
+        return ret;
+    }
+
     function initListener() {
         _GM_registerMenuCommand(i18n('settings'), () => {
             _GM_openInTab(configPage);
@@ -1334,6 +1363,7 @@
         let logoSvg = logoBtn.children[0];
         let grabState = 0;//0 未按下 1 已按下 2 已拖动
         let hideTimer;
+
         let clientX = e => {
             if (e.type.indexOf('mouse') === 0) {
                 return e.clientX;
@@ -1341,6 +1371,7 @@
                 return e.changedTouches[0].clientX;
             }
         };
+
         let clientY = e => {
             if (e.type.indexOf('mouse') === 0) {
                 return e.clientY;
@@ -1348,12 +1379,16 @@
                 return e.changedTouches[0].clientY;
             }
         };
+
         let mouseUpHandler = e => {
             clearTimeout(hideTimer);
             document.removeEventListener('mouseup', mouseUpHandler, false);
             document.removeEventListener('mousemove', mouseMoveHandler, false);
             document.removeEventListener('touchend', mouseUpHandler, false);
             document.removeEventListener('touchmove', mouseMoveHandler, false);
+            searchBar.bar.style.marginLeft = "";
+            searchBar.bar.style.marginTop = "";
+            searchBar.bar.style.transform = "";
             if (grabState === 1) {
                 grabState = 0;
                 _GM_openInTab(configPage);
@@ -1392,28 +1427,32 @@
             searchBar.initPos(relX, relY, posX, posY);
             storage.setItem("searchData", searchData);
         };
+
         let mouseMoveHandler = e => {
             if (grabState === 1) {
                 clearTimeout(hideTimer);
                 logoSvg.style.cursor = "grabbing";
                 searchBar.bar.style.position = "fixed";
-                searchBar.bar.style.marginLeft = "";
-                searchBar.bar.style.marginTop = "";
+                searchBar.bar.style.marginLeft = "0";
+                searchBar.bar.style.marginTop = "0";
                 searchBar.bar.style.right = "";
                 searchBar.bar.style.bottom = "";
+                searchBar.bar.style.transform = "unset";
                 searchBar.bar.parentNode.classList.remove("search-jumper-scroll");
                 setTimeout(() => {grabState === 2 && (searchBar.bar.style.pointerEvents = "none")}, 100);
             }
             grabState = 2;
             searchBar.bar.style.left = clientX(e) - searchBar.bar.scrollWidth + 20 + "px";
-            searchBar.bar.style.top = clientY(e) - searchBar.bar.scrollHeight + 40 + "px";
+            searchBar.bar.style.top = clientY(e) - searchBar.bar.scrollHeight + 20 + "px";
         };
+
         logoBtn.oncontextmenu = function (event) {
             searchBar.bar.style.display = 'none';
             document.removeEventListener('mouseup', mouseUpHandler, false);
             document.removeEventListener('mousemove', mouseMoveHandler, false);
             event.preventDefault();
         };
+
         logoBtn.addEventListener('mousedown', e => {
             if (e.which === 3) {
                 return;
@@ -1431,6 +1470,7 @@
                 document.removeEventListener('mousemove', mouseMoveHandler, false);
             }, 2000);
         }, false);
+
         logoBtn.addEventListener('touchstart', e => {
             grabState = 1;
             document.addEventListener('touchend', mouseUpHandler, false);
@@ -1444,6 +1484,38 @@
                 document.removeEventListener('touchend', mouseUpHandler, false);
                 document.removeEventListener('touchmove', mouseMoveHandler, false);
             }, 2000);
+        }, false);
+
+        searchBar.bar.addEventListener(getSupportWheelEventName(), e => {
+            if (searchBar.bar.parentNode.classList.contains('search-jumper-left') ||
+                searchBar.bar.parentNode.classList.contains('search-jumper-right')) return;
+            var deltaX, deltaY;
+            if(e.type !== 'wheel'){
+                var x = 0, y = 0;
+                if (typeof e.axis == 'number') {
+                    if (e.axis == 2) {
+                        y = e.detail;
+                    } else {
+                        x = e.detail;
+                    }
+                } else {
+                    if (typeof e.wheelDeltaY == 'undefined' || e.wheelDeltaY != 0) {
+                        y = -e.wheelDelta / 40;
+                    } else {
+                        x = -e.wheelDelta / 40;
+                    };
+                };
+                deltaY = y;
+                deltaX = x;
+
+            } else {
+                deltaX = e.deltaX;
+                deltaY = e.deltaY;
+            }
+            e.preventDefault();
+            e.stopPropagation();
+
+            searchBar.bar.parentNode.scrollLeft += deltaY;
         }, false);
 
         if (searchData.prefConfig.enableInPage) {
