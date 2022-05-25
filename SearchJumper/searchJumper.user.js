@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      0.9.4
+// @version      0.9.5
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本
 // @description:zh-TW  又一個搜尋引擎跳轉脚本
@@ -1532,7 +1532,8 @@
                     return;
                 }
                 if (e.target.tagName === 'IMG' &&
-                    e.target.parentNode.className === 'search-jumper-btn') return;
+                    (e.target.parentNode.className === 'search-jumper-btn' ||
+                     e.which === 1)) return;
                 let selectImg = e.target.tagName === 'IMG';
                 if (selectImg) {
                     targetImgSrc = e.target.src;
