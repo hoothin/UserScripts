@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.7.1
+// @version      1.7.2
 // @description  Perpetual pages - Most powerful Auto Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -902,7 +902,8 @@
                 curPage.querySelector(".next>button")||
                 curPage.querySelector("a[alt=next]")||
                 curPage.querySelector("button.next")||
-                curPage.querySelector("[title=next]");
+                curPage.querySelector("[title=next]")||
+                getElementByXpath("//a[contains(@class, 'page__next')]",curPage,curPage);
             if(!next){
                 let nexts=curPage.querySelectorAll("a.next");
                 for(i=0;i<nexts.length;i++){
@@ -3084,6 +3085,8 @@
         },1);*/
     }
 
+    var tryTimes = 0;
+
     function nextPage(){
         if(isPause || isLoading)return;
         if(ruleParser.curSiteRule.delay){
@@ -3096,15 +3099,17 @@
         }
         let nextLink=ruleParser.nextLinkHref;
         if(!nextLink){
-            if(ruleParser.curSiteRule.pinUrl && curPage==1){
+            if(curPage==1){
                 ruleParser.getNextLink(document);
                 nextLink=ruleParser.nextLinkHref;
-                if(!nextLink){
-                    isPause=true;
-                    setTimeout(()=>{isPause=false;},500);
-                    return;
+            }
+            if(!nextLink){
+                isPause=true;
+                if(curPage==1 && (ruleParser.curSiteRule.pinUrl || tryTimes++ <= 10)){
+                    setTimeout(()=>{isPause=false},500);
                 }
-            }else return;
+                return;
+            }
         }
         let pvGallery=document.querySelector("span.pv-gallery-container");
         if(pvGallery && pvGallery.style.display!="none")return;
