@@ -217,6 +217,13 @@
     "pageElement":"#m_main>ul.list"
   },
   {
+    "name":"汽车之家",
+    "url":"^https://club\\.autohome\\.com\\.cn",
+    "pageElement":"#js-reply-list-container",
+    "action":2,
+    "nextLink":".athm-page__next"
+  },
+  {
     "name":"煎蛋吐槽",
     "url":"^https?://jandan\\.net/",
     "nextLink":"a.previous-comment-page",
