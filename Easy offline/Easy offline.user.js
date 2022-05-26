@@ -7,7 +7,7 @@
 // @description:zh-TW 一鍵離綫下載 - 一鍵自動將磁鏈、bt種子或其他下載資源離綫下載至網盤
 // @namespace    https://github.com/hoothin/UserScripts/tree/master/Easy%20offline
 // @require      http://code.jquery.com/jquery-1.7.2.min.js
-// @version      1.9.35
+// @version      1.9.36
 // @author       Hoothin
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAQlBMVEUAAAD///////////////////////////////////////////////////////////////////////////////////8IX9KGAAAAFXRSTlMAwT7hFahN0LZWJgqIavB7YJuRdDPJsaCPAAAA6ElEQVQ4y8WRW5aEIAxEDUGgAQUftf+tjgYOjcPMb3d96Im5pkIxfVgmOuY5mX/afkYVqb/6EXDGh+CNA7axvwOvZrUiDfalX6UY5y+AkZ687Ut9WNgw9SLYQ3cDYfNz4kIAq2Z/wYN0AiSRQN16iroMXnD3K2F+f1oBLK2ckeWpmjFEsc2Tfxn6ndUBLGgjNVgAX8oNa56AO8dKeAEccnW89ruB6bQVWGTL2IcmQJOTdXSdOAIRrMtxsekR8AQ5XyHARLTrAhi6xH0iYWfcOguQpeAtPJJXSvlqEdSl4XaGHb4HEE0f1w+Jcw2XCZjSwgAAAABJRU5ErkJggg==
 // @match        *://*/*
@@ -499,6 +499,7 @@
         }
     };
     var enableUrl = 'a[href^="magnet"],[href^="ed2k://|file"],[href$=".torrent"],[href$=".mp4"],[href$=".rar"],[href$=".7z"],[href$=".zip"],[href$=".rmvb"],[href$=".mkv"],[href$=".avi"],[href$=".iso"],[href$=".exe"],[href$=".dmg"]';
+    var defaultReg = "^(magnet|ed2k:)|\\.(torrent|mp4|rar|7z|zip|rmvb|mkv|avi|iso|exe|dmg)$";
     var disableUrl=[".torrentkitty.","bt.box.n0808.com"];
     var manageLinksLang={};
     var lang = navigator.appName=="Netscape"?navigator.language:navigator.userLanguage;
@@ -823,6 +824,10 @@
     }
     storage.getItem("eoReg",v=>{
         regs=v||[];
+        if(regs.length){
+            defaultReg+='|'+regs.join('|');
+        }
+        defaultReg=new RegExp(defaultReg, 'i');
         addCustomSites(()=>{
             storage.getItem("siteSort",v=>{
                 siteSort=v;
@@ -945,17 +950,23 @@
                 rules.forEach(rule=>{
                     if(/^\s*\/\//.test(rule))return;
                     var ruleArr=rule.split(/\s*@@\s*/);
-                    var siteConfig={};
+                    var siteConfig={custom:true};
                     if(ruleArr[1] && (ruleArr[0].indexOf("$url")!=-1 || ruleArr[0].indexOf("$hash")!=-1 || ruleArr[0].indexOf("${")!=-1 || ruleArr[0].indexOf("$base64")!=-1)){
                         siteConfig.noTxt=true;
                         siteConfig.directUrl=function(offUrl, targetNode){
-                            if(ruleArr[0].indexOf("${")!=-1){
+                            let regIndex=ruleArr[0].indexOf("${");
+                            if(regIndex!=-1){
                                 var strMatch=ruleArr[0].match(/\${(.*?)}/);
                                 var regStr=strMatch?strMatch[1]:"";
                                 if(!regStr)return;
+                                var linkReg,linkMatch,linkResult;
+                                if(regIndex==0 || (regIndex==2 && /^[cp]:/.test(ruleArr[0]))){
+                                    linkReg=new RegExp(regStr,"i");
+                                    return offUrl.replace(linkReg, ruleArr[0].replace(strMatch[0],""));
+                                }
                                 //全匹配为提取模式
-                                var linkReg=new RegExp("^"+regStr+"$","i");
-                                var linkMatch=offUrl.match(linkReg),linkResult;
+                                linkReg=new RegExp("^"+regStr+"$","i");
+                                linkMatch=offUrl.match(linkReg);
                                 if(linkMatch){
                                     linkResult=linkMatch[1]||linkMatch[0];
                                     return linkResult?ruleArr[0].replace(/\${.*?}/,linkResult):ruleArr[0];
@@ -986,13 +997,19 @@
                     }else if(ruleArr[1] && ruleArr[0].indexOf("$text")!=-1){
                         siteConfig.directUrl=function(offUrl, targetNode){
                             ruleArr[0]=ruleArr[0].replace("$text{","${");
-                            if(ruleArr[0].indexOf("${")!=-1){
+                            let regIndex=ruleArr[0].indexOf("${");
+                            if(regIndex!=-1){
                                 var strMatch=ruleArr[0].match(/\${(.*?)}/);
                                 var regStr=strMatch?strMatch[1]:"";
                                 if(!regStr)return;
+                                var linkReg,linkMatch,linkResult;
+                                if(regIndex==0 || (regIndex==2 && /^[cp]:/.test(ruleArr[0]))){
+                                    linkReg=new RegExp(regStr,"i");
+                                    return offUrl.replace(linkReg, ruleArr[0].replace(strMatch[0],""));
+                                }
                                 //全匹配为提取模式
-                                var linkReg=new RegExp("^"+regStr+"$","i");
-                                var linkMatch=offUrl.match(linkReg),linkResult;
+                                linkReg=new RegExp("^"+regStr+"$","i");
+                                linkMatch=offUrl.match(linkReg);
                                 if(linkMatch){
                                     linkResult=linkMatch[1]||linkMatch[0];
                                     return linkResult?ruleArr[0].replace(/\${.*?}/,linkResult):ruleArr[0];
@@ -1145,9 +1162,9 @@
 
     function showDiskIcons(url, top, left){
         offUrl=url;
-        let j=0;
+        let j=0,x;
         parentDiv.css("display","block");
-        for(var x=0;x<offNodes.length;x++){
+        for(x=0;x<offNodes.length;x++){
             let node=offNodes[x];
             let siteConfig=sites[node.attr("name")];
             if(/^https?:\/\/\w/i.test(offUrl) && siteConfig.noHttp){
@@ -1161,6 +1178,8 @@
             }else if(!/^(https?|ftp|ed2k):\/\/\w|^magnet:\?/i.test(offUrl) && siteConfig.noTxt){
                 node.hide();
             }else if(siteConfig.linkRegExp && !siteConfig.linkRegExp.test(offUrl)){
+                node.hide();
+            }else if(!defaultReg.test(offUrl) && !siteConfig.custom){
                 node.hide();
             }else{
                 node.show();
