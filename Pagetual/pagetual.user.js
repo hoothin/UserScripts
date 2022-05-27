@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.7.5
+// @version      1.7.6
 // @description  Perpetual pages - Most powerful Auto Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -2229,6 +2229,7 @@
     var failFromIframe=0;
     var inCors=false;
     function requestFromIframe(url, callback){
+        url=url.replace(/#[^#]*/,"");
         let orgPage,curPage;
         let iframe = document.createElement('iframe');
         iframe.name = 'pagetual-iframe';
@@ -2831,7 +2832,7 @@
 
     var emuIframe;
     function emuPage(callback){
-        let orgPage=null,curPage,iframeDoc,times=0,loadmoreBtn,loadmoreEnd=false,waitTimes=10;
+        let orgPage=null,curPage,iframeDoc,times=0,loadmoreBtn,loadmoreEnd=false,waitTimes=10,changed=false;
         function checkPage(){
             if(isPause)return;
             try{
@@ -2844,7 +2845,7 @@
             }
 
             let nextLink=ruleParser.getNextLink(iframeDoc);
-            let waitTime=500,checkEval;
+            let waitTime=200,checkEval;
             if(ruleParser.curSiteRule.wait){
                 if(isNaN(ruleParser.curSiteRule.wait)){
                     try{
@@ -2929,12 +2930,20 @@
                 }
                 checkItem=checkItem[parseInt(checkItem.length/2)];
             }
-            if(!checkItem || orgPage == checkItem || (checkEval && !checkEval(iframeDoc))){
+            if(!checkItem || (checkEval && !checkEval(iframeDoc))){
                 setTimeout(()=>{
                     checkPage();
                 },waitTime);
             }else{
-                callback(iframeDoc, eles);
+                if(orgPage!=checkItem){
+                    changed=true;
+                    orgPage=checkItem;
+                    setTimeout(()=>{
+                        checkPage();
+                    },waitTime);
+                }else if(changed){
+                    callback(iframeDoc, eles);
+                }
             }
         }
         if(!emuIframe){
@@ -2971,7 +2980,7 @@
                     checkPage();
                 },500);
             });
-            emuIframe.src=location.href;
+            emuIframe.src=location.href.replace(/#[^#]*/,"");
             document.body.appendChild(emuIframe);
         }else{
             checkPage();
@@ -3024,6 +3033,7 @@
     }
 
     function forceIframe(url, callback){
+        url=url.replace(/#[^#]*/,"");
         let curIframe = document.createElement('iframe'),iframeDoc;
         let setPosition = ()=>{
             let getIframe = () => {
