@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      0.9.6
+// @version      0.9.7
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本
 // @description:zh-TW  又一個搜尋引擎跳轉脚本
@@ -1558,7 +1558,7 @@
                     targetImgBaseSrc = targetImgSrc.replace(/https?:\/\//i,"");
                 }
                 let showToolbarTimer = setTimeout(() => {
-                    if (!searchData.prefConfig.selectToShow) {
+                    if (!searchData.prefConfig.selectToShow || targetImgSrc) {
                         searchBar.showInPage(selectImg);
                         e.stopPropagation();
                         e.preventDefault();
@@ -1570,7 +1570,7 @@
                         e.stopPropagation();
                         e.preventDefault();
                     }
-                    if (searchData.prefConfig.selectToShow && (getSelectStr() || targetImgSrc)) {
+                    if (searchData.prefConfig.selectToShow && getSelectStr()) {
                         searchBar.showInPage(selectImg);
                     }
                     clearTimeout(showToolbarTimer);
