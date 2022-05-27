@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      0.9.5
+// @version      0.9.6
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本
 // @description:zh-TW  又一個搜尋引擎跳轉脚本
@@ -969,7 +969,7 @@
                 word.innerText = type;
                 typeBtn.appendChild(word);
             }
-            typeBtn.addEventListener('mousedown', e => {
+            let typeAction = e => {
                 ele.style.width = "";
                 ele.style.height = "";
                 if (ele.classList.contains("search-jumper-hide")) {
@@ -1016,7 +1016,20 @@
                         self.bar.parentNode.classList.remove("search-jumper-scroll");
                     }
                 }, 250);
-            }, false);
+            };
+            typeBtn.addEventListener('mousedown', typeAction, false);
+            if (searchData.prefConfig.overOpen) {
+                let showTimer;
+                typeBtn.addEventListener('mouseenter', e => {
+                    if (!ele.classList.contains("search-jumper-hide")) return;
+                    showTimer = setTimeout(() => {
+                        typeAction(e);
+                    }, 500);
+                }, false);
+                typeBtn.addEventListener('mouseleave', e => {
+                    clearTimeout(showTimer);
+                }, false);
+            }
             let isCurrent = false;
             sites.forEach(site => {
                 let siteEle = this.createSiteBtn(site.name, site.icon, site, openInNewTab);
@@ -1525,32 +1538,40 @@
         if (searchData.prefConfig.enableInPage) {
             let shown = false;
             document.addEventListener('mousedown', e => {
-                shown = false;
-                if (e.which === 1 ||
-                    (searchData.prefConfig.altKey && !e.altKey) ||
+                if ((searchData.prefConfig.altKey && !e.altKey) ||
                     (searchData.prefConfig.ctrlKey && !e.ctrlKey) ||
                     (searchData.prefConfig.shiftKey && !e.shiftKey) ||
-                    (searchData.prefConfig.metaKey && !e.metaKey) ||
-                    (e.target.tagName != 'IMG' && !getSelectStr())) {
+                    (searchData.prefConfig.metaKey && !e.metaKey)) {
+                    return;
+                }
+                if (!searchData.prefConfig.selectToShow &&
+                    (e.which === 1 ||
+                    (e.target.tagName != 'IMG' && !getSelectStr()))) {
                     return;
                 }
                 if (e.target.tagName === 'IMG' &&
                     e.target.parentNode.className === 'search-jumper-btn') return;
+                shown = false;
                 let selectImg = e.target.tagName === 'IMG';
                 if (selectImg) {
                     targetImgSrc = e.target.src;
                     targetImgBaseSrc = targetImgSrc.replace(/https?:\/\//i,"");
                 }
                 let showToolbarTimer = setTimeout(() => {
-                    searchBar.showInPage(selectImg);
-                    e.stopPropagation();
-                    e.preventDefault();
-                    shown = true;
+                    if (!searchData.prefConfig.selectToShow) {
+                        searchBar.showInPage(selectImg);
+                        e.stopPropagation();
+                        e.preventDefault();
+                        shown = true;
+                    }
                 }, 500);
                 let mouseUpHandler = e => {
                     if (shown) {
                         e.stopPropagation();
                         e.preventDefault();
+                    }
+                    if (searchData.prefConfig.selectToShow && (getSelectStr() || targetImgSrc)) {
+                        searchBar.showInPage(selectImg);
                     }
                     clearTimeout(showToolbarTimer);
                     document.removeEventListener('mouseup', mouseUpHandler, false);
