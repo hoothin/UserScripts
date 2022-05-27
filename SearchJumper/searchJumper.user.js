@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      0.9.7
+// @version      0.9.8
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本
 // @description:zh-TW  又一個搜尋引擎跳轉脚本
@@ -1541,7 +1541,9 @@
                 if ((searchData.prefConfig.altKey && !e.altKey) ||
                     (searchData.prefConfig.ctrlKey && !e.ctrlKey) ||
                     (searchData.prefConfig.shiftKey && !e.shiftKey) ||
-                    (searchData.prefConfig.metaKey && !e.metaKey)) {
+                    (searchData.prefConfig.metaKey && !e.metaKey) ||
+                    (e.which === 1 && e.target.tagName === 'IMG') ||
+                    e.target.classList.contains('search-jumper-btn')) {
                     return;
                 }
                 if (!searchData.prefConfig.selectToShow &&
@@ -1550,7 +1552,7 @@
                     return;
                 }
                 if (e.target.tagName === 'IMG' &&
-                    e.target.parentNode.className === 'search-jumper-btn') return;
+                    e.target.parentNode.classList.contains('search-jumper-btn')) return;
                 shown = false;
                 let selectImg = e.target.tagName === 'IMG';
                 if (selectImg) {
@@ -1569,8 +1571,7 @@
                     if (shown) {
                         e.stopPropagation();
                         e.preventDefault();
-                    }
-                    if (searchData.prefConfig.selectToShow && getSelectStr()) {
+                    }else if (searchData.prefConfig.selectToShow && getSelectStr()) {
                         searchBar.showInPage(selectImg);
                     }
                     clearTimeout(showToolbarTimer);
