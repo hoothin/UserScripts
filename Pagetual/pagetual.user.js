@@ -2943,6 +2943,10 @@
                     },waitTime);
                 }else if(changed){
                     callback(iframeDoc, eles);
+                }else{
+                    setTimeout(()=>{
+                        checkPage();
+                    },waitTime);
                 }
             }
         }
