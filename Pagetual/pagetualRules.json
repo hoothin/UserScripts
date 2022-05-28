@@ -462,8 +462,7 @@
     "name":"晋江文学城",
     "url":"^http://www\\.jjwxc\\.net",
     "pageElement":"div.noveltext",
-    "pageBarText":1,
-    "action":1
+    "pageBarText":1
   },
   {
     "name":"厚海网",
