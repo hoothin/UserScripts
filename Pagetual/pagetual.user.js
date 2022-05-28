@@ -1852,11 +1852,11 @@
         let initRunInput=createCheckbox(i18n("initRun"), rulesData.initRun!=false);
         let preloadInput=createCheckbox(i18n("preload"), rulesData.preload!=false);
         let dbClick2StopInput=createCheckbox(i18n("dbClick2Stop"), rulesData.dbClick2Stop);
-        let hideBarInput=createCheckbox("> "+i18n("hideBar"), rulesData.hideBar, "h4", dbClick2StopInput);
-        let dbClick2StopCtrlInput=createCheckbox("> "+i18n("dbClick2StopCtrl"), rulesData.dbClick2StopCtrl, "h4", dbClick2StopInput);
-        let dbClick2StopAltInput=createCheckbox("> "+i18n("dbClick2StopAlt"), rulesData.dbClick2StopAlt, "h4", dbClick2StopInput);
-        let dbClick2StopShiftInput=createCheckbox("> "+i18n("dbClick2StopShift"), rulesData.dbClick2StopShift, "h4", dbClick2StopInput);
-        let dbClick2StopMetaInput=createCheckbox("> "+i18n("dbClick2StopMeta"), rulesData.dbClick2StopMeta, "h4", dbClick2StopInput);
+        let hideBarInput=createCheckbox("🔲> "+i18n("hideBar"), rulesData.hideBar, "h4", dbClick2StopInput);
+        let dbClick2StopCtrlInput=createCheckbox("🔲> "+i18n("dbClick2StopCtrl"), rulesData.dbClick2StopCtrl, "h4", dbClick2StopInput);
+        let dbClick2StopAltInput=createCheckbox("🔲> "+i18n("dbClick2StopAlt"), rulesData.dbClick2StopAlt, "h4", dbClick2StopInput);
+        let dbClick2StopShiftInput=createCheckbox("🔲> "+i18n("dbClick2StopShift"), rulesData.dbClick2StopShift, "h4", dbClick2StopInput);
+        let dbClick2StopMetaInput=createCheckbox("🔲> "+i18n("dbClick2StopMeta"), rulesData.dbClick2StopMeta, "h4", dbClick2StopInput);
 
         let customRulesTitle=document.createElement("h2");
         customRulesTitle.innerHTML=i18n("customRules");
