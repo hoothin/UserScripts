@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.8.1
+// @version      1.8.2
 // @description  Perpetual pages - Most powerful Auto Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -175,7 +175,11 @@
                 editCurrent:"自定义此站规则",
                 editBlacklist:"编辑黑名单网址，一行一条，支持? *通配符",
                 upBtnImg:"回到页首图标",
-                downBtnImg:"前往页尾图标"
+                downBtnImg:"前往页尾图标",
+                dbClick2StopCtrl:"双击时需要按住 Ctrl 键",
+                dbClick2StopAlt:"双击时需要按住 Alt 键",
+                dbClick2StopShift:"双击时需要按住 Shift 键",
+                dbClick2StopMeta:"双击时需要按住 Meta 键"
             };
             break;
         case "zh-TW":
@@ -225,7 +229,11 @@
                 editCurrent:"自定義此站規則",
                 editBlacklist:"編輯黑名單網址，一行一條，支持? *通配符",
                 upBtnImg:"回到頁首圖標",
-                downBtnImg:"前往頁尾圖標"
+                downBtnImg:"前往頁尾圖標",
+                dbClick2StopCtrl:"雙擊時需要按住 Ctrl 鍵",
+                dbClick2StopAlt:"雙擊時需要按住 Alt 鍵",
+                dbClick2StopShift:"雙擊時需要按住 Shift 鍵",
+                dbClick2StopMeta:"雙擊時需要按住 Meta 鍵"
             };
             break;
         case "ja":
@@ -274,7 +282,11 @@
                 editCurrent:"現在のルールの編集",
                 editBlacklist:"ブラックリストのURLを編集し、1行ずつ、サポート? *ワイルドカード",
                 upBtnImg:"トップアイコンに戻る",
-                downBtnImg:"フッターアイコンに移動"
+                downBtnImg:"フッターアイコンに移動",
+                dbClick2StopCtrl:"ダブルクリックするときにCtrlキーを押したままにする",
+                dbClick2StopAlt:"ダブルクリックするときにAltキーを押したままにする",
+                dbClick2StopShift:"ダブルクリックするときにShiftキーを押したままにする",
+                dbClick2StopMeta:"ダブルクリックするときにMetaキーを押したままにする"
             };
             break;
         default:
@@ -323,7 +335,11 @@
                 editCurrent:"Edit rule for current",
                 editBlacklist:"Edit the blacklist urls, line by line, Support ? * for wildcard",
                 upBtnImg:"Icon of back to top",
-                downBtnImg:"Icon of go to footer"
+                downBtnImg:"Icon of go to footer",
+                dbClick2StopCtrl:"Press and hold the Ctrl key when double-clicking",
+                dbClick2StopAlt:"Press and hold the Alt key when double-clicking",
+                dbClick2StopShift:"Press and hold the Shift key when double-clicking",
+                dbClick2StopMeta:"Press and hold the Meta key when double-clicking"
             };
             break;
     }
@@ -1802,8 +1818,8 @@
         let configTable=document.createElement("table");
         configTable.appendChild(document.createElement("tbody"));
         configCon.insertBefore(configTable, insertPos);
-        function createCheckbox(innerText, val){
-            let title=document.createElement("h3");
+        function createCheckbox(innerText, val, tag, parentCheck){
+            let title=document.createElement(tag||"h3");
             title.innerHTML=innerText;
             let input=document.createElement("input");
             input.type="checkbox";
@@ -1818,17 +1834,29 @@
             td.appendChild(title);
             tr.appendChild(td);
             configTable.children[0].appendChild(tr);
+            if(parentCheck){
+                if(!parentCheck.checked){
+                    tr.style.display="none";
+                }
+                parentCheck.addEventListener("click", e=>{
+                    tr.style.display=parentCheck.checked?"":"none";
+                });
+            }
             return input;
         }
 
-        let hideBarInput=createCheckbox(i18n("hideBar"), rulesData.hideBar);
-        let dbClick2StopInput=createCheckbox(i18n("dbClick2Stop"), rulesData.dbClick2Stop);
         let enableWhiteListInput=createCheckbox(i18n("autoRun"), rulesData.enableWhiteList!=true);
         let enableDebugInput=createCheckbox(i18n("enableDebug"), rulesData.enableDebug!=false);
         let enableHistoryInput=createCheckbox(i18n("enableHistory"), rulesData.enableHistory===true);
         let openInNewTabInput=createCheckbox(i18n("openInNewTab"), rulesData.openInNewTab!=false);
         let initRunInput=createCheckbox(i18n("initRun"), rulesData.initRun!=false);
         let preloadInput=createCheckbox(i18n("preload"), rulesData.preload!=false);
+        let dbClick2StopInput=createCheckbox(i18n("dbClick2Stop"), rulesData.dbClick2Stop);
+        let hideBarInput=createCheckbox("> "+i18n("hideBar"), rulesData.hideBar, "h4", dbClick2StopInput);
+        let dbClick2StopCtrlInput=createCheckbox("> "+i18n("dbClick2StopCtrl"), rulesData.dbClick2StopCtrl, "h4", dbClick2StopInput);
+        let dbClick2StopAltInput=createCheckbox("> "+i18n("dbClick2StopAlt"), rulesData.dbClick2StopAlt, "h4", dbClick2StopInput);
+        let dbClick2StopShiftInput=createCheckbox("> "+i18n("dbClick2StopShift"), rulesData.dbClick2StopShift, "h4", dbClick2StopInput);
+        let dbClick2StopMetaInput=createCheckbox("> "+i18n("dbClick2StopMeta"), rulesData.dbClick2StopMeta, "h4", dbClick2StopInput);
 
         let customRulesTitle=document.createElement("h2");
         customRulesTitle.innerHTML=i18n("customRules");
@@ -1903,6 +1931,10 @@
             rulesData.preload=preloadInput.checked;
             rulesData.upBtnImg=upBtnImgInput.value;
             rulesData.downBtnImg=downBtnImgInput.value;
+            rulesData.dbClick2StopCtrl=dbClick2StopCtrlInput.checked;
+            rulesData.dbClick2StopAlt=dbClick2StopAltInput.checked;
+            rulesData.dbClick2StopShift=dbClick2StopShiftInput.checked;
+            rulesData.dbClick2StopMeta=dbClick2StopMetaInput.checked;
             storage.setItem("rulesData", rulesData);
             let customUrls=customUrlsInput.value.trim();
             if(customUrls){
@@ -2559,7 +2591,13 @@
         }
         document.addEventListener('wheel', scrollHandler, true);
         document.addEventListener('dblclick', e=>{
-            if(e.target.tagName!="BODY"){
+            if((rulesData.dbClick2StopCtrl && !e.ctrlKey) ||
+               (rulesData.dbClick2StopAlt && !e.altKey) ||
+               (rulesData.dbClick2StopShift && !e.shiftKey) ||
+               (rulesData.dbClick2StopMeta && !e.metaKey)){
+                return;
+            }
+            if(e.target.tagName!="BODY" && !(rulesData.dbClick2StopCtrl || rulesData.dbClick2StopAlt || rulesData.dbClick2StopShift || rulesData.dbClick2StopMeta)){
                 let selStr=document.getSelection().toString().trim();
                 if(selStr){
                     return;
