@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.8.6
+// @version      1.8.8
 // @description  Perpetual pages - Most powerful Auto Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -134,6 +134,8 @@
                 enableDebug:"调试模式，输出信息至控制台",
                 disable:"暂时禁用",
                 disableSite:"在此站禁用",
+                disableSiteTips:"已在此站禁用",
+                enableSiteTips:"已在此站启用",
                 enable:"启用翻页",
                 toTop:"回到顶部",
                 toBottom:"前往页尾",
@@ -188,6 +190,8 @@
                 enableDebug:"調試模式，輸出信息至控制台",
                 disable:"暫時禁用",
                 disableSite:"在此站禁用",
+                disableSiteTips:"已在此站禁用",
+                enableSiteTips:"已在此站啟用",
                 enable:"啟用翻頁",
                 toTop:"回到頂部",
                 toBottom:"前往頁尾",
@@ -241,6 +245,8 @@
                 enableDebug:"デバッグモード",
                 disable: "一時的に無効にする",
                 disableSite:"このサイト無効",
+                disableSiteTips:"このサイトで既に無効になっています",
+                enableSiteTips:"このサイトで既に有効になっています",
                 enable: "ページめくりを有効にする",
                 toTop: "トップに戻る",
                 toBottom: "ページの下部に移動",
@@ -294,6 +300,8 @@
                 enableDebug:"Enable debug output",
                 disable:"Disable",
                 disableSite:"Disable on the site",
+                disableSiteTips:"Disabled on this site",
+                enableSiteTips:"Enabled on this site",
                 enable:"Enable",
                 toTop:"To Top",
                 toBottom:"To Bottom",
@@ -1527,8 +1535,10 @@
     function initConfig(){
         initView();
         _GM_registerMenuCommand(i18n(forceState==1?"enable":"disableSite"), ()=>{
-            storage.setItem("forceState_"+location.host, (forceState==1?0:1));
-            location.reload();
+            forceState=(forceState==1?0:1);
+            storage.setItem("forceState_"+location.host, forceState);
+            showTips(i18n(forceState==1?"disableSiteTips":"enableSiteTips"));
+            if(!ruleParser.curSiteRule.url) location.reload();
         });
         _GM_registerMenuCommand(i18n("update"), ()=>{
             updateRules(()=>{
@@ -2590,6 +2600,7 @@
         }
         document.addEventListener('wheel', scrollHandler, true);
         document.addEventListener('dblclick', e=>{
+            if(forceState==1) return;
             if((rulesData.dbClick2StopCtrl && !e.ctrlKey) ||
                (rulesData.dbClick2StopAlt && !e.altKey) ||
                (rulesData.dbClick2StopShift && !e.shiftKey) ||
@@ -3184,7 +3195,7 @@
     var tryTimes = 0;
 
     function nextPage(){
-        if(isPause || isLoading)return;
+        if(isPause || isLoading || forceState==1)return;
         if(ruleParser.curSiteRule.delay){
             try{
                 let checkDelay=Function('"use strict";' + ruleParser.curSiteRule.delay)();
