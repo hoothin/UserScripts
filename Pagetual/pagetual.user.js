@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.8.3
+// @version      1.8.5
 // @description  Perpetual pages - Most powerful Auto Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -900,6 +900,7 @@
             if(_unsafeWindow.Discourse)return {};
             let canSave=false;//發現頁碼選擇器在其他頁對不上，還是別保存了
             let url=this.curUrl.replace("#!","").replace("index.php?","?");
+            let _url=url.replace(/\.s?html?$/i,"");
             let pageNum=1,preStr="",afterStr="";
             let pageMatch1=url.match(/(.*[a-z\/\-_](?:p|page)?\/?)(\d+)(\.s?html?$|\/?$)/i);
             let pageMatch2=url.match(/(.*[\?&]p(?:age)?=)(\d+)($|[#&].*)/i);
@@ -1007,33 +1008,32 @@
                     if(aTag.style.display=="none")continue;
                     if(aTag.href && /next$/i.test(aTag.href))continue;
                     if(aTag.className && /slick|slide/i.test(aTag.className))continue;
-                    if(!next1){
-                        if(aTag.innerText.length>15)continue;
-                        if(/^[下后後][一1]?[页頁张張]|^next([ _-]?page)?\s*[›>→»]?$|次のページ|^次へ?$/i.test(aTag.innerText.trim())){
-                            if(!aTag.href || /^javascript:/.test(aTag.href) || aTag.getAttribute("href")=="#"){
-                                if(!nextJs1)nextJs1=aTag;
-                            }else{
-                                next1=aTag;
+                    if(aTag.innerText.length<=18){
+                        if(!next1){
+                            if(/^[下后後][一1]?[页頁张張]|^next([ _-]?page)?\s*[›>→»]?$|次のページ|^次へ?$/i.test(aTag.innerText.trim())){
+                                if(!aTag.href || /^javascript:/.test(aTag.href) || aTag.getAttribute("href")=="#"){
+                                    if(!nextJs1)nextJs1=aTag;
+                                }else{
+                                    next1=aTag;
+                                }
                             }
                         }
-                    }
-                    if(!next2){
-                        if(aTag.innerText.length>15)continue;
-                        if(/^[下后後][一1]?[章话話篇]/i.test(aTag.innerText.trim()) || /nextpage/i.test(aTag.className)){
-                            if(!aTag.href || /^javascript:/.test(aTag.href) || aTag.getAttribute("href")=="#"){
-                                if(!nextJs2)nextJs2=aTag;
-                            }else{
-                                next2=aTag;
+                        if(!next2){
+                            if(/^[下后後][一1]?[章话話篇]/i.test(aTag.innerText.trim()) || /nextpage/i.test(aTag.className)){
+                                if(!aTag.href || /^javascript:/.test(aTag.href) || aTag.getAttribute("href")=="#"){
+                                    if(!nextJs2)nextJs2=aTag;
+                                }else{
+                                    next2=aTag;
+                                }
                             }
                         }
-                    }
-                    if(!next3){
-                        if(aTag.innerText.length>15)continue;
-                        if(aTag.innerText=="&gt;" || aTag.innerText=="▶" || aTag.innerText==">" || aTag.innerText=="›" || aTag.innerText=="→" || aTag.innerText=="»"){
-                            if(!aTag.href || /^javascript:/.test(aTag.href) || aTag.getAttribute("href")=="#"){
-                                if(!nextJs3)nextJs3=aTag;
-                            }else{
-                                next3=aTag;
+                        if(!next3){
+                            if(aTag.innerText=="&gt;" || aTag.innerText=="▶" || aTag.innerText==">" || aTag.innerText=="›" || aTag.innerText=="→" || aTag.innerText=="»"){
+                                if(!aTag.href || /^javascript:/.test(aTag.href) || aTag.getAttribute("href")=="#"){
+                                    if(!nextJs3)nextJs3=aTag;
+                                }else{
+                                    next3=aTag;
+                                }
                             }
                         }
                     }
@@ -1046,7 +1046,6 @@
                         if(pageNum<999 && _aHrefTrim==pageNum+1){
                             next4=aTag;
                         }else if(this.curUrl!=aTag.href){
-                            let _url=url.replace(/\.s?html?$/i,"");
                             _aHref=_aHref.replace(/\.s?html?$/i,"");
                             if(_aHref.indexOf(_url)!=-1 && /^[\/\?&]?[_-]?(p|page)?=?\/?2(\/|\?|&|$)/i.test(_aHref.replace(_url,""))){
                                 let curHref=aTag.getAttribute("href");
