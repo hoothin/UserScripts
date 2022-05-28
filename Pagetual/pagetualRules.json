@@ -461,7 +461,7 @@
   {
     "name":"晋江文学城",
     "url":"^http://www\\.jjwxc\\.net",
-    "pageElement":"div.noveltext",
+    "pageElement":"div.noveltext,#lockpage",
     "pageBarText":1
   },
   {
