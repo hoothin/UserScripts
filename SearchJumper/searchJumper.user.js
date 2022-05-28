@@ -37,7 +37,7 @@
     //const configPage = 'http://localhost:3000/';
     const configPage = 'https://hoothin.github.io/SearchJumper/';
 
-    const importPageReg = /^https:\/\/github\.com\/hoothin\/SearchJumper\/issues\/|^https:\/\/greasyfork\.org\/.*\/scripts\/445274[\-\/]/i;
+    const importPageReg = /^https:\/\/github\.com\/hoothin\/SearchJumper\/issues|^https:\/\/greasyfork\.org\/.*\/scripts\/445274[\-\/]/i;
 
     var searchData = {};
 
