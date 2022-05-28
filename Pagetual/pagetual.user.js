@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.8.8
+// @version      1.8.9
 // @description  Perpetual pages - Most powerful Auto Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -133,7 +133,7 @@
             config={
                 enableDebug:"调试模式，输出信息至控制台",
                 disable:"暂时禁用",
-                disableSite:"在此站禁用",
+                disableSite:"切换禁用状态",
                 disableSiteTips:"已在此站禁用",
                 enableSiteTips:"已在此站启用",
                 enable:"启用翻页",
@@ -189,7 +189,7 @@
             config={
                 enableDebug:"調試模式，輸出信息至控制台",
                 disable:"暫時禁用",
-                disableSite:"在此站禁用",
+                disableSite:"切換禁用狀態",
                 disableSiteTips:"已在此站禁用",
                 enableSiteTips:"已在此站啟用",
                 enable:"啟用翻頁",
@@ -244,7 +244,7 @@
             config = {
                 enableDebug:"デバッグモード",
                 disable: "一時的に無効にする",
-                disableSite:"このサイト無効",
+                disableSite:"無効状態の切り替え",
                 disableSiteTips:"このサイトで既に無効になっています",
                 enableSiteTips:"このサイトで既に有効になっています",
                 enable: "ページめくりを有効にする",
@@ -299,7 +299,7 @@
             config={
                 enableDebug:"Enable debug output",
                 disable:"Disable",
-                disableSite:"Disable on the site",
+                disableSite:"Toggle disabled state",
                 disableSiteTips:"Disabled on this site",
                 enableSiteTips:"Enabled on this site",
                 enable:"Enable",
