@@ -459,6 +459,37 @@
     "pageBarText":1
   },
   {
+    "name":"晋江文学城",
+    "url":"^http://www\\.jjwxc\\.net",
+    "pageElement":"div.noveltext",
+    "pageBarText":1,
+    "action":1
+  },
+  {
+    "name":"厚海网",
+    "url":"^http://www\\.houhaiwang\\.com",
+    "pageElement":".col-a1>.row-b7",
+    "pageBarText":1,
+    "nextLink":".col-d3>span>a"
+  },
+  {
+    "name":"17K小说网_免费章节",
+    "url":"^https://www\\.17k\\.com",
+    "pageElement":".area>.read,.area>.comment",
+    "css":".infoPath,.read_tit,.rightSide,.tuijian{display:none}.readAreaBox{width:auto}",
+    "pageBarText":1,
+    "nextLink":".nextChapter"
+  },
+  {
+    "name":"17K小说网_付费章节",
+    "url":"^https://www\\.17k\\.com",
+    "pageElement":".Context>.Article",
+    "pageBarText":1,
+    "action":1,
+    "nextLink":".nextChapter",
+    "wait":"return doc.querySelector('.copy')==null"
+  },
+  {
     "name":"参考消息手机版",
     "action":1,
     "url":"^http://m\\.cankaoxiaoxi\\.com/",
