@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      0.9.10
+// @version      0.9.9
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本，在搜索时便捷跳转各大搜索引擎，如谷歌、必应、百度、鸭鸭等
 // @description:zh-TW  又一個搜尋引擎跳轉脚本，在搜索時便捷跳轉各大搜尋引擎，如谷歌、必應、百度、鴨鴨等
@@ -1373,7 +1373,7 @@
 
     function initListener() {
         _GM_registerMenuCommand(i18n('settings'), () => {
-            _GM_openInTab(configPage, {active:true});
+            _GM_openInTab(configPage);
         });
         let logoSvg = logoBtn.children[0];
         let grabState = 0;//0 未按下 1 已按下 2 已拖动
@@ -1406,7 +1406,7 @@
             searchBar.bar.style.transform = "";
             if (grabState === 1) {
                 grabState = 0;
-                _GM_openInTab(configPage, {active:true});
+                _GM_openInTab(configPage);
                 return;
             }
             grabState = 0;
