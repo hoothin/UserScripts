@@ -1552,7 +1552,6 @@
                 }
             }
             logoSvg.style.cursor = "";
-            searchBar.bar.style.pointerEvents = "";
             searchBar.initPos(relX, relY, posX, posY);
             storage.setItem("searchData", searchData);
         };
@@ -1568,7 +1567,6 @@
                 searchBar.bar.style.bottom = "";
                 searchBar.bar.style.transform = "unset";
                 searchBar.bar.parentNode.classList.remove("search-jumper-scroll");
-                setTimeout(() => {grabState === 2 && (searchBar.bar.style.pointerEvents = "none")}, 100);
             }
             grabState = 2;
             searchBar.bar.style.left = clientX(e) - searchBar.bar.scrollWidth + 20 + "px";
