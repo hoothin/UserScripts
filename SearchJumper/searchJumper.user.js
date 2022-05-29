@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      0.9.12
+// @version      0.9.13
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本，在搜索时便捷跳转各大搜索引擎，如谷歌、必应、百度、鸭鸭等
 // @description:zh-TW  又一個搜尋引擎跳轉脚本，在搜索時便捷跳轉各大搜尋引擎，如谷歌、必應、百度、鴨鴨等
@@ -963,26 +963,37 @@
             }
             let viewWidth = window.innerWidth || document.documentElement.clientWidth;
             let viewHeight = window.innerHeight || document.documentElement.clientHeight;
-            if (clientX > viewWidth - 50) {
-                this.tips.style.left = "";
-                this.tips.style.bottom = "";
-                this.tips.style.right = "50px";
-                this.tips.style.top = (clientY - this.tips.scrollHeight / 2) + "px";
-            } else if (clientX < 50) {
+            if (clientY < 50) {
                 this.tips.style.right = "";
                 this.tips.style.bottom = "";
-                this.tips.style.left = clientX + 50 + "px";
-                this.tips.style.top = (clientY - this.tips.scrollHeight / 2) + "px";
+                clientX -= this.tips.scrollWidth / 2;
+                clientY += this.tips.scrollHeight / 2;
+                if (clientX < 0) clientX = 0;
+                else if (clientX > viewWidth - this.tips.scrollWidth) clientX = viewWidth - this.tips.scrollWidth;
+                this.tips.style.left = clientX + "px";
+                this.tips.style.top = clientY + "px";
             } else if (clientY > viewHeight - 50) {
                 this.tips.style.right = "";
                 this.tips.style.top = "";
-                this.tips.style.left = (clientX - this.tips.scrollWidth / 2) + "px";
+                clientX -= this.tips.scrollWidth / 2;
+                if (clientX < 0) clientX = 0;
+                else if (clientX > viewWidth - this.tips.scrollWidth) clientX = viewWidth - this.tips.scrollWidth;
+                this.tips.style.left = clientX + "px";
                 this.tips.style.bottom = "50px";
-            } else if (clientY < 50) {
+            } else if (clientX > viewWidth - 50) {
+                this.tips.style.left = "";
+                this.tips.style.bottom = "";
+                clientY -= this.tips.scrollHeight / 2;
+                if (clientY < 0) clientY = 0;
+                this.tips.style.right = "50px";
+                this.tips.style.top = clientY + "px";
+            } else if (clientX < 50) {
                 this.tips.style.right = "";
                 this.tips.style.bottom = "";
-                this.tips.style.left = (clientX - this.tips.scrollWidth / 2) + "px";
-                this.tips.style.top = (clientY + this.tips.scrollHeight / 2) + "px";
+                clientY -= this.tips.scrollHeight / 2;
+                if (clientY < 0) clientY = 0;
+                this.tips.style.left = clientX + 50 + "px";
+                this.tips.style.top = clientY + "px";
             } else {
                 this.tips.style.right = "";
                 this.tips.style.bottom = "";
@@ -1070,15 +1081,15 @@
                     if (self.bar.scrollWidth > viewWidth || self.bar.scrollHeight > viewHeight) {
                         if (!self.bar.parentNode.classList.contains("search-jumper-scroll")) {
                             self.bar.style.cssText = "";
+                            self.bar.parentNode.classList.add("search-jumper-scroll");
                         }
-                        self.bar.parentNode.classList.add("search-jumper-scroll");
                     } else {
                         if (self.bar.parentNode.classList.contains("search-jumper-scroll")) {
                             self.bar.style.cssText = "";
+                            self.bar.parentNode.classList.remove("search-jumper-scroll");
                         }
-                        self.bar.parentNode.classList.remove("search-jumper-scroll");
                     }
-                }, 250);
+                }, 251);
             };
             typeBtn.addEventListener('mousedown', typeAction, false);
 
