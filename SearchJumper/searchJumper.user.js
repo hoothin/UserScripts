@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      0.9.11
+// @version      0.9.12
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本，在搜索时便捷跳转各大搜索引擎，如谷歌、必应、百度、鸭鸭等
 // @description:zh-TW  又一個搜尋引擎跳轉脚本，在搜索時便捷跳轉各大搜尋引擎，如谷歌、必應、百度、鴨鴨等
@@ -806,6 +806,17 @@
          width: 32px;
          height: 32px;
      }
+     .search-jumper-tips {
+         pointer-events: none;
+         position: fixed;
+         font-size: xx-large;
+         background: #f5f5f5e0;
+         border-radius: 10px;
+         padding: 5px;
+         box-shadow: 0px 0px 10px 0px #000;
+         font-weight: bold;
+         transition:all 0.2s ease;
+     }
      .search-jumper-type.search-jumper-hide {
          background: unset;
      }
@@ -853,6 +864,12 @@
             searchBarCon.appendChild(bar);
 
             this.bar = bar;
+
+            let tips = document.createElement("span");
+            tips.className = "search-jumper-tips";
+            tips.style.opacity = 0;
+            searchBarCon.appendChild(tips);
+            this.tips = tips;
 
             document.documentElement.appendChild(searchBarCon);
 
@@ -930,6 +947,48 @@
             }
 
             checkReady();
+        }
+
+        tipsPos(ele, type) {
+            this.tips.innerText = type;
+            this.tips.style.opacity = 1;
+            let clientX = ele.offsetLeft + 20;
+            let clientY = ele.offsetTop + 20;
+            let current = ele.offsetParent;
+
+            while (current !== null){
+                clientX += current.offsetLeft;
+                clientY += current.offsetTop;
+                current = current.offsetParent;
+            }
+            let viewWidth = window.innerWidth || document.documentElement.clientWidth;
+            let viewHeight = window.innerHeight || document.documentElement.clientHeight;
+            if (clientX > viewWidth - 50) {
+                this.tips.style.left = "";
+                this.tips.style.bottom = "";
+                this.tips.style.right = "50px";
+                this.tips.style.top = (clientY - this.tips.scrollHeight / 2) + "px";
+            } else if (clientX < 50) {
+                this.tips.style.right = "";
+                this.tips.style.bottom = "";
+                this.tips.style.left = clientX + 50 + "px";
+                this.tips.style.top = (clientY - this.tips.scrollHeight / 2) + "px";
+            } else if (clientY > viewHeight - 50) {
+                this.tips.style.right = "";
+                this.tips.style.top = "";
+                this.tips.style.left = (clientX - this.tips.scrollWidth / 2) + "px";
+                this.tips.style.bottom = "50px";
+            } else if (clientY < 50) {
+                this.tips.style.right = "";
+                this.tips.style.bottom = "";
+                this.tips.style.left = (clientX - this.tips.scrollWidth / 2) + "px";
+                this.tips.style.top = (clientY + this.tips.scrollHeight / 2) + "px";
+            } else {
+                this.tips.style.right = "";
+                this.tips.style.bottom = "";
+                this.tips.style.left = clientX + "px";
+                this.tips.style.top = clientY + "px";
+            }
         }
 
         createType(data) {
@@ -1022,18 +1081,23 @@
                 }, 250);
             };
             typeBtn.addEventListener('mousedown', typeAction, false);
-            if (searchData.prefConfig.overOpen) {
-                let showTimer;
-                typeBtn.addEventListener('mouseenter', e => {
+
+            let showTimer;
+            typeBtn.addEventListener('mouseenter', e => {
+                self.tipsPos(typeBtn, type);
+                if (searchData.prefConfig.overOpen) {
                     if (!ele.classList.contains("search-jumper-hide")) return;
                     showTimer = setTimeout(() => {
                         typeAction(e);
                     }, 500);
-                }, false);
-                typeBtn.addEventListener('mouseleave', e => {
+                }
+            }, false);
+            typeBtn.addEventListener('mouseleave', e => {
+                self.tips.style.opacity = 0;
+                if (searchData.prefConfig.overOpen) {
                     clearTimeout(showTimer);
-                }, false);
-            }
+                }
+            }, false);
             let isCurrent = false;
             sites.forEach(site => {
                 let siteEle = this.createSiteBtn(site.name, site.icon, site, openInNewTab);
@@ -1064,6 +1128,7 @@
         }
 
         createSiteBtn(name, icon, data, openInNewTab) {
+            let self = this;
             let ele = document.createElement("a");
             ele.className = "search-jumper-btn";
             ele.title = name;
@@ -1147,6 +1212,13 @@
                 } else {
                     ele.href = getUrl();
                 }
+            }, false);
+
+            ele.addEventListener('mouseenter', e => {
+                self.tipsPos(ele, name);
+            }, false);
+            ele.addEventListener('mouseleave', e => {
+                self.tips.style.opacity = 0;
             }, false);
             return ele;
         }
