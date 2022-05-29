@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.1
+// @version      1.9.2
 // @description  Perpetual pages - Most powerful Auto Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -162,7 +162,7 @@
                 save:"保存设置",
                 loadingText:"少女祈祷中...",
                 opacity:"分页隔条不透明值",
-                hideBar:"空白处双击隐藏分页隔条",
+                hideBar:"隐藏分页隔条",
                 dbClick2Stop:"空白处双击暂停翻页",
                 sortTitle:"排序在下次更新规则后生效",
                 autoRun:"自动启用，否则为白名单模式",
@@ -178,10 +178,11 @@
                 editBlacklist:"编辑黑名单网址，一行一条，支持? *通配符",
                 upBtnImg:"回到页首图标",
                 downBtnImg:"前往页尾图标",
-                dbClick2StopCtrl:"双击时需要按住 Ctrl 键",
-                dbClick2StopAlt:"双击时需要按住 Alt 键",
-                dbClick2StopShift:"双击时需要按住 Shift 键",
-                dbClick2StopMeta:"双击时需要按住 Meta 键"
+                dbClick2StopCtrl:"Ctrl 键",
+                dbClick2StopAlt:"Alt 键",
+                dbClick2StopShift:"Shift 键",
+                dbClick2StopMeta:"Meta 键",
+                dbClick2StopKey:"快捷键"
             };
             break;
         case "zh-TW":
@@ -218,7 +219,7 @@
                 save:"存儲設置",
                 loadingText:"少女祈禱中...",
                 opacity:"分頁隔條不透明值",
-                hideBar:"空白處雙擊隱藏分頁隔條",
+                hideBar:"隱藏分頁隔條",
                 dbClick2Stop:"空白處雙擊暫停翻頁",
                 sortTitle:"排序在下次更新規則後生效",
                 autoRun:"自動啓用，否則為白名單模式",
@@ -234,10 +235,11 @@
                 editBlacklist:"編輯黑名單網址，一行一條，支持? *通配符",
                 upBtnImg:"回到頁首圖標",
                 downBtnImg:"前往頁尾圖標",
-                dbClick2StopCtrl:"雙擊時需要按住 Ctrl 鍵",
-                dbClick2StopAlt:"雙擊時需要按住 Alt 鍵",
-                dbClick2StopShift:"雙擊時需要按住 Shift 鍵",
-                dbClick2StopMeta:"雙擊時需要按住 Meta 鍵"
+                dbClick2StopCtrl:"Ctrl 鍵",
+                dbClick2StopAlt:"Alt 鍵",
+                dbClick2StopShift:"Shift 鍵",
+                dbClick2StopMeta:"Meta 鍵",
+                dbClick2StopKey:"快捷鍵"
             };
             break;
         case "ja":
@@ -273,7 +275,7 @@
                 save: "設定を保存",
                 loadingText: "少女祈祷中...",
                 opacity:"ページネーションバーの不透明値",
-                hideBar:"空白部分をダブルクリックして、ページ区切り文字を非表示にします",
+                hideBar:"ページ区切り文字を非表示にします",
                 dbClick2Stop:"空白部分をダブルクリックしてページめくりを一時停止します",
                 sortTitle:"並べ替えは、次のルールの更新後に有効になります",
                 autoRun:"自動的に有効",
@@ -289,10 +291,11 @@
                 editBlacklist:"ブラックリストのURLを編集し、1行ずつ、サポート? *ワイルドカード",
                 upBtnImg:"トップアイコンに戻る",
                 downBtnImg:"フッターアイコンに移動",
-                dbClick2StopCtrl:"ダブルクリックするときにCtrlキーを押したままにする",
-                dbClick2StopAlt:"ダブルクリックするときにAltキーを押したままにする",
-                dbClick2StopShift:"ダブルクリックするときにShiftキーを押したままにする",
-                dbClick2StopMeta:"ダブルクリックするときにMetaキーを押したままにする"
+                dbClick2StopCtrl:"Ctrlキー",
+                dbClick2StopAlt:"Altキー",
+                dbClick2StopShift:"Shiftキー",
+                dbClick2StopMeta:"Metaキー",
+                dbClick2StopKey:"Shortcutキー"
             };
             break;
         default:
@@ -328,7 +331,7 @@
                 save:"Save",
                 loadingText:"Shojo Now Loading...",
                 opacity:"Pagination spacer opacity",
-                hideBar:"Double-click on the blank space to hide the paging spacer",
+                hideBar:"hide the paging spacer",
                 dbClick2Stop:"Double-click on the blank space to pause",
                 sortTitle:"Sorting takes effect after the next rule update",
                 autoRun:"Auto run (black list mode)",
@@ -344,10 +347,11 @@
                 editBlacklist:"Edit the blacklist urls, line by line, Support ? * for wildcard",
                 upBtnImg:"Icon of back to top",
                 downBtnImg:"Icon of go to footer",
-                dbClick2StopCtrl:"Press and hold the Ctrl key when double-clicking",
-                dbClick2StopAlt:"Press and hold the Alt key when double-clicking",
-                dbClick2StopShift:"Press and hold the Shift key when double-clicking",
-                dbClick2StopMeta:"Press and hold the Meta key when double-clicking"
+                dbClick2StopCtrl:"Ctrl key",
+                dbClick2StopAlt:"Alt key",
+                dbClick2StopShift:"Shift key",
+                dbClick2StopMeta:"Meta key",
+                dbClick2StopKey:"Shortcut key"
             };
             break;
     }
@@ -1839,29 +1843,39 @@
         let configTable=document.createElement("table");
         configTable.appendChild(document.createElement("tbody"));
         configCon.insertBefore(configTable, insertPos);
-        function createCheckbox(innerText, val, tag, parentCheck){
+        function createCheckbox(innerText, val, tag, parentCheck, otherType){
             let title=document.createElement(tag||"h3");
             title.innerHTML=innerText;
             let input=document.createElement("input");
-            input.type="checkbox";
+            input.type=otherType||"checkbox";
             input.style.width="50px";
             input.style.height="20px";
+            input.value=val;
             input.checked=val;
-            let tr=document.createElement("tr");
             let td=document.createElement("td");
             td.appendChild(input);
-            tr.appendChild(td);
-            td=document.createElement("td");
-            td.appendChild(title);
-            tr.appendChild(td);
-            configTable.children[0].appendChild(tr);
             if(parentCheck){
+                td.appendChild(title);
+                let parent=parentCheck.parentNode.nextElementSibling;
+                let tr=parent.querySelector("tr");
+                if(!tr){
+                    tr=document.createElement("tr");
+                    parent.appendChild(tr);
+                }
+                tr.appendChild(td);
                 if(!parentCheck.checked){
-                    tr.style.display="none";
+                    td.style.display="none";
                 }
                 parentCheck.addEventListener("click", e=>{
-                    tr.style.display=parentCheck.checked?"":"none";
+                    td.style.display=parentCheck.checked?"":"none";
                 });
+            }else{
+                let tr=document.createElement("tr");
+                tr.appendChild(td);
+                td=document.createElement("td");
+                td.appendChild(title);
+                tr.appendChild(td);
+                configTable.children[0].appendChild(tr);
             }
             return input;
         }
@@ -1873,11 +1887,13 @@
         let initRunInput=createCheckbox(i18n("initRun"), rulesData.initRun!=false);
         let preloadInput=createCheckbox(i18n("preload"), rulesData.preload!=false);
         let dbClick2StopInput=createCheckbox(i18n("dbClick2Stop"), rulesData.dbClick2Stop);
-        let hideBarInput=createCheckbox("🔲> "+i18n("hideBar"), rulesData.hideBar, "h4", dbClick2StopInput);
-        let dbClick2StopCtrlInput=createCheckbox("🔲> "+i18n("dbClick2StopCtrl"), rulesData.dbClick2StopCtrl, "h4", dbClick2StopInput);
-        let dbClick2StopAltInput=createCheckbox("🔲> "+i18n("dbClick2StopAlt"), rulesData.dbClick2StopAlt, "h4", dbClick2StopInput);
-        let dbClick2StopShiftInput=createCheckbox("🔲> "+i18n("dbClick2StopShift"), rulesData.dbClick2StopShift, "h4", dbClick2StopInput);
-        let dbClick2StopMetaInput=createCheckbox("🔲> "+i18n("dbClick2StopMeta"), rulesData.dbClick2StopMeta, "h4", dbClick2StopInput);
+        let hideBarInput=createCheckbox(i18n("hideBar"), rulesData.hideBar, "h4", dbClick2StopInput);
+        let dbClick2StopCtrlInput=createCheckbox(i18n("dbClick2StopCtrl"), rulesData.dbClick2StopCtrl, "h4", dbClick2StopInput);
+        let dbClick2StopAltInput=createCheckbox(i18n("dbClick2StopAlt"), rulesData.dbClick2StopAlt, "h4", dbClick2StopInput);
+        let dbClick2StopShiftInput=createCheckbox(i18n("dbClick2StopShift"), rulesData.dbClick2StopShift, "h4", dbClick2StopInput);
+        let dbClick2StopMetaInput=createCheckbox(i18n("dbClick2StopMeta"), rulesData.dbClick2StopMeta, "h4", dbClick2StopInput);
+        let dbClick2StopKeyInput=createCheckbox(i18n("dbClick2StopKey"), rulesData.dbClick2StopKey, "h4", dbClick2StopInput, "text");
+        dbClick2StopKeyInput.setAttribute("maxlength", "1");
 
         let customRulesTitle=document.createElement("h2");
         customRulesTitle.innerHTML=i18n("customRules");
@@ -1956,6 +1972,7 @@
             rulesData.dbClick2StopAlt=dbClick2StopAltInput.checked;
             rulesData.dbClick2StopShift=dbClick2StopShiftInput.checked;
             rulesData.dbClick2StopMeta=dbClick2StopMetaInput.checked;
+            rulesData.dbClick2StopKey=dbClick2StopKeyInput.value;
             storage.setItem("rulesData", rulesData);
             let customUrls=customUrlsInput.value.trim();
             if(customUrls){
@@ -2613,13 +2630,15 @@
         document.addEventListener('wheel', scrollHandler, true);
         document.addEventListener('dblclick', e=>{
             if(forceState==1) return;
-            if((rulesData.dbClick2StopCtrl && !e.ctrlKey) ||
-               (rulesData.dbClick2StopAlt && !e.altKey) ||
-               (rulesData.dbClick2StopShift && !e.shiftKey) ||
-               (rulesData.dbClick2StopMeta && !e.metaKey)){
-                return;
+            if(!rulesData.dbClick2StopKey){
+                if((rulesData.dbClick2StopCtrl && !e.ctrlKey) ||
+                   (rulesData.dbClick2StopAlt && !e.altKey) ||
+                   (rulesData.dbClick2StopShift && !e.shiftKey) ||
+                   (rulesData.dbClick2StopMeta && !e.metaKey)){
+                    return;
+                }
             }
-            if(e.target.tagName!="BODY" && !(rulesData.dbClick2StopCtrl || rulesData.dbClick2StopAlt || rulesData.dbClick2StopShift || rulesData.dbClick2StopMeta)){
+            if(e.target.tagName!="BODY"){
                 let selStr=document.getSelection().toString().trim();
                 if(selStr){
                     return;
@@ -2635,6 +2654,25 @@
                 },10);
             }
         });
+        if(rulesData.dbClick2StopKey){
+            document.addEventListener('keydown', e=>{
+                if((rulesData.dbClick2StopCtrl && !e.ctrlKey) ||
+                   (rulesData.dbClick2StopAlt && !e.altKey) ||
+                   (rulesData.dbClick2StopShift && !e.shiftKey) ||
+                   (rulesData.dbClick2StopMeta && !e.metaKey)){
+                    return;
+                }
+                var key = String.fromCharCode(e.keyCode).toLowerCase();
+                if(rulesData.dbClick2StopKey.toLowerCase()==key){
+                    forceState=(forceState==1?0:1);
+                    showTips(i18n(forceState==1?"disableSiteTips":"enableSiteTips"));
+                    if(!ruleParser.curSiteRule.url) {
+                        storage.setItem("forceState_"+location.host, forceState);
+                        location.reload();
+                    }
+                }
+            });
+        }
     }
 
     function showTips(content, wordColor, backColor){
