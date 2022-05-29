@@ -815,7 +815,8 @@
          padding: 5px;
          box-shadow: 0px 0px 10px 0px #000;
          font-weight: bold;
-         transition:all 0.2s ease;
+         transition: all 0.2s ease;
+         color: black;
      }
      .search-jumper-type.search-jumper-hide {
          background: unset;
