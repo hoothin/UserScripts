@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      0.9.13
+// @version      0.9.15
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本，在搜索时便捷跳转各大搜索引擎，如谷歌、必应、百度、鸭鸭等
 // @description:zh-TW  又一個搜尋引擎跳轉脚本，在搜索時便捷跳轉各大搜尋引擎，如谷歌、必應、百度、鴨鴨等
@@ -54,7 +54,7 @@
                 charset: "utf-8"
             }, {
                 name: "百度",
-                url: "https://www.baidu.com/s?wd=%s&ie=%e",
+                url: "https://www.baidu.com/s?word=%s&ie=%e",
                 match: "https://www\\.baidu\\.com/.*(wd|word)="
             }, {
                 name: "You",
@@ -74,13 +74,15 @@
                 url: "https://duckduckgo.com/?q=%s"
             }, {
                 name: "360",
-                url: "https://www.so.com/s?ie=utf-8&q=%s"
+                url: "https://www.so.com/s?ie=utf-8&q=%s",
+                match: "\\.so\\.com/s\\?.*&q="
             }, {
                 name: "雅虎",
                 url: "https://search.yahoo.com/search;?p=%s"
             }, {
                 name: "搜狗",
-                url: "https://www.sogou.com/web?query=%s"
+                url: "https://www.sogou.com/web?query=%s",
+                match: "\\.sogou\\.com/.*(query|keyword)="
             }, {
                 name: "Yandex",
                 url: "https://yandex.com/search/?text=%s"
