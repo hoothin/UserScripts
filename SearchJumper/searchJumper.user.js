@@ -1398,11 +1398,13 @@
                 self.bar.style.position = "absolute";
                 self.bar.style.marginTop = posY + "px";
             }
-            if (self.bar.scrollWidth > viewWidth || self.bar.scrollHeight > viewHeight) {
-                self.bar.parentNode.classList.add("search-jumper-scroll");
-            } else {
-                self.bar.parentNode.classList.remove("search-jumper-scroll");
-            }
+            setTimeout(() => {
+                if (self.bar.scrollWidth > viewWidth || self.bar.scrollHeight > viewHeight) {
+                    self.bar.parentNode.classList.add("search-jumper-scroll");
+                } else {
+                    self.bar.parentNode.classList.remove("search-jumper-scroll");
+                }
+            }, 1);
             searchData.prefConfig.position.x = relX;
             searchData.prefConfig.position.y = relY;
             searchData.prefConfig.offset.x = posX;
