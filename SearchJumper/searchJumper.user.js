@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      0.9.16
+// @version      0.9.17
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本，在搜索时便捷跳转各大搜索引擎，如谷歌、必应、百度、鸭鸭等
 // @description:zh-TW  又一個搜尋引擎跳轉脚本，在搜索時便捷跳轉各大搜尋引擎，如谷歌、必應、百度、鴨鴨等
@@ -1168,15 +1168,20 @@
                 img.src = data.url.replace(/^(https?:\/\/[^\/]*\/).*$/, "$1favicon.ico");
             }
             if (searchData.prefConfig.shortcut && data.shortcut) {
-                document.addEventListener('keydown', e=>{
-                    if((data.ctrl && !e.ctrlKey) ||
-                       (data.alt && !e.altKey) ||
-                       (data.shift && !e.shiftKey) ||
-                       (data.meta && !e.metaKey)){
+                document.addEventListener('keydown', e => {
+                    if ((data.ctrl && !e.ctrlKey) ||
+                        (data.alt && !e.altKey) ||
+                        (data.shift && !e.shiftKey) ||
+                        (data.meta && !e.metaKey)) {
+                        return;
+                    }
+                    if (document.activeElement &&
+                        (document.activeElement.tagName == 'INPUT' ||
+                         document.activeElement.tagName == 'TEXTAREA')) {
                         return;
                     }
                     var key = String.fromCharCode(e.keyCode).toLowerCase();
-                    if(data.shortcut==key){
+                    if (data.shortcut == key) {
                         action();
                         ele.click();
                     }
