@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.5
+// @version      1.9.6
 // @description  Perpetual pages - Most powerful Auto Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -2948,7 +2948,7 @@
 
     var emuIframe,lastActiveUrl=location.href;
     function emuPage(callback){
-        let orgPage=null,curPage,iframeDoc,times=0,loadmoreBtn,loadmoreEnd=false,waitTimes=10,changed=false;
+        let orgPage=null,orgContent=null,curPage,iframeDoc,times=0,loadmoreBtn,loadmoreEnd=false,waitTimes=10,changed=false;
         function checkPage(){
             if(isPause)return;
             try{
@@ -3015,6 +3015,7 @@
                 if(orgPage && orgPage[0].tagName=="UL")orgPage=orgPage[0].children;
                 if(orgPage && nextLink){
                     orgPage=orgPage[parseInt(orgPage.length/2)];
+                    if(orgPage.children && orgPage.children.length==0) orgContent=orgPage.innerHTML;
                     if(!isVisible(nextLink, iframeDoc.defaultView)){
                         debug("Stop as next hide when emu");
                         isPause=true;
@@ -3051,9 +3052,11 @@
                     checkPage();
                 },waitTime);
             }else{
-                if(orgPage!=checkItem){
+                let checkInner=(orgPage.children && orgPage.children.length==0);
+                if(orgPage!=checkItem || (checkInner && checkItem.innerHTML!=orgContent)){
                     changed=true;
                     orgPage=checkItem;
+                    if(checkInner) orgContent=checkItem.innerHTML;
                     setTimeout(()=>{
                         checkPage();
                     },waitTime);
