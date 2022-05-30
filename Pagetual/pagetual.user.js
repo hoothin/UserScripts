@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.3
+// @version      1.9.5
 // @description  Perpetual pages - Most powerful Auto Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -33,6 +33,7 @@
 // @grant        GM_addStyle
 // @grant        GM_openInTab
 // @grant        GM_deleteValue
+// @grant        GM_info
 // @grant        GM.xmlHttpRequest
 // @grant        GM.registerMenuCommand
 // @grant        GM.notification
@@ -41,6 +42,7 @@
 // @grant        GM.addStyle
 // @grant        GM.openInTab
 // @grant        GM.deleteValue
+// @grant        GM.info
 // @downloadURL  https://greasyfork.org/scripts/438684-pagetual/code/Pagetual.user.js
 // @updateURL    https://greasyfork.org/scripts/438684-pagetual/code/Pagetual.user.js
 // @supportURL   https://github.com/hoothin/UserScripts/issues
@@ -363,11 +365,15 @@
     var enableDebug=true;
     var debug=str=>{
         if(enableDebug){
+            console.log(
+                `%c【Pagetual v.${_GM_info.script.version}】 debug`,
+                'color: yellow;font-size: x-large;font-weight: bold;'
+            );
             console.debug(str);
         }
     };
 
-    var _GM_xmlhttpRequest,_GM_registerMenuCommand,_GM_notification,_GM_addStyle,_GM_openInTab;
+    var _GM_xmlhttpRequest,_GM_registerMenuCommand,_GM_notification,_GM_addStyle,_GM_openInTab,_GM_info;
     if(typeof GM_xmlhttpRequest!='undefined'){
         _GM_xmlhttpRequest=GM_xmlhttpRequest;
     }else if(typeof GM!='undefined' && typeof GM.xmlHttpRequest!='undefined'){
@@ -381,6 +387,13 @@
         _GM_registerMenuCommand=GM.registerMenuCommand;
     }else{
         _GM_registerMenuCommand=(s,f)=>{};
+    }
+    if(typeof GM_info!='undefined'){
+        _GM_info=GM_info;
+    }else if(typeof GM!='undefined' && typeof GM.info!='undefined'){
+        _GM_info=GM.info;
+    }else{
+        _GM_info={script:1};
     }
     if(typeof GM_notification!='undefined'){
         _GM_notification=GM_notification;
@@ -3219,7 +3232,7 @@
         document.addEventListener("scroll", forceRefresh);
         curIframe.src=url;
         let insert=ruleParser.getInsert();
-        if(ruleParser.curSiteRule.singleUrl){
+        if(ruleParser.curSiteRule.singleUrl || forceState==2){
             document.body.appendChild(curIframe);
         }else if(ruleParser.curSiteRule.insertPos==2){
             ruleParser.insert.appendChild(curIframe);
