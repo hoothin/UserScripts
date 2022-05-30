@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      0.9.15
+// @version      0.9.16
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本，在搜索时便捷跳转各大搜索引擎，如谷歌、必应、百度、鸭鸭等
 // @description:zh-TW  又一個搜尋引擎跳轉脚本，在搜索時便捷跳轉各大搜尋引擎，如谷歌、必應、百度、鴨鴨等
@@ -48,13 +48,14 @@
             sites: [ {
                 name: "Google",
                 url: "https://www.google.com/search?q=%s&ie=%e&oe=%e",
-                keywords: "\\?q=(.*?)&",
+                keywords: "\\?q=(.*?)(&|$)",
                 match: "https://www\\.google\\..*/search\\?q=",
                 icon: "http://www.google.com/favicon.ico",
                 charset: "utf-8"
             }, {
                 name: "百度",
-                url: "https://www.baidu.com/s?word=%s&ie=%e",
+                url: "https://www.baidu.com/s?wd=%s&ie=%e",
+                keywords: "(?:wd|word)=(.*?)(&|$)",
                 match: "https://(www|m)\\.baidu\\.com/.*(wd|word)="
             }, {
                 name: "You",
@@ -82,6 +83,7 @@
             }, {
                 name: "搜狗",
                 url: "https://www.sogou.com/web?query=%s",
+                keywords: "(?:query|keyword)=(.*?)(&|$)",
                 match: "\\.sogou\\.com/.*(query|keyword)="
             }, {
                 name: "Yandex",
@@ -504,7 +506,8 @@
         shiftKey: false,
         metaKey: false,
         autoClose: false,
-        autoDelay: 2000
+        autoDelay: 2000,
+        shortcut: false
     };
     const lang = navigator.appName == "Netscape" ? navigator.language : navigator.userLanguage;
     let config = {};
@@ -1164,6 +1167,21 @@
             } else {
                 img.src = data.url.replace(/^(https?:\/\/[^\/]*\/).*$/, "$1favicon.ico");
             }
+            if (searchData.prefConfig.shortcut && data.shortcut) {
+                document.addEventListener('keydown', e=>{
+                    if((data.ctrl && !e.ctrlKey) ||
+                       (data.alt && !e.altKey) ||
+                       (data.shift && !e.shiftKey) ||
+                       (data.meta && !e.metaKey)){
+                        return;
+                    }
+                    var key = String.fromCharCode(e.keyCode).toLowerCase();
+                    if(data.shortcut==key){
+                        action();
+                        ele.click();
+                    }
+                });
+            }
             if (!currentSite) {
                 if (data.match) {
                     if (new RegExp(data.match).test(location.href)) {
@@ -1214,8 +1232,7 @@
                 }
                 return ele.dataset.url.replace(/%t/g, targetImgSrc).replace(/%b/g, targetImgBaseSrc).replace(/%s/g, keywords);
             };
-            ele.href = data.url;
-            ele.addEventListener('mousedown', e => {
+            let action = e => {
                 if (data.charset || data.url.indexOf(':p{') !== -1) {
                     if (!ele.onclick) {
                         ele.onclick = e => {
@@ -1226,7 +1243,9 @@
                 } else {
                     ele.href = getUrl();
                 }
-            }, false);
+            };
+            ele.href = data.url;
+            ele.addEventListener('mousedown', action, false);
 
             ele.addEventListener('mouseenter', e => {
                 self.tipsPos(ele, name);
