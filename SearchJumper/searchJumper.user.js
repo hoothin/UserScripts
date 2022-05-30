@@ -55,7 +55,7 @@
             }, {
                 name: "百度",
                 url: "https://www.baidu.com/s?word=%s&ie=%e",
-                match: "https://www\\.baidu\\.com/.*(wd|word)="
+                match: "https://(www|m)\\.baidu\\.com/.*(wd|word)="
             }, {
                 name: "You",
                 url: "https://you.com/search?q=%s",
