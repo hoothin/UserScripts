@@ -3015,7 +3015,7 @@
                 if(orgPage && orgPage[0].tagName=="UL")orgPage=orgPage[0].children;
                 if(orgPage && nextLink){
                     orgPage=orgPage[parseInt(orgPage.length/2)];
-                    if(orgPage.children && orgPage.children.length==0) orgContent=orgPage.innerHTML;
+                    orgContent=orgPage.innerHTML;
                     if(!isVisible(nextLink, iframeDoc.defaultView)){
                         debug("Stop as next hide when emu");
                         isPause=true;
@@ -3052,11 +3052,10 @@
                     checkPage();
                 },waitTime);
             }else{
-                let checkInner=(orgPage.children && orgPage.children.length==0);
-                if(orgPage!=checkItem || (checkInner && checkItem.innerHTML!=orgContent)){
+                if(orgPage!=checkItem || checkItem.innerHTML!=orgContent){
                     changed=true;
                     orgPage=checkItem;
-                    if(checkInner) orgContent=checkItem.innerHTML;
+                    orgContent=checkItem.innerHTML;
                     setTimeout(()=>{
                         checkPage();
                     },waitTime);
