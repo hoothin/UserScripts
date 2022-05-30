@@ -492,8 +492,8 @@
     ];
     searchData.prefConfig = {
         position: {
-            x: "top",
-            y: "center"
+            x: "center",
+            y: "top"
         },
         offset: {
             x: "0",
