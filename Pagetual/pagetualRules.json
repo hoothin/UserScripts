@@ -489,6 +489,16 @@
     "wait":"return doc.querySelector('.copy')==null"
   },
   {
+    "name":"纵横中文网手机版",
+    "url":"^https://m\\.zongheng\\.com/h5/chapter",
+    "type":0,
+    "pageElement":"//div[@class='title']|//div[@class='text']",
+    "nextLink":"//div[contains(text(),'下一页')]|//div[contains(text(),'下一章')]",
+    "wait":500,
+    "css":".text>div,#fukerr_bot,#fukerr{display:none!important}",
+    "pageBarText":1
+  },
+  {
     "name":"参考消息手机版",
     "action":1,
     "url":"^http://m\\.cankaoxiaoxi\\.com/",
