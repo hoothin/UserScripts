@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.1
+// @version      1.1.1
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本，在搜索时便捷跳转各大搜索引擎，如谷歌、必应、百度、鸭鸭等
 // @description:zh-TW  又一個搜尋引擎跳轉脚本，在搜索時便捷跳轉各大搜尋引擎，如谷歌、必應、百度、鴨鴨等
@@ -42,58 +42,6 @@
     var searchData = {};
 
     searchData.sitesConfig = [
-        {
-            type: "搜索",
-            icon: "search",
-            sites: [ {
-                name: "Google",
-                url: "https://www.google.com/search?q=%s&ie=%e&oe=%e",
-                keywords: "\\?q=(.*?)(&|$)",
-                match: "https://www\\.google\\..*/search\\?q=",
-                icon: "http://www.google.com/favicon.ico",
-                charset: "utf-8"
-            }, {
-                name: "百度",
-                url: "https://www.baidu.com/s?wd=%s&ie=%e",
-                keywords: "(?:wd|word)=(.*?)(&|$)",
-                match: "https://(www|m)\\.baidu\\.com/.*(wd|word)="
-            }, {
-                name: "You",
-                url: "https://you.com/search?q=%s",
-                icon: "https://you.com/favicon/favicon-32x32.png"
-            }, {
-                name: "SearX",
-                url: "https://searx.be/search?q=%s"
-            }, {
-                name: "头条搜索",
-                url: "https://so.toutiao.com/search/?dvpf=%c&keyword=%s"
-            }, {
-                name: "必应",
-                url: "https://cn.bing.com/search?q=%s"
-            }, {
-                name: "鸭鸭",
-                url: "https://duckduckgo.com/?q=%s"
-            }, {
-                name: "360",
-                url: "https://www.so.com/s?ie=utf-8&q=%s",
-                match: "\\.so\\.com/s\\?.*&q="
-            }, {
-                name: "雅虎",
-                url: "https://search.yahoo.com/search;?p=%s"
-            }, {
-                name: "搜狗",
-                url: "https://www.sogou.com/web?query=%s",
-                keywords: "(?:query|keyword)=(.*?)(&|$)",
-                match: "\\.sogou\\.com/.*(query|keyword)="
-            }, {
-                name: "Yandex",
-                url: "https://yandex.com/search/?text=%s"
-            }, {
-                name: "startpage",
-                url: "https://www.startpage.com/sp/search?query=%s",
-                icon: "https://www.startpage.com/sp/cdn/favicons/favicon-16x16--default.png"
-            } ]
-        },
         {
             type: "翻译",
             icon: "language",
@@ -387,6 +335,56 @@
             } ]
         },
         {
+            type: "搜索",
+            icon: "search",
+            sites: [ {
+                name: "Google",
+                url: "https://www.google.com/search?q=%s&ie=%e&oe=%e",
+                match: "https://www\\.google\\..*/search",
+                charset: "utf-8"
+            }, {
+                name: "百度",
+                url: "https://www.baidu.com/s?wd=%s&ie=%e",
+                keywords: "(?:wd|word)=(.*?)(&|$)",
+                match: "https://(www|m)\\.baidu\\.com/.*(wd|word)="
+            }, {
+                name: "You",
+                url: "https://you.com/search?q=%s",
+                icon: "https://you.com/favicon/favicon-32x32.png"
+            }, {
+                name: "SearX",
+                url: "https://searx.be/search?q=%s"
+            }, {
+                name: "头条搜索",
+                url: "https://so.toutiao.com/search/?dvpf=%c&keyword=%s"
+            }, {
+                name: "必应",
+                url: "https://cn.bing.com/search?q=%s"
+            }, {
+                name: "鸭鸭",
+                url: "https://duckduckgo.com/?q=%s"
+            }, {
+                name: "360",
+                url: "https://www.so.com/s?ie=utf-8&q=%s",
+                match: "\\.so\\.com/s\\?.*&q="
+            }, {
+                name: "雅虎",
+                url: "https://search.yahoo.com/search?p=%s"
+            }, {
+                name: "搜狗",
+                url: "https://www.sogou.com/web?query=%s",
+                keywords: "(?:query|keyword)=(.*?)(&|$)",
+                match: "\\.sogou\\.com/.*(query|keyword)="
+            }, {
+                name: "Yandex",
+                url: "https://yandex.com/search/?text=%s"
+            }, {
+                name: "startpage",
+                url: "https://www.startpage.com/sp/search?query=%s",
+                icon: "https://www.startpage.com/sp/cdn/favicons/favicon-16x16--default.png"
+            } ]
+        },
+        {
             type: "站内搜索",
             icon: "sitemap",
             selectTxt: true,
@@ -394,10 +392,6 @@
             sites: [ {
                 name: "Google",
                 url: "https://www.google.com/search?q=%s%20site%3A%h&ie=%e&oe=%e",
-                keywords: "\\?q=(.*?)&",
-                match: "https://www\\.google\\..*/search\\?q=",
-                icon: "http://www.google.com/favicon.ico",
-                charset: "utf-8"
             }, {
                 name: "头条搜索",
                 url: "https://so.toutiao.com/search/?dvpf=%c&keyword=%s%20site%3A%h"
@@ -652,6 +646,8 @@
          text-align: center;
          overflow: scroll;
          display: block;
+         -ms-overflow-style: none;
+         scrollbar-width: none;
      }
      .search-jumper-searchBar {
          overflow-wrap: break-word;
@@ -798,7 +794,7 @@
      }
      .search-jumper-word {
          background: black;
-         color: white;
+         color: white!important;
          border-radius: 20px;
          font-size: 16px;
          line-height: 32px;
