@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.0
+// @version      1.1
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本，在搜索时便捷跳转各大搜索引擎，如谷歌、必应、百度、鸭鸭等
 // @description:zh-TW  又一個搜尋引擎跳轉脚本，在搜索時便捷跳轉各大搜尋引擎，如谷歌、必應、百度、鴨鴨等
@@ -1026,12 +1026,7 @@
             let typeBtn = document.createElement("span");
             ele.appendChild(typeBtn);
             if (icon) {
-                if (/^http/.test(icon)) {
-                    let img = document.createElement("img");
-                    img.src = icon;
-                    img.className = "search-jumper-btn";
-                    typeBtn.appendChild(img);
-                } else {
+                if (/^[a-z\-]+$/.test(icon)) {
                     let i = document.createElement("i");
                     i.className = "fa fa-" + icon;
                     i.innerText = type;
@@ -1041,6 +1036,11 @@
                     typeBtn.appendChild(i);
                     typeBtn.classList.add("search-jumper-word");
                     typeBtn.classList.add("search-jumper-btn");
+                } else {
+                    let img = document.createElement("img");
+                    img.src = icon;
+                    img.className = "search-jumper-btn";
+                    typeBtn.appendChild(img);
                 }
             } else {
                 typeBtn.classList.add("search-jumper-word");
