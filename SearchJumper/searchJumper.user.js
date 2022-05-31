@@ -693,10 +693,13 @@
      .search-jumper-scroll.search-jumper-bottom>.search-jumper-searchBar.initShow {
          margin-top: 0px;
      }
-     .search-jumper-searchBar:hover,
-     .search-jumper-searchBar.initShow {
+     .search-jumper-searchBar:hover {
          margin-top: 0;
          opacity: 1;
+     }
+     .search-jumper-searchBar.initShow {
+         margin-top: 0;
+         opacity: 0.8;
      }
      .search-jumper-left,
      .search-jumper-left .search-jumper-type,
