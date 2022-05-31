@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      0.9.17
+// @version      1.0
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本，在搜索时便捷跳转各大搜索引擎，如谷歌、必应、百度、鸭鸭等
 // @description:zh-TW  又一個搜尋引擎跳轉脚本，在搜索時便捷跳轉各大搜尋引擎，如谷歌、必應、百度、鴨鴨等
@@ -958,8 +958,8 @@
         tipsPos(ele, type) {
             this.tips.innerText = type;
             this.tips.style.opacity = 1;
-            let clientX = ele.offsetLeft + 20;
-            let clientY = ele.offsetTop + 20;
+            let clientX = ele.offsetLeft + 20 - this.bar.parentNode.scrollLeft;
+            let clientY = ele.offsetTop + 20 - this.bar.parentNode.scrollTop;
             let current = ele.offsetParent;
 
             while (current !== null){
