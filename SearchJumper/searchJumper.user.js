@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.1.1
+// @version      1.1.2
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本，在搜索时便捷跳转各大搜索引擎，如谷歌、必应、百度、鸭鸭等
 // @description:zh-TW  又一個搜尋引擎跳轉脚本，在搜索時便捷跳轉各大搜尋引擎，如谷歌、必應、百度、鴨鴨等
@@ -501,7 +501,8 @@
         metaKey: false,
         autoClose: false,
         autoDelay: 2000,
-        shortcut: false
+        shortcut: false,
+        initShow: false
     };
     const lang = navigator.appName == "Netscape" ? navigator.language : navigator.userLanguage;
     let config = {};
@@ -681,16 +682,19 @@
      .search-jumper-scroll.search-jumper-right>.search-jumper-searchBar {
          margin-left: 20px;
      }
-     .search-jumper-scroll.search-jumper-right>.search-jumper-searchBar:hover {
+     .search-jumper-scroll.search-jumper-right>.search-jumper-searchBar:hover,
+     .search-jumper-scroll.search-jumper-right>.search-jumper-searchBar.initShow {
          margin-left: 0px;
      }
      .search-jumper-scroll.search-jumper-bottom>.search-jumper-searchBar {
          margin-top: 0px;
      }
-     .search-jumper-scroll.search-jumper-bottom>.search-jumper-searchBar:hover {
+     .search-jumper-scroll.search-jumper-bottom>.search-jumper-searchBar:hover,
+     .search-jumper-scroll.search-jumper-bottom>.search-jumper-searchBar.initShow {
          margin-top: 0px;
      }
-     .search-jumper-searchBar:hover {
+     .search-jumper-searchBar:hover,
+     .search-jumper-searchBar.initShow {
          margin-top: 0;
          opacity: 1;
      }
@@ -726,11 +730,13 @@
          margin-left: 0px;
          position: fixed;
      }
-     .search-jumper-left>.search-jumper-searchBar:hover {
+     .search-jumper-left>.search-jumper-searchBar:hover,
+     .search-jumper-left>.search-jumper-searchBar.initShow {
          margin-top: unset;
          margin-left: 0;
      }
-     .search-jumper-right>.search-jumper-searchBar:hover {
+     .search-jumper-right>.search-jumper-searchBar:hover,
+     .search-jumper-right>.search-jumper-searchBar.initShow {
          margin-top: unset;
          margin-left: -20px;
      }
@@ -742,7 +748,8 @@
          -moz-transform:scale(.9);
          transform:scale(.9);
      }
-     .search-jumper-bottom>.search-jumper-searchBar:hover {
+     .search-jumper-bottom>.search-jumper-searchBar:hover,
+     .search-jumper-bottom>.search-jumper-searchBar.initShow {
          margin-top: 0px;
          -webkit-transform:scale(1);
          -moz-transform:scale(1);
@@ -818,6 +825,7 @@
          font-weight: bold;
          transition: all 0.2s ease;
          color: black;
+         white-space: nowrap;
      }
      .search-jumper-type.search-jumper-hide {
          background: unset;
@@ -851,19 +859,29 @@
             let bar = document.createElement("span");
             bar.className = "search-jumper-searchBar";
             bar.appendChild(logoBtn);
-            let touchHandler = e => {
-                bar.removeEventListener('touchstart', touchHandler, true);
-                bar.classList.add('disable-pointer');
-                setTimeout(() => {
-                    bar.classList.remove('disable-pointer');
-                }, 250);
-            };
-            bar.addEventListener('touchstart', touchHandler, true);
 
             let searchBarCon = document.createElement("div");
             searchBarCon.id = "search-jumper";
             searchBarCon.className = "search-jumper-searchBarCon";
             searchBarCon.appendChild(bar);
+
+            if (searchData.prefConfig.initShow) {
+                bar.classList.add("initShow");
+                let enterHandler = e => {
+                    bar.removeEventListener('mouseenter', enterHandler, false);
+                    bar.classList.remove("initShow");
+                };
+                bar.addEventListener('mouseenter', enterHandler, false);
+            } else {
+                let touchHandler = e => {
+                    bar.removeEventListener('touchstart', touchHandler, true);
+                    bar.classList.add('disable-pointer');
+                    setTimeout(() => {
+                        bar.classList.remove('disable-pointer');
+                    }, 250);
+                };
+                bar.addEventListener('touchstart', touchHandler, true);
+            }
 
             this.bar = bar;
 
@@ -971,7 +989,7 @@
                 clientX -= this.tips.scrollWidth / 2;
                 clientY += this.tips.scrollHeight / 2;
                 if (clientX < 0) clientX = 0;
-                else if (clientX > viewWidth - this.tips.scrollWidth) clientX = viewWidth - this.tips.scrollWidth;
+                else if (clientX > viewWidth - this.tips.scrollWidth) clientX = viewWidth - this.tips.scrollWidth - 20;
                 this.tips.style.left = clientX + "px";
                 this.tips.style.top = clientY + "px";
             } else if (clientY > viewHeight - 50) {
@@ -979,7 +997,7 @@
                 this.tips.style.top = "";
                 clientX -= this.tips.scrollWidth / 2;
                 if (clientX < 0) clientX = 0;
-                else if (clientX > viewWidth - this.tips.scrollWidth) clientX = viewWidth - this.tips.scrollWidth;
+                else if (clientX > viewWidth - this.tips.scrollWidth) clientX = viewWidth - this.tips.scrollWidth - 20;
                 this.tips.style.left = clientX + "px";
                 this.tips.style.bottom = "50px";
             } else if (clientX > viewWidth - 50) {
