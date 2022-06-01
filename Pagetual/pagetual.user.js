@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.9
+// @version      1.9.10
 // @description  Perpetual pages - Most powerful Auto Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -812,7 +812,7 @@
             }
             if((this.curSiteRule.singleUrl || !this.curSiteRule.pageElement) && (!pageElement || pageElement.length==0) && curWin && !dontFind){
                 if(!body)return null;
-                let bodyHeight=parseInt(body.scrollHeight);
+                let bodyHeight=parseInt(body.offsetHeight || body.scrollHeight);
                 let curHeight=bodyHeight;
                 let windowHeight=window.innerHeight || document.documentElement.clientHeight;
                 let needCheckNext=(doc==document && this.initNext);
@@ -856,14 +856,14 @@
                             continue;
                         }
                         let comStyle=curWin.getComputedStyle(curNode);
-                        let h=parseInt(curNode.scrollHeight);
+                        let h=parseInt(curNode.offsetHeight || curNode.scrollHeight);
                         let w=parseInt(curNode.scrollWidth);
                         if(isNaN(h) || isNaN(w))continue;
                         if(isHori && h<=50)continue;
                         let a=h*w+h,moreChild=curNode.children[0];
                         while(moreChild){
                             comStyle=curWin.getComputedStyle(moreChild);
-                            let ch=parseInt(moreChild.scrollHeight);
+                            let ch=parseInt(moreChild.offsetHeight || moreChild.scrollHeight);
                             let cw=parseInt(moreChild.scrollWidth);
                             if(h<ch)h=ch;
                             if(moreChild.innerText!="" && !isNaN(ch) && !isNaN(cw)){
