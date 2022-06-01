@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.7.3.6
+// @version      2.7.3.7
 // @description  Fetch and download main content on current page, provide special support for chinese novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -25,7 +25,7 @@
 // @compatible        firefox
 // @compatible        opera 未测试
 // @compatible        safari 未测试
-// @contributionURL https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
+// @contributionURL https://buymeacoffee.com/hoothin
 // @contributionAmount 1
 // ==/UserScript==
 
@@ -507,8 +507,9 @@
         selValue=GM_getValue("downThreadNum");
         var downThreadNum=prompt(i18n.downThreadNum,selValue?selValue:"20");
         GM_setValue("downThreadNum",downThreadNum);
-        GM_setValue("contentSort",window.confirm(i18n.reSort));
-        GM_setValue("contentSortUrl",window.confirm(i18n.reSortUrl));
+        var sortByUrl=window.confirm(i18n.reSortUrl);
+        GM_setValue("contentSortUrl",sortByUrl);
+        if(!sortByUrl)GM_setValue("contentSort",window.confirm(i18n.reSort));
     }
     function customDown(){
         processFunc=null;
