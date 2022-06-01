@@ -499,6 +499,13 @@
     "pageBarText":1
   },
   {
+    "name":"Hacker News",
+    "action":0,
+    "url":"^https?://news\\.ycombinator\\.com/",
+    "pageElement":"table.itemlist>tbody>tr",
+    "nextLink":"a.morelink"
+  },
+  {
     "name":"参考消息手机版",
     "action":1,
     "url":"^http://m\\.cankaoxiaoxi\\.com/",
