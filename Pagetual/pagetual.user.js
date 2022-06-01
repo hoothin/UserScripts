@@ -2813,7 +2813,9 @@
         if(inTable){
             example=(example.tagName=="TR" || example.tagName=="TBODY")?example:example.previousElementSibling;
             if(example.tagName=="TBODY")example=example.querySelector("tr");
-            if(example.previousElementSibling)example=example.previousElementSibling;
+            let preTr=example;
+            while(preTr && preTr.children.length==0)preTr=preTr.previousElementSibling;
+            if(preTr)example=preTr;
             let tdNum=0;
             [].forEach.call(example.children, el=>{
                 if(el.tagName=="TD" || el.tagName=="TH"){
