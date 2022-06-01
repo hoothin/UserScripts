@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.1.2
+// @version      1.1.3
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本，在搜索时便捷跳转各大搜索引擎，如谷歌、必应、百度、鸭鸭等
 // @description:zh-TW  又一個搜尋引擎跳轉脚本，在搜索時便捷跳轉各大搜尋引擎，如谷歌、必應、百度、鴨鴨等
@@ -653,7 +653,7 @@
      .search-jumper-searchBar {
          overflow-wrap: break-word;
          background: #505050;
-         border-radius: 20px;
+         border-radius: 20px!important;
          border: 1px solid #b3b3b3;
          display: inline-flex;
          pointer-events: all;
@@ -795,7 +795,7 @@
      .search-jumper-type {
          display: inline-flex;
          background: #c5c5c5;
-         border-radius: 20px;
+         border-radius: 20px!important;
          overflow: hidden;
          transition:width 0.25s ease, height 0.25s;
      }
@@ -805,7 +805,7 @@
      .search-jumper-word {
          background: black;
          color: white!important;
-         border-radius: 20px;
+         border-radius: 20px!important;
          font-size: 16px;
          line-height: 32px;
          width: 32px;
@@ -822,7 +822,7 @@
          position: fixed;
          font-size: xx-large;
          background: #f5f5f5e0;
-         border-radius: 10px;
+         border-radius: 10px!important;
          padding: 5px;
          box-shadow: 0px 0px 10px 0px #000;
          font-weight: bold;
@@ -848,12 +848,6 @@
             let styleEle = document.createElement("style");
             styleEle.innerHTML = createHTML(cssText);
             document.documentElement.appendChild(styleEle);
-
-            let linkEle = document.createElement("link");
-            linkEle.rel="stylesheet";
-            linkEle.href = "https://cdn.bootcdn.net/ajax/libs/font-awesome/6.1.1/css/all.min.css";
-            document.documentElement.insertBefore(linkEle, document.documentElement.children[0]);
-
 
             logoBtn = document.createElement("span");
             logoBtn.innerHTML = createHTML(logoBtnSvg);
@@ -915,13 +909,19 @@
                     searchData.prefConfig.offset.y
                 );
             }
-            this.waitForFontAwesome(() => {
-                this.fontPool.forEach(font => {
-                    font.innerText = '';
-                    font.style.fontSize = '';
-                    font.style.color = '';
+            if (this.fontPool.length > 0) {
+                this.waitForFontAwesome(() => {
+                    this.fontPool.forEach(font => {
+                        font.innerText = '';
+                        font.style.fontSize = '';
+                        font.style.color = '';
+                    });
                 });
-            });
+                let linkEle = document.createElement("link");
+                linkEle.rel="stylesheet";
+                linkEle.href = "https://cdn.bootcdn.net/ajax/libs/font-awesome/6.1.1/css/all.min.css";
+                document.documentElement.insertBefore(linkEle, document.documentElement.children[0]);
+            }
 
             if (searchData.prefConfig.autoClose) {
                 var delay = searchData.prefConfig.autoDelay;
@@ -939,6 +939,50 @@
                 this.bar.addEventListener('mouseleave', e => {
                     hideTimeout = setTimeout(hideHandler, delay);
                 }, false);
+            }
+        }
+
+        refresh() {
+            if (!currentSite && this.bar.style.display == "none") {
+                let typeData;
+                for (let i in searchData.sitesConfig) {
+                    if (currentSite) break;
+                    typeData = searchData.sitesConfig[i];
+                    let sites = typeData.sites;
+                    for (let j in sites) {
+                        if (currentSite) break;
+                        let data = sites[j];
+                        if (data.match) {
+                            if (new RegExp(data.match).test(location.href)) {
+                                currentSite = data;
+                            }
+                        } else if (data.url.indexOf(location.host) != -1 &&
+                                   data.url.replace(/^https?:\/\//, "").replace(location.host, "").replace(/\?.*/, "") == location.pathname) {
+                            let urlReg = data.url.match(/[^\/\?&]+(?=%[stb])/g);
+                            if (urlReg) {
+                                urlReg = urlReg.join('.*');
+                                if (new RegExp(urlReg).test(location.href)) {
+                                    currentSite = data;
+                                }
+                            }
+                        }
+                    }
+                }
+                if (currentSite) {
+                    this.bar.style.display = "";
+                    this.initPos(
+                        searchData.prefConfig.position.x,
+                        searchData.prefConfig.position.y,
+                        searchData.prefConfig.offset.x,
+                        searchData.prefConfig.offset.y
+                    );
+                    let typeBtn = this.bar.querySelector(`.search-jumper-type.search-jumper-hide[title="${typeData.type}"]>span`);
+                    if (typeBtn) {
+                        this.bar.insertBefore(typeBtn.parentNode, this.bar.children[0]);
+                        let mouseDownEvent = new PointerEvent("mousedown");
+                        typeBtn.dispatchEvent(mouseDownEvent);
+                    }
+                }
             }
         }
 
@@ -1209,7 +1253,8 @@
                     if (new RegExp(data.match).test(location.href)) {
                         ele.dataset.current = true;
                     }
-                } else if (data.url.indexOf(location.host) != -1) {
+                } else if (data.url.indexOf(location.host) != -1 &&
+                           data.url.replace(/^https?:\/\//, "").replace(location.host, "").replace(/\?.*/, "") == location.pathname) {
                     let urlReg = data.url.match(/[^\/\?&]+(?=%[stb])/g);
                     if (urlReg) {
                         urlReg = urlReg.join('.*');
@@ -1738,6 +1783,26 @@
                 if (shown) event.preventDefault();
             };
         }
+        let changeHandler = e => {
+            setTimeout(()=>{
+                searchBar.refresh();
+            },0);
+        }
+        let _wr = function(type) {
+            var orig = history[type];
+            return function() {
+                var rv = orig.apply(this, arguments);
+                var e = new Event(type);
+                e.arguments = arguments;
+                window.dispatchEvent(e);
+                return rv;
+            };
+        };
+        history.pushState = _wr('pushState');
+        history.replaceState = _wr('replaceState');
+        window.addEventListener('pushState', changeHandler);
+        window.addEventListener('replaceState', changeHandler);
+        window.addEventListener('yt-navigate-finish', changeHandler);
     }
 
     function initConfig() {
