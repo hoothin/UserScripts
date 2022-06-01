@@ -1927,7 +1927,7 @@
             ruleParser.customRules.unshift(rulesData.editTemp);
             rulesData.editTemp=null;
             storage.setItem("rulesData", rulesData);
-            customRulesInput.scrollIntoView();
+            customRulesInput.previousElementSibling.scrollIntoView();
         }
         customRulesInput.style.width="100%";
         customRulesInput.style.height="500px";
