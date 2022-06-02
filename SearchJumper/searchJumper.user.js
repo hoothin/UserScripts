@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.2.1
+// @version      1.2.2
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本，在搜索时便捷跳转各大搜索引擎，如谷歌、必应、百度、鸭鸭等
 // @description:zh-TW  又一個搜尋引擎跳轉脚本，在搜索時便捷跳轉各大搜尋引擎，如谷歌、必應、百度、鴨鴨等
@@ -785,11 +785,27 @@
          cursor: grab;
      }
      .search-jumper-type.search-jumper-needInPage,
-     .search-jumper-type.search-jumper-targetImg {
+     .search-jumper-type.search-jumper-targetImg,
+     .search-jumper-type.search-jumper-targetAudio,
+     .search-jumper-type.search-jumper-targetVideo,
+     .search-jumper-type.search-jumper-targetLink,
+     .search-jumper-type.search-jumper-targetPage,
+     .search-jumper-isTargetImg>.search-jumper-type,
+     .search-jumper-isTargetAudio>.search-jumper-type,
+     .search-jumper-isTargetVideo>.search-jumper-type,
+     .search-jumper-isTargetLink>.search-jumper-type,
+     .search-jumper-isTargetPage>.search-jumper-type {
          display: none;
      }
+     .search-jumper-searchBar>.search-jumper-type.search-jumper-targetAll {
+         display: inline-flex;
+     }
      .search-jumper-isInPage>.search-jumper-type.search-jumper-needInPage,
-     .search-jumper-isTargetImg>.search-jumper-type.search-jumper-targetImg {
+     .search-jumper-isTargetImg>.search-jumper-type.search-jumper-targetImg,
+     .search-jumper-isTargetAudio>.search-jumper-type.search-jumper-targetAudio,
+     .search-jumper-isTargetVideo>.search-jumper-type.search-jumper-targetVideo,
+     .search-jumper-isTargetLink>.search-jumper-type.search-jumper-targetLink,
+     .search-jumper-isTargetPage>.search-jumper-type.search-jumper-targetPage {
          display: inline-flex;
      }
      .search-jumper-type {
@@ -841,7 +857,7 @@
          text-decoration:none;
      }`;
 
-    var targetImgSrc, targetImgBaseSrc;
+    var targetElement;
 
     class SearchBar {
         constructor() {
@@ -894,6 +910,7 @@
         }
 
         initRun() {
+            let self = this;
             this.fontPool = [];
             searchData.sitesConfig.forEach(siteConfig => {
                 this.createType(siteConfig);
@@ -911,36 +928,52 @@
                 );
             }
             if (this.fontPool.length > 0) {
-                this.waitForFontAwesome(() => {
-                    this.fontPool.forEach(font => {
-                        font.innerText = '';
-                        font.style.fontSize = '';
-                        font.style.color = '';
-                    });
-                });
                 let linkEle = document.createElement("link");
                 linkEle.rel="stylesheet";
-                linkEle.href = "https://cdn.bootcdn.net/ajax/libs/font-awesome/6.1.1/css/all.min.css";
-                document.documentElement.insertBefore(linkEle, document.documentElement.children[0]);
+                linkEle.href = searchData.prefConfig.fontAwesomeCss || "https://cdn.bootcdn.net/ajax/libs/font-awesome/6.1.1/css/all.min.css";
+                let appendCss = () => {
+                    if (document.readyState == 'complete') {
+                        document.documentElement.insertBefore(linkEle, document.documentElement.children[0]);
+                        this.waitForFontAwesome(() => {
+                            this.fontPool.forEach(font => {
+                                font.innerText = '';
+                                font.style.fontSize = '';
+                                font.style.color = '';
+                            });
+                        });
+                    }
+                };
+                if (document.readyState == 'complete') {
+                    appendCss();
+                }
+                document.addEventListener('readystatechange', event => {
+                    appendCss();
+                })
             }
 
-            if (searchData.prefConfig.autoClose) {
-                var delay = searchData.prefConfig.autoDelay;
-                var hideHandler = () => {
+            var delay = searchData.prefConfig.autoDelay || 1000;
+            var hideHandler = () => {
+                self.bar.classList.remove("search-jumper-isInPage");
+                self.bar.classList.remove("search-jumper-isTargetImg");
+                self.bar.classList.remove("search-jumper-isTargetAudio");
+                self.bar.classList.remove("search-jumper-isTargetVideo");
+                self.bar.classList.remove("search-jumper-isTargetLink");
+                self.bar.classList.remove("search-jumper-isTargetPage");
+                if (searchData.prefConfig.autoClose) {
                     let openType = this.bar.querySelector('.search-jumper-type:not(.search-jumper-hide)>span');
                     if (openType) {
                         let mouseDownEvent = new PointerEvent("mousedown");
                         openType.dispatchEvent(mouseDownEvent);
                     }
-                };
-                var hideTimeout = setTimeout(hideHandler, delay);
-                this.bar.addEventListener('mouseenter', e => {
-                    clearTimeout(hideTimeout);
-                }, false);
-                this.bar.addEventListener('mouseleave', e => {
-                    hideTimeout = setTimeout(hideHandler, delay);
-                }, false);
-            }
+                }
+            };
+            var hideTimeout = setTimeout(hideHandler, delay);
+            this.bar.addEventListener('mouseenter', e => {
+                clearTimeout(hideTimeout);
+            }, false);
+            this.bar.addEventListener('mouseleave', e => {
+                hideTimeout = setTimeout(hideHandler, delay);
+            }, false);
         }
 
         refresh() {
@@ -988,7 +1021,7 @@
         }
 
         waitForFontAwesome(callback) {
-            var retries = 50;
+            var retries = 100;
             var checkReady = function() {
                 var canvas, context;
                 retries -= 1;
@@ -1005,7 +1038,7 @@
                 var data = context.getImageData( 2, 10, 1, 1 ).data;
                 if ( data[0] !== 255 && data[1] !== 255 && data[2] !== 255 ) {
                     if ( retries > 0 ) {
-                        setTimeout( checkReady, 200 );
+                        setTimeout( checkReady, 100 );
                     }
                 } else {
                     if ( typeof callback === 'function' ) {
@@ -1076,12 +1109,17 @@
             let icon = data.icon;
             let inPage = data.selectTxt;
             let selectImg = data.selectImg;
+            let selectAudio = data.selectAudio;
+            let selectVideo = data.selectVideo;
+            let selectLink = data.selectLink;
+            let selectPage = data.selectPage;
             let sites = data.sites;
             let match = data.match;
             let openInNewTab = data.openInNewTab;
             if (match && new RegExp(match).test(location.href) == false) {
                 return;
             }
+            let siteEles = [];
             let ele = document.createElement("span");
             ele.className = "search-jumper-type search-jumper-hide";
             ele.title = type;
@@ -1112,6 +1150,19 @@
                 typeBtn.appendChild(word);
             }
             let typeAction = e => {
+                if (e.which === 3) {
+                    if (!ele.classList.contains("search-jumper-hide")) {
+                        siteEles.forEach(siteEle => {
+                            if (siteEle.dataset.nobatch) return;
+                            let mouseDownEvent = new PointerEvent("mousedown");
+                            siteEle.dispatchEvent(mouseDownEvent);
+                            siteEle.setAttribute("target", "_blank");
+                            siteEle.click();
+                            siteEle.setAttribute("target", siteEle.dataset.target==1?"_blank":"");
+                        });
+                    }
+                    return false;
+                }
                 ele.style.width = "";
                 ele.style.height = "";
                 if (ele.classList.contains("search-jumper-hide")) {
@@ -1181,6 +1232,7 @@
             sites.forEach(site => {
                 let siteEle = this.createSiteBtn(site.name, site.icon, site, openInNewTab);
                 ele.appendChild(siteEle);
+                siteEles.push(siteEle);
                 if (!currentSite && (siteEle.dataset.current || match)) {
                     isCurrent = true;
                     currentSite = site;
@@ -1196,11 +1248,27 @@
                 ele.dataset.width = ele.scrollWidth + "px";
                 ele.style.width = "38px";
             }
-            if (inPage) {
-                ele.classList.add("search-jumper-needInPage");
-            }
-            if (selectImg) {
-                ele.classList.add("search-jumper-targetImg");
+            if (inPage && selectImg && selectAudio && selectVideo && selectLink && selectPage) {
+                ele.classList.add("search-jumper-targetAll");
+            } else {
+                if (inPage) {
+                    ele.classList.add("search-jumper-needInPage");
+                }
+                if (selectImg) {
+                    ele.classList.add("search-jumper-targetImg");
+                }
+                if (selectAudio) {
+                    ele.classList.add("search-jumper-targetAudio");
+                }
+                if (selectVideo) {
+                    ele.classList.add("search-jumper-targetVideo");
+                }
+                if (selectLink) {
+                    ele.classList.add("search-jumper-targetLink");
+                }
+                if (selectPage) {
+                    ele.classList.add("search-jumper-targetPage");
+                }
             }
             searchTypes.push(ele);
             return ele;
@@ -1218,6 +1286,7 @@
             let img = document.createElement("img");
             img.style.opacity = 0;
             ele.appendChild(img);
+            if (data.nobatch) ele.dataset.nobatch = 1;
             img.onload = e => {
                 ele.classList.remove("search-jumper-word");
                 ele.removeChild(word);
@@ -1237,10 +1306,12 @@
                         (data.meta && !e.metaKey)) {
                         return;
                     }
-                    if (document.activeElement &&
-                        (document.activeElement.tagName == 'INPUT' ||
-                         document.activeElement.tagName == 'TEXTAREA')) {
-                        return;
+                    if (!searchData.prefConfig.enableInInput) {
+                        if (document.activeElement &&
+                            (document.activeElement.tagName == 'INPUT' ||
+                             document.activeElement.tagName == 'TEXTAREA')) {
+                            return;
+                        }
                     }
                     var key = String.fromCharCode(e.keyCode).toLowerCase();
                     if (data.shortcut == key) {
@@ -1254,7 +1325,7 @@
                     if (new RegExp(data.match).test(location.href)) {
                         ele.dataset.current = true;
                     }
-                } else if (data.url.indexOf(location.host) != -1 &&
+                } else if (data.url.indexOf(location.host) != -1 && data.url.indexOf("%s") != -1 &&
                            data.url.replace(/^https?:\/\//, "").replace(location.host, "").replace(/\/?[\?#].*/, "") == location.pathname.replace(/\/$/, "")) {
                     let urlReg = data.url.match(/[^\/\?&]+(?=%[stb])/g);
                     if (urlReg) {
@@ -1293,14 +1364,23 @@
             }
             if (openInNewTab || searchData.prefConfig.openInNewTab) {
                 ele.setAttribute("target", "_blank");
+                ele.dataset.target = 1;
             }
             let getUrl = () => {
                 let keywords = getKeywords();
                 if (keywords && keywords != cacheKeywords) storage.setItem("cacheKeywords", keywords);
                 if (!ele.dataset.url) {
-                    ele.dataset.url = data.url.replace(/%e/g, document.charset).replace(/%c/g, (isMobile?"mobile":"pc")).replace(/%u/g, location.href).replace(/%h/g, location.host);
+                    ele.dataset.url = data.url.replace(/%e/g, document.charset).replace(/%c/g, (isMobile?"mobile":"pc")).replace(/%u/g, location.href).replace(/%U/g, encodeURIComponent(location.href)).replace(/%h/g, location.host);
                 }
-                return ele.dataset.url.replace(/%t/g, targetImgSrc).replace(/%b/g, targetImgBaseSrc).replace(/%s/g, keywords);
+                let selStr = getSelectStr();
+                let targetUrl = location.href;
+                let targetName = selStr || document.title;
+                if (targetElement) {
+                    targetUrl = targetElement.src || targetElement.href || location.href;
+                    targetName = targetElement.title || targetElement.alt || selStr || document.title;
+                }
+                let targetBaseUrl = targetUrl.replace(/https?:\/\//i, "");
+                return ele.dataset.url.replace(/%t/g, targetUrl).replace(/%T/g, encodeURIComponent(targetUrl)).replace(/%b/g, targetBaseUrl).replace(/%B/g, encodeURIComponent(targetBaseUrl)).replace(/%n/g, targetName).replace(/%s/g, keywords);
             };
             let action = e => {
                 if (data.charset || data.url.indexOf(':p{') !== -1) {
@@ -1361,7 +1441,41 @@
             return form.submit();
         }
 
-        showInPage(selectImg) {
+        showInPage() {
+            let firstType;
+            this.bar.classList.remove("search-jumper-isInPage");
+            this.bar.classList.remove("search-jumper-isTargetImg");
+            this.bar.classList.remove("search-jumper-isTargetAudio");
+            this.bar.classList.remove("search-jumper-isTargetVideo");
+            this.bar.classList.remove("search-jumper-isTargetLink");
+            this.bar.classList.remove("search-jumper-isTargetPage");
+            if (getSelectStr()) {
+                this.bar.classList.add("search-jumper-isInPage");
+                firstType = this.bar.querySelector('.search-jumper-needInPage>span');
+            } else {
+                switch (targetElement.tagName) {
+                    case 'IMG':
+                        this.bar.classList.add("search-jumper-isTargetImg");
+                        firstType = this.bar.querySelector('.search-jumper-targetImg>span');
+                        break;
+                    case 'AUDIO':
+                        this.bar.classList.add("search-jumper-isTargetAudio");
+                        firstType = this.bar.querySelector('.search-jumper-targetAudio>span');
+                        break;
+                    case 'VIDEO':
+                        this.bar.classList.add("search-jumper-isTargetVideo");
+                        firstType = this.bar.querySelector('.search-jumper-targetVideo>span');
+                        break;
+                    case 'A':
+                        this.bar.classList.add("search-jumper-isTargetLink");
+                        firstType = this.bar.querySelector('.search-jumper-targetLink>span');
+                        break;
+                    default:
+                        this.bar.classList.add("search-jumper-isTargetPage");
+                        firstType = this.bar.querySelector('.search-jumper-targetPage>span');
+                        break;
+                }
+            }
             if (this.bar.style.display == "none") {
                 this.bar.style.display = "";
                 this.initPos(
@@ -1370,17 +1484,9 @@
                     searchData.prefConfig.offset.x,
                     searchData.prefConfig.offset.y
                 );
+                let mouseDownEvent = new PointerEvent("mousedown");
+                if (firstType && firstType.parentNode.classList.contains('search-jumper-hide')) firstType.dispatchEvent(mouseDownEvent);
             }
-            let mouseDownEvent = new PointerEvent("mousedown");
-            let firstType;
-            if (selectImg) {
-                this.bar.classList.add("search-jumper-isTargetImg");
-                firstType = this.bar.querySelector('.search-jumper-targetImg>span');
-            } else {
-                this.bar.classList.add("search-jumper-isInPage");
-                firstType = this.bar.querySelector('.search-jumper-needInPage>span');
-            }
-            if (firstType && firstType.parentNode.classList.contains('search-jumper-hide')) firstType.dispatchEvent(mouseDownEvent);
         }
 
         initPos(relX, relY, posX, posY) {
@@ -1745,37 +1851,31 @@
                     (searchData.prefConfig.ctrlKey && !e.ctrlKey) ||
                     (searchData.prefConfig.shiftKey && !e.shiftKey) ||
                     (searchData.prefConfig.metaKey && !e.metaKey) ||
-                    (e.which === 1 && e.target.tagName === 'IMG') ||
                     e.target.classList.contains('search-jumper-btn')) {
                     return;
                 }
                 if (!searchData.prefConfig.selectToShow &&
-                    (e.which === 1 ||
-                    (e.target.tagName != 'IMG' && !getSelectStr()))) {
+                    e.which === 1) {
                     return;
                 }
                 if (e.target.tagName === 'IMG' &&
                     e.target.parentNode.classList.contains('search-jumper-btn')) return;
                 shown = false;
                 let selectImg = e.target.tagName === 'IMG';
-                if (selectImg) {
-                    targetImgSrc = e.target.src;
-                    targetImgBaseSrc = targetImgSrc.replace(/https?:\/\//i,"");
-                }
+                targetElement = e.target;
                 let showToolbarTimer = setTimeout(() => {
-                    if (!searchData.prefConfig.selectToShow || targetImgSrc) {
-                        searchBar.showInPage(selectImg);
-                        e.stopPropagation();
-                        e.preventDefault();
-                        shown = true;
-                    }
+                    if (e.which === 1) return;
+                    searchBar.showInPage();
+                    e.stopPropagation();
+                    e.preventDefault();
+                    shown = true;
                 }, 500);
                 let mouseUpHandler = e => {
                     if (shown) {
                         e.stopPropagation();
                         e.preventDefault();
                     }else if (searchData.prefConfig.selectToShow && getSelectStr()) {
-                        searchBar.showInPage(selectImg);
+                        searchBar.showInPage();
                     }
                     clearTimeout(showToolbarTimer);
                     document.removeEventListener('mouseup', mouseUpHandler, false);
