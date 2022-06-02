@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.2.2
+// @version      1.2.3
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本，在搜索时便捷跳转各大搜索引擎，如谷歌、必应、百度、鸭鸭等
 // @description:zh-TW  又一個搜尋引擎跳轉脚本，在搜索時便捷跳轉各大搜尋引擎，如谷歌、必應、百度、鴨鴨等
@@ -1276,6 +1276,7 @@
 
         createSiteBtn(name, icon, data, openInNewTab) {
             let self = this;
+            let isBookmarklet = /^javascript:/.test(data.url);
             let ele = document.createElement("a");
             ele.className = "search-jumper-btn";
             ele.title = name;
@@ -1295,7 +1296,7 @@
             if (icon == 0) {
             } else if (icon) {
                 img.src = icon;
-            } else {
+            } else if (!isBookmarklet) {
                 img.src = data.url.replace(/^(https?:\/\/[^\/]*\/).*$/, "$1favicon.ico");
             }
             if (searchData.prefConfig.shortcut && data.shortcut) {
@@ -1362,7 +1363,7 @@
                     }
                 }
             }
-            if (openInNewTab || searchData.prefConfig.openInNewTab) {
+            if (!isBookmarklet && (openInNewTab || searchData.prefConfig.openInNewTab)) {
                 ele.setAttribute("target", "_blank");
                 ele.dataset.target = 1;
             }
@@ -1884,6 +1885,7 @@
             }, true);
             document.oncontextmenu = function (event) {
                 if (shown) event.preventDefault();
+                shown = false;
             };
         }
         let changeHandler = e => {
