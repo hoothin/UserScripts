@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.2.3
+// @version      1.3
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本，在搜索时便捷跳转各大搜索引擎，如谷歌、必应、百度、鸭鸭等
 // @description:zh-TW  又一個搜尋引擎跳轉脚本，在搜索時便捷跳轉各大搜尋引擎，如谷歌、必應、百度、鴨鴨等
@@ -1362,6 +1362,9 @@
                         }, 500);
                     }
                 }
+            }
+            if (data.hideNotMatch && data.match && new RegExp(data.match).test(location.href) === false) {
+                ele.style.display = 'none';
             }
             if (!isBookmarklet && (openInNewTab || searchData.prefConfig.openInNewTab)) {
                 ele.setAttribute("target", "_blank");
