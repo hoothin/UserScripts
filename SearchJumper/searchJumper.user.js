@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.3.2
+// @version      1.3.3.1
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本，在搜索时便捷跳转各大搜索引擎，如谷歌、必应、百度、鸭鸭等
 // @description:zh-TW  又一個搜尋引擎跳轉脚本，在搜索時便捷跳轉各大搜尋引擎，如谷歌、必應、百度、鴨鴨等
@@ -226,10 +226,6 @@
                 name: "爱问知识",
                 url: "http://iask.sina.com.cn/search?searchWord=%s"
             }, {
-                name: "萌娘百科",
-                url: "https://zh.moegirl.org/%s",
-                icon: "https://zh.moegirl.org.cn/favicon.ico"
-            }, {
                 name: "果壳",
                 url: "http://www.guokr.com/search/all/?wd=%s"
             }, {
@@ -340,8 +336,7 @@
             sites: [ {
                 name: "Google",
                 url: "https://www.google.com/search?q=%s&ie=%e&oe=%e",
-                match: "https://www\\.google\\..*/search",
-                charset: "utf-8"
+                match: "https://www\\.google\\..*/search"
             }, {
                 name: "百度",
                 url: "https://www.baidu.com/s?wd=%s&ie=%e",
@@ -390,34 +385,34 @@
             selectTxt: true,
             openInNewTab: true,
             sites: [ {
-                name: "Google",
+                name: "Google站内搜",
                 url: "https://www.google.com/search?q=%s%20site%3A%h&ie=%e&oe=%e",
             }, {
-                name: "头条搜索",
+                name: "头条站内搜",
                 url: "https://so.toutiao.com/search/?dvpf=%c&keyword=%s%20site%3A%h"
             }, {
-                name: "百度",
+                name: "百度站内搜",
                 url: "https://www.baidu.com/s?wd=%s%20site%3A%h&ie=%e"
             }, {
-                name: "必应",
+                name: "必应站内搜",
                 url: "https://cn.bing.com/search?q=%s%20site%3A%h"
             }, {
-                name: "鸭鸭",
+                name: "鸭鸭站内搜",
                 url: "https://duckduckgo.com/?q=%s%20site%3A%h"
             }, {
-                name: "360",
+                name: "360站内搜",
                 url: "https://www.so.com/s?ie=utf-8&q=%s%20site%3A%h"
             }, {
-                name: "雅虎",
+                name: "雅虎站内搜",
                 url: "https://search.yahoo.com/search;?p=%s%20site%3A%h"
             }, {
-                name: "搜狗",
+                name: "搜狗站内搜",
                 url: "https://www.sogou.com/web?query=%s%20site%3A%h"
             }, {
-                name: "Yandex",
+                name: "Yandex站内搜",
                 url: "https://yandex.com/search/?text=%s%20site%3A%h"
             }, {
-                name: "Startpage",
+                name: "Startpage站内搜",
                 url: "https://www.startpage.com/sp/search?query=%s%20site%3A%h",
                 icon: "https://www.startpage.com/sp/cdn/favicons/favicon-16x16--default.png"
             } ]
@@ -482,6 +477,47 @@
             icon: "diamond",
             match: "://v\\.qq\\.com/x/",
             sites: []
+        },
+        {
+            type: "辅助工具",
+            icon: "list-alt",
+            selectTxt: true,
+            selectImg: true,
+            selectAudio: true,
+            selectVideo: true,
+            selectLink: true,
+            selectPage: true,
+            openInNewTab: true,
+            sites: [
+                {
+                    name: "生成二维码",
+                    url: "https://www.lofter.com/genBitmaxImage?h=330&w=330&url=%T"
+                },
+                {
+                    name: "分享到微博",
+                    url: "https://service.weibo.com/share/share.php?url=%t&title=%n"
+                },
+                {
+                    name: "分享到推特",
+                    url: "https://twitter.com/intent/tweet?url=%T"
+                },
+                {
+                    name: "使用Gmail发送",
+                    url: "https://mail.google.com/mail/u/0/?tf=cm&source=mailto&body=%n %T"
+                },
+                {
+                    name: "分享到Facebook",
+                    url: "https://www.facebook.com/sharer/sharer.php?u=%T&t=%n"
+                },
+                {
+                    name: "百度文库",
+                    url: "javascript:(function()%7B(function()%20%7Bvar%20uri%20%3D%20window.location.href%3Bvar%20key%20%3D%20%22%20filetype%3A%22%3Bvar%20value%20%3D%20%22all%22%3Bvar%20re%20%3D%20new%20RegExp(%22(%5B%3F%26%5D)%22%20%2B%20key%20%2B%20%22%3D.*%3F(%26%7C%24)%22%2C%20%22i%22)%3Bif%20(uri.match(re))%20%7Bwindow.location.href%20%3D%20uri.replace(re%2C%20'%241'%20%2B%20key%20%20%2B%20value%20%2B%20'%242')%3B%7D%20else%20%7Bwindow.location.href%20%3D%20uri%20%20%2B%20key%20%20%2B%20value%3B%7D%7D)()%7D)()",
+                    icon: "https://www.baidu.com/favicon.ico",
+                    match: "wenku\\.baidu\\.com",
+                    nobatch: true,
+                    hideNotMatch: true
+                }
+            ]
         }
     ];
     searchData.prefConfig = {
@@ -512,7 +548,8 @@
             config = {
                 scriptName: '搜索酱',
                 importOrNot: '是否导入配置？',
-                settings: '配置脚本'
+                settings: '配置脚本',
+                batchOpen: '确定要批量打开吗？'
             };
             break;
         case "zh-TW":
@@ -520,14 +557,16 @@
             config = {
                 scriptName: "搜索醬",
                 importOrNot: '是否導入配置？',
-                settings: '配置脚本'
+                settings: '配置脚本',
+                batchOpen: '確定要批量打開嗎？'
             };
             break;
         default:
             config = {
                 scriptName: "Search Jumper",
                 importOrNot: 'Do you want to import this config?',
-                settings: 'Settings'
+                settings: 'Settings',
+                batchOpen: 'Batch open urls?'
             };
             break;
     }
@@ -935,7 +974,7 @@
             if (this.fontPool.length > 0) {
                 let linkEle = document.createElement("link");
                 linkEle.rel="stylesheet";
-                linkEle.href = searchData.prefConfig.fontAwesomeCss || "https://cdn.bootcdn.net/ajax/libs/font-awesome/6.1.1/css/all.min.css";
+                linkEle.href = searchData.prefConfig.fontAwesomeCss || "https://lib.baomitu.com/font-awesome/6.0.0-beta2/css/all.css";
                 let appendCss = () => {
                     if (document.readyState == 'complete') {
                         document.documentElement.insertBefore(linkEle, document.documentElement.children[0]);
@@ -1042,8 +1081,15 @@
                 context.fillText( '\uf0c8', 10, 18 );
                 var data = context.getImageData( 2, 10, 1, 1 ).data;
                 if ( data[0] !== 255 && data[1] !== 255 && data[2] !== 255 ) {
-                    if ( retries > 0 ) {
-                        setTimeout( checkReady, 100 );
+                    context.font = '16pt "Font Awesome 6 Free"';
+                    context.fillText( '\uf0c8', 10, 18 );
+                    data = context.getImageData( 2, 10, 1, 1 ).data;
+                    if ( data[0] !== 228 && data[1] !== 228 && data[2] !== 228 ) {
+                        if ( retries > 0 ) {
+                            setTimeout( checkReady, 150 );
+                        }
+                    } else if ( typeof callback === 'function' ) {
+                        callback();
                     }
                 } else {
                     if ( typeof callback === 'function' ) {
@@ -1052,7 +1098,7 @@
                 }
             }
 
-            checkReady();
+            setTimeout( checkReady, 50 );
         }
 
         tipsPos(ele, type) {
@@ -1153,9 +1199,9 @@
             }
             let typeAction = e => {
                 if (e.which === 3) {
-                    if (!ele.classList.contains("search-jumper-hide")) {
+                    if (!ele.classList.contains("search-jumper-hide") || window.confirm(i18n('batchOpen'))) {
                         siteEles.forEach(siteEle => {
-                            if (siteEle.dataset.nobatch) return;
+                            if (siteEle.dataset.nobatch || siteEle.dataset.current) return;
                             let mouseDownEvent = new PointerEvent("mousedown");
                             siteEle.dispatchEvent(mouseDownEvent);
                             siteEle.setAttribute("target", "_blank");
@@ -1449,6 +1495,12 @@
         }
 
         showInPage() {
+            if (targetElement &&
+                targetElement.parentNode &&
+                targetElement.parentNode.className &&
+                targetElement.parentNode.classList.contains("search-jumper-btn")) {
+                return;
+            }
             let firstType;
             this.bar.classList.remove("search-jumper-isInPage");
             this.bar.classList.remove("search-jumper-isTargetImg");
