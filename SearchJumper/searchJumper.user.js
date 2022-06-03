@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.3.3.1
+// @version      1.3.3.2
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本，在搜索时便捷跳转各大搜索引擎，如谷歌、必应、百度、鸭鸭等
 // @description:zh-TW  又一個搜尋引擎跳轉脚本，在搜索時便捷跳轉各大搜尋引擎，如谷歌、必應、百度、鴨鴨等
@@ -465,7 +465,7 @@
                 name: "KarmaDecay",
                 url: "http://karmadecay.com/%t"
             }, {
-                name: "ZXing QRCode",
+                name: "ZXing二维码解码",
                 url: "https://zxing.org/w/decode?full=true&u=%t"
             }, {
                 name: "ImgOps",
@@ -1428,12 +1428,17 @@
                 let selStr = getSelectStr();
                 let targetUrl = location.href;
                 let targetName = selStr || document.title;
+                let imgBase64 = '', resultUrl = ele.dataset.url;
                 if (targetElement) {
-                    targetUrl = targetElement.src || targetElement.href || location.href;
-                    targetName = targetElement.title || targetElement.alt || selStr || document.title;
+                    targetUrl = targetElement.src || targetElement.href || selStr || location.href;
+                    targetName = targetElement.title || targetElement.alt || document.title;
+                    if (targetElement.tagName == 'IMG' && ele.dataset.url.indexOf('%i') != -1) {
+                        imgBase64 = image2Base64(targetElement);
+                        resultUrl = resultUrl.replace(/%i/g, imgBase64);
+                    }
                 }
                 let targetBaseUrl = targetUrl.replace(/https?:\/\//i, "");
-                return ele.dataset.url.replace(/%t/g, targetUrl).replace(/%T/g, encodeURIComponent(targetUrl)).replace(/%b/g, targetBaseUrl).replace(/%B/g, encodeURIComponent(targetBaseUrl)).replace(/%n/g, targetName).replace(/%s/g, keywords);
+                return resultUrl.replace(/%t/g, targetUrl).replace(/%T/g, encodeURIComponent(targetUrl)).replace(/%b/g, targetBaseUrl).replace(/%B/g, encodeURIComponent(targetBaseUrl)).replace(/%n/g, targetName).replace(/%s/g, keywords);
             };
             let action = e => {
                 if (data.charset || data.url.indexOf(':p{') !== -1) {
@@ -1666,6 +1671,16 @@
         }
     }
 
+    function image2Base64 (img) {
+        img.setAttribute("crossOrigin",'anonymous');
+        var canvas = document.createElement("canvas");
+        canvas.width = img.naturalWidth || img.width;
+        canvas.height = img.naturalHeight || img.height;
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        return canvas.toDataURL("image/png");
+    }
+
     function getSelectStr() {
         let selStr = window.getSelection().toString();
         if (selStr) {
@@ -1707,6 +1722,10 @@
                     }
                 }
             }
+        }
+        if (keywords == '') {
+            let firstInput = document.querySelector('input[type=text],input:not([type])');
+            if (firstInput) keywords = firstInput.value;
         }
         localKeywords = keywords.replace(/site(%3A|:).*?([%&]|$)/, "$2");
         return !localKeywords ? cacheKeywords : localKeywords;
