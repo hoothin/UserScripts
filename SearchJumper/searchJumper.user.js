@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.3.3.2
+// @version      1.3.3.3
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本，在搜索时便捷跳转各大搜索引擎，如谷歌、必应、百度、鸭鸭等
 // @description:zh-TW  又一個搜尋引擎跳轉脚本，在搜索時便捷跳轉各大搜尋引擎，如谷歌、必應、百度、鴨鴨等
@@ -37,7 +37,7 @@
     //const configPage = 'http://localhost:3000/';
     const configPage = 'https://hoothin.github.io/SearchJumper/';
 
-    const importPageReg = /^https:\/\/github\.com\/hoothin\/SearchJumper\/issues|^https:\/\/greasyfork\.org\/.*\/scripts\/445274[\-\/]/i;
+    const importPageReg = /^https:\/\/github\.com\/hoothin\/SearchJumper|^https:\/\/greasyfork\.org\/.*\/scripts\/445274[\-\/]/i;
 
     var searchData = {};
 
@@ -137,16 +137,16 @@
                 icon: "https://s1.music.126.net/style/favicon.ico"
             }, {
                 name: "一听",
-                url: "http://so.1ting.com/all.do?q=%s"
+                url: "https://so.1ting.com/all.do?q=%s"
             }, {
                 name: "QQ音乐",
                 url: "https://y.qq.com/portal/search.html#page=1&searchid=1&remoteplace=txt.yqq.top&t=song&w=%s"
             }, {
                 name: "百度音乐",
-                url: "http://music.baidu.com/search?ie=utf-8&oe=utf-8&key=%s"
+                url: "https://music.91q.com/search?ie=utf-8&oe=utf-8&key=%s"
             }, {
                 name: "酷我音乐",
-                url: "http://sou.kuwo.cn/ws/NSearch?type=all&key=%s"
+                url: "https://www.kuwo.cn/search/list?key=%s"
             }, {
                 name: "酷狗",
                 url: "http://search.5sing.kugou.com/?keyword=%s"
