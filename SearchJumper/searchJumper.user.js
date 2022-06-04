@@ -760,13 +760,11 @@
                  .search-jumper-left {
                      height: 100%;
                      text-align: initial;
-                     width: auto;
                  }
                  .search-jumper-right {
                      left: unset;
                      right: 0;
                      height: 100%;
-                     width: auto;
                  }
                  .search-jumper-bottom {
                      top: unset;
