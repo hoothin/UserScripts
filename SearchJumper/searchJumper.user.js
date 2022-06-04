@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.3.5
+// @version      1.3.6
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本，在搜索时便捷跳转各大搜索引擎，如谷歌、必应、百度、鸭鸭等
 // @description:zh-TW  又一個搜尋引擎跳轉脚本，在搜索時便捷跳轉各大搜尋引擎，如谷歌、必應、百度、鴨鴨等
@@ -536,7 +536,10 @@
         autoClose: false,
         autoDelay: 2000,
         shortcut: false,
-        initShow: false
+        initShow: false,
+        customSize: 100,
+        typeOpenTime: 250,
+        longPressTime: 500
     };
     function run() {
         const lang = navigator.appName == "Netscape" ? navigator.language : navigator.userLanguage;
@@ -674,237 +677,240 @@
 
         var logoBtn, searchBar, searchTypes = [], currentSite = false, cacheKeywords, localKeywords;
         var logoBtnSvg = `<svg class="search-jumper-logoBtnSvg" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><title>${i18n("scriptName")}</title><path d="M.736 510.464c0-281.942 228.335-510.5 510-510.5 135.26 0 264.981 53.784 360.625 149.522 95.643 95.737 149.375 225.585 149.375 360.978 0 281.94-228.335 510.5-510 510.5-281.665 0-510-228.56-510-510.5zm510-510.5v1021m-510-510.5h1020" fill="#fefefe"/><path d="M237.44 346.624a48.64 48.64 0 1 0 97.28 0 48.64 48.64 0 1 0-97.28 0zM699.904 346.624a48.64 48.64 0 1 0 97.28 0 48.64 48.64 0 1 0-97.28 0zM423.296 759.296c-64 0-115.712-52.224-115.712-115.712 0-26.624 9.216-52.224 25.6-72.704 9.216-11.776 26.112-13.312 37.888-4.096s13.312 26.112 4.096 37.888c-9.216 11.264-13.824 24.576-13.824 38.912 0 34.304 27.648 61.952 61.952 61.952s61.952-27.648 61.952-61.952c0-4.096-.512-8.192-1.024-11.776-2.56-14.848 6.656-28.672 21.504-31.744 14.848-2.56 28.672 6.656 31.744 21.504 1.536 7.168 2.048 14.336 2.048 22.016-.512 63.488-52.224 115.712-116.224 115.712z" fill="#333"/><path d="M602.08 760.296c-64 0-115.712-52.224-115.712-115.712 0-14.848 12.288-27.136 27.136-27.136s27.136 12.288 27.136 27.136c0 34.304 27.648 61.952 61.952 61.952s61.952-27.648 61.952-61.952c0-15.36-5.632-30.208-15.872-41.472-9.728-11.264-9.216-28.16 2.048-37.888 11.264-9.728 28.16-9.216 37.888 2.048 19.456 21.504 29.696 48.64 29.696 77.824 0 62.976-52.224 115.2-116.224 115.2z" fill="#333"/><ellipse ry="58" rx="125" cy="506.284" cx="201.183" fill="#faf"/><ellipse ry="58" rx="125" cy="506.284" cx="823.183" fill="#faf"/></svg>`;
-        var cssText = `
-     .search-jumper-searchBarCon {
-         position: fixed;
-         top: 0;
-         left: 0;
-         width: 100%;
-         z-index: 2147483646;
-         pointer-events: none;
-         text-align: center;
-         overflow: scroll;
-         display: block;
-         -ms-overflow-style: none;
-         scrollbar-width: none;
-     }
-     .search-jumper-searchBar {
-         overflow-wrap: break-word;
-         background: #505050;
-         border-radius: 20px!important;
-         border: 1px solid #b3b3b3;
-         display: inline-flex;
-         pointer-events: all;
-         margin-top: -25px;
-         opacity: 0.3;
-         vertical-align: top;
-         transition:margin-top 0.25s ease, margin-left 0.25s, opacity 0.25s;
-         user-select: none;
-         box-sizing:content-box;
-         text-align: center;
-         position: relative;
-     }
-     .search-jumper-searchBarCon::-webkit-scrollbar {
-         width: 0 !important;
-         height: 0 !important;
-     }
-     .search-jumper-searchBarCon.search-jumper-scroll {
-         pointer-events: all;
-     }
-     .search-jumper-scroll.search-jumper-bottom {
-         overflow-y: hidden;
-     }
-     .search-jumper-scroll>.search-jumper-searchBar {
-         position: static !important;
-     }
-     .search-jumper-scroll.search-jumper-right>.search-jumper-searchBar {
-         margin-left: 20px;
-     }
-     .search-jumper-scroll.search-jumper-right>.search-jumper-searchBar:hover,
-     .search-jumper-scroll.search-jumper-right>.search-jumper-searchBar.initShow {
-         margin-left: 0px;
-     }
-     .search-jumper-scroll.search-jumper-bottom>.search-jumper-searchBar {
-         margin-top: 0px;
-     }
-     .search-jumper-scroll.search-jumper-bottom>.search-jumper-searchBar:hover,
-     .search-jumper-scroll.search-jumper-bottom>.search-jumper-searchBar.initShow {
-         margin-top: 0px;
-     }
-     .search-jumper-searchBar:hover {
-         margin-top: 0;
-         opacity: 1;
-     }
-     .search-jumper-searchBar.initShow {
-         margin-top: 0;
-         opacity: 0.8;
-     }
-     .search-jumper-left,
-     .search-jumper-left .search-jumper-type,
-     .search-jumper-left>.search-jumper-searchBar,
-     .search-jumper-right,
-     .search-jumper-right .search-jumper-type,
-     .search-jumper-right>.search-jumper-searchBar {
-         flex-direction: column;
-         max-width: 42px;
-     }
-     .search-jumper-left {
-         height: 100%;
-         text-align: initial;
-     }
-     .search-jumper-right {
-         left: unset;
-         right: 0;
-         height: 100%;
-     }
-     .search-jumper-bottom {
-         top: unset;
-         bottom: 0;
-         height: 38px;
-     }
-     .search-jumper-left>.search-jumper-searchBar {
-         margin-top: 0;
-         margin-left: -20px;
-     }
-     .search-jumper-right>.search-jumper-searchBar {
-         margin-top: 0;
-         margin-left: 0px;
-         position: fixed;
-     }
-     .search-jumper-left>.search-jumper-searchBar:hover,
-     .search-jumper-left>.search-jumper-searchBar.initShow {
-         margin-top: unset;
-         margin-left: 0;
-     }
-     .search-jumper-right>.search-jumper-searchBar:hover,
-     .search-jumper-right>.search-jumper-searchBar.initShow {
-         margin-top: unset;
-         margin-left: -20px;
-     }
-     .search-jumper-bottom>.search-jumper-searchBar {
-         position: relative;
-         margin-top: 0px;
-         transition: transform 0.25s;
-         -webkit-transform:scale(.9);
-         -moz-transform:scale(.9);
-         transform:scale(.9);
-     }
-     .search-jumper-bottom>.search-jumper-searchBar:hover,
-     .search-jumper-bottom>.search-jumper-searchBar.initShow {
-         margin-top: 0px;
-         -webkit-transform:scale(1);
-         -moz-transform:scale(1);
-         transform:scale(1);
-     }
-     .search-jumper-btn {
-         position: relative;
-         display: grid;
-         padding: 1px;
-         margin: 3px;
-         cursor: pointer;
-         transition:margin-left 0.25s ease, width 0.25s, height 0.25s, transform 0.25s;
-         width: 32px;
-         height: 32px;
-         overflow: hidden;
-         text-overflow: ellipsis;
-         white-space: nowrap;
-         text-decoration:none;
-         min-width: 32px;
-         min-height: 32px;
-     }
-     .search-jumper-btn>i {
-         line-height: 32px;
-     }
-     .search-jumper-logoBtnSvg {
-         width: 32px;
-         height: 32px;
-         overflow: hidden;
-         vertical-align: top;
-         cursor: grab;
-     }
-     .search-jumper-type.search-jumper-needInPage,
-     .search-jumper-type.search-jumper-targetImg,
-     .search-jumper-type.search-jumper-targetAudio,
-     .search-jumper-type.search-jumper-targetVideo,
-     .search-jumper-type.search-jumper-targetLink,
-     .search-jumper-type.search-jumper-targetPage,
-     .search-jumper-isTargetImg>.search-jumper-type,
-     .search-jumper-isTargetAudio>.search-jumper-type,
-     .search-jumper-isTargetVideo>.search-jumper-type,
-     .search-jumper-isTargetLink>.search-jumper-type,
-     .search-jumper-isTargetPage>.search-jumper-type {
-         display: none;
-     }
-     .search-jumper-searchBar>.search-jumper-type.search-jumper-targetAll {
-         display: inline-flex;
-     }
-     .search-jumper-isInPage>.search-jumper-type.search-jumper-needInPage,
-     .search-jumper-isTargetImg>.search-jumper-type.search-jumper-targetImg,
-     .search-jumper-isTargetAudio>.search-jumper-type.search-jumper-targetAudio,
-     .search-jumper-isTargetVideo>.search-jumper-type.search-jumper-targetVideo,
-     .search-jumper-isTargetLink>.search-jumper-type.search-jumper-targetLink,
-     .search-jumper-isTargetPage>.search-jumper-type.search-jumper-targetPage {
-         display: inline-flex;
-     }
-     .search-jumper-type {
-         display: inline-flex;
-         background: #c5c5c5;
-         border-radius: 20px!important;
-         overflow: hidden;
-         transition:width 0.25s ease, height 0.25s;
-     }
-     .search-jumper-searchBar.disable-pointer>.search-jumper-type {
-         pointer-events: none;
-     }
-     .search-jumper-word {
-         background: black;
-         color: white!important;
-         border-radius: 20px!important;
-         font-size: 16px;
-         line-height: 32px;
-         width: 32px;
-         height: 32px;
-         min-width: 32px;
-         min-height: 32px;
-     }
-     .search-jumper-type img {
-         width: 32px;
-         height: 32px;
-     }
-     .search-jumper-tips {
-         pointer-events: none;
-         position: fixed;
-         font-size: xx-large;
-         background: #f5f5f5e0;
-         border-radius: 10px!important;
-         padding: 5px;
-         box-shadow: 0px 0px 10px 0px #000;
-         font-weight: bold;
-         transition: all 0.2s ease;
-         color: black;
-         white-space: nowrap;
-     }
-     .search-jumper-type.search-jumper-hide {
-         background: unset;
-     }
-     span.search-jumper-word>img {
-         width: 20px;
-         height: 20px;
-         margin: auto;
-     }
-     .search-jumper-searchBar .search-jumper-btn:hover {
-         -webkit-transform:scale(1.2);
-         -moz-transform:scale(1.2);
-         transform:scale(1.2);
-         color: white;
-         text-decoration:none;
-     }`;
 
         var targetElement;
 
         class SearchBar {
             constructor() {
-                if (searchData.prefConfig.cssText) cssText = searchData.prefConfig.cssText;
+                this.scale = searchData.prefConfig.customSize / 100;
+                var cssText = `
+                 .search-jumper-searchBarCon {
+                     position: fixed;
+                     top: 0;
+                     left: 0;
+                     width: 100%;
+                     z-index: 2147483646;
+                     pointer-events: none;
+                     text-align: center;
+                     overflow: scroll;
+                     display: block;
+                     -ms-overflow-style: none;
+                     scrollbar-width: none;
+                 }
+                 .search-jumper-searchBar {
+                     overflow-wrap: break-word;
+                     background: #505050;
+                     border-radius: ${this.scale * 20}px!important;
+                     border: 1px solid #b3b3b3;
+                     display: inline-flex;
+                     pointer-events: all;
+                     margin-top: -${this.scale * 25}px;
+                     opacity: 0.3;
+                     vertical-align: top;
+                     transition:margin-top 0.25s ease, margin-left 0.25s, opacity 0.25s;
+                     user-select: none;
+                     box-sizing:content-box;
+                     text-align: center;
+                     position: relative;
+                 }
+                 .search-jumper-searchBarCon::-webkit-scrollbar {
+                     width: 0 !important;
+                     height: 0 !important;
+                 }
+                 .search-jumper-searchBarCon.search-jumper-scroll {
+                     pointer-events: all;
+                 }
+                 .search-jumper-scroll.search-jumper-bottom {
+                     overflow-y: hidden;
+                 }
+                 .search-jumper-scroll>.search-jumper-searchBar {
+                     position: static !important;
+                 }
+                 .search-jumper-scroll.search-jumper-right>.search-jumper-searchBar {
+                     margin-left: ${this.scale * 20}px;
+                 }
+                 .search-jumper-scroll.search-jumper-right>.search-jumper-searchBar:hover,
+                 .search-jumper-scroll.search-jumper-right>.search-jumper-searchBar.initShow {
+                     margin-left: 0px;
+                 }
+                 .search-jumper-scroll.search-jumper-bottom>.search-jumper-searchBar {
+                     margin-top: 0px;
+                 }
+                 .search-jumper-scroll.search-jumper-bottom>.search-jumper-searchBar:hover,
+                 .search-jumper-scroll.search-jumper-bottom>.search-jumper-searchBar.initShow {
+                     margin-top: 0px;
+                 }
+                 .search-jumper-searchBar:hover {
+                     margin-top: 0;
+                     opacity: 1;
+                 }
+                 .search-jumper-searchBar.initShow {
+                     margin-top: 0;
+                     opacity: 0.8;
+                 }
+                 .search-jumper-left,
+                 .search-jumper-left .search-jumper-type,
+                 .search-jumper-left>.search-jumper-searchBar,
+                 .search-jumper-right,
+                 .search-jumper-right .search-jumper-type,
+                 .search-jumper-right>.search-jumper-searchBar {
+                     flex-direction: column;
+                     max-width: ${42 * this.scale}px;
+                 }
+                 .search-jumper-left {
+                     height: 100%;
+                     text-align: initial;
+                     width: auto;
+                 }
+                 .search-jumper-right {
+                     left: unset;
+                     right: 0;
+                     height: 100%;
+                     width: auto;
+                 }
+                 .search-jumper-bottom {
+                     top: unset;
+                     bottom: 0;
+                     height: ${this.scale * 38}px;
+                 }
+                 .search-jumper-left>.search-jumper-searchBar {
+                     margin-top: 0;
+                     margin-left: -${this.scale * 20}px;
+                 }
+                 .search-jumper-right>.search-jumper-searchBar {
+                     margin-top: 0;
+                     margin-left: 0px;
+                     position: fixed;
+                 }
+                 .search-jumper-left>.search-jumper-searchBar:hover,
+                 .search-jumper-left>.search-jumper-searchBar.initShow {
+                     margin-top: unset;
+                     margin-left: 0;
+                 }
+                 .search-jumper-right>.search-jumper-searchBar:hover,
+                 .search-jumper-right>.search-jumper-searchBar.initShow {
+                     margin-top: unset;
+                     margin-left: -${this.scale * 20}px;
+                 }
+                 .search-jumper-bottom>.search-jumper-searchBar {
+                     position: relative;
+                     margin-top: 0px;
+                     transition: transform 0.25s;
+                     -webkit-transform:scale(.9);
+                     -moz-transform:scale(.9);
+                     transform:scale(.9);
+                 }
+                 .search-jumper-bottom>.search-jumper-searchBar:hover,
+                 .search-jumper-bottom>.search-jumper-searchBar.initShow {
+                     margin-top: 0px;
+                     -webkit-transform:scale(1);
+                     -moz-transform:scale(1);
+                     transform:scale(1);
+                 }
+                 .search-jumper-btn {
+                     position: relative;
+                     display: grid;
+                     padding: 1px;
+                     margin: 3px;
+                     cursor: pointer;
+                     transition:margin-left 0.25s ease, width 0.25s, height 0.25s, transform 0.25s;
+                     width: ${32 * this.scale}px;
+                     height: ${32 * this.scale}px;
+                     overflow: hidden;
+                     text-overflow: ellipsis;
+                     white-space: nowrap;
+                     text-decoration:none;
+                     min-width: ${32 * this.scale}px;
+                     min-height: ${32 * this.scale}px;
+                 }
+                 .search-jumper-btn>i {
+                     line-height: ${32 * this.scale}px;
+                 }
+                 .search-jumper-logoBtnSvg {
+                     width: ${32 * this.scale}px;
+                     height: ${32 * this.scale}px;
+                     overflow: hidden;
+                     vertical-align: top;
+                     cursor: grab;
+                 }
+                 .search-jumper-type.search-jumper-needInPage,
+                 .search-jumper-type.search-jumper-targetImg,
+                 .search-jumper-type.search-jumper-targetAudio,
+                 .search-jumper-type.search-jumper-targetVideo,
+                 .search-jumper-type.search-jumper-targetLink,
+                 .search-jumper-type.search-jumper-targetPage,
+                 .search-jumper-isTargetImg>.search-jumper-type,
+                 .search-jumper-isTargetAudio>.search-jumper-type,
+                 .search-jumper-isTargetVideo>.search-jumper-type,
+                 .search-jumper-isTargetLink>.search-jumper-type,
+                 .search-jumper-isTargetPage>.search-jumper-type {
+                     display: none;
+                 }
+                 .search-jumper-searchBar>.search-jumper-type.search-jumper-targetAll {
+                     display: inline-flex;
+                 }
+                 .search-jumper-isInPage>.search-jumper-type.search-jumper-needInPage,
+                 .search-jumper-isTargetImg>.search-jumper-type.search-jumper-targetImg,
+                 .search-jumper-isTargetAudio>.search-jumper-type.search-jumper-targetAudio,
+                 .search-jumper-isTargetVideo>.search-jumper-type.search-jumper-targetVideo,
+                 .search-jumper-isTargetLink>.search-jumper-type.search-jumper-targetLink,
+                 .search-jumper-isTargetPage>.search-jumper-type.search-jumper-targetPage {
+                     display: inline-flex;
+                 }
+                 .search-jumper-type {
+                     display: inline-flex;
+                     background: #c5c5c5;
+                     border-radius: ${20 * this.scale}px!important;
+                     overflow: hidden;
+                     transition:width ${searchData.prefConfig.typeOpenTime}ms ease, height ${searchData.prefConfig.typeOpenTime}ms;
+                 }
+                 .search-jumper-searchBar.disable-pointer>.search-jumper-type {
+                     pointer-events: none;
+                 }
+                 .search-jumper-word {
+                     background: black;
+                     color: white!important;
+                     border-radius: ${20 * this.scale}px!important;
+                     font-size: ${16 * this.scale}px;
+                     line-height: ${32 * this.scale}px;
+                     width: ${32 * this.scale}px;
+                     height: ${32 * this.scale}px;
+                     min-width: ${32 * this.scale}px;
+                     min-height: ${32 * this.scale}px;
+                 }
+                 .search-jumper-type img {
+                     width: ${32 * this.scale}px;
+                     height: ${32 * this.scale}px;
+                 }
+                 .search-jumper-tips {
+                     pointer-events: none;
+                     position: fixed;
+                     font-size: xx-large;
+                     background: #f5f5f5e0;
+                     border-radius: 10px!important;
+                     padding: 5px;
+                     box-shadow: 0px 0px 10px 0px #000;
+                     font-weight: bold;
+                     transition: all 0.2s ease;
+                     color: black;
+                     white-space: nowrap;
+                 }
+                 .search-jumper-type.search-jumper-hide {
+                     background: unset;
+                 }
+                 span.search-jumper-word>img {
+                     width: ${20 * this.scale}px;
+                     height: ${20 * this.scale}px;
+                     margin: auto;
+                 }
+                 .search-jumper-searchBar .search-jumper-btn:hover {
+                     -webkit-transform:scale(1.2);
+                     -moz-transform:scale(1.2);
+                     transform:scale(1.2);
+                     color: white;
+                     text-decoration:none;
+                 }`;
+                if (searchData.prefConfig.cssText) cssText += searchData.prefConfig.cssText;
                 let styleEle = document.createElement("style");
                 styleEle.innerHTML = createHTML(cssText);
                 document.documentElement.appendChild(styleEle);
@@ -1101,10 +1107,12 @@
             }
 
             tipsPos(ele, type) {
+                let ew = ele.clientWidth;
+                let eh = ele.clientHeight;
                 this.tips.innerText = type;
                 this.tips.style.opacity = 1;
-                let clientX = ele.offsetLeft + 20 - this.bar.parentNode.scrollLeft;
-                let clientY = ele.offsetTop + 20 - this.bar.parentNode.scrollTop;
+                let clientX = ele.offsetLeft + ew / 2 - this.bar.parentNode.scrollLeft;
+                let clientY = ele.offsetTop + eh / 2 - this.bar.parentNode.scrollTop;
                 let current = ele.offsetParent;
 
                 while (current !== null){
@@ -1114,31 +1122,31 @@
                 }
                 let viewWidth = window.innerWidth || document.documentElement.clientWidth;
                 let viewHeight = window.innerHeight || document.documentElement.clientHeight;
-                if (clientY < 50) {
+                if (clientY < 100) {
                     this.tips.style.right = "";
                     this.tips.style.bottom = "";
                     clientX -= this.tips.scrollWidth / 2;
                     clientY += this.tips.scrollHeight / 2;
                     if (clientX < 0) clientX = 0;
-                    else if (clientX > viewWidth - this.tips.scrollWidth) clientX = viewWidth - this.tips.scrollWidth - 20;
+                    else if (clientX > viewWidth - this.tips.scrollWidth) clientX = viewWidth - this.tips.scrollWidth - ew / 2;
                     this.tips.style.left = clientX + "px";
-                    this.tips.style.top = clientY + "px";
-                } else if (clientY > viewHeight - 50) {
+                    this.tips.style.top = clientY + 10 + "px";
+                } else if (clientY > viewHeight - 100) {
                     this.tips.style.right = "";
                     this.tips.style.top = "";
                     clientX -= this.tips.scrollWidth / 2;
                     if (clientX < 0) clientX = 0;
-                    else if (clientX > viewWidth - this.tips.scrollWidth) clientX = viewWidth - this.tips.scrollWidth - 20;
+                    else if (clientX > viewWidth - this.tips.scrollWidth) clientX = viewWidth - this.tips.scrollWidth - ew / 2;
                     this.tips.style.left = clientX + "px";
-                    this.tips.style.bottom = "50px";
-                } else if (clientX > viewWidth - 50) {
+                    this.tips.style.bottom = ew + 20 + "px";
+                } else if (clientX > viewWidth - 100) {
                     this.tips.style.left = "";
                     this.tips.style.bottom = "";
                     clientY -= this.tips.scrollHeight / 2;
                     if (clientY < 0) clientY = 0;
-                    this.tips.style.right = "50px";
+                    this.tips.style.right = ew + 20 + "px";
                     this.tips.style.top = clientY + "px";
-                } else if (clientX < 50) {
+                } else if (clientX < 100) {
                     this.tips.style.right = "";
                     this.tips.style.bottom = "";
                     clientY -= this.tips.scrollHeight / 2;
@@ -1182,7 +1190,7 @@
                         let i = document.createElement("i");
                         i.className = "fa fa-" + icon;
                         i.innerText = type;
-                        i.style.fontSize = '14px';
+                        i.style.fontSize = 14 * this.scale + 'px';
                         i.style.color = 'wheat';
                         this.fontPool.push(i);
                         typeBtn.appendChild(i);
@@ -1222,12 +1230,12 @@
                         }
                         setTimeout(() => {
                             ele.style.flexWrap = "wrap";
-                        }, 250);
+                        }, searchData.prefConfig.typeOpenTime);
                         searchTypes.forEach(type => {
                             if (ele != type) {
                                 type.classList.add("search-jumper-hide");
-                                type.style.width = "38px";
-                                type.style.height = "38px";
+                                type.style.width = 38 * this.scale + "px";
+                                type.style.height = 38 * this.scale + "px";
                                 type.style.flexWrap = "";
                             }
                         });
@@ -1235,9 +1243,9 @@
                         ele.classList.add("search-jumper-hide");
                         if (self.bar.parentNode.classList.contains("search-jumper-left") ||
                             self.bar.parentNode.classList.contains("search-jumper-right")) {
-                            ele.style.height = "38px";
+                            ele.style.height = 38 * this.scale + "px";
                         } else {
-                            ele.style.width = "38px";
+                            ele.style.width = 38 * this.scale + "px";
                         }
                         ele.style.flexWrap = "";
                     }
@@ -1293,7 +1301,7 @@
                 } else {
                     self.bar.insertBefore(ele, self.bar.children[self.bar.children.length - 1]);
                     ele.dataset.width = ele.scrollWidth + "px";
-                    ele.style.width = "38px";
+                    ele.style.width = 38 * this.scale + "px";
                 }
                 if (inPage && selectImg && selectAudio && selectVideo && selectLink && selectPage) {
                     ele.classList.add("search-jumper-targetAll");
@@ -1563,9 +1571,9 @@
                         if (ele.classList.contains("search-jumper-hide")) {
                             if (self.bar.parentNode.classList.contains("search-jumper-left") ||
                                 self.bar.parentNode.classList.contains("search-jumper-right")) {
-                                ele.style.height = "38px";
+                                ele.style.height = 38 * this.scale + "px";
                             } else {
-                                ele.style.width = "38px";
+                                ele.style.width = 38 * this.scale + "px";
                             }
                         } else {
                             if (self.bar.parentNode.classList.contains("search-jumper-left") ||
@@ -1946,7 +1954,7 @@
                         e.stopPropagation();
                         e.preventDefault();
                         shown = true;
-                    }, 500);
+                    }, searchData.prefConfig.longPressTime);
                     let mouseUpHandler = e => {
                         if (shown) {
                             e.stopPropagation();
@@ -2074,6 +2082,15 @@
             });
             if (_searchData) {
                 searchData = _searchData;
+            }
+            if (searchData.prefConfig.customSize === undefined) {
+                searchData.prefConfig.customSize = 100;
+            }
+            if (searchData.prefConfig.typeOpenTime === undefined) {
+                searchData.prefConfig.typeOpenTime = 250;
+            }
+            if (searchData.prefConfig.longPressTime === undefined) {
+                searchData.prefConfig.longPressTime = 500;
             }
         }
 
