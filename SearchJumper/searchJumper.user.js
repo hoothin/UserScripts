@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.3.6
+// @version      1.3.6.1
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本，在搜索时便捷跳转各大搜索引擎，如谷歌、必应、百度、鸭鸭等
 // @description:zh-TW  又一個搜尋引擎跳轉脚本，在搜索時便捷跳轉各大搜尋引擎，如谷歌、必應、百度、鴨鴨等
@@ -926,13 +926,13 @@
                 searchBarCon.className = "search-jumper-searchBarCon";
                 searchBarCon.appendChild(bar);
 
+                let enterHandler = e => {
+                    //bar.removeEventListener('mouseenter', enterHandler, false);
+                    bar.classList.remove("initShow");
+                };
+                bar.addEventListener('mouseenter', enterHandler, false);
                 if (searchData.prefConfig.initShow) {
                     bar.classList.add("initShow");
-                    let enterHandler = e => {
-                        bar.removeEventListener('mouseenter', enterHandler, false);
-                        bar.classList.remove("initShow");
-                    };
-                    bar.addEventListener('mouseenter', enterHandler, false);
                 } else {
                     let touchHandler = e => {
                         bar.removeEventListener('touchstart', touchHandler, true);
@@ -1518,6 +1518,7 @@
                 this.bar.classList.remove("search-jumper-isTargetVideo");
                 this.bar.classList.remove("search-jumper-isTargetLink");
                 this.bar.classList.remove("search-jumper-isTargetPage");
+                this.bar.classList.add("initShow");
                 if (getSelectStr()) {
                     this.bar.classList.add("search-jumper-isInPage");
                     firstType = this.bar.querySelector('.search-jumper-needInPage>span');
