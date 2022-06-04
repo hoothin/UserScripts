@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.3.6.6
+// @version      1.3.6.7
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本，在搜索时便捷跳转各大搜索引擎，如谷歌、必应、百度等
 // @description:zh-TW  又一個搜尋引擎跳轉脚本，在搜索時便捷跳轉各大搜尋引擎，如Google、Bing、Baidu等
@@ -508,12 +508,9 @@
                     url: "https://www.facebook.com/sharer/sharer.php?u=%T&t=%n"
                 },
                 {
-                    name: "百度文库",
-                    url: "javascript:(function()%7B(function()%20%7Bvar%20uri%20%3D%20window.location.href%3Bvar%20key%20%3D%20%22%20filetype%3A%22%3Bvar%20value%20%3D%20%22all%22%3Bvar%20re%20%3D%20new%20RegExp(%22(%5B%3F%26%5D)%22%20%2B%20key%20%2B%20%22%3D.*%3F(%26%7C%24)%22%2C%20%22i%22)%3Bif%20(uri.match(re))%20%7Bwindow.location.href%20%3D%20uri.replace(re%2C%20'%241'%20%2B%20key%20%20%2B%20value%20%2B%20'%242')%3B%7D%20else%20%7Bwindow.location.href%20%3D%20uri%20%20%2B%20key%20%20%2B%20value%3B%7D%7D)()%7D)()",
-                    icon: "https://www.baidu.com/favicon.ico",
-                    match: "wenku\\.baidu\\.com",
-                    nobatch: true,
-                    hideNotMatch: true
+                    name: "编辑当前网页",
+                    url: "javascript:(function(){document.body.setAttribute('contenteditable', 'true');alert('已开启网页编辑，按ESC键取消');document.onkeydown = function (e) {e = e || window.event;if(e.keyCode==27){document.body.setAttribute('contenteditable', 'false');}}})();",
+                    nobatch: true
                 }
             ]
         }
@@ -539,7 +536,7 @@
         initShow: false,
         customSize: 100,
         typeOpenTime: 250,
-        longPressTime: 500
+        longPressTime: 200
     };
     function run() {
         const lang = navigator.appName == "Netscape" ? navigator.language : navigator.userLanguage;
