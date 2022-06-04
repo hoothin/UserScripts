@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.3.6.1
+// @version      1.3.6.2
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本，在搜索时便捷跳转各大搜索引擎，如谷歌、必应、百度、鸭鸭等
 // @description:zh-TW  又一個搜尋引擎跳轉脚本，在搜索時便捷跳轉各大搜尋引擎，如谷歌、必應、百度、鴨鴨等
@@ -2002,8 +2002,12 @@
                             loadConfig();
                         }
                     }, 50);
-                    var loadMessage = new Event('loadConfig');
-                    loadMessage.searchData = searchData;
+                    let searchDataInput = document.createElement('input');
+                    searchDataInput.id='searchDataInput';
+                    searchDataInput.style.display="none";
+                    searchDataInput.value=JSON.stringify(searchData);
+                    document.documentElement.appendChild(searchDataInput);
+                    var loadMessage = new CustomEvent('loadConfig', {detail: searchData});
                     document.dispatchEvent(loadMessage);
                 }
 
@@ -2015,14 +2019,14 @@
                 loadConfig();
 
                 document.addEventListener('saveConfig', e => {
-                    searchData = e.searchData;
+                    searchData = (e.detail ? e.detail.searchData : e.searchData) || _unsafeWindow.searchData;
                     storage.setItem("searchData", searchData);
-                    if (e.notification) {
+                    if (e.notification || (e.detail && e.detail.notification)) {
                         _GM_notification('Configuration imported successfully!');
                     }
                 });
                 document.addEventListener('copyConfig', e => {
-                    _GM_setClipboard(JSON.stringify(e.searchData, null, 2));
+                    _GM_setClipboard(JSON.stringify(searchData, null, 2));
                     _GM_notification('Configuration copied successfully!');
                 });
             } else if (importPageReg.test(location.href)) {
