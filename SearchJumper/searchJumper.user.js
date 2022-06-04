@@ -534,7 +534,7 @@
         shiftKey: false,
         metaKey: false,
         autoClose: false,
-        autoDelay: 2000,
+        autoDelay: 1000,
         shortcut: false,
         initShow: false,
         customSize: 100,
