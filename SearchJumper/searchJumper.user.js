@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.3.6.8
+// @version      1.3.6.9
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本，在搜索时便捷跳转各大搜索引擎，如谷歌、必应、百度等
 // @description:zh-TW  又一個搜尋引擎跳轉脚本，在搜索時便捷跳轉各大搜尋引擎，如Google、Bing、Baidu等
@@ -1026,12 +1026,12 @@
                         }
                     }
                 };
-                var hideTimeout = setTimeout(hideHandler, delay);
+                this.hideTimeout = setTimeout(hideHandler, delay);
                 this.bar.addEventListener('mouseenter', e => {
-                    clearTimeout(hideTimeout);
+                    clearTimeout(this.hideTimeout);
                 }, false);
                 this.bar.addEventListener('mouseleave', e => {
-                    hideTimeout = setTimeout(hideHandler, delay);
+                    this.hideTimeout = setTimeout(hideHandler, delay);
                 }, false);
             }
 
@@ -1552,6 +1552,19 @@
                     return;
                 }
                 let firstType;
+                let self = this;
+                clearTimeout(this.hideTimeout);
+                var delay = searchData.prefConfig.autoDelay || 1000;
+                delay = delay * 3;
+                var hideHandler = () => {
+                    self.bar.classList.remove("search-jumper-isInPage");
+                    self.bar.classList.remove("search-jumper-isTargetImg");
+                    self.bar.classList.remove("search-jumper-isTargetAudio");
+                    self.bar.classList.remove("search-jumper-isTargetVideo");
+                    self.bar.classList.remove("search-jumper-isTargetLink");
+                    self.bar.classList.remove("search-jumper-isTargetPage");
+                };
+                this.hideTimeout = setTimeout(hideHandler, delay);
                 this.bar.classList.remove("search-jumper-isInPage");
                 this.bar.classList.remove("search-jumper-isTargetImg");
                 this.bar.classList.remove("search-jumper-isTargetAudio");
