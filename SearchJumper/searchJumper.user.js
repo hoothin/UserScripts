@@ -1225,12 +1225,13 @@
                     if (!ele.classList.contains("search-jumper-hide") || window.confirm(i18n('batchOpen'))) {
                         siteEles.forEach(siteEle => {
                             if (siteEle.dataset.nobatch || siteEle.dataset.current) return;
-                            if (!/^javascript:/.test(siteEle.href)) {
+                            let isJs = /^javascript:/.test(siteEle.href);
+                            if (!isJs) {
                                 siteEle.setAttribute("target", "_blank");
                             }
                             let mouseDownEvent = new PointerEvent("mousedown");
                             siteEle.dispatchEvent(mouseDownEvent);
-                            if (siteEle.onclick) {
+                            if (siteEle.onclick || isJs) {
                                 siteEle.click();
                             } else {
                                 _GM_openInTab(siteEle.href);
