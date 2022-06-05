@@ -1316,6 +1316,9 @@
                     }, 251);
                 };
                 typeBtn.addEventListener('mousedown', typeAction, false);
+                typeBtn.oncontextmenu = function (event) {
+                    event.preventDefault();
+                };
 
                 typeBtn.addEventListener('click', e => {
                     if (e.which === 1 && e.shiftKey) {
