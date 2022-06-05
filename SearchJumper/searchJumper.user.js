@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.3.6.9
+// @version      1.3.7
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本，在搜索时便捷跳转各大搜索引擎，如谷歌、必应、百度等
 // @description:zh-TW  又一個搜尋引擎跳轉脚本，在搜索時便捷跳轉各大搜尋引擎，如Google、Bing、Baidu等
@@ -37,7 +37,7 @@
     }
     //const configPage = 'http://localhost:3000/';
     const configPage = 'https://hoothin.github.io/SearchJumper';
-    const importPageReg = /^https:\/\/github\.com\/hoothin\/SearchJumper|^https:\/\/greasyfork\.org\/.*\/scripts\/445274[\-\/].*\/discussions/i;
+    const importPageReg = /^https:\/\/github\.com\/hoothin\/SearchJumper\/issue|^https:\/\/greasyfork\.org\/.*\/scripts\/445274[\-\/].*\/discussions/i;
 
     var searchData = {};
     searchData.sitesConfig = [
@@ -1045,7 +1045,8 @@
                         for (let j in sites) {
                             if (currentSite) break;
                             let data = sites[j];
-                            if (data.match) {
+                            if (data.match === '0') {
+                            } else if (data.match) {
                                 if (new RegExp(data.match).test(location.href)) {
                                     currentSite = data;
                                 }
@@ -1182,13 +1183,19 @@
                 let selectLink = data.selectLink;
                 let selectPage = data.selectPage;
                 let sites = data.sites;
-                let match = data.match;
+                let match = false;
                 let openInNewTab = data.openInNewTab;
-                if (match && new RegExp(match).test(location.href) == false) {
-                    return;
-                }
                 let siteEles = [];
                 let ele = document.createElement("span");
+                if (data.match === '0') {
+                    ele.style.display = 'none';
+                } else if (data.match) {
+                    if (new RegExp(data.match).test(location.href) == false) {
+                        ele.style.display = 'none';
+                    } else {
+                        match = true;
+                    }
+                }
                 ele.className = "search-jumper-type search-jumper-hide";
                 ele.title = type;
                 let typeBtn = document.createElement("span");
@@ -1214,18 +1221,44 @@
                     word.innerText = type;
                     typeBtn.appendChild(word);
                 }
+                let batchOpen = () => {
+                    if (!ele.classList.contains("search-jumper-hide") || window.confirm(i18n('batchOpen'))) {
+                        siteEles.forEach(siteEle => {
+                            if (siteEle.dataset.nobatch || siteEle.dataset.current) return;
+                            let mouseDownEvent = new PointerEvent("mousedown");
+                            siteEle.dispatchEvent(mouseDownEvent);
+                            if (!/^javascript:/.test(siteEle.href)) {
+                                siteEle.setAttribute("target", "_blank");
+                            }
+                            siteEle.click();
+                            siteEle.setAttribute("target", siteEle.dataset.target==1?"_blank":"");
+                        });
+                    }
+                };
+                if (searchData.prefConfig.shortcut && data.shortcut) {
+                    document.addEventListener('keydown', e => {
+                        if ((data.ctrl && !e.ctrlKey) ||
+                            (data.alt && !e.altKey) ||
+                            (data.shift && !e.shiftKey) ||
+                            (data.meta && !e.metaKey)) {
+                            return;
+                        }
+                        if (!searchData.prefConfig.enableInInput) {
+                            if (document.activeElement &&
+                                (document.activeElement.tagName == 'INPUT' ||
+                                 document.activeElement.tagName == 'TEXTAREA')) {
+                                return;
+                            }
+                        }
+                        var key = String.fromCharCode(e.keyCode).toLowerCase();
+                        if (data.shortcut == key) {
+                            batchOpen();
+                        }
+                    });
+                }
                 let typeAction = e => {
                     if (e.which === 3) {
-                        if (!ele.classList.contains("search-jumper-hide") || window.confirm(i18n('batchOpen'))) {
-                            siteEles.forEach(siteEle => {
-                                if (siteEle.dataset.nobatch || siteEle.dataset.current || /^javascript:/.test(siteEle.href)) return;
-                                let mouseDownEvent = new PointerEvent("mousedown");
-                                siteEle.dispatchEvent(mouseDownEvent);
-                                siteEle.setAttribute("target", "_blank");
-                                siteEle.click();
-                                siteEle.setAttribute("target", siteEle.dataset.target==1?"_blank":"");
-                            });
-                        }
+                        batchOpen();
                         return false;
                     }
                     ele.style.width = "";
@@ -1387,7 +1420,9 @@
                     });
                 }
                 if (!currentSite || data.hideNotMatch) {
-                    if (data.match) {
+                    if (data.match === '0') {
+                        ele.style.display = 'none';
+                    } else if (data.match) {
                         if (new RegExp(data.match).test(location.href)) {
                             ele.dataset.current = true;
                         }
@@ -1983,6 +2018,7 @@
 
             if (searchData.prefConfig.enableInPage) {
                 let shown = false;
+                let showToolbarTimer;
                 document.addEventListener('mousedown', e => {
                     if ((searchData.prefConfig.altKey && !e.altKey) ||
                         (searchData.prefConfig.ctrlKey && !e.ctrlKey) ||
@@ -1992,7 +2028,7 @@
                         return;
                     }
                     if (!searchData.prefConfig.selectToShow &&
-                        e.which === 1) {
+                        e.which === 1 && !searchData.prefConfig.leftMouse) {
                         return;
                     }
                     if (e.target.tagName === 'IMG' &&
@@ -2000,13 +2036,15 @@
                     shown = false;
                     let selectImg = e.target.tagName === 'IMG';
                     targetElement = e.target;
-                    let showToolbarTimer = setTimeout(() => {
-                        if (e.which === 1) return;
-                        searchBar.showInPage();
-                        e.stopPropagation();
-                        e.preventDefault();
-                        shown = true;
-                    }, searchData.prefConfig.longPressTime);
+                    setTimeout(() => {
+                        showToolbarTimer = setTimeout(() => {
+                            if (e.which === 1 && !searchData.prefConfig.leftMouse) return;
+                            searchBar.showInPage();
+                            e.stopPropagation();
+                            e.preventDefault();
+                            shown = true;
+                        }, searchData.prefConfig.longPressTime);
+                    }, 0);
                     let mouseUpHandler = e => {
                         if (shown) {
                             e.stopPropagation();
@@ -2019,10 +2057,16 @@
                     };
                     document.addEventListener('mouseup', mouseUpHandler, false);
                 }, true);
-                document.oncontextmenu = function (event) {
-                    if (shown) event.preventDefault();
-                    shown = false;
-                };
+                document.addEventListener('contextmenu', e => {
+                    if (shown) e.preventDefault();
+                    e = false;
+                });
+                document.addEventListener('mousemove', e => {
+                    if (showToolbarTimer) {
+                        clearTimeout(showToolbarTimer);
+                        showToolbarTimer = null;
+                    }
+                }, true);
             }
             let changeHandler = e => {
                 setTimeout(()=>{
