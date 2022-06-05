@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.3.6.7
+// @version      1.3.6.8
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本，在搜索时便捷跳转各大搜索引擎，如谷歌、必应、百度等
 // @description:zh-TW  又一個搜尋引擎跳轉脚本，在搜索時便捷跳轉各大搜尋引擎，如Google、Bing、Baidu等
@@ -18,6 +18,8 @@
 // @grant        GM_setValue
 // @grant        GM.registerMenuCommand
 // @grant        GM_registerMenuCommand
+// @grant        GM.xmlHttpRequest
+// @grant        GM_xmlhttpRequest
 // @grant        GM.notification
 // @grant        GM_notification
 // @grant        GM.setClipboard
@@ -548,7 +550,9 @@
                     scriptName: '搜索酱',
                     importOrNot: '是否导入配置？',
                     settings: '配置脚本',
-                    batchOpen: '确定要批量打开吗？'
+                    batchOpen: '确定要批量打开吗？',
+                    postOver: '发送成功：',
+                    postError: '发送失败：'
                 };
                 break;
             case "zh-TW":
@@ -557,7 +561,9 @@
                     scriptName: "搜索醬",
                     importOrNot: '是否導入配置？',
                     settings: '配置脚本',
-                    batchOpen: '確定要批量打開嗎？'
+                    batchOpen: '確定要批量打開嗎？',
+                    postOver: '發送成功：',
+                    postError: '發送失敗：'
                 };
                 break;
             default:
@@ -565,7 +571,9 @@
                     scriptName: "Search Jumper",
                     importOrNot: 'Do you want to import this config?',
                     settings: 'Settings',
-                    batchOpen: 'Batch open urls?'
+                    batchOpen: 'Batch open urls?',
+                    postOver: 'Post over: ',
+                    postError: 'Post fail: '
                 };
                 break;
         }
@@ -580,7 +588,14 @@
             }
         };
 
-        var _GM_registerMenuCommand, _GM_notification, _GM_setClipboard, _GM_openInTab;
+        var _GM_xmlhttpRequest, _GM_registerMenuCommand, _GM_notification, _GM_setClipboard, _GM_openInTab;
+        if(typeof GM_xmlhttpRequest!='undefined'){
+            _GM_xmlhttpRequest=GM_xmlhttpRequest;
+        }else if(typeof GM!='undefined' && typeof GM.xmlHttpRequest!='undefined'){
+            _GM_xmlhttpRequest=GM.xmlHttpRequest;
+        }else{
+            _GM_xmlhttpRequest=(f)=>{fetch(f.url).then(response=>response.text()).then(data=>{let res={response:data};f.onload(res)}).catch(f.onerror())};
+        }
         if (typeof GM_registerMenuCommand != 'undefined') {
             _GM_registerMenuCommand = GM_registerMenuCommand;
         } else if (typeof GM != 'undefined' && typeof GM.registerMenuCommand != 'undefined') {
@@ -1443,7 +1458,35 @@
                     return resultUrl.replace(/%t/g, targetUrl).replace(/%T/g, encodeURIComponent(targetUrl)).replace(/%b/g, targetBaseUrl).replace(/%B/g, encodeURIComponent(targetBaseUrl)).replace(/%n/g, targetName).replace(/%s/g, keywords);
                 };
                 let action = e => {
-                    if (data.charset || data.url.indexOf(':p{') !== -1) {
+                    if (data.url.indexOf(':P{') !== -1) {
+                        if (!ele.onclick) {
+                            ele.onclick = e => {
+                                let url = getUrl();
+                                let postBody = url.match(/:P{(.*?)}/), postParam = {};
+                                if (postBody) {
+                                    postBody = postBody[1];
+                                    url = url.replace(':P{' + postBody + '}', '');
+                                    postBody = new URLSearchParams(postBody);
+                                    postBody.forEach((v, k) => {
+                                        postParam[k] = v;
+                                    });
+                                }
+                                _GM_xmlhttpRequest({
+                                    method: "POST", url: url, data: JSON.stringify(postParam),
+                                    onload: (d) => {
+                                        _GM_notification(i18n("postOver") + d.statusText);
+                                    },
+                                    onerror: (e) => {
+                                        _GM_notification(i18n("postError") + (e.statusText || e.error));
+                                    },
+                                    ontimeout: (e) => {
+                                        _GM_notification(i18n("postError") + (e.statusText || e.error));
+                                    }
+                                });
+                                return false;
+                            };
+                        }
+                    } else if (data.charset || data.url.indexOf(':p{') !== -1) {
                         if (!ele.onclick) {
                             ele.onclick = e => {
                                 this.submitByForm(data.charset, getUrl(), ele.getAttribute("target") || '_self');
