@@ -40,6 +40,13 @@
     "loadMore":".result--more>a"
   },
   {
+    "name":"F 搜",
+    "url":"^https://fsoufsou\\.com/search",
+    "nextLink":".bottom-pagination-bar+.turn-page-btn",
+    "pinUrl":true,
+    "css":"svg{visibility: visible;}"
+  },
+  {
     "name":"Pixiv",
     "url":"^https://www\\.pixiv\\.net/",
     "action":2,
