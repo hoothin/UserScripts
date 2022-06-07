@@ -563,6 +563,11 @@
     "init":"doc&&doc.addEventListener('mouseover',e=>{e.preventDefault();e.stopPropagation()},true)"
   },
   {
+    "name":"NGA列表页",
+    "url":"^https?://(.*\\.nga\\.cn|nga\\.178\\.com)/thread\\.php",
+    "action":1
+  },
+  {
     "name":"淮安新闻网",
     "url":"^http://www\\.hynews\\.net/",
     "loadMore":"#_more"
