@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.11
+// @version      1.9.12
 // @description  Perpetual pages - Most powerful Auto Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -1502,6 +1502,14 @@
             });
         }
 
+        insertElement(ele) {
+            if(this.curSiteRule.insertPos==2){
+                this.insert.appendChild(ele);
+            }else{
+                this.insert.parentNode.insertBefore(ele, this.insert);
+            }
+        }
+
         insertPage(doc, eles, url, callback, tried){
             this.oldUrl=this.curUrl;
             let oldTitle=this.pageDoc.title;
@@ -1540,11 +1548,7 @@
                         let newCanvas=newCanvass[i];
                         newCanvas.getContext('2d').drawImage(oldCanvas, 0, 0);
                     }
-                    if(self.curSiteRule.insertPos==2){
-                        self.insert.appendChild(newEle);
-                    }else{
-                        self.insert.parentNode.insertBefore(newEle, self.insert);
-                    }
+                    self.insertElement(newEle);
                     newEles.push(newEle);
                 });
             }
@@ -2888,11 +2892,7 @@
         pageText.addEventListener("click", e=>{
             e.stopPropagation();
         });
-        if(ruleParser.curSiteRule.insertPos==2){
-            insert.appendChild(pageBar);
-        }else{
-            insert.parentNode.insertBefore(pageBar, insert);
-        }
+        ruleParser.insertElement(pageBar);
         if(ruleParser.curSiteRule.pageBar){
             try{
                 Function("pageBar",'"use strict";' + ruleParser.curSiteRule.pageBar)(pageBar);
@@ -3246,10 +3246,8 @@
         let insert=ruleParser.getInsert();
         if(ruleParser.curSiteRule.singleUrl || forceState==2){
             document.body.appendChild(curIframe);
-        }else if(ruleParser.curSiteRule.insertPos==2){
-            ruleParser.insert.appendChild(curIframe);
         }else{
-            ruleParser.insert.parentNode.insertBefore(curIframe, ruleParser.insert);
+            ruleParser.insertElement(curIframe);
         }
         scrollToResize();
         return curIframe;
@@ -3307,7 +3305,7 @@
                 nextLink=nextLink.replace(/^http/,"https");
             }
             isLoading=true;
-            document.body.appendChild(loadingDiv);
+            ruleParser.insertElement(loadingDiv);
             loadingDiv.style.cssText=loadingCSS;
             let sleep=ruleParser.curSiteRule.sleep||0;
             setTimeout(()=>{
