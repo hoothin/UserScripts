@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.3.8.2
+// @version      1.3.8.3
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本，在搜索时便捷跳转各大搜索引擎
 // @description:zh-TW  又一個搜尋引擎跳轉脚本，在搜索時便捷跳轉各大搜尋引擎
@@ -1552,24 +1552,30 @@
                         targetUrl = targetElement.src || targetElement.href || selStr || location.href;
                         targetName = targetElement.title || targetElement.alt || document.title;
                         if (targetElement.tagName == 'IMG' && ele.dataset.url.indexOf('%i') != -1) {
-                            if (targetElement.src.split("/")[2] == document.domain) {
+                            if (/^data/.test(targetElement.src)) {
+                                resultUrl = resultUrl.replace(/%i/g, targetElement.src);
+                            } else if (targetElement.src.split("/")[2] == document.domain) {
                                 imgBase64 = image2Base64(targetElement);
                                 resultUrl = resultUrl.replace(/%i/g, imgBase64);
                             }
                         }
                     }
+                    while (resultUrl.indexOf('%input{') !== -1) {
+                        let inputMatch = resultUrl.match(/%input{(.*?)}/);
+                        resultUrl = resultUrl.replace(inputMatch[0], window.prompt(inputMatch[1]));
+                    }
                     let targetBaseUrl = targetUrl.replace(/https?:\/\//i, "");
                     return resultUrl.replace(/%t/g, targetUrl).replace(/%T/g, encodeURIComponent(targetUrl)).replace(/%b/g, targetBaseUrl).replace(/%B/g, encodeURIComponent(targetBaseUrl)).replace(/%n/g, targetName).replace(/%s/g, keywords);
                 };
                 let action = e => {
-                    if (data.url.indexOf(':P{') !== -1) {
+                    if (/[:%]P{/.test(data.url)) {
                         if (!ele.onclick) {
                             ele.onclick = e => {
                                 let url = getUrl();
-                                let postBody = url.match(/:P{(.*?)}/), postParam = {};
+                                let postBody = url.match(/[:%]P{(.*?)}/), postParam = {};
                                 if (postBody) {
+                                    url = url.replace(postBody[0], '');
                                     postBody = postBody[1];
-                                    url = url.replace(':P{' + postBody + '}', '');
                                     postBody = new URLSearchParams(postBody);
                                     postBody.forEach((v, k) => {
                                         postParam[k] = v;
@@ -1590,11 +1596,17 @@
                                 return false;
                             };
                         }
-                    } else if ((data.charset && data.charset != 'utf-8') || data.url.indexOf(':p{') !== -1) {
+                    } else if ((data.charset && data.charset != 'utf-8') || /[:%]p{/.test(data.url)) {
                         if (!ele.onclick) {
                             ele.onclick = e => {
                                 submitByForm(data.charset, getUrl(), ele.getAttribute("target") || '_self');
                                 return false;
+                            };
+                        }
+                    } else if (data.url.indexOf('%input{') !== -1) {
+                        if (!ele.onclick) {
+                            ele.onclick = e => {
+                                ele.href = getUrl();
                             };
                         }
                     } else {
@@ -1809,10 +1821,10 @@
                 document.documentElement.appendChild(form);
             }
             var params;
-            let postBody = url.match(/:p{(.*?)}/);
+            let postBody = url.match(/[:%]p{(.*?)}/);
             if (postBody) {
+                url = url.replace(postBody[0], '');
                 postBody = postBody[1];
-                url = url.replace(':p{' + postBody + '}', '');
                 form.method = 'post';
                 params = new URLSearchParams(postBody);
             } else {
