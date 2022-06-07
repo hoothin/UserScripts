@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.3.9.1
+// @version      1.3.9.2
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本，在搜索时便捷跳转各大搜索引擎
 // @description:zh-TW  又一個搜尋引擎跳轉脚本，在搜索時便捷跳轉各大搜尋引擎
@@ -2322,27 +2322,30 @@
                 loadConfig();
 
                 document.addEventListener('saveConfig', e => {
+                    let preSwitch = searchData.prefConfig.cacheSwitch;
                     searchData = (e.detail ? e.detail.searchData : e.searchData) || _unsafeWindow.searchData;
                     storage.setItem("searchData", searchData);
                     let newCache = {};
-                    searchData.sitesConfig.forEach(type => {
-                        if (/^[a-z\-]+$/.test(type.icon) || /^http/.test(type.icon)) {
-                            let typeCache = cacheIcon[type.icon];
-                            if (typeCache) {
-                                newCache[type.icon] = typeCache;
-                            }
-                        }
-                        type.sites.forEach(site => {
-                            let icon = site.icon;
-                            if (!icon) icon = site.url.replace(/^(https?:\/\/[^\/]*\/).*$/, "$1favicon.ico");
-                            if (/^http/.test(icon)) {
-                                let siteCache = cacheIcon[icon];
-                                if (siteCache) {
-                                    newCache[icon] = siteCache;
+                    if (!preSwitch || searchData.prefConfig.cacheSwitch) {
+                        searchData.sitesConfig.forEach(type => {
+                            if (/^[a-z\-]+$/.test(type.icon) || /^http/.test(type.icon)) {
+                                let typeCache = cacheIcon[type.icon];
+                                if (typeCache) {
+                                    newCache[type.icon] = typeCache;
                                 }
                             }
+                            type.sites.forEach(site => {
+                                let icon = site.icon;
+                                if (!icon) icon = site.url.replace(/^(https?:\/\/[^\/]*\/).*$/, "$1favicon.ico");
+                                if (/^http/.test(icon)) {
+                                    let siteCache = cacheIcon[icon];
+                                    if (siteCache) {
+                                        newCache[icon] = siteCache;
+                                    }
+                                }
+                            });
                         });
-                    });
+                    }
                     storage.setItem("cacheIcon", newCache);
                     if (e.notification || (e.detail && e.detail.notification)) {
                         _GM_notification('Configuration imported successfully!');
