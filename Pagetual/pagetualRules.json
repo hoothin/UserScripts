@@ -513,6 +513,13 @@
     "nextLink":"a.morelink"
   },
   {
+    "name":"ekşi sözlük",
+    "action":0,
+    "url":"^https://eksisozluk\\.com",
+    "pageElement":"#entry-item-list",
+    "nextLinkByJs":"let pager=doc.querySelector('.pager');if(!pager || pager.dataset.currentpage==pager.dataset.pagecount)return null;else return location.href.replace(/&p=\\d+/,'')+'&p='+(parseInt(pager.dataset.currentpage)+1)"
+  },
+  {
     "name":"参考消息手机版",
     "action":1,
     "url":"^http://m\\.cankaoxiaoxi\\.com/",
