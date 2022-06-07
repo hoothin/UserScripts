@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.3.8.3
+// @version      1.3.9
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本，在搜索时便捷跳转各大搜索引擎
 // @description:zh-TW  又一個搜尋引擎跳轉脚本，在搜索時便捷跳轉各大搜尋引擎
@@ -987,7 +987,7 @@
                         searchData.prefConfig.offset.y
                     );
                 }
-                if (this.fontPool.length > 0) {
+                if (this.fontPool.length > 0 || location.href.indexOf(configPage) === 0) {
                     let linkEle = document.createElement("link");
                     linkEle.rel="stylesheet";
                     linkEle.href = searchData.prefConfig.fontAwesomeCss || "https://lib.baomitu.com/font-awesome/6.0.0-beta2/css/all.css";
