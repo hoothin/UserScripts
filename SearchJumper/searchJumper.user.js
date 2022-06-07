@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.3.9.3
+// @version      1.3.9.5
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本，在搜索时便捷跳转各大搜索引擎
 // @description:zh-TW  又一個搜尋引擎跳轉脚本，在搜索時便捷跳轉各大搜尋引擎
@@ -335,11 +335,11 @@
             icon: "search",
             sites: [ {
                 name: "Google",
-                url: "https://www.google.com/search?q=%s&ie=%e&oe=%e",
+                url: "https://www.google.com/search?q=%s&ie=utf-8&oe=utf-8",
                 match: "https://www\\.google\\..*/search"
             }, {
                 name: "百度",
-                url: "https://www.baidu.com/s?wd=%s&ie=%e",
+                url: "https://www.baidu.com/s?wd=%s&ie=utf-8",
                 keywords: "(?:wd|word)=(.*?)(&|$)",
                 match: "https://(www|m)\\.baidu\\.com/.*(wd|word)="
             }, {
@@ -387,13 +387,13 @@
             openInNewTab: true,
             sites: [ {
                 name: "Google站内搜",
-                url: "https://www.google.com/search?q=%s%20site%3A%h&ie=%e&oe=%e",
+                url: "https://www.google.com/search?q=%s%20site%3A%h&ie=utf-8&oe=utf-8",
             }, {
                 name: "头条站内搜",
                 url: "https://so.toutiao.com/search/?dvpf=%c&keyword=%s%20site%3A%h"
             }, {
                 name: "百度站内搜",
-                url: "https://www.baidu.com/s?wd=%s%20site%3A%h&ie=%e"
+                url: "https://www.baidu.com/s?wd=%s%20site%3A%h&ie=utf-8"
             }, {
                 name: "必应站内搜",
                 url: "https://cn.bing.com/search?q=%s%20site%3A%h"
