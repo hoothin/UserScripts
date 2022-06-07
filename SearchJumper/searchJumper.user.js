@@ -4,10 +4,10 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.3.8.1
+// @version      1.3.8.2
 // @description  Jump to any search engine quickly and easily!
-// @description:zh-CN  又一个搜索引擎跳转脚本，在搜索时便捷跳转各大搜索引擎，如谷歌、必应、百度等
-// @description:zh-TW  又一個搜尋引擎跳轉脚本，在搜索時便捷跳轉各大搜尋引擎，如Google、Bing、Baidu等
+// @description:zh-CN  又一个搜索引擎跳转脚本，在搜索时便捷跳转各大搜索引擎
+// @description:zh-TW  又一個搜尋引擎跳轉脚本，在搜索時便捷跳轉各大搜尋引擎
 // @description:ja  任意の検索エンジンにすばやく簡単にジャンプします！
 // @author       hoothin
 // @match        *://*/*
@@ -27,6 +27,7 @@
 // @grant        GM.openInTab
 // @grant        GM_openInTab
 // @grant        unsafeWindow
+// @connect      *
 // @run-at       document-start
 // ==/UserScript==
 
@@ -687,7 +688,7 @@
             return escapeHTMLPolicy?escapeHTMLPolicy.createHTML(html):html;
         }
 
-        var logoBtn, searchBar, searchTypes = [], currentSite = false, cacheKeywords, localKeywords, lastSign;
+        var logoBtn, searchBar, searchTypes = [], currentSite = false, cacheKeywords, localKeywords, lastSign, cacheIcon, cachePool = [];
         var logoBtnSvg = `<svg class="search-jumper-logoBtnSvg" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><title>${i18n("scriptName")}</title><path d="M.736 510.464c0-281.942 228.335-510.5 510-510.5 135.26 0 264.981 53.784 360.625 149.522 95.643 95.737 149.375 225.585 149.375 360.978 0 281.94-228.335 510.5-510 510.5-281.665 0-510-228.56-510-510.5zm510-510.5v1021m-510-510.5h1020" fill="#fefefe"/><path d="M237.44 346.624a48.64 48.64 0 1 0 97.28 0 48.64 48.64 0 1 0-97.28 0zM699.904 346.624a48.64 48.64 0 1 0 97.28 0 48.64 48.64 0 1 0-97.28 0zM423.296 759.296c-64 0-115.712-52.224-115.712-115.712 0-26.624 9.216-52.224 25.6-72.704 9.216-11.776 26.112-13.312 37.888-4.096s13.312 26.112 4.096 37.888c-9.216 11.264-13.824 24.576-13.824 38.912 0 34.304 27.648 61.952 61.952 61.952s61.952-27.648 61.952-61.952c0-4.096-.512-8.192-1.024-11.776-2.56-14.848 6.656-28.672 21.504-31.744 14.848-2.56 28.672 6.656 31.744 21.504 1.536 7.168 2.048 14.336 2.048 22.016-.512 63.488-52.224 115.712-116.224 115.712z" fill="#333"/><path d="M602.08 760.296c-64 0-115.712-52.224-115.712-115.712 0-14.848 12.288-27.136 27.136-27.136s27.136 12.288 27.136 27.136c0 34.304 27.648 61.952 61.952 61.952s61.952-27.648 61.952-61.952c0-15.36-5.632-30.208-15.872-41.472-9.728-11.264-9.216-28.16 2.048-37.888 11.264-9.728 28.16-9.216 37.888 2.048 19.456 21.504 29.696 48.64 29.696 77.824 0 62.976-52.224 115.2-116.224 115.2z" fill="#333"/><ellipse ry="58" rx="125" cy="506.284" cx="201.183" fill="#faf"/><ellipse ry="58" rx="125" cy="506.284" cx="823.183" fill="#faf"/></svg>`;
 
         var targetElement;
@@ -998,7 +999,9 @@
                                     font.innerText = '';
                                     font.style.fontSize = '';
                                     font.style.color = '';
+                                    cachePool.push(font);
                                 });
+                                setTimeout(() => {cacheManager()}, 100);
                             });
                         }
                     };
@@ -1008,6 +1011,8 @@
                     document.addEventListener('readystatechange', event => {
                         appendCss();
                     })
+                } else {
+                    cacheManager();
                 }
 
                 var delay = searchData.prefConfig.autoDelay || 1000;
@@ -1204,16 +1209,36 @@
                 typeBtn.classList.add("search-jumper-btn");
                 if (icon) {
                     if (/^[a-z\-]+$/.test(icon)) {
-                        let i = document.createElement("i");
-                        i.className = "fa fa-" + icon;
-                        i.innerText = type;
-                        i.style.fontSize = 14 * this.scale + 'px';
-                        i.style.color = 'wheat';
-                        this.fontPool.push(i);
-                        typeBtn.appendChild(i);
+                        let cache = cacheIcon[icon];
+                        if (cache) {
+                            let img = document.createElement("img");
+                            img.src = cache;
+                            img.style.width = 'auto';
+                            img.style.height = 'auto';
+                            typeBtn.appendChild(img);
+                        } else {
+                            let i = document.createElement("i");
+                            i.className = "fa fa-" + icon;
+                            i.innerText = type;
+                            i.style.fontSize = 14 * this.scale + 'px';
+                            i.style.color = 'wheat';
+                            this.fontPool.push(i);
+                            typeBtn.appendChild(i);
+                        }
                     } else {
                         let img = document.createElement("img");
-                        img.src = icon;
+                        let isBase64 = /^data:/.test(icon);
+                        if (isBase64) {
+                            img.src = icon;
+                        } else {
+                            let cache = searchData.prefConfig.cacheSwitch && cacheIcon[icon];
+                            if (cache) {
+                                img.src = cache;
+                            } else {
+                                img.src = icon;
+                                if (searchData.prefConfig.cacheSwitch) cachePool.push(img);
+                            }
+                        }
                         typeBtn.appendChild(img);
                     }
                 } else {
@@ -1420,11 +1445,24 @@
                     ele.removeChild(word);
                     img.style.opacity = 1;
                 };
+                let imgSrc;
                 if (icon == 0) {
                 } else if (icon) {
-                    img.src = icon;
+                    imgSrc = icon;
                 } else if (!isBookmarklet) {
-                    img.src = data.url.replace(/^(https?:\/\/[^\/]*\/).*$/, "$1favicon.ico");
+                    imgSrc = data.url.replace(/^(https?:\/\/[^\/]*\/).*$/, "$1favicon.ico");
+                }
+                let isBase64 = /^data:/.test(imgSrc);
+                if (isBase64) {
+                    img.src = imgSrc;
+                } else if (imgSrc) {
+                    let cache = searchData.prefConfig.cacheSwitch && cacheIcon[imgSrc];
+                    if (cache) {
+                        img.src = cache;
+                    } else {
+                        img.src = imgSrc;
+                        if (searchData.prefConfig.cacheSwitch) cachePool.push(img);
+                    }
                 }
                 if (searchData.prefConfig.shortcut && data.shortcut) {
                     document.addEventListener('keydown', e => {
@@ -1514,8 +1552,10 @@
                         targetUrl = targetElement.src || targetElement.href || selStr || location.href;
                         targetName = targetElement.title || targetElement.alt || document.title;
                         if (targetElement.tagName == 'IMG' && ele.dataset.url.indexOf('%i') != -1) {
-                            imgBase64 = image2Base64(targetElement);
-                            resultUrl = resultUrl.replace(/%i/g, imgBase64);
+                            if (targetElement.src.split("/")[2] == document.domain) {
+                                imgBase64 = image2Base64(targetElement);
+                                resultUrl = resultUrl.replace(/%i/g, imgBase64);
+                            }
                         }
                     }
                     let targetBaseUrl = targetUrl.replace(/https?:\/\//i, "");
@@ -1794,14 +1834,116 @@
             }
         }
 
-        function image2Base64 (img) {
-            img.setAttribute("crossOrigin",'anonymous');
+        async function image2Base64(img) {
+            if (!img || !img.src) return null;
+            let urlSplit=img.src.split("/");
+            if (urlSplit[2] == document.domain) {
+                let imgStyle = getComputedStyle(img);
+                var canvas = document.createElement("canvas");
+                canvas.width = img.naturalWidth || img.width || parseInt(imgStyle.width);
+                canvas.height = img.naturalHeight || img.height || parseInt(imgStyle.height);
+                var ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0);
+                return (canvas.toDataURL("image/png"));
+            } else {
+                return new Promise((resolve) => {
+                    _GM_xmlhttpRequest({
+                        method: 'GET',
+                        url: img.src,
+                        responseType:'arraybuffer',
+                        headers: {
+                            origin: urlSplit[0] + "//" + urlSplit[2],
+                            referer: img.src,
+                            accept: "*/*"
+                        },
+                        onload: function(d) {
+                            var binary = '';
+                            var bytes = new Uint8Array(d.response);
+                            for (var len = bytes.byteLength, i = 0; i < len; i++) {
+                                binary += String.fromCharCode(bytes[i]);
+                            }
+                            resolve(`data:image/jpeg;base64,${window.btoa(binary)}`);
+                        },
+                        onerror: function(){
+                            resolve(null);
+                        },
+                        ontimeout: function(){
+                            resolve(null);
+                        }
+                    });
+                });
+            }
+        }
+
+        function icon2Base64(icon) {
+            let iconStyle = getComputedStyle(icon);
+            let content = getComputedStyle(icon,':before').content.replace(/"/g, '');
+            if (!content) return false;
             var canvas = document.createElement("canvas");
-            canvas.width = img.naturalWidth || img.width;
-            canvas.height = img.naturalHeight || img.height;
+            canvas.width = icon.clientWidth || parseInt(iconStyle.lineHeight);
+            canvas.height = icon.clientHeight || parseInt(iconStyle.lineHeight);
             var ctx = canvas.getContext("2d");
-            ctx.drawImage(img, 0, 0);
+            ctx.font = iconStyle.font;
+            ctx.strokeStyle = iconStyle.color || "black";
+            ctx.fillStyle = iconStyle.color || "black";
+            ctx.textBaseline = "top";
+            let metrics = ctx.measureText(content);
+            ctx.fillText(content, (canvas.width - metrics.width) / 2, (canvas.height - parseInt(iconStyle.fontSize)) / 2);
             return canvas.toDataURL("image/png");
+        }
+
+        async function cacheImg(img) {
+            if (cacheIcon[img.src]) return;
+            let cache = await image2Base64(img);
+            if (cache == 'data:,' || !cache) return;
+            cacheIcon[img.src] = cache;
+            storage.setItem("cacheIcon", cacheIcon);
+        }
+
+        function cacheFontIcon(icon) {
+            let iconName = icon.className.replace('fa fa-', '');
+            if (cacheIcon[iconName]) return;
+            let cache = icon2Base64(icon);
+            if (cache == 'data:,' || !cache) return;
+            cacheIcon[iconName] = cache;
+            storage.setItem("cacheIcon", cacheIcon);
+        }
+
+        async function cacheAction(target) {
+            await new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve(true);
+                }, 10);
+            });
+            if (target.tagName == 'IMG') {
+                if (!searchData.prefConfig.cacheSwitch) return;
+                let cache;
+                if (target.complete) {
+                    if (target.naturalHeight && target.naturalWidth) {
+                        await cacheImg(target);
+                    }
+                } else {
+                    let loaded = await new Promise((resolve) => {
+                        target.addEventListener('load', e => {
+                            resolve(true);
+                        }, true);
+                        target.addEventListener('error', e => {
+                            resolve(false);
+                        }, true);
+                    });
+                    if (loaded) await cacheImg(target);
+                }
+            } else {
+                cacheFontIcon(target);
+            }
+        }
+
+        async function cacheManager() {
+            let needCache = cachePool.length > 0;
+            while (cachePool.length > 0) {
+                await cacheAction(cachePool.shift());
+            }
+            if (needCache) console.log('SearchJumper all icons cached!');
         }
 
         function getSelectStr() {
@@ -2049,20 +2191,19 @@
                 let shown = false;
                 let showToolbarTimer;
                 document.addEventListener('mousedown', e => {
+                    shown = false;
                     if ((searchData.prefConfig.altKey && !e.altKey) ||
                         (searchData.prefConfig.ctrlKey && !e.ctrlKey) ||
                         (searchData.prefConfig.shiftKey && !e.shiftKey) ||
                         (searchData.prefConfig.metaKey && !e.metaKey) ||
-                        e.target.classList.contains('search-jumper-btn')) {
+                        e.target.classList.contains('search-jumper-btn') ||
+                        (e.target.parentNode && e.target.parentNode.classList.contains('search-jumper-btn'))) {
                         return;
                     }
                     if (!searchData.prefConfig.selectToShow &&
                         e.which === 1 && !searchData.prefConfig.leftMouse) {
                         return;
                     }
-                    if (e.target.tagName === 'IMG' &&
-                        e.target.parentNode.classList.contains('search-jumper-btn')) return;
-                    shown = false;
                     let selectImg = e.target.tagName === 'IMG';
                     targetElement = e.target;
                     setTimeout(() => {
@@ -2144,6 +2285,26 @@
                 document.addEventListener('saveConfig', e => {
                     searchData = (e.detail ? e.detail.searchData : e.searchData) || _unsafeWindow.searchData;
                     storage.setItem("searchData", searchData);
+                    let newCache = {};
+                    searchData.sitesConfig.forEach(type => {
+                        if (/^[a-z\-]+$/.test(type.icon) || /^http/.test(type.icon)) {
+                            let typeCache = cacheIcon[type.icon];
+                            if (typeCache) {
+                                newCache[type.icon] = typeCache;
+                            }
+                        }
+                        type.sites.forEach(site => {
+                            let icon = site.icon;
+                            if (!icon) icon = site.url.replace(/^(https?:\/\/[^\/]*\/).*$/, "$1favicon.ico");
+                            if (/^http/.test(icon)) {
+                                let siteCache = cacheIcon[icon];
+                                if (siteCache) {
+                                    newCache[icon] = siteCache;
+                                }
+                            }
+                        });
+                    });
+                    storage.setItem("cacheIcon", newCache);
                     if (e.notification || (e.detail && e.detail.notification)) {
                         _GM_notification('Configuration imported successfully!');
                     }
@@ -2212,6 +2373,11 @@
                     resolve(data || 0);
                 });
             });
+            cacheIcon = await new Promise((resolve) => {
+                storage.getItem("cacheIcon", data => {
+                    resolve(data || {});
+                });
+            });
             if (_searchData) {
                 searchData = _searchData;
             }
@@ -2223,6 +2389,9 @@
             }
             if (searchData.prefConfig.longPressTime === undefined) {
                 searchData.prefConfig.longPressTime = 500;
+            }
+            if (searchData.prefConfig.cacheSwitch === undefined) {
+                searchData.prefConfig.cacheSwitch = false;
             }
         }
 
