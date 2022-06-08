@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.15
+// @version      1.9.16
 // @description  Perpetual pages - Most powerful Auto Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -2326,88 +2326,6 @@
         });
     }
 
-    var failFromIframe=0;
-    var inCors=false;
-    function requestFromIframe(url, callback){
-        url=url.replace(/#[^#]*/,"");
-        let orgPage,curPage;
-        let iframe = document.createElement('iframe');
-        iframe.name = 'pagetual-iframe';
-        iframe.width = '100%';
-        iframe.height = '0';
-        iframe.frameBorder = '0';
-        if(ruleParser.curSiteRule.sandbox!=false){
-            iframe.sandbox="allow-same-origin allow-scripts allow-popups allow-forms";
-        }
-        iframe.style.cssText = 'margin:0!important;padding:0!important;visibility:hidden!important;';
-        let waitTime=100,checkEval;
-        if(ruleParser.curSiteRule.wait){
-            if(isNaN(ruleParser.curSiteRule.wait)){
-                try{
-                    checkEval=Function("doc",'"use strict";' + ruleParser.curSiteRule.wait);
-                }catch(e){
-                    debug(e);
-                }
-            }else{
-                waitTime=ruleParser.curSiteRule.wait;
-            }
-        }
-        let loadedHandler=e=>{
-            if(e.data != 'pagetual-iframe:DOMLoaded' && e.type != 'load')return;
-            window.removeEventListener('message', loadedHandler, false);
-            iframe.removeEventListener('load', loadedHandler, false);
-            let tryTimes=0;
-            function checkIframe(){
-                try{
-                    let doc=iframe.contentDocument || iframe.contentWindow.document;
-                    let eles=ruleParser.getPageElement(doc, iframe.contentWindow);
-                    if(checkEval && !checkEval(doc)){
-                        setTimeout(()=>{
-                            checkIframe();
-                        },waitTime);
-                        return;
-                    }else if(eles && eles.length>0){
-                        callback(doc, eles);
-                    }else if(tryTimes++ < 10){
-                        setTimeout(()=>{
-                            checkIframe();
-                        },waitTime);
-                        return;
-                    }else{
-                        if(failFromIframe++ > 2){
-                            failFromIframe=0;
-                            debug("Stop as failFromIframe");
-                            isPause=true;
-                            callback(false, false);
-                        }else{
-                            callback(false, false);
-                        }
-                    }
-                }catch(e){
-                    debug("Stop as cors");
-                    inCors=true;
-                    //isPause=true;
-                    if(!ruleParser.curSiteRule.pageElement){
-                        ruleParser.curSiteRule.pageElement=allOfBody;
-                        ruleParser.getInsert(true);
-                    }
-                    ruleParser.curSiteRule.action=0;
-                    ruleParser.nextLinkHref=url;
-                    callback(false, false);
-                    nextPage();
-                }
-                document.body.removeChild(iframe);
-            }
-            setTimeout(()=>{
-                checkIframe();
-            },waitTime);
-        };
-        window.addEventListener('message', loadedHandler, false);
-        iframe.addEventListener('load', loadedHandler, false);
-        iframe.src=url;
-        document.body.appendChild(iframe);
-    }
-
     function initPage(){
         ruleParser.initPage(()=>{
             if(ruleParser.nextLinkHref){
@@ -2961,6 +2879,88 @@
         btn.click();
     }
 
+    var failFromIframe=0;
+    var inCors=false;
+    function requestFromIframe(url, callback){
+        url=url.replace(/#[^#]*/,"");
+        let orgPage,curPage;
+        let iframe = document.createElement('iframe');
+        iframe.name = 'pagetual-iframe';
+        iframe.width = '100%';
+        iframe.height = '0';
+        iframe.frameBorder = '0';
+        if(ruleParser.curSiteRule.sandbox!=false){
+            iframe.sandbox="allow-same-origin allow-scripts allow-popups allow-forms";
+        }
+        iframe.style.cssText = 'margin:0!important;padding:0!important;visibility:hidden!important;';
+        let waitTime=100,checkEval;
+        if(ruleParser.curSiteRule.wait){
+            if(isNaN(ruleParser.curSiteRule.wait)){
+                try{
+                    checkEval=Function("doc",'"use strict";' + ruleParser.curSiteRule.wait);
+                }catch(e){
+                    debug(e);
+                }
+            }else{
+                waitTime=ruleParser.curSiteRule.wait;
+            }
+        }
+        let loadedHandler=e=>{
+            if(e.data != 'pagetual-iframe:DOMLoaded' && e.type != 'load')return;
+            window.removeEventListener('message', loadedHandler, false);
+            iframe.removeEventListener('load', loadedHandler, false);
+            let tryTimes=0;
+            function checkIframe(){
+                try{
+                    let doc=iframe.contentDocument || iframe.contentWindow.document;
+                    let eles=ruleParser.getPageElement(doc, iframe.contentWindow);
+                    if(checkEval && !checkEval(doc)){
+                        setTimeout(()=>{
+                            checkIframe();
+                        },waitTime);
+                        return;
+                    }else if(eles && eles.length>0){
+                        callback(doc, eles);
+                    }else if(tryTimes++ < 10){
+                        setTimeout(()=>{
+                            checkIframe();
+                        },waitTime);
+                        return;
+                    }else{
+                        if(failFromIframe++ > 2){
+                            failFromIframe=0;
+                            debug("Stop as failFromIframe");
+                            isPause=true;
+                            callback(false, false);
+                        }else{
+                            callback(false, false);
+                        }
+                    }
+                }catch(e){
+                    debug("Stop as cors");
+                    inCors=true;
+                    //isPause=true;
+                    if(!ruleParser.curSiteRule.pageElement){
+                        ruleParser.curSiteRule.pageElement=allOfBody;
+                        ruleParser.getInsert(true);
+                    }
+                    ruleParser.curSiteRule.action=0;
+                    ruleParser.nextLinkHref=url;
+                    callback(false, false);
+                    nextPage();
+                }
+                document.body.removeChild(iframe);
+            }
+            setTimeout(()=>{
+                checkIframe();
+            },waitTime);
+        };
+        window.addEventListener('message', loadedHandler, false);
+        iframe.addEventListener('load', loadedHandler, false);
+        iframe.src=url;
+        document.body.appendChild(iframe);
+    }
+
     var emuIframe,lastActiveUrl=location.href;
     function emuPage(callback){
         let orgPage=null,orgContent=null,curPage,iframeDoc,times=0,loadmoreBtn,loadmoreEnd=false,waitTimes=10,changed=false;
@@ -3012,7 +3012,12 @@
                     }
                 }
                 let pageEle=ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView, true);
-                if(!nextLink || !pageEle || pageEle.length==0 || (checkEval && !checkEval(iframeDoc))){
+                if(checkEval && !checkEval(iframeDoc)){
+                    setTimeout(()=>{
+                        checkPage();
+                    },waitTime);
+                    return;
+                }else if(!nextLink || !pageEle || pageEle.length==0){
                     if(waitTimes-->0){
                         setTimeout(()=>{
                             checkPage();
