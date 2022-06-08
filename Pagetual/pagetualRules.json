@@ -517,6 +517,16 @@
     "include":"id('post-list')/ul/li"
   },
   {
+    "name":"拷貝漫畫",
+    "url":"^https://copymanga\\.org/comic/.*/chapter/",
+    "pageElement":"ul.comicContent-list>li",
+    "nextLink":".comicContent-next>a",
+    "action":1,
+    "insert":"ul.comicContent-list",
+    "insertPos":2,
+    "wait":"if(doc==document)return true;let sy=doc.defaultView.scrollY;let cur=doc.querySelector('.comicIndex').innerText;let max=doc.querySelector('.comicCount').innerText;if(window._cur==cur){doc.defaultView.scroll(0, 0);window._cur='';}else{doc.defaultView.scroll(0, sy+9999999);window._cur=cur;}return cur==max;"
+  },
+  {
     "name":"Hacker News",
     "action":0,
     "url":"^https?://news\\.ycombinator\\.com/",
