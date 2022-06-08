@@ -493,7 +493,8 @@
     "pageBarText":1,
     "action":1,
     "nextLink":".nextChapter",
-    "wait":"return doc.querySelector('.copy')==null"
+    "wait":"return doc.querySelector('.copy')==null",
+    "include":"div.content"
   },
   {
     "name":"纵横中文网手机版",
@@ -504,6 +505,16 @@
     "wait":500,
     "css":".text>div,#fukerr_bot,#fukerr{display:none!important}",
     "pageBarText":1
+  },
+  {
+    "name":"Yurifans",
+    "url":"^https://yuri\\.website/[a-z]",
+    "type":0,
+    "action":1,
+    "pageElement":"id('post-list')/ul",
+    "nextLink":"//div[@class='btn-pager']/button[text()='❯']",
+    "wait":"500",
+    "include":"id('post-list')/ul/li"
   },
   {
     "name":"Hacker News",
