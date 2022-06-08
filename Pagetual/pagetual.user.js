@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.16
+// @version      1.9.17
 // @description  Perpetual pages - Most powerful Auto Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -793,7 +793,7 @@
                 pageElement=[body];
             }
             if(this.curSiteRule.singleUrl && pageElement && pageElement.length>0 && pageElement[0].tagName=="TR"){
-                let mainTr=this.insert.previousElementSibling,mainTdNum=0,newTdNum=0;
+                let mainTr=this.insert.parentNode.querySelector('tr'),mainTdNum=0,newTdNum=0;
                 [].forEach.call(mainTr.children, el=>{
                     if(el.tagName=="TD" || el.tagName=="TH"){
                         mainTdNum+=el.colSpan||1;
@@ -2663,7 +2663,7 @@
         let insert=ruleParser.getInsert();
         if(!insert || !insert.parentNode)return;
         curPage++;
-        let example=ruleParser.curSiteRule.insertPos==2?insert.children[0]:(insert.previousElementSibling||insert);
+        let example=ruleParser.curSiteRule.insertPos==2?insert.children[0]:(insert.parentNode.children[parseInt(insert.parentNode.children.length/2)]||insert);
         if(!example || !example.parentNode)example=insert;
         let inTable=example.parentNode.tagName=="TABLE" ||
             example.tagName=="TR" ||
