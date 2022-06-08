@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.3.9.6
+// @version      1.3.9.7
 // @description  Jump to any search engine quickly and easily!
 // @description:zh-CN  又一个搜索引擎跳转脚本，在搜索时便捷跳转各大搜索引擎
 // @description:zh-TW  又一個搜尋引擎跳轉脚本，在搜索時便捷跳轉各大搜尋引擎
@@ -539,7 +539,7 @@
         initShow: false,
         customSize: 100,
         typeOpenTime: 250,
-        longPressTime: 200
+        longPressTime: 250
     };
     function run() {
         const lang = navigator.appName == "Netscape" ? navigator.language : navigator.userLanguage;
@@ -2225,14 +2225,14 @@
                         return;
                     }
                     if (!searchData.prefConfig.selectToShow &&
-                        e.which === 1 && !searchData.prefConfig.leftMouse) {
+                        (e.which === 1 || e.which === 2) && !searchData.prefConfig.leftMouse) {
                         return;
                     }
                     let selectImg = e.target.tagName === 'IMG';
                     targetElement = e.target;
                     setTimeout(() => {
                         showToolbarTimer = setTimeout(() => {
-                            if (e.which === 1 && !searchData.prefConfig.leftMouse) return;
+                            if ((e.which === 1 || e.which === 2) && !searchData.prefConfig.leftMouse) return;
                             searchBar.showInPage();
                             e.stopPropagation();
                             e.preventDefault();
