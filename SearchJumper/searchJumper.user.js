@@ -993,7 +993,7 @@
                                     font.style.color = '';
                                     cachePool.push(font);
                                 });
-                                setTimeout(() => {cacheManager()}, 500);
+                                setTimeout(() => {cacheManager()}, 1000);
                             });
                         }
                     };
