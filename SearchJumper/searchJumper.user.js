@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.4.2
+// @version      1.5
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个搜索引擎跳转脚本，在搜索时便捷跳转各大搜索引擎，支持任意页面右键搜索与全面自定义
 // @description:zh-TW  又一個搜尋引擎跳轉脚本，在搜索時便捷跳轉各大搜尋引擎，支持任意頁面右鍵搜索與全面自定義
@@ -1031,6 +1031,17 @@
                 this.bar.addEventListener('mouseleave', e => {
                     this.hideTimeout = setTimeout(hideHandler, delay);
                 }, false);
+
+                if (/^2:/.test(lastSign)) {
+                    let targetSite = this.bar.querySelector(`a[href='${lastSign.replace(/^2:/,"")}']`);
+                    if (targetSite) {
+                        let mouseDownEvent = new PointerEvent("mousedown");
+                        targetSite.dispatchEvent(mouseDownEvent);
+                        targetSite.click();
+                    }
+                }
+                lastSign = 0;
+                storage.setItem("lastSign", 0);
             }
 
             refresh() {
@@ -1054,13 +1065,20 @@
                                 if (new RegExp(data.match).test(location.href)) {
                                     currentSite = data;
                                 }
-                            } else if (data.url.indexOf(location.host) != -1 &&
-                                       data.url.replace(/^https?:\/\//, "").replace(location.host, "").replace(/[\?#].*/, "") == location.pathname) {
-                                let urlReg = data.url.match(/[^\/\?&]+(?=%[stb])/g);
-                                if (urlReg) {
-                                    urlReg = urlReg.join('.*');
-                                    if (new RegExp(urlReg).test(location.href)) {
+                            } else if (data.url.indexOf(location.host) != -1) {
+                                if (data.url.indexOf("site:") != -1) {
+                                    let siteMatch = data.url.match(/site:(.*?)[\s%]/);
+                                    if (siteMatch && location.href.indexOf(siteMatch[1]) != -1) {
                                         currentSite = data;
+                                    }
+                                }
+                                if (!currentSite && data.url.replace(/^https?:\/\//, "").replace(location.host, "").replace(/\/?[\?#].*/, "") == location.pathname.replace(/\/$/, "")) {
+                                    let urlReg = data.url.match(/[^\/\?&]+(?=%[stb])/g);
+                                    if (urlReg) {
+                                        urlReg = urlReg.join('.*');
+                                        if (new RegExp(urlReg).test(location.href)) {
+                                            currentSite = data;
+                                        }
                                     }
                                 }
                             }
@@ -1334,10 +1352,10 @@
 
                 typeBtn.addEventListener('click', e => {
                     if (e.which === 1 && e.shiftKey) {
-                        storage.setItem("lastSign", 1);
                         for (let i = 0;i < siteEles.length;i++) {
                             let siteEle = siteEles[i];
                             if (!siteEle.dataset.nobatch && !/^javascript:/.test(siteEle.href) && !siteEle.onclick) {
+                                storage.setItem("lastSign", 1);
                                 let mouseDownEvent = new PointerEvent("mousedown");
                                 siteEle.dispatchEvent(mouseDownEvent);
                                 window.open(siteEle.href, '_blank');
@@ -1497,13 +1515,20 @@
                         if (new RegExp(data.match).test(location.href)) {
                             ele.dataset.current = true;
                         }
-                    } else if (data.url.indexOf(location.host) != -1 && data.url.indexOf("%s") != -1 &&
-                               data.url.replace(/^https?:\/\//, "").replace(location.host, "").replace(/\/?[\?#].*/, "") == location.pathname.replace(/\/$/, "")) {
-                        let urlReg = data.url.match(/[^\/\?&]+(?=%[stb])/g);
-                        if (urlReg) {
-                            urlReg = urlReg.join('.*');
-                            if (new RegExp(urlReg).test(location.href)) {
+                    } else if (data.url.indexOf(location.host) != -1 && data.url.indexOf("%s") != -1) {
+                        if (data.url.indexOf("site:") != -1) {
+                            let siteMatch = data.url.match(/site:(.*?)[\s%]/);
+                            if (siteMatch && location.href.indexOf(siteMatch[1]) != -1) {
                                 ele.dataset.current = true;
+                            }
+                        }
+                        if (!currentSite && data.url.replace(/^https?:\/\//, "").replace(location.host, "").replace(/\/?[\?#].*/, "") == location.pathname.replace(/\/$/, "")) {
+                            let urlReg = data.url.match(/[^\/\?&]+(?=%[stb])/g);
+                            if (urlReg) {
+                                urlReg = urlReg.join('.*');
+                                if (new RegExp(urlReg).test(location.href)) {
+                                    ele.dataset.current = true;
+                                }
                             }
                         }
                     }
@@ -1579,6 +1604,7 @@
                             siteNames.forEach(n => {
                                 for (let i = 0; i < self.allSiteBtns.length; i++) {
                                     let siteBtn = self.allSiteBtns[i];
+                                    if (/^\[/.test(siteBtn.href)) continue;
                                     if (siteBtn != ele && siteBtn.title == n) {
                                         targetSites.push(siteBtn);
                                         break;
@@ -1586,6 +1612,18 @@
                                 }
                             });
                             ele.onclick = e => {
+                                if (e.which === 1 && e.shiftKey) {
+                                    for (let i = 0;i < targetSites.length;i++) {
+                                        let siteEle = targetSites[i];
+                                        if (!siteEle.dataset.nobatch && /^http/.test(siteEle.href) && !siteEle.onclick) {
+                                            storage.setItem("lastSign", "2:" + data.url);
+                                            let mouseDownEvent = new PointerEvent("mousedown");
+                                            siteEle.dispatchEvent(mouseDownEvent);
+                                            window.open(siteEle.href, '_blank');
+                                            return;
+                                        }
+                                    }
+                                }
                                 targetSites.forEach(siteEle => {
                                     if (siteEle.dataset.current) return;
                                     let isJs = /^javascript:/.test(siteEle.href);
@@ -2418,7 +2456,6 @@
                     }
                 })
             }
-            storage.setItem("lastSign", 0);
         }
 
         function initView() {
