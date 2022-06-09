@@ -1033,7 +1033,7 @@
                 }, false);
 
                 if (/^2:/.test(lastSign)) {
-                    let targetSite = this.bar.querySelector(`a[href='${lastSign.replace(/^2:/,"")}']`);
+                    let targetSite = this.bar.querySelector(`a[href="${lastSign.replace(/^2:/,"").replace(/(["'])/g,'\\$1')}"]`);
                     if (targetSite) {
                         let mouseDownEvent = new PointerEvent("mousedown");
                         targetSite.dispatchEvent(mouseDownEvent);
