@@ -4,8 +4,8 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.4.0
-// @description  Jump to any search engine quickly and easily!
+// @version      1.4.1
+// @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个搜索引擎跳转脚本，在搜索时便捷跳转各大搜索引擎，支持任意页面右键搜索与全面自定义
 // @description:zh-TW  又一個搜尋引擎跳轉脚本，在搜索時便捷跳轉各大搜尋引擎，支持任意頁面右鍵搜索與全面自定義
 // @description:ja  任意の検索エンジンにすばやく簡単にジャンプします！
@@ -993,7 +993,7 @@
                                     font.style.color = '';
                                     cachePool.push(font);
                                 });
-                                setTimeout(() => {cacheManager()}, 100);
+                                setTimeout(() => {cacheManager()}, 500);
                             });
                         }
                     };
@@ -1207,7 +1207,7 @@
                 typeBtn.classList.add("search-jumper-btn");
                 if (icon) {
                     if (/^[a-z\-]+$/.test(icon)) {
-                        let cache = cacheIcon[icon];
+                        let cache = searchData.prefConfig.cacheSwitch && cacheIcon[icon];
                         if (cache) {
                             let img = document.createElement("img");
                             img.src = cache;
@@ -1931,8 +1931,8 @@
                     resolve(true);
                 }, 10);
             });
+            if (!searchData.prefConfig.cacheSwitch) return;
             if (target.tagName == 'IMG') {
-                if (!searchData.prefConfig.cacheSwitch) return;
                 let cache;
                 if (target.complete) {
                     if (target.naturalHeight && target.naturalWidth) {
@@ -2323,7 +2323,7 @@
                     searchData = (e.detail ? e.detail.searchData : e.searchData) || _unsafeWindow.searchData;
                     storage.setItem("searchData", searchData);
                     let newCache = {};
-                    if (!preSwitch || searchData.prefConfig.cacheSwitch) {
+                    if (preSwitch == searchData.prefConfig.cacheSwitch) {
                         searchData.sitesConfig.forEach(type => {
                             if (/^[a-z\-]+$/.test(type.icon) || /^http/.test(type.icon)) {
                                 let typeCache = cacheIcon[type.icon];
