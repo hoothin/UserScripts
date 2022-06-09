@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.4.1
+// @version      1.4.2
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个搜索引擎跳转脚本，在搜索时便捷跳转各大搜索引擎，支持任意页面右键搜索与全面自定义
 // @description:zh-TW  又一個搜尋引擎跳轉脚本，在搜索時便捷跳轉各大搜尋引擎，支持任意頁面右鍵搜索與全面自定義
@@ -964,6 +964,7 @@
             initRun() {
                 let self = this;
                 this.fontPool = [];
+                this.allSiteBtns = [];
                 searchData.sitesConfig.forEach(siteConfig => {
                     this.createType(siteConfig);
                 });
@@ -1364,7 +1365,8 @@
                 }, false);
                 let isCurrent = false;
                 sites.forEach(site => {
-                    let siteEle = this.createSiteBtn(site.name, site.icon, site, openInNewTab);
+                    let siteEle = self.createSiteBtn(site.name, site.icon, site, openInNewTab);
+                    self.allSiteBtns.push(siteEle);
                     ele.appendChild(siteEle);
                     siteEles.push(siteEle);
                     if (!currentSite && (siteEle.dataset.current || match)) {
@@ -1451,7 +1453,7 @@
                 if (icon == 0) {
                 } else if (icon) {
                     imgSrc = icon;
-                } else if (!isBookmarklet) {
+                } else if (/^http/.test(data.url)) {
                     imgSrc = data.url.replace(/^(https?:\/\/[^\/]*\/).*$/, "$1favicon.ico");
                 }
                 let isBase64 = /^data:/.test(imgSrc);
@@ -1570,7 +1572,39 @@
                     return resultUrl.replace(/%t/g, targetUrl).replace(/%T/g, encodeURIComponent(targetUrl)).replace(/%b/g, targetBaseUrl).replace(/%B/g, encodeURIComponent(targetBaseUrl)).replace(/%n/g, targetName).replace(/%s/g, keywords);
                 };
                 let action = e => {
-                    if (/[:%]P{/.test(data.url)) {
+                    if (/^\[/.test(data.url)) {
+                        if (!ele.onclick) {
+                            let targetSites = [];
+                            let siteNames = JSON.parse(data.url);
+                            siteNames.forEach(n => {
+                                for (let i = 0; i < self.allSiteBtns.length; i++) {
+                                    let siteBtn = self.allSiteBtns[i];
+                                    if (siteBtn != ele && siteBtn.title == n) {
+                                        targetSites.push(siteBtn);
+                                        break;
+                                    }
+                                }
+                            });
+                            ele.onclick = e => {
+                                targetSites.forEach(siteEle => {
+                                    if (siteEle.dataset.current) return;
+                                    let isJs = /^javascript:/.test(siteEle.href);
+                                    if (!isJs) {
+                                        siteEle.setAttribute("target", "_blank");
+                                    }
+                                    let mouseDownEvent = new PointerEvent("mousedown");
+                                    siteEle.dispatchEvent(mouseDownEvent);
+                                    if (siteEle.onclick || isJs) {
+                                        siteEle.click();
+                                    } else {
+                                        _GM_openInTab(siteEle.href);
+                                    }
+                                    siteEle.setAttribute("target", siteEle.dataset.target==1?"_blank":"");
+                                });
+                                return false;
+                            };
+                        }
+                    } else if (/[:%]P{/.test(data.url)) {
                         if (!ele.onclick) {
                             ele.onclick = e => {
                                 let url = getUrl();
