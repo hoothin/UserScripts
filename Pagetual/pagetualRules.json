@@ -182,15 +182,15 @@
   {
     "name":"秀人网",
     "url":"^https://www\\.(imn5|jpxgmn|jpxgyw|jpmnb|jpmn8|xiurenji|xiurenb)\\.(com|net|vip|top|cc)/.*\\.html",
-    "pageElement":"p>img"
+    "pageElement":"p>img",
     "author":"bmp4cwa"
   },
   {
     "name":"美女图123",
     "url":"^https://(www|m)\\.meinvtu123\\.cc/",
-    "pageElement":"div>img"
+    "pageElement":"div>img",
     "author":"bmp4cwa"
-  }
+  },
   {
     "name":"雪球",
     "url":"^https://xueqiu\\.com/",
