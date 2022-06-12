@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.18
+// @version      1.9.19
 // @description  Perpetual pages - Most powerful Auto Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -549,7 +549,7 @@
         }
 
         saveCurSiteRule(){
-            if(!this.curSiteRule || !this.curSiteRule.url || this.curSiteRule.singleUrl)return;
+            if(!this.curSiteRule || !this.curSiteRule.url || this.curSiteRule.singleUrl || this.curSiteRule.url.length<13)return;
             this.hpRules=this.hpRules.filter(item=>{return item&&item.url!=this.curSiteRule.url});
             this.hpRules.unshift(this.curSiteRule);
             if(this.hpRules.length>30){
@@ -1465,7 +1465,8 @@
                     isPause=true;
                     return;
                 }
-                if(self.curSiteRule && !self.curSiteRule.singleUrl){
+                //若是再亂匹配就不緩存wedata，或者只在找完本地規則之後再考慮wedata的緩存
+                if(self.curSiteRule && !self.curSiteRule.singleUrl && self.curSiteRule.url.length>13){
                     self.hpRules=self.hpRules.filter(item=>{return item&&item.url!=self.curSiteRule.url});
                     self.hpRules.unshift(self.curSiteRule);
                     if(self.hpRules.length>30){
