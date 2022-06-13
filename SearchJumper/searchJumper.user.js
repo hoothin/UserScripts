@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.5.2
+// @version      1.5.3
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -345,7 +345,8 @@
                 url: "https://so.toutiao.com/search/?dvpf=%c&keyword=%s"
             }, {
                 name: "必应",
-                url: "https://cn.bing.com/search?q=%s"
+                url: "https://www.bing.com/search?q=%s",
+                match: "^https://(www|cn)\\.bing\\..*/search"
             }, {
                 name: "鸭鸭",
                 url: "https://duckduckgo.com/?q=%s"
@@ -1554,7 +1555,7 @@
                         if (new RegExp(data.match).test(location.href)) {
                             ele.dataset.current = true;
                         }
-                    } else if (data.url.indexOf(location.host) != -1 && data.url.indexOf("%s") != -1) {
+                    } else if (data.url.indexOf(location.host) != -1) {
                         if (data.url.indexOf("site:") != -1) {
                             let siteMatch = data.url.match(/site:(.*?)[\s%]/);
                             if (siteMatch && location.href.indexOf(siteMatch[1]) != -1) {
@@ -1562,10 +1563,16 @@
                             }
                         }
                         if (!currentSite && data.url.replace(/^https?:\/\//, "").replace(location.host, "").replace(/\/?[\?#].*/, "") == location.pathname.replace(/\/$/, "")) {
-                            let urlReg = data.url.match(/[^\/\?&]+(?=%[stb])/g);
-                            if (urlReg) {
-                                urlReg = urlReg.join('.*');
-                                if (new RegExp(urlReg).test(location.href)) {
+                            if (data.url.indexOf("#p{") != -1) {
+                                ele.dataset.current = true;
+                            } else {
+                                let urlReg = data.url.match(/[^\/\?&]+(?=%[stb])/g);
+                                if (urlReg) {
+                                    urlReg = urlReg.join('.*');
+                                    if (new RegExp(urlReg).test(location.href)) {
+                                        ele.dataset.current = true;
+                                    }
+                                } else {
                                     ele.dataset.current = true;
                                 }
                             }
@@ -1575,27 +1582,47 @@
                         if (!currentSite) {
                             let submitParams = location.href.match(/#p{(.*?)}/);
                             if (submitParams) {
-                                setTimeout(() => {
-                                    submitParams = submitParams[1];
-                                    let params = new URLSearchParams(submitParams);
-                                    let form;
-                                    params.forEach((v, k) => {
-                                        let input = document.querySelector(k);
-                                        input.value = v;
-                                        if (!form) {
-                                            form = input.parentNode;
-                                            while (form.tagName != 'FORM') {
-                                                form = form.parentNode;
-                                                if (!form || form.tagName == 'BODY') break;
+                                submitParams = submitParams[1];
+                                let params = submitParams.split("&");
+                                let submitAction = () => {
+                                    setTimeout(() => {
+                                        if (document.readyState === "loading") {
+                                            submitAction();
+                                            return;
+                                        }
+                                        let form, input;
+                                        for (let i = 0; i < params.length; i++) {
+                                            let curPair = decodeURIComponent(params[i]);
+                                            let index = curPair.replace(/http.*/, "").lastIndexOf("=");
+                                            let k = curPair.slice(0, index);
+                                            let v = curPair.slice(index + 1);
+                                            input = document.querySelector(k);
+                                            if (!input) {
+                                                submitAction();
+                                                return;
+                                            }
+                                            if (v === 'click()') {
+                                                emuClick(input);
+                                            } else {
+                                                input.focus();
+                                                input.value = v;
+                                                let inputEvent = new InputEvent("input");
+                                                input.dispatchEvent(inputEvent);
                                             }
                                         }
-                                    });
-                                    if (form) {
-                                        let submitBtn = form.querySelector("[type=submit]");
-                                        if(submitBtn) submitBtn.click();
-                                        else form.submit();
-                                    }
-                                }, 500);
+                                        form = input.parentNode;
+                                        while (form.tagName != 'FORM') {
+                                            form = form.parentNode;
+                                            if (!form) break;
+                                        }
+                                        if (form) {
+                                            let submitBtn = form.querySelector("[type=submit]");
+                                            if(submitBtn) submitBtn.click();
+                                            else form.submit();
+                                        }
+                                    }, 500);
+                                };
+                                submitAction();
                             }
                         }
                     } else if (data.hideNotMatch) {
@@ -1923,6 +1950,46 @@
                 searchData.prefConfig.offset.x = posX;
                 searchData.prefConfig.offset.y = posY;
             }
+        }
+
+        function emuClick(btn){
+            if(!PointerEvent) return btn.click();
+            let eventParam = {
+                isTrusted: true,
+                altKey: false,
+                azimuthAngle: 0,
+                bubbles: true,
+                button: 0,
+                buttons: 0,
+                clientX: 1,
+                clientY: 1,
+                cancelBubble: false,
+                cancelable: true,
+                composed: true,
+                ctrlKey: false,
+                defaultPrevented: false,
+                detail: 1,
+                eventPhase: 2,
+                fromElement: null,
+                height: 1,
+                isPrimary: false,
+                metaKey: false,
+                pointerId: 1,
+                pointerType: "mouse",
+                pressure: 0,
+                relatedTarget: null,
+                returnValue: true,
+                shiftKey: false,
+                toElement: null,
+                twist: 0,
+                which: 1
+            };
+            var mouseEvent = new PointerEvent("mousedown",eventParam);
+            btn.dispatchEvent(mouseEvent);
+            mouseEvent = new PointerEvent("mouseup",eventParam);
+            btn.dispatchEvent(mouseEvent);
+            mouseEvent = new PointerEvent("click",eventParam);
+            btn.dispatchEvent(mouseEvent);
         }
 
         function submitByForm(charset, url, target) {
