@@ -1,0 +1,35 @@
+name: Collect wedata for pagetual
+
+on:
+  schedule:
+    - cron:  '0 1 * * *'
+  workflow_dispatch:
+
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+
+    - name: Download json
+      run: |
+        wget -O "Pagetual/items_all.json" http://wedata.net/databases/AutoPagerize/items_all.json
+
+    - name: Commit
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "512946+github-actions[bot]@users.noreply.github.com"
+        git status
+        git add Pagetual/items_all.json
+        git commit -m "auto commit from github actions" 
+        
+    - name: Push
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: master
