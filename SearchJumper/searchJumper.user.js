@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.5.3
+// @version      1.5.5
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -62,7 +62,7 @@
                 icon: "https://shared.ydstatic.com/images/favicon.ico"
             }, {
                 name: "必应翻译",
-                url: "http://cn.bing.com/dict/search?q=%s"
+                url: "http://www.bing.com/dict/search?q=%s"
             } ]
         },
         {
@@ -388,7 +388,7 @@
                 url: "https://www.baidu.com/s?wd=%s%20site%3A%h&ie=utf-8"
             }, {
                 name: "必应站内搜",
-                url: "https://cn.bing.com/search?q=%s%20site%3A%h"
+                url: "https://www.bing.com/search?q=%s%20site%3A%h"
             }, {
                 name: "鸭鸭站内搜",
                 url: "https://duckduckgo.com/?q=%s%20site%3A%h"
@@ -467,7 +467,7 @@
         },
         {
             type: "VIP",
-            icon: "diamond",
+            icon: "key",
             match: "://v\\.qq\\.com/x/",
             sites: []
         },
@@ -2184,7 +2184,7 @@
             }
             if (keywords == '') {
                 let firstInput = document.querySelector('input[type=text],input:not([type])');
-                if (firstInput) keywords = firstInput.value;
+                if (firstInput) keywords = encodeURIComponent(firstInput.value);
             }
             localKeywords = keywords.replace(/site(%3A|:).*?([%&]|$)/, "$2");
             return !localKeywords ? cacheKeywords : localKeywords;
