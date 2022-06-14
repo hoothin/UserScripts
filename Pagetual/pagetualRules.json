@@ -123,6 +123,20 @@
     "pageElement":"div#threadlist form"
   },
   {
+    "name":"Discuz7.2Postlist",
+    "url":"\\?tid",
+    "nextLink":"a.next",
+    "pageNum":"page={$p}",
+    "pageElement":"div#postlist>*"
+  },
+  {
+    "name":"Discuz7.2Threadlist",
+    "url":"\\?fid",
+    "nextLink":"a.next",
+    "pageNum":"page={$p}",
+    "pageElement":"div#threadlist form"
+  },
+  {
     "name":"chevereto",
     "url":".",
     "nextLink":"a[data-pagination='next']",
