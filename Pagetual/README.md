@@ -66,6 +66,14 @@ enable
 --
 0 means stop action when all matched
 
+include
+--
+Selector of the element which must include
+
+exclude
+--
+Selector of the element which must not include
+
 wait
 --
 The time to wait for page ready when you are sure the url match the site, you can also use a js code which return a boolean to check if the page is ready instead
