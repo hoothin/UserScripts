@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.19
+// @version      1.9.20
 // @description  Perpetual pages - Most powerful Auto Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -163,7 +163,7 @@
                 customRules:"输入【东方永页机】格式的自定义规则",
                 save:"保存设置",
                 loadingText:"少女祈祷中...",
-                opacity:"分页隔条不透明值",
+                opacity:"不透明值",
                 hideBar:"隐藏分页隔条",
                 dbClick2Stop:"空白处双击暂停翻页",
                 sortTitle:"排序在下次更新规则后生效",
@@ -220,7 +220,7 @@
                 customRules:"輸入【東方永頁機】格式的自定義規則",
                 save:"存儲設置",
                 loadingText:"少女祈禱中...",
-                opacity:"分頁隔條不透明值",
+                opacity:"不透明值",
                 hideBar:"隱藏分頁隔條",
                 dbClick2Stop:"空白處雙擊暫停翻頁",
                 sortTitle:"排序在下次更新規則後生效",
@@ -276,7 +276,7 @@
                 customRules: "【東方永頁機】の形式でカスタムルールを入力してください",
                 save: "設定を保存",
                 loadingText: "少女祈祷中...",
-                opacity:"ページネーションバーの不透明値",
+                opacity:"不透明値",
                 hideBar:"ページ区切り文字を非表示にします",
                 dbClick2Stop:"空白部分をダブルクリックしてページめくりを一時停止します",
                 sortTitle:"並べ替えは、次のルールの更新後に有効になります",
@@ -332,7 +332,7 @@
                 customRules:"Input custom rules with [Pagetual] format",
                 save:"Save",
                 loadingText:"Shojo Now Loading...",
-                opacity:"Pagination spacer opacity",
+                opacity:"Opacity",
                 hideBar:"hide the paging spacer",
                 dbClick2Stop:"Double-click on the blank space to pause",
                 sortTitle:"Sorting takes effect after the next rule update",
@@ -679,6 +679,10 @@
                     if(r.include){
                         let include=r.type==0?getElementByXpath(r.include):document.querySelector(r.include);
                         if(!include)return false;
+                    }
+                    if(r.exclude){
+                        let exclude=r.type==0?getElementByXpath(r.exclude):document.querySelector(r.exclude);
+                        if(exclude)return false;
                     }
                     if(r.wait){
                         let waitTime=500,checkEval;
@@ -1789,13 +1793,13 @@
         if(isNaN(passTime)){
             passStr=i18n("firstUpdate");
         }else if(passTime<60){
-            passStr=i18n("passSec", parseInt(passTime))+" ← "+i18n("click2update");
+            passStr=i18n("passSec", parseInt(passTime))+" 👆 "+i18n("click2update");
         }else if(passTime<60*60){
-            passStr=i18n("passMin", parseInt(passTime/60))+" ← "+i18n("click2update");
+            passStr=i18n("passMin", parseInt(passTime/60))+" 👆 "+i18n("click2update");
         }else if(passTime<60*60*24){
-            passStr=i18n("passHour", parseInt(passTime/3600))+" ← "+i18n("click2update");
+            passStr=i18n("passHour", parseInt(passTime/3600))+" 👆 "+i18n("click2update");
         }else{
-            passStr=i18n("passDay", parseInt(passTime/86400))+" ← "+i18n("click2update");
+            passStr=i18n("passDay", parseInt(passTime/86400))+" 👆 "+i18n("click2update");
         }
 
 
@@ -1827,37 +1831,46 @@
         customUrlsInput.placeholder="0 | http://wedata.net/databases/AutoPagerize/items_all.json";
         configCon.insertBefore(customUrlsInput, insertPos);
 
+        let upBtnImg=document.createElement("div");
+        upBtnImg.style.width="45%";
+        upBtnImg.style.float="left";
         let upBtnImgTitle=document.createElement("h2");
         upBtnImgTitle.innerHTML=i18n("upBtnImg");
-        upBtnImgTitle.style.width="50%";
-        upBtnImgTitle.style.float="left";
+        upBtnImg.appendChild(upBtnImgTitle);
         let upBtnImgInput=document.createElement("input");
         upBtnImgInput.style.width="100%";
         upBtnImgInput.placeholder="data:image/png;base64,UpBtn";
         upBtnImgInput.value=rulesData.upBtnImg||'';
-        upBtnImgTitle.appendChild(upBtnImgInput);
-        configCon.insertBefore(upBtnImgTitle, insertPos);
+        upBtnImg.appendChild(upBtnImgInput);
+        configCon.insertBefore(upBtnImg, insertPos);
 
+        let downBtnImg=document.createElement("div");
+        downBtnImg.style.width="45%";
+        downBtnImg.style.float="left";
         let downBtnImgTitle=document.createElement("h2");
         downBtnImgTitle.innerHTML=i18n("downBtnImg");
-        downBtnImgTitle.style.width="50%";
-        downBtnImgTitle.style.float="left";
+        downBtnImg.appendChild(downBtnImgTitle);
         let downBtnImgInput=document.createElement("input");
         downBtnImgInput.style.width="100%";
         downBtnImgInput.placeholder="data:image/png;base64,DownBtn";
         downBtnImgInput.value=rulesData.downBtnImg||'';
-        downBtnImgTitle.appendChild(downBtnImgInput);
-        configCon.insertBefore(downBtnImgTitle, insertPos);
+        downBtnImg.appendChild(downBtnImgInput);
+        configCon.insertBefore(downBtnImg, insertPos);
 
+        let opacity=document.createElement("div");
+        opacity.style.width="10%";
+        opacity.style.float="left";
+        opacity.style.marginBottom="50px";
         let opacityTitle=document.createElement("h2");
         opacityTitle.innerHTML=i18n("opacity");
+        opacity.appendChild(opacityTitle);
         let opacityInput=document.createElement("input");
         opacityInput.value=rulesData.opacity*100;
         opacityInput.type="number";
-        opacityInput.style.width="50px";
-        opacityInput.style.margin="0 0 0 10px";
-        opacityTitle.appendChild(opacityInput);
-        configCon.insertBefore(opacityTitle, insertPos);
+        opacityInput.style.width="95px";
+        opacityInput.style.margin="0";
+        opacity.appendChild(opacityInput);
+        configCon.insertBefore(opacity, insertPos);
 
         let configTable=document.createElement("table");
         configTable.appendChild(document.createElement("tbody"));
@@ -1935,7 +1948,7 @@
             customRulesInput.previousElementSibling.scrollIntoView();
         }
         customRulesInput.style.width="100%";
-        customRulesInput.style.height="500px";
+        customRulesInput.style.height="800px";
         customRulesInput.placeholder=`[\n  {\n    "name":"yande",\n    "action":"0",\n    "url":"^https:\/\/yande\\.re\/",\n    "pageElement":"ul#post-list-posts>li",\n    "nextLink":"a.next_page",\n    "css":".javascript-hide {display: inline-block !important;}"\n  },\n  {\n    "name":"tieba",\n    "action":"1",\n    "url":"^https:\/\/tieba\\.baidu.com\/f\\?kw=",\n    "pageElement":"ul#thread_list>li",\n    "nextLink":".next.pagination-item "\n  }\n]`;
         customRulesInput.value=getFormatJSON(ruleParser.customRules);
         let blacklistInput=document.createElement("textarea");
@@ -2612,6 +2625,11 @@
                    (rulesData.dbClick2StopMeta && !e.metaKey)){
                     return;
                 }
+                if (document.activeElement &&
+                    (document.activeElement.tagName == 'INPUT' ||
+                     document.activeElement.tagName == 'TEXTAREA')) {
+                    return;
+                }
                 var key = String.fromCharCode(e.keyCode).toLowerCase();
                 if(rulesData.dbClick2StopKey.toLowerCase()==key){
                     forceState=(forceState==1?0:1);
@@ -2877,7 +2895,8 @@
         btn.dispatchEvent(mouseEvent);
         mouseEvent = new PointerEvent("mouseup",eventParam);
         btn.dispatchEvent(mouseEvent);
-        btn.click();
+        mouseEvent = new PointerEvent("click",eventParam);
+        btn.dispatchEvent(mouseEvent);
     }
 
     var failFromIframe=0;
