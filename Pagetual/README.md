@@ -154,7 +154,7 @@ pageNum
 --
 Point the page number with $p in current url, you can use{} to target result string from page number
 
-pageBar `[pageBar]`
+pageBar `(pageBar)`
 --
 The js code to change pageBar
 
