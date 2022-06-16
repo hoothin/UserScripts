@@ -2,7 +2,7 @@
 // @name           flashViewer
 // @author         NLF & Hoothin
 // @description    围观Flash，增加 HTML5 视频速度与亮度调整
-// @version        1.2.1.5
+// @version        1.2.1.6
 // @created        2013-12-27
 // @lastUpdated    2022-6-16
 // @grant          none
@@ -1948,6 +1948,7 @@
                 // 为了以后还原，先保存一些需要更改的旧值
                 var vOriStyle = {};
                 this.vOriStyle = vOriStyle;
+                this.vOriControls = video.controls;
                 
                 var vStylePros = [
                     'position', 'z-index', 
@@ -2466,6 +2467,7 @@
                 // 还原video相关的domstyle;
                 
                 var vS = video.style;
+                video.controls = this.vOriControls;
                 var vOriStyle = this.vOriStyle;
                 
                 for (var pro in vOriStyle) {
@@ -2659,6 +2661,7 @@
                             padding-top: 25px;
                             opacity: 0.3;
                             transition: opacity 0.3s ease-in-out;
+                            pointer-events: none;
                         }
                         .fv-p-v-control-layer_maximized {
                             opacity: 1 !important;
@@ -2672,6 +2675,7 @@
                         .fv-p-v-control-title-bar {
                             position: absolute;
                             background-color: #535353;
+                            pointer-events: all;
                         }
                         
                         .fv-p-v-control-title-bar {
