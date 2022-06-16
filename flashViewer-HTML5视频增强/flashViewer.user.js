@@ -2,7 +2,7 @@
 // @name           flashViewer
 // @author         NLF & Hoothin
 // @description    围观Flash，增加 HTML5 视频速度与亮度调整
-// @version        1.2.1.3
+// @version        1.2.1.5
 // @created        2013-12-27
 // @lastUpdated    2022-6-16
 // @grant          none
@@ -1594,6 +1594,7 @@
                                     <option value="0.2">0.2亮度</option>
                                     <option value="0.1">0.1亮度</option>
                                     <option value="input">自定义输入</option>
+                                    <option disabled="disabled" style='display: none' value=''>自定义输入</option>
                                 </select>
                                 <select class="fv-p-v-control-command fv-p-v-control-rate" title="速度">
                                     <option value="1">原速</option>
@@ -1603,6 +1604,7 @@
                                     <option value="0.5">半速</option>
                                     <option value="0.1">0.1速</option>
                                     <option value="input">自定义输入</option>
+                                    <option disabled="disabled" style='display: none' value=''>自定义输入</option>
                                 </select>
                                 <fvspan class="fv-p-v-control-command fv-p-v-control-light" title="关灯"></fvspan>
                                 <fvspan class="fv-p-v-control-command fv-p-v-control-pin" title="固定"></fvspan>
@@ -1651,17 +1653,19 @@
                     let rate = e.target.value;
                     if (rate === 'input') {
                         rate = prompt('输入速度');
+                        e.target.value = "";
                     }
                     video.playbackRate = rate;
                 }, true);
                 var cCommandBright = controlLayer.querySelector('.fv-p-v-control-bright');
                 this.cCommandBright = cCommandBright;
-                let bright = video.style.filter.match(/.*brightness(.*?).*/);
+                let bright = video.style.filter.match(/.*brightness\((.*?)\).*/);
                 if (bright) cCommandBright.value = bright[1];
                 cCommandBright.addEventListener('change', function (e) {
                     let bright = e.target.value;
                     if (bright === 'input') {
                         bright = prompt('输入亮度');
+                        e.target.value = "";
                     }
                     video.style.filter = `brightness(${bright})`;
                 }, true);
