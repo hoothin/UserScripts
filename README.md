@@ -2,6 +2,10 @@ Greasemonkey scripts 油猴腳本集
 ==========================
 https://greasyfork.org/users/8227-hoothin
 
+![star](https://img.shields.io/github/stars/hoothin/UserScripts)
+![license](https://img.shields.io/badge/License-MIT-red.svg)
+![support](https://img.shields.io/badge/Support-Chrome|Firefox|Edge-989898.svg)
+
 ---
 + [Easy offline 一鍵離綫下載](Easy%20offline)
 

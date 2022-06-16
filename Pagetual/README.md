@@ -56,11 +56,11 @@ Example url of this rule
 
 url
 --
-Regexp of the url of target site
+RegExp for the url of target site
 
 pinUrl
 --
-Sometimes the next link and page element will be inexistence, set this to true so you can select the rule just with url
+Sometimes the next link and page element will be inexistence, set this to true so you can pin the rule just with url
 
 enable
 --
@@ -80,11 +80,11 @@ The time to wait for page ready when you are sure the url match the site, you ca
 
 type
 --
-0 means xpath, 1 or undifined means css selector
+0 means xpath, 1 or undefined means css selector
 
 action
 --
-0 means load url and insert to div, 1 means load by iframe so that js on page may action, 2 means force insert to bottom
+0 means load url and insert with static html, 1 means load by iframe so that dynamic js code on page may effect, 2 means force insert iframe to bottom
 
 nextLink
 --
@@ -112,7 +112,7 @@ The attr of image which target to real src
 
 css
 --
-Add css so you can show some hided element
+Add css so you can show some hidden element
 
 insert
 --
@@ -124,27 +124,27 @@ insertPos
 
 init `(document)`
 --
-The js code to run only with current main page with document:(document of main page)
+The js code to run only once with current main page with document:(document of main page)
 
 pagePre `(response)`
 --
-The js code to run after get response from next link, you can modify the response content and return it
+The js code to run after get response from URL of next link, you can modify the response content and return it
 
 pageInit `(doc, eles)`
 --
-The js code to run with every page inserted with doc:(document of every page loaded) and eles:(elements found with rule), run before inserted, you can trigger event like onView
+The js code to run with every page inserted with doc:(document of every page loaded) and eles:(elements found with rule), run before inserted, you can trigger event like onView()
 
 pageAction `(doc, eles)`
 --
-The js code to run with every page inserted with doc:(document of every page loaded) and eles:(elements found with rule), run after inserted, you can add functions like click
+The js code to run with every page inserted with doc:(document of every page loaded) and eles:(elements found with rule), run after inserted, you can add functions like click()
 
 loadMore
 --
-Selector of load more button 
+Selector of "load more" button 
 
 sleep
 --
-Sleep time when get next page if site is limited
+Sleep time (ms) when load next page if site is limited
 
 rate
 --
@@ -152,7 +152,7 @@ The multi-windowHeight which you can set to 2 or 3 while some sites load next pa
 
 pageNum
 --
-Point the page number with $p in current url, you can use{} to target result string from page number
+Point the page number with $p in current url, you can use{} to eval result string from page number
 
 pageBar `(pageBar)`
 --
@@ -160,7 +160,7 @@ The js code to change pageBar
 
 pageBarText
 --
-Set to 1 so the title of next page will be shown on pagebar
+Set to 1 so the document title of next page will be shown on pagebar
 
 autoClick
 --
