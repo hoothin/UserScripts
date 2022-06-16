@@ -94,7 +94,7 @@ nextLinkByUrl
 --
 If there is no next element, you can use this to generate a href from current url, [0] means RegExp string, [1] means replace string, you can use {} to eval simple code
 
-nextLinkByJs [ :(doc) ]
+nextLinkByJs `(doc)`
 --
 Use this to eval js code and return target url of next page with doc (document of every page loaded)
 
@@ -102,7 +102,7 @@ pageElement
 --
 Selector of main content which need to insert
 
-pageElementByJs [ :(over) ]
+pageElementByJs `(over)`
 --
 Use this to eval js code and create the elements whatever you want to insert, a over([]) is needed to callback with elements array for insert
 
@@ -122,19 +122,19 @@ insertPos
 --
 1 means insert before, 2 means just append to the bottom of target
 
-init [ :(document) ]
+init `(document)`
 --
 The js code to run only with current main page with document:(document of main page)
 
-pagePre [ :(response) ]
+pagePre `(response)`
 --
 The js code to run after get response from next link, you can modify the response content and return it
 
-pageInit [ :(doc, eles) ]
+pageInit `(doc, eles)`
 --
 The js code to run with every page inserted with doc:(document of every page loaded) and eles:(elements found with rule), run before inserted, you can trigger event like onView
 
-pageAction [ :(doc, eles) ]
+pageAction `(doc, eles)`
 --
 The js code to run with every page inserted with doc:(document of every page loaded) and eles:(elements found with rule), run after inserted, you can add functions like click
 
@@ -153,6 +153,10 @@ The multi-windowHeight which you can set to 2 or 3 while some sites load next pa
 pageNum
 --
 Point the page number with $p in current url, you can use{} to target result string from page number
+
+pageBar `[pageBar]`
+--
+The js code to change pageBar
 
 pageBarText
 --
