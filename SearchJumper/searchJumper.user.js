@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.5.5
+// @version      1.5.6
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -531,7 +531,8 @@
         initShow: false,
         customSize: 100,
         typeOpenTime: 250,
-        longPressTime: 250
+        longPressTime: 250,
+        noIcons: false
     };
     function run() {
         const lang = navigator.appName == "Netscape" ? navigator.language : navigator.userLanguage;
@@ -829,6 +830,35 @@
                  .search-jumper-btn>i {
                      line-height: ${32 * this.scale}px;
                  }
+                 .search-jumper-btn>div {
+                     position: absolute;
+                     width: 100%;
+                     height: 100%;
+                     line-height: ${32 * this.scale}px;
+                     background: black;
+                     border-radius: ${20 * this.scale}px;
+                     font-size: ${30 * this.scale}px;
+                     color: wheat;
+                     display: none;
+                 }
+                 .search-jumper-isInPage .search-jumper-btn>div,
+                 .search-jumper-isTargetImg .search-jumper-btn>div,
+                 .search-jumper-isTargetAudio .search-jumper-btn>div,
+                 .search-jumper-isTargetVideo .search-jumper-btn>div,
+                 .search-jumper-isTargetLink .search-jumper-btn>div,
+                 .search-jumper-isTargetPage .search-jumper-btn>div {
+                     animation-name: changeOpacity;
+                     animation-duration: 2.5s;
+                     animation-iteration-count: infinite;
+                     animation-delay: 0.1s;
+                     display: block;
+                     opacity: 0.2;
+                 }
+                 @keyframes changeOpacity {
+                     0%   {opacity: 0.2;}
+                     50%  {opacity: 0.7;}
+                     100% {opacity: 0.2;}
+                 }
                  .search-jumper-logoBtnSvg {
                      width: ${32 * this.scale}px;
                      height: ${32 * this.scale}px;
@@ -874,7 +904,7 @@
                      background: black;
                      color: white!important;
                      border-radius: ${20 * this.scale}px!important;
-                     font-size: ${16 * this.scale}px;
+                     font-size: ${15 * this.scale}px;
                      line-height: ${32 * this.scale}px;
                      width: ${32 * this.scale}px;
                      height: ${32 * this.scale}px;
@@ -1024,10 +1054,12 @@
                             openType.dispatchEvent(mouseDownEvent);
                         }
                     }
+                    this.hideTimeout = null;
                 };
-                this.hideTimeout = setTimeout(hideHandler, delay);
                 this.bar.addEventListener('mouseenter', e => {
-                    clearTimeout(this.hideTimeout);
+                    if (this.hideTimeout) {
+                        clearTimeout(this.hideTimeout);
+                    }
                 }, false);
                 this.bar.addEventListener('mouseleave', e => {
                     this.hideTimeout = setTimeout(hideHandler, delay);
@@ -1198,7 +1230,7 @@
             createType(data) {
                 let self = this;
                 let type = data.type;
-                let icon = data.icon;
+                let icon = searchData.prefConfig.noIcons?'':data.icon;
                 let inPage = data.selectTxt;
                 let selectImg = data.selectImg;
                 let selectAudio = data.selectAudio;
@@ -1260,9 +1292,11 @@
                         typeBtn.appendChild(img);
                     }
                 } else {
-                    let word = document.createElement("span");
-                    word.innerText = type;
-                    typeBtn.appendChild(word);
+                    let i = document.createElement("i");
+                    i.innerText = type;
+                    i.style.fontSize = 14 * this.scale + 'px';
+                    i.style.color = 'wheat';
+                    typeBtn.appendChild(i);
                 }
                 let batchOpen = () => {
                     if (!ele.classList.contains("search-jumper-hide") || window.confirm(i18n('batchOpen'))) {
@@ -1423,7 +1457,7 @@
                 }, false);
                 let isCurrent = false;
                 sites.forEach(site => {
-                    let siteEle = self.createSiteBtn(site.name, site.icon, site, openInNewTab);
+                    let siteEle = self.createSiteBtn(site.name, (searchData.prefConfig.noIcons?'':site.icon), site, openInNewTab);
                     self.allSiteBtns.push(siteEle);
                     ele.appendChild(siteEle);
                     siteEles.push(siteEle);
@@ -1472,22 +1506,6 @@
                 return ele;
             }
 
-            checkScroll() {
-                let viewWidth = window.innerWidth || document.documentElement.clientWidth;
-                let viewHeight = window.innerHeight || document.documentElement.clientHeight;
-                if (this.bar.scrollWidth > viewWidth || this.bar.scrollHeight > viewHeight) {
-                    if (!this.bar.parentNode.classList.contains("search-jumper-scroll")) {
-                        this.bar.style.cssText = "";
-                        this.bar.parentNode.classList.add("search-jumper-scroll");
-                    }
-                } else {
-                    if (this.bar.parentNode.classList.contains("search-jumper-scroll")) {
-                        this.bar.style.cssText = "";
-                        this.bar.parentNode.classList.remove("search-jumper-scroll");
-                    }
-                }
-            }
-
             createSiteBtn(name, icon, data, openInNewTab) {
                 let self = this;
                 let isBookmarklet = /^javascript:/.test(data.url);
@@ -1527,12 +1545,17 @@
                     }
                 }
                 if (searchData.prefConfig.shortcut && data.shortcut) {
+                    let shortcutCover = document.createElement("div");
+                    shortcutCover.innerText = data.shortcut.toUpperCase();
+                    ele.appendChild(shortcutCover);
                     document.addEventListener('keydown', e => {
-                        if ((data.ctrl && !e.ctrlKey) ||
-                            (data.alt && !e.altKey) ||
-                            (data.shift && !e.shiftKey) ||
-                            (data.meta && !e.metaKey)) {
-                            return;
+                        if (!self.hideTimeout) {
+                            if ((data.ctrl && !e.ctrlKey) ||
+                                (data.alt && !e.altKey) ||
+                                (data.shift && !e.shiftKey) ||
+                                (data.meta && !e.metaKey)) {
+                                return;
+                            }
                         }
                         if (!searchData.prefConfig.enableInInput) {
                             if (document.activeElement &&
@@ -1765,6 +1788,22 @@
                 return ele;
             }
 
+            checkScroll() {
+                let viewWidth = window.innerWidth || document.documentElement.clientWidth;
+                let viewHeight = window.innerHeight || document.documentElement.clientHeight;
+                if (this.bar.scrollWidth > viewWidth || this.bar.scrollHeight > viewHeight) {
+                    if (!this.bar.parentNode.classList.contains("search-jumper-scroll")) {
+                        this.bar.style.cssText = "";
+                        this.bar.parentNode.classList.add("search-jumper-scroll");
+                    }
+                } else {
+                    if (this.bar.parentNode.classList.contains("search-jumper-scroll")) {
+                        this.bar.style.cssText = "";
+                        this.bar.parentNode.classList.remove("search-jumper-scroll");
+                    }
+                }
+            }
+
             showInPage() {
                 if (targetElement &&
                     targetElement.parentNode &&
@@ -1774,9 +1813,11 @@
                 }
                 let firstType;
                 let self = this;
-                clearTimeout(this.hideTimeout);
+                if (this.hideTimeout) {
+                    clearTimeout(this.hideTimeout);
+                }
                 var delay = searchData.prefConfig.autoDelay || 1000;
-                delay = delay * 3;
+                delay = delay * 5;
                 var hideHandler = () => {
                     self.bar.classList.remove("search-jumper-isInPage");
                     self.bar.classList.remove("search-jumper-isTargetImg");
@@ -1784,6 +1825,7 @@
                     self.bar.classList.remove("search-jumper-isTargetVideo");
                     self.bar.classList.remove("search-jumper-isTargetLink");
                     self.bar.classList.remove("search-jumper-isTargetPage");
+                    this.hideTimeout = null;
                 };
                 this.hideTimeout = setTimeout(hideHandler, delay);
                 this.bar.classList.remove("search-jumper-isInPage");
@@ -1828,9 +1870,9 @@
                         searchData.prefConfig.offset.x,
                         searchData.prefConfig.offset.y
                     );
-                    let mouseDownEvent = new PointerEvent("mousedown");
-                    if (firstType && firstType.parentNode.classList.contains('search-jumper-hide')) firstType.dispatchEvent(mouseDownEvent);
                 }
+                let mouseDownEvent = new PointerEvent("mousedown");
+                if (firstType && firstType.parentNode.classList.contains('search-jumper-hide')) firstType.dispatchEvent(mouseDownEvent);
                 this.checkScroll();
             }
 
@@ -2221,7 +2263,7 @@
 
         function initListener() {
             _GM_registerMenuCommand(i18n('settings'), () => {
-                _GM_openInTab(configPage);
+                _GM_openInTab(configPage, {active: true});
             });
             let logoSvg = logoBtn.children[0];
             let grabState = 0;//0 未按下 1 已按下 2 已拖动
@@ -2254,7 +2296,7 @@
                 searchBar.bar.style.transform = "";
                 if (grabState === 1) {
                     grabState = 0;
-                    _GM_openInTab(configPage);
+                    _GM_openInTab(configPage, {active: true});
                     return;
                 }
                 grabState = 0;
@@ -2605,6 +2647,9 @@
             }
             if (searchData.prefConfig.cacheSwitch === undefined) {
                 searchData.prefConfig.cacheSwitch = false;
+            }
+            if (searchData.prefConfig.noIcons === undefined) {
+                searchData.prefConfig.noIcons = false;
             }
         }
 
