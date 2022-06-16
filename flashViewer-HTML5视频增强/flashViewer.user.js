@@ -1534,6 +1534,7 @@
                 var self = this;
                 
                 var video = this.video;
+                this.vOriControls = video.controls;
                 var vNodeName = video.nodeName;
                 
                 // 如果是这些元素，那么pin的时候直接用fixed方式（这些元素随便调整position不会引发重载）
@@ -1948,7 +1949,6 @@
                 // 为了以后还原，先保存一些需要更改的旧值
                 var vOriStyle = {};
                 this.vOriStyle = vOriStyle;
-                this.vOriControls = video.controls;
                 
                 var vStylePros = [
                     'position', 'z-index', 
