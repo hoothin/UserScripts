@@ -56,11 +56,11 @@ Example url of this rule
 
 url
 --
-Regexp of the url of target site
+RegExp for the url of target site
 
 pinUrl
 --
-Sometimes the next link and page element will be inexistence, set this to true so you can select the rule just with url
+Sometimes the next link and page element will be inexistence, set this to true so you can pin the rule just with url
 
 enable
 --
@@ -84,7 +84,7 @@ type
 
 action
 --
-0 means load url and insert to div, 1 means load by iframe so that js on page may action, 2 means force insert to bottom
+0 means load url and insert with static html, 1 means load by iframe so that dynamic js code on page may effect, 2 means force insert iframe to bottom
 
 nextLink
 --
