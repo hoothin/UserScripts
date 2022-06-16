@@ -1,5 +1,5 @@
 # FlashViewer
-HTML 视频增强脚本
+HTML5 视频增强脚本
 
 原作者 NLF
 
