@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.21
+// @version      1.9.22
 // @description  Perpetual pages - Most powerful Auto Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -1178,9 +1178,9 @@
                     if(reps){
                         reps.forEach(rep=>{
                             let code=rep.replace("{","").replace("}","");
-                            let result=code.match(/^(\d+)\+1$/);
+                            let result=code.match(/^(\d*)\+1$/);
                             if(result){
-                                result=parseInt(result[1])+1;
+                                result=parseInt(result[1]||1)+1;
                             }else{
                                 try{
                                     result=Function('"use strict";return ' + code)();
@@ -1358,7 +1358,7 @@
             let code=this.curSiteRule.pageInit;
             if(code){
                 try{
-                    Function("doc","eles",'"use strict";' + code)(doc,eles);
+                    Function("doc", "eles", '"use strict";' + code)(doc, eles);
                 }catch(e){
                     debug(e);
                 }
@@ -1369,7 +1369,7 @@
             let code=this.curSiteRule.pageAction;
             if(code){
                 try{
-                    Function("doc","eles",'"use strict";' + code)(doc,eles);
+                    Function("doc", "eles", '"use strict";' + code)(doc, eles);
                 }catch(e){
                     debug(e);
                 }
@@ -2115,6 +2115,7 @@
 
     function getFormatJSON(obj){
         if(!objIsArr(obj))return "";
+        return JSON.stringify(obj, null, 4);
         let ret="[\n";
         let len=obj.length,i=0,isLast;
         obj.forEach(item=>{
@@ -2285,7 +2286,11 @@
                 let preCode=ruleParser.curSiteRule.pageElementPre || ruleParser.curSiteRule.pagePre;
                 if(preCode){
                     try{
-                        response=Function("response",'"use strict";' + preCode)(response);
+                        if (preCode.length == 2) {
+                            response = response.replace(new RegExp(preCode[0], "gi"), preCode[1]);
+                        } else {
+                            response = Function("response",'"use strict";' + preCode)(response);
+                        }
                     }catch(e){
                         debug(e);
                     }
@@ -2683,10 +2688,15 @@
         if(!insert || !insert.parentNode)return;
         curPage++;
         let example=ruleParser.curSiteRule.insertPos==2?insert.children[0]:(insert.parentNode.children[parseInt(insert.parentNode.children.length/2)]||insert);
+        if (example.className=="pagetual_pageBar") {
+            example=example.previousElementSibling;
+        }
         if(!example || !example.parentNode)example=insert;
+        let exampleStyle = _unsafeWindow.getComputedStyle(example);
         let inTable=example.parentNode.tagName=="TABLE" ||
             example.tagName=="TR" ||
             example.tagName=="TBODY" ||
+            exampleStyle.display=="table-row" ||
             (example.previousElementSibling && example.previousElementSibling.tagName=="TR") ||
             (example.previousElementSibling && example.previousElementSibling.tagName=="TBODY");
         let inLi=example.tagName=="LI" || (example.previousElementSibling && example.previousElementSibling.tagName=="LI");
@@ -2763,11 +2773,15 @@
             while(preTr && preTr.children.length==0)preTr=preTr.previousElementSibling;
             if(preTr)example=preTr;
             let tdNum=0;
-            [].forEach.call(example.children, el=>{
-                if(el.tagName=="TD" || el.tagName=="TH"){
-                    tdNum+=el.colSpan||1;
-                }
-            });
+            if (exampleStyle.display=="table-row") {
+                tdNum = example.children.length;
+            } else {
+                [].forEach.call(example.children, el=>{
+                    if(el.tagName=="TD" || el.tagName=="TH"){
+                        tdNum+=el.colSpan||1;
+                    }
+                });
+            }
             pageBar.style.display="table-row";
             pageBar.style.backgroundColor="unset";
             pageBar.style.lineHeight="20px";
