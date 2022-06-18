@@ -2286,10 +2286,12 @@
                 let preCode=ruleParser.curSiteRule.pageElementPre || ruleParser.curSiteRule.pagePre;
                 if(preCode){
                     try{
-                        if (preCode.length == 2) {
+                        if (_unsafeWindow.pagetualPagePre) {
+                            response = _unsafeWindow.pagetualPagePre(response);
+                        } else if (preCode.length == 2) {
                             response = response.replace(new RegExp(preCode[0], "gi"), preCode[1]);
                         } else {
-                            response = (_unsafeWindow.pagetualPagePre || Function("response",'"use strict";' + preCode))(response);
+                            response = Function("response",'"use strict";' + preCode)(response);
                         }
                     }catch(e){
                         debug(e);
