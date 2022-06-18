@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.22
+// @version      1.9.23
 // @description  Perpetual pages - Most powerful Auto Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -688,7 +688,7 @@
                         let waitTime=500,checkEval;
                         if(isNaN(r.wait)){
                             try{
-                                checkEval=Function("doc",'"use strict";' + r.wait);
+                                checkEval=_unsafeWindow.pagetualWait || Function("doc",'"use strict";' + r.wait);
                             }catch(e){
                                 debug(e);
                             }
@@ -1136,7 +1136,7 @@
                     result=url.replace(urlReg,"$1"+code+"$2");
                 }else{
                     try{
-                        code=Function('"use strict";return ' + code)();
+                        code=(_unsafeWindow.pagetualPageNum || Function('"use strict";return ' + code))();
                         result=url.replace(urlReg,"$1"+code+"$2");
                     }catch(e){
                         debug(e);
@@ -1166,7 +1166,7 @@
                 return true;
             }else if(this.curSiteRule.nextLinkByJs){
                 try{
-                    let targetUrl=Function("doc",'"use strict";' + this.curSiteRule.nextLinkByJs)(doc);
+                    let targetUrl=(_unsafeWindow.pagetualNextLinkByJs || Function("doc",'"use strict";' + this.curSiteRule.nextLinkByJs))(doc);
                     if(targetUrl)nextLink={href:targetUrl};
                 }catch(e){
                     debug(e);
@@ -1358,7 +1358,7 @@
             let code=this.curSiteRule.pageInit;
             if(code){
                 try{
-                    Function("doc", "eles", '"use strict";' + code)(doc, eles);
+                    (_unsafeWindow.pagetualPageInit || Function("doc", "eles", '"use strict";' + code))(doc, eles);
                 }catch(e){
                     debug(e);
                 }
@@ -1369,7 +1369,7 @@
             let code=this.curSiteRule.pageAction;
             if(code){
                 try{
-                    Function("doc", "eles", '"use strict";' + code)(doc, eles);
+                    (_unsafeWindow.pagetualPageAction || Function("doc", "eles", '"use strict";' + code))(doc, eles);
                 }catch(e){
                     debug(e);
                 }
@@ -1497,7 +1497,7 @@
                 let code=self.curSiteRule.init;
                 if(code){
                     try{
-                        Function('doc','win','iframe','"use strict";' + code)(null,null,null);
+                        (_unsafeWindow.pagetualInit || Function('doc','win','iframe','"use strict";' + code))(null,null,null);
                     }catch(e){
                         debug(e);
                     }
@@ -1527,7 +1527,7 @@
                     this.nextTitle=doc.title;
                 }else{
                     try{
-                        this.nextTitle=Function("doc",'"use strict";' + this.curSiteRule.pageBarText)(doc);
+                        this.nextTitle=(_unsafeWindow.pagetualPageBarText || Function("doc",'"use strict";' + this.curSiteRule.pageBarText))(doc);
                     }catch(e){
                         debug(e);
                     }
@@ -2289,7 +2289,7 @@
                         if (preCode.length == 2) {
                             response = response.replace(new RegExp(preCode[0], "gi"), preCode[1]);
                         } else {
-                            response = Function("response",'"use strict";' + preCode)(response);
+                            response = (_unsafeWindow.pagetualPagePre || Function("response",'"use strict";' + preCode))(response);
                         }
                     }catch(e){
                         debug(e);
@@ -2851,7 +2851,7 @@
         ruleParser.insertElement(pageBar);
         if(ruleParser.curSiteRule.pageBar){
             try{
-                Function("pageBar",'"use strict";' + ruleParser.curSiteRule.pageBar)(pageBar);
+                (_unsafeWindow.pagetualPageBar || Function("pageBar",'"use strict";' + ruleParser.curSiteRule.pageBar))(pageBar);
             }catch(e){
                 debug(e);
             }
@@ -2931,7 +2931,7 @@
         if(ruleParser.curSiteRule.wait){
             if(isNaN(ruleParser.curSiteRule.wait)){
                 try{
-                    checkEval=Function("doc",'"use strict";' + ruleParser.curSiteRule.wait);
+                    checkEval=_unsafeWindow.pagetualWait || Function("doc",'"use strict";' + ruleParser.curSiteRule.wait);
                 }catch(e){
                     debug(e);
                 }
@@ -3014,7 +3014,7 @@
             if(ruleParser.curSiteRule.wait){
                 if(isNaN(ruleParser.curSiteRule.wait)){
                     try{
-                        checkEval=Function("doc",'"use strict";' + ruleParser.curSiteRule.wait);
+                        checkEval=_unsafeWindow.pagetualWait || Function("doc",'"use strict";' + ruleParser.curSiteRule.wait);
                     }catch(e){
                         debug(e);
                     }
@@ -3324,7 +3324,7 @@
         if(isPause || isLoading || forceState==1)return;
         if(ruleParser.curSiteRule.delay){
             try{
-                let checkDelay=Function('"use strict";' + ruleParser.curSiteRule.delay)();
+                let checkDelay=(_unsafeWindow.pagetualDelay || Function('"use strict";' + ruleParser.curSiteRule.delay))();
                 if(!checkDelay)return;
             }catch(e){
                 debug(e);
@@ -3380,7 +3380,7 @@
                         }
                     };
                     try{
-                        Function("over",'"use strict";' + ruleParser.curSiteRule.pageElementByJs)(over);
+                        (_unsafeWindow.pagetualPageElementByJs || Function("over",'"use strict";' + ruleParser.curSiteRule.pageElementByJs))(over);
                     }catch(e){
                         debug(e);
                     }
