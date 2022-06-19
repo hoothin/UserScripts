@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.5.8.7.2
+// @version      1.5.8.8
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -1005,6 +1005,11 @@
                 logoBtn = document.createElement("span");
                 logoBtn.innerHTML = createHTML(logoBtnSvg);
                 logoBtn.className = "search-jumper-btn";
+                logoBtn.addEventListener('mouseenter', e => {
+                    if (this.preList) {
+                        this.preList.style.display = "none";
+                    }
+                });
 
                 let bar = document.createElement("span");
                 bar.className = "search-jumper-searchBar";
@@ -2591,6 +2596,28 @@
             if (searchData.prefConfig.enableInPage) {
                 let shown = false;
                 let showToolbarTimer;
+                if (searchData.prefConfig.shortcutKey) {
+                    document.addEventListener('keydown', e => {
+                        if ((searchData.prefConfig.altKey && !e.altKey) ||
+                            (searchData.prefConfig.ctrlKey && !e.ctrlKey) ||
+                            (searchData.prefConfig.shiftKey && !e.shiftKey) ||
+                            (searchData.prefConfig.metaKey && !e.metaKey)) {
+                            return;
+                        }
+                        if (!searchData.prefConfig.enableInInput) {
+                            if (document.activeElement &&
+                                (document.activeElement.tagName == 'INPUT' ||
+                                 document.activeElement.tagName == 'TEXTAREA')) {
+                                return;
+                            }
+                        }
+                        var key = String.fromCharCode(e.keyCode).toLowerCase();
+                        if (searchData.prefConfig.shortcutKey == key) {
+                            targetElement = document.body;
+                            searchBar.showInPage();
+                        }
+                    });
+                }
                 document.addEventListener('mousedown', e => {
                     if (e.target.classList.contains('search-jumper-btn') ||
                         e.target.tagName === 'CANVAS' ||
