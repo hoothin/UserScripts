@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.5.8.5
+// @version      1.5.8.6
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -755,6 +755,7 @@
                  .search-jumper-searchBar.initShow {
                      margin-top: 0;
                      opacity: 0.8;
+                     transition:margin-top 0.25s ease, margin-left 0.25s, opacity 0.25s, transform 0.25s;
                  }
                  .search-jumper-left,
                  .search-jumper-left .search-jumper-type,
@@ -1971,7 +1972,7 @@
                     clearTimeout(this.hideTimeout);
                 }
                 var delay = searchData.prefConfig.autoDelay || 1000;
-                delay = delay * 5;
+                delay = delay * 3;
                 var hideHandler = () => {
                     self.bar.classList.remove("search-jumper-isInPage");
                     self.bar.classList.remove("search-jumper-isTargetImg");
@@ -1979,7 +1980,8 @@
                     self.bar.classList.remove("search-jumper-isTargetVideo");
                     self.bar.classList.remove("search-jumper-isTargetLink");
                     self.bar.classList.remove("search-jumper-isTargetPage");
-                    this.hideTimeout = null;
+                    self.bar.classList.remove("initShow");
+                    self.hideTimeout = null;
                 };
                 this.hideTimeout = setTimeout(hideHandler, delay);
                 this.bar.classList.remove("search-jumper-isInPage");
@@ -2607,13 +2609,19 @@
                     }
                     let selectImg = e.target.tagName === 'IMG';
                     targetElement = e.target;
-                    showToolbarTimer = setTimeout(() => {
+                    let showHandler = () => {
                         if ((e.which === 1 || e.which === 2) && !searchData.prefConfig.leftMouse) return;
                         searchBar.showInPage();
-                        e.stopPropagation();
-                        e.preventDefault();
                         shown = true;
-                    }, searchData.prefConfig.longPressTime);
+                    };
+                    if (searchData.prefConfig.altKey ||
+                        searchData.prefConfig.ctrlKey ||
+                        searchData.prefConfig.shiftKey ||
+                        searchData.prefConfig.metaKey) {
+                        showHandler();
+                    } else {
+                        showToolbarTimer = setTimeout(showHandler, searchData.prefConfig.longPressTime);
+                    }
                     let mouseUpHandler = e => {
                         if (shown) {
                             e.stopPropagation();
