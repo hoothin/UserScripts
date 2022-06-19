@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.5.8.7.1
+// @version      1.5.8.7.2
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -1103,8 +1103,7 @@
                     if (searchData.prefConfig.autoClose) {
                         let openType = this.bar.querySelector('.search-jumper-type:not(.search-jumper-hide)>span');
                         if (openType) {
-                            let mouseDownEvent = new PointerEvent("mousedown");
-                            openType.dispatchEvent(mouseDownEvent);
+                            openType.onmousedown();
                         }
                     }
                     this.hideTimeout = null;
@@ -1184,8 +1183,7 @@
                         let typeBtn = this.bar.querySelector(`.search-jumper-type.search-jumper-hide[title="${typeData.type}"]>span`);
                         if (typeBtn) {
                             this.bar.insertBefore(typeBtn.parentNode, this.bar.children[0]);
-                            let mouseDownEvent = new PointerEvent("mousedown");
-                            typeBtn.dispatchEvent(mouseDownEvent);
+                            typeBtn.onmousedown();
                         }
                     }
                 }
@@ -1481,11 +1479,13 @@
                     });
                 }
                 let typeAction = e => {
-                    if (e.which === 3) {
-                        batchOpen();
-                        return false;
-                    } if (e.which === 1 && (e.shiftKey || e.altKey || e.ctrlKey)) {
-                        return false;
+                    if (e) {
+                        if (e.which === 3) {
+                            batchOpen();
+                            return false;
+                        } if (e.which === 1 && (e.shiftKey || e.altKey || e.ctrlKey)) {
+                            return false;
+                        }
                     }
                     ele.style.width = "";
                     ele.style.height = "";
@@ -1524,7 +1524,7 @@
                         self.checkScroll();
                     }, 251);
                 };
-                typeBtn.addEventListener('mousedown', typeAction, false);
+                typeBtn.onmousedown = typeAction;
                 typeBtn.oncontextmenu = function (event) {
                     event.preventDefault();
                 };
@@ -2032,8 +2032,7 @@
                         searchData.prefConfig.offset.y
                     );
                 }
-                let mouseDownEvent = new PointerEvent("mousedown");
-                if (firstType && firstType.parentNode.classList.contains('search-jumper-hide')) firstType.dispatchEvent(mouseDownEvent);
+                if (firstType && firstType.parentNode.classList.contains('search-jumper-hide')) firstType.onmousedown();
                 this.checkScroll();
             }
 
