@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.5.8.3
+// @version      1.5.8.5
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -532,7 +532,8 @@
         customSize: 100,
         typeOpenTime: 250,
         longPressTime: 250,
-        noIcons: false
+        noIcons: false,
+        showSiteLists: true
     };
     function run() {
         const lang = navigator.appName == "Netscape" ? navigator.language : navigator.userLanguage;
@@ -807,9 +808,9 @@
                  .search-jumper-bottom>.search-jumper-searchBar:hover,
                  .search-jumper-bottom>.search-jumper-searchBar.initShow {
                      margin-top: 0px;
-                     -webkit-transform:scale(1);
-                     -moz-transform:scale(1);
-                     transform:scale(1);
+                     -webkit-transform:unset;
+                     -moz-transform:unset;
+                     transform:unset;
                  }
                  .search-jumper-btn {
                      position: relative;
@@ -892,10 +893,61 @@
                  }
                  .search-jumper-type {
                      display: inline-flex;
-                     background: #c5c5c5;
+                     background: #ededed;
                      border-radius: ${20 * this.scale}px!important;
                      overflow: hidden;
                      transition:width ${searchData.prefConfig.typeOpenTime}ms ease, height ${searchData.prefConfig.typeOpenTime}ms;
+                 }
+                 .search-jumper-type>.sitelist {
+                     position: fixed;
+                     text-align: left;
+                     background: #00000000;
+                     max-height: 95vh;
+                     overflow: scroll;
+                 }
+                 .search-jumper-type>.sitelist>.sitelistCon {
+                     margin: 10px;
+                     border-radius: 10px;
+                     box-shadow: 0px 0px 10px 0px #7a7a7a;
+                     padding: 0 0 10px 0;
+                     background: white;
+                 }
+                 .search-jumper-type>.sitelist::-webkit-scrollbar {
+                     width: 0 !important;
+                     height: 0 !important;
+                 }
+                 .search-jumper-type>.sitelist>.sitelistCon>div {
+                     padding: 0 10px;
+                 }
+                 .search-jumper-type>.sitelist>.sitelistCon>div:hover {
+                     background: #f5f7fa;
+                 }
+                 .search-jumper-type>.sitelist a {
+                     display: flex;
+                     align-items: center;
+                     text-decoration: none;
+                 }
+                 .search-jumper-type>.sitelist a>img {
+                     width: 20px;
+                     height: 20px;
+                     margin-right: 10px;
+                 }
+                 .search-jumper-type>.sitelist a>p {
+                     display: inline-block;
+                     font-size: 15px;
+                     line-height: 25px;
+                     margin: 5px auto;
+                     color: #6b6e74;
+                     flex: 1;
+                     text-align: left;
+                     white-space: nowrap;
+                 }
+                 .search-jumper-type>.sitelist>.sitelistCon>p {
+                     color: #b6b7ba;
+                     margin: 0;
+                     text-align: center;
+                     font-size: 16px;
+                     font-weight: bold;
                  }
                  .search-jumper-searchBar.disable-pointer>.search-jumper-type {
                      pointer-events: none;
@@ -1063,6 +1115,9 @@
                 }, false);
                 this.bar.addEventListener('mouseleave', e => {
                     this.hideTimeout = setTimeout(hideHandler, delay);
+                    if (this.preList) {
+                        this.preList.style.display = "none";
+                    }
                 }, false);
 
                 if (/^2:/.test(lastSign)) {
@@ -1172,7 +1227,93 @@
                 setTimeout( checkReady, 50 );
             }
 
+            createList(sites, type) {
+                let list = document.createElement("div");
+                list.className = "sitelist";
+                let con = document.createElement("div");
+                con.className = "sitelistCon";
+                list.appendChild(con);
+                let title = document.createElement("p");
+                title.innerText = type;
+                con.appendChild(title);
+                sites.forEach(siteEle => {
+                    let icon = siteEle.querySelector("img");
+                    let name = siteEle.title;
+                    let url = siteEle.href;
+                    let li = document.createElement("div");
+                    let a = document.createElement("a");
+                    a.setAttribute("target", siteEle.target);
+                    a.href = url;
+                    a.addEventListener('mousedown', e => {
+                        siteEle.dispatchEvent(new PointerEvent("mousedown"));
+                        a.href = siteEle.href;
+                        if (!a.onclick && siteEle.onclick) {
+                            a.onclick = siteEle.onclick;
+                        }
+                    }, false);
+                    li.appendChild(a);
+                    if (icon && icon.src) {
+                        let img = document.createElement("img");
+                        img.src = icon.src;
+                        a.appendChild(img);
+                    }
+                    let p = document.createElement("p");
+                    p.innerText = name;
+                    li.title = name;
+                    a.appendChild(p);
+                    con.appendChild(li);
+                });
+                return list;
+            }
+
+            listPos(ele, list) {
+                if (this.preList) {
+                    this.preList.style.display = "none";
+                }
+                list.style = "";
+                this.preList = list;
+                let ew = ele.clientWidth;
+                let eh = ele.clientHeight;
+                let clientX = ele.offsetLeft + ew / 2 - this.bar.parentNode.scrollLeft;
+                let clientY = ele.offsetTop + eh / 2 - this.bar.parentNode.scrollTop;
+                let current = ele.offsetParent;
+
+                while (current !== null){
+                    clientX += current.offsetLeft;
+                    clientY += current.offsetTop;
+                    current = current.offsetParent;
+                }
+                let viewWidth = window.innerWidth || document.documentElement.clientWidth;
+                let viewHeight = window.innerHeight || document.documentElement.clientHeight;
+                if (this.bar.clientWidth > this.bar.clientHeight) {
+                    //横
+                    if (clientY < 100) {
+                        list.style.top = this.bar.clientHeight + "px";
+                    } else {
+                        list.style.bottom = this.bar.clientHeight + "px";
+                    }
+                    clientX -= list.scrollWidth / 2;
+                    if (clientX > viewWidth - list.scrollWidth - 20) clientX = viewWidth - list.scrollWidth - 20;
+                    if (clientX < 10) clientX = 10;
+                    list.style.left = clientX + "px";
+                } else {
+                    //竖
+                    if (clientX < 100) {
+                        list.style.left = this.bar.clientWidth + "px";
+                    } else {
+                        list.style.right = this.bar.clientWidth + "px";
+                    }
+                    clientY -= list.scrollHeight / 2;
+                    if (clientY > viewHeight - list.scrollHeight - 20) clientY = viewHeight - list.scrollHeight - 20;
+                    if (clientY < 10) clientY = 10;
+                    list.style.top = clientY + "px";
+                }
+            }
+
             tipsPos(ele, type) {
+                if (this.preList) {
+                    this.preList.style.display = "none";
+                }
                 let ew = ele.clientWidth;
                 let eh = ele.clientHeight;
                 this.tips.innerText = type;
@@ -1441,9 +1582,15 @@
                     }
                 }, false);
 
+                let siteList;
+
                 let showTimer;
                 typeBtn.addEventListener('mouseenter', e => {
-                    self.tipsPos(typeBtn, type);
+                    if (searchData.prefConfig.showSiteLists && ele.classList.contains("search-jumper-hide")) {
+                        self.listPos(ele, siteList);
+                    } else {
+                        self.tipsPos(typeBtn, type);
+                    }
                     if (searchData.prefConfig.overOpen) {
                         if (!ele.classList.contains("search-jumper-hide")) return;
                         showTimer = setTimeout(() => {
@@ -1468,6 +1615,11 @@
                         currentSite = site;
                     }
                 });
+                if (searchData.prefConfig.showSiteLists) {
+                    siteList = this.createList(siteEles, type);
+                    siteList.style.display = "none";
+                    ele.appendChild(siteList);
+                }
                 if (isCurrent) {
                     self.bar.insertBefore(ele, self.bar.children[0]);
                     ele.dataset.width = ele.scrollWidth + "px";
@@ -1911,15 +2063,19 @@
                 let viewWidth = window.innerWidth || document.documentElement.clientWidth;
                 let viewHeight = window.innerHeight || document.documentElement.clientHeight;
                 var maxSize = Math.max(self.bar.scrollWidth, self.bar.scrollHeight);
+
+                if (posX > viewWidth - maxSize) {
+                    posX = viewWidth - maxSize;
+                }
                 if (posX < 0) {
                     posX = 0;
-                } else if (posX > viewWidth - maxSize) {
-                    posX = viewWidth - maxSize;
+                }
+
+                if (posY > viewHeight - maxSize) {
+                    posY = viewHeight - maxSize;
                 }
                 if (posY < 0) {
                     posY = 0;
-                } else if (posY > viewHeight - maxSize) {
-                    posY = viewHeight - maxSize;
                 }
                 if (relX == "center" && relY == "top") {
                     //上中
@@ -2441,6 +2597,7 @@
                         (searchData.prefConfig.shiftKey && !e.shiftKey) ||
                         (searchData.prefConfig.metaKey && !e.metaKey) ||
                         e.target.classList.contains('search-jumper-btn') ||
+                        e.target.tagName === 'CANVAS' ||
                         (e.target.parentNode && e.target.parentNode.classList && e.target.parentNode.classList.contains('search-jumper-btn'))) {
                         return;
                     }
