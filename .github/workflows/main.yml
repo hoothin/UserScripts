@@ -16,27 +16,33 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
 
-    - name: Download json
-      run: |
-        wget --no-cache -O "Pagetual/items_all.json" http://wedata.net/databases/AutoPagerize/items_all.json
-        git config user.name "github-actions[bot]"
-        git config user.email "512946+github-actions[bot]@users.noreply.github.com"
-        git add Pagetual/items_all.json
+    #- name: Download json
+    #  run: |
+    #    wget --no-cache -O "Pagetual/items_all.json" http://wedata.net/databases/AutoPagerize/items_all.json
 
-    - uses: technote-space/get-diff-action@v6
-      with:
-        FILES: |
-          items_all.json
+    #- uses: technote-space/get-diff-action@v6
+    #  with:
+    #    FILES: |
+    #      items_all.json
 
-    - name: Commit
-      if: env.GIT_DIFF
-      run: |
-        git status
-        git commit -m "auto commit from github actions" 
+    #- name: Commit
+    #  if: env.GIT_DIFF
+    #  run: |
+    #    git config user.name "github-actions[bot]"
+    #    git config user.email "512946+github-actions[bot]@users.noreply.github.com"
+    #    git add Pagetual/items_all.json
+    #    git status
+    #    git commit -m "auto commit from github actions" 
         
-    - name: Push
-      if: env.GIT_DIFF
-      uses: ad-m/github-push-action@master
+    #- name: Push
+    #  if: env.GIT_DIFF
+    #  uses: ad-m/github-push-action@master
+    #  with:
+    #    github_token: ${{ secrets.GITHUB_TOKEN }}
+    #    branch: master
+    - name: Update file
+      id: update_file
+      uses: TheLastProject/keep-remote-file-locally-up-to-date-action@v1
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: master
+        url: http://wedata.net/databases/AutoPagerize/items_all.json
+        file_in_repo: Pagetual/items_all.json
