@@ -165,3 +165,11 @@ Set to 1 so the document title of next page will be shown on pagebar
 autoClick
 --
 The css selector or xpath of element which you want to click automatically
+
+history
+--
+Set to 0 then history writing will be disable. Set to 1 then history writing will be enable. No matter what value is the general option.
+
+child script
+--
+If the site has some limit for code eval. You can make a child script with function under object `window`. You should name them start with `pagetual` use camelCase. Like `window.pagetualWait`, `window.pagetualNextLinkByJs`, `window.pagetualPageInit`, `window.pagetualPageAction`, `window.pagetualInit`, `window.pagetualPageBarText`.
