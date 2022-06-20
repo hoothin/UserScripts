@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.23.1
+// @version      1.9.25
 // @description  Perpetual pages - Most powerful Auto Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -1136,16 +1136,44 @@
                     result=url.replace(urlReg,"$1"+code+"$2");
                 }else{
                     try{
-                        code=(_unsafeWindow.pagetualPageNum || Function('"use strict";return ' + code))();
+                        code=Function('"use strict";return ' + code)();
                         result=url.replace(urlReg,"$1"+code+"$2");
                     }catch(e){
                         debug(e);
                     }
                 }
-                return result==url?url.replace(/([&\/\?](p=|page[=\/_-]?))\d+/i, "$1"+pageNum).replace(/([_-])\d+\./i, "$1"+pageNum+"."):result;
-            }else{
-                return url.replace(/([&\/\?](p=|page[=\/_-]?))\d+/i, "$1"+pageNum).replace(/([_-])\d+\./i, "$1"+pageNum+".");
+                if(result!=url){
+                    return result;
+                }
             }
+            return url.replace(/([&\/\?](p=|page[=\/_-]?))\d+/i, "$1"+pageNum).replace(/([_-])\d+\./i, "$1"+pageNum+".");
+        }
+
+        getPageNumFromUrl(url) {
+            if(!url)return curPage;
+            if(this.curSiteRule.pageNum){
+                let result=this.curSiteRule.pageNum;
+                let strMatch=result.match(/\{.*?}/);
+                if(!strMatch)return null;
+                let urlReg=new RegExp(".*"+result.replace(strMatch[0], "(\\d+)")+".*","i");
+                let curShowNum=url.replace(urlReg,"$1");
+                let code=strMatch[0].replace(/^{/,"").replace(/}$/,"");
+                if(code=="$p"){
+                    return curShowNum;
+                }else{
+                    try{
+                        let page1=Function('"use strict";return ' + code.replace("$p", "0"))();
+                        let page2=Function('"use strict";return ' + code.replace("$p", "1"))();
+                        let numGap=page2-page1;
+                        return (curShowNum - page1) / numGap;
+                    }catch(e){
+                        debug(e);
+                    }
+                }
+            }else{
+                return url.replace(/[&\/\?](p=|page[=\/_-]?)(\d+)/i, "$2").replace(/[_-](\d+)\./i, "$1");
+            }
+            return curPage;
         }
 
         getNextLink(doc) {
@@ -2386,6 +2414,11 @@
     var pageBarStyle;
     function initView(){
         _GM_addStyle(`
+         .pagetual_pageBar{
+           -moz-transition:opacity 0.3s ease-in-out 0s;
+           -webkit-transition:opacity 0.3s ease-in-out 0s;
+           transition:opacity 0.3s ease-in-out 0s;
+         }
          .pagetual_pageBar.stop {
            -webkit-filter: invert(100%);
            filter: invert(100%);
@@ -2399,6 +2432,20 @@
          }
          .pagetual_pageBar span {
            vertical-align: super;
+         }
+         .pagetual_pageBar a>span {
+           margin-top: 0!importabt;
+           opacity: 0;
+           -moz-transition:all 0.3s ease-in-out 0s;
+           -webkit-transition:all 0.3s ease-in-out 0s;
+           transition:all 0.3s ease-in-out 0s;
+         }
+         .pagetual_pageBar a>span:hover {
+           color: red;
+         }
+         .pagetual_pageBar a:hover>span {
+           margin-top: unset;
+           opacity: 1;
          }
 
          .pagetual_pageBar span>svg:hover {
@@ -2719,7 +2766,7 @@
         let pageText=document.createElement("a");
         let pageNum;
         pageBar.className="pagetual_pageBar";
-        pageBar.id="pagetual_pageBar";
+        pageBar.id="pagetual_pageBar"+curPage;
         if(isPause){
             pageBar.classList.add("stop");
         }
@@ -2745,7 +2792,7 @@
         if(ruleParser.curSiteRule.pageNum || (hasPageNum && /[&\/\?](p=|page[=\/_-]?)\d+|[_-]\d+\./.test(url))){
             pageText.innerHTML+="Page ";
             pageNum=document.createElement("span");
-            pageNum.innerText=curPage;
+            pageNum.innerText=ruleParser.getPageNumFromUrl(url);
             pageNum.className="pagetual_pageNum";
             pageNum.title=i18n("inputPageNum");
             pageNum.style.cssText=pageTextStyle;
@@ -2768,6 +2815,39 @@
             pageText.innerHTML+="Page "+curPage;
             hasPageNum=false;
         }
+        let preBtn=document.createElement("span");
+        preBtn.innerText="∧";
+        preBtn.style.cssText="float: left; margin-top: -30px; width: 40px; background: rgba(240, 240, 240, 0.8); position: absolute; border-radius: 20px 20px 0 0; box-shadow: rgb(0 0 0 / 50%) 0px -5px 5px;z-index:9999999";
+        let nextBtn=document.createElement("span");
+        nextBtn.innerText="∨";
+        nextBtn.style.cssText="float: left; margin-top: 30px; width: 40px; background: rgba(240, 240, 240, 0.8); position: absolute; border-radius: 0 0 20px 20px; box-shadow: rgb(0 0 0 / 50%) 0px 5px 5px;z-index:9999999";
+        let localPage=curPage;
+        preBtn.addEventListener("click", e=>{
+            e.stopPropagation();
+            e.preventDefault();
+            let prePageBar = document.querySelector("#pagetual_pageBar"+(localPage-1));
+            if (prePageBar) {
+                prePageBar.scrollIntoView();
+                document.documentElement.scrollBy(0, -50);
+            } else {
+                document.body.scrollTop=0;
+                document.documentElement.scrollTop=0;
+            }
+        });
+        nextBtn.addEventListener("click", e=>{
+            e.stopPropagation();
+            e.preventDefault();
+            let prePageBar=document.querySelector("#pagetual_pageBar"+(localPage+1));
+            if (prePageBar) {
+                prePageBar.scrollIntoView();
+                document.documentElement.scrollBy(0, -50);
+            } else {
+                document.body.scrollTop=9999999;
+                document.documentElement.scrollTop=9999999;
+            }
+        });
+        pageText.insertBefore(preBtn, pageText.firstChild);
+        pageText.insertBefore(nextBtn, pageText.firstChild);
         pageBar.appendChild(downSpan);
         let parentStyle=_unsafeWindow.getComputedStyle(example.parentNode);
         let parentWidth=example.parentNode.scrollWidth||parseInt(parentStyle.width);
@@ -2857,6 +2937,7 @@
         });
         pageText.addEventListener("click", e=>{
             e.stopPropagation();
+            if (e.ctrlKey || e.altKey || e.shiftKey || e.metaKey) return;
             if (e.which == 1) {
                 e.preventDefault();
                 pageBar.scrollIntoView();
