@@ -22,7 +22,7 @@ jobs:
 
     - uses: technote-space/get-diff-action@v6
       with:
-        FILES: items_all.json
+        FILES: Pagetual/items_all.json
 
     - name: Commit
       if: env.GIT_DIFF
