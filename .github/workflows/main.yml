@@ -19,6 +19,9 @@ jobs:
     - name: Download json
       run: |
         wget --no-cache -O "Pagetual/items_all.json" http://wedata.net/databases/AutoPagerize/items_all.json
+        git config user.name "github-actions[bot]"
+        git config user.email "512946+github-actions[bot]@users.noreply.github.com"
+        git add Pagetual/items_all.json
 
     - uses: technote-space/get-diff-action@v6
       with:
@@ -28,10 +31,7 @@ jobs:
     - name: Commit
       if: env.GIT_DIFF
       run: |
-        git config user.name "github-actions[bot]"
-        git config user.email "512946+github-actions[bot]@users.noreply.github.com"
         git status
-        git add Pagetual/items_all.json
         git commit -m "auto commit from github actions" 
         
     - name: Push
