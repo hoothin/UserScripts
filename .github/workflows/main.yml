@@ -20,12 +20,18 @@ jobs:
       run: |
         wget --no-cache -O "Pagetual/items_all.json" http://wedata.net/databases/AutoPagerize/items_all.json
 
-    - uses: technote-space/get-diff-action@v6
-      with:
-        FILES: Pagetual/items_all.json
+    #- uses: technote-space/get-diff-action@v6
+    #  with:
+    #    FILES: Pagetual/items_all.json
+    - name: Get changed files
+      id: changes
+      # Set outputs using the command.
+      run: |
+          echo "::set-output name=all::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | xargs)"
 
     - name: Commit
-      if: env.GIT_DIFF
+      #if: env.GIT_DIFF
+      if: ${{changes.outputs.all}}
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "512946+github-actions[bot]@users.noreply.github.com"
@@ -34,7 +40,7 @@ jobs:
         git commit -m "auto commit from github actions" 
         
     - name: Push
-      if: env.GIT_DIFF
+      if: ${{changes.outputs.all}}
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
