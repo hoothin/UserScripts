@@ -18,7 +18,7 @@ jobs:
 
     - name: Download json
       run: |
-        wget -O "Pagetual/items_all.json" http://wedata.net/databases/AutoPagerize/items_all.json
+        wget --no-cache -O "Pagetual/items_all.json" http://wedata.net/databases/AutoPagerize/items_all.json
 
     - uses: technote-space/get-diff-action@v6
       with:
