@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.5.8.8
+// @version      1.5.8.9
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -894,7 +894,7 @@
                  }
                  .search-jumper-type {
                      display: inline-flex;
-                     background: #ededed;
+                     background: #d0d0d0;
                      border-radius: ${20 * this.scale}px!important;
                      overflow: hidden;
                      transition:width ${searchData.prefConfig.typeOpenTime}ms ease, height ${searchData.prefConfig.typeOpenTime}ms;
@@ -1548,8 +1548,9 @@
                         let viewWidth = window.innerWidth || document.documentElement.clientWidth;
                         let viewHeight = window.innerHeight || document.documentElement.clientHeight;
                         let numPerLine = parseInt(viewWidth / 800);
+                        if (numPerLine > urls.length) numPerLine = urls.length;
                         let _width = parseInt(viewWidth / numPerLine);
-                        let _height = viewHeight / (parseInt(urls.length / numPerLine) + 1) - 10;
+                        let _height = viewHeight / (parseInt((urls.length - 1) / numPerLine) + 1) - 10;
                         for (let i = 0; i< urls.length; i++) {
                             let left = (i % numPerLine) * _width;
                             let top = parseInt(i / numPerLine) * (_height + 70);
@@ -1861,15 +1862,57 @@
                                 }
                             });
                             ele.onclick = e => {
-                                if (e.which === 1 && e.shiftKey) {
+                                if (e.which === 1 && e.altKey && e.shiftKey) {
+                                    let urls=[];
                                     for (let i = 0;i < targetSites.length;i++) {
                                         let siteEle = targetSites[i];
-                                        if (!siteEle.dataset.nobatch && /^http/.test(siteEle.href) && !siteEle.onclick) {
+                                        if (/^http/.test(siteEle.href) && !siteEle.onclick) {
+                                            let mouseDownEvent = new PointerEvent("mousedown");
+                                            siteEle.dispatchEvent(mouseDownEvent);
+                                            urls.push(siteEle.href);
+                                        }
+                                    }
+                                    let viewWidth = window.innerWidth || document.documentElement.clientWidth;
+                                    let viewHeight = window.innerHeight || document.documentElement.clientHeight;
+                                    let numPerLine = parseInt(viewWidth / 800);
+                                    if (numPerLine > urls.length) numPerLine = urls.length;
+                                    let _width = parseInt(viewWidth / numPerLine);
+                                    let _height = viewHeight / (parseInt((urls.length - 1) / numPerLine) + 1) - 10;
+                                    for (let i = 0; i< urls.length; i++) {
+                                        let left = (i % numPerLine) * _width;
+                                        let top = parseInt(i / numPerLine) * (_height + 70);
+                                        _unsafeWindow.open(urls[i], "_blank", `width=${_width-10}, height=${_height}, location=0, resizable=1, menubar=0, scrollbars=0, left=${left}, top=${top}`);
+                                    }
+                                    return false;
+                                } else if (e.which === 1 && e.altKey) {
+                                    let html = '<title>SearchJumper Multi</title>';
+                                    for (let i = 0;i < targetSites.length;i++) {
+                                        let siteEle = targetSites[i];
+                                        if (/^http/.test(siteEle.href) && !siteEle.onclick) {
+                                            let mouseDownEvent = new PointerEvent("mousedown");
+                                            siteEle.dispatchEvent(mouseDownEvent);
+                                            let iframe = document.createElement('iframe');
+                                            iframe.width = '50%';
+                                            iframe.height = '100%';
+                                            iframe.frameBorder = '0';
+                                            iframe.sandbox = "allow-same-origin allow-scripts allow-popups allow-forms";
+                                            iframe.src = siteEle.href;
+                                            html += iframe.outerHTML;
+                                        }
+                                    }
+                                    let c = _unsafeWindow.open("", "_blank");
+                                    c.document.write(html);
+                                    c.document.close();
+                                    return false;
+                                } else if (e.which === 1 && e.shiftKey) {
+                                    for (let i = 0;i < targetSites.length;i++) {
+                                        let siteEle = targetSites[i];
+                                        if (/^http/.test(siteEle.href) && !siteEle.onclick) {
                                             storage.setItem("lastSign", "2:" + data.url);
                                             let mouseDownEvent = new PointerEvent("mousedown");
                                             siteEle.dispatchEvent(mouseDownEvent);
                                             window.open(siteEle.href, '_blank');
-                                            return;
+                                            return false;
                                         }
                                     }
                                 }
@@ -2637,16 +2680,16 @@
                     }
                     let selectImg = e.target.tagName === 'IMG';
                     targetElement = e.target;
-                    let showHandler = () => {
-                        if ((e.which === 1 || e.which === 2) && !searchData.prefConfig.leftMouse) return;
-                        searchBar.showInPage();
-                        shown = true;
-                    };
                     let matchKey = searchData.prefConfig.altKey ||
                         searchData.prefConfig.ctrlKey ||
                         searchData.prefConfig.shiftKey ||
                         searchData.prefConfig.metaKey;
-                    showToolbarTimer = setTimeout(showHandler, searchData.prefConfig.longPressTime);
+                    showToolbarTimer = setTimeout(() => {
+                        if (targetElement != e.target) return;
+                        if ((e.which === 1 || e.which === 2) && !searchData.prefConfig.leftMouse) return;
+                        searchBar.showInPage();
+                        shown = true;
+                    }, parseInt(searchData.prefConfig.longPressTime));
                     let mouseUpHandler = e => {
                         if (shown) {
                             e.stopPropagation();
@@ -2662,12 +2705,6 @@
                 document.addEventListener('contextmenu', e => {
                     if (shown) e.preventDefault();
                 });
-                document.addEventListener('mousemove', e => {
-                    if (showToolbarTimer) {
-                        clearTimeout(showToolbarTimer);
-                        showToolbarTimer = null;
-                    }
-                }, true);
             }
             let changeHandler = e => {
                 setTimeout(()=>{
