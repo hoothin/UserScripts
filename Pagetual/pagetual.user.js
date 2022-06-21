@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.25.1
+// @version      1.9.25.2
 // @description  Perpetual pages - Most powerful Auto Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -2434,7 +2434,7 @@
            vertical-align: super;
          }
          .pagetual_pageBar a>span {
-           margin-top: 0!importabt;
+           margin-top: 0!important;
            opacity: 0;
            -moz-transition:all 0.3s ease-in-out 0s;
            -webkit-transition:all 0.3s ease-in-out 0s;
@@ -2444,8 +2444,13 @@
            color: red;
          }
          .pagetual_pageBar a:hover>span {
-           margin-top: unset;
            opacity: 1;
+         }
+         .pagetual_pageBar a:hover>span.prev {
+           margin-top: -30px!important;
+         }
+         .pagetual_pageBar a:hover>span.next {
+           margin-top: 30px!important;
          }
 
          .pagetual_pageBar span>svg:hover {
@@ -2818,10 +2823,12 @@
         let preBtn=document.createElement("span");
         preBtn.innerText="∧";
         preBtn.title="Prev page";
+        preBtn.className="prev";
         preBtn.style.cssText="float: left; margin-top: -30px; width: 40px; background: rgba(240, 240, 240, 0.8); position: absolute; border-radius: 20px 20px 0 0; box-shadow: rgb(0 0 0 / 50%) 0px -5px 5px;z-index:9999999";
         let nextBtn=document.createElement("span");
         nextBtn.innerText="∨";
         nextBtn.title="Next page";
+        nextBtn.className="next";
         nextBtn.style.cssText="float: left; margin-top: 30px; width: 40px; background: rgba(240, 240, 240, 0.8); position: absolute; border-radius: 0 0 20px 20px; box-shadow: rgb(0 0 0 / 50%) 0px 5px 5px;z-index:9999999";
         let localPage=curPage;
         preBtn.addEventListener("click", e=>{
