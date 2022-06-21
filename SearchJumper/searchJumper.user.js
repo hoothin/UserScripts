@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.5.9
+// @version      1.6
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -1242,7 +1242,6 @@
                 con.appendChild(title);
                 sites.forEach(siteEle => {
                     let icon = siteEle.querySelector("img");
-                    let name = siteEle.title;
                     let url = siteEle.href;
                     let li = document.createElement("div");
                     let a = document.createElement("a");
@@ -1262,8 +1261,8 @@
                         a.appendChild(img);
                     }
                     let p = document.createElement("p");
-                    p.innerText = name;
-                    li.title = name;
+                    p.innerText = siteEle.dataset.name;
+                    li.title = siteEle.title;
                     a.appendChild(p);
                     con.appendChild(li);
                 });
@@ -1463,6 +1462,7 @@
                     }
                 };
                 if (searchData.prefConfig.shortcut && data.shortcut) {
+                    ele.title += ` (${data.shortcut.toUpperCase()})`;
                     document.addEventListener('keydown', e => {
                         if ((data.ctrl && !e.ctrlKey) ||
                             (data.alt && !e.altKey) ||
@@ -1596,7 +1596,7 @@
                     if (searchData.prefConfig.showSiteLists && ele.classList.contains("search-jumper-hide")) {
                         self.listPos(ele, siteList);
                     } else {
-                        self.tipsPos(typeBtn, type);
+                        self.tipsPos(typeBtn, ele.title);
                     }
                     if (searchData.prefConfig.overOpen) {
                         if (!ele.classList.contains("search-jumper-hide")) return;
@@ -1623,7 +1623,7 @@
                     }
                 });
                 if (searchData.prefConfig.showSiteLists) {
-                    siteList = this.createList(siteEles, type);
+                    siteList = this.createList(siteEles, ele.title);
                     siteList.style.display = "none";
                     ele.appendChild(siteList);
                 }
@@ -1673,6 +1673,7 @@
                 let ele = document.createElement("a");
                 ele.className = "search-jumper-btn";
                 ele.title = name;
+                ele.dataset.name = name;
                 ele.classList.add("search-jumper-word");
                 let word = document.createElement("span");
                 word.innerText = name;
@@ -1706,6 +1707,7 @@
                     }
                 }
                 if (searchData.prefConfig.shortcut && data.shortcut) {
+                    ele.title += ` (${data.shortcut.toUpperCase()})`;
                     let shortcutCover = document.createElement("div");
                     shortcutCover.innerText = data.shortcut.toUpperCase();
                     ele.appendChild(shortcutCover);
@@ -1983,7 +1985,7 @@
                 ele.addEventListener('mousedown', action, false);
 
                 ele.addEventListener('mouseenter', e => {
-                    self.tipsPos(ele, name);
+                    self.tipsPos(ele, ele.title);
                 }, false);
                 ele.addEventListener('mouseleave', e => {
                     self.tips.style.opacity = 0;
