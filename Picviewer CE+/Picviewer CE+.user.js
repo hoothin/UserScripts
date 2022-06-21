@@ -15950,7 +15950,7 @@ ImgOps | https://imgops.com/#b#`;
             },
             getAllValidImgs:function(newer){
                 var validImgs = [];
-                var imgs = document.getElementsByTagName('img'),
+                var imgs = document.querySelectorAll('img:not(#search-jumper img,#icons>img)'),
                     container = document.querySelector('.pv-gallery-container'),
                     preloadContainer = document.querySelector('.pv-gallery-preloaded-img-container');
 
@@ -15982,9 +15982,6 @@ ImgOps | https://imgops.com/#b#`;
                 if(bgImgs)imgs=imgs.concat(bgImgs);
                 // 排除库里面的图片
                 imgs = imgs.filter(function(img){
-                    if (img.parentNode && (img.parentNode.id=="icons" || img.parentNode.className=="search-jumper-btn")) {
-                        return false;
-                    }
                     return !(container.contains(img) || (preloadContainer&&preloadContainer.contains(img)));
                 });
 
