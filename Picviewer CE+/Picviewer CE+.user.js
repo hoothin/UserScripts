@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.6.17.1
+// @version              2022.6.21.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -41,7 +41,7 @@
 // @grant                unsafeWindow
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
 // @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1053702
-// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1050741
+// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1063047
 // @match                *://*/*
 // @exclude              http://www.toodledo.com/tasks/*
 // @exclude              http*://maps.google.com*/*
@@ -11724,6 +11724,7 @@ ImgOps | https://imgops.com/#b#`;
                         h:45,
                     },
                 },
+                showWithRules:true,
                 minSizeLimit:{//就算是图片被缩放了(看到的图片被设定了width或者height限定了大小,这种情况下),如果图片显示大小小于设定值,那么也不显示浮动工具栏.
                     w:25,
                     h:25,
@@ -21072,7 +21073,8 @@ ImgOps | https://imgops.com/#b#`;
                 pretreatment(target)
                 result = findPic(target);
                 if(!result)return;
-                if(!(result.imgAS.w==result.imgCS.w && result.imgAS.h==result.imgCS.h)){//如果不是两者完全相等,那么被缩放了.
+                if (prefs.floatBar.showWithRules && result.type=="rule"){
+                }else if(!(result.imgAS.w==result.imgCS.w && result.imgAS.h==result.imgCS.h)){//如果不是两者完全相等,那么被缩放了.
                     if(prefs.floatBar.sizeLimitOr){
                         if(result.imgCS.h <= prefs.floatBar.minSizeLimit.h && result.imgCS.w <= prefs.floatBar.minSizeLimit.w){//最小限定判断.
                             return;
@@ -21336,6 +21338,12 @@ ImgOps | https://imgops.com/#b#`;
                     label: i18n("sizeLimitOr"),
                     type: "checkbox",
                     "default": false
+                },
+                'floatBar.showWithRules': {
+                    label: i18n("showWithRules"),
+                    type: "checkbox",
+                    "default": prefs.floatBar.showWithRules,
+                    title: i18n("showWithRulesTip"),
                 },
                 'floatBar.butonOrder': {
                     label: i18n("butonOrder"),
