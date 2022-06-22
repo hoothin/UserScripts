@@ -1861,7 +1861,7 @@
                         } else {
                             promptStr = window.prompt(inputMatch[1]);
                         }
-                        if (!promptStr) return false;
+                        if (promptStr === null) return false;
                         resultUrl = resultUrl.replace(inputMatch[0], promptStr);
                     }
                     let targetBaseUrl = targetUrl.replace(/https?:\/\//i, "");
