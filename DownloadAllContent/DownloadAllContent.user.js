@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.7.3.7
+// @version      2.7.3.8
 // @description  Fetch and download main content on current page, provide special support for chinese novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -17,9 +17,7 @@
 // @grant        GM_registerMenuCommand
 // @grant        GM_setValue
 // @grant        GM_getValue
-// @grant        GM_download
 // @grant        unsafeWindow
-// @require      https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js
 // @license      MIT License
 // @compatible        chrome
 // @compatible        firefox
@@ -28,13 +26,187 @@
 // @contributionURL https://buymeacoffee.com/hoothin
 // @contributionAmount 1
 // ==/UserScript==
+(function (global, factory) {
+  if (typeof define === "function" && define.amd) {
+    define([], factory);
+  } else if (typeof exports !== "undefined") {
+    factory();
+  } else {
+    var mod = {
+      exports: {}
+    };
+    factory();
+    global.FileSaver = mod.exports;
+  }
+})(this, function () {
+  "use strict";
+
+  /*
+  * FileSaver.js
+  * A saveAs() FileSaver implementation.
+  *
+  * By Eli Grey, http://eligrey.com
+  *
+  * License : https://github.com/eligrey/FileSaver.js/blob/master/LICENSE.md (MIT)
+  * source  : http://purl.eligrey.com/github/FileSaver.js
+  */
+  var _global = typeof window === 'object' && window.window === window ? window : typeof self === 'object' && self.self === self ? self : typeof global === 'object' && global.global === global ? global : void 0;
+
+  function bom(blob, opts) {
+    if (typeof opts === 'undefined') opts = {
+      autoBom: false
+    };else if (typeof opts !== 'object') {
+      console.warn('Deprecated: Expected third argument to be a object');
+      opts = {
+        autoBom: !opts
+      };
+    }
+
+    if (opts.autoBom && /^\s*(?:text\/\S*|application\/xml|\S*\/\S*\+xml)\s*;.*charset\s*=\s*utf-8/i.test(blob.type)) {
+      return new Blob([String.fromCharCode(0xFEFF), blob], {
+        type: blob.type
+      });
+    }
+
+    return blob;
+  }
+
+  function download(url, name, opts) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url);
+    xhr.responseType = 'blob';
+
+    xhr.onload = function () {
+      saveAs(xhr.response, name, opts);
+    };
+
+    xhr.onerror = function () {
+      console.error('could not download file');
+    };
+
+    xhr.send();
+  }
+
+  function corsEnabled(url) {
+    var xhr = new XMLHttpRequest();
+
+    xhr.open('HEAD', url, false);
+
+    try {
+      xhr.send();
+    } catch (e) {}
+
+    return xhr.status >= 200 && xhr.status <= 299;
+  }
+
+
+  function click(node) {
+    try {
+      node.dispatchEvent(new MouseEvent('click'));
+    } catch (e) {
+      var evt = document.createEvent('MouseEvents');
+      evt.initMouseEvent('click', true, true, window, 0, 0, 0, 80, 20, false, false, false, false, 0, null);
+      node.dispatchEvent(evt);
+    }
+  }
+
+
+  var isMacOSWebView = _global.navigator && /Macintosh/.test(navigator.userAgent) && /AppleWebKit/.test(navigator.userAgent) && !/Safari/.test(navigator.userAgent);
+  var saveAs = _global.saveAs || (
+  typeof window !== 'object' || window !== _global ? function saveAs() {}
+
+  : 'download' in HTMLAnchorElement.prototype && !isMacOSWebView ? function saveAs(blob, name, opts) {
+    var URL = _global.URL || _global.webkitURL;
+    var a = document.createElement('a');
+    name = name || blob.name || 'download';
+    a.download = name;
+    a.rel = 'noopener';
+
+    if (typeof blob === 'string') {
+      a.href = blob;
+
+      if (a.origin !== location.origin) {
+        corsEnabled(a.href) ? download(blob, name, opts) : click(a, a.target = '_blank');
+      } else {
+        click(a);
+      }
+    } else {
+      a.href = URL.createObjectURL(blob);
+      setTimeout(function () {
+        URL.revokeObjectURL(a.href);
+      }, 4E4);
+
+      setTimeout(function () {
+        click(a);
+      }, 0);
+    }
+  }
+  : 'msSaveOrOpenBlob' in navigator ? function saveAs(blob, name, opts) {
+    name = name || blob.name || 'download';
+
+    if (typeof blob === 'string') {
+      if (corsEnabled(blob)) {
+        download(blob, name, opts);
+      } else {
+        var a = document.createElement('a');
+        a.href = blob;
+        a.target = '_blank';
+        setTimeout(function () {
+          click(a);
+        });
+      }
+    } else {
+      navigator.msSaveOrOpenBlob(bom(blob, opts), name);
+    }
+  }
+  : function saveAs(blob, name, opts, popup) {
+    popup = popup || open('', '_blank');
+
+    if (popup) {
+      popup.document.title = popup.document.body.innerText = 'downloading...';
+    }
+
+    if (typeof blob === 'string') return download(blob, name, opts);
+    var force = blob.type === 'application/octet-stream';
+
+    var isSafari = /constructor/i.test(_global.HTMLElement) || _global.safari;
+
+    var isChromeIOS = /CriOS\/[\d]+/.test(navigator.userAgent);
+
+    if ((isChromeIOS || force && isSafari || isMacOSWebView) && typeof FileReader !== 'undefined') {
+      var reader = new FileReader();
+
+      reader.onloadend = function () {
+        var url = reader.result;
+        url = isChromeIOS ? url : url.replace(/^data:[^;]*;/, 'data:attachment/file;');
+        if (popup) popup.location.href = url;else location = url;
+        popup = null;
+      };
+
+      reader.readAsDataURL(blob);
+    } else {
+      var URL = _global.URL || _global.webkitURL;
+      var url = URL.createObjectURL(blob);
+      if (popup) popup.location = url;else location.href = url;
+      popup = null;
+
+      setTimeout(function () {
+        URL.revokeObjectURL(url);
+      }, 4E4);
+    }
+  });
+  _global.saveAs = saveAs.saveAs = saveAs;
+
+  if (typeof module !== 'undefined') {
+    module.exports = saveAs;
+  }
+});
 
 (function() {
     'use strict';
     var indexReg=/PART\b|^Prologue|Chapter\s*[\-_]?\d+|分卷|^序$|^序\s*言|^序\s*章|^前\s*言|^附\s*[录錄]|^引\s*[言子]|^摘\s*要|^[楔契]\s*子|^后\s*记|^後\s*記|^附\s*言|^结\s*语|^結\s*語|^尾\s*[声聲]|^最終話|^最终话|^番\s*外|^\d+\s*\D*[^\d#\.]$|^[第（]?[\d〇零一二三四五六七八九十百千万萬-]+\s*[、）章节節回卷折篇幕集话話]/i;
     var innerNextPage=/下一[页頁张張]|next\s*page|次のページ/i;
     var lang = navigator.appName=="Netscape"?navigator.language:navigator.userLanguage;
-    var _GM_download=(typeof GM_download=='undefined')?saveAs:(blob,name)=>{if(blob.size>15*1024*1024)saveAs(blob,name);else GM_download(window.URL.createObjectURL(blob),name)};
     var i18n={};
     var rCats=[];
     var processFunc;
@@ -134,7 +306,7 @@
         var abortbtn = document.getElementById('abortRequest');
         tempSavebtn.onclick = function(){
             var blob = new Blob([i18n.info+"\r\n\r\n"+document.title+"\r\n\r\n"+rCats.join("\r\n\r\n")], {type: "text/plain;charset=utf-8"});
-            _GM_download(blob, document.title+".txt");
+            saveAs(blob, document.title+".txt");
             console.log(curRequests);
         }
         abortbtn.onclick = function(){
@@ -299,7 +471,7 @@
                     txtDownWords.innerHTML=getI18n("complete",[downNum]);
                     sortInnerPage();
                     var blob = new Blob([i18n.info+"\r\n\r\n"+document.title+"\r\n\r\n"+rCats.join("\r\n\r\n")], {type: "text/plain;charset=utf-8"});
-                    _GM_download(blob, document.title+".txt");
+                    saveAs(blob, document.title+".txt");
                 }
             };
             if(contentResult!==false){
@@ -468,7 +640,7 @@
     function fetch(forceSingle){
         forceSingle=forceSingle===true;
         processFunc=null;
-        var aEles=document.querySelectorAll("a"),list=[];
+        var aEles=document.querySelectorAll("a:not(#search-jumper a)"),list=[];
         for(var i=0;i<aEles.length;i++){
             var aEle=aEles[i],has=false;
             if((!aEle.href || aEle.href.indexOf("javascript")!=-1) && aEle.dataset.href){
@@ -491,7 +663,7 @@
             indexDownload(list);
         }else{
             var blob = new Blob([i18n.info+"\r\n\r\n"+document.title+"\r\n\r\n"+getPageContent(document)], {type: "text/plain;charset=utf-8"});
-            _GM_download(blob, document.title+".txt");
+            saveAs(blob, document.title+".txt");
         }
     }
 
