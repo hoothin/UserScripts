@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.2
+// @version      1.6.2.1
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -1854,7 +1854,15 @@
                     }
                     while (resultUrl.indexOf('%input{') !== -1) {
                         let inputMatch = resultUrl.match(/%input{(.*?)}/);
-                        resultUrl = resultUrl.replace(inputMatch[0], window.prompt(inputMatch[1]));
+                        if (!inputMatch) return false;
+                        let promptStr = inputMatch[1].split(",");
+                        if (promptStr.length === 2) {
+                            promptStr = window.prompt(promptStr[0], promptStr[1]);
+                        } else {
+                            promptStr = window.prompt(inputMatch[1]);
+                        }
+                        if (!promptStr) return false;
+                        resultUrl = resultUrl.replace(inputMatch[0], promptStr);
                     }
                     let targetBaseUrl = targetUrl.replace(/https?:\/\//i, "");
                     return resultUrl.replace(/%t/g, targetUrl).replace(/%T/g, encodeURIComponent(targetUrl)).replace(/%b/g, targetBaseUrl).replace(/%B/g, encodeURIComponent(targetBaseUrl)).replace(/%n/g, targetName).replace(/%s/g, keywords);
@@ -1951,6 +1959,7 @@
                         if (!ele.onclick) {
                             ele.onclick = e => {
                                 let url = getUrl();
+                                if (url === false) return false;
                                 let postBody = url.match(/[:%]P{(.*?)}/), postParam = {};
                                 if (postBody) {
                                     url = url.replace(postBody[0], '');
@@ -1978,14 +1987,18 @@
                     } else if ((data.charset && data.charset != 'utf-8') || /[:%]p{/.test(data.url)) {
                         if (!ele.onclick) {
                             ele.onclick = e => {
-                                submitByForm(data.charset, getUrl(), ele.getAttribute("target") || '_self');
+                                let url = getUrl();
+                                if (url === false) return false;
+                                submitByForm(data.charset, url, ele.getAttribute("target") || '_self');
                                 return false;
                             };
                         }
                     } else if (data.url.indexOf('%input{') !== -1) {
                         if (!ele.onclick) {
                             ele.onclick = e => {
-                                ele.href = getUrl();
+                                let url = getUrl();
+                                if (url === false) return false;
+                                ele.href = url;
                             };
                         }
                     } else {
