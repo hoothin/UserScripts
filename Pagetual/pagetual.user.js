@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.26
+// @version      1.9.26.1
 // @description  Perpetual pages - Most powerful Auto Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -172,7 +172,7 @@
                 enableHistory:"翻页后写入历史记录",
                 initRun:"打开页面后立即尝试翻页，否则滚动至页尾再翻页",
                 preload:"翻页前预读下一页，加速浏览",
-                click2ImportRule:"点击下方添加特殊规则库，添加后再行更新：",
+                click2ImportRule:"点击下方添加特殊规则库，并静待更新成功：",
                 forceAllBody:"是否拼接整个页面？",
                 openInNewTab:"使拼接页面的内容在新页面打开",
                 importSucc:"导入成功",
@@ -229,7 +229,7 @@
                 enableHistory:"翻頁后寫入歷史記錄",
                 initRun:"打開頁面后立即嘗試翻頁，否則滾動至頁尾再翻頁",
                 preload:"翻頁前預讀下一頁，加速瀏覽",
-                click2ImportRule:"點擊下方添加特殊規則庫，添加後再行更新：",
+                click2ImportRule:"點擊下方添加特殊規則庫，并靜待更新成功：",
                 forceAllBody:"是否拼接整個頁面？",
                 openInNewTab:"使拼接頁面的内容在新頁面打開",
                 importSucc:"導入成功",
@@ -341,7 +341,7 @@
                 enableHistory:"Write history after page turning",
                 initRun:"Turn pages immediately after opening",
                 preload:"Preload next page for speeding up",
-                click2ImportRule:"Click to import base rules link, then click to update rules:",
+                click2ImportRule:"Click to import base rules link, then wait until the update is complete:",
                 forceAllBody:"Join full body of page?",
                 openInNewTab:"Open urls of additions in new tab",
                 importSucc:"Import completed",
@@ -1912,6 +1912,7 @@
         configTable.appendChild(document.createElement("tbody"));
         configCon.insertBefore(configTable, insertPos);
         function createCheckbox(innerText, val, tag, parentCheck, otherType){
+            if (typeof val == 'undefined') val = "";
             let title=document.createElement(tag||"h3");
             title.innerHTML=innerText;
             let input=document.createElement("input");
@@ -2150,7 +2151,7 @@
     }
 
     function getFormatJSON(obj){
-        if(!objIsArr(obj))return "";
+        if(!objIsArr(obj) || obj.length === 0)return "";
         return JSON.stringify(obj, null, 4);
         let ret="[\n";
         let len=obj.length,i=0,isLast;
