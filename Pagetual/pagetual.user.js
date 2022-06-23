@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.25.2
+// @version      1.9.25.3
 // @description  Perpetual pages - Most powerful Auto Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -688,7 +688,7 @@
                         let waitTime=500,checkEval;
                         if(isNaN(r.wait)){
                             try{
-                                checkEval=_unsafeWindow.pagetualWait || Function("doc",'"use strict";' + r.wait);
+                                checkEval=(typeof _unsafeWindow.pagetualWait=='undefined') ? Function("doc",'"use strict";' + r.wait) : _unsafeWindow.pagetualWait;
                             }catch(e){
                                 debug(e);
                             }
@@ -937,7 +937,7 @@
         }
 
         getPage(doc){
-            if(_unsafeWindow.Discourse)return {};
+            if(typeof _unsafeWindow.Discourse!='undefined')return {};
             let canSave=false;//發現頁碼選擇器在其他頁對不上，還是別保存了
             let url=this.curUrl.replace("#!","").replace("index.php?","?");
             let _url=url.replace(/\.s?html?$/i,"");
@@ -1194,7 +1194,7 @@
                 return true;
             }else if(this.curSiteRule.nextLinkByJs){
                 try{
-                    let targetUrl=(_unsafeWindow.pagetualNextLinkByJs || Function("doc",'"use strict";' + this.curSiteRule.nextLinkByJs))(doc);
+                    let targetUrl=((typeof _unsafeWindow.pagetualNextLinkByJs=='undefined') ? Function("doc",'"use strict";' + this.curSiteRule.nextLinkByJs) : _unsafeWindow.pagetualNextLinkByJs)(doc);
                     if(targetUrl)nextLink={href:targetUrl};
                 }catch(e){
                     debug(e);
@@ -1386,7 +1386,7 @@
             let code=this.curSiteRule.pageInit;
             if(code){
                 try{
-                    (_unsafeWindow.pagetualPageInit || Function("doc", "eles", '"use strict";' + code))(doc, eles);
+                    ((typeof _unsafeWindow.pagetualPageInit=='undefined') ? Function("doc", "eles", '"use strict";' + code) : _unsafeWindow.pagetualPageInit)(doc, eles);
                 }catch(e){
                     debug(e);
                 }
@@ -1397,7 +1397,7 @@
             let code=this.curSiteRule.pageAction;
             if(code){
                 try{
-                    (_unsafeWindow.pagetualPageAction || Function("doc", "eles", '"use strict";' + code))(doc, eles);
+                    ((typeof _unsafeWindow.pagetualPageAction=='undefined') ? Function("doc", "eles", '"use strict";' + code) : _unsafeWindow.pagetualPageAction)(doc, eles);
                 }catch(e){
                     debug(e);
                 }
@@ -1525,7 +1525,7 @@
                 let code=self.curSiteRule.init;
                 if(code){
                     try{
-                        (_unsafeWindow.pagetualInit || Function('doc','win','iframe','"use strict";' + code))(null,null,null);
+                        ((typeof _unsafeWindow.pagetualInit=='undefined') ? Function('doc','win','iframe','"use strict";' + code) : _unsafeWindow.pagetualInit)(null,null,null);
                     }catch(e){
                         debug(e);
                     }
@@ -1555,7 +1555,7 @@
                     this.nextTitle=doc.title;
                 }else{
                     try{
-                        this.nextTitle=(_unsafeWindow.pagetualPageBarText || Function("doc",'"use strict";' + this.curSiteRule.pageBarText))(doc);
+                        this.nextTitle=((typeof _unsafeWindow.pagetualPageBarText=='undefined') ? Function("doc",'"use strict";' + this.curSiteRule.pageBarText) : _unsafeWindow.pagetualPageBarText)(doc);
                     }catch(e){
                         debug(e);
                     }
@@ -2322,7 +2322,7 @@
                 let preCode=ruleParser.curSiteRule.pageElementPre || ruleParser.curSiteRule.pagePre;
                 if(preCode){
                     try{
-                        if (_unsafeWindow.pagetualPagePre) {
+                        if (typeof _unsafeWindow.pagetualPagePre!='undefined') {
                             response = _unsafeWindow.pagetualPagePre(response);
                         } else if (preCode.length == 2) {
                             response = response.replace(new RegExp(preCode[0], "gi"), preCode[1]);
@@ -2956,7 +2956,7 @@
         ruleParser.insertElement(pageBar);
         if(ruleParser.curSiteRule.pageBar){
             try{
-                (_unsafeWindow.pagetualPageBar || Function("pageBar",'"use strict";' + ruleParser.curSiteRule.pageBar))(pageBar);
+                ((typeof _unsafeWindow.pagetualPageBar=='undefined') ? Function("pageBar",'"use strict";' + ruleParser.curSiteRule.pageBar) : _unsafeWindow.pagetualPageBar)(pageBar);
             }catch(e){
                 debug(e);
             }
@@ -3036,7 +3036,7 @@
         if(ruleParser.curSiteRule.wait){
             if(isNaN(ruleParser.curSiteRule.wait)){
                 try{
-                    checkEval=_unsafeWindow.pagetualWait || Function("doc",'"use strict";' + ruleParser.curSiteRule.wait);
+                    checkEval=(typeof _unsafeWindow.pagetualWait=='undefined') ? Function("doc",'"use strict";' + ruleParser.curSiteRule.wait) : _unsafeWindow.pagetualWait;
                 }catch(e){
                     debug(e);
                 }
@@ -3119,7 +3119,7 @@
             if(ruleParser.curSiteRule.wait){
                 if(isNaN(ruleParser.curSiteRule.wait)){
                     try{
-                        checkEval=_unsafeWindow.pagetualWait || Function("doc",'"use strict";' + ruleParser.curSiteRule.wait);
+                        checkEval=(typeof _unsafeWindow.pagetualWait=='undefined') ? Function("doc",'"use strict";' + ruleParser.curSiteRule.wait) : _unsafeWindow.pagetualWait;
                     }catch(e){
                         debug(e);
                     }
@@ -3429,7 +3429,7 @@
         if(isPause || isLoading || forceState==1)return;
         if(ruleParser.curSiteRule.delay){
             try{
-                let checkDelay=(_unsafeWindow.pagetualDelay || Function('"use strict";' + ruleParser.curSiteRule.delay))();
+                let checkDelay=((typeof _unsafeWindow.pagetualDelay=='undefined') ? Function('"use strict";' + ruleParser.curSiteRule.delay) : _unsafeWindow.pagetualDelay)();
                 if(!checkDelay)return;
             }catch(e){
                 debug(e);
@@ -3485,7 +3485,7 @@
                         }
                     };
                     try{
-                        (_unsafeWindow.pagetualPageElementByJs || Function("over",'"use strict";' + ruleParser.curSiteRule.pageElementByJs))(over);
+                        ((typeof _unsafeWindow.pagetualPageElementByJs=='undefined') ? Function("over",'"use strict";' + ruleParser.curSiteRule.pageElementByJs) : _unsafeWindow.pagetualPageElementByJs)(over);
                     }catch(e){
                         debug(e);
                     }
