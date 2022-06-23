@@ -2300,6 +2300,7 @@
                         if(!date || now-date>2*24*60*60*1000){
                             updateRules(()=>{
                             },(rule,err)=>{});
+                            storage.setItem("ruleLastUpdate", now);
                         }
                         callback();
                     });
