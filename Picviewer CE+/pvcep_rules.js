@@ -998,7 +998,17 @@ var siteInfo=[
  getImage:function(){
     if(this.parentNode.nodeName=="PICTURE"){
         let source=this.parentNode.querySelector("source:last-of-type");
-        return source.srcset.split(", ")[1].split(" ")[0];
+        let maxSize=0;
+        let result="";
+        source.srcset.split(", ").forEach(srcset=>{
+            let srcArr=srcset.split(" ");
+            let curSize=parseInt(srcArr[1]);
+            if(curSize>maxSize){
+                maxSize=curSize;
+                result=srcArr[0];
+            }
+        });
+        return result;
     }
     return null;
  }
