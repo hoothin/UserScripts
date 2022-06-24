@@ -7,7 +7,7 @@
 // @description:zh-TW 一鍵離綫下載 - 一鍵自動將磁鏈、bt種子或其他下載資源離綫下載至網盤
 // @namespace    https://github.com/hoothin/UserScripts/tree/master/Easy%20offline
 // @require      http://code.jquery.com/jquery-1.7.2.min.js
-// @version      1.9.37
+// @version      1.9.38
 // @author       Hoothin
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAAQlBMVEUAAAD///////////////////////////////////////////////////////////////////////////////////8IX9KGAAAAFXRSTlMAwT7hFahN0LZWJgqIavB7YJuRdDPJsaCPAAAA6ElEQVQ4y8WRW5aEIAxEDUGgAQUftf+tjgYOjcPMb3d96Im5pkIxfVgmOuY5mX/afkYVqb/6EXDGh+CNA7axvwOvZrUiDfalX6UY5y+AkZ687Ut9WNgw9SLYQ3cDYfNz4kIAq2Z/wYN0AiSRQN16iroMXnD3K2F+f1oBLK2ckeWpmjFEsc2Tfxn6ndUBLGgjNVgAX8oNa56AO8dKeAEccnW89ruB6bQVWGTL2IcmQJOTdXSdOAIRrMtxsekR8AQ5XyHARLTrAhi6xH0iYWfcOguQpeAtPJJXSvlqEdSl4XaGHb4HEE0f1w+Jcw2XCZjSwgAAAABJRU5ErkJggg==
 // @match        *://*/*
@@ -496,6 +496,42 @@
                 return false;
             },
             bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAYFBMVEUAAAArbP5MdNFMdNIrbP4sbP1QdctQdcwvbv////8dYf8sbP9smP/09/8qaf/V4f8iZf/u8/+lwP+duv+UtP+PsP9hkP92n/9nlP/K2v/F1v+7z/+Ytv9Wif9Aef91nv9e7pgKAAAACHRSTlMA+puT/PWHhQBB7XEAAACQSURBVBjTTY8JCsQwCEWdrjFm37p37n/LMdAJfSTgf4IoAPQf8fDpgek4N9NxnwQZJx0/w+UMNd/XV6nluqsBQbRp79Xqvd7ICBCuaHuElMJhdXEspMKGko/YA2LYXyKuiGt8Ca3rfwm052nbjILV1IyFBZFZck4xppwXQ8Srk2wQzXzcIBpDB8w0/vM4AfwACl4LKjajMX0AAAAASUVORK5CYII="
+        },
+        putio:{
+            regex:/app\.put\.io/,
+            url:"https://app.put.io/files",
+            bgColor:"313131",
+            noTxt:true,
+            offFunc:function(delLink){
+                var rsc = setInterval(function(){
+                    var offBtn=document.querySelector('.new-transfer-cta>button');
+                    if(offBtn){
+                        clearInterval(rsc);
+                        var wsc = setInterval(function() {
+                            offBtn.click();
+                            var textarea=document.querySelector('textarea.mantine-Textarea-input');
+                            var root=document.querySelector('.mantine-Skeleton-root');
+                            if(textarea && root && root.innerText.indexOf('Loading')==-1){
+                                clearInterval(wsc);
+                                let lastValue = textarea.value;
+                                textarea.value=curlink;
+                                let tracker = textarea._valueTracker;
+                                if (tracker) {
+                                    tracker.setValue(lastValue);
+                                }
+                                let inputevent = new Event('input', { bubbles: true });
+                                textarea.dispatchEvent(inputevent);
+                                var event = document.createEvent('HTMLEvents');
+                                event.initEvent("input", false, true);
+                                textarea.dispatchEvent(event);
+                                document.querySelector('.modal-footer-action>button').click();
+                                delLink();
+                            }
+                        },200);
+                    }
+                },1000);
+            },
+            bgImg:"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAABcVBMVEUwMDAtLS09PT0AAAA5OTkwMDA2NjY2NjZ0dHQyMjIxMTH////8/P37+/v+/v35+fk0NDQzMzIiIiIvLzCUlJQ2NDIqKzAgIy8oKCgmJibk5OVQUFFHQjP09PSnp6gmKTAqKiokJCT29vWhoaGMj5tra2tSUlXqwkI6OjuehDo3NjYjJi+Abi4uLi4sLC3f39/Y2NrKy9C5ur62uLqrrriqqqqTlZyZmZl0d4NfXlz/5khGRkb20EW9oD/Vsj6slT6nkz6PejvQrDlSSzhuYDevlTabgTKfgy98ai40MCdJPiAbHBz39/bv7+/q6urR0dLHx8fAwMCws7+vs76dnZ6UlpuFiJKKi4+Hh4dwcXJYXWxnZ2djY2NNTU391kr/2klMS0j/4Ef/10bwxkbvyETYuUA8PUBEQj/juj2iiDyPejy7nDqKdjq1lzmNeTl4aDlaUTdlWTZdUzWegjEZHi91Yy51Yi4NFS1gUihIPiIrJx+VLWttAAAACXRSTlP9+3IAnfahnwf3t+iJAAACD0lEQVQ4y31TB3viMAwV0BuxnRiTC0kgQNmb697tdVz37b333nv011euExLo9/WB41h6epJjC86OxIAQoh0DGgFOJ2DkFCgC0Qj+/SkgQBy6BNQaf2j0uQg5AYkBoD9giKSEIKSvBQTCBRGjxWIxVXQ0ETFCX10z3Wx5Op+ffuQ4QonKAWoD+Oy28jkqoU/MO6oWpaD8wlkcQ5/Ouc4ovedowdbBjzeT1ylnOkUwpDx0k4ME4ZYpNwyamRnnyDCu9VRlioDoNa6gOXf37b9v8xmDMVZ1ZZK+gjaaLRmczuy9frp8cF/HVJO7lhkSzGTqHGZg2ZX6D7PXOI/vU78vFkSogARDEta//hIkiQQ61blgW+YAQdfp7f+e1krVLmM5N3ZWbWtAgeqMlar77v7jDGWM3ums2mKIYDB6qXxrFv2GbtTWh1NgXmRIMNzPhLcUFhkSKBbCdcbp1TcfX2H8sRR4ElyqjDc2F760BRkukh4hNzbX+rzQTBPEkALPVyqVuWcbnfqLZtqURxglMG5M7m1tb/98V3+5vKHio596lpbozZ0nH9bWPn0n6YJ/UpHDqmVo7sHW+79t2y6gy48PrhwOd7Ga/fO82baEJWSEGsGlPbrRu5tLK15axapwVUNo8DxL+QMQv7vUC17LNBERd9A4pmLItVBT6NcAYnDGRBoibNBod3fjkIif0P6xeOIQIYVNqqOTMbQAAAAASUVORK5CYII="
         }
     };
     var enableUrl = 'a[href^="magnet"],[href^="ed2k://|file"],[href$=".torrent"],[href$=".mp4"],[href$=".rar"],[href$=".7z"],[href$=".zip"],[href$=".rmvb"],[href$=".mkv"],[href$=".avi"],[href$=".iso"],[href$=".exe"],[href$=".dmg"]';
