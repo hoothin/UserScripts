@@ -1,5 +1,19 @@
 [
 {
+  "resource_url": "http://wedata.net/items/85936",
+  "data": {
+    "pageElement": "id('results')/div[starts-with(@class,'snippet fdb')]",
+    "nextLink": "id('pagination')/a[contains(., 'Next')]",
+    "url": "^https://search\\.brave\\.com/search",
+    "exampleUrl": "https://search.brave.com/search?q=autopagerize"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "nazo6",
+  "name": "Brave Search",
+  "created_at": "2022-06-23T18:29:31+09:00",
+  "updated_at": "2022-06-24T07:56:33+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/85935",
   "data": {
     "insertBefore": "",
