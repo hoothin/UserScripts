@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.2.1
+// @version      1.6.2.3
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -877,8 +877,7 @@
                  .search-jumper-isTargetImg>.search-jumper-type,
                  .search-jumper-isTargetAudio>.search-jumper-type,
                  .search-jumper-isTargetVideo>.search-jumper-type,
-                 .search-jumper-isTargetLink>.search-jumper-type,
-                 .search-jumper-isTargetPage>.search-jumper-type {
+                 .search-jumper-isTargetLink>.search-jumper-type {
                      display: none;
                  }
                  .search-jumper-searchBar>.search-jumper-type.search-jumper-targetAll {
@@ -932,6 +931,7 @@
                      width: 20px;
                      height: 20px;
                      margin-right: 10px;
+                     margin-top: unset;
                  }
                  .search-jumper-type>.sitelist a>p {
                      display: inline-block;
@@ -968,6 +968,7 @@
                  .search-jumper-type img {
                      width: ${32 * this.scale}px;
                      height: ${32 * this.scale}px;
+                     margin-top: unset;
                  }
                  .search-jumper-tips {
                      pointer-events: none;
@@ -1830,7 +1831,9 @@
                     ele.setAttribute("target", "_blank");
                     ele.dataset.target = 1;
                 }
+                let customInput = false;
                 let getUrl = () => {
+                    customInput = false;
                     let keywords = getKeywords();
                     if (keywords && keywords != cacheKeywords) storage.setItem("cacheKeywords", keywords);
                     if (!ele.dataset.url) {
@@ -1855,6 +1858,7 @@
                     while (resultUrl.indexOf('%input{') !== -1) {
                         let inputMatch = resultUrl.match(/%input{(.*?)}/);
                         if (!inputMatch) return false;
+                        customInput = true;
                         let promptStr = inputMatch[1].split(",");
                         if (promptStr.length === 2) {
                             promptStr = window.prompt(promptStr[0], promptStr[1]);
@@ -1865,6 +1869,50 @@
                         resultUrl = resultUrl.replace(inputMatch[0], promptStr);
                     }
                     let targetBaseUrl = targetUrl.replace(/https?:\/\//i, "");
+                    if (!keywords) {
+                        while (resultUrl.indexOf('%s') !== -1) {
+                            customInput = true;
+                            let promptStr = window.prompt("keywords");
+                            if (promptStr === null) return false;
+                            resultUrl = resultUrl.replace("%s", promptStr);
+                        }
+                    }
+                    if (!targetUrl) {
+                        while (resultUrl.indexOf('%t') !== -1) {
+                            customInput = true;
+                            let promptStr = window.prompt("targetUrl");
+                            if (promptStr === null) return false;
+                            resultUrl = resultUrl.replace("%t", promptStr);
+                        }
+                        while (resultUrl.indexOf('%T') !== -1) {
+                            customInput = true;
+                            let promptStr = window.prompt("encode targetUrl");
+                            if (promptStr === null) return false;
+                            resultUrl = resultUrl.replace("%T", encodeURIComponent(promptStr));
+                        }
+                    }
+                    if (!targetBaseUrl) {
+                        while (resultUrl.indexOf('%b') !== -1) {
+                            customInput = true;
+                            let promptStr = window.prompt("targetBaseUrl");
+                            if (promptStr === null) return false;
+                            resultUrl = resultUrl.replace("%b", promptStr);
+                        }
+                        while (resultUrl.indexOf('%B') !== -1) {
+                            customInput = true;
+                            let promptStr = window.prompt("encode targetBaseUrl");
+                            if (promptStr === null) return false;
+                            resultUrl = resultUrl.replace("%B", encodeURIComponent(promptStr));
+                        }
+                    }
+                    if (!targetName) {
+                        while (resultUrl.indexOf('%n') !== -1) {
+                            customInput = true;
+                            let promptStr = window.prompt("targetName");
+                            if (promptStr === null) return false;
+                            resultUrl = resultUrl.replace("%n", promptStr);
+                        }
+                    }
                     return resultUrl.replace(/%t/g, targetUrl).replace(/%T/g, encodeURIComponent(targetUrl)).replace(/%b/g, targetBaseUrl).replace(/%B/g, encodeURIComponent(targetBaseUrl)).replace(/%n/g, targetName).replace(/%s/g, keywords);
                 };
                 let action = e => {
@@ -1993,16 +2041,13 @@
                                 return false;
                             };
                         }
-                    } else if (data.url.indexOf('%input{') !== -1) {
-                        if (!ele.onclick) {
-                            ele.onclick = e => {
-                                let url = getUrl();
-                                if (url === false) return false;
-                                ele.href = url;
-                            };
-                        }
                     } else {
-                        ele.href = getUrl();
+                        let url = getUrl();
+                        if (url === false) return false;
+                        ele.href = url;
+                        if (customInput) {
+                            ele.click();
+                        }
                     }
                 };
                 ele.href = data.url;
