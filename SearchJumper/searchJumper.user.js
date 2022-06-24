@@ -1173,7 +1173,7 @@
                             } else if (data.url.indexOf(location.host) != -1) {
                                 if (data.url.indexOf("site") != -1) {
                                     let siteMatch = data.url.match(/site(%3A|:)(.*?)[\s%]/);
-                                    if (siteMatch && new RegExp("site(%3A|:)" + siteMatch[2]).test(location.href)) {
+                                    if (siteMatch && location.href.indexOf(siteMatch[2]) != -1 && data.url.replace(siteMatch[0], "").indexOf(location.host) != -1) {
                                         currentSite = data;
                                     }
                                 }
@@ -1756,7 +1756,7 @@
                     } else if (data.url.indexOf(location.host) != -1) {
                         if (data.url.indexOf("site") != -1) {
                             let siteMatch = data.url.match(/site(%3A|:)(.*?)[\s%]/);
-                            if (siteMatch && new RegExp("site(%3A|:)" + siteMatch[2]).test(location.href)) {
+                            if (siteMatch && location.href.indexOf(siteMatch[2]) != -1 && data.url.replace(siteMatch[0], "").indexOf(location.host) != -1) {
                                 ele.dataset.current = true;
                             }
                         }
