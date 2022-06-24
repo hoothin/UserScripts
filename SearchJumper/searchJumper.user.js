@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.2.3
+// @version      1.6.3
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -1171,9 +1171,9 @@
                                     currentSite = data;
                                 }
                             } else if (data.url.indexOf(location.host) != -1) {
-                                if (data.url.indexOf("site:") != -1) {
-                                    let siteMatch = data.url.match(/site:(.*?)[\s%]/);
-                                    if (siteMatch && location.href.indexOf(siteMatch[1]) != -1) {
+                                if (data.url.indexOf("site") != -1) {
+                                    let siteMatch = data.url.match(/site(%3A|:)(.*?)[\s%]/);
+                                    if (siteMatch && new RegExp("site(%3A|:)" + siteMatch[2]).test(location.href)) {
                                         currentSite = data;
                                     }
                                 }
@@ -1754,9 +1754,9 @@
                             ele.dataset.current = true;
                         }
                     } else if (data.url.indexOf(location.host) != -1) {
-                        if (data.url.indexOf("site:") != -1) {
-                            let siteMatch = data.url.match(/site:(.*?)[\s%]/);
-                            if (siteMatch && location.href.indexOf(siteMatch[1]) != -1) {
+                        if (data.url.indexOf("site") != -1) {
+                            let siteMatch = data.url.match(/site(%3A|:)(.*?)[\s%]/);
+                            if (siteMatch && new RegExp("site(%3A|:)" + siteMatch[2]).test(location.href)) {
                                 ele.dataset.current = true;
                             }
                         }
