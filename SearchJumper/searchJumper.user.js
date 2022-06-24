@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.3.1
+// @version      1.6.3.2
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -1484,7 +1484,8 @@
                         if (!searchData.prefConfig.enableInInput) {
                             if (document.activeElement &&
                                 (document.activeElement.tagName == 'INPUT' ||
-                                 document.activeElement.tagName == 'TEXTAREA')) {
+                                 document.activeElement.tagName == 'TEXTAREA' ||
+                                 document.activeElement.contentEditable)) {
                                 return;
                             }
                         }
@@ -1717,6 +1718,7 @@
                         if (searchData.prefConfig.cacheSwitch) cachePool.push(img);
                     }
                 }
+                let customInput = false;
                 if (searchData.prefConfig.shortcut && data.shortcut) {
                     ele.title += ` (${data.shortcut.toUpperCase()})`;
                     let shortcutCover = document.createElement("div");
@@ -1734,14 +1736,16 @@
                         if (!searchData.prefConfig.enableInInput) {
                             if (document.activeElement &&
                                 (document.activeElement.tagName == 'INPUT' ||
-                                 document.activeElement.tagName == 'TEXTAREA')) {
+                                 document.activeElement.tagName == 'TEXTAREA' ||
+                                 document.activeElement.contentEditable)) {
                                 return;
                             }
                         }
                         var key = String.fromCharCode(e.keyCode).toLowerCase();
                         if (data.shortcut == key) {
-                            action();
-                            ele.click();
+                            if (action() !== false && !customInput) {
+                                ele.click();
+                            }
                         }
                     });
                 }
@@ -1829,7 +1833,6 @@
                     ele.setAttribute("target", "_blank");
                     ele.dataset.target = 1;
                 }
-                let customInput = false;
                 let getUrl = () => {
                     customInput = false;
                     let keywords = getKeywords();
@@ -2725,7 +2728,8 @@
                         if (!searchData.prefConfig.enableInInput) {
                             if (document.activeElement &&
                                 (document.activeElement.tagName == 'INPUT' ||
-                                 document.activeElement.tagName == 'TEXTAREA')) {
+                                 document.activeElement.tagName == 'TEXTAREA' ||
+                                 document.activeElement.contentEditable)) {
                                 return;
                             }
                         }
