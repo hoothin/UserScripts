@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.3
+// @version      1.6.3.1
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -1176,8 +1176,7 @@
                                     if (siteMatch && location.href.indexOf(siteMatch[2]) != -1 && data.url.replace(siteMatch[0], "").indexOf(location.host) != -1) {
                                         currentSite = data;
                                     }
-                                }
-                                if (!currentSite && data.url.replace(/^https?:\/\//, "").replace(location.host, "").replace(/\/?[\?#].*/, "") == location.pathname.replace(/\/$/, "")) {
+                                } else if (!currentSite && data.url.replace(/^https?:\/\//, "").replace(location.host, "").replace(/\/?[\?#].*/, "") == location.pathname.replace(/\/$/, "")) {
                                     let urlReg = data.url.match(/[^\/\?&]+(?=%[stb])/g);
                                     if (urlReg) {
                                         urlReg = urlReg.join('.*');
@@ -1759,8 +1758,7 @@
                             if (siteMatch && location.href.indexOf(siteMatch[2]) != -1 && data.url.replace(siteMatch[0], "").indexOf(location.host) != -1) {
                                 ele.dataset.current = true;
                             }
-                        }
-                        if (!currentSite && data.url.replace(/^https?:\/\//, "").replace(location.host, "").replace(/\/?[\?#].*/, "") == location.pathname.replace(/\/$/, "")) {
+                        } else if (!currentSite && data.url.replace(/^https?:\/\//, "").replace(location.host, "").replace(/\/?[\?#].*/, "") == location.pathname.replace(/\/$/, "")) {
                             if (data.url.indexOf("#p{") != -1) {
                                 ele.dataset.current = true;
                             } else {
@@ -1835,7 +1833,7 @@
                 let getUrl = () => {
                     customInput = false;
                     let keywords = getKeywords();
-                    if (keywords && keywords != cacheKeywords) storage.setItem("cacheKeywords", keywords);
+                    //if (keywords && keywords != cacheKeywords) storage.setItem("cacheKeywords", keywords);
                     if (!ele.dataset.url) {
                         ele.dataset.url = data.url.replace(/%e/g, document.charset).replace(/%c/g, (isMobile?"mobile":"pc")).replace(/%u/g, location.href).replace(/%U/g, encodeURIComponent(location.href)).replace(/%h/g, location.host);
                     }
@@ -2931,11 +2929,12 @@
                     resolve(data);
                 });
             });
-            cacheKeywords = await new Promise((resolve) => {
+            cacheKeywords = '';
+            /*await new Promise((resolve) => {
                 storage.getItem("cacheKeywords", data => {
                     resolve(data || '');
                 });
-            });
+            });*/
             lastSign = await new Promise((resolve) => {
                 storage.getItem("lastSign", data => {
                     resolve(data || 0);
