@@ -20845,6 +20845,12 @@ ImgOps | https://imgops.com/#b#`;
         function checkPreview(e){
             let selStr;
             try {
+                if (document.activeElement &&
+                    (document.activeElement.tagName == 'INPUT' ||
+                     document.activeElement.tagName == 'TEXTAREA' ||
+                     document.activeElement.contentEditable == 'true')) {
+                    return false;
+                }
                 selStr=document.getSelection().toString();
             }catch(e){}
             if (selStr) return false;
