@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.26.6
+// @version      1.9.26.7
 // @description  Perpetual pages - Most powerful Auto Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -1171,7 +1171,8 @@
                     }
                 }
             }else{
-                return url.replace(/.*[&\/\?](p=|page[=\/_-]?)(\d+).*/i, "$2").replace(/.*[_-](\d+)\..*/i, "$1");
+                let pageNum=url.replace(/.*[&\/\?](p=|page[=\/_-]?)(\d+).*/i, "$2");
+                return pageNum==url?curPage:pageNum;
             }
             return curPage;
         }
@@ -3329,6 +3330,7 @@
                         if(pageEle.length > 1){
                             targetElement = targetElement.parentNode;
                         }
+                        if(parseInt(iframe.style.height)==targetElement.scrollHeight) return;
                         iframe.style.height=targetElement.scrollHeight+"px";
                         frameDoc.documentElement.scrollTop = 0;
                         frameDoc.documentElement.scrollLeft = 0;
@@ -3351,8 +3353,13 @@
 
     function forceIframe(url, callback){
         url=url.replace(/#[^#]*/,"");
-        let curIframe = document.createElement('iframe'),iframeDoc;
-        let setPosition = ()=>{
+        let curIframe = document.createElement('iframe'),iframeDoc,isloaded=false,inAction=true;
+        let loadedHandler = ()=>{
+            inAction=false;
+            if(isloaded)return;
+            isloaded=true;
+            ruleParser.insertPage(iframeDoc, [], url, null, true);
+            callback(curIframe, true);
             let getIframe = () => {
                 return curIframe;
             };
@@ -3386,15 +3393,13 @@
                 callback(false, false);
                 return;
             }
-            ruleParser.insertPage(iframeDoc, [], url, null, true);
-            callback(curIframe, true);
             let css=ruleParser.curSiteRule.css;
             if(css){
                 let styleEle=iframeDoc.createElement("style");
                 styleEle.innerHTML=css;
                 iframeDoc.head.appendChild(styleEle);
             }
-            setPosition();
+            loadedHandler();
             let code=ruleParser.curSiteRule.init;
             if(code){
                 try{
@@ -3404,7 +3409,7 @@
                 }
             }
         });
-        let inAction=false,checkTimes=0;
+        let checkTimes=0;
         let forceRefresh=e=>{
             if(inAction || !iframeDoc)return;
             inAction=true;
@@ -3418,6 +3423,12 @@
                     ruleParser.getNextLink(iframeDoc);
                     if(ruleParser.nextLinkHref){
                         foundNext();
+                    }else if(checkTimes>=5){
+                        let pageElement = ruleParser.getPageElement(iframeDoc,iframeDoc.defaultView);
+                        if (!pageElement){
+                            inAction=true;
+                            curIframe.contentWindow.location.reload();
+                        }
                     }else if(checkTimes>=10){
                         foundNext();
                     }
