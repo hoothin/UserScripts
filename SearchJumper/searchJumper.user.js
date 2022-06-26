@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.3.3.2
+// @version      1.6.3.3.3
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -547,7 +547,9 @@
                     settings: '配置脚本',
                     batchOpen: '确定要批量打开吗？',
                     postOver: '发送成功：',
-                    postError: '发送失败：'
+                    postError: '发送失败：',
+                    keywords: '请输入搜索词',
+                    targetUrl: '请输入搜索URL'
                 };
                 break;
             case "zh-TW":
@@ -558,7 +560,9 @@
                     settings: '配置脚本',
                     batchOpen: '確定要批量打開嗎？',
                     postOver: '發送成功：',
-                    postError: '發送失敗：'
+                    postError: '發送失敗：',
+                    keywords: '請輸入搜索詞',
+                    targetUrl: '請輸入搜索URL'
                 };
                 break;
             default:
@@ -568,7 +572,9 @@
                     settings: 'Settings',
                     batchOpen: 'Batch open urls?',
                     postOver: 'Post over: ',
-                    postError: 'Post fail: '
+                    postError: 'Post fail: ',
+                    keywords: 'Input keywords',
+                    targetUrl: 'Input URL'
                 };
                 break;
         }
@@ -888,7 +894,7 @@
                  .search-jumper-isTargetAudio>.search-jumper-type.search-jumper-targetAudio,
                  .search-jumper-isTargetVideo>.search-jumper-type.search-jumper-targetVideo,
                  .search-jumper-isTargetLink>.search-jumper-type.search-jumper-targetLink,
-                 .search-jumper-isTargetPage>.search-jumper-type.search-jumper-targetPage {
+                 .search-jumper-isTargetPage>.search-jumper-type {
                      display: inline-flex;
                  }
                  .search-jumper-type {
@@ -1841,11 +1847,11 @@
                         ele.dataset.url = data.url.replace(/%e/g, document.charset).replace(/%c/g, (isMobile?"mobile":"pc")).replace(/%u/g, location.href).replace(/%U/g, encodeURIComponent(location.href)).replace(/%h/g, location.host);
                     }
                     let selStr = getSelectStr();
-                    let targetUrl = location.href;
+                    let targetUrl = '';
                     let targetName = selStr || document.title;
                     let imgBase64 = '', resultUrl = ele.dataset.url;
                     if (targetElement) {
-                        targetUrl = targetElement.src || targetElement.href || selStr || location.href;
+                        targetUrl = targetElement.src || targetElement.href || '';
                         targetName = targetElement.title || targetElement.alt || document.title;
                         if (targetElement.tagName == 'IMG' && ele.dataset.url.indexOf('%i') != -1) {
                             if (/^data/.test(targetElement.src)) {
@@ -1869,49 +1875,39 @@
                         if (promptStr === null) return false;
                         resultUrl = resultUrl.replace(inputMatch[0], promptStr);
                     }
-                    let targetBaseUrl = targetUrl.replace(/https?:\/\//i, "");
-                    if (!keywords) {
-                        while (resultUrl.indexOf('%s') !== -1) {
-                            customInput = true;
-                            let promptStr = window.prompt("keywords");
-                            if (promptStr === null) return false;
-                            resultUrl = resultUrl.replace("%s", promptStr);
-                        }
+                    let targetBaseUrl = targetUrl.replace(/^https?:\/\//i, "");
+                    if (!keywords && resultUrl.indexOf('%s') !== -1) {
+                        customInput = true;
+                        let promptStr = window.prompt(i18n("keywords"));
+                        if (promptStr === null) return false;
+                        resultUrl = resultUrl.replace(/%s/g, promptStr);
                     }
-                    if (!targetUrl) {
-                        while (resultUrl.indexOf('%t') !== -1) {
-                            customInput = true;
-                            let promptStr = window.prompt("targetUrl");
+                    if (targetUrl === '') {
+                        let promptStr = false;
+                        let getUrl = () => {
+                            if (promptStr === false) promptStr = window.prompt(i18n("targetUrl"), "https://www.google.com/favicon.ico");
                             if (promptStr === null) return false;
-                            resultUrl = resultUrl.replace("%t", promptStr);
+                            return true;
+                        };
+                        if (resultUrl.indexOf('%t') !== -1) {
+                            customInput = true;
+                            if (getUrl() === false) return false;
+                            resultUrl = resultUrl.replace(/%t/g, promptStr);
                         }
-                        while (resultUrl.indexOf('%T') !== -1) {
+                        if (resultUrl.indexOf('%T') !== -1) {
                             customInput = true;
-                            let promptStr = window.prompt("encode targetUrl");
-                            if (promptStr === null) return false;
-                            resultUrl = resultUrl.replace("%T", encodeURIComponent(promptStr));
+                            if (getUrl() === false) return false;
+                            resultUrl = resultUrl.replace(/%T/g, encodeURIComponent(promptStr));
                         }
-                    }
-                    if (!targetBaseUrl) {
-                        while (resultUrl.indexOf('%b') !== -1) {
+                        if (resultUrl.indexOf('%b') !== -1) {
                             customInput = true;
-                            let promptStr = window.prompt("targetBaseUrl");
-                            if (promptStr === null) return false;
-                            resultUrl = resultUrl.replace("%b", promptStr);
+                            if (getUrl() === false) return false;
+                            resultUrl = resultUrl.replace(/%b/g, promptStr.replace(/^https?:\/\//i, ""));
                         }
-                        while (resultUrl.indexOf('%B') !== -1) {
+                        if (resultUrl.indexOf('%B') !== -1) {
                             customInput = true;
-                            let promptStr = window.prompt("encode targetBaseUrl");
-                            if (promptStr === null) return false;
-                            resultUrl = resultUrl.replace("%B", encodeURIComponent(promptStr));
-                        }
-                    }
-                    if (!targetName) {
-                        while (resultUrl.indexOf('%n') !== -1) {
-                            customInput = true;
-                            let promptStr = window.prompt("targetName");
-                            if (promptStr === null) return false;
-                            resultUrl = resultUrl.replace("%n", promptStr);
+                            if (getUrl() === false) return false;
+                            resultUrl = resultUrl.replace(/%B/g, encodeURIComponent(promptStr.replace(/^https?:\/\//i, "")));
                         }
                     }
                     return resultUrl.replace(/%t/g, targetUrl).replace(/%T/g, encodeURIComponent(targetUrl)).replace(/%b/g, targetBaseUrl).replace(/%B/g, encodeURIComponent(targetBaseUrl)).replace(/%n/g, targetName).replace(/%s/g, keywords);
