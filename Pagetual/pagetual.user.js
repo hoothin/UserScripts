@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.26.8
+// @version      1.9.26.9
 // @description  Perpetual pages - Most powerful Auto Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -637,6 +637,23 @@
             }
         }
 
+        ruleMatch(r) {
+            let pageElement,nextLink,insert;
+            if(r.nextLink && r.nextLink!="0" && r.nextLink!=0){
+                nextLink=r.type==0?getElementByXpath(r.nextLink):document.querySelector(r.nextLink);
+                if(!nextLink)return false;
+            }
+            if(r.pageElement){
+                pageElement=r.type==0?getElementByXpath(r.pageElement):document.querySelector(r.pageElement);
+                if(!pageElement)return false;
+            }
+            if(r.insert){
+                insert=r.type==0?getElementByXpath(r.insert):document.querySelector(r.insert);
+                if(!insert)return false;
+            }
+            return true;
+        }
+
         getRule(callback) {
             if(noRuleTest){
                 this.curSiteRule={};
@@ -650,30 +667,13 @@
             }
             var self=this;
 
-            function setRule(r){
+            function setRule(r) {
                 self.curSiteRule=r;
                 debug(r);
                 callback();
             }
 
-            function ruleMatch(r){
-                let pageElement,nextLink,insert;
-                if(r.nextLink && r.nextLink!="0" && r.nextLink!=0){
-                    nextLink=r.type==0?getElementByXpath(r.nextLink):document.querySelector(r.nextLink);
-                    if(!nextLink)return false;
-                }
-                if(r.pageElement){
-                    pageElement=r.type==0?getElementByXpath(r.pageElement):document.querySelector(r.pageElement);
-                    if(!pageElement)return false;
-                }
-                if(r.insert){
-                    insert=r.type==0?getElementByXpath(r.insert):document.querySelector(r.insert);
-                    if(!insert)return false;
-                }
-                return true;
-            }
-
-            function checkRule(r){
+            function checkRule(r) {
                 let urlReg=new RegExp(r.url, "i");
                 if(urlReg.test(location.href)){
                     if(r.include){
@@ -697,7 +697,7 @@
                         }
                         let checkReady=()=>{
                             setTimeout(()=>{
-                                if(!ruleMatch(r) || (checkEval && !checkEval(document))){
+                                if(!self.ruleMatch(r) || (checkEval && !checkEval(document))){
                                     checkReady();
                                 }else{
                                     setRule(r);
@@ -711,7 +711,7 @@
                         setRule(r);
                         return true;
                     }
-                    if(!ruleMatch(r)){
+                    if(!self.ruleMatch(r)){
                         return false;
                     }
                     setRule(r);
@@ -2625,6 +2625,8 @@
         setTimeout(()=>{
             if(location.href==configPage){
                 location.reload();
+            }else if(!ruleParser.ruleMatch(ruleParser.curSiteRule)){
+                initPage();
             }
         },1);
     });
@@ -3371,7 +3373,7 @@
             }else{
                 let pageElement = ruleParser.getPageElement(iframeDoc,iframeDoc.defaultView);
                 let getPageEle = () => {
-                    if (!pageElement) {
+                    if (!pageElement || pageElement.length===0) {
                         pageElement = ruleParser.getPageElement(iframeDoc,iframeDoc.defaultView);
                     }
                     return pageElement;
