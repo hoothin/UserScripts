@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5
+// @version      1.6.5.1
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -720,7 +720,7 @@
                      margin-top: -${this.scale * 25}px;
                      opacity: 0.3;
                      vertical-align: top;
-                     transition:margin-top 1s ease, margin-left 1s, opacity 1s, transform 1s;
+                     ${searchData.prefConfig.noAni ? "" : "transition:margin-top 1s ease, margin-left 1s, opacity 1s, transform 1s;"}
                      user-select: none;
                      box-sizing:content-box;
                      text-align: center;
@@ -756,12 +756,12 @@
                  .search-jumper-searchBar:hover {
                      margin-top: 0;
                      opacity: 1;
-                     transition:margin-top 0.25s ease, margin-left 0.25s, opacity 0.25s, transform 0.25s;
+                     ${searchData.prefConfig.noAni ? "" : "transition:margin-top 0.25s ease, margin-left 0.25s, opacity 0.25s, transform 0.25s;"}
                  }
                  .search-jumper-searchBar.initShow {
                      margin-top: 0;
                      opacity: 0.8;
-                     transition:margin-top 0.25s ease, margin-left 0.25s, opacity 0.25s, transform 0.25s;
+                     ${searchData.prefConfig.noAni ? "" : "transition:margin-top 0.25s ease, margin-left 0.25s, opacity 0.25s, transform 0.25s;"}
                  }
                  .search-jumper-left,
                  .search-jumper-left .search-jumper-type,
@@ -825,7 +825,7 @@
                      padding: 1px;
                      margin: 3px;
                      cursor: pointer;
-                     transition:margin-left 0.25s ease, width 0.25s, height 0.25s, transform 0.25s;
+                     ${searchData.prefConfig.noAni ? "" : "transition:margin-left 0.25s ease, width 0.25s, height 0.25s, transform 0.25s;"}
                      width: ${32 * this.scale}px;
                      height: ${32 * this.scale}px;
                      overflow: hidden;
@@ -902,7 +902,7 @@
                      background: #d0d0d0;
                      border-radius: ${20 * this.scale}px!important;
                      overflow: hidden;
-                     transition:width ${searchData.prefConfig.typeOpenTime}ms ease, height ${searchData.prefConfig.typeOpenTime}ms;
+                     ${searchData.prefConfig.noAni ? "" : `transition:width ${searchData.prefConfig.typeOpenTime}ms ease, height ${searchData.prefConfig.typeOpenTime}ms;`}
                  }
                  .search-jumper-type>.sitelist {
                      position: fixed;
@@ -985,7 +985,7 @@
                      padding: 5px;
                      box-shadow: 0px 0px 10px 0px #000;
                      font-weight: bold;
-                     transition: all 0.2s ease;
+                     ${searchData.prefConfig.noAni ? "" : "transition: all 0.2s ease;"}
                      color: black;
                      white-space: nowrap;
                      line-height: 35px;
@@ -2962,6 +2962,9 @@
             }
             if (searchData.prefConfig.noIcons === undefined) {
                 searchData.prefConfig.noIcons = false;
+            }
+            if (searchData.prefConfig.noAni === undefined) {
+                searchData.prefConfig.noAni = false;
             }
         }
 
