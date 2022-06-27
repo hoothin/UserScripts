@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.3
+// @version      1.6.5.3.1
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -943,6 +943,7 @@
                  .search-jumper-type>.sitelist a>p {
                      display: inline-block;
                      font-size: 15px;
+                     font-family: Arial,sans-serif;
                      line-height: 25px;
                      margin: 5px auto;
                      color: #6b6e74;
@@ -955,7 +956,10 @@
                      margin: 0;
                      text-align: center;
                      font-size: 16px;
+                     font-family: Arial,sans-serif;
                      font-weight: bold;
+                     background: #f6f6f6;
+                     border-radius: 10px 10px 0 0;
                  }
                  .search-jumper-searchBar.disable-pointer>.search-jumper-type {
                      pointer-events: none;
@@ -1481,7 +1485,7 @@
                             } else {
                                 _GM_openInTab(siteEle.href);
                             }
-                            siteEle.setAttribute("target", siteEle.dataset.target==1?"_blank":"");
+                            siteEle.setAttribute("target", siteEle.dataset.target == 1 ? "_blank" : "");
                         });
                         self.batchOpening = false;
                     }
@@ -2080,7 +2084,9 @@
                         } else ele.href = url;
                         if (customInput) {
                             if (self.batchOpening !== true) {
+                                ele.setAttribute("target", "_blank");
                                 ele.click();
+                                ele.setAttribute("target", ele.dataset.target == 1 ? "_blank" : "");
                             }
                         } else {
                             ele.onclick = null;
