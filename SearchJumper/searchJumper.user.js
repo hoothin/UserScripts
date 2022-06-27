@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.2
+// @version      1.6.5.3
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -861,12 +861,12 @@
                      animation-iteration-count: infinite;
                      animation-delay: 0.1s;
                      display: block;
-                     opacity: 0.2;
+                     opacity: 0.1;
                  }
                  @keyframes changeOpacity {
-                     0%   {opacity: 0.2;}
-                     50%  {opacity: 0.7;}
-                     100% {opacity: 0.2;}
+                     0%   {opacity: 0.1;}
+                     50%  {opacity: 0.6;}
+                     100% {opacity: 0.1;}
                  }
                  .search-jumper-logoBtnSvg {
                      width: ${32 * this.scale}px;
@@ -1467,6 +1467,7 @@
                 }
                 let batchOpen = () => {
                     if (!ele.classList.contains("search-jumper-hide") || window.confirm(i18n('batchOpen'))) {
+                        self.batchOpening = true;
                         siteEles.forEach(siteEle => {
                             if (siteEle.dataset.nobatch || siteEle.dataset.current) return;
                             let isJs = /^javascript:/.test(siteEle.href);
@@ -1482,6 +1483,7 @@
                             }
                             siteEle.setAttribute("target", siteEle.dataset.target==1?"_blank":"");
                         });
+                        self.batchOpening = false;
                     }
                 };
                 if (searchData.prefConfig.shortcut && data.shortcut) {
@@ -1560,6 +1562,7 @@
 
                 typeBtn.addEventListener('click', e => {
                     if (e.which === 1 && e.altKey && e.shiftKey) {
+                        self.batchOpening = true;
                         let urls=[];
                         for (let i = 0;i < siteEles.length;i++) {
                             let siteEle = siteEles[i];
@@ -1581,6 +1584,7 @@
                             _unsafeWindow.open(urls[i], "_blank", `width=${_width-10}, height=${_height}, location=0, resizable=1, menubar=0, scrollbars=0, left=${left}, top=${top}`);
                         }
                     } else if (e.which === 1 && e.altKey) {
+                        self.batchOpening = true;
                         let html = '<title>SearchJumper Multi</title>';
                         for (let i = 0;i < siteEles.length;i++) {
                             let siteEle = siteEles[i];
@@ -1600,6 +1604,7 @@
                         c.document.write(html);
                         c.document.close();
                     } else if (e.which === 1 && e.shiftKey) {
+                        self.batchOpening = true;
                         for (let i = 0;i < siteEles.length;i++) {
                             let siteEle = siteEles[i];
                             if (!siteEle.dataset.nobatch && !/^javascript:/.test(siteEle.href) && !siteEle.onclick) {
@@ -1607,10 +1612,12 @@
                                 let mouseDownEvent = new PointerEvent("mousedown");
                                 siteEle.dispatchEvent(mouseDownEvent);
                                 window.open(siteEle.href, '_blank');
+                                self.batchOpening = false;
                                 return;
                             }
                         }
                     }
+                    self.batchOpening = false;
                 }, false);
 
                 let siteList;
@@ -1731,6 +1738,7 @@
                     }
                 }
                 let customInput = false;
+                self.stopInput = false;
                 if (searchData.prefConfig.shortcut && data.shortcut) {
                     ele.title += ` (${data.shortcut.toUpperCase()})`;
                     let shortcutCover = document.createElement("div");
@@ -1872,6 +1880,7 @@
                         let inputMatch = resultUrl.match(/%input{(.*?)}/);
                         if (!inputMatch) return false;
                         customInput = true;
+                        if (self.stopInput) return false;
                         let promptStr = inputMatch[1].split(",");
                         if (promptStr.length === 2) {
                             promptStr = window.prompt(promptStr[0], promptStr[1]);
@@ -1884,35 +1893,46 @@
                     let targetBaseUrl = targetUrl.replace(/^https?:\/\//i, "");
                     if (!keywords && resultUrl.indexOf('%s') !== -1) {
                         customInput = true;
+                        if (self.stopInput) return false;
                         let promptStr = window.prompt(i18n("keywords"));
                         if (promptStr === null) return false;
+                        localKeywords = promptStr;
+                        setTimeout(() => {localKeywords = ''}, 1);
                         resultUrl = resultUrl.replace(/%s/g, promptStr);
                     }
                     if (targetUrl === '') {
                         let promptStr = false;
-                        let getUrl = () => {
-                            if (promptStr === false) promptStr = window.prompt(i18n("targetUrl"), "https://www.google.com/favicon.ico");
+                        let getTargetUrl = () => {
+                            if (self.stopInput) return false;
+                            if (promptStr === false) {
+                                promptStr = window.prompt(i18n("targetUrl"), "https://www.google.com/favicon.ico");
+                                if (promptStr) {
+                                    let preTargetElement = targetElement;
+                                    targetElement = {src: promptStr};
+                                    setTimeout(() => {targetElement = preTargetElement}, 1);
+                                }
+                            }
                             if (promptStr === null) return false;
                             return true;
                         };
                         if (resultUrl.indexOf('%t') !== -1) {
                             customInput = true;
-                            if (getUrl() === false) return false;
+                            if (getTargetUrl() === false) return false;
                             resultUrl = resultUrl.replace(/%t/g, promptStr);
                         }
                         if (resultUrl.indexOf('%T') !== -1) {
                             customInput = true;
-                            if (getUrl() === false) return false;
+                            if (getTargetUrl() === false) return false;
                             resultUrl = resultUrl.replace(/%T/g, encodeURIComponent(promptStr));
                         }
                         if (resultUrl.indexOf('%b') !== -1) {
                             customInput = true;
-                            if (getUrl() === false) return false;
+                            if (getTargetUrl() === false) return false;
                             resultUrl = resultUrl.replace(/%b/g, promptStr.replace(/^https?:\/\//i, ""));
                         }
                         if (resultUrl.indexOf('%B') !== -1) {
                             customInput = true;
-                            if (getUrl() === false) return false;
+                            if (getTargetUrl() === false) return false;
                             resultUrl = resultUrl.replace(/%B/g, encodeURIComponent(promptStr.replace(/^https?:\/\//i, "")));
                         }
                     }
@@ -2046,10 +2066,24 @@
                         }
                     } else {
                         let url = getUrl();
-                        if (url === false) return false;
-                        ele.href = url;
+                        if (url === false) {
+                            if (!self.stopInput) {
+                                self.stopInput = true;
+                                setTimeout(() => {
+                                    self.stopInput = false;
+                                }, 1);
+                            }
+                            ele.onclick = e => {
+                                ele.onclick = null;
+                                return false;
+                            };
+                        } else ele.href = url;
                         if (customInput) {
-                            ele.click();
+                            if (self.batchOpening !== true) {
+                                ele.click();
+                            }
+                        } else {
+                            ele.onclick = null;
                         }
                     }
                 };
@@ -2491,8 +2525,8 @@
             if (selStr) {
                 return encodeURIComponent(selStr);
             }
-            if (!currentSite) return '';
             if (localKeywords) return localKeywords;
+            if (!currentSite) return '';
             if (localKeywords === '' && cacheKeywords) return cacheKeywords;
 
             let keywordsMatch, keywords = '';
