@@ -598,16 +598,17 @@
   },
   {
     "name":"NGA",
-    "url":"^https?://(.*\\.nga\\.cn|nga\\.178\\.com)/read\\.php",
+    "url":"^https?://(.*\\.nga\\.cn|nga\\.178\\.com|ngabbs\\.com)/read\\.php",
     "nextLink":"a[title='下一页']",
     "action":2,
     "pageElement":"div#m_posts",
     "init":"doc&&doc.addEventListener('mouseover',e=>{e.preventDefault();e.stopPropagation()},true)"
   },
   {
-    "name":"NGA列表页",
-    "url":"^https?://(.*\\.nga\\.cn|nga\\.178\\.com)/thread\\.php",
-    "action":1
+    "name": "NGA列表页",
+    "url": "^https?://(.*\\.nga\\.cn|nga\\.178\\.com|ngabbs\\.com)/thread\\.php",
+    "action": 1,
+    "pageElement": "#topicrows"
   },
   {
     "name":"淮安新闻网",
