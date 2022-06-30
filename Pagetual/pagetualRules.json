@@ -520,6 +520,13 @@
     "include":"div.content"
   },
   {
+    "name": "版主小说",
+    "url": "^http://www\\.tz659\\.com/\\d",
+    "pageElement": "div.page-content",
+    "nextLinkByJs": "let next=doc.querySelector('a.curr+a');if(next)return next.href.replace(/^javascript:.*\\('\\d+','\\d+','(\\d+)','(\\d+)'\\);/,'$1_$2.html');",
+    "action": 2
+  },
+  {
     "name":"纵横中文网手机版",
     "url":"^https://m\\.zongheng\\.com/h5/chapter",
     "type":0,
