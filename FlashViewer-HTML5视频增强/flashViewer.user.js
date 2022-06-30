@@ -2,9 +2,9 @@
 // @name           flashViewer
 // @author         NLF & Hoothin
 // @description    围观Flash，增加 HTML5 视频速度与亮度调整
-// @version        1.2.1.6
+// @version        1.2.1.7
 // @created        2013-12-27
-// @lastUpdated    2022-6-16
+// @lastUpdated    2022-6-30
 // @grant          none
 // @run-at         document-start
 // @namespace      http://userscripts.org/users/NLF
@@ -1525,7 +1525,7 @@
             maximized: false,
             pinned: false,
             isFullscreen: false,
-            minWidth: 300,
+            minWidth: 325,
             minHeight: 150,
             
             init: function () {
@@ -1585,28 +1585,40 @@
                                 <fvspan class="fv-p-v-control-size-info"></fvspan>
                             </fvspan>
                             <fvspan class="fv-p-v-control-title-bar-right-side">
-                                <select class="fv-p-v-control-command fv-p-v-control-bright" title="亮度">
-                                    <option value="1">原亮度</option>
-                                    <option value="1.5">1.5倍亮度</option>
-                                    <option value="2">二倍亮度</option>
-                                    <option value="3">三倍亮度</option>
-                                    <option value="5">五倍亮度</option>
-                                    <option value="0.5">一半亮度</option>
-                                    <option value="0.2">0.2亮度</option>
-                                    <option value="0.1">0.1亮度</option>
-                                    <option value="input">自定义输入</option>
-                                    <option disabled="disabled" style='display: none' value=''>自定义输入</option>
-                                </select>
-                                <select class="fv-p-v-control-command fv-p-v-control-rate" title="速度">
-                                    <option value="1">原速</option>
-                                    <option value="2">二倍速</option>
-                                    <option value="3">三倍速</option>
-                                    <option value="5">五倍速</option>
-                                    <option value="0.5">半速</option>
-                                    <option value="0.1">0.1速</option>
-                                    <option value="input">自定义输入</option>
-                                    <option disabled="disabled" style='display: none' value=''>自定义输入</option>
-                                </select>
+                                <fvspan class="fv-p-v-control-command fv-p-v-control-word fv-p-v-control-open-bright" title="亮度">亮
+                                    <select class="fv-p-v-control-command fv-p-v-control-bright">
+                                        <option value="1">原亮度</option>
+                                        <option value="1.5">1.5倍亮度</option>
+                                        <option value="2">二倍亮度</option>
+                                        <option value="3">三倍亮度</option>
+                                        <option value="5">五倍亮度</option>
+                                        <option value="0.5">一半亮度</option>
+                                        <option value="0.2">0.2亮度</option>
+                                        <option value="0.1">0.1亮度</option>
+                                        <option value="input">自定义输入</option>
+                                        <option disabled="disabled" style='display: none' value=''>自定义输入</option>
+                                    </select>
+                                </fvspan>
+                                <fvspan class="fv-p-v-control-command fv-p-v-control-word fv-p-v-control-open-rate" title="速度">速
+                                    <select class="fv-p-v-control-command fv-p-v-control-rate">
+                                        <option value="1">原速</option>
+                                        <option value="2">二倍速</option>
+                                        <option value="3">三倍速</option>
+                                        <option value="5">五倍速</option>
+                                        <option value="0.5">半速</option>
+                                        <option value="0.1">0.1速</option>
+                                        <option value="input">自定义输入</option>
+                                        <option disabled="disabled" style='display: none' value=''>自定义输入</option>
+                                    </select>
+                                </fvspan>
+                                <fvspan class="fv-p-v-control-command fv-p-v-control-word fv-p-v-control-open-ratio" title="长宽比">比
+                                    <select class="fv-p-v-control-command fv-p-v-control-ratio">
+                                        <option value="">原始比例</option>
+                                        <option value="1.335,1">16 / 9</option>
+                                        <option value=".75,1">4 / 3</option>
+                                        <option value="2,2">两倍大小</option>
+                                    </select>
+                                </fvspan>
                                 <fvspan class="fv-p-v-control-command fv-p-v-control-light" title="关灯"></fvspan>
                                 <fvspan class="fv-p-v-control-command fv-p-v-control-pin" title="固定"></fvspan>
                                 <fvspan class="fv-p-v-control-command fv-p-v-control-maximize" title="最大化"></fvspan>
@@ -1658,6 +1670,7 @@
                     }
                     video.playbackRate = rate;
                 }, true);
+
                 var cCommandBright = controlLayer.querySelector('.fv-p-v-control-bright');
                 this.cCommandBright = cCommandBright;
                 let bright = video.style.filter.match(/.*brightness\((.*?)\).*/);
@@ -1669,6 +1682,15 @@
                         e.target.value = "";
                     }
                     video.style.filter = `brightness(${bright})`;
+                }, true);
+
+                var cCommandRatio = controlLayer.querySelector('.fv-p-v-control-ratio');
+                this.cCommandRatio = cCommandRatio;
+                let ratio = video.style.transform.match(/.*scale\((.*?)\).*/);
+                if (ratio) cCommandRatio.value = ratio[1];
+                cCommandRatio.addEventListener('change', function (e) {
+                    let ratio = e.target.value;
+                    video.style.transform = ratio ? `scale(${ratio})` : "";
                 }, true);
 
                 // 监听标题栏的命令点击
@@ -1754,6 +1776,7 @@
                     function reize(allowSize, allowOffset) {
                         
                         function move(e) {
+                            video.style.transform = "";
                             var mCoorA = {
                                 pageX: e.pageX,
                                 pageY: e.pageY,
@@ -2533,7 +2556,7 @@
                 PopVideo.topVideo = this;
                 
                 this.fixedOverlayer.style.zIndex = PopVideo.maxIndex ++;
-                this.controlLayer.style.zIndex = PopVideo.maxIndex ++;
+                this.controlLayer.style.zIndex = PopVideo.maxIndex;
                 
                 this.video.style.setProperty('z-index', PopVideo.maxIndex ++, 'important');
             },
@@ -2562,8 +2585,10 @@
                 var vCRect = getContentClientRect(video);
                 
                 // 使用top left 修正到和之前的位置一样
-                vS.setProperty('top', parseFloat(vS.top) + cLCRect.top - vCRect.top + 'px', 'important');
-                vS.setProperty('left', parseFloat(vS.left) + cLCRect.left - vCRect.left + 'px', 'important');
+                if (!video.style.transform) {
+                    vS.setProperty('top', parseFloat(vS.top) + cLCRect.top - vCRect.top + 'px', 'important');
+                    vS.setProperty('left', parseFloat(vS.left) + cLCRect.left - vCRect.left + 'px', 'important');
+                }
                 
             },
             smoothScrollIntoView: function (elem) {
@@ -2807,6 +2832,19 @@
                         
                         .fv-p-v-control-command:hover {
                             opacity: 1;
+                        }
+                        .fv-p-v-control-word {
+                            color: #bababa;
+                            font-size: 14px;
+                            line-height: 18px;
+                            font-family: system-ui;
+                            width: auto;
+                        }
+                        .fv-p-v-control-word>.fv-p-v-control-command {
+                            display: none;
+                        }
+                        .fv-p-v-control-word:hover>.fv-p-v-control-command {
+                            display: unset;
                         }
 
                         .fv-p-v-control-light {
