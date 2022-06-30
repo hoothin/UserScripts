@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.5.1
+// @version      1.6.5.5.2
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -1316,7 +1316,7 @@
                     a.setAttribute("target", siteEle.target);
                     a.href = url;
                     a.addEventListener('mousedown', e => {
-                        siteEle.dispatchEvent(new PointerEvent("mousedown"));
+                        siteEle.dispatchEvent(new PointerEvent("mousedown", {altKey: e.altKey, ctrlKey: e.ctrlKey, shiftKey: e.shiftKey, metaKey: e.metaKey}));
                         a.href = siteEle.href;
                         if (!a.onclick && siteEle.onclick) {
                             a.onclick = siteEle.onclick;
@@ -2113,27 +2113,45 @@
                             };
                         }
                     } else {
+                        let alt = e && e.altKey;
                         let url = getUrl();
                         if (url === false) {
+                            //wait for all input stoped
                             if (!self.stopInput) {
                                 self.stopInput = true;
                                 setTimeout(() => {
                                     self.stopInput = false;
                                 }, 1);
                             }
+                            //disable click
                             ele.onclick = e => {
                                 ele.onclick = null;
                                 return false;
                             };
                         } else ele.href = url;
+                        let checkAlt = () => {
+                            if (alt) {
+                                ele.onclick = e => {
+                                    ele.onclick = null;
+                                    _unsafeWindow.open(url, "_blank", "width=800, height=1000, location=0, resizable=1, menubar=0, scrollbars=0");
+                                    return false;
+                                };
+                                return true;
+                            }
+                            return false;
+                        };
                         if (customInput) {
                             if (self.batchOpening !== true) {
+                                //lose click, click one more time
+                                checkAlt();
                                 ele.setAttribute("target", "_blank");
                                 ele.click();
                                 ele.setAttribute("target", ele.dataset.target == 1 ? "_blank" : "");
                             }
                         } else {
-                            ele.onclick = null;
+                            if (!checkAlt()) {
+                                ele.onclick = null;
+                            }
                         }
                     }
                 };
