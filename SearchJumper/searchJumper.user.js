@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.5.3
+// @version      1.6.5.5.6
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -372,6 +372,7 @@
                 icon: "https://www.startpage.com/sp/cdn/favicons/favicon-16x16--default.png"
             }, {
                 name: "谷歌高级搜索",
+                description: "不需要参数可清空",
                 url: "https://www.google.com/search?q=%s%input{请输入限制文件类型, filetype:doc}%input{请输入结果限制语言,&lr=lang_zh-CN|lang_zh-TW}%input{请输入限制日期,&as_qdr=w1}&ie=utf-8&oe=utf-8"
             } ]
         },
@@ -584,7 +585,17 @@
                     postOver: '发送成功：',
                     postError: '发送失败：',
                     keywords: '请输入搜索词',
-                    targetUrl: '请输入搜索URL'
+                    targetUrl: '请输入搜索URL',
+                    siteName: '站名',
+                    siteDesc: '描述',
+                    siteUrl: '地址',
+                    siteIcon: '图标',
+                    siteTest: '测试',
+                    siteCancel: '取消',
+                    siteAdd: '添加',
+                    siteType: '分类',
+                    siteExist: '已存在相同规则，终止添加',
+                    siteAddOver: '站点添加成功'
                 };
                 break;
             case "zh-TW":
@@ -597,19 +608,39 @@
                     postOver: '發送成功：',
                     postError: '發送失敗：',
                     keywords: '請輸入搜索詞',
-                    targetUrl: '請輸入搜索URL'
+                    targetUrl: '請輸入搜索URL',
+                    siteName: '站名',
+                    siteDesc: '描述',
+                    siteUrl: '地址',
+                    siteIcon: '圖標',
+                    siteTest: '測試',
+                    siteCancel: '取消',
+                    siteAdd: '添加',
+                    siteType: '分類',
+                    siteExist: '已存在相同規則，終止添加',
+                    siteAddOver: '站點添加成功'
                 };
                 break;
             default:
                 config = {
-                    scriptName: "Search Jumper",
+                    scriptName: "SearchJumper",
                     importOrNot: 'Do you want to import this config?',
                     settings: 'Settings',
                     batchOpen: 'Batch open urls?',
                     postOver: 'Post over: ',
                     postError: 'Post fail: ',
                     keywords: 'Input keywords',
-                    targetUrl: 'Input URL'
+                    targetUrl: 'Input URL',
+                    siteName: 'Site Name',
+                    siteDesc: 'Description',
+                    siteUrl: 'Site Url',
+                    siteIcon: 'Site Icon',
+                    siteTest: 'Test',
+                    siteCancel: 'Cancel',
+                    siteAdd: 'Add',
+                    siteType: 'Category',
+                    siteExist: 'Abort as the site is already exist',
+                    siteAddOver: 'Site added successfully'
                 };
                 break;
         }
@@ -625,12 +656,12 @@
         };
 
         var _GM_xmlhttpRequest, _GM_registerMenuCommand, _GM_notification, _GM_setClipboard, _GM_openInTab;
-        if(typeof GM_xmlhttpRequest!='undefined'){
-            _GM_xmlhttpRequest=GM_xmlhttpRequest;
-        }else if(typeof GM!='undefined' && typeof GM.xmlHttpRequest!='undefined'){
-            _GM_xmlhttpRequest=GM.xmlHttpRequest;
-        }else{
-            _GM_xmlhttpRequest=(f)=>{fetch(f.url).then(response=>response.text()).then(data=>{let res={response:data};f.onload(res)}).catch(f.onerror())};
+        if (typeof GM_xmlhttpRequest != 'undefined') {
+            _GM_xmlhttpRequest = GM_xmlhttpRequest;
+        } else if (typeof GM != 'undefined' && typeof GM.xmlHttpRequest != 'undefined') {
+            _GM_xmlhttpRequest = GM.xmlHttpRequest;
+        } else {
+            _GM_xmlhttpRequest = (f) => {fetch(f.url).then(response => response.text()).then(data => {let res = {response: data};f.onload(res)}).catch(f.onerror())};
         }
         if (typeof GM_registerMenuCommand != 'undefined') {
             _GM_registerMenuCommand = GM_registerMenuCommand;
@@ -639,25 +670,25 @@
         } else {
             _GM_registerMenuCommand = (s, f) => {};
         }
-        if(typeof GM_notification != 'undefined'){
+        if (typeof GM_notification != 'undefined') {
             _GM_notification = GM_notification;
-        }else if(typeof GM != 'undefined' && typeof GM.notification != 'undefined') {
+        } else if (typeof GM != 'undefined' && typeof GM.notification != 'undefined') {
             _GM_notification = GM.notification;
-        }else{
+        } else {
             _GM_notification = (s) => {alert(s)};
         }
-        if(typeof GM_setClipboard != 'undefined'){
+        if (typeof GM_setClipboard != 'undefined') {
             _GM_setClipboard = GM_setClipboard;
-        }else if(typeof GM != 'undefined' && typeof GM.setClipboard != 'undefined') {
+        } else if (typeof GM != 'undefined' && typeof GM.setClipboard != 'undefined') {
             _GM_setClipboard = GM.setClipboard;
-        }else{
+        } else {
             _GM_setClipboard = (s) => {};
         }
-        if(typeof GM_openInTab != 'undefined'){
+        if (typeof GM_openInTab != 'undefined') {
             _GM_openInTab = GM_openInTab;
-        }else if(typeof GM != 'undefined' && typeof GM.openInTab != 'undefined') {
+        } else if (typeof GM != 'undefined' && typeof GM.openInTab != 'undefined') {
             _GM_openInTab = GM.openInTab;
-        }else{
+        } else {
             _GM_openInTab = (s, t) => {window.open(s)};
         }
         var _unsafeWindow = (typeof unsafeWindow == 'undefined') ? window : unsafeWindow;
@@ -725,7 +756,7 @@
 
         var logoBtn, searchBar, searchTypes = [], currentSite = false, cacheKeywords, localKeywords, lastSign, cacheIcon, cachePool = [], currentFormParams;
         var logoBtnSvg = `<svg class="search-jumper-logoBtnSvg" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><title>${i18n("scriptName")}</title><path d="M.736 510.464c0-281.942 228.335-510.5 510-510.5 135.26 0 264.981 53.784 360.625 149.522 95.643 95.737 149.375 225.585 149.375 360.978 0 281.94-228.335 510.5-510 510.5-281.665 0-510-228.56-510-510.5zm510-510.5v1021m-510-510.5h1020" fill="#fefefe"/><path d="M237.44 346.624a48.64 48.64 0 1 0 97.28 0 48.64 48.64 0 1 0-97.28 0zM699.904 346.624a48.64 48.64 0 1 0 97.28 0 48.64 48.64 0 1 0-97.28 0zM423.296 759.296c-64 0-115.712-52.224-115.712-115.712 0-26.624 9.216-52.224 25.6-72.704 9.216-11.776 26.112-13.312 37.888-4.096s13.312 26.112 4.096 37.888c-9.216 11.264-13.824 24.576-13.824 38.912 0 34.304 27.648 61.952 61.952 61.952s61.952-27.648 61.952-61.952c0-4.096-.512-8.192-1.024-11.776-2.56-14.848 6.656-28.672 21.504-31.744 14.848-2.56 28.672 6.656 31.744 21.504 1.536 7.168 2.048 14.336 2.048 22.016-.512 63.488-52.224 115.712-116.224 115.712z" fill="#333"/><path d="M602.08 760.296c-64 0-115.712-52.224-115.712-115.712 0-14.848 12.288-27.136 27.136-27.136s27.136 12.288 27.136 27.136c0 34.304 27.648 61.952 61.952 61.952s61.952-27.648 61.952-61.952c0-15.36-5.632-30.208-15.872-41.472-9.728-11.264-9.216-28.16 2.048-37.888 11.264-9.728 28.16-9.216 37.888 2.048 19.456 21.504 29.696 48.64 29.696 77.824 0 62.976-52.224 115.2-116.224 115.2z" fill="#333"/><ellipse ry="58" rx="125" cy="506.284" cx="201.183" fill="#faf"/><ellipse ry="58" rx="125" cy="506.284" cx="823.183" fill="#faf"/></svg>`;
-
+        var logoBase64 = "data:image/svg+xml;base64,PHN2ZyBjbGFzcz0ic2VhcmNoLWp1bXBlci1sb2dvQnRuU3ZnIiB2aWV3Qm94PSIwIDAgMTAyNCAxMDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0uNzM2IDUxMC40NjRjMC0yODEuOTQyIDIyOC4zMzUtNTEwLjUgNTEwLTUxMC41IDEzNS4yNiAwIDI2NC45ODEgNTMuNzg0IDM2MC42MjUgMTQ5LjUyMiA5NS42NDMgOTUuNzM3IDE0OS4zNzUgMjI1LjU4NSAxNDkuMzc1IDM2MC45NzggMCAyODEuOTQtMjI4LjMzNSA1MTAuNS01MTAgNTEwLjUtMjgxLjY2NSAwLTUxMC0yMjguNTYtNTEwLTUxMC41em01MTAtNTEwLjV2MTAyMW0tNTEwLTUxMC41aDEwMjAiIGZpbGw9IiNmZWZlZmUiLz48cGF0aCBkPSJNMjM3LjQ0IDM0Ni42MjRhNDguNjQgNDguNjQgMCAxIDAgOTcuMjggMCA0OC42NCA0OC42NCAwIDEgMC05Ny4yOCAwek02OTkuOTA0IDM0Ni42MjRhNDguNjQgNDguNjQgMCAxIDAgOTcuMjggMCA0OC42NCA0OC42NCAwIDEgMC05Ny4yOCAwek00MjMuMjk2IDc1OS4yOTZjLTY0IDAtMTE1LjcxMi01Mi4yMjQtMTE1LjcxMi0xMTUuNzEyIDAtMjYuNjI0IDkuMjE2LTUyLjIyNCAyNS42LTcyLjcwNCA5LjIxNi0xMS43NzYgMjYuMTEyLTEzLjMxMiAzNy44ODgtNC4wOTZzMTMuMzEyIDI2LjExMiA0LjA5NiAzNy44ODhjLTkuMjE2IDExLjI2NC0xMy44MjQgMjQuNTc2LTEzLjgyNCAzOC45MTIgMCAzNC4zMDQgMjcuNjQ4IDYxLjk1MiA2MS45NTIgNjEuOTUyczYxLjk1Mi0yNy42NDggNjEuOTUyLTYxLjk1MmMwLTQuMDk2LS41MTItOC4xOTItMS4wMjQtMTEuNzc2LTIuNTYtMTQuODQ4IDYuNjU2LTI4LjY3MiAyMS41MDQtMzEuNzQ0IDE0Ljg0OC0yLjU2IDI4LjY3MiA2LjY1NiAzMS43NDQgMjEuNTA0IDEuNTM2IDcuMTY4IDIuMDQ4IDE0LjMzNiAyLjA0OCAyMi4wMTYtLjUxMiA2My40ODgtNTIuMjI0IDExNS43MTItMTE2LjIyNCAxMTUuNzEyeiIgZmlsbD0iIzMzMyIvPjxwYXRoIGQ9Ik02MDIuMDggNzYwLjI5NmMtNjQgMC0xMTUuNzEyLTUyLjIyNC0xMTUuNzEyLTExNS43MTIgMC0xNC44NDggMTIuMjg4LTI3LjEzNiAyNy4xMzYtMjcuMTM2czI3LjEzNiAxMi4yODggMjcuMTM2IDI3LjEzNmMwIDM0LjMwNCAyNy42NDggNjEuOTUyIDYxLjk1MiA2MS45NTJzNjEuOTUyLTI3LjY0OCA2MS45NTItNjEuOTUyYzAtMTUuMzYtNS42MzItMzAuMjA4LTE1Ljg3Mi00MS40NzItOS43MjgtMTEuMjY0LTkuMjE2LTI4LjE2IDIuMDQ4LTM3Ljg4OCAxMS4yNjQtOS43MjggMjguMTYtOS4yMTYgMzcuODg4IDIuMDQ4IDE5LjQ1NiAyMS41MDQgMjkuNjk2IDQ4LjY0IDI5LjY5NiA3Ny44MjQgMCA2Mi45NzYtNTIuMjI0IDExNS4yLTExNi4yMjQgMTE1LjJ6IiBmaWxsPSIjMzMzIi8+PGVsbGlwc2Ugcnk9IjU4IiByeD0iMTI1IiBjeT0iNTA2LjI4NCIgY3g9IjIwMS4xODMiIGZpbGw9IiNmYWYiLz48ZWxsaXBzZSByeT0iNTgiIHJ4PSIxMjUiIGN5PSI1MDYuMjg0IiBjeD0iODIzLjE4MyIgZmlsbD0iI2ZhZiIvPjwvc3ZnPg==";
         var targetElement;
 
         class SearchBar {
@@ -903,6 +934,28 @@
                      50%  {opacity: 0.6;}
                      100% {opacity: 0.1;}
                  }
+                 .searchJumper-loading {
+                     animation-name: changeScale;
+                     animation-duration: 2.5s;
+                     animation-iteration-count: infinite;
+                 }
+                 @keyframes changeScale {
+                     0% {
+                         -webkit-transform:rotate(0deg) scale(1);
+                         -moz-transform:rotate(0deg) scale(1);
+                         transform:rotate(0deg) scale(1);
+                     }
+                     50% {
+                         -webkit-transform:rotate(180deg) scale(1.5);
+                         -moz-transform:rotate(180deg) scale(1.5);
+                         transform:rotate(180deg) scale(1.5);
+                     }
+                     100% {
+                         -webkit-transform:rotate(360deg) scale(1);
+                         -moz-transform:rotate(360deg) scale(1);
+                         transform:rotate(360deg) scale(1);
+                     }
+                 }
                  .search-jumper-logoBtnSvg {
                      width: ${32 * this.scale}px;
                      height: ${32 * this.scale}px;
@@ -999,6 +1052,11 @@
                      font-weight: bold;
                      background: #f6f6f6;
                      border-radius: 10px 10px 0 0;
+                     max-width: 200px;
+                     overflow: hidden;
+                     white-space: nowrap;
+                     margin: 0 auto;
+                     text-overflow: ellipsis;
                  }
                  .search-jumper-searchBar.disable-pointer>.search-jumper-type {
                      pointer-events: none;
@@ -1464,7 +1522,11 @@
                     }
                 }
                 ele.className = "search-jumper-type search-jumper-hide";
-                ele.title = type;
+                if (typeof data.description !== 'undefined') {
+                    ele.dataset.title = data.description;
+                } else {
+                    ele.dataset.title = type;
+                }
                 let typeBtn = document.createElement("span");
                 ele.appendChild(typeBtn);
                 typeBtn.classList.add("search-jumper-word");
@@ -1532,7 +1594,7 @@
                     }
                 };
                 if (searchData.prefConfig.shortcut && data.shortcut) {
-                    ele.title += ` (${data.shortcut.toUpperCase()})`;
+                    ele.dataset.title += ` (${data.shortcut.toUpperCase()})`;
                     document.addEventListener('keydown', e => {
                         if ((data.ctrl && !e.ctrlKey) ||
                             (data.alt && !e.altKey) ||
@@ -1675,7 +1737,7 @@
                     if (searchData.prefConfig.showSiteLists && ele.classList.contains("search-jumper-hide")) {
                         self.listPos(ele, siteList);
                     } else {
-                        self.tipsPos(typeBtn, ele.title);
+                        self.tipsPos(typeBtn, ele.dataset.title);
                     }
                     if (searchData.prefConfig.overOpen) {
                         if (!ele.classList.contains("search-jumper-hide")) return;
@@ -1702,7 +1764,7 @@
                     }
                 });
                 if (searchData.prefConfig.showSiteLists) {
-                    siteList = this.createList(siteEles, ele.title);
+                    siteList = this.createList(siteEles, ele.dataset.title);
                     siteList.style.display = "none";
                     ele.appendChild(siteList);
                 }
@@ -1751,7 +1813,7 @@
                 let isBookmarklet = /^javascript:/.test(data.url);
                 let ele = document.createElement("a");
                 ele.className = "search-jumper-btn";
-                ele.title = name;
+                if (typeof data.description !== 'undefined') ele.title = data.description;
                 ele.dataset.name = name;
                 ele.classList.add("search-jumper-word");
                 let word = document.createElement("span");
@@ -1788,7 +1850,7 @@
                 let customInput = false;
                 self.stopInput = false;
                 if (searchData.prefConfig.shortcut && data.shortcut) {
-                    ele.title += ` (${data.shortcut.toUpperCase()})`;
+                    ele.dataset.name += ` (${data.shortcut.toUpperCase()})`;
                     let shortcutCover = document.createElement("div");
                     shortcutCover.innerText = data.shortcut.toUpperCase();
                     ele.appendChild(shortcutCover);
@@ -2161,7 +2223,7 @@
                 ele.addEventListener('mousedown', action, false);
 
                 ele.addEventListener('mouseenter', e => {
-                    self.tipsPos(ele, ele.title);
+                    self.tipsPos(ele, ele.dataset.name);
                 }, false);
                 ele.addEventListener('mouseleave', e => {
                     self.tips.style.opacity = 0;
@@ -2750,6 +2812,8 @@
                 searchBar.bar.style.display = 'none';
                 document.removeEventListener('mouseup', mouseUpHandler, false);
                 document.removeEventListener('mousemove', mouseMoveHandler, false);
+                document.removeEventListener('touchend', mouseUpHandler, false);
+                document.removeEventListener('touchmove', mouseMoveHandler, false);
                 event.preventDefault();
             };
 
@@ -2892,6 +2956,59 @@
                     shown = false;
                 });
             }
+            if (searchData.prefConfig.quickAddRule) {
+                document.addEventListener('click', e => {
+                    if (!e.ctrlKey || !e.altKey) return;
+                    if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') return;
+                    let parentForm, url;
+                    if (e.target.name) {
+                        parentForm = e.target.parentNode;
+                        while (parentForm) {
+                            if (parentForm.tagName === "FORM") {
+                                break;
+                            }
+                            parentForm = parentForm.parentNode;
+                        }
+                    }
+                    if (parentForm) {
+                        url = parentForm.action;
+                        let params = [];
+                        [].forEach.call(parentForm.querySelectorAll("input[type='text'][name],input[name]:not([type])"), input => {
+                            let value = input.value;
+                            if (e.target.name === input.name) {
+                                value = "%s";
+                            }
+                            params.push(input.name + "=" + value);
+                        });
+                        if (parentForm.method.toLowerCase() == "post") {
+                            url += "%p{" + params.join("&") + "}";
+                        } else {
+                            if (url.indexOf("?") === -1) {
+                                url += "?";
+                            }
+                            url += params.join("&");
+                        }
+                    } else if (e.target.value) {
+                        if (location.href.indexOf(e.target.value) !== -1) {
+                            url = location.href.replace(e.target.value, "%s");
+                        } else {
+                            let encodeValue = encodeURIComponent(e.target.value);
+                            if (location.href.indexOf(encodeValue) !== -1) {
+                                url = location.href.replace(encodeValue, "%s");
+                            } else {
+                                return;
+                            }
+                        }
+                    } else {
+                        return;
+                    }
+                    let icons = [];
+                    [].forEach.call(document.querySelectorAll("link[rel='shortcut icon'],link[rel='icon']"), link => {
+                        icons.push(link.href);
+                    });
+                    showSiteAdd(document.title.replace(e.target.value, ""), "", url, icons, document.charset);
+                }, true);
+            }
             let changeHandler = e => {
                 setTimeout(()=>{
                     searchBar.refresh();
@@ -3024,6 +3141,285 @@
             }
         }
 
+        var addFrame, nameInput, descInput, urlInput, iconInput, iconShow, iconsCon, typeSelect, testBtn, cancelBtn, addBtn;
+        function showSiteAdd(name, description, url, icons, charset) {
+            if (!addFrame) {
+                addFrame = document.createElement("div");
+                addFrame.innerHTML = createHTML(`
+                <style>
+                    .searchJumperFrame-body {
+                        width: 300px;
+                        min-height: 300px;
+                        position: fixed;
+                        text-align: left;
+                        left: 50%;
+                        top: 50%;
+                        margin-top: -160px;
+                        margin-left: -150px;
+                        z-index: 100000;
+                        background-color: #ffffff;
+                        border: 1px solid #afb3b6;
+                        border-radius: 10px;
+                        opacity: 0.95;
+                        filter: alpha(opacity=95);
+                        box-shadow: 5px 5px 20px 0px #000;
+                        color: #6e7070;
+                    }
+                    .searchJumperFrame-title {
+                        background: #458bd1;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        color: white;
+                        font-weight: bold;
+                        font-size: 18px;
+                        border-radius: 10px 10px 0 0;
+                    }
+                    .searchJumperFrame-title>img {
+                        margin: 5px;
+                    }
+                    .searchJumperFrame-input-title {
+                        font-size: 9pt;
+                        font-family: Roboto, Helvetica, Arial, sans-serif;
+                        display: inline-block;
+                        background-color: white;
+                        position: relative;
+                        left: 20px;
+                        padding: 0px 4px;
+                        text-align: left;
+                        color: #646464;
+                    }
+                    .searchJumperFrame-body>input,.searchJumperFrame-body>select {
+                        resize: both;
+                        font-size: 11pt;
+                        font-weight: normal;
+                        border-radius: 4px;
+                        border: 1px solid rgba(0, 0, 0, 0.23);
+                        margin: 4px;
+                        font-family: inherit;
+                        background-color: #FFF;
+                        width: calc(100% - 17px);
+                        color: #4A4A4A;
+                        margin-top: -8px;
+                        padding: 4px;
+                        padding-top: 8px;
+                    }
+                    .searchJumperFrame-body>select {
+                        width: calc(100% - 7px);
+                    }
+                    .searchJumperFrame-buttons {
+                        text-align: center;
+                        margin-bottom: 5px;
+                    }
+                    .searchJumperFrame-buttons>button {
+                        width: 32%;
+                        font-size: 16px;
+                        cursor: pointer;
+                        color: #363636;
+                    }
+                    .searchJumperFrame-buttons>button:hover {
+                        color: black;
+                    }
+                    .searchJumperFrame-body>img {
+                        float: right;
+                        margin-top: -33px;
+                        position: relative;
+                        right: 5px;
+                        opacity: 0.8;
+                    }
+                    .searchJumperFrame-body>.iconsCon {
+                        max-height: 150px;
+                        overflow: overlay;
+                    }
+                    .searchJumperFrame-body>.iconsCon>img {
+                        margin: 5px;
+                        cursor: pointer;
+                        max-width: 90%;
+                    }
+                    .searchJumperFrame-body>.iconsCon>img:hover {
+                        border: 2px solid #4e91d3;
+                        box-sizing: border-box;
+                    }
+                </style>
+                <div class="searchJumperFrame-body">
+                    <div class="searchJumperFrame-title">
+                        <img width="32px" height="32px" src=${logoBase64}>${i18n("scriptName")}
+                    </div>
+                    <div class="searchJumperFrame-input-title">${i18n("siteName")}</div>
+                    <input name="siteName" type="text">
+                    <div class="searchJumperFrame-input-title">${i18n("siteDesc")}</div>
+                    <input name="description" type="text">
+                    <div class="searchJumperFrame-input-title">${i18n("siteUrl")}</div>
+                    <input name="url" type="text">
+                    <div class="searchJumperFrame-input-title">${i18n("siteIcon")}</div>
+                    <input name="icon" type="text">
+                    <img width="27px" height="27px">
+                    <div class="iconsCon"></div>
+                    <div class="searchJumperFrame-input-title">${i18n("siteType")}</div>
+                    <select>
+                    </select>
+                    <div class="searchJumperFrame-buttons">
+                        <button id="test" type="button">${i18n("siteTest")}</button>
+                        <button id="cancel" type="button">${i18n("siteCancel")}</button>
+                        <button id="add" type="button">${i18n("siteAdd")}</button>
+                    </div>
+                </div>
+                `);
+                nameInput = addFrame.querySelector("[name='siteName']");
+                descInput = addFrame.querySelector("[name='description']");
+                urlInput = addFrame.querySelector("[name='url']");
+                iconInput = addFrame.querySelector("[name='icon']");
+                iconShow = addFrame.querySelector(".searchJumperFrame-body>img");
+                iconsCon = addFrame.querySelector(".iconsCon");
+                testBtn = addFrame.querySelector("#test");
+                cancelBtn = addFrame.querySelector("#cancel");
+                addBtn = addFrame.querySelector("#add");
+                typeSelect = addFrame.querySelector("select");
+                for (let i = 0; i < searchData.sitesConfig.length; i++) {
+                    let typeConfig = searchData.sitesConfig[i];
+                    let option = document.createElement("option");
+                    option.value = i;
+                    option.innerText = typeConfig.type;
+                    typeSelect.appendChild(option);
+                }
+                testBtn.addEventListener("click", e => {
+                    if (/[:%]p{/.test(urlInput.value) || (charset && charset.toLowerCase() != 'utf-8')) {
+                        submitByForm(charset, urlInput.value.replace(/%s/g, "searchJumper"), "_blank");
+                    } else {
+                        _GM_openInTab(urlInput.value.replace(/%s/g, "searchJumper"), {active: true});
+                    }
+                });
+                cancelBtn.addEventListener("click", e => {
+                    if (addFrame.parentNode) {
+                        addFrame.parentNode.removeChild(addFrame);
+                    }
+                });
+                addBtn.addEventListener("click", e => {
+                    for (let i = 0; i < searchData.sitesConfig.length; i++) {
+                        let typeConfig = searchData.sitesConfig[i];
+                        for (let j = 0; j < typeConfig.sites.length; j++) {
+                            let curSite = typeConfig.sites[j];
+                            if (curSite.url == url) {
+                                _GM_notification(i18n("siteExist"));
+                                return;
+                            }
+                        }
+                    }
+                    let siteObj = {
+                        name: nameInput.value,
+                        url: urlInput.value
+                    };
+                    if (iconInput.value && iconInput.value != urlInput.value.replace(/^(https?:\/\/[^\/]*\/).*$/, "$1favicon.ico")) {
+                        siteObj.icon = iconInput.value;
+                    }
+                    if (descInput.value && descInput.value != nameInput.value) {
+                        siteObj.description = descInput.value;
+                    }
+                    if (charset && charset.toLowerCase() != 'utf-8') {
+                        siteObj.charset = charset;
+                    }
+                    searchData.sitesConfig[typeSelect.value].sites.push(siteObj);
+                    storage.setItem("searchData", searchData);
+                    _GM_notification(i18n("siteAddOver"));
+                });
+            }
+            document.body.appendChild(addFrame);
+            nameInput.value = name;
+            descInput.value = description;
+            urlInput.value = url;
+            if (icons[0]) {
+                iconShow.style.display = "";
+                iconInput.value = icons[0];
+                iconShow.src = icons[0];
+            } else {
+                iconShow.style.display = "none";
+            }
+            if (icons && icons.length > 1) {
+                iconsCon.style.display = "";
+                iconsCon.innerHTML = createHTML("");
+                icons.forEach(iconSrc => {
+                    let curIcon = document.createElement("img");
+                    curIcon.src = iconSrc;
+                    curIcon.addEventListener("click", e => {
+                        iconInput.value = iconSrc;
+                        iconShow.src = iconSrc;
+                    });
+                    iconsCon.appendChild(curIcon);
+                });
+            } else {
+                iconsCon.style.display = "none";
+            }
+        }
+
+        function initMycroft() {
+            if (location.hostname !== "mycroftproject.com") return;
+            let checkLinks = () => {
+                let installLinks = document.querySelectorAll("img.icon+a");
+                if (installLinks.length <= 0) return;
+                let isLoading = false;
+                [].forEach.call(installLinks, installLink => {
+                    if (installLink.previousElementSibling && installLink.previousElementSibling.classList.contains("searchJumperIcon")) return;
+                    if (installLink.previousElementSibling && installLink.previousElementSibling.previousElementSibling && installLink.previousElementSibling.previousElementSibling.classList.contains("searchJumperIcon")) return;
+                    let urlMatch = installLink.href.match(/\?id=(\d+)&basename=(.+?)&/);
+                    if (urlMatch === null) {
+                        return;
+                    }
+                    let icon = document.createElement("img");
+                    icon.className = "icon searchJumperIcon";
+                    icon.style.cssText = "border: 1px solid #4c4c4c; border-radius: 9px; box-sizing: border-box; margin-right: 4px; cursor: pointer;";
+                    icon.title = "Add to SearchJumper";
+                    icon.src = logoBase64;
+                    installLink.parentNode.insertBefore(icon, installLink);
+                    icon.onclick = e => {
+                        if (isLoading) return;
+                        isLoading = true;
+                        icon.classList.add("searchJumper-loading");
+                        _GM_xmlhttpRequest({
+                            method: "GET",
+                            url: `https://mycroftproject.com/installos.php/${urlMatch[1]}/${urlMatch[2]}.xml`,
+                            onload: (d) => {
+                                isLoading = false;
+                                icon.classList.remove("searchJumper-loading");
+                                let shortName = d.responseXML.querySelector("ShortName");
+                                let description = d.responseXML.querySelector("Description");
+                                let urlparam = d.responseXML.querySelector("Url[method]");
+                                let image = d.responseXML.querySelector("Image");
+                                let inputEncoding = d.responseXML.querySelector("InputEncoding");
+                                let postParams = urlparam.querySelectorAll("Param");
+                                let name = shortName.textContent;
+                                let desc = description.textContent;
+                                let url = urlparam.getAttribute("template");
+                                let ico = image.textContent;
+                                let charset = inputEncoding.textContent;
+                                if (postParams.length > 0) {
+                                    let params = [];
+                                    [].forEach.call(postParams, postParam => {
+                                        params.push(`${postParam.getAttribute("name")}=${postParam.getAttribute("value")}`);
+                                    });
+                                    url += `%p{${params.join("&")}}`;
+                                }
+                                showSiteAdd(name, desc, url.replace(/{searchTerms}/g, "%s"), [ico], charset);
+                            },
+                            onerror: (e) => {
+                                isLoading = false;
+                                icon.classList.remove("searchJumper-loading");
+                                _GM_notification(e.statusText || e.error);
+                            },
+                            ontimeout: (e) => {
+                                isLoading = false;
+                                icon.classList.remove("searchJumper-loading");
+                                _GM_notification(e.statusText || e.error);
+                            }
+                        });
+                    };
+                });
+            };
+            checkLinks();
+            window.addEventListener("load", e => {
+                checkLinks();
+            });
+        }
+
         function initView() {
             searchBar = new SearchBar();
         }
@@ -3058,23 +3454,26 @@
             if (_searchData) {
                 searchData = _searchData;
             }
-            if (searchData.prefConfig.customSize === undefined) {
+            if (typeof searchData.prefConfig.customSize === "undefined") {
                 searchData.prefConfig.customSize = 100;
             }
-            if (searchData.prefConfig.typeOpenTime === undefined) {
+            if (typeof searchData.prefConfig.typeOpenTime === "undefined") {
                 searchData.prefConfig.typeOpenTime = 250;
             }
-            if (searchData.prefConfig.longPressTime === undefined) {
+            if (typeof searchData.prefConfig.longPressTime === "undefined") {
                 searchData.prefConfig.longPressTime = 500;
             }
-            if (searchData.prefConfig.cacheSwitch === undefined) {
+            if (typeof searchData.prefConfig.cacheSwitch === "undefined") {
                 searchData.prefConfig.cacheSwitch = false;
             }
-            if (searchData.prefConfig.noIcons === undefined) {
+            if (typeof searchData.prefConfig.noIcons === "undefined") {
                 searchData.prefConfig.noIcons = false;
             }
-            if (searchData.prefConfig.noAni === undefined) {
+            if (typeof searchData.prefConfig.noAni === "undefined") {
                 searchData.prefConfig.noAni = false;
+            }
+            if (typeof searchData.prefConfig.quickAddRule === "undefined") {
+                searchData.prefConfig.quickAddRule = true;
             }
         }
 
@@ -3084,6 +3483,7 @@
             initView();
             initRun();
             initConfig();
+            initMycroft();
         }
 
         function visibilitychangeHandler() {
