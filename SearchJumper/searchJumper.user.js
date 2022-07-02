@@ -3252,6 +3252,7 @@
                         margin: 5px;
                         cursor: pointer;
                         max-width: 90%;
+                        border: 2px solid #ffffff;
                     }
                     .searchJumperFrame-body>.iconsCon>img:hover {
                         border: 2px solid #4e91d3;
