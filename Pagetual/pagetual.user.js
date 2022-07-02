@@ -2679,7 +2679,7 @@
             }
             if(ruleParser.curSiteRule.lockScroll){
                 let curScroll=document.body.scrollTop||document.documentElement.scrollTop;
-                if(isLoading && Math.abs(lastScroll-curScroll)>100){
+                if(isLoading && Math.abs(lastScroll-curScroll)>200){
                     document.body.scrollTop=lastScroll;
                     document.documentElement.scrollTop=lastScroll;
                 }else{
