@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.26.13
+// @version      1.9.26.15
 // @description  Perpetual pages - Most powerful Auto Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -1157,24 +1157,24 @@
                 if(!strMatch)return null;
                 let urlReg=new RegExp(".*"+result.replace(strMatch[0], "(\\d+)")+".*","i");
                 let curShowNum=url.replace(urlReg,"$1");
-                let code=strMatch[0].replace(/^{/,"").replace(/}$/,"");
-                if(code=="$p"){
-                    return curShowNum;
-                }else{
-                    try{
-                        let page1=Function('"use strict";return ' + code.replace("$p", "0"))();
-                        let page2=Function('"use strict";return ' + code.replace("$p", "1"))();
-                        let numGap=page2-page1;
-                        return (curShowNum - page1) / numGap;
-                    }catch(e){
-                        debug(e);
+                if (curShowNum!=url){
+                    let code=strMatch[0].replace(/^{/,"").replace(/}$/,"");
+                    if(code=="$p"){
+                        return curShowNum;
+                    }else{
+                        try{
+                            let page1=Function('"use strict";return ' + code.replace("$p", "0"))();
+                            let page2=Function('"use strict";return ' + code.replace("$p", "1"))();
+                            let numGap=page2-page1;
+                            return (curShowNum - page1) / numGap;
+                        }catch(e){
+                            debug(e);
+                        }
                     }
                 }
-            }else{
-                let pageNum=url.replace(/.*[&\/\?](p=|page[=\/_-]?)(\d+).*/i, "$2");
-                return pageNum==url?curPage:pageNum;
             }
-            return curPage;
+            let pageNum=url.replace(/.*[&\/\?](p=|page[=\/_-]?)(\d+).*/i, "$2");
+            return pageNum==url?curPage:pageNum;
         }
 
         getNextLink(doc) {
