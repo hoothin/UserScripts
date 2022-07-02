@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.5.6
+// @version      1.6.5.5.7
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -1118,18 +1118,22 @@
                 styleEle.innerHTML = createHTML(cssText);
                 document.documentElement.appendChild(styleEle);
 
+                let logoCon = document.createElement("span");
+                logoCon.className = "search-jumper-type search-jumper-hide search-jumper-logo";
                 logoBtn = document.createElement("span");
                 logoBtn.innerHTML = createHTML(logoBtnSvg);
                 logoBtn.className = "search-jumper-btn";
-                logoBtn.addEventListener('mouseenter', e => {
+                logoCon.addEventListener('mouseenter', e => {
                     if (this.preList) {
                         this.preList.style.display = "none";
                     }
                 });
 
+                logoCon.appendChild(logoBtn);
+
                 let bar = document.createElement("span");
                 bar.className = "search-jumper-searchBar";
-                bar.appendChild(logoBtn);
+                bar.appendChild(logoCon);
 
                 let searchBarCon = document.createElement("div");
                 searchBarCon.id = "search-jumper";
@@ -1439,17 +1443,15 @@
                 }
             }
 
-            tipsPos(ele, type) {
+            clingPos(clingEle, target, close) {
                 if (this.preList) {
                     this.preList.style.display = "none";
                 }
-                let ew = ele.clientWidth;
-                let eh = ele.clientHeight;
-                this.tips.innerText = type;
-                this.tips.style.opacity = 1;
-                let clientX = ele.offsetLeft + ew / 2 - this.bar.parentNode.scrollLeft;
-                let clientY = ele.offsetTop + eh / 2 - this.bar.parentNode.scrollTop;
-                let current = ele.offsetParent;
+                let ew = clingEle.clientWidth;
+                let eh = clingEle.clientHeight;
+                let clientX = clingEle.offsetLeft + ew / 2 - this.bar.parentNode.scrollLeft;
+                let clientY = clingEle.offsetTop + eh / 2 - this.bar.parentNode.scrollTop;
+                let current = clingEle.offsetParent;
 
                 while (current !== null){
                     clientX += current.offsetLeft;
@@ -1458,43 +1460,60 @@
                 }
                 let viewWidth = window.innerWidth || document.documentElement.clientWidth;
                 let viewHeight = window.innerHeight || document.documentElement.clientHeight;
-                if (clientY < 100) {
-                    this.tips.style.right = "";
-                    this.tips.style.bottom = "";
-                    clientX -= this.tips.scrollWidth / 2;
-                    clientY += this.tips.scrollHeight / 2;
-                    if (clientX < 0) clientX = 0;
-                    else if (clientX > viewWidth - this.tips.scrollWidth) clientX = viewWidth - this.tips.scrollWidth - ew / 2;
-                    this.tips.style.left = clientX + "px";
-                    this.tips.style.top = clientY + 10 + "px";
-                } else if (clientY > viewHeight - 100) {
-                    this.tips.style.right = "";
-                    this.tips.style.top = "";
-                    clientX -= this.tips.scrollWidth / 2;
-                    if (clientX < 0) clientX = 0;
-                    else if (clientX > viewWidth - this.tips.scrollWidth) clientX = viewWidth - this.tips.scrollWidth - ew / 2;
-                    this.tips.style.left = clientX + "px";
-                    this.tips.style.bottom = ew + 20 + "px";
-                } else if (clientX > viewWidth - 100) {
-                    this.tips.style.left = "";
-                    this.tips.style.bottom = "";
-                    clientY -= this.tips.scrollHeight / 2;
-                    if (clientY < 0) clientY = 0;
-                    this.tips.style.right = ew + 20 + "px";
-                    this.tips.style.top = clientY + "px";
-                } else if (clientX < 100) {
-                    this.tips.style.right = "";
-                    this.tips.style.bottom = "";
-                    clientY -= this.tips.scrollHeight / 2;
-                    if (clientY < 0) clientY = 0;
-                    this.tips.style.left = clientX + 35 + "px";
-                    this.tips.style.top = clientY + "px";
+                if (clientY < eh) {
+                    target.style.left = "";
+                    target.style.right = "";
+                    target.style.bottom = "";
+                    clientX -= target.scrollWidth / 2;
+                    clientY += target.scrollHeight / 2;
+                    if (clientX < 5) {
+                        clientX = 5;
+                        target.style.left = "5px";
+                    } else if (clientX > viewWidth - target.scrollWidth) {
+                        target.style.right = "5px";
+                    } else {
+                        target.style.left = clientX + "px";
+                    }
+                    target.style.top = (close ? eh : eh + 20) + "px";
+                } else if (clientY > viewHeight - eh) {
+                    target.style.left = "";
+                    target.style.right = "";
+                    target.style.top = "";
+                    clientX -= target.scrollWidth / 2;
+                    if (clientX < 5) {
+                        target.style.left = "5px";
+                    } else if (clientX > viewWidth - target.scrollWidth) {
+                        target.style.right = "5px";
+                    } else {
+                        target.style.left = clientX + "px";
+                    }
+                    target.style.bottom = (close ? eh : eh + 20) + "px";
+                } else if (clientX > viewWidth - ew - 10) {
+                    target.style.left = "";
+                    target.style.bottom = "";
+                    clientY -= target.scrollHeight / 2;
+                    if (clientY < 5) clientY = 5;
+                    target.style.right = (close ? ew : ew + 20) + "px";
+                    target.style.top = clientY + "px";
+                } else if (clientX < ew) {
+                    target.style.right = "";
+                    target.style.bottom = "";
+                    clientY -= target.scrollHeight / 2;
+                    if (clientY < 5) clientY = 5;
+                    target.style.left = (close ? ew : ew + 20) + "px";
+                    target.style.top = clientY + "px";
                 } else {
-                    this.tips.style.right = "";
-                    this.tips.style.bottom = "";
-                    this.tips.style.left = clientX + "px";
-                    this.tips.style.top = clientY + "px";
+                    target.style.right = "";
+                    target.style.bottom = "";
+                    target.style.left = clientX + "px";
+                    target.style.top = clientY + "px";
                 }
+            }
+
+            tipsPos(ele, type) {
+                this.tips.innerText = type;
+                this.tips.style.opacity = 1;
+                this.clingPos(ele, this.tips);
             }
 
             createType(data) {
@@ -3203,9 +3222,7 @@
                         margin-top: -8px;
                         padding: 4px;
                         padding-top: 8px;
-                    }
-                    .searchJumperFrame-body>select {
-                        width: calc(100% - 7px);
+                        box-sizing: content-box;
                     }
                     .searchJumperFrame-buttons {
                         text-align: center;
@@ -3242,9 +3259,9 @@
                     }
                 </style>
                 <div class="searchJumperFrame-body">
-                    <div class="searchJumperFrame-title">
+                    <a href="${configPage}" class="searchJumperFrame-title" target="_blank">
                         <img width="32px" height="32px" src=${logoBase64}>${i18n("scriptName")}
-                    </div>
+                    </a>
                     <div class="searchJumperFrame-input-title">${i18n("siteName")}</div>
                     <input name="siteName" type="text">
                     <div class="searchJumperFrame-input-title">${i18n("siteDesc")}</div>
