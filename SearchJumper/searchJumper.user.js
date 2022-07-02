@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.5.7
+// @version      1.6.5.5.8
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -505,10 +505,6 @@
                 {
                     name: "分享到Facebook",
                     url: "https://www.facebook.com/sharer/sharer.php?u=%T&t=%n"
-                },
-                {
-                    name: "高亮关键词",
-                    url: "javascript:%20(%20function%20()%7B%20var%20count=0,%20text,%20dv;text=%22%s%22%20;if%20(%20text==null%20%20%7C%7C%20%20text.length==0%20)%20return;dv=document.defaultView;function%20searchWithinNode%20(%20node,%20te,%20len%20)%7B%20var%20pos,%20skip,%20spannode,%20middlebit,%20endbit,%20middleclone;skip=0;if%20(%20%20node.nodeType==3%20%20)%7B%20pos=node.data.toUpperCase%20()%20.indexOf%20(%20te%20)%20;if%20(%20pos%3E=0%20)%7B%20spannode=document.createElement%20(%20%22SPAN%22%20)%20;spannode.style.backgroundColor=%22yellow%22;middlebit=node.splitText%20(%20pos%20)%20;endbit=middlebit.splitText%20(%20len%20)%20;middleclone=middlebit.cloneNode%20(%20true%20)%20;spannode.appendChild%20(%20middleclone%20)%20;middlebit.parentNode.replaceChild%20(%20spannode,middlebit%20)%20;++count;skip=1;%20%7D%7D%20else%20if%20(%20%20node.nodeType==1&&%20node.childNodes%20&&%20node.tagName.toUpperCase%20()%20!=%22SCRIPT%22%20&&%20node.tagName.toUpperCase!=%22STYLE%22%20)%7B%20for%20%20(%20var%20child=0;%20child%20%3C%20%20node.childNodes.length;%20++child%20)%7B%20child=child+searchWithinNode%20(%20node.childNodes%5Bchild%5D,%20te,%20len%20)%20;%20%7D%7D%20return%20skip;%20%7D%20window.status=%22Searching%20for%20'%22+text+%22'...%22;searchWithinNode%20(%20document.body,%20text.toUpperCase%20()%20,%20text.length%20)%20;window.status=%22Found%20%22+count+%22%20occurrence%22+%20(%20count==1?%22%22:%22s%22%20)%20+%22%20of%20'%22+text+%22'.%22;%20%7D)()%20;"
                 },
                 {
                     name: "手机号码聚合搜索",
@@ -1190,7 +1186,7 @@
                     this.createType(siteConfig);
                 });
                 this.bar.style.display = "none";
-                if (currentSite && currentSite.url.indexOf("%s") != -1) {
+                if (currentSite && /%s\b/.test(currentSite.url)) {
                     this.bar.style.display = "";
                     this.initPos(
                         searchData.prefConfig.position.x,
@@ -1987,7 +1983,7 @@
                     let keywords = getKeywords();
                     //if (keywords && keywords != cacheKeywords) storage.setItem("cacheKeywords", keywords);
                     if (!ele.dataset.url) {
-                        ele.dataset.url = data.url.replace(/%e/g, document.charset).replace(/%c/g, (isMobile?"mobile":"pc")).replace(/%u/g, location.href).replace(/%U/g, encodeURIComponent(location.href)).replace(/%h/g, location.host);
+                        ele.dataset.url = data.url.replace(/%e\b/g, document.charset).replace(/%c\b/g, (isMobile?"mobile":"pc")).replace(/%u\b/g, location.href).replace(/%U\b/g, encodeURIComponent(location.href)).replace(/%h\b/g, location.host);
                     }
                     let selStr = getSelectStr();
                     let targetUrl = '';
@@ -1996,12 +1992,12 @@
                     if (targetElement) {
                         targetUrl = targetElement.src || targetElement.href || '';
                         targetName = targetElement.title || targetElement.alt || document.title;
-                        if (targetElement.tagName == 'IMG' && ele.dataset.url.indexOf('%i') != -1) {
+                        if (targetElement.tagName == 'IMG' && /%i\b/.test(ele.dataset.url)) {
                             if (/^data/.test(targetElement.src)) {
-                                resultUrl = resultUrl.replace(/%i/g, targetElement.src);
+                                resultUrl = resultUrl.replace(/%i\b/g, targetElement.src);
                             } else if (targetElement.src.split("/")[2] == document.domain) {
                                 imgBase64 = image2Base64(targetElement);
-                                resultUrl = resultUrl.replace(/%i/g, imgBase64);
+                                resultUrl = resultUrl.replace(/%i\b/g, imgBase64);
                             }
                         }
                     }
@@ -2020,14 +2016,14 @@
                         resultUrl = resultUrl.replace(inputMatch[0], promptStr);
                     }
                     let targetBaseUrl = targetUrl.replace(/^https?:\/\//i, "");
-                    if (!keywords && resultUrl.indexOf('%s') !== -1) {
+                    if (!keywords && /%s\b/.test(resultUrl)) {
                         customInput = true;
                         if (self.stopInput) return false;
                         let promptStr = window.prompt(i18n("keywords"));
                         if (promptStr === null) return false;
                         localKeywords = promptStr;
                         setTimeout(() => {localKeywords = ''}, 1);
-                        resultUrl = resultUrl.replace(/%s/g, promptStr);
+                        resultUrl = resultUrl.replace(/%s\b/g, promptStr);
                     }
                     if (targetUrl === '') {
                         let promptStr = false;
@@ -2044,28 +2040,28 @@
                             if (promptStr === null) return false;
                             return true;
                         };
-                        if (resultUrl.indexOf('%t') !== -1) {
+                        if (/%t\b/.test(resultUrl)) {
                             customInput = true;
                             if (getTargetUrl() === false) return false;
-                            resultUrl = resultUrl.replace(/%t/g, promptStr);
+                            resultUrl = resultUrl.replace(/%t\b/g, promptStr);
                         }
-                        if (resultUrl.indexOf('%T') !== -1) {
+                        if (/%T\b/.test(resultUrl)) {
                             customInput = true;
                             if (getTargetUrl() === false) return false;
-                            resultUrl = resultUrl.replace(/%T/g, encodeURIComponent(promptStr));
+                            resultUrl = resultUrl.replace(/%T\b/g, encodeURIComponent(promptStr));
                         }
-                        if (resultUrl.indexOf('%b') !== -1) {
+                        if (/%b\b/.test(resultUrl)) {
                             customInput = true;
                             if (getTargetUrl() === false) return false;
-                            resultUrl = resultUrl.replace(/%b/g, promptStr.replace(/^https?:\/\//i, ""));
+                            resultUrl = resultUrl.replace(/%b\b/g, promptStr.replace(/^https?:\/\//i, ""));
                         }
-                        if (resultUrl.indexOf('%B') !== -1) {
+                        if (/%B\b/.test(resultUrl)) {
                             customInput = true;
                             if (getTargetUrl() === false) return false;
-                            resultUrl = resultUrl.replace(/%B/g, encodeURIComponent(promptStr.replace(/^https?:\/\//i, "")));
+                            resultUrl = resultUrl.replace(/%B\b/g, encodeURIComponent(promptStr.replace(/^https?:\/\//i, "")));
                         }
                     }
-                    return resultUrl.replace(/%t/g, targetUrl).replace(/%T/g, encodeURIComponent(targetUrl)).replace(/%b/g, targetBaseUrl).replace(/%B/g, encodeURIComponent(targetBaseUrl)).replace(/%n/g, targetName).replace(/%s/g, keywords);
+                    return resultUrl.replace(/%t\b/g, targetUrl).replace(/%T\b/g, encodeURIComponent(targetUrl)).replace(/%b\b/g, targetBaseUrl).replace(/%B\b/g, encodeURIComponent(targetBaseUrl)).replace(/%n\b/g, targetName).replace(/%s\b/g, keywords);
                 };
                 let action = e => {
                     if (/^\[/.test(data.url)) {
@@ -2686,14 +2682,14 @@
                 if (keywordsMatch) {
                     keywords = keywordsMatch[1];
                 }
-            } else if (currentSite.url.indexOf("%s") != -1) {
+            } else if (/%s\b/.test(currentSite.url)) {
                 if (location.href.indexOf("?") != -1) {
-                    keywordsMatch = currentSite.url.match(/[\?&]([^&]*?)=%s.*/);
+                    keywordsMatch = currentSite.url.match(/[\?&]([^&]*?)=%s\b.*/);
                     if (keywordsMatch) {
                         keywords = new URLSearchParams(location.search).get(keywordsMatch[1]);
                     }
                 } else {
-                    keywordsMatch = currentSite.url.match(/(.*)%s/);
+                    keywordsMatch = currentSite.url.match(/(.*)%s\b/);
                     if (keywordsMatch) {
                         keywordsMatch = location.href.match(new RegExp(keywordsMatch[1] + "(.*?)(\/|$)"));
                         if (keywordsMatch) {
@@ -3302,9 +3298,9 @@
                 }
                 testBtn.addEventListener("click", e => {
                     if (/[:%]p{/.test(urlInput.value) || (charset && charset.toLowerCase() != 'utf-8')) {
-                        submitByForm(charset, urlInput.value.replace(/%s/g, "searchJumper"), "_blank");
+                        submitByForm(charset, urlInput.value.replace(/%s\b/g, "searchJumper"), "_blank");
                     } else {
-                        _GM_openInTab(urlInput.value.replace(/%s/g, "searchJumper"), {active: true});
+                        _GM_openInTab(urlInput.value.replace(/%s\b/g, "searchJumper"), {active: true});
                     }
                 });
                 cancelBtn.addEventListener("click", e => {
