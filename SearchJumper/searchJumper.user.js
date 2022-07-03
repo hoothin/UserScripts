@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.6.1
+// @version      1.6.5.6.2
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -1633,6 +1633,7 @@
                     });
                 }
                 let typeAction = e => {
+                    let baseSize = Math.min(self.bar.scrollWidth, self.bar.scrollHeight);
                     if (e) {
                         if (e.which === 3) {
                             batchOpen();
@@ -1662,8 +1663,8 @@
                         searchTypes.forEach(type => {
                             if (ele != type) {
                                 type.classList.add("search-jumper-hide");
-                                type.style.width = 38 * this.scale + "px";
-                                type.style.height = 38 * this.scale + "px";
+                                type.style.width = baseSize + "px";
+                                type.style.height = baseSize + "px";
                                 type.style.flexWrap = "";
                             }
                         });
@@ -1671,9 +1672,9 @@
                         ele.classList.add("search-jumper-hide");
                         if (self.bar.parentNode.classList.contains("search-jumper-left") ||
                             self.bar.parentNode.classList.contains("search-jumper-right")) {
-                            ele.style.height = 38 * this.scale + "px";
+                            ele.style.height = baseSize + "px";
                         } else {
-                            ele.style.width = 38 * this.scale + "px";
+                            ele.style.width = baseSize + "px";
                         }
                         ele.style.flexWrap = "";
                     }
@@ -1788,7 +1789,6 @@
                     self.bar.insertBefore(ele, self.bar.children[0]);
                     ele.dataset.width = ele.scrollWidth + "px";
                     ele.classList.remove("search-jumper-hide");
-                    ele.style.width = ele.dataset.width;
                     if (lastSign === 1) {
                         batchOpen();
                         lastSign = 0;
@@ -1796,7 +1796,6 @@
                 } else {
                     self.bar.insertBefore(ele, self.bar.children[self.bar.children.length - 1]);
                     ele.dataset.width = ele.scrollWidth + "px";
-                    ele.style.width = 38 * this.scale + "px";
                 }
                 if (inPage && selectImg && selectAudio && selectVideo && selectLink && selectPage) {
                     ele.classList.add("search-jumper-targetAll");
@@ -2357,12 +2356,23 @@
                     searchTypes.forEach(ele => {
                         ele.style.width = "";
                         ele.style.height = "";
+                        if (self.bar.parentNode.classList.contains("search-jumper-left") ||
+                            self.bar.parentNode.classList.contains("search-jumper-right")) {
+                            ele.style.height = ele.dataset.width;
+                        } else {
+                            ele.style.width = ele.dataset.width;
+                        }
+                    });
+                    let baseSize = Math.min(self.bar.scrollWidth, self.bar.scrollHeight);
+                    searchTypes.forEach(ele => {
+                        ele.style.width = "";
+                        ele.style.height = "";
                         if (ele.classList.contains("search-jumper-hide")) {
                             if (self.bar.parentNode.classList.contains("search-jumper-left") ||
                                 self.bar.parentNode.classList.contains("search-jumper-right")) {
-                                ele.style.height = 38 * this.scale + "px";
+                                ele.style.height = baseSize + "px";
                             } else {
-                                ele.style.width = 38 * this.scale + "px";
+                                ele.style.width = baseSize + "px";
                             }
                         } else {
                             if (self.bar.parentNode.classList.contains("search-jumper-left") ||
