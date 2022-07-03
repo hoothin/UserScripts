@@ -1,5 +1,19 @@
 [
 {
+  "resource_url": "http://wedata.net/items/85937",
+  "data": {
+    "pageElement": "//div[@class='text01']",
+    "nextLink": "//*[@rel='next']",
+    "url": "^https://style\\.nikkei\\.com/article/",
+    "exampleUrl": "https://style.nikkei.com/article/DGXZQOLM151O40V10C22A6000000/ https://style.nikkei.com/article/DGXMZO13579300S7A300C1000000"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "autopagerizebanzai",
+  "name": "NIKKEI STYLE",
+  "created_at": "2022-07-02T17:57:59+09:00",
+  "updated_at": "2022-07-03T02:56:33+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/85936",
   "data": {
     "pageElement": "id('results')/div[starts-with(@class,'snippet fdb')]",
@@ -12962,20 +12976,6 @@
   "name": "mercari",
   "created_at": "2017-03-08T22:30:36+09:00",
   "updated_at": "2020-12-01T08:51:04+09:00"
-},
-{
-  "name": "NIKKEI STYLE",
-  "data": {
-    "url": "^https://style\\.nikkei\\.com/article/",
-    "pageElement": "//div[@itemprop='articleBody']",
-    "exampleUrl": "https://style.nikkei.com/article/DGXMZO13579300S7A300C1000000",
-    "nextLink": "//*[@rel='next']"
-  },
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "created_by": "t_f_m",
-  "resource_url": "http://wedata.net/items/81224",
-  "created_at": "2017-03-08T16:35:29+09:00",
-  "updated_at": "2020-04-12T19:16:30+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/81223",
