@@ -544,7 +544,7 @@
     ];
     searchData.prefConfig = {
         position: {
-            x: "center",
+            x: "left",
             y: "top"
         },
         offset: {
@@ -560,12 +560,15 @@
         autoClose: false,
         autoDelay: 1000,
         shortcut: false,
-        initShow: false,
+        initShow: true,
         customSize: 100,
         typeOpenTime: 250,
-        longPressTime: 250,
+        longPressTime: 500,
         noIcons: false,
-        showSiteLists: true
+        showSiteLists: true,
+        cacheSwitch: false,
+        noAni: false,
+        quickAddRule: true
     };
     function run() {
         const lang = navigator.appName == "Netscape" ? navigator.language : navigator.userLanguage;
