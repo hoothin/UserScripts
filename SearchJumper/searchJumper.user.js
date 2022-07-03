@@ -2019,7 +2019,12 @@
                         if (!inputMatch) return false;
                         customInput = true;
                         if (self.stopInput) return false;
-                        let promptStr = inputMatch[1].split(",");
+                        let promptStr;
+                        if (inputMatch[1].indexOf("\"") === 0 && inputMatch[1].indexOf("\",\"") !== -1) {
+                            promptStr = inputMatch[1].substr(1, inputMatch[1].length - 2).split("\",\"");
+                        } else {
+                            promptStr = inputMatch[1].split(",");
+                        }
                         if (promptStr.length === 2) {
                             promptStr = window.prompt(promptStr[0], promptStr[1]);
                         } else {
