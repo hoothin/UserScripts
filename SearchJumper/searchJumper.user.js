@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.5.8
+// @version      1.6.5.5.9
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -1263,6 +1263,16 @@
                 storage.setItem("lastSign", 0);
             }
 
+            setCurrentSite(data) {
+                currentSite = data;
+                localKeywords = "";
+                let keywords = getKeywords();
+                if (keywords && keywords != cacheKeywords) {
+                    cacheKeywords = keywords;
+                    storage.setItem("cacheKeywords", keywords);
+                }
+            }
+
             refresh() {
                 if (!currentSite && this.bar.style.display == "none") {
                     let typeData;
@@ -1282,20 +1292,20 @@
                             if (data.match === '0') {
                             } else if (data.match) {
                                 if (new RegExp(data.match).test(location.href)) {
-                                    currentSite = data;
+                                    this.setCurrentSite(data);
                                 }
                             } else if (data.url.indexOf(location.host) != -1) {
                                 if (data.url.indexOf("site") != -1) {
                                     let siteMatch = data.url.match(/site(%3A|:)(.+?)[\s%]/);
                                     if (siteMatch && location.href.indexOf(siteMatch[2]) != -1 && data.url.replace(siteMatch[0], "").indexOf(location.host) != -1) {
-                                        currentSite = data;
+                                        this.setCurrentSite(data);
                                     }
                                 } else if (!currentSite && data.url.replace(/^https?:\/\//, "").replace(location.host, "").replace(/\/?[\?#].*/, "") == location.pathname.replace(/\/$/, "")) {
                                     let urlReg = data.url.match(/[^\/\?&]+(?=%[stb])/g);
                                     if (urlReg) {
                                         urlReg = urlReg.join('.*');
                                         if (new RegExp(urlReg).test(location.href)) {
-                                            currentSite = data;
+                                            this.setCurrentSite(data);
                                         }
                                     }
                                 }
@@ -1775,7 +1785,7 @@
                     siteEles.push(siteEle);
                     if (!currentSite && (siteEle.dataset.current || match)) {
                         isCurrent = true;
-                        currentSite = site;
+                        self.setCurrentSite(site);
                     }
                 });
                 if (searchData.prefConfig.showSiteLists) {
@@ -1981,7 +1991,10 @@
                 let getUrl = () => {
                     customInput = false;
                     let keywords = getKeywords();
-                    //if (keywords && keywords != cacheKeywords) storage.setItem("cacheKeywords", keywords);
+                    if (keywords && keywords != cacheKeywords) {
+                        cacheKeywords = keywords;
+                        storage.setItem("cacheKeywords", keywords);
+                    }
                     if (!ele.dataset.url) {
                         ele.dataset.url = data.url.replace(/%e\b/g, document.charset).replace(/%c\b/g, (isMobile?"mobile":"pc")).replace(/%u\b/g, location.href).replace(/%U\b/g, encodeURIComponent(location.href)).replace(/%h\b/g, location.host);
                     }
@@ -2061,7 +2074,7 @@
                             resultUrl = resultUrl.replace(/%B\b/g, encodeURIComponent(promptStr.replace(/^https?:\/\//i, "")));
                         }
                     }
-                    return resultUrl.replace(/%t\b/g, targetUrl).replace(/%T\b/g, encodeURIComponent(targetUrl)).replace(/%b\b/g, targetBaseUrl).replace(/%B\b/g, encodeURIComponent(targetBaseUrl)).replace(/%n\b/g, targetName).replace(/%s\b/g, keywords);
+                    return resultUrl.replace(/%t\b/g, targetUrl).replace(/%T\b/g, encodeURIComponent(targetUrl)).replace(/%b\b/g, targetBaseUrl).replace(/%B\b/g, encodeURIComponent(targetBaseUrl)).replace(/%n\b/g, targetName).replace(/%s\b/g, keywords).replace(/%S\b/g, (cacheKeywords || keywords));
                 };
                 let action = e => {
                     if (/^\[/.test(data.url)) {
@@ -2674,7 +2687,7 @@
             }
             if (localKeywords) return localKeywords;
             if (!currentSite) return '';
-            if (localKeywords === '' && cacheKeywords) return cacheKeywords;
+            //if (localKeywords === '' && cacheKeywords) return cacheKeywords;
 
             let keywordsMatch, keywords = '';
             if (currentSite.keywords) {
@@ -2703,7 +2716,7 @@
                 if (firstInput) keywords = encodeURIComponent(firstInput.value);
             }
             localKeywords = keywords;
-            return !localKeywords ? cacheKeywords : localKeywords;
+            return localKeywords;//!localKeywords ? cacheKeywords : localKeywords;
         }
 
         function eventSupported(eventName, elem) {
@@ -3449,12 +3462,11 @@
                     resolve(data);
                 });
             });
-            cacheKeywords = '';
-            /*await new Promise((resolve) => {
+            cacheKeywords = await new Promise((resolve) => {
                 storage.getItem("cacheKeywords", data => {
                     resolve(data || '');
                 });
-            });*/
+            });
             lastSign = await new Promise((resolve) => {
                 storage.getItem("lastSign", data => {
                     resolve(data || 0);
