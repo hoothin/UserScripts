@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.6.7
+// @version      1.6.5.6.8
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -1273,10 +1273,12 @@
             setCurrentSite(data) {
                 currentSite = data;
                 localKeywords = "";
-                let keywords = getKeywords();
-                if (keywords && keywords != cacheKeywords) {
-                    cacheKeywords = keywords;
-                    storage.setItem("cacheKeywords", keywords);
+                if (!/#p{/.test(data.url)) {
+                    let keywords = getKeywords();
+                    if (keywords && keywords != cacheKeywords) {
+                        cacheKeywords = keywords;
+                        storage.setItem("cacheKeywords", keywords);
+                    }
                 }
             }
 
@@ -1612,7 +1614,8 @@
                     }
                 } else {
                     let i = document.createElement("i");
-                    i.innerText = type;
+                    i.innerText = type.substr(0, 3).trim();
+                    if (!/^\w+$/.test(i.innerText)) i.innerText = i.innerText.substr(0, 2);
                     i.style.fontSize = 14 * this.scale + 'px';
                     i.style.color = 'wheat';
                     typeBtn.appendChild(i);
@@ -1992,10 +1995,8 @@
                                             if (v === 'click()') {
                                                 emuClick(input);
                                             } else {
-                                                input.focus();
-                                                input.value = v;
-                                                let inputEvent = new InputEvent("input");
-                                                input.dispatchEvent(inputEvent);
+                                                if (!localKeywords) localKeywords = v;
+                                                emuInput(input, v);
                                             }
                                         }
                                         form = input.parentNode;
@@ -2045,6 +2046,8 @@
                                 imgBase64 = image2Base64(targetElement);
                                 resultUrl = resultUrl.replace(/%i\b/g, imgBase64);
                             }
+                        } else if ((targetElement.tagName == 'A' || targetElement.parentNode.tagName == 'A') && /%s\b/.test(ele.dataset.url) && !keywords) {
+                            keywords = targetElement.textContent;
                         }
                     }
                     while (resultUrl.indexOf('%input{') !== -1) {
@@ -2561,6 +2564,29 @@
             }
         }
 
+        function emuInput(input, v) {
+            if (input) {
+                let event = new Event('focus', { bubbles: true });
+                input.dispatchEvent(event);
+                let lastValue = input.value;
+                if (input.tagName == "INPUT") {
+                    var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
+                    nativeInputValueSetter.call(input, v);
+                } else {
+                    var nativeTextareaValueSetter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, "value").set;
+                    nativeTextareaValueSetter.call(input, v);
+                }
+                event = new Event('input', { bubbles: true });
+                let tracker = input._valueTracker;
+                if (tracker) {
+                    tracker.setValue(lastValue);
+                }
+                input.dispatchEvent(event);
+                event = new Event('change', { bubbles: true });
+                input.dispatchEvent(event);
+            }
+        }
+
         function emuClick(btn){
             if(!PointerEvent) return btn.click();
             let eventParam = {
@@ -3026,7 +3052,7 @@
                 document.addEventListener('mousedown', e => {
                     if (e.target.classList.contains('search-jumper-btn') ||
                         e.target.tagName === 'CANVAS' ||
-                        (e.target.parentNode && e.target.parentNode.classList && e.target.parentNode.classList.contains('search-jumper-btn'))) {
+                        (searchBar.bar.contains(e.target))) {
                         return;
                     }
                     shown = false;
@@ -3433,6 +3459,9 @@
                     searchData.sitesConfig[typeSelect.value].sites.push(siteObj);
                     storage.setItem("searchData", searchData);
                     _GM_notification(i18n("siteAddOver"));
+                    if (addFrame.parentNode) {
+                        addFrame.parentNode.removeChild(addFrame);
+                    }
                 });
             }
             document.body.appendChild(addFrame);
