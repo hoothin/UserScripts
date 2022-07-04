@@ -1390,10 +1390,23 @@
                         }
                     }, false);
                     li.appendChild(a);
-                    if (icon && (icon.src || icon.dataset.src)) {
-                        let img = document.createElement("img");
-                        img.src = icon.src || icon.dataset.src;
-                        a.appendChild(img);
+                    if (icon) {
+                        let iconSrc = icon.src || icon.dataset.src;
+                        if (iconSrc) {
+                            let img = document.createElement("img");
+                            if (!/^data:/.test(iconSrc)) {
+                                img.style.width = "1px";
+                                img.style.height = "1px";
+                                img.style.opacity = 0;
+                                img.onload = e => {
+                                    img.style.width = "";
+                                    img.style.height = "";
+                                    img.style.opacity = 1;
+                                };
+                            }
+                            img.src = iconSrc;
+                            a.appendChild(img);
+                        }
                     }
                     let p = document.createElement("p");
                     p.innerText = siteEle.dataset.name;
