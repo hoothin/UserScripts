@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.6.3
+// @version      1.6.5.6.5
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -1186,30 +1186,23 @@
                         searchData.prefConfig.offset.y
                     );
                 }
+                let appendCss = () => {};
                 if (this.fontPool.length > 0 || location.href.indexOf(configPage) === 0) {
                     let linkEle = document.createElement("link");
                     linkEle.rel="stylesheet";
                     linkEle.href = searchData.prefConfig.fontAwesomeCss || "https://lib.baomitu.com/font-awesome/6.0.0-beta2/css/all.css";
-                    let appendCss = () => {
-                        if (document.readyState == 'complete') {
-                            document.documentElement.insertBefore(linkEle, document.documentElement.children[0]);
-                            this.waitForFontAwesome(() => {
-                                this.fontPool.forEach(font => {
-                                    font.innerText = '';
-                                    font.style.fontSize = '';
-                                    font.style.color = '';
-                                    cachePool.push(font);
-                                });
-                                setTimeout(() => {cacheManager()}, 1000);
+                    appendCss = () => {
+                        document.documentElement.insertBefore(linkEle, document.documentElement.children[0]);
+                        this.waitForFontAwesome(() => {
+                            this.fontPool.forEach(font => {
+                                font.innerText = '';
+                                font.style.fontSize = '';
+                                font.style.color = '';
+                                cachePool.push(font);
                             });
-                        }
+                            setTimeout(() => {cacheManager()}, 1000);
+                        });
                     };
-                    if (document.readyState == 'complete') {
-                        appendCss();
-                    }
-                    document.addEventListener('readystatechange', event => {
-                        appendCss();
-                    })
                 } else {
                     cacheManager();
                 }
@@ -1252,6 +1245,21 @@
                 }
                 lastSign = 0;
                 storage.setItem("lastSign", 0);
+                let waitToRun = () => {
+                    setTimeout(() => {
+                        appendCss();
+                    }, 1);
+                };
+                if (document.readyState == 'complete' || document.readyState == 'interactive') {
+                    waitToRun();
+                }
+                let readystatechangeHandler = event => {
+                    if (document.readyState == 'complete' || document.readyState == 'interactive') {
+                        document.removeEventListener('readystatechange', readystatechangeHandler);
+                        waitToRun();
+                    }
+                };
+                document.addEventListener('readystatechange', readystatechangeHandler);
             }
 
             setCurrentSite(data) {
@@ -1382,9 +1390,9 @@
                         }
                     }, false);
                     li.appendChild(a);
-                    if (icon && icon.src) {
+                    if (icon && (icon.src || icon.dataset.src)) {
                         let img = document.createElement("img");
-                        img.src = icon.src;
+                        img.src = icon.src || icon.dataset.src;
                         a.appendChild(img);
                     }
                     let p = document.createElement("p");
@@ -1668,6 +1676,12 @@
                                 type.style.flexWrap = "";
                             }
                         });
+                        siteEles.forEach(se => {
+                            let si = se.querySelector("img");
+                            if (si && !si.src) {
+                                si.src = si.dataset.src;
+                            }
+                        });
                     } else {
                         ele.classList.add("search-jumper-hide");
                         if (self.bar.parentNode.classList.contains("search-jumper-left") ||
@@ -1793,6 +1807,12 @@
                         batchOpen();
                         lastSign = 0;
                     }
+                    siteEles.forEach(se => {
+                        let si = se.querySelector("img");
+                        if (si && !si.src) {
+                            si.src = si.dataset.src;
+                        }
+                    });
                 } else {
                     self.bar.insertBefore(ele, self.bar.children[self.bar.children.length - 1]);
                     ele.dataset.width = ele.scrollWidth + "px";
@@ -1858,7 +1878,7 @@
                     if (cache) {
                         img.src = cache;
                     } else {
-                        img.src = imgSrc;
+                        img.dataset.src = imgSrc;
                         if (searchData.prefConfig.cacheSwitch) cachePool.push(img);
                     }
                 }
@@ -2636,10 +2656,11 @@
             await new Promise((resolve) => {
                 setTimeout(() => {
                     resolve(true);
-                }, 10);
+                }, 1);
             });
             if (!searchData.prefConfig.cacheSwitch) return;
             if (target.tagName == 'IMG') {
+                if (!target.src && target.dataset.src) target.src = target.dataset.src;
                 let cache;
                 if (target.complete) {
                     if (target.naturalHeight && target.naturalWidth) {
@@ -3537,7 +3558,7 @@
             } else {
                 setTimeout(() => {
                     checkReady();
-                }, 100);
+                }, 10);
             }
         };
         checkReady();
