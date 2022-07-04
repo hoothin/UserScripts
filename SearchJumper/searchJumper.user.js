@@ -548,7 +548,7 @@
         autoClose: false,
         autoDelay: 1000,
         shortcut: false,
-        initShow: true,
+        initShow: false,
         customSize: 100,
         typeOpenTime: 250,
         longPressTime: 500,
