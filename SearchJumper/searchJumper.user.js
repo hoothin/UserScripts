@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.6.5
+// @version      1.6.5.6.6
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -556,7 +556,9 @@
         showSiteLists: true,
         cacheSwitch: false,
         noAni: false,
-        quickAddRule: true
+        quickAddRule: true,
+        multiline: 2,//0 关闭 1 开启 2 询问
+        multilineGap: 1000
     };
     function run() {
         const lang = navigator.appName == "Netscape" ? navigator.language : navigator.userLanguage;
@@ -582,7 +584,9 @@
                     siteAdd: '添加',
                     siteType: '分类',
                     siteExist: '已存在相同规则，终止添加',
-                    siteAddOver: '站点添加成功'
+                    siteAddOver: '站点添加成功',
+                    multiline: '是否以换行符分隔多行搜索？',
+                    multilineTooMuch: '行数超过10行，是否继续搜索？'
                 };
                 break;
             case "zh-TW":
@@ -605,7 +609,9 @@
                     siteAdd: '添加',
                     siteType: '分類',
                     siteExist: '已存在相同規則，終止添加',
-                    siteAddOver: '站點添加成功'
+                    siteAddOver: '站點添加成功',
+                    multiline: '是否以換行符分隔多行搜索？',
+                    multilineTooMuch: '行數超過10行，是否繼續搜索？'
                 };
                 break;
             default:
@@ -627,7 +633,9 @@
                     siteAdd: 'Add',
                     siteType: 'Category',
                     siteExist: 'Abort as the site is already exist',
-                    siteAddOver: 'Site added successfully'
+                    siteAddOver: 'Site added successfully',
+                    multiline: 'Search as multilines?',
+                    multilineTooMuch: 'The number of lines exceeds 10, do you want to continue searching?'
                 };
                 break;
         }
@@ -1614,13 +1622,13 @@
                         self.batchOpening = true;
                         siteEles.forEach(siteEle => {
                             if (siteEle.dataset.nobatch || siteEle.dataset.current) return;
-                            let isJs = /^javascript:/.test(siteEle.href);
-                            if (!isJs) {
+                            let isPage = /^(https?|ftp):/.test(siteEle.href);
+                            if (isPage) {
                                 siteEle.setAttribute("target", "_blank");
                             }
                             let mouseDownEvent = new PointerEvent("mousedown");
                             siteEle.dispatchEvent(mouseDownEvent);
-                            if (siteEle.onclick || isJs) {
+                            if (siteEle.onclick || !isPage) {
                                 siteEle.click();
                             } else {
                                 _GM_openInTab(siteEle.href);
@@ -1830,6 +1838,8 @@
                     self.bar.insertBefore(ele, self.bar.children[self.bar.children.length - 1]);
                     ele.dataset.width = ele.scrollWidth + "px";
                 }
+                ele.style.width = ele.scrollHeight + "px";
+                ele.style.height = ele.scrollHeight + "px";
                 if (inPage && selectImg && selectAudio && selectVideo && selectLink && selectPage) {
                     ele.classList.add("search-jumper-targetAll");
                 } else {
@@ -1858,7 +1868,7 @@
 
             createSiteBtn(name, icon, data, openInNewTab) {
                 let self = this;
-                let isBookmarklet = /^javascript:/.test(data.url);
+                let isPage = /^(https?|ftp):/.test(data.url);
                 let ele = document.createElement("a");
                 ele.className = "search-jumper-btn";
                 if (typeof data.description !== 'undefined') ele.title = data.description;
@@ -2007,7 +2017,7 @@
                         ele.style.display = 'none';
                     }
                 }
-                if (!isBookmarklet && (openInNewTab || searchData.prefConfig.openInNewTab)) {
+                if (isPage && (openInNewTab || searchData.prefConfig.openInNewTab)) {
                     ele.setAttribute("target", "_blank");
                     ele.dataset.target = 1;
                 }
@@ -2244,12 +2254,14 @@
                             //disable click
                             ele.onclick = e => {
                                 ele.onclick = null;
+                                e.preventDefault();
+                                e.stopPropagation();
                                 return false;
                             };
                         } else ele.href = url;
-                        let isJs = /^javascript:/.test(url);
+                        let isPage = /^(https?|ftp):/.test(url);
                         let checkAlt = () => {
-                            if (alt && !isJs) {
+                            if (alt && isPage) {
                                 ele.onclick = e => {
                                     ele.onclick = null;
                                     _unsafeWindow.open(url, "_blank", "width=800, height=1000, location=0, resizable=1, menubar=0, scrollbars=0");
@@ -2262,7 +2274,7 @@
                         if (customInput) {
                             if (self.batchOpening !== true) {
                                 //lose click, click one more time
-                                if (checkAlt() || isJs) {
+                                if (checkAlt() || !isPage) {
                                     ele.click();
                                 } else {
                                     _GM_openInTab(url, {active: true});
@@ -2270,6 +2282,40 @@
                             }
                         } else {
                             if (!checkAlt()) {
+                                if (searchData.prefConfig.multiline == 1 || searchData.prefConfig.multiline == 2) {
+                                    let selStr = getSelectStr();
+                                    if (selStr &&
+                                        /%s\b/.test(ele.dataset.url) &&
+                                        selStr.indexOf("\n") !== -1) {
+                                        if (searchData.prefConfig.multiline == 1 ||
+                                            confirm(i18n("multiline"))) {
+                                            let selStrArr = selStr.split("\n");
+                                            if (selStrArr.length > 10 && !confirm(i18n("multilineTooMuch"))) return;
+                                            let encodeSelStr = encodeURIComponent(selStr);
+                                            let searchIndex = 0;
+                                            let searchByLine = () => {
+                                                _GM_openInTab(url.replace(encodeSelStr, encodeURIComponent(selStrArr[searchIndex++])));
+                                                if (searchIndex < selStrArr.length) {
+                                                    setTimeout(() => {
+                                                        searchByLine();
+                                                    }, searchData.prefConfig.multilineGap || 1000);
+                                                }
+                                            };
+                                            searchByLine();
+                                            if (searchData.prefConfig.multiline == 1) {
+                                                ele.onclick = e => {
+                                                    ele.onclick = null;
+                                                    e.preventDefault();
+                                                    e.stopPropagation();
+                                                    return false;
+                                                };
+                                            }
+                                        } else {
+                                            ele.click();
+                                        }
+                                        return false;
+                                    }
+                                }
                                 ele.onclick = null;
                             }
                         }
@@ -3539,6 +3585,12 @@
             }
             if (typeof searchData.prefConfig.quickAddRule === "undefined") {
                 searchData.prefConfig.quickAddRule = true;
+            }
+            if (typeof searchData.prefConfig.multiline === "undefined") {
+                searchData.prefConfig.multiline = 2;
+            }
+            if (typeof searchData.prefConfig.multilineGap === "undefined") {
+                searchData.prefConfig.multilineGap = 1000;
             }
         }
 
