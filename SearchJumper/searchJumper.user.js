@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.6.8
+// @version      1.6.5.6.9
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -970,6 +970,9 @@
                  .search-jumper-isTargetLink>.search-jumper-type {
                      display: none;
                  }
+                 #search-jumper>.search-jumper-searchBar>.search-jumper-type.search-jumper-logo {
+                     display: inline-flex;
+                 }
                  .search-jumper-searchBar>.search-jumper-type.search-jumper-targetAll {
                      display: inline-flex;
                  }
@@ -1058,8 +1061,8 @@
                  }
                  .search-jumper-word {
                      background: black;
-                     color: white!important;
-                     text-shadow: 0px 0px 5px black;
+                     color: #f5f7fa!important;
+                     text-shadow: 0px 0px 5px #707070;
                      font-family: system-ui,Arial,sans-serif;
                      font-weight: bold;
                      border-radius: ${20 * this.scale}px!important;
@@ -1069,7 +1072,7 @@
                      height: ${32 * this.scale}px;
                      min-width: ${32 * this.scale}px;
                      min-height: ${32 * this.scale}px;
-                     letter-spacing: 2px;
+                     letter-spacing: 0px;
                  }
                  a.search-jumper-word {
                      background: #505050;
@@ -1100,6 +1103,9 @@
                      width: ${20 * this.scale}px;
                      height: ${20 * this.scale}px;
                      margin: auto;
+                 }
+                 .search-jumper-searchBar .search-jumper-btn.search-jumper-word:hover {
+                     background: black;
                  }
                  .search-jumper-searchBar .search-jumper-btn:hover {
                      -webkit-transform:scale(1.2);
@@ -1879,6 +1885,7 @@
                 ele.classList.add("search-jumper-word");
                 let word = document.createElement("span");
                 word.innerText = name.substr(0, 3).trim();
+                if (!/^\w+$/.test(word.innerText)) word.innerText = word.innerText.substr(0, 2);
                 ele.appendChild(word);
                 let img = document.createElement("img");
                 img.style.opacity = 0;
@@ -3049,6 +3056,14 @@
                         }
                     });
                 }
+                let clientRect;
+                if (searchData.prefConfig.leftMouse) {
+                    document.addEventListener('selectionchange', (e) => {
+                        const selection = window.getSelection();
+                        const range = selection.getRangeAt(0);
+                        clientRect = range.getBoundingClientRect();
+                    });
+                }
                 document.addEventListener('mousedown', e => {
                     if (e.target.classList.contains('search-jumper-btn') ||
                         e.target.tagName === 'CANVAS' ||
@@ -3067,6 +3082,16 @@
                         (e.which === 1 || e.which === 2) && !searchData.prefConfig.leftMouse) {
                         return;
                     }
+                    if (e.which === 1 && clientRect) {
+                        if (e.clientX > clientRect.left && e.clientX < clientRect.left + clientRect.width &&
+                           e.clientY > clientRect.top && e.clientY < clientRect.top + clientRect.height) {
+                            searchBar.showInPage();
+                            shown = true;
+                            e.stopPropagation();
+                            e.preventDefault();
+                            return false;
+                        }
+                    }
                     let selectImg = e.target.tagName === 'IMG';
                     let matchKey = searchData.prefConfig.altKey ||
                         searchData.prefConfig.ctrlKey ||
@@ -3078,6 +3103,14 @@
                         searchBar.showInPage();
                         shown = true;
                     }, parseInt(searchData.prefConfig.longPressTime));
+                    let mouseMoveTimer = setTimeout(() => {
+                        document.addEventListener('mousemove', mouseMoveHandler, false);
+                    }, 10);
+                    let mouseMoveHandler = e => {
+                        clearTimeout(showToolbarTimer);
+                        clearTimeout(mouseMoveTimer);
+                        document.removeEventListener('mousemove', mouseMoveHandler, false);
+                    };
                     let mouseUpHandler = e => {
                         if (shown) {
                             e.stopPropagation();
@@ -3086,7 +3119,9 @@
                             searchBar.showInPage();
                         }
                         clearTimeout(showToolbarTimer);
+                        clearTimeout(mouseMoveTimer);
                         document.removeEventListener('mouseup', mouseUpHandler, false);
+                        document.removeEventListener('mousemove', mouseMoveHandler, false);
                     };
                     document.addEventListener('mouseup', mouseUpHandler, false);
                 }, true);
