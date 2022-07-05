@@ -78,6 +78,10 @@ wait
 --
 The time to wait for page ready when you are sure the url match the site, you can also use a js code which return a boolean to check if the page is ready instead
 
+waitElement
+--
+The array["exist", "not exist"] contains "selector of element must exist (for some lazyload element)" & "selector of element must not exist (for some loading placeholder which need scroll into view to load)"
+
 type
 --
 0 means xpath, 1 or undefined means css selector
