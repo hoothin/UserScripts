@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.26.15
+// @version      1.9.26.16
 // @description  Perpetual pages - Most powerful Auto Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -180,6 +180,7 @@
                 editBlacklist:"编辑黑名单网址，一行一条，支持? *通配符",
                 upBtnImg:"回到页首图标",
                 downBtnImg:"前往页尾图标",
+                loadingTextTitle:"加载中文字",
                 dbClick2StopCtrl:"Ctrl 键",
                 dbClick2StopAlt:"Alt 键",
                 dbClick2StopShift:"Shift 键",
@@ -237,6 +238,7 @@
                 editBlacklist:"編輯黑名單網址，一行一條，支持? *通配符",
                 upBtnImg:"回到頁首圖標",
                 downBtnImg:"前往頁尾圖標",
+                loadingTextTitle:"加載中文字",
                 dbClick2StopCtrl:"Ctrl 鍵",
                 dbClick2StopAlt:"Alt 鍵",
                 dbClick2StopShift:"Shift 鍵",
@@ -293,6 +295,7 @@
                 editBlacklist:"ブラックリストのURLを編集し、1行ずつ、サポート? *ワイルドカード",
                 upBtnImg:"トップアイコンに戻る",
                 downBtnImg:"フッターアイコンに移動",
+                loadingTextTitle:"テキストをロード",
                 dbClick2StopCtrl:"Ctrlキー",
                 dbClick2StopAlt:"Altキー",
                 dbClick2StopShift:"Shiftキー",
@@ -349,6 +352,7 @@
                 editBlacklist:"Edit the blacklist urls, line by line, Support ? * for wildcard",
                 upBtnImg:"Icon of back to top",
                 downBtnImg:"Icon of go to footer",
+                loadingTextTitle:"Loading text",
                 dbClick2StopCtrl:"Ctrl key",
                 dbClick2StopAlt:"Alt key",
                 dbClick2StopShift:"Shift key",
@@ -654,6 +658,29 @@
             return true;
         }
 
+        waitElement(doc, selArr) {
+            if (!selArr) selArr = this.curSiteRule.waitElement;
+            if (selArr[0].trim()) {
+                let include = doc.querySelector(selArr[0]);
+                if (!include) return false;
+            }
+            if (selArr.length==2 && selArr[1].trim()) {
+                let exclude = doc.querySelector(selArr[1]);
+                if (exclude) {
+                    var actualTop = exclude.offsetTop;
+                    var current = exclude.offsetParent;
+                    while(current !== null){
+                        actualTop += current.offsetTop;
+                        current = current.offsetParent;
+                    }
+                    doc.body.scrollTop = actualTop;
+                    doc.documentElement.scrollTop = actualTop;
+                    return false;
+                }
+            }
+            return true;
+        }
+
         getRule(callback) {
             if(noRuleTest){
                 this.curSiteRule={};
@@ -684,8 +711,21 @@
                         let exclude=r.type==0?getElementByXpath(r.exclude):document.querySelector(r.exclude);
                         if(exclude)return false;
                     }
-                    if(r.wait){
-                        let waitTime=500,checkEval;
+                    if(r.waitElement){
+                        let waitTime=500;
+                        let checkReady=()=>{
+                            setTimeout(()=>{
+                                if(!self.waitElement(document, r.waitElement)){
+                                    checkReady();
+                                }else{
+                                    setRule(r);
+                                }
+                            },parseInt(waitTime));
+                        };
+                        checkReady();
+                        return true;
+                    }else if(r.wait){
+                        let waitTime=500, checkEval;
                         if(isNaN(r.wait)){
                             try{
                                 checkEval=(typeof _unsafeWindow.pagetualWait=='undefined') ? Function("doc",'"use strict";' + r.wait) : _unsafeWindow.pagetualWait;
@@ -1873,11 +1913,11 @@
         configCon.insertBefore(customUrlsInput, insertPos);
 
         let upBtnImg=document.createElement("div");
-        upBtnImg.style.width="45%";
+        upBtnImg.style.width="35%";
         upBtnImg.style.float="left";
         let upBtnImgTitle=document.createElement("h2");
         upBtnImgTitle.style.whiteSpace="nowrap";
-        upBtnImgTitle.style.overflow="hidden";
+        upBtnImgTitle.style.overflow="auto";
         upBtnImgTitle.innerHTML=i18n("upBtnImg");
         upBtnImg.appendChild(upBtnImgTitle);
         let upBtnImgInput=document.createElement("input");
@@ -1888,11 +1928,11 @@
         configCon.insertBefore(upBtnImg, insertPos);
 
         let downBtnImg=document.createElement("div");
-        downBtnImg.style.width="45%";
+        downBtnImg.style.width="35%";
         downBtnImg.style.float="left";
         let downBtnImgTitle=document.createElement("h2");
         downBtnImgTitle.style.whiteSpace="nowrap";
-        downBtnImgTitle.style.overflow="hidden";
+        downBtnImgTitle.style.overflow="auto";
         downBtnImgTitle.innerHTML=i18n("downBtnImg");
         downBtnImg.appendChild(downBtnImgTitle);
         let downBtnImgInput=document.createElement("input");
@@ -1902,13 +1942,30 @@
         downBtnImg.appendChild(downBtnImgInput);
         configCon.insertBefore(downBtnImg, insertPos);
 
+        let loadingText=document.createElement("div");
+        loadingText.style.width="20%";
+        loadingText.style.float="left";
+        loadingText.style.marginBottom="50px";
+        let loadingTextTitle=document.createElement("h2");
+        loadingTextTitle.style.whiteSpace="nowrap";
+        loadingTextTitle.style.overflow="auto";
+        loadingTextTitle.innerHTML=i18n("loadingTextTitle");
+        loadingText.appendChild(loadingTextTitle);
+        let loadingTextInput=document.createElement("input");
+        loadingTextInput.value=rulesData.loadingText||'';
+        loadingTextInput.placeholder=i18n("loadingText");
+        loadingTextInput.style.width="100%";
+        loadingTextInput.style.margin="0";
+        loadingText.appendChild(loadingTextInput);
+        configCon.insertBefore(loadingText, insertPos);
+
         let opacity=document.createElement("div");
         opacity.style.width="10%";
         opacity.style.float="left";
         opacity.style.marginBottom="50px";
         let opacityTitle=document.createElement("h2");
         opacityTitle.style.whiteSpace="nowrap";
-        opacityTitle.style.overflow="hidden";
+        opacityTitle.style.overflow="visible";
         opacityTitle.innerHTML=i18n("opacity");
         opacity.appendChild(opacityTitle);
         let opacityInput=document.createElement("input");
@@ -2052,6 +2109,7 @@
             rulesData.preload=preloadInput.checked;
             rulesData.upBtnImg=upBtnImgInput.value;
             rulesData.downBtnImg=downBtnImgInput.value;
+            rulesData.loadingText=loadingTextInput.value;
             rulesData.dbClick2StopCtrl=dbClick2StopCtrlInput.checked;
             rulesData.dbClick2StopAlt=dbClick2StopAltInput.checked;
             rulesData.dbClick2StopShift=dbClick2StopShiftInput.checked;
@@ -2266,6 +2324,7 @@
                 if(downBtnImg){
                     downSvg=`<img src="${downBtnImg}"/>`;
                 }
+                setLoadingDiv(rulesData.loadingText || i18n("loadingText"));
                 if(typeof(rulesData.opacity)=="undefined"){
                     rulesData.opacity=0.3;
                 }
@@ -2558,7 +2617,10 @@
     }
     var loadingDiv=document.createElement("div");
     loadingDiv.style.cssText="cy: initial;d: initial;dominant-baseline: initial;empty-cells: initial;fill: initial;fill-opacity: initial;fill-rule: initial;filter: initial;flex: initial;flex-flow: initial;float: initial;flood-color: initial;flood-opacity: initial;grid: initial;grid-area: initial;height: initial;hyphens: initial;image-orientation: initial;image-rendering: initial;inline-size: initial;inset-block: initial;inset-inline: initial;isolation: initial;letter-spacing: initial;lighting-color: initial;line-break: initial;list-style: initial;margin-block: initial;margin: 0px auto;margin-inline: initial;marker: initial;mask: initial;mask-type: initial;max-block-size: initial;max-height: initial;max-inline-size: initial;max-width: initial;min-block-size: initial;min-height: initial;min-inline-size: initial;min-width: initial;mix-blend-mode: initial;object-fit: initial;object-position: initial;offset: initial;opacity: initial;order: initial;origin-trial-test-property: initial;orphans: initial;outline: initial;outline-offset: initial;overflow-anchor: initial;overflow-clip-margin: initial;overflow-wrap: initial;overflow: initial;overscroll-behavior-block: initial;overscroll-behavior-inline: initial;overscroll-behavior: initial;padding-block: initial;padding: initial;padding-inline: initial;page: initial;page-orientation: initial;paint-order: initial;perspective: initial;perspective-origin: initial;pointer-events: initial;position: initial;quotes: initial;r: initial;resize: initial;ruby-position: initial;rx: initial;ry: initial;scroll-behavior: initial;scroll-margin-block: initial;scroll-margin: initial;scroll-margin-inline: initial;scroll-padding-block: initial;scroll-padding: initial;scroll-padding-inline: initial;scroll-snap-align: initial;scroll-snap-stop: initial;scroll-snap-type: initial;scrollbar-gutter: initial;shape-image-threshold: initial;shape-margin: initial;shape-outside: initial;shape-rendering: initial;size: initial;speak: initial;stop-color: initial;stop-opacity: initial;stroke: initial;stroke-dasharray: initial;stroke-dashoffset: initial;stroke-linecap: initial;stroke-linejoin: initial;stroke-miterlimit: initial;stroke-opacity: initial;stroke-width: initial;tab-size: initial;table-layout: initial;text-align: initial;text-align-last: initial;text-anchor: initial;text-combine-upright: initial;text-decoration: initial;text-decoration-skip-ink: initial;text-indent: initial;text-overflow: initial;text-shadow: initial;text-size-adjust: initial;text-transform: initial;text-underline-offset: initial;text-underline-position: initial;touch-action: initial;transform: initial;transform-box: initial;transform-origin: initial;transform-style: initial;transition: initial;user-select: initial;vector-effect: initial;vertical-align: initial;visibility: initial;border-spacing: initial;-webkit-border-image: initial;-webkit-box-align: initial;-webkit-box-decoration-break: initial;-webkit-box-direction: initial;-webkit-box-flex: initial;-webkit-box-ordinal-group: initial;-webkit-box-orient: initial;-webkit-box-pack: initial;-webkit-box-reflect: initial;-webkit-highlight: initial;-webkit-hyphenate-character: initial;-webkit-line-break: initial;-webkit-line-clamp: initial;-webkit-mask-box-image: initial;-webkit-mask: initial;-webkit-mask-composite: initial;-webkit-perspective-origin-x: initial;-webkit-perspective-origin-y: initial;-webkit-print-color-adjust: initial;-webkit-rtl-ordering: initial;-webkit-ruby-position: initial;-webkit-tap-highlight-color: initial;-webkit-text-combine: initial;-webkit-text-decorations-in-effect: initial;-webkit-text-emphasis: initial;-webkit-text-emphasis-position: initial;-webkit-text-fill-color: initial;-webkit-text-security: initial;-webkit-text-stroke: initial;-webkit-transform-origin-x: initial;-webkit-transform-origin-y: initial;-webkit-transform-origin-z: initial;-webkit-user-drag: initial;-webkit-user-modify: initial;white-space: initial;widows: initial;width: initial;will-change: initial;word-break: initial;word-spacing: initial;x: initial;y: initial;z-index: 2147483647;";
-    loadingDiv.innerHTML=`<p class="pagetual_loading_text" style="display: block; position: initial; margin: auto auto 5px auto; shape-rendering: auto; vertical-align: middle; visibility: visible; width: initial; height: initial; text-align: center; color: #6e6e6e;">${i18n("loadingText")}</p><div class="pagetual_loading"><svg width="50" height="50" style="position:relative;cursor: pointer;width: 50px;height: 50px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6364"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#6e6e6e" p-id="6365"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#6e6e6e" p-id="6366"></path></svg></div>`;
+    function setLoadingDiv(loadingText){
+        loadingDiv.innerHTML=`<p class="pagetual_loading_text" style="display: block; position: initial; margin: auto auto 5px auto; shape-rendering: auto; vertical-align: middle; visibility: visible; width: initial; height: initial; text-align: center; color: #6e6e6e;">${loadingText}</p><div class="pagetual_loading"><svg width="50" height="50" style="position:relative;cursor: pointer;width: 50px;height: 50px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6364"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#6e6e6e" p-id="6365"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#6e6e6e" p-id="6366"></path></svg></div>`;
+    }
+
     var loadingCSS=`display: block; position: initial; margin: auto auto 5px auto; shape-rendering: auto; vertical-align: middle; visibility: visible; width: initial; height: initial; text-align: center; color: #6e6e6e;`;
 
     var upSvg=`<svg width="30" height="30" style="display:initial;position:absolute;cursor: pointer;margin: 0 -45px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6364"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a" p-id="6365"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a" p-id="6366"></path></svg>`;
@@ -3068,7 +3130,11 @@
         }
         iframe.style.cssText = 'margin:0!important;padding:0!important;visibility:hidden!important;';
         let waitTime=100,checkEval;
-        if(ruleParser.curSiteRule.wait){
+        if(ruleParser.curSiteRule.waitElement){
+            checkEval = doc => {
+                return ruleParser.waitElement(doc);
+            };
+        }else if(ruleParser.curSiteRule.wait){
             if(isNaN(ruleParser.curSiteRule.wait)){
                 try{
                     checkEval=(typeof _unsafeWindow.pagetualWait=='undefined') ? Function("doc",'"use strict";' + ruleParser.curSiteRule.wait) : _unsafeWindow.pagetualWait;
@@ -3135,7 +3201,7 @@
         document.body.appendChild(iframe);
     }
 
-    var emuIframe,lastActiveUrl=location.href;
+    var emuIframe,lastActiveUrl;
     function emuPage(callback){
         let orgPage=null,orgContent=null,preContent=null,curPage,iframeDoc,times=0,loadmoreBtn,loadmoreEnd=false,waitTimes=10,changed=false;
         function checkPage(){
@@ -3151,7 +3217,11 @@
 
             let nextLink=ruleParser.getNextLink(iframeDoc);
             let waitTime=200,checkEval;
-            if(ruleParser.curSiteRule.wait){
+            if(ruleParser.curSiteRule.waitElement){
+                checkEval = doc => {
+                    return ruleParser.waitElement(doc);
+                };
+            }else if(ruleParser.curSiteRule.wait){
                 if(isNaN(ruleParser.curSiteRule.wait)){
                     try{
                         checkEval=(typeof _unsafeWindow.pagetualWait=='undefined') ? Function("doc",'"use strict";' + ruleParser.curSiteRule.wait) : _unsafeWindow.pagetualWait;
@@ -3303,6 +3373,7 @@
                     checkPage();
                 },500);
             });
+            if (!lastActiveUrl) lastActiveUrl=location.href;
             emuIframe.src=lastActiveUrl.replace(/#[^#]*/,"");
             document.body.appendChild(emuIframe);
         }else{
