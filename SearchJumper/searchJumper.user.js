@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.6.10
+// @version      1.6.5.7
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -420,10 +420,10 @@
             selectImg: true,
             openInNewTab: true,
             sites: [ {
-                name: "Google",
+                name: "Google搜图",
                 url: "https://www.google.com/searchbyimage?image_url=%t"
             }, {
-                name: "Yandex",
+                name: "Yandex搜图",
                 url: "https://yandex.com/images/search?source=collections&rpt=imageview&url=%t"
             }, {
                 name: "SauceNAO",
@@ -435,19 +435,19 @@
                 name: "3D IQDB",
                 url: "https://3d.iqdb.org/?url=%t"
             }, {
-                name: "Baidu",
+                name: "Baidu搜图",
                 url: "https://graph.baidu.com/details?isfromtusoupc=1&tn=pc&carousel=0&promotion_name=pc_image_shituindex&extUiData%5bisLogoShow%5d=1&image=%t"
             }, {
-                name: "Bing",
+                name: "Bing搜图",
                 url: "https://www.bing.com/images/search?view=detailv2&iss=sbi&form=SBIVSP&sbisrc=UrlPaste&q=imgurl:%t"
             }, {
                 name: "TinEye",
                 url: "https://www.tineye.com/search?url=%t"
             }, {
-                name: "Sogou",
+                name: "Sogou搜图",
                 url: "https://pic.sogou.com/ris?query=%t"
             }, {
-                name: "360",
+                name: "360搜图",
                 url: "http://st.so.com/stu?imgurl=%t"
             }, {
                 name: "WhatAnime",
@@ -558,7 +558,9 @@
         noAni: false,
         quickAddRule: true,
         multiline: 2,//0 关闭 1 开启 2 询问
-        multilineGap: 1000
+        multilineGap: 1000,
+        historyLength: 0,
+        sortType: false
     };
     function run() {
         const lang = navigator.appName == "Netscape" ? navigator.language : navigator.userLanguage;
@@ -749,7 +751,7 @@
             return escapeHTMLPolicy?escapeHTMLPolicy.createHTML(html):html;
         }
 
-        var logoBtn, searchBar, searchTypes = [], currentSite = false, cacheKeywords, localKeywords, lastSign, cacheIcon, cachePool = [], currentFormParams;
+        var logoBtn, searchBar, searchTypes = [], currentSite = false, cacheKeywords, localKeywords, lastSign, cacheIcon, historySites, sortTypeNames, cachePool = [], currentFormParams;
         var logoBtnSvg = `<svg class="search-jumper-logoBtnSvg" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><title>${i18n("scriptName")}</title><path d="M.736 510.464c0-281.942 228.335-510.5 510-510.5 135.26 0 264.981 53.784 360.625 149.522 95.643 95.737 149.375 225.585 149.375 360.978 0 281.94-228.335 510.5-510 510.5-281.665 0-510-228.56-510-510.5zm510-510.5v1021m-510-510.5h1020" fill="#fefefe"/><path d="M237.44 346.624a48.64 48.64 0 1 0 97.28 0 48.64 48.64 0 1 0-97.28 0zM699.904 346.624a48.64 48.64 0 1 0 97.28 0 48.64 48.64 0 1 0-97.28 0zM423.296 759.296c-64 0-115.712-52.224-115.712-115.712 0-26.624 9.216-52.224 25.6-72.704 9.216-11.776 26.112-13.312 37.888-4.096s13.312 26.112 4.096 37.888c-9.216 11.264-13.824 24.576-13.824 38.912 0 34.304 27.648 61.952 61.952 61.952s61.952-27.648 61.952-61.952c0-4.096-.512-8.192-1.024-11.776-2.56-14.848 6.656-28.672 21.504-31.744 14.848-2.56 28.672 6.656 31.744 21.504 1.536 7.168 2.048 14.336 2.048 22.016-.512 63.488-52.224 115.712-116.224 115.712z" fill="#333"/><path d="M602.08 760.296c-64 0-115.712-52.224-115.712-115.712 0-14.848 12.288-27.136 27.136-27.136s27.136 12.288 27.136 27.136c0 34.304 27.648 61.952 61.952 61.952s61.952-27.648 61.952-61.952c0-15.36-5.632-30.208-15.872-41.472-9.728-11.264-9.216-28.16 2.048-37.888 11.264-9.728 28.16-9.216 37.888 2.048 19.456 21.504 29.696 48.64 29.696 77.824 0 62.976-52.224 115.2-116.224 115.2z" fill="#333"/><ellipse ry="58" rx="125" cy="506.284" cx="201.183" fill="#faf"/><ellipse ry="58" rx="125" cy="506.284" cx="823.183" fill="#faf"/></svg>`;
         var logoBase64 = "data:image/svg+xml;base64,PHN2ZyBjbGFzcz0ic2VhcmNoLWp1bXBlci1sb2dvQnRuU3ZnIiB2aWV3Qm94PSIwIDAgMTAyNCAxMDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0uNzM2IDUxMC40NjRjMC0yODEuOTQyIDIyOC4zMzUtNTEwLjUgNTEwLTUxMC41IDEzNS4yNiAwIDI2NC45ODEgNTMuNzg0IDM2MC42MjUgMTQ5LjUyMiA5NS42NDMgOTUuNzM3IDE0OS4zNzUgMjI1LjU4NSAxNDkuMzc1IDM2MC45NzggMCAyODEuOTQtMjI4LjMzNSA1MTAuNS01MTAgNTEwLjUtMjgxLjY2NSAwLTUxMC0yMjguNTYtNTEwLTUxMC41em01MTAtNTEwLjV2MTAyMW0tNTEwLTUxMC41aDEwMjAiIGZpbGw9IiNmZWZlZmUiLz48cGF0aCBkPSJNMjM3LjQ0IDM0Ni42MjRhNDguNjQgNDguNjQgMCAxIDAgOTcuMjggMCA0OC42NCA0OC42NCAwIDEgMC05Ny4yOCAwek02OTkuOTA0IDM0Ni42MjRhNDguNjQgNDguNjQgMCAxIDAgOTcuMjggMCA0OC42NCA0OC42NCAwIDEgMC05Ny4yOCAwek00MjMuMjk2IDc1OS4yOTZjLTY0IDAtMTE1LjcxMi01Mi4yMjQtMTE1LjcxMi0xMTUuNzEyIDAtMjYuNjI0IDkuMjE2LTUyLjIyNCAyNS42LTcyLjcwNCA5LjIxNi0xMS43NzYgMjYuMTEyLTEzLjMxMiAzNy44ODgtNC4wOTZzMTMuMzEyIDI2LjExMiA0LjA5NiAzNy44ODhjLTkuMjE2IDExLjI2NC0xMy44MjQgMjQuNTc2LTEzLjgyNCAzOC45MTIgMCAzNC4zMDQgMjcuNjQ4IDYxLjk1MiA2MS45NTIgNjEuOTUyczYxLjk1Mi0yNy42NDggNjEuOTUyLTYxLjk1MmMwLTQuMDk2LS41MTItOC4xOTItMS4wMjQtMTEuNzc2LTIuNTYtMTQuODQ4IDYuNjU2LTI4LjY3MiAyMS41MDQtMzEuNzQ0IDE0Ljg0OC0yLjU2IDI4LjY3MiA2LjY1NiAzMS43NDQgMjEuNTA0IDEuNTM2IDcuMTY4IDIuMDQ4IDE0LjMzNiAyLjA0OCAyMi4wMTYtLjUxMiA2My40ODgtNTIuMjI0IDExNS43MTItMTE2LjIyNCAxMTUuNzEyeiIgZmlsbD0iIzMzMyIvPjxwYXRoIGQ9Ik02MDIuMDggNzYwLjI5NmMtNjQgMC0xMTUuNzEyLTUyLjIyNC0xMTUuNzEyLTExNS43MTIgMC0xNC44NDggMTIuMjg4LTI3LjEzNiAyNy4xMzYtMjcuMTM2czI3LjEzNiAxMi4yODggMjcuMTM2IDI3LjEzNmMwIDM0LjMwNCAyNy42NDggNjEuOTUyIDYxLjk1MiA2MS45NTJzNjEuOTUyLTI3LjY0OCA2MS45NTItNjEuOTUyYzAtMTUuMzYtNS42MzItMzAuMjA4LTE1Ljg3Mi00MS40NzItOS43MjgtMTEuMjY0LTkuMjE2LTI4LjE2IDIuMDQ4LTM3Ljg4OCAxMS4yNjQtOS43MjggMjguMTYtOS4yMTYgMzcuODg4IDIuMDQ4IDE5LjQ1NiAyMS41MDQgMjkuNjk2IDQ4LjY0IDI5LjY5NiA3Ny44MjQgMCA2Mi45NzYtNTIuMjI0IDExNS4yLTExNi4yMjQgMTE1LjJ6IiBmaWxsPSIjMzMzIi8+PGVsbGlwc2Ugcnk9IjU4IiByeD0iMTI1IiBjeT0iNTA2LjI4NCIgY3g9IjIwMS4xODMiIGZpbGw9IiNmYWYiLz48ZWxsaXBzZSByeT0iNTgiIHJ4PSIxMjUiIGN5PSI1MDYuMjg0IiBjeD0iODIzLjE4MyIgZmlsbD0iI2ZhZiIvPjwvc3ZnPg==";
         var targetElement;
@@ -1190,6 +1192,8 @@
                 searchData.sitesConfig.forEach(siteConfig => {
                     this.createType(siteConfig);
                 });
+                this.initHistorySites();
+                this.initSort();
                 this.bar.style.display = "none";
                 if (currentSite && /%s\b/.test(currentSite.url)) {
                     this.bar.style.display = "";
@@ -1380,6 +1384,76 @@
                 }
 
                 setTimeout( checkReady, 50 );
+            }
+
+            initSort() {
+                if (!searchData.prefConfig.sortType) return;
+                let self = this;
+                searchTypes.sort((a, b) => {
+                    let aTypeValue = sortTypeNames[a.dataset.type] || 0;
+                    let bTypeValue = sortTypeNames[b.dataset.type] || 0;
+                    return bTypeValue - aTypeValue;
+                });
+                let allHide = self.bar.children[0].classList.contains("search-jumper-hide");
+                for (let i = searchTypes.length - 1; i >= 0; i--) {
+                    let typeEle = searchTypes[i];
+                    let curValue = sortTypeNames[typeEle.dataset.type] || 0;
+                    if (i == searchTypes.length - 1) {
+                        if (curValue > 0) sortTypeNames[typeEle.dataset.type] = 0;
+                    } else {
+                        let preValue = sortTypeNames[searchTypes[i + 1].dataset.type] || 0;
+                        if (curValue - preValue > 50) {
+                            sortTypeNames[typeEle.dataset.type] = preValue + 50;
+                        }
+                    }
+                    self.bar.insertBefore(typeEle, self.bar.children[allHide ? 0 : 1]);
+                }
+                storage.setItem("sortTypeNames", sortTypeNames);
+            }
+
+            initHistorySites() {
+                this.historySiteBtns = [];
+                if (!searchData.prefConfig.historyLength) return;
+                let self = this;
+                historySites.forEach(n => {
+                    for (let i = 0; i < self.allSiteBtns.length; i++) {
+                        let siteBtn = self.allSiteBtns[i];
+                        if (siteBtn.dataset.name == n) {
+                            self.historySiteBtns.push(siteBtn);
+                            break;
+                        }
+                    }
+                });
+            }
+
+            insertHistory(typeEle) {
+                if (!searchData.prefConfig.historyLength) return;
+                typeEle.style.width = "";
+                typeEle.style.height = "";
+                this.historyInserted = true;
+                this.historySiteBtns.forEach(btn => {
+                    if (btn.parentNode != typeEle) {
+                        typeEle.appendChild(btn);
+                    }
+                });
+                typeEle.style.width = typeEle.scrollWidth + "px";
+                typeEle.style.height = typeEle.scrollHeight + "px";
+            }
+
+            recoveHistory() {
+                if (!searchData.prefConfig.historyLength) return;
+                if (!this.historyInserted) return;
+                this.historyInserted = false;
+                let self = this;
+                this.historySiteBtns.forEach(btn => {
+                    for (let i = 0; i < searchTypes.length; i++) {
+                        let typeBtn = searchTypes[i];
+                        if (typeBtn.dataset.type == btn.dataset.type) {
+                            typeBtn.insertBefore(btn, typeBtn.children[1]);
+                            break;
+                        }
+                    }
+                });
             }
 
             createList(sites, type) {
@@ -1580,6 +1654,7 @@
                 } else {
                     ele.dataset.title = type;
                 }
+                ele.dataset.type = type;
                 let typeBtn = document.createElement("span");
                 ele.appendChild(typeBtn);
                 typeBtn.classList.add("search-jumper-word");
@@ -1680,6 +1755,7 @@
                             return false;
                         }
                     }
+                    self.recoveHistory();
                     ele.style.width = "";
                     ele.style.height = "";
                     if (self.preList) {
@@ -1816,12 +1892,16 @@
                 let isCurrent = false;
                 sites.forEach(site => {
                     let siteEle = self.createSiteBtn(site.name, (searchData.prefConfig.noIcons?'':site.icon), site, openInNewTab);
+                    siteEle.dataset.type = type;
                     self.allSiteBtns.push(siteEle);
                     ele.appendChild(siteEle);
                     siteEles.push(siteEle);
                     if (!currentSite && (siteEle.dataset.current || match)) {
                         isCurrent = true;
                         self.setCurrentSite(site);
+                        setTimeout(() => {
+                            self.insertHistory(ele);
+                        }, 1);
                     }
                 });
                 if (searchData.prefConfig.showSiteLists) {
@@ -1918,7 +1998,6 @@
                 let customInput = false;
                 self.stopInput = false;
                 if (searchData.prefConfig.shortcut && data.shortcut) {
-                    ele.dataset.name += ` (${data.shortcut.toUpperCase()})`;
                     let shortcutCover = document.createElement("div");
                     shortcutCover.innerText = data.shortcut.toUpperCase();
                     ele.appendChild(shortcutCover);
@@ -2125,6 +2204,24 @@
                     return resultUrl.replace(/%t\b/g, targetUrl).replace(/%T\b/g, encodeURIComponent(targetUrl)).replace(/%b\b/g, targetBaseUrl).replace(/%B\b/g, encodeURIComponent(targetBaseUrl)).replace(/%n\b/g, targetName).replace(/%s\b/g, keywords).replace(/%S\b/g, (cacheKeywords || keywords));
                 };
                 let action = e => {
+                    if (!self.batchOpening) {
+                        if (searchData.prefConfig.historyLength) {
+                            historySites = historySites.filter(site => {return site && site != name});
+                            historySites.unshift(name);
+                            if (historySites.length > searchData.prefConfig.historyLength) {
+                                historySites = historySites.slice(0, searchData.prefConfig.historyLength);
+                            }
+                            storage.setItem("historySites", historySites);
+                        }
+                        if (searchData.prefConfig.sortType) {
+                            if (!sortTypeNames[ele.dataset.type]) {
+                                sortTypeNames[ele.dataset.type] = 1;
+                            } else {
+                                sortTypeNames[ele.dataset.type] = sortTypeNames[ele.dataset.type] + 1;
+                            }
+                            storage.setItem("sortTypeNames", sortTypeNames);
+                        }
+                    }
                     if (/^\[/.test(data.url)) {
                         if (!ele.onclick) {
                             let targetSites = [];
@@ -2133,7 +2230,7 @@
                                 for (let i = 0; i < self.allSiteBtns.length; i++) {
                                     let siteBtn = self.allSiteBtns[i];
                                     if (/^\[/.test(siteBtn.href)) continue;
-                                    if (siteBtn != ele && siteBtn.title == n) {
+                                    if (siteBtn != ele && siteBtn.dataset.name == n) {
                                         targetSites.push(siteBtn);
                                         break;
                                     }
@@ -2433,7 +2530,10 @@
                         searchData.prefConfig.offset.y
                     );
                 }
-                if (firstType && firstType.parentNode.classList.contains('search-jumper-hide')) firstType.onmousedown();
+                if (firstType && firstType.parentNode.classList.contains('search-jumper-hide')) {
+                    firstType.onmousedown();
+                    self.insertHistory(firstType.parentNode);
+                }
                 this.checkScroll();
             }
 
@@ -3626,6 +3726,16 @@
                     resolve(data || {});
                 });
             });
+            historySites = await new Promise((resolve) => {
+                storage.getItem("historySites", data => {
+                    resolve(data || []);
+                });
+            });
+            sortTypeNames = await new Promise((resolve) => {
+                storage.getItem("sortTypeNames", data => {
+                    resolve(data || {});
+                });
+            });
             if (_searchData) {
                 searchData = _searchData;
             }
@@ -3655,6 +3765,9 @@
             }
             if (typeof searchData.prefConfig.multilineGap === "undefined") {
                 searchData.prefConfig.multilineGap = 1000;
+            }
+            if (typeof searchData.prefConfig.historyLength === "undefined") {
+                searchData.prefConfig.historyLength = 0;
             }
         }
 
