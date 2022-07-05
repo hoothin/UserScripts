@@ -520,6 +520,16 @@
     "include":"div.content"
   },
   {
+    "name": "netflav",
+    "url": "^https://netflav\\.com/",
+    "pageElement": ".video_grid_container>.grid_root",
+    "nextLink": "#general-pagination>div>a[aria-current='true']+a",
+    "waitElement": [
+        "a[aria-current='true']+a",
+        "div.lazyload-placeholder,.grid_cover.image:not(.fadeIn)"
+    ]
+  },
+  {
     "name": "版主小说",
     "url": "^http://www\\.tz659\\.com/\\d",
     "pageElement": "div.page-content",
