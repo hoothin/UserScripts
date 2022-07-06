@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.7
+// @version      1.6.5.8
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -1233,6 +1233,7 @@
                     self.bar.classList.remove("search-jumper-isTargetVideo");
                     self.bar.classList.remove("search-jumper-isTargetLink");
                     self.bar.classList.remove("search-jumper-isTargetPage");
+                    self.recoveHistory();
                     if (searchData.prefConfig.autoClose) {
                         let openType = this.bar.querySelector('.search-jumper-type:not(.search-jumper-hide)>span');
                         if (openType) {
@@ -2464,6 +2465,7 @@
                     return;
                 }
                 this.appendBar();
+                this.recoveHistory();
                 let firstType;
                 let self = this;
                 if (this.hideTimeout) {
@@ -3048,6 +3050,7 @@
                     searchBar.bar.style.bottom = "";
                     searchBar.bar.style.transform = "unset";
                     searchBar.bar.parentNode.classList.remove("search-jumper-scroll");
+                    searchBar.bar.className = "search-jumper-searchBar";
                 }
                 grabState = 2;
                 searchBar.bar.style.left = clientX(e) - searchBar.bar.scrollWidth + 20 + "px";
