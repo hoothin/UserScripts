@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.8.1
+// @version      1.6.5.8.2
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -36,7 +36,7 @@
     if (window.top != window.self || document.getElementById("search-jumper")) {
         return;
     }
-    //const configPage = 'http://localhost:3000/';
+
     const configPage = 'https://hoothin.github.io/SearchJumper';
     const importPageReg = /^https:\/\/github\.com\/hoothin\/SearchJumper\/issue|^https:\/\/greasyfork\.org\/.*\/scripts\/445274[\-\/].*\/discussions/i;
 
@@ -554,6 +554,7 @@
         longPressTime: 500,
         noIcons: false,
         showSiteLists: true,
+        alwaysShowSiteLists: false,
         cacheSwitch: false,
         noAni: false,
         quickAddRule: true,
@@ -1205,7 +1206,7 @@
                     );
                 }
                 let appendCss = () => {};
-                if (this.fontPool.length > 0 || location.href.indexOf(configPage) === 0) {
+                if (this.fontPool.length > 0 || isInConfigPage()) {
                     let linkEle = document.createElement("link");
                     linkEle.rel="stylesheet";
                     linkEle.href = searchData.prefConfig.fontAwesomeCss || "https://lib.baomitu.com/font-awesome/6.0.0-beta2/css/all.css";
@@ -1457,7 +1458,22 @@
                 });
             }
 
+            bindSite(a, siteEle) {
+                if (a.getAttribute("bind")) return;
+                a.setAttribute("bind", true);
+                a.setAttribute("target", siteEle.target);
+                a.href = siteEle.href;
+                a.addEventListener('mousedown', e => {
+                    siteEle.dispatchEvent(new PointerEvent("mousedown", {altKey: e.altKey, ctrlKey: e.ctrlKey, shiftKey: e.shiftKey, metaKey: e.metaKey}));
+                    a.href = siteEle.href;
+                    if (!a.onclick && siteEle.onclick) {
+                        a.onclick = siteEle.onclick;
+                    }
+                }, false);
+            }
+
             createList(sites, type) {
+                let self = this;
                 let list = document.createElement("div");
                 list.className = "sitelist";
                 let con = document.createElement("div");
@@ -1468,18 +1484,9 @@
                 con.appendChild(title);
                 sites.forEach(siteEle => {
                     let icon = siteEle.querySelector("img");
-                    let url = siteEle.href;
                     let li = document.createElement("div");
                     let a = document.createElement("a");
-                    a.setAttribute("target", siteEle.target);
-                    a.href = url;
-                    a.addEventListener('mousedown', e => {
-                        siteEle.dispatchEvent(new PointerEvent("mousedown", {altKey: e.altKey, ctrlKey: e.ctrlKey, shiftKey: e.shiftKey, metaKey: e.metaKey}));
-                        a.href = siteEle.href;
-                        if (!a.onclick && siteEle.onclick) {
-                            a.onclick = siteEle.onclick;
-                        }
-                    }, false);
+                    self.bindSite(a, siteEle);
                     li.appendChild(a);
                     if (icon) {
                         let iconSrc = icon.src || icon.dataset.src;
@@ -1872,8 +1879,8 @@
 
                 let showTimer;
                 typeBtn.addEventListener('mouseenter', e => {
-                    if (searchData.prefConfig.showSiteLists && ele.classList.contains("search-jumper-hide")) {
-                        self.listPos(ele, siteList);
+                    if (searchData.prefConfig.showSiteLists && (searchData.prefConfig.alwaysShowSiteLists || ele.classList.contains("search-jumper-hide"))) {
+                        self.listPos(ele.children[0], siteList);
                     } else {
                         self.tipsPos(typeBtn, ele.dataset.title);
                     }
@@ -1892,7 +1899,7 @@
                 }, false);
                 let isCurrent = false;
                 sites.forEach(site => {
-                    let siteEle = self.createSiteBtn(site.name, (searchData.prefConfig.noIcons?'':site.icon), site, openInNewTab);
+                    let siteEle = self.createSiteBtn((searchData.prefConfig.noIcons?'':site.icon), site, openInNewTab);
                     siteEle.dataset.type = type;
                     self.allSiteBtns.push(siteEle);
                     ele.appendChild(siteEle);
@@ -1956,8 +1963,28 @@
                 return ele;
             }
 
-            createSiteBtn(name, icon, data, openInNewTab) {
+            createSiteBtn(icon, data, openInNewTab) {
                 let self = this;
+                if (/^\[/.test(data.url)) {
+                    let siteNames = JSON.parse(data.url);
+                    if (siteNames.length === 1) {
+                        let findSite = false;
+                        for (let i = 0; i < searchData.sitesConfig.length; i++) {
+                            if (findSite) break;
+                            let typeConfig = searchData.sitesConfig[i];
+                            for (let j = 0; j < typeConfig.sites.length; j++) {
+                                let siteData = typeConfig.sites[j];
+                                if (/^\[/.test(siteData.url)) continue;
+                                if (siteData.name == siteNames[0]) {
+                                    findSite = true;
+                                    data = siteData;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                let name = data.name;
                 let isPage = /^(https?|ftp):/.test(data.url);
                 let ele = document.createElement("a");
                 ele.className = "search-jumper-btn";
@@ -2238,6 +2265,7 @@
                                 }
                             });
                             ele.onclick = e => {
+                                self.batchOpening = true;
                                 if (e.which === 1 && e.altKey && e.shiftKey) {
                                     let urls=[];
                                     for (let i = 0;i < targetSites.length;i++) {
@@ -2307,6 +2335,7 @@
                                     }
                                     siteEle.setAttribute("target", siteEle.dataset.target==1?"_blank":"");
                                 });
+                                self.batchOpening = false;
                                 return false;
                             };
                         }
@@ -3334,8 +3363,18 @@
             }
         }
 
-        function initConfig() {
+        function isInConfigPage() {
             if (location.href.indexOf(configPage) === 0) {
+                return true;
+            }
+            if (location.href === "http://localhost:3000/" && document.title === "SearchJumper config") {
+                return true;
+            }
+            return false;
+        }
+
+        function initConfig() {
+            if (isInConfigPage()) {
                 var sendMessageTimer, received = false;
                 let loadConfig = () => {
                     sendMessageTimer = setTimeout(() => {
