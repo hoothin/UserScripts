@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.8.2
+// @version      1.6.5.8.3
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -561,7 +561,8 @@
         multiline: 2,//0 关闭 1 开启 2 询问
         multilineGap: 1000,
         historyLength: 0,
-        sortType: false
+        sortType: false,
+        autoHide: false
     };
     function run() {
         const lang = navigator.appName == "Netscape" ? navigator.language : navigator.userLanguage;
@@ -1451,6 +1452,9 @@
                     for (let i = 0; i < searchTypes.length; i++) {
                         let typeBtn = searchTypes[i];
                         if (typeBtn.dataset.type == btn.dataset.type) {
+                            if (!btn.parentNode.classList.contains("search-jumper-hide")) {
+                                btn.parentNode.children[0].onmousedown();
+                            }
                             typeBtn.insertBefore(btn, typeBtn.children[1]);
                             break;
                         }
@@ -1747,7 +1751,7 @@
                                 return;
                             }
                         }
-                        var key = String.fromCharCode(e.keyCode).toLowerCase();
+                        var key = (e.key || String.fromCharCode(e.keyCode)).toLowerCase();
                         if (data.shortcut == key) {
                             batchOpen();
                         }
@@ -2046,7 +2050,7 @@
                                 return;
                             }
                         }
-                        var key = String.fromCharCode(e.keyCode).toLowerCase();
+                        var key = (e.key || String.fromCharCode(e.keyCode)).toLowerCase();
                         if (data.shortcut == key) {
                             if (action() !== false && !customInput) {
                                 ele.click();
@@ -2501,7 +2505,6 @@
                     clearTimeout(this.hideTimeout);
                 }
                 var delay = searchData.prefConfig.autoDelay || 1000;
-                delay = delay * 3;
                 var hideHandler = () => {
                     self.bar.classList.remove("search-jumper-isInPage");
                     self.bar.classList.remove("search-jumper-isTargetImg");
@@ -2512,7 +2515,7 @@
                     self.bar.classList.remove("initShow");
                     self.hideTimeout = null;
                 };
-                //this.hideTimeout = setTimeout(hideHandler, delay);
+                if (searchData.prefConfig.autoHide) this.hideTimeout = setTimeout(hideHandler, delay);
                 this.bar.classList.remove("search-jumper-isInPage");
                 this.bar.classList.remove("search-jumper-isTargetImg");
                 this.bar.classList.remove("search-jumper-isTargetAudio");
@@ -3187,7 +3190,7 @@
                                 return;
                             }
                         }
-                        var key = String.fromCharCode(e.keyCode).toLowerCase();
+                        var key = (e.key || String.fromCharCode(e.keyCode)).toLowerCase();
                         if (searchData.prefConfig.shortcutKey == key) {
                             if (!targetElement) targetElement = document.body;
                             searchBar.showInPage();
@@ -3220,13 +3223,32 @@
                         (e.which === 1 || e.which === 2) && !searchData.prefConfig.leftMouse) {
                         return;
                     }
+                    let mouseMoveTimer;
+                    let mouseUpHandler = e => {
+                        if (shown) {
+                            e.stopPropagation();
+                            e.preventDefault();
+                        }else if (matchKey || (searchData.prefConfig.selectToShow && getSelectStr())) {
+                            searchBar.showInPage();
+                        }
+                        clearTimeout(showToolbarTimer);
+                        clearTimeout(mouseMoveTimer);
+                        document.removeEventListener('mouseup', mouseUpHandler, false);
+                        document.removeEventListener('mousemove', mouseMoveHandler, false);
+                    };
+                    let mouseMoveHandler = e => {
+                        clearTimeout(showToolbarTimer);
+                        clearTimeout(mouseMoveTimer);
+                        document.removeEventListener('mousemove', mouseMoveHandler, false);
+                    };
                     if (e.which === 1 && clientRect) {
                         if (e.clientX > clientRect.left && e.clientX < clientRect.left + clientRect.width &&
                            e.clientY > clientRect.top && e.clientY < clientRect.top + clientRect.height) {
                             searchBar.showInPage();
                             shown = true;
                             e.stopPropagation();
-                            e.preventDefault();
+                            //e.preventDefault();
+                            document.addEventListener('mouseup', mouseUpHandler, false);
                             return false;
                         }
                     }
@@ -3241,26 +3263,9 @@
                         searchBar.showInPage();
                         shown = true;
                     }, parseInt(searchData.prefConfig.longPressTime));
-                    let mouseMoveTimer = setTimeout(() => {
+                    mouseMoveTimer = setTimeout(() => {
                         document.addEventListener('mousemove', mouseMoveHandler, false);
                     }, 10);
-                    let mouseMoveHandler = e => {
-                        clearTimeout(showToolbarTimer);
-                        clearTimeout(mouseMoveTimer);
-                        document.removeEventListener('mousemove', mouseMoveHandler, false);
-                    };
-                    let mouseUpHandler = e => {
-                        if (shown) {
-                            e.stopPropagation();
-                            e.preventDefault();
-                        }else if (matchKey || (searchData.prefConfig.selectToShow && getSelectStr())) {
-                            searchBar.showInPage();
-                        }
-                        clearTimeout(showToolbarTimer);
-                        clearTimeout(mouseMoveTimer);
-                        document.removeEventListener('mouseup', mouseUpHandler, false);
-                        document.removeEventListener('mousemove', mouseMoveHandler, false);
-                    };
                     document.addEventListener('mouseup', mouseUpHandler, false);
                 }, true);
                 document.addEventListener('contextmenu', e => {
