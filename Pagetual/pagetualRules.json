@@ -153,7 +153,7 @@
   },
   {
     "name":"Baidu",
-    "css":"span.c-img-radius-large.c-img-border{pointer-events: none}",
+    "css":"span.c-img-radius-large.c-img-border,.result-molecule[tpl='app/rs']{pointer-events: none}.result-molecule[tpl='app/rs']>div{pointer-events: all}",
     "insertPos":1,
     "nextLink":"//*[@id=\"page\"]/div/a[contains(text(),'下一页')]",
     "pageElement":"//*[@id=\"content_style\"]|//*[@id=\"content_left\"]/*",
