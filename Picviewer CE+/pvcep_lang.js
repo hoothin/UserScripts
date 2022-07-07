@@ -641,7 +641,7 @@ var zhTWLang={
     imgWindow:"圖片窗口",
     imgWindowFitToScreen:"適應屏幕，並且水平垂直居中",
     imgWindowFitToScreenTip:"適應方式為contain，非cover",
-    imgWindowFitToScreenWhenSmall:"即使是小圖也拉伸至適應屏幕",
+    imgWindowFitToScreenWhenSmall:"即使是小圖片也拉伸至適應屏幕",
     imgWindowDefaultTool:"打開窗口時默認選擇的工具",
     hand:'抓手',
     rotate:'旋轉',
