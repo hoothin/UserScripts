@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.6.25.2
+// @version              2022.7.7.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -41,7 +41,7 @@
 // @grant                unsafeWindow
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
 // @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1063681
-// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1063047
+// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1068015
 // @match                *://*/*
 // @exclude              http://www.toodledo.com/tasks/*
 // @exclude              http*://maps.google.com*/*
@@ -11798,6 +11798,7 @@ ImgOps | https://imgops.com/#b#`;
             imgWindow:{// 图片窗相关设置
                 suitLongImg: true,
                 fitToScreen: false,//适应屏幕,并且水平垂直居中(适应方式为contain，非cover).
+                fitToScreenSmall: false,
                 syncSelectedTool:true,//同步当前选择的工具，如果开了多个图片窗口，其中修改一个会反映到其他的上面。
                 defaultTool:'hand',//"hand","rotate","zoom";打开窗口的时候默认选择的工具
                 close:{//关闭的方式
@@ -18492,7 +18493,7 @@ ImgOps | https://imgops.com/#b#`;
                 };
 
                 var size;
-                if(rectSize.w - wSize.w>0 || rectSize.h - wSize.h>0){//超出屏幕，那么缩小。
+                if(prefs.imgWindow.fitToScreenSmall || (rectSize.w - wSize.w>0 || rectSize.h - wSize.h>0)){//超出屏幕，那么缩小。
                     if(rectSize.w/rectSize.h > wSize.w/wSize.h){
                         size={
                             w:wSize.w,
@@ -21218,8 +21219,10 @@ ImgOps | https://imgops.com/#b#`;
         document.addEventListener('mouseout',e=>{
             if(uniqueImgWin && !uniqueImgWin.removed){
                 if(checkPreview(e)){
-                    if(removeUniqueWinTimer)clearTimeout(removeUniqueWinTimer);
-                    removeUniqueWinTimer = setTimeout(()=>{uniqueImgWin.remove()},100);
+                    if(e.target==document.body || (e.target.scrollHeight || 0) > document.body.clientHeight){
+                        if(removeUniqueWinTimer)clearTimeout(removeUniqueWinTimer);
+                        removeUniqueWinTimer = setTimeout(()=>{uniqueImgWin.remove()},100);
+                    }
                 }else{
                     //if(e.target.tagName!="IMG")return;
                     uniqueImgWin.imgWindow.style.pointerEvents = "auto";
@@ -21642,6 +21645,11 @@ ImgOps | https://imgops.com/#b#`;
                     "default": prefs.imgWindow.fitToScreen,
                     section: [i18n("imgWindow")],
                     title: i18n("imgWindowFitToScreenTip"),
+                },
+                'imgWindow.fitToScreenSmall': {
+                    label: i18n("imgWindowFitToScreenWhenSmall"),
+                    type: 'checkbox',
+                    "default": prefs.imgWindow.fitToScreenSmall
                 },
                 'imgWindow.suitLongImg': {
                     label: i18n("suitLongImg"),
