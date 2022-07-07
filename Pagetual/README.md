@@ -16,7 +16,7 @@ Rules example
   {
     "name":"yande",
     "action":0,
-    "url":"^https:\/\/yande\\.re\/",
+    "url":"^https://yande\\.re\/",
     "pageElement":"ul#post-list-posts>li",
     "nextLink":"a.next_page",
     "css":".javascript-hide {display: inline-block !important;}"
@@ -28,7 +28,6 @@ Rules example
   },
   {
     "name":"xxgame",
-    "action":0,
     "url":"^http://www\\.xxgame\\.net/chinese",
     "pageElement":"div.layui-row>div.layui-col-md4:not(div:nth-child(5),div:nth-child(6),div:nth-child(7))",
     "nextLinkByUrl":[
@@ -39,9 +38,8 @@ Rules example
 ]
 </pre>
 
-[More examples of rule](pagetualRules.json)
-
-Buy me a coffee if it helps you with [PayPal.Me](https://paypal.me/hoothin) or [BuyMeACoffee](https://buymeacoffee.com/hoothin)
+Buy me a coffee if it helps you<br>
+[PayPal.Me](https://paypal.me/hoothin) or [BuyMeACoffee](https://buymeacoffee.com/hoothin)
 
 ![donate](https://s2.loli.net/2022/01/06/lEqKWLHG7UBO6AY.jpg)
 
