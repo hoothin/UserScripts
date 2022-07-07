@@ -10,8 +10,8 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.26.16
-// @description  Perpetual pages - Most powerful Auto Pager script. Auto loading next paginated web pages and inserting into current page.
+// @version      1.9.26.17
+// @description  Perpetual pages - Most powerful Auto-Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
 // @description:ja     Webページを自動で読み込み継ぎ足し表示を行うブラウザ拡張です
@@ -1246,7 +1246,7 @@
                     let reps=targetUrl.match(/{.*?}/g);
                     if(reps){
                         reps.forEach(rep=>{
-                            let code=rep.replace("{","").replace("}","");
+                            let code=rep.replace("{","").replace("}","").replace(/\(\)/g, "0");
                             let result=code.match(/^(\d*)\+1$/);
                             if(result){
                                 result=parseInt(result[1]||1)+1;
@@ -1595,7 +1595,7 @@
             let nextLink=this.getNextLink(doc);
             this.nextTitle="";
             if(this.curSiteRule.pageBarText){
-                if(this.curSiteRule.pageBarText==1){
+                if(this.curSiteRule.pageBarText==1 || this.curSiteRule.pageBarText==true){
                     this.nextTitle=doc.title;
                 }else{
                     try{
@@ -2729,11 +2729,11 @@
                     if(isInViewPort(loadmoreBtn)){
                         emuClick(loadmoreBtn);
                         loading=true;
-                        setTimeout(()=>{loading=false},200);
+                        setTimeout(()=>{loading=false},100);
                     }
                 }else{
                     loading=true;
-                    setTimeout(()=>{loading=false},200);
+                    setTimeout(()=>{loading=false},100);
                 }
             }
             if(!isLoading){
