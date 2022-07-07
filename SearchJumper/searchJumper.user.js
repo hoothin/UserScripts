@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.8.3
+// @version      1.6.5.8.5
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -785,7 +785,7 @@
                      margin-top: -${this.scale * 25}px;
                      opacity: 0.3;
                      vertical-align: top;
-                     ${searchData.prefConfig.noAni ? "" : "transition:margin-top 1s ease, margin-left 1s, opacity 1s, transform 1s;"}
+                     ${searchData.prefConfig.noAni ? "" : "transition:margin-top 1s ease, margin-left 1s, right 1s, opacity 1s, transform 1s;"}
                      user-select: none;
                      box-sizing:content-box;
                      text-align: center;
@@ -805,11 +805,8 @@
                      position: static !important;
                  }
                  .search-jumper-scroll.search-jumper-right>.search-jumper-searchBar {
-                     margin-left: ${this.scale * 20}px;
-                 }
-                 .search-jumper-scroll.search-jumper-right>.search-jumper-searchBar:hover,
-                 .search-jumper-scroll.search-jumper-right>.search-jumper-searchBar.initShow {
-                     margin-left: 0px;
+                     position: absolute !important;
+                     top: 0;
                  }
                  .search-jumper-scroll.search-jumper-bottom>.search-jumper-searchBar {
                      margin-top: 0px;
@@ -821,12 +818,12 @@
                  .search-jumper-searchBar:hover {
                      margin-top: 0;
                      opacity: 1;
-                     ${searchData.prefConfig.noAni ? "" : "transition:margin-top 0.25s ease, margin-left 0.25s, opacity 0.25s, transform 0.25s;"}
+                     ${searchData.prefConfig.noAni ? "" : "transition:margin-top 0.25s ease, margin-left 0.25s, right 0.25s, opacity 0.25s, transform 0.25s;"}
                  }
                  .search-jumper-searchBar.initShow {
                      margin-top: 0;
                      opacity: 0.8;
-                     ${searchData.prefConfig.noAni ? "" : "transition:margin-top 0.25s ease, margin-left 0.25s, opacity 0.25s, transform 0.25s;"}
+                     ${searchData.prefConfig.noAni ? "" : "transition:margin-top 0.25s ease, margin-left 0.25s, right 0.25s, opacity 0.25s, transform 0.25s;"}
                  }
                  .search-jumper-left,
                  .search-jumper-left .search-jumper-type,
@@ -857,7 +854,7 @@
                  }
                  .search-jumper-right>.search-jumper-searchBar {
                      margin-top: 0;
-                     margin-left: 0px;
+                     right: -${this.scale * 20}px;
                      position: fixed;
                  }
                  .search-jumper-left>.search-jumper-searchBar:hover,
@@ -868,7 +865,7 @@
                  .search-jumper-right>.search-jumper-searchBar:hover,
                  .search-jumper-right>.search-jumper-searchBar.initShow {
                      margin-top: unset;
-                     margin-left: -${this.scale * 20}px;
+                     right: 0;
                  }
                  .search-jumper-bottom>.search-jumper-searchBar {
                      position: relative;
@@ -1452,9 +1449,9 @@
                     for (let i = 0; i < searchTypes.length; i++) {
                         let typeBtn = searchTypes[i];
                         if (typeBtn.dataset.type == btn.dataset.type) {
-                            if (!btn.parentNode.classList.contains("search-jumper-hide")) {
+                            /*if (!btn.parentNode.classList.contains("search-jumper-hide")) {
                                 btn.parentNode.children[0].onmousedown();
-                            }
+                            }*/
                             typeBtn.insertBefore(btn, typeBtn.children[1]);
                             break;
                         }
