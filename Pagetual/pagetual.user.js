@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.26.17
+// @version      1.9.26.18
 // @description  Perpetual pages - Most powerful Auto-Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -2700,7 +2700,7 @@
             if(loadmoreBtn && isVisible(loadmoreBtn, _unsafeWindow)){
                 loading=false;
                 clearInterval(checkLoadMore);
-            }else if(checkLoadMoreTimes>10){
+            }else if(checkLoadMoreTimes++>10){
                 clearInterval(checkLoadMore);
             }
         },300);
@@ -2729,11 +2729,11 @@
                     if(isInViewPort(loadmoreBtn)){
                         emuClick(loadmoreBtn);
                         loading=true;
-                        setTimeout(()=>{loading=false},100);
+                        setTimeout(()=>{loading=false},200);
                     }
                 }else{
                     loading=true;
-                    setTimeout(()=>{loading=false},100);
+                    setTimeout(()=>{loading=false},200);
                 }
             }
             if(!isLoading){
@@ -2741,7 +2741,7 @@
             }
             if(ruleParser.curSiteRule.lockScroll){
                 let curScroll=document.body.scrollTop||document.documentElement.scrollTop;
-                if(isLoading && Math.abs(lastScroll-curScroll)>200){
+                if(isLoading && Math.abs(lastScroll-curScroll)>350){
                     document.body.scrollTop=lastScroll;
                     document.documentElement.scrollTop=lastScroll;
                 }else{
@@ -2829,6 +2829,7 @@
             let buttons=doc.querySelectorAll("input,button,a,div[onclick]"),loadmoreReg=/^\s*(加载更多|加載更多|load\s*more|もっと読み込む)\s*$/i;
             for(let i=0;i<buttons.length;i++){
                 let button=buttons[i];
+                if(button.innerText.length > 20)continue;
                 if(button && loadmoreReg.test(button.innerText)){
                     loadmoreBtn=button;
                     break;
