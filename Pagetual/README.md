@@ -38,8 +38,14 @@ Rules example
 ]
 </pre>
 
-Buy me a coffee if it helps you<br>
-[PayPal.Me](https://paypal.me/hoothin) or [BuyMeACoffee](https://buymeacoffee.com/hoothin)
+<table>
+    <tr>
+        <th colspan="3">💞Buy me a coffee if it helps you</th>
+    </tr>
+    <tr>
+        <td><a href="https://paypal.me/hoothin">PayPal.Me</a></td><td><a href="https://buymeacoffee.com/hoothin">BuyMeACoffee</a></td>
+    </tr>
+</table>
 
 ![donate](https://s2.loli.net/2022/01/06/lEqKWLHG7UBO6AY.jpg)
 
