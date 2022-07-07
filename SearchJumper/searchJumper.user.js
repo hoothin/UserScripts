@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.8.6
+// @version      1.6.5.8.7
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -1966,7 +1966,9 @@
 
             createSiteBtn(icon, data, openInNewTab) {
                 let self = this;
+                let ele = document.createElement("a");
                 if (/^\[/.test(data.url)) {
+                    ele.dataset.pointer = true;
                     let siteNames = JSON.parse(data.url);
                     if (siteNames.length === 1) {
                         let findSite = false;
@@ -1987,7 +1989,6 @@
                 }
                 let name = data.name;
                 let isPage = /^(https?|ftp):/.test(data.url);
-                let ele = document.createElement("a");
                 ele.className = "search-jumper-btn";
                 if (typeof data.description !== 'undefined') ele.title = data.description;
                 ele.dataset.name = name;
@@ -2258,7 +2259,7 @@
                             siteNames.forEach(n => {
                                 for (let i = 0; i < self.allSiteBtns.length; i++) {
                                     let siteBtn = self.allSiteBtns[i];
-                                    if (/^\[/.test(siteBtn.href)) continue;
+                                    if (siteBtn.dataset.pointer) continue;
                                     if (siteBtn != ele && siteBtn.dataset.name == n) {
                                         targetSites.push(siteBtn);
                                         break;
