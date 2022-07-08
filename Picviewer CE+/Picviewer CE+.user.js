@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.7.7.1
+// @version              2022.7.8.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -20367,18 +20367,13 @@ ImgOps | https://imgops.com/#b#`;
             if(img.nodeName != "IMG" || img.src)return;
             if(img._lazyrias && img._lazyrias.srcset){
                 img.src=img._lazyrias.srcset[0];
-            }else if(img.srcset){
-                var srcs=img.srcset.split(","),minSize=0,newSrc;
-                srcs.forEach(srci=>{
-                    let srcInfo=srci.trim().split(" "),curSize=parseInt(srcInfo[1]);
-                    if(srcInfo[1] && (curSize>minSize || minSize==0)){
-                        minSize=curSize;
-                        newSrc=srcInfo[0];
-                    }
-                });
-                if(newSrc)img.src=newSrc;
             }else if(img.currentSrc){
                 img.src=img.currentSrc;
+            }else if(img.srcset){
+                var srcs=img.srcset.split(",");
+                if (!srcs.length) return;
+                var newSrc=srcs[0].trim().split(" ")[0];
+                if(newSrc)img.src=newSrc;
             }
         }
 
