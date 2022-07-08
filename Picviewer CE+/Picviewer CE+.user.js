@@ -11845,7 +11845,8 @@ ImgOps | https://imgops.com/#b#`;
 
         var tprules=[
             function(a) {
-                var oldsrc = this.src,newsrc = this.src;
+                var oldsrc = (this.currentSrc||this.src);
+                var newsrc = oldsrc;
                 if(this.getAttribute("lazysrc")){
                     newsrc=this.getAttribute("lazysrc");
                 }else if(this.getAttribute("_src") && !this.src){
