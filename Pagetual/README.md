@@ -189,6 +189,14 @@ wheel
 --
 Set to true so the next page action will only effect when the mouse wheel roll
 
+pageElementCss
+--
+Custom css for pageElement
+
+delay
+--
+The js code to delay next action until return true, use this prop to get complete page elements with lazy load.
+
 child script
 --
 If the site has some limit for code eval. You can make a child script with function under object `window`. You should name them start with `pagetual` use camelCase. Like `window.pagetualWait`, `window.pagetualNextLinkByJs`, `window.pagetualPageInit`, `window.pagetualPageAction`, `window.pagetualInit`, `window.pagetualPageBarText`.
