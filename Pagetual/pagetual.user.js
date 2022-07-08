@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.26.18
+// @version      1.9.26.19
 // @description  Perpetual pages - Most powerful Auto-Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -2840,6 +2840,15 @@
         return loadmoreBtn;
     }
 
+    function scrollToPageBar(bar){
+        let yOffset = 0;
+        if (typeof ruleParser.curSiteRule.pageBarTop !== 'undefined') {
+            yOffset = -ruleParser.curSiteRule.pageBarTop;
+        }
+        const y = bar.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        window.scrollTo({ top: y, behavior: 'smooth'});
+    }
+
     var hasPageNum=true;
     function createPageBar(url){
         let insert=ruleParser.getInsert();
@@ -2927,12 +2936,6 @@
         nextBtn.className="next";
         nextBtn.style.cssText="float: left; margin-top: 30px; width: 40px; background: rgba(240, 240, 240, 0.8); position: absolute; border-radius: 0 0 20px 20px; box-shadow: rgb(0 0 0 / 50%) 0px 5px 5px;z-index:9999999";
         let localPage=curPage;
-        let scrollToPageBar = bar => {
-            bar.scrollIntoView();
-            if (typeof ruleParser.curSiteRule.pageBarTop !== 'undefined') {
-                document.documentElement.scrollBy(0, -ruleParser.curSiteRule.pageBarTop);
-            }
-        };
         preBtn.addEventListener("click", e=>{
             e.stopPropagation();
             e.preventDefault();
