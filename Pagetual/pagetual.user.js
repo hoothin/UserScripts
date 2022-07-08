@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.26.20
+// @version      1.9.26.21
 // @description  Perpetual pages - Most powerful Auto-Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -185,7 +185,8 @@
                 dbClick2StopAlt:"Alt 键",
                 dbClick2StopShift:"Shift 键",
                 dbClick2StopMeta:"Meta 键",
-                dbClick2StopKey:"快捷键"
+                dbClick2StopKey:"快捷键",
+                pageElementCss:"页面主体框架的 CSS"
             };
             break;
         case "zh-TW":
@@ -243,7 +244,8 @@
                 dbClick2StopAlt:"Alt 鍵",
                 dbClick2StopShift:"Shift 鍵",
                 dbClick2StopMeta:"Meta 鍵",
-                dbClick2StopKey:"快捷鍵"
+                dbClick2StopKey:"快捷鍵",
+                pageElementCss:"頁面主體框架的 CSS"
             };
             break;
         case "ja":
@@ -300,7 +302,8 @@
                 dbClick2StopAlt:"Altキー",
                 dbClick2StopShift:"Shiftキー",
                 dbClick2StopMeta:"Metaキー",
-                dbClick2StopKey:"Shortcutキー"
+                dbClick2StopKey:"Shortcutキー",
+                pageElementCss:"ページ本文フレームのCSS"
             };
             break;
         default:
@@ -357,7 +360,8 @@
                 dbClick2StopAlt:"Alt key",
                 dbClick2StopShift:"Shift key",
                 dbClick2StopMeta:"Meta key",
-                dbClick2StopKey:"Shortcut key"
+                dbClick2StopKey:"Shortcut key",
+                pageElementCss:"Custom css for main pageElement"
             };
             break;
     }
@@ -828,6 +832,7 @@
         }
 
         getPageElement(doc, curWin, dontFind) {
+            if(doc==document && this.docPageElement)return this.docPageElement;
             let pageElement=null;
             let self=this;
             let body=doc.body;
@@ -972,6 +977,20 @@
                 }
                 pageElement=checkElement(body);
                 //if(pageElement)this.saveCurSiteRule();
+            }
+            if(doc==document && !this.docPageElement){
+                this.docPageElement=pageElement;
+            }
+            if(pageElement && pageElement.length>0){
+                let pageElementCss=self.curSiteRule.pageElementCss || rulesData.pageElementCss;
+                if(pageElementCss){
+                    [].forEach.call(pageElement, ele=>{
+                        if(!ele.dataset.pagetualPageElement){
+                            ele.style.cssText=(ele.style.cssText||'')+pageElementCss;
+                            ele.dataset.pagetualPageElement=1;
+                        }
+                    });
+                }
             }
             return pageElement;
         }
@@ -1945,7 +1964,6 @@
         let loadingText=document.createElement("div");
         loadingText.style.width="20%";
         loadingText.style.float="left";
-        loadingText.style.marginBottom="50px";
         let loadingTextTitle=document.createElement("h2");
         loadingTextTitle.style.whiteSpace="nowrap";
         loadingTextTitle.style.overflow="auto";
@@ -1975,6 +1993,18 @@
         opacityInput.style.margin="0";
         opacity.appendChild(opacityInput);
         configCon.insertBefore(opacity, insertPos);
+
+        let pageElementCss=document.createElement("div");
+        pageElementCss.style.marginBottom="50px";
+        let pageElementCssTitle=document.createElement("h2");
+        pageElementCssTitle.innerHTML=i18n("pageElementCss");
+        pageElementCss.appendChild(pageElementCssTitle);
+        let pageElementCssInput=document.createElement("input");
+        pageElementCssInput.value=rulesData.pageElementCss||'';
+        pageElementCssInput.style.width="100%";
+        pageElementCssInput.style.margin="0";
+        pageElementCss.appendChild(pageElementCssInput);
+        configCon.insertBefore(pageElementCss, insertPos);
 
         let configTable=document.createElement("table");
         configTable.style.width="100%";
@@ -2107,6 +2137,7 @@
             rulesData.openInNewTab=openInNewTabInput.checked;
             rulesData.initRun=initRunInput.checked;
             rulesData.preload=preloadInput.checked;
+            rulesData.pageElementCss=pageElementCssInput.value;
             rulesData.upBtnImg=upBtnImgInput.value;
             rulesData.downBtnImg=downBtnImgInput.value;
             rulesData.loadingText=loadingTextInput.value;
@@ -3554,6 +3585,9 @@
             }catch(e){
                 debug(e);
             }
+        }
+        if(ruleParser.curSiteRule.pageElementCss || rulesData.pageElementCss){
+            ruleParser.getPageElement(document, _unsafeWindow);
         }
         let nextLink=ruleParser.nextLinkHref;
         if(!nextLink){
