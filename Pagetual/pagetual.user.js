@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.26.21
+// @version      1.9.26.22
 // @description  Perpetual pages - Most powerful Auto-Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -186,7 +186,8 @@
                 dbClick2StopShift:"Shift 键",
                 dbClick2StopMeta:"Meta 键",
                 dbClick2StopKey:"快捷键",
-                pageElementCss:"页面主体框架的 CSS"
+                pageElementCss:"页面主体框架的 CSS",
+                customCss:"自定义 CSS"
             };
             break;
         case "zh-TW":
@@ -245,7 +246,8 @@
                 dbClick2StopShift:"Shift 鍵",
                 dbClick2StopMeta:"Meta 鍵",
                 dbClick2StopKey:"快捷鍵",
-                pageElementCss:"頁面主體框架的 CSS"
+                pageElementCss:"頁面主體框架的 CSS",
+                customCss:"自定義 CSS"
             };
             break;
         case "ja":
@@ -303,7 +305,8 @@
                 dbClick2StopShift:"Shiftキー",
                 dbClick2StopMeta:"Metaキー",
                 dbClick2StopKey:"Shortcutキー",
-                pageElementCss:"ページ本文フレームのCSS"
+                pageElementCss:"ページ本文フレームの CSS",
+                customCss:"カスタム CSS"
             };
             break;
         default:
@@ -361,7 +364,8 @@
                 dbClick2StopShift:"Shift key",
                 dbClick2StopMeta:"Meta key",
                 dbClick2StopKey:"Shortcut key",
-                pageElementCss:"Custom css for main pageElement"
+                pageElementCss:"Custom css for main page elements",
+                customCss:"Custom complete css"
             };
             break;
     }
@@ -1569,7 +1573,7 @@
                     }
                     storage.setItem("hpRules", self.hpRules);
                 }
-                let css=self.curSiteRule.css;
+                let css=self.curSiteRule.css || rulesData.customCss;
                 if(css){
                     _GM_addStyle(css);
                 }
@@ -1980,7 +1984,7 @@
         let opacity=document.createElement("div");
         opacity.style.width="10%";
         opacity.style.float="left";
-        opacity.style.marginBottom="50px";
+        opacity.style.marginBottom="30px";
         let opacityTitle=document.createElement("h2");
         opacityTitle.style.whiteSpace="nowrap";
         opacityTitle.style.overflow="visible";
@@ -1995,7 +1999,7 @@
         configCon.insertBefore(opacity, insertPos);
 
         let pageElementCss=document.createElement("div");
-        pageElementCss.style.marginBottom="50px";
+        pageElementCss.style.marginBottom="30px";
         let pageElementCssTitle=document.createElement("h2");
         pageElementCssTitle.innerHTML=i18n("pageElementCss");
         pageElementCss.appendChild(pageElementCssTitle);
@@ -2003,8 +2007,22 @@
         pageElementCssInput.value=rulesData.pageElementCss||'';
         pageElementCssInput.style.width="100%";
         pageElementCssInput.style.margin="0";
+        pageElementCssInput.placeholder="font-size: xx-large;";
         pageElementCss.appendChild(pageElementCssInput);
         configCon.insertBefore(pageElementCss, insertPos);
+
+        let customCss=document.createElement("div");
+        customCss.style.marginBottom="50px";
+        let customCssTitle=document.createElement("h2");
+        customCssTitle.innerHTML=i18n("customCss");
+        customCss.appendChild(customCssTitle);
+        let customCssInput=document.createElement("textarea");
+        customCssInput.value=rulesData.customCss||'';
+        customCssInput.style.width="100%";
+        customCssInput.style.margin="0";
+        customCssInput.placeholder=".pagetual{\n}";
+        customCss.appendChild(customCssInput);
+        configCon.insertBefore(customCss, insertPos);
 
         let configTable=document.createElement("table");
         configTable.style.width="100%";
@@ -2138,6 +2156,7 @@
             rulesData.initRun=initRunInput.checked;
             rulesData.preload=preloadInput.checked;
             rulesData.pageElementCss=pageElementCssInput.value;
+            rulesData.customCss=customCssInput.value;
             rulesData.upBtnImg=upBtnImgInput.value;
             rulesData.downBtnImg=downBtnImgInput.value;
             rulesData.loadingText=loadingTextInput.value;
@@ -3502,7 +3521,7 @@
                 callback(false, false);
                 return;
             }
-            let css=ruleParser.curSiteRule.css;
+            let css=ruleParser.curSiteRule.css || rulesData.customCss;
             if(css){
                 let styleEle=iframeDoc.createElement("style");
                 styleEle.innerHTML=css;
