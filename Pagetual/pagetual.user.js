@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.26.22
+// @version      1.9.26.23
 // @description  Perpetual pages - Most powerful Auto-Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -187,7 +187,8 @@
                 dbClick2StopMeta:"Meta 键",
                 dbClick2StopKey:"快捷键",
                 pageElementCss:"页面主体框架的 CSS",
-                customCss:"自定义 CSS"
+                customCss:"自定义 CSS",
+                firstAlert:"你还未导入规则库，请选择合适的规则库导入哦"
             };
             break;
         case "zh-TW":
@@ -247,7 +248,8 @@
                 dbClick2StopMeta:"Meta 鍵",
                 dbClick2StopKey:"快捷鍵",
                 pageElementCss:"頁面主體框架的 CSS",
-                customCss:"自定義 CSS"
+                customCss:"自定義 CSS",
+                firstAlert:"你還未導入規則庫，請選擇合適的規則庫導入哦"
             };
             break;
         case "ja":
@@ -306,7 +308,8 @@
                 dbClick2StopMeta:"Metaキー",
                 dbClick2StopKey:"Shortcutキー",
                 pageElementCss:"ページ本文フレームの CSS",
-                customCss:"カスタム CSS"
+                customCss:"カスタム CSS",
+                firstAlert:"ルールベースをインポートしていないため、インポートする適切なルールベースを選択してください"
             };
             break;
         default:
@@ -365,7 +368,8 @@
                 dbClick2StopMeta:"Meta key",
                 dbClick2StopKey:"Shortcut key",
                 pageElementCss:"Custom css for main page elements",
-                customCss:"Custom complete css"
+                customCss:"Custom complete css",
+                firstAlert:"You have not imported the base rule, please select the appropriate rule to import"
             };
             break;
     }
@@ -1692,11 +1696,16 @@
         });
 
         var configCon,insertPos;
+        var noRules=!rulesData.urls || rulesData.urls.length===0;
         if(ruleImportUrlReg.test(location.href)){
+            if(noRules){
+                showTips(i18n("firstAlert"));
+            }
+            let greasyfork=location.href.indexOf("greasyfork.org") != -1;
             document.addEventListener("click", e=>{
                 if(e.target.tagName=="PRE"){
                     let nameAttr=e.target.getAttribute("name");
-                    if(nameAttr=="pagetual" || nameAttr=="user-content-pagetual" || location.href.indexOf("greasyfork.org") != -1){
+                    if(nameAttr=="pagetual" || nameAttr=="user-content-pagetual" || greasyfork){
                         let rules=e.target.innerText.trim();
                         let isContent=/['"]name['"]/i.test(rules);
                         if(!window.confirm("Import?")) return;
@@ -1784,32 +1793,32 @@
                     }
                 }
             });
-        }
-        if(location.href==configPage){
-            _GM_addStyle(`
-             p>span:nth-child(1),p>span:nth-child(2),p>span:nth-child(3){
-              cursor: pointer;
-              user-select: none;
-             }
-             p>span:nth-child(1):hover,p>span:nth-child(2):hover,p>span:nth-child(3):hover{
-              color:red;
-             }
-             .updateDate{
-              cursor: pointer;
-              user-select: none;
-             }
-             .updateDate:hover{
-              color:red;
-             }
-            `);
-            document.querySelector("[name='user-content-click2import']").innerText=i18n("click2ImportRule")
-            configCon=document.querySelector(".markdown-body");
-            insertPos=configCon.querySelector("hr");
+            if(location.href==configPage){
+                _GM_addStyle(`
+                 p>span:nth-child(1),p>span:nth-child(2),p>span:nth-child(3){
+                  cursor: pointer;
+                  user-select: none;
+                 }
+                 p>span:nth-child(1):hover,p>span:nth-child(2):hover,p>span:nth-child(3):hover{
+                  color:red;
+                 }
+                 .updateDate{
+                  cursor: pointer;
+                  user-select: none;
+                 }
+                 .updateDate:hover{
+                  color:red;
+                 }
+                `);
+                document.querySelector("[name='user-content-click2import']").innerText=i18n("click2ImportRule")
+                configCon=document.querySelector(".markdown-body");
+                insertPos=configCon.querySelector("hr");
 
-            if(rulesData.urls && rulesData.urls.length>0){
-                document.querySelector("pre[name='user-content-pagetual']").style.display="none";
-                document.querySelector("p[name='user-content-click2import']").style.display="none";
-            }
+                if(!noRules){
+                    document.querySelector("pre[name='user-content-pagetual']").style.display="none";
+                    document.querySelector("p[name='user-content-click2import']").style.display="none";
+                }
+            }else return true;
         }else return false;
         class Rulebar {
             init(ruleUrl){
