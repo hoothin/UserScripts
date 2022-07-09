@@ -189,7 +189,7 @@
                 pageElementCss:"页面主体框架的样式",
                 customCss:"自定义 CSS",
                 firstAlert:"你还未导入规则库，请选择合适的规则库导入哦",
-                manualMode:"禁用拼接，手动用右方向键翻页"
+                manualMode:"禁用拼接，手动用右方向键翻页（或发送事件'pagetual.next'）"
             };
             break;
         case "zh-TW":
@@ -251,7 +251,7 @@
                 pageElementCss:"頁面主體框架的樣式",
                 customCss:"自定義 CSS",
                 firstAlert:"你還未導入規則庫，請選擇合適的規則庫導入哦",
-                manualMode:"禁用拼接，手動用右方向鍵翻頁"
+                manualMode:"禁用拼接，手動用右方向鍵翻頁（或發送事件'pagetual.next'）"
             };
             break;
         case "ja":
@@ -373,7 +373,7 @@
                 pageElementCss:"Custom style for main page elements",
                 customCss:"Custom complete css",
                 firstAlert:"You have not imported the base rule, please select the appropriate rule to import",
-                manualMode:"Disable splicing, manually turn pages with the right arrow keys"
+                manualMode:"Disable splicing, manually turn pages with the right arrow keys (or dispatch event 'pagetual.next')"
             };
             break;
     }
