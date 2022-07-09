@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.26.25
+// @version      1.9.26.26
 // @description  Perpetual pages - Most powerful Auto-Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -188,7 +188,8 @@
                 dbClick2StopKey:"快捷键",
                 pageElementCss:"页面主体框架的样式",
                 customCss:"自定义 CSS",
-                firstAlert:"你还未导入规则库，请选择合适的规则库导入哦"
+                firstAlert:"你还未导入规则库，请选择合适的规则库导入哦",
+                manualMode:"禁用拼接，手动用右方向键翻页"
             };
             break;
         case "zh-TW":
@@ -249,7 +250,8 @@
                 dbClick2StopKey:"快捷鍵",
                 pageElementCss:"頁面主體框架的樣式",
                 customCss:"自定義 CSS",
-                firstAlert:"你還未導入規則庫，請選擇合適的規則庫導入哦"
+                firstAlert:"你還未導入規則庫，請選擇合適的規則庫導入哦",
+                manualMode:"禁用拼接，手動用右方向鍵翻頁"
             };
             break;
         case "ja":
@@ -309,7 +311,8 @@
                 dbClick2StopKey:"Shortcutキー",
                 pageElementCss:"ページ本文フレームの STYLE",
                 customCss:"カスタム CSS",
-                firstAlert:"ルールベースをインポートしていないため、インポートする適切なルールベースを選択してください"
+                firstAlert:"ルールベースをインポートしていないため、インポートする適切なルールベースを選択してください",
+                manualMode:"スプライシングを無効にします。手動で右の矢印キーを使用してページをめくります"
             };
             break;
         default:
@@ -369,7 +372,8 @@
                 dbClick2StopKey:"Shortcut key",
                 pageElementCss:"Custom style for main page elements",
                 customCss:"Custom complete css",
-                firstAlert:"You have not imported the base rule, please select the appropriate rule to import"
+                firstAlert:"You have not imported the base rule, please select the appropriate rule to import",
+                manualMode:"Disable splicing, manually turn pages with the right arrow keys"
             };
             break;
     }
@@ -2085,6 +2089,7 @@
         let initRunInput=createCheckbox(i18n("initRun"), rulesData.initRun!=false);
         let preloadInput=createCheckbox(i18n("preload"), rulesData.preload!=false);
         let dbClick2StopInput=createCheckbox(i18n("dbClick2Stop"), rulesData.dbClick2Stop);
+        let manualModeInput=createCheckbox(i18n("manualMode"), rulesData.manualMode);
         let hideBarInput=createCheckbox(i18n("hideBar"), rulesData.hideBar, "h4", dbClick2StopInput);
         let dbClick2StopCtrlInput=createCheckbox(i18n("dbClick2StopCtrl"), rulesData.dbClick2StopCtrl, "h4", dbClick2StopInput);
         let dbClick2StopAltInput=createCheckbox(i18n("dbClick2StopAlt"), rulesData.dbClick2StopAlt, "h4", dbClick2StopInput);
@@ -2164,6 +2169,7 @@
             rulesData.openInNewTab=openInNewTabInput.checked;
             rulesData.initRun=initRunInput.checked;
             rulesData.preload=preloadInput.checked;
+            rulesData.manualMode=manualModeInput.checked;
             rulesData.pageElementCss=pageElementCssInput.value;
             rulesData.customCss=customCssInput.value;
             rulesData.upBtnImg=upBtnImgInput.value;
@@ -2410,6 +2416,9 @@
                 }
                 if(typeof(rulesData.preload)=="undefined"){
                     rulesData.preload=true;
+                }
+                if(typeof(rulesData.manualMode)=="undefined"){
+                    rulesData.manualMode=false;
                 }
                 if(rulesData.blacklist && rulesData.blacklist.length>0){
                     for(let b in rulesData.blacklist){
@@ -2808,10 +2817,6 @@
                 }
             }
         };
-        if(!ruleParser.curSiteRule.wheel){
-            document.addEventListener('scroll', scrollHandler, true);
-        }
-        document.addEventListener('wheel', scrollHandler, true);
         document.addEventListener('dblclick', e=>{
             if(forceState==1 || e.target.tagName=='INPUT' || e.target.tagName=='TEXTAREA') return;
             if(!rulesData.dbClick2StopKey){
@@ -2862,6 +2867,32 @@
                 }
             });
         }
+        let clickNext=() => {
+            let nextLink=ruleParser.nextLinkHref;
+            if(!nextLink)return;
+            let isJs=/^(javascript|#)/.test(nextLink.replace(location.href,""));
+            if(isJs){
+                let nextBtn=ruleParser.getNextLink(document);
+                if(nextBtn)emuClick(nextBtn);
+            }else{
+                window.location.href = nextLink;
+            }
+        };
+        if(rulesData.manualMode){
+            document.addEventListener('keydown', e=>{
+                if(e.keyCode==39){
+                    clickNext();
+                }
+            });
+            document.addEventListener('pagetual.next', function() {
+                clickNext();
+            }, false);
+            return;
+        }
+        if(!ruleParser.curSiteRule.wheel){
+            document.addEventListener('scroll', scrollHandler, true);
+        }
+        document.addEventListener('wheel', scrollHandler, true);
     }
 
     function showTips(content, wordColor, backColor){
@@ -3605,6 +3636,7 @@
     var tryTimes = 0;
 
     function nextPage(){
+        if(rulesData.manualMode)return;
         if(isPause || isLoading || forceState==1)return;
         if(ruleParser.curSiteRule.delay){
             try{
