@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.26.23
+// @version      1.9.26.25
 // @description  Perpetual pages - Most powerful Auto-Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -186,7 +186,7 @@
                 dbClick2StopShift:"Shift 键",
                 dbClick2StopMeta:"Meta 键",
                 dbClick2StopKey:"快捷键",
-                pageElementCss:"页面主体框架的 CSS",
+                pageElementCss:"页面主体框架的样式",
                 customCss:"自定义 CSS",
                 firstAlert:"你还未导入规则库，请选择合适的规则库导入哦"
             };
@@ -247,7 +247,7 @@
                 dbClick2StopShift:"Shift 鍵",
                 dbClick2StopMeta:"Meta 鍵",
                 dbClick2StopKey:"快捷鍵",
-                pageElementCss:"頁面主體框架的 CSS",
+                pageElementCss:"頁面主體框架的樣式",
                 customCss:"自定義 CSS",
                 firstAlert:"你還未導入規則庫，請選擇合適的規則庫導入哦"
             };
@@ -307,7 +307,7 @@
                 dbClick2StopShift:"Shiftキー",
                 dbClick2StopMeta:"Metaキー",
                 dbClick2StopKey:"Shortcutキー",
-                pageElementCss:"ページ本文フレームの CSS",
+                pageElementCss:"ページ本文フレームの STYLE",
                 customCss:"カスタム CSS",
                 firstAlert:"ルールベースをインポートしていないため、インポートする適切なルールベースを選択してください"
             };
@@ -367,7 +367,7 @@
                 dbClick2StopShift:"Shift key",
                 dbClick2StopMeta:"Meta key",
                 dbClick2StopKey:"Shortcut key",
-                pageElementCss:"Custom css for main page elements",
+                pageElementCss:"Custom style for main page elements",
                 customCss:"Custom complete css",
                 firstAlert:"You have not imported the base rule, please select the appropriate rule to import"
             };
