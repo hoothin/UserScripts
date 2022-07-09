@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.8.7
+// @version      1.6.5.8.8
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -590,7 +590,8 @@
                     siteExist: '已存在相同规则，终止添加',
                     siteAddOver: '站点添加成功',
                     multiline: '是否以换行符分隔多行搜索？',
-                    multilineTooMuch: '行数超过10行，是否继续搜索？'
+                    multilineTooMuch: '行数超过10行，是否继续搜索？',
+                    inputPlaceholder: '输入关键词筛选站点，支持 * ? 通配符'
                 };
                 break;
             case "zh-TW":
@@ -615,7 +616,8 @@
                     siteExist: '已存在相同規則，終止添加',
                     siteAddOver: '站點添加成功',
                     multiline: '是否以換行符分隔多行搜索？',
-                    multilineTooMuch: '行數超過10行，是否繼續搜索？'
+                    multilineTooMuch: '行數超過10行，是否繼續搜索？',
+                    inputPlaceholder: '輸入關鍵詞篩選站點，支持 * ? 通配符'
                 };
                 break;
             default:
@@ -639,7 +641,8 @@
                     siteExist: 'Abort as the site is already exist',
                     siteAddOver: 'Site added successfully',
                     multiline: 'Search as multilines?',
-                    multilineTooMuch: 'The number of lines exceeds 10, do you want to continue searching?'
+                    multilineTooMuch: 'The number of lines exceeds 10, do you want to continue searching?',
+                    inputPlaceholder: 'Enter keywords to filter sites, support * ? wildcards'
                 };
                 break;
         }
@@ -797,6 +800,8 @@
                  }
                  .search-jumper-searchBarCon.search-jumper-scroll {
                      pointer-events: all;
+                     overscroll-behavior: contain;
+                     -ms-scroll-chaining: contain;
                  }
                  .search-jumper-scroll.search-jumper-bottom {
                      overflow-y: hidden;
@@ -812,7 +817,8 @@
                      margin-top: 0px;
                  }
                  .search-jumper-scroll.search-jumper-bottom>.search-jumper-searchBar:hover,
-                 .search-jumper-scroll.search-jumper-bottom>.search-jumper-searchBar.initShow {
+                 .search-jumper-scroll.search-jumper-bottom>.search-jumper-searchBar.initShow,
+                 #search-jumper.in-input.search-jumper-scroll.search-jumper-bottom>.search-jumper-searchBar {
                      margin-top: 0px;
                  }
                  .search-jumper-searchBar:hover {
@@ -824,6 +830,9 @@
                      margin-top: 0;
                      opacity: 0.8;
                      ${searchData.prefConfig.noAni ? "" : "transition:margin-top 0.25s ease, margin-left 0.25s, right 0.25s, opacity 0.25s, transform 0.25s;"}
+                 }
+                 .in-input>.search-jumper-searchBar {
+                     opacity: 1;
                  }
                  .search-jumper-left,
                  .search-jumper-left .search-jumper-type,
@@ -858,12 +867,14 @@
                      position: fixed;
                  }
                  .search-jumper-left>.search-jumper-searchBar:hover,
-                 .search-jumper-left>.search-jumper-searchBar.initShow {
+                 .search-jumper-left>.search-jumper-searchBar.initShow,
+                 #search-jumper.in-input.search-jumper-left>.search-jumper-searchBar {
                      margin-top: unset;
                      margin-left: 0;
                  }
                  .search-jumper-right>.search-jumper-searchBar:hover,
-                 .search-jumper-right>.search-jumper-searchBar.initShow {
+                 .search-jumper-right>.search-jumper-searchBar.initShow,
+                 #search-jumper.in-input.search-jumper-right>.search-jumper-searchBar {
                      margin-top: unset;
                      right: 0;
                  }
@@ -875,7 +886,8 @@
                      transform:scale(.9);
                  }
                  .search-jumper-bottom>.search-jumper-searchBar:hover,
-                 .search-jumper-bottom>.search-jumper-searchBar.initShow {
+                 .search-jumper-bottom>.search-jumper-searchBar.initShow,
+                 #search-jumper.in-input.search-jumper-bottom>.search-jumper-searchBar {
                      margin-top: 0px;
                      -webkit-transform:unset;
                      -moz-transform:unset;
@@ -971,6 +983,13 @@
                  .search-jumper-isTargetLink>.search-jumper-type {
                      display: none;
                  }
+                 #search-jumper.in-input .search-jumper-type:not(.search-jumper-hide) {
+                     width: auto!important;
+                     height: auto!important;
+                 }
+                 #search-jumper.in-input .input-hide {
+                     display: none!important;
+                 }
                  #search-jumper>.search-jumper-searchBar>.search-jumper-type.search-jumper-logo {
                      display: inline-flex;
                  }
@@ -1054,7 +1073,7 @@
                      max-width: 200px;
                      overflow: hidden;
                      white-space: nowrap;
-                     margin: 0 auto;
+                     margin: 0 20px;
                      text-overflow: ellipsis;
                  }
                  .search-jumper-searchBar.disable-pointer>.search-jumper-type {
@@ -1114,6 +1133,42 @@
                      transform:scale(1.2);
                      color: white;
                      text-decoration:none;
+                 }
+                 .in-input .search-jumper-input {
+                     display: block;
+                 }
+                 .search-jumper-input {
+                     overflow: hidden;
+                     width: 80%;
+                     top: 10%;
+                     left: 50%;
+                     margin: 0 0 0 -40%;
+                     position: fixed;
+                     font-family: sans-serif;
+                     background: #F1F1F1;
+                     text-align: left;
+                     box-shadow: 0px 2px 10px rgb(0 0 0 / 80%);
+                     border: 1px solid rgb(179 179 179 / 70%);
+                     border-radius: 28px;
+                     background-color: rgb(51 56 59 / 90%);
+                     padding: 10px;
+                     display: none;
+                     z-index: 2139999999;
+                 }
+                 .search-jumper-input>input {
+                     background-color: #212022;
+                     color: white;
+                     border: none;
+                     font-size: 20px;
+                     height: 35px;
+                     margin-bottom: 0;
+                     padding: 5px;
+                     margin: 0 10px;
+                     border-radius: 3px;
+                     box-shadow: #333 0px 0px 2px;
+                     width: calc(100% - 20px);
+                     outline: none;
+                     box-sizing: border-box;
                  }`;
                 if (searchData.prefConfig.cssText) cssText += searchData.prefConfig.cssText;
                 let styleEle = document.createElement("style");
@@ -1170,6 +1225,30 @@
 
                 this.appendBar();
 
+                let searchInputDiv = document.createElement("div");
+                searchInputDiv.className = "search-jumper-input";
+                let searchInput = document.createElement("input");
+                searchInput.placeholder = i18n("inputPlaceholder");
+                searchInput.id = "searchJumperInput";
+                searchInputDiv.appendChild(searchInput);
+                searchBarCon.appendChild(searchInputDiv);
+                this.searchInput = searchInput;
+            }
+
+            showSearchInput() {
+                this.bar.parentNode.classList.add("in-input");
+                this.searchInput.focus();
+                this.searchInput.value = "";
+                searchTypes.forEach(type => {
+                    type.classList.remove("input-hide");
+                });
+                this.allSiteBtns.forEach(btn => {
+                    btn.classList.remove("input-hide");
+                });
+                [].forEach.call(this.bar.parentNode.querySelectorAll(".sitelist>.sitelistCon>div"), listItem => {
+                    listItem.classList.remove("input-hide");
+                });
+                this.inInput = true;
             }
 
             removeBar() {
@@ -1211,13 +1290,18 @@
                     appendCss = () => {
                         document.documentElement.insertBefore(linkEle, document.documentElement.children[0]);
                         this.waitForFontAwesome(() => {
+                            let hasFont = false;
                             this.fontPool.forEach(font => {
                                 font.innerText = '';
                                 font.style.fontSize = '';
                                 font.style.color = '';
-                                if (this.bar.style.display !== "none") cachePool.push(font);
+                                if (this.bar.style.display !== "none") {
+                                    hasFont = true;
+                                    cachePool.push(font);
+                                }
                             });
-                            setTimeout(() => {cacheManager()}, 1500);
+                            if (hasFont) setTimeout(() => {cacheManager()}, 2000);
+                            else cacheManager();
                         });
                     };
                 } else {
@@ -1278,6 +1362,80 @@
                     }
                 };
                 document.addEventListener('readystatechange', readystatechangeHandler);
+                let inputTimer;
+                this.inInput = false;
+                this.searchInput.addEventListener("input", e => {
+                    clearTimeout(inputTimer);
+                    inputTimer = setTimeout(() => self.searchSiteBtns(), 500);
+                });
+                document.addEventListener("mousedown", e => {
+                    if (self.inInput) {
+                        if (self.bar.parentNode.contains(e.target)) {
+                            if (self.bar.contains(e.target)) e.preventDefault();
+                        } else {
+                            self.inInput = false;
+                            self.bar.parentNode.classList.remove("in-input");
+                        }
+                    }
+                });
+            }
+
+            searchSiteBtns() {
+                if (!this.inInput) return;
+                [].forEach.call(this.bar.parentNode.querySelectorAll(".sitelist>.sitelistCon>div"), listItem => {
+                    listItem.classList.add("input-hide");
+                });
+                let inputWords = this.searchInput.value;
+                this.allSiteBtns.forEach(btn => {
+                    let canMatch = this.globMatch(inputWords, btn.dataset.name) || this.globMatch(inputWords, btn.title);
+                    if (canMatch) {
+                        btn.classList.remove("input-hide");
+                    } else btn.classList.add("input-hide");
+                    let currentList = btn.parentNode.querySelectorAll(".sitelist>.sitelistCon>div");
+                    for (let i = 0; i < currentList.length; i++) {
+                        let listItem = currentList[i];
+                        if (listItem.dataset.name === btn.dataset.name) {
+                            if (canMatch) {
+                                listItem.classList.remove("input-hide");
+                            }
+                        }
+                    }
+                });
+                let showTypes = searchTypes.filter(type => {
+                    let notHideEle = type.querySelector("a.search-jumper-btn:not(.input-hide)");
+                    if (notHideEle) {
+                        type.classList.remove("input-hide");
+                    } else {
+                        type.classList.add("input-hide");
+                    }
+                    return notHideEle;
+                });
+                if (showTypes.length && showTypes[0].classList.contains("search-jumper-hide")) showTypes[0].querySelector("span.search-jumper-btn").onmousedown();
+            }
+
+            globMatch(glob, target) {
+                if (glob.length == 0){
+                    return true;
+                }
+
+                if (glob.length > 1 && glob[0] == '*' &&
+                    target.length == 0){
+                    return false;
+                }
+
+                if ((glob.length > 1 && glob[0] == '?') ||
+                    (glob.length != 0 && target.length != 0 &&
+                     glob[0] == target[0])){
+                    return this.globMatch(glob.substring(1),
+                                     target.substring(1));
+                }
+
+                if (glob.length > 0 && glob[0] == '*'){
+                    return this.globMatch(glob.substring(1), target) ||
+                        this.globMatch(glob, target.substring(1));
+                }
+
+                return false;
             }
 
             setCurrentSite(data) {
@@ -1510,6 +1668,7 @@
                     let p = document.createElement("p");
                     p.innerText = siteEle.dataset.name;
                     li.title = siteEle.title;
+                    li.dataset.name = siteEle.dataset.name;
                     a.appendChild(p);
                     con.appendChild(li);
                 });
@@ -1734,6 +1893,7 @@
                 if (searchData.prefConfig.shortcut && data.shortcut) {
                     ele.dataset.title += ` (${data.shortcut.toUpperCase()})`;
                     document.addEventListener('keydown', e => {
+                        if (e.target.id === "searchJumperInput") return;
                         if ((data.ctrl && !e.ctrlKey) ||
                             (data.alt && !e.altKey) ||
                             (data.shift && !e.shiftKey) ||
@@ -2032,6 +2192,7 @@
                     shortcutCover.innerText = data.shortcut.toUpperCase();
                     ele.appendChild(shortcutCover);
                     document.addEventListener('keydown', e => {
+                        if (e.target.id === "searchJumperInput") return;
                         if (!self.hideTimeout) {
                             if ((data.ctrl && !e.ctrlKey) ||
                                 (data.alt && !e.altKey) ||
@@ -3173,7 +3334,8 @@
                 let shown = false;
                 let showToolbarTimer;
                 if (searchData.prefConfig.shortcutKey) {
-                    document.addEventListener('keydown', e => {
+                    document.addEventListener('keyup', e => {
+                        if (e.target.id === "searchJumperInput") return;
                         if ((searchData.prefConfig.altKey && !e.altKey) ||
                             (searchData.prefConfig.ctrlKey && !e.ctrlKey) ||
                             (searchData.prefConfig.shiftKey && !e.shiftKey) ||
@@ -3192,6 +3354,7 @@
                         if (searchData.prefConfig.shortcutKey == key) {
                             if (!targetElement) targetElement = document.body;
                             searchBar.showInPage();
+                            searchBar.showSearchInput();
                         }
                     });
                 }
