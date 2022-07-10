@@ -21044,7 +21044,7 @@ ImgOps | https://imgops.com/#b#`;
                 if(checkPreview(e)){
                     if(removeUniqueWinTimer)clearTimeout(removeUniqueWinTimer);
                     if(uniqueImgWin && !uniqueImgWin.removed) {
-                        if(uniqueImgWin.src == result.src)return;
+                        if(uniqueImgWin.src == result.src)return true;
                         uniqueImgWin.remove();
                     }
                     new LoadingAnimC(result, 'popup', prefs.waitImgLoad, prefs.framesPicOpenInTopWindow);
