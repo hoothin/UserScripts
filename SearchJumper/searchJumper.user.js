@@ -1413,6 +1413,7 @@
                                     }
                                     let mouseDownEvent = new PointerEvent("mousedown");
                                     siteEle.dispatchEvent(mouseDownEvent);
+                                    if (siteEle.href.indexOf("%s") !== -1) return;
                                     if (siteEle.onclick || !isPage) {
                                         siteEle.click();
                                     } else {
