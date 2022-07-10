@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.26.29
+// @version      1.9.26.30
 // @description  Perpetual pages - Most powerful Auto-Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -3303,14 +3303,21 @@
     var emuIframe,lastActiveUrl;
     function emuPage(callback){
         let orgPage=null,orgContent=null,preContent=null,curPage,iframeDoc,times=0,loadmoreBtn,loadmoreEnd=false,waitTimes=10,changed=false;
+        function returnFalse(log){
+            debug(log);
+            isPause=true;
+            callback(false, false);
+            if(emuIframe && emuIframe.parentNode){
+                emuIframe.parentNode.removeChild(emuIframe);
+                emuIframe=null;
+            }
+        }
         function checkPage(){
             if(isPause)return;
             try{
                 iframeDoc=emuIframe.contentDocument || emuIframe.contentWindow.document;
             }catch(e){
-                debug("Stop as cors");
-                isPause=true;
-                callback(false, false);
+                returnFalse("Stop as cors");
                 return;
             }
 
@@ -3370,9 +3377,7 @@
                 }
                 orgPage=pageEle;
                 if(!orgPage || orgPage.length==0){
-                    debug("Stop as no page when emu");
-                    isPause=true;
-                    callback(false, false);
+                    returnFalse("Stop as no page when emu");
                     return;
                 }
                 if(orgPage && orgPage[0].tagName=="UL")orgPage=orgPage[0].children;
@@ -3381,9 +3386,7 @@
                     orgContent=orgPage.innerText;
                     preContent=orgContent;
                     if(!isVisible(nextLink, iframeDoc.defaultView)){
-                        debug("Stop as next hide when emu");
-                        isPause=true;
-                        callback(false, false);
+                        returnFalse("Stop as next hide when emu");
                     }else{
                         emuClick(nextLink);
                         setTimeout(()=>{
@@ -3391,16 +3394,12 @@
                         },500);
                     }
                 }else{
-                    debug("Stop as no next when emu");
-                    isPause=true;
-                    callback(false, false);
+                    returnFalse("Stop as no next when emu");
                 }
                 return;
             }
             if(times++ > 20){
-                debug("Stop as timeout when emu");
-                isPause=true;
-                callback(false, false);
+                returnFalse("Stop as timeout when emu");
                 return;
             }
             let eles=ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView, true),checkItem;
@@ -3425,9 +3424,7 @@
                     },waitTime);
                 }else if(changed){
                     if (orgContent == preContent) {
-                        debug("Stop as same content");
-                        isPause=true;
-                        callback(false, false);
+                        returnFalse("Stop as same content");
                     } else {
                         callback(iframeDoc, eles);
                     }
@@ -3454,9 +3451,7 @@
                     try{
                         iframeDoc=emuIframe.contentDocument || emuIframe.contentWindow.document;
                     }catch(e){
-                        debug("Stop as cors");
-                        isPause=true;
-                        callback(false, false);
+                        returnFalse("Stop as cors");
                         return;
                     }
                     let code=ruleParser.curSiteRule.init;
@@ -3768,8 +3763,6 @@
                                         nextPage();
                                     }
                                 }
-                            }else if(emuIframe.parentNode){
-                                emuIframe.parentNode.removeChild(emuIframe);
                             }
                         });
                     }
