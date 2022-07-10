@@ -2200,7 +2200,7 @@
                     if (siteEle.onclick || !isPage) {
                         siteEle.click();
                     } else {
-                        _GM_openInTab(siteEle.href);
+                        _GM_openInTab(siteEle.href, {active: true});
                     }
                 }
                 siteEle.setAttribute("target", siteEle.dataset.target==1?"_blank":"");
