@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.8.11
+// @version      1.6.5.8.12
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -1295,6 +1295,7 @@
 
             initRun() {
                 let self = this;
+                this.customInput = false;
                 this.fontPool = [];
                 this.allSiteBtns = [];
                 searchData.sitesConfig.forEach(siteConfig => {
@@ -1368,7 +1369,7 @@
                 }, false);
 
                 if (/^2:/.test(lastSign)) {
-                    let targetSite = this.bar.querySelector(`a[href="${lastSign.replace(/^2:/,"").replace(/(["'])/g,'\\$1')}"]`);
+                    let targetSite = this.bar.querySelector(`a[href="${lastSign.replace(/^2:/, "").replace(/(["'])/g, '\\$1')}"]`);
                     if (targetSite) {
                         let mouseDownEvent = new PointerEvent("mousedown");
                         targetSite.dispatchEvent(mouseDownEvent);
@@ -1407,19 +1408,7 @@
                             if (self.lockSiteKeywords) {
                                 let siteEle = self.bar.querySelector("a.search-jumper-btn:not(.input-hide)");
                                 if (siteEle) {
-                                    let isPage = /^(https?|ftp):/.test(siteEle.href);
-                                    if (isPage) {
-                                        siteEle.setAttribute("target", "_blank");
-                                    }
-                                    let mouseDownEvent = new PointerEvent("mousedown");
-                                    siteEle.dispatchEvent(mouseDownEvent);
-                                    if (siteEle.href.indexOf("%s") !== -1) return;
-                                    if (siteEle.onclick || !isPage) {
-                                        siteEle.click();
-                                    } else {
-                                        _GM_openInTab(siteEle.href, {active: true});
-                                    }
-                                    siteEle.setAttribute("target", siteEle.dataset.target == 1 ? "_blank" : "");
+                                    self.openSiteBtn(siteEle);
                                 }
                             } else if (self.searchInput.value) {
                                 self.lockSiteKeywords = true;
@@ -1961,18 +1950,7 @@
                         self.batchOpening = true;
                         siteEles.forEach(siteEle => {
                             if (siteEle.dataset.nobatch || siteEle.dataset.current) return;
-                            let isPage = /^(https?|ftp):/.test(siteEle.href);
-                            if (isPage) {
-                                siteEle.setAttribute("target", "_blank");
-                            }
-                            let mouseDownEvent = new PointerEvent("mousedown");
-                            siteEle.dispatchEvent(mouseDownEvent);
-                            if (siteEle.onclick || !isPage) {
-                                siteEle.click();
-                            } else {
-                                _GM_openInTab(siteEle.href);
-                            }
-                            siteEle.setAttribute("target", siteEle.dataset.target == 1 ? "_blank" : "");
+                            self.openSiteBtn(siteEle, true);
                         });
                         self.batchOpening = false;
                     }
@@ -2211,6 +2189,23 @@
                 return ele;
             }
 
+            openSiteBtn(siteEle, needClick) {
+                let isPage = /^(https?|ftp):/.test(siteEle.href);
+                if (isPage) {
+                    siteEle.setAttribute("target", "_blank");
+                }
+                let mouseDownEvent = new PointerEvent("mousedown");
+                siteEle.dispatchEvent(mouseDownEvent);
+                if (!this.customInput && (!this.batchOpening || needClick)) {
+                    if (siteEle.onclick || !isPage) {
+                        siteEle.click();
+                    } else {
+                        _GM_openInTab(siteEle.href);
+                    }
+                }
+                siteEle.setAttribute("target", siteEle.dataset.target==1?"_blank":"");
+            }
+
             createSiteBtn(icon, data, openInNewTab) {
                 let self = this;
                 let ele = document.createElement("a");
@@ -2272,7 +2267,6 @@
                         if (searchData.prefConfig.cacheSwitch) cachePool.push(img);
                     }
                 }
-                let customInput = false;
                 self.stopInput = false;
                 if (searchData.prefConfig.shortcut && data.shortcut) {
                     let shortcutCover = document.createElement("div");
@@ -2298,7 +2292,7 @@
                         }
                         var key = (e.key || String.fromCharCode(e.keyCode)).toLowerCase();
                         if (data.shortcut == key) {
-                            if (action() !== false && !customInput) {
+                            if (action() !== false && !self.customInput) {
                                 ele.click();
                             }
                         }
@@ -2387,7 +2381,7 @@
                     ele.dataset.target = 1;
                 }
                 let getUrl = () => {
-                    customInput = false;
+                    self.customInput = false;
                     let keywords;
                     if (self.lockSiteKeywords && self.searchInput.value) {
                         keywords = self.searchInput.value;
@@ -2422,7 +2416,7 @@
                     while (resultUrl.indexOf('%input{') !== -1) {
                         let inputMatch = resultUrl.match(/%input{(.*?)}/);
                         if (!inputMatch) return false;
-                        customInput = true;
+                        self.customInput = true;
                         if (self.stopInput) return false;
                         let promptStr;
                         if (inputMatch[1].indexOf("\"") === 0 && inputMatch[1].indexOf("\",\"") !== -1) {
@@ -2440,7 +2434,7 @@
                     }
                     let targetBaseUrl = targetUrl.replace(/^https?:\/\//i, "");
                     if (!keywords && /%s\b/.test(resultUrl)) {
-                        customInput = true;
+                        self.customInput = true;
                         if (self.stopInput) return false;
                         let promptStr = window.prompt(i18n("keywords"));
                         if (promptStr === null) return false;
@@ -2464,22 +2458,22 @@
                             return true;
                         };
                         if (/%t\b/.test(resultUrl)) {
-                            customInput = true;
+                            self.customInput = true;
                             if (getTargetUrl() === false) return false;
                             resultUrl = resultUrl.replace(/%t\b/g, promptStr);
                         }
                         if (/%T\b/.test(resultUrl)) {
-                            customInput = true;
+                            self.customInput = true;
                             if (getTargetUrl() === false) return false;
                             resultUrl = resultUrl.replace(/%T\b/g, encodeURIComponent(promptStr));
                         }
                         if (/%b\b/.test(resultUrl)) {
-                            customInput = true;
+                            self.customInput = true;
                             if (getTargetUrl() === false) return false;
                             resultUrl = resultUrl.replace(/%b\b/g, promptStr.replace(/^https?:\/\//i, ""));
                         }
                         if (/%B\b/.test(resultUrl)) {
-                            customInput = true;
+                            self.customInput = true;
                             if (getTargetUrl() === false) return false;
                             resultUrl = resultUrl.replace(/%B\b/g, encodeURIComponent(promptStr.replace(/^https?:\/\//i, "")));
                         }
@@ -2577,18 +2571,7 @@
                                 }
                                 targetSites.forEach(siteEle => {
                                     if (siteEle.dataset.current) return;
-                                    let isJs = /^javascript:/.test(siteEle.href);
-                                    if (!isJs) {
-                                        siteEle.setAttribute("target", "_blank");
-                                    }
-                                    let mouseDownEvent = new PointerEvent("mousedown");
-                                    siteEle.dispatchEvent(mouseDownEvent);
-                                    if (siteEle.onclick || isJs) {
-                                        siteEle.click();
-                                    } else {
-                                        _GM_openInTab(siteEle.href);
-                                    }
-                                    siteEle.setAttribute("target", siteEle.dataset.target==1?"_blank":"");
+                                    self.openSiteBtn(siteEle, true);
                                 });
                                 self.batchOpening = false;
                                 return false;
@@ -2663,14 +2646,12 @@
                             }
                             return false;
                         };
-                        if (customInput) {
-                            if (self.batchOpening !== true) {
-                                //lose click, click one more time
-                                if (checkAlt() || !isPage) {
-                                    ele.click();
-                                } else {
-                                    _GM_openInTab(url, {active: true});
-                                }
+                        if (self.customInput) {
+                            //lose click, click one more time
+                            if (checkAlt() || !isPage) {
+                                ele.click();
+                            } else {
+                                _GM_openInTab(url, {active: true});
                             }
                         } else {
                             if (!checkAlt()) {
