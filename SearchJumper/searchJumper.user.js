@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.8.10
+// @version      1.6.5.8.11
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -1405,22 +1405,20 @@
                     switch(e.keyCode) {
                         case 13://回车
                             if (self.lockSiteKeywords) {
-                                if (self.searchInput.value) {
-                                    let siteEle = self.bar.querySelector("a.search-jumper-btn:not(.input-hide)");
-                                    if (siteEle) {
-                                        let isPage = /^(https?|ftp):/.test(siteEle.href);
-                                        if (isPage) {
-                                            siteEle.setAttribute("target", "_blank");
-                                        }
-                                        let mouseDownEvent = new PointerEvent("mousedown");
-                                        siteEle.dispatchEvent(mouseDownEvent);
-                                        if (siteEle.onclick || !isPage) {
-                                            siteEle.click();
-                                        } else {
-                                            _GM_openInTab(siteEle.href, {active: true});
-                                        }
-                                        siteEle.setAttribute("target", siteEle.dataset.target == 1 ? "_blank" : "");
+                                let siteEle = self.bar.querySelector("a.search-jumper-btn:not(.input-hide)");
+                                if (siteEle) {
+                                    let isPage = /^(https?|ftp):/.test(siteEle.href);
+                                    if (isPage) {
+                                        siteEle.setAttribute("target", "_blank");
                                     }
+                                    let mouseDownEvent = new PointerEvent("mousedown");
+                                    siteEle.dispatchEvent(mouseDownEvent);
+                                    if (siteEle.onclick || !isPage) {
+                                        siteEle.click();
+                                    } else {
+                                        _GM_openInTab(siteEle.href, {active: true});
+                                    }
+                                    siteEle.setAttribute("target", siteEle.dataset.target == 1 ? "_blank" : "");
                                 }
                             } else if (self.searchInput.value) {
                                 self.lockSiteKeywords = true;
