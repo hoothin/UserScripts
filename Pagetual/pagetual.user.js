@@ -2878,7 +2878,7 @@
                 window.location.href = nextLink;
             }
         };
-        if(ruleParser.curSiteRule.manualMode || rulesData.manualMode){
+        if(typeof ruleParser.curSiteRule.manualMode=='undefined' ? rulesData.manualMode : ruleParser.curSiteRule.manualMode){
             document.addEventListener('keydown', e=>{
                 if(e.keyCode==39){
                     clickNext();
@@ -3636,7 +3636,7 @@
     var tryTimes = 0;
 
     function nextPage(){
-        if(ruleParser.curSiteRule.manualMode || rulesData.manualMode)return;
+        if(typeof ruleParser.curSiteRule.manualMode=='undefined' ? rulesData.manualMode : ruleParser.curSiteRule.manualMode)return;
         if(isPause || isLoading || forceState==1)return;
         if(ruleParser.curSiteRule.delay){
             try{
