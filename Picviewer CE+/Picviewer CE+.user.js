@@ -18162,8 +18162,8 @@ ImgOps | https://imgops.com/#b#`;
                     opacity:0;\
                     }\
                     .pv-pic-search-state {\
-                    top: 9px;\
-                    left: 9px;\
+                    top: 8px;\
+                    left: 8px;\
                     display: block;\
                     position: absolute;\
                     z-index: 1;\
@@ -18171,7 +18171,7 @@ ImgOps | https://imgops.com/#b#`;
                     height: 20px;\
                     line-height: 20px;\
                     background: rgb(0 0 0 / 80%);\
-                    border-radius: 8px;\
+                    border-radius: 0 0 8px 0;\
                     padding: 1px 5px;\
                     white-space: nowrap;\
                     overflow: hidden;\
