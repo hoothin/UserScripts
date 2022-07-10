@@ -41,7 +41,7 @@
 // @grant                unsafeWindow
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
 // @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1063681
-// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1068015
+// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1068799
 // @match                *://*/*
 // @exclude              http://www.toodledo.com/tasks/*
 // @exclude              http*://maps.google.com*/*
@@ -11746,7 +11746,8 @@ ImgOps | https://imgops.com/#b#`;
                     alt: false,
                     shift: false,
                     command: false,
-                    type: "hold"
+                    type: "hold",
+                    closeAfterPreview: false
                 }
             },
 
@@ -21209,10 +21210,24 @@ ImgOps | https://imgops.com/#b#`;
             }
         }
 
+        function keyup(event) {
+            let isFuncKey = event.key == 'Alt' || event.key == 'Control' || event.key == 'Shift' || event.key == 'Meta';
+            if(isFuncKey && !checkPreview(event) && (uniqueImgWin && !uniqueImgWin.removed)){
+                if(prefs.floatBar.globalkeys.closeAfterPreview){
+                    if(removeUniqueWinTimer)clearTimeout(removeUniqueWinTimer);
+                    removeUniqueWinTimer = setTimeout(()=>{uniqueImgWin.remove()},100);
+                }else{
+                    uniqueImgWin.imgWindow.style.pointerEvents = "auto";
+                    uniqueImgWin.focus();
+                }
+            }
+        }
+
         window.addEventListener('message', handleMessage, true);
 
         addPageScript();
 
+        document.addEventListener('keyup', keyup, false);
         document.addEventListener('mouseover', globalMouseoverHandler, true);
         document.addEventListener('mousemove', globalMouseoverHandler, true);
 
@@ -21410,6 +21425,11 @@ ImgOps | https://imgops.com/#b#`;
                         'hold': i18n("globalkeysHold")
                     },
                     "default": prefs.floatBar.globalkeys.type
+                },
+                'floatBar.globalkeys.closeAfterPreview': {
+                    label: i18n("closeAfterPreview"),
+                    type: 'checkbox',
+                    "default": prefs.floatBar.globalkeys.closeAfterPreview
                 },
                 'floatBar.globalkeys.invertInitShow': {
                     label: i18n("initShow"),
