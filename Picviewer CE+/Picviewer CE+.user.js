@@ -21234,13 +21234,11 @@ ImgOps | https://imgops.com/#b#`;
         document.addEventListener('mouseout',e=>{
             if(uniqueImgWin && !uniqueImgWin.removed){
                 if(checkPreview(e)){
-                    if(!uniqueImgWin.showArea){
-                        uniqueImgWin.showArea=uniqueImgWin.data.img.getBoundingClientRect();
-                    }
-                    if(e.clientX < uniqueImgWin.showArea.left + 20 ||
-                      e.clientX > uniqueImgWin.showArea.right - 20 ||
-                      e.clientY < uniqueImgWin.showArea.top + 20 ||
-                      e.clientY > uniqueImgWin.showArea.bottom - 20){
+                    let showArea=uniqueImgWin.data.img.getBoundingClientRect();
+                    if(e.clientX < showArea.left + 20 ||
+                      e.clientX > showArea.right - 20 ||
+                      e.clientY < showArea.top + 20 ||
+                      e.clientY > showArea.bottom - 20){
                         if(removeUniqueWinTimer)clearTimeout(removeUniqueWinTimer);
                         removeUniqueWinTimer = setTimeout(()=>{uniqueImgWin.remove()},100);
                     }
