@@ -197,6 +197,10 @@ delay
 --
 The js code to delay next action until return true, use this prop to get complete page elements with lazy load.
 
+manualMode
+--
+Set to true to enable manual mode, then paging will stop, right arrow (or 'pagetual.next' event) will be bound to click next link.
+
 child script
 --
 If the site has some limit for code eval. You can make a child script with function under object `window`. You should name them start with `pagetual` use camelCase. Like `window.pagetualWait`, `window.pagetualNextLinkByJs`, `window.pagetualPageInit`, `window.pagetualPageAction`, `window.pagetualInit`, `window.pagetualPageBarText`.
