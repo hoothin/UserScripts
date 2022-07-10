@@ -1950,7 +1950,7 @@
                         self.batchOpening = true;
                         siteEles.forEach(siteEle => {
                             if (siteEle.dataset.nobatch || siteEle.dataset.current) return;
-                            self.openSiteBtn(siteEle, true);
+                            self.openSiteBtn(siteEle);
                         });
                         self.batchOpening = false;
                     }
@@ -2189,14 +2189,14 @@
                 return ele;
             }
 
-            openSiteBtn(siteEle, needClick) {
+            openSiteBtn(siteEle) {
                 let isPage = /^(https?|ftp):/.test(siteEle.href);
                 if (isPage) {
                     siteEle.setAttribute("target", "_blank");
                 }
                 let mouseDownEvent = new PointerEvent("mousedown");
                 siteEle.dispatchEvent(mouseDownEvent);
-                if (!this.customInput && (!this.batchOpening || needClick)) {
+                if (!this.customInput) {
                     if (siteEle.onclick || !isPage) {
                         siteEle.click();
                     } else {
@@ -2571,7 +2571,7 @@
                                 }
                                 targetSites.forEach(siteEle => {
                                     if (siteEle.dataset.current) return;
-                                    self.openSiteBtn(siteEle, true);
+                                    self.openSiteBtn(siteEle);
                                 });
                                 self.batchOpening = false;
                                 return false;
