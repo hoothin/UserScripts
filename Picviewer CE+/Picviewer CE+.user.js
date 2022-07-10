@@ -18056,7 +18056,7 @@ ImgOps | https://imgops.com/#b#`;
                     transition: all 0.3s ease-out;\
                     }\
                     .pv-pic-window-container_focus {\
-                    border: 5px solid rgb(255 255 255 / 30%);\
+                    border: 5px solid rgb(255 255 255 / 50%);\
                     }\
                     .pv-pic-window-close,\
                     .pv-pic-window-max,\
@@ -21043,7 +21043,10 @@ ImgOps | https://imgops.com/#b#`;
                 //metaKey altKey shiftKey ctrlKey
                 if(checkPreview(e)){
                     if(removeUniqueWinTimer)clearTimeout(removeUniqueWinTimer);
-                    if(uniqueImgWin && !uniqueImgWin.removed) uniqueImgWin.remove();
+                    if(uniqueImgWin && !uniqueImgWin.removed) {
+                        if(uniqueImgWin.src == result.src)return;
+                        uniqueImgWin.remove();
+                    }
                     new LoadingAnimC(result, 'popup', prefs.waitImgLoad, prefs.framesPicOpenInTopWindow);
                     return true;
                 }else {
