@@ -189,9 +189,9 @@ wheel
 --
 Set to true so the next page action will only effect when the mouse wheel roll
 
-pageElementCss
+pageElementStyle
 --
-Custom css for pageElement
+Custom cssText of style for pageElement
 
 delay
 --
