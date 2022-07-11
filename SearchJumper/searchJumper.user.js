@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.8.12
+// @version      1.6.5.8.13
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -759,7 +759,7 @@
             return escapeHTMLPolicy?escapeHTMLPolicy.createHTML(html):html;
         }
 
-        var logoBtn, searchBar, searchTypes = [], currentSite = false, cacheKeywords, localKeywords, lastSign, cacheIcon, historySites, sortTypeNames, cachePool = [], currentFormParams;
+        var logoBtn, searchBar, searchTypes = [], currentSite = false, cacheKeywords, localKeywords, lastSign, inPagePostParams, cacheIcon, historySites, sortTypeNames, cachePool = [], currentFormParams;
         var logoBtnSvg = `<svg class="search-jumper-logoBtnSvg" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><title>${i18n("scriptName")}</title><path d="M.736 510.464c0-281.942 228.335-510.5 510-510.5 135.26 0 264.981 53.784 360.625 149.522 95.643 95.737 149.375 225.585 149.375 360.978 0 281.94-228.335 510.5-510 510.5-281.665 0-510-228.56-510-510.5zm510-510.5v1021m-510-510.5h1020" fill="#fefefe"/><path d="M237.44 346.624a48.64 48.64 0 1 0 97.28 0 48.64 48.64 0 1 0-97.28 0zM699.904 346.624a48.64 48.64 0 1 0 97.28 0 48.64 48.64 0 1 0-97.28 0zM423.296 759.296c-64 0-115.712-52.224-115.712-115.712 0-26.624 9.216-52.224 25.6-72.704 9.216-11.776 26.112-13.312 37.888-4.096s13.312 26.112 4.096 37.888c-9.216 11.264-13.824 24.576-13.824 38.912 0 34.304 27.648 61.952 61.952 61.952s61.952-27.648 61.952-61.952c0-4.096-.512-8.192-1.024-11.776-2.56-14.848 6.656-28.672 21.504-31.744 14.848-2.56 28.672 6.656 31.744 21.504 1.536 7.168 2.048 14.336 2.048 22.016-.512 63.488-52.224 115.712-116.224 115.712z" fill="#333"/><path d="M602.08 760.296c-64 0-115.712-52.224-115.712-115.712 0-14.848 12.288-27.136 27.136-27.136s27.136 12.288 27.136 27.136c0 34.304 27.648 61.952 61.952 61.952s61.952-27.648 61.952-61.952c0-15.36-5.632-30.208-15.872-41.472-9.728-11.264-9.216-28.16 2.048-37.888 11.264-9.728 28.16-9.216 37.888 2.048 19.456 21.504 29.696 48.64 29.696 77.824 0 62.976-52.224 115.2-116.224 115.2z" fill="#333"/><ellipse ry="58" rx="125" cy="506.284" cx="201.183" fill="#faf"/><ellipse ry="58" rx="125" cy="506.284" cx="823.183" fill="#faf"/></svg>`;
         var logoBase64 = "data:image/svg+xml;base64,PHN2ZyBjbGFzcz0ic2VhcmNoLWp1bXBlci1sb2dvQnRuU3ZnIiB2aWV3Qm94PSIwIDAgMTAyNCAxMDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0uNzM2IDUxMC40NjRjMC0yODEuOTQyIDIyOC4zMzUtNTEwLjUgNTEwLTUxMC41IDEzNS4yNiAwIDI2NC45ODEgNTMuNzg0IDM2MC42MjUgMTQ5LjUyMiA5NS42NDMgOTUuNzM3IDE0OS4zNzUgMjI1LjU4NSAxNDkuMzc1IDM2MC45NzggMCAyODEuOTQtMjI4LjMzNSA1MTAuNS01MTAgNTEwLjUtMjgxLjY2NSAwLTUxMC0yMjguNTYtNTEwLTUxMC41em01MTAtNTEwLjV2MTAyMW0tNTEwLTUxMC41aDEwMjAiIGZpbGw9IiNmZWZlZmUiLz48cGF0aCBkPSJNMjM3LjQ0IDM0Ni42MjRhNDguNjQgNDguNjQgMCAxIDAgOTcuMjggMCA0OC42NCA0OC42NCAwIDEgMC05Ny4yOCAwek02OTkuOTA0IDM0Ni42MjRhNDguNjQgNDguNjQgMCAxIDAgOTcuMjggMCA0OC42NCA0OC42NCAwIDEgMC05Ny4yOCAwek00MjMuMjk2IDc1OS4yOTZjLTY0IDAtMTE1LjcxMi01Mi4yMjQtMTE1LjcxMi0xMTUuNzEyIDAtMjYuNjI0IDkuMjE2LTUyLjIyNCAyNS42LTcyLjcwNCA5LjIxNi0xMS43NzYgMjYuMTEyLTEzLjMxMiAzNy44ODgtNC4wOTZzMTMuMzEyIDI2LjExMiA0LjA5NiAzNy44ODhjLTkuMjE2IDExLjI2NC0xMy44MjQgMjQuNTc2LTEzLjgyNCAzOC45MTIgMCAzNC4zMDQgMjcuNjQ4IDYxLjk1MiA2MS45NTIgNjEuOTUyczYxLjk1Mi0yNy42NDggNjEuOTUyLTYxLjk1MmMwLTQuMDk2LS41MTItOC4xOTItMS4wMjQtMTEuNzc2LTIuNTYtMTQuODQ4IDYuNjU2LTI4LjY3MiAyMS41MDQtMzEuNzQ0IDE0Ljg0OC0yLjU2IDI4LjY3MiA2LjY1NiAzMS43NDQgMjEuNTA0IDEuNTM2IDcuMTY4IDIuMDQ4IDE0LjMzNiAyLjA0OCAyMi4wMTYtLjUxMiA2My40ODgtNTIuMjI0IDExNS43MTItMTE2LjIyNCAxMTUuNzEyeiIgZmlsbD0iIzMzMyIvPjxwYXRoIGQ9Ik02MDIuMDggNzYwLjI5NmMtNjQgMC0xMTUuNzEyLTUyLjIyNC0xMTUuNzEyLTExNS43MTIgMC0xNC44NDggMTIuMjg4LTI3LjEzNiAyNy4xMzYtMjcuMTM2czI3LjEzNiAxMi4yODggMjcuMTM2IDI3LjEzNmMwIDM0LjMwNCAyNy42NDggNjEuOTUyIDYxLjk1MiA2MS45NTJzNjEuOTUyLTI3LjY0OCA2MS45NTItNjEuOTUyYzAtMTUuMzYtNS42MzItMzAuMjA4LTE1Ljg3Mi00MS40NzItOS43MjgtMTEuMjY0LTkuMjE2LTI4LjE2IDIuMDQ4LTM3Ljg4OCAxMS4yNjQtOS43MjggMjguMTYtOS4yMTYgMzcuODg4IDIuMDQ4IDE5LjQ1NiAyMS41MDQgMjkuNjk2IDQ4LjY0IDI5LjY5NiA3Ny44MjQgMCA2Mi45NzYtNTIuMjI0IDExNS4yLTExNi4yMjQgMTE1LjJ6IiBmaWxsPSIjMzMzIi8+PGVsbGlwc2Ugcnk9IjU4IiByeD0iMTI1IiBjeT0iNTA2LjI4NCIgY3g9IjIwMS4xODMiIGZpbGw9IiNmYWYiLz48ZWxsaXBzZSByeT0iNTgiIHJ4PSIxMjUiIGN5PSI1MDYuMjg0IiBjeD0iODIzLjE4MyIgZmlsbD0iI2ZhZiIvPjwvc3ZnPg==";
         var targetElement;
@@ -2329,10 +2329,8 @@
                     }
                     if (ele.dataset.current) {
                         if (!currentSite) {
-                            let submitParams = location.href.match(/#p{(.*?)}/);
-                            if (submitParams) {
-                                submitParams = submitParams[1];
-                                let params = submitParams.split("&");
+                            if (inPagePostParams) {
+                                storage.setItem("inPagePostParams", false);
                                 let submitAction = () => {
                                     setTimeout(() => {
                                         if (document.readyState === "loading") {
@@ -2340,23 +2338,22 @@
                                             return;
                                         }
                                         let form, input;
-                                        for (let i = 0; i < params.length; i++) {
-                                            let curPair = decodeURIComponent(params[i]);
-                                            let index = curPair.replace(/http.*/, "").lastIndexOf("=");
-                                            let k = curPair.slice(0, index);
-                                            let v = curPair.slice(index + 1);
-                                            input = document.querySelector(k);
+
+                                        for (let i = 0; i < inPagePostParams.length; i++) {
+                                            let param = inPagePostParams[i];
+                                            input = document.querySelector(param[0]);
                                             if (!input) {
                                                 submitAction();
                                                 return;
                                             }
-                                            if (v === 'click()') {
+                                            if (param[1] === 'click()') {
                                                 emuClick(input);
                                             } else {
-                                                if (!localKeywords) localKeywords = v;
-                                                emuInput(input, v);
+                                                if (!localKeywords) localKeywords = param[1];
+                                                emuInput(input, param[1]);
                                             }
                                         }
+
                                         form = input.parentNode;
                                         while (form.tagName != 'FORM') {
                                             form = form.parentNode;
@@ -2392,8 +2389,19 @@
                         cacheKeywords = keywords;
                         storage.setItem("cacheKeywords", keywords);
                     }
+                    if (!ele.dataset.inPagePost) {
+                        ele.dataset.inPagePost = (data.url.indexOf("#p{") != -1) ? 't' : 'f';
+                    }
+                    let inPagePost = ele.dataset.inPagePost === 't', postMatch;
+                    if (inPagePost) {
+                        postMatch = data.url.match(/#p{(.*[^\\])}/);
+                    }
                     if (!ele.dataset.url) {
-                        ele.dataset.url = data.url.replace(/%e\b/g, document.charset).replace(/%c\b/g, (isMobile?"mobile":"pc")).replace(/%u\b/g, location.href).replace(/%U\b/g, encodeURIComponent(location.href)).replace(/%h\b/g, location.host);
+                        let tempUrl = data.url;
+                        if (inPagePost) {
+                            tempUrl = tempUrl.replace(postMatch[0], "");
+                        }
+                        ele.dataset.url = tempUrl.replace(/%e\b/g, document.charset).replace(/%c\b/g, (isMobile?"mobile":"pc")).replace(/%u\b/g, location.href).replace(/%U\b/g, encodeURIComponent(location.href)).replace(/%h\b/g, location.host);
                     }
                     let selStr = getSelectStr();
                     let targetUrl = '';
@@ -2477,6 +2485,27 @@
                             if (getTargetUrl() === false) return false;
                             resultUrl = resultUrl.replace(/%B\b/g, encodeURIComponent(promptStr.replace(/^https?:\/\//i, "")));
                         }
+                    }
+                    if (inPagePost) {
+                        let postParams = [];
+                        postMatch[1].split(/(?<=[^\\])&/).forEach(pair => {
+                            let pairArr = pair.split(/(?<=[^\\])\=/);
+                            if (pairArr.length === 2) {
+                                postParams.push([pairArr[0].replace(/\\([\=&])/g, "$1"), pairArr[1].replace(/\\([\=&])/g, "$1").replace(/%e\b/g, document.charset)
+                                    .replace(/%c\b/g, (isMobile?"mobile":"pc"))
+                                    .replace(/%u\b/g, location.href)
+                                    .replace(/%U\b/g, encodeURIComponent(location.href))
+                                    .replace(/%h\b/g, location.host)
+                                    .replace(/%t\b/g, targetUrl)
+                                    .replace(/%T\b/g, encodeURIComponent(targetUrl))
+                                    .replace(/%b\b/g, targetBaseUrl)
+                                    .replace(/%B\b/g, encodeURIComponent(targetBaseUrl))
+                                    .replace(/%n\b/g, targetName)
+                                    .replace(/%s\b/g, keywords)
+                                    .replace(/%S\b/g, (cacheKeywords || keywords))]);
+                            }
+                        });
+                        storage.setItem("inPagePostParams", postParams);
                     }
                     return resultUrl.replace(/%t\b/g, targetUrl).replace(/%T\b/g, encodeURIComponent(targetUrl)).replace(/%b\b/g, targetBaseUrl).replace(/%B\b/g, encodeURIComponent(targetBaseUrl)).replace(/%n\b/g, targetName).replace(/%s\b/g, keywords).replace(/%S\b/g, (cacheKeywords || keywords));
                 };
@@ -2998,10 +3027,19 @@
                 twist: 0,
                 which: 1
             };
-            var mouseEvent = new PointerEvent("mousedown",eventParam);
-            btn.dispatchEvent(mouseEvent);
-            mouseEvent = new PointerEvent("mouseup",eventParam);
-            btn.dispatchEvent(mouseEvent);
+            btn.focus();
+            var mouseclick = new PointerEvent("mouseover",eventParam);
+            btn.dispatchEvent(mouseclick);
+            mouseclick = new PointerEvent("pointerover",eventParam);
+            btn.dispatchEvent(mouseclick);
+            mouseclick = new PointerEvent("mousedown",eventParam);
+            btn.dispatchEvent(mouseclick);
+            mouseclick = new PointerEvent("pointerdown",eventParam);
+            btn.dispatchEvent(mouseclick);
+            mouseclick = new PointerEvent("mouseup",eventParam);
+            btn.dispatchEvent(mouseclick);
+            mouseclick = new PointerEvent("pointerup",eventParam);
+            btn.dispatchEvent(mouseclick);
             btn.click();
         }
 
@@ -4014,6 +4052,11 @@
             lastSign = await new Promise((resolve) => {
                 storage.getItem("lastSign", data => {
                     resolve(data || 0);
+                });
+            });
+            inPagePostParams = await new Promise((resolve) => {
+                storage.getItem("inPagePostParams", data => {
+                    resolve(data || false);
                 });
             });
             cacheIcon = await new Promise((resolve) => {
