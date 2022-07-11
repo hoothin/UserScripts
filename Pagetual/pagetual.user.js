@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.26.30
+// @version      1.9.26.31
 // @description  Perpetual pages - Most powerful Auto-Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -612,10 +612,10 @@
                         url:item.data.url,
                         pageElement:item.data.pageElement,
                         nextLink:item.data.nextLink,
-                        insert:item.data.insertBefore,
+                        insert:item.data.insertBefore||undefined,
                         insertPos:1,
-                        updatedAt:item.data.updated_at,
-                        css:item.data.Stylus+item.data.CSS,
+                        updatedAt:item.updated_at,
+                        css:(item.data.Stylus && item.data.CSS) ? (item.data.Stylus + item.data.CSS) : (item.data.Stylus || item.data.CSS),
                         pageAction:item.data.bookmarklet
                     };
                     break;
@@ -994,7 +994,7 @@
                 this.docPageElement=pageElement;
             }
             if(pageElement && pageElement.length>0){
-                let pageElementCss=self.curSiteRule.pageElementCss || rulesData.pageElementCss;
+                let pageElementCss=self.curSiteRule.pageElementCss || self.curSiteRule.pageElementStyle || rulesData.pageElementCss;
                 if(pageElementCss){
                     [].forEach.call(pageElement, ele=>{
                         if(!ele.dataset.pagetualPageElement){
@@ -3648,7 +3648,7 @@
                 debug(e);
             }
         }
-        if(ruleParser.curSiteRule.pageElementCss || rulesData.pageElementCss){
+        if(ruleParser.curSiteRule.pageElementCss || ruleParser.curSiteRule.pageElementStyle || rulesData.pageElementCss){
             ruleParser.getPageElement(document, _unsafeWindow);
         }
         let nextLink=ruleParser.nextLinkHref;
