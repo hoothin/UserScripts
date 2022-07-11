@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.7.10.1
+// @version              2022.7.11.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -11784,7 +11784,7 @@ ImgOps | https://imgops.com/#b#`;
 
                 autoZoom: true, // 如果有放大，则把图片及 sidebar 部分的缩放改回 100%，增大可视面积（仅在 chrome 下有效）
                 descriptionLength: 32, // 注释的最大宽度
-                editSite: "Lunapic",
+                editSite: "",
                 defaultSizeLimit:{
                     w:200,
                     h:200
@@ -13601,8 +13601,9 @@ ImgOps | https://imgops.com/#b#`;
                             window.open(self.src,'_blank');
                         }break;
                         case 'psImage':{
-                            //window.open((prefs.gallery.editSite=='Pixlr'?'https://pixlr.com/editor/?image=':'https://www.toolpic.com/apieditor.html?image=')+self.src,'_blank');
-                            window.open('https://www.lunapic.com/editor/index.php?action=url&url='+self.src,'_blank');
+                            let editFunc=editSitesFunc[prefs.gallery.editSite];
+                            if(!editFunc)editFunc=editSitesFunc[Object.keys(editSitesFunc)[0]];
+                            if(editFunc)editFunc(self.src, true);
                         }break;
                         case 'scrollIntoView':{
                             if(collection.mMode){
@@ -21146,6 +21147,109 @@ ImgOps | https://imgops.com/#b#`;
             };
         }
 
+        async function input(sel, v) {
+            await new Promise((resolve) => {
+                let checkInv = setInterval(() => {
+                    let input = document.querySelector(sel);
+                    if (input) {
+                        input.focus();
+                        input.scrollIntoView();
+                        let lastValue = input.value;
+                        if (input.tagName == "INPUT") {
+                            var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
+                            nativeInputValueSetter.call(input, v);
+                        } else {
+                            var nativeTextareaValueSetter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, "value").set;
+                            nativeTextareaValueSetter.call(input, v);
+                        }
+                        let event = new Event('focus', { bubbles: true });
+                        input.dispatchEvent(event);
+                        event = new Event('input', { bubbles: true });
+                        let tracker = input._valueTracker;
+                        if (tracker) {
+                            tracker.setValue(lastValue);
+                        }
+                        input.dispatchEvent(event);
+                        event = new Event('change', { bubbles: true });
+                        input.dispatchEvent(event);
+                        clearInterval(checkInv);
+                        resolve();
+                    }
+                }, 100);
+            });
+        }
+
+        function emuClick(btn){
+            if(!PointerEvent)return btn.click();
+            let eventParam={
+                isTrusted: true,
+                altKey: false,
+                azimuthAngle: 0,
+                bubbles: true,
+                button: 0,
+                buttons: 0,
+                clientX: 1,
+                clientY: 1,
+                cancelBubble: false,
+                cancelable: true,
+                composed: true,
+                ctrlKey: false,
+                defaultPrevented: false,
+                detail: 1,
+                eventPhase: 2,
+                fromElement: null,
+                height: 1,
+                isPrimary: false,
+                metaKey: false,
+                pointerId: 1,
+                pointerType: "mouse",
+                pressure: 0,
+                relatedTarget: null,
+                returnValue: true,
+                shiftKey: false,
+                toElement: null,
+                twist: 0,
+                which: 1
+            };
+            btn.focus();
+            var mouseclick = new PointerEvent("mouseover",eventParam);
+            btn.dispatchEvent(mouseclick);
+            mouseclick = new PointerEvent("pointerover",eventParam);
+            btn.dispatchEvent(mouseclick);
+            mouseclick = new PointerEvent("mousedown",eventParam);
+            btn.dispatchEvent(mouseclick);
+            mouseclick = new PointerEvent("pointerdown",eventParam);
+            btn.dispatchEvent(mouseclick);
+            mouseclick = new PointerEvent("mouseup",eventParam);
+            btn.dispatchEvent(mouseclick);
+            mouseclick = new PointerEvent("pointerup",eventParam);
+            btn.dispatchEvent(mouseclick);
+            btn.click();
+        }
+
+        async function clickEle(sel, failAction) {
+            await new Promise((resolve) => {
+                let checkInv = setInterval(() => {
+                    let ele = document.querySelector(sel);
+                    if (ele) {
+                        clearInterval(checkInv);
+                        emuClick(ele);
+                        resolve();
+                    }else if(failAction) {
+                        failAction();
+                    }
+                }, 100);
+            });
+        }
+
+        async function sleep(time) {
+            await new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve();
+                }, time);
+            })
+        }
+
         function isKeyDownEffectiveTarget(target) {
             var localName = target.localName;
 
@@ -21249,6 +21353,44 @@ ImgOps | https://imgops.com/#b#`;
                 }
             }
         }, true);
+        var editSitesFunc={
+            "Lunapic": (src, initOpen) => {
+                _GM_openInTab('https://www.lunapic.com/editor/index.php?action=url&url=' + src, {active:true});
+            },
+            "Pixlr": async (src, initOpen) => {
+                if(initOpen){
+                    storage.setItem("editUrl", src);
+                    _GM_openInTab('https://pixlr.com/x/', {active:true});
+                }else{
+                    storage.setItem("editUrl", "");
+                    if(/^https:\/\/pixlr\.com\/x/.test(location.href)){
+                        await clickEle('#home-open-url');
+                        await input('#image-url', src);
+                        await clickEle('.dialog>.buttons>a.button.positive');
+                    }
+                }
+            },
+            "Photopea": async (src, initOpen) => {
+                if(initOpen){
+                    storage.setItem("editUrl", src);
+                    _GM_openInTab('https://www.photopea.com/', {active:true});
+                }else{
+                    storage.setItem("editUrl", "");
+                    if(/^https:\/\/www\.photopea\.com\//.test(location.href)){
+                        await sleep(1000);
+                        await clickEle('.topbar>span>button');
+                        await clickEle('.cmanager>.contextpanel>div:nth-child(4)');
+                        await clickEle('.cmanager>div:last-child>div:nth-child(2)');
+                        await input('span.fitem.tinput>input', src);
+                        await clickEle('.form>button');
+                    }
+                }
+            }
+        };
+        var editSitesName={};
+        for(let key in editSitesFunc){
+            editSitesName[key]=key;
+        }
 
         initLang();
         var customLangOption={
@@ -21652,15 +21794,12 @@ ImgOps | https://imgops.com/#b#`;
                     type: 'textarea',
                     "default": prefs.gallery.searchData
                 },
-                /*'gallery.editSite': {
+                'gallery.editSite': {
                     label: i18n("galleryEditSite"),
                     type: 'select',
-                    options: {
-                        'Pixlr': 'Pixlr',
-                        'Toolpic': 'Toolpic'
-                    },
+                    options: editSitesName,
                     "default": prefs.gallery.editSite,
-                },*/
+                },
 
                 // 图片窗口
                 'imgWindow.fitToScreen': {
@@ -21836,12 +21975,30 @@ ImgOps | https://imgops.com/#b#`;
         loadPrefs();
 
         matchedRule = getMatchedRule();
+        let editUrl=storage.getItem("editUrl");
+        if(editUrl){
+            let editFunc=editSitesFunc[prefs.gallery.editSite];
+            if(!editFunc)editFunc=editSitesFunc[Object.keys(editSitesFunc)[0]];
+            if(editFunc){
+                if (document.readyState == 'complete'){
+                    editFunc(editUrl);
+                }else{
+                    let readystatechangeHandler = e => {
+                        if (document.readyState == 'complete') {
+                            editFunc(editUrl);
+                            document.removeEventListener('readystatechange', readystatechangeHandler);
+                        }
+                    };
+                    document.addEventListener('readystatechange', readystatechangeHandler);
+                }
+            }
+        }
 
         if(prefs.gallery.autoOpenSites){
             var sitesArr=prefs.gallery.autoOpenSites.split("\n");
-            for(var s=0;s<sitesArr.length;s++){
-                var siteReg=sitesArr[s].trim();
-                var autoViewMore=siteReg[0]=="@";
+            for(let s=0;s<sitesArr.length;s++){
+                let siteReg=sitesArr[s].trim();
+                let autoViewMore=siteReg[0]=="@";
                 if(autoViewMore)siteReg=siteReg.substr(1);
                 if(new RegExp(siteReg).test(location.href)){
                     setTimeout(function(){
