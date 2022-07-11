@@ -605,15 +605,14 @@
             switch(type){
                 case 0:
                     return {
+                        name:item.name,
                         from:from,
                         type:type,
-                        name:item.name,
                         action:item.data.forceIframe=="true"?1:0,
                         url:item.data.url,
                         pageElement:item.data.pageElement,
                         nextLink:item.data.nextLink,
                         insert:item.data.insertBefore||undefined,
-                        insertPos:1,
                         updatedAt:item.updated_at,
                         css:(item.data.Stylus && item.data.CSS) ? (item.data.Stylus + item.data.CSS) : (item.data.Stylus || item.data.CSS),
                         pageAction:item.data.bookmarklet
