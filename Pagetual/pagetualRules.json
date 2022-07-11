@@ -276,6 +276,15 @@
     "enable":0
   },
   {
+    "name": "Literotica",
+    "type": 0,
+    "action": 0,
+    "url": "^https://www\\.literotica\\.com/.",
+    "pageElement": "//div[contains(@class,\"panel article\") or @class=\"b-story-list\"]/div",
+    "nextLink": "//a[@title='Next Page' or @class='b-pager-next']",
+    "wait": 3000
+  },
+  {
     "name":"站酷",
     "url":"^https://www\\.zcool\\.com\\.cn/search/content",
     "action":2,
