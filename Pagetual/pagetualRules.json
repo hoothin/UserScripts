@@ -344,6 +344,12 @@
     "css":".grid.columns{display: flex; flex-wrap: wrap;}"
   },
   {
+    "name": "JavBus",
+    "url": "^https://www\\.javbus\\.com",
+    "pageBar": 0,
+    "pageElement": "#waterfall>.item,#waterfall_h>.item"
+  },
+  {
     "name":"喜马拉雅",
     "url":"^https://www\\.ximalaya\\.com/",
     "nextLink":".page-next>a",
