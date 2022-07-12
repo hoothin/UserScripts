@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.26.31
+// @version      1.9.26.32
 // @description  Perpetual pages - Most powerful Auto-Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -326,13 +326,13 @@
                 toTop:"To Top",
                 toBottom:"To Bottom",
                 current:"Current Page",
-                forceIframe:"Force to join",
+                forceIframe:"Force to join next page",
                 cancelForceIframe:"Cancel Force join",
                 configure:"Configure",
                 firstUpdate:"Click here to initialize the rules",
                 update:"Update rules",
                 click2update:"Click to update rules from url now",
-                loadNow:"Load next now",
+                loadNow:"Load next page now",
                 loadConfirm:"How much pages do you want to load? (0 means infinite)",
                 noNext:"No next link found, please create a new rule",
                 passSec:"Updated #t# seconds ago",
@@ -1588,7 +1588,7 @@
                     storage.setItem("hpRules", self.hpRules);
                 }
                 let css=self.curSiteRule.css || rulesData.customCss;
-                if(css){
+                if(css && !/^inIframe:/.test(css)){
                     _GM_addStyle(css);
                 }
                 let autoClick=self.curSiteRule.autoClick;
@@ -3564,6 +3564,7 @@
             }
             let css=ruleParser.curSiteRule.css || rulesData.customCss;
             if(css){
+                css = css.replace(/^inIframe:/, "");
                 let styleEle=iframeDoc.createElement("style");
                 styleEle.innerHTML=css;
                 iframeDoc.head.appendChild(styleEle);
