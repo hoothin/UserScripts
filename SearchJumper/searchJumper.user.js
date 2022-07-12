@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.8.16
+// @version      1.6.5.8.17
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -2408,6 +2408,46 @@
                         }
                         ele.dataset.url = tempUrl.replace(/%e\b/g, document.charset).replace(/%c\b/g, (isMobile?"mobile":"pc")).replace(/%u\b/g, location.href).replace(/%U\b/g, encodeURIComponent(location.href)).replace(/%h\b/g, location.host);
                     }
+                    let keywordsU, keywordsL, keywordsR;
+                    let checkReplace = (str, param, v) => {
+                        let replaceMatch = str.match(new RegExp(param + "\\.replace\\(/(.*?)(?<=[^\\\\])/(.*?),\s*(?<=[^\\\\])[\"'](.*?)(?<=[^\\\\])[\"']\\)"));
+                        if (!replaceMatch) return str.replace(new RegExp(param + "\\b", "g"), v);
+                        v = v.replace(new RegExp(replaceMatch[1], replaceMatch[2]), replaceMatch[3]);
+                        switch (param) {
+                            case "%s":
+                                keywords = v;
+                                break;
+                            case "%su":
+                                keywordsU = v;
+                                break;
+                            case "%sl":
+                                keywordsL = v;
+                                break;
+                            case "%sr":
+                                keywordsR = v;
+                                break;
+                        }
+                        str = str.replace(replaceMatch[0], param);
+                        return customReplace(str);
+                    }
+                    let customReplace = str => {
+                        if (!keywordsU && !keywordsL && !keywordsR) {
+                            keywordsU = keywords.toUpperCase();
+                            keywordsL = keywords.toLowerCase();
+                            keywordsR = decodeURIComponent(keywords);
+                        }
+                        if (str.indexOf("%s.replace(/") !== -1) {
+                            return checkReplace(str, "%s", keywords);
+                        } else if (str.indexOf("%su.replace(/") !== -1) {
+                            return checkReplace(str, "%su", keywordsU);
+                        } else if (str.indexOf("%sl.replace(/") !== -1) {
+                            return checkReplace(str, "%sl", keywordsL);
+                        } else if (str.indexOf("%sr.replace(/") !== -1) {
+                            return checkReplace(str, "%sr", keywordsR);
+                        } else {
+                            return str.replace(/%s\b/g, keywords).replace(/%su\b/g, keywordsU).replace(/%sl\b/g, keywordsL).replace(/%sr\b/g, keywordsR);
+                        }
+                    };
                     let selStr = getSelectStr();
                     let targetUrl = '';
                     let targetName = selStr || document.title;
@@ -2453,7 +2493,8 @@
                         if (promptStr === null) return false;
                         localKeywords = promptStr;
                         setTimeout(() => {localKeywords = ''}, 1);
-                        resultUrl = resultUrl.replace(/%s\b/g, promptStr);
+                        keywords = promptStr;
+                        resultUrl = customReplace(resultUrl);
                     }
                     if (targetUrl === '') {
                         let promptStr = false;
@@ -2496,23 +2537,24 @@
                         postMatch[1].split(/(?<=[^\\])&/).forEach(pair => {
                             let pairArr = pair.split(/(?<=[^\\])\=/);
                             if (pairArr.length === 2) {
-                                postParams.push([pairArr[0].replace(/\\([\=&])/g, "$1"), pairArr[1].replace(/\\([\=&])/g, "$1").replace(/%e\b/g, document.charset)
-                                    .replace(/%c\b/g, (isMobile?"mobile":"pc"))
-                                    .replace(/%u\b/g, location.href)
-                                    .replace(/%U\b/g, encodeURIComponent(location.href))
-                                    .replace(/%h\b/g, location.host)
-                                    .replace(/%t\b/g, targetUrl)
-                                    .replace(/%T\b/g, encodeURIComponent(targetUrl))
-                                    .replace(/%b\b/g, targetBaseUrl)
-                                    .replace(/%B\b/g, encodeURIComponent(targetBaseUrl))
-                                    .replace(/%n\b/g, targetName)
-                                    .replace(/%s\b/g, keywords)
-                                    .replace(/%S\b/g, (cacheKeywords || keywords))]);
+                                postParams.push([pairArr[0].replace(/\\([\=&])/g, "$1"),
+                                                 customReplace(pairArr[1].replace(/\\([\=&])/g, "$1")
+                                                               .replace(/%e\b/g, document.charset)
+                                                               .replace(/%c\b/g, (isMobile?"mobile":"pc"))
+                                                               .replace(/%u\b/g, location.href)
+                                                               .replace(/%U\b/g, encodeURIComponent(location.href))
+                                                               .replace(/%h\b/g, location.host)
+                                                               .replace(/%t\b/g, targetUrl)
+                                                               .replace(/%T\b/g, encodeURIComponent(targetUrl))
+                                                               .replace(/%b\b/g, targetBaseUrl)
+                                                               .replace(/%B\b/g, encodeURIComponent(targetBaseUrl))
+                                                               .replace(/%n\b/g, targetName)
+                                                               .replace(/%S\b/g, (cacheKeywords || keywords)))]);
                             }
                         });
                         storage.setItem("inPagePostParams", postParams);
                     }
-                    return resultUrl.replace(/%t\b/g, targetUrl).replace(/%T\b/g, encodeURIComponent(targetUrl)).replace(/%b\b/g, targetBaseUrl).replace(/%B\b/g, encodeURIComponent(targetBaseUrl)).replace(/%n\b/g, targetName).replace(/%s\b/g, keywords).replace(/%S\b/g, (cacheKeywords || keywords));
+                    return customReplace(resultUrl.replace(/%t\b/g, targetUrl).replace(/%T\b/g, encodeURIComponent(targetUrl)).replace(/%b\b/g, targetBaseUrl).replace(/%B\b/g, encodeURIComponent(targetBaseUrl)).replace(/%n\b/g, targetName).replace(/%S\b/g, (cacheKeywords || keywords)));
                 };
                 let action = e => {
                     if (!self.batchOpening) {
@@ -2533,7 +2575,15 @@
                             storage.setItem("sortTypeNames", sortTypeNames);
                         }
                     }
-                    if (/^\[/.test(data.url)) {
+                    if (/^c:/.test(data.url)) {
+                        let url = getUrl();
+                        if (!url) {
+                            ele.href = "#";
+                            return false;
+                        }
+                        _GM_setClipboard(url.replace(/^c:/, ""));
+                        _GM_notification('Copy successfully!');
+                    } else if (/^\[/.test(data.url)) {
                         if (!ele.onclick) {
                             let targetSites = [];
                             let siteNames = JSON.parse(data.url);
@@ -2651,8 +2701,9 @@
                         }
                     } else {
                         let alt = e && e.altKey;
+                        let ctrl = e && e.ctrlKey;
                         let url = getUrl();
-                        if (url === false) {
+                        if (!url) {
                             //wait for all input stoped
                             if (!self.stopInput) {
                                 self.stopInput = true;
@@ -2673,7 +2724,13 @@
                             if (alt && isPage) {
                                 ele.onclick = e => {
                                     ele.onclick = null;
-                                    _unsafeWindow.open(url, "_blank", "width=800, height=1000, location=0, resizable=1, menubar=0, scrollbars=0");
+                                    if (ctrl) {
+                                        _GM_openInTab(url, {incognito: true});
+                                    } else {
+                                        _unsafeWindow.open(url, "_blank", "width=800, height=1000, location=0, resizable=1, menubar=0, scrollbars=0");
+                                    }
+                                    e.preventDefault();
+                                    e.stopPropagation();
                                     return false;
                                 };
                                 return true;
