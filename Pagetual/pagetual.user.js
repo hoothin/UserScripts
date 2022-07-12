@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.26.32
+// @version      1.9.26.34
 // @description  Perpetual pages - Most powerful Auto-Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -164,6 +164,7 @@
                 save:"保存设置",
                 loadingText:"少女祈祷中...",
                 opacity:"不透明值",
+                opacityPlaceholder:"0:隐藏",
                 hideBar:"隐藏分页隔条",
                 dbClick2Stop:"空白处双击暂停翻页",
                 sortTitle:"排序在下次更新规则后生效",
@@ -226,6 +227,7 @@
                 save:"存儲設置",
                 loadingText:"少女祈禱中...",
                 opacity:"不透明值",
+                opacityPlaceholder:"0:隱藏",
                 hideBar:"隱藏分頁隔條",
                 dbClick2Stop:"空白處雙擊暫停翻頁",
                 sortTitle:"排序在下次更新規則後生效",
@@ -287,6 +289,7 @@
                 save: "設定を保存",
                 loadingText: "少女祈祷中...",
                 opacity:"不透明値",
+                opacityPlaceholder:"0:隠す",
                 hideBar:"ページ区切り文字を非表示にします",
                 dbClick2Stop:"空白部分をダブルクリックしてページめくりを一時停止します",
                 sortTitle:"並べ替えは、次のルールの更新後に有効になります",
@@ -348,6 +351,7 @@
                 save:"Save",
                 loadingText:"Shojo Now Loading...",
                 opacity:"Opacity",
+                opacityPlaceholder:"0:hide",
                 hideBar:"hide the paging spacer",
                 dbClick2Stop:"Double-click on the blank space to pause",
                 sortTitle:"Sorting takes effect after the next rule update",
@@ -2014,6 +2018,7 @@
         opacityInput.type="number";
         opacityInput.style.width="95px";
         opacityInput.style.margin="0";
+        opacityInput.placeholder=i18n("opacityPlaceholder");
         opacity.appendChild(opacityInput);
         configCon.insertBefore(opacity, insertPos);
 
@@ -3150,7 +3155,7 @@
             }
         });
         ruleParser.insertElement(pageBar);
-        if(ruleParser.curSiteRule.pageBar){
+        if(ruleParser.curSiteRule.pageBar && ruleParser.curSiteRule.pageBar !== 0){
             try{
                 ((typeof _unsafeWindow.pagetualPageBar=='undefined') ? Function("pageBar",'"use strict";' + ruleParser.curSiteRule.pageBar) : _unsafeWindow.pagetualPageBar)(pageBar);
             }catch(e){
@@ -3170,7 +3175,7 @@
         }else{
             bottomGap=1000;
         }
-        if(rulesData.opacity==0)pageBar.style.display="none";
+        if(rulesData.opacity==0 || ruleParser.curSiteRule.pageBar === 0)pageBar.style.display="none";
         return pageBar;
     }
 
