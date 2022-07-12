@@ -123,7 +123,7 @@ The attr of image which target to real src
 
 css
 --
-Add css so you can show some hidden element
+Add css so you can show some hidden element, start with "inIframe:" then this css will effect only in next iframe page
 
 insert
 --
