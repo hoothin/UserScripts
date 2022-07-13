@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.8.18
+// @version      1.6.5.8.19
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -1697,10 +1697,10 @@
             bindSite(a, siteEle) {
                 if (a.getAttribute("bind")) return;
                 a.setAttribute("bind", true);
-                a.setAttribute("target", siteEle.target);
                 a.href = siteEle.href;
                 a.addEventListener('mousedown', e => {
                     siteEle.dispatchEvent(new PointerEvent("mousedown", {altKey: e.altKey, ctrlKey: e.ctrlKey, shiftKey: e.shiftKey, metaKey: e.metaKey}));
+                    a.setAttribute("target", siteEle.target);
                     a.href = siteEle.href;
                     if (!a.onclick && siteEle.onclick) {
                         a.onclick = siteEle.onclick;
@@ -2554,7 +2554,15 @@
                         });
                         storage.setItem("inPagePostParams", postParams);
                     }
-                    return customReplace(resultUrl.replace(/%t\b/g, targetUrl).replace(/%T\b/g, encodeURIComponent(targetUrl)).replace(/%b\b/g, targetBaseUrl).replace(/%B\b/g, encodeURIComponent(targetBaseUrl)).replace(/%n\b/g, targetName).replace(/%S\b/g, (cacheKeywords || keywords)));
+                    resultUrl = customReplace(resultUrl.replace(/%t\b/g, targetUrl).replace(/%T\b/g, encodeURIComponent(targetUrl)).replace(/%b\b/g, targetBaseUrl).replace(/%B\b/g, encodeURIComponent(targetBaseUrl)).replace(/%n\b/g, targetName).replace(/%S\b/g, (cacheKeywords || keywords)));
+                    if ((openInNewTab || searchData.prefConfig.openInNewTab) && /^(https?|ftp):/.test(resultUrl)) {
+                        ele.setAttribute("target", "_blank");
+                        ele.dataset.target = 1;
+                    } else {
+                        ele.setAttribute("target", "");
+                        ele.dataset.target = 0;
+                    }
+                    return resultUrl;
                 };
                 let action = e => {
                     if (!self.batchOpening) {
