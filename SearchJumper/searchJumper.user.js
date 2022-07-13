@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.8.21
+// @version      1.6.5.8.22
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -1290,6 +1290,18 @@
             appendBar() {
                 if (!this.bar.parentNode.parentNode) {
                     document.documentElement.appendChild(this.bar.parentNode);
+                }
+            }
+
+            searchBySiteName(siteName) {
+                for (let i = 0; i < this.allSiteBtns.length; i++) {
+                    let siteBtn = this.allSiteBtns[i];
+                    if (siteBtn.dataset.name == siteName) {
+                        let mouseDownEvent = new PointerEvent("mousedown");
+                        siteBtn.dispatchEvent(mouseDownEvent);
+                        siteBtn.click();
+                        return;
+                    }
                 }
             }
 
@@ -3518,6 +3530,16 @@
             }, false);
 
             if (searchData.prefConfig.enableInPage) {
+                document.addEventListener('searchJumper', e => {
+                    switch (e.detail.action) {
+                        case "search":
+                            searchBar.searchBySiteName(e.detail.name);
+                            break;
+                        case "show":
+                            searchBar.showInPage();
+                            break;
+                    }
+                });
                 let shown = false;
                 let showToolbarTimer;
                 if (searchData.prefConfig.shortcutKey) {
