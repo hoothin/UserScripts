@@ -2530,8 +2530,8 @@
                     }
                     if (inPagePost) {
                         let postParams = [];
-                        postMatch[1].replace(/([^\\])&/g, "$1SJPARAM").split("SJPARAM").forEach(pair => {//ios不支持零宽断言，哭唧唧
-                            let pairArr = pair.replace(/([^\\])\=/g, "$1SJPARAM").split("SJPARAM");
+                        postMatch[1].replace(/([^\\])&/g, "$1SJ^PARAM").split("SJ^PARAM").forEach(pair => {//ios不支持零宽断言，哭唧唧
+                            let pairArr = pair.replace(/([^\\])\=/g, "$1SJ^PARAM").split("SJ^PARAM");
                             if (pairArr.length === 2) {
                                 postParams.push([pairArr[0].replace(/\\([\=&])/g, "$1"), customReplace(pairArr[1].replace(/\\([\=&])/g, "$1").replace(/%e\b/g, document.charset).replace(/%c\b/g, (isMobile?"mobile":"pc")).replace(/%u\b/g, location.href).replace(/%U\b/g, encodeURIComponent(location.href)).replace(/%h\b/g, location.host).replace(/%t\b/g, targetUrl).replace(/%T\b/g, encodeURIComponent(targetUrl)).replace(/%b\b/g, targetBaseUrl).replace(/%B\b/g, encodeURIComponent(targetBaseUrl)).replace(/%n\b/g, targetName).replace(/%S\b/g, (cacheKeywords || keywords)))]);
                             }
