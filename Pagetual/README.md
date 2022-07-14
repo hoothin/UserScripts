@@ -83,7 +83,7 @@ Selector of the element which must not include
 
 wait
 --
-The time to wait for page ready when you are sure the url match the site, you can also use a js code which return a boolean to check if the page is ready instead
+The time to wait for page ready when you are sure the url match the site, you can also use a javaScript code which return a boolean to check if the page is ready instead
 
 waitElement
 --
@@ -95,7 +95,7 @@ type
 
 action
 --
-0 means load url and insert with static html, 1 means load by iframe so that dynamic js code on page may effect, 2 means force insert iframe to bottom
+0 means load url and insert with static html, 1 means load by iframe so that dynamic javaScript code on page may effect, 2 means force insert iframe to bottom
 
 nextLink
 --
