@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.8.26
+// @version      1.6.5.8.27
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -2533,19 +2533,7 @@
                         postMatch[1].split(/(?<=[^\\])&/).forEach(pair => {
                             let pairArr = pair.split(/(?<=[^\\])\=/);
                             if (pairArr.length === 2) {
-                                postParams.push([pairArr[0].replace(/\\([\=&])/g, "$1"),
-                                                 customReplace(pairArr[1].replace(/\\([\=&])/g, "$1")
-                                                               .replace(/%e\b/g, document.charset)
-                                                               .replace(/%c\b/g, (isMobile?"mobile":"pc"))
-                                                               .replace(/%u\b/g, location.href)
-                                                               .replace(/%U\b/g, encodeURIComponent(location.href))
-                                                               .replace(/%h\b/g, location.host)
-                                                               .replace(/%t\b/g, targetUrl)
-                                                               .replace(/%T\b/g, encodeURIComponent(targetUrl))
-                                                               .replace(/%b\b/g, targetBaseUrl)
-                                                               .replace(/%B\b/g, encodeURIComponent(targetBaseUrl))
-                                                               .replace(/%n\b/g, targetName)
-                                                               .replace(/%S\b/g, (cacheKeywords || keywords)))]);
+                                postParams.push([pairArr[0].replace(/\\([\=&])/g, "$1"), customReplace(pairArr[1].replace(/\\([\=&])/g, "$1").replace(/%e\b/g, document.charset).replace(/%c\b/g, (isMobile?"mobile":"pc")).replace(/%u\b/g, location.href).replace(/%U\b/g, encodeURIComponent(location.href)).replace(/%h\b/g, location.host).replace(/%t\b/g, targetUrl).replace(/%T\b/g, encodeURIComponent(targetUrl)).replace(/%b\b/g, targetBaseUrl).replace(/%B\b/g, encodeURIComponent(targetBaseUrl)).replace(/%n\b/g, targetName).replace(/%S\b/g, (cacheKeywords || keywords)))]);
                             }
                         });
                         storage.setItem("inPagePostParams", postParams);
