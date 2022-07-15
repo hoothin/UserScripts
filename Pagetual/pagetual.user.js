@@ -1721,6 +1721,12 @@
         var noRules=!rulesData.urls || rulesData.urls.length===0;
         if(ruleImportUrlReg.test(location.href)){
             if(noRules){
+                setTimeout(() => {
+                    showTips(i18n("firstAlert"));
+                }, 3000);
+                setTimeout(() => {
+                    showTips(i18n("firstAlert"));
+                }, 6000);
                 showTips(i18n("firstAlert"));
             }
             let greasyfork=location.href.indexOf("greasyfork.org") != -1;
