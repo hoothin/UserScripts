@@ -67,7 +67,7 @@ RegExp for the url of target site
 
 pinUrl
 --
-Sometimes the next link and page element will be inexistence, set this to true so you can pin the rule just with url
+Sometimes the next link or page element will be inexistence, set this to true so you can pin the rule just with url instead of finding elements by intelligent rules
 
 enable
 --
@@ -91,7 +91,7 @@ The array["exist", "not exist"] contains "selector of element must exist (for so
 
 type
 --
-0 means xpath, 1 or undefined means css selector
+0 means crawl by xpath, 1 or undefined means css selector
 
 action
 --
@@ -155,7 +155,7 @@ Selector of "load more" button
 
 sleep
 --
-Sleep time (ms) when load next page if site is limited
+Sleep time (ms) when load next page if site is limited by time interval
 
 rate
 --
