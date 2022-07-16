@@ -2274,7 +2274,7 @@
                 if (icon == 0) {
                 } else if (icon) {
                     imgSrc = icon;
-                } else if (/^http/.test(data.url)) {
+                } else if (/^http/.test(data.url) && !isBookmark) {
                     imgSrc = data.url.replace(/^(https?:\/\/[^\/]*\/).*$/, "$1favicon.ico");
                 }
                 let isBase64 = /^data:/.test(imgSrc);
@@ -2915,7 +2915,10 @@
                     firstType.onmousedown();
                     self.insertHistory(firstType.parentNode);
                 }
-                this.checkScroll();
+
+                setTimeout(() => {
+                    self.checkScroll();
+                }, 251);
             }
 
             initPos(relX, relY, posX, posY) {
