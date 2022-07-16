@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.8.38
+// @version      1.6.5.9.1
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -995,9 +995,11 @@
                  #search-jumper.in-input .input-hide {
                      display: none!important;
                  }
-                 #search-jumper.in-input .search-jumper-type:not(.input-hide),
-                 #search-jumper.in-input .search-jumper-btn:not(.input-hide) {
+                 #search-jumper.in-input .search-jumper-type:not(.input-hide) {
                      display: inline-flex!important;
+                 }
+                 #search-jumper.in-input .search-jumper-btn:not(.input-hide) {
+                     display: grid!important;
                  }
                  #search-jumper>.search-jumper-searchBar>.search-jumper-type.search-jumper-logo {
                      display: inline-flex;
@@ -1454,46 +1456,43 @@
                 [].forEach.call(this.bar.parentNode.querySelectorAll(".sitelist>.sitelistCon>div"), listItem => {
                     listItem.classList.add("input-hide");
                 });
+                searchTypes.forEach(type => {
+                    type.classList.add("input-hide");
+                });
+                let showType;
                 let inputWords = this.searchInput.value;
+                let canCheckHost = !/[^\w\.\/\:\*\?]/.test(inputWords);
                 this.allSiteBtns.forEach(btn => {
-                    let canMatch = this.globMatch(inputWords, btn.dataset.name) || this.globMatch(inputWords, btn.title);
+                    let canMatch = this.globMatch(inputWords, btn.dataset.name) || (btn.title && this.globMatch(inputWords, btn.title));
                     if (canMatch) {
                         btn.classList.remove("input-hide");
                     } else {
-                        if (!btn.dataset.host) {
-                            btn.dataset.host = btn.href.replace(/^https?:\/\/([^\/]*)\/.*$/, "$1");
+                        if (canCheckHost) {
+                            if (!btn.dataset.host) {
+                                btn.dataset.host = btn.href.replace(/^https?:\/\/([^\/]*)\/.*$/, "$1");
+                            }
+                            canMatch = this.globMatch(inputWords, btn.dataset.host);
                         }
-                        canMatch = this.globMatch(inputWords, btn.dataset.host);
                         if (canMatch) {
                             btn.classList.remove("input-hide");
                         } else {
                             btn.classList.add("input-hide");
                         }
                     }
-                    let currentList = btn.parentNode.querySelectorAll(".sitelist>.sitelistCon>div");
-                    for (let i = 0; i < currentList.length; i++) {
-                        let listItem = currentList[i];
-                        if (listItem.dataset.name === btn.dataset.name) {
-                            if (canMatch) {
-                                listItem.classList.remove("input-hide");
-                            }
+                    if (canMatch) {
+                        btn.parentNode.classList.remove("input-hide");
+                        if (!showType) {
+                            showType = btn.parentNode;
                         }
+                        let listItem = btn.parentNode.querySelector("#list" + btn.dataset.id);
+                        if (listItem) listItem.classList.remove("input-hide");
                     }
                 });
-                let showTypes = searchTypes.filter(type => {
-                    let notHideEle = type.querySelector("a.search-jumper-btn:not(.input-hide)");
-                    if (notHideEle) {
-                        type.classList.remove("input-hide");
-                    } else {
-                        type.classList.add("input-hide");
-                    }
-                    return notHideEle;
-                });
-                if (showTypes.length && showTypes[0].classList.contains("search-jumper-hide")) showTypes[0].querySelector("span.search-jumper-btn").onmousedown();
+                if (showType && showType.classList.contains("search-jumper-hide")) showType.querySelector("span.search-jumper-btn").onmousedown();
             }
 
             globMatch(glob, target) {
-                if (glob.length == 0) {
+                if (glob.length == 0 || glob === '*') {
                     return true;
                 }
 
@@ -1726,9 +1725,10 @@
                 let title = document.createElement("p");
                 title.innerText = type;
                 con.appendChild(title);
-                sites.forEach(siteEle => {
-                    let icon = siteEle.querySelector("img");
+                sites.forEach((siteEle, index) => {
                     let li = document.createElement("div");
+                    li.id = "list" + index;
+                    let icon = siteEle.querySelector("img");
                     let a = document.createElement("a");
                     self.bindSite(a, siteEle);
                     li.appendChild(a);
@@ -1746,7 +1746,7 @@
                                     img.style.opacity = 1;
                                 };
                             }
-                            img.src = iconSrc;
+                            img.dataset.src = iconSrc;
                             a.appendChild(img);
                         }
                     }
@@ -1763,6 +1763,15 @@
             listPos(ele, list) {
                 if (this.preList) {
                     this.preList.style.display = "none";
+                }
+                if (!list.dataset.inited) {
+                    list.dataset.inited = true;
+                    [].forEach.call(list.querySelectorAll("div>a>img"), img => {
+                        if (img.dataset.src) {
+                            img.src = img.dataset.src;
+                            img.dataset.src = "";
+                        }
+                    });
                 }
                 list.style = "";
                 this.preList = list;
@@ -2029,6 +2038,7 @@
                             let si = se.querySelector("img");
                             if (si && !si.src && si.dataset.src) {
                                 si.src = si.dataset.src;
+                                si.dataset.src = "";
                             }
                         });
                     } else {
@@ -2114,16 +2124,9 @@
                     e.preventDefault();
                 }, true);
 
-                let siteList;
-
                 let showTimer;
                 typeBtn.addEventListener('mouseenter', e => {
                     if (searchData.prefConfig.showSiteLists && (searchData.prefConfig.alwaysShowSiteLists || ele.classList.contains("search-jumper-hide"))) {
-                        if (!siteList) {
-                            siteList = self.createList(siteEles, ele.dataset.title);
-                            siteList.style.display = "none";
-                            ele.appendChild(siteList);
-                        }
                         self.listPos(ele.children[0], siteList);
                     } else {
                         self.tipsPos(typeBtn, ele.dataset.title);
@@ -2145,6 +2148,7 @@
                 sites.forEach(site => {
                     let siteEle = self.createSiteBtn((searchData.prefConfig.noIcons?'':site.icon), site, openInNewTab);
                     siteEle.dataset.type = type;
+                    siteEle.dataset.id = siteEles.length;
                     self.allSiteBtns.push(siteEle);
                     ele.appendChild(siteEle);
                     siteEles.push(siteEle);
@@ -2156,6 +2160,9 @@
                         }, 1);
                     }
                 });
+                let siteList = self.createList(siteEles, ele.dataset.title);
+                siteList.style.display = "none";
+                ele.appendChild(siteList);
                 if (isCurrent) {
                     self.bar.insertBefore(ele, self.bar.children[0]);
                     ele.dataset.width = ele.scrollWidth + "px";
