@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.8.37
+// @version      1.6.5.8.38
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -2459,7 +2459,7 @@
                     let selStr = getSelectStr();
                     let targetUrl = '';
                     let targetName = selStr || document.title;
-                    let imgBase64 = '', resultUrl = ele.dataset.url.replace(/%u\b/g, location.href).replace(/%U\b/g, encodeURIComponent(location.href));
+                    let imgBase64 = '', resultUrl = ele.dataset.url;
                     if (targetElement) {
                         targetUrl = targetElement.src || targetElement.href || '';
                         targetName = targetElement.title || targetElement.alt || document.title;
@@ -2550,7 +2550,7 @@
                         });
                         storage.setItem("inPagePostParams", postParams);
                     }
-                    resultUrl = customReplace(resultUrl.replace(/%t\b/g, targetUrl).replace(/%T\b/g, encodeURIComponent(targetUrl)).replace(/%b\b/g, targetBaseUrl).replace(/%B\b/g, encodeURIComponent(targetBaseUrl)).replace(/%n\b/g, targetName).replace(/%S\b/g, (cacheKeywords || keywords)));
+                    resultUrl = customReplace(resultUrl.replace(/%u\b/g, location.href).replace(/%U\b/g, encodeURIComponent(location.href)).replace(/%t\b/g, targetUrl).replace(/%T\b/g, encodeURIComponent(targetUrl)).replace(/%b\b/g, targetBaseUrl).replace(/%B\b/g, encodeURIComponent(targetBaseUrl)).replace(/%n\b/g, targetName).replace(/%S\b/g, (cacheKeywords || keywords)));
                     if ((openInNewTab || searchData.prefConfig.openInNewTab) && /^(https?|ftp):/.test(resultUrl)) {
                         ele.setAttribute("target", "_blank");
                         ele.dataset.target = 1;
