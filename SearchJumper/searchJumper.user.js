@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.9.1
+// @version      1.6.5.9.2
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -1081,10 +1081,9 @@
                      font-weight: bold;
                      background: #f6f6f6;
                      border-radius: 10px 10px 0 0;
-                     max-width: 200px;
                      overflow: hidden;
                      white-space: nowrap;
-                     margin: 0 20px;
+                     margin: 0 auto;
                      text-overflow: ellipsis;
                  }
                  .search-jumper-searchBar.disable-pointer>.search-jumper-type {
@@ -1273,7 +1272,7 @@
                 this.allSiteBtns.forEach(btn => {
                     btn.classList.remove("input-hide");
                 });
-                [].forEach.call(this.bar.parentNode.querySelectorAll(".sitelist>.sitelistCon>div"), listItem => {
+                this.allListBtns.forEach(listItem => {
                     listItem.classList.remove("input-hide");
                 });
                 this.inInput = true;
@@ -1318,6 +1317,7 @@
                 this.customInput = false;
                 this.fontPool = [];
                 this.allSiteBtns = [];
+                this.allListBtns = [];
                 searchData.sitesConfig.forEach(siteConfig => {
                     this.createType(siteConfig);
                 });
@@ -1453,7 +1453,7 @@
 
             searchSiteBtns() {
                 if (!this.inInput) return;
-                [].forEach.call(this.bar.parentNode.querySelectorAll(".sitelist>.sitelistCon>div"), listItem => {
+                this.allListBtns.forEach(listItem => {
                     listItem.classList.add("input-hide");
                 });
                 searchTypes.forEach(type => {
@@ -1755,6 +1755,7 @@
                     li.title = siteEle.title;
                     li.dataset.name = siteEle.dataset.name;
                     a.appendChild(p);
+                    self.allListBtns.push(li);
                     con.appendChild(li);
                 });
                 return list;
@@ -1921,6 +1922,7 @@
                 ele.appendChild(typeBtn);
                 typeBtn.classList.add("search-jumper-word");
                 typeBtn.classList.add("search-jumper-btn");
+                let isBookmark = type.indexOf("Bookmarts") === 0 && data.icon === "bookmark";//書簽就不緩存了
                 if (icon) {
                     if (/^[a-z\-]+$/.test(icon)) {
                         let cache = searchData.prefConfig.cacheSwitch && cacheIcon[icon];
@@ -1950,7 +1952,7 @@
                                 img.src = cache;
                             } else {
                                 img.src = icon;
-                                if (searchData.prefConfig.cacheSwitch) cachePool.push(img);
+                                if (searchData.prefConfig.cacheSwitch && !isBookmark) cachePool.push(img);
                             }
                         }
                         typeBtn.appendChild(img);
@@ -2146,7 +2148,7 @@
                 }, false);
                 let isCurrent = false;
                 sites.forEach(site => {
-                    let siteEle = self.createSiteBtn((searchData.prefConfig.noIcons?'':site.icon), site, openInNewTab);
+                    let siteEle = self.createSiteBtn((searchData.prefConfig.noIcons?'':site.icon), site, openInNewTab, isBookmark);
                     siteEle.dataset.type = type;
                     siteEle.dataset.id = siteEles.length;
                     self.allSiteBtns.push(siteEle);
@@ -2226,7 +2228,7 @@
                 siteEle.setAttribute("target", siteEle.dataset.target==1?"_blank":"");
             }
 
-            createSiteBtn(icon, data, openInNewTab) {
+            createSiteBtn(icon, data, openInNewTab, isBookmark) {
                 let self = this;
                 let ele = document.createElement("a");
                 if (/^\[/.test(data.url)) {
@@ -2284,7 +2286,7 @@
                         img.src = cache;
                     } else {
                         img.dataset.src = imgSrc;
-                        if (searchData.prefConfig.cacheSwitch) cachePool.push(img);
+                        if (searchData.prefConfig.cacheSwitch && !isBookmark) cachePool.push(img);
                     }
                 }
                 self.stopInput = false;
