@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.8.34
+// @version      1.6.5.8.35
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -3117,6 +3117,12 @@
         }
 
         function submitByForm(charset, url, target) {
+            currentFormParams = {charset: charset, url: url, target: target};
+            if (url.indexOf("#submitBySearchJumper") !== -1) {
+                currentFormParams = {charset: charset, url: url.replace("#submitBySearchJumper", ""), target: target};
+                jumpBySearchJumper();
+                return;
+            }
             const formId ="searchJumper_form";
             var form = document.getElementById(formId);
             if (!form) {
@@ -3149,7 +3155,6 @@
                 input.value = v;
                 form.appendChild(input);
             });
-            currentFormParams = {charset: charset, url: url, target: target};
             return form.submit();
         }
 
@@ -3711,18 +3716,23 @@
             window.addEventListener('yt-navigate-finish', changeHandler);
             window.addEventListener("securitypolicyviolation", (e) => {
                 if (e.violatedDirective === 'form-action') {
-                    let jumpTo = `https://hoothin.github.io/SearchJumper/jump.html#jump{url=${encodeURIComponent(currentFormParams.url)}&charset=${currentFormParams.charset}}`;
-                    if (currentFormParams.target == '_self') {
-                        location.href = jumpTo;
-                    } else {
-                        _GM_openInTab(jumpTo);
-                    }
+                    jumpBySearchJumper();
                 }
             });
         }
 
+        const jumpHtml = "https://hoothin.github.io/SearchJumper/jump.html";
+        function jumpBySearchJumper() {
+            let jumpTo = `${jumpHtml}#jump{url=${encodeURIComponent(currentFormParams.url)}&charset=${currentFormParams.charset}}`;
+            if (currentFormParams.target == '_self') {
+                location.href = jumpTo;
+            } else {
+                _GM_openInTab(jumpTo, {active: true});
+            }
+        }
+
         function preAction() {
-            if (location.href.indexOf('#jump{') != -1) {
+            if (location.href.indexOf(jumpHtml) != -1) {
                 let submitParams = location.href.match(/#jump{url=(.*)&charset=(.*)}/);
                 if (submitParams) {
                     submitByForm(submitParams[2], decodeURIComponent(submitParams[1]), '_self');
