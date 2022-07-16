@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.8.33
+// @version      1.6.5.8.34
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -1702,7 +1702,12 @@
                     a.setAttribute("target", siteEle.target);
                     a.href = siteEle.href;
                     if (!a.onclick && siteEle.onclick) {
-                        a.onclick = siteEle.onclick;
+                        a.onclick = e => {
+                            siteEle.onclick(e);
+                            e.stopPropagation();
+                            e.preventDefault();
+                            return false;
+                        }
                     }
                 }, false);
             }
@@ -2659,6 +2664,8 @@
                     } else if (/[:%]P{/.test(data.url)) {
                         if (!ele.onclick) {
                             ele.onclick = e => {
+                                e.stopPropagation();
+                                e.preventDefault();
                                 let url = getUrl();
                                 if (url === false) return false;
                                 let postBody = url.match(/[:%]P{(.*?)}/), postParam = {};
@@ -2688,6 +2695,8 @@
                     } else if ((data.charset && data.charset != 'utf-8') || /[:%]p{/.test(data.url)) {
                         if (!ele.onclick) {
                             ele.onclick = e => {
+                                e.stopPropagation();
+                                e.preventDefault();
                                 let url = getUrl();
                                 if (url === false) return false;
                                 submitByForm(data.charset, url, ele.getAttribute("target") || '_self');
@@ -3118,21 +3127,22 @@
             }
             var params;
             let postBody = url.match(/[:%]p{(.*?)}/);
+            let targetUrl = url;
             if (postBody) {
-                url = url.replace(postBody[0], '');
+                targetUrl = url.replace(postBody[0], '');
                 postBody = postBody[1];
                 form.method = 'post';
                 params = new URLSearchParams(postBody);
             } else {
                 form.method = 'get';
-                params = new URLSearchParams(new URL(url).search);
+                params = new URLSearchParams(new URL(targetUrl).search);
             }
             if (charset) {
                 form.acceptCharset = charset;
             }
             form.innerHTML = createHTML('');
             form.target = target;
-            form.action = url;
+            form.action = targetUrl;
             params.forEach((v, k) => {
                 let input = document.createElement("input");
                 input.name = k;
