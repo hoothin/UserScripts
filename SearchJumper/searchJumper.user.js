@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.9.5
+// @version      1.6.5.9.6
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -1085,6 +1085,7 @@
                      white-space: nowrap;
                      margin: 0 auto;
                      text-overflow: ellipsis;
+                     padding: 0 10px;
                  }
                  .search-jumper-searchBar.disable-pointer>.search-jumper-type {
                      pointer-events: none;
@@ -1312,17 +1313,31 @@
                 }
             }
 
-            initRun() {
+            async initRun() {
                 let self = this;
                 this.customInput = false;
                 this.fontPool = [];
                 this.allSiteBtns = [];
                 this.allListBtns = [];
-                searchData.sitesConfig.forEach(siteConfig => {
-                    this.createType(siteConfig);
-                });
+                this.bar.style.visibility = "hidden";
+                let sitesNum = 0;
+                let bookmarkTypes = [];
+                for (let siteConfig of searchData.sitesConfig) {
+                    let isBookmark = siteConfig.sites.length > 50 || (/^BM/.test(siteConfig.type) && siteConfig.icon === "bookmark");
+                    if (isBookmark) {
+                        bookmarkTypes.push(siteConfig);
+                        continue;
+                    }
+                    await this.createType(siteConfig);
+                    sitesNum += siteConfig.sites.length;
+                    if (sitesNum > 500) {
+                        await sleep(1);
+                        sitesNum = 0;
+                    }
+                }
                 this.initHistorySites();
                 this.initSort();
+                this.bar.style.visibility = "";
                 this.bar.style.display = "none";
                 if (currentSite && /%s\b/.test(currentSite.url)) {
                     this.bar.style.display = "";
@@ -1332,6 +1347,7 @@
                         searchData.prefConfig.offset.x,
                         searchData.prefConfig.offset.y
                     );
+                    this.insertHistory(this.currentType);
                 }
                 if (this.fontPool.length > 0 || isInConfigPage()) {
                     let linkEle = document.createElement("link");
@@ -1449,6 +1465,15 @@
                         }
                     }
                 });
+                sitesNum = 0;
+                for (let siteConfig of bookmarkTypes) {
+                    await this.createType(siteConfig);
+                    sitesNum += siteConfig.sites.length;
+                    if (sitesNum > 200) {
+                        await sleep(1);
+                        sitesNum = 0;
+                    }
+                }
             }
 
             searchSiteBtns() {
@@ -1715,7 +1740,7 @@
                 }, false);
             }
 
-            createList(sites, type) {
+            async createList(sites, type) {
                 let self = this;
                 let list = document.createElement("div");
                 list.className = "sitelist";
@@ -1725,7 +1750,7 @@
                 let title = document.createElement("p");
                 title.innerText = type;
                 con.appendChild(title);
-                sites.forEach((siteEle, index) => {
+                for (let [index, siteEle] of sites.entries()) {
                     let li = document.createElement("div");
                     li.id = "list" + index;
                     let icon = siteEle.querySelector("img");
@@ -1757,7 +1782,8 @@
                     a.appendChild(p);
                     self.allListBtns.push(li);
                     con.appendChild(li);
-                });
+                    if (index%100 === 50) await sleep(1);
+                }
                 return list;
             }
 
@@ -1887,7 +1913,7 @@
                 this.clingPos(ele, this.tips);
             }
 
-            createType(data) {
+            async createType(data) {
                 let self = this;
                 let type = data.type;
                 let icon = searchData.prefConfig.noIcons?'':data.icon;
@@ -1922,7 +1948,7 @@
                 ele.appendChild(typeBtn);
                 typeBtn.classList.add("search-jumper-word");
                 typeBtn.classList.add("search-jumper-btn");
-                let isBookmark = type.indexOf("Bookmarts") === 0 && data.icon === "bookmark";//書簽就不緩存了
+                let isBookmark = /^BM/.test(type) && data.icon === "bookmark";//書簽就不緩存了
                 if (icon) {
                     if (/^[a-z\-]+$/.test(icon)) {
                         let cache = searchData.prefConfig.cacheSwitch && cacheIcon[icon];
@@ -2148,7 +2174,7 @@
                 }, false);
                 let isCurrent = false;
                 let tooLoog = sites && sites.length > 50;
-                sites.forEach(site => {
+                for (let [i, site] of sites.entries()) {
                     let siteEle = self.createSiteBtn((tooLoog || searchData.prefConfig.noIcons ? 0 : site.icon), site, openInNewTab, isBookmark);
                     siteEle.dataset.type = type;
                     siteEle.dataset.id = siteEles.length;
@@ -2158,12 +2184,11 @@
                     if (!currentSite && (siteEle.dataset.current || match)) {
                         isCurrent = true;
                         self.setCurrentSite(site);
-                        setTimeout(() => {
-                            self.insertHistory(ele);
-                        }, 1);
+                        self.currentType = ele;
                     }
-                });
-                let siteList = self.createList(siteEles, ele.dataset.title);
+                    if (i % 100 === 50) await sleep(1);
+                }
+                let siteList = await self.createList(siteEles, ele.dataset.title);
                 siteList.style.display = "none";
                 ele.appendChild(siteList);
                 if (isCurrent) {
@@ -2571,7 +2596,7 @@
                     return resultUrl;
                 };
                 let action = e => {
-                    if (!self.batchOpening) {
+                    if (!self.batchOpening && !isBookmark) {
                         if (searchData.prefConfig.historyLength) {
                             historySites = historySites.filter(site => {return site && site != name});
                             historySites.unshift(name);
@@ -4144,6 +4169,14 @@
         function initRun() {
             initListener();
             searchBar.initRun();
+        }
+
+        async function sleep(time) {
+            await new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve();
+                }, time);
+            })
         }
 
         async function initData() {
