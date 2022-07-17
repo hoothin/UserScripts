@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.9.3
+// @version      1.6.5.9.5
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -1576,7 +1576,7 @@
                             searchData.prefConfig.offset.x,
                             searchData.prefConfig.offset.y
                         );
-                        let typeBtn = this.bar.querySelector(`.search-jumper-type.search-jumper-hide[title="${typeData.type}"]>span`);
+                        let typeBtn = this.bar.querySelector(`.search-jumper-type.search-jumper-hide[data-type="${typeData.type}"]>span`);
                         if (typeBtn) {
                             this.bar.insertBefore(typeBtn.parentNode, this.bar.children[0]);
                             typeBtn.onmousedown();
@@ -3309,8 +3309,7 @@
             if (selStr) {
                 return encodeURIComponent(selStr);
             }
-            if (localKeywords) return localKeywords;
-            if (!currentSite) return '';
+            if (!currentSite) return localKeywords || '';
             //if (localKeywords === '' && cacheKeywords) return cacheKeywords;
 
             let keywordsMatch, keywords = '';
@@ -3339,7 +3338,7 @@
                 let firstInput = document.querySelector('input[type=text],input:not([type])');
                 if (firstInput) keywords = encodeURIComponent(firstInput.value);
             }
-            localKeywords = keywords;
+            if (keywords) localKeywords = keywords;
             return localKeywords;//!localKeywords ? cacheKeywords : localKeywords;
         }
 
