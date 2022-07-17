@@ -1323,7 +1323,7 @@
                 let sitesNum = 0;
                 let bookmarkTypes = [];
                 for (let siteConfig of searchData.sitesConfig) {
-                    let isBookmark = siteConfig.sites.length > 50 || (/^BM/.test(siteConfig.type) && siteConfig.icon === "bookmark");
+                    let isBookmark = siteConfig.sites.length > 100 || (/^BM/.test(siteConfig.type) && siteConfig.icon === "bookmark");
                     if (isBookmark) {
                         bookmarkTypes.push(siteConfig);
                         continue;
