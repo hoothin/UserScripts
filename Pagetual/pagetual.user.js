@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.26.37
+// @version      1.9.26.38
 // @description  Perpetual pages - Most powerful Auto-Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -159,7 +159,7 @@
                 confirmDel:"是否确认要删除此规则？",
                 updateSucc:"更新成功",
                 beginUpdate:"正在更新，请耐心等待，不要关闭页面",
-                customUrls:"导入规则url，一行一条，AutoPagerize 格式规则需要以\"0|\"开头",
+                customUrls:"导入 Pagetual 或 AutoPagerize 规则 url，一行一条",
                 customRules:"输入【东方永页机】格式的自定义规则",
                 save:"保存设置",
                 loadingText:"少女祈祷中...",
@@ -222,7 +222,7 @@
                 confirmDel:"是否確認要刪除此規則？",
                 updateSucc:"更新成功",
                 beginUpdate:"正在更新，請稍候",
-                customUrls:"導入規則url，一行一條，AutoPagerize 格式規則需要以\"0|\"開頭",
+                customUrls:"導入 Pagetual 或 AutoPagerize 規則 url，一行一條",
                 customRules:"輸入【東方永頁機】格式的自定義規則",
                 save:"存儲設置",
                 loadingText:"少女祈禱中...",
@@ -284,7 +284,7 @@
                 confirmDel: "このルールを削除してもよろしいですか？",
                 updateSucc: "更新に成功しました",
                 beginUpdate: "更新中、お待ちください",
-                customUrls: "インポートルールのURL、1行に1つ、AutoPagerizeフォーマットルールは\"0|\"で始まる必要があります",
+                customUrls: "インポートルールのURL、1行に1つ",
                 customRules: "【東方永頁機】の形式でカスタムルールを入力してください",
                 save: "設定を保存",
                 loadingText: "少女祈祷中...",
@@ -346,7 +346,7 @@
                 confirmDel:"Are you sure you want to delete this rule?",
                 updateSucc:"Update succeeded",
                 beginUpdate:"Begin update, wait a minute please",
-                customUrls:"Import rule url, One url per line, rules on AutoPagerize format need to start with \"0|\"",
+                customUrls:"Import Pagetual or AutoPagerize rule url, One url per line",
                 customRules:"Input custom rules with [Pagetual] format",
                 save:"Save",
                 loadingText:"Shojo Now Loading...",
@@ -605,34 +605,30 @@
             });
         }
 
-        formatRule(item, type, from){
-            switch(type){
-                case 0:
-                    return {
-                        name:item.name,
-                        from:from,
-                        type:type,
-                        action:item.data.forceIframe=="true"?1:0,
-                        url:item.data.url,
-                        pageElement:item.data.pageElement,
-                        nextLink:item.data.nextLink,
-                        insert:item.data.insertBefore||undefined,
-                        updatedAt:item.updated_at,
-                        css:(item.data.Stylus && item.data.CSS) ? (item.data.Stylus + item.data.CSS) : (item.data.Stylus || item.data.CSS),
-                        pageAction:item.data.bookmarklet
-                    };
-                    break;
-                case 1:
-                default:
-                    item.from=from;
-                    if(typeof(item.type) == "undefined")item.type=type;
-                    return item;
-                    break;
+        formatRule(item, from){
+            if(item.updated_at && item.data){
+                return {
+                    name:item.name,
+                    from:from,
+                    type:0,
+                    action:item.data.forceIframe=="true"?1:0,
+                    url:item.data.url,
+                    pageElement:item.data.pageElement,
+                    nextLink:item.data.nextLink,
+                    insert:item.data.insertBefore||undefined,
+                    updatedAt:item.updated_at,
+                    css:(item.data.Stylus && item.data.CSS) ? (item.data.Stylus + item.data.CSS) : (item.data.Stylus || item.data.CSS),
+                    pageAction:item.data.bookmarklet
+                };
+            }else{
+                item.from=from;
+                if(typeof(item.type) == "undefined")item.type=1;
+                return item;
             }
             return null;
         }
 
-        addRuleByUrl(url, type, from, callback) {
+        addRuleByUrl(url, from, callback) {
             if(url.indexOf("?")==-1){
                 url=url+"?"+Date.now();
             }else{
@@ -643,16 +639,16 @@
                     debug("Update "+url+" rules fail!");
                     debug(err);
                 }
-                this.addRules(json, type, from);
+                this.addRules(json, from);
                 callback(json, err);
             });
         }
 
-        addRules(rules, type, from) {
+        addRules(rules, from) {
             if(rules && rules.length>0){
                 this.rules=this.rules.filter(item=>{return item.from!=from});
                 rules.forEach(item=>{
-                    let rule=this.formatRule(item, type, from);
+                    let rule=this.formatRule(item, from);
                     if(rule){
                         this.rules.unshift(rule);
                     }
@@ -1911,6 +1907,12 @@
                             break;
                         }
                     }
+                    for(let u=0;u<ruleUrls.length;u++){
+                        if(this.ruleUrl.id==ruleUrls[u].id){
+                            ruleUrls.splice(u,1);
+                            break;
+                        }
+                    }
                     for(let u=0;u<rulesData.sort.length;u++){
                         if(this.ruleUrl.id==rulesData.sort[u]){
                             rulesData.sort.splice(u,1);
@@ -1969,7 +1971,7 @@
         configCon.insertBefore(customUrlsTitle, insertPos);
         let customUrlsInput=document.createElement("textarea");
         customUrlsInput.style.width="100%";
-        customUrlsInput.placeholder="0 | http://wedata.net/databases/AutoPagerize/items_all.json";
+        customUrlsInput.placeholder="http://wedata.net/databases/AutoPagerize/items_all.json";
         configCon.insertBefore(customUrlsInput, insertPos);
 
         let upBtnImg=document.createElement("div");
@@ -2210,40 +2212,35 @@
             if(customUrls){
                 customUrls=customUrls.split(/\n/);
                 for(let c=0;c<customUrls.length;c++){
-                    let urlArr=customUrls[c].split("|"),url,type=1;
-                    if(urlArr.length==1){
-                        url=urlArr[0].trim();
-                        if(!/^http/.test(url)){
-                            showTips("Wrong url, check again!");
-                            return;
-                        }
-                    }else if(urlArr.length==2){
-                        type=urlArr[0].trim();
-                        url=urlArr[1].trim();
+                    let url;
+                    if(/^0\s*\|/.test(customUrls[c])){
+                        url=customUrls[c].replace(/^0\s*\|\s*/, "").trim();
                         if(!/^http/.test(url)){
                             showTips("Wrong url, check again!");
                             return;
                         }
                     }else{
-                        break;
+                        url=customUrls[c].trim();
+                        if(!/^http/.test(url)){
+                            showTips("Wrong url, check again!");
+                            return;
+                        }
                     }
-                    let maxId=0,hasUrl=false;
+                    let maxId=1,hasUrl=false;
                     if(!rulesData.urls){
                         rulesData.urls=[];
-                        maxId=1;
-                    }else{
-                        rulesData.urls.forEach(u=>{
-                            if(maxId<u.id){
-                                maxId=u.id;
-                            }
-                            if(u.url==url){
-                                hasUrl=true;
-                            }
-                        });
-                        if(hasUrl)break;
                     }
+                    ruleUrls.forEach(u=>{
+                        if(maxId<u.id){
+                            maxId=u.id;
+                        }
+                        if(u.url==url){
+                            hasUrl=true;
+                        }
+                    });
+                    if(hasUrl)break;
                     if(!rulesData.sort)rulesData.sort=[1];
-                    rulesData.urls.push({id:maxId+1,url:url,type:type});
+                    rulesData.urls.push({id:maxId+1,url:url});
                     rulesData.sort.push(maxId+1);
                     storage.setItem("rulesData", rulesData);
                 }
@@ -2269,7 +2266,7 @@
                 success();
             }else{
                 let rule=ruleUrls[ruleIndex--];
-                ruleParser.addRuleByUrl(rule.url, rule.type, rule.id, (json,err)=>{
+                ruleParser.addRuleByUrl(rule.url, rule.id, (json,err)=>{
                     if(!json){
                         fail(rule,err);
                     }
