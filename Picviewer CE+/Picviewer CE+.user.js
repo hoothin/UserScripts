@@ -18556,6 +18556,7 @@ ImgOps | https://imgops.com/#b#`;
                     }
                     imgWindow.style.top=top + scrolled.y +'px';
                 }
+                imgWindow.classList.add("pv-pic-window-transition-all");
             },
             fitToScreen:function(){
                 var imgWindow=this.imgWindow;
@@ -19875,7 +19876,7 @@ ImgOps | https://imgops.com/#b#`;
                     case 'popup':
                         if(!uniqueImgWin || uniqueImgWin.removed){
                             uniqueImgWin = new ImgWindowC(this.img, this.data);
-                            uniqueImgWin.imgWindow.classList.add("pv-pic-window-transition-all");
+                            //uniqueImgWin.imgWindow.classList.add("pv-pic-window-transition-all");
                         }
                         if(uniqueImgWin.src != this.data.src && (!this.data.srcs || !this.data.srcs.includes(uniqueImgWin.src))){
                             uniqueImgWin.changeData(this.data);
