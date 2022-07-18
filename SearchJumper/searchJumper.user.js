@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.9.9
+// @version      1.6.5.9.10
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -782,6 +782,7 @@
                      display: block;
                      -ms-overflow-style: none;
                      scrollbar-width: none;
+                     box-sizing: border-box;
                  }
                  .search-jumper-searchBar {
                      overflow-wrap: break-word;
@@ -798,6 +799,7 @@
                      box-sizing:content-box;
                      text-align: center;
                      position: relative;
+                     box-sizing: border-box;
                  }
                  .search-jumper-searchBarCon::-webkit-scrollbar {
                      width: 0 !important;
@@ -1495,38 +1497,36 @@
 
             searchSiteBtns() {
                 if (!this.inInput) return;
+                let showType;
+                let inputWords = this.searchInput.value;
+                let canCheckHost = !/[^\w\.\/\:\*\?]/.test(inputWords);
                 this.allListBtns.forEach(listItem => {
                     listItem.classList.add("input-hide");
                 });
                 searchTypes.forEach(type => {
                     type.classList.add("input-hide");
                 });
-                let showType;
-                let inputWords = this.searchInput.value;
-                let canCheckHost = !/[^\w\.\/\:\*\?]/.test(inputWords);
                 this.allSiteBtns.forEach(btn => {
+                    let typeNode = btn.parentNode;
                     let canMatch = this.globMatch(inputWords, btn.dataset.name) || (btn.title && this.globMatch(inputWords, btn.title));
-                    if (canMatch) {
-                        btn.classList.remove("input-hide");
-                    } else {
+                    if (!canMatch) {
                         if (canCheckHost) {
                             if (!btn.dataset.host) {
                                 btn.dataset.host = btn.href.replace(/^https?:\/\/([^\/]*)\/.*$/, "$1");
                             }
                             canMatch = this.globMatch(inputWords, btn.dataset.host);
                         }
-                        if (canMatch) {
-                            btn.classList.remove("input-hide");
-                        } else {
+                        if (!canMatch) {
                             btn.classList.add("input-hide");
                         }
                     }
                     if (canMatch) {
-                        btn.parentNode.classList.remove("input-hide");
+                        btn.classList.remove("input-hide");
+                        typeNode.classList.remove("input-hide");
                         if (!showType) {
-                            showType = btn.parentNode;
+                            showType = typeNode;
                         }
-                        let listItem = btn.parentNode.querySelector("#list" + btn.dataset.id);
+                        let listItem = typeNode.querySelector("#list" + btn.dataset.id);
                         if (listItem) listItem.classList.remove("input-hide");
                     }
                 });
