@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.26.39
+// @version      1.9.27
 // @description  Perpetual pages - Most powerful Auto-Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -3497,48 +3497,47 @@
 
     var scrollToResizeInited = false;
     var resizePool = [];
-    function scrollToResize() {
-        if (scrollToResizeInited) return;
-        scrollToResizeInited = true;
-        var scrollingToResize = false;
-        document.addEventListener("scroll", e => {
-            if (scrollingToResize) return;
-            else {
-                scrollingToResize = true;
-                setTimeout(() => {scrollingToResize = false}, 500);
-            }
-            resizePool.forEach(resizeArr => {
-                let iframe = resizeArr[1]();
-                let frameDoc = resizeArr[2]();
-                if(ruleParser.curSiteRule.singleUrl){
-                    iframe.style.height=frameDoc.body.scrollHeight+"px";
-                    iframe.style.width=frameDoc.body.scrollWidth+"px";
-                }else{
-                    let pageEle = resizeArr[0]();
-                    if(pageEle){
-                        let targetElement = pageEle[0];
-                        if(pageEle.length > 1){
-                            targetElement = targetElement.parentNode;
-                        }
-                        if(parseInt(iframe.style.height)==targetElement.scrollHeight) return;
-                        iframe.style.height=targetElement.scrollHeight+"px";
-                        frameDoc.documentElement.scrollTop = 0;
-                        frameDoc.documentElement.scrollLeft = 0;
-                        while(targetElement && targetElement.offsetParent){
-                            targetElement.offsetParent.scrollTop = targetElement.offsetTop;
-                            if(targetElement.offsetParent.scrollTop == 0){
-                                frameDoc.documentElement.scrollTop += targetElement.offsetTop;
+    var scrollingToResize = false;
+
+    function scrollToResize(e) {
+        if (scrollingToResize) return;
+        else {
+            scrollingToResize = true;
+            setTimeout(() => {
+                resizePool.forEach(resizeArr => {
+                    let iframe = resizeArr[1]();
+                    let frameDoc = resizeArr[2]();
+                    if(ruleParser.curSiteRule.singleUrl){
+                        iframe.style.height=frameDoc.body.scrollHeight+"px";
+                        iframe.style.width=frameDoc.body.scrollWidth+"px";
+                    }else{
+                        let pageEle = resizeArr[0]();
+                        if(pageEle){
+                            let targetElement = pageEle[0];
+                            if(pageEle.length > 1){
+                                targetElement = targetElement.parentNode;
                             }
-                            targetElement.offsetParent.scrollLeft = targetElement.offsetLeft;
-                            if(targetElement.offsetParent.scrollLeft == 0){
-                                frameDoc.documentElement.scrollLeft += targetElement.offsetLeft;
+                            if(parseInt(iframe.style.height)==targetElement.scrollHeight) return;
+                            iframe.style.height=targetElement.scrollHeight+"px";
+                            frameDoc.documentElement.scrollTop = 0;
+                            frameDoc.documentElement.scrollLeft = 0;
+                            while(targetElement && targetElement.offsetParent){
+                                targetElement.offsetParent.scrollTop = targetElement.offsetTop;
+                                if(targetElement.offsetParent.scrollTop == 0){
+                                    frameDoc.documentElement.scrollTop += targetElement.offsetTop;
+                                }
+                                targetElement.offsetParent.scrollLeft = targetElement.offsetLeft;
+                                if(targetElement.offsetParent.scrollLeft == 0){
+                                    frameDoc.documentElement.scrollLeft += targetElement.offsetLeft;
+                                }
+                                targetElement = targetElement.offsetParent;
                             }
-                            targetElement = targetElement.offsetParent;
                         }
                     }
-                }
-            });
-        });
+                });
+                scrollingToResize = false
+            }, 50);
+        }
     }
 
     function forceIframe(url, callback){
@@ -3568,6 +3567,7 @@
                 };
                 resizePool.push([getPageEle, getIframe, getFrameDoc]);
             }
+            scrollToResize();
         };
         curIframe.name = 'pagetual-iframe';
         curIframe.sandbox="allow-same-origin allow-scripts allow-popups allow-forms";
@@ -3639,7 +3639,11 @@
         }else{
             ruleParser.insertElement(curIframe);
         }
-        scrollToResize();
+
+        if (!scrollToResizeInited) {
+            scrollToResizeInited = true;
+            document.addEventListener("scroll", scrollToResize);
+        }
         return curIframe;
     }
 
