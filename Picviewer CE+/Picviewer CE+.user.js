@@ -18485,6 +18485,7 @@ ImgOps | https://imgops.com/#b#`;
                 // keepSI(this.descriptionSpan,['bottom', 'left'],[-40, 10]);
             },
             followPos:function(posX, posY){
+                if(!this.focused)return;
                 if(!prefs.floatBar.globalkeys.previewFollowMouse)return;
                 var imgWindow=this.imgWindow;
                 if(!imgWindow)return;
