@@ -18518,15 +18518,21 @@ ImgOps | https://imgops.com/#b#`;
                         //上
                         maxHeight=posY-50;
                         resizeWithLimit();
-                        imgWindow.style.left=(wSize.w - imgWindow.offsetWidth) / 2 + scrolled.x +'px';
                         imgWindow.style.top=posY - imgWindow.offsetHeight - 25 + scrolled.y +'px';
                     }else{
                         //下
                         maxHeight=wSize.h-posY-50;
                         resizeWithLimit();
-                        imgWindow.style.left=(wSize.w - imgWindow.offsetWidth)/2 + scrolled.x +'px';
                         imgWindow.style.top=posY + 25 + scrolled.y +'px';
                     }
+                    let left=(wSize.w - imgWindow.offsetWidth) / 2;
+                    let maxLeft=posX+50;
+                    if(left>maxLeft)left=maxLeft;
+                    else {
+                        let minLeft=posX-imgWindow.offsetWidth-50;
+                        if(left<minLeft)left=minLeft;
+                    }
+                    imgWindow.style.left=left + scrolled.x +'px';
                 }else{
                     //窄条，左右半屏
                     maxHeight = wSize.h;
@@ -18535,14 +18541,20 @@ ImgOps | https://imgops.com/#b#`;
                         maxWidth=posX-50;
                         resizeWithLimit();
                         imgWindow.style.left=posX - imgWindow.offsetWidth - 25 + scrolled.x +'px';
-                        imgWindow.style.top=(wSize.h - imgWindow.offsetHeight) / 2 + scrolled.y +'px';
                     }else{
                         //右
                         maxWidth=wSize.w-posX-50;
                         resizeWithLimit();
                         imgWindow.style.left=posX + 25 + scrolled.x +'px';
-                        imgWindow.style.top=(wSize.h - imgWindow.offsetHeight)/2 + scrolled.y +'px';
                     }
+                    let top=(wSize.h - imgWindow.offsetHeight) / 2;
+                    let maxTop=posY+50;
+                    if(top>maxTop)top=maxTop;
+                    else {
+                        let minTop=posY-imgWindow.offsetHeight-50;
+                        if(top<minTop)top=minTop;
+                    }
+                    imgWindow.style.top=top + scrolled.y +'px';
                 }
             },
             fitToScreen:function(){
