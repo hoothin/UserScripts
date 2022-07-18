@@ -18485,7 +18485,6 @@ ImgOps | https://imgops.com/#b#`;
                 // keepSI(this.descriptionSpan,['bottom', 'left'],[-40, 10]);
             },
             followPos:function(posX, posY){
-                if(!this.focused)return;
                 if(!prefs.floatBar.globalkeys.previewFollowMouse)return;
                 var imgWindow=this.imgWindow;
                 if(!imgWindow)return;
@@ -20970,7 +20969,7 @@ ImgOps | https://imgops.com/#b#`;
                 target=target.querySelector("img");
             }
             if(e.type=="mousemove"){
-                if((uniqueImgWin && !uniqueImgWin.removed)){
+                if((uniqueImgWin && !uniqueImgWin.removed && !uniqueImgWin.previewed)){
                     uniqueImgWin.followPos(e.clientX, e.clientY);
                     return;
                 }else if(target.nodeName != 'IMG' || !checkPreview(e)){
@@ -21410,6 +21409,7 @@ ImgOps | https://imgops.com/#b#`;
                     uniqueImgWin.imgWindow.style.pointerEvents = "auto";
                     uniqueImgWin.focus();
                     uniqueImgWin.imgWindow.classList.remove("pv-pic-window-transition-all");
+                    uniqueImgWin.previewed=true;
                 }
             }
         }
@@ -21435,8 +21435,6 @@ ImgOps | https://imgops.com/#b#`;
                     }
                 }else{
                     //if(e.target.tagName!="IMG")return;
-                    uniqueImgWin.imgWindow.style.pointerEvents = "auto";
-                    uniqueImgWin.focus();
                 }
             }
         }, true);
