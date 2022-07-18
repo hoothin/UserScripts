@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.9.12
+// @version      1.6.5.9.13
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -1962,6 +1962,20 @@
                 }
                 ele.dataset.type = type;
                 let typeBtn = document.createElement("span");
+                let img = document.createElement("img");
+                let iEle = document.createElement("i");
+                iEle.innerText = type.substr(0, 3).trim();
+                if (!/^\w+$/.test(iEle.innerText)) iEle.innerText = iEle.innerText.substr(0, 2);
+                iEle.style.fontSize = 14 * this.scale + 'px';
+                iEle.style.color = 'wheat';
+                typeBtn.appendChild(iEle);
+                img.style.display = "none";
+                img.onload = e => {
+                    img.style.display = "";
+                    iEle.innerText = '';
+                    iEle.style.fontSize = '';
+                    iEle.style.color = '';
+                };
                 ele.appendChild(typeBtn);
                 typeBtn.classList.add("search-jumper-word");
                 typeBtn.classList.add("search-jumper-btn");
@@ -1970,22 +1984,14 @@
                     if (/^[a-z\-]+$/.test(icon)) {
                         let cache = searchData.prefConfig.cacheSwitch && cacheIcon[icon];
                         if (cache) {
-                            let img = document.createElement("img");
                             img.src = cache;
                             img.style.width = '100%';
                             img.style.height = '100%';
                             typeBtn.appendChild(img);
                         } else {
-                            let i = document.createElement("i");
-                            i.className = "fa fa-" + icon;
-                            i.innerText = type;
-                            i.style.fontSize = 14 * this.scale + 'px';
-                            i.style.color = 'wheat';
-                            this.fontPool.push(i);
-                            typeBtn.appendChild(i);
+                            this.fontPool.push(iEle);
                         }
                     } else {
-                        let img = document.createElement("img");
                         let isBase64 = /^data:/.test(icon);
                         if (isBase64) {
                             img.src = icon;
@@ -2000,13 +2006,6 @@
                         }
                         typeBtn.appendChild(img);
                     }
-                } else {
-                    let i = document.createElement("i");
-                    i.innerText = type.substr(0, 3).trim();
-                    if (!/^\w+$/.test(i.innerText)) i.innerText = i.innerText.substr(0, 2);
-                    i.style.fontSize = 14 * this.scale + 'px';
-                    i.style.color = 'wheat';
-                    typeBtn.appendChild(i);
                 }
                 let batchOpen = () => {
                     if (!ele.classList.contains("search-jumper-hide") || window.confirm(i18n('batchOpen'))) {
