@@ -729,6 +729,22 @@
     "pageNum":"pn={$p}"
   },
   {
+    "name": "Mixfemdomcc",
+    "url": "^https://mixfemdomcc\\.com",
+    "css": ".gray-block a.highslide_new > img{transform:unset}"
+  },
+  {
+    "name": "Handpicked Jerk-Off Instruction (JOI) Videos",
+    "url": "^https://joi-me\\.com",
+    "action": "1"
+  },
+  {
+    "name": "Femdom",
+    "url": "^https://femdomup\\.net",
+    "pageElement": ".cat-shortstory",
+    "action": 2
+  },
+  {
     "name":"草榴社區",
     "type":0,
     "url":"htm_data/\\d+/\\d+/\\d+\\.html",
