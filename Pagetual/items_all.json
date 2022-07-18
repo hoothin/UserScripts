@@ -19377,20 +19377,6 @@
   "updated_at": "2015-05-06T07:58:43+09:00"
 },
 {
-  "resource_url": "http://wedata.net/items/77203",
-  "data": {
-    "pageElement": "//ul[@class=\"c145\"]/li",
-    "nextLink": "//link[@rel=\"next\"]",
-    "url": "^https://www\\.barks\\.jp/news/",
-    "exampleUrl": "https://www.barks.jp/news/"
-  },
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "created_by": "dmdr",
-  "name": "BARKS音楽ニュース",
-  "created_at": "2015-05-05T12:09:34+09:00",
-  "updated_at": "2020-06-09T07:00:28+09:00"
-},
-{
   "resource_url": "http://wedata.net/items/77202",
   "name": "3ost",
   "created_by": "Tanookirby",
