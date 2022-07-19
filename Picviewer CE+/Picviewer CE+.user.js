@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.7.18.3
+// @version              2022.7.19.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -17815,7 +17815,9 @@ ImgOps | https://imgops.com/#b#`;
                     }
                     if(prefs.imgWindow.fitToScreen)
                         self.fitToScreen();
-                    self.center(true,true);
+                    if(!prefs.floatBar.globalkeys.previewFollowMouse){
+                        self.center(true,true);
+                    }
                     self.imgWindow.style.opacity=1;
                     self.keepScreenInside();
 
@@ -18411,7 +18413,7 @@ ImgOps | https://imgops.com/#b#`;
                     this.center(true,true);
                 }else{
                     this.center(rectSize.w <= wSize.w , rectSize.h <= wSize.h);
-                };
+                }
 
                 this.keepScreenInside();
             },
@@ -18490,77 +18492,77 @@ ImgOps | https://imgops.com/#b#`;
                 if(!imgWindow)return;
                 if(this.following)return;
                 this.following=true;
+                this.fitToScreen();
+
+                var wSize=getWindowSize();
+                var scrolled=getScrolled();
+                var maxWidth, maxHeight, left, top;
+                var self=this;
+                function resizeWithLimit(){
+                    if(imgWindow.offsetWidth>maxWidth || imgWindow.offsetHeight>maxHeight){
+                        var size;
+                        if(imgWindow.offsetWidth/imgWindow.offsetHeight > maxWidth/maxHeight){
+                            size={
+                                w:maxWidth,
+                                h:maxWidth / (imgWindow.offsetWidth/imgWindow.offsetHeight),
+                            };
+                        }else{
+                            size={
+                                h:maxHeight,
+                                w:maxHeight * (imgWindow.offsetWidth/imgWindow.offsetHeight),
+                            }
+                        };
+
+                        self.zoom(self.getRotatedImgCliSize(size).w/self.imgNaturalSize.w);
+                    }
+                }
+                if(imgWindow.offsetWidth/imgWindow.offsetHeight>wSize.w/wSize.h){
+                    //宽条，上下半屏
+                    maxWidth = wSize.w;
+                    if(posY > wSize.h / 2){
+                        //上
+                        maxHeight=posY-50;
+                        resizeWithLimit();
+                        imgWindow.style.top=posY - imgWindow.offsetHeight - 25 + scrolled.y +'px';
+                    }else{
+                        //下
+                        maxHeight=wSize.h-posY-50;
+                        resizeWithLimit();
+                        imgWindow.style.top=posY + 25 + scrolled.y +'px';
+                    }
+                    let left=(wSize.w - imgWindow.offsetWidth) / 2;
+                    let maxLeft=posX+50;
+                    if(left>maxLeft)left=maxLeft;
+                    else {
+                        let minLeft=posX-imgWindow.offsetWidth-50;
+                        if(left<minLeft)left=minLeft;
+                    }
+                    imgWindow.style.left=left + scrolled.x +'px';
+                }else{
+                    //窄条，左右半屏
+                    maxHeight = wSize.h;
+                    if(posX > wSize.w / 2){
+                        //左
+                        maxWidth=posX-50;
+                        resizeWithLimit();
+                        imgWindow.style.left=posX - imgWindow.offsetWidth - 25 + scrolled.x +'px';
+                    }else{
+                        //右
+                        maxWidth=wSize.w-posX-50;
+                        resizeWithLimit();
+                        imgWindow.style.left=posX + 25 + scrolled.x +'px';
+                    }
+                    let top=(wSize.h - imgWindow.offsetHeight) / 2;
+                    let maxTop=posY+50;
+                    if(top>maxTop)top=maxTop;
+                    else {
+                        let minTop=posY-imgWindow.offsetHeight-50;
+                        if(top<minTop)top=minTop;
+                    }
+                    imgWindow.style.top=top + scrolled.y +'px';
+                }
                 setTimeout(() => {
                     this.following=false;
-                    this.fitToScreen();
-
-                    var wSize=getWindowSize();
-                    var scrolled=getScrolled();
-                    var maxWidth, maxHeight, left, top;
-                    var self=this;
-                    function resizeWithLimit(){
-                        if(imgWindow.offsetWidth>maxWidth || imgWindow.offsetHeight>maxHeight){
-                            var size;
-                            if(imgWindow.offsetWidth/imgWindow.offsetHeight > maxWidth/maxHeight){
-                                size={
-                                    w:maxWidth,
-                                    h:maxWidth / (imgWindow.offsetWidth/imgWindow.offsetHeight),
-                                };
-                            }else{
-                                size={
-                                    h:maxHeight,
-                                    w:maxHeight * (imgWindow.offsetWidth/imgWindow.offsetHeight),
-                                }
-                            };
-
-                            self.zoom(self.getRotatedImgCliSize(size).w/self.imgNaturalSize.w);
-                        }
-                    }
-                    if(imgWindow.offsetWidth/imgWindow.offsetHeight>wSize.w/wSize.h){
-                        //宽条，上下半屏
-                        maxWidth = wSize.w;
-                        if(posY > wSize.h / 2){
-                            //上
-                            maxHeight=posY-50;
-                            resizeWithLimit();
-                            imgWindow.style.top=posY - imgWindow.offsetHeight - 25 + scrolled.y +'px';
-                        }else{
-                            //下
-                            maxHeight=wSize.h-posY-50;
-                            resizeWithLimit();
-                            imgWindow.style.top=posY + 25 + scrolled.y +'px';
-                        }
-                        let left=(wSize.w - imgWindow.offsetWidth) / 2;
-                        let maxLeft=posX+50;
-                        if(left>maxLeft)left=maxLeft;
-                        else {
-                            let minLeft=posX-imgWindow.offsetWidth-50;
-                            if(left<minLeft)left=minLeft;
-                        }
-                        imgWindow.style.left=left + scrolled.x +'px';
-                    }else{
-                        //窄条，左右半屏
-                        maxHeight = wSize.h;
-                        if(posX > wSize.w / 2){
-                            //左
-                            maxWidth=posX-50;
-                            resizeWithLimit();
-                            imgWindow.style.left=posX - imgWindow.offsetWidth - 25 + scrolled.x +'px';
-                        }else{
-                            //右
-                            maxWidth=wSize.w-posX-50;
-                            resizeWithLimit();
-                            imgWindow.style.left=posX + 25 + scrolled.x +'px';
-                        }
-                        let top=(wSize.h - imgWindow.offsetHeight) / 2;
-                        let maxTop=posY+50;
-                        if(top>maxTop)top=maxTop;
-                        else {
-                            let minTop=posY-imgWindow.offsetHeight-50;
-                            if(top<minTop)top=minTop;
-                        }
-                        imgWindow.style.top=top + scrolled.y +'px';
-                    }
                     imgWindow.classList.add("pv-pic-window-transition-all");
                 },50);
             },
@@ -19894,14 +19896,16 @@ ImgOps | https://imgops.com/#b#`;
                                 uniqueImgWin.imgWindow.style.opacity = 0;
                             }else{
                                 uniqueImgWin.center(true,true);
-                                if(centerInterval)clearInterval(centerInterval);
-                                centerInterval=setInterval(function(){
-                                    if(!uniqueImgWin || uniqueImgWin.removed || uniqueImgWin.loaded)
-                                        clearInterval(centerInterval);
-                                    else{
-                                        uniqueImgWin.center(true,true);
-                                    }
-                                },300);
+                                if(!prefs.floatBar.globalkeys.previewFollowMouse){
+                                    if(centerInterval)clearInterval(centerInterval);
+                                    centerInterval=setInterval(function(){
+                                        if(!uniqueImgWin || uniqueImgWin.removed || uniqueImgWin.loaded){
+                                            clearInterval(centerInterval);
+                                        }else{
+                                            uniqueImgWin.center(true,true);
+                                        }
+                                    },300);
+                                }
                             }
                         }
                         uniqueImgWin.imgWindow.style.pointerEvents = "none";
