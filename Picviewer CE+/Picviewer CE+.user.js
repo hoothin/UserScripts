@@ -18491,6 +18491,7 @@ ImgOps | https://imgops.com/#b#`;
                 var imgWindow=this.imgWindow;
                 if(!imgWindow)return;
                 if(this.following)return;
+                if(this.removed)return;
                 this.following=true;
                 this.fitToScreen();
 
