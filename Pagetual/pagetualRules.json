@@ -745,6 +745,13 @@
     "action": 2
   },
   {
+    "name": "XFantazy",
+    "url": "^https://xfantazy\\.com",
+    "pageElement": ".MuiGrid-container",
+    "action": 2,
+    "fitWidth": false
+  },
+  {
     "name":"草榴社區",
     "type":0,
     "url":"htm_data/\\d+/\\d+/\\d+\\.html",
