@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.9.15
+// @version      1.6.5.9.16
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -3709,7 +3709,7 @@
                     if (shown) e.preventDefault();
                     shown = false;
                 });
-                if (searchData.prefConfig.dragToSearch) {
+                if (searchData.prefConfig.dragToSearch && !isInConfigPage()) {
                     document.addEventListener('dragstart', e => {
                         if ((searchData.prefConfig.altKey && !e.altKey) ||
                             (searchData.prefConfig.ctrlKey && !e.ctrlKey) ||
