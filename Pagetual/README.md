@@ -189,6 +189,10 @@ wheel
 --
 Set to true so the next page action will only effect when the mouse wheel roll
 
+fitWidth
+--
+Set to false if you find the pageElement get the wrong small width
+
 pageElementStyle
 --
 Custom cssText of style for pageElement
