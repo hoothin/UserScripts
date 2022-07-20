@@ -19377,6 +19377,20 @@
   "updated_at": "2015-05-06T07:58:43+09:00"
 },
 {
+  "resource_url": "http://wedata.net/items/77203",
+  "data": {
+    "pageElement": "descendant::ul[.//time][1]",
+    "nextLink": "//link[@rel=\"next\"]",
+    "url": "^https://www\\.barks\\.jp/news/",
+    "exampleUrl": "https://www.barks.jp/news/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "dmdr",
+  "name": "BARKS音楽ニュース",
+  "created_at": "2015-05-05T12:09:34+09:00",
+  "updated_at": "2022-07-18T14:00:00+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/77202",
   "name": "3ost",
   "created_by": "Tanookirby",
@@ -40894,17 +40908,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/32012",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "created_at": "2010-04-09T00:56:23+09:00",
   "data": {
-    "pageElement": "//section[@class='c101']",
-    "exampleUrl": "https://www.barks.jp/news/?id=1000060027&page=2",
+    "pageElement": "//article/section[1]",
+    "nextLink": "//article/nav/a[@role='button'][not(./following-sibling::*)]",
     "url": "^https://(www\\.)?barks\\.jp/(?:feature|news)/",
-    "nextLink": "//div[@class='c168']/following-sibling::a"
+    "exampleUrl": "https://www.barks.jp/news/?id=1000060027&page=2"
   },
-  "updated_at": "2020-05-06T09:14:13+09:00",
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "taka99",
   "name": "BARKS ニュース・特集",
-  "created_by": "taka99"
+  "created_at": "2010-04-09T00:56:23+09:00",
+  "updated_at": "2022-07-18T13:47:32+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/32011",
