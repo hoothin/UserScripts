@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.27
+// @version      1.9.28
 // @description  Perpetual pages - Most powerful Auto-Pager script. Auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -3077,7 +3077,7 @@
         pageText.insertBefore(nextBtn, pageText.firstChild);
         pageBar.appendChild(downSpan);
         let parentStyle=_unsafeWindow.getComputedStyle(example.parentNode);
-        let parentWidth=example.parentNode.scrollWidth||parseInt(parentStyle.width);
+        let parentWidth=example.parentNode.offsetWidth||parseInt(parentStyle.width);
         pageBar.style.width=parentWidth-parseInt(parentStyle.paddingLeft)-parseInt(parentStyle.paddingRight)-10+"px";
         if(parentStyle.display=="grid" || parentStyle.display=="inline-grid"){
             pageBar.style.gridColumnStart=1;
@@ -3503,7 +3503,8 @@
         if (scrollingToResize) return;
         else {
             scrollingToResize = true;
-            setTimeout(() => {
+            let fitWidth = ruleParser.curSiteRule.fitWidth !== false;
+            let resizeHandler = () => {
                 resizePool.forEach(resizeArr => {
                     let iframe = resizeArr[1]();
                     let frameDoc = resizeArr[2]();
@@ -3526,17 +3527,27 @@
                                 if(targetElement.offsetParent.scrollTop == 0){
                                     frameDoc.documentElement.scrollTop += targetElement.offsetTop;
                                 }
-                                targetElement.offsetParent.scrollLeft = targetElement.offsetLeft;
-                                if(targetElement.offsetParent.scrollLeft == 0){
-                                    frameDoc.documentElement.scrollLeft += targetElement.offsetLeft;
+                                if(fitWidth){
+                                    targetElement.offsetParent.scrollLeft = targetElement.offsetLeft;
+                                    if(targetElement.offsetParent.scrollLeft == 0){
+                                        frameDoc.documentElement.scrollLeft += targetElement.offsetLeft;
+                                    }
                                 }
                                 targetElement = targetElement.offsetParent;
+                            }
+                            if(!fitWidth && iframe.style.marginLeft == '0px'){
+                                iframe.style.width = "100vw";
+                                iframe.style.marginLeft = -iframe.getBoundingClientRect().left + "px";
                             }
                         }
                     }
                 });
+            };
+            setTimeout(() => {
+                resizeHandler();
                 scrollingToResize = false
-            }, 50);
+            }, 200);
+            resizeHandler();
         }
     }
 
