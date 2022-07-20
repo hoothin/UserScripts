@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.9.13
+// @version      1.6.5.9.14
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -344,7 +344,7 @@
             }, {
                 name: "必应",
                 url: "https://www.bing.com/search?q=%s",
-                match: "^https://(www|cn)\\.bing\\..*/search"
+                match: "^https://(www|cn|global)\\.bing\\.com/search"
             }, {
                 name: "鸭鸭",
                 url: "https://duckduckgo.com/?q=%s",
@@ -1799,7 +1799,7 @@
                     a.appendChild(p);
                     self.allListBtns.push(li);
                     con.appendChild(li);
-                    if (index%100 === 50) await sleep(1);
+                    if (index%50 === 49) await sleep(1);
                 }
                 return list;
             }
@@ -1989,6 +1989,7 @@
                             img.style.height = '100%';
                             typeBtn.appendChild(img);
                         } else {
+                            iEle.className = "fa fa-" + icon;
                             this.fontPool.push(iEle);
                         }
                     } else {
@@ -2202,7 +2203,7 @@
                         self.setCurrentSite(site);
                         self.currentType = ele;
                     }
-                    if (i % 100 === 50) await sleep(1);
+                    if (i % 50 === 49) await sleep(1);
                 }
                 let siteList = await self.createList(siteEles, ele.dataset.title);
                 siteList.style.display = "none";
@@ -3717,7 +3718,7 @@
                     if (parentForm) {
                         url = parentForm.action;
                         let params = [];
-                        [].forEach.call(parentForm.querySelectorAll("input[type='text'][name],input[name]:not([type])"), input => {
+                        [].forEach.call(parentForm.querySelectorAll("input[type='text'][name],input[type='search'][name],input[name]:not([type])"), input => {
                             let value = input.value;
                             if (e.target.name === input.name) {
                                 value = "%s";
