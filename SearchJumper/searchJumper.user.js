@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.9.14
+// @version      1.6.5.9.15
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -563,6 +563,8 @@
         multiline: 2,//0 关闭 1 开启 2 询问
         multilineGap: 1000,
         historyLength: 0,
+        historyTypeLength: 10,
+        dragToSearch: true,
         sortType: false,
         autoHide: false
     };
@@ -1691,7 +1693,7 @@
 
             initHistorySites() {
                 this.historySiteBtns = [];
-                if (!searchData.prefConfig.historyLength) return;
+                //if (!searchData.prefConfig.historyLength) return;
                 let self = this;
                 historySites.forEach(n => {
                     for (let i = 0; i < self.allSiteBtns.length; i++) {
@@ -1709,7 +1711,7 @@
                 typeEle.style.width = "";
                 typeEle.style.height = "";
                 this.historyInserted = true;
-                this.historySiteBtns.forEach(btn => {
+                this.historySiteBtns.slice(0, searchData.prefConfig.historyLength).forEach(btn => {
                     if (btn.parentNode != typeEle) {
                         typeEle.appendChild(btn);
                     }
@@ -1723,7 +1725,7 @@
                 if (!this.historyInserted) return;
                 this.historyInserted = false;
                 let self = this;
-                this.historySiteBtns.forEach(btn => {
+                this.historySiteBtns.slice(0, searchData.prefConfig.historyLength).forEach(btn => {
                     if (!btn.parentNode.classList.contains("search-jumper-hide")) {
                         btn.parentNode.style.width = "";
                         btn.parentNode.style.height = "";
@@ -1781,11 +1783,11 @@
                             if (!/^data:/.test(iconSrc)) {
                                 img.style.width = "1px";
                                 img.style.height = "1px";
-                                img.style.opacity = 0;
+                                img.style.display = "none";
                                 img.onload = e => {
                                     img.style.width = "";
                                     img.style.height = "";
-                                    img.style.opacity = 1;
+                                    img.style.display = "";
                                 };
                             }
                             img.dataset.src = iconSrc;
@@ -2305,13 +2307,13 @@
                 if (!/^\w+$/.test(word.innerText)) word.innerText = word.innerText.substr(0, 2);
                 ele.appendChild(word);
                 let img = document.createElement("img");
-                img.style.opacity = 0;
+                img.style.display = "none";
                 ele.appendChild(img);
                 if (data.nobatch) ele.dataset.nobatch = 1;
                 img.onload = e => {
                     ele.classList.remove("search-jumper-word");
                     ele.removeChild(word);
-                    img.style.opacity = 1;
+                    img.style.display = "";
                 };
                 let imgSrc;
                 if (icon == 0) {
@@ -2461,12 +2463,18 @@
                     if (inPagePost) {
                         postMatch = data.url.match(/#p{(.*[^\\])}/);
                     }
+                    let host = location.host;
+                    let href = location.href;
+                    if (targetElement && targetElement.href && /%[uUh]\b/.test(data.url) && !/%[tTbB]\b/.test(data.url)) {
+                        href = targetElement.href;
+                        host = href.replace(/.*:\/\/(.*?)\/.*/, "$1");
+                    }
                     if (!ele.dataset.url) {
                         let tempUrl = data.url;
                         if (inPagePost) {
                             tempUrl = tempUrl.replace(postMatch[0], "");
                         }
-                        ele.dataset.url = tempUrl.replace(/%e\b/g, document.charset).replace(/%c\b/g, (isMobile?"mobile":"pc")).replace(/%h\b/g, location.host);
+                        ele.dataset.url = tempUrl.replace(/%e\b/g, document.charset).replace(/%c\b/g, (isMobile?"mobile":"pc")).replace(/%h\b/g, host);
                     }
                     let keywordsU, keywordsL, keywordsR;
                     let checkReplace = (str, param, v) => {
@@ -2597,12 +2605,12 @@
                         postMatch[1].replace(/([^\\])&/g, "$1SJ^PARAM").split("SJ^PARAM").forEach(pair => {//ios不支持零宽断言，哭唧唧
                             let pairArr = pair.replace(/([^\\])\=/g, "$1SJ^PARAM").split("SJ^PARAM");
                             if (pairArr.length === 2) {
-                                postParams.push([pairArr[0].replace(/\\([\=&])/g, "$1"), customReplace(pairArr[1].replace(/\\([\=&])/g, "$1").replace(/%e\b/g, document.charset).replace(/%c\b/g, (isMobile?"mobile":"pc")).replace(/%u\b/g, location.href).replace(/%U\b/g, encodeURIComponent(location.href)).replace(/%h\b/g, location.host).replace(/%t\b/g, targetUrl).replace(/%T\b/g, encodeURIComponent(targetUrl)).replace(/%b\b/g, targetBaseUrl).replace(/%B\b/g, encodeURIComponent(targetBaseUrl)).replace(/%n\b/g, targetName).replace(/%S\b/g, (cacheKeywords || keywords)))]);
+                                postParams.push([pairArr[0].replace(/\\([\=&])/g, "$1"), customReplace(pairArr[1].replace(/\\([\=&])/g, "$1").replace(/%e\b/g, document.charset).replace(/%c\b/g, (isMobile?"mobile":"pc")).replace(/%u\b/g, href).replace(/%U\b/g, encodeURIComponent(href)).replace(/%h\b/g, host).replace(/%t\b/g, targetUrl).replace(/%T\b/g, encodeURIComponent(targetUrl)).replace(/%b\b/g, targetBaseUrl).replace(/%B\b/g, encodeURIComponent(targetBaseUrl)).replace(/%n\b/g, targetName).replace(/%S\b/g, (cacheKeywords || keywords)))]);
                             }
                         });
                         storage.setItem("inPagePostParams", postParams);
                     }
-                    resultUrl = customReplace(resultUrl.replace(/%u\b/g, location.href).replace(/%U\b/g, encodeURIComponent(location.href)).replace(/%t\b/g, targetUrl).replace(/%T\b/g, encodeURIComponent(targetUrl)).replace(/%b\b/g, targetBaseUrl).replace(/%B\b/g, encodeURIComponent(targetBaseUrl)).replace(/%n\b/g, targetName).replace(/%S\b/g, (cacheKeywords || keywords)));
+                    resultUrl = customReplace(resultUrl.replace(/%u\b/g, href).replace(/%U\b/g, encodeURIComponent(href)).replace(/%t\b/g, targetUrl).replace(/%T\b/g, encodeURIComponent(targetUrl)).replace(/%b\b/g, targetBaseUrl).replace(/%B\b/g, encodeURIComponent(targetBaseUrl)).replace(/%n\b/g, targetName).replace(/%S\b/g, (cacheKeywords || keywords)));
                     if ((openInNewTab || searchData.prefConfig.openInNewTab) && /^(https?|ftp):/.test(resultUrl)) {
                         ele.setAttribute("target", "_blank");
                         ele.dataset.target = 1;
@@ -2614,11 +2622,12 @@
                 };
                 let action = e => {
                     if (!self.batchOpening && !isBookmark) {
-                        if (searchData.prefConfig.historyLength) {
+                        let historyLength = Math.max(searchData.prefConfig.historyLength, searchData.prefConfig.historyTypeLength);
+                        if (historyLength) {
                             historySites = historySites.filter(site => {return site && site != name});
                             historySites.unshift(name);
-                            if (historySites.length > searchData.prefConfig.historyLength) {
-                                historySites = historySites.slice(0, searchData.prefConfig.historyLength);
+                            if (historySites.length > historyLength) {
+                                historySites = historySites.slice(0, historyLength);
                             }
                             storage.setItem("historySites", historySites);
                         }
@@ -3700,6 +3709,17 @@
                     if (shown) e.preventDefault();
                     shown = false;
                 });
+                if (searchData.prefConfig.dragToSearch) {
+                    document.addEventListener('dragstart', e => {
+                        if ((searchData.prefConfig.altKey && !e.altKey) ||
+                            (searchData.prefConfig.ctrlKey && !e.ctrlKey) ||
+                            (searchData.prefConfig.shiftKey && !e.shiftKey) ||
+                            (searchData.prefConfig.metaKey && !e.metaKey)) {
+                            return;
+                        }
+                        showDragSearch(e.clientX, e.clientY);
+                    });
+                }
             }
             if (searchData.prefConfig.quickAddRule) {
                 document.addEventListener('click', e => {
@@ -3899,6 +3919,259 @@
                     }
                 })
             }
+        }
+
+        var dragRoundFrame, dragSiteCurSpans, dragSiteHistorySpans;
+        function showDragSearch(left, top) {
+            if (!searchBar || !searchBar.bar) return;
+            if (!dragRoundFrame) {
+                dragSiteCurSpans = [];
+                dragSiteHistorySpans = [];
+                dragRoundFrame = document.createElement("div");
+                dragRoundFrame.id = "searchJumperWrapper";
+                dragRoundFrame.innerHTML = createHTML(`
+                <style>
+                    #searchJumperWrapper * {
+                      margin: 0;
+                      padding: 0;
+                      border: none;
+                      outline: none;
+                      user-select: none;
+                    }
+                    #searchJumperWrapper {
+                      position: fixed;
+                      height: 300px;
+                      width: 300px;
+                      padding: 20px;
+                      margin: 20px;
+                      background-color: #0000009e;
+                      box-shadow: #000000 0px 0px 10px;
+                      border-radius: 50%;
+                      pointer-events: none;
+                      z-index: 2147483647;
+                    }
+                    #searchJumperWrapper>.panel {
+                      position: relative;
+                    }
+                    #searchJumperWrapper .sector:nth-child(2n+1) .sector-inner {
+                      background: #505050;
+                      color: white;
+                    }
+                    #searchJumperWrapper .sector:nth-child(2n) .sector-inner {
+                      background: #ffffff;
+                      color: black;
+                    }
+                    #searchJumperWrapper .sector {
+                      position: absolute;
+                      left: 150px;
+                      top: 50px;
+                      width: 100px;
+                      height: 200px;
+                      font-size: 14px;
+                      border-radius: 0px 100px 100px 0;
+                      overflow: hidden;
+                      transform-origin: left center;
+                      z-index: 1;
+                      -moz-transition:transform 0.3s ease;
+                      -webkit-transition:transform 0.3s ease;
+                      transition:transform 0.3s ease;
+                    }
+                    #searchJumperWrapper .sector.out {
+                      left: 150px;
+                      top: 0px;
+                      width: 150px;
+                      height: 300px;
+                      font-size: 14px;
+                      border-radius: 0px 150px 150px 0;
+                      overflow: hidden;
+                      transform-origin: left center;
+                      z-index: 0;
+                    }
+                    #searchJumperWrapper .sector-inner {
+                      text-align: center;
+                      display: block;
+                      width: 40px;
+                      padding: 5px 3px 0 57px;
+                      height: 195px;
+                      transform: translateX(-100px) rotate(60deg);
+                      transform-origin: right center;
+                      border-radius: 100px 0 0 100px;
+                    }
+                    #searchJumperWrapper .sector.out>.sector-inner {
+                      text-align: center;
+                      display: block;
+                      width: 90px;
+                      height: 295px;
+                      transform: translateX(-150px) rotate(36deg);
+                      transform-origin: right center;
+                      border-radius: 150px 0 0 150px;
+                    }
+                    #searchJumperWrapper .sector-inner span {
+                      display: block;
+                      transform-origin: center;
+                      padding: 20px 0;
+                      pointer-events: all;
+                      opacity: 0.8;
+                      word-break: break-word;
+                      height: 55px;
+                      font-size: 12px;
+                      font-weight: bold;
+                      font-family: Roboto, Helvetica, Arial, sans-serif;
+                    }
+                    #searchJumperWrapper .over>.sector-inner span {
+                      opacity: 1;
+                    }
+                    #searchJumperWrapper .sector-inner span>img {
+                      width: 25px;
+                      height: 25px;
+                    }
+                    #searchJumperWrapper .sector-inner span:hover {
+                      opacity: 1;
+                    }
+                    #searchJumperWrapper .dragLogo {
+                      position: absolute;
+                      left: 140px;
+                      top: 140px;
+                      border-radius: 50%;
+                      box-shadow: #000000 0px 0px 10px;
+                      z-index: 10;
+                    }
+                    .dragLogo>svg {
+                      width: 60px;
+                      height: 60px;
+                    }
+                </style>
+                <div class="panel"></div>
+                <div class="dragLogo">${logoBtnSvg}</div>
+                `);
+                const sector1Num = 6;
+                const sector2Num = 10;
+                let sectorCon = dragRoundFrame.querySelector(".panel");
+                let sector1Gap = 360 / sector1Num;
+                let sector2Gap = 360 / sector2Num;
+                let sector1Start = -sector1Gap / 2;
+                let sector2Start = -sector2Gap / 2;
+                let dragSector;
+                let geneSector = (className, deg, spanTransform) => {
+                    let sector = document.createElement("div");
+                    sector.className = className;
+                    let sectorInner = document.createElement("div");
+                    sectorInner.className = "sector-inner";
+                    let sectorSpan = document.createElement("span");
+                    sectorInner.appendChild(sectorSpan);
+                    sector.appendChild(sectorInner);
+                    let transform = `rotate(${deg}deg)`;
+                    sectorSpan.style.transform = spanTransform;
+                    sector.style.transform = transform;
+                    sector.dataset.deg = deg;
+                    sectorCon.appendChild(sector);
+                    sectorSpan.addEventListener("dragover", e => {
+                        if (!sectorSpan.innerText) return;
+                        if (dragSector) {
+                            dragSector.style.transform = `rotate(${dragSector.dataset.deg}deg)`;
+                            dragSector.classList.remove("over");
+                        }
+                        sector.style.transform = `scale(1.2) ${transform}`;
+                        sector.classList.add("over");
+                        dragSector = sector;
+                        e.preventDefault();
+                    });
+                    return sectorSpan;
+                };
+                for (let i = 0; i < sector1Num; i++) {
+                    let sectorSpan = geneSector("sector", sector1Start + sector1Gap * i, `translateX(-10px) translateY(-10px) rotate(${sector1Start - sector1Gap * i}deg)`);//translateX(-10px) translateY(20px)
+                    dragSiteCurSpans.push(sectorSpan);
+                }
+                for (let i = 0; i < sector2Num; i++) {
+                    let sectorSpan = geneSector("sector out", sector2Start + sector2Gap * i, `translateX(10px) translateY(-18px) rotate(${sector2Start - sector2Gap * i}deg)`);
+                    dragSiteHistorySpans.push(sectorSpan);
+                }
+                let dragEndHandler = e => {
+                    if (dragRoundFrame.parentNode) {
+                        dragRoundFrame.parentNode.removeChild(dragRoundFrame);
+                    }
+                }
+                dragRoundFrame.addEventListener('drop', e => {
+                    if (dragSector) {
+                        searchBar.searchBySiteName(dragSector.children[0].dataset.name);
+                        dragSector.style.transform = `rotate(${dragSector.dataset.deg}deg)`;
+                        dragSector.classList.remove("over");
+                        dragSector = null;
+                    }
+                    e.preventDefault();
+                });
+                document.addEventListener('dragend', dragEndHandler);
+            }
+            if (!targetElement) targetElement = document.body;
+            let firstType;
+            if (getSelectStr()) {
+                firstType = searchBar.bar.querySelector('.search-jumper-needInPage');
+            } else {
+                switch (targetElement.tagName) {
+                    case 'IMG':
+                        firstType = searchBar.bar.querySelector('.search-jumper-targetImg');
+                        break;
+                    case 'AUDIO':
+                        firstType = searchBar.bar.querySelector('.search-jumper-targetAudio');
+                        break;
+                    case 'VIDEO':
+                        firstType = searchBar.bar.querySelector('.search-jumper-targetVideo');
+                        break;
+                    case 'A':
+                        firstType = searchBar.bar.querySelector('.search-jumper-targetLink');
+                        break;
+                    default:
+                        if (targetElement.parentNode.tagName === 'A') {
+                            firstType = searchBar.bar.querySelector('.search-jumper-targetLink');
+                        } else {
+                            firstType = searchBar.bar.querySelector('.search-jumper-targetPage');
+                        }
+                        break;
+                }
+            }
+            if (!firstType) firstType = searchBar.bar.querySelector('.search-jumper-type');
+            dragSiteCurSpans.forEach((span, i) => {
+                span.innerHTML = createHTML("");
+                let targetSite = firstType.querySelector(`a.search-jumper-btn:nth-of-type(${i + 1})`);
+                if (!targetSite) return;
+                span.parentNode.dataset.name = targetSite.dataset.name;
+                let targetIcon = targetSite.querySelector("img");
+                let word = document.createElement("p");
+                word.innerText = targetSite.dataset.name.substr(0, 10).trim();
+                if (!/^\w+$/.test(word.innerText)) word.innerText = word.innerText.substr(0, 6);
+                let img = document.createElement("img");
+                img.style.display = "none";
+                span.appendChild(img);
+                span.appendChild(word);
+                img.onload = e => {
+                    img.style.display = "";
+                };
+                img.src = targetIcon.src;
+            });
+            dragSiteHistorySpans.forEach((span, i) => {
+                let dragleaveEvent = new DragEvent("dragleave");
+                span.dispatchEvent(dragleaveEvent);
+                span.innerHTML = createHTML("");
+                let targetSite = searchBar.historySiteBtns[i];
+                if (!targetSite) return;
+                span.parentNode.dataset.name = targetSite.dataset.name;
+                let targetIcon = targetSite.querySelector("img");
+                let word = document.createElement("p");
+                word.innerText = targetSite.dataset.name.substr(0, 10).trim();
+                if (!/^\w+$/.test(word.innerText)) word.innerText = word.innerText.substr(0, 6);
+                let img = document.createElement("img");
+                img.style.display = "none";
+                span.appendChild(img);
+                span.appendChild(word);
+                img.onload = e => {
+                    img.style.display = "";
+                };
+                img.src = targetIcon.src;
+            });
+
+            document.documentElement.appendChild(dragRoundFrame);
+            dragRoundFrame.style.left = left - 190 + "px";
+            dragRoundFrame.style.top = top - 190 + "px";
         }
 
         var addFrame, nameInput, descInput, urlInput, iconInput, iconShow, iconsCon, typeSelect, testBtn, cancelBtn, addBtn;
@@ -4267,6 +4540,12 @@
             }
             if (typeof searchData.prefConfig.historyLength === "undefined") {
                 searchData.prefConfig.historyLength = 0;
+            }
+            if (typeof searchData.prefConfig.historyTypeLength === "undefined") {
+                searchData.prefConfig.historyTypeLength = 10;
+            }
+            if (typeof searchData.prefConfig.dragToSearch === "undefined") {
+                searchData.prefConfig.dragToSearch = true;
             }
         }
 
