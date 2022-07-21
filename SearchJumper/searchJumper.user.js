@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.9.18
+// @version      1.6.5.9.19
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -3941,12 +3941,7 @@
             if (!searchBar || !searchBar.bar) return;
             locInited = false;
             if (!dragRoundFrame) {
-                dragSiteCurSpans = [];
-                dragSiteHistorySpans = [];
-                dragRoundFrame = document.createElement("div");
-                dragRoundFrame.id = "searchJumperWrapper";
-                dragRoundFrame.innerHTML = createHTML(`
-                <style>
+                let dragCssText = `
                     #searchJumperWrapper * {
                       margin: 0;
                       padding: 0;
@@ -3964,7 +3959,6 @@
                       background-color: #0000009e;
                       box-shadow: #000000 0px 0px 10px;
                       border-radius: 50%;
-                      pointer-events: none;
                       z-index: 2147483647;
                       box-sizing: content-box;
                     }
@@ -3972,12 +3966,18 @@
                       position: relative;
                     }
                     #searchJumperWrapper .sector:nth-child(2n+1) .sector-inner {
-                      background: #505050;
+                      background: #454545;
                       color: white;
                     }
                     #searchJumperWrapper .sector:nth-child(2n) .sector-inner {
                       background: #ffffff;
                       color: black;
+                    }
+                    #searchJumperWrapper .sector.out:nth-child(2n+1) .sector-inner {
+                      background: #353535;
+                    }
+                    #searchJumperWrapper .sector.out:nth-child(2n) .sector-inner {
+                      background: #eeeeee;
                     }
                     #searchJumperWrapper .sector {
                       position: absolute;
@@ -3993,6 +3993,7 @@
                       -moz-transition:transform 0.3s ease;
                       -webkit-transition:transform 0.3s ease;
                       transition:transform 0.3s ease;
+                      pointer-events: none;
                     }
                     #searchJumperWrapper .sector.out {
                       left: 150px;
@@ -4053,11 +4054,21 @@
                       border-radius: 50%;
                       box-shadow: #000000 0px 0px 10px;
                       z-index: 10;
+                      font-size: 0;
                     }
                     .dragLogo>svg {
                       width: 60px;
                       height: 60px;
                     }
+                `;
+                _GM_addStyle(dragCssText);
+                dragSiteCurSpans = [];
+                dragSiteHistorySpans = [];
+                dragRoundFrame = document.createElement("div");
+                dragRoundFrame.id = "searchJumperWrapper";
+                dragRoundFrame.innerHTML = createHTML(`
+                <style>
+                ${dragCssText}
                 </style>
                 <div class="panel"></div>
                 <div class="dragLogo">${logoBtnSvg}</div>
@@ -4101,14 +4112,18 @@
                     dragSiteCurSpans.push(sectorSpan);
                 }
                 for (let i = 0; i < sector2Num; i++) {
-                    let sectorSpan = geneSector("sector out", sector2Start + sector2Gap * i, `translateX(10px) translateY(-18px) rotate(${sector2Start - sector2Gap * i}deg)`);
+                    let sectorSpan = geneSector("sector out", sector2Start + sector2Gap * i, `translateX(12px) translateY(-15px) rotate(${sector2Start - sector2Gap * i}deg)`);
                     dragSiteHistorySpans.push(sectorSpan);
                 }
-                dragEndHandler = e => {
+                let removeFrame = () => {
+                    document.removeEventListener('dragenter', dragenterHandler);
                     if (dragRoundFrame.parentNode) {
                         dragRoundFrame.parentNode.removeChild(dragRoundFrame);
                     }
                     document.removeEventListener('dragend', dragEndHandler);
+                };
+                dragEndHandler = e => {
+                    removeFrame();
                 }
                 dragRoundFrame.addEventListener('drop', e => {
                     if (dragSector) {
@@ -4121,6 +4136,10 @@
                 });
                 let minClientX, maxClientX, minClientY, maxClientY;
                 dragenterHandler = e => {
+                    if (!dragRoundFrame.contains(e.target)){
+                        removeFrame();
+                        return;
+                    }
                     if (!locInited) {
                         locInited = true;
                         minClientX = e.clientX;
@@ -4139,11 +4158,7 @@
                             maxClientY = e.clientY;
                         }
                         if (maxClientX - minClientX > 500 || maxClientY - minClientY > 500) {
-                            document.removeEventListener('dragenter', dragenterHandler);
-                            if (dragRoundFrame.parentNode) {
-                                dragRoundFrame.parentNode.removeChild(dragRoundFrame);
-                            }
-                            document.removeEventListener('dragend', dragEndHandler);
+                            removeFrame();
                         }
                     }
                 };
@@ -4217,17 +4232,25 @@
                 img.src = targetIcon.src;
             });
 
-            document.documentElement.appendChild(dragRoundFrame);
+            if (left - 190 < 0) {
+                left = 190;
+            } else if (document.documentElement.clientWidth - left - 190 < 0) {
+                left = document.documentElement.clientWidth - 190;
+            }
+            if (top - 190 < 0) {
+                top = 190;
+            } else if (document.documentElement.clientHeight - top - 190 < 0) {
+                top = document.documentElement.clientHeight - 190;
+            }
             dragRoundFrame.style.left = left - 190 + "px";
             dragRoundFrame.style.top = top - 190 + "px";
+            setTimeout(() => document.documentElement.appendChild(dragRoundFrame), 0);
         }
 
         var addFrame, nameInput, descInput, urlInput, iconInput, iconShow, iconsCon, typeSelect, testBtn, cancelBtn, addBtn;
         function showSiteAdd(name, description, url, icons, charset) {
             if (!addFrame) {
-                addFrame = document.createElement("div");
-                addFrame.innerHTML = createHTML(`
-                <style>
+                let addFrameCssText = `
                     .searchJumperFrame-body {
                         width: 300px;
                         min-height: 300px;
@@ -4320,6 +4343,12 @@
                         border: 2px solid #4e91d3;
                         box-sizing: border-box;
                     }
+                `;
+                _GM_addStyle(addFrameCssText);
+                addFrame = document.createElement("div");
+                addFrame.innerHTML = createHTML(`
+                <style>
+                ${addFrameCssText}
                 </style>
                 <div class="searchJumperFrame-body">
                     <a href="${configPage}" class="searchJumperFrame-title" target="_blank">
