@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.9.19
+// @version      1.6.5.9.20
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -2291,6 +2291,7 @@
             createSiteBtn(icon, data, openInNewTab, isBookmark) {
                 let self = this;
                 let ele = document.createElement("a");
+                let name = data.name;
                 if (/^\[/.test(data.url)) {
                     ele.dataset.pointer = true;
                     let siteNames = JSON.parse(data.url);
@@ -2311,7 +2312,6 @@
                         }
                     }
                 }
-                let name = data.name;
                 let isPage = /^(https?|ftp):/.test(data.url);
                 ele.className = "search-jumper-btn";
                 if (typeof data.description !== 'undefined') ele.title = data.description;
@@ -3936,10 +3936,9 @@
             }
         }
 
-        var dragRoundFrame, dragSiteCurSpans, dragSiteHistorySpans, dragEndHandler, dragenterHandler, locInited;
+        var dragRoundFrame, dragSiteCurSpans, dragSiteHistorySpans, dragEndHandler, dragenterHandler;
         function showDragSearch(left, top) {
             if (!searchBar || !searchBar.bar) return;
-            locInited = false;
             if (!dragRoundFrame) {
                 let dragCssText = `
                     #searchJumperWrapper * {
@@ -4125,6 +4124,9 @@
                 dragEndHandler = e => {
                     removeFrame();
                 }
+                dragRoundFrame.addEventListener('click', e => {
+                    removeFrame();
+                });
                 dragRoundFrame.addEventListener('drop', e => {
                     if (dragSector) {
                         searchBar.searchBySiteName(dragSector.children[0].dataset.name);
@@ -4139,27 +4141,6 @@
                     if (!dragRoundFrame.contains(e.target)){
                         removeFrame();
                         return;
-                    }
-                    if (!locInited) {
-                        locInited = true;
-                        minClientX = e.clientX;
-                        maxClientX = e.clientX;
-                        minClientY = e.clientY;
-                        maxClientY = e.clientY;
-                    } else {
-                        if (e.clientX < minClientX) {
-                            minClientX = e.clientX;
-                        } else if (e.clientX > maxClientX) {
-                            maxClientX = e.clientX;
-                        }
-                        if (e.clientY < minClientY) {
-                            minClientY = e.clientY;
-                        } else if (e.clientY > maxClientY) {
-                            maxClientY = e.clientY;
-                        }
-                        if (maxClientX - minClientX > 500 || maxClientY - minClientY > 500) {
-                            removeFrame();
-                        }
                     }
                 };
             }
@@ -4193,6 +4174,7 @@
                 }
             }
             if (!firstType) firstType = searchBar.bar.querySelector('.search-jumper-type');
+            searchBar.recoveHistory();
             dragSiteCurSpans.forEach((span, i) => {
                 span.innerHTML = createHTML("");
                 let targetSite = firstType.querySelector(`a.search-jumper-btn:nth-of-type(${i + 1})`);
