@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.9.20
+// @version      1.6.5.9.21
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -386,7 +386,13 @@
             selectTxt: true,
             openInNewTab: true,
             sites: [ {
-                name: "Google站内搜",
+                name: "Google Clone",
+                url: "[\"Google\"]"
+            }, {
+                name: "百度 Clone",
+                url: "[\"百度\"]"
+            }, {
+                name: "谷歌站内搜",
                 url: "https://www.google.com/search?q=%s%20site%3A%h&ie=utf-8&oe=utf-8",
             }, {
                 name: "头条站内搜",
@@ -424,7 +430,7 @@
             selectImg: true,
             openInNewTab: true,
             sites: [ {
-                name: "Google搜图",
+                name: "谷歌搜图",
                 url: "https://www.google.com/searchbyimage?image_url=%t"
             }, {
                 name: "Yandex搜图",
@@ -439,7 +445,7 @@
                 name: "3D IQDB",
                 url: "https://3d.iqdb.org/?url=%t"
             }, {
-                name: "Baidu搜图",
+                name: "百度搜图",
                 url: "https://graph.baidu.com/details?isfromtusoupc=1&tn=pc&carousel=0&promotion_name=pc_image_shituindex&extUiData%5bisLogoShow%5d=1&image=%t"
             }, {
                 name: "Bing搜图",
@@ -448,7 +454,7 @@
                 name: "TinEye",
                 url: "https://www.tineye.com/search?url=%t"
             }, {
-                name: "Sogou搜图",
+                name: "搜狗搜图",
                 url: "https://pic.sogou.com/ris?query=%t"
             }, {
                 name: "360搜图",
@@ -3732,6 +3738,7 @@
                             (searchData.prefConfig.metaKey && !e.metaKey)) {
                             return;
                         }
+                        targetElement = e.target;
                         showDragSearch(e.clientX, e.clientY);
                     });
                 }
@@ -4148,30 +4155,32 @@
             document.addEventListener('dragenter', dragenterHandler);
             if (!targetElement) targetElement = document.body;
             let firstType;
-            if (getSelectStr()) {
-                firstType = searchBar.bar.querySelector('.search-jumper-needInPage');
-            } else {
-                switch (targetElement.tagName) {
-                    case 'IMG':
-                        firstType = searchBar.bar.querySelector('.search-jumper-targetImg');
-                        break;
-                    case 'AUDIO':
-                        firstType = searchBar.bar.querySelector('.search-jumper-targetAudio');
-                        break;
-                    case 'VIDEO':
-                        firstType = searchBar.bar.querySelector('.search-jumper-targetVideo');
-                        break;
-                    case 'A':
+            switch (targetElement.tagName) {
+                case 'IMG':
+                    firstType = searchBar.bar.querySelector('.search-jumper-targetImg');
+                    break;
+                case 'AUDIO':
+                    firstType = searchBar.bar.querySelector('.search-jumper-targetAudio');
+                    break;
+                case 'VIDEO':
+                    firstType = searchBar.bar.querySelector('.search-jumper-targetVideo');
+                    break;
+                case 'A':
+                    if (getSelectStr()) {
+                        firstType = searchBar.bar.querySelector('.search-jumper-needInPage');
+                    } else {
                         firstType = searchBar.bar.querySelector('.search-jumper-targetLink');
-                        break;
-                    default:
-                        if (targetElement.parentNode.tagName === 'A') {
-                            firstType = searchBar.bar.querySelector('.search-jumper-targetLink');
-                        } else {
-                            firstType = searchBar.bar.querySelector('.search-jumper-targetPage');
-                        }
-                        break;
-                }
+                    }
+                    break;
+                default:
+                    if (getSelectStr()) {
+                        firstType = searchBar.bar.querySelector('.search-jumper-needInPage');
+                    } else if (targetElement.parentNode.tagName === 'A') {
+                        firstType = searchBar.bar.querySelector('.search-jumper-targetLink');
+                    } else {
+                        firstType = searchBar.bar.querySelector('.search-jumper-targetPage');
+                    }
+                    break;
             }
             if (!firstType) firstType = searchBar.bar.querySelector('.search-jumper-type');
             searchBar.recoveHistory();
