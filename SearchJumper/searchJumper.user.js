@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.9.21
+// @version      1.6.5.9.22
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -4189,7 +4189,6 @@
                 let targetSite = firstType.querySelector(`a.search-jumper-btn:nth-of-type(${i + 1})`);
                 if (!targetSite) return;
                 span.parentNode.dataset.name = targetSite.dataset.name;
-                let targetIcon = targetSite.querySelector("img");
                 let word = document.createElement("p");
                 word.innerText = targetSite.dataset.name.substr(0, 10).trim();
                 if (!/^\w+$/.test(word.innerText)) word.innerText = word.innerText.substr(0, 6);
@@ -4200,7 +4199,8 @@
                 img.onload = e => {
                     img.style.display = "";
                 };
-                img.src = targetIcon.src;
+                let targetIcon = targetSite.querySelector("img");
+                if (targetIcon) img.src = targetIcon.src || targetIcon.dataset.src;
             });
             dragSiteHistorySpans.forEach((span, i) => {
                 let dragleaveEvent = new DragEvent("dragleave");
@@ -4209,7 +4209,6 @@
                 let targetSite = searchBar.historySiteBtns[i];
                 if (!targetSite) return;
                 span.parentNode.dataset.name = targetSite.dataset.name;
-                let targetIcon = targetSite.querySelector("img");
                 let word = document.createElement("p");
                 word.innerText = targetSite.dataset.name.substr(0, 10).trim();
                 if (!/^\w+$/.test(word.innerText)) word.innerText = word.innerText.substr(0, 6);
@@ -4220,7 +4219,8 @@
                 img.onload = e => {
                     img.style.display = "";
                 };
-                img.src = targetIcon.src;
+                let targetIcon = targetSite.querySelector("img");
+                if (targetIcon) img.src = targetIcon.src || targetIcon.dataset.src;
             });
 
             if (left - 190 < 0) {
