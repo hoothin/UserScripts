@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.9.26
+// @version      1.6.5.9.27
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -1325,13 +1325,17 @@
                 }
             }
 
-            searchBySiteName(siteName) {
+            searchBySiteName(siteName, e) {
                 for (let i = 0; i < this.allSiteBtns.length; i++) {
                     let siteBtn = this.allSiteBtns[i];
                     if (siteBtn.dataset.name == siteName) {
-                        let mouseDownEvent = new PointerEvent("mousedown");
+                        let mouseDownEvent = new PointerEvent("mousedown", {altKey: e.altKey, ctrlKey: e.ctrlKey, shiftKey: e.shiftKey, metaKey: e.metaKey})
                         siteBtn.dispatchEvent(mouseDownEvent);
-                        siteBtn.click();
+                        if (siteBtn.onclick) {
+                            siteBtn.onclick(e);
+                        } else {
+                            siteBtn.click();
+                        }
                         return;
                     }
                 }
@@ -2825,8 +2829,8 @@
                                     } else {
                                         _unsafeWindow.open(url, "_blank", "width=800, height=1000, location=0, resizable=1, menubar=0, scrollbars=0");
                                     }
-                                    e.preventDefault();
-                                    e.stopPropagation();
+                                    if (e.preventDefault) e.preventDefault();
+                                    if (e.stopPropagation) e.stopPropagation();
                                     return false;
                                 };
                                 return true;
@@ -3620,7 +3624,7 @@
                 document.addEventListener('searchJumper', e => {
                     switch (e.detail.action) {
                         case "search":
-                            searchBar.searchBySiteName(e.detail.name);
+                            searchBar.searchBySiteName(e.detail.name, e.detail.key || {});
                             break;
                         case "show":
                             searchBar.showInPage();
@@ -4142,7 +4146,7 @@
                 });
                 dragRoundFrame.addEventListener('drop', e => {
                     if (dragSector) {
-                        searchBar.searchBySiteName(dragSector.children[0].dataset.name);
+                        searchBar.searchBySiteName(dragSector.children[0].dataset.name, e);
                         dragSector.style.transform = `rotate(${dragSector.dataset.deg}deg)`;
                         dragSector.classList.remove("over");
                         dragSector = null;
