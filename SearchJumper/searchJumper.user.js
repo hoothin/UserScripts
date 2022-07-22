@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.9.31
+// @version      1.6.5.9.32
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -2455,7 +2455,7 @@
                                 ele.dataset.current = true;
                             }
                         } else if (!currentSite && data.url.replace(/^https?:\/\//, "").replace(location.host, "").replace(/\/?[\?#].*/, "") == location.pathname.replace(/\/$/, "")) {
-                            if (data.url.indexOf("#p{") != -1) {
+                            if (/[#:%]p{/.test(data.url)) {
                                 ele.dataset.current = true;
                             } else {
                                 let urlReg = data.url.match(/[^\/\?&]+(?=%[stb])/g);
@@ -3484,7 +3484,7 @@
                 if (keywordsMatch) {
                     keywords = keywordsMatch[1];
                 }
-            } else if (/%s\b/.test(currentSite.url)) {
+            } else if (/%s\b/.test(currentSite.url) && !/[#:%]p{/.test(currentSite.url)) {
                 if (location.href.indexOf("?") != -1) {
                     keywordsMatch = currentSite.url.match(/[\?&]([^&]*?)=%s\b.*/);
                     if (keywordsMatch) {
@@ -3500,8 +3500,8 @@
                     }
                 }
             }
-            if (keywords == '') {
-                let firstInput = document.querySelector('input[type=text],input:not([type])');
+            if (keywords == '' && document.body) {
+                let firstInput = document.body.querySelector('input[type=text]:not([readonly]),input:not([type])');
                 if (firstInput) keywords = encodeURIComponent(firstInput.value);
             }
             if (keywords) localKeywords = keywords;
