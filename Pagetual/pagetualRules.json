@@ -745,6 +745,12 @@
     "pageAction": "eles.forEach(ele=>{let video=ele.querySelector('video');video.onmouseenter=e=>{video.src=video.dataset.src;video.classList.add('prev-video')};video.onmouseleave=e=>{video.src='/templates/videok2s/dleimages/plug.webm';video.classList.remove('prev-video')}})"
   },
   {
+    "name": "Amedia",
+    "url": "^https://amedia\\.online",
+    "pageElement": ".c1-item",
+    "css": "img[data-src] { opacity: 1; }"
+  },
+  {
     "name": "XFantazy",
     "url": "^https://xfantazy\\.com",
     "pageElement": ".MuiGrid-container",
