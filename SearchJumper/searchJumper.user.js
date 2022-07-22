@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.9.27
+// @version      1.6.5.9.28
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -1339,6 +1339,47 @@
                         return;
                     }
                 }
+            }
+
+            autoGetFirstType() {
+                if (!targetElement) targetElement = document.body;
+                let firstType;
+                switch (targetElement.tagName) {
+                    case 'IMG':
+                        firstType = this.bar.querySelector('.search-jumper-targetImg');
+                        break;
+                    case 'AUDIO':
+                        firstType = this.bar.querySelector('.search-jumper-targetAudio');
+                        break;
+                    case 'VIDEO':
+                        firstType = this.bar.querySelector('.search-jumper-targetVideo');
+                        break;
+                    case 'A':
+                        if (getSelectStr()) {
+                            firstType = this.bar.querySelector('.search-jumper-needInPage');
+                        } else {
+                            firstType = this.bar.querySelector('.search-jumper-targetLink');
+                        }
+                        break;
+                    default:
+                        if (getSelectStr()) {
+                            firstType = this.bar.querySelector('.search-jumper-needInPage');
+                        } else if (targetElement.parentNode.tagName === 'A') {
+                            firstType = this.bar.querySelector('.search-jumper-targetLink');
+                        } else {
+                            firstType = this.bar.querySelector('.search-jumper-targetPage');
+                        }
+                        break;
+                }
+                if (!firstType) firstType = this.bar.querySelector('.search-jumper-type');
+                return firstType;
+            }
+
+            searchAuto(index, e) {
+                if (!index) index = 0;
+                let firstType = this.autoGetFirstType();
+                let targetSite = firstType.querySelector(`a.search-jumper-btn:nth-of-type(${index + 1})`);
+                this.searchBySiteName(targetSite.dataset.name, e);
             }
 
             async initRun() {
@@ -3620,17 +3661,21 @@
                 searchBar.bar.parentNode.scrollLeft += deltaY;
             }, false);
 
-            if (searchData.prefConfig.enableInPage) {
-                document.addEventListener('searchJumper', e => {
-                    switch (e.detail.action) {
-                        case "search":
+            document.addEventListener('searchJumper', e => {
+                switch (e.detail.action) {
+                    case "search":
+                        if (e.detail.name) {
                             searchBar.searchBySiteName(e.detail.name, e.detail.key || {});
-                            break;
-                        case "show":
-                            searchBar.showInPage();
-                            break;
-                    }
-                });
+                        } else {
+                            searchBar.searchAuto(e.detail.index, e.detail.key || {});
+                        }
+                        break;
+                    case "show":
+                        searchBar.showInPage();
+                        break;
+                }
+            });
+            if (searchData.prefConfig.enableInPage) {
                 let shown = false;
                 let showToolbarTimer;
                 if (searchData.prefConfig.shortcutKey) {
@@ -4163,36 +4208,7 @@
             }
             document.addEventListener('dragend', dragEndHandler);
             document.addEventListener('dragenter', dragenterHandler);
-            if (!targetElement) targetElement = document.body;
-            let firstType;
-            switch (targetElement.tagName) {
-                case 'IMG':
-                    firstType = searchBar.bar.querySelector('.search-jumper-targetImg');
-                    break;
-                case 'AUDIO':
-                    firstType = searchBar.bar.querySelector('.search-jumper-targetAudio');
-                    break;
-                case 'VIDEO':
-                    firstType = searchBar.bar.querySelector('.search-jumper-targetVideo');
-                    break;
-                case 'A':
-                    if (getSelectStr()) {
-                        firstType = searchBar.bar.querySelector('.search-jumper-needInPage');
-                    } else {
-                        firstType = searchBar.bar.querySelector('.search-jumper-targetLink');
-                    }
-                    break;
-                default:
-                    if (getSelectStr()) {
-                        firstType = searchBar.bar.querySelector('.search-jumper-needInPage');
-                    } else if (targetElement.parentNode.tagName === 'A') {
-                        firstType = searchBar.bar.querySelector('.search-jumper-targetLink');
-                    } else {
-                        firstType = searchBar.bar.querySelector('.search-jumper-targetPage');
-                    }
-                    break;
-            }
-            if (!firstType) firstType = searchBar.bar.querySelector('.search-jumper-type');
+            let firstType = searchBar.autoGetFirstType();
             searchBar.recoveHistory();
             dragSiteCurSpans.forEach((span, i) => {
                 span.innerHTML = createHTML("");
