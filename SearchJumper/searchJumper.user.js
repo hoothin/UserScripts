@@ -4183,11 +4183,11 @@
                     dragSiteHistorySpans.push(sectorSpan);
                 }
                 let removeFrame = () => {
-                    document.removeEventListener('dragenter', dragenterHandler);
                     if (dragRoundFrame.parentNode) {
+                        document.removeEventListener('dragenter', dragenterHandler);
+                        document.removeEventListener('dragend', dragEndHandler);
                         dragRoundFrame.parentNode.removeChild(dragRoundFrame);
                     }
-                    document.removeEventListener('dragend', dragEndHandler);
                 };
                 dragEndHandler = e => {
                     removeFrame();
