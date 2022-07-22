@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.9.30
+// @version      1.6.5.9.31
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -484,6 +484,15 @@
             icon: "key",
             match: "://v\\.qq\\.com/x/",
             sites: []
+        },
+        {
+            type: "M3u8",
+            icon: "circle-play",
+            selectVideo: true,
+            sites: [ {
+                name: "M3u8播放器",
+                url: "https://players.akamai.com/players/hlsjs?streamUrl=%t"
+            } ]
         },
         {
             type: "辅助工具",
@@ -2592,6 +2601,13 @@
                     let imgBase64 = '', resultUrl = ele.dataset.url;
                     if (targetElement) {
                         targetUrl = targetElement.src || targetElement.href || '';
+                        if (targetElement.tagName == "VIDEO" || targetElement.tagName == "AUDIO") {
+                            if (!targetUrl) {
+                                let source = targetElement.querySelector("source");
+                                if (source) targetUrl = source.src;
+                            }
+                            if (targetUrl) targetUrl = targetUrl.replace(/^blob:/, "");
+                        }
                         targetName = targetElement.title || targetElement.alt || document.title;
                         if (targetElement.tagName == 'IMG' && /%i\b/.test(ele.dataset.url)) {
                             if (/^data/.test(targetElement.src)) {
@@ -3003,6 +3019,7 @@
                         if (!openType) firstType = this.bar.querySelector('.search-jumper-needInPage>span');
                     }
                 } else {
+                    let parentNode = targetElement.parentNode;
                     switch (targetElement.tagName) {
                         case 'IMG':
                             this.bar.classList.add("search-jumper-isTargetImg");
@@ -3021,14 +3038,32 @@
                             firstType = this.bar.querySelector('.search-jumper-targetLink>span');
                             break;
                         default:
-                            if (targetElement.parentNode.tagName === 'A') {
-                                targetElement = targetElement.parentNode;
+                            if (parentNode && parentNode.tagName === 'A') {
+                                targetElement = parentNode;
                                 this.bar.classList.add("search-jumper-isTargetLink");
                                 firstType = this.bar.querySelector('.search-jumper-targetLink>span');
+                                break;
                             } else {
-                                this.bar.classList.add("search-jumper-isTargetPage");
-                                firstType = this.bar.querySelector('.search-jumper-targetPage>span');
+                                if (parentNode && parentNode.tagName !== 'BODY') {
+                                    parentNode = parentNode.querySelectorAll("video, audio");
+                                    if (parentNode && parentNode.length === 1) {
+                                        targetElement = parentNode[0];
+                                        switch (targetElement.tagName) {
+                                            case 'AUDIO':
+                                                this.bar.classList.add("search-jumper-isTargetAudio");
+                                                firstType = this.bar.querySelector('.search-jumper-targetAudio>span');
+                                                break;
+                                            case 'VIDEO':
+                                                this.bar.classList.add("search-jumper-isTargetVideo");
+                                                firstType = this.bar.querySelector('.search-jumper-targetVideo>span');
+                                                break;
+                                        }
+                                        break;
+                                    }
+                                }
                             }
+                            this.bar.classList.add("search-jumper-isTargetPage");
+                            firstType = this.bar.querySelector('.search-jumper-targetPage>span');
                             break;
                     }
                 }
