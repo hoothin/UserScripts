@@ -31,7 +31,8 @@
     "name": "Pixabay",
     "url": "^https://pixabay\\.com",
     "pageAction": "eles.forEach(ele=>{let media=ele.querySelector('div.media');let timer;media.onmouseenter=e=>{timer=setTimeout((function() {var mp4 = media.dataset.mp4, webm = media.dataset.webm ? mp4.rsplit(\".\", 1)[0] + \".webm\": \"\", mp4Source = '<source type=\"video/mp4\" src=\"'.concat(mp4, '\">'), webmSource = webm ?' <source type=\"video/webm\" src=\"'.concat(webm, '\">') : \"\", videoElement = '<video style=\"display:none\" onloadeddata=\"$(this).addClass(\\'playing\\').show();\" autoplay muted loop>'.concat(mp4Source, \"                 \").concat(webmSource, \"</video>\");media.insertBefore($(videoElement)[0], media.firstChild)}), 300);};media.onmouseleave=e=>{clearTimeout(timer);if(media.firstChild.tagName==='VIDEO')media.removeChild(media.firstChild)};})",
-    "pageElement": ".video-search-results>.row-masonry-cell"
+    "pageElement": ".video-search-results>.row-masonry-cell",
+    "lazyImgSrc": "data-lazy"
   },
   {
     "name":"Bing",
