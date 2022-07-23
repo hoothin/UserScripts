@@ -747,7 +747,7 @@
   {
     "name": "Amedia",
     "url": "^https://amedia\\.online",
-    "pageElement": ".c1-item",
+    "pageElement": "#dle-content>.c1-item",
     "css": "img[data-src] { opacity: 1; }"
   },
   {
