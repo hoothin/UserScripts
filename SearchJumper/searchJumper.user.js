@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.9.33
+// @version      1.6.5.9.34
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -599,6 +599,7 @@
             case "zh-SG":
                 config = {
                     scriptName: '搜索酱',
+                    import: '导入',
                     importOrNot: '是否导入配置？',
                     settings: '配置脚本',
                     batchOpen: '确定要批量打开吗？',
@@ -626,6 +627,7 @@
             case "zh-HK":
                 config = {
                     scriptName: "搜索醬",
+                    import: '導入',
                     importOrNot: '是否導入配置？',
                     settings: '配置脚本',
                     batchOpen: '確定要批量打開嗎？',
@@ -652,6 +654,7 @@
             default:
                 config = {
                     scriptName: "SearchJumper",
+                    import: 'Import',
                     importOrNot: 'Do you want to import this config?',
                     settings: 'Settings',
                     batchOpen: 'Batch open urls?',
@@ -1407,7 +1410,7 @@
                 let sitesNum = 0;
                 let bookmarkTypes = [];
                 for (let siteConfig of searchData.sitesConfig) {
-                    let isBookmark = siteConfig.sites.length > 100 || (/^BM/.test(siteConfig.type) && siteConfig.icon === "bookmark");
+                    let isBookmark = siteConfig.bookmark || siteConfig.sites.length > 100 || (/^BM/.test(siteConfig.type) && siteConfig.icon === "bookmark");
                     if (isBookmark) {
                         bookmarkTypes.push(siteConfig);
                         continue;
@@ -2047,8 +2050,10 @@
                 let typeBtn = document.createElement("span");
                 let img = document.createElement("img");
                 let iEle = document.createElement("i");
-                iEle.innerText = type.substr(0, 3).trim();
-                if (!/^\w+$/.test(iEle.innerText)) iEle.innerText = iEle.innerText.substr(0, 2);
+                if (type.length > 3) {
+                    iEle.innerText = type.substr(0, 3).trim();
+                    if (!/^\w+$/.test(iEle.innerText)) iEle.innerText = iEle.innerText.substr(0, 2);
+                } else iEle.innerText = type;
                 iEle.style.fontSize = 14 * this.scale + 'px';
                 iEle.style.color = 'wheat';
                 typeBtn.appendChild(iEle);
@@ -2358,7 +2363,7 @@
                 let self = this;
                 let ele = document.createElement("a");
                 let name = data.name;
-                let isClone = /^\[/.test(data.url);
+                let isClone = !isBookmark && /^\[/.test(data.url);
                 if (isClone) {
                     ele.dataset.pointer = true;
                     let siteNames = JSON.parse(data.url);
@@ -2385,8 +2390,10 @@
                 ele.dataset.name = name;
                 ele.classList.add("search-jumper-word");
                 let word = document.createElement("span");
-                word.innerText = name.substr(0, 3).trim();
-                if (!/^\w+$/.test(word.innerText)) word.innerText = word.innerText.substr(0, 2);
+                if (!isBookmark && name.length > 3) {
+                    word.innerText = name.substr(0, 3).trim();
+                    if (!/^\w+$/.test(word.innerText)) word.innerText = word.innerText.substr(0, 2);
+                } else word.innerText = name;
                 ele.appendChild(word);
                 let img = document.createElement("img");
                 img.style.display = "none";
@@ -2401,10 +2408,10 @@
                 if (icon == 0) {
                 } else if (icon) {
                     imgSrc = icon;
-                } else if (/^http/.test(data.url) && !isBookmark) {
+                } else if (!isBookmark && isPage) {
                     imgSrc = data.url.replace(/^(https?:\/\/[^\/]*\/).*$/, "$1favicon.ico");
                 }
-                let isBase64 = /^data:/.test(imgSrc);
+                let isBase64 = imgSrc && /^data:/.test(imgSrc);
                 if (isBase64) {
                     img.src = imgSrc;
                 } else if (imgSrc) {
@@ -2413,7 +2420,7 @@
                         img.src = cache;
                     } else {
                         img.dataset.src = imgSrc;
-                        if (searchData.prefConfig.cacheSwitch && !isBookmark) cachePool.push(img);
+                        if (!isBookmark && searchData.prefConfig.cacheSwitch) cachePool.push(img);
                     }
                 }
                 self.stopInput = false;
@@ -2447,7 +2454,7 @@
                         }
                     });
                 }
-                if (!isClone && (!currentSite || data.hideNotMatch)) {
+                if (!isBookmark && !isClone && (!currentSite || data.hideNotMatch)) {
                     if (data.match === '0') {
                         ele.style.display = 'none';
                     } else if (data.match) {
@@ -2455,68 +2462,77 @@
                             ele.dataset.current = true;
                         }
                     } else if (data.url.indexOf(location.host) != -1) {
-                        if (data.url.indexOf("site") != -1) {
-                            let siteMatch = data.url.match(/site(%3A|:)(.+?)[\s%]/);
-                            if (siteMatch && location.href.indexOf(siteMatch[2]) != -1 && data.url.replace(siteMatch[0], "").indexOf(location.host) != -1) {
+                        if (!this.inSiteMatch) this.inSiteMatch = /site(%3A|:)(.+?)[\s%]/;
+                        let match = data.url.match(this.inSiteMatch);
+                        if (match) {
+                            if (location.href.indexOf(match[2]) != -1 && data.url.replace(match[0], "").indexOf(location.host) != -1) {
                                 ele.dataset.current = true;
                             }
-                        } else if (!currentSite && data.url.replace(/^https?:\/\//, "").replace(location.host, "").replace(/\/?[\?#].*/, "") == location.pathname.replace(/\/$/, "")) {
-                            if (/[#:%]p{/.test(data.url)) {
-                                ele.dataset.current = true;
-                            } else {
-                                let urlReg = data.url.match(/[^\/\?&]+(?=%[stb])/g);
-                                if (urlReg) {
-                                    urlReg = urlReg.join('.*');
-                                    if (new RegExp(urlReg).test(location.href)) {
+                        } else {
+                            if (!this.pathMatch) this.pathMatch = new RegExp("^https?://" + location.host + location.pathname + "?([\\?#].*|$)");
+                            if (this.pathMatch.test(data.url)) {
+                                if (!this.postMatch) this.postMatch = /[#:%]p{/;
+                                if (this.postMatch.test(data.url)) {
+                                    ele.dataset.current = true;
+                                } else {
+                                    if (!this.paramMatch) this.paramMatch = /[^\/\?&]+(?=%[stb])/g;
+                                    let urlReg = data.url.match(this.paramMatch);
+                                    if (urlReg) {
+                                        urlReg = urlReg.join('.*');
+                                        if (new RegExp(urlReg).test(location.href)) {
+                                            ele.dataset.current = true;
+                                        }
+                                    } else {
                                         ele.dataset.current = true;
                                     }
-                                } else {
+                                }
+                            } else if (data.url.indexOf("?") === -1) {
+                                if (!this.keywordMatch) this.keywordMatch = /%[stb][a-z]?\b/g;
+                                if (new RegExp(data.url.replace(/\./g, "\\.").replace(this.keywordMatch, ".*")).test(location.href)) {
                                     ele.dataset.current = true;
                                 }
                             }
                         }
                     }
                     if (ele.dataset.current) {
-                        if (!currentSite) {
-                            if (inPagePostParams) {
-                                storage.setItem("inPagePostParams", false);
-                                let submitAction = () => {
-                                    setTimeout(() => {
-                                        if (document.readyState === "loading") {
+                        if (!currentSite && inPagePostParams) {
+                            storage.setItem("inPagePostParams", false);
+                            let submitAction = () => {
+                                setTimeout(() => {
+                                    if (document.readyState === "loading") {
+                                        submitAction();
+                                        return;
+                                    }
+                                    let form, input;
+
+                                    for (let i = 0; i < inPagePostParams.length; i++) {
+                                        let param = inPagePostParams[i];
+                                        input = document.querySelector(param[0]);
+                                        if (!input) {
                                             submitAction();
                                             return;
                                         }
-                                        let form, input;
+                                        if (param[1] === 'click()') {
+                                            emuClick(input);
+                                        } else {
+                                            if (!localKeywords) localKeywords = param[1];
+                                            emuInput(input, param[1]);
+                                        }
+                                    }
 
-                                        for (let i = 0; i < inPagePostParams.length; i++) {
-                                            let param = inPagePostParams[i];
-                                            input = document.querySelector(param[0]);
-                                            if (!input) {
-                                                submitAction();
-                                                return;
-                                            }
-                                            if (param[1] === 'click()') {
-                                                emuClick(input);
-                                            } else {
-                                                if (!localKeywords) localKeywords = param[1];
-                                                emuInput(input, param[1]);
-                                            }
-                                        }
-
-                                        form = input.parentNode;
-                                        while (form.tagName != 'FORM') {
-                                            form = form.parentNode;
-                                            if (!form) break;
-                                        }
-                                        if (form) {
-                                            let submitBtn = form.querySelector("[type=submit]");
-                                            if(submitBtn) submitBtn.click();
-                                            else form.submit();
-                                        }
-                                    }, 500);
-                                };
-                                submitAction();
-                            }
+                                    form = input.parentNode;
+                                    while (form.tagName != 'FORM') {
+                                        form = form.parentNode;
+                                        if (!form) break;
+                                    }
+                                    if (form) {
+                                        let submitBtn = form.querySelector("[type=submit]");
+                                        if(submitBtn) submitBtn.click();
+                                        else form.submit();
+                                    }
+                                }, 500);
+                            };
+                            submitAction();
                         }
                     } else if (data.hideNotMatch) {
                         ele.style.display = 'none';
@@ -4012,6 +4028,37 @@
                     _GM_notification('Configuration copied successfully!');
                 });
             } else if (importPageReg.test(location.href)) {
+                let targetPre;
+                let importBtn = document.createElement("button");
+                importBtn.innerText = i18n("import");
+                importBtn.style.marginTop = "100px";
+                importBtn.style.float = "right";
+                importBtn.style.position = "static";
+                importBtn.style.display = "block";
+                importBtn.style.fontSize = "20px";
+                importBtn.addEventListener("click", e => {
+                    if (targetPre) {
+                        if (window.confirm(i18n("importOrNot"))) {
+                            if (importBtn.parentNode) importBtn.parentNode.removeChild(importBtn);
+                            let configTxt = targetPre.innerText.trim(), configData;
+                            try {
+                                configData = JSON.parse(configTxt);
+                                searchData.sitesConfig = configData;
+                                storage.setItem("searchData", searchData);
+                                _GM_notification('Over!');
+                            } catch (e) {
+                                _GM_notification(e.toString());
+                            }
+                        }
+                    }
+                });
+                document.addEventListener("mouseover", e => {console.log(e.target)
+                    if (e.target.tagName === "PRE" && importPageReg.test(location.href)) {
+                        targetPre = e.target;
+                        importBtn.style.marginTop = `${35 - e.target.clientHeight}px`;
+                        e.target.appendChild(importBtn);
+                    }
+                });
                 document.addEventListener("mousedown", e => {
                     if (e.target.tagName === "PRE" && importPageReg.test(location.href)) {
                         let hasMove = false;
