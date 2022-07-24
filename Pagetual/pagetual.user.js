@@ -1784,7 +1784,7 @@
               box-shadow: rgb(0 0 0) 0px 0px 10px;
              }
              #pagetual-picker>.title {
-              margin: -5px 35px 10px 35px;
+              margin: -5px 45px 10px 45px;
               font-size: 20px;
               font-weight: bold;
               cursor: move;
@@ -1805,12 +1805,12 @@
              }
              #pagetual-picker>.close {
               position: absolute;
-              top: 1px;
-              right: 0px;
+              top: 3px;
+              right: 10px;
              }
              #pagetual-picker>.selector{
               display: inline-block;
-              width: 250px;
+              width: 290px;
               height: 20px;
               padding: 6px 12px;
               font-size: 16px;
@@ -1836,6 +1836,7 @@
               height: 25px;
               width: 25px;
               margin-left: 5px;
+              vertical-align: middle;
              }
              #pagetual-picker label {
               font-size: 18px;
