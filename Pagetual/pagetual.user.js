@@ -10,8 +10,8 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.28.1
-// @description  Perpetual pages - Most powerful Auto-Pager script. Auto loading next paginated web pages and inserting into current page.
+// @version      1.9.30
+// @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
 // @description:ja     Webページを自動で読み込み継ぎ足し表示を行うブラウザ拡張です
@@ -177,6 +177,7 @@
                 forceAllBody:"是否拼接整个页面？",
                 openInNewTab:"使拼接页面的内容在新页面打开",
                 importSucc:"导入成功",
+                import:"导入",
                 editCurrent:"自定义此站规则",
                 editBlacklist:"编辑黑名单网址，一行一条，支持? *通配符",
                 upBtnImg:"回到页首图标",
@@ -190,6 +191,11 @@
                 pageElementCss:"页面主体框架的样式",
                 customCss:"自定义 CSS",
                 firstAlert:"你还未导入规则库，请选择合适的规则库导入哦",
+                picker:"东方永页机主体元素抓取器",
+                closePicker:"关闭东方永页机抓取器",
+                pickerPlaceholder:"没想法建议留空",
+                pickerCheck:"检查你编辑的选择器",
+                gotoEdit:"使用当前的选择器前往编辑规则",
                 manualMode:"禁用拼接，手动用右方向键翻页（或发送事件'pagetual.next'）"
             };
             break;
@@ -240,6 +246,7 @@
                 forceAllBody:"是否拼接整個頁面？",
                 openInNewTab:"使拼接頁面的内容在新頁面打開",
                 importSucc:"導入成功",
+                import:"導入",
                 editCurrent:"自定義此站規則",
                 editBlacklist:"編輯黑名單網址，一行一條，支持? *通配符",
                 upBtnImg:"回到頁首圖標",
@@ -253,6 +260,11 @@
                 pageElementCss:"頁面主體框架的樣式",
                 customCss:"自定義 CSS",
                 firstAlert:"你還未導入規則庫，請選擇合適的規則庫導入哦",
+                picker:"東方永頁機主體元素抓取器",
+                closePicker:"關閉東方永頁機抓取器",
+                pickerPlaceholder:"沒想法建議留空",
+                pickerCheck:"檢查你編輯的選擇器",
+                gotoEdit:"使用當前的選擇器前往編輯規則",
                 manualMode:"禁用拼接，手動用右方向鍵翻頁（或發送事件'pagetual.next'）"
             };
             break;
@@ -302,6 +314,7 @@
                 forceAllBody:"フルページ埋め込み？",
                 openInNewTab:"スプライスされたページのコンテンツを新しいページで開きます",
                 importSucc:"インポート完了",
+                import:"インポート",
                 editCurrent:"現在のルールの編集",
                 editBlacklist:"ブラックリストのURLを編集し、1行ずつ、サポート? *ワイルドカード",
                 upBtnImg:"トップアイコンに戻る",
@@ -315,6 +328,11 @@
                 pageElementCss:"ページ本文フレームの STYLE",
                 customCss:"カスタム CSS",
                 firstAlert:"ルールベースをインポートしていないため、インポートする適切なルールベースを選択してください",
+                picker:"Pagetualページ要素ピッカー",
+                closePicker:"Pagetualピッカーを閉じる",
+                pickerPlaceholder:"わからない場合は空のままにしてください",
+                pickerCheck:"セレクターをチェック",
+                gotoEdit:"現在のセレクターでルールを編集する",
                 manualMode:"スプライシングを無効にします。手動で右の矢印キーを使用してページをめくります"
             };
             break;
@@ -364,6 +382,7 @@
                 forceAllBody:"Join full body of page?",
                 openInNewTab:"Open urls of additions in new tab",
                 importSucc:"Import completed",
+                import:"Import",
                 editCurrent:"Edit rule for current",
                 editBlacklist:"Edit the blacklist urls, line by line, Support ? * for wildcard",
                 upBtnImg:"Icon of back to top",
@@ -377,6 +396,11 @@
                 pageElementCss:"Custom style for main page elements",
                 customCss:"Custom complete css",
                 firstAlert:"You have not imported the base rule, please select the appropriate rule to import",
+                picker:"Pagetual page element picker",
+                closePicker:"Close Pagetual picker",
+                pickerPlaceholder:"Leave empty if you have no idea",
+                pickerCheck:"Check selector",
+                gotoEdit:"Go to edit rule with current selector",
                 manualMode:"Disable splicing, manually turn pages with the right arrow keys (or dispatch event 'pagetual.next')"
             };
             break;
@@ -503,19 +527,7 @@
         _GM_openInTab(configPage,{active:true});
     });
     _GM_registerMenuCommand(i18n("editCurrent"), ()=>{
-        let editTemp;
-        if(ruleParser.curSiteRule.url && !ruleParser.curSiteRule.singleUrl){
-            editTemp=ruleParser.curSiteRule;
-        }else{
-            editTemp={
-                name: document.title,
-                url: "^"+location.origin.replace(/\./g,"\\."),
-                pageElement: ""
-            };
-        }
-        rulesData.editTemp=editTemp;
-        storage.setItem("rulesData", rulesData);
-        _GM_openInTab(configPage,{active:true});
+        Picker.getInstance().start();
     });
 
     function getElementByXpath(xpath, contextNode, doc){
@@ -543,6 +555,71 @@
             throw new Error(`Invalid xpath: ${xpath}`);
         }
         return result;
+    }
+
+    function geneSelector(ele, addID){
+        let selector=ele.tagName.toLowerCase();
+        //Google id class都是隨機。百度更過分，style script順序都是隨機的
+        if(ele.tagName!="HTML" && ele.tagName!="BODY"){
+            if(addID && ele.id) selector += '#' + ele.id;
+            if(ele.className) selector += [].map.call(ele.classList,d=>'.'+d).join('');
+            let parent = ele.parentElement;
+            if(parent){
+                selector = geneSelector(parent, addID) + ' > ' + selector;
+                if(!ele.className && !ele.id){
+                    let i,j=0;
+                    for(i=0;i<parent.children.length;i++){
+                        if(parent.children[i].tagName==ele.tagName){
+                            j++;
+                            if(parent.children[i]==ele){
+                                break;
+                            }
+                        }
+                    }
+                    selector += (parent.tagName=="HTML"?"":`:nth-of-type(${j})`);
+                }
+            }
+        }
+        return selector;
+    }
+
+    function createXPathFromElement(elm) {
+        let allNodes = document.getElementsByTagName('*'), segs;
+        for (segs = []; elm && elm.nodeType == 1; elm = elm.parentNode) {
+            if (elm.hasAttribute('id')) {
+                var uniqueIdCount = 0;
+                for (var n=0;n < allNodes.length;n++) {
+                    if (allNodes[n].hasAttribute('id') && allNodes[n].id == elm.id) uniqueIdCount++;
+                    if (uniqueIdCount > 1) break;
+                }
+                if ( uniqueIdCount == 1) {
+                    segs.unshift('id("' + elm.getAttribute('id') + '")');
+                    return segs.join('/');
+                } else {
+                    segs.unshift(elm.localName.toLowerCase() + '[@id="' + elm.getAttribute('id') + '"]');
+                }
+            } else if (elm.hasAttribute('class')) {
+                segs.unshift(elm.localName.toLowerCase() + '[@class="' + elm.getAttribute('class') + '"]');
+            } else {
+                let i, sib;
+                for (i = 1, sib = elm.previousSibling; sib; sib = sib.previousSibling) {
+                    if (sib.localName == elm.localName) i++;
+                }
+                segs.unshift(elm.localName.toLowerCase() + '[' + i + ']');
+            }
+        }
+        return segs.length ? '/' + segs.join('/') : null;
+    }
+
+    var escapeHTMLPolicy;
+    if (_unsafeWindow.trustedTypes && _unsafeWindow.trustedTypes.createPolicy) {
+        escapeHTMLPolicy = _unsafeWindow.trustedTypes.createPolicy('default', {
+            createHTML: (string, sink) => string
+        });
+    }
+
+    function createHTML(html){
+        return escapeHTMLPolicy?escapeHTMLPolicy.createHTML(html):html;
     }
 
     class RuleParser {
@@ -815,33 +892,6 @@
             searchByTime();
         }
 
-        geneSelector(ele){
-            let selector=ele.tagName;
-            //Google id class都是隨機。百度更過分，style script順序都是隨機的
-            //if(ele.id) selector += '#' + ele.id;
-            //if(ele.classList) selector += [].map.call(ele.classList,d=>'.'+d).join('');
-            if(ele.tagName!="HTML" && ele.tagName!="BODY"){
-                if(ele.className) selector += [].map.call(ele.classList,d=>'.'+d).join('');
-                let parent = ele.parentElement;
-                if(parent){
-                    selector = this.geneSelector(parent) + ' > ' + selector;
-                    if(!ele.className){
-                        let i,j=0;
-                        for(i=0;i<parent.children.length;i++){
-                            if(parent.children[i].tagName==ele.tagName){
-                                j++;
-                                if(parent.children[i]==ele){
-                                    break;
-                                }
-                            }
-                        }
-                        selector += (parent.tagName=="HTML"?"":`:nth-of-type(${j})`);
-                    }
-                }
-            }
-            return selector;
-        }
-
         getPageElement(doc, curWin, dontFind) {
             if(doc==document && this.docPageElement){
                 let parent=this.docPageElement;
@@ -887,7 +937,7 @@
                 function checkElement(ele){
                     if(ele.childNodes && ele.childNodes.length==1)ele=ele.childNodes[0];
                     if(ele.tagName=="PICTURE"){
-                        self.curSiteRule.pageElement=self.geneSelector(ele.parentNode)+">"+ele.tagName;
+                        self.curSiteRule.pageElement=geneSelector(ele.parentNode)+">"+ele.tagName.toLowerCase();
                         debug(self.curSiteRule.pageElement);
                         return [ele];
                     }
@@ -897,13 +947,13 @@
                         return [body];
                     }
                     if(ele.tagName=="FORM"){
-                        self.curSiteRule.pageElement=self.geneSelector(ele)+">*";
+                        self.curSiteRule.pageElement=geneSelector(ele)+">*";
                         debug(self.curSiteRule.pageElement);
                         return ele.children;
                     }
                     if(ele.children.length==0 && !self.curSiteRule.pageElement){
                         if(ele.parentNode.tagName=="P")ele=ele.parentNode;
-                        self.curSiteRule.pageElement=self.geneSelector(ele.parentNode)+">"+ele.tagName;
+                        self.curSiteRule.pageElement=geneSelector(ele.parentNode)+">"+ele.tagName.toLowerCase();
                         debug(self.curSiteRule.pageElement);
                         return [ele];
                     }
@@ -961,14 +1011,14 @@
                     }
                     if(ele.tagName=="P" || ele.tagName=="BR")ele=ele.parentNode;
                     if(ele.tagName=="TBODY"){
-                        self.curSiteRule.pageElement=self.geneSelector(ele)+">*";
+                        self.curSiteRule.pageElement=geneSelector(ele)+">*";
                         if(ele.children.length>0 && ele.children[0].querySelector("th")){
                             self.curSiteRule.pageElement+=":not(:first-child)";
                         }
                         debug(self.curSiteRule.pageElement);
                         return ele.children;
                     }
-                    self.curSiteRule.pageElement=self.geneSelector(ele);
+                    self.curSiteRule.pageElement=geneSelector(ele);
                     if(ele.children.length>1){
                         let hasText=false;
                         for(let i in ele.childNodes){
@@ -1516,6 +1566,8 @@
                     realSrc=img.getAttribute("_src");
                 }else if(img.dataset && img.dataset.original){
                     realSrc=img.dataset.original;
+                }else if(img.dataset && img.dataset.lazy){
+                    realSrc=img.dataset.lazy;
                 }else if(img.dataset && img.dataset.src){
                     realSrc=img.dataset.src;
                 }else if(img._lazyrias && img._lazyrias.srcset){
@@ -1696,6 +1748,364 @@
     }
     var ruleParser = new RuleParser();
 
+    class Picker {
+        static picker;
+        constructor() {
+            this.init();
+        }
+
+        static getInstance() {
+            if (!Picker.picker) {
+                Picker.picker = new Picker();
+            }
+            return Picker.picker;
+        }
+
+        init() {
+            let self = this;
+            this.signList = [];
+            let cssText = `
+             body.pagetual-picker,
+             body.pagetual-picker *:hover,
+             body.pagetual-picker a:hover {
+              cursor: crosshair !important;
+             }
+             #pagetual-picker {
+              position: fixed;
+              top: 0;
+              left: calc(50% - 160px);
+              background: aliceblue;
+              padding: 10px;
+              border-radius: 5px;
+              text-align: center;
+              opacity: 0.95;
+              color: #161616;
+              z-index: 2147483647;
+             }
+             #pagetual-picker>.title {
+              margin: -5px 35px 10px 35px;
+              font-size: 20px;
+              font-weight: bold;
+              cursor: move;
+              border-bottom: 1px solid black;
+              user-select: none;
+             }
+             #pagetual-picker button {
+              background: none;
+              border: none;
+              vertical-align: top;
+              transition: transform .15s ease-in-out;
+              float: right;
+             }
+             #pagetual-picker button:hover {
+              transform: scale(1.2);
+             }
+             #pagetual-picker>.close {
+              position: absolute;
+              top: 1px;
+              right: 10px;
+             }
+             #pagetual-picker>.selector{
+              display: inline-block;
+              width: 250px;
+              height: 20px;
+              padding: 6px 12px;
+              font-size: 16px;
+              font-weight: 400;
+              line-height: 1.5;
+              color: #495057;
+              background-color: #fff;
+              background-clip: padding-box;
+              border: 1px solid #ced4da;
+              border-radius: 4px;
+              transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+             }
+             #pagetual-picker>.selector:focus {
+              color: #495057;
+              background-color: #fff;
+              border-color: #80bdff;
+              outline: 0;
+              box-shadow: 0 0 0 3.2px rgb(0 123 255 / 25%);
+             }
+             #pagetual-picker .xpath {
+              line-height: 20px;
+              height: 25px;
+              width: 25px;
+              margin-left: 5px;
+             }
+             #pagetual-picker label {
+              font-size: 18px;
+              line-height: 25px;
+              vertical-align: top;
+             }
+             #pagetual-picker .bottom {
+              text-align: left;
+              margin-top: 10px;
+             }
+             #pagetual-picker .bottom>button {
+              float: right;
+             }
+             #pagetual-picker svg {
+              width: 30px;
+              height: 30px;
+              vertical-align: middle;
+              fill: #161616;
+              overflow: hidden;
+             }
+             #pagetual-picker .allpath {
+              font-size: 18px;
+              margin: 10px;
+              max-width: 300px;
+              word-break: break-all;
+              cursor: context-menu;
+             }
+             #pagetual-picker .allpath>span.path {
+              cursor: pointer;
+             }
+             #pagetual-picker .allpath>span.path:hover {
+              color: orangered;
+             }
+            `;
+            _GM_addStyle(cssText);
+            this.mainSignDiv = this.createSignDiv();
+            this.allSignDiv = [];
+            let frame = document.createElement("div");
+            frame.id = "pagetual-picker";
+            frame.innerHTML = createHTML(`
+                <div class="title">${i18n("picker")}</div>
+                <button title="${i18n("closePicker")}" type="button" class="close">
+                  <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2754">
+                    <path d="M512 128c212 0 384 172 384 384s-172 384-384 384-384-172-384-384 172-384 384-384m0-64C264.8 64 64 264.8 64 512s200.8 448 448 448 448-200.8 448-448S759.2 64 512 64z m238.4 254.4l-45.6-45.6L512 467.2 318.4 273.6l-45.6 45.6L467.2 512 273.6 705.6l45.6 45.6L512 557.6l193.6 193.6 45.6-45.6L557.6 512l192.8-193.6z" p-id="2755">
+                    </path>
+                  </svg>
+                </button>
+                <div class="allpath"></div>
+                <input class="selector" name="selector" type="text" placeholder="${i18n("pickerPlaceholder")}">
+                <button id="check" title="${i18n("pickerCheck")}" type="button">
+                  <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1609">
+                    <path d="M512 128a384 384 0 1 0 0 768 384 384 0 0 0 0-768z m0-85.333333c259.2 0 469.333333 210.133333 469.333333 469.333333s-210.133333 469.333333-469.333333 469.333333S42.666667 771.2 42.666667 512 252.8 42.666667 512 42.666667zM696.149333 298.666667L768 349.866667 471.594667 725.333333 256 571.733333l53.888-68.266666 143.744 102.4z" p-id="1610">
+                    </path>
+                  </svg>
+                </button>
+                <div class="bottom">
+                  <input class="xpath" name="xpath" id="checkbox_id" type="checkbox">
+                  <label for="checkbox_id">XPath</label>
+                  <button id="edit" title="${i18n("gotoEdit")}" type="button">
+                    <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4129" style="color: orangered;fill: orangered;">
+                      <path d="M775.84 392.768l-155.2-172.352L160.768 643.264l-38.368 187.936 190.56-12.832zM929.952 229.952l-131.2-150.944-0.288-0.32a16 16 0 0 0-22.592-0.96l-131.168 120.576 155.168 172.352 128.832-118.464a15.936 15.936 0 0 0 1.248-22.24zM96 896h832v64H96z" p-id="4130">
+                      </path>
+                    </svg>
+                  </button>
+                </div>
+            `);
+            let closeBtn = frame.querySelector(".close");
+            let title = frame.querySelector(".title");
+            let allpath = frame.querySelector(".allpath");
+            let selectorInput = frame.querySelector(".selector");
+            let xpath = frame.querySelector(".xpath");
+            let checkBtn = frame.querySelector("#check");
+            let editBtn = frame.querySelector("#edit");
+            closeBtn.addEventListener("click", e => {
+                self.close();
+            }, true);
+            let moveHanlder = e => {
+                frame.style.left = e.clientX - 160 + "px";
+                frame.style.top = e.clientY - 15 + "px";
+                e.stopPropagation();
+                e.preventDefault();
+            };
+            let upHanlder = e => {
+                document.removeEventListener("mousemove", moveHanlder, true);
+                title.removeEventListener("mouseup", upHanlder, true);
+                e.stopPropagation();
+                e.preventDefault();
+            };
+            title.addEventListener("mousedown", e => {
+                document.addEventListener("mousemove", moveHanlder, true);
+                title.addEventListener("mouseup", upHanlder, true);
+            });
+            frame.addEventListener("mouseenter", e => {
+                if (self.mainSignDiv.parentNode) self.mainSignDiv.parentNode.removeChild(self.mainSignDiv);
+                self.checkInputSelector();
+            });
+            frame.addEventListener("mouseleave", e => {
+                document.body.appendChild(self.mainSignDiv);
+                self.clearSigns();
+            });
+            checkBtn.addEventListener("click", e => {
+                self.checkInputSelector();
+            });
+            xpath.addEventListener("click", e => {
+                if (!selectorInput.value) {
+                    self.setSelectorDiv("");
+                    return;
+                }
+                let element = !xpath.checked ? getElementByXpath(selectorInput.value) : document.querySelector(selectorInput.value);
+                let selector = self.getSelectorFromEle(element);
+                self.setSelectorDiv(selector);
+                selectorInput.value = selector;
+            });
+            editBtn.addEventListener("click", e => {
+                let editTemp;
+                if(ruleParser.curSiteRule.url && !ruleParser.curSiteRule.singleUrl){
+                    editTemp=ruleParser.curSiteRule;
+                }else{
+                    editTemp={
+                        name: document.title,
+                        url: "^"+location.origin.replace(/\./g,"\\.")
+                    };
+                }
+                if (selectorInput.value) {
+                    editTemp.pageElement = selectorInput.value;
+                    let preType = editTemp.type === 0;
+                    if (xpath.checked !== preType) editTemp.type = xpath.checked ? 0 : 1;
+                }
+                rulesData.editTemp=editTemp;
+                storage.setItem("rulesData", rulesData);
+                _GM_openInTab(configPage, {active: true});
+            });
+            this.frame = frame;
+            this.xpath = xpath;
+            this.allpath = allpath;
+            this.selectorInput = selectorInput;
+            this.moveHandler = e => {
+                if (e.target === document) return;
+                self.adjustSignDiv(self.mainSignDiv, self.getTarget(e.target));
+            };
+            this.clickHandler = e => {
+                if (self.inPicker) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                }
+                let target = self.getTarget(e.target);
+                let selector = self.getSelectorFromEle(target);
+                self.setSelectorDiv(selector);
+                selectorInput.value = selector;
+            };
+        }
+
+        getTarget(ele) {
+            while (ele.parentNode && (ele.scrollWidth === 0 || ele.scrollHeight === 0)) {
+                ele = ele.parentNode;
+            }
+            return ele;
+        }
+
+        close() {
+            this.clearSigns();
+            if (this.frame.parentNode) this.frame.parentNode.removeChild(this.frame);
+            if (this.mainSignDiv.parentNode) this.mainSignDiv.parentNode.removeChild(this.mainSignDiv);
+            document.body.classList.remove("pagetual-picker");
+            document.body.removeEventListener("mousemove", this.moveHandler, true);
+            document.body.removeEventListener("click", this.clickHandler, true);
+            this.inPicker = false;
+        }
+
+        setImportant(ele, prop, value) {
+            ele.style.setProperty(prop, value, "important");
+        }
+
+        createSignDiv() {
+            let signDiv = document.createElement("div");
+            this.setImportant(signDiv, "position", "absolute");
+            this.setImportant(signDiv, "pointer-events", "none");
+            this.setImportant(signDiv, "z-index", "2147483647");
+            this.setImportant(signDiv, "background", "rgba(120, 170, 210, 0.6)");
+            this.setImportant(signDiv, "transition", "all 0.15s ease-out");
+            this.setImportant(signDiv, "box-shadow", "rgb(0 0 0) 0px 0px 3px 0px");
+            return signDiv;
+        }
+
+        adjustSignDiv(div, target) {
+            let rect = target.getBoundingClientRect();
+            this.setImportant(div, "width", rect.width + "px");
+            this.setImportant(div, "height", rect.height + "px");
+            this.setImportant(div, "left", rect.left + window.scrollX + "px");
+            this.setImportant(div, "top", rect.top + window.scrollY + "px");
+        }
+
+        getSelectorFromEle(ele) {
+            return this.xpath.checked ? createXPathFromElement(ele) : geneSelector(ele, true);
+        }
+
+        setSelectorDiv(selector) {
+            let self = this;
+            this.allpath.innerHTML = createHTML("");
+            if (!selector) return;
+            if (this.xpath.checked) {
+                let span = document.createElement("span");
+                span.innerText = selector;
+                span.addEventListener("click", e => {
+                    self.selectorInput.value = selector;
+                    self.checkInputSelector();
+                }, true);
+                this.allpath.appendChild(span);
+            } else {
+                selector.split(">").forEach(i => self.geneSelectorItem(i));
+            }
+        }
+
+        geneSelectorItem(item) {
+            let self = this;
+            item = item.trim();
+            if (!item) return;
+            if (item !== "body") {
+                let span = document.createElement("span");
+                span.innerText = " > ";
+                this.allpath.appendChild(span);
+            }
+            let span = document.createElement("span");
+            span.className = "path";
+            span.innerText = item;
+            span.addEventListener("click", e => {
+                let selector = "";
+                let target = e.target;
+                while (target) {
+                    selector = target.innerText + selector;
+                    target = target.previousElementSibling;
+                }
+                self.selectorInput.value = selector;
+                self.checkInputSelector();
+            }, true);
+            this.allpath.appendChild(span);
+        }
+
+        checkInputSelector() {
+            let self = this;
+            this.clearSigns();
+            if (!this.selectorInput.value) return;
+            let eles = this.xpath.checked ? getAllElementsByXpath(this.selectorInput.value) : document.querySelectorAll(this.selectorInput.value);
+            if (eles && eles.length > 0) {
+                eles.forEach(ele => {
+                    let sign = self.createSignDiv();
+                    document.body.appendChild(sign);
+                    self.adjustSignDiv(sign, ele);
+                    self.signList.push(sign);
+                });
+            }
+        }
+
+        clearSigns() {
+            this.signList.forEach(sign => {
+                if (sign.parentNode) sign.parentNode.removeChild(sign);
+            });
+            this.signList = [];
+        }
+
+        start() {
+            if (this.inPicker) return;
+            this.inPicker = true;
+            document.documentElement.appendChild(this.frame);
+            document.body.appendChild(this.mainSignDiv);
+            document.body.classList.add("pagetual-picker");
+
+            document.body.addEventListener("mousemove", this.moveHandler, true);
+            document.body.addEventListener("click", this.clickHandler, true);
+            this.xpath.checked = ruleParser.curSiteRule.type === 0;
+            this.setSelectorDiv(ruleParser.curSiteRule.pageElement || "");
+        }
+    }
+
     function initConfig(){
         initView();
         _GM_registerMenuCommand(i18n(forceState==1?"enable":"disableSite"), ()=>{
@@ -1717,6 +2127,7 @@
         var configCon,insertPos;
         var noRules=!rulesData.urls || rulesData.urls.length===0;
         if(ruleImportUrlReg.test(location.href)){
+            let greasyfork=location.href.indexOf("greasyfork.org") != -1;
             if(noRules){
                 setTimeout(() => {
                     showTips(i18n("firstAlert"));
@@ -1726,14 +2137,19 @@
                 }, 6000);
                 showTips(i18n("firstAlert"));
             }
-            let greasyfork=location.href.indexOf("greasyfork.org") != -1;
-            document.addEventListener("click", e=>{
-                if(e.target.tagName=="PRE"){
-                    let nameAttr=e.target.getAttribute("name");
-                    if(nameAttr=="pagetual" || nameAttr=="user-content-pagetual" || greasyfork){
-                        let rules=e.target.innerText.trim();
+            let importBtn = document.createElement("button"), targetPre;
+            importBtn.innerText = i18n("import");
+            importBtn.style.marginTop = "100px";
+            importBtn.style.float = "right";
+            importBtn.style.position = "static";
+            importBtn.style.display = "block";
+            importBtn.style.fontSize = "20px";
+            importBtn.addEventListener("click", e => {
+                if (targetPre) {
+                    if (importBtn.parentNode) importBtn.parentNode.removeChild(importBtn);
+                    try {
+                        let rules=targetPre.innerText.trim();
                         let isContent=/['"]name['"]/i.test(rules);
-                        if(!window.confirm("Import?")) return;
                         if(isContent){
                             let ruleList=JSON.parse(`[${rules}]`);
                             for(let i in ruleList){
@@ -1815,9 +2231,22 @@
                             });
                             showTips(i18n("beginUpdate"));
                         }
+                    } catch (e) {
+                        _GM_notification(e.toString());
                     }
                 }
             });
+            document.addEventListener("mouseover", e => {
+                if (e.target.tagName === "PRE") {
+                    let nameAttr=e.target.getAttribute("name");
+                    if(nameAttr=="pagetual" || nameAttr=="user-content-pagetual" || greasyfork){
+                        targetPre = e.target;
+                        importBtn.style.marginTop = `${35 - e.target.clientHeight}px`;
+                        e.target.appendChild(importBtn);
+                    }
+                }
+            });
+
             if(location.href==configPage){
                 _GM_addStyle(`
                  p>span:nth-child(1),p>span:nth-child(2),p>span:nth-child(3){
