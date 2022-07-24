@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.30.2
+// @version      1.9.30.3
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
@@ -1914,6 +1914,7 @@
             closeBtn.addEventListener("click", e => {
                 self.close();
             }, true);
+            let moving = false;
             let moveHanlder = e => {
                 frame.style.left = e.clientX - 160 + "px";
                 frame.style.top = e.clientY - 15 + "px";
@@ -1921,20 +1922,24 @@
                 e.preventDefault();
             };
             let upHanlder = e => {
+                moving = false;
                 document.removeEventListener("mousemove", moveHanlder, true);
                 title.removeEventListener("mouseup", upHanlder, true);
                 e.stopPropagation();
                 e.preventDefault();
             };
             title.addEventListener("mousedown", e => {
+                moving = true;
                 document.addEventListener("mousemove", moveHanlder, true);
                 title.addEventListener("mouseup", upHanlder, true);
             });
             frame.addEventListener("mouseenter", e => {
+                if (moving) return;
                 if (self.mainSignDiv.parentNode) self.mainSignDiv.parentNode.removeChild(self.mainSignDiv);
                 self.checkInputSelector();
             });
             frame.addEventListener("mouseleave", e => {
+                if (moving) return;
                 document.body.appendChild(self.mainSignDiv);
                 self.clearSigns();
             });
