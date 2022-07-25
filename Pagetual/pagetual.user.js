@@ -10,10 +10,10 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.30.3.1
+// @version      1.9.30.3.2
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
-// @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，无需规则驱动支持任意网页
-// @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，無需規則驅動支持任意網頁
+// @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
+// @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
 // @description:ja     Webページを自動で読み込み継ぎ足し表示を行うブラウザ拡張です
 // @description:ru     Просто автоматически загрузите следующую страницу
 // @description:de     Laden Sie einfach automatisch die nächste Seite
@@ -144,7 +144,7 @@
                 current:"当前页",
                 forceIframe:"强制拼接",
                 cancelForceIframe:"取消强制拼接",
-                configure:"打开配置页",
+                configure:"打开配置页面",
                 firstUpdate:"点击此处初始化规则",
                 update:"更新规则",
                 click2update:"点击立即更新规则",
@@ -178,7 +178,7 @@
                 openInNewTab:"使拼接页面的内容在新页面打开",
                 importSucc:"导入成功",
                 import:"导入",
-                editCurrent:"自定义此站规则",
+                editCurrent:"编辑此站规则",
                 editBlacklist:"编辑黑名单网址，一行一条，支持? *通配符",
                 upBtnImg:"回到页首图标",
                 downBtnImg:"前往页尾图标",
@@ -213,7 +213,7 @@
                 current:"當前頁",
                 forceIframe:"強制拼接",
                 cancelForceIframe:"取消强制拼接",
-                configure:"打開配置頁",
+                configure:"打開配置頁面",
                 firstUpdate:"點擊此處初始化規則",
                 update:"更新規則",
                 click2update:"點擊立即更新規則",
@@ -247,7 +247,7 @@
                 openInNewTab:"使拼接頁面的内容在新頁面打開",
                 importSucc:"導入成功",
                 import:"導入",
-                editCurrent:"自定義此站規則",
+                editCurrent:"編輯此站規則",
                 editBlacklist:"編輯黑名單網址，一行一條，支持? *通配符",
                 upBtnImg:"回到頁首圖標",
                 downBtnImg:"前往頁尾圖標",
@@ -351,7 +351,7 @@
                 cancelForceIframe:"Cancel Force join",
                 configure:"Configure",
                 firstUpdate:"Click here to initialize the rules",
-                update:"Update rules",
+                update:"Update online rules",
                 click2update:"Click to update rules from url now",
                 loadNow:"Load next page now",
                 loadConfirm:"How much pages do you want to load? (0 means infinite)",
@@ -1781,6 +1781,7 @@
               opacity: 0.95;
               color: #161616;
               z-index: 2147483647;
+              font-size: 16px;
               box-shadow: rgb(0 0 0) 0px 0px 10px;
              }
              #pagetual-picker>.title {
@@ -1861,7 +1862,7 @@
              #pagetual-picker .allpath {
               font-size: 18px;
               margin: 10px;
-              max-width: 300px;
+              max-width: 350px;
               word-break: break-all;
               cursor: context-menu;
              }
@@ -3025,6 +3026,7 @@
            -moz-transition:opacity 0.3s ease-in-out 0s;
            -webkit-transition:opacity 0.3s ease-in-out 0s;
            transition:opacity 0.3s ease-in-out 0s;
+           font-family: Arial,sans-serif !important;
          }
          .pagetual_pageBar.stop {
            -webkit-filter: invert(100%);
@@ -3059,9 +3061,20 @@
          .pagetual_pageBar a:hover>span.next {
            margin-top: 30px!important;
          }
-
-         .pagetual_pageBar span>svg:hover {
-           animation: touhouAni 1s infinite;
+         .pagetual_pageBar span>svg {
+           -moz-transition:transform 0.5s ease, opacity 0.3s ease;
+           -webkit-transition:transform 0.5s ease, opacity 0.3s ease;
+           transition:transform 0.5 ease, opacity 0.3s ease;
+           opacity: 0;
+         }
+         .pagetual_pageBar:hover span>svg {
+           opacity: 1;
+         }
+         .pagetual_pageBar span>svg.upSvg:hover {
+           transform: rotate(360deg) scale3d(1.2, 1.2, 1.2);
+         }
+         .pagetual_pageBar span>svg.downSvg:hover {
+           transform: rotate(540deg) scale3d(1.2, 1.2, 1.2)!important;
          }
          .pagetual_pageBar .pagetual_pageNum{
            color: #55555f;
@@ -3094,15 +3107,6 @@
            -webkit-transition:opacity 0.3s ease-in-out 0s;
            transition:opacity 0.3s ease-in-out 0s;
            pointer-events: none;
-         }
-
-         @keyframes touhouAni{
-           from {transform: rotate(0deg) scale3d(1.2, 1.2, 1.2);}
-                to {transform: rotate(360deg);}
-         }
-         @-webkit-keyframes touhouAni{
-           from {transform: rotate(0deg) scale3d(1.2, 1.2, 1.2);}
-                to {transform: rotate(360deg);}
          }
          .pagetual_loading {
            width: 50px;
@@ -3154,9 +3158,9 @@
 
     var loadingCSS=`display: block; position: initial; margin: auto auto 5px auto; shape-rendering: auto; vertical-align: middle; visibility: visible; width: initial; height: initial; text-align: center; color: #6e6e6e;`;
 
-    var upSvg=`<svg width="30" height="30" style="display:initial;position:absolute;cursor: pointer;margin: 0 -45px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6364"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a" p-id="6365"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a" p-id="6366"></path></svg>`;
+    var upSvg=`<svg width="30" height="30" class="upSvg" style="display:initial;position:absolute;cursor: pointer;margin: 0 -45px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6364"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a" p-id="6365"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a" p-id="6366"></path></svg>`;
     var upSvgCSS=`display:initial;position:absolute;cursor: pointer;margin: 0 -45px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;`;
-    var downSvg=`<svg width="30" height="30" style="display:initial;position:absolute;cursor: pointer;margin: 0 15px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;transform: rotate(180deg);" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6364"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a" p-id="6365"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a" p-id="6366"></path></svg>`;
+    var downSvg=`<svg width="30" height="30" class="downSvg" style="display:initial;position:absolute;cursor: pointer;margin: 0 15px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;transform: rotate(180deg);" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6364"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a" p-id="6365"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a" p-id="6366"></path></svg>`;
     var downSvgCSS=`display:initial;position:absolute;cursor: pointer;margin: 0 15px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;transform: rotate(180deg);`;
 
     var initStyle=`display: contents;right: unset;left: unset;top: unset;bottom: unset;inset: unset;clear: both;cy: initial;d: initial;dominant-baseline: initial;empty-cells: initial;fill: initial;fill-opacity: initial;fill-rule: initial;filter: initial;flex: initial;flex-flow: initial;float: initial;flood-color: initial;flood-opacity: initial;grid: initial;grid-area: initial;height: initial;hyphens: initial;image-orientation: initial;image-rendering: initial;inline-size: initial;inset-block: initial;inset-inline: initial;isolation: initial;letter-spacing: initial;lighting-color: initial;line-break: initial;list-style: initial;margin-block: initial;margin: 0px auto;margin-inline: initial;marker: initial;mask: initial;mask-type: initial;max-block-size: initial;max-height: initial;max-inline-size: initial;max-width: initial;min-block-size: initial;min-height: initial;min-inline-size: initial;min-width: initial;mix-blend-mode: initial;object-fit: initial;object-position: initial;offset: initial;opacity: initial;order: initial;orphans: initial;outline: initial;outline-offset: initial;overflow-anchor: initial;overflow-clip-margin: initial;overflow-wrap: initial;overflow: initial;overscroll-behavior-block: initial;overscroll-behavior-inline: initial;overscroll-behavior: initial;padding-block: initial;padding: initial;padding-inline: initial;page: initial;page-orientation: initial;paint-order: initial;perspective: initial;perspective-origin: initial;pointer-events: initial;position: relative;quotes: initial;r: initial;resize: initial;ruby-position: initial;rx: initial;ry: initial;scroll-behavior: initial;scroll-margin-block: initial;scroll-margin: initial;scroll-margin-inline: initial;scroll-padding-block: initial;scroll-padding: initial;scroll-padding-inline: initial;scroll-snap-align: initial;scroll-snap-stop: initial;scroll-snap-type: initial;scrollbar-gutter: initial;shape-image-threshold: initial;shape-margin: initial;shape-outside: initial;shape-rendering: initial;size: initial;speak: initial;stop-color: initial;stop-opacity: initial;stroke: initial;stroke-dasharray: initial;stroke-dashoffset: initial;stroke-linecap: initial;stroke-linejoin: initial;stroke-miterlimit: initial;stroke-opacity: initial;stroke-width: initial;tab-size: initial;table-layout: initial;text-align: initial;text-align-last: initial;text-anchor: initial;text-combine-upright: initial;text-decoration: initial;text-decoration-skip-ink: initial;text-indent: initial;text-overflow: initial;text-shadow: initial;text-size-adjust: initial;text-transform: initial;text-underline-offset: initial;text-underline-position: initial;touch-action: initial;transform: initial;transform-box: initial;transform-origin: initial;transform-style: initial;transition: initial;user-select: initial;vector-effect: initial;vertical-align: initial;visibility: initial;border-spacing: initial;-webkit-border-image: initial;-webkit-box-align: initial;-webkit-box-decoration-break: initial;-webkit-box-direction: initial;-webkit-box-flex: initial;-webkit-box-ordinal-group: initial;-webkit-box-orient: initial;-webkit-box-pack: initial;-webkit-box-reflect: initial;-webkit-highlight: initial;-webkit-hyphenate-character: initial;-webkit-line-break: initial;-webkit-line-clamp: initial;-webkit-mask-box-image: initial;-webkit-mask: initial;-webkit-mask-composite: initial;-webkit-perspective-origin-x: initial;-webkit-perspective-origin-y: initial;-webkit-print-color-adjust: initial;-webkit-rtl-ordering: initial;-webkit-ruby-position: initial;-webkit-tap-highlight-color: initial;-webkit-text-combine: initial;-webkit-text-decorations-in-effect: initial;-webkit-text-emphasis: initial;-webkit-text-emphasis-position: initial;-webkit-text-fill-color: initial;-webkit-text-security: initial;-webkit-text-stroke: initial;-webkit-transform-origin-x: initial;-webkit-transform-origin-y: initial;-webkit-transform-origin-z: initial;-webkit-user-drag: initial;-webkit-user-modify: initial;white-space: initial;widows: initial;width: initial;will-change: initial;word-break: initial;word-spacing: initial;x: initial;y: initial;`;
