@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.9.35.2
+// @version      1.6.5.9.35.3
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -3504,9 +3504,18 @@
 
             let keywordsMatch, keywords = '';
             if (currentSite.keywords) {
-                keywordsMatch = location.href.match(new RegExp(currentSite.keywords));
-                if (keywordsMatch) {
-                    keywords = keywordsMatch[1];
+                if (/^[\w\|]+$/.test(currentSite.keywords)) {
+                    let keywordsList = currentSite.keywords.split("|");
+                    let urlParams = new URLSearchParams(location.search);
+                    for (let i = 0; i < keywordsList.length; i++) {
+                        keywords = urlParams.get(keywordsList[i]);
+                        if (keywords) break;
+                    }
+                } else {
+                    keywordsMatch = location.href.match(new RegExp(currentSite.keywords));
+                    if (keywordsMatch) {
+                        keywords = keywordsMatch[1];
+                    }
                 }
             } else if (/%s\b/.test(currentSite.url) && !/[#:%]p{/.test(currentSite.url)) {
                 if (location.href.indexOf("?") != -1) {
