@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん
 // @namespace    hoothin
-// @version      1.6.5.9.35.3
+// @version      1.6.5.9.36
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -1366,28 +1366,28 @@
                 let firstType;
                 switch (targetElement.tagName) {
                     case 'IMG':
-                        firstType = this.bar.querySelector('.search-jumper-targetImg');
+                        firstType = this.bar.querySelector('.search-jumper-targetImg:not(.notmatch)');
                         break;
                     case 'AUDIO':
-                        firstType = this.bar.querySelector('.search-jumper-targetAudio');
+                        firstType = this.bar.querySelector('.search-jumper-targetAudio:not(.notmatch)');
                         break;
                     case 'VIDEO':
-                        firstType = this.bar.querySelector('.search-jumper-targetVideo');
+                        firstType = this.bar.querySelector('.search-jumper-targetVideo:not(.notmatch)');
                         break;
                     case 'A':
                         if (getSelectStr()) {
-                            firstType = this.bar.querySelector('.search-jumper-needInPage');
+                            firstType = this.bar.querySelector('.search-jumper-needInPage:not(.notmatch)');
                         } else {
-                            firstType = this.bar.querySelector('.search-jumper-targetLink');
+                            firstType = this.bar.querySelector('.search-jumper-targetLink:not(.notmatch)');
                         }
                         break;
                     default:
                         if (getSelectStr()) {
-                            firstType = this.bar.querySelector('.search-jumper-needInPage');
+                            firstType = this.bar.querySelector('.search-jumper-needInPage:not(.notmatch)');
                         } else if (targetElement.parentNode.tagName === 'A') {
-                            firstType = this.bar.querySelector('.search-jumper-targetLink');
+                            firstType = this.bar.querySelector('.search-jumper-targetLink:not(.notmatch)');
                         } else {
-                            firstType = this.bar.querySelector('.search-jumper-targetPage');
+                            firstType = this.bar.querySelector('.search-jumper-targetPage:not(.notmatch)');
                         }
                         break;
                 }
@@ -1830,6 +1830,7 @@
                 if (a.getAttribute("bind")) return;
                 a.setAttribute("bind", true);
                 a.href = siteEle.href;
+                a.style.display = siteEle.style.display;
                 a.addEventListener('mousedown', e => {
                     siteEle.dispatchEvent(new PointerEvent("mousedown", {altKey: e.altKey, ctrlKey: e.ctrlKey, shiftKey: e.shiftKey, metaKey: e.metaKey}));
                     a.setAttribute("target", siteEle.target);
@@ -2033,16 +2034,18 @@
                 let openInNewTab = data.openInNewTab;
                 let siteEles = [];
                 let ele = document.createElement("span");
+                ele.className = "search-jumper-type search-jumper-hide";
                 if (data.match === '0') {
                     ele.style.display = 'none';
+                    ele.classList.add("notmatch");
                 } else if (data.match) {
                     if (new RegExp(data.match).test(location.href) == false) {
                         ele.style.display = 'none';
+                        ele.classList.add("notmatch");
                     } else {
                         match = true;
                     }
                 }
-                ele.className = "search-jumper-type search-jumper-hide";
                 if (typeof data.description !== 'undefined') {
                     ele.dataset.title = data.description;
                 } else {
@@ -2071,7 +2074,7 @@
                 typeBtn.classList.add("search-jumper-btn");
                 let isBookmark = /^BM/.test(type) && data.icon === "bookmark";//書簽就不緩存了
                 if (icon) {
-                    if (/^[a-z\-]+$/.test(icon)) {
+                    if (/^[a-z\- ]+$/.test(icon)) {
                         let cache = searchData.prefConfig.cacheSwitch && cacheIcon[icon];
                         if (cache) {
                             img.src = cache;
@@ -2079,7 +2082,7 @@
                             img.style.height = '100%';
                             typeBtn.appendChild(img);
                         } else {
-                            iEle.className = "fa fa-" + icon;
+                            iEle.className = icon.indexOf("fa") === 0 ? icon : "fa fa-" + icon;
                             this.fontPool.push(iEle);
                         }
                     } else {
@@ -2169,13 +2172,24 @@
                                 type.style.flexWrap = "";
                             }
                         });
-                        siteEles.forEach(se => {
+                        let href = (targetElement && (targetElement.href || targetElement.src)) || location.href;
+                        siteEles.forEach((se, i) => {
                             let si = se.querySelector("img");
                             if (si && !si.src && si.dataset.src) {
                                 si.src = si.dataset.src;
                                 si.dataset.src = "";
                             }
+                            let data = sites[i];
+                            if (data.match && data.hideNotMatch) {
+                                if (new RegExp(data.match).test(href)) {
+                                    se.style.display = '';
+                                } else {
+                                    se.style.display = 'none';
+                                }
+                            }
                         });
+
+
                     } else {
                         ele.classList.add("search-jumper-hide");
                         if (self.bar.parentNode.classList.contains("search-jumper-left") ||
@@ -2576,29 +2590,19 @@
                         }
                         ele.dataset.url = tempUrl.replace(/%e\b/g, document.charset).replace(/%c\b/g, (isMobile?"mobile":"pc")).replace(/%h\b/g, host);
                     }
-                    let keywordsU, keywordsL, keywordsR;
-                    let checkReplace = (str, param, v) => {
-                        let replaceMatch = str.match(new RegExp(param + "\\.replace\\(/(.*?[^\\\\])/(.*?),\s*[\"'](.*?[^\\\\])??[\"']\\)"));
-                        if (!replaceMatch) return str.replace(new RegExp(param + "\\b", "g"), v);
-                        v = v.replace(new RegExp(replaceMatch[1], replaceMatch[2]), replaceMatch[3] || '');
-                        switch (param) {
-                            case "%s":
-                                keywords = v;
-                                break;
-                            case "%su":
-                                keywordsU = v;
-                                break;
-                            case "%sl":
-                                keywordsL = v;
-                                break;
-                            case "%sr":
-                                keywordsR = v;
-                                break;
+                    let customReplaceSingle = (str, key, value) => {
+                        if (str.indexOf(key + ".replace(/") !== -1) {
+                            let replaceMatch = str.match(new RegExp(key + "\\.replace\\(/(.*?[^\\\\])/(.*?),\s*[\"'](.*?[^\\\\])??[\"']\\)"));
+                            if (!replaceMatch) return str.replace(new RegExp(key + "\\b", "g"), value);
+                            value = value.replace(new RegExp(replaceMatch[1], replaceMatch[2]), replaceMatch[3] || '');
+                            str = str.replace(replaceMatch[0], key);
+                            return customReplaceSingle(str, key, value);
+                        } else {
+                            return str.replace(new RegExp(key + "\\b", "g"), value);
                         }
-                        str = str.replace(replaceMatch[0], param);
-                        return customReplace(str);
-                    }
-                    let customReplace = str => {
+                    };
+                    let customReplaceKeywords = str => {
+                        let keywordsU, keywordsL, keywordsR;
                         if (!keywordsU && !keywordsL && !keywordsR) {
                             keywordsU = keywords.toUpperCase();
                             keywordsL = keywords.toLowerCase();
@@ -2607,17 +2611,11 @@
                                 keywordsR = decodeURIComponent(keywords);
                             } catch (e) {}
                         }
-                        if (str.indexOf("%s.replace(/") !== -1) {
-                            return checkReplace(str, "%s", keywords);
-                        } else if (str.indexOf("%su.replace(/") !== -1) {
-                            return checkReplace(str, "%su", keywordsU);
-                        } else if (str.indexOf("%sl.replace(/") !== -1) {
-                            return checkReplace(str, "%sl", keywordsL);
-                        } else if (str.indexOf("%sr.replace(/") !== -1) {
-                            return checkReplace(str, "%sr", keywordsR);
-                        } else {
-                            return str.replace(/%s\b/g, keywords).replace(/%su\b/g, keywordsU).replace(/%sl\b/g, keywordsL).replace(/%sr\b/g, keywordsR);
-                        }
+                        str = customReplaceSingle(str, "%s", keywords);
+                        str = customReplaceSingle(str, "%su", keywordsU);
+                        str = customReplaceSingle(str, "%sl", keywordsL);
+                        str = customReplaceSingle(str, "%sr", keywordsR);
+                        return str;
                     };
                     let selStr = getSelectStr();
                     let targetUrl = '';
@@ -2672,7 +2670,7 @@
                         localKeywords = promptStr;
                         setTimeout(() => {localKeywords = ''}, 1);
                         keywords = promptStr;
-                        resultUrl = customReplace(resultUrl);
+                        resultUrl = customReplaceKeywords(resultUrl);
                     }
                     if (targetUrl === '') {
                         let promptStr = false;
@@ -2692,7 +2690,7 @@
                         if (/%t\b/.test(resultUrl)) {
                             self.customInput = true;
                             if (getTargetUrl() === false) return false;
-                            resultUrl = resultUrl.replace(/%t\b/g, promptStr);
+                            resultUrl = customReplaceSingle(resultUrl, "%t", promptStr);
                         }
                         if (/%T\b/.test(resultUrl)) {
                             self.customInput = true;
@@ -2715,12 +2713,18 @@
                         postMatch[1].replace(/([^\\])&/g, "$1SJ^PARAM").split("SJ^PARAM").forEach(pair => {//ios不支持零宽断言，哭唧唧
                             let pairArr = pair.replace(/([^\\])\=/g, "$1SJ^PARAM").split("SJ^PARAM");
                             if (pairArr.length === 2) {
-                                postParams.push([pairArr[0].replace(/\\([\=&])/g, "$1"), customReplace(pairArr[1].replace(/\\([\=&])/g, "$1").replace(/%e\b/g, document.charset).replace(/%c\b/g, (isMobile?"mobile":"pc")).replace(/%u\b/g, href).replace(/%U\b/g, encodeURIComponent(href)).replace(/%h\b/g, host).replace(/%t\b/g, targetUrl).replace(/%T\b/g, encodeURIComponent(targetUrl)).replace(/%b\b/g, targetBaseUrl).replace(/%B\b/g, encodeURIComponent(targetBaseUrl)).replace(/%n\b/g, targetName).replace(/%S\b/g, (cacheKeywords || keywords)))]);
+                                let k = pairArr[0].replace(/\\([\=&])/g, "$1");
+                                let v = customReplaceKeywords(pairArr[1].replace(/\\([\=&])/g, "$1").replace(/%e\b/g, document.charset).replace(/%c\b/g, (isMobile?"mobile":"pc")).replace(/%U\b/g, encodeURIComponent(href)).replace(/%h\b/g, host).replace(/%T\b/g, encodeURIComponent(targetUrl)).replace(/%b\b/g, targetBaseUrl).replace(/%B\b/g, encodeURIComponent(targetBaseUrl)).replace(/%n\b/g, targetName).replace(/%S\b/g, (cacheKeywords || keywords)));
+                                v = customReplaceSingle(v, "%t", targetUrl);
+                                v = customReplaceSingle(v, "%u", href);
+                                postParams.push([k, v]);
                             }
                         });
                         storage.setItem("inPagePostParams", postParams);
                     }
-                    resultUrl = customReplace(resultUrl.replace(/%u\b/g, href).replace(/%U\b/g, encodeURIComponent(href)).replace(/%t\b/g, targetUrl).replace(/%T\b/g, encodeURIComponent(targetUrl)).replace(/%b\b/g, targetBaseUrl).replace(/%B\b/g, encodeURIComponent(targetBaseUrl)).replace(/%n\b/g, targetName).replace(/%S\b/g, (cacheKeywords || keywords)));
+                    resultUrl = customReplaceKeywords(resultUrl.replace(/%U\b/g, encodeURIComponent(href)).replace(/%T\b/g, encodeURIComponent(targetUrl)).replace(/%b\b/g, targetBaseUrl).replace(/%B\b/g, encodeURIComponent(targetBaseUrl)).replace(/%n\b/g, targetName).replace(/%S\b/g, (cacheKeywords || keywords)));
+                    resultUrl = customReplaceSingle(resultUrl, "%t", targetUrl);
+                    resultUrl = customReplaceSingle(resultUrl, "%u", href);
                     if ((openInNewTab || searchData.prefConfig.openInNewTab) && /^(https?|ftp):/.test(resultUrl)) {
                         ele.setAttribute("target", "_blank");
                         ele.dataset.target = 1;
@@ -3010,7 +3014,8 @@
                 if (!targetElement) targetElement = document.body;
                 this.appendBar();
                 //this.recoveHistory();
-                let firstType;
+                let firstType = this.bar.querySelector(".search-jumper-type:not(.search-jumper-hide)");
+                if (firstType) firstType.classList.add("search-jumper-hide");
                 let self = this;
                 if (this.hideTimeout) {
                     clearTimeout(this.hideTimeout);
@@ -3037,35 +3042,35 @@
                 if (getSelectStr()) {
                     this.bar.classList.add("search-jumper-isInPage");
                     if (this.bar.style.display == "none") {
-                        firstType = this.bar.querySelector('.search-jumper-needInPage>span');
+                        firstType = this.bar.querySelector('.search-jumper-needInPage:not(.notmatch)>span');
                     } else {
-                        let openType = this.bar.querySelector(".search-jumper-type:not(.search-jumper-hide,.search-jumper-targetPage,.search-jumper-targetImg,.search-jumper-targetAudio,.search-jumper-targetVideo,.search-jumper-targetLink)");
-                        if (!openType) firstType = this.bar.querySelector('.search-jumper-needInPage>span');
+                        let openType = this.bar.querySelector(".search-jumper-type:not(.notmatch,.search-jumper-hide,.search-jumper-targetPage,.search-jumper-targetImg,.search-jumper-targetAudio,.search-jumper-targetVideo,.search-jumper-targetLink)");
+                        if (!openType) firstType = this.bar.querySelector('.search-jumper-needInPage:not(.notmatch)>span');
                     }
                 } else {
                     let parentNode = targetElement.parentNode;
                     switch (targetElement.tagName) {
                         case 'IMG':
                             this.bar.classList.add("search-jumper-isTargetImg");
-                            firstType = this.bar.querySelector('.search-jumper-targetImg>span');
+                            firstType = this.bar.querySelector('.search-jumper-targetImg:not(.notmatch)>span');
                             break;
                         case 'AUDIO':
                             this.bar.classList.add("search-jumper-isTargetAudio");
-                            firstType = this.bar.querySelector('.search-jumper-targetAudio>span');
+                            firstType = this.bar.querySelector('.search-jumper-targetAudio:not(.notmatch)>span');
                             break;
                         case 'VIDEO':
                             this.bar.classList.add("search-jumper-isTargetVideo");
-                            firstType = this.bar.querySelector('.search-jumper-targetVideo>span');
+                            firstType = this.bar.querySelector('.search-jumper-targetVideo:not(.notmatch)>span');
                             break;
                         case 'A':
                             this.bar.classList.add("search-jumper-isTargetLink");
-                            firstType = this.bar.querySelector('.search-jumper-targetLink>span');
+                            firstType = this.bar.querySelector('.search-jumper-targetLink:not(.notmatch)>span');
                             break;
                         default:
                             if (parentNode && parentNode.tagName === 'A') {
                                 targetElement = parentNode;
                                 this.bar.classList.add("search-jumper-isTargetLink");
-                                firstType = this.bar.querySelector('.search-jumper-targetLink>span');
+                                firstType = this.bar.querySelector('.search-jumper-targetLink:not(.notmatch)>span');
                                 break;
                             } else {
                                 if (parentNode && parentNode.tagName !== 'BODY') {
@@ -3075,11 +3080,11 @@
                                         switch (targetElement.tagName) {
                                             case 'AUDIO':
                                                 this.bar.classList.add("search-jumper-isTargetAudio");
-                                                firstType = this.bar.querySelector('.search-jumper-targetAudio>span');
+                                                firstType = this.bar.querySelector('.search-jumper-targetAudio:not(.notmatch)>span');
                                                 break;
                                             case 'VIDEO':
                                                 this.bar.classList.add("search-jumper-isTargetVideo");
-                                                firstType = this.bar.querySelector('.search-jumper-targetVideo>span');
+                                                firstType = this.bar.querySelector('.search-jumper-targetVideo:not(.notmatch)>span');
                                                 break;
                                         }
                                         break;
@@ -3087,7 +3092,7 @@
                                 }
                             }
                             this.bar.classList.add("search-jumper-isTargetPage");
-                            firstType = this.bar.querySelector('.search-jumper-targetPage>span');
+                            firstType = this.bar.querySelector('.search-jumper-targetPage:not(.notmatch)>span');
                             break;
                     }
                 }
