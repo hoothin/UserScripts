@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.7.19.1
+// @version              2022.7.25.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -18058,8 +18058,8 @@ ImgOps | https://imgops.com/#b#`;
                     box-sizing: content-box;\
                     }\
                     .pv-pic-window-transition-all{\
-                    -webkit-transition: top 0.1s ease, left 0.1s;\
-                    transition: top 0.1s ease, left 0.1s;\
+                    -webkit-transition: top 0.2s ease, left 0.2s ease;\
+                    transition: top 0.2s ease, left 0.2s ease;\
                     }\
                     .pv-pic-window-container_focus {\
                     border: 5px solid rgb(255 255 255 / 50%);\
@@ -18493,9 +18493,33 @@ ImgOps | https://imgops.com/#b#`;
                 if(this.following)return;
                 if(this.removed)return;
                 this.following=true;
-                this.fitToScreen();
-
                 var wSize=getWindowSize();
+                this.zoom(1);
+                if(prefs.imgWindow.fitToScreen && imgWindow.style.overflow!=="scroll"){
+                    var imgWindowCS=unsafeWindow.getComputedStyle(imgWindow);
+                    var rectSize={
+                        h:parseFloat(imgWindowCS.height),
+                        w:parseFloat(imgWindowCS.width),
+                    };
+
+                    var size;
+                    if(prefs.imgWindow.fitToScreenSmall || (rectSize.w - wSize.w>0 || rectSize.h - wSize.h>0)){
+                        if(rectSize.w/rectSize.h > wSize.w/wSize.h){
+                            size={
+                                w:wSize.w,
+                                h:wSize.w / (rectSize.w/rectSize.h),
+                            };
+                        }else{
+                            size={
+                                h:wSize.h,
+                                w:wSize.h * (rectSize.w/rectSize.h),
+                            }
+                        };
+
+                        this.zoom(this.getRotatedImgCliSize(size).w/this.imgNaturalSize.w);
+                    }
+                }
+
                 var scrolled=getScrolled();
                 var maxWidth, maxHeight, left, top;
                 var self=this;
