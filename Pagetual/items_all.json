@@ -3282,17 +3282,17 @@
 {
   "resource_url": "http://wedata.net/items/85540",
   "data": {
-    "pageElement": "id(\"main\")[not(.//button)]/descendant::*[count(./p)>1 or self::ul][1]/*",
-    "considerationUrl": "https://smart-flash.jp/sports/119562/image/0",
-    "nextLink": "//link[@rel=\"next\"]",
+    "pageElement": "descendant::ul[.//p[@class='date']][1]",
+    "considerationUrl": "https://smart-flash.jp/sports/119562\r\nhttps://smart-flash.jp/sports/119562/image/0\r\nhttps://smart-flash.jp/",
+    "nextLink": "//li[@class='next']/a",
     "url": "^https?://smart-flash\\.jp/",
-    "exampleUrl": "https://smart-flash.jp/sports/119562\r\nhttps://smart-flash.jp/sociopolitics\r\n"
+    "exampleUrl": "https://smart-flash.jp/sociopolitics\r\n"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "brib2",
   "name": "Smart FLASH［光文社週刊誌］",
   "created_at": "2020-10-20T18:03:03+09:00",
-  "updated_at": "2022-02-03T12:25:52+09:00"
+  "updated_at": "2022-07-25T10:29:09+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85539",
