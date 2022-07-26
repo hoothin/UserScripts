@@ -467,11 +467,14 @@
     "nextLinkByUrl":["(.*\\.com)(?:/?$|/page\\?currentPage=)(\\d*)","$1/page?currentPage={($2.0||1)+1}"]
   },
   {
-    "name":"音范丝",
-    "action":1,
-    "url":"^https://www\\.yinfans\\.me/",
-    "pageElement":"#post_container",
-    "nextLink":"a.next"
+    "name": "音范丝",
+    "action": 1,
+    "url": "^https://www\\.yinfans\\.me/",
+    "pageElement": "#post_container",
+    "nextLink": "a.next",
+    "waitElement": [
+      "#post_container[style]"
+    ]
   },
   {
     "name":"bookmarkearth search",
