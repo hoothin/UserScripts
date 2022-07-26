@@ -24866,17 +24866,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/74669",
-  "name": "smwcentral",
-  "created_by": "Tanookirby",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "updated_at": "2018-04-04T07:52:24+09:00",
   "data": {
-    "exampleUrl": "http://www.smwcentral.net/?p=viewforum&f=5 http://www.smwcentral.net/?p=viewthread&t=44360 http://www.smwcentral.net/?p=section&s=smwmusic",
+    "pageElement": "//table[@class='list thread-list nonconsecutive' or @class='list']/tbody/tr|id('viewthread-content')/article",
+    "nextLink": "//li[@class='active']/following-sibling::li[1]/a",
     "url": "^https?://(www\\.)?smwcentral\\.net/\\?p",
-    "pageElement": "//tr[td/@class='normal border']/following-sibling::tr[td/@class='normal border cell2']|//tr[td/@class='postsidebar']|//table[@class='generic']//tr[td/@class='header']/following-sibling::tr[td[contains(@class,'center')]]",
-    "nextLink": "//td[@class='normal border' or @class='cell1']//img/following-sibling::a[last()][@title='Next page']|//td[@class='normal border' or @class='cell1']//a[1][./img]/following-sibling::a[last()][not(./following-sibling::img)]"
+    "exampleUrl": "https://www.smwcentral.net/?p=viewforum&f=5 https://www.smwcentral.net/?p=viewthread&t=44360 https://www.smwcentral.net/?p=section&s=smwmusic"
   },
-  "created_at": "2014-03-23T06:48:43+09:00"
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "Tanookirby",
+  "name": "smwcentral",
+  "created_at": "2014-03-23T06:48:43+09:00",
+  "updated_at": "2022-07-26T10:30:44+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/74668",
