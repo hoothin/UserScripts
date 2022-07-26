@@ -2,12 +2,12 @@
 // @name         SearchJumper
 // @name:zh-CN   搜索酱
 // @name:zh-TW   搜索醬
-// @name:ja      検索ちゃん
+// @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.5.9.36
+// @version      1.6.5.9.36.1
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
-// @description:zh-CN  又一个多搜索引擎切换脚本，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
-// @description:zh-TW  又一個多搜尋引擎切換脚本，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
+// @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
+// @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
 // @description:ja  任意の検索エンジンにすばやく簡単にジャンプします！
 // @author       hoothin
 // @match        *://*/*
@@ -337,7 +337,7 @@
             }, {
                 name: "百度",
                 url: "https://www.baidu.com/s?wd=%s&ie=utf-8",
-                keywords: "(?:wd|word)=(.*?)(&|$)",
+                keywords: "wd|word",
                 match: "https://(www|m)\\.baidu\\.com/.*(wd|word)="
             }, {
                 name: "You",
@@ -365,7 +365,7 @@
             }, {
                 name: "搜狗",
                 url: "https://www.sogou.com/web?query=%s",
-                keywords: "(?:query|keyword)=(.*?)(&|$)",
+                keywords: "query|keyword",
                 match: "\\.sogou\\.com/.*(query|keyword)="
             }, {
                 name: "Yandex",
@@ -498,6 +498,43 @@
             } ]
         },
         {
+            type: "Github",
+            icon: "fa-brands fa-github",
+            match: "github\\.com",
+            selectLink: true,
+            selectPage: true,
+            openInNewTab: true,
+            sites: [ {
+                name: "页面镜像 - Fastgit",
+                url: "%u.replace(/https:\\/\\/github\\.com/,\"https://hub.fastgit.xyz\")",
+                match: "https:\\/\\/github\\.com",
+                hideNotMatch: true
+            }, {
+                name: "Raw镜像 - Fastgit",
+                url: "%u.replace(/raw\\.githubusercontent\\.com/,\"raw.fastgit.org\").replace(/github.com(.*)\\/blob\\/(.*)/,\"raw.fastgit.org$1/$2\")",
+                match: "github.com.*\\/blob\\/",
+                hideNotMatch: true
+            }, {
+                name: "Assets镜像 - Fastgit",
+                url: "%u.replace(/github\\.githubassets\\.com/,\"assets.fastgit.orgz\")",
+                match: "github\\.githubassets\\.com",
+                hideNotMatch: true
+            }, {
+                name: "Download镜像- Fastgit",
+                url: "%u.replace(/github\\.com(.*\\/download\\/)/,\"download.fastgit.org$1\")",
+                match: "github\\.com.*\\/download\\/",
+                hideNotMatch: true
+            }, {
+                name: "Archive镜像- Fastgit",
+                url: "%u.replace(/github\\.com(.*\\/archive\\/)/,\"download.fastgit.org$1\")",
+                match: "github\\.com.*\\/archive\\/",
+                hideNotMatch: true
+            }, {
+                name: "Ghproxy镜像加速",
+                url: "https://ghproxy.com/%u"
+            } ]
+        },
+        {
             type: "辅助工具",
             icon: "list-alt",
             selectTxt: true,
@@ -526,6 +563,12 @@
                 name: "手机号码聚合搜索",
                 url: "[\"360\",\"搜狗\"]",
                 icon: "data:image/jpg;base64,/9j/4AAQSkZJRgABAQEBLAEsAAD/2wBDAAcFBQYFBAcGBQYIBwcIChELCgkJChUPEAwRGBUaGRgVGBcbHichGx0lHRcYIi4iJSgpKywrGiAvMy8qMicqKyr/2wBDAQcICAoJChQLCxQqHBgcKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKir/wAARCABAAEADASIAAhEBAxEB/8QAHAABAAICAwEAAAAAAAAAAAAAAAMIAgcBBQYE/8QAMxAAAQMDAgIIBAYDAAAAAAAAAQIDBAAFEQYSByEIEzFBUWFxgRQyUmIVIzNCkbFyoeH/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AsPSlKBSlKBSo2X2pDfWR3UPI+ptYUP5FSUClKUCo33kRo7j7ytrbSCtZxnAAyf8AQqSsHWkPtLacGUOJKFehGD/dBU2+9JPV0nVZmWFbUK0tL/Kgusoc61Hi4rGcn7SMd3jVotPXpjUel7deY6drU+KiQEZzt3JyU+xyPaqFXSzvWvUsuzyilp6NKVGWpw4CSle3JPh31efQ2mjo/QtrsJkiUuExtU8OxaiSo4+3KiB5YoNbWXTvC3VE5Y4cXuTp2+N5KfgH3WHQR4su8lp8QO6vWaT1beIepTozXoZ/GOrL0C4sJ2s3NodpA/a4O9Pr79XJjwuLFsukOdZ3dPaxsTiercKwXojpG5paHU43IVjs/wCGun1FepWqeAto10W+rvtifbmBSU7T1rboaeH+Khzx2dlBuqlRsPIkR232vkdQFp9CMj+6koFKUoKxdJPh29DvA1pbGSqJL2t3AJH6ToGErPkoADP1D7hXp+CfGy33GzxdNatmIiXGKgMxpT6tqJKBySkqPILA5c/m5d9bvmQ41whPRJzDciM+gtutOp3JWk8iCO8VWriJ0bJ8OS7cNAH4yIolRtzqwHmvJCjyWPI4V60G/NSa40zo8sDUl4jQFyRlpC8qUseOEgnHn2V9tl1BZdRRS/YbnDuLKcbjGdSvbnxA5j3FUKvFrvNrkiPfYc2I80OrCJba0FIHcN3d6VtLo22K+yuIyLzBS41aYbbiJrx5Id3IIS0PqO7ary258MhbalKUClKUClKUGDrTb7ex9CXUH9riQofwa4ZYajtBqO0hptPYhtISB7CpKUClKUH/2Q=="
+            }, {
+                name: "🧮  计算器",
+                url: "calculator://"
+            }, {
+                name: "🔎  Everything搜索",
+                url: "ES://%s"
             } ]
         },
         {
