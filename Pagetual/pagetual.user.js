@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.30.3.2
+// @version      1.9.30.3.3
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -3089,7 +3089,7 @@
              "Oxygen", "Ubuntu", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji",
              "Segoe UI Emoji", "Segoe UI Symbol";
            color: #ffffff;
-           height: 70px;
+           min-height: 70px;
            line-height: 70px;
            position: fixed;
            left: 50%;
@@ -3864,7 +3864,7 @@
                 }
                 return;
             }
-            if(times++ > 20){
+            if(times++ > 100){
                 returnFalse("Stop as timeout when emu");
                 return;
             }
