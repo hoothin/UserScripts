@@ -813,6 +813,11 @@
     "nextLink":"li.hupu-rc-pagination-next>a:not([disabled])"
   },
   {
+    "name": "小木虫论坛",
+    "url": "^http://muchong\\.com",
+    "pageElement": "div#maincontent"
+  },
+  {
     "name":"极简",
     "url":"^https://bz\\.zzzmh\\.cn/",
     "pageElement":"div.img-box",
