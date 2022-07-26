@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.5.9.36.1
+// @version      1.6.5.9.36.2
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script!
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -489,12 +489,15 @@
             sites: []
         },
         {
-            type: "M3u8",
+            type: "视频",
             icon: "circle-play",
             selectVideo: true,
             sites: [ {
                 name: "M3u8播放器",
                 url: "https://players.akamai.com/players/hlsjs?streamUrl=%t"
+            }, {
+                name: "去视频水印",
+                url: "https://parse.bqrdh.com/smart/#p{.ant-input=%u&.ant-input-search-button=click()}"
             } ]
         },
         {
@@ -2339,7 +2342,7 @@
                 let isCurrent = false;
                 let tooLoog = sites && sites.length > 200;
                 for (let [i, site] of sites.entries()) {
-                    let siteEle = self.createSiteBtn((tooLoog || searchData.prefConfig.noIcons ? 0 : site.icon), site, openInNewTab, isBookmark);
+                    let siteEle = await self.createSiteBtn((tooLoog || searchData.prefConfig.noIcons ? 0 : site.icon), site, openInNewTab, isBookmark);
                     siteEle.dataset.type = type;
                     siteEle.dataset.id = siteEles.length;
                     self.allSiteBtns.push(siteEle);
@@ -2418,7 +2421,7 @@
                 siteEle.setAttribute("target", siteEle.dataset.target==1?"_blank":"");
             }
 
-            createSiteBtn(icon, data, openInNewTab, isBookmark) {
+            async createSiteBtn(icon, data, openInNewTab, isBookmark) {
                 let self = this;
                 let ele = document.createElement("a");
                 let name = data.name;
@@ -2556,42 +2559,44 @@
                     if (ele.dataset.current) {
                         if (!currentSite && inPagePostParams) {
                             storage.setItem("inPagePostParams", false);
-                            let submitAction = () => {
-                                setTimeout(() => {
-                                    if (document.readyState === "loading") {
+                            let submitAction = async () => {
+                                await sleep(500);
+                                if (document.readyState === "loading") {
+                                    submitAction();
+                                    return;
+                                }
+                                let form, input;
+
+                                for (let param of inPagePostParams) {
+                                    if (param[0] === "sleep") {
+                                        await sleep(param[1]);
+                                        continue;
+                                    }
+                                    input = document.querySelector(param[0]);
+                                    if (!input) {
                                         submitAction();
                                         return;
                                     }
-                                    let form, input;
+                                    if (param[1] === 'click()') {
+                                        await emuClick(input);
+                                    } else {
+                                        if (!localKeywords) localKeywords = param[1];
+                                        await emuInput(input, param[1]);
+                                    }
+                                }
 
-                                    for (let i = 0; i < inPagePostParams.length; i++) {
-                                        let param = inPagePostParams[i];
-                                        input = document.querySelector(param[0]);
-                                        if (!input) {
-                                            submitAction();
-                                            return;
-                                        }
-                                        if (param[1] === 'click()') {
-                                            emuClick(input);
-                                        } else {
-                                            if (!localKeywords) localKeywords = param[1];
-                                            emuInput(input, param[1]);
-                                        }
-                                    }
-
-                                    form = input.parentNode;
-                                    while (form.tagName != 'FORM') {
-                                        form = form.parentNode;
-                                        if (!form) break;
-                                    }
-                                    if (form) {
-                                        let submitBtn = form.querySelector("[type=submit]");
-                                        if(submitBtn) submitBtn.click();
-                                        else form.submit();
-                                    }
-                                }, 500);
+                                form = input.parentNode;
+                                while (form.tagName != 'FORM') {
+                                    form = form.parentNode;
+                                    if (!form) break;
+                                }
+                                if (form) {
+                                    let submitBtn = form.querySelector("[type=submit]");
+                                    if(submitBtn) submitBtn.click();
+                                    else form.submit();
+                                }
                             };
-                            submitAction();
+                            await submitAction();
                         }
                     } else if (data.hideNotMatch) {
                         ele.style.display = 'none';
@@ -3298,7 +3303,7 @@
             }
         }
 
-        function emuInput(input, v) {
+        async function emuInput(input, v) {
             if (input) {
                 let event = new Event('focus', { bubbles: true });
                 input.dispatchEvent(event);
@@ -3319,9 +3324,10 @@
                 event = new Event('change', { bubbles: true });
                 input.dispatchEvent(event);
             }
+            await sleep(0);
         }
 
-        function emuClick(btn){
+        async function emuClick(btn){
             if(!PointerEvent) return btn.click();
             let eventParam = {
                 isTrusted: true,
@@ -3354,19 +3360,20 @@
                 which: 1
             };
             btn.focus();
-            var mouseclick = new PointerEvent("mouseover",eventParam);
-            btn.dispatchEvent(mouseclick);
-            mouseclick = new PointerEvent("pointerover",eventParam);
-            btn.dispatchEvent(mouseclick);
-            mouseclick = new PointerEvent("mousedown",eventParam);
-            btn.dispatchEvent(mouseclick);
-            mouseclick = new PointerEvent("pointerdown",eventParam);
-            btn.dispatchEvent(mouseclick);
-            mouseclick = new PointerEvent("mouseup",eventParam);
-            btn.dispatchEvent(mouseclick);
-            mouseclick = new PointerEvent("pointerup",eventParam);
-            btn.dispatchEvent(mouseclick);
+            var mouseEvent = new PointerEvent("mouseover",eventParam);
+            btn.dispatchEvent(mouseEvent);
+            mouseEvent = new PointerEvent("pointerover",eventParam);
+            btn.dispatchEvent(mouseEvent);
+            mouseEvent = new PointerEvent("mousedown",eventParam);
+            btn.dispatchEvent(mouseEvent);
+            mouseEvent = new PointerEvent("pointerdown",eventParam);
+            btn.dispatchEvent(mouseEvent);
+            mouseEvent = new PointerEvent("mouseup",eventParam);
+            btn.dispatchEvent(mouseEvent);
+            mouseEvent = new PointerEvent("pointerup",eventParam);
+            btn.dispatchEvent(mouseEvent);
             btn.click();
+            await sleep(0);
         }
 
         function submitByForm(charset, url, target) {
