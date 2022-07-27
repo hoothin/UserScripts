@@ -711,12 +711,10 @@
     "nextLink":"//ul[@class=\"pages\"]/li/a[contains(text(),'下一页')]"
   },
   {
-    "name":"alternativeto",
-    "url":"^https://alternativeto\\.net/",
-    "nextLink":"nav[aria-label='Pagination Navigation']>a",
-    "action":1,
-    "pageElement":"div.container>ol>li",
-    "pageInit":"eles.forEach(e=>{let span=e.querySelector('div>div>div>span');if(span)span.onVisible()})"
+    "name": "alternativeto",
+    "url": "^https://alternativeto\\.net/",
+    "action": 1,
+    "pageElement": "div.container>ol>li"
   },
   {
     "name":"不死鸟",
