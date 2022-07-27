@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.30.3.12
+// @version      1.9.30.3.13
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -1532,10 +1532,10 @@
         pageInit(doc,eles){
             let code=this.curSiteRule.pageInit;
             if(code){
-                try{
-                    let initFunc=((typeof _unsafeWindow.pagetualPageInit=='undefined') ? Function("doc", "eles", '"use strict";' + code) : _unsafeWindow.pagetualPageInit);
-                    let checkInit=(resolve)=>{
-                        setTimeout(()=>{
+                let initFunc=((typeof _unsafeWindow.pagetualPageInit=='undefined') ? Function("doc", "eles", '"use strict";' + code) : _unsafeWindow.pagetualPageInit);
+                let checkInit=(resolve)=>{
+                    setTimeout(()=>{
+                        try{
                             if(initFunc(doc, eles)===false){
                                 checkInit(resolve);
                                 return false;
@@ -1543,16 +1543,18 @@
                                 resolve(true);
                                 return true;
                             }
-                        },100);
-                    };
-                    return new Promise((resolve) => {
-                        checkInit(function(e) {
-                            resolve(e)
-                        });
-                    })
-                }catch(e){
-                    debug(e);
-                }
+                        }catch(e){
+                            resolve(false);
+                            return false;
+                            debug(e);
+                        }
+                    },100);
+                };
+                return new Promise((resolve) => {
+                    checkInit(function(e) {
+                        resolve(e)
+                    });
+                })
             }
         }
 
