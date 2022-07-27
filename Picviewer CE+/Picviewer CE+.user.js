@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.7.25.1
+// @version              2022.7.27.2
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -11720,14 +11720,14 @@ ImgOps | https://imgops.com/#b#`;
                 forceShow:{//在没有被缩放的图片上,但是大小超过下面设定的尺寸时,强制显示浮动框.
                     enabled:true,//启用强制显示.
                     size:{//图片尺寸.单位(像素);
-                        w:45,
-                        h:45,
+                        w:100,
+                        h:100,
                     },
                 },
                 showWithRules:true,
                 minSizeLimit:{//就算是图片被缩放了(看到的图片被设定了width或者height限定了大小,这种情况下),如果图片显示大小小于设定值,那么也不显示浮动工具栏.
-                    w:25,
-                    h:25,
+                    w:50,
+                    h:50,
                 },
                 sizeLimitOr:false,
 
@@ -21471,13 +21471,26 @@ ImgOps | https://imgops.com/#b#`;
             "Lunapic": (src, initOpen) => {
                 _GM_openInTab('https://www.lunapic.com/editor/index.php?action=url&url=' + src, {active:true});
             },
-            "Pixlr": async (src, initOpen) => {
+            "Pixlr easy": async (src, initOpen) => {
                 if(initOpen){
                     storage.setItem("editUrl", src);
                     _GM_openInTab('https://pixlr.com/x/', {active:true});
                 }else{
                     storage.setItem("editUrl", "");
                     if(/^https:\/\/pixlr\.com\/x/.test(location.href)){
+                        await clickEle('#home-open-url');
+                        await input('#image-url', src);
+                        await clickEle('.dialog>.buttons>a.button.positive');
+                    }
+                }
+            },
+            "Pixlr advanced": async (src, initOpen) => {
+                if(initOpen){
+                    storage.setItem("editUrl", src);
+                    _GM_openInTab('https://pixlr.com/e/', {active:true});
+                }else{
+                    storage.setItem("editUrl", "");
+                    if(/^https:\/\/pixlr\.com\/e/.test(location.href)){
                         await clickEle('#home-open-url');
                         await input('#image-url', src);
                         await clickEle('.dialog>.buttons>a.button.positive');
