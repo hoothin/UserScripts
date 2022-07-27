@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.30.3.11
+// @version      1.9.30.3.12
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -1533,7 +1533,23 @@
             let code=this.curSiteRule.pageInit;
             if(code){
                 try{
-                    ((typeof _unsafeWindow.pagetualPageInit=='undefined') ? Function("doc", "eles", '"use strict";' + code) : _unsafeWindow.pagetualPageInit)(doc, eles);
+                    let initFunc=((typeof _unsafeWindow.pagetualPageInit=='undefined') ? Function("doc", "eles", '"use strict";' + code) : _unsafeWindow.pagetualPageInit);
+                    let checkInit=(resolve)=>{
+                        setTimeout(()=>{
+                            if(initFunc(doc, eles)===false){
+                                checkInit(resolve);
+                                return false;
+                            } else {
+                                resolve(true);
+                                return true;
+                            }
+                        },100);
+                    };
+                    return new Promise((resolve) => {
+                        checkInit(function(e) {
+                            resolve(e)
+                        });
+                    })
                 }catch(e){
                     debug(e);
                 }
@@ -1696,7 +1712,7 @@
             }
         }
 
-        insertPage(doc, eles, url, callback, tried){
+        async insertPage(doc, eles, url, callback, tried){
             this.oldUrl=this.curUrl;
             let oldTitle=this.pageDoc.title;
             this.pageDoc=doc;
@@ -1724,7 +1740,8 @@
             var self=this,newEles=[];
             if(!eles || eles.length==0 || !self.insert || !self.insert.parentNode){
             }else{
-                this.pageInit(doc, eles);
+                isLoading=true;
+                await this.pageInit(doc, eles);
                 [].forEach.call(eles, ele=>{
                     let newEle=ele.cloneNode(true);
                     let oldCanvass=ele.querySelectorAll("canvas");
@@ -1762,6 +1779,7 @@
                     document.title=oldTitle;
                 }
             }
+            isLoading=false;
             return true;
         }
     }
@@ -2977,7 +2995,7 @@
                 if(pageElement && (pageElement.length>1 || (pageElement.length==1 && pageElement[0].tagName!="IMG") )){
                     let result=ruleParser.insertPage(doc, pageElement, url, callback, false);
                     ruleParser.curSiteRule.action=0;
-                    if(!result){
+                    if(result===false){
                         ruleParser.curSiteRule.action=1;
                         requestFromIframe(url, (doc, eles)=>{
                             loadPageOver();
