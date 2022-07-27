@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.30.3.8
+// @version      1.9.30.3.9
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -1246,11 +1246,16 @@
         }
 
         canonicalUri(src) {
-            if(src.charAt(0)=="#")return location.href+src;
-            var root_page = /^[^?#]*\//.exec(location.href)[0],
-                base_path = location.pathname.replace(/\/[^\/]+\.[^\/]+$/, "/"),
+            let url=this.curUrl||location.href;
+            if(src.charAt(0)=="#")return url+src;
+            var root_page = /^[^?#]*\//.exec(url)[0],
                 root_domain = /^\w+\:\/\/\/?[^\/]+/.exec(root_page)[0],
+                base_path = url.replace(root_domain, "").replace(/\/[^\/]+\.[^\/]+$/, "/"),
                 absolute_regex = /^\w+\:\/\//;
+            if(src.indexOf("../")===0){
+                src=src.substr(3);
+                base_path=base_path.replace(/[^\/]+\/$/, "");
+            }
             src=src.replace(/\.\//,"");
             if (/^\/\/\/?/.test(src)){
                 src = location.protocol + src;
@@ -1402,6 +1407,8 @@
                     let _href=nextLink.getAttribute("href");
                     if(!_href || _href.charAt(0)=="#" || _href=="?"){
                         href="#";
+                    }else{
+                        href=_href;
                     }
                 }
 
@@ -3499,12 +3506,12 @@
         preBtn.innerText="∧";
         preBtn.title="Prev page";
         preBtn.className="prev";
-        preBtn.style.cssText="float: left; margin-top: -30px; width: 40px; background: rgba(240, 240, 240, 0.8); position: absolute; border-radius: 20px 20px 0 0; box-shadow: rgb(0 0 0 / 50%) 0px -5px 5px;z-index:9999999";
+        preBtn.style.cssText="right: unset; float: left; margin-top: -30px; width: 40px; background: rgba(240, 240, 240, 0.8); position: absolute; border-radius: 20px 20px 0 0; box-shadow: rgb(0 0 0 / 50%) 0px -5px 5px;z-index:9999999";
         let nextBtn=document.createElement("span");
         nextBtn.innerText="∨";
         nextBtn.title="Next page";
         nextBtn.className="next";
-        nextBtn.style.cssText="float: left; margin-top: 30px; width: 40px; background: rgba(240, 240, 240, 0.8); position: absolute; border-radius: 0 0 20px 20px; box-shadow: rgb(0 0 0 / 50%) 0px 5px 5px;z-index:9999999";
+        nextBtn.style.cssText="right: unset; float: left; margin-top: 30px; width: 40px; background: rgba(240, 240, 240, 0.8); position: absolute; border-radius: 0 0 20px 20px; box-shadow: rgb(0 0 0 / 50%) 0px 5px 5px;z-index:9999999";
         let localPage=curPage;
         preBtn.addEventListener("click", e=>{
             e.stopPropagation();
