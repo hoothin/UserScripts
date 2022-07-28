@@ -1847,7 +1847,7 @@
              #pagetual-picker button:hover {
               transform: scale(1.2);
              }
-             #pagetual-picker>.close {
+             #pagetual-picker>.closePicker {
               position: absolute;
               top: 3px;
               right: 10px;
@@ -1924,7 +1924,7 @@
             frame.id = "pagetual-picker";
             frame.innerHTML = createHTML(`
                 <div class="title">${i18n("picker")}</div>
-                <button title="${i18n("closePicker")}" type="button" class="close">
+                <button title="${i18n("closePicker")}" type="button" class="closePicker">
                   <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2754">
                     <path d="M512 128c212 0 384 172 384 384s-172 384-384 384-384-172-384-384 172-384 384-384m0-64C264.8 64 64 264.8 64 512s200.8 448 448 448 448-200.8 448-448S759.2 64 512 64z m238.4 254.4l-45.6-45.6L512 467.2 318.4 273.6l-45.6 45.6L467.2 512 273.6 705.6l45.6 45.6L512 557.6l193.6 193.6 45.6-45.6L557.6 512l192.8-193.6z" p-id="2755">
                     </path>
@@ -1949,7 +1949,7 @@
                   </button>
                 </div>
             `);
-            let closeBtn = frame.querySelector(".close");
+            let closeBtn = frame.querySelector(".closePicker");
             let title = frame.querySelector(".title");
             let allpath = frame.querySelector(".allpath");
             let selectorInput = frame.querySelector(".selector");
