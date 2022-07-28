@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.30.3.16.3
+// @version      1.9.30.3.16.5
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -2461,9 +2461,11 @@
         customUrlsInput.placeholder="http://wedata.net/databases/AutoPagerize/items_all.json";
         configCon.insertBefore(customUrlsInput, insertPos);
 
+        let btns=document.createElement("div");
+        btns.style.display="flex";
+        configCon.insertBefore(btns, insertPos);
         let upBtnImg=document.createElement("div");
-        upBtnImg.style.width="35%";
-        upBtnImg.style.float="left";
+        upBtnImg.style.width="50%";
         let upBtnImgTitle=document.createElement("h2");
         upBtnImgTitle.style.whiteSpace="nowrap";
         upBtnImgTitle.style.overflow="auto";
@@ -2474,11 +2476,10 @@
         upBtnImgInput.placeholder="data:image/png;base64,UpBtn";
         upBtnImgInput.value=rulesData.upBtnImg||'';
         upBtnImg.appendChild(upBtnImgInput);
-        configCon.insertBefore(upBtnImg, insertPos);
+        btns.appendChild(upBtnImg);
 
         let downBtnImg=document.createElement("div");
-        downBtnImg.style.width="35%";
-        downBtnImg.style.float="left";
+        downBtnImg.style.width="50%";
         let downBtnImgTitle=document.createElement("h2");
         downBtnImgTitle.style.whiteSpace="nowrap";
         downBtnImgTitle.style.overflow="auto";
@@ -2489,11 +2490,13 @@
         downBtnImgInput.placeholder="data:image/png;base64,DownBtn";
         downBtnImgInput.value=rulesData.downBtnImg||'';
         downBtnImg.appendChild(downBtnImgInput);
-        configCon.insertBefore(downBtnImg, insertPos);
+        btns.appendChild(downBtnImg);
 
+        let otherBtns=document.createElement("div");
+        otherBtns.style.display="flex";
+        configCon.insertBefore(otherBtns, insertPos);
         let loadingText=document.createElement("div");
-        loadingText.style.width="20%";
-        loadingText.style.float="left";
+        loadingText.style.width="100%";
         let loadingTextTitle=document.createElement("h2");
         loadingTextTitle.style.whiteSpace="nowrap";
         loadingTextTitle.style.overflow="auto";
@@ -2505,12 +2508,9 @@
         loadingTextInput.style.width="100%";
         loadingTextInput.style.margin="0";
         loadingText.appendChild(loadingTextInput);
-        configCon.insertBefore(loadingText, insertPos);
+        otherBtns.appendChild(loadingText);
 
         let opacity=document.createElement("div");
-        opacity.style.width="10%";
-        opacity.style.float="left";
-        opacity.style.marginBottom="30px";
         let opacityTitle=document.createElement("h2");
         opacityTitle.style.whiteSpace="nowrap";
         opacityTitle.style.overflow="visible";
@@ -2523,7 +2523,7 @@
         opacityInput.style.margin="0";
         opacityInput.placeholder=i18n("opacityPlaceholder");
         opacity.appendChild(opacityInput);
-        configCon.insertBefore(opacity, insertPos);
+        otherBtns.appendChild(opacity);
 
         let pageElementCss=document.createElement("div");
         pageElementCss.style.marginBottom="30px";
@@ -2653,6 +2653,10 @@
         let saveBtn=document.createElement("button");
         saveBtn.innerHTML=i18n("save");
         saveBtn.style.width="100%";
+        saveBtn.style.position="fixed";
+        saveBtn.style.bottom=0;
+        saveBtn.style.left=0;
+        saveBtn.style.fontSize="x-large";
         configCon.insertBefore(saveBtn, insertPos);
         saveBtn.onclick=e=>{
             try{
