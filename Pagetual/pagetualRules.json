@@ -731,7 +731,7 @@
     "url": "^https://forum\\.mobilism\\.org/",
     "pageElement": "id('page-body')//section|id('page-body')/main/table[last()]/tbody/tr|//div[@class='row-fluid blue-bar']",
     "nextLink": "//a[i/@class='icon-chevron-right']",
-    "css": "td.center { display: none; }"
+    "css": ".stats-color,.last-color,td.center { display: none; }"
   },
   {
     "name":"不死鸟",
