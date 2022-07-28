@@ -717,6 +717,15 @@
     "pageElement": "div.container>ol>li"
   },
   {
+    "name": "YTS Movies",
+    "type": 0,
+    "url": "^https://yts\\.mx/browse-movies",
+    "pageElement": "//section/div[@class=\"row\"]/div",
+    "nextLink": "//li[./a[@class=\"current\"]]/following-sibling::li[1]/a",
+    "css": "img{visibility: visible!important; display: block!important;}",
+    "lazyImgSrc":"data-cfsrc"
+  },
+  {
     "name":"不死鸟",
     "url":"^https://iao\\.su/",
     "pageElement":"#index>article",
