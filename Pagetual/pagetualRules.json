@@ -740,6 +740,12 @@
     "action":1
   },
   {
+    "name": "3DM搜索",
+    "url": "^https://so\\.3dmgame\\.com",
+    "pageElement": "body > div.content > div.search_wrap > div.search_lis",
+    "action": 1
+  },
+  {
     "name":"deviantArt",
     "url":"^https://www\\.deviantart\\.com/search",
     "pageElement":"div[data-hook='all_content']>div>div>div:not([class])"
