@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.30.3.16.5
+// @version      1.9.30.3.16.6
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -1186,6 +1186,8 @@
                     if(aTag.style.display=="none")continue;
                     if(aTag.href && /next$/i.test(aTag.href))continue;
                     if(aTag.className && /slick|slide/i.test(aTag.className))continue;
+                    if(aTag.classList && aTag.classList.contains('disabled'))continue;
+                    if(aTag.parentNode && aTag.parentNode.classList && aTag.parentNode.classList.contains('disabled'))continue;
                     if(aTag.innerText.length<=18){
                         if(!next1){
                             if(/^[下后後][一1]?[页頁张張]|^next([ _-]?page)?\s*[›>→»]?$|次のページ|^次へ?$/i.test(aTag.innerText.trim())){
@@ -3898,10 +3900,14 @@
                     returnFalse("Stop as no page when emu");
                     return;
                 }
-                if(orgPage && orgPage[0].tagName=="UL")orgPage=orgPage[0].children;
-                if(orgPage && nextLink){
+                if(orgPage[0].tagName=="UL")orgPage=orgPage[0].children;
+                if(nextLink){
                     orgPage=orgPage[parseInt(orgPage.length/2)];
-                    orgContent=orgPage.innerText;
+                    if(orgPage.tagName=="IMG" && orgPage.src){
+                        orgContent=orgPage.src;
+                    }else{
+                        orgContent=orgPage.innerText;
+                    }
                     preContent=orgContent;
                     if(!isVisible(nextLink, iframeDoc.defaultView)){
                         returnFalse("Stop as next hide when emu");
@@ -3923,9 +3929,7 @@
             let eles=ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView, true),checkItem;
             if(eles && eles.length>0){
                 checkItem=eles;
-                if(eles[0].tagName=="UL"){
-                    checkItem=eles[0].children;
-                }
+                if(eles[0].tagName=="UL")checkItem=eles[0].children;
                 checkItem=checkItem[parseInt(checkItem.length/2)];
             }
             if(!checkItem || (checkEval && !checkEval(iframeDoc))){
@@ -3933,10 +3937,16 @@
                     checkPage();
                 },waitTime);
             }else{
-                if(orgPage!=checkItem || checkItem.innerText!=preContent){
+                let checkInner;
+                if(checkItem.tagName=="IMG" && checkItem.src){
+                    checkInner=checkItem.src;
+                }else{
+                    checkInner=checkItem.innerText;
+                }
+                if(orgPage!=checkItem || checkInner!=preContent){
                     changed=true;
                     orgPage=checkItem;
-                    preContent=checkItem.innerText;
+                    preContent=checkInner;
                     setTimeout(()=>{
                         checkPage();
                     },waitTime);
