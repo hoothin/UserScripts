@@ -717,6 +717,11 @@
     "pageElement": "div.container>ol>li"
   },
   {
+    "name": "hirelateral",
+    "url": "^https://www\\.hirelateral\\.com/",
+    "pageElement": "div.mainwrap > div.contentwrap > div.leftwrap > table.table-bordered > tbody> tr"
+  },
+  {
     "name": "YTS Movies",
     "type": 0,
     "url": "^https://yts\\.mx/browse-movies",
