@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.30.3.16.7
+// @version      1.9.30.3.16.8
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -405,13 +405,13 @@
             };
             break;
     }
-    var i18n=(name, param)=>{
+    const noRuleTest=false;
+    var enableDebug=true;
+    function i18n(name, param) {
         return config[name]?config[name].replace("#t#",param):name;
     };
 
-    var noRuleTest=false;
-    var enableDebug=true;
-    var debug=str=>{
+    function debug(str) {
         if(enableDebug){
             console.log(
                 `%c【Pagetual v.${_GM_info.script.version}】 debug`,
@@ -520,9 +520,11 @@
             cb(value);
         }
     };
-    var rulesData={},ruleUrls,updateDate,configPage="https://github.com/hoothin/UserScripts/tree/master/Pagetual";
-    var ruleImportUrlReg=/greasyfork\.org\/.*scripts\/438684[^\/]*(\/discussions|\/?$)|github\.com\/hoothin\/UserScripts\/(tree\/master\/Pagetual|issues)/i;
-    var allOfBody="body>*";
+    var rulesData={},ruleUrls,updateDate;
+    const configPage="https://github.com/hoothin/UserScripts/tree/master/Pagetual";
+    const guidePage=/^https?:\/\/.*\/PagetualGuide\/.*rule\.html/;
+    const ruleImportUrlReg=/greasyfork\.org\/.*scripts\/438684[^\/]*(\/discussions|\/?$)|github\.com\/hoothin\/UserScripts\/(tree\/master\/Pagetual|issues)/i;
+    const allOfBody="body>*";
     _GM_registerMenuCommand(i18n("configure"), ()=>{
         _GM_openInTab(configPage,{active:true});
     });
@@ -2181,6 +2183,78 @@
             });
             showTips(i18n("beginUpdate"));
         });
+        if(guidePage.test(location.href)){
+            window.onload = e => {
+                var options = {
+                    mode: 'code',
+                    modes: ['code', 'tree'],
+                    templates: [
+                        {
+                            text: 'New site',
+                            title: 'Insert a new site',
+                            className: 'jsoneditor-type-object',
+                            field: 'SiteTemplate',
+                            value: {
+                                'name': 'Site name',
+                                'url': 'Site url'
+                            }
+                        }
+                    ],
+                    schema: {
+                        "title": "Sites data",
+                        "description": "Object containing site config",
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "name": {
+                                    "title": "Site Name",
+                                    "description": "The site's name.",
+                                    "examples": [
+                                        "Google"
+                                    ],
+                                    "type": "string"
+                                },
+                                "url": {
+                                    "title": "Site Url",
+                                    "description": "The Regexp of site's url.",
+                                    "examples": [
+                                        "^https:\/\/yande\\.re\/"
+                                    ],
+                                    "type": "string"
+                                }
+                            },
+                            "required": ["name", "url"]
+                        }
+                    }
+                };
+                var container = document.getElementById("jsoneditor");
+                var editor = new JSONEditor(container, options);
+                editor.set(ruleParser.customRules);
+                document.querySelector("#saveBtn").onclick=e=>{
+                    try{
+                        storage.setItem("hpRules", []);
+                        let text=editor.getText();
+                        if(text==""){
+                            storage.setItem("customRules", "");
+                        }else{
+                            let customRules=JSON.parse(text);
+                            if(Array && Array.isArray && !Array.isArray(customRules)){
+                                showTips("Rules must be a Array!");
+                                return;
+                            }
+                            debug(customRules);
+                            storage.setItem("customRules", customRules);
+                        }
+                    }catch(e){
+                        debug(e);
+                        showTips("JSON error, check again!");
+                        return;
+                    }
+                    showTips("Edit successfully");
+                };
+            }
+            return true;
+        }
 
         var configCon,insertPos;
         var noRules=!rulesData.urls || rulesData.urls.length===0;
@@ -2656,6 +2730,7 @@
         saveBtn.innerHTML=i18n("save");
         saveBtn.style.width="100%";
         saveBtn.style.position="fixed";
+        saveBtn.style.zIndex="999";
         saveBtn.style.bottom=0;
         saveBtn.style.left=0;
         saveBtn.style.fontSize="x-large";
@@ -3269,7 +3344,7 @@
         urlChanged=true;
         isPause=true;
         setTimeout(()=>{
-            if(location.href==configPage){
+            if(location.href==configPage || guidePage.test(location.href)){
                 location.reload();
             }else if(!ruleParser.ruleMatch(ruleParser.curSiteRule)){
                 initPage();
