@@ -11,7 +11,7 @@ https://raw.githubusercontent.com/hoothin/UserScripts/master/Pagetual/pagetualRu
 
 Rules example
 ==
-<pre>
+``` json
 [
   {
     "name":"yande",
@@ -36,7 +36,7 @@ Rules example
     ]
   }
 ]
-</pre>
+```
 
 <table>
     <tr>
