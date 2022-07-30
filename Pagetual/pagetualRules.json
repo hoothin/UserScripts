@@ -722,6 +722,12 @@
     "pageElement": "div.mainwrap > div.contentwrap > div.leftwrap > table.table-bordered > tbody> tr"
   },
   {
+    "name": "Agristudyinfo & 20govtjobs",
+    "url": "^(https://agristudyinfo\\.in/|https://20govtjobs\\.com/)",
+    "pageElement": "#main>article",
+    "nextLink": ".page-numbers.current+a"
+  },
+  {
     "name": "YTS Movies",
     "type": 0,
     "url": "^https://yts\\.mx/browse-movies",
