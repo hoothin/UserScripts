@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.30.3.16.9
+// @version      1.9.30.3.17
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -909,6 +909,9 @@
             if(this.curSiteRule.pageElement){
                 pageElement=this.curSiteRule.type==0?getAllElementsByXpath(this.curSiteRule.pageElement,doc,doc):doc.querySelectorAll(this.curSiteRule.pageElement);
             }else if(!this.curSiteRule.singleUrl && this.curSiteRule.type==0){
+                pageElement=[body];
+            }
+            if(this.curSiteRule.from===1 && pageElement && pageElement.length===1 && pageElement[0].style.display==='none'){
                 pageElement=[body];
             }
             if(this.curSiteRule.singleUrl && pageElement && pageElement.length>0 && pageElement[0].tagName=="TR"){
@@ -2183,7 +2186,7 @@
             showTips(i18n("beginUpdate"));
         });
         if(guidePage.test(location.href)){
-            window.onload = e => {
+            function createEdit(){
                 var options = {
                     mode: 'code',
                     modes: ['code', 'tree'],
@@ -2227,16 +2230,16 @@
                     }
                 };
                 var container = document.getElementById("jsoneditor");
+                container.style.height='800px';
                 var editor = new JSONEditor(container, options);
                 editor.set(ruleParser.customRules);
                 document.querySelector("#saveBtn").onclick=e=>{
                     try{
                         storage.setItem("hpRules", []);
-                        let text=editor.getText();
-                        if(text==""){
+                        let customRules=editor.get();
+                        if(!customRules){
                             storage.setItem("customRules", "");
                         }else{
-                            let customRules=JSON.parse(text);
                             if(Array && Array.isArray && !Array.isArray(customRules)){
                                 showTips("Rules must be a Array!");
                                 return;
@@ -2251,6 +2254,13 @@
                     }
                     showTips("Edit successfully");
                 };
+            }
+            if(JSONEditor){
+                createEdit();
+            }else{
+                window.onload = e => {
+                    createEdit();
+                }
             }
             return true;
         }
