@@ -9,7 +9,7 @@ https://raw.githubusercontent.com/hoothin/UserScripts/master/Pagetual/pagetualRu
 
 ---
 
-Rules example
+[Rules example](https://hoothin.github.io/PagetualGuide/en/rule.html)
 ==
 ``` json
 [
