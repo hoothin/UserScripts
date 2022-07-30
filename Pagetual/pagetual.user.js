@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.30.3.17
+// @version      1.9.30.3.18
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -911,7 +911,7 @@
             }else if(!this.curSiteRule.singleUrl && this.curSiteRule.type==0){
                 pageElement=[body];
             }
-            if(this.curSiteRule.from===1 && pageElement && pageElement.length===1 && pageElement[0].style.display==='none'){
+            if(pageElement && pageElement.length===1 && pageElement[0].style.display==='none'){
                 pageElement=[body];
             }
             if(this.curSiteRule.singleUrl && pageElement && pageElement.length>0 && pageElement[0].tagName=="TR"){
@@ -1105,6 +1105,7 @@
                 curPage.querySelector(".pagination-nav__item--next>a")||
                 curPage.querySelector("a[title='Next page']")||
                 curPage.querySelector("a.pageright")||
+                curPage.querySelector(".page-numbers.current+a")||
                 curPage.querySelector("a#rightFix")||
                 curPage.querySelector("a#next")||
                 curPage.querySelector(".next>a")||
@@ -1158,11 +1159,7 @@
                 next=null;
             }
             if(!next){
-                next=curPage.querySelector("a.curr");
-                if(next){
-                    next=next.nextSibling;
-                    if (next && next.tagName!="a") next=null;
-                }
+                next=curPage.querySelector("a.curr+a");
             }
             if(!next){
                 next=curPage.querySelector("div.wp-pagenavi>span.current+a,div.page-nav>span.current+a,div.article-paging>span+a");
@@ -1176,9 +1173,7 @@
                 }
             }
             if(!next){
-                cur=curPage.querySelector(".number>ul>li.active");
-                if(cur)next=cur.nextElementSibling;
-                if(next)next=next.querySelector("a");
+                next=curPage.querySelector(".number>ul>li.active+li>a");
             }
             if(!next){
                 let aTags=curPage.querySelectorAll("a,button");
