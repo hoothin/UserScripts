@@ -9,31 +9,19 @@ https://raw.githubusercontent.com/hoothin/UserScripts/master/Pagetual/pagetualRu
 
 ---
 
-Rules example
+[Rules example](https://hoothin.github.io/PagetualGuide/en/rule.html)
 ==
 ``` json
 [
-  {
-    "name":"yande",
-    "action":0,
-    "url":"^https://yande\\.re\/",
-    "pageElement":"ul#post-list-posts>li",
-    "nextLink":"a.next_page",
-    "css":".javascript-hide {display: inline-block !important;}"
-  },
   {
     "name":"beauty",
     "url":"^https://www\\.jpmn8\\.com/",
     "pageElement":"p>img"
   },
   {
-    "name":"xxgame",
-    "url":"^http://www\\.xxgame\\.net/chinese",
-    "pageElement":"div.layui-row>div.layui-col-md4:not(div:nth-child(5),div:nth-child(6),div:nth-child(7))",
-    "nextLinkByUrl":[
-      "(http://www\\.xxgame\\.net/chinese/?)(?:\\?page=|$)(\\d*)",
-      "$1?page={$2+1}"
-    ]
+    "name":"Expreview",
+    "url":"^https://www\\.expreview\\.com/",
+    "loadMore":"span.load"
   }
 ]
 ```
