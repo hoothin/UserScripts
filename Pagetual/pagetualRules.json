@@ -728,6 +728,12 @@
     "nextLink": ".page-numbers.current+a"
   },
   {
+    "name": "秀色女神",
+    "url": "^https://www\\.xsnvshen\\.co",
+    "pageElement": ".container> div.longConWhite> div.workContentWrapper > div.workShow > ul > li > img#bigImg",
+    "nextLink": "span#next"
+  },
+  {
     "name": "YTS Movies",
     "type": 0,
     "url": "^https://yts\\.mx/browse-movies",
