@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.7.27.2
+// @version              2022.7.30.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -21024,7 +21024,7 @@ ImgOps | https://imgops.com/#b#`;
                     }
                 } else if (_type == 'function') {
                     try {
-                        target = matchedRule.ext(target);
+                        target = matchedRule.ext(target) || target;
                     } catch(ex) {
                         throwErrorInfo(ex);
                     }
@@ -21043,6 +21043,7 @@ ImgOps | https://imgops.com/#b#`;
                 if(target.nodeName == "AREA")target=target.parentNode;
                 var targetBg;
                 var bgReg=/^\s*url\(\s*["']?(.+?)["']?\s*\)/i;
+                var preEle=target.previousElementSibling;
                 if(prefs.floatBar.listenBg && hasBg(target)){
                     targetBg = unsafeWindow.getComputedStyle(target).backgroundImage.replace(bgReg,"$1");
                     let src=targetBg,nsrc=src,noActual=true,type="scale";
@@ -21054,12 +21055,23 @@ ImgOps | https://imgops.com/#b#`;
                         noActual:noActual,
                         img: target
                     };
-                }else if(target.previousElementSibling && target.previousElementSibling.tagName=="IMG"){
+                }else if(preEle && preEle.tagName=="IMG"){
                     if(unsafeWindow.getComputedStyle(target).position=="absolute" || target.nodeName == "MAP"){
-                        target=target.previousElementSibling;
+                        target=preEle;
                     }
                 }else if(target.childNodes.length<=2 && target.querySelectorAll("img").length==1){
                     target=target.querySelector("img");
+                }else if(prefs.floatBar.listenBg && preEle && hasBg(preEle)){
+                    targetBg = unsafeWindow.getComputedStyle(preEle).backgroundImage.replace(bgReg,"$1");
+                    let src=targetBg,nsrc=src,noActual=true,type="scale";
+                    let img={src:src};
+                    result = {
+                        src: nsrc,
+                        type: type,
+                        imgSrc: src,
+                        noActual:noActual,
+                        img: target
+                    };
                 }else if(target.parentNode){
                     if(target.parentNode.nodeName=='IMG'){
                         target=target.parentNode;
