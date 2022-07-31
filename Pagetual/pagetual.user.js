@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.30.5
+// @version      1.9.30.6
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -1247,24 +1247,20 @@
         }
 
         canonicalUri(src) {
-            let url=this.curUrl||location.href;
+            let url=this.basePath||location.href;
             if(src.charAt(0)=="#")return url+src;
             var root_page = /^[^?#]*\//.exec(url)[0],
                 root_domain = /^\w+\:\/\/\/?[^\/]+/.exec(root_page)[0],
-                base_path = url.replace(root_domain, "").replace(/\/[^\/]+\.[^\/]+$/, "/"),
                 absolute_regex = /^\w+\:\/\//;
             this.updateUrl=false;
             while(src.indexOf("../")===0){
                 src=src.substr(3);
-                base_path=base_path.replace(/[^\/]+\/$/, "");
+                root_page=root_page.replace(/\/[^\/]+\/$/, "/");
                 this.updateUrl=true;
             }
             src=src.replace(/\.\//,"");
             if (/^\/\/\/?/.test(src)){
                 src = location.protocol + src;
-            }
-            else if (!absolute_regex.test(src) && src.charAt(0) != "/"){
-                src = (base_path || "") + src;
             }
             return (absolute_regex.test(src) ? src : ((src.charAt(0) == "/" ? root_domain : root_page) + src));
         }
@@ -3075,6 +3071,8 @@
                 try {
                     doc=document.implementation.createHTMLDocument('');
                     doc.documentElement.innerHTML=response;
+                    let base=doc.querySelector("base");
+                    ruleParser.basePath=base?base.href:url;
                 }
                 catch (e) {
                     debug('parse error'+e.toString());
@@ -3852,6 +3850,8 @@
             function checkIframe(){
                 try{
                     let doc=iframe.contentDocument || iframe.contentWindow.document;
+                    let base=doc.querySelector("base");
+                    ruleParser.basePath=base?base.href:url;
                     let eles=ruleParser.getPageElement(doc, iframe.contentWindow);
                     if(checkEval && !checkEval(doc)){
                         setTimeout(()=>{
