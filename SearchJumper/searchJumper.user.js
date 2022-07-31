@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.5.9.36.8
+// @version      1.6.5.9.36.9
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -1120,6 +1120,13 @@
                      max-height: 95vh;
                      overflow: scroll;
                      border: 0;
+                     pointer-events: none;
+                     opacity: 0;
+                     transition:opacity 0.25s ease;
+                 }
+                 .search-jumper-type:hover>.sitelist {
+                     pointer-events: all;
+                     opacity: 1;
                  }
                  .search-jumper-type>.sitelist>.sitelistCon {
                      margin: 10px;
@@ -1302,7 +1309,7 @@
                 logoBtn.className = "search-jumper-btn";
                 logoCon.addEventListener('mouseenter', e => {
                     if (this.preList) {
-                        this.preList.style.display = "none";
+                        this.preList.style.visibility = "hidden";
                     }
                 });
 
@@ -1541,7 +1548,7 @@
                 this.bar.addEventListener('mouseleave', e => {
                     this.hideTimeout = setTimeout(hideHandler, delay);
                     if (this.preList) {
-                        this.preList.style.display = "none";
+                        this.preList.style.visibility = "hidden";
                     }
                 }, false);
 
@@ -1559,10 +1566,10 @@
                 this.lockSiteKeywords = false;
                 this.inInput = false;
                 this.searchInput.addEventListener("input", e => {
-                    if (e.data && self.searchInput.value && self.searchInput.value !== "*" && self.searchInput.value.length === 1) {
-                        self.searchInput.value = "*" + self.searchInput.value;
-                    }
                     if (!self.lockSiteKeywords) {
+                        if (e.data && self.searchInput.value && self.searchInput.value !== "*" && self.searchInput.value.length === 1) {
+                            self.searchInput.value = "*" + self.searchInput.value;
+                        }
                         clearTimeout(inputTimer);
                         inputTimer = setTimeout(() => self.searchSiteBtns(), 500);
                     }
@@ -1950,7 +1957,7 @@
 
             listPos(ele, list) {
                 if (this.preList) {
-                    this.preList.style.display = "none";
+                    //this.preList.style.visibility = "hidden";
                 }
                 if (!list.dataset.inited) {
                     list.dataset.inited = true;
@@ -2003,7 +2010,7 @@
 
             clingPos(clingEle, target, close) {
                 if (this.preList) {
-                    this.preList.style.display = "none";
+                    //this.preList.style.visibility = "hidden";
                 }
                 let ew = clingEle.clientWidth;
                 let eh = clingEle.clientHeight;
@@ -2204,7 +2211,7 @@
                     ele.style.width = "";
                     ele.style.height = "";
                     if (self.preList) {
-                        self.preList.style.display = "none";
+                        self.preList.style.visibility = "hidden";
                     }
                     if (ele.classList.contains("search-jumper-hide")) {
                         ele.classList.remove("search-jumper-hide");
@@ -3831,14 +3838,8 @@
                         }
                         var key = (e.key || String.fromCharCode(e.keyCode)).toLowerCase();
                         if (searchData.prefConfig.shortcutKey == key) {
-                            /*if (searchBar.bar.classList.contains("search-jumper-isTargetPage")) {
-                                if (searchBar.bar.parentNode.parentNode) {
-                                    searchBar.removeBar();
-                                    return;
-                                }
-                            }*/
                             searchBar.showInPage();
-                            if (searchBar.bar.classList.contains("search-jumper-isTargetPage")) {
+                            if (!searchBar.bar.classList.contains("search-jumper-isInPage")) {
                                 searchBar.showSearchInput();
                             }
                         }
