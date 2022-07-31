@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.5.9.36.9
+// @version      1.6.5.9.36.10
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -635,7 +635,6 @@
         multiline: 2,//0 关闭 1 开启 2 询问
         multilineGap: 1000,
         historyLength: 0,
-        historyTypeLength: 10,
         dragToSearch: true,
         sortType: false,
         autoHide: false
@@ -1192,7 +1191,7 @@
                  }
                  .search-jumper-word {
                      background: black;
-                     color: #111111!important;
+                     color: #ffffff!important;
                      text-shadow: 0px 0px 5px #707070;
                      font-family: system-ui,Arial,sans-serif;
                      font-weight: bold;
@@ -1207,6 +1206,7 @@
                  }
                  a.search-jumper-word {
                      background: #f7f7f7;
+                     color: #111111!important;
                  }
                  .search-jumper-type img {
                      width: ${32 * this.scale}px;
@@ -1367,6 +1367,7 @@
             }
 
             showSearchInput() {
+                let selectStr = getSelectStr();
                 this.recoveHistory();
                 this.bar.parentNode.classList.add("in-input");
                 this.searchInput.focus();
@@ -1381,6 +1382,10 @@
                     listItem.classList.remove("input-hide");
                 });
                 this.inInput = true;
+                if (this.bar.classList.contains("search-jumper-isInPage")) {
+                    this.lockSearchInput("*");
+                    this.searchInput.value = selectStr;
+                }
             }
 
             hideSearchInput() {
@@ -1462,6 +1467,15 @@
                 let firstType = this.autoGetFirstType();
                 let targetSite = firstType.querySelector(`a.search-jumper-btn:nth-of-type(${index + 1})`);
                 this.searchBySiteName(targetSite.dataset.name, e);
+            }
+
+            lockSearchInput(lockWords) {
+                this.lockSiteKeywords = true;
+                this.searchLockInput.innerText = lockWords;
+                this.bar.parentNode.classList.add("lock-input");
+                this.searchInput.value = "";
+                this.searchInput.style.paddingLeft = `${15 + this.searchLockInput.scrollWidth}px`;
+                this.searchInput.placeholder = i18n("inputKeywords");
             }
 
             async initRun() {
@@ -1583,14 +1597,9 @@
                                     self.openSiteBtn(siteEle);
                                 }
                             } else if (self.searchInput.value) {
-                                self.lockSiteKeywords = true;
-                                self.searchLockInput.innerText = self.searchInput.value;
-                                self.bar.parentNode.classList.add("lock-input");
                                 clearTimeout(inputTimer);
                                 self.searchSiteBtns();
-                                self.searchInput.value = "";
-                                self.searchInput.style.paddingLeft = `${15 + self.searchLockInput.scrollWidth}px`;
-                                self.searchInput.placeholder = i18n("inputKeywords");
+                                self.lockSearchInput(self.searchInput.value);
                                 if (e.ctrlKey) {
                                     let siteEle = self.bar.querySelector("a.search-jumper-btn:not(.input-hide)");
                                     if (siteEle) {
@@ -1841,7 +1850,6 @@
 
             initHistorySites() {
                 this.historySiteBtns = [];
-                //if (!searchData.prefConfig.historyLength) return;
                 let self = this;
                 historySites.forEach(n => {
                     for (let i = 0; i < self.allSiteBtns.length; i++) {
@@ -1918,7 +1926,7 @@
                 let title = document.createElement("p");
                 title.innerText = type;
                 con.appendChild(title);
-                for (let [index, siteEle] of sites.entries()) {
+                function createItem(siteEle, index) {
                     let li = document.createElement("div");
                     li.id = "list" + index;
                     let icon = siteEle.querySelector("img");
@@ -1950,7 +1958,16 @@
                     a.appendChild(p);
                     self.allListBtns.push(li);
                     con.appendChild(li);
-                    if (index%50 === 49) await sleep(1);
+                }
+                try {
+                    for (let [index, siteEle] of sites.entries()) {
+                        createItem(siteEle, index)
+                        if (index%50 === 49) await sleep(1);
+                    }
+                } catch(e) {
+                    for (let index = 0; index < sites.length; index++) {
+                        createItem(sites[index], index);
+                    }
                 }
                 return list;
             }
@@ -2093,7 +2110,7 @@
                 let selectPage = data.selectPage;
                 let sites = data.sites;
                 let match = false;
-                let openInNewTab = data.openInNewTab;
+                let openInNewTab = typeof data.openInNewTab === 'undefined' ? searchData.prefConfig.openInNewTab : data.openInNewTab;
                 let siteEles = [];
                 let ele = document.createElement("span");
                 ele.className = "search-jumper-type search-jumper-hide";
@@ -2357,7 +2374,7 @@
                 }, false);
                 let isCurrent = false;
                 let tooLoog = sites && sites.length > 200;
-                for (let [i, site] of sites.entries()) {
+                async function createItem(site, i) {
                     let siteEle = await self.createSiteBtn((tooLoog || searchData.prefConfig.noIcons ? 0 : site.icon), site, openInNewTab, isBookmark);
                     siteEle.dataset.type = type;
                     siteEle.dataset.id = siteEles.length;
@@ -2369,7 +2386,17 @@
                         self.setCurrentSite(site);
                         self.currentType = ele;
                     }
-                    if (i % 50 === 49) await sleep(1);
+                }
+                try {
+                    for (let [i, site] of sites.entries()) {
+                        await createItem(site, i);
+                        if (i % 50 === 49) await sleep(1);
+                    }
+                } catch(e) {
+                    for (let i = 0; i < sites.length; i++) {
+                        createItem(sites[i], i);
+                    }
+                    await sleep(1);
                 }
                 let siteList = await self.createList(siteEles, ele.dataset.title);
                 siteList.style.display = "none";
@@ -2461,6 +2488,9 @@
                             }
                         }
                     }
+                }
+                if (typeof data.openInNewTab !== 'undefined') {
+                    openInNewTab = data.openInNewTab;
                 }
                 let isPage = /^(https?|ftp):/.test(data.url);
                 ele.className = "search-jumper-btn";
@@ -2618,7 +2648,7 @@
                         ele.style.display = 'none';
                     }
                 }
-                if (isPage && (openInNewTab || searchData.prefConfig.openInNewTab)) {
+                if (isPage && openInNewTab) {
                     ele.setAttribute("target", "_blank");
                     ele.dataset.target = 1;
                 }
@@ -2785,7 +2815,7 @@
                     resultUrl = customReplaceKeywords(resultUrl.replace(/%U\b/g, encodeURIComponent(href)).replace(/%T\b/g, encodeURIComponent(targetUrl)).replace(/%b\b/g, targetBaseUrl).replace(/%B\b/g, encodeURIComponent(targetBaseUrl)).replace(/%n\b/g, targetName).replace(/%S\b/g, (cacheKeywords || keywords)));
                     resultUrl = customReplaceSingle(resultUrl, "%t", targetUrl);
                     resultUrl = customReplaceSingle(resultUrl, "%u", href);
-                    if ((openInNewTab || searchData.prefConfig.openInNewTab) && /^(https?|ftp):/.test(resultUrl)) {
+                    if (openInNewTab && /^(https?|ftp):/.test(resultUrl)) {
                         ele.setAttribute("target", "_blank");
                         ele.dataset.target = 1;
                     } else {
@@ -2796,7 +2826,7 @@
                 };
                 let action = e => {
                     if (!self.batchOpening && !isBookmark) {
-                        let historyLength = Math.max(searchData.prefConfig.historyLength, searchData.prefConfig.historyTypeLength);
+                        let historyLength = Math.max(searchData.prefConfig.historyLength, 20);
                         if (historyLength) {
                             storage.getItem("historySites", data => {
                                 historySites = (data || []);
@@ -3839,9 +3869,7 @@
                         var key = (e.key || String.fromCharCode(e.keyCode)).toLowerCase();
                         if (searchData.prefConfig.shortcutKey == key) {
                             searchBar.showInPage();
-                            if (!searchBar.bar.classList.contains("search-jumper-isInPage")) {
-                                searchBar.showSearchInput();
-                            }
+                            searchBar.showSearchInput();
                         }
                     });
                 }
@@ -4801,9 +4829,6 @@
             }
             if (typeof searchData.prefConfig.historyLength === "undefined") {
                 searchData.prefConfig.historyLength = 0;
-            }
-            if (typeof searchData.prefConfig.historyTypeLength === "undefined") {
-                searchData.prefConfig.historyTypeLength = 10;
             }
             if (typeof searchData.prefConfig.dragToSearch === "undefined") {
                 searchData.prefConfig.dragToSearch = true;
