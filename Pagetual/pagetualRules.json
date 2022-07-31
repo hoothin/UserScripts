@@ -734,6 +734,16 @@
     "nextLink": "span#next"
   },
   {
+    "name": "Anime Time",
+    "url": "^https://www\\.animetime\\.pw",
+    "pageElement": "div.blog-posts.container > div.grid-posts",
+    "nextLink": "a.page-num.page-next",
+    "waitElement": [
+        "",
+        "img.post-thumb:not(.lazy-yard)"
+    ]
+  },
+  {
     "name": "YTS Movies",
     "type": 0,
     "url": "^https://yts\\.mx/browse-movies",
