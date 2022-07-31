@@ -1249,7 +1249,7 @@
         canonicalUri(src) {
             let url=this.basePath||location.href;
             if(src.charAt(0)=="#")return url+src;
-            if(src.charAt(0)=="?")return url.replace(/\?.*/, "?" + src);
+            if(src.charAt(0)=="?")return url.replace(/\?.*/, src);
             var root_page = /^[^?#]*\//.exec(url)[0],
                 root_domain = /^\w+\:\/\/\/?[^\/]+/.exec(root_page)[0],
                 absolute_regex = /^\w+\:\/\//;
