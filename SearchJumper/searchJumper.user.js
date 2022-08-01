@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.5.9.36.13
+// @version      1.6.5.9.36.15
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -640,6 +640,7 @@
         dragToSearch: true,
         sortType: false,
         autoHide: false,
+        autoHideAll: false,
         shortcutKey: '`'
     };
     function run() {
@@ -847,8 +848,19 @@
             });
         }
 
-        function createHTML(html){
+        function createHTML(html) {
             return escapeHTMLPolicy?escapeHTMLPolicy.createHTML(html):html;
+        }
+
+        function getElementByXpath(xpath, contextNode, doc) {
+            doc = doc || document;
+            contextNode = contextNode || doc;
+            try {
+                var result = doc.evaluate(xpath, contextNode, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+                return result.singleNodeValue && result.singleNodeValue.nodeType === 1 && result.singleNodeValue;
+            } catch (err) {
+                throw new Error(`Invalid xpath: ${xpath}`);
+            }
         }
 
         var logoBtn, searchBar, searchTypes = [], currentSite = false, cacheKeywords, localKeywords, lastSign, inPagePostParams, cacheIcon, historySites, sortTypeNames, cachePool = [], currentFormParams;
@@ -1335,12 +1347,19 @@
                 if (searchData.prefConfig.initShow) {
                     bar.classList.add("initShow");
                 } else {
+                    let touched = false;
+                    let touchBodyHandler = e => {
+                        touched = false;
+                        document.body.removeEventListener('touchstart', touchBodyHandler);
+                    };
                     let touchHandler = e => {
-                        bar.removeEventListener('touchstart', touchHandler, true);
+                        if (touched) return;
+                        touched = true;
                         bar.classList.add('disable-pointer');
                         setTimeout(() => {
                             bar.classList.remove('disable-pointer');
                         }, 250);
+                        document.body.addEventListener("touchstart", touchBodyHandler);
                     };
                     bar.addEventListener('touchstart', touchHandler, true);
                 }
@@ -2386,6 +2405,7 @@
                     siteEles.push(siteEle);
                     if (!currentSite && (siteEle.dataset.current || match)) {
                         isCurrent = true;
+                        siteEle.style.display = 'none';
                         self.setCurrentSite(site);
                         self.currentType = ele;
                     }
@@ -2676,22 +2696,18 @@
                     }
                     let host = location.host;
                     let href = location.href;
-                    if (!ele.dataset.url) {
-                        let tempUrl = data.url;
-                        if (inPagePost) {
-                            tempUrl = tempUrl.replace(postMatch[0], "");
-                        }
-                        ele.dataset.url = tempUrl.replace(/%e\b/g, document.charset).replace(/%c\b/g, (isMobile?"mobile":"pc")).replace(/%h\b/g, host);
+                    let keyToReg = (key, sign, more) => {
+                        return new RegExp(key.replace(/([\*\.\?\+\$\^\[\]\(\)\{\}\|\\\/])/g, "\\$1") + (more || "(\\W|$)"), sign);
                     }
                     let customReplaceSingle = (str, key, value) => {
                         if (str.indexOf(key + ".replace(/") !== -1) {
-                            let replaceMatch = str.match(new RegExp(key + "\\.replace\\(/(.*?[^\\\\])/(.*?),\s*[\"'](.*?[^\\\\])??[\"']\\)"));
-                            if (!replaceMatch) return str.replace(new RegExp(key + "\\b", "g"), value);
+                            let replaceMatch = str.match(keyToReg(key, "", "\\.replace\\(/(.*?[^\\\\])/(.*?),\s*[\"'](.*?[^\\\\])??[\"']\\)"));
+                            if (!replaceMatch) return str.replace(keyToReg(key, "g"), value);
                             value = value.replace(new RegExp(replaceMatch[1], replaceMatch[2]), replaceMatch[3] || '');
                             str = str.replace(replaceMatch[0], key);
                             return customReplaceSingle(str, key, value);
                         } else {
-                            return str.replace(new RegExp(key + "\\b", "g"), value);
+                            return str.replace(keyToReg(key, "g"), value);
                         }
                     };
                     let customReplaceKeywords = str => {
@@ -2704,12 +2720,57 @@
                                 keywordsR = decodeURIComponent(keywords);
                             } catch (e) {}
                         }
-                        str = customReplaceSingle(str, "%s", keywords);
                         str = customReplaceSingle(str, "%su", keywordsU);
                         str = customReplaceSingle(str, "%sl", keywordsL);
                         str = customReplaceSingle(str, "%sr", keywordsR);
+                        str = customReplaceSingle(str, "%s", keywords);
                         return str;
                     };
+                    let customSelectElement = str => {
+                        let selectorMatch = str.match(/%selector{(.*?)}(\.prop\((.*?)\))?/);
+                        let runTimes = 0;
+                        while (selectorMatch) {
+                            if (runTimes++ > 100) break;
+                            let selector = selectorMatch[1];
+                            let prop = selectorMatch[3];
+                            let value = "";
+                            let ele = document.querySelector(selector);
+                            if (ele) {
+                                if (prop) {
+                                    value = ele.getAttribute(prop);
+                                } else {
+                                    value = ele.innerText;
+                                }
+                            }
+                            str = customReplaceSingle(str, selectorMatch[0], value);
+                            selectorMatch = str.match(/%selector{(.*?)}(\.prop\((.*?)\))?/);
+                        }
+                        selectorMatch = str.match(/%xpath{(.*?)}(\.prop\((.*?)\))?/);
+                        while (selectorMatch) {
+                            if (runTimes++ > 100) break;
+                            let selector = selectorMatch[1];
+                            let prop = selectorMatch[3];
+                            let value = "";
+                            let ele = getElementByXpath(selector);
+                            if (ele) {
+                                if (prop) {
+                                    value = ele.getAttribute(prop);
+                                } else {
+                                    value = ele.innerText;
+                                }
+                            }
+                            str = customReplaceSingle(str, selectorMatch[0], value);
+                            selectorMatch = str.match(/%xpath{(.*?)}(\.prop\((.*?)\))?/);
+                        }
+                        return str;
+                    }
+                    if (!ele.dataset.url) {
+                        let tempUrl = data.url;
+                        if (inPagePost) {
+                            tempUrl = tempUrl.replace(postMatch[0], "");
+                        }
+                        ele.dataset.url = customSelectElement(tempUrl.replace(/%e\b/g, document.charset).replace(/%c\b/g, (isMobile?"mobile":"pc")).replace(/%h\b/g, host));
+                    }
                     let selStr = getSelectStr();
                     let targetUrl = '';
                     let targetName = selStr || document.title;
@@ -3123,6 +3184,9 @@
                     self.bar.classList.remove("search-jumper-isTargetPage");
                     self.bar.classList.remove("initShow");
                     self.hideTimeout = null;
+                    if (searchData.prefConfig.autoHideAll) {
+                        self.bar.style.display = 'none';
+                    }
                 };
                 if (searchData.prefConfig.autoHide) this.hideTimeout = setTimeout(hideHandler, delay);
                 this.bar.classList.remove("search-jumper-isInPage");
@@ -3887,7 +3951,7 @@
                 document.addEventListener('mousedown', e => {
                     if (e.target.classList.contains('search-jumper-btn') ||
                         e.target.tagName === 'CANVAS' ||
-                        (searchBar.bar.contains(e.target))) {
+                        searchBar.bar.contains(e.target)) {
                         return;
                     }
                     shown = false;
@@ -3903,6 +3967,18 @@
                         return;
                     }
                     let mouseMoveTimer;
+                    let clickHandler = e => {
+                        if (shown) {
+                            e.stopPropagation();
+                            e.preventDefault();
+                        }
+                        document.removeEventListener('click', clickHandler, true);
+                    };
+                    let mouseMoveHandler = e => {
+                        clearTimeout(showToolbarTimer);
+                        clearTimeout(mouseMoveTimer);
+                        document.removeEventListener('mousemove', mouseMoveHandler, true);
+                    };
                     let mouseUpHandler = e => {
                         if (shown) {
                             e.stopPropagation();
@@ -3912,24 +3988,23 @@
                         }
                         clearTimeout(showToolbarTimer);
                         clearTimeout(mouseMoveTimer);
-                        document.removeEventListener('mouseup', mouseUpHandler, false);
-                        document.removeEventListener('mousemove', mouseMoveHandler, false);
+                        document.removeEventListener('mouseup', mouseUpHandler, true);
+                        document.removeEventListener('mousemove', mouseMoveHandler, true);
                     };
-                    let mouseMoveHandler = e => {
-                        clearTimeout(showToolbarTimer);
-                        clearTimeout(mouseMoveTimer);
-                        document.removeEventListener('mousemove', mouseMoveHandler, false);
-                    };
-                    if (e.which === 1 && clientRect) {
-                        if (e.clientX > clientRect.left && e.clientX < clientRect.left + clientRect.width &&
-                           e.clientY > clientRect.top && e.clientY < clientRect.top + clientRect.height) {
-                            searchBar.showInPage();
-                            shown = true;
-                            e.stopPropagation();
-                            //e.preventDefault();
-                            document.addEventListener('mouseup', mouseUpHandler, false);
-                            return false;
-                        }
+                    if ((e.which === 1 && clientRect &&
+                         e.clientX > clientRect.left && e.clientX < clientRect.left + clientRect.width &&
+                         e.clientY > clientRect.top && e.clientY < clientRect.top + clientRect.height) ||
+                        (searchData.prefConfig.altKey||
+                         searchData.prefConfig.ctrlKey ||
+                         searchData.prefConfig.shiftKey ||
+                         searchData.prefConfig.metaKey)) {
+                        searchBar.showInPage();
+                        shown = true;
+                        e.stopPropagation();
+                        e.preventDefault();
+                        document.addEventListener('mouseup', mouseUpHandler, true);
+                        document.addEventListener('click', clickHandler, true);
+                        return false;
                     }
                     let selectImg = e.target.tagName === 'IMG';
                     let matchKey = searchData.prefConfig.altKey ||
@@ -3943,9 +4018,9 @@
                         shown = true;
                     }, parseInt(searchData.prefConfig.longPressTime));
                     mouseMoveTimer = setTimeout(() => {
-                        document.addEventListener('mousemove', mouseMoveHandler, false);
+                        document.addEventListener('mousemove', mouseMoveHandler, true);
                     }, 10);
-                    document.addEventListener('mouseup', mouseUpHandler, false);
+                    document.addEventListener('mouseup', mouseUpHandler, true);
                 }, true);
                 document.addEventListener('contextmenu', e => {
                     if (shown) e.preventDefault();
@@ -4803,6 +4878,7 @@
             if (_searchData) {
                 searchData = _searchData;
             }
+            //旧版兼容
             if (typeof searchData.prefConfig.customSize === "undefined") {
                 searchData.prefConfig.customSize = 100;
             }
