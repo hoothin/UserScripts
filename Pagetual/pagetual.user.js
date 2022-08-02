@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.30.6.9
+// @version      1.9.30.6.10
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -761,6 +761,7 @@
                 let include = doc.querySelector(selArr[0]);
                 if (!include) return false;
             }
+            if (doc === document) return true;
             if (selArr.length==2 && selArr[1].trim()) {
                 let exclude = doc.querySelector(selArr[1]);
                 if (exclude) {
@@ -776,6 +777,10 @@
                     doc.documentElement.scrollTop = actualTop;
                     doc.body.scrollTop = actualTop + 10;
                     doc.documentElement.scrollTop = actualTop + 10;
+                    doc.body.scrollTop = actualTop + 50;
+                    doc.documentElement.scrollTop = actualTop + 50;
+                    doc.body.scrollTop = actualTop + 200;
+                    doc.documentElement.scrollTop = actualTop + 200;
                     return false;
                 }
             }
@@ -3047,7 +3052,7 @@
                     }
                 }
                 if(rulesData.autoLoadNum){
-                    autoLoadNum=rulesData.autoLoadNum;
+                    autoLoadNum=parseInt(rulesData.autoLoadNum);
                 }
                 enableDebug=rulesData.enableDebug;
                 storage.getItem("forceState_"+location.host, v=>{
@@ -4089,7 +4094,7 @@
             emuIframe.width = '100%';
             emuIframe.height = '0';
             emuIframe.frameBorder = '0';
-            emuIframe.style.cssText = 'margin:0!important;padding:0!important;visibility:hidden!important;';
+            emuIframe.style.cssText = 'position:fixed;left:0;top:50%;margin:0!important;padding:0!important;visibility:hidden!important;';
             emuIframe.addEventListener("load", e=>{
                 setTimeout(()=>{
                     try{
