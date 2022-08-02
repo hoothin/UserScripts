@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.30.6.10
+// @version      1.9.30.6.11
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -3814,6 +3814,10 @@
     }
 
     function emuClick(btn){
+        let orgHref=btn.getAttribute('href');
+        if(orgHref){
+            btn.setAttribute('href', orgHref.replace(/#$/,""));
+        }
         if(!PointerEvent)return btn.click();
         let eventParam={
             isTrusted: true,
@@ -3850,6 +3854,9 @@
         mouseEvent = new PointerEvent("mouseup",eventParam);
         btn.dispatchEvent(mouseEvent);
         btn.click();
+        if(orgHref){
+            setTimeout(()=>btn.setAttribute('href', orgHref),0);
+        }
     }
 
     var failFromIframe=0;
@@ -3961,8 +3968,16 @@
                 return;
             }
 
-            let nextLink=ruleParser.getNextLink(iframeDoc);
             let waitTime=200,checkEval;
+            let nextLink=ruleParser.getNextLink(iframeDoc);
+            if(!nextLink){
+                if(waitTimes-->0){
+                    setTimeout(()=>{
+                        checkPage();
+                    },waitTime);
+                    return;
+                }
+            }
             if(ruleParser.curSiteRule.waitElement){
                 checkEval = doc => {
                     return ruleParser.waitElement(doc);
@@ -4007,7 +4022,7 @@
                         checkPage();
                     },waitTime);
                     return;
-                }else if(!nextLink || !pageEle || pageEle.length==0){
+                }else if(!pageEle || pageEle.length==0){
                     if(waitTimes-->0){
                         setTimeout(()=>{
                             checkPage();
@@ -4032,7 +4047,6 @@
                     if(!isVisible(nextLink, iframeDoc.defaultView)){
                         returnFalse("Stop as next hide when emu");
                     }else{
-                        nextLink.href=nextLink.href.replace(/#$/,"");
                         emuClick(nextLink);
                         setTimeout(()=>{
                             checkPage();
