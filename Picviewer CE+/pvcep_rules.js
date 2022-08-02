@@ -512,7 +512,7 @@ var siteInfo=[
 },
 {
  name: "discordapp",
- url: /discordapp\.com/,
+ url: /(discordapp\.|discord\.)(com|net)/,
  r: /\?width=\d+&height=\d+$/i,
  s: ""
 },
