@@ -546,7 +546,7 @@ var siteInfo=[
  getImage: function(a, p) {
      if(p[1] && p[1].nextSibling && p[1].nextSibling.classList &&
         p[1].nextSibling.classList.contains("largeimg")){
-         return p[1].nextSibling.href;
+         return p[1].nextSibling.href.replace(/\/jpeg\/(.*\.)jpg$/, "/image/$1png");
      }
      return this.src;
  }
