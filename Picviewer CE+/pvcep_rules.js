@@ -546,9 +546,9 @@ var siteInfo=[
  getImage: function(a, p) {
      if(p[1] && p[1].nextSibling && p[1].nextSibling.classList &&
         p[1].nextSibling.classList.contains("largeimg")){
-         return p[1].nextSibling.href.replace(/\/(image|jpeg|sample)\/(.*\.)jpg$/, "/image/$2png");
+         return p[1].nextSibling.href.replace(/\/(image|preview|jpeg|sample)\/(.*\.)jpg$/, "/image/$2png");
      }
-     return this.src.replace(/\/(jpeg|sample)\/(.*\.)jpg$/, "/image/$2png");
+     return this.src.replace(/\/(image|preview|jpeg|sample)\/(.*\.)jpg$/, "/image/$2png");
  }
 },
 {
