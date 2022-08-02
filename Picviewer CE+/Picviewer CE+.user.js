@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.8.2.2
+// @version              2022.8.2.3
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -14295,19 +14295,26 @@ ImgOps | https://imgops.com/#b#`;
                     var fileName = document.title + ".zip";
                     var len = saveParams.length;
                     function downloadOne(imgSrc, imgName){
+                        let crosHandler = imgSrc => {
+                            self.corsUrlToBlob(imgSrc, blob=>{
+                                if(blob)zip.file(imgName.replace(/\//g,"").replace(/\.[^\.]+$/,"")+'.jpg',blob);
+                                else console.debug("error: "+imgSrc);
+                                downloaded++;
+                                self.showTips("Downloading "+downloaded+"/"+len, 100000);
+                                if(downloaded == len){
+                                    self.showTips("Begin compress to ZIP...", 100000);
+                                    zip.generateAsync({type:"blob"}, meta=>{self.showCompressProgress(meta)}).then(function(content){
+                                        saveAs(content, fileName);
+                                        callback();
+                                    })
+                                }
+                            });
+                        }
                         if(/^data:/.test(imgSrc) || imgSrc.split("/")[2]==document.domain){
                             self.dataURLToCanvas(imgSrc, canvas=>{
                                 self.showTips("Downloading "+(downloaded+1)+"/"+len, 100000);
                                 if(!canvas){
-                                    console.debug("error: "+imgSrc);
-                                    downloaded++;
-                                    if(downloaded == len){
-                                        self.showTips("Begin compress to ZIP...", 100000);
-                                        zip.generateAsync({type:"blob"}, meta=>{self.showCompressProgress(meta)}).then(function(content){
-                                            saveAs(content, fileName);
-                                            callback();
-                                        })
-                                    }
+                                    crosHandler(imgSrc);
                                     return;
                                 }
                                 canvas.toBlob(blob=>{
@@ -14323,19 +14330,7 @@ ImgOps | https://imgops.com/#b#`;
                                 }, "image/jpg");
                             });
                         }else{
-                            self.corsUrlToBlob(imgSrc, blob=>{
-                                if(blob)zip.file(imgName.replace(/\//g,"").replace(/\.[^\.]+$/,"")+'.jpg',blob);
-                                else console.debug("error: "+imgSrc);
-                                downloaded++;
-                                self.showTips("Downloading "+downloaded+"/"+len, 100000);
-                                if(downloaded == len){
-                                    self.showTips("Begin compress to ZIP...", 100000);
-                                    zip.generateAsync({type:"blob"}, meta=>{self.showCompressProgress(meta)}).then(function(content){
-                                        saveAs(content, fileName);
-                                        callback();
-                                    })
-                                }
-                            });
+                            crosHandler(imgSrc);
                         }
                     }
                     if(prefs.gallery.downloadGap > 0){
