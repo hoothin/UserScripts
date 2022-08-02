@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.30.6.8
+// @version      1.9.30.6.9
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -1198,7 +1198,7 @@
                     if(aTag.parentNode && aTag.parentNode.classList && aTag.parentNode.classList.contains('disabled'))continue;
                     if(aTag.innerText.length<=18){
                         if(!next1){
-                            if(/^[下后後][一1]?[页頁张張]|^next([ _-]?page)?\s*[›>→»]?$|次のページ|^次へ?$/i.test(aTag.innerText.trim())){
+                            if(/^[下后後][一1]?[页頁张張]|^next([ _-]?page)\s*[›>→»]?$|次のページ|^次へ?$/i.test(aTag.innerText.trim())){
                                 if(!aTag.href || /^javascript:/.test(aTag.href) || aTag.getAttribute("href")=="#"){
                                     if(!nextJs1)nextJs1=aTag;
                                 }else{
@@ -1216,7 +1216,7 @@
                             }
                         }
                         if(!next3){
-                            if(aTag.innerText=="&gt;" || aTag.innerText=="▶" || aTag.innerText==">" || aTag.innerText=="›" || aTag.innerText=="→" || aTag.innerText=="»"){
+                            if(aTag.innerText=="Next" || aTag.innerText=="next" || aTag.innerText=="&gt;" || aTag.innerText=="▶" || aTag.innerText==">" || aTag.innerText=="›" || aTag.innerText=="→" || aTag.innerText=="»"){
                                 if(!aTag.href || /^javascript:/.test(aTag.href) || aTag.getAttribute("href")=="#"){
                                     if(!nextJs3)nextJs3=aTag;
                                 }else{
@@ -1248,6 +1248,10 @@
                 if(next3){
                     let eles=getAllElementsByXpath(`//a[text()='${next3.innerText}']`,curPage,curPage);
                     if(eles.length>2)next3=null;
+                }
+                if(nextJs3){
+                    let eles=getAllElementsByXpath(`//a[text()='${nextJs3.innerText}']`,curPage,curPage);
+                    if(eles.length>2)nextJs3=null;
                 }
             }
             if(!next)next=next1||next4||next3||next2||jsNext||nextJs1||nextJs3||nextJs2;
@@ -4023,6 +4027,7 @@
                     if(!isVisible(nextLink, iframeDoc.defaultView)){
                         returnFalse("Stop as next hide when emu");
                     }else{
+                        nextLink.href=nextLink.href.replace(/#$/,"");
                         emuClick(nextLink);
                         setTimeout(()=>{
                             checkPage();
