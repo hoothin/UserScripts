@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.8.2.7
+// @version              2022.8.2.8
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -40,7 +40,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
-// @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1076905
+// @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1076938
 // @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1076727
 // @match                *://*/*
 // @exclude              http://www.toodledo.com/tasks/*
@@ -11691,13 +11691,19 @@ ImgOps | https://imgops.com/#b#`;
     }
     var _GM_download=(typeof GM_download=='undefined')?(url,name)=>{
         let ext=url.match(/\.\w+$/);
-        ext=ext?ext[0]:".jpg";
-        name=name.replace(/[*\/:<>?\\|]/g, "").trim()+ext;
+        if(ext){
+            name=url.match(/[^\/]+$/)[0];
+        }else{
+            name=name.replace(/[*\/:<>?\\|]/g, "").trim()+".jpg";
+        }
         saveAs(url,name);
     }:(url,name)=>{
         let ext=url.match(/\.\w+$/);
-        ext=ext?ext[0]:".jpg";
-        name=name.replace(/[*\/:<>?\\|]/g, "").trim()+ext;
+        if(ext){
+            name=url.match(/[^\/]+$/)[0];
+        }else{
+            name=name.replace(/[*\/:<>?\\|]/g, "").trim()+".jpg";
+        }
         let urlSplit=url.split("/");
         GM_download({
             url: url,
