@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.5.9.37.6
+// @version      1.6.5.9.37.7
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -1540,7 +1540,7 @@
                 this.initSort();
                 this.bar.style.visibility = "";
                 this.bar.style.display = "none";
-                if (window.toolbar.visible && currentSite && /%s\b/.test(currentSite.url)) {
+                if ((window.menubar.visible || window.toolbar.visible) && currentSite && /%s\b/.test(currentSite.url)) {
                     this.bar.style.display = "";
                     this.initPos(
                         searchData.prefConfig.position.x,
@@ -2347,7 +2347,7 @@
                         for (let i = 0; i< urls.length; i++) {
                             let left = (i % numPerLine) * _width;
                             let top = parseInt(i / numPerLine) * (_height + 70);
-                            window.open(urls[i], "_blank", `width=${_width-10}, height=${_height}, location=0, resizable=1, menubar=0, scrollbars=0, left=${left}, top=${top}`);
+                            window.open(urls[i], "_blank", `width=${_width-10}, height=${_height}, location=0, resizable=1, toolbar=0, menubar=0, scrollbars=0, left=${left}, top=${top}`);
                         }
                     } else if (e.which === 1 && e.altKey) {
                         self.batchOpening = true;
@@ -2518,7 +2518,7 @@
 
             isXPath(xpath) {
                 if (!xpath) return false;
-                return xpath.startsWith('./') || xpath.startsWith('//') || xpath.startsWith('id(');
+                return /^\(*(\.\/|\/\/|id\()/.test(xpath);
             }
 
             getElement(sel, doc) {
@@ -2991,7 +2991,7 @@
                                     for (let i = 0; i< urls.length; i++) {
                                         let left = (i % numPerLine) * _width;
                                         let top = parseInt(i / numPerLine) * (_height + 70);
-                                        window.open(urls[i], "_blank", `width=${_width-10}, height=${_height}, location=0, resizable=1, menubar=0, scrollbars=0, left=${left}, top=${top}`);
+                                        window.open(urls[i], "_blank", `width=${_width-10}, height=${_height}, location=0, resizable=1, toolbar=0, menubar=0, scrollbars=0, left=${left}, top=${top}`);
                                     }
                                     return false;
                                 } else if (e.which === 1 && e.altKey) {
@@ -3107,7 +3107,7 @@
                                     }else if (alt && (ctrl || shift)) {
                                         _GM_openInTab(url, {incognito: true});
                                     } else {
-                                        window.open(url, "_blank", "width=800, height=1000, location=0, resizable=1, menubar=0, scrollbars=0");
+                                        window.open(url, "_blank", "width=800, height=1000, location=0, resizable=1, toolbar=0, menubar=0, scrollbars=0");
                                     }
                                     if (e.preventDefault) e.preventDefault();
                                     if (e.stopPropagation) e.stopPropagation();
