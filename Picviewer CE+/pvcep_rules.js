@@ -542,7 +542,7 @@ var siteInfo=[
 },
 {
  name: "yande",
- url: /yande\.re/,
+ url: /yande\.re|konachan\.(net|com)/,
  getImage: function(a, p) {
      if(p[1] && p[1].nextSibling && p[1].nextSibling.classList &&
         p[1].nextSibling.classList.contains("largeimg")){
@@ -669,6 +669,15 @@ var siteInfo=[
  src: /(thumbnails|samples)\/(.*)\/(thumbnail|sample)_/i,
  r: /.*\/(thumbnails|samples)\/(.*)\/(thumbnail|sample)_(.*)\..*/i,
  s: ["https://img3.gelbooru.com/images/$2/$4.png","https://img3.gelbooru.com/images/$2/$4.jpg"]
+},
+{
+ name: "donmai",
+ url: /donmai\.us/,
+ src: /(thumbnails|sample)\/(.*)\/(thumbnail|sample)_|\/\d+x\d+\//i,
+ r: [/\/(thumbnails|sample)\/(.*)\/(thumbnail|sample)_(.*)/i,
+     /\/\d+x\d+\//i
+    ],
+ s: ["/original/$2/$4","/original/"]
 },
 {
  name: "erosberry",
