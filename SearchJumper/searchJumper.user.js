@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.5.9.37.1
+// @version      1.6.5.9.37.2
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -28,6 +28,8 @@
 // @grant        GM_setClipboard
 // @grant        GM.openInTab
 // @grant        GM_openInTab
+// @grant        GM.info
+// @grant        GM_info
 // @grant        unsafeWindow
 // @supportURL   https://github.com/hoothin/SearchJumper/issues
 // @homepage     https://github.com/hoothin/SearchJumper
@@ -739,11 +741,15 @@
         var enableDebug = true;
         var debug = str => {
             if(enableDebug) {
-                console.debug(str);
+                console.log(
+                    `%c【SearchJumper v.${_GM_info.script.version}】 debug`,
+                    'color: yellow;font-size: x-large;font-weight: bold;'
+                );
+                console.log(str);
             }
         };
 
-        var _GM_xmlhttpRequest, _GM_registerMenuCommand, _GM_notification, _GM_setClipboard, _GM_openInTab, _GM_addStyle;
+        var _GM_xmlhttpRequest, _GM_registerMenuCommand, _GM_notification, _GM_setClipboard, _GM_openInTab, _GM_addStyle, _GM_info;
         if (typeof GM_xmlhttpRequest != 'undefined') {
             _GM_xmlhttpRequest = GM_xmlhttpRequest;
         } else if (typeof GM != 'undefined' && typeof GM.xmlHttpRequest != 'undefined') {
@@ -779,16 +785,23 @@
         } else {
             _GM_openInTab = (s, t) => {window.open(s)};
         }
-        if(typeof GM_addStyle != 'undefined'){
+        if (typeof GM_addStyle != 'undefined') {
             _GM_addStyle = GM_addStyle;
-        }else if(typeof GM != 'undefined' && typeof GM.addStyle != 'undefined'){
+        } else if (typeof GM != 'undefined' && typeof GM.addStyle != 'undefined') {
             _GM_addStyle = GM.addStyle;
-        }else{
+        } else {
             _GM_addStyle = cssStr => {
                 let styleEle = document.createElement("style");
                 styleEle.innerHTML = cssStr;
                 document.head.appendChild(styleEle);
             };
+        }
+        if (typeof GM_info != 'undefined') {
+            _GM_info = GM_info;
+        } else if (typeof GM != 'undefined' && typeof GM.info != 'undefined') {
+            _GM_info = GM.info;
+        } else {
+            _GM_info = { script:1 };
         }
         var _unsafeWindow = (typeof unsafeWindow == 'undefined') ? window : unsafeWindow;
         var storage = {
@@ -2494,6 +2507,23 @@
                 siteEle.setAttribute("target", siteEle.dataset.target==1?"_blank":"");
             }
 
+            isXPath(xpath) {
+                if (!xpath) return false;
+                return xpath.startsWith('./') || xpath.startsWith('//') || xpath.startsWith('id(');
+            }
+
+            getElement(sel, doc) {
+                if (!doc) doc = document;
+                try {
+                    if (!this.isXPath(sel)) {
+                        return doc.querySelector(sel);
+                    }
+                } catch(e) {
+                    debug(e);
+                }
+                return getElementByXpath(sel, doc, doc);
+            }
+
             async createSiteBtn(icon, data, openInNewTab, isBookmark) {
                 let self = this;
                 let ele = document.createElement("a");
@@ -2648,7 +2678,7 @@
                                         await sleep(param[1]);
                                         continue;
                                     }
-                                    input = document.querySelector(param[0]);
+                                    input = self.getElement(param[0]);
                                     if (!input) {
                                         submitAction();
                                         return;
@@ -2739,14 +2769,14 @@
                         return str;
                     };
                     let customSelectElement = str => {
-                        let selectorMatch = str.match(/%selector{(.*?)}(\.prop\((.*?)\))?/);
+                        let selectorMatch = str.match(/%element{(.*?)}(\.prop\((.*?)\))?/);
                         let runTimes = 0;
                         while (selectorMatch) {
                             if (runTimes++ > 100) break;
                             let selector = selectorMatch[1];
                             let prop = selectorMatch[3];
                             let value = "";
-                            let ele = document.querySelector(selector);
+                            let ele = self.getElement(selector);
                             if (ele) {
                                 if (prop) {
                                     value = ele.getAttribute(prop) || ele[prop];
@@ -2755,24 +2785,7 @@
                                 }
                             }
                             str = customReplaceSingle(str, selectorMatch[0], value);
-                            selectorMatch = str.match(/%selector{(.*?)}(\.prop\((.*?)\))?/);
-                        }
-                        selectorMatch = str.match(/%xpath{(.*?)}(\.prop\((.*?)\))?/);
-                        while (selectorMatch) {
-                            if (runTimes++ > 100) break;
-                            let selector = selectorMatch[1];
-                            let prop = selectorMatch[3];
-                            let value = "";
-                            let ele = getElementByXpath(selector);
-                            if (ele) {
-                                if (prop) {
-                                    value = ele.getAttribute(prop) || ele[prop];
-                                } else {
-                                    value = ele.innerText;
-                                }
-                            }
-                            str = customReplaceSingle(str, selectorMatch[0], value);
-                            selectorMatch = str.match(/%xpath{(.*?)}(\.prop\((.*?)\))?/);
+                            selectorMatch = str.match(/%element{(.*?)}(\.prop\((.*?)\))?/);
                         }
                         return str;
                     }
@@ -3651,7 +3664,7 @@
                     await cacheAction(cachePool.shift());
                 }
                 if (needCache) {
-                    console.log('SearchJumper all icons cached!');
+                    debug('SearchJumper all icons cached!');
                 }
             }
             if (searchBar.bar.style.display === "none") {
