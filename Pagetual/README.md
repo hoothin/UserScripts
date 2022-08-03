@@ -75,7 +75,7 @@ The time to wait for page ready when you are sure the url match the site, you ca
 
 waitElement
 --
-The array["exist", "not exist"] contains "selector of element must exist (for some lazyload element)" & "selector of element must not exist (for some loading placeholder which need scroll into view to load)"
+The array["exist", "not exist"] contains "selector or xpath of element must exist (for some lazyload element)" & "selector or xpath of element must not exist (for some loading placeholder which need scroll into view to load)"
 
 action
 --
