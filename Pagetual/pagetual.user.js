@@ -1883,9 +1883,16 @@
              #pagetual-nextSwitch>.group>span {
               color: #161616;
               cursor: pointer;
+              margin: 3px;
+              font-size: larger;
+              font-weight: bold;
              }
              #pagetual-nextSwitch>.group>span:hover {
               color: red;
+             }
+             #pagetual-nextSwitch>.group>span.current {
+              border: 2px dotted red;
+              border-radius: 10px;
              }
              #pagetual-nextSwitch>.closeSwitch {
               position: absolute;
@@ -1928,17 +1935,26 @@
                 self.close();
             }, true);
             this.frame = frame;
+            let currentSpan;
             ruleParser.curSiteRule.nextLink.forEach((link, i) => {
                 let span = document.createElement("span");
                 let target = ruleParser.curSiteRule.type==0?getElementByXpath(link,document,document):document.querySelector(link);
-                span.innerText = i + 1 + ": " + ((target && target.innerText) || link);
+                span.innerText = i + 1 + ": " + ((target && target.innerText.trim()) || link);
                 span.addEventListener("click", e => {
+                    if (currentSpan) currentSpan.classList.remove("current");
+                    span.classList.add("current");
+                    currentSpan = span;
                     nextIndex = i;
                     storage.setItem("nextIndex_"+location.host, nextIndex);
+                    ruleParser.oldUrl="";
                     ruleParser.getNextLink(ruleParser.pageDoc||document);
                     isLoading=false;
                     self.close();
                 }, true);
+                if (i == nextIndex) {
+                    span.classList.add("current");
+                    currentSpan = span;
+                }
                 group.appendChild(span);
             });
         }
@@ -3740,7 +3756,7 @@
         window.scrollTo({ top: y, behavior: 'smooth'});
     }
 
-    var hasPageNum=true;
+    const pageNumReg=/[&\/\?](p=|page[=\/_-]?)\d+|[_-]\d+\./;
     function createPageBar(url){
         let insert=ruleParser.getInsert();
         if(!insert || !insert.parentNode)return;
@@ -3790,7 +3806,7 @@
             pageText.innerHTML=ruleParser.nextTitle+" ";
             pageText.title=ruleParser.nextTitle;
         }
-        if(ruleParser.curSiteRule.pageNum || (hasPageNum && /[&\/\?](p=|page[=\/_-]?)\d+|[_-]\d+\./.test(url))){
+        if(ruleParser.curSiteRule.pageNum || pageNumReg.test(url)){
             pageText.innerHTML+="Page ";
             pageNum=document.createElement("span");
             pageNum.innerHTML=ruleParser.getPageNumFromUrl(url);
@@ -3814,7 +3830,6 @@
             pageBar.appendChild(pageNum);
         }else{
             pageText.innerHTML+="Page "+curPage;
-            hasPageNum=false;
         }
         let preBtn=document.createElement("span");
         preBtn.innerHTML="∧";
