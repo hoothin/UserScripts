@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.30.6.15
+// @version      1.9.30.6.16
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -566,6 +566,33 @@
         return result;
     }
 
+    function isXPath(xpath) {
+        if (!xpath) return false;
+        return xpath.startsWith('./') || xpath.startsWith('//') || xpath.startsWith('id(');
+    }
+
+    function getAllElements(sel, doc) {
+        try {
+            if (!isXPath(sel)) {
+                return doc.querySelectorAll(sel);
+            }
+        } catch(e) {
+            debug(e);
+        }
+        return getAllElementsByXpath(sel, doc, doc);
+    }
+
+    function getElement(sel, doc) {
+        try {
+            if (!isXPath(sel)) {
+                return doc.querySelector(sel);
+            }
+        } catch(e) {
+            debug(e);
+        }
+        return getElementByXpath(sel, doc, doc);
+    }
+
     function geneSelector(ele, addID){
         let selector=ele.tagName.toLowerCase();
         //Google id class都是隨機。百度更過分，style script順序都是隨機的
@@ -708,7 +735,6 @@
                 };
             }else{
                 item.from=from;
-                if(typeof(item.type) == "undefined")item.type=1;
                 return item;
             }
             return null;
@@ -748,7 +774,7 @@
                 if(Array && Array.isArray && Array.isArray(nextLink)){
                     nextLink=nextLink[0];
                 }
-                nextLink=r.type==0?getElementByXpath(nextLink):document.querySelector(nextLink);
+                nextLink=getElement(nextLink, document);
                 if(!nextLink)return false;
             }
             if(r.pageElement){
@@ -756,7 +782,7 @@
                 if(Array && Array.isArray && Array.isArray(pageElement)){
                     pageElement=pageElement[0];
                 }
-                pageElement=r.type==0?getElementByXpath(pageElement):document.querySelector(pageElement);
+                pageElement=getElement(pageElement, document);
                 if(!pageElement)return false;
             }
             if(r.insert){
@@ -764,7 +790,7 @@
                 if(Array && Array.isArray && Array.isArray(insert)){
                     insert=insert[0];
                 }
-                insert=r.type==0?getElementByXpath(insert):document.querySelector(insert);
+                insert=getElement(insert, document);
                 if(!insert)return false;
             }
             return true;
@@ -825,11 +851,11 @@
                 let urlReg=new RegExp(r.url, "i");
                 if(urlReg.test(location.href)){
                     if(r.include){
-                        let include=r.type==0?getElementByXpath(r.include):document.querySelector(r.include);
+                        let include=getElement(r.include, document);
                         if(!include)return false;
                     }
                     if(r.exclude){
-                        let exclude=r.type==0?getElementByXpath(r.exclude):document.querySelector(r.exclude);
+                        let exclude=getElement(r.exclude, document);
                         if(exclude)return false;
                     }
                     if(r.waitElement){
@@ -939,9 +965,7 @@
                 if(Array && Array.isArray && Array.isArray(pageElementSel)){
                     pageElementSel=pageElementSel[nextIndex<pageElementSel.length?nextIndex:0];
                 }
-                pageElement=this.curSiteRule.type==0?getAllElementsByXpath(pageElementSel,doc,doc):doc.querySelectorAll(pageElementSel);
-            }else if(!this.curSiteRule.singleUrl && this.curSiteRule.type==0){
-                pageElement=[body];
+                pageElement=getAllElements(pageElementSel, doc);
             }
             if(pageElement && pageElement.length===1 && pageElement[0].style.display==='none'){
                 pageElement=[body];
@@ -1270,11 +1294,11 @@
                     }
                 }
                 if(next3){
-                    let eles=getAllElementsByXpath(`//a[text()='${next3.innerText}']`,curPage,curPage);
+                    let eles=getAllElements(`//a[text()='${next3.innerText}']`, curPage);
                     if(eles.length>2)next3=null;
                 }
                 if(nextJs3){
-                    let eles=getAllElementsByXpath(`//a[text()='${nextJs3.innerText}']`,curPage,curPage);
+                    let eles=getAllElements(`//a[text()='${nextJs3.innerText}']`, curPage);
                     if(eles.length>2)nextJs3=null;
                 }
             }
@@ -1409,7 +1433,7 @@
                     if(Array && Array.isArray && Array.isArray(nextLinkSel)){
                         nextLinkSel=nextLinkSel[nextIndex];
                     }
-                    nextLink=this.curSiteRule.type==0?getElementByXpath(nextLinkSel,doc,doc):doc.querySelector(nextLinkSel);
+                    nextLink=getElement(nextLinkSel, doc);
                 }
             }else{
                 page=this.getPage(doc);
@@ -1563,7 +1587,7 @@
                 if(Array && Array.isArray && Array.isArray(insertSel)){
                     insertSel=insertSel[nextIndex<insertSel.length?nextIndex:0];
                 }
-                this.insert=this.curSiteRule.type==0?getElementByXpath(insertSel,document):document.querySelector(insertSel);
+                this.insert=getElement(insertSel, document);
             }else{
                 let pageElement=this.getPageElement(document, _unsafeWindow);
                 if(pageElement && pageElement.length>0){
@@ -1735,11 +1759,7 @@
                 let autoClick=self.curSiteRule.autoClick;
                 if(autoClick){
                     let autoClickBtn;
-                    try{
-                        autoClickBtn=document.querySelector(autoClick);
-                    }catch(e){
-                        autoClickBtn=getElementByXpath(autoClick);
-                    }
+                    autoClickBtn=getElement(autoClick, document);
                     if(autoClickBtn){
                         emuClick(autoClickBtn);
                     }
@@ -1938,7 +1958,7 @@
             let currentSpan;
             ruleParser.curSiteRule.nextLink.forEach((link, i) => {
                 let span = document.createElement("span");
-                let target = ruleParser.curSiteRule.type==0?getElementByXpath(link,document,document):document.querySelector(link);
+                let target = getElement(link, document);
                 span.innerText = i + 1 + ": " + ((target && target.innerText.trim()) || link);
                 span.addEventListener("click", e => {
                     if (currentSpan) currentSpan.classList.remove("current");
@@ -2174,7 +2194,7 @@
                     self.setSelectorDiv("");
                     return;
                 }
-                let element = !xpath.checked ? getElementByXpath(selectorInput.value) : document.querySelector(selectorInput.value);
+                let element = getElement(selectorInput.value, document);
                 let selector = self.getSelectorFromEle(element);
                 self.setSelectorDiv(selector);
                 selectorInput.value = selector;
@@ -2191,8 +2211,6 @@
                 }
                 if (selectorInput.value) {
                     editTemp.pageElement = selectorInput.value;
-                    let preType = editTemp.type === 0;
-                    if (xpath.checked !== preType) editTemp.type = xpath.checked ? 0 : 1;
                 }
                 rulesData.editTemp=editTemp;
                 storage.setItem("rulesData", rulesData);
@@ -2308,7 +2326,7 @@
             let self = this;
             this.clearSigns();
             if (!this.selectorInput.value) return;
-            let eles = this.xpath.checked ? getAllElementsByXpath(this.selectorInput.value) : document.querySelectorAll(this.selectorInput.value);
+            let eles = getAllElements(this.selectorInput.value, document);
             if (eles && eles.length > 0) {
                 eles.forEach(ele => {
                     let sign = self.createSignDiv();
@@ -2335,7 +2353,7 @@
 
             document.body.addEventListener("mousemove", this.moveHandler, true);
             document.body.addEventListener("click", this.clickHandler, true);
-            this.xpath.checked = ruleParser.curSiteRule.type === 0;
+            this.xpath.checked = isXPath(ruleParser.curSiteRule.pageElement);
 
             let pageElementSel=ruleParser.curSiteRule.pageElement || "";
             if(Array && Array.isArray && Array.isArray(pageElementSel)){
@@ -3721,11 +3739,7 @@
         if(ruleParser.curSiteRule.loadMore==="")return null;
         let btnSel=ruleParser.curSiteRule.loadMore||".LoadMore,.load-more,.button-show-more,button[data-testid='more-results-button']",loadmoreBtn;
         if(btnSel){
-            try{
-                loadmoreBtn=doc.querySelector(btnSel);
-            }catch(e){
-                loadmoreBtn=getElementByXpath(btnSel,doc,doc);
-            }
+            loadmoreBtn=getElement(btnSel, doc);
         }
         if(!loadmoreBtn){
             let buttons=doc.querySelectorAll("input,button,a,div[onclick]"),loadmoreReg=/^\s*(加载更多|加載更多|load\s*more|もっと読み込む)\s*$/i;
