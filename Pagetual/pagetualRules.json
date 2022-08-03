@@ -11,7 +11,10 @@
   },
   {
     "name":"Google Search",
-    "nextLink":"id('pnnext')|id('navbar navcnt nav')//td[span]/following-sibling::td[1]/a|id('nn')/parent::a",
+    "nextLink": [
+        "id('pnnext')|id('navbar navcnt nav')//td[span]/following-sibling::td[1]/a|id('nn')/parent::a",
+        "id('pnprev')|id('navbar navcnt nav')//td[span]/following-sibling::td[1]/a|id('nn')/parent::a"
+    ],
     "pageElement":"id('rso')|id('center_col')/style[contains(.,'relative')][id('rso')]|id('search')/div/div/style[1]",
     "insert":"id('center_col')/div[@role='navigation']",
     "type":0,
@@ -26,6 +29,15 @@
     "pageElement":".gsc-expansionArea>.gsc-result",
     "url":"^https://cse\\.google\\.com.*&gsc\\.q=",
     "wait":2000
+  },
+  {
+    "name": "Vipergirls",
+    "pageElement": "#threads,.posts",
+    "url": "^https://vipergirls\\.to",
+    "nextLink": [
+        "a[rel='next']",
+        "a[rel='prev']"
+    ]
   },
   {
     "name": "Pixabay",
@@ -119,14 +131,20 @@
   {
     "name":"bbsPostlist1",
     "url":"/t",
-    "nextLink":"a.nxt",
+    "nextLink": [
+        "a.nxt",
+        "a.prev"
+    ],
     "pageNum":"\\-\\d+\\-{$p}\\-\\d+\\.html",
     "pageElement":"div#postlist>*"
   },
   {
     "name":"bbsThreadlist1",
     "url":"/f",
-    "nextLink":"a.nxt",
+    "nextLink": [
+        "a.nxt",
+        "a.prev"
+    ],
     "pageNum":"\\-\\d+\\-{$p}\\.html",
     "pageElement":"div#threadlist form"
   },
@@ -175,7 +193,10 @@
     "name":"Baidu",
     "css":"span.c-img-radius-large.c-img-border,.result-molecule[tpl='app/rs']{pointer-events: none}.result-molecule[tpl='app/rs']>div{pointer-events: all}",
     "insertPos":1,
-    "nextLink":"//*[@id=\"page\"]/div/a[contains(text(),'下一页')]",
+    "nextLink": [
+        "//*[@id=\"page\"]/div/a[contains(text(),'下一页')]",
+        "//*[@id=\"page\"]/div/a[contains(text(),'上一页')]"
+    ],
     "pageElement":"//*[@id=\"content_style\"]|//*[@id=\"content_left\"]/*",
     "type":0,
     "pageNum":"&pn={10*($p-1)}",
