@@ -87,7 +87,7 @@ action
 
 nextLink
 --
-Selector of next page link, disable when set to 0
+Selector of next page link, disable when set to 0, you can let it to be a array to contains multiple next links.
 
 nextLinkByUrl
 --
@@ -99,7 +99,7 @@ Use this to eval javaScript code and return target url of next page with doc (do
 
 pageElement
 --
-Selector of main content which need to insert
+Selector of main content which need to insert, you can let it to be a array to contains multiple page elements.
 
 pageElementByJs `(over)`
 --
@@ -115,7 +115,7 @@ Add css so you can show some hidden element, start with "inIframe:" then this cs
 
 insert
 --
-Which position you want to insert
+Which position you want to insert, you can let it to be a array to contains multiple positions.
 
 insertPos
 --
