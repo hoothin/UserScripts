@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.30.6.13
+// @version      1.9.30.6.15
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -196,7 +196,8 @@
                 pickerPlaceholder:"没想法建议留空",
                 pickerCheck:"检查你编辑的选择器",
                 gotoEdit:"使用当前的选择器前往编辑规则",
-                manualMode:"禁用拼接，手动用右方向键翻页（或发送事件'pagetual.next'）"
+                manualMode:"禁用拼接，手动用右方向键翻页（或发送事件'pagetual.next'）",
+                nextSwitch:"切换下一页选择器"
             };
             break;
         case "zh-TW":
@@ -266,7 +267,8 @@
                 pickerPlaceholder:"沒想法建議留空",
                 pickerCheck:"檢查你編輯的選擇器",
                 gotoEdit:"使用當前的選擇器前往編輯規則",
-                manualMode:"禁用拼接，手動用右方向鍵翻頁（或發送事件'pagetual.next'）"
+                manualMode:"禁用拼接，手動用右方向鍵翻頁（或發送事件'pagetual.next'）",
+                nextSwitch:"切換下一頁選擇器"
             };
             break;
         case "ja":
@@ -335,7 +337,8 @@
                 pickerPlaceholder:"わからない場合は空のままにしてください",
                 pickerCheck:"セレクターをチェック",
                 gotoEdit:"現在のセレクターでルールを編集する",
-                manualMode:"スプライシングを無効にします。手動で右の矢印キーを使用してページをめくります"
+                manualMode:"スプライシングを無効にします。手動で右の矢印キーを使用してページをめくります",
+                nextSwitch:"次のページに切り替え"
             };
             break;
         default:
@@ -404,7 +407,8 @@
                 pickerPlaceholder:"Leave empty if you have no idea",
                 pickerCheck:"Check selector",
                 gotoEdit:"Go to edit rule with current selector",
-                manualMode:"Disable splicing, manually turn pages with the right arrow keys (or dispatch event 'pagetual.next')"
+                manualMode:"Disable splicing, manually turn pages with the right arrow keys (or dispatch event 'pagetual.next')",
+                nextSwitch:"Switch next link"
             };
             break;
     }
@@ -739,17 +743,28 @@
         }
 
         ruleMatch(r) {
-            let pageElement,nextLink,insert;
             if(r.nextLink && r.nextLink!="0" && r.nextLink!=0){
-                nextLink=r.type==0?getElementByXpath(r.nextLink):document.querySelector(r.nextLink);
+                let nextLink=r.nextLink;
+                if(Array && Array.isArray && Array.isArray(nextLink)){
+                    nextLink=nextLink[0];
+                }
+                nextLink=r.type==0?getElementByXpath(nextLink):document.querySelector(nextLink);
                 if(!nextLink)return false;
             }
             if(r.pageElement){
-                pageElement=r.type==0?getElementByXpath(r.pageElement):document.querySelector(r.pageElement);
+                let pageElement=r.pageElement;
+                if(Array && Array.isArray && Array.isArray(pageElement)){
+                    pageElement=pageElement[0];
+                }
+                pageElement=r.type==0?getElementByXpath(pageElement):document.querySelector(pageElement);
                 if(!pageElement)return false;
             }
             if(r.insert){
-                insert=r.type==0?getElementByXpath(r.insert):document.querySelector(r.insert);
+                let insert=r.insert;
+                if(Array && Array.isArray && Array.isArray(insert)){
+                    insert=insert[0];
+                }
+                insert=r.type==0?getElementByXpath(insert):document.querySelector(insert);
                 if(!insert)return false;
             }
             return true;
@@ -920,7 +935,11 @@
             let self=this;
             let body=doc.body;
             if(this.curSiteRule.pageElement){
-                pageElement=this.curSiteRule.type==0?getAllElementsByXpath(this.curSiteRule.pageElement,doc,doc):doc.querySelectorAll(this.curSiteRule.pageElement);
+                let pageElementSel=this.curSiteRule.pageElement;
+                if(Array && Array.isArray && Array.isArray(pageElementSel)){
+                    pageElementSel=pageElementSel[nextIndex<pageElementSel.length?nextIndex:0];
+                }
+                pageElement=this.curSiteRule.type==0?getAllElementsByXpath(pageElementSel,doc,doc):doc.querySelectorAll(pageElementSel);
             }else if(!this.curSiteRule.singleUrl && this.curSiteRule.type==0){
                 pageElement=[body];
             }
@@ -1385,8 +1404,12 @@
                 }
                 nextLink={href:targetUrl};
             }else if(this.curSiteRule.nextLink){
-                if(this.curSiteRule.nextLink!="0" && this.curSiteRule.nextLink!=0){
-                    nextLink=this.curSiteRule.type==0?getElementByXpath(this.curSiteRule.nextLink,doc,doc):doc.querySelector(this.curSiteRule.nextLink);
+                let nextLinkSel=this.curSiteRule.nextLink;
+                if(nextLinkSel!="0" && nextLinkSel!=0){
+                    if(Array && Array.isArray && Array.isArray(nextLinkSel)){
+                        nextLinkSel=nextLinkSel[nextIndex];
+                    }
+                    nextLink=this.curSiteRule.type==0?getElementByXpath(nextLinkSel,doc,doc):doc.querySelector(nextLinkSel);
                 }
             }else{
                 page=this.getPage(doc);
@@ -1536,7 +1559,11 @@
                 }
             }
             if(this.curSiteRule.insert){
-                this.insert=this.curSiteRule.type==0?getElementByXpath(this.curSiteRule.insert,document):document.querySelector(this.curSiteRule.insert);
+                let insertSel=this.curSiteRule.insert;
+                if(Array && Array.isArray && Array.isArray(insertSel)){
+                    insertSel=insertSel[nextIndex<insertSel.length?nextIndex:0];
+                }
+                this.insert=this.curSiteRule.type==0?getElementByXpath(insertSel,document):document.querySelector(insertSel);
             }else{
                 let pageElement=this.getPageElement(document, _unsafeWindow);
                 if(pageElement && pageElement.length>0){
@@ -1810,6 +1837,120 @@
         }
     }
     var ruleParser = new RuleParser();
+
+    class NextSwitch {
+        static nextSwitch;
+        constructor() {
+            this.init();
+        }
+
+        static getInstance() {
+            if (!NextSwitch.nextSwitch) {
+                NextSwitch.nextSwitch = new NextSwitch();
+            }
+            return NextSwitch.nextSwitch;
+        }
+
+        init() {
+            let self = this;
+            let cssText = `
+             #pagetual-nextSwitch {
+              position: fixed;
+              top: 10px;
+              left: calc(50% - 160px);
+              background: aliceblue;
+              padding: 10px;
+              border-radius: 5px;
+              text-align: center;
+              opacity: 0.95;
+              color: #161616;
+              z-index: 2147483647;
+              font-size: 16px;
+              box-shadow: rgb(0 0 0) 0px 0px 10px;
+             }
+             #pagetual-nextSwitch>.title {
+              margin: -5px 45px 10px 45px;
+              font-size: 20px;
+              font-weight: bold;
+              border-bottom: 1px solid black;
+              user-select: none;
+              color: orangered;
+             }
+             #pagetual-nextSwitch>.group {
+              display: flex;
+              flex-direction: column;
+             }
+             #pagetual-nextSwitch>.group>span {
+              color: #161616;
+              cursor: pointer;
+             }
+             #pagetual-nextSwitch>.group>span:hover {
+              color: red;
+             }
+             #pagetual-nextSwitch>.closeSwitch {
+              position: absolute;
+              top: 3px;
+              right: 10px;
+              background: none;
+              border: none;
+              vertical-align: top;
+              transition: transform .15s ease-in-out;
+              float: right;
+              cursor: pointer;
+             }
+             #pagetual-nextSwitch svg {
+              width: 30px;
+              height: 30px;
+              vertical-align: middle;
+              fill: #161616;
+              overflow: hidden;
+             }
+             #pagetual-nextSwitch button:hover {
+              transform: scale(1.2);
+             }
+            `;
+            _GM_addStyle(cssText);
+            let frame = document.createElement("div");
+            frame.id = "pagetual-nextSwitch";
+            frame.innerHTML = createHTML(`
+                <div class="title">${i18n("nextSwitch")}</div>
+                <button type="button" class="closeSwitch">
+                  <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2754">
+                    <path d="M512 128c212 0 384 172 384 384s-172 384-384 384-384-172-384-384 172-384 384-384m0-64C264.8 64 64 264.8 64 512s200.8 448 448 448 448-200.8 448-448S759.2 64 512 64z m238.4 254.4l-45.6-45.6L512 467.2 318.4 273.6l-45.6 45.6L467.2 512 273.6 705.6l45.6 45.6L512 557.6l193.6 193.6 45.6-45.6L557.6 512l192.8-193.6z" p-id="2755">
+                    </path>
+                  </svg>
+                </button>
+                <div class="group"></div>
+            `);
+            let group = frame.querySelector(".group");
+            let closeBtn = frame.querySelector(".closeSwitch");
+            closeBtn.addEventListener("click", e => {
+                self.close();
+            }, true);
+            this.frame = frame;
+            ruleParser.curSiteRule.nextLink.forEach((link, i) => {
+                let span = document.createElement("span");
+                let target = ruleParser.curSiteRule.type==0?getElementByXpath(link,document,document):document.querySelector(link);
+                span.innerText = i + 1 + ": " + ((target && target.innerText) || link);
+                span.addEventListener("click", e => {
+                    nextIndex = i;
+                    storage.setItem("nextIndex_"+location.host, nextIndex);
+                    ruleParser.getNextLink(ruleParser.pageDoc||document);
+                    isLoading=false;
+                    self.close();
+                }, true);
+                group.appendChild(span);
+            });
+        }
+
+        start() {
+            document.documentElement.appendChild(this.frame);
+        }
+
+        close() {
+            if (this.frame.parentNode) this.frame.parentNode.removeChild(this.frame);
+        }
+    }
 
     class Picker {
         static picker;
@@ -2179,7 +2320,12 @@
             document.body.addEventListener("mousemove", this.moveHandler, true);
             document.body.addEventListener("click", this.clickHandler, true);
             this.xpath.checked = ruleParser.curSiteRule.type === 0;
-            this.setSelectorDiv(ruleParser.curSiteRule.pageElement || "");
+
+            let pageElementSel=ruleParser.curSiteRule.pageElement || "";
+            if(Array && Array.isArray && Array.isArray(pageElementSel)){
+                pageElementSel=pageElementSel[nextIndex<pageElementSel.length?nextIndex:0];
+            }
+            this.setSelectorDiv(pageElementSel);
         }
     }
 
@@ -3057,22 +3203,27 @@
                     autoLoadNum=parseInt(rulesData.autoLoadNum);
                 }
                 enableDebug=rulesData.enableDebug;
-                storage.getItem("forceState_"+location.host, v=>{
-                    storage.getItem("ruleLastUpdate", date=>{
-                        if(typeof(v)=="undefined"){
-                            v=(rulesData.enableWhiteList?1:0);
-                        }
-                        forceState=v;
-                        updateDate=date;
-                        if(initConfig())return;
-                        if(forceState==1)return;
-                        let now=new Date().getTime();
-                        if(!date || now-date>2*24*60*60*1000){
-                            updateRules(()=>{
-                            },(rule,err)=>{});
-                            storage.setItem("ruleLastUpdate", now);
-                        }
-                        callback();
+                storage.getItem("nextIndex_"+location.host, i=>{
+                    storage.getItem("forceState_"+location.host, v=>{
+                        storage.getItem("ruleLastUpdate", date=>{
+                            if(typeof(i)!=="undefined"){
+                                nextIndex=i;
+                            }
+                            if(typeof(v)=="undefined"){
+                                v=(rulesData.enableWhiteList?1:0);
+                            }
+                            forceState=v;
+                            updateDate=date;
+                            if(initConfig())return;
+                            if(forceState==1)return;
+                            let now=new Date().getTime();
+                            if(!date || now-date>2*24*60*60*1000){
+                                updateRules(()=>{
+                                },(rule,err)=>{});
+                                storage.setItem("ruleLastUpdate", now);
+                            }
+                            callback();
+                        });
                     });
                 });
             });
@@ -3159,6 +3310,11 @@
         ruleParser.initPage(()=>{
             if(ruleParser.curSiteRule.autoLoadNum){
                 autoLoadNum=ruleParser.curSiteRule.autoLoadNum;
+            }
+            if(ruleParser.curSiteRule.nextLink && Array && Array.isArray && Array.isArray(ruleParser.curSiteRule.nextLink)){
+                _GM_registerMenuCommand(i18n("nextSwitch"), ()=>{
+                    NextSwitch.getInstance().start();
+                });
             }
             if(ruleParser.nextLinkHref){
                 let isJs=/^(javascript|#)/.test(ruleParser.nextLinkHref.replace(location.href,""));
@@ -3331,12 +3487,12 @@
     var downSvgCSS=`display:initial;position:absolute;cursor: pointer;margin: 0 15px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;transform: rotate(180deg);`;
 
     const initStyle=`display: contents;right: unset;left: unset;top: unset;bottom: unset;inset: unset;clear: both;cy: initial;d: initial;dominant-baseline: initial;empty-cells: initial;fill: initial;fill-opacity: initial;fill-rule: initial;filter: initial;flex: initial;flex-flow: initial;float: initial;flood-color: initial;flood-opacity: initial;grid: initial;grid-area: initial;height: initial;hyphens: initial;image-orientation: initial;image-rendering: initial;inline-size: initial;inset-block: initial;inset-inline: initial;isolation: initial;letter-spacing: initial;lighting-color: initial;line-break: initial;list-style: initial;margin-block: initial;margin: 0px auto;margin-inline: initial;marker: initial;mask: initial;mask-type: initial;max-block-size: initial;max-height: initial;max-inline-size: initial;max-width: initial;min-block-size: initial;min-height: initial;min-inline-size: initial;min-width: initial;mix-blend-mode: initial;object-fit: initial;object-position: initial;offset: initial;opacity: initial;order: initial;orphans: initial;outline: initial;outline-offset: initial;overflow-anchor: initial;overflow-clip-margin: initial;overflow-wrap: initial;overflow: initial;overscroll-behavior-block: initial;overscroll-behavior-inline: initial;overscroll-behavior: initial;padding-block: initial;padding: initial;padding-inline: initial;page: initial;page-orientation: initial;paint-order: initial;perspective: initial;perspective-origin: initial;pointer-events: initial;position: relative;quotes: initial;r: initial;resize: initial;ruby-position: initial;rx: initial;ry: initial;scroll-behavior: initial;scroll-margin-block: initial;scroll-margin: initial;scroll-margin-inline: initial;scroll-padding-block: initial;scroll-padding: initial;scroll-padding-inline: initial;scroll-snap-align: initial;scroll-snap-stop: initial;scroll-snap-type: initial;scrollbar-gutter: initial;shape-image-threshold: initial;shape-margin: initial;shape-outside: initial;shape-rendering: initial;size: initial;speak: initial;stop-color: initial;stop-opacity: initial;stroke: initial;stroke-dasharray: initial;stroke-dashoffset: initial;stroke-linecap: initial;stroke-linejoin: initial;stroke-miterlimit: initial;stroke-opacity: initial;stroke-width: initial;tab-size: initial;table-layout: initial;text-align: initial;text-align-last: initial;text-anchor: initial;text-combine-upright: initial;text-decoration: initial;text-decoration-skip-ink: initial;text-indent: initial;text-overflow: initial;text-shadow: initial;text-size-adjust: initial;text-transform: initial;text-underline-offset: initial;text-underline-position: initial;touch-action: initial;transform: initial;transform-box: initial;transform-origin: initial;transform-style: initial;transition: initial;user-select: initial;vector-effect: initial;vertical-align: initial;visibility: initial;border-spacing: initial;-webkit-border-image: initial;-webkit-box-align: initial;-webkit-box-decoration-break: initial;-webkit-box-direction: initial;-webkit-box-flex: initial;-webkit-box-ordinal-group: initial;-webkit-box-orient: initial;-webkit-box-pack: initial;-webkit-box-reflect: initial;-webkit-highlight: initial;-webkit-hyphenate-character: initial;-webkit-line-break: initial;-webkit-line-clamp: initial;-webkit-mask-box-image: initial;-webkit-mask: initial;-webkit-mask-composite: initial;-webkit-perspective-origin-x: initial;-webkit-perspective-origin-y: initial;-webkit-print-color-adjust: initial;-webkit-rtl-ordering: initial;-webkit-ruby-position: initial;-webkit-tap-highlight-color: initial;-webkit-text-combine: initial;-webkit-text-decorations-in-effect: initial;-webkit-text-emphasis: initial;-webkit-text-emphasis-position: initial;-webkit-text-fill-color: initial;-webkit-text-security: initial;-webkit-text-stroke: initial;-webkit-transform-origin-x: initial;-webkit-transform-origin-y: initial;-webkit-transform-origin-z: initial;-webkit-user-drag: initial;-webkit-user-modify: initial;white-space: initial;widows: initial;width: initial;will-change: initial;word-break: initial;word-spacing: initial;x: initial;y: initial;`;
-    const pageTextStyle=`line-height: 30px;text-decoration: none;user-select: none;visibility: visible;position: initial;width: auto;max-width: 80%; white-space: nowrap; text-overflow: ellipsis;overflow: hidden;height: auto;float: none;clear: both;margin: 0px auto;text-align: center;display: inline-block;font-weight: bold;font-style: normal;font-size: 16px;letter-spacing: initial;vertical-align: top;color: rgb(85, 85, 95)!important;`;
+    const pageTextStyle=`background: unset!important;line-height: 30px;text-decoration: none;user-select: none;visibility: visible;position: initial;width: auto;max-width: 80%; white-space: nowrap; text-overflow: ellipsis;overflow: hidden;height: auto;float: none;clear: both;margin: 0px auto;text-align: center;display: inline-block;font-weight: bold;font-style: normal;font-size: 16px;letter-spacing: initial;vertical-align: top;color: rgb(85, 85, 95)!important;`;
 
     var tipsWords=document.createElement("div");
     tipsWords.className="pagetual_tipsWords";
 
-    var isPause=false,isLoading=false,curPage=1,forceState=0,bottomGap=1000,autoLoadNum=-1;
+    var isPause=false,isLoading=false,curPage=1,forceState=0,bottomGap=1000,autoLoadNum=-1,nextIndex=0;
 
     function changeStop(stop, hide){
         isPause=stop;
@@ -3576,7 +3732,7 @@
     }
 
     function scrollToPageBar(bar){
-        let yOffset = -15;
+        let yOffset = -20;
         if (typeof ruleParser.curSiteRule.pageBarTop !== 'undefined') {
             yOffset = -ruleParser.curSiteRule.pageBarTop;
         }
@@ -3678,7 +3834,8 @@
             if (prePageBar) {
                 scrollToPageBar(prePageBar);
             } else {
-                window.scrollTo({ top: 0, behavior: 'smooth'});
+                let scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+                window.scrollTo({ top: scrollTop - (window.innerHeight || document.documentElement.clientHeight), behavior: 'smooth'});
             }
         });
         nextBtn.addEventListener("click", e=>{
@@ -3688,7 +3845,8 @@
             if (prePageBar) {
                 scrollToPageBar(prePageBar);
             } else {
-                window.scrollTo({ top: 9999999, behavior: 'smooth'});
+                let scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+                window.scrollTo({ top: scrollTop + (window.innerHeight || document.documentElement.clientHeight), behavior: 'smooth'});
             }
         });
         pageText.insertBefore(preBtn, pageText.firstChild);
