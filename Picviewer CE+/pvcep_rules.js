@@ -5,34 +5,39 @@ PVCEP - Rules for Picviewer CE+
 (c) 2021-2022 Hoothin <rixixi [at] gmail.com>
 Licenced under the MIT license.
 
-最少僅需
+最少仅需
 {
- name:
- r:
- s:
+ name: 站点名
+ r: 图片链接正则或者待替换字符串
+ s: 替换目标字符串
 }
 或者
 {
- name:
- getImage:
+ name: 站点名
+ getImage: 图片链接替换函数
 }
-其他參數項按需添加即可，需要注意 css/ext/xhr/lazyAttr/description/clickToOpen 在指定站點 url 之後方可使用
+其他参数项按需添加即可，需要注意 css/ext/xhr/lazyAttr/description/clickToOpen 在指定站点 url 之后方可使用
  */
 var siteInfo=[
 {
  name: "google 图片搜索",
+ 
  //网址例子 ( 方便测试和查看 )
  example:"http://www.google.com.hk/search?q=firefox&tbm=isch",
+ 
  //是否启用
  enabled:true,
- //站点正则
+ 
+ //站点正则，匹配站点url该条规则才会生效
  url:/https?:\/\/www.google(\.\w{1,3}){1,3}\/search\?.*&tbm=isch/,
- //鼠标左键点击直接打开..（这个只是当高级规则的getImage()返回图片的时候生效）
+ 
+ //鼠标左键点击直接打开（仅当高级规则的getImage()返回图片的时候生效）
  clickToOpen:{
      enabled:false,
      preventDefault:true,//是否尝试阻止点击的默认行为（比如如果是你点的是一个链接，默认行为是打开这个链接，如果是true，js会尝试阻止链接的打开(如果想临时打开这个链接，请使用右键的打开命令)）
      type:'actual',//默认的打开方式: 'actual'(弹出,原始图片) 'magnifier'(放大镜) 'current'(弹出,当前图片)
  },
+ 
  //获取图片实际地址的处理函数,
  //this 为当前鼠标悬浮图片的引用,
  //第一个参数为当前图片的父元素中第一个a元素(可能不存在)
@@ -47,18 +52,24 @@ var siteInfo=[
          return decodeURIComponent(RegExp.$1);
      }
  },
+ 
  // 自定义样式
  // css: '',
+ 
  // 如果图片藏在非img标签后面，使用此项获取被遮挡的img元素。
  // 其中previous代表前面一个元素，previous-2代表前面第二个元素，next代表后面一个元素。
  // 或者直接用函数获取，传入当前元素，返回查找到的元素或是null。
  // ext: 'previous-2',
+ 
  // 排除的图片正则
  // exclude: /weixin_code\.png$/i,
- // 需要替换的图片正则
+ 
+ // 需要替换的图片正则，匹配上图片url该条规则才生效
  // src: /avatar/i,
+ 
  // 正则或字符串检测内容，可以为含有多组规则的数组，若为字符串则只进行字符串替换
  // r: /\?.*$/i,
+ 
  // 正则或字符串替换内容，可以与上一条一一对应，也可以以数组对应检测正则的其中一条，比如希望有多个结果尝试显示原图
  // s: ''
 },
