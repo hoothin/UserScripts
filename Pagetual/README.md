@@ -63,11 +63,11 @@ enable
 
 include
 --
-Selector of the element which must include
+Selector or xpath of the element which must include
 
 exclude
 --
-Selector of the element which must not include
+Selector or xpath of the element which must not include
 
 wait
 --
@@ -77,17 +77,13 @@ waitElement
 --
 The array["exist", "not exist"] contains "selector of element must exist (for some lazyload element)" & "selector of element must not exist (for some loading placeholder which need scroll into view to load)"
 
-type
---
-0 means crawl by xpath, 1 or undefined means css selector
-
 action
 --
 0 means load url and insert with static html, 1 means load by iframe so that dynamic javaScript code on page may effect, 2 means force insert iframe to bottom
 
 nextLink
 --
-Selector of next page link, disable when set to 0, you can let it to be a array to contains multiple next links.
+Selector or xpath of next page link, disable when set to 0, you can let it to be a array to contains multiple next links.
 
 nextLinkByUrl
 --
@@ -99,7 +95,7 @@ Use this to eval javaScript code and return target url of next page with doc (do
 
 pageElement
 --
-Selector of main content which need to insert, you can let it to be a array to contains multiple page elements.
+Selector or xpath of main content which need to insert, you can let it to be a array to contains multiple page elements.
 
 pageElementByJs `(over)`
 --
