@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.5.9.37.2
+// @version      1.6.5.9.37.3
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -2383,6 +2383,16 @@
                                 return;
                             }
                         }
+                    } else if (e.which === 1 && e.ctrlKey) {
+                        self.batchOpening = true;
+                        for (let i = 0;i < siteEles.length;i++) {
+                            let siteEle = siteEles[i];
+                            if (!siteEle.dataset.nobatch && !/^javascript:/.test(siteEle.href) && !siteEle.onclick) {
+                                let mouseDownEvent = new PointerEvent("mousedown");
+                                siteEle.dispatchEvent(mouseDownEvent);
+                                window.open(siteEle.href, '_blank');
+                            }
+                        }
                     }
                     self.batchOpening = false;
                 }, false);
@@ -3070,6 +3080,7 @@
                     } else {
                         let alt = e && e.altKey;
                         let ctrl = e && e.ctrlKey;
+                        let shift = e && e.shiftKey;
                         let url = getUrl();
                         if (!url) {
                             //wait for all input stoped
@@ -3094,7 +3105,7 @@
                                     ele.onclick = null;
                                     if (ctrl && !alt) {
                                         _GM_openInTab(url);
-                                    }else if (ctrl) {
+                                    }else if (alt && (ctrl || shift)) {
                                         _GM_openInTab(url, {incognito: true});
                                     } else {
                                         window.open(url, "_blank", "width=800, height=1000, location=0, resizable=1, menubar=0, scrollbars=0");
@@ -4060,7 +4071,7 @@
             }
             if (searchData.prefConfig.quickAddRule) {
                 document.addEventListener('click', e => {
-                    if (!e.ctrlKey || !e.altKey) return;
+                    if ((!e.ctrlKey && !e.shiftKey) || !e.altKey) return;
                     if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') return;
                     let parentForm, url;
                     if (e.target.name) {
