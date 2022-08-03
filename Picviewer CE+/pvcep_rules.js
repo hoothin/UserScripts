@@ -16,7 +16,7 @@ Licenced under the MIT license.
  name: 站点名
  getImage: 图片链接替换函数
 }
-其他参数项按需添加即可，需要注意 css/ext/xhr/lazyAttr（懒加载的原图 URL 属性名）/description（收藏图片时的描述）/clickToOpen 在指定站点 URL 之后方可使用
+其他参数项按需添加即可，需要注意 css/ext/xhr/lazyAttr（懒加载的原图 URL 属性名）/description（收藏图片时的描述，支持选择器或 xpath）/clickToOpen 在指定站点 URL 之后方可使用
  */
 var siteInfo=[
 {
