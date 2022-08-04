@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.5.9.38.2
+// @version      1.6.5.9.38.3
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -2487,7 +2487,7 @@
                             _GM_openInTab(siteEle.href, {incognito: true});
                             setTimeout(() => {
                                 storage.setItem("lastSign", 0);
-                            }, 1000);
+                            }, 2000);
                             break;
                         }
                     }
@@ -2522,7 +2522,7 @@
                             window.open(siteEle.href, '_blank');
                             setTimeout(() => {
                                 storage.setItem("lastSign", 0);
-                            }, 1000);
+                            }, 2000);
                             break;
                         }
                     }
@@ -2695,7 +2695,7 @@
                                 }
                             } else if (data.url.indexOf("?") === -1) {
                                 if (!this.keywordMatch) this.keywordMatch = /%[stb][a-z]?\b/g;
-                                if (new RegExp(data.url.replace(/\./g, "\\.").replace(this.keywordMatch, ".*")).test(location.href)) {
+                                if (new RegExp(data.url.replace(/^https?/, "").replace(/\./g, "\\.").replace(this.keywordMatch, ".*")).test(location.href)) {
                                     ele.dataset.current = true;
                                 }
                             }
@@ -3056,70 +3056,72 @@
                                 return false;
                             };
                         } else ele.href = url;
-                        let isPage = /^(https?|ftp):/.test(url);
-                        let checkAlt = () => {
-                            if ((alt || ctrl) && isPage) {
-                                ele.onclick = e => {
-                                    ele.onclick = null;
-                                    if (ctrl && shift) {
-                                        _GM_openInTab(url, {incognito: true});
-                                    } else if (ctrl) {
-                                        _GM_openInTab(url);
-                                    } else if (alt) {
-                                        window.open(url, "_blank", "width=800, height=1000, location=0, resizable=1, toolbar=0, menubar=0, scrollbars=0");
-                                    }
-                                    if (e.preventDefault) e.preventDefault();
-                                    if (e.stopPropagation) e.stopPropagation();
-                                    return false;
-                                };
-                                return true;
-                            }
-                            return false;
-                        };
-                        if (self.customInput) {
-                            //lose click, click one more time
-                            if (checkAlt() || !isPage) {
-                                ele.click();
-                            } else {
-                                _GM_openInTab(url, {active: true});
-                            }
-                        } else {
-                            if (!checkAlt()) {
-                                if (searchData.prefConfig.multiline == 1 || searchData.prefConfig.multiline == 2) {
-                                    let selStr = getSelectStr();
-                                    if (selStr &&
-                                        /%s\b/.test(ele.dataset.url) &&
-                                        selStr.indexOf("\n") !== -1) {
-                                        if (searchData.prefConfig.multiline == 1 ||
-                                            confirm(i18n("multiline"))) {
-                                            let selStrArr = selStr.split("\n");
-                                            if (selStrArr.length > 10 && !confirm(i18n("multilineTooMuch"))) return;
-                                            let encodeSelStr = encodeURIComponent(selStr);
-                                            let searchIndex = 0;
-                                            let searchByLine = () => {
-                                                _GM_openInTab(url.replace(encodeSelStr, encodeURIComponent(selStrArr[searchIndex++])));
-                                                if (searchIndex < selStrArr.length) {
-                                                    setTimeout(() => {
-                                                        searchByLine();
-                                                    }, searchData.prefConfig.multilineGap || 1000);
-                                                }
-                                            };
-                                            searchByLine();
-                                            if (searchData.prefConfig.multiline == 1) {
-                                                ele.onclick = e => {
-                                                    ele.onclick = null;
-                                                    e.preventDefault();
-                                                    e.stopPropagation();
-                                                    return false;
-                                                };
-                                            }
-                                        } else {
-                                            ele.click();
+                        if (!self.batchOpening) {
+                            let isPage = /^(https?|ftp):/.test(url);
+                            let checkAlt = () => {
+                                if ((alt || ctrl) && isPage) {
+                                    ele.onclick = e => {
+                                        ele.onclick = null;
+                                        if (ctrl && shift) {
+                                            _GM_openInTab(url, {incognito: true});
+                                        } else if (ctrl) {
+                                            _GM_openInTab(url);
+                                        } else if (alt) {
+                                            window.open(url, "_blank", "width=800, height=1000, location=0, resizable=1, toolbar=0, menubar=0, scrollbars=0");
                                         }
+                                        if (e.preventDefault) e.preventDefault();
+                                        if (e.stopPropagation) e.stopPropagation();
                                         return false;
-                                    }
+                                    };
+                                    return true;
                                 }
-                                ele.onclick = null;
+                                return false;
+                            };
+                            if (self.customInput) {
+                                //lose click, click one more time
+                                if (checkAlt() || !isPage) {
+                                    ele.click();
+                                } else {
+                                    _GM_openInTab(url, {active: true});
+                                }
+                            } else {
+                                if (!checkAlt()) {
+                                    if (searchData.prefConfig.multiline == 1 || searchData.prefConfig.multiline == 2) {
+                                        let selStr = getSelectStr();
+                                        if (selStr &&
+                                            /%s\b/.test(ele.dataset.url) &&
+                                            selStr.indexOf("\n") !== -1) {
+                                            if (searchData.prefConfig.multiline == 1 ||
+                                                confirm(i18n("multiline"))) {
+                                                let selStrArr = selStr.split("\n");
+                                                if (selStrArr.length > 10 && !confirm(i18n("multilineTooMuch"))) return;
+                                                let encodeSelStr = encodeURIComponent(selStr);
+                                                let searchIndex = 0;
+                                                let searchByLine = () => {
+                                                    _GM_openInTab(url.replace(encodeSelStr, encodeURIComponent(selStrArr[searchIndex++])));
+                                                    if (searchIndex < selStrArr.length) {
+                                                        setTimeout(() => {
+                                                            searchByLine();
+                                                        }, searchData.prefConfig.multilineGap || 1000);
+                                                    }
+                                                };
+                                                searchByLine();
+                                                if (searchData.prefConfig.multiline == 1) {
+                                                    ele.onclick = e => {
+                                                        ele.onclick = null;
+                                                        e.preventDefault();
+                                                        e.stopPropagation();
+                                                        return false;
+                                                    };
+                                                }
+                                            } else {
+                                                ele.click();
+                                            }
+                                            return false;
+                                        }
+                                    }
+                                    ele.onclick = null;
+                                }
                             }
                         }
                     }
@@ -3684,7 +3686,7 @@
                 } else {
                     keywordsMatch = currentSite.url.match(/https?:\/\/[^\/]*\/(.*)%s\b/);
                     if (keywordsMatch) {
-                        keywordsMatch = location.href.match(new RegExp(keywordsMatch[1] + "(.*?)(\/|$)"));
+                        keywordsMatch = location.href.match(new RegExp((keywordsMatch[1] || (location.host.replace(/\./g, "\\.") + "/")) + "(.*?)(\/|$)"));
                         if (keywordsMatch) {
                             keywords = keywordsMatch[1];
                         }
