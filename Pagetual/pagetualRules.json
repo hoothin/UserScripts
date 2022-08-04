@@ -37,7 +37,8 @@
     "nextLink": [
         "a[rel='next']",
         "a[rel='prev']"
-    ]
+    ],
+    "pageNum": "page{$p}$"
   },
   {
     "name": "Pixabay",
