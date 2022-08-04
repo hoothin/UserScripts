@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.30.6.22
+// @version      1.9.30.6.23
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -1312,6 +1312,9 @@
         }
 
         canonicalUri(src) {
+            if (!src) {
+                return "";
+            }
             let origin = location.protocol + '//' + location.host;
             let url = this.basePath || origin;
             if(url.indexOf("http") !== 0) url = origin + url;
@@ -1836,10 +1839,10 @@
                     let newCanvass=newEle.querySelectorAll("canvas");
                     if(self.updateUrl){
                         [].forEach.call(newEle.querySelectorAll("img"), img=>{
-                            img.src=self.canonicalUri(img.getAttribute("src"));
+                            if (img.getAttribute("src")) img.src=self.canonicalUri(img.getAttribute("src"));
                         });
                         [].forEach.call(newEle.querySelectorAll("a"), a=>{
-                            a.href=self.canonicalUri(a.getAttribute("href"));
+                            if (a.getAttribute("href")) a.href = self.canonicalUri(a.getAttribute("href"));
                         });
                     }
                     for(let i=0;i<oldCanvass.length;i++){
