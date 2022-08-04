@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.5.9.37.7
+// @version      1.6.5.9.37.8
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -1111,6 +1111,9 @@
                      width: auto!important;
                      height: auto!important;
                  }
+                 #search-jumper.in-input .sitelistCon>div:not(.input-hide)>a {
+                     display: flex!important;
+                 }
                  #search-jumper.in-input .input-hide {
                      display: none!important;
                  }
@@ -1588,9 +1591,6 @@
                             openType.onmousedown();
                         }
                     }
-                    if (searchData.prefConfig.autoHideAll) {
-                        self.bar.style.display = 'none';
-                    }
                     this.hideTimeout = null;
                 };
                 this.bar.addEventListener('mouseenter', e => {
@@ -1605,13 +1605,8 @@
                     }
                 }, false);
 
-                if (/^2:/.test(lastSign)) {
-                    let targetSite = this.bar.querySelector(`a[href="${lastSign.replace(/^2:/, "").replace(/(["'])/g, '\\$1')}"]`);
-                    if (targetSite) {
-                        let mouseDownEvent = new PointerEvent("mousedown");
-                        targetSite.dispatchEvent(mouseDownEvent);
-                        targetSite.click();
-                    }
+                if (lastSign && lastSign !== 0) {
+                    this.batchOpen(lastSign, {});
                 }
                 lastSign = 0;
                 let inputTimer;
@@ -1693,7 +1688,6 @@
 
             searchSiteBtns() {
                 if (!this.inInput) return;
-                let showType;
                 let inputWords = this.searchInput.value;
                 let canCheckHost = !/[^\w\.\/\:\*\?]/.test(inputWords);
                 this.allListBtns.forEach(listItem => {
@@ -1708,7 +1702,9 @@
                     if (!canMatch) {
                         if (canCheckHost) {
                             if (!btn.dataset.host) {
-                                btn.dataset.host = btn.href.replace(/^https?:\/\/([^\/]*)\/.*$/, "$1");
+                                let hostReg = /^https?:\/\/([^\/]*)\/.*$/;
+                                let href = btn.getAttribute("href");
+                                btn.dataset.host = hostReg.test(href) ? href.replace(hostReg, "$1") : href;
                             }
                             canMatch = this.globMatch(inputWords, btn.dataset.host);
                         }
@@ -1719,13 +1715,11 @@
                     if (canMatch) {
                         btn.classList.remove("input-hide");
                         typeNode.classList.remove("input-hide");
-                        if (!showType) {
-                            showType = typeNode;
-                        }
                         let listItem = typeNode.querySelector("#list" + btn.dataset.id);
                         if (listItem) listItem.classList.remove("input-hide");
                     }
                 });
+                let showType = this.bar.querySelector(".search-jumper-type:not(.input-hide)");
                 if (showType && showType.classList.contains("search-jumper-hide")) showType.querySelector("span.search-jumper-btn").onmousedown();
             }
 
@@ -2218,14 +2212,10 @@
                         typeBtn.appendChild(img);
                     }
                 }
-                let batchOpen = () => {
+                let batchSiteNames = [];
+                let batchOpenConfirm = () => {
                     if (!ele.classList.contains("search-jumper-hide") || window.confirm(i18n('batchOpen'))) {
-                        self.batchOpening = true;
-                        siteEles.forEach(siteEle => {
-                            if (siteEle.dataset.nobatch || siteEle.dataset.current) return;
-                            self.openSiteBtn(siteEle);
-                        });
-                        self.batchOpening = false;
+                        self.batchOpen(batchSiteNames, {});
                     }
                 };
                 if (searchData.prefConfig.shortcut && data.shortcut) {
@@ -2248,7 +2238,7 @@
                         }
                         var key = (e.key || String.fromCharCode(e.keyCode)).toLowerCase();
                         if (data.shortcut == key) {
-                            batchOpen();
+                            batchOpenConfirm();
                         }
                     });
                 }
@@ -2256,7 +2246,7 @@
                     let baseSize = Math.min(self.bar.scrollWidth, self.bar.scrollHeight);
                     if (e) {
                         if (e.which === 3) {
-                            batchOpen();
+                            batchOpenConfirm();
                             return false;
                         } if (e.which === 1 && (e.shiftKey || e.altKey || e.ctrlKey)) {
                             return false;
@@ -2327,73 +2317,8 @@
                 };
 
                 typeBtn.addEventListener('click', e => {
-                    if (e.which === 1 && e.altKey && e.shiftKey) {
-                        self.batchOpening = true;
-                        let urls=[];
-                        for (let i = 0;i < siteEles.length;i++) {
-                            let siteEle = siteEles[i];
-                            if (!siteEle.dataset.nobatch && !/^javascript:/.test(siteEle.href) && !siteEle.onclick) {
-                                let mouseDownEvent = new PointerEvent("mousedown");
-                                siteEle.dispatchEvent(mouseDownEvent);
-                                urls.push(siteEle.href);
-                            }
-                        }
-                        let viewWidth = window.innerWidth || document.documentElement.clientWidth;
-                        let viewHeight = window.innerHeight || document.documentElement.clientHeight;
-                        let numPerLine = parseInt(viewWidth / 800);
-                        if (numPerLine > urls.length) numPerLine = urls.length;
-                        let _width = parseInt(viewWidth / numPerLine);
-                        let _height = viewHeight / (parseInt((urls.length - 1) / numPerLine) + 1) - 10;
-                        for (let i = 0; i< urls.length; i++) {
-                            let left = (i % numPerLine) * _width;
-                            let top = parseInt(i / numPerLine) * (_height + 70);
-                            window.open(urls[i], "_blank", `width=${_width-10}, height=${_height}, location=0, resizable=1, toolbar=0, menubar=0, scrollbars=0, left=${left}, top=${top}`);
-                        }
-                    } else if (e.which === 1 && e.altKey) {
-                        self.batchOpening = true;
-                        let html = '<title>SearchJumper Multi</title>';
-                        for (let i = 0;i < siteEles.length;i++) {
-                            let siteEle = siteEles[i];
-                            if (!siteEle.dataset.nobatch && !/^javascript:/.test(siteEle.href) && !siteEle.onclick) {
-                                let mouseDownEvent = new PointerEvent("mousedown");
-                                siteEle.dispatchEvent(mouseDownEvent);
-                                let iframe = document.createElement('iframe');
-                                iframe.width = '50%';
-                                iframe.height = '100%';
-                                iframe.frameBorder = '0';
-                                iframe.sandbox = "allow-same-origin allow-scripts allow-popups allow-forms";
-                                iframe.src = siteEle.href;
-                                html += iframe.outerHTML;
-                            }
-                        }
-                        let c = window.open("", "_blank");
-                        c.document.write(html);
-                        c.document.close();
-                    } else if (e.which === 1 && e.shiftKey) {
-                        self.batchOpening = true;
-                        for (let i = 0;i < siteEles.length;i++) {
-                            let siteEle = siteEles[i];
-                            if (!siteEle.dataset.nobatch && !/^javascript:/.test(siteEle.href) && !siteEle.onclick) {
-                                storage.setItem("lastSign", 1);
-                                let mouseDownEvent = new PointerEvent("mousedown");
-                                siteEle.dispatchEvent(mouseDownEvent);
-                                window.open(siteEle.href, '_blank');
-                                self.batchOpening = false;
-                                return;
-                            }
-                        }
-                    } else if (e.which === 1 && e.ctrlKey) {
-                        self.batchOpening = true;
-                        for (let i = 0;i < siteEles.length;i++) {
-                            let siteEle = siteEles[i];
-                            if (!siteEle.dataset.nobatch && !/^javascript:/.test(siteEle.href) && !siteEle.onclick) {
-                                let mouseDownEvent = new PointerEvent("mousedown");
-                                siteEle.dispatchEvent(mouseDownEvent);
-                                window.open(siteEle.href, '_blank');
-                            }
-                        }
-                    }
-                    self.batchOpening = false;
+                    self.batchOpen(batchSiteNames, e);
+                    return false;
                 }, false);
                 typeBtn.addEventListener('dblclick', e=>{
                     e.stopPropagation();
@@ -2429,6 +2354,7 @@
                     self.allSiteBtns.push(siteEle);
                     ele.appendChild(siteEle);
                     siteEles.push(siteEle);
+                    if (!site.nobatch) batchSiteNames.push(site.name);
                     if (!currentSite && (siteEle.dataset.current || match)) {
                         isCurrent = true;
                         siteEle.classList.add('current');
@@ -2457,10 +2383,6 @@
                     self.bar.insertBefore(ele, self.bar.children[0]);
                     ele.dataset.width = ele.scrollWidth + "px";
                     ele.classList.remove("search-jumper-hide");
-                    if (lastSign === 1) {
-                        batchOpen();
-                        lastSign = 0;
-                    }
                     siteEles.forEach(se => {
                         let si = se.querySelector("img");
                         if (si && !si.src && si.dataset.src) {
@@ -2531,6 +2453,109 @@
                     debug(e);
                 }
                 return getElementByXpath(sel, doc, doc);
+            }
+
+            batchOpen(siteNames, e) {
+                let self = this;
+                self.batchOpening = true;
+                let targetSites = self.getTargetSitesByName(siteNames);
+                if (e.which === 1 && e.altKey && e.shiftKey) {
+                    let html = '<title>SearchJumper Multi</title>';
+                    for (let i = 0;i < targetSites.length;i++) {
+                        let siteEle = targetSites[i];
+                        if (/^http/.test(siteEle.href) && !siteEle.onclick) {
+                            let mouseDownEvent = new PointerEvent("mousedown");
+                            siteEle.dispatchEvent(mouseDownEvent);
+                            let iframe = document.createElement('iframe');
+                            iframe.width = '50%';
+                            iframe.height = '100%';
+                            iframe.frameBorder = '0';
+                            iframe.sandbox = "allow-same-origin allow-scripts allow-popups allow-forms";
+                            iframe.src = siteEle.href;
+                            html += iframe.outerHTML;
+                        }
+                    }
+                    let c = window.open("", "_blank");
+                    c.document.write(html);
+                    c.document.close();
+                } else if (e.which === 1 && e.ctrlKey && e.shiftKey) {
+                    for (let i = 0;i < targetSites.length;i++) {
+                        let siteEle = targetSites[i];
+                        let mouseDownEvent = new PointerEvent("mousedown");
+                        siteEle.dispatchEvent(mouseDownEvent);
+                        if (/^http/.test(siteEle.href) && !siteEle.onclick) {
+                            storage.setItem("lastSign", siteNames);
+                            _GM_openInTab(siteEle.href, {incognito: true});
+                            break;
+                        }
+                    }
+                } else if (e.which === 1 && e.altKey) {
+                    let urls=[];
+                    for (let i = 0;i < targetSites.length;i++) {
+                        let siteEle = targetSites[i];
+                        if (/^http/.test(siteEle.href) && !siteEle.onclick) {
+                            let mouseDownEvent = new PointerEvent("mousedown");
+                            siteEle.dispatchEvent(mouseDownEvent);
+                            urls.push(siteEle.href);
+                        }
+                    }
+                    let viewWidth = window.innerWidth || document.documentElement.clientWidth;
+                    let viewHeight = window.innerHeight || document.documentElement.clientHeight;
+                    let numPerLine = parseInt(viewWidth / 800);
+                    if (numPerLine > urls.length) numPerLine = urls.length;
+                    let _width = parseInt(viewWidth / numPerLine);
+                    let _height = viewHeight / (parseInt((urls.length - 1) / numPerLine) + 1) - 10;
+                    for (let i = 0; i< urls.length; i++) {
+                        let left = (i % numPerLine) * _width;
+                        let top = parseInt(i / numPerLine) * (_height + 70);
+                        window.open(urls[i], "_blank", `width=${_width-10}, height=${_height}, location=0, resizable=1, toolbar=0, menubar=0, scrollbars=0, left=${left}, top=${top}`);
+                    }
+                } else if (e.which === 1 && e.shiftKey) {
+                    for (let i = 0;i < targetSites.length;i++) {
+                        let siteEle = targetSites[i];
+                        let mouseDownEvent = new PointerEvent("mousedown");
+                        siteEle.dispatchEvent(mouseDownEvent);
+                        if (/^http/.test(siteEle.href) && !siteEle.onclick) {
+                            storage.setItem("lastSign", siteNames);
+                            window.open(siteEle.href, '_blank');
+                            break;
+                        }
+                    }
+                } else if (e.which === 1 && e.ctrlKey) {
+                    for (let i = 0;i < targetSites.length;i++) {
+                        let siteEle = targetSites[i];
+                        let isPage = /^(https?|ftp):/.test(siteEle.href);
+                        if (isPage) {
+                            siteEle.setAttribute("target", "_blank");
+                        }
+                        let mouseDownEvent = new PointerEvent("mousedown");
+                        siteEle.dispatchEvent(mouseDownEvent);
+                        siteEle.click();
+                        siteEle.setAttribute("target", siteEle.dataset.target==1?"_blank":"");
+                    }
+                } else {
+                    targetSites.forEach(siteEle => {
+                        if (siteEle.dataset.current) return;
+                        self.openSiteBtn(siteEle);
+                    });
+                }
+                self.batchOpening = false;
+            }
+
+            getTargetSitesByName(siteNames) {
+                let self = this;
+                let targetSites = [];
+                siteNames.forEach(n => {
+                    for (let i = 0; i < self.allSiteBtns.length; i++) {
+                        let siteBtn = self.allSiteBtns[i];
+                        if (siteBtn.dataset.pointer) continue;
+                        if (siteBtn.dataset.name == n) {
+                            targetSites.push(siteBtn);
+                            break;
+                        }
+                    }
+                });
+                return targetSites;
             }
 
             async createSiteBtn(icon, data, openInNewTab, isBookmark) {
@@ -2917,7 +2942,6 @@
                         ele.setAttribute("target", "_blank");
                         ele.dataset.target = 1;
                     } else {
-                        ele.setAttribute("target", "");
                         ele.dataset.target = 0;
                     }
                     return resultUrl;
@@ -2958,79 +2982,9 @@
                         _GM_notification('Copy successfully!');
                     } else if (/^\[/.test(data.url)) {
                         if (!ele.onclick) {
-                            let targetSites = [];
                             let siteNames = JSON.parse(data.url);
-                            siteNames.forEach(n => {
-                                for (let i = 0; i < self.allSiteBtns.length; i++) {
-                                    let siteBtn = self.allSiteBtns[i];
-                                    if (siteBtn.dataset.pointer) continue;
-                                    if (siteBtn != ele && siteBtn.dataset.name == n) {
-                                        targetSites.push(siteBtn);
-                                        break;
-                                    }
-                                }
-                            });
                             ele.onclick = e => {
-                                self.batchOpening = true;
-                                if (e.which === 1 && e.altKey && e.shiftKey) {
-                                    let urls=[];
-                                    for (let i = 0;i < targetSites.length;i++) {
-                                        let siteEle = targetSites[i];
-                                        if (/^http/.test(siteEle.href) && !siteEle.onclick) {
-                                            let mouseDownEvent = new PointerEvent("mousedown");
-                                            siteEle.dispatchEvent(mouseDownEvent);
-                                            urls.push(siteEle.href);
-                                        }
-                                    }
-                                    let viewWidth = window.innerWidth || document.documentElement.clientWidth;
-                                    let viewHeight = window.innerHeight || document.documentElement.clientHeight;
-                                    let numPerLine = parseInt(viewWidth / 800);
-                                    if (numPerLine > urls.length) numPerLine = urls.length;
-                                    let _width = parseInt(viewWidth / numPerLine);
-                                    let _height = viewHeight / (parseInt((urls.length - 1) / numPerLine) + 1) - 10;
-                                    for (let i = 0; i< urls.length; i++) {
-                                        let left = (i % numPerLine) * _width;
-                                        let top = parseInt(i / numPerLine) * (_height + 70);
-                                        window.open(urls[i], "_blank", `width=${_width-10}, height=${_height}, location=0, resizable=1, toolbar=0, menubar=0, scrollbars=0, left=${left}, top=${top}`);
-                                    }
-                                    return false;
-                                } else if (e.which === 1 && e.altKey) {
-                                    let html = '<title>SearchJumper Multi</title>';
-                                    for (let i = 0;i < targetSites.length;i++) {
-                                        let siteEle = targetSites[i];
-                                        if (/^http/.test(siteEle.href) && !siteEle.onclick) {
-                                            let mouseDownEvent = new PointerEvent("mousedown");
-                                            siteEle.dispatchEvent(mouseDownEvent);
-                                            let iframe = document.createElement('iframe');
-                                            iframe.width = '50%';
-                                            iframe.height = '100%';
-                                            iframe.frameBorder = '0';
-                                            iframe.sandbox = "allow-same-origin allow-scripts allow-popups allow-forms";
-                                            iframe.src = siteEle.href;
-                                            html += iframe.outerHTML;
-                                        }
-                                    }
-                                    let c = window.open("", "_blank");
-                                    c.document.write(html);
-                                    c.document.close();
-                                    return false;
-                                } else if (e.which === 1 && e.shiftKey) {
-                                    for (let i = 0;i < targetSites.length;i++) {
-                                        let siteEle = targetSites[i];
-                                        if (/^http/.test(siteEle.href) && !siteEle.onclick) {
-                                            storage.setItem("lastSign", "2:" + data.url);
-                                            let mouseDownEvent = new PointerEvent("mousedown");
-                                            siteEle.dispatchEvent(mouseDownEvent);
-                                            window.open(siteEle.href, '_blank');
-                                            return false;
-                                        }
-                                    }
-                                }
-                                targetSites.forEach(siteEle => {
-                                    if (siteEle.dataset.current) return;
-                                    self.openSiteBtn(siteEle);
-                                });
-                                self.batchOpening = false;
+                                self.batchOpen(siteNames, e);
                                 return false;
                             };
                         }
@@ -3104,7 +3058,7 @@
                                     ele.onclick = null;
                                     if (ctrl && !alt) {
                                         _GM_openInTab(url);
-                                    }else if (alt && (ctrl || shift)) {
+                                    }else if (ctrl && shift) {
                                         _GM_openInTab(url, {incognito: true});
                                     } else {
                                         window.open(url, "_blank", "width=800, height=1000, location=0, resizable=1, toolbar=0, menubar=0, scrollbars=0");
@@ -4070,7 +4024,7 @@
             }
             if (searchData.prefConfig.quickAddRule) {
                 document.addEventListener('click', e => {
-                    if ((!e.ctrlKey && !e.shiftKey) || !e.altKey) return;
+                    if (!((e.ctrlKey && e.shiftKey) || (e.ctrlKey && e.altKey) || (e.altKey && e.shiftKey))) return;
                     if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') return;
                     let parentForm, url;
                     if (e.target.name) {
