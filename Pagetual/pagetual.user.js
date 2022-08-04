@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.30.6.20
+// @version      1.9.30.6.21
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -1920,7 +1920,6 @@
               cursor: pointer;
               margin: 3px;
               font-size: larger;
-              font-weight: bold;
              }
              #pagetual-nextSwitch>.group>span:hover {
               color: red;
@@ -1974,16 +1973,27 @@
             ruleParser.curSiteRule.nextLink.forEach((link, i) => {
                 let span = document.createElement("span");
                 let target = getElement(link, document);
-                span.innerText = i + 1 + ": " + ((target && target.innerText.trim()) || link);
+                let index = "<b>" + (i + 1) + "</b>: ";
+                if (target) {
+                    let targetInner = target.innerText.trim();
+                    span.innerHTML = index + (targetInner || link);
+                    span.title = link;
+                } else {
+                    span.innerHTML = index + link;
+                }
                 span.addEventListener("click", e => {
                     if (currentSpan) currentSpan.classList.remove("current");
                     span.classList.add("current");
                     currentSpan = span;
                     nextIndex = i;
-                    storage.setItem("nextIndex_"+location.host, nextIndex);
-                    ruleParser.oldUrl="";
-                    ruleParser.getNextLink(ruleParser.pageDoc||document);
-                    isLoading=false;
+                    storage.setItem("nextIndex_" + location.host, nextIndex);
+                    ruleParser.curUrl += "#pagetual";
+                    ruleParser.oldUrl = ruleParser.curUrl;
+                    autoLoadNum = -1;
+                    if (!ruleParser.nextLinkHref) {
+                        isLoading = false;
+                        ruleParser.getNextLink(ruleParser.pageDoc || document);
+                    }
                     self.close();
                 }, true);
                 if (i == nextIndex) {
