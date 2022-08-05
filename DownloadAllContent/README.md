@@ -66,6 +66,30 @@
  1. [po18](https://www.po18.tw/books/755779/articles)，章節的選擇器為 `.l_chaptname>a` ，輸入並下載後發現通過 url 無法下載正文內容，正文是 ajax 通過 articlescontent 下載的。此時可後接 `@@articles@@articlescontent` (@@ 分隔) 將章節 url 中的 articles 替換為 articlescontent 。 綜上 【`.l_chaptname>a@@articles@@articlescontent`】 可適配該站，粘貼進命令菜單即可下載。其中第一個 articles 可使用正則，例如 `@@articles(\d+)@@$1content` 代表將連結中的「articles1」「articles2」等替換為「1content」「2content」。
  2. [pixiv](https://www.pixiv.net/novel/series/7807554)，p站小說的章節選擇器為`main>section ul>li>div>a`，無需替換連結，因此後兩項留空。有6個@了 😂。正文在meta里，需要自定義代碼提取meta-preload數據的content項。綜上 【`main>section ul>li>div>a@@@@@@var noval=JSON.parse(data.querySelector("#meta-preload-data").content).novel;noval[Object.keys(noval)[0]].content;`】 即可下載p站小說。其中 "data" 代表抓取網頁的document對象，若返回的是純文本，則用 `data.body.innerText` 獲取。
  3. [紅薯中文網](https://g.hongshu.com/chapterlist/91735.do)，這個站沒有目錄連結，此時可以遍歷標籤自己創建目錄連結下載【`ul#lists>li>>let href=item.getAttribute("onclick").replace(/.*(http.*html).*/,"$1"),innerText=item.querySelector("span").innerText;return {href:href,innerText:innerText};@@@@@@let rdtext=data.querySelector('div.rdtext');let sc=data.querySelector('div.ewm+script');if(sc&&rdtext){let code=sc.innerText.replace(/for\(var i=0x0;i<words.*/,"window.words=words;");eval(code);[].forEach.call(rdtext.querySelectorAll('span[class]'),span=>{let id=span.className.replace(/[^\d]/ig,"");span.innerText=words[id]}),rdtext.innerText};`】
+ 4. [yuyan](https://yuyan.pw/)
+ ``` javascript
+yuyan.pw/novel/xxx/[xxxxxxx-xxxxxxx].html@@@@@@var c=data.querySelector('body>script:nth-of-type(8)').innerHTML.match(/var chapter =(.*?);\\n/)[1];eval(c).replaceAll("<br />","");
+ ```
+ 6. [翠微居](https://www.cuiwei.org/book/28975/yijiequanyuledashi_mulu.html)
+ ``` javascript 
+ .chapter-table>a@@@@@@fetch(data.querySelector("div.box-border>script").innerHTML.match(/\/chapter\/(.*?)"/)[0]) .then(response => response.text()) .then(d => {eval("window.txtObj="+d.match(/_txt_call\((.*)\);/)[1]);for(k in txtObj.replace){txtObj.content=txtObj.content.replaceAll(txtObj.replace[k],k)}cb(unescape(txtObj.content.replace(/&#x(.*?);/g,'%u$1')));});return false;
+ ```
+ 8. [知乎鹽選](https://www.zhihu.com/xen/market/remix/paid_column/1465280726219968513)
+ ``` javascript
+ [class^=ChapterItem-root]>>let a=document.createElement("a");let pre=\`https://www.zhihu.com/market/paid_column/${location.href.replace(/\D*(\d+)$/,"$1")}/section/\`;a.href=pre+JSON.parse(item.dataset.zaExtraModule).card.content.id;a.innerText=item.querySelector("div").innerText;return a;
+ ```
+ 10. [腐女屋](http://m.funvwu.com/)
+ ``` javascript
+ .chapterList>ul>li>a>>let href=item.href.replace(/.*goChapter\((\d+)\)/,"/noval/"+localStorage.booklist+"/$1.html");item.href=href;return item;
+ ```
+ 11. [若初文學網](https://www.ruochu.com/chapter/146456)
+ ``` javascript
+ ul.float-list>li>a@@www\\.ruochu\\.com/book/\d+/(\d+)@@a.ruochu.com/ajax/chapter/content/$1@@var content = data.body.innerText.match(/"htmlContent":"(.*)","status"/);if(!content)console.log(data.body.innerText);else{content=content[1];content.replace(/\\r/g,'\n')}
+ ```
+ 13. [明月中文網](https://www.56bok.com/list/27/27742.html)
+ ``` javascript 
+ ul.readlist>li>a>>let href=item.getAttribute("onclick").replace(/.\*open\\('(.\*)','.\*/,"$1");item.href=href;return item;
+ ```
 
 ### 測試網頁
 + http://www.gulongbbs.com/zhentan/bdlr/plje/Index.html
