@@ -81,26 +81,31 @@ ul#lists>li>>let href=item.getAttribute("onclick").replace(/.*(http.*html).*/,"$
  ``` css
 https://yuyan.pw/novel/xxx/[xxxxxxx-xxxxxxx].html@@@@@@var c=data.querySelector('body>script:nth-of-type(8)').innerHTML.match(/var chapter =(.*?);\\n/)[1];eval(c).replaceAll("<br />","");
  ```
- 6. [翠微居](https://www.cuiwei.org/book/28975/yijiequanyuledashi_mulu.html)
+ 5. [翠微居](https://www.cuiwei.org/book/28975/yijiequanyuledashi_mulu.html)
  ``` javascript 
  .chapter-table>a@@@@@@fetch(data.querySelector("div.box-border>script").innerHTML.match(/\/chapter\/(.*?)"/)[0]) .then(response => response.text()) .then(d => {eval("window.txtObj="+d.match(/_txt_call\((.*)\);/)[1]);for(k in txtObj.replace){txtObj.content=txtObj.content.replaceAll(txtObj.replace[k],k)}cb(unescape(txtObj.content.replace(/&#x(.*?);/g,'%u$1')));});return false;
  ```
- 8. [知乎鹽選](https://www.zhihu.com/xen/market/remix/paid_column/1465280726219968513)
+ 6. [知乎鹽選](https://www.zhihu.com/xen/market/remix/paid_column/1465280726219968513)
  ``` javascript
  [class^=ChapterItem-root]>>let a=document.createElement("a");let pre=`https://www.zhihu.com/market/paid_column/${location.href.replace(/\D*(\d+)$/,"$1")}/section/`;a.href=pre+JSON.parse(item.dataset.zaExtraModule).card.content.id;a.innerText=item.querySelector("div").innerText;return a;
  ```
- 10. [腐女屋](http://m.funvwu.com/)
+ 7. [腐女屋](http://m.funvwu.com/)
  ``` javascript
  .chapterList>ul>li>a>>let href=item.href.replace(/.*goChapter\((\d+)\)/,"/noval/"+localStorage.booklist+"/$1.html");item.href=href;return item;
  ```
- 11. [若初文學網](https://www.ruochu.com/chapter/146456)
+ 8. [若初文學網](https://www.ruochu.com/chapter/146456)
  ``` javascript
  ul.float-list>li>a@@www\\.ruochu\\.com/book/\d+/(\d+)@@a.ruochu.com/ajax/chapter/content/$1@@var content = data.body.innerText.match(/"htmlContent":"(.*)","status"/);if(!content)console.log(data.body.innerText);else{content=content[1];content.replace(/\\r/g,'\n')}
  ```
- 13. [明月中文網](https://www.56bok.com/list/27/27742.html)
+ 9. [明月中文網](https://www.56bok.com/list/27/27742.html)
  ``` javascript 
  ul.readlist>li>a>>let href=item.getAttribute("onclick").replace(/.\*open\\('(.\*)','.\*/,"$1");item.href=href;return item;
  ```
+ 10. [東北人小説網](https://www.dbrxs.org/86/86323/)
+ ``` css
+ .chapterList li>a>>item.href=item.href.replace(/.*gotochapter\('(\d+)','(\d+)','(\d+)'\).*/,"/$1/$2/$3.html");return item;@@@@@@let content=data.querySelector('#contentinfo,#ChapterView>div:nth-child(3)>div');if(!content)return data.body.innerText;content.innerHTML=content.innerHTML.replace(/<br>/g,"\n");content=content.innerText;let pages=data.querySelectorAll(".chapterPages>a:not(.curr)");if(pages){let num=pages.length,cur=0;content=[content];[].forEach.call(pages, (page,i)=>{let url=page.href.replace(/.*\((\d+),(\d+),(\d+),(\d+)\).*/,"/$1/$2/$3_$4.html");fetch(url).then(r => r.text()).then(d => {let doc = document.implementation.createHTMLDocument(''); doc.documentElement.innerHTML = d;let c=doc.querySelector('#contentinfo,#ChapterView>div:nth-child(3)>div');if(c){c.innerHTML=c.innerHTML.replace(/<br>/g,"\n"); content[i+1]=c.innerText;if(++cur>=num)cb(content.join("\n"));} }); });return false;}return content;
+ ```
+ 
 
 ### 測試網頁
 + http://www.gulongbbs.com/zhentan/bdlr/plje/Index.html
