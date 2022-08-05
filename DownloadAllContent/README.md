@@ -44,7 +44,7 @@
 
  倘若正文不在內頁正文，是頁面加載後處理得到的，可點擊**自定義下載**，輸入自定義代碼對內頁進行分析獲取正確結果。例如 【`眾神的風車@@@@@@var noval=JSON.parse(data.querySelector("#meta-preload-data").content).novel;noval[Object.keys(noval)[0]].content;`】，即可通過自定義代碼處理返回頁面獲取內容。代碼中使用 data 可以獲得返回頁面的 document，最後一個表達式的值為最終寫入的內容。
  
- 如果返回 false，代表異步回調，可自行抓取内容並等待抓取成功后用 cb(content) 返回抓取到的 content。
+ 如果返回 false，代表異步回調，可自行抓取內容並等待抓取成功後用 cb(content) 返回抓取到的 content。
 
  倘若章節沒有連結，點擊後方才生成連結跳轉，可通過 `>>` 管道處理抓取到的元素生成章節連結，詳情見下方例子。
 ### 第七層心法（極難）
