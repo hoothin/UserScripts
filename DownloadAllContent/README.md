@@ -87,7 +87,7 @@ https://yuyan.pw/novel/xxx/[xxxxxxx-xxxxxxx].html@@@@@@var c=data.querySelector(
  ```
  8. [知乎鹽選](https://www.zhihu.com/xen/market/remix/paid_column/1465280726219968513)
  ``` javascript
- [class^=ChapterItem-root]>>let a=document.createElement("a");let pre=\`https://www.zhihu.com/market/paid_column/${location.href.replace(/\D*(\d+)$/,"$1")}/section/\`;a.href=pre+JSON.parse(item.dataset.zaExtraModule).card.content.id;a.innerText=item.querySelector("div").innerText;return a;
+ [class^=ChapterItem-root]>>let a=document.createElement("a");let pre=`https://www.zhihu.com/market/paid_column/${location.href.replace(/\D*(\d+)$/,"$1")}/section/`;a.href=pre+JSON.parse(item.dataset.zaExtraModule).card.content.id;a.innerText=item.querySelector("div").innerText;return a;
  ```
  10. [腐女屋](http://m.funvwu.com/)
  ``` javascript
