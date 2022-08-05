@@ -1995,17 +1995,17 @@
 {
   "resource_url": "http://wedata.net/items/85736",
   "data": {
-    "pageElement": "//div[@class='d-item']/ul/li",
-    "comment": "cf. http://wedata.net/items/2137\r\nIn this domain, nextLink //link[@rel='next'] doesn't work, because it ignores price ristriction . So url must be longer than 2137 .",
+    "pageElement": "descendant::div[@class='d-item'][1]",
+    "comment": "cf. http://wedata.net/items/2137\r\nIn these domains, nextLink //link[@rel='next'] doesn't work, because it ignores price ristriction . So url must be longer than 2137 .",
     "nextLink": "//li[@class='page-next']/a",
-    "url": "^https://dlsoft\\.dmm\\.co\\.jp/list/..",
-    "exampleUrl": "https://dlsoft.dmm.co.jp/list/article=keyword/id=7405/price_max=1001/sort=date/page=2/"
+    "url": "^https://dlsoft\\.dmm\\.co(?:\\.jp|m)/list/..",
+    "exampleUrl": "https://dlsoft.dmm.co.jp/list/article=keyword/id=7405/price_max=1001/sort=date/page=2/\r\nhttps://dlsoft.dmm.com/list/article=keyword/id=7496,100911,7279,300064,300065,300066,6781,7277,7281,7495/price_max=2001/sort=ranking/?page=2"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "t_f_m_",
-  "name": "Fanza Games 有料ゲーム",
+  "name": "DMM Games PCゲーム・有料ゲーム / Fanza Games 有料ゲーム",
   "created_at": "2021-10-23T01:54:51+09:00",
-  "updated_at": "2021-10-23T02:02:29+09:00"
+  "updated_at": "2022-08-04T16:07:29+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85730",
