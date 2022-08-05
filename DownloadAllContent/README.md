@@ -59,6 +59,9 @@
  - 按標題名重新排序：是則把目錄頁所有連結按標題名排序後存入txt，否則按頁面位置順序排列。
  - 下載線程數：同時下載的線程數，默認為20，遇到存在限制的站點(例如下載時總有章節獲取失敗)可調低。
 
+### 完整格式說明
+<code>某個章節名/CSS選擇器【選擇器後可跟>>傳入item添加處理代碼】 **@@** 抓取到URL的正則匹配 **@@** 對應匹配生成替換URL **@@** 根據爬取返回內容data處理並返回最終文本</code>
+
 ### 簡易自定義例子
  1. [po18](https://www.po18.tw/books/755779/articles)，章節的選擇器為 `.l_chaptname>a` ，輸入並下載後發現通過 url 無法下載正文內容，正文是 ajax 通過 articlescontent 下載的。此時可後接 `@@articles@@articlescontent` (@@ 分隔) 將章節 url 中的 articles 替換為 articlescontent 。 綜上 【`.l_chaptname>a@@articles@@articlescontent`】 可適配該站，粘貼進命令菜單即可下載。其中第一個 articles 可使用正則，例如 `@@articles(\d+)@@$1content` 代表將連結中的「articles1」「articles2」等替換為「1content」「2content」。
  2. [pixiv](https://www.pixiv.net/novel/series/7807554)，p站小說的章節選擇器為`main>section ul>li>div>a`，無需替換連結，因此後兩項留空。有6個@了 😂。正文在meta里，需要自定義代碼提取meta-preload數據的content項。綜上 【`main>section ul>li>div>a@@@@@@var noval=JSON.parse(data.querySelector("#meta-preload-data").content).novel;noval[Object.keys(noval)[0]].content;`】 即可下載p站小說。其中 "data" 代表抓取網頁的document對象，若返回的是純文本，則用 `data.body.innerText` 獲取。
