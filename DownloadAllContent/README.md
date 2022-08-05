@@ -67,11 +67,11 @@
 ### 簡易自定義例子
  1. [po18](https://www.po18.tw/books/755779/articles)，章節的選擇器為 `.l_chaptname>a` ，輸入並下載後發現通過 url 無法下載正文內容，正文是 ajax 通過 articlescontent 下載的。此時可後接 `@@articles@@articlescontent` (@@ 分隔) 將章節 url 中的 articles 替換為 articlescontent 。 `.l_chaptname>a@@articles@@articlescontent` 粘貼進命令菜單即可下載。其中第一個 articles 可使用正則，例如 `@@articles(\d+)@@$1content` 代表將連結中的「articles1」「articles2」等替換為「1content」「2content」。
  ``` css
-.l_chaptname>a@@articles@@articlescontent
+.l_chaptname>a @@ articles @@ articlescontent
  ```
  2. [pixiv](https://www.pixiv.net/novel/series/7807554)，p站小說的章節選擇器為`main>section ul>li>div>a`，無需替換連結，因此後兩項留空。有6個@了 😂。正文在meta里，需要自定義代碼提取meta-preload數據的content項。其中 "data" 代表抓取網頁的document對象，若返回的是純文本，則用 `data.body.innerText` 獲取。
  ``` javascript
-main>section ul>li>div>a@@@@@@var noval=JSON.parse(data.querySelector("#meta-preload-data").content).novel;noval[Object.keys(noval)[0]].content;
+main>section ul>li>div>a @@@@@@ var noval=JSON.parse(data.querySelector("#meta-preload-data").content).novel;noval[Object.keys(noval)[0]].content;
  ```
  3. [紅薯中文網](https://g.hongshu.com/chapterlist/91735.do)，這個站沒有目錄連結，此時可以遍歷標籤自己創建目錄連結下載
  ``` javascript
