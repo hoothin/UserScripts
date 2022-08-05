@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.5.9.38.3
+// @version      1.6.5.9.38.5
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -3059,7 +3059,7 @@
                         if (!self.batchOpening) {
                             let isPage = /^(https?|ftp):/.test(url);
                             let checkAlt = () => {
-                                if ((alt || ctrl) && isPage) {
+                                if ((alt || ctrl || shift) && isPage) {
                                     ele.onclick = e => {
                                         ele.onclick = null;
                                         if (ctrl && shift) {
@@ -3068,6 +3068,8 @@
                                             _GM_openInTab(url);
                                         } else if (alt) {
                                             window.open(url, "_blank", "width=800, height=1000, location=0, resizable=1, toolbar=0, menubar=0, scrollbars=0");
+                                        } else if (shift) {
+                                            _GM_openInTab(url, {active: true});
                                         }
                                         if (e.preventDefault) e.preventDefault();
                                         if (e.stopPropagation) e.stopPropagation();
