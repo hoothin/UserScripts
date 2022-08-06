@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.30.6.26.1
+// @version      1.9.30.6.26.2
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -1664,40 +1664,46 @@
         }
 
         lazyImgAction(eles){
-            let setLazyImg=img=>{
+            let lazyImgSrc=this.curSiteRule.lazyImgSrc;
+            let setLazyImg = img => {
                 let realSrc;
-                if(img.getAttribute("_src") && !img.src){
-                    realSrc=img.getAttribute("_src");
-                }else if(img.dataset && img.dataset.original){
-                    realSrc=img.dataset.original;
-                }else if(img.dataset && img.dataset.lazy){
-                    realSrc=img.dataset.lazy;
-                }else if(img.dataset && img.dataset.src){
-                    realSrc=img.dataset.src;
-                }else if(img._lazyrias && img._lazyrias.srcset){
-                    realSrc=img._lazyrias.srcset[img._lazyrias.srcset.length-1];
-                }else if(img.dataset && img.dataset.origFile){
-                    realSrc=img.dataset.origFile;
-                }else if(img.srcset){
-                    var srcs=img.srcset.split(/[xw],/),largeSize=0;
-                    srcs.forEach(srci=>{
-                        let srcInfo=srci.trim().split(" "),curSize=parseInt(srcInfo[1]);
-                        if(srcInfo[1] && curSize>largeSize){
-                            largeSize=curSize;
-                            realSrc=srcInfo[0];
-                        }
-                    });
+                if (lazyImgSrc) {
+                    realSrc = img.getAttribute(lazyImgSrc);
                 }
-                if(realSrc){
-                    img.src=realSrc;
-                    if(img.style.display=="none"){
-                        img.style.display="";
+                if (!realSrc) {
+                    if (img.getAttribute("_src") && !img.src) {
+                        realSrc = img.getAttribute("_src");
+                    } else if (img.dataset && img.dataset.original) {
+                        realSrc = img.dataset.original;
+                    } else if (img.dataset && img.dataset.lazy) {
+                        realSrc = img.dataset.lazy;
+                    } else if (img.dataset && img.dataset.src) {
+                        realSrc = img.dataset.src;
+                    } else if (img._lazyrias && img._lazyrias.srcset) {
+                        realSrc = img._lazyrias.srcset[img._lazyrias.srcset.length - 1];
+                    } else if (img.dataset && img.dataset.origFile) {
+                        realSrc = img.dataset.origFile;
+                    } else if (img.srcset) {
+                        var srcs = img.srcset.split(/[xw],/), largeSize = 0;
+                        srcs.forEach(srci => {
+                            let srcInfo = srci.trim().split(" "), curSize = parseInt(srcInfo[1]);
+                            if (srcInfo[1] && curSize > largeSize) {
+                                largeSize = curSize;
+                                realSrc = srcInfo[0];
+                            }
+                        });
                     }
-                    if(img.style.visibility=="hidden"){
-                       img.style.visibility="";
+                }
+                if (realSrc) {
+                    img.src = realSrc;
+                    if (img.style.display == "none") {
+                        img.style.display = "";
                     }
-                    if(img.style.opacity==0){
-                        img.style.opacity="";
+                    if (img.style.visibility == "hidden") {
+                       img.style.visibility = "";
+                    }
+                    if (img.style.opacity == 0) {
+                        img.style.opacity = "";
                     }
                 }
             };
@@ -1724,16 +1730,6 @@
                     });
                 }
             });
-            let lazyImgSrc=this.curSiteRule.lazyImgSrc;
-            if(lazyImgSrc){
-                [].forEach.call(eles, ele=>{
-                    [].forEach.call(ele.querySelectorAll("img"), img=>{
-                        if(img.getAttribute(lazyImgSrc)){
-                            img.src=img.getAttribute(lazyImgSrc);
-                        }
-                    });
-                });
-            }
         }
 
         initPage(callback){
