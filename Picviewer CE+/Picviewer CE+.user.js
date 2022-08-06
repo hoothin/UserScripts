@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.8.3.2
+// @version              2022.8.6.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -20416,7 +20416,7 @@ ImgOps | https://imgops.com/#b#`;
             },
             open:function(e,buttonType){
                 if(buttonType=='download'){
-                    _GM_download(this.data.src||this.data.imgSrc, document.title+" "+(this.data.img.alt||""));
+                    _GM_download(this.data.src||this.data.imgSrc, (this.data.img.alt || this.data.img.title || document.title));
                     return;
                 }
                 var waitImgLoad = e && e.ctrlKey ? !prefs.waitImgLoad : prefs.waitImgLoad; //按住ctrl取反向值
@@ -21086,6 +21086,9 @@ ImgOps | https://imgops.com/#b#`;
             if(e.type=="mousemove"){
                 if((uniqueImgWin && !uniqueImgWin.removed && !uniqueImgWin.previewed)){
                     uniqueImgWin.followPos(e.clientX, e.clientY);
+                    if(!checkPreview(e)){
+                        uniqueImgWin.remove();
+                    }
                     return;
                 }else if(target.nodeName != 'IMG' || !checkPreview(e)){
                     return;
