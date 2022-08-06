@@ -23839,8 +23839,8 @@
 {
   "resource_url": "http://wedata.net/items/74897",
   "data": {
-    "pageElement": "//*[@class='p-article-aera']/node()[not(self::div)]",
-    "nextLink": "//*[@class=\"c-button--pagination\"]/*[@class=\"-active-\"]/following-sibling::a",
+    "pageElement": "//div[@class=\"p-article-aera\"]",
+    "nextLink": "//*[@class=\"c-button--pagination\"]/*[@class=\"-active-\"]/following-sibling::a[1]",
     "url": "^https?://dot\\.asahi\\.com/",
     "exampleUrl": "https://dot.asahi.com/aera/2017091100078.html?page=1\r\nhttps://dot.asahi.com/dot/photoarticle/2019060500079.html?page=1"
   },
@@ -23848,7 +23848,7 @@
   "created_by": "t_f_m",
   "name": "dot asahi",
   "created_at": "2014-06-13T17:32:13+09:00",
-  "updated_at": "2021-09-22T15:14:41+09:00"
+  "updated_at": "2022-08-06T07:11:55+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/74895",
