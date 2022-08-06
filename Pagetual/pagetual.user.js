@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.30.6.26
+// @version      1.9.30.6.26.1
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -568,7 +568,7 @@
 
     function isXPath(xpath) {
         if (!xpath) return false;
-        return /^\(*(\.\/|\/\/|id\()/.test(xpath);
+        return /^\(*(descendant|\.\/|\/\/|id\()/.test(xpath);
     }
 
     function getAllElements(sel, doc) {
@@ -598,7 +598,7 @@
         //Google id class都是隨機。百度更過分，style script順序都是隨機的
         if(ele.tagName!="HTML" && ele.tagName!="BODY"){
             if(addID && ele.id) selector += '#' + ele.id;
-            if(ele.className) selector += [].map.call(ele.classList,d=>'.'+d).join('');
+            if(ele.className) selector += [].map.call(ele.classList,d=>/^[\w-_]+$/.test(d)?('.'+d):"").join('');
             let parent = ele.parentElement;
             if(parent){
                 selector = geneSelector(parent, addID) + ' > ' + selector;
