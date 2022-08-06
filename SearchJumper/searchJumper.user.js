@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.5.9.38.9
+// @version      1.6.5.9.38.10
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -4308,7 +4308,7 @@
                       width: 300px;
                       padding: 20px;
                       margin: 20px;
-                      background-color: #000000${searchData.prefConfig.hideDragHistory ? "50" : "9e"};
+                      background-color: #000000${searchData.prefConfig.hideDragHistory ? "10" : "9e"};
                       box-shadow: #000000 0px 0px 10px;
                       border-radius: 50%;
                       z-index: 2147483647;
@@ -4458,7 +4458,7 @@
                             dragSector.style.transform = `rotate(${dragSector.dataset.deg}deg)`;
                             dragSector.classList.remove("over");
                         }
-                        sector.style.transform = `scale(${searchData.prefConfig.hideDragHistory ? '1.5' : '1.35'}) ${transform}`;
+                        sector.style.transform = `scale(${searchData.prefConfig.hideDragHistory ? '1.6' : '1.35'}) ${transform}`;
                         sector.classList.add("over");
                         dragSector = sector;
                         e.preventDefault();
