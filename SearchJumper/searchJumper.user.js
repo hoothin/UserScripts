@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.5.9.38.7
+// @version      1.6.5.9.38.8
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -640,6 +640,7 @@
         multilineGap: 1000,
         historyLength: 0,
         dragToSearch: true,
+        hideDragHistory: false,
         sortType: false,
         autoHide: false,
         autoHideAll: false,
@@ -1556,7 +1557,7 @@
                 if (this.fontPool.length > 0 || isInConfigPage()) {
                     let linkEle = document.createElement("link");
                     linkEle.rel="stylesheet";
-                    linkEle.href = searchData.prefConfig.fontAwesomeCss || "https://lib.baomitu.com/font-awesome/6.0.0-beta2/css/all.css";
+                    linkEle.href = searchData.prefConfig.fontAwesomeCss || "https://lib.baomitu.com/font-awesome/6.1.2/css/all.css";
                     document.documentElement.insertBefore(linkEle, document.documentElement.children[0]);
                     this.waitForFontAwesome(() => {
                         let hasFont = false;
@@ -2513,7 +2514,7 @@
                     for (let i = 0; i< urls.length; i++) {
                         let left = (i % numPerLine) * _width;
                         let top = parseInt(i / numPerLine) * (_height + 70);
-                        window.open(urls[i], "_blank", `width=${_width-10}, height=${_height}, location=0, resizable=1, toolbar=0, menubar=0, scrollbars=0, left=${left}, top=${top}`);
+                        window.open(urls[i], "_blank", `width=${_width-10}, height=${_height}, location=0, resizable=1, status=0, toolbar=0, menubar=0, scrollbars=0, left=${left}, top=${top}`);
                     }
                 } else if (e.which === 1 && e.shiftKey) {
                     for (let i = 0;i < targetSites.length;i++) {
@@ -3071,7 +3072,7 @@
                                         } else if (ctrl) {
                                             _GM_openInTab(url);
                                         } else if (alt) {
-                                            window.open(url, "_blank", "width=800, height=1000, location=0, resizable=1, toolbar=0, menubar=0, scrollbars=0");
+                                            window.open(url, "_blank", "width=600, height=800, location=0, resizable=1, status=0, toolbar=0, menubar=0, scrollbars=0");
                                         } else if (shift) {
                                             _GM_openInTab(url, {active: true});
                                         }
@@ -4307,7 +4308,7 @@
                       width: 300px;
                       padding: 20px;
                       margin: 20px;
-                      background-color: #0000009e;
+                      background-color: #000000${searchData.prefConfig.hideDragHistory ? "50" : "9e"};
                       box-shadow: #000000 0px 0px 10px;
                       border-radius: 50%;
                       z-index: 2147483647;
@@ -4356,6 +4357,7 @@
                       overflow: hidden;
                       transform-origin: left center;
                       z-index: 0;
+                      ${searchData.prefConfig.hideDragHistory ? "display: none;" : ""}
                     }
                     #searchJumperWrapper .sector-inner {
                       text-align: center;
@@ -4387,6 +4389,14 @@
                       font-size: 12px;
                       font-weight: bold;
                       font-family: Roboto, Helvetica, Arial, sans-serif;
+                    }
+                    #searchJumperWrapper .sector-inner span {
+                      width: 70px;
+                      margin-left: -15px;
+                    }
+                    #searchJumperWrapper .sector.out>.sector-inner span {
+                      width: unset;
+                      margin-left: unset;
                     }
                     #searchJumperWrapper .over>.sector-inner span {
                       opacity: 1;
@@ -4451,7 +4461,7 @@
                             dragSector.style.transform = `rotate(${dragSector.dataset.deg}deg)`;
                             dragSector.classList.remove("over");
                         }
-                        sector.style.transform = `scale(1.2) ${transform}`;
+                        sector.style.transform = `scale(${searchData.prefConfig.hideDragHistory ? '1.5' : '1.35'}) ${transform}`;
                         sector.classList.add("over");
                         dragSector = sector;
                         e.preventDefault();
@@ -4459,7 +4469,7 @@
                     return sectorSpan;
                 };
                 for (let i = 0; i < sector1Num; i++) {
-                    let sectorSpan = geneSector("sector", sector1Start + sector1Gap * i, `translateX(-10px) translateY(-10px) rotate(${sector1Start - sector1Gap * i}deg)`);//translateX(-10px) translateY(20px)
+                    let sectorSpan = geneSector("sector", sector1Start + sector1Gap * i, `translateX(-10px) translateY(-10px) rotate(${sector1Start - sector1Gap * i}deg)`);
                     dragSiteCurSpans.push(sectorSpan);
                 }
                 for (let i = 0; i < sector2Num; i++) {
