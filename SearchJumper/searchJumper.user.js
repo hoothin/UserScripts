@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.5.9.38.13
+// @version      1.6.5.9.39
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -2216,9 +2216,9 @@
                     }
                 }
                 let batchSiteNames = [];
-                let batchOpenConfirm = () => {
+                let batchOpenConfirm = (e) => {
                     if (!ele.classList.contains("search-jumper-hide") || window.confirm(i18n('batchOpen'))) {
-                        self.batchOpen(batchSiteNames, {});
+                        self.batchOpen(batchSiteNames, e);
                     }
                 };
                 if (searchData.prefConfig.shortcut && data.shortcut) {
@@ -2241,7 +2241,7 @@
                         }
                         var key = (e.key || String.fromCharCode(e.keyCode)).toLowerCase();
                         if (data.shortcut == key) {
-                            batchOpenConfirm();
+                            batchOpenConfirm(e);
                         }
                     });
                 }
@@ -2249,7 +2249,7 @@
                     let baseSize = Math.min(self.bar.scrollWidth, self.bar.scrollHeight);
                     if (e) {
                         if (e.which === 3) {
-                            batchOpenConfirm();
+                            batchOpenConfirm(e);
                             return false;
                         } if (e.which === 1 && (e.shiftKey || e.altKey || e.ctrlKey)) {
                             return false;
@@ -2431,7 +2431,7 @@
                 }
                 let mouseDownEvent = new PointerEvent("mousedown");
                 siteEle.dispatchEvent(mouseDownEvent);
-                if (!this.customInput) {
+                if (!this.customInput || this.batchOpening) {
                     if (siteEle.onclick || !isPage) {
                         siteEle.click();
                     } else {
@@ -2461,6 +2461,7 @@
             batchOpen(siteNames, e) {
                 let self = this;
                 self.batchOpening = true;
+                self.customInput = false;
                 let targetSites = self.getTargetSitesByName(siteNames);
                 if (e.which === 1 && e.altKey && e.shiftKey) {
                     let html = '<title>SearchJumper Multi</title>';
@@ -2469,6 +2470,7 @@
                         if (/^http/.test(siteEle.href) && !siteEle.onclick) {
                             let mouseDownEvent = new PointerEvent("mousedown");
                             siteEle.dispatchEvent(mouseDownEvent);
+                            if (self.stopInput) return;
                             let iframe = document.createElement('iframe');
                             iframe.width = '50%';
                             iframe.height = '100%';
@@ -2486,6 +2488,7 @@
                         let siteEle = targetSites[i];
                         let mouseDownEvent = new PointerEvent("mousedown");
                         siteEle.dispatchEvent(mouseDownEvent);
+                        if (self.stopInput) return;
                         if (/^http/.test(siteEle.href) && !siteEle.onclick) {
                             storage.setItem("lastSign", siteNames);
                             _GM_openInTab(siteEle.href, {incognito: true});
@@ -2502,6 +2505,7 @@
                         if (/^http/.test(siteEle.href) && !siteEle.onclick) {
                             let mouseDownEvent = new PointerEvent("mousedown");
                             siteEle.dispatchEvent(mouseDownEvent);
+                            if (self.stopInput) return;
                             urls.push(siteEle.href);
                         }
                     }
@@ -2521,6 +2525,7 @@
                         let siteEle = targetSites[i];
                         let mouseDownEvent = new PointerEvent("mousedown");
                         siteEle.dispatchEvent(mouseDownEvent);
+                        if (self.stopInput) return;
                         if (/^http/.test(siteEle.href) && !siteEle.onclick) {
                             storage.setItem("lastSign", siteNames);
                             window.open(siteEle.href, '_blank');
@@ -2539,10 +2544,11 @@
                         }
                         let mouseDownEvent = new PointerEvent("mousedown");
                         siteEle.dispatchEvent(mouseDownEvent);
+                        if (self.stopInput) return;
                         siteEle.click();
                         siteEle.setAttribute("target", siteEle.dataset.target==1?"_blank":"");
                     }
-                } else {
+                } else if (e.which === 3) {
                     targetSites.forEach(siteEle => {
                         if (siteEle.dataset.current) return;
                         self.openSiteBtn(siteEle);
@@ -3065,7 +3071,7 @@
                         if (!self.batchOpening) {
                             let isPage = /^(https?|ftp):/.test(url);
                             let checkAlt = () => {
-                                if (shift && e.isTrusted) return false;
+                                if (shift && !ctrl && !alt && e.isTrusted) return false;
                                 if ((alt || ctrl || shift) && isPage) {
                                     ele.onclick = e => {
                                         ele.onclick = null;
