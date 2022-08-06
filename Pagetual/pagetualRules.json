@@ -31,6 +31,12 @@
     "wait":2000
   },
   {
+    "name": "Linux Tips, Tricks and Tutorials | Linuxize",
+    "url": "^https://linuxize\\.com",
+    "pageElement": ".post-list>.flex-wrap>section",
+    "lazyImgSrc": "data-cfsrc"
+  },
+  {
     "name": "Vipergirls",
     "pageElement": "#threads,.posts",
     "url": "^https://vipergirls\\.to",
