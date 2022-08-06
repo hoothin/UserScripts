@@ -117,9 +117,9 @@ insertPos
 --
 1 means insert before, 2 means just append to the bottom of target
 
-init `(document)`
+init `(doc,win,iframe)`
 --
-The javaScript code to run only once with current main page with document:(document of main page)
+The javaScript code to run only once with current main page with doc:(document of main page)
 
 pagePre `(response)`
 --
