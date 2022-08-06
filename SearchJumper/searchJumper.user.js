@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.5.9.38.10
+// @version      1.6.5.9.38.11
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -2668,6 +2668,7 @@
                 if (!isBookmark && !isClone && (!currentSite || data.hideNotMatch)) {
                     if (data.match === '0') {
                         ele.style.display = 'none';
+                        ele.classList.add("notmatch");
                     } else if (data.match) {
                         if (new RegExp(data.match).test(location.href)) {
                             ele.dataset.current = true;
@@ -2749,6 +2750,7 @@
                         }
                     } else if (data.hideNotMatch) {
                         ele.style.display = 'none';
+                        ele.classList.add("notmatch");
                     }
                 }
                 if (isPage && openInNewTab) {
@@ -4510,7 +4512,7 @@
             searchBar.recoveHistory();
             dragSiteCurSpans.forEach((span, i) => {
                 span.innerHTML = createHTML("");
-                let targetSite = firstType.querySelector(`a.search-jumper-btn:nth-of-type(${i + 1})`);
+                let targetSite = firstType.querySelectorAll("a.search-jumper-btn:not(.notmatch)")[i];
                 if (!targetSite) return;
                 span.parentNode.dataset.name = targetSite.dataset.name;
                 let word = document.createElement("p");
