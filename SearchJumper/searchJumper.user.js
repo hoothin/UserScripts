@@ -4449,13 +4449,13 @@
                     sector.appendChild(sectorInner);
                     let transform = `rotate(${deg}deg)`;
                     sectorSpan.style.transform = spanTransform;
-                    sector.style.transform = transform;
+                    sector.style.transform = transform + (searchData.prefConfig.hideDragHistory ? 'scale(1.2)' : '');
                     sector.dataset.deg = deg;
                     sectorCon.appendChild(sector);
                     sectorSpan.addEventListener("dragover", e => {
                         if (!sectorSpan.innerText) return;
                         if (dragSector) {
-                            dragSector.style.transform = `rotate(${dragSector.dataset.deg}deg)`;
+                            dragSector.style.transform = `rotate(${dragSector.dataset.deg}deg) ${searchData.prefConfig.hideDragHistory ? 'scale(1.2)' : ''}`;
                             dragSector.classList.remove("over");
                         }
                         sector.style.transform = `scale(${searchData.prefConfig.hideDragHistory ? '1.6' : '1.35'}) ${transform}`;
