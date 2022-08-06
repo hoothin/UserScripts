@@ -568,7 +568,7 @@
 
     function isXPath(xpath) {
         if (!xpath) return false;
-        return /^\(*(descendant|\.\/|\/\/|id\()/.test(xpath);
+        return /^\(*(descendant::|\.\/|\/\/|id\()/.test(xpath);
     }
 
     function getAllElements(sel, doc) {
