@@ -424,6 +424,16 @@
     "action":1
   },
   {
+    "name": "Trakt",
+    "url": "^https://trakt\\.tv",
+    "pageElement": "section#info-wrapper > div.container > div.row > div#overview>*",
+    "action": 1,
+    "waitElement": [
+        ".summary-activity",
+        "#popular-comments.fade:not(.in)"
+    ]
+  },
+  {
     "name":"bilibili search",
     "action":1,
     "url":"^https://search\\.bilibili\\.com",
