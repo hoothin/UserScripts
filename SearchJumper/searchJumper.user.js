@@ -33,6 +33,8 @@
 // @grant        unsafeWindow
 // @supportURL   https://github.com/hoothin/SearchJumper/issues
 // @homepage     https://github.com/hoothin/SearchJumper
+// @downloadURL  https://greasyfork.org/scripts/445274-searchjumper/code/SearchJumper.user.js
+// @updateURL    https://greasyfork.org/scripts/445274-searchjumper/code/SearchJumper.user.js
 // @connect      *
 // @run-at       document-start
 // ==/UserScript==
