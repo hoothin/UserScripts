@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.30.6.26.7
+// @version      1.9.30.6.26.8
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -197,7 +197,7 @@
                 pickerCheck:"检查你编辑的选择器",
                 gotoEdit:"使用当前的选择器前往编辑规则",
                 manualMode:"禁用拼接，手动用右方向键翻页（或发送事件'pagetual.next'）",
-                nextSwitch:"切换下一页选择器"
+                nextSwitch:"切换其他页码"
             };
             break;
         case "zh-TW":
@@ -268,7 +268,7 @@
                 pickerCheck:"檢查你編輯的選擇器",
                 gotoEdit:"使用當前的選擇器前往編輯規則",
                 manualMode:"禁用拼接，手動用右方向鍵翻頁（或發送事件'pagetual.next'）",
-                nextSwitch:"切換下一頁選擇器"
+                nextSwitch:"切換其他頁碼"
             };
             break;
         case "ja":
@@ -1991,7 +1991,7 @@
                     span.classList.add("current");
                     currentSpan = span;
                     nextIndex = i;
-                    storage.setItem("nextIndex_" + location.host, nextIndex);
+                    storage.setItem("nextSwitch_" + location.host, nextIndex === 0 ? "" : nextIndex);
                     ruleParser.curUrl += "#pagetual";
                     ruleParser.oldUrl = ruleParser.curUrl;
                     autoLoadNum = -1;
@@ -3267,7 +3267,7 @@
                     autoLoadNum=parseInt(rulesData.autoLoadNum);
                 }
                 enableDebug=rulesData.enableDebug;
-                storage.getItem("nextIndex_"+location.host, i=>{
+                storage.getItem("nextSwitch_"+location.host, i=>{
                     storage.getItem("forceState_"+location.host, v=>{
                         storage.getItem("ruleLastUpdate", date=>{
                             if(typeof(i)!=="undefined"){
