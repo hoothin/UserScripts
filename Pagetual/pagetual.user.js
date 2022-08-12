@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.30.6.26.5
+// @version      1.9.30.6.26.6
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -1036,10 +1036,20 @@
                             break;
                         }
                     }
+                    let sameClassName = null, hasSameClass = false;
                     for(i=0;i<ele.children.length;i++){
                         let curNode=ele.children[i];
                         if(curNode.tagName=="CANVAS")continue;
                         if(curNode.tagName!="IMG" && /^\s*$/.test(curNode.innerText))continue;
+                        if(curNode.className && sameClassName !== ''){
+                            if (sameClassName === null) sameClassName = curNode.className;
+                            else {
+                                if (sameClassName != curNode.className) {
+                                    sameClassName = '';
+                                    hasSameClass = false;
+                                } else hasSameClass = true;
+                            }
+                        }
                         if(needCheckNext && !curNode.contains(self.initNext) && getElementTop(curNode)>windowHeight){
                             continue;
                         }
@@ -1063,7 +1073,7 @@
                         if(isHori){
                             if(maxWidth<w){
                                 isMax=true;
-                            }else if(maxWidth==w && curMaxArea<a){
+                            }else if(maxWidth<w+300 && curMaxArea<a){
                                 isMax=true;
                             }
                         }else{
@@ -1076,7 +1086,7 @@
                             curMaxEle=curNode;
                         }
                     }
-                    if(curMaxEle && (isHori || curHeight>maxHeight || (needCheckNext && curHeight>windowHeight && ele.contains(self.initNext)))){
+                    if(curMaxEle && !hasSameClass && (isHori || curHeight>maxHeight || (needCheckNext && curHeight>windowHeight && ele.contains(self.initNext)))){
                         return checkElement(curMaxEle);
                     }
                     if(ele.tagName=="P" || ele.tagName=="BR")ele=ele.parentNode;
