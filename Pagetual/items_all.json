@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/85940",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//*[@id=\"js-articleBody\"]",
+    "nextLink": "//*[@id=\"js-articlePaginate\"]/a",
+    "url": "^https://news.mynavi.jp/techplus/article/",
+    "exampleUrl": "https://news.mynavi.jp/techplus/article/20220808-2419801/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "autopagerizebanzai",
+  "name": "マイナビ TECH+（テックプラス）",
+  "created_at": "2022-08-12T09:50:41+09:00",
+  "updated_at": "2022-08-12T09:50:41+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/85937",
   "data": {
     "pageElement": "//div[@class='text01']",
