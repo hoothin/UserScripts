@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.30.6.26.8
+// @version      1.9.30.6.27
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -602,7 +602,7 @@
             let parent = ele.parentElement;
             if(parent){
                 selector = geneSelector(parent, addID) + ' > ' + selector;
-                if(!ele.className && !ele.id && parent.children.length>1){
+                if(!ele.className && (!ele.id || !addID) && parent.children.length>1){
                     let i,j=0;
                     for(i=0;i<parent.children.length;i++){
                         if(parent.children[i].tagName==ele.tagName){
@@ -1982,10 +1982,10 @@
                 if (target) {
                     let targetInner = target.innerText.trim();
                     span.innerHTML = index + (targetInner || link);
-                    span.title = link;
                 } else {
-                    span.innerHTML = index + link;
+                    span.innerHTML = index + "Not Found";
                 }
+                span.title = link;
                 span.addEventListener("click", e => {
                     if (currentSpan) currentSpan.classList.remove("current");
                     span.classList.add("current");
@@ -3828,6 +3828,7 @@
         let pageNum;
         pageBar.className="pagetual_pageBar";
         pageBar.id="pagetual_pageBar"+curPage;
+        pageBar.setAttribute("translate", "no");
         if(isPause){
             pageBar.classList.add("stop");
         }
@@ -4566,7 +4567,13 @@
         let pvGallery=document.querySelector("span.pv-gallery-container");
         if(pvGallery && pvGallery.style.display!="none")return;
         let insert=ruleParser.getInsert();
-        if(insert){
+        if (insert) {
+            if (curPage == 1) {
+                window.postMessage({
+                    insert: geneSelector(ruleParser.curSiteRule.insertPos == 2 ? insert : insert.parentNode, true),
+                    command: 'pagetual.insert'
+                }, '*');
+            }
             let isJs=/^(javascript|#)/.test(nextLink.replace(location.href,""));
             if(!isJs){
                 emuIframe=null;
