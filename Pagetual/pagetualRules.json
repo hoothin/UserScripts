@@ -31,6 +31,13 @@
     "wait":2000
   },
   {
+    "name": "Soccercatch shows",
+    "url": "^https://www\\.soccercatch\\.com.*#shows",
+    "nextLink": ".tabs-page[data-title=shows] .pagination-next",
+    "init": "if(doc)doc.querySelector('[data-title=shows]').click();",
+    "pageElement": ".show-item"
+  },
+  {
     "name": "Linux Tips, Tricks and Tutorials | Linuxize",
     "url": "^https://linuxize\\.com",
     "pageElement": ".post-list>.flex-wrap>section",
