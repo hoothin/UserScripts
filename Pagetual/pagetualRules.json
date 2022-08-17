@@ -38,6 +38,11 @@
     "pageElement": ".show-item"
   },
   {
+    "name": "16Personalities",
+    "url": "^https://www\\.16personalities\\.com",
+    "enable": 0
+  },
+  {
     "name": "Linux Tips, Tricks and Tutorials | Linuxize",
     "url": "^https://linuxize\\.com",
     "pageElement": ".post-list>.flex-wrap>section",
