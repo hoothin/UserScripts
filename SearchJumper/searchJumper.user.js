@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.5.11
+// @version      1.6.5.12
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -1596,11 +1596,13 @@
                      text-align: center;
                      pointer-events: all;
                      font-size: 0px;
+                     opacity: 0;
                  }
                  .searchJumperNavBar>.closeNavBtn {
                      width: 16px;
                      height: 16px;
                      fill: white;
+                     cursor: pointer;
                  }
                  #navMarks>div.navPointer {
                      pointer-events: none;
@@ -1721,10 +1723,8 @@
                 searchJumperNavBar.className = "searchJumperNavBar";
                 searchJumperNavBar.style.display = "none";
                 searchJumperNavBar.innerHTML = createHTML(`
-                <div class="searchJumperNavBar">
                   <svg class="closeNavBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>Close navigation</title><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64z m165.4 618.2l-66-0.3L512 563.4l-99.3 118.4-66.1 0.3c-4.4 0-8-3.5-8-8 0-1.9 0.7-3.7 1.9-5.2l130.1-155L340.5 359c-1.2-1.5-1.9-3.3-1.9-5.2 0-4.4 3.6-8 8-8l66.1 0.3L512 464.6l99.3-118.4 66-0.3c4.4 0 8 3.5 8 8 0 1.9-0.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"></path></svg>
                   <div id="navMarks"></div>
-                </div>
                 `);
                 searchBarCon.appendChild(searchJumperNavBar);
                 this.navMarks = searchJumperNavBar.querySelector("#navMarks");
@@ -2166,6 +2166,9 @@
                     }
                     searchWithinNode(ele, w);
                 });
+                if (this.navMarks.innerHTML != "") {
+                    this.searchJumperNavBar.style.opacity = 1;
+                }
             }
 
             refreshPageWords() {
@@ -2790,8 +2793,8 @@
                     if (keywords && keywords != cacheKeywords) {
                         cacheKeywords = keywords;
                         storage.setItem("cacheKeywords", keywords);
-                        storage.setItem("referrer", location.hostname);
                     }
+                    storage.setItem("referrer", location.hostname);
                 }
             }
 
