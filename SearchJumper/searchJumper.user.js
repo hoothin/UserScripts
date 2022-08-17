@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.5.10.1
+// @version      1.6.5.11
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -647,7 +647,14 @@
         autoHide: false,
         autoHideAll: false,
         showCurrent: true,
-        shortcutKey: '`'
+        shortcutKey: '`',
+        showInSearchEngine: false,
+        showInSearchJumpPage: true,
+        limitInPageLen: 1,
+        ignoreWords: ["a", "in", "into", "the", "to", "on", "among", "between", "and", "an", "of", "by", "with", "about", "under"],
+        inPageRule: {},
+        firstFiveWordsColor: [],
+        inPageWordsStyles: []
     };
     function run() {
         const lang = navigator.appName == "Netscape" ? navigator.language : navigator.userLanguage;
@@ -678,7 +685,16 @@
                     multiline: '是否以换行符分隔多行搜索？',
                     multilineTooMuch: '行数超过10行，是否继续搜索？',
                     inputPlaceholder: '输入关键词筛选站点，支持 * ? 通配符',
-                    inputKeywords: '输入搜索关键词'
+                    inputKeywords: '输入搜索关键词',
+                    inPageTips: '自定义分隔符：$c 加分隔符，例如 $c| search | jumper，默认空格作为分隔符\n原始文本不分隔：$o 加文本，例如$oopai liked by hero\n正则表达式：/re/i，例如 $c, /google/i , /aPPle/\n添加提示文本：搜索文本$t{提示文本}，例如 linux$t{linux is not unix}\n添加自定义样式：搜索文本$s{背景;其他}，例如 google$s{#333333;color:red;}\n左键点击关键词跳转至下一个，右键点击关键词跳转至上一个',
+                    inPagePlaceholder: '输入文字，按下回车进行页内查找',
+                    editBtn: '编辑查找文字',
+                    emptyBtn: '清空查找文字',
+                    recoverBtn: '恢复查找文字',
+                    pinBtn: '固定查找文字',
+                    locBtn: '定位侧边栏',
+                    filterSites: '筛选搜索引擎',
+                    searchInPage: '页内查找'
                 };
                 break;
             case "zh-TW":
@@ -706,7 +722,16 @@
                     multiline: '是否以換行符分隔多行搜索？',
                     multilineTooMuch: '行數超過10行，是否繼續搜索？',
                     inputPlaceholder: '輸入關鍵詞篩選站點，支持 * ? 通配符',
-                    inputKeywords: '輸入搜索關鍵詞'
+                    inputKeywords: '輸入搜索關鍵詞',
+                    inPageTips: '自定義分隔符：$c 加分隔符，例如 $c| search | jumper，默認空格作為分隔符\n原始文本不分隔：$o 加文本，例如$oopai liked by hero\n正則表達式：/re/i，例如 $c, /google/i , /aPPle/\n添加提示文本：搜索文本$t{提示文本}，例如 linux$t{linux is not unix}\n添加自定義樣式：搜索文本$s{背景;其他}，例如 google$s{#333333;color:red;}\n左鍵點擊關鍵詞跳轉至下一個，右鍵點擊關鍵詞跳轉至上一個',
+                    inPagePlaceholder: '輸入文字，按下回車進行頁內查找',
+                    editBtn: '編輯查找文字',
+                    emptyBtn: '清空查找文字',
+                    recoverBtn: '恢復查找文字',
+                    pinBtn: '固定查找文字',
+                    locBtn: '定位側邊欄',
+                    filterSites: '篩選搜尋引擎',
+                    searchInPage: '頁內查找'
                 };
                 break;
             default:
@@ -733,7 +758,16 @@
                     multiline: 'Search as multilines?',
                     multilineTooMuch: 'The number of lines exceeds 10, do you want to continue searching?',
                     inputPlaceholder: 'Enter keywords to filter sites, support * ? wildcards',
-                    inputKeywords: 'Enter search keywords'
+                    inputKeywords: 'Enter search keywords',
+                    inPageTips: 'Custom delimiter: $c + delimiter, such as $c| search | jumper, default space as delimiter\nOriginal text without delimited: $o + text, such as $oopai liked by hero\nRegular expression: /re/i, such as $c, /google/i , /aPPle/\nTips text: search text$t{tips text}, such as linux$t{linux is not unix}\nCustom style: Search text$s{background;other}, such as google$s{#333333;color:red;}\nLeft-click keyword to jump to the next, right-click keyword to jump to the previous',
+                    inPagePlaceholder: 'Input text, press Enter to find in the page',
+                    editBtn: 'Edit search text',
+                    emptyBtn: 'Empty search text',
+                    recoverBtn: 'Recover find text',
+                    pinBtn: 'Pin search text',
+                    locBtn: 'Sidebar to locate',
+                    filterSites: 'Filter search engines',
+                    searchInPage: 'Find in page'
                 };
                 break;
         }
@@ -865,8 +899,8 @@
             });
         }
 
-        function createHTML(html) {
-            return escapeHTMLPolicy?escapeHTMLPolicy.createHTML(html):html;
+        function createHTML(html = "") {
+            return escapeHTMLPolicy ? escapeHTMLPolicy.createHTML(html) : html;
         }
 
         function getElementByXpath(xpath, contextNode, doc) {
@@ -880,7 +914,44 @@
             }
         }
 
-        var logoBtn, searchBar, searchTypes = [], currentSite = false, cacheKeywords, localKeywords, lastSign, inPagePostParams, cacheIcon, historySites, sortTypeNames, cachePool = [], currentFormParams;
+        function isXPath(xpath) {
+            if (!xpath) return false;
+            return /^\(*(descendant::|\.\/|\/\/|id\()/.test(xpath);
+        }
+
+        function getElement(sel, doc) {
+            if (!doc) doc = document;
+            try {
+                if (!isXPath(sel)) {
+                    return doc.querySelector(sel);
+                }
+            } catch(e) {
+                debug(e);
+            }
+            return getElementByXpath(sel, doc, doc);
+        }
+
+        function getElementTop(ele) {
+            var actualTop = ele.offsetTop;
+            var current = ele.offsetParent;
+            while (current) {
+                actualTop += current.offsetTop;
+                current = current.offsetParent;
+            }
+            return actualTop;
+        }
+
+        function getElementLeft(ele) {
+            var actualLeft = ele.offsetLeft;
+            var current = ele.offsetParent;
+            while (current) {
+                actualLeft += current.offsetLeft;
+                current = current.offsetParent;
+            }
+            return actualLeft;
+        }
+
+        var logoBtn, searchBar, searchTypes = [], currentSite = false, cacheKeywords, localKeywords, lastSign, inPagePostParams, cacheIcon, historySites, sortTypeNames, cachePool = [], currentFormParams, globalInPageWords, navEnable, referrer;
         var logoBtnSvg = `<svg class="search-jumper-logoBtnSvg" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><title>${i18n("scriptName")}</title><path d="M.736 510.464c0-281.942 228.335-510.5 510-510.5 135.26 0 264.981 53.784 360.625 149.522 95.643 95.737 149.375 225.585 149.375 360.978 0 281.94-228.335 510.5-510 510.5-281.665 0-510-228.56-510-510.5zm510-510.5v1021m-510-510.5h1020" fill="#fefefe"/><path d="M237.44 346.624a48.64 48.64 0 1 0 97.28 0 48.64 48.64 0 1 0-97.28 0zM699.904 346.624a48.64 48.64 0 1 0 97.28 0 48.64 48.64 0 1 0-97.28 0zM423.296 759.296c-64 0-115.712-52.224-115.712-115.712 0-26.624 9.216-52.224 25.6-72.704 9.216-11.776 26.112-13.312 37.888-4.096s13.312 26.112 4.096 37.888c-9.216 11.264-13.824 24.576-13.824 38.912 0 34.304 27.648 61.952 61.952 61.952s61.952-27.648 61.952-61.952c0-4.096-.512-8.192-1.024-11.776-2.56-14.848 6.656-28.672 21.504-31.744 14.848-2.56 28.672 6.656 31.744 21.504 1.536 7.168 2.048 14.336 2.048 22.016-.512 63.488-52.224 115.712-116.224 115.712z" fill="#333"/><path d="M602.08 760.296c-64 0-115.712-52.224-115.712-115.712 0-14.848 12.288-27.136 27.136-27.136s27.136 12.288 27.136 27.136c0 34.304 27.648 61.952 61.952 61.952s61.952-27.648 61.952-61.952c0-15.36-5.632-30.208-15.872-41.472-9.728-11.264-9.216-28.16 2.048-37.888 11.264-9.728 28.16-9.216 37.888 2.048 19.456 21.504 29.696 48.64 29.696 77.824 0 62.976-52.224 115.2-116.224 115.2z" fill="#333"/><ellipse ry="58" rx="125" cy="506.284" cx="201.183" fill="#faf"/><ellipse ry="58" rx="125" cy="506.284" cx="823.183" fill="#faf"/></svg>`;
         var logoBase64 = "data:image/svg+xml;base64,PHN2ZyBjbGFzcz0ic2VhcmNoLWp1bXBlci1sb2dvQnRuU3ZnIiB2aWV3Qm94PSIwIDAgMTAyNCAxMDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0uNzM2IDUxMC40NjRjMC0yODEuOTQyIDIyOC4zMzUtNTEwLjUgNTEwLTUxMC41IDEzNS4yNiAwIDI2NC45ODEgNTMuNzg0IDM2MC42MjUgMTQ5LjUyMiA5NS42NDMgOTUuNzM3IDE0OS4zNzUgMjI1LjU4NSAxNDkuMzc1IDM2MC45NzggMCAyODEuOTQtMjI4LjMzNSA1MTAuNS01MTAgNTEwLjUtMjgxLjY2NSAwLTUxMC0yMjguNTYtNTEwLTUxMC41em01MTAtNTEwLjV2MTAyMW0tNTEwLTUxMC41aDEwMjAiIGZpbGw9IiNmZWZlZmUiLz48cGF0aCBkPSJNMjM3LjQ0IDM0Ni42MjRhNDguNjQgNDguNjQgMCAxIDAgOTcuMjggMCA0OC42NCA0OC42NCAwIDEgMC05Ny4yOCAwek02OTkuOTA0IDM0Ni42MjRhNDguNjQgNDguNjQgMCAxIDAgOTcuMjggMCA0OC42NCA0OC42NCAwIDEgMC05Ny4yOCAwek00MjMuMjk2IDc1OS4yOTZjLTY0IDAtMTE1LjcxMi01Mi4yMjQtMTE1LjcxMi0xMTUuNzEyIDAtMjYuNjI0IDkuMjE2LTUyLjIyNCAyNS42LTcyLjcwNCA5LjIxNi0xMS43NzYgMjYuMTEyLTEzLjMxMiAzNy44ODgtNC4wOTZzMTMuMzEyIDI2LjExMiA0LjA5NiAzNy44ODhjLTkuMjE2IDExLjI2NC0xMy44MjQgMjQuNTc2LTEzLjgyNCAzOC45MTIgMCAzNC4zMDQgMjcuNjQ4IDYxLjk1MiA2MS45NTIgNjEuOTUyczYxLjk1Mi0yNy42NDggNjEuOTUyLTYxLjk1MmMwLTQuMDk2LS41MTItOC4xOTItMS4wMjQtMTEuNzc2LTIuNTYtMTQuODQ4IDYuNjU2LTI4LjY3MiAyMS41MDQtMzEuNzQ0IDE0Ljg0OC0yLjU2IDI4LjY3MiA2LjY1NiAzMS43NDQgMjEuNTA0IDEuNTM2IDcuMTY4IDIuMDQ4IDE0LjMzNiAyLjA0OCAyMi4wMTYtLjUxMiA2My40ODgtNTIuMjI0IDExNS43MTItMTE2LjIyNCAxMTUuNzEyeiIgZmlsbD0iIzMzMyIvPjxwYXRoIGQ9Ik02MDIuMDggNzYwLjI5NmMtNjQgMC0xMTUuNzEyLTUyLjIyNC0xMTUuNzEyLTExNS43MTIgMC0xNC44NDggMTIuMjg4LTI3LjEzNiAyNy4xMzYtMjcuMTM2czI3LjEzNiAxMi4yODggMjcuMTM2IDI3LjEzNmMwIDM0LjMwNCAyNy42NDggNjEuOTUyIDYxLjk1MiA2MS45NTJzNjEuOTUyLTI3LjY0OCA2MS45NTItNjEuOTUyYzAtMTUuMzYtNS42MzItMzAuMjA4LTE1Ljg3Mi00MS40NzItOS43MjgtMTEuMjY0LTkuMjE2LTI4LjE2IDIuMDQ4LTM3Ljg4OCAxMS4yNjQtOS43MjggMjguMTYtOS4yMTYgMzcuODg4IDIuMDQ4IDE5LjQ1NiAyMS41MDQgMjkuNjk2IDQ4LjY0IDI5LjY5NiA3Ny44MjQgMCA2Mi45NzYtNTIuMjI0IDExNS4yLTExNi4yMjQgMTE1LjJ6IiBmaWxsPSIjMzMzIi8+PGVsbGlwc2Ugcnk9IjU4IiByeD0iMTI1IiBjeT0iNTA2LjI4NCIgY3g9IjIwMS4xODMiIGZpbGw9IiNmYWYiLz48ZWxsaXBzZSByeT0iNTgiIHJ4PSIxMjUiIGN5PSI1MDYuMjg0IiBjeD0iODIzLjE4MyIgZmlsbD0iI2ZhZiIvPjwvc3ZnPg==";
         var targetElement, cssText, mainStyleEle;
@@ -890,6 +961,7 @@
                 this.scale = searchData.prefConfig.customSize / 100;
                 cssText = `
                  .search-jumper-searchBarCon {
+                     all: unset;
                      position: fixed;
                      top: 0;
                      left: 0;
@@ -1315,9 +1387,9 @@
                      display: block;
                  }
                  .search-jumper-input {
-                     overflow: hidden;
                      width: 80%;
-                     top: 10%;
+                     min-width: 500px;
+                     bottom: 3%;
                      left: 50%;
                      margin: 0 0 0 -40%;
                      position: fixed;
@@ -1333,7 +1405,13 @@
                      z-index: 2139999999;
                      font-size: 20px;
                  }
-                 .search-jumper-input>input {
+                 .inputGroup {
+                     cursor: grab;
+                 }
+                 .inputGroup * {
+                     cursor: default;
+                 }
+                 .search-jumper-input input {
                      background-color: #212022;
                      color: white;
                      border: none;
@@ -1347,7 +1425,237 @@
                      width: calc(100% - 20px);
                      outline: none;
                      box-sizing: border-box;
-                 }`;
+                 }
+                 .search-jumper-input * {
+                     box-sizing: border-box;
+                 }
+                 .search-jumper-input input[type="radio"] {
+                     display: none;
+                 }
+                 .search-jumper-input input:checked + label {
+                     background: #3a444add;
+                     color: white;
+                     font-size: 18px;
+                 }
+                 .search-jumper-input input#filterSitesTab:checked ~ .line {
+                     left: 25px;
+                 }
+                 .search-jumper-input input#filterSitesTab:checked ~ .content-container #filterSites {
+                     opacity: 1;
+                     pointer-events: all;
+                 }
+                 .search-jumper-input input#searchInPageTab:checked ~ .line {
+                     left: 231px;
+                 }
+                 .search-jumper-input input#searchInPageTab:checked ~ .content-container #searchInPage {
+                     opacity: 1;
+                     pointer-events: all;
+                 }
+                 .search-jumper-input label {
+                     display: inline-block;
+                     font-size: 18px;
+                     height: 36px;
+                     line-height: 36px;
+                     width: 200px;
+                     text-align: center;
+                     background: #2a343acc;
+                     color: #959595;
+                     position: relative;
+                     transition: 0.25s background ease;
+                     cursor: pointer;
+                     position: relative;
+                     top: -46px;
+                     left: 15px;
+                     border-radius: 5px 5px 0 0;
+                     user-select: none;
+                 }
+                 .search-jumper-input label::after {
+                     content: "";
+                     height: 1px;
+                     width: 100%;
+                     position: absolute;
+                     display: block;
+                     background: #ccc;
+                     bottom: 0;
+                     opacity: 0;
+                     left: 0;
+                     transition: 0.25s ease;
+                 }
+                 .search-jumper-input label:hover::after {
+                     opacity: 1;
+                 }
+                 .search-jumper-input .line {
+                     background: #1E88E5;
+                     width: 200px;
+                     height: 1px;
+                     top: -1px;
+                     left: 0;
+                     transition: 0.25s ease;
+                     position: absolute;
+                 }
+                 .search-jumper-input .content-container {
+                     background: #eee;
+                     position: static;
+                     font-size: 16px;
+                 }
+                 .search-jumper-input .content-container .inputGroup {
+                     position: absolute;
+                     padding: 10px;
+                     width: 100%;
+                     top: 0;
+                     left: 0;
+                     opacity: 0;
+                     pointer-events: none;
+                     transition: 0.25s ease;
+                     color: #333;
+                 }
+                 .search-jumper-input svg,
+                 .searchJumperNavBar svg {
+                     width: 25px;
+                     height: 25px;
+                     fill: white;
+                     cursor: pointer;
+                     opacity: 0.8;
+                     transition: 0.25s all ease;
+                     font-size: 0px;
+                 }
+                 .search-jumper-input svg *,
+                 .searchJumperNavBar svg * {
+                     cursor: pointer;
+                 }
+                 .search-jumper-input svg:hover,
+                 .searchJumperNavBar svg:hover {
+                     -webkit-transform:scale(1.2);
+                     -moz-transform:scale(1.2);
+                     transform:scale(1.2);
+                     opacity: 1;
+                 }
+                 #searchInPage svg.checked {
+                     fill: #1E88E5;
+                 }
+                 #searchInPage>.inPageBtns {
+                     right: 25px;
+                     top: 15px;
+                     position: absolute;
+                     user-select: none;
+                 }
+                 .search-jumper-input>.closeBtn {
+                     position: absolute;
+                     right: 0px;
+                     top: -39px;
+                     width: 35px;
+                     height: 35px;
+                     vertical-align: middle;
+                     fill: #454a4b;
+                     overflow: hidden;
+                     background: white;
+                     border-radius: 20px;
+                 }
+                 #searchInPage>.lockWords {
+                     max-width: 50%;
+                     position: absolute;
+                     bottom: 8px;
+                     left: 20px;
+                     color: white;
+                     font-size: 18px;
+                     display: flex;
+                     flex-wrap: wrap-reverse;
+                     height: 38px;
+                     overflow: hidden;
+                 }
+                 #searchInPage>.lockWords:hover {
+                     overflow: auto;
+                     height: auto;
+                     max-height: 90vh;
+                 }
+                 #searchInPage>.lockWords>span {
+                     padding: 5px;
+                     cursor: alias;
+                     user-select: none;
+                     background: yellow;
+                     color: black;
+                     border: 1px solid;
+                     margin: 2px;
+                     display: flex;
+                     align-items: center;
+                 }
+                 #searchInPage>.lockWords>span>em {
+                     font-size: 12px;
+                     margin-left: 5px;
+                     color: unset;
+                 }
+                 .searchJumperNavBar {
+                     all: unset;
+                     top: 0px;
+                     bottom: 0px;
+                     right: 0px;
+                     position: fixed;
+                     width: 20px;
+                     z-index: 2147483647;
+                     background: #00000066;
+                     text-align: center;
+                     pointer-events: all;
+                     font-size: 0px;
+                 }
+                 .searchJumperNavBar>.closeNavBtn {
+                     width: 16px;
+                     height: 16px;
+                     fill: white;
+                 }
+                 #navMarks>div.navPointer {
+                     pointer-events: none;
+                     position: absolute;
+                     right: 20px;
+                     text-shadow: #fff 1px 0 0, #fff 0 1px 0, #fff -1px 0 0, #fff 0 -1px 0;
+                     font-size: 30px;
+                     line-height: 0px;
+                     border: 0;
+                     margin-top: 2px;
+                     opacity: 0.8;
+                     color: black;
+                 }
+                 #navMarks {
+                     height: 100%;
+                     width: 100%;
+                     position: absolute;
+                 }
+                 #navMarks>span {
+                     height: 0.5vh;
+                     width: 100%;
+                     position: absolute;
+                     border: 1px solid #666666;
+                     box-sizing: content-box;
+                     left: 0;
+                 }
+                 mark.searchJumper {
+                     visibility: visible;
+                 }
+                 .searchJumperPosBar {
+                     background: rgba(29, 93, 163, 0.3);
+                     position: absolute;
+                     min-height: 10px;
+                     min-width: 10px;
+                     animation-duration: 3s;
+                     z-index: 2147483647;
+                     margin: 0;
+                     opacity: 0;
+                     pointer-events: none;
+                     transition: 0.25s all ease;
+                 }
+                 .searchJumperPosBar.searchJumperPosW {
+                     width: 100%;
+                     left: 0;
+                 }
+                 .searchJumperPosBar.searchJumperPosH {
+                     height: 100%;
+                     top: 0;
+                     position: fixed;
+                 }
+                 @keyframes fadeit {
+                     from {opacity: 1;}
+                     to {opacity: 0;}
+                 }
+                 `;
                 if (searchData.prefConfig.cssText) cssText += searchData.prefConfig.cssText;
                 mainStyleEle = _GM_addStyle(cssText);
 
@@ -1372,6 +1680,7 @@
                 searchBarCon.id = "search-jumper";
                 searchBarCon.className = "search-jumper-searchBarCon";
                 searchBarCon.appendChild(bar);
+                searchBarCon.setAttribute("translate", "no");
 
                 let enterHandler = e => {
                     //bar.removeEventListener('mouseenter', enterHandler, false);
@@ -1408,25 +1717,489 @@
 
                 this.appendBar();
 
+                let searchJumperNavBar = document.createElement("div");
+                searchJumperNavBar.className = "searchJumperNavBar";
+                searchJumperNavBar.style.display = "none";
+                searchJumperNavBar.innerHTML = createHTML(`
+                <div class="searchJumperNavBar">
+                  <svg class="closeNavBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>Close navigation</title><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64z m165.4 618.2l-66-0.3L512 563.4l-99.3 118.4-66.1 0.3c-4.4 0-8-3.5-8-8 0-1.9 0.7-3.7 1.9-5.2l130.1-155L340.5 359c-1.2-1.5-1.9-3.3-1.9-5.2 0-4.4 3.6-8 8-8l66.1 0.3L512 464.6l99.3-118.4 66-0.3c4.4 0 8 3.5 8 8 0 1.9-0.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"></path></svg>
+                  <div id="navMarks"></div>
+                </div>
+                `);
+                searchBarCon.appendChild(searchJumperNavBar);
+                this.navMarks = searchJumperNavBar.querySelector("#navMarks");
+                this.closeNavBtn = searchJumperNavBar.querySelector(".closeNavBtn");
+                this.searchJumperNavBar = searchJumperNavBar;
+
                 let searchInputDiv = document.createElement("div");
                 searchInputDiv.className = "search-jumper-input";
-                let searchInput = document.createElement("input");
-                searchInput.placeholder = i18n("inputPlaceholder");
-                searchInput.id = "searchJumperInput";
-                searchInputDiv.appendChild(searchInput);
-                let searchLockInput = document.createElement("span");
-                searchLockInput.className = "search-jumper-lock-input";
-                searchInputDiv.appendChild(searchLockInput);
+                searchInputDiv.innerHTML = createHTML(`
+                <svg class="closeBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>Close search input</title><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64z m165.4 618.2l-66-0.3L512 563.4l-99.3 118.4-66.1 0.3c-4.4 0-8-3.5-8-8 0-1.9 0.7-3.7 1.9-5.2l130.1-155L340.5 359c-1.2-1.5-1.9-3.3-1.9-5.2 0-4.4 3.6-8 8-8l66.1 0.3L512 464.6l99.3-118.4 66-0.3c4.4 0 8 3.5 8 8 0 1.9-0.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"></path></svg>
+                <input type="radio" id="filterSitesTab" name="tab" checked>
+                <label for="filterSitesTab">${i18n("filterSites")}</label>
+                <input type="radio" id="searchInPageTab" name="tab">
+                <label for="searchInPageTab">${i18n("searchInPage")}</label>
+                <div class="line"></div>
+                <div class="content-container">
+                  <div class="inputGroup" id="filterSites">
+                    <input spellcheck="false" id="searchJumperInput" placeholder="${i18n("inputPlaceholder")}">
+                    <span class="search-jumper-lock-input"></span>
+                  </div>
+                  <div class="inputGroup" id="searchInPage">
+                    <span class="lockWords"></span>
+                    <input spellcheck="false" id="searchJumperInPageInput" title="${i18n("inPageTips")}" placeholder="${i18n("inPagePlaceholder")}">
+                    <span class="inPageBtns">
+                      <svg id="editBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("editBtn")}</title><path d="M928 365.664a32 32 0 0 0-32 32V864a32 32 0 0 1-32 32H160a32 32 0 0 1-32-32V160a32 32 0 0 1 32-32h429.6a32 32 0 0 0 0-64H160a96 96 0 0 0-96 96v704a96 96 0 0 0 96 96h704a96 96 0 0 0 96-96V397.664a32 32 0 0 0-32-32z"></path><path d="M231.616 696.416a38.4 38.4 0 0 0 44.256 53.792l148-38.368L950.496 185.248 814.72 49.472 290.432 573.76l-58.816 122.656z m111.808-85.12L814.72 140l45.248 45.248-468.992 468.992-77.824 20.16 30.272-63.104z"></path></svg>
+                      <svg id="emptyBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("emptyBtn")}</title><path d="M687.6 96.4H336.4v91.2h351.1V96.4zM636.7 398v405.5h-73.9V398h73.9z m-175.5 0v405.5h-73.9V398h73.9z m332.1-119.2H230.7l27.9 648.8h506.7l28-648.8zM696.8 5.1c40.4 0 73.3 35.6 73.9 79.8v102.7h147.8c20.2 0 36.6 17.8 37 39.9v41.2c0 5.5-4 10-9 10.1h-70.1L848 941.6c-1.8 42.9-33.7 76.6-72.6 77.3H249.8c-39 0-71.3-33.4-73.7-76l-0.1-1.3-28.5-662.7H77.7c-5 0-9.1-4.4-9.2-9.8v-40.9c0-22.2 16.2-40.2 36.3-40.5h148.4V86.2c0-44.3 32.5-80.4 72.7-81.1h370.9z" p-id="647"></path></svg>
+                      <svg id="recoverBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("recoverBtn")}</title><path d="M502.26 289.06c-0.02 16.95 13.26 30.94 30.18 31.8 123.47 8.79 236.97 70.94 310.89 170.21 73.92 99.28 100.91 225.84 73.93 346.65-41.65-181.74-195.38-316.12-381.05-333.08-8.89-0.6-17.63 2.55-24.09 8.7a31.798 31.798 0 0 0-9.86 23.64v85.15a32.343 32.343 0 0 1-50.67 26.41L114.21 413.02a32.341 32.341 0 0 1-14.46-26.95c0-10.84 5.43-20.96 14.46-26.95L451.6 124.68a32.358 32.358 0 0 1 33.28-2.03 32.355 32.355 0 0 1 17.39 28.44v137.97h-0.01z"></path></svg>
+                      <svg id="pinBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("pinBtn")}</title><path d="M631.637333 178.432a64 64 0 0 1 19.84 13.504l167.616 167.786667a64 64 0 0 1-19.370666 103.744l-59.392 26.304-111.424 111.552-8.832 122.709333a64 64 0 0 1-109.098667 40.64l-108.202667-108.309333-184.384 185.237333-45.354666-45.162667 184.490666-185.344-111.936-112.021333a64 64 0 0 1 40.512-109.056l126.208-9.429333 109.44-109.568 25.706667-59.306667a64 64 0 0 1 84.181333-33.28z m-25.450666 58.730667l-30.549334 70.464-134.826666 135.04-149.973334 11.157333 265.408 265.6 10.538667-146.474667 136.704-136.874666 70.336-31.146667-167.637333-167.765333z"></path></svg>
+                      <svg id="locBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("locBtn")}</title><path d="M874.048 533.333333C863.424 716.629333 716.629333 863.424 533.333333 874.048V917.333333a21.333333 21.333333 0 0 1-42.666666 0v-43.285333C307.370667 863.424 160.576 716.629333 149.952 533.333333H106.666667a21.333333 21.333333 0 0 1 0-42.666666h43.285333C160.576 307.370667 307.370667 160.576 490.666667 149.952V106.666667a21.333333 21.333333 0 0 1 42.666666 0v43.285333c183.296 10.624 330.090667 157.418667 340.714667 340.714667h42.816a21.333333 21.333333 0 1 1 0 42.666666H874.026667z m-42.752 0h-127.786667a21.333333 21.333333 0 0 1 0-42.666666h127.786667C820.778667 330.922667 693.056 203.221333 533.333333 192.704V320a21.333333 21.333333 0 0 1-42.666666 0V192.704C330.922667 203.221333 203.221333 330.944 192.704 490.666667H320a21.333333 21.333333 0 0 1 0 42.666666H192.704c10.517333 159.744 138.24 287.445333 297.962667 297.962667V704a21.333333 21.333333 0 0 1 42.666666 0v127.296c159.744-10.517333 287.445333-138.24 297.962667-297.962667zM512 554.666667a42.666667 42.666667 0 1 1 0-85.333334 42.666667 42.666667 0 0 1 0 85.333334z"></path></svg>
+                    </span>
+                  </div>
+                </div>
+                `);
                 searchBarCon.appendChild(searchInputDiv);
-                this.searchInput = searchInput;
-                this.searchLockInput = searchLockInput;
+                this.searchInputDiv = searchInputDiv;
+                this.searchInput = searchInputDiv.querySelector("#searchJumperInput");
+                this.searchLockInput = searchInputDiv.querySelector(".search-jumper-lock-input");
+                this.searchJumperInPageInput = searchInputDiv.querySelector("#searchJumperInPageInput");
+                this.editBtn = searchInputDiv.querySelector("#editBtn");
+                this.recoverBtn = searchInputDiv.querySelector("#recoverBtn");
+                this.pinBtn = searchInputDiv.querySelector("#pinBtn");
+                this.locBtn = searchInputDiv.querySelector("#locBtn");
+                this.emptyBtn = searchInputDiv.querySelector("#emptyBtn");
+                this.closeBtn = searchInputDiv.querySelector(".closeBtn");
+                this.filterSitesTab = searchInputDiv.querySelector("#filterSitesTab");
+                this.searchInPageTab = searchInputDiv.querySelector("#searchInPageTab");
+                this.searchInPageLockWords = searchInputDiv.querySelector("#searchInPage>.lockWords");
+                this.contentContainer = searchInputDiv.querySelector(".content-container");
+            }
+
+            showInPageSearch() {
+                this.searchInPageTab.checked = true;
+                this.showSearchInput();
+                this.initInPageWords();
+            }
+
+            initInPageWords() {
+                if (this.searchInPageTab.checked && !this.searchJumperInPageInput.value && !this.lockWords) {
+                    let words = getKeywords();
+                    if (words) words = decodeURIComponent(words);
+                    else words = this.searchInput.value.replace(/^\*/, "");
+                    this.searchJumperInPageInput.value = words || globalInPageWords;
+                    this.submitInPageWords();
+                }
+            }
+
+            anylizeInPageWords(words, add) {
+                if (!words) return [];
+                let self = this;
+                let result = [];
+                if (!add) {
+                    if (words.indexOf("$c") === 0 && words.length > 2) {
+                        this.splitSep = words.substr(2, 1);
+                        words = words.substr(3).trim();
+                    } else if (words.indexOf("$o") === 0) {
+                        this.splitSep = "";
+                        words = words.substr(2).trim();
+                    } else this.splitSep = " ";
+                    this.curWordIndex = 0;
+                }
+                if (this.splitSep) {
+                    words.split(this.splitSep).forEach(word => {
+                        word = word.trim();
+                        if (!word) return;
+                        if (word.length < (searchData.prefConfig.limitInPageLen || 1)) return;
+                        if ((searchData.prefConfig.ignoreWords || []).includes(word)) return;
+                        let title = "";
+                        let style = "";
+                        let isRe = false;
+                        let reCase = "";
+                        let titleReg = /\$t{(.*?)}($|\$)/;
+                        let titleMatch = word.match(titleReg);
+                        if (titleMatch) {
+                            title = titleMatch[1];
+                            word = word.replace(titleReg, "$2");
+                        }
+                        let styleReg = /\$s{(.*?)}($|\$)/;
+                        let styleMatch = word.match(styleReg);
+                        if (styleMatch) {
+                            styleMatch = styleMatch[1].match(/(.*?);(.*)/);
+                            style = self.getHighlightStyle(self.curWordIndex, styleMatch[1], styleMatch[2]);
+                            word = word.replace(styleReg, "$2");
+                        } else {
+                            style = self.getHighlightStyle(self.curWordIndex, "", "");
+                        }
+                        let reMatch = word.match(/^\/(.*)\/(i?)($|\$)/);
+                        if (reMatch) {
+                            isRe = true;
+                            word = reMatch[1];
+                            reCase = reMatch[2];
+                        }
+                        result.push({content: word, isRe: isRe, reCase: reCase, title: title || word, style: style});
+                        self.curWordIndex++;
+                    });
+                } else {
+                    this.curWordIndex = 0;
+                    let word = (add || "").replace(/^\$o/, "") + words;
+                    result = [{content: word, isRe: false, reCase: "", title: "" || word, style: ""}];
+                }
+                return result;
+            }
+
+            submitInPageWords() {
+                let self = this;
+                let words = this.searchJumperInPageInput.value;
+                if (!words) {
+                    if (!this.lockWords) {
+                        this.highlight("");
+                        this.highlightSpans = {};
+                    } else this.highlight("insert");
+                    return;
+                }
+                let targetWords = this.anylizeInPageWords(words, this.lockWords);
+                if (!targetWords || targetWords.length == 0) return;
+                if (this.lockWords) {
+                    this.lockWords += this.splitSep + words;
+                } else this.lockWords = words;
+                this.searchJumperInPageInput.value = "";
+                if (!this.splitSep) {
+                    this.searchInPageLockWords.innerHTML = createHTML();
+                    this.highlight("");
+                }
+                this.highlight(targetWords);
+                targetWords.forEach(word => {
+                    if (!word) return;
+                    let wordSpan = document.createElement("span");
+                    wordSpan.innerHTML = word.content;
+                    wordSpan.title = word.title;
+                    wordSpan.style.cssText = word.style;
+
+                    wordSpan.addEventListener("click", e => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        return false;
+                    });
+                    wordSpan.oncontextmenu = e => {
+                        event.preventDefault();
+                    };
+                    wordSpan.addEventListener('dblclick', e=>{
+                        e.stopPropagation();
+                        e.preventDefault();
+                    }, true);
+                    wordSpan.addEventListener("mousedown", e => {
+                        if (e.which === 1 ) {
+                            this.focusHighlightByText(word.content, true, wordSpan);
+                        } else if (e.which === 3){
+                            this.focusHighlightByText(word.content, false, wordSpan);
+                        }
+                    });
+                    this.setHighlightSpan(wordSpan, -1, this.marks[word.content].length);
+                    this.highlightSpans[word.content] = wordSpan;
+
+                    this.searchInPageLockWords.appendChild(wordSpan);
+                });
+                if (this.searchInPageLockWords.scrollTop <= 0) this.searchInPageLockWords.scrollTop = this.searchInPageLockWords.scrollHeight;
+                this.searchJumperInPageInput.style.paddingLeft = this.searchInPageLockWords.clientWidth + 3 + "px";
+            }
+
+            emptyInPageWords() {
+                this.searchInPageLockWords.innerHTML = createHTML();
+                this.highlight("");
+            }
+
+            focusHighlightByText(text, fw, span) {
+                let curList = this.marks[text];
+                if (!curList) return;
+                if (text != this.focusText) {
+                    this.focusIndex = 0;
+                    this.focusText = text;
+                } else {
+                    if (fw) {
+                        if (this.focusIndex != curList.length - 1) {
+                            this.focusIndex = this.focusIndex + 1;
+                        } else this.focusIndex = 0;
+                    } else {
+                        if (this.focusIndex != 0) {
+                            this.focusIndex = this.focusIndex - 1;
+                        } else this.focusIndex = curList.length - 1;
+                    }
+                }
+                this.focusHighlight(curList[this.focusIndex]);
+                this.setHighlightSpan(span, this.focusIndex, curList.length);
+            }
+
+            focusHighlight(ele) {
+                if (!ele) return;
+                if (this.focusMark) this.focusMark.style.border="";
+                ele.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
+                ele.style.border="1px dashed red";
+                this.focusMark = ele;
+                if (!this.wPosBar) {
+                    this.wPosBar = document.createElement("div");
+                    this.hPosBar = document.createElement("div");
+                    this.wPosBar.className = "searchJumperPosBar searchJumperPosW";
+                    this.hPosBar.className = "searchJumperPosBar searchJumperPosH";
+                }
+                if (!this.wPosBar.parentNode) {
+                    document.body.appendChild(this.wPosBar);
+                    document.body.appendChild(this.hPosBar);
+                }
+
+                this.wPosBar.style.top = getElementTop(ele) + "px";
+                this.wPosBar.style.height = ele.offsetHeight + "px";
+
+                this.hPosBar.style.left = getElementLeft(ele) + "px";
+                this.hPosBar.style.width = ele.offsetWidth + "px";
+
+                this.wPosBar.style.animationName = "";
+                this.hPosBar.style.animationName = "";
+                setTimeout(() => {
+                    this.wPosBar.style.animationName = "fadeit";
+                    this.hPosBar.style.animationName = "fadeit";
+                }, 0);
+
+            }
+
+            getHighlightSpanByText(text) {
+                return this.highlightSpans[text];
+            }
+
+            setHighlightSpan(span, index, len) {
+                if (!span) return;
+                let numEle = span.querySelector("em");
+                if (!numEle) {
+                    numEle = document.createElement("em");
+                    span.appendChild(numEle);
+                }
+                index++;
+                numEle.innerHTML = createHTML("[" + index + "/" + len + "]");
+            }
+
+            getHighlightStyle(index, background, addCssText) {
+                if (!background && !addCssText) {
+                    let setCss = searchData.prefConfig.inPageWordsStyles[index];
+                    if (setCss) return setCss;
+                }
+                addCssText = addCssText || "";
+                function geneRandomColor() {
+                    let r, g, b;
+                    r = Math.floor(256 * Math.random());
+                    g = Math.floor(256 * Math.random());
+                    b = Math.floor(256 * Math.random());
+                    r = r.toString(16);
+                    if (r.length === 1) r = "0" + r;
+                    g = g.toString(16);
+                    if (g.length === 1) g = "0" + g;
+                    b = b.toString(16);
+                    if (b.length === 1) b = "0" + b;
+                    return "#" + r + g + b;
+                }
+
+                function getWordColor(bg) {
+                    if (bg.indexOf("#") !== 0) return "";
+                    bg = bg.substr(1);
+                    let r, g, b;
+                    r = parseInt(bg.substr(0, 2), 16);
+                    g = parseInt(bg.substr(2, 2), 16);
+                    b = parseInt(bg.substr(4, 2), 16);
+                    if (r > 50 && r < 205) {
+                        r = r < 128 ? 255 : 0;
+                    } else {
+                        r = 255 - r;
+                    }
+                    if (g > 50 && g < 205) {
+                        g = g < 128 ? 255 : 0;
+                    } else {
+                        g = 255 - g;
+                    }
+                    if (b > 50 && b < 205) {
+                        b = b < 128 ? 255 : 0;
+                    } else {
+                        b = 255 - b;
+                    }
+                    r = r.toString(16);
+                    if (r.length === 1) r = "0" + r;
+                    g = g.toString(16);
+                    if (g.length === 1) g = "0" + g;
+                    b = b.toString(16);
+                    if (b.length === 1) b = "0" + b;
+                    return "#" + r + g + b;
+                }
+                if (!background) {
+                    background = searchData.prefConfig.firstFiveWordsColor[index];
+                }
+                if (!background) {
+                    switch (index) {
+                        case 0:
+                            background = "";
+                            break;
+                        case 1:
+                            background = "#e91e63";
+                            break;
+                        case 2:
+                            background = "#00bcd4";
+                            break;
+                        case 3:
+                            background = "#008000";
+                            break;
+                        case 4:
+                            background = "#800080";
+                            break;
+                        default:
+                            background = geneRandomColor();
+                            break;
+                    }
+                }
+                if (background) background = `background:${background};color:${getWordColor(background)};`;
+                return `${background}${addCssText}`;
+            }
+
+            highlight(words, ele) {
+                ele = ele || document.body;
+                let self = this;
+                if (words === "") {
+                    Object.values(this.marks).forEach(markList => {
+                        if (!markList) return;
+                        markList.forEach(mark => {
+                            if (!mark.parentNode) return;
+                            let newNode = document.createTextNode(mark.innerText);
+                            mark.parentNode.replaceChild(newNode, mark);
+                            newNode.parentNode.normalize();
+                        });
+                    });
+                    this.navMarks.innerHTML = createHTML();
+                    this.marks = {};
+                    this.curHighlightWords = [];
+                    return;
+                }
+                if (words === "insert") {
+                    words = this.curHighlightWords;
+                } else {
+                    this.curHighlightWords = (this.curHighlightWords || []).concat(words);
+                }
+                function searchWithinNode(node, word) {
+                    let len, pos, skip, spannode, middlebit, middleclone;
+                    skip = 0;
+                    if (node.nodeType == 3 && (node.parentNode.tagName == "BODY" || node.parentNode.offsetParent || (node.parentNode.scrollHeight && node.parentNode.scrollWidth))) {
+                        if (word.isRe) {
+                            let wordMatch = node.data.match(new RegExp(word.content, word.reCase));
+                            if (wordMatch) {
+                                let content = wordMatch[0] || wordMatch;
+                                len = content.length;
+                                pos = node.data.indexOf(content);
+                            }
+                        } else {
+                            len = word.content.length;
+                            pos = node.data.toUpperCase().indexOf(word.content.toUpperCase());
+                        }
+                        if (pos >= 0) {
+                            let curList = self.marks[word.content];
+                            let index = curList.length;
+                            spannode = document.createElement("mark");
+                            spannode.className = "searchJumper";
+                            if (word.title) spannode.title = word.title;
+                            spannode.style.cssText = word.style;
+                            spannode.addEventListener("click", e => {
+                                if (!e.altKey) return;
+                                e.stopPropagation();
+                                e.preventDefault();
+                                return false;
+                            });
+                            spannode.addEventListener("mousedown", e => {
+                                if (!e.altKey) return;
+                                let target;
+                                if (e.which === 1 ) {
+                                    if (index != curList.length - 1) {
+                                        self.focusIndex = index + 1;
+                                    } else self.focusIndex = 0;
+                                } else if (e.which === 3){
+                                    if (index != 0) {
+                                        self.focusIndex = index - 1;
+                                    } else self.focusIndex = curList.length - 1;
+                                }
+                                target = curList[self.focusIndex];
+                                self.focusHighlight(target);
+                                self.setHighlightSpan(self.getHighlightSpanByText(word.content), self.focusIndex, curList.length);
+                                self.focusText = word.content;
+                            });
+                            middlebit = node.splitText(pos);
+                            middlebit.splitText(len);
+                            middleclone = middlebit.cloneNode(true);
+                            spannode.appendChild(middleclone);
+                            middlebit.parentNode.replaceChild(spannode, middlebit);
+                            self.marks[word.content].push(spannode);
+
+                            let navMark = document.createElement("span");
+                            let top = getElementTop(spannode);
+                            navMark.dataset.top = top;
+                            navMark.style.top = top / document.documentElement.scrollHeight * 100 + "vh";
+                            navMark.style.cssText += (word.style || "background: yellow;");
+                            navMark.addEventListener("click", e => {
+                                e.stopPropagation();
+                                e.preventDefault();
+                                self.focusIndex = index;
+                                self.focusHighlight(spannode);
+                                self.setHighlightSpan(self.getHighlightSpanByText(word.content), index, curList.length);
+                                self.navMarks.appendChild(self.navPointer);
+                                self.navPointer.style.top = navMark.style.top;
+                                return false;
+                            }, true);
+                            self.navMarks.appendChild(navMark);
+
+                            skip = 1;
+                        }
+                    } else if (node.nodeType == 1 &&
+                               node.childNodes &&
+                               node.tagName != "SCRIPT" &&
+                               node.tagName != "STYLE" &&
+                               node.tagName != "MARK") {
+                        for (var child = 0; child < node.childNodes.length; ++child) {
+                            child = child + searchWithinNode(node.childNodes[child], word);
+                        }
+                    }
+                    return skip;
+                }
+                words.forEach(w => {
+                    if (!self.marks[w.content]) {
+                        self.marks[w.content] = [];
+                    }
+                    searchWithinNode(ele, w);
+                });
+            }
+
+            refreshPageWords() {
+                this.lockWords = "";
+                this.searchJumperInPageInput.value = "";
+                this.searchInPageLockWords.innerHTML = createHTML();
+                this.searchJumperInPageInput.style.paddingLeft = "";
+                this.submitInPageWords();
+                if (globalInPageWords) {
+                    this.searchJumperInPageInput.value = globalInPageWords;
+                    this.submitInPageWords();
+                    this.appendBar();
+                }
+            }
+
+            refreshNav() {
+                this.setNav(navEnable);
+            }
+
+            refreshNavMarks() {
+                [].forEach.call(this.navMarks.querySelectorAll("span"), m => {
+                    m.style.top = m.dataset.top / document.documentElement.scrollHeight * 100 + "vh";
+                });
             }
 
             showSearchInput() {
                 let selectStr = getSelectStr();
                 this.recoveHistory();
                 this.bar.parentNode.classList.add("in-input");
-                this.searchInput.focus();
+                if (this.filterSitesTab.checked) {
+                    this.searchInput.focus();
+                } else if (this.searchInPageTab.checked) {
+                    this.searchJumperInPageInput.focus();
+                }
                 this.searchInput.value = "";
                 searchTypes.forEach(type => {
                     type.classList.remove("input-hide");
@@ -1442,6 +2215,7 @@
                     this.lockSearchInput("*");
                     this.searchInput.value = selectStr;
                 }
+                if (this.lockWords) this.searchJumperInPageInput.style.paddingLeft = this.searchInPageLockWords.clientWidth + 3 + "px";
             }
 
             hideSearchInput() {
@@ -1525,6 +2299,20 @@
                 this.searchBySiteName(targetSite.dataset.name, e);
             }
 
+            setNav(enable) {
+                if (enable != navEnable) {
+                    storage.setItem("navEnable", enable || "");
+                }
+                if (enable) {
+                    this.locBtn.classList.add("checked");
+                    this.searchJumperNavBar.style.display = "";
+                } else {
+                    this.locBtn.classList.remove("checked");
+                    this.searchJumperNavBar.style.display = "none";
+                    if (this.navPointer.parentNode) this.navPointer.parentNode.removeChild(this.navPointer);
+                }
+            }
+
             lockSearchInput(lockWords) {
                 this.lockSiteKeywords = true;
                 this.searchLockInput.innerText = lockWords;
@@ -1543,6 +2331,148 @@
                 this.bar.style.visibility = "hidden";
                 let sitesNum = 0;
                 let bookmarkTypes = [];
+
+                //Search in page
+                this.splitSep = " ";
+                this.lockWords = "";
+                this.marks = {};
+                this.highlightSpans = {};
+                this.curHighlightWords = [];
+                this.curWordIndex = 0;
+                this.navPointer = document.createElement("div");
+                this.navPointer.className = "navPointer";
+                this.navPointer.innerHTML = createHTML(">");
+                let pagetualMsg = e => {
+                    if (e.data.command === 'pagetual.insert') {
+                        let insertParent = document.querySelector(e.data.insert);
+                        if (insertParent) {
+                            window.removeEventListener('message', pagetualMsg, true);
+                            var observer = new MutationObserver((mutationsList, observer) => {
+                                for (let mutation of mutationsList) {
+                                    if (mutation.type === 'childList' && mutation.addedNodes.length) {
+                                        [].forEach.call(mutation.addedNodes, ele => {
+                                            self.highlight("insert", ele);
+                                        });
+                                        self.refreshNavMarks();
+                                    }
+                                }
+                            });
+                            observer.observe(insertParent, {
+                                childList: true
+                            });
+                        }
+                    }
+                };
+                window.addEventListener('message', pagetualMsg, true);
+                let editFunc = () => {
+                    this.searchJumperInPageInput.focus();
+                    this.highlight("");
+                    let words = this.lockWords.trim();
+                    if (!words) {
+                        this.submitInPageWords();
+                        return;
+                    }
+                    if (this.searchJumperInPageInput.value) words += this.splitSep + this.searchJumperInPageInput.value;
+                    this.lockWords = "";
+                    this.searchJumperInPageInput.value = words;
+                    this.searchInPageLockWords.innerHTML = createHTML();
+                    this.searchJumperInPageInput.style.paddingLeft = "";
+                };
+                this.searchJumperInPageInput.addEventListener("keydown", e => {
+                    switch(e.keyCode) {
+                        case 8://退格
+                            if (!this.searchJumperInPageInput.value) {
+                                editFunc();
+                            }
+                            break;
+                        case 9://tab
+                            e.stopPropagation();
+                            e.preventDefault();
+                            this.filterSitesTab.checked = true;
+                            this.searchInput.focus();
+                            break;
+                        case 13://回车
+                            this.submitInPageWords();
+                            break;
+                        default:
+                            break;
+                    }
+                });
+                this.editBtn.addEventListener("click", e => {
+                    editFunc();
+                });
+                this.searchInPageTab.addEventListener("change", e => {
+                    this.initInPageWords();
+                });
+                if (globalInPageWords) {
+                    this.recoverBtn.addEventListener("click", e => {
+                        this.lockWords = "";
+                        this.searchJumperInPageInput.value = globalInPageWords;
+                        this.searchInPageLockWords.innerHTML = createHTML();
+                        this.highlight("");
+                        this.submitInPageWords();
+                        this.searchJumperInPageInput.focus();
+                    });
+                    this.pinBtn.classList.add("checked");
+                } else {
+                    this.recoverBtn.style.display = "none";
+                }
+                this.pinBtn.addEventListener("click", e => {
+                    this.submitInPageWords();
+                    if (this.pinBtn.classList.contains("checked")) {
+                        storage.setItem("globalInPageWords", "");
+                        this.pinBtn.classList.remove("checked");
+                    } else if (this.lockWords) {
+                        storage.setItem("globalInPageWords", this.lockWords);
+                        this.pinBtn.classList.add("checked");
+                    }
+                });
+                this.emptyBtn.addEventListener("click", e => {
+                    this.lockWords = "";
+                    this.searchJumperInPageInput.value = "";
+                    this.searchInPageLockWords.innerHTML = createHTML();
+                    this.searchJumperInPageInput.style.paddingLeft = "";
+                    this.submitInPageWords();
+                    this.searchJumperInPageInput.focus();
+                });
+                this.setNav(navEnable);
+                this.locBtn.addEventListener("click", e => {
+                    this.setNav(!this.locBtn.classList.contains("checked"));
+                });
+                this.closeNavBtn.addEventListener("click", e => {
+                    this.setNav(false);
+                });
+                this.navMarks.addEventListener("click", e => {
+                    let topPercent = e.offsetY / this.navMarks.clientHeight * 100;
+                    let sortedMarks = [].slice.call(this.navMarks.querySelectorAll("span"));
+                    sortedMarks.sort((a, b) => {
+                        a = parseFloat(a.style.top);
+                        b = parseFloat(b.style.top);
+                        if (a > b) return 1;
+                        if (a < b) return -1;
+                        return 0;
+                    });
+                    for (let i = 0; i < sortedMarks.length; i++) {
+                        let mark = sortedMarks[i];
+                        let markTop = parseFloat(mark.style.top);
+                        if (markTop > topPercent) {
+                            if (i == 0) {
+                                mark.click();
+                                return;
+                            }
+                            let preMark = sortedMarks[i - 1];
+                            let preMarkTop = parseFloat(preMark.style.top);
+                            if (markTop - topPercent > topPercent - preMarkTop) {
+                                preMark.click();
+                            } else {
+                                mark.click();
+                            }
+                            break;
+                        }
+                    }
+                });
+                //Search in page
+
                 for (let siteConfig of searchData.sitesConfig) {
                     let isBookmark = siteConfig.bookmark || siteConfig.sites.length > 100 || (/^BM/.test(siteConfig.type) && siteConfig.icon === "bookmark");
                     if (isBookmark) {
@@ -1560,15 +2490,9 @@
                 this.initSort();
                 this.bar.style.visibility = "";
                 this.bar.style.display = "none";
+                this.searchInPageRule();
                 if ((window.menubar.visible || window.toolbar.visible) && currentSite && /%s\b/.test(currentSite.url)) {
-                    this.bar.style.display = "";
-                    this.initPos(
-                        searchData.prefConfig.position.x,
-                        searchData.prefConfig.position.y,
-                        searchData.prefConfig.offset.x,
-                        searchData.prefConfig.offset.y
-                    );
-                    this.insertHistory(this.currentType);
+                    this.inSearchEngine();
                 }
                 if (this.fontPool.length > 0 || isInConfigPage()) {
                     let linkEle = document.createElement("link");
@@ -1641,8 +2565,15 @@
                         inputTimer = setTimeout(() => self.searchSiteBtns(), 500);
                     }
                 });
-                this.searchInput.addEventListener("keyup", e => {
+                this.searchInput.addEventListener("keydown", e => {
                     switch(e.keyCode) {
+                        case 9:
+                            e.stopPropagation();
+                            e.preventDefault();
+                            this.searchInPageTab.checked = true;
+                            this.searchJumperInPageInput.focus();
+                            this.initInPageWords();
+                            break;
                         case 13://回车
                             if (self.lockSiteKeywords) {
                                 let siteEle = self.bar.querySelector("a.search-jumper-btn:not(.input-hide)");
@@ -1675,15 +2606,33 @@
                             break;
                     }
                 });
-                document.addEventListener("mousedown", e => {
-                    if (self.inInput) {
-                        if (self.bar.parentNode.contains(e.target)) {
-                            if (self.bar.contains(e.target)) e.preventDefault();
-                        } else {
-                            self.hideSearchInput();
-                        }
+                this.closeBtn.addEventListener("mousedown", e => {
+                    self.hideSearchInput();
+                });
+
+                let startLeft = window.innerWidth / 2;
+                let startBottom = window.innerHeight * 0.03;
+                this.contentContainer.addEventListener("mousedown", e => {
+                    if (e.target.className == "inputGroup") {
+                        let currentGroup = e.target;
+                        currentGroup.style.cursor = "grabbing";
+                        let startX = e.clientX, startY = e.clientY;
+                        let grabMouseupHandler = e => {
+                            document.removeEventListener("mouseup", grabMouseupHandler);
+                            document.removeEventListener("mousemove", grabMousemoveHandler);
+                            currentGroup.style.cursor = "";
+                            startLeft += e.clientX - startX;
+                            startBottom -= e.clientY - startY;
+                        };
+                        let grabMousemoveHandler = e => {
+                            self.searchInputDiv.style.left = startLeft + e.clientX - startX + "px";
+                            self.searchInputDiv.style.bottom = startBottom - (e.clientY - startY) + "px";
+                        };
+                        document.addEventListener("mouseup", grabMouseupHandler);
+                        document.addEventListener("mousemove", grabMousemoveHandler);
                     }
                 });
+
                 sitesNum = 0;
                 let hasCurrent = currentSite !== false;
                 for (let siteConfig of bookmarkTypes) {
@@ -1695,14 +2644,79 @@
                     }
                 }
                 if (!hasCurrent && currentSite && /%s\b/.test(currentSite.url)) {
-                    this.bar.style.display = "";
-                    this.initPos(
-                        searchData.prefConfig.position.x,
-                        searchData.prefConfig.position.y,
-                        searchData.prefConfig.offset.x,
-                        searchData.prefConfig.offset.y
-                    );
-                    this.insertHistory(this.currentType);
+                    this.inSearchEngine();
+                } else if (!currentSite) {
+                    this.checkSearchJump();
+                }
+            }
+
+            setInPageWords(inPageWords) {
+                this.searchJumperInPageInput.value = inPageWords;
+                this.searchInPageTab.checked = true;
+                if (document.readyState == "loading") {
+                    let loadHandler = e => {
+                        this.submitInPageWords();
+                        document.removeEventListener("DOMContentLoaded", loadHandler);
+                    };
+                    document.addEventListener("DOMContentLoaded", loadHandler);
+                } else {
+                    this.submitInPageWords();
+                }
+            }
+
+            searchInPageRule() {
+                if (this.searchInPageTab.checked) return;
+                if (searchData.prefConfig.inPageRule) {
+                    let keys = Object.keys(searchData.prefConfig.inPageRule);
+                    for (let i = 0; i < keys.length; i++) {
+                        let key = keys[i];
+                        if (!key) continue;
+                        if (this.globMatch(key, location.href)) {
+                            let rule = searchData.prefConfig.inPageRule[key];
+                            if (!rule) continue;
+                            this.setInPageWords(rule);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            checkSearchJump() {
+                if (this.searchInPageTab.checked) return;
+                let inPageWords;
+                if (searchData.prefConfig.showInSearchJumpPage && referrer) {
+                    if (document.referrer.indexOf(referrer) != -1) {
+                        inPageWords = cacheKeywords;
+                        try {
+                            inPageWords = decodeURIComponent(inPageWords);
+                        } catch (e) {}
+                        //storage.setItem("referrer", location.hostname);
+                    } else {
+                        //storage.setItem("referrer", "");
+                    }
+                }
+                inPageWords = inPageWords || globalInPageWords;
+                if (inPageWords) {
+                    this.setInPageWords(inPageWords);
+                }
+            }
+
+            inSearchEngine() {
+                this.bar.style.display = "";
+                this.initPos(
+                    searchData.prefConfig.position.x,
+                    searchData.prefConfig.position.y,
+                    searchData.prefConfig.offset.x,
+                    searchData.prefConfig.offset.y
+                );
+                this.insertHistory(this.currentType);
+                if (this.searchInPageTab.checked) return;
+                let inPageWords = searchData.prefConfig.showInSearchEngine ? getKeywords() : globalInPageWords;
+                if (inPageWords) {
+                    try {
+                        inPageWords = decodeURIComponent(inPageWords);
+                    } catch (e) {}
+                    this.setInPageWords(inPageWords);
                 }
             }
 
@@ -1739,7 +2753,7 @@
                         if (listItem) listItem.classList.remove("input-hide");
                     }
                 });
-                let showType = this.bar.querySelector(".search-jumper-type:not(.input-hide)");
+                let showType = this.bar.querySelector(".search-jumper-type:not(.input-hide,.search-jumper-logo)");
                 if (showType && showType.classList.contains("search-jumper-hide")) showType.querySelector("span.search-jumper-btn").onmousedown();
             }
 
@@ -1776,11 +2790,20 @@
                     if (keywords && keywords != cacheKeywords) {
                         cacheKeywords = keywords;
                         storage.setItem("cacheKeywords", keywords);
+                        storage.setItem("referrer", location.hostname);
                     }
                 }
             }
 
             refresh() {
+                if (this.refreshInPageTimer) {
+                    clearTimeout(this.refreshInPageTimer);
+                }
+                this.refreshInPageTimer = setTimeout(() => {
+                    let oldWords = this.curHighlightWords;
+                    this.highlight("");
+                    this.highlight(oldWords);
+                }, 500);
                 if (!currentSite && this.bar.style.display == "none") {
                     let typeData;
                     for (let i in searchData.sitesConfig) {
@@ -2457,23 +3480,6 @@
                 siteEle.setAttribute("target", siteEle.dataset.target==1?"_blank":"");
             }
 
-            isXPath(xpath) {
-                if (!xpath) return false;
-                return /^\(*(descendant::|\.\/|\/\/|id\()/.test(xpath);
-            }
-
-            getElement(sel, doc) {
-                if (!doc) doc = document;
-                try {
-                    if (!this.isXPath(sel)) {
-                        return doc.querySelector(sel);
-                    }
-                } catch(e) {
-                    debug(e);
-                }
-                return getElementByXpath(sel, doc, doc);
-            }
-
             batchOpen(siteNames, e) {
                 let self = this;
                 self.batchOpening = true;
@@ -2732,8 +3738,8 @@
                         if (!currentSite && inPagePostParams) {
                             storage.setItem("inPagePostParams", false);
                             let submitAction = async () => {
-                                await sleep(500);
                                 if (document.readyState === "loading") {
+                                    await sleep(500);
                                     submitAction();
                                     return;
                                 }
@@ -2744,17 +3750,13 @@
                                         await sleep(param[1]);
                                         continue;
                                     }
-                                    input = self.getElement(param[0]);
-                                    if (!input) {
-                                        submitAction();
-                                        return;
-                                    }
                                     if (param[1] === 'click()') {
-                                        await emuClick(input);
+                                        await emuClick(param[0]);
                                     } else {
                                         if (!localKeywords) localKeywords = param[1];
-                                        await emuInput(input, param[1]);
+                                        await emuInput(param[0], param[1]);
                                     }
+                                    input = getElement(param[0]);
                                 }
 
                                 form = input.parentNode;
@@ -2819,16 +3821,18 @@
                             return str.replace(keyToReg(key, "g"), value);
                         }
                     };
+                    let needDecode = (/^c:|[#:%]P{/i.test(data.url));
+                    let keywordsU, keywordsL, keywordsR;
+                    if (!keywordsU && !keywordsL && !keywordsR) {
+                        keywordsR = keywords;
+                        try {
+                            keywordsR = decodeURIComponent(keywords);
+                        } catch (e) {}
+                        if (needDecode) keywords = keywordsR;
+                        keywordsU = keywords.toUpperCase();
+                        keywordsL = keywords.toLowerCase();
+                    }
                     let customReplaceKeywords = str => {
-                        let keywordsU, keywordsL, keywordsR;
-                        if (!keywordsU && !keywordsL && !keywordsR) {
-                            keywordsU = keywords.toUpperCase();
-                            keywordsL = keywords.toLowerCase();
-                            keywordsR = keywords;
-                            try {
-                                keywordsR = decodeURIComponent(keywords);
-                            } catch (e) {}
-                        }
                         str = customReplaceSingle(str, "%su", keywordsU);
                         str = customReplaceSingle(str, "%sl", keywordsL);
                         str = customReplaceSingle(str, "%sr", keywordsR);
@@ -2843,7 +3847,7 @@
                             let selector = selectorMatch[1];
                             let prop = selectorMatch[3];
                             let value = "";
-                            let ele = self.getElement(selector);
+                            let ele = getElement(selector);
                             if (ele) {
                                 if (prop) {
                                     value = ele.getAttribute(prop) || ele[prop];
@@ -3439,77 +4443,92 @@
             }
         }
 
-        async function emuInput(input, v) {
-            if (input) {
-                let event = new Event('focus', { bubbles: true });
-                input.dispatchEvent(event);
-                let lastValue = input.value;
-                if (input.tagName == "INPUT") {
-                    var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
-                    nativeInputValueSetter.call(input, v);
-                } else {
-                    var nativeTextareaValueSetter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, "value").set;
-                    nativeTextareaValueSetter.call(input, v);
-                }
-                event = new Event('input', { bubbles: true });
-                let tracker = input._valueTracker;
-                if (tracker) {
-                    tracker.setValue(lastValue);
-                }
-                input.dispatchEvent(event);
-                event = new Event('change', { bubbles: true });
-                input.dispatchEvent(event);
-            }
-            await sleep(0);
+        async function emuInput(sel, v) {
+            await new Promise((resolve) => {
+                let checkInv = setInterval(() => {
+                    let input = getElement(sel);
+                    if (input) {
+                        let event = new Event('focus', { bubbles: true });
+                        input.dispatchEvent(event);
+                        let lastValue = input.value;
+                        if (input.tagName == "INPUT") {
+                            var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
+                            nativeInputValueSetter.call(input, v);
+                        } else {
+                            var nativeTextareaValueSetter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, "value").set;
+                            nativeTextareaValueSetter.call(input, v);
+                        }
+                        event = new Event('input', { bubbles: true });
+                        let tracker = input._valueTracker;
+                        if (tracker) {
+                            tracker.setValue(lastValue);
+                        }
+                        input.dispatchEvent(event);
+                        event = new Event('change', { bubbles: true });
+                        input.dispatchEvent(event);
+
+                        clearInterval(checkInv);
+                        resolve();
+                    }
+                }, 100);
+            });
         }
 
-        async function emuClick(btn){
-            if(!PointerEvent) return btn.click();
-            let eventParam = {
-                isTrusted: true,
-                altKey: false,
-                azimuthAngle: 0,
-                bubbles: true,
-                button: 0,
-                buttons: 0,
-                clientX: 1,
-                clientY: 1,
-                cancelBubble: false,
-                cancelable: true,
-                composed: true,
-                ctrlKey: false,
-                defaultPrevented: false,
-                detail: 1,
-                eventPhase: 2,
-                fromElement: null,
-                height: 1,
-                isPrimary: false,
-                metaKey: false,
-                pointerId: 1,
-                pointerType: "mouse",
-                pressure: 0,
-                relatedTarget: null,
-                returnValue: true,
-                shiftKey: false,
-                toElement: null,
-                twist: 0,
-                which: 1
-            };
-            btn.focus();
-            var mouseEvent = new PointerEvent("mouseover",eventParam);
-            btn.dispatchEvent(mouseEvent);
-            mouseEvent = new PointerEvent("pointerover",eventParam);
-            btn.dispatchEvent(mouseEvent);
-            mouseEvent = new PointerEvent("mousedown",eventParam);
-            btn.dispatchEvent(mouseEvent);
-            mouseEvent = new PointerEvent("pointerdown",eventParam);
-            btn.dispatchEvent(mouseEvent);
-            mouseEvent = new PointerEvent("mouseup",eventParam);
-            btn.dispatchEvent(mouseEvent);
-            mouseEvent = new PointerEvent("pointerup",eventParam);
-            btn.dispatchEvent(mouseEvent);
-            btn.click();
-            await sleep(0);
+        async function emuClick(sel) {
+            await new Promise((resolve) => {
+                let checkInv = setInterval(() => {
+                    let btn = getElement(sel);;
+                    if (btn) {
+                        clearInterval(checkInv);
+                        if(!PointerEvent) return btn.click();
+                        let eventParam = {
+                            isTrusted: true,
+                            altKey: false,
+                            azimuthAngle: 0,
+                            bubbles: true,
+                            button: 0,
+                            buttons: 0,
+                            clientX: 1,
+                            clientY: 1,
+                            cancelBubble: false,
+                            cancelable: true,
+                            composed: true,
+                            ctrlKey: false,
+                            defaultPrevented: false,
+                            detail: 1,
+                            eventPhase: 2,
+                            fromElement: null,
+                            height: 1,
+                            isPrimary: false,
+                            metaKey: false,
+                            pointerId: 1,
+                            pointerType: "mouse",
+                            pressure: 0,
+                            relatedTarget: null,
+                            returnValue: true,
+                            shiftKey: false,
+                            toElement: null,
+                            twist: 0,
+                            which: 1
+                        };
+                        btn.focus();
+                        var mouseEvent = new PointerEvent("mouseover",eventParam);
+                        btn.dispatchEvent(mouseEvent);
+                        mouseEvent = new PointerEvent("pointerover",eventParam);
+                        btn.dispatchEvent(mouseEvent);
+                        mouseEvent = new PointerEvent("mousedown",eventParam);
+                        btn.dispatchEvent(mouseEvent);
+                        mouseEvent = new PointerEvent("pointerdown",eventParam);
+                        btn.dispatchEvent(mouseEvent);
+                        mouseEvent = new PointerEvent("mouseup",eventParam);
+                        btn.dispatchEvent(mouseEvent);
+                        mouseEvent = new PointerEvent("pointerup",eventParam);
+                        btn.dispatchEvent(mouseEvent);
+                        btn.click();
+                        resolve();
+                    }
+                }, 100);
+            });
         }
 
         function submitByForm(charset, url, target) {
@@ -3542,7 +4561,7 @@
             if (charset) {
                 form.acceptCharset = charset;
             }
-            form.innerHTML = createHTML('');
+            form.innerHTML = createHTML();
             form.target = target;
             form.action = targetUrl;
             params.forEach((v, k) => {
@@ -3669,7 +4688,7 @@
                     debug('SearchJumper all icons cached!');
                 }
             }
-            if (searchBar.bar.style.display === "none") {
+            if (searchBar.bar.style.display === "none" && !navEnable) {
                 searchBar.removeBar();
             }
         }
@@ -3764,6 +4783,10 @@
         function initListener() {
             _GM_registerMenuCommand(i18n('settings'), () => {
                 _GM_openInTab(configPage, {active: true});
+            });
+            _GM_registerMenuCommand(i18n('showInPageSearch'), () => {
+                searchBar.showInPage();
+                searchBar.showInPageSearch();
             });
             let logoSvg = logoBtn.children[0];
             let grabState = 0;//0 未按下 1 已按下 2 已拖动
@@ -4056,6 +5079,7 @@
                 if (searchData.prefConfig.dragToSearch && !isInConfigPage()) {
                     document.addEventListener('dragstart', e => {
                         targetElement = e.target;
+                        if (targetElement.getAttribute && targetElement.getAttribute("draggable") == "true") return;
                         showDragSearch(e.clientX, e.clientY);
                     });
                 }
@@ -4150,11 +5174,9 @@
             var observer = new MutationObserver((mutationsList, observer) => {
                 for (let mutation of mutationsList) {
                     if (mutation.type === 'childList' && mutation.removedNodes.length) {
-                        if(mutation.removedNodes.length){
-                            [].forEach.call(mutation.removedNodes, removedNode => {
-                                checkCssEle(removedNode);
-                            });
-                        }
+                        [].forEach.call(mutation.removedNodes, removedNode => {
+                            checkCssEle(removedNode);
+                        });
                     }
                 }
             });
@@ -4411,7 +5433,7 @@
                       height: 55px;
                       font-size: 12px;
                       font-weight: bold;
-                      font-family: Roboto, Helvetica, Arial, sans-serif;
+                      font-family: Helvetica, Arial, sans-serif;
                       display: flex;
                       flex-direction: column;
                       align-items: center;
@@ -4536,7 +5558,7 @@
             let firstType = searchBar.autoGetFirstType();
             searchBar.recoveHistory();
             dragSiteCurSpans.forEach((span, i) => {
-                span.innerHTML = createHTML("");
+                span.innerHTML = createHTML();
                 let targetSite = firstType.querySelectorAll("a.search-jumper-btn:not(.notmatch)")[i];
                 if (!targetSite) return;
                 span.parentNode.dataset.name = targetSite.dataset.name;
@@ -4569,7 +5591,7 @@
             dragSiteHistorySpans.forEach((span, i) => {
                 let dragleaveEvent = new DragEvent("dragleave");
                 span.dispatchEvent(dragleaveEvent);
-                span.innerHTML = createHTML("");
+                span.innerHTML = createHTML();
                 let targetSite = getHistorySiteBtn();
                 if (!targetSite) return;
                 span.parentNode.dataset.name = targetSite.dataset.name;
@@ -4639,7 +5661,7 @@
                     }
                     .searchJumperFrame-input-title {
                         font-size: 9pt;
-                        font-family: Roboto, Helvetica, Arial, sans-serif;
+                        font-family: Helvetica, Arial, sans-serif;
                         display: inline-block;
                         background-color: white;
                         position: relative;
@@ -4801,7 +5823,7 @@
             }
             if (icons && icons.length > 1) {
                 iconsCon.style.display = "";
-                iconsCon.innerHTML = createHTML("");
+                iconsCon.innerHTML = createHTML();
                 icons.forEach(iconSrc => {
                     let curIcon = document.createElement("img");
                     curIcon.src = iconSrc;
@@ -4939,6 +5961,21 @@
                     resolve(data || {});
                 });
             });
+            globalInPageWords = await new Promise((resolve) => {
+                storage.getItem("globalInPageWords", data => {
+                    resolve(data || '');
+                });
+            });
+            navEnable = await new Promise((resolve) => {
+                storage.getItem("navEnable", data => {
+                    resolve(data || false);
+                });
+            });
+            referrer = await new Promise((resolve) => {
+                storage.getItem("referrer", data => {
+                    resolve(data || "");
+                });
+            });
             if (_searchData) {
                 searchData = _searchData;
             }
@@ -4976,25 +6013,53 @@
             if (typeof searchData.prefConfig.dragToSearch === "undefined") {
                 searchData.prefConfig.dragToSearch = true;
             }
+            if (typeof searchData.prefConfig.firstFiveWordsColor === "undefined") {
+                searchData.prefConfig.firstFiveWordsColor = [];
+            }
+            if (typeof searchData.prefConfig.inPageWordsStyles === "undefined") {
+                searchData.prefConfig.inPageWordsStyles = [];
+            }
         }
 
-        async function init() {
+        var inited = false;
+        async function init(cb) {
+            if (inited) {
+                if (cb) cb();
+                return;
+            }
+            inited = true;
             preAction();
             await initData();
             initView();
             initConfig();
             initMycroft();
             initRun();
+            if (cb) cb();
         }
 
         function visibilitychangeHandler() {
-            document.removeEventListener('visibilitychange', visibilitychangeHandler);
-            init();
+            if (document.hidden) return;
+            init(() => {
+                let oldGlobalInPageWords = globalInPageWords;
+                storage.getItem("globalInPageWords", data => {
+                    globalInPageWords = (data || '');
+                    if (oldGlobalInPageWords != globalInPageWords) {
+                        searchBar.refreshPageWords();
+                    }
+                });
+                let oldNavEnable = navEnable;
+                storage.getItem("navEnable", data => {
+                    navEnable = (data || false);
+                    if (oldNavEnable != navEnable) {
+                        searchBar.refreshNav();
+                    }
+                });
+            });
         }
 
-        if (document.hidden) {
-            document.addEventListener('visibilitychange', visibilitychangeHandler);
-        } else {
+        document.addEventListener('visibilitychange', visibilitychangeHandler);
+
+        if (!document.hidden) {
             init();
         }
     }
