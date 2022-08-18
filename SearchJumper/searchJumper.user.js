@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.5.16
+// @version      1.6.5.17
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -1951,7 +1951,9 @@
             focusHighlight(ele) {
                 if (!ele) return;
                 if (this.focusMark) this.focusMark.style.border="";
-                ele.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
+                setTimeout(() => {
+                    ele.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
+                }, 0);
                 ele.style.border="1px dashed red";
                 this.focusMark = ele;
                 if (!this.wPosBar) {
@@ -2077,6 +2079,7 @@
 
             highlight(words, ele, root) {
                 ele = ele || document.body;
+                let preEles = [];
                 let self = this;
                 if (words === "") {
                     Object.values(this.marks).forEach(markList => {
@@ -2155,6 +2158,7 @@
                             let navMark = document.createElement("span");
                             let top = getElementTop(spannode);
                             navMark.dataset.top = top;
+                            navMark.dataset.content = word.content;
                             navMark.style.top = top / document.documentElement.scrollHeight * 100 + "vh";
                             navMark.style.background = spannode.style.background;
                             navMark.addEventListener("click", e => {
@@ -2177,8 +2181,12 @@
                                node.tagName != "SCRIPT" &&
                                node.tagName != "STYLE" &&
                                node.tagName != "MARK") {
-                        for (var child = 0; child < node.childNodes.length; ++child) {
-                            child = child + searchWithinNode(node.childNodes[child], word);
+                        if (node.tagName === "PRE" || node.tagName === "CODE") {
+                            preEles.push(node);
+                        } else {
+                            for (var child = 0; child < node.childNodes.length; ++child) {
+                                child = child + searchWithinNode(node.childNodes[child], word);
+                            }
                         }
                     }
                     return skip;
@@ -2189,6 +2197,13 @@
                     }
                     searchWithinNode(ele, w);
                 });
+                setTimeout(() => {
+                    words.forEach(w => {
+                        preEles.forEach(e => {
+                            searchWithinNode(e, w);
+                        });
+                    });
+                }, 500);
                 if (this.navMarks.innerHTML != "") {
                     this.searchJumperNavBar.style.opacity = 1;
                 }
@@ -2225,13 +2240,14 @@
             }
 
             removeMark(removedNode) {
-                let markList = this.marks[removedNode.dataset.content];
+                let content = removedNode.dataset.content;
+                let markList = this.marks[content];
                 if (!markList) return;
                 var index = markList.indexOf(removedNode);
                 if (index === -1) return;
                 markList.splice(index, 1);
-                this.marks[removedNode.dataset.content] = markList;
-                let navMark = this.navMarks.querySelector(`span:nth-of-type(${index + 1})`);
+                this.marks[content] = markList;
+                let navMark = this.navMarks.querySelectorAll(`span[data-content=${content}]`)[index];
                 if (navMark) this.navMarks.removeChild(navMark);
             }
 
@@ -5230,8 +5246,14 @@
                         }
                         if (mutation.removedNodes.length) {
                             [].forEach.call(mutation.removedNodes, removedNode => {
-                                if (removedNode.nodeType === 1 && removedNode.className === "searchJumper") {
-                                    removeMark(removedNode);
+                                if (removedNode.nodeType === 1) {
+                                    if (removedNode.className === "searchJumper") {
+                                        removeMark(removedNode);
+                                    } else if (removedNode.children.length) {
+                                        [].forEach.call(removedNode.querySelectorAll("mark.searchJumper"), node => {
+                                            removeMark(node);
+                                        });
+                                    }
                                 }
                             });
                         }
