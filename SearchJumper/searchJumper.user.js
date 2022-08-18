@@ -4228,7 +4228,7 @@
                     let firstType = this.bar.querySelector(".search-jumper-type:not(.search-jumper-hide)");
                     if (firstType) {
                         setTimeout(() => {
-                            firstType.scrollIntoView();
+                            firstType.scrollIntoView({behavior: "smooth"});
                         }, 0);
                     }
                 } else {
