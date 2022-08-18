@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.5.12
+// @version      1.6.5.13
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -1560,7 +1560,7 @@
                      font-size: 18px;
                      display: flex;
                      flex-wrap: wrap-reverse;
-                     height: 38px;
+                     max-height: 38px;
                      overflow: hidden;
                  }
                  #searchInPage>.lockWords:hover {
@@ -1625,12 +1625,19 @@
                      height: 0.5vh;
                      width: 100%;
                      position: absolute;
-                     border: 1px solid #666666;
-                     box-sizing: content-box;
+                     border: 1px solid #beb7b7;
+                     min-height: 3px;
+                     box-sizing: border-box;
                      left: 0;
+                     border-radius: 0px!important;
                  }
                  mark.searchJumper {
                      visibility: visible;
+                     font-style: normal;
+                     box-shadow: rgba(0, 0, 0, 0.3) 1px 1px 3px;
+                     border-radius: 3px;
+                     text-decoration: none;
+                     padding: 1px 0;
                  }
                  .searchJumperPosBar {
                      background: rgba(29, 93, 163, 0.3);
@@ -1782,12 +1789,16 @@
             }
 
             initInPageWords() {
-                if (this.searchInPageTab.checked && !this.searchJumperInPageInput.value && !this.lockWords) {
-                    let words = getKeywords();
-                    if (words) words = decodeURIComponent(words);
-                    else words = this.searchInput.value.replace(/^\*/, "");
+                if (this.searchInPageTab.checked && !this.searchJumperInPageInput.value) {
+                    let words = this.searchInput.value.replace(/^\*/, "") || getKeywords();
+                    if (words) {
+                        try {
+                            words = decodeURIComponent(words);
+                        } catch (e) {}
+                    }
+                    if (this.lockWords && this.lockWords.indexOf(words) !== -1) return;
                     this.searchJumperInPageInput.value = words || globalInPageWords;
-                    this.submitInPageWords();
+                    if (!this.lockWords) this.submitInPageWords();
                 }
             }
 
@@ -1873,7 +1884,10 @@
                     let wordSpan = document.createElement("span");
                     wordSpan.innerHTML = word.content;
                     wordSpan.title = word.title;
-                    wordSpan.style.cssText = word.style;
+                    let background = word.style.match(/background: *(#?\w+)/);
+                    if (background) wordSpan.style.background = background[1];
+                    let color = word.style.match(/color: *(#?\w+)/);
+                    if (color) wordSpan.style.color = color[1];
 
                     wordSpan.addEventListener("click", e => {
                         e.stopPropagation();
@@ -1998,6 +2012,7 @@
 
                 function getWordColor(bg) {
                     if (bg.indexOf("#") !== 0) return "";
+                    if (bg === "#ffff00") return "";
                     bg = bg.substr(1);
                     let r, g, b;
                     r = parseInt(bg.substr(0, 2), 16);
@@ -2051,11 +2066,11 @@
                             break;
                     }
                 }
-                if (background) background = `background:${background};color:${getWordColor(background)};`;
+                if (background) background = `background:${background};color:${getWordColor(background)};border-radius:5px;`;
                 return `${background}${addCssText}`;
             }
 
-            highlight(words, ele) {
+            highlight(words, ele, root) {
                 ele = ele || document.body;
                 let self = this;
                 if (words === "") {
@@ -2106,6 +2121,7 @@
                                 e.preventDefault();
                                 return false;
                             });
+                            spannode.dataset.content = word.content;
                             spannode.addEventListener("mousedown", e => {
                                 if (!e.altKey) return;
                                 let target;
@@ -2134,7 +2150,7 @@
                             let top = getElementTop(spannode);
                             navMark.dataset.top = top;
                             navMark.style.top = top / document.documentElement.scrollHeight * 100 + "vh";
-                            navMark.style.cssText += (word.style || "background: yellow;");
+                            navMark.style.background = spannode.style.background;
                             navMark.addEventListener("click", e => {
                                 e.stopPropagation();
                                 e.preventDefault();
@@ -2149,7 +2165,8 @@
 
                             skip = 1;
                         }
-                    } else if (node.nodeType == 1 &&
+                    } else if ((!root || node === ele) &&
+                               node.nodeType == 1 &&
                                node.childNodes &&
                                node.tagName != "SCRIPT" &&
                                node.tagName != "STYLE" &&
@@ -2194,6 +2211,21 @@
                 });
             }
 
+            checkCharacterData(target) {
+                this.highlight("insert", target, true);
+            }
+
+            removeMark(removedNode) {
+                let markList = this.marks[removedNode.dataset.content];
+                if (!markList) return;
+                var index = markList.indexOf(removedNode);
+                if (index === -1) return;
+                markList.splice(index, 1);
+                this.marks[removedNode.dataset.content] = markList;
+                let navMark = this.navMarks.querySelector(`span:nth-of-type(${index + 1})`);
+                if (navMark) this.navMarks.removeChild(navMark);
+            }
+
             showSearchInput() {
                 let selectStr = getSelectStr();
                 this.recoveHistory();
@@ -2217,6 +2249,10 @@
                 if (this.bar.classList.contains("search-jumper-isInPage")) {
                     this.lockSearchInput("*");
                     this.searchInput.value = selectStr;
+                    if (this.searchInPageTab.checked && !this.searchJumperInPageInput.value) {
+                        this.searchJumperInPageInput.value = selectStr;
+                        this.submitInPageWords();
+                    }
                 }
                 if (this.lockWords) this.searchJumperInPageInput.style.paddingLeft = this.searchInPageLockWords.clientWidth + 3 + "px";
             }
@@ -2349,20 +2385,6 @@
                     if (e.data.command === 'pagetual.insert') {
                         let insertParent = document.querySelector(e.data.insert);
                         if (insertParent) {
-                            window.removeEventListener('message', pagetualMsg, true);
-                            var observer = new MutationObserver((mutationsList, observer) => {
-                                for (let mutation of mutationsList) {
-                                    if (mutation.type === 'childList' && mutation.addedNodes.length) {
-                                        [].forEach.call(mutation.addedNodes, ele => {
-                                            self.highlight("insert", ele);
-                                        });
-                                        self.refreshNavMarks();
-                                    }
-                                }
-                            });
-                            observer.observe(insertParent, {
-                                childList: true
-                            });
                         }
                     }
                 };
@@ -5166,7 +5188,7 @@
                 }
             });
 
-            var observerOptions = {
+            let headObserverOptions = {
                 childList: true
             };
             let checkCssEle = ele => {
@@ -5174,7 +5196,7 @@
                     mainStyleEle = _GM_addStyle(cssText);
                 }
             };
-            var observer = new MutationObserver((mutationsList, observer) => {
+            let headObserver = new MutationObserver((mutationsList, observer) => {
                 for (let mutation of mutationsList) {
                     if (mutation.type === 'childList' && mutation.removedNodes.length) {
                         [].forEach.call(mutation.removedNodes, removedNode => {
@@ -5183,7 +5205,46 @@
                     }
                 }
             });
-            observer.observe(document.head, observerOptions);
+            headObserver.observe(document.head, headObserverOptions);
+
+            let removeMark = node => searchBar.removeMark(node);
+            let highlight = (words, node) => searchBar.highlight(words, node);
+            let bodyObserverOptions = {
+                childList: true,
+                characterData: true,
+                subtree: true
+            };
+            let bodyObserver = new MutationObserver((mutationsList, observer) => {
+                let lockWords = searchBar.lockWords;
+                if (lockWords) {
+                    for (let mutation of mutationsList) {
+                        if (mutation.type === "characterData") {
+                            let parentNode = mutation.target.parentNode;
+                            if (!parentNode ||
+                                (mutation.target.previousElementSibling && mutation.target.previousElementSibling.className === "searchJumper") ||
+                                (mutation.target.nextElementSibling && mutation.target.nextElementSibling.className === "searchJumper")) {
+                                return;
+                            }
+                            searchBar.checkCharacterData(parentNode);
+                        }
+                        if (mutation.removedNodes.length) {
+                            [].forEach.call(mutation.removedNodes, removedNode => {
+                                if (removedNode.nodeType === 1 && removedNode.className === "searchJumper") {
+                                    removeMark(removedNode);
+                                }
+                            });
+                        }
+                        if (mutation.addedNodes.length) {
+                            [].forEach.call(mutation.addedNodes, addedNode => {
+                                if (addedNode.nodeType === 1 && addedNode.className !== "searchJumper") {
+                                    highlight("insert", addedNode);
+                                }
+                            });
+                        }
+                    }
+                }
+            });
+            bodyObserver.observe(document.body, bodyObserverOptions);
         }
 
         const jumpHtml = "https://hoothin.github.io/SearchJumper/jump.html";
@@ -6066,11 +6127,11 @@
             init();
         }
     }
-    if (document && document.documentElement && document.head) {
+    if (document && document.documentElement && document.head && document.body) {
         run();
     } else {
         let checkReady = () => {
-            if (document && document.documentElement && document.head) {
+            if (document && document.documentElement && document.head && document.body) {
                 run();
             } else {
                 setTimeout(() => {
