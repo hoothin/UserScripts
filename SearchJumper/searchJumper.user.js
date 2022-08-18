@@ -1425,6 +1425,7 @@
                      width: calc(100% - 20px);
                      outline: none;
                      box-sizing: border-box;
+                     cursor: text;
                  }
                  .search-jumper-input * {
                      box-sizing: border-box;
