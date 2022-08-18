@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.30.6.27
+// @version      1.9.30.6.28
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -1599,11 +1599,13 @@
             }
             if(this.insert && !refresh){
                 let parent=this.insert;
-                while(parent && parent.nodeName!="BODY"){
-                    parent=parent.parentNode;
-                }
-                if(parent && parent.nodeName=="BODY"){
-                    return this.insert;
+                if (isVisible(parent)) {
+                    while(parent && parent.nodeName!="BODY"){
+                        parent=parent.parentNode;
+                    }
+                    if(parent && parent.nodeName=="BODY"){
+                        return this.insert;
+                    }
                 }
             }
             if(this.curSiteRule.insert){
@@ -2110,6 +2112,7 @@
               margin-left: 5px;
               vertical-align: middle;
               appearance: auto;
+              display: inline-block;
              }
              #pagetual-picker label {
               font-size: 18px;
@@ -2167,7 +2170,7 @@
                   </svg>
                 </button>
                 <div class="bottom">
-                  <input class="xpath" name="xpath" id="checkbox_id" type="checkbox">
+                  <input spellcheck="false" class="xpath" name="xpath" id="checkbox_id" type="checkbox">
                   <label for="checkbox_id">XPath</label>
                   <button id="edit" title="${i18n("gotoEdit")}" type="button">
                     <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4129" style="color: orangered;fill: orangered;">
@@ -2432,6 +2435,7 @@
                         "description": "Object containing site config",
                         "type": "array",
                         "items": {
+                            "type": 'object',
                             "properties": {
                                 "name": {
                                     "title": "Site Name",
@@ -2778,6 +2782,7 @@
         let customUrlsInput=document.createElement("textarea");
         customUrlsInput.style.width="100%";
         customUrlsInput.placeholder="http://wedata.net/databases/AutoPagerize/items_all.json";
+        customUrlsInput.spellcheck=false;
         configCon.insertBefore(customUrlsInput, insertPos);
 
         let btns=document.createElement("div");
@@ -2794,6 +2799,7 @@
         upBtnImgInput.style.width="100%";
         upBtnImgInput.placeholder="data:image/png;base64,UpBtn";
         upBtnImgInput.value=rulesData.upBtnImg||'';
+        upBtnImgInput.spellcheck=false;
         upBtnImg.appendChild(upBtnImgInput);
         btns.appendChild(upBtnImg);
 
@@ -2808,6 +2814,7 @@
         downBtnImgInput.style.width="100%";
         downBtnImgInput.placeholder="data:image/png;base64,DownBtn";
         downBtnImgInput.value=rulesData.downBtnImg||'';
+        downBtnImgInput.spellcheck=false;
         downBtnImg.appendChild(downBtnImgInput);
         btns.appendChild(downBtnImg);
 
@@ -2826,6 +2833,7 @@
         loadingTextInput.placeholder=i18n("loadingText");
         loadingTextInput.style.width="100%";
         loadingTextInput.style.margin="0";
+        loadingTextInput.spellcheck=false;
         loadingText.appendChild(loadingTextInput);
         otherBtns.appendChild(loadingText);
 
@@ -2841,6 +2849,7 @@
         opacityInput.style.width="95px";
         opacityInput.style.margin="0";
         opacityInput.placeholder=i18n("opacityPlaceholder");
+        opacityInput.spellcheck=false;
         opacity.appendChild(opacityInput);
         otherBtns.appendChild(opacity);
 
@@ -2854,6 +2863,7 @@
         pageElementCssInput.style.width="100%";
         pageElementCssInput.style.margin="0";
         pageElementCssInput.placeholder="font-size: xx-large;";
+        pageElementCssInput.spellcheck=false;
         pageElementCss.appendChild(pageElementCssInput);
         configCon.insertBefore(pageElementCss, insertPos);
 
@@ -2867,6 +2877,7 @@
         customCssInput.style.width="100%";
         customCssInput.style.margin="0";
         customCssInput.placeholder=".pagetual{\n}";
+        customCssInput.spellcheck=false;
         customCss.appendChild(customCssInput);
         configCon.insertBefore(customCss, insertPos);
 
@@ -2936,6 +2947,7 @@
         customRulesTitle.innerHTML=i18n("customRules");
         configCon.insertBefore(customRulesTitle, insertPos);
         let customRulesInput=document.createElement("textarea");
+        customRulesInput.spellcheck=false;
         configCon.insertBefore(customRulesInput, insertPos);
         if(rulesData.editTemp){
             if(!ruleParser.customRules){
@@ -4189,15 +4201,6 @@
             }
 
             let waitTime=200,checkEval;
-            let nextLink=ruleParser.getNextLink(iframeDoc);
-            if(!nextLink){
-                if(waitTimes-->0){
-                    setTimeout(()=>{
-                        checkPage();
-                    },waitTime);
-                    return;
-                }
-            }
             if(ruleParser.curSiteRule.waitElement){
                 checkEval = doc => {
                     return ruleParser.waitElement(doc);
@@ -4214,6 +4217,7 @@
                 }
             }
 
+            let pageEle, nextLink;
             if(!orgPage){
                 if(!loadmoreEnd){
                     loadmoreBtn=getLoadMore(iframeDoc);
@@ -4236,18 +4240,21 @@
                         loadmoreEnd=true;
                     }
                 }
-                let pageEle=ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView, true);
                 if(checkEval && !checkEval(iframeDoc)){
                     setTimeout(()=>{
                         checkPage();
                     },waitTime);
                     return;
-                }else if(!pageEle || pageEle.length==0){
-                    if(waitTimes-->0){
-                        setTimeout(()=>{
-                            checkPage();
-                        },waitTime);
-                        return;
+                }else {
+                    nextLink=ruleParser.getNextLink(iframeDoc);
+                    pageEle=ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView, true);
+                    if(!pageEle || pageEle.length==0 || !nextLink){
+                        if(waitTimes-->0){
+                            setTimeout(()=>{
+                                checkPage();
+                            },waitTime);
+                            return;
+                        }
                     }
                 }
                 orgPage=pageEle;
@@ -4276,6 +4283,15 @@
                     returnFalse("Stop as no next when emu");
                 }
                 return;
+            }
+            nextLink = nextLink || ruleParser.getNextLink(iframeDoc);
+            if(!nextLink){
+                if(waitTimes-->0){
+                    setTimeout(()=>{
+                        checkPage();
+                    },waitTime);
+                    return;
+                }
             }
             if(times++ > 100){
                 returnFalse("Stop as timeout when emu");
