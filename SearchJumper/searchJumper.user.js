@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.5.13
+// @version      1.6.5.15
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -2090,6 +2090,7 @@
                 }
                 if (words === "insert") {
                     words = this.curHighlightWords;
+                    this.refreshNavMarks();
                 } else {
                     this.curHighlightWords = (this.curHighlightWords || []).concat(words);
                 }
@@ -2206,9 +2207,12 @@
             }
 
             refreshNavMarks() {
-                [].forEach.call(this.navMarks.querySelectorAll("span"), m => {
-                    m.style.top = m.dataset.top / document.documentElement.scrollHeight * 100 + "vh";
-                });
+                if (this.refreshNavMarksTimer) clearTimeout(this.refreshNavMarksTimer);
+                this.refreshNavMarksTimer = setTimeout(() => {
+                    [].forEach.call(this.navMarks.querySelectorAll("span"), m => {
+                        m.style.top = m.dataset.top / document.documentElement.scrollHeight * 100 + "vh";
+                    });
+                }, 500);
             }
 
             checkCharacterData(target) {
@@ -2381,14 +2385,6 @@
                 this.navPointer = document.createElement("div");
                 this.navPointer.className = "navPointer";
                 this.navPointer.innerHTML = createHTML(">");
-                let pagetualMsg = e => {
-                    if (e.data.command === 'pagetual.insert') {
-                        let insertParent = document.querySelector(e.data.insert);
-                        if (insertParent) {
-                        }
-                    }
-                };
-                window.addEventListener('message', pagetualMsg, true);
                 let editFunc = () => {
                     this.searchJumperInPageInput.focus();
                     this.highlight("");
