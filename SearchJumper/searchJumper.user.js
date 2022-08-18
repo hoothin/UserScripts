@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.5.17
+// @version      1.6.5.18
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -3347,8 +3347,10 @@
                         if (self.bar.parentNode.classList.contains("search-jumper-left") ||
                             self.bar.parentNode.classList.contains("search-jumper-right")) {
                             ele.style.height = ele.dataset.width;
+                            ele.style.width = "";
                         } else {
                             ele.style.width = ele.dataset.width;
+                            ele.style.height = "";
                         }
                         setTimeout(() => {
                             if (!ele.classList.contains("search-jumper-hide")) {
@@ -4223,6 +4225,12 @@
                         this.bar.style.cssText = "";
                         this.bar.parentNode.classList.add("search-jumper-scroll");
                     }
+                    let firstType = this.bar.querySelector(".search-jumper-type:not(.search-jumper-hide)");
+                    if (firstType) {
+                        setTimeout(() => {
+                            firstType.scrollIntoView();
+                        }, 0);
+                    }
                 } else {
                     if (this.bar.parentNode.classList.contains("search-jumper-scroll")) {
                         this.bar.style.cssText = "";
@@ -5058,6 +5066,8 @@
                         (e.which === 1 || e.which === 2) && !searchData.prefConfig.leftMouse) {
                         return;
                     }
+                    let startX = e.clientX;
+                    let startY = e.clientY;
                     let mouseMoveTimer;
                     let clickHandler = e => {
                         if (shown) {
@@ -5067,9 +5077,11 @@
                         document.removeEventListener('click', clickHandler, true);
                     };
                     let mouseMoveHandler = e => {
-                        clearTimeout(showToolbarTimer);
-                        clearTimeout(mouseMoveTimer);
-                        document.removeEventListener('mousemove', mouseMoveHandler, true);
+                        if (Math.abs(startX - e.clientX) + Math.abs(startY - e.clientY) > 10) {
+                            clearTimeout(showToolbarTimer);
+                            clearTimeout(mouseMoveTimer);
+                            document.removeEventListener('mousemove', mouseMoveHandler, true);
+                        }
                     };
                     let mouseUpHandler = e => {
                         if (shown) {
@@ -5109,9 +5121,7 @@
                         searchBar.showInPage();
                         shown = true;
                     }, parseInt(searchData.prefConfig.longPressTime));
-                    mouseMoveTimer = setTimeout(() => {
-                        document.addEventListener('mousemove', mouseMoveHandler, true);
-                    }, 10);
+                    document.addEventListener('mousemove', mouseMoveHandler, true);
                     document.addEventListener('mouseup', mouseUpHandler, true);
                 });
                 document.addEventListener('contextmenu', e => {
