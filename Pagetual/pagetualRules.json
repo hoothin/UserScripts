@@ -279,7 +279,7 @@
   },
   {
     "name":"秀人网",
-    "url":"^https://www\\.(imn5|jpxgmn|jpxgyw|jpmnb|jpmn8|xiurenji|xiurenb)\\.(com|net|vip|top|cc)/.*\\.html",
+    "url":"^https://www\\.(?:imn5|mntp|jpmnb|jpmn8|mn5|xgmn|jpxgmn|jpxgyw|xiurenji|xiurenb|xrmn|xrmn5)\\.(?:com|net|vip|cc|top)/.*\\.html",
     "pageElement":"p>img",
     "author":"bmp4cwa"
   },
