@@ -1,5 +1,33 @@
 [
 {
+  "resource_url": "http://wedata.net/items/85944",
+  "data": {
+    "pageElement": "//div[@class=\"article\"]",
+    "nextLink": "//ul[@class=\"page_num\"]/li[./span]/following-sibling::li[1]/a",
+    "url": "https?://www\\.e-aidem\\.com/ch/jimocoro/entry/.*",
+    "exampleUrl": "https://www.e-aidem.com/ch/jimocoro/entry/matsuoka21"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "awoifajwojfiawf",
+  "name": "ジモコロ",
+  "created_at": "2022-08-18T06:24:07+09:00",
+  "updated_at": "2022-08-18T06:25:10+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/85943",
+  "data": {
+    "pageElement": "//*[@class=\"post-contents\"]/p",
+    "nextLink": "//div[@class=\"post-nav-links\"]//a",
+    "url": "^https://tetsudo-ch.com/",
+    "exampleUrl": "https://tetsudo-ch.com/12635095.html"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "autopagerizebanzai",
+  "name": "鉄道チャンネル",
+  "created_at": "2022-08-17T21:32:58+09:00",
+  "updated_at": "2022-08-17T21:39:49+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/85942",
   "data": {
     "insertBefore": "",
