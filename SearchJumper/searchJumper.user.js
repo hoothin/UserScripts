@@ -3414,7 +3414,7 @@
                     }
                     setTimeout(() => {
                         self.checkScroll();
-                    }, 251);
+                    }, 500);
                 };
                 typeBtn.onmousedown = typeAction;
                 typeBtn.oncontextmenu = function (event) {
