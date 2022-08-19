@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.5.18.1
+// @version      1.6.5.18.2
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -2027,6 +2027,7 @@
                     r = parseInt(bg.substr(0, 2), 16);
                     g = parseInt(bg.substr(2, 2), 16);
                     b = parseInt(bg.substr(4, 2), 16);
+                    let isLightColor = (r * 0.299 + g * 0.578 + b * 0.114 >= 192);
                     if (r > 50 && r < 205) {
                         r = r < 128 ? 255 : 0;
                     } else {
@@ -2042,6 +2043,20 @@
                     } else {
                         b = 255 - b;
                     }
+
+                    if (isLightColor) {
+                        r = Math.floor(0.7 * r);
+                        g = Math.floor(0.7 * g);
+                        b = Math.floor(0.7 * b);
+                    } else {
+                        r = Math.floor(1.3 * r);
+                        g = Math.floor(1.3 * g);
+                        b = Math.floor(1.3 * b);
+                        r = r > 255 ? 255 : r;
+                        g = g > 255 ? 255 : g;
+                        b = b > 255 ? 255 : b;
+                    }
+
                     r = r.toString(16);
                     if (r.length === 1) r = "0" + r;
                     g = g.toString(16);
@@ -2990,8 +3005,10 @@
                         typeEle.appendChild(btn);
                     }
                 });
-                typeEle.style.width = typeEle.scrollWidth + "px";
-                typeEle.style.height = typeEle.scrollHeight + "px";
+                setTimeout(() => {
+                    typeEle.style.width = typeEle.scrollWidth + "px";
+                    typeEle.style.height = typeEle.scrollHeight + "px";
+                }, 0);
             }
 
             recoveHistory() {
