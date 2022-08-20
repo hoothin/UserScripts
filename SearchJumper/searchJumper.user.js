@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.5.18.2
+// @version      1.6.5.19
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -1040,6 +1040,7 @@
                  .search-jumper-right>.search-jumper-searchBar {
                      flex-direction: column;
                      max-width: ${42 * this.scale}px;
+                     max-height: unset;
                  }
                  .search-jumper-left {
                      height: 100%;
@@ -1054,6 +1055,7 @@
                      top: unset;
                      bottom: 0;
                      height: ${this.scale * 43}px;
+                     max-height: ${this.scale * 43}px;
                      overflow-y: hidden;
                  }
                  .search-jumper-left>.search-jumper-searchBar {
@@ -1195,6 +1197,7 @@
                  }
                  #search-jumper.in-input .search-jumper-type:not(.input-hide) {
                      display: inline-flex!important;
+                     flex-wrap: nowrap!important;
                  }
                  #search-jumper.in-input .search-jumper-btn:not(.input-hide) {
                      display: grid!important;
@@ -1222,6 +1225,9 @@
                      padding: 0.2px;
                      height: ${40 * this.scale}px;
                      width: ${40 * this.scale}px;
+                     max-height: ${this.scale * 40}px;
+                     min-height: ${this.scale * 40}px;
+                     min-width: ${this.scale * 40}px;
                      ${searchData.prefConfig.noAni ? "" : `transition:width ${searchData.prefConfig.typeOpenTime}ms ease, height ${searchData.prefConfig.typeOpenTime}ms;`}
                  }
                  .search-jumper-type>.sitelist {
@@ -1475,6 +1481,7 @@
                      left: 15px;
                      border-radius: 5px 5px 0 0;
                      user-select: none;
+                     pointer-events: all;
                  }
                  .search-jumper-input label::after {
                      content: "";
@@ -1525,6 +1532,7 @@
                      opacity: 0.8;
                      transition: 0.25s all ease;
                      font-size: 0px;
+                     pointer-events: all;
                  }
                  .search-jumper-input svg *,
                  .searchJumperNavBar svg * {
@@ -2410,6 +2418,7 @@
                 this.allSiteBtns = [];
                 this.allListBtns = [];
                 this.bar.style.visibility = "hidden";
+                this.bar.parentNode.classList.add("in-input");
                 let sitesNum = 0;
                 let bookmarkTypes = [];
 
@@ -2569,7 +2578,7 @@
                                 cachePool.unshift(font);
                             }
                         });
-                        if (hasFont) setTimeout(() => {cacheManager()}, 2000);
+                        if (hasFont) setTimeout(() => {cacheManager()}, 5000);
                         else cacheManager();
                     });
                 } else {
@@ -2707,6 +2716,7 @@
                 } else if (!currentSite) {
                     this.checkSearchJump();
                 }
+                this.bar.parentNode.classList.remove("in-input");
             }
 
             setInPageWords(inPageWords) {
