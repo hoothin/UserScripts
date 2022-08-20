@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/85945",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[@class=\"newsArticle_body\"]//div[@class=\"news_feed\"]",
+    "nextLink": "//div[@class=\"newsArticle_pager_heading\"]/a",
+    "url": "^https://thetv.jp/news/detail/",
+    "exampleUrl": "https://thetv.jp/news/detail/1097587/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "autopagerizebanzai",
+  "name": "WEBザテレビジョン",
+  "created_at": "2022-08-19T21:06:16+09:00",
+  "updated_at": "2022-08-19T21:06:16+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/85944",
   "data": {
     "pageElement": "//div[@class='article']/ul[@class='page_num']/preceding-sibling::*",
