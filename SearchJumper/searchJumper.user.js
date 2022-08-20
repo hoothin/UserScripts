@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.5.19
+// @version      1.6.5.20
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -654,7 +654,9 @@
         ignoreWords: ["a", "in", "into", "the", "to", "on", "among", "between", "and", "an", "of", "by", "with", "about", "under"],
         inPageRule: {},
         firstFiveWordsColor: [],
-        inPageWordsStyles: []
+        inPageWordsStyles: [],
+        disableMultiSel: false,
+        disableBoxSel: false
     };
     function run() {
         const lang = navigator.appName == "Netscape" ? navigator.language : navigator.userLanguage;
@@ -1609,7 +1611,7 @@
                      z-index: 2147483647;
                      background: #00000066;
                      text-align: center;
-                     pointer-events: all;
+                     pointer-events: none;
                      font-size: 0px;
                      opacity: 0;
                  }
@@ -1654,6 +1656,12 @@
                      text-decoration: none;
                      padding: 1px 0;
                  }
+                 mark.searchJumper[data-current=true] {
+                     border-bottom: 0.2em solid;
+                     border-bottom-left-radius: 0;
+                     border-bottom-right-radius: 0;
+                     animation: 0.8s linear 0s 5 normal none running currentMark;
+                 }
                  .searchJumperPosBar {
                      background: rgba(29, 93, 163, 0.3);
                      position: absolute;
@@ -1678,6 +1686,10 @@
                  @keyframes fadeit {
                      from {opacity: 1;}
                      to {opacity: 0;}
+                 }
+                 @keyframes currentMark {
+                     from {border-color: unset}
+                     to {border-color: transparent;}
                  }
                  `;
                 if (searchData.prefConfig.cssText) cssText += searchData.prefConfig.cssText;
@@ -1939,7 +1951,7 @@
 
             focusHighlightByText(text, fw, span) {
                 let curList = this.marks[text];
-                if (!curList) return;
+                if (!curList || curList.length === 0) return;
                 if (text != this.focusText) {
                     this.focusIndex = 0;
                     this.focusText = text;
@@ -1960,11 +1972,11 @@
 
             focusHighlight(ele) {
                 if (!ele) return;
-                if (this.focusMark) this.focusMark.style.border="";
+                if (this.focusMark) this.focusMark.removeAttribute('data-current');
                 setTimeout(() => {
                     ele.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
                 }, 0);
-                ele.style.border="1px dashed red";
+                ele.dataset.current=true;
                 this.focusMark = ele;
                 if (!this.wPosBar) {
                     this.wPosBar = document.createElement("div");
@@ -2098,7 +2110,11 @@
                             break;
                     }
                 }
-                if (background) background = `background:${background};color:${getWordColor(background)};border-radius:5px;`;
+                if (background) {
+                    let color = getWordColor(background);
+                    if (color) color = "color:" + color + ";";
+                    background = `background:${background};${color}`;
+                }
                 return `${background}${addCssText}`;
             }
 
@@ -2231,6 +2247,7 @@
                 }, 500);
                 if (this.navMarks.innerHTML != "") {
                     this.searchJumperNavBar.style.opacity = 1;
+                    this.searchJumperNavBar.style.pointerEvents = "all";
                 }
             }
 
@@ -2724,11 +2741,13 @@
                 this.searchInPageTab.checked = true;
                 if (document.readyState == "loading") {
                     let loadHandler = e => {
+                        if (document.body.style.display === "none") document.body.style.display = "";
                         this.submitInPageWords();
                         document.removeEventListener("DOMContentLoaded", loadHandler);
                     };
                     document.addEventListener("DOMContentLoaded", loadHandler);
                 } else {
+                    if (document.body.style.display === "none") document.body.style.display = "";
                     this.submitInPageWords();
                 }
             }
@@ -4863,7 +4882,7 @@
             _GM_registerMenuCommand(i18n('settings'), () => {
                 _GM_openInTab(configPage, {active: true});
             });
-            _GM_registerMenuCommand(i18n('showInPageSearch'), () => {
+            _GM_registerMenuCommand(i18n('searchInPage'), () => {
                 searchBar.showInPage();
                 searchBar.showInPageSearch();
             });
@@ -6037,9 +6056,9 @@
             searchBar = new SearchBar();
         }
 
-        function initRun() {
+        async function initRun() {
+            await searchBar.initRun();
             initListener();
-            searchBar.initRun();
         }
 
         async function sleep(time) {
