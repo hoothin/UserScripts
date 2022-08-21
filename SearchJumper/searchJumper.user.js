@@ -654,9 +654,7 @@
         ignoreWords: ["a", "in", "into", "the", "to", "on", "among", "between", "and", "an", "of", "by", "with", "about", "under"],
         inPageRule: {},
         firstFiveWordsColor: [],
-        inPageWordsStyles: [],
-        disableMultiSel: false,
-        disableBoxSel: false
+        inPageWordsStyles: []
     };
     function run() {
         const lang = navigator.appName == "Netscape" ? navigator.language : navigator.userLanguage;
@@ -690,8 +688,13 @@
                     inputKeywords: '输入搜索关键词',
                     inPageTips: '自定义分隔符：$c 加分隔符，例如 $c| search | jumper，默认空格作为分隔符\n原始文本不分隔：$o 加文本，例如$oopai liked by hero\n正则表达式：/re/i，例如 $c, /google/i , /aPPle/\n添加提示文本：搜索文本$t{提示文本}，例如 linux$t{linux is not unix}\n添加自定义样式：搜索文本$s{背景;其他}，例如 google$s{#333333;color:red;}\n左键点击关键词跳转至下一个，右键点击关键词跳转至上一个',
                     inPagePlaceholder: '输入文字，按下回车进行页内查找',
+                    pickerBtn: '抓取元素',
                     editBtn: '编辑查找文字',
                     emptyBtn: '清空查找文字',
+                    copyInPageBtn: '复制查找文字',
+                    copyEleBtn: '复制选中元素',
+                    maxEleBtn: '展开选中元素',
+                    minEleBtn: '收起选中元素',
                     recoverBtn: '恢复查找文字',
                     pinBtn: '固定查找文字',
                     locBtn: '定位侧边栏',
@@ -727,8 +730,13 @@
                     inputKeywords: '輸入搜索關鍵詞',
                     inPageTips: '自定義分隔符：$c 加分隔符，例如 $c| search | jumper，默認空格作為分隔符\n原始文本不分隔：$o 加文本，例如$oopai liked by hero\n正則表達式：/re/i，例如 $c, /google/i , /aPPle/\n添加提示文本：搜索文本$t{提示文本}，例如 linux$t{linux is not unix}\n添加自定義樣式：搜索文本$s{背景;其他}，例如 google$s{#333333;color:red;}\n左鍵點擊關鍵詞跳轉至下一個，右鍵點擊關鍵詞跳轉至上一個',
                     inPagePlaceholder: '輸入文字，按下回車進行頁內查找',
+                    pickerBtn: '抓取元素',
                     editBtn: '編輯查找文字',
                     emptyBtn: '清空查找文字',
+                    copyInPageBtn: '複製查找文字',
+                    copyEleBtn: '複製選中元素',
+                    maxEleBtn: '展開選中元素',
+                    minEleBtn: '收起選中元素',
                     recoverBtn: '恢復查找文字',
                     pinBtn: '固定查找文字',
                     locBtn: '定位側邊欄',
@@ -763,8 +771,13 @@
                     inputKeywords: 'Enter search keywords',
                     inPageTips: 'Custom delimiter: $c + delimiter, such as $c| search | jumper, default space as delimiter\nOriginal text without delimited: $o + text, such as $oopai liked by hero\nRegular expression: /re/i, such as $c, /google/i , /aPPle/\nTips text: search text$t{tips text}, such as linux$t{linux is not unix}\nCustom style: Search text$s{background;other}, such as google$s{#333333;color:red;}\nLeft-click keyword to jump to the next, right-click keyword to jump to the previous',
                     inPagePlaceholder: 'Input text, press Enter to find in the page',
+                    pickerBtn: 'Pick a element',
                     editBtn: 'Edit search text',
                     emptyBtn: 'Empty search text',
+                    copyInPageBtn: 'Copy search text',
+                    copyEleBtn: 'Copy selected elements',
+                    maxEleBtn: 'Expand selected elements',
+                    minEleBtn: 'Collapse selected elements',
                     recoverBtn: 'Recover find text',
                     pinBtn: 'Pin search text',
                     locBtn: 'Sidebar to locate',
@@ -815,7 +828,7 @@
         } else if (typeof GM != 'undefined' && typeof GM.setClipboard != 'undefined') {
             _GM_setClipboard = GM.setClipboard;
         } else {
-            _GM_setClipboard = (s) => {};
+            _GM_setClipboard = (s, i) => {};
         }
         if (typeof GM_openInTab != 'undefined') {
             _GM_openInTab = GM_openInTab;
@@ -1534,6 +1547,9 @@
                      opacity: 0.8;
                      transition: 0.25s all ease;
                      font-size: 0px;
+                 }
+                 .search-jumper-input .inputGroup:hover svg,
+                 .searchJumperNavBar.show svg {
                      pointer-events: all;
                  }
                  .search-jumper-input svg *,
@@ -1547,10 +1563,13 @@
                      transform:scale(1.2);
                      opacity: 1;
                  }
-                 #searchInPage svg.checked {
+                 .inputGroup svg.checked {
                      fill: #1E88E5;
                  }
-                 #searchInPage>.inPageBtns {
+                 #search-jumper.selectedEle #filterSites>.svgBtns>svg {
+                     display: inline-block!important;
+                 }
+                 .inputGroup>.svgBtns {
                      right: 25px;
                      top: 15px;
                      position: absolute;
@@ -1586,6 +1605,7 @@
                      max-height: 90vh;
                  }
                  #searchInPage>.lockWords>span {
+                     position: relative;
                      padding: 5px;
                      cursor: alias;
                      user-select: none;
@@ -1595,6 +1615,29 @@
                      margin: 2px;
                      display: flex;
                      align-items: center;
+                 }
+                 #searchInPage>.lockWords .removeWord {
+                     position: absolute;
+                     right: 0;
+                     top: 0;
+                     display: none;
+                     opacity: 0.5;
+                 }
+                 #searchInPage>.lockWords .removeWord:hover {
+                     opacity: 1;
+                 }
+                 #searchInPage>.lockWords>span:hover .removeWord {
+                     display: block;
+                     pointer-events: all;
+                 }
+                 #searchInPage>.lockWords .removeWord>svg {
+                     width: 15px;
+                     height: 15px;
+                     fill: black;
+                     color: black;
+                     border: 1px solid white;
+                     border-radius: 10px;
+                     background: white;
                  }
                  #searchInPage>.lockWords>span>em {
                      font-size: 12px;
@@ -1614,6 +1657,10 @@
                      pointer-events: none;
                      font-size: 0px;
                      opacity: 0;
+                 }
+                 .searchJumperNavBar.show {
+                     pointer-events: all;
+                     opacity: 1;
                  }
                  .searchJumperNavBar>.closeNavBtn {
                      width: 16px;
@@ -1660,7 +1707,7 @@
                      border-bottom: 0.2em solid;
                      border-bottom-left-radius: 0;
                      border-bottom-right-radius: 0;
-                     animation: 0.8s linear 0s 5 normal none running currentMark;
+                     animation: 0.5s linear 0s 5 normal none running currentMark;
                  }
                  .searchJumperPosBar {
                      background: rgba(29, 93, 163, 0.3);
@@ -1778,16 +1825,23 @@
                   <div class="inputGroup" id="filterSites">
                     <input spellcheck="false" id="searchJumperInput" placeholder="${i18n("inputPlaceholder")}">
                     <span class="search-jumper-lock-input"></span>
+                    <span class="svgBtns">
+                      <svg id="copyEleBtn" style="display:none;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("copyEleBtn")}</title><path d="M706.5 188.4H190.2c-29.8 0-54 24.2-54 54v662.9c0 29.8 24.2 54 54 54h516.3c29.8 0 54-24.2 54-54V242.4c0-29.8-24.2-54-54-54z m-18 698.9H208.2V260.4h480.3v626.9zM313.7 512.2h275.2c19.9 0 36-16.1 36-36s-16.1-36-36-36H313.7c-19.9 0-36 16.1-36 36s16.1 36 36 36zM313.7 715.2h201.6c19.9 0 36-16.1 36-36s-16.1-36-36-36H313.7c-19.9 0-36 16.1-36 36s16.1 36 36 36zM837.2 64.7H302.9c-19.9 0-36 16.1-36 36s16.1 36 36 36h516.3v662.9c0 19.9 16.1 36 36 36s36-16.1 36-36V118.7c0-29.8-24.2-54-54-54z"></path></svg>
+                      <svg id="maxEleBtn" style="display:none;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("maxEleBtn")}</title><path d="M192 832h160a32 32 0 0 1 0 64H160a32 32 0 0 1-32-32V672a32 32 0 0 1 64 0zM182.72 886.72a32 32 0 0 1-45.44-45.44l224-224a32 32 0 0 1 45.44 45.44zM832 832V672a32 32 0 0 1 64 0v192a32 32 0 0 1-32 32H672a32 32 0 0 1 0-64zM886.72 841.28a32 32 0 0 1-45.44 45.44l-224-224a32 32 0 0 1 45.44-45.44zM192 192v160a32 32 0 0 1-64 0V160a32 32 0 0 1 32-32h192a32 32 0 0 1 0 64zM137.28 182.72a32 32 0 0 1 45.44-45.44l224 224a32 32 0 0 1-45.44 45.44zM832 192H672a32 32 0 0 1 0-64h192a32 32 0 0 1 32 32v192a32 32 0 0 1-64 0zM841.28 137.28a32 32 0 1 1 45.44 45.44l-224 224a32 32 0 0 1-45.44-45.44z"></path></svg>
+                      <svg id="minEleBtn" style="display:none;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("minEleBtn")}</title><path d="M672 352h160a32 32 0 0 1 0 64H640a32 32 0 0 1-32-32V192a32 32 0 0 1 64 0zM662.72 406.72a32 32 0 0 1-45.44-45.44l224-224a32 32 0 1 1 45.44 45.44zM352 352V192a32 32 0 0 1 64 0v192a32 32 0 0 1-32 32H192a32 32 0 0 1 0-64zM406.72 361.28a32 32 0 0 1-45.44 45.44l-224-224a32 32 0 0 1 45.44-45.44zM672 672v160a32 32 0 0 1-64 0V640a32 32 0 0 1 32-32h192a32 32 0 0 1 0 64zM617.28 662.72a32 32 0 0 1 45.44-45.44l224 224a32 32 0 0 1-45.44 45.44zM192 672a32 32 0 0 1 0-64h192a32 32 0 0 1 32 32v192a32 32 0 0 1-64 0V672zM361.28 617.28a32 32 0 0 1 45.44 45.44l-224 224a32 32 0 0 1-45.44-45.44z"></path></svg>
+                      <svg id="pickerBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("pickerBtn")}</title><path d="M874.048 533.333333C863.424 716.629333 716.629333 863.424 533.333333 874.048V917.333333a21.333333 21.333333 0 0 1-42.666666 0v-43.285333C307.370667 863.424 160.576 716.629333 149.952 533.333333H106.666667a21.333333 21.333333 0 0 1 0-42.666666h43.285333C160.576 307.370667 307.370667 160.576 490.666667 149.952V106.666667a21.333333 21.333333 0 0 1 42.666666 0v43.285333c183.296 10.624 330.090667 157.418667 340.714667 340.714667h42.816a21.333333 21.333333 0 1 1 0 42.666666H874.026667z m-42.752 0h-127.786667a21.333333 21.333333 0 0 1 0-42.666666h127.786667C820.778667 330.922667 693.056 203.221333 533.333333 192.704V320a21.333333 21.333333 0 0 1-42.666666 0V192.704C330.922667 203.221333 203.221333 330.944 192.704 490.666667H320a21.333333 21.333333 0 0 1 0 42.666666H192.704c10.517333 159.744 138.24 287.445333 297.962667 297.962667V704a21.333333 21.333333 0 0 1 42.666666 0v127.296c159.744-10.517333 287.445333-138.24 297.962667-297.962667zM512 554.666667a42.666667 42.666667 0 1 1 0-85.333334 42.666667 42.666667 0 0 1 0 85.333334z"></path></svg>
+                    </span>
                   </div>
                   <div class="inputGroup" id="searchInPage">
                     <span class="lockWords"></span>
                     <input spellcheck="false" id="searchJumperInPageInput" title="${i18n("inPageTips")}" placeholder="${i18n("inPagePlaceholder")}">
-                    <span class="inPageBtns">
+                    <span class="svgBtns">
                       <svg id="editBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("editBtn")}</title><path d="M928 365.664a32 32 0 0 0-32 32V864a32 32 0 0 1-32 32H160a32 32 0 0 1-32-32V160a32 32 0 0 1 32-32h429.6a32 32 0 0 0 0-64H160a96 96 0 0 0-96 96v704a96 96 0 0 0 96 96h704a96 96 0 0 0 96-96V397.664a32 32 0 0 0-32-32z"></path><path d="M231.616 696.416a38.4 38.4 0 0 0 44.256 53.792l148-38.368L950.496 185.248 814.72 49.472 290.432 573.76l-58.816 122.656z m111.808-85.12L814.72 140l45.248 45.248-468.992 468.992-77.824 20.16 30.272-63.104z"></path></svg>
-                      <svg id="emptyBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("emptyBtn")}</title><path d="M687.6 96.4H336.4v91.2h351.1V96.4zM636.7 398v405.5h-73.9V398h73.9z m-175.5 0v405.5h-73.9V398h73.9z m332.1-119.2H230.7l27.9 648.8h506.7l28-648.8zM696.8 5.1c40.4 0 73.3 35.6 73.9 79.8v102.7h147.8c20.2 0 36.6 17.8 37 39.9v41.2c0 5.5-4 10-9 10.1h-70.1L848 941.6c-1.8 42.9-33.7 76.6-72.6 77.3H249.8c-39 0-71.3-33.4-73.7-76l-0.1-1.3-28.5-662.7H77.7c-5 0-9.1-4.4-9.2-9.8v-40.9c0-22.2 16.2-40.2 36.3-40.5h148.4V86.2c0-44.3 32.5-80.4 72.7-81.1h370.9z" p-id="647"></path></svg>
+                      <svg id="emptyBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("emptyBtn")}</title><path d="m159.45829,231.40004l-48.83334,0a36.625,34.1375 0 0 1 0,-68.275l805.75004,0a36.625,34.1375 0 0 1 0,68.275l-683.6667,0l0,603.09581a61.04167,56.89583 0 0 0 61.04167,56.89584l439.50002,0a61.04167,56.89583 0 0 0 61.04167,-56.89584l0,-500.68332a36.625,34.1375 0 0 1 73.25,0l0,500.68332c0,69.12844 -60.12604,125.17084 -134.29167,125.17084l-439.50002,0c-74.16563,0 -134.29167,-56.0424 -134.29167,-125.17084l0,-603.09581zm256.37501,-113.79167a36.625,34.1375 0 0 1 0,-68.275l195.33334,0a36.625,34.1375 0 0 1 0,68.275l-195.33334,0zm-36.625,307.23749a36.625,34.1375 0 0 1 73.25,0l0,273.09999a36.625,34.1375 0 0 1 -73.25,0l0,-273.09999zm195.33334,0a36.625,34.1375 0 0 1 73.25,0l0,273.09999a36.625,34.1375 0 0 1 -73.25,0l0,-273.09999z"/></svg>
+                      <svg id="copyInPageBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("copyInPageBtn")}</title><path d="M706.5 188.4H190.2c-29.8 0-54 24.2-54 54v662.9c0 29.8 24.2 54 54 54h516.3c29.8 0 54-24.2 54-54V242.4c0-29.8-24.2-54-54-54z m-18 698.9H208.2V260.4h480.3v626.9zM313.7 512.2h275.2c19.9 0 36-16.1 36-36s-16.1-36-36-36H313.7c-19.9 0-36 16.1-36 36s16.1 36 36 36zM313.7 715.2h201.6c19.9 0 36-16.1 36-36s-16.1-36-36-36H313.7c-19.9 0-36 16.1-36 36s16.1 36 36 36zM837.2 64.7H302.9c-19.9 0-36 16.1-36 36s16.1 36 36 36h516.3v662.9c0 19.9 16.1 36 36 36s36-16.1 36-36V118.7c0-29.8-24.2-54-54-54z"></path></svg>
                       <svg id="recoverBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("recoverBtn")}</title><path d="M502.26 289.06c-0.02 16.95 13.26 30.94 30.18 31.8 123.47 8.79 236.97 70.94 310.89 170.21 73.92 99.28 100.91 225.84 73.93 346.65-41.65-181.74-195.38-316.12-381.05-333.08-8.89-0.6-17.63 2.55-24.09 8.7a31.798 31.798 0 0 0-9.86 23.64v85.15a32.343 32.343 0 0 1-50.67 26.41L114.21 413.02a32.341 32.341 0 0 1-14.46-26.95c0-10.84 5.43-20.96 14.46-26.95L451.6 124.68a32.358 32.358 0 0 1 33.28-2.03 32.355 32.355 0 0 1 17.39 28.44v137.97h-0.01z"></path></svg>
-                      <svg id="pinBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("pinBtn")}</title><path d="M631.637333 178.432a64 64 0 0 1 19.84 13.504l167.616 167.786667a64 64 0 0 1-19.370666 103.744l-59.392 26.304-111.424 111.552-8.832 122.709333a64 64 0 0 1-109.098667 40.64l-108.202667-108.309333-184.384 185.237333-45.354666-45.162667 184.490666-185.344-111.936-112.021333a64 64 0 0 1 40.512-109.056l126.208-9.429333 109.44-109.568 25.706667-59.306667a64 64 0 0 1 84.181333-33.28z m-25.450666 58.730667l-30.549334 70.464-134.826666 135.04-149.973334 11.157333 265.408 265.6 10.538667-146.474667 136.704-136.874666 70.336-31.146667-167.637333-167.765333z"></path></svg>
-                      <svg id="locBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("locBtn")}</title><path d="M874.048 533.333333C863.424 716.629333 716.629333 863.424 533.333333 874.048V917.333333a21.333333 21.333333 0 0 1-42.666666 0v-43.285333C307.370667 863.424 160.576 716.629333 149.952 533.333333H106.666667a21.333333 21.333333 0 0 1 0-42.666666h43.285333C160.576 307.370667 307.370667 160.576 490.666667 149.952V106.666667a21.333333 21.333333 0 0 1 42.666666 0v43.285333c183.296 10.624 330.090667 157.418667 340.714667 340.714667h42.816a21.333333 21.333333 0 1 1 0 42.666666H874.026667z m-42.752 0h-127.786667a21.333333 21.333333 0 0 1 0-42.666666h127.786667C820.778667 330.922667 693.056 203.221333 533.333333 192.704V320a21.333333 21.333333 0 0 1-42.666666 0V192.704C330.922667 203.221333 203.221333 330.944 192.704 490.666667H320a21.333333 21.333333 0 0 1 0 42.666666H192.704c10.517333 159.744 138.24 287.445333 297.962667 297.962667V704a21.333333 21.333333 0 0 1 42.666666 0v127.296c159.744-10.517333 287.445333-138.24 297.962667-297.962667zM512 554.666667a42.666667 42.666667 0 1 1 0-85.333334 42.666667 42.666667 0 0 1 0 85.333334z"></path></svg>
+                      <svg id="pinBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("pinBtn")}</title><path d="m674.8822,92.83803a81.61801,81.04246 0 0 1 25.30158,17.09996l213.75757,212.46631a81.61801,81.04246 0 0 1 -24.70304,131.36982l-75.74151,33.30845l-142.09696,141.257l-11.26329,155.3854a81.61801,81.04246 0 0 1 -139.13151,51.46196l-137.98885,-137.15085l-235.14149,234.56388l-57.83996,-57.18896l235.27751,-234.69896l-142.7499,-141.85131a81.61801,81.04246 0 0 1 51.6642,-138.09635l160.95072,-11.94025l139.5668,-138.74469l32.78324,-75.09935a81.61801,81.04246 0 0 1 107.35489,-42.14208zm-32.45675,74.36997l-38.95901,89.22775l-171.94193,170.99958l-191.25821,14.1284l338.46989,336.3262l13.43977,-185.47917l174.33607,-173.32279l89.69819,-39.44067l-213.78477,-212.43929z"></path></svg>
+                      <svg id="locBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("locBtn")}</title><path d="M357.6 832l-255.2 56c-20 4.8-39.2-10.4-39.2-31.2V569.6c0-15.2 10.4-28 24.8-31.2L243.2 504l53.6 53.6L139.2 592c-7.2 1.6-12.8 8-12.8 16v188c0 10.4 9.6 17.6 19.2 16l192.8-42.4 12.8-3.2 12.8 2.4 306.4 60.8 210.4-47.2c7.2-1.6 12.8-8 12.8-16V580c0-10.4-9.6-17.6-19.2-16L688 606.4l-12 2.4L760 524.8l160.8-36c20-4.8 39.2 10.4 39.2 31.2v286.4c0 15.2-10.4 28-24.8 31.2L672.8 896M512 128c-115.2 0-206.4 101.6-190.4 220 5.6 41.6 26.4 80 56 109.6l0.8 0.8L512 591.2l133.6-132.8 0.8-0.8c29.6-29.6 49.6-68 56-109.6C719.2 229.6 627.2 128 512 128m0-64c141.6 0 256 114.4 256 256 0 70.4-28 133.6-74.4 180L512 681.6 330.4 500C284.8 453.6 256 390.4 256 320 256 178.4 371.2 64 512 64z m64.8 193.6c0-35.2-28.8-64-64-64s-64 28.8-64 64 28.8 64 64 64 64-28 64-64z"></path></svg>
                     </span>
                   </div>
                 </div>
@@ -1797,11 +1851,16 @@
                 this.searchInput = searchInputDiv.querySelector("#searchJumperInput");
                 this.searchLockInput = searchInputDiv.querySelector(".search-jumper-lock-input");
                 this.searchJumperInPageInput = searchInputDiv.querySelector("#searchJumperInPageInput");
+                this.pickerBtn = searchInputDiv.querySelector("#pickerBtn");
+                this.minEleBtn = searchInputDiv.querySelector("#minEleBtn");
+                this.maxEleBtn = searchInputDiv.querySelector("#maxEleBtn");
+                this.copyEleBtn = searchInputDiv.querySelector("#copyEleBtn");
                 this.editBtn = searchInputDiv.querySelector("#editBtn");
                 this.recoverBtn = searchInputDiv.querySelector("#recoverBtn");
                 this.pinBtn = searchInputDiv.querySelector("#pinBtn");
                 this.locBtn = searchInputDiv.querySelector("#locBtn");
                 this.emptyBtn = searchInputDiv.querySelector("#emptyBtn");
+                this.copyInPageBtn = searchInputDiv.querySelector("#copyInPageBtn");
                 this.closeBtn = searchInputDiv.querySelector(".closeBtn");
                 this.filterSitesTab = searchInputDiv.querySelector("#filterSitesTab");
                 this.searchInPageTab = searchInputDiv.querySelector("#searchInPageTab");
@@ -1838,13 +1897,14 @@
                         this.splitSep = words.substr(2, 1);
                         words = words.substr(3).trim();
                     } else if (words.indexOf("$o") === 0) {
-                        this.splitSep = "";
+                        this.splitSep = null;
                         words = words.substr(2).trim();
                     } else this.splitSep = " ";
                     this.curWordIndex = 0;
                 }
                 if (this.splitSep) {
                     words.split(this.splitSep).forEach(word => {
+                        let oriWord = word;
                         word = word.trim();
                         if (!word) return;
                         if (word.length < (searchData.prefConfig.limitInPageLen || 1)) return;
@@ -1874,7 +1934,7 @@
                             word = reMatch[1];
                             reCase = reMatch[2];
                         }
-                        result.push({content: word, isRe: isRe, reCase: reCase, title: title || word, style: style});
+                        result.push({content: word, isRe: isRe, reCase: reCase, title: title || word, style: style, oriWord: oriWord});
                         self.curWordIndex++;
                     });
                 } else {
@@ -1935,12 +1995,52 @@
                             this.focusHighlightByText(word.content, false, wordSpan);
                         }
                     });
+                    let removeBtn = document.createElement("div");
+                    removeBtn.addEventListener("mousedown", e => {
+                        wordSpan.parentNode.removeChild(wordSpan);
+                        this.removeHighlightWord(word);
+                        e.stopPropagation();
+                        e.preventDefault();
+                    });
+                    removeBtn.className = "removeWord";
+                    removeBtn.innerHTML = createHTML(`<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>Remove</title><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64z m165.4 618.2l-66-0.3L512 563.4l-99.3 118.4-66.1 0.3c-4.4 0-8-3.5-8-8 0-1.9 0.7-3.7 1.9-5.2l130.1-155L340.5 359c-1.2-1.5-1.9-3.3-1.9-5.2 0-4.4 3.6-8 8-8l66.1 0.3L512 464.6l99.3-118.4 66-0.3c4.4 0 8 3.5 8 8 0 1.9-0.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"></path></svg>`);
+                    wordSpan.appendChild(removeBtn);
                     this.setHighlightSpan(wordSpan, -1, this.marks[word.content].length);
                     this.highlightSpans[word.content] = wordSpan;
 
                     this.searchInPageLockWords.appendChild(wordSpan);
                 });
                 if (this.searchInPageLockWords.scrollTop <= 0) this.searchInPageLockWords.scrollTop = this.searchInPageLockWords.scrollHeight;
+                this.searchJumperInPageInput.style.paddingLeft = this.searchInPageLockWords.clientWidth + 3 + "px";
+            }
+
+            removeHighlightWord(word) {
+                if (!this.lockWords) return;
+                if (!this.splitSep) this.emptyInPageWords();
+                if (!word.oriWord) return;
+                if (this.lockWords.indexOf(word.oriWord) === -1) return;
+                let preStr = this.lockWords.match(/^\$(c.|o)/);
+                preStr = preStr ? preStr[0] : "";
+                let targetArr = this.lockWords.replace(preStr, "").split(this.splitSep);
+                let findIndex = targetArr.indexOf(word.oriWord);
+                if (findIndex < 0) return;
+                targetArr.splice(findIndex, 1);
+                this.lockWords = preStr + targetArr.join(this.splitSep);
+                delete this.highlightSpans[word.content];
+                findIndex = this.curHighlightWords.indexOf(word);
+                if (findIndex < 0) return;
+                this.curHighlightWords.splice(findIndex, 1);
+
+                this.marks[word.content].forEach(mark => {
+                    if (mark.parentNode) {
+                        let newNode = document.createTextNode(mark.innerText);
+                        mark.parentNode.replaceChild(newNode, mark);
+                        newNode.parentNode.normalize();
+                    }
+                });
+                delete this.marks[word.content];
+                let targetNav = this.navMarks.querySelector(`[data-content="${word.content}"]`);
+                if (targetNav) targetNav.parentNode.removeChild(targetNav);
                 this.searchJumperInPageInput.style.paddingLeft = this.searchInPageLockWords.clientWidth + 3 + "px";
             }
 
@@ -1975,8 +2075,8 @@
                 if (this.focusMark) this.focusMark.removeAttribute('data-current');
                 setTimeout(() => {
                     ele.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
+                    ele.dataset.current=true;
                 }, 0);
-                ele.dataset.current=true;
                 this.focusMark = ele;
                 if (!this.wPosBar) {
                     this.wPosBar = document.createElement("div");
@@ -2201,7 +2301,7 @@
                             navMark.dataset.top = top;
                             navMark.dataset.content = word.content;
                             navMark.style.top = top / document.documentElement.scrollHeight * 100 + "vh";
-                            navMark.style.background = spannode.style.background;
+                            navMark.style.background = spannode.style.background || "yellow";
                             navMark.addEventListener("click", e => {
                                 e.stopPropagation();
                                 e.preventDefault();
@@ -2246,8 +2346,7 @@
                     });
                 }, 500);
                 if (this.navMarks.innerHTML != "") {
-                    this.searchJumperNavBar.style.opacity = 1;
-                    this.searchJumperNavBar.style.pointerEvents = "all";
+                    this.searchJumperNavBar.classList.add("show");
                 }
             }
 
@@ -2332,6 +2431,8 @@
                 this.lockSiteKeywords = false;
                 this.searchInput.style.paddingLeft = "";
                 this.searchInput.placeholder = i18n("inputPlaceholder");
+                this.pickerBtn.classList.remove("checked");
+                Picker.getInstance().close();
             }
 
             removeBar() {
@@ -2520,6 +2621,11 @@
                     this.submitInPageWords();
                     this.searchJumperInPageInput.focus();
                 });
+                this.copyInPageBtn.addEventListener("click", e => {
+                    if (!this.lockWords) return;
+                    _GM_setClipboard(this.lockWords);
+                    _GM_notification('Copied successfully!');
+                });
                 this.setNav(navEnable);
                 this.locBtn.addEventListener("click", e => {
                     this.setNav(!this.locBtn.classList.contains("checked"));
@@ -2558,6 +2664,19 @@
                 });
                 //Search in page
 
+                this.pickerBtn.addEventListener("click", e => {
+                    this.pickerBtn.classList.toggle("checked");
+                    Picker.getInstance().toggle();
+                });
+                this.maxEleBtn.addEventListener("click", e => {
+                    Picker.getInstance().expand();
+                });
+                this.minEleBtn.addEventListener("click", e => {
+                    Picker.getInstance().collapse();
+                });
+                this.copyEleBtn.addEventListener("click", e => {
+                    Picker.getInstance().copy();
+                });
                 for (let siteConfig of searchData.sitesConfig) {
                     let isBookmark = siteConfig.bookmark || siteConfig.sites.length > 100 || (/^BM/.test(siteConfig.type) && siteConfig.icon === "bookmark");
                     if (isBookmark) {
@@ -4108,7 +4227,7 @@
                             return false;
                         }
                         _GM_setClipboard(url.replace(/^c:/, ""));
-                        _GM_notification('Copy successfully!');
+                        _GM_notification('Copied successfully!');
                     } else if (/^\[/.test(data.url)) {
                         if (!ele.onclick) {
                             let siteNames = JSON.parse(data.url);
@@ -4541,6 +4660,238 @@
             }
         }
 
+        class Picker {
+            static picker;
+            constructor() {
+                this.init();
+            }
+
+            static getInstance() {
+                if (!Picker.picker) {
+                    Picker.picker = new Picker();
+                }
+                return Picker.picker;
+            }
+
+            init() {
+                let self = this;
+                this.clickedIndex = 0;
+                this.signList = [];//所有标记
+                this.clickedEles = {};//点击的元素
+                let cssText = `
+                 body.searchJumper-picker,
+                 body.searchJumper-picker *:hover,
+                 body.searchJumper-picker a:hover {
+                  cursor: crosshair !important;
+                 }
+                `;
+                _GM_addStyle(cssText);
+                this.mainSignDiv = this.createSignDiv();
+                this.setImportant(this.mainSignDiv, "pointer-events", "none");
+                this.moveHandler = e => {
+                    if (e.target === document) return;
+                    self.adjustSignDiv(self.mainSignDiv, self.getTarget(e.target));
+                };
+                this.leaveHandler = e => {
+                    if (this.mainSignDiv.parentNode) this.mainSignDiv.parentNode.removeChild(this.mainSignDiv);
+                };
+                this.enterHandler = e => {
+                    document.body.appendChild(this.mainSignDiv);
+                };
+                this.clickHandler = e => {
+                    if (self.inPicker) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                    }
+                    let target = self.getTarget(e.target);
+                    let sign = self.createSignDiv();
+                    self.clickedEles[self.clickedIndex] = target;
+                    self.appendSign(sign, target, self.clickedIndex);
+                    self.clickedIndex++;
+                    searchBar.bar.parentNode.classList.add("selectedEle");
+                };
+            }
+
+            appendSign(sign, target, index) {
+                target.dataset.signNum = parseInt(target.dataset.signNum || 0) + 1;
+                sign.dataset.target = index;
+                document.body.appendChild(sign);
+                this.adjustSignDiv(sign, target);
+                this.signList.push([sign, target]);
+            }
+
+            removeSign(sign) {
+                document.body.removeChild(sign);
+                for (let i = 0; i < this.signList.length; i++) {
+                    let signArr = this.signList[i];
+                    if (signArr[0] === sign) {
+                        this.signList.splice(i, 1);
+                        break;
+                    }
+                }
+                let targetIndex = sign.dataset.target;
+                let target = this.clickedEles[targetIndex];
+                if (!target) return;
+                let signNum = parseInt(target.dataset.signNum || 0) - 1;
+                target.dataset.signNum = signNum;
+                if (signNum <= 0) {
+                    delete this.clickedEles[targetIndex];
+                }
+            }
+
+            getTarget(ele) {
+                while (ele.parentNode && (ele.offsetWidth === 0 || ele.offsetHeight === 0)) {
+                    ele = ele.parentNode;
+                }
+                return ele;
+            }
+
+            close() {
+                this.clearSigns();
+                this.clickedEles = {};
+                if (this.mainSignDiv.parentNode) this.mainSignDiv.parentNode.removeChild(this.mainSignDiv);
+                searchBar.bar.parentNode.classList.remove("selectedEle");
+                document.body.classList.remove("searchJumper-picker");
+                document.body.removeEventListener("mousemove", this.moveHandler, true);
+                document.body.removeEventListener("mouseleave", this.leaveHandler, true);
+                document.body.removeEventListener("mouseenter", this.enterHandler, true);
+                document.body.removeEventListener("click", this.clickHandler, true);
+                this.inPicker = false;
+            }
+
+            setImportant(ele, prop, value) {
+                ele.style.setProperty(prop, value, "important");
+            }
+
+            createSignDiv() {
+                let signDiv = document.createElement("div");
+                this.setImportant(signDiv, "position", "absolute");
+                this.setImportant(signDiv, "z-index", "2147483647");
+                this.setImportant(signDiv, "background", "rgba(120, 170, 210, 0.6)");
+                this.setImportant(signDiv, "transition", "all 0.15s ease-out");
+                this.setImportant(signDiv, "box-shadow", "rgb(0 0 0) 0px 0px 3px 0px");
+                this.setImportant(signDiv, "cursor", "pointer");
+                signDiv.addEventListener("mouseenter", e => {
+                    if (this.mainSignDiv.parentNode) this.mainSignDiv.parentNode.removeChild(this.mainSignDiv);
+                }, true);
+                signDiv.addEventListener("mouseleave", e => {
+                    document.body.appendChild(this.mainSignDiv);
+                }, true);
+                signDiv.addEventListener("mousedown", e => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    this.removeSign(signDiv);
+                    document.body.appendChild(this.mainSignDiv);
+                }, true);
+                return signDiv;
+            }
+
+            adjustSignDiv(div, target) {
+                let rect = target.getBoundingClientRect();
+                this.setImportant(div, "width", rect.width + "px");
+                this.setImportant(div, "height", rect.height + "px");
+                this.setImportant(div, "left", rect.left + window.scrollX + "px");
+                this.setImportant(div, "top", rect.top + window.scrollY + "px");
+            }
+
+            geneSelector(ele) {
+                let selector=ele.tagName.toLowerCase();
+                if(ele.tagName!="HTML" && ele.tagName!="BODY"){
+                    if(ele.className) selector += [].map.call(ele.classList,d=>/^[\w-_]+$/.test(d)?('.'+d):"").join('');
+                    let parent = ele.parentElement;
+                    if(parent){
+                        selector = this.geneSelector(parent) + ' > ' + selector;
+                    }
+                }
+                return selector;
+            }
+
+            copy() {
+                let self = this;
+                let html = "", text = "";
+                this.signList.forEach(sign => {
+                    text += "\n" + sign[1].innerText;
+                    html += sign[1].outerHTML;
+                });
+                text = text.trim();
+                const htmlData = new Blob([html], {type: 'text/html'})
+                const textData = new Blob([text], {type: 'text/plain'})
+                try {
+                    const item = new ClipboardItem({'text/html': htmlData, 'text/plain': textData});
+                    navigator.clipboard.write([item]).then(
+                        () => {
+                            _GM_notification('Copied successfully!');
+                        },
+                        (e) => {
+                            _GM_setClipboard(text);
+                            console.log(e);
+                        }
+                    );
+                } catch(e) {
+                    _GM_setClipboard(text);
+                }
+            }
+
+            getPickerStr() {
+                if (!this.inPicker) return "";
+                let resultStr = "";
+                this.signList.forEach(sign => {
+                    resultStr += "\n" + sign[1].innerText;
+                });
+                return resultStr.trim();
+            }
+
+            expand() {
+                let self = this;
+                this.clearSigns();
+                Object.keys(this.clickedEles).forEach(index => {
+                    let target = self.clickedEles[index];
+                    let sel = self.geneSelector(target);
+                    target.dataset.signNum = 0;
+                    [].forEach.call(document.querySelectorAll(sel), ele => {
+                        let sign = self.createSignDiv();
+                        document.body.appendChild(sign);
+                        self.appendSign(sign, ele, index);
+                    });
+                });
+            }
+
+            collapse() {
+                let self = this;
+                this.clearSigns();
+                Object.keys(this.clickedEles).forEach(index => {
+                    let target = self.clickedEles[index];
+                    target.dataset.signNum = 0;
+                    let sign = self.createSignDiv();
+                    document.body.appendChild(sign);
+                    self.appendSign(sign, target, index);
+                });
+            }
+
+            clearSigns() {
+                this.signList.forEach(sign => {
+                    sign = sign[0];
+                    if (sign.parentNode) sign.parentNode.removeChild(sign);
+                });
+                this.signList = [];
+            }
+
+            toggle() {
+                if (this.inPicker) {
+                    this.close();
+                    return;
+                }
+                this.inPicker = true;
+                document.body.appendChild(this.mainSignDiv);
+                document.body.classList.add("searchJumper-picker");
+
+                document.body.addEventListener("mousemove", this.moveHandler, true);
+                document.body.addEventListener("mouseleave", this.leaveHandler, true);
+                document.body.addEventListener("mouseenter", this.enterHandler, true);
+                document.body.addEventListener("click", this.clickHandler, true);
+            }
+        }
+
         async function emuInput(sel, v) {
             await new Promise((resolve) => {
                 let checkInv = setInterval(() => {
@@ -4792,7 +5143,7 @@
         }
 
         function getSelectStr() {
-            let selStr = window.getSelection().toString();
+            let selStr = Picker.getInstance().getPickerStr() || window.getSelection().toString();
             if (selStr) {
                 selStr = selStr.trim();
                 if (selStr) {
