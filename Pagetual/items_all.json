@@ -2,9 +2,8 @@
 {
   "resource_url": "http://wedata.net/items/85945",
   "data": {
-    "insertBefore": "",
-    "pageElement": "//div[@class=\"newsArticle_body\"]//div[@class=\"news_feed\"]",
-    "nextLink": "//div[@class=\"newsArticle_pager_heading\"]/a",
+    "pageElement": "//div[@class='newsArticle_body']//div[@class='news_feed']/div[not(./figure)][1]/preceding-sibling::*",
+    "nextLink": "//link[@rel='next']",
     "url": "^https://thetv.jp/news/detail/",
     "exampleUrl": "https://thetv.jp/news/detail/1097587/"
   },
@@ -12,7 +11,7 @@
   "created_by": "autopagerizebanzai",
   "name": "WEBザテレビジョン",
   "created_at": "2022-08-19T21:06:16+09:00",
-  "updated_at": "2022-08-19T21:06:16+09:00"
+  "updated_at": "2022-08-21T06:34:59+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85944",
@@ -23742,17 +23741,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/74942",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "created_at": "2014-07-03T07:26:00+09:00",
   "data": {
-    "pageElement": "//div[@class='category-page-item ']",
-    "exampleUrl": "https://people.com/tag/news/",
+    "pageElement": "id('card-list_1-0')",
+    "nextLink": "//li[@class='pagination__next']/a",
     "url": "^https://people\\.com/",
-    "nextLink": "//link[@rel='next']"
+    "exampleUrl": "https://people.com/search?q=pop"
   },
-  "updated_at": "2020-05-30T04:54:40+09:00",
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "Tanookirby",
   "name": "People",
-  "created_by": "Tanookirby"
+  "created_at": "2014-07-03T07:26:00+09:00",
+  "updated_at": "2022-08-21T06:40:13+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/74940",
