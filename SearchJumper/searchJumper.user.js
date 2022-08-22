@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.5.21
+// @version      1.6.5.21.1
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -2400,6 +2400,7 @@
                 let selectStr = getSelectStr();
                 this.recoveHistory();
                 this.bar.parentNode.classList.add("in-input");
+                this.searchInput.value = "";
                 if (this.filterSitesTab.checked) {
                     this.searchInput.focus();
                     if (!this.initShowPicker && searchData.prefConfig.defaultPicker) {
@@ -2407,10 +2408,17 @@
                         this.pickerBtn.classList.toggle("checked");
                         Picker.getInstance().toggle();
                     }
+                    if (this.bar.classList.contains("search-jumper-isInPage")) {
+                        this.lockSearchInput("*");
+                        this.searchInput.value = selectStr;
+                    }
                 } else if (this.searchInPageTab.checked) {
                     this.searchJumperInPageInput.focus();
+                    if (!this.searchJumperInPageInput.value) {
+                        this.searchJumperInPageInput.value = selectStr;
+                        this.submitInPageWords();
+                    }
                 }
-                this.searchInput.value = "";
                 searchTypes.forEach(type => {
                     type.classList.remove("input-hide");
                 });
@@ -2421,16 +2429,9 @@
                     listItem.classList.remove("input-hide");
                 });
                 this.inInput = true;
-                if (this.bar.classList.contains("search-jumper-isInPage")) {
-                    this.lockSearchInput("*");
-                    this.searchInput.value = selectStr;
-                    if (this.searchInPageTab.checked && !this.searchJumperInPageInput.value) {
-                        this.searchJumperInPageInput.value = selectStr;
-                        this.submitInPageWords();
-                    }
-                }
                 if (this.lockWords) this.searchJumperInPageInput.style.paddingLeft = this.searchInPageLockWords.clientWidth + 3 + "px";
                 if (searchData.prefConfig.altToHightlight) {
+                    document.removeEventListener("mouseup", this.checkSelHandler);
                     document.addEventListener("mouseup", this.checkSelHandler);
                 }
             }
