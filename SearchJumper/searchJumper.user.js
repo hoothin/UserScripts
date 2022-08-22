@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.5.21.1
+// @version      1.6.5.22
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -991,6 +991,7 @@
                      -ms-overflow-style: none;
                      scrollbar-width: none;
                      box-sizing: border-box;
+                     z-index: 2147483647;
                  }
                  .search-jumper-searchBar {
                      overflow-wrap: break-word;
@@ -1742,6 +1743,15 @@
                      from {border-color: unset}
                      to {border-color: transparent;}
                  }
+                 #rightSizeChange {
+                     top: 0;
+                     opacity: 0;
+                     height: 55px;
+                     width: 5px;
+                     position: absolute;
+                     cursor: e-resize;
+                     right: 0;
+                 }
                  `;
                 if (searchData.prefConfig.cssText) cssText += searchData.prefConfig.cssText;
                 mainStyleEle = _GM_addStyle(cssText);
@@ -1849,6 +1859,7 @@
                     </span>
                   </div>
                 </div>
+                <div id="rightSizeChange"></div>
                 `);
                 searchBarCon.appendChild(searchInputDiv);
                 this.searchInputDiv = searchInputDiv;
@@ -1870,6 +1881,7 @@
                 this.searchInPageTab = searchInputDiv.querySelector("#searchInPageTab");
                 this.searchInPageLockWords = searchInputDiv.querySelector("#searchInPage>.lockWords");
                 this.contentContainer = searchInputDiv.querySelector(".content-container");
+                this.rightSizeChange = searchInputDiv.querySelector("#rightSizeChange");
             }
 
             showInPageSearch() {
@@ -2663,24 +2675,22 @@
                         if (a < b) return -1;
                         return 0;
                     });
+                    let mark;
                     for (let i = 0; i < sortedMarks.length; i++) {
-                        let mark = sortedMarks[i];
+                        mark = sortedMarks[i];
                         let markTop = parseFloat(mark.style.top);
                         if (markTop > topPercent) {
-                            if (i == 0) {
-                                mark.click();
-                                return;
-                            }
-                            let preMark = sortedMarks[i - 1];
-                            let preMarkTop = parseFloat(preMark.style.top);
-                            if (markTop - topPercent > topPercent - preMarkTop) {
-                                preMark.click();
-                            } else {
-                                mark.click();
+                            if (i > 0) {
+                                let preMark = sortedMarks[i - 1];
+                                let preMarkTop = parseFloat(preMark.style.top);
+                                if (markTop - topPercent > topPercent - preMarkTop) {
+                                    mark = preMark;
+                                }
                             }
                             break;
                         }
                     }
+                    mark.click();
                 });
                 //Search in page
 
@@ -2866,6 +2876,21 @@
                         document.addEventListener("mouseup", grabMouseupHandler);
                         document.addEventListener("mousemove", grabMousemoveHandler);
                     }
+                });
+                let initWidth, initX;
+                let sizeChangeMouseMove = e => {
+                    let width = e.clientX - initX + initWidth + 20;
+                    this.searchInputDiv.style.width = width + "px";
+                };
+                let sizeChangeMouseUp = e => {
+                    document.removeEventListener("mousemove", sizeChangeMouseMove);
+                    document.removeEventListener("mouseup", sizeChangeMouseUp);
+                };
+                this.rightSizeChange.addEventListener("mousedown", e => {
+                    initX = e.clientX;
+                    initWidth = this.searchInput.clientWidth;
+                    document.addEventListener("mousemove", sizeChangeMouseMove);
+                    document.addEventListener("mouseup", sizeChangeMouseUp);
                 });
 
                 sitesNum = 0;
@@ -4784,10 +4809,10 @@
                 this.clearSigns();
                 this.clickedEles = {};
                 if (this.mainSignDiv.parentNode) this.mainSignDiv.parentNode.removeChild(this.mainSignDiv);
-                searchBar.bar.parentNode.classList.remove("selectedEle");
                 document.body.classList.remove("searchJumper-picker");
+                searchBar.bar.parentNode.classList.remove("selectedEle");
+                searchBar.bar.parentNode.removeEventListener("mouseenter", this.leaveHandler, true);
                 document.body.removeEventListener("mousemove", this.moveHandler, true);
-                document.body.removeEventListener("mouseleave", this.leaveHandler, true);
                 document.body.removeEventListener("mouseenter", this.enterHandler, true);
                 document.body.removeEventListener("click", this.clickHandler, true);
                 this.inPicker = false;
@@ -4919,8 +4944,8 @@
                 document.body.appendChild(this.mainSignDiv);
                 document.body.classList.add("searchJumper-picker");
 
+                searchBar.bar.parentNode.addEventListener("mouseenter", this.leaveHandler, true);
                 document.body.addEventListener("mousemove", this.moveHandler, true);
-                document.body.addEventListener("mouseleave", this.leaveHandler, true);
                 document.body.addEventListener("mouseenter", this.enterHandler, true);
                 document.body.addEventListener("click", this.clickHandler, true);
             }
