@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.8.6.1
+// @version              2022.8.22.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -41,7 +41,7 @@
 // @grant                unsafeWindow
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
 // @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1077145
-// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1076727
+// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1084190
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @match                *://*/*
@@ -11820,6 +11820,7 @@ ImgOps | https://imgops.com/#b#`;
                 zoomresized: 25, // 图片尺寸最少相差比例，单位：%
                 scaleSmallSize: 250, // 图库的新类别，缩放的图片，尺寸的高或宽都小于该值
                 showSmallSize:true,//是否默认显示小尺寸图片
+                disableArrow:false,
 
                 scrollEndAndLoad: false, // 滚动主窗口到最底部，然后自动重载库的图片。还有bug，有待进一步测试
                 scrollEndAndLoad_num: 3, // 最后几张图片执行
@@ -14038,6 +14039,7 @@ ImgOps | https://imgops.com/#b#`;
                 var keyDown;
 
                 container.addEventListener('keydown',function(e){
+                    if(prefs.gallery.disableArrow)return;
                     var keyCode=e.keyCode;
                     var index=validKeyCode.indexOf(keyCode);
                     if(index==-1)return;
@@ -14046,6 +14048,7 @@ ImgOps | https://imgops.com/#b#`;
 
                     if(!container.contains(target))return;//触发焦点不再gallery里面。
                     e.preventDefault();
+                    e.stopPropagation();
 
                     if(keyCode==9)return;//tab键
                     if(keyCode==32){//32空格，模拟滚动一页
@@ -20727,27 +20730,29 @@ ImgOps | https://imgops.com/#b#`;
 
         MatchedRuleC.prototype={
             init:function(){
-                try{
-                    var customRules=unsafeWindow.eval(prefs.customRules);
-                    if(Array.isArray(customRules)){
-                        customRules.forEach(rule=>{
-                            let hasRule = false;
-                            for(let s in siteInfo){
-                                if(siteInfo[s].name == rule.name){
-                                    hasRule = true;
-                                    for(let si in rule){
-                                        siteInfo[s][si]=rule[si];
+                if(!isunsafe()){
+                    try{
+                        var customRules=unsafeWindow.eval(prefs.customRules);
+                        if(Array.isArray(customRules)){
+                            customRules.forEach(rule=>{
+                                let hasRule = false;
+                                for(let s in siteInfo){
+                                    if(siteInfo[s].name == rule.name){
+                                        hasRule = true;
+                                        for(let si in rule){
+                                            siteInfo[s][si]=rule[si];
+                                        }
+                                        break;
                                     }
-                                    break;
                                 }
-                            }
-                            if(!hasRule)siteInfo.unshift(rule);
-                        })
-                        //siteInfo=customRules.concat(siteInfo);
+                                if(!hasRule)siteInfo.unshift(rule);
+                            })
+                            //siteInfo=customRules.concat(siteInfo);
+                        }
+                    }catch(e){
+                        console.log("Wrong rule for Picviewer CE+");
+                        console.log(e);
                     }
-                }catch(e){
-                    console.log("Wrong rule for Picviewer CE+");
-                    console.log(e);
                 }
 
                 var self=this,r=0;
@@ -20939,12 +20944,17 @@ ImgOps | https://imgops.com/#b#`;
         //通讯逻辑..A页面的contentscript发送到A页面的pagescript，pagescript转交给B页面的contentscript
         var messageID='pv-0.5106795670312598';
 
+        var _isunsafe = null;
         function isunsafe(){
-            try {
-                return eval("false");
-            } catch (e) {
-                return true;
+            if (_isunsafe === null) {
+                try {
+                    _isunsafe = eval("false");
+                } catch (e) {
+                    console.debug("unsafe");
+                    _isunsafe = true;
+                }
             }
+            return _isunsafe;
         }
         function addPageScript() {
 
@@ -21970,6 +21980,11 @@ ImgOps | https://imgops.com/#b#`;
                     label: i18n("galleryTransition"),
                     type: 'checkbox',
                     "default": prefs.gallery.transition
+                },
+                'gallery.disableArrow': {
+                    label: i18n("galleryDisableArrow"),
+                    type: 'checkbox',
+                    "default": prefs.gallery.disableArrow
                 },
                 'gallery.sidebarPosition': {
                     label: i18n("gallerySidebarPosition"),
