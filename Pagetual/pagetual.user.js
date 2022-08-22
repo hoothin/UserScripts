@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.30.6.31
+// @version      1.9.30.6.32
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -131,7 +131,7 @@
     switch (lang){
         case "zh-CN":
         case "zh-SG":
-            config={
+            config = {
                 enableDebug:"调试模式，输出信息至控制台",
                 disable:"暂时禁用",
                 disableSite:"切换禁用状态",
@@ -202,7 +202,7 @@
             break;
         case "zh-TW":
         case "zh-HK":
-            config={
+            config = {
                 enableDebug:"調試模式，輸出信息至控制台",
                 disable:"暫時禁用",
                 disableSite:"切換禁用狀態",
@@ -341,8 +341,79 @@
                 nextSwitch:"次のページに切り替え"
             };
             break;
+        case "ru":
+        case "ru-RU":
+            config = {
+                enableDebug:"Включить отладку",
+                disable:"Отключить",
+                disableSite:"Переключить состояние отключения",
+                disableSiteTips:"Отключено на этом сайте",
+                enableSiteTips:"Включено на этом сайте",
+                enable:"Включить",
+                toTop:"В начало",
+                toBottom:"В конец",
+                current:"Текущая страница",
+                forceIframe:"Принудительно присоединить следующую страницу",
+                cancelForceIframe:"Отменить принудительное присоединение",
+                configure:"Настроить",
+                firstUpdate:"Нажмите здесь, чтобы инициализировать правила",
+                update:"Обновить правила онлайн",
+                click2update:"Нажмите, чтобы обновить правила по URL сейчас",
+                loadNow:"Загрузить следующую страницу сейчас",
+                loadConfirm:"Сколько страниц вы хотите загрузить? (0 означает бесконечность)",
+                noNext:"Ссылка на следующую страницу не найдена, пожалуйста, создайте новое правило",
+                passSec:"Обновлено #t# секунд назад",
+                passMin:"Обновлено #t# минут назад",
+                passHour:"Обновлено #t# часов назад",
+                passDay:"Обновлено #t# дней назад",
+                cantDel:"Невозможно удалить встроенные правила",
+                confirmDel:"Вы уверены, что хотите удалить это правило?",
+                updateSucc:"Обновление прошло успешно",
+                beginUpdate:"Обновление начато, подождите минуту, пожалуйста",
+                customUrls:"Импортировать URL-адрес правила Пэйджтуал или AutoPagerize по одному URL на строку",
+                customRules:"Введите пользовательские правила с форматом [Pagetual]",
+                save:"Сохранить",
+                loadingText:"Shojo загружается...",
+                opacity:"Непрозрачность",
+                opacityPlaceholder:"0:скрыть",
+                hideBar:"скрыть промежуток переключения страниц",
+                dbClick2Stop:"Двойной щелчок по пустому пространству для паузы",
+                sortTitle:"Сортировка вступает в силу после следующего обновления правила",
+                autoRun:"Автозапуск (режим черного списка)",
+                autoLoadNum:"Количество для предварительной загрузки страниц",
+                inputPageNum:"Введите номер страницы для перехода",
+                enableHistory:"Записать историю после переключения страниц",
+                initRun:"Переключать страницы сразу после открытия",
+                preload:"Предварительная загрузка следующей страницы для ускорения",
+                click2ImportRule:"Нажмите, чтобы импортировать ссылку базовых правил, затем дождитесь завершения обновления:",
+                forceAllBody:"Присоединить полное тело страницы?",
+                openInNewTab:"Открыть дополнительные URL-адреса в новой вкладке",
+                importSucc:"Импорт завершен",
+                import:"Импорт",
+                editCurrent:"Редактировать правило для текущего",
+                editBlacklist:"Редактировать URL-адреса черного списка, по одной строке, поддержка ? * для подстановочного знака",
+                upBtnImg:"Иконка возврата к началу",
+                downBtnImg:"Иконка перехода в нижний колонтитул",
+                loadingTextTitle:"Текст загрузки",
+                dbClick2StopCtrl:"Клавиша Ctrl",
+                dbClick2StopAlt:"Клавиша Alt",
+                dbClick2StopShift:"Клавиша Shift",
+                dbClick2StopMeta:"Клавиша Meta",
+                dbClick2StopKey:"Клавиша быстрого доступа",
+                pageElementCss:"Пользовательский стиль для основных элементов страницы",
+                customCss:"Полный пользовательский CSS",
+                firstAlert:"Вы не импортировали базовое правило, пожалуйста, выберите соответствующее правило для импорта",
+                picker:"Выбор элемента страницы Пэйджтуал",
+                closePicker:"Закрыть выбор Пэйджтуал",
+                pickerPlaceholder:"Оставьте пустым, если вы не знаете",
+                pickerCheck:"Проверить селектор",
+                gotoEdit:"Перейти к редактированию правила с текущим селектором",
+                manualMode:"Отключить автоматическую перелистывание страниц, перелистывать страницы вручную с помощью стрелок справа (или вызвать событие 'pagetual.next')",
+                nextSwitch:"Переключить ссылку на следующую страницу"
+            };
+            break;
         default:
-            config={
+            config = {
                 enableDebug:"Enable debug output",
                 disable:"Disable",
                 disableSite:"Toggle disabled state",
@@ -1189,6 +1260,7 @@
                 curPage.querySelector("a[alt=next]")||
                 curPage.querySelector("button.next")||
                 curPage.querySelector("[title=next]")||
+                curPage.querySelector("[title='Next page']")||
                 curPage.querySelector("a#btnPreGn")||
                 curPage.querySelector("a.page-next")||
                 getElementByXpath("//a[contains(@class, 'page__next')]",curPage,curPage);
@@ -4157,7 +4229,9 @@
                 }catch(e){
                     debug("Stop as cors");
                     inCors=true;
-                    //isPause=true;
+                    if (forceState === 3) {
+                        isPause=true;
+                    }
                     if(!ruleParser.curSiteRule.pageElement){
                         ruleParser.curSiteRule.pageElement=allOfBody;
                         ruleParser.getInsert(true);
@@ -4585,10 +4659,10 @@
         let insert=ruleParser.getInsert();
         if (insert) {
             if (curPage == 1) {
-                window.postMessage({
+                /*window.postMessage({
                     insert: geneSelector(ruleParser.curSiteRule.insertPos == 2 ? insert : insert.parentNode, true),
                     command: 'pagetual.insert'
-                }, '*');
+                }, '*');*/
             }
             let isJs=/^(javascript|#)/.test(nextLink.replace(location.href,""));
             if(!isJs){
