@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.7.3.8
+// @version      2.7.3.9
 // @description  Fetch and download main content on current page, provide special support for chinese novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -458,22 +458,28 @@
             }
             rCats = rCats.filter(function(e){return e!=null});
         }
+        var waitForComplete;
         function processDoc(i, aTag, doc, cause){
-            let contentResult=getPageContent(doc, content=>{
-                cbFunc(content);
-            });
             let cbFunc=content=>{
                 rCats[i]=(aTag.innerText.trim() + "\r\n" + content + (cause || ''));
                 curRequests = curRequests.filter(function(e){return e[0]!=i});
                 txtDownContent.style.display="block";
                 txtDownWords.innerHTML=getI18n("downloading",[downNum,(aEles.length-downNum),aTag.innerText]);
                 if(downNum==aEles.length){
-                    txtDownWords.innerHTML=getI18n("complete",[downNum]);
-                    sortInnerPage();
-                    var blob = new Blob([i18n.info+"\r\n\r\n"+document.title+"\r\n\r\n"+rCats.join("\r\n\r\n")], {type: "text/plain;charset=utf-8"});
-                    saveAs(blob, document.title+".txt");
+                    if(waitForComplete) clearTimeout(waitForComplete);
+                    waitForComplete=setTimeout(()=>{
+                        if(downNum==aEles.length){
+                            txtDownWords.innerHTML=getI18n("complete",[downNum]);
+                            sortInnerPage();
+                            var blob = new Blob([i18n.info+"\r\n\r\n"+document.title+"\r\n\r\n"+rCats.join("\r\n\r\n")], {type: "text/plain;charset=utf-8"});
+                            saveAs(blob, document.title+".txt");
+                        }
+                    },3000);
                 }
             };
+            let contentResult=getPageContent(doc, content=>{
+                cbFunc(content);
+            });
             if(contentResult!==false){
                 cbFunc(contentResult);
             }
@@ -727,6 +733,9 @@
                 let urlSel=urlsArr[0].split(">>");
                 try{
                     eles=document.querySelectorAll(urlSel[0]);
+                    eles=[].filter.call(eles, ele=>{
+                        return !!ele.offsetParent&&getComputedStyle(ele).display!=='none';
+                    })
                 }catch(e){}
                 if(eles.length==0){
                     eles=[];
@@ -761,18 +770,7 @@
                         });
                     });
                 }
-                [].forEach.call(eles,function(item){
-                    if(urlSel[1]){
-                        item=Function("item",urlSel[1])(item);
-                        if(!item || !item.href)return;
-                        if(!item.tagName || item.tagName!="A"){
-                            let href=item.href;
-                            let innerText=item.innerText;
-                            item=document.createElement("a");
-                            item.href=href;
-                            item.innerText=innerText;
-                        }
-                    }
+                function addItem(item) {
                     let has=false;
                     for(var j=0;j<processEles.length;j++){
                         if(processEles[j].href==item.href){
@@ -787,6 +785,28 @@
                     }
                     if(!has && item.href && /^http/i.test(item.href)){
                         processEles.push(item.cloneNode(1));
+                    }
+                }
+                [].forEach.call(eles,function(item){
+                    if(urlSel[1]){
+                        item=Function("item",urlSel[1])(item);
+                        let items;
+                        if (Array.isArray(item)) {
+                            items = item;
+                        } else items = [item];
+                        items.forEach(item => {
+                            if(!item || !item.href)return;
+                            if(!item.tagName || item.tagName!="A"){
+                                let href=item.href;
+                                let innerText=item.innerText;
+                                item=document.createElement("a");
+                                item.href=href;
+                                item.innerText=innerText;
+                            }
+                            addItem(item);
+                        });
+                    } else {
+                        addItem(item);
                     }
                 });
             }
