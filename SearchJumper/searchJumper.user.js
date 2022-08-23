@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.5.23.1
+// @version      1.6.5.24
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -6026,16 +6026,16 @@
                     }
                     #searchJumperWrapper .dragLogo {
                       position: absolute;
-                      left: 140px;
-                      top: 140px;
+                      left: 150px;
+                      top: 150px;
                       border-radius: 50%;
                       box-shadow: #000000 0px 0px 10px;
                       z-index: 10;
                       font-size: 0;
                     }
                     .dragLogo>svg {
-                      width: 60px;
-                      height: 60px;
+                      width: 40px;
+                      height: 40px;
                     }
                 `;
                 dragCssEle = _GM_addStyle(dragCssText);
