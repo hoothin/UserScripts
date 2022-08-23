@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.30.6.32
+// @version      1.9.30.6.33
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -34,6 +34,7 @@
 // @grant        GM_openInTab
 // @grant        GM_deleteValue
 // @grant        GM_info
+// @grant        GM_setClipboard
 // @grant        GM.xmlHttpRequest
 // @grant        GM.registerMenuCommand
 // @grant        GM.notification
@@ -43,6 +44,7 @@
 // @grant        GM.openInTab
 // @grant        GM.deleteValue
 // @grant        GM.info
+// @grant        GM.setClipboard
 // @downloadURL  https://greasyfork.org/scripts/438684-pagetual/code/Pagetual.user.js
 // @updateURL    https://greasyfork.org/scripts/438684-pagetual/code/Pagetual.user.js
 // @supportURL   https://github.com/hoothin/UserScripts/issues
@@ -194,10 +196,12 @@
                 picker:"东方永页机主体元素抓取器",
                 closePicker:"关闭东方永页机抓取器",
                 pickerPlaceholder:"没想法建议留空",
-                pickerCheck:"检查你编辑的选择器",
+                pickerCheck:"检查你编辑的选择器并复制",
+                switchSelector:"点击切换元素",
                 gotoEdit:"使用当前的选择器前往编辑规则",
                 manualMode:"禁用拼接，手动用右方向键翻页（或发送事件'pagetual.next'）",
-                nextSwitch:"切换其他页码"
+                nextSwitch:"切换其他页码",
+                arrowToScroll:"左方向键滚动至上一页，右方向键滚动至下一页"
             };
             break;
         case "zh-TW":
@@ -265,10 +269,12 @@
                 picker:"東方永頁機主體元素抓取器",
                 closePicker:"關閉東方永頁機抓取器",
                 pickerPlaceholder:"沒想法建議留空",
-                pickerCheck:"檢查你編輯的選擇器",
+                pickerCheck:"檢查你編輯的選擇器並複製",
+                switchSelector:"點擊切換元素",
                 gotoEdit:"使用當前的選擇器前往編輯規則",
                 manualMode:"禁用拼接，手動用右方向鍵翻頁（或發送事件'pagetual.next'）",
-                nextSwitch:"切換其他頁碼"
+                nextSwitch:"切換其他頁碼",
+                arrowToScroll:"左方向鍵滾動至上一頁，右方向鍵滾動至下一頁"
             };
             break;
         case "ja":
@@ -335,10 +341,12 @@
                 picker:"Pagetualページ要素ピッカー",
                 closePicker:"Pagetualピッカーを閉じる",
                 pickerPlaceholder:"わからない場合は空のままにしてください",
-                pickerCheck:"セレクターをチェック",
+                pickerCheck:"セレクターをチェックしてコピー",
+                switchSelector:"クリックして要素を切り替えます",
                 gotoEdit:"現在のセレクターでルールを編集する",
                 manualMode:"スプライシングを無効にします。手動で右の矢印キーを使用してページをめくります",
-                nextSwitch:"次のページに切り替え"
+                nextSwitch:"次のページに切り替え",
+                arrowToScroll:"左矢印キーで前へ、右矢印キーで次へ"
             };
             break;
         case "ru":
@@ -406,10 +414,12 @@
                 picker:"Выбор элемента страницы Пэйджтуал",
                 closePicker:"Закрыть выбор Пэйджтуал",
                 pickerPlaceholder:"Оставьте пустым, если вы не знаете",
-                pickerCheck:"Проверить селектор",
+                pickerCheck:"Проверить селектор и скопируй",
+                switchSelector:"нажмите для переключения элемента",
                 gotoEdit:"Перейти к редактированию правила с текущим селектором",
                 manualMode:"Отключить автоматическую перелистывание страниц, перелистывать страницы вручную с помощью стрелок справа (или вызвать событие 'pagetual.next')",
-                nextSwitch:"Переключить ссылку на следующую страницу"
+                nextSwitch:"Переключить ссылку на следующую страницу",
+                arrowToScroll:"Нажмите клавишу со стрелкой влево для предыдущего и клавишу со стрелкой вправо для следующего"
             };
             break;
         default:
@@ -476,10 +486,12 @@
                 picker:"Pagetual page element picker",
                 closePicker:"Close Pagetual picker",
                 pickerPlaceholder:"Leave empty if you have no idea",
-                pickerCheck:"Check selector",
+                pickerCheck:"Check selector and copy",
+                switchSelector:"Click to switch element",
                 gotoEdit:"Go to edit rule with current selector",
                 manualMode:"Disable splicing, manually turn pages with the right arrow keys (or dispatch event 'pagetual.next')",
-                nextSwitch:"Switch next link"
+                nextSwitch:"Switch next link",
+                arrowToScroll:"Press left arrow key to scroll prev and right arrow key to scroll next"
             };
             break;
     }
@@ -499,7 +511,7 @@
         }
     };
 
-    var _GM_xmlhttpRequest,_GM_registerMenuCommand,_GM_notification,_GM_addStyle,_GM_openInTab,_GM_info;
+    var _GM_xmlhttpRequest,_GM_registerMenuCommand,_GM_notification,_GM_addStyle,_GM_openInTab,_GM_info,_GM_setClipboard;
     if(typeof GM_xmlhttpRequest!='undefined'){
         _GM_xmlhttpRequest=GM_xmlhttpRequest;
     }else if(typeof GM!='undefined' && typeof GM.xmlHttpRequest!='undefined'){
@@ -545,6 +557,13 @@
             styleEle.innerHTML=cssStr;
             document.head.appendChild(styleEle);
         };
+    }
+    if (typeof GM_setClipboard != 'undefined') {
+        _GM_setClipboard = GM_setClipboard;
+    } else if (typeof GM != 'undefined' && typeof GM.setClipboard != 'undefined') {
+        _GM_setClipboard = GM.setClipboard;
+    } else {
+        _GM_setClipboard = (s, i) => {};
     }
     var _unsafeWindow=(typeof unsafeWindow=='undefined')?window:unsafeWindow;//兼容 ios userscripts 的寫法
     var storage={
@@ -2212,6 +2231,15 @@
               max-width: 350px;
               word-break: break-all;
               cursor: context-menu;
+              overflow: hidden;
+              max-height: 42px;
+              -moz-transition:max-height 1s ease-in;
+              -webkit-transition:max-height 1s ease-in;
+              transition:max-height 1s ease-in;
+             }
+             #pagetual-picker .allpath:hover {
+              max-height: calc(100vh - 130px);
+              overflow: auto;
              }
              #pagetual-picker .allpath>span.path {
               cursor: pointer;
@@ -2233,8 +2261,8 @@
                     </path>
                   </svg>
                 </button>
-                <div class="allpath"></div>
-                <textarea class="selector" name="selector" placeholder="${i18n("pickerPlaceholder")}"></textarea>
+                <div class="allpath" title="${i18n("switchSelector")}"></div>
+                <textarea class="selector" spellcheck="false" name="selector" placeholder="${i18n("pickerPlaceholder")}"></textarea>
                 <button id="check" title="${i18n("pickerCheck")}" type="button">
                   <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1609">
                     <path d="M512 128a384 384 0 1 0 0 768 384 384 0 0 0 0-768z m0-85.333333c259.2 0 469.333333 210.133333 469.333333 469.333333s-210.133333 469.333333-469.333333 469.333333S42.666667 771.2 42.666667 512 252.8 42.666667 512 42.666667zM696.149333 298.666667L768 349.866667 471.594667 725.333333 256 571.733333l53.888-68.266666 143.744 102.4z" p-id="1610">
@@ -2242,7 +2270,7 @@
                   </svg>
                 </button>
                 <div class="bottom">
-                  <input spellcheck="false" class="xpath" name="xpath" id="checkbox_id" type="checkbox">
+                  <input class="xpath" name="xpath" id="checkbox_id" type="checkbox">
                   <label for="checkbox_id">XPath</label>
                   <button id="edit" title="${i18n("gotoEdit")}" type="button">
                     <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4129" style="color: orangered;fill: orangered;">
@@ -2293,6 +2321,7 @@
             });
             checkBtn.addEventListener("click", e => {
                 self.checkInputSelector();
+                if (this.selectorInput.value) _GM_setClipboard(this.selectorInput.value);
             });
             xpath.addEventListener("click", e => {
                 if (!selectorInput.value) {
@@ -2964,15 +2993,19 @@
             if (typeof val == 'undefined') val = "";
             let title=document.createElement(tag||"h3");
             title.innerHTML=innerText;
+            title.style.overflowWrap="normal";
             let input=document.createElement("input");
             input.type=otherType||"checkbox";
             input.style.width="30px";
             input.style.height="20px";
+            input.style.float="left";
+            input.style.margin="5px";
             input.value=val;
             input.checked=val;
             let td=document.createElement("td");
             td.appendChild(input);
             if(parentCheck){
+                title.style.margin="0";
                 td.appendChild(title);
                 let parent=parentCheck.parentNode.nextElementSibling;
                 let tr=parent.querySelector("tr");
@@ -3007,6 +3040,7 @@
         let preloadInput=createCheckbox(i18n("preload"), rulesData.preload!=false);
         let dbClick2StopInput=createCheckbox(i18n("dbClick2Stop"), rulesData.dbClick2Stop);
         let manualModeInput=createCheckbox(i18n("manualMode"), rulesData.manualMode);
+        let arrowToScrollInput=createCheckbox(i18n("arrowToScroll"), rulesData.arrowToScroll);
         let hideBarInput=createCheckbox(i18n("hideBar"), rulesData.hideBar, "h4", dbClick2StopInput);
         let dbClick2StopCtrlInput=createCheckbox(i18n("dbClick2StopCtrl"), rulesData.dbClick2StopCtrl, "h4", dbClick2StopInput);
         let dbClick2StopAltInput=createCheckbox(i18n("dbClick2StopAlt"), rulesData.dbClick2StopAlt, "h4", dbClick2StopInput);
@@ -3044,6 +3078,7 @@
         blacklistInput.style.width="100%";
         blacklistInput.style.height="500px";
         blacklistInput.style.display="none";
+        blacklistInput.spellcheck=false;
         blacklistInput.placeholder="http://*.xxx.com/*/y";
         blacklistInput.value=rulesData.blacklist?rulesData.blacklist.join("\n"):"";
         let blacklistBtn=document.createElement("button");
@@ -3094,6 +3129,7 @@
             rulesData.autoLoadNum=autoLoadNumInput.value||'';
             rulesData.preload=preloadInput.checked;
             rulesData.manualMode=manualModeInput.checked;
+            rulesData.arrowToScroll=arrowToScrollInput.checked;
             rulesData.pageElementCss=pageElementCssInput.value;
             rulesData.customCss=customCssInput.value;
             rulesData.upBtnImg=upBtnImgInput.value;
@@ -3338,6 +3374,9 @@
                 }
                 if(typeof(rulesData.manualMode)=="undefined"){
                     rulesData.manualMode=false;
+                }
+                if(typeof(rulesData.arrowToScroll)=="undefined"){
+                    rulesData.arrowToScroll=false;
                 }
                 if(rulesData.blacklist && rulesData.blacklist.length>0){
                     for(let b in rulesData.blacklist){
@@ -3816,15 +3855,16 @@
                 window.location.href = nextLink;
             }
         };
-        if(typeof ruleParser.curSiteRule.manualMode=='undefined' ? rulesData.manualMode : ruleParser.curSiteRule.manualMode){
-            document.addEventListener('keydown', e=>{
+        let manualMode = typeof ruleParser.curSiteRule.manualMode == 'undefined' ? rulesData.manualMode : ruleParser.curSiteRule.manualMode;
+        if (manualMode) {
+            document.addEventListener('keydown', e => {
                 if (document.activeElement &&
                     (document.activeElement.tagName == 'INPUT' ||
                      document.activeElement.tagName == 'TEXTAREA' ||
                      document.activeElement.contentEditable == 'true')) {
                     return;
                 }
-                if(e.keyCode==39){
+                if(e.keyCode == 39){
                     clickNext();
                 }
             });
@@ -3833,7 +3873,66 @@
             }, false);
             return;
         }
-        if(!ruleParser.curSiteRule.wheel){
+        if (rulesData.arrowToScroll) {
+            let getPageBar = () => {
+                let preBar = null, nextBar = null;
+                let pageBars = [].slice.call(document.querySelectorAll(".pagetual_pageBar"));
+                for (let i = 0; i < pageBars.length; i++) {
+                    let pageBar = pageBars[i];
+                    if (!pageBar || !document.body.contains(pageBar)) continue;
+                    let {
+                        top,
+                        right,
+                        bottom,
+                        left,
+                    } = pageBar.getBoundingClientRect();
+                    if (top > 500) {
+                        nextBar = pageBar;
+                        preBar = (i - 1 >= 0 ? pageBars[i - 1] : null);
+                        if (pageBar && document.body.contains(pageBar)) {
+                            let {
+                                top,
+                                right,
+                                bottom,
+                                left,
+                            } = pageBar.getBoundingClientRect();
+                            if (top < -500) {
+                                preBar = pageBar;
+                            } else preBar = (i - 2 >= 0 ? pageBars[i - 2] : null);
+                        }
+                        break;
+                    }
+                }
+                if (!nextBar) preBar = pageBars[pageBars.length - 2];
+                return {preBar: preBar, nextBar: nextBar};
+            };
+            document.addEventListener('keyup', e => {
+                if (document.activeElement &&
+                    (document.activeElement.tagName == 'INPUT' ||
+                     document.activeElement.tagName == 'TEXTAREA' ||
+                     document.activeElement.contentEditable == 'true')) {
+                    return;
+                }
+                if (e.keyCode == 39) {
+                    let nextPageBar=getPageBar().nextBar;
+                    if (nextPageBar) {
+                        scrollToPageBar(nextPageBar);
+                    } else {
+                        let scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+                        window.scrollTo({ top: scrollTop + (window.innerHeight || document.documentElement.clientHeight), behavior: 'smooth'});
+                    }
+                } else if (e.keyCode == 37) {
+                    let prePageBar = getPageBar().preBar;
+                    if (prePageBar) {
+                        scrollToPageBar(prePageBar);
+                    } else {
+                        let scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+                        window.scrollTo({ top: scrollTop - (window.innerHeight || document.documentElement.clientHeight), behavior: 'smooth'});
+                    }
+                }
+            });
+        }
+        if (!ruleParser.curSiteRule.wheel) {
             document.addEventListener('scroll', scrollHandler, true);
         }
         document.addEventListener('wheel', scrollHandler, true);
@@ -3985,9 +4084,9 @@
         nextBtn.addEventListener("click", e=>{
             e.stopPropagation();
             e.preventDefault();
-            let prePageBar=document.querySelector("#pagetual_pageBar"+(localPage+1));
-            if (prePageBar) {
-                scrollToPageBar(prePageBar);
+            let nextPageBar=document.querySelector("#pagetual_pageBar"+(localPage+1));
+            if (nextPageBar) {
+                scrollToPageBar(nextPageBar);
             } else {
                 let scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
                 window.scrollTo({ top: scrollTop + (window.innerHeight || document.documentElement.clientHeight), behavior: 'smooth'});
