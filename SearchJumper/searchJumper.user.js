@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.5.24
+// @version      1.6.5.25
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -701,7 +701,16 @@
                     pinBtn: '固定查找文字',
                     locBtn: '定位侧边栏',
                     filterSites: '筛选搜索引擎',
-                    searchInPage: '页内查找'
+                    searchInPage: '页内查找',
+                    removeBtn: '移除搜索词',
+                    saveRuleBtn: '保存当前站点的搜索词',
+                    wordContent: '搜索词内容',
+                    wordStyle: '搜索词样式',
+                    wordTitle: '搜索词注释',
+                    modify: '修改',
+                    cancel: '取消',
+                    modifyWord: '修改页内搜索词',
+                    addSearchEngine: '添加搜索引擎'
                 };
                 break;
             case "zh-TW":
@@ -743,7 +752,16 @@
                     pinBtn: '固定查找文字',
                     locBtn: '定位側邊欄',
                     filterSites: '篩選搜尋引擎',
-                    searchInPage: '頁內查找'
+                    searchInPage: '頁內查找',
+                    removeBtn: '移除搜索詞',
+                    saveRuleBtn: '保存當前站點的搜索詞',
+                    wordContent: '搜索詞內容',
+                    wordStyle: '搜索詞樣式',
+                    wordTitle: '搜索詞注釋',
+                    modify: '修改',
+                    cancel: '取消',
+                    modifyWord: '修改頁內搜索詞',
+                    addSearchEngine: '添加搜尋引擎'
                 };
                 break;
             default:
@@ -784,7 +802,16 @@
                     pinBtn: 'Pin search text',
                     locBtn: 'Sidebar to locate',
                     filterSites: 'Filter search engines',
-                    searchInPage: 'Find in page'
+                    searchInPage: 'Find in page',
+                    removeBtn: 'Remove search term',
+                    saveRuleBtn: 'Save the search term of the current site',
+                    wordContent: 'Search word content',
+                    wordStyle: 'Search word style',
+                    wordTitle: 'Search word annotation',
+                    modify: 'Modify',
+                    cancel: 'Cancel',
+                    modifyWord: 'Modify search word',
+                    addSearchEngine: 'Add search engine'
                 };
                 break;
         }
@@ -1626,7 +1653,7 @@
                      right: 0;
                      top: 0;
                      display: none;
-                     opacity: 0.5;
+                     opacity: 0.3;
                  }
                  #searchInPage>.lockWords .removeWord:hover {
                      opacity: 1;
@@ -1854,6 +1881,7 @@
                       <svg id="emptyBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("emptyBtn")}</title><path d="m159.45829,231.40004l-48.83334,0a36.625,34.1375 0 0 1 0,-68.275l805.75004,0a36.625,34.1375 0 0 1 0,68.275l-683.6667,0l0,603.09581a61.04167,56.89583 0 0 0 61.04167,56.89584l439.50002,0a61.04167,56.89583 0 0 0 61.04167,-56.89584l0,-500.68332a36.625,34.1375 0 0 1 73.25,0l0,500.68332c0,69.12844 -60.12604,125.17084 -134.29167,125.17084l-439.50002,0c-74.16563,0 -134.29167,-56.0424 -134.29167,-125.17084l0,-603.09581zm256.37501,-113.79167a36.625,34.1375 0 0 1 0,-68.275l195.33334,0a36.625,34.1375 0 0 1 0,68.275l-195.33334,0zm-36.625,307.23749a36.625,34.1375 0 0 1 73.25,0l0,273.09999a36.625,34.1375 0 0 1 -73.25,0l0,-273.09999zm195.33334,0a36.625,34.1375 0 0 1 73.25,0l0,273.09999a36.625,34.1375 0 0 1 -73.25,0l0,-273.09999z"/></svg>
                       <svg id="copyInPageBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("copyInPageBtn")}</title><path d="M706.5 188.4H190.2c-29.8 0-54 24.2-54 54v662.9c0 29.8 24.2 54 54 54h516.3c29.8 0 54-24.2 54-54V242.4c0-29.8-24.2-54-54-54z m-18 698.9H208.2V260.4h480.3v626.9zM313.7 512.2h275.2c19.9 0 36-16.1 36-36s-16.1-36-36-36H313.7c-19.9 0-36 16.1-36 36s16.1 36 36 36zM313.7 715.2h201.6c19.9 0 36-16.1 36-36s-16.1-36-36-36H313.7c-19.9 0-36 16.1-36 36s16.1 36 36 36zM837.2 64.7H302.9c-19.9 0-36 16.1-36 36s16.1 36 36 36h516.3v662.9c0 19.9 16.1 36 36 36s36-16.1 36-36V118.7c0-29.8-24.2-54-54-54z"></path></svg>
                       <svg id="recoverBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("recoverBtn")}</title><path d="M502.26 289.06c-0.02 16.95 13.26 30.94 30.18 31.8 123.47 8.79 236.97 70.94 310.89 170.21 73.92 99.28 100.91 225.84 73.93 346.65-41.65-181.74-195.38-316.12-381.05-333.08-8.89-0.6-17.63 2.55-24.09 8.7a31.798 31.798 0 0 0-9.86 23.64v85.15a32.343 32.343 0 0 1-50.67 26.41L114.21 413.02a32.341 32.341 0 0 1-14.46-26.95c0-10.84 5.43-20.96 14.46-26.95L451.6 124.68a32.358 32.358 0 0 1 33.28-2.03 32.355 32.355 0 0 1 17.39 28.44v137.97h-0.01z"></path></svg>
+                      <svg id="saveRuleBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("saveRuleBtn")}</title><path d="M579.7 291.4c18.8 0 34.1-15.3 34.1-34.1v-34.1c0-18.8-15.4-34.1-34.1-34.1-18.8 0-34.1 15.3-34.1 34.1v34.1c0 18.7 15.4 34.1 34.1 34.1zM944.7 216.3L808.2 79.9c-6.8-6.8-15.3-10.2-23.9-10.2H170.4c-56.3 0-102.3 46-102.3 102.3v682.1c0 56.3 46 102.3 102.3 102.3H852.5c56.3 0 102.3-46 102.3-102.3V240.2c0.1-8.5-3.3-17-10.1-23.9zM358 137.9h307v182.5c0 11.9-10.2 22.2-22.2 22.2H380.2c-11.9 0-22.2-10.2-22.2-22.2V137.9z m358.1 750.3H306.9V652.9c0-20.5 17.1-37.5 37.5-37.5h334.2c20.5 0 37.5 17 37.5 37.5v235.3z m170.6-34.1c0 18.8-15.3 34.1-34.1 34.1h-66.5V652.9c0-58-47.7-105.7-105.7-105.7h-336c-58 0-105.7 47.7-105.7 105.7v235.3h-68.2c-18.8 0-34.1-15.3-34.1-34.1V172c0-18.8 15.3-34.1 34.1-34.1h119.4v182.5c0 49.5 40.9 90.4 90.4 90.4h262.6c49.5 0 90.4-40.9 90.4-90.4V137.9h37.5l116 116v600.2z"></path></svg>
                       <svg id="pinBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("pinBtn")}</title><path d="m674.8822,92.83803a81.61801,81.04246 0 0 1 25.30158,17.09996l213.75757,212.46631a81.61801,81.04246 0 0 1 -24.70304,131.36982l-75.74151,33.30845l-142.09696,141.257l-11.26329,155.3854a81.61801,81.04246 0 0 1 -139.13151,51.46196l-137.98885,-137.15085l-235.14149,234.56388l-57.83996,-57.18896l235.27751,-234.69896l-142.7499,-141.85131a81.61801,81.04246 0 0 1 51.6642,-138.09635l160.95072,-11.94025l139.5668,-138.74469l32.78324,-75.09935a81.61801,81.04246 0 0 1 107.35489,-42.14208zm-32.45675,74.36997l-38.95901,89.22775l-171.94193,170.99958l-191.25821,14.1284l338.46989,336.3262l13.43977,-185.47917l174.33607,-173.32279l89.69819,-39.44067l-213.78477,-212.43929z"></path></svg>
                       <svg id="locBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("locBtn")}</title><path d="M357.6 832l-255.2 56c-20 4.8-39.2-10.4-39.2-31.2V569.6c0-15.2 10.4-28 24.8-31.2L243.2 504l53.6 53.6L139.2 592c-7.2 1.6-12.8 8-12.8 16v188c0 10.4 9.6 17.6 19.2 16l192.8-42.4 12.8-3.2 12.8 2.4 306.4 60.8 210.4-47.2c7.2-1.6 12.8-8 12.8-16V580c0-10.4-9.6-17.6-19.2-16L688 606.4l-12 2.4L760 524.8l160.8-36c20-4.8 39.2 10.4 39.2 31.2v286.4c0 15.2-10.4 28-24.8 31.2L672.8 896M512 128c-115.2 0-206.4 101.6-190.4 220 5.6 41.6 26.4 80 56 109.6l0.8 0.8L512 591.2l133.6-132.8 0.8-0.8c29.6-29.6 49.6-68 56-109.6C719.2 229.6 627.2 128 512 128m0-64c141.6 0 256 114.4 256 256 0 70.4-28 133.6-74.4 180L512 681.6 330.4 500C284.8 453.6 256 390.4 256 320 256 178.4 371.2 64 512 64z m64.8 193.6c0-35.2-28.8-64-64-64s-64 28.8-64 64 28.8 64 64 64 64-28 64-64z"></path></svg>
                     </span>
@@ -1872,6 +1900,7 @@
                 this.copyEleBtn = searchInputDiv.querySelector("#copyEleBtn");
                 this.editBtn = searchInputDiv.querySelector("#editBtn");
                 this.recoverBtn = searchInputDiv.querySelector("#recoverBtn");
+                this.saveRuleBtn = searchInputDiv.querySelector("#saveRuleBtn");
                 this.pinBtn = searchInputDiv.querySelector("#pinBtn");
                 this.locBtn = searchInputDiv.querySelector("#locBtn");
                 this.emptyBtn = searchInputDiv.querySelector("#emptyBtn");
@@ -1986,7 +2015,7 @@
                     if (!word) return;
                     let wordSpan = document.createElement("span");
                     wordSpan.innerHTML = word.content;
-                    wordSpan.title = word.title;
+                    wordSpan.title = JSON.parse('"' + word.title + '"');
                     let background = word.style.match(/background: *(#?\w+)/);
                     if (background) wordSpan.style.background = background[1];
                     let color = word.style.match(/color: *(#?\w+)/);
@@ -2000,7 +2029,8 @@
                     wordSpan.oncontextmenu = e => {
                         event.preventDefault();
                     };
-                    wordSpan.addEventListener('dblclick', e=>{
+                    wordSpan.addEventListener('dblclick', e => {
+                        this.showModifyWindow(word, wordSpan);
                         e.stopPropagation();
                         e.preventDefault();
                     }, true);
@@ -2019,8 +2049,9 @@
                         e.preventDefault();
                     });
                     removeBtn.className = "removeWord";
-                    removeBtn.innerHTML = createHTML(`<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>Remove</title><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64z m165.4 618.2l-66-0.3L512 563.4l-99.3 118.4-66.1 0.3c-4.4 0-8-3.5-8-8 0-1.9 0.7-3.7 1.9-5.2l130.1-155L340.5 359c-1.2-1.5-1.9-3.3-1.9-5.2 0-4.4 3.6-8 8-8l66.1 0.3L512 464.6l99.3-118.4 66-0.3c4.4 0 8 3.5 8 8 0 1.9-0.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"></path></svg>`);
+                    removeBtn.innerHTML = createHTML(`<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("removeBtn")}</title><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64z m165.4 618.2l-66-0.3L512 563.4l-99.3 118.4-66.1 0.3c-4.4 0-8-3.5-8-8 0-1.9 0.7-3.7 1.9-5.2l130.1-155L340.5 359c-1.2-1.5-1.9-3.3-1.9-5.2 0-4.4 3.6-8 8-8l66.1 0.3L512 464.6l99.3-118.4 66-0.3c4.4 0 8 3.5 8 8 0 1.9-0.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"></path></svg>`);
                     wordSpan.appendChild(removeBtn);
+
                     this.setHighlightSpan(wordSpan, -1, this.marks[word.content].length);
                     this.highlightSpans[word.content] = wordSpan;
 
@@ -2028,6 +2059,191 @@
                 });
                 if (this.searchInPageLockWords.scrollTop <= 0) this.searchInPageLockWords.scrollTop = this.searchInPageLockWords.scrollHeight;
                 this.searchJumperInPageInput.style.paddingLeft = this.searchInPageLockWords.clientWidth + 3 + "px";
+            }
+
+            showModifyWindow(word, wordSpan) {
+                let oriWord = word.oriWord;
+                if (!oriWord) return;
+                this.modifyWord = word;
+                this.modifySpan = wordSpan;
+                if (!this.modifyFrame) {
+                    this.modifyCssText = `
+                    .searchJumperModify-body {
+                        width: 300px;
+                        min-height: 200px;
+                        position: fixed;
+                        text-align: left;
+                        left: 50%;
+                        top: 50%;
+                        margin-top: -160px;
+                        margin-left: -150px;
+                        z-index: 100000;
+                        background-color: #ffffff;
+                        border: 1px solid #afb3b6;
+                        border-radius: 10px;
+                        opacity: 0.95;
+                        filter: alpha(opacity=95);
+                        box-shadow: 5px 5px 20px 0px #000;
+                        color: #6e7070;
+                    }
+                    .searchJumperModify-title {
+                        background: #458bd1;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        color: white;
+                        font-weight: bold;
+                        font-size: 18px;
+                        border-radius: 10px 10px 0 0;
+                    }
+                    .searchJumperModify-title>img {
+                        margin: 5px;
+                    }
+                    .searchJumperModify-input-title {
+                        font-size: 9pt;
+                        font-family: Helvetica, Arial, sans-serif;
+                        display: inline-block;
+                        background-color: white;
+                        position: relative;
+                        left: 20px;
+                        padding: 0px 4px;
+                        text-align: left;
+                        color: #646464;
+                    }
+                    .searchJumperModify-body>input,
+                    .searchJumperModify-body>textarea {
+                        resize: both;
+                        font-size: 11pt;
+                        font-weight: normal;
+                        border-radius: 4px;
+                        border: 1px solid rgba(0, 0, 0, 0.23);
+                        margin: 4px;
+                        font-family: inherit;
+                        background-color: #FFF;
+                        width: calc(100% - 17px);
+                        color: #4A4A4A;
+                        margin-top: -8px;
+                        padding: 4px;
+                        padding-top: 8px;
+                        box-sizing: content-box;
+                    }
+                    .searchJumperModify-buttons {
+                        text-align: center;
+                        margin-bottom: 5px;
+                    }
+                    .searchJumperModify-buttons>button {
+                        width: 32%;
+                        font-size: 16px;
+                        cursor: pointer;
+                        color: #363636;
+                    }
+                    .searchJumperModify-buttons>button:hover {
+                        color: black;
+                    }
+                    `;
+                    this.modifyCssEle = _GM_addStyle(this.modifyCssText);
+                    this.modifyFrame = document.createElement("div");
+                    this.modifyFrame.id = "searchJumperModifyWord";
+                    this.modifyFrame.innerHTML = createHTML(`
+                     <div class="searchJumperModify-body">
+                         <a href="${configPage}" class="searchJumperModify-title" target="_blank">
+                             <img width="32px" height="32px" src=${logoBase64}>${i18n("modifyWord")}
+                         </a>
+                         <div class="searchJumperModify-input-title">${i18n("wordContent")}</div>
+                         <input name="wordContent" type="text">
+                         <div class="searchJumperModify-input-title">${i18n("wordStyle")}</div>
+                         <input name="wordStyle" placeholder="#333333;color:red;" type="text">
+                         <div class="searchJumperModify-input-title">${i18n("wordTitle")}</div>
+                         <textarea name="wordTitle" type="text"></textarea>
+                         <div class="searchJumperModify-buttons">
+                             <button id="cancel" type="button">${i18n("cancel")}</button>
+                             <button id="modify" type="button">${i18n("modify")}</button>
+                         </div>
+                     </div>
+                    `);
+                    let cancelBtn = this.modifyFrame.querySelector("#cancel");
+                    cancelBtn.addEventListener("click", e => {
+                        if (this.modifyFrame.parentNode) {
+                            this.modifyFrame.parentNode.removeChild(this.modifyFrame);
+                        }
+                    });
+                    let modifyBtn = this.modifyFrame.querySelector("#modify");
+                    modifyBtn.addEventListener("click", e => {
+                        let newWord = wordContent.value;
+                        if (!newWord) return;
+                        let contentChange = newWord !== this.modifyWord.content;
+                        let style = wordStyle.value;
+                        if (style) {
+                            if (this.splitSep) style = style.replaceAll(this.splitSep, "");
+                            newWord += `$s{${style}}`;
+                        }
+                        let title = JSON.stringify(wordTitle.value).replace(/^"|"$/g, "");
+                        if (title) {
+                            if (this.splitSep) title = title.replaceAll(this.splitSep, "");
+                            newWord += `$t{${title}}`;
+                        }
+                        this.replaceWord(this.modifyWord, newWord, this.modifySpan, contentChange);
+                        if (this.modifyFrame.parentNode) {
+                            this.modifyFrame.parentNode.removeChild(this.modifyFrame);
+                        }
+                    });
+                }
+                let wordContent = this.modifyFrame.querySelector("[name='wordContent']"),
+                wordStyle = this.modifyFrame.querySelector("[name='wordStyle']"),
+                wordTitle = this.modifyFrame.querySelector("[name='wordTitle']");
+
+                let style = "";
+                let styleReg = /\$s{(.*?)}($|\$)/;
+                let styleMatch = oriWord.match(styleReg);
+                if (styleMatch) {
+                    style = styleMatch[1];
+                }
+
+                wordContent.value = word.content || "";
+                wordStyle.value = style || "";
+                try {
+                    wordTitle.value = word.title !== word.content ? JSON.parse('"' + word.title + '"') : "";
+                } catch (e) {
+                    debug(e);
+                }
+                if (!this.modifyCssEle || !this.modifyCssEle.parentNode) this.modifyCssEle = _GM_addStyle(this.modifyCssText);
+                document.body.appendChild(this.modifyFrame);
+            }
+
+            replaceWord(word, newWord, modifySpan, contentChange) {
+                if (contentChange) {
+                    if (modifySpan.parentNode) modifySpan.parentNode.removeChild(modifySpan);
+                    this.removeHighlightWord(word);
+                    this.searchJumperInPageInput.value = newWord;
+                    this.submitInPageWords();
+                } else {
+                    let title = "";
+                    let style = "";
+                    let titleReg = /\$t{(.*?)}($|\$)/;
+                    let titleMatch = newWord.match(titleReg);
+                    if (titleMatch) {
+                        title = titleMatch[1];
+                        title = JSON.parse('"' + title + '"');
+                    }
+                    word.title = title;
+                    modifySpan.title = title;
+                    let styleReg = /\$s{(.*?)}($|\$)/;
+                    let styleMatch = newWord.match(styleReg);
+                    if (styleMatch) {
+                        styleMatch = styleMatch[1].match(/(.*?);(.*)/);
+                        style = self.getHighlightStyle(this.curWordIndex, styleMatch[1], styleMatch[2]);
+                        word.style = style;
+                        modifySpan.style = style;
+                    }
+                    this.marks[word.content].forEach(mark => {
+                        if (mark) {
+                            mark.title = title;
+                            if (style) mark.style = style;
+                        }
+                    });
+                    this.lockWords = this.lockWords.replace(word.oriWord, newWord);
+                    word.oriWord = newWord;
+                }
             }
 
             removeHighlightWord(word) {
@@ -2279,7 +2495,7 @@
                             let index = curList.length;
                             spannode = document.createElement("mark");
                             spannode.className = "searchJumper";
-                            if (word.title) spannode.title = word.title;
+                            if (word.title) spannode.title = JSON.parse('"' + word.title + '"');
                             spannode.style.cssText = word.style;
                             spannode.addEventListener("click", e => {
                                 if (!e.altKey) return;
@@ -2566,7 +2782,7 @@
                 let bookmarkTypes = [];
                 this.checkSelHandler = e => {
                     if (!e.altKey) return;
-                    if (window.getSelection().toString()) {
+                    if (this.searchInPageTab.checked && window.getSelection().toString()) {
                         this.showSearchInput();
                     }
                 };
@@ -2643,6 +2859,14 @@
                         storage.setItem("globalInPageWords", this.lockWords);
                         this.pinBtn.classList.add("checked");
                     }
+                });
+                this.saveRuleBtn.addEventListener("click", e => {
+                    if (!this.lockWords) return;
+                    let inPageRule = searchData.prefConfig.inPageRule || {};
+                    inPageRule[location.href] = this.lockWords;
+                    searchData.prefConfig.inPageRule = inPageRule;
+                    storage.setItem("searchData", searchData);
+                    _GM_notification(i18n("save completed"));
                 });
                 this.emptyBtn.addEventListener("click", e => {
                     this.lockWords = "";
@@ -2748,36 +2972,13 @@
                 }
                 cacheImgManager();
 
-                var delay = searchData.prefConfig.autoDelay || 1000;
-                var hideHandler = () => {
-                    self.bar.classList.remove("search-jumper-isInPage");
-                    self.bar.classList.remove("search-jumper-isTargetImg");
-                    self.bar.classList.remove("search-jumper-isTargetAudio");
-                    self.bar.classList.remove("search-jumper-isTargetVideo");
-                    self.bar.classList.remove("search-jumper-isTargetLink");
-                    self.bar.classList.remove("search-jumper-isTargetPage");
-                    //self.recoveHistory();
-                    if (searchData.prefConfig.autoClose) {
-                        let openType = this.bar.querySelector('.search-jumper-type:not(.search-jumper-hide)>span');
-                        if (openType) {
-                            openType.onmousedown();
-                        }
-                    }
-                    if (!currentSite && searchData.prefConfig.autoHideAll) {
-                        self.bar.style.display = 'none';
-                    }
-                    this.hideTimeout = null;
-                };
                 this.bar.addEventListener('mouseenter', e => {
                     if (this.hideTimeout) {
                         clearTimeout(this.hideTimeout);
                     }
                 }, false);
                 this.bar.addEventListener('mouseleave', e => {
-                    this.hideTimeout = setTimeout(hideHandler, delay);
-                    if (this.preList) {
-                        this.preList.style.visibility = "hidden";
-                    }
+                    this.waitForHide();
                 }, false);
 
                 if (lastSign && lastSign !== 0) {
@@ -2909,6 +3110,38 @@
                 }
                 if (this.bar.style.display === "none" && !navEnable) {
                     this.removeBar();
+                }
+            }
+
+            waitForHide() {
+                let self = this;
+                var hideHandler = () => {
+                    self.bar.classList.remove("search-jumper-isInPage");
+                    self.bar.classList.remove("search-jumper-isTargetImg");
+                    self.bar.classList.remove("search-jumper-isTargetAudio");
+                    self.bar.classList.remove("search-jumper-isTargetVideo");
+                    self.bar.classList.remove("search-jumper-isTargetLink");
+                    self.bar.classList.remove("search-jumper-isTargetPage");
+                    self.bar.classList.remove("initShow");
+                    //self.recoveHistory();
+                    if (searchData.prefConfig.autoClose) {
+                        let openType = this.bar.querySelector('.search-jumper-type:not(.search-jumper-hide)>span');
+                        if (openType) {
+                            openType.onmousedown();
+                        }
+                    }
+                    if (!currentSite && searchData.prefConfig.autoHideAll) {
+                        self.bar.style.display = 'none';
+                    }
+                    this.hideTimeout = null;
+                };
+                if (this.hideTimeout) {
+                    clearTimeout(this.hideTimeout);
+                }
+
+                this.hideTimeout = setTimeout(hideHandler, searchData.prefConfig.autoDelay || 1000);
+                if (this.preList) {
+                    this.preList.style.visibility = "hidden";
                 }
             }
 
@@ -3222,16 +3455,19 @@
                 this.historyInserted = false;
                 let self = this;
                 this.historySiteBtns.slice(0, searchData.prefConfig.historyLength).forEach(btn => {
-                    if (!btn.parentNode.classList.contains("search-jumper-hide")) {
-                        btn.parentNode.style.width = "";
-                        btn.parentNode.style.height = "";
-                    }
+                    let curParent = btn.parentNode;
                     for (let i = 0; i < searchTypes.length; i++) {
                         let typeBtn = searchTypes[i];
                         if (typeBtn.dataset.type == btn.dataset.type) {
                             typeBtn.insertBefore(btn, typeBtn.children[1]);
                             break;
                         }
+                    }
+                    if (!curParent.classList.contains("search-jumper-hide")) {
+                        setTimeout(() => {
+                            curParent.style.width = curParent.scrollWidth + "px";
+                            curParent.style.height = curParent.scrollHeight + "px";
+                        }, 0);
                     }
                 });
             }
@@ -4854,7 +5090,10 @@
             geneSelector(ele) {
                 let selector=ele.tagName.toLowerCase();
                 if(ele.tagName!="HTML" && ele.tagName!="BODY"){
-                    if(ele.className) selector += [].map.call(ele.classList,d=>/^[\w-_]+$/.test(d)?('.'+d):"").join('');
+                    if(ele.className) {
+                        let classLen = ele.classList.length;
+                        selector += [].map.call(ele.classList, d => /^[\w]+$/.test(d) || (classLen < 3 && /^[\w\-_]+$/.test(d)) ? ('.' + d) : "").join('');
+                    }
                     let parent = ele.parentElement;
                     if(parent){
                         selector = this.geneSelector(parent) + ' > ' + selector;
@@ -5508,17 +5747,27 @@
                 let clientRect;
                 if (searchData.prefConfig.leftMouse) {
                     document.addEventListener('selectionchange', (e) => {
-                        const selection = window.getSelection();
-                        const range = selection.getRangeAt(0);
-                        clientRect = range.getBoundingClientRect();
+                        if (window.getSelection().toString()) {
+                            const selection = window.getSelection();
+                            const range = selection.getRangeAt(0);
+                            clientRect = range.getBoundingClientRect();
+                        } else {
+                            clientRect = null;
+                        }
                     });
                 }
+                let waitForMouse = false;
                 document.addEventListener('mousedown', e => {
-                    if (e.target.classList.contains('search-jumper-btn') ||
+                    if (waitForMouse ||
+                        e.target.classList.contains('search-jumper-btn') ||
                         e.target.tagName === 'CANVAS' ||
                         searchBar.bar.contains(e.target)) {
                         return;
                     }
+                    waitForMouse = true;
+                    setTimeout(() => {
+                        waitForMouse = false;
+                    }, 500);
                     shown = false;
                     targetElement = e.target;
                     if ((searchData.prefConfig.altKey && !e.altKey) ||
@@ -5554,6 +5803,8 @@
                             e.preventDefault();
                         }else if (matchKey || (searchData.prefConfig.selectToShow && getSelectStr())) {
                             searchBar.showInPage();
+                        } else {
+                            searchBar.waitForHide();
                         }
                         clearTimeout(showToolbarTimer);
                         clearTimeout(mouseMoveTimer);
@@ -6122,11 +6373,12 @@
             if (!dragCssEle || !dragCssEle.parentNode) dragCssEle = _GM_addStyle(dragCssText);
             document.addEventListener('dragend', dragEndHandler);
             document.addEventListener('dragenter', dragenterHandler);
-            let firstType = searchBar.autoGetFirstType();
             searchBar.recoveHistory();
+            let firstType = searchBar.autoGetFirstType();
+            let siteBtns = firstType.querySelectorAll("a.search-jumper-btn:not(.notmatch)");
             dragSiteCurSpans.forEach((span, i) => {
                 span.innerHTML = createHTML();
-                let targetSite = firstType.querySelectorAll("a.search-jumper-btn:not(.notmatch)")[i];
+                let targetSite = siteBtns[i];
                 if (!targetSite) return;
                 span.parentNode.dataset.name = targetSite.dataset.name;
                 let word = document.createElement("p");
@@ -6280,12 +6532,12 @@
                     .searchJumperFrame-body>.iconsCon>img {
                         margin: 5px;
                         cursor: pointer;
-                        max-width: 90%;
+                        max-width: 50%;
                         border: 2px solid #ffffff;
+                        box-sizing: border-box;
                     }
                     .searchJumperFrame-body>.iconsCon>img:hover {
                         border: 2px solid #4e91d3;
-                        box-sizing: border-box;
                     }
                 `;
                 addFrameCssEle = _GM_addStyle(addFrameCssText);
@@ -6293,7 +6545,7 @@
                 addFrame.innerHTML = createHTML(`
                 <div class="searchJumperFrame-body">
                     <a href="${configPage}" class="searchJumperFrame-title" target="_blank">
-                        <img width="32px" height="32px" src=${logoBase64}>${i18n("scriptName")}
+                        <img width="32px" height="32px" src=${logoBase64}>${i18n("addSearchEngine")}
                     </a>
                     <div class="searchJumperFrame-input-title">${i18n("siteName")}</div>
                     <input name="siteName" type="text">
@@ -6398,6 +6650,9 @@
                         iconInput.value = iconSrc;
                         iconShow.src = iconSrc;
                     });
+                    curIcon.onload = e => {
+                        curIcon.title = curIcon.naturalWidth + " x " + curIcon.naturalHeight + "\n" + iconSrc.replace(/.*\/([^\/]+)/, "$1");
+                    };
                     iconsCon.appendChild(curIcon);
                 });
             } else {
