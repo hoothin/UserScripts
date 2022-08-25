@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.5.26
+// @version      1.6.5.27
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -1127,6 +1127,7 @@
                  .search-jumper-bottom>.search-jumper-searchBar {
                      position: relative;
                      margin-top: 0px;
+                     vertical-align: bottom;
                      -webkit-transform:scale(.9);
                      -moz-transform:scale(.9);
                      transform:scale(.9);
@@ -2635,7 +2636,7 @@
                 if (!value) return;
                 if (!this.lockWords && value.indexOf("$c") !== 0 && value.indexOf("$o") !== 0 && value.indexOf(" ") !== -1) {
                     this.splitSep = "◎";
-                    value = "$c" + this.splitSep + value.replaceAll(this.splitSep, "");
+                    value = "$c" + this.splitSep + value;
                 }
                 this.searchJumperInPageInput.value = value;
                 this.submitInPageWords();
@@ -3812,18 +3813,20 @@
                     }
                     ele.style.width = "";
                     ele.style.height = "";
+                    let scrollSize = Math.max(ele.scrollWidth, ele.scrollHeight) + "px";
+                    let leftRight = self.bar.parentNode.classList.contains("search-jumper-left") ||
+                        self.bar.parentNode.classList.contains("search-jumper-right");
                     if (self.preList) {
                         self.preList.style.visibility = "hidden";
                     }
                     if (ele.classList.contains("search-jumper-hide")) {
                         self.recoveHistory();
                         ele.classList.remove("search-jumper-hide");
-                        if (self.bar.parentNode.classList.contains("search-jumper-left") ||
-                            self.bar.parentNode.classList.contains("search-jumper-right")) {
-                            ele.style.height = ele.dataset.width;
+                        if (leftRight) {
+                            ele.style.height = scrollSize;
                             ele.style.width = "";
                         } else {
-                            ele.style.width = ele.dataset.width;
+                            ele.style.width = scrollSize;
                             ele.style.height = "";
                         }
                         setTimeout(() => {
@@ -3859,8 +3862,7 @@
 
                     } else {
                         ele.classList.add("search-jumper-hide");
-                        if (self.bar.parentNode.classList.contains("search-jumper-left") ||
-                            self.bar.parentNode.classList.contains("search-jumper-right")) {
+                        if (leftRight) {
                             ele.style.height = baseSize + "px";
                         } else {
                             ele.style.width = baseSize + "px";
@@ -3937,11 +3939,8 @@
                     await sleep(1);
                 }
                 let siteList = await self.createList(siteEles, ele.dataset.title);
-                siteList.style.display = "none";
-                ele.appendChild(siteList);
                 if (isCurrent) {
                     self.bar.insertBefore(ele, self.bar.children[0]);
-                    ele.dataset.width = ele.scrollWidth + "px";
                     ele.classList.remove("search-jumper-hide");
                     siteEles.forEach(se => {
                         let si = se.querySelector("img");
@@ -3951,10 +3950,12 @@
                     });
                 } else {
                     self.bar.insertBefore(ele, self.bar.children[self.bar.children.length - 1]);
-                    ele.dataset.width = ele.scrollWidth + "px";
                 }
+
                 ele.style.width = ele.scrollHeight + "px";
                 ele.style.height = ele.scrollHeight + "px";
+                siteList.style.display = "none";
+                ele.appendChild(siteList);
                 if (inPage && selectImg && selectAudio && selectVideo && selectLink && selectPage) {
                     ele.classList.add("search-jumper-targetAll");
                 } else {
@@ -4699,16 +4700,22 @@
                         this.bar.style.cssText = "";
                         this.bar.parentNode.classList.add("search-jumper-scroll");
                     }
-                    let firstType = this.bar.querySelector(".search-jumper-type:not(.search-jumper-hide)");
-                    if (firstType) {
-                        setTimeout(() => {
-                            firstType.scrollIntoView({behavior: "smooth"});
-                        }, 0);
-                    }
                 } else {
                     if (this.bar.parentNode.classList.contains("search-jumper-scroll")) {
                         this.bar.style.cssText = "";
                         this.bar.parentNode.classList.remove("search-jumper-scroll");
+                    }
+                }
+                let firstType = this.bar.querySelector(".search-jumper-type:not(.search-jumper-hide)");
+                if (firstType) {
+                    setTimeout(() => {
+                        firstType.scrollIntoView({behavior: "smooth"});
+                    }, 0);
+                    if (firstType.style.width === "0px") {
+                        firstType.style.width = "auto";
+                    }
+                    if (firstType.style.height === "0px") {
+                        firstType.style.height = "auto";
                     }
                 }
             }
@@ -4833,33 +4840,34 @@
                     self.bar.style.cssText = "";
                     self.bar.parentNode.style.cssText = "";
                     self.bar.parentNode.className = "search-jumper-searchBarCon " + className;
+                    let baseSize = Math.min(self.bar.scrollWidth, self.bar.scrollHeight);
+                    let leftRight = self.bar.parentNode.classList.contains("search-jumper-left") ||
+                        self.bar.parentNode.classList.contains("search-jumper-right");
                     searchTypes.forEach(ele => {
                         ele.style.width = "";
                         ele.style.height = "";
-                        if (self.bar.parentNode.classList.contains("search-jumper-left") ||
-                            self.bar.parentNode.classList.contains("search-jumper-right")) {
-                            ele.style.height = ele.dataset.width;
+                        let scrollSize = Math.max(ele.scrollWidth, ele.scrollHeight) + "px";
+                        if (leftRight) {
+                            ele.style.height = scrollSize;
                         } else {
-                            ele.style.width = ele.dataset.width;
+                            ele.style.width = scrollSize;
                         }
                     });
-                    let baseSize = Math.min(self.bar.scrollWidth, self.bar.scrollHeight);
                     searchTypes.forEach(ele => {
                         ele.style.width = "";
                         ele.style.height = "";
+                        let scrollSize = Math.max(ele.scrollWidth, ele.scrollHeight) + "px";
                         if (ele.classList.contains("search-jumper-hide")) {
-                            if (self.bar.parentNode.classList.contains("search-jumper-left") ||
-                                self.bar.parentNode.classList.contains("search-jumper-right")) {
+                            if (leftRight) {
                                 ele.style.height = baseSize + "px";
                             } else {
                                 ele.style.width = baseSize + "px";
                             }
                         } else {
-                            if (self.bar.parentNode.classList.contains("search-jumper-left") ||
-                                self.bar.parentNode.classList.contains("search-jumper-right")) {
-                                ele.style.height = ele.dataset.width;
+                            if (leftRight) {
+                                ele.style.height = scrollSize;
                             } else {
-                                ele.style.width = ele.dataset.width;
+                                ele.style.width = scrollSize;
                             }
                         }
                     });
@@ -4953,17 +4961,20 @@
                     self.bar.parentNode.style.justifyContent = "center";
                     self.bar.parentNode.style.alignItems = "flex-end";
                 }
+                searchData.prefConfig.position.x = relX;
+                searchData.prefConfig.position.y = relY;
+                searchData.prefConfig.offset.x = posX;
+                searchData.prefConfig.offset.y = posY;
                 setTimeout(() => {
                     if (self.bar.scrollWidth > viewWidth || self.bar.scrollHeight > viewHeight) {
                         self.bar.parentNode.classList.add("search-jumper-scroll");
                     } else {
                         self.bar.parentNode.classList.remove("search-jumper-scroll");
                     }
-                }, 100);
-                searchData.prefConfig.position.x = relX;
-                searchData.prefConfig.position.y = relY;
-                searchData.prefConfig.offset.x = posX;
-                searchData.prefConfig.offset.y = posY;
+                }, 251);
+                setTimeout(() => {
+                    self.checkScroll();
+                }, 251);
             }
         }
 
@@ -6539,6 +6550,8 @@
                         position: relative;
                         right: 5px;
                         opacity: 0.8;
+                        background: rgb(0 0 0 / 50%);
+                        border-radius: 5px;
                     }
                     .searchJumperFrame-body>.iconsCon {
                         max-height: 150px;
