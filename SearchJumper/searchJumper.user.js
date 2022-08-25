@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.5.25.2
+// @version      1.6.5.26
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -1632,7 +1632,7 @@
                      overflow: hidden;
                  }
                  #searchInPage>.lockWords:hover {
-                     overflow: auto;
+                     overflow-y: auto;
                      height: auto;
                      max-height: 90vh;
                  }
@@ -1647,6 +1647,8 @@
                      margin: 2px;
                      display: flex;
                      align-items: center;
+                     white-space: nowrap;
+                     max-width: 100%;
                  }
                  #searchInPage>.lockWords .removeWord {
                      position: absolute;
@@ -1929,7 +1931,10 @@
                     }
                     if (this.lockWords && this.lockWords.indexOf(words) !== -1) return;
                     this.searchJumperInPageInput.value = words || globalInPageWords;
-                    if (!this.lockWords) this.submitInPageWords();
+                    if (!this.lockWords) {
+                        this.submitIgnoreSpace(this.searchJumperInPageInput.value);
+                        this.submitInPageWords();
+                    }
                 }
             }
 
@@ -2345,7 +2350,7 @@
                 let numEle = span.querySelector("em");
                 if (!numEle) {
                     numEle = document.createElement("em");
-                    span.appendChild(numEle);
+                    span.insertBefore(numEle, span.firstChild);
                 }
                 index++;
                 numEle.innerHTML = createHTML("[" + index + "/" + len + "]");
@@ -2453,6 +2458,7 @@
             highlight(words, ele, root) {
                 ele = ele || document.body;
                 let preEles = [];
+                let searchingPre = false;
                 let self = this;
                 if (words === "") {
                     Object.values(this.marks).forEach(markList => {
@@ -2554,7 +2560,7 @@
                                node.tagName != "SCRIPT" &&
                                node.tagName != "STYLE" &&
                                node.tagName != "MARK") {
-                        if (node.tagName === "PRE" || node.tagName === "CODE") {
+                        if (!searchingPre && (node.tagName === "PRE" || node.tagName === "CODE")) {
                             preEles.push(node);
                         } else {
                             for (var child = 0; child < node.childNodes.length; ++child) {
@@ -2571,6 +2577,7 @@
                     searchWithinNode(ele, w);
                 });
                 setTimeout(() => {
+                    searchingPre = true;
                     words.forEach(w => {
                         preEles.forEach(e => {
                             searchWithinNode(e, w);
@@ -2624,6 +2631,16 @@
                 if (navMark) this.navMarks.removeChild(navMark);
             }
 
+            submitIgnoreSpace(value) {
+                if (!value) return;
+                if (!this.lockWords && value.indexOf("$c") !== 0 && value.indexOf("$o") !== 0 && value.indexOf(" ") !== -1) {
+                    this.splitSep = "◎";
+                    value = "$c" + this.splitSep + value.replaceAll(this.splitSep, "");
+                }
+                this.searchJumperInPageInput.value = value;
+                this.submitInPageWords();
+            }
+
             showSearchInput() {
                 let selectStr = getSelectStr();
                 this.recoveHistory();
@@ -2643,8 +2660,7 @@
                 } else if (this.searchInPageTab.checked) {
                     this.searchJumperInPageInput.focus();
                     if (!this.searchJumperInPageInput.value) {
-                        this.searchJumperInPageInput.value = selectStr;
-                        this.submitInPageWords();
+                        this.submitIgnoreSpace(selectStr);
                     }
                 }
                 searchTypes.forEach(type => {
@@ -3443,10 +3459,8 @@
                         typeEle.appendChild(btn);
                     }
                 });
-                setTimeout(() => {
-                    typeEle.style.width = typeEle.scrollWidth + "px";
-                    typeEle.style.height = typeEle.scrollHeight + "px";
-                }, 0);
+                typeEle.style.width = typeEle.scrollWidth + "px";
+                typeEle.style.height = typeEle.scrollHeight + "px";
             }
 
             recoveHistory() {
@@ -3466,10 +3480,8 @@
                     if (!curParent.classList.contains("search-jumper-hide")) {
                         curParent.style.width = "auto";
                         curParent.style.height = "auto";
-                        setTimeout(() => {
-                            curParent.style.width = curParent.scrollWidth + "px";
-                            curParent.style.height = curParent.scrollHeight + "px";
-                        }, 0);
+                        curParent.style.width = curParent.scrollWidth + "px";
+                        curParent.style.height = curParent.scrollHeight + "px";
                     }
                 });
             }
@@ -3798,13 +3810,13 @@
                             return false;
                         }
                     }
-                    self.recoveHistory();
                     ele.style.width = "";
                     ele.style.height = "";
                     if (self.preList) {
                         self.preList.style.visibility = "hidden";
                     }
                     if (ele.classList.contains("search-jumper-hide")) {
+                        self.recoveHistory();
                         ele.classList.remove("search-jumper-hide");
                         if (self.bar.parentNode.classList.contains("search-jumper-left") ||
                             self.bar.parentNode.classList.contains("search-jumper-right")) {
