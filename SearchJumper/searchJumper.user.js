@@ -5835,8 +5835,8 @@
                          searchData.prefConfig.metaKey)) {
                         searchBar.showInPage();
                         shown = true;
-                        e.stopPropagation();
-                        e.preventDefault();
+                        //e.stopPropagation();
+                        //e.preventDefault();
                         document.addEventListener('mouseup', mouseUpHandler, true);
                         document.addEventListener('click', clickHandler, true);
                         return false;
