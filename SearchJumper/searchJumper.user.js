@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.5.27
+// @version      1.6.5.28
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -1232,8 +1232,8 @@
                      display: none;
                  }
                  #search-jumper.in-input .search-jumper-type:not(.search-jumper-hide) {
-                     width: auto!important;
-                     height: auto!important;
+                     /*width: auto!important;
+                     height: auto!important;*/
                  }
                  #search-jumper.in-input .sitelistCon>div:not(.input-hide)>a {
                      display: flex!important;
@@ -1484,6 +1484,17 @@
                      outline: none;
                      box-sizing: border-box;
                      cursor: text;
+                 }
+                 #searchJumperInput,
+                 #searchJumperInputKeyWords {
+                     width: calc(50% - 11px);
+                     float: left;
+                 }
+                 #searchJumperInput {
+                     margin: 0 1px 0 10px;
+                 }
+                 #searchJumperInputKeyWords {
+                     margin: 0 10px 0 1px;
                  }
                  .search-jumper-input * {
                      box-sizing: border-box;
@@ -1868,6 +1879,7 @@
                 <div class="content-container">
                   <div class="inputGroup" id="filterSites">
                     <input spellcheck="false" id="searchJumperInput" placeholder="${i18n("inputPlaceholder")}">
+                    <input spellcheck="false" id="searchJumperInputKeyWords" placeholder="${i18n("inputKeywords")}">
                     <span class="search-jumper-lock-input"></span>
                     <span class="svgBtns">
                       <svg id="copyEleBtn" style="display:none;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("copyEleBtn")}</title><path d="M706.5 188.4H190.2c-29.8 0-54 24.2-54 54v662.9c0 29.8 24.2 54 54 54h516.3c29.8 0 54-24.2 54-54V242.4c0-29.8-24.2-54-54-54z m-18 698.9H208.2V260.4h480.3v626.9zM313.7 512.2h275.2c19.9 0 36-16.1 36-36s-16.1-36-36-36H313.7c-19.9 0-36 16.1-36 36s16.1 36 36 36zM313.7 715.2h201.6c19.9 0 36-16.1 36-36s-16.1-36-36-36H313.7c-19.9 0-36 16.1-36 36s16.1 36 36 36zM837.2 64.7H302.9c-19.9 0-36 16.1-36 36s16.1 36 36 36h516.3v662.9c0 19.9 16.1 36 36 36s36-16.1 36-36V118.7c0-29.8-24.2-54-54-54z"></path></svg>
@@ -1895,6 +1907,7 @@
                 searchBarCon.appendChild(searchInputDiv);
                 this.searchInputDiv = searchInputDiv;
                 this.searchInput = searchInputDiv.querySelector("#searchJumperInput");
+                this.searchJumperInputKeyWords = searchInputDiv.querySelector("#searchJumperInputKeyWords");
                 this.searchLockInput = searchInputDiv.querySelector(".search-jumper-lock-input");
                 this.searchJumperInPageInput = searchInputDiv.querySelector("#searchJumperInPageInput");
                 this.pickerBtn = searchInputDiv.querySelector("#pickerBtn");
@@ -1924,7 +1937,7 @@
 
             initInPageWords() {
                 if (this.searchInPageTab.checked && !this.searchJumperInPageInput.value) {
-                    let words = this.searchInput.value.replace(/^\*/, "") || getKeywords();
+                    let words = this.searchJumperInputKeyWords.value.replace(/^\*/, "") || getKeywords();
                     if (words) {
                         try {
                             words = decodeURIComponent(words);
@@ -2655,8 +2668,9 @@
                         Picker.getInstance().toggle();
                     }
                     if (this.bar.classList.contains("search-jumper-isInPage")) {
-                        this.lockSearchInput("*");
-                        this.searchInput.value = selectStr;
+                        //this.lockSearchInput("*");
+                        this.searchJumperInputKeyWords.value = selectStr;
+                        this.searchJumperInputKeyWords.focus();
                     }
                 } else if (this.searchInPageTab.checked) {
                     this.searchJumperInPageInput.focus();
@@ -2685,10 +2699,8 @@
                 this.inInput = false;
                 this.bar.parentNode.classList.remove("in-input");
                 this.bar.parentNode.classList.remove("lock-input");
-                this.searchLockInput.innerText = "";
-                this.lockSiteKeywords = false;
-                this.searchInput.style.paddingLeft = "";
-                this.searchInput.placeholder = i18n("inputPlaceholder");
+                this.searchInput.value = "";
+                this.searchJumperInputKeyWords.value = "";
                 this.pickerBtn.classList.remove("checked");
                 Picker.getInstance().close();
                 document.removeEventListener("mouseup", this.checkSelHandler);
@@ -3003,52 +3015,60 @@
                 }
                 lastSign = 0;
                 let inputTimer;
-                this.lockSiteKeywords = false;
                 this.inInput = false;
                 this.searchInput.addEventListener("input", e => {
-                    if (!self.lockSiteKeywords) {
-                        if (e.data && self.searchInput.value && self.searchInput.value !== "*" && self.searchInput.value.length === 1) {
-                            self.searchInput.value = "*" + self.searchInput.value;
-                        }
-                        clearTimeout(inputTimer);
-                        inputTimer = setTimeout(() => self.searchSiteBtns(), 500);
+                    if (e.data && self.searchInput.value && self.searchInput.value !== "*" && self.searchInput.value.length === 1) {
+                        self.searchInput.value = "*" + self.searchInput.value;
                     }
+                    clearTimeout(inputTimer);
+                    inputTimer = setTimeout(() => self.searchSiteBtns(), 500);
                 });
                 this.searchInput.addEventListener("keydown", e => {
                     switch(e.keyCode) {
                         case 9:
-                            e.stopPropagation();
-                            e.preventDefault();
-                            this.searchInPageTab.checked = true;
-                            this.searchJumperInPageInput.focus();
-                            this.initInPageWords();
-                            break;
-                        case 13://回车
-                            if (self.lockSiteKeywords) {
-                                let siteEle = self.bar.querySelector("a.search-jumper-btn:not(.input-hide)");
-                                if (siteEle) {
-                                    self.openSiteBtn(siteEle);
-                                }
-                            } else if (self.searchInput.value) {
-                                clearTimeout(inputTimer);
-                                self.searchSiteBtns();
-                                self.lockSearchInput(self.searchInput.value);
-                                if (e.ctrlKey) {
-                                    let siteEle = self.bar.querySelector("a.search-jumper-btn:not(.input-hide)");
-                                    if (siteEle) {
-                                        self.openSiteBtn(siteEle);
-                                    }
-                                }
+                            if (e.shiftKey) {
+                                e.stopPropagation();
+                                e.preventDefault();
+                                this.searchInPageTab.checked = true;
+                                this.searchJumperInPageInput.focus();
+                                this.initInPageWords();
                             }
                             break;
+                        case 13://回车
+                            this.searchJumperInputKeyWords.focus();
+                            break;
                         case 8://退格
-                            if (self.lockSiteKeywords && !self.searchInput.value) {
+                            /*if (self.lockSiteKeywords && !self.searchInput.value) {
                                 self.searchInput.value = self.searchLockInput.innerText;
                                 self.searchLockInput.innerText = "";
                                 self.lockSiteKeywords = false;
                                 self.bar.parentNode.classList.remove("lock-input");
                                 self.searchInput.style.paddingLeft = "";
                                 self.searchInput.placeholder = i18n("inputPlaceholder");
+                            }*/
+                            break;
+                        default:
+                            break;
+                    }
+                });
+                this.searchJumperInputKeyWords.addEventListener("keydown", e => {
+                    switch(e.keyCode) {
+                        case 9:
+                            if (!e.shiftKey) {
+                                e.stopPropagation();
+                                e.preventDefault();
+                                this.searchInPageTab.checked = true;
+                                this.searchJumperInPageInput.focus();
+                                this.initInPageWords();
+                            }
+                            break;
+                        case 13://回车
+                            if (this.searchJumperInputKeyWords.value) {
+                                clearTimeout(inputTimer);
+                                let siteEle = self.bar.querySelector("a.search-jumper-btn:not(.input-hide)");
+                                if (siteEle) {
+                                    self.openSiteBtn(siteEle);
+                                }
                             }
                             break;
                         default:
@@ -3105,7 +3125,7 @@
                 };
                 this.rightSizeChange.addEventListener("mousedown", e => {
                     initX = e.clientX;
-                    initWidth = this.searchInput.clientWidth;
+                    initWidth = this.searchInput.clientWidth * 2 + 2;
                     document.addEventListener("mousemove", sizeChangeMouseMove);
                     document.addEventListener("mouseup", sizeChangeMouseUp);
                 });
@@ -4303,8 +4323,8 @@
                 let getUrl = () => {
                     self.customInput = false;
                     let keywords;
-                    if (self.lockSiteKeywords && self.searchInput.value) {
-                        keywords = self.searchInput.value;
+                    if (self.searchJumperInputKeyWords.value) {
+                        keywords = self.searchJumperInputKeyWords.value;
                     } else {
                         keywords = getKeywords();
                     }
@@ -5682,6 +5702,10 @@
             logoBtn.addEventListener('touchstart', e => {
                 grabState = 1;
                 document.addEventListener('touchend', mouseUpHandler, false);
+                setTimeout(() => {
+                    document.removeEventListener('mouseup', mouseUpHandler, false);
+                    document.removeEventListener('mousemove', mouseMoveHandler, false);
+                }, 1);
                 setTimeout(() => {
                     if (grabState === 1) {
                         document.addEventListener('touchmove', mouseMoveHandler, false);
