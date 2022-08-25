@@ -1675,7 +1675,7 @@
                  }
                  #searchInPage>.lockWords>span>em {
                      font-size: 12px;
-                     margin-left: 5px;
+                     margin-right: 5px;
                      color: unset;
                  }
                  .searchJumperNavBar {
