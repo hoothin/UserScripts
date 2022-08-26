@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.5.28
+// @version      1.6.5.29
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -705,6 +705,8 @@
                     removeBtn: '移除搜索词',
                     saveRuleBtn: '保存当前站点的搜索词',
                     wordContent: '搜索词内容',
+                    wordHide: '隐藏父级元素',
+                    wordHideTips: '元素深度，0为当前父级',
                     wordStyle: '搜索词样式',
                     wordTitle: '搜索词注释',
                     modify: '修改',
@@ -756,6 +758,8 @@
                     removeBtn: '移除搜索詞',
                     saveRuleBtn: '保存當前站點的搜索詞',
                     wordContent: '搜索詞內容',
+                    wordHide: '隱藏父級元素',
+                    wordHideTips: '元素深度，0為當前父級',
                     wordStyle: '搜索詞樣式',
                     wordTitle: '搜索詞注釋',
                     modify: '修改',
@@ -806,6 +810,8 @@
                     removeBtn: 'Remove search term',
                     saveRuleBtn: 'Save the search term of the current site',
                     wordContent: 'Search word content',
+                    wordHide: 'Hide parent element',
+                    wordHideTips: 'Element depth, 0 means the current',
                     wordStyle: 'Search word style',
                     wordTitle: 'Search word annotation',
                     modify: 'Modify',
@@ -1793,6 +1799,9 @@
                      cursor: e-resize;
                      right: 0;
                  }
+                 .searchJumper-hide {
+                     display: none!important;
+                 }
                  `;
                 if (searchData.prefConfig.cssText) cssText += searchData.prefConfig.cssText;
                 mainStyleEle = _GM_addStyle(cssText);
@@ -1975,6 +1984,7 @@
                         if ((searchData.prefConfig.ignoreWords || []).includes(word)) return;
                         let title = "";
                         let style = "";
+                        let hideParent;
                         let isRe = false;
                         let reCase = "";
                         let titleReg = /\$t{(.*?)}($|\$)/;
@@ -1982,6 +1992,12 @@
                         if (titleMatch) {
                             title = titleMatch[1];
                             word = word.replace(titleReg, "$2");
+                        }
+                        let hideParentReg = /\$p{(.*?)}($|\$)/;
+                        let hideParentMatch = word.match(hideParentReg);
+                        if (hideParentMatch) {
+                            hideParent = parseInt(hideParentMatch[1]) || 0;
+                            word = word.replace(hideParentReg, "$2");
                         }
                         let styleReg = /\$s{(.*?)}($|\$)/;
                         let styleMatch = word.match(styleReg);
@@ -1998,7 +2014,7 @@
                             word = reMatch[1];
                             reCase = reMatch[2];
                         }
-                        result.push({content: word, isRe: isRe, reCase: reCase, title: title || word, style: style, oriWord: oriWord});
+                        result.push({content: word, isRe: isRe, reCase: reCase, title: title || word, style: style, oriWord: oriWord, hideParent: hideParent});
                         self.curWordIndex++;
                     });
                 } else {
@@ -2170,6 +2186,8 @@
                          </a>
                          <div class="searchJumperModify-input-title">${i18n("wordContent")}</div>
                          <input name="wordContent" type="text">
+                         <div class="searchJumperModify-input-title">${i18n("wordHide")}</div>
+                         <input name="wordHide" min="0" placeholder="${i18n("wordHideTips")}" type="number">
                          <div class="searchJumperModify-input-title">${i18n("wordStyle")}</div>
                          <input name="wordStyle" placeholder="#333333;color:red;" type="text">
                          <div class="searchJumperModify-input-title">${i18n("wordTitle")}</div>
@@ -2191,6 +2209,12 @@
                         let newWord = wordContent.value;
                         if (!newWord) return;
                         let contentChange = newWord !== this.modifyWord.content;
+                        let hide = wordHide.value;
+                        if (hide) {
+                            if (this.splitSep) hide = hide.replaceAll(this.splitSep, "");
+                            hide = hide >= 0 ? hide : 0;
+                            newWord += `$p{${hide}}`;
+                        }
                         let style = wordStyle.value;
                         if (style) {
                             if (this.splitSep) style = style.replaceAll(this.splitSep, "");
@@ -2209,7 +2233,8 @@
                 }
                 let wordContent = this.modifyFrame.querySelector("[name='wordContent']"),
                 wordStyle = this.modifyFrame.querySelector("[name='wordStyle']"),
-                wordTitle = this.modifyFrame.querySelector("[name='wordTitle']");
+                wordTitle = this.modifyFrame.querySelector("[name='wordTitle']"),
+                wordHide = this.modifyFrame.querySelector("[name='wordHide']");
 
                 let style = "";
                 let styleReg = /\$s{(.*?)}($|\$)/;
@@ -2220,6 +2245,7 @@
 
                 wordContent.value = word.content || "";
                 wordStyle.value = style || "";
+                if (typeof word.hideParent !== 'undefined') wordHide.value = word.hideParent;
                 try {
                     wordTitle.value = word.title !== word.content ? JSON.parse('"' + word.title + '"') : "";
                 } catch (e) {
@@ -2238,6 +2264,7 @@
                 } else {
                     let title = "";
                     let style = "";
+                    let hideParent = -1;
                     let titleReg = /\$t{(.*?)}($|\$)/;
                     let titleMatch = newWord.match(titleReg);
                     if (titleMatch) {
@@ -2254,12 +2281,44 @@
                         word.style = style;
                         modifySpan.style = style;
                     }
+                    let hideChange = false;
+                    let hideParentReg = /\$p{(.*?)}($|\$)/;
+                    let hideParentMatch = newWord.match(hideParentReg);
+                    if (hideParentMatch) {
+                        hideParent = parseInt(hideParentMatch[1]) || 0;
+                        hideChange = hideParent != word.hideParent;
+                    } else hideChange = typeof word.hideParent !== 'undefined';
+
+                    if (hideChange) {
+                        [].forEach.call(document.querySelectorAll(".searchJumper-hide"), hide => {
+                            if (hide.dataset.content === word.content) {
+                                hide.classList.remove("searchJumper-hide");
+                                hide.removeAttribute('data-content');
+                            }
+                        });
+                    }
+
                     this.marks[word.content].forEach(mark => {
                         if (mark) {
                             mark.title = title;
                             if (style) mark.style = style;
+
+                            if (hideChange && hideParent != -1) {
+                                let parentDepth = hideParent;
+                                let parent = mark.parentElement;
+                                while(parentDepth-- > 0) {
+                                    parent = parent.parentElement;
+                                }
+                                if (parent) {
+                                    parent.dataset.content = word.content;
+                                    parent.classList.add("searchJumper-hide");
+                                }
+                            }
                         }
                     });
+                    if (hideParent == -1) {
+                        delete word.hideParent;
+                    } else word.hideParent = hideParent;
                     this.lockWords = this.lockWords.replace(word.oriWord, newWord);
                     word.oriWord = newWord;
                 }
@@ -2484,6 +2543,10 @@
                             newNode.parentNode.normalize();
                         });
                     });
+                    [].forEach.call(document.querySelectorAll(".searchJumper-hide"), hide => {
+                        hide.classList.remove("searchJumper-hide");
+                        hide.removeAttribute('data-content');
+                    });
                     this.navMarks.innerHTML = createHTML();
                     this.marks = {};
                     this.curHighlightWords = [];
@@ -2496,7 +2559,7 @@
                     this.curHighlightWords = (this.curHighlightWords || []).concat(words);
                 }
                 function searchWithinNode(node, word) {
-                    let len, pos, skip, spannode, middlebit, middleclone;
+                    let len, pos = -1, skip, spannode, middlebit, middleclone;
                     skip = 0;
                     if (node.nodeType == 3 && (node.parentNode.tagName == "BODY" || node.parentNode.offsetParent || (node.parentNode.scrollHeight && node.parentNode.scrollWidth))) {
                         if (word.isRe) {
@@ -2511,6 +2574,17 @@
                             pos = node.data.toUpperCase().indexOf(word.content.toUpperCase());
                         }
                         if (pos >= 0) {
+                            if (typeof word.hideParent !== 'undefined') {
+                                let parentDepth = word.hideParent;
+                                let parent = node.parentElement;
+                                while(parentDepth-- > 0) {
+                                    parent = parent.parentElement;
+                                }
+                                if (parent) {
+                                    parent.dataset.content = word.content;
+                                    parent.classList.add("searchJumper-hide");
+                                }
+                            }
                             let curList = self.marks[word.content];
                             let index = curList.length;
                             spannode = document.createElement("mark");
@@ -2947,6 +3021,7 @@
                 //Search in page
 
                 this.pickerBtn.addEventListener("click", e => {
+                    this.searchJumperInputKeyWords.value = "";
                     this.pickerBtn.classList.toggle("checked");
                     Picker.getInstance().toggle();
                 });
@@ -4134,6 +4209,43 @@
                 return targetSites;
             }
 
+            async submitAction(params) {
+                if (document.readyState === "loading") {
+                    await sleep(500);
+                    this.submitAction(params);
+                    return;
+                }
+                let form, input, clicked = false;
+
+                for (let param of params) {
+                    if (param[0] === "sleep") {
+                        await sleep(param[1]);
+                        continue;
+                    }
+                    if (param[1] === 'click()') {
+                        clicked = true;
+                        await emuClick(param[0]);
+                    } else {
+                        if (!localKeywords) localKeywords = param[1];
+                        await emuInput(param[0], param[1]);
+                    }
+                    input = getElement(param[0]);
+                }
+
+                if (!clicked) {
+                    form = input.parentNode;
+                    while (form.tagName != 'FORM') {
+                        form = form.parentNode;
+                        if (!form) break;
+                    }
+                    if (form) {
+                        let submitBtn = form.querySelector("[type=submit]");
+                        if (submitBtn) submitBtn.click();
+                        else form.submit();
+                    }
+                }
+            }
+
             async createSiteBtn(icon, data, openInNewTab, isBookmark) {
                 let self = this;
                 let ele = document.createElement("a");
@@ -4276,40 +4388,7 @@
                     if (ele.dataset.current) {
                         if (!currentSite && inPagePostParams) {
                             storage.setItem("inPagePostParams", false);
-                            let submitAction = async () => {
-                                if (document.readyState === "loading") {
-                                    await sleep(500);
-                                    submitAction();
-                                    return;
-                                }
-                                let form, input;
-
-                                for (let param of inPagePostParams) {
-                                    if (param[0] === "sleep") {
-                                        await sleep(param[1]);
-                                        continue;
-                                    }
-                                    if (param[1] === 'click()') {
-                                        await emuClick(param[0]);
-                                    } else {
-                                        if (!localKeywords) localKeywords = param[1];
-                                        await emuInput(param[0], param[1]);
-                                    }
-                                    input = getElement(param[0]);
-                                }
-
-                                form = input.parentNode;
-                                while (form.tagName != 'FORM') {
-                                    form = form.parentNode;
-                                    if (!form) break;
-                                }
-                                if (form) {
-                                    let submitBtn = form.querySelector("[type=submit]");
-                                    if(submitBtn) submitBtn.click();
-                                    else form.submit();
-                                }
-                            };
-                            await submitAction();
+                            await this.submitAction(inPagePostParams);
                         }
                     } else if (data.hideNotMatch) {
                         ele.style.display = 'none';
@@ -4509,7 +4588,12 @@
                                 postParams.push([k, v]);
                             }
                         });
-                        storage.setItem("inPagePostParams", postParams);
+                        if (resultUrl === "" || resultUrl === location.href) {
+                            this.submitAction(postParams);
+                            return false;
+                        } else {
+                            storage.setItem("inPagePostParams", postParams);
+                        }
                     }
                     resultUrl = customReplaceKeywords(resultUrl.replace(/%U\b/g, encodeURIComponent(href)).replace(/%T\b/g, encodeURIComponent(targetUrl)).replace(/%b\b/g, targetBaseUrl).replace(/%B\b/g, encodeURIComponent(targetBaseUrl)).replace(/%n\b/g, targetName).replace(/%S\b/g, (cacheKeywords || keywords)));
                     resultUrl = customReplaceSingle(resultUrl, "%t", targetUrl);
@@ -4626,75 +4710,77 @@
                                 e.stopPropagation();
                                 return false;
                             };
-                        } else ele.href = url;
-                        if (!self.batchOpening) {
-                            let isPage = /^(https?|ftp):/.test(url);
-                            let checkAlt = () => {
-                                if (shift && !ctrl && !alt && e.isTrusted) return false;
-                                if ((alt || ctrl || shift) && isPage) {
-                                    ele.onclick = e => {
-                                        ele.onclick = null;
-                                        if (ctrl && shift) {
-                                            _GM_openInTab(url, {incognito: true});
-                                        } else if (ctrl) {
-                                            _GM_openInTab(url);
-                                        } else if (alt) {
-                                            window.open(url, "_blank", "width=600, height=800, location=0, resizable=1, status=0, toolbar=0, menubar=0, scrollbars=0");
-                                        } else if (shift) {
-                                            _GM_openInTab(url, {active: true});
-                                        }
-                                        if (e.preventDefault) e.preventDefault();
-                                        if (e.stopPropagation) e.stopPropagation();
-                                        return false;
-                                    };
-                                    return true;
-                                }
-                                return false;
-                            };
-                            if (self.customInput) {
-                                //lose click, click one more time
-                                if (checkAlt() || !isPage) {
-                                    ele.click();
-                                } else {
-                                    _GM_openInTab(url, {active: true});
-                                }
-                            } else {
-                                if (!checkAlt()) {
-                                    if (searchData.prefConfig.multiline == 1 || searchData.prefConfig.multiline == 2) {
-                                        let selStr = getSelectStr();
-                                        if (selStr &&
-                                            /%s\b/.test(ele.dataset.url) &&
-                                            selStr.indexOf("\n") !== -1) {
-                                            if (searchData.prefConfig.multiline == 1 ||
-                                                confirm(i18n("multiline"))) {
-                                                let selStrArr = selStr.split("\n");
-                                                if (selStrArr.length > 10 && !confirm(i18n("multilineTooMuch"))) return;
-                                                let encodeSelStr = encodeURIComponent(selStr);
-                                                let searchIndex = 0;
-                                                let searchByLine = () => {
-                                                    _GM_openInTab(url.replace(encodeSelStr, encodeURIComponent(selStrArr[searchIndex++])));
-                                                    if (searchIndex < selStrArr.length) {
-                                                        setTimeout(() => {
-                                                            searchByLine();
-                                                        }, searchData.prefConfig.multilineGap || 1000);
-                                                    }
-                                                };
-                                                searchByLine();
-                                                if (searchData.prefConfig.multiline == 1) {
-                                                    ele.onclick = e => {
-                                                        ele.onclick = null;
-                                                        e.preventDefault();
-                                                        e.stopPropagation();
-                                                        return false;
-                                                    };
-                                                }
-                                            } else {
-                                                ele.click();
+                        } else {
+                            ele.href = url;
+                            if (!self.batchOpening) {
+                                let isPage = /^(https?|ftp):/.test(url);
+                                let checkAlt = () => {
+                                    if (shift && !ctrl && !alt && e.isTrusted) return false;
+                                    if ((alt || ctrl || shift) && isPage) {
+                                        ele.onclick = e => {
+                                            ele.onclick = null;
+                                            if (ctrl && shift) {
+                                                _GM_openInTab(url, {incognito: true});
+                                            } else if (ctrl) {
+                                                _GM_openInTab(url);
+                                            } else if (alt) {
+                                                window.open(url, "_blank", "width=600, height=800, location=0, resizable=1, status=0, toolbar=0, menubar=0, scrollbars=0");
+                                            } else if (shift) {
+                                                _GM_openInTab(url, {active: true});
                                             }
+                                            if (e.preventDefault) e.preventDefault();
+                                            if (e.stopPropagation) e.stopPropagation();
                                             return false;
-                                        }
+                                        };
+                                        return true;
                                     }
-                                    ele.onclick = null;
+                                    return false;
+                                };
+                                if (self.customInput) {
+                                    //lose click, click one more time
+                                    if (checkAlt() || !isPage) {
+                                        ele.click();
+                                    } else {
+                                        _GM_openInTab(url, {active: true});
+                                    }
+                                } else {
+                                    if (!checkAlt()) {
+                                        if (searchData.prefConfig.multiline == 1 || searchData.prefConfig.multiline == 2) {
+                                            let selStr = getSelectStr();
+                                            if (selStr &&
+                                                /%s\b/.test(ele.dataset.url) &&
+                                                selStr.indexOf("\n") !== -1) {
+                                                if (searchData.prefConfig.multiline == 1 ||
+                                                    confirm(i18n("multiline"))) {
+                                                    let selStrArr = selStr.split("\n");
+                                                    if (selStrArr.length > 10 && !confirm(i18n("multilineTooMuch"))) return;
+                                                    let encodeSelStr = encodeURIComponent(selStr);
+                                                    let searchIndex = 0;
+                                                    let searchByLine = () => {
+                                                        _GM_openInTab(url.replace(encodeSelStr, encodeURIComponent(selStrArr[searchIndex++])));
+                                                        if (searchIndex < selStrArr.length) {
+                                                            setTimeout(() => {
+                                                                searchByLine();
+                                                            }, searchData.prefConfig.multilineGap || 1000);
+                                                        }
+                                                    };
+                                                    searchByLine();
+                                                    if (searchData.prefConfig.multiline == 1) {
+                                                        ele.onclick = e => {
+                                                            ele.onclick = null;
+                                                            e.preventDefault();
+                                                            e.stopPropagation();
+                                                            return false;
+                                                        };
+                                                    }
+                                                } else {
+                                                    ele.click();
+                                                }
+                                                return false;
+                                            }
+                                        }
+                                        ele.onclick = null;
+                                    }
                                 }
                             }
                         }
@@ -5590,6 +5676,7 @@
             let logoSvg = logoBtn.children[0];
             let grabState = 0;//0 未按下 1 已按下 2 已拖动
             let hideTimer;
+            let touchStart = false;
 
             let clientX = e => {
                 if (e.type.indexOf('mouse') === 0) {
@@ -5682,6 +5769,10 @@
             };
 
             logoBtn.addEventListener('mousedown', e => {
+                if (touchStart) {
+                    touchStart = false;
+                    return;
+                }
                 if (e.which === 3) {
                     return;
                 }
@@ -5700,12 +5791,9 @@
             }, false);
 
             logoBtn.addEventListener('touchstart', e => {
+                touchStart = true;
                 grabState = 1;
                 document.addEventListener('touchend', mouseUpHandler, false);
-                setTimeout(() => {
-                    document.removeEventListener('mouseup', mouseUpHandler, false);
-                    document.removeEventListener('mousemove', mouseMoveHandler, false);
-                }, 1);
                 setTimeout(() => {
                     if (grabState === 1) {
                         document.addEventListener('touchmove', mouseMoveHandler, false);
@@ -5845,13 +5933,20 @@
                             clearTimeout(showToolbarTimer);
                             clearTimeout(mouseMoveTimer);
                             document.removeEventListener('mousemove', mouseMoveHandler, true);
+                            e.target.removeEventListener('scroll', scrollHandler);
                         }
+                    };
+                    let scrollHandler = e => {
+                        clearTimeout(showToolbarTimer);
+                        clearTimeout(mouseMoveTimer);
+                        document.removeEventListener('mousemove', mouseMoveHandler, true);
+                        e.target.removeEventListener('scroll', scrollHandler);
                     };
                     let mouseUpHandler = e => {
                         if (shown) {
                             e.stopPropagation();
                             e.preventDefault();
-                        }else if (matchKey || (searchData.prefConfig.selectToShow && getSelectStr())) {
+                        } else if (matchKey || (searchData.prefConfig.selectToShow && getSelectStr())) {
                             searchBar.showInPage();
                         } else {
                             searchBar.waitForHide();
@@ -5860,6 +5955,7 @@
                         clearTimeout(mouseMoveTimer);
                         document.removeEventListener('mouseup', mouseUpHandler, true);
                         document.removeEventListener('mousemove', mouseMoveHandler, true);
+                        e.target.removeEventListener('scroll', scrollHandler);
                     };
                     if ((e.which === 1 && clientRect &&
                          e.clientX > clientRect.left && e.clientX < clientRect.left + clientRect.width &&
@@ -5889,6 +5985,7 @@
                     }, parseInt(searchData.prefConfig.longPressTime));
                     document.addEventListener('mousemove', mouseMoveHandler, true);
                     document.addEventListener('mouseup', mouseUpHandler, true);
+                    e.target.addEventListener('scroll', scrollHandler);
                 });
                 document.addEventListener('contextmenu', e => {
                     if (shown) e.preventDefault();
