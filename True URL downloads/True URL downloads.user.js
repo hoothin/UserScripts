@@ -7,7 +7,7 @@
 // @description:zh-TW    迅雷、快車、QQ旋風等專有鏈解密，嗅探下載鏈接並批量管理
 // @author         Yulei, Hoothin
 // @namespace      https://github.com/hoothin/UserScripts
-// @version        1.22.16
+// @version        1.22.16.1
 // @create         2013-01-05
 // @include        http://*
 // @include        https://*
@@ -33,6 +33,10 @@
 
 (function() {
     'use strict';
+    var shortcutKey = 88; //快捷键 Alt + x
+    var altKey = true;
+    var ctrlKey = false;
+    var shiftKey = false;
     function Yu() {
         decode64 = (window.atob) ? atob : decode64;
         var Rstr = /^\s*(?:thunder|flashget|qqdl|fs2you):\/\/([^'"\s]*)/i,
@@ -127,22 +131,37 @@
                 link = document.getElementsByTagName('a');
             }
             for (var i = 0, k = link.length; i < k; i++) {
-                if (/\w+href/i.test(link[i].outerHTML)) { //枚举所有专用链属性
-                    var lion = link[i].getAttribute("oncontextmenu"),attr;
-                    if (/\w+href=/i.test(link[i].outerHTML)) {
-                        attr = link[i].outerHTML.match(/\w+href=/i).toString().replace(/=/, '');
-                        link[i].href = link[i].getAttribute(attr);
+                var attrs = link[i].attributes;
+                var whref = "";
+                var lion = link[i].getAttribute("oncontextmenu"), attr;
+                for(var j = attrs.length - 1; j >= 0; j--) {
+                    if (/\w+href/i.test(attrs[j].nodeName)) {
+                        attr = attrs[j].nodeName;
+                        whref = attrs[j].nodeValue;
+                        break;
+                    }
+                }
+                if (whref && /\w+href/i.test(lion)) { //枚举所有专用链属性
+                    if (whref) {
+                        link[i].href = whref;
                         link[i].removeAttribute(attr);
                         Decryption(link[i]);
                     } else if (lion) {
-                        try{
+                        try {
                             link[i].oncontextmenu();
-                            attr = link[i].outerHTML.match(/\w+href=/i).toString().replace(/=/, '');
-                            if(attr)link[i].removeAttribute(attr);
-                        }catch(e){
+                            attr = "";
+                            for(var jj = attrs.length - 1; jj >= 0; jj--) {
+                                if (/\w+href/i.test(attrs[jj].nodeName)) {
+                                    attr = attrs[jj].nodeName;
+                                    whref = attrs[jj].nodeValue;
+                                    break;
+                                }
+                            }
+                            if (attr) link[i].removeAttribute(attr);
+                        } catch(e) {
                         }
                         Decryption(link[i]);
-                    } //枚举失败后再侦听处理，如网页上有错误
+                    }
                     link[i].removeAttribute("oncontextmenu");
                     link[i].removeAttribute("onclick");
                 } else {
@@ -280,7 +299,7 @@
         var isseeking=false,dontDecode=false;
 
         document.addEventListener("keydown", function(e) {
-            if(e.keyCode == 88 && e.altKey) {
+            if(e.keyCode == shortcutKey && e.altKey == altKey && e.ctrlKey == ctrlKey && e.shiftKey == shiftKey) {
                 copyLink();
             }
         });
