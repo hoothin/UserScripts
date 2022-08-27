@@ -5784,8 +5784,8 @@
                 let baseWidth = viewWidth / 3;
                 let baseHeight = viewHeight / 3;
                 let relX, relY, posX, posY;
-                let curX = clientX(e) - searchBar.bar.scrollWidth / 2;
-                let curY = clientY(e) - searchBar.bar.scrollHeight / 2;
+                let curX = clientX(e);
+                let curY = clientY(e);
                 if (curX < baseWidth) {
                     relX = "left";
                     posX = parseInt(searchBar.bar.style.left) > 0 ? parseInt(searchBar.bar.style.left) : "0";
