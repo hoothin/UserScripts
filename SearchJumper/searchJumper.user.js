@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.5.29.1
+// @version      1.6.5.30
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -655,8 +655,14 @@
         inPageRule: {},
         firstFiveWordsColor: [],
         inPageWordsStyles: [],
-        altToHightlight: true,
-        defaultPicker: false
+        altToHighlight: true,
+        defaultPicker: false,
+        disableInputOnWords: false,
+        callBarAlt: false,
+        callBarCtrl: false,
+        callBarShift: false,
+        callBarMeta: false,
+        defaultFindTab: false
     };
     function run() {
         const lang = navigator.appName == "Netscape" ? navigator.language : navigator.userLanguage;
@@ -988,6 +994,26 @@
                 actualTop += current.offsetTop;
                 current = current.offsetParent;
             }
+            if (ele.ownerDocument != document) {
+                let iframes = document.getElementsByTagName("iframe");
+                for (let i = 0; i < iframes.length; i++) {
+                    let iframe = iframes[i];
+                    let iframeDoc;
+                    try {
+                        iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    } catch(e) {
+                        break;
+                    }
+                    if (iframeDoc == ele.ownerDocument) {
+                        current = iframe;
+                        while (current) {
+                            actualTop += current.offsetTop;
+                            current = current.offsetParent;
+                        }
+                        break;
+                    }
+                }
+            }
             return actualTop;
         }
 
@@ -998,7 +1024,65 @@
                 actualLeft += current.offsetLeft;
                 current = current.offsetParent;
             }
+            if (ele.ownerDocument != document) {
+                let iframes = document.getElementsByTagName("iframe");
+                for (let i = 0; i < iframes.length; i++) {
+                    let iframe = iframes[i];
+                    let iframeDoc;
+                    try {
+                        iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                    } catch(e) {
+                        break;
+                    }
+                    if (iframeDoc == ele.ownerDocument) {
+                        current = iframe;
+                        while (current) {
+                            actualLeft += current.offsetLeft;
+                            current = current.offsetParent;
+                        }
+                        break;
+                    }
+                }
+            }
             return actualLeft;
+        }
+
+        function waitForFontAwesome(callback) {
+            var retries = 50;
+            var text = '\uf0c8';
+            var checkReady = function() {
+                var canvas, context;
+                retries -= 1;
+                canvas = document.createElement('canvas');
+                canvas.width = 20;
+                canvas.height = 20;
+                context = canvas.getContext('2d');
+                context.fillStyle = 'rgba(0,0,0,1.0)';
+                context.fillRect( 0, 0, 20, 20 );
+                context.font = '16pt FontAwesome';
+                context.textAlign = 'center';
+                context.fillStyle = 'rgba(255,255,255,1.0)';
+                context.fillText(text, 10, 18 );
+                var data = context.getImageData( 2, 10, 1, 1 ).data;
+                if ( data[0] == 0 && data[1] == 0 && data[2] == 0 ) {
+                    context.font = '16pt "Font Awesome 6 Free"';
+                    context.fillText(text, 10, 18 );
+                    data = context.getImageData( 2, 10, 1, 1 ).data;
+                    if ( data[0] == 0 && data[1] == 0 && data[2] == 0 ) {
+                        if ( retries > 0 ) {
+                            setTimeout( checkReady, 150 );
+                        }
+                    } else if ( typeof callback === 'function' ) {
+                        callback();
+                    }
+                } else {
+                    if ( typeof callback === 'function' ) {
+                        callback();
+                    }
+                }
+            }
+
+            setTimeout( checkReady, 100 );
         }
 
         var logoBtn, searchBar, searchTypes = [], currentSite = false, cacheKeywords, localKeywords, lastSign, inPagePostParams, cacheIcon, historySites, sortTypeNames, cachePool = [], cacheFontPool = [], currentFormParams, globalInPageWords, navEnable, referrer;
@@ -1082,6 +1166,7 @@
                  }
                  .in-input>.search-jumper-searchBar {
                      opacity: 1;
+                     display: inline-flex!important;
                  }
                  .search-jumper-left,
                  .search-jumper-left .search-jumper-type,
@@ -1105,8 +1190,8 @@
                  .search-jumper-bottom {
                      top: unset;
                      bottom: 0;
-                     height: ${this.scale * 43}px;
-                     max-height: ${this.scale * 43}px;
+                     height: ${this.scale * 41}px;
+                     max-height: ${this.scale * 41}px;
                      overflow-y: hidden;
                  }
                  .search-jumper-left>.search-jumper-searchBar {
@@ -1132,8 +1217,8 @@
                  }
                  .search-jumper-bottom>.search-jumper-searchBar {
                      position: relative;
-                     margin-top: 0px;
-                     vertical-align: bottom;
+                     margin-top: 10px;
+                     vertical-align: text-top;
                      -webkit-transform:scale(.9);
                      -moz-transform:scale(.9);
                      transform:scale(.9);
@@ -1141,7 +1226,7 @@
                  .search-jumper-bottom>.search-jumper-searchBar:hover,
                  .search-jumper-bottom>.search-jumper-searchBar.initShow,
                  #search-jumper.in-input.search-jumper-bottom>.search-jumper-searchBar {
-                     margin-top: 0px;
+                     margin-top: 10px;
                      -webkit-transform:unset;
                      -moz-transform:unset;
                      transform:unset;
@@ -1281,6 +1366,19 @@
                      min-height: ${this.scale * 40}px;
                      min-width: ${this.scale * 40}px;
                      ${searchData.prefConfig.noAni ? "" : `transition:width ${searchData.prefConfig.typeOpenTime}ms ease, height ${searchData.prefConfig.typeOpenTime}ms;`}
+                 }
+                 .search-jumper-right>.searchJumperNavBar {
+                     right: unset;
+                     left: 0;
+                 }
+                 .search-jumper-right>.searchJumperNavBar>#navMarks>div.navPointer {
+                     right: unset;
+                     left: 20px;
+                     transform: rotate(180deg);
+                 }
+                 .search-jumper-bottom>.search-jumper-input {
+                     bottom: unset;
+                     top: 5%;
                  }
                  .search-jumper-type>.sitelist {
                      position: fixed;
@@ -1471,6 +1569,7 @@
                  }
                  .inputGroup {
                      cursor: grab;
+                     display: flex;
                  }
                  .inputGroup * {
                      cursor: default;
@@ -1495,12 +1594,16 @@
                  #searchJumperInputKeyWords {
                      width: calc(50% - 11px);
                      float: left;
+                     transition: 0.25s width ease;
                  }
                  #searchJumperInput {
                      margin: 0 1px 0 10px;
                  }
                  #searchJumperInputKeyWords {
                      margin: 0 10px 0 1px;
+                 }
+                 #filterSites>input:focus {
+                     width: calc(200% - 20px);
                  }
                  .search-jumper-input * {
                      box-sizing: border-box;
@@ -1880,9 +1983,9 @@
                 searchInputDiv.className = "search-jumper-input";
                 searchInputDiv.innerHTML = createHTML(`
                 <svg class="closeBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>Close search input</title><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64z m165.4 618.2l-66-0.3L512 563.4l-99.3 118.4-66.1 0.3c-4.4 0-8-3.5-8-8 0-1.9 0.7-3.7 1.9-5.2l130.1-155L340.5 359c-1.2-1.5-1.9-3.3-1.9-5.2 0-4.4 3.6-8 8-8l66.1 0.3L512 464.6l99.3-118.4 66-0.3c4.4 0 8 3.5 8 8 0 1.9-0.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"></path></svg>
-                <input type="radio" id="filterSitesTab" name="tab" checked>
+                <input type="radio" id="filterSitesTab" name="tab" ${searchData.prefConfig.defaultFindTab? "" : "checked"}>
                 <label for="filterSitesTab">${i18n("filterSites")}</label>
-                <input type="radio" id="searchInPageTab" name="tab">
+                <input type="radio" id="searchInPageTab" name="tab" ${searchData.prefConfig.defaultFindTab? "checked" : ""}>
                 <label for="searchInPageTab">${i18n("searchInPage")}</label>
                 <div class="line"></div>
                 <div class="content-container">
@@ -2014,13 +2117,13 @@
                             word = reMatch[1];
                             reCase = reMatch[2];
                         }
-                        result.push({content: word, isRe: isRe, reCase: reCase, title: title || word, style: style, oriWord: oriWord, hideParent: hideParent});
+                        result.push({content: word, isRe: isRe, reCase: reCase, title: title, style: style, oriWord: oriWord, hideParent: hideParent});
                         self.curWordIndex++;
                     });
                 } else {
                     this.curWordIndex = 0;
                     let word = (add || "").replace(/^\$o/, "") + words;
-                    result = [{content: word, isRe: false, reCase: "", title: "" || word, style: ""}];
+                    result = [{content: word, isRe: false, reCase: "", title: "", style: ""}];
                 }
                 return result;
             }
@@ -2050,7 +2153,7 @@
                     if (!word) return;
                     let wordSpan = document.createElement("span");
                     wordSpan.innerHTML = word.content;
-                    wordSpan.title = JSON.parse('"' + word.title + '"');
+                    wordSpan.title = word.title ? JSON.parse('"' + word.title + '"') : word.content;
                     let background = word.style.match(/background: *(#?\w+)/);
                     if (background) wordSpan.style.background = background[1];
                     let color = word.style.match(/color: *(#?\w+)/);
@@ -2529,6 +2632,19 @@
             }
 
             highlight(words, ele, root) {
+                if (!ele) {
+                    this.highlight(words, document.body, root);
+                    [].forEach.call(document.getElementsByTagName("iframe"), iframe => {
+                        let iframeDoc;
+                        try {
+                            iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                        } catch(e) {
+                            return;
+                        }
+                        this.highlight(words, iframeDoc.body, root);
+                    });
+                    return;
+                }
                 ele = ele || document.body;
                 let preEles = [];
                 let searchingPre = false;
@@ -2543,7 +2659,7 @@
                             newNode.parentNode.normalize();
                         });
                     });
-                    [].forEach.call(document.querySelectorAll(".searchJumper-hide"), hide => {
+                    [].forEach.call(ele.querySelectorAll(".searchJumper-hide"), hide => {
                         hide.classList.remove("searchJumper-hide");
                         hide.removeAttribute('data-content');
                     });
@@ -2763,7 +2879,7 @@
                 });
                 this.inInput = true;
                 if (this.lockWords) this.searchJumperInPageInput.style.paddingLeft = this.searchInPageLockWords.clientWidth + 3 + "px";
-                if (searchData.prefConfig.altToHightlight) {
+                if (searchData.prefConfig.altToHighlight) {
                     document.removeEventListener("mouseup", this.checkSelHandler);
                     document.addEventListener("mouseup", this.checkSelHandler);
                 }
@@ -2914,6 +3030,11 @@
                     this.searchInPageLockWords.innerHTML = createHTML();
                     this.searchJumperInPageInput.style.paddingLeft = "";
                 };
+                document.addEventListener("keydown", e => {
+                    if (e.keyCode === 27 && this.inInput) {
+                        this.hideSearchInput();
+                    }
+                });
                 this.searchJumperInPageInput.addEventListener("keydown", e => {
                     switch(e.keyCode) {
                         case 8://退格
@@ -3060,18 +3181,18 @@
                     linkEle.rel="stylesheet";
                     linkEle.href = searchData.prefConfig.fontAwesomeCss || "https://lib.baomitu.com/font-awesome/6.1.2/css/all.css";
                     document.documentElement.insertBefore(linkEle, document.documentElement.children[0]);
-                    this.waitForFontAwesome(() => {
+                    waitForFontAwesome(() => {
                         let hasFont = false;
                         this.fontPool.forEach(font => {
                             font.innerText = '';
                             font.style.fontSize = '';
                             font.style.color = '';
-                            if (font.offsetParent) {
-                                hasFont = true;
-                                cacheFontPool.unshift(font);
-                            }
+                            hasFont = true;
+                            cacheFontPool.unshift(font);
                         });
-                        if (hasFont) setTimeout(() => {cacheFontManager()}, 5000);
+                        if (hasFont) {
+                            setTimeout(() => {cacheFontManager()}, 5000);
+                        }
                     });
                 }
                 cacheImgManager();
@@ -3469,43 +3590,6 @@
                 }
             }
 
-            waitForFontAwesome(callback) {
-                var retries = 100;
-                var checkReady = function() {
-                    var canvas, context;
-                    retries -= 1;
-                    canvas = document.createElement('canvas');
-                    canvas.width = 20;
-                    canvas.height = 20;
-                    context = canvas.getContext('2d');
-                    context.fillStyle = 'rgba(0,0,0,1.0)';
-                    context.fillRect( 0, 0, 20, 20 );
-                    context.font = '16pt FontAwesome';
-                    context.textAlign = 'center';
-                    context.fillStyle = 'rgba(255,255,255,1.0)';
-                    context.fillText( '\uf0c8', 10, 18 );
-                    var data = context.getImageData( 2, 10, 1, 1 ).data;
-                    if ( data[0] == 0 && data[1] == 0 && data[2] == 0 ) {
-                        context.font = '16pt "Font Awesome 6 Free"';
-                        context.fillText( '\uf0c8', 10, 18 );
-                        data = context.getImageData( 2, 10, 1, 1 ).data;
-                        if ( data[0] == 0 && data[1] == 0 && data[2] == 0 ) {
-                            if ( retries > 0 ) {
-                                setTimeout( checkReady, 150 );
-                            }
-                        } else if ( typeof callback === 'function' ) {
-                            callback();
-                        }
-                    } else {
-                        if ( typeof callback === 'function' ) {
-                            callback();
-                        }
-                    }
-                }
-
-                setTimeout( checkReady, 50 );
-            }
-
             initSort() {
                 if (!searchData.prefConfig.sortType) return;
                 let self = this;
@@ -3893,6 +3977,7 @@
                         var key = (e.key || String.fromCharCode(e.keyCode)).toLowerCase();
                         if (data.shortcut == key) {
                             batchOpenConfirm(e);
+                            e.stopPropagation();
                         }
                     });
                 }
@@ -3908,14 +3993,14 @@
                     }
                     ele.style.width = "";
                     ele.style.height = "";
-                    let scrollSize = Math.max(ele.scrollWidth, ele.scrollHeight) + "px";
+                    let scrollSize = Math.max(ele.scrollWidth, ele.scrollHeight) + 5 + "px";
                     let leftRight = self.bar.parentNode.classList.contains("search-jumper-left") ||
                         self.bar.parentNode.classList.contains("search-jumper-right");
                     if (self.preList) {
                         self.preList.style.visibility = "hidden";
                     }
+                    self.recoveHistory();
                     if (ele.classList.contains("search-jumper-hide")) {
-                        self.recoveHistory();
                         ele.classList.remove("search-jumper-hide");
                         if (leftRight) {
                             ele.style.height = scrollSize;
@@ -4341,6 +4426,7 @@
                             if (action({altKey: e.altKey, ctrlKey: e.ctrlKey, shiftKey: e.shiftKey, metaKey: e.metaKey}) !== false && !self.customInput) {
                                 ele.click();
                             }
+                            e.stopPropagation();
                         }
                     });
                 }
@@ -4952,17 +5038,7 @@
                     searchTypes.forEach(ele => {
                         ele.style.width = "";
                         ele.style.height = "";
-                        let scrollSize = Math.max(ele.scrollWidth, ele.scrollHeight) + "px";
-                        if (leftRight) {
-                            ele.style.height = scrollSize;
-                        } else {
-                            ele.style.width = scrollSize;
-                        }
-                    });
-                    searchTypes.forEach(ele => {
-                        ele.style.width = "";
-                        ele.style.height = "";
-                        let scrollSize = Math.max(ele.scrollWidth, ele.scrollHeight) + "px";
+                        let scrollSize = Math.max(ele.scrollWidth, ele.scrollHeight) + 5 + "px";
                         if (ele.classList.contains("search-jumper-hide")) {
                             if (leftRight) {
                                 ele.style.height = baseSize + "px";
@@ -5858,12 +5934,12 @@
                 let shown = false;
                 let showToolbarTimer;
                 if (searchData.prefConfig.shortcutKey) {
-                    document.addEventListener('keyup', e => {
+                    document.addEventListener('keydown', e => {
                         if (e.target.id === "searchJumperInput") return;
-                        if ((searchData.prefConfig.altKey && !e.altKey) ||
-                            (searchData.prefConfig.ctrlKey && !e.ctrlKey) ||
-                            (searchData.prefConfig.shiftKey && !e.shiftKey) ||
-                            (searchData.prefConfig.metaKey && !e.metaKey)) {
+                        if ((searchData.prefConfig.callBarAlt && !e.altKey) ||
+                            (searchData.prefConfig.callBarCtrl && !e.ctrlKey) ||
+                            (searchData.prefConfig.callBarShift && !e.shiftKey) ||
+                            (searchData.prefConfig.callBarMeta && !e.metaKey)) {
                             return;
                         }
                         if (!searchData.prefConfig.enableInInput) {
@@ -5877,7 +5953,11 @@
                         var key = (e.key || String.fromCharCode(e.keyCode)).toLowerCase();
                         if (searchData.prefConfig.shortcutKey == key) {
                             searchBar.showInPage();
-                            searchBar.showSearchInput();
+                            if (!searchData.prefConfig.disableInputOnWords || searchBar.inInput || !getSelectStr()) {
+                                searchBar.showSearchInput();
+                            }
+                            e.preventDefault();
+                            e.stopPropagation();
                         }
                     });
                 }
@@ -6223,7 +6303,25 @@
                             storage.setItem("cacheIcon", newCache);
                         }
                     } else {
-                        storage.setItem("cacheIcon", {});
+                        searchData.sitesConfig.forEach(type => {
+                            if (/^http/.test(type.icon)) {
+                                let typeCache = cacheIcon[type.icon];
+                                if (typeCache) {
+                                    newCache[type.icon] = typeCache;
+                                }
+                            }
+                            type.sites.forEach(site => {
+                                let icon = site.icon;
+                                if (!icon) icon = site.url.replace(/^(https?:\/\/[^\/]*\/).*$/, "$1favicon.ico");
+                                if (/^http/.test(icon)) {
+                                    let siteCache = cacheIcon[icon];
+                                    if (siteCache) {
+                                        newCache[icon] = siteCache;
+                                    }
+                                }
+                            });
+                        });
+                        storage.setItem("cacheIcon", newCache);
                     }
                     if (e.notification || (e.detail && e.detail.notification)) {
                         _GM_notification('Configuration imported successfully!');
