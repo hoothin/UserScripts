@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.7.3.10
+// @version      2.7.3.11
 // @description  Fetch and download main content on current page, provide special support for chinese novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -227,6 +227,7 @@
                 setting:"选项设置",
                 abort:"跳过此章",
                 save:"临时保存",
+                saveAsMd:"存为Markdown",
                 downThreadNum:"设置同时下载的线程数"
             };
             break;
@@ -246,6 +247,7 @@
                 setting:"選項設置",
                 abort:"跳過此章",
                 save:"保存當前",
+                saveAsMd:"存爲Markdown",
                 downThreadNum:"設置同時下載的綫程數"
             };
             break;
@@ -264,6 +266,7 @@
                 setting:"Open Setting",
                 abort:"Abort",
                 save:"Save",
+                saveAsMd:"Save as Markdown",
                 downThreadNum:"Set threadNum for download"
             };
             break;
@@ -288,6 +291,7 @@
                 <div style="position:absolute;right:0px;bottom:2px;cursor: pointer;max-width:85px">
                     <button id="abortRequest" style="background: #008aff;border: 0;padding: 5px;border-radius: 6px;color: white;float: right;margin: 1px;height: 25px;display:none;line-height: 16px;">${getI18n('abort')}</button>
                     <button id="tempSaveTxt" style="background: #008aff;border: 0;padding: 5px;border-radius: 6px;color: white;float: right;margin: 1px;height: 25px;line-height: 16px;">${getI18n('save')}</button>
+                    <button id="saveAsMd" style="background: #008aff;border: 0;padding: 5px;border-radius: 6px;color: white;float: right;margin: 1px;height: 25px;line-height: 16px;" title="${getI18n('saveAsMd')}">Markdown</button>
                 </div>
             </div>
         </div>`;
@@ -304,6 +308,7 @@
     function initTempSave(){
         var tempSavebtn = document.getElementById('tempSaveTxt');
         var abortbtn = document.getElementById('abortRequest');
+        var saveAsMd = document.getElementById('saveAsMd');
         tempSavebtn.onclick = function(){
             var blob = new Blob([i18n.info+"\r\n\r\n"+document.title+"\r\n\r\n"+rCats.join("\r\n\r\n")], {type: "text/plain;charset=utf-8"});
             saveAs(blob, document.title+".txt");
@@ -312,6 +317,15 @@
         abortbtn.onclick = function(){
             let curRequest = curRequests.pop();
             if(curRequest)curRequest[1].abort();
+        }
+        saveAsMd.onclick = function(){
+            let txt = i18n.info+"\n\n---\n"+document.title+"\n===\n";
+            rCats.forEach(cat => {
+                cat = cat.replace("\t \t \t\r\n", "\n---").replace(/(\r\n|\n\r)+/g, "\n\n").replace(/[\n\r]\t+/g, "\n");
+                txt += '\n'+cat;
+            });
+            var blob = new Blob([txt], {type: "text/plain;charset=utf-8"});
+            saveAs(blob, document.title+".md");
         }
     }
 
@@ -461,7 +475,7 @@
         var waitForComplete;
         function processDoc(i, aTag, doc, cause){
             let cbFunc=content=>{
-                rCats[i]=(aTag.innerText.trim() + "\r\n" + content + (cause || ''));
+                rCats[i]=(aTag.innerText.trim() + "\t \t \t\r\n" + content + (cause || ''));
                 curRequests = curRequests.filter(function(e){return e[0]!=i});
                 txtDownContent.style.display="block";
                 txtDownWords.innerHTML=getI18n("downloading",[downNum,(aEles.length-downNum),aTag.innerText]);
