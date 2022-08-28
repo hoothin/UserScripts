@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.5.34
+// @version      1.6.5.35
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -503,7 +503,7 @@
                 url: "https://players.akamai.com/players/hlsjs?streamUrl=%t"
             }, {
                 name: "去视频水印",
-                url: "https://parse.bqrdh.com/smart/#p{.ant-input=%u&.ant-input-search-button=click()}"
+                url: "https://parse.bqrdh.com/smart/#p{.ant-input=%u&.ant-input-search-button.click}"
             } ]
         },
         {
@@ -959,6 +959,14 @@
             String.prototype.replaceAll = function(search, replacement) {
                 var target = this;
                 return target.split(search).join(replacement);
+            };
+        }
+        if (typeof String.prototype.endsWith != 'function') {
+            String.prototype.endsWith = function(search, this_len) {
+                if (this_len === undefined || this_len > this.length) {
+                    this_len = this.length;
+                }
+                return this.substring(this_len - search.length, this_len) === search;
             };
         }
 
@@ -1537,6 +1545,7 @@
                  }
                  .in-input .search-jumper-input {
                      display: block;
+                     box-sizing: content-box;
                  }
                  .lock-input .search-jumper-lock-input {
                      float: left;
@@ -4392,17 +4401,17 @@
                         await sleep(param[1]);
                         continue;
                     }
-                    if (param[1] === 'click()') {
+                    if (param[1] === 'click' && param[0].indexOf('@') === 0) {
                         clicked = true;
-                        await emuClick(param[0]);
+                        await emuClick(param[0].substr(1));
                     } else {
                         if (!localKeywords) localKeywords = param[1];
                         await emuInput(param[0], param[1]);
+                        input = getElement(param[0]);
                     }
-                    input = getElement(param[0]);
                 }
 
-                if (!clicked) {
+                if (!clicked && input) {
                     form = input.parentNode;
                     while (form.tagName != 'FORM') {
                         form = form.parentNode;
@@ -4758,6 +4767,8 @@
                                 v = customReplaceSingle(v, "%t", targetUrl);
                                 v = customReplaceSingle(v, "%u", href);
                                 postParams.push([k, v]);
+                            } else if (pair.endsWith('.click()') || pair.endsWith('.click')) {
+                                postParams.push(['@' + pair.replace(/\.click(\(\))?$/, ''), 'click']);
                             }
                         });
                         if (resultUrl === "" || resultUrl === location.href) {
