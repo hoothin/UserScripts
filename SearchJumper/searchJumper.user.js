@@ -6694,6 +6694,8 @@
                         document.removeEventListener('dragenter', dragenterHandler);
                         document.removeEventListener('dragend', dragEndHandler);
                         dragRoundFrame.parentNode.removeChild(dragRoundFrame);
+                        dragRoundFrame.style.opacity = "";
+                        dragRoundFrame.style.transform = '';
                     }
                 };
                 dragEndHandler = e => {
@@ -6796,7 +6798,7 @@
                 setTimeout(() => {
                     dragRoundFrame.style.opacity = 1;
                     dragRoundFrame.style.transform = 'scale(1)';
-                }, 0);
+                }, 10);
             }, 0);
         }
 
