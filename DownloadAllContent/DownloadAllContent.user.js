@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.7.3.11
+// @version      2.7.3.12
 // @description  Fetch and download main content on current page, provide special support for chinese novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -321,7 +321,7 @@
         saveAsMd.onclick = function(){
             let txt = i18n.info+"\n\n---\n"+document.title+"\n===\n";
             rCats.forEach(cat => {
-                cat = cat.replace("\t \t \t\r\n", "\n---").replace(/(\r\n|\n\r)+/g, "\n\n").replace(/[\n\r]\t+/g, "\n");
+                cat = cat.replace("\r\n", "\n---").replace(/(\r\n|\n\r)+/g, "\n\n").replace(/[\n\r]\t+/g, "\n");
                 txt += '\n'+cat;
             });
             var blob = new Blob([txt], {type: "text/plain;charset=utf-8"});
@@ -475,7 +475,7 @@
         var waitForComplete;
         function processDoc(i, aTag, doc, cause){
             let cbFunc=content=>{
-                rCats[i]=(aTag.innerText.trim() + "\t \t \t\r\n" + content + (cause || ''));
+                rCats[i]=(aTag.innerText.replace(/[\r\n\t]/g, "") + "\r\n" + content + (cause || ''));
                 curRequests = curRequests.filter(function(e){return e[0]!=i});
                 txtDownContent.style.display="block";
                 txtDownWords.innerHTML=getI18n("downloading",[downNum,(aEles.length-downNum),aTag.innerText]);
