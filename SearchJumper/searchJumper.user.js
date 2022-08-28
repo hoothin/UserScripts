@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.5.32
+// @version      1.6.5.33
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -953,6 +953,13 @@
             escapeHTMLPolicy = _unsafeWindow.trustedTypes.createPolicy('default', {
                 createHTML: (string, sink) => string
             });
+        }
+
+        if (typeof String.prototype.replaceAll != 'function') {
+            String.prototype.replaceAll = function(search, replacement) {
+                var target = this;
+                return target.split(search).join(replacement);
+            };
         }
 
         function createHTML(html = "") {
@@ -2151,15 +2158,16 @@
             submitInPageWords() {
                 let self = this;
                 let words = this.searchJumperInPageInput.value;
+                let wordSpans = [];
                 if (!words) {
                     if (!this.lockWords) {
                         this.highlight("");
                         this.highlightSpans = {};
                     } else this.highlight("insert");
-                    return;
+                    return wordSpans;
                 }
                 let targetWords = this.anylizeInPageWords(words, this.lockWords);
-                if (!targetWords || targetWords.length == 0) return;
+                if (!targetWords || targetWords.length == 0) return wordSpans;
                 if (this.lockWords) {
                     this.lockWords += this.splitSep + words;
                 } else this.lockWords = words;
@@ -2214,9 +2222,11 @@
                     this.highlightSpans[word.content] = wordSpan;
 
                     this.searchInPageLockWords.appendChild(wordSpan);
+                    wordSpans.push(wordSpan);
                 });
                 if (this.searchInPageLockWords.scrollTop <= 0) this.searchInPageLockWords.scrollTop = this.searchInPageLockWords.scrollHeight;
                 this.searchJumperInPageInput.style.paddingLeft = this.searchInPageLockWords.clientWidth + 3 + "px";
+                return wordSpans;
             }
 
             showModifyWindow(word, wordSpan) {
@@ -3069,7 +3079,14 @@
                             this.searchInput.focus();
                             break;
                         case 13://回车
-                            this.submitInPageWords();
+                            {
+                                let spans = this.submitInPageWords();
+                                if (spans && spans.length > 0) {
+                                    let lastSpan = spans.pop();
+                                    var mouseEvent = new PointerEvent("mousedown", {which: 1});
+                                    lastSpan.dispatchEvent(mouseEvent);
+                                }
+                            }
                             break;
                         default:
                             break;
