@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/85946",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[@class='content']",
+    "nextLink": "//li[@class=\"next-page\"]/a",
+    "url": "^https://supjav.com/",
+    "exampleUrl": "https://supjav.com/ja/category/censored-jav"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "blekai",
+  "name": "SupJav",
+  "created_at": "2022-08-27T22:53:13+09:00",
+  "updated_at": "2022-08-27T22:53:13+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/85945",
   "data": {
     "pageElement": "//div[@class='newsArticle_body']//div[@class='news_feed']/div[not(./figure)][1]/preceding-sibling::*",
@@ -2084,14 +2099,14 @@
   "data": {
     "pageElement": "//ul[@class=\"cc\"]/li|id(\"imgarea\")",
     "nextLink": "//span[@class=\"next\"]/a|//label[select]/following-sibling::a",
-    "url": "^https://(?:www\\.)?wnacg1?\\.(?:cc|com|org)/",
+    "url": "^https://(?:www\\.)?(?:wnacg1?\\.(?:cc|com|org)|hentaicomic.ru)/",
     "exampleUrl": "https://www.wnacg1.org/photos-index-aid-130600.html https://www.wnacg1.org/photos-view-id-11372630.html\r\nhttps://www.wnacg1.cc/albums-index-page-20-cate-12.html"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "unknown11",
   "name": "wnacg1",
   "created_at": "2021-10-14T23:07:56+09:00",
-  "updated_at": "2021-12-18T02:39:35+09:00"
+  "updated_at": "2022-08-27T11:59:22+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85729",
