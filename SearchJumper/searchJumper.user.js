@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.5.33
+// @version      1.6.5.34
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -3987,7 +3987,7 @@
                 let typeBtn = document.createElement("span");
                 let img = document.createElement("img");
                 let iEle = document.createElement("i");
-                if (type.length > 3) {
+                if (type.length >= 3) {
                     iEle.innerText = type.substr(0, 3).trim();
                     if (!/^\w+$/.test(iEle.innerText)) iEle.innerText = iEle.innerText.substr(0, 2);
                 } else iEle.innerText = type;
@@ -4450,7 +4450,7 @@
                 ele.dataset.name = name;
                 ele.classList.add("search-jumper-word");
                 let word = document.createElement("span");
-                if (!isBookmark && name.length > 3) {
+                if (!isBookmark && name.length >= 3) {
                     word.innerText = name.substr(0, 3).trim();
                     if (!/^\w+$/.test(word.innerText)) word.innerText = word.innerText.substr(0, 2);
                 } else word.innerText = name;
@@ -6067,6 +6067,7 @@
                     });
                 }
                 let waitForMouse = false;
+                let draging = false;
                 document.addEventListener('mousedown', e => {
                     if (waitForMouse ||
                         e.target.classList.contains('search-jumper-btn') ||
@@ -6093,7 +6094,6 @@
                     }
                     let startX = e.clientX;
                     let startY = e.clientY;
-                    let mouseMoveTimer;
                     let clickHandler = e => {
                         if (shown) {
                             e.stopPropagation();
@@ -6104,18 +6104,17 @@
                     let mouseMoveHandler = e => {
                         if (Math.abs(startX - e.clientX) + Math.abs(startY - e.clientY) > 10) {
                             clearTimeout(showToolbarTimer);
-                            clearTimeout(mouseMoveTimer);
                             document.removeEventListener('mousemove', mouseMoveHandler, true);
                             e.target.removeEventListener('scroll', scrollHandler);
                         }
                     };
                     let scrollHandler = e => {
                         clearTimeout(showToolbarTimer);
-                        clearTimeout(mouseMoveTimer);
                         document.removeEventListener('mousemove', mouseMoveHandler, true);
                         e.target.removeEventListener('scroll', scrollHandler);
                     };
                     let mouseUpHandler = e => {
+                        draging = false;
                         if (shown) {
                             e.stopPropagation();
                             e.preventDefault();
@@ -6125,7 +6124,6 @@
                             searchBar.waitForHide();
                         }
                         clearTimeout(showToolbarTimer);
-                        clearTimeout(mouseMoveTimer);
                         document.removeEventListener('mouseup', mouseUpHandler, true);
                         document.removeEventListener('mousemove', mouseMoveHandler, true);
                         e.target.removeEventListener('scroll', scrollHandler);
@@ -6137,10 +6135,14 @@
                          searchData.prefConfig.ctrlKey ||
                          searchData.prefConfig.shiftKey ||
                          searchData.prefConfig.metaKey)) {
-                        searchBar.showInPage();
+                        setTimeout(() => {
+                            if (!draging) {
+                                searchBar.showInPage();
+                            }
+                            draging = false;
+                        }, 100);
                         shown = true;
-                        //e.stopPropagation();
-                        //e.preventDefault();
+                        clearTimeout(showToolbarTimer);
                         document.addEventListener('mouseup', mouseUpHandler, true);
                         document.addEventListener('click', clickHandler, true);
                         return false;
@@ -6169,6 +6171,7 @@
                         targetElement = e.target;
                         if (targetElement.getAttribute && targetElement.getAttribute("draggable") == "true") return;
                         showDragSearch(e.clientX, e.clientY);
+                        draging = true;
                     });
                 }
             }
@@ -6515,6 +6518,11 @@
                       border-radius: 50%;
                       z-index: 2147483647;
                       box-sizing: content-box;
+                      opacity: 0;
+                      transform: scale(.5);
+                      -moz-transition:opacity 0.3s ease, transform 0.3s;
+                      -webkit-transition:opacity 0.3s ease, transform 0.3s;
+                      transition:opacity 0.3s ease, transform 0.3s;
                     }
                     #searchJumperWrapper>.panel {
                       position: relative;
@@ -6598,6 +6606,9 @@
                     #searchJumperWrapper .sector-inner span {
                       width: 70px;
                       margin-left: -15px;
+                    }
+                    #searchJumperWrapper .sector-inner span>p {
+                      max-width: 58px;
                     }
                     #searchJumperWrapper .sector.out>.sector-inner span {
                       width: unset;
@@ -6778,7 +6789,15 @@
             }
             dragRoundFrame.style.left = left - 190 + "px";
             dragRoundFrame.style.top = top - 190 + "px";
-            setTimeout(() => document.documentElement.appendChild(dragRoundFrame), 0);
+            dragRoundFrame.style.opacity = "";
+            dragRoundFrame.style.transform = '';
+            setTimeout(() => {
+                document.documentElement.appendChild(dragRoundFrame);
+                setTimeout(() => {
+                    dragRoundFrame.style.opacity = 1;
+                    dragRoundFrame.style.transform = 'scale(1)';
+                }, 0);
+            }, 0);
         }
 
         var addFrame, nameInput, descInput, urlInput, iconInput, iconShow, iconsCon, typeSelect, testBtn, cancelBtn, addBtn, addFrameCssText, addFrameCssEle;
