@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.5.36
+// @version      1.6.5.37
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -3351,6 +3351,8 @@
                     currentGroup.style.cursor = "";
                     startLeft += clientX(e) - startX;
                     startBottom -= clientY(e) - startY;
+                    e.stopPropagation();
+                    e.preventDefault();
                 };
                 let grabMousemoveHandler = e => {
                     let left = startLeft + clientX(e) - startX;
@@ -3368,6 +3370,8 @@
                         }
                         self.searchInputDiv.style.maxWidth = maxWidth + "px";
                     }
+                    e.stopPropagation();
+                    e.preventDefault();
                 };
 
                 let setStartBottom = () => {
@@ -3379,8 +3383,6 @@
                     touchStart = true;
                     if (e.target.className === 'inputGroup' || e.target.tagName === 'LABEL') {
                         setStartBottom();
-                        e.stopPropagation();
-                        e.preventDefault();
                         currentGroup = e.target;
                         currentGroup.style.cursor = "grabbing";
                         startX = clientX(e);
@@ -3397,8 +3399,6 @@
                     }
                     if (e.target.className === 'inputGroup' || e.target.tagName === 'LABEL') {
                         setStartBottom();
-                        e.stopPropagation();
-                        e.preventDefault();
                         currentGroup = e.target;
                         currentGroup.style.cursor = "grabbing";
                         startX = e.clientX;
