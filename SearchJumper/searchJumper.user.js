@@ -5956,6 +5956,8 @@
                 if (e.which === 3) {
                     return;
                 }
+                e.preventDefault();
+                e.stopPropagation();
                 grabState = 1;
                 document.addEventListener('mouseup', mouseUpHandler, false);
                 setTimeout(() => {
@@ -5971,6 +5973,8 @@
             }, false);
 
             logoBtn.addEventListener('touchstart', e => {
+                e.preventDefault();
+                e.stopPropagation();
                 touchStart = true;
                 grabState = 1;
                 document.addEventListener('touchend', mouseUpHandler, false);
