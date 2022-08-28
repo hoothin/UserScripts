@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.5.31
+// @version      1.6.5.32
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -1560,6 +1560,7 @@
                      display: none;
                      z-index: 2139999999;
                      font-size: 20px;
+                     height: 36px;
                  }
                  .inputGroup {
                      cursor: grab;
@@ -1583,6 +1584,11 @@
                      outline: none;
                      box-sizing: border-box;
                      cursor: text;
+                     user-select: none;
+                     -webkit-user-select: none;
+                     -moz-user-select: none;
+                     -khtml-user-select: none;
+                     -ms-user-select: none;
                  }
                  #searchJumperInput,
                  #searchJumperInputKeyWords {
@@ -1642,6 +1648,10 @@
                      border-radius: 5px 5px 0 0;
                      user-select: none;
                      pointer-events: all;
+                     max-width: 40%;
+                     white-space: nowrap;
+                     overflow: hidden;
+                     text-overflow: ellipsis;
                  }
                  .search-jumper-input label::after {
                      content: "";
@@ -1666,6 +1676,32 @@
                      left: 0;
                      transition: 0.25s ease;
                      position: absolute;
+                 }
+                 .inputGroup>.svgBtns {
+                     right: 25px;
+                     top: 15px;
+                     position: absolute;
+                     user-select: none;
+                     background: rgb(0 0 0 / 50%);
+                     white-space: nowrap;
+                     overflow: hidden;
+                 }
+                 .inputGroup>.svgBtns:hover {
+                     width: auto;
+                 }
+                 .inputGroup svg.checked {
+                     fill: #1E88E5;
+                 }
+                 @media screen and (max-width: 800px) {
+                     .search-jumper-input .line {
+                         display: none;
+                     }
+                     .search-jumper-input {
+                         min-width: 300px;
+                     }
+                     .inputGroup>.svgBtns {
+                         width: 25px;
+                     }
                  }
                  .search-jumper-input .content-container {
                      background: #eee;
@@ -1708,18 +1744,8 @@
                      transform:scale(1.2);
                      opacity: 1;
                  }
-                 .inputGroup svg.checked {
-                     fill: #1E88E5;
-                 }
                  #search-jumper.selectedEle #filterSites>.svgBtns>svg {
                      display: inline-block!important;
-                 }
-                 .inputGroup>.svgBtns {
-                     right: 25px;
-                     top: 15px;
-                     position: absolute;
-                     user-select: none;
-                     background: rgb(0 0 0 / 50%);
                  }
                  .search-jumper-input>.closeBtn {
                      position: absolute;
@@ -3272,34 +3298,78 @@
                 let startLeft = window.innerWidth / 2;
                 let startBottom = window.innerHeight * 0.03;
                 let halfContainerWidth = 0.4 * window.innerWidth;
-                this.contentContainer.addEventListener("mousedown", e => {
-                    if (e.target.className == "inputGroup") {
-                        let currentGroup = e.target;
-                        currentGroup.style.cursor = "grabbing";
-                        let startX = e.clientX, startY = e.clientY;
-                        let grabMouseupHandler = e => {
-                            document.removeEventListener("mouseup", grabMouseupHandler);
-                            document.removeEventListener("mousemove", grabMousemoveHandler);
-                            currentGroup.style.cursor = "";
-                            startLeft += e.clientX - startX;
-                            startBottom -= e.clientY - startY;
-                        };
-                        let grabMousemoveHandler = e => {
-                            let left = startLeft + e.clientX - startX;
+                let currentGroup, startX, startY;
+
+                let clientX = e => {
+                    if (e.type.indexOf('mouse') === 0) {
+                        return e.clientX;
+                    } else {
+                        return e.changedTouches[0].clientX;
+                    }
+                };
+
+                let clientY = e => {
+                    if (e.type.indexOf('mouse') === 0) {
+                        return e.clientY;
+                    } else {
+                        return e.changedTouches[0].clientY;
+                    }
+                };
+
+
+                let grabMouseupHandler = e => {
+                    document.removeEventListener("mouseup", grabMouseupHandler);
+                    document.removeEventListener("mousemove", grabMousemoveHandler);
+                    document.removeEventListener("touchend", grabMouseupHandler);
+                    document.removeEventListener("touchmove", grabMousemoveHandler);
+                    currentGroup.style.cursor = "";
+                    startLeft += clientX(e) - startX;
+                    startBottom -= clientY(e) - startY;
+                };
+                let grabMousemoveHandler = e => {
+                    let left = startLeft + clientX(e) - startX;
+                    self.searchInputDiv.style.left = left + "px";
+                    self.searchInputDiv.style.bottom = startBottom - (clientY(e) - startY) + "px";
+                    if (left > window.innerWidth / 2) {
+                        let maxWidth = window.innerWidth - left + halfContainerWidth - 50;
+                        self.searchInputDiv.style.maxWidth = maxWidth + "px";
+                    } else {
+                        let maxWidth = left + halfContainerWidth;
+                        if (left < halfContainerWidth) {
+                            left += halfContainerWidth - left;
                             self.searchInputDiv.style.left = left + "px";
-                            self.searchInputDiv.style.bottom = startBottom - (e.clientY - startY) + "px";
-                            if (left > window.innerWidth / 2) {
-                                let maxWidth = window.innerWidth - left + halfContainerWidth - 50;
-                                self.searchInputDiv.style.maxWidth = maxWidth + "px";
-                            } else {
-                                let maxWidth = left + halfContainerWidth;
-                                if (left < halfContainerWidth) {
-                                    left += halfContainerWidth - left;
-                                    self.searchInputDiv.style.left = left + "px";
-                                }
-                                self.searchInputDiv.style.maxWidth = maxWidth + "px";
-                            }
-                        };
+                        }
+                        self.searchInputDiv.style.maxWidth = maxWidth + "px";
+                    }
+                };
+
+                let touchStart = false;
+                this.contentContainer.addEventListener("touchstart", e => {
+                    touchStart = true;
+                    if (e.target.className == "inputGroup") {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        currentGroup = e.target;
+                        currentGroup.style.cursor = "grabbing";
+                        startX = clientX(e);
+                        startY = clientY(e);
+                        document.addEventListener("touchend", grabMouseupHandler);
+                        document.addEventListener("touchmove", grabMousemoveHandler);
+                    }
+                });
+
+                this.contentContainer.addEventListener("mousedown", e => {
+                    if (touchStart) {
+                        touchStart = false;
+                        return;
+                    }
+                    if (e.target.className == "inputGroup") {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        currentGroup = e.target;
+                        currentGroup.style.cursor = "grabbing";
+                        startX = e.clientX;
+                        startY = e.clientY;
                         document.addEventListener("mouseup", grabMouseupHandler);
                         document.addEventListener("mousemove", grabMousemoveHandler);
                     }
@@ -3318,6 +3388,8 @@
                     initWidth = this.searchInput.clientWidth * 2 + 2;
                     document.addEventListener("mousemove", sizeChangeMouseMove);
                     document.addEventListener("mouseup", sizeChangeMouseUp);
+                    e.stopPropagation();
+                    e.preventDefault();
                 });
 
                 sitesNum = 0;
@@ -3919,7 +3991,8 @@
                 if (icon) {
                     if (/^[a-z\- ]+$/.test(icon)) {
                         let cache = searchData.prefConfig.cacheSwitch && cacheIcon[icon];
-                        if (cache) {
+                        if (cache === 'fail') {
+                        } else if (cache) {
                             img.src = cache;
                             img.style.width = '100%';
                             img.style.height = '100%';
@@ -3934,7 +4007,8 @@
                             img.src = icon;
                         } else {
                             let cache = searchData.prefConfig.cacheSwitch && cacheIcon[icon];
-                            if (cache) {
+                            if (cache === 'fail') {
+                            } else if (cache) {
                                 img.src = cache;
                             } else {
                                 img.src = icon;
@@ -4385,7 +4459,8 @@
                     img.src = imgSrc;
                 } else if (imgSrc) {
                     let cache = searchData.prefConfig.cacheSwitch && cacheIcon[imgSrc];
-                    if (cache) {
+                    if (cache === 'fail') {
+                    } else if (cache) {
                         img.src = cache;
                     } else {
                         img.dataset.src = imgSrc;
@@ -5580,7 +5655,7 @@
         async function cacheImg(img) {
             if (cacheIcon[img.src]) return;
             let cache = await image2Base64(img);
-            if (cache == 'data:,' || !cache) return;
+            if (cache == 'data:,' || !cache) cache = 'fail';
             cacheIcon[img.src] = cache;
             storage.setItem("cacheIcon", cacheIcon);
         }
@@ -5589,7 +5664,7 @@
             let iconName = icon.className.replace('fa fa-', '');
             if (cacheIcon[iconName]) return;
             let cache = icon2Base64(icon);
-            if (cache == 'data:,' || !cache) return;
+            if (cache == 'data:,' || !cache) cache = 'fail';
             cacheIcon[iconName] = cache;
             storage.setItem("cacheIcon", cacheIcon);
         }
@@ -5607,6 +5682,9 @@
                 if (target.complete) {
                     if (target.naturalHeight && target.naturalWidth) {
                         await cacheImg(target);
+                    } else {
+                        cacheIcon[target.src] = 'fail';
+                        storage.setItem("cacheIcon", cacheIcon);
                     }
                 } else {
                     let loaded = await new Promise((resolve) => {
@@ -5618,6 +5696,10 @@
                         }, true);
                     });
                     if (loaded) await cacheImg(target);
+                    else {
+                        cacheIcon[target.src] = 'fail';
+                        storage.setItem("cacheIcon", cacheIcon);
+                    }
                 }
             } else {
                 cacheFontIcon(target);
@@ -6300,7 +6382,7 @@
                         searchData.sitesConfig.forEach(type => {
                             if (/^http/.test(type.icon)) {
                                 let typeCache = cacheIcon[type.icon];
-                                if (typeCache) {
+                                if (typeCache && typeCache !== 'fail') {
                                     newCache[type.icon] = typeCache;
                                 }
                             }
@@ -6309,7 +6391,7 @@
                                 if (!icon) icon = site.url.replace(/^(https?:\/\/[^\/]*\/).*$/, "$1favicon.ico");
                                 if (/^http/.test(icon)) {
                                     let siteCache = cacheIcon[icon];
-                                    if (siteCache) {
+                                    if (siteCache && siteCache !== 'fail') {
                                         newCache[icon] = siteCache;
                                     }
                                 }
