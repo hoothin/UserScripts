@@ -6140,7 +6140,7 @@
                                 searchBar.showInPage();
                             }
                             draging = false;
-                        }, 100);
+                        }, 200);
                         shown = true;
                         clearTimeout(showToolbarTimer);
                         document.addEventListener('mouseup', mouseUpHandler, true);
