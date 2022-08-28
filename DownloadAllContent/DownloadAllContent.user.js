@@ -646,7 +646,7 @@
     function fetch(forceSingle){
         forceSingle=forceSingle===true;
         processFunc=null;
-        var aEles=document.querySelectorAll("a:not(#search-jumper a)"),list=[];
+        var aEles=document.body.querySelectorAll("a"),list=[];
         for(var i=0;i<aEles.length;i++){
             var aEle=aEles[i],has=false;
             if((!aEle.href || aEle.href.indexOf("javascript")!=-1) && aEle.dataset.href){
