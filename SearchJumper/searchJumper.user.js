@@ -3322,7 +3322,7 @@
                 });
 
                 let startLeft = window.innerWidth / 2;
-                let startBottom = window.innerHeight * 0.03;
+                let startBottom;
                 let halfContainerWidth = 0.4 * window.innerWidth;
                 let currentGroup, startX, startY;
 
@@ -3354,6 +3354,7 @@
                 };
                 let grabMousemoveHandler = e => {
                     let left = startLeft + clientX(e) - startX;
+                    self.searchInputDiv.style.top = 'unset';
                     self.searchInputDiv.style.left = left + "px";
                     self.searchInputDiv.style.bottom = startBottom - (clientY(e) - startY) + "px";
                     if (left > window.innerWidth / 2) {
@@ -3369,10 +3370,15 @@
                     }
                 };
 
+                let setStartBottom = () => {
+                    if (!startBottom) startBottom = self.bar.parentNode.classList.contains('search-jumper-bottom') ? window.innerHeight * 0.95 - 60 : window.innerHeight * 0.03;
+                };
+
                 let touchStart = false;
                 this.contentContainer.addEventListener("touchstart", e => {
                     touchStart = true;
                     if (e.target.className == "inputGroup") {
+                        setStartBottom();
                         e.stopPropagation();
                         e.preventDefault();
                         currentGroup = e.target;
@@ -3390,6 +3396,7 @@
                         return;
                     }
                     if (e.target.className == "inputGroup") {
+                        setStartBottom();
                         e.stopPropagation();
                         e.preventDefault();
                         currentGroup = e.target;
