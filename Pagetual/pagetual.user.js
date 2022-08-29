@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.30.8
+// @version      1.9.30.9
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -438,7 +438,7 @@
                 firstUpdate:"Click here to initialize the rules",
                 update:"Update online rules",
                 click2update:"Click to update rules from url now",
-                loadNow:"Load next page now",
+                loadNow:"Load next page manually",
                 loadConfirm:"How much pages do you want to load? (0 means infinite)",
                 noNext:"No next link found, please create a new rule",
                 passSec:"Updated #t# seconds ago",
@@ -1232,6 +1232,7 @@
                     });
                 }
             }
+            this.lazyImgAction(pageElement);
             return pageElement;
         }
 
@@ -1753,7 +1754,6 @@
                     debug(e);
                 }
             }
-            this.lazyImgAction(eles);
             this.openInNewTab(eles);
         }
 
@@ -1775,25 +1775,33 @@
         }
 
         lazyImgAction(eles){
+            if (!eles || eles.length==0) return;
             let lazyImgSrc=this.curSiteRule.lazyImgSrc;
+            if (lazyImgSrc===0 || lazyImgSrc==='0') return;
             let setLazyImg = img => {
                 let realSrc;
                 if (lazyImgSrc) {
                     realSrc = img.getAttribute(lazyImgSrc);
+                    img.removeAttribute(lazyImgSrc);
                 }
                 if (!realSrc) {
                     if (img.getAttribute("_src") && !img.src) {
                         realSrc = img.getAttribute("_src");
+                        img.removeAttribute("_src");
                     } else if (img.dataset && img.dataset.original) {
                         realSrc = img.dataset.original;
+                        img.dataset.original = "";
                     } else if (img.dataset && img.dataset.lazy) {
                         realSrc = img.dataset.lazy;
+                        img.dataset.lazy = "";
                     } else if (img.dataset && img.dataset.src) {
                         realSrc = img.dataset.src;
+                        img.dataset.src = "";
                     } else if (img._lazyrias && img._lazyrias.srcset) {
                         realSrc = img._lazyrias.srcset[img._lazyrias.srcset.length - 1];
                     } else if (img.dataset && img.dataset.origFile) {
                         realSrc = img.dataset.origFile;
+                        img.dataset.origFile = "";
                     } else if (img.srcset) {
                         var srcs = img.srcset.split(/[xw],/), largeSize = 0;
                         srcs.forEach(srci => {
@@ -4504,6 +4512,7 @@
                         callback(iframeDoc, eles);
                     }
                 }else{
+                    emuClick(nextLink);
                     setTimeout(()=>{
                         checkPage();
                     },waitTime);
