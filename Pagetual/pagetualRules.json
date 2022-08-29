@@ -139,6 +139,13 @@
     "pageElement": "[data-testid=galleryMosaicAsset]"
   },
   {
+    "name": "IMHentai",
+    "url": "^https://imhentai\\.xxx",
+    "pageElement": "#gimg",
+    "nextLink": ".nav_next",
+    "css": "#footer,#bar{display:none}.pre_img+.nav_pagination{bottom: 10px; position: fixed; width: 100%;}.return_btn{bottom: 0; position: fixed; width: 100%;}"
+  },
+  {
     "name":"playstation",
     "action":1,
     "css":".psw-visually-hide{opacity:1!important}.pagetual_loading{display:none!important}[name='pagetual-iframe']{display:none}",
