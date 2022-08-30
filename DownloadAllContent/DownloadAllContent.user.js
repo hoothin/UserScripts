@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.7.3.12
+// @version      2.7.3.13
 // @description  Fetch and download main content on current page, provide special support for chinese novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -204,7 +204,7 @@
 
 (function() {
     'use strict';
-    var indexReg=/PART\b|^Prologue|Chapter\s*[\-_]?\d+|分卷|^序$|^序\s*言|^序\s*章|^前\s*言|^附\s*[录錄]|^引\s*[言子]|^摘\s*要|^[楔契]\s*子|^后\s*记|^後\s*記|^附\s*言|^结\s*语|^結\s*語|^尾\s*[声聲]|^最終話|^最终话|^番\s*外|^\d+\s*\D*[^\d#\.]$|^[第（]?[\d〇零一二三四五六七八九十百千万萬-]+\s*[、）章节節回卷折篇幕集话話]/i;
+    var indexReg=/PART\b|^Prologue|Chapter\s*[\-_]?\d+|分卷|^序$|^序\s*言|^序\s*章|^前\s*言|^附\s*[录錄]|^引\s*[言子]|^摘\s*要|^[楔契]\s*子|^后\s*记|^後\s*記|^附\s*言|^结\s*语|^結\s*語|^尾\s*[声聲]|^最終話|^最终话|^番\s*外|^[第（]?[\d〇零一二三四五六七八九十百千万萬-]+\s*[、）章节節回卷折篇幕集话話]/i;
     var innerNextPage=/下一[页頁张張]|next\s*page|次のページ/i;
     var lang = navigator.appName=="Netscape"?navigator.language:navigator.userLanguage;
     var i18n={};
@@ -226,8 +226,8 @@
                 reSortUrl:"按网址重新排序",
                 setting:"选项设置",
                 abort:"跳过此章",
-                save:"临时保存",
-                saveAsMd:"存为Markdown",
+                save:"保存当前",
+                saveAsMd:"存为 Markdown",
                 downThreadNum:"设置同时下载的线程数"
             };
             break;
@@ -247,7 +247,7 @@
                 setting:"選項設置",
                 abort:"跳過此章",
                 save:"保存當前",
-                saveAsMd:"存爲Markdown",
+                saveAsMd:"存爲 Markdown",
                 downThreadNum:"設置同時下載的綫程數"
             };
             break;
@@ -281,7 +281,7 @@
         document.body.appendChild(rocketContent);
         rocketContent.outerHTML=`
         <div id="txtDownContent">
-            <div style="font-size:16px;color:#333333;width:360px;height:110px;position:fixed;left:50%;top:50%;margin-top:-25px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;">
+            <div style="font-size:16px;color:#333333;width:362px;height:110px;position:fixed;left:50%;top:50%;margin-top:-25px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;">
                 <div id="txtDownWords" style="position:absolute;width:275px;height: 90px;max-height: 90%;border: 1px solid #f3f1f1;padding: 8px;border-radius: 10px;overflow: auto;">
                     Downloading......
                 </div>
@@ -290,8 +290,8 @@
                 </div>
                 <div style="position:absolute;right:0px;bottom:2px;cursor: pointer;max-width:85px">
                     <button id="abortRequest" style="background: #008aff;border: 0;padding: 5px;border-radius: 6px;color: white;float: right;margin: 1px;height: 25px;display:none;line-height: 16px;">${getI18n('abort')}</button>
-                    <button id="tempSaveTxt" style="background: #008aff;border: 0;padding: 5px;border-radius: 6px;color: white;float: right;margin: 1px;height: 25px;line-height: 16px;">${getI18n('save')}</button>
-                    <button id="saveAsMd" style="background: #008aff;border: 0;padding: 5px;border-radius: 6px;color: white;float: right;margin: 1px;height: 25px;line-height: 16px;" title="${getI18n('saveAsMd')}">Markdown</button>
+                    <button id="tempSaveTxt" style="background: #008aff;border: 0;padding: 5px;border-radius: 6px;color: white;float: right;margin: 1px;height: 25px;line-height: 16px;cursor: pointer;">${getI18n('save')}</button>
+                    <button id="saveAsMd" style="background: #008aff;border: 0;padding: 5px;border-radius: 6px;color: white;float: right;margin: 1px;height: 25px;line-height: 16px;cursor: pointer;" title="${getI18n('saveAsMd')}">Markdown</button>
                 </div>
             </div>
         </div>`;
