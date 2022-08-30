@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.5
+// @version      1.6.6.6
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -6184,7 +6184,7 @@
                         searchData.prefConfig.metaKey;
                     let clickHandler = e => {
                         if (shown) {
-                            e.stopPropagation();
+                            //e.stopPropagation();
                             e.preventDefault();
                         }
                         document.removeEventListener('click', clickHandler, true);
@@ -6812,15 +6812,16 @@
                 };
             }
             if (!dragCssEle || !dragCssEle.parentNode) dragCssEle = _GM_addStyle(dragCssText);
-            document.addEventListener('dragend', dragEndHandler, true);
             document.addEventListener('dragenter', dragenterHandler, true);
             searchBar.recoveHistory();
             let firstType = searchBar.autoGetFirstType();
             let siteBtns = firstType.querySelectorAll("a.search-jumper-btn:not(.notmatch)");
             dragSiteCurSpans.forEach((span, i) => {
                 span.innerHTML = createHTML();
+                span.parentNode.parentNode.style.filter = 'contrast(0.5)';
                 let targetSite = siteBtns[i];
                 if (!targetSite) return;
+                span.parentNode.parentNode.style.filter = '';
                 span.parentNode.dataset.name = targetSite.dataset.name;
                 let word = document.createElement("p");
                 word.innerText = targetSite.dataset.name.substr(0, 10).trim();
@@ -6852,8 +6853,10 @@
                 let dragleaveEvent = new DragEvent("dragleave");
                 span.dispatchEvent(dragleaveEvent);
                 span.innerHTML = createHTML();
+                span.parentNode.parentNode.style.opacity = 0.6;
                 let targetSite = getHistorySiteBtn();
                 if (!targetSite) return;
+                span.parentNode.parentNode.style.opacity = 1;
                 span.parentNode.dataset.name = targetSite.dataset.name;
                 let word = document.createElement("p");
                 word.innerText = targetSite.dataset.name.substr(0, 10).trim();
@@ -6884,6 +6887,7 @@
             dragRoundFrame.style.opacity = "";
             dragRoundFrame.style.transform = '';
             setTimeout(() => {
+                document.addEventListener('dragend', dragEndHandler, true);
                 document.documentElement.appendChild(dragRoundFrame);
                 setTimeout(() => {
                     dragRoundFrame.style.opacity = 1;
