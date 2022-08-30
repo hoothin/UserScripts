@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.2
+// @version      1.6.6.3
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -6168,7 +6168,6 @@
                             if (!draging) {
                                 searchBar.showInPage();
                             }
-                            clearTimeout(showToolbarTimer);
                             document.removeEventListener('mouseup', mouseUpHandler, true);
                             document.removeEventListener('mousemove', mouseMoveHandler, true);
                             e.target.removeEventListener('scroll', scrollHandler);
@@ -6181,7 +6180,9 @@
                         return false;
                     }
                     let selectImg = e.target.tagName === 'IMG';
+                    if (showToolbarTimer) clearTimeout(showToolbarTimer);
                     showToolbarTimer = setTimeout(() => {
+                        if (draging) return;
                         if (targetElement != e.target) return;
                         if ((e.which === 1 || e.which === 2) && !searchData.prefConfig.leftMouse) return;
                         searchBar.showInPage();
