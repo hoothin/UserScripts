@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.3
+// @version      1.6.6.5
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -692,7 +692,7 @@
                     siteAddOver: '站点添加成功',
                     multiline: '是否以换行符分隔多行搜索？',
                     multilineTooMuch: '行数超过10行，是否继续搜索？',
-                    inputPlaceholder: '输入关键词筛选站点，支持 * ? 通配符',
+                    inputPlaceholder: '输入关键词筛选站点，支持 * ? 通配符，$代表末尾',
                     inputKeywords: '输入搜索关键词',
                     inPageTips: '自定义分隔符：$c 加分隔符，例如 $c| search | jumper，默认空格作为分隔符\n原始文本不分隔：$o 加文本，例如$oopai liked by hero\n正则表达式：/re/，例如 $c, /google/i , /aPPle/\n添加提示文本：搜索文本$t{提示文本}，例如 linux$t{linux is not unix}\n添加自定义样式：搜索文本$s{背景;其他}，例如 google$s{#333333;color:red;}\n左键点击关键词跳转至下一个，右键点击关键词跳转至上一个',
                     inPagePlaceholder: '输入文字，按下回车进行页内查找',
@@ -745,7 +745,7 @@
                     siteAddOver: '站點添加成功',
                     multiline: '是否以換行符分隔多行搜索？',
                     multilineTooMuch: '行數超過10行，是否繼續搜索？',
-                    inputPlaceholder: '輸入關鍵詞篩選站點，支持 * ? 通配符',
+                    inputPlaceholder: '輸入關鍵詞篩選站點，支持 * ? 通配符，$代表末尾',
                     inputKeywords: '輸入搜索關鍵詞',
                     inPageTips: '自定義分隔符：$c 加分隔符，例如 $c| search | jumper，默認空格作為分隔符\n原始文本不分隔：$o 加文本，例如$oopai liked by hero\n正則表達式：/re/，例如 $c, /google/i , /aPPle/\n添加提示文本：搜索文本$t{提示文本}，例如 linux$t{linux is not unix}\n添加自定義樣式：搜索文本$s{背景;其他}，例如 google$s{#333333;color:red;}\n左鍵點擊關鍵詞跳轉至下一個，右鍵點擊關鍵詞跳轉至上一個',
                     inPagePlaceholder: '輸入文字，按下回車進行頁內查找',
@@ -797,7 +797,7 @@
                     siteAddOver: 'Site added successfully',
                     multiline: 'Search as multilines?',
                     multilineTooMuch: 'The number of lines exceeds 10, do you want to continue searching?',
-                    inputPlaceholder: 'Enter keywords to filter sites, support * ? wildcards',
+                    inputPlaceholder: 'Enter keywords to filter sites, support * ? wildcards, $ means end',
                     inputKeywords: 'Enter search keywords',
                     inPageTips: 'Custom delimiter: $c + delimiter, such as $c| search | jumper, space as delimiter by default\nOriginal text without delimited: $o + text, such as $oopai liked by hero\nRegular expression: /re/, such as $c, /google/i , /aPPle/\nTips text: search text$t{tips text}, such as linux$t{linux is not unix}\nCustom style: Search text$s{background;other}, such as google$s{#333333;color:red;}\nLeft-click keyword to jump to the next, right-click keyword to jump to the previous',
                     inPagePlaceholder: 'Input text, press Enter to find in the page',
@@ -2101,7 +2101,7 @@
                 }
             }
 
-            anylizeInPageWords(words, add) {
+            anylizeInPageWords(words, add, limitLen) {
                 if (!words) return [];
                 let self = this;
                 let result = [];
@@ -2120,7 +2120,7 @@
                         let oriWord = word;
                         word = word.trim();
                         if (!word) return;
-                        if (word.length < (searchData.prefConfig.limitInPageLen || 1)) return;
+                        if (limitLen && word.length < (searchData.prefConfig.limitInPageLen || 1)) return;
                         if ((searchData.prefConfig.ignoreWords || []).includes(word)) return;
                         let title = "";
                         let style = "";
@@ -2165,7 +2165,7 @@
                 return result;
             }
 
-            submitInPageWords() {
+            submitInPageWords(limitLen) {
                 let self = this;
                 let words = this.searchJumperInPageInput.value;
                 let wordSpans = [];
@@ -2176,7 +2176,7 @@
                     } else this.highlight("insert");
                     return wordSpans;
                 }
-                let targetWords = this.anylizeInPageWords(words, this.lockWords);
+                let targetWords = this.anylizeInPageWords(words, this.lockWords, !!limitLen);
                 if (!targetWords || targetWords.length == 0) return wordSpans;
                 if (this.lockWords) {
                     this.lockWords += this.splitSep + words;
@@ -2206,9 +2206,10 @@
                         event.preventDefault();
                     };
                     wordSpan.addEventListener('dblclick', e => {
-                        this.showModifyWindow(word, wordSpan);
                         e.stopPropagation();
                         e.preventDefault();
+                        if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) return;
+                        this.showModifyWindow(word, wordSpan);
                     }, true);
                     wordSpan.addEventListener("mousedown", e => {
                         if (e.which === 1 ) {
@@ -3051,6 +3052,7 @@
                 this.splitSep = " ";
                 this.lockWords = "";
                 this.marks = {};
+                this.initInPageWords = [];
                 this.highlightSpans = {};
                 this.curHighlightWords = [];
                 this.curWordIndex = 0;
@@ -3429,6 +3431,51 @@
                     e.preventDefault();
                 });
 
+                let dragSiteBtn;
+                let dragOpenDropHandler = e => {
+                    if (!this.bar.contains(e.target)){
+                        let isPage = /^(https?|ftp):/.test(dragSiteBtn.href);
+                        if (isPage) {
+                            dragSiteBtn.setAttribute("target", "_blank");
+                        }
+                        if (!this.customInput || this.batchOpening) {
+                            if (dragSiteBtn.onclick || !isPage) {
+                                dragSiteBtn.click();
+                            } else {
+                                _GM_openInTab(dragSiteBtn.href, {active: false});
+                            }
+                        }
+                        dragSiteBtn.setAttribute("target", dragSiteBtn.dataset.target==1?"_blank":"");
+                    }
+                    document.body.removeEventListener('dragover', dragOpenOverHandler);
+                    document.removeEventListener('drop', dragOpenDropHandler);
+                    document.removeEventListener('dragover', dragOpenOverHandler);
+                };
+                let dragOpenOverHandler = e => {
+                    e.preventDefault();
+                };
+                let dragOpenEndHandler = e => {
+                    document.body.removeEventListener('dragover', dragOpenOverHandler);
+                    document.removeEventListener('drop', dragOpenDropHandler);
+                    document.removeEventListener('dragover', dragOpenOverHandler);
+                };
+                this.bar.addEventListener("dragstart", e => {
+                    let target = e.target;
+                    let parentNode = target.parentNode;
+                    if (target.tagName !== 'IMG' && target.tagName !== 'A') return;
+                    if (target.classList && target.classList.contains('search-jumper-btn')) {
+                        dragSiteBtn = target;
+                        document.body.addEventListener('dragover', dragOpenOverHandler);
+                        document.addEventListener('drop', dragOpenDropHandler);
+                        document.addEventListener('dragend', dragOpenEndHandler);
+                    } else if (parentNode && parentNode.classList && parentNode.classList.contains('search-jumper-btn')) {
+                        dragSiteBtn = parentNode;
+                        document.body.addEventListener('dragover', dragOpenOverHandler);
+                        document.addEventListener('drop', dragOpenDropHandler);
+                        document.addEventListener('dragend', dragOpenEndHandler);
+                    }
+                }, true);
+
                 sitesNum = 0;
                 let hasCurrent = currentSite !== false;
                 for (let siteConfig of bookmarkTypes) {
@@ -3482,18 +3529,28 @@
             }
 
             setInPageWords(inPageWords) {
-                this.searchJumperInPageInput.value = inPageWords;
+                this.initInPageWords.push(inPageWords);
                 this.searchInPageTab.checked = true;
                 if (document.readyState == "loading") {
                     let loadHandler = e => {
-                        if (document.body.style.display === "none") document.body.style.display = "";
-                        this.submitInPageWords();
                         document.removeEventListener("DOMContentLoaded", loadHandler);
+                        if (document.body.style.display === "none") document.body.style.display = "";
+                        let word = this.initInPageWords.shift();
+                        while (word) {
+                            this.searchJumperInPageInput.value = word;
+                            this.submitInPageWords(true);
+                            word = this.initInPageWords.shift();
+                        }
                     };
                     document.addEventListener("DOMContentLoaded", loadHandler);
                 } else {
                     if (document.body.style.display === "none") document.body.style.display = "";
-                    this.submitInPageWords();
+                    let word = this.initInPageWords.shift();
+                    while (word) {
+                        this.searchJumperInPageInput.value = word;
+                        this.submitInPageWords(true);
+                        word = this.initInPageWords.shift();
+                    }
                 }
             }
 
@@ -3514,7 +3571,6 @@
             }
 
             checkSearchJump() {
-                if (this.searchInPageTab.checked) return;
                 let inPageWords;
                 if (searchData.prefConfig.showInSearchJumpPage && referrer) {
                     if (document.referrer.indexOf(referrer) != -1) {
@@ -3542,7 +3598,6 @@
                     searchData.prefConfig.offset.y
                 );
                 this.insertHistory(this.currentType);
-                if (this.searchInPageTab.checked) return;
                 let inPageWords = searchData.prefConfig.showInSearchEngine ? getKeywords() : globalInPageWords;
                 if (inPageWords) {
                     try {
@@ -3594,19 +3649,23 @@
                     return true;
                 }
 
-                if (glob.length > 1 && glob[0] == '*' &&
-                    target.length == 0) {
+                if (glob.length === 1 && glob[0] === '$') {
+                    return target.length === 0;
+                }
+
+                if (glob.length > 1 && glob[0] === '*' &&
+                    target.length === 0) {
                     return false;
                 }
 
-                if ((glob.length > 1 && glob[0] == '?') ||
-                    (glob.length != 0 && target.length != 0 &&
-                     glob[0] == target[0])) {
+                if ((glob.length > 1 && glob[0] === '?') ||
+                    (glob.length != 0 && target.length !== 0 &&
+                     glob[0] === target[0])) {
                     return this.globMatch(glob.substring(1),
                                      target.substring(1));
                 }
 
-                if (glob.length > 0 && glob[0] == '*') {
+                if (glob.length > 0 && glob[0] === '*') {
                     return this.globMatch(glob.substring(1), target) ||
                         this.globMatch(glob, target.substring(1));
                 }
@@ -6197,7 +6256,7 @@
                     shown = false;
                 });
                 if (searchData.prefConfig.dragToSearch && !isInConfigPage()) {
-                    document.addEventListener('dragstart', e => {
+                    document.body.addEventListener('dragstart', e => {
                         targetElement = e.target;
                         if (targetElement.getAttribute && targetElement.getAttribute("draggable") == "true") return;
                         showDragSearch(e.clientX, e.clientY);
@@ -6708,7 +6767,7 @@
                         sector.classList.add("over");
                         dragSector = sector;
                         e.preventDefault();
-                    });
+                    }, true);
                     return sectorSpan;
                 };
                 for (let i = 0; i < sector1Num; i++) {
@@ -6720,9 +6779,9 @@
                     dragSiteHistorySpans.push(sectorSpan);
                 }
                 let removeFrame = () => {
+                    document.removeEventListener('dragend', dragEndHandler, true);
+                    document.removeEventListener('dragenter', dragenterHandler, true);
                     if (dragRoundFrame.parentNode) {
-                        document.removeEventListener('dragenter', dragenterHandler);
-                        document.removeEventListener('dragend', dragEndHandler);
                         dragRoundFrame.parentNode.removeChild(dragRoundFrame);
                         dragRoundFrame.style.opacity = "";
                         dragRoundFrame.style.transform = '';
@@ -6753,8 +6812,8 @@
                 };
             }
             if (!dragCssEle || !dragCssEle.parentNode) dragCssEle = _GM_addStyle(dragCssText);
-            document.addEventListener('dragend', dragEndHandler);
-            document.addEventListener('dragenter', dragenterHandler);
+            document.addEventListener('dragend', dragEndHandler, true);
+            document.addEventListener('dragenter', dragenterHandler, true);
             searchBar.recoveHistory();
             let firstType = searchBar.autoGetFirstType();
             let siteBtns = firstType.querySelectorAll("a.search-jumper-btn:not(.notmatch)");
