@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.8
+// @version      1.6.6.9
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -692,7 +692,7 @@
                     siteAddOver: '站点添加成功',
                     multiline: '是否以换行符分隔多行搜索？',
                     multilineTooMuch: '行数超过10行，是否继续搜索？',
-                    inputPlaceholder: '输入关键词筛选站点，支持 * ? 通配符，$代表末尾',
+                    inputPlaceholder: '输入关键词筛选站点，支持 * ? 通配符，$代表末尾，^代表开头',
                     inputKeywords: '输入搜索关键词',
                     inPageTips: '自定义分隔符：$c 加分隔符，例如 $c| search | jumper，默认空格作为分隔符\n原始文本不分隔：$o 加文本，例如$oopai liked by hero\n正则表达式：/re/，例如 $c, /google/i , /aPPle/\n添加提示文本：搜索文本$t{提示文本}，例如 linux$t{linux is not unix}\n添加自定义样式：搜索文本$s{背景;其他}，例如 google$s{#333333;color:red;}\n左键点击关键词跳转至下一个，右键点击关键词跳转至上一个',
                     inPagePlaceholder: '输入文字，按下回车进行页内查找',
@@ -746,7 +746,7 @@
                     siteAddOver: '站點添加成功',
                     multiline: '是否以換行符分隔多行搜索？',
                     multilineTooMuch: '行數超過10行，是否繼續搜索？',
-                    inputPlaceholder: '輸入關鍵詞篩選站點，支持 * ? 通配符，$代表末尾',
+                    inputPlaceholder: '輸入關鍵詞篩選站點，支持 * ? 通配符，$代表末尾，^代表開頭',
                     inputKeywords: '輸入搜索關鍵詞',
                     inPageTips: '自定義分隔符：$c 加分隔符，例如 $c| search | jumper，默認空格作為分隔符\n原始文本不分隔：$o 加文本，例如$oopai liked by hero\n正則表達式：/re/，例如 $c, /google/i , /aPPle/\n添加提示文本：搜索文本$t{提示文本}，例如 linux$t{linux is not unix}\n添加自定義樣式：搜索文本$s{背景;其他}，例如 google$s{#333333;color:red;}\n左鍵點擊關鍵詞跳轉至下一個，右鍵點擊關鍵詞跳轉至上一個',
                     inPagePlaceholder: '輸入文字，按下回車進行頁內查找',
@@ -799,7 +799,7 @@
                     siteAddOver: 'Site added successfully',
                     multiline: 'Search as multilines?',
                     multilineTooMuch: 'The number of lines exceeds 10, do you want to continue searching?',
-                    inputPlaceholder: 'Enter keywords to filter sites, support * ? wildcards, $ means end',
+                    inputPlaceholder: 'Enter keywords to filter sites, support * ? wildcards, $ means end, ^ means start',
                     inputKeywords: 'Enter search keywords',
                     inPageTips: 'Custom delimiter: $c + delimiter, such as $c| search | jumper, space as delimiter by default\nOriginal text without delimited: $o + text, such as $oopai liked by hero\nRegular expression: /re/, such as $c, /google/i , /aPPle/\nTips text: search text$t{tips text}, such as linux$t{linux is not unix}\nCustom style: Search text$s{background;other}, such as google$s{#333333;color:red;}\nLeft-click keyword to jump to the next, right-click keyword to jump to the previous',
                     inPagePlaceholder: 'Input text, press Enter to find in the page',
@@ -5185,8 +5185,15 @@
                     if (this.bar.style.display == "none") {
                         firstType = this.bar.querySelector('.search-jumper-needInPage:not(.notmatch)>span');
                     } else {
-                        let openType = this.bar.querySelector(".search-jumper-type:not(.notmatch,.search-jumper-hide,.search-jumper-targetPage,.search-jumper-targetImg,.search-jumper-targetAudio,.search-jumper-targetVideo,.search-jumper-targetLink)");
-                        if (!openType) firstType = this.bar.querySelector('.search-jumper-needInPage:not(.notmatch)>span');
+                        let openType = this.bar.querySelector(".search-jumper-type:not(.search-jumper-hide)");
+                        if (!openType || openType.classList.contains('notmatch') ||
+                            openType.classList.contains('search-jumper-targetPage') ||
+                            openType.classList.contains('search-jumper-targetImg') ||
+                            openType.classList.contains('search-jumper-targetAudio') ||
+                            openType.classList.contains('search-jumper-targetVideo') ||
+                            openType.classList.contains('search-jumper-targetLink')) {
+                            firstType = this.bar.querySelector('.search-jumper-needInPage:not(.notmatch)>span');
+                        }
                     }
                 } else {
                     let parentNode = targetElement.parentNode;
