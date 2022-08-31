@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.7
+// @version      1.6.6.8
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -1358,8 +1358,10 @@
                  #search-jumper.in-input .search-jumper-btn:not(.input-hide) {
                      display: grid!important;
                  }
-                 #search-jumper>.search-jumper-searchBar>.search-jumper-type.search-jumper-logo {
+                 #search-jumper>.search-jumper-searchBar>.search-jumper-logo {
                      display: inline-flex;
+                     background: unset;
+                     padding: 0px;
                  }
                  .search-jumper-searchBar>.search-jumper-type.search-jumper-targetAll {
                      display: inline-flex;
@@ -1372,7 +1374,8 @@
                  .search-jumper-isTargetPage>.search-jumper-type {
                      display: inline-flex;
                  }
-                 .search-jumper-type {
+                 .search-jumper-type,
+                 .search-jumper-logo {
                      display: inline-flex;
                      box-sizing: content-box;
                      background: #d0d0d0;
@@ -1960,7 +1963,7 @@
                 mainStyleEle = _GM_addStyle(cssText);
 
                 let logoCon = document.createElement("span");
-                logoCon.className = "search-jumper-type search-jumper-hide search-jumper-logo";
+                logoCon.className = "search-jumper-hide search-jumper-logo";
                 logoBtn = document.createElement("span");
                 logoBtn.innerHTML = createHTML(logoBtnSvg);
                 logoBtn.className = "search-jumper-btn";
@@ -3683,7 +3686,7 @@
                         }
                     }
                 });
-                let showType = this.bar.querySelector(".search-jumper-type:not(.input-hide,.search-jumper-logo)");
+                let showType = this.bar.querySelector(".search-jumper-type:not(.input-hide)");
                 if (showType && showType.classList.contains("search-jumper-hide")) showType.querySelector("span.search-jumper-btn").onmousedown();
             }
 
