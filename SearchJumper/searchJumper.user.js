@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.10
+// @version      1.6.6.11
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -395,10 +395,10 @@
             selectTxt: true,
             openInNewTab: true,
             sites: [ {
-                name: "Google",
+                name: "Google ",
                 url: "[\"Google\"]"
             }, {
-                name: "百度",
+                name: "百度 ",
                 url: "[\"百度\"]"
             }, {
                 name: "谷歌站内搜",
@@ -1477,7 +1477,7 @@
                      white-space: nowrap;
                      margin: 0 auto;
                      text-overflow: ellipsis;
-                     padding: 0 10px;
+                     padding: 3px 10px;
                  }
                  .search-jumper-searchBar.disable-pointer>.search-jumper-type {
                      pointer-events: none;
@@ -2129,7 +2129,7 @@
                 }
             }
 
-            anylizeInPageWords(words, add, limitLen) {
+            anylizeInPageWords(words, add, init) {
                 if (!words) return [];
                 let self = this;
                 let result = [];
@@ -2148,8 +2148,10 @@
                         let oriWord = word;
                         word = word.trim();
                         if (!word) return;
-                        if (limitLen && word.length < (searchData.prefConfig.limitInPageLen || 1)) return;
-                        if ((searchData.prefConfig.ignoreWords || []).includes(word)) return;
+                        if (init) {
+                            if (word.length < (searchData.prefConfig.limitInPageLen || 1)) return;
+                            if ((searchData.prefConfig.ignoreWords || []).includes(word)) return;
+                        }
                         let title = "";
                         let style = "";
                         let hideParent;
@@ -2193,7 +2195,7 @@
                 return result;
             }
 
-            submitInPageWords(limitLen) {
+            submitInPageWords(init) {
                 let self = this;
                 let words = this.searchJumperInPageInput.value;
                 let wordSpans = [];
@@ -2204,7 +2206,7 @@
                     } else this.highlight("insert");
                     return wordSpans;
                 }
-                let targetWords = this.anylizeInPageWords(words, this.lockWords, !!limitLen);
+                let targetWords = this.anylizeInPageWords(words, this.lockWords, !!init);
                 if (!targetWords || targetWords.length == 0) return wordSpans;
                 if (this.lockWords) {
                     this.lockWords += this.splitSep + words;
@@ -2833,6 +2835,7 @@
                                node.childNodes &&
                                node.tagName != "SCRIPT" &&
                                node.tagName != "STYLE" &&
+                               node.tagName != "TEXTAREA" &&
                                node.tagName != "MARK") {
                         if (!searchingPre && (node.tagName === "PRE" || node.tagName === "CODE")) {
                             preEles.push(node);
@@ -3664,7 +3667,7 @@
                 this.filterGlob.innerHTML = createHTML();
                 this.allSiteBtns.forEach(btn => {
                     let typeNode = btn.parentNode;
-                    let canMatch = !btn.dataset.pointer && (this.globMatch(inputWords, btn.dataset.name) || (btn.title && this.globMatch(inputWords, btn.title)));
+                    let canMatch = !btn.dataset.clone && (this.globMatch(inputWords, btn.dataset.name) || (btn.title && this.globMatch(inputWords, btn.title)));
                     if (!canMatch) {
                         if (canCheckHost) {
                             if (!btn.dataset.host) {
@@ -3683,11 +3686,9 @@
                         typeNode.classList.remove("input-hide");
                         let listItem = typeNode.querySelector("#list" + btn.dataset.id);
                         if (listItem) listItem.classList.remove("input-hide");
-                        if (!btn.dataset.pointer) {
-                            let option = document.createElement('option');
-                            option.value = '^' + btn.dataset.name + '$';
-                            this.filterGlob.appendChild(option);
-                        }
+                        let option = document.createElement('option');
+                        option.value = '^' + btn.dataset.name + '$';
+                        this.filterGlob.appendChild(option);
                     }
                 });
                 let showType = this.bar.querySelector(".search-jumper-type:not(.input-hide)");
@@ -3857,10 +3858,13 @@
                 if (!searchData.prefConfig.historyLength) return;
                 typeEle.style.width = "auto";
                 typeEle.style.height = "auto";
+                let self = this;
                 this.historyInserted = true;
                 this.historySiteBtns.slice(0, searchData.prefConfig.historyLength).forEach(btn => {
                     if (btn.parentNode != typeEle) {
-                        typeEle.appendChild(btn);
+                        if (self.searchJumperExpand.parentNode == typeEle) {
+                            typeEle.insertBefore(btn, self.searchJumperExpand);
+                        } else typeEle.appendChild(btn);
                     }
                 });
                 typeEle.style.width = typeEle.scrollWidth + "px";
@@ -4352,8 +4356,10 @@
                 if (isCurrent) {
                     self.bar.insertBefore(ele, self.bar.children[0]);
                     ele.classList.remove("search-jumper-hide");
-                    ele.classList.add("not-expand");
-                    ele.appendChild(self.searchJumperExpand);
+                    if (sites.length > 10) {
+                        ele.classList.add("not-expand");
+                        ele.appendChild(self.searchJumperExpand);
+                    }
                     siteEles.forEach(se => {
                         let si = se.querySelector("img");
                         if (si && !si.src && si.dataset.src) {
@@ -4567,11 +4573,12 @@
                 let self = this;
                 let ele = document.createElement("a");
                 let name = data.name;
-                let isClone = !isBookmark && /^\[/.test(data.url);
-                if (isClone) {
+                let pointer = !isBookmark && /^\[/.test(data.url);
+                if (pointer) {
                     ele.dataset.pointer = true;
                     let siteNames = JSON.parse(data.url);
                     if (siteNames.length === 1) {
+                        ele.dataset.clone = true;
                         let findSite = false;
                         for (let i = 0; i < searchData.sitesConfig.length; i++) {
                             if (findSite) break;
@@ -4632,7 +4639,7 @@
                     }
                 }
                 self.stopInput = false;
-                if (searchData.prefConfig.shortcut && data.shortcut && !isClone) {
+                if (searchData.prefConfig.shortcut && data.shortcut && !ele.dataset.clone) {
                     let shortcutCover = document.createElement("div");
                     shortcutCover.innerText = data.shortcut.toUpperCase();
                     ele.appendChild(shortcutCover);
@@ -4663,7 +4670,7 @@
                         }
                     });
                 }
-                if (!isBookmark && !isClone && (!currentSite || data.hideNotMatch)) {
+                if (!isBookmark && (!currentSite || data.hideNotMatch)) {
                     if (data.match === '0') {
                         ele.style.display = 'none';
                         ele.classList.add("notmatch");
@@ -4671,7 +4678,7 @@
                         if (new RegExp(data.match).test(location.href)) {
                             ele.dataset.current = true;
                         }
-                    } else if (data.url.indexOf(location.host) != -1) {
+                    } else if (!pointer && data.url.indexOf(location.host) != -1) {
                         if (!this.inSiteMatch) this.inSiteMatch = /site(%3A|:)(.+?)[\s%]/;
                         let match = data.url.match(this.inSiteMatch);
                         if (match) {
@@ -4930,7 +4937,7 @@
                 let action = e => {
                     if (!self.batchOpening && !isBookmark) {
                         let historyLength = Math.max(searchData.prefConfig.historyLength, 20);
-                        if (historyLength) {
+                        if (!ele.dataset.clone && historyLength) {
                             storage.getItem("historySites", data => {
                                 historySites = (data || []);
                                 historySites = historySites.filter(site => {return site && site != name});
