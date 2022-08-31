@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.6
+// @version      1.6.6.7
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -395,10 +395,10 @@
             selectTxt: true,
             openInNewTab: true,
             sites: [ {
-                name: "Google Clone",
+                name: "Google",
                 url: "[\"Google\"]"
             }, {
-                name: "百度 Clone",
+                name: "百度",
                 url: "[\"百度\"]"
             }, {
                 name: "谷歌站内搜",
@@ -718,7 +718,8 @@
                     modify: '修改',
                     cancel: '取消',
                     modifyWord: '修改页内搜索词',
-                    addSearchEngine: '添加搜索引擎'
+                    addSearchEngine: '添加搜索引擎',
+                    expand: '展开剩余站点'
                 };
                 break;
             case "zh-TW":
@@ -771,7 +772,8 @@
                     modify: '修改',
                     cancel: '取消',
                     modifyWord: '修改頁內搜索詞',
-                    addSearchEngine: '添加搜尋引擎'
+                    addSearchEngine: '添加搜尋引擎',
+                    expand: '展開剩餘站點'
                 };
                 break;
             default:
@@ -823,7 +825,8 @@
                     modify: 'Modify',
                     cancel: 'Cancel',
                     modifyWord: 'Modify search word',
-                    addSearchEngine: 'Add search engine'
+                    addSearchEngine: 'Add search engine',
+                    expand: 'Expand other sites'
                 };
                 break;
         }
@@ -1202,6 +1205,13 @@
                      right: 0;
                      height: 100%;
                  }
+                 .searchJumperExpand>svg {
+                     transform: rotate(-90deg);
+                 }
+                 .search-jumper-left .searchJumperExpand>svg,
+                 .search-jumper-right .searchJumperExpand>svg {
+                     transform: unset;
+                 }
                  .search-jumper-bottom {
                      top: unset;
                      bottom: 0;
@@ -1332,8 +1342,8 @@
                      display: none;
                  }
                  #search-jumper.in-input .search-jumper-type:not(.search-jumper-hide) {
-                     /*width: auto!important;
-                     height: auto!important;*/
+                     width: auto!important;
+                     height: auto!important;
                  }
                  #search-jumper.in-input .sitelistCon>div:not(.input-hide)>a {
                      display: flex!important;
@@ -1388,6 +1398,9 @@
                  .search-jumper-bottom>.search-jumper-input {
                      bottom: unset;
                      top: 5%;
+                 }
+                 .search-jumper-type.not-expand>a:nth-of-type(10)~a {
+                     display: none;
                  }
                  .search-jumper-type>.sitelist {
                      position: fixed;
@@ -2012,6 +2025,15 @@
                   <div id="navMarks"></div>
                 `);
                 searchBarCon.appendChild(searchJumperNavBar);
+
+                let searchJumperExpand = document.createElement("span");
+                searchJumperExpand.title = i18n('expand');
+                searchJumperExpand.className = "searchJumperExpand search-jumper-btn input-hide";
+                searchJumperExpand.innerHTML = createHTML(`
+                <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 64C264.8 64 64 264.8 64 512s200.8 448 448 448 448-200.8 448-448S759.2 64 512 64z m0 640L240 432l45.6-45.6L512 613.6l226.4-226.4 45.6 45.6L512 704z"></path></svg>
+                `);
+                this.searchJumperExpand = searchJumperExpand;
+
                 this.navMarks = searchJumperNavBar.querySelector("#navMarks");
                 this.closeNavBtn = searchJumperNavBar.querySelector(".closeNavBtn");
                 this.searchJumperNavBar = searchJumperNavBar;
@@ -2027,8 +2049,10 @@
                 <div class="line"></div>
                 <div class="content-container">
                   <div class="inputGroup" id="filterSites">
-                    <input spellcheck="false" id="searchJumperInput" placeholder="${i18n("inputPlaceholder")}">
+                    <input spellcheck="false" id="searchJumperInput" placeholder="${i18n("inputPlaceholder")}" list="filterGlob">
                     <input spellcheck="false" id="searchJumperInputKeyWords" placeholder="${i18n("inputKeywords")}">
+                    <datalist id="filterGlob">
+                    </datalist>
                     <span class="search-jumper-lock-input"></span>
                     <span class="svgBtns">
                       <svg id="copyEleBtn" style="display:none;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("copyEleBtn")}</title><path d="M706.5 188.4H190.2c-29.8 0-54 24.2-54 54v662.9c0 29.8 24.2 54 54 54h516.3c29.8 0 54-24.2 54-54V242.4c0-29.8-24.2-54-54-54z m-18 698.9H208.2V260.4h480.3v626.9zM313.7 512.2h275.2c19.9 0 36-16.1 36-36s-16.1-36-36-36H313.7c-19.9 0-36 16.1-36 36s16.1 36 36 36zM313.7 715.2h201.6c19.9 0 36-16.1 36-36s-16.1-36-36-36H313.7c-19.9 0-36 16.1-36 36s16.1 36 36 36zM837.2 64.7H302.9c-19.9 0-36 16.1-36 36s16.1 36 36 36h516.3v662.9c0 19.9 16.1 36 36 36s36-16.1 36-36V118.7c0-29.8-24.2-54-54-54z"></path></svg>
@@ -2076,6 +2100,7 @@
                 this.searchInPageLockWords = searchInputDiv.querySelector("#searchInPage>.lockWords");
                 this.contentContainer = searchInputDiv.querySelector(".content-container");
                 this.rightSizeChange = searchInputDiv.querySelector("#rightSizeChange");
+                this.filterGlob = searchInputDiv.querySelector("#filterGlob");
             }
 
             showInPageSearch() {
@@ -3195,6 +3220,21 @@
                 });
                 //Search in page
 
+                this.searchJumperExpand.addEventListener("click", e => {
+                    let typeEle = this.searchJumperExpand.parentNode;
+                    typeEle.classList.remove('not-expand');
+                    let leftRight = this.bar.parentNode.classList.contains("search-jumper-left") ||
+                        this.bar.parentNode.classList.contains("search-jumper-right");
+                    typeEle.removeChild(this.searchJumperExpand);
+                    let scrollSize = Math.max(typeEle.scrollWidth, typeEle.scrollHeight) + 5 + "px";
+                    if (leftRight) {
+                        typeEle.style.height = scrollSize;
+                        typeEle.style.width = "";
+                    } else {
+                        typeEle.style.width = scrollSize;
+                        typeEle.style.height = "";
+                    }
+                });
                 this.pickerBtn.addEventListener("click", e => {
                     this.searchJumperInputKeyWords.value = "";
                     this.pickerBtn.classList.toggle("checked");
@@ -3267,9 +3307,6 @@
                 let inputTimer;
                 this.inInput = false;
                 this.searchInput.addEventListener("input", e => {
-                    if (e.data && self.searchInput.value && self.searchInput.value !== "*" && self.searchInput.value.length === 1) {
-                        self.searchInput.value = "*" + self.searchInput.value;
-                    }
                     clearTimeout(inputTimer);
                     inputTimer = setTimeout(() => self.searchSiteBtns(), 500);
                 });
@@ -3617,9 +3654,10 @@
                 searchTypes.forEach(type => {
                     type.classList.add("input-hide");
                 });
+                this.filterGlob.innerHTML = createHTML();
                 this.allSiteBtns.forEach(btn => {
                     let typeNode = btn.parentNode;
-                    let canMatch = this.globMatch(inputWords, btn.dataset.name) || (btn.title && this.globMatch(inputWords, btn.title));
+                    let canMatch = !btn.dataset.pointer && (this.globMatch(inputWords, btn.dataset.name) || (btn.title && this.globMatch(inputWords, btn.title)));
                     if (!canMatch) {
                         if (canCheckHost) {
                             if (!btn.dataset.host) {
@@ -3638,13 +3676,18 @@
                         typeNode.classList.remove("input-hide");
                         let listItem = typeNode.querySelector("#list" + btn.dataset.id);
                         if (listItem) listItem.classList.remove("input-hide");
+                        if (!btn.dataset.pointer) {
+                            let option = document.createElement('option');
+                            option.value = '^' + btn.dataset.name + '$';
+                            this.filterGlob.appendChild(option);
+                        }
                     }
                 });
                 let showType = this.bar.querySelector(".search-jumper-type:not(.input-hide,.search-jumper-logo)");
                 if (showType && showType.classList.contains("search-jumper-hide")) showType.querySelector("span.search-jumper-btn").onmousedown();
             }
 
-            globMatch(glob, target) {
+            globMatch(glob, target, inner) {
                 if (glob.length == 0 || glob === '*') {
                     return true;
                 }
@@ -3658,16 +3701,29 @@
                     return false;
                 }
 
+                if (!inner) {
+                    inner = true;
+                    if (glob.length > 1 && glob[0] === '^' &&
+                        target.length !== 0) {
+                        glob = glob.substring(1);
+                        if (glob[0] !== target[0]) {
+                            return false;
+                        }
+                    } else if (glob[0] !== '*') {
+                        glob = '*' + glob;
+                    }
+                }
+
                 if ((glob.length > 1 && glob[0] === '?') ||
                     (glob.length != 0 && target.length !== 0 &&
                      glob[0] === target[0])) {
                     return this.globMatch(glob.substring(1),
-                                     target.substring(1));
+                                     target.substring(1), !!inner);
                 }
 
                 if (glob.length > 0 && glob[0] === '*') {
-                    return this.globMatch(glob.substring(1), target) ||
-                        this.globMatch(glob, target.substring(1));
+                    return this.globMatch(glob.substring(1), target, !!inner) ||
+                        this.globMatch(glob, target.substring(1), !!inner);
                 }
 
                 return false;
@@ -4044,7 +4100,7 @@
                 let openInNewTab = typeof data.openInNewTab === 'undefined' ? searchData.prefConfig.openInNewTab : data.openInNewTab;
                 let siteEles = [];
                 let ele = document.createElement("span");
-                ele.className = "search-jumper-type search-jumper-hide";
+                ele.className = "search-jumper-type search-jumper-hide not-expand";
                 if (data.match === '0') {
                     ele.style.display = 'none';
                     ele.classList.add("notmatch");
@@ -4156,7 +4212,6 @@
                     }
                     ele.style.width = "";
                     ele.style.height = "";
-                    let scrollSize = Math.max(ele.scrollWidth, ele.scrollHeight) + 5 + "px";
                     let leftRight = self.bar.parentNode.classList.contains("search-jumper-left") ||
                         self.bar.parentNode.classList.contains("search-jumper-right");
                     if (self.preList) {
@@ -4165,6 +4220,11 @@
                     self.recoveHistory();
                     if (ele.classList.contains("search-jumper-hide")) {
                         ele.classList.remove("search-jumper-hide");
+                        if (sites.length > 10) {
+                            ele.classList.add("not-expand");
+                            ele.appendChild(self.searchJumperExpand);
+                        }
+                        let scrollSize = Math.max(ele.scrollWidth, ele.scrollHeight) + 5 + "px";
                         if (leftRight) {
                             ele.style.height = scrollSize;
                             ele.style.width = "";
@@ -4285,6 +4345,8 @@
                 if (isCurrent) {
                     self.bar.insertBefore(ele, self.bar.children[0]);
                     ele.classList.remove("search-jumper-hide");
+                    ele.classList.add("not-expand");
+                    ele.appendChild(self.searchJumperExpand);
                     siteEles.forEach(se => {
                         let si = se.querySelector("img");
                         if (si && !si.src && si.dataset.src) {
@@ -5088,8 +5150,7 @@
                 if (!targetElement) targetElement = document.body;
                 this.appendBar();
                 //this.recoveHistory();
-                let firstType = this.bar.querySelector(".search-jumper-type:not(.search-jumper-hide)");
-                if (firstType) firstType.classList.add("search-jumper-hide");
+                let firstType;
                 let self = this;
                 if (this.hideTimeout) {
                     clearTimeout(this.hideTimeout);
@@ -5151,14 +5212,10 @@
                                 break;
                             } else {
                                 if (parentNode && parentNode.tagName !== 'BODY') {
-                                    parentNode = parentNode.querySelectorAll("video, audio");
+                                    parentNode = parentNode.querySelectorAll("video");
                                     if (parentNode && parentNode.length === 1) {
                                         targetElement = parentNode[0];
                                         switch (targetElement.tagName) {
-                                            case 'AUDIO':
-                                                this.bar.classList.add("search-jumper-isTargetAudio");
-                                                firstType = this.bar.querySelector('.search-jumper-targetAudio:not(.notmatch)>span');
-                                                break;
                                             case 'VIDEO':
                                                 this.bar.classList.add("search-jumper-isTargetVideo");
                                                 firstType = this.bar.querySelector('.search-jumper-targetVideo:not(.notmatch)>span');
