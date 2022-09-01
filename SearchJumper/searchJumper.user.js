@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.11
+// @version      1.6.6.12
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -179,7 +179,7 @@
             }, {
                 name: "GitHub",
                 url: "https://github.com/search?utf8=✓&q=%s",
-                match: "https://github\\.com/search\\?.*&q="
+                match: "https://github\\.com/search\\?.*[&\?]q="
             }, {
                 name: "w3c",
                 url: "http://www.runoob.com/?s=%s"
@@ -363,7 +363,7 @@
             }, {
                 name: "360",
                 url: "https://www.so.com/s?ie=utf-8&q=%s",
-                match: "\\.so\\.com/s\\?.*&q="
+                match: "\\.so\\.com/s\\?.*[&\?]q="
             }, {
                 name: "雅虎",
                 url: "https://search.yahoo.com/search?p=%s",
@@ -3686,9 +3686,11 @@
                         typeNode.classList.remove("input-hide");
                         let listItem = typeNode.querySelector("#list" + btn.dataset.id);
                         if (listItem) listItem.classList.remove("input-hide");
-                        let option = document.createElement('option');
-                        option.value = '^' + btn.dataset.name + '$';
-                        this.filterGlob.appendChild(option);
+                        if (this.searchInput.value !== '^' + btn.dataset.name + '$') {
+                            let option = document.createElement('option');
+                            option.value = '^' + btn.dataset.name + '$';
+                            this.filterGlob.appendChild(option);
+                        }
                     }
                 });
                 let showType = this.bar.querySelector(".search-jumper-type:not(.input-hide)");
