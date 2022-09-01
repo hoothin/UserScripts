@@ -2619,18 +2619,20 @@
                 }, 6000);
                 showTips(i18n("firstAlert"));
             }
-            let importBtn = document.createElement("button"), targetPre;
-            importBtn.innerText = i18n("import");
-            importBtn.style.marginTop = "100px";
-            importBtn.style.float = "right";
-            importBtn.style.position = "static";
-            importBtn.style.display = "block";
-            importBtn.style.fontSize = "20px";
-            importBtn.addEventListener("click", e => {
-                if (targetPre) {
-                    if (importBtn.parentNode) importBtn.parentNode.removeChild(importBtn);
+            let createImportBtn = () => {
+                let importBtn = document.createElement("button");
+                importBtn.innerText = i18n("import");
+                importBtn.style.marginTop = "100px";
+                importBtn.style.float = "right";
+                importBtn.style.position = "relative";
+                importBtn.style.display = "block";
+                importBtn.style.fontSize = "20px";
+                importBtn.addEventListener("click", e => {
+                    let parentNode = importBtn.parentNode;
+                    if (!parentNode) return;
+                    parentNode.removeChild(importBtn);
                     try {
-                        let rules=targetPre.innerText.trim();
+                        let rules=parentNode.innerText.trim();
                         let isContent=/['"]name['"]/i.test(rules);
                         if(isContent){
                             let ruleList=JSON.parse(`[${rules}]`);
@@ -2690,7 +2692,10 @@
                                 rulesData.urls.push({id:maxId+1,url:url,type:type});
                                 rulesData.sort.unshift(maxId+1);
                             }
-                            if(!diff)return;
+                            if(!diff){
+                                showTips("Already exists!");
+                                return;
+                            }
                             storage.setItem("rulesData", rulesData);
 
                             if(rulesData.urls)ruleUrls=ruleUrls.concat(rulesData.urls);
@@ -2717,13 +2722,22 @@
                     } catch (e) {
                         _GM_notification(e.toString());
                     }
-                }
+                });
+                return importBtn;
+            };
+            [].forEach.call(document.querySelectorAll('pre[name=pagetual],pre[name=user-content-pagetual]'), pre => {
+                let importBtn = createImportBtn();
+                let clientHeight = 35 - pre.clientHeight;
+                if (clientHeight > -20) clientHeight = -20;
+                importBtn.style.marginTop = `${clientHeight}px`;
+                pre.appendChild(importBtn);
             });
             document.addEventListener("mouseover", e => {
                 if (e.target.tagName === "PRE") {
                     let nameAttr=e.target.getAttribute("name");
                     if(nameAttr=="pagetual" || nameAttr=="user-content-pagetual"){
-                        targetPre = e.target;
+                        if (e.target.querySelector('button')) return;
+                        let importBtn = createImportBtn();
                         let clientHeight = 35 - e.target.clientHeight;
                         if (clientHeight > -20) clientHeight = -20;
                         importBtn.style.marginTop = `${clientHeight}px`;
