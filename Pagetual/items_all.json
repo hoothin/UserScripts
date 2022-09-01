@@ -1,5 +1,19 @@
 [
 {
+  "resource_url": "http://wedata.net/items/85949",
+  "data": {
+    "pageElement": "//div[@class='contentsArea']",
+    "nextLink": "//li[@class='active']/following-sibling::li/a",
+    "url": "^https://magazine\\.cainz\\.com/article/",
+    "exampleUrl": "https://magazine.cainz.com/article/82938"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "t_f_m'",
+  "name": "となりのカインズさん 記事",
+  "created_at": "2022-08-31T17:27:44+09:00",
+  "updated_at": "2022-08-31T17:34:04+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/85948",
   "data": {
     "insertBefore": "",
@@ -12841,17 +12855,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/81262",
-  "name": "dailyshincho",
-  "created_by": "hatenaZZZ",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "updated_at": "2017-09-05T04:36:35+09:00",
   "data": {
-    "exampleUrl": "http://www.dailyshincho.jp/article/2017/03270801/?all=1",
+    "pageElement": "//article/div[@class='p-block']",
+    "nextLink": "//p[@class='c-text-next']/a",
     "url": "^https?://(www\\.)?dailyshincho\\.jp/article/",
-    "pageElement": "//p[@class='p-pagination']/preceding-sibling::*[not(@class='c-text-next')]",
-    "nextLink": "//p[@class='c-text-next']/a"
+    "exampleUrl": "http://www.dailyshincho.jp/article/2017/03270801/?all=1\r\nhttps://www.dailyshincho.jp/article/2022/08310556/?all=1"
   },
-  "created_at": "2017-03-27T17:54:23+09:00"
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "hatenaZZZ",
+  "name": "dailyshincho",
+  "created_at": "2017-03-27T17:54:23+09:00",
+  "updated_at": "2022-08-31T16:40:59+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/81254",
