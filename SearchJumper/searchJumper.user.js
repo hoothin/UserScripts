@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.13
+// @version      1.6.6.14
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -1207,6 +1207,11 @@
                  }
                  .searchJumperExpand>svg {
                      transform: rotate(-90deg);
+                     border-radius: 20px;
+                     filter: drop-shadow(0px 0px 2px black);
+                 }
+                 .search-jumper-type:not(.search-jumper-hide)>span.search-jumper-word {
+                     filter: drop-shadow(0px 0px 2px black);
                  }
                  .search-jumper-left .searchJumperExpand>svg,
                  .search-jumper-right .searchJumperExpand>svg {
@@ -2033,7 +2038,7 @@
                 searchJumperExpand.title = i18n('expand');
                 searchJumperExpand.className = "searchJumperExpand search-jumper-btn input-hide";
                 searchJumperExpand.innerHTML = createHTML(`
-                <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 64C264.8 64 64 264.8 64 512s200.8 448 448 448 448-200.8 448-448S759.2 64 512 64z m0 640L240 432l45.6-45.6L512 613.6l226.4-226.4 45.6 45.6L512 704z"></path></svg>
+                <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><rect height="450" width="600" y="300" x="200" fill="#fff"></rect><path d="M512 64C264.8 64 64 264.8 64 512s200.8 448 448 448 448-200.8 448-448S759.2 64 512 64z m0 640L240 432l45.6-45.6L512 613.6l226.4-226.4 45.6 45.6L512 704z"></path></svg>
                 `);
                 this.searchJumperExpand = searchJumperExpand;
 
@@ -6270,7 +6275,7 @@
                         document.removeEventListener('click', clickHandler, true);
                     };
                     let mouseMoveHandler = e => {
-                        if (Math.abs(startX - e.clientX) + Math.abs(startY - e.clientY) > 10) {
+                        if (Math.abs(startX - e.clientX) + Math.abs(startY - e.clientY) > 5) {
                             clearTimeout(showToolbarTimer);
                             document.removeEventListener('mousemove', mouseMoveHandler, true);
                             e.target.removeEventListener('scroll', scrollHandler);
@@ -6307,10 +6312,8 @@
                             if (!draging) {
                                 searchBar.showInPage();
                             }
-                            document.removeEventListener('mouseup', mouseUpHandler, true);
                             document.removeEventListener('mousemove', mouseMoveHandler, true);
                             e.target.removeEventListener('scroll', scrollHandler);
-                            document.removeEventListener('click', clickHandler, true);
                         }, 200);
                         shown = true;
                         clearTimeout(showToolbarTimer);
