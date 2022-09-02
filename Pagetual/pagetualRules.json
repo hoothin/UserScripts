@@ -146,6 +146,13 @@
     "css": "#footer,#bar{display:none}.pre_img+.nav_pagination{bottom: 10px; position: fixed; width: 100%;}.return_btn{bottom: 0; position: fixed; width: 100%;}"
   },
   {
+    "name": "Moebooru:Danbooru clones",
+    "url": "^https?://(konachan\\.com|yande\\.re|www\\.sakugabooru\\.com)/(post|comment)($|\\?|#|/search\\?)",
+    "pageElement": "//li[contains(@class, 'creator-id-')]|//div[@id='comment-list']/div[@class='post']|//table[@class='highlightable']",
+    "nextLink": "//a[@class='next_page']",
+    "css": ".javascript-hide { display: inline-block !important; }.pagetual_pageBar { display: inline-flex!important;width: 100%!important; }"
+  },
+  {
     "name":"playstation",
     "action":1,
     "css":".psw-visually-hide{opacity:1!important}.pagetual_loading{display:none!important}[name='pagetual-iframe']{display:none}",
