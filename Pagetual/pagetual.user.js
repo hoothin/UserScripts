@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.30.12
+// @version      1.9.30.13
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -686,12 +686,16 @@
         let selector=ele.tagName.toLowerCase();
         //Google id class都是隨機。百度更過分，style script順序都是隨機的
         if(ele.tagName!="HTML" && ele.tagName!="BODY"){
-            if(addID && ele.id) selector += '#' + ele.id;
-            if(ele.className) selector += [].map.call(ele.classList,d=>/^[\w-_]+$/.test(d)?('.'+d):"").join('');
+            if (addID && ele.id) selector += '#' + ele.id;
+            let className;
+            if (ele.className) {
+                className = [].map.call(ele.classList, d => /^[\w-_]+$/.test(d) && !/\d{3,}/.test(d) ? ('.' + d) : "").join('');
+                selector += className;
+            }
             let parent = ele.parentElement;
-            if(parent){
+            if (parent) {
                 selector = geneSelector(parent, addID) + ' > ' + selector;
-                if(!ele.className && (!ele.id || !addID) && parent.children.length>1){
+                if(!className && (!ele.id || !addID) && parent.children.length>1){
                     let i,j=0;
                     for(i=0;i<parent.children.length;i++){
                         if(parent.children[i].tagName==ele.tagName){
