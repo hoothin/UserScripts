@@ -908,6 +908,12 @@
     "action": "1"
   },
   {
+    "name": "Konachan.com Anime Wallpapers",
+    "url": "^https://konachan\\.com/post",
+    "nextLink": "id(\"post-view\")/div[@class=\"sidebar\"]/div[5]/ul/li[2]/a",
+    "pageElement": "id(\"image\")"
+  },
+  {
     "name": "Femdom",
     "url": "^https://femdomup\\.net",
     "pageElement": ".cat-shortstory>article",
