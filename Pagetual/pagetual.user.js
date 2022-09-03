@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.30.16
+// @version      1.9.30.17
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -200,7 +200,8 @@
                 gotoEdit:"使用当前的选择器前往编辑规则",
                 manualMode:"禁用拼接，手动用右方向键翻页（或发送事件'pagetual.next'）",
                 nextSwitch:"切换其他页码",
-                arrowToScroll:"左方向键滚动至上一页，右方向键滚动至下一页"
+                arrowToScroll:"左方向键滚动至上一页，右方向键滚动至下一页",
+                hideLoadingIcon:"隐藏加载动画"
             };
             break;
         case "zh-TW":
@@ -273,7 +274,8 @@
                 gotoEdit:"使用當前的選擇器前往編輯規則",
                 manualMode:"禁用拼接，手動用右方向鍵翻頁（或發送事件'pagetual.next'）",
                 nextSwitch:"切換其他頁碼",
-                arrowToScroll:"左方向鍵滾動至上一頁，右方向鍵滾動至下一頁"
+                arrowToScroll:"左方向鍵滾動至上一頁，右方向鍵滾動至下一頁",
+                hideLoadingIcon:"隱藏加載動畫"
             };
             break;
         case "ja":
@@ -345,7 +347,8 @@
                 gotoEdit:"現在のセレクターでルールを編集する",
                 manualMode:"スプライシングを無効にします。手動で右の矢印キーを使用してページをめくります",
                 nextSwitch:"次のページに切り替え",
-                arrowToScroll:"左矢印キーで前へ、右矢印キーで次へ"
+                arrowToScroll:"左矢印キーで前へ、右矢印キーで次へ",
+                hideLoadingIcon:"読み込み中のアニメーションを隠す"
             };
             break;
         case "ru":
@@ -418,7 +421,8 @@
                 gotoEdit:"Перейти к редактированию правила с текущим селектором",
                 manualMode:"Отключить автоматическую перелистывание страниц, перелистывать страницы вручную с помощью стрелок справа (или вызвать событие 'pagetual.next')",
                 nextSwitch:"Переключить ссылку на следующую страницу",
-                arrowToScroll:"Нажмите клавишу со стрелкой влево для предыдущего и клавишу со стрелкой вправо для следующего"
+                arrowToScroll:"Нажмите клавишу со стрелкой влево для предыдущего и клавишу со стрелкой вправо для следующего",
+                hideLoadingIcon:"Скрыть анимацию загрузки"
             };
             break;
         default:
@@ -490,7 +494,8 @@
                 gotoEdit:"Go to edit rule with current selector",
                 manualMode:"Disable splicing, manually turn pages with the right arrow keys (or dispatch event 'pagetual.next')",
                 nextSwitch:"Switch next link",
-                arrowToScroll:"Press left arrow key to scroll prev and right arrow key to scroll next"
+                arrowToScroll:"Press left arrow key to scroll prev and right arrow key to scroll next",
+                hideLoadingIcon:"Hide loading animation"
             };
             break;
     }
@@ -3068,6 +3073,7 @@
         let enableDebugInput=createCheckbox(i18n("enableDebug"), rulesData.enableDebug!=false);
         let enableHistoryInput=createCheckbox(i18n("enableHistory"), rulesData.enableHistory===true);
         let openInNewTabInput=createCheckbox(i18n("openInNewTab"), rulesData.openInNewTab!=false);
+        let hideLoadingIconInput=createCheckbox(i18n("hideLoadingIcon"), rulesData.hideLoadingIcon!=false);
         let initRunInput=createCheckbox(i18n("initRun"), rulesData.initRun!=false);
         let autoLoadNumInput=createCheckbox(i18n("autoLoadNum"), rulesData.autoLoadNum, "h4", initRunInput, "number");
         let preloadInput=createCheckbox(i18n("preload"), rulesData.preload!=false);
@@ -3158,6 +3164,7 @@
             rulesData.enableDebug=enableDebugInput.checked;
             rulesData.enableHistory=enableHistoryInput.checked;
             rulesData.openInNewTab=openInNewTabInput.checked;
+            rulesData.hideLoadingIcon=hideLoadingIconInput.checked;
             rulesData.initRun=initRunInput.checked;
             rulesData.autoLoadNum=autoLoadNumInput.value||'';
             rulesData.preload=preloadInput.checked;
@@ -3410,6 +3417,9 @@
                 }
                 if(typeof(rulesData.arrowToScroll)=="undefined"){
                     rulesData.arrowToScroll=false;
+                }
+                if(typeof(rulesData.hideLoadingIcon)=="undefined"){
+                    rulesData.hideLoadingIcon=false;
                 }
                 if(rulesData.blacklist && rulesData.blacklist.length>0){
                     for(let b in rulesData.blacklist){
@@ -3699,7 +3709,7 @@
 
     const loadingCSS=`display: block; position: initial; margin: auto auto 5px auto; shape-rendering: auto; vertical-align: middle; visibility: visible; width: initial; height: initial; text-align: center; color: #6e6e6e;`;
     function setLoadingDiv(loadingText){
-        loadingDiv.innerHTML=`<p class="pagetual_loading_text" style="${loadingCSS}">${loadingText}</p><div class="pagetual_loading"><svg width="50" height="50" style="position:relative;cursor: pointer;width: 50px;height: 50px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6364"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#6e6e6e" p-id="6365"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#6e6e6e" p-id="6366"></path></svg></div>`;
+        loadingDiv.innerHTML=`<p class="pagetual_loading_text" style="${loadingCSS}">${loadingText}</p>${rulesData.hideLoadingIcon ? "" : `<div class="pagetual_loading"><svg width="50" height="50" style="position:relative;cursor: pointer;width: 50px;height: 50px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6364"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#6e6e6e" p-id="6365"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#6e6e6e" p-id="6366"></path></svg></div>`}`;
     }
 
     var upSvg=`<svg width="30" height="30" class="upSvg" style="display:initial;position:absolute;cursor: pointer;margin: 0 -45px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6364"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a" p-id="6365"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a" p-id="6366"></path></svg>`;
