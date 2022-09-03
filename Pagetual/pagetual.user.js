@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.30.13
+// @version      1.9.30.14
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -689,7 +689,13 @@
             if (addID && ele.id) selector += '#' + ele.id;
             let className;
             if (ele.className) {
-                className = [].map.call(ele.classList, d => /^[\w-_]+$/.test(d) && !/\d{3,}/.test(d) ? ('.' + d) : "").join('');
+                let classList = ele.classList, i = 0, className = "";
+                for (let i = 0; i < classList.length; i++) {
+                    let c = classList[i];
+                    if (/^[\w-_]+$/.test(c) && !/\d{3,}/.test(c)) {
+                        className += '.' + c;
+                    }
+                }
                 selector += className;
             }
             let parent = ele.parentElement;
@@ -1264,32 +1270,32 @@
                 pageNum=parseInt(pageMatch2[2]);
                 afterStr=pageMatch2[3];
             }
-            let curPage=doc,i,cur,jsNext;
+            let curPage=doc,i,cur,jsNext,body=doc.body||doc;
             let next1,next2,next3,next4,nextJs1,nextJs2,nextJs3;
-            let next=curPage.querySelector(".page-next>a")||
-                curPage.querySelector("a.next_page")||
-                curPage.querySelector("#next_page")||
-                curPage.querySelector(".nextPage")||
-                curPage.querySelector("a[data-pagination=next]")||
-                curPage.querySelector("ul.pagination>li.active+li>a")||
-                curPage.querySelector(".pagination a[rel=next]")||
-                curPage.querySelector(".pagination-nav__item--next>a")||
-                curPage.querySelector("a[title='Next page']")||
-                curPage.querySelector("a.pageright")||
-                curPage.querySelector(".page-numbers.current+a")||
-                curPage.querySelector("a#rightFix")||
-                curPage.querySelector("a#next")||
-                curPage.querySelector(".next>a")||
-                curPage.querySelector(".next>button")||
-                curPage.querySelector("a[alt=next]")||
-                curPage.querySelector("button.next")||
-                curPage.querySelector("[title=next]")||
-                curPage.querySelector("[title='Next page']")||
-                curPage.querySelector("a#btnPreGn")||
-                curPage.querySelector("a.page-next")||
+            let next=body.querySelector(".page-next>a")||
+                body.querySelector("a.next_page")||
+                body.querySelector("#next_page")||
+                body.querySelector(".nextPage")||
+                body.querySelector("a[data-pagination=next]")||
+                body.querySelector("ul.pagination>li.active+li>a")||
+                body.querySelector(".pagination a[rel=next]")||
+                body.querySelector(".pagination-nav__item--next>a")||
+                body.querySelector("a[title='Next page']")||
+                body.querySelector("a.pageright")||
+                body.querySelector(".page-numbers.current+a")||
+                body.querySelector("a#rightFix")||
+                body.querySelector("a#next")||
+                body.querySelector(".next>a")||
+                body.querySelector(".next>button")||
+                body.querySelector("a[alt=next]")||
+                body.querySelector("button.next")||
+                body.querySelector("[title=next]")||
+                body.querySelector("[title='Next page']")||
+                body.querySelector("a#btnPreGn")||
+                body.querySelector("a.page-next")||
                 getElementByXpath("//a[contains(@class, 'page__next')]",curPage,curPage);
             if(!next){
-                let nexts=curPage.querySelectorAll("a.next");
+                let nexts=body.querySelectorAll("a.next");
                 for(i=0;i<nexts.length;i++){
                     if(!/^([上前首尾][一1]?[页頁张張]|previous(\s*page)?\s*›?$|前のページ)/i.test(nexts[i].innerText.trim()) &&
                        nexts[i].style.display!=="none" &&
@@ -1304,7 +1310,7 @@
                 next=null;
             }
             if(!next){
-                next=curPage.querySelectorAll("[aria-label='Next page']");
+                next=body.querySelectorAll("[aria-label='Next page']");
                 if(next && next.length==1){
                     next=next[0];
                     if(!next.href || /^javascript:/.test(next.href) || next.getAttribute("href")=="#"){
@@ -1316,7 +1322,7 @@
                 }
             }
             if(!next){
-                next=curPage.querySelectorAll("[aria-label='Next']");
+                next=body.querySelectorAll("[aria-label='Next']");
                 if(next && next.length==1){
                     next=next[0];
                     if(!next.href || /^javascript:/.test(next.href) || next.getAttribute("href")=="#"){
@@ -1332,13 +1338,13 @@
                 next=null;
             }
             if(!next){
-                next=curPage.querySelector("a.curr+a");
+                next=body.querySelector("a.curr+a");
             }
             if(!next){
-                next=curPage.querySelector("div.wp-pagenavi>span.current+a,div.page-nav>span.current+a,div.article-paging>span+a");
+                next=body.querySelector("div.wp-pagenavi>span.current+a,div.page-nav>span.current+a,div.article-paging>span+a");
             }
             if(!next){
-                let pageDiv=curPage.querySelector("div.pages>ul");
+                let pageDiv=body.querySelector("div.pages>ul");
                 if(pageDiv){
                     cur=pageDiv.querySelector("li>b");
                     if(cur)next=cur.parentNode.nextElementSibling;
@@ -1346,10 +1352,10 @@
                 }
             }
             if(!next){
-                next=curPage.querySelector(".number>ul>li.active+li>a");
+                next=body.querySelector(".number>ul>li.active+li>a");
             }
             if(!next){
-                let aTags=curPage.querySelectorAll("a,button");
+                let aTags=body.querySelectorAll("a,button");
                 for(i=aTags.length-1;i>=0;i--){
                     if(next1 && next2 && next3 && next4)break;
                     let aTag=aTags[i];
@@ -1403,7 +1409,7 @@
                                 let curHref=aTag.getAttribute("href");
                                 let pageOne=curHref.replace(/\/2(\/|\?|&|$)/,"/1$1");
                                 if(pageOne==curHref)pageOne=null;
-                                else pageOne=curPage.querySelector(`a[href='${pageOne}']`);
+                                else pageOne=body.querySelector(`a[href='${pageOne}']`);
                                 if(!pageOne || pageOne.className!=curHref.className)next4=aTag;
                             }
                         }
@@ -2165,6 +2171,7 @@
               border-bottom: 1px solid black;
               user-select: none;
               color: orangered;
+              font-family: Times New Roman;
              }
              #pagetual-picker button {
               background: none;
@@ -3705,7 +3712,7 @@
     var tipsWords=document.createElement("div");
     tipsWords.className="pagetual_tipsWords";
 
-    var isPause=false,isLoading=false,curPage=1,forceState=0,bottomGap=1000,autoLoadNum=-1,nextIndex=0;
+    var isPause=false,isLoading=false,curPage=1,forceState=0,bottomGap=1000,autoLoadNum=-1,nextIndex=0,stopScroll=false;
 
     function changeStop(stop, hide){
         isPause=stop;
@@ -3807,7 +3814,7 @@
                     setTimeout(()=>{loading=false},200);
                 }
             }
-            if(!isLoading){
+            if(!isLoading && !stopScroll){
                 checkScrollReach();
             }
             if(ruleParser.curSiteRule.lockScroll){
@@ -4738,7 +4745,9 @@
     }
 
     function loadPageOver(){
-        isLoading=false;
+        isLoading = false;
+        stopScroll = true;
+        setTimeout(() => {stopScroll = false}, 500);
         if(loadingDiv.parentNode){
             loadingDiv.parentNode.removeChild(loadingDiv);
         }
