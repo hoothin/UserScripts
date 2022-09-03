@@ -153,6 +153,12 @@
     "css": ".javascript-hide { display: inline-block !important; }.pagetual_pageBar { display: inline-flex!important;width: 100%!important; }"
   },
   {
+    "name": "developer.wordpress",
+    "url": "^https://developer\\.wordpress\\.org/",
+    "pageElement": "#primary>*",
+    "nextLink": "[rel=next]"
+  },
+  {
     "name":"playstation",
     "action":1,
     "css":".psw-visually-hide{opacity:1!important}.pagetual_loading{display:none!important}[name='pagetual-iframe']{display:none}",
