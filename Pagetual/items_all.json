@@ -5919,7 +5919,7 @@
 {
   "resource_url": "http://wedata.net/items/85290",
   "data": {
-    "pageElement": "//div[@class=\"editor\"]/*[not(@class=\"page-links\")][not(@class=\"next_page\")] | id(\"container\")[@class=\"article\" or @class=\"article writer_detail\"]//ul[@class=\"article_list one\"] | //div[@class=\"article_image_head\"]/*[self::div[@class=\"image_box\"] or self::figcaption]",
+    "pageElement": "//main/descendant::*[contains(@class,'page')][1]/preceding-sibling::*[not(//div[@class='article_image_head'])]|//ul[@class='article_list one']|//div[@class='article_image_head']/*[self::div[contains(@class, 'image_box')] or self::figcaption]",
     "nextLink": "//*[@class=\"next_page\" or @class=\"arrow_next\"]/a | //a[@class=\"next page-numbers\"]",
     "url": "^https://qjweb\\.jp/",
     "exampleUrl": "https://qjweb.jp/journal/15016/\r\nhttps://qjweb.jp/book/\r\nhttps://qjweb.jp/contributor/14103/\r\nhttps://qjweb.jp/feature/45028/article-gallery/45053/"
@@ -5928,7 +5928,7 @@
   "created_by": "brib2",
   "name": "QJWeb クイックジャパンウェブ",
   "created_at": "2020-04-13T14:18:41+09:00",
-  "updated_at": "2020-12-20T10:54:25+09:00"
+  "updated_at": "2022-09-03T17:52:09+09:00"
 },
 {
   "name": "rrys2019",
