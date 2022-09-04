@@ -933,6 +933,12 @@
     "fitWidth": false
   },
   {
+    "name": "PornAV",
+    "url": "^https://pornav\\.co",
+    "pageElement": "div#grid-container",
+    "css": ".cbp-lightbox{visibility: visible;}.cbp-caption-defaultWrap{-webkit-transition: -webkit-transform .6s cubic-bezier(.19,1,.22,1); transition: transform .6s cubic-bezier(.19,1,.22,1)}.cbp-caption:hover .cbp-caption-defaultWrap{-webkit-transform: scale(1.25); -moz-transform: scale(1.25); transform: scale(1.25);}.cbp-caption-activeWrap{opacity:0}.cbp-caption-activeWrap:hover{opacity:1}#grid-container.cbp-l-grid-blog{visibility: visible;}"
+  },
+  {
     "name":"草榴社區",
     "type":0,
     "url":"htm_data/\\d+/\\d+/\\d+\\.html",
