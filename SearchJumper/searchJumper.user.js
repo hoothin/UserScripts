@@ -5399,6 +5399,8 @@
                 searchData.prefConfig.offset.x = posX;
                 searchData.prefConfig.offset.y = posY;
                 setTimeout(() => {
+                    self.currentType.style.width = self.currentType.scrollWidth + "px";
+                    self.currentType.style.height = self.currentType.scrollHeight + "px";
                     if (self.bar.scrollWidth > viewWidth || self.bar.scrollHeight > viewHeight) {
                         self.bar.parentNode.classList.add("search-jumper-scroll");
                     } else {
