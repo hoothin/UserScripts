@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.30.17
+// @version      1.9.30.18
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -1382,7 +1382,7 @@
                             }
                         }
                         if(!next2){
-                            if(/^[下后後][一1]?[章话話篇]/i.test(aTag.innerText.trim()) || /nextpage/i.test(aTag.className) || aTag.innerText=="»"){
+                            if(/^[下后後][一1]?[章话話篇个個]/i.test(aTag.innerText.trim()) || /nextpage/i.test(aTag.className) || aTag.innerText=="»"){
                                 if(!aTag.href || /^javascript:/.test(aTag.href) || aTag.getAttribute("href")=="#"){
                                     if(!nextJs2)nextJs2=aTag;
                                 }else{
@@ -1949,6 +1949,7 @@
             }else{
                 isLoading=true;
                 await this.pageInit(doc, eles);
+                let curScroll=document.body.scrollTop||document.documentElement.scrollTop;
                 [].forEach.call(eles, ele=>{
                     let newEle=ele.cloneNode(true);
                     let oldCanvass=ele.querySelectorAll("canvas");
@@ -1969,6 +1970,8 @@
                     self.insertElement(newEle);
                     newEles.push(newEle);
                 });
+                document.body.scrollTop=curScroll;
+                document.documentElement.scrollTop=curScroll;
             }
             this.pageAction(doc, newEles);
             if(this.oldUrl!=location.href){
