@@ -2,6 +2,7 @@ var defaultLang={
     //English by RX-3200.
     saveBtn: "OK",
     download:"Download",
+    download2copy: "Use copy instead of download",
     saveBtnTips: "some options need to refresh the page to take effect",
     closeBtn: "Cancel",
     invertBtn:"Invert",
@@ -233,6 +234,7 @@ var defaultLang={
 var zhCNLang={
     saveBtn:"确定",
     download:"下载",
+    download2copy: "使用复制代替下载",
     saveBtnTips:"部分选项需要刷新页面才能生效",
     closeBtn:"取消",
     invertBtn:"反选",
@@ -464,6 +466,7 @@ var zhCNLang={
 var zhTWLang={
     saveBtn:"確定",
     download:"下載",
+    download2copy: "使用複製代替下載",
     saveBtnTips:"部分選項需要刷新頁面才能生效",
     closeBtn:"取消",
     invertBtn:"反選",
@@ -696,6 +699,7 @@ var ptLang={
     //Português by AstroCoelestis.
     saveBtn: "Salvar",
     download:"Baixar",
+    download2copy: "Use copiar em vez de baixar",
     saveBtnTips: "algumas opções precisam atualizar a página para entrar em vigor",
     closeBtn: "Cancelar",
     invertBtn:"Inverter Seleção",
@@ -928,6 +932,7 @@ var ruLang={
     //Русский перевод by RX-3200 и vanja-san.
     saveBtn: "OK",
     download:"Скачать",
+    download2copy: "Используйте копию вместо загрузки",
     saveBtnTips: "Некоторые параметры требуют обновления страницы, чтобы применить изменения",
     closeBtn: "Отмена",
     invertBtn:"Инвертировать",
