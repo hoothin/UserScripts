@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.8.22.1
+// @version              2022.9.4.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -41,7 +41,7 @@
 // @grant                unsafeWindow
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
 // @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1077145
-// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1084190
+// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1089401
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @match                *://*/*
@@ -11754,6 +11754,7 @@ ImgOps | https://imgops.com/#b#`;
                 stayOut:false,
                 stayOutOffsetX:0,
                 stayOutOffsetY:0,
+                download2copy:false,
                 offset:{//浮动工具栏偏移.单位(像素)
                     x:-15,//x轴偏移(正值,向右偏移,负值向左)
                     y:-15,//y轴偏移(正值,向下,负值向上)
@@ -20420,8 +20421,14 @@ ImgOps | https://imgops.com/#b#`;
                 },100);
             },
             open:function(e,buttonType){
-                if(buttonType=='download'){
-                    _GM_download(this.data.src||this.data.imgSrc, (this.data.img.alt || this.data.img.title || document.title));
+                if (buttonType === 'download') {
+                    let copy = prefs.floatBar.download2copy;
+                    if (e && e.ctrlKey) copy = !copy;
+                    if (copy) {
+                        _GM_setClipboard(this.data.src || this.data.imgSrc);
+                    } else {
+                        _GM_download(this.data.src||this.data.imgSrc, (this.data.img.alt || this.data.img.title || document.title));
+                    }
                     return;
                 }
                 var waitImgLoad = e && e.ctrlKey ? !prefs.waitImgLoad : prefs.waitImgLoad; //按住ctrl取反向值
@@ -21768,6 +21775,11 @@ ImgOps | https://imgops.com/#b#`;
                     type: 'text',
                     className: 'order',
                     "default": prefs.floatBar.butonOrder.join(', '),
+                },
+                'floatBar.download2copy': {
+                    label: i18n("download2copy"),
+                    type: 'checkbox',
+                    "default": prefs.floatBar.download2copy
                 },
                 'floatBar.listenBg': {
                     label: i18n("listenBg"),
