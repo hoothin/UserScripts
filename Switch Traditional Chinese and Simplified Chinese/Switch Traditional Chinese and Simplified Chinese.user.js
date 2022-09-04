@@ -619,19 +619,19 @@
         let siteChanged = false;
         let sitesTcTitle = document.createElement('h3');
         sitesTcTitle.style.margin = '5px 0';
-        sitesTcTitle.innerText = '正體中文站點（一行一條）：';
+        sitesTcTitle.innerText = '簡轉繁站點（一行一條）：';
         baseCon.appendChild(sitesTcTitle);
         let sitesTcInput = document.createElement('textarea');
-        sitesTcInput.placeholder = 'm.wfxs.tw';
+        sitesTcInput.placeholder = 'tieba.baidu.com';
         sitesTcInput.style.width = '100%';
         baseCon.appendChild(sitesTcInput);
 
         let sitesScTitle = document.createElement('h3');
         sitesScTitle.style.margin = '5px 0';
-        sitesScTitle.innerText = '簡體中文站點（一行一條）：';
+        sitesScTitle.innerText = '繁轉簡站點（一行一條）：';
         baseCon.appendChild(sitesScTitle);
         let sitesScInput = document.createElement('textarea');
-        sitesScInput.placeholder = 'tieba.baidu.com';
+        sitesScInput.placeholder = 'm.wfxs.tw';
         sitesScInput.style.width = '100%';
         baseCon.appendChild(sitesScInput);
 
