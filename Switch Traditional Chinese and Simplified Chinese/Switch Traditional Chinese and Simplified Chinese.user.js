@@ -631,13 +631,13 @@
         sitesScTitle.innerText = '繁 → 簡站點：';
         baseCon.appendChild(sitesScTitle);
         let sitesScInput = document.createElement('textarea');
-        sitesScInput.placeholder = 'm.wfxs.tw\n一行一條';
+        sitesScInput.placeholder = 'www.gamer.com.tw\n一行一條';
         sitesScInput.style.width = '100%';
         baseCon.appendChild(sitesScInput);
 
         let sitesDisableTitle = document.createElement('h3');
         sitesDisableTitle.style.margin = '5px 0';
-        sitesDisableTitle.innerText = '禁用站點（一行一條）：';
+        sitesDisableTitle.innerText = '禁用站點：';
         baseCon.appendChild(sitesDisableTitle);
         let sitesDisableInput = document.createElement('textarea');
         sitesDisableInput.style.width = '100%';
