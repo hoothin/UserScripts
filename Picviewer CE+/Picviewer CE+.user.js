@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.9.4.3
+// @version              2022.9.5.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -14342,7 +14342,7 @@ ImgOps | https://imgops.com/#b#`;
                     function downloadOne(imgSrc, imgName){
                         let crosHandler = imgSrc => {
                             self.corsUrlToBlob(imgSrc, blob=>{
-                                if(blob)zip.file(imgName.replace(/\//g,"").replace(/\.[^\.]+$/,"")+'.jpg',blob);
+                                if(blob)zip.file(downloaded + '.' + imgName.replace(/\//g,"").replace(/\.\w+$/,"")+'.jpg',blob);
                                 else console.debug("error: "+imgSrc);
                                 downloaded++;
                                 self.showTips("Downloading "+downloaded+"/"+len, 100000);
@@ -14363,7 +14363,7 @@ ImgOps | https://imgops.com/#b#`;
                                     return;
                                 }
                                 canvas.toBlob(blob=>{
-                                    zip.file(imgName.replace(/\//g,"").replace(/\.[^\.]+$/,"")+'.jpg',blob);
+                                    zip.file(downloaded + '.' + imgName.replace(/\//g,"").replace(/\.\w+$/,"")+'.jpg',blob);
                                     downloaded++;
                                     if(downloaded == len){
                                         self.showTips("Begin compress to ZIP...", 100000);
