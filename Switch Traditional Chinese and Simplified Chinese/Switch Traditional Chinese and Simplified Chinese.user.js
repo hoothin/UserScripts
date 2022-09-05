@@ -6,7 +6,7 @@
 // @namespace    hoothin
 // @supportURL   https://github.com/hoothin/UserScripts
 // @homepageURL  https://github.com/hoothin/UserScripts
-// @version      1.2.5
+// @version      1.2.5.1
 // @description        任意轉換網頁中的簡體中文與繁體中文（默認簡體→繁體）
 // @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体）
 // @description:ja     簡繁中国語に変換
@@ -314,6 +314,12 @@
                     let title=stranText(child.title);
                     if(child.title != title){
                         child.title=title;
+                    }
+                }
+                if(child.placeholder){
+                    let placeholder=stranText(child.placeholder);
+                    if(child.placeholder != placeholder){
+                        child.placeholder=placeholder;
                     }
                 }
                 if(child.alt){
