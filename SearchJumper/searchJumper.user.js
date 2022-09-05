@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.15
+// @version      1.6.6.16
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -662,7 +662,9 @@
         callBarCtrl: false,
         callBarShift: false,
         callBarMeta: false,
-        defaultFindTab: false
+        defaultFindTab: false,
+        disableAutoOpen: false,
+        hideOnSearchEngine: false
     };
     function run() {
         const lang = navigator.appName == "Netscape" ? navigator.language : navigator.userLanguage;
@@ -692,7 +694,7 @@
                     siteAddOver: '站点添加成功',
                     multiline: '是否以换行符分隔多行搜索？',
                     multilineTooMuch: '行数超过10行，是否继续搜索？',
-                    inputPlaceholder: '输入关键词筛选站点，支持 * ? 通配符，$代表末尾，^代表开头',
+                    inputPlaceholder: '输入关键词筛选站点，支持 * ? 通配符，$代表末尾，^代表开头，类别**站点 可筛选指定类别',
                     inputKeywords: '输入搜索关键词',
                     inPageTips: '自定义分隔符：$c 加分隔符，例如 $c| search | jumper，默认空格作为分隔符\n原始文本不分隔：$o 加文本，例如$oopai liked by hero\n正则表达式：/re/，例如 $c, /google/i , /aPPle/\n添加提示文本：搜索文本$t{提示文本}，例如 linux$t{linux is not unix}\n添加自定义样式：搜索文本$s{背景;其他}，例如 google$s{#333333;color:red;}\n左键点击关键词跳转至下一个，右键点击关键词跳转至上一个',
                     inPagePlaceholder: '输入文字，按下回车进行页内查找',
@@ -719,7 +721,10 @@
                     cancel: '取消',
                     modifyWord: '修改页内搜索词',
                     addSearchEngine: '添加搜索引擎',
-                    expand: '展开剩余站点'
+                    expand: '展开剩余站点',
+                    add: '添加',
+                    addWord: '添加新词语',
+                    wordRange: '生效范围'
                 };
                 break;
             case "zh-TW":
@@ -746,7 +751,7 @@
                     siteAddOver: '站點添加成功',
                     multiline: '是否以換行符分隔多行搜索？',
                     multilineTooMuch: '行數超過10行，是否繼續搜索？',
-                    inputPlaceholder: '輸入關鍵詞篩選站點，支持 * ? 通配符，$代表末尾，^代表開頭',
+                    inputPlaceholder: '輸入關鍵詞篩選站點，支持 * ? 通配符，$代表末尾，^代表開頭，類別**站點 可篩選指定類別',
                     inputKeywords: '輸入搜索關鍵詞',
                     inPageTips: '自定義分隔符：$c 加分隔符，例如 $c| search | jumper，默認空格作為分隔符\n原始文本不分隔：$o 加文本，例如$oopai liked by hero\n正則表達式：/re/，例如 $c, /google/i , /aPPle/\n添加提示文本：搜索文本$t{提示文本}，例如 linux$t{linux is not unix}\n添加自定義樣式：搜索文本$s{背景;其他}，例如 google$s{#333333;color:red;}\n左鍵點擊關鍵詞跳轉至下一個，右鍵點擊關鍵詞跳轉至上一個',
                     inPagePlaceholder: '輸入文字，按下回車進行頁內查找',
@@ -773,7 +778,10 @@
                     cancel: '取消',
                     modifyWord: '修改頁內搜索詞',
                     addSearchEngine: '添加搜尋引擎',
-                    expand: '展開剩餘站點'
+                    expand: '展開剩餘站點',
+                    add: '添加',
+                    addWord: '添加新詞語',
+                    wordRange: '生效範圍'
                 };
                 break;
             default:
@@ -799,7 +807,7 @@
                     siteAddOver: 'Site added successfully',
                     multiline: 'Search as multilines?',
                     multilineTooMuch: 'The number of lines exceeds 10, do you want to continue searching?',
-                    inputPlaceholder: 'Enter keywords to filter sites, support * ? wildcards, $ means end, ^ means start',
+                    inputPlaceholder: 'Enter keywords to filter sites, support * ? wildcards, $ means end, ^ means start，type**site to filter type',
                     inputKeywords: 'Enter search keywords',
                     inPageTips: 'Custom delimiter: $c + delimiter, such as $c| search | jumper, space as delimiter by default\nOriginal text without delimited: $o + text, such as $oopai liked by hero\nRegular expression: /re/, such as $c, /google/i , /aPPle/\nTips text: search text$t{tips text}, such as linux$t{linux is not unix}\nCustom style: Search text$s{background;other}, such as google$s{#333333;color:red;}\nLeft-click keyword to jump to the next, right-click keyword to jump to the previous',
                     inPagePlaceholder: 'Input text, press Enter to find in the page',
@@ -826,7 +834,10 @@
                     cancel: 'Cancel',
                     modifyWord: 'Modify search word',
                     addSearchEngine: 'Add search engine',
-                    expand: 'Expand other sites'
+                    expand: 'Expand other sites',
+                    add: 'Add',
+                    addWord: 'Add new word',
+                    wordRange: 'Effective range'
                 };
                 break;
         }
@@ -2074,6 +2085,7 @@
                     <input spellcheck="false" id="searchJumperInPageInput" title="${i18n("inPageTips")}" placeholder="${i18n("inPagePlaceholder")}">
                     <span class="svgBtns">
                       <svg id="editBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("editBtn")}</title><path d="M928 365.664a32 32 0 0 0-32 32V864a32 32 0 0 1-32 32H160a32 32 0 0 1-32-32V160a32 32 0 0 1 32-32h429.6a32 32 0 0 0 0-64H160a96 96 0 0 0-96 96v704a96 96 0 0 0 96 96h704a96 96 0 0 0 96-96V397.664a32 32 0 0 0-32-32z"></path><path d="M231.616 696.416a38.4 38.4 0 0 0 44.256 53.792l148-38.368L950.496 185.248 814.72 49.472 290.432 573.76l-58.816 122.656z m111.808-85.12L814.72 140l45.248 45.248-468.992 468.992-77.824 20.16 30.272-63.104z"></path></svg>
+                      <svg id="addWord" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("addWord")}</title><path d="M821.364 962h-618.75C123.864 962 62 900.114 62 821.364v-618.75c0-78.75 61.864-140.635 140.614-140.635h618.75c78.75 0 140.636 61.885 140.636 140.635v618.75C962 900.114 900.114 962 821.364 962z m79.265-756.814c0-46.586-35.25-81.815-81.815-81.815H205.186c-46.843-0.214-84.557 34.758-83.165 82.393-0.128 14.4 1.35 613.05 1.35 613.05 0 46.565 35.25 81.815 81.815 81.815h613.628c46.565 0 81.815-35.25 81.815-81.815V205.186z m-173.55 347.657H552.843v174.236c0 16.95-13.736 30.685-30.686 30.685h-0.236a30.686 30.686 0 0 1-30.685-30.685V552.843H296.92a30.686 30.686 0 0 1-30.685-30.686v-0.236c0-16.95 13.735-30.685 30.685-30.685h194.315V296.92c0-16.95 13.735-30.685 30.685-30.685h0.236c16.95 0 30.686 13.735 30.686 30.685v194.315h174.236c16.95 0 30.685 13.735 30.685 30.685v0.236c0 16.95-13.735 30.686-30.685 30.686z"></path></svg>
                       <svg id="emptyBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("emptyBtn")}</title><path d="m159.45829,231.40004l-48.83334,0a36.625,34.1375 0 0 1 0,-68.275l805.75004,0a36.625,34.1375 0 0 1 0,68.275l-683.6667,0l0,603.09581a61.04167,56.89583 0 0 0 61.04167,56.89584l439.50002,0a61.04167,56.89583 0 0 0 61.04167,-56.89584l0,-500.68332a36.625,34.1375 0 0 1 73.25,0l0,500.68332c0,69.12844 -60.12604,125.17084 -134.29167,125.17084l-439.50002,0c-74.16563,0 -134.29167,-56.0424 -134.29167,-125.17084l0,-603.09581zm256.37501,-113.79167a36.625,34.1375 0 0 1 0,-68.275l195.33334,0a36.625,34.1375 0 0 1 0,68.275l-195.33334,0zm-36.625,307.23749a36.625,34.1375 0 0 1 73.25,0l0,273.09999a36.625,34.1375 0 0 1 -73.25,0l0,-273.09999zm195.33334,0a36.625,34.1375 0 0 1 73.25,0l0,273.09999a36.625,34.1375 0 0 1 -73.25,0l0,-273.09999z"/></svg>
                       <svg id="copyInPageBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("copyInPageBtn")}</title><path d="M706.5 188.4H190.2c-29.8 0-54 24.2-54 54v662.9c0 29.8 24.2 54 54 54h516.3c29.8 0 54-24.2 54-54V242.4c0-29.8-24.2-54-54-54z m-18 698.9H208.2V260.4h480.3v626.9zM313.7 512.2h275.2c19.9 0 36-16.1 36-36s-16.1-36-36-36H313.7c-19.9 0-36 16.1-36 36s16.1 36 36 36zM313.7 715.2h201.6c19.9 0 36-16.1 36-36s-16.1-36-36-36H313.7c-19.9 0-36 16.1-36 36s16.1 36 36 36zM837.2 64.7H302.9c-19.9 0-36 16.1-36 36s16.1 36 36 36h516.3v662.9c0 19.9 16.1 36 36 36s36-16.1 36-36V118.7c0-29.8-24.2-54-54-54z"></path></svg>
                       <svg id="recoverBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("recoverBtn")}</title><path d="M502.26 289.06c-0.02 16.95 13.26 30.94 30.18 31.8 123.47 8.79 236.97 70.94 310.89 170.21 73.92 99.28 100.91 225.84 73.93 346.65-41.65-181.74-195.38-316.12-381.05-333.08-8.89-0.6-17.63 2.55-24.09 8.7a31.798 31.798 0 0 0-9.86 23.64v85.15a32.343 32.343 0 0 1-50.67 26.41L114.21 413.02a32.341 32.341 0 0 1-14.46-26.95c0-10.84 5.43-20.96 14.46-26.95L451.6 124.68a32.358 32.358 0 0 1 33.28-2.03 32.355 32.355 0 0 1 17.39 28.44v137.97h-0.01z"></path></svg>
@@ -2096,6 +2108,7 @@
                 this.maxEleBtn = searchInputDiv.querySelector("#maxEleBtn");
                 this.copyEleBtn = searchInputDiv.querySelector("#copyEleBtn");
                 this.editBtn = searchInputDiv.querySelector("#editBtn");
+                this.addWord = searchInputDiv.querySelector("#addWord");
                 this.recoverBtn = searchInputDiv.querySelector("#recoverBtn");
                 this.saveRuleBtn = searchInputDiv.querySelector("#saveRuleBtn");
                 this.pinBtn = searchInputDiv.querySelector("#pinBtn");
@@ -2114,10 +2127,10 @@
             showInPageSearch() {
                 this.searchInPageTab.checked = true;
                 this.showSearchInput();
-                this.initInPageWords();
+                this.initSetInPageWords();
             }
 
-            initInPageWords() {
+            initSetInPageWords() {
                 if (this.searchInPageTab.checked && !this.searchJumperInPageInput.value) {
                     let words = this.searchJumperInputKeyWords.value.replace(/^\*/, "") || getKeywords();
                     if (words) {
@@ -2160,6 +2173,7 @@
                         let title = "";
                         let style = "";
                         let hideParent;
+                        let inRange;
                         let isRe = false;
                         let reCase = "";
                         let titleReg = /\$t{(.*?)}($|\$)/;
@@ -2173,6 +2187,12 @@
                         if (hideParentMatch) {
                             hideParent = parseInt(hideParentMatch[1]) || 0;
                             word = word.replace(hideParentReg, "$2");
+                        }
+                        let inRangeReg = /\$in{(.*?)}($|\$)/;
+                        let inRangeMatch = word.match(inRangeReg);
+                        if (inRangeMatch) {
+                            inRange = inRangeMatch[1] || '';
+                            word = word.replace(inRangeReg, "$2");
                         }
                         let styleReg = /\$s{(.*?)}($|\$)/;
                         let styleMatch = word.match(styleReg);
@@ -2189,7 +2209,7 @@
                             word = reMatch[1];
                             reCase = reMatch[2];
                         }
-                        result.push({content: word, isRe: isRe, reCase: reCase, title: title, style: style, oriWord: oriWord, hideParent: hideParent});
+                        result.push({content: word, isRe: isRe, reCase: reCase, title: title, style: style, oriWord: oriWord, hideParent: hideParent, inRange: inRange});
                         self.curWordIndex++;
                     });
                 } else {
@@ -2243,6 +2263,7 @@
                     wordSpan.addEventListener('dblclick', e => {
                         e.stopPropagation();
                         e.preventDefault();
+                        if (e.target.tagName === 'EM') return;
                         if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) return;
                         this.showModifyWindow(word, wordSpan);
                     }, true);
@@ -2276,10 +2297,15 @@
             }
 
             showModifyWindow(word, wordSpan) {
-                let oriWord = word.oriWord;
-                if (!oriWord) return;
-                this.modifyWord = word;
-                this.modifySpan = wordSpan;
+                let oriWord;
+                this.modifyWord = {};
+                this.addNew = !word && !wordSpan;
+                if (!this.addNew) {
+                    oriWord = word.oriWord;
+                    if (!oriWord) return;
+                    this.modifyWord = word;
+                    this.modifySpan = wordSpan;
+                }
                 if (!this.modifyFrame) {
                     this.modifyCssText = `
                     .searchJumperModify-body {
@@ -2354,11 +2380,22 @@
                     .searchJumperModify-buttons>button:hover {
                         color: black;
                     }
+                    #rangePickerBtn {
+                        width: 32px;
+                        float: right;
+                        top: -37px;
+                        right: 3px;
+                        position: relative;
+                        display: block;
+                        cursor: pointer;
+                        background: rgb(255 255 255 / 80%);
+                    }
                     `;
                     this.modifyCssEle = _GM_addStyle(this.modifyCssText);
-                    this.modifyFrame = document.createElement("div");
-                    this.modifyFrame.id = "searchJumperModifyWord";
-                    this.modifyFrame.innerHTML = createHTML(`
+                    let modifyFrame = document.createElement("div");
+                    this.modifyFrame = modifyFrame;
+                    modifyFrame.id = "searchJumperModifyWord";
+                    modifyFrame.innerHTML = createHTML(`
                      <div class="searchJumperModify-body">
                          <a href="${configPage}" class="searchJumperModify-title" target="_blank">
                              <img width="32px" height="32px" src=${logoBase64}>${i18n("modifyWord")}
@@ -2367,6 +2404,9 @@
                          <input name="wordContent" type="text">
                          <div class="searchJumperModify-input-title">${i18n("wordHide")}</div>
                          <input name="wordHide" min="0" placeholder="${i18n("wordHideTips")}" type="number">
+                         <div class="searchJumperModify-input-title">${i18n("wordRange")}</div>
+                         <input name="wordRange" placeholder="#main" type="text">
+                         <svg id="rangePickerBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("pickerBtn")}</title><path d="M874.048 533.333333C863.424 716.629333 716.629333 863.424 533.333333 874.048V917.333333a21.333333 21.333333 0 0 1-42.666666 0v-43.285333C307.370667 863.424 160.576 716.629333 149.952 533.333333H106.666667a21.333333 21.333333 0 0 1 0-42.666666h43.285333C160.576 307.370667 307.370667 160.576 490.666667 149.952V106.666667a21.333333 21.333333 0 0 1 42.666666 0v43.285333c183.296 10.624 330.090667 157.418667 340.714667 340.714667h42.816a21.333333 21.333333 0 1 1 0 42.666666H874.026667z m-42.752 0h-127.786667a21.333333 21.333333 0 0 1 0-42.666666h127.786667C820.778667 330.922667 693.056 203.221333 533.333333 192.704V320a21.333333 21.333333 0 0 1-42.666666 0V192.704C330.922667 203.221333 203.221333 330.944 192.704 490.666667H320a21.333333 21.333333 0 0 1 0 42.666666H192.704c10.517333 159.744 138.24 287.445333 297.962667 297.962667V704a21.333333 21.333333 0 0 1 42.666666 0v127.296c159.744-10.517333 287.445333-138.24 297.962667-297.962667zM512 554.666667a42.666667 42.666667 0 1 1 0-85.333334 42.666667 42.666667 0 0 1 0 85.333334z"></path></svg>
                          <div class="searchJumperModify-input-title">${i18n("wordStyle")}</div>
                          <input name="wordStyle" placeholder="#333333;color:red;" type="text">
                          <div class="searchJumperModify-input-title">${i18n("wordTitle")}</div>
@@ -2377,13 +2417,22 @@
                          </div>
                      </div>
                     `);
-                    let cancelBtn = this.modifyFrame.querySelector("#cancel");
+                    let cancelBtn = modifyFrame.querySelector("#cancel");
                     cancelBtn.addEventListener("click", e => {
-                        if (this.modifyFrame.parentNode) {
-                            this.modifyFrame.parentNode.removeChild(this.modifyFrame);
+                        if (modifyFrame.parentNode) {
+                            modifyFrame.parentNode.removeChild(modifyFrame);
                         }
                     });
-                    let modifyBtn = this.modifyFrame.querySelector("#modify");
+                    let rangePickerBtn = modifyFrame.querySelector("#rangePickerBtn");
+                    rangePickerBtn.addEventListener("click", e => {
+                        Picker.getInstance().getSelector(selector => {
+                            wordRange.value = selector;
+                            modifyFrame.style.display = '';
+                        });
+                        modifyFrame.style.display = 'none';
+                    });
+                    let modifyBtn = modifyFrame.querySelector("#modify");
+                    this.modifyBtn = modifyBtn;
                     modifyBtn.addEventListener("click", e => {
                         let newWord = wordContent.value;
                         if (!newWord) return;
@@ -2404,31 +2453,54 @@
                             if (this.splitSep) title = title.replaceAll(this.splitSep, "");
                             newWord += `$t{${title}}`;
                         }
-                        this.replaceWord(this.modifyWord, newWord, this.modifySpan, contentChange);
-                        if (this.modifyFrame.parentNode) {
-                            this.modifyFrame.parentNode.removeChild(this.modifyFrame);
+                        let range = wordRange.value;
+                        if (range) {
+                            if (this.splitSep) range = range.replaceAll(this.splitSep, "");
+                            if (range !== this.modifyWord.inRange) contentChange = true;
+                            newWord += `$in{${range}}`;
+                        }
+                        if (this.addNew) {
+                            this.searchJumperInPageInput.value = newWord;
+                            this.submitInPageWords();
+                        } else {
+                            this.replaceWord(this.modifyWord, newWord, this.modifySpan, contentChange);
+                        }
+                        if (modifyFrame.parentNode) {
+                            modifyFrame.parentNode.removeChild(modifyFrame);
                         }
                     });
                 }
                 let wordContent = this.modifyFrame.querySelector("[name='wordContent']"),
                 wordStyle = this.modifyFrame.querySelector("[name='wordStyle']"),
                 wordTitle = this.modifyFrame.querySelector("[name='wordTitle']"),
+                wordRange = this.modifyFrame.querySelector("[name='wordRange']"),
                 wordHide = this.modifyFrame.querySelector("[name='wordHide']");
 
-                let style = "";
-                let styleReg = /\$s{(.*?)}($|\$)/;
-                let styleMatch = oriWord.match(styleReg);
-                if (styleMatch) {
-                    style = styleMatch[1];
-                }
+                if (this.addNew) {
+                    wordContent.value = "";
+                    wordStyle.value = "";
+                    wordRange.value = "";
+                    wordHide.value = "";
+                    wordTitle.value = "";
+                    this.modifyBtn.innerText = i18n('add');
+                } else {
+                    this.modifyBtn.innerText = i18n('modify');
+                    let style = "";
+                    let styleReg = /\$s{(.*?)}($|\$)/;
+                    let styleMatch = oriWord.match(styleReg);
+                    if (styleMatch) {
+                        style = styleMatch[1];
+                    }
 
-                wordContent.value = word.content || "";
-                wordStyle.value = style || "";
-                if (typeof word.hideParent !== 'undefined') wordHide.value = word.hideParent;
-                try {
-                    wordTitle.value = word.title !== word.content ? JSON.parse('"' + word.title + '"') : "";
-                } catch (e) {
-                    debug(e);
+                    wordContent.value = word.content || "";
+                    wordStyle.value = style || "";
+                    wordRange.value = word.inRange || "";
+                    if (typeof word.hideParent !== 'undefined') wordHide.value = word.hideParent;
+                    try {
+                        wordTitle.value = word.title !== word.content ? JSON.parse('"' + word.title + '"') : "";
+                    } catch (e) {
+                        debug(e);
+                    }
                 }
                 if (!this.modifyCssEle || !this.modifyCssEle.parentNode) this.modifyCssEle = _GM_addStyle(this.modifyCssText);
                 document.body.appendChild(this.modifyFrame);
@@ -2856,7 +2928,11 @@
                     if (!self.marks[w.content]) {
                         self.marks[w.content] = [];
                     }
-                    searchWithinNode(ele, w);
+                    if (w.inRange) {
+                        [].forEach.call(ele.querySelectorAll(w.inRange), e => {
+                            searchWithinNode(e, w);
+                        })
+                    } else searchWithinNode(ele, w);
                 });
                 setTimeout(() => {
                     searchingPre = true;
@@ -3152,8 +3228,11 @@
                 this.editBtn.addEventListener("click", e => {
                     editFunc();
                 });
+                this.addWord.addEventListener("click", e => {
+                    this.showModifyWindow();
+                });
                 this.searchInPageTab.addEventListener("change", e => {
-                    this.initInPageWords();
+                    this.initSetInPageWords();
                 });
                 if (globalInPageWords) {
                     this.recoverBtn.addEventListener("click", e => {
@@ -3333,7 +3412,7 @@
                                 e.preventDefault();
                                 this.searchInPageTab.checked = true;
                                 this.searchJumperInPageInput.focus();
-                                this.initInPageWords();
+                                this.initSetInPageWords();
                             }
                             break;
                         case 13://回车
@@ -3361,7 +3440,7 @@
                                 e.preventDefault();
                                 this.searchInPageTab.checked = true;
                                 this.searchJumperInPageInput.focus();
-                                this.initInPageWords();
+                                this.initSetInPageWords();
                             }
                             break;
                         case 13://回车
@@ -3642,13 +3721,15 @@
             }
 
             inSearchEngine() {
-                this.bar.style.display = "";
-                this.initPos(
-                    searchData.prefConfig.position.x,
-                    searchData.prefConfig.position.y,
-                    searchData.prefConfig.offset.x,
-                    searchData.prefConfig.offset.y
-                );
+                if (!searchData.prefConfig.hideOnSearchEngine) {
+                    this.bar.style.display = "";
+                    this.initPos(
+                        searchData.prefConfig.position.x,
+                        searchData.prefConfig.position.y,
+                        searchData.prefConfig.offset.x,
+                        searchData.prefConfig.offset.y
+                    );
+                }
                 this.insertHistory(this.currentType);
                 let inPageWords = searchData.prefConfig.showInSearchEngine ? getKeywords() : globalInPageWords;
                 if (inPageWords) {
@@ -3662,7 +3743,12 @@
             searchSiteBtns() {
                 if (!this.inInput) return;
                 let inputWords = this.searchInput.value;
-                let canCheckHost = !/[^\w\.\/\:\*\?]/.test(inputWords);
+                let canCheckHost = !/[^\w\.\/\:\*\?\^\$]/.test(inputWords);
+                let checkIndex = inputWords.indexOf('**'), checkType;
+                if (checkIndex > 0) {
+                    checkType = inputWords.slice(0, checkIndex);
+                    inputWords = inputWords.slice(checkIndex + 2);
+                }
                 this.allListBtns.forEach(listItem => {
                     listItem.classList.add("input-hide");
                 });
@@ -3672,6 +3758,10 @@
                 this.filterGlob.innerHTML = createHTML();
                 this.allSiteBtns.forEach(btn => {
                     let typeNode = btn.parentNode;
+                    if (checkType) {
+                        let typeMatch = this.globMatch(checkType, typeNode.dataset.type);
+                        if (!typeMatch) return;
+                    }
                     let canMatch = !btn.dataset.clone && (this.globMatch(inputWords, btn.dataset.name) || (btn.title && this.globMatch(inputWords, btn.title)));
                     if (!canMatch) {
                         if (canCheckHost) {
@@ -3816,7 +3906,9 @@
                         let typeBtn = this.bar.querySelector(`.search-jumper-type.search-jumper-hide[data-type="${typeData.type}"]>span`);
                         if (typeBtn) {
                             this.bar.insertBefore(typeBtn.parentNode, this.bar.children[0]);
-                            typeBtn.onmousedown();
+                            if (!searchData.prefConfig.disableAutoOpen) {
+                                typeBtn.onmousedown();
+                            }
                         }
                     }
                 }
@@ -3862,6 +3954,7 @@
             }
 
             insertHistory(typeEle) {
+                if (searchData.prefConfig.disableAutoOpen) return;
                 if (!searchData.prefConfig.historyLength) return;
                 typeEle.style.width = "auto";
                 typeEle.style.height = "auto";
@@ -4362,17 +4455,19 @@
                 let siteList = await self.createList(siteEles, ele.dataset.title);
                 if (isCurrent) {
                     self.bar.insertBefore(ele, self.bar.children[0]);
-                    ele.classList.remove("search-jumper-hide");
-                    if (sites.length > 10) {
-                        ele.classList.add("not-expand");
-                        ele.appendChild(self.searchJumperExpand);
-                    }
-                    siteEles.forEach(se => {
-                        let si = se.querySelector("img");
-                        if (si && !si.src && si.dataset.src) {
-                            si.src = si.dataset.src;
+                    if (!searchData.prefConfig.disableAutoOpen) {
+                        ele.classList.remove("search-jumper-hide");
+                        if (sites.length > 10) {
+                            ele.classList.add("not-expand");
+                            ele.appendChild(self.searchJumperExpand);
                         }
-                    });
+                        siteEles.forEach(se => {
+                            let si = se.querySelector("img");
+                            if (si && !si.src && si.dataset.src) {
+                                si.src = si.dataset.src;
+                            }
+                        });
+                    }
                 } else {
                     self.bar.insertBefore(ele, self.bar.children[self.bar.children.length - 1]);
                 }
@@ -5268,7 +5363,9 @@
                     );
                 }
                 if (firstType && firstType.parentNode.classList.contains('search-jumper-hide')) {
-                    firstType.onmousedown();
+                    if (!searchData.prefConfig.disableAutoOpen) {
+                        firstType.onmousedown();
+                    }
                     self.insertHistory(firstType.parentNode);
                 }
 
@@ -5399,8 +5496,12 @@
                 searchData.prefConfig.offset.x = posX;
                 searchData.prefConfig.offset.y = posY;
                 setTimeout(() => {
-                    self.currentType.style.width = self.currentType.scrollWidth + "px";
-                    self.currentType.style.height = self.currentType.scrollHeight + "px";
+                    if (!searchData.prefConfig.disableAutoOpen) {
+                        if (self.currentType && !self.currentType.classList.contains('search-jumper-hide')) {
+                            self.currentType.style.width = self.currentType.scrollWidth + "px";
+                            self.currentType.style.height = self.currentType.scrollHeight + "px";
+                        }
+                    }
                     if (self.bar.scrollWidth > viewWidth || self.bar.scrollHeight > viewHeight) {
                         self.bar.parentNode.classList.add("search-jumper-scroll");
                     } else {
@@ -5424,6 +5525,12 @@
                     Picker.picker = new Picker();
                 }
                 return Picker.picker;
+            }
+
+            getSelector(callback) {
+                this.close();
+                this.toggle();
+                this.callback = callback;
             }
 
             init() {
@@ -5457,6 +5564,14 @@
                         e.preventDefault();
                     }
                     let target = self.getTarget(e.target);
+                    if (self.callback) {
+                        if (target) {
+                            let sel = self.geneSelector(target);
+                            self.callback(sel);
+                            self.close();
+                        }
+                        return;
+                    }
                     let sign = self.createSignDiv();
                     self.clickedEles[self.clickedIndex] = target;
                     self.appendSign(sign, target, self.clickedIndex);
@@ -5500,6 +5615,7 @@
             }
 
             close() {
+                this.callback = null;
                 this.clearSigns();
                 this.clickedEles = {};
                 if (this.mainSignDiv.parentNode) this.mainSignDiv.parentNode.removeChild(this.mainSignDiv);
@@ -6074,6 +6190,8 @@
                     }
                 }
                 logoSvg.style.cursor = "";
+                let firstType = searchBar.bar.querySelector('.search-jumper-type:not(.search-jumper-hide)>span');
+                if (firstType) firstType.onmousedown();
                 searchBar.initPos(relX, relY, posX, posY);
                 storage.setItem("searchData", searchData);
             };
@@ -6902,7 +7020,6 @@
                 };
             }
             if (!dragCssEle || !dragCssEle.parentNode) dragCssEle = _GM_addStyle(dragCssText);
-            document.addEventListener('dragenter', dragenterHandler, true);
             searchBar.recoveHistory();
             let firstType = searchBar.autoGetFirstType();
             let siteBtns = firstType.querySelectorAll("a.search-jumper-btn:not(.notmatch)");
@@ -6982,6 +7099,7 @@
                 setTimeout(() => {
                     dragRoundFrame.style.opacity = 1;
                     dragRoundFrame.style.transform = 'scale(1)';
+                    document.addEventListener('dragenter', dragenterHandler, true);
                 }, 10);
             }, 0);
         }
