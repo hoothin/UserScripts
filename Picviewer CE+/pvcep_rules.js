@@ -1034,6 +1034,13 @@ var siteInfo=[
  }
 },
 {
+ name:"coomer.party & kemono.party",
+ url:/^https:\/\/(coomer|kemono)\.party\/.*\/post\//,
+ getImage:function(a){
+    if(a) return a.href;
+ }
+},
+{
  name:"instagram",
  url:/^https?:\/\/[^.]+\.instagram.com/i,
  ext: function(target) {
