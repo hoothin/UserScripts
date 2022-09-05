@@ -705,7 +705,7 @@ var siteInfo=[
 {
  name: "javbus",
  url: /javbus\.|busjav\./,
- r: /\/thumb(\/\w+)\.jpg$/i,
+ r: /\/thumbs?(\/\w+)\.jpg$/i,
  s: "/cover$1_b.jpg"
 },
 {
