@@ -1135,7 +1135,7 @@
   },
   {
     "name":"Alibaba",
-    "url":"^https://www\\.alibaba\\.com/trade/search",
+    "url":"^https://www\\.alibaba\\.com//?trade/search",
     "pageElement":".organic-list>*",
     "nextLink":".seb-pagination__pages>span+a",
     "action":1,
