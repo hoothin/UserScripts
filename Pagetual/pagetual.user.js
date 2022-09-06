@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.30.18
+// @version      1.9.30.19
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -164,7 +164,7 @@
                 save:"保存设置",
                 loadingText:"少女祈祷中...",
                 opacity:"不透明值",
-                opacityPlaceholder:"0:隐藏",
+                opacityPlaceholder:"0: 隐藏分隔条",
                 hideBar:"隐藏分页隔条",
                 dbClick2Stop:"空白处双击暂停翻页",
                 sortTitle:"排序在下次更新规则后生效",
@@ -198,7 +198,7 @@
                 pickerCheck:"检查你编辑的选择器并复制",
                 switchSelector:"点击切换元素",
                 gotoEdit:"使用当前的选择器前往编辑规则",
-                manualMode:"禁用拼接，手动用右方向键翻页（或发送事件'pagetual.next'）",
+                manualMode:"禁用拼接，手动用右方向键翻页（或发送事件'pagetual.next'），可使用 Alt + 左方向键返回",
                 nextSwitch:"切换其他页码",
                 arrowToScroll:"左方向键滚动至上一页，右方向键滚动至下一页",
                 hideLoadingIcon:"隐藏加载动画"
@@ -238,7 +238,7 @@
                 save:"存儲設置",
                 loadingText:"少女祈禱中...",
                 opacity:"不透明值",
-                opacityPlaceholder:"0:隱藏",
+                opacityPlaceholder:"0: 隱藏分隔條",
                 hideBar:"隱藏分頁隔條",
                 dbClick2Stop:"空白處雙擊暫停翻頁",
                 sortTitle:"排序在下次更新規則後生效",
@@ -311,7 +311,7 @@
                 save: "設定を保存",
                 loadingText: "少女祈祷中...",
                 opacity:"不透明値",
-                opacityPlaceholder:"0:隠す",
+                opacityPlaceholder:"0: 隠す",
                 hideBar:"ページ区切り文字を非表示にします",
                 dbClick2Stop:"空白部分をダブルクリックしてページめくりを一時停止します",
                 sortTitle:"並べ替えは、次のルールの更新後に有効になります",
@@ -385,7 +385,7 @@
                 save:"Сохранить",
                 loadingText:"Shojo загружается...",
                 opacity:"Непрозрачность",
-                opacityPlaceholder:"0:скрыть",
+                opacityPlaceholder:"0: скрыть",
                 hideBar:"скрыть промежуток переключения страниц",
                 dbClick2Stop:"Двойной щелчок по пустому пространству для паузы",
                 sortTitle:"Сортировка вступает в силу после следующего обновления правила",
@@ -458,7 +458,7 @@
                 save:"Save",
                 loadingText:"Shojo Now Loading...",
                 opacity:"Opacity",
-                opacityPlaceholder:"0:hide",
+                opacityPlaceholder:"0: hide",
                 hideBar:"hide the paging spacer",
                 dbClick2Stop:"Double-click on the blank space to pause",
                 sortTitle:"Sorting takes effect after the next rule update",
@@ -1373,7 +1373,7 @@
                     if(aTag.parentNode && aTag.parentNode.classList && aTag.parentNode.classList.contains('disabled'))continue;
                     if(aTag.innerText.length<=18){
                         if(!next1){
-                            if(/^[下后後][一1]?[页頁张張]|^next([ _-]?page)\s*[›>→»]?$|次のページ|^次へ?$/i.test(aTag.innerText.trim())){
+                            if(/^[下后後次][一1]?[页頁张張]|^next([ _-]?page)\s*[›>→»]?$|次のページ|^次へ?$/i.test(aTag.innerText.trim())){
                                 if(!aTag.href || /^javascript:/.test(aTag.href) || aTag.getAttribute("href")=="#"){
                                     if(!nextJs1)nextJs1=aTag;
                                 }else{
@@ -1382,7 +1382,7 @@
                             }
                         }
                         if(!next2){
-                            if(/^[下后後][一1]?[章话話篇个個]/i.test(aTag.innerText.trim()) || /nextpage/i.test(aTag.className) || aTag.innerText=="»"){
+                            if(/^[下后後次][一1]?[章话話篇个個]/i.test(aTag.innerText.trim()) || /nextpage/i.test(aTag.className) || aTag.innerText=="»"){
                                 if(!aTag.href || /^javascript:/.test(aTag.href) || aTag.getAttribute("href")=="#"){
                                     if(!nextJs2)nextJs2=aTag;
                                 }else{
@@ -2988,7 +2988,7 @@
         let opacityInput=document.createElement("input");
         opacityInput.value=rulesData.opacity*100;
         opacityInput.type="number";
-        opacityInput.style.width="95px";
+        opacityInput.style.width="110px";
         opacityInput.style.margin="0";
         opacityInput.placeholder=i18n("opacityPlaceholder");
         opacityInput.spellcheck=false;
@@ -3705,7 +3705,7 @@
            100% { opacity: 1 }
          }
         `);
-        pageBarStyle=`vertical-align: super;line-height:1;opacity:${rulesData.opacity};display:${rulesData.opacity==0?"none":"block"};padding:0;box-shadow: 0px 0px 10px 0px #000000aa;border-radius: 20px;background-color: rgb(240 240 240 / 80%);font-size: 30px;visibility: visible; position: initial; width: auto; height: 30px; float: none; clear: both; margin: 5px auto; text-align: center;`;
+        pageBarStyle=`vertical-align: super;line-height:1;opacity:${rulesData.opacity};display:${rulesData.opacity==0?"none":"block"};padding:0;box-shadow: 0px 0px 10px 0px #000000aa;border-radius: 20px;background-color: rgb(240 240 240 / 80%);font-size: 30px;visibility: visible; position: initial; width: auto; height: 30px; float: none; clear: both; margin: 5px auto; text-align: center!important;`;
     }
     var loadingDiv=document.createElement("div");
     loadingDiv.style.cssText="cy: initial;d: initial;dominant-baseline: initial;empty-cells: initial;fill: initial;fill-opacity: initial;fill-rule: initial;filter: initial;flex: initial;flex-flow: initial;float: initial;flood-color: initial;flood-opacity: initial;grid: initial;grid-area: initial;height: initial;hyphens: initial;image-orientation: initial;image-rendering: initial;inline-size: initial;inset-block: initial;inset-inline: initial;isolation: initial;letter-spacing: initial;lighting-color: initial;line-break: initial;list-style: initial;margin-block: initial;margin: 0px auto;margin-inline: initial;marker: initial;mask: initial;mask-type: initial;max-block-size: initial;max-height: initial;max-inline-size: initial;max-width: initial;min-block-size: initial;min-height: initial;min-inline-size: initial;min-width: initial;mix-blend-mode: initial;object-fit: initial;object-position: initial;offset: initial;opacity: initial;order: initial;origin-trial-test-property: initial;orphans: initial;outline: initial;outline-offset: initial;overflow-anchor: initial;overflow-clip-margin: initial;overflow-wrap: initial;overflow: initial;overscroll-behavior-block: initial;overscroll-behavior-inline: initial;overscroll-behavior: initial;padding-block: initial;padding: initial;padding-inline: initial;page: initial;page-orientation: initial;paint-order: initial;perspective: initial;perspective-origin: initial;pointer-events: initial;position: initial;quotes: initial;r: initial;resize: initial;ruby-position: initial;rx: initial;ry: initial;scroll-behavior: initial;scroll-margin-block: initial;scroll-margin: initial;scroll-margin-inline: initial;scroll-padding-block: initial;scroll-padding: initial;scroll-padding-inline: initial;scroll-snap-align: initial;scroll-snap-stop: initial;scroll-snap-type: initial;scrollbar-gutter: initial;shape-image-threshold: initial;shape-margin: initial;shape-outside: initial;shape-rendering: initial;size: initial;speak: initial;stop-color: initial;stop-opacity: initial;stroke: initial;stroke-dasharray: initial;stroke-dashoffset: initial;stroke-linecap: initial;stroke-linejoin: initial;stroke-miterlimit: initial;stroke-opacity: initial;stroke-width: initial;tab-size: initial;table-layout: initial;text-align: initial;text-align-last: initial;text-anchor: initial;text-combine-upright: initial;text-decoration: initial;text-decoration-skip-ink: initial;text-indent: initial;text-overflow: initial;text-shadow: initial;text-size-adjust: initial;text-transform: initial;text-underline-offset: initial;text-underline-position: initial;touch-action: initial;transform: initial;transform-box: initial;transform-origin: initial;transform-style: initial;transition: initial;user-select: initial;vector-effect: initial;vertical-align: initial;visibility: initial;border-spacing: initial;-webkit-border-image: initial;-webkit-box-align: initial;-webkit-box-decoration-break: initial;-webkit-box-direction: initial;-webkit-box-flex: initial;-webkit-box-ordinal-group: initial;-webkit-box-orient: initial;-webkit-box-pack: initial;-webkit-box-reflect: initial;-webkit-highlight: initial;-webkit-hyphenate-character: initial;-webkit-line-break: initial;-webkit-line-clamp: initial;-webkit-mask-box-image: initial;-webkit-mask: initial;-webkit-mask-composite: initial;-webkit-perspective-origin-x: initial;-webkit-perspective-origin-y: initial;-webkit-print-color-adjust: initial;-webkit-rtl-ordering: initial;-webkit-ruby-position: initial;-webkit-tap-highlight-color: initial;-webkit-text-combine: initial;-webkit-text-decorations-in-effect: initial;-webkit-text-emphasis: initial;-webkit-text-emphasis-position: initial;-webkit-text-fill-color: initial;-webkit-text-security: initial;-webkit-text-stroke: initial;-webkit-transform-origin-x: initial;-webkit-transform-origin-y: initial;-webkit-transform-origin-z: initial;-webkit-user-drag: initial;-webkit-user-modify: initial;white-space: initial;widows: initial;width: initial;will-change: initial;word-break: initial;word-spacing: initial;x: initial;y: initial;z-index: 2147483647;";
@@ -4195,6 +4195,7 @@
             pageBar.style.boxShadow="";
             let td=document.createElement("td");
             td.colSpan=example.children.length;
+            td.style.width='100%';
             let inTd=document.createElement("div");
             inTd.style.backgroundColor="rgb(240 240 240 / 80%)";
             inTd.style.borderRadius="20px";
