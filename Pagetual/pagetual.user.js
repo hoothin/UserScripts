@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.30.19
+// @version      1.9.31
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -1041,7 +1041,7 @@
             let r=0;
             function searchByTime(){
                 setTimeout(()=>{
-                    let end=r+10;
+                    let end=r+50;
                     end=end>self.rules.length?self.rules.length:end;
                     for(;r<end;r++){
                         let rule=self.rules[r];
@@ -4189,10 +4189,11 @@
             pageBar.appendChild(td);
         }else if(inLi){
             example=example.tagName=="LI"?example:example.previousElementSibling;
-            pageBar.style.display="table-row";
+            pageBar.style.display=getComputedStyle(example).display;
             pageBar.style.backgroundColor="unset";
             pageBar.style.lineHeight="20px";
             pageBar.style.boxShadow="";
+            pageBar.style.height="35px";
             let td=document.createElement("td");
             td.colSpan=example.children.length;
             td.style.width='100%';
@@ -4209,8 +4210,12 @@
             inTd.style.boxShadow="rgb(0 0 0 / 67%) 0px 0px 10px 0px";
             if(pageNum)inTd.appendChild(pageNum);
             inTd.appendChild(downSpan);
-            td.appendChild(inTd);
-            pageBar.appendChild(td);
+            if (pageBar.style.display === 'table-row') {
+                td.appendChild(inTd);
+                pageBar.appendChild(td);
+            } else {
+                pageBar.appendChild(inTd);
+            }
         }
 
         upSpan.addEventListener("click", e=>{
