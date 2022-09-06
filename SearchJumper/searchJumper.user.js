@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.16.1
+// @version      1.6.6.17
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -74,7 +74,7 @@
             } ]
         },
         {
-            type: "视频",
+            type: "影视",
             icon: "video",
             sites: [ {
                 name: "bilibili",
@@ -105,38 +105,6 @@
             } ]
         },
         {
-            type: "购物",
-            icon: "shopping-cart",
-            sites: [ {
-                name: "淘宝",
-                url: "http://s.taobao.com/search?q=%s",
-                icon: "https://www.taobao.com/favicon.ico"
-            }, {
-                name: "京东",
-                url: "http://search.jd.com/search?keyword=%s&enc=utf-8",
-                icon: "https://www.jd.com/favicon.ico"
-            }, {
-                name: "苏宁",
-                url: "https://search.suning.com/%s/"
-            }, {
-                name: "亚马逊",
-                url: "http://www.amazon.cn/s/ref=nb_sb_noss?field-keywords=%s",
-                icon: "https://www.amazon.cn/favicon.ico"
-            }, {
-                name: "天猫",
-                url: "http://list.tmall.com/search_product.htm?q=%s"
-            }, {
-                name: "值得买",
-                url: "http://search.smzdm.com/?c=home&s=%s"
-            }, {
-                name: "当当网",
-                url: "http://search.dangdang.com/?key=%s"
-            }, {
-                name: "1688",
-                url: "https://s.1688.com/selloffer/offer_search.htm?keywords=%s"
-            } ]
-        },
-        {
             type: "音乐",
             icon: "music",
             sites: [ {
@@ -158,35 +126,6 @@
             }, {
                 name: "酷狗",
                 url: "http://search.5sing.kugou.com/?keyword=%s"
-            } ]
-        },
-        {
-            type: "开发",
-            icon: "code",
-            sites: [ {
-                name: "MDN",
-                url: "https://developer.mozilla.org/zh-CN/search?q=%s"
-            }, {
-                name: "stackoverflow",
-                url: "https://stackoverflow.com/search?q=%s"
-            }, {
-                name: "掘金",
-                url: "https://juejin.im/search?query=%s&type=all"
-            }, {
-                name: "Can I Use",
-                url: "http://caniuse.com/#search=%s",
-                icon: "https://caniuse.com/img/favicon-128.png"
-            }, {
-                name: "GitHub",
-                url: "https://github.com/search?utf8=✓&q=%s",
-                match: "https://github\\.com/search\\?.*[&\?]q="
-            }, {
-                name: "w3c",
-                url: "http://www.runoob.com/?s=%s"
-            }, {
-                name: "GreasyFork",
-                url: "https://greasyfork.org/zh-CN/scripts?q=%s&utf8=✓",
-                icon: "https://greasyfork.org/packs/media/images/blacklogo96-b2384000fca45aa17e45eb417cbcbb59.png"
             } ]
         },
         {
@@ -213,32 +152,6 @@
             }, {
                 name: "微信搜索",
                 url: "http://weixin.sogou.com/weixin?ie=utf8&type=2&query=%s"
-            } ]
-        },
-        {
-            type: "百科",
-            icon: "book-open-reader",
-            sites: [ {
-                name: "维基",
-                url: "http://zh.wikipedia.org/wiki/%s"
-            }, {
-                name: "百度百科",
-                url: "http://baike.baidu.com/search/word?pic=1&sug=1&word=%s"
-            }, {
-                name: "百度文库",
-                url: "http://wenku.baidu.com/search?word=%s&ie=utf-8"
-            }, {
-                name: "豆丁文档",
-                url: "http://www.docin.com/search.do?searchcat=2&searchType_banner=p&nkey=%s"
-            }, {
-                name: "爱问知识",
-                url: "http://iask.sina.com.cn/search?searchWord=%s"
-            }, {
-                name: "果壳",
-                url: "http://www.guokr.com/search/all/?wd=%s"
-            }, {
-                name: "Quora",
-                url: "https://www.quora.com/search?q=%s"
             } ]
         },
         {
@@ -279,23 +192,6 @@
             }, {
                 name: "unsplash",
                 url: "https://unsplash.com/s/photos/%s"
-            } ]
-        },
-        {
-            type: "网盘",
-            icon: "cloud-download",
-            sites: [ {
-                name: "百度网盘",
-                url: "https://pan.baidu.com/disk/main?#/search?key=%s"
-            }, {
-                name: "大力盘",
-                url: "https://www.dalipan.com/search?keyword=%s"
-            }, {
-                name: "大圣盘",
-                url: "https://www.dashengpan.com/search?keyword=%s"
-            }, {
-                name: "优聚搜",
-                url: "https://v3.ujuso.com/#/main?kw=%s"
             } ]
         },
         {
@@ -504,6 +400,110 @@
             }, {
                 name: "去视频水印",
                 url: "https://parse.bqrdh.com/smart/#p{.ant-input=%u&.ant-input-search-button.click}"
+            } ]
+        },
+        {
+            type: "开发",
+            icon: "code",
+            sites: [ {
+                name: "MDN",
+                url: "https://developer.mozilla.org/zh-CN/search?q=%s"
+            }, {
+                name: "stackoverflow",
+                url: "https://stackoverflow.com/search?q=%s"
+            }, {
+                name: "掘金",
+                url: "https://juejin.im/search?query=%s&type=all"
+            }, {
+                name: "Can I Use",
+                url: "http://caniuse.com/#search=%s",
+                icon: "https://caniuse.com/img/favicon-128.png"
+            }, {
+                name: "GitHub",
+                url: "https://github.com/search?utf8=✓&q=%s",
+                match: "https://github\\.com/search\\?.*[&\?]q="
+            }, {
+                name: "w3c",
+                url: "http://www.runoob.com/?s=%s"
+            }, {
+                name: "GreasyFork",
+                url: "https://greasyfork.org/zh-CN/scripts?q=%s&utf8=✓",
+                icon: "https://greasyfork.org/packs/media/images/blacklogo96-b2384000fca45aa17e45eb417cbcbb59.png"
+            } ]
+        },
+        {
+            type: "百科",
+            icon: "book-open-reader",
+            sites: [ {
+                name: "维基",
+                url: "http://zh.wikipedia.org/wiki/%s"
+            }, {
+                name: "百度百科",
+                url: "http://baike.baidu.com/search/word?pic=1&sug=1&word=%s"
+            }, {
+                name: "百度文库",
+                url: "http://wenku.baidu.com/search?word=%s&ie=utf-8"
+            }, {
+                name: "豆丁文档",
+                url: "http://www.docin.com/search.do?searchcat=2&searchType_banner=p&nkey=%s"
+            }, {
+                name: "爱问知识",
+                url: "http://iask.sina.com.cn/search?searchWord=%s"
+            }, {
+                name: "果壳",
+                url: "http://www.guokr.com/search/all/?wd=%s"
+            }, {
+                name: "Quora",
+                url: "https://www.quora.com/search?q=%s"
+            } ]
+        },
+        {
+            type: "网盘",
+            icon: "cloud-download",
+            sites: [ {
+                name: "百度网盘",
+                url: "https://pan.baidu.com/disk/main?#/search?key=%s"
+            }, {
+                name: "大力盘",
+                url: "https://www.dalipan.com/search?keyword=%s"
+            }, {
+                name: "大圣盘",
+                url: "https://www.dashengpan.com/search?keyword=%s"
+            }, {
+                name: "优聚搜",
+                url: "https://v3.ujuso.com/#/main?kw=%s"
+            } ]
+        },
+        {
+            type: "购物",
+            icon: "shopping-cart",
+            sites: [ {
+                name: "淘宝",
+                url: "http://s.taobao.com/search?q=%s",
+                icon: "https://www.taobao.com/favicon.ico"
+            }, {
+                name: "京东",
+                url: "http://search.jd.com/search?keyword=%s&enc=utf-8",
+                icon: "https://www.jd.com/favicon.ico"
+            }, {
+                name: "苏宁",
+                url: "https://search.suning.com/%s/"
+            }, {
+                name: "亚马逊",
+                url: "http://www.amazon.cn/s/ref=nb_sb_noss?field-keywords=%s",
+                icon: "https://www.amazon.cn/favicon.ico"
+            }, {
+                name: "天猫",
+                url: "http://list.tmall.com/search_product.htm?q=%s"
+            }, {
+                name: "值得买",
+                url: "http://search.smzdm.com/?c=home&s=%s"
+            }, {
+                name: "当当网",
+                url: "http://search.dangdang.com/?key=%s"
+            }, {
+                name: "1688",
+                url: "https://s.1688.com/selloffer/offer_search.htm?keywords=%s"
             } ]
         },
         {
@@ -2331,7 +2331,7 @@
                         display: flex;
                         align-items: center;
                         justify-content: center;
-                        color: white;
+                        color: white!important;
                         font-weight: bold;
                         font-size: 18px;
                         border-radius: 10px 10px 0 0;
@@ -2985,7 +2985,7 @@
                 if (index === -1) return;
                 markList.splice(index, 1);
                 this.marks[content] = markList;
-                let navMark = this.navMarks.querySelectorAll(`span[data-content=${content}]`)[index];
+                let navMark = this.navMarks.querySelectorAll(`span[data-content="${content}"]`)[index];
                 if (navMark) this.navMarks.removeChild(navMark);
             }
 
@@ -3734,7 +3734,7 @@
                 let inPageWords = searchData.prefConfig.showInSearchEngine ? getKeywords() : globalInPageWords;
                 if (inPageWords) {
                     try {
-                        inPageWords = decodeURIComponent(inPageWords);
+                        inPageWords = decodeURIComponent(inPageWords).replace(/[:;]/g, ' ');
                     } catch (e) {}
                     this.setInPageWords(inPageWords);
                 }
@@ -3781,7 +3781,7 @@
                         typeNode.classList.remove("input-hide");
                         let listItem = typeNode.querySelector("#list" + btn.dataset.id);
                         if (listItem) listItem.classList.remove("input-hide");
-                        if (this.searchInput.value !== '^' + btn.dataset.name + '$') {
+                        if (inputWords && this.searchInput.value !== '^' + btn.dataset.name + '$') {
                             let option = document.createElement('option');
                             option.value = '^' + btn.dataset.name + '$';
                             this.filterGlob.appendChild(option);
@@ -7131,7 +7131,7 @@
                         display: flex;
                         align-items: center;
                         justify-content: center;
-                        color: white;
+                        color: white!important;
                         font-weight: bold;
                         font-size: 18px;
                         border-radius: 10px 10px 0 0;
