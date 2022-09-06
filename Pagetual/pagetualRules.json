@@ -1147,7 +1147,7 @@
     "url": "^https://www\\.mikuclub\\.online",
     "pageElement": "#post-list > div.col.card",
     "lazyImgSrc": "file",
-    "css":".sl_lazyimg{opacity:1}",
+    "css":"img.sl_lazyimg{opacity:1}",
     "pageAction": "eles.forEach(ele=>{let img=ele.querySelector('img');img.classList.remove('sl_lazyimg')})"
   },
   {
