@@ -1143,6 +1143,14 @@
     "wait":"return doc.querySelector('.seb-pagination__pages') && !doc.querySelector('.organic-list>p>i.ui2-icon-loading')"
   },
   {
+    "name": "初音社",
+    "url": "^https://www\\.mikuclub\\.online",
+    "pageElement": "#post-list > div.col.card",
+    "lazyImgSrc": "file",
+    "css":".sl_lazyimg{opacity:1}",
+    "pageAction": "eles.forEach(ele=>{let img=ele.querySelector('img');img.classList.remove('sl_lazyimg')})"
+  },
+  {
     "name":"豆瓣电影",
     "url":"^https://movie\\.douban\\.com",
     "wheel":true
