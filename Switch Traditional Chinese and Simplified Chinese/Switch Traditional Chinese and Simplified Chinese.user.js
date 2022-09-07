@@ -6,7 +6,7 @@
 // @namespace    hoothin
 // @supportURL   https://github.com/hoothin/UserScripts
 // @homepageURL  https://github.com/hoothin/UserScripts
-// @version      1.2.5.1
+// @version      1.2.5.2
 // @description        任意轉換網頁中的簡體中文與繁體中文（默認簡體→繁體）
 // @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体）
 // @description:ja     簡繁中国語に変換
@@ -19,6 +19,12 @@
 // @grant        GM_notification
 // @grant        GM_listValues
 // @grant        GM_deleteValue
+// @grant        GM.setValue
+// @grant        GM.getValue
+// @grant        GM.registerMenuCommand
+// @grant        GM.notification
+// @grant        GM.listValues
+// @grant        GM.deleteValue
 // @contributionURL https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
 // @contributionAmount 1
 // ==/UserScript==
@@ -479,18 +485,101 @@
         return str;
     }
 
+    var _GM_listValues, _GM_registerMenuCommand, _GM_notification;
+    _GM_listValues = (cb) => {
+        if (typeof GM_listValues != 'undefined') {
+            cb(GM_listValues());
+        } else if (typeof GM != 'undefined' && typeof GM.listValues != 'undefined') {
+            GM.listValues.then(list => cb(list));
+        } else if (window.localStorage) {
+            let list = [];
+            for(let i = 0, len = window.localStorage.length; i < len; i++) {
+                let key = localStorage.key(i);
+                list.push(key);
+            }
+            cb(list);
+        } else {
+            cb([]);
+        }
+    };
+    if (typeof GM_registerMenuCommand != 'undefined') {
+        _GM_registerMenuCommand = GM_registerMenuCommand;
+    } else if (typeof GM != 'undefined' && typeof GM.registerMenuCommand != 'undefined') {
+        _GM_registerMenuCommand = GM.registerMenuCommand;
+    } else {
+        _GM_registerMenuCommand = (s, f) => {};
+    }
+    if (typeof GM_notification != 'undefined') {
+        _GM_notification = GM_notification;
+    } else if (typeof GM != 'undefined' && typeof GM.notification != 'undefined') {
+        _GM_notification = GM.notification;
+    } else {
+        _GM_notification = (s) => {alert(s)};
+    }
+    var storage = {
+        supportGM: typeof GM_getValue == 'function' && typeof GM_getValue('a', 'b') != 'undefined',
+        supportGMPromise: typeof GM != 'undefined' && typeof GM.getValue == 'function' && typeof GM.getValue('a','b') != 'undefined',
+        mxAppStorage: (function() {
+            try {
+                return window.external.mxGetRuntime().storage;
+            } catch(e) {
+            }
+        })(),
+        operaUJSStorage: (function() {
+            try {
+                return window.opera.scriptStorage;
+            } catch(e) {
+            }
+        })(),
+        setItem: function (key, value) {
+            if (this.supportGM) {
+                GM_setValue(key, value);
+                if(value === "" && typeof GM_deleteValue != 'undefined'){
+                    GM_deleteValue(key);
+                }
+            } else if (this.supportGMPromise) {
+                GM.setValue(key, value);
+                if(value === "" && typeof GM != 'undefined' && typeof GM.deleteValue != 'undefined'){
+                    GM.deleteValue(key);
+                }
+            } else if (window.localStorage) {
+                window.localStorage.setItem(key, value);
+            } else if (this.operaUJSStorage) {
+                this.operaUJSStorage.setItem(key, value);
+            } else if (this.mxAppStorage) {
+                this.mxAppStorage.setConfig(key, value);
+            }
+        },
+        getItem: function (key, cb) {
+            var value;
+            if (this.supportGM) {
+                value = GM_getValue(key);
+            } else if (this.supportGMPromise) {
+                value = GM.getValue(key).then(v=>{cb(v)});
+                return;
+            } else if (window.localStorage) {
+                value = window.localStorage.getItem(key);
+            } else if (this.operaUJSStorage) {
+                value = this.operaUJSStorage.getItem(key);
+            } else if (this.mxAppStorage) {
+                value = this.mxAppStorage.getConfig(key);
+            }
+            cb(value);
+        }
+    };
+
     function setLanguage(){
-        GM_setValue("action_" + location.hostname.toString().replace(/\./g,"_"), action);
+        storage.setItem("action_" + location.hostname.toString().replace(/\./g,"_"), action);
         switch(action){
             case 1:
-                GM_notification("已於該網域禁用簡繁切換");
+                _GM_notification("已於該網域禁用簡繁切換");
                 location.reload();
                 break;
             case 2:
-                GM_notification("已切换至简体中文");
+                _GM_notification("已切换至简体中文");
                 break;
             case 3:
-                GM_notification("已切換至繁體中文");
+                _GM_notification("已切換至繁體中文");
                 break;
         }
         if(action > 1){
@@ -509,211 +598,229 @@
         setLanguage();
     }
 
-    let _auto = GM_getValue("auto");
-    if (typeof _auto != 'undefined') {
-        auto = _auto;
-    }
-    let _shortcutKey = GM_getValue("shortcutKey");
-    if (typeof _shortcutKey != 'undefined') {
-        shortcutKey = _shortcutKey;
-    }
-    let _ctrlKey = GM_getValue("ctrlKey");
-    if (typeof _ctrlKey != 'undefined') {
-        ctrlKey = _ctrlKey;
-    }
-    let _altKey = GM_getValue("altKey");
-    if (typeof _altKey != 'undefined') {
-        altKey = _altKey;
-    }
-    let _shiftKey = GM_getValue("shiftKey");
-    if (typeof _shiftKey != 'undefined') {
-        shiftKey = _shiftKey;
-    }
-    let _metaKey = GM_getValue("metaKey");
-    if (typeof _metaKey != 'undefined') {
-        metaKey = _metaKey;
-    }
+    var saveAction;
+    function run() {
+        action=saveAction?saveAction:(isSimple?(auto?2:3):(auto?3:2));
+        if((auto||saveAction) && action > 1){
+            setTimeout(function(){
+                stranBody();
+                var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
+                var observer = new MutationObserver(function(records){
+                    records.map(function(record) {
+                        if(record.addedNodes){
+                            [].forEach.call(record.addedNodes,function(item){
+                                stranBody(item);
+                            });
+                        }
+                    });
+                });
+                var option = {
+                    'childList': true,
+                    'subtree': true
+                };
+                observer.observe(document.body, option);
+            },50);
+        }
 
-    var saveAction = GM_getValue("action_" + location.hostname.toString().replace(/\./g,"_"));
-    action=saveAction?saveAction:(isSimple?(auto?2:3):(auto?3:2));
-    if((auto||saveAction) && action > 1){
-        setTimeout(function(){
-            stranBody();
-            var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
-            var observer = new MutationObserver(function(records){
-                records.map(function(record) {
-                    if(record.addedNodes){
-                        [].forEach.call(record.addedNodes,function(item){
-                            stranBody(item);
+        var curLang=isSimple;
+        document.addEventListener("keydown", function(e) {
+            if(e.key == shortcutKey && e.ctrlKey == ctrlKey && e.altKey == altKey && e.shiftKey == shiftKey && e.metaKey == metaKey) {
+                if("TEXTAREA"==document.activeElement.tagName){
+                    document.activeElement.innerHTML=curLang?traditionalized(document.activeElement.innerHTML):simplized(document.activeElement.innerHTML);
+                    document.activeElement.value=curLang?traditionalized(document.activeElement.value):simplized(document.activeElement.value);
+                    curLang=!curLang;
+                }else if("INPUT"==document.activeElement.tagName){
+                    document.activeElement.value=curLang?traditionalized(document.activeElement.value):simplized(document.activeElement.value);
+                    curLang=!curLang;
+                }else{
+                    action=action==2?3:2;
+                    setLanguage();
+                }
+            }
+        });
+
+        if (inConfigPage) {
+            let parent = document.querySelector('#additional-info');
+            let baseCon = document.createElement('div');
+            baseCon.style.margin = '20px';
+            parent.insertBefore(baseCon, parent.children[0]);
+            let checkIndex = 0;
+            let createCheckbox = (name, defaultValue) => {
+                let box = document.createElement('div');
+                let checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.checked = defaultValue;
+                let id = 'stcnsc-checkbox' + checkIndex++;
+                checkbox.id = id;
+                let label = document.createElement('label');
+                label.setAttribute('for', id);
+                label.innerText = name;
+                box.appendChild(checkbox);
+                box.appendChild(label);
+                baseCon.appendChild(box);
+                return checkbox;
+            };
+            let autoInput = createCheckbox('總是自動切換', auto);
+            let shortcutCon = document.createElement('div');
+            shortcutCon.style.display = 'flex';
+            shortcutCon.style.alignItems = 'center';
+            let shortcutTitle = document.createElement('h3');
+            shortcutTitle.style.margin = '5px 0';
+            shortcutTitle.innerText = '快捷鍵：';
+            shortcutCon.appendChild(shortcutTitle);
+            let shortcutInput = document.createElement('input');
+            shortcutInput.style.height = '20px';
+            shortcutInput.style.width = '50px';
+            shortcutInput.setAttribute('readonly', "readonly");
+            shortcutInput.value = shortcutKey;
+            shortcutInput.addEventListener("keydown", function(e) {
+                if (e.key) {
+                    shortcutInput.value = e.key;
+                    e.stopPropagation();
+                    e.preventDefault();
+                }
+            }, true);
+            shortcutCon.appendChild(shortcutInput);
+            baseCon.appendChild(shortcutCon);
+            let ctrlKeyInput = createCheckbox('Ctrl 鍵', ctrlKey);
+            let altKeyInput = createCheckbox('Alt 鍵', altKey);
+            let shiftKeyInput = createCheckbox('Shift 鍵', shiftKey);
+            let metaKeyInput = createCheckbox('Meta 鍵', metaKey);
+
+            let siteChanged = false;
+            let sitesTcTitle = document.createElement('h3');
+            sitesTcTitle.style.margin = '5px 0';
+            sitesTcTitle.innerText = '簡 → 繁站點：';
+            baseCon.appendChild(sitesTcTitle);
+            let sitesTcInput = document.createElement('textarea');
+            sitesTcInput.placeholder = 'tieba.baidu.com\n一行一條';
+            sitesTcInput.style.width = '100%';
+            baseCon.appendChild(sitesTcInput);
+
+            let sitesScTitle = document.createElement('h3');
+            sitesScTitle.style.margin = '5px 0';
+            sitesScTitle.innerText = '繁 → 簡站點：';
+            baseCon.appendChild(sitesScTitle);
+            let sitesScInput = document.createElement('textarea');
+            sitesScInput.placeholder = 'www.gamer.com.tw\n一行一條';
+            sitesScInput.style.width = '100%';
+            baseCon.appendChild(sitesScInput);
+
+            let sitesDisableTitle = document.createElement('h3');
+            sitesDisableTitle.style.margin = '5px 0';
+            sitesDisableTitle.innerText = '禁用站點：';
+            baseCon.appendChild(sitesDisableTitle);
+            let sitesDisableInput = document.createElement('textarea');
+            sitesDisableInput.style.width = '100%';
+            baseCon.appendChild(sitesDisableInput);
+
+            sitesTcInput.addEventListener("change", function(e) {
+                siteChanged = true;
+            });
+            sitesScInput.addEventListener("change", function(e) {
+                siteChanged = true;
+            });
+            sitesDisableInput.addEventListener("change", function(e) {
+                siteChanged = true;
+            });
+
+            let sitesList;
+            _GM_listValues(list => {
+                sitesList = list;
+                sitesList.forEach(site => {
+                    if (site.indexOf('action_') === 0) {
+                        storage.getItem(site, _action => {
+                            site = site.replace(/^action_/, '').replace(/_/g, '.') + '\n';
+                            switch (_action) {
+                                case 1:
+                                    sitesDisableInput.value += site;
+                                    break;
+                                case 2:
+                                    sitesScInput.value += site;
+                                    break;
+                                case 3:
+                                    sitesTcInput.value += site;
+                                    break;
+                            }
                         });
                     }
                 });
             });
-            var option = {
-                'childList': true,
-                'subtree': true
-            };
-            observer.observe(document.body, option);
-        },50);
+            let saveBtn = document.createElement('button');
+            saveBtn.innerText = '保存設置';
+            saveBtn.style.display = 'block';
+            saveBtn.addEventListener("click", function(e) {
+                auto = autoInput.checked;
+                shortcutKey = shortcutInput.value;
+                ctrlKey = ctrlKeyInput.checked;
+                altKey = altKeyInput.checked;
+                shiftKey = shiftKeyInput.checked;
+                metaKey = metaKeyInput.checked;
+
+                if (siteChanged) {
+                    sitesList.forEach(site => {
+                        if (site.indexOf('action_') === 0) {
+                            storage.setItem(site, "");
+                        }
+                    });
+                    sitesDisableInput.value.trim().split('\n').forEach(site => {
+                        storage.setItem("action_" + site.replace(/\./g,"_"), 1);
+                    });
+                    sitesScInput.value.trim().split('\n').forEach(site => {
+                        storage.setItem("action_" + site.replace(/\./g,"_"), 2);
+                    });
+                    sitesTcInput.value.trim().split('\n').forEach(site => {
+                        storage.setItem("action_" + site.replace(/\./g,"_"), 3);
+                    });
+                }
+                storage.setItem('auto', auto);
+                storage.setItem('shortcutKey', shortcutKey);
+                storage.setItem('ctrlKey', ctrlKey);
+                storage.setItem('altKey', altKey);
+                storage.setItem('shiftKey', shiftKey);
+                storage.setItem('metaKey', metaKey);
+                alert('保存設置成功！')
+            });
+            baseCon.appendChild(saveBtn);
+        }
     }
 
-    var curLang=isSimple;
-    document.addEventListener("keydown", function(e) {
-        if(e.key == shortcutKey && e.ctrlKey == ctrlKey && e.altKey == altKey && e.shiftKey == shiftKey && e.metaKey == metaKey) {
-            if("TEXTAREA"==document.activeElement.tagName){
-                document.activeElement.innerHTML=curLang?traditionalized(document.activeElement.innerHTML):simplized(document.activeElement.innerHTML);
-                document.activeElement.value=curLang?traditionalized(document.activeElement.value):simplized(document.activeElement.value);
-                curLang=!curLang;
-            }else if("INPUT"==document.activeElement.tagName){
-                document.activeElement.value=curLang?traditionalized(document.activeElement.value):simplized(document.activeElement.value);
-                curLang=!curLang;
-            }else{
-                action=action==2?3:2;
-                setLanguage();
-            }
+    storage.getItem("auto", _auto => {
+        if (typeof _auto != 'undefined') {
+            auto = _auto;
         }
+        storage.getItem("shortcutKey", _shortcutKey => {
+            if (typeof _shortcutKey != 'undefined') {
+                shortcutKey = _shortcutKey;
+            }
+            storage.getItem("ctrlKey", _ctrlKey => {
+                if (typeof _ctrlKey != 'undefined') {
+                    ctrlKey = _ctrlKey;
+                }
+                storage.getItem("altKey", _altKey => {
+                    if (typeof _altKey != 'undefined') {
+                        altKey = _altKey;
+                    }
+                    storage.getItem("shiftKey", _shiftKey => {
+                        if (typeof _shiftKey != 'undefined') {
+                            shiftKey = _shiftKey;
+                        }
+                        storage.getItem("metaKey", _metaKey => {
+                            if (typeof _metaKey != 'undefined') {
+                                metaKey = _metaKey;
+                            }
+                            storage.getItem("action_" + location.hostname.toString().replace(/\./g,"_"), v => {
+                                if (typeof v != 'undefined') {
+                                    saveAction = v;
+                                }
+                                run();
+                            });
+                        });
+                    });
+                });
+            });
+        });
     });
 
-    if (inConfigPage) {
-        let parent = document.querySelector('#additional-info');
-        let baseCon = document.createElement('div');
-        baseCon.style.margin = '20px';
-        parent.insertBefore(baseCon, parent.children[0]);
-        let checkIndex = 0;
-        let createCheckbox = (name, defaultValue) => {
-            let box = document.createElement('div');
-            let checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkbox.checked = defaultValue;
-            let id = 'stcnsc-checkbox' + checkIndex++;
-            checkbox.id = id;
-            let label = document.createElement('label');
-            label.setAttribute('for', id);
-            label.innerText = name;
-            box.appendChild(checkbox);
-            box.appendChild(label);
-            baseCon.appendChild(box);
-            return checkbox;
-        };
-        let autoInput = createCheckbox('總是自動切換', auto);
-        let shortcutCon = document.createElement('div');
-        shortcutCon.style.display = 'flex';
-        shortcutCon.style.alignItems = 'center';
-        let shortcutTitle = document.createElement('h3');
-        shortcutTitle.style.margin = '5px 0';
-        shortcutTitle.innerText = '快捷鍵：';
-        shortcutCon.appendChild(shortcutTitle);
-        let shortcutInput = document.createElement('input');
-        shortcutInput.style.height = '20px';
-        shortcutInput.style.width = '50px';
-        shortcutInput.setAttribute('readonly', "readonly");
-        shortcutInput.value = shortcutKey;
-        shortcutInput.addEventListener("keydown", function(e) {
-            if (e.key) {
-                shortcutInput.value = e.key;
-                e.stopPropagation();
-                e.preventDefault();
-            }
-        }, true);
-        shortcutCon.appendChild(shortcutInput);
-        baseCon.appendChild(shortcutCon);
-        let ctrlKeyInput = createCheckbox('Ctrl 鍵', ctrlKey);
-        let altKeyInput = createCheckbox('Alt 鍵', altKey);
-        let shiftKeyInput = createCheckbox('Shift 鍵', shiftKey);
-        let metaKeyInput = createCheckbox('Meta 鍵', metaKey);
-
-        let siteChanged = false;
-        let sitesTcTitle = document.createElement('h3');
-        sitesTcTitle.style.margin = '5px 0';
-        sitesTcTitle.innerText = '簡 → 繁站點：';
-        baseCon.appendChild(sitesTcTitle);
-        let sitesTcInput = document.createElement('textarea');
-        sitesTcInput.placeholder = 'tieba.baidu.com\n一行一條';
-        sitesTcInput.style.width = '100%';
-        baseCon.appendChild(sitesTcInput);
-
-        let sitesScTitle = document.createElement('h3');
-        sitesScTitle.style.margin = '5px 0';
-        sitesScTitle.innerText = '繁 → 簡站點：';
-        baseCon.appendChild(sitesScTitle);
-        let sitesScInput = document.createElement('textarea');
-        sitesScInput.placeholder = 'www.gamer.com.tw\n一行一條';
-        sitesScInput.style.width = '100%';
-        baseCon.appendChild(sitesScInput);
-
-        let sitesDisableTitle = document.createElement('h3');
-        sitesDisableTitle.style.margin = '5px 0';
-        sitesDisableTitle.innerText = '禁用站點：';
-        baseCon.appendChild(sitesDisableTitle);
-        let sitesDisableInput = document.createElement('textarea');
-        sitesDisableInput.style.width = '100%';
-        baseCon.appendChild(sitesDisableInput);
-
-        sitesTcInput.addEventListener("change", function(e) {
-            siteChanged = true;
-        });
-        sitesScInput.addEventListener("change", function(e) {
-            siteChanged = true;
-        });
-        sitesDisableInput.addEventListener("change", function(e) {
-            siteChanged = true;
-        });
-
-        let sitesList = GM_listValues();
-        sitesList.forEach(site => {
-            if (site.indexOf('action_') === 0) {
-                let _action = GM_getValue(site);
-                site = site.replace(/^action_/, '').replace(/_/g, '.') + '\n';
-                switch (_action) {
-                    case 1:
-                        sitesDisableInput.value += site;
-                        break;
-                    case 2:
-                        sitesScInput.value += site;
-                        break;
-                    case 3:
-                        sitesTcInput.value += site;
-                        break;
-                }
-            }
-        });
-        let saveBtn = document.createElement('button');
-        saveBtn.innerText = '保存設置';
-        saveBtn.style.display = 'block';
-        saveBtn.addEventListener("click", function(e) {
-            auto = autoInput.checked;
-            shortcutKey = shortcutInput.value;
-            ctrlKey = ctrlKeyInput.checked;
-            altKey = altKeyInput.checked;
-            shiftKey = shiftKeyInput.checked;
-            metaKey = metaKeyInput.checked;
-
-            if (siteChanged) {
-                sitesList.forEach(site => {
-                    if (site.indexOf('action_') === 0) {
-                        GM_deleteValue(site);
-                    }
-                });
-                sitesDisableInput.value.trim().split('\n').forEach(site => {
-                    GM_setValue("action_" + site.replace(/\./g,"_"), 1);
-                });
-                sitesScInput.value.trim().split('\n').forEach(site => {
-                    GM_setValue("action_" + site.replace(/\./g,"_"), 2);
-                });
-                sitesTcInput.value.trim().split('\n').forEach(site => {
-                    GM_setValue("action_" + site.replace(/\./g,"_"), 3);
-                });
-            }
-            GM_setValue('auto', auto);
-            GM_setValue('shortcutKey', shortcutKey);
-            GM_setValue('ctrlKey', ctrlKey);
-            GM_setValue('altKey', altKey);
-            GM_setValue('shiftKey', shiftKey);
-            GM_setValue('metaKey', metaKey);
-            alert('保存設置成功！')
-        });
-        baseCon.appendChild(saveBtn);
-    }
-
-    GM_registerMenuCommand("繁簡切換【Ctrl+F8】", switchLanguage);
+    _GM_registerMenuCommand("繁簡切換【Ctrl+F8】", switchLanguage);
 })();
