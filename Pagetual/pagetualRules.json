@@ -275,7 +275,7 @@
     "name":"手机百度",
     "url":"^https://(m|www|wap)\\.baidu\\.com/",
     "nextLink":"a.new-nextpage-only,a.new-nextpage",
-    "pageElement":"#results>.result"
+    "pageElement":"#results"
   },
   {
     "name":"百度贴吧列表",
