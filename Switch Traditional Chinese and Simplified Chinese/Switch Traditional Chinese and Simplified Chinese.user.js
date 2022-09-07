@@ -25,7 +25,7 @@
 // @grant        GM.notification
 // @grant        GM.listValues
 // @grant        GM.deleteValue
-// @contributionURL https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation
+// @contributionURL      https://www.buymeacoffee.com/hoothin
 // @contributionAmount 1
 // ==/UserScript==
 //因一簡對多繁，所以簡轉繁需要優先排除異體字，並根據詞匯轉換。其他需要語義分析的，暫時無解。整理繁簡對照表很費時，因此不打臉的話不再更新，如有需求，刪減自用。更精細的需求可自行申請相應API或自行訓練語義AI並搭建對照數據庫。在油猴脚本裏面如此這般折騰，我是覺得沒有意義啦。。。
