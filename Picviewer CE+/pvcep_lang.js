@@ -408,7 +408,7 @@ var langData = [
         galleryLoadAll:"加载更多图片时自动处理全部页",
         galleryLoadAllTip:"若页数过多可能影响体验",
         galleryDownloadWithZip:"下载所有时打包成zip",
-        galleryDownloadWithZipAlert:"正在打包，请耐心等候数十秒",
+        galleryDownloadWithZipAlert:"下载准备中，请耐心等候数十秒",
         galleryScaleSmallSize1:"实际尺寸的高和宽都小于 ",
         galleryScaleSmallSize2:" 像素则归入小尺寸图片",
         galleryShowSmallSize:"默认显示小尺寸图片",
