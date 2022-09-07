@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.9.5.2
+// @version              2022.9.7
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -13703,14 +13703,17 @@ ImgOps | https://imgops.com/#b#`;
                             [].forEach.call(nodes, function(node){
                                 if(unsafeWindow.getComputedStyle(node).display!="none"){
                                     saveIndex++;
-                                    srcSplit=node.dataset.src.replace(/[\?#].*/,"").split("/");
-                                    srcSplit=srcSplit[srcSplit.length-1];
-                                    if(srcSplit.length>30 && (srcSplit.indexOf(".")==-1 || /[&\?=,]/i.test(srcSplit))){
-                                        srcSplit="";
+                                    if (node.dataset.src.indexOf('data') === 0) srcSplit = "";
+                                    else {
+                                        srcSplit=node.dataset.src.match(/[\w\-\_\.]+$/) || '';
+                                        if (srcSplit.length > 30 && (srcSplit.indexOf(".") == -1 || /[&\?=,]/i.test(srcSplit))){
+                                            srcSplit = "";
+                                        }
+                                        if (srcSplit.length > 50) srcSplit = srcSplit.substring(0, 50);
                                     }
-                                    if(srcSplit.length>50)srcSplit=srcSplit.substring(0,50);
-                                    var picName=document.title + "-" + (saveIndex<10?"00"+saveIndex:(saveIndex<100?"0"+saveIndex:saveIndex)) + (node.title?"-" + node.title:"") + "-" + srcSplit,hostArr=location.host.split(".");
-                                    var host=hostArr[hostArr.length-2];
+                                    var title = node.title.indexOf('\n') !== -1 ? node.title.split('\n')[0] : (node.title.indexOf('http') === 0 ? '' : node.title);
+                                    var picName = document.title + "-" + (saveIndex < 10 ? "00" + saveIndex : (saveIndex < 100 ? "0" + saveIndex : saveIndex)) + (title ? "-" + title : "") + "-" + srcSplit, hostArr = location.host.split(".");
+                                    var host = hostArr[hostArr.length-2];
                                     saveParams.push([node.dataset.src, picName]);
                                     //saveAs(node.dataset.src, location.host+"-"+srcSplit[srcSplit.length-1]);
                                 }
@@ -14342,8 +14345,10 @@ ImgOps | https://imgops.com/#b#`;
                     function downloadOne(imgSrc, imgName){
                         let crosHandler = imgSrc => {
                             self.corsUrlToBlob(imgSrc, blob=>{
-                                if(blob)zip.file(downloaded + '.' + imgName.replace(/\//g,"").replace(/\.\w+$/,"")+'.jpg',blob);
-                                else console.debug("error: "+imgSrc);
+                                if (blob) {
+                                    let ext = imgSrc.match(/\.\w{2,5}$/);
+                                    zip.file(imgName.replace(/\//g,"").replace(/\.\w+$/,"") + '-' + downloaded + (ext || '.jpg'), blob);
+                                } else console.debug("error: "+imgSrc);
                                 downloaded++;
                                 self.showTips("Downloading "+downloaded+"/"+len, 100000);
                                 if(downloaded == len){
@@ -14363,7 +14368,13 @@ ImgOps | https://imgops.com/#b#`;
                                     return;
                                 }
                                 canvas.toBlob(blob=>{
-                                    zip.file(downloaded + '.' + imgName.replace(/\//g,"").replace(/\.\w+$/,"")+'.jpg',blob);
+                                    let ext;
+                                    if (/^data:/.test(imgSrc)) {
+                                        ext = '.png';
+                                    } else {
+                                        ext = imgSrc.match(/\.\w{2,5}$/) || '.png';
+                                    }
+                                    zip.file(imgName.replace(/\//g,"").replace(/\.\w+$/,"") + '-' + downloaded + ext,blob);
                                     downloaded++;
                                     if(downloaded == len){
                                         self.showTips("Begin compress to ZIP...", 100000);
@@ -14372,7 +14383,7 @@ ImgOps | https://imgops.com/#b#`;
                                             callback();
                                         })
                                     }
-                                }, "image/jpg");
+                                }, "image/png");
                             });
                         }else{
                             crosHandler(imgSrc);
@@ -14666,7 +14677,7 @@ ImgOps | https://imgops.com/#b#`;
                             }
                         });
                     });
-                    imgSpan.title=curNode.title;
+                    imgSpan.title=curNode.title + '\n' + curNode.dataset.src.slice(0, 100);
                     let img=imgSpan.querySelector("img");
                     var addDlSpan=(img, imgSpan, curNode, clickCb)=>{
                         var dlSpan=document.createElement('p');
@@ -14703,15 +14714,20 @@ ImgOps | https://imgops.com/#b#`;
                                         let conItem=node.parentNode;
                                         if(conItem.style.display=="none")return;
                                         saveIndex++;
+
                                         let imgSrc=conItem.querySelector("img").src;
                                         let title=node.nextElementSibling.title;
-                                        let srcSplit=imgSrc.replace(/[\?#].*/,"").split("/");
-                                        srcSplit=srcSplit[srcSplit.length-1];
-                                        if(srcSplit.length>30 && (srcSplit.indexOf(".")==-1 || /[&\?=,]/i.test(srcSplit))){
-                                            srcSplit="";
+                                        title = title.indexOf('\n') !== -1 ? title.split('\n')[0] : (title.indexOf('http') === 0 ? '' : title);
+                                        let srcSplit;
+                                        if (imgSrc.indexOf('data') === 0) srcSplit = "";
+                                        else {
+                                            srcSplit=imgSrc.match(/[\w\-\_\.]+$/) || '';
+                                            if (srcSplit.length > 30 && (srcSplit.indexOf(".") == -1 || /[&\?=,]/i.test(srcSplit))){
+                                                srcSplit = "";
+                                            }
+                                            if (srcSplit.length > 50) srcSplit = srcSplit.substring(0, 50);
                                         }
-                                        if(srcSplit.length>50)srcSplit=srcSplit.substring(0,50);
-                                        var picName=document.title + "-" + (saveIndex<10?"00"+saveIndex:(saveIndex<100?"0"+saveIndex:saveIndex)) + (title==document.title?"":"-" + title) + "-" + srcSplit;
+                                        var picName = document.title + "-" + (saveIndex < 10 ? "00" + saveIndex : (saveIndex < 100 ? "0" + saveIndex : saveIndex)) + (!title && title == document.title ? "" : "-" + title) + "-" + srcSplit;
                                         saveParams.push([imgSrc, picName]);
                                     });
                                     self.batchDownload(saveParams, ()=>{
@@ -14838,6 +14854,7 @@ ImgOps | https://imgops.com/#b#`;
                     method: 'GET',
                     url: url,
                     responseType:'arraybuffer',
+                    timeout:20000,
                     headers: {
                         origin: urlSplit[0]+"//"+urlSplit[2],
                         referer: url,
@@ -15363,7 +15380,7 @@ ImgOps | https://imgops.com/#b#`;
                             if(item.xhr)spanMark.dataset.xhr=encodeURIComponent(JSON.stringify(item.xhr));
                             spanMark.dataset.description=encodeURIComponent(item.description || '');
                             spanMark.dataset.thumbSrc=item.imgSrc;
-                            spanMark.title=(item.img?(item.img.title||item.img.alt||""):"");
+                            spanMark.title=(item.img?(item.img.title||item.img.alt||""):"") + '\n' + item.src.slice(0, 100);
                             spanMark.innerHTML=createHTML('<span class="pv-gallery-vertical-align-helper"></span>' +
                                 '<span class="pv-gallery-sidebar-thumb-loading" title="'+i18n("loading")+'......"></span>');
                         }catch(e){};
@@ -16044,12 +16061,12 @@ ImgOps | https://imgops.com/#b#`;
             },
             getAllValidImgs:function(newer){
                 var validImgs = [];
-                var imgs = document.getElementsByTagName('img'),
+                var imgs = document.body.getElementsByTagName('img'),
                     container = document.querySelector('.pv-gallery-container'),
                     preloadContainer = document.querySelector('.pv-gallery-preloaded-img-container');
 
                 imgs = Array.prototype.slice.call(imgs);
-                arrayFn.forEach.call(document.querySelectorAll("iframe"),function(iframe){
+                arrayFn.forEach.call(document.body.querySelectorAll("iframe"),function(iframe){
                     if(iframe.src && (iframe.src=="about:blank" || iframe.src.replace(/\/[^\/]*$/,"").indexOf(location.hostname)!=-1)){
                         try{
                             arrayFn.forEach.call(iframe.contentWindow.document.getElementsByTagName('img'),function(img){
@@ -16061,7 +16078,7 @@ ImgOps | https://imgops.com/#b#`;
                     }
                 });
                 var bgReg=/.*url\(\s*["']?(.+?)["']?\s*\)/i;
-                var bgImgs=Array.from(document.querySelectorAll('*'))
+                var bgImgs=Array.from(document.body.querySelectorAll('*'))
                     .reduce((total, node) => {
                         if(node.nodeName != "IMG" && !node.src && (!node.className || !node.className.indexOf || node.className.indexOf("pv-")==-1)){
                             let prop = unsafeWindow.getComputedStyle(node).backgroundImage;
@@ -16074,6 +16091,22 @@ ImgOps | https://imgops.com/#b#`;
                         return total;
                 }, []);
                 if(bgImgs)imgs=imgs.concat(bgImgs);
+                var svgImgs=Array.from(document.body.querySelectorAll('svg'))
+                    .reduce((total, svg) => {
+                        const xml = new XMLSerializer().serializeToString(svg);
+                        const ImgBase64 = `data:image/svg+xml;base64,${window.btoa(xml)}`;
+                        svg.src = ImgBase64;
+                        total.push(svg);
+                        return total;
+                }, []);
+                if(svgImgs)imgs=imgs.concat(svgImgs);
+                var canvasImgs=Array.from(document.body.querySelectorAll('canvas'))
+                    .reduce((total, canvas) => {
+                        canvas.src = canvas.toDataURL("image/png");
+                        total.push(canvas);
+                        return total;
+                }, []);
+                if(svgImgs)imgs=imgs.concat(svgImgs);
                 // 排除库里面的图片
                 imgs = imgs.filter(function(img){
                     if (img.parentNode) {
@@ -16090,7 +16123,7 @@ ImgOps | https://imgops.com/#b#`;
                 var self = this;
                 imgs.forEach(function(img) {
                     pretreatment(img);
-                    if(!img.src || (img.getAttribute && !img.getAttribute("src"))) return;
+                    if(!img.src || (img.tagName=='IMG' && img.getAttribute && !img.getAttribute("src"))) return;
                     if (newer && self._dataCache[img.src]) return;
 
                     var result = findPic(img);
@@ -16847,6 +16880,9 @@ ImgOps | https://imgops.com/#b#`;
                     display: inline-block;\
                     vertical-align: middle;\
                     text-align: center;\
+                    background: linear-gradient( 45deg, rgba(255, 255, 255, 0.4) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.4) 75%, rgba(255, 255, 255, 0.4) 100% ), linear-gradient( 45deg, rgba(255, 255, 255, 0.4) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.4) 75%, rgba(255, 255, 255, 0.4) 100% );\
+                    background-size: 20px 20px;\
+                    background-position: 0 0, 10px 10px;\
                     }\
                     .pv-gallery-maximize-container>.maximizeChild.selected{\
                     border: 5px solid #ff0000;\
@@ -17128,6 +17164,9 @@ ImgOps | https://imgops.com/#b#`;
                     display:inline-block;\
                     text-align: center;\
                     border:2px solid rgb(52,52,52);\
+                    background: linear-gradient( 45deg, rgba(255, 255, 255, 0.4) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.4) 75%, rgba(255, 255, 255, 0.4) 100% ), linear-gradient( 45deg, rgba(255, 255, 255, 0.4) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.4) 75%, rgba(255, 255, 255, 0.4) 100% );\
+                    background-size: 20px 20px;\
+                    background-position: 0 0, 10px 10px;\
                     cursor:pointer;\
                     position:relative;\
                     padding:2px;\
@@ -18108,7 +18147,8 @@ ImgOps | https://imgops.com/#b#`;
                 document.body.appendChild(container);
 
                 this.rotatedRadians=0;//已经旋转的角度
-                this.zoomLevel=1;//缩放级别
+                this.zoomLevel=0;
+                this.zoom(1);
                 this.setToolBadge('zoom',1);
 
                 this.firstOpen();
