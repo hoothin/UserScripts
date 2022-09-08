@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.9.7.1
+// @version              2022.9.8.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -17928,39 +17928,40 @@ ImgOps | https://imgops.com/#b#`;
                         }
                     }
                 };
-                img.onload=function(e){
-                    if(self.removed)return;
-                    self.loaded=true;
-                    if(img.naturalHeight ==1 && img.naturalWidth ==1){
+                img.onload = function(e) {
+                    if (self.removed) return;
+                    self.loaded = true;
+                    if (img.naturalHeight == 1 && img.naturalWidth == 1) {
                         self.remove();
                         return;
                     }
                     //self.imgWindow.classList.remove("pv-pic-window-transition-all");
-                    self.imgWindow.style.display="";
-                    setSearchState(img.naturalWidth+" x "+img.naturalHeight,img.parentNode);
-                    self.imgNaturalSize={
+                    self.imgWindow.style.display = "";
+                    setSearchState(img.naturalWidth + " x " + img.naturalHeight, img.parentNode);
+                    self.imgNaturalSize = {
                         h:img.naturalHeight,
                         w:img.naturalWidth,
                     };
-                    if(self.imgWindow.style.overflow!="scroll"){
+                    if (self.imgWindow.style.overflow!="scroll") {
                         self.zoomLevel=0;
                         self.zoom(1);
                     }
-                    if(prefs.imgWindow.fitToScreen)
+                    if (prefs.imgWindow.fitToScreen) {
                         self.fitToScreen();
-                    if(!prefs.floatBar.globalkeys.previewFollowMouse){
-                        self.center(true,true);
                     }
-                    self.imgWindow.style.opacity=1;
+                    if (!prefs.floatBar.globalkeys.previewFollowMouse) {
+                        self.center(true, true);
+                    }
+                    self.imgWindow.style.opacity = 1;
                     self.keepScreenInside();
 
-                    var wSize=getWindowSize();
+                    var wSize = getWindowSize();
                     wSize.h -= 16;
                     wSize.w -= 16;
-                    self.isLongImg=self.imgNaturalSize.h >= wSize.h && self.imgNaturalSize.h/self.imgNaturalSize.w > 3.5;
+                    self.isLongImg = self.imgNaturalSize.h >= wSize.h && self.imgNaturalSize.h / self.imgNaturalSize.w > 3.5;
                 }
-                if(imgNaturalSize.h && imgNaturalSize.w){
-                    setSearchState(img.naturalWidth+" x "+img.naturalHeight,img.parentNode);
+                if (imgNaturalSize.h && imgNaturalSize.w) {
+                    setSearchState(img.naturalWidth + " x " + img.naturalHeight, img.parentNode);
                 }
                 /*searchButton.addEventListener('click',function(e){
                     sortSearch();
@@ -20054,8 +20055,10 @@ ImgOps | https://imgops.com/#b#`;
                                 uniqueImgWin.imgWindow.style.display = "none";
                                 uniqueImgWin.imgWindow.style.opacity = 0;
                             }else{
-                                uniqueImgWin.center(true,true);
-                                if(!prefs.floatBar.globalkeys.previewFollowMouse){
+                                if (prefs.floatBar.globalkeys.previewFollowMouse) {
+                                    uniqueImgWin.followPos(uniqueImgWinInitX, uniqueImgWinInitY);
+                                } else {
+                                    uniqueImgWin.center(true,true);
                                     if(centerInterval)clearInterval(centerInterval);
                                     centerInterval=setInterval(function(){
                                         if(!uniqueImgWin || uniqueImgWin.removed || uniqueImgWin.loaded){
@@ -21103,10 +21106,10 @@ ImgOps | https://imgops.com/#b#`;
 
         var canclePreCTO,uniqueImgWin,centerInterval,removeUniqueWinTimer,globalFuncEnabled=false;
         function checkGlobalKeydown(e){
-            return(!((!e.ctrlKey && prefs.floatBar.globalkeys.ctrl)||
-                     (!e.altKey && prefs.floatBar.globalkeys.alt)||
-                     (!e.shiftKey && prefs.floatBar.globalkeys.shift)||
-                     (!e.metaKey && prefs.floatBar.globalkeys.command)||
+            return(!((!e.ctrlKey && e.key !== 'Control' && prefs.floatBar.globalkeys.ctrl)||
+                     (!e.altKey && e.key !== 'Alt' && prefs.floatBar.globalkeys.alt)||
+                     (!e.shiftKey && e.key !== 'Shift' && prefs.floatBar.globalkeys.shift)||
+                     (!e.metaKey && e.key !== 'Meta' && prefs.floatBar.globalkeys.command)||
                      (!prefs.floatBar.globalkeys.ctrl && !prefs.floatBar.globalkeys.alt && !prefs.floatBar.globalkeys.shift && !prefs.floatBar.globalkeys.command)));
         }
 
@@ -21125,6 +21128,26 @@ ImgOps | https://imgops.com/#b#`;
             let keyActive=(prefs.floatBar.globalkeys.type == "hold" && checkGlobalKeydown(e)) ||
                 (prefs.floatBar.globalkeys.type == "press" && globalFuncEnabled);
             return prefs.floatBar.globalkeys.invertInitShow?!keyActive:keyActive;
+        }
+
+        var untilMoveTimer, moveHandler, uniqueImgWinInitX, uniqueImgWinInitY;
+        function waitUntilMove(target, callback) {
+            if (moveHandler) document.removeEventListener('mousemove', moveHandler, true);
+            if (untilMoveTimer) clearTimeout(untilMoveTimer);
+
+            moveHandler = e => {
+                uniqueImgWinInitX = e.clientX;
+                uniqueImgWinInitY = e.clientY;
+                if (target != e.target) {
+                    document.removeEventListener('mousemove', moveHandler, true);
+                    clearTimeout(untilMoveTimer);
+                }
+            }
+            document.addEventListener('mousemove', moveHandler, true);
+            untilMoveTimer = setTimeout(() => {
+                document.removeEventListener('mousemove', moveHandler, true);
+                callback();
+            }, prefs.floatBar.showDelay || 0)
         }
 
         //监听 mouseover
@@ -21324,15 +21347,18 @@ ImgOps | https://imgops.com/#b#`;
                     }
                 }
             }
-            var checkUniqueImgWin=function(){
-                //metaKey altKey shiftKey ctrlKey
+            var checkUniqueImgWin = function(t) {
                 if(checkPreview(e)){
                     if(removeUniqueWinTimer)clearTimeout(removeUniqueWinTimer);
                     if(uniqueImgWin && !uniqueImgWin.removed) {
                         if(uniqueImgWin.src == result.src)return true;
                         uniqueImgWin.remove();
                     }
-                    new LoadingAnimC(result, 'popup', prefs.waitImgLoad, prefs.framesPicOpenInTopWindow);
+                    uniqueImgWinInitX = e.clientX;
+                    uniqueImgWinInitY = e.clientY;
+                    waitUntilMove(t, () => {
+                        new LoadingAnimC(result, 'popup', prefs.waitImgLoad, prefs.framesPicOpenInTopWindow);
+                    });
                     return true;
                 }else {
                     if(uniqueImgWin && uniqueImgWin.imgWindow && !uniqueImgWin.removed){
@@ -21351,7 +21377,7 @@ ImgOps | https://imgops.com/#b#`;
                         noActual:true,
                         img: target
                     };
-                    checkUniqueImgWin();
+                    checkUniqueImgWin(e.target);
                 }else if(target.parentNode.nodeName == 'A' && /\.(jpg|png|jpeg|gif|webp)\b/.test(target.parentNode.href)){
                     result = {
                         src: target.parentNode.href,
@@ -21360,7 +21386,7 @@ ImgOps | https://imgops.com/#b#`;
                         noActual:true,
                         img: target.parentNode
                     };
-                    checkUniqueImgWin();
+                    checkUniqueImgWin(e.target);
                 }
                 return;
             }
@@ -21414,7 +21440,7 @@ ImgOps | https://imgops.com/#b#`;
                     canclePreCTO=clickToOpen(result);
                 }
 
-                if(!checkUniqueImgWin()){
+                if(!checkUniqueImgWin(e.target)){
                     let canShow=floatBar.start(result);
                     if(canShow){
                         var keyHide=prefs.floatBar.position=="hide"?!e.altKey:e.altKey;
@@ -21608,6 +21634,7 @@ ImgOps | https://imgops.com/#b#`;
                     uniqueImgWin.focus();
                     uniqueImgWin.imgWindow.classList.remove("pv-pic-window-transition-all");
                     uniqueImgWin.previewed=true;
+                    uniqueImgWin = null;
                 }
             }
         }
@@ -21631,8 +21658,6 @@ ImgOps | https://imgops.com/#b#`;
                         if(removeUniqueWinTimer)clearTimeout(removeUniqueWinTimer);
                         removeUniqueWinTimer = setTimeout(()=>{uniqueImgWin.remove()},100);
                     }
-                }else{
-                    //if(e.target.tagName!="IMG")return;
                 }
             }
         }, true);
