@@ -6,7 +6,7 @@
 // @namespace    hoothin
 // @supportURL   https://github.com/hoothin/UserScripts
 // @homepageURL  https://github.com/hoothin/UserScripts
-// @version      1.2.5.2
+// @version      1.2.5.3
 // @description        任意轉換網頁中的簡體中文與繁體中文（默認簡體→繁體）
 // @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体）
 // @description:ja     簡繁中国語に変換
@@ -490,7 +490,7 @@
         if (typeof GM_listValues != 'undefined') {
             cb(GM_listValues());
         } else if (typeof GM != 'undefined' && typeof GM.listValues != 'undefined') {
-            GM.listValues.then(list => cb(list));
+            GM.listValues().then(list => cb(list));
         } else if (window.localStorage) {
             let list = [];
             for(let i = 0, len = window.localStorage.length; i < len; i++) {
