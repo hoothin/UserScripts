@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/85955",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[@class=\"article-body\"]",
+    "nextLink": "//div[@class=\"next-page\"]//a",
+    "url": "^https?://wedge\\.ismedia\\.jp/articles/-/\\d+",
+    "exampleUrl": "https://wedge.ismedia.jp/articles/-/4748"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "awoifajwojfiawf",
+  "name": "wedge",
+  "created_at": "2022-09-07T14:21:58+09:00",
+  "updated_at": "2022-09-07T14:21:58+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/85949",
   "data": {
     "pageElement": "//div[@class='contentsArea']",
@@ -294,15 +309,16 @@
   "resource_url": "http://wedata.net/items/85920",
   "data": {
     "pageElement": "//div[@class='entry-content']/p[last()]/preceding-sibling::*",
-    "nextLink": "//div[@class='entry-content']//li[last()]/a[not(contains(@href,'/tag/'))]",
+    "considerationUrl": "https://rocketnews24.com/2022/09/06/1680911/",
+    "nextLink": "//div[@class='entry-content']//li[last()]/a[not(contains(@href,'/tag/'))][id('page-nav')//a[.='漫画']]",
     "url": "^https://rocketnews24\\.com/20\\d{2}/\\d{2}/\\d{2}/\\d+",
-    "exampleUrl": "https://rocketnews24.com/2022/05/20/1633432/\r\nhttps://rocketnews24.com/2022/05/21/1634096/"
+    "exampleUrl": "https://rocketnews24.com/2022/05/20/1633432/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "Griever3",
-  "name": "ロケットニュース24 連続記事",
+  "name": "ロケットニュース24 漫画連続記事",
   "created_at": "2022-05-22T14:30:52+09:00",
-  "updated_at": "2022-05-23T07:25:49+09:00"
+  "updated_at": "2022-09-07T19:46:59+09:00"
 },
 {
   "data": {
