@@ -17,6 +17,7 @@ Licenced under the MIT license.
  getImage: 图片链接替换函数
 }
 其他参数项按需添加即可，需要注意 css/ext/xhr/lazyAttr（懒加载的原图 URL 属性名）/description（收藏图片时的描述，支持选择器或 xpath）/clickToOpen 在指定站点 URL 之后方可使用
+xhr為内頁圖片獲取屬性，配合 getImage 使用，首先使用 getImage 篩選並返回父級 a 標簽的 url，然後脚本會自動抓取該 url 指向的網頁，通過 xhr 獲取圖片，其中 xhr.q 為圖片（可以為多張，多張將添加到圖庫）的選擇器或者函數
  */
 var siteInfo=[
 {
@@ -565,8 +566,17 @@ var siteInfo=[
 {
  name:"绅士漫画",
  url:/^https?:\/\/wnacg\./,
+ src: /\/\/t(\w\.qy.*data\/)t\//,
  r: /\/\/t(\w\.qy.*data\/)t\//,
- s: "//img$1"
+ s: "//img$1",
+ getImage: function(a) {
+     if (p && p[1] && p[1].className === 'pic_box tb' && a && a.href) {
+         return a.href;
+     }
+ },
+ xhr: {
+     q: ['#picarea']
+ }
 },
 {
  name:"xlysauc",
@@ -750,7 +760,20 @@ var siteInfo=[
  ext: 'next',
  url: /artstation\.com/,
  r: /\/(\d{14}\/)?smaller_square\//i,
- s: "/large/"
+ s: "/large/",
+ getImage: function(a, p) {
+    if (p && p[0] && p[0].className === 'project-image') return a.href.replace('/artwork/', '/projects/') + '.json';
+ },
+ xhr: {
+     q: function(html) {
+        let datas = JSON.parse(html);
+        let urls = [];
+        datas.assets.forEach(d => {
+            urls.push(d.image_url)
+        });
+        return urls;
+     }
+ }
 },
 {
  name: "flickr",
