@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.9.9.1
+// @version              2022.9.9.3
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -40,7 +40,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
-// @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1091389
+// @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1091461
 // @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1090794
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
@@ -13793,8 +13793,8 @@ ImgOps | https://imgops.com/#b#`;
                                 };
                                 self.data.push(result);
                                 self._appendThumbSpans([result]);
-                                self.loadThumb();
                             });
+                            self.loadThumb();
                             break;
                         case 'operate':
                             imgReady(self.src,{
@@ -15365,10 +15365,7 @@ ImgOps | https://imgops.com/#b#`;
                     this._dataCache = {};
                     this.eleMaps['maximize-container'].innerHTML = createHTML("");
                 }
-                var self=this;
-                (data || this.data).forEach(function(item) {
-                    if(!item || !item.type)return;
-                    iStatisCopy[item.type].count++;
+                var createSpanMark = item => {
                     var spanMark=self._spanMarkPool[item.imgSrc];
                     if(!spanMark){
                         spanMark = document.createElement("span");
@@ -15391,13 +15388,41 @@ ImgOps | https://imgops.com/#b#`;
                         item.sizeW=naturalSize.w;
                         item.sizeH=naturalSize.h;
                     }
-                    if(item.sizeW<sizeInputW.value || item.sizeH<sizeInputH.value){
+                    if(item.sizeW && item.sizeH && (item.sizeW<sizeInputW.value || item.sizeH<sizeInputH.value)){
                         spanMark.style.display="none";
                     }else{
                         spanMark.style.display="";
                     }
                     thumbnails.appendChild(spanMark);
                     self.addViewmoreItem([spanMark]);
+                };
+                var self=this;
+                (data || this.data).forEach(function(item) {
+                    if(!item || !item.type)return;
+                    iStatisCopy[item.type].count++;
+                    if(item.xhr){
+                        xhrLoad.load({
+                            url: item.src,
+                            xhr: item.xhr,
+                            cb: function(imgSrc, imgSrcs, caption) {
+                                if (imgSrc) {
+                                    imgSrcs = imgSrcs ? imgSrcs.concat([imgSrc]) : [imgSrc];
+                                    if (imgSrcs) {
+                                        imgSrcs.forEach(src => {
+                                            let img = document.createElement('img');
+                                            img.src = src;
+                                            let result = findPic(img);
+                                            result.xhr = false;
+                                            createSpanMark(result);
+                                        })
+                                    }
+                                    self.thumbScrollbar.reset();
+                                }
+                            }
+                        });
+                    } else {
+                        createSpanMark(item);
+                    }
                 });
 
                 (data || this.data).forEach(function(d) {
@@ -15859,24 +15884,71 @@ ImgOps | https://imgops.com/#b#`;
                         });
                         function loadImg(img){
                             var result = findPic(img);
-                            img.src = result.src;
                             self.loadingImgNum++;
-                            setTimeout(()=>{
-                                imgReady(img,{
-                                    ready:function(){
-                                        result = findPic(img);
-                                        self.loadingImgNum--;
-                                        self.data.push(result);
-                                        self._appendThumbSpans([result]);
-                                        self.loadThumb();
-                                        self.pageImgReady();
+                            if (result.xhr) {
+                                xhrLoad.load({
+                                    url: result.src,
+                                    xhr: result.xhr,
+                                    cb: function(imgSrc, imgSrcs, caption) {
+                                        if (imgSrc) {
+                                            img.src = imgSrc;
+                                            imgReady(img,{
+                                                ready:function(){
+                                                    result = findPic(img);
+                                                    self.loadingImgNum--;
+                                                    self.data.push(result);
+                                                    self._appendThumbSpans([result]);
+                                                    self.loadThumb();
+                                                    self.pageImgReady();
+                                                },
+                                                error:function(){
+                                                    self.loadingImgNum--;
+                                                    self.pageImgReady();
+                                                }
+                                            });
+                                            if (imgSrcs) {
+                                                imgSrcs.forEach(src => {
+                                                    let img = document.createElement('img');
+                                                    img.src = src;
+                                                    imgReady(img,{
+                                                        ready:function(){
+                                                            let result = findPic(img);
+                                                            self.data.push(result);
+                                                            self._appendThumbSpans([result]);
+                                                            self.loadThumb();
+                                                        }
+                                                    });
+                                                })
+                                            }
+                                        } else {
+                                            self.loadingImgNum--;
+                                            self.pageImgReady();
+                                        }
                                     },
-                                    error:function(){
+                                    onerror: () => {
                                         self.loadingImgNum--;
                                         self.pageImgReady();
                                     }
                                 });
-                            },0);
+                            } else {
+                                img.src = result.src;
+                                setTimeout(()=>{
+                                    imgReady(img,{
+                                        ready:function(){
+                                            result = findPic(img);
+                                            self.loadingImgNum--;
+                                            self.data.push(result);
+                                            self._appendThumbSpans([result]);
+                                            self.loadThumb();
+                                            self.pageImgReady();
+                                        },
+                                        error:function(){
+                                            self.loadingImgNum--;
+                                            self.pageImgReady();
+                                        }
+                                    });
+                                },0);
+                            }
                             if(!preloadContainer)preloadContainer = document.querySelector('.pv-gallery-preloaded-img-container');
                             preloadContainer.appendChild(img);
                         }
@@ -19833,6 +19905,7 @@ ImgOps | https://imgops.com/#b#`;
                             xhr: this.data.xhr,
                             cb: function(imgSrc, imgSrcs, caption) {
                                 if (imgSrc) {
+                                    self.data.src=imgSrc;
                                     self.loadImg(imgSrc, imgSrcs);
                                 } else {
                                     self.error();
@@ -20517,6 +20590,10 @@ ImgOps | https://imgops.com/#b#`;
 
                     if(typeof q == 'function') {
                         iurl = q(html, doc);
+                        if (Array.isArray(iurl)) {
+                            iurls = iurl;
+                            iurl = iurls.shift();
+                        }
                     } else {
                         var inodes = findNodes(q, doc);
                         inodes.forEach(function(node) {
@@ -20603,7 +20680,7 @@ ImgOps | https://imgops.com/#b#`;
             _.load = function(opt) {
                 var info = caches[opt.url];
                 if (info) {
-                    opt.cb(info.iurl, info.iruls, info.cap);
+                    opt.cb(info.iurl, info.iurls, info.cap);
                     return;
                 }
 
