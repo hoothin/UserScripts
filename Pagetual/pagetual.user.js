@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.31.4
+// @version      1.9.31.5
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -4045,15 +4045,17 @@
         }
         if(!example || !example.parentNode)example=insert;
         let exampleStyle = _unsafeWindow.getComputedStyle(example);
-        let inTable=example.parentNode.tagName=="TABLE" ||
+        let inTable, inLi;
+        if (forceState == 2) {
+            inTable = inLi = false;
+        } else {
+            inTable=example.parentNode.tagName=="TABLE" ||
             example.tagName=="TR" ||
             example.tagName=="TBODY" ||
             exampleStyle.display=="table-row" ||
             (example.previousElementSibling && example.previousElementSibling.tagName=="TR") ||
             (example.previousElementSibling && example.previousElementSibling.tagName=="TBODY");
-        let inLi=example.tagName=="LI" || (example.previousElementSibling && example.previousElementSibling.tagName=="LI");
-        if(forceState==2){
-            inTable=inLi=false;
+            inLi=example.tagName=="LI" || (example.previousElementSibling && example.previousElementSibling.tagName=="LI");
         }
         let pageBar=document.createElement(inTable?"tr":(inLi?"li":"div"));
         let upSpan=document.createElement("span");
@@ -4146,80 +4148,84 @@
         pageText.insertBefore(preBtn, pageText.firstChild);
         pageText.insertBefore(nextBtn, pageText.firstChild);
         pageBar.appendChild(downSpan);
-        let parentStyle=_unsafeWindow.getComputedStyle(example.parentNode);
-        let parentWidth=example.parentNode.offsetWidth||parseInt(parentStyle.width);
-        pageBar.style.width=parentWidth-parseInt(parentStyle.paddingLeft)-parseInt(parentStyle.paddingRight)-10+"px";
-        if(parentStyle.display=="grid" || parentStyle.display=="inline-grid"){
-            pageBar.style.gridColumnStart=1;
-            pageBar.style.gridColumnEnd=1+parseInt(example.parentNode.offsetWidth/example.offsetWidth);
-        }
-        if(inTable){
-            example=(example.tagName=="TR" || example.tagName=="TBODY")?example:example.previousElementSibling;
-            if(example.tagName=="TBODY")example=example.querySelector("tr");
-            let preTr=example;
-            while(preTr && preTr.children.length==0)preTr=preTr.previousElementSibling;
-            if(preTr)example=preTr;
-            let tdNum=0;
-            if (exampleStyle.display=="table-row") {
-                [].forEach.call(example.children, el=>{
-                    tdNum+=el.colSpan||1;
-                });
-            } else {
-                [].forEach.call(example.children, el=>{
-                    if(el.tagName=="TD" || el.tagName=="TH"){
-                        tdNum+=el.colSpan||1;
-                    }
-                });
+        if (forceState == 2) {
+            pageBar.style.width = "100%";
+        } else {
+            let parentStyle=_unsafeWindow.getComputedStyle(example.parentNode);
+            let parentWidth=example.parentNode.offsetWidth||parseInt(parentStyle.width);
+            pageBar.style.width=parentWidth-parseInt(parentStyle.paddingLeft)-parseInt(parentStyle.paddingRight)-10+"px";
+            if(parentStyle.display=="grid" || parentStyle.display=="inline-grid"){
+                pageBar.style.gridColumnStart=1;
+                pageBar.style.gridColumnEnd=1+parseInt(example.parentNode.offsetWidth/example.offsetWidth);
             }
-            pageBar.style.display="table-row";
-            pageBar.style.backgroundColor="unset";
-            pageBar.style.lineHeight="20px";
-            pageBar.style.boxShadow="";
-            let td=document.createElement("td");
-            td.colSpan=tdNum||1;
-            let inTd=document.createElement("div");
-            inTd.style.backgroundColor="rgb(240 240 240 / 80%)";
-            inTd.style.borderRadius="20px";
-            inTd.style.padding="0 0";
-            inTd.style.margin="0";
-            inTd.style.lineHeight="20px";
-            inTd.style.textAlign="center";
-            inTd.style.boxShadow="rgb(0 0 0 / 67%) 0px 0px 10px 0px";
-            inTd.appendChild(upSpan);
-            inTd.appendChild(pageText);
-            if(pageNum)inTd.appendChild(pageNum);
-            inTd.appendChild(downSpan);
-            td.appendChild(inTd);
-            pageBar.appendChild(td);
-        }else if(inLi){
-            example=example.tagName=="LI"?example:example.previousElementSibling;
-            pageBar.style.display=getComputedStyle(example).display;
-            pageBar.style.backgroundColor="unset";
-            pageBar.style.lineHeight="20px";
-            pageBar.style.boxShadow="";
-            pageBar.style.height="35px";
-            let td=document.createElement("td");
-            td.colSpan=example.children.length;
-            td.style.width='100%';
-            let inTd=document.createElement("div");
-            inTd.style.backgroundColor="rgb(240 240 240 / 80%)";
-            inTd.style.borderRadius="20px";
-            inTd.style.margin="0"
-            inTd.style.padding="0 0";
-            inTd.style.textAlign="center";
-            inTd.style.minWidth="150px";
-            inTd.appendChild(upSpan);
-            inTd.appendChild(pageText);
-            inTd.style.width='calc(100% - 20px)';
-            inTd.style.boxShadow="rgb(0 0 0 / 67%) 0px 0px 10px 0px";
-            if(pageNum)inTd.appendChild(pageNum);
-            inTd.appendChild(downSpan);
-            if (pageBar.style.display === 'table-row') {
+            if(inTable){
+                example=(example.tagName=="TR" || example.tagName=="TBODY")?example:example.previousElementSibling;
+                if(example.tagName=="TBODY")example=example.querySelector("tr");
+                let preTr=example;
+                while(preTr && preTr.children.length==0)preTr=preTr.previousElementSibling;
+                if(preTr)example=preTr;
+                let tdNum=0;
+                if (exampleStyle.display=="table-row") {
+                    [].forEach.call(example.children, el=>{
+                        tdNum+=el.colSpan||1;
+                    });
+                } else {
+                    [].forEach.call(example.children, el=>{
+                        if(el.tagName=="TD" || el.tagName=="TH"){
+                            tdNum+=el.colSpan||1;
+                        }
+                    });
+                }
+                pageBar.style.display="table-row";
+                pageBar.style.backgroundColor="unset";
+                pageBar.style.lineHeight="20px";
+                pageBar.style.boxShadow="";
+                let td=document.createElement("td");
+                td.colSpan=tdNum||1;
+                let inTd=document.createElement("div");
+                inTd.style.backgroundColor="rgb(240 240 240 / 80%)";
+                inTd.style.borderRadius="20px";
+                inTd.style.padding="0 0";
+                inTd.style.margin="0";
+                inTd.style.lineHeight="20px";
+                inTd.style.textAlign="center";
+                inTd.style.boxShadow="rgb(0 0 0 / 67%) 0px 0px 10px 0px";
+                inTd.appendChild(upSpan);
+                inTd.appendChild(pageText);
+                if(pageNum)inTd.appendChild(pageNum);
+                inTd.appendChild(downSpan);
                 td.appendChild(inTd);
                 pageBar.appendChild(td);
-            } else {
-                inTd.style.width='100%';
-                pageBar.appendChild(inTd);
+            }else if(inLi){
+                example=example.tagName=="LI"?example:example.previousElementSibling;
+                pageBar.style.display=getComputedStyle(example).display;
+                pageBar.style.backgroundColor="unset";
+                pageBar.style.lineHeight="20px";
+                pageBar.style.boxShadow="";
+                pageBar.style.height="35px";
+                let td=document.createElement("td");
+                td.colSpan=example.children.length;
+                td.style.width='100%';
+                let inTd=document.createElement("div");
+                inTd.style.backgroundColor="rgb(240 240 240 / 80%)";
+                inTd.style.borderRadius="20px";
+                inTd.style.margin="0"
+                inTd.style.padding="0 0";
+                inTd.style.textAlign="center";
+                inTd.style.minWidth="150px";
+                inTd.appendChild(upSpan);
+                inTd.appendChild(pageText);
+                inTd.style.width='calc(100% - 20px)';
+                inTd.style.boxShadow="rgb(0 0 0 / 67%) 0px 0px 10px 0px";
+                if(pageNum)inTd.appendChild(pageNum);
+                inTd.appendChild(downSpan);
+                if (pageBar.style.display === 'table-row') {
+                    td.appendChild(inTd);
+                    pageBar.appendChild(td);
+                } else {
+                    inTd.style.width='100%';
+                    pageBar.appendChild(inTd);
+                }
             }
         }
 
@@ -4865,6 +4871,19 @@
                     }catch(e){
                         debug(e);
                     }
+                }else if((forceState==2||ruleParser.curSiteRule.action==2) && !isJs){
+                    forceIframe(nextLink, (iframe, eles)=>{
+                        loadPageOver();
+                        let pageBar=createPageBar(nextLink);
+                        if(pageBar)iframe.parentNode.insertBefore(pageBar, iframe);
+                        if(autoLoadNum>=0){
+                            if(autoLoadNum!=0 && --autoLoadNum==0){
+                                autoLoadNum=-1;
+                            }else{
+                                setTimeout(() => nextPage(), 1);
+                            }
+                        }
+                    });
                 }else if((forceState==3||ruleParser.curSiteRule.action==1) && !isJs){
                     requestFromIframe(nextLink, (doc, eles)=>{
                         loadPageOver();
@@ -4878,19 +4897,6 @@
                                 }else{
                                     setTimeout(() => nextPage(), 1);
                                 }
-                            }
-                        }
-                    });
-                }else if((forceState==2||ruleParser.curSiteRule.action==2) && !isJs){
-                    forceIframe(nextLink, (iframe, eles)=>{
-                        loadPageOver();
-                        let pageBar=createPageBar(nextLink);
-                        if(pageBar)iframe.parentNode.insertBefore(pageBar, iframe);
-                        if(autoLoadNum>=0){
-                            if(autoLoadNum!=0 && --autoLoadNum==0){
-                                autoLoadNum=-1;
-                            }else{
-                                setTimeout(() => nextPage(), 1);
                             }
                         }
                     });
