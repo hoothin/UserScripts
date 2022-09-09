@@ -570,7 +570,7 @@ var siteInfo=[
 },
 {
  name:"xlysauc",
- url:/^http:\/\/xlysauc\.com\//,
+ url:/^https?:\/\/xlysauc\.com\//,
  r: /\/x\/(\d+\.jpg)/,
  s: "/d/$1",
  ext: function(target) {
