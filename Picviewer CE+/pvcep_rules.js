@@ -563,6 +563,25 @@ var siteInfo=[
  }
 },
 {
+ name:"绅士漫画",
+ url:/^http:\/\/wnacg\./,
+ r: /\/\/t(\w\.qy.*data\/)t\//,
+ s: "//img$1"
+},
+{
+ name:"xlysauc",
+ url:/^http:\/\/xlysauc\.com\//,
+ r: /\/x\/(\d+\.jpg)/,
+ s: "/d/$1",
+ ext: function(target) {
+    if (target.parentNode.className === 'imgbg' || target.className === 'pp_hoverContainer'){
+        let img = target.parentNode.querySelector("img");
+        if (img) return img;
+    }
+    return null;
+ }
+},
+{
  name: "E621",
  url: /e621\.net/,
  getImage: function(a, p) {
