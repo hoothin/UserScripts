@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.31.3
+// @version      1.9.31.4
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -957,6 +957,7 @@
             }
 
             function checkRule(r) {
+                if (r.from == 1 && r.url.length <= 13) return false;
                 let urlReg=new RegExp(r.url, "i");
                 if(urlReg.test(location.href)){
                     if(r.include){
@@ -1376,7 +1377,7 @@
                     if(aTag.parentNode && aTag.parentNode.classList && aTag.parentNode.classList.contains('disabled'))continue;
                     if(aTag.innerText.length<=18){
                         if(!next1){
-                            if(/^[下后後次][一1]?[页頁张張]|^next([ _-]?page)\s*[›>→»]?$|次のページ|^次へ?$/i.test(aTag.innerText.trim())){
+                            if(/^翻?[下后後次][一1]?[页頁张張]|^next([ _-]?page)\s*[›>→»]?$|次のページ|^次へ?$/i.test(aTag.innerText.trim())){
                                 if(!aTag.href || /^javascript:/.test(aTag.href) || aTag.getAttribute("href")=="#"){
                                     if(!nextJs1)nextJs1=aTag;
                                 }else{
@@ -1385,7 +1386,7 @@
                             }
                         }
                         if(!next2){
-                            if(/^[下后後次][一1]?[章话話篇个個]/i.test(aTag.innerText.trim()) || /nextpage/i.test(aTag.className) || aTag.innerText=="»"){
+                            if(/^[下后後次][一1]?[章话話节節篇个個幅]/i.test(aTag.innerText.trim()) || /nextpage/i.test(aTag.className) || aTag.innerText=="»"){
                                 if(!aTag.href || /^javascript:/.test(aTag.href) || aTag.getAttribute("href")=="#"){
                                     if(!nextJs2)nextJs2=aTag;
                                 }else{
@@ -4618,9 +4619,12 @@
                 resizePool.forEach(resizeArr => {
                     let iframe = resizeArr[1]();
                     let frameDoc = resizeArr[2]();
-                    if(ruleParser.curSiteRule.singleUrl){
+                    if(ruleParser.curSiteRule.singleUrl || forceState === 2){
                         iframe.style.height = (frameDoc.body.scrollHeight || frameDoc.body.offsetHeight) + "px";
-                        iframe.style.width = (frameDoc.body.scrollWidth || frameDoc.body.offsetWidth) + "px";
+                        iframe.style.minHeight = iframe.style.height;
+                        iframe.style.width = "100%";
+                        frameDoc.documentElement.scrollTop = 0;
+                        frameDoc.documentElement.scrollLeft = 0;
                     }else{
                         let pageEle = resizeArr[0]();
                         if(pageEle){
