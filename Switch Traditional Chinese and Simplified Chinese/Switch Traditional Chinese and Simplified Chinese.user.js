@@ -6,7 +6,7 @@
 // @namespace    hoothin
 // @supportURL   https://github.com/hoothin/UserScripts
 // @homepageURL  https://github.com/hoothin/UserScripts
-// @version      1.2.6
+// @version      1.2.6.1
 // @description        任意轉換網頁中的簡體中文與繁體中文（默認簡體→繁體）
 // @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体）
 // @description:ja     簡繁中国語に変換
@@ -738,8 +738,9 @@
         }
     };
 
+    let currentAction = "action_" + location.hostname.toString().replace(/\./g,"_");
     function setLanguage(){
-        storage.setItem("action_" + location.hostname.toString().replace(/\./g,"_"), action);
+        storage.setItem(currentAction, action);
         switch(action){
             case 1:
                 _GM_notification("已於該網域禁用簡繁切換");
@@ -898,7 +899,7 @@
             _GM_listValues(list => {
                 sitesList = list;
                 sitesList.forEach(site => {
-                    if (site.indexOf('action_') === 0) {
+                    if (site.indexOf('action_') === 0 && site.length > 7) {
                         storage.getItem(site, _action => {
                             site = site.replace(/^action_/, '').replace(/_/g, '.') + '\n';
                             switch (_action) {
@@ -934,13 +935,13 @@
                         }
                     });
                     sitesDisableInput.value.trim().split('\n').forEach(site => {
-                        storage.setItem("action_" + site.replace(/\./g,"_"), 1);
+                        if (site.trim()) storage.setItem("action_" + site.replace(/\./g,"_"), 1);
                     });
                     sitesScInput.value.trim().split('\n').forEach(site => {
-                        storage.setItem("action_" + site.replace(/\./g,"_"), 2);
+                        if (site.trim()) storage.setItem("action_" + site.replace(/\./g,"_"), 2);
                     });
                     sitesTcInput.value.trim().split('\n').forEach(site => {
-                        storage.setItem("action_" + site.replace(/\./g,"_"), 3);
+                        if (site.trim()) storage.setItem("action_" + site.replace(/\./g,"_"), 3);
                     });
                 }
                 storage.setItem('auto', auto);
@@ -969,7 +970,6 @@
         }
     }
 
-    let currentAction = "action_" + location.hostname.toString().replace(/\./g,"_");
     getMulValue(["auto", "shortcutKey", "ctrlKey", "altKey", "shiftKey", "metaKey", currentAction], values => {
         auto = values.auto;
         shortcutKey = values.shortcutKey;
