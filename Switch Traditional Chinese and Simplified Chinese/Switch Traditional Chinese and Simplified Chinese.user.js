@@ -6,7 +6,7 @@
 // @namespace    hoothin
 // @supportURL   https://github.com/hoothin/UserScripts
 // @homepageURL  https://github.com/hoothin/UserScripts
-// @version      1.2.6.1
+// @version      1.2.6.2
 // @description        任意轉換網頁中的簡體中文與繁體中文（默認簡體→繁體）
 // @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体）
 // @description:ja     簡繁中国語に変換
@@ -249,6 +249,7 @@
                 };
     //此處為用語轉換
     var sc2tcComb = {
+        '补丁':'補靪',
         '战栗':'顫慄',
         '豆蔻':'荳蔻',
         '累累':'纍纍',
