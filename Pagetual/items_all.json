@@ -2472,17 +2472,17 @@
 {
   "resource_url": "http://wedata.net/items/85687",
   "data": {
-    "pageElement": "//ul[./li[@class=\"useful\" or @class=\"article\"]]",
+    "pageElement": "//ul[./li[@class=\"useful\" or @class=\"article\"]][not(ancestor::article)]\r\n|\r\n//article[@class='article-contents']/div[@class='main-content']",
     "comment": "If pageElement is specified by li, autopagerize_page_info will not be displayed.",
     "nextLink": "//nav[@class=\"pagination\"]/span[@class=\"next\"]/a",
     "url": "^https?://ferret-plus\\.com/.*",
-    "exampleUrl": "https://ferret-plus.com/articles https://ferret-plus.com/useful-items"
+    "exampleUrl": "https://ferret-plus.com/articles https://ferret-plus.com/useful-items\r\nhttps://ferret-plus.com/7531"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "denimu_ld",
   "name": "ferrt-plus",
   "created_at": "2021-06-23T00:37:56+09:00",
-  "updated_at": "2022-02-02T11:00:27+09:00"
+  "updated_at": "2022-09-09T22:43:31+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85685",
@@ -21949,17 +21949,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/76461",
-  "name": "DMM オンラインゲーム コミュニティ",
-  "created_by": "t_f_m",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "updated_at": "2018-06-28T23:34:01+09:00",
   "data": {
-    "exampleUrl": "http://www.dmm.com/netgame/community/-/topic/detail/=/cid=/tid=16660/",
-    "url": "^http://www\\.dmm\\.co(?:m|\\.jp)/netgame/community/-/topic/",
     "pageElement": "//div[contains(@class,'ntg-comment-list')]/ul/li",
-    "nextLink": "//ul[@class='area-pager']/li[span]/following-sibling::li/a"
+    "nextLink": "//ul[@class='area-pager']/li[span]/following-sibling::li/a",
+    "url": "^https://www\\.dmm\\.co(?:m|\\.jp)/netgame/community/-/topic/",
+    "exampleUrl": "http://www.dmm.com/netgame/community/-/topic/detail/=/cid=/tid=16660/"
   },
-  "created_at": "2014-11-14T07:45:04+09:00"
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "t_f_m",
+  "name": "DMM オンラインゲーム コミュニティ",
+  "created_at": "2014-11-14T07:45:04+09:00",
+  "updated_at": "2022-09-09T14:28:37+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/76454",
