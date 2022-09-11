@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.31.8
+// @version      1.9.31.9
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -4145,6 +4145,7 @@
         let downSpan=document.createElement("span");
         let pageText=document.createElement("a");
         let pageNum;
+        let scrollH=Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
         pageBar.className="pagetual_pageBar";
         pageBar.id="pagetual_pageBar"+curPage;
         pageBar.setAttribute("translate", "no");
@@ -4224,8 +4225,11 @@
             if (nextPageBar) {
                 scrollToPageBar(nextPageBar);
             } else {
-                let scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
-                window.scrollTo({ top: scrollTop + (window.innerHeight || document.documentElement.clientHeight), behavior: 'smooth'});
+                let nextEle = pageBar.parentNode.nextElementSibling;
+                if (nextEle) scrollToPageBar(nextEle);
+                else {
+                    window.scrollTo({ top: scrollH || 9999999, behavior: 'smooth'});
+                }
             }
         });
         pageText.insertBefore(preBtn, pageText.firstChild);
@@ -4320,9 +4324,9 @@
         });
         downSpan.addEventListener("click", e=>{
             changeStop(true);
-            pageBar.title=i18n(isPause?"enable":"disable");
-            document.body.scrollTop=9999999;
-            document.documentElement.scrollTop=9999999;
+            pageBar.title = i18n(isPause ? "enable" : "disable");
+            document.body.scrollTop = scrollH || 9999999;
+            document.documentElement.scrollTop = scrollH || 9999999;
             e.preventDefault();
             e.stopPropagation();
         });
@@ -4347,7 +4351,6 @@
             }
         }
 
-        let scrollH=Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
         let posEle=pageBar.nextElementSibling||pageBar;
         while(posEle && !posEle.offsetParent){
             posEle=posEle.previousElementSibling||posEle.parentNode;
