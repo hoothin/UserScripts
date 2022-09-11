@@ -6,7 +6,7 @@
 // @namespace    hoothin
 // @supportURL   https://github.com/hoothin/UserScripts
 // @homepageURL  https://github.com/hoothin/UserScripts
-// @version      1.2.6.3
+// @version      1.2.6.4
 // @description        任意轉換網頁中的簡體中文與繁體中文（默認簡體→繁體）
 // @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体）
 // @description:ja     簡繁中国語に変換
@@ -762,14 +762,16 @@
     }
 
     function switchLanguage(){
-        if(isSimple){
-            action--;
-            action=action<1?3:action;
-        }else{
-            action++;
-            action=action>3?1:action;
-        }
+        let reload = action === 1;
+        action = action == 2 ? 3 : 2;
         setLanguage();
+        if (reload) location.reload();
+    }
+
+    function disableOnSite(){
+        action = action === 1 ? "" : 1;
+        setLanguage();
+        location.reload();
     }
 
     var saveAction;
@@ -984,5 +986,15 @@
         run();
     });
 
+    let currentState = "";
+    switch (saveAction) {
+        case 2:
+            currentState = "（简体）";
+            break;
+        case 3:
+            currentState = "（正體）";
+            break;
+    }
     _GM_registerMenuCommand("繁簡切換【Ctrl+F8】", switchLanguage);
+    _GM_registerMenuCommand(saveAction === 1 ? "取消禁用" : "禁用" + currentState, disableOnSite);
 })();
