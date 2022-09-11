@@ -6,7 +6,7 @@
 // @namespace    hoothin
 // @supportURL   https://github.com/hoothin/UserScripts
 // @homepageURL  https://github.com/hoothin/UserScripts
-// @version      1.2.6.2
+// @version      1.2.6.3
 // @description        任意轉換網頁中的簡體中文與繁體中文（默認簡體→繁體）
 // @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体）
 // @description:ja     簡繁中国語に変換
@@ -249,6 +249,8 @@
                 };
     //此處為用語轉換
     var sc2tcComb = {
+        '香烟袅袅':'香煙裊裊',
+        '袅袅香烟':'裊裊香煙',
         '补丁':'補靪',
         '战栗':'顫慄',
         '豆蔻':'荳蔻',
@@ -472,53 +474,6 @@
         else if(action == 3){return traditionalized(txt);}
     }
 
-    function stranBody(pNode){
-        var childs;
-        if(pNode){
-            childs=pNode.childNodes;
-        }else{
-            childs=document.documentElement.childNodes;
-        }
-        if(childs){
-            for(var i=0;i<childs.length;i++){
-                var child=childs.item(i);
-                if(/BR|META|SCRIPT|HR|TEXTAREA|STYLE/.test(child.tagName))continue;
-                if(child.title){
-                    let title=stranText(child.title);
-                    if(child.title != title){
-                        child.title=title;
-                    }
-                }
-                if(child.alt){
-                    let alt=stranText(child.alt);
-                    if(child.alt != alt){
-                        child.alt=alt;
-                    }
-                }
-                if (child.getAttribute) {
-                    let _placeholder = child.getAttribute('placeholder');
-                    if (_placeholder) {
-                        let placeholder = stranText(_placeholder);
-                        if (_placeholder != placeholder) {
-                            child.setAttribute('placeholder', placeholder);
-                        }
-                    }
-                }
-                if(child.tagName == "INPUT" && child.value !== "" && child.type != "text" && child.type != "search" && child.type != "hidden"){
-                    let value=stranText(child.value);
-                    if(child.value != value){
-                        child.value=value;
-                    }
-                }else if(child.nodeType == 3){
-                    let data=stranText(child.data);
-                    if(child.data != data){
-                        child.data=data;
-                    }
-                }else stranBody(child);
-            }
-        }
-    }
-
     function traditionalized(orgStr){
         var str='', char;
         for(var i=0;i<orgStr.length;i++){
@@ -653,6 +608,54 @@
             else str+=char;
         }
         return str;
+    }
+
+    function stranBody(pNode) {
+        var childs;
+        if (pNode) {
+            childs = pNode.childNodes;
+        } else {
+            childs = document.documentElement.childNodes;
+        }
+        if (childs) {
+            for (var i = 0;i<childs.length;i++){
+                var child=childs.item(i);
+                if (/BR|META|SCRIPT|HR|TEXTAREA|STYLE/.test(child.tagName)) continue;
+                if (child.getAttribute && child.getAttribute('translate') === 'no') continue;
+                if (child.title) {
+                    let title = stranText(child.title);
+                    if (child.title != title) {
+                        child.title = title;
+                    }
+                }
+                if (child.alt) {
+                    let alt = stranText(child.alt);
+                    if (child.alt != alt) {
+                        child.alt = alt;
+                    }
+                }
+                if (child.getAttribute) {
+                    let _placeholder = child.getAttribute('placeholder');
+                    if (_placeholder) {
+                        let placeholder = stranText(_placeholder);
+                        if (_placeholder != placeholder) {
+                            child.setAttribute('placeholder', placeholder);
+                        }
+                    }
+                }
+                if (child.tagName == "INPUT" && child.value !== "" && child.type != "text" && child.type != "search" && child.type != "hidden") {
+                    let value = stranText(child.value);
+                    if (child.value != value) {
+                        child.value = value;
+                    }
+                } else if(child.nodeType == 3) {
+                    let data = stranText(child.data);
+                    if (child.data != data) {
+                        child.data = data;
+                    }
+                } else stranBody(child);
+            }
+        }
     }
 
     var _GM_listValues, _GM_registerMenuCommand, _GM_notification;
