@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.31.9
+// @version      1.9.31.10
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -1218,7 +1218,6 @@
                     }
                     if(ele.tagName=="P" || ele.tagName=="BR")ele=ele.parentNode;
                     else if(ele.tagName=="TD")ele=ele.parentNode;
-                    else if(curWin.getComputedStyle(ele).display==='flex')ele=ele.parentNode;
                     else if(ele.tagName=="TBODY"){
                         self.curSiteRule.pageElement=geneSelector(ele)+">*";
                         if(ele.children.length>0 && ele.children[0].querySelector("th")){
@@ -1240,7 +1239,9 @@
                         }
                         if(!hasText){
                             let middleChild=ele.children[parseInt(ele.children.length/2)];
-                            if((middleChild.style && middleChild.style.position=="absolute" && middleChild.style.left && middleChild.style.top) || ele.tagName=="UL" || curHeight==0){
+                            if(curWin.getComputedStyle(ele).display==='flex' || rulesData.opacity!=0){
+                                ele=[ele];
+                            }else if((middleChild.style && middleChild.style.position=="absolute" && middleChild.style.left && middleChild.style.top) || ele.tagName=="UL" || curHeight==0){
                                 ele=[ele];
                             }else{
                                 self.curSiteRule.pageElement+=">*";
@@ -1324,6 +1325,7 @@
                 body.querySelector("a#btnPreGn")||
                 body.querySelector("a.page-next")||
                 body.querySelector("a.pages-next")||
+                body.querySelector("a.page.right")||
                 getElementByXpath("//a[contains(@class, 'page__next')]",curPage,curPage);
             if(!next){
                 let nexts=body.querySelectorAll("a.next");
@@ -1671,7 +1673,7 @@
                     if(ruleParser.curSiteRule.sandbox!=false){
                         iframe.sandbox="allow-same-origin allow-scripts allow-popups allow-forms";
                     }
-                    iframe.style.cssText = 'margin:0!important;padding:0!important;visibility:hidden!important;';
+                    iframe.style.cssText = 'margin:0!important;padding:0!important;visibility:hidden!important;flex:0;';
                     iframe.addEventListener('load', function (e) {
                         try{
                             let doc=iframe.contentDocument || iframe.contentWindow.document;
@@ -3797,7 +3799,7 @@
     var loadingDiv=document.createElement("div");
     loadingDiv.style.cssText="cy: initial;d: initial;dominant-baseline: initial;empty-cells: initial;fill: initial;fill-opacity: initial;fill-rule: initial;filter: initial;flex: initial;flex-flow: initial;float: initial;flood-color: initial;flood-opacity: initial;grid: initial;grid-area: initial;height: initial;hyphens: initial;image-orientation: initial;image-rendering: initial;inline-size: initial;inset-block: initial;inset-inline: initial;isolation: initial;letter-spacing: initial;lighting-color: initial;line-break: initial;list-style: initial;margin-block: initial;margin: 0px auto;margin-inline: initial;marker: initial;mask: initial;mask-type: initial;max-block-size: initial;max-height: initial;max-inline-size: initial;max-width: initial;min-block-size: initial;min-height: initial;min-inline-size: initial;min-width: initial;mix-blend-mode: initial;object-fit: initial;object-position: initial;offset: initial;opacity: initial;order: initial;origin-trial-test-property: initial;orphans: initial;outline: initial;outline-offset: initial;overflow-anchor: initial;overflow-clip-margin: initial;overflow-wrap: initial;overflow: initial;overscroll-behavior-block: initial;overscroll-behavior-inline: initial;overscroll-behavior: initial;padding-block: initial;padding: initial;padding-inline: initial;page: initial;page-orientation: initial;paint-order: initial;perspective: initial;perspective-origin: initial;pointer-events: initial;position: initial;quotes: initial;r: initial;resize: initial;ruby-position: initial;rx: initial;ry: initial;scroll-behavior: initial;scroll-margin-block: initial;scroll-margin: initial;scroll-margin-inline: initial;scroll-padding-block: initial;scroll-padding: initial;scroll-padding-inline: initial;scroll-snap-align: initial;scroll-snap-stop: initial;scroll-snap-type: initial;scrollbar-gutter: initial;shape-image-threshold: initial;shape-margin: initial;shape-outside: initial;shape-rendering: initial;size: initial;speak: initial;stop-color: initial;stop-opacity: initial;stroke: initial;stroke-dasharray: initial;stroke-dashoffset: initial;stroke-linecap: initial;stroke-linejoin: initial;stroke-miterlimit: initial;stroke-opacity: initial;stroke-width: initial;tab-size: initial;table-layout: initial;text-align: initial;text-align-last: initial;text-anchor: initial;text-combine-upright: initial;text-decoration: initial;text-decoration-skip-ink: initial;text-indent: initial;text-overflow: initial;text-shadow: initial;text-size-adjust: initial;text-transform: initial;text-underline-offset: initial;text-underline-position: initial;touch-action: initial;transform: initial;transform-box: initial;transform-origin: initial;transform-style: initial;transition: initial;user-select: initial;vector-effect: initial;vertical-align: initial;visibility: initial;border-spacing: initial;-webkit-border-image: initial;-webkit-box-align: initial;-webkit-box-decoration-break: initial;-webkit-box-direction: initial;-webkit-box-flex: initial;-webkit-box-ordinal-group: initial;-webkit-box-orient: initial;-webkit-box-pack: initial;-webkit-box-reflect: initial;-webkit-highlight: initial;-webkit-hyphenate-character: initial;-webkit-line-break: initial;-webkit-line-clamp: initial;-webkit-mask-box-image: initial;-webkit-mask: initial;-webkit-mask-composite: initial;-webkit-perspective-origin-x: initial;-webkit-perspective-origin-y: initial;-webkit-print-color-adjust: initial;-webkit-rtl-ordering: initial;-webkit-ruby-position: initial;-webkit-tap-highlight-color: initial;-webkit-text-combine: initial;-webkit-text-decorations-in-effect: initial;-webkit-text-emphasis: initial;-webkit-text-emphasis-position: initial;-webkit-text-fill-color: initial;-webkit-text-security: initial;-webkit-text-stroke: initial;-webkit-transform-origin-x: initial;-webkit-transform-origin-y: initial;-webkit-transform-origin-z: initial;-webkit-user-drag: initial;-webkit-user-modify: initial;white-space: initial;widows: initial;width: initial;will-change: initial;word-break: initial;word-spacing: initial;x: initial;y: initial;z-index: 2147483647;";
 
-    const loadingCSS=`display: block; position: initial; margin: auto auto 5px auto; shape-rendering: auto; vertical-align: middle; visibility: visible; width: initial; height: initial; text-align: center; color: #6e6e6e;`;
+    const loadingCSS=`display: block; position: initial; margin: auto auto 5px auto; shape-rendering: auto; vertical-align: middle; visibility: visible; width: initial; height: initial; text-align: center; color: #6e6e6e; flex: 0;`;
     function setLoadingDiv(loadingText){
         loadingDiv.innerHTML=`<p class="pagetual_loading_text" style="${loadingCSS}">${loadingText}</p>${rulesData.hideLoadingIcon ? "" : `<div class="pagetual_loading"><svg width="50" height="50" style="position:relative;cursor: pointer;width: 50px;height: 50px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6364"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#6e6e6e" p-id="6365"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#6e6e6e" p-id="6366"></path></svg></div>`}`;
     }
@@ -4425,7 +4427,7 @@
         if(ruleParser.curSiteRule.sandbox!=false){
             iframe.sandbox="allow-same-origin allow-scripts allow-popups allow-forms";
         }
-        iframe.style.cssText = 'margin:0!important;padding:0!important;visibility:hidden!important;';
+        iframe.style.cssText = 'margin:0!important;padding:0!important;visibility:hidden!important;flex:0;';
         let waitTime=100,checkEval;
         if(ruleParser.curSiteRule.waitElement){
             checkEval = doc => {
@@ -4668,7 +4670,7 @@
             emuIframe.width = '100%';
             emuIframe.height = '0';
             emuIframe.frameBorder = '0';
-            emuIframe.style.cssText = 'position:fixed;left:0;top:50%;margin:0!important;padding:0!important;visibility:hidden!important;';
+            emuIframe.style.cssText = 'position:fixed;left:0;top:50%;margin:0!important;padding:0!important;visibility:hidden!important;flex:0;';
             emuIframe.addEventListener("load", e=>{
                 setTimeout(()=>{
                     try{
