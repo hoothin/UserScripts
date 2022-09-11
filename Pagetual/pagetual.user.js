@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.31.5
+// @version      1.9.31.7
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -201,7 +201,11 @@
                 manualMode:"禁用拼接，手动用右方向键翻页（或发送事件'pagetual.next'），可使用 Alt + 左方向键返回",
                 nextSwitch:"切换其他页码",
                 arrowToScroll:"左方向键滚动至上一页，右方向键滚动至下一页",
-                hideLoadingIcon:"隐藏加载动画"
+                hideLoadingIcon:"隐藏加载动画",
+                duplicate:"检测到永页机重复安装，请删除其他脚本管理器中的永页机!",
+                forceStateIframe:"以 iframe 嵌入整页",
+                forceStateDynamic:"通过 iframe 加载动态内容后取出",
+                forceStateDisable:"在此站禁用"
             };
             break;
         case "zh-TW":
@@ -275,7 +279,11 @@
                 manualMode:"禁用拼接，手動用右方向鍵翻頁（或發送事件'pagetual.next'）",
                 nextSwitch:"切換其他頁碼",
                 arrowToScroll:"左方向鍵滾動至上一頁，右方向鍵滾動至下一頁",
-                hideLoadingIcon:"隱藏加載動畫"
+                hideLoadingIcon:"隱藏加載動畫",
+                duplicate:"檢測到永頁機重複安裝，請刪除其他腳本管理器中的永頁機!",
+                forceStateIframe:"以 iframe 嵌入整頁",
+                forceStateDynamic:"通過 iframe 加載動態內容後取出",
+                forceStateDisable:"在此站禁用"
             };
             break;
         case "ja":
@@ -348,7 +356,11 @@
                 manualMode:"スプライシングを無効にします。手動で右の矢印キーを使用してページをめくります",
                 nextSwitch:"次のページに切り替え",
                 arrowToScroll:"左矢印キーで前へ、右矢印キーで次へ",
-                hideLoadingIcon:"読み込み中のアニメーションを隠す"
+                hideLoadingIcon:"読み込み中のアニメーションを隠す",
+                duplicate: "Pagetual の重複インストールが検出されました。他のスクリプト マネージャで永続的なページ マシンを削除してください!",
+                forceStateIframe: "iframe にページ全体を埋め込む",
+                forceStateDynamic: "iframe 経由で動的コンテンツを読み込む",
+                forceStateDisable: "このステーションでのページめくりを無効にする"
             };
             break;
         case "ru":
@@ -422,7 +434,11 @@
                 manualMode:"Отключить автоматическую перелистывание страниц, перелистывать страницы вручную с помощью стрелок справа (или вызвать событие 'pagetual.next')",
                 nextSwitch:"Переключить ссылку на следующую страницу",
                 arrowToScroll:"Нажмите клавишу со стрелкой влево для предыдущего и клавишу со стрелкой вправо для следующего",
-                hideLoadingIcon:"Скрыть анимацию загрузки"
+                hideLoadingIcon:"Скрыть анимацию загрузки",
+                duplicate: "Обнаружена двойная установка Pagetual, пожалуйста, удалите постоянную страничную машину в других менеджерах скриптов!",
+                forceStateIframe: "Вставить полную страницу как iframe",
+                forceStateDynamic:"Загружать динамический контент через iframe",
+                forceStateDisable: "Отключить перелистывание страниц на этой станции"
             };
             break;
         default:
@@ -495,7 +511,11 @@
                 manualMode:"Disable splicing, manually turn pages with the right arrow keys (or dispatch event 'pagetual.next')",
                 nextSwitch:"Switch next link",
                 arrowToScroll:"Press left arrow key to scroll prev and right arrow key to scroll next",
-                hideLoadingIcon:"Hide loading animation"
+                hideLoadingIcon:"Hide loading animation",
+                duplicate:"Duplicate Pagetual have been installed, check your script manager!",
+                forceStateIframe: "Embed full page as iframe",
+                forceStateDynamic: "Load dynamic content via iframe",
+                forceStateDisable: "Disable page turning on this site"
             };
             break;
     }
@@ -824,19 +844,20 @@
 
         formatRule(item, from){
             if(item.data && item.data.url){
-                return {
+                let result = {
                     name:item.name,
                     from:from,
-                    type:0,
                     action:item.data.forceIframe=="true"?1:0,
                     url:item.data.url,
                     pageElement:item.data.pageElement,
                     nextLink:item.data.nextLink,
                     insert:item.data.insertBefore||undefined,
-                    updatedAt:item.updated_at,
-                    css:(item.data.Stylus && item.data.CSS) ? (item.data.Stylus + item.data.CSS) : (item.data.Stylus || item.data.CSS),
-                    pageAction:item.data.bookmarklet
+                    updatedAt:item.updated_at
                 };
+                let _css = (item.data.Stylus || '') + (item.data.CSS || '');
+                if (_css) result.css = _css;
+                if (item.data.bookmarklet) result.pageAction = item.data.bookmarklet;
+                return result;
             }else{
                 item.from=from;
                 return item;
@@ -1196,8 +1217,9 @@
                         return checkElement(curMaxEle);
                     }
                     if(ele.tagName=="P" || ele.tagName=="BR")ele=ele.parentNode;
-                    if(ele.tagName=="TD")ele=ele.parentNode;
-                    if(ele.tagName=="TBODY"){
+                    else if(ele.tagName=="TD")ele=ele.parentNode;
+                    else if(curWin.getComputedStyle(ele).display==='flex')ele=ele.parentNode;
+                    else if(ele.tagName=="TBODY"){
                         self.curSiteRule.pageElement=geneSelector(ele)+">*";
                         if(ele.children.length>0 && ele.children[0].querySelector("th")){
                             self.curSiteRule.pageElement+=":not(:first-child)";
@@ -2225,7 +2247,8 @@
               outline: 0;
               box-shadow: 0 0 0 3.2px rgb(0 123 255 / 25%);
              }
-             #pagetual-picker .xpath {
+             #pagetual-picker [type=checkbox],
+             #pagetual-picker [type=radio] {
               line-height: 20px;
               height: 25px;
               width: 25px;
@@ -2243,7 +2266,7 @@
              }
              #pagetual-picker .bottom {
               text-align: left;
-              margin-top: 10px;
+              margin: 10px 0;
              }
              #pagetual-picker .bottom>button {
               float: right;
@@ -2278,6 +2301,12 @@
              #pagetual-picker .allpath>span.path:hover {
               color: orangered;
              }
+             #pagetual-picker .moreConfig {
+              display: flex;
+              justify-content: space-between;
+              border-top: 1px solid;
+              padding-top: 10px;
+             }
             `;
             _GM_addStyle(cssText);
             this.mainSignDiv = this.createSignDiv();
@@ -2301,7 +2330,7 @@
                   </svg>
                 </button>
                 <div class="bottom">
-                  <input class="xpath" name="xpath" id="checkbox_id" type="checkbox">
+                  <input name="xpath" id="checkbox_id" type="checkbox">
                   <label for="checkbox_id">XPath</label>
                   <button id="edit" title="${i18n("gotoEdit")}" type="button">
                     <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4129" style="color: orangered;fill: orangered;">
@@ -2310,12 +2339,58 @@
                     </svg>
                   </button>
                 </div>
+                <div class="moreConfig">
+                  <div title="${i18n('forceStateIframe')}">
+                    <input name="forceState" id="forceStateIframe" type="radio">
+                    <label for="forceStateIframe">Iframe</label>
+                  </div>
+                  <div title="${i18n('forceStateDynamic')}">
+                    <input name="forceState" id="forceStateDynamic" type="radio">
+                    <label for="forceStateDynamic">Dynamic</label>
+                  </div>
+                  <div title="${i18n('forceStateDisable')}">
+                    <input name="forceState" id="forceStateDisable" type="radio">
+                    <label for="forceStateDisable">Disable</label>
+                  </div>
+                </div>
             `);
+            let forceStateIframe = frame.querySelector("#forceStateIframe");//forceState 1 禁用 2 强嵌 3 动态
+            let forceStateDynamic = frame.querySelector("#forceStateDynamic");
+            let forceStateDisable = frame.querySelector("#forceStateDisable");
+            let clickRadio = e => {
+                let radio = e.currentTarget.querySelector('input');
+                if (radio.checked) {
+                    forceState = "";
+                } else {
+                    switch (radio.id) {
+                        case "forceStateIframe":
+                            forceState = 2;
+                            break;
+                        case "forceStateDynamic":
+                            forceState = 3;
+                            break;
+                        case "forceStateDisable":
+                            forceState = 1;
+                            break;
+                        default:
+                            return;
+                    }
+                }
+                storage.setItem("forceState_"+location.host, forceState);
+                self.close();
+                location.reload();
+            };
+            forceStateIframe.parentNode.addEventListener("mousedown", clickRadio);
+            forceStateDynamic.parentNode.addEventListener("mousedown", clickRadio);
+            forceStateDisable.parentNode.addEventListener("mousedown", clickRadio);
+            if (forceState == 1) forceStateDisable.checked = true;
+            else if (forceState == 2) forceStateIframe.checked = true;
+            else if (forceState == 3) forceStateDynamic.checked = true;
             let closeBtn = frame.querySelector(".closePicker");
             let title = frame.querySelector(".title");
             let allpath = frame.querySelector(".allpath");
             let selectorInput = frame.querySelector(".selector");
-            let xpath = frame.querySelector(".xpath");
+            let xpath = frame.querySelector("#checkbox_id");
             let checkBtn = frame.querySelector("#check");
             let editBtn = frame.querySelector("#edit");
             closeBtn.addEventListener("click", e => {
@@ -3650,6 +3725,7 @@
              "Segoe UI Emoji", "Segoe UI Symbol";
            color: #ffffff;
            min-height: 70px;
+           max-width: 80%;
            line-height: 70px;
            position: fixed;
            left: 50%;
@@ -4940,7 +5016,7 @@
     function init(){
         try{
             if(_unsafeWindow.initedPagetual){
-                alert('Duplicate Pagetual have been installed, check your script manager!');
+                showTips(i18n('duplicate'));
                 return;
             }
             _unsafeWindow.initedPagetual=true;
