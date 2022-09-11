@@ -2223,11 +2223,11 @@
               top: 3px;
               right: 10px;
              }
-             #pagetual-picker>.selector{
+             #pagetual-picker .selector{
               display: inline-block;
               width: 290px;
               height: 20px;
-              max-width: 65vw;
+              max-width: calc(65vw - 50px);
               padding: 6px 12px;
               font-size: 16px;
               font-weight: 400;
@@ -2240,7 +2240,7 @@
               transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
               box-sizing: content-box;
              }
-             #pagetual-picker>.selector:focus {
+             #pagetual-picker .selector:focus {
               color: #495057;
               background-color: #fff;
               border-color: #80bdff;
@@ -2267,6 +2267,7 @@
              #pagetual-picker .bottom {
               text-align: left;
               margin: 10px 0;
+              width: 100%;
              }
              #pagetual-picker .bottom>button {
               float: right;
@@ -2306,6 +2307,7 @@
               justify-content: space-between;
               border-top: 1px solid;
               padding-top: 10px;
+              width: 100%;
              }
             `;
             _GM_addStyle(cssText);
@@ -2322,13 +2324,15 @@
                   </svg>
                 </button>
                 <div class="allpath" title="${i18n("switchSelector")}"></div>
-                <textarea class="selector" spellcheck="false" name="selector" placeholder="${i18n("pickerPlaceholder")}"></textarea>
-                <button id="check" title="${i18n("pickerCheck")}" type="button">
-                  <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1609">
-                    <path d="M512 128a384 384 0 1 0 0 768 384 384 0 0 0 0-768z m0-85.333333c259.2 0 469.333333 210.133333 469.333333 469.333333s-210.133333 469.333333-469.333333 469.333333S42.666667 771.2 42.666667 512 252.8 42.666667 512 42.666667zM696.149333 298.666667L768 349.866667 471.594667 725.333333 256 571.733333l53.888-68.266666 143.744 102.4z" p-id="1610">
-                    </path>
-                  </svg>
-                </button>
+                <div>
+                  <textarea class="selector" spellcheck="false" name="selector" placeholder="${i18n("pickerPlaceholder")}"></textarea>
+                  <button id="check" title="${i18n("pickerCheck")}" type="button">
+                    <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1609">
+                      <path d="M512 128a384 384 0 1 0 0 768 384 384 0 0 0 0-768z m0-85.333333c259.2 0 469.333333 210.133333 469.333333 469.333333s-210.133333 469.333333-469.333333 469.333333S42.666667 771.2 42.666667 512 252.8 42.666667 512 42.666667zM696.149333 298.666667L768 349.866667 471.594667 725.333333 256 571.733333l53.888-68.266666 143.744 102.4z" p-id="1610">
+                      </path>
+                    </svg>
+                  </button>
+                </div>
                 <div class="bottom">
                   <input name="xpath" id="checkbox_id" type="checkbox">
                   <label for="checkbox_id">XPath</label>
