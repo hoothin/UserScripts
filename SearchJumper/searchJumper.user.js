@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.19
+// @version      1.6.6.21
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -2350,7 +2350,8 @@
                         text-align: left;
                         color: #646464;
                     }
-                    .searchJumperModify-body>input,
+                    .searchJumperModify-body>input[type=text],
+                    .searchJumperModify-body>input[type=number],
                     .searchJumperModify-body>textarea {
                         resize: both;
                         font-size: 11pt;
@@ -3448,7 +3449,7 @@
                         case 13://回车
                             if (this.searchJumperInputKeyWords.value) {
                                 clearTimeout(inputTimer);
-                                let siteEle = self.bar.querySelector("a.search-jumper-btn:not(.input-hide)");
+                                let siteEle = self.bar.querySelector(".search-jumper-type:not(.search-jumper-hide)>a.search-jumper-btn:not(.input-hide)") || self.bar.querySelector("a.search-jumper-btn:not(.input-hide)");
                                 if (siteEle) {
                                     self.openSiteBtn(siteEle);
                                 }
@@ -3757,14 +3758,26 @@
                 searchTypes.forEach(type => {
                     type.classList.add("input-hide");
                 });
+                let optionNum = 0;
                 this.filterGlob.innerHTML = createHTML();
                 this.allSiteBtns.forEach(btn => {
                     let typeNode = btn.parentNode;
+                    let globMatchName = "";
                     if (checkType) {
                         let typeMatch = this.globMatch(checkType, typeNode.dataset.type);
                         if (!typeMatch) return;
+                        globMatchName = checkType + "**";
                     }
-                    let canMatch = !btn.dataset.clone && (this.globMatch(inputWords, btn.dataset.name) || (btn.title && this.globMatch(inputWords, btn.title)));
+                    let canMatch = false;
+                    if (!btn.dataset.clone) {
+                        if (this.globMatch(inputWords, btn.dataset.name)) {
+                            canMatch = true;
+                            globMatchName += '^' + btn.dataset.name + '$';
+                        } else if (btn.title && this.globMatch(inputWords, btn.title)) {
+                            canMatch = true;
+                            globMatchName += '^' + btn.title + '$';
+                        }
+                    }
                     if (!canMatch) {
                         if (canCheckHost) {
                             if (!btn.dataset.host) {
@@ -3776,6 +3789,8 @@
                         }
                         if (!canMatch) {
                             btn.classList.add("input-hide");
+                        } else {
+                            globMatchName += '^' + btn.dataset.host + '$';
                         }
                     }
                     if (canMatch) {
@@ -3783,9 +3798,10 @@
                         typeNode.classList.remove("input-hide");
                         let listItem = typeNode.querySelector("#list" + btn.dataset.id);
                         if (listItem) listItem.classList.remove("input-hide");
-                        if (inputWords && this.searchInput.value !== '^' + btn.dataset.name + '$') {
+                        if (optionNum < 50 && inputWords && this.searchInput.value !== globMatchName) {
+                            optionNum++;
                             let option = document.createElement('option');
-                            option.value = '^' + btn.dataset.name + '$';
+                            option.value = globMatchName;
                             this.filterGlob.appendChild(option);
                         }
                     }
