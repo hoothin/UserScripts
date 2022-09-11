@@ -304,6 +304,14 @@
     "nextLink":0
   },
   {
+    "name": "Camp Firefox Forum",
+    "url": "^https://www\\.camp-firefox\\.de/forum/ungelesene-beitraege/",
+    "pageElement": "#content > div > ol.tabularList",
+    "nextLink": "nav.pagination > ul > li.skip:last-child > a",
+    "updatedAt": "2022-09-10",
+    "author": "benzBrake"
+  },
+  {
     "name":"秀人网",
     "url":"^https://www\\.(?:imn5|mntp|jpmnb|jpmn8|mn5|xgmn|jpxgmn|jpxgyw|xiurenji|xiurenb|xrmn|xrmn5)\\.(?:com|net|vip|cc|top)/.*\\.html",
     "pageElement":"p>img",
