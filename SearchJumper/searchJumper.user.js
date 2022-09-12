@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.21
+// @version      1.6.6.22
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -399,7 +399,7 @@
                 url: "https://players.akamai.com/players/hlsjs?streamUrl=%t"
             }, {
                 name: "去视频水印",
-                url: "https://parse.bqrdh.com/smart/#p{.ant-input=%u&.ant-input-search-button.click}"
+                url: "https://parse.bqrdh.com/smart/#p{.ant-input=%u&.ant-input-search-button.click()}"
             } ]
         },
         {
@@ -1269,8 +1269,8 @@
                  .search-jumper-btn {
                      position: relative;
                      display: grid;
-                     padding: 1px;
-                     margin: 3px;
+                     padding: ${1 * this.scale}px;
+                     margin: ${3 * this.scale}px;
                      cursor: pointer;
                      box-sizing: content-box;
                      ${searchData.prefConfig.noAni ? "" : "transition:margin-left 0.25s ease, width 0.25s, height 0.25s, transform 0.25s;"}
@@ -4653,7 +4653,7 @@
             }
 
             async submitAction(params) {
-                if (document.readyState === "loading") {
+                if (document.readyState !== 'complete') {
                     await sleep(500);
                     this.submitAction(params);
                     return;
@@ -4937,7 +4937,7 @@
                     let selStr = getSelectStr();
                     let targetUrl = '';
                     let targetName = selStr || document.title;
-                    let imgBase64 = '', resultUrl = ele.dataset.url;
+                    let imgBase64 = '', resultUrl = ele.dataset.url.replace(/%date/g, new Date().getTime());
                     if (targetElement) {
                         targetUrl = targetElement.src || targetElement.href || '';
                         if (targetElement.tagName == "VIDEO" || targetElement.tagName == "AUDIO") {
