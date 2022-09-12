@@ -1167,7 +1167,8 @@
     "name": "Discuz! mobile postlist1",
     "url": ".",
     "pageElement": ".postlist>div[id^=pid]",
-    "nextLink": ".page>#select_a+a:not([class])"
+    "nextLink": ".page>#select_a+a:not([class])",
+    "action":1
   },
   {
     "name": "Discuz! mobile postlist2",
