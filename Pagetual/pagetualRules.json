@@ -1173,7 +1173,7 @@
   {
     "name": "Discuz! mobile postlist2",
     "url": ".",
-    "pageElement": ".bm>div:not(.bm_h):not(.bm_inf):not(.pg)",
+    "pageElement": ".bm>div[id^=post_],.bm>div[id^=post_]+div",
     "nextLink": "a.nxt",
     "action":1
   },
