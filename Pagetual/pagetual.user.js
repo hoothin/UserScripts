@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.31.12
+// @version      1.9.31.15
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -541,7 +541,7 @@
     }else if(typeof GM!='undefined' && typeof GM.xmlHttpRequest!='undefined'){
         _GM_xmlhttpRequest=GM.xmlHttpRequest;
     }else{
-        _GM_xmlhttpRequest=(f)=>{fetch(f.url).then(response=>response.text()).then(data=>{let res={response:data};f.onload(res)}).catch(f.onerror())};
+        _GM_xmlhttpRequest=(f)=>{fetch(f.url).then(response=>response.text()).then(data=>{let res={response:data};f.onload(res)}).catch(e => f.onerror(e))};
     }
     if(typeof GM_registerMenuCommand!='undefined'){
         _GM_registerMenuCommand=GM_registerMenuCommand;
@@ -3241,6 +3241,7 @@
                     }
                     debug(customRules);
                     storage.setItem("customRules", customRules);
+                    customRulesInput.value=JSON.stringify(customRules, null, 4);
                 }
             }catch(e){
                 debug(e);
@@ -4238,11 +4239,12 @@
         pageText.insertBefore(nextBtn, pageText.firstChild);
         pageBar.appendChild(downSpan);
         if (forceState == 2) {
-            pageBar.style.width = "100%";
+            pageBar.style.width = "99%";
         } else {
             let parentStyle=_unsafeWindow.getComputedStyle(example.parentNode);
             let parentWidth=example.parentNode.offsetWidth||parseInt(parentStyle.width);
             pageBar.style.width=parentWidth-parseInt(parentStyle.paddingLeft)-parseInt(parentStyle.paddingRight)-10+"px";
+            pageBar.style.marginLeft='5px';
             if(parentStyle.display=="grid" || parentStyle.display=="inline-grid"){
                 pageBar.style.gridColumnStart=1;
                 pageBar.style.gridColumnEnd=1+parseInt(example.parentNode.offsetWidth/example.offsetWidth);
