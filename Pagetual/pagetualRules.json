@@ -1164,10 +1164,17 @@
     "wheel":true
   },
   {
-    "name": "Discuz! mobile postlist",
+    "name": "Discuz! mobile postlist1",
     "url": ".",
     "pageElement": ".postlist>div[id^=pid]",
     "nextLink": ".page>#select_a+a:not([class])"
+  },
+  {
+    "name": "Discuz! mobile postlist2",
+    "url": ".",
+    "pageElement": ".bm>div:not(.bm_h):not(.bm_inf):not(.pg)",
+    "nextLink": "a.nxt",
+    "action":1
   },
   {
     "name":"检测到AC百度就不运行",
