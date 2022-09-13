@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.22
+// @version      1.6.6.23
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -664,7 +664,8 @@
         callBarMeta: false,
         defaultFindTab: false,
         disableAutoOpen: false,
-        hideOnSearchEngine: false
+        hideOnSearchEngine: false,
+        minSizeMode: false
     };
     function run() {
         const lang = navigator.appName == "Netscape" ? navigator.language : navigator.userLanguage;
@@ -724,7 +725,10 @@
                     expand: '展开剩余站点',
                     add: '添加',
                     addWord: '添加新词语',
-                    wordRange: '生效范围'
+                    wordRange: '生效范围',
+                    customInputFrame: '自定义搜索参数',
+                    customSubmit: '提交搜索',
+                    finalSearch: '目标搜索字串'
                 };
                 break;
             case "zh-TW":
@@ -781,7 +785,10 @@
                     expand: '展開剩餘站點',
                     add: '添加',
                     addWord: '添加新詞語',
-                    wordRange: '生效範圍'
+                    wordRange: '生效範圍',
+                    customInputFrame: '自定義搜索參數',
+                    customSubmit: '提交搜索',
+                    finalSearch: '目標搜尋字串'
                 };
                 break;
             default:
@@ -837,7 +844,10 @@
                     expand: 'Expand other sites',
                     add: 'Add',
                     addWord: 'Add new word',
-                    wordRange: 'Effective range'
+                    wordRange: 'Effective range',
+                    customInputFrame: 'Custom search parameters',
+                    customSubmit: 'Submit',
+                    finalSearch: 'Target search string'
                 };
                 break;
         }
@@ -1354,7 +1364,17 @@
                  .search-jumper-isTargetImg>.search-jumper-type,
                  .search-jumper-isTargetAudio>.search-jumper-type,
                  .search-jumper-isTargetVideo>.search-jumper-type,
-                 .search-jumper-isTargetLink>.search-jumper-type {
+                 .search-jumper-isTargetLink>.search-jumper-type,
+                 .search-jumper-searchBar:hover>.search-jumper-type.search-jumper-needInPage,
+                 .search-jumper-searchBar:hover>.search-jumper-type.search-jumper-targetImg,
+                 .search-jumper-searchBar:hover>.search-jumper-type.search-jumper-targetAudio,
+                 .search-jumper-searchBar:hover>.search-jumper-type.search-jumper-targetVideo,
+                 .search-jumper-searchBar:hover>.search-jumper-type.search-jumper-targetLink,
+                 .search-jumper-searchBar:hover>.search-jumper-type.search-jumper-targetPage,
+                 .search-jumper-searchBar.search-jumper-isTargetImg:hover>.search-jumper-type,
+                 .search-jumper-searchBar.search-jumper-isTargetAudio:hover>.search-jumper-type,
+                 .search-jumper-searchBar.search-jumper-isTargetVideo:hover>.search-jumper-type,
+                 .search-jumper-searchBar.search-jumper-isTargetLink:hover>.search-jumper-type {
                      display: none;
                  }
                  #search-jumper.in-input .search-jumper-type:not(.search-jumper-hide) {
@@ -1379,7 +1399,8 @@
                      background: unset;
                      padding: 0px;
                  }
-                 .search-jumper-searchBar>.search-jumper-type.search-jumper-targetAll {
+                 .search-jumper-searchBar>.search-jumper-type.search-jumper-targetAll,
+                 .search-jumper-searchBar:hover>.search-jumper-type.search-jumper-targetAll {
                      display: inline-flex;
                  }
                  .search-jumper-isInPage>.search-jumper-type.search-jumper-needInPage,
@@ -1387,7 +1408,13 @@
                  .search-jumper-isTargetAudio>.search-jumper-type.search-jumper-targetAudio,
                  .search-jumper-isTargetVideo>.search-jumper-type.search-jumper-targetVideo,
                  .search-jumper-isTargetLink>.search-jumper-type.search-jumper-targetLink,
-                 .search-jumper-isTargetPage>.search-jumper-type {
+                 .search-jumper-isTargetPage>.search-jumper-type,
+                 .search-jumper-searchBar.search-jumper-isInPage:hover>.search-jumper-type.search-jumper-needInPage,
+                 .search-jumper-searchBar.search-jumper-isTargetImg:hover>.search-jumper-type.search-jumper-targetImg,
+                 .search-jumper-searchBar.search-jumper-isTargetAudio:hover>.search-jumper-type.search-jumper-targetAudio,
+                 .search-jumper-searchBar.search-jumper-isTargetVideo:hover>.search-jumper-type.search-jumper-targetVideo,
+                 .search-jumper-searchBar.search-jumper-isTargetLink:hover>.search-jumper-type.search-jumper-targetLink,
+                 .search-jumper-searchBar.search-jumper-isTargetPage:hover>.search-jumper-type {
                      display: inline-flex;
                  }
                  .search-jumper-type,
@@ -1536,9 +1563,13 @@
                      white-space: nowrap;
                      line-height: 35px;
                  }
-                 .search-jumper-type.search-jumper-hide {
+                 .search-jumper-searchBar>.search-jumper-type.search-jumper-hide {
                      background: unset;
                      padding: 0px;
+                     ${searchData.prefConfig.minSizeMode ? 'display: none;' : ''}
+                 }
+                 .search-jumper-searchBar:hover>.search-jumper-hide {
+                     ${searchData.prefConfig.minSizeMode ? 'display: inline-flex;' : ''}
                  }
                  span.search-jumper-word>img {
                      width: ${20 * this.scale}px;
@@ -2296,6 +2327,201 @@
                 return wordSpans;
             }
 
+            showCustomInputWindow(url, callback) {
+                this.customInputCallback = callback;
+                if (!this.customInputFrame) {
+                    this.customInputCssText = `
+                    .customInputFrame-body {
+                        width: 300px;
+                        min-height: 200px;
+                        position: fixed;
+                        text-align: left;
+                        left: 50%;
+                        top: 50%;
+                        margin-top: -160px;
+                        margin-left: -150px;
+                        z-index: 100000;
+                        background-color: #ffffff;
+                        border: 1px solid #afb3b6;
+                        border-radius: 10px;
+                        opacity: 0.95;
+                        filter: alpha(opacity=95);
+                        box-shadow: 5px 5px 20px 0px #000;
+                        color: #6e7070;
+                    }
+                    .customInputFrame-title {
+                        background: #458bd1;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        color: white!important;
+                        font-weight: bold;
+                        font-size: 18px;
+                        border-radius: 10px 10px 0 0;
+                    }
+                    .customInputFrame-title>img {
+                        margin: 5px;
+                    }
+                    .customInputFrame-input-title {
+                        font-size: 9pt;
+                        font-family: Helvetica, Arial, sans-serif;
+                        display: inline-block;
+                        background-color: white;
+                        position: relative;
+                        left: 20px;
+                        padding: 0px 4px;
+                        text-align: left;
+                        color: #646464;
+                        word-break: break-all;
+                        max-width: 85%;
+                    }
+                    .customInputFrame-body input[type=text],
+                    .customInputFrame-body input[type=number],
+                    .customInputFrame-body textarea,
+                    .customInputFrame-body select {
+                        resize: both;
+                        font-size: 11pt;
+                        font-weight: normal;
+                        border-radius: 4px;
+                        border: 1px solid rgba(0, 0, 0, 0.23);
+                        margin: 4px;
+                        font-family: inherit;
+                        background-color: #FFF;
+                        width: calc(100% - 17px);
+                        color: #4A4A4A;
+                        margin-top: -8px;
+                        padding: 4px;
+                        padding-top: 8px;
+                        box-sizing: content-box;
+                    }
+                    .customInputFrame-buttons {
+                        text-align: center;
+                        margin-bottom: 5px;
+                    }
+                    .customInputFrame-buttons>button {
+                        width: 32%;
+                        font-size: 16px;
+                        cursor: pointer;
+                        border: 1px solid #1976d2;
+                        border-radius: 4px;
+                        transition: all .3s;
+                        color: #fff;
+                        background-color: #458bd1;
+                    }
+                    .customInputFrame-buttons>button:hover {
+                        color: #e3f2fd;
+                    }
+                    `;
+                    this.customInputCssEle = _GM_addStyle(this.customInputCssText);
+                    let customInputFrame = document.createElement("div");
+                    this.customInputFrame = customInputFrame;
+                    customInputFrame.innerHTML = createHTML(`
+                     <div class="customInputFrame-body">
+                         <a href="${configPage}" class="customInputFrame-title" target="_blank">
+                             <img width="32px" height="32px" src=${logoBase64}>${i18n("customInputFrame")}
+                         </a>
+                         <div id="customGroup">
+                         </div>
+                         <div class="customInputFrame-input-title">${i18n("finalSearch")}</div>
+                         <textarea name="finalSearch" type="text"></textarea>
+                         <div class="customInputFrame-buttons">
+                             <button id="cancel" type="button">${i18n("cancel")}</button>
+                             <button id="customSubmit" type="button">${i18n("customSubmit")}</button>
+                         </div>
+                     </div>
+                    `);
+                    let cancelBtn = customInputFrame.querySelector("#cancel");
+                    cancelBtn.addEventListener("click", e => {
+                        if (customInputFrame.parentNode) {
+                            customInputFrame.parentNode.removeChild(customInputFrame);
+                        }
+                    });
+                    let customGroup = this.customInputFrame.querySelector("#customGroup");
+                    this.customGroup = customGroup;
+                    let finalSearch = this.customInputFrame.querySelector("[name='finalSearch']");
+                    this.finalSearch = finalSearch;
+                    finalSearch.addEventListener("click", e => {
+                        let finalValue = finalSearch.dataset.url;
+                        [].forEach.call(customGroup.children, ele => {
+                            if (ele.tagName === 'DIV') return;
+                            finalValue = finalValue.replace('◎', ele.value || '');
+                        });
+                        finalSearch.value = finalValue;
+                    });
+                    let customSubmit = customInputFrame.querySelector("#customSubmit");
+                    customSubmit.addEventListener("click", e => {
+                        if (finalSearch.value) {
+                            this.customInputCallback(finalSearch.value);
+                        }
+                    });
+                }
+                this.customGroup.innerHTML = createHTML();
+                let tempUrl = url;
+                let inputMatch = tempUrl.match(/%input{(.*?)}/);
+                while (inputMatch) {
+                    let param = inputMatch[1];
+                    if (param.indexOf("\"") === 0 && param.indexOf("\",\"") !== -1) {
+                        param = param.substr(1, param.length - 2).split("\",\"");
+                    } else {
+                        param = param.split(",");
+                    }
+                    if (param.length === 2) {//select
+                        let titleSplit = param[0];
+                        if (titleSplit.indexOf("'") === 0 && titleSplit.indexOf("'/'") !== -1) {
+                            titleSplit = titleSplit.substr(1, titleSplit.length - 2).split("'/'");
+                        } else {
+                            titleSplit = titleSplit.split("/");
+                        }
+                        let optionSplit = param[1];
+                        if (optionSplit.indexOf("'") === 0 && optionSplit.indexOf("'/'") !== -1) {
+                            optionSplit = optionSplit.substr(1, optionSplit.length - 2).split("'/'");
+                        } else {
+                            optionSplit = optionSplit.split("/");
+                        }
+                        let singleTitle = titleSplit.length === optionSplit.length + 1;
+                        let inputTitle = document.createElement('div');
+                        inputTitle.className = 'customInputFrame-input-title';
+                        inputTitle.innerText = titleSplit[0];
+                        this.customGroup.appendChild(inputTitle);
+                        let paramSelect = document.createElement('select');
+
+                        let option = document.createElement("option");
+                        option.value = '';
+                        option.innerText = '';
+                        paramSelect.appendChild(option);
+
+                        for (let i = 0; i < optionSplit.length; i++) {
+                            let value = optionSplit[i];
+                            let option = document.createElement("option");
+                            option.value = value;
+                            option.innerText = singleTitle ? titleSplit[i + 1] : value;
+                            paramSelect.appendChild(option);
+                        }
+                        paramSelect.addEventListener("change", e => {
+                            this.finalSearch.click();
+                        });
+                        this.customGroup.appendChild(paramSelect);
+                    } else if (param.length === 1) {//input
+                        let inputTitle = document.createElement('div');
+                        inputTitle.className = 'customInputFrame-input-title';
+                        inputTitle.innerText = param[0];
+                        this.customGroup.appendChild(inputTitle);
+                        let paramInput = document.createElement('input');
+                        paramInput.type = 'text';
+                        paramInput.addEventListener("change", e => {
+                            this.finalSearch.click();
+                        });
+                        this.customGroup.appendChild(paramInput);
+                    }
+                    tempUrl = tempUrl.replace(inputMatch[0], '◎');
+                    inputMatch = tempUrl.match(/%input{(.*?)}/);
+                }
+                this.finalSearch.dataset.url = tempUrl;
+                this.finalSearch.value = tempUrl.replace(/◎/g, '');
+                if (!this.customInputCssEle || !this.customInputCssEle.parentNode) this.customInputCssEle = _GM_addStyle(this.customInputCssText);
+                document.body.appendChild(this.customInputFrame);
+            }
+
             showModifyWindow(word, wordSpan) {
                 let oriWord;
                 this.modifyWord = {};
@@ -2376,10 +2602,14 @@
                         width: 32%;
                         font-size: 16px;
                         cursor: pointer;
-                        color: #363636;
+                        border: 1px solid #1976d2;
+                        border-radius: 4px;
+                        transition: all .3s;
+                        color: #fff;
+                        background-color: #458bd1;
                     }
                     .searchJumperModify-buttons>button:hover {
-                        color: black;
+                        color: #e3f2fd;
                     }
                     #rangePickerBtn {
                         width: 28px;
@@ -3331,6 +3561,9 @@
                         typeEle.style.width = scrollSize;
                         typeEle.style.height = "";
                     }
+                    setTimeout(() => {
+                        self.checkScroll();
+                    }, 251);
                 });
                 this.pickerBtn.addEventListener("click", e => {
                     this.searchJumperInputKeyWords.value = "";
@@ -3392,6 +3625,7 @@
                     if (this.hideTimeout) {
                         clearTimeout(this.hideTimeout);
                     }
+                    this.checkScroll(true);
                 }, false);
                 this.bar.addEventListener('mouseleave', e => {
                     this.waitForHide();
@@ -4964,19 +5198,21 @@
                         if (!inputMatch) return false;
                         self.customInput = true;
                         if (self.stopInput) return false;
-                        let promptStr;
-                        if (inputMatch[1].indexOf("\"") === 0 && inputMatch[1].indexOf("\",\"") !== -1) {
-                            promptStr = inputMatch[1].substr(1, inputMatch[1].length - 2).split("\",\"");
-                        } else {
-                            promptStr = inputMatch[1].split(",");
-                        }
-                        if (promptStr.length === 2) {
-                            promptStr = window.prompt(promptStr[0], promptStr[1]);
-                        } else {
-                            promptStr = window.prompt(inputMatch[1]);
-                        }
-                        if (promptStr === null) return false;
-                        resultUrl = resultUrl.replace(inputMatch[0], promptStr);
+                        if (self.batchOpening) {
+                            let promptStr;
+                            if (inputMatch[1].indexOf("\"") === 0 && inputMatch[1].indexOf("\",\"") !== -1) {
+                                promptStr = inputMatch[1].substr(1, inputMatch[1].length - 2).split("\",\"");
+                            } else {
+                                promptStr = inputMatch[1].split(",");
+                            }
+                            if (promptStr.length === 2) {
+                                promptStr = window.prompt(promptStr[0], promptStr[1]);
+                            } else {
+                                promptStr = window.prompt(inputMatch[1]);
+                            }
+                            if (promptStr === null) return false;
+                            resultUrl = resultUrl.replace(inputMatch[0], promptStr);
+                        } else break;
                     }
                     let targetBaseUrl = targetUrl.replace(/^https?:\/\//i, "");
                     if (!keywords && /%s[lur]?\b/.test(resultUrl)) {
@@ -5088,9 +5324,15 @@
                         if (!url) {
                             ele.href = "#";
                             return false;
+                        } else if (url.indexOf('%input{') !== -1) {
+                            self.showCustomInputWindow(url, _url => {
+                                _GM_setClipboard(_url.replace(/^c:/, ""));
+                                _GM_notification('Copied successfully!');
+                            });
+                        } else {
+                            _GM_setClipboard(url.replace(/^c:/, ""));
+                            _GM_notification('Copied successfully!');
                         }
-                        _GM_setClipboard(url.replace(/^c:/, ""));
-                        _GM_notification('Copied successfully!');
                     } else if (/^\[/.test(data.url)) {
                         if (!ele.onclick) {
                             let siteNames = JSON.parse(data.url);
@@ -5104,29 +5346,39 @@
                             ele.onclick = e => {
                                 e.stopPropagation();
                                 e.preventDefault();
+
                                 let url = getUrl();
                                 if (url === false) return false;
-                                let postBody = url.match(/[:%]P{(.*?)}/), postParam = {};
-                                if (postBody) {
-                                    url = url.replace(postBody[0], '');
-                                    postBody = postBody[1];
-                                    postBody = new URLSearchParams(postBody);
-                                    postBody.forEach((v, k) => {
-                                        postParam[k] = v;
+                                let postHandler = _url => {
+                                    let postBody = _url.match(/[:%]P{(.*?)}/), postParam = {};
+                                    if (postBody) {
+                                        _url = _url.replace(postBody[0], '');
+                                        postBody = postBody[1];
+                                        postBody = new URLSearchParams(postBody);
+                                        postBody.forEach((v, k) => {
+                                            postParam[k] = v;
+                                        });
+                                    }
+                                    _GM_xmlhttpRequest({
+                                        method: "POST", url: _url, data: JSON.stringify(postParam),
+                                        onload: (d) => {
+                                            _GM_notification(i18n("postOver") + d.statusText);
+                                        },
+                                        onerror: (e) => {
+                                            _GM_notification(i18n("postError") + (e.statusText || e.error));
+                                        },
+                                        ontimeout: (e) => {
+                                            _GM_notification(i18n("postError") + (e.statusText || e.error));
+                                        }
                                     });
                                 }
-                                _GM_xmlhttpRequest({
-                                    method: "POST", url: url, data: JSON.stringify(postParam),
-                                    onload: (d) => {
-                                        _GM_notification(i18n("postOver") + d.statusText);
-                                    },
-                                    onerror: (e) => {
-                                        _GM_notification(i18n("postError") + (e.statusText || e.error));
-                                    },
-                                    ontimeout: (e) => {
-                                        _GM_notification(i18n("postError") + (e.statusText || e.error));
-                                    }
-                                });
+                                if (url.indexOf('%input{') !== -1) {
+                                    self.showCustomInputWindow(url, _url => {
+                                        postHandler(_url);
+                                    });
+                                } else {
+                                    postHandler(url);
+                                }
                                 return false;
                             };
                         }
@@ -5137,7 +5389,13 @@
                                 e.preventDefault();
                                 let url = getUrl();
                                 if (url === false) return false;
-                                submitByForm(data.charset, url, ele.getAttribute("target") || '_self');
+                                if (url.indexOf('%input{') !== -1) {
+                                    self.showCustomInputWindow(url, _url => {
+                                        submitByForm(data.charset, _url, ele.getAttribute("target") || '_self');
+                                    });
+                                } else {
+                                    submitByForm(data.charset, url, ele.getAttribute("target") || '_self');
+                                }
                                 return false;
                             };
                         }
@@ -5189,10 +5447,27 @@
                                 };
                                 if (self.customInput) {
                                     //lose click, click one more time
-                                    if (checkAlt() || !isPage) {
-                                        ele.click();
+                                    let checkCustomHandler = _url => {
+                                        ele.href = _url;
+                                        if (checkAlt() || !isPage) {
+                                            ele.click();
+                                        } else {
+                                            _GM_openInTab(_url, {active: true});
+                                        }
+                                    };
+                                    if (url.indexOf('%input{') !== -1) {
+                                        ele.onclick = e => {
+                                            ele.onclick = null;
+                                            if (e.preventDefault) e.preventDefault();
+                                            if (e.stopPropagation) e.stopPropagation();
+                                            return false;
+                                        };
+                                        self.showCustomInputWindow(url, _url => {
+                                            checkCustomHandler(_url);
+                                        });
+                                        return false;
                                     } else {
-                                        _GM_openInTab(url, {active: true});
+                                        checkCustomHandler(url);
                                     }
                                 } else {
                                     if (!checkAlt()) {
@@ -5249,7 +5524,7 @@
                 return ele;
             }
 
-            checkScroll() {
+            checkScroll(noIntoView) {
                 let viewWidth = window.innerWidth || document.documentElement.clientWidth;
                 let viewHeight = window.innerHeight || document.documentElement.clientHeight;
                 if (this.bar.scrollWidth > viewWidth || this.bar.scrollHeight > viewHeight) {
@@ -5263,6 +5538,7 @@
                         this.bar.parentNode.classList.remove("search-jumper-scroll");
                     }
                 }
+                if (noIntoView) return;
                 let firstType = this.bar.querySelector(".search-jumper-type:not(.search-jumper-hide)");
                 if (firstType) {
                     setTimeout(() => {
@@ -7195,10 +7471,14 @@
                         width: 32%;
                         font-size: 16px;
                         cursor: pointer;
-                        color: #363636;
+                        border: 1px solid #1976d2;
+                        border-radius: 4px;
+                        transition: all .3s;
+                        color: #fff;
+                        background-color: #458bd1;
                     }
                     .searchJumperFrame-buttons>button:hover {
-                        color: black;
+                        color: #e3f2fd;
                     }
                     .searchJumperFrame-body>img {
                         float: right;
