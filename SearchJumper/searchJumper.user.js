@@ -4,7 +4,7 @@
 // @name:zh-TW   搜索醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.23
+// @version      1.6.6.24
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜索時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜索與全面自定義
@@ -5172,6 +5172,7 @@
                     let targetUrl = '';
                     let targetName = selStr || document.title;
                     let imgBase64 = '', resultUrl = ele.dataset.url.replace(/%date/g, new Date().getTime());
+                    let hasWordParam = /%s[lur]?\b/.test(ele.dataset.url);
                     if (targetElement) {
                         targetUrl = targetElement.src || targetElement.href || '';
                         if (targetElement.tagName == "VIDEO" || targetElement.tagName == "AUDIO") {
@@ -5189,7 +5190,7 @@
                                 imgBase64 = image2Base64(targetElement);
                                 resultUrl = resultUrl.replace(/%i\b/g, imgBase64);
                             }
-                        } else if ((targetElement.tagName == 'A' || (targetElement.parentNode && targetElement.parentNode.tagName == 'A')) && /%s[lur]?\b/.test(ele.dataset.url) && !keywords) {
+                        } else if ((targetElement.tagName == 'A' || (targetElement.parentNode && targetElement.parentNode.tagName == 'A')) && hasWordParam && !keywords) {
                             keywords = encodeURIComponent(targetElement.textContent);
                         }
                     }
@@ -5215,7 +5216,7 @@
                         } else break;
                     }
                     let targetBaseUrl = targetUrl.replace(/^https?:\/\//i, "");
-                    if (!keywords && /%s[lur]?\b/.test(resultUrl)) {
+                    if (!keywords && hasWordParam) {
                         self.customInput = true;
                         if (self.stopInput) return false;
                         let promptStr = window.prompt(i18n("keywords"));
@@ -5226,39 +5227,44 @@
                         resultUrl = customReplaceKeywords(resultUrl);
                     }
                     if (targetUrl === '') {
-                        let promptStr = false;
-                        let getTargetUrl = () => {
-                            if (self.stopInput) return false;
-                            if (promptStr === false) {
-                                promptStr = window.prompt(i18n("targetUrl"), "https://www.google.com/favicon.ico");
-                                if (promptStr) {
-                                    let preTargetElement = targetElement;
-                                    targetElement = {src: promptStr};
-                                    setTimeout(() => {targetElement = preTargetElement}, 1);
+                        let canBeUrl = getSelectStr() || self.searchJumperInputKeyWords.value;
+                        if (canBeUrl && !hasWordParam) {
+                            targetUrl = canBeUrl;
+                        } else {
+                            let promptStr = false;
+                            let getTargetUrl = () => {
+                                if (self.stopInput) return false;
+                                if (promptStr === false) {
+                                    promptStr = window.prompt(i18n("targetUrl"), "https://www.google.com/favicon.ico");
+                                    if (promptStr) {
+                                        let preTargetElement = targetElement;
+                                        targetElement = {src: promptStr};
+                                        setTimeout(() => {targetElement = preTargetElement}, 1);
+                                    }
                                 }
+                                if (promptStr === null) return false;
+                                return true;
+                            };
+                            if (/%t\b/.test(resultUrl)) {
+                                self.customInput = true;
+                                if (getTargetUrl() === false) return false;
+                                resultUrl = customReplaceSingle(resultUrl, "%t", promptStr);
                             }
-                            if (promptStr === null) return false;
-                            return true;
-                        };
-                        if (/%t\b/.test(resultUrl)) {
-                            self.customInput = true;
-                            if (getTargetUrl() === false) return false;
-                            resultUrl = customReplaceSingle(resultUrl, "%t", promptStr);
-                        }
-                        if (/%T\b/.test(resultUrl)) {
-                            self.customInput = true;
-                            if (getTargetUrl() === false) return false;
-                            resultUrl = resultUrl.replace(/%T\b/g, encodeURIComponent(promptStr));
-                        }
-                        if (/%b\b/.test(resultUrl)) {
-                            self.customInput = true;
-                            if (getTargetUrl() === false) return false;
-                            resultUrl = resultUrl.replace(/%b\b/g, promptStr.replace(/^https?:\/\//i, ""));
-                        }
-                        if (/%B\b/.test(resultUrl)) {
-                            self.customInput = true;
-                            if (getTargetUrl() === false) return false;
-                            resultUrl = resultUrl.replace(/%B\b/g, encodeURIComponent(promptStr.replace(/^https?:\/\//i, "")));
+                            if (/%T\b/.test(resultUrl)) {
+                                self.customInput = true;
+                                if (getTargetUrl() === false) return false;
+                                resultUrl = resultUrl.replace(/%T\b/g, encodeURIComponent(promptStr));
+                            }
+                            if (/%b\b/.test(resultUrl)) {
+                                self.customInput = true;
+                                if (getTargetUrl() === false) return false;
+                                resultUrl = resultUrl.replace(/%b\b/g, promptStr.replace(/^https?:\/\//i, ""));
+                            }
+                            if (/%B\b/.test(resultUrl)) {
+                                self.customInput = true;
+                                if (getTargetUrl() === false) return false;
+                                resultUrl = resultUrl.replace(/%B\b/g, encodeURIComponent(promptStr.replace(/^https?:\/\//i, "")));
+                            }
                         }
                     }
                     if (inPagePost) {
@@ -5554,13 +5560,23 @@
             }
 
             showInPage() {
-                if (targetElement &&
-                    targetElement.parentNode &&
-                    targetElement.parentNode.className &&
-                    targetElement.parentNode.classList.contains("search-jumper-btn")) {
+                if (this.bar.contains(targetElement)) {
                     return;
                 }
                 if (!targetElement) targetElement = document.body;
+                let _targetElement = targetElement, children;
+                while (_targetElement) {
+                    if (_targetElement.tagName == 'IMG' || _targetElement.tagName == 'AUDIO' || _targetElement.tagName == 'VIDEO' || _targetElement.tagName == 'A') break;
+                    if (_targetElement.parentNode) {
+                        children = _targetElement.parentNode.querySelectorAll("img,audio,video,a");
+                        if (children && children.length === 1 && children[0].clientHeight && _targetElement.clientHeight / children[0].clientHeight < 2) {
+                            _targetElement = children[0];
+                            break;
+                        }
+                    }
+                    _targetElement = _targetElement.parentNode;
+                }
+                if (_targetElement) targetElement = _targetElement;
                 this.appendBar();
                 //this.recoveHistory();
                 let firstType;
@@ -5625,26 +5641,6 @@
                             firstType = this.bar.querySelector('.search-jumper-targetLink:not(.notmatch)>span');
                             break;
                         default:
-                            if (parentNode && parentNode.tagName === 'A') {
-                                targetElement = parentNode;
-                                this.bar.classList.add("search-jumper-isTargetLink");
-                                firstType = this.bar.querySelector('.search-jumper-targetLink:not(.notmatch)>span');
-                                break;
-                            } else {
-                                if (parentNode && parentNode.tagName !== 'BODY') {
-                                    parentNode = parentNode.querySelectorAll("video");
-                                    if (parentNode && parentNode.length === 1) {
-                                        targetElement = parentNode[0];
-                                        switch (targetElement.tagName) {
-                                            case 'VIDEO':
-                                                this.bar.classList.add("search-jumper-isTargetVideo");
-                                                firstType = this.bar.querySelector('.search-jumper-targetVideo:not(.notmatch)>span');
-                                                break;
-                                        }
-                                        break;
-                                    }
-                                }
-                            }
                             this.bar.classList.add("search-jumper-isTargetPage");
                             firstType = this.bar.querySelector('.search-jumper-targetPage:not(.notmatch)>span');
                             break;
