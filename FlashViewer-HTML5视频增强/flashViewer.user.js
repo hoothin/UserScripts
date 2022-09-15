@@ -4,7 +4,7 @@
 // @description    围观Flash，增加 HTML5 视频速度与亮度调整
 // @version        1.2.1.7
 // @created        2013-12-27
-// @lastUpdated    2022-6-30
+// @lastUpdated    2022-9-15
 // @grant          none
 // @run-at         document-start
 // @namespace      http://userscripts.org/users/NLF
@@ -3088,11 +3088,51 @@
                         <fvspan class="fv-f-b-button"></fvspan>
                         <fvspan class="fv-f-b-button"></fvspan>
                         <fvspan class="fv-f-b-button"></fvspan>
+                        <fvspan class="fv-f-b-button word">
+                          速
+                          <select class="fv-p-v-control-rate">
+                            <option value="1">原速</option>
+                            <option value="2">二倍速</option>
+                            <option value="3">三倍速</option>
+                            <option value="5">五倍速</option>
+                            <option value="0.5">半速</option>
+                            <option value="0.1">0.1速</option>
+                            <option value="input">自定义输入</option>
+                            <option disabled="disabled" style='display: none' value=''>自定义输入</option>
+                          </select>
+                        </fvspan>
+                        <fvspan class="fv-f-b-button word">
+                          比
+                          <select class="fv-p-v-control-ratio">
+                            <option value="">原始比例</option>
+                            <option value="1.335,1">16 / 9</option>
+                            <option value="0.75,1">4 / 3</option>
+                            <option value="2,2">两倍大小</option>
+                          </select>
+                        </fvspan>
+                        <fvspan class="fv-f-b-button word">
+                          亮
+                          <select class="fv-p-v-control-bright">
+                            <option value="1">原亮度</option>
+                            <option value="1.5">1.5倍亮度</option>
+                            <option value="2">二倍亮度</option>
+                            <option value="3">三倍亮度</option>
+                            <option value="5">五倍亮度</option>
+                            <option value="0.5">一半亮度</option>
+                            <option value="0.2">0.2亮度</option>
+                            <option value="0.1">0.1亮度</option>
+                            <option value="input">自定义输入</option>
+                            <option disabled="disabled" style='display: none' value=''>自定义输入</option>
+                          </select>
+                        </fvspan>
                     */
                 }).innerHTML;
 
                 var butonOrder = prefs.floatBar.butonOrder.slice(0);
                 butonOrder.push('download');
+                butonOrder.push('rate');
+                butonOrder.push('ratio');
+                butonOrder.push('bright');
 
                 nativeMethods.forEach.call(floatBar.children, function (child) {
                     var classlist = child.classList;
@@ -3111,6 +3151,9 @@
                         reload: '重载视频',
                         close: '移除视频',
                         download: '用flvcd解析视频地址',
+                        rate: '播放速度',
+                        ratio: '长宽比',
+                        bright: '亮度'
                     };
                     
                     child.title = titleMap[bName];
@@ -3123,8 +3166,33 @@
                 document.body.appendChild(floatBar);
                 
                 this.downloadButton = floatBar.querySelector('.fv-f-b-button-download');
-                
+
                 var self = this;
+                this.rateSelect = floatBar.querySelector('.fv-p-v-control-rate');
+                this.ratioSelect = floatBar.querySelector('.fv-p-v-control-ratio');
+                this.brightSelect = floatBar.querySelector('.fv-p-v-control-bright');
+                this.rateSelect.addEventListener('change', function (e) {
+                    let rate = e.target.value;
+                    if (rate === 'input') {
+                        rate = prompt('输入速度');
+                        e.target.value = "";
+                    }
+                    self.target.playbackRate = rate;
+                }, true);
+
+                this.brightSelect.addEventListener('change', function (e) {
+                    let bright = e.target.value;
+                    if (bright === 'input') {
+                        bright = prompt('输入亮度');
+                        e.target.value = "";
+                    }
+                    self.target.style.filter = `brightness(${bright})`;
+                }, true);
+
+                this.ratioSelect.addEventListener('change', function (e) {
+                    let ratio = e.target.value;
+                    self.target.style.transform = ratio ? `scale(${ratio})` : "";
+                }, true);
                 
                 // 监听按钮点击
                 floatBar.addEventListener('click', function (e) {
@@ -3415,7 +3483,14 @@
             
                 this.target = target;
                 // console.log(target);
-                
+
+                this.rateSelect.value = target.playbackRate;
+
+                let bright = target.style.filter.match(/.*brightness\((.*?)\).*/);
+                if (bright) this.brightSelect.value = bright[1];
+                let ratio = target.style.transform.match(/.*scale\((.*?)\).*/);
+                if (ratio) this.ratioSelect.value = ratio[1].replace(/ /g, '');
+
                 var self = this;
 
                 var targetLeaveHandler = function (e) {
@@ -3508,7 +3583,6 @@
                             box-shadow: 0 0 3px 0px rgba(0, 0, 0, 1),
                                 inset 0 24px 0px 0px rgba(255, 255, 255, 0.2);
                         }
-                        
                         .fv-f-b-button:nth-last-child(1) {
                             z-index: 1
                         }
@@ -3524,11 +3598,18 @@
                         .fv-f-b-button:nth-last-child(5) {
                             z-index: 5
                         }
+                        .fv-f-b-button:nth-last-child(6) {
+                            z-index: 6
+                        }
+                        .fv-f-b-button:nth-last-child(7) {
+                            z-index: 7
+                        }
 
                         #fv-f-b-container:hover > .fv-f-b-button {
                             width: 24px;
                             height: 24px;
                             margin-right: 6px;
+                            display: inline-block;
                         }
 
                         .fv-f-b-button-pop {
@@ -3542,6 +3623,28 @@
                         }
                         .fv-f-b-button-download {
                             background-image: url("$download$");
+                        }
+                        .fv-f-b-button.word {
+                            font-size: 18px;
+                            font-weight: bold;
+                            line-height: 24px;
+                            text-align: center;
+                            color: #b7b7b7;
+                            background: #5f5f5f;
+                            display: none;
+                        }
+                        .fv-f-b-button.word>select {
+                            font-size: 15px;
+                            width: auto;
+                            color: white;
+                            background: #535353;
+                            opacity: 0;
+                            transition: opacity 0.2s ease-in-out;
+                            pointer-events: none;
+                        }
+                        .fv-f-b-button.word:hover>select {
+                            opacity: 1;
+                            pointer-events: all;
                         }
                         
                         
