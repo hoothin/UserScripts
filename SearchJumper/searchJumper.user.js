@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.26
+// @version      1.6.6.27
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -3613,7 +3613,7 @@
                 this.bar.style.visibility = "";
                 this.bar.style.display = "none";
                 this.searchInPageRule();
-                if ((window.menubar.visible || window.toolbar.visible) && currentSite && /%s\b/.test(currentSite.url)) {
+                if (currentSite && /%s\b/.test(currentSite.url)) {
                     this.inSearchEngine();
                 }
                 if (this.fontPool.length > 0 || isInConfigPage()) {
@@ -4847,7 +4847,7 @@
                     for (let i = 0; i< urls.length; i++) {
                         let left = (i % numPerLine) * _width;
                         let top = parseInt(i / numPerLine) * (_height + 70);
-                        window.open(urls[i], "_blank", `width=${_width-10}, height=${_height}, location=0, resizable=1, status=0, toolbar=0, menubar=0, scrollbars=0, left=${left}, top=${top}`);
+                        window.open(urls[i] + "#searchJumperMin", "_blank", `width=${_width-10}, height=${_height}, location=0, resizable=1, status=0, toolbar=0, menubar=0, scrollbars=0, left=${left}, top=${top}`);
                     }
                 } else if (e.which === 1 && e.shiftKey) {
                     for (let i = 0;i < targetSites.length;i++) {
@@ -5458,7 +5458,8 @@
                                             } else if (ctrl) {
                                                 _GM_openInTab(url);
                                             } else if (alt) {
-                                                window.open(url, "_blank", "width=600, height=800, location=0, resizable=1, status=0, toolbar=0, menubar=0, scrollbars=0");
+                                                if (data.match && data.match.indexOf("(www|m)") != -1) url = url.replace("www", "m");
+                                                window.open(url + "#searchJumperMin", "_blank", "width=450, height=800, location=0, resizable=1, status=0, toolbar=0, menubar=0, scrollbars=0");
                                             } else if (shift) {
                                                 _GM_openInTab(url, {active: true});
                                             }
@@ -7863,6 +7864,12 @@
         if (!document.hidden) {
             init();
         }
+    }
+
+    if (location.href.indexOf("#searchJumperMin") != -1) {
+        window.history.replaceState(null, '', location.href.replace("#searchJumperMin", ""));
+        Object.defineProperty(Object.getPrototypeOf(navigator), 'userAgent', { get:function() { return 'Mozilla/5.0 (iPhone; CPU iPhone OS like Mac OS X) AppleWebKit/ (KHTML, like Gecko) Version/ Mobile/ Safari/' }});
+        return;
     }
     if (document && document.documentElement && document.head && document.body) {
         run();
