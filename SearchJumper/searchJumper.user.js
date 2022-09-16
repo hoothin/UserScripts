@@ -7848,7 +7848,6 @@
                     "User-Agent": mobileUa
                 },
                 onload: function(d) {
-                    document.close();
                     document.write(d.response);
                     document.close();
                 },
