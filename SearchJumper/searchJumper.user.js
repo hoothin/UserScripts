@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.25
+// @version      1.6.6.26
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -315,6 +315,9 @@
                 name: "360站内搜",
                 url: "https://www.so.com/s?ie=utf-8&q=%s%20site%3A%h"
             }, {
+                name: "文字转二维码-草料",
+                url: "https://cli.im/text#p{#text-content=%s&#click-create.click()}"
+            }, {
                 name: "雅虎站内搜",
                 url: "https://search.yahoo.com/search;?p=%s%20site%3A%h"
             }, {
@@ -349,6 +352,14 @@
             }, {
                 name: "3D IQDB",
                 url: "https://3d.iqdb.org/?url=%t"
+            }, {
+                name: "Lunapic",
+                url: "https://www.lunapic.com/editor/index.php?action=url&url=%t",
+                description: "使用 Lunapic 编辑图片"
+            }, {
+                name: "Pixlr easy",
+                url: "https://pixlr.com/x/#p{#home-open-url.click()&#image-url=%t&.dialog>.buttons>a.button.positive.click()}",
+                description: "使用 Pixlr easy 编辑图片"
             }, {
                 name: "百度搜图",
                 url: "https://graph.baidu.com/details?isfromtusoupc=1&tn=pc&carousel=0&promotion_name=pc_image_shituindex&extUiData%5bisLogoShow%5d=1&image=%t"
@@ -607,6 +618,9 @@
             }, {
                 name: "万能命令",
                 url: "https://wn.run/%u"
+            }, {
+                name: "当前网址-草料二维码",
+                url: "https://cli.im/url#p{#url_content=%u&#click-create.click()}"
             } ]
         }
     ];
@@ -5268,6 +5282,9 @@
                                 resultUrl = resultUrl.replace(/%B\b/g, encodeURIComponent(promptStr.replace(/^https?:\/\//i, "")));
                             }
                         }
+                    }
+                    if (targetUrl && !/%t\b/i.test(ele.dataset.url)) {
+                        href = targetUrl;
                     }
                     if (inPagePost) {
                         let postParams = [];
