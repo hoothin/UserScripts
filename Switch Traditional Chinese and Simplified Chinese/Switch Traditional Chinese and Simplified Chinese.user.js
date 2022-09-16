@@ -6,7 +6,7 @@
 // @namespace    hoothin
 // @supportURL   https://github.com/hoothin/UserScripts
 // @homepageURL  https://github.com/hoothin/UserScripts
-// @version      1.2.6.5
+// @version      1.2.6.6
 // @description        任意轉換網頁中的簡體中文與繁體中文（默認簡體→繁體）
 // @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体）
 // @description:ja     簡繁中国語に変換
@@ -31,6 +31,8 @@
 //因一簡對多繁，所以簡轉繁需要優先排除異體字，並根據詞匯轉換。其他需要語義分析的，暫時無解。整理繁簡對照表很費時，因此不打臉的話不再更新，如有需求，刪減自用。更精細的需求可自行申請相應API或自行訓練語義AI並搭建對照數據庫。在油猴脚本裏面如此這般折騰，我是覺得沒有意義啦。。。
 (function() {
     'use strict';
+    if (window.stcascInited) return;
+    window.stcascInited = true;
     var auto = false;
     var shortcutKey = 'F8';
     var ctrlKey = true;
@@ -613,13 +615,13 @@
     function stranBody(pNode) {
         var childs;
         if (pNode) {
-            childs = pNode.childNodes;
+            childs = pNode.nodeType == 3 ? [pNode] : pNode.childNodes;
         } else {
             childs = document.documentElement.childNodes;
         }
         if (childs) {
             for (var i = 0;i<childs.length;i++){
-                var child=childs.item(i);
+                var child=childs[i];
                 if (/BR|META|SCRIPT|HR|TEXTAREA|STYLE/.test(child.tagName)) continue;
                 if (child.getAttribute && child.getAttribute('translate') === 'no') continue;
                 if (child.title) {
@@ -778,11 +780,18 @@
     function run() {
         action=saveAction?saveAction:(isSimple?(auto?2:3):(auto?3:2));
         if((auto||saveAction) && action > 1){
-            setTimeout(function(){
+            let startStrans = () => {
                 stranBody();
                 var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
                 var observer = new MutationObserver(function(records){
                     records.map(function(record) {
+                        if (record.type === "characterData") {
+                            let parentNode = record.target.parentNode;
+                            if (!parentNode) {
+                                return;
+                            }
+                            stranBody(parentNode);
+                        }
                         if(record.addedNodes){
                             [].forEach.call(record.addedNodes,function(item){
                                 stranBody(item);
@@ -791,10 +800,24 @@
                     });
                 });
                 var option = {
-                    'childList': true,
-                    'subtree': true
+                    childList: true,
+                    subtree: true,
+                    characterData: true
                 };
                 observer.observe(document.body, option);
+            };
+            setTimeout(function(){
+                if (document.readyState !== 'complete') {
+                    let loadHandler = e => {
+                        if (document.readyState !== 'complete') return;
+                        document.removeEventListener("readystatechange", loadHandler);
+                        startStrans();
+                    };
+                    document.addEventListener("readystatechange", loadHandler);
+                    return;
+                } else {
+                    startStrans();
+                }
             },50);
         }
 
@@ -996,5 +1019,10 @@
             break;
     }
     _GM_registerMenuCommand("繁簡切換【Ctrl+F8】", switchLanguage);
-    _GM_registerMenuCommand(saveAction === 1 ? "取消禁用" : "禁用" + currentState, disableOnSite);
+    if (saveAction) _GM_registerMenuCommand(saveAction === 1 ? "取消禁用" : "禁用" + currentState, disableOnSite);
+    if (!isSimple) {
+        _GM_registerMenuCommand("提交新增詞彙", () => {
+            window.open("https://github.com/hoothin/UserScripts/issues", "_blank");
+        });
+    }
 })();
