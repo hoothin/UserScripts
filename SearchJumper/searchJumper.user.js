@@ -619,7 +619,7 @@
                 name: "万能命令",
                 url: "https://wn.run/%u"
             }, {
-                name: "当前网址-草料二维码",
+                name: "当前网址-草料",
                 url: "https://cli.im/url#p{#url_content=%u&#click-create.click()}"
             } ]
         }
@@ -5188,7 +5188,7 @@
                     let targetUrl = '';
                     let targetName = selStr || document.title;
                     let imgBase64 = '', resultUrl = ele.dataset.url.replace(/%date/g, new Date().getTime());
-                    let hasWordParam = /%s[lur]?\b/.test(ele.dataset.url);
+                    let hasWordParam = /%s[lur]?\b/.test(data.url);
                     if (targetElement) {
                         targetUrl = targetElement.src || targetElement.href || '';
                         if (targetElement.tagName == "VIDEO" || targetElement.tagName == "AUDIO") {
