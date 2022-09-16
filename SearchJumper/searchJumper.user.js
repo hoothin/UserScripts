@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.28
+// @version      1.6.6.29
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -47,6 +47,7 @@
 
     const configPage = 'https://hoothin.github.io/SearchJumper';
     const importPageReg = /^https:\/\/github\.com\/hoothin\/SearchJumper\/issue|^https:\/\/greasyfork\.org\/.*\/scripts\/445274[\-\/].*\/discussions/i;
+    const mobileUa = "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1";
 
     var searchData = {};
     searchData.sitesConfig = [
@@ -259,7 +260,7 @@
             }, {
                 name: "360",
                 url: "https://www.so.com/s?ie=utf-8&q=%s",
-                match: "\\.so\\.com/s\\?.*[&\?]q="
+                match: "(www|m)\\.so\\.com/s\\?.*[&\?]q="
             }, {
                 name: "雅虎",
                 url: "https://search.yahoo.com/search?p=%s",
@@ -268,7 +269,7 @@
                 name: "搜狗",
                 url: "https://www.sogou.com/web?query=%s",
                 keywords: "query|keyword",
-                match: "\\.sogou\\.com/.*(query|keyword)="
+                match: "(www|wap|m)\\.sogou\\.com/(web|web/searchList\\.jsp).*(query|keyword)="
             }, {
                 name: "Yandex",
                 url: "https://yandex.com/search/?text=%s",
@@ -5468,7 +5469,11 @@
                                                         mobileMatch = match.match(/\(([^\)\|]+)\|([^\)\|]+)/);
                                                     }
                                                 }
-                                                window.open(url + "#searchJumperMin", "_blank", "width=450, height=800, location=0, resizable=1, status=0, toolbar=0, menubar=0, scrollbars=0");
+                                                let viewWidth = window.innerWidth || document.documentElement.clientWidth;
+                                                let viewHeight = window.innerHeight || document.documentElement.clientHeight;
+                                                let left = viewWidth - 450;
+                                                let top = (viewHeight - 800) / 2;
+                                                window.open(url + "#searchJumperMin", "_blank", `width=450, height=800, location=0, resizable=1, status=0, toolbar=0, menubar=0, scrollbars=0, left=${left}, top=${top}`);
                                             } else if (shift) {
                                                 _GM_openInTab(url, {active: true});
                                             }
@@ -7832,6 +7837,29 @@
             }
         }
 
+        if (location.href.indexOf("#searchJumperMin") != -1) {
+            window.history.replaceState(null, '', location.href.replace("#searchJumperMin", ""));
+            Object.defineProperty(Object.getPrototypeOf(navigator), 'userAgent', { get:function() { return mobileUa }});
+            _GM_xmlhttpRequest({
+                method: 'GET',
+                url: location.href,
+                headers: {
+                    referer: location.href,
+                    "User-Agent": mobileUa
+                },
+                onload: function(d) {
+                    document.close();
+                    document.write(d.response);
+                    document.close();
+                },
+                onerror: function(){
+                },
+                ontimeout: function(){
+                }
+            });
+            return;
+        }
+
         var inited = false;
         async function init(cb) {
             if (inited) {
@@ -7875,11 +7903,6 @@
         }
     }
 
-    if (location.href.indexOf("#searchJumperMin") != -1) {
-        window.history.replaceState(null, '', location.href.replace("#searchJumperMin", ""));
-        Object.defineProperty(Object.getPrototypeOf(navigator), 'userAgent', { get:function() { return 'Mozilla/5.0 (iPhone; CPU iPhone OS like Mac OS X) AppleWebKit/ (KHTML, like Gecko) Version/ Mobile/ Safari/' }});
-        return;
-    }
     if (document && document.documentElement && document.head && document.body) {
         run();
     } else {
