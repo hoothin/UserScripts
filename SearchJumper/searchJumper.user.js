@@ -4828,7 +4828,8 @@
                                         if (doc) {
                                             curIframe.style.display = "";
                                             curIframe.src = siteEle.href;
-                                            let docContent = d.response.indexOf("<head>") !== -1 ? d.response.replace("<head>", `<head><base href="${siteEle.href.replace(/[^\/]*$/, "")}">`) : `<base href="${siteEle.href.replace(/[^\/]*$/, "")}">` + d.response;
+                                            let base = `<base href="${siteEle.href.replace(/[^\/]*$/, "")}">`;
+                                            let docContent = d.response.indexOf("<head>") !== -1 ? d.response.replace("<head>", "<head>" + base) : base + d.response;
                                             doc.write(docContent);
                                         } else {
                                             setTimeout(() => {
