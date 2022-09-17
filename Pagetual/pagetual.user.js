@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.31.17
+// @version      1.9.31.18
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -3868,8 +3868,7 @@
             return rv;
         };
     };
-    history.pushState = _wr('pushState');
-    window.addEventListener('pushState', function(e) {
+    var changeHandler = e => {
         urlChanged=true;
         isPause=true;
         setTimeout(()=>{
@@ -3879,7 +3878,11 @@
                 initPage();
             }
         },1);
-    });
+    };
+    history.pushState = _wr('pushState');
+    history.replaceState = _wr('replaceState');
+    window.addEventListener('pushState', changeHandler);
+    window.addEventListener('replaceState', changeHandler);
 
     function initListener(){
         let loadmoreBtn,loading=true,lastScroll=0,checkLoadMoreTimes=0;
@@ -3903,10 +3906,12 @@
         let scrollHandler = e=>{
             if(urlChanged){
                 ruleParser.initPage(()=>{
-                    if(ruleParser.nextLinkHref)initView();
+                    if(ruleParser.nextLinkHref){
+                        initView();
+                        isPause=false;
+                    }
                 });
                 urlChanged=false;
-                isPause=false;
             }
             if(isPause)return;
             if(!loading){
@@ -4525,7 +4530,7 @@
             }
         }
         function checkPage(){
-            if(isPause)return;
+            if(isPause)return loadPageOver();
             try{
                 iframeDoc=emuIframe.contentDocument || emuIframe.contentWindow.document;
             }catch(e){
