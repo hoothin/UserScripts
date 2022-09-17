@@ -4242,6 +4242,7 @@
                 let nextEle = pageBar.parentNode.nextElementSibling;
                 if (nextEle) scrollToPageBar(nextEle);
                 else {
+                    scrollH=Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
                     window.scrollTo({ top: scrollH || 9999999, behavior: 'smooth'});
                 }
             }
@@ -4340,6 +4341,7 @@
         downSpan.addEventListener("click", e=>{
             changeStop(true);
             pageBar.title = i18n(isPause ? "enable" : "disable");
+            scrollH=Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
             document.body.scrollTop = scrollH || 9999999;
             document.documentElement.scrollTop = scrollH || 9999999;
             e.preventDefault();
