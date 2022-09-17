@@ -145,6 +145,10 @@ rate
 --
 The multi-windowHeight which you can set to 2 or 3 while some sites load next page slowly 
 
+autoLoadNum
+--
+The amount of pages for auto turning after page opening
+
 pageNum
 --
 Point the page number with $p in current url, you can use{} to eval result string from page number, like {$p\*25+1}
