@@ -17,7 +17,7 @@ Licenced under the MIT license.
  getImage: 图片链接替换函数
 }
 其他参数项按需添加即可，需要注意 css/ext/xhr/lazyAttr（懒加载的原图 URL 属性名）/description（收藏图片时的描述，支持选择器或 xpath）/clickToOpen 在指定站点 URL 之后方可使用
-xhr為内頁圖片獲取屬性，配合 getImage 使用，首先使用 getImage 篩選並返回父級 a 標簽的 url，然後脚本會自動抓取該 url 指向的網頁，通過 xhr 獲取圖片，其中 xhr.q 為圖片（可以為多張，多張將添加到圖庫）的選擇器或者函數
+xhr 为内页图片获取属性，配合 getImage 使用，首先使用 getImage 筛选并返回父级 a 标签的 url，然后脚本会自动抓取该 url 指向的网页，通过 xhr 获取图片，其中 xhr.q 为图片（可以为多张，多张将添加到图库）的选择器或者函数
  */
 var siteInfo=[
 {
