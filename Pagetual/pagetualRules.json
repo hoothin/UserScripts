@@ -1,7 +1,6 @@
 [
   {
     "name":"google search mobile",
-    "type":0,
     "action":0,
     "url":"^https://(?:www\\.)?google\\..*/search",
     "pageElement":"id('rso')/div|id('rso')/style",
@@ -16,12 +15,11 @@
         "id('pnprev')|id('navbar navcnt nav')//td[span]/following-sibling::td[1]/a|id('nn')/parent::a"
     ],
     "pageElement":"id('rso')|id('center_col')/style[contains(.,'relative')][id('rso')]|id('search')/div/div/style[1]",
-    "insert":"id('center_col')/div[@role='navigation']",
-    "type":0,
     "action":1,
     "pageNum":"&start={10*($p-1)}",
     "pageBarTop": 55,
-    "url":"^https?://[^./]+\\.google(?:\\.[^./]{2,3}){1,2}/(?:c(?:se|ustom)|search|webhp|m|#)"
+    "url":"^https?://[^./]+\\.google(?:\\.[^./]{2,3}){1,2}/(?:c(?:se|ustom)|search|webhp|m|#)",
+    "replaceElement": "[role='navigation']>[role='presentation']"
   },
   {
     "name":"Google cse",
@@ -269,7 +267,8 @@
     "pageNum":"&pn={10*($p-1)}",
     "url":"^https?://www\\.baidu\\.com/(s|baidu)",
     "pageBarTop": 75,
-    "init":"let rs=document.querySelector('div.result-molecule[tpl=\\'app/rs\\']');if(!rs)return;(document.querySelector('#con-ceiling-wrapper')||document.querySelector('#content_right')).appendChild(rs);let tp=document.querySelector('.c-font-medium>div');let t;if(tp)t=tp.children[0];[].forEach.call(rs.querySelectorAll('tr>td'),rp=>{if(tp&&t){rp.className=tp.className;rp.children[0].className=t.className}})"
+    "init":"let rs=document.querySelector('div.result-molecule[tpl=\\'app/rs\\']');if(!rs)return;(document.querySelector('#con-ceiling-wrapper')||document.querySelector('#content_right')).appendChild(rs);let tp=document.querySelector('.c-font-medium>div');let t;if(tp)t=tp.children[0];[].forEach.call(rs.querySelectorAll('tr>td'),rp=>{if(tp&&t){rp.className=tp.className;rp.children[0].className=t.className}})",
+    "replaceElement": "#page"
   },
   {
     "name":"手机百度",
