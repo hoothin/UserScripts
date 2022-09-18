@@ -491,6 +491,13 @@
     ]
   },
   {
+    "name": "北邮人论坛-北邮校园",
+    "url": "^https://bbs\\.byr\\.cn",
+    "listenHashChange": true,
+    "pageElement": "section#main.corner>section#body>.b-content",
+    "action": 1
+  },
+  {
     "name":"bilibili search",
     "action":1,
     "url":"^https://search\\.bilibili\\.com",
