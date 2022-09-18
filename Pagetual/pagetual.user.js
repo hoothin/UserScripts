@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.31.23
+// @version      1.9.31.25
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -531,7 +531,7 @@
                 `%c【Pagetual v.${_GM_info.script.version}】 debug`,
                 'color: yellow;font-size: x-large;font-weight: bold;'
             );
-            console.debug(str);
+            console.log(str);
         }
     };
 
@@ -3931,13 +3931,12 @@
             }
         };
         let scrollHandler = e=>{
-            if(urlChanged){
+            if(urlChanged && !isLoading){
                 ruleParser.initPage(()=>{
                     if(ruleParser.nextLinkHref){
                         initView();
-                        isPause=false;
-                        isLoading=false;
                     }
+                    isPause=false;
                 });
                 urlChanged=false;
             }
@@ -4493,12 +4492,22 @@
                 waitTime=ruleParser.curSiteRule.wait;
             }
         }
-        let loadedHandler=e=>{
+        let checkRemoveIntv = setInterval(() => {
+            if (!iframe || !document.body.contains(iframe)) {
+                clearInterval(checkRemoveIntv);
+                loadPageOver();
+            }
+        }, 500);
+        let loadedHandler = e => {
             if(e.data != 'pagetual-iframe:DOMLoaded' && e.type != 'load')return;
+            clearInterval(checkRemoveIntv);
             window.removeEventListener('message', loadedHandler, false);
             iframe.removeEventListener('load', loadedHandler, false);
             let tryTimes=0;
             function checkIframe(){
+                if (urlChanged || isPause) {
+                    return callback(false, false);
+                }
                 try{
                     let doc=iframe.contentDocument || iframe.contentWindow.document;
                     let base=doc.querySelector("base");
@@ -4990,7 +4999,8 @@
                 if(ruleParser.curSiteRule.pageElementByJs){
                     var over=ele=>{
                         loadPageOver();
-                        if(ele){
+                        if (urlChanged || isPause) return;
+                        if (ele) {
                             createPageBar(nextLink);
                             ruleParser.insertPage(null, ele, nextLink, null, true);
                             if(autoLoadNum>=0){
@@ -5013,12 +5023,13 @@
                 }else if((forceState==2||ruleParser.curSiteRule.action==2) && !isJs){
                     forceIframe(nextLink, (iframe, eles)=>{
                         loadPageOver();
-                        let pageBar=createPageBar(nextLink);
-                        if(pageBar)iframe.parentNode.insertBefore(pageBar, iframe);
-                        if(autoLoadNum>=0){
-                            if(autoLoadNum!=0 && --autoLoadNum==0){
+                        if (urlChanged || isPause) return;
+                        let pageBar = createPageBar(nextLink);
+                        if (pageBar) iframe.parentNode.insertBefore(pageBar, iframe);
+                        if (autoLoadNum >= 0) {
+                            if (autoLoadNum != 0 && --autoLoadNum == 0) {
                                 autoLoadNum=-1;
-                            }else{
+                            } else {
                                 setTimeout(() => nextPage(), 1);
                             }
                         }
@@ -5026,7 +5037,8 @@
                 }else if((forceState==3||ruleParser.curSiteRule.action==1) && !isJs){
                     requestFromIframe(nextLink, (doc, eles)=>{
                         loadPageOver();
-                        if(eles){
+                        if (urlChanged || isPause) return;
+                        if (eles) {
                             ruleParser.insertPage(doc, eles, nextLink, ()=>{
                                 createPageBar(nextLink);
                             }, true);
@@ -5043,7 +5055,8 @@
                     if(!isJs){
                         requestDoc(nextLink, (eles)=>{
                             loadPageOver();
-                            if(eles){
+                            if (urlChanged || isPause) return;
+                            if (eles) {
                                 createPageBar(nextLink);
                                 if(autoLoadNum>=0){
                                     if(autoLoadNum!=0 && --autoLoadNum==0){
@@ -5057,7 +5070,8 @@
                     }else{
                         emuPage((doc, eles)=>{
                             loadPageOver();
-                            if(eles){
+                            if (urlChanged || isPause) return;
+                            if (eles) {
                                 ruleParser.insertPage(doc, eles, "", ()=>{
                                     createPageBar(nextLink);
                                 }, true);
