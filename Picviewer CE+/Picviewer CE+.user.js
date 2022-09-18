@@ -15460,7 +15460,7 @@ ImgOps | https://imgops.com/#b#`;
 
                 this.thumbScrollbar.reset();
 
-                if(!selectSpan || (selectSpan.style.display=="none" && !selectData)){
+                if(!data && (!selectSpan || (selectSpan.style.display=="none" && !selectData))){
                     for(var j in this.imgSpans){
                         if (!this.imgSpans.hasOwnProperty(j)) continue;
                         var curSpan=this.imgSpans[j];
