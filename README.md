@@ -1,6 +1,6 @@
 Greasemonkey scripts 油猴腳本集
 ==========================
-https://greasyfork.org/users/8227-hoothin
+https://greasyfork.org/users/8227
 
 ![star](https://img.shields.io/github/stars/hoothin/UserScripts)
 ![license](https://img.shields.io/badge/License-MIT-red.svg)
