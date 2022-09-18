@@ -4464,6 +4464,7 @@
 
     var failFromIframe=0;
     var inCors=false;
+    var checkRemoveIntv;
     function requestFromIframe(url, callback){
         url=url.replace(/#[^#]*/,"");
         let orgPage,curPage;
@@ -4492,7 +4493,8 @@
                 waitTime=ruleParser.curSiteRule.wait;
             }
         }
-        let checkRemoveIntv = setInterval(() => {
+        if (checkRemoveIntv) clearInterval(checkRemoveIntv);
+        checkRemoveIntv = setInterval(() => {
             if (!iframe || !document.body.contains(iframe)) {
                 clearInterval(checkRemoveIntv);
                 loadPageOver();
