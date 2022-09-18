@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.31.20
+// @version      1.9.31.21
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -1084,6 +1084,23 @@
             searchByTime();
         }
 
+        replaceElement(doc) {
+            if (!doc || doc === document) return;
+            let replaceElementSel = this.curSiteRule.replaceElement;
+            if (replaceElementSel) {
+                if (!Array.isArray(replaceElementSel)) {
+                    replaceElementSel = [replaceElementSel];
+                }
+                replaceElementSel.forEach(sel => {
+                    let pageEle = getElement(sel, document);
+                    let replaceEle = getElement(sel, doc);
+                    if (pageEle && replaceEle) {
+                        pageEle.parentNode.replaceChild(replaceEle, pageEle);
+                    }
+                });
+            }
+        }
+
         getPageElement(doc, curWin, dontFind) {
             if(doc==document && this.docPageElement){
                 let parent=this.docPageElement;
@@ -1208,7 +1225,7 @@
                     if (curMaxEle) {
                         for(i = 0; i < ele.children.length; i++) {
                             let curNode = ele.children[i];
-                            if (curMaxEle != curNode && curNode.className && curNode.style.display !== 'none' && curMaxEle.className == curNode.className){
+                            if (curMaxEle != curNode && curNode.className && curNode.style.display !== 'none' && curMaxEle.className == curNode.className && curMaxEle.tagName == curNode.tagName){
                                 hasSameClass = true;
                                 break;
                             }
@@ -1288,7 +1305,7 @@
                 }
             }
             let canSave=false;//發現頁碼選擇器在其他頁對不上，還是別保存了
-            let url=this.curUrl.replace("#!","").replace("index.php?","?");
+            let url = this.curUrl.replace("index.php?","?");
             let _url=url.replace(/\.s?html?$/i,"");
             let pageNum=1,preStr="",afterStr="";
             let pageMatch1=url.match(/(.*[a-z\/\-_](?:p|page)?\/?)(\d+)(\.s?html?$|\/?$)/i);
@@ -1323,6 +1340,7 @@
                 body.querySelector("button.next")||
                 body.querySelector("[title=next]")||
                 body.querySelector("[title='Next page']")||
+                body.querySelector("[title='下一页']")||
                 body.querySelector("a#btnPreGn")||
                 body.querySelector("a.page-next")||
                 body.querySelector("a.pages-next")||
@@ -1415,7 +1433,7 @@
                             }
                         }
                         if(!next2){
-                            if(/^[下后後次][一1]?[章话話节節篇个個幅]/i.test(aTag.innerText.trim()) || /nextpage/i.test(aTag.className) || aTag.innerText=="»"){
+                            if(/^[下后後次][一1]?[章话話节節篇个個幅]/i.test(aTag.innerText.trim()) || /nextpage/i.test(aTag.className) || aTag.innerText=="»" || aTag.innerText==">>"){
                                 if(!aTag.href || /^javascript:/.test(aTag.href) || aTag.getAttribute("href")=="#"){
                                     if(!nextJs2)nextJs2=aTag;
                                 }else{
@@ -1435,7 +1453,7 @@
                     }
                     if(!aTag.href || /^javascript:/.test(aTag.href) || aTag.getAttribute("href")=="#")continue;
                     if(!next4 && aTag.href.length<250){
-                        let _aHref=aTag.href.replace("?&","?").replace("#!","").replace("index.php?","?");
+                        let _aHref=aTag.href.replace("?&","?").replace("index.php?","?");
                         let _aHrefTrim=_aHref;
                         if(preStr)_aHrefTrim=_aHrefTrim.replace(preStr,"");
                         if(afterStr)_aHrefTrim=_aHrefTrim.replace(afterStr,"");
@@ -1806,6 +1824,7 @@
                 }
             }
             this.openInNewTab(eles);
+            this.replaceElement(doc);
         }
 
         openInNewTab(eles){
@@ -3881,9 +3900,7 @@
         },1);
     };
     history.pushState = _wr('pushState');
-    history.replaceState = _wr('replaceState');
     window.addEventListener('pushState', changeHandler);
-    window.addEventListener('replaceState', changeHandler);
 
     function initListener(){
         let loadmoreBtn,loading=true,lastScroll=0,checkLoadMoreTimes=0;
@@ -4005,6 +4022,12 @@
                 window.location.href = nextLink;
             }
         };
+        if (ruleParser.curSiteRule.listenHashChange) {
+            window.addEventListener('hashchange', () => {
+                urlChanged=true;
+                isPause=true;
+            }, false);
+        }
         let manualMode = typeof ruleParser.curSiteRule.manualMode == 'undefined' ? rulesData.manualMode : ruleParser.curSiteRule.manualMode;
         if (manualMode) {
             document.addEventListener('keydown', e => {
