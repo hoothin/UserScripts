@@ -62,7 +62,7 @@ url
 --
 RegExp for the url of target site
 ```JSON
-"url": "^https://abc\\.com/xyz"
+"url": "^https://abc\\.com/\\d+"
 ```
 
 pinUrl
