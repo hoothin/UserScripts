@@ -74,18 +74,18 @@
   "updated_at": "2022-08-27T22:53:13+09:00"
 },
 {
-  "resource_url": "http://wedata.net/items/85945",
   "data": {
-    "pageElement": "//div[@class='newsArticle_body']//div[@class='news_feed']/div[not(./figure)][1]/preceding-sibling::*",
+    "pageElement": "//div[@class='newsArticle_body']//div[@class='news_feed']/*[not(self::div)][last()]|//div[@class='newsArticle_body']//div[@class='news_feed']/*[not(self::div)][last()]/preceding-sibling::*",
     "nextLink": "//link[@rel='next']",
     "url": "^https://thetv.jp/news/detail/",
-    "exampleUrl": "https://thetv.jp/news/detail/1097587/"
+    "exampleUrl": "https://thetv.jp/news/detail/1097587/\r\nhttps://thetv.jp/news/detail/1103073/p2/"
   },
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "autopagerizebanzai",
+  "resource_url": "http://wedata.net/items/85945",
   "name": "WEBザテレビジョン",
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_at": "2022-08-19T21:06:16+09:00",
-  "updated_at": "2022-08-21T06:34:59+09:00"
+  "updated_at": "2022-09-17T15:42:03+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85944",
