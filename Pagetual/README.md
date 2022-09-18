@@ -98,7 +98,7 @@ wait
 The time to wait for page ready when you are sure the url match the site, you can also use a javaScript code which return a boolean to check if the page is ready instead
 ```JSON
 "wait": 500
-"wait": "let img=doc.querySelector('ul.grid-list img');return img!=null"
+"wait": "let img=doc.querySelector('ul.list img');return img!=null"
 ```
 
 waitElement
@@ -144,7 +144,7 @@ nextLinkByJs `(doc)`
 --
 Use this to eval javaScript code and return target url of next page with doc (document of every page loaded)
 ```JSON
-"nextLinkByJs": "let next=doc.querySelector('a.curr+a');if(next)return next.href.replace(/^javascript:.*\\('\\d+','\\d+','(\\d+)','(\\d+)'\\);/,'$1_$2.html');"
+"nextLinkByJs": "let n=doc.querySelector('a.curr+a');if(n)return n.href.replace(/^javascript:.*\\((\\d+)'\\);/,'$1_.html');"
 ```
 
 pageElement
@@ -158,7 +158,7 @@ pageElementByJs `(over)`
 --
 Use this to eval javaScript code and create the elements whatever you want to insert, a over(eles) is needed to callback with elements array for insert
 ```JSON
-"pageElementByJs": "let src=match[1]+(window.i>99?window.i:(window.i>9?'0'+window.i:'00'+window.i))+match[3]; let img=document.createElement('img');img.onload=()=>{over([img])};img.onerror=e=>{over()};img.src=src;"
+"pageElementByJs": "let src=match[1]+match[3]; img.onload=()=>{over([img])};img.onerror=e=>{over()};img.src=src;"
 ```
 
 replaceElement
@@ -215,7 +215,7 @@ pageInit `(doc, eles)`
 --
 The javaScript code to run with every page inserted with doc:(document of every page loaded) and eles:(elements found with rule), run before inserted, you can trigger event like onView()
 ```JSON
-"pageInit": "let imgCon=eles[0],ops=doc.querySelectorAll('op');imgCon.innerHTML='';[].forEach.call(ops,op=>{let img=document.createElement('img');img.src=op.value;imgCon.appendChild(img)})"
+"pageInit": "let ops=doc.querySelectorAll('op');[].forEach.call(ops,op=>{img.src=op.value;imgCon.appendChild(img)})"
 ```
 
 pageAction `(doc, eles)`
@@ -251,6 +251,13 @@ autoLoadNum
 The amount of pages for auto turning after page opening
 ```JSON
 "autoLoadNum": 5
+```
+
+listenHashChange
+--
+Set this to true so pagetual will restart when hash changed
+```JSON
+"listenHashChange": true
 ```
 
 pageNum
