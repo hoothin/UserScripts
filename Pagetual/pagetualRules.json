@@ -1,1192 +1,1193 @@
 [
-  {
-    "name":"google search mobile",
-    "action":0,
-    "url":"^https://(?:www\\.)?google\\..*/search",
-    "pageElement":"id('rso')/div|id('rso')/style",
-    "insert":"//div[@role=\"progressbar\"]/following-sibling::a[@role=\"button\"]|id(\"extrares\")//span[count(a)>0]/span/following-sibling::a",
-    "nextLink":0,
-    "loadMore":"div[role='progressbar']+a[role='button']"
-  },
-  {
-    "name":"Google Search",
-    "nextLink": [
-        "id('pnnext')|id('navbar navcnt nav')//td[span]/following-sibling::td[1]/a|id('nn')/parent::a",
-        "id('pnprev')|id('navbar navcnt nav')//td[span]/following-sibling::td[1]/a|id('nn')/parent::a"
-    ],
-    "pageElement":"id('rso')|id('center_col')/style[contains(.,'relative')][id('rso')]|id('search')/div/div/style[1]",
-    "action":1,
-    "pageNum":"&start={10*($p-1)}",
-    "pageBarTop": 55,
-    "url":"^https?://[^./]+\\.google(?:\\.[^./]{2,3}){1,2}/(?:c(?:se|ustom)|search|webhp|m|#)",
-    "replaceElement": "[role='navigation']>[role='presentation']"
-  },
-  {
-    "name":"Google cse",
-    "nextLink":".gsc-cursor-current-page+div",
-    "pageElement":".gsc-expansionArea>.gsc-result",
-    "url":"^https://cse\\.google\\.com.*&gsc\\.q=",
-    "wait":2000
-  },
-  {
-    "name": "Soccercatch shows",
-    "url": "^https://www\\.soccercatch\\.com.*#shows",
-    "nextLink": ".tabs-page[data-title=shows] .pagination-next",
-    "init": "if(doc)doc.querySelector('[data-title=shows]').click();",
-    "pageElement": ".show-item"
-  },
-  {
-    "name": "16Personalities",
-    "url": "^https://www\\.16personalities\\.com",
-    "enable": 0
-  },
-  {
-    "name": "Linux Tips, Tricks and Tutorials | Linuxize",
-    "url": "^https://linuxize\\.com",
-    "pageElement": ".post-list>.flex-wrap>section",
-    "lazyImgSrc": "data-cfsrc"
-  },
-  {
-    "name": "Vipergirls",
-    "pageElement": "#threads,.posts",
-    "url": "^https://vipergirls\\.to",
-    "nextLink": [
-        "a[rel='next']",
-        "a[rel='prev']"
-    ],
-    "pageNum": "page{$p}$"
-  },
-  {
-    "name": "linuxfromscratch",
-    "url": "^https://www\\.linuxfromscratch\\.org",
-    "pageElement": "body>*",
-    "css": ".sect1{overflow-wrap: break-word;}div.navheader{position: relative;}"
-  },
-  {
-    "name": "xda-developers",
-    "url": "^https://forum\\.xda\\-developers\\.com/t/",
-    "pageElement": ".block-body>article"
-  },
-  {
-    "name": "Pixabay",
-    "url": "^https://pixabay\\.com",
-    "pageAction": "eles.forEach(ele=>{let media=ele.querySelector('div.media');let timer;media.onmouseenter=e=>{timer=setTimeout((function() {var mp4 = media.dataset.mp4, webm = media.dataset.webm ? mp4.rsplit(\".\", 1)[0] + \".webm\": \"\", mp4Source = '<source type=\"video/mp4\" src=\"'.concat(mp4, '\">'), webmSource = webm ?' <source type=\"video/webm\" src=\"'.concat(webm, '\">') : \"\", videoElement = '<video style=\"display:none\" onloadeddata=\"$(this).addClass(\\'playing\\').show();\" autoplay muted loop>'.concat(mp4Source, \"                 \").concat(webmSource, \"</video>\");media.insertBefore($(videoElement)[0], media.firstChild)}), 300);};media.onmouseleave=e=>{clearTimeout(timer);if(media.firstChild.tagName==='VIDEO')media.removeChild(media.firstChild)};})",
-    "pageElement": ".video-search-results>.row-masonry-cell",
-    "lazyImgSrc": "data-lazy"
-  },
-  {
-    "name":"Bing",
-    "action":1,
-    "url":"^https://.*\\.bing\\.com/",
-    "nextLink":"a[title='Next page'],a.sb_pagN,a.sb_halfnext,a.sb_fullnpl",
-    "pageElement":"ol#b_results>li.b_algo",
-    "wait":"if(doc==document)return true;doc.documentElement.scrollTop=99999;return doc.querySelector('a[title=\\'Next page\\'],a.sb_pagN,a.sb_halfnext,a.sb_fullnpl')"
-  },
-  {
-    "name":"Duckduckgo",
-    "url":"^https://duckduckgo\\.com/\\?",
-    "loadMore":".result--more>a"
-  },
-  {
-    "name":"F 搜",
-    "url":"^https://fsoufsou\\.com/search",
-    "nextLink":".bottom-pagination-bar+.turn-page-btn",
-    "pinUrl":true,
-    "css":"svg{visibility: visible;}"
-  },
-  {
-    "name": "gog",
-    "action": 1,
-    "url": "^https://www\\.gog\\.com/",
-    "pageElement": "paginated-products-grid.ng-star-inserted",
-    "nextLinkByUrl": [
-        "(&page=(\\d+))?$",
-        "&page={$2+1}"
-    ],
-    "pageAction": "[].forEach.call(eles, ele=>{[].forEach.call(ele.querySelectorAll('source[lazyload]'), source=>{source.setAttribute('srcset',source.getAttribute('lazyload'))})})"
-  },
-  {
-    "name":"Pixiv",
-    "url":"^https://www\\.pixiv\\.net/",
-    "action":2,
-    "pageElement":"section>div>ul,div.sc-l7cibp-0.juyBTC>*,div.sc-1eop7y7-0.cJYTWr>*",
-    "nextLink":"a[class*='filterProps-Styled-Component']:last-child",
-    "wait":500,
-    "css":"@media (min-width: 1000px) {@supports (display:grid)  {.krFoBL { grid-template-columns: repeat(6, 184px); }}}"
-  },
-  {
-    "name":"DeviantArt",
-    "url":"^https://www\\.deviantart\\.com",
-    "pageElement":"#sub-folder-gallery>div>div:not([class])>div>div>div>div"
-  },
-  {
-    "name":"Z-Library",
-    "url":"^https?://.*(1lib\\.(to|us|org)|z-lib\\.org|booksc\\.(org|eu)|bookfi\\.net|b\\-ok\\.(asia|africa)|1lib\\.pl|sg1lib\\.org|2lib\\.org|book4you\\.org)/s/",
-    "pageElement":"#searchResultBox"
-  },
-  {
-    "name":"Startpage",
-    "url":"^https://www\\.startpage\\.com/",
-    "pageElement":"section.w-gl>div.w-gl__result",
-    "nextLinkByJs":"let nextBtn=doc.querySelector('button.next'),params=[];if(!nextBtn)return null;let form=nextBtn.parentNode;[].forEach.call(form.querySelectorAll('input'),input=>{params.push(input.name+'='+input.value)});return form.action+'?'+params.join('&')"
-  },
-  {
-    "name": "Search Getty Images",
-    "url": "^https://www\\.gettyimages\\.ie",
-    "nextLink": "button[title='Next page']",
-    "pageElement": "[data-testid=galleryMosaicAsset]"
-  },
-  {
-    "name": "IMHentai",
-    "url": "^https://imhentai\\.xxx",
-    "pageElement": "#gimg",
-    "nextLink": ".nav_next",
-    "css": "#footer,#bar{display:none}.pre_img+.nav_pagination{bottom: 10px; position: fixed; width: 100%;}.return_btn{bottom: 0; position: fixed; width: 100%;}"
-  },
-  {
-    "name": "Moebooru:Danbooru clones",
-    "url": "^https?://(konachan\\.com|yande\\.re|www\\.sakugabooru\\.com)/(post|comment)($|\\?|#|/search\\?)",
-    "pageElement": "//li[contains(@class, 'creator-id-')]|//div[@id='comment-list']/div[@class='post']|//table[@class='highlightable']",
-    "nextLink": "//a[@class='next_page']",
-    "css": ".javascript-hide { display: inline-block !important; }.pagetual_pageBar { display: inline-flex!important;width: 100%!important; }"
-  },
-  {
-    "name": "developer.wordpress",
-    "url": "^https://developer\\.wordpress\\.org/",
-    "pageElement": "#primary>*",
-    "nextLink": "[rel=next]"
-  },
-  {
-    "name":"playstation",
-    "action":1,
-    "css":".psw-visually-hide{opacity:1!important}.pagetual_loading{display:none!important}[name='pagetual-iframe']{display:none}",
-    "url":"^https://store\\.playstation\\.com/.*/\\d+$",
-    "pageElement":"ul.psw-grid-list",
-    "wait":"let img=doc.querySelector('ul.psw-grid-list img');return img!=null",
-    "nextLinkByUrl":["(.*/)(\\d+)$","$1{$2+1}"],
-    "pageAction":"[].forEach.call(eles[0].querySelectorAll('[loading=lazy]'),img=>{img.src=img.src.replace('w=54&thumb=true','w=230&thumb=false');img.classList.remove('psw-blur')});"
-  },
-  {
-    "name":"yande",
-    "action":0,
-    "url":"^https://yande\\.re/",
-    "pageElement":"ul#post-list-posts>li",
-    "nextLink":"a.next_page",
-    "css":".javascript-hide {display: inline-block !important;}"
-  },
-  {
-    "name":"Expreview",
-    "url":"^https://www\\.expreview\\.com/",
-    "loadMore":"span.load"
-  },
-  {
-    "name":"goddessfantasy",
-    "type":0,
-    "url":"^https://www\\.goddessfantasy\\.net/bbs/",
-    "pageElement":"//div[@id='messageindex']|//form[@id='quickModForm']",
-    "nextLink":"//div[@class='pagelinks']/a[text()='»']",
-    "pinUrl":true
-  },
-  {
-    "name":"SkrBT",
-    "url":"^https://skrbt",
-    "pageElement":"ul.list-unstyled",
-    "nextLinkByJs":"let form=doc.querySelector('#search-form'),params=[];if(!form)return null;[].forEach.call(form.querySelectorAll('input'),input=>{params.push(input.name+'='+(input.name=='p'?parseInt(input.value)+1:input.value))});return form.action+'?'+params.join('&')"
-  },
-  {
-    "name":"bbsPostlist1",
-    "url":"/t",
-    "nextLink": [
-        "a.nxt",
-        "a.prev"
-    ],
-    "pageNum":"\\-\\d+\\-{$p}\\-\\d+\\.html",
-    "pageElement":"div#postlist>*"
-  },
-  {
-    "name":"bbsThreadlist1",
-    "url":"/f",
-    "nextLink": [
-        "a.nxt",
-        "a.prev"
-    ],
-    "pageNum":"\\-\\d+\\-{$p}\\.html",
-    "pageElement":"div#threadlist form"
-  },
-  {
-    "name":"Discuz7.2Postlist",
-    "url":"\\?tid",
-    "nextLink":"a.next",
-    "pageNum":"page={$p}",
-    "pageElement":"div#postlist>*"
-  },
-  {
-    "name":"Discuz7.2Threadlist",
-    "url":"\\?fid",
-    "nextLink":"a.next",
-    "pageNum":"page={$p}",
-    "pageElement":"div#threadlist form"
-  },
-  {
-    "name":"chevereto",
-    "url":".",
-    "nextLink":"a[data-pagination='next']",
-    "pageAction":"let w=document.querySelector('.list-item').style.width;let content=eles[0].querySelector('.pad-content-listing');content.style.display='flex';content.style.flexFlow='row wrap';[].forEach.call(eles[0].querySelectorAll('.list-item'),i=>{i.style.display='block';i.style.width=w;i.style.position='sticky';i.querySelector('.list-item-image').style.height=w;})",
-    "pageElement":"div#content-listing-tabs"
-  },
-  {
-    "name": "FC Portables",
-    "url": "^https://www\\.fcportables\\.com",
-    "pageElement": ".listing-blog>article",
-    "pageAction": "eles.forEach(e=>{let a=e.querySelector('.img-holder');if(!a)return;a.style.backgroundImage=`url(\"${a.dataset.src}\")`;a.classList.add('b-loaded')})"
-  },
-  {
-    "name": "1688全部商品页",
-    "url": "^https://.*\\.1688\\.com/page",
-    "pageElement": "#bd_1_container_0 > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(6) > div",
-    "pageAction": "window.setUrl=null;window.index=0;eles.forEach(e=>{let img=e.querySelector('.main-picture[src^=data]');if(!img)return;img.src=img.nextElementSibling.children[0].src;e.onclick=()=>window.open(e.dataset.url,'_blank')})",
-    "pageInit": "if(!window.index)window.index=0;if(!window.setUrl){window.setUrl=()=>{setTimeout(()=>{if(window.url){eles[window.index++].dataset.url=window.url;window.url=null;}if(eles[window.index]){eles[window.index].click();window.setUrl()}},1)};Object.defineProperty(doc.defaultView, 'open', { get: function () { return (s)=>window.url=s; } });window.setUrl();}if(eles.length<=window.index)return true;else return false;"
-  },
-  {
-    "name":"blog1",
-    "url":".",
-    "pageElement":"section.posts-expand>article.post",
-    "nextLink":"li.pagination-active+li>a",
-    "css":"section.posts-expand>article.post{opacity:1}"
-  },
-  {
-    "name":"Baidu",
-    "css":"span.c-img-radius-large.c-img-border,.result-molecule[tpl='app/rs']{pointer-events: none}.result-molecule[tpl='app/rs']>div{pointer-events: all}",
-    "insertPos":1,
-    "nextLink": [
-        "//*[@id=\"page\"]/div/a[contains(text(),'下一页')]",
-        "//*[@id=\"page\"]/div/a[contains(text(),'上一页')]"
-    ],
-    "pageElement":"//*[@id=\"content_style\"]|//*[@id=\"content_left\"]/*",
-    "type":0,
-    "pageNum":"&pn={10*($p-1)}",
-    "url":"^https?://www\\.baidu\\.com/(s|baidu)",
-    "pageBarTop": 75,
-    "init":"let rs=document.querySelector('div.result-molecule[tpl=\\'app/rs\\']');if(!rs)return;(document.querySelector('#con-ceiling-wrapper')||document.querySelector('#content_right')).appendChild(rs);let tp=document.querySelector('.c-font-medium>div');let t;if(tp)t=tp.children[0];[].forEach.call(rs.querySelectorAll('tr>td'),rp=>{if(tp&&t){rp.className=tp.className;rp.children[0].className=t.className}})",
-    "replaceElement": "#page"
-  },
-  {
-    "name":"手机百度",
-    "url":"^https://(m|www|wap)\\.baidu\\.com/",
-    "nextLink":"a.new-nextpage-only,a.new-nextpage",
-    "pageElement":"#results"
-  },
-  {
-    "name":"百度贴吧列表",
-    "action":1,
-    "pageBar":"pageBar.classList.add('j_thread_list');pageBar.dataset.field='{}'",
-    "url":"^https?://tieba\\.baidu\\.com/.+",
-    "pageElement":"ul#thread_list>li",
-    "pageNum":"&pn={50*($p-1)}",
-    "nextLink":".next.pagination-item "
-  },
-  {
-    "name":"百度贴吧看贴",
-    "pageBar":"pageBar.classList.add('l_post')",
-    "nextLink":"//div[@class=\"pb_footer\"]//a[starts-with(text(), '下一页')]",
-    "pageElement":"//div[@class=\"p_postlist\"]/div[starts-with(@class, 'l_post')]",
-    "type":0,
-    "action":1,
-    "pageNum":"&pn={$p}",
-    "url":"^https?://tieba\\.baidu\\.com/p/.+",
-    "wait":"if(doc==document)return true;let lzl=doc.querySelector('div.hideLzl');if(lzl){var actualTop=lzl.offsetTop;var current=lzl.offsetParent;while(current!==null){actualTop+=current.offsetTop;current=current.offsetParent;}doc.body.scrollTop=actualTop;doc.documentElement.scrollTop=actualTop;return false}else{return true}"
-  },
-  {
-    "name":"搜狗wap",
-    "url":"^https?://wap\\.sogou\\.com/web/searchList\\.jsp",
-    "loadMore":"#ajax_next_page",
-    "nextLink":0
-  },
-  {
-    "name": "Camp Firefox Forum",
-    "url": "^https://www\\.camp-firefox\\.de/forum/ungelesene-beitraege/",
-    "pageElement": "#content > div > ol.tabularList",
-    "nextLink": "nav.pagination > ul > li.skip:last-child > a",
-    "updatedAt": "2022-09-10",
-    "author": "benzBrake"
-  },
-  {
-    "name":"秀人网",
-    "url":"^https://www\\.(?:imn5|mntp|jpmnb|jpmn8|mn5|xgmn|jpxgmn|jpxgyw|xiurenji|xiurenb|xrmn|xrmn5)\\.(?:com|net|vip|cc|top)/.*\\.html",
-    "pageElement":"p>img",
-    "author":"bmp4cwa"
-  },
-  {
-    "name":"美女图123",
-    "url":"^https://(www|m)\\.meinvtu123\\.cc/",
-    "pageElement":"div>img",
-    "author":"bmp4cwa"
-  },
-  {
-    "name":"雪球",
-    "url":"^https://xueqiu\\.com/",
-    "pageElement":".status-list>article",
-    "nextLink":"a.pagination__next"
-  },
-  {
-    "name":"中国知网",
-    "url":"^https://kns\\.cnki\\.net/kns8/defaultresult/index",
-    "nextLink":"a#PageNext",
-    "pageElement":".result-table-list tbody>*",
-    "init":"if(doc){let fn1=window.BriefExtend.setFullTextState;window.BriefExtend.setFullTextState=()=>{fn1();win.$('#PageNext').attr('data-curPage',window.$('#PageNext').attr('data-curPage'))}; win.BriefParam._getSearchPaperArgModel=(isSearch, cPage)=>{return window.BriefParam._getSearchPaperArgModel(isSearch, (!!cPage ? cPage : win.BriefParam._getCurPage()))};doc.querySelector('#txt_search').value=document.querySelector('#txt_search').value;doc.querySelector('.search-btn').click()}",
-    "initRun":0,
-    "wait":1000
-  },
-  {
-    "name":"图怪兽",
-    "url":"^https://818ps\\.com/",
-    "pageElement":"#masonry"
-  },
-  {
-    "name":"创客贴",
-    "url":"^https://www\\.chuangkit\\.com/",
-    "type":0,
-    "nextLink":"//div[@class='number']/ul/li[@class='item active']/following-sibling::li/a",
-    "pageElement":"//div[@class='ckt-waterfall-content']",
-    "pageAction":"let infos=doc.querySelector('body>script').innerText.match(/designTemplateId:\\d+,designTemplateImageUrl:\".*?\"/g),infoMap;if(infos){infoMap={};infos.forEach(i=>{let id=i.replace(/designTemplateId:(\\d+).*/,'$1');let src=i.replace(/.*designTemplateImageUrl:\"(.+)\"/,'$1');src=JSON.stringify(src);src=src.replace(/\\\\\\\\/g,'\\\\');src=JSON.parse(src);infoMap[id]=src;})};[].forEach.call(eles[0].querySelectorAll('.temp-sec__bottom>div>a'),a=>{let id=a.href.replace(/.*?(\\d+).*/,'$1');let src=infoMap[id];let img=a.parentNode.parentNode.previousElementSibling.querySelector('img');img.src=src;img.style.opacity=1;})"
-  },
-  {
-    "name":"水木桌面端",
-    "url":"^https://www\\.mysmth\\.net/nForum/#!article/",
-    "nextLink":"a[title='下一页']",
-    "pageElement":"div.b-content"
-  },
-  {
-    "name":"水木移动端",
-    "url":"^https://m\\.mysmth\\.net/article/",
-    "pageElement":"#m_main>ul.list"
-  },
-  {
-    "name":"汽车之家",
-    "url":"^https://club\\.autohome\\.com\\.cn",
-    "pageElement":"#js-reply-list-container",
-    "action":2,
-    "nextLink":".athm-page__next"
-  },
-  {
-    "name":"煎蛋吐槽",
-    "url":"^https?://jandan\\.net/",
-    "nextLink":"a.previous-comment-page",
-    "pageElement":"ol.commentlist>li",
-    "pageAction":"[].forEach.call(eles,e=>{let tucao=e.querySelector('a.tucao-btn');if(tucao)tucao.onclick=e=>{ var n = $(e.currentTarget); var m = n.data('id'); var o = n.closest('li'); var l = o.find('div.jandan-tucao'); if (l.length) { l.slideToggle('fast') } else { tucao_load_content(o, m) } };})"
-  },
-  {
-    "name":"xxgame",
-    "action":0,
-    "url":"^http://www\\.xxgame\\.net/chinese",
-    "pageElement":"div.layui-row>div.layui-col-md4:not(div:nth-child(5),div:nth-child(6),div:nth-child(7))",
-    "nextLinkByUrl":["(http://www\\.xxgame\\.net/chinese/?)(?:\\?page=|$)(\\d*)","$1?page={($2.0||1)+1}"]
-  },
-  {
-    "name":"斗鱼",
-    "url":"^https://www\\.douyu\\.com/directory/",
-    "nextLink":"li.dy-Pagination-next[aria-disabled='false']",
-    "pageElement":"ul.layout-Cover-list",
-    "wait":1000,
-    "enable":0
-  },
-  {
-    "name": "Literotica",
-    "type": 0,
-    "action": 0,
-    "url": "^https://www\\.literotica\\.com/.",
-    "pageElement": "//div[contains(@class,\"panel article\") or @class=\"b-story-list\"]/div",
-    "nextLink": "//a[@title='Next Page' or @class='b-pager-next']",
-    "wait": 3000
-  },
-  {
-    "name":"站酷",
-    "url":"^https://www\\.zcool\\.com\\.cn/search/content",
-    "action":2,
-    "nextLinkByUrl":["(.*/content\\?&?word=[^&]+)(?:&page=|$)(\\d*)","$1&page={($2.0||1)+1}"]
-  },
-  {
-    "name":"masuit",
-    "action":0,
-    "url":"^https://masuit\\.com/",
-    "pageElement":".ibox.wow",
-    "nextLink":"a[aria-label=Next]"
-  },
-  {
-    "name":"佛弟子文库",
-    "url":"^https?://www\\.fodizi\\.net/",
-    "nextLink":"a.current+a",
-    "pageElement":"div.wrap>*:not(.page)"
-  },
-  {
-    "name":"动漫之家",
-    "action":1,
-    "url":"^https?://(www|manhua)\\.(dmzj|178)\\.com/.*/\\d+\\.s?html",
-    "nextLink":"a.btm_chapter_btn.fr",
-    "pageElement":"div.comic_wraCon",
-    "init":"let imgCon=document.querySelector('div.comic_wraCon'),ops=document.querySelectorAll('option');imgCon.innerHTML='';[].forEach.call(ops,op=>{let img=document.createElement('img');img.src=op.value;imgCon.appendChild(img)})",
-    "pageInit":"let imgCon=eles[0],ops=doc.querySelectorAll('option');imgCon.innerHTML='';[].forEach.call(ops,op=>{let img=document.createElement('img');img.src=op.value;imgCon.appendChild(img)})"
-  },
-  {
-    "name":"smzdm",
-    "action":0,
-    "url":"^https://.*\\.smzdm\\.com",
-    "pageElement":"ul#feed-main-list>li",
-    "nextLink":".pagenation-list>li.current+li>a",
-    "insert":"ul#feed-main-list",
-    "insertPos":2
-  },
-  {
-    "name":"mhgui",
-    "action":0,
-    "url":"^https://.*\\.(mhgui|manhuagui)\\.com/comic/\\d+",
-    "pageElementByJs":"let link=document.querySelector('#mangaBox>img').src; let match=link.match(/(.*)(\\d{3})(\\.jpg.*)/); window.i=window.i||parseInt(match[2]);window.i++; let src=match[1]+(window.i>99?window.i:(window.i>9?'0'+window.i:'00'+window.i))+match[3]; let img=document.createElement('img');img.onload=()=>{over([img])};img.onerror=e=>{over()};img.src=src;",
-    "insert":"#mangaBox",
-    "insertPos":2
-  },
-  {
-    "name":"manga1000",
-    "url":"^https://manga1000\\.top/\\d+/\\d+",
-    "pageElement":"div.chapter-content>*",
-    "css":".chapter-content>img{display:unset!important}",
-    "nextLink":"ul.chapter_select a.next"
-  },
-  {
-    "name":"javdb",
-    "action":0,
-    "url":"^https://javdb\\.com/",
-    "pageElement":"#videos.video-container",
-    "css":".grid.columns{display: flex; flex-wrap: wrap;}"
-  },
-  {
-    "name": "JavBus",
-    "url": "^https://www\\.javbus\\.com",
-    "pageBar": 0,
-    "pageElement": "#waterfall>.item,#waterfall_h>.item"
-  },
-  {
-    "name":"喜马拉雅",
-    "url":"^https://www\\.ximalaya\\.com/",
-    "nextLink":".page-next>a",
-    "wait":1000,
-    "action":2,
-    "pageElement":".list-container,.main-content"
-  },
-  {
-    "name":"方正字库",
-    "url":"^https://www\\.foundertype\\.com/",
-    "nextLink":"#page>a.on+a",
-    "pageElement":"#fonPar,#chinese_ft1",
-    "action":1
-  },
-  {
-    "name": "Trakt",
-    "url": "^https://trakt\\.tv",
-    "pageElement": "section#info-wrapper > div.container > div.row > div#overview>*",
-    "action": 1,
-    "waitElement": [
-        ".summary-activity",
-        "#popular-comments.fade:not(.in)"
-    ]
-  },
-  {
-    "name": "北邮人论坛-北邮校园",
-    "url": "^https://bbs\\.byr\\.cn",
-    "listenHashChange": true,
-    "pageElement": "section#main.corner>section#body>.b-content",
-    "action": 1
-  },
-  {
-    "name":"bilibili search",
-    "action":1,
-    "url":"^https://search\\.bilibili\\.com",
-    "pageElement":"ul>li.video-item,div.video-list.row>*",
-    "nextLinkByUrl":["(.*keyword=.*?)(?:&page=|$)(\\d*).*","$1&page={($2.0||1)+1}"],
-    "sandbox":false,
-    "wait":"return doc.querySelector('.bili-video-card__wrap')"
-  },
-  {
-    "name": "bilibili space",
-    "url": "^https://space\\.bilibili\\.com/",
-    "sandbox": false,
-    "pageElement": "ul.cube-list>li,ul.video-list>li",
-    "nextLink": ".be-pager-next,.next-page",
-    "wait": 1000
-  },
-  {
-    "name":"动漫屋1",
-    "action":1,
-    "url":"^https?://www\\.(dm5|1kkk)\\.(com|cn)/(m|ch)",
-    "pageElement":".view-main>.item",
-    "nextLink":"span.current+a,div#chapterpager+a+a",
-    "rate":3
-  },
-  {
-    "name":"动漫屋2",
-    "action":1,
-    "type":0,
-    "url":"^https?://www\\.(dm5|1kkk)\\.(com|cn)/(m|ch)",
-    "pageElement":"//div[@id=\"barChapter\"]/img",
-    "nextLink":"//div[@class=\"view-paging\"]/div/a[contains(text(),'下一')]",
-    "rate":3
-  },
-  {
-    "name":"异次元",
-    "url":"^https://www\\.iplaysoft\\.com/",
-    "pageElement":"#postlist",
-    "nextLink":".pagenavi>a[title='下一页']"
-  },
-  {
-    "name":"魂+",
-    "url":"^https://.*(soul|white|north|south|snow)\\-plus\\.",
-    "action":1,
-    "sleep":1000
-  },
-  {
-    "name":"魂+阅读页",
-    "url":"^https://.*(soul|white|north|south|snow)\\-plus\\.",
-    "action":1,
-    "type":0,
-    "pageElement":"//div[@id='main']/form",
-    "nextLink":"//div[@class='pages']/ul/li[.//b]/following-sibling::li/a",
-    "sleep":1000,
-    "pageNum":"page-{$p}.html"
-  },
-  {
-    "name":"魂+列表页",
-    "url":"^https://.*(soul|white|north|south|snow)\\-plus\\.",
-    "action":1,
-    "type":0,
-    "pageElement":"//tr[@align='center']",
-    "nextLink":"//div[@class='pages']/ul/li[.//b]/following-sibling::li/a",
-    "sleep":1000,
-    "pageNum":"page-{$p}.html"
-  },
-  {
-    "name":"动漫啦",
-    "url":"^https://www\\.dongman\\.la/manhua/chapter/",
-    "pageElement":".chapter-images img",
-    "nextLink":".mdui-bottom-nav>a+a",
-    "init":"let is=document.querySelectorAll('.chapter-images img'),j=document.querySelector('.lazyBox');is.forEach(i=>{i.src=i.dataset.srcset;j.appendChild(i);})",
-    "pageAction":"let j=document.querySelector('.lazyBox');eles.forEach(i=>{i.src=i.dataset.srcset;})",
-    "insert":".lazyBox",
-    "insertPos":2
-  },
-  {
-    "name":"bookmarkearth",
-    "action":0,
-    "url":"^https://www\\.bookmarkearth\\.com(?:/?$|/page\\?currentPage=)",
-    "pageElement":".source>.document-piece",
-    "nextLinkByUrl":["(.*\\.com)(?:/?$|/page\\?currentPage=)(\\d*)","$1/page?currentPage={($2.0||1)+1}"]
-  },
-  {
-    "name": "音范丝",
-    "action": 1,
-    "url": "^https://www\\.yinfans\\.me/",
-    "pageElement": "#post_container",
-    "nextLink": "a.next",
-    "waitElement": [
-      "#post_container[style]"
-    ]
-  },
-  {
-    "name":"bookmarkearth search",
-    "action":0,
-    "url":"^https://www\\.bookmarkearth\\.com/s/search\\?q=",
-    "pageElement":".source>.document-piece",
-    "nextLinkByUrl":["(.*/s/search\\?q=.*&currentPage=)(\\d*)","$1{$2+1}"]
-  },
-  {
-    "name":"深圳人社局通知公告",
-    "action":0,
-    "url":"^http://hrss\\.sz\\.gov\\.cn/tzgg",
-    "pageElement":".newsList>ul",
-    "nextLink":"a.next"
-  },
-  {
-    "name":"什么值得买社区",
-    "action":0,
-    "url":"^https://post\\.smzdm\\.com/p",
-    "pageElement":"#comment",
-    "nextLink":".pagedown>a"
-  },
-  {
-    "name":"51元素",
-    "action":1,
-    "url":"^https://www\\.51yuansu\\.com",
-    "pageElement":".f-content",
-    "nextLink":"a.nextpage"
-  },
-  {
-    "name":"Asian Sister",
-    "url":"^https://asiansister\\.com/",
-    "pageElement":"div.itemBox,div.itemBox_video"
-  },
-  {
-    "name":"小说站1",
-    "type":0,
-    "nextLink":"//a[contains(text(),'下一页')]|//a[contains(text(),'下一頁')]|//a[contains(text(),'下一章')]",
-    "pageElement":"//div[@id='content']|//div[@id='chaptercontent']|//div[@id='BookText']",
-    "url":"\\d+/[\\d_-]+\\.html?$",
-    "pageBarText":1
-  },
-  {
-    "name":"小说站2",
-    "type":0,
-    "nextLink":"//a[contains(text(),'下一页')]|//a[contains(text(),'下一頁')]|//a[contains(text(),'下一章')]",
-    "pageElement":"//div[@class='content']|//div[@class='chaptercontent']",
-    "url":"\\d+/[\\d_-]+\\.html?$",
-    "pageBarText":1
-  },
-  {
-    "name":"晋江文学城",
-    "url":"^http://www\\.jjwxc\\.net",
-    "pageElement":"div.noveltext,#lockpage",
-    "pageBarText":1
-  },
-  {
-    "name":"厚海网",
-    "url":"^http://www\\.houhaiwang\\.com",
-    "pageElement":".col-a1>.row-b7",
-    "pageBarText":1,
-    "nextLink":".col-d3>span>a"
-  },
-  {
-    "name":"17K小说网_免费章节",
-    "url":"^https://www\\.17k\\.com",
-    "pageElement":".area>.read,.area>.comment",
-    "css":".infoPath,.read_tit,.rightSide,.tuijian{display:none}.readAreaBox{width:auto}",
-    "pageBarText":1,
-    "nextLink":".nextChapter"
-  },
-  {
-    "name":"17K小说网_付费章节",
-    "url":"^https://www\\.17k\\.com",
-    "pageElement":".Context>.Article",
-    "pageBarText":1,
-    "action":1,
-    "nextLink":".nextChapter",
-    "wait":"return doc.querySelector('.copy')==null",
-    "include":"div.content"
-  },
-  {
-    "name": "netflav",
-    "url": "^https://netflav\\.com/",
-    "pageElement": ".video_grid_container>.grid_root",
-    "nextLink": "#general-pagination>div>a[aria-current='true']+a",
-    "waitElement": [
-        "a[aria-current='true']+a",
-        "div.lazyload-placeholder,.grid_cover.image:not(.fadeIn)"
-    ]
-  },
-  {
-    "name": "版主小说",
-    "url": "^http://www\\.tz659\\.com/\\d",
-    "pageElement": "div.page-content",
-    "nextLinkByJs": "let next=doc.querySelector('a.curr+a');if(next)return next.href.replace(/^javascript:.*\\('\\d+','\\d+','(\\d+)','(\\d+)'\\);/,'$1_$2.html');",
-    "action": 2
-  },
-  {
-    "name":"纵横中文网手机版",
-    "url":"^https://m\\.zongheng\\.com/h5/chapter",
-    "type":0,
-    "pageElement":"//div[@class='title']|//div[@class='text']",
-    "nextLink":"//div[contains(text(),'下一页')]|//div[contains(text(),'下一章')]",
-    "wait":500,
-    "css":".text>div,#fukerr_bot,#fukerr{display:none!important}",
-    "pageBarText":1
-  },
-  {
-    "name":"Yurifans",
-    "url":"^https://yuri\\.website/[a-z]",
-    "type":0,
-    "action":1,
-    "pageElement":"id('post-list')/ul",
-    "nextLink":"//div[@class='btn-pager']/button[text()='❯']",
-    "wait":"500",
-    "include":"id('post-list')/ul/li"
-  },
-  {
-    "name":"拷貝漫畫",
-    "url":"^https://copymanga\\.org/comic/.*/chapter/",
-    "pageElement":"ul.comicContent-list>li",
-    "nextLink":".comicContent-next>a",
-    "action":1,
-    "insert":"ul.comicContent-list",
-    "insertPos":2,
-    "wait":"if(doc==document)return true;let sy=doc.defaultView.scrollY;let cur=doc.querySelector('.comicIndex').innerText;let max=doc.querySelector('.comicCount').innerText;if(window._cur==cur){doc.defaultView.scroll(0, 0);window._cur='';}else{doc.defaultView.scroll(0, sy+9999999);window._cur=cur;}return cur==max;"
-  },
-  {
-    "name":"Hacker News",
-    "action":0,
-    "url":"^https?://news\\.ycombinator\\.com/",
-    "pageElement":"table.itemlist>tbody>tr",
-    "nextLink":"a.morelink"
-  },
-  {
-    "name":"ekşi sözlük",
-    "action":0,
-    "url":"^https://eksisozluk\\.com",
-    "pageElement":"#entry-item-list",
-    "nextLinkByJs":"let pager=doc.querySelector('.pager');if(!pager || pager.dataset.currentpage==pager.dataset.pagecount)return null;else return location.href.replace(/&p=\\d+/,'')+'&p='+(parseInt(pager.dataset.currentpage)+1)"
-  },
-  {
-    "name":"参考消息手机版",
-    "action":1,
-    "url":"^http://m\\.cankaoxiaoxi\\.com/",
-    "pageElement":"div.content",
-    "nextLink":"li.next>a"
-  },
-  {
-    "name":"58pic",
-    "url":"^https://www\\.58pic\\.com/tupian/",
-    "css":".card-lazy{display:none}.pagetual_pageBar{margin-bottom: 20px!important;}",
-    "pageElement":"div.search-v3-content>.card-grid-box"
-  },
-  {
-    "name":"千库网",
-    "url":"^https://588ku\\.com/",
-    "action":1,
-    "pageElement":".data-box>.data-list"
-  },
-  {
-    "name":"中国大学MOOC课程评论区",
-    "url":"^https://www\\.icourse163\\.org/course/",
-    "action":1,
-    "wait":1000,
-    "type":0,
-    "init":"if(doc)doc.querySelector('#review-tag-button').click()",
-    "nextLink":"//ul[@class='ux-pager']/li/a[text()='下一页']",
-    "pageElement":"//div[@class='ux-mooc-comment-course-comment_comment-list']/div[@class='ux-mooc-comment-course-comment_comment-list_item']"
-  },
-  {
-    "name":"铅笔小说",
-    "nextLinkByJs":"let script=doc.querySelector('body>.mlfy_main>script:nth-of-type(2)');if(!script)return null;return location.origin+script.innerText.match(/.*url_next:'([^']+)'.*/i)[1]",
-    "pageElement":"#mlfy_main_text",
-    "url":"^https://www\\.23qb\\.(net|com)/book/"
-  },
-  {
-    "name":"NGA",
-    "url":"^https?://(.*\\.nga\\.cn|nga\\.178\\.com|ngabbs\\.com)/read\\.php",
-    "nextLink":"a[title='下一页']",
-    "action":2,
-    "pageElement":"div#m_posts",
-    "init":"doc&&doc.addEventListener('mouseover',e=>{e.preventDefault();e.stopPropagation()},true)"
-  },
-  {
-    "name": "NGA列表页",
-    "url": "^https?://(.*\\.nga\\.cn|nga\\.178\\.com|ngabbs\\.com)/thread\\.php",
-    "action": 1,
-    "pageElement": "#topicrows"
-  },
-  {
-    "name":"淮安新闻网",
-    "url":"^http://www\\.hynews\\.net/",
-    "loadMore":"#_more"
-  },
-  {
-    "name":"淘股吧内贴",
-    "url":"^https://www\\.taoguba\\.com\\.cn/Article/\\d+/\\d+",
-    "pageElement":"#new_wrap_container",
-    "nextLinkByJs":"let pageSpan=doc.querySelector('.t_page>.left>span:last-child');if(!pageSpan)return false;let maxPage=pageSpan.innerText.replace(/.*\\/(\\d+).*/,'$1'),curPage=pageSpan.querySelector('b').innerText.trim();if(parseInt(curPage)<parseInt(maxPage))return location.href.replace(/(.*?)\\d+$/,'$1')+(parseInt(curPage)+1);else return false;"
-  },
-  {
-    "name":"淘股吧列表页1",
-    "url":"^https://www\\.taoguba\\.com\\.cn/(bbs|zongban|ttcl)",
-    "pageElement":".kuaixun,.Notspmatch,.p_list,#contents",
-    "nextLinkByJs":"let pageSpan=doc.querySelector('.t_page>.left>span:last-child');if(!pageSpan)return false;let maxPage=pageSpan.innerText.replace(/.*\\/(\\d+).*/,'$1'),curPage=pageSpan.querySelector('b').innerText.trim();if(parseInt(curPage)<parseInt(maxPage))return location.href.replace(/(\\D+)\\d*(.*)$/,'$1')+(parseInt(curPage)+1)+'/0';else return false;"
-  },
-  {
-    "name":"淘股吧列表页2",
-    "url":"^https://www\\.taoguba\\.com\\.cn/(jinghua|dianzan)",
-    "pageElement":".kuaixun,.Notspmatch,.p_list,#contents",
-    "nextLinkByJs":"let pageSpan=doc.querySelector('.t_page>.left>span:last-child');if(!pageSpan)return false;let maxPage=pageSpan.innerText.replace(/.*\\/(\\d+).*/,'$1'),curPage=pageSpan.querySelector('b').innerText.trim();if(parseInt(curPage)<parseInt(maxPage))return location.href.replace(/(\\D+)\\d*(.*)$/,'$1')+(parseInt(curPage)+1)+'-0';else return false;"
-  },
-  {
-    "name":"淘股吧生活吧",
-    "url":"^https://www\\.taoguba\\.com\\.cn/shenghuoba/",
-    "pageElement":".lifeContent-topicList-item",
-    "nextLinkByJs":"let pageSpan=doc.querySelector('#N_go_pageBtn');if(!pageSpan)return false;let maxPage=pageSpan.dataset.total,curPage=pageSpan.dataset.now;if(parseInt(curPage)<parseInt(maxPage))return location.href.replace(/(\\D+\\/)[^\\/]*$/,'$1')+'H-'+(parseInt(curPage)+1);else return false;"
-  },
-  {
-    "name":"K.F. 绯月列表页",
-    "url":"^https://(bbs\\.9shenmi\\.com|kf\\.miaola\\.work)/thread.php",
-    "pageElement":"//table[@class=\"thread1\"]/tbody/tr[position()>3]",
-    "type":0,
-    "nextLink":"//ul[@class=\"pages\"]/li/a[contains(text(),'下一页')]"
-  },
-  {
-    "name":"K.F. 绯月阅读页",
-    "url":"^https://(bbs\\.9shenmi\\.com|kf\\.miaola\\.work)/read.php",
-    "pageElement":"//form/div[@class=\"readlou\"]|//form/div[@class=\"readtext\"]|//form/div[@class=\"c\"]",
-    "type":0,
-    "nextLink":"//ul[@class=\"pages\"]/li/a[contains(text(),'下一页')]"
-  },
-  {
-    "name": "alternativeto",
-    "url": "^https://alternativeto\\.net/",
-    "action": 1,
-    "pageElement": "div.container>ol>li"
-  },
-  {
-    "name": "hirelateral",
-    "url": "^https://www\\.hirelateral\\.com/",
-    "pageElement": "div.mainwrap > div.contentwrap > div.leftwrap > table.table-bordered > tbody> tr"
-  },
-  {
-    "name": "Agristudyinfo & 20govtjobs",
-    "url": "^(https://agristudyinfo\\.in/|https://20govtjobs\\.com/)",
-    "pageElement": "#main>article",
-    "nextLink": ".page-numbers.current+a"
-  },
-  {
-    "name": "秀色女神",
-    "url": "^https://www\\.xsnvshen\\.co",
-    "pageElement": ".container> div.longConWhite> div.workContentWrapper > div.workShow > ul > li > img#bigImg",
-    "nextLink": "span#next"
-  },
-  {
-    "name": "Anime Time",
-    "url": "^https://www\\.animetime\\.pw",
-    "pageElement": "div.blog-posts.container > div.grid-posts",
-    "nextLink": "a.page-num.page-next",
-    "waitElement": [
-        "",
-        "img.post-thumb:not(.lazy-yard)"
-    ]
-  },
-  {
-    "name": "YTS Movies",
-    "type": 0,
-    "url": "^https://yts\\.mx/browse-movies",
-    "pageElement": "//section/div[@class=\"row\"]/div",
-    "nextLink": "//li[./a[@class=\"current\"]]/following-sibling::li[1]/a",
-    "css": "img{visibility: visible!important; display: block!important;}",
-    "lazyImgSrc":"data-cfsrc"
-  },
-  {
-    "name": "Mobilism",
-    "type": 0,
-    "url": "^https://forum\\.mobilism\\.org/",
-    "pageElement": "id('page-body')//section|id('page-body')/main/table[last()]/tbody/tr|//div[@class='row-fluid blue-bar']",
-    "nextLink": "//a[i/@class='icon-chevron-right']",
-    "css": "table.phone .stats-color,table.phone .last-color,table.phone td.center { display: none; }"
-  },
-  {
-    "name":"不死鸟",
-    "url":"^https://iao\\.su/",
-    "pageElement":"#index>article",
-    "action":1
-  },
-  {
-    "name": "3DM搜索",
-    "url": "^https://so\\.3dmgame\\.com",
-    "pageElement": "body > div.content > div.search_wrap > div.search_lis",
-    "action": 1
-  },
-  {
-    "name":"deviantArt",
-    "url":"^https://www\\.deviantart\\.com/search",
-    "pageElement":"div[data-hook='all_content']>div>div>div:not([class])"
-  },
-  {
-    "name":"豆瓣小组内页",
-    "url":"^https://www\\.douban\\.com/group/topic/",
-    "pageElement":"ul#comments>li",
-    "pageNum":"start={100*($p-1)}"
-  },
-  {
-    "name": "Github issues and pulls",
-    "type": 0,
-    "action": 0,
-    "url": "^https:\\/\\/github\\.com\\/[^/]+\\/[^/]+\\/(?:issues|pulls)",
-    "pageElement": "//div[starts-with(@id,'issue_')]",
-    "nextLink": "//a[@class='next_page']",
-    "pinUrl": true
-  },
-  {
-    "name":"360搜索",
-    "url":"^https://www\\.so\\.com/s",
-    "lazyImgSrc":"data-isrc",
-    "css":".so-lazyimg{opacity:1!important}.so-rich-news .pics li{float:left;margin-right:17px;}",
-    "pageNum":"pn={$p}"
-  },
-  {
-    "name": "Mixfemdomcc",
-    "url": "^https://mixfemdomcc\\.com",
-    "css": ".gray-block a.highslide_new > img{transform:unset}"
-  },
-  {
-    "name": "Handpicked Jerk-Off Instruction (JOI) Videos",
-    "url": "^https://joi-me\\.com",
-    "action": "1"
-  },
-  {
-    "name": "Konachan.com Anime Wallpapers",
-    "url": "^https://konachan\\.com/post",
-    "nextLink": "id(\"post-view\")/div[@class=\"sidebar\"]/div[5]/ul/li[2]/a",
-    "pageElement": "id(\"image\")"
-  },
-  {
-    "name": "Femdom",
-    "url": "^https://femdomup\\.net",
-    "pageElement": ".cat-shortstory>article",
-    "pageAction": "eles.forEach(ele=>{let video=ele.querySelector('video');video.onmouseenter=e=>{video.src=video.dataset.src;video.classList.add('prev-video')};video.onmouseleave=e=>{video.src='/templates/videok2s/dleimages/plug.webm';video.classList.remove('prev-video')}})"
-  },
-  {
-    "name": "Amedia",
-    "url": "^https://amedia\\.online",
-    "pageElement": "#dle-content",
-    "css": "img[data-src] { opacity: 1; }"
-  },
-  {
-    "name": "XFantazy",
-    "url": "^https://xfantazy\\.com",
-    "pageElement": ".MuiGrid-container",
-    "action": 2,
-    "fitWidth": false
-  },
-  {
-    "name": "PornAV",
-    "url": "^https://pornav\\.co",
-    "pageElement": "div#grid-container",
-    "css": ".cbp-lightbox{visibility: visible;}.cbp-caption-defaultWrap{-webkit-transition: -webkit-transform .6s cubic-bezier(.19,1,.22,1); transition: transform .6s cubic-bezier(.19,1,.22,1)}.cbp-caption:hover .cbp-caption-defaultWrap{-webkit-transform: scale(1.25); -moz-transform: scale(1.25); transform: scale(1.25);}.cbp-caption-activeWrap{opacity:0}.cbp-caption-activeWrap:hover{opacity:1}#grid-container.cbp-l-grid-blog{visibility: visible;}"
-  },
-  {
-    "name":"草榴社區",
-    "type":0,
-    "url":"htm_data/\\d+/\\d+/\\d+\\.html",
-    "pageElement":"//div[@class='t t2']",
-    "sleep":2000,
-    "nextLink":"//div[@class='pages']/a[u]/following-sibling::a[1]"
-  },
-  {
-    "name":"phpwind read",
-    "url":"/read\\.php\\?",
-    "pageElement":".main-box>.bbs-read-subbox"
-  },
-  {
-    "name":"phpwind old read",
-    "url":"/read\\.php\\?",
-    "pageElement":"form[name='delatc']>a[name]",
-    "nextLink":"td>b+a",
-    "insert":"form[name='delatc']>a:last-child>table:nth-child(2)",
-    "insertPos":1
-  },
-  {
-    "name":"phpwind old list",
-    "url":"/thread\\.php\\?",
-    "pageElement":"tr.t_two",
-    "nextLink":"td>b+a"
-  },
-  {
-    "name":"虎扑",
-    "url":"^https?://bbs\\.hupu\\.com/\\d+",
-    "pageElement":".bbs-post-wrapper-content",
-    "nextLink":"li.hupu-rc-pagination-next>a:not([disabled])"
-  },
-  {
-    "name": "小木虫论坛",
-    "url": "^http://muchong\\.com",
-    "pageElement": "div#maincontent"
-  },
-  {
-    "name":"极简",
-    "url":"^https://bz\\.zzzmh\\.cn/",
-    "pageElement":"div.img-box",
-    "nextLink":"div.vue_pagination_next",
-    "wait":"let preload=doc.querySelector('.v-image__image--preload');if(preload){var actualTop=preload.offsetTop;var current=preload.offsetParent;while(current!==null){actualTop+=current.offsetTop;current=current.offsetParent;}doc.documentElement.scrollTop=actualTop;return false;}return doc.querySelector('div.vue_pagination_next');",
-    "init":"if(iframe){iframe.style.position='fixed';iframe.style.top=0;iframe.height=1000;let mask=doc.querySelector('div.mask');setInterval(()=>{if(mask.style.display!='none'){iframe.style.visibility='';}else{iframe.style.visibility='hidden'}},1000)}",
-    "enable":0
-  },
-  {
-    "name":"东方财富",
-    "url":"^http://quote\\.eastmoney\\.com/",
-    "pinUrl":"true",
-    "nextLink":"a.next:not(.disabled)",
-    "pageElement":"#table_wrapper-table>tbody>tr"
-  },
-  {
-    "name":"mikuclub",
-    "url":"^https://www\\.mikuclub\\.cc/",
-    "loadMore":"button.get-next-page",
-    "nextLink":"0"
-  },
-  {
-    "name":"smzdm jingxuan",
-    "action":0,
-    "url":"^https://.*\\.smzdm\\.com/jingxuan",
-    "pageElement":"ul#feed-main-list>li",
-    "nextLinkByUrl":["(.*jingxuan)(/p)?(\\d*)","$1/p{($3.0||1)+3}"],
-    "insert":"ul#feed-main-list",
-    "insertPos":2,
-    "delay":"let curpage=location.href.match(/\\d+$/);if(curpage)curpage=parseInt(curpage[0])+2;else curpage=3;return document.querySelector('#J_feed_pagenation>li.current').innerText>=curpage&&document.querySelector('#J_feed_loading').style.display=='none'"
-  },
-  {
-    "name":"天涯列表页",
-    "url":"^http://bbs\\.tianya\\.cn/list",
-    "pageElement":"table.tab-bbs-list>tbody:not(tbody:nth-of-type(1))"
-  },
-  {
-    "name":"天涯内容页",
-    "url":"^http://bbs\\.tianya\\.cn/post",
-    "pageElement":".atl-main>.atl-item"
-  },
-  {
-    "name":"Fiction.live",
-    "url":"^https://fiction\\.live/",
-    "pageElement":"#storyPosts>div>article.chapter",
-    "nextLink":".nextChapter",
-    "action":1,
-    "wait":500
-  },
-  {
-    "name":"微博搜索",
-    "url":"^https://s\\.weibo\\.com/weibo",
-    "pageElement":"#pl_feedlist_index>div>div.card-wrap",
-    "action":1,
-    "pageAction":"eles.forEach(e=>{let vc=e.querySelector('a.WB_video_h5');if(vc){let v=vc.querySelector('video');let b=vc.querySelector('button.wbpv-big-play-button');b.onclick=e=>{v.style.zIndex=9;v.controls=true;v.play()}}})"
-  },
-  {
-    "name":"某小说站",
-    "url":"^https://yuyan\\.pw/novel/\\d+/\\d+",
-    "pageElement":"#nr>div",
-    "pageAction":"eles[0].innerHTML='　　'+eval(doc.querySelector('body>script:nth-of-type(8)').innerHTML.match(/var chapter =(.*?);\\n/)[1]);"
-  },
-  {
-    "name":"翠微居",
-    "url":"^https://www\\.cuiwei\\.org/book/\\d+/\\d+\\.html",
-    "action":1,
-    "nextLink":"a.next",
-    "pageElement":"#chapter-content>p"
-  },
-  {
-    "name":"套图吧",
-    "url":"^https://www\\.192tp\\.com/",
-    "pageElement":".picsboxcenter"
-  },
-  {
-    "name":"Wndfx",
-    "url":"^https://www\\.wndfx\\.com/",
-    "pageElement":"article.article-content"
-  },
-  {
-    "name":"蕾丝猫",
-    "url":"^https://www\\.lesmao\\.org/",
-    "pageElement":"#thread-pic>ul>li"
-  },
-  {
-    "name":"昵图网",
-    "url":"^https://www\\.nipic\\.com/",
-    "css":"a.new-works-img-box>span>img{display:initial!important}"
-  },
-  {
-    "name":"inoveltranslation",
-    "url":"^https://inoveltranslation\\.com/",
-    "pageElement":".chakra-skeleton>p",
-    "insert":"#chapterreadtrck",
-    "nextLink":"button[aria-label='next chapter']"
-  },
-  {
-    "name":"lightnovelstranslations",
-    "url":"^https://lightnovelstranslations\\.com/",
-    "nextLink":"p.alignright>a",
-    "pageElement":".entry-content>p"
-  },
-  {
-    "name":"书山有路",
-    "url":"^https?://www\\.ssylu\\.com/",
-    "nextLink":".pagenavi>span.current+a"
-  },
-  {
-    "name":"bjav",
-    "url":"^https://thebjav\\.com/|^https://sexbjcam\\.com/",
-    "css":"img[data-src]{opacity: 1;}"
-  },
-  {
-    "name":"scribblehub",
-    "url":"^https://www\\.scribblehub\\.com/read",
-    "pageElement":"#chp_raw",
-    "nextLink":"a.btn-next"
-  },
-  {
-    "name":"淘宝已买到的宝贝",
-    "url":"^https://buyertrade\\.taobao\\.com/",
-    "pageElement":"table[data-reactid]",
-    "lockScroll":true
-  },
-  {
-    "name":"淘宝店铺1",
-    "url":"^https?://.*\\.taobao\\.com/search\\.htm",
-    "pageElement":".skin-box-bd>.grid>.item3line1",
-    "pagePre":"return decodeURI(response).replace(/[\\\\]/g,'')",
-    "nextLinkByJs":"let n=doc.querySelector('.pagination>a.next');if(!n)return;return n.href.replace(/(.*)\\/search\\.htm\\?(.*)/,'$1/i/asynSearch.htm?$2').replace(/&callback=.*?&/,'&')",
-    "wait":500
-  },
-  {
-    "name":"奔跑的奶酪",
-    "url":"^https://www\\.runningcheese\\.com/",
-    "pageElement":"ul.ajaxposts>li"
-  },
-  {
-    "name":"异星软件",
-    "url":"^https://www\\.yxssp\\.com/",
-    "pageElement":".td-modules-container",
-    "nextLink":"span.current+a"
-  },
-  {
-    "name":"bt1207",
-    "url":"^https://bt1207ao\\.xyz/",
-    "nextLinkByJs":"let n=doc.querySelector('ul.pagination>li.active+li>a');if(!n)return null;let params=[]; let form=doc.querySelector('#search-form'); [].forEach.call(form.querySelectorAll('input'), input=>{ if(input.name=='p')params.push('p='+n.innerText);else params.push(input.name+'='+input.value); }); return form.action+'?'+params.join('&');",
-    "pageElement":"ul.list-unstyled"
-  },
-  {
-    "name":"buondua",
-    "url":"^https://(.*\\.)?buondua\\.com/",
-    "type":0,
-    "pageElement":"//div[@class='article-fulltext']",
-    "nextLink":"//span[.//a[@class='pagination-link is-current']]/following-sibling::span/a"
-  },
-  {
-    "name":"Alibaba",
-    "url":"^https://www\\.alibaba\\.com//?trade/search",
-    "pageElement":".organic-list>*",
-    "nextLink":".seb-pagination__pages>span+a",
-    "action":1,
-    "pageAction":"eles.forEach(ele=>{let img=ele.querySelector('div[data-image]>img');if(!img)return;img.src=img.parentNode.dataset.image})",
-    "wait":"return doc.querySelector('.seb-pagination__pages') && !doc.querySelector('.organic-list>p>i.ui2-icon-loading')"
-  },
-  {
-    "name": "初音社",
-    "url": "^https://www\\.mikuclub\\.online",
-    "pageElement": "#post-list > div.col.card",
-    "lazyImgSrc": "file",
-    "css":"img.sl_lazyimg{opacity:1}",
-    "pageAction": "eles.forEach(ele=>{let img=ele.querySelector('img');img.classList.remove('sl_lazyimg')})"
-  },
-  {
-    "name":"豆瓣电影",
-    "url":"^https://movie\\.douban\\.com",
-    "wheel":true
-  },
-  {
-    "name": "Discuz! mobile postlist1",
-    "url": ".",
-    "pageElement": ".postlist>div[id^=pid]",
-    "nextLink": ".page>#select_a+a:not([class])",
-    "action":1
-  },
-  {
-    "name": "Discuz! mobile postlist2",
-    "url": ".",
-    "pageElement": ".bm>div[id^=post_],.bm>div[id^=post_]+div",
-    "nextLink": "a.nxt",
-    "action":1
-  },
-  {
-    "name":"检测到AC百度就不运行",
-    "url":".",
-    "pageElement":".AC-style-logo",
-    "enable":0
-  }
+    {
+        "name":"google search mobile",
+        "action":0,
+        "url":"^https://(?:www\\.)?google\\..*/search",
+        "pageElement":"id('rso')/div|id('rso')/style",
+        "insert":"//div[@role=\"progressbar\"]/following-sibling::a[@role=\"button\"]|id(\"extrares\")//span[count(a)>0]/span/following-sibling::a",
+        "nextLink":0,
+        "loadMore":"div[role='progressbar']+a[role='button']"
+    },
+    {
+        "name":"Google Search",
+        "nextLink": [
+                "id('pnnext')|id('navbar navcnt nav')//td[span]/following-sibling::td[1]/a|id('nn')/parent::a",
+                "id('pnprev')|id('navbar navcnt nav')//td[span]/following-sibling::td[1]/a|id('nn')/parent::a"
+        ],
+        "pageElement":"id('rso')|id('center_col')/style[contains(.,'relative')][id('rso')]|id('search')/div/div/style[1]",
+        "action":1,
+        "pageNum":"&start={10*($p-1)}",
+        "pageBarTop": 55,
+        "url":"^https?://[^./]+\\.google(?:\\.[^./]{2,3}){1,2}/(?:c(?:se|ustom)|search|webhp|m|#)",
+        "replaceElement": "[role='navigation']>[role='presentation']"
+    },
+    {
+        "name":"Google cse",
+        "nextLink":".gsc-cursor-current-page+div",
+        "pageElement":".gsc-expansionArea>.gsc-result",
+        "url":"^https://cse\\.google\\.com.*&gsc\\.q=",
+        "wait":2000
+    },
+    {
+        "name": "Soccercatch shows",
+        "url": "^https://www\\.soccercatch\\.com.*#shows",
+        "nextLink": ".tabs-page[data-title=shows] .pagination-next",
+        "init": "if(doc)doc.querySelector('[data-title=shows]').click();",
+        "pageElement": ".show-item"
+    },
+    {
+        "name": "16Personalities",
+        "url": "^https://www\\.16personalities\\.com",
+        "enable": 0
+    },
+    {
+        "name": "Linux Tips, Tricks and Tutorials | Linuxize",
+        "url": "^https://linuxize\\.com",
+        "pageElement": ".post-list>.flex-wrap>section",
+        "lazyImgSrc": "data-cfsrc"
+    },
+    {
+        "name": "Vipergirls",
+        "pageElement": "#threads,.posts",
+        "url": "^https://vipergirls\\.to",
+        "nextLink": [
+                "a[rel='next']",
+                "a[rel='prev']"
+        ],
+        "pageNum": "page{$p}$"
+    },
+    {
+        "name": "linuxfromscratch",
+        "url": "^https://www\\.linuxfromscratch\\.org",
+        "pageElement": "body>*",
+        "css": ".sect1{overflow-wrap: break-word;}div.navheader{position: relative;}"
+    },
+    {
+        "name": "xda-developers",
+        "url": "^https://forum\\.xda\\-developers\\.com/t/",
+        "pageElement": ".block-body>article"
+    },
+    {
+        "name": "Pixabay",
+        "url": "^https://pixabay\\.com",
+        "pageAction": "eles.forEach(ele=>{let media=ele.querySelector('div.media');let timer;media.onmouseenter=e=>{timer=setTimeout((function() {var mp4 = media.dataset.mp4, webm = media.dataset.webm ? mp4.rsplit(\".\", 1)[0] + \".webm\": \"\", mp4Source = '<source type=\"video/mp4\" src=\"'.concat(mp4, '\">'), webmSource = webm ?' <source type=\"video/webm\" src=\"'.concat(webm, '\">') : \"\", videoElement = '<video style=\"display:none\" onloadeddata=\"$(this).addClass(\\'playing\\').show();\" autoplay muted loop>'.concat(mp4Source, \"                                 \").concat(webmSource, \"</video>\");media.insertBefore($(videoElement)[0], media.firstChild)}), 300);};media.onmouseleave=e=>{clearTimeout(timer);if(media.firstChild.tagName==='VIDEO')media.removeChild(media.firstChild)};})",
+        "pageElement": ".video-search-results>.row-masonry-cell",
+        "lazyImgSrc": "data-lazy"
+    },
+    {
+        "name":"Bing",
+        "action":1,
+        "url":"^https://.*\\.bing\\.com/",
+        "nextLink":"a[title='Next page'],a.sb_pagN,a.sb_halfnext,a.sb_fullnpl",
+        "pageElement":"ol#b_results>li.b_algo",
+        "wait":"if(doc==document)return true;doc.documentElement.scrollTop=99999;return doc.querySelector('a[title=\\'Next page\\'],a.sb_pagN,a.sb_halfnext,a.sb_fullnpl')"
+    },
+    {
+        "name":"Duckduckgo",
+        "url":"^https://duckduckgo\\.com/\\?",
+        "loadMore":".result--more>a"
+    },
+    {
+        "name":"F 搜",
+        "url":"^https://fsoufsou\\.com/search",
+        "nextLink":".bottom-pagination-bar+.turn-page-btn",
+        "pinUrl":true,
+        "css":"svg{visibility: visible;}"
+    },
+    {
+        "name": "gog",
+        "action": 1,
+        "url": "^https://www\\.gog\\.com/",
+        "pageElement": "paginated-products-grid.ng-star-inserted",
+        "nextLinkByUrl": [
+                "(&page=(\\d+))?$",
+                "&page={$2+1}"
+        ],
+        "pageAction": "[].forEach.call(eles, ele=>{[].forEach.call(ele.querySelectorAll('source[lazyload]'), source=>{source.setAttribute('srcset',source.getAttribute('lazyload'))})})"
+    },
+    {
+        "name":"Pixiv",
+        "url":"^https://www\\.pixiv\\.net/",
+        "action":2,
+        "pageElement":"section>div>ul,div.sc-l7cibp-0.juyBTC>*,div.sc-1eop7y7-0.cJYTWr>*",
+        "nextLink":"a[class*='filterProps-Styled-Component']:last-child",
+        "wait":500,
+        "css":"@media (min-width: 1000px) {@supports (display:grid)    {.krFoBL { grid-template-columns: repeat(6, 184px); }}}"
+    },
+    {
+        "name":"DeviantArt",
+        "url":"^https://www\\.deviantart\\.com",
+        "pageElement":"#sub-folder-gallery>div>div:not([class])>div>div>div>div"
+    },
+    {
+        "name":"Z-Library",
+        "url":"^https?://.*(1lib\\.(to|us|org)|z-lib\\.org|booksc\\.(org|eu)|bookfi\\.net|b\\-ok\\.(asia|africa)|1lib\\.pl|sg1lib\\.org|2lib\\.org|book4you\\.org)/s/",
+        "pageElement":"#searchResultBox"
+    },
+    {
+        "name":"Startpage",
+        "url":"^https://www\\.startpage\\.com/",
+        "pageElement":"section.w-gl>div.w-gl__result",
+        "nextLinkByJs":"let nextBtn=doc.querySelector('button.next'),params=[];if(!nextBtn)return null;let form=nextBtn.parentNode;[].forEach.call(form.querySelectorAll('input'),input=>{params.push(input.name+'='+input.value)});return form.action+'?'+params.join('&')"
+    },
+    {
+        "name": "Search Getty Images",
+        "url": "^https://www\\.gettyimages\\.ie",
+        "nextLink": "button[title='Next page']",
+        "pageElement": "[data-testid=galleryMosaicAsset]"
+    },
+    {
+        "name": "IMHentai",
+        "url": "^https://imhentai\\.xxx",
+        "pageElement": "#gimg",
+        "nextLink": ".nav_next",
+        "css": "#footer,#bar{display:none}.pre_img+.nav_pagination{bottom: 10px; position: fixed; width: 100%;}.return_btn{bottom: 0; position: fixed; width: 100%;}"
+    },
+    {
+        "name": "Moebooru:Danbooru clones",
+        "url": "^https?://(konachan\\.com|yande\\.re|www\\.sakugabooru\\.com)/(post|comment)($|\\?|#|/search\\?)",
+        "pageElement": "//li[contains(@class, 'creator-id-')]|//div[@id='comment-list']/div[@class='post']|//table[@class='highlightable']",
+        "nextLink": "//a[@class='next_page']",
+        "css": ".javascript-hide { display: inline-block !important; }.pagetual_pageBar { display: inline-flex!important;width: 100%!important; }"
+    },
+    {
+        "name": "developer.wordpress",
+        "url": "^https://developer\\.wordpress\\.org/",
+        "pageElement": "#primary>*",
+        "nextLink": "[rel=next]"
+    },
+    {
+        "name":"playstation",
+        "action":1,
+        "css":".psw-visually-hide{opacity:1!important}.pagetual_loading{display:none!important}[name='pagetual-iframe']{display:none}",
+        "url":"^https://store\\.playstation\\.com/.*/\\d+$",
+        "pageElement":"ul.psw-grid-list",
+        "wait":"let img=doc.querySelector('ul.psw-grid-list img');return img!=null",
+        "nextLinkByUrl":["(.*/)(\\d+)$","$1{$2+1}"],
+        "pageAction":"[].forEach.call(eles[0].querySelectorAll('[loading=lazy]'),img=>{img.src=img.src.replace('w=54&thumb=true','w=230&thumb=false');img.classList.remove('psw-blur')});"
+    },
+    {
+        "name":"yande",
+        "action":0,
+        "url":"^https://yande\\.re/",
+        "pageElement":"ul#post-list-posts>li",
+        "nextLink":"a.next_page",
+        "css":".javascript-hide {display: inline-block !important;}"
+    },
+    {
+        "name":"Expreview",
+        "url":"^https://www\\.expreview\\.com/",
+        "loadMore":"span.load"
+    },
+    {
+        "name":"goddessfantasy",
+        "type":0,
+        "url":"^https://www\\.goddessfantasy\\.net/bbs/",
+        "pageElement":"//div[@id='messageindex']|//form[@id='quickModForm']",
+        "nextLink":"//div[@class='pagelinks']/a[text()='»']",
+        "pinUrl":true
+    },
+    {
+        "name":"SkrBT",
+        "url":"^https://skrbt",
+        "pageElement":"ul.list-unstyled",
+        "nextLinkByJs":"let form=doc.querySelector('#search-form'),params=[];if(!form)return null;[].forEach.call(form.querySelectorAll('input'),input=>{params.push(input.name+'='+(input.name=='p'?parseInt(input.value)+1:input.value))});return form.action+'?'+params.join('&')"
+    },
+    {
+        "name":"bbsPostlist1",
+        "url":"/t",
+        "nextLink": [
+                "a.nxt",
+                "a.prev"
+        ],
+        "pageNum":"\\-\\d+\\-{$p}\\-\\d+\\.html",
+        "pageElement":"div#postlist>*"
+    },
+    {
+        "name":"bbsThreadlist1",
+        "url":"/f",
+        "nextLink": [
+                "a.nxt",
+                "a.prev"
+        ],
+        "pageNum":"\\-\\d+\\-{$p}\\.html",
+        "pageElement":"div#threadlist form"
+    },
+    {
+        "name":"Discuz7.2Postlist",
+        "url":"\\?tid",
+        "nextLink":"a.next",
+        "pageNum":"page={$p}",
+        "pageElement":"div#postlist>*"
+    },
+    {
+        "name":"Discuz7.2Threadlist",
+        "url":"\\?fid",
+        "nextLink":"a.next",
+        "pageNum":"page={$p}",
+        "pageElement":"div#threadlist form"
+    },
+    {
+        "name":"chevereto",
+        "url":".",
+        "nextLink":"a[data-pagination='next']",
+        "pageAction":"let w=document.querySelector('.list-item').style.width;let content=eles[0].querySelector('.pad-content-listing');content.style.display='flex';content.style.flexFlow='row wrap';[].forEach.call(eles[0].querySelectorAll('.list-item'),i=>{i.style.display='block';i.style.width=w;i.style.position='sticky';i.querySelector('.list-item-image').style.height=w;})",
+        "pageElement":"div#content-listing-tabs"
+    },
+    {
+        "name": "FC Portables",
+        "url": "^https://www\\.fcportables\\.com",
+        "pageElement": ".listing-blog>article",
+        "pageAction": "eles.forEach(e=>{let a=e.querySelector('.img-holder');if(!a)return;a.style.backgroundImage=`url(\"${a.dataset.src}\")`;a.classList.add('b-loaded')})"
+    },
+    {
+        "name": "1688全部商品页",
+        "url": "^https://.*\\.1688\\.com/page",
+        "pageElement": "#bd_1_container_0 > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(6) > div",
+        "pageAction": "window.setUrl=null;window.index=0;eles.forEach(e=>{let img=e.querySelector('.main-picture[src^=data]');if(!img)return;img.src=img.nextElementSibling.children[0].src;e.onclick=()=>window.open(e.dataset.url,'_blank')})",
+        "pageInit": "if(!window.index)window.index=0;if(!window.setUrl){window.setUrl=()=>{setTimeout(()=>{if(window.url){eles[window.index++].dataset.url=window.url;window.url=null;}if(eles[window.index]){eles[window.index].click();window.setUrl()}},1)};Object.defineProperty(doc.defaultView, 'open', { get: function () { return (s)=>window.url=s; } });window.setUrl();}if(eles.length<=window.index)return true;else return false;"
+    },
+    {
+        "name":"blog1",
+        "url":".",
+        "pageElement":"section.posts-expand>article.post",
+        "nextLink":"li.pagination-active+li>a",
+        "css":"section.posts-expand>article.post{opacity:1}"
+    },
+    {
+        "name":"Baidu",
+        "css":"span.c-img-radius-large.c-img-border,.result-molecule[tpl='app/rs']{pointer-events: none}.result-molecule[tpl='app/rs']>div{pointer-events: all}",
+        "insertPos":1,
+        "nextLink": [
+                "//*[@id=\"page\"]/div/a[contains(text(),'下一页')]",
+                "//*[@id=\"page\"]/div/a[contains(text(),'上一页')]"
+        ],
+        "pageElement":"//*[@id=\"content_style\"]|//*[@id=\"content_left\"]/*",
+        "type":0,
+        "pageNum":"&pn={10*($p-1)}",
+        "url":"^https?://www\\.baidu\\.com/(s|baidu)",
+        "pageBarTop": 75,
+        "init":"let rs=document.querySelector('div.result-molecule[tpl=\\'app/rs\\']');if(!rs)return;(document.querySelector('#con-ceiling-wrapper')||document.querySelector('#content_right')).appendChild(rs);let tp=document.querySelector('.c-font-medium>div');let t;if(tp)t=tp.children[0];[].forEach.call(rs.querySelectorAll('tr>td'),rp=>{if(tp&&t){rp.className=tp.className;rp.children[0].className=t.className}})",
+        "replaceElement": "#page"
+    },
+    {
+        "name":"手机百度",
+        "url":"^https://(m|www|wap)\\.baidu\\.com/",
+        "nextLink":"a.new-nextpage-only,a.new-nextpage",
+        "pageElement":"#results"
+    },
+    {
+        "name":"百度贴吧列表",
+        "action":1,
+        "pageBar":"pageBar.classList.add('j_thread_list');pageBar.dataset.field='{}'",
+        "url":"^https?://tieba\\.baidu\\.com/.+",
+        "pageElement":"ul#thread_list>li",
+        "pageNum":"&pn={50*($p-1)}",
+        "nextLink":".next.pagination-item "
+    },
+    {
+        "name":"百度贴吧看贴",
+        "pageBar":"pageBar.classList.add('l_post')",
+        "nextLink":"//div[@class=\"pb_footer\"]//a[starts-with(text(), '下一页')]",
+        "pageElement":"//div[@class=\"p_postlist\"]/div[starts-with(@class, 'l_post')]",
+        "type":0,
+        "action":1,
+        "pageNum":"&pn={$p}",
+        "url":"^https?://tieba\\.baidu\\.com/p/.+",
+        "wait":"if(doc==document)return true;let lzl=doc.querySelector('div.hideLzl');if(lzl){var actualTop=lzl.offsetTop;var current=lzl.offsetParent;while(current!==null){actualTop+=current.offsetTop;current=current.offsetParent;}doc.body.scrollTop=actualTop;doc.documentElement.scrollTop=actualTop;return false}else{return true}"
+    },
+    {
+        "name":"搜狗wap",
+        "url":"^https?://wap\\.sogou\\.com/web/searchList\\.jsp",
+        "loadMore":"#ajax_next_page",
+        "nextLink":0
+    },
+    {
+        "name": "Camp Firefox Forum",
+        "url": "^https://www\\.camp-firefox\\.de/forum/ungelesene-beitraege/",
+        "pageElement": "#content > div > ol.tabularList",
+        "nextLink": "nav.pagination > ul > li.skip:last-child > a",
+        "updatedAt": "2022-09-10",
+        "author": "benzBrake"
+    },
+    {
+        "name":"秀人网",
+        "url":"^https://www\\.(?:imn5|mntp|jpmnb|jpmn8|mn5|xgmn|jpxgmn|jpxgyw|xiurenji|xiurenb|xrmn|xrmn5)\\.(?:com|net|vip|cc|top)/.*\\.html",
+        "pageElement":"p>img",
+        "author":"bmp4cwa"
+    },
+    {
+        "name":"美女图123",
+        "url":"^https://(www|m)\\.meinvtu123\\.cc/",
+        "pageElement":"div>img",
+        "author":"bmp4cwa"
+    },
+    {
+        "name":"雪球",
+        "url":"^https://xueqiu\\.com/",
+        "pageElement":".status-list>article",
+        "nextLink":"a.pagination__next"
+    },
+    {
+        "name":"中国知网",
+        "url":"^https://kns\\.cnki\\.net/kns8/defaultresult/index",
+        "nextLink":"a#PageNext",
+        "pageElement":".result-table-list tbody>*",
+        "init":"if(doc){let fn1=window.BriefExtend.setFullTextState;window.BriefExtend.setFullTextState=()=>{fn1();win.$('#PageNext').attr('data-curPage',window.$('#PageNext').attr('data-curPage'))}; win.BriefParam._getSearchPaperArgModel=(isSearch, cPage)=>{return window.BriefParam._getSearchPaperArgModel(isSearch, (!!cPage ? cPage : win.BriefParam._getCurPage()))};doc.querySelector('#txt_search').value=document.querySelector('#txt_search').value;doc.querySelector('.search-btn').click()}",
+        "initRun":0,
+        "wait":1000
+    },
+    {
+        "name":"图怪兽",
+        "url":"^https://818ps\\.com/",
+        "pageElement":"#masonry"
+    },
+    {
+        "name":"创客贴",
+        "url":"^https://www\\.chuangkit\\.com/",
+        "type":0,
+        "nextLink":"//div[@class='number']/ul/li[@class='item active']/following-sibling::li/a",
+        "pageElement":"//div[@class='ckt-waterfall-content']",
+        "pageAction":"let infos=doc.querySelector('body>script').innerText.match(/designTemplateId:\\d+,designTemplateImageUrl:\".*?\"/g),infoMap;if(infos){infoMap={};infos.forEach(i=>{let id=i.replace(/designTemplateId:(\\d+).*/,'$1');let src=i.replace(/.*designTemplateImageUrl:\"(.+)\"/,'$1');src=JSON.stringify(src);src=src.replace(/\\\\\\\\/g,'\\\\');src=JSON.parse(src);infoMap[id]=src;})};[].forEach.call(eles[0].querySelectorAll('.temp-sec__bottom>div>a'),a=>{let id=a.href.replace(/.*?(\\d+).*/,'$1');let src=infoMap[id];let img=a.parentNode.parentNode.previousElementSibling.querySelector('img');img.src=src;img.style.opacity=1;})"
+    },
+    {
+        "name":"水木桌面端",
+        "url":"^https://www\\.mysmth\\.net/nForum/#!article/",
+        "nextLink":"a[title='下一页']",
+        "pageElement":"div.b-content"
+    },
+    {
+        "name":"水木移动端",
+        "url":"^https://m\\.mysmth\\.net/article/",
+        "pageElement":"#m_main>ul.list"
+    },
+    {
+        "name":"汽车之家",
+        "url":"^https://club\\.autohome\\.com\\.cn",
+        "pageElement":"#js-reply-list-container",
+        "action":2,
+        "nextLink":".athm-page__next"
+    },
+    {
+        "name":"煎蛋吐槽",
+        "url":"^https?://jandan\\.net/",
+        "nextLink":"a.previous-comment-page",
+        "pageElement":"ol.commentlist>li",
+        "pageAction":"[].forEach.call(eles,e=>{let tucao=e.querySelector('a.tucao-btn');if(tucao)tucao.onclick=e=>{ var n = $(e.currentTarget); var m = n.data('id'); var o = n.closest('li'); var l = o.find('div.jandan-tucao'); if (l.length) { l.slideToggle('fast') } else { tucao_load_content(o, m) } };})"
+    },
+    {
+        "name":"xxgame",
+        "action":0,
+        "url":"^http://www\\.xxgame\\.net/chinese",
+        "pageElement":"div.layui-row>div.layui-col-md4:not(div:nth-child(5),div:nth-child(6),div:nth-child(7))",
+        "nextLinkByUrl":["(http://www\\.xxgame\\.net/chinese/?)(?:\\?page=|$)(\\d*)","$1?page={($2.0||1)+1}"]
+    },
+    {
+        "name":"斗鱼",
+        "url":"^https://www\\.douyu\\.com/directory/",
+        "nextLink":"li.dy-Pagination-next[aria-disabled='false']",
+        "pageElement":"ul.layout-Cover-list",
+        "wait":1000,
+        "enable":0
+    },
+    {
+        "name": "Literotica",
+        "type": 0,
+        "action": 0,
+        "url": "^https://www\\.literotica\\.com/.",
+        "pageElement": "//div[contains(@class,\"panel article\") or @class=\"b-story-list\"]/div",
+        "nextLink": "//a[@title='Next Page' or @class='b-pager-next']",
+        "wait": 3000
+    },
+    {
+        "name":"站酷",
+        "url":"^https://www\\.zcool\\.com\\.cn/search/content",
+        "action":2,
+        "nextLinkByUrl":["(.*/content\\?&?word=[^&]+)(?:&page=|$)(\\d*)","$1&page={($2.0||1)+1}"]
+    },
+    {
+        "name":"masuit",
+        "action":0,
+        "url":"^https://masuit\\.com/",
+        "pageElement":".ibox.wow",
+        "nextLink":"a[aria-label=Next]"
+    },
+    {
+        "name":"佛弟子文库",
+        "url":"^https?://www\\.fodizi\\.net/",
+        "nextLink":"a.current+a",
+        "pageElement":"div.wrap>*:not(.page)"
+    },
+    {
+        "name":"动漫之家",
+        "action":1,
+        "url":"^https?://(www|manhua)\\.(dmzj|178)\\.com/.*/\\d+\\.s?html",
+        "nextLink":"a.btm_chapter_btn.fr",
+        "pageElement":"div.comic_wraCon",
+        "init":"let imgCon=document.querySelector('div.comic_wraCon'),ops=document.querySelectorAll('option');imgCon.innerHTML='';[].forEach.call(ops,op=>{let img=document.createElement('img');img.src=op.value;imgCon.appendChild(img)})",
+        "pageInit":"let imgCon=eles[0],ops=doc.querySelectorAll('option');imgCon.innerHTML='';[].forEach.call(ops,op=>{let img=document.createElement('img');img.src=op.value;imgCon.appendChild(img)})"
+    },
+    {
+        "name":"smzdm",
+        "action":0,
+        "url":"^https://.*\\.smzdm\\.com",
+        "pageElement":"ul#feed-main-list>li",
+        "nextLink":".pagenation-list>li.current+li>a",
+        "insert":"ul#feed-main-list",
+        "insertPos":2
+    },
+    {
+        "name":"mhgui",
+        "action":0,
+        "url":"^https://.*\\.(mhgui|manhuagui)\\.com/comic/\\d+",
+        "pageElementByJs":"let link=document.querySelector('#mangaBox>img').src; let match=link.match(/(.*)(\\d{3})(\\.jpg.*)/); window.i=window.i||parseInt(match[2]);window.i++; let src=match[1]+(window.i>99?window.i:(window.i>9?'0'+window.i:'00'+window.i))+match[3]; let img=document.createElement('img');img.onload=()=>{over([img])};img.onerror=e=>{over()};img.src=src;",
+        "insert":"#mangaBox",
+        "insertPos":2
+    },
+    {
+        "name":"manga1000",
+        "url":"^https://manga1000\\.top/\\d+/\\d+",
+        "pageElement":"div.chapter-content>*",
+        "css":".chapter-content>img{display:unset!important}",
+        "nextLink":"ul.chapter_select a.next"
+    },
+    {
+        "name":"javdb",
+        "action":0,
+        "url":"^https://javdb\\.com/",
+        "pageElement":"#videos.video-container",
+        "css":".grid.columns{display: flex; flex-wrap: wrap;}"
+    },
+    {
+        "name": "JavBus",
+        "url": "^https://www\\.javbus\\.com",
+        "pageBar": 0,
+        "pageElement": "#waterfall>.item,#waterfall_h>.item"
+    },
+    {
+        "name":"喜马拉雅",
+        "url":"^https://www\\.ximalaya\\.com/",
+        "nextLink":".page-next>a",
+        "wait":1000,
+        "action":2,
+        "pageElement":".list-container,.main-content"
+    },
+    {
+        "name":"方正字库",
+        "url":"^https://www\\.foundertype\\.com/",
+        "nextLink":"#page>a.on+a",
+        "pageElement":"#fonPar,#chinese_ft1",
+        "action":1
+    },
+    {
+        "name": "Trakt",
+        "url": "^https://trakt\\.tv",
+        "pageElement": "section#info-wrapper > div.container > div.row > div#overview>*",
+        "action": 1,
+        "waitElement": [
+                ".summary-activity",
+                "#popular-comments.fade:not(.in)"
+        ]
+    },
+    {
+        "name": "北邮人论坛-北邮校园",
+        "url": "^https://bbs\\.byr\\.cn",
+        "listenHashChange": true,
+        "pageElement": "section#main.corner>section#body>.b-content",
+        "action": 1,
+        "pinUrl": true
+    },
+    {
+        "name":"bilibili search",
+        "action":1,
+        "url":"^https://search\\.bilibili\\.com",
+        "pageElement":"ul>li.video-item,div.video-list.row>*",
+        "nextLinkByUrl":["(.*keyword=.*?)(?:&page=|$)(\\d*).*","$1&page={($2.0||1)+1}"],
+        "sandbox":false,
+        "wait":"return doc.querySelector('.bili-video-card__wrap')"
+    },
+    {
+        "name": "bilibili space",
+        "url": "^https://space\\.bilibili\\.com/",
+        "sandbox": false,
+        "pageElement": "ul.cube-list>li,ul.video-list>li",
+        "nextLink": ".be-pager-next,.next-page",
+        "wait": 1000
+    },
+    {
+        "name":"动漫屋1",
+        "action":1,
+        "url":"^https?://www\\.(dm5|1kkk)\\.(com|cn)/(m|ch)",
+        "pageElement":".view-main>.item",
+        "nextLink":"span.current+a,div#chapterpager+a+a",
+        "rate":3
+    },
+    {
+        "name":"动漫屋2",
+        "action":1,
+        "type":0,
+        "url":"^https?://www\\.(dm5|1kkk)\\.(com|cn)/(m|ch)",
+        "pageElement":"//div[@id=\"barChapter\"]/img",
+        "nextLink":"//div[@class=\"view-paging\"]/div/a[contains(text(),'下一')]",
+        "rate":3
+    },
+    {
+        "name":"异次元",
+        "url":"^https://www\\.iplaysoft\\.com/",
+        "pageElement":"#postlist",
+        "nextLink":".pagenavi>a[title='下一页']"
+    },
+    {
+        "name":"魂+",
+        "url":"^https://.*(soul|white|north|south|snow)\\-plus\\.",
+        "action":1,
+        "sleep":1000
+    },
+    {
+        "name":"魂+阅读页",
+        "url":"^https://.*(soul|white|north|south|snow)\\-plus\\.",
+        "action":1,
+        "type":0,
+        "pageElement":"//div[@id='main']/form",
+        "nextLink":"//div[@class='pages']/ul/li[.//b]/following-sibling::li/a",
+        "sleep":1000,
+        "pageNum":"page-{$p}.html"
+    },
+    {
+        "name":"魂+列表页",
+        "url":"^https://.*(soul|white|north|south|snow)\\-plus\\.",
+        "action":1,
+        "type":0,
+        "pageElement":"//tr[@align='center']",
+        "nextLink":"//div[@class='pages']/ul/li[.//b]/following-sibling::li/a",
+        "sleep":1000,
+        "pageNum":"page-{$p}.html"
+    },
+    {
+        "name":"动漫啦",
+        "url":"^https://www\\.dongman\\.la/manhua/chapter/",
+        "pageElement":".chapter-images img",
+        "nextLink":".mdui-bottom-nav>a+a",
+        "init":"let is=document.querySelectorAll('.chapter-images img'),j=document.querySelector('.lazyBox');is.forEach(i=>{i.src=i.dataset.srcset;j.appendChild(i);})",
+        "pageAction":"let j=document.querySelector('.lazyBox');eles.forEach(i=>{i.src=i.dataset.srcset;})",
+        "insert":".lazyBox",
+        "insertPos":2
+    },
+    {
+        "name":"bookmarkearth",
+        "action":0,
+        "url":"^https://www\\.bookmarkearth\\.com(?:/?$|/page\\?currentPage=)",
+        "pageElement":".source>.document-piece",
+        "nextLinkByUrl":["(.*\\.com)(?:/?$|/page\\?currentPage=)(\\d*)","$1/page?currentPage={($2.0||1)+1}"]
+    },
+    {
+        "name": "音范丝",
+        "action": 1,
+        "url": "^https://www\\.yinfans\\.me/",
+        "pageElement": "#post_container",
+        "nextLink": "a.next",
+        "waitElement": [
+            "#post_container[style]"
+        ]
+    },
+    {
+        "name":"bookmarkearth search",
+        "action":0,
+        "url":"^https://www\\.bookmarkearth\\.com/s/search\\?q=",
+        "pageElement":".source>.document-piece",
+        "nextLinkByUrl":["(.*/s/search\\?q=.*&currentPage=)(\\d*)","$1{$2+1}"]
+    },
+    {
+        "name":"深圳人社局通知公告",
+        "action":0,
+        "url":"^http://hrss\\.sz\\.gov\\.cn/tzgg",
+        "pageElement":".newsList>ul",
+        "nextLink":"a.next"
+    },
+    {
+        "name":"什么值得买社区",
+        "action":0,
+        "url":"^https://post\\.smzdm\\.com/p",
+        "pageElement":"#comment",
+        "nextLink":".pagedown>a"
+    },
+    {
+        "name":"51元素",
+        "action":1,
+        "url":"^https://www\\.51yuansu\\.com",
+        "pageElement":".f-content",
+        "nextLink":"a.nextpage"
+    },
+    {
+        "name":"Asian Sister",
+        "url":"^https://asiansister\\.com/",
+        "pageElement":"div.itemBox,div.itemBox_video"
+    },
+    {
+        "name":"小说站1",
+        "type":0,
+        "nextLink":"//a[contains(text(),'下一页')]|//a[contains(text(),'下一頁')]|//a[contains(text(),'下一章')]",
+        "pageElement":"//div[@id='content']|//div[@id='chaptercontent']|//div[@id='BookText']",
+        "url":"\\d+/[\\d_-]+\\.html?$",
+        "pageBarText":1
+    },
+    {
+        "name":"小说站2",
+        "type":0,
+        "nextLink":"//a[contains(text(),'下一页')]|//a[contains(text(),'下一頁')]|//a[contains(text(),'下一章')]",
+        "pageElement":"//div[@class='content']|//div[@class='chaptercontent']",
+        "url":"\\d+/[\\d_-]+\\.html?$",
+        "pageBarText":1
+    },
+    {
+        "name":"晋江文学城",
+        "url":"^http://www\\.jjwxc\\.net",
+        "pageElement":"div.noveltext,#lockpage",
+        "pageBarText":1
+    },
+    {
+        "name":"厚海网",
+        "url":"^http://www\\.houhaiwang\\.com",
+        "pageElement":".col-a1>.row-b7",
+        "pageBarText":1,
+        "nextLink":".col-d3>span>a"
+    },
+    {
+        "name":"17K小说网_免费章节",
+        "url":"^https://www\\.17k\\.com",
+        "pageElement":".area>.read,.area>.comment",
+        "css":".infoPath,.read_tit,.rightSide,.tuijian{display:none}.readAreaBox{width:auto}",
+        "pageBarText":1,
+        "nextLink":".nextChapter"
+    },
+    {
+        "name":"17K小说网_付费章节",
+        "url":"^https://www\\.17k\\.com",
+        "pageElement":".Context>.Article",
+        "pageBarText":1,
+        "action":1,
+        "nextLink":".nextChapter",
+        "wait":"return doc.querySelector('.copy')==null",
+        "include":"div.content"
+    },
+    {
+        "name": "netflav",
+        "url": "^https://netflav\\.com/",
+        "pageElement": ".video_grid_container>.grid_root",
+        "nextLink": "#general-pagination>div>a[aria-current='true']+a",
+        "waitElement": [
+                "a[aria-current='true']+a",
+                "div.lazyload-placeholder,.grid_cover.image:not(.fadeIn)"
+        ]
+    },
+    {
+        "name": "版主小说",
+        "url": "^http://www\\.tz659\\.com/\\d",
+        "pageElement": "div.page-content",
+        "nextLinkByJs": "let next=doc.querySelector('a.curr+a');if(next)return next.href.replace(/^javascript:.*\\('\\d+','\\d+','(\\d+)','(\\d+)'\\);/,'$1_$2.html');",
+        "action": 2
+    },
+    {
+        "name":"纵横中文网手机版",
+        "url":"^https://m\\.zongheng\\.com/h5/chapter",
+        "type":0,
+        "pageElement":"//div[@class='title']|//div[@class='text']",
+        "nextLink":"//div[contains(text(),'下一页')]|//div[contains(text(),'下一章')]",
+        "wait":500,
+        "css":".text>div,#fukerr_bot,#fukerr{display:none!important}",
+        "pageBarText":1
+    },
+    {
+        "name":"Yurifans",
+        "url":"^https://yuri\\.website/[a-z]",
+        "type":0,
+        "action":1,
+        "pageElement":"id('post-list')/ul",
+        "nextLink":"//div[@class='btn-pager']/button[text()='❯']",
+        "wait":"500",
+        "include":"id('post-list')/ul/li"
+    },
+    {
+        "name":"拷貝漫畫",
+        "url":"^https://copymanga\\.org/comic/.*/chapter/",
+        "pageElement":"ul.comicContent-list>li",
+        "nextLink":".comicContent-next>a",
+        "action":1,
+        "insert":"ul.comicContent-list",
+        "insertPos":2,
+        "wait":"if(doc==document)return true;let sy=doc.defaultView.scrollY;let cur=doc.querySelector('.comicIndex').innerText;let max=doc.querySelector('.comicCount').innerText;if(window._cur==cur){doc.defaultView.scroll(0, 0);window._cur='';}else{doc.defaultView.scroll(0, sy+9999999);window._cur=cur;}return cur==max;"
+    },
+    {
+        "name":"Hacker News",
+        "action":0,
+        "url":"^https?://news\\.ycombinator\\.com/",
+        "pageElement":"table.itemlist>tbody>tr",
+        "nextLink":"a.morelink"
+    },
+    {
+        "name":"ekşi sözlük",
+        "action":0,
+        "url":"^https://eksisozluk\\.com",
+        "pageElement":"#entry-item-list",
+        "nextLinkByJs":"let pager=doc.querySelector('.pager');if(!pager || pager.dataset.currentpage==pager.dataset.pagecount)return null;else return location.href.replace(/&p=\\d+/,'')+'&p='+(parseInt(pager.dataset.currentpage)+1)"
+    },
+    {
+        "name":"参考消息手机版",
+        "action":1,
+        "url":"^http://m\\.cankaoxiaoxi\\.com/",
+        "pageElement":"div.content",
+        "nextLink":"li.next>a"
+    },
+    {
+        "name":"58pic",
+        "url":"^https://www\\.58pic\\.com/tupian/",
+        "css":".card-lazy{display:none}.pagetual_pageBar{margin-bottom: 20px!important;}",
+        "pageElement":"div.search-v3-content>.card-grid-box"
+    },
+    {
+        "name":"千库网",
+        "url":"^https://588ku\\.com/",
+        "action":1,
+        "pageElement":".data-box>.data-list"
+    },
+    {
+        "name":"中国大学MOOC课程评论区",
+        "url":"^https://www\\.icourse163\\.org/course/",
+        "action":1,
+        "wait":1000,
+        "type":0,
+        "init":"if(doc)doc.querySelector('#review-tag-button').click()",
+        "nextLink":"//ul[@class='ux-pager']/li/a[text()='下一页']",
+        "pageElement":"//div[@class='ux-mooc-comment-course-comment_comment-list']/div[@class='ux-mooc-comment-course-comment_comment-list_item']"
+    },
+    {
+        "name":"铅笔小说",
+        "nextLinkByJs":"let script=doc.querySelector('body>.mlfy_main>script:nth-of-type(2)');if(!script)return null;return location.origin+script.innerText.match(/.*url_next:'([^']+)'.*/i)[1]",
+        "pageElement":"#mlfy_main_text",
+        "url":"^https://www\\.23qb\\.(net|com)/book/"
+    },
+    {
+        "name":"NGA",
+        "url":"^https?://(.*\\.nga\\.cn|nga\\.178\\.com|ngabbs\\.com)/read\\.php",
+        "nextLink":"a[title='下一页']",
+        "action":2,
+        "pageElement":"div#m_posts",
+        "init":"doc&&doc.addEventListener('mouseover',e=>{e.preventDefault();e.stopPropagation()},true)"
+    },
+    {
+        "name": "NGA列表页",
+        "url": "^https?://(.*\\.nga\\.cn|nga\\.178\\.com|ngabbs\\.com)/thread\\.php",
+        "action": 1,
+        "pageElement": "#topicrows"
+    },
+    {
+        "name":"淮安新闻网",
+        "url":"^http://www\\.hynews\\.net/",
+        "loadMore":"#_more"
+    },
+    {
+        "name":"淘股吧内贴",
+        "url":"^https://www\\.taoguba\\.com\\.cn/Article/\\d+/\\d+",
+        "pageElement":"#new_wrap_container",
+        "nextLinkByJs":"let pageSpan=doc.querySelector('.t_page>.left>span:last-child');if(!pageSpan)return false;let maxPage=pageSpan.innerText.replace(/.*\\/(\\d+).*/,'$1'),curPage=pageSpan.querySelector('b').innerText.trim();if(parseInt(curPage)<parseInt(maxPage))return location.href.replace(/(.*?)\\d+$/,'$1')+(parseInt(curPage)+1);else return false;"
+    },
+    {
+        "name":"淘股吧列表页1",
+        "url":"^https://www\\.taoguba\\.com\\.cn/(bbs|zongban|ttcl)",
+        "pageElement":".kuaixun,.Notspmatch,.p_list,#contents",
+        "nextLinkByJs":"let pageSpan=doc.querySelector('.t_page>.left>span:last-child');if(!pageSpan)return false;let maxPage=pageSpan.innerText.replace(/.*\\/(\\d+).*/,'$1'),curPage=pageSpan.querySelector('b').innerText.trim();if(parseInt(curPage)<parseInt(maxPage))return location.href.replace(/(\\D+)\\d*(.*)$/,'$1')+(parseInt(curPage)+1)+'/0';else return false;"
+    },
+    {
+        "name":"淘股吧列表页2",
+        "url":"^https://www\\.taoguba\\.com\\.cn/(jinghua|dianzan)",
+        "pageElement":".kuaixun,.Notspmatch,.p_list,#contents",
+        "nextLinkByJs":"let pageSpan=doc.querySelector('.t_page>.left>span:last-child');if(!pageSpan)return false;let maxPage=pageSpan.innerText.replace(/.*\\/(\\d+).*/,'$1'),curPage=pageSpan.querySelector('b').innerText.trim();if(parseInt(curPage)<parseInt(maxPage))return location.href.replace(/(\\D+)\\d*(.*)$/,'$1')+(parseInt(curPage)+1)+'-0';else return false;"
+    },
+    {
+        "name":"淘股吧生活吧",
+        "url":"^https://www\\.taoguba\\.com\\.cn/shenghuoba/",
+        "pageElement":".lifeContent-topicList-item",
+        "nextLinkByJs":"let pageSpan=doc.querySelector('#N_go_pageBtn');if(!pageSpan)return false;let maxPage=pageSpan.dataset.total,curPage=pageSpan.dataset.now;if(parseInt(curPage)<parseInt(maxPage))return location.href.replace(/(\\D+\\/)[^\\/]*$/,'$1')+'H-'+(parseInt(curPage)+1);else return false;"
+    },
+    {
+        "name":"K.F. 绯月列表页",
+        "url":"^https://(bbs\\.9shenmi\\.com|kf\\.miaola\\.work)/thread.php",
+        "pageElement":"//table[@class=\"thread1\"]/tbody/tr[position()>3]",
+        "type":0,
+        "nextLink":"//ul[@class=\"pages\"]/li/a[contains(text(),'下一页')]"
+    },
+    {
+        "name":"K.F. 绯月阅读页",
+        "url":"^https://(bbs\\.9shenmi\\.com|kf\\.miaola\\.work)/read.php",
+        "pageElement":"//form/div[@class=\"readlou\"]|//form/div[@class=\"readtext\"]|//form/div[@class=\"c\"]",
+        "type":0,
+        "nextLink":"//ul[@class=\"pages\"]/li/a[contains(text(),'下一页')]"
+    },
+    {
+        "name": "alternativeto",
+        "url": "^https://alternativeto\\.net/",
+        "action": 1,
+        "pageElement": "div.container>ol>li"
+    },
+    {
+        "name": "hirelateral",
+        "url": "^https://www\\.hirelateral\\.com/",
+        "pageElement": "div.mainwrap > div.contentwrap > div.leftwrap > table.table-bordered > tbody> tr"
+    },
+    {
+        "name": "Agristudyinfo & 20govtjobs",
+        "url": "^(https://agristudyinfo\\.in/|https://20govtjobs\\.com/)",
+        "pageElement": "#main>article",
+        "nextLink": ".page-numbers.current+a"
+    },
+    {
+        "name": "秀色女神",
+        "url": "^https://www\\.xsnvshen\\.co",
+        "pageElement": ".container> div.longConWhite> div.workContentWrapper > div.workShow > ul > li > img#bigImg",
+        "nextLink": "span#next"
+    },
+    {
+        "name": "Anime Time",
+        "url": "^https://www\\.animetime\\.pw",
+        "pageElement": "div.blog-posts.container > div.grid-posts",
+        "nextLink": "a.page-num.page-next",
+        "waitElement": [
+                "",
+                "img.post-thumb:not(.lazy-yard)"
+        ]
+    },
+    {
+        "name": "YTS Movies",
+        "type": 0,
+        "url": "^https://yts\\.mx/browse-movies",
+        "pageElement": "//section/div[@class=\"row\"]/div",
+        "nextLink": "//li[./a[@class=\"current\"]]/following-sibling::li[1]/a",
+        "css": "img{visibility: visible!important; display: block!important;}",
+        "lazyImgSrc":"data-cfsrc"
+    },
+    {
+        "name": "Mobilism",
+        "type": 0,
+        "url": "^https://forum\\.mobilism\\.org/",
+        "pageElement": "id('page-body')//section|id('page-body')/main/table[last()]/tbody/tr|//div[@class='row-fluid blue-bar']",
+        "nextLink": "//a[i/@class='icon-chevron-right']",
+        "css": "table.phone .stats-color,table.phone .last-color,table.phone td.center { display: none; }"
+    },
+    {
+        "name":"不死鸟",
+        "url":"^https://iao\\.su/",
+        "pageElement":"#index>article",
+        "action":1
+    },
+    {
+        "name": "3DM搜索",
+        "url": "^https://so\\.3dmgame\\.com",
+        "pageElement": "body > div.content > div.search_wrap > div.search_lis",
+        "action": 1
+    },
+    {
+        "name":"deviantArt",
+        "url":"^https://www\\.deviantart\\.com/search",
+        "pageElement":"div[data-hook='all_content']>div>div>div:not([class])"
+    },
+    {
+        "name":"豆瓣小组内页",
+        "url":"^https://www\\.douban\\.com/group/topic/",
+        "pageElement":"ul#comments>li",
+        "pageNum":"start={100*($p-1)}"
+    },
+    {
+        "name": "Github issues and pulls",
+        "type": 0,
+        "action": 0,
+        "url": "^https:\\/\\/github\\.com\\/[^/]+\\/[^/]+\\/(?:issues|pulls)",
+        "pageElement": "//div[starts-with(@id,'issue_')]",
+        "nextLink": "//a[@class='next_page']",
+        "pinUrl": true
+    },
+    {
+        "name":"360搜索",
+        "url":"^https://www\\.so\\.com/s",
+        "lazyImgSrc":"data-isrc",
+        "css":".so-lazyimg{opacity:1!important}.so-rich-news .pics li{float:left;margin-right:17px;}",
+        "pageNum":"pn={$p}"
+    },
+    {
+        "name": "Mixfemdomcc",
+        "url": "^https://mixfemdomcc\\.com",
+        "css": ".gray-block a.highslide_new > img{transform:unset}"
+    },
+    {
+        "name": "Handpicked Jerk-Off Instruction (JOI) Videos",
+        "url": "^https://joi-me\\.com",
+        "action": "1"
+    },
+    {
+        "name": "Konachan.com Anime Wallpapers",
+        "url": "^https://konachan\\.com/post",
+        "nextLink": "id(\"post-view\")/div[@class=\"sidebar\"]/div[5]/ul/li[2]/a",
+        "pageElement": "id(\"image\")"
+    },
+    {
+        "name": "Femdom",
+        "url": "^https://femdomup\\.net",
+        "pageElement": ".cat-shortstory>article",
+        "pageAction": "eles.forEach(ele=>{let video=ele.querySelector('video');video.onmouseenter=e=>{video.src=video.dataset.src;video.classList.add('prev-video')};video.onmouseleave=e=>{video.src='/templates/videok2s/dleimages/plug.webm';video.classList.remove('prev-video')}})"
+    },
+    {
+        "name": "Amedia",
+        "url": "^https://amedia\\.online",
+        "pageElement": "#dle-content",
+        "css": "img[data-src] { opacity: 1; }"
+    },
+    {
+        "name": "XFantazy",
+        "url": "^https://xfantazy\\.com",
+        "pageElement": ".MuiGrid-container",
+        "action": 2,
+        "fitWidth": false
+    },
+    {
+        "name": "PornAV",
+        "url": "^https://pornav\\.co",
+        "pageElement": "div#grid-container",
+        "css": ".cbp-lightbox{visibility: visible;}.cbp-caption-defaultWrap{-webkit-transition: -webkit-transform .6s cubic-bezier(.19,1,.22,1); transition: transform .6s cubic-bezier(.19,1,.22,1)}.cbp-caption:hover .cbp-caption-defaultWrap{-webkit-transform: scale(1.25); -moz-transform: scale(1.25); transform: scale(1.25);}.cbp-caption-activeWrap{opacity:0}.cbp-caption-activeWrap:hover{opacity:1}#grid-container.cbp-l-grid-blog{visibility: visible;}"
+    },
+    {
+        "name":"草榴社區",
+        "type":0,
+        "url":"htm_data/\\d+/\\d+/\\d+\\.html",
+        "pageElement":"//div[@class='t t2']",
+        "sleep":2000,
+        "nextLink":"//div[@class='pages']/a[u]/following-sibling::a[1]"
+    },
+    {
+        "name":"phpwind read",
+        "url":"/read\\.php\\?",
+        "pageElement":".main-box>.bbs-read-subbox"
+    },
+    {
+        "name":"phpwind old read",
+        "url":"/read\\.php\\?",
+        "pageElement":"form[name='delatc']>a[name]",
+        "nextLink":"td>b+a",
+        "insert":"form[name='delatc']>a:last-child>table:nth-child(2)",
+        "insertPos":1
+    },
+    {
+        "name":"phpwind old list",
+        "url":"/thread\\.php\\?",
+        "pageElement":"tr.t_two",
+        "nextLink":"td>b+a"
+    },
+    {
+        "name":"虎扑",
+        "url":"^https?://bbs\\.hupu\\.com/\\d+",
+        "pageElement":".bbs-post-wrapper-content",
+        "nextLink":"li.hupu-rc-pagination-next>a:not([disabled])"
+    },
+    {
+        "name": "小木虫论坛",
+        "url": "^http://muchong\\.com",
+        "pageElement": "div#maincontent"
+    },
+    {
+        "name":"极简",
+        "url":"^https://bz\\.zzzmh\\.cn/",
+        "pageElement":"div.img-box",
+        "nextLink":"div.vue_pagination_next",
+        "wait":"let preload=doc.querySelector('.v-image__image--preload');if(preload){var actualTop=preload.offsetTop;var current=preload.offsetParent;while(current!==null){actualTop+=current.offsetTop;current=current.offsetParent;}doc.documentElement.scrollTop=actualTop;return false;}return doc.querySelector('div.vue_pagination_next');",
+        "init":"if(iframe){iframe.style.position='fixed';iframe.style.top=0;iframe.height=1000;let mask=doc.querySelector('div.mask');setInterval(()=>{if(mask.style.display!='none'){iframe.style.visibility='';}else{iframe.style.visibility='hidden'}},1000)}",
+        "enable":0
+    },
+    {
+        "name":"东方财富",
+        "url":"^http://quote\\.eastmoney\\.com/",
+        "pinUrl":"true",
+        "nextLink":"a.next:not(.disabled)",
+        "pageElement":"#table_wrapper-table>tbody>tr"
+    },
+    {
+        "name":"mikuclub",
+        "url":"^https://www\\.mikuclub\\.cc/",
+        "loadMore":"button.get-next-page",
+        "nextLink":"0"
+    },
+    {
+        "name":"smzdm jingxuan",
+        "action":0,
+        "url":"^https://.*\\.smzdm\\.com/jingxuan",
+        "pageElement":"ul#feed-main-list>li",
+        "nextLinkByUrl":["(.*jingxuan)(/p)?(\\d*)","$1/p{($3.0||1)+3}"],
+        "insert":"ul#feed-main-list",
+        "insertPos":2,
+        "delay":"let curpage=location.href.match(/\\d+$/);if(curpage)curpage=parseInt(curpage[0])+2;else curpage=3;return document.querySelector('#J_feed_pagenation>li.current').innerText>=curpage&&document.querySelector('#J_feed_loading').style.display=='none'"
+    },
+    {
+        "name":"天涯列表页",
+        "url":"^http://bbs\\.tianya\\.cn/list",
+        "pageElement":"table.tab-bbs-list>tbody:not(tbody:nth-of-type(1))"
+    },
+    {
+        "name":"天涯内容页",
+        "url":"^http://bbs\\.tianya\\.cn/post",
+        "pageElement":".atl-main>.atl-item"
+    },
+    {
+        "name":"Fiction.live",
+        "url":"^https://fiction\\.live/",
+        "pageElement":"#storyPosts>div>article.chapter",
+        "nextLink":".nextChapter",
+        "action":1,
+        "wait":500
+    },
+    {
+        "name":"微博搜索",
+        "url":"^https://s\\.weibo\\.com/weibo",
+        "pageElement":"#pl_feedlist_index>div>div.card-wrap",
+        "action":1,
+        "pageAction":"eles.forEach(e=>{let vc=e.querySelector('a.WB_video_h5');if(vc){let v=vc.querySelector('video');let b=vc.querySelector('button.wbpv-big-play-button');b.onclick=e=>{v.style.zIndex=9;v.controls=true;v.play()}}})"
+    },
+    {
+        "name":"某小说站",
+        "url":"^https://yuyan\\.pw/novel/\\d+/\\d+",
+        "pageElement":"#nr>div",
+        "pageAction":"eles[0].innerHTML='　　'+eval(doc.querySelector('body>script:nth-of-type(8)').innerHTML.match(/var chapter =(.*?);\\n/)[1]);"
+    },
+    {
+        "name":"翠微居",
+        "url":"^https://www\\.cuiwei\\.org/book/\\d+/\\d+\\.html",
+        "action":1,
+        "nextLink":"a.next",
+        "pageElement":"#chapter-content>p"
+    },
+    {
+        "name":"套图吧",
+        "url":"^https://www\\.192tp\\.com/",
+        "pageElement":".picsboxcenter"
+    },
+    {
+        "name":"Wndfx",
+        "url":"^https://www\\.wndfx\\.com/",
+        "pageElement":"article.article-content"
+    },
+    {
+        "name":"蕾丝猫",
+        "url":"^https://www\\.lesmao\\.org/",
+        "pageElement":"#thread-pic>ul>li"
+    },
+    {
+        "name":"昵图网",
+        "url":"^https://www\\.nipic\\.com/",
+        "css":"a.new-works-img-box>span>img{display:initial!important}"
+    },
+    {
+        "name":"inoveltranslation",
+        "url":"^https://inoveltranslation\\.com/",
+        "pageElement":".chakra-skeleton>p",
+        "insert":"#chapterreadtrck",
+        "nextLink":"button[aria-label='next chapter']"
+    },
+    {
+        "name":"lightnovelstranslations",
+        "url":"^https://lightnovelstranslations\\.com/",
+        "nextLink":"p.alignright>a",
+        "pageElement":".entry-content>p"
+    },
+    {
+        "name":"书山有路",
+        "url":"^https?://www\\.ssylu\\.com/",
+        "nextLink":".pagenavi>span.current+a"
+    },
+    {
+        "name":"bjav",
+        "url":"^https://thebjav\\.com/|^https://sexbjcam\\.com/",
+        "css":"img[data-src]{opacity: 1;}"
+    },
+    {
+        "name":"scribblehub",
+        "url":"^https://www\\.scribblehub\\.com/read",
+        "pageElement":"#chp_raw",
+        "nextLink":"a.btn-next"
+    },
+    {
+        "name":"淘宝已买到的宝贝",
+        "url":"^https://buyertrade\\.taobao\\.com/",
+        "pageElement":"table[data-reactid]",
+        "lockScroll":true
+    },
+    {
+        "name":"淘宝店铺1",
+        "url":"^https?://.*\\.taobao\\.com/search\\.htm",
+        "pageElement":".skin-box-bd>.grid>.item3line1",
+        "pagePre":"return decodeURI(response).replace(/[\\\\]/g,'')",
+        "nextLinkByJs":"let n=doc.querySelector('.pagination>a.next');if(!n)return;return n.href.replace(/(.*)\\/search\\.htm\\?(.*)/,'$1/i/asynSearch.htm?$2').replace(/&callback=.*?&/,'&')",
+        "wait":500
+    },
+    {
+        "name":"奔跑的奶酪",
+        "url":"^https://www\\.runningcheese\\.com/",
+        "pageElement":"ul.ajaxposts>li"
+    },
+    {
+        "name":"异星软件",
+        "url":"^https://www\\.yxssp\\.com/",
+        "pageElement":".td-modules-container",
+        "nextLink":"span.current+a"
+    },
+    {
+        "name":"bt1207",
+        "url":"^https://bt1207ao\\.xyz/",
+        "nextLinkByJs":"let n=doc.querySelector('ul.pagination>li.active+li>a');if(!n)return null;let params=[]; let form=doc.querySelector('#search-form'); [].forEach.call(form.querySelectorAll('input'), input=>{ if(input.name=='p')params.push('p='+n.innerText);else params.push(input.name+'='+input.value); }); return form.action+'?'+params.join('&');",
+        "pageElement":"ul.list-unstyled"
+    },
+    {
+        "name":"buondua",
+        "url":"^https://(.*\\.)?buondua\\.com/",
+        "type":0,
+        "pageElement":"//div[@class='article-fulltext']",
+        "nextLink":"//span[.//a[@class='pagination-link is-current']]/following-sibling::span/a"
+    },
+    {
+        "name":"Alibaba",
+        "url":"^https://www\\.alibaba\\.com//?trade/search",
+        "pageElement":".organic-list>*",
+        "nextLink":".seb-pagination__pages>span+a",
+        "action":1,
+        "pageAction":"eles.forEach(ele=>{let img=ele.querySelector('div[data-image]>img');if(!img)return;img.src=img.parentNode.dataset.image})",
+        "wait":"return doc.querySelector('.seb-pagination__pages') && !doc.querySelector('.organic-list>p>i.ui2-icon-loading')"
+    },
+    {
+        "name": "初音社",
+        "url": "^https://www\\.mikuclub\\.online",
+        "pageElement": "#post-list > div.col.card",
+        "lazyImgSrc": "file",
+        "css":"img.sl_lazyimg{opacity:1}",
+        "pageAction": "eles.forEach(ele=>{let img=ele.querySelector('img');img.classList.remove('sl_lazyimg')})"
+    },
+    {
+        "name":"豆瓣电影",
+        "url":"^https://movie\\.douban\\.com",
+        "wheel":true
+    },
+    {
+        "name": "Discuz! mobile postlist1",
+        "url": ".",
+        "pageElement": ".postlist>div[id^=pid]",
+        "nextLink": ".page>#select_a+a:not([class])",
+        "action":1
+    },
+    {
+        "name": "Discuz! mobile postlist2",
+        "url": ".",
+        "pageElement": ".bm>div[id^=post_],.bm>div[id^=post_]+div",
+        "nextLink": "a.nxt",
+        "action":1
+    },
+    {
+        "name":"检测到AC百度就不运行",
+        "url":".",
+        "pageElement":".AC-style-logo",
+        "enable":0
+    }
 ]
