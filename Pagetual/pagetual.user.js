@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.31.25
+// @version      1.9.31.26
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -785,39 +785,43 @@
 
     class RuleParser {
         constructor() {
-            this.hpRules=[];
-            this.customRules=[];
-            this.rules=[];
-            this.pageDoc=document;
-            this.nextLinkHref=null;
-            this.nextTitle="";
-            this.oldUrl="";
-            this.curUrl=location.href;
-            this.curSiteRule={};
+            this.hpRules = [];
+            this.smartRules = [];
+            this.customRules = [];
+            this.rules = [];
+            this.pageDoc = document;
+            this.nextLinkHref = null;
+            this.nextTitle = "";
+            this.oldUrl = "";
+            this.curUrl = location.href;
+            this.curSiteRule = {};
         }
 
-        initSavedRules(callback){
-            var self=this;
-            storage.getItem("hpRules", hpRules=>{
-                if(hpRules)self.hpRules=hpRules;
-                storage.getItem("customRules", customRules=>{
-                    if(customRules)self.customRules=customRules;
-                    storage.getItem("rules", rules=>{
-                        if(rules)self.rules=rules;
-                        callback();
+        initSavedRules(callback) {
+            var self = this;
+            storage.getItem("smartRules", smartRules => {
+                if (smartRules) self.smartRules = smartRules;
+                storage.getItem("hpRules", hpRules => {
+                    if (hpRules) self.hpRules = hpRules;
+                    storage.getItem("customRules", customRules => {
+                        if (customRules) self.customRules = customRules;
+                        storage.getItem("rules", rules => {
+                            if (rules) self.rules = rules;
+                            callback();
+                        });
                     });
                 });
             });
         }
 
         saveCurSiteRule(){
-            if(!this.curSiteRule || !this.curSiteRule.url || this.curSiteRule.singleUrl || this.curSiteRule.url.length<13)return;
+            /*if(!this.curSiteRule || !this.curSiteRule.url || this.curSiteRule.singleUrl || this.curSiteRule.url.length<13)return;
             this.hpRules=this.hpRules.filter(item=>{return item&&item.url!=this.curSiteRule.url});
             this.hpRules.unshift(this.curSiteRule);
             if(this.hpRules.length>30){
                 this.hpRules.pop();
             }
-            storage.setItem("hpRules", this.hpRules);
+            storage.setItem("hpRules", this.hpRules);*/
         }
 
         requestJSON(url, callback){
@@ -1044,24 +1048,31 @@
                 return false;
             }
 
-            for(let i in this.hpRules){
-                let rule=this.hpRules[i];
-                if(!rule || !rule.url)continue;
-                if(rule.singleUrl){
-                    if(location.origin+location.pathname==rule.url){
+            for (let i in this.hpRules) {
+                let rule = this.hpRules[i];
+                if (!rule || !rule.url) continue;
+                if (rule.singleUrl) {
+                    continue;
+                }
+                if (checkRule(rule)) return;
+            }
+            for (let i in this.customRules) {
+                let rule = this.customRules[i];
+                if (!rule || !rule.url) continue;
+                if (checkRule(rule)) return;
+            }
+            for (let i in this.smartRules) {
+                let rule = this.smartRules[i];
+                if (!rule || !rule.url) continue;
+                if (rule.singleUrl) {
+                    if (location.origin + location.pathname == rule.url) {
                         setRule(rule);
                         return;
                     }
                     continue;
                 }
-                if(checkRule(rule))return;
             }
-            for(let i in this.customRules){
-                let rule=this.customRules[i];
-                if(!rule || !rule.url)continue;
-                if(checkRule(rule))return;
-            }
-            let r=0;
+            let r = 0;
             function searchByTime(){
                 setTimeout(()=>{
                     let end=r+50;
@@ -1942,10 +1953,17 @@
                     return;
                 }
                 //若是再亂匹配就不緩存wedata，或者只在找完本地規則之後再考慮wedata的緩存
-                if(self.curSiteRule && !self.curSiteRule.singleUrl && self.curSiteRule.url.length>13){
-                    self.hpRules=self.hpRules.filter(item=>{return item&&item.url!=self.curSiteRule.url});
+                if (self.curSiteRule.singleUrl) {
+                    self.smartRules = self.smartRules.filter(item => {return item && item.url != self.curSiteRule.url});
+                    self.smartRules.unshift(self.curSiteRule);
+                    if (self.smartRules.length > 100) {
+                        self.smartRules.pop();
+                    }
+                    storage.setItem("smartRules", self.smartRules);
+                } else if (self.curSiteRule && self.curSiteRule.url.length > 13) {
+                    self.hpRules = self.hpRules.filter(item => {return item && item.url != self.curSiteRule.url});
                     self.hpRules.unshift(self.curSiteRule);
-                    if(self.hpRules.length>30){
+                    if (self.hpRules.length > 30) {
                         self.hpRules.pop();
                     }
                     storage.setItem("hpRules", self.hpRules);
@@ -2483,18 +2501,21 @@
             });
             editBtn.addEventListener("click", e => {
                 let editTemp;
-                if(ruleParser.curSiteRule.url && !ruleParser.curSiteRule.singleUrl){
-                    editTemp=ruleParser.curSiteRule;
-                }else{
-                    editTemp={
+                if (ruleParser.curSiteRule.url && !ruleParser.curSiteRule.singleUrl) {
+                    editTemp = ruleParser.curSiteRule;
+                } else {
+                    editTemp = {
                         name: document.title,
-                        url: "^"+location.origin.replace(/\./g,"\\.")
+                        url: "^" + location.origin.replace(/\./g,"\\.")
                     };
                 }
                 if (selectorInput.value) {
                     editTemp.pageElement = selectorInput.value;
                 }
-                rulesData.editTemp=editTemp;
+                delete editTemp.from;
+                delete editTemp.type;
+                delete editTemp.updatedAt;
+                rulesData.editTemp = editTemp;
                 storage.setItem("rulesData", rulesData);
                 _GM_openInTab(configPage, {active: true});
             });
@@ -2714,6 +2735,7 @@
                 document.querySelector("#saveBtn").onclick=e=>{
                     try{
                         storage.setItem("hpRules", []);
+                        storage.setItem("smartRules", []);
                         let customRules=editor.get();
                         if(!customRules){
                             storage.setItem("customRules", "");
@@ -2787,6 +2809,7 @@
                             }
                             storage.setItem("customRules", ruleParser.customRules);
                             storage.setItem("hpRules", []);
+                            storage.setItem("smartRules", []);
                             showTips(i18n("importSucc"));
                         }else{
                             rules=rules.split("\n");
@@ -3264,6 +3287,7 @@
         saveBtn.onclick=e=>{
             try{
                 storage.setItem("hpRules", []);
+                storage.setItem("smartRules", []);
                 if(customRulesInput.value==""){
                     storage.setItem("customRules", "");
                 }else{
@@ -3355,6 +3379,7 @@
         inUpdate=true;
         let ruleIndex=ruleUrls.length-1;
         storage.setItem("hpRules", []);
+        storage.setItem("smartRules", []);
         function addNextRule(){
             if(ruleIndex<0){
                 let now=new Date().getTime();
@@ -3733,10 +3758,10 @@
          .pagetual_pageBar a:hover>span {
            opacity: 1;
          }
-         .pagetual_pageBar a:hover>span.prev {
+         .pagetual_pageBar a:hover>span.prevScreen {
            margin-top: -30px!important;
          }
-         .pagetual_pageBar a:hover>span.next {
+         .pagetual_pageBar a:hover>span.nextScreen {
            margin-top: 30px!important;
          }
          .pagetual_pageBar span>svg {
@@ -4246,12 +4271,12 @@
         let preBtn=document.createElement("span");
         preBtn.innerHTML="∧";
         preBtn.title="Prev page";
-        preBtn.className="prev";
+        preBtn.className="prevScreen";
         preBtn.style.cssText="text-align: center;right: unset; float: left; margin-top: -30px; width: 40px; background: rgba(240, 240, 240, 0.8); position: absolute; border-radius: 20px 20px 0 0; box-shadow: rgb(0 0 0 / 50%) 0px -5px 5px;z-index:9999999";
         let nextBtn=document.createElement("span");
         nextBtn.innerHTML="∨";
         nextBtn.title="Next page";
-        nextBtn.className="next";
+        nextBtn.className="nextScreen";
         nextBtn.style.cssText="text-align: center;right: unset; float: left; margin-top: 30px; width: 40px; background: rgba(240, 240, 240, 0.8); position: absolute; border-radius: 0 0 20px 20px; box-shadow: rgb(0 0 0 / 50%) 0px 5px 5px;z-index:9999999";
         let localPage=curPage;
         preBtn.addEventListener("click", e=>{
