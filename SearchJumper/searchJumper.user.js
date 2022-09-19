@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.34
+// @version      1.6.6.35
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -746,7 +746,8 @@
                     wordRange: '生效范围',
                     customInputFrame: '自定义搜索参数',
                     customSubmit: '提交搜索',
-                    finalSearch: '目标搜索字串'
+                    finalSearch: '目标搜索字串',
+                    search: '搜索此项'
                 };
                 break;
             case "zh-TW":
@@ -806,7 +807,8 @@
                     wordRange: '生效範圍',
                     customInputFrame: '自定義搜索參數',
                     customSubmit: '提交搜索',
-                    finalSearch: '目標搜尋字串'
+                    finalSearch: '目標搜尋字串',
+                    search: '搜索此項'
                 };
                 break;
             default:
@@ -865,7 +867,8 @@
                     wordRange: 'Effective range',
                     customInputFrame: 'Custom search parameters',
                     customSubmit: 'Submit',
-                    finalSearch: 'Target search string'
+                    finalSearch: 'Target search string',
+                    search: 'Search this'
                 };
                 break;
         }
@@ -6492,6 +6495,9 @@
                 searchBar.showInPage();
                 searchBar.showInPageSearch();
             });
+            _GM_registerMenuCommand(i18n('search'), () => {
+                searchBar.showInPage();
+            });
             let logoSvg = logoBtn.children[0];
             let grabState = 0;//0 未按下 1 已按下 2 已拖动
             let hideTimer;
@@ -6743,11 +6749,16 @@
                     }, 500);
                     shown = false;
                     targetElement = e.target;
-                    if ((searchData.prefConfig.altKey && !e.altKey) ||
-                        (searchData.prefConfig.ctrlKey && !e.ctrlKey) ||
-                        (searchData.prefConfig.shiftKey && !e.shiftKey) ||
-                        (searchData.prefConfig.metaKey && !e.metaKey)) {
-                        return;
+                    let matchKey = false;
+                    if ((searchData.prefConfig.altKey ||
+                         searchData.prefConfig.ctrlKey ||
+                         searchData.prefConfig.shiftKey ||
+                         searchData.prefConfig.metaKey) &&
+                        !((searchData.prefConfig.altKey && !e.altKey) ||
+                          (searchData.prefConfig.ctrlKey && !e.ctrlKey) ||
+                          (searchData.prefConfig.shiftKey && !e.shiftKey) ||
+                          (searchData.prefConfig.metaKey && !e.metaKey))) {
+                        matchKey = true;
                     }
                     if (!searchData.prefConfig.selectToShow &&
                         (e.which === 1 || e.which === 2) && !searchData.prefConfig.leftMouse) {
@@ -6755,10 +6766,6 @@
                     }
                     let startX = e.clientX;
                     let startY = e.clientY;
-                    let matchKey = searchData.prefConfig.altKey ||
-                        searchData.prefConfig.ctrlKey ||
-                        searchData.prefConfig.shiftKey ||
-                        searchData.prefConfig.metaKey;
                     let mouseMoveHandler = e => {
                         if (Math.abs(startX - e.clientX) + Math.abs(startY - e.clientY) > 5) {
                             clearTimeout(showToolbarTimer);
@@ -6789,10 +6796,7 @@
                     if ((e.which === 1 && clientRect &&
                          e.clientX > clientRect.left && e.clientX < clientRect.left + clientRect.width &&
                          e.clientY > clientRect.top && e.clientY < clientRect.top + clientRect.height) ||
-                        (searchData.prefConfig.altKey||
-                         searchData.prefConfig.ctrlKey ||
-                         searchData.prefConfig.shiftKey ||
-                         searchData.prefConfig.metaKey)) {
+                        matchKey) {
                         setTimeout(() => {
                             if (!draging) {
                                 searchBar.showInPage();
