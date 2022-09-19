@@ -197,6 +197,11 @@
         ]
     },
     {
+        "name": "哈啦區 - 巴哈姆特",
+        "url": "^https?://forum\\.gamer\\.com\\.tw/(index|$)",
+        "enable": 0
+    },
+    {
         "name":"SkrBT",
         "url":"^https://skrbt",
         "pageElement":"ul.list-unstyled",
