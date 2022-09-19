@@ -188,6 +188,15 @@
         "pinUrl":true
     },
     {
+        "name": "軟體部落",
+        "url": "^https?://softblog\\.tw/",
+        "pageElement": "article.blog-entry",
+        "lazyImgSrc": [
+            "data-lazy-src",
+            "srcset"
+        ]
+    },
+    {
         "name":"SkrBT",
         "url":"^https://skrbt",
         "pageElement":"ul.list-unstyled",
