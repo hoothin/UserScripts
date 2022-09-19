@@ -2516,7 +2516,7 @@
                 } else {
                     editTemp = {
                         name: document.title,
-                        url: "^" + location.origin.replace(/\./g,"\\.")
+                        url: "^" + location.origin.replace(/^https?/, "https?").replace(/\./g,"\\.") + "/"
                     };
                 }
                 if (selectorInput.value) {
