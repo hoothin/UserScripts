@@ -889,6 +889,15 @@
             let altKeyInput = createCheckbox('Alt 鍵', altKey);
             let shiftKeyInput = createCheckbox('Shift 鍵', shiftKey);
             let metaKeyInput = createCheckbox('Meta 鍵', metaKey);
+            ctrlKeyInput.parentNode.style.float = "left";
+            altKeyInput.parentNode.style.float = "left";
+            shiftKeyInput.parentNode.style.float = "left";
+
+            let createHR = () => {
+                baseCon.appendChild(document.createElement('hr'));
+            };
+
+            createHR();
 
             let siteChanged = false;
             let sitesTcTitle = document.createElement('h3');
@@ -898,6 +907,7 @@
             let sitesTcInput = document.createElement('textarea');
             sitesTcInput.placeholder = 'tieba.baidu.com\n一行一條';
             sitesTcInput.style.width = '100%';
+            sitesTcInput.style.minHeight = "60px";
             baseCon.appendChild(sitesTcInput);
 
             let sitesScTitle = document.createElement('h3');
@@ -907,6 +917,7 @@
             let sitesScInput = document.createElement('textarea');
             sitesScInput.placeholder = 'www.gamer.com.tw\n一行一條';
             sitesScInput.style.width = '100%';
+            sitesScInput.style.minHeight = "60px";
             baseCon.appendChild(sitesScInput);
 
             let sitesDisableTitle = document.createElement('h3');
@@ -915,6 +926,7 @@
             baseCon.appendChild(sitesDisableTitle);
             let sitesDisableInput = document.createElement('textarea');
             sitesDisableInput.style.width = '100%';
+            sitesDisableInput.style.minHeight = "60px";
             baseCon.appendChild(sitesDisableInput);
 
             sitesTcInput.addEventListener("change", function(e) {
@@ -986,12 +998,15 @@
             });
             baseCon.appendChild(saveBtn);
 
+            createHR();
+
             let testTitle = document.createElement('h3');
             testTitle.style.margin = '5px 0';
             testTitle.innerText = '繁簡切換測試輸入框：';
             baseCon.appendChild(testTitle);
             let testInput = document.createElement('textarea');
             testInput.style.width = '100%';
+            testInput.setAttribute('placeholder', "輸入文字后，按下快捷鍵");
             baseCon.appendChild(testInput);
         }
     }
