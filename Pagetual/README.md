@@ -171,9 +171,10 @@ Selector or xpath of element which you want to replace with new one, can be a ar
 
 lazyImgSrc
 --
-The attr of image which target to real src
+The attr of image which target to real src, can be set by ["lazysrc", "removeProp1,removeProp2"] to remove props of image
 ```JSON
 "lazyImgSrc": "data-cfsrc"
+"lazyImgSrc": ["data-lazy-src", "removeProp1,removeProp2"]
 ```
 
 css
