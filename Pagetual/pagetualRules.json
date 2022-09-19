@@ -194,6 +194,20 @@
         "nextLinkByJs":"let form=doc.querySelector('#search-form'),params=[];if(!form)return null;[].forEach.call(form.querySelectorAll('input'),input=>{params.push(input.name+'='+(input.name=='p'?parseInt(input.value)+1:input.value))});return form.action+'?'+params.join('&')"
     },
     {
+        "name": "Discuz! mobile postlist1",
+        "url": ".",
+        "pageElement": ".postlist>div[id^=pid]",
+        "nextLink": ".page>#select_a+a:not([class])",
+        "action":1
+    },
+    {
+        "name": "Discuz! mobile postlist2",
+        "url": ".",
+        "pageElement": ".bm:not(#postlist)>div[id^=post_],.bm:not(#postlist)>div[id^=post_]+div",
+        "nextLink": "a.nxt",
+        "action":1
+    },
+    {
         "name":"bbsPostlist1",
         "url":"/t",
         "nextLink": [
@@ -201,7 +215,8 @@
                 "a.prev"
         ],
         "pageNum":"\\-\\d+\\-{$p}\\-\\d+\\.html",
-        "pageElement":"div#postlist>*"
+        "pageElement":"div#postlist>*",
+        "replaceElement": "div.pg"
     },
     {
         "name":"bbsThreadlist1",
@@ -211,7 +226,8 @@
                 "a.prev"
         ],
         "pageNum":"\\-\\d+\\-{$p}\\.html",
-        "pageElement":"div#threadlist form"
+        "pageElement":"div#threadlist form",
+        "replaceElement": "div.pg"
     },
     {
         "name":"Discuz7.2Postlist",
@@ -1169,20 +1185,6 @@
         "name":"豆瓣电影",
         "url":"^https://movie\\.douban\\.com",
         "wheel":true
-    },
-    {
-        "name": "Discuz! mobile postlist1",
-        "url": ".",
-        "pageElement": ".postlist>div[id^=pid]",
-        "nextLink": ".page>#select_a+a:not([class])",
-        "action":1
-    },
-    {
-        "name": "Discuz! mobile postlist2",
-        "url": ".",
-        "pageElement": ".bm>div[id^=post_],.bm>div[id^=post_]+div",
-        "nextLink": "a.nxt",
-        "action":1
     },
     {
         "name":"检测到AC百度就不运行",
