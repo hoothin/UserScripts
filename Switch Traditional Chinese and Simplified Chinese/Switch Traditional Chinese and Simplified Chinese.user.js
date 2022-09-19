@@ -6,7 +6,7 @@
 // @namespace    hoothin
 // @supportURL   https://github.com/hoothin/UserScripts
 // @homepageURL  https://github.com/hoothin/UserScripts
-// @version      1.2.6.6
+// @version      1.2.6.7
 // @description        任意轉換網頁中的簡體中文與繁體中文（默認簡體→繁體）
 // @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体）
 // @description:ja     簡繁中国語に変換
@@ -54,7 +54,7 @@
                  ],
                  '冲':[
                      '沖',
-                     ['衝','冲奖','冲高','冲决','冲浪','冲子','冲力','冲要','冲破','冲口','冲顶','冲床','冲突','冲刺','冲金','冲模','冲撞','冲腾','冲锋','冲量','冲动','冲程','冲压','冲杀','冲激','冲击','俯冲','反冲','折冲','缓冲','脉冲','要冲','冲锋枪','冲孔机','冲浪板','冲劲','冲金点','冲压机','冲击波','反冲力','冲锋','横冲','冲冠','首当其冲']
+                     ['衝','冲奖','冲高','冲决','冲浪','冲子','冲力','冲要','冲破','冲口','冲顶','冲床','冲突','冲刺','冲金','冲模','冲撞','冲腾','冲锋','冲量','冲动','冲程','冲压','冲杀','冲激','冲击','俯冲','反冲','折冲','缓冲','脉冲','要冲','冲锋枪','冲孔机','冲劲','冲金点','冲压机','冲击波','反冲力','冲锋','横冲','冲冠','首当其冲']
                  ],
                  '恶':[
                      '惡',
@@ -247,6 +247,10 @@
                  '表':[
                      '表',
                      ['錶','戴表','手表','秒表','腕表','表店','跳表','陀表','怀表','表带','表厂','表壳','表炼','表链','钟表','马表']
+                 ],
+                 '板':[
+                     '板',
+                     ['闆','老板']
                  ]
                 };
     //此處為用語轉換
@@ -825,12 +829,12 @@
         document.addEventListener("keydown", function(e) {
             if(e.key == shortcutKey && e.ctrlKey == ctrlKey && e.altKey == altKey && e.shiftKey == shiftKey && e.metaKey == metaKey) {
                 if("TEXTAREA"==document.activeElement.tagName){
+                    curLang=!curLang;
                     document.activeElement.innerHTML=curLang?traditionalized(document.activeElement.innerHTML):simplized(document.activeElement.innerHTML);
                     document.activeElement.value=curLang?traditionalized(document.activeElement.value):simplized(document.activeElement.value);
-                    curLang=!curLang;
                 }else if("INPUT"==document.activeElement.tagName){
-                    document.activeElement.value=curLang?traditionalized(document.activeElement.value):simplized(document.activeElement.value);
                     curLang=!curLang;
+                    document.activeElement.value=curLang?traditionalized(document.activeElement.value):simplized(document.activeElement.value);
                 }else{
                     action=action==2?3:2;
                     setLanguage();
@@ -981,6 +985,14 @@
                 alert('保存設置成功！')
             });
             baseCon.appendChild(saveBtn);
+
+            let testTitle = document.createElement('h3');
+            testTitle.style.margin = '5px 0';
+            testTitle.innerText = '繁簡切換測試輸入框：';
+            baseCon.appendChild(testTitle);
+            let testInput = document.createElement('textarea');
+            testInput.style.width = '100%';
+            baseCon.appendChild(testInput);
         }
     }
 
