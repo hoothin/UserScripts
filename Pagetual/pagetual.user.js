@@ -1878,7 +1878,7 @@
                     if (lazyImgSrc.length == 2) {
                         let removeProps = lazyImgSrc[1].split(",");
                         removeProps.forEach(prop => {
-                            img.removeAttribute(prop);
+                            img.removeAttribute(prop.trim());
                         });
                     }
                 }
