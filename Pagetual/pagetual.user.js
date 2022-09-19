@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.31.27
+// @version      1.9.31.28
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -1885,18 +1885,24 @@
                 if (!realSrc) {
                     if (img.getAttribute("_src") && !img.src) {
                         realSrc = img.getAttribute("_src");
-                    } else if (img.dataset && img.dataset.original) {
-                        realSrc = img.dataset.original;
-                    } else if (img.dataset && img.dataset.lazySrc) {
-                        realSrc = img.dataset.lazySrc;
-                    } else if (img.dataset && img.dataset.lazy) {
-                        realSrc = img.dataset.lazy;
-                    } else if (img.dataset && img.dataset.src) {
-                        realSrc = img.dataset.src;
-                    } else if (img._lazyrias && img._lazyrias.srcset) {
+                    } else if (img.dataset) {
+                        if (img.dataset.original) {
+                            realSrc = img.dataset.original;
+                        } else if (img.dataset.lazySrc) {
+                            realSrc = img.dataset.lazySrc;
+                        } else if (img.dataset.lazy) {
+                            realSrc = img.dataset.lazy;
+                        } else if (img.dataset.src) {
+                            realSrc = img.dataset.src;
+                        } else if (img.dataset.origFile) {
+                            realSrc = img.dataset.origFile;
+                        }
+                    }
+                    if (!realSrc && img._lazyrias && img._lazyrias.srcset) {
                         realSrc = img._lazyrias.srcset[img._lazyrias.srcset.length - 1];
-                    } else if (img.dataset && img.dataset.origFile) {
-                        realSrc = img.dataset.origFile;
+                    }
+                    if (realSrc) {
+                        img.removeAttribute("srcset");
                     } else if (img.srcset) {
                         var srcs = img.srcset.split(/[xw],/), largeSize = 0;
                         srcs.forEach(srci => {
