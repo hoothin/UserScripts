@@ -520,12 +520,43 @@
         ]
     },
     {
-        "name": "北邮人论坛-北邮校园",
-        "url": "^https://bbs\\.byr\\.cn",
+        "name": "北邮人论坛",
+        "url": "bbs\\.byr\\.cn(|/(|#!)default)$",
         "listenHashChange": true,
-        "pageElement": "section#main.corner>section#body>.b-content",
-        "action": 1,
         "pinUrl": true
+    },
+    {
+        "name": "北邮人论坛-版块",
+        "url": "bbs\\.byr\\.cn/(|#!)board",
+        "listenHashChange": true,
+        "pageElement": ".b-content> table>tbody",
+        "pinUrl": true,
+        "history": 0,
+        "action": 1
+    },
+    {
+        "name": "北邮人论坛-帖子内",
+        "url": "bbs\\.byr\\.cn/(|#!)article",
+        "listenHashChange": true,
+        "pageElement": ".b-content",
+        "replaceElement": ".page",
+        "pinUrl": true,
+        "history": 0,
+        "action": 1
+    },
+    {
+        "name": "北大未名BBS-版块",
+        "url": "bbs\\.pku\\.edu\\.cn/v2/thread.php",
+        "pageElement": "#list-content",
+        "nextLink": "//div[contains(text(),'下一页')]/a",
+        "replaceElement": ".paging"
+    },
+    {
+        "name": "北大未名BBS-帖子内",
+        "url": "bbs\\.pku\\.edu\\.cn/v2/post-read.php",
+        "pageElement": ".card-list",
+        "nextLink": "//div[contains(text(),'下一页')]/a",
+        "replaceElement": ".paging"
     },
     {
         "name":"bilibili search",
