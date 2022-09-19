@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.33
+// @version      1.6.6.34
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -7295,10 +7295,14 @@
                       box-shadow: #000000 0px 0px 10px;
                       z-index: 10;
                       font-size: 0;
+                      -moz-transition:transform 0.3s ease;
+                      -webkit-transition:transform 0.3s ease;
+                      transition:transform 0.3s ease;
                     }
                     .dragLogo>svg {
                       width: 40px;
                       height: 40px;
+                      pointer-events: none;
                     }
                 `;
                 dragCssEle = _GM_addStyle(dragCssText);
@@ -7318,6 +7322,16 @@
                 let sector1Start = -sector1Gap / 2;
                 let sector2Start = -sector2Gap / 2;
                 let dragSector;
+                let dragLogo = dragRoundFrame.querySelector(".dragLogo");
+                dragLogo.addEventListener("dragover", e => {
+                    if (dragSector) {
+                        dragSector.style.transform = `rotate(${dragSector.dataset.deg}deg) ${searchData.prefConfig.hideDragHistory ? 'scale(1.2)' : ''}`;
+                        dragSector.classList.remove("over");
+                    }
+                    dragSector = null;
+                    dragLogo.style.transform = `scale(1.35)`;
+                    e.preventDefault();
+                }, true);
                 let geneSector = (className, deg, spanTransform) => {
                     let sector = document.createElement("div");
                     sector.className = className;
@@ -7337,6 +7351,7 @@
                             dragSector.style.transform = `rotate(${dragSector.dataset.deg}deg) ${searchData.prefConfig.hideDragHistory ? 'scale(1.2)' : ''}`;
                             dragSector.classList.remove("over");
                         }
+                        dragLogo.style.transform = "";
                         sector.style.transform = `scale(${searchData.prefConfig.hideDragHistory ? '1.6' : '1.35'}) ${transform}`;
                         sector.classList.add("over");
                         dragSector = sector;
@@ -7369,7 +7384,9 @@
                     removeFrame();
                 });
                 dragRoundFrame.addEventListener('drop', e => {
-                    if (dragSector) {
+                    if (e.target === dragLogo) {
+                        searchBar.showInPage();
+                    } else if (dragSector) {
                         searchBar.searchBySiteName(dragSector.children[0].dataset.name, e);
                         dragSector.style.transform = `rotate(${dragSector.dataset.deg}deg)`;
                         dragSector.classList.remove("over");
@@ -7465,7 +7482,7 @@
                 setTimeout(() => {
                     dragRoundFrame.style.opacity = 1;
                     dragRoundFrame.style.transform = 'scale(1)';
-                }, 1);
+                }, 10);
                 setTimeout(() => {
                     document.addEventListener('dragenter', dragenterHandler, true);
                 }, 100);
