@@ -15,10 +15,6 @@ Test ALT+X：[MP4](http://a.a/h.mp4) [MP3](http://a.a/o.mp3) [RAR](http://a.a/o.
 [![img](https://img.shields.io/github/stars/hoothin/UserScripts?style=social)](https://github.com/hoothin/UserScripts)
 Forked from [http://userscripts-mirror.org/scripts/show/157556](http://userscripts-mirror.org/scripts/show/157556 "Xunlei, Express, QQ Tornado dedicated link decoding by yulei")
 
-*If it is helpful to you, please buy me a cup of milk tea to help refresh my mind and encourage frequent updates [PayPal.Me](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=rixixi@sina.com&item_name=Greasy+Fork+donation)*
-
-<img src='https://s2.loli.net/2022/01/06/lEqKWLHG7UBO6AY.jpg' alt="donation" width=420>
-
 
 ---
 change content
