@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.31.26
+// @version      1.9.31.27
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -1304,7 +1304,7 @@
                     });
                 }
             }
-            this.lazyImgAction(pageElement);
+            if (doc !== document) this.lazyImgAction(pageElement);
             return pageElement;
         }
 
@@ -1864,21 +1864,31 @@
             }
         }
 
-        lazyImgAction(eles){
-            if (!eles || eles.length==0) return;
-            let lazyImgSrc=this.curSiteRule.lazyImgSrc;
-            if (lazyImgSrc===0 || lazyImgSrc==='0') return;
+        lazyImgAction(eles) {
+            if (!eles || eles.length == 0) return;
+            let lazyImgSrc = this.curSiteRule.lazyImgSrc;
+            if (lazyImgSrc === 0 || lazyImgSrc === '0') return;
             let setLazyImg = img => {
                 let realSrc;
                 if (lazyImgSrc) {
-                    realSrc = img.getAttribute(lazyImgSrc);
-                    img.removeAttribute(lazyImgSrc);
+                    if (!Array.isArray(lazyImgSrc)) {
+                        lazyImgSrc = [lazyImgSrc];
+                    }
+                    realSrc = img.getAttribute(lazyImgSrc[0]);
+                    if (lazyImgSrc.length == 2) {
+                        let removeProps = lazyImgSrc[1].split(",");
+                        removeProps.forEach(prop => {
+                            img.removeAttribute(prop);
+                        });
+                    }
                 }
                 if (!realSrc) {
                     if (img.getAttribute("_src") && !img.src) {
                         realSrc = img.getAttribute("_src");
                     } else if (img.dataset && img.dataset.original) {
                         realSrc = img.dataset.original;
+                    } else if (img.dataset && img.dataset.lazySrc) {
+                        realSrc = img.dataset.lazySrc;
                     } else if (img.dataset && img.dataset.lazy) {
                         realSrc = img.dataset.lazy;
                     } else if (img.dataset && img.dataset.src) {
