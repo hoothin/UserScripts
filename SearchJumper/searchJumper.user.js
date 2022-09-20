@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.37
+// @version      1.6.6.38
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -320,7 +320,7 @@
                 url: "https://www.so.com/s?ie=utf-8&q=%s%20site%3A%h"
             }, {
                 name: "文字转二维码-草料",
-                url: "https://cli.im/text#p{#text-content=%s&#click-create.click}"
+                url: "https://cli.im/text#p{#text-content=%s&click(#click-create)}"
             }, {
                 name: "雅虎站内搜",
                 url: "https://search.yahoo.com/search;?p=%s%20site%3A%h"
@@ -362,7 +362,7 @@
                 description: "使用 Lunapic 编辑图片"
             }, {
                 name: "Pixlr easy",
-                url: "https://pixlr.com/x/#p{#home-open-url.click&#image-url=%t&.dialog>.buttons>a.button.positive.click}",
+                url: "https://pixlr.com/x/#p{click(#home-open-url)&#image-url=%t&click(.dialog>.buttons>a.button.positive)}",
                 description: "使用 Pixlr easy 编辑图片"
             }, {
                 name: "百度搜图",
@@ -414,7 +414,7 @@
                 url: "https://players.akamai.com/players/hlsjs?streamUrl=%t"
             }, {
                 name: "去视频水印",
-                url: "https://parse.bqrdh.com/smart/#p{.ant-input=%u&.ant-input-search-button.click}"
+                url: "https://parse.bqrdh.com/smart/#p{.ant-input=%u&click(.ant-input-search-button)}"
             } ]
         },
         {
@@ -624,7 +624,7 @@
                 url: "https://wn.run/%u"
             }, {
                 name: "当前网址-草料",
-                url: "https://cli.im/url#p{#url_content=%u&#click-create.click}"
+                url: "https://cli.im/url#p{#url_content=%u&click(#click-create)}"
             } ]
         }
     ];
@@ -834,7 +834,7 @@
                     siteAddOver: 'Site added successfully',
                     multiline: 'Search as multilines?',
                     multilineTooMuch: 'The number of lines exceeds 10, do you want to continue searching?',
-                    inputPlaceholder: 'Enter keywords to filter sites, support * ? wildcards, $ means end, ^ means start，type**site to filter type',
+                    inputPlaceholder: 'Enter keywords to filter sites, support * ? wildcards, $ means end, ^ means start，type name**site name to filter type',
                     inputKeywords: 'Enter search keywords',
                     inPageTips: 'Custom delimiter: $c + delimiter, such as $c| search | jumper, space as delimiter by default\nOriginal text without delimited: $o + text, such as $oopai liked by hero\nRegular expression: /re/, such as $c, /google/i , /aPPle/\nTips text: search text$t{tips text}, such as linux$t{linux is not unix}\nCustom style: Search text$s{background;other}, such as google$s{#333333;color:red;}\nLeft-click keyword to jump to the next, right-click keyword to jump to the previous',
                     inPagePlaceholder: 'Input text, press Enter to find in the page',
@@ -1012,6 +1012,11 @@
                     this_len = this.length;
                 }
                 return this.substring(this_len - search.length, this_len) === search;
+            };
+        }
+        if (typeof String.prototype.startsWith != 'function') {
+            String.prototype.startsWith = function(search, pos){
+                return this.slice(pos || 0, search.length) === search;
             };
         }
 
@@ -4957,8 +4962,11 @@
                     if (param[0] === "sleep" || param[0] === "@sleep") {
                         await sleep(param[1]);
                         continue;
-                    }
-                    if (param[1] === 'click' && param[0].indexOf('@') === 0) {
+                    } else if (param[0] === "@click") {
+                        clicked = true;
+                        await emuClick(param[1]);
+                        continue;
+                    } else if (param[1] === 'click' && param[0].indexOf('@') === 0) {
                         clicked = true;
                         await emuClick(param[0].substr(1));
                     } else {
@@ -5332,20 +5340,28 @@
                     if (inPagePost) {
                         let postParams = [];
                         postMatch[1].replace(/([^\\])&/g, "$1SJ^PARAM").split("SJ^PARAM").forEach(pair => {//ios不支持零宽断言，哭唧唧
-                            pair = pair.replace(/([^\\])\=/g, "$1SJ^PARAM").replace(/\\([\=&])/g, "$1");
-                            let pairArr = pair.split("SJ^PARAM");
-                            if (pairArr.length === 2) {
-                                let k = pairArr[0];
-                                let v = customReplaceKeywords(pairArr[1].replace(/\\([\=&])/g, "$1").replace(/%e\b/g, document.charset).replace(/%c\b/g, (isMobile?"mobile":"pc")).replace(/%U\b/g, encodeURIComponent(href)).replace(/%h\b/g, host).replace(/%T\b/g, encodeURIComponent(targetUrl)).replace(/%b\b/g, targetBaseUrl).replace(/%B\b/g, encodeURIComponent(targetBaseUrl)).replace(/%n\b/g, targetName).replace(/%S\b/g, (cacheKeywords || keywords)));
-                                v = customReplaceSingle(v, "%t", targetUrl);
-                                v = customReplaceSingle(v, "%u", href);
-                                postParams.push([k, v]);
-                            } else if (pair.endsWith('.click()') || pair.endsWith('.click')) {
-                                postParams.push(['@' + pair.replace(/\.click(\(\))?$/, ''), 'click']);
+                            pair = pair.trim();
+                            if (pair.startsWith("click(") && pair.endsWith(')')) {
+                                let click = pair.slice(6, pair.length-1);
+                                if (click) {
+                                    postParams.push(['@click', click.replace(/\\([\=&])/g, "$1").trim()]);
+                                }
                             } else {
-                                let sleep = pair.match(/sleep\((.*)\)/);
-                                if (sleep) {
-                                    postParams.push(['@sleep', sleep[1]]);
+                                pair = pair.replace(/([^\\])\=/g, "$1SJ^PARAM").replace(/\\([\=&])/g, "$1");
+                                let pairArr = pair.split("SJ^PARAM");
+                                if (pairArr.length === 2) {
+                                    let k = pairArr[0];
+                                    let v = customReplaceKeywords(pairArr[1].replace(/\\([\=&])/g, "$1").replace(/%e\b/g, document.charset).replace(/%c\b/g, (isMobile?"mobile":"pc")).replace(/%U\b/g, encodeURIComponent(href)).replace(/%h\b/g, host).replace(/%T\b/g, encodeURIComponent(targetUrl)).replace(/%b\b/g, targetBaseUrl).replace(/%B\b/g, encodeURIComponent(targetBaseUrl)).replace(/%n\b/g, targetName).replace(/%S\b/g, (cacheKeywords || keywords)));
+                                    v = customReplaceSingle(v, "%t", targetUrl);
+                                    v = customReplaceSingle(v, "%u", href);
+                                    postParams.push([k, v]);
+                                } else if (pair.endsWith('.click()') || pair.endsWith('.click')) {
+                                    postParams.push(['@' + pair.replace(/\.click(\(\))?$/, ''), 'click']);
+                                } else {
+                                    let sleep = pair.match(/sleep\((.*)\)/);
+                                    if (sleep) {
+                                        postParams.push(['@sleep', sleep[1]]);
+                                    }
                                 }
                             }
                         });
