@@ -263,7 +263,7 @@ Set this to true so pagetual will restart when hash changed
 
 refreshByClick
 --
-If the site reload content without changing url when click a submit button. Set this with the selector of the target button, pagetual will refresh when click it.
+If the site reload content without changing url when click a submit button. Set this with the selector of the target button, pagetual will reset when click it.
 ```JSON
 "refreshByClick": "#sreach"
 ```
