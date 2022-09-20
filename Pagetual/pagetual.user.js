@@ -4668,7 +4668,6 @@
                 }
                 if(checkEval && !checkEval(iframeDoc)){
                     waitTimes=10;
-                    curPage=1;
                     setTimeout(()=>{
                         checkPage();
                     },waitTime);
