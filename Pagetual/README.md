@@ -261,6 +261,13 @@ Set this to true so pagetual will restart when hash changed
 "listenHashChange": true
 ```
 
+refreshByClick
+--
+If the site reload content without changing url when click a submit button. Set this with the selector of the target button, pagetual will refresh when click it.
+```JSON
+"refreshByClick": "#sreach"
+```
+
 pageNum
 --
 Point the page number with $p in current url, you can use{} to eval result string from page number, like {$p\*25+1}
