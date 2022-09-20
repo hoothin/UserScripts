@@ -205,6 +205,12 @@
         "enable": 0
     },
     {
+        "name": "COCOMANGA",
+        "url": "^https?://www\\.cocomanga\\.com/",
+        "pageElement": "body > div#mangalist.mh_mangalist",
+        "action": 2
+    },
+    {
         "name": "古籍館 - 閲讀",
         "url": "^https?://(www\\.)?gujiguan\\.com/Book_View\\.aspx",
         "pageElement": "div#content > img#book"
