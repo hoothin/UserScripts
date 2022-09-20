@@ -5342,9 +5342,14 @@
                         postMatch[1].replace(/([^\\])&/g, "$1SJ^PARAM").split("SJ^PARAM").forEach(pair => {//ios不支持零宽断言，哭唧唧
                             pair = pair.trim();
                             if (pair.startsWith("click(") && pair.endsWith(')')) {
-                                let click = pair.slice(6, pair.length-1);
+                                let click = pair.slice(6, pair.length - 1);
                                 if (click) {
                                     postParams.push(['@click', click.replace(/\\([\=&])/g, "$1").trim()]);
+                                }
+                            } else if (/^sleep\(\d+\)$/.test(pair)) {
+                                let sleep = pair.match(/sleep\((.*)\)/);
+                                if (sleep) {
+                                    postParams.push(['@sleep', sleep[1]]);
                                 }
                             } else {
                                 pair = pair.replace(/([^\\])\=/g, "$1SJ^PARAM").replace(/\\([\=&])/g, "$1");
@@ -5357,11 +5362,6 @@
                                     postParams.push([k, v]);
                                 } else if (pair.endsWith('.click()') || pair.endsWith('.click')) {
                                     postParams.push(['@' + pair.replace(/\.click(\(\))?$/, ''), 'click']);
-                                } else {
-                                    let sleep = pair.match(/sleep\((.*)\)/);
-                                    if (sleep) {
-                                        postParams.push(['@sleep', sleep[1]]);
-                                    }
                                 }
                             }
                         });
