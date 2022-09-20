@@ -202,6 +202,16 @@
         "enable": 0
     },
     {
+        "name": "古籍館 - 閲讀",
+        "url": "^https?://www\\.gujiguan\\.com/Book_View\\.aspx",
+        "pageElement": "div#content > img#book"
+    },
+    {
+        "name": "古籍館 - 檢索",
+        "url": "^https?://www\\.gujiguan\\.com/Search_Result\\.aspx",
+        "pageElement": "#DataList1>tbody>tr"
+    },
+    {
         "name":"SkrBT",
         "url":"^https://skrbt",
         "pageElement":"ul.list-unstyled",
