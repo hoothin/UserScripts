@@ -1120,7 +1120,7 @@
             let refreshByClickSel = this.curSiteRule.refreshByClick;
             if (refreshByClickSel) {
                 document.addEventListener("click", e => {
-                    let checkEles = document.querySelectorAll(refreshByClickSel);
+                    let checkEles = getAllElements(refreshByClickSel, document);
                     for (let i = 0; i < checkEles.length; i++) {
                         if (checkEles[i] === e.target) {
                             urlChanged = true;
