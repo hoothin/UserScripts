@@ -209,7 +209,8 @@
     {
         "name": "古籍館 - 檢索",
         "url": "^https?://(www\\.)?gujiguan\\.com/Search_Result\\.aspx",
-        "pageElement": "#DataList1>tbody>tr"
+        "pageElement": "#DataList1>tbody>tr",
+        "wait": "let nv=doc.querySelector('#keyValue'),ov=document.querySelector('#keyValue');if(!nv||!ov)return false;if(nv.value==ov.value)return true;nv.value=ov.value;doc.querySelector('#sreach').click();doc.querySelector('#DataList1').innerHTML='';return false;"
     },
     {
         "name":"SkrBT",
