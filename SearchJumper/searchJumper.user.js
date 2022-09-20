@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.40
+// @version      1.6.6.41
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -1174,7 +1174,6 @@
                      scrollbar-width: none;
                      box-sizing: border-box;
                      z-index: 2147483647;
-                     scrollbar-width: none;
                  }
                  .search-jumper-searchBar {
                      overflow-wrap: break-word;
@@ -1217,6 +1216,7 @@
                  }
                  .search-jumper-scroll.search-jumper-bottom>.search-jumper-searchBar:hover,
                  .search-jumper-scroll.search-jumper-bottom>.search-jumper-searchBar.initShow,
+                 .search-jumper-scroll.search-jumper-bottom>.search-jumper-searchBar.funcKeyCall,
                  #search-jumper.in-input.search-jumper-scroll.search-jumper-bottom>.search-jumper-searchBar {
                      margin-top: 0px;
                  }
@@ -1230,9 +1230,27 @@
                      opacity: 0.8;
                      ${searchData.prefConfig.noAni ? "" : "transition:margin-top 0.25s ease, margin-left 0.25s, right 0.25s, opacity 0.25s, transform 0.25s;"}
                  }
-                 .in-input>.search-jumper-searchBar {
+                 .in-input>.search-jumper-searchBar,
+                 .search-jumper-searchBar.funcKeyCall {
                      opacity: 1;
                      display: inline-flex!important;
+                 }
+                 #search-jumper>.search-jumper-searchBar.funcKeyCall>.search-jumper-type {
+                     height: auto!important;
+                     width: ${240 * this.scale}px!important;
+                     flex-wrap: wrap!important;
+                     flex-direction: row;
+                     max-width: unset;
+                     max-height: ${108 * this.scale + 10}px;
+                     padding: 5px;
+                     box-shadow: #000000 0px 0px 10px;
+                     overflow: auto;
+                     scrollbar-width: none;
+                     overscroll-behavior ：contain;
+                 }
+                 #search-jumper>.search-jumper-searchBar.funcKeyCall>.search-jumper-type::-webkit-scrollbar {
+                     width: 0 !important;
+                     height: 0 !important;
                  }
                  .search-jumper-left,
                  .search-jumper-left .search-jumper-type,
@@ -1283,12 +1301,14 @@
                  }
                  .search-jumper-left>.search-jumper-searchBar:hover,
                  .search-jumper-left>.search-jumper-searchBar.initShow,
+                 .search-jumper-left>.search-jumper-searchBar.funcKeyCall,
                  #search-jumper.in-input.search-jumper-left>.search-jumper-searchBar {
                      margin-top: unset;
                      margin-left: 0;
                  }
                  .search-jumper-right>.search-jumper-searchBar:hover,
                  .search-jumper-right>.search-jumper-searchBar.initShow,
+                 .search-jumper-right>.search-jumper-searchBar.funcKeyCall,
                  #search-jumper.in-input.search-jumper-right>.search-jumper-searchBar {
                      margin-top: unset;
                      right: 0;
@@ -1300,6 +1320,7 @@
                  }
                  .search-jumper-bottom>.search-jumper-searchBar:hover,
                  .search-jumper-bottom>.search-jumper-searchBar.initShow,
+                 .search-jumper-bottom>.search-jumper-searchBar.funcKeyCall,
                  #search-jumper.in-input.search-jumper-bottom>.search-jumper-searchBar {
                      margin-top: 0px;
                  }
@@ -1425,6 +1446,9 @@
                      display: inline-flex;
                      background: unset;
                      padding: 0px;
+                 }
+                 #search-jumper>.search-jumper-searchBar.funcKeyCall>.search-jumper-logo {
+                     display: none;
                  }
                  .search-jumper-searchBar>.search-jumper-type.search-jumper-targetAll,
                  .search-jumper-searchBar:hover>.search-jumper-type.search-jumper-targetAll {
@@ -1598,6 +1622,12 @@
                  }
                  .search-jumper-searchBar:hover>.search-jumper-hide {
                      ${searchData.prefConfig.minSizeMode ? 'display: inline-flex;' : ''}
+                 }
+                 .search-jumper-searchBar.funcKeyCall>.search-jumper-type.search-jumper-hide {
+                     display: none;
+                 }
+                 .search-jumper-searchBar.funcKeyCall:hover>.search-jumper-hide {
+                     display: none;
                  }
                  span.search-jumper-word>img {
                      width: ${20 * this.scale}px;
@@ -3909,7 +3939,8 @@
                             openType.onmousedown();
                         }
                     }
-                    if (!currentSite && searchData.prefConfig.autoHideAll) {
+                    if ((!currentSite && searchData.prefConfig.autoHideAll) || self.bar.classList.contains("funcKeyCall")) {
+                        self.bar.classList.remove("funcKeyCall");
                         self.bar.style.display = 'none';
                     }
                     this.hideTimeout = null;
@@ -4415,6 +4446,7 @@
                 let clientX = clingEle.offsetLeft + ew / 2 - this.bar.parentNode.scrollLeft;
                 let clientY = clingEle.offsetTop + eh / 2 - this.bar.parentNode.scrollTop;
                 let current = clingEle.offsetParent;
+                let funcKeyCall = this.bar.classList.contains("funcKeyCall");
 
                 while (current !== null){
                     clientX += current.offsetLeft;
@@ -4423,7 +4455,15 @@
                 }
                 let viewWidth = window.innerWidth || document.documentElement.clientWidth;
                 let viewHeight = window.innerHeight || document.documentElement.clientHeight;
-                if (clientY < eh) {
+                if (funcKeyCall) {
+                    clientX -= target.scrollWidth / 2;
+                    if (clientY > viewHeight / 2) clientY -= (target.scrollHeight / 2 + eh / 2 + 30);
+                    else clientY += (eh / 2 + 10);
+                    target.style.right = "";
+                    target.style.bottom = "";
+                    target.style.left = clientX + "px";
+                    target.style.top = clientY + "px";
+                } else if (clientY < eh) {
                     target.style.left = "";
                     target.style.right = "";
                     target.style.bottom = "";
@@ -4603,6 +4643,18 @@
                         } if (e.which === 1 && (e.shiftKey || e.altKey || e.ctrlKey)) {
                             return false;
                         }
+                    }
+                    let funcKeyCall = self.bar.classList.contains("funcKeyCall");
+                    if (funcKeyCall) {
+                        self.bar.classList.remove("funcKeyCall");
+                        self.bar.style.display = "";
+                        self.initPos(
+                            searchData.prefConfig.position.x,
+                            searchData.prefConfig.position.y,
+                            searchData.prefConfig.offset.x,
+                            searchData.prefConfig.offset.y
+                        );
+                        return;
                     }
                     ele.style.width = "";
                     ele.style.height = "";
@@ -5659,7 +5711,7 @@
                 }
             }
 
-            showInPage() {
+            showInPage(funcKeyCall, e) {
                 if (this.bar.contains(targetElement)) {
                     return;
                 }
@@ -5761,10 +5813,39 @@
                     }
                     self.insertHistory(firstType.parentNode);
                 }
+                if (funcKeyCall) {
+                    this.bar.classList.add("funcKeyCall");
+                } else if (this.bar.classList.contains("funcKeyCall")) {
+                    this.bar.classList.remove("funcKeyCall");
+                    this.bar.style.display = "";
+                    this.initPos(
+                        searchData.prefConfig.position.x,
+                        searchData.prefConfig.position.y,
+                        searchData.prefConfig.offset.x,
+                        searchData.prefConfig.offset.y
+                    );
+                }
 
-                setTimeout(() => {
-                    self.checkScroll();
-                }, 251);
+                if (funcKeyCall) {
+                    self.bar.style.cssText = "";
+                    self.bar.parentNode.style.cssText = "";
+                    let baseSize = Math.min(self.bar.scrollWidth, self.bar.scrollHeight);
+                    let viewWidth = window.innerWidth || document.documentElement.clientWidth;
+                    let viewHeight = window.innerHeight || document.documentElement.clientHeight;
+                    self.bar.style.position = "fixed";
+                    let clientX = e.clientX - self.bar.scrollWidth / 2;
+                    if (clientX < 0) clientX = 5;
+                    else if (clientX + self.bar.scrollWidth > viewWidth) clientX = viewWidth - self.bar.scrollWidth - 20;
+                    let clientY = e.clientY;
+                    if (clientY > viewHeight / 2) clientY -= (self.bar.scrollHeight + 5);
+                    else clientY += 5;
+                    self.bar.style.left = clientX + "px";
+                    self.bar.style.top = clientY + "px";
+                } else {
+                    setTimeout(() => {
+                        self.checkScroll();
+                    }, 251);
+                }
             }
 
             initPos(relX, relY, posX, posY) {
@@ -6808,7 +6889,7 @@
                             e.stopPropagation();
                             e.preventDefault();
                         } else if (matchKey || (searchData.prefConfig.selectToShow && getSelectStr())) {
-                            searchBar.showInPage();
+                            searchBar.showInPage(matchKey, e);
                         } else {
                             searchBar.waitForHide();
                         }
@@ -6823,7 +6904,7 @@
                         matchKey) {
                         setTimeout(() => {
                             if (!draging) {
-                                searchBar.showInPage();
+                                searchBar.showInPage(matchKey, e);
                             }
                             document.removeEventListener('mousemove', mouseMoveHandler, true);
                             e.target.removeEventListener('scroll', scrollHandler);
@@ -7681,7 +7762,7 @@
                         let typeConfig = searchData.sitesConfig[i];
                         for (let j = 0; j < typeConfig.sites.length; j++) {
                             let curSite = typeConfig.sites[j];
-                            if (curSite.url == url) {
+                            if (curSite.url == urlInput.value) {
                                 _GM_notification(i18n("siteExist"));
                                 return;
                             }
