@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.31.33
+// @version      1.9.31.34
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -1116,6 +1116,23 @@
             }
         }
 
+        refreshByClick() {
+            let refreshByClickSel = this.curSiteRule.refreshByClick;
+            if (refreshByClickSel) {
+                document.addEventListener("click", e => {
+                    let checkEles = document.querySelectorAll(refreshByClickSel);
+                    for (let i = 0; i < checkEles.length; i++) {
+                        if (checkEles[i] === e.target) {
+                            urlChanged = true;
+                            isPause = true;
+                            if (!ruleParser.nextLinkHref) isLoading = false;
+                            break;
+                        }
+                    }
+                });
+            }
+        }
+
         getPageElement(doc, curWin, dontFind) {
             if(doc==document && this.docPageElement){
                 let parent=this.docPageElement;
@@ -2005,6 +2022,7 @@
                     }
                 }
                 self.getNextLink(document);
+                self.refreshByClick();
                 callback();
             });
         }
@@ -3938,15 +3956,16 @@
         };
     };
     var changeHandler = e => {
-        urlChanged=true;
-        isPause=true;
-        setTimeout(()=>{
+        urlChanged = true;
+        isPause = true;
+        setTimeout(() => {
             lastActiveUrl = location.href;
-            if(location.href==configPage || guidePage.test(location.href)){
+            if (location.href == configPage || guidePage.test(location.href)) {
                 location.reload();
-            }else if(!ruleParser.ruleMatch(ruleParser.curSiteRule)){
+            } else if (!ruleParser.ruleMatch(ruleParser.curSiteRule)) {
                 initPage();
             }
+            if (!ruleParser.nextLinkHref) isLoading = false;
         },1);
     };
     history.pushState = _wr('pushState');
@@ -4073,8 +4092,9 @@
         };
         if (ruleParser.curSiteRule.listenHashChange) {
             window.addEventListener('hashchange', () => {
-                urlChanged=true;
-                isPause=true;
+                urlChanged = true;
+                isPause = true;
+                if (!ruleParser.nextLinkHref) isLoading = false;
             }, false);
         }
         let manualMode = typeof ruleParser.curSiteRule.manualMode == 'undefined' ? rulesData.manualMode : ruleParser.curSiteRule.manualMode;
@@ -4634,7 +4654,7 @@
             }else if(ruleParser.curSiteRule.wait){
                 if(isNaN(ruleParser.curSiteRule.wait)){
                     try{
-                        checkEval=(typeof _unsafeWindow.pagetualWait=='undefined') ? Function("doc",'"use strict";' + ruleParser.curSiteRule.wait) : _unsafeWindow.pagetualWait;
+                        checkEval=(typeof _unsafeWindow.pagetualWait=='undefined') ? Function("doc", '"use strict";' + ruleParser.curSiteRule.wait) : _unsafeWindow.pagetualWait;
                     }catch(e){
                         debug(e);
                     }
@@ -4773,24 +4793,24 @@
             emuIframe.height = '0';
             emuIframe.frameBorder = '0';
             emuIframe.style.cssText = 'position:fixed;left:0;top:50%;margin:0!important;padding:0!important;visibility:hidden!important;flex:0;';
-            emuIframe.addEventListener("load", e=>{
-                setTimeout(()=>{
-                    try{
-                        iframeDoc=emuIframe.contentDocument || emuIframe.contentWindow.document;
-                    }catch(e){
+            emuIframe.addEventListener("load", e => {
+                setTimeout(() => {
+                    try {
+                        iframeDoc = emuIframe.contentDocument || emuIframe.contentWindow.document;
+                    } catch(e) {
                         returnFalse("Stop as cors");
                         return;
                     }
-                    let code=ruleParser.curSiteRule.init;
-                    if(code){
-                        try{
+                    let code = ruleParser.curSiteRule.init;
+                    if (code) {
+                        try {
                             Function('doc','win','iframe','"use strict";' + code)(iframeDoc, iframeDoc.defaultView, emuIframe);
-                        }catch(e){
+                        } catch(e) {
                             debug(e);
                         }
                     }
-                    if(loaded)return;
-                    loaded=true;
+                    if (loaded) return;
+                    loaded = true;
                     checkPage();
                 },500);
             });
