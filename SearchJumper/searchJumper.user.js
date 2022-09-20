@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.36
+// @version      1.6.6.37
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -320,7 +320,7 @@
                 url: "https://www.so.com/s?ie=utf-8&q=%s%20site%3A%h"
             }, {
                 name: "文字转二维码-草料",
-                url: "https://cli.im/text#p{#text-content=%s&#click-create.click()}"
+                url: "https://cli.im/text#p{#text-content=%s&#click-create.click}"
             }, {
                 name: "雅虎站内搜",
                 url: "https://search.yahoo.com/search;?p=%s%20site%3A%h"
@@ -362,7 +362,7 @@
                 description: "使用 Lunapic 编辑图片"
             }, {
                 name: "Pixlr easy",
-                url: "https://pixlr.com/x/#p{#home-open-url.click()&#image-url=%t&.dialog>.buttons>a.button.positive.click()}",
+                url: "https://pixlr.com/x/#p{#home-open-url.click&#image-url=%t&.dialog>.buttons>a.button.positive.click}",
                 description: "使用 Pixlr easy 编辑图片"
             }, {
                 name: "百度搜图",
@@ -414,7 +414,7 @@
                 url: "https://players.akamai.com/players/hlsjs?streamUrl=%t"
             }, {
                 name: "去视频水印",
-                url: "https://parse.bqrdh.com/smart/#p{.ant-input=%u&.ant-input-search-button.click()}"
+                url: "https://parse.bqrdh.com/smart/#p{.ant-input=%u&.ant-input-search-button.click}"
             } ]
         },
         {
@@ -624,7 +624,7 @@
                 url: "https://wn.run/%u"
             }, {
                 name: "当前网址-草料",
-                url: "https://cli.im/url#p{#url_content=%u&#click-create.click()}"
+                url: "https://cli.im/url#p{#url_content=%u&#click-create.click}"
             } ]
         }
     ];
@@ -4954,7 +4954,7 @@
                 let form, input, clicked = false;
 
                 for (let param of params) {
-                    if (param[0] === "sleep") {
+                    if (param[0] === "sleep" || param[0] === "@sleep") {
                         await sleep(param[1]);
                         continue;
                     }
@@ -5342,6 +5342,11 @@
                                 postParams.push([k, v]);
                             } else if (pair.endsWith('.click()') || pair.endsWith('.click')) {
                                 postParams.push(['@' + pair.replace(/\.click(\(\))?$/, ''), 'click']);
+                            } else {
+                                let sleep = pair.match(/sleep\((.*)\)/);
+                                if (sleep) {
+                                    postParams.push(['@sleep', sleep[1]]);
+                                }
                             }
                         });
                         if (resultUrl === "" || resultUrl === location.href) {
