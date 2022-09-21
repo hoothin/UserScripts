@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.43
+// @version      1.6.6.44
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -1230,6 +1230,9 @@
                      opacity: 0.8;
                      ${searchData.prefConfig.noAni ? "" : "transition:margin-top 0.25s ease, margin-left 0.25s, right 0.25s, opacity 0.25s, transform 0.25s;"}
                  }
+                 .search-jumper-searchBar.initShow.funcKeyCall {
+                     ${searchData.prefConfig.noAni ? "" : "transition:opacity 0.5s;"}
+                 }
                  .in-input>.search-jumper-searchBar,
                  .search-jumper-searchBar.funcKeyCall {
                      opacity: 1;
@@ -1246,7 +1249,9 @@
                      box-shadow: #000000 0px 0px 10px;
                      overflow: auto;
                      scrollbar-width: none;
-                     overscroll-behavior ：contain;
+                     overscroll-behavior: contain;
+                     -ms-scroll-chaining: contain;
+                     transition: none;
                  }
                  #search-jumper>.search-jumper-searchBar.funcKeyCall>.search-jumper-type::-webkit-scrollbar {
                      width: 0 !important;
@@ -5807,6 +5812,7 @@
                         searchData.prefConfig.offset.y
                     );
                 }
+                this.bar.classList.remove("funcKeyCall");
                 if (firstType && firstType.parentNode.classList.contains('search-jumper-hide')) {
                     if (!searchData.prefConfig.disableAutoOpen) {
                         firstType.onmousedown();
@@ -5815,8 +5821,7 @@
                 }
                 if (funcKeyCall) {
                     this.bar.classList.add("funcKeyCall");
-                } else if (this.bar.classList.contains("funcKeyCall")) {
-                    this.bar.classList.remove("funcKeyCall");
+                } else {
                     this.bar.style.display = "";
                     this.initPos(
                         searchData.prefConfig.position.x,
@@ -5837,10 +5842,18 @@
                     if (clientX < 0) clientX = 5;
                     else if (clientX + self.bar.scrollWidth > viewWidth) clientX = viewWidth - self.bar.scrollWidth - 20;
                     let clientY = e.clientY;
-                    if (clientY > viewHeight / 2) clientY -= (self.bar.scrollHeight + 5);
-                    else clientY += 5;
+                    if (clientY > viewHeight / 2) clientY -= (self.bar.scrollHeight + 15);
+                    else clientY += 15;
                     self.bar.style.left = clientX + "px";
                     self.bar.style.top = clientY + "px";
+                    self.bar.style.opacity = 0;
+                    self.removeBar();
+                    setTimeout(() => {
+                        self.appendBar();
+                        setTimeout(() => {
+                            self.bar.style.opacity = 1;
+                        }, 1);
+                    }, 1);
                 } else {
                     setTimeout(() => {
                         self.checkScroll();
