@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.31.34
+// @version      1.9.31.35
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -172,6 +172,7 @@
                 autoLoadNum:"自动加载指定页数",
                 inputPageNum:"输入页码跳转",
                 enableHistory:"翻页后写入历史记录",
+                enableHistoryAfterInsert:"拼接后立即写入历史记录，否则浏览完毕后再行写入",
                 initRun:"打开页面后立即尝试翻页，否则滚动至页尾再翻页",
                 preload:"翻页前预读下一页，加速浏览",
                 click2ImportRule:"点击下方添加特殊规则库，并静待更新成功：",
@@ -250,6 +251,7 @@
                 autoLoadNum:"自動加載指定頁數",
                 inputPageNum:"輸入頁碼跳轉",
                 enableHistory:"翻頁后寫入歷史記錄",
+                enableHistoryAfterInsert:"拼接後立即寫入歷史記錄，否則瀏覽完畢後再行寫入",
                 initRun:"打開頁面后立即嘗試翻頁，否則滾動至頁尾再翻頁",
                 preload:"翻頁前預讀下一頁，加速瀏覽",
                 click2ImportRule:"點擊下方添加特殊規則庫，并靜待更新成功：",
@@ -327,6 +329,7 @@
                 autoLoadNum:"指定したページ数を自動的に読み込みます",
                 inputPageNum:"ジャンプするページ番号を入力",
                 enableHistory:"ページめくり後の履歴を書く",
+                enableHistoryAfterInsert: "スプライシングの直後に履歴レコードを書き込みます。それ以外の場合は、閲覧後に書き込みます",
                 initRun:"Webページを開いた直後にページをめくる",
                 preload:"事前に次のページを読む",
                 click2ImportRule:"以下をクリックして、ルールベースを追加します：",
@@ -405,6 +408,7 @@
                 autoLoadNum:"Количество для предварительной загрузки страниц",
                 inputPageNum:"Введите номер страницы для перехода",
                 enableHistory:"Записать историю после переключения страниц",
+                enableHistoryAfterInsert: "Записать запись истории сразу после сплайсинга, в противном случае запишите после просмотра",
                 initRun:"Переключать страницы сразу после открытия",
                 preload:"Предварительная загрузка следующей страницы для ускорения",
                 click2ImportRule:"Нажмите, чтобы импортировать ссылку базовых правил, затем дождитесь завершения обновления:",
@@ -482,6 +486,7 @@
                 autoLoadNum:"Amount for preload pages",
                 inputPageNum:"Enter page number to jump",
                 enableHistory:"Write history after page turning",
+                enableHistoryAfterInsert: "Write history immediately after splicing, otherwise write after browsing",
                 initRun:"Turn pages immediately after opening",
                 preload:"Preload next page for speeding up",
                 click2ImportRule:"Click to import base rules link, then wait until the update is complete:",
@@ -931,32 +936,52 @@
             return true;
         }
 
+        scrollToShow(sel, doc) {
+            let exclude = getElement(sel, doc);
+            if (exclude) {
+                var actualTop = exclude.offsetTop;
+                var current = exclude.offsetParent;
+                while(current !== null){
+                    actualTop += current.offsetTop;
+                    current = current.offsetParent;
+                }
+                doc.body.scrollTop = 0;
+                doc.documentElement.scrollTop = 0;
+                setTimeout(() => {
+                    doc.body.scrollTop = actualTop;
+                    doc.documentElement.scrollTop = actualTop;
+                }, 1);
+                setTimeout(() => {
+                    doc.body.scrollTop = actualTop + 10;
+                    doc.documentElement.scrollTop = actualTop + 10;
+                }, 2);
+                setTimeout(() => {
+                    doc.body.scrollTop = actualTop + 50;
+                    doc.documentElement.scrollTop = actualTop + 50;
+                }, 3);
+                setTimeout(() => {
+                    doc.body.scrollTop = actualTop + 200;
+                    doc.documentElement.scrollTop = actualTop + 200;
+                }, 4);
+                return false;
+            }
+            return true;
+        }
+
         waitElement(doc, selArr) {
             if (!selArr) selArr = this.curSiteRule.waitElement;
             if (selArr[0].trim()) {
                 let include = getElement(selArr[0], doc);
-                if (!include) return false;
+                if (!include) {
+                    if (selArr.length == 2 && selArr[1].trim()) {
+                        this.scrollToShow(selArr[1], doc);
+                    }
+                    return false;
+                }
             }
             if (doc === document) return true;
-            if (selArr.length==2 && selArr[1].trim()) {
-                let exclude = getElement(selArr[1], doc);
-                if (exclude) {
-                    var actualTop = exclude.offsetTop;
-                    var current = exclude.offsetParent;
-                    while(current !== null){
-                        actualTop += current.offsetTop;
-                        current = current.offsetParent;
-                    }
-                    doc.body.scrollTop = 0;
-                    doc.documentElement.scrollTop = 0;
-                    doc.body.scrollTop = actualTop;
-                    doc.documentElement.scrollTop = actualTop;
-                    doc.body.scrollTop = actualTop + 10;
-                    doc.documentElement.scrollTop = actualTop + 10;
-                    doc.body.scrollTop = actualTop + 50;
-                    doc.documentElement.scrollTop = actualTop + 50;
-                    doc.body.scrollTop = actualTop + 200;
-                    doc.documentElement.scrollTop = actualTop + 200;
+            if (selArr.length == 2 && selArr[1].trim()) {
+                if (!this.scrollToShow(selArr[1], doc)) {
                     return false;
                 }
             }
@@ -1361,16 +1386,9 @@
                 body.querySelector("ul.pagination>li.active+li>a")||
                 body.querySelector(".pagination a[rel=next]")||
                 body.querySelector(".pagination-nav__item--next>a")||
-                body.querySelector("a[title='Next page']")||
                 body.querySelector("a.pageright")||
                 body.querySelector(".page-numbers.current+a")||
-                body.querySelector("a#rightFix")||
-                body.querySelector("a#next")||
-                body.querySelector(".next>a")||
-                body.querySelector(".next>button")||
-                body.querySelector("a[alt=next]")||
-                body.querySelector("button.next")||
-                body.querySelector("[title=next]")||
+                body.querySelector("a[title='Next page']")||
                 body.querySelector("[title='Next page']")||
                 body.querySelector("[title='下一页']")||
                 body.querySelector("[title='下一頁']")||
@@ -1378,10 +1396,18 @@
                 body.querySelector("input[value='Next page']")||
                 body.querySelector("input[value='下一页']")||
                 body.querySelector("input[value='下一頁']")||
+                body.querySelector("a#pb_next")||
+                body.querySelector("a#rightFix")||
                 body.querySelector("a#btnPreGn")||
                 body.querySelector("a.page-next")||
                 body.querySelector("a.pages-next")||
                 body.querySelector("a.page.right")||
+                body.querySelector("a#next")||
+                body.querySelector(".next>a")||
+                body.querySelector(".next>button")||
+                body.querySelector("a[alt=next]")||
+                body.querySelector("button.next")||
+                body.querySelector("[title=next]")||
                 getElementByXpath("//a[contains(@class, 'page__next')]",curPage,curPage);
             if(!next){
                 let nexts=body.querySelectorAll("a.next");
@@ -1603,50 +1629,66 @@
         }
 
         getNextLink(doc) {
-            let nextLink=null,page,href;
-            let getNextLinkByForm=(form,n)=>{
-                let params=[];
-                [].forEach.call(form.querySelectorAll("input"), input=>{
-                    if(n && /^(p|page)$/i.test(input.name)){
-                        params.push('p='+n);
-                    }else{
-                        params.push(input.name+'='+input.value);
+            let nextLink = null, page, href;
+            let getNextLinkByForm = (form, n) => {
+                let params = [];
+                [].forEach.call(form.querySelectorAll("input"), input => {
+                    if (n && /^(p|page)$/i.test(input.name)) {
+                        params.push('p=' + n);
+                    } else {
+                        params.push(input.name + '=' + input.value);
                     }
                 });
-                return form.action+'?'+params.join('&');
+                return form.action + '?' + params.join('&');
             };
-            if(this.curSiteRule.pageElementByJs){
-                this.nextLinkHref="#";
+            if (this.curSiteRule.pageElementByJs) {
+                this.nextLinkHref = "#";
                 return true;
-            }else if(this.curSiteRule.nextLinkByJs){
-                try{
-                    let targetUrl=((typeof _unsafeWindow.pagetualNextLinkByJs=='undefined') ? Function("doc",'"use strict";' + this.curSiteRule.nextLinkByJs) : _unsafeWindow.pagetualNextLinkByJs)(doc);
-                    if(targetUrl)nextLink={href:targetUrl};
-                }catch(e){
+            } else if (this.curSiteRule.nextLinkByJs) {
+                try {
+                    let targetUrl = ((typeof _unsafeWindow.pagetualNextLinkByJs == 'undefined') ? Function("doc", '"use strict";' + this.curSiteRule.nextLinkByJs) : _unsafeWindow.pagetualNextLinkByJs)(doc);
+                    if (targetUrl) nextLink = {href: targetUrl};
+                } catch(e) {
                     debug(e);
                 }
-            }else if(this.curSiteRule.nextLinkByUrl){
-                let targetUrl=this.curUrl.replace(new RegExp(this.curSiteRule.nextLinkByUrl[0],"i"), this.curSiteRule.nextLinkByUrl[1]);
-                if(targetUrl != this.curUrl){
-                    let reps=targetUrl.match(/{.*?}/g);
-                    if(reps){
-                        reps.forEach(rep=>{
-                            let code=rep.replace("{","").replace("}","").replace(/\(\)/g, "0");
-                            let result=code.match(/^(\d*)\+1$/);
-                            if(result){
-                                result=parseInt(result[1]||1)+1;
-                            }else{
-                                try{
-                                    result=Function('"use strict";return ' + code)();
-                                }catch(e){
+            } else if (this.curSiteRule.nextLinkByUrl) {
+                let targetUrl = this.curUrl.replace(new RegExp(this.curSiteRule.nextLinkByUrl[0], "i"), this.curSiteRule.nextLinkByUrl[1]);
+                if (targetUrl != this.curUrl) {
+                    let includeSel = this.curSiteRule.nextLinkByUrl[2];
+                    let excludeSel = this.curSiteRule.nextLinkByUrl[3];
+                    if (includeSel) {
+                        includeSel = includeSel.trim();
+                        if (!getElement(includeSel, doc)) {
+                            this.nextLinkHref=false;
+                            return null;
+                        }
+                    }
+                    if (excludeSel) {
+                        excludeSel = excludeSel.trim();
+                        if (getElement(excludeSel, doc)) {
+                            this.nextLinkHref=false;
+                            return null;
+                        }
+                    }
+                    let reps = targetUrl.match(/{.*?}/g);
+                    if (reps) {
+                        reps.forEach(rep => {
+                            let code = rep.replace("{","").replace("}", "").replace(/\(\)/g, "0");
+                            let result = code.match(/^(\d*)\+1$/);
+                            if (result) {
+                                result = parseInt(result[1] || 1) + 1;
+                            } else {
+                                try {
+                                    result = Function('"use strict";return ' + code)();
+                                } catch(e) {
                                     debug(e);
                                 }
                             }
-                            targetUrl=targetUrl.replace(rep, result);
+                            targetUrl = targetUrl.replace(rep, result);
                         });
                     }
                 }
-                nextLink={href:targetUrl};
+                nextLink = {href: targetUrl};
             } else if (this.curSiteRule.nextLink) {
                 let nextLinkSel = this.curSiteRule.nextLink;
                 if (nextLinkSel != "0" && nextLinkSel != 0) {
@@ -2035,7 +2077,7 @@
             }
         }
 
-        async insertPage(doc, eles, url, callback, tried){
+        async insertPage(doc, eles, url, callback, tried) {
             this.oldUrl=this.curUrl;
             let oldTitle=this.pageDoc.title;
             this.pageDoc=doc;
@@ -2090,22 +2132,31 @@
                 document.documentElement.scrollTop=curScroll;
             }
             this.pageAction(doc, newEles);
-            if(this.oldUrl!=location.href){
-                let isJs=/^(javascript|#)/.test(this.oldUrl.replace(location.href,""));
-                let enableHistory = this.curSiteRule.history;
-                if (enableHistory == 1) {
-                    enableHistory = true;
-                } else if (enableHistory == 0) {
-                    enableHistory = false;
-                } else {
-                    enableHistory = rulesData.enableHistory;
-                }
-                if(enableHistory && !isJs){
-                    _unsafeWindow.history.replaceState(undefined, oldTitle, this.oldUrl);
-                    document.title=oldTitle;
+            let enableHistory = this.curSiteRule.history;
+            let enableHistoryAfterInsert = false;
+            if (enableHistory == 1) {
+                enableHistory = true;
+            } else if (enableHistory == 2) {
+                enableHistory = true;
+                enableHistoryAfterInsert = true;
+            } else if (enableHistory == 0) {
+                enableHistory = false;
+            } else {
+                enableHistory = rulesData.enableHistory;
+                enableHistoryAfterInsert = rulesData.enableHistoryAfterInsert;
+            }
+            if (enableHistory) {
+                let historyUrl = enableHistoryAfterInsert ? this.curUrl : this.oldUrl;
+                if(historyUrl != location.href) {
+                    let isJs=/^(javascript|#)/.test(historyUrl.replace(location.href, ""));
+                    if(!isJs){
+                        let historyTitle = enableHistoryAfterInsert ? doc.title : oldTitle;
+                        _unsafeWindow.history.replaceState(undefined, historyTitle, historyUrl);
+                        document.title = historyTitle;
+                    }
                 }
             }
-            isLoading=false;
+            isLoading = false;
             return true;
         }
     }
@@ -3253,6 +3304,7 @@
         let enableWhiteListInput=createCheckbox(i18n("autoRun"), rulesData.enableWhiteList!=true);
         let enableDebugInput=createCheckbox(i18n("enableDebug"), rulesData.enableDebug!=false);
         let enableHistoryInput=createCheckbox(i18n("enableHistory"), rulesData.enableHistory===true);
+        let enableHistoryAfterInsertInput=createCheckbox(i18n("enableHistoryAfterInsert"), rulesData.enableHistoryAfterInsert===true);
         let openInNewTabInput=createCheckbox(i18n("openInNewTab"), rulesData.openInNewTab!=false);
         let hideLoadingIconInput=createCheckbox(i18n("hideLoadingIcon"), rulesData.hideLoadingIcon!=false);
         let initRunInput=createCheckbox(i18n("initRun"), rulesData.initRun!=false);
@@ -3346,6 +3398,7 @@
             rulesData.enableWhiteList=!enableWhiteListInput.checked;
             rulesData.enableDebug=enableDebugInput.checked;
             rulesData.enableHistory=enableHistoryInput.checked;
+            rulesData.enableHistoryAfterInsert=enableHistoryAfterInsertInput.checked;
             rulesData.openInNewTab=openInNewTabInput.checked;
             rulesData.hideLoadingIcon=hideLoadingIconInput.checked;
             rulesData.initRun=initRunInput.checked;
@@ -4532,12 +4585,12 @@
         let iframe = document.createElement('iframe');
         iframe.name = 'pagetual-iframe';
         iframe.width = '100%';
-        iframe.height = '0';
+        iframe.height = '1000';
         iframe.frameBorder = '0';
         if(ruleParser.curSiteRule.sandbox!=false){
             iframe.sandbox="allow-same-origin allow-scripts allow-popups allow-forms";
         }
-        iframe.style.cssText = 'margin:0!important;padding:0!important;visibility:hidden!important;flex:0;';
+        iframe.style.cssText = 'margin:0!important;padding:0!important;;flex:0;opacity:0!important;pointer-events:none!important;position:fixed;top:0px;left:0px;';
         let waitTime=100,checkEval;
         if(ruleParser.curSiteRule.waitElement){
             checkEval = doc => {
