@@ -1023,6 +1023,11 @@
         "pinUrl": true
     },
     {
+        "name": "Actions · github",
+        "url": "^https?://github\\.com/",
+        "pageElement": "div.js-socket-channel.js-updatable-content"
+    },
+    {
         "name": "360搜索",
         "url": "^https://www\\.so\\.com/s",
         "lazyImgSrc": "data-isrc",
