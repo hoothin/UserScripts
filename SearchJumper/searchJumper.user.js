@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.45.1
+// @version      1.6.6.45.2
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -5016,6 +5016,7 @@
             }
 
             async submitAction(params) {
+                params = params.slice();
                 if (document.readyState !== 'complete') {
                     await sleep(500);
                     this.submitAction(params);
@@ -5024,6 +5025,10 @@
                 let form, input, clicked = false;
 
                 for (let param of params) {
+                    if (inPagePostParams) {
+                        inPagePostParams.shift();
+                        storage.setItem("inPagePostParams", inPagePostParams ? inPagePostParams : false);
+                    }
                     if (param[0] === "sleep" || param[0] === "@sleep") {
                         await sleep(param[1]);
                         continue;
@@ -5159,6 +5164,8 @@
                         }
                     });
                 }
+                ele.dataset.inPagePost = (data.url.indexOf("#p{") != -1) ? 't' : 'f';
+                let inPagePost = ele.dataset.inPagePost === 't';
                 if (!isBookmark && (!currentSite || data.hideNotMatch)) {
                     if (data.match === '0') {
                         ele.style.display = 'none';
@@ -5202,8 +5209,11 @@
                     }
                     if (ele.dataset.current) {
                         if (!currentSite && inPagePostParams) {
-                            storage.setItem("inPagePostParams", false);
-                            await this.submitAction(inPagePostParams);
+                            if (inPagePost) {
+                                await this.submitAction(inPagePostParams);
+                            } else {
+                                storage.setItem("inPagePostParams", false);
+                            }
                         }
                     } else if (data.hideNotMatch) {
                         ele.style.display = 'none';
@@ -5226,10 +5236,7 @@
                         cacheKeywords = keywords;
                         storage.setItem("cacheKeywords", keywords);
                     }
-                    if (!ele.dataset.inPagePost) {
-                        ele.dataset.inPagePost = (data.url.indexOf("#p{") != -1) ? 't' : 'f';
-                    }
-                    let inPagePost = ele.dataset.inPagePost === 't', postMatch;
+                    let postMatch;
                     if (inPagePost) {
                         postMatch = data.url.match(/#p{(.*[^\\])}/);
                     }
@@ -5256,15 +5263,6 @@
                     };
                     let needDecode = (/^c:|[#:%]P{/i.test(data.url));
                     let keywordsU, keywordsL, keywordsR;
-                    if (!keywordsU && !keywordsL && !keywordsR) {
-                        keywordsR = keywords;
-                        try {
-                            keywordsR = decodeURIComponent(keywords);
-                        } catch (e) {}
-                        if (needDecode) keywords = keywordsR;
-                        keywordsU = keywords.toUpperCase();
-                        keywordsL = keywords.toLowerCase();
-                    }
                     let customReplaceKeywords = str => {
                         str = customReplaceSingle(str, "%su", keywordsU);
                         str = customReplaceSingle(str, "%sl", keywordsL);
@@ -5325,6 +5323,15 @@
                         } else if ((targetElement.tagName == 'A' || (targetElement.parentNode && targetElement.parentNode.tagName == 'A')) && hasWordParam && !keywords) {
                             keywords = encodeURIComponent(targetElement.textContent);
                         }
+                    }
+                    if (!keywordsU && !keywordsL && !keywordsR) {
+                        keywordsR = keywords;
+                        try {
+                            keywordsR = decodeURIComponent(keywords);
+                        } catch (e) {}
+                        if (needDecode) keywords = keywordsR;
+                        keywordsU = keywords.toUpperCase();
+                        keywordsL = keywords.toLowerCase();
                     }
                     while (resultUrl.indexOf('%input{') !== -1) {
                         let inputMatch = resultUrl.match(/%input{(.*?)}/);
@@ -5431,6 +5438,7 @@
                             }
                         });
                         if (resultUrl === "" || resultUrl === location.href) {
+                            inPagePostParams = postParams;
                             this.submitAction(postParams);
                             return false;
                         } else {
