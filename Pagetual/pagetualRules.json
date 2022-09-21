@@ -200,6 +200,26 @@
         ]
     },
     {
+        "name": "avple.tv",
+        "author": "tony0809",
+        "example": "https://avple.tv/tags/135/1/date",
+        "url": "^https://avple\\.tv/tags/\\d+/\\d+/\\w+$",
+        "action": 1,
+        "nextLinkByUrl": [
+            "(/\\d+/)(\\d+)(/\\w+)$",
+            "$1{$2+1}$3",
+            "[aria-label='Go to next page']:not(.Mui-disabled)"
+        ],
+        "pageElement": ".jss23",
+        "replaceElement": ".jss15",
+        "waitElement": [
+            ".lazyload-wrapper>img",
+            ".lazyload-wrapper>.lazyload-placeholder"
+        ],
+        "pageBar": 1,
+        "css": "inIframe:header{display:none!important;}.jss23{margin-left:-7px;margin-right:7px;}"
+    },
+    {
         "name": "哈啦區 - 巴哈姆特",
         "url": "^https?://forum\\.gamer\\.com\\.tw/(index|$)",
         "enable": 0
