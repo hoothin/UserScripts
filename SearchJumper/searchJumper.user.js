@@ -1341,7 +1341,7 @@
                      margin: ${3 * this.scale}px;
                      cursor: pointer;
                      box-sizing: content-box;
-                     ${searchData.prefConfig.noAni ? "" : "transition:margin-left 0.25s ease-out, width 0.25s, height 0.25s, transform 0.25s;"}
+                     ${searchData.prefConfig.noAni ? "" : "transition:margin-left 0.25s ease, width 0.25s, height 0.25s, transform 0.25s;"}
                      width: ${32 * this.scale}px;
                      height: ${32 * this.scale}px;
                      overflow: hidden;
