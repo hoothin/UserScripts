@@ -6,7 +6,7 @@
 // @namespace    hoothin
 // @supportURL   https://github.com/hoothin/UserScripts
 // @homepageURL  https://github.com/hoothin/UserScripts
-// @version      1.2.6.7
+// @version      1.2.6.8
 // @description        任意轉換網頁中的簡體中文與繁體中文（默認簡體→繁體）
 // @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体）
 // @description:ja     簡繁中国語に変換
@@ -318,7 +318,6 @@
         '估计':'大概',
         '竖的':'直的',
         '让一下':'借過',
-        '等会儿':'等一下',
         '凉水':'冰水',
         '打包':'外帶',
         '外卖':'外送',
@@ -365,10 +364,7 @@
         '蛙泳':'蛙式',
         '初中生':'國中生',
         '本科生':'大學生',
-        '师傅':'司機',
-        '女士':'小姐',
         '程序员':'程式設計師',
-        '师兄':'學長',
         '妹子':'女孩',
         '传销':'直銷',
         '宇航员':'太空人',
@@ -380,6 +376,9 @@
         '丙肝':'C肝',
         '塑料':'塑膠',
         '知识产权':'智慧財產權'
+    };
+    var sc2tcCombConfig = {
+        "*": sc2tcComb
     };
     //此處為姦文盲親娘
     var fuckIlliteracy = {
@@ -419,60 +418,7 @@
     var action = 0;//1:noChange, 2:showSimplified, 3:showTraditional
 
     var stDict={},tsDict={};
-    for(let i in scStr){
-        stDict[scStr[i]]=tcStr[i];
-        tsDict[tcStr[i]]=scStr[i];
-    }
     var sc2tcCombTree={}, tc2scCombTree={}, fuckIlliteracyTree={};
-    for(let key in sc2tcComb){
-        let value=sc2tcComb[key];
-        let curTree=sc2tcCombTree;
-        for(let i=0;i<key.length;i++){
-            let newTree={};
-            if(i==key.length-1){
-                newTree={"end":value};
-            }
-            let branch=curTree[key.charAt(i)];
-            if(!branch){
-                curTree[key.charAt(i)]=newTree;
-                curTree=newTree;
-            }else{
-                curTree=branch;
-            }
-        }
-        curTree=tc2scCombTree;
-        for(let i=0;i<value.length;i++){
-            let newTree={};
-            if(i==value.length-1){
-                newTree={"end":key};
-            }
-            let branch=curTree[value.charAt(i)];
-            if(!branch){
-                curTree[value.charAt(i)]=newTree;
-                curTree=newTree;
-            }else{
-                curTree=branch;
-            }
-        }
-    }
-    for(let key in fuckIlliteracy){
-        let value=fuckIlliteracy[key];
-        let curTree=fuckIlliteracyTree;
-        for(let i=0;i<key.length;i++){
-            let newTree={};
-            if(i==key.length-1){
-                newTree={"end":value};
-            }
-            let branch=curTree[key.charAt(i)];
-            if(!branch){
-                curTree[key.charAt(i)]=newTree;
-                curTree=newTree;
-            }else{
-                curTree=branch;
-            }
-        }
-    }
-
 
     function stranText(txt){
         if(!txt)return "";
@@ -782,6 +728,58 @@
 
     var saveAction;
     function run() {
+        for(let i in scStr){
+            stDict[scStr[i]]=tcStr[i];
+            tsDict[tcStr[i]]=scStr[i];
+        }
+        for(let key in sc2tcComb){
+            let value=sc2tcComb[key];
+            let curTree=sc2tcCombTree;
+            for(let i=0;i<key.length;i++){
+                let newTree={};
+                if(i==key.length-1){
+                    newTree={"end":value};
+                }
+                let branch=curTree[key.charAt(i)];
+                if(!branch){
+                    curTree[key.charAt(i)]=newTree;
+                    curTree=newTree;
+                }else{
+                    curTree=branch;
+                }
+            }
+            curTree=tc2scCombTree;
+            for(let i=0;i<value.length;i++){
+                let newTree={};
+                if(i==value.length-1){
+                    newTree={"end":key};
+                }
+                let branch=curTree[value.charAt(i)];
+                if(!branch){
+                    curTree[value.charAt(i)]=newTree;
+                    curTree=newTree;
+                }else{
+                    curTree=branch;
+                }
+            }
+        }
+        for(let key in fuckIlliteracy){
+            let value=fuckIlliteracy[key];
+            let curTree=fuckIlliteracyTree;
+            for(let i=0;i<key.length;i++){
+                let newTree={};
+                if(i==key.length-1){
+                    newTree={"end":value};
+                }
+                let branch=curTree[key.charAt(i)];
+                if(!branch){
+                    curTree[key.charAt(i)]=newTree;
+                    curTree=newTree;
+                }else{
+                    curTree=branch;
+                }
+            }
+        }
         action=saveAction?saveAction:(isSimple?(auto?2:3):(auto?3:2));
         if((auto||saveAction) && action > 1){
             let startStrans = () => {
@@ -939,6 +937,16 @@
                 siteChanged = true;
             });
 
+            let customTermTitle = document.createElement('h3');
+            customTermTitle.style.margin = '5px 0';
+            customTermTitle.innerText = '自定義用語轉換（可透過網址通配符設置生效範圍）：';
+            baseCon.appendChild(customTermTitle);
+            let customTermInput = document.createElement('textarea');
+            customTermInput.style.width = '100%';
+            customTermInput.style.minHeight = "60px";
+            customTermInput.value = JSON.stringify(sc2tcCombConfig, null, 4);
+            baseCon.appendChild(customTermInput);
+
             let sitesList;
             _GM_listValues(list => {
                 sitesList = list;
@@ -994,6 +1002,12 @@
                 storage.setItem('altKey', altKey);
                 storage.setItem('shiftKey', shiftKey);
                 storage.setItem('metaKey', metaKey);
+                try {
+                    sc2tcCombConfig = JSON.parse(customTermInput.value);
+                    storage.setItem('sc2tcCombConfig', sc2tcCombConfig);
+                } catch (e) {
+                    console.log(e);
+                }
                 alert('保存設置成功！')
             });
             baseCon.appendChild(saveBtn);
@@ -1025,7 +1039,28 @@
         }
     }
 
-    getMulValue(["auto", "shortcutKey", "ctrlKey", "altKey", "shiftKey", "metaKey", currentAction], values => {
+    function globMatch(first, second) {
+        if (first.length == 0 && second.length == 0){
+            return true;
+        }
+        if (first.length > 1 && first[0] == '*' &&
+            second.length == 0){
+            return false;
+        }
+        if ((first.length > 1 && first[0] == '?') ||
+            (first.length != 0 && second.length != 0 &&
+             first[0] == second[0])){
+            return globMatch(first.substring(1),
+                             second.substring(1));
+        }
+        if (first.length > 0 && first[0] == '*'){
+            return globMatch(first.substring(1), second) ||
+                globMatch(first, second.substring(1));
+        }
+        return false;
+    }
+
+    getMulValue(["auto", "shortcutKey", "ctrlKey", "altKey", "shiftKey", "metaKey", "sc2tcCombConfig", currentAction], values => {
         auto = values.auto;
         shortcutKey = values.shortcutKey;
         ctrlKey = values.ctrlKey;
@@ -1033,6 +1068,18 @@
         shiftKey = values.shiftKey;
         metaKey = values.metaKey;
         saveAction = values[currentAction];
+        if (values.sc2tcCombConfig) {
+            sc2tcCombConfig = values.sc2tcCombConfig;
+            sc2tcComb = {};
+            for (let key in sc2tcCombConfig) {
+                 if (globMatch(key, location.href)) {
+                     let sc2tc = sc2tcCombConfig[key];
+                     for (let sc in sc2tc) {
+                         sc2tcComb[sc] = sc2tc[sc];
+                     }
+                 }
+            }
+        }
         run();
     });
 
