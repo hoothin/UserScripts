@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.45.8
+// @version      1.6.6.45.9
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -1231,7 +1231,11 @@
                      ${searchData.prefConfig.noAni ? "" : "transition:margin-top 0.25s ease, margin-left 0.25s, right 0.25s, opacity 0.25s, transform 0.25s;"}
                  }
                  .search-jumper-searchBar.initShow.funcKeyCall {
-                     ${searchData.prefConfig.noAni ? "" : "transition:opacity 0.5s;"}
+                     ${searchData.prefConfig.noAni ? "" : "transition:opacity 0.5s ease-out;"}
+                 }
+                 .search-jumper-searchBar.funcKeyCall {
+                     background: none;
+                     border: none;
                  }
                  .in-input>.search-jumper-searchBar,
                  .search-jumper-searchBar.funcKeyCall {
@@ -1252,6 +1256,7 @@
                      overscroll-behavior: contain;
                      -ms-scroll-chaining: contain;
                      transition: none;
+                     background: #d0d0d0d0;
                  }
                  #search-jumper>.search-jumper-searchBar.funcKeyCall>.search-jumper-type::-webkit-scrollbar {
                      width: 0 !important;
@@ -1336,7 +1341,7 @@
                      margin: ${3 * this.scale}px;
                      cursor: pointer;
                      box-sizing: content-box;
-                     ${searchData.prefConfig.noAni ? "" : "transition:margin-left 0.25s ease, width 0.25s, height 0.25s, transform 0.25s;"}
+                     ${searchData.prefConfig.noAni ? "" : "transition:margin-left 0.25s ease-out, width 0.25s, height 0.25s, transform 0.25s;"}
                      width: ${32 * this.scale}px;
                      height: ${32 * this.scale}px;
                      overflow: hidden;
@@ -1601,6 +1606,7 @@
                  a.search-jumper-word {
                      background: #f7f7f7;
                      color: #111111!important;
+                     filter: drop-shadow(1px 1px 3px #00000060);
                  }
                  .search-jumper-type img {
                      width: ${32 * this.scale}px;
