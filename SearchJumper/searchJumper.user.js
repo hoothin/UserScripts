@@ -1345,7 +1345,7 @@
                      text-decoration:none;
                      min-width: ${32 * this.scale}px;
                      min-height: ${32 * this.scale}px;
-                     filter: drop-shadow(1px 1px 3px #00000010);
+                     filter: drop-shadow(1px 1px 3px #00000020);
                  }
                  .search-jumper-btn>i {
                      line-height: ${32 * this.scale}px;
@@ -1634,9 +1634,6 @@
                  }
                  .search-jumper-searchBar.funcKeyCall:hover>.search-jumper-hide {
                      display: none;
-                 }
-                 .search-jumper-searchBar.funcKeyCall>.search-jumper-type>a.search-jumper-btn {
-                     filter: drop-shadow(1px 1px 3px #00000080);
                  }
                  span.search-jumper-word>img {
                      width: ${20 * this.scale}px;
