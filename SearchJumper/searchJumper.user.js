@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.45.7
+// @version      1.6.6.45.8
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -4286,7 +4286,11 @@
                 this.historyInserted = true;
                 this.historySiteBtns.slice(0, searchData.prefConfig.historyLength).forEach(btn => {
                     if (btn.parentNode != typeEle) {
-                        if (typeEle.querySelector(`[href="${btn.href}"]`)) return;
+                        let sites = typeEle.querySelectorAll("a.search-jumper-btn");
+                        for (let i = 0; i < sites.length; i++) {
+                            let site = sites[i];
+                            if (site.href == btn.href) return;
+                        }
                         if (self.searchJumperExpand.parentNode == typeEle) {
                             typeEle.insertBefore(btn, self.searchJumperExpand);
                         } else typeEle.appendChild(btn);
@@ -5803,7 +5807,7 @@
                 this.bar.classList.add("initShow");
                 if (getSelectStr()) {
                     this.bar.classList.add("search-jumper-isInPage");
-                    if (this.bar.style.display == "none") {
+                    if (this.bar.style.display == "none" || funcKeyCall) {
                         firstType = this.bar.querySelector('.search-jumper-needInPage:not(.notmatch)>span');
                     } else {
                         let openType = this.bar.querySelector(".search-jumper-type:not(.search-jumper-hide)");
@@ -5852,7 +5856,7 @@
                 }
                 this.bar.classList.remove("funcKeyCall");
                 if (firstType && firstType.parentNode.classList.contains('search-jumper-hide')) {
-                    if (!searchData.prefConfig.disableAutoOpen) {
+                    if (!searchData.prefConfig.disableAutoOpen || funcKeyCall) {
                         firstType.onmousedown();
                     }
                     self.insertHistory(firstType.parentNode);
