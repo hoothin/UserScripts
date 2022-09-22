@@ -939,7 +939,7 @@
 
             let customTermTitle = document.createElement('h3');
             customTermTitle.style.margin = '5px 0';
-            customTermTitle.innerText = '自定義用語轉換（可透過網址通配符設置生效範圍）：';
+            customTermTitle.innerText = '自定義用語轉換（可透過通配符設置生效網址範圍）：';
             baseCon.appendChild(customTermTitle);
             let customTermInput = document.createElement('textarea');
             customTermInput.style.width = '100%';
