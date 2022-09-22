@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.45.2
+// @version      1.6.6.45.3
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -5861,13 +5861,13 @@
                     else clientY += 15;
                     self.bar.style.left = clientX + "px";
                     self.bar.style.top = clientY + "px";
-                    self.bar.style.opacity = 0;
                     self.removeBar();
+                    self.bar.style.opacity = 0;
                     setTimeout(() => {
                         self.appendBar();
                         setTimeout(() => {
                             self.bar.style.opacity = 1;
-                        }, 1);
+                        }, 10);
                     }, 1);
                 } else {
                     setTimeout(() => {
@@ -6068,7 +6068,7 @@
                     let target = self.getTarget(e.target);
                     if (self.callback) {
                         if (target) {
-                            let sel = self.geneSelector(target);
+                            let sel = self.geneSelector(target, true);
                             self.callback(sel);
                             self.close();
                         }
@@ -6165,16 +6165,17 @@
                 this.setImportant(div, "top", rect.top + window.scrollY + "px");
             }
 
-            geneSelector(ele) {
-                let selector=ele.tagName.toLowerCase();
-                if(ele.tagName!="HTML" && ele.tagName!="BODY"){
-                    if(ele.className) {
+            geneSelector(ele, id) {
+                let selector = ele.tagName.toLowerCase();
+                if (ele.tagName !== "HTML" && ele.tagName !== "BODY") {
+                    if (id && ele.id) selector += '#' + ele.id;
+                    if (ele.className) {
                         let classLen = ele.classList.length;
                         selector += [].map.call(ele.classList, d => /^[\w]+$/.test(d) || (classLen < 3 && /^[\w\-_]+$/.test(d)) ? ('.' + d) : "").join('');
                     }
                     let parent = ele.parentElement;
-                    if(parent){
-                        selector = this.geneSelector(parent) + ' > ' + selector;
+                    if (parent) {
+                        selector = this.geneSelector(parent, !!id) + ' > ' + selector;
                     }
                 }
                 return selector;
