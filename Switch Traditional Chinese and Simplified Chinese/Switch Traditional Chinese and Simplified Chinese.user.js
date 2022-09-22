@@ -1067,14 +1067,14 @@
     }
 
     getMulValue(["auto", "shortcutKey", "ctrlKey", "altKey", "shiftKey", "metaKey", "sc2tcCombConfig", currentAction], values => {
-        auto = values.auto;
-        shortcutKey = values.shortcutKey;
-        ctrlKey = values.ctrlKey;
-        altKey = values.altKey;
-        shiftKey = values.shiftKey;
-        metaKey = values.metaKey;
-        saveAction = values[currentAction];
         if (values.sc2tcCombConfig) {
+            auto = values.auto;
+            shortcutKey = values.shortcutKey;
+            ctrlKey = values.ctrlKey;
+            altKey = values.altKey;
+            shiftKey = values.shiftKey;
+            metaKey = values.metaKey;
+            saveAction = values[currentAction];
             sc2tcCombConfig = values.sc2tcCombConfig;
             sc2tcComb = {};
             for (let key in sc2tcCombConfig) {
