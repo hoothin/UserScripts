@@ -578,7 +578,7 @@
         if (childs) {
             for (var i = 0;i<childs.length;i++){
                 var child=childs[i];
-                if (/BR|META|SCRIPT|HR|TEXTAREA|STYLE/.test(child.tagName)) continue;
+                if (/BR|META|SCRIPT|HR|STYLE/.test(child.tagName)) continue;
                 if (child.getAttribute && child.getAttribute('translate') === 'no') continue;
                 if (child.title) {
                     let title = stranText(child.title);
