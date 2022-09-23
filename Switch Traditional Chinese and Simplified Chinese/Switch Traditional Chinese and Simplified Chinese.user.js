@@ -6,7 +6,7 @@
 // @namespace    hoothin
 // @supportURL   https://github.com/hoothin/UserScripts
 // @homepageURL  https://github.com/hoothin/UserScripts
-// @version      1.2.6.10
+// @version      1.2.6.11
 // @description        任意轉換網頁中的簡體中文與繁體中文（默認簡體→繁體）
 // @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体）
 // @description:ja     簡繁中国語に変換
@@ -25,6 +25,8 @@
 // @grant        GM.notification
 // @grant        GM.listValues
 // @grant        GM.deleteValue
+// @downloadURL  https://github.com/hoothin/UserScripts/raw/master/Switch%20Traditional%20Chinese%20and%20Simplified%20Chinese/Switch%20Traditional%20Chinese%20and%20Simplified%20Chinese.user.js
+// @updateURL    https://github.com/hoothin/UserScripts/raw/master/Switch%20Traditional%20Chinese%20and%20Simplified%20Chinese/Switch%20Traditional%20Chinese%20and%20Simplified%20Chinese.user.js
 // @contributionURL      https://www.buymeacoffee.com/hoothin
 // @contributionAmount 1
 // ==/UserScript==
