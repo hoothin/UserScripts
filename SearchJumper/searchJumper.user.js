@@ -3493,7 +3493,11 @@
                 this.historySiteBtns.slice(0, 10).forEach(btn => {
                     self.historylist.appendChild(btn);
                 });
-                this.showallInput.value = getKeywords();
+                let kw = getKeywords();
+                try {
+                    kw = decodeURIComponent(kw);
+                } catch (e) {}
+                this.showallInput.value = kw;
                 setTimeout(() => {
                     let mouseHandler = e => {
                         if (e.target.id === 'search-jumper-alllist' || e.target.className === 'search-jumper-showallBg' || e.target.className === 'search-jumper-historylist') {
