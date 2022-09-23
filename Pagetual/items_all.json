@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/85956",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//article/div[contains(concat(' ',@class,' '),' article ')]/*[starts-with(@class,'article__') or contains(concat(' ',@class,' '),' info ')]",
+    "nextLink": "//link[@rel='next']",
+    "url": "^https://(?:www\\.)?travelbook\\.co\\.jp/topic/",
+    "exampleUrl": "https://www.travelbook.co.jp/topic/20120"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "t_f_m'",
+  "name": "おすすめ旅行を探すならトラベルブック(TravelBook)",
+  "created_at": "2022-09-22T17:01:58+09:00",
+  "updated_at": "2022-09-22T17:01:58+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/85955",
   "data": {
     "insertBefore": "",
@@ -4493,16 +4508,16 @@
 {
   "resource_url": "http://wedata.net/items/85413",
   "data": {
-    "pageElement": "//div[@class='article-body']/*[not(self::div)]|//main//div[./div[@class='m-articles__item']]",
-    "nextLink": "//ul[@class='m-pagination__list']/li[last()]/a",
+    "pageElement": "//div[@class='article-body']/*[not(self::div) or @class='figure-center']|//main//div[./div[@class='m-articles__item']]",
+    "nextLink": "//ul[@class='m-pagination__list']/li[contains(concat(' ', @class, ' '), 'is-current')]/following-sibling::li[1]/a",
     "url": "^https://limo\\.media/",
-    "exampleUrl": "https://limo.media/articles/-/16289\r\nhttps://limo.media/category/money"
+    "exampleUrl": "https://limo.media/articles/-/32276\r\nhttps://limo.media/category/money"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "brib2",
   "name": "LIMO",
   "created_at": "2020-07-14T23:08:51+09:00",
-  "updated_at": "2022-02-10T20:56:28+09:00"
+  "updated_at": "2022-09-23T10:34:50+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85412",
