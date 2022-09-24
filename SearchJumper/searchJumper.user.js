@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.46.4
+// @version      1.6.6.46.5
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -683,7 +683,9 @@
         defaultFindTab: false,
         disableAutoOpen: false,
         hideOnSearchEngine: false,
-        minSizeMode: false
+        minSizeMode: false,
+        hidePopup: false,
+        minPopup: false
     };
     function run() {
         const lang = navigator.appName == "Netscape" ? navigator.language : navigator.userLanguage;
@@ -1351,12 +1353,12 @@
                      display: inline-flex!important;
                  }
                  #search-jumper>.search-jumper-searchBar.funcKeyCall>.search-jumper-type {
-                     height: auto!important;
-                     width: ${240 * this.scale}px!important;
-                     flex-wrap: wrap!important;
-                     flex-direction: row;
+                     height: ${searchData.prefConfig.minPopup ? '24px' : 'auto'}!important;
+                     width: ${searchData.prefConfig.minPopup ? 24 : (240 * this.scale)}px!important;
                      max-width: unset;
                      max-height: ${108 * this.scale + 10}px;
+                     flex-wrap: wrap!important;
+                     flex-direction: row;
                      padding: 5px;
                      box-shadow: #000000 0px 0px 10px;
                      overflow: auto;
@@ -1365,6 +1367,10 @@
                      -ms-scroll-chaining: contain;
                      transition: none;
                      background: #d0d0d0d0;
+                 }
+                 #search-jumper>.search-jumper-searchBar.funcKeyCall>.search-jumper-type:hover {
+                     height: auto!important;
+                     width: ${240 * this.scale}px!important;
                  }
                  #search-jumper>.search-jumper-searchBar.funcKeyCall>.search-jumper-type::-webkit-scrollbar {
                      width: 0 !important;
@@ -6001,9 +6007,10 @@
             }
 
             showInPage(funcKeyCall, e) {
-                if (this.bar.contains(targetElement) || this.inInput || this.bar.classList.contains("funcKeyCall")) {
+                if (this.bar.contains(targetElement) || this.inInput || (!funcKeyCall && this.bar.classList.contains("funcKeyCall"))) {
                     return;
                 }
+                if (searchData.prefConfig.hidePopup) funcKeyCall = false;
                 if (this.bar.parentNode && this.bar.parentNode.classList.contains("search-jumper-showall")) return;
                 if (!targetElement) targetElement = document.body;
                 let _targetElement = targetElement, children;
@@ -6097,6 +6104,7 @@
                         searchData.prefConfig.offset.y
                     );
                 }
+                this.bar.classList.remove("funcKeyCall");
                 if (firstType && firstType.parentNode.classList.contains('search-jumper-hide')) {
                     if (!searchData.prefConfig.disableAutoOpen || funcKeyCall) {
                         firstType.onmousedown();
@@ -7830,6 +7838,7 @@
                 });
                 dragRoundFrame.addEventListener('drop', e => {
                     if (e.target === dragLogo) {
+                        searchBar.bar.classList.remove("funcKeyCall");
                         searchBar.showInPage();
                     } else if (dragSector) {
                         searchBar.searchBySiteName(dragSector.children[0].dataset.name, e);
