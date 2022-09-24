@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.46.2
+// @version      1.6.6.46.3
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -1464,7 +1464,7 @@
                      width: ${32 * this.scale}px;
                      height: ${32 * this.scale}px;
                  }
-                 .search-jumper-btn>i {
+                 .search-jumper-btn>b {
                      line-height: ${32 * this.scale}px;
                      letter-spacing: 0;
                  }
@@ -1689,7 +1689,7 @@
                      margin: 0;
                      text-align: center;
                      font-size: 16px;
-                     font-family: Arial,sans-serif;
+                     font-family: Arial, sans-serif;
                      font-weight: bold;
                      background: #f6f6f6;
                      border-radius: 10px 10px 0 0;
@@ -1709,7 +1709,7 @@
                      background: black;
                      color: #ffffff!important;
                      text-shadow: 0px 0px 5px #707070;
-                     font-family: STHeiti,system-ui,Arial,sans-serif;
+                     font-family: Arial, sans-serif;
                      font-weight: bold;
                      border-radius: ${20 * this.scale}px!important;
                      font-size: ${15 * this.scale}px;
@@ -2607,7 +2607,7 @@
                     }
                     .customInputFrame-input-title {
                         font-size: 9pt;
-                        font-family: STHeiti, Helvetica, Arial, sans-serif;
+                        font-family: Arial, sans-serif;
                         display: inline-block;
                         background-color: white;
                         position: relative;
@@ -2813,7 +2813,7 @@
                     }
                     .searchJumperModify-input-title {
                         font-size: 9pt;
-                        font-family: Helvetica, Arial, sans-serif;
+                        font-family: Arial, sans-serif;
                         display: inline-block;
                         background-color: white;
                         position: relative;
@@ -4810,7 +4810,7 @@
                 ele.dataset.type = type;
                 let typeBtn = document.createElement("span");
                 let img = document.createElement("img");
-                let iEle = document.createElement("i");
+                let iEle = document.createElement("b");
                 if (type.length >= 3) {
                     iEle.innerText = type.substr(0, 3).trim();
                     if (!/^\w+$/.test(iEle.innerText)) iEle.innerText = iEle.innerText.substr(0, 2);
@@ -7706,7 +7706,7 @@
                       height: 55px;
                       font-size: 12px;
                       font-weight: bold;
-                      font-family: STHeiti, Helvetica, Arial, sans-serif;
+                      font-family: Arial, sans-serif;
                       display: flex;
                       flex-direction: column;
                       align-items: center;
@@ -7972,7 +7972,7 @@
                     }
                     .searchJumperFrame-input-title {
                         font-size: 9pt;
-                        font-family: STHeiti, Helvetica, Arial, sans-serif;
+                        font-family: Arial, sans-serif;
                         display: inline-block;
                         background-color: white;
                         position: relative;
