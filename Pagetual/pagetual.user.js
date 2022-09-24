@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.31.35
+// @version      1.9.31.36
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -166,6 +166,7 @@
                 opacity:"不透明值",
                 opacityPlaceholder:"0: 隐藏分隔条",
                 hideBar:"隐藏分页隔条",
+                hideBarButNoStop:"隐藏但不停止",
                 dbClick2Stop:"空白处双击暂停翻页",
                 sortTitle:"排序在下次更新规则后生效",
                 autoRun:"自动启用，否则为白名单模式",
@@ -245,6 +246,7 @@
                 opacity:"不透明值",
                 opacityPlaceholder:"0: 隱藏分隔條",
                 hideBar:"隱藏分頁隔條",
+                hideBarButNoStop:"隱藏但不停止",
                 dbClick2Stop:"空白處雙擊暫停翻頁",
                 sortTitle:"排序在下次更新規則後生效",
                 autoRun:"自動啓用，否則為白名單模式",
@@ -323,6 +325,7 @@
                 opacity:"不透明値",
                 opacityPlaceholder:"0: 隠す",
                 hideBar:"ページ区切り文字を非表示にします",
+                hideBarButNoStop:"非表示にするが停止しない",
                 dbClick2Stop:"空白部分をダブルクリックしてページめくりを一時停止します",
                 sortTitle:"並べ替えは、次のルールの更新後に有効になります",
                 autoRun:"自動的に有効",
@@ -402,6 +405,7 @@
                 opacity:"Непрозрачность",
                 opacityPlaceholder:"0: скрыть",
                 hideBar:"скрыть промежуток переключения страниц",
+                hideBarButNoStop:"Скрыть, но не остановить",
                 dbClick2Stop:"Двойной щелчок по пустому пространству для паузы",
                 sortTitle:"Сортировка вступает в силу после следующего обновления правила",
                 autoRun:"Автозапуск (режим черного списка)",
@@ -480,6 +484,7 @@
                 opacity:"Opacity",
                 opacityPlaceholder:"0: hide",
                 hideBar:"hide the paging spacer",
+                hideBarButNoStop:"Hide but not stop",
                 dbClick2Stop:"Double-click on the blank space to pause",
                 sortTitle:"Sorting takes effect after the next rule update",
                 autoRun:"Auto run (black list mode)",
@@ -3313,7 +3318,22 @@
         let dbClick2StopInput=createCheckbox(i18n("dbClick2Stop"), rulesData.dbClick2Stop);
         let manualModeInput=createCheckbox(i18n("manualMode"), rulesData.manualMode);
         let arrowToScrollInput=createCheckbox(i18n("arrowToScroll"), rulesData.arrowToScroll);
-        let hideBarInput=createCheckbox(i18n("hideBar"), rulesData.hideBar, "h4", dbClick2StopInput);
+
+        let hideBarInput = createCheckbox(i18n("hideBar"), rulesData.hideBar && !rulesData.hideBarButNoStop, "h4", dbClick2StopInput, 'radio');
+        hideBarInput.name = 'hideBar';
+        let hideBarButNoStopInput = createCheckbox(i18n("hideBarButNoStop"), rulesData.hideBarButNoStop, "h4", dbClick2StopInput, 'radio');
+        hideBarButNoStopInput.name = 'hideBar';
+        hideBarInput.addEventListener('mouseup', e => {
+            if (hideBarInput.checked) {
+                setTimeout(() => {hideBarInput.checked = false}, 0);
+            }
+        });
+        hideBarButNoStopInput.addEventListener('mouseup', e => {
+            if (hideBarButNoStopInput.checked) {
+                setTimeout(() => {hideBarButNoStopInput.checked = false}, 0);
+            }
+        });
+
         let dbClick2StopCtrlInput=createCheckbox(i18n("dbClick2StopCtrl"), rulesData.dbClick2StopCtrl, "h4", dbClick2StopInput);
         let dbClick2StopAltInput=createCheckbox(i18n("dbClick2StopAlt"), rulesData.dbClick2StopAlt, "h4", dbClick2StopInput);
         let dbClick2StopShiftInput=createCheckbox(i18n("dbClick2StopShift"), rulesData.dbClick2StopShift, "h4", dbClick2StopInput);
@@ -3394,6 +3414,7 @@
             rulesData.opacity=opacityInput.value/100;
             rulesData.blacklist=blacklistInput.value?blacklistInput.value.split("\n"):"";
             rulesData.hideBar=hideBarInput.checked;
+            rulesData.hideBarButNoStop=hideBarButNoStopInput.checked;
             rulesData.dbClick2Stop=dbClick2StopInput.checked;
             rulesData.enableWhiteList=!enableWhiteListInput.checked;
             rulesData.enableDebug=enableDebugInput.checked;
@@ -3962,17 +3983,26 @@
     var tipsWords=document.createElement("div");
     tipsWords.className="pagetual_tipsWords";
 
-    var isPause=false,isLoading=false,curPage=1,forceState=0,bottomGap=1000,autoLoadNum=-1,nextIndex=0,stopScroll=false;
+    var isPause = false, isHideBar = false, isLoading = false, curPage = 1, forceState = 0, bottomGap = 1000, autoLoadNum = -1, nextIndex = 0, stopScroll = false;
 
-    function changeStop(stop, hide){
-        isPause=stop;
-        [].forEach.call(document.querySelectorAll(".pagetual_pageBar"), bar=>{
-            if(isPause){
+    function changeStop(stop) {
+        isPause = stop;
+        [].forEach.call(document.querySelectorAll(".pagetual_pageBar"), bar => {
+            if (isPause) {
                 bar.classList.add("stop");
-                if(hide)bar.classList.add("hide");
-            }else{
+            } else {
                 bar.classList.remove("stop");
-                if(hide)bar.classList.remove("hide");
+            }
+        });
+    }
+
+    function changeHideBar(hide) {
+        isHideBar = hide;
+        [].forEach.call(document.querySelectorAll(".pagetual_pageBar"), bar => {
+            if (isHideBar) {
+                bar.classList.add("hide");
+            } else {
+                bar.classList.remove("hide");
             }
         });
     }
@@ -4100,11 +4130,16 @@
             }
             if(rulesData.dbClick2Stop && (ruleParser.nextLinkHref || loadmoreBtn)){
                 setTimeout(()=>{
-                    changeStop(!isPause, rulesData.hideBar);
+                    if (rulesData.hideBarButNoStop || rulesData.hideBar) {
+                        changeHideBar(!isHideBar);
+                    }
+                    if (!rulesData.hideBarButNoStop) {
+                        changeStop(!isPause);
+                        showTips(i18n(isPause?"disable":"enable"));
+                    }
                     if(!isPause){
                         checkScrollReach();
                     }
-                    showTips(i18n(isPause?"disable":"enable"));
                 },10);
             }
         });
@@ -4307,7 +4342,7 @@
         let pageText=document.createElement("a");
         let pageNum;
         let scrollH=Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
-        pageBar.className="pagetual_pageBar";
+        pageBar.className=isHideBar?"pagetual_pageBar hide":"pagetual_pageBar";
         pageBar.id="pagetual_pageBar"+curPage;
         pageBar.setAttribute("translate", "no");
         if(isPause){
