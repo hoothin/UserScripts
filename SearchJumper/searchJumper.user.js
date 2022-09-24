@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.46.1
+// @version      1.6.6.46.2
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -1709,7 +1709,7 @@
                      background: black;
                      color: #ffffff!important;
                      text-shadow: 0px 0px 5px #707070;
-                     font-family: system-ui,Arial,sans-serif;
+                     font-family: STHeiti,system-ui,Arial,sans-serif;
                      font-weight: bold;
                      border-radius: ${20 * this.scale}px!important;
                      font-size: ${15 * this.scale}px;
@@ -2607,7 +2607,7 @@
                     }
                     .customInputFrame-input-title {
                         font-size: 9pt;
-                        font-family: Helvetica, Arial, sans-serif;
+                        font-family: STHeiti, Helvetica, Arial, sans-serif;
                         display: inline-block;
                         background-color: white;
                         position: relative;
@@ -5495,7 +5495,7 @@
                 let getUrl = () => {
                     self.customInput = false;
                     let keywords;
-                    if (self.bar.parentNode || self.bar.parentNode.classList.contains("search-jumper-showall")) {
+                    if (self.bar.parentNode && self.bar.parentNode.classList.contains("search-jumper-showall")) {
                         keywords = self.showallInput.value;
                     } else if (self.searchJumperInputKeyWords.value) {
                         keywords = self.searchJumperInputKeyWords.value;
@@ -7706,7 +7706,7 @@
                       height: 55px;
                       font-size: 12px;
                       font-weight: bold;
-                      font-family: Helvetica, Arial, sans-serif;
+                      font-family: STHeiti, Helvetica, Arial, sans-serif;
                       display: flex;
                       flex-direction: column;
                       align-items: center;
@@ -7972,7 +7972,7 @@
                     }
                     .searchJumperFrame-input-title {
                         font-size: 9pt;
-                        font-family: Helvetica, Arial, sans-serif;
+                        font-family: STHeiti, Helvetica, Arial, sans-serif;
                         display: inline-block;
                         background-color: white;
                         position: relative;
