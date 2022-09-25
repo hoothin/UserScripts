@@ -1346,6 +1346,12 @@
                  .search-jumper-searchBar.funcKeyCall {
                      background: none;
                      border: none;
+                     max-width: unset!important;
+                     ${searchData.prefConfig.minPopup ? 'transition: transform 0.25s ease;' : ''}
+                     ${searchData.prefConfig.minPopup ? 'transform: scale(0.7);' : ''}
+                 }
+                 .search-jumper-searchBar.funcKeyCall:hover {
+                     ${searchData.prefConfig.minPopup ? 'transform: scale(1);' : ''}
                  }
                  .in-input>.search-jumper-searchBar,
                  .search-jumper-searchBar.funcKeyCall {
@@ -6143,7 +6149,11 @@
                     let clientY = e.clientY;
                     if (clientY > viewHeight / 2) clientY -= (self.bar.scrollHeight + 20);
                     else clientY += 30;
-                    self.bar.style.left = clientX + "px";
+                    if (clientX < viewWidth / 2) {
+                        self.bar.style.left = clientX + "px";
+                    } else {
+                        self.bar.style.right = viewWidth - clientX - self.bar.scrollWidth - 15 + "px";
+                    }
                     self.bar.style.top = clientY + "px";
                     self.removeBar();
                     self.bar.style.opacity = 0;
@@ -7166,6 +7176,7 @@
                     if (shown) {
                         e.preventDefault();
                     }
+                    shown = false;
                     document.removeEventListener('click', clickHandler, true);
                 };
                 document.addEventListener('mousedown', e => {
@@ -7238,7 +7249,7 @@
                         if (shown) {
                             e.stopPropagation();
                             e.preventDefault();
-                        } else if (matchKey || (e.which === 1 && searchData.prefConfig.selectToShow && getSelectStr())) {
+                        } else if ((matchKey && e.which !== 1) || (e.which === 1 && searchData.prefConfig.selectToShow && getSelectStr())) {
                             searchBar.showInPage(true, e);
                         } else {
                             searchBar.waitForHide();
@@ -7251,7 +7262,7 @@
                     if ((e.which === 1 && clientRect &&
                          e.clientX > clientRect.left && e.clientX < clientRect.left + clientRect.width &&
                          e.clientY > clientRect.top && e.clientY < clientRect.top + clientRect.height) ||
-                        matchKey) {
+                        (matchKey && e.which !== 1)) {
                         setTimeout(() => {
                             if (!draging) {
                                 searchBar.showInPage(matchKey, e);
