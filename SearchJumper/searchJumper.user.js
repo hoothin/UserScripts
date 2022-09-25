@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.46.7
+// @version      1.6.6.46.8
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -2240,7 +2240,7 @@
                 showallBg.className = "search-jumper-showallBg";
                 alllist.appendChild(showallBg);
                 alllist.addEventListener(getSupportWheelEventName(), e => {
-                    if (e.target != alllist) return;
+                    if (e.target != alllist && e.target != showallBg) return;
                     var deltaX, deltaY;
                     if(e.type !== 'wheel'){
                         var x = 0, y = 0;
@@ -6837,7 +6837,10 @@
             //if (localKeywords === '' && cacheKeywords) return cacheKeywords;
 
             let keywordsMatch, keywords = '';
-            if (currentSite.keywords) {
+            if (currentSite.charset && currentSite.charset != 'UTF-8') {
+                let firstInput = document.body.querySelector('input[type=text]:not([readonly]),input:not([type])');
+                if (firstInput) keywords = encodeURIComponent(firstInput.value);
+            } else if (currentSite.keywords) {
                 if (/^[\w\|]+$/.test(currentSite.keywords)) {
                     let keywordsList = currentSite.keywords.split("|");
                     let urlParams = new URLSearchParams(location.search);
