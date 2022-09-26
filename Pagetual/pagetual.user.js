@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.31.36
+// @version      1.9.31.37
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -3264,41 +3264,51 @@
         configTbody.style.display="inline-table";
         configTable.appendChild(configTbody);
         configCon.insertBefore(configTable, insertPos);
-        function createCheckbox(innerText, val, tag, parentCheck, otherType){
+        function createCheckbox(innerText, val, tag, parentCheck, otherType) {
             if (typeof val == 'undefined') val = "";
-            let title=document.createElement(tag||"h3");
-            title.innerHTML=innerText;
-            title.style.overflowWrap="normal";
-            let input=document.createElement("input");
-            input.type=otherType||"checkbox";
-            input.style.width="30px";
-            input.style.height="20px";
-            input.style.float="left";
-            input.style.margin="5px";
-            input.value=val;
-            input.checked=val;
-            let td=document.createElement("td");
+            let title=document.createElement(tag || "h3");
+            title.innerHTML = innerText;
+            title.style.overflowWrap = "normal";
+            let input = document.createElement("input");
+            if (otherType === 'key') {
+                input.type = 'text';
+                input.setAttribute('readOnly', 'readonly');
+                input.addEventListener("keydown", e => {
+                    input.value = e.key;
+                    e.stopPropagation();
+                    e.preventDefault();
+                });
+            } else {
+                input.type = otherType || "checkbox";
+            }
+            input.style.width = "30px";
+            input.style.height = "20px";
+            input.style.float = "left";
+            input.style.margin = "5px";
+            input.value = val;
+            input.checked = val;
+            let td = document.createElement("td");
             td.appendChild(input);
-            if(parentCheck){
-                title.style.margin="0";
+            if (parentCheck) {
+                title.style.margin = "0";
                 td.appendChild(title);
-                let parent=parentCheck.parentNode.nextElementSibling;
-                let tr=parent.querySelector("tr");
-                if(!tr){
-                    tr=document.createElement("tr");
+                let parent = parentCheck.parentNode.nextElementSibling;
+                let tr = parent.querySelector("tr");
+                if (!tr) {
+                    tr = document.createElement("tr");
                     parent.appendChild(tr);
                 }
                 tr.appendChild(td);
-                if(!parentCheck.checked){
-                    td.style.display="none";
+                if (!parentCheck.checked) {
+                    td.style.display = "none";
                 }
-                parentCheck.addEventListener("click", e=>{
-                    td.style.display=parentCheck.checked?"":"none";
+                parentCheck.addEventListener("click", e => {
+                    td.style.display = parentCheck.checked ? "" : "none";
                 });
-            }else{
-                let tr=document.createElement("tr");
+            } else {
+                let tr = document.createElement("tr");
                 tr.appendChild(td);
-                td=document.createElement("td");
+                td = document.createElement("td");
                 td.appendChild(title);
                 tr.appendChild(td);
                 configTable.children[0].appendChild(tr);
@@ -3338,8 +3348,7 @@
         let dbClick2StopAltInput=createCheckbox(i18n("dbClick2StopAlt"), rulesData.dbClick2StopAlt, "h4", dbClick2StopInput);
         let dbClick2StopShiftInput=createCheckbox(i18n("dbClick2StopShift"), rulesData.dbClick2StopShift, "h4", dbClick2StopInput);
         let dbClick2StopMetaInput=createCheckbox(i18n("dbClick2StopMeta"), rulesData.dbClick2StopMeta, "h4", dbClick2StopInput);
-        let dbClick2StopKeyInput=createCheckbox(i18n("dbClick2StopKey"), rulesData.dbClick2StopKey, "h4", dbClick2StopInput, "text");
-        dbClick2StopKeyInput.setAttribute("maxlength", "1");
+        let dbClick2StopKeyInput=createCheckbox(i18n("dbClick2StopKey"), rulesData.dbClick2StopKey, "h4", dbClick2StopInput, "key");
 
         let customRulesTitle=document.createElement("h2");
         customRulesTitle.innerHTML=i18n("customRules");
@@ -4122,7 +4131,7 @@
                     return;
                 }
             }
-            if(e.target.tagName!="BODY"){
+            if(e.target.tagName !== "BODY" && e.target.className !== 'pagetual_pageBar'){
                 let selStr=document.getSelection().toString();
                 if(selStr && selStr.trim()){
                     return;
@@ -4156,7 +4165,7 @@
                      document.activeElement.tagName == 'TEXTAREA')) {
                     return;
                 }
-                var key = String.fromCharCode(e.keyCode).toLowerCase();
+                var key = e.key.toLowerCase();
                 if(rulesData.dbClick2StopKey.toLowerCase()==key){
                     forceState=(forceState==1?0:1);
                     showTips(i18n(forceState==1?"disableSiteTips":"enableSiteTips"));
