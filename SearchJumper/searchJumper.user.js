@@ -6150,7 +6150,7 @@
                     if (clientX < 0) clientX = 5;
                     else if (clientX + self.bar.scrollWidth > viewWidth) clientX = viewWidth - self.bar.scrollWidth - 20;
                     let clientY = e.clientY;
-                    if (clientY > viewHeight / 2) clientY -= (self.bar.scrollHeight + 20);
+                    if (clientY > viewHeight / 5) clientY -= (self.bar.scrollHeight + 20);
                     else clientY += 30;
                     if (clientX < viewWidth / 2) {
                         self.bar.style.left = clientX + "px";
