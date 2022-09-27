@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.9.19.1
+// @version              2022.9.27.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -11692,9 +11692,9 @@ ImgOps | https://imgops.com/#b#`;
         _GM_notification=(s)=>{alert(s)};
     }
     var _GM_download=(typeof GM_download=='undefined')?(url,name)=>{
-        let ext=url.match(/\.\w+$/);
+        let ext=url.match(/\.\w+(\?|$)/);
         if(ext){
-            name=url.match(/[^\/]+$/)[0];
+            name=url.match(/([^\/]+?)(\?|$)/)[1];
             try {
                 name = decodeURIComponent(name);
             }catch(e){}
@@ -11703,9 +11703,9 @@ ImgOps | https://imgops.com/#b#`;
         }
         saveAs(url,name);
     }:(url,name)=>{
-        let ext=url.match(/\.\w+$/);
+        let ext=url.match(/\.\w+(\?|$)/);
         if(ext){
-            name=url.match(/[^\/]+$/)[0];
+            name=url.match(/([^\/]+?)(\?|$)/)[1];
             try {
                 name = decodeURIComponent(name);
             }catch(e){}
@@ -12995,6 +12995,7 @@ ImgOps | https://imgops.com/#b#`;
                     '<span class="pv-gallery-vertical-align-helper"></span>'+
                     '</span>'+
                     '<span class="pv-gallery-head-command-drop-list pv-gallery-head-command-drop-list-others">'+
+                    '<span class="pv-gallery-head-command-drop-list-item" data-command="urlFilter" title="'+i18n("urlFilterTip")+'">'+i18n("urlFilter")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="psImage" title="'+i18n("onlineEditTip",prefs.gallery.editSite)+'">'+i18n("onlineEdit")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="exportImages" title="'+i18n("exportImagesTip")+'">'+i18n("exportImages")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="copyImages" title="'+i18n("copyImagesUrlTip")+'">'+i18n("copyImagesUrl")+'</span>'+
@@ -13008,7 +13009,6 @@ ImgOps | https://imgops.com/#b#`;
                     '</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="addImageUrls" title="'+i18n("addImageUrlsTips")+'">'+i18n("addImageUrls")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="operate" title="'+i18n("fiddleTip")+'">'+i18n("fiddle")+'</span>'+
-                    '<span class="pv-gallery-head-command-drop-list-item" data-command="urlFilter" title="'+i18n("urlFilterTip")+'">'+i18n("urlFilter")+'</span>'+
                     '<span id="pv-gallery-fullscreenbtn" class="pv-gallery-head-command-drop-list-item" data-command="fullScreen">'+i18n("enterFullsc")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="openPrefs">'+i18n("openConfig")+'</span>'+
                     '</span>'+
@@ -13705,13 +13705,15 @@ ImgOps | https://imgops.com/#b#`;
                                     saveIndex++;
                                     if (node.dataset.src.indexOf('data') === 0) srcSplit = "";
                                     else {
-                                        srcSplit=node.dataset.src.match(/[\w\-\_\.]+$/) || '';
+                                        srcSplit=node.dataset.src.match(/([^\/]+\.\w+?)(\?|$)/) || '';
+                                        if (srcSplit) srcSplit = srcSplit[1];
                                         if (srcSplit.length > 30 && (srcSplit.indexOf(".") == -1 || /[&\?=,]/i.test(srcSplit))){
                                             srcSplit = "";
                                         }
-                                        if (srcSplit.length > 50) srcSplit = srcSplit.substring(0, 50);
+                                        if (srcSplit.length > 50) srcSplit = srcSplit.substring(srcSplit.length - 50, srcSplit.length);
                                     }
-                                    var title = node.title.indexOf('\n') !== -1 ? node.title.split('\n')[0] : (node.title.indexOf('http') === 0 ? '' : node.title);
+                                    var title = node.title.indexOf('\n') !== -1 ? node.title.split('\n')[0] : node.title;
+                                    title = title.indexOf('http') === 0 ? '' : title;
                                     var picName = document.title + "-" + (saveIndex < 10 ? "00" + saveIndex : (saveIndex < 100 ? "0" + saveIndex : saveIndex)) + (title ? "-" + title : "") + "-" + srcSplit, hostArr = location.host.split(".");
                                     var host = hostArr[hostArr.length-2];
                                     saveParams.push([node.dataset.src, picName]);
@@ -14717,15 +14719,17 @@ ImgOps | https://imgops.com/#b#`;
 
                                         let imgSrc=conItem.querySelector("img").src;
                                         let title=node.nextElementSibling.title;
-                                        title = title.indexOf('\n') !== -1 ? title.split('\n')[0] : (title.indexOf('http') === 0 ? '' : title);
+                                        title = title.indexOf('\n') !== -1 ? title.split('\n')[0] : title;
+                                        title = title.indexOf('http') === 0 ? '' : title;
                                         let srcSplit;
                                         if (imgSrc.indexOf('data') === 0) srcSplit = "";
                                         else {
-                                            srcSplit=imgSrc.match(/[\w\-\_\.]+$/) || '';
+                                            srcSplit=imgSrc.match(/([^\/]+\.\w+?)(\?|$)/) || '';
+                                            if (srcSplit) srcSplit = srcSplit[1];
                                             if (srcSplit.length > 30 && (srcSplit.indexOf(".") == -1 || /[&\?=,]/i.test(srcSplit))){
                                                 srcSplit = "";
                                             }
-                                            if (srcSplit.length > 50) srcSplit = srcSplit.substring(0, 50);
+                                            if (srcSplit.length > 50) srcSplit = srcSplit.substring(srcSplit.length - 50, srcSplit.length);
                                         }
                                         var picName = document.title + "-" + (saveIndex < 10 ? "00" + saveIndex : (saveIndex < 100 ? "0" + saveIndex : saveIndex)) + (!title && title == document.title ? "" : "-" + title) + "-" + srcSplit;
                                         saveParams.push([imgSrc, picName]);
@@ -15380,7 +15384,12 @@ ImgOps | https://imgops.com/#b#`;
                             if(item.xhr)spanMark.dataset.xhr=encodeURIComponent(JSON.stringify(item.xhr));
                             spanMark.dataset.description=encodeURIComponent(item.description || '');
                             spanMark.dataset.thumbSrc=item.imgSrc;
-                            spanMark.title=(item.img?(item.img.title||item.img.alt||""):"") + '\n' + item.src.slice(0, 100);
+                            let title = item.img ? (item.img.title || item.img.alt || "").slice(0, 50) : "";
+                            if (title) {
+                                if (title.indexOf('http') === 0) title = '';
+                                else title += '\n';
+                            }
+                            spanMark.title = title + item.src.slice(0, 200);
                             spanMark.innerHTML=createHTML('<span class="pv-gallery-vertical-align-helper"></span>' +
                                 '<span class="pv-gallery-sidebar-thumb-loading" title="'+i18n("loading")+'......"></span>');
                         }catch(e){};
@@ -21010,6 +21019,10 @@ ImgOps | https://imgops.com/#b#`;
                     command=data.command;
                     switch(command){
                         case 'open':{
+                            if (data.buttonType === 'download') {
+                                _GM_download(data.src, document.title);
+                                return;
+                            }
                             var img=document.createElement('img');
                             img.src=data.src;
 
@@ -21228,8 +21241,12 @@ ImgOps | https://imgops.com/#b#`;
                 uniqueImgWinInitX = e.clientX;
                 uniqueImgWinInitY = e.clientY;
                 if (target != e.target) {
-                    document.removeEventListener('mousemove', moveHandler, true);
-                    clearTimeout(untilMoveTimer);
+                    let preRect = target.getBoundingClientRect();
+                    let nextRect = e.target.getBoundingClientRect();
+                    if (preRect && nextRect && (preRect.left > nextRect.left || preRect.right < nextRect.right || preRect.top > nextRect.top || preRect.bottom < nextRect.bottom)) {
+                        document.removeEventListener('mousemove', moveHandler, true);
+                        clearTimeout(untilMoveTimer);
+                    }
                 }
             }
             document.addEventListener('mousemove', moveHandler, true);
