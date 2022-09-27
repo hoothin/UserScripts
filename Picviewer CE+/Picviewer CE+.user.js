@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.9.27.1
+// @version              2022.9.27.2
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -21699,7 +21699,7 @@ ImgOps | https://imgops.com/#b#`;
         }
 
         function keydown(event) {
-            var key = String.fromCharCode(event.keyCode).toLowerCase();
+            var key = event.key;
             if(checkGlobalKeydown(event)){
                 if(prefs.floatBar.keys.enable && key==prefs.floatBar.keys.gallery){
                     openGallery();
@@ -22416,6 +22416,20 @@ ImgOps | https://imgops.com/#b#`;
 
         loadPrefs();
 
+        function initKeyInputs() {
+            if (!GM_config.frame || !GM_config.frame.contentDocument) return;
+            let keyInputs = GM_config.frame.contentDocument.querySelectorAll('input.floatBar-key');
+            [].forEach.call(keyInputs, input => {
+                input.setAttribute('readOnly', 'readonly');
+                input.addEventListener("keydown", e => {
+                    if (e.key === 'Escape' || e.key === 'Backspace') input.value = '';
+                    else input.value = e.key;
+                    e.stopPropagation();
+                    e.preventDefault();
+                });
+            });
+        }
+
         matchedRule = getMatchedRule();
         let editUrl=storage.getItem("editUrl");
         if(editUrl){
@@ -22461,6 +22475,7 @@ ImgOps | https://imgops.com/#b#`;
                 if(GM_config.frame && GM_config.frame.style && GM_config.frame.style.display=="none"){
                     GM_config.frame.src="";
                 }
+                initKeyInputs();
             },500);
         }
 
