@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.31.38
+// @version      1.9.31.39
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -3421,37 +3421,37 @@
                 showTips("JSON error, check again!");
                 return;
             }
-            rulesData.opacity=opacityInput.value/100;
-            rulesData.blacklist=blacklistInput.value?blacklistInput.value.split("\n"):"";
-            rulesData.hideBar=hideBarInput.checked;
-            rulesData.hideBarButNoStop=hideBarButNoStopInput.checked;
-            rulesData.dbClick2Stop=dbClick2StopInput.checked;
-            rulesData.enableWhiteList=!enableWhiteListInput.checked;
-            rulesData.enableDebug=enableDebugInput.checked;
-            rulesData.enableHistory=enableHistoryInput.checked;
-            rulesData.enableHistoryAfterInsert=enableHistoryAfterInsertInput.checked;
-            rulesData.openInNewTab=openInNewTabInput.checked;
-            rulesData.hideLoadingIcon=hideLoadingIconInput.checked;
-            rulesData.initRun=initRunInput.checked;
-            rulesData.autoLoadNum=autoLoadNumInput.value||'';
-            rulesData.preload=preloadInput.checked;
-            rulesData.manualMode=manualModeInput.checked;
-            rulesData.arrowToScroll=arrowToScrollInput.checked;
-            rulesData.pageElementCss=pageElementCssInput.value;
-            rulesData.customCss=customCssInput.value;
-            rulesData.upBtnImg=upBtnImgInput.value;
-            rulesData.downBtnImg=downBtnImgInput.value;
-            rulesData.loadingText=loadingTextInput.value;
-            rulesData.dbClick2StopCtrl=dbClick2StopCtrlInput.checked;
-            rulesData.dbClick2StopAlt=dbClick2StopAltInput.checked;
-            rulesData.dbClick2StopShift=dbClick2StopShiftInput.checked;
-            rulesData.dbClick2StopMeta=dbClick2StopMetaInput.checked;
-            rulesData.dbClick2StopKey=dbClick2StopKeyInput.value;
+            rulesData.opacity = opacityInput.value / 100;
+            rulesData.blacklist = blacklistInput.value ? blacklistInput.value.split("\n") : "";
+            rulesData.hideBar = hideBarInput.checked;
+            rulesData.hideBarButNoStop = hideBarButNoStopInput.checked;
+            rulesData.dbClick2Stop = dbClick2StopInput.checked;
+            rulesData.enableWhiteList = !enableWhiteListInput.checked;
+            rulesData.enableDebug = enableDebugInput.checked;
+            rulesData.enableHistory = enableHistoryInput.checked;
+            rulesData.enableHistoryAfterInsert = enableHistoryAfterInsertInput.checked;
+            rulesData.openInNewTab = openInNewTabInput.checked;
+            rulesData.hideLoadingIcon = hideLoadingIconInput.checked;
+            rulesData.initRun = initRunInput.checked;
+            rulesData.autoLoadNum = autoLoadNumInput.value !== "0" ? autoLoadNumInput.value : '';
+            rulesData.preload = preloadInput.checked;
+            rulesData.manualMode = manualModeInput.checked;
+            rulesData.arrowToScroll = arrowToScrollInput.checked;
+            rulesData.pageElementCss = pageElementCssInput.value;
+            rulesData.customCss = customCssInput.value;
+            rulesData.upBtnImg = upBtnImgInput.value;
+            rulesData.downBtnImg = downBtnImgInput.value;
+            rulesData.loadingText = loadingTextInput.value;
+            rulesData.dbClick2StopCtrl = dbClick2StopCtrlInput.checked;
+            rulesData.dbClick2StopAlt = dbClick2StopAltInput.checked;
+            rulesData.dbClick2StopShift = dbClick2StopShiftInput.checked;
+            rulesData.dbClick2StopMeta = dbClick2StopMetaInput.checked;
+            rulesData.dbClick2StopKey = dbClick2StopKeyInput.value;
             storage.setItem("rulesData", rulesData);
-            let customUrls=customUrlsInput.value.trim();
-            if(customUrls){
-                customUrls=customUrls.split(/\n/);
-                for(let c=0;c<customUrls.length;c++){
+            let customUrls = customUrlsInput.value.trim();
+            if (customUrls) {
+                customUrls = customUrls.split(/\n/);
+                for (let c = 0; c < customUrls.length; c++) {
                     let url;
                     if(/^0\s*\|/.test(customUrls[c])){
                         url=customUrls[c].replace(/^0\s*\|\s*/, "").trim();
@@ -3836,7 +3836,8 @@
                 });
             }
             initListener();
-            if(rulesData.initRun && ruleParser.curSiteRule.initRun!=0)nextPage();
+            let initRun = typeof ruleParser.curSiteRule.initRun == 'undefined' ? rulesData.initRun : ruleParser.curSiteRule.initRun;
+            if (initRun && initRun != 0 && initRun != '0') nextPage();
         });
     }
 
