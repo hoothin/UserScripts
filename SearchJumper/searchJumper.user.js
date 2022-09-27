@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.46.11
+// @version      1.6.6.46.12
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -4605,6 +4605,7 @@
                     li.id = "list" + index;
                     let icon = siteEle.querySelector("img");
                     let a = document.createElement("a");
+                    a.setAttribute("ref", "noopener noreferrer");
                     self.bindSite(a, siteEle);
                     li.appendChild(a);
                     self.allListBtns.push(li);
@@ -5341,6 +5342,7 @@
             async createSiteBtn(icon, data, openInNewTab, isBookmark) {
                 let self = this;
                 let ele = document.createElement("a");
+                ele.setAttribute("ref", "noopener noreferrer");
                 let name = data.name;
                 let pointer = !isBookmark && /^\[/.test(data.url);
                 if (pointer) {
@@ -5901,7 +5903,7 @@
                                                 let viewHeight = window.innerHeight || document.documentElement.clientHeight;
                                                 let left = viewWidth - 450;
                                                 let top = (viewHeight - 800) / 2;
-                                                window.open(url + "#searchJumperMin", "_blank", `width=450, height=800, location=0, resizable=1, status=0, toolbar=0, menubar=0, scrollbars=0, left=${left}, top=${top}`);
+                                                window.open(url + "#searchJumperMin" + (data.hasMobile ? 'Mobile' : ''), "_blank", `width=450, height=800, location=0, resizable=1, status=0, toolbar=0, menubar=0, scrollbars=0, left=${left}, top=${top}`);
                                             } else if (shift) {
                                                 _GM_openInTab(url, {active: true});
                                             }
@@ -8382,24 +8384,27 @@
         }
 
         if (location.href.indexOf("#searchJumperMin") != -1) {
-            window.history.replaceState(null, '', location.href.replace("#searchJumperMin", ""));
-            Object.defineProperty(Object.getPrototypeOf(navigator), 'userAgent', { get:function() { return mobileUa }});
-            _GM_xmlhttpRequest({
-                method: 'GET',
-                url: location.href,
-                headers: {
-                    referer: location.href,
-                    "User-Agent": mobileUa
-                },
-                onload: function(d) {
-                    document.close();
-                    document.write(d.response);
-                },
-                onerror: function(){
-                },
-                ontimeout: function(){
-                }
-            });
+            if (location.href.indexOf("#searchJumperMinMobile") != -1) {
+                Object.defineProperty(Object.getPrototypeOf(navigator), 'userAgent', { get:function() { return mobileUa }});
+                _GM_xmlhttpRequest({
+                    method: 'GET',
+                    url: location.href,
+                    headers: {
+                        referer: location.href,
+                        "User-Agent": mobileUa
+                    },
+                    onload: function(d) {
+                        document.open();
+                        document.write(d.response);
+                        document.close();
+                    },
+                    onerror: function(){
+                    },
+                    ontimeout: function(){
+                    }
+                });
+            }
+            window.history.replaceState(null, '', location.href.replace(/#searchJumperMin(Mobile)?/, ""));
             return;
         }
         if (document.title == 'SearchJumper Multi') return;
