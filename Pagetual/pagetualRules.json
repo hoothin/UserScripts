@@ -391,7 +391,7 @@
     },
     {
         "name": "搜狗wap",
-        "url": "^https?://wap\\.sogou\\.com/web/searchList\\.jsp",
+        "url": "^https?://wap\\.sogou\\.com/web/(searchList\\.jsp|sl\\?)",
         "loadMore": "#ajax_next_page",
         "nextLink": 0
     },
