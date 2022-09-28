@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.7.3.13
+// @version      2.7.3.14
 // @description  Fetch and download main content on current page, provide special support for chinese novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -567,7 +567,11 @@
                     if(/^\s*$/.test(item.data))
                         item.innerHTML="";
                     else hasText=true;
-                }else if(/^(I|A|STRONG|B|FONT|P|DL|DD|H\d)$/.test(item.tagName))hasText=true;
+                }else if(/^(I|A|STRONG|B|FONT|P|DL|DD|H\d)$/.test(item.tagName)){
+                    hasText=true;
+                }else if(item.nodeType==1&&item.children.length==1&&/^(I|A|STRONG|B|FONT|P|DL|DD|H\d)$/.test(item.children[0].tagName)){
+                    hasText=true;
+                }
             }
             for(j=content.childNodes.length-1;j>=0;j--){
                 item=content.childNodes[j];
@@ -600,6 +604,9 @@
                 [].forEach.call(content.childNodes,function(item){
                     if(item.nodeType==3)curNum+=item.data.length;
                     else if(/^(I|A|STRONG|B|FONT|P|DL|DD|H\d)$/.test(item.tagName))curNum+=(firefox?item.textContent.length:item.innerText.length);
+                    else if(item.nodeType==1&&item.children.length==1&&/^(I|A|STRONG|B|FONT|P|DL|DD|H\d)$/.test(item.children[0].tagName)){
+                        curNum+=(firefox?item.textContent.length:item.innerText.length);
+                    }
                 });
             }
             if(curNum>largestNum){
