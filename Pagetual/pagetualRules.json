@@ -286,7 +286,7 @@
     },
     {
         "name": "bbsPostlist1",
-        "url": "/t",
+        "url": ".",
         "nextLink": [
             "a.nxt",
             "a.prev"
