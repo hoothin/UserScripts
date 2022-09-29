@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.46.13
+// @version      1.6.6.46.14
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -4943,7 +4943,7 @@
                                 searchData.prefConfig.offset.y
                             );
                         }, 0);
-                        return;
+                        return false;
                     }
                     ele.style.width = "";
                     ele.style.height = "";
@@ -5842,16 +5842,21 @@
                     } else if ((data.charset && data.charset != 'utf-8') || /[:%]p{/.test(data.url)) {
                         if (!ele.onclick) {
                             ele.onclick = e => {
+                                ele.onclick = null;
                                 e.stopPropagation();
                                 e.preventDefault();
                                 let url = getUrl();
                                 if (url === false) return false;
                                 if (url.indexOf('%input{') !== -1) {
                                     self.showCustomInputWindow(url, _url => {
-                                        submitByForm(data.charset, _url, ele.getAttribute("target") || '_self');
+                                        storage.setItem("postUrl", [_url, data.charset]);
+                                        ele.href = _url.replace(/[:%]p{.*/, '');
+                                        ele.click();
                                     });
                                 } else {
-                                    submitByForm(data.charset, url, ele.getAttribute("target") || '_self');
+                                    storage.setItem("postUrl", [url, data.charset]);
+                                    ele.href = url.replace(/[:%]p{.*/, '');
+                                    ele.click();
                                 }
                                 return false;
                             };
@@ -8415,14 +8420,17 @@
                 if (cb) cb();
                 return;
             }
-            inited = true;
-            preAction();
-            await initData();
-            initView();
-            initConfig();
-            initMycroft();
-            initRun();
-            if (cb) cb();
+            if (!document.hidden) {
+                inited = true;
+                preAction();
+                await initData();
+                initView();
+                initConfig();
+                initMycroft();
+                initRun();
+                if (cb) cb();
+            }
+            document.addEventListener('visibilitychange', visibilitychangeHandler);
         }
 
         function visibilitychangeHandler() {
@@ -8445,18 +8453,35 @@
             });
         }
 
-        document.addEventListener('visibilitychange', visibilitychangeHandler);
 
-        if (!document.hidden) {
-            init();
-        }
+        storage.getItem("postUrl", postUrl => {
+            if (postUrl && postUrl[0].indexOf(location.host) != -1) {
+                storage.setItem("postUrl", '');
+                submitByForm(postUrl[1], postUrl[0], '_self');
+            } else {
+                if (document.documentElement && document.head && document.body) {
+                    init();
+                } else {
+                    let checkReady = () => {
+                        if (document.documentElement && document.head && document.body) {
+                            init();
+                        } else {
+                            setTimeout(() => {
+                                checkReady();
+                            }, 10);
+                        }
+                    };
+                    checkReady();
+                }
+            }
+        });
     }
 
-    if (document && document.documentElement && document.head && document.body) {
+    if (document) {
         run();
     } else {
         let checkReady = () => {
-            if (document && document.documentElement && document.head && document.body) {
+            if (document) {
                 run();
             } else {
                 setTimeout(() => {
