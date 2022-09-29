@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.31.41
+// @version      1.9.31.42
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -1418,7 +1418,7 @@
             if(!next){
                 let nexts=body.querySelectorAll("a.next");
                 for(i=0;i<nexts.length;i++){
-                    if(!/^([上前首尾][一1]?[页頁张張]|previous(\s*page)?\s*›?$|前のページ)/i.test(nexts[i].innerText.trim()) &&
+                    if(!/^([上前首尾][一ー1]?[页頁张張]|previous(\s*page)?\s*›?$|前のページ)/i.test(nexts[i].innerText.trim()) &&
                        nexts[i].style.display!=="none" &&
                        nexts[i].parentNode.style.display!=="none"){
                         next=nexts[i];
@@ -1454,7 +1454,7 @@
                     next=null;
                 }
             }
-            if(next && /^[下后後][一1]?[章话話篇]/i.test(next.innerText.trim())){
+            if(next && /^[下后後][一ー1]?[章话話篇]/i.test(next.innerText.trim())){
                 next2=next;
                 next=null;
             }
@@ -1493,7 +1493,7 @@
                     if(aTag.parentNode && aTag.parentNode.classList && aTag.parentNode.classList.contains('disabled'))continue;
                     if(aTag.innerText.length<=18){
                         if(!next1){
-                            if(/^翻?[下后後次][一1]?[页頁张張]|^next([ _-]?page)\s*[›>→»]?$|次のページ|^次へ?$/i.test(aTag.innerText.trim())){
+                            if(/^翻?[下后後次][一ー1]?[页頁张張]|^next([ _-]?page)\s*[›>→»]?$|次のページ|^次へ?$/i.test(aTag.innerText.trim())){
                                 if(!aTag.href || /^javascript:/.test(aTag.href) || aTag.getAttribute("href")=="#"){
                                     if(!nextJs1)nextJs1=aTag;
                                 }else{
@@ -1502,7 +1502,7 @@
                             }
                         }
                         if(!next2){
-                            if(/^[下后後次][一1]?[章话話节節篇个個幅]/i.test(aTag.innerText.trim()) || /nextpage/i.test(aTag.className) || aTag.innerText=="»" || aTag.innerText==">>"){
+                            if(/^[下后後次][一ー1]?[章话話节節篇个個幅]/i.test(aTag.innerText.trim()) || /nextpage/i.test(aTag.className) || aTag.innerText=="»" || aTag.innerText==">>"){
                                 if(!aTag.href || /^javascript:/.test(aTag.href) || aTag.getAttribute("href")=="#"){
                                     if(!nextJs2)nextJs2=aTag;
                                 }else{
