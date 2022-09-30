@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.46.18
+// @version      1.6.6.46.19
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -7199,12 +7199,14 @@
                         searchBar.bar.contains(e.target)) {
                         return;
                     }
+                    let inputSign = false;
                     if (!searchData.prefConfig.enableInInput) {
                         if (e.target.tagName == 'INPUT' ||
                             e.target.tagName == 'TEXTAREA' ||
                             e.target.contentEditable == 'true') {
-                            searchBar.waitForHide();
-                            return;
+                            inputSign = true;
+                            //searchBar.waitForHide();
+                            //return;
                         } else {
                             let contentEditable = false;
                             let parent = e.target;
@@ -7216,11 +7218,13 @@
                                 parent = parent.parentNode;
                             }
                             if (contentEditable) {
-                                searchBar.waitForHide();
-                                return;
+                                inputSign = true;
+                                //searchBar.waitForHide();
+                                //return;
                             }
                         }
                     }
+                    if (inputSign && e.type === 'dblclick') return;
                     waitForMouse = true;
                     setTimeout(() => {
                         waitForMouse = false;
@@ -7261,7 +7265,7 @@
                         if (shown) {
                             e.stopPropagation();
                             e.preventDefault();
-                        } else {
+                        } else if (!inputSign) {
                             setTimeout(() => {
                                 if ((matchKey && e.which !== 1) || (e.which === 1 && searchData.prefConfig.selectToShow && getSelectStr())) {
                                     searchBar.showInPage(true, e);
@@ -7283,7 +7287,7 @@
                         searchBar.showInPage(true, e);
                         return;
                     }
-                    if ((e.which === 1 && clientRect &&
+                    if ((e.which === 1 && clientRect && !inputSign &&
                          e.clientX > clientRect.left && e.clientX < clientRect.left + clientRect.width &&
                          e.clientY > clientRect.top && e.clientY < clientRect.top + clientRect.height) ||
                         (matchKey && e.which !== 1)) {
@@ -7300,7 +7304,6 @@
                         document.addEventListener('click', clickHandler, true);
                         return false;
                     }
-                    let selectImg = e.target.tagName === 'IMG';
                     if (showToolbarTimer) clearTimeout(showToolbarTimer);
                     showToolbarTimer = setTimeout(() => {
                         if (draging) return;
