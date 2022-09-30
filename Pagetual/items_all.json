@@ -1,5 +1,62 @@
 [
 {
+  "resource_url": "http://wedata.net/items/85960",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[contains(@class,'photos-list')]",
+    "nextLink": "//a[contains(text(),'Next')]",
+    "url": "^https://(www\\.)?v2ph.com/album/",
+    "exampleUrl": "https://www.v2ph.com/album/YTY-128"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "powertalent",
+  "name": "v2ph.com - The Latest High-definition Sexy Beauty Pictures",
+  "created_at": "2022-09-30T09:06:19+09:00",
+  "updated_at": "2022-09-30T09:06:19+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/85959",
+  "data": {
+    "pageElement": "//div[@class=\"post-inner group\"]",
+    "nextLink": "//*[@rel=\"next\"]",
+    "url": "^https://hotgirlchina\\.com/",
+    "exampleUrl": "https://hotgirlchina.com/ugirls-ai-you-wu-app-no-2389-victoria-%E6%9E%9C%E5%84%BF-35-photos/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "powertalent",
+  "name": "Hot Girl China - Free Sexy and Hot Chinese Girls",
+  "created_at": "2022-09-29T21:04:37+09:00",
+  "updated_at": "2022-09-29T21:10:03+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/85958",
+  "data": {
+    "pageElement": "//div[contains(@class,'entry-content-wrap')]",
+    "nextLink": "//span[contains(@class,'page-number') and contains(@class,'current')]/following-sibling::a",
+    "url": "^https://(www\\.)?baobua\\.com/post/",
+    "exampleUrl": "https://www.baobua.com/post/UUo1VXAzOXZNWngvVWlUdWIvVEJGejFBYnY2UzZvSURyM2M1T1dXN2pRcVExakNwbm5qdzZ4aWMrRUIxTkplbE5lRldKNGIrVW05UWp4TVVYT2E0NHc9PQ=="
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "powertalent",
+  "name": "baobua.com - free watch online hd photo sets, girls photos ",
+  "created_at": "2022-09-29T20:52:40+09:00",
+  "updated_at": "2022-09-29T21:31:08+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/85957",
+  "data": {
+    "pageElement": "//div[@class='article-fulltext']",
+    "nextLink": "//span/a[contains(@class,'pagination-link') and contains(@class,'is-current')]/parent::span/following-sibling::span[1]/a",
+    "url": "^https://buondua\\.com/",
+    "exampleUrl": "https://buondua.com/djawa-photo-mimmi-%EB%B0%88%EB%AF%B8-rudy-codename-wolfgirl-201-photos-27684"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "powertalent",
+  "name": "Buondua - Sexy Girls Photo",
+  "created_at": "2022-09-29T20:14:09+09:00",
+  "updated_at": "2022-09-30T09:13:27+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/85956",
   "data": {
     "insertBefore": "",
