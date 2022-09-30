@@ -6,7 +6,7 @@
 // @namespace    hoothin
 // @supportURL   https://github.com/hoothin/UserScripts
 // @homepageURL  https://github.com/hoothin/UserScripts
-// @version      1.2.6.12
+// @version      1.2.6.13
 // @description        任意轉換網頁中的簡體中文與繁體中文（默認簡體→繁體）
 // @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体）
 // @description:ja     簡繁中国語に変換
@@ -1082,7 +1082,6 @@
             altKey = values.altKey;
             shiftKey = values.shiftKey;
             metaKey = values.metaKey;
-            saveAction = values[currentAction];
             sc2tcCombConfig = values.sc2tcCombConfig;
             sc2tcComb = {};
             for (let key in sc2tcCombConfig) {
@@ -1094,26 +1093,27 @@
                  }
             }
         }
+        saveAction = values[currentAction];
         run();
+        let currentState = "";
+        switch (saveAction) {
+            case 2:
+                currentState = "（简体）";
+                break;
+            case 3:
+                currentState = "（正體）";
+                break;
+        }
+        _GM_registerMenuCommand("繁簡切換【Ctrl+F8】", switchLanguage);
+        _GM_registerMenuCommand("自定義設置", () => {
+            window.open("https://greasyfork.org/scripts/24300", "_blank");
+        });
+        if (saveAction) _GM_registerMenuCommand(saveAction === 1 ? "取消禁用" : "禁用" + currentState, disableOnSite);
+        if (!isSimple) {
+            _GM_registerMenuCommand("提交新增詞彙", () => {
+                window.open("https://github.com/hoothin/UserScripts/issues", "_blank");
+            });
+        }
     });
 
-    let currentState = "";
-    switch (saveAction) {
-        case 2:
-            currentState = "（简体）";
-            break;
-        case 3:
-            currentState = "（正體）";
-            break;
-    }
-    _GM_registerMenuCommand("繁簡切換【Ctrl+F8】", switchLanguage);
-    _GM_registerMenuCommand("自定義設置", () => {
-        window.open("https://greasyfork.org/scripts/24300", "_blank");
-    });
-    if (saveAction) _GM_registerMenuCommand(saveAction === 1 ? "取消禁用" : "禁用" + currentState, disableOnSite);
-    if (!isSimple) {
-        _GM_registerMenuCommand("提交新增詞彙", () => {
-            window.open("https://github.com/hoothin/UserScripts/issues", "_blank");
-        });
-    }
 })();
