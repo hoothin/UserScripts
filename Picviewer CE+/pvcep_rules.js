@@ -1097,5 +1097,12 @@ var siteInfo=[
  url: /^https:\/\/(.*\.)?(hentai\-cosplays|porn\-images\-xxx)\.com/,
  r: /\/p=[\dx]+(\/\d+\.\w+)$/i,
  s: '$1'
+},
+{
+ name:"beta.kemono.party",
+ url:/^https:\/\/(\w+\.)?kemono\.party\/.*\/post\//,
+ getImage:function(a){
+  if(a) return a.href;
+ }
 }
 ];
