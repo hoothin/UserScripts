@@ -1277,6 +1277,12 @@
         "pageElement": "ul.ajaxposts>li"
     },
     {
+        "name": "奔跑的奶酪内页禁用",
+        "url": "^https://www\\.runningcheese\\.com/",
+        "pageElement": "section#scroll",
+        "enable": 0
+    },
+    {
         "name": "异星软件",
         "url": "^https://www\\.yxssp\\.com/",
         "pageElement": ".td-modules-container",
