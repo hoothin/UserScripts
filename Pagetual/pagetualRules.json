@@ -1279,7 +1279,7 @@
     {
         "name": "奔跑的奶酪内页禁用",
         "url": "^https://www\\.runningcheese\\.com/",
-        "pageElement": "section#scroll",
+        "pageElement": "section#scroll article.entry",
         "enable": 0
     },
     {
