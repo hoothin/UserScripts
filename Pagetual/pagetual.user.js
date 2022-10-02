@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.31.42
+// @version      1.9.31.43
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -91,7 +91,8 @@
 // @exclude      *://m.bilibili.com/bangumi/play/*
 // @exclude      *://m.wasu.cn/Play/show/*
 // @exclude      *://www.youtube.com
-// @exclude      *://www.youtube.com/
+// @exclude      *://www.youtube.com/*
+// @exclude      *://twitter.com/*
 // @exclude      *://www.youtube.com/watch*
 // @exclude      *://baike.baidu.com/*
 // @exclude      *://*.instagram.com/*
@@ -1488,7 +1489,8 @@
                     if(aTag.innerText.length>50)continue;
                     if(aTag.style.display=="none")continue;
                     if(aTag.href && /next$/i.test(aTag.href))continue;
-                    if(aTag.className && /slick|slide/i.test(aTag.className))continue;
+                    if(aTag.className && /slick|slide|gallery/i.test(aTag.className))continue;
+                    if(aTag.parentNode && aTag.parentNode.className && /slick|slide|gallery/i.test(aTag.parentNode.className))continue;
                     if(aTag.classList && aTag.classList.contains('disabled'))continue;
                     if(aTag.parentNode && aTag.parentNode.classList && aTag.parentNode.classList.contains('disabled'))continue;
                     if(aTag.innerText.length<=18){
