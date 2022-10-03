@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.46.20
+// @version      1.6.6.46.21
 // @description  Jump to any search engine quickly and easily, the most powerful, most complete search enhancement script.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键跳转各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵跳轉各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -41,7 +41,7 @@
 
 (function() {
     'use strict';
-    if (window.top != window.self || document.getElementById("search-jumper")) {
+    if (document.getElementById("search-jumper")) {
         return;
     }
 
@@ -4175,7 +4175,7 @@
                 }
             }
 
-            waitForHide() {
+            waitForHide(delay) {
                 let self = this;
                 var hideHandler = () => {
                     self.bar.classList.remove("search-jumper-isInPage");
@@ -4201,7 +4201,7 @@
                 if (this.hideTimeout) {
                     clearTimeout(this.hideTimeout);
                 }
-                let delayTime = this.bar.classList.contains("funcKeyCall") ? 300 : (searchData.prefConfig.autoDelay || 1000);
+                let delayTime = delay || (this.bar.classList.contains("funcKeyCall") ? 300 : (searchData.prefConfig.autoDelay || 1000));
 
                 this.hideTimeout = setTimeout(hideHandler, delayTime);
                 if (this.preList) {
@@ -5458,7 +5458,7 @@
                 }
                 ele.dataset.inPagePost = (data.url.indexOf("#p{") != -1) ? 't' : 'f';
                 let inPagePost = ele.dataset.inPagePost === 't';
-                if (!isBookmark && (!currentSite || data.hideNotMatch)) {
+                if (!isBookmark && (!currentSite || data.hideNotMatch) && window.top == window.self) {
                     if (data.match === '0') {
                         ele.style.display = 'none';
                         ele.classList.add("notmatch");
@@ -7280,12 +7280,14 @@
                         document.removeEventListener('mousemove', mouseMoveHandler, true);
                         e.target.removeEventListener('scroll', scrollHandler);
                     };
-                    if (getSelectStr() !== '' && e.type === 'dblclick') {
-                        shown = true;
-                        document.removeEventListener('mousemove', mouseMoveHandler, true);
-                        e.target.removeEventListener('scroll', scrollHandler);
-                        clearTimeout(showToolbarTimer);
-                        searchBar.showInPage(true, e);
+                    if (e.type === 'dblclick') {
+                        if (getSelectStr() !== '') {
+                            shown = true;
+                            document.removeEventListener('mousemove', mouseMoveHandler, true);
+                            e.target.removeEventListener('scroll', scrollHandler);
+                            clearTimeout(showToolbarTimer);
+                            searchBar.showInPage(true, e);
+                        }
                         return;
                     }
                     if ((e.which === 1 && clientRect && !inputSign &&
@@ -7329,6 +7331,7 @@
                         targetElement = e.target;
                         if (targetElement.getAttribute && targetElement.getAttribute("draggable") == "true") return;
                         showDragSearch(e.clientX, e.clientY);
+                        searchBar.waitForHide(1);
                         document.removeEventListener('click', clickHandler, true);
                         draging = true;
                     });
