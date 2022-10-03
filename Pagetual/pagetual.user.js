@@ -1564,23 +1564,24 @@
             if (!src) {
                 return "";
             }
+            if (src.charAt(0) == "#") return this.curUrl + src;
+            if (src.charAt(0) == "?") return this.curUrl.replace(/^([^\?#]+).*/, "$1" + src);
             let origin = location.protocol + '//' + location.host;
             let url = this.basePath || origin;
-            url = url.replace(/(\?|#).*/, "").replace(/([^\/])$/, "$1/");
-            if(url.indexOf("http") !== 0) url = origin + url;
-            if(src.charAt(0)=="#")return this.curUrl+src;
-            if(src.charAt(0)=="?")return this.curUrl.replace(/^([^\?#]+).*/, "$1" + src);
+            url = url.replace(/(\?|#).*/, "");
+            if (/https?:\/\/[^\/]+$/.test(url)) url = url + '/';
+            if (url.indexOf("http") !== 0) url = origin + url;
             var root_page = /^[^\?#]*\//.exec(url)[0],
                 root_domain = /^\w+\:\/\/\/?[^\/]+/.exec(root_page)[0],
                 absolute_regex = /^\w+\:\/\//;
-            this.updateUrl=false;
-            while(src.indexOf("../")===0){
-                src=src.substr(3);
-                root_page=root_page.replace(/\/[^\/]+\/$/, "/");
-                this.updateUrl=true;
+            this.updateUrl = false;
+            while (src.indexOf("../") === 0) {
+                src = src.substr(3);
+                root_page = root_page.replace(/\/[^\/]+\/$/, "/");
+                this.updateUrl = true;
             }
-            src=src.replace(/\.\//,"");
-            if (/^\/\/\/?/.test(src)){
+            src = src.replace(/\.\//, "");
+            if (/^\/\/\/?/.test(src)) {
                 src = location.protocol + src;
             }
             return (absolute_regex.test(src) ? src : ((src.charAt(0) == "/" ? root_domain : root_page) + src));
