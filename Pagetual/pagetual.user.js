@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.32
+// @version      1.9.32.1
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -1789,7 +1789,7 @@
                     if(ruleParser.curSiteRule.sandbox!=false){
                         iframe.sandbox="allow-same-origin allow-scripts allow-popups allow-forms";
                     }
-                    iframe.style.cssText = 'margin:0!important;padding:0!important;visibility:hidden!important;flex:0;';
+                    iframe.style.cssText = 'margin:0!important;padding:0!important;visibility:hidden!important;flex:0;z-index:-2147483647;';
                     iframe.addEventListener('load', function (e) {
                         try{
                             let doc=iframe.contentDocument || iframe.contentWindow.document;
@@ -4645,7 +4645,7 @@
         if(ruleParser.curSiteRule.sandbox!=false){
             iframe.sandbox="allow-same-origin allow-scripts allow-popups allow-forms";
         }
-        iframe.style.cssText = 'margin:0!important;padding:0!important;;flex:0;opacity:0!important;pointer-events:none!important;position:fixed;top:0px;left:0px;';
+        iframe.style.cssText = 'margin:0!important;padding:0!important;flex:0;opacity:0!important;pointer-events:none!important;position:fixed;top:0px;left:0px;z-index:-2147483647;';
         let waitTime=100,checkEval;
         if(ruleParser.curSiteRule.waitElement){
             checkEval = doc => {
@@ -4821,6 +4821,7 @@
                 if(nextLink){
                     orgPage=orgPage[parseInt(orgPage.length/2)];
                     if(orgPage.tagName=="IMG" && orgPage.src){
+                        if (!ruleParser.curSiteRule.lazyImgSrc) ruleParser.curSiteRule.lazyImgSrc = "0";
                         orgContent=orgPage.src;
                     }else{
                         orgContent=orgPage.innerHTML;
@@ -4883,7 +4884,9 @@
                         callback(iframeDoc, eles);
                     }
                 }else{
-                    emuClick(nextLink);
+                    if (times % 5 === 1) {
+                        emuClick(nextLink);
+                    }
                     setTimeout(()=>{
                         checkPage();
                     },waitTime);
@@ -4898,9 +4901,9 @@
                 emuIframe.sandbox="allow-same-origin allow-scripts allow-popups allow-forms";
             }
             emuIframe.width = '100%';
-            emuIframe.height = '0';
+            emuIframe.height = '100';
             emuIframe.frameBorder = '0';
-            emuIframe.style.cssText = 'position:fixed;left:0;top:50%;margin:0!important;padding:0!important;visibility:hidden!important;flex:0;';
+            emuIframe.style.cssText = 'margin:0!important;padding:0!important;flex:0;opacity:0!important;pointer-events:none!important;position:fixed;top:0px;left:0px;z-index:-2147483647;';
             emuIframe.addEventListener("load", e => {
                 setTimeout(() => {
                     try {
