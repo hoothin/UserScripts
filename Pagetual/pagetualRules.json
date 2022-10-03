@@ -141,7 +141,8 @@
         "url": "^https://imhentai\\.xxx",
         "pageElement": "#gimg",
         "nextLink": ".nav_next",
-        "css": "#footer,#bar{display:none}.pre_img+.nav_pagination{bottom: 10px; position: fixed; width: 100%;}.return_btn{bottom: 0; position: fixed; width: 100%;}"
+        "css": "#footer,#bar{display:none}.pre_img+.nav_pagination{bottom: 10px; position: fixed; width: 100%;left:0;}.return_btn{bottom: 0; position: fixed; width: 100%;left:0;}",
+        "lazyImgSrc": 0
     },
     {
         "name": "Moebooru:Danbooru clones",
