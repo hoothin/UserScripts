@@ -8442,8 +8442,8 @@
 
         var inited = false;
         async function init(cb) {
-            if (window.top != window.self) {
-                if (document.body.clientHeight < 100 || document.body.clientWidth < 100) return;
+            if (window.top != window.self && document.body.clientHeight < 100 && document.body.clientWidth < 100) {
+                return;
             }
             if (inited) {
                 if (cb) cb();
