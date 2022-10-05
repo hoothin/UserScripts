@@ -1049,7 +1049,8 @@
         "name": "Actions · github",
         "action": 0,
         "url": "^https?://github\\.com/",
-        "pageElement": "div.js-socket-channel.js-updatable-content"
+        "pageElement": "div.js-socket-channel.js-updatable-content",
+        "nextLink": "//a[text()='Next']"
     },
     {
         "name": "360搜索",
