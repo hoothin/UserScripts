@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.32.1
+// @version      1.9.32.2
 // @description  Perpetual pages - most powerful auto-pager script, auto loading next paginated web pages and inserting into current page.
 // @description:zh-CN  自动翻页脚本 - 自动加载并拼接下一分页内容，支持任意网页
 // @description:zh-TW  自動翻頁脚本 - 自動加載並拼接下一分頁內容，支持任意網頁
@@ -1320,7 +1320,7 @@
                         }
                         if(!hasText){
                             let middleChild=ele.children[parseInt(ele.children.length/2)];
-                            if(curWin.getComputedStyle(ele).display==='flex' || rulesData.opacity!=0){
+                            if(curWin.getComputedStyle(ele).display==='flex' || (rulesData.opacity!=0 && curWin.getComputedStyle(ele.parentNode).display!=='flex')){
                                 ele=[ele];
                             }else if((middleChild.style && middleChild.style.position=="absolute" && middleChild.style.left && middleChild.style.top) || ele.tagName=="UL" || curHeight==0){
                                 ele=[ele];
@@ -4458,7 +4458,7 @@
             let parentStyle=_unsafeWindow.getComputedStyle(example.parentNode);
             let parentWidth=example.parentNode.offsetWidth||parseInt(parentStyle.width);
             pageBar.style.width=parentWidth-parseInt(parentStyle.paddingLeft)-parseInt(parentStyle.paddingRight)-10+"px";
-            pageBar.style.margin='0 5px';
+            pageBar.style.margin='10px 5px';
             if(parentStyle.display=="grid" || parentStyle.display=="inline-grid"){
                 pageBar.style.gridColumnStart=1;
                 pageBar.style.gridColumnEnd=1+parseInt(example.parentNode.offsetWidth/example.offsetWidth);
