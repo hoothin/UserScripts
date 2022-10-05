@@ -6,7 +6,7 @@
 // @namespace    hoothin
 // @supportURL   https://github.com/hoothin/UserScripts
 // @homepageURL  https://github.com/hoothin/UserScripts
-// @version      1.2.6.13
+// @version      1.2.6.14
 // @description        任意轉換網頁中的簡體中文與正體中文（默認簡體→正體）
 // @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体）
 // @description:ja     簡繁中国語に変換
@@ -481,9 +481,9 @@
                 continue;
             }
             if(char.charCodeAt(0) > 10000){
-                var tChar=stDict[char];
-                if(tChar){
-                    var sc2tcItem=sc2tc[char],newChar="";
+                var tChar=stDict[char], sc2tcItem=sc2tc[char];
+                if(tChar || sc2tcItem){
+                    var newChar="";
                     if(sc2tcItem){
                         if(sc2tcItem.length==1){
                             newChar=sc2tcItem;
