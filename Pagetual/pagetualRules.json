@@ -1047,6 +1047,7 @@
     },
     {
         "name": "Actions · github",
+        "action": 0,
         "url": "^https?://github\\.com/",
         "pageElement": "div.js-socket-channel.js-updatable-content"
     },
