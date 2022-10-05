@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.46.23
+// @version      1.6.6.46.25
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -290,7 +290,7 @@
             } ]
         },
         {
-            type: "站内搜索",
+            type: "划词搜索",
             icon: "sitemap",
             selectTxt: true,
             openInNewTab: true,
@@ -415,6 +415,53 @@
             }, {
                 name: "去视频水印",
                 url: "https://parse.bqrdh.com/smart/#p{.ant-input=%u&click(.ant-input-search-button)}"
+            } ]
+        },
+        {
+            type: "学术",
+            icon: "graduation-cap",
+            sites: [ {
+                name: "百度学术",
+                url: "http://xueshu.baidu.com/s?wd=%s"
+            }, {
+                name: "万方",
+                url: "https://s.wanfangdata.com.cn/paper?q=%s",
+                icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABJ0lEQVQ4jdWSvY4BURhAPwoS8TuTqESC3lN4DZGYVqGTaPQa4g1UYjqxdN5EoURI/CQ0M9/ZYnYya9fsRrHFFqe5Jzm5936ftEXatog9EZm+ii1iy1xkQbUKlgXNpodlQb0O8TjUao/O940GJJPIRGRKr4fCd0wTXa2eO4BK5SPQ6XiHqh6Ans+oYaCz2aPz/e0GpdJfBk4nL7BcPn+C60K5/MsNTBMdj9HDAd1uA3Y7dLOBYvGHwPWKFgqoSCiI/BC4XNB8HrUsdDRCB4OA4RDt98EwwgOcz2guFzpG/sEYXwp0uziuq59x73d1DEOdxUK/Osd11XUcDfag1UKPx2DO+z2s194nhuwB/h7MRd6IxSCbhXTaI5OBVAoiEUgkHp1PKgXRKO8NfBp7UCxd2QAAAABJRU5ErkJggg=="
+            }, {
+                name: "Scholar",
+                url: "http://scholar.google.com/scholar?hl=zh-CN&q=%s"
+            }, {
+                name: "Google Book",
+                url: "https://www.google.com/search?q=%s&btnG=搜索图书&tbm=bks&tbo=1&hl=zh-CN&gws_rd=ssl"
+            }, {
+                name: "中国知网",
+                url: "https://kns.cnki.net/KNS8/DefaultResult/Index?dbcode=CFLS&kw=%s"
+            }, {
+                name: "爱学术",
+                url: "https://www.ixueshu.com/search/index.html?search_type=&q=%s",
+                icon: "https://www.ixueshu.com/static/favicon.ico"
+            }, {
+                name: "维普",
+                url: "http://lib.cqvip.com/Qikan/Search/Index?from=Qikan_Search_Index/%p{isNoteHistory=1&isLog=1&indexIdentifier=U&indexKey=%s}"
+            }, {
+                name: "krugle",
+                url: "http://opensearch.krugle.org/document/search/#query=%s",
+                icon: "https://opensearch.krugle.org/media/images/favicon.ico"
+            }, {
+                name: "npm",
+                url: "https://www.npmjs.org/search?q=%s",
+                icon: "https://static.npmjs.com/b0f1a8318363185cc2ea6a40ac23eeb2.png"
+            }, {
+                name: "中国大学MOOC",
+                url: "https://www.icourse163.org/search.htm?search=%s"
+            }, {
+                name: "读秀知识",
+                url: "http://qw.duxiu.com/getPage?sw=%s&ecode=utf-8",
+                icon: "https://mycroftproject.com/updateos.php/id0/duxiu.ico"
+            }, {
+                name: "读秀书籍",
+                url: "http://book.duxiu.com/search?Field=all&channel=search&sw=%s&ecode=utf-8&edtype=&searchtype=1&view=0",
+                icon: "https://mycroftproject.com/updateos.php/id0/duxiu.ico"
             } ]
         },
         {
@@ -1408,10 +1455,19 @@
                      right: 0;
                      height: 100%;
                  }
+                 .searchJumperExpand {
+                     opacity: 0.8;
+                 }
+                 .searchJumperExpand:hover {
+                     opacity: 1;
+                 }
                  .searchJumperExpand>svg {
                      transform: rotate(-90deg);
                      border-radius: 20px;
                      filter: drop-shadow(0px 0px 2px black);
+                     width: unset;
+                     height: unset;
+                     color: black;
                  }
                  .search-jumper-type:not(.search-jumper-hide)>span.search-jumper-word {
                      filter: drop-shadow(0px 0px 2px black);
@@ -1486,6 +1542,13 @@
                  .search-jumper-btn>b {
                      line-height: ${32 * this.scale}px;
                      letter-spacing: 0;
+                     color: white;
+                 }
+                 .search-jumper-btn.noIcon>b {
+                     color: #f1e4cd;
+                 }
+                 .search-jumper-btn.noIcon:hover>b {
+                     color: wheat;
                  }
                  .search-jumper-btn>div {
                      position: absolute;
@@ -1727,7 +1790,6 @@
                  .search-jumper-word {
                      background: black;
                      color: #ffffff!important;
-                     text-shadow: 0px 0px 5px #d0d0d0;
                      font-family: Arial, sans-serif;
                      font-weight: bold;
                      border-radius: ${20 * this.scale}px!important;
@@ -1743,6 +1805,12 @@
                      background: #f7f7f7;
                      color: #111111!important;
                      filter: drop-shadow(1px 1px 3px #00000060);
+                 }
+                 .search-jumper-word {
+                     text-shadow: unset;
+                 }
+                 .search-jumper-word:hover {
+                     text-shadow: 0px 0px 5px #d0d0d0;
                  }
                  .search-jumper-type img {
                      width: ${32 * this.scale}px;
@@ -3514,9 +3582,6 @@
                     self.historylist.appendChild(btn);
                 });
                 let kw = getKeywords();
-                try {
-                    kw = decodeURIComponent(kw);
-                } catch (e) {}
                 this.showallInput.value = kw;
                 setTimeout(() => {
                     let mouseHandler = e => {
@@ -4283,10 +4348,7 @@
                 this.insertHistory(this.currentType);
                 let inPageWords = searchData.prefConfig.showInSearchEngine ? getKeywords() : globalInPageWords;
                 if (inPageWords) {
-                    try {
-                        inPageWords = decodeURIComponent(inPageWords).replace(/[:;]/g, ' ');
-                    } catch (e) {}
-                    this.setInPageWords(inPageWords);
+                    this.setInPageWords(inPageWords.replace(/[:;]/g, ' '));
                 }
             }
 
@@ -4836,7 +4898,7 @@
                     if (!/^\w+$/.test(iEle.innerText)) iEle.innerText = iEle.innerText.substr(0, 2);
                 } else iEle.innerText = type;
                 iEle.style.fontSize = 14 * this.scale + 'px';
-                iEle.style.color = 'wheat';
+                //iEle.style.color = 'wheat';
                 typeBtn.appendChild(iEle);
                 img.style.display = "none";
                 img.onload = e => {
@@ -4848,8 +4910,10 @@
                 ele.appendChild(typeBtn);
                 typeBtn.classList.add("search-jumper-word");
                 typeBtn.classList.add("search-jumper-btn");
+                typeBtn.classList.add("noIcon");
                 let isBookmark = /^BM/.test(type) && data.icon === "bookmark";//書簽就不緩存了
                 if (icon) {
+                    typeBtn.classList.remove("noIcon");
                     if (/^[a-z\- ]+$/.test(icon)) {
                         let cache = searchData.prefConfig.cacheSwitch && cacheIcon[icon];
                         if (cache === 'fail') {
@@ -5620,12 +5684,9 @@
                     }
                     if (!keywordsU && !keywordsL && !keywordsR) {
                         keywordsR = keywords;
-                        try {
-                            keywordsR = decodeURIComponent(keywords);
-                        } catch (e) {}
-                        if (needDecode) keywords = keywordsR;
                         keywordsU = keywordsR.toUpperCase();
                         keywordsL = keywordsR.toLowerCase();
+                        if (!needDecode) keywords = encodeURIComponent(keywords);
                     }
                     while (resultUrl.indexOf('%input{') !== -1) {
                         let inputMatch = resultUrl.match(/%input{(.*?)}/);
@@ -5852,12 +5913,20 @@
                                     self.showCustomInputWindow(url, _url => {
                                         storage.setItem("postUrl", [_url, data.charset]);
                                         ele.href = _url.replace(/[:%]p{.*/, '');
-                                        ele.click();
+                                        if (ele.target === '_blank') {
+                                            _GM_openInTab(ele.href, {active: true});
+                                        } else {
+                                            location.href = ele.href;
+                                        }
                                     });
                                 } else {
                                     storage.setItem("postUrl", [url, data.charset]);
                                     ele.href = url.replace(/[:%]p{.*/, '');
-                                    ele.click();
+                                    if (ele.target === '_blank') {
+                                        _GM_openInTab(ele.href, {active: true});
+                                    } else {
+                                        location.href = ele.href;
+                                    }
                                 }
                                 return false;
                             };
@@ -6854,7 +6923,7 @@
         function getKeywords() {
             let selStr = getSelectStr();
             if (selStr) {
-                return encodeURIComponent(selStr);
+                return selStr;
             }
             if (!currentSite) return localKeywords || '';
             //if (localKeywords === '' && cacheKeywords) return cacheKeywords;
@@ -6862,40 +6931,47 @@
             let keywordsMatch, keywords = '';
             if (currentSite.charset && currentSite.charset != 'UTF-8') {
                 let firstInput = document.body.querySelector('input[type=text]:not([readonly]),input:not([type])');
-                if (firstInput) keywords = encodeURIComponent(firstInput.value);
-            } else if (currentSite.keywords) {
-                if (/^[\w\|]+$/.test(currentSite.keywords)) {
-                    let keywordsList = currentSite.keywords.split("|");
-                    let urlParams = new URLSearchParams(location.search);
-                    for (let i = 0; i < keywordsList.length; i++) {
-                        keywords = urlParams.get(keywordsList[i]);
-                        if (keywords) break;
-                    }
-                } else {
-                    keywordsMatch = location.href.match(new RegExp(currentSite.keywords));
-                    if (keywordsMatch) {
-                        keywords = keywordsMatch[1];
-                    }
-                }
-            } else if (/%s\b/.test(currentSite.url) && !/[#:%]p{/.test(currentSite.url)) {
-                if (location.href.indexOf("?") != -1) {
-                    keywordsMatch = currentSite.url.match(/[\?&]([^&]*?)=%s\b.*/);
-                    if (keywordsMatch) {
-                        keywords = new URLSearchParams(location.search).get(keywordsMatch[1]);
-                    }
-                } else {
-                    keywordsMatch = currentSite.url.match(/https?:\/\/[^\/]*\/(.*)%s\b/);
-                    if (keywordsMatch) {
-                        keywordsMatch = location.href.match(new RegExp((keywordsMatch[1] || (location.host.replace(/\./g, "\\.") + "/")) + "(.*?)(\/|$)"));
+                if (firstInput) keywords = firstInput.value;
+            } else {
+                if (currentSite.keywords) {
+                    if (/^[\w\|]+$/.test(currentSite.keywords)) {
+                        let keywordsList = currentSite.keywords.split("|");
+                        let urlParams = new URLSearchParams(location.search);
+                        for (let i = 0; i < keywordsList.length; i++) {
+                            keywords = urlParams.get(keywordsList[i]);
+                            if (keywords) break;
+                        }
+                    } else {
+                        keywordsMatch = location.href.match(new RegExp(currentSite.keywords));
                         if (keywordsMatch) {
                             keywords = keywordsMatch[1];
                         }
                     }
+                } else if (/%s\b/.test(currentSite.url) && !/[#:%]p{/.test(currentSite.url)) {
+                    if (location.href.indexOf("?") != -1) {
+                        keywordsMatch = currentSite.url.match(/[\?&]([^&]*?)=%s\b.*/);
+                        if (keywordsMatch) {
+                            keywords = new URLSearchParams(location.search).get(keywordsMatch[1]);
+                        }
+                    } else {
+                        keywordsMatch = currentSite.url.match(/https?:\/\/[^\/]*\/(.*)%s\b/);
+                        if (keywordsMatch) {
+                            keywordsMatch = location.href.match(new RegExp((keywordsMatch[1] || (location.host.replace(/\./g, "\\.") + "/")) + "(.*?)(\/|$)"));
+                            if (keywordsMatch) {
+                                keywords = keywordsMatch[1];
+                            }
+                        }
+                    }
+                }
+                if (keywords) {
+                    try {
+                        keywords = decodeURIComponent(keywords);
+                    } catch (e) {}
                 }
             }
             if (keywords == '' && document.body) {
                 let firstInput = document.body.querySelector('input[type=text]:not([readonly]),input:not([type])');
-                if (firstInput) keywords = encodeURIComponent(firstInput.value);
+                if (firstInput) keywords = firstInput.value;
             }
             if (keywords) localKeywords = keywords;
             return localKeywords;//!localKeywords ? cacheKeywords : localKeywords;
