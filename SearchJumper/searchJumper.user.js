@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.46.26
+// @version      1.6.6.46.27
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -6218,21 +6218,20 @@
                 if (funcKeyCall) {
                     self.bar.style.cssText = "";
                     self.bar.parentNode.style.cssText = "";
-                    let baseSize = Math.min(self.bar.scrollWidth, self.bar.scrollHeight);
                     let viewWidth = window.innerWidth || document.documentElement.clientWidth;
                     let viewHeight = window.innerHeight || document.documentElement.clientHeight;
                     self.bar.style.position = "fixed";
-                    let clientX = e.clientX - self.bar.scrollWidth / 2;
+                    let clientX = e.clientX - self.bar.clientWidth / 2;
                     if (clientX < 0) clientX = 5;
-                    else if (clientX + self.bar.scrollWidth > viewWidth) clientX = viewWidth - self.bar.scrollWidth - 20;
+                    else if (clientX + self.bar.clientWidth > viewWidth) clientX = viewWidth - self.bar.clientWidth - 20;
                     let clientY = e.clientY;
-                    if (clientY > viewHeight / 5) clientY -= (self.bar.scrollHeight + 20);
+                    if (clientY > viewHeight / 5) clientY -= (self.bar.clientHeight + 20);
                     else clientY += 30;
                     if (clientX < viewWidth / 2) {
                         self.bar.style.left = clientX + "px";
                         self.bar.style.transformOrigin = '0 0';
                     } else {
-                        self.bar.style.right = viewWidth - clientX - self.bar.scrollWidth - 15 + "px";
+                        self.bar.style.right = viewWidth - clientX - self.bar.clientWidth - 15 + "px";
                         self.bar.style.transformOrigin = '100% 0';
                     }
                     self.bar.style.top = clientY + "px";
