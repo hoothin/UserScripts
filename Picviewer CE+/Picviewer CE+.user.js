@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.10.2.1
+// @version              2022.10.6.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -15741,7 +15741,7 @@ ImgOps | https://imgops.com/#b#`;
                             if(!aTag.href || /javascript:/.test(aTag.href.trim()))continue;
                             if(pref && pres && pret)break;
                             if(!pref){
-                                if(/(\s|^)上[一1]?[页頁张張]|^previous( page)?\s*$|前のページ/i.test(aTag.innerHTML)){
+                                if(/(\s|^)上[一1]?[页頁张張话話章]|^previous( page)?\s*$|前のページ/i.test(aTag.innerHTML)){
                                     pref=aTag;
                                 }
                             }
@@ -15771,7 +15771,7 @@ ImgOps | https://imgops.com/#b#`;
                             if(!aTag.href || /^\s*javascript:/.test(aTag.href.trim()))continue;
                             if(nextf && nexts && nextt)break;
                             if(!nextf){
-                                if(/(\s|^)下[一1]?[页頁张張]|^next( page)?\s*$|次のページ/i.test(aTag.innerHTML)){
+                                if(/(\s|^)下[一1]?[页頁张張话話章]|^next( page)?\s*$|次のページ/i.test(aTag.innerHTML)){
                                     nextf=aTag;
                                 }
                             }
@@ -15798,12 +15798,13 @@ ImgOps | https://imgops.com/#b#`;
                 return {pre:pre,next:next};
             },
             canonicalUri:function(src){
-                if(src.charAt(0)=="#")return location.href+src;
+                if (src.charAt(0) == "#") return location.href + src;
+                if (src.charAt(0) == "?") return location.href.replace(/^([^\?#]+).*/, "$1" + src);
                 var root_page = /^[^?#]*\//.exec(location.href)[0],
                     base_path = location.pathname.replace(/\/[^\/]+\.[^\/]+$/, "/"),
                     root_domain = /^\w+\:\/\/\/?[^\/]+/.exec(root_page)[0],
                     absolute_regex = /^\w+\:\/\//;
-                src=src.replace(/\.\//,"");
+                src=src.replace("./", "");
                 if (/^\/\/\/?/.test(src)){
                     src = location.protocol + src;
                 }
@@ -16864,11 +16865,11 @@ ImgOps | https://imgops.com/#b#`;
                     '+
                     (prefs.gallery.transition ? ('\
                     -webkit-transition: opacity 0.15s ease-in-out,\
-                    -webkit-transform 0.1s ease-in-out;\
+                    -webkit-transform 0.1s ease;\
                     -moz-transition: opacity 0.15s ease-in-out,\
-                    -moz-transform 0.1s ease-in-out;\
+                    -moz-transform 0.1s ease;\
                     transition: opacity 0.15s ease-in-out,\
-                    transform 0.1s ease-in-out;\
+                    transform 0.1s ease;\
                     ') : '') + '\
                     }\
                     .pv-gallery-img_zoom-out{\
@@ -18932,25 +18933,30 @@ ImgOps | https://imgops.com/#b#`;
                 var self=this;
                 var PI=Math.PI;
 
-                var rotate=function (radians){
-                    if(self.rotatedRadians==radians)return;
-                    if(self.working){
-                        img.style[support.cssTransform] = ' rotate('+ radians +'rad) ' + iTransform;
-                    }else if(Math.abs(self.rotatedRadians-radians)==1.5*PI){
+                var rotate = function (radians) {
+                    if (self.rotatedRadians == radians) return;
+                    if (self.working) {
+                        img.style[support.cssTransform] = ' rotate(' + radians + 'rad) ' + iTransform;
+                    } else {
                         img.classList.remove("transition-transform");
-                        img.style[support.cssTransform] = ' rotate('+ (self.rotatedRadians<radians?self.rotatedRadians+2*PI:self.rotatedRadians-2*PI) +'rad) ' + iTransform;
-                        setTimeout(()=>{
-                            img.classList.add("transition-all");
-                            img.classList.add("transition-transform");
+                        if(Math.abs(self.rotatedRadians-radians)==1.5*PI){
+                            //img.style[support.cssTransform] = ' rotate('+ (self.rotatedRadians<radians?self.rotatedRadians+2*PI:self.rotatedRadians-2*PI) +'rad) ' + iTransform;
                             img.style[support.cssTransform] = ' rotate('+ radians +'rad) ' + iTransform;
+                            //setTimeout(()=>{
+                                //img.classList.add("transition-all");
+                                //img.classList.add("transition-transform");
+                            //},0);
+                        }else{
+                            //img.classList.add("transition-all");
+                            img.style[support.cssTransform] = ' rotate('+ radians +'rad) ' + iTransform;//旋转图片
+                        }
+                        setTimeout(()=>{
+                            img.classList.add("transition-transform");
                         },0);
-                    }else{
-                        img.classList.add("transition-all");
-                        img.style[support.cssTransform] = ' rotate('+ radians +'rad) ' + iTransform;//旋转图片
                     }
-                    setTimeout(()=>{
-                        img.classList.remove("transition-all");
-                    },300);
+                    //setTimeout(()=>{
+                        //img.classList.remove("transition-all");
+                    //},300);
                     self.rotateIPointer.style[support.cssTransform]='rotate('+ radians +'rad)';//旋转指示器
 
                     self.rotatedRadians=radians;
