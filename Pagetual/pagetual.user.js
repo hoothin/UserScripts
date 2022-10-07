@@ -2051,6 +2051,7 @@
                 }
                 //若是再亂匹配就不緩存wedata，或者只在找完本地規則之後再考慮wedata的緩存
                 if (self.curSiteRule.singleUrl) {
+                    self.curSiteRule.pageElement = "";
                     self.smartRules = self.smartRules.filter(item => {return item && item.url != self.curSiteRule.url});
                     self.smartRules.unshift(self.curSiteRule);
                     if (self.smartRules.length > 100) {
