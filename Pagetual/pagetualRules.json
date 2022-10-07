@@ -1261,6 +1261,11 @@
         "nextLink": "a.btn-next"
     },
     {
+        "name": "serx.ml",
+        "url": "^https?://serx\\.ml/",
+        "pageElement": "article.result"
+    },
+    {
         "name": "淘宝已买到的宝贝",
         "url": "^https://buyertrade\\.taobao\\.com/",
         "pageElement": "table[data-reactid]",
