@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.32.3
+// @version      1.9.32.4
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -536,13 +536,13 @@
         return config[name]?config[name].replace("#t#",param):name;
     };
 
-    function debug(str) {
+    function debug(str, title) {
         if(enableDebug){
             console.log(
-                `%c【Pagetual v.${_GM_info.script.version}】 debug`,
-                'color: yellow;font-size: x-large;font-weight: bold;'
+                `%c【Pagetual v.${_GM_info.script.version}】 ${title ? title : 'debug'}:`,
+                'color: yellow;font-size: large;font-weight: bold;background-color: darkblue;',
+                str
             );
-            console.log(str);
         }
     };
 
@@ -591,6 +591,7 @@
             let styleEle=document.createElement("style");
             styleEle.innerHTML=cssStr;
             document.head.appendChild(styleEle);
+            return styleEle;
         };
     }
     if (typeof GM_setClipboard != 'undefined') {
@@ -703,7 +704,7 @@
                 return doc.querySelectorAll(sel);
             }
         } catch(e) {
-            debug(e);
+            debug(e, 'Error selector');
         }
         return getAllElementsByXpath(sel, doc, doc);
     }
@@ -714,7 +715,7 @@
                 return doc.querySelector(sel);
             }
         } catch(e) {
-            debug(e);
+            debug(e, 'Error selector');
         }
         return getElementByXpath(sel, doc, doc);
     }
@@ -845,7 +846,7 @@
                     try{
                         json=JSON.parse(res.response||res.responseText);
                     }catch(e){
-                        debug(e);
+                        debug(e, 'Error json');
                     }
                     callback(json);
                 },
@@ -889,8 +890,7 @@
             }
             this.requestJSON(url, (json,err)=>{
                 if(!json){
-                    debug("Update "+url+" rules fail!");
-                    debug(err);
+                    debug(err, "Update "+url+" rules fail!");
                 }
                 this.addRules(json, from);
                 callback(json, err);
@@ -1009,7 +1009,7 @@
 
             function setRule(r) {
                 self.curSiteRule=r;
-                debug(r);
+                debug(r, 'Match rule');
                 callback();
             }
 
@@ -1044,7 +1044,7 @@
                             try{
                                 checkEval=(typeof _unsafeWindow.pagetualWait=='undefined') ? Function("doc",'"use strict";' + r.wait) : _unsafeWindow.pagetualWait;
                             }catch(e){
-                                debug(e);
+                                debug(e, 'Error when checkeval');
                             }
                         }else{
                             waitTime=r.wait;
@@ -1215,23 +1215,23 @@
                     if(ele.childNodes && ele.childNodes.length==1)ele=ele.childNodes[0];
                     if(ele.tagName=="PICTURE"){
                         self.curSiteRule.pageElement=geneSelector(ele.parentNode)+">"+ele.tagName.toLowerCase();
-                        debug(self.curSiteRule.pageElement);
+                        debug(self.curSiteRule.pageElement, 'Page element');
                         return [ele];
                     }
                     if(curHeight/bodyHeight<=0.25){
                         self.curSiteRule.pageElement=allOfBody;
-                        debug(self.curSiteRule.pageElement);
+                        debug(self.curSiteRule.pageElement, 'Page element');
                         return [body];
                     }
                     if(ele.tagName=="FORM" && ele.parentNode!=document.body){
                         self.curSiteRule.pageElement=geneSelector(ele)+">*";
-                        debug(self.curSiteRule.pageElement);
+                        debug(self.curSiteRule.pageElement, 'Page element');
                         return ele.children;
                     }
                     if(ele.children.length==0 && !self.curSiteRule.pageElement){
                         if(ele.parentNode.tagName=="P")ele=ele.parentNode;
                         self.curSiteRule.pageElement=geneSelector(ele.parentNode)+">"+ele.tagName.toLowerCase();
-                        debug(self.curSiteRule.pageElement);
+                        debug(self.curSiteRule.pageElement, 'Page element');
                         return [ele];
                     }
                     let i,maxHeight=curHeight*0.55,curMaxEle=null,curMaxArea=0,maxWidth=0;
@@ -1304,7 +1304,7 @@
                         if(ele.children.length>0 && ele.children[0].querySelector("th")){
                             self.curSiteRule.pageElement+=":not(:first-child)";
                         }
-                        debug(self.curSiteRule.pageElement);
+                        debug(self.curSiteRule.pageElement, 'Page element');
                         return ele.children;
                     }
                     self.curSiteRule.pageElement=geneSelector(ele);
@@ -1332,7 +1332,7 @@
                     }else{
                         ele=[ele];
                     }
-                    debug(self.curSiteRule.pageElement);
+                    debug(self.curSiteRule.pageElement, 'Page element');
                     return ele;
                 }
                 pageElement=checkElement(body);
@@ -1714,9 +1714,15 @@
                 page=this.getPage(doc);
                 nextLink=page.next;
                 if(nextLink){
-                    if(nextLink.tagName=="INPUT" && nextLink.parentNode.tagName=="FORM"){
-                        let form=nextLink.parentNode;
-                        nextLink.href=getNextLinkByForm(form);
+                    if(nextLink.tagName=="INPUT" || nextLink.type=="submit"){
+                        let form = nextLink.parentNode;
+                        while (form) {
+                            if (form.tagName == "FORM") break;
+                            else form = form.parentNode;
+                        }
+                        if (form) {
+                            nextLink.href=getNextLinkByForm(form);
+                        }
                     }
                     if((nextLink.className && /slick|slide/i.test(nextLink.className)) || (nextLink.parentNode && nextLink.parentNode.className && /slick|slide/i.test(nextLink.parentNode.className))){
                         this.nextLinkHref=false;
@@ -1745,15 +1751,17 @@
                     }
                 }
             }
-            if(nextLink){
-                let needUrl=(this.curSiteRule.action==0 || this.curSiteRule.action==1);
-                if(!href)href=nextLink.href;
-                if(href && nextLink.getAttribute){
-                    let _href=nextLink.getAttribute("href");
-                    if(!_href || _href.charAt(0)=="#" || _href=="?"){
-                        href="#";
-                    }else{
-                        href=_href;
+            if (nextLink) {
+                let needUrl = (this.curSiteRule.action == 0 || this.curSiteRule.action == 1);
+                if (!href) href = nextLink.href;
+                if (href && nextLink.getAttribute) {
+                    let _href = nextLink.getAttribute("href");
+                    if (_href) {
+                        if (_href.charAt(0) == "#" || _href == "?"){
+                            href = "#";
+                        } else {
+                            href = _href;
+                        }
                     }
                 }
 
@@ -1765,7 +1773,7 @@
                     this.nextLinkHref=(href && !/^(javascript:|#)/.test(href))?this.canonicalUri(href):"#";
                     if(this.nextLinkHref!="#" && (this.nextLinkHref==this.curUrl || this.nextLinkHref==this.curUrl+"#" || this.nextLinkHref==this.oldUrl || this.nextLinkHref==this.oldUrl+"#")){
                         this.nextLinkHref=false;
-                    }else if(doc==document)debug(nextLink);
+                    }else if(doc==document)debug(nextLink, 'Next link');
                 }
             }else{
                 this.nextLinkHref=false;
