@@ -7607,7 +7607,7 @@
             if (location.href.indexOf(configPage) === 0) {
                 return true;
             }
-            if (location.href === "http://localhost:3000/" && document.title === "SearchJumper config") {
+            if (location.href === "http://localhost:3000/" && document.title === "SearchJumper Settings") {
                 return true;
             }
             return false;
