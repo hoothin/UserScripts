@@ -1,5 +1,19 @@
 [
 {
+  "resource_url": "http://wedata.net/items/85967",
+  "data": {
+    "pageElement": "//article/div[@class='wpeditor']",
+    "nextLink": "//div[@class='box-nextpage']/a",
+    "url": "^https://diamond-rm\\.net/",
+    "exampleUrl": "https://diamond-rm.net/management/227594/\r\nhttps://diamond-rm.net/store/226737/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "t_f_m'",
+  "name": "ダイヤモンド・チェーンストアオンライン DIAMOND Chain Store online",
+  "created_at": "2022-10-07T20:54:34+09:00",
+  "updated_at": "2022-10-07T20:55:54+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/85966",
   "data": {
     "insertBefore": "",
@@ -5945,19 +5959,18 @@
   "updated_at": "2020-04-20T10:21:08+09:00"
 },
 {
+  "resource_url": "http://wedata.net/items/85299",
   "data": {
-    "pageElement": "//div[@class=\"RankingVideoListContainer\"]/div[contains(concat(\" \",@class),\" RankingMain\")]",
-    "bookmarklet": "var matches=document.querySelectorAll('div[data-background-image]')\r\n\r\nmatches.forEach(function (elem) {\r\n    var t1=elem.getAttribute(\"data-background-image\");\r\n    elem.setAttribute(\"style\", \"background-image: url('\"+t1+\"');\");\r\n});",
+    "pageElement": "//div[@class=\"RankingVideoListContainer\"]/div[@data-owner-id]",
     "nextLink": "//ul[contains(concat(\" \",@class,\" \"),\" Paginator \")]/li[contains(concat(\" \",@class,\" \"),\" Paginator-item_current \")]/following-sibling::li/a",
     "url": "^https://www\\.nicovideo\\.jp/ranking/",
     "exampleUrl": "https://www.nicovideo.jp/ranking/genre/game?video_ranking_menu"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "t_f_m_",
-  "resource_url": "http://wedata.net/items/85299",
   "name": "ニコニコ動画 ランキング",
   "created_at": "2020-04-18T05:36:55+09:00",
-  "updated_at": "2021-03-30T20:11:15+09:00"
+  "updated_at": "2022-10-07T19:59:38+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85298",
