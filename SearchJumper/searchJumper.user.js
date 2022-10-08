@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.46.32
+// @version      1.6.6.46.33
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -796,7 +796,15 @@
                     customInputFrame: '自定义搜索参数',
                     customSubmit: '提交搜索',
                     finalSearch: '目标搜索字串',
-                    search: '搜索此项'
+                    search: '搜索此项',
+                    siteKeywords: '关键词',
+                    siteMatch: '站点 URL 匹配',
+                    openSelect: '打开选项',
+                    openInDefault: '默认',
+                    openInNewTab: '新标签页打开',
+                    openInCurrent: '当前页打开',
+                    maxAddSiteBtn: '最大化',
+                    minAddSiteBtn: '还原'
                 };
                 break;
             case "zh-TW":
@@ -858,7 +866,15 @@
                     customInputFrame: '自定義搜索參數',
                     customSubmit: '提交搜索',
                     finalSearch: '目標搜尋字串',
-                    search: '搜索此項'
+                    search: '搜索此項',
+                    siteKeywords: '關鍵詞',
+                    siteMatch: '站點 URL 匹配',
+                    openSelect: '打開選項',
+                    openInDefault: '默認',
+                    openInNewTab: '新標籤頁打開',
+                    openInCurrent: '當前頁打開',
+                    maxAddSiteBtn: '最大化',
+                    minAddSiteBtn: '還原'
                 };
                 break;
             default:
@@ -919,7 +935,15 @@
                     customInputFrame: 'Custom search parameters',
                     customSubmit: 'Submit',
                     finalSearch: 'Target search string',
-                    search: 'Search this'
+                    search: 'Search this',
+                    siteKeywords: 'Keywords',
+                    siteMatch: 'Match site URL',
+                    openSelect: 'Open option',
+                    openInDefault: 'Default',
+                    openInNewTab: 'Open a new tab',
+                    openInCurrent: 'Open in current',
+                    maxAddSiteBtn: 'Maximize',
+                    minAddSiteBtn: 'Restore'
                 };
                 break;
         }
@@ -932,9 +956,9 @@
             if(enableDebug) {
                 console.log(
                     `%c【SearchJumper v.${_GM_info.script.version}】 debug`,
-                    'color: yellow;font-size: x-large;font-weight: bold;'
+                    'color: yellow;font-size: large;font-weight: bold;',
+                    str
                 );
-                console.log(str);
             }
         };
 
@@ -983,6 +1007,7 @@
                 let styleEle = document.createElement("style");
                 styleEle.innerHTML = cssStr;
                 document.head.appendChild(styleEle);
+                return styleEle;
             };
         }
         if (typeof GM_info != 'undefined') {
@@ -1201,7 +1226,7 @@
             setTimeout( checkReady, 100 );
         }
 
-        var logoBtn, searchBar, searchTypes = [], currentSite = false, cacheKeywords, localKeywords, lastSign, inPagePostParams, cacheIcon, historySites, sortTypeNames, cachePool = [], cacheFontPool = [], currentFormParams, globalInPageWords, navEnable, referrer;
+        var logoBtn, searchBar, searchTypes = [], currentSite = false, cacheKeywords, localKeywords, lastSign, inPagePostParams, cacheIcon, historySites, sortTypeNames, cachePool = [], cacheFontPool = [], currentFormParams, globalInPageWords, navEnable, referrer, lastAddType;
         var logoBtnSvg = `<svg class="search-jumper-logoBtnSvg" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><title>${i18n("scriptName")}</title><path d="M.736 510.464c0-281.942 228.335-510.5 510-510.5 135.26 0 264.981 53.784 360.625 149.522 95.643 95.737 149.375 225.585 149.375 360.978 0 281.94-228.335 510.5-510 510.5-281.665 0-510-228.56-510-510.5zm510-510.5v1021m-510-510.5h1020" fill="#fefefe"/><path d="M237.44 346.624a48.64 48.64 0 1 0 97.28 0 48.64 48.64 0 1 0-97.28 0zM699.904 346.624a48.64 48.64 0 1 0 97.28 0 48.64 48.64 0 1 0-97.28 0zM423.296 759.296c-64 0-115.712-52.224-115.712-115.712 0-26.624 9.216-52.224 25.6-72.704 9.216-11.776 26.112-13.312 37.888-4.096s13.312 26.112 4.096 37.888c-9.216 11.264-13.824 24.576-13.824 38.912 0 34.304 27.648 61.952 61.952 61.952s61.952-27.648 61.952-61.952c0-4.096-.512-8.192-1.024-11.776-2.56-14.848 6.656-28.672 21.504-31.744 14.848-2.56 28.672 6.656 31.744 21.504 1.536 7.168 2.048 14.336 2.048 22.016-.512 63.488-52.224 115.712-116.224 115.712z" fill="#333"/><path d="M602.08 760.296c-64 0-115.712-52.224-115.712-115.712 0-14.848 12.288-27.136 27.136-27.136s27.136 12.288 27.136 27.136c0 34.304 27.648 61.952 61.952 61.952s61.952-27.648 61.952-61.952c0-15.36-5.632-30.208-15.872-41.472-9.728-11.264-9.216-28.16 2.048-37.888 11.264-9.728 28.16-9.216 37.888 2.048 19.456 21.504 29.696 48.64 29.696 77.824 0 62.976-52.224 115.2-116.224 115.2z" fill="#333"/><ellipse ry="58" rx="125" cy="506.284" cx="201.183" fill="#faf"/><ellipse ry="58" rx="125" cy="506.284" cx="823.183" fill="#faf"/></svg>`;
         var logoBase64 = "data:image/svg+xml;base64,PHN2ZyBjbGFzcz0ic2VhcmNoLWp1bXBlci1sb2dvQnRuU3ZnIiB2aWV3Qm94PSIwIDAgMTAyNCAxMDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0uNzM2IDUxMC40NjRjMC0yODEuOTQyIDIyOC4zMzUtNTEwLjUgNTEwLTUxMC41IDEzNS4yNiAwIDI2NC45ODEgNTMuNzg0IDM2MC42MjUgMTQ5LjUyMiA5NS42NDMgOTUuNzM3IDE0OS4zNzUgMjI1LjU4NSAxNDkuMzc1IDM2MC45NzggMCAyODEuOTQtMjI4LjMzNSA1MTAuNS01MTAgNTEwLjUtMjgxLjY2NSAwLTUxMC0yMjguNTYtNTEwLTUxMC41em01MTAtNTEwLjV2MTAyMW0tNTEwLTUxMC41aDEwMjAiIGZpbGw9IiNmZWZlZmUiLz48cGF0aCBkPSJNMjM3LjQ0IDM0Ni42MjRhNDguNjQgNDguNjQgMCAxIDAgOTcuMjggMCA0OC42NCA0OC42NCAwIDEgMC05Ny4yOCAwek02OTkuOTA0IDM0Ni42MjRhNDguNjQgNDguNjQgMCAxIDAgOTcuMjggMCA0OC42NCA0OC42NCAwIDEgMC05Ny4yOCAwek00MjMuMjk2IDc1OS4yOTZjLTY0IDAtMTE1LjcxMi01Mi4yMjQtMTE1LjcxMi0xMTUuNzEyIDAtMjYuNjI0IDkuMjE2LTUyLjIyNCAyNS42LTcyLjcwNCA5LjIxNi0xMS43NzYgMjYuMTEyLTEzLjMxMiAzNy44ODgtNC4wOTZzMTMuMzEyIDI2LjExMiA0LjA5NiAzNy44ODhjLTkuMjE2IDExLjI2NC0xMy44MjQgMjQuNTc2LTEzLjgyNCAzOC45MTIgMCAzNC4zMDQgMjcuNjQ4IDYxLjk1MiA2MS45NTIgNjEuOTUyczYxLjk1Mi0yNy42NDggNjEuOTUyLTYxLjk1MmMwLTQuMDk2LS41MTItOC4xOTItMS4wMjQtMTEuNzc2LTIuNTYtMTQuODQ4IDYuNjU2LTI4LjY3MiAyMS41MDQtMzEuNzQ0IDE0Ljg0OC0yLjU2IDI4LjY3MiA2LjY1NiAzMS43NDQgMjEuNTA0IDEuNTM2IDcuMTY4IDIuMDQ4IDE0LjMzNiAyLjA0OCAyMi4wMTYtLjUxMiA2My40ODgtNTIuMjI0IDExNS43MTItMTE2LjIyNCAxMTUuNzEyeiIgZmlsbD0iIzMzMyIvPjxwYXRoIGQ9Ik02MDIuMDggNzYwLjI5NmMtNjQgMC0xMTUuNzEyLTUyLjIyNC0xMTUuNzEyLTExNS43MTIgMC0xNC44NDggMTIuMjg4LTI3LjEzNiAyNy4xMzYtMjcuMTM2czI3LjEzNiAxMi4yODggMjcuMTM2IDI3LjEzNmMwIDM0LjMwNCAyNy42NDggNjEuOTUyIDYxLjk1MiA2MS45NTJzNjEuOTUyLTI3LjY0OCA2MS45NTItNjEuOTUyYzAtMTUuMzYtNS42MzItMzAuMjA4LTE1Ljg3Mi00MS40NzItOS43MjgtMTEuMjY0LTkuMjE2LTI4LjE2IDIuMDQ4LTM3Ljg4OCAxMS4yNjQtOS43MjggMjguMTYtOS4yMTYgMzcuODg4IDIuMDQ4IDE5LjQ1NiAyMS41MDQgMjkuNjk2IDQ4LjY0IDI5LjY5NiA3Ny44MjQgMCA2Mi45NzYtNTIuMjI0IDExNS4yLTExNi4yMjQgMTE1LjJ6IiBmaWxsPSIjMzMzIi8+PGVsbGlwc2Ugcnk9IjU4IiByeD0iMTI1IiBjeT0iNTA2LjI4NCIgY3g9IjIwMS4xODMiIGZpbGw9IiNmYWYiLz48ZWxsaXBzZSByeT0iNTgiIHJ4PSIxMjUiIGN5PSI1MDYuMjg0IiBjeD0iODIzLjE4MyIgZmlsbD0iI2ZhZiIvPjwvc3ZnPg==";
         var targetElement, cssText, mainStyleEle;
@@ -8069,7 +8094,7 @@
             }, 0);
         }
 
-        var addFrame, nameInput, descInput, urlInput, iconInput, iconShow, iconsCon, typeSelect, testBtn, cancelBtn, addBtn, addFrameCssText, addFrameCssEle;
+        var addFrame, nameInput, descInput, urlInput, iconInput, iconShow, iconsCon, typeSelect, testBtn, cancelBtn, addBtn, addFrameCssText, addFrameCssEle, siteKeywords, siteMatch, openSelect;
         function showSiteAdd(name, description, url, icons, charset) {
             if (!addFrame) {
                 addFrameCssText = `
@@ -8079,8 +8104,8 @@
                         position: fixed;
                         text-align: left;
                         left: 50%;
-                        top: 50%;
-                        margin-top: -160px;
+                        top: 45%;
+                        margin-top: -250px;
                         margin-left: -150px;
                         z-index: 100000;
                         background-color: #ffffff;
@@ -8090,6 +8115,7 @@
                         filter: alpha(opacity=95);
                         box-shadow: 5px 5px 20px 0px #000;
                         color: #6e7070;
+                        transition:all 0.25s ease;
                     }
                     .searchJumperFrame-title {
                         background: #458bd1;
@@ -8115,7 +8141,10 @@
                         text-align: left;
                         color: #646464;
                     }
-                    .searchJumperFrame-body>input,.searchJumperFrame-body>select {
+                    .searchJumperFrame-inputs>input,
+                    .searchJumperFrame-inputs>textarea,
+                    .searchJumperFrame-inputs>select,
+                    .searchJumperFrame-body select {
                         resize: both;
                         font-size: 11pt;
                         font-weight: normal;
@@ -8132,7 +8161,10 @@
                         box-sizing: content-box;
                         height: 25px;
                     }
-                    .searchJumperFrame-body>input:focus,.searchJumperFrame-body>select:focus {
+                    .searchJumperFrame-inputs>input:focus,
+                    .searchJumperFrame-inputs>textarea:focus,
+                    .searchJumperFrame-inputs>select:focus,
+                    .searchJumperFrame-body select:focus {
                         background-color: #FFF;
                     }
                     .searchJumperFrame-buttons {
@@ -8156,28 +8188,70 @@
                     .searchJumperFrame-buttons>button:hover {
                         color: #e3f2fd;
                     }
-                    .searchJumperFrame-body>img {
+                    .searchJumperFrame-inputs>img {
                         float: right;
-                        margin-top: -33px;
+                        margin-top: -40px;
                         position: relative;
-                        right: 5px;
+                        right: 20px;
                         opacity: 0.8;
                         background: rgb(0 0 0 / 50%);
                         border-radius: 5px;
+                        pointer-events: none;
                     }
                     .searchJumperFrame-body>.iconsCon {
                         max-height: 150px;
                         overflow: auto;
+                        width: 100%;
+                        border-top: 1px solid rgba(0, 0, 0, 0.23);
+                        border-bottom: 1px solid rgba(0, 0, 0, 0.23);
                     }
                     .searchJumperFrame-body>.iconsCon>img {
                         margin: 5px;
                         cursor: pointer;
-                        max-width: 50%;
+                        max-width: 120px;
                         border: 2px solid #ffffff;
                         box-sizing: border-box;
                     }
                     .searchJumperFrame-body>.iconsCon>img:hover {
                         border: 2px solid #4e91d3;
+                    }
+                    .maxContent .searchJumperFrame-inputs {
+                        width: 50%;
+                        float: left;
+                    }
+                    .searchJumperFrame-body>.moreItem {
+                        display: none;
+                    }
+                    .maxContent>.searchJumperFrame-body>.moreItem {
+                        display: block;
+                    }
+                    .maxContent>.searchJumperFrame-body {
+                        width: 600px;
+                        margin-left: -300px;
+                    }
+                    .searchJumperFrame-maxBtn {
+                        position: absolute;
+                        right: 5px;
+                        top: 5px;
+                        color: white;
+                        width: 25px;
+                        cursor: pointer;
+                        transition:width 0.25s ease;
+                    }
+                    .searchJumperFrame-maxBtn:hover {
+                        width: 30px;
+                    }
+                    .searchJumperFrame-maxBtn>#maxBtn {
+                        display: block;
+                    }
+                    .searchJumperFrame-maxBtn>#minBtn {
+                        display: none;
+                    }
+                    .maxContent .searchJumperFrame-maxBtn>#maxBtn {
+                        display: none;
+                    }
+                    .maxContent .searchJumperFrame-maxBtn>#minBtn {
+                        display: block;
                     }
                 `;
                 addFrameCssEle = _GM_addStyle(addFrameCssText);
@@ -8187,18 +8261,36 @@
                     <a href="${configPage}" class="searchJumperFrame-title" target="_blank">
                         <img width="32px" height="32px" src=${logoBase64}>${i18n("addSearchEngine")}
                     </a>
-                    <div class="searchJumperFrame-input-title">${i18n("siteName")}</div>
-                    <input name="siteName" type="text">
-                    <div class="searchJumperFrame-input-title">${i18n("siteDesc")}</div>
-                    <input name="description" type="text">
-                    <div class="searchJumperFrame-input-title">${i18n("siteUrl")}</div>
-                    <input name="url" type="text">
-                    <div class="searchJumperFrame-input-title">${i18n("siteIcon")}</div>
-                    <input name="icon" type="text">
-                    <img width="27px" height="27px">
+                    <div class="searchJumperFrame-maxBtn">
+                        <svg id="maxBtn" fill="white" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("maxAddSiteBtn")}</title><path d="M192 832h160a32 32 0 0 1 0 64H160a32 32 0 0 1-32-32V672a32 32 0 0 1 64 0zM182.72 886.72a32 32 0 0 1-45.44-45.44l224-224a32 32 0 0 1 45.44 45.44zM832 832V672a32 32 0 0 1 64 0v192a32 32 0 0 1-32 32H672a32 32 0 0 1 0-64zM886.72 841.28a32 32 0 0 1-45.44 45.44l-224-224a32 32 0 0 1 45.44-45.44zM192 192v160a32 32 0 0 1-64 0V160a32 32 0 0 1 32-32h192a32 32 0 0 1 0 64zM137.28 182.72a32 32 0 0 1 45.44-45.44l224 224a32 32 0 0 1-45.44 45.44zM832 192H672a32 32 0 0 1 0-64h192a32 32 0 0 1 32 32v192a32 32 0 0 1-64 0zM841.28 137.28a32 32 0 1 1 45.44 45.44l-224 224a32 32 0 0 1-45.44-45.44z"></path></svg>
+                        <svg id="minBtn" fill="white" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("minAddSiteBtn")}</title><path d="M672 352h160a32 32 0 0 1 0 64H640a32 32 0 0 1-32-32V192a32 32 0 0 1 64 0zM662.72 406.72a32 32 0 0 1-45.44-45.44l224-224a32 32 0 1 1 45.44 45.44zM352 352V192a32 32 0 0 1 64 0v192a32 32 0 0 1-32 32H192a32 32 0 0 1 0-64zM406.72 361.28a32 32 0 0 1-45.44 45.44l-224-224a32 32 0 0 1 45.44-45.44zM672 672v160a32 32 0 0 1-64 0V640a32 32 0 0 1 32-32h192a32 32 0 0 1 0 64zM617.28 662.72a32 32 0 0 1 45.44-45.44l224 224a32 32 0 0 1-45.44 45.44zM192 672a32 32 0 0 1 0-64h192a32 32 0 0 1 32 32v192a32 32 0 0 1-64 0V672zM361.28 617.28a32 32 0 0 1 45.44 45.44l-224 224a32 32 0 0 1-45.44-45.44z"></path></svg>
+                    </div>
+                    <div class="searchJumperFrame-inputs">
+                        <div class="searchJumperFrame-input-title">${i18n("siteName")}</div>
+                        <input name="siteName" type="text">
+                        <div class="searchJumperFrame-input-title">${i18n("siteDesc")}</div>
+                        <textarea name="description" type="text"></textarea>
+                        <div class="searchJumperFrame-input-title">${i18n("siteUrl")}</div>
+                        <textarea name="url" type="text"></textarea>
+                        <div class="searchJumperFrame-input-title">${i18n("siteIcon")}</div>
+                        <textarea name="icon" type="text"></textarea>
+                        <img width="27px" height="27px">
+                    </div>
+                    <div class="searchJumperFrame-inputs moreItem">
+                        <div class="searchJumperFrame-input-title">${i18n("siteKeywords")}</div>
+                        <input name="siteKeywords" placeholder="kw|key" type="text">
+                        <div class="searchJumperFrame-input-title">${i18n("siteMatch")}</div>
+                        <input name="siteMatch" placeholder="(www|m)\\.google\\.com" type="text"></textarea>
+                        <div class="searchJumperFrame-input-title">${i18n("openSelect")}</div>
+                        <select name="openSelect">
+                            <option value='-1'>${i18n("openInDefault")}</option>
+                            <option value='true'>${i18n("openInNewTab")}</option>
+                            <option value='false'>${i18n("openInCurrent")}</option>
+                        </select>
+                    </div>
                     <div class="iconsCon"></div>
                     <div class="searchJumperFrame-input-title">${i18n("siteType")}</div>
-                    <select>
+                    <select name="typeSelect">
                     </select>
                     <div class="searchJumperFrame-buttons">
                         <button id="test" type="button">${i18n("siteTest")}</button>
@@ -8211,16 +8303,30 @@
                 descInput = addFrame.querySelector("[name='description']");
                 urlInput = addFrame.querySelector("[name='url']");
                 iconInput = addFrame.querySelector("[name='icon']");
-                iconShow = addFrame.querySelector(".searchJumperFrame-body>img");
+                iconShow = addFrame.querySelector(".searchJumperFrame-inputs>img");
                 iconsCon = addFrame.querySelector(".iconsCon");
                 testBtn = addFrame.querySelector("#test");
                 cancelBtn = addFrame.querySelector("#cancel");
                 addBtn = addFrame.querySelector("#add");
-                typeSelect = addFrame.querySelector("select");
+                typeSelect = addFrame.querySelector("select[name='typeSelect']");
+                siteKeywords = addFrame.querySelector("[name='siteKeywords']");
+                siteMatch = addFrame.querySelector("[name='siteMatch']");
+                openSelect = addFrame.querySelector("select[name='openSelect']");
+                let maxBtn = addFrame.querySelector("#maxBtn");
+                maxBtn.addEventListener("click", e => {
+                    addFrame.classList.add("maxContent");
+                });
+                let minBtn = addFrame.querySelector("#minBtn");
+                minBtn.addEventListener("click", e => {
+                    addFrame.classList.remove("maxContent");
+                });
                 for (let i = 0; i < searchData.sitesConfig.length; i++) {
                     let typeConfig = searchData.sitesConfig[i];
                     let option = document.createElement("option");
                     option.value = i;
+                    if (lastAddType !== "" && lastAddType == i) {
+                        option.selected = "selected";
+                    }
                     option.innerText = typeConfig.type;
                     typeSelect.appendChild(option);
                 }
@@ -8257,10 +8363,20 @@
                     if (descInput.value && descInput.value != nameInput.value) {
                         siteObj.description = descInput.value;
                     }
+                    if (siteKeywords.value) {
+                        siteObj.keywords = siteKeywords.value;
+                    }
+                    if (siteMatch.value) {
+                        siteObj.match = siteMatch.value;
+                    }
+                    if (openSelect.value && openSelect.value != '-1') {
+                        siteObj.openInNewTab = openSelect.value === 'true';
+                    }
                     if (charset && charset.toLowerCase() != 'utf-8') {
                         siteObj.charset = charset;
                     }
                     searchData.sitesConfig[typeSelect.value].sites.push(siteObj);
+                    storage.setItem("lastAddType", typeSelect.value);
                     storage.setItem("searchData", searchData);
                     _GM_notification(i18n("siteAddOver"));
                     if (addFrame.parentNode) {
@@ -8270,6 +8386,8 @@
             }
             if (!addFrameCssEle || !addFrameCssEle.parentNode) addFrameCssEle = _GM_addStyle(addFrameCssText);
             document.body.appendChild(addFrame);
+            siteKeywords.value = "";
+            siteMatch.value = "";
             nameInput.value = name;
             descInput.value = description;
             urlInput.value = url;
@@ -8439,6 +8557,11 @@
             });
             referrer = await new Promise((resolve) => {
                 storage.getItem("referrer", data => {
+                    resolve(data || "");
+                });
+            });
+            lastAddType = await new Promise((resolve) => {
+                storage.getItem("lastAddType", data => {
                     resolve(data || "");
                 });
             });
