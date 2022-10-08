@@ -1319,6 +1319,13 @@
         "wait": "return doc.querySelector('.seb-pagination__pages') && !doc.querySelector('.organic-list>p>i.ui2-icon-loading')"
     },
     {
+        "name": "MGS Videos",
+        "url": "^https?://tktube\\.com/",
+        "pageElement": " div.list-videos > div#list_videos_common_videos_list_items > div.item",
+        "nextLink": ".next>a[href^='#']",
+        "pageAction": "eles.forEach(ele=>{let img=ele.querySelector('img[data-preview]');if(!img)return;let video=document.createElement('video');video.src=img.dataset.preview;video.setAttribute('playsinline','true');video.setAttribute('autoplay','');video.setAttribute('loop','');video.style.cssText='position: absolute; left: 0px; top: 0px; width: 318px; height: 179px; background: rgb(0, 0, 0); visibility: visible;';ele.onmouseenter=e=>{video.play();img.parentNode.appendChild(video)};ele.onmouseleave=e=>{img.parentNode.removeChild(video)}})"
+    },
+    {
         "name": "初音社",
         "url": "^https://www\\.mikuclub\\.online",
         "pageElement": "#post-list > div.col.card",
