@@ -2,7 +2,7 @@
 {
   "resource_url": "http://wedata.net/items/85967",
   "data": {
-    "pageElement": "//article/div[@class='wpeditor']",
+    "pageElement": "//div[@class='wpeditor']/*[not(contains(@class,'wp_social_bookmarking_light') or @class='box-nextpage')]",
     "nextLink": "//div[@class='box-nextpage']/a",
     "url": "^https://diamond-rm\\.net/",
     "exampleUrl": "https://diamond-rm.net/management/227594/\r\nhttps://diamond-rm.net/store/226737/"
@@ -11,7 +11,7 @@
   "created_by": "t_f_m'",
   "name": "ダイヤモンド・チェーンストアオンライン DIAMOND Chain Store online",
   "created_at": "2022-10-07T20:54:34+09:00",
-  "updated_at": "2022-10-07T20:55:54+09:00"
+  "updated_at": "2022-10-09T04:16:15+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85966",
@@ -4152,20 +4152,19 @@
   "updated_at": "2020-08-24T01:47:24+09:00"
 },
 {
+  "resource_url": "http://wedata.net/items/85454",
   "data": {
-    "insertBefore": "",
-    "pageElement": "//div[contains(@class,'block') and contains(@data-href,'inline')]",
+    "pageElement": "//div[@class='structItemContainer-group js-threadList']/*",
     "comment": "This is used for VOZ thread list page",
-    "nextLink": "(//div[contains(@class,'pageNav')]//a[contains(@class,'pageNav-jump--next')])[last()]",
+    "nextLink": "//a[@class='pageNav-jump pageNav-jump--next']",
     "url": "https://voz.vn/f/*",
     "exampleUrl": "https://voz.vn/f/diem-bao.33/page-2"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "Here Spam",
-  "resource_url": "http://wedata.net/items/85454",
   "name": "VOZ Next List of Threads",
   "created_at": "2020-08-16T23:10:39+09:00",
-  "updated_at": "2020-08-16T23:10:39+09:00"
+  "updated_at": "2022-10-09T03:43:29+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85453",
