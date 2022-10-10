@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.32.4
+// @version      1.9.32.5
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -1786,73 +1786,45 @@
             if(!rulesData.preload)return;
             if(!this.nextLinkHref || this.nextLinkHref=="#")return;
             let self=this;
-            if(this.curSiteRule && this.curSiteRule.action==1){
-                if(!this.preloadIframe){
-                    this.preloadIframe = document.createElement('iframe');
-                    let iframe = this.preloadIframe;
-                    iframe.name = 'pagetual-iframe';
-                    iframe.width = '100%';
-                    iframe.height = '0';
-                    iframe.frameBorder = '0';
-                    if(ruleParser.curSiteRule.sandbox!=false){
-                        iframe.sandbox="allow-same-origin allow-scripts allow-popups allow-forms";
-                    }
-                    iframe.style.cssText = 'margin:0!important;padding:0!important;visibility:hidden!important;flex:0;z-index:-2147483647;';
-                    iframe.addEventListener('load', function (e) {
-                        try{
-                            let doc=iframe.contentDocument || iframe.contentWindow.document;
-                            var body = doc.body;
-                            if (body && body.firstChild) {
-                                self.lazyImgAction(body.children);
-                            }
-                        }catch(e){
-                            return;
+            _GM_xmlhttpRequest({
+                url: this.nextLinkHref,
+                method: 'GET',
+                overrideMimeType: 'text/html;charset='+document.charset,
+                headers: {
+                    'Referer': location.href
+                },
+                timeout: 5000,
+                onload: function(res) {
+                    var doc=null;
+                    try {
+                        doc=document.implementation.createHTMLDocument('');
+                        doc.documentElement.innerHTML=res.response;
+                        var body = doc.body;
+                        if (body && body.firstChild) {
+                            self.lazyImgAction(body.children);
                         }
-                    }, false);
-                    document.body.appendChild(iframe);
+                        if(!self.preloadDiv){
+                            self.preloadDiv = document.createElement('div');
+                            self.preloadDiv.id = "pagetual-preload";
+                            self.preloadDiv.style.cssText = 'display:none!important;';
+                            document.body.appendChild(self.preloadDiv);
+                            self.checkedImgs={};
+                        }
+                        [].forEach.call(doc.images, i=>{
+                            let iSrc=i.src;
+                            if(iSrc && !self.checkedImgs[iSrc]){
+                                self.checkedImgs[iSrc] = true;
+                                let img = document.createElement('img');
+                                img.src = iSrc;
+                                self.preloadDiv.appendChild(img);
+                            }
+                        });
+                    }
+                    catch (e) {
+                        return;
+                    }
                 }
-                this.preloadIframe.src = this.nextLinkHref;
-            }else{
-                _GM_xmlhttpRequest({
-                    url: this.nextLinkHref,
-                    method: 'GET',
-                    overrideMimeType: 'text/html;charset='+document.charset,
-                    headers: {
-                        'Referer': location.href
-                    },
-                    timeout: 5000,
-                    onload: function(res) {
-                        var doc=null;
-                        try {
-                            doc=document.implementation.createHTMLDocument('');
-                            doc.documentElement.innerHTML=res.response;
-                            var body = doc.body;
-                            if (body && body.firstChild) {
-                                self.lazyImgAction(body.children);
-                            }
-                            if(!self.preloadDiv){
-                                self.preloadDiv = document.createElement('div');
-                                self.preloadDiv.id = "pagetual-preload";
-                                self.preloadDiv.style.cssText = 'display:none!important;';
-                                document.body.appendChild(self.preloadDiv);
-                                self.checkedImgs={};
-                            }
-                            [].forEach.call(doc.images, i=>{
-                                let iSrc=i.src;
-                                if(iSrc && !self.checkedImgs[iSrc]){
-                                    self.checkedImgs[iSrc] = true;
-                                    let img = document.createElement('img');
-                                    img.src = iSrc;
-                                    self.preloadDiv.appendChild(img);
-                                }
-                            });
-                        }
-                        catch (e) {
-                            return;
-                        }
-                    }
-                });
-            }
+            });
         }
 
         getInsert(refresh) {
@@ -4647,7 +4619,7 @@
         if(ruleParser.curSiteRule.sandbox!=false){
             iframe.sandbox="allow-same-origin allow-scripts allow-popups allow-forms";
         }
-        iframe.style.cssText = 'margin:0!important;padding:0!important;flex:0;opacity:0!important;pointer-events:none!important;position:fixed;top:0px;left:0px;z-index:-2147483647;';
+        iframe.style.cssText = 'margin:0!important;padding:0!important;visibility:hidden!important;flex:0;opacity:0!important;pointer-events:none!important;position:fixed;top:0px;left:0px;z-index:-2147483647;';
         let waitTime=100,checkEval;
         if(ruleParser.curSiteRule.waitElement){
             checkEval = doc => {
