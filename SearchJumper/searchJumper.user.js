@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.46.38
+// @version      1.6.6.46.40
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -3647,6 +3647,9 @@
                         //this.lockSearchInput("*");
                         this.searchJumperInputKeyWords.value = selectStr;
                         //this.searchJumperInputKeyWords.focus();
+                    } else if (!this.searchJumperInputKeyWords.value && currentSite) {
+                        this.searchJumperInputKeyWords.value = getKeywords();
+                        this.searchJumperInputKeyWords.focus();
                     }
                 } else if (this.searchInPageTab.checked) {
                     this.searchJumperInPageInput.focus();
@@ -4082,9 +4085,16 @@
                         case 13://回车
                             if (this.searchJumperInputKeyWords.value) {
                                 clearTimeout(inputTimer);
-                                let siteEle = self.bar.querySelector(".search-jumper-type:not(.search-jumper-hide)>a.search-jumper-btn:not(.input-hide)") || self.bar.querySelector("a.search-jumper-btn:not(.input-hide)");
+                                let siteEle, forceTarget = "";
+                                if (currentSite && !self.searchInput.value) {
+                                    siteEle = self.bar.querySelector(".search-jumper-btn.current");
+                                    forceTarget = "_self";
+                                } else {
+                                    siteEle = self.bar.querySelector(".search-jumper-type:not(.search-jumper-hide)>a.search-jumper-btn:not(.input-hide)") || self.bar.querySelector("a.search-jumper-btn:not(.input-hide)");
+                                    forceTarget = "_blank";
+                                }
                                 if (siteEle) {
-                                    self.openSiteBtn(siteEle);
+                                    self.openSiteBtn(siteEle, forceTarget);
                                 }
                             }
                             break;
@@ -5215,10 +5225,11 @@
                 return ele;
             }
 
-            openSiteBtn(siteEle) {
+            openSiteBtn(siteEle, forceTarget) {
                 let isPage = /^(https?|ftp):/.test(siteEle.href);
+                if (!forceTarget) forceTarget = "_blank";
                 if (isPage) {
-                    siteEle.setAttribute("target", "_blank");
+                    siteEle.setAttribute("target", forceTarget);
                 }
                 let mouseDownEvent = new PointerEvent("mousedown");
                 siteEle.dispatchEvent(mouseDownEvent);
@@ -5226,10 +5237,12 @@
                     if (siteEle.onclick || !isPage) {
                         siteEle.click();
                     } else {
-                        _GM_openInTab(siteEle.href, {active: true});
+                        if (forceTarget == "_blank") {
+                            _GM_openInTab(siteEle.href, {active: true});
+                        } else location.href = siteEle.href;
                     }
                 }
-                siteEle.setAttribute("target", siteEle.dataset.target==1?"_blank":"");
+                if (isPage) siteEle.setAttribute("target", siteEle.dataset.target == 1 ? "_blank" : "");
             }
 
             batchOpen(siteNames, e) {
@@ -7263,6 +7276,7 @@
                         }
                         var key = (e.key || String.fromCharCode(e.keyCode)).toLowerCase();
                         if (searchData.prefConfig.shortcutKey == key) {
+                            searchBar.bar.classList.remove("funcKeyCall");
                             searchBar.showInPage();
                             if (!searchData.prefConfig.disableInputOnWords || searchBar.inInput || !getSelectStr()) {
                                 searchBar.showSearchInput();
