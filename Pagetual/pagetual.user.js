@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.32.5
+// @version      1.9.32.6
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -202,6 +202,8 @@
                 switchSelector:"点击切换元素",
                 gotoEdit:"使用当前的选择器前往编辑规则",
                 manualMode:"禁用拼接，手动用右方向键翻页（或发送事件'pagetual.next'），可使用 Alt + 左方向键返回",
+                clickMode:"禁用拼接，滚动至页尾时自动点击下一页",
+                pageBarMenu:"点击分隔条中间弹出菜单",
                 nextSwitch:"切换其他页码",
                 arrowToScroll:"左方向键滚动至上一页，右方向键滚动至下一页",
                 hideLoadingIcon:"隐藏加载动画",
@@ -282,6 +284,8 @@
                 switchSelector:"點擊切換元素",
                 gotoEdit:"使用當前的選擇器前往編輯規則",
                 manualMode:"禁用拼接，手動用右方向鍵翻頁（或發送事件'pagetual.next'）",
+                clickMode:"禁用拼接，滾動至頁尾時自動點擊下一頁",
+                pageBarMenu:"點擊分隔條中間彈出菜單",
                 nextSwitch:"切換其他頁碼",
                 arrowToScroll:"左方向鍵滾動至上一頁，右方向鍵滾動至下一頁",
                 hideLoadingIcon:"隱藏加載動畫",
@@ -361,6 +365,8 @@
                 switchSelector:"クリックして要素を切り替えます",
                 gotoEdit:"現在のセレクターでルールを編集する",
                 manualMode:"スプライシングを無効にします。手動で右の矢印キーを使用してページをめくります",
+                clickMode: "スティッチングを無効にします。ページの最後までスクロールすると、次のページが自動的にクリックされます",
+                pageBarMenu:"ページバーの中央をクリックしてメニューをポップアップ表示",
                 nextSwitch:"次のページに切り替え",
                 arrowToScroll:"左矢印キーで前へ、右矢印キーで次へ",
                 hideLoadingIcon:"読み込み中のアニメーションを隠す",
@@ -441,6 +447,8 @@
                 switchSelector:"нажмите для переключения элемента",
                 gotoEdit:"Перейти к редактированию правила с текущим селектором",
                 manualMode:"Отключить автоматическую перелистывание страниц, перелистывать страницы вручную с помощью стрелок справа (или вызвать событие 'pagetual.next')",
+                clickMode: "Отключить сшивание, автоматически переходить на следующую страницу при прокрутке до конца",
+                pageBarMenu:"Щелкните середину панели страниц, чтобы открыть меню.",
                 nextSwitch:"Переключить ссылку на следующую страницу",
                 arrowToScroll:"Нажмите клавишу со стрелкой влево для предыдущего и клавишу со стрелкой вправо для следующего",
                 hideLoadingIcon:"Скрыть анимацию загрузки",
@@ -520,6 +528,8 @@
                 switchSelector:"Click to switch element",
                 gotoEdit:"Go to edit rule with current selector",
                 manualMode:"Disable splicing, manually turn pages with the right arrow keys (or dispatch event 'pagetual.next')",
+                clickMode: "Disable splicing, automatically click the next page when scrolling to the end of the page",
+                pageBarMenu:"Click the middle of the page bar to open the menu",
                 nextSwitch:"Switch next link",
                 arrowToScroll:"Press left arrow key to scroll prev and right arrow key to scroll next",
                 hideLoadingIcon:"Hide loading animation",
@@ -2359,6 +2369,11 @@
               top: 3px;
               right: 10px;
              }
+             #pagetual-picker>.logoToHome {
+              position: absolute;
+              top: 3px;
+              left: 10px;
+             }
              #pagetual-picker .selector{
               display: inline-block;
               width: 290px;
@@ -2445,6 +2460,16 @@
               padding-top: 10px;
               width: 100%;
              }
+             #pagetual-picker .command {
+              width: 100%;
+              color: black;
+              text-align: center;
+              font-size: large;
+              margin-top: 10px;
+             }
+             #pagetual-picker .command:hover {
+              color: orangered;
+             }
             `;
             _GM_addStyle(cssText);
             this.mainSignDiv = this.createSignDiv();
@@ -2452,29 +2477,26 @@
             let frame = document.createElement("div");
             frame.id = "pagetual-picker";
             frame.innerHTML = createHTML(`
+                <button title="Pagetual" type="button" class="logoToHome">
+                  <svg width="30" height="30" class="upSvg pagetual" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a"></path></svg>
+                </button>
                 <div class="title">${i18n("picker")}</div>
                 <button title="${i18n("closePicker")}" type="button" class="closePicker">
-                  <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2754">
-                    <path d="M512 128c212 0 384 172 384 384s-172 384-384 384-384-172-384-384 172-384 384-384m0-64C264.8 64 64 264.8 64 512s200.8 448 448 448 448-200.8 448-448S759.2 64 512 64z m238.4 254.4l-45.6-45.6L512 467.2 318.4 273.6l-45.6 45.6L467.2 512 273.6 705.6l45.6 45.6L512 557.6l193.6 193.6 45.6-45.6L557.6 512l192.8-193.6z" p-id="2755">
-                    </path>
-                  </svg>
+                  <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 128c212 0 384 172 384 384s-172 384-384 384-384-172-384-384 172-384 384-384m0-64C264.8 64 64 264.8 64 512s200.8 448 448 448 448-200.8 448-448S759.2 64 512 64z m238.4 254.4l-45.6-45.6L512 467.2 318.4 273.6l-45.6 45.6L467.2 512 273.6 705.6l45.6 45.6L512 557.6l193.6 193.6 45.6-45.6L557.6 512l192.8-193.6z" fill="#604b4a"></path></svg>
                 </button>
                 <div class="allpath" title="${i18n("switchSelector")}"></div>
                 <div>
                   <textarea class="selector" spellcheck="false" name="selector" placeholder="${i18n("pickerPlaceholder")}"></textarea>
                   <button id="check" title="${i18n("pickerCheck")}" type="button">
-                    <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1609">
-                      <path d="M512 128a384 384 0 1 0 0 768 384 384 0 0 0 0-768z m0-85.333333c259.2 0 469.333333 210.133333 469.333333 469.333333s-210.133333 469.333333-469.333333 469.333333S42.666667 771.2 42.666667 512 252.8 42.666667 512 42.666667zM696.149333 298.666667L768 349.866667 471.594667 725.333333 256 571.733333l53.888-68.266666 143.744 102.4z" p-id="1610">
-                      </path>
-                    </svg>
+                    <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 128a384 384 0 1 0 0 768 384 384 0 0 0 0-768z m0-85.333333c259.2 0 469.333333 210.133333 469.333333 469.333333s-210.133333 469.333333-469.333333 469.333333S42.666667 771.2 42.666667 512 252.8 42.666667 512 42.666667zM696.149333 298.666667L768 349.866667 471.594667 725.333333 256 571.733333l53.888-68.266666 143.744 102.4z" fill="#604b4a"></path></svg>
                   </button>
                 </div>
                 <div class="bottom">
                   <input name="xpath" id="checkbox_id" type="checkbox">
                   <label for="checkbox_id">XPath</label>
                   <button id="edit" title="${i18n("gotoEdit")}" type="button">
-                    <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4129" style="color: orangered;fill: orangered;">
-                      <path d="M775.84 392.768l-155.2-172.352L160.768 643.264l-38.368 187.936 190.56-12.832zM929.952 229.952l-131.2-150.944-0.288-0.32a16 16 0 0 0-22.592-0.96l-131.168 120.576 155.168 172.352 128.832-118.464a15.936 15.936 0 0 0 1.248-22.24zM96 896h832v64H96z" p-id="4130">
+                    <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" style="color: orangered;fill: orangered;">
+                      <path d="M775.84 392.768l-155.2-172.352L160.768 643.264l-38.368 187.936 190.56-12.832zM929.952 229.952l-131.2-150.944-0.288-0.32a16 16 0 0 0-22.592-0.96l-131.168 120.576 155.168 172.352 128.832-118.464a15.936 15.936 0 0 0 1.248-22.24zM96 896h832v64H96z">
                       </path>
                     </svg>
                   </button>
@@ -2493,6 +2515,8 @@
                     <label for="forceStateDisable">Disable</label>
                   </div>
                 </div>
+                <button id="nextSwitch" class="command" title="${i18n("nextSwitch")}" type="button">${i18n("nextSwitch")}</button>
+                <button id="loadNow" class="command" title="${i18n("loadNow")}" type="button">${i18n("loadNow")}</button>
             `);
             let forceStateIframe = frame.querySelector("#forceStateIframe");//forceState 1 禁用 2 强嵌 3 动态
             let forceStateDynamic = frame.querySelector("#forceStateDynamic");
@@ -2527,18 +2551,35 @@
             else if (forceState == 2) forceStateIframe.checked = true;
             else if (forceState == 3) forceStateDynamic.checked = true;
             let closeBtn = frame.querySelector(".closePicker");
+            let homeBtn = frame.querySelector(".logoToHome");
             let title = frame.querySelector(".title");
             let allpath = frame.querySelector(".allpath");
             let selectorInput = frame.querySelector(".selector");
             let xpath = frame.querySelector("#checkbox_id");
             let checkBtn = frame.querySelector("#check");
             let editBtn = frame.querySelector("#edit");
+            let nextSwitch = frame.querySelector("#nextSwitch");
+            let loadNow = frame.querySelector("#loadNow");
+            nextSwitch.addEventListener("click", e => {
+                self.close();
+                NextSwitch.getInstance().start();
+            }, true);
+            loadNow.addEventListener("click", e => {
+                self.close();
+                let loadNum=window.prompt(i18n("loadConfirm"), "1");
+                if(loadNum==="" || loadNum===null)return;
+                autoLoadNum=Math.abs(parseInt(loadNum));
+                nextPage();
+            }, true);
             closeBtn.addEventListener("click", e => {
                 self.close();
             }, true);
+            homeBtn.addEventListener("click", e => {
+                _GM_openInTab(configPage, {active: true});
+            }, true);
             let moving = false;
             let moveHanlder = e => {
-                frame.style.left = e.clientX - 160 + "px";
+                frame.style.left = e.clientX - 200 + "px";
                 frame.style.top = e.clientY - 15 + "px";
                 e.stopPropagation();
                 e.preventDefault();
@@ -2603,6 +2644,8 @@
             this.xpath = xpath;
             this.allpath = allpath;
             this.selectorInput = selectorInput;
+            this.nextSwitch = nextSwitch;
+            this.loadNow = loadNow;
             this.moveHandler = e => {
                 if (e.target === document) return;
                 self.adjustSignDiv(self.mainSignDiv, self.getTarget(e.target));
@@ -2737,6 +2780,13 @@
             document.body.addEventListener("mousemove", this.moveHandler, true);
             document.body.addEventListener("click", this.clickHandler, true);
             this.xpath.checked = isXPath(ruleParser.curSiteRule.pageElement);
+
+            this.loadNow.style.display = ruleParser.nextLinkHref ? "block" : "none";
+            if (ruleParser.curSiteRule.nextLink && Array && Array.isArray && Array.isArray(ruleParser.curSiteRule.nextLink)) {
+                this.nextSwitch.style.display = "block";
+            } else {
+                this.nextSwitch.style.display = "none";
+            }
 
             let pageElementSel=ruleParser.curSiteRule.pageElement || "";
             if(Array && Array.isArray && Array.isArray(pageElementSel)){
@@ -3318,6 +3368,8 @@
         let preloadInput=createCheckbox(i18n("preload"), rulesData.preload!=false);
         let dbClick2StopInput=createCheckbox(i18n("dbClick2Stop"), rulesData.dbClick2Stop);
         let manualModeInput=createCheckbox(i18n("manualMode"), rulesData.manualMode);
+        let clickModeInput=createCheckbox(i18n("clickMode"), rulesData.clickMode);
+        let pageBarMenuInput=createCheckbox(i18n("pageBarMenu"), rulesData.pageBarMenu);
         let arrowToScrollInput=createCheckbox(i18n("arrowToScroll"), rulesData.arrowToScroll);
 
         let hideBarInput = createCheckbox(i18n("hideBar"), rulesData.hideBar && !rulesData.hideBarButNoStop, "h4", dbClick2StopInput, 'radio');
@@ -3426,6 +3478,8 @@
             rulesData.autoLoadNum = autoLoadNumInput.value !== "0" ? autoLoadNumInput.value : '';
             rulesData.preload = preloadInput.checked;
             rulesData.manualMode = manualModeInput.checked;
+            rulesData.clickMode = clickModeInput.checked;
+            rulesData.pageBarMenu = pageBarMenuInput.checked;
             rulesData.arrowToScroll = arrowToScrollInput.checked;
             rulesData.pageElementCss = pageElementCssInput.value;
             rulesData.customCss = customCssInput.value;
@@ -3672,6 +3726,12 @@
                 }
                 if(typeof(rulesData.manualMode)=="undefined"){
                     rulesData.manualMode=false;
+                }
+                if(typeof(rulesData.clickMode)=="undefined"){
+                    rulesData.clickMode=false;
+                }
+                if(typeof(rulesData.pageBarMenu)=="undefined"){
+                    rulesData.pageBarMenu=false;
                 }
                 if(typeof(rulesData.arrowToScroll)=="undefined"){
                     rulesData.arrowToScroll=false;
@@ -3970,12 +4030,12 @@
 
     const loadingCSS=`display: block; position: initial; margin: auto auto 5px auto; shape-rendering: auto; vertical-align: middle; visibility: visible; width: initial; height: initial; text-align: center; color: #6e6e6e; flex: 0;`;
     function setLoadingDiv(loadingText){
-        loadingDiv.innerHTML=`<p class="pagetual_loading_text" style="${loadingCSS}display: inline-block;">${loadingText}</p>${rulesData.hideLoadingIcon ? "" : `<div class="pagetual_loading"><svg width="50" height="50" style="position:relative;cursor: pointer;width: 50px;height: 50px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6364"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#6e6e6e" p-id="6365"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#6e6e6e" p-id="6366"></path></svg></div>`}`;
+        loadingDiv.innerHTML=`<p class="pagetual_loading_text" style="${loadingCSS}display: inline-block;">${loadingText}</p>${rulesData.hideLoadingIcon ? "" : `<div class="pagetual_loading"><svg width="50" height="50" style="position:relative;cursor: pointer;width: 50px;height: 50px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#6e6e6e"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#6e6e6e"></path></svg></div>`}`;
     }
 
-    var upSvg=`<svg width="30" height="30" class="upSvg pagetual" style="display:initial;position:relative;cursor: pointer;margin: 0 8px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6364"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a" p-id="6365"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a" p-id="6366"></path></svg>`;
+    var upSvg=`<svg width="30" height="30" class="upSvg pagetual" style="display:initial;position:relative;cursor: pointer;margin: 0 8px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a"></path></svg>`;
     var upSvgCSS=`display:initial;position:relative;cursor: pointer;margin: 0 8px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;`;
-    var downSvg=`<svg width="30" height="30" class="downSvg pagetual" style="display:initial;position:relative;cursor: pointer;margin: 0 8px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;transform: rotate(180deg);" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6364"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a" p-id="6365"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a" p-id="6366"></path></svg>`;
+    var downSvg=`<svg width="30" height="30" class="downSvg pagetual" style="display:initial;position:relative;cursor: pointer;margin: 0 8px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;transform: rotate(180deg);" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a"></path></svg>`;
     var downSvgCSS=`display:initial;position:relative;cursor: pointer;margin: 0 8px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;transform: rotate(180deg);`;
 
     const initStyle=`display: contents;right: unset;left: unset;top: unset;bottom: unset;inset: unset;clear: both;cy: initial;d: initial;dominant-baseline: initial;empty-cells: initial;fill: initial;fill-opacity: initial;fill-rule: initial;filter: initial;flex: initial;flex-flow: initial;float: initial;flood-color: initial;flood-opacity: initial;grid: initial;grid-area: initial;height: initial;hyphens: initial;image-orientation: initial;image-rendering: initial;inline-size: initial;inset-block: initial;inset-inline: initial;isolation: initial;letter-spacing: initial;lighting-color: initial;line-break: initial;list-style: initial;margin-block: initial;margin: 0px 5px;margin-inline: initial;marker: initial;mask: initial;mask-type: initial;max-block-size: initial;max-height: initial;max-inline-size: initial;max-width: initial;min-block-size: initial;min-height: initial;min-inline-size: initial;min-width: initial;mix-blend-mode: initial;object-fit: initial;object-position: initial;offset: initial;opacity: initial;order: initial;orphans: initial;outline: initial;outline-offset: initial;overflow-anchor: initial;overflow-clip-margin: initial;overflow-wrap: initial;overflow: initial;overscroll-behavior-block: initial;overscroll-behavior-inline: initial;overscroll-behavior: initial;padding-block: initial;padding: initial;padding-inline: initial;page: initial;page-orientation: initial;paint-order: initial;perspective: initial;perspective-origin: initial;pointer-events: initial;position: relative;quotes: initial;r: initial;resize: initial;ruby-position: initial;rx: initial;ry: initial;scroll-behavior: initial;scroll-margin-block: initial;scroll-margin: initial;scroll-margin-inline: initial;scroll-padding-block: initial;scroll-padding: initial;scroll-padding-inline: initial;scroll-snap-align: initial;scroll-snap-stop: initial;scroll-snap-type: initial;scrollbar-gutter: initial;shape-image-threshold: initial;shape-margin: initial;shape-outside: initial;shape-rendering: initial;size: initial;speak: initial;stop-color: initial;stop-opacity: initial;stroke: initial;stroke-dasharray: initial;stroke-dashoffset: initial;stroke-linecap: initial;stroke-linejoin: initial;stroke-miterlimit: initial;stroke-opacity: initial;stroke-width: initial;tab-size: initial;table-layout: initial;text-align: initial;text-align-last: initial;text-anchor: initial;text-combine-upright: initial;text-decoration: initial;text-decoration-skip-ink: initial;text-indent: initial;text-overflow: initial;text-shadow: initial;text-size-adjust: initial;text-transform: initial;text-underline-offset: initial;text-underline-position: initial;touch-action: initial;transform: initial;transform-box: initial;transform-origin: initial;transform-style: initial;transition: initial;user-select: initial;vector-effect: initial;vertical-align: initial;visibility: initial;border-spacing: initial;-webkit-border-image: initial;-webkit-box-align: initial;-webkit-box-decoration-break: initial;-webkit-box-direction: initial;-webkit-box-flex: initial;-webkit-box-ordinal-group: initial;-webkit-box-orient: initial;-webkit-box-pack: initial;-webkit-box-reflect: initial;-webkit-highlight: initial;-webkit-hyphenate-character: initial;-webkit-line-break: initial;-webkit-line-clamp: initial;-webkit-mask-box-image: initial;-webkit-mask: initial;-webkit-mask-composite: initial;-webkit-perspective-origin-x: initial;-webkit-perspective-origin-y: initial;-webkit-print-color-adjust: initial;-webkit-rtl-ordering: initial;-webkit-ruby-position: initial;-webkit-tap-highlight-color: initial;-webkit-text-combine: initial;-webkit-text-decorations-in-effect: initial;-webkit-text-emphasis: initial;-webkit-text-emphasis-position: initial;-webkit-text-fill-color: initial;-webkit-text-security: initial;-webkit-text-stroke: initial;-webkit-transform-origin-x: initial;-webkit-transform-origin-y: initial;-webkit-transform-origin-z: initial;-webkit-user-drag: initial;-webkit-user-modify: initial;white-space: initial;widows: initial;width: initial;will-change: initial;word-break: initial;word-spacing: initial;x: initial;y: initial;`;
@@ -4066,11 +4126,27 @@
                 clearInterval(checkLoadMore);
             }
         },300);
+        let clickMode = typeof ruleParser.curSiteRule.clickMode == 'undefined' ? rulesData.clickMode : ruleParser.curSiteRule.clickMode;
+        let clickNext=() => {
+            let nextLink=ruleParser.nextLinkHref;
+            if(!nextLink)return;
+            let isJs=/^(javascript|#)/.test(nextLink.replace(location.href,""));
+            if(isJs){
+                let nextBtn=ruleParser.getNextLink(document);
+                if(nextBtn)emuClick(nextBtn);
+            }else{
+                window.location.href = nextLink;
+            }
+        };
         let checkScrollReach=()=>{
             let scrolly=window.scrollY;
             let windowHeight=window.innerHeight || document.documentElement.clientHeight;
             let scrollH=Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
-            if(scrollH-scrolly-windowHeight<bottomGap){
+            if(clickMode){
+                if(scrollH-scrolly-windowHeight<10){
+                    clickNext();
+                }
+            }else if(scrollH-scrolly-windowHeight<bottomGap){
                 nextPage();
             }
         };
@@ -4168,17 +4244,6 @@
                 }
             });
         }
-        let clickNext=() => {
-            let nextLink=ruleParser.nextLinkHref;
-            if(!nextLink)return;
-            let isJs=/^(javascript|#)/.test(nextLink.replace(location.href,""));
-            if(isJs){
-                let nextBtn=ruleParser.getNextLink(document);
-                if(nextBtn)emuClick(nextBtn);
-            }else{
-                window.location.href = nextLink;
-            }
-        };
         if (ruleParser.curSiteRule.listenHashChange) {
             window.addEventListener('hashchange', () => {
                 urlChanged = true;
@@ -4365,6 +4430,13 @@
         if(rulesData.openInNewTab)pageText.target="_blank";
         pageBar.appendChild(upSpan);
         pageBar.appendChild(pageText);
+        if(rulesData.pageBarMenu){
+            pageText.addEventListener("click", e=>{
+                e.stopPropagation();
+                e.preventDefault();
+                Picker.getInstance().start();
+            });
+        }
         if(ruleParser.nextTitle){
             pageText.innerHTML=ruleParser.nextTitle+" ";
             pageText.title=ruleParser.nextTitle;
@@ -5089,6 +5161,7 @@
 
     function nextPage(){
         if(typeof ruleParser.curSiteRule.manualMode=='undefined' ? rulesData.manualMode : ruleParser.curSiteRule.manualMode)return;
+        if(typeof ruleParser.curSiteRule.clickMode=='undefined' ? rulesData.clickMode : ruleParser.curSiteRule.clickMode)return;
         if(isPause || isLoading || forceState==1)return;
         if(ruleParser.curSiteRule.delay){
             try{
