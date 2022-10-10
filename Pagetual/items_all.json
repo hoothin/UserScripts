@@ -2,7 +2,7 @@
 {
   "resource_url": "http://wedata.net/items/85967",
   "data": {
-    "pageElement": "//div[@class='wpeditor']/*[not(contains(@class,'wp_social_bookmarking_light') or @class='box-nextpage')]",
+    "pageElement": "//div[@class='wpeditor']/*[not(@class) or self::figure]",
     "nextLink": "//div[@class='box-nextpage']/a",
     "url": "^https://diamond-rm\\.net/",
     "exampleUrl": "https://diamond-rm.net/management/227594/\r\nhttps://diamond-rm.net/store/226737/"
@@ -11,7 +11,7 @@
   "created_by": "t_f_m'",
   "name": "ダイヤモンド・チェーンストアオンライン DIAMOND Chain Store online",
   "created_at": "2022-10-07T20:54:34+09:00",
-  "updated_at": "2022-10-09T04:16:15+09:00"
+  "updated_at": "2022-10-09T12:12:01+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85966",
