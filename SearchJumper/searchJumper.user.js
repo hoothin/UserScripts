@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.46.45
+// @version      1.6.6.46.46
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -3301,8 +3301,8 @@
                     r = parseInt(bg.substr(0, 2), 16);
                     g = parseInt(bg.substr(2, 2), 16);
                     b = parseInt(bg.substr(4, 2), 16);
-                    let isLightColor = (r * 0.299 + g * 0.578 + b * 0.114 >= 192);
-                    if (r > 50 && r < 205) {
+                    let isLightColor = (r * 0.299 + g * 0.587 + b * 0.114 >= 158);
+                    /*if (r > 50 && r < 205) {
                         r = r < 128 ? 255 : 0;
                     } else {
                         r = 255 - r;
@@ -3316,28 +3316,29 @@
                         b = b < 128 ? 255 : 0;
                     } else {
                         b = 255 - b;
-                    }
+                    }*/
 
                     if (isLightColor) {
-                        r = Math.floor(0.7 * r);
+                        return '#000000';
+                        /*r = Math.floor(0.7 * r);
                         g = Math.floor(0.7 * g);
-                        b = Math.floor(0.7 * b);
+                        b = Math.floor(0.7 * b);*/
                     } else {
-                        r = Math.floor(1.3 * r);
+                        return '#FFFFFF';
+                        /*r = Math.floor(1.3 * r);
                         g = Math.floor(1.3 * g);
                         b = Math.floor(1.3 * b);
                         r = r > 255 ? 255 : r;
                         g = g > 255 ? 255 : g;
-                        b = b > 255 ? 255 : b;
+                        b = b > 255 ? 255 : b;*/
                     }
-
-                    r = r.toString(16);
+                    /*r = r.toString(16);
                     if (r.length === 1) r = "0" + r;
                     g = g.toString(16);
                     if (g.length === 1) g = "0" + g;
                     b = b.toString(16);
                     if (b.length === 1) b = "0" + b;
-                    return "#" + r + g + b;
+                    return "#" + r + g + b;*/
                 }
                 if (!background) {
                     background = searchData.prefConfig.firstFiveWordsColor[index];
