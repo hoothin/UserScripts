@@ -1308,6 +1308,34 @@
         "pageElement": "ul.list-unstyled"
     },
     {
+        "name": "题目列表 - 洛谷",
+        "url": "^https://www\\.luogu\\.com\\.cn/problem/list",
+        "nextLinkByUrl": [
+            "(\\?page=|$)(\\d*)",
+            "?page={$2+1}"
+        ],
+        "wait": 1000,
+        "pagePre": [
+            "<a href=\"(.*?)\">(.*?)</a></li>",
+            "<div data-v-c06fccc2=\"\" data-v-24f898d2=\"\" class=\"row\"><!----> <span data-v-c06fccc2=\"\" data-v-24f898d2=\"\" class=\"status\"><svg data-v-1b44b3e6=\"\" data-v-c06fccc2=\"\" aria-hidden=\"true\" focusable=\"false\" data-prefix=\"fas\" data-icon=\"minus\" role=\"img\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 448 512\" class=\"icon svg-inline--fa fa-minus fa-w-14\" data-v-24f898d2=\"\" style=\"opacity: 0.7;\"><path data-v-1b44b3e6=\"\" fill=\"currentColor\" d=\"M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z\" class=\"\"></path></svg></span> <span data-v-c06fccc2=\"\" data-v-24f898d2=\"\" class=\"pid\">$1</span> <div data-v-c06fccc2=\"\" data-v-24f898d2=\"\" class=\"title\"><a data-v-303bbf52=\"\" data-v-c06fccc2=\"\" href=\"/problem/$1\" target=\"_blank\" colorscheme=\"default\" class=\"title color-default\" data-v-24f898d2=\"\">$2</a></div> <div data-v-187aafe9=\"\" data-v-c06fccc2=\"\" class=\"tags\" data-v-24f898d2=\"\"><div data-v-187aafe9=\"\" class=\"tags-wrap multiline\"></div></div> <div data-v-c06fccc2=\"\" data-v-24f898d2=\"\" class=\"difficulty\"></div> <div data-v-c06fccc2=\"\" data-v-24f898d2=\"\" class=\"progress\"><div data-v-47712372=\"\" data-v-c06fccc2=\"\" class=\"progress-frame has-tooltip\" data-original-title=\"null\" data-v-24f898d2=\"\"><div data-v-47712372=\"\" style=\"width: 37.2682%; background-color: rgb(52, 152, 219);\"></div></div></div></div>"
+        ],
+        "pageElement": ".row"
+    },
+    {
+        "name": "题单广场 - 洛谷",
+        "url": "^https://www\\.luogu\\.com\\.cn/training/list",
+        "nextLinkByUrl": [
+            "(&page=|$)(\\d*)",
+            "&page={$2+1}"
+        ],
+        "wait": 1000,
+        "pagePre": [
+            "<li><a href=\"(.*?)\">(.*?)</a></li>",
+            "<div data-v-128051e7=\"\" data-v-24f898d2=\"\" class=\"row\"><span data-v-128051e7=\"\" data-v-24f898d2=\"\" class=\"id\">$1</span> <span data-v-128051e7=\"\" data-v-24f898d2=\"\" class=\"name\"><a data-v-303bbf52=\"\" data-v-128051e7=\"\" href=\"/training/$1\" target=\"_blank\" colorscheme=\"default\" class=\"color-default\" data-v-24f898d2=\"\"> $2 </a></span> <!----> <span data-v-128051e7=\"\" data-v-24f898d2=\"\" class=\"problem-count\">0</span> <span data-v-128051e7=\"\" data-v-24f898d2=\"\" class=\"collection\">0</span> <span data-v-128051e7=\"\" class=\"creator\" data-v-24f898d2=\"\"><span data-v-dfb4a326=\"\"><span data-v-58fd269e=\"\" data-v-dfb4a326=\"\"><span data-v-58fd269e=\"\"><a data-v-303bbf52=\"\" data-v-dfb4a326=\"\" href=\"/user/0\" target=\"_blank\" colorscheme=\"none\" class=\"color-none\" data-v-58fd269e=\"\"><span data-v-dfb4a326=\"\" data-v-303bbf52=\"\" style=\"font-weight: bold; color: rgb(254, 76, 97);\"> author </span></a></span> </span></span></span></div>"
+        ],
+        "pageElement": ".row"
+    },
+    {
         "name": "buondua",
         "url": "^https://(.*\\.)?buondua\\.com/",
         "type": 0,
