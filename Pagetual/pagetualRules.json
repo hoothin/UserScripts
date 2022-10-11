@@ -1266,6 +1266,11 @@
         "pageElement": "article.result"
     },
     {
+        "name": "Ru.Board",
+        "url": "^https?://forum\\.ru-board\\.com/",
+        "nextLink": "table .small>b+a"
+    },
+    {
         "name": "淘宝已买到的宝贝",
         "url": "^https://buyertrade\\.taobao\\.com/",
         "pageElement": "table[data-reactid]",
