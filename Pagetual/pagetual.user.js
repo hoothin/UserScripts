@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.32.6
+// @version      1.9.32.7
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -492,7 +492,7 @@
                 loadingText:"Shojo Now Loading...",
                 opacity:"Opacity",
                 opacityPlaceholder:"0: hide",
-                hideBar:"hide the paging spacer",
+                hideBar:"Hide the paging spacer",
                 hideBarButNoStop:"Hide but not stop",
                 dbClick2Stop:"Double-click on the blank space to pause",
                 sortTitle:"Sorting takes effect after the next rule update",
@@ -1532,22 +1532,30 @@
                             }
                         }
                     }
-                    if(!aTag.href || /^javascript:/.test(aTag.href) || aTag.getAttribute("href")=="#")continue;
-                    if(!next4 && aTag.href.length<250){
-                        let _aHref=aTag.href.replace("?&","?").replace("index.php?","?");
-                        let _aHrefTrim=_aHref;
-                        if(preStr)_aHrefTrim=_aHrefTrim.replace(preStr,"");
-                        if(afterStr)_aHrefTrim=_aHrefTrim.replace(afterStr,"");
-                        if(pageNum<999 && _aHrefTrim==pageNum+1){
-                            next4=aTag;
-                        }else if(this.curUrl!=aTag.href){
-                            _aHref=_aHref.replace(/\.s?html?$/i,"");
-                            if(_aHref.indexOf(_url)!=-1 && /^[\/\?&]?[_-]?(p|page)?=?\/?2(\/|\?|&|$)/i.test(_aHref.replace(_url,""))){
-                                let curHref=aTag.getAttribute("href");
-                                let pageOne=curHref.replace(/\/2(\/|\?|&|$)/,"/1$1");
-                                if(pageOne==curHref)pageOne=null;
-                                else pageOne=body.querySelector(`a[href='${pageOne}']`);
-                                if(!pageOne || pageOne.className!=curHref.className)next4=aTag;
+                    if (!aTag.href || /^javascript:/.test(aTag.href) || aTag.getAttribute("href") == "#") continue;
+                    if (!next4) {
+                        let prevEle = aTag.previousElementSibling;
+                        if (prevEle && prevEle.tagName == 'B') {
+                            if (/^\d+$/.test(aTag.innerText) && parseInt(aTag.innerText) == parseInt(prevEle.innerText) + 1) {
+                                next4 = aTag;
+                            }
+                        }
+                    }
+                    if (!next4 && aTag.href.length < 250) {
+                        let _aHref = aTag.href.replace("?&", "?").replace("index.php?", "?");
+                        let _aHrefTrim = _aHref;
+                        if (preStr) _aHrefTrim = _aHrefTrim.replace(preStr, "");
+                        if (afterStr) _aHrefTrim = _aHrefTrim.replace(afterStr, "");
+                        if (pageNum < 999 && _aHrefTrim == pageNum + 1) {
+                            next4 = aTag;
+                        } else if (this.curUrl != aTag.href) {
+                            _aHref = _aHref.replace(/\.s?html?$/i, "");
+                            if (_aHref.indexOf(_url) != -1 && /^[\/\?&]?[_-]?(p|page)?=?\/?2(\/|\?|&|$)/i.test(_aHref.replace(_url, ""))) {
+                                let curHref = aTag.getAttribute("href");
+                                let pageOne = curHref.replace(/\/2(\/|\?|&|$)/,"/1$1");
+                                if (pageOne == curHref) pageOne = null;
+                                else pageOne = body.querySelector(`a[href='${pageOne}']`);
+                                if (!pageOne || pageOne.className != curHref.className) next4 = aTag;
                             }
                         }
                     }
