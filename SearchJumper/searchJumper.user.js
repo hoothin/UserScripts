@@ -3301,44 +3301,27 @@
                     r = parseInt(bg.substr(0, 2), 16);
                     g = parseInt(bg.substr(2, 2), 16);
                     b = parseInt(bg.substr(4, 2), 16);
-                    let isLightColor = (r * 0.299 + g * 0.587 + b * 0.114 >= 158);
-                    /*if (r > 50 && r < 205) {
-                        r = r < 128 ? 255 : 0;
-                    } else {
-                        r = 255 - r;
-                    }
-                    if (g > 50 && g < 205) {
-                        g = g < 128 ? 255 : 0;
-                    } else {
-                        g = 255 - g;
-                    }
-                    if (b > 50 && b < 205) {
-                        b = b < 128 ? 255 : 0;
-                    } else {
-                        b = 255 - b;
-                    }*/
+                    let bgBrightness = r * 0.299 + g * 0.587 + b * 0.114;
+                    r = 255 - r;
+                    g = 255 - g;
+                    b = 255 - b;
 
-                    if (isLightColor) {
-                        return '#000000';
-                        /*r = Math.floor(0.7 * r);
-                        g = Math.floor(0.7 * g);
-                        b = Math.floor(0.7 * b);*/
-                    } else {
-                        return '#FFFFFF';
-                        /*r = Math.floor(1.3 * r);
-                        g = Math.floor(1.3 * g);
-                        b = Math.floor(1.3 * b);
-                        r = r > 255 ? 255 : r;
-                        g = g > 255 ? 255 : g;
-                        b = b > 255 ? 255 : b;*/
+                    let wordBrightness = r * 0.299 + g * 0.587 + b * 0.114;
+                    let diff = Math.abs(wordBrightness - bgBrightness);
+                    if (diff <= 128) {
+                        if (bgBrightness > 158) {
+                            return "#000000";
+                        } else {
+                            return "#FFFFFF";
+                        }
                     }
-                    /*r = r.toString(16);
+                    r = r.toString(16);
                     if (r.length === 1) r = "0" + r;
                     g = g.toString(16);
                     if (g.length === 1) g = "0" + g;
                     b = b.toString(16);
                     if (b.length === 1) b = "0" + b;
-                    return "#" + r + g + b;*/
+                    return "#" + r + g + b;
                 }
                 if (!background) {
                     background = searchData.prefConfig.firstFiveWordsColor[index];
