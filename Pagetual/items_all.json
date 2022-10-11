@@ -1,5 +1,19 @@
 [
 {
+  "resource_url": "http://wedata.net/items/85970",
+  "data": {
+    "pageElement": "//div[@class=\"text-left\"]",
+    "nextLink": "//ul[@class=\"pagination\"]/li/a[contains(text(),\"»\")]",
+    "url": "^https://\\d+\\.peta2\\.jp/",
+    "exampleUrl": "https://11210.peta2.jp/1936697.html"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "masao1",
+  "name": "ぺたぼーど",
+  "created_at": "2022-10-10T19:14:02+09:00",
+  "updated_at": "2022-10-10T19:22:49+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/85967",
   "data": {
     "pageElement": "//div[@class='wpeditor']/*[not(@class) or self::figure]",
@@ -21557,17 +21571,18 @@
 },
 {
   "resource_url": "http://wedata.net/items/76720",
-  "name": "nHentai",
-  "created_by": "theydonotwant",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "updated_at": "2015-11-12T07:15:43+09:00",
   "data": {
-    "exampleUrl": "http://nhentai.net/artist/kokutou-nikke/ http://nhentai.net/?page=3 http://nhentai.net/g/124271/1/",
-    "url": "^https?://nhentai\\.net/",
     "pageElement": "id('content')//*[@class='gallery' or @id='image-container']",
-    "nextLink": "//a[@class='next']"
+    "insertBefore": "//section[@class='pagination']",
+    "nextLink": "//a[@class='next']",
+    "url": "^https?://nhentai\\.net/",
+    "exampleUrl": "http://nhentai.net/artist/kokutou-nikke/ http://nhentai.net/?page=3 http://nhentai.net/g/124271/1/"
   },
-  "created_at": "2014-12-28T23:26:34+09:00"
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "theydonotwant",
+  "name": "nHentai",
+  "created_at": "2014-12-28T23:26:34+09:00",
+  "updated_at": "2022-10-10T16:29:51+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/76713",
