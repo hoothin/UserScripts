@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/85972",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[@id='main']",
+    "nextLink": "//a[@class='next']",
+    "url": "^http://www\\.xiuren\\.org/?(page)?",
+    "exampleUrl": "http://www.xiuren.org/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "powertalent",
+  "name": "xiuren.org",
+  "created_at": "2022-10-12T10:48:49+09:00",
+  "updated_at": "2022-10-12T10:48:49+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/85970",
   "data": {
     "pageElement": "//div[@class=\"text-left\"]",
