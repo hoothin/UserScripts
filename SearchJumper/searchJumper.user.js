@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.46.46
+// @version      1.6.6.46.47
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -3579,7 +3579,7 @@
             }
 
             showAllSites() {
-                if (!this.bar.parentNode || this.bar.parentNode.classList.contains("search-jumper-showall")) return;
+                if (!this.bar.parentNode || !this.bar.parentNode.parentNode || this.bar.parentNode.classList.contains("search-jumper-showall")) return;
                 let self = this;
                 this.bar.parentNode.classList.add("search-jumper-showall");
                 searchTypes.forEach(type => {
@@ -3610,6 +3610,13 @@
                                     }
                                 }
                             });
+                            self.bar.style.display = "";
+                            self.initPos(
+                                searchData.prefConfig.position.x,
+                                searchData.prefConfig.position.y,
+                                searchData.prefConfig.offset.x,
+                                searchData.prefConfig.offset.y
+                            );
                         }
                     };
                     document.addEventListener("mousedown", mouseHandler);
@@ -7150,7 +7157,7 @@
                 }
                 e.preventDefault();
                 e.stopPropagation();
-                if (searchBar.inInput) {
+                if (searchBar.inInput || e.which === 2 || e.altKey || e.ctrlKey || e.shiftKey || e.metaKey) {
                     _GM_openInTab(configPage, {active: true});
                     return;
                 }
@@ -7277,6 +7284,46 @@
                         }
                     });
                 }
+
+                if (searchData.prefConfig.showAllShortcutKey) {
+                    document.addEventListener('keydown', e => {
+                        if (e.target.id === "searchJumperInput") return;
+                        if ((searchData.prefConfig.showAllAlt && !e.altKey) ||
+                            (searchData.prefConfig.showAllCtrl && !e.ctrlKey) ||
+                            (searchData.prefConfig.showAllShift && !e.shiftKey) ||
+                            (searchData.prefConfig.showAllMeta && !e.metaKey)) {
+                            return;
+                        }
+                        if (!searchData.prefConfig.enableInInput) {
+                            if (document.activeElement &&
+                                (document.activeElement.tagName == 'INPUT' ||
+                                 document.activeElement.tagName == 'TEXTAREA' ||
+                                 document.activeElement.contentEditable == 'true')) {
+                                return;
+                            } else {
+                                let contentEditable = false;
+                                let parent = document.activeElement;
+                                while (parent) {
+                                    contentEditable = parent.contentEditable == 'true';
+                                    if (contentEditable || parent.tagName == 'BODY') {
+                                        break;
+                                    }
+                                    parent = parent.parentNode;
+                                }
+                                if (contentEditable) return;
+                            }
+                        }
+                        var key = (e.key || String.fromCharCode(e.keyCode)).toLowerCase();
+                        if (searchData.prefConfig.showAllShortcutKey == key) {
+                            searchBar.bar.classList.remove("funcKeyCall");
+                            searchBar.appendBar();
+                            searchBar.showAllSites();
+                            e.preventDefault();
+                            e.stopPropagation();
+                        }
+                    });
+                }
+
                 let clientRect;
                 if (searchData.prefConfig.leftMouse) {
                     document.addEventListener('selectionchange', (e) => {
