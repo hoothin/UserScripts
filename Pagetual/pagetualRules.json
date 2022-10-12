@@ -1285,6 +1285,11 @@
         "wait": 500
     },
     {
+        "name": "423Down评论",
+        "url": "^https?://www\\.423down\\.com/",
+        "pageElement": "div#postcomments > ol.commentlist> li.comment"
+    },
+    {
         "name": "奔跑的奶酪",
         "url": "^https://www\\.runningcheese\\.com/",
         "pageElement": "ul.ajaxposts>li"
