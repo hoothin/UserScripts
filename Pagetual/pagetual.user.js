@@ -4466,6 +4466,22 @@
                 Picker.getInstance().start();
             });
         }
+        let touched = false;
+        let touchBodyHandler = e => {
+            touched = false;
+            document.body.removeEventListener('touchstart', touchBodyHandler);
+        };
+        pageText.addEventListener("touchstart", e => {
+            e.stopPropagation();
+            e.preventDefault();
+            if (touched) return;
+            touched = true;
+            pageBar.style.pointerEvents = 'none';
+            setTimeout(() => {
+                pageBar.style.pointerEvents = 'all';
+            }, 250);
+            document.body.addEventListener("touchstart", touchBodyHandler);
+        });
         if(ruleParser.nextTitle){
             pageText.innerHTML=ruleParser.nextTitle+" ";
             pageText.title=ruleParser.nextTitle;
