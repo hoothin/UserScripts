@@ -4472,12 +4472,11 @@
             document.body.removeEventListener('touchstart', touchBodyHandler);
         };
         pageText.addEventListener("touchstart", e => {
-            e.stopPropagation();
             if (touched) return;
             touched = true;
-            pageBar.style.pointerEvents = 'none';
+            pageText.style.pointerEvents = 'none';
             setTimeout(() => {
-                pageBar.style.pointerEvents = 'all';
+                pageText.style.pointerEvents = 'all';
             }, 250);
             document.body.addEventListener("touchstart", touchBodyHandler);
         });
