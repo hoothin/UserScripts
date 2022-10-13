@@ -4473,7 +4473,6 @@
         };
         pageText.addEventListener("touchstart", e => {
             e.stopPropagation();
-            e.preventDefault();
             if (touched) return;
             touched = true;
             pageBar.style.pointerEvents = 'none';
