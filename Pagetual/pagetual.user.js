@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.32.10
+// @version      1.9.32.11
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -1350,7 +1350,8 @@
                 }
                 pageElement=checkElement(body);
                 if (pageElement && pageElement.length > 0) {
-                    if (getElementTop(self.initNext) - getElementBottom(pageElement[pageElement.length - 1]) > 500) {
+                    let lastBottom = getElementBottom(pageElement[pageElement.length - 1]);
+                    if (lastBottom && getElementTop(self.initNext) - lastBottom > 500) {
                         isPause = true;
                         pageElement = [];
                     }
@@ -2352,7 +2353,7 @@
              }
              #pagetual-picker {
               position: fixed;
-              top: 0;
+              top: 10px;
               left: calc(50% - 160px);
               background: aliceblue;
               padding: 10px;
@@ -3941,6 +3942,7 @@
          }
          .pagetual_pageBar a>span {
            margin-top: 0!important;
+           pointer-events: none;
            opacity: 0;
            -moz-transition:all 0.3s ease-in-out 0s;
            -webkit-transition:all 0.3s ease-in-out 0s;
@@ -3954,9 +3956,11 @@
          }
          .pagetual_pageBar a:hover>span.prevScreen {
            margin-top: -30px!important;
+           pointer-events: all;
          }
          .pagetual_pageBar a:hover>span.nextScreen {
            margin-top: 30px!important;
+           pointer-events: all;
          }
          .pagetual_pageBar span>svg {
            -moz-transition:transform 0.5s ease, opacity 0.3s ease;
