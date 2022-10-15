@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.32.12
+// @version      1.9.32.13
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -4775,10 +4775,41 @@
             twist: 0,
             which: 1
         };
-        var mouseEvent = new PointerEvent("mousedown",eventParam);
+        let mouseEvent = new PointerEvent("mousedown",eventParam);
         btn.dispatchEvent(mouseEvent);
         mouseEvent = new PointerEvent("mouseup",eventParam);
         btn.dispatchEvent(mouseEvent);
+        let dispatchTouchEvent = (ele, type) => {
+            let touchEvent;
+            try {
+                touchEvent = document.createEvent('TouchEvent')
+                touchEvent.initTouchEvent(type, true, true)
+            } catch (err) {
+                try {
+                    touchEvent = document.createEvent('UIEvent')
+                    touchEvent.initUIEvent(type, true, true)
+                } catch (err) {
+                    touchEvent = document.createEvent('Event')
+                    touchEvent.initEvent(type, true, true)
+                }
+            }
+            touchEvent.targetTouches = [{
+                pageX: 1,
+                pageY: 1,
+                clientX: 1,
+                clientY: 1
+            }];
+            touchEvent.touches = [{
+                pageX: 1,
+                pageY: 1,
+                clientX: 1,
+                clientY: 1
+            }];
+            ele.dispatchEvent(touchEvent);
+        }
+        dispatchTouchEvent(btn, "touchstart");
+        dispatchTouchEvent(btn, "touchend");
+
         btn.click();
         if(orgHref){
             setTimeout(()=>btn.setAttribute('href', orgHref),0);
