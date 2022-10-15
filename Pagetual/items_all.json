@@ -467,17 +467,16 @@
 {
   "resource_url": "http://wedata.net/items/85922",
   "data": {
-    "insertBefore": "",
-    "pageElement": "//div[@class=\"article-body\"]",
-    "nextLink": "//a[@class=\"article-next\"]",
-    "url": "^https?://newsdig\\.tbs\\.co\\.jp/articles/-/",
-    "exampleUrl": "https://newsdig.tbs.co.jp/articles/-/36414?display=1"
+    "pageElement": "//div[contains(concat(' ', normalize-space(@class), ' '), ' article-body ')]",
+    "nextLink": "//a[contains(concat(' ', normalize-space(@class), ' '), ' article-next ')]",
+    "url": "^https?://newsdig\\.tbs\\.co\\.jp/articles/",
+    "exampleUrl": "https://newsdig.tbs.co.jp/articles/-/162617?display=1\r\nhttps://newsdig.tbs.co.jp/articles/tut/177158?display=1"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "brib2",
   "name": "TBS NEWS DIG",
   "created_at": "2022-05-27T14:31:47+09:00",
-  "updated_at": "2022-05-27T14:31:47+09:00"
+  "updated_at": "2022-10-14T18:38:24+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85920",
@@ -33773,17 +33772,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/55227",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "created_at": "2011-08-13T22:36:38+09:00",
   "data": {
-    "pageElement": "//article/div[not(ul/@class='pagination')]|descendant::ul[@class='list-news-line'][not(id('leaf-body'))][1]/li",
-    "exampleUrl": "https://www.cnn.co.jp/fringe/30003461.html\r\nhttps://www.cnn.co.jp/showbiz/35024127.html\r\nhttps://www.cnn.co.jp/business/35044552.html\r\nhttps://www.cnn.co.jp/travel/35094757.html\r\nhttps://www.cnn.co.jp/archives/",
+    "pageElement": "//div[@class='ad-txt']/following-sibling::*[./following-sibling::div[./ul] or ./following-sibling::div[@class='ad-txt']]",
+    "nextLink": "//link[@rel='next']|//ul[@class='pagination']/li[last()]/a[@href]",
     "url": "^https?://(www\\.)?cnn\\.co\\.jp/",
-    "nextLink": "//link[@rel='next']|//ul[@class='pagination']/li[last()]/a[@href]"
+    "exampleUrl": "https://www.cnn.co.jp/fringe/30003461.html\r\nhttps://www.cnn.co.jp/showbiz/35024127.html\r\nhttps://www.cnn.co.jp/business/35044552.html\r\nhttps://www.cnn.co.jp/travel/35094757.html\r\nhttps://www.cnn.co.jp/archives/\r\nhttps://www.cnn.co.jp/video/"
   },
-  "updated_at": "2020-05-17T08:55:01+09:00",
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "t_f_m",
   "name": "cnn.co.jp",
-  "created_by": "t_f_m"
+  "created_at": "2011-08-13T22:36:38+09:00",
+  "updated_at": "2022-10-14T21:40:39+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/55226",
