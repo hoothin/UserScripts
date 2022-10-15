@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.32.11
+// @version      1.9.32.12
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -1320,6 +1320,13 @@
                         debug(self.curSiteRule.pageElement, 'Page element');
                         return ele.children;
                     }
+                    let imgs = ele.querySelectorAll('img');
+                    if (imgs.length == 1) {
+                        let img = imgs[0];
+                        if (img.offsetWidth > ele.offsetWidth / 3 * 2 && img.offsetHeight > ele.offsetHeight / 2) {
+                            ele = img;
+                        }
+                    }
                     self.curSiteRule.pageElement=geneSelector(ele);
                     if(ele.children.length>1){
                         let hasText=false;
@@ -1354,6 +1361,10 @@
                     if (lastBottom && getElementTop(self.initNext) - lastBottom > 500) {
                         isPause = true;
                         pageElement = [];
+                    } else {
+                        if (pageElement.length == 1 && pageElement[0].tagName == "IMG") {
+                            self.curSiteRule.pageBar = 0;
+                        }
                     }
                 }
                 //if(pageElement)this.saveCurSiteRule();
@@ -1501,7 +1512,7 @@
                 if(next && (next.href=="javascript:;" || next.getAttribute("href")=="#"))next=null;
             }
             if(!next){
-                let aTags=body.querySelectorAll("a,button");
+                let aTags=body.querySelectorAll("a,button,[type='button']");
                 for(i=aTags.length-1;i>=0;i--){
                     if(next1 && next2 && next3 && next4)break;
                     let aTag=aTags[i];
@@ -1513,9 +1524,10 @@
                     if(aTag.parentNode && aTag.parentNode.className && /slick|slide|gallery/i.test(aTag.parentNode.className))continue;
                     if(aTag.classList && aTag.classList.contains('disabled'))continue;
                     if(aTag.parentNode && aTag.parentNode.classList && aTag.parentNode.classList.contains('disabled'))continue;
-                    if(aTag.innerText.length<=18){
+                    let innerText = (aTag.innerText||aTag.value||'').replace(/ /g, '');
+                    if(innerText.length<=18){
                         if(!next1){
-                            if(/^翻?[下后後次][一ー1]?[页頁张張]|^next([ _-]?page)\s*[›>→»]?$|次のページ|^次へ?$/i.test(aTag.innerText.trim())){
+                            if(/^翻?[下后後次][一ー1]?[页頁张張]|^next([ _-]?page)\s*[›>→»]?$|次のページ|^次へ?$/i.test(innerText)){
                                 if(!aTag.href || /^javascript:/.test(aTag.href) || aTag.getAttribute("href")=="#"){
                                     if(!nextJs1)nextJs1=aTag;
                                 }else{
@@ -1524,7 +1536,7 @@
                             }
                         }
                         if(!next2){
-                            if(/^[下后後次][一ー1]?[章话話节節篇个個幅]/i.test(aTag.innerText.trim()) || /nextpage/i.test(aTag.className) || aTag.innerText=="»" || aTag.innerText==">>"){
+                            if(/^[下后後次][一ー1]?[章话話节節篇个個幅]/i.test(innerText) || /nextpage/i.test(aTag.className) || innerText=="»" || innerText==">>"){
                                 if(!aTag.href || /^javascript:/.test(aTag.href) || aTag.getAttribute("href")=="#"){
                                     if(!nextJs2)nextJs2=aTag;
                                 }else{
@@ -1533,7 +1545,7 @@
                             }
                         }
                         if(!next3){
-                            if(aTag.innerText=="Next" || aTag.innerText=="next" || aTag.innerText=="&gt;" || aTag.innerText=="▶" || aTag.innerText==">" || aTag.innerText=="›" || aTag.innerText=="→"){
+                            if(innerText=="Next" || innerText=="next" || innerText=="&gt;" || innerText=="▶" || innerText==">" || innerText=="›" || innerText=="→"){
                                 if(!aTag.href || /^javascript:/.test(aTag.href) || aTag.getAttribute("href")=="#"){
                                     if(!nextJs3)nextJs3=aTag;
                                 }else{
@@ -1780,6 +1792,58 @@
                 }
             }
             if (nextLink) {
+                if (this.curSiteRule.stopSign) {
+                    if (Array && Array.isArray && Array.isArray(this.curSiteRule.stopSign)) {
+                        let includeSel = this.curSiteRule.stopSign[0];
+                        let excludeSel = this.curSiteRule.stopSign[1];
+                        let curSign = this.curSiteRule.stopSign[2];
+                        let maxSign = this.curSiteRule.stopSign[3];
+                        if (Array && Array.isArray && Array.isArray(includeSel) && !curSign) {
+                            curSign = includeSel;
+                            includeSel = false;
+                        }
+                        if (Array && Array.isArray && Array.isArray(excludeSel) && !maxSign) {
+                            maxSign = excludeSel;
+                            excludeSel = false;
+                        }
+                        if (includeSel) {
+                            includeSel = includeSel.trim();
+                            if (!getElement(includeSel, doc)) {
+                                this.nextLinkHref=false;
+                                return null;
+                            }
+                        }
+                        if (excludeSel) {
+                            excludeSel = excludeSel.trim();
+                            if (getElement(excludeSel, doc)) {
+                                this.nextLinkHref=false;
+                                return null;
+                            }
+                        }
+                        if (curSign && maxSign) {
+                            let currentEle = getElement(curSign[0], doc);
+                            let maxEle = getElement(maxSign[0], doc);
+                            if (currentEle && maxEle) {
+                                let currentSignNum = currentEle.innerText.match(new RegExp(curSign[1]));
+                                let maxSignNum = maxEle.innerText.match(new RegExp(maxSign[1]));
+                                if (currentSignNum && maxSignNum && currentSignNum[1] == maxSignNum[1]) {
+                                    this.nextLinkHref = false;
+                                    return null;
+                                }
+                            }
+                        }
+                    } else {
+                        try {
+                            let stopSign = ((typeof _unsafeWindow.stopSign == 'undefined') ? Function("doc", "nextLink", '"use strict";' + this.curSiteRule.stopSign) : _unsafeWindow.stopSign)(doc, nextLink);
+                            if (stopSign) {
+                                this.nextLinkHref = false;
+                                return null;
+                            }
+                        } catch(e) {
+                            debug(e);
+                        }
+                    }
+                }
                 let needUrl = (this.curSiteRule.action == 0 || this.curSiteRule.action == 1);
                 if (!href) href = nextLink.href;
                 if (href && nextLink.getAttribute) {
@@ -4909,9 +4973,16 @@
                 if(orgPage[0].tagName=="UL")orgPage=orgPage[0].children;
                 if(nextLink){
                     orgPage=orgPage[parseInt(orgPage.length/2)];
-                    if(orgPage.tagName=="IMG" && orgPage.src){
+                    if(orgPage.tagName=="IMG"){
                         if (!ruleParser.curSiteRule.lazyImgSrc) ruleParser.curSiteRule.lazyImgSrc = "0";
-                        orgContent=orgPage.src;
+                        if (orgPage.src) {
+                            orgContent = orgPage.src;
+                        } else {
+                            setTimeout(()=>{
+                                checkPage();
+                            },500);
+                            return;
+                        }
                     }else{
                         orgContent=orgPage.innerHTML;
                     }
@@ -4954,8 +5025,15 @@
                 },waitTime);
             }else{
                 let checkInner;
-                if(checkItem.tagName=="IMG" && checkItem.src){
-                    checkInner=checkItem.src;
+                if (checkItem.tagName == "IMG") {
+                    if (checkItem.src) {
+                        checkInner = checkItem.src;
+                    } else {
+                        setTimeout(() => {
+                            checkPage();
+                        }, waitTime);
+                        return;
+                    }
                 }else{
                     checkInner=checkItem.innerHTML;
                 }
