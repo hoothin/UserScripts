@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.46.47
+// @version      1.6.6.46.48
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -742,6 +742,8 @@
                 config = {
                     scriptName: '搜索酱',
                     import: '导入',
+                    filter: '筛选',
+                    selectAll: '全选',
                     importOrNot: '是否导入配置？',
                     settings: '配置脚本',
                     batchOpen: '批量打开',
@@ -812,6 +814,8 @@
                 config = {
                     scriptName: "搜索醬",
                     import: '導入',
+                    filter: '篩選',
+                    selectAll: '全選',
                     importOrNot: '是否導入配置？',
                     settings: '配置脚本',
                     batchOpen: '批量打開',
@@ -881,6 +885,8 @@
                 config = {
                     scriptName: "SearchJumper",
                     import: 'Import',
+                    filter: 'Filter',
+                    selectAll: 'SelectAll',
                     importOrNot: 'Do you want to import this config?',
                     settings: 'Settings',
                     batchOpen: 'Batch open',
@@ -7750,17 +7756,22 @@
             } else if (importPageReg.test(location.href)) {
                 let targetPre;
                 let importBtn = document.createElement("button");
+                let filterBtn = document.createElement("button");
                 importBtn.innerText = i18n("import");
-                importBtn.style.marginTop = "100px";
-                importBtn.style.float = "right";
-                importBtn.style.position = "static";
+                importBtn.style.position = "absolute";
                 importBtn.style.display = "block";
                 importBtn.style.fontSize = "20px";
+                importBtn.style.right = "35px";
+                importBtn.style.opacity = "0.8";
                 importBtn.addEventListener("click", e => {
                     if (targetPre) {
                         if (window.confirm(i18n("importOrNot"))) {
-                            if (importBtn.parentNode) importBtn.parentNode.removeChild(importBtn);
+                            if (importBtn.parentNode) {
+                                importBtn.parentNode.removeChild(importBtn);
+                                filterBtn.parentNode.removeChild(filterBtn);
+                            }
                             let configTxt = targetPre.innerText.trim(), configData;
+                            if (!configTxt || configTxt.indexOf('[') !== 0) return;
                             try {
                                 configData = JSON.parse(configTxt);
                                 searchData.sitesConfig = configData;
@@ -7772,44 +7783,289 @@
                         }
                     }
                 });
+
+                filterBtn.innerText = i18n("filter");
+                filterBtn.style.position = "absolute";
+                filterBtn.style.display = "block";
+                filterBtn.style.fontSize = "20px";
+                filterBtn.style.right = "115px";
+                filterBtn.style.opacity = "0.8";
+                filterBtn.addEventListener("click", e => {
+                    if (targetPre) {
+                        if (importBtn.parentNode) {
+                            importBtn.parentNode.removeChild(importBtn);
+                            filterBtn.parentNode.removeChild(filterBtn);
+                        }
+                        let configTxt = targetPre.innerText.trim(), configData;
+                        if (!configTxt || configTxt.indexOf('[') !== 0) return;
+                        try {
+                            configData = JSON.parse(configTxt);
+                            ImportFilter.getInstance().open(configData);
+                        } catch (e) {
+                            _GM_notification(e.toString());
+                        }
+                    }
+                });
+
                 document.addEventListener("mouseover", e => {
                     if (e.target.tagName === "PRE" && importPageReg.test(location.href)) {
                         targetPre = e.target;
-                        importBtn.style.marginTop = `${35 - e.target.clientHeight}px`;
-                        e.target.appendChild(importBtn);
+                        let top = `${e.target.offsetTop + 40}px`;
+                        importBtn.style.top = top;
+                        e.target.parentNode.appendChild(importBtn);
+                        filterBtn.style.top = top;
+                        e.target.parentNode.appendChild(filterBtn);
                     }
                 });
-                document.addEventListener("mousedown", e => {
-                    if (e.target.tagName === "PRE" && importPageReg.test(location.href)) {
-                        if (importBtn.parentNode) importBtn.parentNode.removeChild(importBtn);
-                        let hasMove = false;
-                        let mouseUpHandler = e => {
-                            if (hasMove) {
-                                return;
-                            }
-                            document.removeEventListener('mouseup', mouseUpHandler, false);
-                            document.removeEventListener('mousemove', mouseMoveHandler, false);
-                            if (getSelectStr() === '' && window.confirm(i18n("importOrNot"))) {
-                                let configTxt = e.target.innerText.trim(), configData;
-                                try {
-                                    configData = JSON.parse(configTxt);
-                                    searchData.sitesConfig = configData;
-                                    storage.setItem("searchData", searchData);
-                                    _GM_notification('Over!');
-                                } catch (e) {
-                                    _GM_notification(e.toString());
-                                }
-                            }
-                        };
-                        let mouseMoveHandler = e => {
-                            hasMove = true;
-                            document.removeEventListener('mouseup', mouseUpHandler, false);
-                            document.removeEventListener('mousemove', mouseMoveHandler, false);
-                        };
-                        document.addEventListener('mouseup', mouseUpHandler, false);
-                        document.addEventListener('mousemove', mouseMoveHandler, false);
+            }
+        }
+
+        class ImportFilter {
+            static importFilter;
+            constructor() {
+                this.init();
+            }
+
+            static getInstance() {
+                if (!ImportFilter.importFilter) {
+                    ImportFilter.importFilter = new ImportFilter();
+                }
+                return ImportFilter.importFilter;
+            }
+
+            init() {
+                let self = this;
+                this.filterCss = `
+                    #searchJumperFilter {
+                        width: 100%;
+                        height: 100%;
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        z-index: 100000;
+                        background-color: rgba(255, 255, 255, 0.1);
+                        backdrop-filter: blur(10px);
+                        -webkit-backdrop-filter: blur(5px);
                     }
-                })
+                    .searchJumperFrame-body {
+                        width: 300px;
+                        text-align: left;
+                        background-color: #ffffff;
+                        border: 1px solid #afb3b6;
+                        border-radius: 10px;
+                        opacity: 0.95;
+                        filter: alpha(opacity=95);
+                        box-shadow: 5px 5px 20px 0px #000;
+                        color: #6e7070;
+                        transition:all 0.25s ease;
+                        border: 0;
+                    }
+                    .searchJumperFrame-title {
+                        background: #458bd1;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        color: white!important;
+                        font-weight: bold;
+                        font-size: 18px;
+                        border-radius: 10px 10px 0 0;
+                    }
+                    .searchJumperFrame-title>img {
+                        margin: 5px;
+                    }
+                    .searchJumperFrame-buttons {
+                        text-align: center;
+                        margin: 5px;
+                        display: flex;
+                        justify-content: space-evenly;
+                    }
+                    .searchJumperFrame-buttons>button {
+                        width: 32%;
+                        font-size: 16px;
+                        cursor: pointer;
+                        border: 1px solid #1976d2;
+                        border-radius: 4px;
+                        transition: all .3s;
+                        color: #fff;
+                        background-color: #458bd1;
+                        line-height: 25px;
+                        padding: 3px;
+                    }
+                    .searchJumperFrame-buttons>button:hover {
+                        color: #e3f2fd;
+                    }
+                    .searchJumperFrame-body>.sitesCon {
+                        max-height: 70vh;
+                        overflow: auto;
+                        width: 100%;
+                        border-top: 1px solid rgba(0, 0, 0, 0.23);
+                        border-bottom: 1px solid rgba(0, 0, 0, 0.23);
+                        padding: 5px;
+                        user-select: none;
+                    }
+                    .searchJumperFrame-body>.sitesCon input {
+                        margin: 2px 5px;
+                        width: 20px;
+                        height: 20px;
+                        vertical-align: sub;
+                    }
+                    .searchJumperFrame-body>.sitesCon div {
+                        margin-left: 32px;
+                    }
+                    .searchJumperFrame-body>.sitesCon div.exist {
+                        text-decoration:line-through;
+                    }
+                `;
+                this.filterCssEle = _GM_addStyle(this.filterCss);
+                this.filterFrame = document.createElement("div");
+                this.filterFrame.id = "searchJumperFilter";
+                this.filterFrame.innerHTML = createHTML(`
+                <div class="searchJumperFrame-body">
+                    <a href="${configPage}" class="searchJumperFrame-title" target="_blank">
+                        <img width="32px" height="32px" src=${logoBase64}>${i18n("addSearchEngine")}
+                    </a>
+                    <div class="sitesCon"></div>
+                    <div class="searchJumperFrame-buttons">
+                        <button id="cancel" type="button">${i18n("siteCancel")}</button>
+                        <button id="selectAll" type="button">${i18n("selectAll")}</button>
+                        <button id="add" type="button">${i18n("import")}</button>
+                    </div>
+                </div>
+                `);
+                this.sitesCon = this.filterFrame.querySelector(".sitesCon");
+                let add = this.filterFrame.querySelector("#add");
+                let selectAll = this.filterFrame.querySelector("#selectAll");
+                let checkMark = false;
+                selectAll.addEventListener("click", e => {
+                    checkMark = !checkMark;
+                    [].forEach.call(this.filterFrame.querySelectorAll("input[type=checkbox]"), checkbox => {
+                        checkbox.checked = checkMark;
+                    });
+                });
+                add.addEventListener("click", e => {
+                    [].forEach.call(this.filterFrame.querySelectorAll("details"), details => {
+                        let typeData = self.typeDict[details.children[0].innerText.trim()];
+                        typeData.sites = [];
+                        [].forEach.call(details.querySelectorAll('div>[type="checkbox"]'), checkSite => {
+                            if (checkSite.checked) {
+                                typeData.sites.push(self.siteDict[checkSite.parentNode.title]);
+                            }
+                        });
+                        if (typeData.sites.length) {
+                            let typeIndex = self.searchType(typeData.type);
+                            if (typeIndex === false) {
+                                searchData.sitesConfig.push(typeData);
+                            } else {
+                                searchData.sitesConfig[typeIndex].sites = searchData.sitesConfig[typeIndex].sites.concat(typeData.sites);
+                            }
+                        }
+                    });
+                    storage.setItem("searchData", searchData);
+                    _GM_notification('Over!');
+                    this.close();
+                });
+                this.filterFrame.addEventListener("click", e => {
+                    if (e.target.id == "searchJumperFilter" || e.target.id == "cancel") {
+                        this.close();
+                    }
+                });
+            }
+
+            searchType(type) {
+                for (let i = 0; i < searchData.sitesConfig.length; i++) {
+                    let typeData = searchData.sitesConfig[i];
+                    if (typeData.type == type) return i;
+                }
+                return false;
+            }
+
+            searchUrl(url) {
+                for (let i = 0; i < searchData.sitesConfig.length; i++) {
+                    let sites = searchData.sitesConfig[i].sites;
+                    for (let j = 0; j < sites.length; j++) {
+                        if (sites[j].url == url) return true;
+                    }
+                }
+                return false;
+            }
+
+            anylizeType(typeData) {
+                let self = this;
+                let details = document.createElement("details");
+                let summary = document.createElement("summary");
+                summary.innerText = typeData.type;
+                let checkType = document.createElement("input");
+                checkType.type = 'checkbox';
+                summary.appendChild(checkType);
+                details.appendChild(summary);
+                let sites = [];
+                this.typeDict[typeData.type] = typeData;
+                if (typeData.sites) {
+                    typeData.sites.forEach(siteData => {
+                        let siteCon = document.createElement("div");
+                        siteCon.innerText = siteData.name;
+                        siteCon.title = siteData.url;
+                        details.appendChild(siteCon);
+                        if (self.searchUrl(siteData.url)) {
+                            siteCon.classList.add("exist");
+                            return;
+                        }
+                        let checkSite = document.createElement("input");
+                        checkSite.type = 'checkbox';
+                        checkSite.onclick = e => {
+                            if (!checkSite.checked) {
+                                checkType.checked = false;
+                            } else {
+                                let allchecked = true;
+                                for (let i = 0; i < sites.length; i++) {
+                                    if (!sites[i].checked) {
+                                        allchecked = false;
+                                        break;
+                                    }
+                                }
+                                if (allchecked) checkType.checked = true;
+                            }
+                        };
+                        siteCon.appendChild(checkSite);
+                        siteCon.addEventListener("click", e => {
+                            if (e.target.tagName != 'INPUT') {
+                                checkSite.click();
+                            }
+                        });
+                        self.siteDict[siteData.url] = siteData;
+                        sites.push(checkSite);
+                    });
+                }
+                if (sites.length == 0) checkType.style.display = "none";
+                checkType.addEventListener("click", e => {
+                    sites.forEach(checkSite => {
+                        checkSite.checked = checkType.checked;
+                    });
+                });
+                this.sitesCon.appendChild(details);
+            }
+
+            close() {
+                if (this.filterFrame.parentNode) {
+                    this.filterFrame.parentNode.removeChild(this.filterFrame);
+                }
+            }
+
+            open(configData) {
+                let self = this;
+                this.siteDict = {};
+                this.typeDict = {};
+                if (!this.filterCssEle || !this.filterCssEle.parentNode) this.filterCssEle = _GM_addStyle(this.filterCss);
+                document.documentElement.appendChild(this.filterFrame);
+                this.sitesCon.innerHTML = createHTML('');
+                configData.forEach(type => {
+                    self.anylizeType(type);
+                });
+                //storage.setItem("searchData", searchData);
+                //_GM_notification('Over!');
             }
         }
 
@@ -8170,6 +8426,7 @@
                         box-shadow: 5px 5px 20px 0px #000;
                         color: #6e7070;
                         transition:all 0.25s ease;
+                        border: 0;
                     }
                     .searchJumperFrame-title {
                         background: #458bd1;
