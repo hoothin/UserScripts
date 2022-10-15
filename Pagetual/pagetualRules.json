@@ -1285,6 +1285,83 @@
         "wait": 500
     },
     {
+        "name": "無限動漫手機版 - 漫畫閱讀",
+        "author": "tony0809",
+        "example": "https://8.twobili.com/comic/insurance_1475.html?ch=1",
+        "url": "^https?://8\\.twobili\\.com/comic/\\w+\\.html\\?ch=\\d+(-\\d+)?$",
+        "nextLinkByUrl": [
+            "(ch=\\d+)(-(\\d+))?$",
+            "$1-{($3.0||1)+1}"
+        ],
+        "stopSign": [
+            [
+                "#pagenum",
+                "(\\d+)"
+            ],
+            [
+                "#pagenum",
+                "\\/(\\d+)"
+            ]
+        ],
+        "pageElement": "#TheImg",
+        "replaceElement": "#pagenum,#pageindex",
+        "pageBar": 0,
+        "css": ".pinch-zoom-container{height: auto; display: contents;}",
+        "rate": 3
+    },
+    {
+        "name": "無限動漫 - 漫畫閱讀2",
+        "author": "tony0809",
+        "example": "https://www.comicabc.com/online/new-18722.html?ch=26-1",
+        "url": "^https?://www\\.comicabc\\.com/online/new-\\d+\\.html\\?ch=\\d+(-\\d+)?$",
+        "nextLinkByUrl": [
+            "(ch=\\d+)(-(\\d+))?$",
+            "$1-{($3.0||1)+1}"
+        ],
+        "stopSign": [
+            "#next:not([style])",
+            "",
+            [
+                "#pagenum",
+                "(\\d+)"
+            ],
+            [
+                "#pagenum",
+                "\\/(\\d+)"
+            ]
+        ],
+        "pageElement": "#TheImg",
+        "replaceElement": "#pageindex,#pagenum",
+        "css": "img[name='TheImg'] {max-width: 100% !important;display: block !important;margin: 0 auto !important;}#TheTable td:nth-child(1),#TheTable td:nth-child(3),.comment_block,#prevnext2,#prev,#next{display:none!important}",
+        "pageBar": 0
+    },
+    {
+        "name": "無限動漫 - 漫畫閱讀",
+        "author": "tony0809",
+        "example": "https://www.comicabc.com/ReadComic/103/1/1_FU4_LD9_7.html",
+        "url": "^https?://www\\.comicabc\\.com/ReadComic/\\d+/\\d+/\\w+\\.html",
+        "nextLinkByUrl": [
+            "html(\\?p=(\\d+))?$",
+            "html?p={($2.0||1)+1}"
+        ],
+        "stopSign": [
+            "#next:not([style])",
+            "",
+            [
+                "#pagenum",
+                "(\\d+)"
+            ],
+            [
+                "#pagenum",
+                "\\/(\\d+)"
+            ]
+        ],
+        "pageElement": "#TheImg",
+        "replaceElement": "#pageindex,#pagenum",
+        "css": "img[name='TheImg'] {max-width: 100% !important;display: block !important;margin: 0 auto !important;}#TheTable td:nth-child(1),#TheTable td:nth-child(3),.comment_block,#prevnext2,#prev,#next{display:none!important}",
+        "pageBar": 0
+    },
+    {
         "name": "423Down评论",
         "url": "^https?://www\\.423down\\.com/",
         "pageElement": "div#postcomments > ol.commentlist> li.comment"
