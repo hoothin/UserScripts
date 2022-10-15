@@ -7946,6 +7946,7 @@
                     });
                 });
                 add.addEventListener("click", e => {
+                    let canImport = false;
                     [].forEach.call(this.filterFrame.querySelectorAll("details"), details => {
                         let typeData = self.typeDict[details.children[0].innerText.trim()];
                         typeData.sites = [];
@@ -7955,6 +7956,7 @@
                             }
                         });
                         if (typeData.sites.length) {
+                            canImport = true;
                             let typeIndex = self.searchType(typeData.type);
                             if (typeIndex === false) {
                                 searchData.sitesConfig.push(typeData);
@@ -7963,9 +7965,11 @@
                             }
                         }
                     });
-                    storage.setItem("searchData", searchData);
-                    _GM_notification('Over!');
-                    this.close();
+                    if (canImport) {
+                        storage.setItem("searchData", searchData);
+                        _GM_notification('Over!');
+                        this.close();
+                    }
                 });
                 this.filterFrame.addEventListener("click", e => {
                     if (e.target.id == "searchJumperFilter" || e.target.id == "cancel") {
