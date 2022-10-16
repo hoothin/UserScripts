@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.32.13
+// @version      1.9.32.14
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -665,12 +665,13 @@
         }
     };
     var rulesData={},ruleUrls,updateDate;
-    const configPage="https://github.com/hoothin/UserScripts/tree/master/Pagetual";
+    const configPage=["https://github.com/hoothin/UserScripts/tree/master/Pagetual",
+                     "https://hoothin.github.io/UserScripts/Pagetual/"];
     const guidePage=/^https?:\/\/.*\/PagetualGuide\/.*rule\.html/;
     const ruleImportUrlReg=/greasyfork\.org\/.*scripts\/438684[^\/]*(\/discussions|\/?$)|github\.com\/hoothin\/UserScripts\/(tree\/master\/Pagetual|issues)/i;
     const allOfBody="body>*";
     _GM_registerMenuCommand(i18n("configure"), ()=>{
-        _GM_openInTab(configPage,{active:true});
+        _GM_openInTab(configPage[0],{active:true});
     });
     _GM_registerMenuCommand(i18n("editCurrent"), ()=>{
         Picker.getInstance().start();
@@ -2661,7 +2662,7 @@
                 self.close();
             }, true);
             homeBtn.addEventListener("click", e => {
-                _GM_openInTab(configPage, {active: true});
+                _GM_openInTab(configPage[0], {active: true});
             }, true);
             let moving = false;
             let moveHanlder = e => {
@@ -2724,7 +2725,7 @@
                 delete editTemp.updatedAt;
                 rulesData.editTemp = editTemp;
                 storage.setItem("rulesData", rulesData);
-                _GM_openInTab(configPage, {active: true});
+                _GM_openInTab(configPage[0], {active: true});
             });
             this.frame = frame;
             this.xpath = xpath;
@@ -2984,7 +2985,15 @@
 
         var configCon,insertPos;
         var noRules=!rulesData.urls || rulesData.urls.length===0;
-        if(ruleImportUrlReg.test(location.href)){
+
+        let inConfig = false;
+        for (let i = 0; i < configPage.length; i++) {
+            if (configPage[i] == location.href) {
+                inConfig = true;
+                break;
+            }
+        }
+        if(ruleImportUrlReg.test(location.href) || inConfig){
             if(noRules){
                 setTimeout(() => {
                     showTips(i18n("firstAlert"));
@@ -3122,7 +3131,7 @@
                 }
             });
 
-            if(location.href==configPage){
+            if(inConfig){
                 _GM_addStyle(`
                  p>span:nth-child(1),p>span:nth-child(2),p>span:nth-child(3){
                   cursor: pointer;
@@ -3147,13 +3156,13 @@
                   -moz-appearance:textfield;
                  }
                 `);
-                document.querySelector("[name='user-content-click2import']").innerText=i18n("click2ImportRule")
+                document.querySelector("[name='user-content-click2import'],[name='click2import']").innerText=i18n("click2ImportRule")
                 configCon=document.querySelector(".markdown-body");
                 insertPos=configCon.querySelector("hr");
 
                 if(!noRules){
-                    document.querySelector("pre[name='user-content-pagetual']").style.display="none";
-                    document.querySelector("p[name='user-content-click2import']").style.display="none";
+                    document.querySelector("pre[name='user-content-pagetual'],pre[name='pagetual']").style.display="none";
+                    document.querySelector("p[name='user-content-click2import'],p[name='click2import']").style.display="none";
                 }
             }else return true;
         }else return false;
@@ -4197,7 +4206,7 @@
         isPause = true;
         setTimeout(() => {
             lastActiveUrl = location.href;
-            if (location.href == configPage || guidePage.test(location.href)) {
+            if (location.href == configPage[0] || guidePage.test(location.href)) {
                 location.reload();
             } else if (!ruleParser.ruleMatch(ruleParser.curSiteRule)) {
                 initPage();
