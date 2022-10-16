@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.46.49
+// @version      1.6.6.46.50
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -775,6 +775,9 @@
                     copyEleBtn: '复制选中元素',
                     maxEleBtn: '展开选中元素',
                     minEleBtn: '收起选中元素',
+                    expandAll: '全部展开',
+                    collapseAll: '全部合起',
+                    rename: '重命名',
                     recoverBtn: '恢复查找文字',
                     pinBtn: '固定查找文字',
                     locBtn: '定位侧边栏',
@@ -805,6 +808,7 @@
                     openInDefault: '默认',
                     openInNewTab: '新标签页打开',
                     openInCurrent: '当前页打开',
+                    currentType: '当前分类',
                     maxAddSiteBtn: '最大化',
                     minAddSiteBtn: '还原'
                 };
@@ -847,6 +851,9 @@
                     copyEleBtn: '複製選中元素',
                     maxEleBtn: '展開選中元素',
                     minEleBtn: '收起選中元素',
+                    expandAll: '全部展開',
+                    collapseAll: '全部合起',
+                    rename: '重命名',
                     recoverBtn: '恢復查找文字',
                     pinBtn: '固定查找文字',
                     locBtn: '定位側邊欄',
@@ -877,6 +884,7 @@
                     openInDefault: '默認',
                     openInNewTab: '新標籤頁打開',
                     openInCurrent: '當前頁打開',
+                    currentType: '當前分類',
                     maxAddSiteBtn: '最大化',
                     minAddSiteBtn: '還原'
                 };
@@ -918,6 +926,9 @@
                     copyEleBtn: 'Copy selected elements',
                     maxEleBtn: 'Expand selected elements',
                     minEleBtn: 'Collapse selected elements',
+                    expandAll: 'Expand All',
+                    collapseAll: 'Collapse All',
+                    rename: 'Rename',
                     recoverBtn: 'Recover find text',
                     pinBtn: 'Pin search text',
                     locBtn: 'Sidebar to locate',
@@ -948,6 +959,7 @@
                     openInDefault: 'Default',
                     openInNewTab: 'Open a new tab',
                     openInCurrent: 'Open in current',
+                    currentType: 'Current',
                     maxAddSiteBtn: 'Maximize',
                     minAddSiteBtn: 'Restore'
                 };
@@ -1839,7 +1851,7 @@
                      letter-spacing: 0px;
                  }
                  a.search-jumper-word {
-                     background: #f7f7f7;
+                     background: #f7f7f7d9;
                      color: #111111!important;
                      filter: drop-shadow(1px 1px 3px #00000060);
                  }
@@ -7839,6 +7851,7 @@
 
             init() {
                 let self = this;
+                this.openList = [];
                 this.filterCss = `
                     #searchJumperFilter {
                         width: 100%;
@@ -7855,7 +7868,7 @@
                         -webkit-backdrop-filter: blur(5px);
                     }
                     .searchJumperFrame-body {
-                        width: 300px;
+                        width: 350px;
                         text-align: left;
                         background-color: #ffffff;
                         border: 1px solid #afb3b6;
@@ -7909,6 +7922,24 @@
                         border-bottom: 1px solid rgba(0, 0, 0, 0.23);
                         padding: 5px;
                         user-select: none;
+                        white-space: nowrap;
+                    }
+                    .searchJumperFrame-body>.sitesCon>details>summary>span,
+                    .searchJumperFrame-body>.sitesCon>details>div>span {
+                        line-height: 25px;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        max-width: 180px;
+                        display: inline-block;
+                        vertical-align: middle;
+                    }
+                    .searchJumperFrame-body>.sitesCon>details>summary>button,
+                    .searchJumperFrame-body>.sitesCon>details>div>select {
+                        display: none;
+                    }
+                    .searchJumperFrame-body>.sitesCon>details>summary:hover>button,
+                    .searchJumperFrame-body>.sitesCon>details>div:hover>select {
+                        display: inline-block;
                     }
                     .searchJumperFrame-body>.sitesCon input {
                         margin: 2px 5px;
@@ -7931,6 +7962,10 @@
                     <a href="${configPage}" class="searchJumperFrame-title" target="_blank">
                         <img width="32px" height="32px" src=${logoBase64}>${i18n("addSearchEngine")}
                     </a>
+                    <div class="searchJumperFrame-buttons">
+                        <button id="expandAll" type="button">${i18n("expandAll")}</button>
+                        <button id="collapseAll" type="button">${i18n("collapseAll")}</button>
+                    </div>
                     <div class="sitesCon"></div>
                     <div class="searchJumperFrame-buttons">
                         <button id="cancel" type="button">${i18n("siteCancel")}</button>
@@ -7942,7 +7977,19 @@
                 this.sitesCon = this.filterFrame.querySelector(".sitesCon");
                 let add = this.filterFrame.querySelector("#add");
                 let selectAll = this.filterFrame.querySelector("#selectAll");
+                let expandAll = this.filterFrame.querySelector("#expandAll");
+                let collapseAll = this.filterFrame.querySelector("#collapseAll");
                 let checkMark = false;
+                expandAll.addEventListener("click", e => {
+                    [].forEach.call(this.filterFrame.querySelectorAll("details"), details => {
+                        details.setAttribute("open", "open");
+                    });
+                });
+                collapseAll.addEventListener("click", e => {
+                    [].forEach.call(this.filterFrame.querySelectorAll("details"), details => {
+                        details.removeAttribute("open");
+                    });
+                });
                 selectAll.addEventListener("click", e => {
                     checkMark = !checkMark;
                     [].forEach.call(this.filterFrame.querySelectorAll("input[type=checkbox]"), checkbox => {
@@ -7952,15 +7999,25 @@
                 add.addEventListener("click", e => {
                     let canImport = false;
                     [].forEach.call(this.filterFrame.querySelectorAll("details"), details => {
-                        let typeData = self.typeDict[details.children[0].innerText.trim()];
+                        let typeName = details.children[0].children[0];
+                        let typeData = self.typeDict[typeName.title];
+                        typeData.type = typeName.innerText.trim();
                         typeData.sites = [];
                         [].forEach.call(details.querySelectorAll('div>[type="checkbox"]'), checkSite => {
                             if (checkSite.checked) {
-                                typeData.sites.push(self.siteDict[checkSite.parentNode.title]);
+                                canImport = true;
+                                let curData = self.siteDict[checkSite.parentNode.title];
+                                let otherType = checkSite.nextElementSibling;
+                                if (!curData || !otherType) return;
+                                if (otherType.value === "0") {
+                                    typeData.sites.push(curData);
+                                } else {
+                                    let typeIndex = self.searchType(otherType.value);
+                                    searchData.sitesConfig[typeIndex].sites.push(curData);;
+                                }
                             }
                         });
                         if (typeData.sites.length) {
-                            canImport = true;
                             let typeIndex = self.searchType(typeData.type);
                             if (typeIndex === false) {
                                 searchData.sitesConfig.push(typeData);
@@ -7994,27 +8051,58 @@
                 for (let i = 0; i < searchData.sitesConfig.length; i++) {
                     let sites = searchData.sitesConfig[i].sites;
                     for (let j = 0; j < sites.length; j++) {
-                        if (sites[j].url == url) return true;
+                        if (sites[j].url.replace(/^https?/, "") == url.replace(/^https?/, "")) return true;
                     }
                 }
                 return false;
+            }
+
+            searchName(name) {
+                for (let i = 0; i < searchData.sitesConfig.length; i++) {
+                    let sites = searchData.sitesConfig[i].sites;
+                    for (let j = 0; j < sites.length; j++) {
+                        if (sites[j].name == name) {
+                            let newName = name + "_1";
+                            return this.searchName(newName);
+                        }
+                    }
+                }
+                return name;
             }
 
             anylizeType(typeData) {
                 let self = this;
                 let details = document.createElement("details");
                 let summary = document.createElement("summary");
-                summary.innerText = typeData.type;
+                let typeName = document.createElement("span");
+                typeName.title = typeData.type;
+                typeName.innerText = typeData.type;
+                summary.appendChild(typeName);
                 let checkType = document.createElement("input");
                 checkType.type = 'checkbox';
                 summary.appendChild(checkType);
+                let renameBtn = document.createElement("button");
+                renameBtn.innerText = i18n("rename");
+                renameBtn.addEventListener("click", e => {
+                    typeName.innerText = window.prompt(i18n('rename'), typeName.innerText);
+                });
+                summary.appendChild(renameBtn);
                 details.appendChild(summary);
+                for (let i = 0; i < this.openList.length; i++) {
+                    if (this.openList[i] == typeData.type) {
+                        details.setAttribute("open", "open");
+                        break;
+                    }
+                }
                 let sites = [];
                 this.typeDict[typeData.type] = typeData;
                 if (typeData.sites) {
                     typeData.sites.forEach(siteData => {
                         let siteCon = document.createElement("div");
-                        siteCon.innerText = siteData.name;
+                        let siteName = document.createElement("span");
+                        siteName.innerText = siteData.name;
+                        siteData.name = self.searchName(siteData.name);
+                        siteCon.appendChild(siteName);
                         siteCon.title = siteData.url;
                         details.appendChild(siteCon);
                         if (self.searchUrl(siteData.url)) {
@@ -8039,15 +8127,33 @@
                         };
                         siteCon.appendChild(checkSite);
                         siteCon.addEventListener("click", e => {
-                            if (e.target.tagName != 'INPUT') {
+                            if (e.target.tagName == 'SPAN') {
                                 checkSite.click();
                             }
                         });
+                        let typeSelect = document.createElement("select");
+                        let option = document.createElement("option");
+                        option.value = 0;
+                        option.innerText = i18n("currentType");
+                        typeSelect.appendChild(option);
+                        for (let i = 0; i < searchData.sitesConfig.length; i++) {
+                            let _type = searchData.sitesConfig[i];
+                            if (_type.type != typeData.type) {
+                                let option = document.createElement("option");
+                                option.value = _type.type;
+                                option.innerText = _type.type;
+                                typeSelect.appendChild(option);
+                            }
+                        }
+                        siteCon.appendChild(typeSelect);
                         self.siteDict[siteData.url] = siteData;
                         sites.push(checkSite);
                     });
                 }
-                if (sites.length == 0) checkType.style.display = "none";
+                if (sites.length == 0) {
+                    checkType.style.display = "none";
+                    renameBtn.style.display = "none";
+                }
                 checkType.addEventListener("click", e => {
                     sites.forEach(checkSite => {
                         checkSite.checked = checkType.checked;
@@ -8057,6 +8163,12 @@
             }
 
             close() {
+                this.openList = [];
+                [].forEach.call(this.sitesCon.querySelectorAll("details"), details => {
+                    if (details.hasAttribute("open")) {
+                        this.openList.push(details.querySelector("summary").innerText);
+                    }
+                });
                 if (this.filterFrame.parentNode) {
                     this.filterFrame.parentNode.removeChild(this.filterFrame);
                 }
