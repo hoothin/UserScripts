@@ -7933,12 +7933,10 @@
                         display: inline-block;
                         vertical-align: middle;
                     }
-                    .searchJumperFrame-body>.sitesCon>details>summary>button,
-                    .searchJumperFrame-body>.sitesCon>details>div>select {
+                    .searchJumperFrame-body>.sitesCon>details>summary>button {
                         display: none;
                     }
-                    .searchJumperFrame-body>.sitesCon>details>summary:hover>button,
-                    .searchJumperFrame-body>.sitesCon>details>div:hover>select {
+                    .searchJumperFrame-body>.sitesCon>details>summary:hover>button {
                         display: inline-block;
                     }
                     .searchJumperFrame-body>.sitesCon input {
