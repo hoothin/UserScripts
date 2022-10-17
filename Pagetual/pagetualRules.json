@@ -1053,6 +1053,11 @@
         "nextLink": "//a[text()='Next']"
     },
     {
+        "name": "Hoothin github page",
+        "url": "^https?://hoothin\\.github\\.io/",
+        "enable": 0
+    },
+    {
         "name": "360搜索",
         "url": "^https://www\\.so\\.com/s",
         "lazyImgSrc": "data-isrc",
