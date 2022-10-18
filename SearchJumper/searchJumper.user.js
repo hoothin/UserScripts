@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.46.52
+// @version      1.6.6.46.53
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -1295,7 +1295,7 @@
                      border-radius: 10px;
                      box-shadow: 0px 0px 10px 0px #7a7a7a;
                  }
-                 #search-jumper.search-jumper-showall #search-jumper-alllist>.sitelist {
+                 #search-jumper.search-jumper-showall #search-jumper-alllist .sitelist {
                      visibility: visible!important;
                      opacity: 1;
                      pointer-events: all;
@@ -1305,25 +1305,29 @@
                      height: fit-content;
                      max-height: calc(100vh - 120px);
                  }
-                 #search-jumper.search-jumper-showall #search-jumper-alllist>.sitelist>.sitelistCon {
+                 #search-jumper.search-jumper-showall #search-jumper-alllist .sitelist>.sitelistCon {
                      opacity: 1;
                  }
-                 #search-jumper.search-jumper-showall #search-jumper-alllist>.sitelist>.sitelistCon>p {
+                 #search-jumper.search-jumper-showall #search-jumper-alllist .sitelist>.sitelistCon>p {
                      pointer-events: all;
                      cursor: pointer;
                  }
-                 #search-jumper.search-jumper-showall #search-jumper-alllist>.sitelist:hover {
+                 #search-jumper.search-jumper-showall #search-jumper-alllist .sitelist:hover {
                      z-index: 1;
                  }
                  #search-jumper.search-jumper-showall.search-jumper-searchBarCon {
                      -ms-overflow-style: unset;
                      scrollbar-width: unset;
+                     overflow: hidden;
                  }
                  #search-jumper-alllist {
-                     width: fit-content;
                      display: none;
                      top: 110px;
                      position: absolute;
+                     width: 100%;
+                     overflow-x: scroll;
+                     overflow-y: hidden;
+                     height: calc(100% - 110px);
                  }
                  #search-jumper-alllist>.search-jumper-btn {
                      position: fixed;
@@ -1336,15 +1340,19 @@
                      cursor: pointer;
                  }
                  .search-jumper-showallBg {
+                     display: none;
                      position: fixed;
                      left: 0;
                      top: 0;
                      width: 100%;
-                     height: calc(100% - 15px);
+                     height: 100%;
                      z-index: -1;
                      background-color: rgba(255, 255, 255, 0.1);
                      backdrop-filter: blur(10px);
                      -webkit-backdrop-filter: blur(5px);
+                 }
+                 #search-jumper.search-jumper-showall>.search-jumper-showallBg {
+                     display: block;
                  }
                  .search-jumper-historylist {
                      display: flex;
@@ -1359,9 +1367,13 @@
                  .search-jumper-historylist>a.search-jumper-btn {
                  }
                  #search-jumper.search-jumper-showall #search-jumper-alllist {
+                     display: block;
+                 }
+                 #search-jumper-alllist>.sitelistBox {
                      display: flex;
                      min-width: 100%;
                      justify-content: center;
+                     width: fit-content;
                  }
                  .search-jumper-searchBarCon {
                      all: unset;
@@ -2350,16 +2362,22 @@
                 searchBarCon.appendChild(bar);
                 searchBarCon.setAttribute("translate", "no");
 
+                let showallBg = document.createElement("div");
+                showallBg.className = "search-jumper-showallBg";
+                searchBarCon.appendChild(showallBg);
+
                 let alllist = document.createElement("div");
                 alllist.id = "search-jumper-alllist";
                 searchBarCon.appendChild(alllist);
                 this.alllist = alllist;
 
-                let showallBg = document.createElement("div");
-                showallBg.className = "search-jumper-showallBg";
-                alllist.appendChild(showallBg);
+                let sitelistBox = document.createElement("div");
+                sitelistBox.className = "sitelistBox";
+                alllist.appendChild(sitelistBox);
+                this.sitelistBox = sitelistBox;
+
                 alllist.addEventListener(getSupportWheelEventName(), e => {
-                    if (e.target != alllist && e.target != showallBg) return;
+                    if (e.target != alllist && e.target != showallBg && e.target != sitelistBox) return;
                     var deltaX, deltaY;
                     if(e.type !== 'wheel'){
                         var x = 0, y = 0;
@@ -2386,7 +2404,7 @@
                     e.preventDefault();
                     e.stopPropagation();
 
-                    searchBarCon.scrollLeft += deltaY;
+                    alllist.scrollLeft += deltaY;
                 }, false);
 
                 let showallInput = document.createElement("input");
@@ -3603,7 +3621,7 @@
                 searchTypes.forEach(type => {
                     if (type.style.display != 'none') {
                         let sitelist = type.querySelector('.sitelist');
-                        if (sitelist) self.alllist.appendChild(sitelist);
+                        if (sitelist) self.sitelistBox.appendChild(sitelist);
                     }
                 });
                 this.historySiteBtns.slice(0, 10).forEach(btn => {
@@ -3613,7 +3631,7 @@
                 this.showallInput.value = kw;
                 setTimeout(() => {
                     let mouseHandler = e => {
-                        if (e.target.id === 'search-jumper-alllist' || e.target.className === 'search-jumper-showallBg' || e.target.className === 'search-jumper-historylist') {
+                        if (e.target.className === 'sitelistBox' || e.target.className === 'search-jumper-showallBg' || e.target.className === 'search-jumper-historylist') {
                             document.removeEventListener("mousedown", mouseHandler);
                             self.bar.parentNode.classList.remove("search-jumper-showall");
                             self.showallInput.value = "";
