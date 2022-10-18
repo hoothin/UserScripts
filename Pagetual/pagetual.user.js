@@ -668,7 +668,7 @@
     const configPage=["https://github.com/hoothin/UserScripts/tree/master/Pagetual",
                      "https://hoothin.github.io/UserScripts/Pagetual/"];
     const guidePage=/^https?:\/\/.*\/PagetualGuide\/.*rule\.html/;
-    const ruleImportUrlReg=/greasyfork\.org\/.*scripts\/438684[^\/]*(\/discussions|\/?$)|github\.com\/hoothin\/UserScripts\/(tree\/master\/Pagetual|issues)/i;
+    const ruleImportUrlReg=/greasyfork\.org\/.*scripts\/438684[^\/]*(\/discussions|\/?$)|github\.com\/hoothin\/UserScripts\/(tree\/master\/Pagetual|issues\/)/i;
     const allOfBody="body>*";
     _GM_registerMenuCommand(i18n("configure"), ()=>{
         _GM_openInTab(configPage[0],{active:true});
