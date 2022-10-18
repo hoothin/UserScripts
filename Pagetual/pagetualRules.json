@@ -1058,10 +1058,30 @@
         "enable": 0
     },
     {
-        "name": "全图网",
-        "url": "^https?://qq?\\.quantuwang1\\.com/",
-        "pageElement": "div.index_c_img img[alt]",
-        "nextLink": ".index_c_page>span+a"
+        "name": "全图网 - 图片",
+        "author": "tony0809",
+        "example": "http://qq.quantuwang1.com/m/fb9deaa66efefa21.html",
+        "url": "^https?://(q|qq|t|w|m)\\.(quantuwang1|54mn)\\.(com|cc)/m/",
+        "init": "let link=document.querySelector('.index_c_img>a');link.removeAttribute('href')",
+        "nextLink": "span+a",
+        "pageElement": ".index_c_img img,.index_c_img>p",
+        "insert": ".index_c_img",
+        "insertPos": 2,
+        "replaceElement": ".index_c_page",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
+        "initRun": 1,
+        "autoLoadNum": "0",
+        "css": "body>[style*='z-index'],img[src*='/aaa/']{display:none!important}body{padding-bottom:0px!important}"
+    },
+    {
+        "name": "全图网 - 分类",
+        "author": "tony0809",
+        "example": "http://qq.quantuwang1.com/meinv/taotu/",
+        "url": "^https?://(q|qq|t|w|m)\\.(quantuwang1|54mn)\\.(com|cc)/meinv/",
+        "nextLink": "span+a",
+        "pageElement": ".index_middle_c",
+        "replaceElement": ".index_c_page,.list_page",
+        "css": "body>[style*='z-index'],img[src*='/aaa/']{display:none!important}"
     },
     {
         "name": "360搜索",
