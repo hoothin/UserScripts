@@ -15827,10 +15827,12 @@ ImgOps | https://imgops.com/#b#`;
             loadingImgs:[],
             pageImgReady:function(){
                 var textSpan=this.eleMaps['head-command-nextPage'].querySelector("span");
-                if(this.pageAllReady && this.loadingImgNum<=0){
-                    textSpan.innerHTML=createHTML("<font color='red'>"+i18n("loadedAll")+"</font>");
-                    setTimeout(function(){textSpan.innerHTML=createHTML(i18n("loadAll"));},1500);
-                }
+                setTimeout(() => {
+                    if(this.pageAllReady && this.loadingImgNum<=0){
+                        textSpan.innerHTML=createHTML("<font color='red'>"+i18n("loadedAll")+"</font>");
+                        setTimeout(function(){textSpan.innerHTML=createHTML(i18n("loadAll"));},1500);
+                    }
+                }, 500);
             },
             pageAction:function(next, single){
                 var pageObj=this.getPage(),self=this,textSpan=this.eleMaps['head-command-nextPage'].querySelector("span");
@@ -15838,16 +15840,14 @@ ImgOps | https://imgops.com/#b#`;
                     return;
                 }
                 var loadOver=function(){
-                    setTimeout(() => {
-                        if(!next || !prefs.gallery.loadAll || single){
-                            self.pageAllReady=true;
-                            self.pageImgReady();
-                        }else{
-                            self.curPage=document;
-                            self.href=location.href;
-                            self.pageAction(false);
-                        }
-                    }, 1000);
+                    if(!next || !prefs.gallery.loadAll || single){
+                        self.pageAllReady=true;
+                        self.pageImgReady();
+                    }else{
+                        self.curPage=document;
+                        self.href=location.href;
+                        self.pageAction(false);
+                    }
                 };
                 if((next && !pageObj.next) || (!next && !pageObj.pre)){
                     loadOver();
