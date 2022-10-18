@@ -15827,12 +15827,13 @@ ImgOps | https://imgops.com/#b#`;
             loadingImgs:[],
             pageImgReady:function(){
                 var textSpan=this.eleMaps['head-command-nextPage'].querySelector("span");
-                setTimeout(() => {
+                clearTimeout(this.readyTimeout);
+                this.readyTimeout = setTimeout(() => {
                     if(this.pageAllReady && this.loadingImgNum<=0){
                         textSpan.innerHTML=createHTML("<font color='red'>"+i18n("loadedAll")+"</font>");
                         setTimeout(function(){textSpan.innerHTML=createHTML(i18n("loadAll"));},1500);
                     }
-                }, 500);
+                }, 1100);
             },
             pageAction:function(next, single){
                 var pageObj=this.getPage(),self=this,textSpan=this.eleMaps['head-command-nextPage'].querySelector("span");
