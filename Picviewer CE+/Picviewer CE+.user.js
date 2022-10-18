@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.10.18.1
+// @version              2022.10.18.2
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -13717,6 +13717,11 @@ ImgOps | https://imgops.com/#b#`;
                                     var picName = document.title + "-" + (saveIndex < 10 ? "00" + saveIndex : (saveIndex < 100 ? "0" + saveIndex : saveIndex)) + (title ? "-" + title : "") + "-" + srcSplit, hostArr = location.host.split(".");
                                     var host = hostArr[hostArr.length-2];
                                     saveParams.push([node.dataset.src, picName]);
+                                    if (node.dataset.srcs) {
+                                        node.dataset.srcs.split(" ").forEach(src => {
+                                            saveParams.push([src, picName]);
+                                        });
+                                    }
                                     //saveAs(node.dataset.src, location.host+"-"+srcSplit[srcSplit.length-1]);
                                 }
                             });
@@ -14347,7 +14352,7 @@ ImgOps | https://imgops.com/#b#`;
                     function downloadOne(imgSrc, imgName){
                         let crosHandler = imgSrc => {
                             self.corsUrlToBlob(imgSrc, blob=>{
-                                if (blob) {
+                                if (blob && blob.byteLength>58) {
                                     let ext = imgSrc.match(/\.\w{2,5}$/);
                                     zip.file(imgName.replace(/\//g,"").replace(/\.\w+$/,"") + '-' + downloaded + (ext || '.jpg'), blob);
                                 } else console.debug("error: "+imgSrc);
@@ -15380,7 +15385,7 @@ ImgOps | https://imgops.com/#b#`;
                             spanMark.className="pv-gallery-sidebar-thumb-container";
                             spanMark.dataset.type=item.type;
                             spanMark.dataset.src=item.src;
-                            spanMark.dataset.srcs=item.srcs||"";
+                            spanMark.dataset.srcs=item.srcs?item.srcs.join(" "):"";
                             if(item.xhr)spanMark.dataset.xhr=encodeURIComponent(JSON.stringify(item.xhr));
                             spanMark.dataset.description=encodeURIComponent(item.description || '');
                             spanMark.dataset.thumbSrc=item.imgSrc;
