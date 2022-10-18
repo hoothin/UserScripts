@@ -15838,14 +15838,16 @@ ImgOps | https://imgops.com/#b#`;
                     return;
                 }
                 var loadOver=function(){
-                    if(!next || !prefs.gallery.loadAll || single){
-                        self.pageAllReady=true;
-                        self.pageImgReady();
-                    }else{
-                        self.curPage=document;
-                        self.href=location.href;
-                        self.pageAction(false);
-                    }
+                    setTimeout(() => {
+                        if(!next || !prefs.gallery.loadAll || single){
+                            self.pageAllReady=true;
+                            self.pageImgReady();
+                        }else{
+                            self.curPage=document;
+                            self.href=location.href;
+                            self.pageAction(false);
+                        }
+                    }, 1000);
                 };
                 if((next && !pageObj.next) || (!next && !pageObj.pre)){
                     loadOver();
