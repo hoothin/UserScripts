@@ -1070,7 +1070,6 @@
         "replaceElement": ".index_c_page",
         "pageBar": 0,
         "initRun": 1,
-        "autoLoadNum": "0",
         "css": "body>[style*='z-index'],img[src*='/aaa/']{display:none!important}body{padding-bottom:0px!important}"
     },
     {
