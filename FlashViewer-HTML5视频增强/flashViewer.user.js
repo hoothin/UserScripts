@@ -4,7 +4,7 @@
 // @description    围观Flash，增加 HTML5 视频速度与亮度调整
 // @version        1.2.1.7
 // @created        2013-12-27
-// @lastUpdated    2022-9-15
+// @lastUpdated    2022-10-19
 // @grant          none
 // @run-at         document-start
 // @namespace      http://userscripts.org/users/NLF
@@ -3663,6 +3663,11 @@
         document.addEventListener('mouseover', function (e) {
             var target = e.target;
             var tNName = target.nodeName;
+            let video = target.querySelectorAll('video');
+            if (video.length === 1) {
+                target = video[0];
+                tNName = 'VIDEO';
+            }
             
             // 可弹出元素
             if (!/^(?:OBJECT|EMBED|VIDEO|AUDIO|IFRAME)$/.test(tNName)) return;
