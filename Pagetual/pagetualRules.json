@@ -29,6 +29,11 @@
         "wait": 2000
     },
     {
+        "name": "Apphot",
+        "url": "^https?://apphot\\.cc/",
+        "pageElement": "section.container > div.content-wrap > div.content > article"
+    },
+    {
         "name": "Soccercatch shows",
         "url": "^https://www\\.soccercatch\\.com.*#shows",
         "nextLink": ".tabs-page[data-title=shows] .pagination-next",
