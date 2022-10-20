@@ -42020,16 +42020,16 @@
 {
   "resource_url": "http://wedata.net/items/31126",
   "data": {
-    "pageElement": "//div[@class='newsArticle_body_text']/*|//div[@class='contentPhotoLerge']/*",
-    "nextLink": "//ul[@class='pageNav']/li[@class='nextPage']/a|//li[@class='list_thumbnail__item']/a|//a[contains(concat(' ',@class,' '),' nextNav ')]",
+    "pageElement": "//div[@class='newsArticle_heading']/div[@class='news_feed']",
+    "nextLink": "//li[@class='btn-next']/a",
     "url": "^https://thetv\\.jp/news/detail/",
-    "exampleUrl": "https://thetv.jp/news/detail/72686/408175/\r\nhttps://thetv.jp/news/detail/1026443/"
+    "exampleUrl": "https://thetv.jp/news/detail/72686/408175/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "xfdata",
-  "name": "thetv.jp",
+  "name": "thetv.jp 画像",
   "created_at": "2010-01-16T14:42:24+09:00",
-  "updated_at": "2021-04-01T18:22:14+09:00"
+  "updated_at": "2022-10-20T01:16:08+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/31116",
