@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.32.18
+// @version      1.9.32.19
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -737,9 +737,9 @@
         //Google id class都是隨機。百度更過分，style script順序都是隨機的
         if(ele.tagName!="HTML" && ele.tagName!="BODY"){
             if (addID && ele.id) selector += '#' + ele.id;
-            let className;
+            let className = "";
             if (ele.className) {
-                let classList = ele.classList, i = 0, className = "";
+                let classList = ele.classList, i = 0;
                 for (let i = 0; i < classList.length; i++) {
                     let c = classList[i];
                     if (/^[\w-_]+$/.test(c) && !/\d{3,}/.test(c)) {
@@ -1259,45 +1259,48 @@
                         }
                     }
                     let hasSameClass = false;
-                    for(i=0;i<ele.children.length;i++){
-                        let curNode=ele.children[i];
-                        if(curNode.tagName=="CANVAS")continue;
-                        if(!curNode.offsetParent)continue;
-                        if(curNode.tagName!="IMG" && curNode.querySelector('img')==null && /^\s*$/.test(curNode.innerText))continue;
-                        if(needCheckNext && !curNode.contains(self.initNext) && getElementTop(curNode)>windowHeight){
+                    let articleNum = 0;
+                    for (i = 0; i < ele.children.length; i++) {
+                        let curNode = ele.children[i];
+                        if (curNode.tagName == "CANVAS") continue;
+                        if (curNode.tagName == "NAV") continue;
+                        if (!curNode.offsetParent) continue;
+                        if (curNode.tagName != "IMG" && curNode.querySelector('img') == null && /^\s*$/.test(curNode.innerText)) continue;
+                        if (needCheckNext && !curNode.contains(self.initNext) && getElementTop(curNode) > windowHeight) {
                             continue;
                         }
-                        let comStyle=curWin.getComputedStyle(curNode);
-                        let h=parseInt(curNode.offsetHeight || curNode.scrollHeight);
-                        let w=parseInt(curNode.scrollWidth);
-                        if(isNaN(h) || isNaN(w))continue;
-                        if(isHori && h<=50)continue;
-                        let a=h*w+h,moreChild=curNode.children[0];
-                        while(moreChild){
-                            comStyle=curWin.getComputedStyle(moreChild);
-                            let ch=parseInt(moreChild.offsetHeight || moreChild.scrollHeight);
-                            let cw=parseInt(moreChild.scrollWidth);
-                            if(h<ch)h=ch;
-                            if(moreChild.innerText!="" && !isNaN(ch) && !isNaN(cw)){
-                                a+=ch*cw;
+                        if (curNode.tagName == "ARTICLE") articleNum++;
+                        let comStyle = curWin.getComputedStyle(curNode);
+                        let h = parseInt(curNode.offsetHeight || curNode.scrollHeight);
+                        let w = parseInt(curNode.scrollWidth);
+                        if (isNaN(h) || isNaN(w)) continue;
+                        if (isHori && h <= 50) continue;
+                        let a = h * w + h, moreChild = curNode.children[0];
+                        while (moreChild) {
+                            comStyle = curWin.getComputedStyle(moreChild);
+                            let ch = parseInt(moreChild.offsetHeight || moreChild.scrollHeight);
+                            let cw = parseInt(moreChild.scrollWidth);
+                            if (h < ch) h = ch;
+                            if (moreChild.innerText != "" && !isNaN(ch) && !isNaN(cw)) {
+                                a += ch * cw;
                             }
-                            moreChild=moreChild.nextElementSibling;
+                            moreChild = moreChild.nextElementSibling;
                         }
-                        let isMax=false;
-                        if(isHori){
-                            if(maxWidth<w){
-                                isMax=true;
-                            }else if(maxWidth<w+300 && curMaxArea<a){
-                                isMax=true;
+                        let isMax = false;
+                        if (isHori) {
+                            if (maxWidth < w) {
+                                isMax = true;
+                            } else if (maxWidth < w + 300 && curMaxArea < a) {
+                                isMax = true;
                             }
-                        }else{
-                            isMax=curMaxArea<a;
+                        } else {
+                            isMax = curMaxArea < a;
                         }
-                        if(curMaxEle==null || isMax){
-                            if(h>0 || !isHori)curHeight=h;
-                            curMaxArea=a;
-                            maxWidth=w;
-                            curMaxEle=curNode;
+                        if (curMaxEle == null || isMax) {
+                            if (h > 0 || !isHori) curHeight = h;
+                            curMaxArea = a;
+                            maxWidth = w;
+                            curMaxEle = curNode;
                         }
                     }
                     if (curMaxEle) {
@@ -1309,11 +1312,11 @@
                             }
                         }
                     }
-                    if(curMaxEle && !hasSameClass && (isHori || curHeight>maxHeight || (needCheckNext && curHeight>windowHeight && ele.contains(self.initNext)))){
+                    if (curMaxEle && !hasSameClass && (isHori || curHeight > maxHeight || (needCheckNext && curHeight > windowHeight && ele.contains(self.initNext)))) {
                         return checkElement(curMaxEle);
                     }
-                    if(ele.parentNode.children.length == 1)ele=ele.parentNode;
-                    if(ele.tagName=="P" || ele.tagName=="BR")ele=ele.parentNode;
+                    if (ele.parentNode.children.length == 1)ele=ele.parentNode;
+                    else if(ele.tagName=="P" || ele.tagName=="BR")ele=ele.parentNode;
                     else if(ele.tagName=="TD")ele=ele.parentNode;
                     else if(ele.tagName=="TBODY"){
                         self.curSiteRule.pageElement=geneSelector(ele)+">*";
@@ -1331,25 +1334,30 @@
                         }
                     }
                     self.curSiteRule.pageElement=geneSelector(ele);
-                    if(ele.children.length>1){
-                        let hasText=false;
-                        for(let i in ele.childNodes){
-                            let child=ele.childNodes[i];
-                            if(child.nodeType==3 && child.nodeValue.trim()!=''){
-                                hasText=true;
-                                ele=[ele];
-                                break;
+                    if (ele.children.length > 1) {
+                        if (articleNum > 1) {
+                            self.curSiteRule.pageElement += ">article";
+                            ele = ele.children;
+                        } else {
+                            let hasText=false;
+                            for(let i in ele.childNodes){
+                                let child=ele.childNodes[i];
+                                if(child.nodeType==3 && child.nodeValue.trim()!=''){
+                                    hasText=true;
+                                    ele=[ele];
+                                    break;
+                                }
                             }
-                        }
-                        if(!hasText){
-                            let middleChild=ele.children[parseInt(ele.children.length/2)];
-                            if(curWin.getComputedStyle(ele).display==='flex' || (rulesData.opacity!=0 && curWin.getComputedStyle(ele.parentNode).display!=='flex')){
-                                ele=[ele];
-                            }else if((middleChild.style && middleChild.style.position=="absolute" && middleChild.style.left && middleChild.style.top) || ele.tagName=="UL" || curHeight==0){
-                                ele=[ele];
-                            }else{
-                                self.curSiteRule.pageElement+=">*";
-                                ele=ele.children;
+                            if(!hasText){
+                                let middleChild=ele.children[parseInt(ele.children.length/2)];
+                                if(curWin.getComputedStyle(ele).display==='flex' || (rulesData.opacity!=0 && curWin.getComputedStyle(ele.parentNode).display!=='flex')){
+                                    ele=[ele];
+                                }else if((middleChild.style && middleChild.style.position=="absolute" && middleChild.style.left && middleChild.style.top) || ele.tagName=="UL" || curHeight==0){
+                                    ele=[ele];
+                                }else{
+                                    self.curSiteRule.pageElement+=">*";
+                                    ele=ele.children;
+                                }
                             }
                         }
                     }else{
