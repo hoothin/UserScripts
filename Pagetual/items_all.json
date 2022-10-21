@@ -248,18 +248,18 @@
   "updated_at": "2022-08-27T22:53:13+09:00"
 },
 {
+  "resource_url": "http://wedata.net/items/85945",
   "data": {
-    "pageElement": "//div[@class='newsArticle_body']//div[@class='news_feed']/*[not(self::div)][last()]|//div[@class='newsArticle_body']//div[@class='news_feed']/*[not(self::div)][last()]/preceding-sibling::*",
+    "pageElement": "descendant::div[@class='news_feed'][last()-1]/*[not(self::div)][last()]|descendant::div[@class='news_feed'][last()-1]/*[not(self::div)][last()]/preceding-sibling::*",
     "nextLink": "//link[@rel='next']",
     "url": "^https://thetv.jp/news/detail/",
-    "exampleUrl": "https://thetv.jp/news/detail/1097587/\r\nhttps://thetv.jp/news/detail/1103073/p2/"
+    "exampleUrl": "https://thetv.jp/news/detail/1097587/\r\nhttps://thetv.jp/news/detail/1103073/p2/\r\nhttps://thetv.jp/news/detail/1026443/\r\nhttps://thetv.jp/news/detail/194206/"
   },
-  "created_by": "autopagerizebanzai",
-  "resource_url": "http://wedata.net/items/85945",
-  "name": "WEBザテレビジョン",
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "autopagerizebanzai",
+  "name": "WEBザテレビジョン",
   "created_at": "2022-08-19T21:06:16+09:00",
-  "updated_at": "2022-09-17T15:42:03+09:00"
+  "updated_at": "2022-10-20T16:36:46+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85944",
@@ -32445,18 +32445,18 @@
   "created_by": "Sheepmaster"
 },
 {
+  "resource_url": "http://wedata.net/items/56888",
   "data": {
-    "pageElement": "//div[@class='mainContent']/div[@class='contentBody newsContent'][1]/ul[@class='listContent newsList'] | //ul[@class='pageNav'][./preceding-sibling::div[@class='contentText'] or ./parent::*[@class='contentText']]/preceding-sibling::* | //ul[@class='programList' or @class='p__talent_list']/li",
+    "pageElement": "//div[@class='pager']/preceding-sibling::*",
     "nextLink": "//link[@rel='next']",
     "url": "^https://(.+)?thetv\\.jp",
-    "exampleUrl": "https://thetv.jp/news/\r\nhttps://thetv.jp/news/detail/194206/\r\nhttps://thetv.jp/feature/matome/758/\r\nhttps://thetv.jp/program/finder/drama/?slot=256\r\nhttps://talent.thetv.jp/person/feature/657/"
+    "exampleUrl": "https://thetv.jp/news/\r\nhttps://thetv.jp/feature/matome/758/\r\nhttps://thetv.jp/program/finder/drama/?slot=256\r\nhttps://thetv.jp/person/feature/657/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "kisara",
-  "resource_url": "http://wedata.net/items/56888",
   "name": "webザテレビジョン",
   "created_at": "2012-01-14T15:22:34+09:00",
-  "updated_at": "2020-08-27T10:34:51+09:00"
+  "updated_at": "2022-10-20T17:00:47+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/56870",
