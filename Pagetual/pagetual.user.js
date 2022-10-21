@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.32.20
+// @version      1.9.32.21
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -129,6 +129,7 @@
         }
     }
 
+    const noRuleTest = false;
     const lang = navigator.appName=="Netscape"?navigator.language:navigator.userLanguage;
     let config={};
     switch (lang){
@@ -541,7 +542,6 @@
             };
             break;
     }
-    const noRuleTest=false;
     var enableDebug=true;
     function i18n(name, param) {
         return config[name]?config[name].replace("#t#",param):name;
@@ -1374,7 +1374,8 @@
                 pageElement=checkElement(body);
                 if (pageElement && pageElement.length > 0) {
                     let lastBottom = getElementBottom(pageElement[pageElement.length - 1]);
-                    if (lastBottom && getElementTop(self.initNext) - lastBottom > 500) {
+                    if (lastBottom && getElementTop(self.initNext) - lastBottom > 1000) {
+                        debug("Stop as too long between next & page element");
                         isPause = true;
                         pageElement = [];
                     } else {
@@ -1964,6 +1965,7 @@
             } else {
                 let pageElement = this.getPageElement(document, _unsafeWindow);
                 if (this.curSiteRule.singleUrl && this.nextLinkHref == "#" && this.curSiteRule.pageElement === 'body') {
+                    debug("Stop as jsNext & whole body");
                     isPause = true;
                     return null;
                 }
@@ -3955,6 +3957,7 @@
                         }
                     });
                 }else{
+                    debug("Stop as no page element");
                     isPause=true;
                     callback(false);
                 }
