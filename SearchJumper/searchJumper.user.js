@@ -727,7 +727,8 @@
         hideOnSearchEngine: false,
         minSizeMode: false,
         hidePopup: false,
-        minPopup: false
+        minPopup: false,
+        selectToShow: true
     };
     function run() {
         const lang = navigator.appName == "Netscape" ? navigator.language : navigator.userLanguage;
