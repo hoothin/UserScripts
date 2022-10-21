@@ -3484,12 +3484,21 @@
                 this.target = target;
                 // console.log(target);
 
-                this.rateSelect.value = target.playbackRate;
+                if (target && target.playbackRate) {
+                    this.rateSelect.parentNode.style.display = "";
+                    this.brightSelect.parentNode.style.display = "";
+                    this.ratioSelect.parentNode.style.display = "";
+                    this.rateSelect.value = target.playbackRate;
 
-                let bright = target.style.filter.match(/.*brightness\((.*?)\).*/);
-                if (bright) this.brightSelect.value = bright[1];
-                let ratio = target.style.transform.match(/.*scale\((.*?)\).*/);
-                if (ratio) this.ratioSelect.value = ratio[1].replace(/ /g, '');
+                    let bright = target.style.filter.match(/.*brightness\((.*?)\).*/);
+                    if (bright) this.brightSelect.value = bright[1];
+                    let ratio = target.style.transform.match(/.*scale\((.*?)\).*/);
+                    if (ratio) this.ratioSelect.value = ratio[1].replace(/ /g, '');
+                } else {
+                    this.rateSelect.parentNode.style.display = "none";
+                    this.brightSelect.parentNode.style.display = "none";
+                    this.ratioSelect.parentNode.style.display = "none";
+                }
 
                 var self = this;
 
