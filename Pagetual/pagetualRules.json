@@ -1137,6 +1137,13 @@
         "css": ".cbp-lightbox{visibility: visible;}.cbp-caption-defaultWrap{-webkit-transition: -webkit-transform .6s cubic-bezier(.19,1,.22,1); transition: transform .6s cubic-bezier(.19,1,.22,1)}.cbp-caption:hover .cbp-caption-defaultWrap{-webkit-transform: scale(1.25); -moz-transform: scale(1.25); transform: scale(1.25);}.cbp-caption-activeWrap{opacity:0}.cbp-caption-activeWrap:hover{opacity:1}#grid-container.cbp-l-grid-blog{visibility: visible;}"
     },
     {
+        "name": "Pornhub.com",
+        "action": 0,
+        "url": "^https://[^.]+\\.pornhub\\.com/(?!view_video\\.php).+",
+        "pageElement": "id(\"videoCategory\") | \r\nid(\"incategoryVideos\") | \r\nid(\"videoSearchResult\") | \r\nid(\"mostRecentVideosSection\") | \r\nid(\"photosAlbumsSection\") | \r\nid(\"claimedRecentVideoSection\") | \r\n//div[@class='recommendedVideosContainer']/ul | \r\nid(\"popularPornstars\") | \r\n//ul[contains(concat(' ', normalize-space(@class), ' '), ' streamateContent ')] | \r\nid('filterChannelsSection') | \r\nid('playListSection')",
+        "nextLink": "//li[contains(concat(\" \", normalize-space(@class), \" \"), \" page_next \")][not(contains(@class, \"disabled\"))]/a"
+    },
+    {
         "name": "草榴社區",
         "type": 0,
         "url": "htm_data/\\d+/\\d+/\\d+\\.html",
