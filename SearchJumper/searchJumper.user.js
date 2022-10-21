@@ -3630,7 +3630,7 @@
                 this.showallInput.value = kw;
                 setTimeout(() => {
                     let mouseHandler = e => {
-                        if (e.target.className === 'sitelistBox' || e.target.className === 'search-jumper-showallBg' || e.target.className === 'search-jumper-historylist') {
+                        if (e.target.id === 'search-jumper-alllist' || e.target.className === 'sitelistBox' || e.target.className === 'search-jumper-showallBg' || e.target.className === 'search-jumper-historylist') {
                             document.removeEventListener("mousedown", mouseHandler);
                             self.bar.parentNode.classList.remove("search-jumper-showall");
                             self.showallInput.value = "";
