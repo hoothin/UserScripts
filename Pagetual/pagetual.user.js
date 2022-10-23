@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.32.24
+// @version      1.9.32.25
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -1425,6 +1425,10 @@
                 preStr=pageMatch1[1];
                 pageNum=parseInt(pageMatch1[2]);
                 afterStr=pageMatch1[3];
+                if (/^\/?$/.test(afterStr) && !/(p(age)?|_|\-|\/)$/.test(preStr)) {
+                    preStr = "";
+                    afterStr = "";
+                }
             }else if(pageMatch2){
                 preStr=pageMatch2[1];
                 pageNum=parseInt(pageMatch2[2]);
@@ -1529,6 +1533,14 @@
                 if(next && (next.href=="javascript:;" || next.getAttribute("href")=="#"))next=null;
             }
             if(!next){
+                let pageDiv=body.querySelector(".pagination");
+                if(pageDiv){
+                    cur=pageDiv.querySelector("[class*=current]");
+                    if(cur)next=cur.parentNode.nextElementSibling;
+                    if(next)next=next.querySelector("a");
+                }
+            }
+            if(!next){
                 let aTags=body.querySelectorAll("a,button,[type='button']");
                 for(i=aTags.length-1;i>=0;i--){
                     if(next1 && next2 && next3 && next4)break;
@@ -1586,7 +1598,7 @@
                         let _aHrefTrim = _aHref;
                         if (preStr) _aHrefTrim = _aHrefTrim.replace(preStr, "");
                         if (afterStr) _aHrefTrim = _aHrefTrim.replace(afterStr, "");
-                        if (pageNum < 999 && _aHrefTrim == pageNum + 1) {
+                        if ((preStr || afterStr) && pageNum < 999 && _aHrefTrim == pageNum + 1) {
                             next4 = aTag;
                         } else if (this.curUrl != aTag.href) {
                             _aHref = _aHref.replace(/\.s?html?$/i, "");
@@ -1843,9 +1855,20 @@
                             let currentEle = getElement(curSign[0], doc);
                             let maxEle = getElement(maxSign[0], doc);
                             if (currentEle && maxEle) {
-                                let currentSignNum = currentEle.innerText.match(new RegExp(curSign[1]));
-                                let maxSignNum = maxEle.innerText.match(new RegExp(maxSign[1]));
-                                if (currentSignNum && maxSignNum && currentSignNum[1] == maxSignNum[1]) {
+                                let currentSignNum, maxSignNum;
+                                if (/\(.*\)/.test(curSign[1])) {
+                                    currentSignNum = currentEle.innerText.match(new RegExp(curSign[1]));
+                                    if (currentSignNum) currentSignNum = currentSignNum[1];
+                                } else if (currentEle.getAttribute) {
+                                    currentSignNum = currentEle.getAttribute(curSign[1]);
+                                }
+                                if (/\(.*\)/.test(maxSign[1])) {
+                                    maxSignNum = maxEle.innerText.match(new RegExp(maxSign[1]));
+                                    if (maxSignNum) maxSignNum = maxSignNum[1];
+                                } else if (maxEle.getAttribute) {
+                                    maxSignNum = maxEle.getAttribute(maxSign[1]);
+                                }
+                                if (currentSignNum && maxSignNum && currentSignNum == maxSignNum) {
                                     this.nextLinkHref = false;
                                     return null;
                                 }
