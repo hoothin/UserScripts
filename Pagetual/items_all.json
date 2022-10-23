@@ -1,5 +1,20 @@
 [
 {
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//article/div[contains(concat(' ',@class,' '),' c-post__body ')]",
+    "nextLink": "//div[@class='c-linkpages']//span[contains(concat(' ',@class,' '),' current ')]/following-sibling::a",
+    "url": "^https://www\\.fujitv-view\\.jp/article/post-",
+    "exampleUrl": "https://www.fujitv-view.jp/article/post-701235/"
+  },
+  "created_by": "t_f_m'",
+  "resource_url": "http://wedata.net/items/85974",
+  "name": "フジテレビュー!! fujitv-view",
+  "created_at": "2022-10-21T15:05:31+09:00",
+  "updated_at": "2022-10-21T15:05:31+09:00",
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize"
+},
+{
   "resource_url": "http://wedata.net/items/85972",
   "data": {
     "insertBefore": "",
