@@ -2,6 +2,21 @@
 {
   "data": {
     "insertBefore": "",
+    "pageElement": "//div[contains(@class, 'box05')]",
+    "nextLink": "//a[@class='arrowNext01']",
+    "url": "^https://kakaku\\.com/shopreview/",
+    "exampleUrl": "https://kakaku.com/shopreview/2099/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "masao1",
+  "resource_url": "http://wedata.net/items/85976",
+  "name": "価格.com ショップ評価",
+  "created_at": "2022-10-23T12:10:56+09:00",
+  "updated_at": "2022-10-23T12:10:56+09:00"
+},
+{
+  "data": {
+    "insertBefore": "",
     "pageElement": "//article/div[contains(concat(' ',@class,' '),' c-post__body ')]",
     "nextLink": "//div[@class='c-linkpages']//span[contains(concat(' ',@class,' '),' current ')]/following-sibling::a",
     "url": "^https://www\\.fujitv-view\\.jp/article/post-",
@@ -46984,18 +46999,18 @@
   "updated_at": "2020-04-02T14:26:29+09:00"
 },
 {
+  "data": {
+    "pageElement": "descendant::div[./div[contains(@class,'p-result_item')]][1]/div",
+    "nextLink": "//ul[@class='p-pager']/li[number(./span/text())>0][1]/following-sibling::li[1]/a",
+    "url": "^https://kakaku\\.com/search_results/",
+    "exampleUrl": "https://kakaku.com/search_results/av/ https://kakaku.com/search_results/av/?page=5"
+  },
+  "created_by": "flagmeister",
   "resource_url": "http://wedata.net/items/2768",
   "name": "価格.com キーワード検索結果",
-  "data": {
-    "url": "^https://kakaku\\.com/search_results/",
-    "pageElement": "//div[@class='c-list1 p-result_list ']/*",
-    "exampleUrl": "https://kakaku.com/search_results/av/",
-    "nextLink": "//li[@class='p-pager_btn p-pager_btn_next']/a"
-  },
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "created_by": "flagmeister",
   "created_at": "2008-10-06T20:51:02+09:00",
-  "updated_at": "2020-04-02T06:46:38+09:00"
+  "updated_at": "2022-10-23T15:53:19+09:00",
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize"
 },
 {
   "resource_url": "http://wedata.net/items/2767",
