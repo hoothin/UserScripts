@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.10.24.1
+// @version              2022.10.24.2
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             http://hoothin.com
@@ -15226,7 +15226,6 @@ ImgOps | https://imgops.com/#b#`;
 
                 function styled(){
                     img.style.opacity=1;
-                    img.style[support.cssTransform]='scale(1)';
                 };
 
 
@@ -15333,13 +15332,13 @@ ImgOps | https://imgops.com/#b#`;
                     imgScaledInfo.style.color='#E9CCCC';
                 }else{
                     imgScaledInfo.style.color='';
-                };
+                }
 
             },
 
             _dataCache: {},
             _spanMarkPool: {},
-            _appendThumbSpans: function(data, index) {  // 添加缩略图栏的 spans
+            _appendThumbSpans: function(data, index) { // 添加缩略图栏的 spans
                 var iStatisCopy = this.iStatisCopy;
 
                 if (typeof index == 'undefined' && this.selected) {
@@ -16872,19 +16871,13 @@ ImgOps | https://imgops.com/#b#`;
                     padding:0;\
                     border:5px solid #313131;\
                     margin:1px;\
-                    opacity:0.6;\
-                    -webkit-transform:scale(1.2);\
-                    -moz-transform:scale(1.2);\
-                    transform:scale(1.2);\
+                    opacity:0.3;\
                     background-color: #282828cc;\
                     '+
                     (prefs.gallery.transition ? ('\
-                    -webkit-transition: opacity 0.15s ease-in-out,\
-                    -webkit-transform 0.1s ease;\
-                    -moz-transition: opacity 0.15s ease-in-out,\
-                    -moz-transform 0.1s ease;\
-                    transition: opacity 0.15s ease-in-out,\
-                    transform 0.1s ease;\
+                    -webkit-transition: opacity 0.5s ease;\
+                    -moz-transition: opacity 0.5s ease;\
+                    transition: opacity 0.5s ease;\
                     ') : '') + '\
                     }\
                     .pv-gallery-img_zoom-out{\
@@ -16989,6 +16982,9 @@ ImgOps | https://imgops.com/#b#`;
                     display: inline-block;\
                     vertical-align: middle;\
                     text-align: center;\
+                    background-color: rgba(40, 40, 40, 0.8);\
+                    }\
+                    .pv-gallery-maximize-container>.maximizeChild:hover{\
                     background: linear-gradient( 45deg, rgba(255, 255, 255, 0.4) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.4) 75%, rgba(255, 255, 255, 0.4) 100% ), linear-gradient( 45deg, rgba(255, 255, 255, 0.4) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.4) 75%, rgba(255, 255, 255, 0.4) 100% );\
                     background-size: 20px 20px;\
                     background-position: 0 0, 10px 10px;\
@@ -17326,7 +17322,7 @@ ImgOps | https://imgops.com/#b#`;
                     height:100%;\
                     display:none;\
                     opacity:0.6;\
-                    background:black url("'+ prefs.icons.loading + '") no-repeat center ;\
+                    background:black url("' + prefs.icons.loading + '") no-repeat center ;\
                     }\
                     .pv-gallery-sidebar-thumb-loading:hover{\
                     opacity:0.8;\
@@ -17412,7 +17408,7 @@ ImgOps | https://imgops.com/#b#`;
                 if((this.max<=this.nextNumber && this.max<=this.preNumber) || (!this.nextEle && !this.preEle)){
                     return;
                 };
-                var ele=this.direction=='pre'?  this.getNext() : this.getPrevious();
+                var ele=this.direction=='pre'? this.getNext() : this.getPrevious();
                 if(ele && !dataset(ele,'preloaded')){
                     return ele;
                 }else{
@@ -17468,14 +17464,14 @@ ImgOps | https://imgops.com/#b#`;
                         }break;
                         case track:{//轨道；功能，按住不放来连续滚动一个页面的距离
                             let pro=self.isHorizontal ? ['left','offsetX','layerX','clientWidth','offsetWidth'] : ['top' , 'offsetY' ,'layerY','clientHeight','offsetHeight'];
-                            var clickOffset=typeof e[pro[1]]=='undefined' ?  e[pro[2]] : e[pro[1]];
+                            var clickOffset=typeof e[pro[1]]=='undefined' ? e[pro[2]] : e[pro[1]];
                             var handleOffset=parseFloat(handle.style[pro[0]]);
                             var handleSize=handle[pro[4]];
                             var under= clickOffset > handleOffset ;//点击在滚动手柄的下方
                             var containerSize=self.container[pro[3]];
 
                             var scroll=function(){
-                                self.scrollBy(under?  (containerSize - 10) : (-containerSize + 10));//滚动一个页面距离少一点
+                                self.scrollBy(under? (containerSize - 10) : (-containerSize + 10));//滚动一个页面距离少一点
                             };
                             scroll();
 
@@ -17547,7 +17543,7 @@ ImgOps | https://imgops.com/#b#`;
                 this.scrollbar.bar.style.display='none';
             },
             scrollBy:function(distance,handleDistance){
-                return this.scroll(this.getScrolled() + (handleDistance?  distance / this.one :  distance));
+                return this.scroll(this.getScrolled() + (handleDistance? distance / this.one : distance));
             },
             scrollByPages:function(num){
                 this.scroll(this.getScrolled() + (this.container[(this.isHorizontal ? 'clientWidth' : 'clientHeight')] - 10) * num);
@@ -17557,7 +17553,7 @@ ImgOps | https://imgops.com/#b#`;
 
                 //滚动实际滚动条
                 var _distance=distance;
-                _distance=handleDistance?  distance / this.one :  distance;
+                _distance=handleDistance? distance / this.one : distance;
                 _distance=Math.max(0,_distance);
                 _distance=Math.min(_distance,this.scrollMax);
 
@@ -17609,7 +17605,7 @@ ImgOps | https://imgops.com/#b#`;
                 return noScroll;
             },
             getScrolled:function(){
-                return  this.container[(this.isHorizontal ? 'scrollLeft' : 'scrollTop')];
+                return this.container[(this.isHorizontal ? 'scrollLeft' : 'scrollTop')];
             },
         };
 
@@ -18452,6 +18448,9 @@ ImgOps | https://imgops.com/#b#`;
                     }\
                     .pv-pic-window-container_focus>.pv-pic-window-pic {\
                     box-shadow: 0 0 6px black;\
+                    background: linear-gradient( 45deg, rgba(255, 255, 255, 0.4) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.4) 75%, rgba(255, 255, 255, 0.4) 100% ), linear-gradient( 45deg, rgba(255, 255, 255, 0.4) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.4) 75%, rgba(255, 255, 255, 0.4) 100% );\
+                    background-size: 20px 20px;\
+                    background-position: 0 0, 10px 10px;\
                     }\
                     .pv-pic-window-tb-tool,\
                     .pv-pic-window-tb-command{\
