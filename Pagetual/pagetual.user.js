@@ -49,6 +49,8 @@
 // @supportURL   https://github.com/hoothin/UserScripts/issues
 // @connect      wedata.net
 // @connect      githubusercontent.com
+// @connect      ghproxy.com
+// @connect      hoothin.github.io
 // @run-at       document-idle
 // @exclude      http://www.toodledo.com/tasks/*
 // @exclude      http*://maps.google.com*/*
