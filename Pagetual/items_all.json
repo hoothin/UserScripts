@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/85977",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[@class='post-list']",
+    "nextLink": "//a[@rel='next']",
+    "url": "^https://openloadpro\\.com/",
+    "exampleUrl": "https://openloadpro.com/?s=dvd"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "masamasa",
+  "name": "OPENLOAD.PRO",
+  "created_at": "2022-10-24T18:24:03+09:00",
+  "updated_at": "2022-10-24T18:24:03+09:00"
+},
+{
   "data": {
     "insertBefore": "",
     "pageElement": "//div[contains(@class, 'box05')]",
@@ -353,15 +368,15 @@
   "resource_url": "http://wedata.net/items/85937",
   "data": {
     "pageElement": "//div[@class='text01']",
-    "nextLink": "//*[@id=\"pagination-preview-pc\"]/a[1]",
+    "nextLink": "id(\"pagination-preview-pc\")/div[number(.)>0]/following-sibling::a[1]",
     "url": "^https://style\\.nikkei\\.com/article/",
-    "exampleUrl": "https://style.nikkei.com/article/DGXZQOLM151O40V10C22A6000000/ https://style.nikkei.com/article/DGXMZO13579300S7A300C1000000 https://style.nikkei.com/article/DGXBZO19177890R01C10A2AA1P01/"
+    "exampleUrl": "https://style.nikkei.com/article/DGXZQOLM151O40V10C22A6000000/ https://style.nikkei.com/article/DGXMZO13579300S7A300C1000000 https://style.nikkei.com/article/DGXBZO19177890R01C10A2AA1P01/\r\nhttps://style.nikkei.com/article/DGXMZO75127910V20C21A8000000"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "autopagerizebanzai",
   "name": "NIKKEI STYLE",
   "created_at": "2022-07-02T17:57:59+09:00",
-  "updated_at": "2022-08-28T21:52:09+09:00"
+  "updated_at": "2022-10-24T22:32:21+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85936",
@@ -6799,21 +6814,6 @@
   "created_by": "t_f_m_",
   "created_at": "2019-12-09T20:36:28+09:00",
   "updated_at": "2019-12-09T20:36:28+09:00"
-},
-{
-  "resource_url": "http://wedata.net/items/85162",
-  "name": "CiNii ncid",
-  "data": {
-    "url": "^https://ci\\.nii\\.ac\\.jp/ncid/",
-    "pageElement": "//div[contains(concat(\" \",@class,\" \"),\" listContainer \")]/ul/li",
-    "exampleUrl": "https://ci.nii.ac.jp/ncid/BN00368295",
-    "insertBefore": "",
-    "nextLink": "//a[@rel=\"next\"]"
-  },
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "created_by": "t_f_m_",
-  "created_at": "2019-12-09T20:23:38+09:00",
-  "updated_at": "2019-12-09T20:23:38+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85158",
@@ -44233,18 +44233,18 @@
   "created_by": "cool_ni_ikou"
 },
 {
+  "data": {
+    "pageElement": "//div[contains(@class, 'listContainer')]",
+    "nextLink": "//a[@rel='next' or @title='次へ' or @aria-label='Next']",
+    "url": "^https://ci\\.nii\\.ac\\.jp/",
+    "exampleUrl": "https://ci.nii.ac.jp/author/DA00102827 https://ci.nii.ac.jp/ncid/BN00368295 https://ci.nii.ac.jp/d/search?q=%E7%89%A9%E7%90%86%E5%AD%A6"
+  },
+  "created_by": "TakiTake",
   "resource_url": "http://wedata.net/items/29118",
   "name": "CiNii",
-  "data": {
-    "url": "^https://ci\\.nii\\.ac\\.jp/search",
-    "pageElement": "//form[@name=\"articlelist\"]",
-    "exampleUrl": "https://ci.nii.ac.jp/search?q=javascript&range=2&count=20&sortorder=1",
-    "nextLink": "//a[contains(concat(\" \",@rel,\" \"),\" next \")]"
-  },
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "created_by": "TakiTake",
   "created_at": "2009-06-12T23:57:28+09:00",
-  "updated_at": "2019-12-09T20:19:58+09:00"
+  "updated_at": "2022-10-24T20:02:15+09:00",
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize"
 },
 {
   "resource_url": "http://wedata.net/items/29111",
