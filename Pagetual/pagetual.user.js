@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.32.26
+// @version      1.9.32.27
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -4070,6 +4070,10 @@
          .pagetual_pageBar a:hover>span {
            opacity: 1;
          }
+         .pagetual_pageBar span.prevScreen,
+         .pagetual_pageBar span.nextScreen {
+           display: block!important;
+         }
          .pagetual_pageBar a:hover>span.prevScreen {
            margin-top: -30px!important;
            pointer-events: all;
@@ -4629,12 +4633,12 @@
         preBtn.innerHTML="∧";
         preBtn.title="Prev page";
         preBtn.className="prevScreen";
-        preBtn.style.cssText="text-align: center;right: unset; float: left; margin-top: -30px; width: 40px; background: rgba(240, 240, 240, 0.8); position: absolute; border-radius: 20px 20px 0 0; box-shadow: rgb(0 0 0 / 50%) 0px -5px 5px;z-index:9999999";
+        preBtn.style.cssText="display: none;text-align: center;right: unset; float: left; margin-top: -30px; width: 40px; background: rgba(240, 240, 240, 0.8); position: absolute; border-radius: 20px 20px 0 0; box-shadow: rgb(0 0 0 / 50%) 0px -5px 5px;z-index:9999999";
         let nextBtn=document.createElement("span");
         nextBtn.innerHTML="∨";
         nextBtn.title="Next page";
         nextBtn.className="nextScreen";
-        nextBtn.style.cssText="text-align: center;right: unset; float: left; margin-top: 30px; width: 40px; background: rgba(240, 240, 240, 0.8); position: absolute; border-radius: 0 0 20px 20px; box-shadow: rgb(0 0 0 / 50%) 0px 5px 5px;z-index:9999999";
+        nextBtn.style.cssText="display: none;text-align: center;right: unset; float: left; margin-top: 30px; width: 40px; background: rgba(240, 240, 240, 0.8); position: absolute; border-radius: 0 0 20px 20px; box-shadow: rgb(0 0 0 / 50%) 0px 5px 5px;z-index:9999999";
         let localPage=curPage;
         preBtn.addEventListener("click", e=>{
             e.stopPropagation();
