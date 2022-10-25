@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.46.58
+// @version      1.6.6.46.59
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -976,6 +976,7 @@
                 );
             }
         };
+        var disabled = false;
 
         var _GM_xmlhttpRequest, _GM_registerMenuCommand, _GM_notification, _GM_setClipboard, _GM_openInTab, _GM_addStyle, _GM_info;
         if (typeof GM_xmlhttpRequest != 'undefined') {
@@ -3734,8 +3735,9 @@
                     document.documentElement.appendChild(this.bar.parentNode);
                     let minSize = Math.min(this.bar.parentNode.offsetWidth, this.bar.parentNode.offsetHeight);
                     if (minSize > 500) {
+                        disabled = true;
                         this.removeBar();
-                    }
+                    } else disabled = false;
                 }
             }
 
@@ -3935,6 +3937,7 @@
                     let inPageRule = searchData.prefConfig.inPageRule || {};
                     inPageRule[location.href] = this.lockWords;
                     searchData.prefConfig.inPageRule = inPageRule;
+                    searchData.lastModified = new Date().getTime();
                     storage.setItem("searchData", searchData);
                     _GM_notification(i18n("save completed"));
                 });
@@ -7527,6 +7530,7 @@
                 });
                 if (searchData.prefConfig.dragToSearch && !isInConfigPage()) {
                     document.body.addEventListener('dragstart', e => {
+                        if (disabled) return;
                         targetElement = e.target;
                         if (targetElement.getAttribute && targetElement.getAttribute("draggable") == "true") return;
                         showDragSearch(e.clientX, e.clientY);
@@ -7816,6 +7820,7 @@
                             try {
                                 configData = JSON.parse(configTxt);
                                 searchData.sitesConfig = configData;
+                                searchData.lastModified = new Date().getTime();
                                 storage.setItem("searchData", searchData);
                                 _GM_notification('Over!');
                             } catch (e) {
@@ -8050,6 +8055,7 @@
                         }
                     });
                     if (canImport) {
+                        searchData.lastModified = new Date().getTime();
                         storage.setItem("searchData", searchData);
                         _GM_notification('Over!');
                         this.close();
@@ -8831,6 +8837,7 @@
                         siteObj.charset = charset;
                     }
                     searchData.sitesConfig[typeSelect.value].sites.push(siteObj);
+                    searchData.lastModified = new Date().getTime();
                     storage.setItem("lastAddType", typeSelect.value);
                     storage.setItem("searchData", searchData);
                     _GM_notification(i18n("siteAddOver"));
