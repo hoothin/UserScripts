@@ -23582,18 +23582,19 @@
   "updated_at": "2020-07-11T07:56:46+09:00"
 },
 {
-  "resource_url": "http://wedata.net/items/75012",
   "data": {
-    "pageElement": "id('photos')",
+    "pageElement": "id('photos')/div",
+    "insertBefore": "id('article-contents')/div[@class='article-buy']",
     "nextLink": "//a[@class=\"next\"][contains(@href,\"?pid=\")]",
     "url": "^https?://(www\\.)?afpbb\\.com/articles/",
     "exampleUrl": "http://www.afpbb.com/articles/-/3148066?pid=\r\nhttp://www.afpbb.com/articles/-/3182187?pid=20345505"
   },
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "t_f_m",
+  "resource_url": "http://wedata.net/items/75012",
   "name": "afpbb 写真",
   "created_at": "2014-08-03T18:32:34+09:00",
-  "updated_at": "2022-01-17T17:16:32+09:00"
+  "updated_at": "2022-10-25T19:08:50+09:00",
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize"
 },
 {
   "resource_url": "http://wedata.net/items/75008",
