@@ -6,7 +6,7 @@
 // @namespace    hoothin
 // @supportURL   https://github.com/hoothin/UserScripts
 // @homepageURL  https://github.com/hoothin/UserScripts
-// @version      1.2.6.15
+// @version      1.2.6.16
 // @description        任意轉換網頁中的簡體中文與正體中文（默認簡體→正體）
 // @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体）
 // @description:ja     簡繁中国語に変換
@@ -416,10 +416,10 @@
     };
     //此處對應繁轉簡，無需求，故暫不實現
     var tc2sc = {
-        /*'叠':[
-            '叠',
-            ['迭']
-        ]*/
+        '著':[
+            '着',
+            ['著','著名','著作','巨著']
+        ]
     };
 
     var lang = navigator.appName == "Netscape"?navigator.language:navigator.userLanguage;
@@ -583,9 +583,47 @@
                 continue;
             }
             if(char.charCodeAt(0) > 10000){
-                var sChar=tsDict[char];
-                if(sChar)str+=sChar;
-                else str+=char;
+                var sChar=tsDict[char], tc2scItem=tc2sc[char];
+                if(sChar || tc2scItem){
+                    var newChar="";
+                    if(tc2scItem){
+                        if(tc2scItem.length==1){
+                            newChar=tc2scItem;
+                        }else{
+                            var defaultChar=tc2scItem[0],char_f=[],char_b=[],r=i;
+                            while(--r>=0 && char_f.length<3){
+                                char_f.push(orgStr.charAt(r));
+                            }
+                            r=i;
+                            while(++r<orgStr.length && char_b.length<3){
+                                char_b.push(orgStr.charAt(r));
+                            }
+                            for(var j=1;j<tc2scItem.length;j++){
+                                var others=tc2scItem[j],otherChar=others[0];
+                                for(var k=1;k<others.length;k++){
+                                    var curOther=others[k],fadd=curOther.indexOf(char),badd=curOther.length-1-fadd,x=0;
+                                    var processChar=char;
+                                    while(fadd-->0){
+                                        if(char_f[x])processChar=char_f[x]+processChar;
+                                    }
+                                    x=0;
+                                    while(badd-->0){
+                                        if(char_b[x])processChar+=char_b[x];
+                                    }
+                                    if(processChar.indexOf(curOther) != -1){
+                                        newChar=otherChar;
+                                        break;
+                                    }
+                                }
+                                if(newChar)break;
+                            }
+                            if(!newChar)newChar=defaultChar;
+                        }
+                    }else{
+                        newChar=sChar;
+                    }
+                    str+=newChar;
+                }else str+=char;
             }
             else str+=char;
         }
