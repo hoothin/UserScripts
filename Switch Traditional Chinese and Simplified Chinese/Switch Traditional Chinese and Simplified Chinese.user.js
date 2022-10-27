@@ -6,7 +6,7 @@
 // @namespace    hoothin
 // @supportURL   https://github.com/hoothin/UserScripts
 // @homepageURL  https://github.com/hoothin/UserScripts
-// @version      1.2.6.16
+// @version      1.2.6.17
 // @description        任意轉換網頁中的簡體中文與正體中文（默認簡體→正體）
 // @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体）
 // @description:ja     簡繁中国語に変換
@@ -414,11 +414,11 @@
     var fuckIlliteracy = {
         'yyds':'永遠的神'
     };
-    //此處對應繁轉簡，無需求，故暫不實現
+
     var tc2sc = {
         '著':[
             '着',
-            ['著','著名','著作','巨著']
+            ['著','著名','著作','巨著','著稱','顯著','昭著','卓著','所著','著述','編著','著書','名著','遺著','譯著','著：','著:']
         ]
     };
 
