@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.32.29
+// @version      1.9.32.30
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -118,6 +118,8 @@
         } else {
             domloaded();
         }
+        if (getComputedStyle(document.documentElement).display == 'none') document.documentElement.style.display = 'block';
+        if (getComputedStyle(document.body).display == 'none') document.body.style.display = 'block';
         return;
     }
 
@@ -1888,28 +1890,33 @@
                         }
                     }
                 }
-                let needUrl = (this.curSiteRule.action == 0 || this.curSiteRule.action == 1);
-                if (!href) href = nextLink.href;
-                if (href && nextLink.getAttribute) {
-                    let _href = nextLink.getAttribute("href");
-                    if (_href) {
-                        if (_href.charAt(0) == "#" || _href == "?"){
-                            href = "#";
-                        } else {
-                            href = _href;
+                if (this.curSiteRule.action == 3) {
+                    if (doc == document) debug(nextLink, 'Next link');
+                    this.nextLinkHref = '#';
+                } else {
+                    let needUrl = (this.curSiteRule.action == 0 || this.curSiteRule.action == 1);
+                    if (!href) href = nextLink.href;
+                    if (href && nextLink.getAttribute) {
+                        let _href = nextLink.getAttribute("href");
+                        if (_href) {
+                            if (_href.charAt(0) == "#" || _href == "?"){
+                                href = "#";
+                            } else {
+                                href = _href;
+                            }
                         }
                     }
-                }
 
-                if((href===""||href===null) && needUrl){
-                    this.nextLinkHref=false;
-                }else if(/^(javascript:(void\(0\)|;)|#)/.test(href) && needUrl){
-                    this.nextLinkHref=false;
-                }else{
-                    this.nextLinkHref=(href && !/^(javascript:|#)/.test(href))?this.canonicalUri(href):"#";
-                    if(this.nextLinkHref!="#" && (this.nextLinkHref==this.curUrl || this.nextLinkHref==this.curUrl+"#" || this.nextLinkHref==this.oldUrl || this.nextLinkHref==this.oldUrl+"#")){
+                    if(needUrl && (href===""||href===null)){
                         this.nextLinkHref=false;
-                    }else if(doc==document)debug(nextLink, 'Next link');
+                    }else if(needUrl && /^(javascript:(void\(0\)|;)|#)/.test(href)){
+                        this.nextLinkHref=false;
+                    }else{
+                        this.nextLinkHref=(href && !/^(javascript:|#)/.test(href))?this.canonicalUri(href):"#";
+                        if(this.nextLinkHref!="#" && (this.nextLinkHref==this.curUrl || this.nextLinkHref==this.curUrl+"#" || this.nextLinkHref==this.oldUrl || this.nextLinkHref==this.oldUrl+"#")){
+                            this.nextLinkHref=false;
+                        }else if(doc==document)debug(nextLink, 'Next link');
+                    }
                 }
             }else{
                 this.nextLinkHref=false;
@@ -4878,7 +4885,7 @@
     var inCors=false;
     var checkRemoveIntv;
     function requestFromIframe(url, callback){
-        url=url.replace(/#[^#]*/,"");
+        url = url.indexOf('=') == -1 ? url.replace(/#[^#]*/,"") : url;
         let iframe = document.createElement('iframe');
         iframe.name = 'pagetual-iframe';
         iframe.width = '100%';
@@ -5182,10 +5189,10 @@
                 },500);
             });
             if (!lastActiveUrl) lastActiveUrl=location.href;
-            emuIframe.src=lastActiveUrl.replace(/#[^#]*/,"");
+            emuIframe.src = lastActiveUrl;
             document.body.appendChild(emuIframe);
         }else{
-            let targetSrc = lastActiveUrl.replace(/#[^#]*/,"");
+            let targetSrc = lastActiveUrl;
             if (emuIframe.src != targetSrc) emuIframe.src = targetSrc;
             checkPage();
         }
@@ -5259,7 +5266,7 @@
     }
 
     function forceIframe(url, callback){
-        url=url.replace(/#[^#]*/,"");
+        url = url.indexOf('=') == -1 ? url.replace(/#[^#]*/,"") : url;
         let curIframe = document.createElement('iframe'),iframeDoc,isloaded=false,inAction=true;
         let loadedHandler = ()=>{
             inAction=false;
@@ -5415,13 +5422,13 @@
                     command: 'pagetual.insert'
                 }, '*');*/
             }
-            let isJs=/^(javascript|#)/.test(nextLink.replace(location.href,""));
+            let isJs = ruleParser.curSiteRule.action == 3 || /^(javascript|#)/.test(nextLink.replace(location.href,""));
             if(!isJs){
                 emuIframe=null;
                 lastActiveUrl=nextLink;
-            }
-            if(location.protocol=="https:" && /^http:/.test(nextLink)){
-                nextLink=nextLink.replace(/^http/,"https");
+                if(location.protocol=="https:" && /^http:/.test(nextLink)){
+                    nextLink=nextLink.replace(/^http/,"https");
+                }
             }
             isLoading=true;
             ruleParser.insertElement(loadingDiv);
