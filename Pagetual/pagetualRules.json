@@ -428,6 +428,13 @@
         "nextLink": "a.pagination__next"
     },
     {
+        "name": "行情 - 雪球",
+        "url": "^https?://xueqiu\\.com/",
+        "pageElement": "div#stockList table.portfolio",
+        "pinUrl": true,
+        "action": 3
+    },
+    {
         "name": "中国知网",
         "url": "^https://kns\\.cnki\\.net/kns8/defaultresult/index",
         "nextLink": "a#PageNext",
