@@ -956,8 +956,7 @@
 {
   "resource_url": "http://wedata.net/items/85868",
   "data": {
-    "insertBefore": "",
-    "pageElement": "//span[contains(@class,'date')]/ancestor::div[1]",
+    "pageElement": "descendant::div[contains(@class,'c-news')][1]",
     "nextLink": "//link[@rel='next']",
     "url": "^https://archisite\\.co\\.jp/",
     "exampleUrl": "https://archisite.co.jp/category/news/ https://archisite.co.jp/category/notice/"
@@ -966,7 +965,7 @@
   "created_by": "jigen_ldid",
   "name": "株式会社アーキサイト",
   "created_at": "2022-02-19T11:19:13+09:00",
-  "updated_at": "2022-02-19T11:19:13+09:00"
+  "updated_at": "2022-10-26T19:19:44+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85865",
@@ -1261,20 +1260,6 @@
   "name": "PRESIDENT WOMAN Online",
   "created_at": "2022-01-31T11:28:26+09:00",
   "updated_at": "2022-02-01T12:25:41+09:00"
-},
-{
-  "data": {
-    "pageElement": "//div[@class='post__list'][./a]/ancestor::*[./following-sibling::* or ./preceding-sibling::*][2]",
-    "nextLink": "//li[@class=\"pager--next\"]/a",
-    "url": "^https://blog\\.goo\\.ne\\.jp/.+",
-    "exampleUrl": "https://blog.goo.ne.jp/mai_2014yokohama https://blog.goo.ne.jp/portal/tags/%E3%83%AA%E3%83%8E%E3%83%99 https://blog.goo.ne.jp/portal/hotentry_ranking"
-  },
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "created_by": "kenzou_ogawa2",
-  "resource_url": "http://wedata.net/items/85836",
-  "name": "blog.goo.ne.jp postlist",
-  "created_at": "2022-01-29T20:46:56+09:00",
-  "updated_at": "2022-05-02T14:05:13+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85835",
@@ -9081,23 +9066,9 @@
   "updated_at": "2022-02-23T09:44:07+09:00"
 },
 {
-  "resource_url": "http://wedata.net/items/82057",
-  "name": "デイリーポータルZ：コネタいちらん",
-  "created_by": "jigendaddy_be",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "updated_at": "2019-01-14T14:45:15+09:00",
-  "data": {
-    "exampleUrl": "https://backnumber.dailyportalz.jp/koneta06/03/index.htm",
-    "url": "^https://(?:backnumber\\.)?dailyportalz\\.jp/koneta0",
-    "pageElement": "//img[@alt=\"コネタ\"]/following-sibling::table//img[@src=\"../../top_img/marker.gif\"]/ancestor::tbody[1]/tr",
-    "nextLink": "//img[@alt=\"コネタ\"]/following-sibling::table//td[@align=\"right\"][not(./br)]/a[last()]|//img[@alt=\"コネタ\"]/following-sibling::table//td[@align=\"right\"]/br[1]/preceding-sibling::a[1]"
-  },
-  "created_at": "2019-01-14T13:21:34+09:00"
-},
-{
   "resource_url": "http://wedata.net/items/82056",
   "data": {
-    "pageElement": "//img[@align=\"absmiddle\"]/ancestor::tbody[1]/tr|//div[@class=\"module_inner\"][.//li[contains(@class,\"next\")]]/table/tbody/tr|//div[@class=\"frame-sttl\"][last()]/following-sibling::table/tbody/tr",
+    "pageElement": "//*[./*[last()][self::div] and ./*[last()-1][self::table]]/table[last()]/tbody/tr",
     "nextLink": "id(\"mainContents\")//td[@align=\"center\"]/b/following-sibling::a[1]|//a[@rel=\"next\"]",
     "url": "^https://(?:backnumber\\.)?dailyportalz\\.jp/(?!dpq)",
     "exampleUrl": "https://backnumber.dailyportalz.jp/cs/link/backnumber/1.htm https://dailyportalz.jp/kiji?ccm_paging_p=1&ccm_order_by=h.publicDate&ccm_order_by_direction=desc https://dailyportalz.jp/writer/kijilist/163"
@@ -9106,7 +9077,7 @@
   "created_by": "jigendaddy_be",
   "name": "デイリーポータルＺ バックナンバー ライタープロフィール",
   "created_at": "2019-01-12T10:22:25+09:00",
-  "updated_at": "2020-11-05T11:44:56+09:00"
+  "updated_at": "2022-10-27T10:17:31+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/82055",
@@ -14625,18 +14596,18 @@
   "updated_at": "2020-06-21T11:19:27+09:00"
 },
 {
+  "data": {
+    "pageElement": "//main//div[./nav]/preceding-sibling::div[1]/div",
+    "nextLink": "//li[@aria-current]/following-sibling::li[1]/a",
+    "url": "^https?://azure\\.microsoft\\.com/ja-jp/updates/",
+    "exampleUrl": "https://azure.microsoft.com/ja-jp/updates/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "nnn",
   "resource_url": "http://wedata.net/items/80972",
   "name": "Microsoft Azure Updates",
-  "created_by": "nnn",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "updated_at": "2017-09-03T07:04:35+09:00",
-  "data": {
-    "exampleUrl": "https://azure.microsoft.com/ja-jp/updates/",
-    "url": "^https?://azure\\.microsoft\\.com/ja-jp/updates/",
-    "pageElement": "//section[1]//h2/ancestor::div[1]/following-sibling::*|//section[1]//h2/ancestor::div[1]",
-    "nextLink": "//div[@class=\"wa-pagination\"]//li[last()]/a"
-  },
-  "created_at": "2016-09-08T10:05:12+09:00"
+  "created_at": "2016-09-08T10:05:12+09:00",
+  "updated_at": "2022-10-26T19:51:49+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/80969",
@@ -21995,17 +21966,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/76490",
-  "name": "YAHOO!映画、・ニュース・公開カレンダー・レビュー・上映スケジュール・映画館・インタビュー・プレゼント・予告編",
-  "created_by": "hohoho",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "updated_at": "2017-07-23T06:30:27+09:00",
   "data": {
-    "exampleUrl": "https://movies.yahoo.co.jp/news/\r\nhttps://movies.yahoo.co.jp/movie/\r\nhttps://movies.yahoo.co.jp/calendar/\r\nhttps://movies.yahoo.co.jp/review/\r\nhttps://movies.yahoo.co.jp/schedule/\r\nhttps://movies.yahoo.co.jp/theater/\r\nhttps://movies.yahoo.co.jp/interview/\r\nhttps://movies.yahoo.co.jp/present/\r\nhttps://movies.yahoo.co.jp/trailer/",
-    "url": "^https://movies\\.yahoo\\.co\\.jp/(news|movie|calendar|review|schedule|theater|present|trailer|interview)/",
-    "pageElement": "//ul[contains(@class,'js-lazy-load-images')]/li",
-    "nextLink": "//a[i/@class='icon-chevron-right color-sub']"
+    "pageElement": "//main/descendant::div[count(./div)>1][.//div[contains(@class,'movie-list_item')]][last()]",
+    "nextLink": "//link[@rel='next']",
+    "url": "^https://movies\\.yahoo\\.co\\.jp/find/",
+    "exampleUrl": "https://movies.yahoo.co.jp/find/"
   },
-  "created_at": "2014-11-28T12:46:29+09:00"
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "hohoho",
+  "name": "YAHOO!映画、・ニュース・公開カレンダー・レビュー・上映スケジュール・映画館・インタビュー・プレゼント・予告編",
+  "created_at": "2014-11-28T12:46:29+09:00",
+  "updated_at": "2022-10-26T15:33:26+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/76486",
@@ -33632,18 +33603,18 @@
   "created_by": "willpagerize"
 },
 {
-  "resource_url": "http://wedata.net/items/55341",
   "data": {
-    "pageElement": "descendant::img[contains(@src,\"ten_line.gif\")][1]/ancestor::table[1]|descendant::img[contains(@src,\"ten_line.gif\")][1]/ancestor::table[1]/preceding-sibling::*",
-    "nextLink": "id(\"links\")/b/following-sibling::a[1]|id(\"mainContents\")/table[last()-1]/tbody/tr/td[3]//td[@align=\"right\"]/a",
+    "pageElement": "id('mainContents')/descendant::tr[./td[@align='center']][1]|(//div[@align='center'][./div[@align='center']]|//div[@align='center'][./div[@align='center']]/preceding-sibling::*)[not(id('mainContents')//td[@align='center'])]",
+    "nextLink": "id('mainContents')/descendant::td[@align='right'][1]/a",
     "url": "^https://(?:backnumber\\.)?dailyportalz\\.jp/(?:cs/link/backnumber/|kiji/|special)",
     "exampleUrl": "https://backnumber.dailyportalz.jp/special/1010/ https://backnumber.dailyportalz.jp/special04/01/29/ https://backnumber.dailyportalz.jp/special04/11/22/index.htm"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "Yuu",
+  "resource_url": "http://wedata.net/items/55341",
   "name": "デイリーポータルZ dailyportalz.jp 記事",
   "created_at": "2011-08-26T21:10:42+09:00",
-  "updated_at": "2020-11-05T12:00:51+09:00"
+  "updated_at": "2022-10-27T10:47:06+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/55336",
@@ -48444,17 +48415,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/2025",
-  "name": "Yahoo!映画ユーザーレビュー",
   "data": {
+    "pageElement": "//li[.//time][count(//ul[.//time])=1]",
+    "nextLink": "//link[@rel='next']",
     "url": "^https://movies\\.yahoo\\.co\\.jp/movie/\\d+/review/",
-    "pageElement": "id('list-module')/li",
-    "exampleUrl": "https://movies.yahoo.co.jp/movie/327529/review/",
-    "nextLink": "//a[i/@class='icon-chevron-right color-sub']"
+    "exampleUrl": "https://movies.yahoo.co.jp/movie/327529/review/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "raitu",
+  "name": "Yahoo!映画ユーザーレビュー",
   "created_at": "2008-07-21T18:41:55+09:00",
-  "updated_at": "2020-03-29T08:11:02+09:00"
+  "updated_at": "2022-10-26T15:14:05+09:00"
 },
 {
   "name": "8bitpeoples Discography",
