@@ -4984,7 +4984,7 @@
 
     var emuIframe,lastActiveUrl;
     function emuPage(callback){
-        let orgPage=null,orgContent=null,preContent=null,iframeDoc,times=0,loadmoreBtn,loadmoreEnd=false,waitTimes=10,changed=false;
+        let orgPage=null,orgContent=null,preContent=null,iframeDoc,times=0,loadmoreBtn,pageEle,nextLink,loadmoreEnd=false,waitTimes=10,changed=false;
         function returnFalse(log){
             debug(log);
             isPause=true;
@@ -5020,7 +5020,6 @@
                 }
             }
 
-            let pageEle, nextLink;
             if(!orgPage){
                 if(!loadmoreEnd){
                     loadmoreBtn=getLoadMore(iframeDoc);
@@ -5192,8 +5191,7 @@
             emuIframe.src = lastActiveUrl;
             document.body.appendChild(emuIframe);
         }else{
-            let targetSrc = lastActiveUrl;
-            if (emuIframe.src != targetSrc) emuIframe.src = targetSrc;
+            if (emuIframe.src != lastActiveUrl) emuIframe.src = lastActiveUrl;
             checkPage();
         }
     }
