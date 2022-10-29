@@ -1,5 +1,20 @@
 [
 {
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[@class='sons']",
+    "nextLink": "//a[@class='amore']",
+    "url": "^https://so\\.gushiwen\\.cn/",
+    "exampleUrl": "https://so.gushiwen.cn/search.aspx?value=%E6%9D%9C%E7%94%AB&valuej=%E6%9D%9C"
+  },
+  "created_by": "sunny",
+  "resource_url": "http://wedata.net/items/85979",
+  "name": "古诗文网",
+  "created_at": "2022-10-29T08:51:42+09:00",
+  "updated_at": "2022-10-29T08:51:42+09:00",
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize"
+},
+{
   "resource_url": "http://wedata.net/items/85977",
   "data": {
     "insertBefore": "",
