@@ -2,6 +2,65 @@
 {
   "data": {
     "insertBefore": "",
+    "pageElement": "//table[@class='normal']",
+    "nextLink": "//a[contains(text(), '次へ')]",
+    "url": "^https://koan\\.osaka-u\\.ac\\.jp/campusweb/campussquare",
+    "exampleUrl": "https://koan.osaka-u.ac.jp/campusweb/campussquare.do?_flowExecutionKey=_cADFBD4C4-F94C-D224-0433-CAACB71A149C_kA2681FF9-5A20-6978-C6CE-6E49A7FA2A64"
+  },
+  "created_by": "sunny",
+  "resource_url": "http://wedata.net/items/85983",
+  "name": "大阪大学　シラバス公開",
+  "created_at": "2022-10-29T13:53:37+09:00",
+  "updated_at": "2022-10-29T13:53:37+09:00",
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize"
+},
+{
+  "resource_url": "http://wedata.net/items/85982",
+  "data": {
+    "pageElement": "//div[@class='srBox2']",
+    "nextLink": "//li[@class='active']/following-sibling::li[1]/a",
+    "url": "^https://www\\.supergenji\\.jp/",
+    "exampleUrl": "https://www.supergenji.jp/item/sietaix.php?rp=https%3A%2F%2Fwww.supergenji.jp&gk=a&rc=50&sm=s&of=6&CID=1&sl=1000&mojicode=utf8"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "sunny",
+  "name": "古本検索サイト・スーパー源氏",
+  "created_at": "2022-10-29T13:04:03+09:00",
+  "updated_at": "2022-10-29T15:53:20+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/85981",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//section[@class='job-area']",
+    "nextLink": "//li[@class='page-next']/a",
+    "url": "^https://kyoin-saiyo\\.jp/",
+    "exampleUrl": "https://kyoin-saiyo.jp/job_search/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "sunny",
+  "name": "教員採用.jp",
+  "created_at": "2022-10-29T11:54:11+09:00",
+  "updated_at": "2022-10-29T11:54:11+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/85980",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[@class='shienbox08']//div[@class='shienbox08']",
+    "nextLink": "//a[@rel='next']",
+    "url": "^https://www\\.osaka-shigaku\\.gr\\.jp/",
+    "exampleUrl": "https://www.osaka-shigaku.gr.jp/?get_cats%5B%5D=english&s=&submit=%E6%A4%9C%E7%B4%A2"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "sunny",
+  "name": "大阪私立中学校高等学校連合会",
+  "created_at": "2022-10-29T11:43:08+09:00",
+  "updated_at": "2022-10-29T11:43:08+09:00"
+},
+{
+  "data": {
+    "insertBefore": "",
     "pageElement": "//div[@class='sons']",
     "nextLink": "//a[@class='amore']",
     "url": "^https://so\\.gushiwen\\.cn/",
@@ -2663,7 +2722,7 @@
   "resource_url": "http://wedata.net/items/85691",
   "data": {
     "pageElement": "//div[@class='wp']/*",
-    "nextLink": "//a[@class='wp-block-ve-nextpage-copy__text']",
+    "nextLink": "//div[@class='wp']/descendant::a[last()][contains(@href,//meta[@name='cXenseParse:articleid']/@content)]",
     "url": "^https://i-voce\\.jp/feed/",
     "exampleUrl": "https://i-voce.jp/feed/663858/"
   },
@@ -2671,7 +2730,7 @@
   "created_by": "t_f_m_",
   "name": "VoCE",
   "created_at": "2021-07-01T20:10:47+09:00",
-  "updated_at": "2021-07-02T07:23:21+09:00"
+  "updated_at": "2022-10-29T17:02:51+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85690",
