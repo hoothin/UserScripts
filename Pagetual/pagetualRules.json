@@ -1,6 +1,18 @@
 [
     {
-        "name": "漫畫櫃 - 手機版閱讀 - 直接載入整個章節的圖片 代碼參考取至https://sleazyfork.org/zh-TW/scripts/39122",
+        "name": "嗨皮漫畫 - 給本王顯示全部章節",
+        "example": "https://m.happymh.com/manga/daiwangraoming",
+        "url": "^https://m\\.happymh\\.com/manga/",
+        "autoClick": "#expandButton"
+    },
+    {
+        "name": "嗨皮漫畫 - 更新頁",
+        "example": "https://m.happymh.com/latest",
+        "url": "^https://m\\.happymh\\.com/latest$",
+        "loadMore": ".more-div-btn"
+    },
+    {
+        "name": "看漫画 - 手機版閱讀 - 直接載入整個章節的圖片 代碼參考取至https://sleazyfork.org/zh-TW/scripts/39122",
         "example": "https://m.manhuagui.com/comic/19430/220363.html",
         "url": "^https?://m\\.manhuagui\\.com/comic/",
         "nextLink": "0",
@@ -8,13 +20,13 @@
         "css": ".action-list li{width:50%!important}#action>ul>li:nth-child(n+2):nth-child(-n+3),.manga-page{display:none!important}"
     },
     {
-        "name": "漫畫櫃 - 手機版 點選檢視下20條記錄",
+        "name": "看漫画 - 手機版 檢視下20條記錄",
         "example": "https://m.manhuagui.com/list/update.html",
         "url": "^https://m\\.manhuagui\\.com/(list|update|rank)/",
         "loadMore": ".more-go"
     },
     {
-        "name": "漫畫櫃 - 閱讀 - 直接載入整個章節的圖片 代碼參考取至https://sleazyfork.org/zh-TW/scripts/39122",
+        "name": "看漫画 - 閱讀 - 直接載入整個章節的圖片 代碼參考取至https://sleazyfork.org/zh-TW/scripts/39122",
         "example": "https://www.manhuagui.com/comic/19430/219425.html",
         "url": "^https?://(tw|www)\\.manhuagui\\.com/comic/",
         "nextLink": "0",
@@ -22,7 +34,7 @@
         "css": ".title>div:not(.fr)>span,#pageSelect,.main-btn>a[href^='j'],.pager>a[href*='goPage'],.pager>span{display:none!important}#mangaBox>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
     },
     {
-        "name": "漫畫屋 - 分類",
+        "name": "看漫画 - 分類",
         "example": "https://www.manhuagui.com/list/lianzai/",
         "url": "^https?://(www|tw)\\.manhuagui\\.com/list/",
         "nextLink": "span.current+a",
@@ -38,7 +50,7 @@
         "nextLink": "a.cur+a",
         "pageElement": ".ptview>img:not([style])",
         "replaceElement": ".setnmh-pagedos",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove();setTimeout(()=>{let last=document.querySelector('.setnmh-readagin');let lastimg=document.querySelector('.ptview>img:last-child');let p=document.createElement('p');p.innerText='本話/集已達最後一頁';p.style='font-size:24px;height: 40px;line-height: 40px;text-align: center;margin: 10px auto;';if(last){lastimg.parentNode.insertBefore(p,lastimg);lastimg.remove()}},200)",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();setTimeout(()=>{let last=document.querySelector('.setnmh-readagin');let lastimg=document.querySelector('.ptview>img:last-child');let p=document.createElement('p');p.innerText='本章節已達最後一頁';p.style='font-size:24px;height: 40px;line-height: 40px;text-align: center;margin: 10px auto;';if(last){lastimg.parentNode.insertBefore(p,lastimg);lastimg.remove()}},200)",
         "initRun": 1,
         "autoLoadNum": "0",
         "css": ".setnmh-seebox img{margin-bottom:0!important;box-shadow:none!important}"
@@ -63,10 +75,13 @@
         "css": ".chapter_content_img{opacity:1!important}"
     },
     {
-        "name": "zero搬运网 - PC版閱讀去頁碼壓縮圖片上下邊界",
-        "example": "http://www.zerobywgeat.com/plugin.php?id=jameson_manhua&a=read&zjid=346233",
+        "name": "zero搬运网 - PC版閱讀",
+        "example": "http://www.zerobywgeat.com/plugin.php?id=jameson_manhua&a=read&zjid=346180",
         "url": "^https?://www\\.zerobywgeat\\.com/plugin\\.php",
-        "nextLink": "0",
+        "nextLink": "//a[span[contains(@uk-icon,'right')]]",
+        "pageElement": ".uk-zjimg",
+        "replaceElement": ".uk-grid-collapse,.uk-text-center",
+        "pageBarText": 1,
         "css": ".uk-text-center.xg1.xs2{display:none!important}img[id]{margin-top:0px!important;margin-bottom:0px!important}"
     },
     {
@@ -221,7 +236,7 @@
         "pageElement": "#cp_img,.main-404-img",
         "lazyImgSrc": "0",
         "rate": 3,
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove();let last=document.querySelector('.main-404-img');if(last){let para=document.createElement('p');para.innerText='本章節已達最後一頁';para.style='height: 40px;line-height: 40px;text-align: center;';last.parentNode.insertBefore(para,last);last.remove()}",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();let last=document.querySelector('.main-404-img');if(last){let p=document.createElement('p');p.innerText='本章節已達最後一頁';p.style='height: 40px;line-height: 40px;text-align: center;';last.parentNode.insertBefore(p,last);last.remove()}",
         "css": ".main-404-img,.view-bottom-bar > li:nth-child(2),.view-bottom-bar > li:nth-child(3){display:none!important}.view-bottom-bar li{width:50%!important}"
     },
     {
@@ -430,7 +445,7 @@
         "init": "let _img='';for(let i=0;i<chapterImages.length;i++){let imghost=pageImage.match(/^(https?:\\/\\/[^/]+\\/)/)[1];if(location.hostname=='www.qianwee.com' || location.hostname=='www.zuimh.com' || location.hostname=='www.mhxin.com'){_img+=`<img src=\"${chapterImages[i]}\">`}else if(location.hostname=='www.ykmh.com'){_img+=`<img src=\"${imghost}${chapterImages[i]}\">`}else{_img+=`<img src=\"${imghost}${chapterPath}${chapterImages[i]}\">`}};document.querySelector('#images').innerHTML=_img",
         "nextLink": "0",
         "pinUrl": true,
-        "css": ".nav-pagination,.img_land_prev,.img_land_next,#page_select,.img_info{display:none!important}#images>img{max-width: 100% !important;display: block !important;margin: 0 auto -2px auto !important;}"
+        "css": ".nav-pagination,.img_land_prev,.img_land_next,#page_select,.img_info,.title.pr>em:nth-child(5),.title.pr>span{display:none!important}#images>img{max-width: 100% !important;display: block !important;margin: 0 auto -2px auto !important;}"
     },
     {
         "name": "90漫畫網 - 分類",
@@ -451,7 +466,7 @@
     },
     {
         "name": "古漫画 / 360 漫画 - 下拉模式閱讀去頁碼去APP",
-        "example": "https://www.izhegu.com/manhua/zhuangbeiwozuiqiang/2192395.html",
+        "example": "https://www.izhegu.com/manhua/zhuangbeiwozuiqiang/2192395.html，https://www.100fanwo.com/manhua/banbenDAYS/3434626.html",
         "url": "^https?://(www|m)\\.(izhegu|100fanwo)\\.com/manhua/[a-z]+/\\d+\\.html",
         "css": "p.img_info,.item.active,#action > li:nth-child(2),#action > li:nth-child(3),#ion > ul > li:nth-child(2),#ion > ul > li:nth-child(3){display:none!important}.tbCenter img{border:0px!important}.tction-list2 li,.ion-list2 li{width:50%!important}",
         "nextLink": "0"
@@ -480,11 +495,11 @@
     },
     {
         "name": "漫画星球PC版 / 6 漫画PC版 / 奇漫屋手機版 - 閱讀 - 圖片提前全部載入",
-        "example": "http://www.mhxqiu1.com/22914/1235326.html",
-        "url": "^https?://(www\\.)?(mhxqiu1|sixmh7|qiman\\d+)\\.com/\\d+/\\d+\\.html",
-        "init": "setTimeout(()=>{if(location.hostname=='qiman57.com'){let imgs=document.querySelectorAll('img.lazy[data-original]');[].forEach.call(imgs,img=>{let f=img.getAttribute('data-original');img.src=f;img.removeAttribute('data-original');img.removeAttribute('style')})}else{let imgs=document.querySelectorAll('img.lazy');[].forEach.call(imgs,img=>{img.referrerPolicy='no-referrer';let f=img.getAttribute('data-src');img.src=f})}let ps=document.querySelectorAll('p.num');[].forEach.call(ps,p=>{p.style.display='none';p.nextSibling.style.display='none'})},1000)",
+        "example": "http://www.mhxqiu1.com/22914/1235326.html，http://qiman57.com/21429/999976.html，http://m.qiman57.com/21429/999975.html",
+        "url": "^https?://(www\\.|m\\.)?(mhxqiu1|sixmh7|qiman\\d+)\\.com/\\d+/\\d+\\.html",
+        "init": "setTimeout(()=>{if(location.hostname=='qiman57.com' || location.hostname=='m.qiman57.com'){let imgs=document.querySelectorAll('img.lazy[data-original]');[].forEach.call(imgs,img=>{let f=img.getAttribute('data-original');img.src=f;img.removeAttribute('data-original');img.removeAttribute('style')})}else{let imgs=document.querySelectorAll('img.lazy');[].forEach.call(imgs,img=>{img.referrerPolicy='no-referrer';let f=img.getAttribute('data-src');img.src=f})}let ps=document.querySelectorAll('p.num');[].forEach.call(ps,p=>{p.style.display='none';p.nextSibling.style.display='none'})},1000)",
         "nextLink": "0",
-        "css": "body.view .logo-sub-wrap{display:none!important}.loaded.lazy {max-width: 100% !important;margin: 0 auto !important;}"
+        "css": "body.view .logo-sub-wrap,.guide-download{display:none!important}.loaded.lazy {max-width: 100% !important;margin: 0 auto !important;}"
     },
     {
         "name": "漫画星球 / 6 漫画 / 奇漫屋 - 手機版分類",
@@ -502,10 +517,11 @@
         "replaceElement": ".NewPages"
     },
     {
-        "name": "733 动漫 - 手機版漫畫閱讀",
+        "name": "733 动漫 - 手機版漫畫閱讀 - 直接載入整個章節的圖片",
         "example": "https://m.733.so/mh/54709/1353912/1.html",
         "url": "^https?://m\\.733\\.so/mh/\\d+/\\d+/\\d+\\.html",
         "init": "document.querySelector('#pic_box').innerHTML = temp_pic_all.replaceAll('<p>','').replaceAll('</p>','');",
+        "nextLink": "0",
         "pinUrl": true,
         "css": "#pic_box img{margin-bottom:-5px!important}"
     },
@@ -520,12 +536,12 @@
         "css": ".pagetual_pageBar{margin-top:-10px!important}"
     },
     {
-        "name": "爱漫之家 / 733 动漫 - 漫畫閱讀",
-        "example": "http://www.17fuman.com/rszimukaitou/34599/171775.html，https://www.733.so/mh/26810/1615580.html",
+        "name": "爱漫之家 / 733 动漫 - 漫畫閱讀 - 直接載入整個章節的圖片",
+        "example": "http://www.17fuman.com/rszimukaitou/34599/171775.html，https://www.733.so/mh/56534/1396417.html",
         "url": "^https?://www\\.(17fuman|733)\\.(com|so)/[a-z]+/\\d+/\\d+\\.html",
         "init": "let _img='',imgArr=qTcms_S_m_murl.split('$qingtiandy$');for(let i=0;i<imgArr.length;i++){if(location.hostname=='www.733.so'){imgArr[i]=f_qTcms_Pic_curUrl_realpic(imgArr[i])};_img+=`<img src=\"${imgArr[i]}\">`};document.querySelector('#qTcms_Pic_middle td').innerHTML=_img;",
         "nextLink": "0",
-        "css": "#prev,#k_next,#k_pageSelect,#pager{display:none!important}"
+        "css": "#prev,#k_next,#k_pageSelect,#pager,.title.pr>em:nth-child(5),.title.pr>span{display:none!important}td[align='center']>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
     },
     {
         "name": "木马漫画 - 閱讀 - 去頁碼停止自動匹配",
@@ -585,7 +601,7 @@
         "pageAction": "document.querySelector('.pagetual_pageBar').remove();"
     },
     {
-        "name": "快岸漫画 - 閱讀 - 單擊、兩側模式(只支持網站的刷新模式:1)",
+        "name": "快岸漫画 - 閱讀 - 單擊、兩側模式(只支持網站的刷新模式:1) 還是用網站內建的下拉模式吧",
         "enable": 0,
         "example": "http://www.kanbook.net/1755/1/1",
         "url": "^https?://www\\.kanbook\\.net/\\d+/\\d+/\\d+",
@@ -643,7 +659,7 @@
         "css": "aside{display:none!important}#mhimg0 img {max-width: 98% !important;display: block !important;margin: 0 auto !important;}"
     },
     {
-        "name": "新新漫画 - 閱讀",
+        "name": "新新漫画 - 閱讀 - 直接載入整個章節的圖片",
         "example": "http://www.77mh.xyz/201802/380433.html",
         "url": "^https?://www\\.77mh\\.[a-z]{2,3}/\\d+/\\d+\\.html",
         "init": "setTimeout(()=>{let _img='';for(let i=0;i<arr.length;i++){_img+=`<img src=\"${img_qianz}${arr[i]}\">`};document.querySelector('#comicImg').innerHTML=_img},1000);",
@@ -661,7 +677,7 @@
     },
     {
         "name": "漫漫聚 / KuKu动漫 - 閱讀",
-        "example": "http://www.manmanju.com/comiclist/3658/97532/1.htm",
+        "example": "http://www.manmanju.com/comiclist/3658/97532/1.htm，http://manhua.ikukudm.com/comiclist/3756/102656/1.htm，http://m.manmanju.com/comiclist/3658/97532/1.htm，",
         "url": "^https?://(m|www|manhua)\\.(manmanju|ikukudm)\\.com/comiclist/\\d+/\\d+/\\d+\\.htm$",
         "action": 1,
         "init": "let ia = document.querySelector('input~a');let sa = document.querySelector('script[language]+a');if(ia){ia.removeAttribute('href');}else{sa.removeAttribute('href');}",
@@ -675,7 +691,7 @@
     },
     {
         "name": "漫漫聚 / KuKu动漫 - 分類",
-        "example": "http://www.manmanju.com/comictype/3_1.htm",
+        "example": "http://www.manmanju.com/comictype/3_1.htm，http://manhua.ikukudm.com/comictype/3_1.htm",
         "url": "^https?://(m|www|manhua)\\.(manmanju|ikukudm)\\.com/comictype/",
         "nextLink": "//a[text()='下一页'] | //a[span[text()='下一页']]",
         "pageElement": "//dl[@id='comicmain'] | //div[@class='imgBox']",
@@ -693,15 +709,6 @@
         "css": ".article-content img, #newsArticle img{visibility:visible!important;opacity:1!important;}"
     },
     {
-        "name": "好漫 6 / 漫客栈 - 卷軸模式修正PC版漫畫下架 不自動翻頁",
-        "example": "https://www.haoman6.com/chapter/1630368，https://www.g-lens.com/chapter/983463",
-        "url": "^https?://www\\.(haoman6|g-lens|mkzhan)\\.com/(chapter|\\d+)/\\d+",
-        "enable": 0,
-        "init": "let imgs=document.querySelectorAll('img.lazy-read');[].forEach.call(imgs,img=>{let de=img.getAttribute('data-ecp');let pe=img.getAttribute('pc-ec');let dc=img.getAttribute('data-src');if(de!=null){img.src=de}else if(pe!=null){img.src=pe}else if(dc!=null){img.src=dc}})",
-        "nextLink": "0",
-        "css": ".ds,.adv-img,#global-mask-content,.guide-hd-banner,#global-mask,.comic-list>a{display:none!important}#mainView{margin-top:0px!important}.rd-article__pic{min-height: auto!important}"
-    },
-    {
         "name": "漫客栈 - 卷軸模式",
         "example": "https://www.mkzhan.com/216512/1007019.html",
         "url": "^https?://www\\.mkzhan\\.com/\\d+/\\d+\\.html",
@@ -714,7 +721,16 @@
         "pageInit": "let imgs=doc.querySelectorAll('img.lazy-read');[].forEach.call(imgs,img=>{let dc=img.getAttribute('data-src');img.src=dc})",
         "replaceElement": ".rd-aside__item.j-rd-prev,.rd-aside__item.j-rd-next",
         "pageBarText": 1,
-        "css": ".ds,.adv-img{display:none!important}#mainView{margin-top:0px!important}.rd-article__pic{min-height: auto!important}"
+        "css": ".ds,.adv-img,.page-index__btn{display:none!important}#mainView{margin-top:0px!important}.rd-article__pic{min-height: auto!important}"
+    },
+    {
+        "name": "好漫 6 - 卷軸模式修正PC版漫畫下架 不自動翻頁",
+        "example": "https://www.haoman6.com/chapter/1630368，https://www.g-lens.com/chapter/983463",
+        "url": "^https?://www\\.(haoman6|g-lens|mkzhan)\\.com/(chapter|\\d+)/\\d+",
+        "enable": 1,
+        "init": "let imgs=document.querySelectorAll('img.lazy-read');[].forEach.call(imgs,img=>{let de=img.getAttribute('data-ecp');let pe=img.getAttribute('pc-ec');let dc=img.getAttribute('data-src');if(de!=null){img.src=de}else if(pe!=null){img.src=pe}else if(dc!=null){img.src=dc}})",
+        "nextLink": "0",
+        "css": ".ds,.adv-img,#global-mask-content,.guide-hd-banner,#global-mask,.comic-list>a{display:none!important}#mainView{margin-top:0px!important}.rd-article__pic{min-height: auto!important}"
     },
     {
         "name": "好漫 6 - 卷軸模式修正PC版漫畫下架 自動翻頁",
@@ -860,7 +876,7 @@
     },
     {
         "name": "快看 - 分類",
-        "example": "https://www.kuaikanmanhua.com/tag/0?region=1&pays=0&state=0&sort=1&page=1",
+        "example": "https://www.kuaikanmanhua.com/tag/0",
         "url": "^https?://www\\.kuaikanmanhua\\.com/tag/\\d+",
         "init": "let link=document.querySelector('.headerContent > div > ul > li:nth-child(2) > a');link.href=`/tag/0\\?region=1&pays=0&state=0&sort=1&page=1`;link.removeAttribute('target');if (!location.search){document.querySelector('.selList.fl.cls>a:first-child').click();}",
         "action": 1,
@@ -894,6 +910,139 @@
         "pageElement": "img.comic_img,.comic-wrapper>.read-next",
         "replaceElement": ".comic-wrapper>a:last-child,.header_word",
         "css": ".comic-wrapper {overflow-y: initial !important;} .comic_img{display: inline;}"
+    },
+    {
+        "name": "R3SUB - 搜索",
+        "example": "https://r3sub.com/search.php?s=king",
+        "url": "^https?://r3sub\\.com/search\\.php",
+        "nextLink": "li.active+li>a",
+        "pageElement": ".movie.movie--preview.ddd",
+        "replaceElement": ".pagination",
+        "css": ".pagetual_pageBar{margin-top:10px!important;}.pagetual_pageBar+.movie{margin-top:-2px!important;}"
+    },
+    {
+        "name": "SubHD",
+        "example": "https://subhd.tv/sub/movie",
+        "url": "^https?://subhd(tw)?\\.(tv|com|la|cc|me)/(zu|sub|search)/",
+        "include": "nav.clearfix",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": ".bg-white.shadow-sm.rounded-3",
+        "replaceElement": ".pagination",
+        "insert": "nav.clearfix",
+        "insertPos": 1,
+        "css": ".col-lg-3.pt-5{display:none!important}.pagetual_pageBar{margin-top:-10px!important;}",
+        "rate": 3,
+        "sleep": 1000
+    },
+    {
+        "name": "伪射手网",
+        "example": "http://assrt.net/xml/list/sub/",
+        "url": "^https?://assrt\\.net/",
+        "nextLinkByJs": "let next = doc.querySelector('#pl-current+a'); if (next) return location.origin + location.pathname + '?page=' + next.innerText",
+        "pageElement": ".subitem:not([style])",
+        "replaceElement": ".pagelinkcard",
+        "insert": ".pagelinkcard",
+        "insertPos": 1,
+        "css": ".pagetual_pageBar{margin-top:10px!important}.pagetual_pageBar+.subitem{margin-top:-2px!important}"
+    },
+    {
+        "name": "A4k 字幕網",
+        "example": "https://www.a4k.net/",
+        "url": "^https?://www\\.a4k\\.net/",
+        "nextLink": "a.pager__item--next",
+        "pageElement": ".list>.item",
+        "replaceElement": "nav.pager"
+    },
+    {
+        "name": "字幕库 zmk",
+        "example": "https://zimuku.org/",
+        "url": "^https?://zimuku\\.org/",
+        "nextLink": "a.next",
+        "pageElement": "table>tbody",
+        "replaceElement": ".pagination"
+    },
+    {
+        "name": "中文字幕网 zimuzimu",
+        "example": "http://cn.zimuzimu.com/so_zimu.htm?q=2020",
+        "url": "^https?://cn\\.zimuzimu\\.com/",
+        "nextLink": "li.page-item.active+li>a",
+        "pageElement": "li.thread",
+        "replaceElement": ".pagination"
+    },
+    {
+        "name": "點點字幕",
+        "example": "http://www.ddzimu.com/download/xslist.php?key=king",
+        "url": "^https?://www\\.ddzimu\\.com/\\w+/xslist\\.php",
+        "nextLink": "li.disabled+li>a",
+        "pageElement": ".list>ul>li:not(.first)",
+        "replaceElement": "div.pagination"
+    },
+    {
+        "name": "bt1207",
+        "example": "http://ibt120701.xyz/search?keyword=king",
+        "url": "^https?://.*(bt1207|skrbtjo).+/",
+        "nextLinkByJs": "let n=doc.querySelector('ul.pagination>li.active+li>a');if(!n)return null;let params=[]; let form=doc.querySelector('#search-form'); [].forEach.call(form.querySelectorAll('input'), input=>{ if(input.name=='p')params.push('p='+n.innerText);else params.push(input.name+'='+input.value); }); return form.action+'?'+params.join('&');",
+        "pageElement": "ul.list-unstyled",
+        "replaceElement": "nav>.pagination",
+        "css": ".pagetual_pageBar+.list-unstyled{margin-top:0px!important;}"
+    },
+    {
+        "name": "RARBG",
+        "example": "https://rarbg.to/torrents.php?category=movies",
+        "url": "^https?://rarbg\\.to/",
+        "include": "#pager_links",
+        "nextLink": "#pager_links>a[title='next page']",
+        "pageElement": "table.lista2t tr.lista2",
+        "replaceElement": "#pager_links",
+        "sleep": 1000
+    },
+    {
+        "name": "limetorrents.cc",
+        "example": "https://www.limetorrents.lol/browse-torrents/Movies/",
+        "url": "^https?://www\\.limetorrents\\.lol/(browse-torrents|search)/",
+        "nextLink": "#next",
+        "pageElement": "table.table2>tbody>tr:not(:first-of-type)",
+        "replaceElement": ".search_stat"
+    },
+    {
+        "name": "BT 之家",
+        "example": "https://www.btbtt15.com/forum-index-fid-950.htm",
+        "url": "^https?://www\\.btbtt\\d+\\.com/",
+        "nextLink": "//div[@class='page']/a[text()='▶' or text()='下一页']",
+        "pageElement": "#threadlist",
+        "replaceElement": "div+div.page",
+        "css": ".pagetual_pageBar+div{margin-top:-10px!important;}",
+        "rate": 3
+    },
+    {
+        "name": "蜜柑计划",
+        "example": "https://mikanani.me/Home/Classic",
+        "url": "^https?://mikanani\\.me/Home/Classic",
+        "action": 1,
+        "nextLinkByJs": "let next = doc.querySelector('.pagination>li.active+li:not([style]):not([class])>a'); if (next) return location.origin + location.pathname.replace(/\\/\\d+$/,'') + '/' + next.innerText",
+        "pageElement": "//table/tbody/tr",
+        "replaceElement": ".pagination",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();"
+    },
+    {
+        "name": "動漫花園",
+        "example": "http://share.dmhy.org/topics/list/sort_id/2",
+        "url": "^https?://(www|share|dmhy)?(\\.)?(dmhy|anoneko)\\.(org|com)",
+        "action": 1,
+        "nextLink": "//a[text()='下一頁']",
+        "pageElement": "thead+tbody",
+        "replaceElement": ".table.clear>.nav_title,script+.nav_title",
+        "rate": 3
+    },
+    {
+        "name": "愛戀動漫&MioBT",
+        "example": "http://www.kisssub.org/，http://miobt.com/",
+        "url": "^https?://(www\\.|m|share\\.)?(kisssub|miobt|comicat|acgnx|anix|36dm)\\.(org|com|se|moe|club)",
+        "action": 1,
+        "nextLink": "span.current+a",
+        "pageElement": "#data_list>tr,.lists",
+        "replaceElement": ".pages.clear",
+        "rate": 2
     },
     {
         "name": "言耽社 - 閱讀",
@@ -1077,6 +1226,17 @@
         "replaceElement": ".pagelist"
     },
     {
+        "name": "筆趣影視",
+        "example": "http://biquys.com/acg/y2022/",
+        "url": "^https?://(www\\.)?biquys.com/(acg|zongyi|mov|tv)/",
+        "action": 1,
+        "nextLink": "//a[@class='a1' and text()='下一页']",
+        "pageElement": ".index-tj",
+        "replaceElement": ".page",
+        "wait": "let img=doc.querySelector('ul.main img');return img!=null",
+        "css": ".pagetual_pageBar{margin-top:-10px!important;}.mb {margin-bottom: 10px!important;}"
+    },
+    {
         "name": "游研社",
         "example": "https://www.yystv.cn/docs",
         "url": "^https?://www\\.yystv\\.cn/",
@@ -1202,11 +1362,250 @@
         "css": ".pagetual_pageBar{margin-bottom:20px!important}"
     },
     {
+        "name": "飛極速線上",
+        "example": "http://www.fjisu2.com/acg/japan/",
+        "url": "^https?://(www\\.|m\\.)?(fjisu|feijisu)\\d+\\.com/\\w+/\\w+/",
+        "action": 1,
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": ".b-listtab,.picTxt>.picTxt",
+        "replaceElement": ".pages",
+        "css": ".pagetual_pageBar+div {margin-top: -10px !important;}"
+    },
+    {
         "name": "淘豆网 - 閱讀",
         "example": "https://m.taodocs.com/p-118668992.html",
         "url": "^https?://m\\.taodocs\\.com/",
         "autoClick": ".view",
         "loadMore": "#moreBtn"
+    },
+    {
+        "name": "200btsow.vip",
+        "example": "https://200btsow.vip/",
+        "url": "^https?://200btsow\\.vip/",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": ".file-list>tbody>tr:not(:nth-last-child(-n+2))",
+        "replaceElement": "//a[text()='下一页']"
+    },
+    {
+        "name": "onehu.xyz",
+        "example": "https://onehu.xyz/",
+        "url": "^https?://onehu\\.xyz/",
+        "nextLink": "li.active+li>a",
+        "pageElement": "#page-content>.row>div:not(.center-align)",
+        "replaceElement": ".pagination"
+    },
+    {
+        "name": "小众软件",
+        "example": "https://www.appinn.com/abouttime/amp/",
+        "url": "^https?://www\\.appinn\\.com/",
+        "nextLink": "a.next,.next>a",
+        "pageElement": "article,.amp-post-title,.amp-featured-image,.cntn-wrp",
+        "replaceElement": "#pagination,.pagination,.sp-lt,.s_stk",
+        "css": ".pagetual_pageBar{margin-top:0px!important}"
+    },
+    {
+        "name": "Winaero",
+        "example": "https://winaero.com/category/windows-10/",
+        "url": "^https?://winaero\\.com/",
+        "nextLink": "a.next",
+        "pageElement": "#main>article",
+        "replaceElement": ".pagination",
+        "css": ".pagetual_pageBar{margin-top:0px!important}"
+    },
+    {
+        "name": "cahdroid",
+        "example": "https://cahdroid.com/",
+        "url": "^https?://cahdroid\\.com/",
+        "include": ".pagination",
+        "nextLink": "span.page-numbers.current+a",
+        "pageElement": ".relat,.post-show",
+        "replaceElement": ".pagination",
+        "css": ".pagetual_pageBar{margin-top:10px!important;}"
+    },
+    {
+        "name": "4download",
+        "example": "https://4download.net/software/",
+        "url": "^https?://4download\\.net/",
+        "include": ".pagi-nav.clearfix.ignore-select",
+        "nextLink": "span.pnext>a",
+        "pageElement": ".short-item",
+        "replaceElement": ".pagi-nav",
+        "rate": 2,
+        "css": ".pagetual_pageBar{margin-top:-10px!important;margin-bottom:18px!important;}"
+    },
+    {
+        "name": "菜鸟教程 - 分类页",
+        "example": "https://www.runoob.com/w3cnote",
+        "url": "^https?://www\\.runoob\\.com/w3cnote",
+        "nextLink": "li.next-page>a",
+        "pageElement": ".archive-list>.archive-list-item",
+        "replaceElement": "#wp_page_numbers"
+    },
+    {
+        "name": "菜鸟教程 - 文章页",
+        "example": "https://www.runoob.com/js/js-tutorial.html",
+        "url": "^https?://www\\.runoob\\.com/[a-z/-]+\\.html",
+        "action": 1,
+        "nextLink": "a[style^='b']+a,a[style^='b']+br+h2+a",
+        "pageElement": ".article-heading, .article-body",
+        "waitElement": [
+            "a[target='_top'][style^='background']"
+        ],
+        "replaceElement": ".sidebar-box"
+    },
+    {
+        "name": "奔跑中的奶酪",
+        "example": "http://www.runningcheese.com/",
+        "url": "^https?://www\\.runningcheese\\.com/",
+        "nextLink": "a.next",
+        "pageElement": ".ajaxpost",
+        "replaceElement": ".pagination"
+    },
+    {
+        "name": "423down",
+        "example": "https://www.423down.com/",
+        "url": "^https?://www\\.423down\\.com/",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": ".content>.excerpt, .commentlist>li",
+        "replaceElement": ".paging, .pagenav"
+    },
+    {
+        "name": "大眼仔旭",
+        "example": "http://www.dayanzai.me/",
+        "url": "^https?://www\\.dayanzai\\.me/",
+        "nextLink": ".page>span+a",
+        "pageElement": "ul.c-news",
+        "replaceElement": ".page"
+    },
+    {
+        "name": "果核剥壳",
+        "example": "https://www.ghxi.com/category/all/pcsoft",
+        "url": "^https?://www\\.ghxi\\.com/",
+        "nextLink": "a.next",
+        "pageElement": "ul.post-loop>.item",
+        "replaceElement": ".pagination",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();"
+    },
+    {
+        "name": "億破姐&電腦系統吧",
+        "example": "http://www.dnxitong.com/soft/",
+        "url": "^https?://www\\.(ypojie|dnxitong)\\.com/",
+        "nextLink": ".next-page>a",
+        "pageElement": "article[class^='excerpt excerpt-']",
+        "replaceElement": ".pagination",
+        "rate": 3,
+        "css": ".pagetual_pageBar{margin-top:12px!important;}"
+    },
+    {
+        "name": "KaranPc",
+        "example": "https://karanpc.com/windows/download-managers/",
+        "url": "^https?://karanpc\\.com/",
+        "include": "#nav-below",
+        "nextLink": "a.next",
+        "pageElement": "article[id^='post']",
+        "replaceElement": "#nav-below",
+        "css": ".pagetual_pageBar{margin-top:-6px!important;}"
+    },
+    {
+        "name": "Blogger",
+        "example": "https://www.azofreeware.com/",
+        "url": "^https?://[^/]+/",
+        "include": "#blog-pager-older-link",
+        "nextLink": ".blog-pager-older-link",
+        "pageElement": ".blog-posts.hfeed",
+        "replaceElement": "#blog-pager",
+        "css": ".pagetual_pageBar{margin-top:-10px!important;}"
+    },
+    {
+        "name": "Apkpure",
+        "example": "https://apkpure.com/tw/game",
+        "url": "^https?://apkpure\\.com/",
+        "nextLink": "a.loadmore",
+        "pageElement": "#pagedata",
+        "replaceElement": ".loadmore",
+        "css": ".pagetual_pageBar{margin-top:-5px!important;}.pagetual_pageBar+ul{margin-top:-30px!important;}"
+    },
+    {
+        "name": "軟體部落",
+        "example": "https://softblog.tw/green-portable",
+        "url": "^https?://softblog\\.tw/",
+        "include": ".page-numbers",
+        "nextLink": "a.next",
+        "pageElement": "#blog-entries",
+        "replaceElement": ".oceanwp-pagination.clr",
+        "css": ".pagetual_pageBar{margin-top:-10px!important;}"
+    },
+    {
+        "name": "Gdaily",
+        "example": "https://www.gdaily.org/software",
+        "url": "^https?://www\\.gdaily\\.org/(search|software|app|online|teaching)",
+        "nextLink": "li.active+li>a",
+        "pageElement": ".columns .column",
+        "replaceElement": ".navigation",
+        "history": 2,
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();"
+    },
+    {
+        "name": "94i.in - 自動簽到",
+        "example": "https://94i.in/",
+        "url": "^https://94i\\.in/",
+        "autoClick": "#pper_a:not([style='display: none;'])"
+    },
+    {
+        "name": "Mobile01 - 手機版內文",
+        "example": "https://m.mobile01.com/topicdetail.php?f=300&t=6660682",
+        "url": "^https?://m\\.mobile01\\.com/topicdetail",
+        "nextLink": ".c-pagination--next",
+        "pageElement": ".u-gapNextV--lg>.u-gapNextV--md",
+        "replaceElement": ".u-gapNextV--lg.u-tac",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
+        "rate": 2,
+        "sleep": 1000
+    },
+    {
+        "name": "Mobile01 - 內文",
+        "example": "https://www.mobile01.com/topicdetail.php?f=300&t=6660682",
+        "url": "^https?://www\\.mobile01\\.com/topicdetail",
+        "nextLink": "li.l-pagination__page.is-active+li>a",
+        "pageElement": "//div[(div/@class='l-articlePage__author') and @class='l-articlePage']",
+        "replaceElement": "ul.l-pagination",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
+        "rate": 2,
+        "sleep": 1000
+    },
+    {
+        "name": "Mobile01 - 文章列表",
+        "example": "https://www.mobile01.com/topiclist.php?f=300",
+        "url": "^https?://(www|m)\\.mobile01\\.com/(forumtopic|topiclist)",
+        "nextLink": "li.l-pagination__page.is-active+li>a,.c-pagination--next",
+        "pageElement": ".l-listTable__tbody,.u-gapNextV--lg>.u-gapNextV--lg>div[class$='u-gapNextV--lg'] .l-articleList",
+        "replaceElement": ".l-tabulate__action,.l-pagination",
+        "rate": 3,
+        "sleep": 2000
+    },
+    {
+        "name": "巴哈姆特 - 內文",
+        "example": "https://forum.gamer.com.tw/C.php?bsn=23805&snA=610529&tnum=14858",
+        "url": "^https?://forum\\.gamer\\.com.tw/C\\.php",
+        "nextLink": "a.next",
+        "pageElement": ".c-section[id*='post']",
+        "replaceElement": [
+            "div.forum-ad_top+section>.c-section__main>#BH-pagebtn",
+            "section+section>.c-section__main>#BH-pagebtn"
+        ],
+        "css": ".pagetual_pageBar{margin-bottom:10px!important;}"
+    },
+    {
+        "name": "巴哈姆特 - 文章列表",
+        "example": "https://forum.gamer.com.tw/B.php?bsn=23805",
+        "url": "^https?://forum\\.gamer\\.com.tw/B\\.php",
+        "nextLink": "a.next",
+        "pageElement": ".b-list>tbody>tr:not(.b-list__head)",
+        "replaceElement": [
+            ".forum-ad_top+.b-pager.pager",
+            ".b-popular.popular+.b-pager.pager"
+        ],
+        "pageAction": "Forum.B.lazyThumbnail();Forum.Common.drawNoImageCanvas();"
     },
     {
         "name": "gogo人体艺术",
@@ -2806,10 +3205,10 @@
         "css": ".pagetual_pageBar{margin-top:-10px!important;}"
     },
     {
-        "name": "7mmtv - 漫畫",
+        "name": "7mmtv - 漫畫 - 直接載入全部圖片",
         "example": "https://0vrlcn.7mmtv.sx/zh/hcomic_content/4162/content.html",
         "url": "^https?://\\w+\\.7mmtv\\.sx/(zh|en|ja|ko)/hcomic_content/",
-        "init": "let _img='';for(let i=1;i<=Large_cgurl.length-1;i++){_img+=`<img src=\"${Large_cgurl[i]}\"class=\"img-responsive\">`};document.getElementById('show_cg_html').innerHTML=_img;",
+        "init": "let _img='';for(let i=1;i<=Large_cgurl.length-1;i++){_img+=`<img src=\"${Large_cgurl[i]}\"class=\"img-responsive\">`};document.querySelector('#show_cg_html').innerHTML=_img;",
         "css": ".ut1_img_content_js,.fullcomics-controls,.video-introduction-images-row>center>*:not(#content) {display: none !important;}.img-responsive{max-width:100%}",
         "pinUrl": true
     },
@@ -3175,17 +3574,6 @@
         "replaceElement": ".pagination",
         "lazyImgSrc": "data-srcset",
         "css": ".home-rows-videos-div{margin-bottom:10px!important;}.search-pagination{margin-top:-50px!important;}"
-    },
-    {
-        "name": "筆趣影視",
-        "example": "http://biquys.com/acg/y2022/",
-        "url": "^https?://(www\\.)?biquys.com/(acg|zongyi|mov|tv)/",
-        "action": 1,
-        "nextLink": "//a[@class='a1' and text()='下一页']",
-        "pageElement": ".index-tj",
-        "replaceElement": ".page",
-        "wait": "let img=doc.querySelector('ul.main img');return img!=null",
-        "css": ".pagetual_pageBar{margin-top:-10px!important;}.mb {margin-bottom: 10px!important;}"
     },
     {
         "name": "尤物妹妹圖 - 看圖",
@@ -3919,389 +4307,18 @@
     {
         "name": "XVIDEOS",
         "example": "https://www.xvideos.com/",
-        "url": "^https?://www\\.(xvideos|xnxx)\\.com",
-        "include": ".pagination",
+        "url": "^https?://www\\.(xvideos|xnxx)\\.com/",
         "nextLink": "//li[a/@class='active']/following-sibling::li[1]/a",
+        "pinUrl": true,
         "pageElement": ".mozaique.cust-nb-cols",
         "replaceElement": ".pagination",
-        "pageAction": "xv.thumb_block_initiator.init_listing();",
-        "css": ".pagetual_pageBar+div{margin-top: -10px!important;}"
-    },
-    {
-        "name": "200btsow.vip",
-        "example": "https://200btsow.vip/",
-        "url": "^https?://200btsow\\.vip/",
-        "nextLink": "//a[text()='下一页']",
-        "pageElement": ".file-list>tbody>tr:not(:nth-last-child(-n+2))",
-        "replaceElement": "//a[text()='下一页']"
-    },
-    {
-        "name": "onehu.xyz",
-        "example": "https://onehu.xyz/",
-        "url": "^https?://onehu\\.xyz/",
-        "nextLink": "li.active+li>a",
-        "pageElement": "#page-content>.row>div:not(.center-align)",
-        "replaceElement": ".pagination"
-    },
-    {
-        "name": "小众软件",
-        "example": "https://www.appinn.com/abouttime/amp/",
-        "url": "^https?://www\\.appinn\\.com/",
-        "nextLink": "a.next,.next>a",
-        "pageElement": "article,.amp-post-title,.amp-featured-image,.cntn-wrp",
-        "replaceElement": "#pagination,.pagination,.sp-lt,.s_stk",
-        "css": ".pagetual_pageBar{margin-top:0px!important}"
-    },
-    {
-        "name": "Winaero",
-        "example": "https://winaero.com/category/windows-10/",
-        "url": "^https?://winaero\\.com/",
-        "nextLink": "a.next",
-        "pageElement": "#main>article",
-        "replaceElement": ".pagination",
-        "css": ".pagetual_pageBar{margin-top:0px!important}"
-    },
-    {
-        "name": "cahdroid",
-        "example": "https://cahdroid.com/",
-        "url": "^https?://cahdroid\\.com/",
-        "include": ".pagination",
-        "nextLink": "span.page-numbers.current+a",
-        "pageElement": ".relat,.post-show",
-        "replaceElement": ".pagination",
-        "css": ".pagetual_pageBar{margin-top:10px!important;}"
-    },
-    {
-        "name": "4download",
-        "example": "https://4download.net/software/",
-        "url": "^https?://4download\\.net/",
-        "include": ".pagi-nav.clearfix.ignore-select",
-        "nextLink": "span.pnext>a",
-        "pageElement": ".short-item",
-        "replaceElement": ".pagi-nav",
-        "rate": 2,
-        "css": ".pagetual_pageBar{margin-top:-10px!important;margin-bottom:18px!important;}"
-    },
-    {
-        "name": "菜鸟教程 - 分类页",
-        "example": "https://www.runoob.com/w3cnote",
-        "url": "^https?://www\\.runoob\\.com/w3cnote",
-        "nextLink": "li.next-page>a",
-        "pageElement": ".archive-list>.archive-list-item",
-        "replaceElement": "#wp_page_numbers"
-    },
-    {
-        "name": "菜鸟教程 - 文章页",
-        "example": "https://www.runoob.com/js/js-tutorial.html",
-        "url": "^https?://www\\.runoob\\.com/[a-z/-]+\\.html",
-        "action": 1,
-        "nextLink": "a[style^='b']+a,a[style^='b']+br+h2+a",
-        "pageElement": ".article-heading, .article-body",
-        "waitElement": [
-            "a[target='_top'][style^='background']"
-        ],
-        "replaceElement": ".sidebar-box"
-    },
-    {
-        "name": "奔跑中的奶酪",
-        "example": "http://www.runningcheese.com/",
-        "url": "^https?://www\\.runningcheese\\.com/",
-        "nextLink": "a.next",
-        "pageElement": ".ajaxpost",
-        "replaceElement": ".pagination"
-    },
-    {
-        "name": "423down",
-        "example": "https://www.423down.com/",
-        "url": "^https?://www\\.423down\\.com/",
-        "nextLink": "//a[text()='下一页']",
-        "pageElement": ".content>.excerpt, .commentlist>li",
-        "replaceElement": ".paging, .pagenav"
-    },
-    {
-        "name": "大眼仔旭",
-        "example": "http://www.dayanzai.me/",
-        "url": "^https?://www\\.dayanzai\\.me/",
-        "nextLink": ".page>span+a",
-        "pageElement": "ul.c-news",
-        "replaceElement": ".page"
-    },
-    {
-        "name": "果核剥壳",
-        "example": "https://www.ghxi.com/category/all/pcsoft",
-        "url": "^https?://www\\.ghxi\\.com/",
-        "nextLink": "a.next",
-        "pageElement": "ul.post-loop>.item",
-        "replaceElement": ".pagination",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove();"
-    },
-    {
-        "name": "億破姐&電腦系統吧",
-        "example": "http://www.dnxitong.com/soft/",
-        "url": "^https?://www\\.(ypojie|dnxitong)\\.com/",
-        "nextLink": ".next-page>a",
-        "pageElement": "article[class^='excerpt excerpt-']",
-        "replaceElement": ".pagination",
-        "rate": 3,
-        "css": ".pagetual_pageBar{margin-top:12px!important;}"
-    },
-    {
-        "name": "KaranPc",
-        "example": "https://karanpc.com/windows/download-managers/",
-        "url": "^https?://karanpc\\.com/",
-        "include": "#nav-below",
-        "nextLink": "a.next",
-        "pageElement": "article[id^='post']",
-        "replaceElement": "#nav-below",
-        "css": ".pagetual_pageBar{margin-top:-6px!important;}"
-    },
-    {
-        "name": "Blogger",
-        "example": "https://www.azofreeware.com/",
-        "url": "^https?://[^/]+/",
-        "include": "#blog-pager-older-link",
-        "nextLink": ".blog-pager-older-link",
-        "pageElement": ".blog-posts.hfeed",
-        "replaceElement": "#blog-pager",
-        "css": ".pagetual_pageBar{margin-top:-10px!important;}"
-    },
-    {
-        "name": "Apkpure",
-        "example": "https://apkpure.com/tw/game",
-        "url": "^https?://apkpure\\.com/",
-        "nextLink": "a.loadmore",
-        "pageElement": "#pagedata",
-        "replaceElement": ".loadmore",
-        "css": ".pagetual_pageBar{margin-top:-5px!important;}.pagetual_pageBar+ul{margin-top:-30px!important;}"
-    },
-    {
-        "name": "軟體部落",
-        "example": "https://softblog.tw/green-portable",
-        "url": "^https?://softblog\\.tw/",
-        "include": ".page-numbers",
-        "nextLink": "a.next",
-        "pageElement": "#blog-entries",
-        "replaceElement": ".oceanwp-pagination.clr",
-        "css": ".pagetual_pageBar{margin-top:-10px!important;}"
-    },
-    {
-        "name": "Mobile01 - 手機版內文",
-        "example": "https://m.mobile01.com/topicdetail.php?f=300&t=6660682",
-        "url": "^https?://m\\.mobile01\\.com/topicdetail",
-        "nextLink": ".c-pagination--next",
-        "pageElement": ".u-gapNextV--lg>.u-gapNextV--md",
-        "replaceElement": ".u-gapNextV--lg.u-tac",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
-        "rate": 2,
-        "sleep": 1000
-    },
-    {
-        "name": "Mobile01 - 內文",
-        "example": "https://www.mobile01.com/topicdetail.php?f=300&t=6660682",
-        "url": "^https?://www\\.mobile01\\.com/topicdetail",
-        "nextLink": "li.l-pagination__page.is-active+li>a",
-        "pageElement": "//div[(div/@class='l-articlePage__author') and @class='l-articlePage']",
-        "replaceElement": "ul.l-pagination",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
-        "rate": 2,
-        "sleep": 1000
-    },
-    {
-        "name": "Mobile01 - 文章列表",
-        "example": "https://www.mobile01.com/topiclist.php?f=300",
-        "url": "^https?://(www|m)\\.mobile01\\.com/(forumtopic|topiclist)",
-        "nextLink": "li.l-pagination__page.is-active+li>a,.c-pagination--next",
-        "pageElement": ".l-listTable__tbody,.u-gapNextV--lg>.u-gapNextV--lg>div[class$='u-gapNextV--lg'] .l-articleList",
-        "replaceElement": ".l-tabulate__action,.l-pagination",
-        "rate": 3,
-        "sleep": 2000
-    },
-    {
-        "name": "巴哈姆特 - 內文",
-        "example": "https://forum.gamer.com.tw/C.php?bsn=23805&snA=610529&tnum=14858",
-        "url": "^https?://forum\\.gamer\\.com.tw/C\\.php",
-        "nextLink": "a.next",
-        "pageElement": ".c-section[id*='post']",
-        "replaceElement": [
-            "div.forum-ad_top+section>.c-section__main>#BH-pagebtn",
-            "section+section>.c-section__main>#BH-pagebtn"
-        ],
-        "css": ".pagetual_pageBar{margin-bottom:10px!important;}"
-    },
-    {
-        "name": "巴哈姆特 - 文章列表",
-        "example": "https://forum.gamer.com.tw/B.php?bsn=23805",
-        "url": "^https?://forum\\.gamer\\.com.tw/B\\.php",
-        "nextLink": "a.next",
-        "pageElement": ".b-list>tbody>tr:not(.b-list__head)",
-        "replaceElement": [
-            ".forum-ad_top+.b-pager.pager",
-            ".b-popular.popular+.b-pager.pager"
-        ],
-        "pageAction": "Forum.B.lazyThumbnail();Forum.Common.drawNoImageCanvas();"
-    },
-    {
-        "name": "94i.in - 自動簽到",
-        "example": "https://94i.in/",
-        "url": "^https://94i\\.in/",
-        "autoClick": "#pper_a:not([style='display: none;'])"
-    },
-    {
-        "name": "四季線上 - 懷舊戲劇分類",
-        "example": "https://www.4gtv.tv/classicdrama",
-        "url": "^https://(www|m)\\.4gtv\\.tv/classicdrama",
-        "loadMore": "#more"
+        "pageAction": "xv.thumb_block_initiator.init_listing();"
     },
     {
         "name": "麻豆社,草麻豆",
         "example": "https://madou.club/，https://xxxmadou.com/",
         "url": "^https://(madou|xxxmadou|)\\.(club|com)/",
         "loadMore": ".ias_trigger>a"
-    },
-    {
-        "name": "嗨皮漫畫 - 給本王顯示全部章節",
-        "example": "https://m.happymh.com/manga/daiwangraoming",
-        "url": "^https://m\\.happymh\\.com/manga/",
-        "autoClick": "#expandButton"
-    },
-    {
-        "name": "嗨皮漫畫 - 更新頁",
-        "example": "https://m.happymh.com/latest",
-        "url": "^https://m\\.happymh\\.com/latest$",
-        "loadMore": ".more-div-btn"
-    },
-    {
-        "name": "R3SUB - 搜索",
-        "example": "https://r3sub.com/search.php?s=king",
-        "url": "^https?://r3sub\\.com/search\\.php",
-        "nextLink": "li.active+li>a",
-        "pageElement": ".movie.movie--preview.ddd",
-        "replaceElement": ".pagination",
-        "css": ".pagetual_pageBar{margin-top:10px!important;}.pagetual_pageBar+.movie{margin-top:-2px!important;}"
-    },
-    {
-        "name": "SubHD",
-        "example": "https://subhd.tv/sub/movie",
-        "url": "^https?://subhd(tw)?\\.(tv|com|la|cc|me)/(zu|sub|search)/",
-        "include": "nav.clearfix",
-        "nextLink": "//a[text()='下一页']",
-        "pageElement": ".bg-white.shadow-sm.rounded-3",
-        "replaceElement": ".pagination",
-        "insert": "nav.clearfix",
-        "insertPos": 1,
-        "css": ".col-lg-3.pt-5{display:none!important}.pagetual_pageBar{margin-top:-10px!important;}",
-        "rate": 3,
-        "sleep": 1000
-    },
-    {
-        "name": "伪射手网",
-        "example": "http://assrt.net/xml/list/sub/",
-        "url": "^https?://assrt\\.net/",
-        "nextLinkByJs": "let next = doc.querySelector('#pl-current+a'); if (next) return location.origin + location.pathname + '?page=' + next.innerText",
-        "pageElement": ".subitem:not([style])",
-        "replaceElement": ".pagelinkcard",
-        "insert": ".pagelinkcard",
-        "insertPos": 1,
-        "css": ".pagetual_pageBar{margin-top:10px!important}.pagetual_pageBar+.subitem{margin-top:-2px!important}"
-    },
-    {
-        "name": "A4k 字幕網",
-        "example": "https://www.a4k.net/",
-        "url": "^https?://www\\.a4k\\.net/",
-        "nextLink": "a.pager__item--next",
-        "pageElement": ".list>.item",
-        "replaceElement": "nav.pager"
-    },
-    {
-        "name": "字幕库 zmk",
-        "example": "https://zimuku.org/",
-        "url": "^https?://zimuku\\.org/",
-        "nextLink": "a.next",
-        "pageElement": "table>tbody",
-        "replaceElement": ".pagination"
-    },
-    {
-        "name": "中文字幕网 zimuzimu",
-        "example": "http://cn.zimuzimu.com/so_zimu.htm?q=2020",
-        "url": "^https?://cn\\.zimuzimu\\.com/",
-        "nextLink": "li.page-item.active+li>a",
-        "pageElement": "li.thread",
-        "replaceElement": ".pagination"
-    },
-    {
-        "name": "點點字幕",
-        "example": "http://www.ddzimu.com/download/xslist.php?key=king",
-        "url": "^https?://www\\.ddzimu\\.com/\\w+/xslist\\.php",
-        "nextLink": "li.disabled+li>a",
-        "pageElement": ".list>ul>li:not(.first)",
-        "replaceElement": "div.pagination"
-    },
-    {
-        "name": "bt1207",
-        "example": "http://ibt120701.xyz/search?keyword=king",
-        "url": "^https?://.*(bt1207|skrbtjo).+/",
-        "nextLinkByJs": "let n=doc.querySelector('ul.pagination>li.active+li>a');if(!n)return null;let params=[]; let form=doc.querySelector('#search-form'); [].forEach.call(form.querySelectorAll('input'), input=>{ if(input.name=='p')params.push('p='+n.innerText);else params.push(input.name+'='+input.value); }); return form.action+'?'+params.join('&');",
-        "pageElement": "ul.list-unstyled",
-        "replaceElement": "nav>.pagination",
-        "css": ".pagetual_pageBar+.list-unstyled{margin-top:0px!important;}"
-    },
-    {
-        "name": "RARBG",
-        "example": "https://rarbg.to/torrents.php?category=movies",
-        "url": "^https?://rarbg\\.to/",
-        "include": "#pager_links",
-        "nextLink": "#pager_links>a[title='next page']",
-        "pageElement": "table.lista2t tr.lista2",
-        "replaceElement": "#pager_links",
-        "sleep": 1000
-    },
-    {
-        "name": "limetorrents.cc",
-        "example": "https://www.limetorrents.lol/browse-torrents/Movies/",
-        "url": "^https?://www\\.limetorrents\\.lol/(browse-torrents|search)/",
-        "nextLink": "#next",
-        "pageElement": "table.table2>tbody>tr:not(:first-of-type)",
-        "replaceElement": ".search_stat"
-    },
-    {
-        "name": "BT 之家",
-        "example": "https://www.btbtt15.com/forum-index-fid-950.htm",
-        "url": "^https?://www\\.btbtt\\d+\\.com/",
-        "nextLink": "//div[@class='page']/a[text()='▶' or text()='下一页']",
-        "pageElement": "#threadlist",
-        "replaceElement": "div+div.page",
-        "css": ".pagetual_pageBar+div{margin-top:-10px!important;}",
-        "rate": 3
-    },
-    {
-        "name": "蜜柑计划",
-        "example": "https://mikanani.me/Home/Classic",
-        "url": "^https?://mikanani\\.me/Home/Classic",
-        "action": 1,
-        "nextLinkByJs": "let next = doc.querySelector('.pagination>li.active+li:not([style]):not([class])>a'); if (next) return location.origin + location.pathname.replace(/\\/\\d+$/,'') + '/' + next.innerText",
-        "pageElement": "//table/tbody/tr",
-        "replaceElement": ".pagination",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove();"
-    },
-    {
-        "name": "動漫花園",
-        "example": "http://share.dmhy.org/topics/list/sort_id/2",
-        "url": "^https?://(www|share|dmhy)?(\\.)?(dmhy|anoneko)\\.(org|com)",
-        "action": 1,
-        "nextLink": "//a[text()='下一頁']",
-        "pageElement": "thead+tbody",
-        "replaceElement": ".table.clear>.nav_title,script+.nav_title",
-        "rate": 3
-    },
-    {
-        "name": "愛戀動漫&MioBT",
-        "example": "http://www.kisssub.org/，http://miobt.com/",
-        "url": "^https?://(www\\.|m|share\\.)?(kisssub|miobt|comicat|acgnx|anix|36dm)\\.(org|com|se|moe|club)",
-        "action": 1,
-        "nextLink": "span.current+a",
-        "pageElement": "#data_list>tr,.lists",
-        "replaceElement": ".pages.clear",
-        "rate": 2
     },
     {
         "name": "牛C網 - 列表",
@@ -4385,81 +4402,6 @@
         "example": "https://onejav.com/",
         "url": "^https?://onejav\\.com/$",
         "loadMore": "#button-load-more"
-    },
-    {
-        "name": "飛極速線上",
-        "example": "http://www.fjisu2.com/acg/japan/",
-        "url": "^https?://(www\\.|m\\.)?(fjisu|feijisu)\\d+\\.com/\\w+/\\w+/",
-        "action": 1,
-        "nextLink": "//a[text()='下一页']",
-        "pageElement": ".b-listtab,.picTxt>.picTxt",
-        "replaceElement": ".pages",
-        "css": ".pagetual_pageBar+div {margin-top: -10px !important;}"
-    },
-    {
-        "name": "Bookshop.tw",
-        "example": "https://www.bookshop.tw/",
-        "url": "^https?://www\\.bookshop\\.tw",
-        "action": 1,
-        "nextLink": "#url_ne[href$='htm']",
-        "pageElement": ".listbg0",
-        "replaceElement": "//td[a/@id='url_fr']",
-        "waitElement": [
-            "#url_ne[href$='htm']"
-        ]
-    },
-    {
-        "name": "Mox.moe",
-        "example": "https://mox.moe/",
-        "url": "^https?://mox\\.moe",
-        "nextLink": "//a[button/text()='下頁']",
-        "pageElement": ".listbg",
-        "replaceElement": "td.listtitle[colspan='5']"
-    },
-    {
-        "name": "BOOK☆WALKER TW 更多",
-        "example": "https://www.bookwalker.com.tw/more/index/1",
-        "url": "^https?://www\\.bookwalker\\.com\\.tw/more/",
-        "nextLink": "//li[span/@class='active']/following-sibling::li[1]/a",
-        "pageElement": ".bw_main2 > div:nth-child(2),.row.listbox.clearfix+.row.mar0pad0",
-        "replaceElement": ".bw_main2 > div:first-child,.bw_main2 > div:last-child,.pagebar",
-        "initRun": 1,
-        "autoLoadNum": 2,
-        "css": ".pagetual_pageBar{margin-top:2px!important}"
-    },
-    {
-        "name": "BOOK☆WALKER TW",
-        "example": "https://www.bookwalker.com.tw/search?m=2&series_display=1&vertical=0&order=sell_desc&s=19",
-        "url": "^https?://www\\.bookwalker\\.com\\.tw/search",
-        "nextLink": "//li[span/@class='active']/following-sibling::li[1]/a",
-        "pageElement": ".bookdesc2.clearfix,.row.listbox.clearfix+.row.mar0pad0",
-        "replaceElement": ".bw_main2 > div:first-child,.bw_main2 > div:last-child,.pagebar",
-        "initRun": 1,
-        "autoLoadNum": 2
-    },
-    {
-        "name": "BOOK☆WALKER JP - 手機版",
-        "example": "https://bookwalker.jp/new/?qsto=st2",
-        "url": "^https?://bookwalker\\.jp/(category|search|new)/",
-        "include": ".o-pager-box",
-        "nextLink": "li.o-select-box+li>a",
-        "pageElement": ".a-result-wrap,#js-display-style__list-wrap",
-        "replaceElement": ".o-pager-box",
-        "css": ".pagetual_pageBar {margin-top: 5px !important;}",
-        "rate": 2
-    },
-    {
-        "name": "BOOK☆WALKER JP",
-        "example": "https://bookwalker.jp/new/?qsto=st2",
-        "url": "^https?://bookwalker\\.jp/(category|search|new)/",
-        "include": ".o-list--menu,.o-list--footer",
-        "nextLink": ".o-pager-next>a",
-        "pageElement": ".o-contents-section__body",
-        "replaceElement": [
-            ".o-list--menu",
-            ".o-list--footer"
-        ],
-        "css": ".pagetual_pageBar {margin-top: 10px !important;}.pagetual_pageBar+div {margin-top: 0px !important;}"
     },
     {
         "name": "微圖坊 - 看圖",
@@ -4568,13 +4510,22 @@
         "css": ".pagetual_pageBar {margin-top: 10px !important;}"
     },
     {
+        "name": "3xchina.net",
+        "example": "https://3xchina.net/category/chinese-av/",
+        "url": "^https?://3xchina\\.net/",
+        "nextLink": "//a[text()='Next']",
+        "pageElement": ".videos-list",
+        "replaceElement": ".pagination",
+        "css": ".pagetual_pageBar {margin-bottom:0px!important}img[data-src]{opacity:1!important}"
+    },
+    {
         "name": "fanxxx.net",
         "example": "https://fanxxx.net/",
-        "url": "^https?://fanxxx\\.net/(av-chinese|amateur-sex|search)",
+        "url": "^https?://fanxxx\\.net/",
         "nextLink": "a[rel='next']",
         "pageElement": ".video-list",
         "replaceElement": ".pagenavi",
-        "css": ".pagetual_pageBar {margin-bottom: 10px !important;}"
+        "css": ".pagetual_pageBar {margin-bottom:10px!important;}"
     },
     {
         "name": "JAVDAY",
@@ -4583,7 +4534,7 @@
         "nextLink": ".layui-laypage-next",
         "pageElement": ".videoGroup>#app",
         "replaceElement": "div.av",
-        "css": ".pagetual_pageBar {margin-bottom: 15px !important;}"
+        "css": ".pagetual_pageBar {margin-bottom:15px!important;}"
     },
     {
         "name": "AV RBO",
@@ -4796,16 +4747,6 @@
         "autoLoadNum": "0"
     },
     {
-        "name": "Gdaily",
-        "example": "https://www.gdaily.org/software",
-        "url": "^https?://www\\.gdaily\\.org/(search|software|app|online|teaching)",
-        "nextLink": "li.active+li>a",
-        "pageElement": ".columns .column",
-        "replaceElement": ".navigation",
-        "history": 2,
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove();"
-    },
-    {
         "name": "imgasd",
         "example": "https://imgasd.com/",
         "url": "^https?://imgasd\\.com",
@@ -4824,7 +4765,7 @@
             "div.article:not(.result)+div.pager",
             "div.article.result+div.pager"
         ],
-        "css": ".pagetual_pageBar+div{margin-top:-10px !important;}",
+        "css": ".pagetual_pageBar+div{margin-top:-5px !important;}",
         "rate": 3
     },
     {
@@ -4834,7 +4775,7 @@
         "nextLink": ".image > a:not([href^='j']):nth-child(4)",
         "pageElement": ".container > img",
         "replaceElement": ".image>.index",
-        "css": ".image > a:nth-child(3),.image > a:nth-child(4){display: none!important;}.container>img {max-width: 99% !important;display: block !important;margin: 0 auto !important;}",
+        "css": ".image > a:nth-child(3),.image > a:nth-child(4){display: none!important;}.container>img {max-width: 100% !important;display: block !important;margin: 0 auto !important;}",
         "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "initRun": 1,
         "autoLoadNum": "0"
@@ -4850,7 +4791,7 @@
             "div.article>div.pager:first-child",
             "div.article>div.pager:last-child"
         ],
-        "css": ".photos > div.item {display: none!important;}",
+        "css": ".photos > div.item {display: none!important;}.pagetual_pageBar{margin-top:30px!important;margin-bottom:0px!important}",
         "pageAction": "let imgs=document.querySelectorAll('.photos img');[].forEach.call(imgs,img=>{let s=img.src;let f=s.replace('_600x0','');img.src=f});",
         "initRun": 1,
         "autoLoadNum": "0"
@@ -4866,7 +4807,7 @@
             "div.article>div.pager:first-child",
             "div.article>div.pager:last-child"
         ],
-        "css": ".photos > div.item {display: none!important;}",
+        "css": ".photos > div.item {display: none!important;}.pagetual_pageBar{margin-top:30px!important;margin-bottom:0px!important}",
         "pageAction": "document.querySelector('.pagetual_pageBar').remove();let psb=document.querySelectorAll('.photos figure.item');[].forEach.call(psb,figure=>{let s=figure.getAttribute('style');let sr=s.replace('_600x0','');figure.style=sr});",
         "initRun": 1,
         "autoLoadNum": "0"
@@ -4882,7 +4823,7 @@
             "div.article>div.pager:first-child",
             "div.article>div.pager:last-child"
         ],
-        "css": ".photos > div.item {display: none!important;}",
+        "css": ".photos > div.item {display: none!important;}.pagetual_pageBar{margin-top:30px!important;margin-bottom:0px!important}",
         "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "initRun": 1,
         "autoLoadNum": "0"
@@ -4897,7 +4838,8 @@
             "div.article>div.pager:first-child",
             "div.article>div.pager:last-child"
         ],
-        "rate": 3
+        "rate": 3,
+        "css": ".pagetual_pageBar{margin-bottom:5px!important}"
     },
     {
         "name": "hitxhot - 寫真",
@@ -4943,7 +4885,7 @@
         "replaceElement": "#nav-below"
     },
     {
-        "name": "性愛套圖 - 搜索",
+        "name": "性趣套圖 - 搜索",
         "example": "https://myjkwd.com/e/search/result/?searchid=7898",
         "url": "^https?://myjkwd\\.com/e/search/",
         "nextLink": "//a[text()='下一页']",
@@ -4953,7 +4895,7 @@
         "pageAction": "document.querySelector('.pagetual_pageBar').remove();"
     },
     {
-        "name": "性愛套圖 - 看圖",
+        "name": "性趣套圖 - 看圖",
         "example": "https://myjkwd.com/e/action/ShowInfo.php?classid=1&id=20737",
         "enable": 1,
         "url": "^https?://myjkwd\\.com/e/action/ShowInfo\\.php",
@@ -4967,7 +4909,7 @@
         "autoLoadNum": "0"
     },
     {
-        "name": "性愛套圖 - 列表",
+        "name": "性趣套圖 - 列表",
         "example": "https://myjkwd.com/e/action/ListInfo/?classid=1",
         "url": "^https?://myjkwd.com/e/action/ListInfo",
         "nextLink": "//a[text()='下一页']",
@@ -4976,6 +4918,71 @@
         "css": ".pagetual_pageBar{margin-top:10px !important;}aside.side{display:none!important;}.main-content{margin-left:0px!important;}body{background:#EDEDED!important;}",
         "initRun": 1,
         "autoLoadNum": 1
+    },
+    {
+        "name": "Bookshop.tw",
+        "example": "https://www.bookshop.tw/",
+        "url": "^https?://www\\.bookshop\\.tw",
+        "action": 1,
+        "nextLink": "#url_ne[href$='htm']",
+        "pageElement": ".listbg0",
+        "replaceElement": "//td[a/@id='url_fr']",
+        "waitElement": [
+            "#url_ne[href$='htm']"
+        ]
+    },
+    {
+        "name": "Mox.moe",
+        "example": "https://mox.moe/",
+        "url": "^https?://mox\\.moe",
+        "nextLink": "//a[button/text()='下頁']",
+        "pageElement": ".listbg",
+        "replaceElement": "td.listtitle[colspan='5']"
+    },
+    {
+        "name": "BOOK☆WALKER TW 更多",
+        "example": "https://www.bookwalker.com.tw/more/index/1",
+        "url": "^https?://www\\.bookwalker\\.com\\.tw/more/",
+        "nextLink": "//li[span/@class='active']/following-sibling::li[1]/a",
+        "pageElement": ".bw_main2 > div:nth-child(2),.row.listbox.clearfix+.row.mar0pad0",
+        "replaceElement": ".bw_main2 > div:first-child,.bw_main2 > div:last-child,.pagebar",
+        "initRun": 1,
+        "autoLoadNum": 2,
+        "css": ".pagetual_pageBar{margin-top:2px!important}"
+    },
+    {
+        "name": "BOOK☆WALKER TW",
+        "example": "https://www.bookwalker.com.tw/search?m=2&series_display=1&vertical=0&order=sell_desc&s=19",
+        "url": "^https?://www\\.bookwalker\\.com\\.tw/search",
+        "nextLink": "//li[span/@class='active']/following-sibling::li[1]/a",
+        "pageElement": ".bookdesc2.clearfix,.row.listbox.clearfix+.row.mar0pad0",
+        "replaceElement": ".bw_main2 > div:first-child,.bw_main2 > div:last-child,.pagebar",
+        "initRun": 1,
+        "autoLoadNum": 2
+    },
+    {
+        "name": "BOOK☆WALKER JP - 手機版",
+        "example": "https://bookwalker.jp/new/?qsto=st2",
+        "url": "^https?://bookwalker\\.jp/(category|search|new)/",
+        "include": ".o-pager-box",
+        "nextLink": "li.o-select-box+li>a",
+        "pageElement": ".a-result-wrap,#js-display-style__list-wrap",
+        "replaceElement": ".o-pager-box",
+        "css": ".pagetual_pageBar {margin-top: 5px !important;}",
+        "rate": 2
+    },
+    {
+        "name": "BOOK☆WALKER JP",
+        "example": "https://bookwalker.jp/new/?qsto=st2",
+        "url": "^https?://bookwalker\\.jp/(category|search|new)/",
+        "include": ".o-list--menu,.o-list--footer",
+        "nextLink": ".o-pager-next>a",
+        "pageElement": ".o-contents-section__body",
+        "replaceElement": [
+            ".o-list--menu",
+            ".o-list--footer"
+        ],
+        "css": ".pagetual_pageBar {margin-top: 10px !important;}.pagetual_pageBar+div {margin-top: 0px !important;}"
     },
     {
         "name": "博仕書屋手機版 - 閱讀",
