@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.46.61
+// @version      1.6.6.46.62
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -2812,6 +2812,30 @@
                     .customInputFrame-buttons>button:hover {
                         color: #e3f2fd;
                     }
+                    @media (prefers-color-scheme: dark) {
+                      .customInputFrame-body,
+                      .customInputFrame-input-title,
+                      .customInputFrame-body input,
+                      .customInputFrame-body textarea,
+                      .customInputFrame-body select {
+                        background-color: black;
+                        color: #d5d5d5;
+                      }
+                      .customInputFrame-body input:focus,
+                      .customInputFrame-body textarea:focus,
+                      .customInputFrame-body select:focus {
+                        background-color: #1e1e1e;
+                      }
+                      .customInputFrame-body input,
+                      .customInputFrame-body textarea,
+                      .customInputFrame-body select {
+                        border: 1px solid rgb(255 255 255 / 36%);
+                      }
+                      .customInputFrame-title,
+                      .customInputFrame-buttons>button {
+                        background: #245d8f;
+                      }
+                    }
                     `;
                     this.customInputCssEle = _GM_addStyle(this.customInputCssText);
                     let customInputFrame = document.createElement("div");
@@ -3024,6 +3048,35 @@
                         display: block;
                         cursor: pointer;
                         background: rgb(255 255 255 / 80%);
+                    }
+                    @media (prefers-color-scheme: dark) {
+                      .searchJumperModify-body,
+                      .searchJumperModify-input-title,
+                      .searchJumperModify-body>input[type=text],
+                      .searchJumperModify-body>input[type=number],
+                      .searchJumperModify-body>textarea,
+                      .searchJumperModify-body>select {
+                        background-color: black;
+                        color: #d5d5d5;
+                      }
+                      .searchJumperModify-body>input:focus,
+                      .searchJumperModify-body>textarea:focus,
+                      .searchJumperModify-body>select:focus {
+                        background-color: #1e1e1e;
+                      }
+                      .searchJumperModify-body>input[type=text],
+                      .searchJumperModify-body>input[type=number],
+                      .searchJumperModify-body>textarea {
+                        border: 1px solid rgb(255 255 255 / 36%);
+                      }
+                      .searchJumperModify-title,
+                      .searchJumperModify-buttons>button {
+                        background: #245d8f;
+                      }
+                      #rangePickerBtn {
+                        background: rgb(0 0 0 / 80%);
+                        fill: white;
+                      }
                     }
                     `;
                     this.modifyCssEle = _GM_addStyle(this.modifyCssText);
@@ -5295,16 +5348,16 @@
                 self.customInput = false;
                 let targetSites = self.getTargetSitesByName(siteNames);
                 if (e.which === 1 && e.altKey && e.shiftKey) {
-                    let html = '<title>SearchJumper Multi</title><style>body{background: black; margin: 0;}iframe{box-sizing: border-box;}iframe:nth-child(odd){padding: 0 5px 10px 0;}iframe:nth-child(even){padding: 0 0 10px 5px;}</style>';
+                    let html = '<title>SearchJumper Multi</title><style>body{background: black; margin: 0;}iframe{box-sizing: border-box;padding: 5px}</style>';
                     let c = window.open("", "_blank");
                     for (let i = 0;i < targetSites.length;i++) {
                         let siteEle = targetSites[i];
-                        if (/^http/.test(siteEle.href) && !siteEle.onclick) {
+                        if (/^https?:\/\/.+/.test(siteEle.href) && !siteEle.onclick) {
                             let mouseDownEvent = new PointerEvent("mousedown");
                             siteEle.dispatchEvent(mouseDownEvent);
                             if (self.stopInput) return;
                             let iframe = document.createElement('iframe');
-                            iframe.width = '50%';
+                            iframe.width = targetSites.length <= 2 ? '50%' : '33%';
                             iframe.height = '100%';
                             iframe.frameBorder = '0';
                             iframe.sandbox = "allow-same-origin allow-scripts allow-popups allow-forms";
@@ -5355,7 +5408,7 @@
                         let mouseDownEvent = new PointerEvent("mousedown");
                         siteEle.dispatchEvent(mouseDownEvent);
                         if (self.stopInput) return;
-                        if (/^http/.test(siteEle.href) && !siteEle.onclick) {
+                        if (/^https?:\/\/.+/.test(siteEle.href) && !siteEle.onclick) {
                             storage.setItem("lastSign", siteNames);
                             _GM_openInTab(siteEle.href, {incognito: true});
                             setTimeout(() => {
@@ -5368,7 +5421,7 @@
                     let urls=[];
                     for (let i = 0;i < targetSites.length;i++) {
                         let siteEle = targetSites[i];
-                        if (/^http/.test(siteEle.href) && !siteEle.onclick) {
+                        if (/^https?:\/\/.+/.test(siteEle.href) && !siteEle.onclick) {
                             let mouseDownEvent = new PointerEvent("mousedown");
                             siteEle.dispatchEvent(mouseDownEvent);
                             if (self.stopInput) return;
@@ -5392,7 +5445,7 @@
                         let mouseDownEvent = new PointerEvent("mousedown");
                         siteEle.dispatchEvent(mouseDownEvent);
                         if (self.stopInput) return;
-                        if (/^http/.test(siteEle.href) && !siteEle.onclick) {
+                        if (/^https?:\/\/.+/.test(siteEle.href) && !siteEle.onclick) {
                             storage.setItem("lastSign", siteNames);
                             window.open(siteEle.href, '_blank');
                             setTimeout(() => {
@@ -8722,6 +8775,36 @@
                     }
                     .maxContent .searchJumperFrame-maxBtn>#minBtn {
                         display: block;
+                    }
+                    @media (prefers-color-scheme: dark) {
+                      .searchJumperFrame-body,
+                      .searchJumperFrame-input-title,
+                      .searchJumperFrame-inputs>input,
+                      .searchJumperFrame-inputs>textarea,
+                      .searchJumperFrame-inputs>select,
+                      .searchJumperFrame-body select {
+                        background-color: black;
+                        color: #d5d5d5;
+                      }
+                      .searchJumperFrame-inputs>input:focus,
+                      .searchJumperFrame-inputs>textarea:focus,
+                      .searchJumperFrame-inputs>select:focus,
+                      .searchJumperFrame-body select:focus {
+                        background-color: #1e1e1e;
+                      }
+                      .searchJumperFrame-inputs>input,
+                      .searchJumperFrame-inputs>textarea,
+                      .searchJumperFrame-inputs>select,
+                      .searchJumperFrame-body select {
+                        border: 1px solid rgb(255 255 255 / 36%);
+                      }
+                      .searchJumperFrame-title,
+                      .searchJumperFrame-buttons>button {
+                        background: #245d8f;
+                      }
+                      .searchJumperFrame-body>.iconsCon>img {
+                        border: 2px solid #000000;
+                      }
                     }
                 `;
                 addFrameCssEle = _GM_addStyle(addFrameCssText);
