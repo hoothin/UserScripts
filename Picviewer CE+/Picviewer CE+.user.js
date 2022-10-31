@@ -11,6 +11,7 @@
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
 // @version              2022.10.27.1
+// @version              2022.10.31.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -13719,7 +13720,7 @@ ImgOps | https://imgops.com/#b#`;
                                     var host = hostArr[hostArr.length-2];
                                     saveParams.push([node.dataset.src, picName]);
                                     if (node.dataset.srcs) {
-                                        node.dataset.srcs.split(" ").forEach(src => {
+                                        node.dataset.srcs.split(",").forEach(src => {
                                             saveParams.push([src, picName]);
                                         });
                                     }
@@ -15208,10 +15209,6 @@ ImgOps | https://imgops.com/#b#`;
                             dataset(relatedThumb, 'srcs',srcs.join(","));
                             if(src){
                                 dataset(relatedThumb, 'src',src);
-                                this.img.onerror=function(e){
-                                    this.src=relatedImg.src;
-                                    dataset(relatedThumb, 'src',this.src);
-                                }
                                 this.img.src=src;
                             }
                         }
@@ -15385,7 +15382,7 @@ ImgOps | https://imgops.com/#b#`;
                             spanMark.className="pv-gallery-sidebar-thumb-container";
                             spanMark.dataset.type=item.type;
                             spanMark.dataset.src=item.src;
-                            spanMark.dataset.srcs=item.srcs?item.srcs.join(" "):"";
+                            spanMark.dataset.srcs=item.srcs?item.srcs.join(","):"";
                             if(item.xhr)spanMark.dataset.xhr=encodeURIComponent(JSON.stringify(item.xhr));
                             spanMark.dataset.description=encodeURIComponent(item.description || '');
                             spanMark.dataset.thumbSrc=item.imgSrc;
