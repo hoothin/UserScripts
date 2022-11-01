@@ -2,7 +2,7 @@
 // @name           flashViewer
 // @author         NLF & Hoothin
 // @description    围观Flash，增加 HTML5 视频速度与亮度调整
-// @version        1.2.1.7
+// @version        1.2.1.8
 // @created        2013-12-27
 // @lastUpdated    2022-10-19
 // @grant          none
@@ -1602,6 +1602,9 @@
                                 <fvspan class="fv-p-v-control-command fv-p-v-control-word fv-p-v-control-open-rate" title="速度">速
                                     <select class="fv-p-v-control-command fv-p-v-control-rate">
                                         <option value="1">原速</option>
+                                        <option value="1.25">1.25倍速</option>
+                                        <option value="1.5">1.5倍速</option>
+                                        <option value="1.75">1.75倍速</option>
                                         <option value="2">二倍速</option>
                                         <option value="3">三倍速</option>
                                         <option value="5">五倍速</option>
@@ -3092,6 +3095,9 @@
                           速
                           <select class="fv-p-v-control-rate">
                             <option value="1">原速</option>
+                            <option value="1.25">1.25倍速</option>
+                            <option value="1.5">1.5倍速</option>
+                            <option value="1.75">1.75倍速</option>
                             <option value="2">二倍速</option>
                             <option value="3">三倍速</option>
                             <option value="5">五倍速</option>
