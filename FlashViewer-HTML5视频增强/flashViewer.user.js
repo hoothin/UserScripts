@@ -1608,7 +1608,9 @@
                                         <option value="2">二倍速</option>
                                         <option value="3">三倍速</option>
                                         <option value="5">五倍速</option>
+                                        <option value="0.75">0.75倍速</option>
                                         <option value="0.5">半速</option>
+                                        <option value="0.25">0.25倍速</option>
                                         <option value="0.1">0.1速</option>
                                         <option value="input">自定义输入</option>
                                         <option disabled="disabled" style='display: none' value=''>自定义输入</option>
@@ -3101,7 +3103,9 @@
                             <option value="2">二倍速</option>
                             <option value="3">三倍速</option>
                             <option value="5">五倍速</option>
+                            <option value="0.75">0.75倍速</option>
                             <option value="0.5">半速</option>
+                            <option value="0.25">0.25倍速</option>
                             <option value="0.1">0.1速</option>
                             <option value="input">自定义输入</option>
                             <option disabled="disabled" style='display: none' value=''>自定义输入</option>
