@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/85985",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[@class='article-body']",
+    "nextLink": "//span[@class='c-pagination__item next']/a",
+    "url": "^https://esse-online\\.jp/articles/-/\\d+",
+    "exampleUrl": "https://esse-online.jp/articles/-/21206?cx_clicks_art_md=2_title"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "Griever3",
+  "name": "ESSEonline article",
+  "created_at": "2022-10-31T19:37:09+09:00",
+  "updated_at": "2022-10-31T19:37:09+09:00"
+},
+{
   "data": {
     "insertBefore": "",
     "pageElement": "//table[@class='normal']",
@@ -907,20 +922,19 @@
   "updated_at": "2022-03-04T06:39:38+09:00"
 },
 {
-  "resource_url": "http://wedata.net/items/85878",
   "data": {
-    "insertBefore": "",
-    "pageElement": "descendant::*[./article][1]",
+    "pageElement": "descendant::div[contains(@class,'footer')][1]/preceding-sibling::div[1]",
     "comment": "If pageElement is specified by article, it will affect the design.",
     "nextLink": "//span[contains(@class,'next')]/a",
     "url": "^https://esse-online\\.jp/",
     "exampleUrl": "https://esse-online.jp/list/latest"
   },
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "jigen_ldid",
+  "resource_url": "http://wedata.net/items/85878",
   "name": "ESSEonline",
   "created_at": "2022-03-03T14:06:28+09:00",
-  "updated_at": "2022-03-03T14:06:28+09:00"
+  "updated_at": "2022-10-31T20:32:26+09:00",
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize"
 },
 {
   "resource_url": "http://wedata.net/items/85876",
