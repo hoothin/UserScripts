@@ -19581,7 +19581,6 @@ ImgOps | https://imgops.com/#b#`;
                         };
                     }break;
                     case 67:{//c键
-                        e.stopPropagation();
                         clearTimeout(this.ctrlkeyDownTimer);
                     }break;
                     case 71:{//g键
@@ -19603,6 +19602,8 @@ ImgOps | https://imgops.com/#b#`;
                     }break;
                     default:break;
                 };
+                e.stopPropagation();
+                return false;
             },
 
             toolbarEventHandler:function(e){
