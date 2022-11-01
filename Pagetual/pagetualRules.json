@@ -12,25 +12,64 @@
         "loadMore": ".more-div-btn"
     },
     {
-        "name": "看漫画 - 手機版閱讀 - 直接載入整個章節的圖片 代碼參考取至https://sleazyfork.org/zh-TW/scripts/39122",
-        "example": "https://m.manhuagui.com/comic/19430/220363.html",
-        "url": "^https?://m\\.manhuagui\\.com/comic/",
-        "nextLink": "0",
-        "init": "let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/window\\[\"\\\\x65\\\\x76\\\\x61\\\\x6c\"\\]/)>-1).innerHTML.slice(26,-1);let imgDataCode=eval(code).slice(10,-11);let imgData=eval(imgDataCode);let domain='https://i.hamreus.com/';setTimeout(()=>{let _img='';for(let i=0;i<imgData.images.length;i++){_img+=`<img src=\"${domain + imgData.images[i]}?e=${imgData.sl.e}&m=${imgData.sl.m}\">`};document.querySelector('#manga').innerHTML=_img},0)",
-        "css": ".action-list li{width:50%!important}#action>ul>li:nth-child(n+2):nth-child(-n+3),.manga-page{display:none!important}"
+        "name": "嗨皮漫畫 - 閱讀 - 手動翻頁",
+        "example": "https://m.happymh.com/manga/shishijilingdishejishi",
+        "url": "^https://m\\.happymh\\.com/reads/",
+        "init": "setTimeout(()=>{let p=document.querySelector(`footer p:nth-child(2)>a[href*='reads']`);if(p){p.classList.add('MuiButton-containedPrimary')}let n=document.querySelector(`footer a[href*='readMore']`);if(n){n.classList.remove('MuiButton-containedPrimary');n.firstChild.innerText='^_^感谢阅读~已经没有下一话了哦~';let f=document.querySelector('footer>article');let p=document.createElement('p');let c=f.firstChild.getAttribute('class');p.setAttribute('class',c);p.innerHTML=f.lastChild.firstChild.outerHTML;p.firstChild.href='https://m.happymh.com/';p.firstChild.firstChild.innerText='返回主页';f.insertBefore(p,f.firstChild)}},1000)",
+        "nextLink": "//a[span[text()='下一话'] and contains(@href,'reads')]",
+        "pinUrl": true,
+        "manualMode": true
     },
     {
-        "name": "看漫画 - 手機版 檢視下20條記錄",
+        "name": "看漫画 - 手機版閱讀 - 只留下一章按鈕並加大，在底部添加返回目錄 - 直接載入整個章節的圖片 代碼參考取至https://sleazyfork.org/zh-TW/scripts/39122",
+        "example": "https://m.manhuagui.com/comic/19430/220363.html",
+        "url": "^https?://m\\.manhuagui\\.com/comic/\\d+/\\d+\\.html",
+        "init": "let b=document.body;let f=document.querySelector('footer');let a=document.createElement('a');a.href=document.querySelector('#mangaTitle>a').href;a.innerText='返回目录';a.style='display:block;color:#333;font-size:38px;line-height:60px;text-align:center;font-weight:600';b.insertBefore(a,f);let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/window\\[\"\\\\x65\\\\x76\\\\x61\\\\x6c\"\\]/)>-1).innerHTML.slice(26,-1);let imgDataCode=eval(code).slice(10,-11);let imgData=eval(imgDataCode);let domain='https://i.hamreus.com/';setTimeout(()=>{let _img='';for(let i=0;i<imgData.images.length;i++){_img+=`<img src=\"${domain + imgData.images[i]}?e=${imgData.sl.e}&m=${imgData.sl.m}\">`};document.querySelector('#manga').innerHTML=_img},0)",
+        "nextLinkByJs": "let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/window\\[\"\\\\x65\\\\x76\\\\x61\\\\x6c\"\\]/)>-1).innerHTML.slice(26,-1);let imgDataCode=eval(code).slice(10,-11);let imgData=eval(imgDataCode);let n=imgData.nextId;let nl=location.href.replace(/\\d+\\.html$/,'')+n+'.html';if(n!=0)return nl;",
+        "pinUrl": true,
+        "manualMode": true,
+        "css": ".action-list li a{font-size:40px!important;margin-top:8px!important}.action-list{height: 60px!important;}.action-list li{height: 60px!important;width:100%!important}#action>ul>li:nth-child(n+1):nth-child(-n+3),.manga-page{display:none!important}.manga-box img{border-top:0px!important;border-bottom:0px!important}"
+    },
+    {
+        "name": "看漫画 - 手機版閱讀左手模式並加大上下章按鈕，在底部添加返回目錄 - 直接載入整個章節的圖片 代碼參考取至https://sleazyfork.org/zh-TW/scripts/39122",
+        "example": "https://m.manhuagui.com/comic/19430/220363.html",
+        "url": "^https?://m\\.manhuagui\\.com/comic/\\d+/\\d+\\.html",
+        "init": "let u=document.querySelector('#action>ul');u.appendChild(u.firstChild);u.insertBefore(u.lastChild.previousSibling,u.firstChild);let b=document.body;let f=document.querySelector('footer');let a=document.createElement('a');a.href=document.querySelector('#mangaTitle>a').href;a.innerText='返回目录';a.style='display:block;color:#333;font-size:38px;line-height:60px;text-align:center;font-weight:600';b.insertBefore(a,f);let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/window\\[\"\\\\x65\\\\x76\\\\x61\\\\x6c\"\\]/)>-1).innerHTML.slice(26,-1);let imgDataCode=eval(code).slice(10,-11);let imgData=eval(imgDataCode);let domain='https://i.hamreus.com/';setTimeout(()=>{let _img='';for(let i=0;i<imgData.images.length;i++){_img+=`<img src=\"${domain + imgData.images[i]}?e=${imgData.sl.e}&m=${imgData.sl.m}\">`};document.querySelector('#manga').innerHTML=_img},0)",
+        "nextLinkByJs": "let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/window\\[\"\\\\x65\\\\x76\\\\x61\\\\x6c\"\\]/)>-1).innerHTML.slice(26,-1);let imgDataCode=eval(code).slice(10,-11);let imgData=eval(imgDataCode);let n=imgData.nextId;let nl=location.href.replace(/\\d+\\.html$/,'')+n+'.html';if(n!=0)return nl;",
+        "pinUrl": true,
+        "manualMode": true,
+        "css": ".action-list li a{font-size:40px!important;margin-top:8px!important}.action-list{height: 60px!important;}.action-list li{height: 60px!important;width:50%!important}#action>ul>li:nth-child(n+2):nth-child(-n+3),.manga-page{display:none!important}.manga-box img{border-top:0px!important;border-bottom:0px!important}"
+    },
+    {
+        "name": "看漫画 - 手機版閱讀 - 直接載入整個章節的圖片 代碼參考取至https://sleazyfork.org/zh-TW/scripts/39122",
+        "example": "https://m.manhuagui.com/comic/19430/220363.html",
+        "url": "^https?://m\\.manhuagui\\.com/comic/\\d+/\\d+\\.html",
+        "init": "let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/window\\[\"\\\\x65\\\\x76\\\\x61\\\\x6c\"\\]/)>-1).innerHTML.slice(26,-1);let imgDataCode=eval(code).slice(10,-11);let imgData=eval(imgDataCode);let domain='https://i.hamreus.com/';setTimeout(()=>{let _img='';for(let i=0;i<imgData.images.length;i++){_img+=`<img src=\"${domain + imgData.images[i]}?e=${imgData.sl.e}&m=${imgData.sl.m}\">`};document.querySelector('#manga').innerHTML=_img},0)",
+        "nextLinkByJs": "let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/window\\[\"\\\\x65\\\\x76\\\\x61\\\\x6c\"\\]/)>-1).innerHTML.slice(26,-1);let imgDataCode=eval(code).slice(10,-11);let imgData=eval(imgDataCode);let n=imgData.nextId;let nl=location.href.replace(/\\d+\\.html$/,'')+n+'.html';if(n!=0)return nl;",
+        "pinUrl": true,
+        "manualMode": true,
+        "css": ".action-list li{width:50%!important}#action>ul>li:nth-child(n+2):nth-child(-n+3),.manga-page{display:none!important}.manga-box img{border-top:0px!important;border-bottom:0px!important}"
+    },
+    {
+        "name": "看漫画手機版 - 漫画大全 檢視下20條記錄",
         "example": "https://m.manhuagui.com/list/update.html",
-        "url": "^https://m\\.manhuagui\\.com/(list|update|rank)/",
-        "loadMore": ".more-go"
+        "url": "^https://m\\.manhuagui\\.com/list/",
+        "loadMore": "#more:not([style*='none'])>.more-go"
+    },
+    {
+        "name": "看漫画手機版 - 最新更新/排行榜/書架 檢視下20條記錄",
+        "example": "https://m.manhuagui.com/list/update.html",
+        "url": "^https://m\\.manhuagui\\.com/(update|rank|user)/",
+        "nextLinkByJs": "let more = document.querySelector(`#more:not([style*='none'])>.more-go`); if (more) more.click();"
     },
     {
         "name": "看漫画 - 閱讀 - 直接載入整個章節的圖片 代碼參考取至https://sleazyfork.org/zh-TW/scripts/39122",
         "example": "https://www.manhuagui.com/comic/19430/219425.html",
-        "url": "^https?://(tw|www)\\.manhuagui\\.com/comic/",
-        "nextLink": "0",
+        "url": "^https?://(tw|www)\\.manhuagui\\.com/comic/\\d+/\\d+\\.html",
         "init": "let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/window\\[\"\\\\x65\\\\x76\\\\x61\\\\x6c\"\\]/)>-1).innerHTML.slice(26,-1);let imgDataCode=eval(code).slice(11,-11);let imgData=eval(imgDataCode);let domain='https://i.hamreus.com/';setTimeout(()=>{let _img='';for(let i=0;i<imgData.files.length;i++){_img+=`<img src=\"${domain + imgData.path + imgData.files[i]}?e=${imgData.sl.e}&m=${imgData.sl.m}\">`};document.querySelector('#mangaBox').innerHTML=_img},0)",
+        "nextLinkByJs": "let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/window\\[\"\\\\x65\\\\x76\\\\x61\\\\x6c\"\\]/)>-1).innerHTML.slice(26,-1);let imgDataCode=eval(code).slice(11,-11);let imgData=eval(imgDataCode);let n=imgData.nextId;let nl=location.href.replace(/\\d+\\.html$/,'')+n+'.html';if(n!=0)return nl;",
+        "pinUrl": true,
+        "manualMode": true,
         "css": ".title>div:not(.fr)>span,#pageSelect,.main-btn>a[href^='j'],.pager>a[href*='goPage'],.pager>span{display:none!important}#mangaBox>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
     },
     {
@@ -65,22 +104,12 @@
         "css": ".pagetual_pageBar{margin-bottom:0px!important}.pagetual_pageBar+dl{margin-top:-10px!important}"
     },
     {
-        "name": "七夕漫画 - 閱讀",
-        "example": "http://qiximh1.com/21429/1416794.html",
-        "url": "^https?://qiximh\\d+\\.com/\\d+/\\d+\\.html",
-        "nextLink": "//a[div/span[text()='下一篇'] and contains(@href,'html')]",
-        "pageElement": ".chapter_content>.comic_chapter_content",
-        "replaceElement": ".bottom_menu",
-        "pageBarText": 1,
-        "css": ".chapter_content_img{opacity:1!important}"
-    },
-    {
         "name": "zero搬运网 - PC版閱讀",
         "example": "http://www.zerobywgeat.com/plugin.php?id=jameson_manhua&a=read&zjid=346180",
         "url": "^https?://www\\.zerobywgeat\\.com/plugin\\.php",
         "nextLink": "//a[span[contains(@uk-icon,'right')]]",
         "pageElement": ".uk-zjimg",
-        "replaceElement": ".uk-grid-collapse,.uk-text-center",
+        "replaceElement": ".uk-grid-collapse,.uk-text-center,html>head",
         "pageBarText": 1,
         "css": ".uk-text-center.xg1.xs2{display:none!important}img[id]{margin-top:0px!important;margin-bottom:0px!important}"
     },
@@ -403,7 +432,7 @@
         "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "initRun": 1,
         "autoLoadNum": "0",
-        "css": ".comicpage img {max-width: 100% !important;margin: 0 auto !important;}.fanye>a:nth-child(n+2):nth-child(-n+3){display:none!important}"
+        "css": ".comicpage img{max-width:100%!important;margin:0 auto !important}.fanye>a:nth-child(n+2):nth-child(-n+3),.view-fix-bottom-bar-item:nth-child(n+4):nth-child(-n+5){display:none!important}.view-fix-bottom-bar-item{width:33.33%!important}"
     },
     {
         "name": "砂之船动漫家 - 分類",
@@ -440,11 +469,12 @@
     },
     {
         "name": "90漫畫網 / 优酷漫画 / 前未漫画 / 最漫画 / 漫画芯 - 漫畫閱讀(直接加載整個章節的圖片)",
-        "example": "http://www.90mh.com/manhua/DRAWINGzuiqiangmanhuajialiyonghuihuajinengzaiyishijiekaiwushuang/204311.html，http://www.ykmh.com/manhua/yiquanchaoren/145.html，https://www.qianwee.com/manhua/mushenji/245914.html，https://www.zuimh.com/manhua/gongzibiexiule/1454909.html",
-        "url": "^https?://www\\.(90mh|ykmh|qianwee|zuimh|mhxin)\\.com/manhua/",
+        "example": "http://www.90mh.com/manhua/DRAWINGzuiqiangmanhuajialiyonghuihuajinengzaiyishijiekaiwushuang/204311.html，http://www.ykmh.com/manhua/yiquanchaoren/145.html，https://www.qianwee.com/manhua/mushenji/245914.html，https://www.zuimh.com/manhua/gongzibiexiule/1454909.html，https://www.mhxin.com/manhua/woduzishiyongzhouyu/2103659.html",
+        "url": "^https?://www\\.(90mh|ykmh|qianwee|zuimh|mhxin)\\.com/manhua/\\w+/\\d+\\.html",
         "init": "let _img='';for(let i=0;i<chapterImages.length;i++){let imghost=pageImage.match(/^(https?:\\/\\/[^/]+\\/)/)[1];if(location.hostname=='www.qianwee.com' || location.hostname=='www.zuimh.com' || location.hostname=='www.mhxin.com'){_img+=`<img src=\"${chapterImages[i]}\">`}else if(location.hostname=='www.ykmh.com'){_img+=`<img src=\"${imghost}${chapterImages[i]}\">`}else{_img+=`<img src=\"${imghost}${chapterPath}${chapterImages[i]}\">`}};document.querySelector('#images').innerHTML=_img",
-        "nextLink": "0",
+        "nextLinkByJs": "if(nextChapterData.id&&nextChapterData.id>0) return comicUrl+nextChapterData.id+'.html'",
         "pinUrl": true,
+        "manualMode": true,
         "css": ".nav-pagination,.img_land_prev,.img_land_next,#page_select,.img_info,.title.pr>em:nth-child(5),.title.pr>span{display:none!important}#images>img{max-width: 100% !important;display: block !important;margin: 0 auto -2px auto !important;}"
     },
     {
@@ -468,8 +498,9 @@
         "name": "古漫画 / 360 漫画 - 下拉模式閱讀去頁碼去APP",
         "example": "https://www.izhegu.com/manhua/zhuangbeiwozuiqiang/2192395.html，https://www.100fanwo.com/manhua/banbenDAYS/3434626.html",
         "url": "^https?://(www|m)\\.(izhegu|100fanwo)\\.com/manhua/[a-z]+/\\d+\\.html",
-        "css": "p.img_info,.item.active,#action > li:nth-child(2),#action > li:nth-child(3),#ion > ul > li:nth-child(2),#ion > ul > li:nth-child(3){display:none!important}.tbCenter img{border:0px!important}.tction-list2 li,.ion-list2 li{width:50%!important}",
-        "nextLink": "0"
+        "nextLinkByJs": "let mn=document.querySelector('#action>li:nth-child(4)>mip-link>a');let mn2=document.querySelector('#ion>ul>li:nth-child(4)>mip-link>a');if(mn){return mn.href}else if(mn2){return mn2.href}else if(nextChapterData.id&&nextChapterData.id>0){return comicUrl+nextChapterData.id+'.html'}else if(!nextChapterData.id){return comicUrl}",
+        "manualMode": true,
+        "css": "p.img_info,.item.active,#action > li:nth-child(2),#action > li:nth-child(3),#ion > ul > li:nth-child(2),#ion > ul > li:nth-child(3){display:none!important}.tbCenter img{border:0px!important}.tction-list2 li,.ion-list2 li{width:50%!important}"
     },
     {
         "name": "优酷漫画 / 360 漫画 / 古漫画 / 前未漫画 / 最漫画 / 漫画芯 - 分類",
@@ -481,29 +512,87 @@
         "css": ".pagetual_pageBar{margin-top:-30px!important;margin-bottom:10px!important}"
     },
     {
+        "name": "动漫啦 - 閱讀 - 單頁滾動模式",
+        "example": "https://www.dongman.la/manhua/chapter/5985/160411/",
+        "url": "^https?://www\\.dongman\\.la/manhua/chapter/\\d+/\\d+/",
+        "init": "setTimeout(()=>{let link=document.querySelector('.imgListBox>a');link.removeAttribute('href')},100)",
+        "nextLink": ".imgListBox>a[href^='http']",
+        "pageElement": ".imgListBox img",
+        "replaceElement": "button.prePic,button.nextPic",
+        "rate": 3,
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
+        "css": "a.mdui-btn.mdui-btn-icon,button.prePic,button.nextPic,button.allBtn{display:none!important}.mdui-container{width:100%!important;padding:0px!important}.imgListBox img{margin-top:-4px!important}"
+    },
+    {
+        "name": "动漫啦 - 分類",
+        "example": "https://www.dongman.la/manhua/oumei/2.html",
+        "url": "^https?://www\\.dongman\\.la/manhua/[a-z]+/(\\d+\\.html)?$",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": ".cy_list_mh",
+        "replaceElement": ".NewPages",
+        "css": ".pagetual_pageBar{margin-top:-0px!important;margin-bottom:-10px!important}"
+    },
+    {
+        "name": "七夕漫画(PC/手機) / 漫画星球手機版 - 閱讀",
+        "example": "http://www.qiximh2.com/21429/1416794.html，http://m.qiximh2.com/22914/1235326.html",
+        "url": "^https?://((www|m)\\.qiximh2|m\\.mhxqiu2)\\.com/\\d+/\\d+\\.html",
+        "history": 2,
+        "pinUrl": true,
+        "init": "let imgs=document.querySelectorAll('img[data-src]');[].forEach.call(imgs,img=>{let f=img.getAttribute('data-src');img.src=f;img.removeAttribute('data-src')});",
+        "nextLink": "//a[img[@alt='下一章'] and contains(@href,'html')] | //a[p[text()='下一篇'] and contains(@href,'html')]",
+        "pageElement": ".main_img>.chapter-img-box",
+        "replaceElement": ".imgFloat>p:not(.chappl),html>head,.bottom_menu,.bottom-layout.show_footer,.top_left",
+        "pageBarText": 1,
+        "lazyImgSrc": [
+            "data-src",
+            "data-src"
+        ],
+        "pageAction": "if(location.hostname=='www.qiximh2.com'){setTimeout(()=>{let last=document.querySelector(`.imgFloat>p:nth-child(3)>a:not([href$='html'])`);if(last){document.querySelector('.cy_intro_r.wxfocus').innerHTML='<br><br><br><br><br><br><p>^_^感谢您的阅读，已经沒有下一章了哦！</p><br><p>点击下一章按钮可以返回目录哦！</p>'}},100)}",
+        "css": ".cy_intro_r>img,.cy_intro_r>p:nth-child(3),.readend{display:none!important}.cy_intro_r{height:30px!important;}"
+    },
+    {
+        "name": "七夕漫画手機版 / 漫画星球手機版 - 点击加载更多",
+        "example": "http://m.qiximh2.com/sort/1-1.html",
+        "url": "^https?://m\\.(qiximh2|mhxqiu2)\\.com/",
+        "include": ".list_notdone>button",
+        "loadMore": ".list_notdone>button"
+    },
+    {
+        "name": "七夕漫画 / 漫画星球 - 分類",
+        "example": "http://www.qiximh2.com/sort/1-1.html，http://www.mhxqiu2.com/sort/1-1.html",
+        "url": "^https?://www\\.(qiximh2|mhxqiu2)\\.com/",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": ".cy_list_mh",
+        "replaceElement": ".NewPages",
+        "css": ".pagetual_pageBar{margin-bottom:0px!important}.pagetual_pageBar+div{margin-top:-20px!important;}"
+    },
+    {
         "name": "6 漫画手機版 - 閱讀 - 圖片提前全部載入 可搭配擋廣告封鎖http://m.sixmh7.com/style/js/jquery.lazyload.min.js",
         "example": "http://m.sixmh7.com/25528/1411233.html",
         "url": "^https?://m\\.sixmh7\\.com/\\d+/\\d+\\.html",
         "init": "let imgs=document.querySelectorAll('img.lazy');[].forEach.call(imgs,img=>{img.referrerPolicy='no-referrer';let f=img.getAttribute('data-original');img.src=f;img.style.display='block'})",
-        "nextLink": "0"
+        "nextLink": ".next>a",
+        "manualMode": true
     },
     {
-        "name": "漫画星球手機版 - 閱讀 - 停止自動匹配",
+        "name": "漫画星球手機版 - 閱讀",
         "example": "http://m.mhxqiu1.com/22445/1104615.html",
         "url": "^https?://m\\.mhxqiu1\\.com/\\d+/\\d+\\.html",
-        "nextLink": "0"
+        "nextLink": ".next>a",
+        "manualMode": true
     },
     {
         "name": "漫画星球PC版 / 6 漫画PC版 / 奇漫屋手機版 - 閱讀 - 圖片提前全部載入",
-        "example": "http://www.mhxqiu1.com/22914/1235326.html，http://qiman57.com/21429/999976.html，http://m.qiman57.com/21429/999975.html",
+        "example": "http://www.mhxqiu1.com/22914/1235326.html，http://www.sixmh7.com/22914/1235326.html，http://qiman57.com/21429/999976.html，http://m.qiman57.com/21429/999975.html",
         "url": "^https?://(www\\.|m\\.)?(mhxqiu1|sixmh7|qiman\\d+)\\.com/\\d+/\\d+\\.html",
         "init": "setTimeout(()=>{if(location.hostname=='qiman57.com' || location.hostname=='m.qiman57.com'){let imgs=document.querySelectorAll('img.lazy[data-original]');[].forEach.call(imgs,img=>{let f=img.getAttribute('data-original');img.src=f;img.removeAttribute('data-original');img.removeAttribute('style')})}else{let imgs=document.querySelectorAll('img.lazy');[].forEach.call(imgs,img=>{img.referrerPolicy='no-referrer';let f=img.getAttribute('data-src');img.src=f})}let ps=document.querySelectorAll('p.num');[].forEach.call(ps,p=>{p.style.display='none';p.nextSibling.style.display='none'})},1000)",
-        "nextLink": "0",
+        "nextLink": "//a[img[@alt='下一章']] | //li[contains(@class,'next')]/a",
+        "manualMode": true,
         "css": "body.view .logo-sub-wrap,.guide-download{display:none!important}.loaded.lazy {max-width: 100% !important;margin: 0 auto !important;}"
     },
     {
         "name": "漫画星球 / 6 漫画 / 奇漫屋 - 手機版分類",
-        "example": "m.mhxqiu1.com，m.sixmh7.com",
+        "example": "m.mhxqiu1.com，m.sixmh7.com，m.qiman57.com",
         "url": "^https?://(m\\.)?(sixmh7|mhxqiu1|qiman\\d+)\\.com/(sort|rank)/",
         "loadMore": ".getmore,.getmore1",
         "nextLink": "0"
@@ -521,9 +610,10 @@
         "example": "https://m.733.so/mh/54709/1353912/1.html",
         "url": "^https?://m\\.733\\.so/mh/\\d+/\\d+/\\d+\\.html",
         "init": "document.querySelector('#pic_box').innerHTML = temp_pic_all.replaceAll('<p>','').replaceAll('</p>','');",
-        "nextLink": "0",
+        "nextLink": "//a[text()='下一话']",
+        "manualMode": true,
         "pinUrl": true,
-        "css": "#pic_box img{margin-bottom:-5px!important}"
+        "css": "#pic_box img{margin-bottom:-6px!important}.icon>.container{padding-right:0px!important;padding-left:0px!important}"
     },
     {
         "name": "733 动漫 - 手機版分類",
@@ -540,15 +630,19 @@
         "example": "http://www.17fuman.com/rszimukaitou/34599/171775.html，https://www.733.so/mh/56534/1396417.html",
         "url": "^https?://www\\.(17fuman|733)\\.(com|so)/[a-z]+/\\d+/\\d+\\.html",
         "init": "let _img='',imgArr=qTcms_S_m_murl.split('$qingtiandy$');for(let i=0;i<imgArr.length;i++){if(location.hostname=='www.733.so'){imgArr[i]=f_qTcms_Pic_curUrl_realpic(imgArr[i])};_img+=`<img src=\"${imgArr[i]}\">`};document.querySelector('#qTcms_Pic_middle td').innerHTML=_img;",
-        "nextLink": "0",
+        "nextLink": ".nextC:not([href^='j'])",
+        "pinUrl": true,
+        "manualMode": true,
         "css": "#prev,#k_next,#k_pageSelect,#pager,.title.pr>em:nth-child(5),.title.pr>span{display:none!important}td[align='center']>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
     },
     {
-        "name": "木马漫画 - 閱讀 - 去頁碼停止自動匹配",
+        "name": "木马漫画 - 閱讀 - 去頁碼",
         "example": "https://www.omyschool.com/article_detail/1/653844/%E6%B5%B7%E8%B3%8A%E7%8E%8B/1055%E8%A9%B1%20%E6%96%B0%E6%99%82%E4%BB%A3/",
         "url": "^https?://www\\.omyschool\\.com/article_detail/\\d+/\\d+/",
         "init": "function $x(xpath,context){var nodes=[];try{var doc=(context&&context.ownerDocument)||window.document;var results=doc.evaluate(xpath,context||doc,null,XPathResult.ANY_TYPE,null);var node;while(node=results.iterateNext()){nodes.push(node)}}catch(e){throw e;}return nodes}let ps=$x(`//div[(span) and contains(@class,'wrap_img')]`);[].forEach.call(ps,div=>{div.remove()});",
-        "nextLink": "0"
+        "nextLink": "//a[contains(@class,'next')][not(@href='javascript:void(0)')]",
+        "pinUrl": true,
+        "manualMode": true
     },
     {
         "name": "木马漫画 - 分類",
@@ -560,11 +654,13 @@
         "pageAction": "document.querySelector('.pagetual_pageBar').remove();"
     },
     {
-        "name": "动漫之家 - 閱讀 - 去頁碼停止自動匹配",
+        "name": "动漫之家 - 閱讀 - 去頁碼",
         "example": "https://manhua.dmzj.com/zysjkkftlo/34798.shtml",
         "url": "^https?://manhua\\.dmzj\\.com/[a-z]+/\\d+\\.shtml",
         "css": "p.curr_page{display:none!important}.inner_img{margin-top:1px!important}",
-        "nextLink": "0"
+        "nextLink": "a.fr",
+        "pinUrl": true,
+        "manualMode": true
     },
     {
         "name": "动漫之家 - 分類",
@@ -628,12 +724,13 @@
         "name": "動漫戲說 - 漫畫閱讀",
         "example": "https://comic.acgn.cc/view-202.htm",
         "url": "^https?://comic\\.acgn\\.cc/view-",
+        "history": 2,
         "action": 1,
         "init": "document.querySelectorAll('.pic[_src][id]').forEach(e=>{e.outerHTML=`<div class='pic'_src><img src='${e.getAttribute('_src')}'class='img1'></div>`});",
         "nextLink": "#next_chapter",
         "pinUrl": true,
         "pageElement": ".pic[_src]",
-        "replaceElement": "[class^='display_']",
+        "replaceElement": "[class^='display_'],html>head",
         "pageAction": "document.querySelectorAll('.pic[_src][id]').forEach(e=>{e.outerHTML=`<div class='pic'_src><img src='${e.getAttribute('_src')}'class='img1'></div>`});",
         "pageBarText": 1,
         "css": ".btn_wrap,#ss-toolbar{display:none!important}"
@@ -663,7 +760,9 @@
         "example": "http://www.77mh.xyz/201802/380433.html",
         "url": "^https?://www\\.77mh\\.[a-z]{2,3}/\\d+/\\d+\\.html",
         "init": "setTimeout(()=>{let _img='';for(let i=0;i<arr.length;i++){_img+=`<img src=\"${img_qianz}${arr[i]}\">`};document.querySelector('#comicImg').innerHTML=_img},1000);",
-        "nextLink": "0",
+        "nextLink": "#pnpage>a:nth-child(2)",
+        "pinUrl": true,
+        "manualMode": true,
         "css": "#main>*:not(#comicImg),.qrcode_div{display:none!important}#comicImg>img{max-width: 98% !important;display: block !important;margin: 0 auto !important;}"
     },
     {
@@ -712,14 +811,14 @@
         "name": "漫客栈 - 卷軸模式",
         "example": "https://www.mkzhan.com/216512/1007019.html",
         "url": "^https?://www\\.mkzhan\\.com/\\d+/\\d+\\.html",
-        "enable": 1,
+        "history": 2,
         "action": 1,
         "wait": 1000,
         "init": "let imgs=document.querySelectorAll('img.lazy-read');[].forEach.call(imgs,img=>{let dc=img.getAttribute('data-src');img.src=dc})",
         "nextLinkByJs": "let next = doc.querySelector('.rd-aside__item.j-rd-next:not([style])'); if (next) return location.origin + next.getAttribute('href')",
         "pageElement": "#pages-tpl",
         "pageInit": "let imgs=doc.querySelectorAll('img.lazy-read');[].forEach.call(imgs,img=>{let dc=img.getAttribute('data-src');img.src=dc})",
-        "replaceElement": ".rd-aside__item.j-rd-prev,.rd-aside__item.j-rd-next",
+        "replaceElement": ".rd-aside__item.j-rd-prev,.rd-aside__item.j-rd-next,html>head",
         "pageBarText": 1,
         "css": ".ds,.adv-img,.page-index__btn{display:none!important}#mainView{margin-top:0px!important}.rd-article__pic{min-height: auto!important}"
     },
@@ -727,21 +826,22 @@
         "name": "好漫 6 - 卷軸模式修正PC版漫畫下架 不自動翻頁",
         "example": "https://www.haoman6.com/chapter/1630368，https://www.g-lens.com/chapter/983463",
         "url": "^https?://www\\.(haoman6|g-lens|mkzhan)\\.com/(chapter|\\d+)/\\d+",
-        "enable": 1,
         "init": "let imgs=document.querySelectorAll('img.lazy-read');[].forEach.call(imgs,img=>{let de=img.getAttribute('data-ecp');let pe=img.getAttribute('pc-ec');let dc=img.getAttribute('data-src');if(de!=null){img.src=de}else if(pe!=null){img.src=pe}else if(dc!=null){img.src=dc}})",
-        "nextLink": "0",
+        "nextLinkByJs": "let next = doc.querySelector('.rd-aside__item.j-rd-next:not([style])'); if (next) return location.origin + next.getAttribute('_href')",
+        "pinUrl": true,
+        "manualMode": true,
         "css": ".ds,.adv-img,#global-mask-content,.guide-hd-banner,#global-mask,.comic-list>a{display:none!important}#mainView{margin-top:0px!important}.rd-article__pic{min-height: auto!important}"
     },
     {
         "name": "好漫 6 - 卷軸模式修正PC版漫畫下架 自動翻頁",
         "example": "https://www.haoman6.com/chapter/1630368，https://www.g-lens.com/chapter/983463，https://www.mkzhan.com/216512/1007019.html",
         "url": "^https?://www\\.(haoman6|g-lens)\\.com/chapter/\\d+",
-        "enable": 0,
+        "history": 2,
         "action": 1,
         "wait": 1000,
         "init": "let imgs=document.querySelectorAll('img.lazy-read');[].forEach.call(imgs,img=>{let de=img.getAttribute('data-ecp');let pe=img.getAttribute('pc-ec');let dc=img.getAttribute('data-src');if(de!=null){img.src=de}else if(pe!=null){img.src=pe}else if(dc!=null){img.src=dc}})",
         "nextLinkByJs": "let next = doc.querySelector('.rd-aside__item.j-rd-next:not([style])'); if (next) return location.origin + next.getAttribute('_href')",
-        "pageElement": ".rd-article-wr",
+        "pageElement": ".rd-article-wr,html>head",
         "pageInit": "let imgs=doc.querySelectorAll('img.lazy-read');[].forEach.call(imgs,img=>{let de=img.getAttribute('data-ecp');let pe=img.getAttribute('pc-ec');let dc=img.getAttribute('data-src');if(de!=null){img.src=de}else if(pe!=null){img.src=pe}else if(dc!=null){img.src=dc}})",
         "replaceElement": ".rd-aside__item.j-rd-prev,.rd-aside__item.j-rd-next",
         "pageBarText": 1,
@@ -768,7 +868,9 @@
         "example": "http://www.manben.com/m1330792/",
         "url": "^https?://www\\.manben\\.com/m\\d+/",
         "init": "setTimeout(()=>{let imgs=document.querySelectorAll('img.lazy');[].forEach.call(imgs,img=>{img.referrerPolicy='no-referrer';let f=img.getAttribute('data-src');img.src=f});let ps=document.querySelectorAll('p.num');[].forEach.call(ps,p=>{p.style.display='none';p.nextSibling.style.display='none'})},1000)",
-        "nextLink": "0",
+        "nextLink": "//a[img[@alt='下一章'] and not(@href='javascript:void(0);')]",
+        "pinUrl": true,
+        "manualMode": true,
         "css": "body.view .logo-sub-wrap{display:none!important}.loaded.lazy {max-width: 100% !important;margin: 0 auto !important;}"
     },
     {
@@ -796,27 +898,6 @@
         "css": ".pagetual_pageBar {margin-top: -10px !important;margin-bottom: 20px !important;}"
     },
     {
-        "name": "动漫啦 - 閱讀 - 單頁滾動模式",
-        "example": "https://www.dongman.la/manhua/chapter/5985/160411/",
-        "url": "^https?://www\\.dongman\\.la/manhua/chapter/\\d+/\\d+/",
-        "init": "setTimeout(()=>{let link=document.querySelector('.imgListBox>a');link.removeAttribute('href')},100)",
-        "nextLink": ".imgListBox>a[href^='http']",
-        "pageElement": ".imgListBox img",
-        "replaceElement": "button.prePic,button.nextPic",
-        "rate": 3,
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
-        "css": "a.mdui-btn.mdui-btn-icon,button.prePic,button.nextPic,button.allBtn{display:none!important}.mdui-container{width:100%!important;padding:0px!important}.imgListBox img{margin-top:-4px!important}"
-    },
-    {
-        "name": "动漫啦 - 分類",
-        "example": "https://www.dongman.la/manhua/oumei/2.html",
-        "url": "^https?://www\\.dongman\\.la/manhua/[a-z]+/(\\d+\\.html)?$",
-        "nextLink": "//a[text()='下一页']",
-        "pageElement": ".cy_list_mh",
-        "replaceElement": ".NewPages",
-        "css": ".pagetual_pageBar{margin-top:-0px!important;margin-bottom:-10px!important}"
-    },
-    {
         "name": "二次元動漫 - 閱讀",
         "example": "https://www.2animx.com/index-look-name-%E5%A6%96%E7%A5%9E%E8%A8%98-cid-22592-id-235546",
         "url": "^https?://www\\.2animx\\.com/index-look-name",
@@ -825,7 +906,8 @@
         "replaceElement": "script+div.c,.e+.c,.b",
         "pageAction": "document.querySelector('.pagetual_pageBar').remove();",
         "initRun": 1,
-        "autoLoadNum": "0"
+        "autoLoadNum": "0",
+        "css": ".e>h1,.e>p,.fb-share-button,#index_mian,.c>.fanye,.c>select,#k_zsy{display:none!important}#img_ad_img>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
     },
     {
         "name": "二次元動漫 - 分類",
@@ -839,11 +921,13 @@
         "name": "酷漫屋 - 閱讀",
         "example": "http://www.kumw5.com/24186/1259138.html",
         "url": "^https?://www\\.(kumw|kuman)\\d+\\.com/\\d+/\\d+\\.html$",
+        "history": 2,
         "action": 1,
         "nextLink": "a.next[href$='html']",
         "pageElement": ".main_img",
-        "replaceElement": ".chapend",
-        "pageBarText": 1
+        "replaceElement": ".chapend,html>head",
+        "pageBarText": 1,
+        "css": ".chapter-img-box{margin-bottom:-1px!important}.chapend .next,.chapend .prev{margin:0 auto!important}"
     },
     {
         "name": "酷漫屋 - 分類",
@@ -858,11 +942,13 @@
         "name": "酷漫屋手機版 - 閱讀",
         "example": "http://m.kumw5.com/25387/1391493.html",
         "url": "^https?://m\\.(kumw|kuman)\\d+\\.com/\\d+/\\d+\\.html",
+        "history": 2,
         "action": 1,
         "nextLink": "li.end-itm.next>a[href$='html']",
         "pageElement": ".main_img",
-        "replaceElement": ".chapter-end",
-        "pageBarText": 1
+        "replaceElement": ".chapter-end,.rd-static,div.title,html>head",
+        "pageBarText": 1,
+        "css": ".img_Page{display:none!important}"
     },
     {
         "name": "酷漫屋手機版 - 分類",
@@ -898,7 +984,7 @@
         "action": 1,
         "nextLink": "//a[not(@href='javascript:void(0);') and text()='下一话']",
         "pageElement": ".imgList",
-        "replaceElement": ".AdjacentChapters",
+        "replaceElement": ".AdjacentChapters,html>head",
         "css": ".giude{display:none!important}",
         "pageBarText": 1
     },
@@ -2570,7 +2656,6 @@
     {
         "name": "BeautyLeg - 圖片",
         "example": "http://www.beautyleg6.com/xingganmeinv/201406/133.html",
-        "enable": 1,
         "url": "^https?://www.beautyleg\\d+\\.com/.+\\.html",
         "init": "function $x(xpath,context){var nodes=[];try{var doc=(context&&context.ownerDocument)||window.document;var results=doc.evaluate(xpath,context||doc,null,XPathResult.ANY_TYPE,null);var node;while(node=results.iterateNext()){nodes.push(node)}}catch(e){throw e;}return nodes}let as=$x(`//div[@class='contents']/a[not(img)]`);[].forEach.call(as,a=>{a.remove()});let ams=$x(`//div[@class='contents']/a`);[].forEach.call(ams,a=>{a.removeAttribute('href')});let brs=$x(`//div[@class='contents']/br`);[].forEach.call(brs,br=>{br.remove()});let ads=$x(`//div[@class='ad']`);[].forEach.call(ads,div=>{div.remove()});",
         "nextLink": "//a[text()='下一页']",
@@ -3547,7 +3632,9 @@
     {
         "name": "禁漫天堂 - 分类页",
         "example": "https://18comic.vip/，https://18comic.org/",
-        "url": "^https?://18comic\\.(vip|org)/(albums|search|blogs|videos|movies|promotes)",
+        "url": "^https?://18comic\\.(vip|org)/(album|search|blogs|videos|movies|promotes)",
+        "pinUrl": true,
+        "init": "let imgs=document.querySelectorAll(`img[src*='blank.jpg'][data-original]`);[].forEach.call(imgs,img=>{let f=img.getAttribute('data-original');img.src=f});",
         "nextLink": "#wrapper>.container>div:not(.row)>.pagination .prevnext",
         "pageElement": "#wrapper>.container>.row:not(:last-of-type):not(.visible-xs)",
         "replaceElement": "#wrapper>.container>div:not(.row)>.pagination",
@@ -3870,7 +3957,6 @@
     },
     {
         "name": "BuzzAV - album 相簿清單直接載入大圖可透過Picviewer CE+打包下載",
-        "enable": 1,
         "example": "https://www.buzzav.com/album/260/jk",
         "url": "^https?://www\\.buzzav\\.com/album/\\d+",
         "init": "let imgs=document.querySelectorAll('.row.content-row .img-responsive');[].forEach.call(imgs,img=>{let s=img.src;let sm=s.match(/media\\/photos\\/tmb\\//);let f=s.replace('tmb/','');if(sm){img.src=f}});",
@@ -3884,7 +3970,6 @@
     },
     {
         "name": "BuzzAV - album",
-        "enable": 0,
         "example": "https://www.buzzav.com/album/260/jk",
         "url": "^https?://www\\.buzzav\\.com/album/\\d+",
         "nextLink": ".page-item.active+li>a",
@@ -4782,7 +4867,6 @@
     },
     {
         "name": "小黃書 - 圖片清單瀏覽 - 同時加載原圖可透過Picviewer CE+打包下載",
-        "enable": 1,
         "example": "https://tw.xchina.co/photo/id-6311c6080f9a5.html",
         "url": "^https?://(tw|kr)?(\\.)?xchina\\.co/photo/",
         "nextLink": "a.next",
@@ -4798,7 +4882,6 @@
     },
     {
         "name": "小黃書 - 圖片清單瀏覽 - 背景圖顯示為原圖",
-        "enable": 0,
         "example": "https://tw.xchina.co/photo/id-6311c6080f9a5.html",
         "url": "^https?://(tw|kr)?(\\.)?xchina\\.co/photo/",
         "nextLink": "a.next",
@@ -4814,7 +4897,6 @@
     },
     {
         "name": "小黃書 - 圖片清單瀏覽",
-        "enable": 0,
         "example": "https://tw.xchina.co/photo/id-6311c6080f9a5.html",
         "url": "^https?://(tw|kr)?(\\.)?xchina\\.co/photo/",
         "nextLink": "a.next",
@@ -4897,7 +4979,6 @@
     {
         "name": "性趣套圖 - 看圖",
         "example": "https://myjkwd.com/e/action/ShowInfo.php?classid=1&id=20737",
-        "enable": 1,
         "url": "^https?://myjkwd\\.com/e/action/ShowInfo\\.php",
         "init": "let e = document.querySelector('.entry');e.innerHTML = e.innerHTML.replace(`\"&gt;`,'');",
         "nextLink": "//a[text()='下一页']",
@@ -5000,7 +5081,6 @@
     {
         "name": "博仕書屋手機版 - 小說章節",
         "example": "https://m.77z5.com/boshi/28_28437/all.html",
-        "enable": 1,
         "url": "^https?://m\\.(boshisw|77z5)\\.com/boshi/\\w+/(all|p\\d+)\\.html",
         "init": "let b = document.querySelector('body');b.innerHTML = b.innerHTML.replace(`<br>\n<b>Warning</b>:  iconv() expects parameter 3 to be string, array given in <b>/www/wwwroot/m.boshisw.com/17mb/class/function.php</b> on line <b>14</b><br>`,'');",
         "nextLink": "//a[text()='下一页']",
@@ -5039,7 +5119,6 @@
     {
         "name": "歡喜冤家小說網 - 閱讀",
         "example": "https://www.huanxiyuanjia.com/12_12849/5258090.html",
-        "enable": 1,
         "url": "^https?://www.huanxiyuanjia.com/[0-9_]+/\\d+\\.html",
         "init": "let t = document.querySelector('#TextContent');t.innerHTML = t.innerHTML.replace(`huanxiyuanjia.com 欢喜冤家`,'');",
         "action": 1,
