@@ -2470,7 +2470,7 @@
              #pagetual-picker {
               position: fixed;
               top: 10px;
-              left: calc(50% - 160px);
+              left: calc(50% - 178px);
               background: aliceblue;
               padding: 10px;
               border-radius: 5px;
@@ -3045,12 +3045,13 @@
             }
         }
         if(ruleImportUrlReg.test(location.href) || inConfig){
+            let importing = false;
             if(noRules){
                 setTimeout(() => {
-                    showTips(i18n("firstAlert"));
+                    if (!importing) showTips(i18n("firstAlert"));
                 }, 3000);
                 setTimeout(() => {
-                    showTips(i18n("firstAlert"));
+                    if (!importing) showTips(i18n("firstAlert"));
                 }, 6000);
                 showTips(i18n("firstAlert"));
             }
@@ -3153,6 +3154,7 @@
                             },(rule,err)=>{
                                 showTips("Update "+rule.url+" rules fail!");
                             });
+                            importing = true;
                             showTips(i18n("beginUpdate"));
                         }
                     } catch (e) {
