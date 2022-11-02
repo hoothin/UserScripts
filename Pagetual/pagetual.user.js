@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.32.31
+// @version      1.9.32.32
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -207,7 +207,7 @@
                 pickerCheck:"检查你编辑的选择器并复制",
                 switchSelector:"点击切换元素",
                 gotoEdit:"使用当前的选择器前往编辑规则",
-                manualMode:"禁用拼接，手动用右方向键翻页（或发送事件'pagetual.next'），可使用 Alt + 左方向键返回",
+                manualMode:"禁用拼接，手动用右方向键翻页，可使用 Alt + 左方向键返回",
                 clickMode:"禁用拼接，滚动至页尾时自动点击下一页",
                 pageBarMenu:"点击分隔条中间弹出菜单",
                 nextSwitch:"切换其他页码",
@@ -289,7 +289,7 @@
                 pickerCheck:"檢查你編輯的選擇器並複製",
                 switchSelector:"點擊切換元素",
                 gotoEdit:"使用當前的選擇器前往編輯規則",
-                manualMode:"禁用拼接，手動用右方向鍵翻頁（或發送事件'pagetual.next'）",
+                manualMode:"禁用拼接，手動用右方向鍵翻頁",
                 clickMode:"禁用拼接，滾動至頁尾時自動點擊下一頁",
                 pageBarMenu:"點擊分隔條中間彈出菜單",
                 nextSwitch:"切換其他頁碼",
@@ -4275,15 +4275,19 @@
 
     function initListener(){
         let loadmoreBtn,loading=true,lastScroll=0,checkLoadMoreTimes=0;
-        let checkLoadMore=setInterval(()=>{
-            loadmoreBtn=getLoadMore(document);
-            if(loadmoreBtn && isVisible(loadmoreBtn, _unsafeWindow)){
-                loading=false;
-                clearInterval(checkLoadMore);
-            }else if(checkLoadMoreTimes++>30){
-                clearInterval(checkLoadMore);
-            }
-        },300);
+        if (ruleParser.curSiteRule.loadMore) {
+            loading=false;
+        } else {
+            let checkLoadMore=setInterval(()=>{
+                loadmoreBtn=getLoadMore(document);
+                if(loadmoreBtn && isVisible(loadmoreBtn, _unsafeWindow)){
+                    loading=false;
+                    clearInterval(checkLoadMore);
+                }else if(checkLoadMoreTimes++>30){
+                    clearInterval(checkLoadMore);
+                }
+            },300);
+        }
         let clickMode = typeof ruleParser.curSiteRule.clickMode == 'undefined' ? rulesData.clickMode : ruleParser.curSiteRule.clickMode;
         let clickNext=() => {
             let nextLink=ruleParser.nextLinkHref;
@@ -4320,7 +4324,7 @@
             }
             if(isPause)return;
             if(!loading){
-                if(!loadmoreBtn || !document.body.contains(loadmoreBtn)){
+                if(ruleParser.curSiteRule.loadMore || !loadmoreBtn || !document.body.contains(loadmoreBtn)){
                     loadmoreBtn=getLoadMore(document);
                 }
                 if(loadmoreBtn){
@@ -4502,19 +4506,19 @@
         setTimeout(()=>{tipsWords.style.opacity=0},1000);
     }
 
-    function getLoadMore(doc){
-        if(ruleParser.curSiteRule.loadMore==="")return null;
-        let btnSel=ruleParser.curSiteRule.loadMore||".LoadMore,.load-more,.button-show-more,button[data-testid='more-results-button']",loadmoreBtn;
-        if(btnSel){
-            loadmoreBtn=getElement(btnSel, doc);
+    function getLoadMore(doc) {
+        if (ruleParser.curSiteRule.loadMore === "") return null;
+        let btnSel = ruleParser.curSiteRule.loadMore || ".LoadMore,.load-more,.button-show-more,button[data-testid='more-results-button']", loadmoreBtn;
+        if (btnSel) {
+            loadmoreBtn = getElement(btnSel, doc);
         }
-        if(!loadmoreBtn){
-            let buttons=doc.querySelectorAll("input,button,a,div[onclick]"),loadmoreReg=/^\s*(加载更多|加載更多|load\s*more|もっと読み込む)\s*$/i;
-            for(let i=0;i<buttons.length;i++){
-                let button=buttons[i];
-                if(button.innerText.length > 20)continue;
-                if(button && loadmoreReg.test(button.innerText)){
-                    loadmoreBtn=button;
+        if (!loadmoreBtn) {
+            let buttons = doc.querySelectorAll("input,button,a,div[onclick]"), loadmoreReg = /^\s*(加载更多|加載更多|load\s*more|もっと読み込む)\s*$/i;
+            for (let i = 0; i < buttons.length; i++) {
+                let button = buttons[i];
+                if (button.innerText.length > 20) continue;
+                if (button && loadmoreReg.test(button.innerText)) {
+                    loadmoreBtn = button;
                     break;
                 }
             }
@@ -4863,13 +4867,22 @@
                 pageX: 1,
                 pageY: 1,
                 clientX: 1,
-                clientY: 1
+                clientY: 1,
+                target: btn
             }];
             touchEvent.touches = [{
                 pageX: 1,
                 pageY: 1,
                 clientX: 1,
-                clientY: 1
+                clientY: 1,
+                target: btn
+            }];
+            touchEvent.changedTouches = [{
+                pageX: 1,
+                pageY: 1,
+                clientX: 1,
+                clientY: 1,
+                target: btn
             }];
             ele.dispatchEvent(touchEvent);
         }
