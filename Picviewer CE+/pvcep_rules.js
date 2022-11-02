@@ -126,9 +126,8 @@ var siteInfo=[
  enabled:true,
  url:/^https?:\/\/tieba\.baidu\.[^\/]+\//i,
  r: [/\/sys\/portrait/i,
-     /^(http:\/\/tiebapic\.baidu\.com\/forum\/)ab(pic\/item\/[\w.]+)/i,
-     /.*\/sign=\w+\/([\w\.]+)(\?|$)/i],
- s: ["/sys/portraitl", "$1$2", 'http://tiebapic.baidu.com/forum/pic/item/$1']
+     /^(http:\/\/tiebapic\.baidu\.com\/forum\/)ab(pic\/item\/[\w.]+)/i],
+ s: ["/sys/portraitl", "$1$2"]
 },
 {
  name: "百度图片搜索",
@@ -569,7 +568,7 @@ var siteInfo=[
  src: /\/\/t(\w\.qy.*data\/)t\//,
  r: /\/\/t(\w\.qy.*data\/)t\//,
  s: "//img$1",
- getImage: function(a) {
+ getImage: function(a, p) {
      if (p && p[1] && p[1].className === 'pic_box tb' && a && a.href) {
          return a.href;
      }
