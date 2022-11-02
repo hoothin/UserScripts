@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.46.65
+// @version      1.6.6.46.66
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -2340,6 +2340,54 @@
                  }
                  .searchJumper-hide {
                      display: none!important;
+                 }
+                 @media (prefers-color-scheme: dark) {
+                     /* 站点列表 */
+                     #search-jumper .sitelist > .sitelistCon > p {
+                         background-color: #252B32 !important;
+                     }
+
+                     #search-jumper .sitelist > .sitelistCon {
+                         background-color: #1C2127 !important;
+                     }
+
+                     #search-jumper .sitelist > .sitelistCon > div:hover {
+                         background-color: #283C57 !important;
+                     }
+
+                     #search-jumper .sitelist > .sitelistCon > p,
+                     #search-jumper .sitelist a > p {
+                         color: #DADADA !important;
+                     }
+
+                     /* 历史列表 */
+                     .search-jumper-historylist {
+                         background-color: #181C20 !important;
+                     }
+
+                     .search-jumper-showall a.search-jumper-word,
+                     .search-jumper-showall a.search-jumper-word > span {
+                         background-color: #292A2D !important;
+                     }
+
+                     .search-jumper-tips {
+                         background-color: #3F4042 !important;
+                     }
+
+                     .search-jumper-showall a.search-jumper-word > span,
+                     .search-jumper-tips {
+                         color: #DADADA !important;
+                     }
+
+                     .search-jumper-showall .search-jumper-word:hover {
+                         text-shadow: 0px 0px 5px #2374FF !important;
+                     }
+
+                     /* 类别 */
+                     .search-jumper-showall .search-jumper-type,
+                     .search-jumper-showall .search-jumper-logo {
+                         background-color: #181C20 !important;
+                     }
                  }
                  `;
                 if (searchData.prefConfig.cssText) cssText += searchData.prefConfig.cssText;
@@ -6863,6 +6911,45 @@
                         btn.dispatchEvent(mouseEvent);
                         mouseEvent = new PointerEvent("pointerup",eventParam);
                         btn.dispatchEvent(mouseEvent);
+                        let dispatchTouchEvent = (ele, type) => {
+                            let touchEvent;
+                            try {
+                                touchEvent = document.createEvent('TouchEvent')
+                                touchEvent.initTouchEvent(type, true, true)
+                            } catch (err) {
+                                try {
+                                    touchEvent = document.createEvent('UIEvent')
+                                    touchEvent.initUIEvent(type, true, true)
+                                } catch (err) {
+                                    touchEvent = document.createEvent('Event')
+                                    touchEvent.initEvent(type, true, true)
+                                }
+                            }
+                            touchEvent.targetTouches = [{
+                                pageX: 1,
+                                pageY: 1,
+                                clientX: 1,
+                                clientY: 1,
+                                target: btn
+                            }];
+                            touchEvent.touches = [{
+                                pageX: 1,
+                                pageY: 1,
+                                clientX: 1,
+                                clientY: 1,
+                                target: btn
+                            }];
+                            touchEvent.changedTouches = [{
+                                pageX: 1,
+                                pageY: 1,
+                                clientX: 1,
+                                clientY: 1,
+                                target: btn
+                            }];
+                            ele.dispatchEvent(touchEvent);
+                        }
+                        dispatchTouchEvent(btn, "touchstart");
+                        dispatchTouchEvent(btn, "touchend");
                         btn.click();
                         resolve();
                     }
