@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.11.1.1
+// @version              2022.11.2.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -17967,6 +17967,7 @@ ImgOps | https://imgops.com/#b#`;
                     '</span>'+
                     '<span class="pv-pic-window-max"  title="'+i18n("gallery")+'(g)"></span>' +
                     '<span class="pv-pic-window-close"></span>' +
+                    '<svg class="pv-pic-window-scrollSign" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 212.468019m-43.132605 0a43.132605 43.132605 0 1 0 86.26521 0 43.132605 43.132605 0 1 0-86.26521 0ZM512 383.400936m-43.132605 0a43.132605 43.132605 0 1 0 86.26521 0 43.132605 43.132605 0 1 0-86.26521 0ZM512 554.333853m-43.132605 0a43.132605 43.132605 0 1 0 86.26521 0 43.132605 43.132605 0 1 0-86.26521 0ZM609.447738 651.781591L512 749.229329l-97.447738-97.447738c-17.572543-17.572543-43.132605-17.572543-59.107644 0s-17.572543 43.132605 0 59.107645l127.800312 127.800312c7.98752 7.98752 20.767551 12.780031 30.352574 12.780031s20.767551-4.792512 30.352574-12.780031l127.800312-127.800312c17.572543-17.572543 17.572543-43.132605 0-59.107645-19.170047-17.572543-44.730109-17.572543-62.302652 0zM555.132605 0h-84.667706C302.726989 0 171.731669 132.592824 171.731669 298.733229v426.533542c0 166.140406 132.592824 298.733229 298.73323 298.733229h84.667706c166.140406 0 298.733229-132.592824 298.73323-298.733229V298.733229C852.268331 132.592824 721.273011 0 555.132605 0zM767.600624 723.669267c0 119.812793-94.25273 212.468019-212.468019 212.468018h-84.667706c-119.812793 0-212.468019-94.25273-212.468019-212.468018V298.733229c0-119.812793 94.25273-212.468019 212.468019-212.468018h84.667706c119.812793 0 212.468019 94.25273 212.468019 212.468018v424.936038z"></path></svg>' +
                     //'<span class="pv-pic-window-search" title="'+i18n("similarImage")+'"></span>' +
                     '<span class="pv-pic-window-range"></span>' +
                     '<span class="pv-pic-window-description"></span>'+
@@ -18055,7 +18056,7 @@ ImgOps | https://imgops.com/#b#`;
                         h:img.naturalHeight,
                         w:img.naturalWidth,
                     };
-                    if (self.imgWindow.style.overflow!="scroll") {
+                    if (!self.imgWindow.classList.contains("pv-pic-window-scroll")) {
                         self.zoomLevel=0;
                         self.zoom(1);
                     }
@@ -18436,6 +18437,39 @@ ImgOps | https://imgops.com/#b#`;
                     -webkit-box-sizing: content-box;\
                     box-sizing: content-box;\
                     }\
+                    .pv-pic-window-scrollSign {\
+                    display: none;\
+                    width: auto;\
+                    height: 30px;\
+                    fill: black;\
+                    top: 10px;\
+                    right: 8px;\
+                    position: absolute;\
+                    -webkit-animation: scroll_sign_opacity 2s infinite ease-in-out;\
+                    animation: scroll_sign_opacity 2s infinite ease-in-out;\
+                    }\
+                    @-webkit-keyframes scroll_sign_opacity {\
+                      0% { opacity: 1 }\
+                      50% { opacity: 0.2 }\
+                      100% { opacity: 1 }\
+                    }\
+                    @keyframes scroll_sign_opacity {\
+                      0% { opacity: 1 }\
+                      50% { opacity: 0.2 }\
+                      100% { opacity: 1 }\
+                    }\
+                    .pv-pic-window-scroll {\
+                    max-height: 100%;\
+                    max-width: 100%;\
+                    overflow: scroll;\
+                    }\
+                    .pv-pic-window-scroll>.pv-pic-window-scrollSign {\
+                    display: block;\
+                    }\
+                    .pv-pic-window-scroll>.pv-pic-window-close,\
+                    .pv-pic-window-scroll>.pv-pic-window-max {\
+                    display: none;\
+                    }\
                     .transition-transform{\
                     transition: transform 0.3s ease;\
                     }\
@@ -18654,11 +18688,7 @@ ImgOps | https://imgops.com/#b#`;
                 this.isLongImg=rectSize.h > wSize.h && rectSize.h/rectSize.w > 3.5;
                 if(prefs.imgWindow.suitLongImg && this.isLongImg){
                     this.center(rectSize.w <= wSize.w,false);
-                    this.imgWindow.style.overflow="scroll";
-                    this.imgWindow.style.height="100%";
-                    this.imgWindow.style.maxWidth="100%";
-                    this.closeButton.style.display="none";
-                    this.maxButton.style.display="none";
+                    this.imgWindow.classList.add("pv-pic-window-scroll");
                 }else if(prefs.imgWindow.fitToScreen){
                     this.fitToScreen();
                     this.center(true,true);
@@ -18746,7 +18776,7 @@ ImgOps | https://imgops.com/#b#`;
                 this.following=true;
                 var wSize=getWindowSize();
                 this.zoom(1);
-                if(prefs.imgWindow.fitToScreen && imgWindow.style.overflow!=="scroll"){
+                if(prefs.imgWindow.fitToScreen && !imgWindow.classList.contains("pv-pic-window-scroll")){
                     var imgWindowCS=unsafeWindow.getComputedStyle(imgWindow);
                     var rectSize={
                         h:parseFloat(imgWindowCS.height),
@@ -18844,7 +18874,7 @@ ImgOps | https://imgops.com/#b#`;
             },
             fitToScreen:function(){
                 var imgWindow=this.imgWindow;
-                if(!prefs.imgWindow.fitToScreen || imgWindow.style.overflow=="scroll")return;
+                if(!prefs.imgWindow.fitToScreen || imgWindow.classList.contains("pv-pic-window-scroll"))return;
                 var wSize=getWindowSize();
                 //空隙
                 wSize.h -= 26;
@@ -19630,7 +19660,7 @@ ImgOps | https://imgops.com/#b#`;
                 e.stopPropagation();
                 var selectedTool=this.selectedTool;
                 if(selectedTool == "hand" && prefs.imgWindow.suitLongImg && this.isLongImg){
-                    var inScroll=this.imgWindow.style.overflow=="scroll";
+                    var inScroll=this.imgWindow.classList.contains("pv-pic-window-scroll");
                     if(e.type == "wheel" && inScroll)
                         return;
                     if(e.type == "click" && !this.moving){
@@ -19640,12 +19670,8 @@ ImgOps | https://imgops.com/#b#`;
                         var origTop=parseFloat(imgWindow.style.top);
                         if(inScroll){
                             imgWindow.style.top = parseFloat(imgWindow.style.top) - getScrolled(imgWindow).y +'px';
-                        }
-                        this.imgWindow.style.height=inScroll?"":"100%";
-                        this.imgWindow.style.maxWidth=inScroll?"":"100%";
-                        this.imgWindow.style.overflow=inScroll?"":"scroll";
-                        this.closeButton.style.display=inScroll?"":"none";
-                        this.maxButton.style.display=inScroll?"":"none";
+                            this.imgWindow.classList.remove("pv-pic-window-scroll");
+                        } else this.imgWindow.classList.add("pv-pic-window-scroll");
                         //this.center(true , true);
                         if(!inScroll){
                             imgWindow.style.top= (wSize.h - imgWindow.offsetHeight)/2 + scrolled.y +'px';
