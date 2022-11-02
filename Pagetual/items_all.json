@@ -1,5 +1,21 @@
 [
 {
+  "resource_url": "http://wedata.net/items/85986",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[@id='content3']",
+    "comment": "It doesn't work on weAutoPagerize addon(MacOS, Firefox). Please use uAutoPagerize addon.",
+    "nextLink": "//table[@class='searchsummary']//a[contains(@href, concat('page=', number(substring-before(substring-after((//table[@class='searchsummary']//b/text())[5], '第'), '頁，共'))+1))]",
+    "url": "^https://ctext\\.org/",
+    "exampleUrl": "https://ctext.org/pre-qin-and-han/zh?searchu=%E7%A4%BC"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "sunny",
+  "name": "中國哲學書電子化計劃",
+  "created_at": "2022-11-02T08:53:04+09:00",
+  "updated_at": "2022-11-02T08:53:04+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/85985",
   "data": {
     "insertBefore": "",
