@@ -3624,6 +3624,15 @@
         "css": "#img {max-width: 100% !important;height: auto !important;min-height: 400px;}"
     },
     {
+        "name": "ExHentai.org",
+        "url": "^https?://exhentai\\.org/(?!g)",
+        "nextLink": "body > div.ido > div:nth-of-type(2) > div.searchnav > div:nth-of-type(4) > a",
+        "pageElement": "body > div.ido > div:nth-of-type(2)",
+        "insert": "body > div.ido > div:nth-of-type(2)",
+        "insertPos": 2,
+        "pinUrl": true
+    },
+    {
         "name": "177 漫画/xxiav",
         "example": "www.177picyy.com，www.xxiav.com",
         "url": "^https?://www.(177picyy|177pica|xxiav).com/",
