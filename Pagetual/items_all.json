@@ -1,5 +1,19 @@
 [
 {
+  "resource_url": "http://wedata.net/items/85987",
+  "data": {
+    "pageElement": "id('content')/div[./table]",
+    "nextLink": "//div[contains(concat(' ',@class,' '),' list-title ')]/b/following-sibling::a",
+    "url": "^https://www\\.dmm\\.com/rental/comic/-/selection/=/",
+    "exampleUrl": "https://www.dmm.com/rental/comic/-/selection/=/id=627/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "t_f_m'",
+  "name": "DMM > レンタルCD/DVD > レンタルコミック > セレクション",
+  "created_at": "2022-11-02T19:46:59+09:00",
+  "updated_at": "2022-11-03T07:19:00+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/85986",
   "data": {
     "insertBefore": "",
@@ -17127,16 +17141,16 @@
 {
   "resource_url": "http://wedata.net/items/77724",
   "data": {
-    "pageElement": "//div[@class=\"article-pagination\"]/preceding-sibling::*|//div[@class=\"p-article-wp-pager\"][not(//div[@class=\"article-pagination\"])]/preceding-sibling::*",
-    "nextLink": "//div[@class=\"next\"]/a|//div[@class=\"p-article-wp-pager\"]/p/following-sibling::a[1]",
+    "pageElement": "//*[contains(@class,'pag') or self::aside][./preceding-sibling::*[1][self::p[@itemprop='articleBody']]][1]/preceding-sibling::*",
+    "nextLink": "//div[@class=\"next\"]/a|//div[@class=\"p-article-wp-pager\"]/span[@aria-current]/following-sibling::a[1]",
     "url": "^https://www\\.yomiuri\\.co\\.jp/",
-    "exampleUrl": "https://www.yomiuri.co.jp/fukayomi/20190204-OYT8T50085/\r\nhttps://www.yomiuri.co.jp/economy/20210926-OYT1T50112/"
+    "exampleUrl": "https://www.yomiuri.co.jp/fukayomi/20190204-OYT8T50085/\r\nhttps://www.yomiuri.co.jp/economy/20210926-OYT1T50112/\r\nhttps://www.yomiuri.co.jp/politics/20221030-OYT1T50259/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "ofk",
   "name": "YOMIURI ONLINE=",
   "created_at": "2015-12-17T12:29:58+09:00",
-  "updated_at": "2021-09-27T17:34:45+09:00"
+  "updated_at": "2022-11-03T09:40:47+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/77721",
