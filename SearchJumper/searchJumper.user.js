@@ -1253,8 +1253,7 @@
             constructor() {
                 this.scale = searchData.prefConfig.customSize / 100;
                 cssText = `
-                 #search-jumper,
-                 #search-jumper * {
+                 #search-jumper {
                      font-size: 16px;
                  }
                  #search-jumper.search-jumper-showall {
