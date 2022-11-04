@@ -1,5 +1,35 @@
 [
 {
+  "resource_url": "http://wedata.net/items/85989",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//section[@class='contSubBox02']",
+    "nextLink": "//a[@rel='next']",
+    "url": "^https://www\\.kulib\\.kyoto-u\\.ac\\.jp/pical",
+    "exampleUrl": "https://www.kulib.kyoto-u.ac.jp/pical"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "sunny",
+  "name": "京都大学図書館機構　開館日程",
+  "created_at": "2022-11-03T13:48:53+09:00",
+  "updated_at": "2022-11-03T13:48:53+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/85988",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//article[contains(@class, 'post-block')]",
+    "nextLink": "//a[@id='blog-pager-older-link']",
+    "url": "^https://www\\.bugbugnow\\.net/",
+    "exampleUrl": "https://www.bugbugnow.net/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "sunny",
+  "name": "バグ取りの日々",
+  "created_at": "2022-11-03T13:31:57+09:00",
+  "updated_at": "2022-11-03T13:31:57+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/85987",
   "data": {
     "pageElement": "id('content')/div[./table]",
@@ -6325,18 +6355,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/85281",
-  "name": "ホミニス",
   "data": {
-    "url": "^https://hominis\\.media/category/",
-    "pageElement": "//div[@class=\"contentBody\"]",
-    "exampleUrl": "https://hominis.media/category/voiceActor/post5445/",
-    "insertBefore": "",
-    "nextLink": "//a[@rel=\"next\"]"
+    "pageElement": "//div[@class='controlArea']/preceding-sibling::*[1]",
+    "nextLink": "//a[@rel='next']",
+    "url": "^https://hominis\\.media/.",
+    "exampleUrl": "https://hominis.media/category/voiceActor/post5445/\r\nhttps://hominis.media/news/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "t_f_m_",
+  "name": "ホミニス",
   "created_at": "2020-04-06T19:23:19+09:00",
-  "updated_at": "2020-04-06T19:23:19+09:00"
+  "updated_at": "2022-11-03T21:08:11+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85280",
@@ -8981,7 +9010,7 @@
 {
   "resource_url": "http://wedata.net/items/82078",
   "data": {
-    "pageElement": "id(\"inview-main-rankingY\")/preceding-sibling::*[1]",
+    "pageElement": "descendant::*[./div[@id='cmsMark']][1]/div[@class='gad'][1]/preceding-sibling::*|descendant::*[./div[@id='cmsMark']][1][not(./div[@class='gad'])]",
     "comment": "#end is not unique id",
     "nextLink": "id(\"next\")/a",
     "url": "^https?://nlab\\.itmedia\\.co\\.jp/nl/articles/(this_string_is_required_to_exceed_64248:)?",
@@ -8991,7 +9020,7 @@
   "created_by": "t_f_m",
   "name": "ねとらぼ",
   "created_at": "2019-02-14T00:12:58+09:00",
-  "updated_at": "2021-11-12T19:53:34+09:00"
+  "updated_at": "2022-11-03T17:06:05+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/82077",
