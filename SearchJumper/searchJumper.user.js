@@ -2833,12 +2833,12 @@
                         margin: 4px;
                         font-family: inherit;
                         background-color: #FFF;
-                        width: calc(100% - 17px);
+                        width: calc(100% - 8px);
                         color: #4A4A4A;
                         margin-top: -8px;
                         padding: 4px;
                         padding-top: 8px;
-                        box-sizing: content-box;
+                        box-sizing: border-box;
                     }
                     .customInputFrame-buttons {
                         text-align: center;
@@ -2866,13 +2866,13 @@
                       .customInputFrame-body input,
                       .customInputFrame-body textarea,
                       .customInputFrame-body select {
-                        background-color: black;
-                        color: #d5d5d5;
+                        background-color: black!important;
+                        color: #d5d5d5!important;
                       }
                       .customInputFrame-body input:focus,
                       .customInputFrame-body textarea:focus,
                       .customInputFrame-body select:focus {
-                        background-color: #1e1e1e;
+                        background-color: #1e1e1e!important;
                       }
                       .customInputFrame-body input,
                       .customInputFrame-body textarea,
@@ -3060,12 +3060,12 @@
                         margin: 4px;
                         font-family: inherit;
                         background-color: #FFF;
-                        width: calc(100% - 17px);
+                        width: calc(100% - 8px);
                         color: #4A4A4A;
                         margin-top: -8px;
                         padding: 4px;
                         padding-top: 8px;
-                        box-sizing: content-box;
+                        box-sizing: border-box;
                     }
                     .searchJumperModify-buttons {
                         text-align: center;
@@ -3091,7 +3091,7 @@
                         width: 28px;
                         float: right;
                         margin-top: -33px;
-                        margin-right: 4px;
+                        margin-right: 6px;
                         position: sticky;
                         display: block;
                         cursor: pointer;
@@ -3104,13 +3104,13 @@
                       .searchJumperModify-body>input[type=number],
                       .searchJumperModify-body>textarea,
                       .searchJumperModify-body>select {
-                        background-color: black;
-                        color: #d5d5d5;
+                        background-color: black!important;
+                        color: #d5d5d5!important;
                       }
                       .searchJumperModify-body>input:focus,
                       .searchJumperModify-body>textarea:focus,
                       .searchJumperModify-body>select:focus {
-                        background-color: #1e1e1e;
+                        background-color: #1e1e1e!important;
                       }
                       .searchJumperModify-body>input[type=text],
                       .searchJumperModify-body>input[type=number],
@@ -8789,14 +8789,14 @@
                         margin: 4px;
                         font-family: inherit;
                         background-color: #FFF;
-                        width: calc(100% - 17px);
-                        min-width: calc(100% - 17px);
-                        max-width: calc(100% - 17px);
+                        width: calc(100% - 8px);
+                        min-width: calc(100% - 8px);
+                        max-width: calc(100% - 8px);
                         color: #4A4A4A;
                         margin-top: -8px;
                         padding: 4px;
                         padding-top: 8px;
-                        box-sizing: content-box;
+                        box-sizing: border-box;
                         height: auto;
                     }
                     .searchJumperFrame-inputs>input:focus,
@@ -8898,14 +8898,14 @@
                       .searchJumperFrame-inputs>textarea,
                       .searchJumperFrame-inputs>select,
                       .searchJumperFrame-body select {
-                        background-color: black;
-                        color: #d5d5d5;
+                        background-color: black!important;
+                        color: #d5d5d5!important;
                       }
                       .searchJumperFrame-inputs>input:focus,
                       .searchJumperFrame-inputs>textarea:focus,
                       .searchJumperFrame-inputs>select:focus,
                       .searchJumperFrame-body select:focus {
-                        background-color: #1e1e1e;
+                        background-color: #1e1e1e!important;
                       }
                       .searchJumperFrame-inputs>input,
                       .searchJumperFrame-inputs>textarea,
