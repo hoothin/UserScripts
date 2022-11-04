@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.46.68
+// @version      1.6.6.46.69
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -1253,6 +1253,10 @@
             constructor() {
                 this.scale = searchData.prefConfig.customSize / 100;
                 cssText = `
+                 #search-jumper,
+                 #search-jumper * {
+                     font-size: 16px;
+                 }
                  #search-jumper.search-jumper-showall {
                      overflow-y: hidden;
                      pointer-events: all;
@@ -1410,6 +1414,9 @@
                      position: relative;
                      box-sizing: border-box;
                  }
+                 .hideAll>.search-jumper-searchBar {
+                     margin-top: -${this.scale * 40}px;
+                 }
                  .search-jumper-searchBarCon:not(.search-jumper-showall)::-webkit-scrollbar {
                      width: 0 !important;
                      height: 0 !important;
@@ -1441,7 +1448,7 @@
                  .search-jumper-searchBar:hover {
                      margin-top: 0;
                      opacity: 1;
-                     ${searchData.prefConfig.noAni ? "" : "transition:margin-top 0.25s ease, margin-left 0.25s, right 0.25s, opacity 0.25s, transform 0.25s;"}
+                     ${searchData.prefConfig.noAni ? "" : "transition:margin-top 0.1s ease, margin-left 0.1s, right 0.1s, opacity 0.1s, transform 0.1s;"}
                  }
                  .search-jumper-searchBar.initShow {
                      margin-top: 0;
@@ -1455,6 +1462,7 @@
                      background: none;
                      border: none;
                      max-width: unset!important;
+                     margin: unset;
                      ${searchData.prefConfig.minPopup && !searchData.prefConfig.noAni ? 'transition: transform 0.25s ease;' : ''}
                      ${searchData.prefConfig.minPopup ? 'transform: scale(0.7);' : ''}
                  }
@@ -1481,6 +1489,7 @@
                      -ms-scroll-chaining: contain;
                      transition: none;
                      background: #d0d0d0d0;
+                     box-sizing: content-box;
                  }
                  #search-jumper>.funcKeyCall>.search-jumper-type>.sitelist {
                      display: none;
@@ -1542,7 +1551,7 @@
                  .search-jumper-bottom {
                      top: unset;
                      bottom: 0;
-                     height: ${this.scale * 43}px;
+                     height: ${this.scale * 42}px;
                      max-height: ${this.scale * 43}px;
                      overflow-y: hidden;
                  }
@@ -1550,10 +1559,16 @@
                      margin-top: 0;
                      margin-left: -${this.scale * 20}px;
                  }
+                 .hideAll.search-jumper-left>.search-jumper-searchBar {
+                     margin-left: -${this.scale * 40}px;
+                 }
                  .search-jumper-right>.search-jumper-searchBar {
                      margin-top: 0;
                      right: -${this.scale * 20}px;
                      position: fixed;
+                 }
+                 .hideAll.search-jumper-right>.search-jumper-searchBar {
+                     right: -${this.scale * 40}px;
                  }
                  .search-jumper-left>.search-jumper-searchBar:hover,
                  .search-jumper-left>.search-jumper-searchBar.initShow,
@@ -1561,6 +1576,7 @@
                  #search-jumper.in-input.search-jumper-left>.search-jumper-searchBar {
                      margin-top: unset;
                      margin-left: 0;
+                     opacity: 1;
                  }
                  .search-jumper-right>.search-jumper-searchBar:hover,
                  .search-jumper-right>.search-jumper-searchBar.initShow,
@@ -1568,17 +1584,21 @@
                  #search-jumper.in-input.search-jumper-right>.search-jumper-searchBar {
                      margin-top: unset;
                      right: 0;
+                     opacity: 1;
                  }
                  .search-jumper-bottom>.search-jumper-searchBar {
                      position: relative;
                      margin-top: 0px;
-                     vertical-align: bottom;
+                 }
+                 .hideAll.search-jumper-bottom>.search-jumper-searchBar {
+                     opacity: 0;
                  }
                  .search-jumper-bottom>.search-jumper-searchBar:hover,
                  .search-jumper-bottom>.search-jumper-searchBar.initShow,
                  .search-jumper-bottom>.search-jumper-searchBar.funcKeyCall,
                  #search-jumper.in-input.search-jumper-bottom>.search-jumper-searchBar {
                      margin-top: 0px;
+                     opacity: 1;
                  }
                  .search-jumper-btn {
                      position: relative;
@@ -1739,7 +1759,7 @@
                  .search-jumper-type,
                  .search-jumper-logo {
                      display: inline-flex;
-                     box-sizing: content-box;
+                     box-sizing: border-box;
                      background: #d0d0d0;
                      border-radius: ${20 * this.scale}px!important;
                      overflow: hidden;
@@ -1771,7 +1791,7 @@
                      position: fixed;
                      text-align: left;
                      background: #00000000;
-                     max-height: 95vh;
+                     max-height: 100vh;
                      overflow: scroll;
                      border: 0;
                      pointer-events: none;
@@ -4426,6 +4446,7 @@
 
             waitForHide(delay) {
                 let self = this;
+                if (this.bar.classList.contains("grabbing")) return;
                 var hideHandler = () => {
                     self.bar.classList.remove("search-jumper-isInPage");
                     self.bar.classList.remove("search-jumper-isTargetImg");
@@ -4932,8 +4953,8 @@
                         list.style.bottom = this.bar.clientHeight + "px";
                     }
                     clientX -= list.scrollWidth / 2;
-                    if (clientX > viewWidth - list.scrollWidth - 20) clientX = viewWidth - list.scrollWidth - 20;
-                    if (clientX < 10) clientX = 10;
+                    if (clientX > viewWidth - list.scrollWidth - 10) clientX = viewWidth - list.scrollWidth - 10;
+                    if (clientX < 0) clientX = 0;
                     list.style.left = clientX + "px";
                 } else {
                     //竖
@@ -4943,8 +4964,8 @@
                         list.style.right = this.bar.clientWidth + "px";
                     }
                     clientY -= list.scrollHeight / 2;
-                    if (clientY > viewHeight - list.scrollHeight - 20) clientY = viewHeight - list.scrollHeight - 20;
-                    if (clientY < 10) clientY = 10;
+                    if (clientY > viewHeight - list.scrollHeight) clientY = viewHeight - list.scrollHeight;
+                    if (clientY < 0) clientY = 0;
                     list.style.top = clientY + "px";
                 }
             }
@@ -4986,31 +5007,37 @@
                     target.style.left = clientX + "px";
                     target.style.top = clientY + "px";
                 } else if (clientY < eh) {
-                    target.style.left = "";
-                    target.style.right = "";
-                    target.style.bottom = "";
                     clientX -= target.scrollWidth / 2;
                     clientY += target.scrollHeight / 2;
                     if (clientX < 5) {
                         clientX = 5;
                         target.style.left = "5px";
+                        target.style.right = "";
+                        target.style.bottom = "";
                     } else if (clientX > viewWidth - target.scrollWidth) {
+                        target.style.left = "";
                         target.style.right = "5px";
+                        target.style.bottom = "";
                     } else {
                         target.style.left = clientX + "px";
+                        target.style.right = "";
+                        target.style.bottom = "";
                     }
                     target.style.top = (close ? eh : eh + 20) + "px";
                 } else if (clientY > viewHeight - eh) {
-                    target.style.left = "";
-                    target.style.right = "";
-                    target.style.top = "";
                     clientX -= target.scrollWidth / 2;
                     if (clientX < 5) {
                         target.style.left = "5px";
+                        target.style.right = "";
+                        target.style.top = "";
                     } else if (clientX > viewWidth - target.scrollWidth) {
+                        target.style.left = "";
                         target.style.right = "5px";
+                        target.style.top = "";
                     } else {
                         target.style.left = clientX + "px";
+                        target.style.right = "";
+                        target.style.top = "";
                     }
                     target.style.bottom = (close ? eh : eh + 20) + "px";
                 } else if (clientX > viewWidth - ew - 10) {
@@ -6331,9 +6358,6 @@
                     self.bar.classList.remove("search-jumper-isTargetPage");
                     self.bar.classList.remove("initShow");
                     self.hideTimeout = null;
-                    if (searchData.prefConfig.autoHideAll) {
-                        self.bar.style.display = 'none';
-                    }
                 };
                 if (searchData.prefConfig.autoHide) this.hideTimeout = setTimeout(hideHandler, delay);
                 this.bar.classList.remove("search-jumper-isInPage");
@@ -6342,7 +6366,7 @@
                 this.bar.classList.remove("search-jumper-isTargetVideo");
                 this.bar.classList.remove("search-jumper-isTargetLink");
                 this.bar.classList.remove("search-jumper-isTargetPage");
-                this.bar.classList.add("initShow");
+                setTimeout(() => {this.bar.classList.add("initShow");}, 10);
                 if (getSelectStr()) {
                     this.bar.classList.add("search-jumper-isInPage");
                     if (this.bar.style.display == "none" || funcKeyCall) {
@@ -6452,7 +6476,7 @@
                 let setClass = className => {
                     self.bar.style.cssText = "";
                     self.bar.parentNode.style.cssText = "";
-                    self.bar.parentNode.className = "search-jumper-searchBarCon " + className;
+                    self.bar.parentNode.className = "search-jumper-searchBarCon " + (searchData.prefConfig.autoHideAll ? "hideAll " : "") + className;
                     let baseSize = Math.min(self.bar.scrollWidth, self.bar.scrollHeight);
                     let leftRight = self.bar.parentNode.classList.contains("search-jumper-left") ||
                         self.bar.parentNode.classList.contains("search-jumper-right");
@@ -7275,6 +7299,7 @@
 
             let mouseUpHandler = e => {
                 clearTimeout(hideTimer);
+                searchBar.bar.classList.remove("grabbing");
                 document.removeEventListener('mouseup', mouseUpHandler, false);
                 document.removeEventListener('mousemove', mouseMoveHandler, false);
                 document.removeEventListener('touchend', mouseUpHandler, false);
@@ -7334,7 +7359,7 @@
                     searchBar.bar.style.bottom = "";
                     searchBar.bar.style.transform = "unset";
                     searchBar.bar.parentNode.classList.remove("search-jumper-scroll");
-                    searchBar.bar.className = "search-jumper-searchBar";
+                    searchBar.bar.className = "search-jumper-searchBar grabbing";
                 }
                 grabState = 2;
                 searchBar.bar.style.left = clientX(e) - searchBar.bar.scrollWidth + 20 + "px";
@@ -7555,6 +7580,7 @@
                         searchBar.bar.contains(e.target)) {
                         return;
                     }
+                    if (searchBar.bar.classList.contains("grabbing")) return;
                     let inputSign = false;
                     if (!searchData.prefConfig.enableInInput) {
                         if (e.target.tagName == 'INPUT' ||
