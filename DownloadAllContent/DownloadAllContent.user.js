@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.7.3.15
+// @version      2.7.3.16
 // @description  Fetch and download main content on current page, provide special support for chinese novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -539,13 +539,12 @@
         if(processFunc){
             return processFunc(doc, cb);
         }
-        if(doc.defaultView){
-            [].forEach.call(doc.querySelectorAll("span,div,ul"),function(item){
-                var thisStyle=doc.defaultView.getComputedStyle(item);
-                if(thisStyle && (thisStyle.display=="none" || (item.tagName=="SPAN" && thisStyle.fontSize=="0px")))
-                    item.innerHTML="";
-            });
-        }
+        [].forEach.call(doc.querySelectorAll("span,div,ul"),function(item){
+            var thisStyle=doc.defaultView?doc.defaultView.getComputedStyle(item):item.style;
+            if(thisStyle && (thisStyle.display=="none" || (item.tagName=="SPAN" && thisStyle.fontSize=="0px"))){
+                item.innerHTML="";
+            }
+        });
         var i,j,k,rStr="",pageData=(doc.body?doc.body:doc).cloneNode(true),delList=[];
         pageData.innerHTML=pageData.innerHTML.replace(/\<\!\-\-((.|[\n|\r|\r\n])*?)\-\-\>/g,"");
         [].forEach.call(pageData.querySelectorAll("font.jammer"),function(item){
