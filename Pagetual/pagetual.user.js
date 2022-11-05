@@ -971,10 +971,8 @@
                 doc.body.scrollTop = 0;
                 doc.documentElement.scrollTop = 0;
                 let maxHeight = Math.max(doc.body.scrollHeight, doc.documentElement.scrollHeight);
-                doc.body.scrollTop = actualTop;
-                doc.documentElement.scrollTop = actualTop;
-                doc.body.scrollTop = actualTop + 10;
-                doc.documentElement.scrollTop = actualTop + 10;
+                doc.body.scrollTop = actualTop - 10;
+                doc.documentElement.scrollTop = actualTop - 10;
                 setTimeout(() => {
                     while (actualTop < maxHeight) {
                         actualTop += 200;
