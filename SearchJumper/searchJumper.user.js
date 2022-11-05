@@ -6587,6 +6587,7 @@
                 searchData.prefConfig.position.y = relY;
                 searchData.prefConfig.offset.x = posX;
                 searchData.prefConfig.offset.y = posY;
+                self.checkScroll(false, true);
                 setTimeout(() => {
                     if (!searchData.prefConfig.disableAutoOpen) {
                         if (self.currentType && !self.currentType.classList.contains('search-jumper-hide')) {
