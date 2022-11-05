@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.46.69
+// @version      1.6.6.46.70
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -968,10 +968,10 @@
         };
         const isMobile = ('ontouchstart' in document.documentElement);
         var enableDebug = true;
-        var debug = str => {
+        var debug = (str, title) => {
             if(enableDebug) {
                 console.log(
-                    `%c【SearchJumper v.${_GM_info.script.version}】 debug`,
+                    `%c【SearchJumper v.${_GM_info.script.version}】 ${title ? title : 'debug'}`,
                     'color: yellow;font-size: large;font-weight: bold;',
                     str
                 );
@@ -5590,6 +5590,7 @@
                     }
                     if (param[0] === "sleep" || param[0] === "@sleep") {
                         await sleep(param[1]);
+                        debug(`sleep ${param[1]}`);
                         continue;
                     } else if (param[0] === "@click") {
                         clicked = true;
@@ -6291,7 +6292,7 @@
                 return ele;
             }
 
-            checkScroll(noIntoView) {
+            checkScroll(noIntoView, noSmooth) {
                 let viewWidth = window.innerWidth || document.documentElement.clientWidth;
                 let viewHeight = window.innerHeight || document.documentElement.clientHeight;
                 if (this.bar.scrollWidth > viewWidth || this.bar.scrollHeight > viewHeight) {
@@ -6308,15 +6309,13 @@
                 if (noIntoView) return;
                 let firstType = this.bar.querySelector(".search-jumper-type:not(.search-jumper-hide)");
                 if (firstType) {
-                    setTimeout(() => {
-                        firstType.scrollIntoView({behavior: "smooth"});
-                    }, 0);
                     if (firstType.style.width === "0px") {
                         firstType.style.width = "auto";
                     }
                     if (firstType.style.height === "0px") {
                         firstType.style.height = "auto";
                     }
+                    firstType.scrollIntoView(noSmooth ? {} : {behavior: "smooth"});
                 }
             }
 
@@ -6365,6 +6364,7 @@
                 this.bar.classList.remove("search-jumper-isTargetVideo");
                 this.bar.classList.remove("search-jumper-isTargetLink");
                 this.bar.classList.remove("search-jumper-isTargetPage");
+                this.bar.classList.remove("initShow");
                 setTimeout(() => {this.bar.classList.add("initShow");}, 10);
                 if (getSelectStr()) {
                     this.bar.classList.add("search-jumper-isInPage");
@@ -6463,10 +6463,6 @@
                             self.bar.style.opacity = 1;
                         }, 10);
                     }, 1);
-                } else {
-                    setTimeout(() => {
-                        self.checkScroll();
-                    }, 251);
                 }
             }
 
@@ -6598,14 +6594,7 @@
                             self.currentType.style.height = self.currentType.scrollHeight + "px";
                         }
                     }
-                    if (self.bar.scrollWidth > viewWidth || self.bar.scrollHeight > viewHeight) {
-                        self.bar.parentNode.classList.add("search-jumper-scroll");
-                    } else {
-                        self.bar.parentNode.classList.remove("search-jumper-scroll");
-                    }
-                }, 251);
-                setTimeout(() => {
-                    self.checkScroll();
+                    self.checkScroll(false, true);
                 }, 251);
             }
         }
@@ -6887,6 +6876,7 @@
 
                         clearInterval(checkInv);
                         resolve();
+                        debug(input, `input ${sel}, ${v}`);
                     }
                 }, 100);
             });
@@ -6895,7 +6885,7 @@
         async function emuClick(sel) {
             await new Promise((resolve) => {
                 let checkInv = setInterval(() => {
-                    let btn = getElement(sel);;
+                    let btn = getElement(sel);
                     if (btn) {
                         clearInterval(checkInv);
                         if(!PointerEvent) return btn.click();
@@ -6983,6 +6973,7 @@
                         dispatchTouchEvent(btn, "touchend");
                         btn.click();
                         resolve();
+                        debug(btn, `click ${sel}`);
                     }
                 }, 100);
             });
@@ -7655,7 +7646,7 @@
                                     searchBar.showInPage(true, e);
                                 } else {
                                     waitForMouse = false;
-                                    searchBar.waitForHide();
+                                    searchBar.waitForHide(1);
                                 }
                             }, 0);
                         }
