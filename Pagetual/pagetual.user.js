@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.32.35
+// @version      1.9.32.36
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -964,28 +964,24 @@
             if (exclude) {
                 var actualTop = exclude.offsetTop;
                 var current = exclude.offsetParent;
-                while(current !== null){
+                while (current !== null) {
                     actualTop += current.offsetTop;
                     current = current.offsetParent;
                 }
                 doc.body.scrollTop = 0;
                 doc.documentElement.scrollTop = 0;
+                let maxHeight = Math.max(doc.body.scrollHeight, doc.documentElement.scrollHeight);
+                doc.body.scrollTop = actualTop;
+                doc.documentElement.scrollTop = actualTop;
+                doc.body.scrollTop = actualTop + 10;
+                doc.documentElement.scrollTop = actualTop + 10;
                 setTimeout(() => {
-                    doc.body.scrollTop = actualTop;
-                    doc.documentElement.scrollTop = actualTop;
-                }, 1);
-                setTimeout(() => {
-                    doc.body.scrollTop = actualTop + 10;
-                    doc.documentElement.scrollTop = actualTop + 10;
-                }, 2);
-                setTimeout(() => {
-                    doc.body.scrollTop = actualTop + 50;
-                    doc.documentElement.scrollTop = actualTop + 50;
-                }, 3);
-                setTimeout(() => {
-                    doc.body.scrollTop = actualTop + 200;
-                    doc.documentElement.scrollTop = actualTop + 200;
-                }, 4);
+                    while (actualTop < maxHeight) {
+                        actualTop += 200;
+                        doc.body.scrollTop = actualTop;
+                        doc.documentElement.scrollTop = actualTop;
+                    }
+                }, 0);
                 return false;
             }
             return true;
@@ -1005,6 +1001,9 @@
             if (doc === document) return true;
             if (selArr.length == 2 && selArr[1].trim()) {
                 if (!this.scrollToShow(selArr[1], doc)) {
+                    if (!document.documentElement.contains(loadingDiv) && this.insert.parentNode) {
+                        this.insertElement(loadingDiv);
+                    }
                     return false;
                 }
             }
@@ -1989,19 +1988,8 @@
             if(refresh){
                 this.insert=null;
             }
-            if(this.insert && !refresh){
-                let parent=this.insert;
-                if (parent.parentNode) {
-                    if (parent.parentNode.nodeName === 'HTML' || parent.parentNode.nodeName === 'BODY') return this.insert;
-                    else if (isVisible(parent.parentNode, _unsafeWindow)) {
-                        while(parent && parent.nodeName != "BODY"){
-                            parent=parent.parentNode;
-                        }
-                        if(parent && parent.nodeName == "BODY"){
-                            return this.insert;
-                        }
-                    }
-                }
+            if(this.insert && document.documentElement.contains(this.insert)){
+                return this.insert;
             }
             if (this.curSiteRule.insert) {
                 let insertSel = this.curSiteRule.insert;
@@ -2228,6 +2216,7 @@
         }
 
         insertElement(ele) {
+            this.getInsert();
             if(this.curSiteRule.insertPos==2){
                 this.insert.appendChild(ele);
             }else{
@@ -5251,6 +5240,7 @@
                         let pageEle = resizeArr[0]();
                         if(pageEle){
                             let targetElement = pageEle[0];
+                            if (!targetElement) return;
                             if(pageEle.length > 1){
                                 targetElement = targetElement.parentNode;
                             }
@@ -5288,8 +5278,8 @@
                 });
             };
             setTimeout(() => {
+                scrollingToResize = false;
                 resizeHandler();
-                scrollingToResize = false
             }, 200);
             resizeHandler();
         }
