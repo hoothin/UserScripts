@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.32.36
+// @version      1.9.32.37
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -1554,9 +1554,12 @@
                     if(aTag.style.display=="none")continue;
                     if(aTag.href && /next$/i.test(aTag.href))continue;
                     if(aTag.className && /slick|slide|gallery/i.test(aTag.className))continue;
-                    if(aTag.parentNode && aTag.parentNode.className && /slick|slide|gallery/i.test(aTag.parentNode.className))continue;
                     if(aTag.classList && aTag.classList.contains('disabled'))continue;
-                    if(aTag.parentNode && aTag.parentNode.classList && aTag.parentNode.classList.contains('disabled'))continue;
+                    if(aTag.parentNode){
+                        if(aTag.parentNode.className && /slick|slide|gallery/i.test(aTag.parentNode.className))continue;
+                        if(aTag.parentNode.classList && aTag.parentNode.classList.contains('disabled'))continue;
+                        if(aTag.parentNode.tagName == "BLOCKQUOTE")continue;
+                    }
                     let innerText = (aTag.innerText||aTag.value||'').replace(/ /g, '');
                     let isJs = !aTag.href || /^(javascript|#)/.test(aTag.href.replace(location.href,""));
                     if(innerText.length<=18){
@@ -1948,7 +1951,7 @@
                 headers: {
                     'Referer': location.href
                 },
-                timeout: 5000,
+                timeout: 10000,
                 onload: function(res) {
                     var doc=null;
                     try {
@@ -3942,7 +3945,7 @@
                 'User-Agent': navigator.userAgent,
                 "Content-Type": "text/html;charset=" + (document.characterSet || document.charset || document.inputEncoding),
             },
-            timeout: 5000,
+            timeout: 10000,
             onload: function(res) {
                 var doc=null,response=res.response;
                 let preCode=ruleParser.curSiteRule.pageElementPre || ruleParser.curSiteRule.pagePre;
