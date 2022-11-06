@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/85990",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[@class='content2']",
+    "nextLink": "//a[span[@id='next_page_link']]",
+    "url": "^https://eegg\\.fun/",
+    "exampleUrl": "https://eegg.fun/text/20130216143707.html"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "masamasa",
+  "name": "easterEgg",
+  "created_at": "2022-11-05T21:13:40+09:00",
+  "updated_at": "2022-11-05T21:13:40+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/85989",
   "data": {
     "insertBefore": "",
