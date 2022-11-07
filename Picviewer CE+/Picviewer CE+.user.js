@@ -16221,12 +16221,14 @@ ImgOps | https://imgops.com/#b#`;
                 var bgReg=/.*url\(\s*["']?(.+?)["']?\s*\)/i;
                 var bgImgs=Array.from(document.body.querySelectorAll('*'))
                     .reduce((total, node) => {
-                        if(node.nodeName != "IMG" && !node.src && (!node.className || !node.className.indexOf || node.className.indexOf("pv-")==-1)){
-                            let prop = unsafeWindow.getComputedStyle(node).backgroundImage;
-                            let match = bgReg.exec(prop)
-                            if (match) {
-                                node.src=match[1];
-                                total.push(node);
+                        if(node.nodeName != "IMG" && (!node.className || !node.className.indexOf || node.className.indexOf("pv-")==-1)){
+                            let prop = getComputedStyle(node).backgroundImage;
+                            if (prop != "none") {
+                                let match = bgReg.exec(prop);
+                                if (match) {
+                                    node.src=match[1];
+                                    total.push(node);
+                                }
                             }
                         }
                         return total;
