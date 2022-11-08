@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.11.7.3
+// @version              2022.11.8.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -15301,11 +15301,12 @@ ImgOps | https://imgops.com/#b#`;
 
                 var noResize = false;
                 if(this.fitContains && !(scale && scale.x==0 && scale.y==0 && imgNaturalSize.h/imgNaturalSize.w > 2.5)){//适应屏幕
+                    this.scaleByScreen = false;
                     this.imgScrollbarV.hide();
                     this.imgScrollbarH.hide();
                     if(larger){
                         img.classList.add('pv-gallery-img_zoom-in');
-                        if(contentSSize.h/contentSSize.w >=containerSize.h/containerSize.w){
+                        if(contentSSize.h/contentSSize.w >= containerSize.h/containerSize.w){
                             let height=containerSize.h - 10;
                             if (rotate90) {
                                 imgSty.width=height + 'px';
@@ -15332,7 +15333,7 @@ ImgOps | https://imgops.com/#b#`;
                         };
                         scaled=(scaled*100).toFixed(2) + '%';
                     }else if(prefs.gallery.fitToScreenSmall){
-                        if(imgNaturalSize.h/imgNaturalSize.w >=containerSize.h/containerSize.w){
+                        if(imgNaturalSize.h/imgNaturalSize.w >= containerSize.h/containerSize.w){
                             let height=contentSSize.h-50;
                             height=height<0?contentSSize.h:height;
                             imgSty.height=height + 'px';
@@ -15349,17 +15350,60 @@ ImgOps | https://imgops.com/#b#`;
                     noResize = true;
                 }
                 if (imgSty.width == '' && imgSty.height == "" && this.imgNaturalSize.h && this.imgNaturalSize.w) {
-                    imgSty.width = this.imgNaturalSize.w + 'px';
-                    imgSty.height = this.imgNaturalSize.h + 'px';
-                    imgPaSty.width = imgNaturalSize.w + 'px';
-                    imgPaSty.height = imgNaturalSize.h + 'px';
+                    let imgW = this.imgNaturalSize.w + 'px';
+                    let imgH = this.imgNaturalSize.h + 'px';
+                    let imgPaW = imgNaturalSize.w + 'px';
+                    let imgPaH = imgNaturalSize.h + 'px';
+                    if (containerSize.h < imgNaturalSize.h && containerSize.w < imgNaturalSize.w) {
+                        if (this.scaleByScreen) {
+                            this.scaleByScreen = false;
+                        } else {
+                            this.scaleByScreen = true;
+                            img.classList.add('pv-gallery-img_zoom-in');
+                            if (imgNaturalSize.h / imgNaturalSize.w >= containerSize.h / containerSize.w) {
+                                let fitWidth = containerSize.w - 10;
+                                let fitHeight = imgNaturalSize.h / imgNaturalSize.w * fitWidth;
+                                if (rotate90) {
+                                    imgH = fitWidth + "px";
+                                    imgW = fitHeight + "px";
+                                    imgPaW = imgH;
+                                    imgPaH = imgW;
+                                } else {
+                                    imgW = fitWidth + "px";
+                                    imgH = fitHeight + "px";
+                                    imgPaW = imgW;
+                                    imgPaH = imgH;
+                                }
+                            } else {
+                                let fitHeight = containerSize.h - 10;
+                                let fitWidth = imgNaturalSize.w / imgNaturalSize.h * fitHeight;
+                                if (rotate90) {
+                                    imgW = fitHeight + "px";
+                                    imgH = fitWidth + "px";
+                                    imgPaW = imgH;
+                                    imgPaH = imgW;
+                                } else {
+                                    imgH = fitHeight + "px";
+                                    imgW = fitWidth + "px";
+                                    imgPaW = imgW;
+                                    imgPaH = imgH;
+                                }
+                            }
+                        }
+                    }
+                    imgSty.width = imgW;
+                    imgSty.height = imgH;
+                    imgPaSty.width = imgPaW;
+                    imgPaSty.height = imgPaH;
                 }
                 if (noResize) {
                     this.imgScrollbarV.reset();
                     this.imgScrollbarH.reset();
 
                     if(larger){
-                        img.classList.add('pv-gallery-img_zoom-out');
+                        if (!this.scaleByScreen) {
+                            img.classList.add('pv-gallery-img_zoom-out');
+                        }
                         if(scale){//通过鼠标点击进行的切换。
                             this.imgScrollbarH.scroll(container.scrollWidth * scale.x - containerSize.w/2);
                             this.imgScrollbarV.scroll(container.scrollHeight * scale.y - containerSize.h/2);
