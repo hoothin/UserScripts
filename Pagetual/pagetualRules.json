@@ -278,6 +278,7 @@
         "name": "漫画人 / dm5 動漫屋 / 極速漫畫 - 手機版閱讀",
         "example": "https://www.manhuaren.com/manhua-list-s2/，https://www.manhuaren.com/m198122/，https://m.dm5.com/m1331307/，https://m.1kkk.com/ch1063-1331307/，https://m.1kkk.com/vol1-4761/",
         "url": "^https?://(www|m)\\.(manhuaren|1kkk|dm5)\\.[a-z]{2,3}/(m|ch|vol)\\d+",
+        "exclude": ".view-paging",
         "history": 2,
         "pinUrl": true,
         "init": "let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/newImgs/)>-1).innerHTML.slice(4,-1);let imgData=eval(code).slice(13,-2).replaceAll(\"'\",'').split(',');let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src=\"${imgData[i]}\">`};document.querySelector('#cp_img').innerHTML=_img",
@@ -287,12 +288,13 @@
         "pageInit": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/newImgs/)>-1).innerHTML.slice(4,-1);let imgData=eval(code).slice(13,-2).replaceAll(\"'\",'').split(',');let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src=\"${imgData[i]}\">`};doc.querySelector('#cp_img').innerHTML=_img",
         "pageAction": "setTimeout(()=>{document.querySelectorAll(\"a[href*='pushHistory']\").forEach(a=>{a.href=a.href.split(\"'\")[1]});},300);function $$(css){return document.querySelectorAll(css)};setTimeout(()=>{let c=$$('#cp_img');if(c.length>2){c[0].remove()}let p=$$('.pagetual_pageBar');if(p.length>2){p[0].remove()}},200)",
         "pageBarText": 1,
-        "css": ".view-bottom-bar>li:nth-child(n+2):nth-child(-n+3),.view-fix-bottom-bar>a:nth-child(2){display:none!important}.view-bottom-bar li{width:50%!important}.view-fix-bottom-bar>a{width:25%!important}"
+        "css": ".view-bottom-bar>li:nth-child(n+2):nth-child(-n+3),.view-fix-bottom-bar>a:nth-child(2),.guide{display:none!important}.view-bottom-bar li{width:50%!important}.view-fix-bottom-bar>a{width:25%!important}"
     },
     {
         "name": "極速漫畫 - 單行本閱讀",
         "example": "https://www.1kkk.com/vol1-4761/",
         "url": "^https?://www\\.1kkk\\.com/vol\\d+-\\d+/",
+        "init": "document.body.style.overflow='scroll'",
         "nextLink": "//a[text()='下一页']",
         "stopSign": "let c = doc.querySelector('span.current').innerText; if (c == DM5_IMAGE_COUNT) return true;",
         "pageElement": "#cp_image",
@@ -305,6 +307,7 @@
         "name": "極速漫畫 - 連載閱讀",
         "example": "https://www.1kkk.com/ch1063-1331307/",
         "url": "^https?://www\\.1kkk\\.com/ch\\d+-\\d+(-p\\d+)?/",
+        "init": "document.body.style.overflow='scroll'",
         "nextLink": "span.current+a",
         "pageElement": "#cp_image",
         "replaceElement": ".chapterpager",
@@ -326,6 +329,7 @@
         "name": "dm5 動漫屋 - 閱讀",
         "example": "https://www.dm5.com/m1331307/",
         "url": "^https?://www\\.dm5\\.[a-z]{2,3}/m\\d+/",
+        "init": "document.body.style.overflow='scroll'",
         "nextLink": "span.current+a",
         "pageElement": "#cp_image",
         "replaceElement": ".chapterpager",
@@ -477,16 +481,30 @@
         "nextLink": "0"
     },
     {
-        "name": "砂之船动漫家 - 閱讀",
+        "name": "砂之船动漫家 - 手機版版閱讀 - 手動下一話",
         "example": "https://www.szcdmj.com/szcchapter/736400",
         "url": "^https?://www\\.szcdmj\\.com/szcchapter/\\d+",
+        "include": ".view-bottom-bar",
         "nextLink": "//a[@href][text()='下一页']",
-        "pageElement": ".comicpage img,#cp_img>img",
-        "replaceElement": ".fanye,.view-bottom-bar,.view-fix-top-bar,.view-fix-bottom-bar",
+        "pageElement": "#cp_img>img",
+        "replaceElement": ".view-bottom-bar,.view-fix-top-bar,.view-fix-bottom-bar",
         "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
         "initRun": 1,
         "autoLoadNum": "0",
-        "css": ".comicpage img{max-width:100%!important;margin:0 auto !important}.fanye>a:nth-child(n+2):nth-child(-n+3),.view-fix-bottom-bar-item:nth-child(n+4):nth-child(-n+5){display:none!important}.view-fix-bottom-bar-item{width:33.33%!important}"
+        "css": ".view-bottom-bar>li:nth-child(n+3):nth-child(-n+4),.view-fix-bottom-bar-item:nth-child(n+4):nth-child(-n+5){display:none!important}.view-fix-bottom-bar-item,.view-bottom-bar>li{width:33.33%!important}"
+    },
+    {
+        "name": "砂之船动漫家 - PC版閱讀 - 手動下一話",
+        "example": "https://www.szcdmj.com/szcchapter/736400",
+        "url": "^https?://www\\.szcdmj\\.com/szcchapter/\\d+",
+        "include": ".read-section",
+        "nextLink": "//a[@href][text()='下一页']",
+        "pageElement": ".comicpage img",
+        "replaceElement": ".fanye",
+        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "initRun": 1,
+        "autoLoadNum": "0",
+        "css": ".comicpage img{max-width:100%!important;margin:0 auto !important}.fanye>a:nth-child(n+2):nth-child(-n+3){display:none!important}"
     },
     {
         "name": "砂之船动漫家 - 分類",
@@ -810,10 +828,50 @@
         "pageAction": "document.querySelector('.pagetual_pageBar').remove()"
     },
     {
+        "name": "动漫之家手機版 - 閱讀",
+        "example": "https://m.dmzj.com/view/41903/64446.html",
+        "url": "^https?://m\\.dmzj\\.com/view/\\d+/\\d+\\.html",
+        "pinUrl": true,
+        "history": 2,
+        "init": "function $(css){return document.querySelector(css)};function $$(css){return document.querySelectorAll(css)};$('.iconRet').setAttribute('onclick','goBack();');$$('.letchepter>a[onclick]').forEach(a=>{a.removeAttribute('onclick')});let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/comic_id/)>-1).innerHTML.replaceAll('\"','');let n=code.search(/next_chap/);let p=code.search(/prev_chap/);let cd=code.match(/comic_id:(\\d+)/)[1];if(n>-1){let nd=code.match(/next_chap_id:(\\d+)/)[1];let url='/view/'+cd+'/'+nd+'.html';$('.afterChapter').href=url}else{$('.afterChapter').href=$('.ChapterLestMune').href}if(p>-1){let pd=code.match(/prev_chap_id:(\\d+)/)[1];let url='/view/'+cd+'/'+pd+'.html';$('.beforeChapter').href=url}else{$('.beforeChapter').href=$('.ChapterLestMune').href}",
+        "nextLinkByJs": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/comic_id/)>-1).innerHTML.replaceAll('\"','');let n=code.search(/next_chap/);if(n>-1){let cd=code.match(/comic_id:(\\d+)/)[1];let nd=code.match(/next_chap_id:(\\d+)/)[1];return location.origin+'/view/'+cd+'/'+nd+'.html'}",
+        "pageElement": "div[id^='charpet']",
+        "replaceElement": "head>title,a.BarTit,.botNav .tc",
+        "pageInit": "function $(css){return document.querySelector(css)};function $$(css){return document.querySelectorAll(css)};let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/comic_id/)>-1).innerHTML.replaceAll('\"','');let n=code.search(/next_chap/);let p=code.search(/prev_chap/);let cd=code.match(/comic_id:(\\d+)/)[1];if(n>-1){let nd=code.match(/next_chap_id:(\\d+)/)[1];let url='/view/'+cd+'/'+nd+'.html';$('.afterChapter').href=url}else{$('.afterChapter').href=$('.ChapterLestMune').href}if(p>-1){let pd=code.match(/prev_chap_id:(\\d+)/)[1];let url='/view/'+cd+'/'+pd+'.html';$('.beforeChapter').href=url}else{$('.beforeChapter').href=$('.ChapterLestMune').href}",
+        "pageAction": "function $$(css){return document.querySelectorAll(css)};setTimeout(()=>{let c=$$(\"div[id^='charpet']\");if(c.length>2){c[0].remove()}let p=$$('.pagetual_pageBar');if(p.length>2){p[0].remove()}},200)",
+        "pageBarText": 1,
+        "css": "#commicBox img{opacity:1!important}#m_r_panelbox,#khdDown,#divAD{display:none!important}"
+    },
+    {
+        "name": "动漫之家2 - 閱讀",
+        "example": "https://www.dmzj.com/view/siwangleyuan/75382.html#@page=1",
+        "url": "^https?://www\\.dmzj\\.com/view/",
+        "pinUrl": true,
+        "history": 2,
+        "init": "let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/arr_img/)>-1).innerHTML.slice(71,-1);let imgData=eval(code).slice(12,-3).split(',')[2].replace('\"page_url\":\"','').replace('\"','').replaceAll('\\\\','').split('rn');let host='https://images.dmzj.com/';let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src='${host}${imgData[i]}'>`};document.querySelector('.comic_wraCon').innerHTML=_img",
+        "nextLink": "span.next>a",
+        "pageElement": ".comic_wraCon",
+        "replaceElement": "head>title,.wrap_last_head,.wrap_last_mid",
+        "pageInit": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/arr_img/)>-1).innerHTML.slice(71,-1);let imgData=eval(code).slice(12,-3).split(',')[2].replace('\"page_url\":\"','').replace('\"','').replaceAll('\\\\','').split('rn');let host='https://images.dmzj.com/';let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src='${host}${imgData[i]}'>`};doc.querySelector('.comic_wraCon').innerHTML=_img",
+        "pageAction": "function $$(css){return document.querySelectorAll(css)};setTimeout(()=>{let c=$$('.comic_wraCon');if(c.length>2){c[0].remove()}let p=$$('.pagetual_pageBar');if(p.length>2){p[0].remove()}},200)",
+        "pageBarText": 1,
+        "css": ".nav-pagination,.img_land_prev,.img_land_next,#page_select,.img_info,.title.pr>em:nth-child(5),.title.pr>span{display:none!important}.comic_wraCon>img{max-width: 100% !important;display: block !important;margin: 0 auto -2px auto !important;border:0px!important;padding:0px!important;}"
+    },
+    {
+        "name": "动漫之家2 - 分類",
+        "example": "https://www.dmzj.com/update/",
+        "url": "^https?://www\\.dmzj\\.com/(update|category|rank)",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": ".list_con_li,.ph_r_con_li",
+        "replaceElement": ".top_page.page,.bottom_page.page",
+        "css": ".wrap_list,.wrap_mhlist .wrap_mhlist_l,.wrap_mhlist .wrap_mhlist_r{height:auto!important}.pagetual_pageBar{margin-top:-10px!important;margin-bottom:0px!important}.ph_r_con_li+.pagetual_pageBar{display:none!important}"
+    },
+    {
         "name": "动漫之家 - 閱讀",
         "example": "https://manhua.dmzj.com/shenghuomosgushimentiaozhanmigong/118093.shtml",
         "url": "^https?://manhua\\.dmzj\\.com/[a-z]+/\\d+\\.shtml",
         "pinUrl": true,
+        "history": 2,
         "action": 1,
         "waitElement": [
             "#center_box img"
