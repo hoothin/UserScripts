@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.32.38
+// @version      1.9.32.39
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -736,17 +736,21 @@
         return getElementByXpath(sel, doc, doc);
     }
 
-    function geneSelector(ele, addID){
-        let selector=ele.tagName.toLowerCase();
+    function geneSelector(ele, addID) {
+        let selector = ele.tagName.toLowerCase();
         //Google id class都是隨機。百度更過分，style script順序都是隨機的
-        if(ele.tagName!="HTML" && ele.tagName!="BODY"){
-            if (addID && ele.id) selector += '#' + ele.id;
+        if (ele.tagName != "HTML" && ele.tagName != "BODY") {
+            let hasId = false;
+            if (addID && ele.id && /^[a-z_][\w\-_]*$/i.test(ele.id)) {
+                hasId = true;
+                selector += '#' + ele.id;
+            }
             let className = "";
             if (ele.className) {
                 let classList = ele.classList, i = 0;
                 for (let i = 0; i < classList.length; i++) {
                     let c = classList[i];
-                    if (/^[\w-_]+$/.test(c) && !/\d{3,}/.test(c)) {
+                    if (/^[\w\-_]+$/.test(c) && !/\d{3,}/.test(c)) {
                         className += '.' + c;
                     }
                 }
@@ -755,17 +759,17 @@
             let parent = ele.parentElement;
             if (parent) {
                 selector = geneSelector(parent, addID) + ' > ' + selector;
-                if(!className && (!ele.id || !addID) && parent.children.length>1){
-                    let i,j=0;
-                    for(i=0;i<parent.children.length;i++){
-                        if(parent.children[i].tagName==ele.tagName){
+                if (!className && !hasId && parent.children.length > 1) {
+                    let i, j = 0;
+                    for (i = 0; i < parent.children.length; i++) {
+                        if (parent.children[i].tagName == ele.tagName) {
                             j++;
-                            if(parent.children[i]==ele){
+                            if (parent.children[i] == ele) {
                                 break;
                             }
                         }
                     }
-                    selector += (parent.tagName=="HTML"?"":`:nth-of-type(${j})`);
+                    selector += (parent.tagName == "HTML" ? "" : `:nth-of-type(${j})`);
                 }
             }
         }
