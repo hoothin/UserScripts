@@ -1,5 +1,19 @@
 [
 {
+  "resource_url": "http://wedata.net/items/85993",
+  "data": {
+    "pageElement": "//div[@id='arcbox']",
+    "nextLink": "//*[@rel=\"next\"]",
+    "url": "^(https://)?m\\.xsnvshen\\.com/album/",
+    "exampleUrl": "https://m.xsnvshen.com/album/39755"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "powertalent",
+  "name": "性感美女图片_宅男女神写真_秀色女神 | Sexy Beauty Pictures",
+  "created_at": "2022-11-11T08:29:39+09:00",
+  "updated_at": "2022-11-11T08:35:28+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/85992",
   "data": {
     "insertBefore": "",
@@ -4889,7 +4903,8 @@
   "resource_url": "http://wedata.net/items/85413",
   "data": {
     "pageElement": "//div[@class='article-body']/*[not(self::div) or @class='figure-center']|//main//div[./div[@class='m-articles__item']]",
-    "nextLink": "//link[@rel='next']",
+    "comment": "link[@rel='next'] NG https://limo.media/category/latest",
+    "nextLink": "//li[./a[contains(@href,'?page=')]][last()]/a",
     "url": "^https://limo\\.media/",
     "exampleUrl": "https://limo.media/articles/-/32276\r\nhttps://limo.media/category/money"
   },
@@ -4897,7 +4912,7 @@
   "created_by": "brib2",
   "name": "LIMO",
   "created_at": "2020-07-14T23:08:51+09:00",
-  "updated_at": "2022-09-24T10:14:31+09:00"
+  "updated_at": "2022-11-10T20:13:06+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85412",
