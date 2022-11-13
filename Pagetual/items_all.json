@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/85998",
+  "data": {
+    "pageElement": "//div[@id='fukie2']/p",
+    "insertBefore": "//div[@id='jp-relatedposts']",
+    "nextLink": "(//link|//a)[contains(concat(' ', translate(normalize-space(@rel),'NEXT','next'), ' '), ' next ')]",
+    "url": "^https://mrcong\\.com/",
+    "exampleUrl": "https://mrcong.com/bimilstory-hyunji-vol-02-pantyhose-is-the-truth-100-anh/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "powertalent",
+  "name": "MrCong.com",
+  "created_at": "2022-11-12T14:39:13+09:00",
+  "updated_at": "2022-11-12T14:42:45+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/85997",
   "data": {
     "insertBefore": "",
@@ -46,15 +61,15 @@
   "resource_url": "http://wedata.net/items/85993",
   "data": {
     "pageElement": "//div[@id='arcbox']",
-    "nextLink": "//*[@rel=\"next\"]",
+    "nextLink": "//a[@class='pg_next']|//*[@rel='next']",
     "url": "^(https://)?m\\.xsnvshen\\.com/album/",
-    "exampleUrl": "https://m.xsnvshen.com/album/39755"
+    "exampleUrl": "https://m.xsnvshen.com/album/39755 | https://m.xsnvshen.com/album/39765"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "powertalent",
   "name": "性感美女图片_宅男女神写真_秀色女神 | Sexy Beauty Pictures",
   "created_at": "2022-11-11T08:29:39+09:00",
-  "updated_at": "2022-11-11T08:35:28+09:00"
+  "updated_at": "2022-11-12T19:57:50+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85992",
