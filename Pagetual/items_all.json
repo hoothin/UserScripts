@@ -1,5 +1,77 @@
 [
 {
+  "resource_url": "http://wedata.net/items/85998",
+  "data": {
+    "pageElement": "//div[@id='fukie2']/p",
+    "insertBefore": "//div[@id='jp-relatedposts']",
+    "nextLink": "(//link|//a)[contains(concat(' ', translate(normalize-space(@rel),'NEXT','next'), ' '), ' next ')]",
+    "url": "^https://mrcong\\.com/",
+    "exampleUrl": "https://mrcong.com/bimilstory-hyunji-vol-02-pantyhose-is-the-truth-100-anh/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "powertalent",
+  "name": "MrCong.com",
+  "created_at": "2022-11-12T14:39:13+09:00",
+  "updated_at": "2022-11-12T14:42:45+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/85997",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[@id='section']",
+    "nextLink": "//a[i[contains(text(), '›')]]",
+    "url": "^https://joxjo\\.net/",
+    "exampleUrl": "https://joxjo.net/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "masamasa",
+  "name": "女Ｘ女　～じょじょ～",
+  "created_at": "2022-11-12T05:43:42+09:00",
+  "updated_at": "2022-11-12T05:43:42+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/85996",
+  "data": {
+    "pageElement": "//div[@class='c_content']/a",
+    "nextLink": "(//a[@style='background:green;color:white']/following-sibling::a)[1]",
+    "url": "^https://(www|m).gril8\\.net/",
+    "exampleUrl": "https://www.gril8.net/body/202111/51485.htm"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "powertalent",
+  "name": "徐娘半老_成熟自拍照_美女生活照_美女自拍 - 女人吧",
+  "created_at": "2022-11-11T15:20:11+09:00",
+  "updated_at": "2022-11-12T10:19:59+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/85994",
+  "data": {
+    "pageElement": "//div[@class='contentme']",
+    "nextLink": "//a[contains(text(),'Next >')]",
+    "url": "^https://www\\.depvailon\\.com/",
+    "exampleUrl": "https://www.depvailon.com/xiu-ren-no-5791-%E5%BC%A0%E6%80%9D%E5%85%81-nice-chinese-beauties.html"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "powertalent",
+  "name": "So Beautiful Girl",
+  "created_at": "2022-11-11T14:21:08+09:00",
+  "updated_at": "2022-11-11T15:25:28+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/85993",
+  "data": {
+    "pageElement": "//div[@id='arcbox']",
+    "nextLink": "//a[@class='pg_next']|//*[@rel='next']",
+    "url": "^(https://)?m\\.xsnvshen\\.com/album/",
+    "exampleUrl": "https://m.xsnvshen.com/album/39755 | https://m.xsnvshen.com/album/39765"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "powertalent",
+  "name": "性感美女图片_宅男女神写真_秀色女神 | Sexy Beauty Pictures",
+  "created_at": "2022-11-11T08:29:39+09:00",
+  "updated_at": "2022-11-12T19:57:50+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/85992",
   "data": {
     "insertBefore": "",
@@ -3984,7 +4056,7 @@
 {
   "resource_url": "http://wedata.net/items/85504",
   "data": {
-    "pageElement": "id('release-list')/li[@class='ui grid']|//div[@class='ui repository list' or @class='issue list']/*[@class='item']",
+    "pageElement": "id('release-list')/li[@class='ui grid']|//div[not(@id)][contains(@class,'list')]/*[contains(@class,'item')][.//*[contains(@class,'title')]]",
     "nextLink": "//a[@class='active item']/following-sibling::a[@class=' item navigation']",
     "url": "^https?://codeberg\\.org/",
     "exampleUrl": "https://codeberg.org/nobody/LocalCDN/releases https://codeberg.org/explore/repos https://codeberg.org/Codeberg/Community/issues"
@@ -3993,7 +4065,7 @@
   "created_by": "hhenning",
   "name": "Codeberg",
   "created_at": "2020-09-21T18:21:40+09:00",
-  "updated_at": "2020-09-22T07:34:06+09:00"
+  "updated_at": "2022-11-12T09:24:31+09:00"
 },
 {
   "data": {
@@ -4889,7 +4961,8 @@
   "resource_url": "http://wedata.net/items/85413",
   "data": {
     "pageElement": "//div[@class='article-body']/*[not(self::div) or @class='figure-center']|//main//div[./div[@class='m-articles__item']]",
-    "nextLink": "//link[@rel='next']",
+    "comment": "link[@rel='next'] NG https://limo.media/category/latest",
+    "nextLink": "//li[./a[contains(@href,'?page=')]][last()]/a",
     "url": "^https://limo\\.media/",
     "exampleUrl": "https://limo.media/articles/-/32276\r\nhttps://limo.media/category/money"
   },
@@ -4897,7 +4970,7 @@
   "created_by": "brib2",
   "name": "LIMO",
   "created_at": "2020-07-14T23:08:51+09:00",
-  "updated_at": "2022-09-24T10:14:31+09:00"
+  "updated_at": "2022-11-10T20:13:06+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85412",
@@ -27444,17 +27517,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/66475",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "created_at": "2013-02-03T12:54:41+09:00",
   "data": {
-    "pageElement": "//div[@class='article_list list_clm-listpage']/ul",
-    "exampleUrl": "https://www.soccer-king.jp/news/japan/national",
+    "pageElement": "descendant::div[contains(@class,'article_list')][1]/ul",
+    "nextLink": "//li[@class='next']/a",
     "url": "^https?://(www\\.)?soccer-king\\.jp/.",
-    "nextLink": "//li[@class='next']/a"
+    "exampleUrl": "https://www.soccer-king.jp/news/japan/national"
   },
-  "updated_at": "2020-05-26T06:44:20+09:00",
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "worhy",
   "name": "サッカーキング　一覧",
-  "created_by": "worhy"
+  "created_at": "2013-02-03T12:54:41+09:00",
+  "updated_at": "2022-11-12T06:54:04+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/66470",
