@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.32.40
+// @version      1.9.32.41
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -814,6 +814,8 @@
     function createHTML(html){
         return escapeHTMLPolicy?escapeHTMLPolicy.createHTML(html):html;
     }
+
+    const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
 
     class RuleParser {
         constructor() {
@@ -1724,7 +1726,7 @@
             return pageNum==url?curPage:pageNum;
         }
 
-        getNextLink(doc) {
+        async getNextLink(doc) {
             let nextLink = null, page, href;
             let getNextLinkByForm = (form, n) => {
                 let params = [];
@@ -1742,7 +1744,9 @@
                 return true;
             } else if (this.curSiteRule.nextLinkByJs) {
                 try {
-                    let targetUrl = ((typeof _unsafeWindow.pagetualNextLinkByJs == 'undefined') ? Function("doc", '"use strict";' + this.curSiteRule.nextLinkByJs) : _unsafeWindow.pagetualNextLinkByJs)(doc);
+                    let over = _url => {
+                    };
+                    let targetUrl = await ((typeof _unsafeWindow.pagetualNextLinkByJs == 'undefined') ? new AsyncFunction("doc", '"use strict";' + this.curSiteRule.nextLinkByJs) : _unsafeWindow.pagetualNextLinkByJs)(doc);
                     if (targetUrl) nextLink = {href: targetUrl};
                 } catch(e) {
                     debug(e);
@@ -2171,7 +2175,7 @@
             this.curUrl=location.href;
             let base=document.querySelector("base");
             this.basePath=base?base.href:location.href;
-            this.getRule(()=>{
+            this.getRule(async () => {
                 if(self.curSiteRule.enable==0){
                     debug("Stop as rule disable");
                     isPause=true;
@@ -2214,7 +2218,7 @@
                         debug(e);
                     }
                 }
-                self.getNextLink(document);
+                await self.getNextLink(document);
                 self.refreshByClick();
                 callback();
             });
@@ -2234,7 +2238,7 @@
             let oldTitle=this.pageDoc.title;
             this.pageDoc=doc;
             this.curUrl=url;
-            let nextLink=this.getNextLink(doc);
+            let nextLink=await this.getNextLink(doc);
             this.nextTitle="";
             if(this.curSiteRule.pageBarText){
                 if(this.curSiteRule.pageBarText==1 || this.curSiteRule.pageBarText==true){
@@ -4307,14 +4311,14 @@
             },300);
         }
         let clickMode = typeof ruleParser.curSiteRule.clickMode == 'undefined' ? rulesData.clickMode : ruleParser.curSiteRule.clickMode;
-        let clickNext=() => {
-            let nextLink=ruleParser.nextLinkHref;
-            if(!nextLink)return;
-            let isJs=/^(javascript|#)/.test(nextLink.replace(location.href,""));
-            if(isJs){
-                let nextBtn=ruleParser.getNextLink(document);
-                if(nextBtn)emuClick(nextBtn);
-            }else{
+        let clickNext = async () => {
+            let nextLink = ruleParser.nextLinkHref;
+            if (!nextLink) return;
+            let isJs = /^(javascript|#)/.test(nextLink.replace(location.href, ""));
+            if (isJs) {
+                let nextBtn = await ruleParser.getNextLink(document);
+                if (nextBtn) emuClick(nextBtn);
+            } else {
                 window.location.href = nextLink;
             }
         };
@@ -5026,7 +5030,7 @@
                 emuIframe=null;
             }
         }
-        function checkPage(){
+        async function checkPage(){
             if(isPause)return loadPageOver();
             try{
                 iframeDoc=emuIframe.contentDocument || emuIframe.contentWindow.document;
@@ -5081,13 +5085,13 @@
                     },waitTime);
                     return;
                 }else {
-                    nextLink=ruleParser.getNextLink(iframeDoc);
-                    pageEle=ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView, true);
-                    if(!pageEle || pageEle.length==0 || !nextLink){
-                        if(waitTimes-->0){
-                            setTimeout(()=>{
+                    nextLink = await ruleParser.getNextLink(iframeDoc);
+                    pageEle = ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView, true);
+                    if (!pageEle || pageEle.length==0 || !nextLink) {
+                        if (waitTimes-- > 0) {
+                            setTimeout(() => {
                                 checkPage();
-                            },waitTime);
+                            }, waitTime);
                             return;
                         }
                     }
@@ -5127,7 +5131,7 @@
                 }
                 return;
             }
-            nextLink = nextLink || ruleParser.getNextLink(iframeDoc);
+            nextLink = nextLink || await ruleParser.getNextLink(iframeDoc);
             if(!nextLink){
                 if(waitTimes-->0){
                     setTimeout(()=>{
@@ -5172,6 +5176,7 @@
                         checkPage();
                     },waitTime);
                 }else if(changed){
+                    times = 0;
                     if (orgContent == preContent) {
                         returnFalse("Stop as same content");
                     } else {
@@ -5363,11 +5368,11 @@
             let foundNext=()=>{
                 document.removeEventListener("scroll", forceRefresh);
             }
-            setTimeout(()=>{
+            setTimeout(async () => {
                 inAction=false;
                 if(!ruleParser.nextLinkHref){
                     checkTimes++;
-                    ruleParser.getNextLink(iframeDoc);
+                    await ruleParser.getNextLink(iframeDoc);
                     if(ruleParser.nextLinkHref){
                         foundNext();
                     }else if(checkTimes>=10){
@@ -5414,7 +5419,7 @@
 
     var tryTimes = 0;
 
-    function nextPage(){
+    async function nextPage(){
         if(typeof ruleParser.curSiteRule.manualMode=='undefined' ? rulesData.manualMode : ruleParser.curSiteRule.manualMode)return;
         if(typeof ruleParser.curSiteRule.clickMode=='undefined' ? rulesData.clickMode : ruleParser.curSiteRule.clickMode)return;
         if(isPause || isLoading || forceState==1)return;
@@ -5429,16 +5434,16 @@
         if(ruleParser.curSiteRule.pageElementCss || ruleParser.curSiteRule.pageElementStyle || rulesData.pageElementCss){
             ruleParser.getPageElement(document, _unsafeWindow);
         }
-        let nextLink=ruleParser.nextLinkHref;
-        if(!nextLink){
-            if(curPage==1){
-                ruleParser.getNextLink(document);
-                nextLink=ruleParser.nextLinkHref;
+        let nextLink = ruleParser.nextLinkHref;
+        if (!nextLink) {
+            if (curPage == 1) {
+                await ruleParser.getNextLink(document);
+                nextLink = ruleParser.nextLinkHref;
             }
-            if(!nextLink){
-                isLoading=true;
-                if(curPage==1 && (ruleParser.curSiteRule.pinUrl || tryTimes++ <= 10)){
-                    setTimeout(()=>{isLoading=false},500);
+            if (!nextLink) {
+                isLoading = true;
+                if (curPage == 1 && (ruleParser.curSiteRule.pinUrl || tryTimes++ <= 10)) {
+                    setTimeout(() => {isLoading = false}, 500);
                 }
                 return;
             }
