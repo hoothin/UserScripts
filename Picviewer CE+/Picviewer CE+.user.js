@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.11.8.1
+// @version              2022.11.14.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -13728,7 +13728,7 @@ ImgOps | https://imgops.com/#b#`;
                                         if (srcSplit.length > 50) srcSplit = srcSplit.substring(srcSplit.length - 50, srcSplit.length);
                                     }
                                     var title = node.title.indexOf('\n') !== -1 ? node.title.split('\n')[0] : node.title;
-                                    title = title.indexOf('http') === 0 ? '' : title;
+                                    title = title.indexOf('http') === 0 || title.indexOf('data') === 0 ? '' : title;
                                     var picName = document.title + "-" + (saveIndex < 10 ? "00" + saveIndex : (saveIndex < 100 ? "0" + saveIndex : saveIndex)) + (title ? "-" + title : "") + "-" + srcSplit, hostArr = location.host.split(".");
                                     var host = hostArr[hostArr.length-2];
                                     saveParams.push([node.dataset.src, picName]);
@@ -14114,7 +14114,7 @@ ImgOps | https://imgops.com/#b#`;
                 eleMaps['img-parent'].addEventListener('mousedown',function(e){//如果图片尺寸大于屏幕的时候按住图片进行拖移
                     var target=e.target;
                     if(e.button!=0 || target.nodeName!='IMG')return;
-                    var bigger=target.classList.contains('pv-gallery-img_zoom-out');//如果是大于屏幕
+                    var bigger=target.classList.contains('pv-gallery-img_zoom-out') || self.scaleByScreen;//如果是大于屏幕
 
                     var oClient={
                         x:e.clientX,
@@ -14399,7 +14399,7 @@ ImgOps | https://imgops.com/#b#`;
                                     } else {
                                         ext = imgSrc.match(/\.\w{2,5}$/) || '.png';
                                     }
-                                    zip.file(imgName.replace(/\//g,"").replace(/\.\w+$/,"") + '-' + downloaded + ext,blob);
+                                    zip.file(imgName.replace(/^data:.*/, "img").replace(/\//g,"").replace(/\.\w+$/,"") + '-' + downloaded + ext,blob);
                                     downloaded++;
                                     if(downloaded == len){
                                         self.showTips("Begin compress to ZIP...", 100000);
@@ -14743,7 +14743,7 @@ ImgOps | https://imgops.com/#b#`;
                                         let imgSrc=conItem.querySelector("img").src;
                                         let title=node.nextElementSibling.title;
                                         title = title.indexOf('\n') !== -1 ? title.split('\n')[0] : title;
-                                        title = title.indexOf('http') === 0 ? '' : title;
+                                        title = title.indexOf('http') === 0 || title.indexOf('data') === 0 ? '' : title;
                                         let srcSplit;
                                         if (imgSrc.indexOf('data') === 0) srcSplit = "";
                                         else {
@@ -15475,7 +15475,7 @@ ImgOps | https://imgops.com/#b#`;
                             spanMark.dataset.thumbSrc=item.imgSrc;
                             let title = item.img ? (item.img.title || item.img.alt || "").slice(0, 50) : "";
                             if (title) {
-                                if (title.indexOf('http') === 0) title = '';
+                                if (title.indexOf('http') === 0 || title.indexOf('data') === 0) title = '';
                                 else title += '\n';
                             }
                             spanMark.title = title + item.src.slice(0, 200);
@@ -20733,7 +20733,7 @@ ImgOps | https://imgops.com/#b#`;
                 var setPosition = {
                     top:function() {
                         var top = targetPosi.top + scrolled.y;
-                        if (targetPosi.top + offsetY < 0) {
+                        if (targetPosi.top + offsetY < 10) {
                             top = scrolled.y;
                             offsetY = 0;
                         } else {
