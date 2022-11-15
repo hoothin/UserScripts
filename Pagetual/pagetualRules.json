@@ -979,13 +979,18 @@
         "css": ".pagetual_pageBar{margin:20px 5px 0!important}.newpic_bgno,.tcaricature_block+.pagetual_pageBar{margin-top:5px!important}.pagetual_pageBar+.tcaricature_block{margin-top:0px!important}"
     },
     {
-        "name": "漫画猫 - 閱讀 - 雙擊前往下一話，鍵盤左右鍵上下話",
+        "name": "漫画猫 - 閱讀",
         "example": "https://www.maofly.com/manga/39027/515484.html",
         "url": "^https?://www\\.maofly\\.com/manga/",
         "pinUrl": true,
-        "init": "function gx(x){return document.evaluate(x,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue};function next(e){e=e||window.event;if(e.keyCode==39){let n=gx(\"//a[text()='下一话']\");if(n){n.click()}}};document.addEventListener('keydown',next);function prev(e){e=e||window.event;if(e.keyCode==37){let p=gx(\"//a[text()='上一话']\");if(p){p.click()}}};document.addEventListener('keydown',prev);function dcnext(){let n=gx(\"//a[text()='下一话']\");if(n){n.click()}};document.addEventListener('dblclick',dcnext);let _img='';for(let i=0;i<img_data_arr.length;i++){_img+=`<img class=\"img-fluid show-pic\" src='${asset_domain}${img_pre}${img_data_arr[i]}'>`};document.querySelector('.img-content').innerHTML=_img;",
-        "nextLink": "0",
-        "manualMode": true,
+        "history": 2,
+        "init": "let vgrdata=document.querySelector('.vg-r-data');let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/img_data/)>-1).innerHTML;let Base64=eval(code.match(/img_data = \".+\"/g)[0]);let imgData=LZString.decompressFromBase64(Base64).split(',');let imgPre='/uploads/';let assetDomain=vgrdata.getAttribute('data-chapter-domain');let assetKey=vgrdata.getAttribute('data-chapter-key');let _img='';for(let i=0;i<imgData.length;i++){let imgSrc=assetDomain+imgPre+imgData[i];_img+=`<img class=\"img-fluid show-pic\"src='${imgSrc}'>`};document.querySelector('.img-content').innerHTML=_img;",
+        "nextLinkByJs": "let vgrdata=doc.querySelector('.vg-r-data');let num=vgrdata.getAttribute('data-chapter_num');let type=vgrdata.getAttribute('data-chapter-type');let n=1;let json='/chapter_num?chapter_id='+num+'&ctype='+n+'&type='+type;return fetch(json).then((response)=>{return response.json()}).then((json)=>{if(json.code!='0000'){return null}else{return json.url}}).then((res)=>{return res});",
+        "pageElement": ".img-content",
+        "replaceElement": "head>title,.breadcrumb-item.active,.h4.text-center",
+        "pageInit": "let vgrdata=doc.querySelector('.vg-r-data');let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/img_data/)>-1).innerHTML;let Base64=eval(code.match(/img_data = \".+\"/g)[0]);let imgData=LZString.decompressFromBase64(Base64).split(',');let imgPre='/uploads/';let assetDomain=vgrdata.getAttribute('data-chapter-domain');let assetKey=vgrdata.getAttribute('data-chapter-key');let _img='';for(let i=0;i<imgData.length;i++){let imgSrc=assetDomain+imgPre+imgData[i];_img+=`<img class=\"img-fluid show-pic\"src='${imgSrc}'>`};doc.querySelector('.img-content').innerHTML=_img;",
+        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('.img-content');if(c.length>2){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>2){p[0].remove()}},200)",
+        "pageBarText": 1,
         "css": "a[onclick],a[href*='false']{display:none!important}.img-content>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
     },
     {
@@ -998,13 +1003,18 @@
         "css": ".row+.pagetual_pageBar{margin-top:-2px!important}hr+.pagetual_pageBar{display:none!important}"
     },
     {
-        "name": "漫画DB - 閱讀 - 雙擊前往下一集，鍵盤左右鍵上下集 - 圖片數據eval(window.atob(img_data));",
-        "example": "https://www.manhuadb.com/manhua/1167/7899_120148.html",
+        "name": "漫画DB - 閱讀",
+        "example": "https://www.manhuadb.com/manhua/1167/1315_13028.html",
         "url": "^https?://www\\.manhuadb\\.com/manhua/\\d+/\\w+\\.html",
         "pinUrl": true,
-        "init": "function gx(x){return document.evaluate(x,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue};function next(e){let key=window.event?e.keyCode:e.which;if(key==39){let n=gx(\"//a[text()='下集']\");if(n){n.click()}}};document.addEventListener('keydown',next);function prev(e){let key=window.event?e.keyCode:e.which;if(key==37){let p=gx(\"//a[text()='上集']\");if(p){p.click()}}};document.addEventListener('keydown',prev);function dcnext(){let n=gx(\"//a[text()='下集']\");if(n){n.click()}};document.addEventListener('dblclick',dcnext);let _img='';for(let i=0;i<img_data_arr.length;i++){if(is_webp!=1&&img_data_arr[i].img_webp){_img+=`<img class=\"img-fluid show-pic\" src='${img_host}${img_pre}${img_data_arr[i].img_webp}'>`}else{_img+=`<img class=\"img-fluid show-pic\" src='${img_host}${img_pre}${img_data_arr[i].img}'>`}};document.querySelector('#all').innerHTML=_img",
-        "nextLink": "0",
-        "manualMode": true,
+        "history": 2,
+        "init": "let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/img_data/)>-1).innerHTML;let Base64=eval(code.replace('var ',''));let imgData=eval(atob(Base64));let vgrdata=document.querySelector('.vg-r-data');let imgHost=vgrdata.getAttribute('data-host');let imgPre=vgrdata.getAttribute('data-img_pre');let _img='';for(let i=0;i<imgData.length;i++){if(is_webp!=1&&imgData[i].img_webp){_img+=`<img class=\"img-fluid show-pic\"src='${imgHost}${imgPre}${imgData[i].img_webp}'>`}else{_img+=`<img class=\"img-fluid show-pic\"src='${imgHost}${imgPre}${imgData[i].img}'>`}};document.querySelector('#all').innerHTML=_img;",
+        "nextLinkByJs": "return new Promise((resolve)=>{let vgrdata=doc.querySelector('.vg-r-data');let num=vgrdata.getAttribute('data-num');let nnum=parseInt(num)+1;let pccid=vgrdata.getAttribute('data-ccid');let pid=vgrdata.getAttribute('data-id');let pd=vgrdata.getAttribute('data-d');$.ajax({type:'post',url:'/book/goNumPage',data:{ccid:pccid,id:pid,num:nnum,d:pd,type:'next'},dataType:'json',success:function(json){if(json.state==0){resolve(null)}else{let url=json.url;resolve(location.origin+url)}}})}).then((res)=>{return res});",
+        "pageElement": "#all",
+        "replaceElement": "head>title,.h4.text-center,ol.breadcrumb",
+        "pageInit": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/img_data/)>-1).innerHTML;let Base64=eval(code.replace('var ',''));let imgData=eval(atob(Base64));let vgrdata=doc.querySelector('.vg-r-data');let imgHost=vgrdata.getAttribute('data-host');let imgPre=vgrdata.getAttribute('data-img_pre');let _img='';for(let i=0;i<imgData.length;i++){if(is_webp!=1&&imgData[i].img_webp){_img+=`<img class=\"img-fluid show-pic\"src='${imgHost}${imgPre}${imgData[i].img_webp}'>`}else{_img+=`<img class=\"img-fluid show-pic\"src='${imgHost}${imgPre}${imgData[i].img}'>`}};doc.querySelector('#all').innerHTML=_img;",
+        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('#all');if(c.length>2){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>2){p[0].remove()}},200)",
+        "pageBarText": 1,
         "css": "nav.d-none+div.row,#left,#right,.pagination .form-inline>*:nth-child(n+2):nth-child(-n+4){display:none!important}.row>*{padding:0px!important}#all,img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
     },
     {
@@ -5539,13 +5549,25 @@
         "css": ".pagetual_pageBar {margin-top: 10px !important;}.pagetual_pageBar+div {margin-top: 0px !important;}"
     },
     {
+        "name": "优书网 - 書籍分類",
+        "example": "https://www.yousuu.com/bookstore/?channel",
+        "url": "^https?://www\\.yousuu\\.com/(bookstore|booklists)/",
+        "action": 1,
+        "init": "setTimeout(()=>{document.querySelectorAll('label.tab').forEach(e=>{e.setAttribute('onclick','setTimeout(()=>{location.reload()}, 100)')});document.querySelectorAll('h1>span').forEach(e=>{e.setAttribute('onclick','setTimeout(()=>{location.reload()}, 100)')});},1000)",
+        "nextLinkByJs": "let next = doc.querySelector('li.number.active+li.number'); if (next) return location.origin + location.pathname +location.search.replace(/&page=\\d+$/,'') + '&page=' + next.innerText",
+        "pageElement": ".result",
+        "replaceElement": ".pagination",
+        "pageAction": "setTimeout(()=>{document.querySelectorAll('.number:not(.active)').forEach(e=>{let ls=location.search.replace(/&page=\\d+$/,'')+'&page='+e.innerText;let link=`location.href='`+ls+`'`;e.setAttribute('onclick',link)});let pb=document.querySelector('.btn-prev');let nb=document.querySelector('.btn-next');let c=document.querySelector('.number.active');let n=document.querySelector('.number.active+.number');if(n){let ls=location.search.replace(/&page=\\d+$/,'')+'&page='+n.innerText;let link=`location.href='`+ls+`'`;nb.setAttribute('onclick',link)}if(c.innerText>1){let p=c.innerText-1;let ls=location.search.replace(/&page=\\d+$/,'')+'&page='+p;let link=`location.href='`+ls+`'`;pb.setAttribute('onclick',link)}},200)",
+        "css": ".pagetual_pageBar{margin-top:0px!important}"
+    },
+    {
         "name": "博仕書屋手機版 - 閱讀",
         "example": "https://m.77z5.com/boshi/28_28437/14990400.html",
         "url": "^https?://m\\.(boshisw|77z5)\\.com/boshi/\\w+/[0-9_]+\\.html",
         "history": 2,
         "nextLink": "#pt_next",
         "pageElement": "header#top,#chaptercontent",
-        "replaceElement": ".Readpage",
+        "replaceElement": "head>title,.Readpage",
         "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
         "css": "#chaptercontent p[style],#chaptercontent p[style]+p,#chaptercontent+#top a,[style='text-align: left;color: #028aa0;font-size: 18px;font-weight:bold;']{display: none!important;}#chaptercontent+#top{height:30px!important;line-height:30px!important}",
         "initRun": 1,
@@ -5577,9 +5599,9 @@
         "history": 2,
         "nextLink": "//a[text()='下一章']",
         "pageElement": ".bookname>h1,#content",
-        "replaceElement": ".bottem1,bottem2",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
-        "css": "#content+h1{padding-top:20px;text-align:center}"
+        "replaceElement": "head>title,.bottem1,bottem2",
+        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('.pagetual_pageBar')[0].remove();let h=geAll('h1');let t=geAll('#content');if(t.length>2){h[0].remove();t[0].remove()}",
+        "css": "table+h1,#content+h1{padding-top:20px;text-align:center}"
     },
     {
         "name": "博仕書屋 - 書籍分類",
@@ -5593,14 +5615,15 @@
         "name": "歡喜冤家小說網 - 閱讀",
         "example": "https://www.huanxiyuanjia.com/12_12849/5258090.html",
         "url": "^https?://www.huanxiyuanjia.com/[0-9_]+/\\d+\\.html",
-        "init": "let t = document.querySelector('#TextContent');t.innerHTML = t.innerHTML.replace(`huanxiyuanjia.com 欢喜冤家`,'');",
+        "init": "function geAll(e){return document.querySelectorAll(e)}geAll('#TextContent>*:not(p):nth-child(n+1):nth-child(-n+999)').forEach(e=>{e.remove()});geAll('#TextContent>p:nth-child(n+1):nth-child(-n+2)').forEach(e=>{e.remove()});let t = geAll('#TextContent')[0];t.innerHTML = t.innerHTML.replace(`huanxiyuanjia.com 欢喜冤家`,'');",
         "action": 1,
         "history": 2,
         "nextLink": "#next_url",
-        "pageElement": "h1,#TextContent>p:nth-child(n+8):nth-child(-n+999)",
-        "replaceElement": ".mlfy_page+.mlfy_page",
+        "pageElement": "h1,#TextContent",
+        "replaceElement": "head>title,.mlfy_page+.mlfy_page",
         "css": ".mlfy_main h1{padding-bottom:0px!important;border-bottom:none!important}#TextContent>p:nth-child(n+2):nth-child(-n+3){display: none!important;}",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()"
+        "pageInit": "function geAll(e){return doc.querySelectorAll(e)}geAll('#TextContent>*:not(p):nth-child(n+1):nth-child(-n+999)').forEach(e=>{e.remove()});geAll('#TextContent>p:nth-child(n+1):nth-child(-n+2)').forEach(e=>{e.remove()});let t = geAll('#TextContent')[0];t.innerHTML = t.innerHTML.replace(`huanxiyuanjia.com 欢喜冤家`,'');",
+        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('.pagetual_pageBar')[0].remove();let h=geAll('h1');let t=geAll('#TextContent');if(t.length>2){h[0].remove();t[0].remove()}"
     },
     {
         "name": "歡喜冤家小說網 - 書籍分類",
@@ -5619,9 +5642,9 @@
         "history": 2,
         "nextLink": "//a[text()='下一章']",
         "pageElement": ".bookname>h1,#content",
-        "replaceElement": ".bottem1,.bottem2",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
-        "css": "#content+h1{font:35px 雅黑;padding-top:20px;text-align:center}"
+        "replaceElement": "head>title,.bottem1,.bottem2",
+        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('.pagetual_pageBar')[0].remove();let h=geAll('h1');let t=geAll('#content');if(t.length>2){h[0].remove();t[0].remove()}",
+        "css": "#ifexplorer+h1,#content+h1{font:35px 雅黑;padding-top:20px;text-align:center}"
     },
     {
         "name": "筆趣閣biqu86 - 書籍分類",
@@ -5644,8 +5667,8 @@
             "",
             ".cmask"
         ],
-        "replaceElement": "#spage",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "replaceElement": "head>title,#spage",
+        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('.pagetual_pageBar')[0].remove();let h=geAll('.title>h2');let t=geAll('#content');if(t.length>2){h[0].remove();t[0].remove()}",
         "css": ".body>h2{text-align:center!important;}"
     },
     {
@@ -5659,8 +5682,8 @@
             "",
             ".mask.mask2"
         ],
-        "replaceElement": "#right",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "replaceElement": "head>title,#right",
+        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('.pagetual_pageBar')[0].remove();let t=geAll('#content');if(t.length>2){t[0].remove()}",
         "css": "body,#center,#cbox,#content {overflow: initial !important;position: initial !important;} #right,.sidebarbox{position: fixed !important;right: 0;}#content+#content{padding-top:-10px!important}"
     },
     {
@@ -5673,6 +5696,28 @@
         "css": ".pagetual_pageBar{margin-top:-10px!important;}"
     },
     {
+        "name": "同人圈 -閱讀",
+        "example": "http://tongrenquan.org/tongren/7070/1.html",
+        "url": "^https?://tongrenquan\\.org/tongren/\\d+/\\d+\\.html",
+        "pinUrl": true,
+        "history": 2,
+        "action": 1,
+        "nextLink": "//a[text()='下一章']",
+        "pageElement": ".read_chapterName,.read_chapterDetail",
+        "replaceElement": "head>title,.pageNav",
+        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('.pagetual_pageBar')[0].remove();let h=geAll('.read_chapterName');let t=geAll('.read_chapterDetail');if(t.length>2){h[0].remove();t[0].remove()}",
+        "css": ".read_chapterName h1{font:24px 'Microsoft YaHei'!important}.read_chapterName{margin-top:25px!important;margin-bottom:15px!important}"
+    },
+    {
+        "name": "同人圈 -分類",
+        "example": "http://tongrenquan.org/",
+        "url": "^https?://tongrenquan\\.org/",
+        "pinUrl": true,
+        "nextLink": ".page b+a",
+        "pageElement": ".books",
+        "replaceElement": ".page"
+    },
+    {
         "name": "小說狂人 - 閱讀",
         "example": "https://czbooks.net/n/ul6pe/ukcme",
         "url": "^https?://czbooks\\.net/n/\\w+/\\w+",
@@ -5680,8 +5725,8 @@
         "history": 2,
         "nextLink": "//a[text()='下一章']",
         "pageElement": ".name,.content",
-        "replaceElement": ".container .chapter-nav,.main>.chapter-nav,#mm-5>.chapter-nav",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()"
+        "replaceElement": "head>title,.container .chapter-nav,.main>.chapter-nav,#mm-5>.chapter-nav",
+        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('.pagetual_pageBar')[0].remove();let h=geAll('.name');let t=geAll('.content');if(t.length>2){h[0].remove();t[0].remove()}"
     },
     {
         "name": "小說狂人 - 書籍分類",
@@ -5699,9 +5744,9 @@
         "history": 2,
         "nextLink": "#j_chapterNext:not(.disabled)",
         "pageElement": ".text-head,.read-content",
-        "replaceElement": ".chapter-control.dib-wrap",
+        "replaceElement": "head>title,.chapter-control.dib-wrap",
         "css": ".review-count,.admire-wrap,.chapter-end-qrcode{display:none!important}",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()"
+        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('.pagetual_pageBar')[0].remove();let h=geAll('.text-head');let t=geAll('.read-content');if(t.length>2){h[0].remove();t[0].remove()}"
     },
     {
         "name": "起點小說 - 分類",
@@ -5716,22 +5761,24 @@
     {
         "name": "無限小說 - 閱讀",
         "example": "https://www.8book.com/read/125687/?312407",
-        "url": "^https?://www\\.8book\\.com/read/",
+        "url": "^https?://(www\\.)?8book\\.com/read/",
         "action": 1,
         "history": 2,
+        "init": "setTimeout(()=>{let t=document.querySelector('#text');t.innerHTML=t.innerHTML.replace(/[<br>]{4}[⒏8８⒏⑧⑻ВbｂьＯσｏоοoＫkкｃсcｍmм．。·.]{9,10}/gi,'')},1000)",
         "nextLink": "span.next>a",
         "pageElement": "//div[div/@id='subtitle'] | id('text')",
         "waitElement": [
             "#text>br"
         ],
-        "replaceElement": "//div[@class='row mx-0 read_btn_gp']",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "replaceElement": "//head/title | //div[@class='row mx-0 read_btn_gp']",
+        "pageInit": "let t=doc.querySelector('#text');t.innerHTML=t.innerHTML.replace(/[<br>]{4}[⒏8８⒏⑧⑻ВbｂьＯσｏоοoＫkкｃсcｍmм．。·.]{9,10}/gi,'')",
+        "pageAction": "function gxAll(x,context){var nodes=[];try{var doc=(context&&context.ownerDocument)||window.document;var results=doc.evaluate(x,context||doc,null,XPathResult.ANY_TYPE,null);var node;while(node=results.iterateNext()){nodes.push(node)}}catch(e){throw e;}return nodes}gxAll(\"//*[contains(@class,'pagetual_pageBar')]\")[0].remove();let t=gxAll(\"//div[@id='text']\");let s=gxAll(\"//div[div/@id='subtitle']\");if(t.length>4){t[0].remove();s[0].remove()}",
         "css": "#text>br:nth-child(even){display:none!important}#subtitle{margin-bottom:0px!important}"
     },
     {
         "name": "無限小說 - 書籍分類",
         "example": "https://www.8book.com/booklists/update/",
-        "url": "^https?://www\\.8book\\.com/booklists/(update|newrelease|finish|list|\\d+)/",
+        "url": "^https?://(www\\.)?8book\\.com/booklists/(update|newrelease|finish|list|\\d+)/",
         "nextLink": "li[onclick]+li>a",
         "pageElement": ".row>div.p-2",
         "replaceElement": ".row>li"
@@ -5745,8 +5792,8 @@
         "history": 2,
         "nextLink": "#read_next",
         "pageElement": "#divContent > h3,#bookContent",
-        "replaceElement": "#read-page>.rp-switch",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove();document.querySelector('.ad_content').remove()"
+        "replaceElement": "head>title,#read-page>.rp-switch",
+        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('.pagetual_pageBar')[0].remove();let h=geAll('h3');let t=geAll('#bookContent');if(t.length>2){h[0].remove();t[0].remove()}geAll('.ad_content')[0].remove()"
     },
     {
         "name": "UU看書手機版 - 列表(加載更多小說)",
@@ -5762,8 +5809,8 @@
         "history": 2,
         "nextLink": "#next",
         "pageElement": ".h1title,.contentbox",
-        "replaceElement": ".fanye",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()"
+        "replaceElement": "head>title,.fanye",
+        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('.pagetual_pageBar')[0].remove();let h=geAll('.h1title');let t=geAll('.contentbox');if(t.length>2){h[0].remove();t[0].remove()}"
     },
     {
         "name": "UU看書 - 書籍列表",
@@ -5782,7 +5829,7 @@
         "history": 2,
         "nextLink": "#read_next",
         "pageElement": "#top,#bookContent",
-        "replaceElement": "#read>.rp-switch,#read-page>.rp-switch",
+        "replaceElement": "head>title,#read>.rp-switch,#read-page>.rp-switch",
         "css": "#read-page .iconback,#read-page .iconhome{display: none!important;}",
         "insert": "#read-page>.rp-switch",
         "insertPos": 1,
@@ -5799,7 +5846,7 @@
         "replaceElement": ".fanye",
         "insert": ".fanye",
         "insertPos": 1,
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()"
+        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('.pagetual_pageBar')[0].remove();let h=geAll('.h1title');let t=geAll('#contentbox');if(t.length>2){h[0].remove();t[0].remove()}"
     },
     {
         "name": "愛下電子書 - 閱讀",
@@ -5808,9 +5855,9 @@
         "history": 2,
         "nextLink": "a.chapter-paging.chapter-next",
         "pageElement": "#page .page-content",
-        "replaceElement": ".page-d.page-turn,.page-d-top,.read-next,.read-pre,.read-prog-info",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
-        "css": ".page-content{margin-top:.16rem!important}"
+        "replaceElement": "head>title,.page-d.page-turn,.page-d-top,.read-next,.read-pre,.read-prog-info",
+        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('.pagetual_pageBar')[0].remove();let t=geAll('#page .page-content');if(t.length>2){t[0].remove()}",
+        "css": ".page-content{margin-top:.16rem!important}.page-content h3{line-height:.20rem!important;font-size:.24rem!important;text-align:center!important}"
     },
     {
         "name": "愛下電子書 - 書籍列表",

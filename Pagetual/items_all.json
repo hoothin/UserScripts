@@ -38993,14 +38993,14 @@
     "pageElement": "//div[@class=\"articleArea\"]",
     "considerationUrl": "https://www.gdm.or.jp/review/2016/0226/152578/7",
     "nextLink": "//div[@class=\"nextArticle\"]/a",
-    "url": "^https?://(www\\.)?gdm\\.or\\.jp/review",
-    "exampleUrl": "http://www.gdm.or.jp/review/2016/0226/152578 "
+    "url": "^https?://(www\\.)?gdm\\.or\\.jp/(review|crew)",
+    "exampleUrl": "http://www.gdm.or.jp/review/2016/0226/152578\r\nhttps://www.gdm.or.jp/crew/2022/1113/464132"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "materia-x64",
   "name": "エルミタージュ秋葉原 レビュー",
   "created_at": "2010-07-04T16:35:47+09:00",
-  "updated_at": "2022-01-07T12:53:57+09:00"
+  "updated_at": "2022-11-13T14:48:20+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/33439",
