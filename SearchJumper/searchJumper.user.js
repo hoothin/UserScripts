@@ -9242,7 +9242,7 @@
             });
             navEnable = await new Promise((resolve) => {
                 storage.getItem("navEnable", data => {
-                    resolve(data || false);
+                    resolve(typeof data === "undefined" ? true : data);
                 });
             });
             referrer = await new Promise((resolve) => {
@@ -9365,7 +9365,7 @@
                 });
                 let oldNavEnable = navEnable;
                 storage.getItem("navEnable", data => {
-                    navEnable = (data || false);
+                    navEnable = (typeof data === "undefined" ? true : data);
                     if (oldNavEnable != navEnable) {
                         searchBar.refreshNav();
                     }
