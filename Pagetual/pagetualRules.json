@@ -7217,6 +7217,13 @@
         "pageElement": ".row"
     },
     {
+        "name": "SteamPY",
+        "url": "^https?://steampy\\.com/",
+        "pageElement": ".market-detail > div.ivu-tabs > div.ivu-tabs-content > div.ivu-tabs-tabpane div.flex-row > .gameblock",
+        "nextLink": ".page-ul > li.active + li:not(.disabled)",
+        "pinUrl": true
+    },
+    {
         "name": "buondua",
         "url": "^https://(.*\\.)?buondua\\.com/",
         "type": 0,
