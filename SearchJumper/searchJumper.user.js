@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.46.77
+// @version      1.6.6.46.78
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -3749,9 +3749,33 @@
                 this.submitInPageWords();
             }
 
+            closeShowAll() {
+                this.bar.parentNode.classList.remove("search-jumper-showall");
+                this.showallInput.value = "";
+                this.historySiteBtns.slice(0, 10).forEach(btn => {
+                    for (let i = 0; i < searchTypes.length; i++) {
+                        let typeBtn = searchTypes[i];
+                        if (typeBtn.dataset.type == btn.dataset.type) {
+                            if (btn.dataset.id) {
+                                typeBtn.insertBefore(btn, typeBtn.children[parseInt(btn.dataset.id) + 1]);
+                            } else typeBtn.insertBefore(btn, typeBtn.children[1]);
+                            break;
+                        }
+                    }
+                });
+                this.bar.style.display = "";
+                this.initPos(
+                    searchData.prefConfig.position.x,
+                    searchData.prefConfig.position.y,
+                    searchData.prefConfig.offset.x,
+                    searchData.prefConfig.offset.y
+                );
+            }
+
             showAllSites() {
                 if (!this.bar.parentNode || !this.bar.parentNode.parentNode || this.bar.parentNode.classList.contains("search-jumper-showall")) return;
                 let self = this;
+                this.hideSearchInput();
                 this.bar.parentNode.classList.add("search-jumper-showall");
                 searchTypes.forEach(type => {
                     if (type.style.display != 'none') {
@@ -3766,28 +3790,9 @@
                 this.showallInput.value = kw;
                 setTimeout(() => {
                     let mouseHandler = e => {
-                        if (e.target.className === 'sitelistBox' || e.target.className === 'search-jumper-showallBg' || e.target.className === 'search-jumper-historylist') {
+                        if (e.isTrusted == false || e.target.className === 'sitelistBox' || e.target.className === 'search-jumper-showallBg' || e.target.className === 'search-jumper-historylist') {
                             document.removeEventListener("mousedown", mouseHandler);
-                            self.bar.parentNode.classList.remove("search-jumper-showall");
-                            self.showallInput.value = "";
-                            self.historySiteBtns.slice(0, 10).forEach(btn => {
-                                for (let i = 0; i < searchTypes.length; i++) {
-                                    let typeBtn = searchTypes[i];
-                                    if (typeBtn.dataset.type == btn.dataset.type) {
-                                        if (btn.dataset.id) {
-                                            typeBtn.insertBefore(btn, typeBtn.children[parseInt(btn.dataset.id) + 1]);
-                                        } else typeBtn.insertBefore(btn, typeBtn.children[1]);
-                                        break;
-                                    }
-                                }
-                            });
-                            self.bar.style.display = "";
-                            self.initPos(
-                                searchData.prefConfig.position.x,
-                                searchData.prefConfig.position.y,
-                                searchData.prefConfig.offset.x,
-                                searchData.prefConfig.offset.y
-                            );
+                            self.closeShowAll();
                         }
                     };
                     document.addEventListener("mousedown", mouseHandler);
@@ -4002,6 +4007,32 @@
                         } else {
                             this.highlight("");
                         }
+                    }
+                });
+                this.showallInput.addEventListener("keydown", e => {
+                    switch(e.keyCode) {
+                        case 13://回车
+                            {
+                                clearTimeout(inputTimer);
+                                let siteEle, forceTarget = "";
+                                if (currentSite && !self.showallInput.value) {
+                                    siteEle = self.bar.querySelector(".search-jumper-btn.current");
+                                    forceTarget = "_self";
+                                } else {
+                                    siteEle = self.bar.querySelector(`.search-jumper-needInPage>a[href^=http]`) ||
+                                        self.bar.querySelector(".search-jumper-type:not(.search-jumper-hide)>a.search-jumper-btn:not(.input-hide)") ||
+                                        self.bar.querySelector("a.search-jumper-btn:not(.input-hide)");
+                                    forceTarget = "_blank";
+                                }
+                                if (siteEle) {
+                                    self.openSiteBtn(siteEle, forceTarget);
+                                    var mouseEvent = new PointerEvent("mousedown");
+                                    document.dispatchEvent(mouseEvent);
+                                }
+                            }
+                            break;
+                        default:
+                            break;
                     }
                 });
                 this.searchJumperInPageInput.addEventListener("keydown", e => {
@@ -7569,9 +7600,9 @@
                 };
                 let mouseDownHandler = e => {
                     if ((waitForMouse && e.type === 'mousedown' && e.which === 1) ||
-                        e.target.classList.contains('search-jumper-btn') ||
                         e.target.tagName === 'CANVAS' ||
                         e.target.tagName === 'HTML' ||
+                        (e.target.classList && e.target.classList.contains('search-jumper-btn')) ||
                         searchBar.bar.contains(e.target)) {
                         return;
                     }
