@@ -296,13 +296,23 @@
         "replaceElement": ".page-pagination"
     },
     {
-        "name": "無限動漫手機版 - 漫畫閱讀 - 雙擊前往下一集，鍵盤左右鍵上下集",
-        "example": "https://8.twobili.com/comic/insurance_1475.html?ch=1",
+        "name": "無限動漫手機版 - 漫畫閱讀",
+        "example": "https://8.twobili.com/comic/insurance_15059.html?ch=1",
         "url": "^https?://8\\.twobili\\.com/comic/insurance",
         "pinUrl": true,
-        "init": "function ge(e){return document.querySelector(e)}function next(e){let key=window.event?e.keyCode:e.which;if(key==39){let n=ge(\"#nextvol:not([style])\");if(n){n.click()}else{alert('沒有下一集了！')}}};document.addEventListener('keydown',next);function prev(e){let key=window.event?e.keyCode:e.which;if(key==37){let p=ge(\"#prevvol:not([style])\");if(p){p.click()}}};document.addEventListener('keydown',prev);function dcnext(){let n=ge(\"#nextvol:not([style])\");if(n){n.click()}else{alert('沒有下一集了！')}};document.addEventListener('dblclick',dcnext);let _img='';for(let i=1;i<=ps;i++){let imgSrc='//img'+ss(c,4,2)+'.8comic.com/'+ss(c,6,1)+'/'+ti+'/'+ss(c,0,4)+'/'+nn([i])+'_'+ss(c,mm([i])+10,3,f)+'.jpg';_img+=`<img name=\"TheImg\"border=\"0\"id=\"TheImg\"width=\"100%\"src='${imgSrc}'>`};let li=document.querySelector('ul>li');li.innerHTML=_img;let v1=document.querySelector('.view_tmenu').cloneNode(true);let v2=document.querySelectorAll('.view_menut')[1];li.appendChild(v2);li.appendChild(v1);let b1=document.querySelector('.book_inc_title');let b2=document.querySelector('.book_link_item');li.appendChild(b1);li.appendChild(b2);",
-        "nextLink": "0",
-        "manualMode": true,
+        "history": 2,
+        "action": 1,
+        "waitElement": [
+            "#TheImg[src]"
+        ],
+        "init": "let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/var cs/)>-1).innerHTML.replaceAll('var ','');let pcs=eval(code.match(/cs='[^']+'/g)[0]);let pti=eval(code.match(/ti=\\d+/g)[0]);let pch=location.href.match(/ch=(\\d+)/)[1]-1;let pc=ss(pcs,pch*f,f,f);let pps=document.querySelector('#pagenum').innerText.match(/\\/(\\d+)/)[1];let _img='';for(let i=1;i<=pps;i++){let imgSrc='//img'+ss(pc,4,2)+'.8comic.com/'+ss(pc,6,1)+'/'+pti+'/'+ss(pc,0,4)+'/'+nn([i])+'_'+ss(pc,mm([i])+10,3,f)+'.jpg';_img+=`<img name=\"TheImg\"border=\"0\"id=\"TheImg\"width=\"100%\"src='${imgSrc}'>`};document.querySelector('ul>li').innerHTML=_img;let ul=document.querySelector('#TheTable>ul');let v1=document.querySelector('.view_tmenu').cloneNode(true);let v2=document.querySelectorAll('.view_menut')[1];ul.appendChild(v2);ul.appendChild(v1);let b1=document.querySelector('.book_inc_title');let b2=document.querySelector('.book_link_item');ul.appendChild(b1);ul.appendChild(b2);",
+        "nextLinkByJs": "let next=doc.querySelector('#nextvol');if(next){let n=doc.querySelector('#nextname').innerText.match(/\\d+/)[0];return replaceurl('ch',n)}",
+        "pageElement": "//li[img[@id='TheImg']]",
+        "replaceElement": ".view_tmenu",
+        "pageInit": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/var cs/)>-1).innerHTML.replaceAll('var ','');let pcs=eval(code.match(/cs='[^']+'/g)[0]);let pti=eval(code.match(/ti=\\d+/g)[0]);let pch=doc.querySelector('#chapter').innerText.match(/\\d+/)[0]-1;let pc=ss(pcs,pch*f,f,f);let pps=doc.querySelector('#pagenum').innerText.match(/\\/(\\d+)/)[1];let _img='';for(let i=1;i<=pps;i++){let imgSrc='//img'+ss(pc,4,2)+'.8comic.com/'+ss(pc,6,1)+'/'+pti+'/'+ss(pc,0,4)+'/'+nn([i])+'_'+ss(pc,mm([i])+10,3,f)+'.jpg';_img+=`<img name=\"TheImg\"border=\"0\"id=\"TheImg\"width=\"100%\"src='${imgSrc}'>`};doc.querySelector('ul>li').innerHTML=_img;setTimeout(()=>{let v=document.querySelectorAll('.view_tmenu');v[1].innerHTML=v[0].innerHTML;let n=doc.querySelector('#nextname').innerText.match(/\\d+/)[0];let nh=replaceurl('ch',n);document.querySelector('#nextvol').outerHTML='<a href=\"'+nh+'\" id=\"nextvol\"><span class=\"nextepisode_button\">下集:<span id=\"nextname\">[ '+n+' ]</span></span></a>';let p=doc.querySelector('#prevname').innerText.match(/\\d+/)[0];let ph=replaceurl('ch',p);document.querySelector('#prevvol').outerHTML='<a href=\"'+ph+'\" id=\"prevvol\"><span class=\"prevepisode_button\">上集:<span id=\"prevname\">[ '+p+' ]</span></span></a>';},0);",
+        "pageAction": "function gxAll(x,context){var nodes=[];try{var doc=(context&&context.ownerDocument)||window.document;var results=doc.evaluate(x,context||doc,null,XPathResult.ANY_TYPE,null);var node;while(node=results.iterateNext()){nodes.push(node)}}catch(e){throw e;}return nodes};setTimeout(()=>{let c=gxAll(\"//li[img[@id='TheImg']]\");if(c.length>3){c[0].remove()}let p=gxAll(\"//*[contains(@class,'pagetual_pageBar')]\");if(p.length>3){p[0].remove()}},100)",
+        "pageBarText": 1,
+        "pageNum": "ch={$p}$",
         "css": ".pinch-zoom-container{height: auto!important; display: contents!important}#pagenum,[onclick^='j'],#pageindex,ico+a+.material-icons.right-logo{display:none!important}.view_menut a{width:33.3%!important;max-width:33.3%!important}"
     },
     {
