@@ -3750,26 +3750,9 @@
             }
 
             closeShowAll() {
-                this.bar.parentNode.classList.remove("search-jumper-showall");
-                this.showallInput.value = "";
-                this.historySiteBtns.slice(0, 10).forEach(btn => {
-                    for (let i = 0; i < searchTypes.length; i++) {
-                        let typeBtn = searchTypes[i];
-                        if (typeBtn.dataset.type == btn.dataset.type) {
-                            if (btn.dataset.id) {
-                                typeBtn.insertBefore(btn, typeBtn.children[parseInt(btn.dataset.id) + 1]);
-                            } else typeBtn.insertBefore(btn, typeBtn.children[1]);
-                            break;
-                        }
-                    }
-                });
-                this.bar.style.display = "";
-                this.initPos(
-                    searchData.prefConfig.position.x,
-                    searchData.prefConfig.position.y,
-                    searchData.prefConfig.offset.x,
-                    searchData.prefConfig.offset.y
-                );
+                if (!this.bar.parentNode.classList.contains("search-jumper-showall")) return;
+                var mouseEvent = new PointerEvent("mousedown");
+                document.dispatchEvent(mouseEvent);
             }
 
             showAllSites() {
@@ -3792,7 +3775,26 @@
                     let mouseHandler = e => {
                         if (e.isTrusted == false || e.target.className === 'sitelistBox' || e.target.className === 'search-jumper-showallBg' || e.target.className === 'search-jumper-historylist') {
                             document.removeEventListener("mousedown", mouseHandler);
-                            self.closeShowAll();
+                            self.bar.parentNode.classList.remove("search-jumper-showall");
+                            self.showallInput.value = "";
+                            self.historySiteBtns.slice(0, 10).forEach(btn => {
+                                for (let i = 0; i < searchTypes.length; i++) {
+                                    let typeBtn = searchTypes[i];
+                                    if (typeBtn.dataset.type == btn.dataset.type) {
+                                        if (btn.dataset.id) {
+                                            typeBtn.insertBefore(btn, typeBtn.children[parseInt(btn.dataset.id) + 1]);
+                                        } else typeBtn.insertBefore(btn, typeBtn.children[1]);
+                                        break;
+                                    }
+                                }
+                            });
+                            self.bar.style.display = "";
+                            self.initPos(
+                                searchData.prefConfig.position.x,
+                                searchData.prefConfig.position.y,
+                                searchData.prefConfig.offset.x,
+                                searchData.prefConfig.offset.y
+                            );
                         }
                     };
                     document.addEventListener("mousedown", mouseHandler);
@@ -4013,10 +4015,10 @@
                     switch(e.keyCode) {
                         case 13://回车
                             {
-                                clearTimeout(inputTimer);
+                                if (!self.showallInput.value) return;
                                 let siteEle, forceTarget = "";
-                                if (currentSite && !self.showallInput.value) {
-                                    siteEle = self.bar.querySelector(".search-jumper-btn.current");
+                                if (currentSite) {
+                                    siteEle = self.bar.parentNode.querySelector(".search-jumper-btn.current");
                                     forceTarget = "_self";
                                 } else {
                                     siteEle = self.bar.querySelector(`.search-jumper-needInPage>a[href^=http]`) ||
@@ -4026,8 +4028,7 @@
                                 }
                                 if (siteEle) {
                                     self.openSiteBtn(siteEle, forceTarget);
-                                    var mouseEvent = new PointerEvent("mousedown");
-                                    document.dispatchEvent(mouseEvent);
+                                    self.closeShowAll();
                                 }
                             }
                             break;
