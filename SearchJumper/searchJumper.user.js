@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.46.78
+// @version      1.6.6.46.79
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -559,9 +559,6 @@
             }, {
                 name: "当当网",
                 url: "http://search.dangdang.com/?key=%s"
-            }, {
-                name: "1688",
-                url: "https://s.1688.com/selloffer/offer_search.htm?keywords=%s"
             } ]
         },
         {
@@ -4953,9 +4950,9 @@
             }
 
             listPos(ele, list) {
-                if (this.preList) {
+                //if (this.preList) {
                     //this.preList.style.visibility = "hidden";
-                }
+                //}
                 if (!list.dataset.inited) {
                     list.dataset.inited = true;
                     [].forEach.call(list.querySelectorAll("div>a>img"), img => {
@@ -5006,9 +5003,9 @@
             }
 
             clingPos(clingEle, target, close) {
-                if (this.preList) {
+                //if (this.preList) {
                     //this.preList.style.visibility = "hidden";
-                }
+                //}
                 let ew = clingEle.clientWidth;
                 let eh = clingEle.clientHeight;
                 let clientX = clingEle.offsetLeft + ew / 2 - this.bar.parentNode.scrollLeft;
@@ -5192,7 +5189,7 @@
                 }
                 let batchSiteNames = [];
                 let batchOpenConfirm = (e) => {
-                    if (!ele.classList.contains("search-jumper-hide") || window.confirm(i18n('batchOpenConfirm'))) {
+                    if (!ele.classList.contains("search-jumper-hide") || (e.shiftKey || e.altKey || e.ctrlKey || e.metaKey) || window.confirm(i18n('batchOpenConfirm'))) {
                         self.batchOpen(batchSiteNames, e);
                     }
                 };
@@ -6160,41 +6157,29 @@
                                 return false;
                             };
                         }
-                    } else if ((data.charset && data.charset != 'utf-8') || /[:%]p{/.test(data.url)) {
-                        if (!ele.onclick) {
-                            ele.onclick = e => {
-                                ele.onclick = null;
-                                e.stopPropagation();
-                                e.preventDefault();
-                                let url = getUrl();
-                                if (url === false) return false;
-                                if (url.indexOf('%input{') !== -1) {
-                                    self.showCustomInputWindow(url, _url => {
-                                        storage.setItem("postUrl", [_url, data.charset]);
-                                        ele.href = _url.replace(/\?.*/, "").replace(/[:%]p{.*/, '');
-                                        if (ele.target === '_blank') {
-                                            _GM_openInTab(ele.href, {active: true});
-                                        } else {
-                                            location.href = ele.href;
-                                        }
-                                    });
-                                } else {
-                                    storage.setItem("postUrl", [url, data.charset]);
-                                    ele.href = url.replace(/\?.*/, "").replace(/[:%]p{.*/, '');
+                    } else {
+                        let url = getUrl();
+                        if ((data.charset && data.charset != 'utf-8') || /[:%]p{/.test(data.url)) {
+                            if (url === false) return false;
+                            if (url.indexOf('%input{') !== -1) {
+                                self.showCustomInputWindow(url, _url => {
+                                    storage.setItem("postUrl", [_url, data.charset]);
+                                    ele.href = _url.replace(/\?.*/, "").replace(/[:%]p{.*/, '');
                                     if (ele.target === '_blank') {
                                         _GM_openInTab(ele.href, {active: true});
                                     } else {
                                         location.href = ele.href;
                                     }
-                                }
-                                return false;
-                            };
+                                });
+                                return;
+                            } else {
+                                storage.setItem("postUrl", [url, data.charset]);
+                                url = url.replace(/\?.*/, "").replace(/[:%]p{.*/, '');
+                            }
                         }
-                    } else {
                         let alt = e && e.altKey;
                         let ctrl = e && (e.ctrlKey || e.metaKey);
                         let shift = e && e.shiftKey;
-                        let url = getUrl();
                         if (!url) {
                             //wait for all input stoped
                             if (!self.stopInput) {
@@ -9333,9 +9318,9 @@
         }
 
         if (location.href.indexOf("#searchJumperMin") != -1) {
+            inMinMode = true;
             if (location.href.indexOf("#searchJumperMinPost") != -1) {
                 window.history.replaceState(null, '', location.href.replace(/#searchJumperMin(Post)?/, ""));
-                inMinMode = true;
             } else {
                 if (location.href.indexOf("#searchJumperMinMobile") != -1) {
                     Object.defineProperty(Object.getPrototypeOf(navigator), 'userAgent', { get:function() { return mobileUa }});
@@ -9356,9 +9341,9 @@
                         ontimeout: function(){
                         }
                     });
+                    return;
                 }
                 window.history.replaceState(null, '', location.href.replace(/#searchJumperMin(Mobile)?/, ""));
-                return;
             }
         }
         if (document.title == 'SearchJumper Multi') return;
