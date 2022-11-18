@@ -1,5 +1,67 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86004",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "(descendant::*[./*[starts-with(@id,'post-')]][1]/*[starts-with(@id,'post-')])[count(//*[./*[starts-with(@id,'post-')][./following-sibling::*[starts-with(@id,'post-')]][parent::node()[not(@id='content')]][self::div or self::p or self::section or self::table or self::ul or self::li][ancestor-or-self::main or ancestor-or-self::*[contains(@id,'main')] or ancestor-or-self::*[contains(@class,'main')]]])=1]|id('content')[count(div)>1]/div[contains(@class,'post')][not(contains(div/@class,'breadcrumb'))]",
+    "nextLink": "(//*[not(contains(@class,'_inactive'))]/a[starts-with(@class,'nextpostslink') or contains(@class,'next page-numbers') or (.|..)[normalize-space(@rel)='next' or normalize-space(@class)='next' or contains(@class,'pagination-next')]][not(span/@class='link-text')]|//*[contains(@class,'nav-previous')][not(contains(@class,'pull'))]/a|(//*[contains(@class,'current')][number()>0]/following-sibling::a[1]|(//li|//span|//div)[(.//*|.)[contains(@class,'current')]][number()>0]/following-sibling::*[self::li or self::span or self::div][1]/a)[not(//a[starts-with(@class,'nextpostslink') or contains(@class,'next page-numbers') or (.|..)[normalize-space(@rel)='next' or normalize-space(@class)='next' or contains(@class,'pagination-next')]])])[not(starts-with(@href, '#'))]",
+    "exampleUrl_b": "http://bash.org.pl/latest/ http://moherou.net/page/2/ http://octech.jp/modules/wordpress/ http://dannnao.net/blog/ http://dannnao.net/blog/page/2/ http://dannnao.net/blog/2013/01/2000px/ https://www.askasu.idv.tw/",
+    "exampleUrl_a": "https://www.ama-dan.com/news http://anjo.dekiteharu.jp/category/3d_animation http://www.octech.jp/review/?s=a",
+    "url": "^https?://.",
+    "exampleUrl": ""
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "kenzou_ogawa2",
+  "name": "Generic Posts Rule (post)",
+  "created_at": "2022-11-18T09:40:53+09:00",
+  "updated_at": "2022-11-18T09:40:53+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/86003",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[@class='post']",
+    "nextLink": "//a[@class='next']",
+    "url": "^https?://blog\\.gsmarena\\.com/",
+    "exampleUrl": "http://blog.gsmarena.com/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "kenzou_ogawa2",
+  "name": "GSMArena.com Blog",
+  "created_at": "2022-11-17T13:22:50+09:00",
+  "updated_at": "2022-11-17T13:22:50+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/86002",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[starts-with(@id,'post-')]",
+    "nextLink": "//a[@class='next page-numbers']",
+    "url": "^https://seigura\\.com/",
+    "exampleUrl": "https://seigura.com/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "kenzou_ogawa2",
+  "name": "声優グランプリ 公式webサイト",
+  "created_at": "2022-11-17T13:17:37+09:00",
+  "updated_at": "2022-11-17T13:17:37+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/86001",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//article",
+    "nextLink": "//a[@class='next']",
+    "url": "^https://ptm-net\\.com/",
+    "exampleUrl": "https://ptm-net.com/report https://ptm-net.com/news"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "kenzou_ogawa2",
+  "name": "Poet-type.M",
+  "created_at": "2022-11-17T13:07:59+09:00",
+  "updated_at": "2022-11-17T13:07:59+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86000",
   "data": {
     "insertBefore": "",
@@ -4539,16 +4601,17 @@
 {
   "resource_url": "http://wedata.net/items/85451",
   "data": {
-    "pageElement": "//div[contains(@class,\"related-nav-container\")]/preceding-sibling::div[not(@id)]",
-    "nextLink": "//div[contains(@class,'related-nav-container')]/a[contains(@href,concat('?page=',number(substring-after(//link[@rel='canonical']/@href,'?page='))+1))]",
-    "url": "^https?://hellogiggles\\.com/.+/\\?page",
-    "exampleUrl": "https://hellogiggles.com/beauty/?page=2"
+    "pageElement": "id('block-2')/p[last()]",
+    "comment": "This is a dummy code for 649.",
+    "nextLink": "//a[@title='About Us']",
+    "url": "^https?://hellogiggles\\.com/",
+    "exampleUrl": "https://hellogiggles.com/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "kenzou_ogawa",
   "name": "HelloGiggles",
   "created_at": "2020-08-13T15:46:39+09:00",
-  "updated_at": "2022-02-10T21:43:59+09:00"
+  "updated_at": "2022-11-17T11:59:34+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85449",
@@ -4918,15 +4981,16 @@
   "data": {
     "pageElement": "id('rso')/div",
     "comment": "Changed to avoid conflict with news search. Example:https://www.google.com/search?q=google+search+mobile&client=firefox-b-1-d&tbm=nws&ei=3pG-YYugMpbCytMP_-ar-A0&start=0&sa=N&ved=2ahUKEwiLh7nq4e70AhUWoXIEHX_zCt84UBDy0wN6BAgBEDY&biw=1536&bih=711&dpr=1.25",
-    "nextLink": "//div[@role=\"progressbar\"]/following-sibling::a[@role=\"button\"]|id(\"extrares\")//span[count(a)>0]/span/following-sibling::a",
-    "url": "^https://(?:www\\.)?google\\.com/search",
-    "exampleUrl": "https://www.google.com/search?q=autopagerize https://www.google.com/search?q=autopagerize&start=10"
+    "comment2": "Has infinite scroll. https://www.google.com/search?q=autopagerize",
+    "nextLink": "//div[@role=\"progressbar\"]/following-sibling::a[@role=\"button\"][not(contains(@style, 'display: none'))]\r\n|\r\nid('botstuff')/descendant::a[contains(@href, 'start=')][last()][not(string(.)) and not(following-sibling::*)]\r\n|\r\nid(\"extrares\")//span[count(a)>0]/span/following-sibling::a",
+    "url": "^https?://[^./]+\\.google(?:\\.[^./]{2,3}){1,2}/search",
+    "exampleUrl": "https://www.google.com/search?q=autopagerize&start=10\r\nhttps://www.google.co.jp/search?q=chrome&tbm=bks"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "t_f_m_",
   "name": "google search mobile",
   "created_at": "2020-07-23T07:55:02+09:00",
-  "updated_at": "2021-12-19T10:25:07+09:00"
+  "updated_at": "2022-11-17T22:43:45+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85417",
@@ -6994,17 +7058,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/85185",
-  "name": "for GEEK",
   "data": {
+    "pageElement": "//div[@class=\"new_article\"]|//div[@class=\"article_detail\"]",
+    "nextLink": "//li[@class='next']/a",
     "url": "^https://(www\\.)?geekjob\\.jp/.",
-    "pageElement": "//div[@class='article_detail']",
-    "exampleUrl": "https://www.geekjob.jp/beginning/learnning/java-primer-2/",
-    "nextLink": "//li[@class='next']/a"
+    "exampleUrl": "https://www.geekjob.jp/ https://www.geekjob.jp/beginning/learnning/java-primer-2/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "denimu_ld",
+  "name": "for GEEK",
   "created_at": "2020-01-04T12:27:25+09:00",
-  "updated_at": "2020-01-05T04:53:42+09:00"
+  "updated_at": "2022-11-17T11:22:06+09:00"
 },
 {
   "name": "お知らせ FGO",
@@ -11598,17 +11662,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/81668",
-  "name": "E-Hentai",
-  "created_by": "badfalcon610",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "updated_at": "2018-01-07T19:12:44+09:00",
   "data": {
-    "exampleUrl": "https://e-hentai.org/ https://e-hentai.org/g/1064494/ffd72819c5/ https://e-hentai.org/?f_doujinshi=0&f_manga=0&f_artistcg=1&f_gamecg=0&f_western=0&f_non-h=0&f_imageset=1&f_cosplay=1&f_asianporn=1&f_misc=0&f_search=&f_apply=Apply+Filter&advsearch=1&f_sname=on&f_stags=on&f_sr=on&f_srdd=5",
-    "url": "^https?:\\/\\/(e-|ex)hentai\\.org\\/",
     "pageElement": "//*[(self::table or self::div) and contains(concat(\" \", @class, \" \"), \" itg \")]|//div[contains(concat(\" \", @class, \" \"), \" sni \")]/div/a[./*[self::img and last()=1]]|id(\"gdt\")/*",
-    "nextLink": "//td[contains(concat(\" \", @class, \" \"), \" ptds \")]/following-sibling::td[1]/a[not(@href=\"#\")]|//div[contains(concat(\" \", @class, \" \"), \" sni \")]/div/a[./*[self::img and last()=1]]"
+    "nextLink": "//a[@id=\"dnext\"]",
+    "url": "^https?:\\/\\/(e-|ex)hentai\\.org\\/",
+    "exampleUrl": "https://e-hentai.org/ https://e-hentai.org/g/1064494/ffd72819c5/ https://e-hentai.org/?f_doujinshi=0&f_manga=0&f_artistcg=1&f_gamecg=0&f_western=0&f_non-h=0&f_imageset=1&f_cosplay=1&f_asianporn=1&f_misc=0&f_search=&f_apply=Apply+Filter&advsearch=1&f_sname=on&f_stags=on&f_sr=on&f_srdd=5"
   },
-  "created_at": "2018-01-07T18:55:54+09:00"
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "badfalcon610",
+  "name": "E-Hentai",
+  "created_at": "2018-01-07T18:55:54+09:00",
+  "updated_at": "2022-11-18T08:26:50+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/81667",
@@ -21881,7 +21945,7 @@
 {
   "resource_url": "http://wedata.net/items/76720",
   "data": {
-    "pageElement": "id('content')//*[@class='gallery' or @id='image-container']",
+    "pageElement": "id('content')//*[@class='container index-container' or @id='image-container' or @id='favcontainer' or @id='tag-container']",
     "insertBefore": "//section[@class='pagination']",
     "nextLink": "//a[@class='next']",
     "url": "^https?://nhentai\\.net/",
@@ -21891,7 +21955,7 @@
   "created_by": "theydonotwant",
   "name": "nHentai",
   "created_at": "2014-12-28T23:26:34+09:00",
-  "updated_at": "2022-10-10T16:29:51+09:00"
+  "updated_at": "2022-11-18T08:32:21+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/76713",
@@ -42158,17 +42222,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/31251",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "created_at": "2010-01-30T13:16:28+09:00",
   "data": {
-    "pageElement": "id('content')/*[not(@class='pagination')]",
-    "exampleUrl": "http://blog.jquery.com/2014/08/07/jquery-chicago-roundup/",
-    "url": "^https?://blog\\.jquery\\.com/\\d{4}/\\d{2}/\\d{2}/",
-    "nextLink": "//link[@rel='prev']"
+    "pageElement": "id('content')/article",
+    "nextLink": "//a[@class='next page-numbers']",
+    "url": "^https?://blog\\.jquery\\.com/",
+    "exampleUrl": "https://blog.jquery.com/"
   },
-  "updated_at": "2020-05-06T04:40:05+09:00",
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "kouki",
   "name": "jQuery",
-  "created_by": "kouki"
+  "created_at": "2010-01-30T13:16:28+09:00",
+  "updated_at": "2022-11-17T12:51:12+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/31233",
@@ -52041,17 +52105,15 @@
 {
   "resource_url": "http://wedata.net/items/400",
   "data": {
-    "pageElement": "(descendant::*[./article or ./*[starts-with(@id,'post-')]][1]/*[self::article or starts-with(@id,'post-')])[count(//*[./article][ancestor-or-self::main or ancestor-or-self::*[contains(@id,'main')] or ancestor-or-self::*[contains(@class,'main')]]) + count(//*[./*[starts-with(@id,'post-')][parent::node()[not(@id='content')]][self::div or self::p or self::section or self::table or self::ul or self::li][ancestor-or-self::main  or ancestor-or-self::*[contains(@id,'main')] or ancestor-or-self::*[contains(@class,'main')]]])=1]|id('content')[count(div)>1]/div[contains(@class,'post')][not(contains(div/@class,'breadcrumb'))]",
+    "pageElement": "(descendant::*[./article][1]/article)[count(//*[./article][ancestor-or-self::main or ancestor-or-self::*[contains(@id,'main')] or ancestor-or-self::*[contains(@class,'main')]])=1][not(//*[@rel='next'] and //*[contains(@class,'hentry')])]",
     "nextLink": "(//*[not(contains(@class,'_inactive'))]/a[starts-with(@class,'nextpostslink') or contains(@class,'next page-numbers') or (.|..)[normalize-space(@rel)='next' or normalize-space(@class)='next' or contains(@class,'pagination-next')]][not(span/@class='link-text')]|//*[contains(@class,'nav-previous')][not(contains(@class,'pull'))]/a|(//*[contains(@class,'current')][number()>0]/following-sibling::a[1]|(//li|//span|//div)[(.//*|.)[contains(@class,'current')]][number()>0]/following-sibling::*[self::li or self::span or self::div][1]/a)[not(//a[starts-with(@class,'nextpostslink') or contains(@class,'next page-numbers') or (.|..)[normalize-space(@rel)='next' or normalize-space(@class)='next' or contains(@class,'pagination-next')]])])[not(starts-with(@href, '#'))]",
     "url": "^https?://.+",
-    "exampleUrl_a": "https://starcasm.net/\r\nhttps://www.newyorker.com/magazine/food-and-drink\r\nhttps://shingeki.tv/news/\r\nhttps://www.stuff-review.com/\r\nhttps://insidepulse.com/zone/wrestling/\r\nhttp://diehardgamefan.com/category/nintendo_wii/\r\nhttps://littlebigdetails.com/page/2\r\nhttps://littlebigdetails.com/tagged/chrome/page/2\r\nhttps://tekito-style.me/\r\nhttps://kinmaweb.jp/archives/category/column\r\nhttps://www.sensitivity.jp/monolog/\r\nhttps://www.flickeringmyth.com/category/movies/\r\nhttps://www.webcreatorbox.com/\r\nhttps://asian-breeze.com/category/2020roster/page/2\r\nhttps://rephtone.com/page/3/\r\nhttps://news.careerconnection.jp/newlist/\r\nhttps://www.jinnsblog.com/\r\nhttps://blog.archive.org/\r\nhttps://www.celebdirtylaundry.com/\r\nhttps://www.evilmadscientist.com/\r\nhttp://www.synthtopia.com/\r\nhttps://ieiri.net/blog\r\nhttps://petitetomo.com/\r\nhttps://xperia-freaks.org/\r\nhttps://allanhutchison.net/\r\nhttps://caelum-lex.com/\r\nhttp://skaz.jp/page/2\r\nhttp://yaneuraou.yaneu.com/\r\nhttp://dl-zip.com/\r\nhttp://haaya.net/\r\nhttps://info.yadoku.com/\r\nhttps://write-sentence.org/category/blog/\r\nhttps://www.kirainet.com/",
-    "exampleUrl_b": "https://www.ama-dan.com/news http://anjo.dekiteharu.jp/category/3d_animation\r\nhttp://www.octech.jp/review/?s=a",
-    "exampleUrl_c": "http://bash.org.pl/latest/\r\nhttp://moherou.net/page/2/\r\nhttp://octech.jp/modules/wordpress/\r\nhttp://dannnao.net/blog/\r\nhttp://dannnao.net/blog/page/2/\r\nhttp://dannnao.net/blog/2013/01/2000px/\r\nhttps://www.askasu.idv.tw/"
+    "exampleUrl": "https://starcasm.net/\r\nhttps://www.newyorker.com/magazine/food-and-drink\r\nhttps://shingeki.tv/news/\r\nhttps://insidepulse.com/zone/wrestling/\r\nhttp://diehardgamefan.com/category/nintendo_wii/\r\nhttps://littlebigdetails.com/page/2\r\nhttps://littlebigdetails.com/tagged/chrome/page/2\r\nhttps://tekito-style.me/\r\nhttps://kinmaweb.jp/archives/category/column\r\nhttps://www.flickeringmyth.com/category/movies/\r\nhttps://www.webcreatorbox.com/\r\nhttps://asian-breeze.com/category/2020roster/page/2\r\nhttps://rephtone.com/page/3/\r\nhttps://news.careerconnection.jp/newlist/\r\nhttps://www.evilmadscientist.com/\r\nhttp://www.synthtopia.com/\r\nhttps://ieiri.net/blog\r\nhttps://xperia-freaks.org/\r\nhttps://allanhutchison.net/\r\nhttps://caelum-lex.com/\r\nhttp://skaz.jp/page/2\r\nhttp://dl-zip.com/\r\nhttp://haaya.net/\r\nhttps://write-sentence.org/category/blog/\r\nhttps://www.kirainet.com/\r\nhttps://i.impressrd.jp/page/2\r\nhttps://www.43rumors.com/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "swdyh",
   "name": "Generic Posts Rule",
   "created_at": "2008-04-16T12:35:17+09:00",
-  "updated_at": "2022-11-17T07:20:33+09:00"
+  "updated_at": "2022-11-18T10:51:20+09:00"
 }
 ]
