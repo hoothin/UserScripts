@@ -1,20 +1,33 @@
 [
 {
-  "resource_url": "http://wedata.net/items/86004",
+  "resource_url": "http://wedata.net/items/86005",
   "data": {
     "insertBefore": "",
-    "pageElement": "(descendant::*[./*[starts-with(@id,'post-')]][1]/*[starts-with(@id,'post-')])[count(//*[./*[starts-with(@id,'post-')][./following-sibling::*[starts-with(@id,'post-')]][parent::node()[not(@id='content')]][self::div or self::p or self::section or self::table or self::ul or self::li][ancestor-or-self::main or ancestor-or-self::*[contains(@id,'main')] or ancestor-or-self::*[contains(@class,'main')]]])=1]|id('content')[count(div)>1]/div[contains(@class,'post')][not(contains(div/@class,'breadcrumb'))]",
+    "pageElement": "//div[@id='content']",
+    "nextLink": "//a[contains(text(), '下一页')]",
+    "url": "^https://sou-yun\\.cn/",
+    "exampleUrl": "https://sou-yun.cn/QueryPoem.aspx?key=%e6%a1%83%e5%a4%ad&au=&dy=0&pt=All&sic=0&sc=0&pm=False&smo=False&page=0"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "sunny",
+  "name": "搜韵",
+  "created_at": "2022-11-18T19:33:28+09:00",
+  "updated_at": "2022-11-18T19:33:28+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/86004",
+  "data": {
+    "pageElement": "(descendant::*[./*[starts-with(@id,'post-')]][1]/*[starts-with(@id,'post-')])[count(//*[./*[starts-with(@id,'post-')][./following-sibling::*[starts-with(@id,'post-')]][parent::node()[not(@id='content')]][self::div or self::p or self::section or self::table or self::ul or self::li][ancestor-or-self::main or ancestor-or-self::*[contains(@id,'main')] or ancestor-or-self::*[contains(@class,'main')]]])=1][not(//*[@rel='next'] and //*[contains(@class,'hentry')])]|id('content')[count(div)>1]/div[contains(@class,'post')][not(contains(div/@class,'breadcrumb'))]",
     "nextLink": "(//*[not(contains(@class,'_inactive'))]/a[starts-with(@class,'nextpostslink') or contains(@class,'next page-numbers') or (.|..)[normalize-space(@rel)='next' or normalize-space(@class)='next' or contains(@class,'pagination-next')]][not(span/@class='link-text')]|//*[contains(@class,'nav-previous')][not(contains(@class,'pull'))]/a|(//*[contains(@class,'current')][number()>0]/following-sibling::a[1]|(//li|//span|//div)[(.//*|.)[contains(@class,'current')]][number()>0]/following-sibling::*[self::li or self::span or self::div][1]/a)[not(//a[starts-with(@class,'nextpostslink') or contains(@class,'next page-numbers') or (.|..)[normalize-space(@rel)='next' or normalize-space(@class)='next' or contains(@class,'pagination-next')]])])[not(starts-with(@href, '#'))]",
-    "exampleUrl_b": "http://bash.org.pl/latest/ http://moherou.net/page/2/ http://octech.jp/modules/wordpress/ http://dannnao.net/blog/ http://dannnao.net/blog/page/2/ http://dannnao.net/blog/2013/01/2000px/ https://www.askasu.idv.tw/",
-    "exampleUrl_a": "https://www.ama-dan.com/news http://anjo.dekiteharu.jp/category/3d_animation http://www.octech.jp/review/?s=a",
     "url": "^https?://.",
-    "exampleUrl": ""
+    "exampleUrl_b": "http://bash.org.pl/latest/ http://moherou.net/page/2/ http://octech.jp/modules/wordpress/ http://dannnao.net/blog/ http://dannnao.net/blog/page/2/ http://dannnao.net/blog/2013/01/2000px/ https://www.askasu.idv.tw/",
+    "exampleUrl_a": "http://anjo.dekiteharu.jp/category/3d_animation http://www.octech.jp/review/?s=a"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "kenzou_ogawa2",
   "name": "Generic Posts Rule (post)",
   "created_at": "2022-11-18T09:40:53+09:00",
-  "updated_at": "2022-11-18T09:40:53+09:00"
+  "updated_at": "2022-11-18T11:00:05+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/86003",
