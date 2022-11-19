@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.46.79
+// @version      1.6.6.46.80
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -1438,6 +1438,7 @@
                  }
                  .search-jumper-scroll.search-jumper-bottom>.search-jumper-searchBar:hover,
                  .search-jumper-scroll.search-jumper-bottom>.search-jumper-searchBar.initShow,
+                 .resizePage.search-jumper-scroll.search-jumper-bottom>.search-jumper-searchBar,
                  .search-jumper-scroll.search-jumper-bottom>.search-jumper-searchBar.funcKeyCall,
                  #search-jumper.in-input.search-jumper-scroll.search-jumper-bottom>.search-jumper-searchBar {
                      margin-top: 0px;
@@ -1447,7 +1448,8 @@
                      opacity: 1;
                      ${searchData.prefConfig.noAni ? "" : "transition:margin-top 0.1s ease, margin-left 0.1s, right 0.1s, opacity 0.1s, transform 0.1s;"}
                  }
-                 .search-jumper-searchBar.initShow {
+                 .search-jumper-searchBar.initShow,
+                 .resizePage>.search-jumper-searchBar {
                      margin-top: 0;
                      opacity: 0.8;
                      ${searchData.prefConfig.noAni ? "" : "transition:margin-top 0.25s ease, margin-left 0.25s, right 0.25s, opacity 0.25s, transform 0.25s;"}
@@ -1569,6 +1571,7 @@
                  }
                  .search-jumper-left>.search-jumper-searchBar:hover,
                  .search-jumper-left>.search-jumper-searchBar.initShow,
+                 .resizePage.search-jumper-left>.search-jumper-searchBar,
                  .search-jumper-left>.search-jumper-searchBar.funcKeyCall,
                  #search-jumper.in-input.search-jumper-left>.search-jumper-searchBar {
                      margin-top: unset;
@@ -1577,6 +1580,7 @@
                  }
                  .search-jumper-right>.search-jumper-searchBar:hover,
                  .search-jumper-right>.search-jumper-searchBar.initShow,
+                 .resizePage.search-jumper-right>.search-jumper-searchBar,
                  .search-jumper-right>.search-jumper-searchBar.funcKeyCall,
                  #search-jumper.in-input.search-jumper-right>.search-jumper-searchBar {
                      margin-top: unset;
@@ -1592,6 +1596,7 @@
                  }
                  .search-jumper-bottom>.search-jumper-searchBar:hover,
                  .search-jumper-bottom>.search-jumper-searchBar.initShow,
+                 .resizePage.search-jumper-bottom>.search-jumper-searchBar,
                  .search-jumper-bottom>.search-jumper-searchBar.funcKeyCall,
                  #search-jumper.in-input.search-jumper-bottom>.search-jumper-searchBar {
                      margin-top: 0px;
@@ -4225,12 +4230,14 @@
                 cacheImgManager();
 
                 this.bar.addEventListener('mouseenter', e => {
+                    if (this.bar.classList.contains("grabbing")) return;
                     if (this.hideTimeout) {
                         clearTimeout(this.hideTimeout);
                     }
                     this.checkScroll(true);
                 }, false);
                 this.bar.addEventListener('mouseleave', e => {
+                    if (this.bar.classList.contains("grabbing")) return;
                     this.waitForHide();
                 }, false);
 
@@ -6492,7 +6499,37 @@
                 let setClass = className => {
                     self.bar.style.cssText = "";
                     self.bar.parentNode.style.cssText = "";
-                    self.bar.parentNode.className = "search-jumper-searchBarCon " + (searchData.prefConfig.autoHideAll ? "hideAll " : "") + className;
+                    self.bar.parentNode.className = "search-jumper-searchBarCon " + className;
+                    if (searchData.prefConfig.resizePage) {
+                        if (typeof self.initBodyStyle == 'undefined') self.initBodyStyle = document.body.style.cssText;
+                        else document.body.style.cssText = self.initBodyStyle;
+                        self.bar.parentNode.classList.add("resizePage");
+                        document.body.style.position = "absolute";
+                        switch (className) {
+                            case "search-jumper-left":
+                                document.body.style.width = `calc(100% - ${self.scale * 42}px)`;
+                                document.body.style.height = "100%";
+                                document.body.style.right = "0px";
+                                break;
+                            case "search-jumper-right":
+                                document.body.style.width = `calc(100% - ${self.scale * 42}px)`;
+                                document.body.style.height = "100%";
+                                document.body.style.left = "0px";
+                                break;
+                            case "search-jumper-bottom":
+                                document.body.style.width = "100%";
+                                document.body.style.height = `calc(100% - ${self.scale * 42}px)`;
+                                document.body.style.top = "0px";
+                                break;
+                            default:
+                                document.body.style.width = "100%";
+                                document.body.style.height = `calc(100% - ${self.scale * 42}px)`;
+                                document.body.style.bottom = "0px";
+                                break;
+                        }
+                    } else if (searchData.prefConfig.autoHideAll) {
+                        self.bar.parentNode.classList.add("hideAll");
+                    }
                     let baseSize = Math.min(self.bar.scrollWidth, self.bar.scrollHeight);
                     let leftRight = self.bar.parentNode.classList.contains("search-jumper-left") ||
                         self.bar.parentNode.classList.contains("search-jumper-right");
@@ -7379,11 +7416,6 @@
             };
 
             logoBtn.oncontextmenu = function (event) {
-                searchBar.bar.style.display = 'none';
-                document.removeEventListener('mouseup', mouseUpHandler, false);
-                document.removeEventListener('mousemove', mouseMoveHandler, false);
-                document.removeEventListener('touchend', mouseUpHandler, false);
-                document.removeEventListener('touchmove', mouseMoveHandler, false);
                 event.preventDefault();
             };
 
@@ -7393,6 +7425,14 @@
                     return;
                 }
                 if (e.which === 3) {
+                    if (searchData.prefConfig.resizePage) {
+                        if (searchBar.initBodyStyle) document.body.style.cssText = searchBar.initBodyStyle;
+                    }
+                    searchBar.bar.style.display = 'none';
+                    document.removeEventListener('mouseup', mouseUpHandler, false);
+                    document.removeEventListener('mousemove', mouseMoveHandler, false);
+                    document.removeEventListener('touchend', mouseUpHandler, false);
+                    document.removeEventListener('touchmove', mouseMoveHandler, false);
                     return;
                 }
                 e.preventDefault();
