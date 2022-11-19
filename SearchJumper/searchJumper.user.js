@@ -7416,6 +7416,7 @@
             };
 
             logoBtn.oncontextmenu = function (event) {
+                searchBar.bar.style.display = 'none';
                 event.preventDefault();
             };
 
@@ -7426,9 +7427,8 @@
                 }
                 if (e.which === 3) {
                     if (searchData.prefConfig.resizePage) {
-                        if (searchBar.initBodyStyle) document.body.style.cssText = searchBar.initBodyStyle;
+                        if (typeof searchBar.initBodyStyle != "undefined") document.body.style.cssText = searchBar.initBodyStyle;
                     }
-                    searchBar.bar.style.display = 'none';
                     document.removeEventListener('mouseup', mouseUpHandler, false);
                     document.removeEventListener('mousemove', mouseMoveHandler, false);
                     document.removeEventListener('touchend', mouseUpHandler, false);
