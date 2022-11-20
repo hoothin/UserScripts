@@ -7989,9 +7989,10 @@
                     if (preSwitch == searchData.prefConfig.cacheSwitch) {
                         searchData.sitesConfig.forEach(type => {
                             if (/^[a-z\- ]+$/.test(type.icon) || /^http/.test(type.icon)) {
-                                let typeCache = cacheIcon[type.icon.trim().replace(/ /g, '_')];
+                                let icon = type.icon.trim().replace(/ /g, '_');
+                                let typeCache = cacheIcon[icon];
                                 if (typeCache) {
-                                    newCache[type.icon] = typeCache;
+                                    newCache[icon] = typeCache;
                                 }
                             }
                             type.sites.forEach(site => {
@@ -8011,8 +8012,8 @@
                         }
                     } else {
                         searchData.sitesConfig.forEach(type => {
-                            if (/^[a-z\- ]+$/.test(type.icon) || /^http/.test(type.icon)) {
-                                let typeCache = cacheIcon[type.icon.trim().replace(/ /g, '_')];
+                            if (/^http/.test(type.icon)) {
+                                let typeCache = cacheIcon[type.icon];
                                 if (typeCache && typeCache !== 'fail') {
                                     newCache[type.icon] = typeCache;
                                 }
