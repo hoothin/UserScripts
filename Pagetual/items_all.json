@@ -27,7 +27,7 @@
   "created_by": "kenzou_ogawa2",
   "name": "Generic Posts Rule (post)",
   "created_at": "2022-11-18T09:40:53+09:00",
-  "updated_at": "2022-11-18T11:00:05+09:00"
+  "updated_at": "2022-11-20T03:02:53+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/86003",
@@ -24447,16 +24447,16 @@
 {
   "resource_url": "http://wedata.net/items/74923",
   "data": {
-    "pageElement": "//div[contains(@class,'a-archive-grid__story')]|descendant::*[./div[contains(@class,'o-card')]][1]|//div[@class='story_list_blk']/*|//li[@class='l-list__item'][article]",
-    "nextLink": "//link[@rel='next']|//a[contains(@class,'next') or contains(@class,'a-icon-right-arrow')]",
-    "url": "^https?://.*(?:bollywoodlife|deadline|footwearnews)\\.com",
-    "exampleUrl": "https://www.deadline.com/ https://deadline.com/vcategory/the-contenders-emmys/page/2/ https://deadline.com/tag/caa/page/2/\r\nhttps://www.bollywoodlife.com/\r\nhttps://footwearnews.com/page/2/"
+    "pageElement": "//div[contains(@class,'a-archive-grid__story')]|descendant::*[./div[contains(@class,'o-card')]][1]|//div[@class='story_list_blk']/*|//li[@class='l-list__item'][article]|id('main')/article[@id]",
+    "nextLink": "//link[@rel='next']|//a[contains(@class,'next') or contains(@class,'a-icon-right-arrow')]|//div[@class='nav-previous']/a",
+    "url": "^https?://.*(?:bollywoodlife|(dead|tv)line|footwearnews)\\.com",
+    "exampleUrl": "https://www.deadline.com/ https://deadline.com/vcategory/the-contenders-emmys/page/2/ https://deadline.com/tag/caa/page/2/ https://www.bollywoodlife.com/ https://footwearnews.com/page/2/ https://tvline.com/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "Tanookirby",
   "name": "PMC Brands",
   "created_at": "2014-06-26T02:58:29+09:00",
-  "updated_at": "2022-03-06T05:27:41+09:00"
+  "updated_at": "2022-11-20T03:10:44+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/74912",
