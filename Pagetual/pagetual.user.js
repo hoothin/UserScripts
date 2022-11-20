@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.32.43
+// @version      1.9.33
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -1730,14 +1730,16 @@
             let nextLink = null, page, href;
             let getNextLinkByForm = (form, n) => {
                 let params = [];
-                [].forEach.call(form.querySelectorAll("input"), input => {
-                    if (n && /^(p|page)$/i.test(input.name)) {
-                        params.push('p=' + n);
+                let formData = new FormData(form);
+                for (let [key, value] of formData) {
+                    if (n && /^(p|page)$/i.test(key)) {
+                        params.push(key + '=' + n);
                     } else {
-                        params.push(input.name + '=' + input.value);
+                        params.push(key + '=' + encodeURIComponent(value));
                     }
-                });
-                return form.action + '?' + params.join('&');
+                }
+                params = params.join('&');
+                return form.action + (form.action.indexOf('?') == -1 ? '?' : '&') + params + (form.method == 'post' ? '#p{' + params + '}' : '');
             };
             if (this.curSiteRule.pageElementByJs) {
                 this.nextLinkHref = "#";
@@ -1796,6 +1798,26 @@
                         nextLink = getElement(nextLinkSel[nextIndex], doc);
                     } else nextLink = getElement(nextLinkSel, doc);
                 }
+                if (nextLink && (this.curSiteRule.action == 0 || this.curSiteRule.action == 1 || this.curSiteRule.action == 2)) {
+                    let form = doc.querySelector('#search-form');
+                    if (!nextLink.href && nextLink.hasAttribute("onclick") && form) {
+                        if (/^\d+$/.test(nextLink.innerText)) {
+                            nextLink.href = getNextLinkByForm(form, nextLink.innerText);
+                        }
+                    } else if (nextLink.tagName == "INPUT" || nextLink.type == "submit") {
+                        form = nextLink.parentNode;
+                        while (form) {
+                            if (form.tagName == "FORM") break;
+                            else form = form.parentNode;
+                        }
+                        if (form) {
+                            nextLink.href = getNextLinkByForm(form);
+                        }
+                    }
+                    if (nextLink.href && this.curSiteRule.action != 0) {
+                        nextLink.href = nextLink.href.replace(/#p{.*/, "");
+                    }
+                }
             }else{
                 page=this.getPage(doc);
                 nextLink=page.next;
@@ -1807,7 +1829,7 @@
                             else form = form.parentNode;
                         }
                         if (form) {
-                            nextLink.href=getNextLinkByForm(form);
+                            nextLink.href = getNextLinkByForm(form);
                         }
                     }
                     let parent = nextLink;
@@ -1917,7 +1939,7 @@
                     if (doc == document) debug(nextLink, 'Next link');
                     this.nextLinkHref = '#';
                 } else {
-                    let needUrl = (this.curSiteRule.action == 0 || this.curSiteRule.action == 1);
+                    let needUrl = (this.curSiteRule.action == 0 || this.curSiteRule.action == 1 || this.curSiteRule.action == 2);
                     if (!href) href = nextLink.href;
                     if (href && nextLink.getAttribute) {
                         let _href = nextLink.getAttribute("href");
@@ -1932,7 +1954,7 @@
 
                     if(needUrl && (href===""||href===null)){
                         this.nextLinkHref=false;
-                    }else if(needUrl && /^(javascript:(void\(0\)|;)|#)/.test(href)){
+                    }else if(needUrl && /^(javascript:|#)/.test(href)){
                         this.nextLinkHref=false;
                     }else{
                         this.nextLinkHref=(href && !/^(javascript:|#)/.test(href))?this.canonicalUri(href):"#";
@@ -3945,14 +3967,20 @@
     }
 
     function requestDoc(url, callback){
+        let postParams = url.match(/#p{(.*)}$/);
+        if (postParams) {
+            postParams = postParams[1];
+            url = url.replace(/#p{.*/, "");
+        }
         _GM_xmlhttpRequest({
             url: url,
-            method: 'GET',
+            method: postParams ? 'POST' : 'GET',
+            data: postParams,
             overrideMimeType: 'text/html;charset=' + (document.characterSet || document.charset || document.inputEncoding),
             headers: {
                 'Referer': location.href,
                 'User-Agent': navigator.userAgent,
-                "Content-Type": "text/html;charset=" + (document.characterSet || document.charset || document.inputEncoding),
+                "Content-Type": (postParams ? "application/x-www-form-urlencoded" : "text/html") + ";charset=" + (document.characterSet || document.charset || document.inputEncoding),
             },
             timeout: 10000,
             onload: function(res) {
@@ -4565,6 +4593,7 @@
 
     const pageNumReg=/[&\/\?](p=|page[=\/_-]?)\d+|[_-]\d+\./;
     function createPageBar(url) {
+        url = url.replace(/#p{.*/, "");
         if (rulesData.opacity == 0 || ruleParser.curSiteRule.pageBar === 0) return null;
         let insert=ruleParser.getInsert();
         if(!insert || !insert.parentNode)return;
@@ -4619,6 +4648,7 @@
         if(rulesData.pageBarMenu){
             pageText.addEventListener("click", e=>{
                 e.stopPropagation();
+                if (e.ctrlKey || e.altKey || e.shiftKey || e.metaKey) return;
                 e.preventDefault();
                 Picker.getInstance().start();
             });
