@@ -6063,7 +6063,14 @@
         "name": "Startpage",
         "url": "^https://www\\.startpage\\.com/",
         "pageElement": "section.w-gl>div.w-gl__result",
-        "nextLinkByJs": "let nextBtn=doc.querySelector('button.next'),params=[];if(!nextBtn)return null;let form=nextBtn.parentNode;[].forEach.call(form.querySelectorAll('input'),input=>{params.push(input.name+'='+input.value)});return form.action+'?'+params.join('&')"
+        "nextLink": "button.next",
+        "action": 0
+    },
+    {
+        "name": "图书书目检索",
+        "url": "^https?://pcpt\\.nlc\\.cn/mgwx/search/search",
+        "pageElement": "#content > div.list-panel.thelist > div.block > table.table",
+        "nextLinkByJs": "let max=doc.querySelector(`.pagination>.result>b:nth-child(2)`),cur=doc.querySelector(`.pagination>.result>b:nth-child(3)`);let form=doc.querySelector('#fm_id'),params=[];if(!max||!cur||max.innerText==cur.innerText||!form)return null;let formData = new FormData(form); for (let [key, value] of formData) {params.push(key+'='+encodeURIComponent(value))};return form.action.replace(/\\?pageCount.*/,'')+'?pageCount='+(parseInt(cur.innerText) + 1)+'#p{'+params.join('&')+'}'"
     },
     {
         "name": "Search Getty Images",
