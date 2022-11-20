@@ -31,7 +31,7 @@
     {
         "name": "包子漫畫 - 閱讀",
         "example": "https://www.webmota.com/comic/chapter/dawangraoming-yuedongwenhua/0_0.html",
-        "url": "^https://(www|tw)\\.webmota\\.com/comic/chapter/[^/]+/\\w+\\.html",
+        "url": "^https://(www|tw)\\.(webmota|baozimh)\\.com/comic/chapter/[^/]+/\\w+\\.html",
         "history": 2,
         "pinUrl": true,
         "init": "function geAll(e){return document.querySelectorAll(e)}geAll('.mobadsq').forEach(e=>{e.remove()});let imgs=geAll('.comic-contain amp-img');let imgData=[];for(let i=0;i<imgs.length;i++){imgData.push(imgs[i].getAttribute('src'))};let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img class=\"comic-contain__item\"src='${imgData[i]}'>`};geAll('.comic-contain')[0].innerHTML=_img",
@@ -39,10 +39,55 @@
         "pageElement": ".chapter-main>.next_chapter,.chapter-main>.comic-contain",
         "replaceElement": "//head/title | //span[@class='title'] | //div[@class='comic-chapter']/div[@class='next_chapter'] | //div[@class='bottom-bar']",
         "pageInit": "function geAll(e){return doc.querySelectorAll(e)}geAll('.mobadsq').forEach(e=>{e.remove()});let imgs=geAll('.comic-contain amp-img');let imgData=[];for(let i=0;i<imgs.length;i++){imgData.push(imgs[i].getAttribute('src'))};let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img class=\"comic-contain__item\"src='${imgData[i]}'>`};geAll('.comic-contain')[0].innerHTML=_img",
-        "pageAction": "function gx(x){return document.evaluate(x,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue}function geAll(e){return document.querySelectorAll(e)}setTimeout(()=>{let nc=gx(\"//div[starts-with(@class,'chapter-main')]/div[@class='next_chapter']/a[contains(text(),'點擊進入上一頁')]\");if(nc){geAll('.chapter-main>.next_chapter').forEach(e=>{e.remove()});geAll('.pagetual_pageBar').forEach(e=>{e.remove()})}},0);setTimeout(()=>{let c=geAll('.comic-contain');if(c.length>4){gx(\"//ul[@class='comic-contain']\").remove()}let p=geAll('.pagetual_pageBar');if(p.length>4){p[0].remove()}},1000)",
+        "pageAction": "function gx(x){return document.evaluate(x,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue}function geAll(e){return document.querySelectorAll(e)}setTimeout(()=>{let nc=gx(\"//div[starts-with(@class,'chapter-main')]/div[@class='next_chapter']/a[contains(text(),'點擊進入上一頁')]\");if(nc){geAll('.chapter-main>.next_chapter').forEach(e=>{e.remove()});geAll('.pagetual_pageBar').forEach(e=>{e.remove()})}},0);setTimeout(()=>{let c=geAll('.comic-contain');if(c.length>4){gx(\"//ul[@class='comic-contain']\").remove()}let p=geAll('.pagetual_pageBar');if(p.length>4){p[0].remove()}},10000)",
         "pageBarText": 1,
         "rate": 3,
         "css": ".mobadsq,.chapter-main>.next_chapter{display:none!important}ul{margin-block-start:-2px!important;margin-block-end:2px!important}.pagetual_pageBar{margin-top:7px!important}"
+    },
+    {
+        "name": "包子漫畫2 - 閱讀",
+        "example": "https://baozimh.org/manga/kaijuyizuoshan-yulemeicuo/0_2/",
+        "url": "^https?://baozimh\\.org/manga/[^/]+/\\w+/",
+        "history": 2,
+        "pinUrl": true,
+        "init": "function gx(x){return document.evaluate(x,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue}function geAll(e){return document.querySelectorAll(e)}let imgs=geAll('img[data-src]');let imgData=[];for(let i=0;i<imgs.length;i++){let imgSrc=imgs[i].getAttribute('data-src');imgData.push(imgSrc)};let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src='${imgData[i]}'>`};gx(\"//div[(div/img) and contains(@class,'gb-container')]\").innerHTML=_img",
+        "nextLink": "//a[span[text()='下一话']]",
+        "pageElement": "//div[(div/img) and contains(@class,'gb-container')] | //div[(img) and contains(@class,'gb-container')]",
+        "replaceElement": "head>title,#pagenation,#site-navigation~.gb-container",
+        "pageInit": "function gx(x){return doc.evaluate(x,doc,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue}function geAll(e){return doc.querySelectorAll(e)}let imgs=geAll('img[data-src]');let imgData=[];for(let i=0;i<imgs.length;i++){let imgSrc=imgs[i].getAttribute('data-src');imgData.push(imgSrc)};let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src='${imgData[i]}'>`};gx(\"//div[(div/img) and contains(@class,'gb-container')]\").innerHTML=_img",
+        "pageAction": "function gxAll(x,context){var nodes=[];try{var doc=(context&&context.ownerDocument)||window.document;var results=doc.evaluate(x,context||doc,null,XPathResult.ANY_TYPE,null);var node;while(node=results.iterateNext()){nodes.push(node)}}catch(e){throw e;}return nodes}setTimeout(()=>{let c=gxAll(\"//div[(img) and contains(@class,'gb-container')]\");if(c.length>2){c[0].remove()}let p=gxAll(\"//*[contains(@class,'pagetual_pageBar')]\");if(p.length>2){p[0].remove()}},10000)",
+        "pageBarText": 1,
+        "css": ".pagetual_pageBar+.gb-container{margin-top:-3px!important}"
+    },
+    {
+        "name": "包子漫畫2 - 分類/搜索",
+        "example": "https://baozimh.org/",
+        "url": "^https?://baozimh\\.org/",
+        "nextLink": "span.current+a,a[aria-label='Next page']",
+        "pageElement": "#main>article article,header.page-header~article",
+        "replaceElement": "nav.ct-pagination,.paging-navigation",
+        "css": ".pagetual_pageBar{margin-top:-10px!important;margin-bottom:10px!important}"
+    },
+    {
+        "name": "GODA漫画  - 閱讀",
+        "example": "https://chapter.godamanga.com/manga/wozhendebushiqiyunzhizi-vv/0_0/",
+        "url": "^https?://chapter\\.godamanga\\.com/manga/[^/]+/\\w+/",
+        "history": 2,
+        "nextLink": "//a[span[text()='下一话']]",
+        "pageElement": "//div[div/div/div/img[@decoding='async']]",
+        "replaceElement": "head>title,.hero-section,#pagenation",
+        "pageAction": "function gxAll(x,context){var nodes=[];try{var doc=(context&&context.ownerDocument)||window.document;var results=doc.evaluate(x,context||doc,null,XPathResult.ANY_TYPE,null);var node;while(node=results.iterateNext()){nodes.push(node)}}catch(e){throw e;}return nodes}setTimeout(()=>{let c=gxAll(\"//div[div/div/div/img[@decoding='async']]\");if(c.length>2){c[0].remove()}let p=gxAll(\"//*[contains(@class,'pagetual_pageBar')]\");if(p.length>2){p[0].remove()}},1000)",
+        "pageBarText": 1,
+        "css": ".pagetual_pageBar+.stk-row{margin-top:-3px!important}"
+    },
+    {
+        "name": "GODA漫画 - 分類/搜索",
+        "example": "https://godamanga.com/",
+        "url": "^https?://(cn\\.)?godamanga\\.com/",
+        "nextLink": "span.current+a,a[aria-label='Next page']",
+        "pageElement": "//article[a/img]",
+        "replaceElement": "nav.ct-pagination,.paging-navigation",
+        "css": ".pagetual_pageBar{margin-top:-20px!important;margin-bottom:0px!important}"
     },
     {
         "name": "COCOMANGA - 閱讀 - 雙擊前往下一章，鍵盤左右鍵上下章",
@@ -1563,6 +1608,7 @@
         "name": "RARBG",
         "example": "https://rarbg.to/torrents.php?category=movies",
         "url": "^https?://rarbg\\.to/",
+        "action": 1,
         "include": "#pager_links",
         "nextLink": "#pager_links>a[title='next page']",
         "pageElement": "table.lista2t tr.lista2",
