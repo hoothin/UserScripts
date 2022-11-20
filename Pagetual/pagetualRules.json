@@ -1607,7 +1607,7 @@
     {
         "name": "RARBG",
         "example": "https://rarbg.to/torrents.php?category=movies",
-        "url": "^https?://rarbg\\.to/",
+        "url": "^https?://(proxy|unblocked)?rarbg([a-z0-9]+)?\\.(to|org|com)/",
         "action": 1,
         "include": "#pager_links",
         "nextLink": "#pager_links>a[title='next page']",
