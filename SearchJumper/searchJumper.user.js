@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.46.81
+// @version      1.6.6.46.82
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -1033,6 +1033,8 @@
             _GM_info = { script:1 };
         }
         var _unsafeWindow = (typeof unsafeWindow == 'undefined') ? window : unsafeWindow;
+        if (_unsafeWindow.searchJumperInited) return;
+        _unsafeWindow.searchJumperInited = true;
         var storage = {
             supportGM: typeof GM_getValue == 'function' && typeof GM_getValue('a', 'b') != 'undefined',
             supportGMPromise: typeof GM != 'undefined' && typeof GM.getValue == 'function' && typeof GM.getValue('a','b') != 'undefined',
@@ -5111,7 +5113,7 @@
             async createType(data) {
                 let self = this;
                 let type = data.type;
-                let icon = searchData.prefConfig.noIcons?'':data.icon;
+                let icon = data.icon;
                 let inPage = data.selectTxt;
                 let selectImg = data.selectImg;
                 let selectAudio = data.selectAudio;
@@ -5167,7 +5169,7 @@
                 if (icon) {
                     typeBtn.classList.remove("noIcon");
                     if (/^[a-z\- ]+$/.test(icon)) {
-                        let cache = searchData.prefConfig.cacheSwitch && cacheIcon[icon];
+                        let cache = searchData.prefConfig.cacheSwitch && cacheIcon[icon.trim().replace(/ /g, '_')];
                         if (cache === 'fail') {
                         } else if (cache) {
                             img.src = cache;
@@ -5189,7 +5191,7 @@
                                 img.src = cache;
                             } else {
                                 img.src = icon;
-                                if (searchData.prefConfig.cacheSwitch && !isBookmark) cachePool.push(img);
+                                if (!cacheIcon[icon] && !isBookmark) cachePool.push(img);
                             }
                         }
                         typeBtn.appendChild(img);
@@ -5829,13 +5831,13 @@
                         if (ele.dataset.current && imgSrc.indexOf(location.host) != -1) {
                             img.dataset.src = imgSrc;
                             cacheIcon[imgSrc] = '';
-                            if (!isBookmark && searchData.prefConfig.cacheSwitch) cachePool.push(img);
+                            if (!isBookmark && !cacheIcon[imgSrc]) cachePool.push(img);
                         }
                     } else if (cache) {
                         img.src = cache;
                     } else {
                         img.dataset.src = imgSrc;
-                        if (!isBookmark && searchData.prefConfig.cacheSwitch) cachePool.push(img);
+                        if (!isBookmark && !cacheIcon[imgSrc]) cachePool.push(img);
                     }
                 }
                 if (isPage && openInNewTab) {
@@ -7148,7 +7150,7 @@
         }
 
         function cacheFontIcon(icon) {
-            let iconName = icon.className.replace('fa fa-', '');
+            let iconName = icon.className.trim().replace('fa fa-', '').replace(/ /g, '_');
             if (cacheIcon[iconName]) return;
             let cache = icon2Base64(icon);
             if (cache == 'data:,' || !cache) cache = 'fail';
@@ -7979,15 +7981,15 @@
 
                 loadConfig();
 
+                let preSwitch = searchData.prefConfig.cacheSwitch;
                 document.addEventListener('saveConfig', e => {
-                    let preSwitch = searchData.prefConfig.cacheSwitch;
                     searchData = (e.detail ? e.detail.searchData : e.searchData) || _unsafeWindow.searchData;
                     storage.setItem("searchData", searchData);
                     let newCache = {}, oldCacheLength = cacheIcon ? Object.keys(cacheIcon).length : 0;
                     if (preSwitch == searchData.prefConfig.cacheSwitch) {
                         searchData.sitesConfig.forEach(type => {
-                            if (/^[a-z\-]+$/.test(type.icon) || /^http/.test(type.icon)) {
-                                let typeCache = cacheIcon[type.icon];
+                            if (/^[a-z\- ]+$/.test(type.icon) || /^http/.test(type.icon)) {
+                                let typeCache = cacheIcon[type.icon.trim().replace(/ /g, '_')];
                                 if (typeCache) {
                                     newCache[type.icon] = typeCache;
                                 }
@@ -8009,8 +8011,8 @@
                         }
                     } else {
                         searchData.sitesConfig.forEach(type => {
-                            if (/^http/.test(type.icon)) {
-                                let typeCache = cacheIcon[type.icon];
+                            if (/^[a-z\- ]+$/.test(type.icon) || /^http/.test(type.icon)) {
+                                let typeCache = cacheIcon[type.icon.trim().replace(/ /g, '_')];
                                 if (typeCache && typeCache !== 'fail') {
                                     newCache[type.icon] = typeCache;
                                 }
@@ -8027,7 +8029,15 @@
                             });
                         });
                         storage.setItem("cacheIcon", newCache);
+                        if (searchData.prefConfig.cacheSwitch) {
+                            debug('SearchJumper start cache!');
+                            setTimeout(() => {
+                                cacheFontManager();
+                            }, 500);
+                            cacheImgManager();
+                        }
                     }
+                    preSwitch = searchData.prefConfig.cacheSwitch;
                     if (e.notification || (e.detail && e.detail.notification)) {
                         _GM_notification('Configuration imported successfully!');
                     }
