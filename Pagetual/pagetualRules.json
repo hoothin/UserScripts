@@ -6068,7 +6068,7 @@
     },
     {
         "name": "图书书目检索",
-        "url": "^https?://pcpt\\.nlc\\.cn/mgwx/search/search",
+        "url": "^https?://pcpt\\.nlc\\.cn/",
         "pageElement": "#content > div.list-panel.thelist > div.block > table.table",
         "nextLinkByJs": "let max=doc.querySelector(`.pagination>.result>b:nth-child(2)`),cur=doc.querySelector(`.pagination>.result>b:nth-child(3)`);let form=doc.querySelector('#fm_id'),params=[];if(!max||!cur||max.innerText==cur.innerText||!form)return null;let formData = new FormData(form); for (let [key, value] of formData) {params.push(key+'='+encodeURIComponent(value))};return form.action.replace(/\\?pageCount.*/,'')+'?pageCount='+(parseInt(cur.innerText) + 1)+'#p{'+params.join('&')+'}'"
     },
