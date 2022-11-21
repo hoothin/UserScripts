@@ -1608,12 +1608,14 @@
         "name": "RARBG",
         "example": "https://rarbg.to/torrents.php?category=movies",
         "url": "^https?://(proxy|unblocked)?rarbg([a-z0-9]+)?\\.(to|org|com)/",
-        "action": 1,
+        "action": 2,
         "include": "#pager_links",
         "nextLink": "#pager_links>a[title='next page']",
-        "pageElement": "table.lista2t tr.lista2",
+        "pageElement": "//table[tbody/tr[@class='lista2']/td/a/img]",
         "replaceElement": "#pager_links",
-        "sleep": 1000
+        "pageAction": "document.querySelectorAll('iframe[name]').forEach(iftame=>{iftame.style.margin='0 0 2px'});",
+        "sleep": 1000,
+        "css": "inIframe:body,table{margin:0!important;padding:0!important}table{width:100%!important}td[width='100']{display:none!important}body{background:none!important}"
     },
     {
         "name": "limetorrents.cc",
