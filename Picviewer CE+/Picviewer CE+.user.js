@@ -18349,7 +18349,7 @@ ImgOps | https://imgops.com/#b#`;
                 if(prefs.imgWindow.close.dblClickImgWindow){
                     var dblClickImgWindow=function(e){
                         var target=e.target;
-                        if(target==container || target==img || target.className=='pv-pic-window-center' || target==self.rotateOverlayer){
+                        if(target==container || target==img || target.className=='pv-pic-window-center' || target==self.imgState || target==self.rotateOverlayer){
                             self.remove();
                         };
                         e.preventDefault();
