@@ -1318,7 +1318,7 @@
         "init": "function ShowBar(){let dt=document.querySelector('div.titleBar');dt.style='background-color:#373737;';let ut=document.querySelector('ul.toolBar');ut.removeAttribute('style')}document.addEventListener('click',ShowBar);",
         "history": 2,
         "pinUrl": true,
-        "nextLink": "//p[text()='下一章'] | //a[@class='readTipForm']",
+        "nextLink": "//p[text()='下一章']/preceding-sibling::a[starts-with(@href,'/m')] | //a[@class='readTipForm' and not(@href='/m0/')]",
         "pageElement": "#cp_img",
         "replaceElement": "//head/title | id('title') | //a[@class='readTipForm'] | //p[contains(text(), '上一章') or contains(text(), '下一章')]/preceding-sibling::a",
         "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('#cp_img');if(c.length>2){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>2){p[0].remove()}},10000)",
@@ -1613,9 +1613,9 @@
         "nextLink": "#pager_links>a[title='next page']",
         "pageElement": "//table[tbody/tr[@class='lista2']/td/a/img]",
         "replaceElement": "#pager_links",
-        "pageAction": "document.querySelectorAll('iframe[name]').forEach(iftame=>{iftame.style.margin='0 0 2px'});",
+        "pageAction": "document.querySelectorAll('iframe[name]').forEach(iftame=>{iftame.style.margin='0 -2px 2px 0px'});let w=document.querySelector(\".lista2t .lista2>td[align='center']:not([width])\").clientWidth-2;let Iframes=document.getElementsByTagName(\"iframe\");for(let i=0;i<Iframes.length;i++){let I=(Iframes[i].contentWindow||Iframes[i].contentDocument);if(I.document){I=I.document};I.body.querySelectorAll(\".lista2t .lista2>td[align='center']:not([width])\").forEach(e=>{e.setAttribute('width',w)})};",
         "sleep": 1000,
-        "css": "inIframe:body,table{margin:0!important;padding:0!important}table{width:100%!important}td[width='100']{display:none!important}body{background:none!important}"
+        "css": "inIframe:body,table{margin:0!important;padding:0!important;width:100.1%!important}td[width='100'],.lista2t tr:not(.lista2){display:none!important}body{background:none!important}table.lista2t{border-top:2px solid #a0cff0}"
     },
     {
         "name": "limetorrents.cc",
@@ -2552,10 +2552,11 @@
         "name": "图集岛",
         "example": "https://www.tujidao03.com/u/?action=gengxin",
         "url": "^https?://www\\.tujidao\\d+\\.com/",
+        "action": 2,
         "nextLink": ".num+.next",
         "pageElement": ".hezi>ul",
         "replaceElement": "#pages",
-        "manualMode": true
+        "pageAction": "document.querySelectorAll('iframe[name]').forEach(iftame=>{iftame.style.margin='0 0 2px'});"
     },
     {
         "name": "Kemono - post",
@@ -4150,11 +4151,11 @@
     },
     {
         "name": "E-Hentai",
-        "example": "http://e-hentai.org/",
+        "example": "http://(e-hentai|exhentai).org/",
         "url": "^https?://e-hentai\\.org/",
-        "nextLink": "//table[@class='ptt']//a[string()='>'] | id('next')",
+        "nextLink": "//table[@class='ptt']//a[string()='>'] | id('next') | id('unext')",
         "pageElement": ".itg>div, .itg>tbody>tr:not(:first-of-type), #gdt>div:not(.c), #img",
-        "replaceElement": ".ptt, .ptb, .sn",
+        "replaceElement": ".ptt, .ptb, .sn, .searchnav",
         "css": "#img {max-width: 100% !important;height: auto !important;min-height: 400px;}"
     },
     {
@@ -6008,6 +6009,14 @@
         "nextLink": "a.num.current+a",
         "pageElement": ".u-list",
         "replaceElement": "div.panel+div>.pagei"
+    },
+    {
+        "name": "Discuz Archiver",
+        "example": "https://bbs.yxfanfan.com/archiver/?fid-13.html，https://bbs.yxfanfan.com/archiver/?tid-225893.html",
+        "url": "^https?://[^/]+/archiver/\\?(fid|tid)",
+        "nextLink": "strong+a",
+        "pageElement": "#content",
+        "css": ".pagetual_pageBar{margin-bottom:0px!important}"
     },
     {
         "name": "google search mobile",
