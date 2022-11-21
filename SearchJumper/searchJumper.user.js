@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.46.84
+// @version      1.6.6.46.85
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -1916,6 +1916,7 @@
                      margin-top: unset;
                  }
                  .search-jumper-tips {
+                     z-index: 2147483647;
                      pointer-events: none;
                      position: fixed;
                      font-size: xx-large;
@@ -3800,12 +3801,7 @@
                                 }
                             });
                             self.bar.style.display = "";
-                            self.initPos(
-                                searchData.prefConfig.position.x,
-                                searchData.prefConfig.position.y,
-                                searchData.prefConfig.offset.x,
-                                searchData.prefConfig.offset.y
-                            );
+                            self.initPos();
                         }
                     };
                     document.addEventListener("mousedown", mouseHandler);
@@ -4511,7 +4507,11 @@
                     }
                     if (self.funcKeyCall) {
                         self.setFuncKeyCall(false);
-                        self.bar.style.display = 'none';
+                        if (currentSite) {
+                            self.initPos();
+                        } else {
+                            self.bar.style.display = 'none';
+                        }
                     }
                     this.hideTimeout = null;
                 };
@@ -4591,12 +4591,7 @@
             inSearchEngine() {
                 if (!searchData.prefConfig.hideOnSearchEngine) {
                     this.bar.style.display = "";
-                    this.initPos(
-                        searchData.prefConfig.position.x,
-                        searchData.prefConfig.position.y,
-                        searchData.prefConfig.offset.x,
-                        searchData.prefConfig.offset.y
-                    );
+                    this.initPos();
                 }
                 this.insertHistory(this.currentType);
                 let inPageWords = searchData.prefConfig.showInSearchEngine ? getKeywords() : globalInPageWords;
@@ -4777,12 +4772,7 @@
                     if (currentSite) {
                         this.appendBar();
                         this.bar.style.display = "";
-                        this.initPos(
-                            searchData.prefConfig.position.x,
-                            searchData.prefConfig.position.y,
-                            searchData.prefConfig.offset.x,
-                            searchData.prefConfig.offset.y
-                        );
+                        this.initPos();
                         let typeBtn = this.bar.querySelector(`.search-jumper-type.search-jumper-hide[data-type="${typeData.type}"]>span`);
                         if (typeBtn) {
                             this.bar.insertBefore(typeBtn.parentNode, this.bar.children[0]);
@@ -6457,12 +6447,7 @@
                     this.bar.parentNode.classList.remove("search-jumper-scroll");
                 } else {
                     this.bar.style.display = "";
-                    this.initPos(
-                        searchData.prefConfig.position.x,
-                        searchData.prefConfig.position.y,
-                        searchData.prefConfig.offset.x,
-                        searchData.prefConfig.offset.y
-                    );
+                    this.initPos();
                 }
 
                 if (_funcKeyCall) {
@@ -6506,6 +6491,10 @@
             }
 
             initPos(relX, relY, posX, posY) {
+                relX = relX || searchData.prefConfig.position.x;
+                relY = relY || searchData.prefConfig.position.y;
+                posX = posX || searchData.prefConfig.offset.x;
+                posY = posY || searchData.prefConfig.offset.y;
                 let self = this;
                 let setClass = className => {
                     self.bar.style.cssText = "";
