@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.11.17.1
+// @version              2022.11.21.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -18031,6 +18031,7 @@ ImgOps | https://imgops.com/#b#`;
                  ';
                 container.className='pv-pic-window-container';
                 container.innerHTML=createHTML(
+                    '<span class="pv-pic-window-center"></span>'+
                     '<span class="pv-pic-window-rotate-indicator">'+
                     '<span class="pv-pic-window-rotate-indicator-pointer"></span>'+
                     '</span>'+
@@ -18348,7 +18349,7 @@ ImgOps | https://imgops.com/#b#`;
                 if(prefs.imgWindow.close.dblClickImgWindow){
                     var dblClickImgWindow=function(e){
                         var target=e.target;
-                        if(target==container || target==img || target==self.rotateOverlayer){
+                        if(target==container || target==img || target.className=='pv-pic-window-center' || target==self.rotateOverlayer){
                             self.remove();
                         };
                         e.preventDefault();
@@ -18590,6 +18591,17 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-pic-window-next {\
                     right: 8px;\
                     background-image: url("'+prefs.icons.arrowRight+'");\
+                    }\
+                    .pv-pic-window-center {\
+                    position: absolute;\
+                    height: 20%;\
+                    width: 20%;\
+                    top: 40%;\
+                    left: 40%;\
+                    opacity: 0;\
+                    }\
+                    .pv-pic-window-container>.pv-pic-window-center:hover~.pv-pic-search-state {\
+                    opacity: 0;\
                     }\
                     .pv-pic-window-container_focus>.pv-pic-window-pic:hover~.pv-pic-window-pre,\
                     .pv-pic-window-container_focus>.pv-pic-window-pic:hover~.pv-pic-window-next{\
@@ -19923,7 +19935,7 @@ ImgOps | https://imgops.com/#b#`;
                             return;
                         };
 
-                        if((e.button!=0 && e.type!="touchstart") || (target!=this.imgWindow && target!=this.img && target!=this.rotateOverlayer && target!=this.imgState))return;
+                        if((e.button!=0 && e.type!="touchstart") || (target!=this.imgWindow && target.className!='pv-pic-window-center' && target!=this.img && target!=this.rotateOverlayer && target!=this.imgState))return;
                         e.preventDefault();
                         if(this.tempHand){
                             this.move(e);
