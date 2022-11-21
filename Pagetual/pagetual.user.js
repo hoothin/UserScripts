@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.33
+// @version      1.9.33.1
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -497,7 +497,7 @@
                 save:"Save",
                 loadingText:"Shojo Now Loading...",
                 opacity:"Opacity",
-                opacityPlaceholder:"0: hide",
+                opacityPlaceholder:"0: hide spacer",
                 hideBar:"Hide the paging spacer",
                 hideBarButNoStop:"Hide but not stop",
                 dbClick2Stop:"Double-click on the blank space to pause",
@@ -2971,6 +2971,15 @@
 
     function initConfig(){
         initView();
+        try{
+            if(_unsafeWindow.initedPagetual){
+                if(ruleImportUrlReg.test(location.href)){
+                    showTips(i18n('duplicate'));
+                }
+                return true;
+            }
+            _unsafeWindow.initedPagetual=true;
+        }catch(e){}
         _GM_registerMenuCommand(i18n(forceState==1?"enable":"disableSite"), ()=>{
             forceState=(forceState==1?0:1);
             storage.setItem("forceState_"+location.host, forceState);
@@ -4175,11 +4184,11 @@
            position: fixed;
            left: 50%;
            top: 10%;
-           margin-left: -150px;
-           padding: 0 10px;
+           margin-left: -99999px;
+           padding: 0 15px;
            z-index: 999999999;
            background-color: #000;
-           border: 1px solid black;
+           border: 1px solid #303030;
            border-radius: 10px;
            opacity: 0;
            filter: alpha(opacity=65);
@@ -5364,7 +5373,7 @@
         curIframe.sandbox="allow-same-origin allow-scripts allow-popups allow-forms";
         curIframe.frameBorder = '0';
         curIframe.scrolling="no";
-        curIframe.style.cssText = 'display: block; visibility: visible; float: none; clear: both; width: 100%;height:0;background: initial; border: 0px; border-radius: 0px; margin: 0px 0px 2rem; padding: 0px; z-index: 2147483647;';
+        curIframe.style.cssText = 'display: block; visibility: visible; float: none; clear: both; width: 100%; height: 0; background: initial; border: 0px; border-radius: 0px; margin: 0px; padding: 0px; z-index: 2147483647;';
         curIframe.addEventListener("load", e=>{
             try{
                 iframeDoc=curIframe.contentDocument || curIframe.contentWindow.document;
@@ -5603,15 +5612,6 @@
     }
 
     function init(){
-        try{
-            if(_unsafeWindow.initedPagetual){
-                if(ruleImportUrlReg.test(location.href)){
-                    showTips(i18n('duplicate'));
-                }
-                return;
-            }
-            _unsafeWindow.initedPagetual=true;
-        }catch(e){}
         initRules(()=>{
             initPage();
         });
