@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.46.82
+// @version      1.6.6.46.83
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -1441,7 +1441,7 @@
                  .search-jumper-scroll.search-jumper-bottom>.search-jumper-searchBar:hover,
                  .search-jumper-scroll.search-jumper-bottom>.search-jumper-searchBar.initShow,
                  .resizePage.search-jumper-scroll.search-jumper-bottom>.search-jumper-searchBar,
-                 .search-jumper-scroll.search-jumper-bottom>.search-jumper-searchBar.funcKeyCall,
+                 .search-jumper-scroll.search-jumper-bottom.funcKeyCall>.search-jumper-searchBar,
                  #search-jumper.in-input.search-jumper-scroll.search-jumper-bottom>.search-jumper-searchBar {
                      margin-top: 0px;
                  }
@@ -1456,10 +1456,15 @@
                      opacity: 0.8;
                      ${searchData.prefConfig.noAni ? "" : "transition:margin-top 0.25s ease, margin-left 0.25s, right 0.25s, opacity 0.25s, transform 0.25s;"}
                  }
-                 .search-jumper-searchBar.initShow.funcKeyCall {
+                 .funcKeyCall>.search-jumper-searchBar.initShow {
                      ${searchData.prefConfig.noAni ? "" : "transition:opacity 0.5s ease-out;"}
                  }
-                 .search-jumper-searchBar.funcKeyCall {
+                 #search-jumper.funcKeyCall {
+                     overflow: visible;
+                     position: initial;
+                 }
+                 .funcKeyCall>.search-jumper-searchBar {
+                     position: absolute!important;
                      background: none;
                      border: none;
                      max-width: unset!important;
@@ -1467,15 +1472,15 @@
                      ${searchData.prefConfig.minPopup && !searchData.prefConfig.noAni ? 'transition: transform 0.25s ease;' : ''}
                      ${searchData.prefConfig.minPopup ? 'transform: scale(0.7);' : ''}
                  }
-                 .search-jumper-searchBar.funcKeyCall:hover {
+                 .funcKeyCall>.search-jumper-searchBar:hover {
                      ${searchData.prefConfig.minPopup ? 'transform: scale(1);' : ''}
                  }
                  .in-input>.search-jumper-searchBar,
-                 .search-jumper-searchBar.funcKeyCall {
+                 .funcKeyCall>.search-jumper-searchBar {
                      opacity: 1;
                      display: inline-flex!important;
                  }
-                 #search-jumper>.search-jumper-searchBar.funcKeyCall>.search-jumper-type {
+                 #search-jumper.funcKeyCall>.search-jumper-searchBar>.search-jumper-type {
                      height: ${searchData.prefConfig.minPopup ? '24px' : 'auto'}!important;
                      width: ${searchData.prefConfig.minPopup ? 24 : (240 * this.scale)}px!important;
                      max-width: unset;
@@ -1492,20 +1497,20 @@
                      background: #d0d0d0d0;
                      box-sizing: content-box;
                  }
-                 #search-jumper>.funcKeyCall>.search-jumper-type>.sitelist {
+                 #search-jumper.funcKeyCall>.search-jumper-searchBar>.search-jumper-type>.sitelist {
                      display: none;
                  }
-                 #search-jumper>.search-jumper-searchBar.funcKeyCall>.search-jumper-type>a.search-jumper-btn {
+                 #search-jumper.funcKeyCall>.search-jumper-searchBar>.search-jumper-type>a.search-jumper-btn {
                      ${searchData.prefConfig.minPopup ? 'visibility: hidden;' : ''}
                  }
-                 #search-jumper>.search-jumper-searchBar.funcKeyCall>.search-jumper-type:hover>a.search-jumper-btn {
+                 #search-jumper.funcKeyCall>.search-jumper-searchBar>.search-jumper-type:hover>a.search-jumper-btn {
                      ${searchData.prefConfig.minPopup ? 'visibility: visible;' : ''}
                  }
-                 #search-jumper>.search-jumper-searchBar.funcKeyCall>.search-jumper-type:hover {
+                 #search-jumper.funcKeyCall>.search-jumper-searchBar>.search-jumper-type:hover {
                      height: auto!important;
                      width: ${240 * this.scale}px!important;
                  }
-                 #search-jumper>.search-jumper-searchBar.funcKeyCall>.search-jumper-type::-webkit-scrollbar {
+                 #search-jumper.funcKeyCall>.search-jumper-searchBar>.search-jumper-type::-webkit-scrollbar {
                      width: 0 !important;
                      height: 0 !important;
                  }
@@ -1574,7 +1579,7 @@
                  .search-jumper-left>.search-jumper-searchBar:hover,
                  .search-jumper-left>.search-jumper-searchBar.initShow,
                  .resizePage.search-jumper-left>.search-jumper-searchBar,
-                 .search-jumper-left>.search-jumper-searchBar.funcKeyCall,
+                 .search-jumper-left.funcKeyCall>.search-jumper-searchBar,
                  #search-jumper.in-input.search-jumper-left>.search-jumper-searchBar {
                      margin-top: unset;
                      margin-left: 0;
@@ -1583,7 +1588,7 @@
                  .search-jumper-right>.search-jumper-searchBar:hover,
                  .search-jumper-right>.search-jumper-searchBar.initShow,
                  .resizePage.search-jumper-right>.search-jumper-searchBar,
-                 .search-jumper-right>.search-jumper-searchBar.funcKeyCall,
+                 .search-jumper-right.funcKeyCall>.search-jumper-searchBar,
                  #search-jumper.in-input.search-jumper-right>.search-jumper-searchBar {
                      margin-top: unset;
                      right: 0;
@@ -1599,7 +1604,7 @@
                  .search-jumper-bottom>.search-jumper-searchBar:hover,
                  .search-jumper-bottom>.search-jumper-searchBar.initShow,
                  .resizePage.search-jumper-bottom>.search-jumper-searchBar,
-                 .search-jumper-bottom>.search-jumper-searchBar.funcKeyCall,
+                 .search-jumper-bottom.funcKeyCall>.search-jumper-searchBar,
                  #search-jumper.in-input.search-jumper-bottom>.search-jumper-searchBar {
                      margin-top: 0px;
                      opacity: 1;
@@ -1739,7 +1744,7 @@
                      background: unset;
                      padding: 0px;
                  }
-                 #search-jumper>.search-jumper-searchBar.funcKeyCall>.search-jumper-logo {
+                 #search-jumper.funcKeyCall>.search-jumper-searchBar>.search-jumper-logo {
                      display: none;
                  }
                  .search-jumper-searchBar>.search-jumper-type.search-jumper-targetAll,
@@ -1931,10 +1936,10 @@
                  .search-jumper-searchBar:hover>.search-jumper-hide {
                      ${searchData.prefConfig.minSizeMode ? 'display: inline-flex;' : ''}
                  }
-                 .search-jumper-searchBar.funcKeyCall>.search-jumper-type.search-jumper-hide {
+                 .funcKeyCall>.search-jumper-searchBar>.search-jumper-type.search-jumper-hide {
                      display: none;
                  }
-                 .search-jumper-searchBar.funcKeyCall:hover>.search-jumper-hide {
+                 .funcKeyCall>.search-jumper-searchBar:hover>.search-jumper-hide {
                      display: none;
                  }
                  span.search-jumper-word>img {
@@ -3463,7 +3468,7 @@
 
                 function getWordColor(bg) {
                     if (bg.indexOf("#") !== 0) return "";
-                    if (bg === "#ffff00") return "";
+                    if (bg === "#ffff00") return "black";
                     bg = bg.substr(1);
                     let r, g, b;
                     r = parseInt(bg.substr(0, 2), 16);
@@ -3497,7 +3502,7 @@
                 if (!background) {
                     switch (index) {
                         case 0:
-                            background = "";
+                            background = "#ffff00";
                             break;
                         case 1:
                             background = "#e91e63";
@@ -4503,8 +4508,8 @@
                             openType.onmousedown();
                         }
                     }
-                    if (self.bar.classList.contains("funcKeyCall")) {
-                        self.bar.classList.remove("funcKeyCall");
+                    if (self.funcKeyCall) {
+                        self.setFuncKeyCall(false);
                         self.bar.style.display = 'none';
                     }
                     this.hideTimeout = null;
@@ -4512,7 +4517,7 @@
                 if (this.hideTimeout) {
                     clearTimeout(this.hideTimeout);
                 }
-                let delayTime = delay || (this.bar.classList.contains("funcKeyCall") ? 300 : (searchData.prefConfig.autoDelay || 1000));
+                let delayTime = delay || (this.funcKeyCall ? 300 : (searchData.prefConfig.autoDelay || 1000));
 
                 this.hideTimeout = setTimeout(hideHandler, delayTime);
                 if (this.preList) {
@@ -5021,7 +5026,6 @@
                 let clientX = clingEle.offsetLeft + ew / 2 - this.bar.parentNode.scrollLeft;
                 let clientY = clingEle.offsetTop + eh / 2 - this.bar.parentNode.scrollTop - clingEle.parentNode.scrollTop;
                 let current = clingEle.offsetParent;
-                let funcKeyCall = this.bar.classList.contains("funcKeyCall");
                 let showall = this.bar.parentNode && this.bar.parentNode.classList.contains("search-jumper-showall");
 
                 while (current !== null){
@@ -5040,7 +5044,7 @@
                     target.style.bottom = "";
                     target.style.left = clientX + "px";
                     target.style.top = clientY + "px";
-                } else if (funcKeyCall) {
+                } else if (this.funcKeyCall) {
                     clientX -= target.scrollWidth / 2;
                     if (clientY > viewHeight / 2) clientY -= (target.scrollHeight / 2 + eh / 2 + 30);
                     else clientY += (eh / 2 + 10);
@@ -5249,9 +5253,8 @@
                             return false;
                         }
                     }
-                    let funcKeyCall = self.bar.classList.contains("funcKeyCall");
-                    if (funcKeyCall) {
-                        self.bar.classList.remove("funcKeyCall");
+                    if (self.funcKeyCall) {
+                        self.setFuncKeyCall(false);
                         self.showAllSites();
                         /*self.bar.style.display = "none";
                         setTimeout(() => {
@@ -5347,7 +5350,7 @@
 
                 let showTimer, siteList;
                 typeBtn.addEventListener('mouseenter', e => {
-                    if (!self.bar.classList.contains("funcKeyCall") && searchData.prefConfig.showSiteLists && (searchData.prefConfig.alwaysShowSiteLists || ele.classList.contains("search-jumper-hide"))) {
+                    if (!self.funcKeyCall && searchData.prefConfig.showSiteLists && (searchData.prefConfig.alwaysShowSiteLists || ele.classList.contains("search-jumper-hide"))) {
                         ele.appendChild(siteList);
                         self.listPos(ele.children[0], siteList);
                     } else {
@@ -6324,6 +6327,7 @@
             }
 
             checkScroll(noIntoView, noSmooth) {
+                if (this.funcKeyCall) return;
                 let viewWidth = window.innerWidth || document.documentElement.clientWidth;
                 let viewHeight = window.innerHeight || document.documentElement.clientHeight;
                 if (this.bar.scrollWidth > viewWidth || this.bar.scrollHeight > viewHeight) {
@@ -6350,11 +6354,11 @@
                 }
             }
 
-            showInPage(funcKeyCall, e) {
-                if (this.bar.contains(targetElement) || this.inInput || (!funcKeyCall && this.bar.classList.contains("funcKeyCall"))) {
+            showInPage(_funcKeyCall, e) {
+                if (this.bar.contains(targetElement) || this.inInput || (!_funcKeyCall && this.funcKeyCall)) {
                     return;
                 }
-                if (searchData.prefConfig.hidePopup) funcKeyCall = false;
+                if (searchData.prefConfig.hidePopup) _funcKeyCall = false;
                 if (this.bar.parentNode && this.bar.parentNode.classList.contains("search-jumper-showall")) return;
                 if (!targetElement) targetElement = document.body;
                 let _targetElement = targetElement, children;
@@ -6399,7 +6403,7 @@
                 setTimeout(() => {this.bar.classList.add("initShow");}, 10);
                 if (getSelectStr()) {
                     this.bar.classList.add("search-jumper-isInPage");
-                    if (this.bar.style.display == "none" || funcKeyCall) {
+                    if (this.bar.style.display == "none" || _funcKeyCall) {
                         firstType = this.bar.querySelector('.search-jumper-needInPage:not(.notmatch)>span');
                     } else {
                         let openType = this.bar.querySelector(".search-jumper-type:not(.search-jumper-hide)");
@@ -6439,22 +6443,16 @@
                 }
                 if (this.bar.style.display == "none") {
                     this.bar.style.display = "";
-                    this.initPos(
-                        searchData.prefConfig.position.x,
-                        searchData.prefConfig.position.y,
-                        searchData.prefConfig.offset.x,
-                        searchData.prefConfig.offset.y
-                    );
                 }
-                this.bar.classList.remove("funcKeyCall");
+                self.setFuncKeyCall(false);
                 if (firstType && firstType.parentNode.classList.contains('search-jumper-hide')) {
-                    if (!searchData.prefConfig.disableAutoOpen || funcKeyCall) {
+                    if (!searchData.prefConfig.disableAutoOpen || _funcKeyCall) {
                         firstType.onmousedown();
                     }
                     self.insertHistory(firstType.parentNode);
                 }
-                if (funcKeyCall) {
-                    this.bar.classList.add("funcKeyCall");
+                self.setFuncKeyCall(_funcKeyCall);
+                if (_funcKeyCall) {
                     this.bar.parentNode.classList.remove("search-jumper-scroll");
                 } else {
                     this.bar.style.display = "";
@@ -6466,16 +6464,16 @@
                     );
                 }
 
-                if (funcKeyCall) {
+                if (_funcKeyCall) {
                     self.bar.style.cssText = "";
                     self.bar.parentNode.style.cssText = "";
                     let viewWidth = window.innerWidth || document.documentElement.clientWidth;
                     let viewHeight = window.innerHeight || document.documentElement.clientHeight;
                     self.bar.style.position = "fixed";
-                    let clientX = e.clientX - self.bar.clientWidth / 2;
+                    let clientX = e.pageX - self.bar.clientWidth / 2;
                     if (clientX < 0) clientX = 5;
                     else if (clientX + self.bar.clientWidth > viewWidth) clientX = viewWidth - self.bar.clientWidth - 20;
-                    let clientY = e.clientY;
+                    let clientY = e.pageY;
                     if (clientY > viewHeight / 5) clientY -= (self.bar.clientHeight + 20);
                     else clientY += 30;
                     if (clientX < viewWidth / 2) {
@@ -6494,6 +6492,15 @@
                             self.bar.style.opacity = 1;
                         }, 10);
                     }, 1);
+                }
+            }
+
+            setFuncKeyCall(value) {
+                this.funcKeyCall = value;
+                if (value) {
+                    this.bar.parentNode.classList.add("funcKeyCall");
+                } else {
+                    this.bar.parentNode.classList.remove("funcKeyCall");
                 }
             }
 
@@ -7557,7 +7564,7 @@
                         }
                         var key = (e.key || String.fromCharCode(e.keyCode)).toLowerCase();
                         if (searchData.prefConfig.shortcutKey == key) {
-                            searchBar.bar.classList.remove("funcKeyCall");
+                            searchBar.setFuncKeyCall(false);
                             searchBar.showInPage();
                             if (!searchData.prefConfig.disableInputOnWords || searchBar.inInput || !getSelectStr()) {
                                 searchBar.showSearchInput();
@@ -7598,7 +7605,7 @@
                         }
                         var key = (e.key || String.fromCharCode(e.keyCode)).toLowerCase();
                         if (searchData.prefConfig.showAllShortcutKey == key) {
-                            searchBar.bar.classList.remove("funcKeyCall");
+                            searchBar.setFuncKeyCall(false);
                             searchBar.appendBar();
                             searchBar.showAllSites();
                             e.preventDefault();
@@ -7755,7 +7762,7 @@
                         if (targetElement != e.target) return;
                         if ((e.which === 1 || e.which === 2) && !searchData.prefConfig.leftMouse) return;
                         if (e.which === 1 && getSelectStr() !== '') return;
-                        searchBar.bar.classList.remove("funcKeyCall");
+                        searchBar.setFuncKeyCall(false);
                         searchBar.showInPage();
                         shown = true;
                     }, parseInt(searchData.prefConfig.longPressTime));
@@ -8714,7 +8721,7 @@
                 });
                 dragRoundFrame.addEventListener('drop', e => {
                     if (e.target === dragLogo) {
-                        searchBar.bar.classList.remove("funcKeyCall");
+                        searchBar.setFuncKeyCall(false);
                         searchBar.showInPage();
                     } else if (dragSector) {
                         searchBar.searchBySiteName(dragSector.children[0].dataset.name, e);
