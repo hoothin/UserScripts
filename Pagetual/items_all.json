@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86007",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[@class='post-detail']",
+    "nextLink": "//div[@class='link-nextpage']/a",
+    "url": "^https://merkmal-biz.jp/post/.+?",
+    "exampleUrl": ""
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "htsign_0",
+  "name": "Merkmal",
+  "created_at": "2022-11-21T10:04:11+09:00",
+  "updated_at": "2022-11-21T10:04:11+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86005",
   "data": {
     "insertBefore": "",
@@ -27,7 +42,7 @@
   "created_by": "kenzou_ogawa2",
   "name": "Generic Posts Rule (post)",
   "created_at": "2022-11-18T09:40:53+09:00",
-  "updated_at": "2022-11-20T03:02:53+09:00"
+  "updated_at": "2022-11-21T07:47:46+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/86003",
