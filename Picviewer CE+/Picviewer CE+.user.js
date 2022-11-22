@@ -20473,6 +20473,7 @@ ImgOps | https://imgops.com/#b#`;
                             gallery=new GalleryC();
                         };
                         gallery.load(this.data,this.from);
+                        gallery.changeMinView();
                         break;
                     case 'magnifier':
                         new MagnifierC(this.img,this.data);
