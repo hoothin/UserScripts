@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.46.88
+// @version      1.6.6.46.89
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -1351,9 +1351,10 @@
                      width: 100%;
                      height: 100%;
                      z-index: -1;
-                     background-color: rgba(255, 255, 255, 0.1);
-                     backdrop-filter: blur(10px);
-                     -webkit-backdrop-filter: blur(5px);
+                     ${searchData.prefConfig.noAni ? "background-color: rgba(255, 255, 255, 0.8);" : (
+                    "background-color: rgba(255, 255, 255, 0.1);" +
+                    "backdrop-filter: blur(10px);" +
+                    "-webkit-backdrop-filter: blur(5px);")}
                  }
                  #search-jumper.search-jumper-showall>.search-jumper-showallBg {
                      display: block;
@@ -1406,8 +1407,8 @@
                      display: inline-flex;
                      pointer-events: all;
                      margin-top: -${this.scale * 25}px;
-                     opacity: 0.3;
                      vertical-align: top;
+                     ${searchData.prefConfig.noAni ? "" : "opacity: 0.3;"}
                      ${searchData.prefConfig.noAni ? "" : "transition:margin-top 1s ease, margin-left 1s, right 1s, opacity 1s, transform 1s;"}
                      user-select: none;
                      text-align: center;
@@ -1454,7 +1455,7 @@
                  .search-jumper-searchBar.initShow,
                  .resizePage>.search-jumper-searchBar {
                      margin-top: 0;
-                     opacity: 0.8;
+                     ${searchData.prefConfig.noAni ? "" : "opacity: 0.8;"}
                      ${searchData.prefConfig.noAni ? "" : "transition:margin-top 0.25s ease, margin-left 0.25s, right 0.25s, opacity 0.25s, transform 0.25s;"}
                  }
                  .funcKeyCall>.search-jumper-searchBar.initShow {
@@ -1629,7 +1630,6 @@
                      text-decoration:none;
                      min-width: ${32 * this.scale}px;
                      min-height: ${32 * this.scale}px;
-                     filter: drop-shadow(1px 1px 3px #00000020);
                  }
                  .search-jumper-btn>img {
                      width: ${32 * this.scale}px;
@@ -1823,7 +1823,7 @@
                      box-shadow: 0px 0px 10px 0px #7a7a7a;
                      padding: 0 0 10px 0;
                      background: white;
-                     opacity: 0.9;
+                     opacity: 1;
                      border: 0;
                  }
                  #search-jumper .sitelist>.sitelistCon:hover {
@@ -1967,6 +1967,7 @@
                      transform:scale(1.2);
                      color: white;
                      text-decoration:none;
+                     filter: drop-shadow(1px 1px 3px #00000050);
                  }
                  .search-jumper-searchBar .search-jumper-btn.current {
                      overflow: visible;
@@ -1983,7 +1984,7 @@
                      border-radius: 50%;
                      background: white;
                      box-shadow: 0px 0px 3px 0px rgb(0 0 0 / 80%);
-                     opacity: 0.8;
+                     ${searchData.prefConfig.noAni ? "" : "opacity: 0.8;"}
                  }
                  .in-input .search-jumper-input {
                      display: block;
@@ -5860,7 +5861,7 @@
                     } else if (self.searchJumperInputKeyWords.value) {
                         keywords = self.searchJumperInputKeyWords.value;
                     } else {
-                        keywords = getKeywords() || cacheKeywords;
+                        keywords = getKeywords() || (currentSite && cacheKeywords);
                     }
                     if (keywords && keywords != cacheKeywords) {
                         cacheKeywords = keywords;
@@ -5956,12 +5957,6 @@
                             if (targetElement.textContent.trim()) keywords = encodeURIComponent(targetElement.textContent);
                         }
                     }
-                    if (!keywordsU && !keywordsL && !keywordsR) {
-                        keywordsR = keywords;
-                        keywordsU = keywordsR.toUpperCase();
-                        keywordsL = keywordsR.toLowerCase();
-                        if (!needDecode) keywords = encodeURIComponent(keywords);
-                    }
                     while (resultUrl.indexOf('%input{') !== -1) {
                         let inputMatch = resultUrl.match(/%input{(.*?)}/);
                         if (!inputMatch) return false;
@@ -5993,6 +5988,12 @@
                         setTimeout(() => {localKeywords = ''}, 1);
                         keywords = promptStr;
                         resultUrl = customReplaceKeywords(resultUrl);
+                    }
+                    if (keywords && (!keywordsU && !keywordsL && !keywordsR)) {
+                        keywordsR = keywords;
+                        keywordsU = keywordsR.toUpperCase();
+                        keywordsL = keywordsR.toLowerCase();
+                        if (!needDecode) keywords = encodeURIComponent(keywords);
                     }
                     if (targetUrl === '') {
                         let canBeUrl = getSelectStr() || self.searchJumperInputKeyWords.value;
