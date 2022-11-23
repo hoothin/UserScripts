@@ -138,7 +138,7 @@
         "pageInit": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/window\\[\"\\\\x65\\\\x76\\\\x61\\\\x6c\"\\]/)>-1).innerHTML.slice(26,-1);let imgDataCode=eval(code).slice(10,-11);let imgData=eval(imgDataCode);let domain='https://i.hamreus.com/';let _img='';for(let i=0;i<imgData.images.length;i++){_img+=`<img src=\"${domain+imgData.images[i]}?e=${imgData.sl.e}&m=${imgData.sl.m}\">`};doc.querySelector('#manga').innerHTML=_img;document.querySelector(`a[data-action='chapter.prev']`).href=location.pathname.replace(/\\d+\\.html$/,'')+imgData.prevId+'.html';if(imgData.nextId!=0){document.querySelector(`a[data-action='chapter.next']`).href=location.pathname.replace(/\\d+\\.html$/,'')+imgData.nextId+'.html'}else{document.querySelector(`a[data-action='chapter.next']`).href=location.pathname.replace(/\\d+\\.html$/,'');document.querySelector(`a[data-action='chapter.next']`).innerText='返回目录';setTimeout(()=>{document.querySelector('#manga').remove();document.querySelector('.pagetual_pageBar').remove()},15000)}",
         "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('#manga');if(c.length>2){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>2){p[0].remove()}},10000)",
         "pageBarText": 1,
-        "css": ".action-list li{width:50%!important}#action>ul>li:nth-child(n+2):nth-child(-n+3),.manga-page{display:none!important}.manga-box img{border-top:0px!important;border-bottom:0px!important}"
+        "css": ".action-list li{width:50%!important}#action>ul>li:nth-child(n+2):nth-child(-n+3),.manga-page,body>center>center>ins{display:none!important}.manga-box img{border-top:0px!important;border-bottom:0px!important}"
     },
     {
         "name": "看漫画手機版 - 漫画大全 檢視下20條記錄",
@@ -583,14 +583,19 @@
         "css": ".nav-pagination,.img_land_prev,.img_land_next,#page_select,.img_info,.title.pr>em:nth-child(5),.title.pr>span{display:none!important}#images>img{max-width: 100% !important;display: block !important;margin: 0 auto -2px auto !important;border:0px!important;padding:0px!important;}"
     },
     {
-        "name": "优酷漫画手機版 - 閱讀 - 雙擊前往下一章，鍵盤左右鍵上下章",
+        "name": "优酷漫画手機版 - 閱讀",
         "example": "http://wap.ykmh.com/manhua/yiquanchaoren/346.html",
         "url": "^https?://wap\\.ykmh\\.com/manhua/[a-z]+/\\d+\\.html",
+        "history": 2,
         "pinUrl": true,
-        "init": "function gx(x){return document.evaluate(x,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue};function next(e){let key=window.event?e.keyCode:e.which;if(key==39){let n=gx(\"//a[text()='下一章']\");if(n){n.click()}}};document.addEventListener('keydown',next);function prev(e){let key=window.event?e.keyCode:e.which;if(key==37){let p=gx(\"//a[text()='上一章']\");if(p){p.click()}}};document.addEventListener('keydown',prev);function dcnext(){let n=gx(\"//a[text()='下一章']\");if(n){n.click()}};document.addEventListener('dblclick',dcnext);let _img='';for(let i=1;i<=chapterImages.length;i++){let imgSrc=SinMH.getChapterImage([i]);_img+=`<img src='${imgSrc}'>`};document.querySelector('#images').innerHTML=_img",
-        "nextLink": "0",
-        "manualMode": true,
-        "css": ".subHeader span,#action>ul>li:nth-child(n+2):nth-child(-n+3){display:none!important}.action-list li{width:50%!important}.chapter-view #images img{margin:0 auto 0px!important}"
+        "init": "let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML.replaceAll('var ','');let imgs=eval(code.match(/chapterImages[^;]+/)[0]);let host=eval(code.match(/pageImage[^;]+/)[0]).match(/^(https?:\\/\\/[^/]+)/)[1];let _img='';for(let i=0;i<imgs.length;i++){_img+=`<img src='${host}${imgs[i]}'>`};document.querySelector('#images').innerHTML=_img;",
+        "nextLinkByJs": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML.replaceAll('var ','');let cUrl=eval(code.match(/comicUrl[^;]+/)[0]);let nData=eval(code.match(/nextChapterData[^;]+/)[0]);if(nData.id&&nData.id>0)return cUrl+nData.id+'.html';",
+        "pageElement": "#images",
+        "replaceElement": "head>title,.BarTit",
+        "pageInit": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML.replaceAll('var ','');let imgs=eval(code.match(/chapterImages[^;]+/)[0]);let host=eval(code.match(/pageImage[^;]+/)[0]).match(/^(https?:\\/\\/[^/]+)/)[1];let _img='';for(let i=0;i<imgs.length;i++){_img+=`<img src='${host}${imgs[i]}'>`};doc.querySelector('#images').innerHTML=_img;let cUrl=eval(code.match(/comicUrl[^;]+/)[0]);let nData=eval(code.match(/nextChapterData[^;]+/)[0]);let n=document.querySelector('#action>ul>li:nth-child(4)>a');let n2=document.querySelector('.afterChapter');if(nData.id&&nData.id>0){let nlink=cUrl+nData.id+'.html';n.href=nlink;n2.outerHTML=`<a href=\"${nlink}\"class=\"afterChapter\">下一章 > </a>`}else{n.removeAttribute('href');n.innerText='無下一章';n2.outerHTML=`<a href class=\"afterChapter\">無下一章</a>`}let pData=eval(code.match(/prevChapterData[^;]+/)[0]);let p=document.querySelector('#action>ul>li:nth-child(1)>a');let p2=document.querySelector('.beforeChapter');if(pData.id&&pData.id>0){let plink=cUrl+pData.id+'.html';p.href=plink;p2.outerHTML=`<a href=\"${plink}\"class=\"beforeChapter\"> < 上一章</a>`}",
+        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('#images');if(c.length>2){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>2){p[0].remove()}},10000)",
+        "pageBarText": 1,
+        "css": ".subHeader span,#action>ul>li:nth-child(n+2):nth-child(-n+3),.letchepter>section,.letchepter>svg,i~div[id][class],body>span~div:not(#pagetual-preload):not(.pagetual_tipsWords),.comic-comment{display:none!important}.action-list li{width:50%!important}.chapter-view #images img{margin:0 auto 0px!important}"
     },
     {
         "name": "优酷漫画 - PC版閱讀",
@@ -1629,6 +1634,7 @@
         "name": "BT 之家",
         "example": "https://www.btbtt15.com/forum-index-fid-950.htm",
         "url": "^https?://www\\.btbtt\\d+\\.com/",
+        "pinUrl": true,
         "nextLink": "//div[@class='page']/a[text()='▶' or text()='下一页']",
         "pageElement": "#threadlist",
         "replaceElement": "div+div.page",
@@ -6009,6 +6015,14 @@
         "nextLink": "a.num.current+a",
         "pageElement": ".u-list",
         "replaceElement": "div.panel+div>.pagei"
+    },
+    {
+        "name": "Discuz Archiver",
+        "example": "https://bbs.yxfanfan.com/archiver/?fid-13.html，https://bbs.yxfanfan.com/archiver/?tid-225893.html",
+        "url": "^https?://[^/]+/archiver/\\?(fid|tid)",
+        "nextLink": "strong+a",
+        "pageElement": "#content",
+        "css": ".pagetual_pageBar{margin-bottom:0px!important}"
     },
     {
         "name": "Discuz Archiver",
