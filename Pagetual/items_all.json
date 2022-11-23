@@ -1,5 +1,19 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86008",
+  "data": {
+    "pageElement": "//div[@id=\"primary\"]",
+    "nextLink": "//a[@class=\"next\"]",
+    "url": "^https://javtorrent.me/",
+    "exampleUrl": "https://javtorrent.me/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "yawaraka",
+  "name": "javtorrent.me",
+  "created_at": "2022-11-22T21:21:29+09:00",
+  "updated_at": "2022-11-22T21:50:25+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86007",
   "data": {
     "insertBefore": "",
@@ -10073,18 +10087,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/81989",
-  "name": "シティヘヴン　写メ日記",
-  "created_by": "jigendaddy_be",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "updated_at": "2018-10-18T16:18:23+09:00",
   "data": {
-    "exampleUrl": "https://www.cityheaven.net/tokyo/diarytop/netatop/neta-12369/ https://www.cityheaven.net/tokyo/diarytop/photogallerytop/theme-116/ https://www.cityheaven.net/tokyo/diarytop/diarynewlist/",
-    "bookmarklet": "var result = document.evaluate('//div[@class=\"photogallery_img\" or @class=\"neta_img\"]//img', document, null, 7, null);\r\nfor (var i = 0; i < result.snapshotLength; i++) {\r\n  if (result.snapshotItem(i).dataset.echo != undefined) {\r\n    result.snapshotItem(i).src = result.snapshotItem(i).dataset.echo;\r\n  }\r\n}",
+    "pageElement": "id(\"container\")",
+    "nextLink": "//link[@rel=\"next\"]",
     "url": "^https?://(?:www|img)\\.cityheaven\\.net/.+/diarytop/",
-    "pageElement": "//*[./p[@class=\"title\"]]//li|id(\"container\")",
-    "nextLink": "//link[@rel=\"next\"]"
+    "exampleUrl": "https://www.cityheaven.net/tokyo/diarytop/diarynewlist/"
   },
-  "created_at": "2018-10-18T11:30:00+09:00"
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "jigendaddy_be",
+  "name": "シティヘヴン　写メ日記",
+  "created_at": "2018-10-18T11:30:00+09:00",
+  "updated_at": "2022-11-23T07:23:14+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/81987",
@@ -33510,17 +33523,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/55749",
-  "name": "シティヘヴン",
-  "created_by": "あしょかん",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "updated_at": "2018-10-18T10:56:51+09:00",
   "data": {
-    "exampleUrl": "https://www.cityheaven.net/tokyo/newsbacknumber/ https://www.cityheaven.net/tokyo/girl-list/typ601/ https://www.cityheaven.net/tokyo/shop-list/",
+    "pageElement": "descendant::ul[./li[count(./div)>1][count(.//img)>1]][1]/li",
+    "nextLink": "//link[@rel=\"next\"]",
     "url": "^https?://(?:www|img)\\.cityheaven\\.net/",
-    "pageElement": "//ul[@class=\"newslists\"]/li|//li[@class=\"girls-list\" or @class=\"shop_list shop_list_s\"][not(@style)]",
-    "nextLink": "//link[@rel=\"next\"]"
+    "exampleUrl": "https://www.cityheaven.net/tokyo/newsbacknumber/ https://www.cityheaven.net/tokyo/girl-list/typ601/"
   },
-  "created_at": "2011-10-28T19:30:02+09:00"
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "あしょかん",
+  "name": "シティヘヴン",
+  "created_at": "2011-10-28T19:30:02+09:00",
+  "updated_at": "2022-11-23T07:38:44+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/55748",
