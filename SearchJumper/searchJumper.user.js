@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.46.90
+// @version      1.6.6.46.91
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -1296,6 +1296,7 @@
                      top: 1%;
                      border-radius: 10px;
                      box-shadow: 0px 0px 10px 0px #7a7a7a;
+                     pointer-events: all;
                  }
                  #search-jumper.search-jumper-showall #search-jumper-alllist .sitelist {
                      visibility: visible!important;
@@ -1332,6 +1333,7 @@
                      overflow-x: scroll;
                      overflow-y: hidden;
                      height: calc(100% - 110px);
+                     pointer-events: none;
                  }
                  #search-jumper-alllist>.search-jumper-btn {
                      position: fixed;
@@ -1339,6 +1341,7 @@
                      right: 25%;
                      filter: drop-shadow(1px 1px 3px #00000060);
                      cursor: pointer;
+                     pointer-events: all;
                  }
                  #search-jumper-alllist>.search-jumper-btn>svg {
                      cursor: pointer;
@@ -1352,12 +1355,18 @@
                      height: 100%;
                      z-index: -1;
                      ${searchData.prefConfig.noAni ? "background-color: rgba(255, 255, 255, 0.8);" : (
-                    "background-color: rgba(255, 255, 255, 0.1);" +
+                    "background-color: rgba(255, 255, 255, 0.5);" +
                     "backdrop-filter: blur(10px);" +
-                    "-webkit-backdrop-filter: blur(5px);")}
+                    "-webkit-backdrop-filter: blur(5px);" +
+                    "transition:background-color 1s ease;")}
                  }
                  #search-jumper.search-jumper-showall>.search-jumper-showallBg {
                      display: block;
+                 }
+                 #search-jumper-alllist:hover+.search-jumper-showallBg {
+                     backdrop-filter: none;
+                     -webkit-backdrop-filter: none;
+                     background-color: rgba(255, 255, 255, 0.95);
                  }
                  .search-jumper-historylist {
                      display: flex;
@@ -1368,6 +1377,7 @@
                      top: 60px;
                      background: white;
                      border-bottom: 1px solid #ddd;
+                     pointer-events: all;
                  }
                  .search-jumper-historylist>a.search-jumper-btn {
                  }
@@ -1380,6 +1390,7 @@
                      justify-content: center;
                      width: fit-content;
                      min-height: 100%;
+                     pointer-events: none;
                  }
                  .search-jumper-searchBarCon {
                      all: unset;
@@ -2455,14 +2466,14 @@
                 searchBarCon.appendChild(bar);
                 searchBarCon.setAttribute("translate", "no");
 
-                let showallBg = document.createElement("div");
-                showallBg.className = "search-jumper-showallBg";
-                searchBarCon.appendChild(showallBg);
-
                 let alllist = document.createElement("div");
                 alllist.id = "search-jumper-alllist";
                 searchBarCon.appendChild(alllist);
                 this.alllist = alllist;
+
+                let showallBg = document.createElement("div");
+                showallBg.className = "search-jumper-showallBg";
+                searchBarCon.appendChild(showallBg);
 
                 let sitelistBox = document.createElement("div");
                 sitelistBox.className = "sitelistBox";
