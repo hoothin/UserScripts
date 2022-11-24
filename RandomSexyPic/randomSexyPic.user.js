@@ -4,7 +4,7 @@
 // @name:zh-TW   軟瑟盤
 // @name:ja      RandomSexyPicParser
 // @namespace    hoothin
-// @version      1.3.13
+// @version      1.3.14
 // @description        Random Sexy Pictures Parser
 // @description:zh-CN  随机色图
 // @description:zh-TW  隨機色圖
@@ -81,6 +81,7 @@
             }
         },
         "api.nyan.xyz":{
+            hide: true,
             include: /httpapi\/sexphoto/i,
             name:"Nyan ACG SexyPic",
             url:"https://api.nyan.xyz/httpapi/sexphoto/?r18=true&num=5",
@@ -146,6 +147,7 @@
             }
         },
         "huanmengii.xyz":{
+            hide: true,
             include: /ZY\/aCOS\/cos/i,
             name:"Cosplay Show",
             url:"https://huanmengii.xyz/ZY/aCOS/cos/?type=json&num=15",
@@ -244,7 +246,9 @@
         var luckyUrls=[],targetUrl;
         for(var i in setuConfig){
             let sc=setuConfig[i];
-            if(sc.luckyUrl){
+            if(sc.hide){
+                continue;
+            }else if(sc.luckyUrl){
                 luckyUrls=luckyUrls.concat(sc.luckyUrl);
             }else if(sc.urls){
                 luckyUrls=luckyUrls.concat(sc.urls);
@@ -257,6 +261,14 @@
         location.href=targetUrl;
     });
     var curConfig=setuConfig[document.domain],jsonData,hasFloatImg=false,grabed=false,oClient;
+    if(curConfig){
+        if(!curConfig.run){
+            curConfig=setuConfig[curConfig];
+        }
+        if(curConfig.include && !curConfig.include.test(location.href)){
+            curConfig=false;
+        }
+    }
     if(!curConfig){
         GM_registerMenuCommand("Parse current api", customSet);
         var customRule=GM_getValue("RSPrules_"+document.domain+location.pathname);
@@ -288,29 +300,48 @@
                     }
                 }
                 parsePics(jsonData);
-                processByTime(leftNum,loadNum=>{
+                processByTime(leftNum||1, loadNum=>{
+                    let href=location.href.replace(/num=\d+/,"num="+loadNum+"&time="+Date.now()),postParams=href.match(/#p{(.*)}/);
+                    if(postParams){
+                        postParams=postParams[1];
+                        href=href.replace(/#p{.*/,"");
+                    }
                     GM_xmlhttpRequest({
-                        method: 'GET',
-                        url: location.href.replace(/num=\d+/,"num="+loadNum),
+                        method: postParams?'POST':'GET',
+                        data: postParams,
+                        headers: {
+                            'Referer': location.href,
+                            "Content-Type": (postParams ? "application/x-www-form-urlencoded" : "text/html") + ";charset=" + (document.characterSet || document.charset || document.inputEncoding),
+                        },
+                        url: href,
                         timeout:15000,
                         onload: function(result) {
                             var parseData;
                             try{
                                 parseData=JSON.parse(result.responseText);
+                                console.log(parseData);
                             }catch(e){
                                 parseData=result.responseText;
                             }
                             parsePics(parseData);
                         }
                     });
-                },5,1000);
+                }, (leftNum < searchNum - 1 ? 5 : 1), 1000);
             },
             getSearch:(param)=>{
                 var href=location.href;
                 if(/\bnum=/.test(href)){
-                    href=href.replace(/\bnum=\d+/,"num="+param.num);
+                    href=href.replace(/\bnum=\d+/,"num="+param.num+"&time="+Date.now());
                 }else{
-                    href+=(href.indexOf("?")==-1?"?":"&")+"num="+param.num;
+                    if(href.indexOf("?")==-1){
+                        if(href.indexOf("#")==-1){
+                            href+="?num="+param.num+"&time="+Date.now();
+                        }else{
+                            href=href.replace("#","?num="+param.num+"&time="+Date.now()+"#");
+                        }
+                    }else{
+                        href+="&num="+param.num+"&time="+Date.now();
+                    }
                 }
                 return href;
             },
@@ -319,11 +350,6 @@
                 numInput.value=searchNum;
             }};
         }else return;
-    }else if(!curConfig.run){
-        curConfig=setuConfig[curConfig];
-    }
-    if(curConfig && curConfig.include && !curConfig.include.test(location.href)){
-        return;
     }
     document.title=curConfig.name?curConfig.name:"Random Sexy Pictures";
     try{
@@ -335,10 +361,10 @@
                 break;
             }
         }
-        jsonData=JSON.parse(firstText);
+        if(firstText)jsonData=JSON.parse(firstText);
     }catch(e){
         console.log(e);
-        jsonData = firstText;
+        jsonData=firstText;
     }
     document.body.innerHTML="";
     var imgCon=document.createElement("div");
@@ -356,7 +382,7 @@
     var homepage=document.createElement("a");
     for(var name in setuConfig){
         var config=setuConfig[name];
-        if(!config.name)continue;
+        if(config.hide || !config.name)continue;
         var siteA=document.createElement("a");
         var url=config.url;
         if(config.urls){
@@ -617,6 +643,7 @@
         overflow-x: hidden;
         overflow: auto;
         width: 100%;
+        min-height: calc(100vh - 70px);
         display: block;
     }
     .img-con>img{
