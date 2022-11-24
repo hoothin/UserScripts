@@ -10088,16 +10088,16 @@
 {
   "resource_url": "http://wedata.net/items/81989",
   "data": {
-    "pageElement": "id(\"container\")",
+    "pageElement": "//ul[.//*[contains(@class,'_img')]]",
     "nextLink": "//link[@rel=\"next\"]",
     "url": "^https?://(?:www|img)\\.cityheaven\\.net/.+/diarytop/",
-    "exampleUrl": "https://www.cityheaven.net/tokyo/diarytop/diarynewlist/"
+    "exampleUrl": "https://www.cityheaven.net/tokyo/diarytop/diarynewlist/ https://www.cityheaven.net/tokyo/diarytop/photogallerytop/theme-1270/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "jigendaddy_be",
   "name": "シティヘヴン　写メ日記",
   "created_at": "2018-10-18T11:30:00+09:00",
-  "updated_at": "2022-11-23T07:23:14+09:00"
+  "updated_at": "2022-11-23T14:49:11+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/81987",
@@ -11704,16 +11704,16 @@
 {
   "resource_url": "http://wedata.net/items/81668",
   "data": {
-    "pageElement": "//*[(self::table or self::div) and contains(concat(\" \", @class, \" \"), \" itg \")]|//div[contains(concat(\" \", @class, \" \"), \" sni \")]/div/a[./*[self::img and last()=1]]|id(\"gdt\")/*",
-    "nextLink": "//a[@id=\"dnext\"]",
+    "pageElement": "//*[(self::table or self::div) and contains(concat(\" \", @class, \" \"), \" itg \")]",
+    "nextLink": "//a[@id=\"dnext\"]|//td[contains(concat(\" \", @class, \" \"), \" ptds \")]/following-sibling::td[1]/a[not(@href=\"#\")]",
     "url": "^https?:\\/\\/(e-|ex)hentai\\.org\\/",
-    "exampleUrl": "https://e-hentai.org/ https://e-hentai.org/g/1064494/ffd72819c5/ https://e-hentai.org/?f_doujinshi=0&f_manga=0&f_artistcg=1&f_gamecg=0&f_western=0&f_non-h=0&f_imageset=1&f_cosplay=1&f_asianporn=1&f_misc=0&f_search=&f_apply=Apply+Filter&advsearch=1&f_sname=on&f_stags=on&f_sr=on&f_srdd=5"
+    "exampleUrl": "https://e-hentai.org/ https://e-hentai.org/torrents.php https://e-hentai.org/?f_doujinshi=0&f_manga=0&f_artistcg=1&f_gamecg=0&f_western=0&f_non-h=0&f_imageset=1&f_cosplay=1&f_asianporn=1&f_misc=0&f_search=&f_apply=Apply+Filter&advsearch=1&f_sname=on&f_stags=on&f_sr=on&f_srdd=5"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "badfalcon610",
   "name": "E-Hentai",
   "created_at": "2018-01-07T18:55:54+09:00",
-  "updated_at": "2022-11-18T08:26:50+09:00"
+  "updated_at": "2022-11-23T14:13:52+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/81667",
@@ -46295,20 +46295,20 @@
 },
 {
   "resource_url": "http://wedata.net/items/26665",
-  "name": "E-Hentai/ExHentai Galleries",
-  "created_by": "kaon",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "updated_at": "2017-10-14T12:29:57+09:00",
   "data": {
-    "cssPatch": "img#img{max-width:100%!important;max-height:100%!important;width:auto!important;height:auto!important;margin:0!important;}",
-    "exampleUrl": "https://e-hentai.org/ https://e-hentai.org/g/948162/978203c4a5/ https://e-hentai.org/torrents.php https://e-hentai.org/s/99293aa4e2/949159-1",
-    "url": "^https?://(?:gm?\\.)?(?:e-|ex)hentai\\.org/.+",
-    "pageElement": "//table[@class='ptt']/following-sibling::table[1]//tr[@class]|//a[./img[@id='img']]",
+    "pageElement": "//div[@class='itg' or @id='gdt']/*[not(@class='c')]|//a[./img[@id='img']]",
     "nextLink": "//table[@class='ptt']//td/a[.='>']|//a[./img[@id='img']]",
     "disableSeparator": "true",
+    "url": "^https?://(?:gm?\\.)?(?:e-|ex)hentai\\.org/.+",
+    "cssPatch": "img#img{max-width:100%!important;max-height:100%!important;width:auto!important;height:auto!important;margin:0!important;}",
+    "exampleUrl": "https://e-hentai.org/g/2383090/0ddb2b6ebf/ https://e-hentai.org/s/aab88e1889/2383090-1",
     "comment_en": "Exclude first page because there is popular section that will be pushed down/unreachable"
   },
-  "created_at": "2009-01-13T20:07:26+09:00"
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "kaon",
+  "name": "E-Hentai/ExHentai Galleries",
+  "created_at": "2009-01-13T20:07:26+09:00",
+  "updated_at": "2022-11-23T14:20:46+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/26664",
