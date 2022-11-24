@@ -4,7 +4,7 @@
 // @name:zh-TW   軟瑟盤
 // @name:ja      RandomSexyPicParser
 // @namespace    hoothin
-// @version      1.3.14
+// @version      1.3.15
 // @description        Random Sexy Pictures Parser
 // @description:zh-CN  随机色图
 // @description:zh-TW  隨機色圖
@@ -293,6 +293,7 @@
                         checkJson(data);
                     }
                     if(picUrls){
+                        picUrls=picUrls.filter((item, index) => picUrls.indexOf(item) === index);
                         picUrls.forEach(url=>{
                             leftNum--;
                             createImg(unescape(url));
@@ -301,7 +302,7 @@
                 }
                 parsePics(jsonData);
                 processByTime(leftNum||1, loadNum=>{
-                    let href=location.href.replace(/num=\d+/,"num="+loadNum+"&time="+Date.now()),postParams=href.match(/#p{(.*)}/);
+                    let href=location.href.replace(/num=\d+(&time=\d+)?/,"num="+loadNum+"&time="+Date.now()),postParams=href.match(/#p{(.*)}/);
                     if(postParams){
                         postParams=postParams[1];
                         href=href.replace(/#p{.*/,"");
@@ -331,7 +332,7 @@
             getSearch:(param)=>{
                 var href=location.href;
                 if(/\bnum=/.test(href)){
-                    href=href.replace(/\bnum=\d+/,"num="+param.num+"&time="+Date.now());
+                    href=href.replace(/\bnum=\d+(&time=\d+)?/,"num="+param.num+"&time="+Date.now());
                 }else{
                     if(href.indexOf("?")==-1){
                         if(href.indexOf("#")==-1){
