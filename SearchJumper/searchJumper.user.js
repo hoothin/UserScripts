@@ -6134,11 +6134,11 @@
                         } else if (url.indexOf('%input{') !== -1) {
                             self.showCustomInputWindow(url, _url => {
                                 _GM_setClipboard(_url.replace(/^c:/, ""));
-                                _GM_notification('Copied successfully!');
+                                //_GM_notification('Copied successfully!');
                             });
                         } else {
                             _GM_setClipboard(url.replace(/^c:/, ""));
-                            _GM_notification('Copied successfully!');
+                            //_GM_notification('Copied successfully!');
                         }
                     } else if (/^\[/.test(data.url)) {
                         if (!ele.onclick) {
