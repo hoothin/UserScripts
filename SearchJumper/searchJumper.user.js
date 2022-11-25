@@ -1982,6 +1982,8 @@
                      -webkit-transform:scale(1.1);
                      -moz-transform:scale(1.1);
                      transform:scale(1.1);
+                     transition:unset;
+                     filter: drop-shadow(1px 1px 5px #000000a0);
                  }
                  .search-jumper-searchBar .search-jumper-btn.current {
                      overflow: visible;
