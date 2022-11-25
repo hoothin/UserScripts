@@ -4063,7 +4063,7 @@
 
     function initPage(){
         ruleParser.initPage(()=>{
-            if(ruleParser.curSiteRule.autoLoadNum && ruleParser.curSiteRule.autoLoadNum != "0"){
+            if(ruleParser.curSiteRule.autoLoadNum){
                 autoLoadNum=ruleParser.curSiteRule.autoLoadNum;
             }
             if(ruleParser.curSiteRule.nextLink && Array && Array.isArray && Array.isArray(ruleParser.curSiteRule.nextLink)){
