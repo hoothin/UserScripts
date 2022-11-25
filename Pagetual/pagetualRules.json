@@ -5155,15 +5155,15 @@
         "example": "https://www.jpmn5.com/Xiuren/Xiuren23112.html",
         "url": "^https?://www\\.\\w+\\.(com|cc|org|top)/\\w+/\\w+\\.html",
         "include": "body > section.container > div.content-wrap > div.content > article.article-content > p > img,.article-content>.pagination",
-        "init": "document.querySelectorAll('.article-content br').forEach(br=>{br.remove()})",
         "action": 1,
         "nextLink": ".current+a",
-        "pageElement": ".article-content p img",
+        "pageElement": ".article-content img:not([width])",
         "replaceElement": ".pagination",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove();document.querySelectorAll('article img[alt]').forEach(img=>{img.removeAttribute('title')})",
+        "pageBar": 0,
+        "pageAction": "document.querySelectorAll('article img[alt]').forEach(img=>{img.removeAttribute('title')})",
         "initRun": 1,
         "autoLoadNum": "0",
-        "css": ".article-content p img[width]{display:none!important}"
+        "css": ".article-content p img[width],.article-content br{display:none!important}"
     },
     {
         "name": "極品性感美女 - 分類",
