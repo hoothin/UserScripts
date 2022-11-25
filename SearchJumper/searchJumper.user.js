@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.46.94
+// @version      1.6.6.46.95
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -4152,7 +4152,16 @@
                     this.setNav(!this.locBtn.classList.contains("checked"));
                 });
                 this.closeNavBtn.addEventListener("click", e => {
-                    this.setNav(false);
+                    if (this.lockWords) {
+                        this.lockWords = "";
+                        this.searchJumperInPageInput.value = "";
+                        this.searchInPageLockWords.innerHTML = createHTML();
+                        this.searchJumperInPageInput.style.paddingLeft = "";
+                        this.submitInPageWords();
+                        this.searchJumperInPageInput.focus();
+                    } else {
+                        this.setNav(false);
+                    }
                 });
                 this.navMarks.addEventListener("click", e => {
                     let topPercent = e.offsetY / this.navMarks.clientHeight * 100;
