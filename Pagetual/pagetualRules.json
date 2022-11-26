@@ -5154,7 +5154,10 @@
         "name": "極品性感美女 - 看圖",
         "example": "https://www.jpmn5.com/Xiuren/Xiuren23112.html",
         "url": "^https?://www\\.\\w+\\.(com|cc|org|top)/\\w+/\\w+\\.html",
-        "include": "body > section.container > div.content-wrap > div.content > article.article-content > p > img,.article-content>.pagination",
+        "include": [
+            "body > section.container > div.content-wrap > div.content > article.article-content > p > img,.article-content>.pagination",
+            "//title[contains(text(), '极品性感美女')]"
+        ],
         "action": 1,
         "nextLink": ".current+a",
         "pageElement": ".article-content img:not([width])",
