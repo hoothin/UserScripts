@@ -1,12 +1,10 @@
 // ==UserScript==
 // @name         RandomSexyPicParser
-// @name:zh-CN   软瑟盘
 // @name:zh-TW   軟瑟盤
 // @name:ja      RandomSexyPicParser
 // @namespace    hoothin
 // @version      1.3.15.1
 // @description        Random Sexy Pictures Parser
-// @description:zh-CN  随机色图
 // @description:zh-TW  隨機色圖
 // @description:ja     Random Sexy Pictures Parser
 // @author       hoothin
