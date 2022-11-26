@@ -171,7 +171,8 @@
         "nextLink": "a.cur+a",
         "pageElement": ".ptview>img:not([style])",
         "replaceElement": ".setnmh-pagedos",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove();setTimeout(()=>{let last=document.querySelector('.setnmh-readagin');let lastimg=document.querySelector('.ptview>img:last-child');let p=document.createElement('p');p.innerText='本章節已達最後一頁';p.style='font-size:24px;height: 40px;line-height: 40px;text-align: center;margin: 10px auto;';if(last){lastimg.parentNode.insertBefore(p,lastimg);lastimg.remove()}},200)",
+        "pageAction": "setTimeout(()=>{let last=document.querySelector('.setnmh-readagin');let lastimg=document.querySelector('.ptview>img:last-child');let p=document.createElement('p');p.innerText='本章節已達最後一頁';p.style='font-size:24px;height: 40px;line-height: 40px;text-align: center;margin: 10px auto;';if(last){lastimg.parentNode.insertBefore(p,lastimg);lastimg.remove()}},200)",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0",
         "css": ".setnmh-seebox img{max-width: 100% !important;display: block !important;margin: 0 auto !important;box-shadow:none!important}.setnmh-seebox{width:auto !important;max-width:800px !important}{display:none!important}.pagetual_tipsWords{display:none!important}"
@@ -278,7 +279,7 @@
         "nextLink": "a.onpage+a[href$='html']",
         "pageElement": "img[onload],img[oncontextmenu]",
         "replaceElement": "//tr[td/a/@class='onpage'] | //select[@name='jump']",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0",
         "css": "img[onload],img[oncontextmenu]{max-width: 100% !important;display: block !important;margin: 0 auto !important;}td[valign='top'][width='160'],td[width='12']{display:none!important}"
@@ -367,7 +368,7 @@
         "pageElement": "#TheImg",
         "replaceElement": "#pagenum",
         "css": "img[name='TheImg'] {max-width: 100% !important;display: block !important;margin: 0 auto !important;}#TheTable td:nth-child(1),#TheTable td:nth-child(3),.comment_block,#prevnext2,#prev,#next{display:none!important}",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -393,7 +394,7 @@
         "pageElement": "#TheImg",
         "replaceElement": "#pagenum",
         "css": "img[name='TheImg'] {max-width: 100% !important;display: block !important;margin: 0 auto !important;}#TheTable td:nth-child(1),#TheTable td:nth-child(3),.comment_block,#prevnext2,#prev,#next{display:none!important}",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -426,7 +427,7 @@
         ],
         "pageElement": "img[name='TheImg']",
         "replaceElement": ".photo_main_div > div:nth-child(1)",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0",
         "css": "img[name='TheImg'] {max-width: 98% !important;display: block !important;margin: 0 auto !important;}"
@@ -499,7 +500,7 @@
         "pinUrl": true,
         "pageElement": "#manga-image",
         "replaceElement": "#manga-image+p",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0",
         "css": "#image-msg,ul.nav+div:not(#images),ul.nav+div+div:not(#images),#action>ul>li:nth-child(n+2):nth-child(-n+3){display:none!important}.action-list li{width:50%!important}.chapter-view #images img{margin:0 auto 0px!important}"
@@ -513,7 +514,7 @@
         "pinUrl": true,
         "pageElement": "#image",
         "replaceElement": "#image+p",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0",
         "css": "ul.nav+div,#actio>ul>li:nth-child(n+2):nth-child(-n+3){display:none!important}.action-list li{width:50%!important}.chapter-view #images img{margin:0 auto 0px!important}"
@@ -587,7 +588,7 @@
         "pinUrl": true,
         "pageElement": "#chapter-image img",
         "replaceElement": "#k_page,#m_r_bottom",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0",
         "css": ".friendly,#action>ul>li:nth-child(n+2):nth-child(-n+3){display:none!important}.action-list li{width:50%!important}"
@@ -708,7 +709,7 @@
         "nextLink": ".imgListBox>a[href^='http']",
         "pageElement": ".imgListBox img",
         "replaceElement": "button.prePic,button.nextPic",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0",
         "css": "a.mdui-btn.mdui-btn-icon,button.prePic,button.nextPic,button.allBtn{display:none!important}.mdui-container{width:100%!important;padding:0px!important}.imgListBox img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto!important}.pagetual_tipsWords{display:none!important}"
@@ -911,7 +912,7 @@
         "nextLink": "a.next",
         "pageElement": "#book_list>.item",
         "replaceElement": ".uk-pagination",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()"
+        "pageBar": 0
     },
     {
         "name": "动漫之家手機版 - 閱讀",
@@ -1035,7 +1036,7 @@
         "nextLink": "a[title='下一页']",
         "pageElement": ".comic-main-section>*",
         "replaceElement": ".pagination",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()"
+        "pageBar": 0
     },
     {
         "name": "快岸漫画 - 閱讀 - 雙擊前往下一章，鍵盤左右鍵上下章",
@@ -1135,7 +1136,7 @@
         "nextLink": "//a[./img[@src='/images/d.gif']][not(@href='/exit/exit.htm')] | //a[span[text()='下一页']][not(@href='/exit/exit.htm')]",
         "pageElement": "//script[@language]/following-sibling::a/img[@src][not(contains(@src,'.gif'))]",
         "replaceElement": "//a[./img[@src='/images/d.gif']] | //a[./img[@src='/images/t.gif']] | //div[@class='bottom']/ul[@class='subNav'] | //li[@class='txtA']",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0",
         "css": "table[border='0'],.bottom>.subNav~*:not(p){display:none!important}a>img[src^='http'],table,tbody,tr,td{width: 100% !important;max-width: 100% !important;display: block !important;margin: 0 auto !important;}"
@@ -1396,7 +1397,7 @@
         "nextLink": "//a[text()='下一頁'][not(starts-with(@href,'javascript'))]",
         "pageElement": "#img_ad_img>img",
         "replaceElement": "script+div.c,.e+.c,.b",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0",
         "css": ".e>h1,.e>p,.fb-share-button,#index_mian,.c>.fanye,.c>select,#k_zsy{display:none!important}#img_ad_img>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
@@ -1569,7 +1570,7 @@
     {
         "name": "bt1207",
         "example": "http://ibt120701.xyz/search?keyword=king",
-        "url": "^https?://.*(bt1207|skrbtjo)[^/]+/",
+        "url": "^https?://.*(bt1207|skrbtjo).+/",
         "nextLinkByJs": "let n=doc.querySelector('ul.pagination>li.active+li>a');if(!n)return null;let params=[];let form=doc.querySelector('#search-form');form.querySelectorAll('input').forEach(input=>{if(input.name=='p')params.push('p='+n.innerText);else params.push(input.name+'='+input.value)});return form.action+'?'+params.join('&')",
         "pageElement": "ul.list-unstyled",
         "replaceElement": "nav>.pagination",
@@ -1584,7 +1585,7 @@
         "nextLink": "#pager_links>a[title='next page']",
         "pageElement": "//table[tbody/tr[@class='lista2']/td/a/img]",
         "replaceElement": "#pager_links",
-        "pageAction": "document.querySelectorAll('iframe[name]').forEach(iftame=>{iftame.style.margin='0 -2px 2px 0px'});let w=document.querySelector(\".lista2t .lista2>td[align='center']:not([width])\").clientWidth-2;let Iframes=document.getElementsByTagName(\"iframe\");for(let i=0;i<Iframes.length;i++){let I=(Iframes[i].contentWindow||Iframes[i].contentDocument);if(I.document){I=I.document};I.body.querySelectorAll(\".lista2t .lista2>td[align='center']:not([width])\").forEach(e=>{e.setAttribute('width',w)})};",
+        "pageAction": "document.querySelectorAll('iframe[name]').forEach(iftame=>{iftame.style.margin='0 -2px 2px 0px'});let w=document.querySelector(\".lista2t .lista2>td[align='center']:not([width])\").clientWidth-2;let Iframes=document.getElementsByTagName(\"iframe\");for(let i=0;i<Iframes.length;i++){let I=(Iframes[i].contentWindow||Iframes[i].contentDocument);let fdoc;if(I.document){fdoc=I.document}fdoc.body.querySelectorAll(\".lista2t .lista2>td[align='center']:not([width])\").forEach(e=>{e.setAttribute('width',w)})};",
         "sleep": 1000,
         "css": "inIframe:body,table{margin:0!important;padding:0!important;width:100.1%!important}td[width='100'],.lista2t tr:not(.lista2){display:none!important}body{background:none!important}table.lista2t{border-top:2px solid #a0cff0}"
     },
@@ -1615,7 +1616,7 @@
         "nextLinkByJs": "let next = doc.querySelector('.pagination>li.active+li:not([style]):not([class])>a'); if (next) return location.origin + location.pathname.replace(/\\/\\d+$/,'') + '/' + next.innerText",
         "pageElement": "//table/tbody/tr",
         "replaceElement": ".pagination",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()"
+        "pageBar": 0
     },
     {
         "name": "動漫花園",
@@ -1909,7 +1910,7 @@
         "nextLink": "a.next",
         "pageElement": ".post-box-list",
         "replaceElement": ".pagination_wrap",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()"
+        "pageBar": 0
     },
     {
         "name": "马克喵",
@@ -2030,6 +2031,20 @@
         "css": ".pagetual_pageBar{margin-top:-10px!important;margin-bottom:18px!important;}"
     },
     {
+        "name": "w3school.com.cn",
+        "example": "https://www.w3school.com.cn/js/index.asp",
+        "url": "^https?://www\\.w3school\\.com\\.cn/",
+        "action": 1,
+        "nextLinkByJs": "let next = doc.querySelector('li.next>a[href]'); if (next && next.href.indexOf('/index.') === -1) return next.href",
+        "pageElement": "#maincontent>*:not([class*='prenextnav']):not(#bpn):not(#tpn)",
+        "replaceElement": "ul.prenext, #navsecond",
+        "insert": "id('bpn') | //div[contains(@class, 'prenextnav')][last()]",
+        "insertPos": 1,
+        "pageBarText": 1,
+        "initRun": 1,
+        "autoLoadNum": 2
+    },
+    {
         "name": "菜鸟教程 - 分类页",
         "example": "https://www.runoob.com/w3cnote",
         "url": "^https?://www\\.runoob\\.com/w3cnote",
@@ -2080,7 +2095,7 @@
         "nextLink": "a.next",
         "pageElement": "ul.post-loop>.item",
         "replaceElement": ".pagination",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()"
+        "pageBar": 0
     },
     {
         "name": "億破姐&電腦系統吧",
@@ -2139,7 +2154,7 @@
         "pageElement": ".columns .column",
         "replaceElement": ".navigation",
         "history": 2,
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()"
+        "pageBar": 0
     },
     {
         "name": "94i.in - 自動簽到",
@@ -2154,7 +2169,7 @@
         "nextLink": ".c-pagination--next",
         "pageElement": ".u-gapNextV--lg>.u-gapNextV--md",
         "replaceElement": ".u-gapNextV--lg.u-tac",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "rate": 2,
         "sleep": 1000
     },
@@ -2165,7 +2180,7 @@
         "nextLink": "li.l-pagination__page.is-active+li>a",
         "pageElement": "//div[(div/@class='l-articlePage__author') and @class='l-articlePage']",
         "replaceElement": "ul.l-pagination",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "rate": 2,
         "sleep": 1000
     },
@@ -2211,7 +2226,7 @@
         "nextLink": "//a[text()='下一页' and contains(@href,'html')]",
         "pageElement": ".ulPic",
         "replaceElement": ".pages",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "css": "iframe{height:55px!important}"
     },
     {
@@ -2222,7 +2237,7 @@
         "nextLink": "//a[text()='下一页' and contains(@href,'html')]",
         "pageElement": ".content img[alt]",
         "replaceElement": ".page",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -2244,7 +2259,7 @@
         "nextLink": "//a[text()='下一页 >>' and contains(@href,'html')]",
         "pageElement": ".imgbox img[alt]",
         "replaceElement": ".page,span>h1,.www",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0",
         "css": "img[alt]{margin-top:0px!important;margin-bottom:0px!important}"
@@ -2265,7 +2280,7 @@
         "nextLink": "//a[text()='下一页']",
         "pageElement": ".tu img[alt]",
         "replaceElement": ".page-show",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0",
         "css": "img[alt]{margin-top:0px!important;margin-bottom:0px!important}"
@@ -2287,7 +2302,7 @@
         "nextLink": "//a[text()='下一页']",
         "pageElement": ".content-pic img[alt]",
         "replaceElement": ".page-show",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0",
         "css": "img[alt]{margin-top:0px!important;margin-bottom:0px!important}"
@@ -2308,7 +2323,7 @@
         "nextLink": "//a[text()='下一页']",
         "pageElement": ".content img[alt]",
         "replaceElement": ".page",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -2328,7 +2343,7 @@
         "nextLink": "//a[text()='下一页']",
         "pageElement": "#content img[alt]",
         "replaceElement": ".pagelist,h3",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -2349,7 +2364,7 @@
         "nextLink": "//a[text()='下一页']",
         "pageElement": ".imgbox img[alt]",
         "replaceElement": ".pagelist,.imgbox>h1",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -2379,7 +2394,7 @@
         "nextLink": "//a[text()='下一页']",
         "pageElement": ".pp img",
         "replaceElement": ".page-show",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -2401,7 +2416,7 @@
         "nextLink": "//a[text()='下一页']",
         "pageElement": "#content-p img",
         "replaceElement": ".gengduo",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0",
         "css": "img[alt]{margin-bottom:0px!important}"
@@ -2423,7 +2438,7 @@
         "nextLink": "//a[text()='下一页']",
         "pageElement": ".content img",
         "replaceElement": ".paging",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0",
         "css": "img[alt]{margin-bottom:0px!important}"
@@ -2445,7 +2460,7 @@
         "nextLink": "//a[text()='下一页']",
         "pageElement": ".tal img[alt]",
         "replaceElement": ".page,body>[style='font-size:14px;'],.tip",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0",
         "css": "[style='margin:3px 0 0 0;']{display:none!important}img[alt]{opacity: 1!important}"
@@ -2470,7 +2485,7 @@
         "nextLink": "//a[text()='下一页']",
         "pageElement": ".img_box img",
         "replaceElement": "#pages",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -2495,7 +2510,7 @@
         "pageElement": "//div[@class='main']/div[a/@title]//img",
         "replaceElement": "//div[a/@class='a1']",
         "css": ".main>iframe{display:none!important}iframe{height:55px!important}",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -2506,7 +2521,7 @@
         "nextLink": "span+a:not(.a1)",
         "pageElement": ".search_content",
         "replaceElement": ".pages",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "css": ".pagetual_pageBar{margin-top:0px!important}"
     },
     {
@@ -2517,7 +2532,7 @@
         "nextLink": "span+a:not(.a1)",
         "pageElement": ".ulPic",
         "replaceElement": ".pages",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "css": "iframe{height:55px!important}"
     },
     {
@@ -2549,7 +2564,7 @@
         ],
         "pageElement": ".card-list__items>article",
         "replaceElement": "#paginator-top,#paginator-bottom",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()"
+        "pageBar": 0
     },
     {
         "name": "Kemono - posts",
@@ -2573,7 +2588,7 @@
         "insert": ".index_c_img",
         "insertPos": 2,
         "replaceElement": ".index_c_page",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0",
         "css": "body>[style*='z-index'],img[src*='/aaa/']{display:none!important}body{padding-bottom:0px!important}"
@@ -2594,7 +2609,7 @@
         "nextLink": "//a[text()='Next >']",
         "pageElement": ".videos img[onerror]+br,.videos img[onerror]",
         "replaceElement": ".entry-title,.dept-ct.show-less,.pagination",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -2613,7 +2628,7 @@
         "nextLink": ".nav_next",
         "pageElement": "#gimg",
         "replaceElement": "span.current",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0",
         "css": ".nav_pagination,#bar,#footer,.prev_nav.page_prev,.next_nav.page_next{display:none!important}"
@@ -2640,7 +2655,8 @@
         "nextLink": "a.next",
         "pageElement": "#image-container",
         "replaceElement": ".reader-bar",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove();document.querySelectorAll('#image-container>a').forEach(a=>{a.removeAttribute('href')})",
+        "pageAction": "document.querySelectorAll('#image-container>a').forEach(a=>{a.removeAttribute('href')})",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -2669,7 +2685,7 @@
         "nextLink": "a.next",
         "pageElement": ".row>.col-md-3",
         "replaceElement": ".pagination",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()"
+        "pageBar": 0
     },
     {
         "name": "留园酷18",
@@ -2696,7 +2712,7 @@
         "replaceElement": ".bb ul,.hddiv+span",
         "css": "#imgshow img {max-width: 100%;}",
         "rate": 3,
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()"
+        "pageBar": 0
     },
     {
         "name": "24tupian - 圖片清單",
@@ -2705,7 +2721,7 @@
         "nextLink": "a.on+a[href$=html]",
         "pageElement": ".gtps.fl>ul",
         "replaceElement": ".page",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()"
+        "pageBar": 0
     },
     {
         "name": "24tupian",
@@ -2732,7 +2748,7 @@
         "nextLink": "//a[text()='下一张>']",
         "pageElement": ".photo-box picture",
         "replaceElement": ".tools row",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -2749,7 +2765,7 @@
         "nextLink": ".now-page+a",
         "pageElement": ".info-imtg-box>img",
         "replaceElement": ".pagebar",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0",
         "css": ".img-next{display:none!important}"
@@ -2770,7 +2786,7 @@
         "init": "document.querySelectorAll('#post_content a').forEach(a=>{a.removeAttribute('href');a.removeAttribute('title')});document.querySelectorAll('#post_content br').forEach(br=>{br.remove()})",
         "pageElement": "#post_content img",
         "replaceElement": ".pagelist",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -2790,7 +2806,7 @@
         "nextLink": "//div[@class='page-show' or contains(@class,'article-page')]/a[contains(@href,'html') and text()='下一页']",
         "pageElement": ".hh+.pp img[alt],.clearfix.arcmain img",
         "replaceElement": ".page-show,h1>span",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0",
         "css": ".pgg1+.hh{display:none!important}"
@@ -2811,7 +2827,7 @@
         "nextLink": "//div[@class='paging']/a[text()='下一页']",
         "pageElement": ".picture>p, .a_img>p",
         "replaceElement": ".paging",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -2830,7 +2846,7 @@
         "nextLink": "//a[text()='下一页']",
         "pageElement": ".picture>p, .view_img>p",
         "replaceElement": ".paging",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -2850,7 +2866,7 @@
         "pageElement": ".entry img, .article-content img",
         "replaceElement": "#dm-fy",
         "css": "img[src$='.gif'] {display: none !important;}",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -2869,7 +2885,7 @@
         "nextLink": "//a[text()='下一页']",
         "pageElement": ".container-inner-fix-m>img",
         "replaceElement": ".pagination",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -2898,7 +2914,7 @@
         "nextLink": "//a[text()='下一页']",
         "pageElement": "p img",
         "replaceElement": "#pages",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -2920,7 +2936,7 @@
         "nextLink": "a.next",
         "pageElement": "article.post",
         "replaceElement": ".nav-links",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()"
+        "pageBar": 0
     },
     {
         "name": "Asian Girls",
@@ -2929,7 +2945,7 @@
         "nextLink": "a.next",
         "pageElement": "//div[div/@class='col post-item']",
         "replaceElement": ".page-numbers",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "css": ".post-item {height: 370px;min-height: 370px;margin-bottom:0px!important}",
         "initRun": 1,
         "autoLoadNum": 1
@@ -2950,7 +2966,7 @@
         "nextLink": "//a[text()='Older posts']",
         "pageElement": "article.post",
         "replaceElement": ".navigation",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()"
+        "pageBar": 0
     },
     {
         "name": "idol.gravureprincess.date",
@@ -2959,7 +2975,7 @@
         "nextLink": ".blog-pager-older-link",
         "pageElement": ".blog-posts>.date-outer",
         "replaceElement": "#blog-pager",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()"
+        "pageBar": 0
     },
     {
         "name": "NudeBird",
@@ -2968,7 +2984,7 @@
         "nextLink": "li.current+li>a",
         "pageElement": ".excerpt",
         "replaceElement": ".pagination",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()"
+        "pageBar": 0
     },
     {
         "name": "NUDECOSPLAY",
@@ -2986,7 +3002,7 @@
         "nextLink": "li.active+li>a",
         "pageElement": "//div[div/a/@class='thumbnail']",
         "replaceElement": "#dnav",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()"
+        "pageBar": 0
     },
     {
         "name": "Nlegs",
@@ -3004,7 +3020,7 @@
         "nextLink": ".current+a",
         "pageElement": "article.post",
         "replaceElement": ".wp-pagenavi",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()"
+        "pageBar": 0
     },
     {
         "name": "NongMo.Zone",
@@ -3058,7 +3074,7 @@
         "nextLink": "//span[a/@class='pagination-link is-current']/following-sibling::span/a",
         "pageElement": ".article-fulltext p",
         "replaceElement": "nav.pagination",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0",
         "css": ".content p:not(:last-child){margin-bottom:0!important}"
@@ -3082,7 +3098,8 @@
         "nextLink": ".current+a,.current+.dots+a",
         "pageElement": ".entry-content.read-details",
         "replaceElement": "nav.pagination,.trail-items",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove();document.querySelectorAll('.entry-content.read-details>br').forEach(br=>{br.remove()});document.querySelectorAll('.entry-content.read-details>div#ad-ex').forEach(div=>{div.remove()})",
+        "pageAction": "document.querySelectorAll('.entry-content.read-details>br').forEach(br=>{br.remove()});document.querySelectorAll('.entry-content.read-details>div#ad-ex').forEach(div=>{div.remove()})",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0",
         "css": ".wp-block-image{margin-bottom:0!important}"
@@ -3136,7 +3153,7 @@
         "pageElement": ".entry-inner>p",
         "replaceElement": "nav.pagination",
         "css": ".entry p{margin-bottom:0!important}[id^='boxzilla']{display:none!important}",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -3172,7 +3189,7 @@
         "nextLink": "//a[text()='下一页']",
         "pageElement": ".contents img",
         "replaceElement": ".page",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -3193,7 +3210,7 @@
         "nextLink": ".current+a",
         "pageElement": "#content img",
         "replaceElement": ".nav-links",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -3231,7 +3248,7 @@
         "pageElement": ".imgwebp>p>img",
         "replaceElement": ".page",
         "css": "section.container>p{display:none!important}",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -3253,7 +3270,7 @@
         "pageElement": ".post-content img",
         "replaceElement": ".paging",
         "css": ".bannert_ios,.bannerb_ios,.tips{display:none!important}.single-post-content{line-height: 0!important}",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -3286,7 +3303,7 @@
         "pageElement": ".content-pic img",
         "replaceElement": ".content-page",
         "css": ".content-tips{display:none!important}.content-pic img{margin-top:0px!important}",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -3346,7 +3363,7 @@
         "nextLink": ".page-link>span+a",
         "pageElement": "p>img",
         "replaceElement": ".page-link",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -3365,7 +3382,7 @@
         "nextLink": "#pages>span +a:not(.a1), a.cur+a",
         "pageElement": "#hgallery>img",
         "replaceElement": "#pages",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0",
         "css": "#hgallery img{margin:0px!important}"
@@ -3386,7 +3403,8 @@
         "nextLink": ".pagination-box li.active+li>a",
         "pageElement": ".gallery-detail-img,.gallery-img",
         "replaceElement": ".pagination-box",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove();document.querySelectorAll('.gallery-img').forEach(a=>{a.removeAttribute('href')})",
+        "pageAction": "document.querySelectorAll('.gallery-img').forEach(a=>{a.removeAttribute('href')})",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0",
         "css": ".book-list>div[style]{display:none!important}"
@@ -3408,7 +3426,7 @@
         "pageElement": ".album-post-body>.separator,.album-post-body>br",
         "initRun": 1,
         "autoLoadNum": "0",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "replaceElement": ".pgz-pagination,.album-post-inner,.breadcrumbs"
     },
     {
@@ -3437,7 +3455,7 @@
         "nextLink": "//a[text()='下一页']",
         "pageElement": ".main-body>img",
         "replaceElement": ".link_pages",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -3466,7 +3484,7 @@
         "nextLink": "//a[text()='下一页']",
         "pageElement": "p img",
         "replaceElement": ".pagination1",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -3492,9 +3510,11 @@
         ],
         "pageElement": ".post img",
         "replaceElement": "h1.h3",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove();document.querySelectorAll('.post img[title]').forEach(img=>{img.removeAttribute('title')})",
+        "pageAction": "document.querySelectorAll('.post img[title]').forEach(img=>{img.removeAttribute('title')})",
+        "pageBar": 0,
         "initRun": 1,
-        "autoLoadNum": "0"
+        "autoLoadNum": "0",
+        "css": "span.d-md-inline-block.d-none:not(.mx-1),.text-xs.text-muted>b{display:none!important}"
     },
     {
         "name": "MM 范",
@@ -3538,7 +3558,7 @@
             ".picsbox img[style]"
         ],
         "css": ".picsbox img{opacity: 1!important}.national-day,.picpege{display:none!important}",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -3564,7 +3584,7 @@
         "pageElement": "#thread-pic li,#pic",
         "replaceElement": "#thread-page",
         "css": "#thread-pic li,#pic li{margin-bottom: 0px!important;}#pic img{width:100%!important;height:auto!important;}",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -3585,7 +3605,7 @@
         "nextLink": "span+a",
         "pageElement": ".article-content img",
         "replaceElement": ".nav-links.page_imges",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -3607,7 +3627,7 @@
         "nextLink": "li.thisclass+li>a",
         "pageElement": ".big-pic>a",
         "replaceElement": ".pages",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -3629,7 +3649,7 @@
         "pageElement": "#display_image_detail img",
         "replaceElement": "script+#paginator,#detail_tag+div+div",
         "css": "#display_image_detail a[id]{display:none!important}",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -3654,7 +3674,7 @@
         "pageElement": "#content img",
         "replaceElement": ".pager",
         "css": "img{margin-top:0px!important;margin-bottom:1px!important}",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -3792,7 +3812,7 @@
         "nextLink": "//a[text()='下一步']",
         "pageElement": ".thumb-overlay",
         "replaceElement": ".clearfix+div.pull-left+div",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -3803,7 +3823,7 @@
         "nextLink": "ul.pagination:not(.pagination-lg) li.active+li>a",
         "pageElement": ".row>div[id^=album_photo_]",
         "replaceElement": ".pagination",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -3899,7 +3919,7 @@
         "nextLink": ".fenye span+a",
         "pageElement": ".article-content>p,.article-content>h2,.article-content>#erphpdown",
         "replaceElement": ".fenye",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()"
+        "pageBar": 0
     },
     {
         "name": "壹纳网 - 文章",
@@ -3968,7 +3988,7 @@
         "nextLink": "//a[text()='下一頁']",
         "pageElement": "#picarea",
         "replaceElement": ".newpagewrap,.png.bread,.grid_2.cc",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -4050,7 +4070,7 @@
         "nextLink": "a[alt='next']",
         "pageElement": ".thumbnail-container, span.thumb",
         "replaceElement": "#paginator",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()"
+        "pageBar": 0
     },
     {
         "name": "yande",
@@ -4059,7 +4079,7 @@
         "pageElement": "//li[contains(@class, 'creator-id-')]|//div[@id='comment-list']/div[@class='post']|//table[@class='highlightable']",
         "nextLink": "//a[@class='next_page']",
         "replaceElement": "#paginator",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "css": ".javascript-hide { display: inline-block !important; }.pagetual_pageBar { display: inline-flex!important;width: 100%!important; }"
     },
     {
@@ -4068,7 +4088,7 @@
         "url": "^https?://hitomi\\.la/reader/",
         "nextLink": "#nextPanel",
         "pageElement": "#comicImages",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "css": "#comicImages{margin-bottom:-40px!important}body{overflow:inherit!important}"
     },
     {
@@ -4102,7 +4122,7 @@
         "nextLink": "a.next_page",
         "pageElement": ".wp-manga-chapter-img",
         "replaceElement": ".wp-manga-nav",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": 10,
         "rate": 3,
@@ -4116,7 +4136,7 @@
         "nextLink": ".nextpostslink,li.active+li>a",
         "pageElement": ".page-content-listing.item-big_thumbnail,.chapter-images-list>.image-item",
         "replaceElement": ".wp-pagenavi,.pagination",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": 1,
         "rate": 3
@@ -4146,7 +4166,7 @@
         "nextLink": "//div[@class='page-links']/a[./span[./i[@class='be be-arrowright']]]",
         "pageElement": ".single-content>p",
         "replaceElement": ".page-links",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()"
+        "pageBar": 0
     },
     {
         "name": "18 禁漫 - 閱讀",
@@ -4156,7 +4176,7 @@
         "pageElement": ".e>img:not([style='display:none;'])",
         "replaceElement": ".c, .b",
         "css": ".e img {display: block; margin: 0 auto;}",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0",
         "lazyImgSrc": "data-url"
@@ -4191,7 +4211,7 @@
         "pageElement": "img#current-page-image",
         "replaceElement": ".comic-show-content-nav",
         "css": "#current-page-image {display: block !important; margin: 0 auto !important; max-height: calc(250vh) !important;}",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -4215,7 +4235,7 @@
         "pageElement": "#picg img",
         "replaceElement": "span+.pagelist",
         "css": "#picg img:hover{transform: none!important}#picg img{max-width: 99% !important;display: block !important;margin: 0 auto !important;filter: blur(0px)!important;}.interestline+center,center+#pic,#xzpap1,#divpsgx,#bdivpx,#divftsp,#app+div,#xzappsq,div.bg-text,#divpsg,#divStayTopright2,#bdssy,#qrcode2,#d5tig,#pcapicb,#google_translate_element{display:none!important}",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -4230,7 +4250,7 @@
         "css": "[href^='https://www.358a.vip/'],#span_xzappsq,#span_listp,#bdssx,#listmt,#listmt2,#listmt3,#listmt4,#listmmt2,#xzappsq,#listp,#listja{display:none!important}",
         "initRun": 1,
         "autoLoadNum": 1,
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()"
+        "pageBar": 0
     },
     {
         "name": "秀人集 - 搜索",
@@ -4250,7 +4270,7 @@
         "nextLink": "//a[text()='下页']",
         "pageElement": ".content img",
         "replaceElement": ".page",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -4282,7 +4302,7 @@
         "nextLink": "//a[text()='下页']",
         "pageElement": ".content img",
         "replaceElement": "div.page",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -4305,7 +4325,7 @@
         "nextLink": "//a[text()='下页']",
         "pageElement": ".content img",
         "replaceElement": "div.page",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -4371,7 +4391,7 @@
         "initRun": 1,
         "autoLoadNum": 1,
         "pageInit": "doc.querySelectorAll(`.image>img[img^='h']`).forEach(img=>{img.src=img.getAttribute('img');img.setAttribute('img','')})",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()"
+        "pageBar": 0
     },
     {
         "name": "成人色情分享論壇",
@@ -4414,7 +4434,7 @@
         "nextLink": "span.items+a[data-link-name='pager']",
         "pageElement": ".c-cntCard-110-f",
         "replaceElement": ".c-pager-101",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()"
+        "pageBar": 0
     },
     {
         "name": "俺の3Dエロ動画",
@@ -4423,7 +4443,7 @@
         "nextLink": "a[rel='next']",
         "pageElement": ".g-main-grid>article",
         "replaceElement": ".pagination",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()"
+        "pageBar": 0
     },
     {
         "name": "Sex Nori",
@@ -4521,7 +4541,7 @@
         "nextLink": "//a[text()='Next']",
         "pageElement": ".img-responsive-mw",
         "replaceElement": ".float-right",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -4534,7 +4554,8 @@
         "pinUrl": true,
         "pageElement": ".row>.col-12>.row.content-row",
         "replaceElement": ".pagination,.well-info",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove();document.querySelectorAll('.row.content-row .img-responsive').forEach(img=>{let s=img.src;let sm=s.match(/media\\/photos\\/tmb\\//);let f=s.replace('tmb/','');if(sm){img.src=f}})",
+        "pageAction": "document.querySelectorAll('.row.content-row .img-responsive').forEach(img=>{let s=img.src;let sm=s.match(/media\\/photos\\/tmb\\//);let f=s.replace('tmb/','');if(sm){img.src=f}})",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -4545,7 +4566,7 @@
         "nextLink": ".page-item.active+li>a",
         "pageElement": ".row>.col-12>.row.content-row",
         "replaceElement": ".pagination,.well-info",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()"
+        "pageBar": 0
     },
     {
         "name": "BuzzAV",
@@ -4603,8 +4624,9 @@
         "insert": "//div[div/div/div/a/div/figure][2]",
         "insertPos": 2,
         "replaceElement": "[role='navigation']",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove();setTimeout(()=>{let bs=document.querySelectorAll(`button[tabindex='0']`);[].forEach.call(bs,button=>{let link=location.pathname.replace(/\\/\\d+$/,'')+'/'+button.textContent;let lh=`location.href='` + link + `'`;button.setAttribute('onclick',lh)});let pb=document.querySelector(`button[aria-disabled='false']:first-child`);let nb=document.querySelector(`button[aria-disabled='false']:last-child`);let cp=document.querySelector('[aria-current]').textContent;let pn=cp-1;if(pb){let link=location.pathname.replace(/\\/\\d+$/,'')+'/'+pn;let lh=`location.href='` + link + `'`;pb.setAttribute('onclick',lh)}if(nb){let nn=document.querySelector('[aria-current]+button[tabindex]').textContent;let link=location.pathname.replace(/\\/\\d+$/,'')+'/'+nn;let lh=`location.href='` + link + `'`;nb.setAttribute('onclick',lh)}},1000)",
-        "css": "[style='margin-top:20px'],[style='margin-top: 20px;'],.mantine-SimpleGrid-root[style^='margin-bottom']>div:nth-child(1),[style='width:300px;height:190px;margin:0 auto'],[style='width: 300px; height: 190px; margin: 0px auto;'],#__next>.mantine-Stack-root{display:none!important}.mantine-Container-root .mantine-Image-image{margin: 0 auto !important;width: auto!important;height: 210px!important}"
+        "pageAction": "setTimeout(()=>{let bs=document.querySelectorAll(`button[tabindex='0']`);[].forEach.call(bs,button=>{let link=location.pathname.replace(/\\/\\d+$/,'')+'/'+button.textContent;let lh=`location.href='` + link + `'`;button.setAttribute('onclick',lh)});let pb=document.querySelector(`button[aria-disabled='false']:first-child`);let nb=document.querySelector(`button[aria-disabled='false']:last-child`);let cp=document.querySelector('[aria-current]').textContent;let pn=cp-1;if(pb){let link=location.pathname.replace(/\\/\\d+$/,'')+'/'+pn;let lh=`location.href='` + link + `'`;pb.setAttribute('onclick',lh)}if(nb){let nn=document.querySelector('[aria-current]+button[tabindex]').textContent;let link=location.pathname.replace(/\\/\\d+$/,'')+'/'+nn;let lh=`location.href='` + link + `'`;nb.setAttribute('onclick',lh)}},1000)",
+        "css": "[style='margin-top:20px'],[style='margin-top: 20px;'],.mantine-SimpleGrid-root[style^='margin-bottom']>div:nth-child(1),[style='width:300px;height:190px;margin:0 auto'],[style='width: 300px; height: 190px; margin: 0px auto;'],#__next>.mantine-Stack-root{display:none!important}.mantine-Container-root .mantine-Image-image{margin: 0 auto !important;width: auto!important;height: 210px!important}",
+        "pageBar": 0
     },
     {
         "name": "Jav223",
@@ -4679,7 +4701,7 @@
         "pageElement": "#waterfall>.item",
         "replaceElement": ".pagination",
         "css": "#waterfall>.item {position: static !important; float: left !important; height: 400px !important;}",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()"
+        "pageBar": 0
     },
     {
         "name": "JavDB",
@@ -4773,7 +4795,7 @@
         "pageElement": ".photohref",
         "pageInit": "let img = doc.querySelector('.photohref>img[alt]');img.src = img.parentNode.href;img.parentNode.removeAttribute('href');",
         "replaceElement": "#photobitlefta,#photobitrighta",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0",
         "css": "#photobitlefta,#photobitrighta{display:none!important}#gridphoto *{overflow: initial !important;position: initial !important;}img[alt]{max-width: 98% !important;display: block !important;margin: 0 auto !important;}"
@@ -4866,7 +4888,7 @@
         "nextLink": "//a[text()='»']",
         "pageElement": ".row .row>div",
         "replaceElement": "#paging",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()"
+        "pageBar": 0
     },
     {
         "name": "Thumbzilla",
@@ -4875,7 +4897,7 @@
         "nextLink": ".page_next>a",
         "pageElement": ".responsiveListing>li:not([id]",
         "replaceElement": ".pagination",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()"
+        "pageBar": 0
     },
     {
         "name": "Tube8",
@@ -4885,7 +4907,7 @@
         "pageElement": "#category_video_list .video_box, #result_container>.video_box, .sectionWrapper .video_box",
         "replaceElement": "#pagination",
         "lazyImgSrc": "data-thumb",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "css": "#home_page_wrapper>.sectionWrapper:nth-last-child(-n+3) {display: none;}"
     },
     {
@@ -4905,7 +4927,7 @@
         "pinUrl": true,
         "pageElement": ".full-row-thumbs>[data-espnode='videobox'],.channelLists .full-row-channel,.all-erotica-section>.erotica-box,.fifteen-column .porn-star-list",
         "replaceElement": "#pagination",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()"
+        "pageBar": 0
     },
     {
         "name": "PornHub photo",
@@ -4925,7 +4947,7 @@
         ],
         "pageElement": ".centerImage img",
         "replaceElement": ".arrowLeft,.arrowRight,.thumbSliderButtons,.thumbSliderContent,.itemCount",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0",
         "css": ".arrowLeft,.arrowRight{display:none!important}#photoImageSection img{margin:0!important}"
@@ -4947,7 +4969,7 @@
         "pageElement": ".photoAlbumListContainer",
         "replaceElement": ".paginationGated",
         "pageInit": "doc.querySelectorAll('.js_lazy_bkg').forEach(div=>{div.style.backgroundImage=`url('${div.dataset.bkg}')`})",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()"
+        "pageBar": 0
     },
     {
         "name": "Pornhub",
@@ -4994,7 +5016,7 @@
         "pageElement": "div.panel-body.single.mt-2 > p",
         "replaceElement": ".page-nav",
         "css": ".alignnone,p{margin:0!important}",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -5058,7 +5080,7 @@
         "nextLink": "//a[text()='下一頁']",
         "pageElement": ".grid-cols-2>.shadow",
         "replaceElement": ".bg-white.px-4.py-3",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()"
+        "pageBar": 0
     },
     {
         "name": "jav9999",
@@ -5091,7 +5113,7 @@
         "nextLink": "//a[text()='下一頁']",
         "pageElement": ".photos-list",
         "replaceElement": ".pagination",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "lazyImgSrc": "data-src",
         "initRun": 1,
         "autoLoadNum": "0",
@@ -5121,18 +5143,18 @@
         "example": "https://www.jpmn5.com/Xiuren/Xiuren23112.html",
         "url": "^https?://www\\.\\w+\\.(com|cc|org|top)/\\w+/\\w+\\.html",
         "include": [
-            "body > section.container > div.content-wrap > div.content > article.article-content > p > img,.article-content>.pagination",
+            "body>section.container>div.content-wrap>div.content>article.article-content img[alt],.article-content>.pagination",
             "//title[contains(text(), '极品性感美女')]"
         ],
         "action": 1,
         "nextLink": ".current+a",
-        "pageElement": ".article-content img:not([width])",
+        "pageElement": ".article-content img[alt]:not([width])",
         "replaceElement": ".pagination",
         "pageBar": 0,
         "pageAction": "document.querySelectorAll('article img[alt]').forEach(img=>{img.removeAttribute('title')})",
         "initRun": 1,
         "autoLoadNum": "0",
-        "css": ".article-content p img[width],.article-content br{display:none!important}"
+        "css": ".article-content img[width],.article-content br{display:none!important}"
     },
     {
         "name": "極品性感美女 - 分類",
@@ -5344,7 +5366,6 @@
     },
     {
         "name": "avple.tv - 類別",
-        "author": "tony0809",
         "example": "https://avple.tv/tags/135/1/date",
         "url": "^https://avple\\.tv/tags/\\d+/\\d+/\\w+$",
         "action": 1,
@@ -5365,7 +5386,6 @@
     },
     {
         "name": "avple.tv - 搜索",
-        "author": "tony0809",
         "example": "https://avple.tv/search?key=FC2PPV&page=1&sort=date",
         "action": 1,
         "url": "^https://avple\\.tv/search\\?key=",
@@ -5407,7 +5427,7 @@
         "nextLink": "li.page-current+li.page>a",
         "pageElement": ".porntrex-box .video-item,.box .item",
         "replaceElement": ".pagination",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "css": ".pagetual_pageBar+div{margin-top:-5px!important;}"
     },
     {
@@ -5428,7 +5448,7 @@
         "insert": "#pagination",
         "insertPos": 1,
         "css": "#footer,#commentfb,.content-kuss{display: none!important;}",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -5462,7 +5482,7 @@
         "pageElement": ".container > img",
         "replaceElement": ".image>.index",
         "css": ".image > a:nth-child(3),.image > a:nth-child(4){display: none!important;}.container>img {max-width: 100% !important;display: block !important;margin: 0 auto !important;}",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -5478,36 +5498,6 @@
         ],
         "css": ".photos > div.item {display: none!important;}.pagetual_pageBar{margin-top:30px!important;margin-bottom:0px!important}",
         "pageAction": "document.querySelectorAll('.photos img').forEach(img=>{img.src=img.src.replace('_600x0','')})",
-        "initRun": 1,
-        "autoLoadNum": "0"
-    },
-    {
-        "name": "小黃書 - 圖片清單瀏覽 - 背景圖顯示為原圖",
-        "example": "https://tw.xchina.co/photo/id-6311c6080f9a5.html",
-        "url": "^https?://(tw|kr)?(\\.)?xchina\\.co/photo/",
-        "nextLink": "a.next",
-        "pageElement": ".photos > a",
-        "replaceElement": [
-            "div.article>div.pager:first-child",
-            "div.article>div.pager:last-child"
-        ],
-        "css": ".photos > div.item {display: none!important;}.pagetual_pageBar{margin-top:30px!important;margin-bottom:0px!important}",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove();document.querySelectorAll('.photos figure.item').forEach(figure=>{figure.style=figure.getAttribute('style').replace('_600x0','')})",
-        "initRun": 1,
-        "autoLoadNum": "0"
-    },
-    {
-        "name": "小黃書 - 圖片清單瀏覽",
-        "example": "https://tw.xchina.co/photo/id-6311c6080f9a5.html",
-        "url": "^https?://(tw|kr)?(\\.)?xchina\\.co/photo/",
-        "nextLink": "a.next",
-        "pageElement": ".photos > a",
-        "replaceElement": [
-            "div.article>div.pager:first-child",
-            "div.article>div.pager:last-child"
-        ],
-        "css": ".photos > div.item {display: none!important;}.pagetual_pageBar{margin-top:30px!important;margin-bottom:0px!important}",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -5534,7 +5524,7 @@
         "replaceElement": ".pag>.pagination-site,.c-denomination.s-denomination",
         "insert": ".contentme>br:last-child",
         "insertPos": 1,
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -5546,7 +5536,7 @@
         "nextLink": "//a[contains(text(),'Next')]",
         "pageElement": ".videos>.thumb-view",
         "replaceElement": ".pag>.pagination-site",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()"
+        "pageBar": 0
     },
     {
         "name": "YINGPIAN影片社",
@@ -5575,7 +5565,7 @@
         "pageElement": "h2.r,table[width^='8']",
         "replaceElement": ".list_page",
         "css": "table.nav,table[width^='8'] tr:nth-child(1){display:none!important;}td{font:12px/1.5 Verdana,Arial,Helvetica,sans-serif,'微软雅黑'!important}",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()"
+        "pageBar": 0
     },
     {
         "name": "性趣套圖 - 看圖",
@@ -5586,7 +5576,7 @@
         "pageElement": ".entry img",
         "replaceElement": ".pageLink",
         "css": "aside.side{display:none!important;}.main-content{margin-left:0px!important;}.pagetual_pageBar{margin-top:10px!important}",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -5686,7 +5676,7 @@
         "nextLink": "#pt_next",
         "pageElement": "header#top,#chaptercontent",
         "replaceElement": "head>title,.Readpage",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "css": "#chaptercontent p[style],#chaptercontent p[style]+p,#chaptercontent+#top a,[style='text-align: left;color: #028aa0;font-size: 18px;font-weight:bold;']{display: none!important;}#chaptercontent+#top{height:30px!important;line-height:30px!important}",
         "initRun": 1,
         "autoLoadNum": 1
@@ -5699,7 +5689,7 @@
         "nextLink": "//a[text()='下一页']",
         "pageElement": "//div[@id='chapterlist']/p[a/@title]",
         "replaceElement": ".listpage",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()",
+        "pageBar": 0,
         "css": "#chapterlist>p[style]{display:none!important;}"
     },
     {
@@ -5836,6 +5826,23 @@
         "replaceElement": ".page"
     },
     {
+        "name": "69書吧 -閱讀",
+        "example": "https://www.69shu.com/txt/38161/26369110",
+        "url": "^https?://www\\.69shu\\.com/txt/\\d+/\\d+",
+        "history": 2,
+        "action": 1,
+        "nextLink": "//a[text()='下一章']",
+        "pageElement": ".txtnav",
+        "replaceElement": "head>title",
+        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('.pagetual_pageBar')[0].remove();let t=geAll('.txtnav');if(t.length>2)t[0].remove()"
+    },
+    {
+        "name": "69書吧 - 書籍分類",
+        "example": "https://www.69shu.com/top/0.htm",
+        "url": "^https?://www\\.69shu\\.com/top/",
+        "nextLink": "0"
+    },
+    {
         "name": "小說狂人 - 閱讀",
         "example": "https://czbooks.net/n/ul6pe/ukcme",
         "url": "^https?://czbooks\\.net/n/\\w+/\\w+",
@@ -5937,7 +5944,7 @@
         "nextLink": "//a[text()='下一頁' or text()='下一页']",
         "pageElement": ".content.clearfix>span",
         "replaceElement": "#page",
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()"
+        "pageBar": 0
     },
     {
         "name": "UU看書網uuks.org手機版 - 閱讀",
@@ -5951,7 +5958,7 @@
         "css": "#read-page .iconback,#read-page .iconhome{display: none!important;}",
         "insert": "#read-page>.rp-switch",
         "insertPos": 1,
-        "pageAction": "document.querySelector('.pagetual_pageBar').remove()"
+        "pageBar": 0
     },
     {
         "name": "UU看書網uuks.org - 閱讀",
