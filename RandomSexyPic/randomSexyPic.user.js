@@ -4,7 +4,7 @@
 // @name:zh-TW   軟瑟盤
 // @name:ja      RandomSexyPicParser
 // @namespace    hoothin
-// @version      1.3.15
+// @version      1.3.15.1
 // @description        Random Sexy Pictures Parser
 // @description:zh-CN  随机色图
 // @description:zh-TW  隨機色圖
@@ -270,9 +270,15 @@
         }
     }
     if(!curConfig){
-        GM_registerMenuCommand("Parse current api", customSet);
         var customRule=GM_getValue("RSPrules_"+document.domain+location.pathname);
-        if(customRule){
+        if(!customRule){
+            GM_registerMenuCommand("Parse current api", customSet);
+            return;
+        }else{
+            GM_registerMenuCommand("Stop parse api", () => {
+                GM_deleteValue("RSPrules_"+document.domain+location.pathname);
+                location.reload();
+            });
             curConfig={run:()=>{
                 var searchNum=getSearchParam("num");
                 var leftNum=searchNum;
@@ -350,7 +356,7 @@
                 var searchNum=getSearchParam("num");
                 numInput.value=searchNum;
             }};
-        }else return;
+        }
     }
     document.title=curConfig.name?curConfig.name:"Random Sexy Pictures";
     try{
@@ -570,10 +576,8 @@
     function customSet(){
         if(window.confirm("Parse current api?")){
             GM_setValue("RSPrules_"+document.domain+location.pathname, true);
-        }else{
-            GM_deleteValue("RSPrules_"+document.domain+location.pathname)
+            location.reload();
         }
-        location.reload();
     }
 
     GM_addStyle(`
