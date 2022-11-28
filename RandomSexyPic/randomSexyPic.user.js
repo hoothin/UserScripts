@@ -3,7 +3,7 @@
 // @name:zh-TW   軟瑟盤
 // @name:ja      RandomSexyPicParser
 // @namespace    hoothin
-// @version      1.3.15.1
+// @version      1.3.15.2
 // @description        Random Sexy Pictures Parser
 // @description:zh-TW  隨機色圖
 // @description:ja     Random Sexy Pictures Parser
@@ -503,6 +503,13 @@
                 return;
             }
             window.scrollTo(0,0);
+            var de=document.documentElement;
+            var body=document.body;
+            var backCompat=document.compatMode=='BackCompat';
+            var windowSize={
+                h: backCompat ? body.clientHeight : de.clientHeight,
+                w: backCompat ? body.clientWidth : de.clientWidth,
+            };
             if(img.style.zIndex==2){
                 restoreImg(img);
             }else if(img.style.zIndex==1){
@@ -521,7 +528,7 @@
                 hasFloatImg=img;
                 document.body.style.overflow="hidden";
                 img.style.bottom=0;
-                if(img.naturalWidth>document.documentElement.clientWidth || img.naturalHeight>document.documentElement.clientHeight){
+                if(img.naturalWidth>windowSize.w || img.naturalHeight>windowSize.h){
                     img.style.zIndex=1;
                     img.style.maxWidth="99%";
                     img.style.maxHeight="99%";
