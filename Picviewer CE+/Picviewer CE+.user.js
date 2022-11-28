@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.11.28.1
+// @version              2022.11.28.2
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -18187,7 +18187,7 @@ ImgOps | https://imgops.com/#b#`;
                     var wSize = getWindowSize();
                     wSize.h -= 16;
                     wSize.w -= 16;
-                    self.isLongImg = self.imgNaturalSize.h >= wSize.h && self.imgNaturalSize.h / self.imgNaturalSize.w > 3;
+                    self.isLongImg = self.imgNaturalSize.h >= wSize.h && self.imgNaturalSize.h / self.imgNaturalSize.w > 2.5;
                 }
                 if (imgNaturalSize.h && imgNaturalSize.w) {
                     setSearchState(img.naturalWidth + " x " + img.naturalHeight, img.parentNode);
@@ -18892,7 +18892,7 @@ ImgOps | https://imgops.com/#b#`;
                     h:parseFloat(imgWindowCS.height),
                     w:parseFloat(imgWindowCS.width),
                 };
-                this.isLongImg=rectSize.h > wSize.h && rectSize.h/rectSize.w > 3;
+                this.isLongImg=rectSize.h > wSize.h && rectSize.h/rectSize.w > 2.5;
                 if(prefs.imgWindow.suitLongImg && this.isLongImg){
                     this.center(rectSize.w <= wSize.w,false);
                     this.imgWindow.classList.add("pv-pic-window-scroll");
