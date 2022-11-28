@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86009",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[contains(@class,'block--messages')]",
+    "nextLink": "(//a[contains(@class, 'pageNav-jump--next')])[last()]",
+    "url": "^https?://vn-z\\.vn/threads/",
+    "exampleUrl": "https://vn-z.vn/threads/thao-luan-ve-cac-phan-mem-nen-duoc-chia-se-len-dien-dan.16218/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "powertalent",
+  "name": "VNZOOM aka vn-z forums",
+  "created_at": "2022-11-27T14:16:45+09:00",
+  "updated_at": "2022-11-27T14:16:45+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86008",
   "data": {
     "pageElement": "//div[@id=\"primary\"]",
