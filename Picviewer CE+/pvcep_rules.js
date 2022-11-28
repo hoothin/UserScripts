@@ -1013,6 +1013,13 @@ var siteInfo=[
  example: "http://game.yesky.com/tupian/165/37968665.shtml"
 },
 {
+ name:"巴哈姆特",
+ url:/^https:\/\/\w+\.gamer\.com\.tw/,
+ src: /bahamut\.com\.tw/,
+ r: "/S/",
+ s: "/B/"
+},
+{
  name: "sgamer",
  url: /\.sgamer\.com/i,
  r: /\/s([^\.\/]+\.[a-z]+$)/i,
