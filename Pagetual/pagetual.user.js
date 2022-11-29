@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.33.5
+// @version      1.9.33.6
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -1584,7 +1584,7 @@
                     let isJs = !aTag.href || /^(javascript|#)/.test(aTag.href.replace(location.href,""));
                     if(innerText.length<=18){
                         if(!next1){
-                            if(/^翻?[下后後次][一ー1]?[页頁张張]|^next([ _-]?page)\s*[›>→»]?$|次のページ|^次へ?$/i.test(innerText)){
+                            if(/^翻?[下后後次][一ー1]?[页頁张張]|^(next[ _-]?page|older)\s*[›>→»]?$|次のページ|^次へ?$/i.test(innerText)){
                                 if(isJs){
                                     if(!nextJs1)nextJs1=aTag;
                                 }else{
@@ -2530,6 +2530,10 @@
               font-size: 16px;
               box-shadow: rgb(0 0 0) 0px 0px 10px;
              }
+             #pagetual-picker * {
+              margin: 0;
+              padding: 0;
+             }
              #pagetual-picker>.title {
               margin: -5px 45px 10px 45px;
               font-size: 20px;
@@ -2649,7 +2653,7 @@
              }
              #pagetual-picker .command {
               width: 100%;
-              color: black;
+              color: black!important;
               text-align: center;
               font-size: large;
               margin-top: 10px;
