@@ -6,7 +6,7 @@
 // @namespace    hoothin
 // @supportURL   https://github.com/hoothin/UserScripts
 // @homepageURL  https://github.com/hoothin/UserScripts
-// @version      1.2.6.17
+// @version      1.2.6.18
 // @description        任意轉換網頁中的簡體中文與正體中文（默認簡體→正體）
 // @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体）
 // @description:ja     簡繁中国語に変換
@@ -902,8 +902,23 @@
                     curLang=!curLang;
                     document.activeElement.value=curLang?traditionalized(document.activeElement.value):simplized(document.activeElement.value);
                 }else{
-                    action=action==2?3:2;
-                    setLanguage();
+                    var selecter;
+                    if(window.getSelection()){
+                        selecter=window.getSelection();
+                    }else{
+                        selecter=document.getSelection();
+                    }
+                    selecter=document.getSelection();
+                    var selectStr=selecter.toString().trim();
+                    if(selectStr!=""){
+                        var rang = selecter.getRangeAt(0);
+                        rang.deleteContents();
+                        curLang=!curLang;
+                        rang.insertNode(document.createTextNode(curLang?traditionalized(selectStr):simplized(selectStr)));
+                    }else{
+                        action=action==2?3:2;
+                        setLanguage();
+                    }
                 }
             }
         });
@@ -1083,7 +1098,7 @@
             createHR();
 
             let testTitle = document.createElement('h3');
-            testTitle.style.margin = '5px 0';
+            testTitle.style.margin = '50px 0 5px 0';
             testTitle.innerText = '繁簡切換測試輸入框：';
             baseCon.appendChild(testTitle);
             let testInput = document.createElement('textarea');
