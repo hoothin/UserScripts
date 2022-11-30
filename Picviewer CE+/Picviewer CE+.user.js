@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.11.29.1
+// @version              2022.11.30.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -14636,7 +14636,7 @@ ImgOps | https://imgops.com/#b#`;
                 if(this.curImgSpan)this.curImgSpan.classList.remove("selected");
                 imgSpan.classList.add("selected");
                 this.curImgSpan=imgSpan;
-                var node = document.querySelector('.pv-gallery-sidebar-thumb-container[data-src="'+src+'"]');
+                var node = document.querySelector('.pv-gallery-sidebar-thumb-container[data-thumb-src="'+src+'"]');
                 if(node)this.select(node);
             },
             addViewmoreItem: function(nodes) {
@@ -14645,15 +14645,15 @@ ImgOps | https://imgops.com/#b#`;
                 var self=this;
                 var maximizeContainer = this.eleMaps['maximize-container'];
                 [].forEach.call(nodes, function(node){
-                    var nodeStyle=unsafeWindow.getComputedStyle(node);
-                    let curNode=node;
+                    var nodeStyle = unsafeWindow.getComputedStyle(node);
+                    let curNode = node;
                     let imgSpan = document.createElement('span');
-                    if(nodeStyle.display=="none")imgSpan.style.display="none";
+                    if (nodeStyle.display == "none") imgSpan.style.display = "none";
                     imgSpan.className = "maximizeChild";
-                    imgSpan.innerHTML = createHTML('<img src="'+curNode.dataset.src+'">');
-                    imgSpan.addEventListener("click", function(e){
-                        imgReady(curNode.dataset.src,{
-                            ready:function(){
+                    imgSpan.innerHTML = createHTML('<img data-src="' + curNode.dataset.src + '" src="' + curNode.dataset.thumbSrc + '">');
+                    imgSpan.addEventListener("click", function(e) {
+                        imgReady(curNode.dataset.src, {
+                            ready: function() {
                                 let imgwin=new ImgWindowC(this);
                                 self.selectViewmore(imgSpan, curNode.dataset.src);
                                 if(prefs.imgWindow.overlayer.shown){
@@ -14673,12 +14673,12 @@ ImgOps | https://imgops.com/#b#`;
                                                 if(targetImgSpan){
                                                     self.curImgWin.remove();
                                                     let curImgEle=document.createElement("img");
-                                                    curImgEle.src=targetImgSpan.querySelector("img").src;
+                                                    curImgEle.src=targetImgSpan.querySelector("img").dataset.src;
                                                     let imgwin=new ImgWindowC(curImgEle);
                                                     imgwin.blur(true);
                                                     self.curImgWin=imgwin;
                                                     self.selectViewmore(targetImgSpan, curImgEle.src);
-                                                    targetImgSpan.scrollIntoView({block: "nearest", inline: "nearest"});
+                                                    targetImgSpan.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
                                                     self.canScroll=true;
                                                     /*imgReady(targetImgSpan.querySelector("img").src,{
                                                         ready:function(){
@@ -17042,6 +17042,7 @@ ImgOps | https://imgops.com/#b#`;
                     -webkit-column-count: unset;\
                     display: flex;\
                     flex-flow: wrap;\
+                    justify-content: center;\
                     }\
                     .pv-gallery-maximize-container.pv-gallery-flex-maximize span{\
                     width: 18.5%;\
@@ -17073,6 +17074,8 @@ ImgOps | https://imgops.com/#b#`;
                     vertical-align: middle;\
                     text-align: center;\
                     background-color: rgba(40, 40, 40, 0.8);\
+                    border: 5px solid #000000;\
+                    width: 100%;\
                     }\
                     .pv-gallery-maximize-container>.maximizeChild:hover{\
                     background: linear-gradient( 45deg, rgba(255, 255, 255, 0.4) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.4) 75%, rgba(255, 255, 255, 0.4) 100% ), linear-gradient( 45deg, rgba(255, 255, 255, 0.4) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.4) 75%, rgba(255, 255, 255, 0.4) 100% );\
@@ -18027,7 +18030,8 @@ ImgOps | https://imgops.com/#b#`;
                  cursor:pointer;\
                  top:0px;\
                  left:0px;\
-                 opacity:0\
+                 opacity:0;\
+                 background:black url("'+prefs.icons.loading+'") center no-repeat;\
                  ';
                 container.className='pv-pic-window-container';
                 container.innerHTML=createHTML(
@@ -18160,6 +18164,7 @@ ImgOps | https://imgops.com/#b#`;
                 img.onload = function(e) {
                     if (self.removed) return;
                     self.loaded = true;
+                    container.style.background='';
                     if (img.naturalHeight == 1 && img.naturalWidth == 1) {
                         self.remove();
                         return;
@@ -18190,6 +18195,7 @@ ImgOps | https://imgops.com/#b#`;
                     self.isLongImg = self.imgNaturalSize.h >= wSize.h && self.imgNaturalSize.h / self.imgNaturalSize.w > 2.5;
                 }
                 if (imgNaturalSize.h && imgNaturalSize.w) {
+                    container.style.background='';
                     setSearchState(img.naturalWidth + " x " + img.naturalHeight, img.parentNode);
                 }
                 /*searchButton.addEventListener('click',function(e){
@@ -19361,8 +19367,8 @@ ImgOps | https://imgops.com/#b#`;
                     if(typeof level=='undefined' || level<0 || level==self.zoomLevel)return;
 
                     var afterImgSize={
-                        h:self.imgNaturalSize.h * level,
-                        w:self.imgNaturalSize.w * level,
+                        h:self.imgNaturalSize.h * level || 10,
+                        w:self.imgNaturalSize.w * level || 10,
                     };
                     img.width=afterImgSize.w;
                     img.height=afterImgSize.h;
