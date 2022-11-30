@@ -14671,14 +14671,16 @@ ImgOps | https://imgops.com/#b#`;
                                                     if(targetImgSpan && targetImgSpan.style.display!="none" && targetImgSpan.clientWidth>1)break;
                                                 }
                                                 if(targetImgSpan){
+                                                    let imgNode=targetImgSpan.querySelector("img");
                                                     self.curImgWin.remove();
                                                     let curImgEle=document.createElement("img");
-                                                    curImgEle.src=targetImgSpan.querySelector("img").dataset.src;
+                                                    curImgEle.src=imgNode.dataset.src||imgNode.src;
                                                     let imgwin=new ImgWindowC(curImgEle);
                                                     imgwin.blur(true);
                                                     self.curImgWin=imgwin;
                                                     self.selectViewmore(targetImgSpan, curImgEle.src);
                                                     targetImgSpan.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
+                                                    setTimeout(() => {targetImgSpan.scrollIntoView({block: "center", inline: "nearest"})}, 300);
                                                     self.canScroll=true;
                                                     /*imgReady(targetImgSpan.querySelector("img").src,{
                                                         ready:function(){
