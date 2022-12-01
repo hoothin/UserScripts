@@ -2219,6 +2219,23 @@
         "pageAction": "Forum.B.lazyThumbnail();Forum.Common.drawNoImageCanvas()"
     },
     {
+        "name": "Erowall.com",
+        "example": "https://erowall.com/",
+        "url": "^https?://erowall\\.com/",
+        "nextLink": "//a[contains(text(),'Next')]",
+        "pageElement": ".wpmini",
+        "replaceElement": ".paginator"
+    },
+    {
+        "name": "ftopx.com",
+        "example": "https://ftopx.com/",
+        "url": "^https?://ftopx\\.com/",
+        "nextLink": "li.active+li>a",
+        "pageElement": "//div[div[@class='thumbnail']]",
+        "replaceElement": "#pagination",
+        "css": ".pagetual_pageBar{margin:-10px 3% 10px!important;width:94%!important}"
+    },
+    {
         "name": "gogo人体艺术",
         "example": "https://gogortrt.com/gmgqdd/",
         "url": "^https?://gogortrt\\.[a-z]{2,3}/[a-z]+/",
@@ -5110,6 +5127,7 @@
         "name": "微圖坊 - 看圖",
         "example": "https://www.v2ph.com/album/SSA-392",
         "url": "^https?://www\\.v2ph\\.[a-z]{3}/album/[^/]+",
+        "init": "document.querySelectorAll('img[data-src]').forEach(e=>{e.src=e.getAttribute('data-src')})",
         "nextLink": "//a[text()='下一頁']",
         "pageElement": ".photos-list",
         "replaceElement": ".pagination",
@@ -5122,9 +5140,9 @@
     {
         "name": "微圖坊 - 分類",
         "example": "https://www.v2ph.com/country/taiwan",
-        "url": "^https?://www\\.v2ph\\.[a-z]{3}/country/[^/]+",
+        "url": "^https?://www\\.v2ph\\.[a-z]{3}/(country|company)/[^/]+",
         "nextLink": "//a[text()='下一頁']",
-        "pageElement": "h1+.albums-list",
+        "pageElement": "//div[(div/div/div/a/@class='media-cover') and contains(@class,'albums-list')]",
         "replaceElement": ".pagination",
         "css": ".pagetual_pageBar {margin-top: 5px!important;}.pagetual_pageBar+div {margin-top: -8px!important;}img{opacity:1!important}"
     },
@@ -5861,6 +5879,50 @@
         "pageElement": ".novel-list",
         "replaceElement": ".nav.paginate",
         "css": ".pagetual_pageBar+.novel-list.style-default{margin-top:8px!important;}"
+    },
+    {
+        "name": "新笔下文学 - 手機版閱讀",
+        "example": "https://www.bxwx.cc/112/112794/56123570.html",
+        "url": "^https?://www\\.bxwx\\.cc/\\d+/\\d+/\\d+\\.html",
+        "history": 2,
+        "action": 1,
+        "nextLink": "#pb_next",
+        "pageElement": "#chaptername,#txt",
+        "replaceElement": "head>title,.chapter-page-btn",
+        "pageBar": 0
+    },
+    {
+        "name": "新笔下文学 - 閱讀",
+        "example": "https://www.bxwx.cc/112/112794/56123570.html",
+        "url": "^https?://www\\.bxwx\\.cc/\\d+/\\d+/\\d+\\.html",
+        "history": 2,
+        "action": 1,
+        "nextLink": "//a[contains(text(),'下一章')]",
+        "pageElement": ".word_read>*:not(.read_btn)",
+        "replaceElement": "head>title,.read_btn",
+        "pageBar": 0
+    },
+    {
+        "name": "笔下文学bixia - 閱讀",
+        "example": "http://www.bixia.org/book/3726/9586349.html",
+        "url": "^https?://www\\.bixia\\.org/book/\\d+/\\d+\\.html",
+        "history": 2,
+        "action": 1,
+        "nextLink": "//a[contains(text(),'下一页')]|//a[contains(text(),'下一頁')]|//a[contains(text(),'下一章')]",
+        "pageElement": ".chapter-name,#content",
+        "replaceElement": "head>title,.g-content-nav",
+        "pageAction": "function gx(x){return document.evaluate(x,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue}function geAll(e){return document.querySelectorAll(e)}setTimeout(()=>{let n=gx(\"//a[contains(text(),'下一章')]\");if(n){let l=geAll('.chapter-name').length-1;geAll('.chapter-name')[l].remove()}},0);setTimeout(()=>{let t=geAll('.chapter-name');if(t.length>10){geAll('.g-reader>*:not(.chapter-opt):nth-child(n+1):nth-child(-n+4)').forEach(e=>{e.remove()})}},1000)",
+        "pageBar": 0,
+        "css": ".chapter-name{font-size:20px!important;font-weight:bold!important;padding-top:10px;padding-bottom:10px;}"
+    },
+    {
+        "name": "笔下文学bixia - 目錄",
+        "example": "http://www.bixia.org/book/3726/",
+        "url": "^https?://www\\.bixia\\.org/book/\\d+/",
+        "nextLink": "//a[contains(text(),'下一页')]|//a[contains(text(),'下一頁')]",
+        "pageElement": "#main .list>li",
+        "replaceElement": ".pages",
+        "pageBar": 0
     },
     {
         "name": "起點小說 - 閱讀",
