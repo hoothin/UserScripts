@@ -58,6 +58,21 @@
   "updated_at": "2022-11-21T10:04:11+09:00"
 },
 {
+  "resource_url": "http://wedata.net/items/86006",
+  "data": {
+    "pageElement": "id('main')/div[not(@*)][.//a//h3 or .//a/accordion-entry-search-icon]",
+    "comment": "Kindle, Nest Hub, 一部端末の Android 版 Firefox 用",
+    "nextLink": "id('main')[not(id('rso botstuff'))]/footer//a[@aria-label and contains(@href, 'start=') and contains(., '>')]",
+    "url": "^https?://[^./]+\\.google(?:\\.[^./]{2,3}){1,2}/search",
+    "exampleUrl": "http://www.google.com/search?q=autopagerize"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "Griever3",
+  "name": "Google Search Mobile (by Kindle etc)",
+  "created_at": "2022-11-19T22:58:45+09:00",
+  "updated_at": "2022-11-30T12:17:10+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86005",
   "data": {
     "insertBefore": "",
@@ -105,17 +120,16 @@
 {
   "resource_url": "http://wedata.net/items/86002",
   "data": {
-    "insertBefore": "",
-    "pageElement": "//div[starts-with(@id,'post-')]",
+    "pageElement": "id('primary')/div[@class='archive-list-wrap']",
     "nextLink": "//a[@class='next page-numbers']",
-    "url": "^https://seigura\\.com/",
-    "exampleUrl": "https://seigura.com/"
+    "url": "^https://seigura\\.com/.",
+    "exampleUrl": "https://seigura.com/category/news/\r\nhttps://seigura.com/directory/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "kenzou_ogawa2",
   "name": "声優グランプリ 公式webサイト",
   "created_at": "2022-11-17T13:17:37+09:00",
-  "updated_at": "2022-11-17T13:17:37+09:00"
+  "updated_at": "2022-11-30T20:40:53+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/86001",
@@ -7132,14 +7146,14 @@
   "data": {
     "pageElement": "//div[@class=\"new_article\"]|//div[@class=\"article_detail\"]",
     "nextLink": "//li[@class='next']/a",
-    "url": "^https://(www\\.)?geekjob\\.jp/.",
+    "url": "^https://www\\.geekjob\\.jp/",
     "exampleUrl": "https://www.geekjob.jp/ https://www.geekjob.jp/beginning/learnning/java-primer-2/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "denimu_ld",
   "name": "for GEEK",
   "created_at": "2020-01-04T12:27:25+09:00",
-  "updated_at": "2022-11-17T11:22:06+09:00"
+  "updated_at": "2022-11-30T20:29:23+09:00"
 },
 {
   "name": "お知らせ FGO",
@@ -52074,7 +52088,7 @@
 {
   "resource_url": "http://wedata.net/items/418",
   "data": {
-    "pageElement": "id('searchWidget')/*[following-sibling::hr[last()-1]]|//img[@class='s-image']/ancestor::div[@data-index][last()]",
+    "pageElement": "id('searchWidget')/*[following-sibling::hr[last()-1]]|descendant::*[contains(@class,'list')][1]/div[.//img[@class='s-image']]",
     "nextLink": "//a[contains(@class,'s-pagination-next')]|//li[./a[@aria-current]]/following-sibling::li[1]/a",
     "url": "^https?://(www\\.)?amazon\\.(?:c(?:a|n|o(?:m|\\.(?:jp|uk)))|de|fr)/(?:[^/]+/)?(?:[bes]|(?:gp|exec/obidos)/(search|aag)|entity/author)?",
     "exampleUrl": "http://www.amazon.co.jp/s/?field-keywords=windows\r\nhttp://www.amazon.co.jp/s/?url=search-alias%3Dtoys&field-keywords=lego\r\nhttp://www.amazon.co.jp/exec/obidos/search-handle-url?_encoding=UTF8&search-type=ss&index=books-jp&field-author=%E6%9D%91%E4%B8%8A%20%E6%98%A5%E6%A8%B9\r\nhttp://www.amazon.co.jp/%E6%A9%99%E4%B9%83-%E3%81%BE%E3%81%BE%E3%82%8C/e/B006AIETUI/\r\nhttps://www.amazon.co.jp/kindle-dbs/entity/author/B00J1JKSOY?_encoding=UTF8&offset=0&pageSize=12&searchAlias=stripbooks&sort=author-pages-popularity-rank&page=4&langFilter=default#formatSelectorHeader"
@@ -52083,7 +52097,7 @@
   "created_by": "swdyh",
   "name": "Amazon 検索結果",
   "created_at": "2008-04-16T12:35:23+09:00",
-  "updated_at": "2022-04-01T09:06:57+09:00"
+  "updated_at": "2022-12-01T07:35:26+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/414",
