@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86012",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "id('article')/div[@id='kiji']",
+    "nextLink": "//div[@class='paging']/div[@class='next']/a",
+    "url": "^https://project\\.nikkeibp\\.co\\.jp/ms/atcl/",
+    "exampleUrl": "https://project.nikkeibp.co.jp/ms/atcl/19/feature/00007/00071/?ST=msb"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "t_f_m'",
+  "name": "日経BP メガソーラービジネス",
+  "created_at": "2022-12-01T15:44:59+09:00",
+  "updated_at": "2022-12-01T15:44:59+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86010",
   "data": {
     "pageElement": "//div[@class='image-container']",
@@ -3653,8 +3668,7 @@
 {
   "resource_url": "http://wedata.net/items/85598",
   "data": {
-    "insertBefore": "",
-    "pageElement": "//article/div[@class=\"articleBody\"]",
+    "pageElement": "//article/div[@id=\"articleBody\"]",
     "nextLink": "//ul[@class=\"pageNav\"]/li[@class=\"pageActive\"]/following-sibling::li/a",
     "url": "^https://project\\.nikkeibp\\.co\\.jp/energy/",
     "exampleUrl": "https://project.nikkeibp.co.jp/energy/atcl/19/feature/00001/00043/?P=1"
@@ -3663,7 +3677,7 @@
   "created_by": "t_f_m_",
   "name": "日経エネルギーNext",
   "created_at": "2021-01-12T16:08:42+09:00",
-  "updated_at": "2021-01-12T16:08:42+09:00"
+  "updated_at": "2022-12-01T15:40:18+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85597",
@@ -16611,18 +16625,18 @@
   "created_at": "2016-03-02T02:14:55+09:00"
 },
 {
+  "resource_url": "http://wedata.net/items/79970",
   "data": {
-    "pageElement": "//input[@name=\"titleName\"]/ancestor::ul[1]",
-    "nextLink": "//link[@rel=\"next\"]|//li[@data-page]/following-sibling::li[1]/a[contains(@href,\"&page=\")]",
+    "pageElement": "//div[contains(@class,'ListMain')]/ul",
+    "nextLink": "//link[@rel=\"next\"]|//li[@data-page]/following-sibling::li[1]/a[contains(@href,\"&page=\")]|//li[contains(concat(' ',./span/@class,' '),' is-current ')]/following-sibling::a",
     "url": "^https://(?:book|www)\\.dmm\\.co(?:m|.jp)/",
-    "exampleUrl": "https://book.dmm.com/list/comic/?floor=Gcomic&article=category&id=66032&page=5\r\nhttps://book.dmm.co.jp/list/comic/?floor=Abook&type=magazine&sort=date\r\nhttps://www.dmm.com/search/=/searchstr=%E3%82%A2%E3%82%AF%E3%82%B7%E3%83%A7%E3%83%B3/limit=30/n1=FgRCTw9VBA4GAFNXXF0_/sort=ranking/view=package/page=5/\r\nhttps://book.dmm.com/list/comic/?floor=Gcomic&sort=ranking\r\nhttps://book.dmm.co.jp/list/comic/?floor=Abook&sort=ranking&type=volume\r\nhttps://book.dmm.com/list/free/comic/?floor=Gcomic&article=category&id=66031%2C66032%2C66035%2C66033%2C66034%2C66066&price_max=0&sort=osusume&view=detail\r\nhttps://book.dmm.co.jp/list/photo/?floor=Aphoto&sort=ranking&view=detail\r\nhttps://book.dmm.com/search/?service=ebook&searchstr=%E3%83%90%E3%83%88%E3%83%AB"
+    "exampleUrl": "https://book.dmm.com/list/comic/?floor=Gcomic&article=category&id=66032&page=5\r\nhttps://book.dmm.co.jp/list/comic/?floor=Abook&type=magazine&sort=date\r\nhttps://book.dmm.com/search/?service=ebook&searchstr=%E3%82%A2%E3%82%AF%E3%82%B7%E3%83%A7%E3%83%B3\r\nhttps://book.dmm.com/list/comic/?floor=Gcomic&sort=ranking\r\nhttps://book.dmm.co.jp/list/comic/?floor=Abook&sort=ranking&type=volume\r\nhttps://book.dmm.com/list/free/comic/?floor=Gcomic&article=category&id=66031%2C66032%2C66035%2C66033%2C66034%2C66066&price_max=0&sort=osusume&view=detail\r\nhttps://book.dmm.co.jp/list/photo/?floor=Aphoto&sort=ranking&view=detail\r\nhttps://book.dmm.com/search/?service=ebook&searchstr=%E3%83%90%E3%83%88%E3%83%AB\r\nhttps://book.dmm.com/list/?category=66031,66032,66035\r\nhttps://book.dmm.co.jp/list/?category=670001,670002,670003"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "t_f_m",
-  "resource_url": "http://wedata.net/items/79970",
   "name": "DMM 電子書籍",
   "created_at": "2016-03-02T01:46:38+09:00",
-  "updated_at": "2021-12-04T16:54:45+09:00"
+  "updated_at": "2022-12-01T21:04:06+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/79968",
