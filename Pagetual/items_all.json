@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86013",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[@class='figure-list grid']/article",
+    "nextLink": "//div[@class='current']/following-sibling::div[1]/a",
+    "url": "^https://wotopi\\.jp/archives/category/",
+    "exampleUrl": "https://wotopi.jp/archives/category/trip"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "Griever3",
+  "name": "ウートピ",
+  "created_at": "2022-12-03T09:09:11+09:00",
+  "updated_at": "2022-12-03T09:09:11+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86012",
   "data": {
     "insertBefore": "",
@@ -18087,19 +18102,19 @@
 },
 {
   "resource_url": "http://wedata.net/items/77631",
-  "created_by": "wOxxOm=-",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "name": "Microsoft Blog",
   "data": {
-    "exampleUrl": "https://devblogs.microsoft.com/oldnewthing/",
-    "nextLink": "//a[contains(@class,\"next page-link\")]",
+    "pageElement": "id('most-recent')/article | //div[contains(@class, \"landing-content-wrapper\")]//article | //div[contains(@class, \"search-results-col\")]//article",
+    "bookmarklet": "Array.prototype.forEach.call(document.querySelectorAll('img'), function(img) { var lazySrc = img.hasAttribute('data-src') ? img.getAttribute('data-src') : img.getAttribute('data-lazy-src'); if (lazySrc) { img.src = lazySrc;} });",
     "Stylus": ".autopagerize_page_separator~article [data-lazy-src]{display:block !important;}",
+    "nextLink": "//a[contains(@class,\"next page-link\")]",
     "url": "^https://devblogs\\.microsoft\\.com/",
-    "pageElement": "id('most-recent')/article",
-    "bookmarklet": "Array.prototype.forEach.call(document.querySelectorAll('img'), function(img) { var lazySrc = img.hasAttribute('data-src') ? img.getAttribute('data-src') : img.getAttribute('data-lazy-src'); if (lazySrc) { img.src = lazySrc;} });"
+    "exampleUrl": "https://devblogs.microsoft.com/oldnewthing/\r\nhttps://devblogs.microsoft.com/\r\nhttps://devblogs.microsoft.com/search?query=update"
   },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "wOxxOm=-",
+  "name": "Microsoft Blog",
   "created_at": "2015-11-06T08:18:44+09:00",
-  "updated_at": "2019-07-08T08:37:19+09:00"
+  "updated_at": "2022-12-03T06:18:45+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/77629",
