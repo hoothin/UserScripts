@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.33.7
+// @version      1.9.33.8
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -92,8 +92,8 @@
 // @exclude      *://m.bilibili.com/anime/*
 // @exclude      *://m.bilibili.com/bangumi/play/*
 // @exclude      *://m.wasu.cn/Play/show/*
-// @exclude      *://www.youtube.com
-// @exclude      *://www.youtube.com/*
+// @exclude      *://*.youtube.com
+// @exclude      *://*.youtube.com/*
 // @exclude      *://twitter.com/*
 // @exclude      *://www.youtube.com/watch*
 // @exclude      *://baike.baidu.com/*
@@ -806,7 +806,7 @@
 
     var escapeHTMLPolicy;
     if (_unsafeWindow.trustedTypes && _unsafeWindow.trustedTypes.createPolicy) {
-        escapeHTMLPolicy = _unsafeWindow.trustedTypes.createPolicy('default', {
+        escapeHTMLPolicy = _unsafeWindow.trustedTypes.createPolicy('pagetual_default', {
             createHTML: (string, sink) => string
         });
     }
