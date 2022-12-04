@@ -2798,11 +2798,11 @@
             "nav.pagination"
         ],
         "action": 1,
-        "init": "document.querySelectorAll('source').forEach(e=>{e.remove()});document.querySelectorAll('picture>img').forEach(img=>{img.src=img.src.match(/https?:\\/\\/[^/]+\\/upload\\/[^.]+\\.[a-z]{3}/)[0]})",
+        "init": "document.querySelectorAll('source').forEach(e=>{e.remove()});document.querySelectorAll('picture>img').forEach(img=>{img.src=img.src.match(/[^/]+\\/\\/[^/]+\\/[^.]+\\.[a-z]{3}/)[0]})",
         "nextLink": "li.page-item.active+li>a",
         "pageElement": ".photo-list.row",
         "replaceElement": "nav.pagination",
-        "pageInit": "doc.querySelectorAll('source').forEach(e=>{e.remove()});doc.querySelectorAll('picture>img').forEach(img=>{img.src=img.src.match(/https?:\\/\\/[^/]+\\/upload\\/[^.]+\\.[a-z]{3}/)[0]})"
+        "pageInit": "doc.querySelectorAll('source').forEach(e=>{e.remove()});doc.querySelectorAll('picture>img').forEach(img=>{img.src=img.src.match(/[^/]+\\/\\/[^/]+\\/[^.]+\\.[a-z]{3}/)[0]})"
     },
     {
         "name": "美女目录网 - 圖片",
@@ -5336,7 +5336,7 @@
     },
     {
         "name": "極品性感美女 - 搜索",
-        "example": "https://www.jpmn5.com/plus/search/index.asp?keyword=XiuRen",
+        "example": "https://www.jpmn5.cc/plus/search/index.asp?keyword=XiuRen",
         "url": "^https?://[^/]+/plus/search/index\\.asp\\?keyword=",
         "include": "body>.container>.container+font>font>font>.list>.list>.node+.pagination",
         "nextLink": ".current+a",
@@ -5346,7 +5346,7 @@
     },
     {
         "name": "極品性感美女 - 看圖",
-        "example": "https://www.jpmn5.com/Xiuren/Xiuren23112.html",
+        "example": "https://www.jpmn5.cc/Xiuren/Xiuren23112.html",
         "url": "^https?://[^/]+/\\w+/\\w+\\.html",
         "include": [
             "body>section.container>div.content-wrap>div.content>article.article-content img[alt]",
@@ -5365,7 +5365,7 @@
     },
     {
         "name": "極品性感美女 - 分類",
-        "example": "https://www.jpmn5.com/Xiuren/",
+        "example": "https://www.jpmn5.cc/Xiuren/",
         "url": "^https?://[^/]+/\\w+/",
         "include": [
             "body>.container>.content-wrap>.content>.speedbar+.widget-title",
@@ -5812,12 +5812,16 @@
         "name": "小黃書 - 原圖瀏覽",
         "example": "https://tw.xchina.co/photoShow.php?server=1&id=6311c6080f9a5&index=0&pageSize=19&title=%E3%80%90%E6%9C%AA%E5%88%86%E9%A1%9E%E4%BA%BA%E9%AB%94%E6%94%9D%E5%BD%B1%E3%80%91%E9%87%91%E9%AD%9Akinngyo%E3%80%8A%E5%A4%8F%E6%97%A5%E5%8D%88%E5%BE%8C%E3%80%8B",
         "url": "^https?://(tw|kr)?(\\.)?xchina\\.co/photoShow\\.php",
-        "pinUrl": true,
-        "init": "let alt=document.querySelector('img[alt]').getAttribute('alt');let max=alt.match(/\\d+\\/(\\d+)/)[1];let imgh=document.querySelector('img[alt]').getAttribute('src').replace(/\\d+\\.jpg/,'');let _img='';for(let i=1;i<=max;i++){let n;let a=alt.replace(/【.+】/,'').replace(/\\s\\(\\d+\\/\\d+\\)/,'')+'_P'+i;if(i<10){n='000'+i+'.jpg'}else if(i<100){n='00'+i+'.jpg'}else if(i<1000){n='0'+i+'.jpg'}_img+=`<img src='${imgh}${n}'alt='${a}'>`};document.querySelector('.image').innerHTML=_img",
-        "css": ".image>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
+        "nextLink": ".image > a:not([href^='j']):nth-child(4)",
+        "pageElement": ".container > img",
+        "replaceElement": ".image>.index",
+        "css": ".image>a:nth-child(3),.image>a:nth-child(4),body>.image~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords){display: none!important;}.container>img {max-width: 100% !important;display: block !important;margin: 0 auto !important;}",
+        "pageBar": 0,
+        "initRun": 1,
+        "autoLoadNum": "0"
     },
     {
-        "name": "小黃書 - 圖片清單瀏覽 - 同時加載原圖可透過Picviewer CE+打包下載",
+        "name": "小黃書 - 圖片清單瀏覽 - 最後加載所有原圖可透過Picviewer CE+打包下載",
         "example": "https://tw.xchina.co/photo/id-6311c6080f9a5.html",
         "url": "^https?://(tw|kr)?(\\.)?xchina\\.co/photo/",
         "nextLink": "a.next",
@@ -5826,8 +5830,8 @@
             "div.article>div.pager:first-child",
             "div.article>div.pager:last-child"
         ],
-        "css": ".photos > div.item {display: none!important;}.pagetual_pageBar{margin-top:30px!important;margin-bottom:0px!important}",
-        "pageAction": "document.querySelectorAll('.photos img').forEach(img=>{img.src=img.src.replace('_600x0','')})",
+        "css": ".photos>div.item,.pager>.tips,body>footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords){display: none!important;}.pagetual_pageBar{margin-top:30px!important;margin-bottom:0px!important}.body .article:not(.ad)>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}",
+        "pageAction": "document.querySelectorAll('img.cr_only').forEach(img=>{img.src=img.src.replace('_600x0','')});setTimeout(()=>{let last=document.querySelector(\"a[current='true']+a.next\");if(last){let imgs=document.querySelectorAll('img.cr_only');let imgData=[];for(let i=0;i<imgs.length;i++){imgData.push(imgs[i].getAttribute('src'))};let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src='${imgData[i]}'>`};document.querySelector('.body .article:not(.ad)').innerHTML=_img;let p=document.querySelector('#pagetual-preload');if(p)p.remove()}},1000)",
         "initRun": 1,
         "autoLoadNum": "0"
     },
