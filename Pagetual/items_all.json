@@ -1,9 +1,113 @@
 [
 {
-  "resource_url": "http://wedata.net/items/86013",
+  "resource_url": "http://wedata.net/items/86021",
   "data": {
     "insertBefore": "",
+    "pageElement": "descendant::*[./*[starts-with(@id,'post-')]][1]/*[starts-with(@id,'post-')]",
+    "nextLink": "//a[@class='pagenext']",
+    "url": "^https://appsafari\\.com/",
+    "exampleUrl": "https://appsafari.com/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "kenzou_ogawa2",
+  "name": "AppSafari",
+  "created_at": "2022-12-03T20:18:22+09:00",
+  "updated_at": "2022-12-03T20:18:22+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/86020",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "descendant::*[./article][1]/article",
+    "nextLink": "//link[@rel='next']",
+    "url": "^https://techreport\\.com/category/",
+    "exampleUrl": "https://techreport.com/category/news/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "kenzou_ogawa2",
+  "name": "The Tech Report category",
+  "created_at": "2022-12-03T20:11:08+09:00",
+  "updated_at": "2022-12-03T20:11:08+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/86019",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "descendant::*[./article][1]/article",
+    "nextLink": "//a[@class='next page-numbers']",
+    "url": "^https://tnzwtmfm\\.net/",
+    "exampleUrl": "https://tnzwtmfm.net/articles/news/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "kenzou_ogawa2",
+  "name": "Tomofumi Tanizawa – 谷澤智文公式サイト",
+  "created_at": "2022-12-03T19:24:48+09:00",
+  "updated_at": "2022-12-03T19:24:48+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/86018",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//article",
+    "nextLink": "//link[@rel='next']",
+    "url": "^https://www\\.stuff-review\\.com/",
+    "exampleUrl": "https://www.stuff-review.com/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "kenzou_ogawa2",
+  "name": "Stuff-Review",
+  "created_at": "2022-12-03T19:00:41+09:00",
+  "updated_at": "2022-12-03T19:00:41+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/86017",
+  "data": {
+    "pageElement": "(descendant::*[./article][1]/article)[count(//*[./article][ancestor-or-self::main or ancestor-or-self::*[contains(@id,'main')] or ancestor-or-self::*[contains(@class,'main')]])=1][not(//*[@rel='next'] and //*[contains(@class,'hentry')])]",
+    "nextLink": "//*[normalize-space(@class)='next' or @class='pagination-next']/a|//a[@class='next page-numbers']",
+    "url": "^https?://.",
+    "exampleUrl": "https://www.flickeringmyth.com/category/movies/ https://dl-zip.com/ https://www.kirainet.com/ https://www.43rumors.com/ https://montrealpython.org/en/blog/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "kenzou_ogawa2",
+  "name": "Generic Posts Rule (next-article)",
+  "created_at": "2022-12-03T13:34:56+09:00",
+  "updated_at": "2022-12-04T07:17:49+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/86016",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//article",
+    "nextLink": "//a[@class='next page-numbers']",
+    "url": "^https://rephtone\\.com/",
+    "exampleUrl": "https://rephtone.com/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "kenzou_ogawa2",
+  "name": "Rephtone",
+  "created_at": "2022-12-03T13:15:55+09:00",
+  "updated_at": "2022-12-03T13:15:55+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/86014",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "id('main')//article",
+    "nextLink": "//link[@rel='next']",
+    "url": "^https://insidepulse\\.com/",
+    "exampleUrl": "https://insidepulse.com/zone/wrestling/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "kenzou_ogawa2",
+  "name": "Inside Pulse",
+  "created_at": "2022-12-03T10:52:13+09:00",
+  "updated_at": "2022-12-03T10:52:13+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/86013",
+  "data": {
     "pageElement": "//div[@class='figure-list grid']/article",
+    "Stylus": ".figure-list{display:flex;flex-wrap:wrap;}",
     "nextLink": "//div[@class='current']/following-sibling::div[1]/a",
     "url": "^https://wotopi\\.jp/archives/category/",
     "exampleUrl": "https://wotopi.jp/archives/category/trip"
@@ -12,7 +116,7 @@
   "created_by": "Griever3",
   "name": "ウートピ",
   "created_at": "2022-12-03T09:09:11+09:00",
-  "updated_at": "2022-12-03T09:09:11+09:00"
+  "updated_at": "2022-12-03T11:01:27+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/86012",
@@ -18103,9 +18207,7 @@
 {
   "resource_url": "http://wedata.net/items/77631",
   "data": {
-    "pageElement": "id('most-recent')/article | //div[contains(@class, \"landing-content-wrapper\")]//article | //div[contains(@class, \"search-results-col\")]//article",
-    "bookmarklet": "Array.prototype.forEach.call(document.querySelectorAll('img'), function(img) { var lazySrc = img.hasAttribute('data-src') ? img.getAttribute('data-src') : img.getAttribute('data-lazy-src'); if (lazySrc) { img.src = lazySrc;} });",
-    "Stylus": ".autopagerize_page_separator~article [data-lazy-src]{display:block !important;}",
+    "pageElement": "//article",
     "nextLink": "//a[contains(@class,\"next page-link\")]",
     "url": "^https://devblogs\\.microsoft\\.com/",
     "exampleUrl": "https://devblogs.microsoft.com/oldnewthing/\r\nhttps://devblogs.microsoft.com/\r\nhttps://devblogs.microsoft.com/search?query=update"
@@ -18114,7 +18216,7 @@
   "created_by": "wOxxOm=-",
   "name": "Microsoft Blog",
   "created_at": "2015-11-06T08:18:44+09:00",
-  "updated_at": "2022-12-03T06:18:45+09:00"
+  "updated_at": "2022-12-03T11:16:35+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/77629",
@@ -24926,17 +25028,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/74839",
-  "name": "Qoly.jp",
-  "created_by": "jigendaddy_be",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "updated_at": "2017-05-20T14:29:47+09:00",
   "data": {
-    "exampleUrl": "http://qoly.jp/2014/05/11/Japan-nationalteam\r\nhttp://qoly.jp/2014/07/09/bigakusei-zukan-vol4",
-    "url": "^https?://qoly\\.jp/\\d",
-    "pageElement": "//div[@class='post-inner']//*[@class='post clearfix']",
-    "nextLink": "//li[@class='next']/a"
+    "pageElement": "descendant::*[count(./article)>1][1]/article",
+    "nextLink": "//li[@class='pagination-next' or @class='next']/a",
+    "url": "^https?://qoly\\.jp/",
+    "exampleUrl": "http://qoly.jp/2014/05/11/Japan-nationalteam\r\nhttp://qoly.jp/2014/07/09/bigakusei-zukan-vol4\r\nhttps://qoly.jp/category/news"
   },
-  "created_at": "2014-05-14T08:08:28+09:00"
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "jigendaddy_be",
+  "name": "Qoly.jp",
+  "created_at": "2014-05-14T08:08:28+09:00",
+  "updated_at": "2022-12-03T19:46:44+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/74829",
@@ -37155,17 +37257,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/40577",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "created_at": "2010-12-11T20:00:34+09:00",
   "data": {
-    "pageElement": "//*[@class='contents' or contains(' main center content ',concat(' ',@id,' ')) or local-name()='td']//*[contains(concat(' ',@class,' '),' entry ') or contains(concat(' ',@class,' '),' section ') or contains(' comment relatedEntry trackback ',concat(' ',@id,' ')) or contains(' comment relatedEntry trackback trackack ',concat(' ',@class,' '))]|id('contents')[h2 and div]/ul[@class='navi']/preceding-sibling::node()|id('main')/dl",
-    "exampleUrl": "http://mushibamamire.jugem.jp/ http://wonderkind.jugem.jp/ http://wonderkind.jugem.jp/?eid=805 http://ino-mi.jugem.jp/ http://themainstream.jugem.jp/?page=3 http://osatomi.jugem.jp/ http://ryo-ko-pentan.jugem.jp/?eid=2953 http://monchicon.jugem.jp/?page=1 http://lapilazu.jugem.jp/?eid=105 http://macholic.jugem.jp/ http://870860.jugem.jp/ http://garari.jugem.jp/ http://aquapple.jugem.jp/ http://poab.jugem.jp/ http://usami-mi.jugem.jp/?page=1 http://lapilazu.jugem.jp/ http://themainstream.jugem.jp/?page=3",
+    "pageElement": "//*[@class='entry']|descendant::*[./article][1]/article",
+    "nextLink": "//link[@rel='next']|//*[@class='next' or @class='pager_next']/a",
     "url": "^https?://[^/.]+\\.jugem\\.jp/",
-    "nextLink": "id('main')/div[contains(concat(' ',@class,' '),' page_navi ')]/a[last()]|id('main center')//div[@class='entry_navi']/a[contains(@href,'/?eid=') or not(.='>>')]|//div[@class='entry_navi']/a[contains(@href,'/?eid=')]|//div[@class='entry_navi']/span/a[contains(.,'prev')]|id(\"navi\")/div[@class='entry_navi']/a[last()]|id('pager')/span[contains(concat(' ', @class, ' '), ' pager_next ')]/a|id('entryNavi')/a|id('pager')/span[@class='current']/following-sibling::span[1]/a|//*[contains(' next page pagingLink ',concat(' ',@class,' '))]//a[.='>>']|id('main')//ul/li[@class='prev']/a[not(.='<<')]|id('contents')/ul/li/a[.='>>']|//dd[@class='pagenavi']/span/a[contains(.,'next')]|//div[@class='paging']/a[contains(.,'>')]|id('content')//div[@class='pagingLink']/ul/li/a[@title]|//td[@align='right']/a[contains(.,'old')]"
+    "exampleUrl": "http://themainstream.jugem.jp/?page=3 http://monchicon.jugem.jp/?page=1 http://garari.jugem.jp/ http://lapilazu.jugem.jp/"
   },
-  "updated_at": "2020-05-13T11:08:13+09:00",
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "t_f_m",
   "name": "jugem.jp",
-  "created_by": "t_f_m"
+  "created_at": "2010-12-11T20:00:34+09:00",
+  "updated_at": "2022-12-04T09:17:22+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/40549",
@@ -49309,18 +49411,18 @@
   "created_at": "2008-06-30T17:29:38+09:00"
 },
 {
-  "name": "The Tech Report",
+  "resource_url": "http://wedata.net/items/1894",
   "data": {
+    "pageElement": "descendant::*[./article][1]",
+    "nextLink": "//a[@class=\"next page-numbers\"]",
     "url": "^https://techreport\\.com/$",
-    "pageElement": "//div[@class=\"recent-posts-wrap group\"]",
-    "exampleUrl": "https://techreport.com/",
-    "nextLink": "//a[@class=\"next page-numbers\"]"
+    "exampleUrl": "https://techreport.com/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "k2jp",
-  "resource_url": "http://wedata.net/items/1894",
+  "name": "The Tech Report",
   "created_at": "2008-06-30T03:49:33+09:00",
-  "updated_at": "2020-04-04T11:50:23+09:00"
+  "updated_at": "2022-12-03T20:07:49+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/1887",
@@ -52216,17 +52318,17 @@
   "created_by": "swdyh"
 },
 {
-  "resource_url": "http://wedata.net/items/400",
   "data": {
     "pageElement": "(descendant::*[./article][1]/article)[count(//*[./article][ancestor-or-self::main or ancestor-or-self::*[contains(@id,'main')] or ancestor-or-self::*[contains(@class,'main')]])=1][not(//*[@rel='next'] and //*[contains(@class,'hentry')])]",
-    "nextLink": "(//*[not(contains(@class,'_inactive'))]/a[starts-with(@class,'nextpostslink') or contains(@class,'next page-numbers') or (.|..)[normalize-space(@rel)='next' or normalize-space(@class)='next' or contains(@class,'pagination-next')]][not(span/@class='link-text')]|//*[contains(@class,'nav-previous')][not(contains(@class,'pull'))]/a|(//*[contains(@class,'current')][number()>0]/following-sibling::a[1]|(//li|//span|//div)[(.//*|.)[contains(@class,'current')]][number()>0]/following-sibling::*[self::li or self::span or self::div][1]/a)[not(//a[starts-with(@class,'nextpostslink') or contains(@class,'next page-numbers') or (.|..)[normalize-space(@rel)='next' or normalize-space(@class)='next' or contains(@class,'pagination-next')]])])[not(starts-with(@href, '#'))]",
+    "nextLink": "//*[contains(@class,'nav-previous')][not(contains(@class,'pull'))]/a|//*[contains(@class,'current')][number()>0]/following-sibling::a[1]|(//li|//span|//div)[(.//*|.)[contains(@class,'current')]][number()>0]/following-sibling::*[self::li or self::span or self::div][1]/a[not(starts-with(@href, '#'))]",
     "url": "^https?://.+",
-    "exampleUrl": "https://starcasm.net/\r\nhttps://www.newyorker.com/magazine/food-and-drink\r\nhttps://shingeki.tv/news/\r\nhttps://insidepulse.com/zone/wrestling/\r\nhttp://diehardgamefan.com/category/nintendo_wii/\r\nhttps://littlebigdetails.com/page/2\r\nhttps://littlebigdetails.com/tagged/chrome/page/2\r\nhttps://tekito-style.me/\r\nhttps://kinmaweb.jp/archives/category/column\r\nhttps://www.flickeringmyth.com/category/movies/\r\nhttps://www.webcreatorbox.com/\r\nhttps://asian-breeze.com/category/2020roster/page/2\r\nhttps://rephtone.com/page/3/\r\nhttps://news.careerconnection.jp/newlist/\r\nhttps://www.evilmadscientist.com/\r\nhttp://www.synthtopia.com/\r\nhttps://ieiri.net/blog\r\nhttps://xperia-freaks.org/\r\nhttps://allanhutchison.net/\r\nhttps://caelum-lex.com/\r\nhttp://skaz.jp/page/2\r\nhttp://dl-zip.com/\r\nhttp://haaya.net/\r\nhttps://write-sentence.org/category/blog/\r\nhttps://www.kirainet.com/\r\nhttps://i.impressrd.jp/page/2\r\nhttps://www.43rumors.com/"
+    "exampleUrl": "https://starcasm.net/\r\nhttps://www.newyorker.com/magazine/food-and-drink\r\nhttps://shingeki.tv/news/\r\nhttp://diehardgamefan.com/category/nintendo_wii/\r\nhttps://littlebigdetails.com/page/2\r\nhttps://littlebigdetails.com/tagged/chrome/page/2\r\nhttps://tekito-style.me/\r\nhttps://kinmaweb.jp/archives/category/column\r\nhttps://www.webcreatorbox.com/\r\nhttps://asian-breeze.com/category/2020roster/page/2\r\nhttps://news.careerconnection.jp/newlist/\r\nhttps://www.evilmadscientist.com/\r\nhttp://www.synthtopia.com/\r\nhttps://ieiri.net/blog\r\nhttps://xperia-freaks.org/\r\nhttps://allanhutchison.net/\r\nhttp://skaz.jp/page/2\r\nhttp://haaya.net/\r\nhttps://write-sentence.org/category/blog/\r\nhttps://i.impressrd.jp/page/2"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "swdyh",
+  "resource_url": "http://wedata.net/items/400",
   "name": "Generic Posts Rule",
   "created_at": "2008-04-16T12:35:17+09:00",
-  "updated_at": "2022-11-18T10:51:20+09:00"
+  "updated_at": "2022-12-03T13:36:58+09:00"
 }
 ]
