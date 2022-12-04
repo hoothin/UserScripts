@@ -1366,7 +1366,7 @@
                  #search-jumper-alllist:hover+.search-jumper-showallBg {
                      backdrop-filter: none;
                      -webkit-backdrop-filter: none;
-                     background-color: rgba(255, 255, 255, 0.95);
+                     background-color: rgb(28 33 39 / 70%);
                  }
                  .search-jumper-historylist {
                      display: flex;
