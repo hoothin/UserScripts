@@ -62,7 +62,7 @@
 {
   "resource_url": "http://wedata.net/items/86017",
   "data": {
-    "pageElement": "(descendant::*[./article][1]/article)[count(//*[./article][ancestor-or-self::main or ancestor-or-self::*[contains(@id,'main')] or ancestor-or-self::*[contains(@class,'main')]])=1][not(//*[@rel='next'] and //*[contains(@class,'hentry')])]",
+    "pageElement": "descendant::*[./article][ancestor-or-self::main or ancestor-or-self::*[contains(@id,'main')] or ancestor-or-self::*[contains(@class,'main')]][last()=1][not(//*[@rel='next'] and //*[contains(@class,'hentry')])]/article",
     "nextLink": "//*[normalize-space(@class)='next' or @class='pagination-next']/a|//a[@class='next page-numbers']",
     "url": "^https?://.",
     "exampleUrl": "https://www.flickeringmyth.com/category/movies/ https://dl-zip.com/ https://www.kirainet.com/ https://www.43rumors.com/ https://montrealpython.org/en/blog/"
@@ -71,7 +71,7 @@
   "created_by": "kenzou_ogawa2",
   "name": "Generic Posts Rule (next-article)",
   "created_at": "2022-12-03T13:34:56+09:00",
-  "updated_at": "2022-12-04T07:17:49+09:00"
+  "updated_at": "2022-12-05T20:50:14+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/86016",
@@ -224,7 +224,7 @@
 {
   "resource_url": "http://wedata.net/items/86004",
   "data": {
-    "pageElement": "(descendant::*[./*[starts-with(@id,'post-')]][1]/*[starts-with(@id,'post-')])[count(//*[./*[starts-with(@id,'post-')][./following-sibling::*[starts-with(@id,'post-')]][parent::node()[not(@id='content')]][self::div or self::p or self::section or self::table or self::ul or self::li][ancestor-or-self::main or ancestor-or-self::*[contains(@id,'main')] or ancestor-or-self::*[contains(@class,'main')]]])=1][not(//*[@rel='next'] and //*[contains(@class,'hentry')])]|id('content')[count(div)>1]/div[contains(@class,'post')][not(contains(div/@class,'breadcrumb'))]",
+    "pageElement": "descendant::*[./*[starts-with(@id,'post-')][./following-sibling::*[starts-with(@id,'post-')]][parent::node()[not(@id='content')]][self::div or self::p or self::section or self::table or self::ul or self::li][ancestor-or-self::main or ancestor-or-self::*[contains(@id,'main')] or ancestor-or-self::*[contains(@class,'main')]]][last()=1][not(//*[@rel='next'] and //*[contains(@class,'hentry')])]/*[starts-with(@id,'post-')]|id('content')[count(div)>1]/div[contains(@class,'post')][not(contains(div/@class,'breadcrumb'))]",
     "nextLink": "(//*[not(contains(@class,'_inactive'))]/a[starts-with(@class,'nextpostslink') or contains(@class,'next page-numbers') or (.|..)[normalize-space(@rel)='next' or normalize-space(@class)='next' or contains(@class,'pagination-next')]][not(span/@class='link-text')]|//*[contains(@class,'nav-previous')][not(contains(@class,'pull'))]/a|(//*[contains(@class,'current')][number()>0]/following-sibling::a[1]|(//li|//span|//div)[(.//*|.)[contains(@class,'current')]][number()>0]/following-sibling::*[self::li or self::span or self::div][1]/a)[not(//a[starts-with(@class,'nextpostslink') or contains(@class,'next page-numbers') or (.|..)[normalize-space(@rel)='next' or normalize-space(@class)='next' or contains(@class,'pagination-next')]])])[not(starts-with(@href, '#'))]",
     "url": "^https?://.",
     "exampleUrl_b": "http://bash.org.pl/latest/ http://moherou.net/page/2/ http://octech.jp/modules/wordpress/ http://dannnao.net/blog/ http://dannnao.net/blog/page/2/ http://dannnao.net/blog/2013/01/2000px/ https://www.askasu.idv.tw/",
@@ -234,7 +234,7 @@
   "created_by": "kenzou_ogawa2",
   "name": "Generic Posts Rule (post)",
   "created_at": "2022-11-18T09:40:53+09:00",
-  "updated_at": "2022-11-21T07:47:46+09:00"
+  "updated_at": "2022-12-05T20:49:00+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/86003",
@@ -51386,7 +51386,7 @@
 {
   "resource_url": "http://wedata.net/items/649",
   "data": {
-    "pageElement": "//*[contains(concat(' ', normalize-space(@class), ' '), ' hentry ') or contains(concat(' ', normalize-space(@class), ' '), ' h-entry ')][count(//*[./*[contains(concat(' ', normalize-space(@class), ' '), ' hentry ') or contains(concat(' ', normalize-space(@class), ' '), ' h-entry ')]])=1]",
+    "pageElement": "(//*[contains(concat(' ', @class, ' '), ' hentry ') or contains(concat(' ', @class, ' '), ' h-entry ')]/parent::*)[last()=1]/*[contains(concat(' ', @class, ' '), ' hentry ') or contains(concat(' ', @class, ' '), ' h-entry ')]",
     "exampleMicroformats": "microformat : http://microformats.org/wiki/Main_Page hAtom : http://microformats.org/wiki/hatom rel-next & rel-prev : http://microformats.org/wiki/existing-rel-values microformat 2 : http://microformats.org/wiki/microformats-2 h-entry : http://microformats.org/wiki/h-entry",
     "nextLink": "(//link|//a)[contains(concat(' ', translate(normalize-space(@rel),'NEXT','next'), ' '), ' next ')]",
     "comment_ja": "この SITEINFO は、Microformats の hAtom に適用されます。 AutoPagerize はページを継ぎ足す際に url の評価を行ないますが、文字列の長い順に適用されます。この SITEINFO は url の正規表現としては最短になりますので、一番最後に適用されます。つまり一致する url が一つも無い場合に適用されるわけです。 もしも、この SITEINFO が適用されないようにしたいサイトがある場合には、以下のような対応をするのが適切だと思われます。 (1) AutoPagerize, AutoPatchwork といった拡張、userscrpt の設定で特定のサイトの url が無効になるようにする (2) そのサイトで適切に動作する SITEINFO を書く Microformats に対応した SITEINFO は、サイト運営者にとっても利用者にとっても利益があるものです。本 SITEINFO を無効または削除などせずに、適切な対応をされることを期待します。 original text from: http://wedata.net/items/63493?rev=105018",
@@ -51398,7 +51398,7 @@
   "created_by": "swdyh",
   "name": "hAtom",
   "created_at": "2008-04-16T12:36:19+09:00",
-  "updated_at": "2020-08-26T10:50:16+09:00"
+  "updated_at": "2022-12-05T20:46:44+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/632",
@@ -52318,17 +52318,17 @@
   "created_by": "swdyh"
 },
 {
+  "resource_url": "http://wedata.net/items/400",
   "data": {
-    "pageElement": "(descendant::*[./article][1]/article)[count(//*[./article][ancestor-or-self::main or ancestor-or-self::*[contains(@id,'main')] or ancestor-or-self::*[contains(@class,'main')]])=1][not(//*[@rel='next'] and //*[contains(@class,'hentry')])]",
+    "pageElement": "descendant::*[./article][ancestor-or-self::main or ancestor-or-self::*[contains(@id,'main')] or ancestor-or-self::*[contains(@class,'main')]][last()=1][not(//*[@rel='next'] and //*[contains(@class,'hentry')])]/article",
     "nextLink": "//*[contains(@class,'nav-previous')][not(contains(@class,'pull'))]/a|//*[contains(@class,'current')][number()>0]/following-sibling::a[1]|(//li|//span|//div)[(.//*|.)[contains(@class,'current')]][number()>0]/following-sibling::*[self::li or self::span or self::div][1]/a[not(starts-with(@href, '#'))]",
     "url": "^https?://.+",
     "exampleUrl": "https://starcasm.net/\r\nhttps://www.newyorker.com/magazine/food-and-drink\r\nhttps://shingeki.tv/news/\r\nhttp://diehardgamefan.com/category/nintendo_wii/\r\nhttps://littlebigdetails.com/page/2\r\nhttps://littlebigdetails.com/tagged/chrome/page/2\r\nhttps://tekito-style.me/\r\nhttps://kinmaweb.jp/archives/category/column\r\nhttps://www.webcreatorbox.com/\r\nhttps://asian-breeze.com/category/2020roster/page/2\r\nhttps://news.careerconnection.jp/newlist/\r\nhttps://www.evilmadscientist.com/\r\nhttp://www.synthtopia.com/\r\nhttps://ieiri.net/blog\r\nhttps://xperia-freaks.org/\r\nhttps://allanhutchison.net/\r\nhttp://skaz.jp/page/2\r\nhttp://haaya.net/\r\nhttps://write-sentence.org/category/blog/\r\nhttps://i.impressrd.jp/page/2"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "swdyh",
-  "resource_url": "http://wedata.net/items/400",
   "name": "Generic Posts Rule",
   "created_at": "2008-04-16T12:35:17+09:00",
-  "updated_at": "2022-12-03T13:36:58+09:00"
+  "updated_at": "2022-12-05T20:50:05+09:00"
 }
 ]
