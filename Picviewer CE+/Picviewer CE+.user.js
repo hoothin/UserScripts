@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.12.3.1
+// @version              2022.12.7.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -14371,7 +14371,7 @@ ImgOps | https://imgops.com/#b#`;
                         let crosHandler = imgSrc => {
                             self.corsUrlToBlob(imgSrc, blob=>{
                                 if (blob && blob.byteLength>58) {
-                                    let ext = imgSrc.match(/\.\w{2,5}$/);
+                                    let ext = imgSrc.match(/\.\w{2,5}(\?|$)/);
                                     zip.file(imgName.replace(/\//g,"").replace(/\.\w+$/,"") + '-' + downloaded + (ext || '.jpg'), blob);
                                 } else console.debug("error: "+imgSrc);
                                 downloaded++;
@@ -14397,7 +14397,7 @@ ImgOps | https://imgops.com/#b#`;
                                     if (/^data:/.test(imgSrc)) {
                                         ext = '.png';
                                     } else {
-                                        ext = imgSrc.match(/\.\w{2,5}$/) || '.png';
+                                        ext = imgSrc.match(/\.\w{2,5}(\?|$)/) || '.png';
                                     }
                                     zip.file(imgName.replace(/^data:.*/, "img").replace(/\//g,"").replace(/\.\w+$/,"") + '-' + downloaded + ext,blob);
                                     downloaded++;
@@ -18252,6 +18252,13 @@ ImgOps | https://imgops.com/#b#`;
                 this.shiftKeyUp=true;
                 this.moving=false;
 
+                container.querySelector('.pv-pic-window-center').addEventListener('mousedown', function(e) {
+                    var target = e.target;
+                    target.style.display = "none";
+                    setTimeout(() => {
+                        target.style.display = "";
+                    }, 500);
+                },true);
                 //缩放工具的扩展菜单
                 container.querySelector('.pv-pic-window-tb-tool-extend-menu-zoom').addEventListener('click',function(e){
                     var target=e.target;
