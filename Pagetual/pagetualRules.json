@@ -6656,6 +6656,13 @@
         "replaceElement": "div.pg"
     },
     {
+        "name": "bbsPostlist2",
+        "url": ".",
+        "nextLink": ".page-item.active+.page-item>a",
+        "pageElement": "ul.postlist>*",
+        "replaceElement": "ul.pagination"
+    },
+    {
         "name": "bbsThreadlist1",
         "url": "/f",
         "nextLink": [
