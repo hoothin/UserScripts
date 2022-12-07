@@ -11693,7 +11693,7 @@ ImgOps | https://imgops.com/#b#`;
         _GM_notification=(s)=>{alert(s)};
     }
     var _GM_download=(typeof GM_download=='undefined')?(url,name)=>{
-        let ext=url.match(/\.\w+(\?|$)/);
+        let ext=url.match(/\.\w{2,5}(\?|$)/);
         if(ext){
             name=url.match(/([^\/]+?)(\?|$)/)[1];
             try {
@@ -11704,7 +11704,7 @@ ImgOps | https://imgops.com/#b#`;
         }
         saveAs(url,name);
     }:(url,name)=>{
-        let ext=url.match(/\.\w+(\?|$)/);
+        let ext=url.match(/\.\w{2,5}(\?|$)/);
         if(ext){
             name=url.match(/([^\/]+?)(\?|$)/)[1];
             try {
@@ -13720,7 +13720,7 @@ ImgOps | https://imgops.com/#b#`;
                                     saveIndex++;
                                     if (node.dataset.src.indexOf('data') === 0) srcSplit = "";
                                     else {
-                                        srcSplit=node.dataset.src.match(/([^\/]+\.\w+?)(\?|$)/) || '';
+                                        srcSplit=node.dataset.src.match(/([^\/]+\.\w{2,5}?)(\?|$)/) || '';
                                         if (srcSplit) srcSplit = srcSplit[1];
                                         if (srcSplit.length > 30 && (srcSplit.indexOf(".") == -1 || /[&\?=,]/i.test(srcSplit))){
                                             srcSplit = "";
@@ -14749,7 +14749,7 @@ ImgOps | https://imgops.com/#b#`;
                                         let srcSplit;
                                         if (imgSrc.indexOf('data') === 0) srcSplit = "";
                                         else {
-                                            srcSplit=imgSrc.match(/([^\/]+\.\w+?)(\?|$)/) || '';
+                                            srcSplit=imgSrc.match(/([^\/]+\.\w{2,5}?)(\?|$)/) || '';
                                             if (srcSplit) srcSplit = srcSplit[1];
                                             if (srcSplit.length > 30 && (srcSplit.indexOf(".") == -1 || /[&\?=,]/i.test(srcSplit))){
                                                 srcSplit = "";
