@@ -1,5 +1,19 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86022",
+  "data": {
+    "pageElement": "//main//li[contains(@class,'list__item')]|//div[@class='p-post__wrap']/div[./following-sibling::div and ./preceding-sibling::div]",
+    "nextLink": "//*[@rel='next']",
+    "url": "^https://jouer-style\\.jp/",
+    "exampleUrl": "https://jouer-style.jp/411 https://jouer-style.jp/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "sunny",
+  "name": "jouer[ジュエ]",
+  "created_at": "2022-12-07T08:34:09+09:00",
+  "updated_at": "2022-12-07T10:10:44+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86021",
   "data": {
     "insertBefore": "",
@@ -51384,9 +51398,8 @@
   "updated_at": "2022-02-16T16:15:16+09:00"
 },
 {
-  "resource_url": "http://wedata.net/items/649",
   "data": {
-    "pageElement": "(//*[contains(concat(' ', @class, ' '), ' hentry ') or contains(concat(' ', @class, ' '), ' h-entry ')]/parent::*)[last()=1]/*[contains(concat(' ', @class, ' '), ' hentry ') or contains(concat(' ', @class, ' '), ' h-entry ')]",
+    "pageElement": "descendant::*[./*[contains(concat(' ', @class, ' '), ' hentry ') or contains(concat(' ', @class, ' '), ' h-entry ')]][last()=1]/*[contains(concat(' ', @class, ' '), ' hentry ') or contains(concat(' ', @class, ' '), ' h-entry ')]",
     "exampleMicroformats": "microformat : http://microformats.org/wiki/Main_Page hAtom : http://microformats.org/wiki/hatom rel-next & rel-prev : http://microformats.org/wiki/existing-rel-values microformat 2 : http://microformats.org/wiki/microformats-2 h-entry : http://microformats.org/wiki/h-entry",
     "nextLink": "(//link|//a)[contains(concat(' ', translate(normalize-space(@rel),'NEXT','next'), ' '), ' next ')]",
     "comment_ja": "この SITEINFO は、Microformats の hAtom に適用されます。 AutoPagerize はページを継ぎ足す際に url の評価を行ないますが、文字列の長い順に適用されます。この SITEINFO は url の正規表現としては最短になりますので、一番最後に適用されます。つまり一致する url が一つも無い場合に適用されるわけです。 もしも、この SITEINFO が適用されないようにしたいサイトがある場合には、以下のような対応をするのが適切だと思われます。 (1) AutoPagerize, AutoPatchwork といった拡張、userscrpt の設定で特定のサイトの url が無効になるようにする (2) そのサイトで適切に動作する SITEINFO を書く Microformats に対応した SITEINFO は、サイト運営者にとっても利用者にとっても利益があるものです。本 SITEINFO を無効または削除などせずに、適切な対応をされることを期待します。 original text from: http://wedata.net/items/63493?rev=105018",
@@ -51396,9 +51409,10 @@
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "swdyh",
+  "resource_url": "http://wedata.net/items/649",
   "name": "hAtom",
   "created_at": "2008-04-16T12:36:19+09:00",
-  "updated_at": "2022-12-05T20:46:44+09:00"
+  "updated_at": "2022-12-06T11:00:52+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/632",
