@@ -359,7 +359,7 @@ var siteInfo=[
 },
 {
  name: '知乎',
- url: /zhihu\.com/,
+ url: /(zhihu|zhimg)\.com/,
  r: /_(b|xs|s|l|\d+x\d+)\./i,
  s: "."
 },
