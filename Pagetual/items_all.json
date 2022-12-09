@@ -2,7 +2,7 @@
 {
   "resource_url": "http://wedata.net/items/86022",
   "data": {
-    "pageElement": "//main//li[contains(@class,'list__item')]|//div[@class='p-post__wrap']/div[./following-sibling::div and ./preceding-sibling::div]",
+    "pageElement": "//nav[./span]/preceding-sibling::div[last()=1]|//div[@class='p-post__wrap']/div[./following-sibling::div and ./preceding-sibling::div]",
     "nextLink": "//*[@rel='next']",
     "url": "^https://jouer-style\\.jp/",
     "exampleUrl": "https://jouer-style.jp/411 https://jouer-style.jp/"
@@ -11,7 +11,7 @@
   "created_by": "sunny",
   "name": "jouer[ジュエ]",
   "created_at": "2022-12-07T08:34:09+09:00",
-  "updated_at": "2022-12-07T10:10:44+09:00"
+  "updated_at": "2022-12-09T09:05:55+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/86021",
