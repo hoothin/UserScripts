@@ -6,7 +6,7 @@
 // @namespace    hoothin
 // @supportURL   https://github.com/hoothin/UserScripts
 // @homepageURL  https://github.com/hoothin/UserScripts
-// @version      1.2.6.18
+// @version      1.2.6.19
 // @description        任意轉換網頁中的簡體中文與正體中文（默認簡體→正體）
 // @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体）
 // @description:ja     簡繁中国語に変換
@@ -25,8 +25,6 @@
 // @grant        GM.notification
 // @grant        GM.listValues
 // @grant        GM.deleteValue
-// @downloadURL  https://github.com/hoothin/UserScripts/raw/master/Switch%20Traditional%20Chinese%20and%20Simplified%20Chinese/Switch%20Traditional%20Chinese%20and%20Simplified%20Chinese.user.js
-// @updateURL    https://github.com/hoothin/UserScripts/raw/master/Switch%20Traditional%20Chinese%20and%20Simplified%20Chinese/Switch%20Traditional%20Chinese%20and%20Simplified%20Chinese.user.js
 // @contributionURL      https://www.buymeacoffee.com/hoothin
 // @contributionAmount 1
 // ==/UserScript==
@@ -36,6 +34,7 @@
     if (window.stcascInited) return;
     window.stcascInited = true;
     var auto = false;
+    var notification = true;
     var shortcutKey = 'F8';
     var ctrlKey = true;
     var altKey = false;
@@ -766,15 +765,15 @@
         storage.setItem(currentAction, action);
         switch(action){
             case 1:
-                _GM_notification("已於該網域禁用簡繁切換");
-                location.reload();
-                break;
+              if ( notification ) _GM_notification("已於該網域禁用簡繁切換");
+              location.reload();
+              break;
             case 2:
-                _GM_notification("已切换至简体中文");
-                break;
+              if ( notification ) _GM_notification("已切换至简体中文");
+              break;
             case 3:
-                _GM_notification("已切換至繁體中文");
-                break;
+              if ( notification ) _GM_notification("已切換至繁體中文");
+              break;
         }
         if(action > 1){
             stranBody();
@@ -970,6 +969,7 @@
             let altKeyInput = createCheckbox('Alt 鍵', altKey);
             let shiftKeyInput = createCheckbox('Shift 鍵', shiftKey);
             let metaKeyInput = createCheckbox('Meta 鍵', metaKey);
+            let notificationInput = createCheckbox('通知', notification);
             ctrlKeyInput.parentNode.style.float = "left";
             altKeyInput.parentNode.style.float = "left";
             shiftKeyInput.parentNode.style.float = "left";
@@ -1062,6 +1062,7 @@
                 altKey = altKeyInput.checked;
                 shiftKey = shiftKeyInput.checked;
                 metaKey = metaKeyInput.checked;
+                notification = notificationInput.checked;
 
                 if (siteChanged) {
                     sitesList.forEach(site => {
@@ -1085,6 +1086,7 @@
                 storage.setItem('altKey', altKey);
                 storage.setItem('shiftKey', shiftKey);
                 storage.setItem('metaKey', metaKey);
+                storage.setItem('notification', notification);
                 try {
                     sc2tcCombConfig = JSON.parse(customTermInput.value);
                     storage.setItem('sc2tcCombConfig', sc2tcCombConfig);
@@ -1143,7 +1145,7 @@
         return false;
     }
 
-    getMulValue(["auto", "shortcutKey", "ctrlKey", "altKey", "shiftKey", "metaKey", "sc2tcCombConfig", currentAction], values => {
+    getMulValue(["auto", "shortcutKey", "ctrlKey", "altKey", "shiftKey", "metaKey", "sc2tcCombConfig", "notification", currentAction], values => {
         if (values.sc2tcCombConfig) {
             auto = values.auto;
             shortcutKey = values.shortcutKey;
@@ -1152,6 +1154,7 @@
             shiftKey = values.shiftKey;
             metaKey = values.metaKey;
             sc2tcCombConfig = values.sc2tcCombConfig;
+            notification = values.notification;
             sc2tcComb = {};
             for (let key in sc2tcCombConfig) {
                  if (globMatch(key, location.href)) {
