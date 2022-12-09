@@ -6465,6 +6465,12 @@
         "css": ".sect1{overflow-wrap: break-word;}div.navheader{position: relative;}"
     },
     {
+        "name": "Standards DOC",
+        "url": "\\.html$",
+        "nextLink": ".header>p>[rel=next]",
+        "pageElement": ".header~*"
+    },
+    {
         "name": "xda-developers",
         "url": "^https://forum\\.xda\\-developers\\.com/t/",
         "pageElement": ".block-body>article"
