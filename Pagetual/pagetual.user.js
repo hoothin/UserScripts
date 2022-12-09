@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.33.9
+// @version      1.9.33.10
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -1491,6 +1491,8 @@
                 body.querySelector("button.next")||
                 body.querySelector("[title=next]")||
                 body.querySelector("a#linkNext")||
+                body.querySelector("[accesskey=N]")||
+                body.querySelector("[accesskey=n]")||
                 getElementByXpath("//a[contains(@class, 'page__next')]",curPage,curPage);
             if(!next){
                 let nexts=body.querySelectorAll("a.next");
@@ -4890,7 +4892,7 @@
 
     function emuClick(btn){
         let orgHref=btn.getAttribute('href');
-        if(orgHref){
+        if(orgHref && orgHref != "#"){
             btn.setAttribute('href', orgHref.replace(/#$/,""));
         }
         if(!PointerEvent)return btn.click();
@@ -4969,7 +4971,7 @@
         dispatchTouchEvent(btn, "touchend");
 
         btn.click();
-        if(orgHref){
+        if(orgHref && orgHref != "#"){
             setTimeout(()=>btn.setAttribute('href', orgHref),0);
         }
     }
@@ -5197,7 +5199,7 @@
                     return;
                 }
             }
-            if(times++ > 100){
+            if(times++ > 200){
                 returnFalse("Stop as timeout when emu");
                 return;
             }
