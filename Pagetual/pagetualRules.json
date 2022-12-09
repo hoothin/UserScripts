@@ -6547,6 +6547,12 @@
         "nextLinkByJs": "let max=doc.querySelector(`.pagination>.result>b:nth-child(2)`),cur=doc.querySelector(`.pagination>.result>b:nth-child(3)`);let form=doc.querySelector('#fm_id'),params=[];if(!max||!cur||max.innerText==cur.innerText||!form)return null;let formData = new FormData(form); for (let [key, value] of formData) {params.push(key+'='+encodeURIComponent(value))};return form.action.replace(/\\?pageCount.*/,'')+'?pageCount='+(parseInt(cur.innerText) + 1)+'#p{'+params.join('&')+'}'"
     },
     {
+        "name": "全國古籍普查登記基本數據庫",
+        "url": "^https?://202\\.96\\.31\\.78/",
+        "pageElement": "body > div.wrap > div#side.list > div.item",
+        "nextLinkByJs": "let n=doc.querySelector('[title=\"Next Page\"]');if(!n)return;let params=n.getAttribute('onclick').match(/JavaScript:toUrl\\('(.*)',(\\d+)\\);/);let temp=params[1];let index=params[2];if(temp.indexOf('&cGFn')!=-1)temp=temp.substring(0,temp.indexOf('&cGFn'));let code=window.btoa('page='+index);return temp+'&'+code;"
+    },
+    {
         "name": "Search Getty Images",
         "url": "^https://www\\.gettyimages\\.ie",
         "nextLink": "button[title='Next page']",
