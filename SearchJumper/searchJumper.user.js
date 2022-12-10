@@ -3336,10 +3336,8 @@
                         [].forEach.call(document.querySelectorAll(".searchJumper-hide"), hide => {
                             if (hide.dataset.content === word.content) {
                                 hide.classList.remove("searchJumper-hide");
+                                hide.style.display = "";
                                 hide.removeAttribute('data-content');
-                                [].forEach.call(hide.querySelectorAll(".searchJumper-hide"), hideChild => {
-                                    hideChild.classList.remove("searchJumper-hide");
-                                });
                             }
                         });
                     }
@@ -3358,7 +3356,7 @@
                                 if (parent) {
                                     parent.dataset.content = word.content;
                                     parent.classList.add("searchJumper-hide");
-                                    mark.classList.add("searchJumper-hide");
+                                    parent.style.display = "none";
                                 }
                             }
                         }
@@ -3393,6 +3391,18 @@
                         let newNode = document.createTextNode(mark.innerText);
                         mark.parentNode.replaceChild(newNode, mark);
                         newNode.parentNode.normalize();
+                        if (typeof word.hideParent !== 'undefined') {
+                            let parentDepth = word.hideParent;
+                            let parent = mark.parentElement;
+                            while(parentDepth-- > 0 && parent) {
+                                parent = parent.parentElement;
+                            }
+                            if (parent) {
+                                parent.classList.remove("searchJumper-hide");
+                                parent.style.display = "";
+                                parent.removeAttribute('data-content');
+                            }
+                        }
                     }
                 });
                 delete this.marks[word.content];
@@ -3592,10 +3602,8 @@
                     });
                     [].forEach.call(ele.querySelectorAll(".searchJumper-hide"), hide => {
                         hide.classList.remove("searchJumper-hide");
+                        hide.style.display = "";
                         hide.removeAttribute('data-content');
-                        [].forEach.call(hide.querySelectorAll(".searchJumper-hide"), hideChild => {
-                            hideChild.classList.remove("searchJumper-hide");
-                        });
                     });
                     this.navMarks.innerHTML = createHTML();
                     this.marks = {};
@@ -3641,7 +3649,7 @@
                                 if (parent) {
                                     parent.dataset.content = word.content;
                                     parent.classList.add("searchJumper-hide");
-                                    node.classList.add("searchJumper-hide");
+                                    parent.style.display = "none";
                                 }
                             }
                             let curList = self.marks[word.content];
