@@ -1,5 +1,34 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86025",
+  "data": {
+    "pageElement": "//div[@class='c-wp-post']/p[./text()][last()]/following-sibling::*[1]/preceding-sibling::*[self::h2 or ./preceding-sibling::h2]",
+    "nextLink": "//nav[@class='c-pagination']/span/following-sibling::a[1]",
+    "url": "^https://full-count\\.jp/.+/post\\d+",
+    "exampleUrl": "https://full-count.jp/2022/12/09/post1316032/ https://full-count.jp/2014/04/01/post2052/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "Griever3",
+  "name": "Full-count 記事",
+  "created_at": "2022-12-09T22:15:25+09:00",
+  "updated_at": "2022-12-10T09:40:57+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/86024",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "id('mainwrap')/div[not(./p)][last()]/following-sibling::*[1]/preceding-sibling::*",
+    "nextLink": "//link[@rel='next']",
+    "url": "^https://beauty\\.oricon\\.co\\.jp/",
+    "exampleUrl": "https://beauty.oricon.co.jp/special/100852/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "kenzou_ogawa2",
+  "name": "eltha",
+  "created_at": "2022-12-09T15:57:28+09:00",
+  "updated_at": "2022-12-09T15:57:28+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86022",
   "data": {
     "pageElement": "//nav[./span]/preceding-sibling::div[last()=1]|//div[@class='p-post__wrap']/div[./following-sibling::div and ./preceding-sibling::div]",
@@ -25634,16 +25663,16 @@
 {
   "resource_url": "http://wedata.net/items/74694",
   "data": {
-    "pageElement": "//*[count(./article)>1]/article|//div[@class=\"c-wp-post\"]/*[self::p[./text()][last()] or self::h2]|//div[@class=\"c-wp-post\"]/p[./text()][last()]/preceding-sibling::*[./preceding-sibling::h2]",
+    "pageElement": "//*[count(./article)>1]/article",
     "nextLink": "//nav[@class='c-pagination']/span/following-sibling::a[1]",
     "url": "^https://full-count\\.jp/.+",
-    "exampleUrl": "https://full-count.jp/2014/04/01/post2052/\r\nhttps://full-count.jp/2022/02/05/post1182024/\r\nhttps://full-count.jp/category/mlb/"
+    "exampleUrl": "https://full-count.jp/category/mlb/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "soolo",
   "name": "Full-count",
   "created_at": "2014-04-01T10:55:15+09:00",
-  "updated_at": "2022-02-07T20:35:19+09:00"
+  "updated_at": "2022-12-10T09:41:46+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/74691",
@@ -27855,16 +27884,16 @@
 {
   "resource_url": "http://wedata.net/items/66470",
   "data": {
-    "pageElement": "//div[@class='special-content']/div[@class='block-tags']/preceding-sibling::*|//div[@class='contentsbox clearfix']",
+    "pageElement": "descendant::div[@class='block-pagination'][1]/following-sibling::div[1]/*[contains(@class,'section')][last()]/following-sibling::*[1]/preceding-sibling::*",
     "nextLink": "//link[@rel='next']",
     "url": "^https?://.*oricon\\.co\\.jp/special/.",
-    "exampleUrl": "https://www.oricon.co.jp/special/53133/ https://beauty.oricon.co.jp/special/100852/"
+    "exampleUrl": "https://www.oricon.co.jp/special/53133/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "jigendaddy_be",
   "name": "ORICON STYLE 特集",
   "created_at": "2013-02-02T21:27:24+09:00",
-  "updated_at": "2022-01-23T19:30:01+09:00"
+  "updated_at": "2022-12-09T15:48:27+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/66390",
