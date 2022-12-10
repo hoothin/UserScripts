@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.49
+// @version      1.6.6.50
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -3356,7 +3356,7 @@
                                 if (parent) {
                                     parent.dataset.content = word.content;
                                     parent.classList.add("searchJumper-hide");
-                                    parent.style.display = "none";
+                                    parent.innerHTML = createHTML("");
                                 }
                             }
                         }
@@ -3391,18 +3391,6 @@
                         let newNode = document.createTextNode(mark.innerText);
                         mark.parentNode.replaceChild(newNode, mark);
                         newNode.parentNode.normalize();
-                        if (typeof word.hideParent !== 'undefined') {
-                            let parentDepth = word.hideParent;
-                            let parent = mark.parentElement;
-                            while(parentDepth-- > 0 && parent) {
-                                parent = parent.parentElement;
-                            }
-                            if (parent) {
-                                parent.classList.remove("searchJumper-hide");
-                                parent.style.display = "";
-                                parent.removeAttribute('data-content');
-                            }
-                        }
                     }
                 });
                 delete this.marks[word.content];
@@ -3619,7 +3607,7 @@
                 function searchWithinNode(node, word) {
                     let len, pos = -1, skip, spannode, middlebit, middleclone;
                     skip = 0;
-                    if (node.nodeType == 3 && (node.parentNode.tagName == "BODY" || node.parentNode.offsetParent || (node.parentNode.scrollHeight && node.parentNode.scrollWidth))) {
+                    if (node.nodeType == 3 && (typeof word.hideParent !== 'undefined' || node.parentNode.tagName == "BODY" || node.parentNode.offsetParent || (node.parentNode.scrollHeight && node.parentNode.scrollWidth))) {
                         if (word.isRe) {
                             let wordMatch = node.data.match(new RegExp(word.content, word.reCase));
                             if (wordMatch) {
@@ -3647,9 +3635,10 @@
                                     parent = parent.parentElement;
                                 }
                                 if (parent) {
+                                    parent.innerHTML = createHTML("");
                                     parent.dataset.content = word.content;
                                     parent.classList.add("searchJumper-hide");
-                                    parent.style.display = "none";
+                                    return;
                                 }
                             }
                             let curList = self.marks[word.content];
@@ -7985,21 +7974,23 @@
                         }
                         if (mutation.removedNodes.length) {
                             [].forEach.call(mutation.removedNodes, removedNode => {
-                                if (removedNode.nodeType === 1) {
-                                    if (removedNode.className === "searchJumper") {
-                                        removeMark(removedNode);
-                                    } else if (removedNode.children.length) {
-                                        [].forEach.call(removedNode.querySelectorAll("mark.searchJumper"), node => {
-                                            removeMark(node);
-                                        });
-                                    }
+                                let target = removedNode.nodeType === 1 ? removedNode : mutation.target;
+                                if (target.className === "searchJumper") {
+                                    removeMark(target);
+                                } else if (target.children.length) {
+                                    [].forEach.call(target.querySelectorAll("mark.searchJumper"), node => {
+                                        removeMark(node);
+                                    });
                                 }
                             });
                         }
                         if (mutation.addedNodes.length) {
                             [].forEach.call(mutation.addedNodes, addedNode => {
-                                if (addedNode.nodeType === 1 && addedNode.className !== "searchJumper") {
-                                    highlight("insert", addedNode);
+                                let target = addedNode.nodeType === 1 ? addedNode : mutation.target;
+                                if (target.className !== "searchJumper") {
+                                    setTimeout(() => {
+                                        highlight("insert", target)
+                                    }, 0);
                                 }
                             });
                         }
