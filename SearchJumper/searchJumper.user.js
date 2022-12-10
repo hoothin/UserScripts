@@ -4195,7 +4195,9 @@
                             break;
                         }
                     }
-                    mark.click();
+                    if (mark) {
+                        mark.click();
+                    }
                 });
                 //Search in page
 
