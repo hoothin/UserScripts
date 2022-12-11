@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86026",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "id('article-contents')",
+    "nextLink": "//a[@rel='next']",
+    "url": "^https://hanada-plus\\.jp/articles/\\d+",
+    "exampleUrl": "https://hanada-plus.jp/articles/1150"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "Griever3",
+  "name": "Hanadaプラス 記事",
+  "created_at": "2022-12-11T08:49:07+09:00",
+  "updated_at": "2022-12-11T08:49:07+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86025",
   "data": {
     "pageElement": "//div[@class='c-wp-post']/p[./text()][last()]/following-sibling::*[1]/preceding-sibling::*[self::h2 or ./preceding-sibling::h2]",
@@ -4525,19 +4540,19 @@
   "updated_at": "2020-09-22T17:43:10+09:00"
 },
 {
+  "resource_url": "http://wedata.net/items/85488",
   "data": {
     "pageElement": "//ul[@data-filterable-for='your-repos-filter']",
     "comment": "To do: 1. internationalize (Previous/Next)\r\n       2. change to also work with projects and packages lists",
-    "nextLink": "//div[@data-test-selector=\"pagination\"][count(./a)>1 or ./a/preceding-sibling::button]/a[last()]",
+    "nextLink": "//a[@rel='next']",
     "url": "^https?://github\\.com/[^/]+\\?tab=repositories",
     "exampleUrl": "https://github.com/TarekJor?tab=repositories"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "hhenning",
-  "resource_url": "http://wedata.net/items/85488",
   "name": "github repos list",
   "created_at": "2020-09-11T17:59:04+09:00",
-  "updated_at": "2020-09-22T17:46:28+09:00"
+  "updated_at": "2022-12-10T10:31:44+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85487",
@@ -5007,7 +5022,7 @@
 {
   "resource_url": "http://wedata.net/items/85436",
   "data": {
-    "pageElement": "//article/div/p[./text()][last()]|//article/div/p[./text()][last()]/preceding-sibling::*[./preceding-sibling::ul]",
+    "pageElement": "//div[@class='page-links']/preceding-sibling::*[./preceding-sibling::ul]",
     "nextLink": "//link[@rel=\"next\"]",
     "url": "^https://tsurinews\\.jp/\\d+",
     "exampleUrl": "https://tsurinews.jp/93350/"
@@ -5016,7 +5031,7 @@
   "created_by": "t_f_m_",
   "name": "釣りニュース",
   "created_at": "2020-08-03T12:32:23+09:00",
-  "updated_at": "2022-02-03T16:17:43+09:00"
+  "updated_at": "2022-12-10T10:43:38+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85435",
@@ -6899,18 +6914,18 @@
   "updated_at": "2020-04-04T14:40:00+09:00"
 },
 {
-  "resource_url": "http://wedata.net/items/85276",
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "created_at": "2020-04-03T15:49:01+09:00",
   "data": {
-    "pageElement": "//div[starts-with(@class,\"content\")]//p[not(@class=\"date\")]|//div[starts-with(@class,\"content\")]//p[not(@class=\"date\")]/preceding-sibling::*|id(\"searchResult\")/ul/li",
-    "exampleUrl": "https://project.nikkeibp.co.jp/behealth/atcl/column/00011/031000007/ https://project.nikkeibp.co.jp/atclhco/20110322/264486/?P=3 https://project.nikkeibp.co.jp/hco/search.html?q=2",
+    "pageElement": "//div[@class=\"articleBody\"]",
+    "nextLink": "//a[@class=\"pagenationNextButton\"]",
     "url": "^https://project\\.nikkeibp\\.co\\.jp/",
-    "nextLink": "//a[@class='pagenationNextButton' or @class='next']"
+    "exampleUrl": "https://project.nikkeibp.co.jp/behealth/atcl/column/00011/031000007/"
   },
-  "updated_at": "2020-05-15T09:09:49+09:00",
+  "created_by": "t_f_m_",
+  "resource_url": "http://wedata.net/items/85276",
   "name": "日経BP Beyond Health",
-  "created_by": "t_f_m_"
+  "created_at": "2020-04-03T15:49:01+09:00",
+  "updated_at": "2022-12-10T10:58:00+09:00"
 },
 {
   "name": "DIYChatroom Articles",
