@@ -119,7 +119,7 @@
         "nextLinkByJs": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/window\\[\"\\\\x65\\\\x76\\\\x61\\\\x6c\"\\]/)>-1).innerHTML.slice(26,-1);let imgDataCode=eval(code).slice(10,-11);let imgData=eval(imgDataCode);let n=imgData.nextId;let nl=location.href.replace(/\\d+\\.html$/,'')+n+'.html';if(n!=0)return nl;",
         "pageElement": "#manga",
         "replaceElement": "head>title,#mangaTitle",
-        "pageInit": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/window\\[\"\\\\x65\\\\x76\\\\x61\\\\x6c\"\\]/)>-1).innerHTML.slice(26,-1);let imgDataCode=eval(code).slice(10,-11);let imgData=eval(imgDataCode);let domain='https://i.hamreus.com/';let _img='';for(let i=0;i<imgData.images.length;i++){_img+=`<img src=\"${domain+imgData.images[i]}?e=${imgData.sl.e}&m=${imgData.sl.m}\">`};doc.querySelector('#manga').innerHTML=_img;document.querySelector(`a[data-action='chapter.prev']`).href=location.pathname.replace(/\\d+\\.html$/,'')+imgData.prevId+'.html';if(imgData.nextId!=0){document.querySelector(`a[data-action='chapter.next']`).href=location.pathname.replace(/\\d+\\.html$/,'')+imgData.nextId+'.html'}else{document.querySelector(`a[data-action='chapter.next']`).href=location.pathname.replace(/\\d+\\.html$/,'');document.querySelector(`a[data-action='chapter.next']`).innerText='返回目录';setTimeout(()=>{document.querySelector('#manga').remove();document.querySelector('.pagetual_pageBar').remove()},15000)}",
+        "pageInit": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/window\\[\"\\\\x65\\\\x76\\\\x61\\\\x6c\"\\]/)>-1).innerHTML.slice(26,-1);let imgDataCode=eval(code).slice(10,-11);let imgData=eval(imgDataCode);let domain='https://i.hamreus.com/';let _img='';for(let i=0;i<imgData.images.length;i++){_img+=`<img src=\"${domain+imgData.images[i]}?e=${imgData.sl.e}&m=${imgData.sl.m}\">`};doc.querySelector('#manga').innerHTML=_img;document.querySelector(`a[data-action='chapter.prev']`).href=location.pathname.replace(/\\d+\\.html$/,'')+imgData.prevId+'.html';if(imgData.nextId!=0){document.querySelector(`a[data-action='chapter.next']`).href=location.pathname.replace(/\\d+\\.html$/,'')+imgData.nextId+'.html'}else{document.querySelector(`a[data-action='chapter.next']`).href=location.pathname.replace(/\\d+\\.html$/,'');document.querySelector(`a[data-action='chapter.next']`).innerText='返回目录';}",
         "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('#manga');if(c.length>2){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>2){p[0].remove()}},10000)",
         "pageBarText": 1,
         "css": ".action-list li{width:50%!important}#action>ul>li:nth-child(n+2):nth-child(-n+3),.manga-page,body>center>center>ins{display:none!important}.manga-box img{border-top:0px!important;border-bottom:0px!important}"
@@ -5830,20 +5830,21 @@
     {
         "name": "小黃書 - 搜索",
         "example": "https://tw.xchina.co/search/keyword-%E4%B8%9D%E8%A2%9C/mode-photo.html",
-        "url": "^https?://(tw|kr)?(\\.)?xchina\\.co/search/.*/.*\\.html",
+        "url": "^https?://([a-z-]{2}\\.)?(xchina|8se)\\.(co|me|pro)/search/",
+        "init": "let bs = document.querySelector('body[style]');if(bs)bs.removeAttribute('style');",
         "nextLink": "a.next",
         "pageElement": ".article.result>.list",
         "replaceElement": [
             "div.article:not(.result)+div.pager",
             "div.article.result+div.pager"
         ],
-        "css": ".pagetual_pageBar+div{margin-top:-5px !important;}",
+        "css": ".pagetual_pageBar+div{margin-top:-5px !important;}.slider-ad,.jquery-modal.blocker.current,.article.ad,.body>*:not(.article):not(.pager){display:none!important}",
         "rate": 3
     },
     {
         "name": "小黃書 - 原圖瀏覽",
         "example": "https://tw.xchina.co/photoShow.php?server=1&id=6311c6080f9a5&index=0&pageSize=19&title=%E3%80%90%E6%9C%AA%E5%88%86%E9%A1%9E%E4%BA%BA%E9%AB%94%E6%94%9D%E5%BD%B1%E3%80%91%E9%87%91%E9%AD%9Akinngyo%E3%80%8A%E5%A4%8F%E6%97%A5%E5%8D%88%E5%BE%8C%E3%80%8B",
-        "url": "^https?://(tw|kr)?(\\.)?xchina\\.co/photoShow\\.php",
+        "url": "^https?://([a-z-]{2}\\.)?(xchina|8se)\\.(co|me|pro)/photoShow\\.php",
         "action": 1,
         "nextLink": "//div[@class='image']/a[3][i[@class='fa fa-arrow-right right']][not(starts-with(@href,'java'))]",
         "pageElement": ".container > img",
@@ -5855,30 +5856,33 @@
     },
     {
         "name": "小黃書 - 圖片清單瀏覽 - 翻頁完後加載所有原圖可透過Picviewer CE+打包下載",
-        "example": "https://tw.xchina.co/photo/id-6311c6080f9a5.html",
-        "url": "^https?://(tw|kr)?(\\.)?xchina\\.co/photo/",
+        "example": "https://tw.xchina.co/photo/id-6311c6080f9a5.html，https://8se.me/photo/id-63938c1972fde.html",
+        "url": "^https?://([a-z-]{2}\\.)?(xchina|8se)\\.(co|me|pro)/photo/",
         "include": "img.cr_only",
         "pinUrl": true,
         "action": 1,
         "waitElement": [
             "img.cr_only"
         ],
-        "init": "let p=document.querySelector('.info').textContent.match(/\\d+/)[0];if(p<18){document.querySelectorAll('img.cr_only').forEach(img=>{img.src=img.src.replace('_600x0','')});let imgs=document.querySelectorAll('img.cr_only');let imgData=[];let fa=[];for(let i=0;i<imgs.length;i++){imgData.push(imgs[i].getAttribute('src'));fa.push(imgs[i].parentNode.parentNode.getAttribute('href'))};let aimg='';for(let i=0;i<imgData.length;i++){aimg+=`<a href='${fa[i]}'target=\"_blank\"><img src='${imgData[i]}'></a>`};document.querySelector('.body .article:not(.ad)').innerHTML=aimg;let p=document.querySelector('#pagetual-preload');if(p)p.remove()}",
+        "init": "let bs = document.querySelector('body[style]');if(bs)bs.removeAttribute('style');let p=document.querySelector('.info').textContent.match(/\\d+/)[0];if(p<18){document.querySelectorAll('img.cr_only').forEach(img=>{img.src=img.src.replace('_600x0','')});let imgs=document.querySelectorAll('img.cr_only');let imgData=[];let fa=[];for(let i=0;i<imgs.length;i++){imgData.push(imgs[i].getAttribute('src'));fa.push(imgs[i].parentNode.parentNode.getAttribute('href'))};let aimg='';for(let i=0;i<imgData.length;i++){aimg+=`<a href='${fa[i]}'target=\"_blank\"><img src='${imgData[i]}'></a>`};document.querySelector('.body .article:not(.ad)').innerHTML=aimg;let p=document.querySelector('#pagetual-preload');if(p)p.remove()}",
         "nextLink": "a.next",
         "pageElement": ".photos > a",
         "replaceElement": [
             "div.article>div.pager:first-child",
             "div.article>div.pager:last-child"
         ],
-        "css": ".photos>div.item,.pager>.tips,body>footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords){display: none!important;}.pagetual_pageBar{margin-top:30px!important;margin-bottom:0px!important}.body .article:not(.ad)>a>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}",
+        "css": ".photos>div.item,.jquery-modal.blocker.current,.slider-ad,.article.ad,.pager>.tips,body>footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords){display: none!important;}.pagetual_pageBar{margin-top:30px!important;margin-bottom:0px!important}.body .article:not(.ad)>a>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}",
         "pageAction": "document.querySelectorAll('img.cr_only').forEach(img=>{img.src=img.src.replace('_600x0','')});setTimeout(()=>{let last=document.querySelector(`a[current='true']+a.next`);if(last){let imgs=document.querySelectorAll('img.cr_only');let imgData=[];let fa=[];for(let i=0;i<imgs.length;i++){imgData.push(imgs[i].getAttribute('src'));fa.push(imgs[i].parentNode.parentNode.getAttribute('href'))};let aimg='';for(let i=0;i<imgData.length;i++){aimg+=`<a href='${fa[i]}'target=\"_blank\"><img src='${imgData[i]}'></a>`};document.querySelector('.body .article:not(.ad)').innerHTML=aimg;let p=document.querySelector('#pagetual-preload');if(p)p.remove()}},1000)",
         "initRun": 1,
         "autoLoadNum": "0"
     },
     {
         "name": "小黃書 - 分類",
-        "example": "https://tw.xchina.co/photos/kind-2.html",
-        "url": "^https?://(tw|kr)?(\\.)?xchina\\.co/(photos|videos|models)/",
+        "example": "https://tw.xchina.co/photos/kind-2.html，https://8se.me/photos/model-61be1af337a19.html",
+        "url": "^https?://([a-z-]{2}\\.)?(xchina|8se)\\.(co|me|pro)/(photos|videos|models)",
+        "exclude": "body>.image",
+        "init": "let bs = document.querySelector('body[style]');if(bs)bs.removeAttribute('style');",
+        "pinUrl": true,
         "nextLink": "a.next",
         "pageElement": ".list>.item,.videos",
         "replaceElement": [
@@ -5886,7 +5890,7 @@
             "div.article>div.pager:last-child"
         ],
         "rate": 3,
-        "css": ".pagetual_pageBar{margin-bottom:5px!important}"
+        "css": ".pagetual_pageBar{margin-bottom:5px!important}.slider-ad,.article.ad,.jquery-modal.blocker.current{display:none!important}"
     },
     {
         "name": "hitxhot - 寫真",
