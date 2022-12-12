@@ -73,19 +73,19 @@
   "updated_at": "2022-12-03T20:18:22+09:00"
 },
 {
-  "resource_url": "http://wedata.net/items/86020",
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "data": {
-    "insertBefore": "",
     "pageElement": "descendant::*[./article][1]/article",
+    "comment": "If pageElement is specified by parent node of article, it will affect the design.",
     "nextLink": "//link[@rel='next']",
     "url": "^https://techreport\\.com/category/",
     "exampleUrl": "https://techreport.com/category/news/"
   },
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "kenzou_ogawa2",
+  "resource_url": "http://wedata.net/items/86020",
   "name": "The Tech Report category",
   "created_at": "2022-12-03T20:11:08+09:00",
-  "updated_at": "2022-12-03T20:11:08+09:00"
+  "updated_at": "2022-12-11T19:36:21+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/86019",
@@ -49472,6 +49472,7 @@
   "resource_url": "http://wedata.net/items/1894",
   "data": {
     "pageElement": "descendant::*[./article][1]",
+    "comment": "If pageElement is specified by article, it will affect the design.",
     "nextLink": "//a[@class=\"next page-numbers\"]",
     "url": "^https://techreport\\.com/$",
     "exampleUrl": "https://techreport.com/"
@@ -49480,7 +49481,7 @@
   "created_by": "k2jp",
   "name": "The Tech Report",
   "created_at": "2008-06-30T03:49:33+09:00",
-  "updated_at": "2022-12-03T20:07:49+09:00"
+  "updated_at": "2022-12-11T19:32:56+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/1887",
