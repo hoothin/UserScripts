@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86027",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[@class='block block--messages']",
+    "nextLink": "//*[@rel=\"next\"]",
+    "url": "^https?://www\\.otofun\\.net/threads/",
+    "exampleUrl": "https://www.otofun.net/threads/khoi-dong-chuong-trinh-suoi-am-ban-cao-2022-vi-mot-mien-trung-tuoi-sang-tri-le-oi-cho-chung-toi.1844206/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "powertalent",
+  "name": "OTOFUN | CỘNG ĐỒNG OTO XE MÁY VIỆT NAM",
+  "created_at": "2022-12-12T16:52:28+09:00",
+  "updated_at": "2022-12-12T16:52:28+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86026",
   "data": {
     "insertBefore": "",
