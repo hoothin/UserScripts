@@ -152,6 +152,45 @@ Use this to eval javaScript code and return target url of next page with doc (do
 "nextLinkByJs": "let n=doc.querySelector('a.curr+a');if(n)return n.href.replace(/^javascript:.*\\((\\d+)'\\);/,'$1_.html');"
 ```
 
+stopSign
+--
+Stop load next page when match this sign
+
+1. Stop when "#pagenum" don't exist or ".disable" exist
+```JSON
+"stopSign": ["#pagenum", ".disable"] 
+```
+2. Stop when number in "#pagenum" matching 1st group of `(\\d+)` by RegExp == number matching 1st group of `\\/(\\d+)`
+```JSON
+"stopSign": [
+    [
+        "#pagenum",
+        "(\\d+)"
+    ],
+    [
+        "#pagenum",
+        "\\/(\\d+)"
+    ]
+]
+```
+3. Stop when matching rule-1 or rule-2
+```JSON
+"stopSign": ["#pagenum", ".disable",
+    [
+        "#pagenum",
+        "(\\d+)"
+    ],
+    [
+        "#pagenum",
+        "\\/(\\d+)"
+    ]
+] 
+```
+4. Stop when stopSign(doc, nextLink) return true
+```JSON
+"stopSign": "if (doc.querySelector('.disable')) return true; if (nextLink.className === 'disable') return true; return false;" 
+```
+
 pageElement
 --
 Selector or xpath of main content which need to insert, you can let it to be a array to contains multiple page elements.
