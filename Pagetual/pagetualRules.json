@@ -5383,7 +5383,7 @@
         "include": [
             "body>section.container>div.content-wrap>div.content>article.article-content img[alt]",
             ".article-content>.pagination",
-            "//title[contains(text(), '极品性感美女')]"
+            "//title[contains(text(), '性感美女')]"
         ],
         "action": 1,
         "nextLink": ".current+a",
