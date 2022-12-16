@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.12.9.1
+// @version              2022.12.16.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -14956,9 +14956,9 @@ ImgOps | https://imgops.com/#b#`;
                 // 修正底部距离
                 this.eleMaps['sidebar-toggle'].style[sidebarPosition] = isHidden ? '-3px' : '0';
                 if(isHidden){
-                    this.eleMaps['sidebar-toggle'].classList.remove("pv-gallery-sidebar-toggle-hide");
+                    this.gallery.classList.remove("pv-gallery-sidebar-toggle-hide");
                 }else{
-                    this.eleMaps['sidebar-toggle'].classList.add("pv-gallery-sidebar-toggle-hide");
+                    this.gallery.classList.add("pv-gallery-sidebar-toggle-hide");
                 }
                 this.eleMaps['sidebar-toggle-content'].innerHTML = createHTML(isHidden ? '▼' : '▲');
                 this.eleMaps['sidebar-viewmore'].style.visibility = isHidden ? 'visible' : 'hidden';
@@ -15186,6 +15186,12 @@ ImgOps | https://imgops.com/#b#`;
 
                 this.eleMaps['head-left-img-info-resolution'].textContent=imgNaturalSize.w + ' x ' + imgNaturalSize.h;
                 var thumbnails=this.eleMaps['sidebar-thumbnails-container'].childNodes,i=0;
+                thumbnails=Array.prototype.slice.call(thumbnails).filter(function(thumbnail){
+                    if(thumbnail.style.display=="none"){
+                        return false;
+                    }
+                    return true;
+                });
                 while(thumbnails[i]!=relatedThumb && i<thumbnails.length)i++;
                 if(i<thumbnails.length)this.eleMaps['head-left-img-info-count'].textContent="（"+(i+1)+" / "+thumbnails.length+"）";
                 // 加上图片的注释
@@ -16991,10 +16997,21 @@ ImgOps | https://imgops.com/#b#`;
                     z-index:1;\
                     display:none;\
                     }\
-                    span.pv-gallery-sidebar-toggle-hide{\
-                    opacity: 0.5;\
+                    .pv-gallery-container.pv-gallery-sidebar-toggle-hide>.pv-gallery-body>.pv-gallery-img-container>span.pv-gallery-sidebar-toggle{\
+                    opacity: 0.1;\
+                    transition: opacity .3s ease;\
                     }\
-                    span.pv-gallery-sidebar-toggle-hide:hover{\
+                    .pv-gallery-container.pv-gallery-sidebar-toggle-hide>.pv-gallery-body>.pv-gallery-img-container>span.pv-gallery-sidebar-toggle:hover{\
+                    opacity: 1;\
+                    }\
+                    .pv-gallery-container.pv-gallery-sidebar-toggle-hide>.pv-gallery-body{\
+                    border-top: 0px solid transparent;\
+                    }\
+                    .pv-gallery-container.pv-gallery-sidebar-toggle-hide>.pv-gallery-head{\
+                    opacity: 0.1;\
+                    transition: opacity .3s ease;\
+                    }\
+                    .pv-gallery-container.pv-gallery-sidebar-toggle-hide>.pv-gallery-head:hover{\
                     opacity: 1;\
                     }\
                     .pv-gallery-sidebar-viewmore{\
@@ -17012,7 +17029,8 @@ ImgOps | https://imgops.com/#b#`;
                     border-radius: 15px;\
                     line-height: 2 !important;\
                     font-family: auto;\
-                    opacity: 0.5;\
+                    opacity: 0.2;\
+                    transition: opacity .3s ease;\
                     }\
                     .pv-gallery-sidebar-viewmore:hover{\
                     opacity: 1;\
