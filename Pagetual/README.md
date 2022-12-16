@@ -154,7 +154,7 @@ Use this to eval javaScript code and return target url of next page with doc (do
 
 stopSign
 --
-Stop load next page when match this sign
+Stop to load next page when matching this sign
 
 1. Stop when "#pagenum" don't exist or ".disable" exist
 ```JSON
