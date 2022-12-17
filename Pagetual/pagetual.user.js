@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.33.16
+// @version      1.9.33.17
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -1359,7 +1359,8 @@
                             ele = img;
                         }
                     }
-                    self.curSiteRule.pageElement=geneSelector(ele);
+                    self.curSiteRule.pageElement = geneSelector(ele);
+                    let pf = ele.parentNode && curWin.getComputedStyle(ele.parentNode).display.indexOf('flex') !== -1;
                     if (ele.children.length > 1) {
                         if (curWin.getComputedStyle(ele).gridArea) {
                             self.curSiteRule.pageElement += ">*";
@@ -1368,29 +1369,32 @@
                             self.curSiteRule.pageElement += ">article";
                             ele = ele.children;
                         } else {
-                            let hasText=false;
-                            for(let i in ele.childNodes){
-                                let child=ele.childNodes[i];
-                                if(child.nodeType==3 && child.nodeValue.trim()!=''){
-                                    hasText=true;
-                                    ele=[ele];
+                            let hasText = false;
+                            for (let i in ele.childNodes) {
+                                let child = ele.childNodes[i];
+                                if (child.nodeType == 3 && child.nodeValue.trim() !== '') {
+                                    hasText = true;
+                                    ele = [ele];
                                     break;
                                 }
                             }
-                            if(!hasText){
-                                let middleChild=ele.children[parseInt(ele.children.length/2)];
-                                if(curWin.getComputedStyle(ele).display==='flex' || (rulesData.opacity!=0 && curWin.getComputedStyle(ele.parentNode).display.indexOf('flex')==-1)){
-                                    ele=[ele];
-                                }else if((middleChild.style && middleChild.style.position=="absolute" && middleChild.style.left && middleChild.style.top) || ele.tagName=="UL" || curHeight==0){
-                                    ele=[ele];
-                                }else{
-                                    self.curSiteRule.pageElement+=">*";
-                                    ele=ele.children;
+                            if (!hasText) {
+                                let middleChild = ele.children[parseInt(ele.children.length / 2)];
+                                if (curWin.getComputedStyle(ele).display === 'flex' || (rulesData.opacity != 0 && !pf)) {
+                                    ele = [ele];
+                                } else if ((middleChild.style && middleChild.style.position === "absolute" && middleChild.style.left && middleChild.style.top) || ele.tagName === "UL" || curHeight == 0) {
+                                    ele = [ele];
+                                } else {
+                                    self.curSiteRule.pageElement += ">*";
+                                    ele = ele.children;
                                 }
                             }
                         }
-                    }else{
-                        ele=[ele];
+                    } else if (pf) {
+                        self.curSiteRule.pageElement += ">*";
+                        ele = ele.children;
+                    } else {
+                        ele = [ele];
                     }
                     debug(self.curSiteRule.pageElement, 'Page element');
                     return ele;
@@ -1573,8 +1577,10 @@
                 for(i=aTags.length-1;i>=0;i--){
                     if(next1 && next2 && next3 && next4)break;
                     let aTag=aTags[i];
-                    if(aTag.innerText=="§")continue;
-                    if(aTag.innerText.length>50)continue;
+                    if(aTag.innerText){
+                        if(aTag.innerText=="§")continue;
+                        if(aTag.innerText.trim().length>55)continue;
+                    }
                     if(aTag.style.display=="none")continue;
                     if(aTag.href && /next$/i.test(aTag.href))continue;
                     if(aTag.className && /slick|slide|gallery/i.test(aTag.className))continue;
@@ -1584,9 +1590,9 @@
                         if(aTag.parentNode.classList && aTag.parentNode.classList.contains('disabled'))continue;
                         if(aTag.parentNode.tagName == "BLOCKQUOTE")continue;
                     }
-                    let innerText = (aTag.innerText||aTag.value||'').replace(/ /g, '');
+                    let innerText = (aTag.innerText||aTag.value||'').trim().replace(/( |\n.*)/g, '');
                     let isJs = !aTag.href || /^(javascript|#)/.test(aTag.href.replace(location.href,""));
-                    if(innerText.length<=18){
+                    if(innerText && innerText.length<=25){
                         if(!next1){
                             if(/^翻?[下后後次][一ー1]?[页頁张張]|^(next[ _-]?page|older)\s*[›>→»]?$|次のページ|^次へ?$|Вперед/i.test(innerText)){
                                 if(isJs){
