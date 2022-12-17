@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.53
+// @version      1.6.6.54.1
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -6570,27 +6570,26 @@
                         else document.body.style.cssText = self.initBodyStyle;
                         self.bar.parentNode.classList.add("resizePage");
                         document.body.style.position = "absolute";
-                        document.body.style.overflow = "auto";
                         switch (className) {
                             case "search-jumper-left":
                                 document.body.style.width = `calc(100% - ${self.scale * 42}px)`;
-                                document.body.style.height = "100%";
                                 document.body.style.right = "0px";
                                 break;
                             case "search-jumper-right":
                                 document.body.style.width = `calc(100% - ${self.scale * 42}px)`;
-                                document.body.style.height = "100%";
                                 document.body.style.left = "0px";
                                 break;
                             case "search-jumper-bottom":
                                 document.body.style.width = "100%";
                                 document.body.style.height = `calc(100% - ${self.scale * 42}px)`;
                                 document.body.style.top = "0px";
+                                document.body.style.overflow = "auto";
                                 break;
                             default:
                                 document.body.style.width = "100%";
                                 document.body.style.height = `calc(100% - ${self.scale * 42}px)`;
                                 document.body.style.bottom = "0px";
+                                document.body.style.overflow = "auto";
                                 break;
                         }
                     } else if (searchData.prefConfig.autoHideAll) {
