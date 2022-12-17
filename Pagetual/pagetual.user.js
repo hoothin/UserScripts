@@ -1579,7 +1579,7 @@
                     let aTag=aTags[i];
                     if(aTag.innerText){
                         if(aTag.innerText=="§")continue;
-                        if(aTag.innerText.trim().length>55)continue;
+                        if(aTag.innerText.trim().length>80)continue;
                     }
                     if(aTag.style.display=="none")continue;
                     if(aTag.href && /next$/i.test(aTag.href))continue;
@@ -1590,7 +1590,7 @@
                         if(aTag.parentNode.classList && aTag.parentNode.classList.contains('disabled'))continue;
                         if(aTag.parentNode.tagName == "BLOCKQUOTE")continue;
                     }
-                    let innerText = (aTag.innerText||aTag.value||'').trim().replace(/( |\n.*)/g, '');
+                    let innerText = (aTag.innerText||aTag.value||'').trim().replace(/(\n.*| )/g, '');
                     let isJs = !aTag.href || /^(javascript|#)/.test(aTag.href.replace(location.href,""));
                     if(innerText && innerText.length<=25){
                         if(!next1){
