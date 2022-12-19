@@ -5285,10 +5285,10 @@
 {
   "resource_url": "http://wedata.net/items/85418",
   "data": {
-    "pageElement": "id('rso')/div",
+    "pageElement": "id('rso')|id('center_col')/style[contains(.,'relative')][id('rso')]",
     "comment": "Changed to avoid conflict with news search. Example:https://www.google.com/search?q=google+search+mobile&client=firefox-b-1-d&tbm=nws&ei=3pG-YYugMpbCytMP_-ar-A0&start=0&sa=N&ved=2ahUKEwiLh7nq4e70AhUWoXIEHX_zCt84UBDy0wN6BAgBEDY&biw=1536&bih=711&dpr=1.25",
     "comment2": "Has infinite scroll. https://www.google.com/search?q=autopagerize",
-    "nextLink": "//div[@role=\"progressbar\"]/following-sibling::a[@role=\"button\"][not(contains(@style, 'display: none'))][contains(@href, 'q=')]\r\n|\r\nid('botstuff')/descendant::a[contains(@href, 'start=')][last()][not(string(.)) and not(following-sibling::*)]\r\n|\r\nid(\"extrares\")//span[count(a)>0]/span/following-sibling::a",
+    "nextLink": "//div[@role=\"progressbar\"]/following-sibling::a[@role=\"button\"][not(contains(@style, 'display: none'))][contains(@href, 'start=')]\r\n|\r\nid('botstuff')/descendant::span/a[contains(@href, 'start=')][last()][not(string(.)) and not(following-sibling::*)]\r\n|\r\nid('pnnext')",
     "url": "^https?://[^./]+\\.google(?:\\.[^./]{2,3}){1,2}/search",
     "exampleUrl": "https://www.google.com/search?q=autopagerize&start=10\r\nhttps://www.google.co.jp/search?q=chrome&tbm=bks"
   },
@@ -5296,7 +5296,7 @@
   "created_by": "t_f_m_",
   "name": "google search mobile",
   "created_at": "2020-07-23T07:55:02+09:00",
-  "updated_at": "2022-12-16T22:41:38+09:00"
+  "updated_at": "2022-12-18T08:42:39+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85417",
@@ -31687,17 +31687,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/62015",
-  "name": "エロじゃないけれど～　伍",
-  "updated_at": "2012-06-28T01:17:17+09:00",
+  "data": {
+    "pageElement": "//center[form[contains(concat(@action,\" \"),\"d.php \")]]/following-sibling::form/node()[following-sibling::table[@align=\"left\"]]",
+    "nextLink": "//table[@align=\"left\"]//td/b/following-sibling::a",
+    "url": "^https?://3d\\.skr\\.jp/[23]d/",
+    "exampleUrl": "http://3d.skr.jp/3d/ http://3d.skr.jp/2d/"
+  },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "uchikouko",
+  "name": "エロじゃないけれど～　伍",
   "created_at": "2012-06-26T23:54:57+09:00",
-  "data": {
-    "nextLink": "//table[@align=\"left\"]//td/b/following-sibling::a",
-    "exampleUrl": "http://3d.skr.jp/3d/ http://3d.skr.jp/2d/",
-    "url": "^http://3d\\.skr\\.jp/[23]d/",
-    "pageElement": "//center[form[contains(concat(@action,\" \"),\"d.php \")]]/following-sibling::form/node()[following-sibling::table[@align=\"left\"]]"
-  }
+  "updated_at": "2022-12-18T07:34:16+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/61998",
