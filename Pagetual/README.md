@@ -143,12 +143,9 @@ Example url of this rule
 
 [stopSign](https://pagetual.hoothin.com/en/rules/stopSign.html)
 --
-
-1. Stop when "#pagenum" don't exist or ".disable" exist
 ```JSON
 "stopSign": ["#pagenum", ".disable"] 
 ```
-2. Stop when number in "#pagenum" matching 1st group of `(\\d+)` by RegExp == number matching 1st group of `\\/(\\d+)`
 ```JSON
 "stopSign": [
     [
@@ -161,7 +158,6 @@ Example url of this rule
     ]
 ]
 ```
-3. Stop when matching rule-1 or rule-2
 ```JSON
 "stopSign": ["#pagenum", ".disable",
     [
@@ -174,7 +170,6 @@ Example url of this rule
     ]
 ] 
 ```
-4. Stop when stopSign(doc, nextLink) return true
 ```JSON
 "stopSign": "if (doc.querySelector('.disable')) return true; if (nextLink.className === 'disable') return true; return false;" 
 ```
