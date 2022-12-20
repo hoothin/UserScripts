@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.33.18
+// @version      1.9.33.19
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -99,7 +99,6 @@
 // @exclude      *://baike.baidu.com/*
 // @exclude      *://*.instagram.com/*
 // @exclude      *://order.jd.com/*
-// @exclude      *://pagetual.hoothin.com/*
 // @exclude      *://wenku.baidu.com/view/*
 // @exclude      *://pan.baidu.com/*
 // @connect      *
@@ -670,8 +669,8 @@
     };
     var rulesData={},ruleUrls,updateDate;
     const configPage=["https://github.com/hoothin/UserScripts/tree/master/Pagetual",
-                     "https://hoothin.github.io/UserScripts/Pagetual/"];
-    const guidePage=/^https?:\/\/.*\/PagetualGuide\/.*rule\.html/;
+                      "https://hoothin.github.io/UserScripts/Pagetual/"];
+    const guidePage=/^https?:\/\/.*pagetual.*rule\.html/i;
     const ruleImportUrlReg=/greasyfork\.org\/.*scripts\/438684[^\/]*(\/discussions|\/?$)|github\.com\/hoothin\/UserScripts\/(tree\/master\/Pagetual|issues\/)/i;
     const allOfBody="body>*";
     _GM_registerMenuCommand(i18n("configure"), ()=>{
@@ -3105,6 +3104,7 @@
             return true;
         }
         if(location.href.indexOf("PagetualGuide")!=-1) return true;
+        if(location.hostname==="pagetual.hoothin.com") return true;
 
         var configCon,insertPos;
         var noRules=!rulesData.urls || rulesData.urls.length===0;
