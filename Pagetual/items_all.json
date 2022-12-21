@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86030",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[@class='result-search']/ul",
+    "nextLink": "//a[span[@class='nv-pager__next-label']]",
+    "url": "^https://www\\.furusato-tax\\.jp/",
+    "exampleUrl": "https://www.furusato-tax.jp/search?q=%E3%83%88%E3%82%A4%E3%83%AC%E3%83%83%E3%83%88%E3%83%9A%E3%83%BC%E3%83%91%E3%83%BC"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "sunny",
+  "name": "ふるさとチョイス",
+  "created_at": "2022-12-20T16:14:05+09:00",
+  "updated_at": "2022-12-20T16:14:05+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86028",
   "data": {
     "insertBefore": "",
