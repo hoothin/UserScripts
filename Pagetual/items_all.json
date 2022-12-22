@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86032",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[@class='tab-content']",
+    "nextLink": "//*[@rel=\"next\"]",
+    "url": "https?://vnpt\\.com\\.vn/",
+    "exampleUrl": "https://vnpt.com.vn/goi-home/home-combo"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "powertalent",
+  "name": "VNPT",
+  "created_at": "2022-12-22T10:07:23+09:00",
+  "updated_at": "2022-12-22T10:07:23+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86030",
   "data": {
     "insertBefore": "",
