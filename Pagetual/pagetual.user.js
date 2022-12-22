@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.33.20
+// @version      1.9.33.21
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -3000,6 +3000,79 @@
         }
     }
 
+    function createEdit(){
+        var options = {
+            mode: 'code',
+            modes: ['code', 'tree'],
+            templates: [
+                {
+                    text: 'New site',
+                    title: 'Insert a new site',
+                    className: 'jsoneditor-type-object',
+                    field: 'SiteTemplate',
+                    value: {
+                        'name': 'Site name',
+                        'url': 'Site url'
+                    }
+                }
+            ],
+            schema: {
+                "title": "Sites data",
+                "description": "Object containing site config",
+                "type": "array",
+                "items": {
+                    "type": 'object',
+                    "properties": {
+                        "name": {
+                            "title": "Site Name",
+                            "description": "The site's name.",
+                            "examples": [
+                                "Google"
+                            ],
+                            "type": "string"
+                        },
+                        "url": {
+                            "title": "Site Url",
+                            "description": "The Regexp of site's url.",
+                            "examples": [
+                                "^https:\/\/yande\\.re\/"
+                            ],
+                            "type": "string"
+                        }
+                    },
+                    "required": ["name", "url"]
+                }
+            }
+        };
+        var container = document.getElementById("jsoneditor");
+        container.style.height = '800px';
+        container.innerHTML = "";
+        var editor = new JSONEditor(container, options);
+        editor.set(ruleParser.customRules);
+        document.querySelector("#saveBtn").onclick=e=>{
+            try{
+                storage.setItem("hpRules", []);
+                storage.setItem("smartRules", []);
+                let customRules=editor.get();
+                if(!customRules){
+                    storage.setItem("customRules", "");
+                }else{
+                    if(Array && Array.isArray && !Array.isArray(customRules)){
+                        showTips("Rules must be a Array!");
+                        return;
+                    }
+                    debug(customRules);
+                    storage.setItem("customRules", customRules);
+                }
+            }catch(e){
+                debug(e);
+                showTips("JSON error, check again!");
+                return;
+            }
+            showTips("Edit successfully");
+        };
+    }
+
     function initConfig(){
         initView();
         try{
@@ -3027,77 +3100,6 @@
             showTips(i18n("beginUpdate"));
         });
         if(guidePage.test(location.href)){
-            function createEdit(){
-                var options = {
-                    mode: 'code',
-                    modes: ['code', 'tree'],
-                    templates: [
-                        {
-                            text: 'New site',
-                            title: 'Insert a new site',
-                            className: 'jsoneditor-type-object',
-                            field: 'SiteTemplate',
-                            value: {
-                                'name': 'Site name',
-                                'url': 'Site url'
-                            }
-                        }
-                    ],
-                    schema: {
-                        "title": "Sites data",
-                        "description": "Object containing site config",
-                        "type": "array",
-                        "items": {
-                            "type": 'object',
-                            "properties": {
-                                "name": {
-                                    "title": "Site Name",
-                                    "description": "The site's name.",
-                                    "examples": [
-                                        "Google"
-                                    ],
-                                    "type": "string"
-                                },
-                                "url": {
-                                    "title": "Site Url",
-                                    "description": "The Regexp of site's url.",
-                                    "examples": [
-                                        "^https:\/\/yande\\.re\/"
-                                    ],
-                                    "type": "string"
-                                }
-                            },
-                            "required": ["name", "url"]
-                        }
-                    }
-                };
-                var container = document.getElementById("jsoneditor");
-                container.style.height='800px';
-                var editor = new JSONEditor(container, options);
-                editor.set(ruleParser.customRules);
-                document.querySelector("#saveBtn").onclick=e=>{
-                    try{
-                        storage.setItem("hpRules", []);
-                        storage.setItem("smartRules", []);
-                        let customRules=editor.get();
-                        if(!customRules){
-                            storage.setItem("customRules", "");
-                        }else{
-                            if(Array && Array.isArray && !Array.isArray(customRules)){
-                                showTips("Rules must be a Array!");
-                                return;
-                            }
-                            debug(customRules);
-                            storage.setItem("customRules", customRules);
-                        }
-                    }catch(e){
-                        debug(e);
-                        showTips("JSON error, check again!");
-                        return;
-                    }
-                    showTips("Edit successfully");
-                };
-            }
             if(JSONEditor){
                 createEdit();
             }else{
@@ -4353,7 +4355,17 @@
         isPause = true;
         setTimeout(() => {
             lastActiveUrl = location.href;
-            if (location.href == configPage[0] || guidePage.test(location.href)) {
+            if (guidePage.test(location.href)) {
+                setTimeout(() => {
+                    if(JSONEditor){
+                        createEdit();
+                    }else{
+                        window.onload = e => {
+                            createEdit();
+                        }
+                    }
+                }, 500);
+            } else if (location.href == configPage[0]) {
                 location.reload();
             } else if (!ruleParser.ruleMatch(ruleParser.curSiteRule)) {
                 initPage();
