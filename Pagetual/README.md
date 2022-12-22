@@ -60,289 +60,163 @@ Example url of this rule
 
 [url](https://pagetual.hoothin.com/en/rules/url.html)
 --
-```JSON
-"url": "^https://abc\\.com/\\d+"
-```
+RegExp for the url of target site
 
 [pinUrl](https://pagetual.hoothin.com/en/rules/pinUrl.html)
 --
-```JSON
-"pinUrl": true
-```
+Sometimes the next link or page element will be inexistence, set this to true so you can pin the rule just with url instead of finding elements by intelligent rules
 
 [enable](https://pagetual.hoothin.com/en/rules/enable.html)
 --
-```JSON
-"enable": 0
-```
+0 means stop action when all matched
 
 [include](https://pagetual.hoothin.com/en/rules/include.html)
 --
-```JSON
-"include": "div.content"
-```
+Selector or xpath of the element which must include
 
 [exclude](https://pagetual.hoothin.com/en/rules/exclude.html)
 --
-```JSON
-"exclude": "div.content"
-```
+Selector or xpath of the element which must not include
 
 [wait](https://pagetual.hoothin.com/en/rules/wait.html)
 --
-```JSON
-"wait": 500
-"wait": "let img=doc.querySelector('ul.list img');return img!=null"
-```
+The time to wait for page ready when you are sure the url match the site, you can also use a javaScript code which return a boolean to check if the page is ready instead
 
 [waitElement](https://pagetual.hoothin.com/en/rules/waitElement.html)
 --
-```JSON
-"waitElement": [
-    ".summary",
-    "#popular.fade:not(.in)"
-]
-```
+The array["exist", "not exist"] contains "selector or xpath of element must exist (for some lazyload element)" & "selector or xpath of element must not exist (for some loading placeholder which need scroll into view to load)"
 
 [action](https://pagetual.hoothin.com/en/rules/action.html)
 --
-```JSON
-"action": 1
-```
+0 means load url and insert with static html, 1 means load by iframe so that dynamic javaScript code on page may effect, 2 means force insert iframe to bottom
 
 [nextLink](https://pagetual.hoothin.com/en/rules/nextLink.html)
 --
-```JSON
-"nextLink": ".page-next>a"
-"nextLink": [
-    ".page1-next>a",
-    ".page2-next>a",
-    ".page3-next>a"
-]
-```
+Selector or xpath of next page link, disable when set to 0, you can let it to be a array to contains multiple next links.
 
 [nextLinkByUrl](https://pagetual.hoothin.com/en/rules/nextLinkByUrl.html)
 --
-```JSON
-"nextLinkByUrl": [
-    "(&page=(\\d+))?$",
-    "&page={$2+1}"
-]
-"nextLinkByUrl": [
-    "(&page=(\\d+))?$",
-    "&page={$2+1}",
-    ".disable>button"
-]
-```
+If there is no next element, you can use this to generate a href from current url, [0] means RegExp string, [1] means replace string, [2] means selector or xpath of the element which must include, [3] means selector or xpath of the element which must not include, you can use {} to eval simple code
 
-[nextLinkByJs](https://pagetual.hoothin.com/en/rules/nextLinkByJs.html)
+[nextLinkByJs `(doc)`](https://pagetual.hoothin.com/en/rules/nextLinkByJs.html)
 --
-```JSON
-"nextLinkByJs": "let n=doc.querySelector('a.curr+a');if(n)return n.href.replace(/^javascript:.*\\((\\d+)'\\);/,'$1_.html');"
-```
+Use this to eval javaScript code and return target url of next page with doc (document of every page loaded)
 
 [stopSign](https://pagetual.hoothin.com/en/rules/stopSign.html)
 --
-```JSON
-"stopSign": ["#pagenum", ".disable"] 
-```
-```JSON
-"stopSign": [
-    [
-        "#pagenum",
-        "(\\d+)"
-    ],
-    [
-        "#pagenum",
-        "\\/(\\d+)"
-    ]
-]
-```
-```JSON
-"stopSign": ["#pagenum", ".disable",
-    [
-        "#pagenum",
-        "(\\d+)"
-    ],
-    [
-        "#pagenum",
-        "\\/(\\d+)"
-    ]
-] 
-```
-```JSON
-"stopSign": "if (doc.querySelector('.disable')) return true; if (nextLink.className === 'disable') return true; return false;" 
-```
+Stop to load next page when matching this sign
 
 [pageElement](https://pagetual.hoothin.com/en/rules/pageElement.html)
 --
-```JSON
-"pageElement": ".Context>.Article"
-```
+Selector or xpath of main content which need to insert, you can let it to be a array to contains multiple page elements.
 
-[pageElementByJs](https://pagetual.hoothin.com/en/rules/pageElementByJs.html)
+[pageElementByJs `(over)`](https://pagetual.hoothin.com/en/rules/pageElementByJs.html)
 --
-```JSON
-"pageElementByJs": "let src=match[1]+match[3];img.onload=()=>{over([img])};img.onerror=e=>{over()};img.src=src;"
-```
+Use this to eval javaScript code and create the elements whatever you want to insert, a over(eles) is needed to callback with elements array for insert
 
 [replaceElement](https://pagetual.hoothin.com/en/rules/replaceElement.html)
 --
-```JSON
-"replaceElement": "#page"
-"replaceElement": ["#page1", "#page2"]
-```
+Selector or xpath of element which you want to replace with new one, can be a array
 
 [lazyImgSrc](https://pagetual.hoothin.com/en/rules/lazyImgSrc.html)
 --
-```JSON
-"lazyImgSrc": "data-cfsrc"
-"lazyImgSrc": ["data-lazy-src", "removeProp1,removeProp2"]
-```
+The attr of image which target to real src, can be set by ["lazysrc", "removeProp1,removeProp2"] to remove props of image
 
 [css](https://pagetual.hoothin.com/en/rules/css.html)
 --
-```JSON
-"css": ".card-lazy{display:none}"
-```
+Add css so you can show some hidden element, start with "inIframe:" then this css will effect only in next iframe page
 
 [insert](https://pagetual.hoothin.com/en/rules/insert.html)
 --
-```JSON
-"insert": "ul#feed-main"
-```
+Which position you want to insert, you can let it to be a array to contains multiple positions.
 
 [insertPos](https://pagetual.hoothin.com/en/rules/insertPos.html)
 --
-```JSON
-"insertPos": 2
-```
+1 means insert before, 2 means just append to the bottom of target
 
-[init](https://pagetual.hoothin.com/en/rules/init.html)
+[init `(doc,win,iframe)`](https://pagetual.hoothin.com/en/rules/init.html)
 --
-```JSON
-"init": "if(doc)doc.querySelector('[data-title=sh]').click();"
-```
+The javaScript code to run only once with current main page with doc:(document of main page)
 
-[pagePre](https://pagetual.hoothin.com/en/rules/pagePre.html)
+[pagePre `(response)`](https://pagetual.hoothin.com/en/rules/pagePre.html)
 --
-```JSON
-"pagePre": "return decodeURI(response).replace(/[\\\\]/g,'')"
-```
+The javaScript code to run after get response from URL of next link, you can modify the response content and return it
 
-[pageInit](https://pagetual.hoothin.com/en/rules/pageInit.html)
+[pageInit `(doc, eles)`](https://pagetual.hoothin.com/en/rules/pageInit.html)
 --
-```JSON
-"pageInit": "let ops=doc.querySelectorAll('op');[].forEach.call(ops,op=>{img.src=op.value;imgCon.appendChild(img)})"
-```
+The javaScript code to run with every page inserted with doc:(document of every page loaded) and eles:(elements found with rule), run before inserted, you can trigger event like onView()
 
-[pageAction](https://pagetual.hoothin.com/en/rules/pageAction.html)
+[pageAction `(doc, eles)`](https://pagetual.hoothin.com/en/rules/pageAction.html)
 --
-```JSON
-"pageAction": "let j=document.querySelector('.lazy');eles.forEach(i=>{i.src=i.dataset.srcset;})"
-```
+The javaScript code to run with every page inserted with doc:(document of every page loaded) and eles:(elements found with rule), run after inserted, you can add functions like click()
 
 [loadMore](https://pagetual.hoothin.com/en/rules/loadMore.html)
 --
-```JSON
-"loadMore": ".loadMore"
-```
+Selector of "load more" button 
 
 [sleep](https://pagetual.hoothin.com/en/rules/sleep.html)
 --
-```JSON
-"sleep": 1000
-```
+Sleep time (ms) when load next page if site is limited by time interval
 
 [rate](https://pagetual.hoothin.com/en/rules/rate.html)
 --
-```JSON
-"rate": 3
-```
+The multi-windowHeight which you can set to 2 or 3 while some sites load next page slowly 
 
 [autoLoadNum](https://pagetual.hoothin.com/en/rules/autoLoadNum.html)
 --
-```JSON
-"autoLoadNum": 5
-```
+The amount of pages for auto turning after page opening
 
 [listenHashChange](https://pagetual.hoothin.com/en/rules/listenHashChange.html)
 --
-```JSON
-"listenHashChange": true
-```
+Set this to true so pagetual will restart when hash changed
 
 [refreshByClick](https://pagetual.hoothin.com/en/rules/refreshByClick.html)
 --
-```JSON
-"refreshByClick": "#sreach"
-```
+If the site reload content without changing url when click a submit button. Set this with the selector of the target button, pagetual will reset after click it.
 
 [pageNum](https://pagetual.hoothin.com/en/rules/pageNum.html)
 --
-```JSON
-"pageNum": "&start={15*($p-1)}"
-```
+Point the page number with $p in current url, you can use{} to eval result string from page number, like {$p\*25+1}
 
-[pageBar](https://pagetual.hoothin.com/en/rules/pageBar.html)
+[pageBar `(pageBar)`](https://pagetual.hoothin.com/en/rules/pageBar.html)
 --
-```JSON
-"pageBar": "pageBar.classList.add('j_thread_list');"
-```
+The javaScript code to change pageBar, 0 means hide
 
 [pageBarText](https://pagetual.hoothin.com/en/rules/pageBarText.html)
 --
-```JSON
-"pageBarText": 1
-```
+Set to 1 so the document title of next page will be shown on pagebar
 
 [autoClick](https://pagetual.hoothin.com/en/rules/autoClick.html)
 --
-```JSON
-"autoClick": "#btn-sky"
-```
+The css selector or xpath of element which you want to click automatically
 
 [history](https://pagetual.hoothin.com/en/rules/history.html)
 --
-```JSON
-"history": 1
-```
+Set to 0 then history writing will be disable. Set to 1 then history writing will be enable. Set to 2 then history writing will action immediately after splicing. No matter what value is the general option.
 
 [lockScroll](https://pagetual.hoothin.com/en/rules/lockScroll.html)
 --
-```JSON
-"lockScroll": true
-```
+Set to true if you don't want the page to auto scroll when navigate to next page
 
 [wheel](https://pagetual.hoothin.com/en/rules/wheel.html)
 --
-```JSON
-"wheel": true
-```
+Set to true so the next page action will only effect when the mouse wheel roll
 
 [fitWidth](https://pagetual.hoothin.com/en/rules/fitWidth.html)
 --
-```JSON
-"fitWidth": false
-```
+Set to false if you find the pageElement get the wrong small width
 
 [pageElementStyle](https://pagetual.hoothin.com/en/rules/pageElementStyle.html)
 --
-```JSON
-"pageElementStyle": "font-size: xx-large;"
-```
+Custom cssText of style for pageElement
 
 [delay](https://pagetual.hoothin.com/en/rules/delay.html)
 --
-```JSON
-"delay": "return document.querySelector('#feed_pagenation>li.cur').innerText>=curpage"
-```
+The javaScript code to delay next action until return true, use this prop to get complete page elements with lazy load.
 
 [manualMode](https://pagetual.hoothin.com/en/rules/manualMode.html)
 --
-```JSON
-"manualMode": true
-```
+Set to true to enable manual mode, then paging will stop, right arrow (or 'pagetual.next' event) will be bound to click next link.
 
 [child script](https://pagetual.hoothin.com/en/rules/child-script.html)
 --
