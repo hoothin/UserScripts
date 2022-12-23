@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.33.22
+// @version      1.9.33.23
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -667,12 +667,14 @@
             cb(value);
         }
     };
-    var rulesData={},ruleUrls,updateDate;
-    const configPage=["https://github.com/hoothin/UserScripts/tree/master/Pagetual",
+    var rulesData = {}, ruleUrls, updateDate;
+    const configPage = ["https://github.com/hoothin/UserScripts/tree/master/Pagetual",
                       "https://hoothin.github.io/UserScripts/Pagetual/"];
-    const guidePage=/^https?:\/\/.*pagetual.*rule\.html/i;
-    const ruleImportUrlReg=/greasyfork\.org\/.*scripts\/438684[^\/]*(\/discussions|\/?$)|github\.com\/hoothin\/UserScripts\/(tree\/master\/Pagetual|issues\/)/i;
-    const allOfBody="body>*";
+    const guidePage = /^https?:\/\/.*pagetual.*rule\.html/i;
+    const ruleImportUrlReg = /greasyfork\.org\/.*scripts\/438684[^\/]*(\/discussions|\/?$)|github\.com\/hoothin\/UserScripts\/(tree\/master\/Pagetual|issues\/)/i;
+    const allOfBody = "body>*";
+    const nextTextReg1 = new RegExp("\u005e\u7ffb\u003f\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u9875\u9801\u5f20\u5f35\u005d\u007c\u005e\u0028\u006e\u0065\u0078\u0074\u005b\u0020\u005f\u002d\u005d\u003f\u0070\u0061\u0067\u0065\u007c\u006f\u006c\u0064\u0065\u0072\u0029\u005c\u0073\u002a\u005b\u203a\u003e\u2192\u00bb\u005d\u003f\u0024\u007c\u6b21\u306e\u30da\u30fc\u30b8\u007c\u005e\u6b21\u3078\u003f\u0024\u007cВперед", "i");
+    const nextTextReg2 = new RegExp("\u005e\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u7ae0\u8bdd\u8a71\u8282\u7bc0\u4e2a\u500b\u5e45\u005d", "i");
     _GM_registerMenuCommand(i18n("configure"), ()=>{
         _GM_openInTab(configPage[0],{active:true});
     });
@@ -1440,7 +1442,7 @@
 
         getPage(doc){
             if(typeof _unsafeWindow.Discourse!='undefined')return {};
-            let video=document.querySelector("video,iframe[src*=player],iframe[src*=m3u8],iframe[id*=play]");
+            let video=document.querySelector("video,iframe[id*=play],[id*=play]>iframe,iframe[src*=player],iframe[src*=m3u8]");
             if(video){
                 let scrollWidth = video.scrollWidth || video.offsetWidth;
                 let scrollHeight = video.scrollHeight || video.offsetHeight;
@@ -1481,7 +1483,6 @@
                 body.querySelector(".pagination-nav__item--next>a")||
                 body.querySelector("a.pageright")||
                 body.querySelector(".page-numbers.current+a")||
-                body.querySelector("a[title='Next page']")||
                 body.querySelector("[title='Next page']")||
                 body.querySelector("[title='下一页']")||
                 body.querySelector("[title='下一頁']")||
@@ -1502,13 +1503,13 @@
                 body.querySelector("button.next")||
                 body.querySelector("[title=next]")||
                 body.querySelector("a#linkNext")||
-                getElementByXpath("//a[contains(@class, 'page__next')]",curPage,curPage);
+                body.querySelector("a[class*=page__next]");
             if(!next){
                 let nexts=body.querySelectorAll("a.next");
                 for(i=0;i<nexts.length;i++){
-                    if(!/^([上前首尾][一ー1]?[页頁张張]|previous(\s*page)?\s*›?$|前のページ)/i.test(nexts[i].innerText.trim()) &&
-                       nexts[i].style.display!=="none" &&
-                       nexts[i].parentNode.style.display!=="none"){
+                    if(nexts[i].style.display!=="none" &&
+                       nexts[i].parentNode.style.display!=="none" &&
+                       !/^\s*([上前首尾]|previous)/i.test(nexts[i].innerText.trim())){
                         next=nexts[i];
                         break;
                     }
@@ -1542,7 +1543,7 @@
                     next=null;
                 }
             }
-            if(next && /^[下后後][一ー1]?[章话話篇]/i.test(next.innerText.trim())){
+            if(next && nextTextReg2.test(next.innerText.trim())){
                 next2=next;
                 next=null;
             }
@@ -1586,18 +1587,20 @@
                     }
                     if(aTag.style.display=="none")continue;
                     if(aTag.href && /next$/i.test(aTag.href))continue;
-                    if(aTag.className && /slick|slide|gallery/i.test(aTag.className))continue;
-                    if(aTag.classList && aTag.classList.contains('disabled'))continue;
+                    if(aTag.className){
+                        if(/slick|slide|gallery/i.test(aTag.className))continue;
+                        if(aTag.classList && aTag.classList.contains('disabled'))continue;
+                    }
                     if(aTag.parentNode){
                         if(aTag.parentNode.className && /slick|slide|gallery/i.test(aTag.parentNode.className))continue;
                         if(aTag.parentNode.classList && aTag.parentNode.classList.contains('disabled'))continue;
                         if(aTag.parentNode.tagName == "BLOCKQUOTE")continue;
                     }
-                    let innerText = (aTag.innerText||aTag.value||'').trim().replace(/(\n.*| )/g, '');
+                    let innerText = (aTag.innerText||aTag.value||aTag.title||'').trim().replace(/(\n.*| )/g, '');
                     let isJs = !aTag.href || /^(javascript|#)/.test(aTag.href.replace(location.href,""));
                     if(innerText && innerText.length<=25){
                         if(!next1){
-                            if(/^翻?[下后後次][一ー1]?[页頁张張]|^(next[ _-]?page|older)\s*[›>→»]?$|次のページ|^次へ?$|Вперед/i.test(innerText)){
+                            if(nextTextReg1.test(innerText)){
                                 if(isJs){
                                     if(!nextJs1)nextJs1=aTag;
                                 }else{
@@ -1606,7 +1609,7 @@
                             }
                         }
                         if(!next2){
-                            if(/^[下后後次][一ー1]?[章话話节節篇个個幅]/i.test(innerText) || /nextpage/i.test(aTag.className) || innerText=="»" || innerText==">>"){
+                            if(nextTextReg2.test(innerText) || /nextpage/i.test(aTag.className) || innerText=="»" || innerText==">>"){
                                 if(isJs){
                                     if(!nextJs2)nextJs2=aTag;
                                 }else{
@@ -1642,7 +1645,8 @@
                             next4 = aTag;
                         } else if (this.curUrl != aTag.href) {
                             _aHref = _aHref.replace(/\.s?html?$/i, "");
-                            if (_aHref.indexOf(_url) != -1 && /^[\/\?&]?[_-]?(p|page)?=?\/?2(\/|\?|&|$)/i.test(_aHref.replace(_url, ""))) {
+                            let pageTwoReg = /^[\/\?&]?[_-]?(p|page)?=?\/?2(\/|\?|&|$)/i;
+                            if (_aHref.indexOf(_url) != -1 && pageTwoReg.test(_aHref.replace(_url, ""))) {
                                 let curHref = aTag.getAttribute("href");
                                 let pageOne = curHref.replace(/\/2(\/|\?|&|$)/,"/1$1");
                                 if (pageOne == curHref) pageOne = null;
@@ -3100,7 +3104,7 @@
             showTips(i18n("beginUpdate"));
         });
         if(guidePage.test(location.href)){
-            if(JSONEditor){
+            if(typeof JSONEditor !== 'undefined'){
                 createEdit();
             }else{
                 window.onload = e => {
@@ -4357,7 +4361,7 @@
             lastActiveUrl = location.href;
             if (guidePage.test(location.href)) {
                 setTimeout(() => {
-                    if(JSONEditor){
+                    if(typeof JSONEditor !== 'undefined'){
                         createEdit();
                     }else{
                         window.onload = e => {
