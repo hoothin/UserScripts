@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.54.4
+// @version      1.6.6.54.5
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -757,7 +757,7 @@
                     siteCancel: '取消',
                     siteAdd: '添加',
                     siteType: '分类',
-                    siteExist: '已存在相同规则，终止添加',
+                    siteExist: '已存在相同规则，是否添加为克隆项？',
                     siteAddOver: '站点添加成功',
                     multiline: '是否以换行符分隔多行搜索？',
                     multilineTooMuch: '行数超过10行，是否继续搜索？',
@@ -833,7 +833,7 @@
                     siteCancel: '取消',
                     siteAdd: '添加',
                     siteType: '分類',
-                    siteExist: '已存在相同規則，終止添加',
+                    siteExist: '已存在相同規則，是否添加為克隆項？',
                     siteAddOver: '站點添加成功',
                     multiline: '是否以換行符分隔多行搜索？',
                     multilineTooMuch: '行數超過10行，是否繼續搜索？',
@@ -908,7 +908,7 @@
                     siteCancel: 'Cancel',
                     siteAdd: 'Add',
                     siteType: 'Category',
-                    siteExist: 'Abort as the site is already exist',
+                    siteExist: 'Site is already exist, add it as clone?',
                     siteAddOver: 'Site added successfully',
                     multiline: 'Search as multilines?',
                     multilineTooMuch: 'The number of lines exceeds 10, do you want to continue searching?',
@@ -1328,12 +1328,12 @@
                  }
                  #search-jumper-alllist {
                      display: none;
-                     top: 110px;
+                     top: 101px;
                      position: absolute;
                      width: 100%;
                      overflow-x: scroll;
                      overflow-y: hidden;
-                     height: calc(100% - 110px);
+                     height: calc(100% - 101px);
                  }
                  #search-jumper-alllist>.search-jumper-btn {
                      position: fixed;
@@ -9182,37 +9182,45 @@
                     }
                 });
                 addBtn.addEventListener("click", e => {
+                    let siteObj = null;
                     for (let i = 0; i < searchData.sitesConfig.length; i++) {
                         let typeConfig = searchData.sitesConfig[i];
                         for (let j = 0; j < typeConfig.sites.length; j++) {
                             let curSite = typeConfig.sites[j];
                             if (curSite.url == urlInput.value) {
-                                _GM_notification(i18n("siteExist"));
-                                return;
+                                if (i == parseInt(typeSelect.value)) return;
+                                if (window.confirm(i18n("siteExist"))) {
+                                    siteObj = {
+                                        name: curSite.name + " - " + typeConfig.type,
+                                        url: `["${curSite.name}"]`
+                                    };
+                                } else return;
                             }
                         }
                     }
-                    let siteObj = {
-                        name: nameInput.value,
-                        url: urlInput.value
-                    };
-                    if (iconInput.value && iconInput.value != urlInput.value.replace(/^(https?:\/\/[^\/]*\/).*$/, "$1favicon.ico")) {
-                        siteObj.icon = iconInput.value;
-                    }
-                    if (descInput.value && descInput.value != nameInput.value) {
-                        siteObj.description = descInput.value;
-                    }
-                    if (siteKeywords.value) {
-                        siteObj.keywords = siteKeywords.value;
-                    }
-                    if (siteMatch.value) {
-                        siteObj.match = siteMatch.value;
-                    }
-                    if (openSelect.value && openSelect.value != '-1') {
-                        siteObj.openInNewTab = openSelect.value === 'true';
-                    }
-                    if (charset && charset.toLowerCase() != 'utf-8') {
-                        siteObj.charset = charset;
+                    if (siteObj == null) {
+                        siteObj = {
+                            name: nameInput.value,
+                            url: urlInput.value
+                        };
+                        if (iconInput.value && iconInput.value != urlInput.value.replace(/^(https?:\/\/[^\/]*\/).*$/, "$1favicon.ico")) {
+                            siteObj.icon = iconInput.value;
+                        }
+                        if (descInput.value && descInput.value != nameInput.value) {
+                            siteObj.description = descInput.value;
+                        }
+                        if (siteKeywords.value) {
+                            siteObj.keywords = siteKeywords.value;
+                        }
+                        if (siteMatch.value) {
+                            siteObj.match = siteMatch.value;
+                        }
+                        if (openSelect.value && openSelect.value != '-1') {
+                            siteObj.openInNewTab = openSelect.value === 'true';
+                        }
+                        if (charset && charset.toLowerCase() != 'utf-8') {
+                            siteObj.charset = charset;
+                        }
                     }
                     searchData.sitesConfig[typeSelect.value].sites.push(siteObj);
                     searchData.lastModified = new Date().getTime();
