@@ -1,5 +1,19 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86033",
+  "data": {
+    "pageElement": "descendant::tbody[.//a[contains(@href,'Find.html')]][last()]/tr",
+    "nextLink": "//td/a[contains(.//img/@src,'ya_next.png')]",
+    "url": "^https://www\\.nibiohn\\.go\\.jp/eiken/linkdediet/news/",
+    "exampleUrl": "https://www.nibiohn.go.jp/eiken/linkdediet/news/FMPro%3F-db=NEWS.fp5&-Format=list_news_byoki.htm&newcat2=4&flag=1&-SortField=kibanID&-SortOrder=descend&-lay=lay&-Max=30&-Find.html"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "t_f_m'",
+  "name": "Link de ダイエット",
+  "created_at": "2022-12-23T20:45:33+09:00",
+  "updated_at": "2022-12-24T07:13:24+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86032",
   "data": {
     "insertBefore": "",
