@@ -1,5 +1,18 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86034",
+  "data": {
+    "pageElement": "//div[@class='structItemContainer'] | //div[@class='block block--messages']",
+    "nextLink": "//*[@rel=\"next\"]",
+    "url": "https://www\\.giaiphapexcel\\.com/diendan/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "powertalent",
+  "name": "giaiphapexcel.com",
+  "created_at": "2022-12-26T08:25:45+09:00",
+  "updated_at": "2022-12-26T08:54:29+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86033",
   "data": {
     "pageElement": "descendant::tbody[.//a[contains(@href,'Find.html')]][last()]/tr",
