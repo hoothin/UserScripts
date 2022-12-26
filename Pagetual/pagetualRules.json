@@ -26,7 +26,8 @@
         "init": "function gx(x){return document.evaluate(x,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue}function next(e){let key=window.event?e.keyCode:e.which;if(key=='39'){let n=gx(\"//a[span[text()='下一话' or text()='下一話'] and contains(@href,'reads')]\");if(n){n.click()}else{alert('沒有下一话了！')}}};document.addEventListener('keydown',next);function prev(e){let key=window.event?e.keyCode:e.which;if(key=='37'){let p=gx(\"//a[span[text()='上一话' or text()='上一話'] and contains(@href,'reads')]\");if(p){p.click()}else{alert('沒有上一话了！')}}};document.addEventListener('keydown',prev);function dcnext(){document.querySelector('footer a').click()}document.addEventListener('dblclick',dcnext);setTimeout(()=>{let p=document.querySelector(`footer p:nth-child(2)>a[href*='reads']`);if(p){p.classList.add('MuiButton-containedPrimary');let f=document.querySelector('footer>article');let pnc=f.lastChild.cloneNode(true);pnc.firstChild.href='/latest';pnc.firstChild.firstChild.innerText='更新';f.appendChild(pnc);let pbc=f.lastChild.cloneNode(true);pbc.firstChild.href='/bookcase';pbc.firstChild.firstChild.innerText='收藏';f.appendChild(pbc)}let n=document.querySelector(`footer a[href*='readMore']`);if(n){n.classList.remove('MuiButton-containedPrimary');n.firstChild.innerText='^_^感谢您的阅读~已经没有下一话了哦~'}},2000)",
         "nextLink": "0",
         "pinUrl": true,
-        "manualMode": true
+        "manualMode": true,
+        "css": "#root>div>header+div{display:none!important}"
     },
     {
         "name": "包子漫畫 - 閱讀",
@@ -91,8 +92,8 @@
     },
     {
         "name": "COCOMANGA - 閱讀 - 雙擊前往下一章，鍵盤左右鍵上下章",
-        "example": "https://www.cocomanga.com/15177/1/2.html",
-        "url": "^https://www\\.cocomanga\\.com/[a-z0-9-]+/\\d+/\\d+\\.html",
+        "example": "https://www.colamanhua.com/15177/1/2.html",
+        "url": "^https://www\\.colamanhua\\.com/[a-z0-9-]+/\\d+/\\d+\\.html",
         "init": "function gx(x){return document.evaluate(x,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue};function next(e){let key=window.event?e.keyCode:e.which;if(key==39){e.preventDefault();let n=gx(\"//a[contains(@href,'html') and text()='下一章']\");if(n){n.click()}else{alert('沒有下一章了！')}}};document.addEventListener('keydown',next);function prev(e){let key=window.event?e.keyCode:e.which;if(key==37){e.preventDefault();let p=gx(\"//a[contains(@href,'html') and text()='上一章']\");if(p){p.click()}else{alert('沒有上一章了！')}}};document.addEventListener('keydown',prev);function dcnext(){let n=gx(\"//a[contains(@href,'html') and text()='下一章']\");if(n){n.click()}else{alert('沒有下一章了！')}};document.addEventListener('dblclick',dcnext);",
         "nextLink": "0",
         "pinUrl": true,
@@ -101,8 +102,8 @@
     },
     {
         "name": "COCOMANGA - 分類/搜索",
-        "example": "https://www.cocomanga.com/show?orderBy=update",
-        "url": "^https?://www\\.cocomanga\\.com/(show|search)",
+        "example": "https://www.colamanhua.com/show?orderBy=update",
+        "url": "^https?://www\\.colamanhua\\.com/(show|search)",
         "init": "let w = document.querySelector(`h2 a[href*='weeklyCount']`); if (!location.search) w.click()",
         "nextLinkByJs": "let next = doc.querySelector('.fed-page-info a.fed-btns-green+a[onclick]'); if (next) return location.origin + location.pathname + location.search.replace(/&page=\\d+$/,'') + '&page=' + next.innerText",
         "pageElement": "//div[contains(@class,'fed-list-head')]/following-sibling::ul[li/a/span] | //dl[dt/a/span]",
@@ -1597,6 +1598,7 @@
         "name": "RARBG",
         "example": "https://rarbg.to/torrents.php?category=movies",
         "url": "^https?://(proxy|unblocked)?rarbg([a-z0-9]+)?\\.(to|org|com)/",
+        "pinUrl": true,
         "action": 2,
         "include": "#pager_links",
         "nextLink": "#pager_links>a[title='next page']",
@@ -4604,7 +4606,11 @@
     {
         "name": "NEXE channels/models",
         "example": "https://nnwjs.top/models",
-        "url": "^https?://(nncsh|nnwjs|nbbmz)\\.(xyz|top)/(models|channels)",
+        "url": "^https?://[^/]+/(models|channels)",
+        "include": [
+            "//title[contains(text(),'NEXE')]",
+            "//body/div[@class='top-nav']//img[@src='/templates/neon/static/logo.png']"
+        ],
         "exclude": "iframe[src]",
         "nextLink": "//li[a/@class='active']/following-sibling::li[1]/a",
         "pageElement": ".margin-top-sm>.hex,.padding-lr-sm>.hex",
@@ -4615,7 +4621,11 @@
     {
         "name": "NEXE",
         "example": "https://nnwjs.top/",
-        "url": "^https?://(nncsh|nnwjs|nbbmz)\\.(xyz|top)/(best|search|index)?",
+        "url": "^https?://[^/]+/(best|search|index)?",
+        "include": [
+            "//title[contains(text(),'NEXE')]",
+            "//body/div[@class='top-nav']//img[@src='/templates/neon/static/logo.png']"
+        ],
         "exclude": "iframe[src]",
         "nextLink": "//li[a/@class='active']/following-sibling::li[1]/a",
         "pageElement": ".margin-top-sm>.hex,.hot-keywords",
@@ -5706,16 +5716,24 @@
     {
         "name": "HOTGIRL.asia - 寫真",
         "example": "https://hotgirl.asia/xiuren%e7%a7%80%e4%ba%ba%e7%bd%91-no-4438-%e7%bb%ae%e9%87%8c%e5%98%89/",
-        "url": "^https?://hotgirl\\.asia/.+[^donate]/(\\d+\\/)?$",
+        "url": "^https?://hotgirl\\.asia/[^/]+/",
+        "include": ".mx-auto",
         "nextLink": "li.active+li>a",
-        "pageElement": "#myimg",
+        "pageElement": ".galeria_img",
         "replaceElement": "#pagination",
-        "insert": "#pagination",
-        "insertPos": 1,
-        "css": "#footer,#commentfb,.content-kuss,.mx-auto{display: none!important;}",
+        "css": "#footer,#commentfb,.content-kuss{display: none!important;}",
         "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
+    },
+    {
+        "name": "HOTGIRL.asia - 寫真 - SLIDE SHO模式",
+        "example": "https://hotgirl.asia/yuna-%ec%9c%a0%eb%82%98-saint-photolife-habibi/?stype=slideshow",
+        "url": "^https?://hotgirl\\.asia/",
+        "include": "#carouselImageIndicators",
+        "init": "let images=document.querySelectorAll('.item img');let imgData=[];for(let i=0;i<images.length;i++){imgData.push(images[i].src)};let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src='${imgData[i]}'>`};document.querySelector('#carouselImageIndicators').innerHTML=_img;",
+        "nextLink": "0",
+        "css": "#carouselImageIndicators>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
     },
     {
         "name": "imgasd",
@@ -5856,16 +5874,16 @@
         "url": "^https?://m\\.xsnvshen\\.[a-z]{2,3}/album/\\d+(\\?p=\\d+)?",
         "pinUrl": true,
         "action": 1,
-        "init": "document.querySelectorAll('#arcbox img.nolazy').forEach(img=>{img.src=img.src.replace(/thumb[^/]+\\//,'')});document.querySelectorAll('#arcbox img.lazy[alt]').forEach(img=>{img.src=img.getAttribute('data-original').replace(/thumb[^/]+\\//,'');img.removeAttribute('data-original');img.setAttribute('class','nolazy')});",
+        "init": "document.querySelectorAll('#arcbox img.nolazy').forEach(img=>{img.src=img.src.replace(/thumb[^/]+\\//,'');img.removeAttribute('style');img.parentNode.outerHTML=img.outerHTML});document.querySelectorAll('#arcbox img.lazy[alt]').forEach(img=>{img.src=img.getAttribute('data-original').replace(/thumb[^/]+\\//,'');img.removeAttribute('data-original');img.setAttribute('class','nolazy');img.removeAttribute('style');img.parentNode.outerHTML=img.outerHTML});",
         "nextLink": "a.pg_next",
         "pageElement": "#arcbox img[alt]",
         "replaceElement": "#pageNum",
-        "pageInit": "doc.querySelectorAll('#arcbox img.nolazy').forEach(img=>{img.src=img.src.replace(/thumb[^/]+\\//,'')});doc.querySelectorAll('#arcbox img.lazy[alt]').forEach(img=>{img.src=img.getAttribute('data-original').replace(/thumb[^/]+\\//,'');img.removeAttribute('data-original');img.removeAttribute('style');img.setAttribute('class','nolazy')});",
+        "pageInit": "doc.querySelectorAll('#arcbox img.nolazy').forEach(img=>{img.src=img.src.replace(/thumb[^/]+\\//,'');img.removeAttribute('style');});doc.querySelectorAll('#arcbox img.lazy[alt]').forEach(img=>{img.src=img.getAttribute('data-original').replace(/thumb[^/]+\\//,'');img.removeAttribute('data-original');img.removeAttribute('style');img.setAttribute('class','nolazy')});",
         "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0",
         "sleep": 5000,
-        "css": "#arcbox img[alt]{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0px auto !important}"
+        "css": "#arcbox img[alt]{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0px auto !important}[id^='ad']{display:none!important}"
     },
     {
         "name": "秀色女神 - 看圖",
