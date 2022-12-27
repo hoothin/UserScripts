@@ -1,8 +1,23 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86035",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[@class='post-list']",
+    "nextLink": "//a[@rel='next']",
+    "url": "^https://javmix\\.tv/",
+    "exampleUrl": "https://javmix.tv/video/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "masamasa",
+  "name": "Javmix.TV",
+  "created_at": "2022-12-26T20:48:10+09:00",
+  "updated_at": "2022-12-26T20:48:10+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86034",
   "data": {
-    "pageElement": "//div[@class='structItemContainer'] | //div[@class='block block--messages']",
+    "pageElement": "(//div[@class='block block--messages'] | //div[@class='structItemContainer'])[1]\r\n",
     "nextLink": "//*[@rel=\"next\"]",
     "url": "https://www\\.giaiphapexcel\\.com/diendan/"
   },
@@ -10,7 +25,7 @@
   "created_by": "powertalent",
   "name": "giaiphapexcel.com",
   "created_at": "2022-12-26T08:25:45+09:00",
-  "updated_at": "2022-12-26T08:54:29+09:00"
+  "updated_at": "2022-12-26T20:21:22+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/86033",
