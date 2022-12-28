@@ -497,7 +497,7 @@
         "name": "漫画芯手機版 - 閱讀",
         "example": "https://m.mhxin.com/manhua/woduzishiyongzhouyu/2103659.html",
         "url": "^https?://m\\.mhxin\\.com/manhua/[a-z]+/\\d+\\.html",
-        "init": "document.querySelectorAll('#images a').forEach(a=>{a.removeAttribute('href')})",
+        "init": "let Imgs=document.querySelector('#images');let Img=document.querySelector('#manga-image');Imgs.innerHTML=Img.outerHTML;",
         "nextLink": "//a[contains(@href,'-') and text()='下一页']",
         "pinUrl": true,
         "pageElement": "#manga-image",
@@ -511,7 +511,7 @@
         "name": "最漫画手機版 - 閱讀",
         "example": "https://m.zuimh.com/manhua/gongzibiexiule/1454909.html",
         "url": "^https?://m\\.zuimh\\.com/manhua/[a-z]+/\\d+\\.html",
-        "init": "document.querySelectorAll('#images a').forEach(a=>{a.removeAttribute('href')})",
+        "init": "let Imgs=document.querySelector('#images');let Img=document.querySelector('#image');Imgs.innerHTML=Img.outerHTML;",
         "nextLink": "//a[contains(@href,'-') and text()='下一页']",
         "pinUrl": true,
         "pageElement": "#image",
@@ -583,9 +583,9 @@
     },
     {
         "name": "90漫畫網手機版 - 漫畫閱讀",
-        "example": "http://m.90mh.com/manhua/DRAWINGzuiqiangmanhuajialiyonghuihuajinengzaiyishijiekaiwushuang/204311.html",
-        "url": "^https?://m\\.90mh\\.com/manhua/",
-        "init": "document.querySelector('#chapter-image>a').removeAttribute('href');",
+        "example": "http://wap.90mh.com/manhua/DRAWINGzuiqiangmanhuajialiyonghuihuajinengzaiyishijiekaiwushuang/204311.html",
+        "url": "^https?://wap\\.90mh\\.com/manhua/",
+        "init": "let Imgs=document.querySelector('#chapter-image');let Img=document.querySelector('#chapter-image img');Imgs.innerHTML=Img.outerHTML;",
         "nextLink": "//a[contains(@href,'-') and text()='下一页']",
         "pinUrl": true,
         "pageElement": "#chapter-image img",
@@ -2255,6 +2255,18 @@
         "css": ".pagetual_pageBar{margin:-10px 3% 10px!important;width:94%!important}"
     },
     {
+        "name": "gogo人体艺术 - 圖片",
+        "example": "https://gogortrt.com/gmgqdd/1305/",
+        "url": "^https?://gogortrt\\.[a-z]{2,3}/[a-z]+/\\d+/",
+        "init": "let a=document.querySelector('.main>div:not(.atc_new_head)>a');a.outerHTML=a.innerHTML;",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": ".main>div:not(.atc_new_head):not(.keywords) img[alt]",
+        "replaceElement": ".Mrlsr55,.RlpeZsp,.cgdijkn,.d70rZyL,.i09cWt8,.pages,.pfb45A1,.vd7O8HI,.wpwRCvy,.zrLIsoJ",
+        "pageBar": 0,
+        "initRun": 1,
+        "autoLoadNum": "0"
+    },
+    {
         "name": "gogo人体艺术",
         "example": "https://gogortrt.com/gmgqdd/",
         "url": "^https?://gogortrt\\.[a-z]{2,3}/[a-z]+/",
@@ -2269,7 +2281,7 @@
         "name": "956体艺术 - 圖片",
         "example": "https://956n.com/rbddszysz/1398/",
         "url": "^https?://956[a-z]{1,2}\\.[a-z]{2,3}/[a-z]+/\\d+/(\\d+\\.html$)?",
-        "init": "let ah=document.querySelector('.content a');ah.removeAttribute('href')",
+        "init": "document.querySelectorAll('.content>a').forEach(a=>{a.outerHTML=a.innerHTML})",
         "nextLink": "//a[text()='下一页' and contains(@href,'html')]",
         "pageElement": ".content img[alt]",
         "replaceElement": ".page",
@@ -2291,14 +2303,14 @@
         "name": "666人体艺术 - 圖片",
         "example": "https://6666rt.com/ArtZG/2152/1.html",
         "url": "^https?://[6]{3,4}[a-z]{2}\\.[a-z]{2,3}/[a-zA-Z]+/\\d+/\\d+\\.html",
-        "init": "let ah=document.querySelector('.imgbox>a');ah.removeAttribute('href')",
+        "init": "document.querySelectorAll('.imgbox>a').forEach(a=>{a.outerHTML=a.innerHTML})",
         "nextLink": "//a[text()='下一页 >>' and contains(@href,'html')]",
         "pageElement": ".imgbox img[alt]",
         "replaceElement": ".page,span>h1,.www",
         "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0",
-        "css": "img[alt]{margin-top:0px!important;margin-bottom:0px!important}"
+        "css": "img[alt]{margin-top:0px!important;margin-bottom:0px!important}.dis{display:none!important}"
     },
     {
         "name": "666人体艺术",
@@ -2312,7 +2324,7 @@
         "name": "64体艺术 - 圖片",
         "example": "http://www.64ay.com/xxrtddbkxb/313.html",
         "url": "^https?://www\\.64[a-z]{2}\\.[a-z]{2,3}/[a-z]+/\\d+(_\\d+)?\\.html",
-        "init": "let ah=document.querySelector('.tu>a');ah.removeAttribute('href')",
+        "init": "document.querySelectorAll('.tu>a').forEach(a=>{a.outerHTML=a.innerHTML})",
         "nextLink": "//a[text()='下一页']",
         "pageElement": ".tu img[alt]",
         "replaceElement": ".page-show",
@@ -2334,7 +2346,7 @@
         "name": "98体艺术 - 圖片",
         "example": "http://www.98ah.com/GOGOqqddgqrt/415.html",
         "url": "^https?://www\\.98[a-z]{2}\\.[a-z]{2,3}/[a-z]+/\\d+(_\\d+)?\\.html",
-        "init": "let ah=document.querySelector('.content-pic>a');ah.removeAttribute('href')",
+        "init": "let a=document.querySelector('.content-pic>a');a.outerHTML=a.innerHTML;",
         "nextLink": "//a[text()='下一页']",
         "pageElement": ".content-pic img[alt]",
         "replaceElement": ".page-show",
@@ -2355,7 +2367,7 @@
         "name": "54体艺术 - 圖片",
         "example": "http://www.54aj.com/gogogmbspqq/432.html",
         "url": "^https?://www\\.54[a-z]{2}\\.[a-z]{2,3}/[a-z]+/\\d+(_\\d+)?\\.html",
-        "init": "let ah=document.querySelector('.content>a:not([href*=tags])');ah.removeAttribute('href')",
+        "init": "let a=document.querySelector('.content>a:not([href*=tags])');a.outerHTML=a.innerHTML;",
         "nextLink": "//a[text()='下一页']",
         "pageElement": ".content img[alt]",
         "replaceElement": ".page",
@@ -2375,7 +2387,7 @@
         "name": "48人体艺术 - 圖片",
         "example": "http://www.48gd.com/yyrtdd/448.html",
         "url": "^https?://www\\.48[a-z]{2}\\.[a-z]{2,3}/[a-z]+/\\d+(_\\d+)?\\.html",
-        "init": "let ah=document.querySelector('#content>a');ah.removeAttribute('href')",
+        "init": "let a=document.querySelector('#content>a');a.outerHTML=a.innerHTML;",
         "nextLink": "//a[text()='下一页']",
         "pageElement": "#content img[alt]",
         "replaceElement": ".pagelist,h3",
@@ -2396,7 +2408,7 @@
         "example": "http://www.42jd.com/ddrGOGOtysgq/417.html",
         "url": "^https?://www\\.42[a-z]{2}\\.[a-z]{2,3}/[a-z]+/\\d+(_\\d+)?\\.html",
         "action": 1,
-        "init": "let ah=document.querySelector('.imgbox>a');ah.removeAttribute('href')",
+        "init": "let a=document.querySelector('.imgbox>a');a.outerHTML=a.innerHTML;",
         "nextLink": "//a[text()='下一页']",
         "pageElement": ".imgbox img[alt]",
         "replaceElement": ".pagelist,.imgbox>h1",
@@ -2426,13 +2438,14 @@
         "example": "www.36ut.com，xixirt.org",
         "url": "^https?://(www\\.)?(36[a-z]{2}|xixirt)\\.[a-z]{2,3}/[a-z]+/(\\d+/|\\d+(_\\d+)?\\.html)",
         "action": 1,
-        "init": "let ah=document.querySelector('.pp>a');ah.removeAttribute('href')",
+        "init": "let a=document.querySelector('.pp>a');a.outerHTML=a.innerHTML;",
         "nextLink": "//a[text()='下一页']",
         "pageElement": ".pp img",
         "replaceElement": ".page-show",
         "pageBar": 0,
         "initRun": 1,
-        "autoLoadNum": "0"
+        "autoLoadNum": "0",
+        "css": ".picTip{display:none!important}"
     },
     {
         "name": "36人体艺术",
@@ -2448,7 +2461,7 @@
         "example": "http://www.23fe.com/gogoddppys/435.html",
         "url": "^https?://www\\.23[a-z]{2}\\.[a-z]{2,3}/[a-z]+/\\d+(_\\d+)?\\.html",
         "action": 1,
-        "init": "let ah=document.querySelector('#content-p a');ah.removeAttribute('href')",
+        "init": "let a=document.querySelector('#content-p a');a.outerHTML=a.innerHTML;",
         "nextLink": "//a[text()='下一页']",
         "pageElement": "#content-p img",
         "replaceElement": ".gengduo",
@@ -2467,10 +2480,10 @@
     },
     {
         "name": "AJ人体艺术 - 圖片",
-        "example": "https://www.02aj.com/yzrt/8674_2.html",
+        "example": "https://www.02aj.com/yzrt/8674.html",
         "url": "^https?://www\\.02aj\\.[a-z]{2,3}/[a-z]+/\\d+(_\\d+)?\\.html",
         "action": 1,
-        "init": "document.querySelectorAll('.content>a').forEach(a=>{a.removeAttribute('href')})",
+        "init": "document.querySelectorAll('.content>a').forEach(a=>{a.outerHTML=a.innerHTML})",
         "nextLink": "//a[text()='下一页']",
         "pageElement": ".content img",
         "replaceElement": ".paging",
@@ -2492,7 +2505,7 @@
         "name": "139人体艺术手機版 - 圖片",
         "example": "https://m.139tu.com/rtysyz/20200710/7479.html",
         "url": "^https?://(m|wap)\\.([0-9]{2,4}[a-z]{1,5}|[a-z]{2,5}[0-9]{1,3}|\\d+aj|\\d+|xixirt|gogortrt|7m11)\\.[a-z]{2,3}/[a-zA-Z]+/(\\d+/(\\d+\\.html$)?|\\d+(_\\d+)?\\.html$|\\d+/\\d+(_\\d+)?\\.html$)",
-        "init": "document.querySelectorAll('.tal a').forEach(a=>{a.removeAttribute('href')})",
+        "init": "document.querySelectorAll('.tal>a').forEach(a=>{a.outerHTML=a.innerHTML})",
         "nextLink": "//a[text()='下一页']",
         "pageElement": ".tal img[alt]",
         "replaceElement": ".page,body>[style='font-size:14px;'],.tip",
@@ -2514,10 +2527,10 @@
     },
     {
         "name": "139人体艺术 - 圖片",
-        "example": "https://www.139tu.com/rtysyz/20210829/8674_2.html",
+        "example": "https://www.139tu.com/rtysyz/20210829/8674.html",
         "url": "^https?://www\\.139tu\\.[a-z]{2,3}/[a-z]+/\\d+/\\d+(_\\d+)?\\.html",
         "action": 1,
-        "init": "document.querySelectorAll('.img_box>a').forEach(a=>{a.removeAttribute('href')})",
+        "init": "document.querySelectorAll('.img_box>a').forEach(a=>{a.outerHTML=a.innerHTML})",
         "nextLink": "//a[text()='下一页']",
         "pageElement": ".img_box img",
         "replaceElement": "#pages",
@@ -2539,16 +2552,27 @@
     {
         "name": "GOGO人体艺术 - 圖片",
         "example": "http://www.gogort2.com/html/yazhou/9988.html",
-        "url": "^https?://www\\.gogort\\d?\\.[a-z]{2,3}/html/[a-z]+/\\d+(_\\d+)?\\.html$",
+        "url": "^https?://www\\.gogort\\d?\\.[a-z]{2,3}/html/\\w+/\\d+(_\\d+)?\\.html$",
         "action": 1,
-        "init": "document.querySelectorAll('.main>div>a[title]').forEach(a=>{a.removeAttribute('href')})",
+        "init": "document.querySelectorAll('.main>div>a[title]').forEach(a=>{a.outerHTML=a.innerHTML})",
         "nextLink": "span+a:not(.a1)",
-        "pageElement": "//div[@class='main']/div[a/@title]//img",
+        "pageElement": ".avrquwl img,.stmyzbx img,.cgdijkk img,.pwb45A1 img,.wppRCvy img,.zKLIsoJ img,.RlHeZsp img,.d70qZyL img,.vI7O8HI img,.i099Wt8 img,.Mrlhr55 img,.ApxBGcj img,.O5hE1YO img,.bFzVVIb img,.cgKhHJm img,.NpowfkG img,.fFva0bX img,.ARSR2Ka img,.flZ0dv3 img,.oP7WdAw img,.wd8SrVn img,.UsP0xCk img,.yH0NSlb img,.HStHSH0 img,.re8tbBu img",
         "replaceElement": "//div[a/@class='a1']",
         "css": ".main>iframe{display:none!important}iframe{height:55px!important}",
         "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
+    },
+    {
+        "name": "GOGO人体艺术 - 標籤",
+        "example": "http://www.gogort2.net/index.php?m=content&c=tag&a=lists&tag=%B3%AC%B4%F3%B3%DF%B6%C8",
+        "url": "^https?://www\\.gogort\\d?\\.[a-z]{2,3}/index\\.php\\?m=content&c=tag",
+        "nextLink": "span+a:not(.a1)",
+        "pageElement": ".search_list ul",
+        "replaceElement": ".pages",
+        "pageBar": 0,
+        "initRun": 1,
+        "autoLoadNum": "10"
     },
     {
         "name": "GOGO人体艺术 - 搜索",
@@ -2557,8 +2581,7 @@
         "nextLink": "span+a:not(.a1)",
         "pageElement": ".search_content",
         "replaceElement": ".pages",
-        "pageBar": 0,
-        "css": ".pagetual_pageBar{margin-top:0px!important}"
+        "pageBar": 0
     },
     {
         "name": "GOGO人体艺术",
@@ -2658,8 +2681,8 @@
     },
     {
         "name": "Pic Yailay - 圖片",
-        "example": "https://pic.yailay.com/articles/UTVKYXJDOFRFVy8zVGlINHUySk1Ldz09.html",
-        "url": "^https?://pic\\.yailay\\.com/articles",
+        "example": "https://pic.yailay.com/articles/UTVKYXJDOFRFVy8zVGlINHUySk1Ldz09.html，https://nungvl.net/gallerys/87379.cg?page=1",
+        "url": "^https?://(pic\\.yailay\\.com|nungvl\\.net)/(articles|gallerys)",
         "pinUrl": true,
         "nextLink": "//a[text()='Next >']",
         "pageElement": "img[onerror]+br,img[onerror]",
@@ -2672,7 +2695,7 @@
     {
         "name": "Pic Yailay",
         "example": "https://pic.yailay.com/?page=1",
-        "url": "^https?://pic\\.yailay\\.com/",
+        "url": "^https?://(pic\\.yailay\\.com|nungvl\\.net)/",
         "nextLink": ".pagination-next",
         "pageElement": ".blog",
         "replaceElement": ".pagination",
@@ -2709,13 +2732,16 @@
         "name": "nhentai - 閱讀",
         "example": "https://nhentai.net/g/422938/1/",
         "url": "^https?://nhentai\\.net/g/\\d+/\\d+/",
+        "init": "let a = document.querySelector('#image-container>a');a.outerHTML=a.innerHTML;",
         "nextLink": "a.next",
-        "pageElement": "#image-container",
-        "replaceElement": ".reader-bar",
-        "pageAction": "document.querySelectorAll('#image-container>a').forEach(a=>{a.removeAttribute('href')})",
+        "pageElement": "#content>img,#image-container",
+        "replaceElement": ".reader-pagination",
+        "pageInit": "let a = doc.querySelector('#image-container>a');a.outerHTML=a.innerHTML;",
+        "pageAction": "document.querySelectorAll('#image-container').forEach(e=>{e.outerHTML=e.innerHTML})",
         "pageBar": 0,
         "initRun": 1,
-        "autoLoadNum": "0"
+        "autoLoadNum": "0",
+        "css": "#content>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
     },
     {
         "name": "nhentai",
@@ -2763,7 +2789,7 @@
         "name": "24tupian - 圖片原圖",
         "example": "https://www.24tupian.org/2022/10-12/tuimo52612_1.html",
         "url": "^https?://www\\.24tupian\\.org/\\d+/[0-9-]+/\\w+\\.html",
-        "init": "let link=document.querySelector('#imgshow > a');link.removeAttribute('href')",
+        "init": "let a=document.querySelector('#imgshow>a');a.outerHTML=a.innerHTML;",
         "nextLink": "//div[@class='bb']//li[img/@id='bimg']/following-sibling::li[1]/a",
         "pageElement": "#imgshow img",
         "replaceElement": ".bb ul,.hddiv+span",
@@ -2850,7 +2876,7 @@
         "url": "^https?://[^/]+/photos/",
         "include": "//title[contains(text(), '美女目录网')]",
         "action": 1,
-        "init": "let link = document.querySelector('.photo-box > a');link.removeAttribute('href');document.querySelector('source').remove()",
+        "init": "function ge(e){return document.querySelector(e)}let a = ge('.photo-box>a');a.outerHTML=a.innerHTML;ge('source').remove()",
         "nextLink": "//a[text()='下一张>']",
         "pageElement": ".photo-box picture img[alt]",
         "replaceElement": ".tools row",
@@ -2924,7 +2950,7 @@
         "example": "https://www.6evu.com/30131.html",
         "url": "^https?://www\\.6evu\\.com/\\d+\\.html",
         "nextLink": ".pagelist>span+a",
-        "init": "document.querySelectorAll('#post_content a').forEach(a=>{a.removeAttribute('href');a.removeAttribute('title')});document.querySelectorAll('#post_content br').forEach(br=>{br.remove()})",
+        "init": "function geAll(e){return document.querySelectorAll(e)}let imgs=geAll('#post_content img');let _img='';for(let i=0;i<imgs.length;i++){_img+=imgs[i].outerHTML};geAll('#post_content')[0].innerHTML=_img;",
         "pageElement": "#post_content img",
         "replaceElement": ".pagelist",
         "pageBar": 0,
@@ -2945,7 +2971,7 @@
         "name": "爱美女 - 看圖",
         "example": "www.2meinv.com，wap.2meinv.com",
         "url": "^https?://(www|wap)\\.2meinv\\.com/article",
-        "init": "let link=document.querySelector('.hh+.pp > a');let link2=document.querySelector('.clearfix.arcmain a');if(link){link.removeAttribute('href')}else{link2.removeAttribute('href')}",
+        "init": "function ge(e){return document.querySelector(e)}let a=ge('.hh+.pp > a');let a2=ge('.clearfix.arcmain a');if(a){a.outerHTML=a.innerHTML}else{a2.outerHTML=a2.innerHTML}",
         "nextLink": "//div[@class='page-show' or contains(@class,'article-page')]/a[contains(@href,'html') and text()='下一页']",
         "pageElement": ".hh+.pp img[alt],.clearfix.arcmain img",
         "replaceElement": ".page-show,h1>span,.article-page",
@@ -3002,10 +3028,10 @@
         "replaceElement": ".paging"
     },
     {
-        "name": "凸凹吧/撸女吧/女优吧 - 圖片",
-        "example": "www.tuao8.xyz，www.tumm.cc，www.97mm.cc",
-        "url": "^https?://(www\\.)?(tuao\\d?|tumm|\\d+mm)\\.[a-z]{2,3}/(post|web)/",
-        "init": "document.querySelector('.entry p>a').removeAttribute('href');",
+        "name": "凸凹吧/撸女吧/女优吧/撸哥吧/欲女吧 - 圖片",
+        "example": "www.tuao.one，www.63mm.cc，www.97mm.cc，www.luge8.co，luge8.co",
+        "url": "^https?://(www\\.)?(tuao8?|tumm|\\d+mm|luge8?)\\.[a-z]{2,3}/(post|web)/",
+        "init": "let a=document.querySelector('.entry p>a');a.outerHTML=a.innerHTML;",
         "nextLink": "li.next-page>a",
         "pageElement": ".entry img, .article-content img",
         "replaceElement": "#dm-fy",
@@ -3015,9 +3041,9 @@
         "autoLoadNum": "0"
     },
     {
-        "name": "凸凹吧/撸女吧/女优吧 - 分類",
-        "example": "www.tuao8.xyz，www.tumm.cc，www.97mm.cc",
-        "url": "^https?://(www\\.)?(tuao\\d?|tumm|\\d+mm)\\.[a-z]{2,3}/",
+        "name": "凸凹吧/撸女吧/女优吧/撸哥吧/欲女吧 - 分類",
+        "example": "www.tuao.one，www.63mm.cc，www.97mm.cc，www.luge8.co，luge8.co",
+        "url": "^https?://(www\\.)?(tuao\\d?|tumm|\\d+mm|luge8?)\\.[a-z]{2,3}/",
         "include": ".pagenavi",
         "nextLink": ".now-page+a",
         "pageElement": "main.main>article",
@@ -3073,9 +3099,9 @@
         "name": "MEITU131 - 看圖",
         "example": "https://www.meitu131.com/meinv/7672/",
         "url": "^https?://www\\.meitu131\\.com/meinv/\\d+",
-        "init": "document.querySelectorAll('p>a').forEach(a=>{a.removeAttribute('href')})",
+        "init": "document.querySelectorAll('p>a').forEach(e=>{e.outerHTML=e.innerHTML})",
         "nextLink": "//a[text()='下一页']",
-        "pageElement": "p img",
+        "pageElement": ".work-content img",
         "replaceElement": "#pages",
         "pageBar": 0,
         "initRun": 1,
@@ -3433,7 +3459,7 @@
         "name": "BeautyLeg - 圖片",
         "example": "http://www.beautyleg6.com/xingganmeinv/201406/133.html",
         "url": "^https?://www.beautyleg\\d+\\.com/.+\\.html",
-        "init": "function $x(xpath,context){var nodes=[];try{var doc=(context&&context.ownerDocument)||window.document;var results=doc.evaluate(xpath,context||doc,null,XPathResult.ANY_TYPE,null);var node;while(node=results.iterateNext()){nodes.push(node)}}catch(e){throw e;}return nodes}$x(`a.remove()});$x(`a.removeAttribute('href')});$x(`br.remove()});$x(`div.remove()})",
+        "init": "function geAll(e){return document.querySelectorAll(e)}let imgs=geAll('.contents img');let _img='';for(let i=0;i<imgs.length;i++){_img+=imgs[i].outerHTML};geAll('.contents')[0].innerHTML=_img;",
         "nextLink": "//a[text()='下一页']",
         "pageElement": ".contents img",
         "replaceElement": ".page",
@@ -3513,7 +3539,7 @@
         "name": "MM131美女图片手機版 - 看圖",
         "example": "https://m.mmm131.com/xinggan/5761.html",
         "url": "^https?://m\\.mmm131\\.com/.+\\html$",
-        "init": "let link=document.querySelector('.post-content>a');link.removeAttribute('href')",
+        "init": "let a=document.querySelector('.post-content>a');a.outerHTML=a.innerHTML;",
         "nextLink": "//a[text()='下一张']",
         "pageElement": ".post-content img",
         "replaceElement": ".paging",
@@ -3546,7 +3572,7 @@
         "name": "MM131美女图片 - 看圖",
         "example": "https://www.mmm131.com/xinggan/5774.html",
         "url": "^https?://www\\.mmm131\\.com/.+\\html$",
-        "init": "let link=document.querySelector('.content-pic>a');link.removeAttribute('href')",
+        "init": "let a=document.querySelector('.content-pic>a');a.outerHTML=a.innerHTML;",
         "nextLink": "//a[text()='下一页']",
         "pageElement": ".content-pic img",
         "replaceElement": ".content-page",
@@ -3751,12 +3777,21 @@
         "name": "MM 范 - 圖片",
         "example": "https://www.95mm.tv/65309.html",
         "url": "^https://www\\.95mm\\.\\w+/\\w+\\.html",
-        "init": "let link=document.querySelector('.post a');link.removeAttribute('href');link.removeAttribute('alt')",
-        "include": ".post a",
+        "init": "let a=document.querySelector('.post a');a.outerHTML=a.innerHTML;",
+        "include": ".post img[alt]",
         "nextLinkByUrl": [
             "/(\\d+)(/)?(\\d+)?(\\.html)",
-            "/$1/{($3.0||1)+1}$4",
-            ".post a:not([href*='/1\\.html'])"
+            "/$1/{($3.0||1)+1}$4"
+        ],
+        "stopSign": [
+            [
+                ".post-title",
+                "(\\d+)"
+            ],
+            [
+                ".post-title",
+                "\\/(\\d+)"
+            ]
         ],
         "pageElement": ".post img",
         "replaceElement": "h1.h3",
@@ -4245,8 +4280,10 @@
         "name": "绅士漫画 - 閱讀",
         "example": "https://wnacg.org/photos-view-id-15403544.html",
         "url": "^https?://(www\\.)?(wnacg|htcomic)\\.[^/]+/photos-view",
-        "init": "let link=document.querySelector('#imgarea > a');link.removeAttribute('href')",
+        "include": "span.newpagelabel",
+        "init": "let a=document.querySelector('#imgarea>a');a.outerHTML=a.innerHTML;",
         "nextLink": "//a[text()='下一頁']",
+        "stopSign": "let p=doc.querySelector('span.newpagelabel').textContent;let m=p.match(/(\\d+)\\/(\\d+)/);if(m[1]==m[2])return true;",
         "pageElement": "#picarea",
         "replaceElement": ".newpagewrap,.png.bread,.grid_2.cc",
         "pageBar": 0,
@@ -4260,6 +4297,30 @@
         "nextLink": "span.thispage+a",
         "pageElement": "li.gallary_item",
         "replaceElement": ".paginator"
+    },
+    {
+        "name": "松鼠症倉庫 - 閱讀",
+        "example": "https://ahri8.top/readOnline2.php?ID=90518&host_id=0",
+        "url": "^https?://[^/]+/readOnline\\d\\.php\\?ID=\\d+",
+        "include": [
+            "//div[@id='logo-group']//a[contains(text(),'松鼠症倉庫')]",
+            "[id^='image_width']"
+        ],
+        "pinUrl": true,
+        "init": "let _img='';for(let i=0;i<Original_Image_List.length;i++){let imgSrc=HTTP_IMAGE+Original_Image_List[i].new_filename+'_w1500.'+Original_Image_List[i].extension;_img+=`<img src='${imgSrc}'>`};document.querySelector('#Big_Image').innerHTML=_img;",
+        "nextLink": "0",
+        "css": "#Big_Image>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}#content>[style^='text-align']{display:none!important}"
+    },
+    {
+        "name": "松鼠症倉庫",
+        "example": "https://ahri8.top/dnew.php?t=1669824000",
+        "url": "^https?://[^/]+/dnew\\.php",
+        "include": "//div[@id='logo-group']//a[contains(text(),'松鼠症倉庫')]",
+        "action": 1,
+        "nextLink": ".pagination li.active+li>a",
+        "pageElement": "#gallery",
+        "replaceElement": ".pagination",
+        "css": "#content>[style^='text-align']{display:none!important}"
     },
     {
         "name": "绅士会所",
@@ -4487,11 +4548,14 @@
         "css": ".home-rows-videos-div{margin-bottom:10px!important;}.search-pagination{margin-top:-50px!important;}"
     },
     {
-        "name": "尤物妹妹圖 - 看圖",
-        "example": "http://www.ywmmt.com/html/meinvpp/20221027/139704.html",
-        "url": "^https?://www\\.[a-z]+\\.com/.+\\d+\\.html",
-        "include": "body>span+.page>#picg > p[align='center'] > a[title] > img[alt],body>span+.page>span+.pagelist",
-        "init": "let link=document.querySelector('#picg a');link.removeAttribute('href');link.removeAttribute('title')",
+        "name": "免费私房图 - 看圖",
+        "example": "http://www.mfsft.com/gaoqing/photo/20221021/139363.html",
+        "url": "^https?://www\\.[a-z]+\\.com/",
+        "include": [
+            "body>span+.page>#picg>p[align='center']>a[title]>img[alt]",
+            "body>span+.page>span+.pagelist"
+        ],
+        "init": "let a=document.querySelector('#picg a');a.outerHTML=a.innerHTML;",
         "nextLink": "//a[text()='下一页']",
         "pageElement": "#picg img",
         "replaceElement": "span+.pagelist",
@@ -4501,16 +4565,20 @@
         "autoLoadNum": "0"
     },
     {
-        "name": "尤物妹妹圖 - 分類",
-        "example": "http://www.ywmmt.com/html/mm/1_1.html",
-        "url": "^https?://www\\.[a-z]+\\.com/(s\\.asp|.+\\d+\\.html)",
-        "include": "body>#list>ul>li>a,.pagelist a[title='尾页']",
+        "name": "免费私房图 - 分類",
+        "example": "http://www.mfsft.com/gaoqing/tulie/1_1.html",
+        "url": "^https?://www\\.[a-z]+\\.com/",
+        "include": [
+            "body>#list>ul>li>a",
+            ".pagelist a[title='尾页']"
+        ],
         "nextLink": "//p/u/following-sibling::a",
         "pageElement": "body>#list>ul>li:not([id^='listmt'])",
         "replaceElement": ".pagelist",
         "css": "[href^='https://www.358a.vip/'],#span_xzappsq,#span_listp,#bdssx,#listmt,#listmt2,#listmt3,#listmt4,#listmmt2,#xzappsq,#listp,#listja{display:none!important}",
         "initRun": 1,
-        "autoLoadNum": 1,
+        "autoLoadNum": 5,
+        "rate": 3,
         "pageBar": 0
     },
     {
@@ -5059,10 +5127,11 @@
         "name": "EPORNER Photo",
         "example": "https://www.eporner.com/photo/02USX1vSH4e/8/",
         "url": "^https?://[a-z]{2,3}\\.eporner\\.com/photo/",
-        "init": "let img = document.querySelector('.photohref>img[alt]');img.src = img.parentNode.href;img.parentNode.removeAttribute('href');",
+        "init": "let img = document.querySelector('.photohref>img[alt]');img.src = img.parentNode.href;",
         "nextLink": "#photobitrighta",
-        "pageElement": ".photohref",
-        "pageInit": "let img = doc.querySelector('.photohref>img[alt]');img.src = img.parentNode.href;img.parentNode.removeAttribute('href');",
+        "pageElement": "#gridphoto>.photohref,#gridphoto>.mainphoto",
+        "pageInit": "let img = doc.querySelector('.photohref>img[alt]');img.src = img.parentNode.href;",
+        "pageAction": "document.querySelectorAll('.photohref').forEach(e=>{e.outerHTML=e.innerHTML})",
         "replaceElement": "#photobitlefta,#photobitrighta",
         "pageBar": 0,
         "initRun": 1,
@@ -5202,7 +5271,7 @@
         "name": "PornHub photo",
         "example": "https://cn.pornhub.com/photo/825175581",
         "url": "^https?://[a-z]{2,3}\\.pornhub\\.com/photo/\\d+",
-        "init": "document.querySelector('.centerImage>a:nth-child(3)').removeAttribute('href')",
+        "init": "let a=document.querySelector('.centerImage img[alt]').parentNode;a.outerHTML=a.innerHTML;",
         "nextLink": ".arrowRight",
         "stopSign": [
             [
@@ -5214,7 +5283,7 @@
                 "^(\\d+)"
             ]
         ],
-        "pageElement": ".centerImage img",
+        "pageElement": ".centerImage img[alt]",
         "replaceElement": ".arrowLeft,.arrowRight,.thumbSliderButtons,.thumbSliderContent,.itemCount",
         "pageBar": 0,
         "initRun": 1,
@@ -5269,7 +5338,7 @@
     {
         "name": "牛C網 - 列表",
         "example": "https://niuc.icu/sex",
-        "url": "^https?://niuc(\\d+)?\\.[a-z]{2,3}/(blog|sex|pornhub|apps)",
+        "url": "^https?://niuc[^/]+/(blog|sex|pornhub|apps)",
         "init": "document.querySelectorAll('a[data-src]').forEach(a=>{a.style.backgroundImage=`url('${a.dataset.src}')`})",
         "nextLink": "span.current+a",
         "pageElement": ".cat_list",
@@ -5279,8 +5348,9 @@
     },
     {
         "name": "牛C網 - 看圖",
-        "example": "https://niuc.icu/64438.html",
-        "url": "^https?://niuc(\\d+)?\\.[a-z]{2,3}/\\d+\\.html",
+        "example": "https://niuc.icu/78111.html",
+        "url": "^https?://niuc[^/]+/\\d+\\.html",
+        "init": "document.querySelectorAll('a.js').forEach(e=>{e.outerHTML=e.innerHTML})",
         "nextLink": "span+a",
         "pageElement": "div.panel-body.single.mt-2 > p",
         "replaceElement": ".page-nav",
@@ -5292,7 +5362,7 @@
     {
         "name": "牛C網 - 正文",
         "example": "https://niuc.icu/67307.html",
-        "url": "^https?://niuc(\\d+)?\\.[a-z]{2,3}/\\d+\\.html",
+        "url": "^https?://niuc[^/]+/\\d+\\.html",
         "action": 1,
         "exclude": ".page-nav",
         "nextLink": ".nav.previous>a",
@@ -5768,9 +5838,10 @@
     {
         "name": "超级美女图库 - 看圖",
         "example": "https://www.2avtt.com/xingan/54985.html",
-        "url": "^https?://www\\.2avtt\\.com/",
+        "url": "^https?://[^/]+/",
+        "include": "//title[contains(text(),'超级美女图库')]",
         "action": 1,
-        "init": "document.querySelector('#nextPageTagA').removeAttribute('href');",
+        "init": "let a=document.querySelector('#nextPageTagA');a.outerHTML=a.innerHTML;",
         "nextLink": "li.thisclass+li>a",
         "pageElement": "#photoMain img[alt]",
         "replaceElement": ".page,.local>span",
@@ -5782,7 +5853,8 @@
     {
         "name": "超级美女图库 - 分類",
         "example": "https://www.2avtt.com/xingan/",
-        "url": "^https?://www\\.2avtt\\.com/",
+        "url": "^https?://[^/]+/",
+        "include": "//title[contains(text(),'超级美女图库')]",
         "nextLink": "li.thisclass+li>a",
         "pageElement": "//div[@class='col-left-right'][div/div[@align='center']/following-sibling::div[1]/div[@class='item']]",
         "replaceElement": ".page",
@@ -6352,6 +6424,27 @@
         "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('.pagetual_pageBar')[0].remove();let t=geAll('.txtnav');if(t.length>2)t[0].remove()"
     },
     {
+        "name": "乐文小说网 -閱讀",
+        "example": "http://www.lewenlou.org/132/132683/41065575.html",
+        "url": "^https?://www\\.lewenlou\\.org/\\d+/\\d+/\\d+\\.html",
+        "history": 2,
+        "nextLink": ".next>a",
+        "pageElement": "//div[div[contains(@class,'content-body')]]",
+        "replaceElement": "head>title,.pager",
+        "pageAction": "function gxAll(x,context){var nodes=[];try{var doc=(context&&context.ownerDocument)||window.document;var results=doc.evaluate(x,context||doc,null,XPathResult.ANY_TYPE,null);var node;while(node=results.iterateNext()){nodes.push(node)}}catch(e){throw e;}return nodes}let t=gxAll(\"//div[div[contains(@class,'content-body')]]\");if(t.length>2){t[0].remove()}",
+        "pageBar": 0,
+        "css": ".chaptera,#pccontent_tip{display:none!important}"
+    },
+    {
+        "name": "乐文小说网 -分類",
+        "example": "http://www.lewenlou.org/list/1-1.html",
+        "url": "^https?://www\\.lewenlou\\.org/list/",
+        "nextLink": "li.active+li>a",
+        "pageElement": "//div[@class='panel-body'][div[contains(@class,'col-sm-index')]]",
+        "replaceElement": ".pagination",
+        "css": "#center_tip{display:none!important}"
+    },
+    {
         "name": "69書吧 - 書籍分類",
         "example": "https://www.69shu.com/top/0.htm",
         "url": "^https?://www\\.69shu\\.com/top/",
@@ -6366,7 +6459,8 @@
         "nextLink": "//a[text()='下一章']",
         "pageElement": ".name,.content",
         "replaceElement": "head>title,.container .chapter-nav,.main>.chapter-nav,#mm-5>.chapter-nav",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('.pagetual_pageBar')[0].remove();let h=geAll('.name');let t=geAll('.content');if(t.length>2){h[0].remove();t[0].remove()}"
+        "pageAction": "function geAll(e){return document.querySelectorAll(e)}let h=geAll('.name');let t=geAll('.content');if(t.length>2){h[0].remove();t[0].remove()}",
+        "pageBar": 0
     },
     {
         "name": "小說狂人 - 書籍分類",
