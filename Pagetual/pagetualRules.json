@@ -276,14 +276,10 @@
     {
         "name": "動漫狂 - 閱讀",
         "url": "^https?://www\\.cartoonmad\\.cc/comic/\\d+\\.html",
-        "init": "let link=$('body>table>tbody>tr:nth-child(4)>td>table>tbody>tr:nth-child(1)>td:nth-child(1)>a');let link2=$('body>table>tbody>tr:nth-child(3)>td>a');if(link){link.removeAttr('href')}else if(link2){link2.removeAttr('href')}",
-        "nextLink": "a.onpage+a[href$='html']",
-        "pageElement": "img[onload],img[oncontextmenu]",
-        "replaceElement": "//tr[td/a/@class='onpage'] | //select[@name='jump']",
-        "pageBar": 0,
-        "initRun": 1,
-        "autoLoadNum": "0",
-        "css": "img[onload],img[oncontextmenu]{max-width: 100% !important;display: block !important;margin: 0 auto !important;}td[valign='top'][width='160'],td[width='12']{display:none!important}"
+        "init": "function ge(e){return document.querySelector(e)}let _src=ge('img[onload],img[oncontextmenu]').src.replace(/\\d+$/,'');let max=document.querySelectorAll('option[value]').length;let _img='';for(let i=1;i<=max;i++){let imgSrc;if(i<10){imgSrc=_src+'00'+i}else if(i<100){imgSrc=_src+'0'+i}else{imgSrc=_src+i}_img+=`<img src='${imgSrc}' onload>`};ge('img[onload],img[oncontextmenu]').parentNode.outerHTML=_img;let p=ge('body>table>tbody>tr:nth-child(2)').cloneNode(true);let c=ge('body>table>tbody>tr:last-child');c.parentNode.insertBefore(p,c);",
+        "nextLink": "//a[img[@src='/image/rad.gif']]",
+        "manualMode": true,
+        "css": "td[align]>img{max-width: 100% !important;display: block !important;margin: 0 auto !important;}td[valign='top'][width='160'],td[width='12'],select[name],body>table>tbody>tr:nth-child(5){display:none!important}"
     },
     {
         "name": "動漫狂 - 分類",
@@ -921,8 +917,8 @@
         "name": "木马漫画 - 閱讀 - 雙擊前往下一章，鍵盤左右鍵上下章",
         "example": "https://www.omyschool.com/article_detail/590/653244/%E5%85%A8%E8%81%B7%E7%8D%B5%E4%BA%BA/390%E8%A9%B1/",
         "url": "^https?://www\\.omyschool\\.com/article_detail/\\d+/\\d+/",
-        "init": "function gx(x){return document.evaluate(x,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue};function next(e){let key=window.event?e.keyCode:e.which;if(key==39){let n=gx(\"//a[contains(@class,'next')][not(@href='javascript:void(0)')]\");if(n){n.click()}else{alert('沒有下一章了！')}}};document.addEventListener('keydown',next);function prev(e){let key=window.event?e.keyCode:e.which;if(key==37){let p=gx(\"//a[contains(@class,'prev')][not(@href='javascript:void(0)')]\");if(p){p.click()}else{alert('沒有上一章了！')}}};document.addEventListener('keydown',prev);function dcnext(){let n=gx(\"//a[contains(@class,'next')][not(@href='javascript:void(0)')]\");if(n){n.click()}else{alert('沒有下一章了！')}};document.addEventListener('dblclick',dcnext);function gxAll(xpath,context){var nodes=[];try{var doc=(context&&context.ownerDocument)||window.document;var results=doc.evaluate(xpath,context||doc,null,XPathResult.ANY_TYPE,null);var node;while(node=results.iterateNext()){nodes.push(node)}}catch(e){throw e;}return nodes}geAll(\"//div[(span) and contains(@class,'wrap_img')]\").forEach(div=>{div.remove()})",
-        "nextLink": "0",
+        "init": "function gx(x){return document.evaluate(x,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue};function next(e){let key=window.event?e.keyCode:e.which;if(key==39){let n=gx(\"//a[contains(@class,'next')][not(@href='javascript:void(0)')]\");if(n){n.click()}else{alert('沒有下一章了！')}}};document.addEventListener('keydown',next);function prev(e){let key=window.event?e.keyCode:e.which;if(key==37){let p=gx(\"//a[contains(@class,'prev')][not(@href='javascript:void(0)')]\");if(p){p.click()}else{alert('沒有上一章了！')}}};document.addEventListener('keydown',prev);function dcnext(){let n=gx(\"//a[contains(@class,'next')][not(@href='javascript:void(0)')]\");if(n){n.click()}else{alert('沒有下一章了！')}};document.addEventListener('dblclick',dcnext);function gxAll(xpath,context){var nodes=[];try{var doc=(context&&context.ownerDocument)||window.document;var results=doc.evaluate(xpath,context||doc,null,XPathResult.ANY_TYPE,null);var node;while(node=results.iterateNext()){nodes.push(node)}}catch(e){throw e;}return nodes}gxAll(\"//div[(span) and contains(@class,'wrap_img')]\").forEach(div=>{div.remove()})",
+        "nextLink": ".nav_button next",
         "pinUrl": true,
         "manualMode": true
     },
@@ -1061,7 +1057,7 @@
         "url": "^https?://www\\.kanbook\\.net/",
         "include": "nav+.container-fluid+.container-fluid",
         "pinUrl": true,
-        "init": "setTimeout(()=>{function gx(x){return document.evaluate(x,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue}function next(e){let key=window.event?e.keyCode:e.which;if(key==39){e.preventDefault();let n=gx(\"//a[text()='下一章']\");if(n){n.click()}else{alert('沒有下一章了！')}}};document.addEventListener('keydown',next);function prev(e){let key=window.event?e.keyCode:e.which;if(key==37){e.preventDefault();let p=gx(\"//a[text()='上一章']\");if(p){p.click()}else{alert('沒有上一章了！')}}};document.addEventListener('keydown',prev)},1100);function dcnext(e){let n=document.querySelector('.next_part');if(n){n.click()}else{alert('沒有下一章了！')}};document.addEventListener('dblclick',dcnext);setTimeout(()=>{document.querySelector('nav+.container-fluid+.container-fluid').innerHTML='';let imgData=[];if(is_refresh==0){for(let i=0;i<pageNum;i++){imgData.push(Gm.getImgUrl(comic_id+'/'+version_id+'/'+part_id+'/'+my_sha2(x_tokens[i])))}}else{for(let i=0;i<data.url.length;i++){imgData.push(Gm.getImgUrl(data.url[i]))}}for(let i=0;i<imgData.length;i++){setTimeout(()=>{let imgSrc='<img src=\"'+imgData[i]+'\">';$('nav+.container-fluid+.container-fluid').append(imgSrc)},3000*i)}},1000)",
+        "init": "setTimeout(()=>{function gx(x){return document.evaluate(x,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue}function next(e){let key=window.event?e.keyCode:e.which;if(key==39){e.preventDefault();let n=gx(\"//a[text()='下一章']\");if(n){n.click()}else{alert('沒有下一章了！')}}};document.addEventListener('keydown',next);function prev(e){let key=window.event?e.keyCode:e.which;if(key==37){e.preventDefault();let p=gx(\"//a[text()='上一章']\");if(p){p.click()}else{alert('沒有上一章了！')}}};document.addEventListener('keydown',prev)},1100);function dcnext(e){let n=document.querySelector('.next_part');if(n){n.click()}else{alert('沒有下一章了！')}};document.addEventListener('dblclick',dcnext);setTimeout(()=>{document.querySelector('nav+.container-fluid+.container-fluid').innerHTML='';let imgData=[];if(is_refresh==0){for(let i=0;i<pageNum;i++){imgData.push(Gm.getImgUrl(comic_id+'/'+version_id+'/'+part_id+'/'+my_sha2(x_tokens[i])))}}else{for(let i=0;i<data.url.length;i++){imgData.push(Gm.getImgUrl(data.url[i]))}}for(let i=0;i<imgData.length;i++){setTimeout(()=>{let imgSrc='<img src=\"'+imgData[i]+'\">';$('nav+.container-fluid+.container-fluid').append(imgSrc)},200*i)}},1000)",
         "nextLink": "0",
         "manualMode": true,
         "css": "nav+.container-fluid+.container-fluid>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}h2~span:not(.h4),.ppre,.pnext,#page-selector,.pagination>a:nth-child(1)~*:not(.next_part){display:none!important}.container-fluid{max-width:1000px}"
@@ -1098,15 +1094,6 @@
         "nextLink": "a[rel='next']",
         "pageElement": "ul#display",
         "replaceElement": "#pagination"
-    },
-    {
-        "name": "風之動漫 - 直接載入整個章節的圖片",
-        "example": "https://www.fffdm.com/，http://manhua.fffdm.com/203/001/",
-        "url": "^https?://(www|manhua)\\.fffdm\\.com/",
-        "init": "let imgs=window.atob(temps).split('\\r\\n');let host=document.querySelector('#mhpic').src.match(/^(https?:\\/\\/[^/]+\\/)/)[1];let _img='';for(let i=0;i<imgs.length;i++){_img+=`<img src='${host}${imgs[i]}'id=\"mhpic\"referrerpolicy=\"no-referrer\">`};document.querySelector(\"[id^='mhimg']\").innerHTML=_img;",
-        "pinUrl": true,
-        "manualMode": true,
-        "css": "aside,.navigation{display:none!important}#mhpic{max-width:98% !important;display:block !important;margin:0 auto !important;border:none!important;padding:0px!important;border-radius:0px!important}"
     },
     {
         "name": "新新漫画 - 閱讀 - 沒有顯示圖片時需要換服務器 (手機版添加鍵盤左右鍵上下話)",
@@ -1410,10 +1397,11 @@
         "name": "二次元動漫 - 閱讀",
         "example": "https://www.2animx.com/index-look-name-%E5%A6%96%E7%A5%9E%E8%A8%98-cid-22592-id-235546",
         "url": "^https?://www\\.2animx\\.com/index-look-name",
-        "init": "function gx(x){return document.evaluate(x,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue};function next(e){let key=window.event?e.keyCode:e.which;if(key==39){e.preventDefault();let n=gx(\"//a[text()='下一章'][not(starts-with(@href,'javascript'))]\");if(n){n.click()}else{alert('沒有下一章了！')}}};document.addEventListener('keydown',next);function prev(e){let key=window.event?e.keyCode:e.which;if(key==37){e.preventDefault();let p=gx(\"//a[text()='上一章'][not(starts-with(@href,'javascript'))]\");if(p){p.click()}else{alert('沒有上一章了！')}}};document.addEventListener('keydown',prev);function dcnext(){let n=gx(\"//a[text()='下一章'][not(starts-with(@href,'javascript'))]\");if(n){n.click()}else{alert('沒有下一章了！')}};document.addEventListener('dblclick',dcnext);",
+        "init": "document.querySelectorAll(\"#img_ad_img>img[style*='none']\").forEach(e=>{e.remove()});document.querySelectorAll(\"#ComicPic\").forEach(e=>{e.outerHTML=`<img src='${e.src}'>`});function gx(x){return document.evaluate(x,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue};function next(e){let key=window.event?e.keyCode:e.which;if(key==39){e.preventDefault();let n=gx(\"//a[text()='下一章'][not(starts-with(@href,'javascript'))]\");if(n){n.click()}else{alert('沒有下一章了！')}}};document.addEventListener('keydown',next);function prev(e){let key=window.event?e.keyCode:e.which;if(key==37){e.preventDefault();let p=gx(\"//a[text()='上一章'][not(starts-with(@href,'javascript'))]\");if(p){p.click()}else{alert('沒有上一章了！')}}};document.addEventListener('keydown',prev);function dcnext(){let n=gx(\"//a[text()='下一章'][not(starts-with(@href,'javascript'))]\");if(n){n.click()}else{alert('沒有下一章了！')}};document.addEventListener('dblclick',dcnext);",
         "nextLink": "//a[text()='下一頁'][not(starts-with(@href,'javascript'))]",
         "pageElement": "#img_ad_img>img",
         "replaceElement": "script+div.c,.e+.c,.b",
+        "pageAction": "document.querySelectorAll(\"#img_ad_img>img[style*='none']\").forEach(e=>{e.remove()});document.querySelectorAll(\"#ComicPic\").forEach(e=>{e.outerHTML=`<img src='${e.src}'>`})",
         "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0",
@@ -2680,6 +2668,29 @@
         "replaceElement": ".pagenav-clear"
     },
     {
+        "name": "美女图片网 - 圖片",
+        "example": "https://www.mevtu.com/xingganmm/15275.html",
+        "url": "^https?://www\\.mevtu\\.com/",
+        "include": ".page_imges",
+        "init": "let a=document.querySelector('.imageclick-href');a.outerHTML=a.innerHTML;",
+        "nextLink": "span.current+a:not(.prev)",
+        "pageElement": "#image_div img[alt]",
+        "replaceElement": ".nav-links,.mbx-nav-right",
+        "pageBar": 0,
+        "initRun": 1,
+        "autoLoadNum": "0",
+        "css": "#content>a{display:none!important}"
+    },
+    {
+        "name": "美女图片网 - 分類",
+        "example": "https://www.mevtu.com/",
+        "url": "^https?://www\\.mevtu\\.com/",
+        "include": ".nav-links",
+        "nextLink": "span.current+a",
+        "pageElement": "#index_ajax_list",
+        "replaceElement": ".nav-links"
+    },
+    {
         "name": "Pic Yailay - 圖片",
         "example": "https://pic.yailay.com/articles/UTVKYXJDOFRFVy8zVGlINHUySk1Ldz09.html，https://nungvl.net/gallerys/87379.cg?page=1",
         "url": "^https?://(pic\\.yailay\\.com|nungvl\\.net)/(articles|gallerys)",
@@ -2895,8 +2906,11 @@
         "name": "3G 壁纸 - 圖片",
         "example": "https://www.3gbizhi.com/meinv/mn1869.html",
         "url": "^https?://www\\.3gbizhi\\.com/meinv/\\w+\\.html",
-        "init": "document.querySelector('#showimg').appendChild(document.querySelector('#showpicnow'));",
-        "nextLink": "a.next",
+        "init": "function ge(e){return document.querySelector(e)}ge('#showimg').appendChild(ge('#showpicnow'));document.querySelectorAll('#showimg>a').forEach(e=>{e.remove()})",
+        "nextLinkByUrl": [
+            "/([^_]+)(_(\\d+))?\\.html$",
+            "/$1_{$3+1}.html"
+        ],
         "stopSign": [
             [
                 ".showtitle>h2",
@@ -3096,6 +3110,28 @@
         "css": ".pagetual_pageBar{margin-top:0px!important}"
     },
     {
+        "name": "MEITU131 - 手機版看圖",
+        "example": "https://m.meitu131.com/meinv/8140/",
+        "url": "^https?://m\\.meitu131\\.com/",
+        "include": ".uk-article",
+        "init": "let a=document.querySelector('.uk-article-bd a');a.outerHTML=a.innerHTML;",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": ".uk-article-bd img[alt]",
+        "replaceElement": ".uk-page",
+        "pageBar": 0,
+        "initRun": 1,
+        "autoLoadNum": "0"
+    },
+    {
+        "name": "MEITU131 手機版",
+        "example": "https://m.meitu131.com/meinv/",
+        "url": "^https?://m\\.meitu131\\.com/",
+        "exclude": ".uk-article",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": ".uk-container",
+        "replaceElement": ".uk-page"
+    },
+    {
         "name": "MEITU131 - 看圖",
         "example": "https://www.meitu131.com/meinv/7672/",
         "url": "^https?://www\\.meitu131\\.com/meinv/\\d+",
@@ -3117,6 +3153,52 @@
         "replaceElement": "#pages",
         "lazyImgSrc": "data-echo",
         "css": ".cover-list+.pagetual_pageBar{margin-top:0px!important}.pagetual_pageBar+.cover-list{margin-top:-4px!important}"
+    },
+    {
+        "name": "亿图全景图库 - 手機版看圖",
+        "example": "https://m.yeitu.com/meinv/xinggan/20221205_32251.html",
+        "url": "^https?://m\\.yeitu\\.com/",
+        "include": ".uk-article",
+        "init": "let a=document.querySelector('.gallery-item>a');a.outerHTML=a.innerHTML;",
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": ".gallery-item img[alt]",
+        "replaceElement": ".yt-pages,.imageset-current",
+        "pageBar": 0,
+        "initRun": 1,
+        "autoLoadNum": "0"
+    },
+    {
+        "name": "亿图全景图库手機版",
+        "example": "https://m.yeitu.com/meinv/xinggan/",
+        "url": "^https?://m.yeitu.com/",
+        "include": ".uk-pagination",
+        "nextLink": "//a[@class='a1' and text()='下一页']",
+        "pageElement": ".uk-container>ul",
+        "replaceElement": ".uk-pagination"
+    },
+    {
+        "name": "亿图全景图库 - 看圖",
+        "example": "https://www.yeitu.com/meinv/xinggan/20220725_31887.html",
+        "url": "^https?://www\\.yeitu\\.com/",
+        "include": ".img_content",
+        "init": "let a=document.querySelector('.img_box>a');a.outerHTML=a.innerHTML;",
+        "nextLink": "//a[@class='a1' and text()='下一页']",
+        "pageElement": ".img_box img[alt]",
+        "replaceElement": "#pages,.imageset-current",
+        "pageBar": 0,
+        "initRun": 1,
+        "autoLoadNum": "0"
+    },
+    {
+        "name": "亿图全景图库",
+        "example": "https://www.yeitu.com/meinv/xinggan/",
+        "url": "^https?://www\\.yeitu\\.com/",
+        "include": "#pages",
+        "nextLink": "//a[@class='a1' and text()='下一页']",
+        "pageElement": ".list-box-p",
+        "replaceElement": "#pages",
+        "lazyImgSrc": "data-echo",
+        "css": ".pagetual_pageBar{margin-top:-8px!important}"
     },
     {
         "name": "Make Girls",
@@ -4303,11 +4385,11 @@
         "example": "https://ahri8.top/readOnline2.php?ID=90518&host_id=0",
         "url": "^https?://[^/]+/readOnline\\d\\.php\\?ID=\\d+",
         "include": [
-            "//div[@id='logo-group']//a[contains(text(),'松鼠症倉庫')]",
-            "[id^='image_width']"
+            "//div[@id='logo-group']//a[contains(text(),'松鼠症倉庫') or contains(text(),'松鼠症仓库')]",
+            "//script[contains(text(),'HTTP_IMAGE') and contains(text(),'Original_Image_List')]"
         ],
         "pinUrl": true,
-        "init": "let _img='';for(let i=0;i<Original_Image_List.length;i++){let imgSrc=HTTP_IMAGE+Original_Image_List[i].new_filename+'_w1500.'+Original_Image_List[i].extension;_img+=`<img src='${imgSrc}'>`};document.querySelector('#Big_Image').innerHTML=_img;",
+        "init": "let p=Original_Image_List;let _img='';for(let i=0;i<p.length;i++){let imgSrc=HTTP_IMAGE+p[i].new_filename+'_w1500.'+p[i].extension;_img+=`<img src='${imgSrc}'>`};document.querySelector('#Big_Image').innerHTML=_img;",
         "nextLink": "0",
         "css": "#Big_Image>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}#content>[style^='text-align']{display:none!important}"
     },
@@ -4315,7 +4397,7 @@
         "name": "松鼠症倉庫",
         "example": "https://ahri8.top/dnew.php?t=1669824000",
         "url": "^https?://[^/]+/dnew\\.php",
-        "include": "//div[@id='logo-group']//a[contains(text(),'松鼠症倉庫')]",
+        "include": "//div[@id='logo-group']//a[contains(text(),'松鼠症倉庫') or contains(text(),'松鼠症仓库')]",
         "action": 1,
         "nextLink": ".pagination li.active+li>a",
         "pageElement": "#gallery",
@@ -5555,8 +5637,12 @@
     },
     {
         "name": "愛污傳媒",
-        "example": "https://www.aiwu333.top/index.php/&m=vodtype/mdapp52.html",
-        "url": "^https?://www\\.aiwu.*\\.(info|top|com)/index\\.php/",
+        "example": "https://aiwucm.com/",
+        "url": "aiwu",
+        "include": [
+            "//title[contains(text(),'爱污传媒')]",
+            ".pagination.justify-content-center"
+        ],
         "nextLink": "a[title='Go to next page!']",
         "pageElement": ".grid.mx-auto.videos",
         "replaceElement": ".pagination.justify-content-center",
@@ -6015,7 +6101,7 @@
         "waitElement": [
             "img.cr_only"
         ],
-        "init": "let bs = document.querySelector('body[style]');if(bs)bs.removeAttribute('style');let p=document.querySelector('.info').textContent.match(/\\d+/)[0];if(p<18){document.querySelectorAll('img.cr_only').forEach(img=>{img.src=img.src.replace('_600x0','')});let imgs=document.querySelectorAll('img.cr_only');let imgData=[];let fa=[];for(let i=0;i<imgs.length;i++){imgData.push(imgs[i].getAttribute('src'));fa.push(imgs[i].parentNode.parentNode.getAttribute('href'))};let aimg='';for(let i=0;i<imgData.length;i++){aimg+=`<a href='${fa[i]}'target=\"_blank\"><img src='${imgData[i]}'></a>`};document.querySelector('.body .article:not(.ad)').innerHTML=aimg;let p=document.querySelector('#pagetual-preload');if(p)p.remove()}",
+        "init": "function ge(e){return document.querySelector(e)}let bs = ge('body[style]');if(bs)bs.removeAttribute('style');let p=ge('.info').textContent.match(/\\d+/)[0];if(p<18){document.querySelectorAll('img.cr_only').forEach(img=>{img.src=img.src.replace('_600x0','')});let imgs=document.querySelectorAll('img.cr_only');let imgData=[];let fa=[];for(let i=0;i<imgs.length;i++){imgData.push(imgs[i].getAttribute('src'));fa.push(imgs[i].parentNode.parentNode.getAttribute('href'))};let aimg='';for(let i=0;i<imgData.length;i++){aimg+=`<a href='${fa[i]}'target=\"_blank\"><img src='${imgData[i]}'></a>`};ge('.body .article:not(.ad)').innerHTML=aimg;let p=ge('#pagetual-preload');if(p)p.remove()}",
         "nextLink": "a.next",
         "pageElement": ".photos > a",
         "replaceElement": [
@@ -6023,7 +6109,7 @@
             "div.article>div.pager:last-child"
         ],
         "css": ".photos>div.item,.jquery-modal.blocker.current,.slider-ad,.article.ad,.pager>.tips,body>footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords){display: none!important;}.pagetual_pageBar{margin-top:30px!important;margin-bottom:0px!important}.body .article:not(.ad)>a>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}",
-        "pageAction": "document.querySelectorAll('img.cr_only').forEach(img=>{img.src=img.src.replace('_600x0','')});setTimeout(()=>{let last=document.querySelector(`a[current='true']+a.next`);if(last){let imgs=document.querySelectorAll('img.cr_only');let imgData=[];let fa=[];for(let i=0;i<imgs.length;i++){imgData.push(imgs[i].getAttribute('src'));fa.push(imgs[i].parentNode.parentNode.getAttribute('href'))};let aimg='';for(let i=0;i<imgData.length;i++){aimg+=`<a href='${fa[i]}'target=\"_blank\"><img src='${imgData[i]}'></a>`};document.querySelector('.body .article:not(.ad)').innerHTML=aimg;let p=document.querySelector('#pagetual-preload');if(p)p.remove()}},1000)",
+        "pageAction": "function ge(e){return document.querySelector(e)}document.querySelectorAll('img.cr_only').forEach(img=>{img.src=img.src.replace('_600x0','')});setTimeout(()=>{let last=ge(`a[current='true']+a.next`);if(last){let imgs=document.querySelectorAll('img.cr_only');let imgData=[];let fa=[];for(let i=0;i<imgs.length;i++){imgData.push(imgs[i].getAttribute('src'));fa.push(imgs[i].parentNode.parentNode.getAttribute('href'))};let aimg='';for(let i=0;i<imgData.length;i++){aimg+=`<a href='${fa[i]}'target=\"_blank\"><img src='${imgData[i]}'></a>`};ge('.body .article:not(.ad):not(.action)').innerHTML = aimg;let p=ge('#pagetual-preload');if(p)p.remove()}},1000)",
         "initRun": 1,
         "autoLoadNum": "0"
     },
