@@ -276,7 +276,7 @@
     {
         "name": "動漫狂 - 閱讀",
         "url": "^https?://www\\.cartoonmad\\.cc/comic/\\d+\\.html",
-        "init": "function ge(e){return document.querySelector(e)}let _src=ge('img[onload],img[oncontextmenu]').src.replace(/\\d+$/,'');let max=document.querySelectorAll('option[value]').length;let _img='';for(let i=1;i<=max;i++){let imgSrc;if(i<10){imgSrc=_src+'00'+i}else if(i<100){imgSrc=_src+'0'+i}else{imgSrc=_src+i}_img+=`<img src='${imgSrc}' onload>`};ge('img[onload],img[oncontextmenu]').parentNode.outerHTML=_img;let p=ge('body>table>tbody>tr:nth-child(2)').cloneNode(true);let c=ge('body>table>tbody>tr:last-child');c.parentNode.insertBefore(p,c);",
+        "init": "document.onkeydown = null;function ge(e){return document.querySelector(e)}let _src=ge('img[onload],img[oncontextmenu]').src.replace(/\\d+$/,'');let max=document.querySelectorAll('option[value]').length;let _img='';for(let i=1;i<=max;i++){let imgSrc;if(i<10){imgSrc=_src+'00'+i}else if(i<100){imgSrc=_src+'0'+i}else{imgSrc=_src+i}_img+=`<img src='${imgSrc}' onload>`};ge('img[onload],img[oncontextmenu]').parentNode.outerHTML=_img;let p=ge('body>table>tbody>tr:nth-child(2)').cloneNode(true);let c=ge('body>table>tbody>tr:last-child');c.parentNode.insertBefore(p,c);",
         "nextLink": "//a[img[@src='/image/rad.gif']]",
         "manualMode": true,
         "css": "td[align]>img{max-width: 100% !important;display: block !important;margin: 0 auto !important;}td[valign='top'][width='160'],td[width='12'],select[name],body>table>tbody>tr:nth-child(5){display:none!important}"
@@ -530,7 +530,7 @@
         "pageInit": "function geAll(e){return document.querySelectorAll(e)}let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML.slice(1,-1).replaceAll('var ','');let imgData=eval(code.split(';')[3]);let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src='${imgData[i]}'>`};doc.querySelector('#images').innerHTML=_img;setTimeout(()=>{let url=eval(code.split(';')[8]);let p=eval(code.split(';')[12]);let n=eval(code.split(';')[13]);geAll('.nextC').forEach(e=>{if(n.id>0){e.href=url+n.id+'.html'}else{e.href=url;e.innerHTML=e.innerHTML.replace('下一章','返回目录')}});geAll('.prevC').forEach(e=>{e.href=url+p.id+'.html'})},300)",
         "pageAction": "function geAll(css){return document.querySelectorAll(css)};setTimeout(()=>{let c=geAll('#images');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": 1,
-        "css": ".nav-pagination,.img_land_prev,.img_land_next,#page_select,.img_info,.title.pr>em:nth-child(5),.title.pr>span{display:none!important}#images>img{max-width: 100% !important;display: block !important;margin: 0 auto -2px auto !important;border:0px!important;padding:0px!important;}"
+        "css": ".nav-pagination,.img_land_prev,.img_land_next,#page_select,.img_info,.title.pr>em:nth-child(5),.title.pr>span{display:none!important}#images>img{max-width: 100% !important;display: block !important;margin: 0 auto -2px auto !important;border:0px!important;padding:0px!important;}.w996,.tbCenter{width:auto!important}"
     },
     {
         "name": "前未漫画 / 漫画芯 - PC版閱讀",
@@ -545,7 +545,7 @@
         "pageInit": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML;let imgData=eval(code.match(/chapterImages = ([^;]+)/)[1]);let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src='${imgData[i]}'>`};doc.querySelector('#images').innerHTML=_img",
         "pageAction": "function ge(e){return document.querySelector(e)}setTimeout(()=>{let n=ge('.next>a');if(n){ge('.btm_chapter_btn.fr').href=n.href}else{ge('.btm_chapter_btn').href=ge('.head_wz>a+a').href}let p=ge('.pre>a');if(p){ge('.btm_chapter_btn.fl').href=p.href}},300);function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('#images');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": 1,
-        "css": ".nav-pagination,.img_land_prev,.img_land_next,#page_select,.img_info,.title.pr>em:nth-child(5),.title.pr>span{display:none!important}#images>img{max-width: 100% !important;display: block !important;margin: 0 auto -2px auto !important;border:0px!important;padding:0px!important;}"
+        "css": ".nav-pagination,.img_land_prev,.img_land_next,#page_select,.img_info,.title.pr>em:nth-child(5),.title.pr>span{display:none!important}#images>img{max-width: 100% !important;display: block !important;margin: 0 auto -2px auto !important;border:0px!important;padding:0px!important;}body,.autoHeight,.wrap_last_mid .pre,.wrap_last_mid .next,.chapter-view .panel,.mainNav_inner{width:auto!important;min-width:auto!important}"
     },
     {
         "name": "优酷漫画手機版 - 閱讀",
@@ -575,7 +575,7 @@
         "pageInit": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML.slice(1,-1).replaceAll('var ','');let imghost=eval(code.split(';')[7]).match(/^(https?:\\/\\/[^/]+\\/)/)[1];let imgData=eval(code.split(';')[0]);let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src='${imghost}${imgData[i]}'>`};doc.querySelector('#images').innerHTML=_img",
         "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('#images');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": 1,
-        "css": ".nav-pagination,.img_land_prev,.img_land_next,#page_select,.img_info,.title.pr>em:nth-child(5),.title.pr>span{display:none!important}#images>img{max-width: 100% !important;display: block !important;margin: 0 auto -2px auto !important;border:0px!important;padding:0px!important;}"
+        "css": ".nav-pagination,.img_land_prev,.img_land_next,#page_select,.img_info,.title.pr>em:nth-child(5),.title.pr>span{display:none!important}#images>img{max-width: 100% !important;display: block !important;margin: 0 auto -2px auto !important;border:0px!important;padding:0px!important;}body,.autoHeight,.wrap_last_mid .pre,.wrap_last_mid .next,.chapter-view .panel,.mainNav_inner{width:auto!important;min-width:auto!important}"
     },
     {
         "name": "90漫畫網手機版 - 漫畫閱讀",
@@ -613,7 +613,7 @@
         "pageInit": "function geAll(e){return document.querySelectorAll(e)}let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML.slice(1,-1).replaceAll('var ','');let ih=eval(code.split(';')[8]).match(/^(https?:\\/\\/[^/]+\\/)/)[1];let cp=eval(code.split(';')[4]);let imgData=eval(code.split(';')[3]);let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src='${ih}${cp}${imgData[i]}'>`};doc.querySelector('#images').innerHTML=_img;setTimeout(()=>{let url=eval(code.split(';')[6]);let p=eval(code.split(';')[11]);let n=eval(code.split(';')[12]);geAll('.nextC').forEach(e=>{if(n.id>0){e.href=url+n.id+'.html'}else{e.href=url;e.innerHTML=e.innerHTML.replace('下一章','返回目录')}});geAll('.prevC').forEach(e=>{e.href=url+p.id+'.html'})},300)",
         "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('#images');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": 1,
-        "css": ".nav-pagination,.img_land_prev,.img_land_next,#page_select,.img_info,.title.pr>em:nth-child(5),.title.pr>span{display:none!important}#images>img{max-width: 100% !important;display: block !important;margin: 0 auto -2px auto !important;border:0px!important;padding:0px!important;}"
+        "css": ".nav-pagination,.img_land_prev,.img_land_next,#page_select,.img_info,.title.pr>em:nth-child(5),.title.pr>span{display:none!important}#images>img{max-width: 100% !important;display: block !important;margin: 0 auto -2px auto !important;border:0px!important;padding:0px!important;}.w996,.tbCenter{width:auto!important}"
     },
     {
         "name": "90漫畫網 - 分類",
@@ -659,7 +659,15 @@
         "pageInit": "function geAll(e){return document.querySelectorAll(e)}let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML.slice(1,-1).replaceAll('var ','');let imgData=eval(code.split(';')[3]);let imghost='https://res1.izhegu.com';let _img='';for(let i=0;i<imgData.length;i++){if(imgData[i].indexOf('http')!=-1){_img+=`<img src='${imgData[i]}'>`}else{_img+=`<img src='${imghost}${imgData[i]}'>`}};doc.querySelector('#images').innerHTML=_img;setTimeout(()=>{let url=eval(code.split(';')[8]);let p=eval(code.split(';')[11]);let n=eval(code.split(';')[12]);geAll('.nextC').forEach(e=>{if(n.id>0){e.href=url+n.id+'.html'}else{e.href=url;e.innerHTML=e.innerHTML.replace('下一章','返回目录')}});geAll('.prevC').forEach(e=>{e.href=url+p.id+'.html'})},300)",
         "pageAction": "function geAll(css){return document.querySelectorAll(css)};setTimeout(()=>{let c=geAll('#images');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": 1,
-        "css": ".nav-pagination,.img_land_prev,.img_land_next,#page_select,.img_info,.title.pr>em:nth-child(5),.title.pr>span{display:none!important}#images>img{max-width: 100% !important;display: block !important;margin: 0 auto -2px auto !important;border:0px!important;padding:0px!important;}"
+        "css": ".nav-pagination,.img_land_prev,.img_land_next,#page_select,.img_info,.title.pr>em:nth-child(5),.title.pr>span{display:none!important}#images>img{max-width: 100% !important;display: block !important;margin: 0 auto -2px auto !important;border:0px!important;padding:0px!important;}.w996,.tbCenter{width:auto!important}"
+    },
+    {
+        "name": "亲亲漫画 - 手機版章節全部展開",
+        "example": "https://m.acgqd.com/manhua/38496/",
+        "url": "^https?://m\\.acgqd\\.com/manhua/\\d+/$",
+        "pinUrl": true,
+        "autoClick": "//a[@title='全部展开']",
+        "css": "script+a{display:none!important}.Introduct_Sub *{color: #000!important}.Introduct .sub_r .Btn{border:1px solid #000!important}"
     },
     {
         "name": "亲亲漫画 - 手機版章節全部展開",
@@ -687,7 +695,7 @@
         "init": "let _img='';for(let i=0;i<chapterImages.length;i++){let host=pageImage.match(/^https?:\\/\\/[^/]+\\//)[0];let imgSrc=host+chapterPath+chapterImages[i];_img+=`<img src='${imgSrc}'>`};document.querySelector('.comic_wraCon').innerHTML=_img;",
         "nextLink": "span.next>a",
         "manualMode": true,
-        "css": ".comic_wraCon img{border:none!important;padding:0!important;width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}select{display:none!important}body,.autoHeight,.wrap_last_mid .pre,.wrap_last_mid .next{width:auto!important;min-width:auto!important}"
+        "css": ".comic_wraCon img{border:none!important;padding:0!important;width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}select{display:none!important}body,.autoHeight,.wrap_last_mid .pre,.wrap_last_mid .next,.chapter-view .panel,.mainNav_inner{width:auto!important;min-width:auto!important}"
     },
     {
         "name": "优酷漫画 / 360 漫画 / 古漫画 / 前未漫画 / 最漫画 / 漫画芯 / 亲亲漫画 - 分類",
@@ -991,7 +999,7 @@
         "pageInit": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/arr_img/)>-1).innerHTML.slice(71,-1);let Data=eval('('+eval(code).slice(11,-2)+')');let imgData=Data.page_url.split('\\r\\n');let host='https://images.dmzj.com/';let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src='${host}${imgData[i]}'>`};doc.querySelector('.comic_wraCon').innerHTML=_img",
         "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('.comic_wraCon');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": 1,
-        "css": ".nav-pagination,.img_land_prev,.img_land_next,#page_select,.img_info,.title.pr>em:nth-child(5),.title.pr>span{display:none!important}.comic_wraCon>img{max-width: 100% !important;display: block !important;margin: 0 auto -2px auto !important;border:0px!important;padding:0px!important;}"
+        "css": ".nav-pagination,.img_land_prev,.img_land_next,#page_select,.img_info,.title.pr>em:nth-child(5),.title.pr>span{display:none!important}.comic_wraCon>img{max-width: 100% !important;display: block !important;margin: 0 auto -2px auto !important;border:0px!important;padding:0px!important;}body,.autoHeight,.wrap_last_mid .pre,.wrap_last_mid .next,.chapter-view .panel,.mainNav_inner{width:auto!important;min-width:auto!important}"
     },
     {
         "name": "动漫之家2 - 分類",
@@ -1007,6 +1015,7 @@
         "example": "https://manhua.dmzj.com/shenghuomosgushimentiaozhanmigong/118093.shtml",
         "url": "^https?://manhua\\.dmzj\\.com/[a-z]+/\\d+\\.shtml",
         "pinUrl": true,
+        "autoClick": "//a[@id='qiehuan_txt' and text()='切换到上下滚动阅读']",
         "history": 2,
         "action": 1,
         "waitElement": [
