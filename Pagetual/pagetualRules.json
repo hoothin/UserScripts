@@ -662,14 +662,22 @@
         "css": ".nav-pagination,.img_land_prev,.img_land_next,#page_select,.img_info,.title.pr>em:nth-child(5),.title.pr>span{display:none!important}#images>img{max-width: 100% !important;display: block !important;margin: 0 auto -2px auto !important;border:0px!important;padding:0px!important;}"
     },
     {
+        "name": "亲亲漫画 - 手機版章節全部展開",
+        "example": "https://m.acgqd.com/manhua/38496/",
+        "url": "^https?://m\\.acgqd\\.com/manhua/\\d+/$",
+        "pinUrl": true,
+        "autoClick": "//a[@title='全部展开']",
+        "css": "script+a{display:none!important}.Introduct_Sub *{color: #000!important}.Introduct .sub_r .Btn{border:1px solid #000!important}"
+    },
+    {
         "name": "亲亲漫画 - 手機版閱讀",
         "example": "https://m.acgqd.com/manhua/39305/1277010.html",
         "url": "^https?://m\\.acgqd\\.com/manhua/\\d+/\\d+\\.html",
         "pinUrl": true,
-        "init": "let _img='';for(let i=0;i<chapterImages.length;i++){let host=pageImage.match(/^https?:\\/\\/[^/]+\\//)[0];let imgSrc=host+chapterPath+chapterImages[i];_img+=`<img src='${imgSrc}'>`};document.querySelector('#images').innerHTML=_img;",
+        "init": "$('.control_bottom').append('<div class=\"side_public scroll-top\"id=\"sidePublic\"style=\"display: block;\"><a href=\"javascript:SinMH.scrollTo(0);\"id=\"returnTop\"class=\"return-top\"></a></div>');let _img='';for(let i=0;i<chapterImages.length;i++){let host=pageImage.match(/^https?:\\/\\/[^/]+\\//)[0];let imgSrc=host+chapterPath+chapterImages[i];_img+=`<img src='${imgSrc}'>`};document.querySelector('#images').outerHTML=_img;document.addEventListener('dblclick',SinTheme.nextChapter)",
         "nextLinkByJs": "if(nextChapterData.id>0)return comicUrl+nextChapterData.id+'.html'",
         "manualMode": true,
-        "css": "#page-info,#action li:nth-child(2),#action li:nth-child(3),.control_bottom~*{display:none!important}#action li{width:50%!important}"
+        "css": "#page-info,#action li:nth-child(2),#action li:nth-child(3),.control_bottom~*,.chapter-view~*{display:none!important}#action li{width:50%!important}.chapter-view>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}.side_public{opacity:0.4;border-radius: 50%;position:fixed;bottom:60px;right:13px;width:36px;height:35px;display:none;margin-left:20px}.side_public a{border-radius: 50%;display:inline-block;*zoom:1;*display:inline;width:36px;height:36px;border:1px solid #e6e6e6;}.side_public a.return-top{background:#fff url(https://www.acgqd.com/assets/4155373f/images/side_ico.png) no-repeat 2px -81px}"
     },
     {
         "name": "亲亲漫画 - PC版閱讀",
