@@ -490,6 +490,21 @@
         "css": ".mh-list+.pagetual_pageBar{margin-top:20px!important}.manga-list-2-cover-img{opacity: 1!important}"
     },
     {
+        "name": "xlsmh下拉式漫画 - 閱讀",
+        "example": "https://www.xlsmh.com/manhua/wodetexingnengwuxianchengzhang/1308826.html",
+        "url": "^https?://www\\.xlsmh\\.com/manhua/\\w+/\\d+\\.html",
+        "pinUrl": true,
+        "history": 2,
+        "init": "function ge(e){return document.querySelector(e)}let interval=setInterval(function(){let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML;let imgData=eval(code.match(/chapterImages = ([^;]+)/)[1]);if(imgData.length==ge('#images').querySelectorAll('img').length){let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src='${imgData[i]}'>`};ge('#images').innerHTML=_img;clearInterval(interval)}},1000);",
+        "nextLinkByJs": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML.slice(1,-1).replaceAll('var ','');let url=eval(code.split(';')[6]);let next=eval(code.split(';')[12]);if(next.id>0)return url+next.id+'.html'",
+        "pageElement": "#images",
+        "replaceElement": "head>title,h1",
+        "pageInit": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML.slice(1,-1).replaceAll('var ','');let imgData=eval(code.split(';')[3]);let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src='${imgData[i]}'>`};doc.querySelector('#images').innerHTML=_img;",
+        "pageAction": "function geAll(css){return document.querySelectorAll(css)};setTimeout(()=>{let c=geAll('#images');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageBarText": 1,
+        "css": ".nav-pagination,.img_land_prev,.img_land_next,#page_select,.img_info,.title.pr>em:nth-child(5),.title.pr>span,.img_info{display:none!important}#images>img{max-width: 100% !important;display: block !important;margin: 0 auto -2px auto !important;border:0px!important;padding:0px!important;}.w996,.tbCenter{width:auto!important}"
+    },
+    {
         "name": "漫画芯手機版 - 閱讀",
         "example": "https://m.mhxin.com/manhua/woduzishiyongzhouyu/2103659.html",
         "url": "^https?://m\\.mhxin\\.com/manhua/[a-z]+/\\d+\\.html",
@@ -662,12 +677,40 @@
         "css": ".nav-pagination,.img_land_prev,.img_land_next,#page_select,.img_info,.title.pr>em:nth-child(5),.title.pr>span{display:none!important}#images>img{max-width: 100% !important;display: block !important;margin: 0 auto -2px auto !important;border:0px!important;padding:0px!important;}.w996,.tbCenter{width:auto!important}"
     },
     {
-        "name": "亲亲漫画 - 手機版章節全部展開",
-        "example": "https://m.acgqd.com/manhua/38496/",
-        "url": "^https?://m\\.acgqd\\.com/manhua/\\d+/$",
+        "name": "漫画456 - 手機版章節全部展開",
+        "example": "https://m.manhua456.com/manhua/zhongniannandeyishijiewanggoushenghuo/",
+        "url": "^https?://m\\.manhua456\\.com/manhua/\\w+/$",
         "pinUrl": true,
-        "autoClick": "//a[@title='全部展开']",
-        "css": "script+a{display:none!important}.Introduct_Sub *{color: #000!important}.Introduct .sub_r .Btn{border:1px solid #000!important}"
+        "autoClick": "//a[@title='全部展开']"
+    },
+    {
+        "name": "漫画456 - 手機版閱讀",
+        "example": "https://m.manhua456.com/manhua/moliwuxiandezuiqiangmonvyongchuangzaomofazaiyishijieyouzaishenghuo/537951.html",
+        "url": "^https?://m\\.manhua456\\.com/manhua/\\w+/\\d+\\.html",
+        "pinUrl": true,
+        "init": "function ge(e){return document.querySelector(e)}setTimeout(()=>{let _img='';for(let i=0;i<chapterImages.length;i++){let host=ge('#images img').src.match(/^https?:\\/\\/[^/]+\\//)[0];let imgSrc=host+chapterPath+chapterImages[i];_img+=`<img src='${imgSrc}'>`};ge('#images').outerHTML=_img;document.addEventListener('dblclick',SinTheme.nextChapter)},500)",
+        "nextLinkByJs": "if(nextChapterData.id>0)return comicUrl+nextChapterData.id+'.html'",
+        "manualMode": true,
+        "css": "#page-info,#action li:nth-child(2),#action li:nth-child(3),.control_bottom~*,.chapter-view~*,#loading{display:none!important}#action li{width:50%!important}.chapter-view>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
+    },
+    {
+        "name": "漫画456 - PC版閱讀",
+        "example": "https://www.manhua456.com/manhua/wodeshifumeidaodaxiancaitupo/766673.html",
+        "url": "^https?://www\\.manhua456\\.com/manhua/[a-z]+/\\d+\\.html",
+        "history": 2,
+        "pinUrl": true,
+        "init": "function ge(e){return document.querySelector(e)}setTimeout(()=>{let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML.slice(1,-1).replaceAll('var','');let imghost=ge('#images img').src.match(/^(https?:\\/\\/[^/]+\\/)/)[1];let imgpath=eval(code.split(';')[1]);let imgData=eval(code.split(';')[0]);let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src='${imghost}${imgpath}${imgData[i]}'>`};ge('#images').innerHTML=_img},1000)",
+        "action": 1,
+        "waitElement": [
+            "#images img"
+        ],
+        "nextLink": ".next>a",
+        "pageElement": "#images",
+        "replaceElement": "head>title,.wrap_last_head,.wrap_last_mid",
+        "pageInit": "function ge(e){return doc.querySelector(e)}let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML.slice(1,-1).replaceAll('var','');let imghost=ge('#images img').src.match(/^(https?:\\/\\/[^/]+\\/)/)[1];let imgpath=eval(code.split(';')[1]);let imgData=eval(code.split(';')[0]);let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src='${imghost}${imgpath}${imgData[i]}'>`};ge('#images').innerHTML=_img",
+        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('#images');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageBarText": 1,
+        "css": ".nav-pagination,.img_land_prev,.img_land_next,#page_select,.img_info,.title.pr>em:nth-child(5),.title.pr>span,.block.clearfix{display:none!important}#images>img{max-width: 100% !important;display: block !important;margin: 0 auto -2px auto !important;border:0px!important;padding:0px!important;}body,.autoHeight,.wrap_last_mid .pre,.wrap_last_mid .next,.chapter-view .panel,.mainNav_inner{width:auto!important;min-width:auto!important}"
     },
     {
         "name": "亲亲漫画 - 手機版章節全部展開",
@@ -675,7 +718,7 @@
         "url": "^https?://m\\.acgqd\\.com/manhua/\\d+/$",
         "pinUrl": true,
         "autoClick": "//a[@title='全部展开']",
-        "css": "script+a{display:none!important}.Introduct_Sub *{color: #000!important}.Introduct .sub_r .Btn{border:1px solid #000!important}"
+        "css": "script+a{display:none!important}.Introduct_Sub{background:url(https://m.dmzj.com/images/int_bg.png)!important;background-size:100% 100%!important}"
     },
     {
         "name": "亲亲漫画 - 手機版閱讀",
@@ -698,9 +741,9 @@
         "css": ".comic_wraCon img{border:none!important;padding:0!important;width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}select{display:none!important}body,.autoHeight,.wrap_last_mid .pre,.wrap_last_mid .next,.chapter-view .panel,.mainNav_inner{width:auto!important;min-width:auto!important}"
     },
     {
-        "name": "优酷漫画 / 360 漫画 / 古漫画 / 前未漫画 / 最漫画 / 漫画芯 / 亲亲漫画 - 分類",
-        "example": "www.ykmh.com，www.qianwee.com，www.100fanwo.com，www.izhegu.com，www.zuimh.com，www.mhxin.com，www.acgqd.com",
-        "url": "^https?://www\\.(ykmh|qianwee|100fanwo|izhegu|zuimh|mhxin|acgqd)\\.com/",
+        "name": "优酷漫画 / 360 漫画 / 古漫画 / 前未漫画 / 最漫画 / 漫画芯 / 亲亲漫画 / 漫画456 - 分類",
+        "example": "www.ykmh.com，www.qianwee.com，www.100fanwo.com，www.izhegu.com，www.zuimh.com，www.mhxin.com，www.acgqd.com，www.manhua456.com",
+        "url": "^https?://www\\.(ykmh|qianwee|100fanwo|izhegu|zuimh|mhxin|acgqd|manhua456)\\.com/",
         "nextLink": "li.next>a",
         "pageElement": "li.item-lg,.list-comic",
         "replaceElement": "ul.pagination",
@@ -901,6 +944,21 @@
         "css": "#subNav,#prev,#k_next,#k_pageSelect,#pager,.title.pr>em:nth-child(5),.title.pr>span{display:none!important}.cf>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}#action>ul>li:nth-child(n+2):nth-child(-n+3){display:none!important}.action-list li{width:50%!important}"
     },
     {
+        "name": "73漫画 - 閱讀",
+        "example": "http://www.73mh.net/mh/63788_1633109/1",
+        "url": "^https?://www\\.73mh\\.net/mh/\\w+/\\d+",
+        "pinUrl": true,
+        "history": 2,
+        "init": "document.querySelectorAll('section .v_con_box>p').forEach(e=>{e.outerHTML=e.innerHTML})",
+        "nextLink": "//a[text()='下一话']",
+        "pageElement": "//div[@class='v_con_box'][p/img] | //div[@class='v_con_box'][img]",
+        "replaceElement": "head>title,.v-page",
+        "pageInit": "doc.querySelectorAll('section .v_con_box>p').forEach(e=>{e.outerHTML=e.innerHTML})",
+        "pageAction": "function gxAll(x,context){var nodes=[];try{var doc=(context&&context.ownerDocument)||window.document;var results=doc.evaluate(x,context||doc,null,XPathResult.ANY_TYPE,null);var node;while(node=results.iterateNext()){nodes.push(node)}}catch(e){throw e;}return nodes};function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll(\"//div[@class='v_con_box'][img]\");if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageBarText": 1,
+        "css": ".v_con_box>img{margin-bottom:-6px!important}.icon>.container{padding-right:0px!important;padding-left:0px!important}"
+    },
+    {
         "name": "733 动漫 - 手機版漫畫閱讀",
         "example": "https://m.733.so/mh/54709/1353912/1.html",
         "url": "^https?://m\\.733\\.so/mh/\\d+/\\d+/\\d+\\.html",
@@ -917,9 +975,12 @@
     },
     {
         "name": "733 动漫 - 手機版分類",
-        "example": "https://m.733.so/all/all/all/all/0/1.html",
-        "url": "^https?://m\\.733\\.so/",
-        "exclude": "#pic_box",
+        "example": "https://m.733.so/all/all/all/all/0/1.html，http://www.73mh.net/neidi/",
+        "url": "^https?://(m\\.733\\.so|www\\.73mh\\.net)/",
+        "exclude": [
+            "#pic_box",
+            "//div[@class='v_con_box'][p/img]"
+        ],
         "nextLink": "//a[text()='下一页']",
         "pageElement": ".tv-list",
         "replaceElement": ".v-page",
