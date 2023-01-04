@@ -8249,6 +8249,11 @@
         "pinUrl": true
     },
     {
+        "name": "Steam Community Workshop Items",
+        "url": "^https?://steamcommunity\\.com/",
+        "pageElement": "#leftContents>div.workshopBrowsePaging+div.workshopBrowseItems"
+    },
+    {
         "name": "buondua",
         "url": "^https://(.*\\.)?buondua\\.com/",
         "type": 0,
