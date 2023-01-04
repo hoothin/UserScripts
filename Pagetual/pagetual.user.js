@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.33.23
+// @version      1.9.33.24
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -211,6 +211,7 @@
                 pageBarMenu:"点击分隔条中间弹出菜单",
                 nextSwitch:"切换其他页码",
                 arrowToScroll:"左方向键滚动至上一页，右方向键滚动至下一页",
+                sideController:"在侧边显示翻页控制栏",
                 hideLoadingIcon:"隐藏加载动画",
                 duplicate:"检测到永页机重复安装，请删除其他脚本管理器中的永页机!",
                 forceStateIframe:"以 iframe 嵌入整页",
@@ -293,6 +294,7 @@
                 pageBarMenu:"點擊分隔條中間彈出菜單",
                 nextSwitch:"切換其他頁碼",
                 arrowToScroll:"左方向鍵滾動至上一頁，右方向鍵滾動至下一頁",
+                sideController:"在側邊顯示翻頁控制欄",
                 hideLoadingIcon:"隱藏加載動畫",
                 duplicate:"檢測到永頁機重複安裝，請刪除其他腳本管理器中的永頁機!",
                 forceStateIframe:"以 iframe 嵌入整頁",
@@ -374,6 +376,7 @@
                 pageBarMenu:"ページバーの中央をクリックしてメニューをポップアップ表示",
                 nextSwitch:"次のページに切り替え",
                 arrowToScroll:"左矢印キーで前へ、右矢印キーで次へ",
+                sideController:"サイドバーにページング コントロール バーを表示する",
                 hideLoadingIcon:"読み込み中のアニメーションを隠す",
                 duplicate: "Pagetual の重複インストールが検出されました。他のスクリプト マネージャで永続的なページ マシンを削除してください!",
                 forceStateIframe: "iframe にページ全体を埋め込む",
@@ -456,6 +459,7 @@
                 pageBarMenu:"Щелкните середину панели страниц, чтобы открыть меню.",
                 nextSwitch:"Переключить ссылку на следующую страницу",
                 arrowToScroll:"Нажмите клавишу со стрелкой влево для предыдущего и клавишу со стрелкой вправо для следующего",
+                sideController:"Отображение панели управления пейджингом на боковой панели",
                 hideLoadingIcon:"Скрыть анимацию загрузки",
                 duplicate: "Обнаружена двойная установка Pagetual, пожалуйста, удалите постоянную страничную машину в других менеджерах скриптов!",
                 forceStateIframe: "Вставить полную страницу как iframe",
@@ -537,6 +541,7 @@
                 pageBarMenu:"Click the middle of the page bar to open the menu",
                 nextSwitch:"Switch next link",
                 arrowToScroll:"Press left arrow key to scroll prev and right arrow key to scroll next",
+                sideController:"Display the paging control bar in the sidebar",
                 hideLoadingIcon:"Hide loading animation",
                 duplicate:"Duplicate Pagetual have been installed, check your script manager!",
                 forceStateIframe: "Embed full page as iframe",
@@ -2371,6 +2376,153 @@
     }
     var ruleParser = new RuleParser();
 
+    class SideController {
+        static controller;
+        constructor() {
+            this.init();
+        }
+
+        static getInstance() {
+            if (!SideController.controller) {
+                SideController.controller = new SideController();
+            }
+            return SideController.controller;
+        }
+
+        static setup() {
+            if (!rulesData.sideController) return;
+            SideController.getInstance().addToStage();
+        }
+
+        init() {
+            let self = this;
+            let cssText = `
+             #pagetual-sideController {
+                 position: fixed;
+                 top: calc(50% - 75px);
+                 left: calc(98% - 30px);
+                 width: 40px;
+                 border-radius: 20px;
+                 box-shadow: rgb(0 0 0) 0px 0px 10px;
+                 text-align: center;
+                 font-weight: bold;
+                 font-style: normal;
+                 font-size: 16px;
+                 background: white;
+                 user-select: none;
+             }
+             .pagetual-sideController-btn {
+                 padding: 5px 0;
+                 cursor: pointer;
+                 transition: transform .15s ease-in-out;
+             }
+             .pagetual-sideController-btn:hover {
+                 transform: scale(1.5);
+                 color: red;
+             }
+            `;
+            _GM_addStyle(cssText);
+            let frame = document.createElement("div");
+            frame.id = "pagetual-sideController";
+            frame.innerHTML = createHTML(`
+                <div id="pagetual-sideController-top" class="pagetual-sideController-btn">⊼</div>
+                <div>
+                  <div id="pagetual-sideController-pre" class="pagetual-sideController-btn">∧</div>
+                  <div id="pagetual-sideController-move"><svg width="30" height="30" style="display:initial;position:relative;cursor: pointer;margin: 0;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a"></path></svg></div>
+                  <div id="pagetual-sideController-next" class="pagetual-sideController-btn">∨</div>
+                </div>
+                <div id="pagetual-sideController-bottom" class="pagetual-sideController-btn">⊻</div>
+            `);
+            let top = frame.querySelector("#pagetual-sideController-top");
+            let pre = frame.querySelector("#pagetual-sideController-pre");
+            let move = frame.querySelector("#pagetual-sideController-move");
+            let next = frame.querySelector("#pagetual-sideController-next");
+            let bottom = frame.querySelector("#pagetual-sideController-bottom");
+
+            pre.addEventListener("click", e => {
+                let prePageBar = getPageBar().preBar;
+                if (prePageBar) {
+                    scrollToPageBar(prePageBar);
+                } else {
+                    let scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+                    window.scrollTo({ top: scrollTop - (window.innerHeight || document.documentElement.clientHeight), behavior: 'smooth'});
+                }
+            }, true);
+
+            next.addEventListener("click", e => {
+                let nextPageBar=getPageBar().nextBar;
+                if (nextPageBar) {
+                    scrollToPageBar(nextPageBar);
+                } else {
+                    let scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+                    window.scrollTo({ top: scrollTop + (window.innerHeight || document.documentElement.clientHeight), behavior: 'smooth'});
+                }
+            }, true);
+
+            top.addEventListener("click", e => {
+                document.body.scrollTop=0;
+                document.documentElement.scrollTop=0;
+                e.preventDefault();
+                e.stopPropagation();
+            }, true);
+
+            bottom.addEventListener("click", e => {
+                changeStop(true);
+                let scrollH=Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+                document.body.scrollTop = scrollH || 9999999;
+                document.documentElement.scrollTop = scrollH || 9999999;
+                e.preventDefault();
+                e.stopPropagation();
+            }, true);
+
+            let initX, initY, moving = false;
+            move.addEventListener("click", e => {
+                if (!moving) {
+                    changeStop(!isPause);
+                }
+            }, true);
+
+            let mouseMoveHandler = e => {
+                if (moving) {
+                    let windowHeight=window.innerHeight || document.documentElement.clientHeight;
+                    let windowWidth=window.innerWidth || document.documentElement.clientWidth;
+                    initX = parseInt(e.clientX / windowWidth * 100);
+                    initY = parseInt(e.clientY / windowHeight * 100);
+                    this.frame.style.top = `calc(${initY}% - 70px)`;
+                    this.frame.style.left = `calc(${initX}% - 10px)`;
+                } else if (Math.abs(e.clientX - initX) + Math.abs(e.clientY - initY) > 50) {
+                    moving = true;
+                }
+            };
+            let mouseUpHandler = e => {
+                document.removeEventListener("mousemove", mouseMoveHandler, true);
+                document.removeEventListener("mouseup", mouseUpHandler, true);
+                if (moving) {
+                    rulesData.sideControllerPos = {x: initX, y: initY};
+                    storage.setItem("rulesData", rulesData);
+                }
+            };
+
+            move.addEventListener("mousedown", e => {
+                initX = e.clientX;
+                initY = e.clientY;
+                moving = false;
+                document.addEventListener("mousemove", mouseMoveHandler, true);
+                document.addEventListener("mouseup", mouseUpHandler, true);
+            }, true);
+
+            this.frame = frame;
+            if (rulesData.sideControllerPos) {
+                this.frame.style.top = `calc(${rulesData.sideControllerPos.y}% - 70px)`;
+                this.frame.style.left = `calc(${rulesData.sideControllerPos.x}% - 10px)`;
+            }
+        }
+
+        addToStage() {
+            document.body.appendChild(this.frame);
+        }
+    }
+
     class NextSwitch {
         static nextSwitch;
         constructor() {
@@ -3601,6 +3753,7 @@
         let clickModeInput=createCheckbox(i18n("clickMode"), rulesData.clickMode);
         let pageBarMenuInput=createCheckbox(i18n("pageBarMenu"), rulesData.pageBarMenu);
         let arrowToScrollInput=createCheckbox(i18n("arrowToScroll"), rulesData.arrowToScroll);
+        let sideControllerInput=createCheckbox(i18n("sideController"), rulesData.sideController);
 
         let hideBarInput = createCheckbox(i18n("hideBar"), rulesData.hideBar && !rulesData.hideBarButNoStop, "h4", dbClick2StopInput, 'radio');
         hideBarInput.name = 'hideBar';
@@ -3711,6 +3864,10 @@
             rulesData.clickMode = clickModeInput.checked;
             rulesData.pageBarMenu = pageBarMenuInput.checked;
             rulesData.arrowToScroll = arrowToScrollInput.checked;
+            if (rulesData.sideController != sideControllerInput.checked) {
+                rulesData.sideControllerPos = false;
+            }
+            rulesData.sideController = sideControllerInput.checked;
             rulesData.pageElementCss = pageElementCssInput.value;
             rulesData.customCss = customCssInput.value;
             rulesData.upBtnImg = upBtnImgInput.value;
@@ -4343,6 +4500,39 @@
         );
     }
 
+    function getPageBar() {
+        let preBar = null, nextBar = null;
+        let pageBars = [].slice.call(document.querySelectorAll(".pagetual_pageBar"));
+        for (let i = 0; i < pageBars.length; i++) {
+            let pageBar = pageBars[i];
+            if (!pageBar || !document.body.contains(pageBar)) continue;
+            let {
+                top,
+                right,
+                bottom,
+                left,
+            } = pageBar.getBoundingClientRect();
+            if (top > 500) {
+                nextBar = pageBar;
+                preBar = (i - 1 >= 0 ? pageBars[i - 1] : null);
+                if (pageBar && document.body.contains(pageBar)) {
+                    let {
+                        top,
+                        right,
+                        bottom,
+                        left,
+                    } = pageBar.getBoundingClientRect();
+                    if (top < -500) {
+                        preBar = pageBar;
+                    } else preBar = (i - 2 >= 0 ? pageBars[i - 2] : null);
+                }
+                break;
+            }
+        }
+        if (!nextBar) preBar = pageBars[pageBars.length - 2];
+        return {preBar: preBar, nextBar: nextBar};
+    }
+
     var urlChanged=false;
     var _wr = function(type) {
         var orig = history[type];
@@ -4539,38 +4729,6 @@
             return;
         }
         if (rulesData.arrowToScroll) {
-            let getPageBar = () => {
-                let preBar = null, nextBar = null;
-                let pageBars = [].slice.call(document.querySelectorAll(".pagetual_pageBar"));
-                for (let i = 0; i < pageBars.length; i++) {
-                    let pageBar = pageBars[i];
-                    if (!pageBar || !document.body.contains(pageBar)) continue;
-                    let {
-                        top,
-                        right,
-                        bottom,
-                        left,
-                    } = pageBar.getBoundingClientRect();
-                    if (top > 500) {
-                        nextBar = pageBar;
-                        preBar = (i - 1 >= 0 ? pageBars[i - 1] : null);
-                        if (pageBar && document.body.contains(pageBar)) {
-                            let {
-                                top,
-                                right,
-                                bottom,
-                                left,
-                            } = pageBar.getBoundingClientRect();
-                            if (top < -500) {
-                                preBar = pageBar;
-                            } else preBar = (i - 2 >= 0 ? pageBars[i - 2] : null);
-                        }
-                        break;
-                    }
-                }
-                if (!nextBar) preBar = pageBars[pageBars.length - 2];
-                return {preBar: preBar, nextBar: nextBar};
-            };
             document.addEventListener('keyup', e => {
                 if (document.activeElement &&
                     (document.activeElement.tagName == 'INPUT' ||
@@ -4650,6 +4808,7 @@
 
     const pageNumReg=/[&\/\?](p=|page[=\/_-]?)\d+|[_-]\d+\./;
     function createPageBar(url) {
+        SideController.setup();
         url = url.replace(/#p{.*/, "");
         if (rulesData.opacity == 0 || ruleParser.curSiteRule.pageBar === 0) return null;
         let insert=ruleParser.getInsert();
