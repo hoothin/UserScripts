@@ -14330,17 +14330,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/81173",
-  "name": "PHPオンライン 衆知",
-  "created_by": "hatenaZZZ",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "updated_at": "2017-09-04T12:37:41+09:00",
   "data": {
-    "exampleUrl": "http://shuchi.php.co.jp/article/3535 http://shuchi.php.co.jp/the21/detail/3531",
+    "pageElement": "//div[contains(concat(' ', @class, ' '), ' article_text ')]",
+    "nextLink": "//div[@class='pagenation']/ul[@class='clearfix']/li/a[contains(.,'→')]",
     "url": "^https?://shuchi\\.php\\.co\\.jp/",
-    "pageElement": "//div[@class='article_text']/*[not(self::h2)]",
-    "nextLink": "//div[@class='pagenation']/ul[@class='clearfix']/li/a[contains(.,'→')]"
+    "exampleUrl": "http://shuchi.php.co.jp/article/3535 http://shuchi.php.co.jp/the21/detail/3531"
   },
-  "created_at": "2017-01-26T18:02:07+09:00"
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "hatenaZZZ",
+  "name": "PHPオンライン 衆知",
+  "created_at": "2017-01-26T18:02:07+09:00",
+  "updated_at": "2023-01-03T15:37:04+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/81171",
