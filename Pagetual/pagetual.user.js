@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.33.24
+// @version      1.9.33.25
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -2407,9 +2407,15 @@
                  text-align: center;
                  font-weight: bold;
                  font-style: normal;
-                 font-size: 16px;
-                 background: white;
+                 font-size: 20px!important;
+                 background: white!important;
+                 color: black!important;
                  user-select: none;
+                 z-index: 2147483647!important;
+             }
+             #pagetual-sideController.stop {
+                 -webkit-filter: invert(100%);
+                 filter: invert(100%);
              }
              .pagetual-sideController-btn {
                  padding: 5px 0;
@@ -2439,6 +2445,11 @@
             let next = frame.querySelector("#pagetual-sideController-next");
             let bottom = frame.querySelector("#pagetual-sideController-bottom");
 
+            frame.addEventListener("dblclick", e => {
+                e.preventDefault();
+                e.stopPropagation();
+            }, true);
+
             pre.addEventListener("click", e => {
                 let prePageBar = getPageBar().preBar;
                 if (prePageBar) {
@@ -2454,8 +2465,8 @@
                 if (nextPageBar) {
                     scrollToPageBar(nextPageBar);
                 } else {
-                    let scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
-                    window.scrollTo({ top: scrollTop + (window.innerHeight || document.documentElement.clientHeight), behavior: 'smooth'});
+                    let scrollH = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+                    window.scrollTo({ top: (scrollH || 9999999), behavior: 'smooth'});
                 }
             }, true);
 
@@ -2468,7 +2479,7 @@
 
             bottom.addEventListener("click", e => {
                 changeStop(true);
-                let scrollH=Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+                let scrollH = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
                 document.body.scrollTop = scrollH || 9999999;
                 document.documentElement.scrollTop = scrollH || 9999999;
                 e.preventDefault();
@@ -2479,6 +2490,11 @@
             move.addEventListener("click", e => {
                 if (!moving) {
                     changeStop(!isPause);
+                    if (isPause) {
+                        frame.classList.add("stop");
+                    } else {
+                        frame.classList.remove("stop");
+                    }
                 }
             }, true);
 
@@ -2489,8 +2505,8 @@
                     initX = parseInt(e.clientX / windowWidth * 100);
                     initY = parseInt(e.clientY / windowHeight * 100);
                     this.frame.style.top = `calc(${initY}% - 70px)`;
-                    this.frame.style.left = `calc(${initX}% - 10px)`;
-                } else if (Math.abs(e.clientX - initX) + Math.abs(e.clientY - initY) > 50) {
+                    this.frame.style.left = `calc(${initX}% - 5px)`;
+                } else if (Math.abs(e.clientX - initX) + Math.abs(e.clientY - initY) > 20) {
                     moving = true;
                 }
             };
@@ -2514,7 +2530,7 @@
             this.frame = frame;
             if (rulesData.sideControllerPos) {
                 this.frame.style.top = `calc(${rulesData.sideControllerPos.y}% - 70px)`;
-                this.frame.style.left = `calc(${rulesData.sideControllerPos.x}% - 10px)`;
+                this.frame.style.left = `calc(${rulesData.sideControllerPos.x}% - 5px)`;
             }
         }
 
