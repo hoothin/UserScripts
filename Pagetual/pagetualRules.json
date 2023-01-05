@@ -725,7 +725,7 @@
         "example": "https://m.acgqd.com/manhua/39305/1277010.html",
         "url": "^https?://m\\.acgqd\\.com/manhua/\\d+/\\d+\\.html",
         "pinUrl": true,
-        "init": "$('.control_bottom').append('<div class=\"side_public scroll-top\"id=\"sidePublic\"style=\"display: block;\"><a href=\"javascript:SinMH.scrollTo(0);\"id=\"returnTop\"class=\"return-top\"></a></div>');let _img='';for(let i=0;i<chapterImages.length;i++){let host=pageImage.match(/^https?:\\/\\/[^/]+\\//)[0];let imgSrc=host+chapterPath+chapterImages[i];_img+=`<img src='${imgSrc}'>`};document.querySelector('#images').outerHTML=_img;document.addEventListener('dblclick',SinTheme.nextChapter)",
+        "init": "$('.control_bottom').append('<div class=\"side_public scroll-top\"id=\"sidePublic\"style=\"display: block;\"><a href=\"javascript:SinMH.scrollTo(0);\"id=\"returnTop\"class=\"return-top\"></a></div>');let _img='';for(let i=0;i<chapterImages.length;i++){let host=SinConf.resHost[0].domain+'/';let imgSrc=host+chapterPath+chapterImages[i];_img+=`<img src='${imgSrc}'>`};document.querySelector('#images').outerHTML=_img;document.addEventListener('dblclick',SinTheme.nextChapter)",
         "nextLinkByJs": "if(nextChapterData.id>0)return comicUrl+nextChapterData.id+'.html'",
         "manualMode": true,
         "css": "#page-info,#action li:nth-child(2),#action li:nth-child(3),.control_bottom~*,.chapter-view~*{display:none!important}#action li{width:50%!important}.chapter-view>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}.side_public{opacity:0.4;border-radius: 50%;position:fixed;bottom:60px;right:13px;width:36px;height:35px;display:none;margin-left:20px}.side_public a{border-radius: 50%;display:inline-block;*zoom:1;*display:inline;width:36px;height:36px;border:1px solid #e6e6e6;}.side_public a.return-top{background:#fff url(https://www.acgqd.com/assets/4155373f/images/side_ico.png) no-repeat 2px -81px}"
@@ -735,7 +735,7 @@
         "example": "https://www.acgqd.com/manhua/39305/1277010.html",
         "url": "^https?://www\\.acgqd\\.com/manhua/\\d+/\\d+\\.html",
         "pinUrl": true,
-        "init": "let _img='';for(let i=0;i<chapterImages.length;i++){let host=pageImage.match(/^https?:\\/\\/[^/]+\\//)[0];let imgSrc=host+chapterPath+chapterImages[i];_img+=`<img src='${imgSrc}'>`};document.querySelector('.comic_wraCon').innerHTML=_img;",
+        "init": "let _img='';for(let i=0;i<chapterImages.length;i++){let host=SinConf.resHost[0].domain+'/';let imgSrc=host+chapterPath+chapterImages[i];_img+=`<img src='${imgSrc}'>`};document.querySelector('.comic_wraCon').innerHTML=_img;",
         "nextLink": "span.next>a",
         "manualMode": true,
         "css": ".comic_wraCon img{border:none!important;padding:0!important;width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}select{display:none!important}body,.autoHeight,.wrap_last_mid .pre,.wrap_last_mid .next,.chapter-view .panel,.mainNav_inner{width:auto!important;min-width:auto!important}"
@@ -2726,21 +2726,21 @@
     {
         "name": "全图网 - 圖片 - 直接載入全部圖片",
         "example": "http://qq.quantuwang1.com/m/fb9deaa66efefa21.html，http://m.54mn.cc/m/29491/1.html",
-        "url": "^https?://(q|qq|t|w|m)\\.(quantuwang1|54mn)\\.(com|cc)/m/",
+        "url": "^https?://(qq?|t|w|m)\\.(quantuwang\\d?|54mn)\\.(com|cc)/m/",
         "include": [
-            ".index_c_img",
+            ".index_c_img img[alt]",
             ".index_c_page"
         ],
         "pinUrl": true,
         "nextLink": "0",
-        "init": "let end=document.querySelector('.index_c_page>a:last-child').innerText;let m=document.querySelector('.index_c_img img').src.match(/(https?:\\/\\/[^/]+\\/[^/]+\\/[^/]+\\/[^/]+\\/[^/]+\\/)(\\d+)/);let img=m[1];let start=m[2];let max=parseInt(end)+parseInt(start)-1;let _img='';for(let i=start;i<=max;i++){let imgSrc=img+i+'.jpg';let p;if(i<10){p='00'+i}else if(i<100){p='0'+i}else{p=i}let alt=document.querySelector('.index_c_title').innerText+'_P'+p;_img+=`<img src='${imgSrc}'alt='${alt}'>`};document.querySelector('.index_c_img').innerHTML=_img;",
+        "init": "function ge(e){return document.querySelector(e)}let end=ge('.index_c_page>a:last-child').innerText;let m=ge('.index_c_img img').src.match(/(https?:\\/\\/[^/]+\\/[^/]+\\/[^/]+\\/[^/]+\\/[^/]+\\/)(\\d+)/);let _src=m[1];let start=m[2];let max=parseInt(end)+parseInt(start)-1;let _img='';for(let i=start;i<=max;i++){let imgSrc=_src+i+'.jpg';let p;if(i<10){p='00'+i}else if(i<100){p='0'+i}else{p=i}let alt=ge('.index_c_title').innerText+'_P'+p;_img+=`<img src='${imgSrc}'alt='${alt}'>`};ge('.index_c_img').innerHTML=_img;",
         "css": "body>[style*='z-index'],img[src*='/aaa/'],.index_c_page{display:none!important}body{padding-bottom:0px!important}"
     },
     {
         "name": "全图网 - 分類",
         "example": "http://qq.quantuwang1.com/meinv/taotu/，http://m.54mn.cc/meinv/taotu/",
-        "url": "^https?://(q|qq|t|w|m)\\.(quantuwang1|54mn)\\.(com|cc)/",
-        "exclude": ".index_c_img",
+        "url": "^https?://(qq?|t|w|m)\\.(quantuwang\\d?|54mn)\\.(com|cc)/",
+        "exclude": ".index_c_img img[alt]",
         "nextLink": "span+a",
         "pageElement": ".index_middle_c",
         "replaceElement": ".index_c_page,.list_page",
@@ -4429,13 +4429,56 @@
         "css": ".pagetual_pageBar+.excerpt{margin-top:-2px!important;}"
     },
     {
-        "name": "壹纳网 - 文章",
-        "example": "https://yinaw.com/",
-        "url": "^https?://yinaw\\.com/",
-        "nextLink": ".next-page>a",
-        "pageElement": ".excerpt",
-        "replaceElement": ".pagination",
-        "css": ".pagetual_pageBar+.excerpt{margin-top:-2px!important;}"
+        "name": "mangabtt - 漫畫閱讀",
+        "example": "https://mangabtt.com/manga/transmigrating-to-the-otherworld-once-more/chapter-30-eng-li/291628",
+        "url": "^https?://mangabtt\\.com/",
+        "init": "document.querySelectorAll('img[data-src]').forEach(img=>{img.src=img.getAttribute('data-src')})",
+        "include": "option[selected]",
+        "nextLink": "#nextChapter",
+        "pageElement": ".reading-detail",
+        "replaceElement": "#chapter-nav"
+    },
+    {
+        "name": "klmanga - 漫畫閱讀",
+        "example": "https://klmanga.net/bsaq-i-became-a-magical-cheat-loli-witch-my-different-world-life-with-my-reincarnation-privilege-creation-magic-and-the-seed-of-magic-manga-chapter-5.html",
+        "url": "^https?://klmanga\\.net/",
+        "include": "option[selected]",
+        "pinUrl": true,
+        "action": 1,
+        "history": 2,
+        "nextLinkByJs": "function gx(x){return doc.evaluate(x,doc,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue}let next = gx('//option[@selected]/preceding-sibling::option[1]'); if (next) return location.href.replace(/[^-]+\\.html$/,'') + next.innerText.match(/[0-9.]+/)[0]+'.html'",
+        "pageElement": "center .chapter-content",
+        "replaceElement": ".navbar-nav"
+    },
+    {
+        "name": "Rawkuma - 漫畫閱讀",
+        "example": "https://rawkuma.com/mikata-ga-yowa-sugite-hojo-mahou-ni-toushite-ita-kyuutei-mahou-shi-tsuihou-sarete-saikyou-wo-mezasu-chapter-1/",
+        "url": "^https?://rawkuma\\.com/",
+        "pinUrl": true,
+        "action": 1,
+        "history": 2,
+        "nextLink": ".ch-next-btn",
+        "pageElement": "#readerarea",
+        "replaceElement": ".chnav.ctop"
+    },
+    {
+        "name": "manga1001 - 漫畫閱讀",
+        "example": "manga1001.in，manga1001.su，mangaraw.vip",
+        "url": "^https?://(manga1001|mangaraw)\\.(in|su|vip)/chapters/",
+        "pinUrl": true,
+        "init": "document.querySelectorAll('img[data-src]').forEach(img=>{img.src=img.getAttribute('data-src')})",
+        "nextLink": "a[rel='next'],.nextchapter",
+        "manualMode": true
+    },
+    {
+        "name": "MANGAROW - 漫畫閱讀",
+        "url": "^https?://mangarow\\.org/chapters/",
+        "pinUrl": true,
+        "history": 2,
+        "init": "document.querySelectorAll('img[data-src]').forEach(img=>{img.src=img.getAttribute('data-src')})",
+        "nextLink": "a[rel='next']",
+        "pageElement": ".container-chapter-reader",
+        "replaceElement": "//div[div/div/select]"
     },
     {
         "name": "MANGA1000 - 漫畫閱讀",
@@ -5933,7 +5976,7 @@
             ".lazyload-wrapper>img",
             ".lazyload-placeholder"
         ],
-        "pageInit": "doc.querySelectorAll('img.jss29').forEach(img=>{img.setAttribute('class','jss28')})",
+        "pageInit": "doc.querySelectorAll('img.jss29').forEach(img=>{img.setAttribute('class','jss28');img.src=img.src});",
         "pageAction": "setTimeout(()=>{let bs=document.querySelectorAll(`button[aria-label^='Go to page']`);let pp=document.querySelector(`button[aria-label='Go to previous page']:not(.Mui-disabled)`);let cp=document.querySelector('button.Mui-selected');let np=document.querySelector(`button[aria-label='Go to next page']:not(.Mui-disabled)`);let lp=location.pathname;let lps=lp.split('/');[].forEach.call(bs,button=>{let pn=button.textContent;let link='/'+lps[1]+'/'+lps[2]+'/'+pn+'/'+lps[4];let lh=`location.href='` + link + `'`;button.setAttribute('onclick',lh)});if(pp){let cpn=cp.textContent;let p=cpn-1;let link='/'+lps[1]+'/'+lps[2]+'/'+p+'/'+lps[4];let lh=`location.href='` + link + `'`;pp.setAttribute('onclick',lh)}if(np){let npn=cp.parentNode.nextSibling.textContent;let link='/'+lps[1]+'/'+lps[2]+'/'+npn+'/'+lps[4];let lh=`location.href='` + link + `'`;np.setAttribute('onclick',lh)}},1000)",
         "css": ".lazyload-wrapper+span.jss28{display:none!important}.pagetual_pageBar{margin-top:10px!important}"
     },
@@ -5953,7 +5996,7 @@
             ".lazyload-wrapper>img",
             ".lazyload-placeholder"
         ],
-        "pageInit": "doc.querySelectorAll('img.jss29').forEach(img=>{img.setAttribute('class','jss28')})",
+        "pageInit": "doc.querySelectorAll('img.jss29').forEach(img=>{img.setAttribute('class','jss28');img.src=img.src})",
         "pageAction": "setTimeout(()=>{let bs=document.querySelectorAll(`button[aria-label^='Go to page']`);let pp=document.querySelector(`button[aria-label='Go to previous page']:not(.Mui-disabled)`);let cp=document.querySelector('button.Mui-selected');let np=document.querySelector(`button[aria-label='Go to next page']:not(.Mui-disabled)`);let ls=location.search;let m=ls.match(/^(\\?key=)([^&]+)(&page=)(\\d+)(&sort=date|&sort=view_count|&sort=favorite)/);[].forEach.call(bs,button=>{let pn=button.textContent;let link=m[1]+m[2]+m[3]+pn+m[5];let lh=`location.href='` + link + `'`;button.setAttribute('onclick',lh)});if(pp){let cpn=cp.textContent;let p=cpn-1;let link=m[1]+m[2]+m[3]+p+m[5];let lh=`location.href='` + link + `'`;pp.setAttribute('onclick',lh)}if(np){let npn=cp.parentNode.nextSibling.textContent;let link=m[1]+m[2]+m[3]+npn+m[5];let lh=`location.href='` + link + `'`;np.setAttribute('onclick',lh)}},1000)",
         "css": ".lazyload-wrapper+span.jss28{display:none!important;}.pagetual_pageBar{margin-top:10px!important;}"
     },
