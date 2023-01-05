@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86039",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[@class='leaderboard']/table/tbody/tr[not(@class='header')]",
+    "nextLink": "//a[@rel='next']",
+    "url": "https://www\\.songkick\\.com/",
+    "exampleUrl": "https://www.songkick.com/leaderboards/popular_artists https://www.songkick.com/leaderboards/trending_artists"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "sunny",
+  "name": "Songkick",
+  "created_at": "2023-01-04T13:42:11+09:00",
+  "updated_at": "2023-01-04T13:42:11+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86035",
   "data": {
     "insertBefore": "",
