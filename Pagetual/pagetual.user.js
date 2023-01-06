@@ -2405,7 +2405,7 @@
              #pagetual-sideController {
                  position: fixed;
                  top: calc(50% - 75px);
-                 left: calc(98% - 30px);
+                 left: calc(99% - 45px);
                  width: 40px;
                  border-radius: 20px;
                  box-shadow: rgb(0 0 0) 0px 0px 10px;
