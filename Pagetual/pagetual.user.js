@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.33.25
+// @version      1.9.33.26
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -177,6 +177,7 @@
                 sortTitle:"排序在下次更新规则后生效",
                 autoRun:"自动启用，否则为白名单模式",
                 autoLoadNum:"自动加载指定页数",
+                turnRate:"距离页尾X倍页面高度时就开始翻页",
                 inputPageNum:"输入页码跳转",
                 enableHistory:"翻页后写入历史记录",
                 enableHistoryAfterInsert:"拼接后立即写入历史记录，否则浏览完毕后再行写入",
@@ -260,6 +261,7 @@
                 sortTitle:"排序在下次更新規則後生效",
                 autoRun:"自動啓用，否則為白名單模式",
                 autoLoadNum:"自動加載指定頁數",
+                turnRate:"距離頁尾X倍頁面高度時就開始翻頁",
                 inputPageNum:"輸入頁碼跳轉",
                 enableHistory:"翻頁后寫入歷史記錄",
                 enableHistoryAfterInsert:"拼接後立即寫入歷史記錄，否則瀏覽完畢後再行寫入",
@@ -342,6 +344,7 @@
                 sortTitle:"並べ替えは、次のルールの更新後に有効になります",
                 autoRun:"自動的に有効",
                 autoLoadNum:"指定したページ数を自動的に読み込みます",
+                turnRate:"ページの端からページの高さの X 倍になったらページをめくる",
                 inputPageNum:"ジャンプするページ番号を入力",
                 enableHistory:"ページめくり後の履歴を書く",
                 enableHistoryAfterInsert: "スプライシングの直後に履歴レコードを書き込みます。それ以外の場合は、閲覧後に書き込みます",
@@ -425,6 +428,7 @@
                 sortTitle:"Сортировка вступает в силу после следующего обновления правила",
                 autoRun:"Автозапуск (режим черного списка)",
                 autoLoadNum:"Количество для предварительной загрузки страниц",
+                turnRate:"Переверните страницу, когда она будет в X раз больше высоты страницы от конца страницы",
                 inputPageNum:"Введите номер страницы для перехода",
                 enableHistory:"Записать историю после переключения страниц",
                 enableHistoryAfterInsert: "Записать запись истории сразу после сплайсинга, в противном случае запишите после просмотра",
@@ -507,6 +511,7 @@
                 sortTitle:"Sorting takes effect after the next rule update",
                 autoRun:"Auto run (black list mode)",
                 autoLoadNum:"Amount for preload pages",
+                turnRate:"Turn the next page when it's less than X times page height from the footer",
                 inputPageNum:"Enter page number to jump",
                 enableHistory:"Write history after page turning",
                 enableHistoryAfterInsert: "Write history immediately after splicing, otherwise write after browsing",
@@ -2412,6 +2417,7 @@
                  color: black!important;
                  user-select: none;
                  z-index: 2147483647!important;
+                 padding: 0!important;
              }
              #pagetual-sideController.stop {
                  -webkit-filter: invert(100%);
@@ -3764,6 +3770,7 @@
         let initRunInput=createCheckbox(i18n("initRun"), rulesData.initRun!=false);
         let autoLoadNumInput=createCheckbox(i18n("autoLoadNum"), rulesData.autoLoadNum, "h4", initRunInput, "number");
         let preloadInput=createCheckbox(i18n("preload"), rulesData.preload!=false);
+        let rateInput=createCheckbox(i18n("turnRate"), rulesData.rate, "h4", preloadInput, "number");
         let dbClick2StopInput=createCheckbox(i18n("dbClick2Stop"), rulesData.dbClick2Stop);
         let manualModeInput=createCheckbox(i18n("manualMode"), rulesData.manualMode);
         let clickModeInput=createCheckbox(i18n("clickMode"), rulesData.clickMode);
@@ -3875,6 +3882,7 @@
             rulesData.hideLoadingIcon = hideLoadingIconInput.checked;
             rulesData.initRun = initRunInput.checked;
             rulesData.autoLoadNum = autoLoadNumInput.value !== "0" ? autoLoadNumInput.value : '';
+            rulesData.rate = rateInput.value;
             rulesData.preload = preloadInput.checked;
             rulesData.manualMode = manualModeInput.checked;
             rulesData.clickMode = clickModeInput.checked;
@@ -5085,7 +5093,7 @@
         }
         if(posEle){
             let actualTop = getElementTop(posEle);
-            bottomGap=scrollH-actualTop+(window.innerHeight||document.documentElement.clientHeight)*(ruleParser.curSiteRule.rate||1);
+            bottomGap=scrollH-actualTop+(window.innerHeight||document.documentElement.clientHeight)*(ruleParser.curSiteRule.rate||rulesData.rate||1);
             if(bottomGap<100)bottomGap=100;
         }else{
             bottomGap=1000;
