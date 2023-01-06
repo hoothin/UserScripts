@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86041",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "id('element-area')/*[starts-with(@id, 'num_')]",
+    "nextLink": "//a[@rel='next']",
+    "url": "^https://mayonez\\.jp/topic/\\d",
+    "exampleUrl": "https://mayonez.jp/topic/1137862"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "Griever3",
+  "name": "Mayonez",
+  "created_at": "2023-01-05T18:53:31+09:00",
+  "updated_at": "2023-01-05T18:53:31+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86039",
   "data": {
     "insertBefore": "",
