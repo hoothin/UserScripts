@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2022.12.16.1
+// @version              2023.1.7.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -13018,6 +13018,7 @@ ImgOps | https://imgops.com/#b#`;
                     '</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="addImageUrls" title="'+i18n("addImageUrlsTips")+'">'+i18n("addImageUrls")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="operate" title="'+i18n("fiddleTip")+'">'+i18n("fiddle")+'</span>'+
+                    '<span class="pv-gallery-head-command-drop-list-item" data-command="viewmore">'+i18n("viewmore")+'</span>'+
                     '<span id="pv-gallery-fullscreenbtn" class="pv-gallery-head-command-drop-list-item" data-command="fullScreen">'+i18n("enterFullsc")+'</span>'+
                     '<span class="pv-gallery-head-command-drop-list-item" data-command="openPrefs">'+i18n("openConfig")+'</span>'+
                     '</span>'+
@@ -13771,6 +13772,9 @@ ImgOps | https://imgops.com/#b#`;
                             break;
                         case 'openPrefs':
                             openPrefs();
+                            break;
+                        case 'viewmore':
+                            self.maximizeSidebar();
                             break;
                         case 'addImageUrls':
                             var urls=window.prompt(i18n('addImageUrls'),"https://xxx.xxx/pic-[20-99].jpg, https://xxx.xxx/pic-[01-10].png");
@@ -17029,7 +17033,7 @@ ImgOps | https://imgops.com/#b#`;
                     border-radius: 15px;\
                     line-height: 2 !important;\
                     font-family: auto;\
-                    opacity: 0.2;\
+                    opacity: 0.35;\
                     transition: opacity .3s ease;\
                     }\
                     .pv-gallery-sidebar-viewmore:hover{\
@@ -17215,6 +17219,7 @@ ImgOps | https://imgops.com/#b#`;
                     }\
                     .pv-gallery-sidebar-viewmore-bottom.showmore{\
                     background-color: rgb(42, 42, 42);\
+                    opacity: 1;\
                     }\
                     .pv-gallery-sidebar-toggle-left,.pv-gallery-sidebar-viewmore-left{\
                     left:-3px;\
