@@ -1,17 +1,32 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86044",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[@class='syllabus__list']",
+    "nextLink": "//a[@class='c-cms__pagenation--next']",
+    "url": "^https://ocw\\.kyoto-u\\.ac\\.jp/syllabus/",
+    "exampleUrl": "https://ocw.kyoto-u.ac.jp/syllabus/?act=search&page=1&department_id=&form_code=&language_code=&semester=&level_code=&gakka_code=&teacher=&keyword="
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "sunny",
+  "name": "シラバス検索｜京都大学OCW",
+  "created_at": "2023-01-07T16:37:44+09:00",
+  "updated_at": "2023-01-07T16:37:44+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86043",
   "data": {
     "pageElement": "//div[contains(@class,'searchResults')]",
     "nextLink": "//*[@rel=\"next\"]",
     "url": "^https?://tve-4u\\.org/search",
-    "exampleUrl": "https://tve-4u.org/search/5443105/?q=%22%C4%90i%E1%BB%83m+t%E1%BB%B1a%22+%22Ni%E1%BB%81m+Tin%22&o=date"
+    "exampleUrl": "https://tve-4u.org/search/5444171/?q=Calibre&o=date"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "powertalent",
-  "name": "https://tve-4u.org/search",
+  "name": "THƯ VIỆN EBOOK (TVE-4U) | SEARCH",
   "created_at": "2023-01-07T09:51:43+09:00",
-  "updated_at": "2023-01-07T09:54:25+09:00"
+  "updated_at": "2023-01-07T14:43:25+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/86042",
