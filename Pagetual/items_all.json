@@ -1,5 +1,35 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86046",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "id('content')/div[@class='entry ']",
+    "nextLink": "//span[@class='pager_next']/a",
+    "url": "^https?://info\\.jugem\\.jp/",
+    "exampleUrl": "http://info.jugem.jp/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "Griever3",
+  "name": "JUGEMお知らせブログ",
+  "created_at": "2023-01-08T17:43:40+09:00",
+  "updated_at": "2023-01-08T17:43:40+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/86045",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "id('main')/div[contains(concat(' ', @class, ' '), ' entry_area ')][not(.//p[text()='一定期間更新がないため広告を表示しています'])]",
+    "nextLink": "//link[@rel='next']",
+    "url": "^https?://.[^/.]+\\.jugem\\.jp/",
+    "exampleUrl": "http://esaki.jugem.jp/ http://kawaihidetosh.jugem.jp/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "Griever3",
+  "name": "jugem.jp (class=entry_area)",
+  "created_at": "2023-01-08T17:43:24+09:00",
+  "updated_at": "2023-01-08T17:43:24+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86044",
   "data": {
     "insertBefore": "",
@@ -91,7 +121,7 @@
 {
   "resource_url": "http://wedata.net/items/86034",
   "data": {
-    "pageElement": "(//div[@class='block block--messages'] | //div[@class='structItemContainer'])[1]\r\n",
+    "pageElement": "(//div[@class='block block--messages'] | //div[@class='structItemContainer'])[1] | //div[@class='p-body-pageContent']\r\n",
     "nextLink": "//*[@rel=\"next\"]",
     "url": "https://www\\.giaiphapexcel\\.com/diendan/"
   },
@@ -99,7 +129,7 @@
   "created_by": "powertalent",
   "name": "giaiphapexcel.com",
   "created_at": "2022-12-26T08:25:45+09:00",
-  "updated_at": "2022-12-26T20:21:22+09:00"
+  "updated_at": "2023-01-08T20:32:59+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/86033",
@@ -37491,16 +37521,16 @@
 {
   "resource_url": "http://wedata.net/items/40577",
   "data": {
-    "pageElement": "//*[@class='entry']|descendant::*[./article][1]/article",
+    "pageElement": "//*[@class='entry'][not(.//p[text()='一定期間更新がないため広告を表示しています'])]|//article[starts-with(@id, 'post')]",
     "nextLink": "//link[@rel='next']|//*[@class='next' or @class='pager_next']/a",
     "url": "^https?://[^/.]+\\.jugem\\.jp/",
-    "exampleUrl": "http://themainstream.jugem.jp/?page=3 http://monchicon.jugem.jp/?page=1 http://garari.jugem.jp/ http://lapilazu.jugem.jp/"
+    "exampleUrl": "http://themainstream.jugem.jp/?page=3 http://monchicon.jugem.jp/?page=1 http://garari.jugem.jp/ http://lapilazu.jugem.jp/\r\n\r\nhttp://3306.jugem.jp/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "t_f_m",
   "name": "jugem.jp",
   "created_at": "2010-12-11T20:00:34+09:00",
-  "updated_at": "2022-12-04T09:17:22+09:00"
+  "updated_at": "2023-01-08T17:46:25+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/40549",
