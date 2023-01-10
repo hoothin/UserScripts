@@ -2,8 +2,7 @@
 {
   "resource_url": "http://wedata.net/items/86046",
   "data": {
-    "insertBefore": "",
-    "pageElement": "id('content')/div[@class='entry ']",
+    "pageElement": "id('pager')/preceding-sibling::*",
     "nextLink": "//span[@class='pager_next']/a",
     "url": "^https?://info\\.jugem\\.jp/",
     "exampleUrl": "http://info.jugem.jp/"
@@ -12,7 +11,7 @@
   "created_by": "Griever3",
   "name": "JUGEMお知らせブログ",
   "created_at": "2023-01-08T17:43:40+09:00",
-  "updated_at": "2023-01-08T17:43:40+09:00"
+  "updated_at": "2023-01-09T11:16:26+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/86045",
