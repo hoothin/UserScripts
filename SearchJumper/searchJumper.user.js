@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.54.5
+// @version      1.6.6.54.6
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -709,6 +709,7 @@
         showInSearchEngine: false,
         showInSearchJumpPage: true,
         limitInPageLen: 1,
+        limitPopupLen: 1,
         ignoreWords: ["a", "in", "into", "the", "to", "on", "among", "between", "and", "an", "of", "by", "with", "about", "under", "or", "at", "as"],
         inPageRule: {},
         firstFiveWordsColor: [],
@@ -6415,8 +6416,10 @@
                 if (this.bar.contains(targetElement) || this.inInput || (!_funcKeyCall && this.funcKeyCall)) {
                     return;
                 }
-                if (searchData.prefConfig.hidePopup) _funcKeyCall = false;
+                let selectStr = getSelectStr();
+                if (_funcKeyCall && selectStr && selectStr.length < (searchData.prefConfig.limitPopupLen || 1)) return;
                 if (this.bar.parentNode && this.bar.parentNode.classList.contains("search-jumper-showall")) return;
+                if (searchData.prefConfig.hidePopup) _funcKeyCall = false;
                 if (!targetElement) targetElement = document.body;
                 let _targetElement = targetElement, children;
                 while (_targetElement) {
@@ -6458,7 +6461,7 @@
                 this.bar.classList.remove("search-jumper-isTargetPage");
                 this.bar.classList.remove("initShow");
                 setTimeout(() => {this.bar.classList.add("initShow");}, 10);
-                if (getSelectStr()) {
+                if (selectStr) {
                     this.bar.classList.add("search-jumper-isInPage");
                     if (this.bar.style.display == "none" || _funcKeyCall) {
                         firstType = this.bar.querySelector('.search-jumper-needInPage:not(.notmatch)>span');
@@ -7773,7 +7776,7 @@
                     };
                     let mouseUpHandler = e => {
                         draging = false;
-                        if (shown) {
+                        if (searchBar.bar.contains(e.target) || shown) {
                             e.stopPropagation();
                             e.preventDefault();
                         } else if (!inputSign) {
@@ -8034,7 +8037,7 @@
             if (location.href.indexOf(configPage) === 0) {
                 return true;
             }
-            if (location.href === "http://localhost:3000/" && document.title === "SearchJumper Settings") {
+            if (location.hostname === "localhost" && document.title === "SearchJumper Settings") {
                 return true;
             }
             return false;
