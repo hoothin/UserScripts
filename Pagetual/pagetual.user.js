@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.33.32
+// @version      1.9.33.33
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -1667,12 +1667,20 @@
                         }
                     }
                 }
+                if(next2 && (next2.innerText=="»" || next2.innerText==">>")){
+                    let eles=getAllElements(`//${next2.tagName}[text()='${next2.innerText}']`, curPage);
+                    if(eles.length>2)next2=null;
+                }
+                if(nextJs2 && (nextJs2.innerText=="»" || nextJs2.innerText==">>")){
+                    let eles=getAllElements(`//${nextJs2.tagName}[text()='${nextJs2.innerText}']`, curPage);
+                    if(eles.length>2)nextJs2=null;
+                }
                 if(next3){
-                    let eles=getAllElements(`//a[text()='${next3.innerText}']`, curPage);
+                    let eles=getAllElements(`//${next3.tagName}[text()='${next3.innerText}']`, curPage);
                     if(eles.length>2)next3=null;
                 }
                 if(nextJs3){
-                    let eles=getAllElements(`//a[text()='${nextJs3.innerText}']`, curPage);
+                    let eles=getAllElements(`//${nextJs3.tagName}[text()='${nextJs3.innerText}']`, curPage);
                     if(eles.length>2)nextJs3=null;
                 }
             }
