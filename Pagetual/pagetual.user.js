@@ -1452,8 +1452,8 @@
 
         getPage(doc){
             if(typeof _unsafeWindow.Discourse!='undefined')return {};
-            let video=document.querySelector("video,iframe[id*=play],[id*=play]>iframe,iframe[src*=player],iframe[src*=m3u8]");
-            if(video && video.name != "pagetual-iframe"){
+            let video=document.querySelector("video,iframe[id*=play]:not([name=pagetual-iframe]),[id*=play]>iframe:not([name=pagetual-iframe]),iframe[src*=player]:not([name=pagetual-iframe]),iframe[src*=m3u8]:not([name=pagetual-iframe])");
+            if(video){
                 let scrollWidth = video.scrollWidth || video.offsetWidth;
                 let scrollHeight = video.scrollHeight || video.offsetHeight;
                 if(scrollWidth>500 && scrollHeight>500){
