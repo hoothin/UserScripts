@@ -2427,7 +2427,7 @@
                  background: #ffffffa0!important;
                  color: black!important;
                  user-select: none;
-                 z-index: 2147483647!important;
+                 z-index: 2147483646!important;
                  padding: 0!important;
              }
              #pagetual-sideController.stop {
