@@ -4802,10 +4802,10 @@
                                 if (new RegExp(data.match).test(location.href)) {
                                     this.setCurrentSite(data);
                                 }
-                            } else if (data.url.indexOf(location.host) != -1) {
+                            } else if (data.url.indexOf(location.hostname) != -1) {
                                 if (data.url.indexOf("site") != -1) {
                                     let siteMatch = data.url.match(/site(%3A|:)(.+?)[\s%]/);
-                                    if (siteMatch && location.href.indexOf(siteMatch[2]) != -1 && data.url.replace(siteMatch[0], "").indexOf(location.host) != -1) {
+                                    if (siteMatch && location.href.indexOf(siteMatch[2]) != -1 && data.url.replace(siteMatch[0], "").indexOf(location.hostname) != -1) {
                                         this.setCurrentSite(data);
                                     }
                                 } else if (!currentSite && data.url.replace(/^https?:\/\//, "").replace(location.host, "").replace(/\/?[\?#].*/, "") == location.pathname.replace(/\/$/, "")) {
@@ -5686,7 +5686,7 @@
                 for (let param of params) {
                     if (inPagePostParams) {
                         inPagePostParams.shift();
-                        storage.setItem("inPagePostParams_" + location.host, inPagePostParams ? inPagePostParams : "");
+                        storage.setItem("inPagePostParams_" + location.hostname, inPagePostParams ? inPagePostParams : "");
                     }
                     if (param[0] === "sleep" || param[0] === "@sleep") {
                         await sleep(param[1]);
@@ -5826,11 +5826,11 @@
                         if (new RegExp(data.match).test(location.href)) {
                             ele.dataset.current = true;
                         }
-                    } else if (!pointer && data.url.indexOf(location.host) != -1) {
+                    } else if (!pointer && data.url.indexOf(location.hostname) != -1) {
                         if (!this.inSiteMatch) this.inSiteMatch = /site(%3A|:)(.+?)[\s%]/;
                         let match = data.url.match(this.inSiteMatch);
                         if (match) {
-                            if (location.href.indexOf(match[2]) != -1 && data.url.replace(match[0], "").indexOf(location.host) != -1) {
+                            if (location.href.indexOf(match[2]) != -1 && data.url.replace(match[0], "").indexOf(location.hostname) != -1) {
                                 ele.dataset.current = true;
                             }
                         } else {
@@ -9386,7 +9386,7 @@
             });
             storage.setItem("lastSign", 0);
             inPagePostParams = await new Promise((resolve) => {
-                storage.getItem("inPagePostParams_" + location.host, data => {
+                storage.getItem("inPagePostParams_" + location.hostname, data => {
                     resolve(data || false);
                 });
             });
@@ -9548,7 +9548,7 @@
 
 
         storage.getItem("postUrl", postUrl => {
-            if (postUrl && postUrl[0].indexOf(location.host.replace(/.*\.(\w+\.\w+)/, "$1")) != -1) {
+            if (postUrl && postUrl[0].indexOf(location.hostname.replace(/.*\.(\w+\.\w+)/, "$1")) != -1) {
                 storage.setItem("postUrl", '');
                 submitByForm(postUrl[1], postUrl[0], '_self');
             } else {
