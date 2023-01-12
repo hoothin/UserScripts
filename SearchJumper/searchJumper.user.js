@@ -6238,7 +6238,7 @@
                                 if (jumpFrom) {
                                     _url = jumpFrom[1];
                                 } else {
-                                    _url = _url.replace(/\?.*/, "").replace(/[:%]p{.*/, '').replace(/[^\/]*$/, '');
+                                    _url = _url.replace(/(:\/\/.*?)[\?\/].*/, "$1").replace(/[:%]p{.*/, '');
                                 }
                                 return _url;
                             };
