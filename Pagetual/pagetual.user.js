@@ -5543,7 +5543,7 @@
                                 targetElement = targetElement.parentNode;
                             }
                             let scrollHeight = targetElement.scrollHeight || targetElement.offsetHeight;
-                            if(parseInt(iframe.style.height)==scrollHeight) return;
+                            if(!scrollHeight || parseInt(iframe.style.height)==scrollHeight) return;
                             iframe.style.height=(scrollHeight+1)+"px";
                             let scrollTop = 0, scrollLeft = 0;
                             frameDoc.body.scrollTop = 0;
