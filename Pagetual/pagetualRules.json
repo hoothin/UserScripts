@@ -7265,10 +7265,11 @@
         "name": "Pixiv",
         "url": "^https://www\\.pixiv\\.net/",
         "action": 2,
-        "pageElement": "section>div>ul,div.sc-l7cibp-0.juyBTC>*,div.sc-1eop7y7-0.cJYTWr>*",
+        "pageElement": "section>div>div>ul,section>div>ul,div.sc-l7cibp-0.juyBTC>*,div.sc-1eop7y7-0.cJYTWr>*",
         "nextLink": "a[class*='filterProps-Styled-Component']:last-child",
         "wait": 500,
-        "css": "@media (min-width: 1000px) {@supports (display:grid)    {.krFoBL { grid-template-columns: repeat(6, 184px); }}}"
+        "fitWidth": false,
+        "css": "@media (min-width: 1000px) {@supports (display:grid)  {.krFoBL { grid-template-columns: repeat(6, 184px); }}}"
     },
     {
         "name": "DeviantArt",
