@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86047",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "id('threadlisttableid waterfall')[.//a[starts-with(@href, 'thread-')]]",
+    "nextLink": "//a[@class='nxt']",
+    "url": "^https://www\\.jkforum\\.net/forum-",
+    "exampleUrl": "https://www.jkforum.net/forum-1149-2.html\r\nhttps://www.jkforum.net/forum-15-1.html"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "Griever3",
+  "name": "JKF 捷克論壇",
+  "created_at": "2023-01-11T18:49:55+09:00",
+  "updated_at": "2023-01-11T18:49:55+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86046",
   "data": {
     "pageElement": "id('pager')/preceding-sibling::*",
