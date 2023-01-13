@@ -51326,17 +51326,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/718",
-  "name": "クックパッド",
-  "created_by": "swdyh",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "updated_at": "2017-01-19T06:23:00+09:00",
   "data": {
-    "exampleUrl": "https://cookpad.com/recipe/recent\r\nhttps://cookpad.com/tsukurepo/recent",
-    "url": "^https?://cookpad\\.com/(?!recipe/\\d)",
-    "pageElement": "//div[@class='recipe-preview' or @class='request' or @class='question'] | id('tsukurepo-list')/div[starts-with(@class,'tsukurepo') or @class='clear']",
-    "nextLink": "//a[@rel='next ']"
+    "pageElement": "//div[contains(concat(' ', @class, ' '), ' paginate ')]/preceding-sibling::*",
+    "nextLink": "//a[@rel='next ']",
+    "url": "^https://cookpad\\.com/",
+    "exampleUrl": "https://cookpad.com/recipe/recent\r\nhttps://cookpad.com/tsukurepo/recent\r\nhttps://cookpad.com/search/%E3%81%8A%E3%81%A7%E3%82%93\r\nhttps://cookpad.com/kitchens/hot"
   },
-  "created_at": "2008-04-16T12:36:41+09:00"
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "swdyh",
+  "name": "クックパッド",
+  "created_at": "2008-04-16T12:36:41+09:00",
+  "updated_at": "2023-01-12T18:24:39+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/715",
