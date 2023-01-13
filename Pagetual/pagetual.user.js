@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.33.33
+// @version      1.9.33.34
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -681,7 +681,7 @@
     const configPage = ["https://github.com/hoothin/UserScripts/tree/master/Pagetual",
                       "https://hoothin.github.io/UserScripts/Pagetual/"];
     const guidePage = /^https?:\/\/.*pagetual.*rule\.html/i;
-    const ruleImportUrlReg = /greasyfork\.org\/.*scripts\/438684[^\/]*(\/discussions|\/?$)|github\.com\/hoothin\/UserScripts\/(tree\/master\/Pagetual|issues\/)/i;
+    const ruleImportUrlReg = /greasyfork\.org\/.*scripts\/438684[^\/]*(\/discussions|\/?$|\/feedback)|github\.com\/hoothin\/UserScripts\/(tree\/master\/Pagetual|issues\/)/i;
     const allOfBody = "body>*";
     const nextTextReg1 = new RegExp("\u005e\u7ffb\u003f\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u9875\u9801\u5f20\u5f35\u005d\u007c\u005e\u0028\u006e\u0065\u0078\u0074\u005b\u0020\u005f\u002d\u005d\u003f\u0070\u0061\u0067\u0065\u007c\u006f\u006c\u0064\u0065\u0072\u0029\u005c\u0073\u002a\u005b\u203a\u003e\u2192\u00bb\u005d\u003f\u0024\u007c\u6b21\u306e\u30da\u30fc\u30b8\u007c\u005e\u6b21\u3078\u003f\u0024\u007cВперед", "i");
     const nextTextReg2 = new RegExp("\u005e\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u7ae0\u8bdd\u8a71\u8282\u7bc0\u4e2a\u500b\u5e45\u005d", "i");
@@ -2416,7 +2416,7 @@
              #pagetual-sideController {
                  position: fixed;
                  top: calc(50% - 75px);
-                 left: calc(99% - 45px);
+                 left: calc(99% - 60px);
                  width: 40px;
                  border-radius: 20px;
                  box-shadow: rgb(0 0 0) 0px 0px 10px;
@@ -3323,6 +3323,8 @@
                 }, 6000);
                 showTips(i18n("firstAlert"));
             }
+            let defaultOption = document.querySelector('#discussion_rating_4');
+            if (defaultOption) defaultOption.checked = true;
             let createImportBtn = () => {
                 let importBtn = document.createElement("button");
                 importBtn.innerText = i18n("import");
@@ -4492,7 +4494,7 @@
     var tipsWords=document.createElement("div");
     tipsWords.className="pagetual_tipsWords";
 
-    var isPause = false, isHideBar = false, isLoading = false, curPage = 1, forceState = 0, bottomGap = 1000, autoLoadNum = -1, nextIndex = 0, stopScroll = false;
+    var isPause = false, isHideBar = false, isLoading = false, curPage = 1, forceState = 0, bottomGap = 1000, autoLoadNum = -1, nextIndex = 0, stopScroll = false, clickMode = false;
 
     function changeStop(stop) {
         isPause = stop;
@@ -4606,7 +4608,14 @@
     history.pushState = _wr('pushState');
     window.addEventListener('pushState', changeHandler);
 
-    function initListener(){
+    function distToBottom () {
+        let scrolly = window.scrollY;
+        let windowHeight = window.innerHeight || document.documentElement.clientHeight;
+        let scrollH = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+        return scrollH - scrolly - windowHeight;
+    }
+
+    function initListener () {
         let loadmoreBtn,loading=true,lastScroll=0,checkLoadMoreTimes=0;
         if (ruleParser.curSiteRule.loadMore) {
             loading=false;
@@ -4621,7 +4630,7 @@
                 }
             },300);
         }
-        let clickMode = typeof ruleParser.curSiteRule.clickMode == 'undefined' ? rulesData.clickMode : ruleParser.curSiteRule.clickMode;
+        clickMode = typeof ruleParser.curSiteRule.clickMode == 'undefined' ? rulesData.clickMode : ruleParser.curSiteRule.clickMode;
         let clickNext = async () => {
             let nextLink = ruleParser.nextLinkHref;
             if (!nextLink) return;
@@ -4633,94 +4642,92 @@
                 window.location.href = nextLink;
             }
         };
-        let checkScrollReach=()=>{
-            let scrolly=window.scrollY;
-            let windowHeight=window.innerHeight || document.documentElement.clientHeight;
-            let scrollH=Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
-            if(clickMode){
-                if(scrollH-scrolly-windowHeight<10){
+        let checkScrollReach = () => {
+            let dist = distToBottom();
+            if (clickMode) {
+                if (dist < 10) {
                     clickNext();
                 }
-            }else if(scrollH-scrolly-windowHeight<bottomGap){
+            } else if (dist < bottomGap) {
                 nextPage();
             }
         };
-        let scrollHandler = e=>{
-            if(urlChanged && !isLoading){
-                ruleParser.initPage(()=>{
-                    if(ruleParser.nextLinkHref){
+        let scrollHandler = e => {
+            if (urlChanged && !isLoading) {
+                ruleParser.initPage(() => {
+                    if (ruleParser.nextLinkHref) {
                         initView();
                     }
-                    isPause=false;
+                    isPause = false;
                 });
-                urlChanged=false;
+                urlChanged = false;
             }
-            if(isPause)return;
-            if(!loading){
-                if(ruleParser.curSiteRule.loadMore || !loadmoreBtn || !document.body.contains(loadmoreBtn)){
-                    loadmoreBtn=getLoadMore(document);
+            if (isPause) return;
+            if (!loading) {
+                if (ruleParser.curSiteRule.loadMore || !loadmoreBtn || !document.body.contains(loadmoreBtn)) {
+                    loadmoreBtn = getLoadMore(document);
                 }
-                if(loadmoreBtn){
-                    if(isInViewPort(loadmoreBtn)){
+                if (loadmoreBtn) {
+                    if (isInViewPort(loadmoreBtn)) {
                         emuClick(loadmoreBtn);
-                        loading=true;
-                        setTimeout(()=>{loading=false},200);
+                        loading = true;
+                        setTimeout(() => {loading = false}, 200);
                     }
-                }else{
-                    loading=true;
-                    setTimeout(()=>{loading=false},200);
+                } else {
+                    loading = true;
+                    setTimeout(() => {loading = false}, 200);
                 }
             }
-            if(!isLoading && !stopScroll){
+            if (!isLoading && !stopScroll) {
                 checkScrollReach();
             }
-            if(ruleParser.curSiteRule.lockScroll){
-                let curScroll=document.body.scrollTop||document.documentElement.scrollTop;
-                if(isLoading && Math.abs(lastScroll-curScroll)>350){
-                    document.body.scrollTop=lastScroll;
-                    document.documentElement.scrollTop=lastScroll;
-                }else{
-                    lastScroll=curScroll;
+            if (ruleParser.curSiteRule.lockScroll) {
+                let curScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                if (isLoading && Math.abs(lastScroll - curScroll) > 350) {
+                    document.body.scrollTop = lastScroll;
+                    document.documentElement.scrollTop = lastScroll;
+                } else {
+                    lastScroll = curScroll;
                 }
             }
         };
-        document.addEventListener('dblclick', e=>{
-            if(forceState==1 || e.target.tagName=='INPUT' || e.target.tagName=='TEXTAREA') return;
-            if(!rulesData.dbClick2StopKey){
-                if((rulesData.dbClick2StopCtrl && !e.ctrlKey) ||
+        document.addEventListener('dblclick', e => {
+            if (forceState == 1 || e.target.tagName == 'INPUT' || e.target.tagName == 'TEXTAREA') return;
+            if (!rulesData.dbClick2StopKey) {
+                if ((rulesData.dbClick2StopCtrl && !e.ctrlKey) ||
                    (rulesData.dbClick2StopAlt && !e.altKey) ||
                    (rulesData.dbClick2StopShift && !e.shiftKey) ||
-                   (rulesData.dbClick2StopMeta && !e.metaKey)){
+                   (rulesData.dbClick2StopMeta && !e.metaKey)) {
                     return;
                 }
             }
-            if(e.target.tagName !== "BODY" && e.target.className !== 'pagetual_pageBar'){
-                let selStr=document.getSelection().toString();
-                if(selStr && selStr.trim()){
+            if (e.target.tagName !== "BODY" && e.target.className !== 'pagetual_pageBar') {
+                let selStr = document.getSelection().toString();
+                if (selStr && selStr.trim()) {
                     return;
                 }
             }
-            if(rulesData.dbClick2Stop && (ruleParser.nextLinkHref || loadmoreBtn)){
-                setTimeout(()=>{
+            if (rulesData.dbClick2Stop && (ruleParser.nextLinkHref || loadmoreBtn)) {
+                setTimeout(() => {
                     if (rulesData.hideBarButNoStop || rulesData.hideBar) {
                         changeHideBar(!isHideBar);
                     }
                     if (!rulesData.hideBarButNoStop) {
                         changeStop(!isPause);
-                        showTips(i18n(isPause?"disable":"enable"));
+                        showTips(i18n(isPause ? "disable" : "enable"));
                     }
-                    if(!isPause){
+                    if (!isPause) {
                         checkScrollReach();
                     }
-                },10);
+                }, 10);
             }
         });
-        if(rulesData.dbClick2StopKey){
-            document.addEventListener('keydown', e=>{
-                if((rulesData.dbClick2StopCtrl && !e.ctrlKey) ||
+        if (rulesData.dbClick2StopKey) {
+            document.addEventListener('keydown', e => {
+                if ((rulesData.dbClick2StopCtrl && !e.ctrlKey) ||
                    (rulesData.dbClick2StopAlt && !e.altKey) ||
                    (rulesData.dbClick2StopShift && !e.shiftKey) ||
-                   (rulesData.dbClick2StopMeta && !e.metaKey)){
+                   (rulesData.dbClick2StopMeta && !e.metaKey)) {
                     return;
                 }
                 if (document.activeElement &&
@@ -4729,11 +4736,11 @@
                     return;
                 }
                 var key = e.key.toLowerCase();
-                if(rulesData.dbClick2StopKey.toLowerCase()==key){
-                    forceState=(forceState==1?0:1);
-                    showTips(i18n(forceState==1?"disableSiteTips":"enableSiteTips"));
-                    if(!ruleParser.curSiteRule.url) {
-                        storage.setItem("forceState_"+location.host, forceState);
+                if (rulesData.dbClick2StopKey.toLowerCase() == key) {
+                    forceState = (forceState == 1 ? 0 : 1);
+                    showTips(i18n(forceState == 1 ? "disableSiteTips" : "enableSiteTips"));
+                    if (!ruleParser.curSiteRule.url) {
+                        storage.setItem("forceState_" + location.host, forceState);
                         location.reload();
                     }
                 }
@@ -4845,10 +4852,23 @@
     const pageNumReg=/[&\/\?](p=|page[=\/_-]?)\d+|[_-]\d+\./;
     function createPageBar(url) {
         SideController.setup();
-        url = url.replace(/#p{.*/, "");
+        let posEle = null;
+        let scrollH = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+        let insert = ruleParser.getInsert();
+        if (!insert || !insert.parentNode) return;
+        posEle = insert;
+        while (posEle && !posEle.offsetParent) {
+            posEle = posEle.previousElementSibling || posEle.parentNode;
+        }
+        if (posEle) {
+            let actualBottom = getElementBottom(posEle);
+            bottomGap = scrollH - actualBottom + (window.innerHeight || document.documentElement.clientHeight) * (ruleParser.curSiteRule.rate || rulesData.rate || 1);
+            if (bottomGap < 100) bottomGap = 100;
+        } else {
+            bottomGap = 1000;
+        }
         if (rulesData.opacity == 0 || ruleParser.curSiteRule.pageBar === 0) return null;
-        let insert=ruleParser.getInsert();
-        if(!insert || !insert.parentNode)return;
+        url = url.replace(/#p{.*/, "");
         curPage++;
         let example=ruleParser.curSiteRule.insertPos==2?insert.children[0]:(insert.parentNode.children[parseInt(insert.parentNode.children.length/2)]||insert);
         if (example.className=="pagetual_pageBar") {
@@ -4874,7 +4894,6 @@
         let downSpan=document.createElement("span");
         let pageText=document.createElement("a");
         let pageNum;
-        let scrollH=Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
         pageBar.className=isHideBar?"pagetual_pageBar hide":"pagetual_pageBar";
         pageBar.id="pagetual_pageBar"+curPage;
         pageBar.setAttribute("translate", "no");
@@ -5099,17 +5118,6 @@
             }
         }
 
-        let posEle=pageBar.nextElementSibling||pageBar;
-        while(posEle && !posEle.offsetParent){
-            posEle=posEle.previousElementSibling||posEle.parentNode;
-        }
-        if(posEle){
-            let actualTop = getElementTop(posEle);
-            bottomGap=scrollH-actualTop+(window.innerHeight||document.documentElement.clientHeight)*(ruleParser.curSiteRule.rate||rulesData.rate||1);
-            if(bottomGap<100)bottomGap=100;
-        }else{
-            bottomGap=1000;
-        }
         return pageBar;
     }
 
@@ -5693,7 +5701,16 @@
     function loadPageOver(){
         isLoading = false;
         stopScroll = true;
-        setTimeout(() => {stopScroll = false}, 500);
+        let dist = distToBottom();
+        let rate = (ruleParser.curSiteRule.rate || rulesData.rate || 1);
+        if (rate != 1 && !clickMode) {
+            setTimeout(() => {
+                if (dist < bottomGap) {
+                    nextPage();
+                }
+            }, 1);
+        }
+        setTimeout(() => {stopScroll = false}, 300);
         if(loadingDiv.parentNode){
             loadingDiv.parentNode.removeChild(loadingDiv);
         }
@@ -5703,7 +5720,7 @@
 
     async function nextPage(){
         if(typeof ruleParser.curSiteRule.manualMode=='undefined' ? rulesData.manualMode : ruleParser.curSiteRule.manualMode)return;
-        if(typeof ruleParser.curSiteRule.clickMode=='undefined' ? rulesData.clickMode : ruleParser.curSiteRule.clickMode)return;
+        if(clickMode)return;
         if(isPause || isLoading || forceState==1)return;
         if(ruleParser.curSiteRule.delay){
             try{
