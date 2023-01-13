@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.54.7
+// @version      1.6.6.54.8
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -5929,15 +5929,15 @@
                         }
                         return new RegExp(key.replace(/([\*\.\?\+\$\^\[\]\(\)\{\}\|\\\/])/g, "\\$1") + more, sign);
                     }
-                    let customReplaceSingle = (str, key, value) => {
+                    let customReplaceSingle = (str, key, value, after) => {
                         if (str.indexOf(key + ".replace(/") !== -1) {
                             let replaceMatch = str.match(keyToReg(key, "", "\\.replace\\(/(.*?[^\\\\])/(.*?),\s*[\"'](.*?[^\\\\])??[\"']\\)"));
-                            if (!replaceMatch) return str.replace(keyToReg(key, "g"), value);
+                            if (!replaceMatch) return str.replace(keyToReg(key, "g"), (after ? after(value) : value));
                             value = value.replace(new RegExp(replaceMatch[1], replaceMatch[2]), replaceMatch[3] || '');
                             str = str.replace(replaceMatch[0], key);
-                            return customReplaceSingle(str, key, value);
+                            return customReplaceSingle(str, key, value, after);
                         } else {
-                            return str.replace(keyToReg(key, "g"), value);
+                            return str.replace(keyToReg(key, "g"), (after ? after(value) : value));
                         }
                     };
                     let needDecode = (/^c:|[#:%]P{/i.test(data.url));
@@ -5946,7 +5946,9 @@
                         str = customReplaceSingle(str, "%su", keywordsU);
                         str = customReplaceSingle(str, "%sl", keywordsL);
                         str = customReplaceSingle(str, "%sr", keywordsR);
-                        str = customReplaceSingle(str, "%s", keywords);
+                        str = customReplaceSingle(str, "%s", keywordsR, v => {
+                            return (needDecode ? v : encodeURIComponent(v));
+                        });
                         return str;
                     };
                     let customSelectElement = str => {
@@ -6381,7 +6383,7 @@
                         }
                     }
                 };
-                ele.href = data.url;
+                //ele.href = data.url;
                 ele.addEventListener('mousedown', action, false);
 
                 ele.addEventListener('mouseenter', e => {
