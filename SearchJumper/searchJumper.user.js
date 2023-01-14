@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.54.8
+// @version      1.6.6.54.9
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -1032,7 +1032,7 @@
         } else if (typeof GM != 'undefined' && typeof GM.info != 'undefined') {
             _GM_info = GM.info;
         } else {
-            _GM_info = { script:1 };
+            _GM_info = { script: {} };
         }
         var _unsafeWindow = (typeof unsafeWindow == 'undefined') ? window : unsafeWindow;
         if (_unsafeWindow.searchJumperInited) return;
@@ -2792,7 +2792,7 @@
                         return false;
                     });
                     wordSpan.oncontextmenu = e => {
-                        event.preventDefault();
+                        e.preventDefault();
                     };
                     wordSpan.addEventListener('dblclick', e => {
                         e.stopPropagation();
@@ -5725,6 +5725,7 @@
                 let ele = document.createElement("a");
                 ele.setAttribute("ref", "noopener noreferrer");
                 let name = data.name;
+                let urlMatch = data.match;
                 let pointer = !isBookmark && /^\[/.test(data.url);
                 if (pointer) {
                     ele.dataset.pointer = true;
@@ -5818,12 +5819,12 @@
                 }
                 ele.dataset.inPagePost = (data.url.indexOf("#p{") != -1) ? 't' : 'f';
                 let inPagePost = ele.dataset.inPagePost === 't';
-                if (!isBookmark && (!currentSite || data.hideNotMatch) && window.top == window.self) {
-                    if (data.match === '0') {
-                        ele.style.display = 'none';
-                        ele.classList.add("notmatch");
-                    } else if (data.match) {
-                        if (new RegExp(data.match).test(location.href)) {
+                if (urlMatch === '0') {
+                    ele.style.display = 'none';
+                    ele.classList.add("notmatch");
+                } else if (!isBookmark && (!currentSite || data.hideNotMatch) && window.top == window.self) {
+                    if (urlMatch) {
+                        if (new RegExp(urlMatch).test(location.href)) {
                             ele.dataset.current = true;
                         }
                     } else if (!pointer && data.url.indexOf(location.hostname) != -1) {
@@ -8056,7 +8057,7 @@
 
         function initConfig() {
             if (isInConfigPage()) {
-                var sendMessageTimer, received = false;
+                let sendMessageTimer, received = false;
                 let loadConfig = () => {
                     sendMessageTimer = setTimeout(() => {
                         if (!received) {
@@ -8065,6 +8066,7 @@
                     }, 50);
                     window.postMessage({
                         searchData: searchData,
+                        version: _GM_info.script.version || 0,
                         command: 'loadConfig'
                     }, '*');
                 }
