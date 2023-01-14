@@ -1,5 +1,48 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86051",
+  "data": {
+    "pageElement": "id('posts')",
+    "nextLink": "//div[@class='pagination']/a[@class='pagination_next']",
+    "url": "^https://community\\.mybb\\.com/thread-\\d+.(this_string_is_required_to_exceed_items_65332_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa)?",
+    "exampleUrl": "https://community.mybb.com/thread-170127.html"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "Griever3",
+  "name": "community.mybb.com/thread",
+  "created_at": "2023-01-13T22:04:22+09:00",
+  "updated_at": "2023-01-13T22:06:39+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/86050",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "id('posts_container posts')/div[@class='tborder']",
+    "nextLink": "//div[@class='pagination']/a[@class='pagination_next']",
+    "url": "^https://www\\.bios-mods\\.com/forum/.(this_string_is_required_to_exceed_items_65332_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa)?",
+    "exampleUrl": "https://www.bios-mods.com/forum/Thread-Asus-Crosshair-IV-Formula-1005-Asus-2-1-SLIC"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "Griever3",
+  "name": "bios-mods.com",
+  "created_at": "2023-01-13T22:01:29+09:00",
+  "updated_at": "2023-01-13T22:01:29+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/86049",
+  "data": {
+    "pageElement": "id('bbpress-forums')/ul[last()]",
+    "nextLink": "//link[@rel='next']",
+    "url": "^https://wordpress\\.org/support/topic/",
+    "exampleUrl": "https://wordpress.org/support/topic/upgrading-from-textpattern/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "Griever3",
+  "name": "WordPress.org support/topic",
+  "created_at": "2023-01-13T21:35:24+09:00",
+  "updated_at": "2023-01-14T10:00:38+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86047",
   "data": {
     "insertBefore": "",
@@ -17110,16 +17153,16 @@
 {
   "resource_url": "http://wedata.net/items/79961",
   "data": {
-    "pageElement": "//div[@class='entry-body']/*",
-    "nextLink": "//a[@class='next page-numbers']",
-    "url": "^https://(www\\.)?lisani\\.jp/\\d+",
-    "exampleUrl": "https://www.lisani.jp/0000001842/?show_more=1"
+    "pageElement": "//div[contains(concat(' ',@class,' '),' detail__wysiwyg ')]",
+    "nextLink": "//li[@class='current']/following-sibling::li/a",
+    "url": "^https://(www\\.)?lisani\\.jp/\\d",
+    "exampleUrl": "https://www.lisani.jp/0000001842/?show_more=1\r\nhttps://www.lisani.jp/0000219176/?show_more=1\r\n"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "t_f_m",
   "name": "リスアニ！Web インタビュー",
   "created_at": "2016-02-25T09:11:20+09:00",
-  "updated_at": "2020-07-01T15:19:18+09:00"
+  "updated_at": "2023-01-14T03:52:29+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/79958",
@@ -28692,19 +28735,19 @@
   "created_at": "2012-12-16T10:18:29+09:00"
 },
 {
+  "resource_url": "http://wedata.net/items/65332",
   "data": {
-    "pageElement": "//div[@id='posts' or div//td/@class='postContent']/*[.//*[starts-with(@id,'post')]]|//table[@class='bordercolor']//tr[.//tr/td[starts-with(@class,'windowbg')]]|(id('posts messageList')|//ul[starts-with(@class,'conversation-list')])/li[starts-with(@id,'post') or contains(@class,'js-post')]|id('comments')/div/form/*|id('quickModForm')/div[contains(@class,'windowbg') or @class='bordercolor']|//li[@class='bbp-body']/div",
+    "pageElement": "//div[@id='posts' or div//td/@class='postContent']/*[.//*[starts-with(@id,'post')]]|//table[@class='bordercolor']//tr[.//tr/td[starts-with(@class,'windowbg')]]|(id('posts messageList')|//ul[starts-with(@class,'conversation-list')])/li[starts-with(@id,'post') or contains(@class,'js-post')]|id('comments')/div/form/*|id('quickModForm')/div[contains(@class,'windowbg') or @class='bordercolor']|//li[@class='bbp-body']/div\r\n|//article[translate(@id, '1234567890', '')='js-post-']\r\n|//section[@class='thread_posts']/article[contains(concat(' ', @class, ' '), ' post ')]",
     "comment": "Topic Lists: http://wedata.net/items/74668",
     "nextLink": "(//link[//span/@class='scrollable']|//a)[@rel='next' or .='>' or .='Next ›' or .='Next >']|(//td[@class='middletext']|//div[starts-with(@class,'pagelinks') or contains(@class,'pagesclass')])/text()[contains(.,']')]/following-sibling::a[@class='navPages']|(//span|//a)[contains(@class,'current')]/following-sibling::a[not(@class='go_page')]|//li[starts-with(@class,'pager-next')]/a",
     "url": "^https?://.*(showthread\\.php\\?|(f|hist)or(um|o|ex)|threads?|/f/\\d+/|worldwide-invest|fiuxy|dp/node|eq2flames|rcgroups|hisseanaliz\\.net|diychatroom.com/f\\d+/.)",
-    "exampleUrl": "https://www.e-cigarette-forum.com/threads/become-an-ecf-supporting-member.3931/\r\nhttp://forums.civfanatics.com/showthread.php?t=261551\r\nhttp://www.akiba-online.com/showthread.php?t=1101510\r\nhttp://forums.macrumors.com/showthread.php?t=1586311\r\nhttp://talk.maemo.org/showthread.php?t=28834\r\nhttp://slickdeals.net/f/8197379-lg-g4-smartphone-20-mm-promo-extended\r\nhttp://bbs.themex.net/showthread.php?t=16897390\r\nhttp://www.studytemple.com/forum/general-discussion/2-give-your-introduction-here.html\r\nhttp://forums.hardwarezone.com.sg/hardware-clinic-2/graphics-card-buy-y2014-1233319.html\r\nhttp://www.avsforum.com/forum/149-blu-ray-players/1432162-official-oppo-bdp-103-owner-s-thread.html\r\nhttp://forum.goodservice.su/forum-27-pipsovshiki/thread-7036-wallstreet-ea/index.html\r\nhttp://forums.mydigitallife.info/threads/9055-SLP-Marker-File-Update-Utilities\r\nhttp://www.donationcoder.com/forum/index.php?topic=1685.0\r\nhttp://www.thefastlaneforum.com/community/threads/ive-read-the-the-millionaire-fastlane.28234/\r\nhttp://forum.unity3d.com/threads/smooth-moves-2d-skeletal-animation.124211/\r\nhttp://www.techpowerup.com/forums/threads/psu-guide.39758/\r\nhttp://forum.tradelikeapro.ru/index.php?topic=7733.0\r\nhttp://www.donnaforex.com/index.php?topic=4365.0\r\nhttps://tlap.com/forum/topic/19513-tolko-bag-reporty-novyy-dvizhok-foruma/page/2/#comments\r\nhttps://forums.comodo.com/melihs-corner-ceo-talkdiscussionsblog/2-internets-t99768.0.html\r\nhttp://www.forodeltenis.com/index.php/topic,51048.0.html\r\nhttp://www.fanforum.com/f20/tour-guide-7-happenings-fan-forum-boards-complete-board-list-opening-post-62950701/\r\nhttps://gbatemp.net/threads/official-xbox-360-discussion-thread.59999/\r\nhttp://www.tarfandestan.com/forum/thread35873.html\r\nhttp://www.city-data.com/forum/alabama/440433-scenic-alabama-interesting-places-visit-day.html\r\nhttp://www.tech-forums.net/forums/f33/tech-forums-group-map-new-235157/\r\nhttp://www.macuser.de/forum/thema/543395-Warum-ist-gutes-Design-eigentlich-so-teuer\r\nhttp://forum.xda-developers.com/showthread.php?t=809328\r\nhttp://www.android-hilfe.de/informationen-fuer-neue-user-vorstellungen/47787-how-wie-benutze-ich-die-suchfunktion.html\r\nhttp://forums.totalwar.com/showthread.php/4694-DirectX-11-graphics-cards-overview\r\nhttp://forums.redflagdeals.com/costco-lg-60pk250-1297-00-a-997407/\r\nhttp://www.forex-tsd.com/metatrader-4/2432-coding-help.html\r\nhttp://f319.com/threads/ma-chung-khoan-nao-ce-vao-31-3.486551/\r\nhttp://www.reteam.org/board/showthread.php?t=4521\r\nhttps://historum.com/threads/patriotic-artistry.191967/page-2\r\nhttps://www.bios-mods.com/forum/Thread-Asus-Crosshair-IV-Formula-1005-Asus-2-1-SLIC\r\nhttp://community.mybb.com/thread-170127.html\r\nhttp://xnotifier.tobwithu.com/dp/node/278\r\nhttps://forum-en.msi.com/index.php?topic=31222.0\r\nhttp://www.eq2flames.com/general-gameplay/19139-i-cancelled-my-account-heres-why.html\r\nhttps://www.hisseanaliz.net/forum/borsa-yorum/canli-borsa/6317-trading-school\r\nhttp://www.goldderby.com/forum/television/outstanding-lead-actress-in-a-comedy-series/\r\nhttps://wordpress.org/support/topic/upgrading-from-textpattern/\r\nhttp://aow.triumph.net/forums/topic/gameplay-suggestion-compiled-topics-index-2/\r\nhttps://idolforums.com/topic/743676-american-idol-season-20-spoilers-presented-by-the-idol-pad/page/4/#comments"
+    "exampleUrl": "https://www.e-cigarette-forum.com/threads/become-an-ecf-supporting-member.3931/\r\nhttps://forums.civfanatics.com/threads/a-babylon-5-mod-for-the-final-frontier-mod.261551/\r\n\r\nhttps://forums.macrumors.com/threads/more-details-on-jony-ives-flat-ios-7-design-heavier-on-black-and-white.1586311/\r\nhttps://talk.maemo.org/showthread.php?t=28834\r\n\r\n\r\n\r\nhttps://forums.hardwarezone.com.sg/threads/which-graphics-card-to-buy-in-y2022.1233319/\r\nhttps://www.avsforum.com/threads/official-oppo-bdp-103-owners-thread.1432162/\r\n\r\n\r\nhttps://www.donationcoder.com/forum/index.php?topic=1685.0\r\nhttps://www.thefastlaneforum.com/community/threads/ive-read-the-millionaire-fastlane.28234/\r\nhttps://forum.unity.com/threads/smooth-moves-2d-skeletal-animation.124211/\r\nhttps://www.techpowerup.com/forums/threads/psu-guide.39758/\r\nhttps://tlap.com/forum/topic/21382-arhiv-pamm-alpari-safe-basket-invest/\r\n\r\nhttps://tlap.com/forum/topic/19513-tolko-bag-reporty-novyy-dvizhok-foruma/page/2/#comments\r\nhttps://forums.comodo.com/melihs-corner-ceo-talkdiscussionsblog/2-internets-t99768.0.html\r\nhttps://www.forodeltenis.com/torneos-atp-2010/torneos-retransmitidos-por-tv-en-2010/\r\nhttps://www.fanforum.com/f20/tour-guide-7-happenings-fan-forum-boards-complete-board-list-opening-post-62950701/\r\nhttps://gbatemp.net/threads/official-xbox-360-discussion-thread.59999/\r\nhttps://www.tarfandestan.com/forum/thread35873.html\r\nhttp://www.city-data.com/forum/alabama/440433-scenic-alabama-interesting-places-visit-day.html\r\nhttps://www.techist.com/forums/f33/tech-forums-group-map-new-235157/\r\nhttps://www.macuser.de/threads/warum-ist-gutes-design-eigentlich-so-teuer.543395/\r\nhttps://forum.xda-developers.com/t/htc-desire-bravo-index-everything-desire-is-here-24th-january-2015.809328/\r\nhttps://www.android-hilfe.de/forum/informationen-fuer-neue-user-und-vorstellungen.4/how-to-wie-benutze-ich-die-suchfunktion.47787.html\r\n\r\nhttps://forums.redflagdeals.com/costco-lg-60pk250-1297-00-a-997407/\r\n\r\nhttp://f319.com/threads/ma-chung-khoan-nao-ce-vao-31-3.486551/\r\nhttp://www.reteam.org/board/showthread.php?t=4521\r\nhttps://historum.com/t/patriotic-artistry.191967/page-2\r\n\r\n\r\n\r\nhttps://forum-en.msi.com/index.php?threads/trefi-on-b650-and-x670-boards.380964/\r\n\r\nhttps://www.hisseanaliz.net/forum/borsa-yorum/canli-borsa/6317-trading-school\r\n\r\n\r\n\r\nhttps://idolforums.com/topic/743676-american-idol-season-20-spoilers-presented-by-the-idol-pad/page/4/#comments\""
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "alan_",
-  "resource_url": "http://wedata.net/items/65332",
   "name": "forum - showthread.php",
   "created_at": "2012-12-14T00:12:52+09:00",
-  "updated_at": "2022-02-02T06:39:43+09:00"
+  "updated_at": "2023-01-13T22:11:25+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/65331",
@@ -39544,20 +39587,6 @@
   "updated_at": "2020-05-11T09:22:20+09:00",
   "name": "Blog | FJORD, LLC（合同会社フィヨルド）",
   "created_by": "kazuhiko"
-},
-{
-  "resource_url": "http://wedata.net/items/33482",
-  "name": "WordPress.org",
-  "created_by": "kazuhiko",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "updated_at": "2016-03-05T09:40:20+09:00",
-  "data": {
-    "exampleUrl": "https://wordpress.org/news/",
-    "url": "^https://wordpress\\.org/",
-    "pageElement": "//div[@class=\"col-9\"]/a[1]/preceding-sibling::*",
-    "nextLink": "//div[@class=\"col-9\"][count(./a)>1 or ./a[@href=\"https://wordpress.org/news/page/2/\"]]/a[last()]"
-  },
-  "created_at": "2010-07-05T23:55:13+09:00"
 },
 {
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
@@ -51327,7 +51356,7 @@
 {
   "resource_url": "http://wedata.net/items/718",
   "data": {
-    "pageElement": "//div[contains(concat(' ', @class, ' '), ' paginate ')]/preceding-sibling::*",
+    "pageElement": "//div[contains(@class,'paginate')]/preceding-sibling::*[not(./h1)]",
     "nextLink": "//a[@rel='next ']",
     "url": "^https://cookpad\\.com/",
     "exampleUrl": "https://cookpad.com/recipe/recent\r\nhttps://cookpad.com/tsukurepo/recent\r\nhttps://cookpad.com/search/%E3%81%8A%E3%81%A7%E3%82%93\r\nhttps://cookpad.com/kitchens/hot"
@@ -51336,7 +51365,7 @@
   "created_by": "swdyh",
   "name": "クックパッド",
   "created_at": "2008-04-16T12:36:41+09:00",
-  "updated_at": "2023-01-12T18:24:39+09:00"
+  "updated_at": "2023-01-13T15:56:35+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/715",
