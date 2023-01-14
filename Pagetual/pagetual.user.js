@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.33.34
+// @version      1.9.33.35
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -685,14 +685,14 @@
     const allOfBody = "body>*";
     const nextTextReg1 = new RegExp("\u005e\u7ffb\u003f\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u9875\u9801\u5f20\u5f35\u005d\u007c\u005e\u0028\u006e\u0065\u0078\u0074\u005b\u0020\u005f\u002d\u005d\u003f\u0070\u0061\u0067\u0065\u007c\u006f\u006c\u0064\u0065\u0072\u0029\u005c\u0073\u002a\u005b\u203a\u003e\u2192\u00bb\u005d\u003f\u0024\u007c\u6b21\u306e\u30da\u30fc\u30b8\u007c\u005e\u6b21\u3078\u003f\u0024\u007cВперед", "i");
     const nextTextReg2 = new RegExp("\u005e\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u7ae0\u8bdd\u8a71\u8282\u7bc0\u4e2a\u500b\u5e45\u005d", "i");
-    _GM_registerMenuCommand(i18n("configure"), ()=>{
-        _GM_openInTab(configPage[0],{active:true});
+    _GM_registerMenuCommand(i18n("configure"), () => {
+        _GM_openInTab(configPage[0], {active: true});
     });
-    _GM_registerMenuCommand(i18n("editCurrent"), ()=>{
+    _GM_registerMenuCommand(i18n("editCurrent"), () => {
         Picker.getInstance().start();
     });
 
-    function getElementByXpath(xpath, contextNode, doc){
+    function getElementByXpath(xpath, contextNode, doc) {
         doc = doc || document;
         contextNode = contextNode || doc;
         try {
@@ -704,7 +704,7 @@
         return null;
     }
 
-    function getAllElementsByXpath(xpath, contextNode, doc){
+    function getAllElementsByXpath(xpath, contextNode, doc) {
         doc = doc || document;
         contextNode = contextNode || doc;
         var result = [];
@@ -1620,7 +1620,7 @@
                             }
                         }
                         if(!next2){
-                            if(nextTextReg2.test(innerText) || /nextpage/i.test(aTag.className) || innerText=="»" || innerText==">>"){
+                            if(nextTextReg2.test(innerText) || /nextpage|pager\-older/i.test(aTag.className) || innerText=="»" || innerText==">>"){
                                 if(isJs){
                                     if(!nextJs2)nextJs2=aTag;
                                 }else{
@@ -2241,7 +2241,6 @@
         initPage(callback){
             let self=this;
             curPage=1;
-            //if(this.curSiteRule.url && !this.curSiteRule.singleUrl)return;
             this.curSiteRule={};
             this.pageDoc=document;
             this.nextLinkHref=null;
@@ -2421,14 +2420,17 @@
                  border-radius: 20px;
                  box-shadow: rgb(0 0 0) 0px 0px 10px;
                  text-align: center;
-                 font-weight: bold;
-                 font-style: normal;
-                 font-size: 20px!important;
                  background: #ffffffa0!important;
                  color: black!important;
                  user-select: none;
                  z-index: 2147483646!important;
                  padding: 0!important;
+             }
+             #pagetual-sideController * {
+                 font-weight: bold;
+                 font-style: normal;
+                 font-size: 20px!important;
+                 line-height: normal;
              }
              #pagetual-sideController.stop {
                  -webkit-filter: invert(100%);
@@ -2515,6 +2517,11 @@
                     changeStop(!isPause);
                 }
             }, true);
+
+            move.oncontextmenu = e => {
+                e.preventDefault();
+                Picker.getInstance().start();
+            };
 
             let mouseMoveHandler = e => {
                 if (moving) {
