@@ -1854,6 +1854,7 @@
                      display: flex;
                      align-items: center;
                      text-decoration: none;
+                     cursor: pointer;
                  }
                  #search-jumper .sitelist a>img {
                      width: 20px;
