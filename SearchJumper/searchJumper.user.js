@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.54.9
+// @version      1.6.6.54.10
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -4925,7 +4925,7 @@
             bindSite(a, siteEle) {
                 if (a.getAttribute("bind")) return;
                 a.setAttribute("bind", true);
-                a.href = siteEle.href;
+                if (siteEle.href) a.href = siteEle.href;
                 a.style.display = siteEle.style.display;
                 a.addEventListener('mousedown', e => {
                     siteEle.dispatchEvent(new PointerEvent("mousedown", {altKey: e.altKey, ctrlKey: e.ctrlKey, shiftKey: e.shiftKey, metaKey: e.metaKey}));
@@ -5505,7 +5505,7 @@
             }
 
             openSiteBtn(siteEle, forceTarget) {
-                let isPage = /^(https?|ftp):/.test(siteEle.href);
+                let isPage = siteEle.dataset.isPage;
                 if (!forceTarget) forceTarget = "_blank";
                 if (isPage) {
                     siteEle.setAttribute("target", forceTarget);
@@ -5534,7 +5534,7 @@
                     let c = window.open("", "_blank");
                     for (let i = 0;i < targetSites.length;i++) {
                         let siteEle = targetSites[i];
-                        if (/^https?:\/\/.+/.test(siteEle.href) && !siteEle.onclick) {
+                        if (siteEle.dataset.isPage && !siteEle.onclick) {
                             let mouseDownEvent = new PointerEvent("mousedown");
                             siteEle.dispatchEvent(mouseDownEvent);
                             if (self.stopInput) return;
@@ -5590,7 +5590,7 @@
                         let mouseDownEvent = new PointerEvent("mousedown");
                         siteEle.dispatchEvent(mouseDownEvent);
                         if (self.stopInput) return;
-                        if (/^https?:\/\/.+/.test(siteEle.href) && !siteEle.onclick) {
+                        if (siteEle.dataset.isPage && !siteEle.onclick) {
                             storage.setItem("lastSign", siteNames);
                             _GM_openInTab(siteEle.href, {incognito: true});
                             setTimeout(() => {
@@ -5603,7 +5603,7 @@
                     let urls=[];
                     for (let i = 0;i < targetSites.length;i++) {
                         let siteEle = targetSites[i];
-                        if (/^https?:\/\/.+/.test(siteEle.href) && !siteEle.onclick) {
+                        if (siteEle.dataset.isPage && !siteEle.onclick) {
                             let mouseDownEvent = new PointerEvent("mousedown");
                             siteEle.dispatchEvent(mouseDownEvent);
                             if (self.stopInput) return;
@@ -5627,7 +5627,7 @@
                         let mouseDownEvent = new PointerEvent("mousedown");
                         siteEle.dispatchEvent(mouseDownEvent);
                         if (self.stopInput) return;
-                        if (/^https?:\/\/.+/.test(siteEle.href) && !siteEle.onclick) {
+                        if (siteEle.dataset.isPage && !siteEle.onclick) {
                             storage.setItem("lastSign", siteNames);
                             window.open(siteEle.href, '_blank');
                             setTimeout(() => {
@@ -5639,7 +5639,7 @@
                 } else if (e.which === 1 && (e.ctrlKey || e.metaKey)) {
                     for (let i = 0;i < targetSites.length;i++) {
                         let siteEle = targetSites[i];
-                        let isPage = /^(https?|ftp):/.test(siteEle.href);
+                        let isPage = siteEle.dataset.isPage;
                         if (isPage) {
                             siteEle.setAttribute("target", "_blank");
                         }
@@ -5755,6 +5755,7 @@
                     openInNewTab = data.openInNewTab;
                 }
                 let isPage = /^(https?|ftp):/.test(data.url);
+                ele.dataset.isPage = isPage;
                 ele.className = "search-jumper-btn";
                 if (typeof data.description !== 'undefined') ele.title = name + " - " + data.description;
                 ele.dataset.name = name;
