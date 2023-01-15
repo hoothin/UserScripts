@@ -30,6 +30,14 @@
         "css": "#root>div>header+div{display:none!important}"
     },
     {
+        "name": "包子漫畫 - 查看全部章節",
+        "example": "https://www.baozimh.com/comic/dawangraoming-yuedongwenhua",
+        "url": "^https://(www|tw|cn)\\.(webmota|baozimh)\\.com/comic/",
+        "include": "#button_show_all_chatper",
+        "nextLink": "0",
+        "autoClick": "#button_show_all_chatper"
+    },
+    {
         "name": "包子漫畫 - 閱讀",
         "example": "https://www.webmota.com/comic/chapter/dawangraoming-yuedongwenhua/0_0.html",
         "url": "^https://(www|tw|cn)\\.(webmota|baozimh)\\.com/comic/chapter/[^/]+/\\w+\\.html",
@@ -40,7 +48,7 @@
         "pageElement": ".comic-contain",
         "replaceElement": "//head/title | //span[@class='title'] | //div[@class='comic-chapter']/div[@class='next_chapter'] | //div[@class='bottom-bar']",
         "pageInit": "function geAll(e){return doc.querySelectorAll(e)}let imgs=geAll('.comic-contain amp-img');let imgData=[];for(let i=0;i<imgs.length;i++){imgData.push(imgs[i].getAttribute('src'))};let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img class=\"comic-contain__item\"src='${imgData[i]}'>`};geAll('.comic-contain')[0].innerHTML=_img",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('.pagetual_pageBar a').forEach(a =>{if(/\\/\\d+_\\d+_\\d+\\.html$/.test(a.href)==true)a.parentNode.remove()});setTimeout(()=>{let c=geAll('.comic-contain');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},200)",
+        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('.pagetual_pageBar a').forEach(a =>{if(/\\/\\d+_\\d+_\\d+\\.html$/.test(a.href))a.parentNode.remove()});setTimeout(()=>{let c=geAll('.comic-contain');if(c.length>10){c[0].remove()}geAll('.pagetual_pageBar+.pagetual_pageBar').forEach(e =>{e.previousElementSibling.remove()})},200)",
         "pageBarText": 1,
         "rate": 3,
         "css": ".mobadsq{display:none!important}ul{margin-block-start:-2px!important;margin-block-end:2px!important}.pagetual_pageBar{margin-top:7px!important}"
@@ -2815,7 +2823,7 @@
         ],
         "pinUrl": true,
         "nextLink": "0",
-        "init": "function ge(e){return document.querySelector(e)}let end=ge('.index_c_page>a:last-child').innerText;let m=ge('.index_c_img img').src.match(/(^.+)(\\d+)(\\.[a-z]{3}$)/);let path=m[1];let start=m[2];let ex=m[3];let max=parseInt(end)+parseInt(start)-1;let _img='';for(let i=start;i<=max;i++){let imgSrc=path+i+ex;let p;if(i<10){p='00'+i}else if(i<100){p='0'+i}else{p=i}let alt=ge('.index_c_title').innerText+'_P'+p;_img+=`<img src='${imgSrc}'alt='${alt}'>`};ge('.index_c_img').innerHTML=_img;",
+        "init": "function ge(e){return document.querySelector(e)}let end=ge('.index_c_page>a:last-child').innerText;let m=ge('.index_c_img img').src.match(/(^.+\\/)(\\d+)(\\.[a-z]{3}$)/);let path=m[1];let start=m[2];let ex=m[3];let max=parseInt(end)+parseInt(start)-1;let _img='';for(let i=start;i<=max;i++){let imgSrc=path+i+ex;let p;if(i<10){p='00'+i}else if(i<100){p='0'+i}else{p=i}let alt=ge('.index_c_title').innerText+'_P'+p;_img+=`<img src='${imgSrc}'alt='${alt}'>`};ge('.index_c_img').innerHTML=_img;",
         "css": "body>[style*='z-index'],img[src*='/aaa/'],.index_c_page{display:none!important}body{padding-bottom:0px!important}"
     },
     {
@@ -6766,6 +6774,30 @@
         "example": "https://www.69shu.com/top/0.htm",
         "url": "^https?://www\\.69shu\\.com/top/",
         "nextLink": "0"
+    },
+    {
+        "name": "天天看小說 - 顯示全部目錄",
+        "example": "https://tw.ttkan.co/novel/chapters/yedemingmingshu-huishuohuadezhouzi",
+        "url": "^https?://[^/]+/novel/chapters/",
+        "include": [
+            "//title[contains(text(),'天天看小說') or contains(text(),'天天看小说')]",
+            "#button_show_all_chatper"
+        ],
+        "nextLink": "0",
+        "autoClick": "#button_show_all_chatper"
+    },
+    {
+        "name": "天天看小說 - 閱讀",
+        "example": "https://tw.bg3.co/novel/pagea/yedemingmingshu-huishuohuadezhouzi_1.html",
+        "url": "^https?://[^/]+/novel/pagea/[^.]+\\.html",
+        "include": "//title[contains(text(),'天天看小說') or contains(text(),'天天看小说')]",
+        "action": 1,
+        "history": 2,
+        "nextLink": ".next_page_links>a[href$='html']",
+        "pageElement": ".title,.content",
+        "replaceElement": "head>title,.prev_page,.next_page_links",
+        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('amp-addthis').forEach(e =>{e.remove()});let h=geAll('.title');let t=geAll('.content');if(t.length>2){h[0].remove();t[0].remove()}",
+        "pageBar": 0
     },
     {
         "name": "小說狂人 - 閱讀",
