@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.1.11.1
+// @version              2023.1.16.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -42,7 +42,7 @@
 // @grant                unsafeWindow
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
 // @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1126536
-// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1108618
+// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1138919
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @match                *://*/*
@@ -11693,27 +11693,51 @@ ImgOps | https://imgops.com/#b#`;
     }else{
         _GM_notification=(s)=>{alert(s)};
     }
-    var _GM_download=(typeof GM_download=='undefined')?(url,name)=>{
-        let ext=url.match(/\.\w{2,5}(\?|$)/);
-        if(ext){
-            name=url.match(/([^\/]+?)(\?|$)/)[1];
+    function getRightSaveName(url, name, type) {
+        /*
+         0: i18n("default"),
+         1: i18n("textFirst"),
+         2: i18n("onlyUrl"),
+         3: i18n("urlAndText")
+        */
+        type = parseInt(type || 0);
+        if (name) name = name.split("\n")[0];
+        let ext = url.match(/(\.\w{2,5})(\?|@|$)/);
+        let nameFromUrl = "";
+        if (ext) {
+            ext = ext[1];
+            nameFromUrl = url.replace(/.*\/([^\/]+?)\.\w{2,5}(\?|@|$).*/, "$1");
             try {
-                name = decodeURIComponent(name);
-            }catch(e){}
-        }else{
-            name=name.replace(/[*\/:<>?\\|]/g, "").trim()+".jpg";
+                nameFromUrl = decodeURIComponent(nameFromUrl);
+            } catch (e) {}
         }
-        saveAs(url,name);
-    }:(url,name)=>{
-        let ext=url.match(/\.\w{2,5}(\?|$)/);
-        if(ext){
-            name=url.match(/([^\/]+?)(\?|$)/)[1];
-            try {
-                name = decodeURIComponent(name);
-            }catch(e){}
-        }else{
-            name=name.replace(/[*\/:<>?\\|]/g, "").trim()+".jpg";
+        switch (type) {
+            case 1:
+                name = (name || nameFromUrl || url || document.title || "image").substr(-50);
+                break;
+            case 2:
+                name = (nameFromUrl || url || "image").substr(-50);
+                break;
+            case 3:
+                if (nameFromUrl && !name) {
+                    name = nameFromUrl.substr(-50);
+                } else if (nameFromUrl && name) {
+                    name = nameFromUrl.substr(-50) + " - " + name.substr(-50);
+                } else if (!nameFromUrl && !name) {
+                    name = (url || document.title || "image").substr(-50);
+                }
+                break;
+            default:
+                name = (nameFromUrl || name || url || document.title || "image").substr(-50);
+                break;
         }
+        return name.replace(/.*\/([^\/]+?)(\?|@|$).*/, "$1").replace(/[\*\/:<>\?\\\|]/g, "").replace(/\.\w{2,5}$/, "").trim() + (ext || ".png");
+    }
+    var _GM_download=(typeof GM_download=='undefined')?(url, name, type)=>{
+        name=getRightSaveName(url, name, type);
+        saveAs(url, name);
+    }:(url, name, type)=>{
+        name=getRightSaveName(url, name, type);
         let urlSplit=url.split("/");
         GM_download({
             url: url,
@@ -11725,11 +11749,11 @@ ImgOps | https://imgops.com/#b#`;
             }],
             onerror: e => {
                 console.log(e);
-                saveAs(url,name);
+                saveAs(url, name);
             },
             ontimeout: e => {
                 console.log(e);
-                saveAs(url,name);
+                saveAs(url, name);
             }
         })
     };
@@ -13722,16 +13746,12 @@ ImgOps | https://imgops.com/#b#`;
                                     saveIndex++;
                                     if (node.dataset.src.indexOf('data') === 0) srcSplit = "";
                                     else {
-                                        srcSplit=node.dataset.src.match(/([^\/]+\.\w{2,5}?)(\?|$)/) || '';
-                                        if (srcSplit) srcSplit = srcSplit[1];
-                                        if (srcSplit.length > 30 && (srcSplit.indexOf(".") == -1 || /[&\?=,]/i.test(srcSplit))){
-                                            srcSplit = "";
-                                        }
-                                        if (srcSplit.length > 50) srcSplit = srcSplit.substring(srcSplit.length - 50, srcSplit.length);
+                                        srcSplit=node.dataset.src || '';
                                     }
                                     var title = node.title.indexOf('\n') !== -1 ? node.title.split('\n')[0] : node.title;
                                     title = title.indexOf('http') === 0 || title.indexOf('data') === 0 ? '' : title;
-                                    var picName = document.title + "-" + (saveIndex < 10 ? "00" + saveIndex : (saveIndex < 100 ? "0" + saveIndex : saveIndex)) + (title ? "-" + title : "") + "-" + srcSplit, hostArr = location.host.split(".");
+                                    title = getRightSaveName(srcSplit, title, prefs.saveName);
+                                    var picName = document.title + "-" + (saveIndex < 10 ? "00" + saveIndex : (saveIndex < 100 ? "0" + saveIndex : saveIndex)) + (title ? "-" + title : ""), hostArr = location.host.split(".");
                                     var host = hostArr[hostArr.length-2];
                                     saveParams.push([node.dataset.src, picName]);
                                     if (node.dataset.srcs) {
@@ -14376,9 +14396,7 @@ ImgOps | https://imgops.com/#b#`;
                         let crosHandler = imgSrc => {
                             self.corsUrlToBlob(imgSrc, blob=>{
                                 if (blob && blob.byteLength>58) {
-                                    let ext = imgSrc.match(/\.\w{2,5}(\?|$)/);
-                                    if (ext) ext = ext[0];
-                                    zip.file(imgName.replace(/\//g,"").replace(/\.\w+$/,"") + '-' + downloaded + (ext || '.jpg'), blob);
+                                    zip.file(imgName.replace(/\//g,""), blob);
                                 } else console.debug("error: "+imgSrc);
                                 downloaded++;
                                 self.showTips("Downloading "+downloaded+"/"+len, 100000);
@@ -14399,14 +14417,7 @@ ImgOps | https://imgops.com/#b#`;
                                     return;
                                 }
                                 canvas.toBlob(blob=>{
-                                    let ext;
-                                    if (/^data:/.test(imgSrc)) {
-                                        ext = '.png';
-                                    } else {
-                                        ext = imgSrc.match(/\.\w{2,5}(\?|$)/)
-                                        ext = ext ? ext[0] : '.png';
-                                    }
-                                    zip.file(imgName.replace(/^data:.*/, "img").replace(/\//g,"").replace(/\.\w+$/,"") + '-' + downloaded + ext,blob);
+                                    zip.file(imgName.replace(/^data:.*/, "img").replace(/\//g,""), blob);
                                     downloaded++;
                                     if(downloaded == len){
                                         self.showTips("Begin compress to ZIP...", 100000);
@@ -14439,7 +14450,7 @@ ImgOps | https://imgops.com/#b#`;
                     for(let i=0;i<5;i++){
                         let saveParam=saveParams.shift();
                         if(saveParam){
-                            _GM_download(saveParam[0], saveParam[1]);
+                            _GM_download(saveParam[0], saveParam[1], prefs.saveName);
                         }else{
                             callback();
                             break;
@@ -14646,6 +14657,101 @@ ImgOps | https://imgops.com/#b#`;
                 var node = document.querySelector('.pv-gallery-sidebar-thumb-container[data-thumb-src="'+src+'"]');
                 if(node)this.select(node);
             },
+            addDlSpan: function(img, imgSpan, curNode, clickCb) {
+                var maximizeContainer = this.eleMaps['maximize-container'];
+                var dlSpan=document.createElement('p');
+                dlSpan.className="pv-bottom-banner";
+                dlSpan.innerHTML=createHTML('<svg class="icon" style="width: 20px;height: 20px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1100"><path d="M768 768q0-14.857143-10.857143-25.714286t-25.714286-10.857143-25.714285 10.857143-10.857143 25.714286 10.857143 25.714286 25.714285 10.857143 25.714286-10.857143 10.857143-25.714286z m146.285714 0q0-14.857143-10.857143-25.714286t-25.714285-10.857143-25.714286 10.857143-10.857143 25.714286 10.857143 25.714286 25.714286 10.857143 25.714285-10.857143 10.857143-25.714286z m73.142857-128v182.857143q0 22.857143-16 38.857143t-38.857142 16H91.428571q-22.857143 0-38.857142-16t-16-38.857143v-182.857143q0-22.857143 16-38.857143t38.857142-16h265.714286l77.142857 77.714286q33.142857 32 77.714286 32t77.714286-32l77.714285-77.714286h265.142858q22.857143 0 38.857142 16t16 38.857143z m-185.714285-325.142857q9.714286 23.428571-8 40l-256 256q-10.285714 10.857143-25.714286 10.857143t-25.714286-10.857143L230.285714 354.857143q-17.714286-16.571429-8-40 9.714286-22.285714 33.714286-22.285714h146.285714V36.571429q0-14.857143 10.857143-25.714286t25.714286-10.857143h146.285714q14.857143 0 25.714286 10.857143t10.857143 25.714286v256h146.285714q24 0 33.714286 22.285714z" p-id="1101"></path></svg> '+i18n("download"));
+                dlSpan.src=curNode.dataset.src;
+                dlSpan.title=curNode.title||document.title;
+                dlSpan.onclick=clickCb;
+                var topP=document.createElement('p');
+                topP.className="pv-top-banner";
+                topP.innerHTML=createHTML(img.naturalWidth+' x '+img.naturalHeight);
+                topP.title=img.src;
+                var checkBox=document.createElement('input');
+                checkBox.type="checkbox";
+                checkBox.onclick=function(e){
+                    let checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input:checked");
+                    if(!self.batchDl || self.batchDl.parentNode!=maximizeContainer){
+                        self.batchDl=document.createElement('p');
+                        let batchDlBtn=document.createElement('input');
+                        let cancelBtn=document.createElement('input');
+                        let invertBtn=document.createElement('input');
+                        batchDlBtn.value=i18n("download");
+                        cancelBtn.value=i18n("closeBtn");
+                        invertBtn.value=i18n("invertBtn");
+                        batchDlBtn.type="button";
+                        cancelBtn.type="button";
+                        invertBtn.type="button";
+                        batchDlBtn.onclick=function(e){
+                            checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input:checked");
+                            if(checkBoxs.length<1)return;
+
+                            var saveParams = [],saveIndex=0;
+                            [].forEach.call(checkBoxs, function(node){
+                                let conItem=node.parentNode;
+                                if(conItem.style.display=="none")return;
+                                saveIndex++;
+
+                                let imgSrc=conItem.querySelector("img").src;
+                                let title=node.nextElementSibling.title;
+                                title = title.indexOf('\n') !== -1 ? title.split('\n')[0] : title;
+                                title = title.indexOf('http') === 0 || title.indexOf('data') === 0 ? '' : title;
+                                let srcSplit;
+                                if (imgSrc.indexOf('data') === 0) srcSplit = "";
+                                else {
+                                    srcSplit=imgSrc || '';
+                                }
+                                title = getRightSaveName(srcSplit, title, prefs.saveName);
+                                var picName = document.title + "-" + (saveIndex < 10 ? "00" + saveIndex : (saveIndex < 100 ? "0" + saveIndex : saveIndex)) + (!title || title == document.title ? "" : "-" + title);
+                                saveParams.push([imgSrc, picName]);
+                            });
+                            self.batchDownload(saveParams, ()=>{
+                                self.showTips("Completed!", 1000);
+                            });
+                        };
+                        cancelBtn.onclick=function(e){
+                            checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input:checked");
+                            if(checkBoxs.length<1)return;
+                            [].forEach.call(checkBoxs, i=>{
+                                i.checked=false;
+                            });
+                            maximizeContainer.removeChild(self.batchDl);
+                            maximizeContainer.classList.remove("checked");
+                        };
+                        invertBtn.onclick=function(e){
+                            checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input");
+                            if(checkBoxs.length<1)return;
+                            [].forEach.call(checkBoxs, i=>{
+                                let conItem=i.parentNode;
+                                if(conItem.style.display=="none")i.checked=false;
+                                else i.checked=!i.checked;
+                            });
+                            checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input:checked");
+                            if(checkBoxs.length==0){
+                                maximizeContainer.removeChild(self.batchDl);
+                                maximizeContainer.classList.remove("checked");
+                            }
+                        };
+                        self.batchDl.appendChild(batchDlBtn);
+                        self.batchDl.appendChild(cancelBtn);
+                        self.batchDl.appendChild(invertBtn);
+                        maximizeContainer.appendChild(self.batchDl);
+                    }
+                    if(checkBoxs.length>0){
+                        maximizeContainer.appendChild(self.batchDl);
+                        maximizeContainer.classList.add("checked");
+                    }else{
+                        maximizeContainer.removeChild(self.batchDl);
+                        maximizeContainer.classList.remove("checked");
+                    }
+                    e.stopPropagation();
+                };
+                imgSpan.appendChild(topP);
+                imgSpan.appendChild(checkBox);
+                imgSpan.appendChild(dlSpan);
+            },
             addViewmoreItem: function(nodes) {
                 var alreadyShow = this.eleMaps['sidebar-toggle'].style.visibility == 'hidden';
                 if(!alreadyShow)return;
@@ -14656,40 +14762,36 @@ ImgOps | https://imgops.com/#b#`;
                     let curNode = node;
                     let imgSpan = document.createElement('span');
                     if (nodeStyle.display == "none") imgSpan.style.display = "none";
-                    imgSpan.className = "maximizeChild";
-                    imgSpan.innerHTML = createHTML('<img data-src="' + curNode.dataset.src + '" src="' + curNode.dataset.thumbSrc + '">');
-                    imgSpan.addEventListener("click", function(e) {
-                        imgReady(curNode.dataset.src, {
-                            ready: function() {
-                                let imgwin=new ImgWindowC(this);
-                                self.selectViewmore(imgSpan, curNode.dataset.src);
-                                if(prefs.imgWindow.overlayer.shown){
-                                    imgwin.blur(true);
-                                    self.curImgWin=imgwin;
-                                    self.curImgSpan=imgSpan;
-                                    if(!self.scrollInit){
-                                        self.scrollInit=true;
-                                        let wheelHandler=function(e){
-                                            if(self.canScroll && self.curImgWin && !self.curImgWin.removed && !self.curImgWin.focused){
-                                                self.canScroll=false;
-                                                let targetImgSpan=self.curImgSpan;
-                                                while(targetImgSpan){
-                                                    targetImgSpan=e.deltaY<0?targetImgSpan.previousElementSibling:targetImgSpan.nextElementSibling;
-                                                    if(targetImgSpan && targetImgSpan.style.display!="none" && targetImgSpan.clientWidth>1)break;
-                                                }
-                                                if(targetImgSpan){
-                                                    let imgNode=targetImgSpan.querySelector("img");
-                                                    self.curImgWin.remove();
-                                                    let curImgEle=document.createElement("img");
-                                                    curImgEle.src=imgNode.dataset.src||imgNode.src;
-                                                    let imgwin=new ImgWindowC(curImgEle);
-                                                    imgwin.blur(true);
-                                                    self.curImgWin=imgwin;
-                                                    self.selectViewmore(targetImgSpan, curImgEle.src);
-                                                    targetImgSpan.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
-                                                    setTimeout(() => {targetImgSpan.scrollIntoView({block: "center", inline: "nearest"})}, 300);
-                                                    self.canScroll=true;
-                                                    /*imgReady(targetImgSpan.querySelector("img").src,{
+                    let popupImgWin = (i) => {
+                        let imgwin=new ImgWindowC(i);
+                        self.selectViewmore(imgSpan, curNode.dataset.src);
+                        if(prefs.imgWindow.overlayer.shown){
+                            imgwin.blur(true);
+                            self.curImgWin=imgwin;
+                            self.curImgSpan=imgSpan;
+                            if(!self.scrollInit){
+                                self.scrollInit=true;
+                                let wheelHandler=function(e){
+                                    if(self.canScroll && self.curImgWin && !self.curImgWin.removed && !self.curImgWin.focused){
+                                        self.canScroll=false;
+                                        let targetImgSpan=self.curImgSpan;
+                                        while(targetImgSpan){
+                                            targetImgSpan=e.deltaY<0?targetImgSpan.previousElementSibling:targetImgSpan.nextElementSibling;
+                                            if(targetImgSpan && targetImgSpan.style.display!="none" && targetImgSpan.clientWidth>1)break;
+                                        }
+                                        if(targetImgSpan){
+                                            let imgNode=targetImgSpan.querySelector("img");
+                                            self.curImgWin.remove();
+                                            let curImgEle=document.createElement("img");
+                                            curImgEle.src=imgNode.dataset.src||imgNode.src;
+                                            let imgwin=new ImgWindowC(curImgEle);
+                                            imgwin.blur(true);
+                                            self.curImgWin=imgwin;
+                                            self.selectViewmore(targetImgSpan, curImgEle.src);
+                                            targetImgSpan.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
+                                            setTimeout(() => {targetImgSpan.scrollIntoView({block: "center", inline: "nearest"})}, 300);
+                                            self.canScroll=true;
+                                            /*imgReady(targetImgSpan.querySelector("img").src,{
                                                         ready:function(){
                                                             self.curImgWin.remove(true);
                                                             let imgwin=new ImgWindowC(this);
@@ -14700,152 +14802,76 @@ ImgOps | https://imgops.com/#b#`;
                                                             self.canScroll=true;
                                                         }
                                                     });*/
-                                                }else{
-                                                    self.canScroll=true;
-                                                }
-                                            }
-                                        };
-                                        addWheelEvent(document.body,wheelHandler,true);
-                                    }
-                                }
-                            }
-                        });
-                    });
-                    imgSpan.title=curNode.title + '\n' + curNode.dataset.src.slice(0, 100);
-                    let img=imgSpan.querySelector("img");
-                    var addDlSpan=(img, imgSpan, curNode, clickCb)=>{
-                        var dlSpan=document.createElement('p');
-                        dlSpan.className="pv-bottom-banner";
-                        dlSpan.innerHTML=createHTML('<svg class="icon" style="width: 20px;height: 20px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1100"><path d="M768 768q0-14.857143-10.857143-25.714286t-25.714286-10.857143-25.714285 10.857143-10.857143 25.714286 10.857143 25.714286 25.714285 10.857143 25.714286-10.857143 10.857143-25.714286z m146.285714 0q0-14.857143-10.857143-25.714286t-25.714285-10.857143-25.714286 10.857143-10.857143 25.714286 10.857143 25.714286 25.714286 10.857143 25.714285-10.857143 10.857143-25.714286z m73.142857-128v182.857143q0 22.857143-16 38.857143t-38.857142 16H91.428571q-22.857143 0-38.857142-16t-16-38.857143v-182.857143q0-22.857143 16-38.857143t38.857142-16h265.714286l77.142857 77.714286q33.142857 32 77.714286 32t77.714286-32l77.714285-77.714286h265.142858q22.857143 0 38.857142 16t16 38.857143z m-185.714285-325.142857q9.714286 23.428571-8 40l-256 256q-10.285714 10.857143-25.714286 10.857143t-25.714286-10.857143L230.285714 354.857143q-17.714286-16.571429-8-40 9.714286-22.285714 33.714286-22.285714h146.285714V36.571429q0-14.857143 10.857143-25.714286t25.714286-10.857143h146.285714q14.857143 0 25.714286 10.857143t10.857143 25.714286v256h146.285714q24 0 33.714286 22.285714z" p-id="1101"></path></svg> '+i18n("download"));
-                        dlSpan.src=curNode.dataset.src;
-                        dlSpan.title=curNode.title||document.title;
-                        dlSpan.onclick=clickCb;
-                        var topP=document.createElement('p');
-                        topP.className="pv-top-banner";
-                        topP.innerHTML=createHTML(img.naturalWidth+' x '+img.naturalHeight);
-                        topP.title=img.src;
-                        var checkBox=document.createElement('input');
-                        checkBox.type="checkbox";
-                        checkBox.onclick=function(e){
-                            let checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input:checked");
-                            if(!self.batchDl || self.batchDl.parentNode!=maximizeContainer){
-                                self.batchDl=document.createElement('p');
-                                let batchDlBtn=document.createElement('input');
-                                let cancelBtn=document.createElement('input');
-                                let invertBtn=document.createElement('input');
-                                batchDlBtn.value=i18n("download");
-                                cancelBtn.value=i18n("closeBtn");
-                                invertBtn.value=i18n("invertBtn");
-                                batchDlBtn.type="button";
-                                cancelBtn.type="button";
-                                invertBtn.type="button";
-                                batchDlBtn.onclick=function(e){
-                                    checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input:checked");
-                                    if(checkBoxs.length<1)return;
-
-                                    var saveParams = [],saveIndex=0;
-                                    [].forEach.call(checkBoxs, function(node){
-                                        let conItem=node.parentNode;
-                                        if(conItem.style.display=="none")return;
-                                        saveIndex++;
-
-                                        let imgSrc=conItem.querySelector("img").src;
-                                        let title=node.nextElementSibling.title;
-                                        title = title.indexOf('\n') !== -1 ? title.split('\n')[0] : title;
-                                        title = title.indexOf('http') === 0 || title.indexOf('data') === 0 ? '' : title;
-                                        let srcSplit;
-                                        if (imgSrc.indexOf('data') === 0) srcSplit = "";
-                                        else {
-                                            srcSplit=imgSrc.match(/([^\/]+\.\w{2,5}?)(\?|$)/) || '';
-                                            if (srcSplit) srcSplit = srcSplit[1];
-                                            if (srcSplit.length > 30 && (srcSplit.indexOf(".") == -1 || /[&\?=,]/i.test(srcSplit))){
-                                                srcSplit = "";
-                                            }
-                                            if (srcSplit.length > 50) srcSplit = srcSplit.substring(srcSplit.length - 50, srcSplit.length);
-                                        }
-                                        var picName = document.title + "-" + (saveIndex < 10 ? "00" + saveIndex : (saveIndex < 100 ? "0" + saveIndex : saveIndex)) + (!title && title == document.title ? "" : "-" + title) + "-" + srcSplit;
-                                        saveParams.push([imgSrc, picName]);
-                                    });
-                                    self.batchDownload(saveParams, ()=>{
-                                        self.showTips("Completed!", 1000);
-                                    });
-                                };
-                                cancelBtn.onclick=function(e){
-                                    checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input:checked");
-                                    if(checkBoxs.length<1)return;
-                                    [].forEach.call(checkBoxs, i=>{
-                                        i.checked=false;
-                                    });
-                                    maximizeContainer.removeChild(self.batchDl);
-                                    maximizeContainer.classList.remove("checked");
-                                };
-                                invertBtn.onclick=function(e){
-                                    checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input");
-                                    if(checkBoxs.length<1)return;
-                                    [].forEach.call(checkBoxs, i=>{
-                                        let conItem=i.parentNode;
-                                        if(conItem.style.display=="none")i.checked=false;
-                                        else i.checked=!i.checked;
-                                    });
-                                    checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input:checked");
-                                    if(checkBoxs.length==0){
-                                        maximizeContainer.removeChild(self.batchDl);
-                                        maximizeContainer.classList.remove("checked");
-                                    }
-                                };
-                                self.batchDl.appendChild(batchDlBtn);
-                                self.batchDl.appendChild(cancelBtn);
-                                self.batchDl.appendChild(invertBtn);
-                                maximizeContainer.appendChild(self.batchDl);
-                            }
-                            if(checkBoxs.length>0){
-                                maximizeContainer.appendChild(self.batchDl);
-                                maximizeContainer.classList.add("checked");
-                            }else{
-                                maximizeContainer.removeChild(self.batchDl);
-                                maximizeContainer.classList.remove("checked");
-                            }
-                            e.stopPropagation();
-                        };
-                        imgSpan.appendChild(topP);
-                        imgSpan.appendChild(checkBox);
-                        imgSpan.appendChild(dlSpan);
-                    };
-                    fetch(curNode.dataset.src).then(response=>{
-                        return response.blob();
-                    }).then(blob=>{
-                        imgReady(img,{
-                            ready:function(){
-                                if(img.width>=88 && img.height>=88){
-                                    addDlSpan(img, imgSpan, curNode, e=>{
-                                        e.stopPropagation();
-                                        if(blob.type=="image/webp"){
-                                            self.blobToCanvas(blob, canvas=>{
-                                                canvas.toBlob(blob=>{
-                                                    saveAs(blob,e.target.title+".png");
-                                                }, "image/png");
-                                            });
                                         }else{
-                                            _GM_download(e.target.src,e.target.title);
+                                            self.canScroll=true;
                                         }
-                                        return true;
-                                    });
-                                }
+                                    }
+                                };
+                                addWheelEvent(document.body,wheelHandler,true);
                             }
-                        });
-                    }).catch(e=>{
-                        imgReady(img,{
-                            ready:function(){
-                                if(img.width>=88 && img.height>=88){
-                                    addDlSpan(img, imgSpan, curNode, e=>{
-                                        e.stopPropagation();
-                                        _GM_download(e.target.src,e.target.title);
-                                        return true;
-                                    });
-                                }
+                        }
+                    };
+                    imgSpan.className = "maximizeChild";
+                    imgSpan.innerHTML = createHTML('<img data-src="' + curNode.dataset.src + '" src="' + curNode.dataset.thumbSrc + '">');
+                    let img=imgSpan.querySelector("img");
+                    imgSpan.addEventListener("click", function(e) {
+                        imgReady(img.dataset.src, {
+                            ready: function() {
+                                popupImgWin(this);
+                            },
+                            error:function(e){
+                                let i=document.createElement("img");
+                                i.src=curNode.dataset.thumbSrc;
+                                curNode.dataset.src=curNode.dataset.thumbSrc;
+                                popupImgWin(i);
                             }
                         });
                     });
+                    imgSpan.title=curNode.title;
+                    let curSrc=curNode.dataset.src;
+                    let defaultDl=()=>{
+                        if(img.width>=88 && img.height>=88){
+                            self.addDlSpan(img, imgSpan, curNode, e=>{
+                                e.stopPropagation();
+                                _GM_download(curNode.dataset.src, curNode.title, prefs.saveName);
+                                return true;
+                            });
+                        }
+                    };
+                    if(curSrc.indexOf("data")===0){
+                        defaultDl();
+                    }else{
+                        fetch(curSrc).then(response=>{
+                            return response.blob();
+                        }).then(blob=>{
+                            imgReady(img,{
+                                ready:function(){
+                                    if(img.width>=88 && img.height>=88){
+                                        self.addDlSpan(img, imgSpan, curNode, e=>{
+                                            e.stopPropagation();
+                                            if(blob.type=="image/webp"){
+                                                self.blobToCanvas(blob, canvas=>{
+                                                    canvas.toBlob(blob=>{
+                                                        saveAs(blob, getRightSaveName("", curNode.title, prefs.saveName));
+                                                    }, "image/png");
+                                                });
+                                            }else{
+                                                _GM_download(curNode.dataset.src, curNode.title, prefs.saveName);
+                                            }
+                                            return true;
+                                        });
+                                    }
+                                }
+                            });
+                        }).catch(e=>{
+                            curNode.dataset.src=curNode.dataset.thumbSrc;
+                            imgReady(img,{
+                                ready:function(){
+                                    defaultDl();
+                                }
+                            });
+                        });
+                    }
                     maximizeContainer.appendChild(imgSpan);
                 });
             },
@@ -15488,7 +15514,7 @@ ImgOps | https://imgops.com/#b#`;
                             if(item.xhr)spanMark.dataset.xhr=encodeURIComponent(JSON.stringify(item.xhr));
                             spanMark.dataset.description=encodeURIComponent(item.description || '');
                             spanMark.dataset.thumbSrc=item.imgSrc;
-                            let title = item.img ? (item.img.title || item.img.alt || "").slice(0, 50) : "";
+                            let title = item.img ? (item.img.title || item.img.alt || "").slice(-50) : "";
                             if (title) {
                                 if (title.indexOf('http') === 0 || title.indexOf('data') === 0) title = '';
                                 else title += '\n';
@@ -20923,7 +20949,7 @@ ImgOps | https://imgops.com/#b#`;
                     if (copy) {
                         _GM_setClipboard(this.data.src || this.data.imgSrc);
                     } else {
-                        _GM_download(this.data.src||this.data.imgSrc, (this.data.img.alt || this.data.img.title || document.title));
+                        _GM_download(this.data.src||this.data.imgSrc, (this.data.img.alt || this.data.img.title), prefs.saveName);
                     }
                     return;
                 }
@@ -21374,7 +21400,7 @@ ImgOps | https://imgops.com/#b#`;
                     switch(command){
                         case 'open':{
                             if (data.buttonType === 'download') {
-                                _GM_download(data.src, document.title);
+                                _GM_download(data.src, document.title, prefs.saveName);
                                 return;
                             }
                             var img=document.createElement('img');
@@ -22716,6 +22742,18 @@ ImgOps | https://imgops.com/#b#`;
                     options: customLangOption,
                     "default": prefs.customLang,
                     line: 'end',
+                },
+                'saveName': {
+                    label: i18n("saveName"),
+                    type: 'select',
+                    options: {
+                        0: i18n("default"),
+                        1: i18n("textFirst"),
+                        2: i18n("onlyUrl"),
+                        3: i18n("urlAndText")
+                    },
+                    "default": (prefs.saveName || 0),
+                    title: i18n("saveNameTip"),
                 },
                 'debug': {
                     label: i18n("debug"),
