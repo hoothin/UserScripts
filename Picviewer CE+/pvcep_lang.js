@@ -5,6 +5,12 @@ var langData = [
     lang: {
         //English by RX-3200.
         saveBtn: "OK",
+        saveName: "Save name",
+        saveNameTip: "Save images with the name",
+        default: "Default",
+        textFirst: "Info first if exist",
+        onlyUrl: "Only with url",
+        urlAndText: "Url + Info",
         download:"Download",
         download2copy: "Use copy instead of download",
         saveBtnTips: "some options need to refresh the page to take effect",
@@ -241,6 +247,12 @@ var langData = [
     match: ["zh-CN", "zh-SG"],
     lang: {
         saveBtn:"确定",
+        saveName: "保存图片名",
+        saveNameTip: "使用预设模式保存图片",
+        default: "默认",
+        textFirst: "优先使用图片描述",
+        onlyUrl: "仅使用 url 中的文件名",
+        urlAndText: "Url + 文件描述",
         download:"下载",
         download2copy: "使用复制代替下载",
         saveBtnTips:"部分选项需要刷新页面才能生效",
@@ -477,6 +489,12 @@ var langData = [
     match: ["zh-TW", "zh-HK", "zh-MO"],
     lang: {
         saveBtn:"確定",
+        saveName: "保存圖片名",
+        saveNameTip: "使用預設模式保存圖片",
+        default: "默認",
+        textFirst: "優先使用圖片描述",
+        onlyUrl: "僅使用 url 中的文件名",
+        urlAndText: "Url + 文件描述",
         download:"下載",
         download2copy: "使用複製代替下載",
         saveBtnTips:"部分選項需要刷新頁面才能生效",
@@ -714,6 +732,12 @@ var langData = [
     lang: {
         //Português by AstroCoelestis.
         saveBtn: "Salvar",
+        saveName: "Salvar nome",
+        saveNameTip: "Salvar imagens com o nome",
+        default: "Padrão",
+        textFirst: "Informações primeiro se existirem",
+        onlyUrl: "Apenas com url",
+        urlAndText: "URL + Informações",
         download:"Baixar",
         download2copy: "Use copiar em vez de baixar",
         saveBtnTips: "algumas opções precisam atualizar a página para entrar em vigor",
@@ -951,6 +975,12 @@ var langData = [
     lang: {
         //Русский перевод by RX-3200 и vanja-san.
         saveBtn: "OK",
+        saveName: "Сохранить имя",
+        saveNameTip: "Сохранять изображения с именем",
+        default: "По умолчанию",
+        textFirst: "Сначала информация, если существует",
+        onlyUrl: "Только с URL",
+        urlAndText: "Ссылка + информация",
         download:"Скачать",
         download2copy: "Используйте копию вместо загрузки",
         saveBtnTips: "Некоторые параметры требуют обновления страницы, чтобы применить изменения",
@@ -1188,6 +1218,12 @@ var langData = [
     lang: {
         //Turkish by PUFF1N.
         saveBtn: "Tamam",
+        saveName: "İsmi kaydet",
+        saveNameTip: "Görüntüleri isimle kaydet",
+        default: "Varsayılan",
+        textFirst: "Varsa önce bilgi",
+        onlyUrl: "Yalnızca url ile",
+        urlAndText: "Url + Bilgi",
         download:"İndir",
         download2copy: "İndirmek yerine kopyasını kullan",
         saveBtnTips: "bazı ayarların etkili olabilmesi için sayfanın yenilenmesi gerekir",
