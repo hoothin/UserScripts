@@ -24999,7 +24999,7 @@
   "resource_url": "http://wedata.net/items/74923",
   "data": {
     "pageElement": "//div[contains(@class,'a-archive-grid__story')]|descendant::*[./div[contains(@class,'o-card')]][1]|//div[@class='story_list_blk']/*|//li[@class='l-list__item'][article]|id('main')/article[@id]",
-    "nextLink": "//link[@rel='next']|//a[contains(@class,'next') or contains(@class,'a-icon-right-arrow')]|//div[@class='nav-previous']/a",
+    "nextLink": "//link[@rel='next']|//a[contains(@class,'next')]|//div[@class='nav-previous']/a|//div[@class='more-stories pmc-u-margin-t-1 u-flex u-justify-content-space-between']/a[contains(@class,'a-icon-right-arrow')]",
     "url": "^https?://.*(?:bollywoodlife|(dead|tv)line|footwearnews)\\.com",
     "exampleUrl": "https://www.deadline.com/ https://deadline.com/vcategory/the-contenders-emmys/page/2/ https://deadline.com/tag/caa/page/2/ https://www.bollywoodlife.com/ https://footwearnews.com/page/2/ https://tvline.com/"
   },
@@ -25007,7 +25007,7 @@
   "created_by": "Tanookirby",
   "name": "PMC Brands",
   "created_at": "2014-06-26T02:58:29+09:00",
-  "updated_at": "2022-11-20T03:10:44+09:00"
+  "updated_at": "2023-01-19T09:42:29+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/74912",
@@ -25843,16 +25843,16 @@
 {
   "resource_url": "http://wedata.net/items/74720",
   "data": {
-    "pageElement": "//main//div[count(./div)>2][not(ancestor::aside)]",
-    "nextLink": "//link[@rel='next']",
+    "pageElement": "//div[contains(@class,'story ')]",
+    "nextLink": "//nav[starts-with(@class,'more-stories-button')][count(a)>1]/a[last()]",
     "url": "^https?://(www\\.)?hollywoodreporter\\.com/.",
-    "exampleUrl": "https://www.hollywoodreporter.com/c/lifestyle/arts/ https://www.hollywoodreporter.com/vcategory/thr-news-57094/"
+    "exampleUrl": "https://www.hollywoodreporter.com/page/2/ https://www.hollywoodreporter.com/c/lifestyle/arts/page/2/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "Tanookirby",
   "name": "The Hollywood Reporter",
   "created_at": "2014-04-12T06:23:43+09:00",
-  "updated_at": "2021-05-08T09:52:03+09:00"
+  "updated_at": "2023-01-18T17:11:19+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/74716",
@@ -26124,17 +26124,17 @@
 {
   "resource_url": "http://wedata.net/items/74668",
   "data": {
-    "pageElement": "(//tbody|//div)[starts-with(@id,'threadbit')]/*[*[contains(@id,'td_threadtitle')] or @class!='thead'][not(contains(td/div,'Sticky:') or .//img[contains(@src,'sticky') or contains(@class,'sticky')])]|//table[.//@class='middletext']/following-sibling::div/table[@class='bordercolor']//tr[td/@class='windowbg']|id('topic_container')/div[@class='windowbg']|//ol[(@id='threads' and @class='threads') or @class='discussionListItems']/li[@id]|//div[@class='threadbit'][not(.//div[contains(.,'Sticky:')])]|id('messageindex')//tr[td[starts-with(@class,'subject')]]|//table[@class='tborder clear' or @class='table']//tr[@class='inline_row' or @class='row forumThread']|//table[starts-with(@id,'forum-topic') or starts-with(@class,'topic-list') or starts-with(@id,'forumTopic')]/tbody/tr[not(.//span[@class='prefix js-prefix'][contains(.,'Sticky:')] or contains(@class,'header'))]|descendant::li[@class='bbp-body'][1]/ul[contains(@class,'hentry')]|//div[@class='california-thread-item']\r\n|id('threadList-1')/table/tbody[contains(concat(' ', @class, ' '), ' threadsBody ')]/tr|descendant::div[contains(concat(' ', @class, ' '), ' js-threadList ')][last()=1][not(//article[starts-with(@id, 'js-post-')])]",
+    "pageElement": "(//tbody|//div)[starts-with(@id,'threadbit')]/*[*[contains(@id,'td_threadtitle')] or @class!='thead'][not(contains(td/div,'Sticky:') or .//img[contains(@src,'sticky') or contains(@class,'sticky')])]|//table[.//@class='middletext']/following-sibling::div/table[@class='bordercolor']//tr[td/@class='windowbg']|id('topic_container')/div[@class='windowbg']|//ol[(@id='threads' and @class='threads') or @class='discussionListItems']/li[@id]|//div[@class='threadbit'][not(.//div[contains(.,'Sticky:')])]|id('messageindex')//tr[td[starts-with(@class,'subject')]]|//table[@class='tborder clear' or @class='table']//tr[@class='inline_row' or @class='row forumThread']|//table[starts-with(@id,'forum-topic') or starts-with(@class,'topic-list') or starts-with(@id,'forumTopic')]/tbody/tr[not(.//span[@class='prefix js-prefix'][contains(.,'Sticky:')] or contains(@class,'header'))]|//div[@class='california-thread-item']\r\n|id('threadList-1')/table/tbody[contains(concat(' ', @class, ' '), ' threadsBody ')]/tr|descendant::div[contains(concat(' ', @class, ' '), ' js-threadList ')][last()=1][not(//article[starts-with(@id, 'js-post-')])]",
     "comment": "Post Lists: http://wedata.net/items/65332",
     "nextLink": "(//link[contains(concat(' ', @rel, ' '), ' next ')][1][@href=//a/@href]\r\n|//a[@rel='next' or .='>' or .='Next ›' or .='Next >' or .='Next']\r\n|(//td[@class='middletext']|//div[starts-with(@class,'pagelinks') or contains(@class,'pagesclass')]|//span[@class='di-ib'])/text()[contains(.,']')]/following-sibling::a[@class='navPages'][1]\r\n|(//span|//a)[contains(@class,'current')][number()>0]/following-sibling::a[not(@class='go_page')][1]\r\n|//span[contains(@class,'selected')][number()>0]/following-sibling::span[1]/a\r\n|//li[starts-with(@class,'pager-next')]/a\r\n|//div[@class='pages']/text()[number(translate(., '[] ', ''))>0]/following-sibling::a[1][number()>0])[string(@href) and not(starts-with(@href, '#') or starts-with(@href, 'javascript'))]",
     "url": "^https?://.*?(forums?(display\\.php\\?)?)",
-    "exampleUrl": "https://www.phoronix.com/forums/forum/phoronix/site-discussion?6-Site-Discussion=\r\nhttps://talk.maemo.org/forumdisplay.php?s=ee4ec124091a207f428ee97aaec4c4d0&f=7\r\nhttps://slickdeals.net/forums/forumdisplay.php?f=9\r\nhttps://www.sweclockers.com/forum/2-kylning-och-overklockning-av-processorer/\r\nhttps://www.studytemple.com/forum/general-discussion/\r\nhttps://www.donationcoder.com/forum/index.php?board=6.40\r\nhttps://forum.unity.com/forums/assets-and-asset-store.32/\r\nhttps://forums.comodo.com/melihs-corner-ceo-talkdiscussionsblog-b36.0/\r\nhttps://www.fanforum.com/f20/\r\nhttps://forums.sherdog.com/forums/the-trenches.205/\r\nhttp://www.city-data.com/forum/alabama/\r\nhttps://www.webhosting.uk.com/forums/forum/pre-sales-and-billing/pre-sale-questions\r\nhttp://www.reteam.org/board/forumdisplay.php?f=21\r\nhttps://www.bios-mods.com/forum/Forum-Asus--57?order=asc&datecut=9999\r\nhttps://community.mybb.com/forum-127.html\r\nhttp://www.rom.by/forum/Ishchu_proshivku\r\nhttps://myanimelist.net/forum/?board=1&show=50\r\nhttps://www.goldderby.com/forum/music/\r\nhttps://wordpress.org/support/forum/installation/\r\nhttp://gamevn.com/forums/thong-bao.17/\r\nhttp://onix-trade.net/forum/index.php?forums/novosti-opisanie-servisov-proekta-texpodderzhka.28/\r\nhttps://myanimelist.net/forum/?board=15\r\nhttps://forum.avast.com/index.php?board=5.0\r\n\r\nhttps://www.overclock.net/forums/computer-cases.161/\r\nhttps://www.head-fi.org/forums/headphones-full-size.4/\r\nhttps://arsenal-mania.com/forum/forums/football-talk.21/"
+    "exampleUrl": "https://www.phoronix.com/forums/forum/phoronix/site-discussion?6-Site-Discussion=\r\nhttps://talk.maemo.org/forumdisplay.php?s=ee4ec124091a207f428ee97aaec4c4d0&f=7\r\nhttps://slickdeals.net/forums/forumdisplay.php?f=9\r\nhttps://www.sweclockers.com/forum/2-kylning-och-overklockning-av-processorer/\r\nhttps://www.studytemple.com/forum/general-discussion/\r\nhttps://www.donationcoder.com/forum/index.php?board=6.40\r\nhttps://forum.unity.com/forums/assets-and-asset-store.32/\r\nhttps://forums.comodo.com/melihs-corner-ceo-talkdiscussionsblog-b36.0/\r\nhttps://www.fanforum.com/f20/\r\nhttps://forums.sherdog.com/forums/the-trenches.205/\r\nhttp://www.city-data.com/forum/alabama/\r\nhttps://www.webhosting.uk.com/forums/forum/pre-sales-and-billing/pre-sale-questions\r\nhttp://www.reteam.org/board/forumdisplay.php?f=21\r\nhttps://www.bios-mods.com/forum/Forum-Asus--57?order=asc&datecut=9999\r\nhttps://community.mybb.com/forum-127.html\r\nhttp://www.rom.by/forum/Ishchu_proshivku\r\nhttps://myanimelist.net/forum/?board=1&show=50\r\nhttp://gamevn.com/forums/thong-bao.17/\r\nhttp://onix-trade.net/forum/index.php?forums/novosti-opisanie-servisov-proekta-texpodderzhka.28/\r\nhttps://myanimelist.net/forum/?board=15\r\nhttps://forum.avast.com/index.php?board=5.0\r\n\r\nhttps://www.overclock.net/forums/computer-cases.161/\r\nhttps://www.head-fi.org/forums/headphones-full-size.4/\r\nhttps://arsenal-mania.com/forum/forums/football-talk.21/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "Tanookirby",
   "name": "forum - forumdisplay.php",
   "created_at": "2014-03-23T06:39:00+09:00",
-  "updated_at": "2023-01-16T18:33:32+09:00"
+  "updated_at": "2023-01-18T18:36:45+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/74667",
@@ -28766,18 +28766,18 @@
 {
   "resource_url": "http://wedata.net/items/65332",
   "data": {
-    "pageElement": "//div[@id='posts' or div//td/@class='postContent']/*[.//*[starts-with(@id,'post')]]|//table[@class='bordercolor']//tr[.//tr/td[starts-with(@class,'windowbg')]]|(id('posts messageList')|//ul[starts-with(@class,'conversation-list')])/li[starts-with(@id,'post') or contains(@class,'js-post')]|id('comments')/div/form/*|id('quickModForm')/div[contains(@class,'windowbg') or @class='bordercolor']|//li[@class='bbp-body']\r\n|//article[translate(@id, '1234567890', '')='js-post-']\r\n|//section[@class='thread_posts']/article[contains(concat(' ', @class, ' '), ' post ')]\r\n|id('content')/div[translate(@id, '1234567890', '')='msg'][@data-id]",
+    "pageElement": "//div[@id='posts' or div//td/@class='postContent']/*[.//*[starts-with(@id,'post')]]|//table[@class='bordercolor']//tr[.//tr/td[starts-with(@class,'windowbg')]]|(id('posts messageList')|//ul[starts-with(@class,'conversation-list')])/li[starts-with(@id,'post') or contains(@class,'js-post')]|id('quickModForm')/div[contains(@class,'windowbg') or @class='bordercolor']\r\n|//article[translate(@id, '1234567890', '')='js-post-']\r\n|//section[@class='thread_posts']/article[contains(concat(' ', @class, ' '), ' post ')]\r\n|id('content')/div[translate(@id, '1234567890', '')='msg'][@data-id]",
     "comment": "Topic Lists: http://wedata.net/items/74668",
     "comment2": "link[@rel='next'] is invalid.\r\nhttps://www.donationcoder.com/forum/index.php?topic=1685.0\r\n\r\n[not(ancestor::*[contains(@style, 'display: none')])]\r\nhttps://community.mybb.com/thread-170127-page-2.html",
     "nextLink": "(//link[contains(concat(' ', @rel, ' '), ' next ')][1][@href=//a/@href]\r\n|//a[@rel='next' or .='>' or .='Next ›' or .='Next >' or .='Next']\r\n|(//td[@class='middletext']|//div[starts-with(@class,'pagelinks') or contains(@class,'pagesclass')])/text()[contains(.,']')]/following-sibling::a[@class='navPages'][1]\r\n|(//span|//a)[contains(@class,'current')][number()>0]/following-sibling::a[not(@class='go_page')][1][not(ancestor::*[contains(@style, 'display: none')])]\r\n|//span[contains(@class,'selected')][number()>0]/following-sibling::span[1]/a\r\n|//li[starts-with(@class,'pager-next')]/a\r\n|//div[@class='pages']/text()[number(translate(., '[] ', ''))>0]/following-sibling::a[1][number()>0])[string(@href) and not(starts-with(@href, '#') or starts-with(@href, 'javascript'))]",
     "url": "^https?://.*(showthread\\.php\\?|forum|threads?)",
-    "exampleUrl": "https://www.e-cigarette-forum.com/threads/become-an-ecf-supporting-member.3931/\r\nhttps://forums.civfanatics.com/threads/a-babylon-5-mod-for-the-final-frontier-mod.261551/\r\nhttps://forums.macrumors.com/threads/more-details-on-jony-ives-flat-ios-7-design-heavier-on-black-and-white.1586311/\r\nhttps://talk.maemo.org/showthread.php?t=28834\r\nhttps://forums.hardwarezone.com.sg/threads/which-graphics-card-to-buy-in-y2022.1233319/\r\nhttps://www.avsforum.com/threads/official-oppo-bdp-103-owners-thread.1432162/\r\nhttps://www.donationcoder.com/forum/index.php?topic=1685.0\r\nhttps://www.thefastlaneforum.com/community/threads/ive-read-the-millionaire-fastlane.28234/\r\nhttps://forum.unity.com/threads/smooth-moves-2d-skeletal-animation.124211/\r\nhttps://www.techpowerup.com/forums/threads/psu-guide.39758/\r\nhttps://tlap.com/forum/topic/21382-arhiv-pamm-alpari-safe-basket-invest/\r\nhttps://tlap.com/forum/topic/19513-tolko-bag-reporty-novyy-dvizhok-foruma/page/2/#comments\r\nhttps://forums.comodo.com/melihs-corner-ceo-talkdiscussionsblog/2-internets-t99768.0.html\r\nhttps://www.fanforum.com/f20/tour-guide-7-happenings-fan-forum-boards-complete-board-list-opening-post-62950701/\r\nhttps://gbatemp.net/threads/official-xbox-360-discussion-thread.59999/\r\nhttps://www.tarfandestan.com/forum/thread35873.html\r\nhttp://www.city-data.com/forum/alabama/440433-scenic-alabama-interesting-places-visit-day.html\r\nhttps://www.techist.com/forums/f33/tech-forums-group-map-new-235157/\r\nhttps://www.macuser.de/threads/warum-ist-gutes-design-eigentlich-so-teuer.543395/\r\nhttps://forum.xda-developers.com/t/htc-desire-bravo-index-everything-desire-is-here-24th-january-2015.809328/\r\nhttps://www.android-hilfe.de/forum/informationen-fuer-neue-user-und-vorstellungen.4/how-to-wie-benutze-ich-die-suchfunktion.47787.html\r\nhttps://forums.redflagdeals.com/costco-lg-60pk250-1297-00-a-997407/\r\nhttp://f319.com/threads/ma-chung-khoan-nao-ce-vao-31-3.486551/\r\nhttp://www.reteam.org/board/showthread.php?t=4521\r\nhttps://forum-en.msi.com/index.php?threads/trefi-on-b650-and-x670-boards.380964/\r\nhttps://www.hisseanaliz.net/forum/borsa-yorum/canli-borsa/6317-trading-school\r\nhttps://idolforums.com/topic/743676-american-idol-season-20-spoilers-presented-by-the-idol-pad/page/4/#comments\"\r\nhttps://myanimelist.net/forum/?topicid=2038566&show=0\r\nhttps://forum.avast.com/index.php?topic=210570.0"
+    "exampleUrl": "https://www.e-cigarette-forum.com/threads/become-an-ecf-supporting-member.3931/\r\nhttps://forums.civfanatics.com/threads/a-babylon-5-mod-for-the-final-frontier-mod.261551/\r\nhttps://forums.macrumors.com/threads/more-details-on-jony-ives-flat-ios-7-design-heavier-on-black-and-white.1586311/\r\nhttps://talk.maemo.org/showthread.php?t=28834\r\nhttps://forums.hardwarezone.com.sg/threads/which-graphics-card-to-buy-in-y2022.1233319/\r\nhttps://www.avsforum.com/threads/official-oppo-bdp-103-owners-thread.1432162/\r\nhttps://www.donationcoder.com/forum/index.php?topic=1685.0\r\nhttps://www.thefastlaneforum.com/community/threads/ive-read-the-millionaire-fastlane.28234/\r\nhttps://forum.unity.com/threads/smooth-moves-2d-skeletal-animation.124211/\r\nhttps://www.techpowerup.com/forums/threads/psu-guide.39758/\r\nhttps://forums.comodo.com/melihs-corner-ceo-talkdiscussionsblog/2-internets-t99768.0.html\r\nhttps://www.fanforum.com/f20/tour-guide-7-happenings-fan-forum-boards-complete-board-list-opening-post-62950701/\r\nhttps://gbatemp.net/threads/official-xbox-360-discussion-thread.59999/\r\nhttps://www.tarfandestan.com/forum/thread35873.html\r\nhttp://www.city-data.com/forum/alabama/440433-scenic-alabama-interesting-places-visit-day.html\r\nhttps://www.techist.com/forums/f33/tech-forums-group-map-new-235157/\r\nhttps://www.macuser.de/threads/warum-ist-gutes-design-eigentlich-so-teuer.543395/\r\nhttps://forum.xda-developers.com/t/htc-desire-bravo-index-everything-desire-is-here-24th-january-2015.809328/\r\nhttps://www.android-hilfe.de/forum/informationen-fuer-neue-user-und-vorstellungen.4/how-to-wie-benutze-ich-die-suchfunktion.47787.html\r\nhttps://forums.redflagdeals.com/costco-lg-60pk250-1297-00-a-997407/\r\nhttp://f319.com/threads/ma-chung-khoan-nao-ce-vao-31-3.486551/\r\nhttp://www.reteam.org/board/showthread.php?t=4521\r\nhttps://forum-en.msi.com/index.php?threads/trefi-on-b650-and-x670-boards.380964/\r\nhttps://www.hisseanaliz.net/forum/borsa-yorum/canli-borsa/6317-trading-school\r\nhttps://myanimelist.net/forum/?topicid=2038566&show=0\r\nhttps://forum.avast.com/index.php?topic=210570.0"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "alan_",
   "name": "forum - showthread.php",
   "created_at": "2012-12-14T00:12:52+09:00",
-  "updated_at": "2023-01-16T18:32:14+09:00"
+  "updated_at": "2023-01-18T18:35:40+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/65331",
@@ -37156,18 +37156,18 @@
   "created_by": "t_f_m"
 },
 {
-  "data": {
-    "pageElement": "//div[not(id('forum_table'))][contains(@class,'ipsBox') and not(contains(@class,'removeDefault'))][not(@data-role='replyArea')][not(@id='elSearchFilters')][.//div[contains(@class,'ipsBox')]]|//div[contains(@class,'ipsBox') or @data-role='resultsArea']//ol[not(contains(@class,'ipsDataList_zebra'))][count(li)>1]/li|//div[@data-role='commentFeed']/form/*[self::a or self::article]|id('forum_table')/tbody/tr",
-    "nextLink": "//a[@rel='next']",
-    "url": "^https?://.*(forum|topic|=search)",
-    "exampleUrl": "http://www.fx4u.ru/forum/3-%D0%BD%D0%BE%D0%B2%D0%B8%D1%87%D0%BA%D0%B0%D0%BC/\r\nhttp://www.fx4u.ru/topic/584-%D0%BA%D1%83%D1%80%D1%81-mql4/\r\nhttps://w3schools.invisionzone.com/forum/45-general/\r\nhttps://w3schools.invisionzone.com/topic/828-introduce-yourself/\r\nhttps://www.fountainpennetwork.com/forum/forum/5-inky-thoughts/\r\nhttps://autohotkey.com/board/forum/48-\r\nhttps://www.autoitscript.com/forum/files/category/1-autoit/?sort_order=DESC&sort_key=file_submitted&num=10&st=50\r\nhttps://idolforums.com/search/?q=lgbt&quick=1"
-  },
-  "created_by": "Rodze",
   "resource_url": "http://wedata.net/items/41434",
-  "name": "Invision IPB",
+  "data": {
+    "pageElement": "id('ipsLayout_body')//ol[starts-with(@id, 'elTable_') or @data-role='resultsContents']\r\n|id('elPostFeed')/form/*[self::a or self::article]\r\n\r\n|id('forum_table')/tbody/tr\r\n|id('ips_Posts')\r\n\r\n|id('bbpress-forums')/descendant::*[@class='bbp-body'][last()=1 or parent::*[starts-with(@id, 'bbp-forum')]]",
+    "nextLink": "//a[@rel='next']|id('bbpress-forums')//span[contains(@class, 'current') and number()>0]/following-sibling::a[1]",
+    "url": "^https?://.*(forum|topic|=search)",
+    "exampleUrl": "https://w3schools.invisionzone.com/forum/45-general/\r\nhttps://w3schools.invisionzone.com/topic/828-introduce-yourself/#elPostFeed\r\n\r\nhttps://www.autohotkey.com/board/forum/48-#forum_table\r\nhttps://www.autohotkey.com/board/topic/36552-ftp-uploading-with-the-help-of-ahk/#ips_Posts\r\n\r\nhttps://www.businesstraveller.com/forum/#bbpress-forums\r\nhttps://www.businesstraveller.com/forums/topic/transferring-between-london-heathrow-and-london-gatwick/#bbpress-forums\r\nhttps://judgeacademy.com/forums/view/topics-freshness/?lang=ja#bbpress-forums\r\n\r\nhttps://www.fountainpennetwork.com/forum/forum/5-inky-thoughts/\r\nhttps://www.autoitscript.com/forum/files/category/1-autoit/?sort_order=DESC&sort_key=file_submitted&num=10&st=50\r\nhttps://idolforums.com/search/?q=lgbt&quick=1"
+  },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "Rodze",
+  "name": "Invision, IP.Board, BBPress",
   "created_at": "2011-01-16T01:02:37+09:00",
-  "updated_at": "2022-05-08T09:45:04+09:00"
+  "updated_at": "2023-01-18T18:39:41+09:00"
 },
 {
   "name": "land.to ranking",
