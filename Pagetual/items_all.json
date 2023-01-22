@@ -1,5 +1,18 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86056",
+  "data": {
+    "pageElement": "//div[2][@class='card border-primary bg-light mb-2']",
+    "nextLink": "//div[1][@class='card-header dayguide']/*/div[@class='prev']/a[2]",
+    "url": "^https?://notestock\\.osa-p\\.net/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "uaa",
+  "name": "notestock",
+  "created_at": "2023-01-21T20:49:47+09:00",
+  "updated_at": "2023-01-21T21:03:03+09:00"
+},
+{
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "data": {
     "insertBefore": "",
@@ -10685,16 +10698,16 @@
 {
   "resource_url": "http://wedata.net/items/81985",
   "data": {
-    "pageElement": "descendant::div[./div[contains(@class,\"box\")]][last()]",
+    "pageElement": "//div[@class=\"page-navi\"]/preceding-sibling::div[1]/div[count(./div)>1]",
     "nextLink": "//link[@rel=\"next\"] | //div[@class=\"page-navi\"]/span/following-sibling::a[1]",
     "url": "^https://omocoro\\.jp/",
-    "exampleUrl": "https://omocoro.jp/rensai/\r\nhttps://omocoro.jp/bros/page/5/\r\nhttps://omocoro.jp/newpost/"
+    "exampleUrl": "https://omocoro.jp/rensai/\r\nhttps://omocoro.jp/bros/page/5/\r\nhttps://omocoro.jp/newpost/\r\nhttps://omocoro.jp/radio/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "jigendaddy_be",
   "name": "オモコロ",
   "created_at": "2018-10-10T07:19:16+09:00",
-  "updated_at": "2022-02-02T20:05:48+09:00"
+  "updated_at": "2023-01-22T01:44:19+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/81984",
