@@ -18,14 +18,14 @@
   "resource_url": "http://wedata.net/items/86056",
   "data": {
     "pageElement": "//div[contains(@role,'main')]",
-    "nextLink": "//div[contains(@class,'dayguide')]/*/a[@rel='prev']",
+    "nextLink": "//div[contains(@class,'dayguide')]/*/*/a[@rel='prev']",
     "url": "^https?://notestock\\.osa-p\\.net/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "uaa",
   "name": "notestock",
   "created_at": "2023-01-21T20:49:47+09:00",
-  "updated_at": "2023-01-24T12:26:47+09:00"
+  "updated_at": "2023-01-26T06:46:08+09:00"
 },
 {
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
