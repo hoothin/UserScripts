@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.1.16.3
+// @version              2023.1.27.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -13407,11 +13407,12 @@ ImgOps | https://imgops.com/#b#`;
                 //收藏相关
                 var collection={
                     getMatched:function(){
-                        return (this.all || this.get())._find(function(value,index){
-                            if(value.src==self.src){
-                                return true;
-                            };
-                        });
+                        let all=this.all || this.get();
+                        for(let i=0;i<all.length;i++){
+                            let v=all[i];
+                            if(v.src==self.src) return [v, i];
+                        }
+                        return null;
                     },
                     check:function(){
                         //从缓存数据中检查。
@@ -17937,14 +17938,14 @@ ImgOps | https://imgops.com/#b#`;
                 var level;
                 var self=this;
                 if(this.zoomOut){//缩小
-                    MagnifierC.zoomRangeR._find(function(value){
+                    MagnifierC.zoomRangeR.find(function(value){
                         if(value < self.zoomLevel){
                             level=value;
                             return true;
                         }
                     })
                 }else{
-                    MagnifierC.zoomRange._find(function(value){
+                    MagnifierC.zoomRange.find(function(value){
                         if(value > self.zoomLevel){
                             level=value;
                             return true;
@@ -18054,7 +18055,7 @@ ImgOps | https://imgops.com/#b#`;
                     uniqueImgWin.remove();
                 }
                 //图片是否已经被打开
-                if(ImgWindowC.all._find(function(iwin){
+                if(ImgWindowC.all.find(function(iwin){
                     if(iwin.src==self.src){
                         iwin.firstOpen();
                         return true;
@@ -19528,14 +19529,14 @@ ImgOps | https://imgops.com/#b#`;
                 var level;
                 var self=this;
                 if(this.zoomOut){//缩小
-                    ImgWindowC.zoomRangeR._find(function(value){
+                    ImgWindowC.zoomRangeR.find(function(value){
                         if(value < self.zoomLevel){
                             level=value;
                             return true;
                         }
                     })
                 }else{
-                    ImgWindowC.zoomRange._find(function(value){
+                    ImgWindowC.zoomRange.find(function(value){
                         if(value > self.zoomLevel){
                             level=value;
                             return true;
@@ -20726,7 +20727,7 @@ ImgOps | https://imgops.com/#b#`;
             start:function(data){
 
                 //读取中的图片,不显示浮动栏,调整读取图标的位置.
-                if(LoadingAnimC.all._find(function(item,index,array){
+                if(LoadingAnimC.all.find(function(item,index,array){
                     if(data.img==item.data.img){
                         return true;
                     };
@@ -20734,7 +20735,7 @@ ImgOps | https://imgops.com/#b#`;
 
 
                 //被放大镜盯上的图片,不要显示浮动栏.
-                if(MagnifierC.all._find(function(item,index,array){
+                if(MagnifierC.all.find(function(item,index,array){
                     if(data.img==item.data.img){
                         return true;
                     };
@@ -21177,7 +21178,7 @@ ImgOps | https://imgops.com/#b#`;
             }
 
             if(!src && !base64Img){//遍历通配规则
-                tprules._find(function(rule,index,array){
+                tprules.find(function(rule,index,array){
                     try{
                         src=rule.call(img,imgPA);
                         if(src){
@@ -21241,13 +21242,11 @@ ImgOps | https://imgops.com/#b#`;
 
         function getMatchedRule() {
             return new MatchedRuleC();
-            /*var rule = siteInfo._find(function(site, index, array) {
+            /*var rule = siteInfo.find(function(site, index, array) {
                 if (site.enabled != false && site.url && toRE(site.url).test(URL)) {
                     return true;
                 }
             });
-
-            rule = rule ? rule[0] : false;
 
             return rule;*/
         }
@@ -21810,7 +21809,7 @@ ImgOps | https://imgops.com/#b#`;
                             }
                         }catch(err){}
                         if(result.type!="rule"){
-                            tprules._find(function(rule,index,array){
+                            tprules.find(function(rule,index,array){
                                 try{
                                     src=rule.call(img);
                                     if(src){
@@ -22934,46 +22933,9 @@ ImgOps | https://imgops.com/#b#`;
 
 
     var arrayFn=(function(){
-        //Array的某些方法对所有的类数组都有效，比如HTMLCollection,NodeList,DOMStringList.....
-
-        //添加一个当函数返回true时，返回[array[index],index]，并且跳出循环的方法
-        //类似做到 for 循环，在满足条件的时候直接break跳出的效果。
-        if(typeof Array.prototype['_find']!='function'){
-            Object.defineProperty(Array.prototype,'_find',{
-                value:function(callback , thisArg){
-                    if (this == null){
-                        throw new TypeError( "this is null or not defined" );
-                    };
-
-                    if(typeof callback != 'function') {
-                        throw new TypeError( callback + " is not a function" );
-                    };
-
-                    var i = 0,
-                        l = this.length,
-                        value,
-                        hasOwnProperty=Object.prototype.hasOwnProperty;
-
-
-                    while(i<l){
-                        if(hasOwnProperty.call(this,i)){
-                            value = this[i];
-                            if(callback.call( thisArg, value, i, this )===true){
-                                return [value,i,this];
-                            };
-                        };
-                        i++;
-                    };
-                },
-                writable:true,
-                enumerable:false,//与原生方法一样不可枚举，维护网页和谐。。。
-                configurable:true,
-            });
-        };
-
         var arrayProto=Array.prototype;
         return {
-            _find:arrayProto._find,
+            find:arrayProto.find,
             slice:arrayProto.slice,
             forEach:arrayProto.forEach,
             some:arrayProto.some,
