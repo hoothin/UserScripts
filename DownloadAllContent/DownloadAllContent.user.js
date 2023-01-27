@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.7.3.17
+// @version      2.7.3.18
 // @description  Fetch and download main content on current page, provide special support for chinese novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -283,7 +283,7 @@
         <div id="txtDownContent">
             <div style="font-size:16px;color:#333333;width:362px;height:110px;position:fixed;left:50%;top:50%;margin-top:-25px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;">
                 <div id="txtDownWords" style="position:absolute;width:275px;height: 90px;max-height: 90%;border: 1px solid #f3f1f1;padding: 8px;border-radius: 10px;overflow: auto;">
-                    Downloading......
+                    Analysing......
                 </div>
                 <div id="txtDownQuit" style="width: 30px;height: 30px;border-radius: 30px;position:absolute;right:2px;top:2px;cursor: pointer;background-color:#ff5a5a;">
                     <span style="height: 30px;line-height: 30px;display:block;color:#FFF;text-align:center;font-size: 12px;font-weight: bold;">╳</span>
@@ -356,7 +356,7 @@
                     url: aTag.href,
                     headers:{
                         referer:aTag.href,
-                        "Content-Type":"text/html;charset="+document.charset,
+                        "Content-Type":"text/html;charset="+document.charset
                     },
                     timeout:15000,
                     overrideMimeType:"text/html;charset="+document.charset,
@@ -396,7 +396,7 @@
                                 insertSigns[targetIndex].push(aEles.length-1);
                             }
                         }
-                        processDoc(curIndex, aTag, doc);
+                        processDoc(curIndex, aTag, doc, (result.status>=400?` status: ${result.status} `:""));
                         let request=downOnce();
                         if(request)curRequests.push(request);
                     },
@@ -405,7 +405,7 @@
                         console.log(e);
                         downIndex++;
                         downNum++;
-                        processDoc(curIndex, aTag, null, ' : NETWORK ERROR '+(e.response||e.responseText));
+                        processDoc(curIndex, aTag, null, ` NETWORK ERROR: '+${(e.response||e.responseText)} `);
                         let request=downOnce();
                         if(request)curRequests.push(request);
                     },
@@ -417,7 +417,7 @@
                         }
                         downIndex++;
                         downNum++;
-                        processDoc(curIndex, aTag, null, ' : TIMEOUT '+aTag.href);
+                        processDoc(curIndex, aTag, null, ` TIMEOUT: '+${aTag.href} `);
                         let request=downOnce();
                         if(request)curRequests.push(request);
                     }
@@ -475,7 +475,7 @@
         var waitForComplete;
         function processDoc(i, aTag, doc, cause){
             let cbFunc=content=>{
-                rCats[i]=(aTag.innerText.replace(/[\r\n\t]/g, "") + "\r\n" + content + (cause || ''));
+                rCats[i]=(aTag.innerText.replace(/[\r\n\t]/g, "") + "\r\n" + (cause || '') + content);
                 curRequests = curRequests.filter(function(e){return e[0]!=i});
                 txtDownContent.style.display="block";
                 txtDownWords.innerHTML=getI18n("downloading",[downNum,(aEles.length-downNum),aTag.innerText]);
@@ -534,6 +534,12 @@
         return nextPage;
     }
 
+    function textNodesUnder(el){
+        var n, a=[], walk=document.createTreeWalker(el,NodeFilter.SHOW_TEXT,null,false);
+        while(n=walk.nextNode()) a.push(n);
+        return a;
+    }
+
     function getPageContent(doc, cb){
         if(!doc)return i18n.error;
         if(processFunc){
@@ -579,19 +585,22 @@
                     item.innerHTML="";
             }
             if(content.childNodes.length>1){
+                let indexItem=0;
                 for(j=0;j<content.childNodes.length;j++){
                     item=content.childNodes[j];
                     if(item.nodeType==1){
-                         for(k=0;k<item.childNodes.length;k++){
-                             var childNode=item.childNodes[k];
-                             if(childNode.nodeType!=3 && !/^(I|A|STRONG|B|FONT|BR)$/.test(childNode.tagName)){
-                                 allSingle=false;
-                                 break;
-                             }
-                         }
+                        if(item.innerText && item.innerText.length<50 && indexReg.test(item.innerText))indexItem++;
+                        for(k=0;k<item.childNodes.length;k++){
+                            var childNode=item.childNodes[k];
+                            if(childNode.nodeType!=3 && !/^(I|A|STRONG|B|FONT|BR)$/.test(childNode.tagName)){
+                                allSingle=false;
+                                break;
+                            }
+                        }
                         if(!allSingle)break;
                     }
                 }
+                if(indexItem>=5)continue;
             }else{
                 allSingle=false;
             }
