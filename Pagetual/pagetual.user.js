@@ -1335,9 +1335,10 @@
                                 isMax = true;
                             }
                         } else {
-                            if (curMaxEle && curMaxEle.offsetTop == curNode.offsetTop) {
+                            if (curMaxEle && curMaxEle.offsetParent == curNode.offsetParent && curMaxEle.offsetTop == curNode.offsetTop) {
                                 if (curMaxArea * 2 > a) continue;
-                            } else isMax = curMaxArea < a;
+                            }
+                            isMax = curMaxArea < a;
                         }
                         if (curMaxEle == null || isMax) {
                             if (h > 0 || !isHori) curHeight = h;
