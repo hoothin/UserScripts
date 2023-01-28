@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86058",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//article[@id]",
+    "nextLink": "//span[contains(concat(' ',@class,' '),' current ')]/following-sibling::a",
+    "url": "^https://soundquest\\.jp/quest/",
+    "exampleUrl": "https://soundquest.jp/quest/intro/history-of-music-theory/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "t_f_m'",
+  "name": "SoundQuest",
+  "created_at": "2023-01-28T00:27:24+09:00",
+  "updated_at": "2023-01-28T00:27:24+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86057",
   "data": {
     "insertBefore": "",
@@ -17,15 +32,16 @@
 {
   "resource_url": "http://wedata.net/items/86056",
   "data": {
-    "pageElement": "//div[contains(@role,'main')]",
-    "nextLink": "//div[contains(@class,'dayguide')]/*/*/a[@rel='prev']",
-    "url": "^https?://notestock\\.osa-p\\.net/"
+    "pageElement": "//div[contains(concat(' ',@role,' '),' main ')]",
+    "nextLink": "//div[contains(concat(' ',@class,' '),' dayguide ')]//a[@class='autopagerize-next']",
+    "url": "^https?://notestock\\.osa-p\\.net/",
+    "exampleUrl": "https://notestock.osa-p.net/@osapon@mstdn.nere9.help/20230126/view"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "uaa",
   "name": "notestock",
   "created_at": "2023-01-21T20:49:47+09:00",
-  "updated_at": "2023-01-26T06:46:08+09:00"
+  "updated_at": "2023-01-28T00:55:14+09:00"
 },
 {
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
