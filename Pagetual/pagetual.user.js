@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.33.38
+// @version      1.9.33.39
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -1141,9 +1141,24 @@
                 let rule = this.smartRules[i];
                 if (!rule || !rule.url) continue;
                 if (rule.singleUrl) {
-                    if (location.origin + location.pathname == rule.url) {
+                    let singleUrl = location.origin + location.pathname;
+                    if (singleUrl == rule.url) {
                         setRule(rule);
-                        return;
+                        callback = () => {
+                            if (self.curSiteRule && !self.curSiteRule.singleUrl) {
+                                self.smartRules = self.smartRules.filter(item => {return item && item.url != singleUrl});
+                                storage.setItem("smartRules", self.smartRules);
+                                if (self.curSiteRule.url.length > 13) {
+                                    self.hpRules = self.hpRules.filter(item => {return item && item.url != self.curSiteRule.url});
+                                    self.hpRules.unshift(self.curSiteRule);
+                                    if (self.hpRules.length > 30) {
+                                        self.hpRules.pop();
+                                    }
+                                    storage.setItem("hpRules", self.hpRules);
+                                }
+                            }
+                        };
+                        break;
                     }
                     continue;
                 }
@@ -5027,7 +5042,7 @@
             let parentStyle=_unsafeWindow.getComputedStyle(example.parentNode);
             let parentWidth=example.parentNode.offsetWidth||parseInt(parentStyle.width);
             pageBar.style.width=parentWidth-parseInt(parentStyle.paddingLeft)-parseInt(parentStyle.paddingRight)-10+"px";
-            pageBar.style.margin='0 5px 10px';
+            pageBar.style.margin='10px 5px';
             if(parentStyle.display=="grid" || parentStyle.display=="inline-grid"){
                 pageBar.style.gridColumnStart=1;
                 pageBar.style.gridColumnEnd=1+parseInt(example.parentNode.offsetWidth/example.offsetWidth);
