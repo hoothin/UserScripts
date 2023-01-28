@@ -41,7 +41,7 @@
         "replaceElement": ".mypage",
         "pageBar": 0,
         "sideController": true,
-        "css": ".pagetual_pageBar{margin-top:-10px!important;margin-bottom:10px!important}#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
     },
     {
         "name": "Manga Koma 閱讀",
@@ -117,11 +117,11 @@
         "url": "^https://(www|tw|cn)\\.(webmota|baozimh)\\.com/comic/chapter/[^/]+/\\w+\\.html",
         "history": 2,
         "pinUrl": true,
-        "init": "function geAll(e){return document.querySelectorAll(e)}let imgs=geAll('.comic-contain amp-img');let imgData=[];for(let i=0;i<imgs.length;i++){imgData.push(imgs[i].getAttribute('src'))};let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img class=\"comic-contain__item\"src='${imgData[i]}'>`};geAll('.comic-contain')[0].innerHTML=_img",
+        "init": "function geAll(e){return document.querySelectorAll(e)}let _img='';geAll('.comic-contain amp-img').forEach(e=>{_img+=`<img class=\"comic-contain__item\"src=\"${e.getAttribute('src')}\">`});geAll('.comic-contain')[0].innerHTML=_img",
         "nextLink": "#next-chapter",
         "pageElement": ".comic-contain",
         "replaceElement": "//head/title | //span[@class='title'] | //div[@class='comic-chapter']/div[@class='next_chapter'] | //div[@class='bottom-bar']",
-        "pageInit": "function geAll(e){return doc.querySelectorAll(e)}let imgs=geAll('.comic-contain amp-img');let imgData=[];for(let i=0;i<imgs.length;i++){imgData.push(imgs[i].getAttribute('src'))};let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img class=\"comic-contain__item\"src='${imgData[i]}'>`};geAll('.comic-contain')[0].innerHTML=_img",
+        "pageInit": "function geAll(e){return doc.querySelectorAll(e)}let _img='';geAll('.comic-contain amp-img').forEach(e=>{_img+=`<img class=\"comic-contain__item\"src=\"${e.getAttribute('src')}\">`});geAll('.comic-contain')[0].innerHTML=_img",
         "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('.pagetual_pageBar a').forEach(a =>{if(/\\/\\d+_\\d+_\\d+\\.html$/.test(a.href))a.parentNode.remove()});setTimeout(()=>{let c=geAll('.comic-contain');if(c.length>10){c[0].remove()}geAll('.pagetual_pageBar+.pagetual_pageBar').forEach(e =>{e.previousElementSibling.remove()})},200)",
         "pageBarText": "let t=doc.querySelector('span.title');if(t)return t.innerText",
         "rate": 3,
@@ -151,7 +151,7 @@
         "replaceElement": "nav.ct-pagination,.paging-navigation",
         "pageBar": 0,
         "sideController": true,
-        "css": ".pagetual_pageBar{margin-top:-10px!important;margin-bottom:10px!important}#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
     },
     {
         "name": "GODA漫画  - 閱讀",
@@ -175,7 +175,7 @@
         "replaceElement": "nav.ct-pagination,.paging-navigation",
         "pageBar": 0,
         "sideController": true,
-        "css": ".pagetual_pageBar{margin-top:-20px!important;margin-bottom:0px!important}#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:3px;margin-bottom:5px}"
     },
     {
         "name": "COCOMANGA - 閱讀 - 雙擊前往下一章，鍵盤左右鍵上下章",
@@ -623,7 +623,7 @@
         "replaceElement": "head>title,#mangaTitle",
         "pageInit": "function ge(e){return doc.querySelector(e)}let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/mhInfo/)>-1).innerHTML.trim().slice(11, -1);let json=JSON.parse(code);let host=ge('#manga img').src.match(/^https?:\\/\\/[^/]+/)[0];let _img='';for(let i=0;i<json.images.length;i++){let imgSrc=host+json.path+json.images[i];_img+=`<img src='${imgSrc}'>`};ge('#manga').innerHTML=_img;",
         "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('#manga');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
-        "pageBarText": "let t=doc.querySelector('#mangaTitle');if(t)return t.innerHTML.replace(/.+<.+>/g,'')",
+        "pageBarText": "let t=doc.querySelector('#mangaTitle');if(t)return t.innerHTML.replace(/.+<.+>/g,'').trim()",
         "css": ".action-list li{width:50%!important}#action>ul>li:nth-child(n+2):nth-child(-n+3),.manga-page,[id^='jusha']{display:none!important}.manga-box img{border-top:0px!important;border-bottom:0px!important}"
     },
     {
@@ -2053,7 +2053,7 @@
     {
         "name": "kickasss",
         "example": "https://kickasss.to/",
-        "url": "^https?://kickasss\\.",
+        "url": "^https?://(kickasss|katcr)\\.",
         "nextLink": "a.active+a",
         "pageElement": "table.data.frontPageWidget>tbody>tr:not(.firstr)",
         "replaceElement": ".pages",
@@ -2342,8 +2342,9 @@
     },
     {
         "name": "厂长资源",
-        "example": "https://www.czspp.com/",
-        "url": "^https?://www\\.czspp\\.com/",
+        "example": "https://czzy01.com/",
+        "url": "^https?://[^/]+/",
+        "include": "//title[contains(text(),'厂长资源')]",
         "nextLink": ".current+a",
         "pageElement": ".bt_img>ul",
         "replaceElement": ".pagenavi_txt",
@@ -2408,7 +2409,7 @@
         "replaceElement": "#pagination",
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:3px;margin-bottom:5px}"
     },
     {
         "name": "小众软件",
@@ -2547,7 +2548,7 @@
         "replaceElement": ".pagination",
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:3px;margin-bottom:5px}"
     },
     {
         "name": "億破姐&電腦系統吧",
@@ -2571,7 +2572,7 @@
         "pageInit": "doc.querySelectorAll('a.img-holder').forEach(a=>{a.style.backgroundImage=`url('${a.dataset.src}')`;a.classList.add('b-loaded');a.removeAttribute('data-src')})",
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:3px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
     },
     {
         "name": "KaranPc",
@@ -2583,7 +2584,7 @@
         "replaceElement": "#nav-below",
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:3px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
     },
     {
         "name": "Blogger",
@@ -3258,7 +3259,7 @@
     {
         "name": "nhentai - 閱讀",
         "example": "https://nhentai.net/g/422938/1/",
-        "url": "^https?://nhentai\\.[a-z]{2,3}/g/\\d+/\\d+/?",
+        "url": "^https?://n(ya)?hentai\\.(net|to|xxx|red)/g/\\d+/\\d+/?",
         "init": "let a = document.querySelector('#image-container>a');a.outerHTML=a.innerHTML;",
         "nextLink": "a.next",
         "stopSign": [
@@ -3271,10 +3272,10 @@
                 "(\\d+)"
             ]
         ],
-        "pageElement": "#content>img,#image-container,.fit-horizontal",
-        "replaceElement": ".reader-pagination,.pagination",
+        "pageElement": "#content>img,.container>img,#image-container",
+        "replaceElement": ".reader-pagination,span.current",
         "pageInit": "let a = doc.querySelector('#image-container>a');a.outerHTML=a.innerHTML;",
-        "pageAction": "document.querySelectorAll('#image-container').forEach(e=>{e.outerHTML=e.innerHTML})",
+        "pageAction": "document.querySelectorAll('#image-container').forEach(e=>{e.outerHTML=e.innerHTML});document.querySelectorAll('img').forEach(e=>{e.src=e.src})",
         "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0",
@@ -3283,9 +3284,9 @@
     {
         "name": "nhentai - 圖片清單載入大圖",
         "example": "https://nhentai.net/g/438743/",
-        "url": "^https?://nhentai\\.[a-z]{2,3}/g/\\d+/?$",
+        "url": "^https?://n(ya)?hentai\\.(net|to|xxx|red)/g/\\d+/?$",
         "include": "#thumbnail-container",
-        "init": "let t=document.querySelector('.thumbs');if(t){t.removeAttribute('style');}function get(url){return fetch(url).then(res=>res.text()).then((res)=>{let doc=new DOMParser().parseFromString(res,'text/html');let imgRes=doc.querySelector('#image-container img');if(imgRes){return imgRes.outerHTML}else{location.reload()}})}let imgs=document.querySelectorAll('.gallerythumb');for(let i=0;i<imgs.length;i++){setTimeout(async()=>{imgs[i].innerHTML=await get(imgs[i].href)},i*333)}",
+        "init": "let t=document.querySelector('.thumbs[style]');if(t){t.removeAttribute('style')}function get(url){return fetch(url).then(res=>res.text()).then((res)=>{let doc=new DOMParser().parseFromString(res,'text/html');let imgRes=doc.querySelector('#image-container img');if(imgRes){setTimeout(()=>{document.querySelectorAll('img').forEach(e=>{e.src=e.src})},2000);return imgRes.outerHTML}else{location.reload()}})}let imgs=document.querySelectorAll('.gallerythumb');for(let i=0;i<imgs.length;i++){setTimeout(async()=>{imgs[i].innerHTML=await get(imgs[i].href)},i*333)}",
         "nextLink": "0",
         "autoClick": "#show-all-images-button",
         "css": ".thumb-container{width:100%!important;margin:0px!important}.thumbs img{margin:-1px!important;padding:0px!important;border-radius:0!important}"
@@ -3293,7 +3294,7 @@
     {
         "name": "nhentai",
         "example": "https://nhentai.net/",
-        "url": "^https?://nhentai\\.[a-z]{2,3}/(search|\\?page=|tags|artists|characters|parodies|groups)?",
+        "url": "^https?://n(ya)?hentai\\.(net|to|xxx|red)/(search|\\?page=|tags|artists|characters|parodies|groups)?",
         "nextLink": "a.next,a.current+a,a.last",
         "pageElement": ".gallery,#tag-container",
         "replaceElement": ".pagination",
@@ -3514,7 +3515,7 @@
         "example": "https://www.6evu.com/30131.html",
         "url": "^https?://www\\.6evu\\.com/\\d+\\.html",
         "nextLink": ".pagelist>span+a",
-        "init": "function geAll(e){return document.querySelectorAll(e)}let imgs=geAll('#post_content img');let _img='';for(let i=0;i<imgs.length;i++){_img+=imgs[i].outerHTML};geAll('#post_content')[0].innerHTML=_img;",
+        "init": "function geAll(e){return document.querySelectorAll(e)}let _img='';geAll('#post_content img').forEach(e=>{_img+=e.outerHTML});geAll('#post_content')[0].innerHTML=_img;",
         "pageElement": "#post_content img",
         "replaceElement": ".pagelist",
         "pageBar": 0,
@@ -3802,7 +3803,7 @@
         "sideController": true,
         "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:4px;margin-bottom:5px}.post-item {height: 370px;min-height: 370px;margin-bottom:0px!important}",
         "initRun": 1,
-        "autoLoadNum": 1
+        "autoLoadNum": 4
     },
     {
         "name": "Yellow Fever",
@@ -3814,7 +3815,7 @@
         "rate": 3,
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:3px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
     },
     {
         "name": "ASD ASFD CN",
@@ -3825,7 +3826,7 @@
         "replaceElement": ".navigation",
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:3px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
     },
     {
         "name": "NudeBird",
@@ -3873,11 +3874,9 @@
         "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
     },
     {
-        "name": "Nlegs - 預覽圖清單 - 載入大圖",
+        "name": "Nlegs - 預覽圖清單",
         "example": "https://www.nlegs.com/girls/2022/10/01/28219.html",
         "url": "^https?://www\\.nlegs\\.com/girls/[^.]+\\.html",
-        "pinUrl": true,
-        "init": "function get(url){return new Promise((resolve)=>{let xhr=new XMLHttpRequest();xhr.responseType='document';xhr.open('GET',url);xhr.onload=function(){if(xhr.status==200){resolve(xhr.response)}};xhr.send(null)}).then((res)=>{let imgRes=res.querySelector('.img-res');if(imgRes){return imgRes.outerHTML}else{location.reload()}})}let loop=setInterval(()=>{let last=document.querySelector('#dnav li.active:last-child');if(last){clearInterval(loop);let imgs=document.querySelectorAll('.thumbnail');for(let i=0;i<imgs.length;i++){setTimeout(async()=>{imgs[i].parentNode.outerHTML=await get(imgs[i].href)},i*2000)}}},100)",
         "nextLink": "li.active+li>a",
         "pageElement": "//div[div/a/@class='thumbnail']",
         "replaceElement": "#dnav",
@@ -3997,7 +3996,7 @@
         "replaceElement": "nav[aria-label='Pagination']",
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:4px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
     },
     {
         "name": "4KUP - 圖片清單載入大圖",
@@ -4017,7 +4016,7 @@
         "replaceElement": "#blog-pager",
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:4px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
     },
     {
         "name": "Goddess247 - 圖片",
@@ -4102,7 +4101,7 @@
         "wait": 500,
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:3px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
     },
     {
         "name": "BAOBUA.COM - 影片分類",
@@ -4120,7 +4119,7 @@
         "rate": 3,
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:3px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
     },
     {
         "name": "BAOBUA.COM - 圖片分類",
@@ -4137,7 +4136,7 @@
         "rate": 3,
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:3px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
     },
     {
         "name": "BaoBua.Com - 看圖",
@@ -6482,7 +6481,7 @@
         "pageAction": "eval(document.querySelector('.gray-block>script').innerHTML)",
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:3px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
     },
     {
         "name": "Femdom",
@@ -6652,7 +6651,7 @@
     {
         "name": "Supjav 自動點擊SERVER TV播放按鈕",
         "url": "^https?://supjav\\.com/(zh/|ja/)?\\d+\\.html",
-        "init": "let loop=setInterval(()=>{let play=document.querySelector('#vserver.play-button');if(play){play.click();clearInterval(loop)}},100)",
+        "init": "let loop=setInterval(()=>{let play=document.querySelector('#vserver.play-button');if(play){play.click();clearInterval(loop)}},100);let t=document.querySelector('title');t.innerText=t.innerText.replace(/-\\sSupjav.com.+/,'').trim()",
         "pinUrl": true
     },
     {
@@ -6664,7 +6663,7 @@
         "replaceElement": ".pagination",
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:3px;margin-bottom:5px}"
     },
     {
         "name": "加勒逼A片網",
@@ -6782,7 +6781,7 @@
         "replaceElement": ".pagination",
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:3px;margin-bottom:5px}"
     },
     {
         "name": "javbangers.com - 相冊圖片清單載入全部大圖",
@@ -7087,8 +7086,8 @@
         "autoLoadNum": "0"
     },
     {
-        "name": "小黃書 - 圖片清單瀏覽 - 翻頁完後加載所有原圖可透過Picviewer CE+打包下載",
-        "example": "https://tw.xchina.co/photo/id-6311c6080f9a5.html，https://8se.me/photo/id-63938c1972fde.html",
+        "name": "小黃書 - 圖片清單瀏覽 - 翻頁完後添加顯示所有大圖按鈕",
+        "example": "https://tw.xchina.co/photo/id-63d02a8cdaf75.html，https://8se.me/photo/id-63938c1972fde.html",
         "url": "^https?://([a-z-]{2}\\.)?(xchina|8se)\\.(co|me|pro)/photo/",
         "include": "img.cr_only",
         "pinUrl": true,
@@ -7096,15 +7095,15 @@
         "waitElement": [
             "img.cr_only"
         ],
-        "init": "function ge(e){return document.querySelector(e)}let bs = ge('body[style]');if(bs)bs.removeAttribute('style');let p=ge('.info').textContent.match(/\\d+/)[0];if(p<18){document.querySelectorAll('img.cr_only').forEach(img=>{img.src=img.src.replace('_600x0','')});let imgs=document.querySelectorAll('img.cr_only');let imgData=[];let fa=[];for(let i=0;i<imgs.length;i++){imgData.push(imgs[i].getAttribute('src'));fa.push(imgs[i].parentNode.parentNode.getAttribute('href'))};let aimg='';for(let i=0;i<imgData.length;i++){aimg+=`<a href='${fa[i]}'target=\"_blank\"><img src='${imgData[i]}'></a>`};ge('.photos').outerHTML=aimg;let p=ge('#pagetual-preload');if(p)p.remove()}",
+        "init": "function ge(e){return document.querySelector(e)}let bs=ge('body[style]');if(bs)bs.removeAttribute('style');let loop=setInterval(()=>{let last=ge(`a[current='true']+a.next`);let p=ge('.info').textContent.match(/\\d+/)[0];if(last||p<18){clearInterval(loop);let photos=ge('.photos').parentNode;let imgBox=document.createElement('div');imgBox.id='PagetualBox';imgBox.style='display:none';photos.insertBefore(imgBox,photos.firstChild);let showAllImgButton=document.createElement('div');showAllImgButton.id='showAllImgButton';showAllImgButton.innerText='顯示所有大圖';showAllImgButton.style='width: 160px;height: 30px;font-size: 20px;font-weight:bold;line-height:30px;text-align:center;margin:5px auto 10px;box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);border-radius:15px;';showAllImgButton.addEventListener('click',()=>{let b=ge('#PagetualBox');let s=ge('#showAllImgButton');if(b.style.display=='none'){b.style.display='block';s.innerText='關閉顯示大圖';if(!ge('#PagetualBox>img')){let i=0;document.querySelectorAll('img.cr_only').forEach(e=>{setTimeout(()=>{b.insertAdjacentHTML('beforeend',`<img src='${e.src.replace('_600x0', '')}'>`)},i*234);i++})}}else{b.style.display='none';s.innerText='顯示所有大圖'}});photos.insertBefore(showAllImgButton,photos.firstChild);let p=ge('#pagetual-preload');if(p)p.remove()}},1000)",
         "nextLink": "a.next",
         "pageElement": ".photos > a",
         "replaceElement": [
             "div.article>div.pager:first-child",
             "div.article>div.pager:last-child"
         ],
-        "css": ".photos>div.item,.jquery-modal.blocker.current,.slider-ad,.article.ad,.pager>.tips,body>footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords),.photoMask,.banner_ad{display: none!important;}.pagetual_pageBar{margin-top:30px!important;margin-bottom:0px!important}.body .article:not(.ad)>a>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}",
-        "pageAction": "function ge(e){return document.querySelector(e)}document.querySelectorAll('img.cr_only').forEach(img=>{img.src=img.src.replace('_600x0','')});setTimeout(()=>{let last=ge(`a[current='true']+a.next`);if(last){let imgs=document.querySelectorAll('img.cr_only');let imgData=[];let fa=[];for(let i=0;i<imgs.length;i++){imgData.push(imgs[i].getAttribute('src'));fa.push(imgs[i].parentNode.parentNode.getAttribute('href'))};let aimg='';for(let i=0;i<imgData.length;i++){aimg+=`<a href='${fa[i]}'target=\"_blank\"><img src='${imgData[i]}'></a>`};ge('.photos').outerHTML= aimg;let p=ge('#pagetual-preload');if(p)p.remove()}},1000)",
+        "css": ".photos>div.item,.jquery-modal.blocker.current,.slider-ad,.article.ad,.pager>.tips,body>footer~*:not([id^='pv-']):not([class^='pv-']):not(.pagetual_tipsWords),.photoMask,.banner_ad{display: none!important;}",
+        "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
     },
@@ -7148,7 +7147,7 @@
         "replaceElement": ".pag>.pagination-site",
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:3px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
     },
     {
         "name": "女神研究所",
@@ -7212,7 +7211,7 @@
         "example": "https://myjkwd.com/e/action/ShowInfo.php?classid=1&id=23726",
         "url": "^https?://myjkwd\\.com/e/action/ShowInfo\\.php",
         "pinUrl": true,
-        "init": "function ge(e){return document.querySelector(e)}let e=ge('.entry');e.innerHTML=e.innerHTML.replace(`\"&gt;`,'');function get(url){return new Promise((resolve)=>{let xhr=new XMLHttpRequest();xhr.responseType='document';xhr.open('GET',url);xhr.onload=function(){if(xhr.status==200){resolve(xhr.response)}};xhr.send(null)}).then((res)=>{let img=res.querySelector('.entry img');ge('.entry img').parentNode.appendChild(img)})}let max=ge('.pageLink>a>b').innerText;for(let i=1;i<max;i++){let link=location.href+'&page='+i;setTimeout(()=>{get(link)},i*200)}let loop=setInterval(()=>{let imgs=document.querySelectorAll('.entry img');if(imgs.length==max){clearInterval(loop);let over=document.createElement('p');over.innerText='图片已全部爬取完毕';over.style='font-size:24px;height: 40px;line-height: 40px;text-align: center;margin: 10px auto;';ge('.entry img').parentNode.appendChild(over)}},1000)",
+        "init": "function ge(e){return document.querySelector(e)}let entry=ge('.entry');entry.innerHTML=entry.innerHTML.replace(`\"&gt;`,'');function get(url,p,max){return new Promise((resolve)=>{let xhr=new XMLHttpRequest();xhr.responseType='document';xhr.open('GET',url);xhr.onload=function(){if(xhr.status==200){resolve(xhr.response)}};xhr.send(null)}).then((res)=>{let img=res.querySelector('.entry img');ge('.entry img').parentNode.appendChild(img);if(p==max-1){let loop=setInterval(()=>{if(document.querySelectorAll('.entry img').length==max){clearInterval(loop);let over=document.createElement('p');over.innerText='图片已全部爬取完毕';over.style='font-size:24px;height: 40px;line-height: 40px;text-align: center;margin: 10px auto;';ge('.entry img').parentNode.appendChild(over)}},1000)}})}let max=ge('.pageLink>a>b').innerText;for(let i=1;i<max;i++){let link=location.href+'&page='+i;setTimeout(()=>{get(link,i,max)},i*500)}",
         "nextLink": "//div[@class='nextinfo']/p[contains(text(),'上一')]/a",
         "manualMode": true,
         "css": "aside.side,.pageLink{display:none!important;}.main-content{margin-left:0px!important;}"
@@ -7276,7 +7275,7 @@
         "autoLoadNum": 4,
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:4px;margin-bottom:5px}"
     },
     {
         "name": "BOOK☆WALKER TW",
@@ -7289,7 +7288,7 @@
         "autoLoadNum": 2,
         "pageBar": 0,
         "sideController": true,
-        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:5px;margin-bottom:5px}"
+        "css": "#pagetual-sideController-top,#pagetual-sideController-bottom,#pagetual-sideController-pre,#pagetual-sideController-next{display:none!important}#pagetual-sideController-move{margin-top:4px;margin-bottom:5px}"
     },
     {
         "name": "BOOK☆WALKER JP - 手機版",
