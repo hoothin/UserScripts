@@ -9,8 +9,8 @@
 // @description:en  Tools for jandan.net
 // @description:zh-TW  為煎蛋jandan.net提供左右方向鍵快捷翻頁、上下方向鍵快捷切圖、鼠標懸停顯示大圖、屏蔽指定用戶發言等功能
 // @author       hoothin
-// @include      http*://jandan.net/*
-// @include      http*://i.jandan.net/*
+// @match        http*://jandan.net/*
+// @match        http*://i.jandan.net/*
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_deleteValue
@@ -403,10 +403,18 @@
         }else{
             top-=imgHeight;
         }
-        if(left+imgWidth>document.documentElement.clientWidth){
-            left=document.documentElement.clientWidth-imgWidth;
+        if(left>document.documentElement.clientWidth/2){
+            if(left+imgWidth>document.documentElement.clientWidth){
+                left=document.documentElement.clientWidth-imgWidth;
+            }
+            left+=10;
+        }else{
+            left=left-imgWidth;
+            if(left<0){
+                left=0;
+            }else left-=10;
         }
-        bigImg.style.left=left+10+"px";
+        bigImg.style.left=left+"px";
         bigImg.style.top=top+"px";
     }
     GM_addStyle(`
