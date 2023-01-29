@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.33.39
+// @version      1.9.33.40
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -898,7 +898,7 @@
                 let result = {
                     name:item.name,
                     from:from,
-                    action:item.data.forceIframe=="true"?1:0,
+                    action:item.data.forceIframe=="true"?1:undefined,
                     url:item.data.url,
                     pageElement:item.data.pageElement,
                     nextLink:item.data.nextLink,
@@ -1179,9 +1179,11 @@
                         if(checkRule(rule))return;
                     }
                     if(end>=self.rules.length){
-                        self.curSiteRule={};
-                        self.curSiteRule.url=location.origin+location.pathname;
-                        self.curSiteRule.singleUrl=true;
+                        if (!self.curSiteRule.singleUrl) {
+                            self.curSiteRule={};
+                            self.curSiteRule.url=location.origin+location.pathname;
+                            self.curSiteRule.singleUrl=true;
+                        }
                         callback();
                         return;
                     }else{
@@ -1314,7 +1316,6 @@
                             break;
                         }
                     }
-                    let hasSameClass = false;
                     let articleNum = 0;
                     for (i = 0; i < ele.children.length; i++) {
                         let curNode = ele.children[i];
@@ -1362,16 +1363,7 @@
                             curMaxEle = curNode;
                         }
                     }
-                    if (curMaxEle) {
-                        for(i = 0; i < ele.children.length; i++) {
-                            let curNode = ele.children[i];
-                            if (curMaxEle != curNode && curNode.className && curNode.style.display !== 'none' && curMaxEle.className == curNode.className && curMaxEle.tagName == curNode.tagName){
-                                hasSameClass = true;
-                                break;
-                            }
-                        }
-                    }
-                    if (curMaxEle && !hasSameClass && (isHori || curHeight > maxHeight || (needCheckNext && curHeight > windowHeight && ele.contains(self.initNext)))) {
+                    if (curMaxEle && (isHori || curHeight > maxHeight || (needCheckNext && curHeight > windowHeight && ele.contains(self.initNext)))) {
                         return checkElement(curMaxEle);
                     }
                     if (ele.parentNode.children.length == 1 && curWin.getComputedStyle(ele.parentNode).float == 'none')ele=ele.parentNode;
@@ -5502,7 +5494,7 @@
                         callback(iframeDoc, eles);
                     }
                 }else{
-                    if (times % 5 === 1) {
+                    if (times % 10 === 1) {
                         emuClick(nextLink);
                     }
                     setTimeout(()=>{
