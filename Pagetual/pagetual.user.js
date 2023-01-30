@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.33.40
+// @version      1.9.33.41
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -2442,6 +2442,7 @@
              }
              #pagetual-sideController * {
                  font-weight: bold;
+                 font-family: arial;
                  font-style: normal;
                  font-size: 20px!important;
                  line-height: normal;
@@ -2541,9 +2542,9 @@
                 if (moving) {
                     let windowHeight=window.innerHeight || document.documentElement.clientHeight;
                     let windowWidth=window.innerWidth || document.documentElement.clientWidth;
-                    initX = parseInt(e.clientX / windowWidth * 100);
-                    initY = parseInt(e.clientY / windowHeight * 100);
-                    this.frame.style.top = `calc(${initY}% - 70px)`;
+                    initX = e.clientX / windowWidth * 100;
+                    initY = e.clientY / windowHeight * 100;
+                    this.frame.style.top = `calc(${initY}% - 80px)`;
                     this.frame.style.left = `calc(${initX}% - 5px)`;
                 } else if (Math.abs(e.clientX - initX) + Math.abs(e.clientY - initY) > 20) {
                     moving = true;
@@ -2553,7 +2554,7 @@
                 document.removeEventListener("mousemove", mouseMoveHandler, true);
                 document.removeEventListener("mouseup", mouseUpHandler, true);
                 if (moving) {
-                    rulesData.sideControllerPos = {x: initX, y: initY};
+                    rulesData.sideControllerPos = {x: parseInt(initX), y: parseInt(initY)};
                     storage.setItem("rulesData", rulesData);
                 }
             };
@@ -2568,7 +2569,7 @@
 
             this.frame = frame;
             if (rulesData.sideControllerPos) {
-                this.frame.style.top = `calc(${rulesData.sideControllerPos.y}% - 70px)`;
+                this.frame.style.top = `calc(${rulesData.sideControllerPos.y}% - 80px)`;
                 this.frame.style.left = `calc(${rulesData.sideControllerPos.x}% - 5px)`;
             }
         }
@@ -4198,7 +4199,7 @@
                         }
                     }
                 }
-                if(rulesData.autoLoadNum){
+                if(rulesData.autoLoadNum && rulesData.initRun){
                     autoLoadNum=parseInt(rulesData.autoLoadNum);
                 }
                 enableDebug=rulesData.enableDebug;
