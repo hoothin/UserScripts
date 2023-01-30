@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.54.11
+// @version      1.6.6.54.12
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -339,7 +339,7 @@
             openInNewTab: true,
             sites: [ {
                 name: "谷歌搜图",
-                url: "https://www.google.com/searchbyimage?image_url=%t"
+                url: "https://www.google.com/searchbyimage?sbisrc=cr_1_0_0&image_url=%T"
             }, {
                 name: "Yandex搜图",
                 url: "https://yandex.com/images/search?source=collections&rpt=imageview&url=%t"
@@ -3972,8 +3972,12 @@
             searchAuto(index, e) {
                 if (!index) index = 0;
                 let firstType = this.autoGetFirstType();
-                let targetSite = firstType.querySelector(`a.search-jumper-btn:nth-of-type(${index + 1})`);
-                this.searchBySiteName(targetSite.dataset.name, e);
+                if (!firstType) return;
+                let targetSites = firstType.querySelectorAll('a.search-jumper-btn:not(.notmatch)');
+                if (index < targetSites.length) {
+                    let targetSite = targetSites[index];
+                    this.searchBySiteName(targetSite.dataset.name, e);
+                }
             }
 
             setNav(enable, noSave) {
@@ -8051,7 +8055,7 @@
             if (location.href.indexOf(configPage) === 0) {
                 return true;
             }
-            if (location.hostname === "localhost" && document.title === "SearchJumper Settings") {
+            if ((location.hostname === "localhost" || location.href.indexOf("SearchJumper") != -1) && document.title === "SearchJumper Settings") {
                 return true;
             }
             return false;
