@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.33.42
+// @version      1.9.33.43
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -1643,7 +1643,7 @@
                             }
                         }
                         if(!next3){
-                            if(innerText=="Next" || innerText=="next" || innerText=="&gt;" || innerText=="▶" || innerText==">" || innerText=="›" || innerText=="→"){
+                            if(innerText=="Next" || innerText=="next" || innerText=="&gt;" || innerText=="▶" || innerText==">" || innerText=="›" || innerText=="→" || innerText=="❯"){
                                 if(isJs){
                                     if(!nextJs3)nextJs3=aTag;
                                 }else{
@@ -4847,7 +4847,7 @@
 
     function getLoadMore(doc) {
         if (ruleParser.curSiteRule.loadMore === "") return null;
-        let btnSel = ruleParser.curSiteRule.loadMore || ".LoadMore,.load-more,.button-show-more,button[data-testid='more-results-button']", loadmoreBtn;
+        let btnSel = ruleParser.curSiteRule.loadMore || ".LoadMore,.load-more,.button-show-more,button[data-testid='more-results-button'],#btn_preview_remain", loadmoreBtn;
         if (btnSel) {
             loadmoreBtn = getElement(btnSel, doc);
         }
