@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.54.12
+// @version      1.6.6.54.13
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -5704,6 +5704,9 @@
                     } else if (param[1] === 'click' && param[0].indexOf('@') === 0) {
                         clicked = true;
                         await emuClick(param[0].substr(1));
+                    } else if (param[0] === '@call') {
+                        let func = window[param[1]] || Function('"use strict";' + param[1]);
+                        if (func) await func();
                     } else {
                         if (!localKeywords) localKeywords = param[1];
                         await emuInput(param[0], param[1]);
@@ -6108,6 +6111,11 @@
                                 let click = pair.slice(6, pair.length - 1);
                                 if (click) {
                                     postParams.push(['@click', click.replace(/\\([\=&])/g, "$1").trim()]);
+                                }
+                            } else if (pair.startsWith("call(") && pair.endsWith(')')) {
+                                let func = pair.slice(5, pair.length - 1);
+                                if (func) {
+                                    postParams.push(['@call', func.replace(/\\([\=&])/g, "$1").trim()]);
                                 }
                             } else if (/^sleep\(\d+\)$/.test(pair)) {
                                 let sleep = pair.match(/sleep\((.*)\)/);
