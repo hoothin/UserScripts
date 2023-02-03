@@ -3429,16 +3429,16 @@
 {
   "resource_url": "http://wedata.net/items/85724",
   "data": {
-    "pageElement": "//*[./h3][not(//h4)]|//*[./h4]",
+    "pageElement": "descendant::div[contains(@class,'bgc_fff')][1][not(.//div[contains(@class,'page')])]/div|descendant::div[contains(@class,'bgc_fff')][1]//div[contains(@class,'page')]/preceding-sibling::*",
     "nextLink": "//li[./span]/following-sibling::li[1]/a",
     "url": "^https://tvfan\\.kyodo\\.co\\.jp/",
-    "exampleUrl": "https://tvfan.kyodo.co.jp/feature-interview/interview https://tvfan.kyodo.co.jp/feature-interview/interview/1291767"
+    "exampleUrl": "https://tvfan.kyodo.co.jp/feature-interview/interview\r\nhttps://tvfan.kyodo.co.jp/tag/%e6%ba%80%e5%b3%b6%e3%81%b2%e3%81%8b%e3%82%8a\r\nhttps://tvfan.kyodo.co.jp/feature-interview/interview/1291767\r\nhttps://tvfan.kyodo.co.jp/feature-interview/column/week-movie-c"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "kenzou_ogawa2",
   "name": "エンタメOVO（オーヴォ）",
   "created_at": "2021-10-03T20:07:28+09:00",
-  "updated_at": "2021-10-03T20:28:42+09:00"
+  "updated_at": "2023-02-03T10:02:46+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85723",
