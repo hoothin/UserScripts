@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.33.43
+// @version      1.9.33.44
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -1477,22 +1477,28 @@
             }
             let canSave=false;//發現頁碼選擇器在其他頁對不上，還是別保存了
             let url = this.curUrl.replace("index.php?","?");
-            let _url=url.replace(/\.s?html?$/i,"");
-            let pageNum=1,preStr="",afterStr="";
-            let pageMatch1=url.match(/(.*[a-z\/\-_](?:p|page)?\/?)(\d+)(\.s?html?$|\/?$)/i);
-            let pageMatch2=url.match(/(.*[\?&]p(?:age)?=)(\d+)($|[#&].*)/i);
-            if(pageMatch1){
-                preStr=pageMatch1[1];
-                pageNum=parseInt(pageMatch1[2]);
-                afterStr=pageMatch1[3];
+            let _url = url.replace(/\.s?html?$/i,"");
+            let pageNum = 1,preStr = "",afterStr = "";
+            let pageTwoReg = /^[\/\?&]?[_-]?(p|page)?=?\/?2(\/|\?|&|$)/i;
+            let pageMatch1 = url.match(/(.*[a-z\/\-_](?:p|page)?\/?)(\d+)(\.s?html?$|\/?$)/i);
+            let pageMatch2 = url.match(/(.*[\?&]p(?:age)?=)(\d+)($|[#&].*)/i);
+            if (pageMatch1) {
+                preStr = pageMatch1[1];
+                pageNum = parseInt(pageMatch1[2]);
+                afterStr = pageMatch1[3];
                 if (/^\/?$/.test(afterStr) && !/(p(age)?|_|\-|\/)$/.test(preStr)) {
                     preStr = "";
                     afterStr = "";
                 }
-            }else if(pageMatch2){
-                preStr=pageMatch2[1];
-                pageNum=parseInt(pageMatch2[2]);
-                afterStr=pageMatch2[3];
+            } else if (pageMatch2) {
+                preStr = pageMatch2[1];
+                pageNum = parseInt(pageMatch2[2]);
+                afterStr = pageMatch2[3];
+            }
+            if (pageNum > 999) {
+                pageNum = 1;
+                preStr = "";
+                afterStr = "";
             }
             let curPage=doc,i,cur,jsNext,body=doc.body||doc;
             let next1,next2,next3,next4,nextJs1,nextJs2,nextJs3;
@@ -1601,53 +1607,55 @@
                     if(next)next=next.querySelector("a");
                 }
             }
-            if(!next){
-                let aTags=body.querySelectorAll("a,button,[type='button']");
-                for(i=aTags.length-1;i>=0;i--){
-                    if(next1 && next2 && next3 && next4)break;
-                    let aTag=aTags[i];
-                    if(aTag.innerText){
-                        if(aTag.innerText=="§")continue;
-                        if(aTag.innerText.trim().length>80)continue;
+            if (!next) {
+                let aTags = body.querySelectorAll("a,button,[type='button']");
+                for (i = aTags.length - 1; i >= 0; i--) {
+                    if (next1) break;
+                    let aTag = aTags[i];
+                    if (aTag.innerText) {
+                        if (aTag.innerText == "§") continue;
+                        if (aTag.innerText.trim().length > 80) continue;
                     }
-                    if(aTag.style.display=="none")continue;
-                    if(aTag.href && /next$/i.test(aTag.href))continue;
-                    if(aTag.className){
-                        if(/slick|slide|gallery/i.test(aTag.className))continue;
-                        if(aTag.classList && aTag.classList.contains('disabled'))continue;
+                    if (aTag.style.display == "none") continue;
+                    if (aTag.href && /next$/i.test(aTag.href)) continue;
+                    if (aTag.className) {
+                        if (/slick|slide|gallery/i.test(aTag.className)) continue;
+                        if (aTag.classList && aTag.classList.contains('disabled')) continue;
                     }
-                    if(aTag.parentNode){
-                        if(aTag.parentNode.className && /slick|slide|gallery/i.test(aTag.parentNode.className))continue;
-                        if(aTag.parentNode.classList && aTag.parentNode.classList.contains('disabled'))continue;
-                        if(aTag.parentNode.tagName == "BLOCKQUOTE")continue;
+                    if (aTag.parentNode) {
+                        if (aTag.parentNode.className && /slick|slide|gallery/i.test(aTag.parentNode.className)) continue;
+                        if (aTag.parentNode.classList && aTag.parentNode.classList.contains('disabled')) continue;
+                        if (aTag.parentNode.tagName == "BLOCKQUOTE") continue;
                     }
-                    let innerText = (aTag.innerText||aTag.value||aTag.title||'').trim().replace(/(\n.*| )/g, '');
+                    let innerText = (aTag.innerText||aTag.value||aTag.title||'').trim().replace(/\n.*/, '').replace(/ /g, '');
                     let isJs = !aTag.href || /^(javascript|#)/.test(aTag.href.replace(location.href,""));
-                    if(innerText && innerText.length<=25){
-                        if(!next1){
-                            if(nextTextReg1.test(innerText)){
-                                if(isJs){
-                                    if(!nextJs1)nextJs1=aTag;
-                                }else{
-                                    next1=aTag;
+                    if (innerText && innerText.length <= 25) {
+                        if (!next1) {
+                            if (nextTextReg1.test(innerText)) {
+                                if (isJs) {
+                                    if (!nextJs1) nextJs1 = aTag;
+                                } else {
+                                    next1 = aTag;
                                 }
                             }
                         }
-                        if(!next2){
-                            if(nextTextReg2.test(innerText) || /nextpage|pager\-older/i.test(aTag.className) || innerText=="»" || innerText==">>"){
-                                if(isJs){
-                                    if(!nextJs2)nextJs2=aTag;
-                                }else{
-                                    next2=aTag;
+                        if (!next4) {
+                            if (!next2) {
+                                if (nextTextReg2.test(innerText) || /nextpage|pager\-older/i.test(aTag.className) || /^\s*(»|>>)\s*$/.test(innerText)) {
+                                    if (isJs) {
+                                        if (!nextJs2) nextJs2 = aTag;
+                                    } else {
+                                        next2 = aTag;
+                                    }
                                 }
                             }
-                        }
-                        if(!next3){
-                            if(innerText=="Next" || innerText=="next" || innerText=="&gt;" || innerText=="▶" || innerText==">" || innerText=="›" || innerText=="→" || innerText=="❯"){
-                                if(isJs){
-                                    if(!nextJs3)nextJs3=aTag;
-                                }else{
-                                    next3=aTag;
+                            if (!next3) {
+                                if (/^\s*(next|&gt;|▶|>|›|→|❯)\s*$/.test(innerText)) {
+                                    if (isJs) {
+                                        if (!nextJs3) nextJs3 = aTag;
+                                    } else {
+                                        next3 = aTag;
+                                    }
                                 }
                             }
                         }
@@ -1663,14 +1671,15 @@
                     }
                     if (!next4 && aTag.href.length < 250) {
                         let _aHref = aTag.href.replace("?&", "?").replace("index.php?", "?");
-                        let _aHrefTrim = _aHref;
-                        if (preStr) _aHrefTrim = _aHrefTrim.replace(preStr, "");
-                        if (afterStr) _aHrefTrim = _aHrefTrim.replace(afterStr, "");
-                        if ((preStr || afterStr) && pageNum < 999 && _aHrefTrim == pageNum + 1) {
-                            next4 = aTag;
+                        if (preStr || afterStr) {
+                            let _aHrefTrim = _aHref;
+                            if (preStr) _aHrefTrim = _aHrefTrim.replace(preStr, "");
+                            if (afterStr) _aHrefTrim = _aHrefTrim.replace(afterStr, "");
+                            if (_aHrefTrim == pageNum + 1) {
+                                next4 = aTag;
+                            }
                         } else if (this.curUrl != aTag.href) {
                             _aHref = _aHref.replace(/\.s?html?$/i, "");
-                            let pageTwoReg = /^[\/\?&]?[_-]?(p|page)?=?\/?2(\/|\?|&|$)/i;
                             if (_aHref.indexOf(_url) != -1 && pageTwoReg.test(_aHref.replace(_url, ""))) {
                                 let curHref = aTag.getAttribute("href");
                                 let pageOne = curHref.replace(/\/2(\/|\?|&|$)/,"/1$1");
@@ -1681,21 +1690,17 @@
                         }
                     }
                 }
-                if(next2 && (next2.innerText=="»" || next2.innerText==">>")){
-                    let eles=getAllElements(`//${next2.tagName}[text()='${next2.innerText}']`, curPage);
-                    if(eles.length>2)next2=null;
+                if (next2 && /^\s*(»|>>)\s*$/.test(next2.innerText)) {
+                    next2 = this.verifyNext(next2, doc);
                 }
-                if(nextJs2 && (nextJs2.innerText=="»" || nextJs2.innerText==">>")){
-                    let eles=getAllElements(`//${nextJs2.tagName}[text()='${nextJs2.innerText}']`, curPage);
-                    if(eles.length>2)nextJs2=null;
+                if (nextJs2 && /^\s*(»|>>)\s*$/.test(nextJs2.innerText)) {
+                    nextJs2 = this.verifyNext(nextJs2, doc);
                 }
-                if(next3){
-                    let eles=getAllElements(`//${next3.tagName}[text()='${next3.innerText}']`, curPage);
-                    if(eles.length>2)next3=null;
+                if (next3) {
+                    next3 = this.verifyNext(next3, doc);
                 }
-                if(nextJs3){
-                    let eles=getAllElements(`//${nextJs3.tagName}[text()='${nextJs3.innerText}']`, curPage);
-                    if(eles.length>2)nextJs3=null;
+                if (nextJs3) {
+                    nextJs3 = this.verifyNext(nextJs3, doc);
                 }
             }
             if (!next) next = next1 || next4 || next3 || next2;
@@ -1707,6 +1712,24 @@
             if (next && next.classList && next.classList.contains("results-more")) next=null;
             if (next && next.hasAttribute && next.hasAttribute("disabled")) next=null;
             return {next:next, canSave:canSave};
+        }
+
+        verifyNext(next, doc) {
+            if (!next) return null;
+            let eles = getAllElements(`//${next.tagName}[text()='${next.innerText}']`, doc);
+            if (eles.length > 2) {
+                next = null;
+            } else if (doc == document) {
+                let top = getElementTop(next);
+                if (top < 20) {
+                    next = null;
+                } else {
+                    let bottom = top + next.offsetHeight || 0;
+                    let scrollH = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+                    if (scrollH - bottom < 10) next = null;
+                }
+            }
+            return next;
         }
 
         canonicalUri(src) {
@@ -4852,7 +4875,7 @@
             loadmoreBtn = getElement(btnSel, doc);
         }
         if (!loadmoreBtn) {
-            let buttons = doc.querySelectorAll("input,button,a,div[onclick]"), loadmoreReg = /^\s*(加载更多|加載更多|load\s*more|もっと読み込む)\s*$/i;
+            let buttons = doc.querySelectorAll("input,button,a,div[onclick]"), loadmoreReg = /^\s*(加载更多|加載更多|(load|show)\s*more|もっと読み込む)\s*$/i;
             for (let i = 0; i < buttons.length; i++) {
                 let button = buttons[i];
                 if (button.innerText.length > 20) continue;
