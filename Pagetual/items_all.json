@@ -23476,16 +23476,17 @@
 {
   "resource_url": "http://wedata.net/items/76399",
   "data": {
-    "pageElement": "descendant::article[1]/div[./p]",
-    "nextLink": "//link[@rel=\"next\"]|descendant::article[1]//p[last()]/a",
-    "url": "^https?://www\\.sankei\\.com/",
+    "pageElement": "//div[contains(@class,'article-body')]/*[not(./div[@style])]",
+    "comment": "\"続き\"ではない関連記事を読み込まないよう修正 https://www.sankei.com/article/20230203-ZHMA6XHWVFPL3EPTPRCIBYLL4I/",
+    "nextLink": "//link[@rel='next']|//div[contains(@class,'article-body')]/p[last()]/a[contains(., 'に続く')]",
+    "url": "^https://www\\.sankei\\.com/",
     "exampleUrl": "https://www.sankei.com/premium/news/141004/prm1410040002-n1.html\r\nhttps://www.sankei.com/premium/news/181015/prm1810150007-n1.html\r\nhttps://www.sankei.com/article/20211004-UEL6V7EASNKYTPGXT4W45ENJVQ/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "lcou1",
   "name": "産経ニュース",
   "created_at": "2014-10-04T12:10:44+09:00",
-  "updated_at": "2021-10-05T11:59:22+09:00"
+  "updated_at": "2023-02-04T20:51:06+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/76398",
