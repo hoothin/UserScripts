@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.33.46
+// @version      1.9.33.47
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -945,7 +945,7 @@
 
         ruleMatch(r) {
             let findIndex = 0;
-            if (r.nextLink && r.nextLink != "0" && r.nextLink != 0) {
+            if (r.nextLink && r.nextLink != 0) {
                 let nextLinkSel = r.nextLink, nextLink;
                 if (Array && Array.isArray && Array.isArray(nextLinkSel)) {
                     nextLink = !nextLinkSel.every((sel, i) => {
@@ -1174,7 +1174,7 @@
                             delete rule.autoLoadNum;
                             delete rule.history;
                             delete rule.sideController;
-                            if (rule.pageBar == "0" || rule.pageBar == 0) delete rule.pageBar;
+                            if (rule.pageBar == 0) delete rule.pageBar;
                         }
                         if(checkRule(rule))return;
                     }
@@ -1881,7 +1881,7 @@
                 nextLink = {href: targetUrl};
             } else if (this.curSiteRule.nextLink) {
                 let nextLinkSel = this.curSiteRule.nextLink;
-                if (nextLinkSel != "0" && nextLinkSel != 0) {
+                if (nextLinkSel != 0) {
                     if (Array && Array.isArray && Array.isArray(nextLinkSel)) {
                         nextLink = getElement(nextLinkSel[nextIndex], doc);
                     } else nextLink = getElement(nextLinkSel, doc);
@@ -4651,7 +4651,7 @@
             return rv;
         };
     };
-    var changeHandler = e => {
+    var urlchangeHandler = e => {
         urlChanged = true;
         isPause = true;
         setTimeout(() => {
@@ -4675,7 +4675,6 @@
         },1);
     };
     history.pushState = _wr('pushState');
-    window.addEventListener('pushState', changeHandler);
 
     function distToBottom () {
         let scrolly = window.scrollY;
@@ -4695,6 +4694,10 @@
         document.removeEventListener('keydown', manualModeKeyHandler);
         document.removeEventListener('pagetual.next', pagetualNextHandler, false);
         document.removeEventListener('keyup', keyupHandler);
+        window.removeEventListener('pushState', urlchangeHandler);
+        if (ruleParser.curSiteRule.listenUrlChange != false && ruleParser.curSiteRule.listenUrlChange != 0) {
+            window.addEventListener('pushState', urlchangeHandler);
+        }
         let loadmoreBtn,loading=true,lastScroll=0,checkLoadMoreTimes=0;
         if (ruleParser.curSiteRule.loadMore) {
             loading=false;
