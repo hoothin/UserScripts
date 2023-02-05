@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.33.45
+// @version      1.9.33.46
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -2277,7 +2277,13 @@
 
         initPage(callback){
             let self=this;
+            if(self.initing)return;
+            self.initing=true;
+            setTimeout(() => {
+                self.initing=false;
+            }, 300);
             curPage=1;
+            urlChanged=false;
             if(this.addedElePool && this.addedElePool.length){
                 this.addedElePool.forEach(ele=>{
                     if(ele.parentNode)ele.parentNode.removeChild(ele);
@@ -2292,6 +2298,7 @@
             let base=document.querySelector("base");
             this.basePath=base?base.href:location.href;
             this.getRule(async () => {
+                isPause=false;
                 if(self.curSiteRule.enable==0){
                     debug("Stop as rule disable");
                     isPause=true;
@@ -4677,12 +4684,22 @@
         return scrollH - scrolly - windowHeight;
     }
 
+    let checkLoadMore, scrollHandler, dblclickHandler, keydownHandler, hashchangeHandler, manualModeKeyHandler, pagetualNextHandler, keyupHandler;
     function initListener () {
+        clearInterval(checkLoadMore);
+        document.removeEventListener('scroll', scrollHandler, true);
+        document.removeEventListener('wheel', scrollHandler, true);
+        document.removeEventListener('dblclick', dblclickHandler);
+        document.removeEventListener('keydown', keydownHandler);
+        window.removeEventListener('hashchange', hashchangeHandler, false);
+        document.removeEventListener('keydown', manualModeKeyHandler);
+        document.removeEventListener('pagetual.next', pagetualNextHandler, false);
+        document.removeEventListener('keyup', keyupHandler);
         let loadmoreBtn,loading=true,lastScroll=0,checkLoadMoreTimes=0;
         if (ruleParser.curSiteRule.loadMore) {
             loading=false;
         } else {
-            let checkLoadMore=setInterval(()=>{
+            checkLoadMore=setInterval(()=>{
                 loadmoreBtn=getLoadMore(document);
                 if(loadmoreBtn && isVisible(loadmoreBtn, _unsafeWindow)){
                     loading=false;
@@ -4714,13 +4731,12 @@
                 nextPage();
             }
         };
-        let scrollHandler = e => {
+        scrollHandler = e => {
             if (urlChanged && !isLoading) {
                 ruleParser.initPage(() => {
                     if (ruleParser.nextLinkHref) {
                         initView();
                     }
-                    isPause = false;
                 });
                 urlChanged = false;
             }
@@ -4753,7 +4769,7 @@
                 }
             }
         };
-        document.addEventListener('dblclick', e => {
+        dblclickHandler = e => {
             if (forceState == 1 || e.target.tagName == 'INPUT' || e.target.tagName == 'TEXTAREA') return;
             if (!rulesData.dbClick2StopKey) {
                 if ((rulesData.dbClick2StopCtrl && !e.ctrlKey) ||
@@ -4783,9 +4799,10 @@
                     }
                 }, 10);
             }
-        });
+        };
+        document.addEventListener('dblclick', dblclickHandler);
         if (rulesData.dbClick2StopKey) {
-            document.addEventListener('keydown', e => {
+            keydownHandler = e => {
                 if ((rulesData.dbClick2StopCtrl && !e.ctrlKey) ||
                    (rulesData.dbClick2StopAlt && !e.altKey) ||
                    (rulesData.dbClick2StopShift && !e.shiftKey) ||
@@ -4806,18 +4823,20 @@
                         location.reload();
                     }
                 }
-            });
+            };
+            document.addEventListener('keydown', keydownHandler);
         }
         if (ruleParser.curSiteRule.listenHashChange) {
-            window.addEventListener('hashchange', () => {
+            hashchangeHandler = () => {
                 urlChanged = true;
                 isPause = true;
                 if (!ruleParser.nextLinkHref) isLoading = false;
-            }, false);
+            };
+            window.addEventListener('hashchange', hashchangeHandler, false);
         }
         let manualMode = typeof ruleParser.curSiteRule.manualMode == 'undefined' ? rulesData.manualMode : ruleParser.curSiteRule.manualMode;
         if (manualMode) {
-            document.addEventListener('keydown', e => {
+            manualModeKeyHandler = e => {
                 if (document.activeElement &&
                     (document.activeElement.tagName == 'INPUT' ||
                      document.activeElement.tagName == 'TEXTAREA' ||
@@ -4827,14 +4846,16 @@
                 if(e.keyCode == 39){
                     clickNext();
                 }
-            });
-            document.addEventListener('pagetual.next', function() {
+            };
+            document.addEventListener('keydown', manualModeKeyHandler);
+            pagetualNextHandler = () => {
                 clickNext();
-            }, false);
+            };
+            document.addEventListener('pagetual.next', pagetualNextHandler, false);
             return;
         }
         if (rulesData.arrowToScroll) {
-            document.addEventListener('keyup', e => {
+            keyupHandler = e => {
                 if (document.activeElement &&
                     (document.activeElement.tagName == 'INPUT' ||
                      document.activeElement.tagName == 'TEXTAREA' ||
@@ -4858,7 +4879,8 @@
                         window.scrollTo({ top: scrollTop - (window.innerHeight || document.documentElement.clientHeight), behavior: 'smooth'});
                     }
                 }
-            });
+            };
+            document.addEventListener('keyup', keyupHandler);
         }
         if (!ruleParser.curSiteRule.wheel) {
             document.addEventListener('scroll', scrollHandler, true);
