@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.33.44
+// @version      1.9.33.45
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -1465,7 +1465,7 @@
         }
 
         getPage(doc){
-            if(typeof _unsafeWindow.Discourse!='undefined')return {};
+            if(document.documentElement.className.indexOf('discourse')!=-1)return {};
             let video=document.querySelector("video,iframe[id*=play]:not([name=pagetual-iframe]),[id*=play]>iframe:not([name=pagetual-iframe]),iframe[src*=player]:not([name=pagetual-iframe]),iframe[src*=m3u8]:not([name=pagetual-iframe])");
             if(video){
                 let scrollWidth = video.scrollWidth || video.offsetWidth;
@@ -2278,6 +2278,13 @@
         initPage(callback){
             let self=this;
             curPage=1;
+            if(this.addedElePool && this.addedElePool.length){
+                this.addedElePool.forEach(ele=>{
+                    if(ele.parentNode)ele.parentNode.removeChild(ele);
+                });
+            }
+            this.insert=null;
+            this.addedElePool=[];
             this.curSiteRule={};
             this.pageDoc=document;
             this.nextLinkHref=null;
@@ -2334,6 +2341,7 @@
         }
 
         insertElement(ele) {
+            this.addedElePool.push(ele);
             this.getInsert();
             if(this.curSiteRule.insertPos==2){
                 this.insert.appendChild(ele);
