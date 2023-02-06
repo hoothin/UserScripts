@@ -25794,17 +25794,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/74789",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "created_at": "2014-04-22T20:37:42+09:00",
   "data": {
-    "pageElement": "//div[@itemprop=\"articleBody\"]/p",
-    "exampleUrl": "https://bizgate.nikkei.co.jp/article/DGXMZO5957527026052020000000?channel=DF050420183723",
-    "url": "http://bizgate\\.nikkei\\.co\\.jp/article/.+",
-    "nextLink": "//link[@rel=\"next\"]"
+    "pageElement": "//div[@itemprop='articleBody']/p[last()]|//div[@itemprop='articleBody']/p[last()]/preceding-sibling::*",
+    "nextLink": "//link[@rel=\"next\"]",
+    "url": "https://bizgate\\.nikkei\\.co\\.jp/article/.+",
+    "exampleUrl": "https://bizgate.nikkei.co.jp/article/DGXMZO5957527026052020000000?channel=DF050420183723"
   },
-  "updated_at": "2020-05-28T15:20:55+09:00",
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "nkmry",
   "name": "日経BizGate",
-  "created_by": "nkmry"
+  "created_at": "2014-04-22T20:37:42+09:00",
+  "updated_at": "2023-02-05T14:07:30+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/74786",
@@ -37292,7 +37292,7 @@
 {
   "resource_url": "http://wedata.net/items/41434",
   "data": {
-    "pageElement": "id('ipsLayout_body')//ol[starts-with(@id, 'elTable_') or @data-role='resultsContents']\r\n|id('elPostFeed')/form/*[self::a or self::article]\r\n\r\n|id('forum_table')/tbody/tr\r\n|id('ips_Posts')\r\n\r\n|id('bbpress-forums')/descendant::*[@class='bbp-body'][last()=1 or parent::*[starts-with(@id, 'bbp-forum')]]",
+    "pageElement": "id('ipsLayout_body')//ol[starts-with(@id, 'elTable_') or @data-role='resultsContents']/li[not(@class='ipsDataItem' and .//@class='adsbygoogle')]\r\n|id('elPostFeed')/form/*[self::a or self::article]\r\n\r\n|id('forum_table')/tbody/tr\r\n|id('ips_Posts')\r\n\r\n|id('bbpress-forums')/descendant::*[@class='bbp-body'][last()=1 or parent::*[starts-with(@id, 'bbp-forum')]]/*",
     "nextLink": "//a[@rel='next']|id('bbpress-forums')//span[contains(@class, 'current') and number()>0]/following-sibling::a[1]",
     "url": "^https?://.*(forum|topic|=search)",
     "exampleUrl": "https://w3schools.invisionzone.com/forum/45-general/\r\nhttps://w3schools.invisionzone.com/topic/828-introduce-yourself/#elPostFeed\r\n\r\nhttps://www.autohotkey.com/board/forum/48-#forum_table\r\nhttps://www.autohotkey.com/board/topic/36552-ftp-uploading-with-the-help-of-ahk/#ips_Posts\r\n\r\nhttps://www.businesstraveller.com/forum/#bbpress-forums\r\nhttps://www.businesstraveller.com/forums/topic/transferring-between-london-heathrow-and-london-gatwick/#bbpress-forums\r\nhttps://judgeacademy.com/forums/view/topics-freshness/?lang=ja#bbpress-forums\r\n\r\nhttps://www.fountainpennetwork.com/forum/forum/5-inky-thoughts/\r\nhttps://www.autoitscript.com/forum/files/category/1-autoit/?sort_order=DESC&sort_key=file_submitted&num=10&st=50\r\nhttps://idolforums.com/search/?q=lgbt&quick=1"
@@ -37301,7 +37301,7 @@
   "created_by": "Rodze",
   "name": "Invision, IP.Board, BBPress",
   "created_at": "2011-01-16T01:02:37+09:00",
-  "updated_at": "2023-01-18T18:39:41+09:00"
+  "updated_at": "2023-02-06T02:52:36+09:00"
 },
 {
   "name": "land.to ranking",
@@ -42371,17 +42371,17 @@
 {
   "resource_url": "http://wedata.net/items/31897",
   "data": {
-    "pageElement": "//ul[./li[@class=\"m-miM32_item\"]]",
+    "pageElement": "//div[@class='m-pageNation']/preceding-sibling::*",
     "comment": "If pageElement is specified by li, autopagerize_page_info will not be displayed.",
     "nextLink": "//div[@class='m-pageNation']//li[last()]/a[not(number(.)>0)]",
     "url": "^https://(www\\.)?nikkei\\.com/",
-    "exampleUrl": "https://www.nikkei.com/news/category/"
+    "exampleUrl": "https://www.nikkei.com/news/category/\r\nhttps://www.nikkei.com/business/archive/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "raitu",
   "name": "日本経済新聞",
   "created_at": "2010-03-23T16:27:51+09:00",
-  "updated_at": "2022-01-27T07:32:48+09:00"
+  "updated_at": "2023-02-05T12:56:47+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/31877",
@@ -48073,7 +48073,8 @@
   "resource_url": "http://wedata.net/items/2761",
   "data": {
     "pageElement": "//div[starts-with(@class,'listingResult ')]|id('article-body')/*",
-    "nextLink": "//link[@rel='next']",
+    "comment": "link[@rel='next'] is 404. https://www.techradar.com/gaming",
+    "nextLink": "//li[contains(concat(' ', @class, ' '), ' current-page ')]/following-sibling::li[1]/a",
     "url": "^https://(www\\.)?techradar\\.com/.",
     "exampleUrl": "https://www.techradar.com/how-to https://www.techradar.com/uk/news/world-of-tech/roundup/excel-tutorial-sales-and-commissions-1088415"
   },
@@ -48081,7 +48082,7 @@
   "created_by": "triptoy",
   "name": "TechRadar",
   "created_at": "2008-10-06T08:26:15+09:00",
-  "updated_at": "2020-09-20T04:39:55+09:00"
+  "updated_at": "2023-02-05T10:43:33+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/2759",
