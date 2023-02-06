@@ -4653,13 +4653,14 @@
         var orig = history[type];
         return function() {
             var rv = orig.apply(this, arguments);
-            var e = new Event(type);
+            var e = new Event('pagetual_' + type);
             e.arguments = arguments;
             window.dispatchEvent(e);
             return rv;
         };
     };
     var urlchangeHandler = e => {
+        if (ruleParser && ruleParser.curSiteRule && ruleParser.curSiteRule.listenUrlChange == false) return;
         urlChanged = true;
         isPause = true;
         setTimeout(() => {
@@ -4687,6 +4688,7 @@
         },1);
     };
     history.pushState = _wr('pushState');
+    window.addEventListener('pagetual_pushState', urlchangeHandler);
 
     function distToBottom () {
         let scrolly = window.scrollY;
@@ -4706,10 +4708,6 @@
         document.removeEventListener('keydown', manualModeKeyHandler);
         document.removeEventListener('pagetual.next', pagetualNextHandler, false);
         document.removeEventListener('keyup', keyupHandler);
-        window.removeEventListener('pushState', urlchangeHandler);
-        if (ruleParser.curSiteRule.listenUrlChange != false && ruleParser.curSiteRule.listenUrlChange != 0) {
-            window.addEventListener('pushState', urlchangeHandler);
-        }
         let loadmoreBtn,loading=true,lastScroll=0,checkLoadMoreTimes=0;
         if (ruleParser.curSiteRule.loadMore) {
             loading=false;
