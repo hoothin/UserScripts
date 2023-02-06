@@ -8912,5 +8912,10 @@
         "url": ".",
         "pageElement": ".AC-style-logo",
         "enable": 0
+    },
+    {
+        "name": "游戏怀旧灌水首页禁用",
+        "url": "^https?://www\\.yxhjgs\\.com/$",
+        "enable": 0
     }
 ]
