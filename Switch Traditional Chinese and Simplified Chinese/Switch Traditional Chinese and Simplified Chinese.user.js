@@ -6,7 +6,7 @@
 // @namespace    hoothin
 // @supportURL   https://github.com/hoothin/UserScripts
 // @homepageURL  https://github.com/hoothin/UserScripts
-// @version      1.2.6.21
+// @version      1.2.6.22
 // @description        任意轉換網頁中的簡體中文與正體中文（默認簡體→正體）
 // @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体）
 // @description:ja     簡繁中国語に変換
@@ -19,12 +19,14 @@
 // @grant        GM_notification
 // @grant        GM_listValues
 // @grant        GM_deleteValue
+// @grant        GM_openInTab
 // @grant        GM.setValue
 // @grant        GM.getValue
 // @grant        GM.registerMenuCommand
 // @grant        GM.notification
 // @grant        GM.listValues
 // @grant        GM.deleteValue
+// @grant        GM.openInTab
 // @contributionURL      https://www.buymeacoffee.com/hoothin
 // @contributionAmount 1
 // ==/UserScript==
@@ -904,7 +906,7 @@
         }
     }
 
-    var _GM_listValues, _GM_registerMenuCommand, _GM_notification;
+    var _GM_listValues, _GM_registerMenuCommand, _GM_notification, _GM_openInTab;
     _GM_listValues = (cb) => {
         if (typeof GM_listValues != 'undefined') {
             cb(GM_listValues());
@@ -934,6 +936,13 @@
         _GM_notification = GM.notification;
     } else {
         _GM_notification = (s) => {alert(s)};
+    }
+    if (typeof GM_openInTab != 'undefined') {
+        _GM_openInTab = GM_openInTab;
+    } else if (typeof GM != 'undefined' && typeof GM.openInTab != 'undefined') {
+        _GM_openInTab = GM.openInTab;
+    } else {
+        _GM_openInTab = (s, t) => {window.open(s)};
     }
     var storage = {
         supportGM: typeof GM_getValue == 'function' && typeof GM_getValue('a', 'b') != 'undefined',
@@ -1407,12 +1416,12 @@
         }
         _GM_registerMenuCommand("繁簡切換【Ctrl+F8】", switchLanguage);
         _GM_registerMenuCommand("自定義設置", () => {
-            window.open("https://greasyfork.org/scripts/24300", "_blank");
+            _GM_openInTab("https://greasyfork.org/scripts/24300", {active: true});
         });
         if (saveAction) _GM_registerMenuCommand(saveAction === 1 ? "取消禁用" : "禁用" + currentState, disableOnSite);
         if (!isSimple) {
             _GM_registerMenuCommand("提交新增詞彙", () => {
-                window.open("https://github.com/hoothin/UserScripts/issues", "_blank");
+                _GM_openInTab("https://github.com/hoothin/UserScripts/issues", {active: true});
             });
         }
     });
