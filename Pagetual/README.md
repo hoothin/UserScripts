@@ -35,7 +35,7 @@ https://raw.githubusercontent.com/hoothin/UserScripts/master/Pagetual/pagetualRu
     </tr>
 </table>
 
-![donate](https://s2.loli.net/2022/01/06/lEqKWLHG7UBO6AY.jpg)
+![donate](https://s2.loli.net/2023/02/06/afTMxeASm48z5vE.jpg)
 
 name
 --
