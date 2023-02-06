@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.33.47
+// @version      1.9.33.48
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -2281,9 +2281,10 @@
             self.initing=true;
             setTimeout(() => {
                 self.initing=false;
-            }, 300);
+            }, 100);
             curPage=1;
             urlChanged=false;
+            SideController.getInstance().remove();
             if(this.addedElePool && this.addedElePool.length){
                 this.addedElePool.forEach(ele=>{
                     if(ele.parentNode)ele.parentNode.removeChild(ele);
@@ -2445,7 +2446,7 @@
     class SideController {
         static controller;
         constructor() {
-            this.init();
+            this.inited = false;
         }
 
         static getInstance() {
@@ -2462,6 +2463,8 @@
         }
 
         init() {
+            if (this.inited) return;
+            this.inited = true;
             let self = this;
             let cssText = `
              #pagetual-sideController {
@@ -2618,7 +2621,12 @@
         }
 
         addToStage() {
+            this.init();
             document.body.appendChild(this.frame);
+        }
+
+        remove() {
+            if (this.frame && this.frame.parentNode) this.frame.parentNode.removeChild(this.frame);
         }
     }
 
@@ -4668,10 +4676,14 @@
                 }, 500);
             } else if (location.href == configPage[0]) {
                 location.reload();
-            } else if (!ruleParser.ruleMatch(ruleParser.curSiteRule)) {
-                initPage();
+            } else {
+                if (!ruleParser.nextLinkHref) {
+                    isLoading = false;
+                }
+                if (!isLoading && !ruleParser.ruleMatch(ruleParser.curSiteRule)) {
+                    initPage();
+                }
             }
-            if (!ruleParser.nextLinkHref) isLoading = false;
         },1);
     };
     history.pushState = _wr('pushState');
@@ -5369,9 +5381,9 @@
                         }
                     }
                 }catch(e){
-                    debug("Stop as cors");
                     inCors=true;
                     if (forceState === 3) {
+                        debug("Stop as cors");
                         isPause=true;
                     }
                     if(!ruleParser.curSiteRule.pageElement){
