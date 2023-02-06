@@ -1,6 +1,6 @@
-東方永頁機 [Wiki](https://pagetual.hoothin.com/en/)
+☯️東方永頁機
 ==
-*Pagetual - Perpetual pages. Auto loading paginated web pages for 90% of all web sites !*
+*Pagetual - Perpetual pages. Auto loading paginated web pages for 90% of all web sites !* [Wiki](https://pagetual.hoothin.com/en/)
 
 <p name="click2import"></p>
 <pre name="pagetual">
