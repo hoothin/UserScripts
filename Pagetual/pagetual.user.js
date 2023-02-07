@@ -4695,7 +4695,7 @@
     history.pushState = _wr('pushState');*/
 
     function listenUrl() {
-        var prevState = window.location.pathname;
+        var prevState = window.location.pathname + window.location.search;
         var checkUrlTime = 100;
         var checkUrlTimer;
         var checkFunc = () => {
@@ -4703,9 +4703,10 @@
             if (checkUrlTime < 5000) {
                 checkUrlTime += checkUrlTime>>1;
             }
-            if (prevState !== window.location.pathname && window.location.href != ruleParser.historyUrl) {
+            let url = window.location.pathname + window.location.search;
+            if (prevState !== url && window.location.href != ruleParser.historyUrl) {
                 checkUrlTime = 2000;
-                prevState = window.location.pathname;
+                prevState = url;
                 var e = new Event('pagetual_pushState');
                 e.arguments = arguments;
                 window.dispatchEvent(e);
