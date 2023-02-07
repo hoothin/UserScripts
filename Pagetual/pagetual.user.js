@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.33.48
+// @version      1.9.33.49
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -2296,6 +2296,8 @@
             this.pageDoc=document;
             this.nextLinkHref=null;
             this.curUrl=location.href;
+            this.oldUrl="";
+            this.historyUrl="";
             let base=document.querySelector("base");
             this.basePath=base?base.href:location.href;
             this.getRule(async () => {
@@ -2345,6 +2347,8 @@
                 await self.getNextLink(document);
                 self.refreshByClick();
                 callback();
+                let initRun = typeof self.curSiteRule.initRun == 'undefined' ? rulesData.initRun : self.curSiteRule.initRun;
+                if (initRun && initRun != false) nextPage();
             });
         }
 
@@ -2427,12 +2431,12 @@
                 enableHistoryAfterInsert = rulesData.enableHistoryAfterInsert;
             }
             if (enableHistory) {
-                let historyUrl = enableHistoryAfterInsert ? this.curUrl : this.oldUrl;
-                if(historyUrl != location.href) {
-                    let isJs=/^(javascript|#)/.test(historyUrl.replace(location.href, ""));
+                this.historyUrl = enableHistoryAfterInsert ? this.curUrl : this.oldUrl;
+                if(this.historyUrl != location.href) {
+                    let isJs=/^(javascript|#)/.test(this.historyUrl.replace(location.href, ""));
                     if(!isJs){
                         let historyTitle = enableHistoryAfterInsert ? doc.title : oldTitle;
-                        _unsafeWindow.history.replaceState(undefined, historyTitle, historyUrl);
+                        _unsafeWindow.history.replaceState(undefined, historyTitle, this.historyUrl);
                         document.title = historyTitle;
                     }
                 }
@@ -3338,6 +3342,7 @@
 
     function initConfig(){
         initView();
+        listenUrl();
         try{
             if(_unsafeWindow.initedPagetual){
                 if(ruleImportUrlReg.test(location.href)){
@@ -4250,6 +4255,7 @@
                     for(let b in rulesData.blacklist){
                         let curGlob=rulesData.blacklist[b];
                         if(globMatch(curGlob, location.href)){
+                            forceState==1;
                             return;
                         }
                     }
@@ -4401,8 +4407,6 @@
                 });
             }
             initListener();
-            let initRun = typeof ruleParser.curSiteRule.initRun == 'undefined' ? rulesData.initRun : ruleParser.curSiteRule.initRun;
-            if (initRun && initRun != 0 && initRun != '0') nextPage();
         });
     }
 
@@ -4649,16 +4653,6 @@
     }
 
     var urlChanged=false;
-    var _wr = function(type) {
-        var orig = history[type];
-        return function() {
-            var rv = orig.apply(this, arguments);
-            var e = new Event('pagetual_' + type);
-            e.arguments = arguments;
-            window.dispatchEvent(e);
-            return rv;
-        };
-    };
     var urlchangeHandler = e => {
         if (ruleParser && ruleParser.curSiteRule && ruleParser.curSiteRule.listenUrlChange == false) return;
         urlChanged = true;
@@ -4681,14 +4675,52 @@
                 if (!ruleParser.nextLinkHref) {
                     isLoading = false;
                 }
-                if (!isLoading && !ruleParser.ruleMatch(ruleParser.curSiteRule)) {
+                if (!isLoading && (ruleParser.curSiteRule.singleUrl || !ruleParser.ruleMatch(ruleParser.curSiteRule))) {
                     initPage();
                 }
             }
         },1);
     };
-    history.pushState = _wr('pushState');
     window.addEventListener('pagetual_pushState', urlchangeHandler);
+    /*var _wr = function(type) {
+        var orig = history[type];
+        return function() {
+            var rv = orig.apply(this, arguments);
+            var e = new Event('pagetual_' + type);
+            e.arguments = arguments;
+            window.dispatchEvent(e);
+            return rv;
+        };
+    };
+    history.pushState = _wr('pushState');*/
+
+    function listenUrl() {
+        var prevState = window.location.pathname;
+        var checkUrlTime = 100;
+        var checkUrlTimer;
+        var checkFunc = () => {
+            if (forceState == 1) return;
+            if (checkUrlTime < 5000) {
+                checkUrlTime += checkUrlTime>>1;
+            }
+            if (prevState !== window.location.pathname && window.location.href != ruleParser.historyUrl) {
+                checkUrlTime = 2000;
+                prevState = window.location.pathname;
+                var e = new Event('pagetual_pushState');
+                e.arguments = arguments;
+                window.dispatchEvent(e);
+            }
+            clearTimeout(checkUrlTimer);
+            checkUrlTimer = setTimeout(checkFunc, checkUrlTime);
+        };
+        checkUrlTimer = setTimeout(checkFunc, checkUrlTime);
+
+        document.addEventListener("click", e => {
+            checkUrlTime = 100;
+            clearTimeout(checkUrlTimer);
+            checkUrlTimer = setTimeout(checkFunc, checkUrlTime);
+        });
+    }
 
     function distToBottom () {
         let scrolly = window.scrollY;
