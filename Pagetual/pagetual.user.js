@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.33.49
+// @version      1.9.33.50
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -1273,46 +1273,46 @@
                     this.getInsert(true);
                 }
             }
-            if((this.curSiteRule.singleUrl || !this.curSiteRule.pageElement) && (!pageElement || pageElement.length==0) && curWin && !dontFind){
-                if(!body)return null;
-                let bodyHeight=parseInt(body.offsetHeight || body.scrollHeight);
-                let curHeight=bodyHeight;
-                let windowHeight=window.innerHeight || document.documentElement.clientHeight;
-                let needCheckNext=(doc==document && this.initNext);
-                function checkElement(ele){
+            if ((this.curSiteRule.singleUrl || !this.curSiteRule.pageElement) && (!pageElement || pageElement.length == 0) && curWin && !dontFind) {
+                if (!body) return null;
+                let bodyHeight = parseInt(body.offsetHeight || body.scrollHeight);
+                let curHeight = bodyHeight, curWidth = 0;
+                let windowHeight = window.innerHeight || document.documentElement.clientHeight;
+                let needCheckNext = (doc == document && this.initNext);
+                function checkElement(ele) {
                     if (ele.tagName == "PRE" || ele.tagName == "CODE") {
                         self.curSiteRule.pageElement = geneSelector(ele.parentNode);
                         debug(self.curSiteRule.pageElement, 'Page element');
                         return [ele.parentNode];
                     }
-                    if(ele.childNodes && ele.childNodes.length==1)ele=ele.childNodes[0];
-                    if(ele.tagName=="PICTURE"){
-                        self.curSiteRule.pageElement=geneSelector(ele.parentNode)+">"+ele.tagName.toLowerCase();
+                    if (ele.childNodes && ele.childNodes.length == 1) ele = ele.childNodes[0];
+                    if (ele.tagName == "PICTURE") {
+                        self.curSiteRule.pageElement = geneSelector(ele.parentNode) + ">" + ele.tagName.toLowerCase();
                         debug(self.curSiteRule.pageElement, 'Page element');
                         return [ele];
                     }
-                    if(curHeight/bodyHeight<=0.25){
-                        self.curSiteRule.pageElement=allOfBody;
+                    if (curHeight / bodyHeight <= 0.25) {
+                        self.curSiteRule.pageElement = allOfBody;
                         debug(self.curSiteRule.pageElement, 'Page element');
                         return [body];
                     }
-                    if(ele.tagName=="FORM" && ele.parentNode!=document.body){
-                        self.curSiteRule.pageElement=geneSelector(ele)+">*";
+                    if (ele.tagName == "FORM" && ele.parentNode != document.body) {
+                        self.curSiteRule.pageElement = geneSelector(ele) + ">*";
                         debug(self.curSiteRule.pageElement, 'Page element');
                         return ele.children;
                     }
-                    if(ele.children.length==0 && !self.curSiteRule.pageElement){
-                        if(ele.parentNode.tagName=="P")ele=ele.parentNode;
-                        self.curSiteRule.pageElement=geneSelector(ele.parentNode)+">"+ele.tagName.toLowerCase();
+                    if (ele.children.length == 0 && !self.curSiteRule.pageElement) {
+                        if (ele.parentNode.tagName == "P") ele = ele.parentNode;
+                        self.curSiteRule.pageElement = geneSelector(ele.parentNode) + ">" + ele.tagName.toLowerCase();
                         debug(self.curSiteRule.pageElement, 'Page element');
                         return getAllElements(self.curSiteRule.pageElement, doc);
                     }
-                    let i,maxHeight=curHeight*0.55,curMaxEle=null,curMaxArea=0,maxWidth=0;
-                    let isHori=true;
-                    let offsetTop=ele.children[0].offsetTop;
-                    for(i=1;i<ele.children.length;i++){
-                        if(ele.children[i].offsetTop!=offsetTop){
-                            isHori=false;
+                    let i, minHeight = curHeight * 0.55, curMaxEle = null, curMaxArea = 0, minWidth = curWidth * 0.55;
+                    let isHori = true;
+                    let offsetTop = ele.children[0].offsetTop;
+                    for (i = 1; i < ele.children.length; i++) {
+                        if (ele.children[i].offsetTop != offsetTop) {
+                            isHori = false;
                             break;
                         }
                     }
@@ -1329,7 +1329,7 @@
                         if (curNode.tagName == "ARTICLE") articleNum++;
                         let comStyle = curWin.getComputedStyle(curNode);
                         let h = parseInt(curNode.offsetHeight || curNode.scrollHeight);
-                        let w = parseInt(curNode.scrollWidth);
+                        let w = parseInt(curNode.offsetWidth || curNode.scrollWidth);
                         if (isNaN(h) || isNaN(w)) continue;
                         if (isHori && h <= 50) continue;
                         let a = h * w + h, moreChild = curNode.children[0];
@@ -1345,9 +1345,9 @@
                         }
                         let isMax = false;
                         if (isHori) {
-                            if (maxWidth < w) {
+                            if (curWidth < w) {
                                 isMax = true;
-                            } else if (maxWidth < w + 300 && curMaxArea < a) {
+                            } else if (curWidth < w + 300 && curMaxArea < a) {
                                 isMax = true;
                             }
                         } else {
@@ -1357,22 +1357,33 @@
                             isMax = curMaxArea < a;
                         }
                         if (curMaxEle == null || isMax) {
-                            if (h > 0 || !isHori) curHeight = h;
+                            if (isHori) {
+                                if (w < minWidth) {
+                                    continue;
+                                }
+                            } else {
+                                if (h < minHeight) {
+                                    if (!needCheckNext || h < windowHeight || !ele.contains(self.initNext)) {
+                                        continue;
+                                    }
+                                }
+                            }
+                            curHeight = h;
                             curMaxArea = a;
-                            maxWidth = w;
+                            curWidth = w;
                             curMaxEle = curNode;
                         }
                     }
-                    if (curMaxEle && (isHori || curHeight > maxHeight || (needCheckNext && curHeight > windowHeight && ele.contains(self.initNext)))) {
+                    if (curMaxEle) {
                         return checkElement(curMaxEle);
                     }
-                    if (ele.parentNode.children.length == 1 && curWin.getComputedStyle(ele.parentNode).float == 'none')ele=ele.parentNode;
-                    else if(ele.tagName=="P" || ele.tagName=="BR")ele=ele.parentNode;
-                    else if(ele.tagName=="TD")ele=ele.parentNode;
-                    else if(ele.tagName=="TBODY"){
-                        self.curSiteRule.pageElement=geneSelector(ele)+">*";
-                        if(ele.children.length>0 && ele.children[0].querySelector("th")){
-                            self.curSiteRule.pageElement+=":not(:first-child)";
+                    if (ele.parentNode.children.length == 1 && curWin.getComputedStyle(ele.parentNode).float == 'none') ele = ele.parentNode;
+                    else if (ele.tagName == "P" || ele.tagName == "BR") ele = ele.parentNode;
+                    else if (ele.tagName == "TD") ele = ele.parentNode;
+                    else if (ele.tagName == "TBODY") {
+                        self.curSiteRule.pageElement = geneSelector(ele) + ">*";
+                        if (ele.children.length > 0 && ele.children[0].querySelector("th")) {
+                            self.curSiteRule.pageElement += ":not(:first-child)";
                         }
                         debug(self.curSiteRule.pageElement, 'Page element');
                         return ele.children;
@@ -1428,7 +1439,7 @@
                     debug(self.curSiteRule.pageElement, 'Page element');
                     return ele;
                 }
-                pageElement=checkElement(body);
+                pageElement = checkElement(body);
                 if (pageElement && pageElement.length > 0 && self.initNext) {
                     let lastBottom = getElementBottom(pageElement[pageElement.length - 1]);
                     if (lastBottom && getElementTop(self.initNext) - lastBottom > 1000) {
