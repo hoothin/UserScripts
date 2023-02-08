@@ -3789,18 +3789,18 @@
   "updated_at": "2021-06-09T07:43:25+09:00"
 },
 {
-  "resource_url": "http://wedata.net/items/85672",
   "data": {
-    "pageElement": "id('mainContentsInner')/div[contains(concat(' ',@class,' '),' contentblock ')]",
+    "pageElement": "id('mainContentsInner')//div[contains(concat(' ',@class,' '),' contentblock ')]",
     "nextLink": "//a[@rel='next']",
     "url": "^https://dailyportalz\\.jp/kiji/",
-    "exampleUrl": "https://dailyportalz.jp/kiji/jimoto-trip-in-saitama"
+    "exampleUrl": "https://dailyportalz.jp/kiji/jimoto-trip-in-saitama\r\nhttps://dailyportalz.jp/kiji/menma-wakai-take"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "t_f_m_",
+  "resource_url": "http://wedata.net/items/85672",
   "name": "デイリーポータルZ 記事",
   "created_at": "2021-06-07T21:41:56+09:00",
-  "updated_at": "2021-06-07T21:50:45+09:00"
+  "updated_at": "2023-02-07T18:06:08+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85671",
