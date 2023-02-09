@@ -1901,7 +1901,7 @@
                 if (nextLinkSel != 0) {
                     if (Array && Array.isArray && Array.isArray(nextLinkSel)) {
                         nextLink = getElement(nextLinkSel[nextIndex], doc);
-                        if (!nextLink && nextIndex != 0) {
+                        if (!nextLink && curPage == 1 && nextIndex != 0) {
                             nextIndex = 0;
                             nextLink = getElement(nextLinkSel[nextIndex], doc);
                         }
@@ -1927,11 +1927,11 @@
                         nextLink.href = nextLink.href.replace(/#p{.*/, "");
                     }
                 }
-            }else{
-                page=this.getPage(doc);
-                nextLink=page.next;
-                if(nextLink){
-                    if(nextLink.tagName=="INPUT" || nextLink.type=="submit"){
+            } else {
+                page = this.getPage(doc);
+                nextLink = page.next;
+                if (nextLink) {
+                    if (nextLink.tagName == "INPUT" || nextLink.type == "submit") {
                         let form = nextLink.parentNode;
                         while (form) {
                             if (form.tagName == "FORM") break;
@@ -1959,23 +1959,23 @@
                         }
                         parent = parent.parentNode;
                     }
-                    if(doc==document){
-                        if((!nextLink.href || /^(javascript|#)/.test(nextLink.href.replace(location.href,""))) && !isVisible(nextLink, _unsafeWindow)){
-                            this.nextLinkHref=false;
+                    if (doc == document) {
+                        if ((!nextLink.href || /^(javascript|#)/.test(nextLink.href.replace(location.href,""))) && !isVisible(nextLink, _unsafeWindow)) {
+                            this.nextLinkHref = false;
                             return null;
-                        }else{
-                            let nextLinkCs=_unsafeWindow.getComputedStyle(nextLink);
-                            if(nextLinkCs.cursor=="not-allowed"){
-                                this.nextLinkHref=false;
+                        } else {
+                            let nextLinkCs = _unsafeWindow.getComputedStyle(nextLink);
+                            if (nextLinkCs.cursor == "not-allowed") {
+                                this.nextLinkHref = false;
                                 return null;
                             }
-                            this.initNext=nextLink;
+                            this.initNext = nextLink;
                         }
                     }
-                    let form=doc.querySelector('#search-form');
-                    if(!nextLink.href && nextLink.hasAttribute("onclick") && form){
-                        if(form && /^\d+$/.test(nextLink.innerText)){
-                            href=getNextLinkByForm(form, nextLink.innerText);
+                    let form = doc.querySelector('#search-form');
+                    if (!nextLink.href && nextLink.hasAttribute("onclick") && form) {
+                        if (form && /^\d+$/.test(nextLink.innerText)) {
+                            href = getNextLinkByForm(form, nextLink.innerText);
                         }
                     }
                 }
@@ -5022,6 +5022,7 @@
 
     const pageNumReg=/[&\/\?](p=|page[=\/_-]?)\d+|[_-]\d+\./;
     function createPageBar(url) {
+        curPage++;
         SideController.setup();
         let posEle = null;
         let scrollH = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
@@ -5040,10 +5041,9 @@
         }
         if (rulesData.opacity == 0 || ruleParser.curSiteRule.pageBar === 0) return null;
         url = url.replace(/#p{.*/, "");
-        curPage++;
-        let example=ruleParser.curSiteRule.insertPos==2?insert.children[0]:(insert.parentNode.children[parseInt(insert.parentNode.children.length/2)]||insert);
-        if (example.className=="pagetual_pageBar") {
-            example=example.previousElementSibling;
+        let example = ruleParser.curSiteRule.insertPos == 2 ? insert.children[0] : (insert.parentNode.children[parseInt(insert.parentNode.children.length / 2)] || insert);
+        if (example.className == "pagetual_pageBar") {
+            example = example.previousElementSibling;
         }
         if(!example || !example.parentNode)example=insert;
         let exampleStyle = _unsafeWindow.getComputedStyle(example);
