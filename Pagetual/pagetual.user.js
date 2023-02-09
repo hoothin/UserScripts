@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.33.52
+// @version      1.9.33.53
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -1406,10 +1406,7 @@
                         pf = paDisplay.indexOf('flex') !== -1 || paDisplay.indexOf('grid') !== -1;
                     }
                     if (ele.children.length > 1) {
-                        if (curWin.getComputedStyle(ele).gridArea) {
-                            self.curSiteRule.pageElement += ">*";
-                            ele = ele.children;
-                        } else if (articleNum > 1) {
+                        if (articleNum > 1) {
                             self.curSiteRule.pageElement += ">article";
                             ele = ele.children;
                         } else {
@@ -1423,14 +1420,19 @@
                                 }
                             }
                             if (!hasText) {
-                                let middleChild = ele.children[parseInt(ele.children.length / 2)];
-                                if (curWin.getComputedStyle(ele).display === 'flex' || (rulesData.opacity != 0 && !pf)) {
-                                    ele = [ele];
-                                } else if ((middleChild.style && middleChild.style.position === "absolute" && middleChild.style.left && middleChild.style.top) || ele.tagName === "UL" || curHeight == 0) {
-                                    ele = [ele];
-                                } else {
+                                if (curWin.getComputedStyle(ele).gridArea) {
                                     self.curSiteRule.pageElement += ">*";
                                     ele = ele.children;
+                                } else {
+                                    let middleChild = ele.children[parseInt(ele.children.length / 2)];
+                                    if (curWin.getComputedStyle(ele).display === 'flex' || (rulesData.opacity != 0 && !pf)) {
+                                        ele = [ele];
+                                    } else if ((middleChild.style && middleChild.style.position === "absolute" && middleChild.style.left && middleChild.style.top) || ele.tagName === "UL" || curHeight == 0) {
+                                        ele = [ele];
+                                    } else {
+                                        self.curSiteRule.pageElement += ">*";
+                                        ele = ele.children;
+                                    }
                                 }
                             }
                         }
@@ -1899,6 +1901,10 @@
                 if (nextLinkSel != 0) {
                     if (Array && Array.isArray && Array.isArray(nextLinkSel)) {
                         nextLink = getElement(nextLinkSel[nextIndex], doc);
+                        if (!nextLink && nextIndex != 0) {
+                            nextIndex = 0;
+                            nextLink = getElement(nextLinkSel[nextIndex], doc);
+                        }
                     } else nextLink = getElement(nextLinkSel, doc);
                 }
                 if (nextLink && (this.curSiteRule.action == 0 || this.curSiteRule.action == 1 || this.curSiteRule.action == 2)) {
