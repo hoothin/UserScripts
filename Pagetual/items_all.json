@@ -1,5 +1,20 @@
 [
 {
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[@class='hdgLv2']|//div[@class='sectionBlock']",
+    "nextLink": "//span[@id='isPagingNext-Bottom']/a[@id='goPagingToNextTop']",
+    "url": "^https://tickets\\.jr-odekake\\.net/",
+    "exampleUrl": "https://tickets.jr-odekake.net/shohindb/view/consumer/tokutoku/list.html"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "sunny",
+  "resource_url": "http://wedata.net/items/86066",
+  "name": "JRおでかけネット > トクトクきっぷ",
+  "created_at": "2023-02-09T09:09:31+09:00",
+  "updated_at": "2023-02-09T09:09:31+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86065",
   "data": {
     "insertBefore": "",
@@ -2424,18 +2439,18 @@
   "updated_at": "2022-01-27T12:10:19+09:00"
 },
 {
-  "resource_url": "http://wedata.net/items/85827",
   "data": {
-    "pageElement": "descendant::article[1]/p[not(./text())][last()]/preceding-sibling::*[./preceding-sibling::header]",
+    "pageElement": "descendant::article[1]/p[last()]/following-sibling::*[1]/preceding-sibling::*[./preceding-sibling::header]",
     "nextLink": "//span[@class='current_page']/following-sibling::a",
     "url": "^https://chuokoron\\.jp/",
-    "exampleUrl": "https://chuokoron.jp/culture/118833.html\r\nhttps://chuokoron.jp/society/121747.html"
+    "exampleUrl": "https://chuokoron.jp/culture/118833.html\r\nhttps://chuokoron.jp/society/121747.html\r\nhttps://chuokoron.jp/series/122389_2.html"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "t_f_m'",
+  "resource_url": "http://wedata.net/items/85827",
   "name": "中央公論",
   "created_at": "2022-01-25T18:49:10+09:00",
-  "updated_at": "2022-11-29T15:18:12+09:00"
+  "updated_at": "2023-02-09T09:21:20+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85826",
