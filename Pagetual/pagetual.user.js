@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.33.50
+// @version      1.9.33.51
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -1233,43 +1233,43 @@
         }
 
         getPageElement(doc, curWin, dontFind) {
-            if(doc==document && this.docPageElement){
-                let parent=this.docPageElement;
-                while(parent && parent.nodeName!="BODY"){
-                    parent=parent.parentNode;
+            if (doc == document && this.docPageElement) {
+                let parent = this.docPageElement;
+                while (parent && parent.nodeName != "BODY") {
+                    parent = parent.parentNode;
                 }
-                if(parent && parent.nodeName=="BODY"){
+                if (parent && parent.nodeName == "BODY") {
                     return this.docPageElement;
                 }
             }
-            let pageElement=null;
-            let self=this;
-            let body=doc.body;
-            if(this.curSiteRule.pageElement){
-                let pageElementSel=this.curSiteRule.pageElement;
-                if(Array && Array.isArray && Array.isArray(pageElementSel)){
-                    pageElementSel=pageElementSel[nextIndex<pageElementSel.length?nextIndex:0];
+            let pageElement = null;
+            let self = this;
+            let body = doc.body;
+            if (this.curSiteRule.pageElement) {
+                let pageElementSel = this.curSiteRule.pageElement;
+                if (Array && Array.isArray && Array.isArray(pageElementSel)) {
+                    pageElementSel = pageElementSel[nextIndex < pageElementSel.length ? nextIndex : 0];
                 }
-                pageElement=getAllElements(pageElementSel, doc);
+                pageElement = getAllElements(pageElementSel, doc);
             }
-            if(pageElement && pageElement.length===1 && pageElement[0].style.display==='none'){
-                pageElement=[body];
+            if (pageElement && pageElement.length === 1 && pageElement[0].style.display === 'none') {
+                pageElement = [body];
             }
-            if(this.curSiteRule.singleUrl && pageElement && pageElement.length>0 && pageElement[0].tagName=="TR"){
-                let mainTr=this.insert.parentNode.querySelector('tr'),mainTdNum=0,newTdNum=0;
-                [].forEach.call(mainTr.children, el=>{
-                    if(el.tagName=="TD" || el.tagName=="TH"){
-                        mainTdNum+=el.colSpan||1;
+            if (this.curSiteRule.singleUrl && pageElement && pageElement.length > 0 && pageElement[0].tagName == "TR") {
+                let mainTr = this.insert.parentNode.querySelector('tr'), mainTdNum = 0, newTdNum = 0;
+                [].forEach.call(mainTr.children, el => {
+                    if (el.tagName == "TD" || el.tagName == "TH") {
+                        mainTdNum += el.colSpan || 1;
                     }
                 });
-                [].forEach.call(pageElement[0].children, el=>{
-                    if(el.tagName=="TD" || el.tagName=="TH"){
-                        newTdNum+=el.colSpan||1;
+                [].forEach.call(pageElement[0].children, el => {
+                    if (el.tagName == "TD" || el.tagName == "TH") {
+                        newTdNum += el.colSpan || 1;
                     }
                 });
-                if(mainTdNum!=newTdNum){
-                    this.curSiteRule.pageElement=allOfBody;
-                    pageElement=[body];
+                if (mainTdNum != newTdNum) {
+                    this.curSiteRule.pageElement = allOfBody;
+                    pageElement = [body];
                     this.getInsert(true);
                 }
             }
@@ -1285,7 +1285,11 @@
                         debug(self.curSiteRule.pageElement, 'Page element');
                         return [ele.parentNode];
                     }
-                    if (ele.childNodes && ele.childNodes.length == 1) ele = ele.childNodes[0];
+                    if (ele.childNodes && ele.childNodes.length == 1) {
+                        ele = ele.childNodes[0];
+                        curHeight = parseInt(ele.offsetHeight || ele.scrollHeight);
+                        curWidth = parseInt(ele.offsetWidth || ele.scrollWidth);
+                    }
                     if (ele.tagName == "PICTURE") {
                         self.curSiteRule.pageElement = geneSelector(ele.parentNode) + ">" + ele.tagName.toLowerCase();
                         debug(self.curSiteRule.pageElement, 'Page element');
@@ -2115,10 +2119,10 @@
         }
 
         getInsert(refresh) {
-            if(refresh){
-                this.insert=null;
+            if (refresh) {
+                this.insert = null;
             }
-            if(this.insert && document.documentElement.contains(this.insert)){
+            if (this.insert && document.documentElement.contains(this.insert)) {
                 return this.insert;
             }
             if (this.curSiteRule.insert) {
@@ -2286,36 +2290,36 @@
             });
         }
 
-        initPage(callback){
-            let self=this;
-            if(self.initing)return;
-            self.initing=true;
+        initPage(callback) {
+            let self = this;
+            if (self.initing) return;
+            self.initing = true;
             setTimeout(() => {
-                self.initing=false;
+                self.initing = false;
             }, 100);
-            curPage=1;
-            urlChanged=false;
+            curPage = 1;
+            urlChanged = false;
             SideController.getInstance().remove();
-            if(this.addedElePool && this.addedElePool.length){
-                this.addedElePool.forEach(ele=>{
-                    if(ele.parentNode)ele.parentNode.removeChild(ele);
+            if (this.addedElePool && this.addedElePool.length) {
+                this.addedElePool.forEach(ele => {
+                    if (ele.parentNode) ele.parentNode.removeChild(ele);
                 });
             }
-            this.insert=null;
-            this.addedElePool=[];
-            this.curSiteRule={};
-            this.pageDoc=document;
-            this.nextLinkHref=null;
-            this.curUrl=location.href;
-            this.oldUrl="";
-            this.historyUrl="";
-            let base=document.querySelector("base");
-            this.basePath=base?base.href:location.href;
+            this.insert = null;
+            this.addedElePool = [];
+            this.curSiteRule = {};
+            this.pageDoc = document;
+            this.nextLinkHref = null;
+            this.curUrl = location.href;
+            this.oldUrl = "";
+            this.historyUrl = "";
+            let base = document.querySelector("base");
+            this.basePath = base ? base.href : location.href;
             this.getRule(async () => {
-                isPause=false;
-                if(self.curSiteRule.enable==0){
+                isPause = false;
+                if (self.curSiteRule.enable == 0) {
                     debug("Stop as rule disable");
-                    isPause=true;
+                    isPause = true;
                     return;
                 }
                 //若是再亂匹配就不緩存wedata，或者只在找完本地規則之後再考慮wedata的緩存
@@ -2335,28 +2339,32 @@
                     }
                     storage.setItem("hpRules", self.hpRules);
                 }
-                let css=self.curSiteRule.css || rulesData.customCss;
-                if(css && !/^inIframe:/.test(css)){
+                let css = self.curSiteRule.css || rulesData.customCss;
+                if (css && !/^inIframe:/.test(css)) {
                     _GM_addStyle(css);
                 }
-                let autoClick=self.curSiteRule.autoClick;
-                if(autoClick){
+                let autoClick = self.curSiteRule.autoClick;
+                if (autoClick) {
                     let autoClickBtn;
-                    autoClickBtn=getElement(autoClick, document);
-                    if(autoClickBtn){
+                    autoClickBtn = getElement(autoClick, document);
+                    if (autoClickBtn) {
                         emuClick(autoClickBtn);
                     }
                 }
-                let code=self.curSiteRule.init;
-                if(code){
-                    try{
-                        ((typeof _unsafeWindow.pagetualInit=='undefined') ? Function('doc','win','iframe','"use strict";' + code) : _unsafeWindow.pagetualInit)(null,null,null);
-                    }catch(e){
+                let code = self.curSiteRule.init;
+                if (code) {
+                    try {
+                        ((typeof _unsafeWindow.pagetualInit == 'undefined') ? Function('doc','win','iframe','"use strict";' + code) : _unsafeWindow.pagetualInit)(null, null, null);
+                    } catch(e) {
                         debug(e);
                     }
                 }
                 await self.getNextLink(document);
                 self.refreshByClick();
+
+                if (self.curSiteRule.pageElementCss || self.curSiteRule.pageElementStyle || rulesData.pageElementCss) {
+                    self.getPageElement(document, _unsafeWindow);
+                }
                 callback();
                 let initRun = typeof self.curSiteRule.initRun == 'undefined' ? rulesData.initRun : self.curSiteRule.initRun;
                 if (initRun && initRun != false) nextPage();
@@ -2366,66 +2374,66 @@
         insertElement(ele) {
             this.addedElePool.push(ele);
             this.getInsert();
-            if(this.curSiteRule.insertPos==2){
+            if (this.curSiteRule.insertPos == 2) {
                 this.insert.appendChild(ele);
-            }else{
+            } else {
                 this.insert.parentNode.insertBefore(ele, this.insert);
             }
         }
 
         async insertPage(doc, eles, url, callback, tried) {
-            this.oldUrl=this.curUrl;
-            let oldTitle=this.pageDoc.title;
-            this.pageDoc=doc;
-            this.curUrl=url;
-            let nextLink=await this.getNextLink(doc);
-            this.nextTitle="";
-            if(this.curSiteRule.pageBarText){
-                if(this.curSiteRule.pageBarText==1 || this.curSiteRule.pageBarText==true){
-                    this.nextTitle=doc.title;
-                }else{
-                    try{
-                        this.nextTitle=((typeof _unsafeWindow.pagetualPageBarText=='undefined') ? Function("doc",'"use strict";' + this.curSiteRule.pageBarText) : _unsafeWindow.pagetualPageBarText)(doc);
-                    }catch(e){
+            this.oldUrl = this.curUrl;
+            let oldTitle = this.pageDoc.title;
+            this.pageDoc = doc;
+            this.curUrl = url;
+            let nextLink = await this.getNextLink(doc);
+            this.nextTitle = "";
+            if (this.curSiteRule.pageBarText) {
+                if (this.curSiteRule.pageBarText == 1 || this.curSiteRule.pageBarText == true) {
+                    this.nextTitle = doc.title;
+                } else {
+                    try {
+                        this.nextTitle = ((typeof _unsafeWindow.pagetualPageBarText == 'undefined') ? Function("doc",'"use strict";' + this.curSiteRule.pageBarText) : _unsafeWindow.pagetualPageBarText)(doc);
+                    } catch(e) {
                         debug(e);
                     }
                 }
             }
-            if(curPage==1 && !tried && !nextLink && this.curSiteRule.singleUrl && this.curSiteRule.pageElement && this.curSiteRule.action!=0){
-                this.curSiteRule.action=1;
-                this.curUrl=location.href;
+            if (curPage == 1 && !tried && !nextLink && this.curSiteRule.singleUrl && this.curSiteRule.pageElement && this.curSiteRule.action != 0) {
+                this.curSiteRule.action = 1;
+                this.curUrl = location.href;
                 return false;
             }
-            if(callback)callback(eles);
+            if (callback) callback(eles);
             this.getInsert();
-            var self=this,newEles=[];
-            if(!eles || eles.length==0 || !self.insert || !self.insert.parentNode){
-            }else{
-                isLoading=true;
+            var self = this, newEles = [];
+            if (!eles || eles.length == 0 || !self.insert || !self.insert.parentNode) {
+            } else {
+                isLoading = true;
                 await this.pageInit(doc, eles);
-                let curScroll=document.body.scrollTop||document.documentElement.scrollTop;
-                [].forEach.call(eles, ele=>{
-                    let newEle=ele.cloneNode(true);
-                    let oldCanvass=ele.querySelectorAll("canvas");
-                    let newCanvass=newEle.querySelectorAll("canvas");
-                    if(self.updateUrl){
-                        [].forEach.call(newEle.querySelectorAll("img"), img=>{
-                            if (img.getAttribute("src")) img.src=self.canonicalUri(img.getAttribute("src"));
+                let curScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                [].forEach.call(eles, ele => {
+                    let newEle = ele.cloneNode(true);
+                    let oldCanvass = ele.querySelectorAll("canvas");
+                    let newCanvass = newEle.querySelectorAll("canvas");
+                    if (self.updateUrl) {
+                        [].forEach.call(newEle.querySelectorAll("img"), img => {
+                            if (img.getAttribute("src")) img.src = self.canonicalUri(img.getAttribute("src"));
                         });
-                        [].forEach.call(newEle.querySelectorAll("a"), a=>{
+                        [].forEach.call(newEle.querySelectorAll("a"), a => {
                             if (a.getAttribute("href")) a.href = self.canonicalUri(a.getAttribute("href"));
                         });
                     }
-                    for(let i=0;i<oldCanvass.length;i++){
-                        let oldCanvas=oldCanvass[i];
-                        let newCanvas=newCanvass[i];
+                    for (let i = 0; i < oldCanvass.length; i++) {
+                        let oldCanvas = oldCanvass[i];
+                        let newCanvas = newCanvass[i];
                         newCanvas.getContext('2d').drawImage(oldCanvas, 0, 0);
                     }
                     self.insertElement(newEle);
                     newEles.push(newEle);
                 });
-                document.body.scrollTop=curScroll;
-                document.documentElement.scrollTop=curScroll;
+                document.body.scrollTop = curScroll;
+                document.documentElement.scrollTop = curScroll;
             }
             this.pageAction(doc, newEles);
             let enableHistory = this.curSiteRule.history;
@@ -4320,100 +4328,100 @@
             },
             timeout: 20000,
             onload: function(res) {
-                var doc=null,response=res.response;
-                let preCode=ruleParser.curSiteRule.pageElementPre || ruleParser.curSiteRule.pagePre;
-                if(preCode){
-                    try{
-                        if (typeof _unsafeWindow.pagetualPagePre!='undefined') {
+                var doc = null, response = res.response;
+                let preCode = ruleParser.curSiteRule.pageElementPre || ruleParser.curSiteRule.pagePre;
+                if (preCode) {
+                    try {
+                        if (typeof _unsafeWindow.pagetualPagePre != 'undefined') {
                             response = _unsafeWindow.pagetualPagePre(response);
                         } else if (preCode.length == 2) {
                             response = response.replace(new RegExp(preCode[0], "gi"), preCode[1]);
                         } else {
                             response = Function("response",'"use strict";' + preCode)(response);
                         }
-                    }catch(e){
+                    } catch(e) {
                         debug(e);
                     }
                 }
                 try {
-                    doc=document.implementation.createHTMLDocument('');
-                    doc.documentElement.innerHTML=response;
-                    let base=doc.querySelector("base");
-                    ruleParser.basePath=base?base.href:url;
+                    doc = document.implementation.createHTMLDocument('');
+                    doc.documentElement.innerHTML = response;
+                    let base = doc.querySelector("base");
+                    ruleParser.basePath = base ? base.href : url;
                 }
                 catch (e) {
-                    debug('parse error'+e.toString());
+                    debug('parse error:' + e.toString());
                 }
-                let pageElement=ruleParser.getPageElement(doc);
-                if(inCors && (!pageElement || pageElement.length==0)){
-                    ruleParser.curSiteRule.pageElement=allOfBody;
-                    pageElement=ruleParser.getPageElement(doc);
+                let pageElement = ruleParser.getPageElement(doc);
+                if (inCors && (!pageElement || pageElement.length == 0)) {
+                    ruleParser.curSiteRule.pageElement = allOfBody;
+                    pageElement = ruleParser.getPageElement(doc);
                     ruleParser.getInsert(true);
                 }
                 //只有1的話怕不是圖片哦
-                if(pageElement && (pageElement.length>1 || (pageElement.length==1 && pageElement[0].tagName!="IMG") )){
+                if (pageElement && (pageElement.length > 1 || (pageElement.length == 1 && pageElement[0].tagName != "IMG"))) {
                     ruleParser.insertPage(doc, pageElement, url, callback, false);
-                    if(ruleParser.curSiteRule.action==1){
-                        requestFromIframe(url, (doc, eles)=>{
+                    if (ruleParser.curSiteRule.action == 1) {
+                        requestFromIframe(url, (doc, eles) => {
                             loadPageOver();
-                            if(eles){
+                            if (eles) {
                                 ruleParser.insertPage(doc, eles, url, callback, true);
                             }
                         });
-                    }else ruleParser.curSiteRule.action=0;
-                }else if(ruleParser.curSiteRule.singleUrl || curPage==1){
-                    ruleParser.curSiteRule.action=1;
-                    requestFromIframe(url, (doc, eles)=>{
+                    } else ruleParser.curSiteRule.action = 0;
+                } else if (ruleParser.curSiteRule.singleUrl || curPage == 1) {
+                    ruleParser.curSiteRule.action = 1;
+                    requestFromIframe(url, (doc, eles) => {
                         loadPageOver();
-                        if(eles){
+                        if (eles) {
                             ruleParser.insertPage(doc, eles, url, callback, true);
                         }
                     });
-                }else{
+                } else {
                     debug("Stop as no page element");
-                    isPause=true;
+                    isPause = true;
                     callback(false);
                 }
             },
-            onerror: function(e){
+            onerror: function(e) {
                 debug(e, "NetError");
                 callback(false);
             },
-            ontimeout: function(e){
+            ontimeout: function(e) {
                 debug(e, "NetTimeout");
                 callback(false);
             }
         });
     }
 
-    function initPage(){
-        ruleParser.initPage(()=>{
-            if(ruleParser.curSiteRule.autoLoadNum){
-                autoLoadNum=ruleParser.curSiteRule.autoLoadNum;
+    function initPage() {
+        ruleParser.initPage(() => {
+            if (ruleParser.curSiteRule.autoLoadNum) {
+                autoLoadNum = ruleParser.curSiteRule.autoLoadNum;
             }
-            if(ruleParser.curSiteRule.nextLink && Array && Array.isArray && Array.isArray(ruleParser.curSiteRule.nextLink)){
-                _GM_registerMenuCommand(i18n("nextSwitch"), ()=>{
+            if (ruleParser.curSiteRule.nextLink && Array && Array.isArray && Array.isArray(ruleParser.curSiteRule.nextLink)) {
+                _GM_registerMenuCommand(i18n("nextSwitch"), () => {
                     NextSwitch.getInstance().start();
                 });
             }
-            if(ruleParser.nextLinkHref){
-                let isJs=/^(javascript|#)/.test(ruleParser.nextLinkHref.replace(location.href,""));
-                if(!isJs){
-                    let inForce=(forceState == 2 || forceState == 3);
-                    _GM_registerMenuCommand(i18n(inForce?"cancelForceIframe":"forceIframe"), ()=>{
-                        if(inForce){
-                            storage.setItem("forceState_"+location.host, "");
-                        }else{
-                            let _state=ruleParser.curSiteRule.action>0 || confirm(i18n("forceAllBody"))?2:3;
-                            storage.setItem("forceState_"+location.host, _state);
+            if (ruleParser.nextLinkHref) {
+                let isJs = /^(javascript|#)/.test(ruleParser.nextLinkHref.replace(location.href, ""));
+                if (!isJs) {
+                    let inForce = (forceState == 2 || forceState == 3);
+                    _GM_registerMenuCommand(i18n(inForce ? "cancelForceIframe" : "forceIframe"), () => {
+                        if (inForce) {
+                            storage.setItem("forceState_" + location.host, "");
+                        } else {
+                            let _state = ruleParser.curSiteRule.action > 0 || confirm(i18n("forceAllBody")) ? 2 : 3;
+                            storage.setItem("forceState_" + location.host, _state);
                         }
                         location.reload();
                     });
                 }
-                _GM_registerMenuCommand(i18n("loadNow"), ()=>{
-                    let loadNum=window.prompt(i18n("loadConfirm"), "1");
-                    if(loadNum==="" || loadNum===null)return;
-                    autoLoadNum=Math.abs(parseInt(loadNum));
+                _GM_registerMenuCommand(i18n("loadNow"), () => {
+                    let loadNum = window.prompt(i18n("loadConfirm"), "1");
+                    if (loadNum === "" || loadNum === null) return;
+                    autoLoadNum = Math.abs(parseInt(loadNum));
                     nextPage();
                 });
             }
@@ -4422,7 +4430,7 @@
     }
 
     var pageBarStyle;
-    function initView(){
+    function initView() {
         _GM_addStyle(`
          .pagetual_pageBar{
            -moz-transition:opacity 0.3s ease-in-out 0s;
@@ -4565,26 +4573,26 @@
            100% { opacity: 1 }
          }
         `);
-        pageBarStyle=`text-indent: initial;vertical-align: super;line-height:1;opacity:${rulesData.opacity};display:${rulesData.opacity==0?"none":"inline-flex"};padding:0;box-shadow: 0px 0px 10px 0px #000000aa;border-radius: 20px;background-color: rgb(240 240 240 / 80%);font-size: 30px;visibility: visible; position: initial; width: auto; height: 30px; float: none; clear: both; margin: 5px auto; text-align: center!important;justify-content: center;`;
+        pageBarStyle = `text-indent: initial;vertical-align: super;line-height:1;opacity:${rulesData.opacity};display:${rulesData.opacity==0?"none":"inline-flex"};padding:0;box-shadow: 0px 0px 10px 0px #000000aa;border-radius: 20px;background-color: rgb(240 240 240 / 80%);font-size: 30px;visibility: visible; position: initial; width: auto; height: 30px; float: none; clear: both; margin: 5px auto; text-align: center!important;justify-content: center;`;
     }
-    var loadingDiv=document.createElement("div");
-    loadingDiv.style.cssText="text-indent: initial;cy: initial;d: initial;dominant-baseline: initial;empty-cells: initial;fill: initial;fill-opacity: initial;fill-rule: initial;filter: initial;flex: initial;flex-flow: initial;float: initial;flood-color: initial;flood-opacity: initial;grid: initial;grid-area: initial;height: initial;hyphens: initial;image-orientation: initial;image-rendering: initial;inline-size: initial;inset-block: initial;inset-inline: initial;isolation: initial;letter-spacing: initial;lighting-color: initial;line-break: initial;list-style: initial;margin-block: initial;margin: 0px auto;margin-inline: initial;marker: initial;mask: initial;mask-type: initial;max-block-size: initial;max-height: initial;max-inline-size: initial;max-width: initial;min-block-size: initial;min-height: initial;min-inline-size: initial;min-width: initial;mix-blend-mode: initial;object-fit: initial;object-position: initial;offset: initial;opacity: initial;order: initial;origin-trial-test-property: initial;orphans: initial;outline: initial;outline-offset: initial;overflow-anchor: initial;overflow-clip-margin: initial;overflow-wrap: initial;overflow: initial;overscroll-behavior-block: initial;overscroll-behavior-inline: initial;overscroll-behavior: initial;padding-block: initial;padding: initial;padding-inline: initial;page: initial;page-orientation: initial;paint-order: initial;perspective: initial;perspective-origin: initial;pointer-events: initial;position: initial;quotes: initial;r: initial;resize: initial;ruby-position: initial;rx: initial;ry: initial;scroll-behavior: initial;scroll-margin-block: initial;scroll-margin: initial;scroll-margin-inline: initial;scroll-padding-block: initial;scroll-padding: initial;scroll-padding-inline: initial;scroll-snap-align: initial;scroll-snap-stop: initial;scroll-snap-type: initial;scrollbar-gutter: initial;shape-image-threshold: initial;shape-margin: initial;shape-outside: initial;shape-rendering: initial;size: initial;speak: initial;stop-color: initial;stop-opacity: initial;stroke: initial;stroke-dasharray: initial;stroke-dashoffset: initial;stroke-linecap: initial;stroke-linejoin: initial;stroke-miterlimit: initial;stroke-opacity: initial;stroke-width: initial;tab-size: initial;table-layout: initial;text-align: initial;text-align-last: initial;text-anchor: initial;text-combine-upright: initial;text-decoration: initial;text-decoration-skip-ink: initial;text-indent: initial;text-overflow: initial;text-shadow: initial;text-size-adjust: initial;text-transform: initial;text-underline-offset: initial;text-underline-position: initial;touch-action: initial;transform: initial;transform-box: initial;transform-origin: initial;transform-style: initial;transition: initial;user-select: initial;vector-effect: initial;vertical-align: initial;visibility: initial;border-spacing: initial;-webkit-border-image: initial;-webkit-box-align: initial;-webkit-box-decoration-break: initial;-webkit-box-direction: initial;-webkit-box-flex: initial;-webkit-box-ordinal-group: initial;-webkit-box-orient: initial;-webkit-box-pack: initial;-webkit-box-reflect: initial;-webkit-highlight: initial;-webkit-hyphenate-character: initial;-webkit-line-break: initial;-webkit-line-clamp: initial;-webkit-mask-box-image: initial;-webkit-mask: initial;-webkit-mask-composite: initial;-webkit-perspective-origin-x: initial;-webkit-perspective-origin-y: initial;-webkit-print-color-adjust: initial;-webkit-rtl-ordering: initial;-webkit-ruby-position: initial;-webkit-tap-highlight-color: initial;-webkit-text-combine: initial;-webkit-text-decorations-in-effect: initial;-webkit-text-emphasis: initial;-webkit-text-emphasis-position: initial;-webkit-text-fill-color: initial;-webkit-text-security: initial;-webkit-text-stroke: initial;-webkit-transform-origin-x: initial;-webkit-transform-origin-y: initial;-webkit-transform-origin-z: initial;-webkit-user-drag: initial;-webkit-user-modify: initial;white-space: initial;widows: initial;width: initial;will-change: initial;word-break: initial;word-spacing: initial;x: initial;y: initial;z-index: 2147483647;";
+    var loadingDiv = document.createElement("div");
+    loadingDiv.style.cssText = "text-indent: initial;cy: initial;d: initial;dominant-baseline: initial;empty-cells: initial;fill: initial;fill-opacity: initial;fill-rule: initial;filter: initial;flex: initial;flex-flow: initial;float: initial;flood-color: initial;flood-opacity: initial;grid: initial;grid-area: initial;height: initial;hyphens: initial;image-orientation: initial;image-rendering: initial;inline-size: initial;inset-block: initial;inset-inline: initial;isolation: initial;letter-spacing: initial;lighting-color: initial;line-break: initial;list-style: initial;margin-block: initial;margin: 0px auto;margin-inline: initial;marker: initial;mask: initial;mask-type: initial;max-block-size: initial;max-height: initial;max-inline-size: initial;max-width: initial;min-block-size: initial;min-height: initial;min-inline-size: initial;min-width: initial;mix-blend-mode: initial;object-fit: initial;object-position: initial;offset: initial;opacity: initial;order: initial;origin-trial-test-property: initial;orphans: initial;outline: initial;outline-offset: initial;overflow-anchor: initial;overflow-clip-margin: initial;overflow-wrap: initial;overflow: initial;overscroll-behavior-block: initial;overscroll-behavior-inline: initial;overscroll-behavior: initial;padding-block: initial;padding: initial;padding-inline: initial;page: initial;page-orientation: initial;paint-order: initial;perspective: initial;perspective-origin: initial;pointer-events: initial;position: initial;quotes: initial;r: initial;resize: initial;ruby-position: initial;rx: initial;ry: initial;scroll-behavior: initial;scroll-margin-block: initial;scroll-margin: initial;scroll-margin-inline: initial;scroll-padding-block: initial;scroll-padding: initial;scroll-padding-inline: initial;scroll-snap-align: initial;scroll-snap-stop: initial;scroll-snap-type: initial;scrollbar-gutter: initial;shape-image-threshold: initial;shape-margin: initial;shape-outside: initial;shape-rendering: initial;size: initial;speak: initial;stop-color: initial;stop-opacity: initial;stroke: initial;stroke-dasharray: initial;stroke-dashoffset: initial;stroke-linecap: initial;stroke-linejoin: initial;stroke-miterlimit: initial;stroke-opacity: initial;stroke-width: initial;tab-size: initial;table-layout: initial;text-align: initial;text-align-last: initial;text-anchor: initial;text-combine-upright: initial;text-decoration: initial;text-decoration-skip-ink: initial;text-indent: initial;text-overflow: initial;text-shadow: initial;text-size-adjust: initial;text-transform: initial;text-underline-offset: initial;text-underline-position: initial;touch-action: initial;transform: initial;transform-box: initial;transform-origin: initial;transform-style: initial;transition: initial;user-select: initial;vector-effect: initial;vertical-align: initial;visibility: initial;border-spacing: initial;-webkit-border-image: initial;-webkit-box-align: initial;-webkit-box-decoration-break: initial;-webkit-box-direction: initial;-webkit-box-flex: initial;-webkit-box-ordinal-group: initial;-webkit-box-orient: initial;-webkit-box-pack: initial;-webkit-box-reflect: initial;-webkit-highlight: initial;-webkit-hyphenate-character: initial;-webkit-line-break: initial;-webkit-line-clamp: initial;-webkit-mask-box-image: initial;-webkit-mask: initial;-webkit-mask-composite: initial;-webkit-perspective-origin-x: initial;-webkit-perspective-origin-y: initial;-webkit-print-color-adjust: initial;-webkit-rtl-ordering: initial;-webkit-ruby-position: initial;-webkit-tap-highlight-color: initial;-webkit-text-combine: initial;-webkit-text-decorations-in-effect: initial;-webkit-text-emphasis: initial;-webkit-text-emphasis-position: initial;-webkit-text-fill-color: initial;-webkit-text-security: initial;-webkit-text-stroke: initial;-webkit-transform-origin-x: initial;-webkit-transform-origin-y: initial;-webkit-transform-origin-z: initial;-webkit-user-drag: initial;-webkit-user-modify: initial;white-space: initial;widows: initial;width: initial;will-change: initial;word-break: initial;word-spacing: initial;x: initial;y: initial;z-index: 2147483647;";
 
-    const loadingCSS=`display: block; position: initial; margin: auto auto 5px auto; shape-rendering: auto; vertical-align: middle; visibility: visible; width: initial; height: initial; text-align: center; color: #6e6e6e; flex: 0;`;
-    function setLoadingDiv(loadingText){
-        loadingDiv.innerHTML=createHTML(`<p class="pagetual_loading_text" style="${loadingCSS}display: inline-block;">${loadingText}</p>${rulesData.hideLoadingIcon ? "" : `<div class="pagetual_loading"><svg width="50" height="50" style="position:relative;cursor: pointer;width: 50px;height: 50px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#6e6e6e"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#6e6e6e"></path></svg></div>`}`);
+    const loadingCSS = `display: block; position: initial; margin: auto auto 5px auto; shape-rendering: auto; vertical-align: middle; visibility: visible; width: initial; height: initial; text-align: center; color: #6e6e6e; flex: 0;`;
+    function setLoadingDiv(loadingText) {
+        loadingDiv.innerHTML = createHTML(`<p class="pagetual_loading_text" style="${loadingCSS}display: inline-block;">${loadingText}</p>${rulesData.hideLoadingIcon ? "" : `<div class="pagetual_loading"><svg width="50" height="50" style="position:relative;cursor: pointer;width: 50px;height: 50px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#6e6e6e"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#6e6e6e"></path></svg></div>`}`);
     }
 
-    var upSvg=`<svg width="30" height="30" class="upSvg pagetual" style="display:initial;position:relative;cursor: pointer;margin: 0 8px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a"></path></svg>`;
-    var upSvgCSS=`display:initial;position:relative;cursor: pointer;margin: 0 8px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;`;
-    var downSvg=`<svg width="30" height="30" class="downSvg pagetual" style="display:initial;position:relative;cursor: pointer;margin: 0 8px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;transform: rotate(180deg);" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a"></path></svg>`;
-    var downSvgCSS=`display:initial;position:relative;cursor: pointer;margin: 0 8px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;transform: rotate(180deg);`;
+    var upSvg = `<svg width="30" height="30" class="upSvg pagetual" style="display:initial;position:relative;cursor: pointer;margin: 0 8px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a"></path></svg>`;
+    var upSvgCSS = `display:initial;position:relative;cursor: pointer;margin: 0 8px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;`;
+    var downSvg = `<svg width="30" height="30" class="downSvg pagetual" style="display:initial;position:relative;cursor: pointer;margin: 0 8px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;transform: rotate(180deg);" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a"></path></svg>`;
+    var downSvgCSS = `display:initial;position:relative;cursor: pointer;margin: 0 8px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;transform: rotate(180deg);`;
 
-    const initStyle=`text-indent: initial;display: contents;right: unset;left: unset;top: unset;bottom: unset;inset: unset;clear: both;cy: initial;d: initial;dominant-baseline: initial;empty-cells: initial;fill: initial;fill-opacity: initial;fill-rule: initial;filter: initial;flex: initial;flex-flow: initial;float: initial;flood-color: initial;flood-opacity: initial;grid: initial;grid-area: initial;height: initial;hyphens: initial;image-orientation: initial;image-rendering: initial;inline-size: initial;inset-block: initial;inset-inline: initial;isolation: initial;letter-spacing: initial;lighting-color: initial;line-break: initial;list-style: initial;margin-block: initial;margin: 0px 5px;margin-inline: initial;marker: initial;mask: initial;mask-type: initial;max-block-size: initial;max-height: initial;max-inline-size: initial;max-width: initial;min-block-size: initial;min-height: initial;min-inline-size: initial;min-width: initial;mix-blend-mode: initial;object-fit: initial;object-position: initial;offset: initial;opacity: initial;order: initial;orphans: initial;outline: initial;outline-offset: initial;overflow-anchor: initial;overflow-clip-margin: initial;overflow-wrap: initial;overflow: initial;overscroll-behavior-block: initial;overscroll-behavior-inline: initial;overscroll-behavior: initial;padding-block: initial;padding: initial;padding-inline: initial;page: initial;page-orientation: initial;paint-order: initial;perspective: initial;perspective-origin: initial;pointer-events: initial;position: relative;quotes: initial;r: initial;resize: initial;ruby-position: initial;rx: initial;ry: initial;scroll-behavior: initial;scroll-margin-block: initial;scroll-margin: initial;scroll-margin-inline: initial;scroll-padding-block: initial;scroll-padding: initial;scroll-padding-inline: initial;scroll-snap-align: initial;scroll-snap-stop: initial;scroll-snap-type: initial;scrollbar-gutter: initial;shape-image-threshold: initial;shape-margin: initial;shape-outside: initial;shape-rendering: initial;size: initial;speak: initial;stop-color: initial;stop-opacity: initial;stroke: initial;stroke-dasharray: initial;stroke-dashoffset: initial;stroke-linecap: initial;stroke-linejoin: initial;stroke-miterlimit: initial;stroke-opacity: initial;stroke-width: initial;tab-size: initial;table-layout: initial;text-align: initial;text-align-last: initial;text-anchor: initial;text-combine-upright: initial;text-decoration: initial;text-decoration-skip-ink: initial;text-indent: initial;text-overflow: initial;text-shadow: initial;text-size-adjust: initial;text-transform: initial;text-underline-offset: initial;text-underline-position: initial;touch-action: initial;transform: initial;transform-box: initial;transform-origin: initial;transform-style: initial;transition: initial;user-select: initial;vector-effect: initial;vertical-align: initial;visibility: initial;border-spacing: initial;-webkit-border-image: initial;-webkit-box-align: initial;-webkit-box-decoration-break: initial;-webkit-box-direction: initial;-webkit-box-flex: initial;-webkit-box-ordinal-group: initial;-webkit-box-orient: initial;-webkit-box-pack: initial;-webkit-box-reflect: initial;-webkit-highlight: initial;-webkit-hyphenate-character: initial;-webkit-line-break: initial;-webkit-line-clamp: initial;-webkit-mask-box-image: initial;-webkit-mask: initial;-webkit-mask-composite: initial;-webkit-perspective-origin-x: initial;-webkit-perspective-origin-y: initial;-webkit-print-color-adjust: initial;-webkit-rtl-ordering: initial;-webkit-ruby-position: initial;-webkit-tap-highlight-color: initial;-webkit-text-combine: initial;-webkit-text-decorations-in-effect: initial;-webkit-text-emphasis: initial;-webkit-text-emphasis-position: initial;-webkit-text-fill-color: initial;-webkit-text-security: initial;-webkit-text-stroke: initial;-webkit-transform-origin-x: initial;-webkit-transform-origin-y: initial;-webkit-transform-origin-z: initial;-webkit-user-drag: initial;-webkit-user-modify: initial;white-space: initial;widows: initial;width: initial;will-change: initial;word-break: initial;word-spacing: initial;x: initial;y: initial;`;
-    const pageTextStyle=`text-indent: initial;padding: unset;border: none;background: unset!important;line-height: 30px;text-decoration: none;user-select: none;visibility: visible;position: initial;width: auto;max-width: 80%; white-space: nowrap; text-overflow: ellipsis;overflow: hidden;height: auto;float: none;clear: both;margin: 0px;text-align: center;display: inline-block;font-weight: bold;font-style: normal;font-size: 16px;letter-spacing: initial;vertical-align: top;color: rgb(85, 85, 95)!important;`;
+    const initStyle = `text-indent: initial;display: contents;right: unset;left: unset;top: unset;bottom: unset;inset: unset;clear: both;cy: initial;d: initial;dominant-baseline: initial;empty-cells: initial;fill: initial;fill-opacity: initial;fill-rule: initial;filter: initial;flex: initial;flex-flow: initial;float: initial;flood-color: initial;flood-opacity: initial;grid: initial;grid-area: initial;height: initial;hyphens: initial;image-orientation: initial;image-rendering: initial;inline-size: initial;inset-block: initial;inset-inline: initial;isolation: initial;letter-spacing: initial;lighting-color: initial;line-break: initial;list-style: initial;margin-block: initial;margin: 0px 5px;margin-inline: initial;marker: initial;mask: initial;mask-type: initial;max-block-size: initial;max-height: initial;max-inline-size: initial;max-width: initial;min-block-size: initial;min-height: initial;min-inline-size: initial;min-width: initial;mix-blend-mode: initial;object-fit: initial;object-position: initial;offset: initial;opacity: initial;order: initial;orphans: initial;outline: initial;outline-offset: initial;overflow-anchor: initial;overflow-clip-margin: initial;overflow-wrap: initial;overflow: initial;overscroll-behavior-block: initial;overscroll-behavior-inline: initial;overscroll-behavior: initial;padding-block: initial;padding: initial;padding-inline: initial;page: initial;page-orientation: initial;paint-order: initial;perspective: initial;perspective-origin: initial;pointer-events: initial;position: relative;quotes: initial;r: initial;resize: initial;ruby-position: initial;rx: initial;ry: initial;scroll-behavior: initial;scroll-margin-block: initial;scroll-margin: initial;scroll-margin-inline: initial;scroll-padding-block: initial;scroll-padding: initial;scroll-padding-inline: initial;scroll-snap-align: initial;scroll-snap-stop: initial;scroll-snap-type: initial;scrollbar-gutter: initial;shape-image-threshold: initial;shape-margin: initial;shape-outside: initial;shape-rendering: initial;size: initial;speak: initial;stop-color: initial;stop-opacity: initial;stroke: initial;stroke-dasharray: initial;stroke-dashoffset: initial;stroke-linecap: initial;stroke-linejoin: initial;stroke-miterlimit: initial;stroke-opacity: initial;stroke-width: initial;tab-size: initial;table-layout: initial;text-align: initial;text-align-last: initial;text-anchor: initial;text-combine-upright: initial;text-decoration: initial;text-decoration-skip-ink: initial;text-indent: initial;text-overflow: initial;text-shadow: initial;text-size-adjust: initial;text-transform: initial;text-underline-offset: initial;text-underline-position: initial;touch-action: initial;transform: initial;transform-box: initial;transform-origin: initial;transform-style: initial;transition: initial;user-select: initial;vector-effect: initial;vertical-align: initial;visibility: initial;border-spacing: initial;-webkit-border-image: initial;-webkit-box-align: initial;-webkit-box-decoration-break: initial;-webkit-box-direction: initial;-webkit-box-flex: initial;-webkit-box-ordinal-group: initial;-webkit-box-orient: initial;-webkit-box-pack: initial;-webkit-box-reflect: initial;-webkit-highlight: initial;-webkit-hyphenate-character: initial;-webkit-line-break: initial;-webkit-line-clamp: initial;-webkit-mask-box-image: initial;-webkit-mask: initial;-webkit-mask-composite: initial;-webkit-perspective-origin-x: initial;-webkit-perspective-origin-y: initial;-webkit-print-color-adjust: initial;-webkit-rtl-ordering: initial;-webkit-ruby-position: initial;-webkit-tap-highlight-color: initial;-webkit-text-combine: initial;-webkit-text-decorations-in-effect: initial;-webkit-text-emphasis: initial;-webkit-text-emphasis-position: initial;-webkit-text-fill-color: initial;-webkit-text-security: initial;-webkit-text-stroke: initial;-webkit-transform-origin-x: initial;-webkit-transform-origin-y: initial;-webkit-transform-origin-z: initial;-webkit-user-drag: initial;-webkit-user-modify: initial;white-space: initial;widows: initial;width: initial;will-change: initial;word-break: initial;word-spacing: initial;x: initial;y: initial;`;
+    const pageTextStyle = `text-indent: initial;padding: unset;border: none;background: unset!important;line-height: 30px;text-decoration: none;user-select: none;visibility: visible;position: initial;width: auto;max-width: 80%; white-space: nowrap; text-overflow: ellipsis;overflow: hidden;height: auto;float: none;clear: both;margin: 0px;text-align: center;display: inline-block;font-weight: bold;font-style: normal;font-size: 16px;letter-spacing: initial;vertical-align: top;color: rgb(85, 85, 95)!important;`;
 
-    var tipsWords=document.createElement("div");
-    tipsWords.className="pagetual_tipsWords";
+    var tipsWords = document.createElement("div");
+    tipsWords.className = "pagetual_tipsWords";
 
     var isPause = false, isHideBar = false, isLoading = false, curPage = 1, forceState = 0, bottomGap = 1000, autoLoadNum = -1, nextIndex = 0, stopScroll = false, clickMode = false;
 
@@ -4741,7 +4749,7 @@
         return scrollH - scrolly - windowHeight;
     }
 
-    let checkLoadMore, scrollHandler, dblclickHandler, keydownHandler, hashchangeHandler, manualModeKeyHandler, pagetualNextHandler, keyupHandler;
+    let checkLoadMore, scrollHandler, clickToResetHandler, dblclickHandler, keydownHandler, hashchangeHandler, manualModeKeyHandler, pagetualNextHandler, keyupHandler;
     function initListener () {
         clearInterval(checkLoadMore);
         document.removeEventListener('scroll', scrollHandler, true);
@@ -4858,6 +4866,10 @@
             }
         };
         document.addEventListener('dblclick', dblclickHandler);
+        clickToResetHandler = e => {
+            if (!ruleParser.nextLinkHref) isLoading = false;
+        };
+        document.addEventListener('click', clickToResetHandler);
         if (rulesData.dbClick2StopKey) {
             keydownHandler = e => {
                 if ((rulesData.dbClick2StopCtrl && !e.ctrlKey) ||
@@ -4957,7 +4969,7 @@
 
     function getLoadMore(doc) {
         if (ruleParser.curSiteRule.loadMore === "") return null;
-        let btnSel = ruleParser.curSiteRule.loadMore || ".LoadMore,.load-more,.button-show-more,button[data-testid='more-results-button'],#btn_preview_remain", loadmoreBtn;
+        let btnSel = ruleParser.curSiteRule.loadMore || ".loadMore,.LoadMore,.load-more,.button-show-more,button[data-testid='more-results-button'],#btn_preview_remain", loadmoreBtn;
         if (btnSel) {
             loadmoreBtn = getElement(btnSel, doc);
         }
@@ -5262,13 +5274,13 @@
         return pageBar;
     }
 
-    function emuClick(btn){
-        let orgHref=btn.getAttribute('href');
-        if(orgHref && orgHref != "#"){
+    function emuClick(btn) {
+        let orgHref = btn.getAttribute('href');
+        if (orgHref && orgHref != "#") {
             btn.setAttribute('href', orgHref.replace(/#$/,""));
         }
-        if(!PointerEvent)return btn.click();
-        let eventParam={
+        if (!PointerEvent) return btn.click();
+        let eventParam = {
             isTrusted: true,
             altKey: false,
             azimuthAngle: 0,
@@ -5343,13 +5355,13 @@
         dispatchTouchEvent(btn, "touchend");
 
         btn.click();
-        if(orgHref && orgHref != "#"){
-            setTimeout(()=>btn.setAttribute('href', orgHref),0);
+        if (orgHref && orgHref != "#") {
+            setTimeout(() => btn.setAttribute('href', orgHref), 0);
         }
     }
 
-    var failFromIframe=0;
-    var inCors=false;
+    var failFromIframe = 0;
+    var inCors = false;
     var checkRemoveIntv;
     function requestFromIframe(url, callback){
         url = url.indexOf('=') == -1 ? url.replace(/#[^#]*/,"") : url;
@@ -5358,24 +5370,24 @@
         iframe.width = '100%';
         iframe.height = '1000';
         iframe.frameBorder = '0';
-        if(ruleParser.curSiteRule.sandbox!=false){
-            iframe.sandbox="allow-same-origin allow-scripts allow-popups allow-forms";
+        if (ruleParser.curSiteRule.sandbox != false) {
+            iframe.sandbox = "allow-same-origin allow-scripts allow-popups allow-forms";
         }
         iframe.style.cssText = 'margin:0!important;padding:0!important;visibility:hidden!important;flex:0;opacity:0!important;pointer-events:none!important;position:fixed;top:0px;left:0px;z-index:-2147483647;';
-        let waitTime=100,checkEval;
-        if(ruleParser.curSiteRule.waitElement){
+        let waitTime = 100, checkEval;
+        if (ruleParser.curSiteRule.waitElement) {
             checkEval = doc => {
                 return ruleParser.waitElement(doc);
             };
-        }else if(ruleParser.curSiteRule.wait){
-            if(isNaN(ruleParser.curSiteRule.wait)){
-                try{
-                    checkEval=(typeof _unsafeWindow.pagetualWait=='undefined') ? Function("doc",'"use strict";' + ruleParser.curSiteRule.wait) : _unsafeWindow.pagetualWait;
-                }catch(e){
+        } else if (ruleParser.curSiteRule.wait) {
+            if (isNaN(ruleParser.curSiteRule.wait)) {
+                try {
+                    checkEval = (typeof _unsafeWindow.pagetualWait == 'undefined') ? Function("doc",'"use strict";' + ruleParser.curSiteRule.wait) : _unsafeWindow.pagetualWait;
+                } catch(e) {
                     debug(e);
                 }
-            }else{
-                waitTime=ruleParser.curSiteRule.wait;
+            } else {
+                waitTime = ruleParser.curSiteRule.wait;
             }
         }
         if (checkRemoveIntv) clearInterval(checkRemoveIntv);
@@ -5386,71 +5398,71 @@
             }
         }, 500);
         let loadedHandler = e => {
-            if(e.data != 'pagetual-iframe:DOMLoaded' && e.type != 'load')return;
+            if(e.data != 'pagetual-iframe:DOMLoaded' && e.type != 'load') return;
             clearInterval(checkRemoveIntv);
             window.removeEventListener('message', loadedHandler, false);
             iframe.removeEventListener('load', loadedHandler, false);
-            let tryTimes=0;
-            function checkIframe(){
+            let tryTimes = 0;
+            function checkIframe() {
                 if (urlChanged || isPause) {
                     return callback(false, false);
                 }
-                try{
-                    let doc=iframe.contentDocument || iframe.contentWindow.document;
-                    let base=doc.querySelector("base");
-                    ruleParser.basePath=base?base.href:url;
-                    let eles=ruleParser.getPageElement(doc, iframe.contentWindow);
-                    if(checkEval && !checkEval(doc)){
-                        setTimeout(()=>{
+                try {
+                    let doc = iframe.contentDocument || iframe.contentWindow.document;
+                    let base = doc.querySelector("base");
+                    ruleParser.basePath = base ? base.href : url;
+                    let eles = ruleParser.getPageElement(doc, iframe.contentWindow);
+                    if (checkEval && !checkEval(doc)) {
+                        setTimeout(() => {
                             checkIframe();
-                        },waitTime);
+                        }, waitTime);
                         return;
-                    }else if(eles && eles.length>0){
+                    } else if (eles && eles.length > 0) {
                         callback(doc, eles);
-                    }else if(tryTimes++ < 100){
-                        setTimeout(()=>{
+                    } else if (tryTimes++ < 100) {
+                        setTimeout(() => {
                             checkIframe();
-                        },waitTime);
+                        }, waitTime);
                         return;
-                    }else{
-                        if(failFromIframe++ > 2){
-                            failFromIframe=0;
+                    } else {
+                        if (failFromIframe++ > 2) {
+                            failFromIframe = 0;
                             debug("Stop as failFromIframe");
-                            isPause=true;
+                            isPause = true;
                             callback(false, false);
-                        }else{
+                        } else {
                             callback(false, false);
                         }
                     }
-                }catch(e){
-                    inCors=true;
+                } catch(e) {
+                    inCors = true;
                     if (forceState === 3) {
                         debug("Stop as cors");
-                        isPause=true;
+                        isPause = true;
                     }
-                    if(!ruleParser.curSiteRule.pageElement){
-                        ruleParser.curSiteRule.pageElement=allOfBody;
+                    if (!ruleParser.curSiteRule.pageElement) {
+                        ruleParser.curSiteRule.pageElement = allOfBody;
                         ruleParser.getInsert(true);
                     }
-                    ruleParser.curSiteRule.action=0;
-                    ruleParser.nextLinkHref=url;
+                    ruleParser.curSiteRule.action = 0;
+                    ruleParser.nextLinkHref = url;
                     callback(false, false);
                     nextPage();
                 }
                 document.body.removeChild(iframe);
             }
-            setTimeout(()=>{
+            setTimeout(() => {
                 checkIframe();
             },waitTime);
         };
         window.addEventListener('message', loadedHandler, false);
         iframe.addEventListener('load', loadedHandler, false);
-        iframe.src=url;
+        iframe.src = url;
         document.body.appendChild(iframe);
     }
 
     var emuIframe,lastActiveUrl;
-    function emuPage(callback){
+    function emuPage(callback) {
         let orgPage=null,orgContent=null,preContent=null,iframeDoc,times=0,loadmoreBtn,pageEle,nextLink,loadmoreEnd=false,waitTimes=10,changed=false;
         function returnFalse(log){
             debug(log);
@@ -5732,27 +5744,27 @@
         }
     }
 
-    function forceIframe(url, callback){
+    function forceIframe(url, callback) {
         url = url.indexOf('=') == -1 ? url.replace(/#[^#]*/,"") : url;
-        let curIframe = document.createElement('iframe'),iframeDoc,isloaded=false,inAction=true;
-        let loadedHandler = ()=>{
-            inAction=false;
-            if(isloaded)return;
-            isloaded=true;
+        let curIframe = document.createElement('iframe'), iframeDoc, isloaded = false, inAction = true;
+        let loadedHandler = () => {
+            inAction = false;
+            if (isloaded) return;
+            isloaded = true;
             ruleParser.insertPage(iframeDoc, [], url, null, true);
-            callback(curIframe, true);
+            callback(curIframe);
             let getIframe = () => {
                 return curIframe;
             };
             let getFrameDoc = () => {
                 return iframeDoc;
             };
-            if(ruleParser.curSiteRule.singleUrl){
+            if (ruleParser.curSiteRule.singleUrl) {
                 resizePool.push([() => {}, getIframe, getFrameDoc]);
-            }else{
+            } else {
                 let pageElement = ruleParser.getPageElement(iframeDoc,iframeDoc.defaultView);
                 let getPageEle = () => {
-                    if (!pageElement || pageElement.length===0) {
+                    if (!pageElement || pageElement.length === 0) {
                         pageElement = ruleParser.getPageElement(iframeDoc,iframeDoc.defaultView);
                     }
                     return pageElement;
@@ -5762,73 +5774,73 @@
             scrollToResize();
         };
         curIframe.name = 'pagetual-iframe';
-        curIframe.sandbox="allow-same-origin allow-scripts allow-popups allow-forms";
+        curIframe.sandbox = "allow-same-origin allow-scripts allow-popups allow-forms";
         curIframe.frameBorder = '0';
-        curIframe.scrolling="no";
+        curIframe.scrolling = "no";
         curIframe.style.cssText = 'display: block; visibility: visible; float: none; clear: both; width: 100%; height: 0; background: initial; border: 0px; border-radius: 0px; margin: 0px; padding: 0px; z-index: 2147483647;';
-        curIframe.addEventListener("load", e=>{
-            try{
-                iframeDoc=curIframe.contentDocument || curIframe.contentWindow.document;
-            }catch(e){
+        curIframe.addEventListener("load", e => {
+            try {
+                iframeDoc = curIframe.contentDocument || curIframe.contentWindow.document;
+            } catch(e) {
                 debug("Stop as cors");
-                isPause=true;
-                callback(false, false);
+                isPause = true;
+                callback(false);
                 return;
             }
-            let css=ruleParser.curSiteRule.css || rulesData.customCss;
-            if(css){
+            let css = ruleParser.curSiteRule.css || rulesData.customCss;
+            if (css) {
                 css = css.replace(/^inIframe:/, "");
                 let styleEle=iframeDoc.createElement("style");
                 styleEle.innerHTML=css;
                 iframeDoc.head.appendChild(styleEle);
             }
             loadedHandler();
-            let code=ruleParser.curSiteRule.init;
-            if(code){
-                try{
+            let code = ruleParser.curSiteRule.init;
+            if (code) {
+                try {
                     Function('doc','win','iframe','"use strict";' + code)(iframeDoc,iframeDoc.defaultView,curIframe);
-                }catch(e){
+                } catch(e) {
                     debug(e);
                 }
             }
         });
-        let checkTimes=0,findPageEle=false;
-        let forceRefresh=e=>{
-            if(inAction || !iframeDoc)return;
-            inAction=true;
-            let foundNext=()=>{
+        let checkTimes = 0, findPageEle = false;
+        let forceRefresh = e => {
+            if (inAction || !iframeDoc) return;
+            inAction = true;
+            let foundNext = () => {
                 document.removeEventListener("scroll", forceRefresh);
             }
             setTimeout(async () => {
-                inAction=false;
-                if(!ruleParser.nextLinkHref){
+                inAction = false;
+                if (!ruleParser.nextLinkHref) {
                     checkTimes++;
                     await ruleParser.getNextLink(iframeDoc);
-                    if(ruleParser.nextLinkHref){
+                    if (ruleParser.nextLinkHref) {
                         foundNext();
-                    }else if(checkTimes>=10){
+                    } else if (checkTimes >= 10) {
                         foundNext();
-                    }else if(checkTimes>=3 && !findPageEle){
-                        let pageElement = ruleParser.getPageElement(iframeDoc,iframeDoc.defaultView);
-                        if(!pageElement){
-                            inAction=true;
+                    } else if (checkTimes >= 3 && !findPageEle) {
+                        let pageElement = ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView);
+                        if (!pageElement) {
+                            inAction = true;
                             curIframe.contentWindow.location.reload();
-                        }else{
-                            findPageEle=true;
+                        } else {
+                            findPageEle = true;
                         }
                     }
-                }else{
+                } else {
                     foundNext();
                 }
             },50);
         };
         document.addEventListener("scroll", forceRefresh);
-        curIframe.src=url;
-        let insert=ruleParser.getInsert();
-        if(ruleParser.curSiteRule.singleUrl || forceState==2){
+        curIframe.src = url;
+        let insert = ruleParser.getInsert();
+        if (ruleParser.curSiteRule.singleUrl || forceState == 2) {
             document.body.appendChild(loadingDiv);
             document.body.appendChild(curIframe);
-        }else{
+        } else {
             ruleParser.insertElement(curIframe);
         }
 
@@ -5857,22 +5869,28 @@
         }
     }
 
-    var tryTimes = 0;
-
-    async function nextPage(){
-        if(typeof ruleParser.curSiteRule.manualMode=='undefined' ? rulesData.manualMode : ruleParser.curSiteRule.manualMode)return;
-        if(clickMode)return;
-        if(isPause || isLoading || forceState==1)return;
-        if(ruleParser.curSiteRule.delay){
-            try{
-                let checkDelay=((typeof _unsafeWindow.pagetualDelay=='undefined') ? Function('"use strict";' + ruleParser.curSiteRule.delay) : _unsafeWindow.pagetualDelay)();
-                if(!checkDelay)return;
-            }catch(e){
-                debug(e);
+    function checkAutoLoadNum() {
+        if (autoLoadNum >= 0) {
+            if (autoLoadNum != 0 && --autoLoadNum == 0) {
+                autoLoadNum = -1;
+            } else {
+                setTimeout(() => nextPage(), 1);
             }
         }
-        if(ruleParser.curSiteRule.pageElementCss || ruleParser.curSiteRule.pageElementStyle || rulesData.pageElementCss){
-            ruleParser.getPageElement(document, _unsafeWindow);
+    }
+
+    var tryTimes = 0;
+    async function nextPage() {
+        if (typeof ruleParser.curSiteRule.manualMode=='undefined' ? rulesData.manualMode : ruleParser.curSiteRule.manualMode) return;
+        if (clickMode) return;
+        if (isPause || isLoading || forceState==1) return;
+        if (ruleParser.curSiteRule.delay) {
+            try {
+                let checkDelay = ((typeof _unsafeWindow.pagetualDelay=='undefined') ? Function('"use strict";' + ruleParser.curSiteRule.delay) : _unsafeWindow.pagetualDelay)();
+                if (!checkDelay) return;
+            } catch(e) {
+                debug(e);
+            }
         }
         let nextLink = ruleParser.nextLinkHref;
         if (!nextLink) {
@@ -5888,9 +5906,9 @@
                 return;
             }
         }
-        let pvGallery=document.querySelector("span.pv-gallery-container");
-        if(pvGallery && pvGallery.style.display!="none")return;
-        let insert=ruleParser.getInsert();
+        let pvGallery = document.querySelector("span.pv-gallery-container");
+        if (pvGallery && pvGallery.style.display != "none") return;
+        let insert = ruleParser.getInsert();
         if (insert) {
             if (curPage == 1) {
                 /*window.postMessage({
@@ -5899,81 +5917,64 @@
                 }, '*');*/
             }
             let isJs = ruleParser.curSiteRule.action == 3 || /^(javascript|#)/.test(nextLink.replace(location.href,""));
-            if(!isJs){
-                emuIframe=null;
-                lastActiveUrl=nextLink;
-                if(location.protocol=="https:" && /^http:/.test(nextLink)){
-                    nextLink=nextLink.replace(/^http/,"https");
+            if (!isJs) {
+                emuIframe = null;
+                lastActiveUrl = nextLink;
+                if (location.protocol == "https:" && /^http:/.test(nextLink)) {
+                    nextLink = nextLink.replace(/^http/, "https");
                 }
             }
-            isLoading=true;
+            isLoading = true;
             ruleParser.insertElement(loadingDiv);
-            let parent=loadingDiv.parentNode;
-            if(parent.tagName=="TBODY"){
-                parent=parent.parentNode;
+            let parent = loadingDiv.parentNode;
+            if (parent.tagName == "TBODY") {
+                parent = parent.parentNode;
             }
-            if(parent.tagName=="TABLE"){
+            if(parent.tagName == "TABLE"){
                 parent.parentNode.appendChild(loadingDiv);
             }
-            loadingDiv.style.cssText=loadingCSS;
+            loadingDiv.style.cssText = loadingCSS;
             if (curPage == 1 && isJs && ruleParser.curSiteRule.singleUrl) {
                 loadingDiv.style.display = "none";
             }
-            let sleep=ruleParser.curSiteRule.sleep||0;
-            setTimeout(()=>{
-                if(ruleParser.curSiteRule.pageElementByJs){
-                    var over=ele=>{
-                        loadPageOver();
-                        if (urlChanged || isPause) return;
-                        if (ele) {
-                            createPageBar(nextLink);
-                            ruleParser.insertPage(null, ele, nextLink, null, true);
-                            if(autoLoadNum>=0){
-                                if(autoLoadNum!=0 && --autoLoadNum==0){
-                                    autoLoadNum=-1;
-                                }else{
-                                    setTimeout(() => nextPage(), 1);
-                                }
-                            }
-                        }else{
-                            debug("Stop as no page when get by js");
-                            isPause=true;
-                        }
-                    };
-                    try{
-                        ((typeof _unsafeWindow.pagetualPageElementByJs=='undefined') ? Function("over",'"use strict";' + ruleParser.curSiteRule.pageElementByJs) : _unsafeWindow.pagetualPageElementByJs)(over);
-                    }catch(e){
-                        debug(e);
-                    }
-                }else if((forceState==2||ruleParser.curSiteRule.action==2) && !isJs){
-                    forceIframe(nextLink, (iframe, eles)=>{
-                        loadPageOver();
-                        if (urlChanged || isPause) return;
-                        let pageBar = createPageBar(nextLink);
-                        if (pageBar) iframe.parentNode.insertBefore(pageBar, iframe);
-                        if (autoLoadNum >= 0) {
-                            if (autoLoadNum != 0 && --autoLoadNum == 0) {
-                                autoLoadNum=-1;
-                            } else {
-                                setTimeout(() => nextPage(), 1);
-                            }
-                        }
-                    });
-                }else if((forceState==3||ruleParser.curSiteRule.action==1) && !isJs){
-                    requestFromIframe(nextLink, (doc, eles)=>{
+            let sleep = ruleParser.curSiteRule.sleep || 0;
+            setTimeout(() => {
+                if (ruleParser.curSiteRule.pageElementByJs) {
+                    var over = eles => {
                         loadPageOver();
                         if (urlChanged || isPause) return;
                         if (eles) {
-                            ruleParser.insertPage(doc, eles, nextLink, ()=>{
+                            ruleParser.insertPage(document, eles, nextLink, () => {
                                 createPageBar(nextLink);
                             }, true);
-                            if(autoLoadNum>=0){
-                                if(autoLoadNum!=0 && --autoLoadNum==0){
-                                    autoLoadNum=-1;
-                                }else{
-                                    setTimeout(() => nextPage(), 1);
-                                }
-                            }
+                            checkAutoLoadNum();
+                        } else {
+                            debug("Stop as no page when get by js");
+                            isPause = true;
+                        }
+                    };
+                    try {
+                        ((typeof _unsafeWindow.pagetualPageElementByJs == 'undefined') ? Function("over",'"use strict";' + ruleParser.curSiteRule.pageElementByJs) : _unsafeWindow.pagetualPageElementByJs)(over);
+                    } catch(e) {
+                        debug(e);
+                    }
+                } else if ((forceState == 2 || ruleParser.curSiteRule.action == 2) && !isJs) {
+                    forceIframe(nextLink, (iframe) => {
+                        loadPageOver();
+                        if (urlChanged || isPause) return;
+                        let pageBar = createPageBar(nextLink);
+                        if (pageBar && iframe) iframe.parentNode.insertBefore(pageBar, iframe);
+                        checkAutoLoadNum();
+                    });
+                } else if ((forceState == 3 || ruleParser.curSiteRule.action == 1) && !isJs) {
+                    requestFromIframe(nextLink, (doc, eles) => {
+                        loadPageOver();
+                        if (urlChanged || isPause) return;
+                        if (eles) {
+                            ruleParser.insertPage(doc, eles, nextLink, () => {
+                                createPageBar(nextLink);
+                            }, true);
+                            checkAutoLoadNum();
                         }
                     });
                 }else{
@@ -5983,13 +5984,7 @@
                             if (urlChanged || isPause) return;
                             if (eles) {
                                 createPageBar(nextLink);
-                                if(autoLoadNum>=0){
-                                    if(autoLoadNum!=0 && --autoLoadNum==0){
-                                        autoLoadNum=-1;
-                                    }else{
-                                        setTimeout(() => nextPage(), 1);
-                                    }
-                                }
+                                checkAutoLoadNum();
                             }
                         });
                     }else{
@@ -6000,13 +5995,7 @@
                                 ruleParser.insertPage(doc, eles, "", ()=>{
                                     createPageBar(nextLink);
                                 }, true);
-                                if(autoLoadNum>=0){
-                                    if(autoLoadNum!=0 && --autoLoadNum==0){
-                                        autoLoadNum=-1;
-                                    }else{
-                                        setTimeout(() => nextPage(), 1);
-                                    }
-                                }
+                                checkAutoLoadNum();
                             }
                         });
                     }
@@ -6015,18 +6004,18 @@
         }
     }
 
-    function init(){
-        initRules(()=>{
+    function init() {
+        initRules(() => {
             initPage();
         });
     }
 
-    function visibilitychangeHandler(){
+    function visibilitychangeHandler() {
         document.removeEventListener('visibilitychange', visibilitychangeHandler);
         init();
     }
 
-    setTimeout(()=>{
+    setTimeout(() => {
         if (document.hidden) {
             document.addEventListener('visibilitychange', visibilitychangeHandler);
         } else {
