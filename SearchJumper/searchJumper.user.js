@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.54.15
+// @version      1.6.6.54.16
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -1216,7 +1216,7 @@
                 canvas = document.createElement('canvas');
                 canvas.width = 20;
                 canvas.height = 20;
-                context = canvas.getContext('2d');
+                context = canvas.getContext('2d', { willReadFrequently: true });
                 context.fillStyle = 'rgba(0,0,0,1.0)';
                 context.fillRect( 0, 0, 20, 20 );
                 context.font = '16pt FontAwesome';
@@ -2518,7 +2518,7 @@
                     e.stopPropagation();
 
                     alllist.scrollLeft += deltaY;
-                }, false);
+                }, { passive: false, capture: false });
 
                 let showallInput = document.createElement("input");
                 showallInput.className = "search-jumper-showallInput";
@@ -2548,7 +2548,7 @@
                     let touched = false;
                     let touchBodyHandler = e => {
                         touched = false;
-                        document.body.removeEventListener('touchstart', touchBodyHandler);
+                        document.body.removeEventListener('touchstart', touchBodyHandler, { passive: true, capture: false });
                     };
                     let touchHandler = e => {
                         if (touched) return;
@@ -2557,9 +2557,9 @@
                         setTimeout(() => {
                             bar.classList.remove('disable-pointer');
                         }, 250);
-                        document.body.addEventListener("touchstart", touchBodyHandler);
+                        document.body.addEventListener("touchstart", touchBodyHandler, { passive: true, capture: false });
                     };
-                    bar.addEventListener('touchstart', touchHandler, true);
+                    bar.addEventListener('touchstart', touchHandler, { passive: true, capture: true });
                 }
 
                 this.bar = bar;
@@ -3795,8 +3795,22 @@
 
             closeShowAll() {
                 if (!this.bar.parentNode.classList.contains("search-jumper-showall")) return;
-                var mouseEvent = new PointerEvent("mousedown");
-                document.dispatchEvent(mouseEvent);
+                document.removeEventListener("mousedown", self.showAllMouseHandler);
+                this.bar.parentNode.classList.remove("search-jumper-showall");
+                this.showallInput.value = "";
+                this.historySiteBtns.slice(0, 10).forEach(btn => {
+                    for (let i = 0; i < searchTypes.length; i++) {
+                        let typeBtn = searchTypes[i];
+                        if (typeBtn.dataset.type == btn.dataset.type) {
+                            if (btn.dataset.id) {
+                                typeBtn.insertBefore(btn, typeBtn.children[parseInt(btn.dataset.id) + 1]);
+                            } else typeBtn.insertBefore(btn, typeBtn.children[1]);
+                            break;
+                        }
+                    }
+                });
+                this.bar.style.display = "";
+                this.initPos();
             }
 
             showAllSites() {
@@ -3816,27 +3830,12 @@
                 let kw = getKeywords() || cacheKeywords;
                 this.showallInput.value = kw;
                 setTimeout(() => {
-                    let mouseHandler = e => {
+                    self.showAllMouseHandler = e => {
                         if (e.isTrusted == false || e.target.className === 'sitelistBox' || e.target.className === 'search-jumper-showallBg' || e.target.className === 'search-jumper-historylist') {
-                            document.removeEventListener("mousedown", mouseHandler);
-                            self.bar.parentNode.classList.remove("search-jumper-showall");
-                            self.showallInput.value = "";
-                            self.historySiteBtns.slice(0, 10).forEach(btn => {
-                                for (let i = 0; i < searchTypes.length; i++) {
-                                    let typeBtn = searchTypes[i];
-                                    if (typeBtn.dataset.type == btn.dataset.type) {
-                                        if (btn.dataset.id) {
-                                            typeBtn.insertBefore(btn, typeBtn.children[parseInt(btn.dataset.id) + 1]);
-                                        } else typeBtn.insertBefore(btn, typeBtn.children[1]);
-                                        break;
-                                    }
-                                }
-                            });
-                            self.bar.style.display = "";
-                            self.initPos();
+                            self.closeShowAll();
                         }
                     };
-                    document.addEventListener("mousedown", mouseHandler);
+                    document.addEventListener("mousedown", self.showAllMouseHandler);
                     this.showallInput.focus();
                 }, 0);
             }
@@ -4434,7 +4433,7 @@
                         document.addEventListener("touchend", grabMouseupHandler);
                         document.addEventListener("touchmove", grabMousemoveHandler);
                     }
-                });
+                }, { passive: true, capture: false });
 
                 this.searchInputDiv.addEventListener("mousedown", e => {
                     if (touchStart) {
@@ -7601,7 +7600,7 @@
                     document.removeEventListener('touchend', mouseUpHandler, false);
                     document.removeEventListener('touchmove', mouseMoveHandler, false);
                 }, 2000);
-            }, false);
+            }, { passive: false, capture: false });
 
             searchBar.bar.addEventListener(getSupportWheelEventName(), e => {
                 let targetClassList = searchBar.bar.parentNode.classList;
@@ -7635,7 +7634,7 @@
                 e.stopPropagation();
 
                 searchBar.bar.parentNode.scrollLeft += deltaY;
-            }, false);
+            }, { passive: false, capture: false });
 
             document.addEventListener('searchJumper', e => {
                 switch (e.detail.action) {
@@ -9571,7 +9570,10 @@
         }
 
         function visibilitychangeHandler() {
-            if (document.hidden) return;
+            if (document.hidden) {
+                searchBar.closeShowAll();
+                return;
+            }
             init(() => {
                 let oldGlobalInPageWords = globalInPageWords;
                 storage.getItem("globalInPageWords", data => {
