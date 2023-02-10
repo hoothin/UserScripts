@@ -13,12 +13,12 @@
         "url": "^https://www\\.dashumanhua\\.com/comic/[^/]+/read-\\d+\\.html",
         "pinUrl": true,
         "history": 2,
-        "init": "let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/picTree/)>-1).innerHTML;let m=code.replace(/eval.+\\)\\)/,'').match(/eval.+\\)\\)/)[0].slice(4);let imgData=eval(eval(m).slice(12,-1));let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src='${imgData[i]}'>`};document.querySelector('#pic-list').innerHTML=_img;$('head').append('<style>#pre-loading+#pic-list>img:nth-child('+imgData.length+')~* {display:none!important}</style>')",
-        "nextLink": "//a[text()='下一话'][not(contains(@href,'--1'))]",
+        "init": "let ge=e=>document.querySelector(e);let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/picTree/)>-1).innerHTML;let m=code.replace(/eval.+\\)\\)/,'').match(/eval.+\\)\\)/)[0].slice(4);let imgData=eval(eval(m).slice(12,-1));let E=ge('#pic-list');let F=new DocumentFragment();imgData.forEach(e=>{let img=new Image();img.src=e;F.appendChild(img)});E.innerHTML='';E.appendChild(F);$('head').append('<style>#pre-loading+#pic-list>img:nth-child('+imgData.length+')~* {display:none!important}</style>')",
+        "nextLink": "//a[text()='下一话' and not(contains(@href,'--1'))]",
         "pageElement": "#pic-list",
         "replaceElement": "head>title,h2,.prev,.huiname,.next,.setnmh-pagedos",
-        "pageInit": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/picTree/)>-1).innerHTML;let m=code.replace(/eval.+\\)\\)/,'').match(/eval.+\\)\\)/)[0].slice(4);let imgData=eval(eval(m).slice(12,-1));let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src='${imgData[i]}'>`};doc.querySelector('#pic-list').innerHTML=_img;",
-        "pageAction": "function ge(e){return document.querySelector(e)}setTimeout(()=>{ge('.prev>a').href=ge('.prev>.tandiv>a').href;let n=ge('.next>.tandiv>a');if(n){ge('.next>a').href=n.href;ge('.next>a+span').remove();ge(\"a[v-if='booknext']+span\").remove()}else{ge(\"div[v-if='booknext']\").remove();ge('.next>a').classList.add('hui')}},100);function geAll(e){return document.querySelectorAll(e)};let c=geAll('#pic-list');if(c.length>9){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>9){p[0].remove()};",
+        "pageInit": "let ge=e=>doc.querySelector(e);let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/picTree/)>-1).innerHTML;let m=code.replace(/eval.+\\)\\)/,'').match(/eval.+\\)\\)/)[0].slice(4);let imgData=eval(eval(m).slice(12,-1));let E=ge('#pic-list');let F=new DocumentFragment();imgData.forEach(e=>{let img=new Image();img.src=e;F.appendChild(img)});E.innerHTML='';E.appendChild(F);",
+        "pageAction": "let ge=e=>document.querySelector(e);let gae=e=>document.querySelectorAll(e);let c=gae('#pic-list');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}setTimeout(()=>{ge('.prev>a').href=ge('.prev>.tandiv>a').href;let n=ge('.next>.tandiv>a');if(n){ge('.next>a').href=n.href;ge('.next>a+span').remove();ge('a[v-if=booknext]+span').remove()}else{ge('div[v-if=booknext]').remove();ge('.next>a').classList.add('hui')}},100)",
         "pageBarText": "let t=doc.querySelector('.setnmh-bookname>h2');if(t)return t.innerText",
         "rate": 3,
         "css": "#pic-list img{box-shadow:none!important}.setnmh-seebox>*:first-child:not(.loading-box),.loading-box,.aboutmh>*:last-child{display:none!important}"
@@ -89,14 +89,10 @@
         "loadMore": ".more-div-btn"
     },
     {
-        "name": "嗨皮漫畫 - 閱讀 - 手動翻頁 - 雙擊前往下一話，鍵盤左右鍵上下話",
+        "name": "嗨皮漫畫 - 閱讀 - 禁用",
         "example": "https://m.happymh.com/manga/shishijilingdishejishi",
         "url": "^https://m\\.happymh\\.com/reads/",
-        "init": "function gx(x){return document.evaluate(x,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue}function next(e){let key=window.event?e.keyCode:e.which;if(key=='39'){let n=gx(\"//a[span[text()='下一话' or text()='下一話'] and contains(@href,'reads')]\");if(n){n.click()}else{alert('沒有下一话了！')}}};document.addEventListener('keydown',next);function prev(e){let key=window.event?e.keyCode:e.which;if(key=='37'){let p=gx(\"//a[span[text()='上一话' or text()='上一話'] and contains(@href,'reads')]\");if(p){p.click()}else{alert('沒有上一话了！')}}};document.addEventListener('keydown',prev);function dcnext(){document.querySelector('footer a').click()}document.addEventListener('dblclick',dcnext);setTimeout(()=>{let p=document.querySelector(`footer p:nth-child(2)>a[href*='reads']`);if(p){p.classList.add('MuiButton-containedPrimary');let f=document.querySelector('footer>article');let pnc=f.lastChild.cloneNode(true);pnc.firstChild.href='/latest';pnc.firstChild.firstChild.innerText='更新';f.appendChild(pnc);let pbc=f.lastChild.cloneNode(true);pbc.firstChild.href='/bookcase';pbc.firstChild.firstChild.innerText='收藏';f.appendChild(pbc)}let n=document.querySelector(`footer a[href*='readMore']`);if(n){n.classList.remove('MuiButton-containedPrimary');n.firstChild.innerText='^_^感谢您的阅读~已经没有下一话了哦~'}},4000)",
-        "nextLink": "0",
-        "pinUrl": true,
-        "manualMode": true,
-        "css": "#root>div>header+div{display:none!important}"
+        "enable": "0"
     },
     {
         "name": "包子漫畫 - 查看全部章節",
@@ -112,12 +108,12 @@
         "url": "^https://(www|tw|cn)\\.(webmota|baozimh)\\.com/comic/chapter/[^/]+/\\w+\\.html",
         "history": 2,
         "pinUrl": true,
-        "init": "function geAll(e){return document.querySelectorAll(e)}let _img='';geAll('.comic-contain amp-img').forEach(e=>{_img+=`<img class=\"comic-contain__item\"src=\"${e.getAttribute('src')}\">`});geAll('.comic-contain')[0].innerHTML=_img",
+        "init": "let gae=e=>document.querySelectorAll(e);let E=gae('.comic-contain')[0];let F=new DocumentFragment();let imgs=gae('.comic-contain amp-img');imgs.forEach(e=>{let img=new Image();img.className='comic-contain__item';img.src=e.getAttribute('src');F.appendChild(img)});E.innerHTML='';E.appendChild(F);let loop=setInterval(()=>{let set=document.querySelector('#interstitial_fade');if(set){clearInterval(loop);set.remove()}},100);setTimeout(()=>{if(loop)clearInterval(loop)},5000)",
         "nextLink": "#next-chapter",
         "pageElement": ".comic-contain",
         "replaceElement": "//head/title | //span[@class='title'] | //div[@class='comic-chapter']/div[@class='next_chapter'] | //div[@class='bottom-bar']",
-        "pageInit": "function geAll(e){return doc.querySelectorAll(e)}let _img='';geAll('.comic-contain amp-img').forEach(e=>{_img+=`<img class=\"comic-contain__item\"src=\"${e.getAttribute('src')}\">`});geAll('.comic-contain')[0].innerHTML=_img",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('.pagetual_pageBar a').forEach(a =>{if(/\\/\\d+_\\d+_\\d+\\.html$/.test(a.href))a.parentNode.remove()});setTimeout(()=>{let c=geAll('.comic-contain');if(c.length>10){c[0].remove()}geAll('.pagetual_pageBar+.pagetual_pageBar').forEach(e =>{e.previousElementSibling.remove()})},200)",
+        "pageInit": "let gae=e=>doc.querySelectorAll(e);let E=gae('.comic-contain')[0];let F=new DocumentFragment();let imgs=gae('.comic-contain amp-img');imgs.forEach(e=>{let img=new Image();img.className='comic-contain__item';img.src=e.getAttribute('src');F.appendChild(img)});E.innerHTML='';E.appendChild(F);",
+        "pageAction": "let gae=e=>document.querySelectorAll(e);gae('.pagetual_pageBar a').forEach(e=>{if(/\\/\\d+_\\d+_\\d+\\.html$/.test(e.href))e.parentNode.remove()});let ps=gae('.pagetual_pageBar');if(ps.length>10){ps[0].remove();let ds=gae('.chapter-main>*');for(let i in ds){if(/pagetual/.test(ds[i].id)){break};ds[i].remove()}}",
         "pageBarText": "let t=doc.querySelector('span.title');if(t)return t.innerText",
         "rate": 3,
         "css": ".mobadsq{display:none!important}ul{margin-block-start:-2px!important;margin-block-end:2px!important}.pagetual_pageBar{margin-top:7px!important}"
@@ -128,12 +124,12 @@
         "url": "^https?://baozimh\\.org/manga/[^/]+/\\w+/",
         "history": 2,
         "pinUrl": true,
-        "init": "function gx(x){return document.evaluate(x,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue}let _img='';document.querySelectorAll('img[data-src]').forEach(e=>{_img+=`<img src='${e.dataset.src}'>`});gx(\"//div[(div/img) and contains(@class,'gb-container')]\").innerHTML=_img",
+        "init": "let gx=x=>document.evaluate(x,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue;let E=gx(\"//div[(div/img) and contains(@class,'gb-container')]\");let F=new DocumentFragment();document.querySelectorAll('img[data-src]').forEach(e=>{let img=new Image();img.src=e.dataset.src;F.appendChild(img)});E.innerHTML='';E.appendChild(F);",
         "nextLink": "//a[span[text()='下一话']]",
         "pageElement": "//div[(div/img) and contains(@class,'gb-container')] | //div[(img) and contains(@class,'gb-container')]",
-        "replaceElement": "head>title,#pagenation,#site-navigation~.gb-container",
-        "pageInit": "function gx(x){return doc.evaluate(x,doc,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue}let _img='';doc.querySelectorAll('img[data-src]').forEach(e=>{_img+=`<img src='${e.dataset.src}'>`});gx(\"//div[(div/img) and contains(@class,'gb-container')]\").innerHTML=_img",
-        "pageAction": "function gxAll(x,context){var nodes=[];try{var doc=(context&&context.ownerDocument)||window.document;var results=doc.evaluate(x,context||doc,null,XPathResult.ANY_TYPE,null);var node;while(node=results.iterateNext()){nodes.push(node)}}catch(e){throw e;}return nodes}setTimeout(()=>{let c=gxAll(\"//div[(img) and contains(@class,'gb-container')]\");if(c.length>10){c[0].remove()}let p=gxAll(\"//*[contains(@class,'pagetual_pageBar')]\");if(p.length>10){p[0].remove()}},10000)",
+        "replaceElement": "head>title,.gb-inside-container>h1,.last,#pagenation",
+        "pageInit": "let gx=x=>doc.evaluate(x,doc,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue;let E=gx(\"//div[(div/img) and contains(@class,'gb-container')]\");let F=new DocumentFragment();doc.querySelectorAll('img[data-src]').forEach(e=>{let img=new Image();img.src=e.dataset.src;F.appendChild(img)});E.innerHTML='';E.appendChild(F);",
+        "pageAction": "function gax(x){let nodes=[];let results=document.evaluate(x,document,null,XPathResult.ANY_TYPE,null);let node;while(node=results.iterateNext()){nodes.push(node)}return nodes}let c=gax(\"//div[(img) and contains(@class,'gb-container')]\");if(c.length>10){c[0].remove()}let p=gax(\"//*[contains(@class,'pagetual_pageBar')]\");if(p.length>10){p[0].remove()}",
         "pageBarText": "let t=doc.querySelector('.last');if(t)return t.innerText",
         "css": ".pagetual_pageBar+.gb-container{margin-top:-3px!important}"
     },
@@ -155,7 +151,7 @@
         "nextLink": "//a[span[text()='下一话']]",
         "pageElement": "//div[div/div/div/img[@decoding='async']]",
         "replaceElement": "head>title,.hero-section,#pagenation",
-        "pageAction": "function gxAll(x,context){var nodes=[];try{var doc=(context&&context.ownerDocument)||window.document;var results=doc.evaluate(x,context||doc,null,XPathResult.ANY_TYPE,null);var node;while(node=results.iterateNext()){nodes.push(node)}}catch(e){throw e;}return nodes}setTimeout(()=>{let c=gxAll(\"//div[div/div/div/img[@decoding='async']]\");if(c.length>10){c[0].remove()}let p=gxAll(\"//*[contains(@class,'pagetual_pageBar')]\");if(p.length>10){p[0].remove()}},1000)",
+        "pageAction": "function gax(x){let nodes=[];let results=document.evaluate(x,document,null,XPathResult.ANY_TYPE,null);let node;while(node=results.iterateNext()){nodes.push(node)}return nodes}let c=gax(\"//div[div/div/div/img[@decoding='async']]\");if(c.length>10){c[0].remove()}let p=gax(\"//*[contains(@class,'pagetual_pageBar')]\");if(p.length>10){p[0].remove()}",
         "pageBarText": "let t=doc.querySelector('.last-item>span');if(t)return t.innerText",
         "css": ".pagetual_pageBar+.stk-row{margin-top:-3px!important}"
     },
@@ -171,11 +167,10 @@
     {
         "name": "COCOMANGA - 閱讀 - 雙擊前往下一章，鍵盤左右鍵上下章",
         "example": "https://www.colamanhua.com/15177/1/2.html",
-        "url": "^https://www\\.colamanhua\\.com/[a-z0-9-]+/\\d+/\\d+\\.html",
-        "init": "function gx(x){return document.evaluate(x,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue};function next(e){let key=window.event?e.keyCode:e.which;if(key==39){e.preventDefault();let n=gx(\"//a[contains(@href,'html') and text()='下一章']\");if(n){n.click()}else{alert('沒有下一章了！')}}};document.addEventListener('keydown',next);function prev(e){let key=window.event?e.keyCode:e.which;if(key==37){e.preventDefault();let p=gx(\"//a[contains(@href,'html') and text()='上一章']\");if(p){p.click()}else{alert('沒有上一章了！')}}};document.addEventListener('keydown',prev);function dcnext(){let n=gx(\"//a[contains(@href,'html') and text()='下一章']\");if(n){n.click()}else{alert('沒有下一章了！')}};document.addEventListener('dblclick',dcnext);",
+        "url": "^https://www\\.colamanhua\\.com/\\w+/\\d+/\\d+\\.html",
+        "init": "let gx=x=>document.evaluate(x,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue;function next(e){let key=window.event?e.keyCode:e.which;if(key==39){e.preventDefault();let n=gx(\"//a[contains(@href,'html') and text()='下一章']\");if(n){n.click()}else{alert('沒有下一章了！')}}};document.addEventListener('keydown',next);function prev(e){let key=window.event?e.keyCode:e.which;if(key==37){e.preventDefault();let p=gx(\"//a[contains(@href,'html') and text()='上一章']\");if(p){p.click()}else{alert('沒有上一章了！')}}};document.addEventListener('keydown',prev);function dcnext(){let n=gx(\"//a[contains(@href,'html') and text()='下一章']\");if(n){n.click()}else{alert('沒有下一章了！')}};document.addEventListener('dblclick',dcnext);",
         "nextLink": "0",
         "pinUrl": true,
-        "manualMode": true,
         "css": ".mh_wrap{width:100%!important;min-width:100%!important}"
     },
     {
@@ -183,7 +178,7 @@
         "example": "https://www.colamanhua.com/show?orderBy=update",
         "url": "^https?://www\\.colamanhua\\.com/(show|search)",
         "init": "let w = document.querySelector(`h2 a[href*='weeklyCount']`); if (!location.search) w.click()",
-        "nextLinkByJs": "let next = doc.querySelector('.fed-page-info a.fed-btns-green+a[onclick]'); if (next) return location.origin + location.pathname + location.search.replace(/&page=\\d+$/,'') + '&page=' + next.innerText",
+        "nextLinkByJs": "let next=doc.querySelector('.fed-page-info a.fed-btns-green+a[onclick]');if(next)return location.origin+location.pathname+location.search.replace(/&page=\\d+$/,'')+'&page='+next.innerText",
         "pageElement": "//div[contains(@class,'fed-list-head')]/following-sibling::ul[li/a/span] | //dl[dt/a/span]",
         "pageInit": "doc.querySelectorAll('a[data-original]').forEach(a=>{a.style.backgroundImage=`url('${a.dataset.original}')`})",
         "replaceElement": ".fed-page-info"
@@ -194,12 +189,12 @@
         "url": "^https?://m\\.manhuagui\\.com/comic/\\d+/\\d+\\.html",
         "pinUrl": true,
         "history": 2,
-        "init": "$('body').append('<div class=\"goback\" title=\"返回頂部\" onclick=\"document.documentElement.scrollTo({top: 0})\" style=\"background: url(/images/bg_main.png) -258px -80px no-repeat;opacity:0.2;position:fixed;left:50%;margin-left:-20px;bottom:0px;width:40px;height:40px;\"></div>');function handleScroll(){let dd=document.documentElement;let gb=document.querySelector('.goback');let scrollTotal=dd.scrollHeight-dd.clientHeight;if((dd.scrollTop/scrollTotal)>0.7){gb.style.opacity=0.7}else{gb.style.opacity=0.2}}document.addEventListener('scroll',handleScroll);let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/window\\[\"\\\\x65\\\\x76\\\\x61\\\\x6c\"\\]/)>-1).innerHTML.slice(26,-1);let imgDataCode=eval(code).slice(10,-11);let imgData=eval(imgDataCode);let domain='https://i.hamreus.com/';setTimeout(()=>{let _img='';for(let i=0;i<imgData.images.length;i++){_img+=`<img src=\"${domain + imgData.images[i]}?e=${imgData.sl.e}&m=${imgData.sl.m}\">`};document.querySelector('#manga').innerHTML=_img},0)",
-        "nextLinkByJs": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/window\\[\"\\\\x65\\\\x76\\\\x61\\\\x6c\"\\]/)>-1).innerHTML.slice(26,-1);let imgDataCode=eval(code).slice(10,-11);let imgData=eval(imgDataCode);let n=imgData.nextId;let nl=location.href.replace(/\\d+\\.html$/,'')+n+'.html';if(n!=0)return nl;",
+        "init": "let ge=e=>document.querySelector(e);$('body').append('<div class=\"goback\" title=\"返回頂部\" onclick=\"document.documentElement.scrollTo({top: 0})\" style=\"background: url(/images/bg_main.png) -258px -80px no-repeat;opacity:0.2;position:fixed;left:50%;margin-left:-20px;bottom:0px;width:40px;height:40px;\"></div>');function handleScroll(){let dd=document.documentElement;let gb=ge('.goback');let scrollTotal=dd.scrollHeight-dd.clientHeight;if((dd.scrollTop/scrollTotal)>0.7){gb.style.opacity=0.7}else{gb.style.opacity=0.2}}document.addEventListener('scroll',handleScroll);let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/x6c/)>-1).innerHTML.slice(26,-1);let imgDataCode=eval(code).slice(10,-11);let imgData=eval(imgDataCode);let loop=setInterval(()=>{let set=ge('#manga img');if(set){clearInterval(loop);let domain='https://i.hamreus.com/';let E=ge('#manga');let F=new DocumentFragment();imgData.images.forEach(e=>{let img=new Image();img.src=`${domain+e}?e=${imgData.sl.e}&m=${imgData.sl.m}`;F.appendChild(img)});E.innerHTML='';E.appendChild(F);let n=ge(\"a[data-action='chapter.next']\");if(imgData.nextId==0){n.href=location.pathname.replace(/\\d+\\.html$/,'');n.innerText='返回目录'}}},100)",
+        "nextLinkByJs": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/x6c/)>-1).innerHTML.slice(26,-1);let imgDataCode=eval(code).slice(10,-11);let imgData=eval(imgDataCode);let n=imgData.nextId;if(n!=0)return location.href.replace(/\\d+\\.html$/,'')+n+'.html';",
         "pageElement": "#manga",
         "replaceElement": "head>title,#mangaTitle",
-        "pageInit": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/window\\[\"\\\\x65\\\\x76\\\\x61\\\\x6c\"\\]/)>-1).innerHTML.slice(26,-1);let imgDataCode=eval(code).slice(10,-11);let imgData=eval(imgDataCode);let domain='https://i.hamreus.com/';let _img='';for(let i=0;i<imgData.images.length;i++){_img+=`<img src=\"${domain+imgData.images[i]}?e=${imgData.sl.e}&m=${imgData.sl.m}\">`};doc.querySelector('#manga').innerHTML=_img;document.querySelector(`a[data-action='chapter.prev']`).href=location.pathname.replace(/\\d+\\.html$/,'')+imgData.prevId+'.html';if(imgData.nextId!=0){document.querySelector(`a[data-action='chapter.next']`).href=location.pathname.replace(/\\d+\\.html$/,'')+imgData.nextId+'.html'}else{document.querySelector(`a[data-action='chapter.next']`).href=location.pathname.replace(/\\d+\\.html$/,'');document.querySelector(`a[data-action='chapter.next']`).innerText='返回目录';}",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('#manga');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageInit": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/x6c/)>-1).innerHTML.slice(26,-1);let imgDataCode=eval(code).slice(10,-11);let imgData=eval(imgDataCode);let domain='https://i.hamreus.com/';let E=doc.querySelector('#manga');let F=new DocumentFragment();imgData.images.forEach(e=>{let img=new Image();img.src=`${domain+e}?e=${imgData.sl.e}&m=${imgData.sl.m}`;F.appendChild(img)});E.innerHTML='';E.appendChild(F);let ge=e=>document.querySelector(e);let curl=location.pathname.replace(/\\d+\\.html$/,'');ge(\"a[data-action='chapter.prev']\").href=curl+imgData.prevId+'.html';let n=ge(\"a[data-action='chapter.next']\");if(imgData.nextId!=0){n.href=curl+imgData.nextId+'.html'}else{n.href=curl;n.innerText='返回目录'}",
+        "pageAction": "let gae=e=>document.querySelectorAll(e);let c=gae('#manga');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}",
         "pageBarText": "let t=doc.querySelector('#mangaTitle');if(t)return t.innerHTML.replace(/<.+>\\s?/g,'')",
         "css": ".action-list li{width:50%!important}#action>ul>li:nth-child(n+2):nth-child(-n+3),.manga-page,.clickforceads{display:none!important}.manga-box img{border-top:0px!important;border-bottom:0px!important}"
     },
@@ -223,12 +218,12 @@
         "url": "^https?://(tw|www)\\.manhuagui\\.com/comic/\\d+/\\d+\\.html",
         "history": 2,
         "pinUrl": true,
-        "init": "let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/window\\[\"\\\\x65\\\\x76\\\\x61\\\\x6c\"\\]/)>-1).innerHTML.slice(26,-1);let imgDataCode=eval(code).slice(11,-11);let imgData=eval(imgDataCode);let domain='https://i.hamreus.com/';setTimeout(()=>{let _img='';for(let i=0;i<imgData.files.length;i++){_img+=`<img src=\"${domain + imgData.path + imgData.files[i]}?e=${imgData.sl.e}&m=${imgData.sl.m}\">`};document.querySelector('.pr.tbCenter.cb').innerHTML=_img},0)",
-        "nextLinkByJs": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/window\\[\"\\\\x65\\\\x76\\\\x61\\\\x6c\"\\]/)>-1).innerHTML.slice(26,-1);let imgDataCode=eval(code).slice(11,-11);let imgData=eval(imgDataCode);let n=imgData.nextId;let nl=location.href.replace(/\\d+\\.html$/,'')+n+'.html';if(n!=0)return nl;",
+        "init": "let ge=e=>document.querySelector(e);let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/x6c/)>-1).innerHTML.slice(26,-1);let imgDataCode=eval(code).slice(11,-11);let imgData=eval(imgDataCode);let loop=setInterval(()=>{let set=ge('.pr.tbCenter.cb img');if(set){clearInterval(loop);let domain='https://i.hamreus.com/';let E=ge('.pr.tbCenter.cb');let F=new DocumentFragment();imgData.files.forEach(e=>{let img=new Image();img.src=`${domain+imgData.path+e}?e=${imgData.sl.e}&m=${imgData.sl.m}`;F.appendChild(img)});E.innerHTML='';E.appendChild(F)}},100)",
+        "nextLinkByJs": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/x6c/)>-1).innerHTML.slice(26,-1);let imgDataCode=eval(code).slice(11,-11);let imgData=eval(imgDataCode);let n=imgData.nextId;if(n!=0)return location.href.replace(/\\d+\\.html$/,'')+n+'.html';",
         "pageElement": ".pr.tbCenter.cb",
         "replaceElement": "head>title,.title h2",
-        "pageInit": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/window\\[\"\\\\x65\\\\x76\\\\x61\\\\x6c\"\\]/)>-1).innerHTML.slice(26,-1);let imgDataCode=eval(code).slice(11,-11);let imgData=eval(imgDataCode);let domain='https://i.hamreus.com/';let _img='';for(let i=0;i<imgData.files.length;i++){_img+=`<img src=\"${domain+imgData.path+imgData.files[i]}?e=${imgData.sl.e}&m=${imgData.sl.m}\">`};doc.querySelector('.pr.tbCenter.cb').innerHTML=_img;let pc=document.querySelector('.btn-red.prevC');pc.href=location.href.replace(/\\d+\\.html.*/,'')+imgData.prevId+'.html';pc.removeAttribute('onclick');let p=document.querySelector('.btn-red.prev');p.href=location.href.replace(/\\d+\\.html.*/,'')+imgData.prevId+'.html';p.removeAttribute('onclick');if(imgData.nextId!=0){document.querySelector('.btn-red.nextC').href=location.href.replace(/\\d+\\.html.*/,'')+imgData.nextId+'.html';let n=document.querySelector('.btn-red.next+a');n.href=location.href.replace(/\\d+\\.html.*/,'')+imgData.nextId+'.html';n.removeAttribute('onclick')}else{document.querySelector('.btn-red.nextC').href=location.href.replace(/\\d+\\.html.*/,'');let n=document.querySelector('.btn-red.next+a');n.href=location.href.replace(/\\d+\\.html.*/,'');n.innerText=document.querySelector('#viewList').innerText;setTimeout(()=>{document.querySelector('.pr.tbCenter.cb').remove();document.querySelector('.pagetual_pageBar').remove()},10000);n.removeAttribute('onclick')}",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('.pr.tbCenter.cb');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageInit": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/x6c/)>-1).innerHTML.slice(26,-1);let imgDataCode=eval(code).slice(11,-11);let imgData=eval(imgDataCode);let domain='https://i.hamreus.com/';let E=doc.querySelector('.pr.tbCenter.cb');let F=new DocumentFragment();imgData.files.forEach(e=>{let img=new Image();img.src=`${domain+imgData.path+e}?e=${imgData.sl.e}&m=${imgData.sl.m}`;F.appendChild(img)});E.innerHTML='';E.appendChild(F);let ge=e=>document.querySelector(e);let pc=ge('.btn-red.prevC');let curl=location.href.replace(/\\d+\\.html.*/,'');let purl=curl+imgData.prevId+'.html';let nurl=curl+imgData.nextId+'.html';pc.href=purl;pc.removeAttribute('onclick');let p=ge('.btn-red.prev');p.href=purl;p.removeAttribute('onclick');if(imgData.nextId!=0){ge('.btn-red.nextC').href=nurl;let n=ge('.btn-red.next+a');n.href=nurl;n.removeAttribute('onclick')}else{ge('.btn-red.nextC').href=curl;let n=ge('.btn-red.next+a');n.href=curl;n.innerText=ge('#viewList').innerText;n.removeAttribute('onclick')}",
+        "pageAction": "let gae=e=>document.querySelectorAll(e);let c=gae('.pr.tbCenter.cb');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}",
         "pageBarText": "let t=doc.querySelector('h2');if(t)return t.innerText",
         "css": ".title>div:not(.fr)>span,#pageSelect,.main-btn>a[href^='j'],.pager>a[href*='goPage'],.pager>span{display:none!important}.pr.tbCenter.cb>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
     },
@@ -242,19 +237,17 @@
         "css": ".pagetual_pageBar{margin-top:-10px!important}"
     },
     {
-        "name": "漫畫屋 - 閱讀 - 雙擊下一話，鍵盤左右鍵上下話",
+        "name": "漫畫屋 - 閱讀",
         "example": "https://mh5.tw/series-wunalfy-484928-1-%E4%B8%8D%E5%B9%B8%E8%81%B7%E6%A5%AD%E7%9A%84%E5%B9%B8%E9%81%8B?",
         "url": "^https?://mh5\\.tw/series",
         "pinUrl": true,
-        "init": "function next(e){let key=window.event?e.keyCode:e.which;if(key==39){let n=document.querySelector('.next>div+a:not(.hui)');if(n){n.click()}else{alert('沒有下一話了！')}}};document.addEventListener('keydown',next);function dcnext(e){let n=document.querySelector('.next>div+a:not(.hui)');if(n){n.click()}else{alert('沒有下一話了！')}};document.addEventListener('dblclick',dcnext);function prev(e){let key=window.event?e.keyCode:e.which;if(key==37){let p=document.querySelector('.prev>div+a:not(.hui)');if(p){p.click()}else{alert('沒有上一話了！')}}};document.addEventListener('keydown',prev);",
-        "nextLink": "a.cur+a",
+        "nextLinkByJs": "let ge=e=>doc.querySelector(e);let np=ge('.num>.cur+a');let nc=ge('.next>a:not(.hui)');let c=ge('.num>.cur').innerText;let m=ge('.num>a:last-child').innerText-1;if(c!=m){return np.href}else if(nc){return nc.href}else return;",
         "pageElement": ".ptview>img:not([style])",
         "replaceElement": ".setnmh-pagedos",
-        "pageAction": "setTimeout(()=>{let last=document.querySelector('.setnmh-readagin');let lastimg=document.querySelector('.ptview>img:last-child');let p=document.createElement('p');p.innerText='本章節已達最後一頁';p.style='font-size:24px;height: 40px;line-height: 40px;text-align: center;margin: 10px auto;';if(last){lastimg.parentNode.insertBefore(p,lastimg);lastimg.remove()}},200)",
-        "pageBar": 0,
-        "initRun": 1,
-        "autoLoadNum": "0",
-        "css": ".setnmh-seebox img{max-width: 100% !important;display: block !important;margin: 0 auto !important;box-shadow:none!important}.setnmh-seebox{width:auto !important;max-width:800px !important}{display:none!important}.pagetual_tipsWords{display:none!important}"
+        "pageAction": "let gae=e=>document.querySelectorAll(e);let d=gae('img[alt][style]')[0];if(d)d.remove();gae('.pagetual_pageBar>a').forEach(e=>{if(!/-1-/.test(e.href))e.parentNode.remove()});let ps=gae('.pagetual_pageBar');if(ps.length>4){ps[0].remove();let ds=gae('.ptview>*');for(let i in ds){if(/pagetual/.test(ds[i].id)){break};ds[i].remove()}}",
+        "pageBarText": "let t=doc.querySelector('h2');if(t)return t.innerText.replace(/\\（\\d+P\\）/,'')",
+        "rate": 10,
+        "css": ".setnmh-seebox img{max-width: 100% !important;display: block !important;margin: 0 auto !important;box-shadow:none!important}.setnmh-seebox{width:auto !important;max-width:800px !important}.num>a:last-child{display:none!important}"
     },
     {
         "name": "漫畫屋 - 分類",
@@ -295,51 +288,61 @@
     {
         "name": "Xmanhua - 手機版閱讀",
         "example": "https://xmanhua.com/m10344/",
-        "url": "^https?://(www\\.)?xmanhua\\.com/m\\d+/",
+        "url": "^https?://(www\\.)?xmanhua\\.com/m\\d+(-p\\d+)?/",
         "include": ".bottom-bar",
         "history": 2,
         "pinUrl": true,
-        "init": "function showtoolbar(){let c=document.querySelectorAll('.pagetual_pageBar+#cp_img');let t=document.querySelector('body.toolbar');if(c.length==2){if(t){$('body').removeClass('toolbar')}else{$('body').addClass('toolbar')}}};document.addEventListener('click',showtoolbar);document.querySelectorAll('img[data-src]').forEach(img=>{img.src=img.getAttribute('data-src')});",
+        "init": "function showtoolbar(){let c=document.querySelectorAll('.pagetual_pageBar+#cp_img');let t=document.querySelector('body.toolbar');if(c.length==2){if(t){$('body').removeClass('toolbar')}else{$('body').addClass('toolbar')}}};document.addEventListener('click',showtoolbar);document.querySelectorAll('img[data-src]').forEach(img=>{img.src=img.dataset.src});",
         "nextLink": "//a[text()='下一章']",
         "pageElement": "#cp_img",
         "replaceElement": ".top-title,.bottom-bar,.toast-win,head>title",
-        "pageInit": "function ge(e){return doc.querySelector(e)}let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/newImgs/)>-1).innerHTML;let imgData=eval(eval(code.trim().slice(4)).slice(12));let _img='';imgData.forEach(e=>{_img+=`<img src='${e}'>`});ge('#cp_img').innerHTML=_img;",
-        "pageAction": "setTimeout(()=>{let m=document.title.match(/([^_]+)_([^_]+)/);let t=document.querySelector('.top-title');t.innerText=m[1].replace('漫畫','')+'_'+m[2];},100);function geAll(e){return document.querySelectorAll(e)}setTimeout(()=>{let c=geAll('#cp_img');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageInit": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/newImgs/)>-1).innerHTML;let imgData=eval(eval(code.trim().slice(4)).slice(12));let E=doc.querySelector('#cp_img');let F=new DocumentFragment();imgData.forEach(e=>{let img=new Image();img.src=e;F.appendChild(img)});E.innerHTML='';E.appendChild(F);",
+        "pageAction": "let gae=e=>document.querySelectorAll(e);let c=gae('#cp_img');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}setTimeout(()=>{let m=document.title.match(/([^_]+)_([^_]+)/);let t=document.querySelector('.top-title');t.innerText=m[1].replace('漫畫','')+'_'+m[2]},100)",
         "pageBarText": "let t=doc.querySelector('.top-title');if(t)return t.innerText.replace(/XManhua\\?.+\\?/,'')"
     },
     {
         "name": "Mangabz - 手機版閱讀",
         "example": "https://www.mangabz.com/m38701/",
-        "url": "^https?://www\\.mangabz\\.com/m\\d+/",
+        "url": "^https?://www\\.mangabz\\.com/m\\d+(-p\\d+)?/",
         "include": ".bottom-bar",
         "history": 2,
         "pinUrl": true,
-        "init": "function ge(e){return document.querySelector(e)}let b=ge('body.viewbody');if(b){b.innerHTML=b.innerHTML.replace('<!--','').replace('-->','');setTimeout(()=>{$('.top-bar-tool').removeAttr('style');removeAttr('.bottom-bar').removeAttr('style')},0)}function showtoolbar(){let t=document.querySelector('body.toolbar');if(t){$('body').removeClass('toolbar')}else{$('body').addClass('toolbar')}};document.addEventListener('click',showtoolbar);document.querySelectorAll('img[data-src]').forEach(img=>{img.src=img.getAttribute('data-src')});",
+        "init": "let ge=e=>document.querySelector(e);let b=ge('body.viewbody');if(b){b.innerHTML=b.innerHTML.replace('<!--','').replace('-->','');setTimeout(()=>{$('.top-bar-tool').removeAttr('style');removeAttr('.bottom-bar').removeAttr('style')},0)}function showtoolbar(){let t=ge('body.toolbar');if(t){$('body').removeClass('toolbar')}else{$('body').addClass('toolbar')}};document.addEventListener('click',showtoolbar);document.querySelectorAll('img[data-src]').forEach(e=>{e.src=e.dataset.src});",
         "nextLink": "//a[text()='下一章']",
         "pageElement": "#cp_img",
         "replaceElement": ".bottom-bar,.toast-win,head>title",
-        "pageInit": "function ge(e){return doc.querySelector(e)}let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/newImgs/)>-1).innerHTML;let imgData=eval(eval(code.trim().slice(4)).slice(12));let _img='';imgData.forEach(e=>{_img+=`<img src='${e}'>`});ge('#cp_img').innerHTML=_img;",
-        "pageAction": "setTimeout(()=>{let m=document.title.match(/([^_]+)_([^_]+)/);let t=document.querySelector('.top-title');t.innerText=m[1].replace('漫畫','')+'_'+m[2];$('.bottom-bar').removeAttr('style')},100);function geAll(e){return document.querySelectorAll(e)}setTimeout(()=>{let c=geAll('#cp_img');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageInit": "let ge=e=>doc.querySelector(e);let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/newImgs/)>-1).innerHTML;let imgData=eval(eval(code.trim().slice(4)).slice(12));let E=ge('#cp_img');let F=new DocumentFragment();imgData.forEach(e=>{let img=new Image();img.src=e;F.appendChild(img)});E.innerHTML='';E.appendChild(F);",
+        "pageAction": "let gae=e=>document.querySelectorAll(e);let c=gae('#cp_img');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}setTimeout(()=>{let m=document.title.match(/([^_]+)_([^_]+)/);let t=document.querySelector('.top-title');t.innerText=m[1].replace('漫畫','')+'_'+m[2];$('.bottom-bar').removeAttr('style')},100);",
         "pageBarText": "let t=doc.querySelector('title');if(t)return t.innerText.match(/_(.+)_/)[1]"
     },
     {
-        "name": "Xmanhua - PC版閱讀 - 雙擊下一話，鍵盤左右鍵上下話",
+        "name": "Xmanhua - PC版閱讀",
         "example": "https://xmanhua.com/m10344/",
         "url": "^https?://(www\\.)?xmanhua\\.com/m\\d+(-p\\d+)?/",
         "include": ".reader-bottom-page-list",
         "pinUrl": true,
-        "init": "function getX(path){return document.evaluate(path,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue}function getCss(e){return document.querySelector(e)}function getCssAll(e){return document.querySelectorAll(e)}function showtoolbar(){let t=getCss('.header.toolbar');if(t){$('.header').removeClass('toolbar');$('.header').removeAttr('style')}else{$('.header').addClass('toolbar');$('.header').attr('style','top: -64px;')}let b=getCss('.reader-bottom.toolbar');if(b){$('.reader-bottom').removeClass('toolbar');$('.reader-bottom').removeAttr('style')}else{$('.reader-bottom').addClass('toolbar');$('.reader-bottom').attr('style','bottom: -50px;')}};document.addEventListener('click',showtoolbar);function hidetoolbar(){var e=e||window.event;if(e.wheelDelta<0||e.detail>0){$('.header').addClass('toolbar');$('.header').attr('style','top: -64px;');$('.reader-bottom').addClass('toolbar');$('.reader-bottom').attr('style','bottom: -50px;')}else{$('.header').removeClass('toolbar');$('.header').removeAttr('style');$('.reader-bottom').removeClass('toolbar');$('.reader-bottom').removeAttr('style')}};document.addEventListener('wheel',hidetoolbar);document.addEventListener('DOMMouseScroll',hidetoolbar);function keyhidetoolbar(e){let key=window.event?e.keyCode:e.which;if(key=='34'||key=='32'||key=='40'){$('.header').addClass('toolbar');$('.header').attr('style','top: -64px;');$('.reader-bottom').addClass('toolbar');$('.reader-bottom').attr('style','bottom: -50px;')}else{$('.header').removeClass('toolbar');$('.header').removeAttr('style');$('.reader-bottom').removeClass('toolbar');$('.reader-bottom').removeAttr('style')}};document.addEventListener('keydown',keyhidetoolbar);function next(e){let key=window.event?e.keyCode:e.which;if(key==39){let n=getX(\"//a[img[contains(@src,'right-2')]]\");if(n){n.click()}else{alert('沒有下一話了！')}}};document.addEventListener('keydown',next);function dcnext(e){let n=getX(\"//a[img[contains(@src,'right-2')]]\");if(n){n.click()}else{alert('沒有下一話了！')}};document.addEventListener('dblclick',dcnext);function prev(e){let key=window.event?e.keyCode:e.which;if(key==37){let p=getX(\"//a[img[contains(@src,'right-1')]]\");if(p){p.click()}else{alert('沒有上一話了！')}}};document.addEventListener('keydown',prev);setTimeout(()=>{document.body.style.overflow='scroll';getCss('#showimage').removeAttribute('class');getCss('#showimage').setAttribute('style','text-align:center;font-size:2em;color:#FFFFFF;');getCssAll('.container').forEach(e=>{e.setAttribute('style','width: auto!important;')});getCss(\".reader-bottom-page\").remove();setTimeout(()=>{getCss('#cp_img').innerHTML='';},500);for(let i=1;i<=XMANHUA_IMAGE_COUNT;i++){setTimeout(()=>{$.ajax({url:'chapterimage.ashx',data:{cid:XMANHUA_CID,page:i,key:'',_cid:XMANHUA_CID,_mid:XMANHUA_MID,_dt:XMANHUA_VIEWSIGN_DT,_sign:XMANHUA_VIEWSIGN},type:'GET',success:function(msg){let imgSrc='<img src=\"'+eval(msg)[0]+'\">';$('#cp_img').append(imgSrc)}})},1000*i)}},0)",
-        "nextLink": "0",
-        "css": ".container{width:auto!important}#cp_img img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
+        "init": "let ge=e=>document.querySelector(e);let loop=setInterval(()=>{let set=ge('#cp_img>img');if(set){clearInterval(loop);ge('#cp_img').innerHTML=ge('#cp_img>img').outerHTML;ge('#showimage').removeAttribute('style');}},100);function showtoolbar(){let t=ge('.header.toolbar');if(t){$('.header').removeClass('toolbar');$('.header').removeAttr('style')}else{$('.header').addClass('toolbar');$('.header').attr('style','top: -64px;')}let b=ge('.reader-bottom.toolbar');if(b){$('.reader-bottom').removeClass('toolbar');$('.reader-bottom').removeAttr('style')}else{$('.reader-bottom').addClass('toolbar');$('.reader-bottom').attr('style','bottom: -50px;')}};document.addEventListener('click',showtoolbar);function hidetoolbar(){var e=e||window.event;if(e.wheelDelta<0||e.detail>0){$('.header').addClass('toolbar');$('.header').attr('style','top: -64px;');$('.reader-bottom').addClass('toolbar');$('.reader-bottom').attr('style','bottom: -50px;')}else{$('.header').removeClass('toolbar');$('.header').removeAttr('style');$('.reader-bottom').removeClass('toolbar');$('.reader-bottom').removeAttr('style')}};document.addEventListener('wheel',hidetoolbar);document.addEventListener('DOMMouseScroll',hidetoolbar);function keyhidetoolbar(e){let key=window.event?e.keyCode:e.which;if(key=='34'||key=='32'||key=='40'){$('.header').addClass('toolbar');$('.header').attr('style','top: -64px;');$('.reader-bottom').addClass('toolbar');$('.reader-bottom').attr('style','bottom: -50px;')}else{$('.header').removeClass('toolbar');$('.header').removeAttr('style');$('.reader-bottom').removeClass('toolbar');$('.reader-bottom').removeAttr('style')}};document.addEventListener('keydown',keyhidetoolbar);",
+        "nextLinkByJs": "let m=doc.querySelector('.relative>a').innerText.match(/(\\d+)\\/(\\d+)/);let nc=doc.querySelector('img[src*=right-2]');if(m[1]!=m[2]){let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/XMANHUA_CURL/)>-1).innerHTML;let c=eval(code.match(/XMANHUA_CURL[^;]+/)[0]);let url=location.origin+c;let next=url.replace(/(-p\\d+)?\\/$/,'')+'-p'+(parseInt(m[1])+1)+'/';return next}else if(nc&&nc.parentNode){if(/javascript/.test(nc.parentNode.href)){return;}else{return nc.parentNode.href}}",
+        "pageElement": "#cp_img>img",
+        "replaceElement": ".container",
+        "pageAction": "let gae=e=>document.querySelectorAll(e);gae('.pagetual_pageBar>a').forEach(e=>{if(/-p\\d+\\/$/.test(e.href))e.parentNode.remove()});let ps=gae('.pagetual_pageBar');if(ps.length>4){ps[0].remove();let ds=gae('#cp_img>*');for(let i in ds){if(/pagetual/.test(ds[i].id)){break};ds[i].remove()}}",
+        "pageBarText": "let t=doc.querySelector('.reader-title>a:last-child');if(t)return t.innerText.trim()",
+        "rate": 5,
+        "css": ".container{width:auto!important}#cp_img img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}.reader-img-con{padding:64px 0 50px !important;}"
     },
     {
-        "name": "Mangabz - PC版閱讀 - 雙擊下一話，鍵盤左右鍵上下話",
+        "name": "Mangabz - PC版閱讀",
         "example": "https://www.mangabz.com/m38701/",
         "url": "^https?://www\\.mangabz\\.com/m\\d+(-p\\d+)?/",
         "include": ".container",
         "pinUrl": true,
-        "init": "function getX(path){return document.evaluate(path,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue}function getCss(e){return document.querySelector(e)}function getCssAll(e){return document.querySelectorAll(e)}function next(e){let key=window.event?e.keyCode:e.which;if(key==39){let n=getX(\"//a[img[contains(@src,'xiayizhang')]]\");if(n){n.click()}else{alert('沒有下一話了！')}}};document.addEventListener('keydown',next);function dcnext(e){let n=getX(\"//a[img[contains(@src,'xiayizhang')]]\");if(n){n.click()}else{alert('沒有下一話了！')}};document.addEventListener('dblclick',dcnext);function prev(e){let key=window.event?e.keyCode:e.which;if(key==37){let p=getX(\"//a[img[contains(@src,'shangyizhang')]]\");if(p){p.click()}else{alert('沒有上一話了！')}}};document.addEventListener('keydown',prev);function hidetoolbar(){var e=e||window.event;if(e.wheelDelta<0||e.detail>0){$('.top-bar').attr('style','top: -74px;')}else{$('.top-bar').removeAttr('style')}};document.addEventListener('wheel',hidetoolbar);document.addEventListener('DOMMouseScroll',hidetoolbar);function keyhidetoolbar(e){let key=window.event?e.keyCode:e.which;if(key=='34'||key=='32'||key=='40'){$('.top-bar').attr('style','top: -74px;')}else{$('.top-bar').removeAttr('style')}};document.addEventListener('keydown',keyhidetoolbar);setTimeout(()=>{document.body.style.overflow='scroll';getCss('#showimage').removeAttribute('class');getCss('#showimage').setAttribute('style','text-align:center;font-size:2em;color:#FFFFFF;');getCssAll('.container').forEach(e=>{e.setAttribute('style','width: auto!important;')});getCss(\"a[href*='ShowPre']\").remove();getCss(\"span[class^='bottom-page']\").remove();getCss(\"a[href*='ShowNext']\").remove();setTimeout(()=>{getCss('#cp_img').innerHTML='';},500);for(let i=1;i<=MANGABZ_IMAGE_COUNT;i++){setTimeout(()=>{$.ajax({url:'chapterimage.ashx',data:{cid:MANGABZ_CID,page:i,key:'',_cid:MANGABZ_CID,_mid:MANGABZ_MID,_dt:MANGABZ_VIEWSIGN_DT,_sign:MANGABZ_VIEWSIGN},type:'GET',success:function(msg){let imgSrc='<img src=\"'+eval(msg)[0]+'\">';$('#cp_img').append(imgSrc)}})},1000*i)}},0)",
-        "nextLink": "0",
+        "init": "let ge=e=>document.querySelector(e);let loop=setInterval(()=>{let set=ge('#cp_img>img');if(set){clearInterval(loop);ge('#cp_img').innerHTML=ge('#cp_img>img').outerHTML}},100);function hidetoolbar(){var e=e||window.event;if(e.wheelDelta<0||e.detail>0){$('.top-bar').attr('style','top: -74px;')}else{$('.top-bar').removeAttr('style')}};document.addEventListener('wheel',hidetoolbar);document.addEventListener('DOMMouseScroll',hidetoolbar);function keyhidetoolbar(e){let key=window.event?e.keyCode:e.which;if(key=='34'||key=='32'||key=='40'){$('.top-bar').attr('style','top: -74px;')}else{$('.top-bar').removeAttr('style')}};document.addEventListener('keydown',keyhidetoolbar);",
+        "nextLinkByJs": "let m=doc.querySelector('[class^=bottom-page]').innerText.match(/(\\d+)-(\\d+)/);let nc=doc.querySelector('img[src*=xiayizhang]');if(m[1]!=m[2]){let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/MANGABZ_CURL/)>-1).innerHTML;let c=eval(code.match(/MANGABZ_CURL[^;]+/)[0]);let url=location.origin+c;let next=url.replace(/(-p\\d+)?\\/$/,'')+'-p'+(parseInt(m[1])+1)+'/';return next}else if(nc&&nc.parentNode){if(/javascript/.test(nc.parentNode.href)){return;}else{return nc.parentNode.href}}",
+        "pageElement": "#cp_img>img",
+        "replaceElement": ".container",
+        "pageAction": "let gae=e=>document.querySelectorAll(e);gae('.pagetual_pageBar>a').forEach(e=>{if(/-p\\d+\\/$/.test(e.href))e.parentNode.remove()});let ps=gae('.pagetual_pageBar');if(ps.length>4){ps[0].remove();let ds=gae('#cp_img>*');for(let i in ds){if(/pagetual/.test(ds[i].id)){break};ds[i].remove()}}",
+        "pageBarText": "let t=doc.querySelector('.top-title');if(t)return t.innerText.trim()",
+        "rate": 5,
         "css": "a[href^='j']{display:none!important}.container{width:auto!important}#cp_img img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
     },
     {
@@ -370,16 +373,16 @@
         "url": "^https?://www\\.cartoonmad\\.cc/comic/\\d+\\.html",
         "example": "https://www.cartoonmad.com/comic/6187.html",
         "history": 2,
-        "init": "document.onkeydown = null;function ge(e){return document.querySelector(e)}let _src=ge('img[onload]').src.replace(/\\d+$/,'');let max=document.querySelectorAll('option[value]').length;let _img='';for(let i=1;i<=max;i++){let imgSrc;if(i<10){imgSrc=_src+'00'+i}else if(i<100){imgSrc=_src+'0'+i}else{imgSrc=_src+i}_img+=`<img class=\"PagetualImg\" src='${imgSrc}'>`};ge('img[onload],img[oncontextmenu]').parentNode.outerHTML=_img;let p=ge('body>table>tbody>tr:nth-child(2)').cloneNode(true);let c=ge('body>table>tbody>tr:last-child');c.parentNode.insertBefore(p,c);",
+        "init": "document.onkeydown=null;let ge=e=>document.querySelector(e);let _src=ge('img[onload]').src.replace(/\\d+$/,'');let max=document.querySelectorAll('option[value]').length;let E=ge('img[onload]').parentNode.parentNode;let F=new DocumentFragment();for(let i=1;i<=max;i++){let imgSrc;if(i<10){imgSrc=_src+'00'+i}else if(i<100){imgSrc=_src+'0'+i}else{imgSrc=_src+i}let img=new Image();img.className='PagetualImg';img.src=imgSrc;F.appendChild(img)};E.innerHTML='';E.appendChild(F);let p=ge('body>table>tbody>tr:nth-child(2)').cloneNode(true);let c=ge('body>table>tbody>tr:last-child');c.parentNode.insertBefore(p,c);",
         "nextLink": "//a[img[@src='/image/rad.gif']]",
         "pageElement": "//script[contains(text(),'top.')]",
         "replaceElement": "head>title",
         "insert": "//td[a/img[@onload]] | //td[img[@class='PagetualImg']]",
         "insertPos": 2,
-        "pageInit": "function docge(e){return doc.querySelector(e)}function ge(e){return document.querySelector(e)}let _src=docge('img[onload]').src.replace(/\\d+$/,'');let max=doc.querySelectorAll('option[value]').length;let _img='';for(let i=1;i<=max;i++){let imgSrc;if(i<10){imgSrc=_src+'00'+i}else if(i<100){imgSrc=_src+'0'+i}else{imgSrc=_src+i}_img+=`<img class=\"PagetualImg\"src='${imgSrc}'>`};ge('.PagetualImg').parentNode.insertAdjacentHTML('beforeend',_img);let re=docge('body>table>tbody>tr:nth-child(2)').outerHTML;ge('body>table>tbody>tr:nth-child(2)').outerHTML=re;ge('body>table>tbody>tr:nth-child(7)').outerHTML=re;",
-        "pageAction": "let ps=document.querySelectorAll('.pagetual_pageBar');if(ps.length>4){ps[0].remove();let ds=document.querySelector('.PagetualImg').parentNode.querySelectorAll('*');for(let i=0;i<ds.length;i++){if(/pagetual/.test(ds[i].id)){break};ds[i].remove()}}",
+        "pageInit": "let docge=e=>doc.querySelector(e);let ge=e=>document.querySelector(e);let _src=docge('img[onload]').src.replace(/\\d+$/,'');let max=doc.querySelectorAll('option[value]').length;let E=ge('.PagetualImg').parentNode;let F=new DocumentFragment();for(let i=1;i<=max;i++){let imgSrc;if(i<10){imgSrc=_src+'00'+i}else if(i<100){imgSrc=_src+'0'+i}else{imgSrc=_src+i}let img=new Image();img.className='PagetualImg';img.src=imgSrc;F.appendChild(img)};E.appendChild(F);let re=docge('body>table>tbody>tr:nth-child(2)').outerHTML;ge('body>table>tbody>tr:nth-child(2)').outerHTML=re;ge('body>table>tbody>tr:nth-child(7)').outerHTML=re;",
+        "pageAction": "let ps=document.querySelectorAll('.pagetual_pageBar');if(ps.length>10){ps[0].remove();let ds=document.querySelector('.PagetualImg').parentNode.querySelectorAll('*');for(let i in ds){if(/pagetual/.test(ds[i].id)){break};ds[i].remove()}}",
         "pageBarText": "let t=doc.querySelector('b+a[style]');if(t)return t.innerText;",
-        "css": "td[align]>img{max-width: 100% !important;display: block !important;margin: 0 auto !important;}td[valign='top'][width='160'],td[width='12'],select[name],body>table>tbody>tr:nth-child(5){display:none!important}"
+        "css": ".PagetualImg{max-width: 100% !important;display: block !important;margin: 0 auto !important;}td[valign='top'][width='160'],td[width='12'],select[name],body>table>tbody>tr:nth-child(5){display:none!important}"
     },
     {
         "name": "動漫狂 - 分類",
@@ -397,24 +400,39 @@
         "exclude": ".view-paging",
         "history": 2,
         "pinUrl": true,
-        "init": "function showtoolbar(){let c=document.querySelectorAll('.pagetual_pageBar+#cp_img');let t=document.querySelector('body.toolbar');if(c.length==2){if(t){$('body').removeClass('toolbar')}else{$('body').addClass('toolbar')}}};document.addEventListener('click',showtoolbar);setTimeout(()=>{let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/newImgs/)>-1).innerHTML.slice(4,-1);let imgData=eval(eval(code).replace('var',''));let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src='${imgData[i]}'>`};document.querySelector('#cp_img').innerHTML=_img},1000)",
-        "nextLinkByJs": "function gx(x){return doc.evaluate(x,doc,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue}let next = gx(\"//ul[@class='view-bottom-bar']//a[text()='下一章' and not(contains(@href,'-end'))]\"); if (next && next.href) return location.origin + next.href.split(\"'\")[1]",
+        "init": "let ge=e=>document.querySelector(e);function showtoolbar(){let c=document.querySelectorAll('.pagetual_pageBar+#cp_img');let t=ge('body.toolbar');if(c.length==2){if(t){$('body').removeClass('toolbar')}else{$('body').addClass('toolbar')}}};document.addEventListener('click',showtoolbar);let loop=setInterval(()=>{let set=ge('#cp_img img');if(set){clearInterval(loop);let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/newImgs/)>-1).innerHTML.slice(4,-1);let imgData=eval(eval(code).replace('var',''));let E=ge('#cp_img');let F=new DocumentFragment();imgData.forEach(e=>{let img=new Image();img.src=e;F.appendChild(img)});E.innerHTML='';E.appendChild(F)}},100)",
+        "nextLinkByJs": "let gx=x=>doc.evaluate(x,doc,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue;let next=gx(\"//ul[@class='view-bottom-bar']//a[text()='下一章' and not(contains(@href,'-end'))]\");if(next)return location.origin+next.href.split(\"'\")[1]",
         "pageElement": "#cp_img",
         "replaceElement": "head>title,.view-fix-top-bar-title,ul.view-bottom-bar,.view-fix-bottom-bar",
-        "pageInit": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/newImgs/)>-1).innerHTML.slice(4,-1);let imgData=eval(eval(code).replace('var',''));let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src='${imgData[i]}'>`};doc.querySelector('#cp_img').innerHTML=_img",
-        "pageAction": "setTimeout(()=>{document.querySelectorAll(\"a[href*='pushHistory']\").forEach(a=>{a.href=a.href.split(\"'\")[1]});},300);function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('#cp_img');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageInit": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/newImgs/)>-1).innerHTML.slice(4,-1);let imgData=eval(eval(code).replace('var',''));let E=doc.querySelector('#cp_img');let F=new DocumentFragment();imgData.forEach(e=>{let img=new Image();img.src=e;F.appendChild(img)});E.innerHTML='';E.appendChild(F);",
+        "pageAction": "let gae=e=>document.querySelectorAll(e);let c=gae('#cp_img');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}setTimeout(()=>{gae('a[href*=pushHistory]').forEach(a=>{a.href=a.href.split(\"'\")[1]})},300);",
         "pageBarText": "let t=doc.querySelector('title');if(t)return t.innerText.match(/_([^_]+)/)[1]",
         "css": ".view-bottom-bar>li:nth-child(n+2):nth-child(-n+3),.view-fix-bottom-bar>a:nth-child(2),.guide{display:none!important}.view-bottom-bar li{width:50%!important}.view-fix-bottom-bar>a{width:25%!important}"
     },
     {
-        "name": "dm5 動漫屋 / 極速漫畫 - PC版閱讀 - 雙擊下一章，鍵盤左右鍵上下章",
-        "example": "https://www.dm5.com/m1331307/，https://www.1kkk.com/ch1063-1331307/，https://www.1kkk.com/vol1-4761/",
-        "url": "^https?://(www|tel|en)?\\.(dm5|1kkk)\\.(com|cn)/(m|ch|vol)\\d+",
+        "name": "極速漫畫 - PC版單行本閱讀 - 雙擊下一章，鍵盤左右鍵上下章",
+        "example": "https://www.1kkk.com/vol1-4761/",
+        "url": "^https?://www\\.1kkk\\.com/vol\\d+",
         "include": "#chapterpager",
         "pinUrl": true,
-        "init": "function getX(path){return document.evaluate(path,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue}function next(e){let key=window.event?e.keyCode:e.which;if(key==39){let n=getX(\"//a[text()='下一章']\");if(n){n.click()}else{alert('沒有下一章了！')}}};document.addEventListener('keydown',next);function dcnext(e){let n=getX(\"//a[text()='下一章']\");if(n){n.click()}else{alert('沒有下一章了！')}};document.addEventListener('dblclick',dcnext);function prev(e){let key=window.event?e.keyCode:e.which;if(key==37){let p=getX(\"//a[text()='上一章']\");if(p){p.click()}else{alert('沒有上一章了！')}}};document.addEventListener('keydown',prev);document.body.style.overflow='scroll';document.querySelector('#showimage').style='margin:5px auto 0px;min-height:1330px;max-width:1000px;';setTimeout(()=>{document.querySelector('#cp_img').innerHTML='';for(let i=1;i<=DM5_IMAGE_COUNT;i++){setTimeout(()=>{let mkey='';if($('#dm5_key').length>0){mkey=$('#dm5_key').val()}$.ajax({url:'chapterfun.ashx',data:{cid:DM5_CID,page:i,key:mkey,language:1,gtk:6,_cid:DM5_CID,_mid:DM5_MID,_dt:DM5_VIEWSIGN_DT,_sign:DM5_VIEWSIGN},type:'GET',success:function(msg){let imgSrc='<img src=\"'+eval(msg)[0]+'\">';$('#cp_img').append(imgSrc)}})},1000*i)}},0)",
+        "init": "let ge=e=>document.querySelector(e);let gx=x=>document.evaluate(x,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue;function next(e){let key=window.event?e.keyCode:e.which;if(key==39){let n=gx(\"//a[text()='下一章']\");if(n){n.click()}else{alert('沒有下一章了！')}}};document.addEventListener('keydown',next);function prev(e){let key=window.event?e.keyCode:e.which;if(key==37){let p=gx(\"//a[text()='上一章']\");if(p){p.click()}else{alert('沒有上一章了！')}}};document.addEventListener('keydown',prev);function dcnext(e){let n=gx(\"//a[text()='下一章']\");if(n){n.click()}else{alert('沒有下一章了！')}};document.addEventListener('dblclick',dcnext);let loop=setInterval(()=>{let set=ge('#cp_img img');if(set){clearInterval(loop);document.body.style.overflow='scroll';ge('#showimage').style='margin:5px auto 0px;min-height:1330px;max-width:1000px;';ge('#cp_img').innerHTML='';for(let i=1;i<=DM5_IMAGE_COUNT;i++){setTimeout(()=>{let mkey='';if($('#dm5_key').length>0){mkey=$('#dm5_key').val()}$.ajax({url:'chapterfun.ashx',data:{cid:DM5_CID,page:i,key:mkey,language:1,gtk:6,_cid:DM5_CID,_mid:DM5_MID,_dt:DM5_VIEWSIGN_DT,_sign:DM5_VIEWSIGN},type:'GET',success:function(msg){let img=new Image();img.src=eval(msg)[0];ge('#cp_img').appendChild(img);if(i==DM5_IMAGE_COUNT){let p=document.createElement('p');p.innerText='本集已达最后一页';p.style='font-size:24px;height: 40px;line-height: 40px;text-align: center;margin: 10px auto;';ge('#cp_img').appendChild(p)}}})},1000*i)}}},100)",
         "nextLink": "0",
         "css": "a[href^='j'],.chapterpager,.view-comment{display:none!important}#cp_img>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}.container{width:auto!important}"
+    },
+    {
+        "name": "dm5 動漫屋 / 極速漫畫 - PC版閱讀",
+        "example": "https://www.dm5.com/m1331307/，https://www.1kkk.com/ch1063-1331307/",
+        "url": "^https?://(www|tel|en)?\\.(dm5|1kkk)\\.(com|cn)/(m|ch)\\d+",
+        "include": "#chapterpager",
+        "pinUrl": true,
+        "init": "let g=(e)=>document.querySelector(e);let loop=setInterval(()=>{let set=g('#cp_img>img');if(set){clearInterval(loop);g('#cp_img').innerHTML=g('#cp_img>img').outerHTML}},100);",
+        "nextLinkByJs": "let g=(e)=>doc.querySelector(e);let gx=x=>doc.evaluate(x,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue;let c=g('.chapterpager>span.current').innerText;let m=g('.chapterpager>*:last-child').innerText;let nc=gx(\"//a[text()='下一章']\");if(c!=m){let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/DM5_CURL/)>-1).innerHTML;let dc=eval(code.match(/DM5_CURL[^;]+/)[0]);let url=location.origin+dc;let next=url.replace(/(-p\\d+)?\\/$/,'')+'-p'+(parseInt(c)+1)+'/';return next}else if(nc){return nc.href}else{return null}",
+        "pageElement": "#cp_img>img",
+        "replaceElement": ".container",
+        "pageAction": "let ga=(e)=>document.querySelectorAll(e);ga('.pagetual_pageBar>a').forEach(e=>{if(/-p\\d+\\/$/.test(e.href))e.parentNode.remove()});let ps=ga('.pagetual_pageBar');if(ps.length>4){ps[0].remove();let ds=ga('#cp_img>*');for(let i=0;i<ds.length;i++){if(/pagetual/.test(ds[i].id)){break};ds[i].remove()}}",
+        "pageBarText": "let t=doc.querySelector('.active');if(t)return t.innerText.trim()",
+        "rate": 10,
+        "css": "a[href^='j'],.chapterpager{display:none!important}#cp_img>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}.container{width:auto!important}"
     },
     {
         "name": "dm5 動漫屋 / 極速漫畫 - 分類",
@@ -431,9 +449,8 @@
         "example": "https://8.twobili.com/comic/insurance_15059.html?ch=1",
         "url": "^https?://8\\.twobili\\.com/comic/insurance",
         "pinUrl": true,
-        "init": "function ge(e){return document.querySelector(e)}function next(e){let key=window.event?e.keyCode:e.which;if(key==39){let n=ge('#nextvol:not([style])');if(n){n.click()}else{alert('沒有下一集了！')}}};document.addEventListener('keydown',next);function dcnext(e){let n=ge('#nextvol:not([style])');if(n){n.click()}else{alert('沒有下一集了！')}};document.addEventListener('dblclick',dcnext);function prev(e){let key=window.event?e.keyCode:e.which;if(key==37){let p=ge('#prevvol');if(ch==1){alert('沒有上一集了！')}else{p.click()}}};document.addEventListener('keydown',prev);let _img='';for(let i=1;i<=ps;i++){let imgSrc='//img'+ss(c,4,2)+'.8comic.com/'+ss(c,6,1)+'/'+ti+'/'+ss(c,0,4)+'/'+nn([i])+'_'+ss(c,mm([i])+10,3,f)+'.jpg';_img+=`<img name=\"TheImg\"border=\"0\"id=\"TheImg \"width=\"100%\"src='${imgSrc}'>`};ge('#TheTable>ul>li').innerHTML=_img;let ul=ge('#TheTable>ul');let v1=ge('.view_tmenu').cloneNode(true);let v2=document.querySelectorAll('.view_menut')[1];ul.appendChild(v2);ul.appendChild(v1);let b1=ge('.book_inc_title');let b2=ge('.book_link_item');ul.appendChild(b1);ul.appendChild(b2);",
+        "init": "ge=e=>document.querySelector(e);function next(e){let key=window.event?e.keyCode:e.which;if(key==39){let n=ge('#nextvol:not([style])');if(n){n.click()}else{alert('沒有下一集了！')}}};document.addEventListener('keydown',next);function prev(e){let key=window.event?e.keyCode:e.which;if(key==37){let p=ge('#prevvol');if(ch==1){alert('沒有上一集了！')}else{p.click()}}};document.addEventListener('keydown',prev);function dcnext(e){let n=ge('#nextvol:not([style])');if(n){n.click()}else{alert('沒有下一集了！')}};document.addEventListener('dblclick',dcnext);let E=ge('#TheTable>ul>li');let F=new DocumentFragment();for(let i=1;i<=ps;i++){let imgSrc='//img'+ss(c,4,2)+'.8comic.com/'+ss(c,6,1)+'/'+ti+'/'+ss(c,0,4)+'/'+nn([i])+'_'+ss(c,mm([i])+10,3,f)+'.jpg';let img=new Image();img.src=imgSrc;F.appendChild(img)};E.innerHTML='';E.appendChild(F);let ul=ge('#TheTable>ul');let v1=ge('.view_tmenu').cloneNode(true);let v2=document.querySelectorAll('.view_menut')[1];ul.appendChild(v2);ul.appendChild(v1);let b1=ge('.book_inc_title');let b2=ge('.book_link_item');ul.appendChild(b1);ul.appendChild(b2);",
         "nextLink": "0",
-        "manualMode": true,
         "css": ".pinch-zoom-container{height: auto!important; display: contents!important}#pagenum,[onclick^='j'],#pageindex,ico+a+.material-icons.right-logo{display:none!important}.view_menut a{width:33.3%!important;max-width:33.3%!important}"
     },
     {
@@ -562,7 +579,7 @@
         "nextLink": "//a[@href][text()='下一页' or text()='下一话']",
         "pageElement": "#cp_img",
         "replaceElement": ".view-bottom-bar,.view-fix-top-bar,.view-fix-bottom-bar",
-        "pageAction": "function gxAll(x,context){var nodes=[];try{var doc=(context&&context.ownerDocument)||window.document;var results=doc.evaluate(x,context||doc,null,XPathResult.ANY_TYPE,null);var node;while(node=results.iterateNext()){nodes.push(node)}}catch(e){throw e;}return nodes}let c=gxAll(\"//div[@id='cp_img']\");if(c.length>6){c[0].remove();c[1].remove();c[2].remove()}setTimeout(()=>{let pp=gxAll(\"//a[@href][text()='上一页']\")[0];let np=gxAll(\"//a[@href][text()='下一页']\")[0];let nc=gxAll(\"//a[@href][text()='下一话']\")[0];if(!np){gxAll(\"//*[contains(@class,'pagetual_pageBar')]\").forEach(e=>{e.remove()})}if(pp&&np&&nc){gxAll(\"//*[contains(@class,'pagetual_pageBar')]\").forEach(e=>{e.remove()})}},0)",
+        "pageAction": "function gax(x,context){var nodes=[];try{var doc=(context&&context.ownerDocument)||window.document;var results=doc.evaluate(x,context||doc,null,XPathResult.ANY_TYPE,null);var node;while(node=results.iterateNext()){nodes.push(node)}}catch(e){throw e;}return nodes}let c=gax(\"//div[@id='cp_img']\");if(c.length>6){c[0].remove();c[1].remove();c[2].remove()}setTimeout(()=>{let pp=gax(\"//a[@href][text()='上一页']\")[0];let np=gax(\"//a[@href][text()='下一页']\")[0];let nc=gax(\"//a[@href][text()='下一话']\")[0];if(!np){gax(\"//*[contains(@class,'pagetual_pageBar')]\").forEach(e=>{e.remove()})}if(pp&&np&&nc){gax(\"//*[contains(@class,'pagetual_pageBar')]\").forEach(e=>{e.remove()})}},0)",
         "pageBarText": "let t=doc.querySelector('.view-fix-top-bar-title');if(t)return t.innerText",
         "css": ".view-bottom-bar>li:nth-child(n+3):nth-child(-n+4),.view-fix-bottom-bar-item:nth-child(n+4):nth-child(-n+5){display:none!important}.view-fix-bottom-bar-item,.view-bottom-bar>li{width:33.33%!important}"
     },
@@ -576,7 +593,7 @@
         "nextLink": "//a[@href][text()='下一页' or text()='下一话' or text()='下一章']",
         "pageElement": ".comiclist",
         "replaceElement": ".fanye",
-        "pageAction": "function gxAll(x,context){var nodes=[];try{var doc=(context&&context.ownerDocument)||window.document;var results=doc.evaluate(x,context||doc,null,XPathResult.ANY_TYPE,null);var node;while(node=results.iterateNext()){nodes.push(node)}}catch(e){throw e;}return nodes}let c=gxAll(\"//div[@class='comiclist']\");if(c.length>4){c[0].remove();c[1].remove()}setTimeout(()=>{let pp=gxAll(\"//a[@href][text()='上一页']\")[0];let np=gxAll(\"//a[@href][text()='下一页']\")[0];let nc=gxAll(\"//a[@href][text()='下一话' or text()='下一章']\")[0];if(!np){gxAll(\"//*[contains(@class,'pagetual_pageBar')]\").forEach(e=>{e.remove()})}if(pp&&np&&nc){gxAll(\"//*[contains(@class,'pagetual_pageBar')]\").forEach(e=>{e.remove()})}},0)",
+        "pageAction": "function gax(x,context){var nodes=[];try{var doc=(context&&context.ownerDocument)||window.document;var results=doc.evaluate(x,context||doc,null,XPathResult.ANY_TYPE,null);var node;while(node=results.iterateNext()){nodes.push(node)}}catch(e){throw e;}return nodes}let c=gax(\"//div[@class='comiclist']\");if(c.length>4){c[0].remove();c[1].remove()}setTimeout(()=>{let pp=gax(\"//a[@href][text()='上一页']\")[0];let np=gax(\"//a[@href][text()='下一页']\")[0];let nc=gax(\"//a[@href][text()='下一话' or text()='下一章']\")[0];if(!np){gax(\"//*[contains(@class,'pagetual_pageBar')]\").forEach(e=>{e.remove()})}if(pp&&np&&nc){gax(\"//*[contains(@class,'pagetual_pageBar')]\").forEach(e=>{e.remove()})}},0)",
         "pageBarText": "let t=doc.querySelector('.title');if(t)return t.innerText.match(/\\s(.+)/)[1]",
         "css": ".comiclist img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
     },
@@ -601,7 +618,7 @@
         "pageElement": "#images",
         "replaceElement": "head>title,h1",
         "pageInit": "function ge(e){return doc.querySelector(e)}let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML;let imgData=eval(code.match(/chapterImages[^;]+/)[0]);let _img='';for(let i=0;i<imgData.length;i++){if(imgData[i].indexOf('http')!=-1){_img+=`<img src='${imgData[i]}'>`}else{_img+=`<img src='${SinConf.resHost[0].domain}${imgData[i]}'>`}};ge('#images').innerHTML=_img;",
-        "pageAction": "function geAll(css){return document.querySelectorAll(css)};setTimeout(()=>{let c=geAll('#images');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageAction": "function gae(css){return document.querySelectorAll(css)};setTimeout(()=>{let c=gae('#images');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": "let t=doc.querySelector('h1');if(t)return t.innerHTML.replace(/\\s<.+>/,'')",
         "css": ".nav-pagination,.img_land_prev,.img_land_next,#page_select,.img_info,.title.pr>em:nth-child(5),.title.pr>span,.img_info{display:none!important}#images>img{max-width: 100% !important;display: block !important;margin: 0 auto -2px auto !important;border:0px!important;padding:0px!important;}.w996,.tbCenter{width:auto!important}"
     },
@@ -620,7 +637,7 @@
         "pageElement": "#manga",
         "replaceElement": "head>title,#mangaTitle",
         "pageInit": "function ge(e){return doc.querySelector(e)}let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/mhInfo/)>-1).innerHTML;let json=eval(code.match(/mhInfo[^;]+/)[0]);let host=ge('#manga img').src.match(/^https?:\\/\\/[^/]+/)[0];let _img='';for(let i=0;i<json.images.length;i++){let imgSrc=host+json.path+json.images[i];_img+=`<img src='${imgSrc}'>`};ge('#manga').innerHTML=_img;",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('#manga');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=gae('#manga');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": "let t=doc.querySelector('#mangaTitle');if(t)return t.innerHTML.replace(/.+<.+>/g,'').trim()",
         "css": ".action-list li{width:50%!important}#action>ul>li:nth-child(n+2):nth-child(-n+3),.manga-page,[id^='jusha']{display:none!important}.manga-box img{border-top:0px!important;border-bottom:0px!important}"
     },
@@ -635,7 +652,7 @@
         "pageElement": "#pic-list",
         "replaceElement": "head>title,h1,#position>b",
         "pageInit": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/picTree/)>-1).innerHTML;let base64=eval(code.match(/picTree[^;]+/)[0]);let images=base64_decode(base64).split('$qingtiandy$');let host=getpicdamin();let _img='';for(let i=0;i<images.length;i++){let imgSrc=encodeURI(host+images[i]);_img+=`<img src='${imgSrc}'>`};doc.querySelector('#pic-list').innerHTML=_img;",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('#pic-list');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=gae('#pic-list');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": "let t=doc.querySelector('#position>b');if(t)return t.innerText",
         "css": ".img_info{display:none!important}#pic-list>img{max-width: 100% !important;display: block !important;margin: 0 auto -2px auto !important;border:0px!important;padding:0px!important;}.w996,.tbCenter{width:auto!important}.pagetual_pageBar+.img-box{margin-top:0px!important}"
     },
@@ -643,13 +660,13 @@
         "name": "漫画吧手機版 - 閱讀",
         "example": "https://m.dmhua8.com/manhua/shengnvyintaiguowanmeibugoukeaierbeifeichuhunyuebingmaidaolinguo/966591.html",
         "url": "^https?://m\\.d?mhua8\\.com/manhua/[a-z]+/\\d+\\.html",
-        "init": "function geAll(e){return document.querySelectorAll(e)}let Imgs=geAll('#images')[0];let Img=geAll('img[alt]');let _img='';for(let i=0;i<Img.length;i++){_img+=Img[i].outerHTML}Imgs.innerHTML=_img;",
+        "init": "function gae(e){return document.querySelectorAll(e)}let Imgs=gae('#images')[0];let Img=gae('img[alt]');let _img='';for(let i=0;i<Img.length;i++){_img+=Img[i].outerHTML}Imgs.innerHTML=_img;",
         "action": 1,
         "wait": "let img=doc.querySelector('#images img[alt]');return img!=null",
         "nextLinkByJs": "let n=doc.querySelector('.action-list li:nth-child(3)>a');if(/html$/.test(n.href))return n.href",
         "pageElement": "#images img[alt]",
         "replaceElement": "head>title,.BarTit,#action",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('.pagetual_pageBar>a').forEach(e=>{if(/-\\d+\\.html$/.test(e.href))e.parentNode.remove()});let ps=geAll('.pagetual_pageBar');if(ps.length>9){ps[0].remove();let ds=document.querySelectorAll('#images>*');for(let i=0;i<ds.length;i++){if(/pagetual/.test(ds[i].id)){break};ds[i].remove()}}",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)}gae('.pagetual_pageBar>a').forEach(e=>{if(/-\\d+\\.html$/.test(e.href))e.parentNode.remove()});let ps=gae('.pagetual_pageBar');if(ps.length>9){ps[0].remove();let ds=document.querySelectorAll('#images>*');for(let i=0;i<ds.length;i++){if(/pagetual/.test(ds[i].id)){break};ds[i].remove()}}",
         "pageBarText": "let t=doc.querySelector('.BarTit');if(t)return t.innerText;",
         "rate": 10,
         "css": "#images~[id]:not(.control_bottom){display:none!important}#images img{margin:0 auto!important}"
@@ -666,7 +683,7 @@
         "pageElement": "#images",
         "replaceElement": "head>title,h2",
         "pageInit": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML;let imgData=eval(code.match(/chapterImages[^;]+/)[0]);let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src='${imgData[i]}'>`};doc.querySelector('#images').innerHTML=_img;",
-        "pageAction": "function geAll(css){return document.querySelectorAll(css)};setTimeout(()=>{let c=geAll('#images');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageAction": "function gae(css){return document.querySelectorAll(css)};setTimeout(()=>{let c=gae('#images');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": "let t=doc.querySelector('h2');if(t)return t.innerText",
         "css": "#images>img{max-width: 100% !important;display: block !important;margin: 0 auto -2px auto !important;border:0px!important;padding:0px!important;}.w996,.tbCenter{width:auto!important}.img_info{display:none!important}"
     },
@@ -681,7 +698,7 @@
         "pageElement": "#images",
         "replaceElement": "head>title,h1",
         "pageInit": "let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML;let imgData=eval(code.match(/chapterImages[^;]+/)[0]);let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src='${imgData[i]}'>`};doc.querySelector('#images').innerHTML=_img;",
-        "pageAction": "function geAll(css){return document.querySelectorAll(css)};setTimeout(()=>{let c=geAll('#images');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageAction": "function gae(css){return document.querySelectorAll(css)};setTimeout(()=>{let c=gae('#images');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": "let t=doc.querySelector('h1');if(t)return t.innerHTML.match(/\\S+([^<]+)<.+>/)[1]",
         "css": ".nav-pagination,.img_land_prev,.img_land_next,#page_select,.img_info,.title.pr>em:nth-child(5),.title.pr>span,.img_info{display:none!important}#images>img{max-width: 100% !important;display: block !important;margin: 0 auto -2px auto !important;border:0px!important;padding:0px!important;}.w996,.tbCenter{width:auto!important}"
     },
@@ -694,7 +711,7 @@
         "pinUrl": true,
         "pageElement": "#images img[id]",
         "replaceElement": ".image-content>p:last-child",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('.pagetual_pageBar>a').forEach(e=>{if(/-\\d+\\.html$/.test(e.href))e.parentNode.remove()});let ps=geAll('.pagetual_pageBar');if(ps.length>5){ps[0].remove();let ds=document.querySelector('#images img[id]').parentNode.querySelectorAll('*');for(let i=0;i<ds.length;i++){if(/pagetual/.test(ds[i].id)){break};ds[i].remove()}}",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)}gae('.pagetual_pageBar>a').forEach(e=>{if(/-\\d+\\.html$/.test(e.href))e.parentNode.remove()});let ps=gae('.pagetual_pageBar');if(ps.length>5){ps[0].remove();let ds=document.querySelector('#images img[id]').parentNode.querySelectorAll('*');for(let i=0;i<ds.length;i++){if(/pagetual/.test(ds[i].id)){break};ds[i].remove()}}",
         "pageBarText": "let t=doc.querySelector('.BarTit');if(t)return t.innerText",
         "rate": 10,
         "css": "#image-msg,ul.nav+div:not(#images),ul.nav+div+div:not(#images),.action-list>ul>li:nth-child(n+2):nth-child(-n+3){display:none!important}.action-list li{width:50%!important}.chapter-view #images img{margin:0 auto 0px!important}"
@@ -709,8 +726,8 @@
         "nextLinkByJs": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/nextChapterData/)>-1).innerHTML;let next=eval(code.match(/nextChapterData[^;]+/)[0]);if(next.id>0)return next.url",
         "pageElement": "#images",
         "replaceElement": "head>title,h2",
-        "pageInit": "function geAll(e){return document.querySelectorAll(e)}let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML;let imgData=eval(code.match(/chapterImages[^;]+/)[0]);let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src='${imgData[i]}'>`};doc.querySelector('#images').innerHTML=_img;setTimeout(()=>{let c=eval(code.match(/comicUrl[^;]+/)[0]);let p=eval(code.match(/prevChapterData[^;]+/)[0]);let n=eval(code.match(/nextChapterData[^;]+/)[0]);geAll('.nextC').forEach(e=>{if(n.id>0){e.href=n.url}else{e.href=c;e.innerHTML=e.innerHTML.replace('下一章','返回目录')}});geAll('.prevC').forEach(e=>{e.href=p.url})},300)",
-        "pageAction": "function geAll(css){return document.querySelectorAll(css)};setTimeout(()=>{let c=geAll('#images');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageInit": "function gae(e){return document.querySelectorAll(e)}let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML;let imgData=eval(code.match(/chapterImages[^;]+/)[0]);let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src='${imgData[i]}'>`};doc.querySelector('#images').innerHTML=_img;setTimeout(()=>{let c=eval(code.match(/comicUrl[^;]+/)[0]);let p=eval(code.match(/prevChapterData[^;]+/)[0]);let n=eval(code.match(/nextChapterData[^;]+/)[0]);gae('.nextC').forEach(e=>{if(n.id>0){e.href=n.url}else{e.href=c;e.innerHTML=e.innerHTML.replace('下一章','返回目录')}});gae('.prevC').forEach(e=>{e.href=p.url})},300)",
+        "pageAction": "function gae(css){return document.querySelectorAll(css)};setTimeout(()=>{let c=gae('#images');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": "let t=doc.querySelector('h2');if(t)return t.innerText",
         "css": ".nav-pagination,.img_land_prev,.img_land_next,#page_select,.img_info,.title.pr>em:nth-child(5),.title.pr>span{display:none!important}#images>img{max-width: 100% !important;display: block !important;margin: 0 auto -2px auto !important;border:0px!important;padding:0px!important;}.w996,.tbCenter{width:auto!important}"
     },
@@ -725,7 +742,7 @@
         "pageElement": "#images,.ip-body",
         "replaceElement": "head>title,.wrap_last_head,.wrap_last_mid",
         "pageInit": "function ge(e){return doc.querySelector(e)}let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML;let imgData=eval(code.match(/chapterImages[^;]+/)[0]);let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src='${imgData[i]}'>`};if(ge('#images')){ge('#images').innerHTML=_img}else if(ge('.ip-body')){ge('.ip-body').innerHTML=_img}",
-        "pageAction": "function ge(e){return document.querySelector(e)}let ip=ge('.ip-body');if(ip){ip.id='images';ip.removeAttribute('class');ip.removeAttribute('style');}setTimeout(()=>{let n=ge('.next>a');if(n){ge('.btm_chapter_btn.fr').href=n.href}else{ge('.btm_chapter_btn').href=ge('.head_wz>a+a').href}let p=ge('.pre>a');if(p){ge('.btm_chapter_btn.fl').href=p.href}},300);function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('#images');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageAction": "function ge(e){return document.querySelector(e)}let ip=ge('.ip-body');if(ip){ip.id='images';ip.removeAttribute('class');ip.removeAttribute('style');}setTimeout(()=>{let n=ge('.next>a');if(n){ge('.btm_chapter_btn.fr').href=n.href}else{ge('.btm_chapter_btn').href=ge('.head_wz>a+a').href}let p=ge('.pre>a');if(p){ge('.btm_chapter_btn.fl').href=p.href}},300);function gae(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=gae('#images');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": "let t=doc.querySelector('.head_wz');if(t)return t.innerHTML.replace(/.+;/,'').replace(/\\s-\\s漫画芯/,'')",
         "css": ".nav-pagination,.img_land_prev,.img_land_next,#page_select,.img_info,.title.pr>em:nth-child(5),.title.pr>span{display:none!important}#images>img{max-width: 100% !important;display: block !important;margin: 0 auto -2px auto !important;border:0px!important;padding:0px!important;}body,.autoHeight,.wrap_last_mid .pre,.wrap_last_mid .next,.chapter-view .panel,.mainNav_inner{width:auto!important;min-width:auto!important}"
     },
@@ -740,7 +757,7 @@
         "pageElement": "#images",
         "replaceElement": "head>title,.BarTit",
         "pageInit": "function ge(e){return document.querySelector(e)}let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML;let imgs=eval(code.match(/chapterImages[^;]+/)[0]);let host=eval(code.match(/pageImage[^;]+/)[0]).match(/^https?:\\/\\/[^/]+/)[0];let _img='';for(let i=0;i<imgs.length;i++){_img+=`<img src='${host+imgs[i]}'>`};doc.querySelector('#images').innerHTML=_img;let next=eval(code.match(/nextChapterData[^;]+/)[0]);let n=ge('#action>ul>li:nth-child(4)>a');let n2=ge('.afterChapter');if(next.id>0){n.href=next.uri;n2.outerHTML=`<a href=\"${next.uri}\"class=\"afterChapter\">下一章></a>`}else{n.removeAttribute('href');n.innerText='無下一章';n2.outerHTML=`<a href class=\"afterChapter\">無下一章</a>`}let prev=eval(code.match(/prevChapterData[^;]+/)[0]);let p=ge('#action>ul>li:nth-child(1)>a');let p2=ge('.beforeChapter');if(prev.id>0){p.href=prev.uri;p2.outerHTML=`<a href=\"${prev.uri}\"class=\"beforeChapter\"><上一章</a>`}",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('#images');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=gae('#images');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": "let t=doc.querySelector('.BarTit');if(t)return t.innerHTML.match(/\\n?([^<]+)/)[1]",
         "css": ".subHeader span,#action>ul>li:nth-child(n+2):nth-child(-n+3),.letchepter>section,.letchepter>svg,i~div[id][class],body>span~div:not(#pagetual-preload):not(.pagetual_tipsWords),.comic-comment{display:none!important}.action-list li{width:50%!important}.chapter-view #images img{margin:0 auto 0px!important}"
     },
@@ -755,7 +772,7 @@
         "pageElement": "#images",
         "replaceElement": "head>title,.wrap_last_head,.wrap_last_mid",
         "pageInit": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML;let imghost=eval(code.match(/pageImage[^;]+/)[0]).match(/^https?:\\/\\/[^/]+\\//)[0];let imgData=eval(code.match(/chapterImages[^;]+/)[0]);let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src='${imghost+imgData[i]}'>`};doc.querySelector('#images').innerHTML=_img",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('#images');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=gae('#images');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": "let t=doc.querySelector('.head_wz');if(t)return t.innerHTML.replace(/.+;/,'')",
         "pageNum": "{$p}\\.html$",
         "css": ".nav-pagination,.img_land_prev,.img_land_next,#page_select,.img_info,.title.pr>em:nth-child(5),.title.pr>span{display:none!important}#images>img{max-width: 100% !important;display: block !important;margin: 0 auto -2px auto !important;border:0px!important;padding:0px!important;}body,.autoHeight,.wrap_last_mid .pre,.wrap_last_mid .next,.chapter-view .panel,.mainNav_inner{width:auto!important;min-width:auto!important}"
@@ -768,7 +785,7 @@
         "nextLinkByJs": "function ge(e){return doc.querySelector(e)}let page=ge('#k_page').innerText;let total=ge('#k_total').innerText;let np=ge('.action-list li:nth-child(3) a');let nc=ge('.action-list li:nth-child(4) a');if(page!=total){return np.href}else if(/html$/.test(nc.href)){return nc.href}",
         "pageElement": "#chapter-image img",
         "replaceElement": "head>title,h1,#m_r_bottom",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('.pagetual_pageBar>a').forEach(e=>{if(/-\\d+\\.html$/.test(e.href))e.parentNode.remove()});let ps=geAll('.pagetual_pageBar');if(ps.length>4){ps[0].remove();let ds=geAll('#chapter-image>*');for(let i=0;i<ds.length;i++){if(/pagetual/.test(ds[i].id)){break};ds[i].remove()}}",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)}gae('.pagetual_pageBar>a').forEach(e=>{if(/-\\d+\\.html$/.test(e.href))e.parentNode.remove()});let ps=gae('.pagetual_pageBar');if(ps.length>4){ps[0].remove();let ds=gae('#chapter-image>*');for(let i=0;i<ds.length;i++){if(/pagetual/.test(ds[i].id)){break};ds[i].remove()}}",
         "pageBarText": "let t=doc.querySelector('h1');if(t)return t.innerText.match(/>(.+)\\n/)[1];",
         "rate": 10,
         "css": ".friendly,#action>ul>li:nth-child(n+2):nth-child(-n+3){display:none!important}.action-list li{width:50%!important}"
@@ -792,8 +809,8 @@
         "nextLinkByJs": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/nextChapterData/)>-1).innerHTML;let next=eval(code.match(/nextChapterData[^;]+/)[0]);if(next.id>0)return next.url",
         "pageElement": "#images",
         "replaceElement": "head>title,h2",
-        "pageInit": "function geAll(e){return document.querySelectorAll(e)}let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML;let ih=eval(code.match(/pageImage[^;]+/)[0]).match(/^https?:\\/\\/[^/]+\\//)[0];let cp=eval(code.match(/chapterPath[^;]+/)[0]);let imgData=eval(code.match(/chapterImages[^;]+/)[0]);let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src='${ih+cp+imgData[i]}'>`};doc.querySelector('#images').innerHTML=_img;setTimeout(()=>{let c=eval(code.match(/comicUrl[^;]+/)[0]);let p=eval(code.match(/prevChapterData[^;]+/)[0]);let n=eval(code.match(/nextChapterData[^;]+/)[0]);geAll('.nextC').forEach(e=>{if(n.id>0){e.href=n.uri}else{e.href=c;e.innerHTML=e.innerHTML.replace('下一章','返回目录')}});geAll('.prevC').forEach(e=>{e.href=p.uri})},300)",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('#images');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},1000)",
+        "pageInit": "function gae(e){return document.querySelectorAll(e)}let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML;let ih=eval(code.match(/pageImage[^;]+/)[0]).match(/^https?:\\/\\/[^/]+\\//)[0];let cp=eval(code.match(/chapterPath[^;]+/)[0]);let imgData=eval(code.match(/chapterImages[^;]+/)[0]);let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src='${ih+cp+imgData[i]}'>`};doc.querySelector('#images').innerHTML=_img;setTimeout(()=>{let c=eval(code.match(/comicUrl[^;]+/)[0]);let p=eval(code.match(/prevChapterData[^;]+/)[0]);let n=eval(code.match(/nextChapterData[^;]+/)[0]);gae('.nextC').forEach(e=>{if(n.id>0){e.href=n.uri}else{e.href=c;e.innerHTML=e.innerHTML.replace('下一章','返回目录')}});gae('.prevC').forEach(e=>{e.href=p.uri})},300)",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=gae('#images');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}},1000)",
         "pageBarText": "let t=doc.querySelector('h2');if(t)return t.innerText",
         "css": ".nav-pagination,.img_land_prev,.img_land_next,#page_select,.img_info,.title.pr>em:nth-child(5),.title.pr>span{display:none!important}#images>img{max-width: 100% !important;display: block !important;margin: 0 auto -2px auto !important;border:0px!important;padding:0px!important;}.w996,.tbCenter{width:auto!important}"
     },
@@ -825,8 +842,8 @@
         "nextLinkByJs": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/nextChapterData/)>-1).innerHTML;let next=eval(code.match(/nextChapterData[^;]+/)[0]);if(next.id>0)return next.url",
         "pageElement": "#images",
         "replaceElement": "head>title,h2",
-        "pageInit": "function geAll(e){return document.querySelectorAll(e)}let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML;let imgData=eval(code.match(/chapterImages[^;]+/)[0]);let imghost='https://res1.izhegu.com';let _img='';for(let i=0;i<imgData.length;i++){if(imgData[i].indexOf('http')!=-1){_img+=`<img src='${imgData[i]}'>`}else{_img+=`<img src='${imghost+imgData[i]}'>`}};doc.querySelector('#images').innerHTML=_img;setTimeout(()=>{let c=eval(code.match(/comicUrl[^;]+/)[0]);let p=eval(code.match(/prevChapterData[^;]+/)[0]);let n=eval(code.match(/nextChapterData[^;]+/)[0]);geAll('.nextC').forEach(e=>{if(n.id>0){e.href=n.uri}else{e.href=c;e.innerHTML=e.innerHTML.replace('下一章','返回目录')}});geAll('.prevC').forEach(e=>{e.href=p.uri})},300)",
-        "pageAction": "function geAll(css){return document.querySelectorAll(css)};setTimeout(()=>{let c=geAll('#images');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageInit": "function gae(e){return document.querySelectorAll(e)}let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML;let imgData=eval(code.match(/chapterImages[^;]+/)[0]);let imghost='https://res1.izhegu.com';let _img='';for(let i=0;i<imgData.length;i++){if(imgData[i].indexOf('http')!=-1){_img+=`<img src='${imgData[i]}'>`}else{_img+=`<img src='${imghost+imgData[i]}'>`}};doc.querySelector('#images').innerHTML=_img;setTimeout(()=>{let c=eval(code.match(/comicUrl[^;]+/)[0]);let p=eval(code.match(/prevChapterData[^;]+/)[0]);let n=eval(code.match(/nextChapterData[^;]+/)[0]);gae('.nextC').forEach(e=>{if(n.id>0){e.href=n.uri}else{e.href=c;e.innerHTML=e.innerHTML.replace('下一章','返回目录')}});gae('.prevC').forEach(e=>{e.href=p.uri})},300)",
+        "pageAction": "function gae(css){return document.querySelectorAll(css)};setTimeout(()=>{let c=gae('#images');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": "let t=doc.querySelector('h2');if(t)return t.innerText",
         "css": ".nav-pagination,.img_land_prev,.img_land_next,#page_select,.img_info,.title.pr>em:nth-child(5),.title.pr>span{display:none!important}#images>img{max-width: 100% !important;display: block !important;margin: 0 auto -2px auto !important;border:0px!important;padding:0px!important;}.w996,.tbCenter{width:auto!important}"
     },
@@ -869,7 +886,7 @@
         "pageElement": "#images",
         "replaceElement": "head>title,.wrap_last_head,.wrap_last_mid",
         "pageInit": "function ge(e){return doc.querySelector(e)}let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML;let ih=ge('#images img').src.match(/^https?:\\/\\/[^/]+\\//)[0];let cp=eval(code.match(/chapterPath[^;]+/)[0]);let imgData=eval(code.match(/chapterImages[^;]+/)[0]);let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src='${ih+cp+imgData[i]}'>`};ge('#images').innerHTML=_img;",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('#images');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=gae('#images');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": "let t=doc.querySelector('.head_wz');if(t)return t.innerHTML.replace(/.+;/,'')",
         "css": ".nav-pagination,.img_land_prev,.img_land_next,#page_select,.img_info,.title.pr>em:nth-child(5),.title.pr>span,.block.clearfix{display:none!important}#images>img{max-width: 100% !important;display: block !important;margin: 0 auto -2px auto !important;border:0px!important;padding:0px!important;}body,.autoHeight,.wrap_last_mid .pre,.wrap_last_mid .next,.chapter-view .panel,.mainNav_inner{width:auto!important;min-width:auto!important}"
     },
@@ -887,14 +904,14 @@
         "url": "^https?://m\\.acgqd\\.com/manhua/\\d+/\\d+\\.html",
         "pinUrl": true,
         "history": 2,
-        "init": "function ge(e){return document.querySelector(e)}$('.control_bottom').append('<div class=\"side_public scroll-top\"id=\"sidePublic\"style=\"display: block;\"><a href=\"javascript:SinMH.scrollTo(0);\"id=\"returnTop\"class=\"return-top\"></a></div>');let imgs=document.createElement('div');imgs.id='PagetualImgBox';let _img='';for(let i=0;i<chapterImages.length;i++){let host=SinConf.resHost[0].domain+'/';let imgSrc=host+chapterPath+chapterImages[i];_img+=`<img src='${imgSrc}'>`};imgs.innerHTML=_img;let x=ge('#loading');x.parentNode.insertBefore(imgs,x);ge('a.iconRet').href=comicUrl",
+        "init": "let ge=e=>document.querySelector(e);$('.control_bottom').append('<div class=\"side_public scroll-top\"id=\"sidePublic\"style=\"display: block;\"><a href=\"javascript:SinMH.scrollTo(0);\"id=\"returnTop\"class=\"return-top\"></a></div>');let imgs=document.createElement('div');imgs.className='PagetualImgBox';let _img='';for(let i=0;i<chapterImages.length;i++){let host=SinConf.resHost[0].domain+'/';let imgSrc=host+chapterPath+chapterImages[i];_img+=`<img src='${imgSrc}'>`};imgs.innerHTML=_img;let x=ge('#loading');x.parentNode.insertBefore(imgs,x);ge('a.iconRet').href=comicUrl;let n=ge('#action li:nth-child(4)>a');if(nextChapterData.id==null)n.href=comicUrl;n.innerText='返回目录';",
         "nextLinkByJs": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/nextChapterData/)>-1).innerHTML;let next=eval(code.match(/nextChapterData[^;]+/)[0]);if(next.id>0)return next.url",
         "pageElement": "//script[contains(text(),'chapterImages')]",
         "replaceElement": "head>title,.BarTit",
         "insert": "#loading",
         "insertPos": 1,
-        "pageInit": "function ge(e){return document.querySelector(e)}let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML;let s=document.createElement('script');s.textContent=code;let x=document.querySelector('#loading');x.parentNode.insertBefore(s,x);let cd=eval(code.match(/comicUrl[^;]+/)[0]);let pd=eval(code.match(/prevChapterData[^;]+/)[0]);let nd=eval(code.match(/nextChapterData[^;]+/)[0]);let p=ge('#action li:nth-child(1)>a');let n=ge('#action li:nth-child(4)>a');if(nd.id>0){n.href=nd.uri}else{n.href=cd;n.innerText='返回目录'}p.href=pd.uri;",
-        "pageAction": "jmzz20191018();let imgs=document.createElement('div');imgs.id='PagetualImgBox';let _img='';for(let i=0;i<chapterImages.length;i++){let host=SinConf.resHost[0].domain+'/';let imgSrc=host+chapterPath+chapterImages[i];_img+=`<img src='${imgSrc}'>`};imgs.innerHTML=_img;let x=document.querySelector('#loading');x.parentNode.insertBefore(imgs,x);function geAll(e){return document.querySelectorAll(e)}let ps=geAll('.pagetual_pageBar');if(ps.length>4){ps[0].remove();let ds=geAll('#images~*');for(let i=0;i<ds.length;i++){if(/pagetual/.test(ds[i].id)){break};ds[i].remove()}}",
+        "pageInit": "let ge=e=>document.querySelector(e);let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML;let s=document.createElement('script');s.textContent=code;let x=document.querySelector('#loading');x.parentNode.insertBefore(s,x);let cd=eval(code.match(/comicUrl[^;]+/)[0]);let pd=eval(code.match(/prevChapterData[^;]+/)[0]);let nd=eval(code.match(/nextChapterData[^;]+/)[0]);let p=ge('#action li:nth-child(1)>a');let n=ge('#action li:nth-child(4)>a');if(nd.id>0){n.href=nd.uri}else{n.href=cd;n.innerText='返回目录'}p.href=pd.uri;",
+        "pageAction": "jmzz20191018();let imgs=document.createElement('div');imgs.className='PagetualImgBox';let _img='';for(let i=0;i<chapterImages.length;i++){let host=SinConf.resHost[0].domain+'/';let imgSrc=host+chapterPath+chapterImages[i];_img+=`<img src='${imgSrc}'>`};imgs.innerHTML=_img;let x=document.querySelector('#loading');x.parentNode.insertBefore(imgs,x);function gae(e){return document.querySelectorAll(e)}let ps=gae('.pagetual_pageBar');if(ps.length>4){ps[0].remove();let ds=gae('#images~*');for(let i=0;i<ds.length;i++){if(/pagetual/.test(ds[i].id)){break};ds[i].remove()}}",
         "pageBarText": "let t=doc.querySelector('.BarTit');if(t)return t.innerText.match(/[^(]+/)[0];",
         "sleep": 1000,
         "css": "#page-info,#action li:nth-child(2),#action li:nth-child(3),.control_bottom~*,.chapter-view~*,#images{display:none!important}#action li{width:50%!important}.chapter-view img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}.side_public{opacity:0.4;border-radius: 50%;position:fixed;bottom:60px;right:13px;width:36px;height:35px;display:none;margin-left:20px}.side_public a{border-radius: 50%;display:inline-block;*zoom:1;*display:inline;width:36px;height:36px;border:1px solid #e6e6e6;}.side_public a.return-top{background:#fff url(https://www.acgqd.com/assets/4155373f/images/side_ico.png) no-repeat 2px -81px}"
@@ -912,7 +929,7 @@
         "insert": ".comic_wraCon",
         "insertPos": 2,
         "pageInit": "let code = Array.from(doc.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML;document.querySelector('.comic_wraCon').appendChild(document.createElement('script')).textContent = code;",
-        "pageAction": "jmzz20191018();let imgs=document.createElement('div');imgs.id='PagetualImgBox';let _img='';for(let i=0;i<chapterImages.length;i++){let host=SinConf.resHost[0].domain+'/';let imgSrc=host+chapterPath+chapterImages[i];_img+=`<img src='${imgSrc}'>`};imgs.innerHTML=_img;document.querySelector('.comic_wraCon').appendChild(imgs);function geAll(e){return document.querySelectorAll(e)}let ps=geAll('.pagetual_pageBar');if(ps.length>4){ps[0].remove();let ds=geAll('#images~*');for(let i=0;i<ds.length;i++){if(/pagetual/.test(ds[i].id)){break};ds[i].remove()}}",
+        "pageAction": "jmzz20191018();let imgs=document.createElement('div');imgs.id='PagetualImgBox';let _img='';for(let i=0;i<chapterImages.length;i++){let host=SinConf.resHost[0].domain+'/';let imgSrc=host+chapterPath+chapterImages[i];_img+=`<img src='${imgSrc}'>`};imgs.innerHTML=_img;document.querySelector('.comic_wraCon').appendChild(imgs);function gae(e){return document.querySelectorAll(e)}let ps=gae('.pagetual_pageBar');if(ps.length>4){ps[0].remove();let ds=gae('#images~*');for(let i=0;i<ds.length;i++){if(/pagetual/.test(ds[i].id)){break};ds[i].remove()}}",
         "pageBarText": "let t=doc.querySelector('h2');if(t)return t.innerText;",
         "sleep": 1000,
         "css": ".comic_wraCon img{border:none!important;padding:0!important;width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}select,.img_land_prev,.img_land_next,#images{display:none!important}body,.autoHeight,.wrap_last_mid .pre,.wrap_last_mid .next,.chapter-view .panel,.mainNav_inner{width:auto!important;min-width:auto!important}"
@@ -934,12 +951,12 @@
         "pinUrl": true,
         "action": 1,
         "wait": 1000,
-        "init": "function geAll(e){return document.querySelectorAll(e)}let _img='';geAll('img[data-src]').forEach(e=>{_img+=`<img src='${e.dataset.src}'>`});let loop=setInterval(()=>{let set=geAll('.chapter-images img')[0];if(set){clearInterval(loop);geAll('.chapter-images')[0].innerHTML=_img}},200)",
+        "init": "function gae(e){return document.querySelectorAll(e)}let _img='';gae('img[data-src]').forEach(e=>{_img+=`<img src='${e.dataset.src}'>`});let loop=setInterval(()=>{let set=gae('.chapter-images img')[0];if(set){clearInterval(loop);gae('.chapter-images')[0].innerHTML=_img}},200)",
         "nextLink": "//a[label[text()='下一章']][starts-with(@href,'http')]",
         "pageElement": ".chapter-images",
         "replaceElement": "//head/title | //a[@class='mdui-typo-title'] | //div[@class='main']/following-sibling::footer[1]//a",
-        "pageInit": "function geAll(e){return doc.querySelectorAll(e)}let _img='';geAll('img[data-src]').forEach(e=>{_img+=`<img src='${e.dataset.src}'>`});geAll('.chapter-images')[0].innerHTML=_img",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('.chapter-images');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageInit": "function gae(e){return doc.querySelectorAll(e)}let _img='';gae('img[data-src]').forEach(e=>{_img+=`<img src='${e.dataset.src}'>`});gae('.chapter-images')[0].innerHTML=_img",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=gae('.chapter-images');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": "let t=doc.querySelector('.mdui-typo-title');if(t)return t.innerText",
         "css": ".chapter-images>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
     },
@@ -994,7 +1011,7 @@
             "data-src",
             "data-src"
         ],
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)}if(location.hostname=='www.qiximh2.com'){setTimeout(()=>{let last=document.querySelector(`.imgFloat>p:nth-child(3)>a:not([href$='html'])`);if(last){document.querySelector('.cy_intro_r.wxfocus').innerHTML='<br><br><br><br><br><br><p>^_^感谢您的阅读，已经沒有下一章了哦！</p><br><p>点击下一章按钮可以返回目录哦！</p><br><br><br>'}},100)};setTimeout(()=>{let c=geAll('.main_img');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)}if(location.hostname=='www.qiximh2.com'){setTimeout(()=>{let last=document.querySelector(`.imgFloat>p:nth-child(3)>a:not([href$='html'])`);if(last){document.querySelector('.cy_intro_r.wxfocus').innerHTML='<br><br><br><br><br><br><p>^_^感谢您的阅读，已经沒有下一章了哦！</p><br><p>点击下一章按钮可以返回目录哦！</p><br><br><br>'}},100)};setTimeout(()=>{let c=gae('.main_img');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "css": ".cy_intro_r>img,.cy_intro_r>p:nth-child(3),.readend,.logo.lbc{display:none!important}.cy_intro_r{height:30px!important;}"
     },
     {
@@ -1007,7 +1024,7 @@
         "nextLink": "//a[i[@class='ift-next']]",
         "pageElement": ".main_img",
         "replaceElement": "head>title,.chapter_title,.bottom-nav,.bottom_menu",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('.main_img');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=gae('.main_img');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": "let t=doc.querySelector('.chapter_title');if(t)return t.innerText",
         "css": "#adhtml{display:none!important}"
     },
@@ -1040,7 +1057,7 @@
         "pageElement": ".main_img",
         "replaceElement": ".swiper-chapter,head>title,.title>h1,.end-btns",
         "pageInit": "function ge(e){return document.querySelector(e)}let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/eval/)>-1).innerHTML.trim().slice(4);let imgData=eval(eval(code).slice(12));let _img='';imgData.forEach(e=>{_img+=`<img src='${e}'>`});ge('.main_img').innerHTML=_img;",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('.main_img');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=gae('.main_img');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": "let t=doc.querySelector('h1');if(t)return t.innerText",
         "css": "#adhtml{display:none!important}.main_img>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
     },
@@ -1055,7 +1072,7 @@
         "pageElement": ".comic-list",
         "replaceElement": "head>title,h1.comic-name,li.prev-chapter,li.next-chapter,.chapter-end,p.read-pos",
         "pageInit": "function ge(e){return doc.querySelector(e)}let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/eval/)>-1).innerHTML.trim().slice(4);let imgData=eval(eval(code).slice(12));let _img='';imgData.forEach(e=>{_img+=`<img src='${e}'>`});ge('.comic-list').innerHTML=_img;",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('.comic-list');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=gae('.comic-list');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": "let t=doc.querySelector('h1.comic-name');if(t)return t.innerText",
         "css": "#adhtml,.guide-download,.read-end~*:not(.pagetual_tipsWords):not(.bottom-tool-bar){display:none!important}.comic-list>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
     },
@@ -1070,7 +1087,7 @@
         "pageElement": "#comicContain",
         "replaceElement": "head>title,.main_control,#mainView~a",
         "pageInit": "function ge(e){return doc.querySelector(e)}let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/newImgs/)>-1).innerHTML;let imgData=eval(eval(code.trim().slice(4)).slice(12));let _img='';imgData.forEach(e=>{_img+=`<img src='${e}'>`});ge('#comicContain').innerHTML=_img;",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('#comicContain');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=gae('#comicContain');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": "let t=doc.querySelector('.chaptername_title');if(t)return t.innerText",
         "css": "body.view .logo-sub-wrap,.guide-download{display:none!important}#mainView img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}.pagetual_pageBar{margin-top:30px!important;margin-bottom:22px!important}"
     },
@@ -1093,7 +1110,7 @@
         "pageElement": "#subNav+.cf",
         "replaceElement": "head>title,.title>h2,.main-btn,#mangaTitle,#action",
         "pageInit": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/images/)>-1).innerHTML.match(/eval[^$]+/)[0].trim().slice(4);let data=eval('('+eval(code).replace(/^[^{]+/,'').replace(/;$/,'')+')');let _img='';for(let i=0;i<data.fs.length;i++){_img+=`<img src='${data.fs[i]}'>`};doc.querySelector('#subNav+.cf').innerHTML=_img;",
-        "pageAction": "function ge(e){return document.querySelector(e)}setTimeout(()=>{let ph=ge('.prevC').href;let nh=ge('.nextC').href;ge('#pager>.prev').outerHTML=`<a class=\"prev\"href='${ph}'>上一章</a>`;ge('#pager>.next:last-child').outerHTML=`<a class=\"next\"href='${nh}'>下一章</a>`},1000);function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('#subNav~.cf');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageAction": "function ge(e){return document.querySelector(e)}setTimeout(()=>{let ph=ge('.prevC').href;let nh=ge('.nextC').href;ge('#pager>.prev').outerHTML=`<a class=\"prev\"href='${ph}'>上一章</a>`;ge('#pager>.next:last-child').outerHTML=`<a class=\"next\"href='${nh}'>下一章</a>`},1000);function gae(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=gae('#subNav~.cf');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": 1,
         "css": ".title>*:nth-child(n+5):nth-child(-n+6):not(.cf),.bd_960_90,.main-btn>*:nth-child(n+3):nth-child(-n+5),.help,#pager>*:not(.prev):not(.next:last-child),.bd_960_90+[style]:not(.w996),#action~*:not(#pageNo):not(.pagetual_tipsWords),span.manga-page,#action>ul>li:nth-child(n+2):nth-child(-n+3){display:none!important}.cf>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}.action-list li{width:50%!important}body{padding-bottom:0px!important}"
     },
@@ -1108,7 +1125,7 @@
         "pageElement": "#subNav+.cf,.UnderPage",
         "replaceElement": "head>title,.title>h2,.main-btn,#pager,#m_r_title,#action",
         "pageInit": "function ge(e){return doc.querySelector(e)}let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/qTcms_S_m_murl_e/)>-1).innerHTML;let imgBase64=eval(code.match(/qTcms_S_m_murl_e[^;]+/)[0]);let imgData=window.atob(imgBase64).split('$qingtiandy$');let p='/statics/pic/?p=';let _img='';for(let i=0;i<imgData.length;i++){if(location.origin.indexOf('/m.')==-1){_img+=`<img src='${p+imgData[i]}'>`}else{_img+=`<img src='${p+imgData[i]}'id=\"qTcms_pic\"width=\"100%\">`}};if(location.origin.indexOf('/m.')==-1){ge('#subNav+.cf').innerHTML=_img}else{ge('.UnderPage').innerHTML=_img}",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let cf=geAll('#subNav~.cf');if(cf.length>2){cf[0].remove()}let c=geAll('.UnderPage');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},1000)",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)};setTimeout(()=>{let cf=gae('#subNav~.cf');if(cf.length>2){cf[0].remove()}let c=gae('.UnderPage');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}},1000)",
         "pageBarText": "let t1=doc.querySelector('h2');let t2=doc.querySelector('.BarTit');if(t1){return t1.innerText}else if(t2){return t2.innerText.match(/[^(]+/)[0].trim()}",
         "css": "#subNav,#prev,#k_next,#k_pageSelect,#pager,.title.pr>em:nth-child(5),.title.pr>span,.control_bottom+.img_001{display:none!important}.cf>img,.UnderPage>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}#action>ul>li:nth-child(n+2):nth-child(-n+3){display:none!important}.action-list li{width:50%!important}"
     },
@@ -1123,7 +1140,7 @@
         "pageElement": "#subNav+.cf,.UnderPage",
         "replaceElement": "head>title,.title>h2,.main-btn,#pager,#m_r_title,#action",
         "pageInit": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/qTcms_S_m_murl_e/)>-1).innerHTML;let imgBase64=code.match(/var qTcms_S_m_murl_e=\"([^\"]+)/)[1];let imgData=base64_decode(imgBase64).split('$qingtiandy$');let _img='';for(let i=0;i<imgData.length;i++){if(location.origin.indexOf('/m.')==-1){_img+=`<img src='${imgData[i]}'>`}else{_img+=`<img src='${qTcms_m_weburl+imgData[i]}'id=\"qTcms_pic\"width=\"100%\">`}};if(location.origin.indexOf('/m.')==-1){doc.querySelector('#subNav+.cf').innerHTML=_img}else{doc.querySelector('.UnderPage').innerHTML=_img}",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let cf=geAll('#subNav~.cf');if(cf.length>2){cf[0].remove()}let c=geAll('.UnderPage');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)};setTimeout(()=>{let cf=gae('#subNav~.cf');if(cf.length>2){cf[0].remove()}let c=gae('.UnderPage');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": "let t1=doc.querySelector('h2');let t2=doc.querySelector('.BarTit');if(t1){return t1.innerText}else if(t2){return t2.innerText.match(/[^(]+/)[0].trim()}",
         "css": "#subNav,#prev,#k_next,#k_pageSelect,#pager,.title.pr>em:nth-child(5),.title.pr>span{display:none!important}.cf>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}#action>ul>li:nth-child(n+2):nth-child(-n+3){display:none!important}.action-list li{width:50%!important}"
     },
@@ -1138,7 +1155,7 @@
         "pageElement": "//div[@class='v_con_box'][p/img] | //div[@class='v_con_box'][img]",
         "replaceElement": "head>title,.v-page",
         "pageInit": "doc.querySelectorAll('section .v_con_box>p').forEach(e=>{e.outerHTML=e.innerHTML})",
-        "pageAction": "function gxAll(x,context){var nodes=[];try{var doc=(context&&context.ownerDocument)||window.document;var results=doc.evaluate(x,context||doc,null,XPathResult.ANY_TYPE,null);var node;while(node=results.iterateNext()){nodes.push(node)}}catch(e){throw e;}return nodes};function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll(\"//div[@class='v_con_box'][img]\");if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageAction": "function gax(x,context){var nodes=[];try{var doc=(context&&context.ownerDocument)||window.document;var results=doc.evaluate(x,context||doc,null,XPathResult.ANY_TYPE,null);var node;while(node=results.iterateNext()){nodes.push(node)}}catch(e){throw e;}return nodes};function gae(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=gae(\"//div[@class='v_con_box'][img]\");if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": "let t=doc.querySelector('.v-page>span');if(t)return t.innerText",
         "css": ".v_con_box>img{margin-bottom:-6px!important}.icon>.container{padding-right:0px!important;padding-left:0px!important}"
     },
@@ -1153,7 +1170,7 @@
         "pageElement": "#pic_box",
         "replaceElement": "head>title,.v-page",
         "pageInit": "let imgs = Array.from(doc.scripts).find(s => s.innerHTML.search(/temp_pic_all/) > -1).innerHTML.slice(18, -1).replaceAll('</p>','').replaceAll('<p>','');doc.querySelector('#pic_box').innerHTML = imgs;",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('#pic_box');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=gae('#pic_box');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": "let t=doc.querySelector('.v-page>span');if(t)return t.innerText",
         "css": "#pic_box img{margin-bottom:-6px!important}.icon>.container{padding-right:0px!important;padding-left:0px!important}"
     },
@@ -1181,7 +1198,7 @@
         "pageElement": "#subNav+.cf",
         "replaceElement": "head>title,.title>h2,.main-btn,#pager",
         "pageInit": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/qTcms_S_m_murl_e/)>-1).innerHTML;let imgBase64=code.match(/(qTcms_S_m_murl_e=)([^;]+)/)[2].replaceAll('\"','');let imgData=window.atob(imgBase64).split('$qingtiandy$');let _img='';for(let i=0;i<imgData.length;i++){let imgSrc=f_qTcms_Pic_curUrl_realpic(imgData[i]);_img+=`<img src='${imgSrc}'>`};doc.querySelector('#subNav+.cf').innerHTML=_img",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('#subNav~.cf');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=gae('#subNav~.cf');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": "let t=doc.querySelector('h2');if(t)return t.innerText",
         "css": "#subNav,#prev,#k_next,#k_pageSelect,#pager,.title.pr>em:nth-child(5),.title.pr>span{display:none!important}.cf>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
     },
@@ -1198,7 +1215,7 @@
         "name": "木马漫画 - 閱讀 - 雙擊前往下一章，鍵盤左右鍵上下章",
         "example": "https://www.omyschool.com/article_detail/590/653244/%E5%85%A8%E8%81%B7%E7%8D%B5%E4%BA%BA/390%E8%A9%B1/",
         "url": "^https?://www\\.omyschool\\.com/article_detail/\\d+/\\d+/",
-        "init": "function gx(x){return document.evaluate(x,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue};function next(e){let key=window.event?e.keyCode:e.which;if(key==39){let n=gx(\"//a[contains(@class,'next')][not(@href='javascript:void(0)')]\");if(n){n.click()}else{alert('沒有下一章了！')}}};document.addEventListener('keydown',next);function prev(e){let key=window.event?e.keyCode:e.which;if(key==37){let p=gx(\"//a[contains(@class,'prev')][not(@href='javascript:void(0)')]\");if(p){p.click()}else{alert('沒有上一章了！')}}};document.addEventListener('keydown',prev);function dcnext(){let n=gx(\"//a[contains(@class,'next')][not(@href='javascript:void(0)')]\");if(n){n.click()}else{alert('沒有下一章了！')}};document.addEventListener('dblclick',dcnext);function gxAll(xpath,context){var nodes=[];try{var doc=(context&&context.ownerDocument)||window.document;var results=doc.evaluate(xpath,context||doc,null,XPathResult.ANY_TYPE,null);var node;while(node=results.iterateNext()){nodes.push(node)}}catch(e){throw e;}return nodes}gxAll(\"//div[(span) and contains(@class,'wrap_img')]\").forEach(div=>{div.remove()})",
+        "init": "function gx(x){return document.evaluate(x,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue};function next(e){let key=window.event?e.keyCode:e.which;if(key==39){let n=gx(\"//a[contains(@class,'next')][not(@href='javascript:void(0)')]\");if(n){n.click()}else{alert('沒有下一章了！')}}};document.addEventListener('keydown',next);function prev(e){let key=window.event?e.keyCode:e.which;if(key==37){let p=gx(\"//a[contains(@class,'prev')][not(@href='javascript:void(0)')]\");if(p){p.click()}else{alert('沒有上一章了！')}}};document.addEventListener('keydown',prev);function dcnext(){let n=gx(\"//a[contains(@class,'next')][not(@href='javascript:void(0)')]\");if(n){n.click()}else{alert('沒有下一章了！')}};document.addEventListener('dblclick',dcnext);function gax(xpath,context){var nodes=[];try{var doc=(context&&context.ownerDocument)||window.document;var results=doc.evaluate(xpath,context||doc,null,XPathResult.ANY_TYPE,null);var node;while(node=results.iterateNext()){nodes.push(node)}}catch(e){throw e;}return nodes}gax(\"//div[(span) and contains(@class,'wrap_img')]\").forEach(div=>{div.remove()})",
         "nextLink": ".nav_button next",
         "pinUrl": true,
         "manualMode": true
@@ -1218,12 +1235,12 @@
         "url": "^https?://m\\.dmzj\\.com/view/\\d+/\\d+\\.html",
         "pinUrl": true,
         "history": 2,
-        "init": "function ge(e){return document.querySelector(e)};function geAll(e){return document.querySelectorAll(e)};ge('.iconRet').setAttribute('onclick','goBack();');geAll('.letchepter>a[onclick]').forEach(a=>{a.removeAttribute('onclick')});let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/comic_id/)>-1).innerHTML.replaceAll('\"','');let n=code.search(/next_chap/);let p=code.search(/prev_chap/);let cm=code.match(/comic_id:(\\d+)/)[1];if(n>-1){let nm=code.match(/next_chap_id:(\\d+)/)[1];let url='/view/'+cm+'/'+nm+'.html';ge('.afterChapter').href=url}else{ge('.afterChapter').href=ge('.ChapterLestMune').href}if(p>-1){let pm=code.match(/prev_chap_id:(\\d+)/)[1];let url='/view/'+cm+'/'+pm+'.html';ge('.beforeChapter').href=url}else{ge('.beforeChapter').href=ge('.ChapterLestMune').href}",
+        "init": "function ge(e){return document.querySelector(e)};function gae(e){return document.querySelectorAll(e)};ge('.iconRet').setAttribute('onclick','goBack();');gae('.letchepter>a[onclick]').forEach(a=>{a.removeAttribute('onclick')});let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/comic_id/)>-1).innerHTML.replaceAll('\"','');let n=code.search(/next_chap/);let p=code.search(/prev_chap/);let cm=code.match(/comic_id:(\\d+)/)[1];if(n>-1){let nm=code.match(/next_chap_id:(\\d+)/)[1];let url='/view/'+cm+'/'+nm+'.html';ge('.afterChapter').href=url}else{ge('.afterChapter').href=ge('.ChapterLestMune').href}if(p>-1){let pm=code.match(/prev_chap_id:(\\d+)/)[1];let url='/view/'+cm+'/'+pm+'.html';ge('.beforeChapter').href=url}else{ge('.beforeChapter').href=ge('.ChapterLestMune').href}",
         "nextLinkByJs": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/comic_id/)>-1).innerHTML.replaceAll('\"','');let n=code.search(/next_chap/);if(n>-1){let cm=code.match(/comic_id:(\\d+)/)[1];let nm=code.match(/next_chap_id:(\\d+)/)[1];return location.origin+'/view/'+cm+'/'+nm+'.html'}",
         "pageElement": "div[id^='charpet']",
         "replaceElement": "head>title,a.BarTit,.botNav .tc",
-        "pageInit": "function ge(e){return document.querySelector(e)};function geAll(e){return document.querySelectorAll(e)};let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/comic_id/)>-1).innerHTML.replaceAll('\"','');let n=code.search(/next_chap/);let p=code.search(/prev_chap/);let cm=code.match(/comic_id:(\\d+)/)[1];if(n>-1){let nm=code.match(/next_chap_id:(\\d+)/)[1];let url='/view/'+cm+'/'+nm+'.html';ge('.afterChapter').href=url}else{ge('.afterChapter').href=ge('.ChapterLestMune').href}if(p>-1){let pm=code.match(/prev_chap_id:(\\d+)/)[1];let url='/view/'+cm+'/'+pm+'.html';ge('.beforeChapter').href=url}else{ge('.beforeChapter').href=ge('.ChapterLestMune').href}",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll(\"div[id^='charpet']\");if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageInit": "function ge(e){return document.querySelector(e)};function gae(e){return document.querySelectorAll(e)};let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/comic_id/)>-1).innerHTML.replaceAll('\"','');let n=code.search(/next_chap/);let p=code.search(/prev_chap/);let cm=code.match(/comic_id:(\\d+)/)[1];if(n>-1){let nm=code.match(/next_chap_id:(\\d+)/)[1];let url='/view/'+cm+'/'+nm+'.html';ge('.afterChapter').href=url}else{ge('.afterChapter').href=ge('.ChapterLestMune').href}if(p>-1){let pm=code.match(/prev_chap_id:(\\d+)/)[1];let url='/view/'+cm+'/'+pm+'.html';ge('.beforeChapter').href=url}else{ge('.beforeChapter').href=ge('.ChapterLestMune').href}",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=gae(\"div[id^='charpet']\");if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": "let t=doc.querySelector('.BarTit');if(t)return t.innerText",
         "css": "#commicBox img{opacity:1!important}#m_r_panelbox,#khdDown,#divAD{display:none!important}"
     },
@@ -1242,7 +1259,7 @@
         "pageElement": ".comic_wraCon",
         "replaceElement": "head>title,.wrap_last_head,.wrap_last_mid,.btmBtnBox",
         "pageInit": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/arr_img/)>-1).innerHTML.slice(71,-1);let Data=eval('('+eval(code).slice(11,-2)+')');let imgData=Data.page_url.split('\\r\\n');let host='https://images.dmzj.com/';let _img='';for(let i=0;i<imgData.length;i++){_img+=`<img src='${host}${imgData[i]}'>`};doc.querySelector('.comic_wraCon').innerHTML=_img",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('.comic_wraCon');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=gae('.comic_wraCon');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": "let t=doc.querySelector('h2');if(t)return t.innerText",
         "css": ".nav-pagination,.img_land_prev,.img_land_next,#page_select,.img_info,.title.pr>em:nth-child(5),.title.pr>span{display:none!important}.comic_wraCon>img{max-width: 100% !important;display: block !important;margin: 0 auto -2px auto !important;border:0px!important;padding:0px!important;}body,.autoHeight,.wrap_last_mid .pre,.wrap_last_mid .next,.chapter-view .panel,.mainNav_inner{width:auto!important;min-width:auto!important}"
     },
@@ -1266,12 +1283,12 @@
         "waitElement": [
             "#center_box img"
         ],
-        "init": "function geAll(e){return document.querySelectorAll(e)}let _img='';geAll('img[data-original]').forEach(e=>{_img+=`<img src='${e.dataset.original}'>`});let loop=setInterval(()=>{let set=geAll('#center_box img')[0];if(set){clearInterval(loop);geAll('#center_box')[0].innerHTML=_img}},200)",
+        "init": "function gae(e){return document.querySelectorAll(e)}let _img='';gae('img[data-original]').forEach(e=>{_img+=`<img src='${e.dataset.original}'>`});let loop=setInterval(()=>{let set=gae('#center_box img')[0];if(set){clearInterval(loop);gae('#center_box')[0].innerHTML=_img}},200)",
         "nextLink": "a.fr",
         "pageElement": "#center_box",
         "replaceElement": "head>title,.display_graybg,.btmBtnBox",
-        "pageInit": "function geAll(e){return doc.querySelectorAll(e)}let _img='';geAll('img[data-original]').forEach(e=>{_img+=`<img src='${e.dataset.original}'>`});geAll('#center_box')[0].innerHTML=_img",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('#center_box');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageInit": "function gae(e){return doc.querySelectorAll(e)}let _img='';gae('img[data-original]').forEach(e=>{_img+=`<img src='${e.dataset.original}'>`});gae('#center_box')[0].innerHTML=_img",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=gae('#center_box');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": "let t=doc.querySelector('span.redhotl');if(t)return t.innerText",
         "css": "#center_box img{opacity:1!important;width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important;border: none!important;padding: 0px!important;}"
     },
@@ -1296,7 +1313,7 @@
         "pageElement": ".img-content",
         "replaceElement": "head>title,.breadcrumb-item.active,.h4.text-center",
         "pageInit": "let vgrdata=doc.querySelector('.vg-r-data');let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/img_data/)>-1).innerHTML;let Base64=eval(code.match(/img_data = \".+\"/g)[0]);let imgData=LZString.decompressFromBase64(Base64).split(',');let imgPre='/uploads/';let assetDomain=vgrdata.getAttribute('data-chapter-domain');let assetKey=vgrdata.getAttribute('data-chapter-key');let _img='';for(let i=0;i<imgData.length;i++){let imgSrc=assetDomain+imgPre+imgData[i];_img+=`<img class=\"img-fluid show-pic\"src='${imgSrc}'>`};doc.querySelector('.img-content').innerHTML=_img;",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('.img-content');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=gae('.img-content');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": 1,
         "css": "a[onclick],a[href*='false']{display:none!important}.img-content>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
     },
@@ -1320,7 +1337,7 @@
         "pageElement": "#all",
         "replaceElement": "head>title,.h4.text-center,ol.breadcrumb",
         "pageInit": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/img_data/)>-1).innerHTML;let Base64=eval(code.replace('var ',''));let imgData=eval(atob(Base64));let vgrdata=doc.querySelector('.vg-r-data');let imgHost=vgrdata.getAttribute('data-host');let imgPre=vgrdata.getAttribute('data-img_pre');let _img='';for(let i=0;i<imgData.length;i++){if(is_webp!=1&&imgData[i].img_webp){_img+=`<img class=\"img-fluid show-pic\"src='${imgHost}${imgPre}${imgData[i].img_webp}'>`}else{_img+=`<img class=\"img-fluid show-pic\"src='${imgHost}${imgPre}${imgData[i].img}'>`}};doc.querySelector('#all').innerHTML=_img;",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('#all');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=gae('#all');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": "let t=doc.querySelector('.h4.text-center');if(t)return t.innerText",
         "css": "nav.d-none+div.row,#left,#right,.pagination .form-inline>*:nth-child(n+2):nth-child(-n+4){display:none!important}.row>*{padding:0px!important}#all,img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
     },
@@ -1365,7 +1382,7 @@
         "pageElement": "//tbody[tr/td/div[@class='img']]",
         "replaceElement": "#top,#breadcrumb,[class^='display_'],head>title",
         "pageInit": "doc.querySelectorAll('.pic[_src][id]').forEach(e=>{e.outerHTML=`<div class='pic'_src><img src='${e.getAttribute('_src')}'class='img1'></div>`})",
-        "pageAction": "function gxAll(xpath,context){var nodes=[];try{var doc=(context&&context.ownerDocument)||window.document;var results=doc.evaluate(xpath,context||doc,null,XPathResult.ANY_TYPE,null);var node;while(node=results.iterateNext()){nodes.push(node)}}catch(e){throw e;}return nodes}setTimeout(()=>{let c=gxAll(\"//tbody[tr/td/div[@class='img']]\");if(c.length>10){c[0].remove()}let p=gxAll(\"//*[@class='pagetual_pageBar']\");if(p.length>10){p[0].remove()}},10000)",
+        "pageAction": "function gax(xpath,context){var nodes=[];try{var doc=(context&&context.ownerDocument)||window.document;var results=doc.evaluate(xpath,context||doc,null,XPathResult.ANY_TYPE,null);var node;while(node=results.iterateNext()){nodes.push(node)}}catch(e){throw e;}return nodes}setTimeout(()=>{let c=gax(\"//tbody[tr/td/div[@class='img']]\");if(c.length>10){c[0].remove()}let p=gax(\"//*[@class='pagetual_pageBar']\");if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": "let t=doc.querySelector('h1');if(t)return t.innerText",
         "css": ".btn_wrap,#ss-toolbar{display:none!important}"
     },
@@ -1391,7 +1408,7 @@
         "pageElement": "#comicImg,.mg-co",
         "replaceElement": "head>title,#subTitle>h1,#pnpage,.page_num,.nav.nav-back",
         "pageInit": "let code=eval(Array.from(doc.scripts).find(s=>s.innerHTML.search(/msg/)>-1).innerHTML.trim().slice(4));let imgData=eval(code.match(/msg[^;]+/)[0]).split('|');let _img='';for(let i=0;i<imgData.length;i++){if(location.hostname.indexOf('m.77mh')!=-1){_img+=`<img src='${ImgSvrList}${imgData[i]}'>`}else{_img+=`<img src='${img_qianz}${imgData[i]}'>`}};if(location.hostname.indexOf('m.77mh')!=-1){doc.querySelector('.mg-co').innerHTML=_img}else{doc.querySelector('#comicImg').innerHTML=_img}",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)}setTimeout(()=>{if(location.hostname.indexOf('m.77mh')!=-1){let m=geAll('.mg-co');if(m.length>3){geAll('.mg-co')[0].remove()}}else{let c=geAll('#comicImg');if(c.length>10){geAll('#comicImg')[0].remove()}}let p=geAll('.pagetual_pageBar');if(p.length>10){geAll('.pagetual_pageBar')[0].remove()}},10000)",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)}setTimeout(()=>{if(location.hostname.indexOf('m.77mh')!=-1){let m=gae('.mg-co');if(m.length>3){gae('.mg-co')[0].remove()}}else{let c=gae('#comicImg');if(c.length>10){gae('#comicImg')[0].remove()}}let p=gae('.pagetual_pageBar');if(p.length>10){gae('.pagetual_pageBar')[0].remove()}},10000)",
         "pageBarText": "let t1=doc.querySelector('h1>a');let t2=doc.querySelector('.tit>a');if(t1){return t1.innerText.replace(/\\S+/,'').trim()}else if(t2){return t2.innerText.replace(/\\S+/,'').trim()}",
         "css": "#main>*:not(#comicImg):not(.pagetual_pageBar),.qrcode_div,.content~*:not(#toApp),body>p{display:none!important}#comicImg>img,.mg-co>img{max-width:100%!important;display:block!important;margin: 0 auto !important;border:0px!important;}"
     },
@@ -1460,7 +1477,7 @@
         "pageElement": ".comic-list,.read-end:not(.hide)",
         "replaceElement": "head>title,h1.comic-name,.end-txt",
         "pageInit": "doc.querySelectorAll(`.comic-page[style='display: none;']`).forEach(e=>{e.style.display='list-item'});doc.querySelectorAll('.ldimg[mob-ec]').forEach(e=>{e.src=e.getAttribute('mob-ec')});let nh=doc.querySelector('li.next-chapter').getAttribute('_href');let ph=doc.querySelector('li.prev-chapter').getAttribute('_href');setTimeout(()=>{if(nh.indexOf('/')!=-1){document.querySelector('.end-itm.next').outerHTML='<li class=\"end-itm next\"><i class=\"i-rd-next\"></i><a href=\"'+nh+'\">下一章</a></li>';let nlink=`location.href='` + nh + `'`;document.querySelector('.chapternext').setAttribute('onclick',nlink)}else{document.querySelector('.end-itm.next').outerHTML='<li class=\"end-itm next\"><i class=\"i-rd-next\"></i><a _href>無下一章</a></li>';document.querySelector('.chapternext').removeAttribute('onclick')}document.querySelector('.end-itm.prev').outerHTML='<li class=\"end-itm prev\"><i class=\"i-rd-prev\"></i><a href=\"'+ph+'\">上一章</a></li>';let plink=`location.href='` + ph + `'`;document.querySelector('.chapterprev').setAttribute('onclick',plink)},200)",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('.comic-list');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}let r=geAll('.read-end')[0];if(r){geAll('.prev-chapter')[0].remove()}},1000);",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=gae('.comic-list');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}let r=gae('.read-end')[0];if(r){gae('.prev-chapter')[0].remove()}},1000);",
         "pageBarText": "let t=doc.querySelector('h1.comic-name');if(t)return t.innerText",
         "css": ".read-pos,.ds{display:none!important}"
     },
@@ -1478,7 +1495,7 @@
         "nextLinkByJs": "let next = doc.querySelector('.rd-aside__item.j-rd-next:not([style])'); if (next) return location.origin + next.getAttribute('_href')",
         "pageElement": ".rd-article-wr",
         "replaceElement": ".last-crumb,.rd-aside__item.j-rd-prev,.rd-aside__item.j-rd-next,head>title",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('.rd-article-wr');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=gae('.rd-article-wr');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": "let t=doc.querySelector('.last-crumb');if(t)return t.innerText",
         "css": ".ds,.adv-img,.page-index__btn{display:none!important}.rd-article-wr>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
     },
@@ -1495,7 +1512,7 @@
         "nextLinkByJs": "let n = doc.querySelector(`.next-chapter[data-href$='html']`);if (n) return location.origin+n.getAttribute('data-href');",
         "pageElement": ".comic-list,.read-end",
         "replaceElement": "head>title,h1.comic-name,.prev-chapter,.next-chapter,.chapter-end",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('.comic-list');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}let r=geAll('.read-end')[0];if(r){geAll('.prev-chapter')[0].remove()}},10000)",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=gae('.comic-list');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}let r=gae('.read-end')[0];if(r){gae('.prev-chapter')[0].remove()}},10000)",
         "pageBarText": "let t=doc.querySelector('h1.comic-name');if(t)return t.innerText",
         "css": "p.read-pos{display:none!important}"
     },
@@ -1513,7 +1530,7 @@
         "pageElement": "#pages-tpl",
         "replaceElement": ".rd-aside__item.j-rd-prev,.rd-aside__item.j-rd-next,head>title,.last-crumb",
         "pageInit": "doc.querySelectorAll('img.lazy-read').forEach(img=>{let dc=img.getAttribute('data-src');img.src=dc})",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('#pages-tpl');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=gae('#pages-tpl');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": "let t=doc.querySelector('.last-crumb');if(t)return t.innerText",
         "css": ".ds,.adv-img,.page-index__btn{display:none!important}#mainView{margin-top:0px!important}.rd-article__pic{min-height: auto!important}"
     },
@@ -1530,7 +1547,7 @@
         "pageElement": ".comic-list,.read-end:not(.hide)",
         "replaceElement": "head>title,h1.comic-name,.end-txt",
         "pageInit": "let nh=doc.querySelector('li.next-chapter').getAttribute('_href');let ph=doc.querySelector('li.prev-chapter').getAttribute('_href');setTimeout(()=>{if(nh.indexOf('/')!=-1){document.querySelector('.end-itm.next').outerHTML='<li class=\"end-itm next\"><i class=\"i-rd-next\"></i><a href=\"'+nh+'\">下一章</a></li>';let nlink=`location.href='` + nh + `'`;document.querySelector('.chapternext').setAttribute('onclick',nlink)}else{document.querySelector('.end-itm.next').outerHTML='<li class=\"end-itm next\"><i class=\"i-rd-next\"></i><a _href>無下一章</a></li>';document.querySelector('.chapternext').removeAttribute('onclick')}document.querySelector('.end-itm.prev').outerHTML='<li class=\"end-itm prev\"><i class=\"i-rd-prev\"></i><a href=\"'+ph+'\">上一章</a></li>';let plink=`location.href='` + ph + `'`;document.querySelector('.chapterprev').setAttribute('onclick',plink)},200);let _img='';doc.querySelectorAll('.ldimg[mob-ec]').forEach(e=>{_img+=`<img src='${e.getAttribute('mob-ec')}'>`});doc.querySelector('.comic-list').innerHTML=_img",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('.comic-list');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}let r=geAll('.read-end')[0];if(r){geAll('.prev-chapter')[0].remove()}},10000);",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=gae('.comic-list');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}let r=gae('.read-end')[0];if(r){gae('.prev-chapter')[0].remove()}},10000);",
         "pageBarText": "let t=doc.querySelector('h1.comic-name');if(t)return t.innerText",
         "css": ".read-pos,.ds,.top-tool-bar+div[style]{display:none!important}.comic-list>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
     },
@@ -1548,7 +1565,7 @@
         "pageElement": ".rd-article-wr",
         "replaceElement": ".last-crumb,.rd-aside__item.j-rd-prev,.rd-aside__item.j-rd-next,head>title",
         "pageInit": "doc.querySelectorAll(`.rd-article__pic[style='display: none;']`).forEach(e=>{e.style.display='block'});doc.querySelectorAll('img.lazy-read').forEach(img=>{img.src=img.getAttribute('data-ecp')})",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('.rd-article-wr');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=gae('.rd-article-wr');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": "let t=doc.querySelector('.last-crumb');if(t)return t.innerText",
         "css": ".ds,.adv-img,.page-index__btn{display:none!important}#mainView{margin-top:0px!important}.rd-article__pic{min-height: auto!important}"
     },
@@ -1580,7 +1597,7 @@
         "nextLink": "//p[text()='下一章']/preceding-sibling::a[starts-with(@href,'/m')] | //a[@class='readTipForm' and not(@href='/m0/')]",
         "pageElement": "#cp_img",
         "replaceElement": "//head/title | id('title') | //a[@class='readTipForm'] | //p[contains(text(), '上一章') or contains(text(), '下一章')]/preceding-sibling::a",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('#cp_img');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=gae('#cp_img');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": "let t=doc.querySelector('#title');if(t)return t.innerText.replace(/\\S+/,'').trim()"
     },
     {
@@ -1598,7 +1615,7 @@
         "nextLink": "id('mainControlNext') | //a[img[@alt='下一章'] and not(@href='javascript:void(0);')]",
         "pageElement": "#comicContain",
         "replaceElement": "head>title,.title-comicHeading,.main_control,.catalog~a",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('#comicContain');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=gae('#comicContain');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": "let t=doc.querySelector('.title-comicHeading');if(t)return t.innerText",
         "css": "p.num,p.say,.comic-text{display:none!important}img[data-src]{max-width:100%!important;margin:0 auto!important;}"
     },
@@ -1627,7 +1644,7 @@
             "data-echo"
         ],
         "pageInit": "let nh=doc.querySelector('li.next-chapter').getAttribute('_href');let ph=doc.querySelector('li.prev-chapter').getAttribute('_href');setTimeout(()=>{if(nh.indexOf('/')!=-1){document.querySelector('.end-itm.next').outerHTML='<li class=\"end-itm next\"><i class=\"i-rd-next\"></i><a href=\"'+nh+'\">下一章</a></li>';let nlink=`location.href='` + nh + `'`;document.querySelector('.chapternext').setAttribute('onclick',nlink)}else{document.querySelector('.end-itm.next').outerHTML='<li class=\"end-itm next\"><i class=\"i-rd-next\"></i><a _href>無下一章</a></li>';document.querySelector('.chapternext').removeAttribute('onclick')}document.querySelector('.end-itm.prev').outerHTML='<li class=\"end-itm prev\"><i class=\"i-rd-prev\"></i><a href=\"'+ph+'\">上一章</a></li>';let plink=`location.href='` + ph + `'`;document.querySelector('.chapterprev').setAttribute('onclick',plink)},200)",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('.comic-list');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}let r=geAll('.read-end')[0];if(r){geAll('.prev-chapter')[0].remove()}},10000);",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=gae('.comic-list');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}let r=gae('.read-end')[0];if(r){gae('.prev-chapter')[0].remove()}},10000);",
         "pageBarText": 1,
         "css": ".read-pos,.ds{display:none!important}.comic-list>.comic-page{margin-top:-3px!important}"
     },
@@ -1685,7 +1702,7 @@
         "nextLink": "//a[text()='下一頁'][not(starts-with(@href,'javascript'))] | //a[text()='下一章']",
         "pageElement": "#img_ad_img>img",
         "replaceElement": "head>title,script+div.c,.e+.c,.b",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll(\"#img_ad_img>img[style*='none']\").forEach(e=>{e.remove()});geAll(\"#ComicPic\").forEach(e=>{e.outerHTML=`<img src='${e.src}'>`});geAll('.pagetual_pageBar>a').forEach(e=>{if(/-p-/.test(e.href))e.parentNode.remove()});let ps=geAll('.pagetual_pageBar');if(ps.length>5){ps[0].remove();let ds=geAll('#img_ad_img>*');for(let i=0;i<ds.length;i++){if(/pagetual/.test(ds[i].id)){break};ds[i].remove()}}",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)}gae(\"#img_ad_img>img[style*='none']\").forEach(e=>{e.remove()});gae(\"#ComicPic\").forEach(e=>{e.outerHTML=`<img src='${e.src}'>`});gae('.pagetual_pageBar>a').forEach(e=>{if(/-p-/.test(e.href))e.parentNode.remove()});let ps=gae('.pagetual_pageBar');if(ps.length>5){ps[0].remove();let ds=gae('#img_ad_img>*');for(let i=0;i<ds.length;i++){if(/pagetual/.test(ds[i].id)){break};ds[i].remove()}}",
         "pageBarText": "let t=doc.querySelector('h1');if(t)return t.innerText.match(/-([^-]+)/)[1].trim();",
         "rate": 10,
         "css": ".e>h1,.e>p,.fb-share-button,#index_mian,.c>.fanye,.c>select,#k_zsy,.lookpage{display:none!important}#img_ad_img>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
@@ -1707,7 +1724,7 @@
         "nextLink": "a.next[href$='html']",
         "pageElement": ".main_img",
         "replaceElement": ".chaptitle,.chapend,head>title",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('.main_img');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=gae('.main_img');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": "let t=doc.querySelector('h1');if(t)return t.innerText",
         "css": ".chapter-img-box{margin-bottom:-1px!important}.chapend .next,.chapend .prev{margin:0 auto!important}"
     },
@@ -1735,7 +1752,7 @@
             "data-src",
             "data-src"
         ],
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('.main_img');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=gae('.main_img');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "pageBarText": "let t=doc.querySelector('.rd-static>span');if(t)return t.innerText",
         "css": ".img_Page,.morepl,#adhtml{display:none!important}"
     },
@@ -1775,7 +1792,7 @@
         "nextLink": "//a[not(@href='javascript:void(0);') and text()='下一话']",
         "pageElement": ".imgList",
         "replaceElement": ".comicDetails h3,.AdjacentChapters,head>title",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=geAll('.imgList');if(c.length>10){c[0].remove()}let p=geAll('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)};setTimeout(()=>{let c=gae('.imgList');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}},10000)",
         "css": ".giude{display:none!important}",
         "pageBarText": "let t=doc.querySelector('title');if(t)return t.innerText.match(/[^|]+/)[0].trim()"
     },
@@ -2134,10 +2151,11 @@
         "example": "https://libvio.me/type/1.html",
         "url": "^https?://libvio\\.me/",
         "action": 1,
-        "wait": 1000,
+        "wait": 500,
         "nextLink": "li.active+li>a",
         "pageElement": ".stui-vodlist",
         "replaceElement": ".stui-page__item",
+        "pageInit": "let defaultImg='https://vkceyugu.cdn.bspapp.com/VKCEYUGU-ae4eabf5-1b15-425e-bdc9-144e48cded99/c9d2141e-8569-4996-9c73-d633a0669fa8.gif';doc.querySelectorAll('a.lazyload').forEach((item)=>{let imgUrl=item.dataset.original;let image=new Image();image.src=imgUrl;if(!image.complete){item.style.backgroundImage=`url(${defaultImg})`}image.onload=()=>item.style.backgroundImage=`url(${imgUrl})`})",
         "css": ".stui-page__all{display:none!important}"
     },
     {
@@ -2192,7 +2210,7 @@
         "pageElement": ".list-container>li,.video-list,.img-mode",
         "replaceElement": ".page-list",
         "css": ".pagetual_pageBar{margin-top:-5px!important}",
-        "pageAction": "function ge(e){return document.querySelector(e)}function geAll(e){return document.querySelectorAll(e)}geAll('.scale-img').forEach(e=>{e.style=e.getAttribute('style')});setTimeout(()=>{let ls=geAll('.page-num-list li:not([class])');let lp=location.pathname;[].forEach.call(ls,li=>{let p=li.innerText;let link=lp+'?page='+p;let ps=`location.href='` + link + `'`;li.setAttribute('onclick',ps)});let h=ge('.page-list>li:nth-child(1)');let gohp=`location.href='` + lp + `'`;h.setAttribute('onclick',gohp);let n=ge('.page-list>li:nth-child(2)');let np=ge('.cur-page+li');if(n&&np){let link=lp+'?page='+np.innerText;let next=`location.href='` + link + `'`;n.setAttribute('onclick',next)}else{n.removeAttribute('onclick')}},500)"
+        "pageAction": "function ge(e){return document.querySelector(e)}function gae(e){return document.querySelectorAll(e)}gae('.scale-img').forEach(e=>{e.style=e.getAttribute('style')});setTimeout(()=>{let ls=gae('.page-num-list li:not([class])');let lp=location.pathname;[].forEach.call(ls,li=>{let p=li.innerText;let link=lp+'?page='+p;let ps=`location.href='` + link + `'`;li.setAttribute('onclick',ps)});let h=ge('.page-list>li:nth-child(1)');let gohp=`location.href='` + lp + `'`;h.setAttribute('onclick',gohp);let n=ge('.page-list>li:nth-child(2)');let np=ge('.cur-page+li');if(n&&np){let link=lp+'?page='+np.innerText;let next=`location.href='` + link + `'`;n.setAttribute('onclick',next)}else{n.removeAttribute('onclick')}},500)"
     },
     {
         "name": "Vilipix",
@@ -2962,14 +2980,12 @@
         "css": "iframe{height:55px!important}"
     },
     {
-        "name": "图集岛 - 載入VIP破解腳本",
+        "name": "图集岛",
         "example": "https://www.tujidao03.com/u/?action=gengxin",
         "url": "^https?://www\\.tujidao\\d+\\.com/",
-        "init": "fetch('https://greasyfork.org/scripts/420397-%E5%9B%BE%E9%9B%86%E5%B2%9B%E7%A0%B4%E8%A7%A3vip/code/%E5%9B%BE%E9%9B%86%E5%B2%9B%E7%A0%B4%E8%A7%A3VIP.user.js').then(res=>res.text()).then((res)=>{eval(res)})",
         "nextLink": ".num+.next",
         "pageElement": ".hezi>ul",
-        "replaceElement": "#pages",
-        "pageAction": "fetch('https://greasyfork.org/scripts/420397-%E5%9B%BE%E9%9B%86%E5%B2%9B%E7%A0%B4%E8%A7%A3vip/code/%E5%9B%BE%E9%9B%86%E5%B2%9B%E7%A0%B4%E8%A7%A3VIP.user.js').then(res=>res.text()).then((res)=>{eval(res)})"
+        "replaceElement": "#pages"
     },
     {
         "name": "Kemono - post",
@@ -3395,7 +3411,7 @@
         "example": "https://www.6evu.com/30131.html",
         "url": "^https?://www\\.6evu\\.com/\\d+\\.html",
         "nextLink": ".pagelist>span+a",
-        "init": "function geAll(e){return document.querySelectorAll(e)}let _img='';geAll('#post_content img').forEach(e=>{_img+=e.outerHTML});geAll('#post_content')[0].innerHTML=_img;",
+        "init": "function gae(e){return document.querySelectorAll(e)}let _img='';gae('#post_content img').forEach(e=>{_img+=e.outerHTML});gae('#post_content')[0].innerHTML=_img;",
         "pageElement": "#post_content img",
         "replaceElement": ".pagelist",
         "pageBar": 0,
@@ -4063,7 +4079,7 @@
         "name": "BeautyLeg - 圖片",
         "example": "http://www.beautyleg6.com/xingganmeinv/201406/133.html",
         "url": "^https?://www.beautyleg\\d+\\.com/.+\\.html",
-        "init": "function geAll(e){return document.querySelectorAll(e)}let imgs=geAll('.contents img');let _img='';for(let i=0;i<imgs.length;i++){_img+=imgs[i].outerHTML};geAll('.contents')[0].innerHTML=_img;",
+        "init": "function gae(e){return document.querySelectorAll(e)}let imgs=gae('.contents img');let _img='';for(let i=0;i<imgs.length;i++){_img+=imgs[i].outerHTML};gae('.contents')[0].innerHTML=_img;",
         "nextLink": "//a[text()='下一页']",
         "pageElement": ".contents img",
         "replaceElement": ".page",
@@ -4600,7 +4616,7 @@
         "nextLink": "//li[a/@class='current']/following-sibling::li[1]/a",
         "pageElement": ".videos-list article",
         "replaceElement": ".pagination",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)}let url=geAll('#wpst-main-js')[0].src;if(url){fetch(url).then(res=>res.text()).then((res)=>{eval(res)})}let ps=geAll('.videos-list');let last=ps.length-1;ps[last].querySelectorAll('img.loaded').forEach(img=>{if(!img.parentNode.getAttribute('data-thumbs')){img.onmouseenter=e=>{img.classList.add('video-img--hidden')}}})",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)}let url=gae('#wpst-main-js')[0].src;if(url){fetch(url).then(res=>res.text()).then((res)=>{eval(res)})}let ps=gae('.videos-list');let last=ps.length-1;ps[last].querySelectorAll('img.loaded').forEach(img=>{if(!img.parentNode.getAttribute('data-thumbs')){img.onmouseenter=e=>{img.classList.add('video-img--hidden')}}})",
         "css": ".pagetual_pageBar{margin-top:0px!important}"
     },
     {
@@ -4648,7 +4664,7 @@
         "url": "^https?://ppp\\.porn/",
         "nextLink": "//li[a/@class='pagination__item  pagination__item--selected']/following-sibling::li[1]/a",
         "pageElement": "div[id^='list_videos']",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)}let ps=geAll(\"div[id^='list_videos']\");let last=ps.length-1;ps[last].querySelectorAll('figure.aspect-ratio>a').forEach(a=>{a.onmouseenter=e=>{let v=document.createElement('VIDEO');let img=a.querySelector('img');v.setAttribute('loop','');v.setAttribute('autoplay','');v.setAttribute('src',img.getAttribute('data-preview'));v.setAttribute('webkitplaysinline','true');v.setAttribute('playsinline','true');$(v).css({position:\"absolute\",left:\"0\",top:\"0\",width:img.offsetWidth+\"px\",height:img.offsetHeight+\"px\",background:\"#000000\",visibility:\"visible\"});a.appendChild(v)};a.onmouseleave=e=>{a.querySelector('VIDEO').remove()}})",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)}let ps=gae(\"div[id^='list_videos']\");let last=ps.length-1;ps[last].querySelectorAll('figure.aspect-ratio>a').forEach(a=>{a.onmouseenter=e=>{let v=document.createElement('VIDEO');let img=a.querySelector('img');v.setAttribute('loop','');v.setAttribute('autoplay','');v.setAttribute('src',img.getAttribute('data-preview'));v.setAttribute('webkitplaysinline','true');v.setAttribute('playsinline','true');$(v).css({position:\"absolute\",left:\"0\",top:\"0\",width:img.offsetWidth+\"px\",height:img.offsetHeight+\"px\",background:\"#000000\",visibility:\"visible\"});a.appendChild(v)};a.onmouseleave=e=>{a.querySelector('VIDEO').remove()}})",
         "replaceElement": "nav.pagination",
         "css": ".pagetual_pageBar{margin-top:0px!important;margin-bottom:16px!important}.padding-bottom-md{padding-bottom:unset!important}nav.pagination{padding-top:var(--space-md)!important}"
     },
@@ -4733,7 +4749,7 @@
         "nextLink": "li.page-item.current+li.page-item>a",
         "pageElement": ".row.content",
         "replaceElement": "nav.pagination-row",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)}let ps=geAll('.row.content');let last=ps.length-1;ps[last].querySelectorAll('.video').forEach(div=>{div.onmouseenter=e=>{let v=div.querySelector('video[data-src]');v.setAttribute('src',v.getAttribute('data-src'));$(v).css({visibility:'visible'});let l=div.querySelector('.video-loader');$(l).css({visibility:'visible'});setTimeout(()=>{$(l).css({visibility:'hidden'})},500)};div.onmouseleave=e=>{let v=div.querySelector('video[data-src]');let l=div.querySelector('.video-loader');v.setAttribute('src','');v.setAttribute('style','');$(l).css({visibility:'hidden'})}})",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)}let ps=gae('.row.content');let last=ps.length-1;ps[last].querySelectorAll('.video').forEach(div=>{div.onmouseenter=e=>{let v=div.querySelector('video[data-src]');v.setAttribute('src',v.getAttribute('data-src'));$(v).css({visibility:'visible'});let l=div.querySelector('.video-loader');$(l).css({visibility:'visible'});setTimeout(()=>{$(l).css({visibility:'hidden'})},500)};div.onmouseleave=e=>{let v=div.querySelector('video[data-src]');let l=div.querySelector('.video-loader');v.setAttribute('src','');v.setAttribute('style','');$(l).css({visibility:'hidden'})}})",
         "css": ".pagetual_pageBar{margin-top:-10px!important}"
     },
     {
@@ -4743,7 +4759,7 @@
         "nextLink": ".next>a",
         "pageElement": ".list-videos",
         "replaceElement": "[id$='pagination']",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)}let ps=geAll(\".list-videos\");let last=ps.length-1;ps[last].querySelectorAll('.item>a>.img').forEach(div=>{div.onmouseenter=e=>{let v=document.createElement('video');let img=div.querySelector('.thumb');v.setAttribute('loop','');v.setAttribute('autoplay','');v.setAttribute('src',img.getAttribute('data-preview'));v.setAttribute('webkitplaysinline','true');v.setAttribute('playsinline','true');$(v).css({position:\"absolute\",left:\"0\",top:\"0\",width:img.offsetWidth+\"px\",height:img.offsetHeight+\"px\",background:\"#000000\",visibility:\"visible\"});div.appendChild(v)};div.onmouseleave=e=>{div.querySelector('video').remove()}})"
+        "pageAction": "function gae(e){return document.querySelectorAll(e)}let ps=gae(\".list-videos\");let last=ps.length-1;ps[last].querySelectorAll('.item>a>.img').forEach(div=>{div.onmouseenter=e=>{let v=document.createElement('video');let img=div.querySelector('.thumb');v.setAttribute('loop','');v.setAttribute('autoplay','');v.setAttribute('src',img.getAttribute('data-preview'));v.setAttribute('webkitplaysinline','true');v.setAttribute('playsinline','true');$(v).css({position:\"absolute\",left:\"0\",top:\"0\",width:img.offsetWidth+\"px\",height:img.offsetHeight+\"px\",background:\"#000000\",visibility:\"visible\"});div.appendChild(v)};div.onmouseleave=e=>{div.querySelector('video').remove()}})"
     },
     {
         "name": "RIRI TV / playav",
@@ -4778,7 +4794,7 @@
         "nextLink": "//li[span/@class='page-link active disabled']/following-sibling::li[1]/a",
         "pageElement": "section>.row",
         "replaceElement": ".pagination",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)}let ps=geAll(\"section>.row\");let last=ps.length-1;ps[last].querySelectorAll('.img-box>a').forEach(a=>{a.onmouseenter=e=>{let v=document.createElement('video');let img=a.querySelector('img');v.setAttribute('loop','');v.setAttribute('autoplay','');v.setAttribute('src',img.getAttribute('data-preview'));v.setAttribute('webkitplaysinline','true');v.setAttribute('playsinline','true');$(v).css({position:\"absolute\",left:\"0\",top:\"0\",width:img.offsetWidth+\"px\",height:img.offsetHeight+\"px\",background:\"#000000\",visibility:\"visible\"});a.appendChild(v)};a.onmouseleave=e=>{a.querySelector('video').remove()}})",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)}let ps=gae(\"section>.row\");let last=ps.length-1;ps[last].querySelectorAll('.img-box>a').forEach(a=>{a.onmouseenter=e=>{let v=document.createElement('video');let img=a.querySelector('img');v.setAttribute('loop','');v.setAttribute('autoplay','');v.setAttribute('src',img.getAttribute('data-preview'));v.setAttribute('webkitplaysinline','true');v.setAttribute('playsinline','true');$(v).css({position:\"absolute\",left:\"0\",top:\"0\",width:img.offsetWidth+\"px\",height:img.offsetHeight+\"px\",background:\"#000000\",visibility:\"visible\"});a.appendChild(v)};a.onmouseleave=e=>{a.querySelector('video').remove()}})",
         "css": ".pagetual_pageBar{margin-top:0px!important;margin-bottom:20px!important}"
     },
     {
@@ -5074,7 +5090,7 @@
         "example": "https://orzqwq.com/manga/pixiv-dogvahkiin-cg-934423-2/japanese/?style=list",
         "url": "^https?://orzqwq\\.com/",
         "include": "//option[@selected and text()='List style']",
-        "init": "function geAll(e){return document.querySelectorAll(e)}let interval=setInterval(()=>{let Img=geAll('img[id][data-src]')[0];if(Img){let path=Img.getAttribute('data-src').trim().replace(/\\d+\\.[a-z]{3}$/,'');let imgs=geAll('img[id][data-src]').length;let _img='';for(let i=1;i<=imgs;i++){let p;if(i<10){p='00'+i}else if(i<100){p='0'+i}else{p=i}let imgSrc=path+p+'.jpg';_img+=`<img src='${imgSrc}'>`};geAll('.entry-content')[0].innerHTML=_img;clearInterval(interval)}},100);",
+        "init": "function gae(e){return document.querySelectorAll(e)}let interval=setInterval(()=>{let Img=gae('img[id][data-src]')[0];if(Img){let path=Img.getAttribute('data-src').trim().replace(/\\d+\\.[a-z]{3}$/,'');let imgs=gae('img[id][data-src]').length;let _img='';for(let i=1;i<=imgs;i++){let p;if(i<10){p='00'+i}else if(i<100){p='0'+i}else{p=i}let imgSrc=path+p+'.jpg';_img+=`<img src='${imgSrc}'>`};gae('.entry-content')[0].innerHTML=_img;clearInterval(interval)}},100);",
         "nextLink": "0",
         "css": ".entry-content img{display: block!important; margin: 0 auto!important;}"
     },
@@ -5083,7 +5099,7 @@
         "example": "https://orzqwq.com/manga/pixiv-dogvahkiin-cg-934423-2/japanese/p/1/",
         "url": "^https?://orzqwq\\.com/",
         "include": "//option[@selected and text()='Paged style']",
-        "init": "function geAll(e){return document.querySelectorAll(e)}let interval=setInterval(()=>{let _src=geAll('img[id][data-src]')[0].src;if(_src){let path=_src.replace(/\\d+\\.[a-z]{3}$/,'');let imgs=geAll('.select-pagination')[0].querySelectorAll('option').length;let _img='';for(let i=1;i<=imgs;i++){let p;if(i<10){p='00'+i}else if(i<100){p='0'+i}else{p=i}let imgSrc=path+p+'.jpg';_img+=`<img src='${imgSrc}'>`};geAll('.entry-content')[0].innerHTML=_img;clearInterval(interval)}},100);",
+        "init": "function gae(e){return document.querySelectorAll(e)}let interval=setInterval(()=>{let _src=gae('img[id][data-src]')[0].src;if(_src){let path=_src.replace(/\\d+\\.[a-z]{3}$/,'');let imgs=gae('.select-pagination')[0].querySelectorAll('option').length;let _img='';for(let i=1;i<=imgs;i++){let p;if(i<10){p='00'+i}else if(i<100){p='0'+i}else{p=i}let imgSrc=path+p+'.jpg';_img+=`<img src='${imgSrc}'>`};gae('.entry-content')[0].innerHTML=_img;clearInterval(interval)}},100);",
         "nextLink": "0",
         "css": ".page-link-hover,.select-pagination{display:none!important}.entry-content img{display: block!important; margin: 0 auto!important;}"
     },
@@ -5755,7 +5771,7 @@
         "pageElement": "//div[div[@class='video-thumb']]",
         "replaceElement": ".pagination, .mobilePager",
         "pageInit": "doc.querySelectorAll('video[preload]').forEach(e=>{e.src=e.parentNode.getAttribute('data-clip')})",
-        "pageAction": "function gxAll(x,context){var nodes=[];try{var doc=(context&&context.ownerDocument)||window.document;var results=doc.evaluate(x,context||doc,null,XPathResult.ANY_TYPE,null);var node;while(node=results.iterateNext()){nodes.push(node)}}catch(e){throw e;}return nodes}let ps=gxAll(\"//div[div[@class='video-thumb']]\");let last=ps.length-1;ps[last].querySelectorAll('a.frame.video').forEach(a=>{a.onmouseenter=e=>{let v=a.querySelector('video');v.style='';v.setAttribute('loop','')};a.onmouseleave=e=>{let v=a.querySelector('video');v.style.display='none';v.removeAttribute('loop')}})"
+        "pageAction": "function gax(x,context){var nodes=[];try{var doc=(context&&context.ownerDocument)||window.document;var results=doc.evaluate(x,context||doc,null,XPathResult.ANY_TYPE,null);var node;while(node=results.iterateNext()){nodes.push(node)}}catch(e){throw e;}return nodes}let ps=gax(\"//div[div[@class='video-thumb']]\");let last=ps.length-1;ps[last].querySelectorAll('a.frame.video').forEach(a=>{a.onmouseenter=e=>{let v=a.querySelector('video');v.style='';v.setAttribute('loop','')};a.onmouseleave=e=>{let v=a.querySelector('video');v.style.display='none';v.removeAttribute('loop')}})"
     },
     {
         "name": "EPORNER Photo",
@@ -5882,7 +5898,7 @@
         "nextLink": "a[rel='next']",
         "pageElement": ".thumb-list",
         "replaceElement": ".pager-section",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)}let ps=geAll('.thumb-list');let last=ps.length-1;ps[last].querySelectorAll('a[data-previewvideo]').forEach(a=>{a.onmouseenter=e=>{let v=document.createElement('video');v.setAttribute('loop','loop');v.setAttribute('autoplay','autoplay');v.setAttribute('playsinline','playsinline');v.setAttribute('webkitplaysinline','webkitplaysinline');v.setAttribute('src',a.getAttribute('data-previewvideo'));v.setAttribute('class','thumb-image-container__video');v.setAttribute('eid1','156');a.appendChild(v)};a.onmouseleave=e=>{a.querySelector('video').remove()}})"
+        "pageAction": "function gae(e){return document.querySelectorAll(e)}let ps=gae('.thumb-list');let last=ps.length-1;ps[last].querySelectorAll('a[data-previewvideo]').forEach(a=>{a.onmouseenter=e=>{let v=document.createElement('video');v.setAttribute('loop','loop');v.setAttribute('autoplay','autoplay');v.setAttribute('playsinline','playsinline');v.setAttribute('webkitplaysinline','webkitplaysinline');v.setAttribute('src',a.getAttribute('data-previewvideo'));v.setAttribute('class','thumb-image-container__video');v.setAttribute('eid1','156');a.appendChild(v)};a.onmouseleave=e=>{a.querySelector('video').remove()}})"
     },
     {
         "name": "GavPorn 相冊",
@@ -6110,10 +6126,12 @@
         "name": "肉視頻",
         "example": "https://rouv01.xyz/t/%E6%8E%A2%E8%8A%B1",
         "url": "^https?://(rouv\\d+|rou)\\.(xyz|video)/(t|v|search)",
+        "pinUrl": true,
         "nextLink": "//a[text()='下一頁']",
         "pageElement": ".grid-cols-2>.shadow",
         "replaceElement": ".bg-white.px-4.py-3",
-        "pageBar": 0
+        "pageBar": 0,
+        "css": ".col-span-2.md\\:col-span-1{display:none!important}"
     },
     {
         "name": "jav9999",
@@ -6802,7 +6820,7 @@
         "waitElement": [
             "img.cr_only"
         ],
-        "init": "function ge(e){return document.querySelector(e)}function geAll(e){return document.querySelectorAll(e)}let bs=ge('body[style]');if(bs)bs.removeAttribute('style');let loop=setInterval(()=>{let last=ge(`a[current='true']+a.next`);let p=ge('.info').textContent.match(/\\d+/)[0];if(last||p<18){clearInterval(loop);let photos=ge('.photos').parentNode;let css='width: 170px;height: 30px;font-size: 24px;font-weight:bold;line-height:30px;text-align:center;margin:10px auto;box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);border-radius:15px;';let imgBox=document.createElement('div');imgBox.id='PagetualBox';imgBox.style='display:none';photos.insertBefore(imgBox,photos.firstChild);let showAllImgButton=document.createElement('div');showAllImgButton.id='showAllImgButton';showAllImgButton.innerText='顯示所有大圖';showAllImgButton.style=css;showAllImgButton.addEventListener('click',()=>{let b=ge('#PagetualBox');let s=ge('#showAllImgButton');if(b.style.display=='none'){geAll('.pager').forEach(e=>{e.style='display:none'});ge('.photos').style='display:none';b.removeAttribute('style');s.innerText='關閉顯示大圖';if(!ge('#PagetualBox>img')){let i=0;let imgs=geAll('img.cr_only');let ps=imgs.length;imgs.forEach(e=>{setTimeout(()=>{b.insertAdjacentHTML('beforeend',`<img src='${e.src.replace('_600x0', '')}'>`)},i*234);i++;if(i==ps-1){let over=document.createElement('div');over.innerText='大圖添加結束';over.setAttribute('title','點擊返回頂部');over.style=css;over.addEventListener('click',()=>{document.documentElement.scrollTo({top:0})});setTimeout(()=>{b.appendChild(over)},i*250)}})}}else{geAll('.pager').forEach(e=>{e.removeAttribute('style')});ge('.photos').removeAttribute('style');b.style.display='none';s.innerText='顯示所有大圖'}});photos.insertBefore(showAllImgButton,photos.firstChild);let p=ge('#pagetual-preload');if(p)p.remove()}},1000)",
+        "init": "let ge=e=>document.querySelector(e);let gae=e=>document.querySelectorAll(e);let bs=ge('body[style]');if(bs)bs.removeAttribute('style');let loop=setInterval(()=>{let last=ge('a[current=true]+a.next');let p=ge('.info').textContent.match(/\\d+/)[0];if(last||p<18){clearInterval(loop);let photos=ge('.photos').parentNode;let css='width: 160px;height: 30px;font-size: 22px;font-weight:bold;line-height:26px;text-align:center;margin:10px auto;box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);border-radius:15px;';let imgBox=document.createElement('div');imgBox.id='PagetualBox';imgBox.style='display:none';photos.insertBefore(imgBox,photos.firstChild);let showAllImgButton=document.createElement('div');showAllImgButton.id='showAllImgButton';showAllImgButton.innerText='顯示所有大圖';showAllImgButton.style=css;showAllImgButton.addEventListener('click',()=>{let b=ge('#PagetualBox');let s=ge('#showAllImgButton');if(b.style.display=='none'){gae('.pager').forEach(e=>{e.style='display:none'});ge('.photos').style='display:none';b.removeAttribute('style');s.innerText='關閉顯示大圖';if(!ge('#PagetualBox>img')){let i=0;let imgs=gae('img.cr_only');let ps=imgs.length;imgs.forEach(e=>{setTimeout(()=>{let img=new Image();img.src=e.src.replace('_600x0','');b.appendChild(img)},i*333);i++;if(i==ps-1){let over=document.createElement('div');over.innerText='大圖添加結束';over.setAttribute('title','點擊返回頂部');over.style=css;over.addEventListener('click',()=>{document.documentElement.scrollTo({top:0})});setTimeout(()=>{b.appendChild(over)},i*350)}})}}else{gae('.pager').forEach(e=>{e.removeAttribute('style')});ge('.photos').removeAttribute('style');b.style.display='none';s.innerText='顯示所有大圖'}});photos.insertBefore(showAllImgButton,photos.firstChild);let p=ge('#pagetual-preload');if(p)p.remove()}},1000)",
         "nextLink": "a.next",
         "pageElement": ".photos > a",
         "replaceElement": [
@@ -6872,6 +6890,21 @@
         "pageBar": 0
     },
     {
+        "name": "MediaFire 自動下載",
+        "url": "^https?://www\\.mediafire\\.com/",
+        "init": "let loop=setInterval(()=>{let set=document.querySelector('.download_link:not(.started) #downloadButton');if(set){clearInterval(loop);set.click()}},100)",
+        "pinUrl": true,
+        "nextLink": "0"
+    },
+    {
+        "name": "ouo.io 自動跳轉",
+        "url": "^https?://ouo\\.",
+        "init": "let loop=setInterval(()=>{let set=document.querySelector('#btn-main:not(.disabled)');if(set){clearInterval(loop);set.click()}},100)",
+        "include": "#btn-main",
+        "pinUrl": true,
+        "nextLink": "0"
+    },
+    {
         "name": "YINGPIAN影片社",
         "example": "https://yingpian89.com/",
         "url": "^https?://(yingpian89|69avfilm).com/",
@@ -6907,7 +6940,7 @@
         "example": "https://myjkwd.com/e/action/ShowInfo.php?classid=1&id=23726",
         "url": "^https?://myjkwd\\.com/e/action/ShowInfo\\.php",
         "pinUrl": true,
-        "init": "function ge(e){return document.querySelector(e)}let entry=ge('.entry');entry.innerHTML=entry.innerHTML.replace(`\"&gt;`,'');function get(url,p,max){return new Promise((resolve)=>{let xhr=new XMLHttpRequest();xhr.responseType='document';xhr.open('GET',url);xhr.onload=function(){if(xhr.status==200){resolve(xhr.response)}};xhr.send(null)}).then((res)=>{let img=res.querySelector('.entry img');ge('.entry img').parentNode.appendChild(img);if(p==max-1){let loop=setInterval(()=>{if(document.querySelectorAll('.entry img').length==max){clearInterval(loop);let over=document.createElement('p');over.innerText='图片已全部爬取完毕';over.style='font-size:24px;height: 40px;line-height: 40px;text-align: center;margin: 10px auto;';ge('.entry img').parentNode.appendChild(over)}},1000)}})}let max=ge('.pageLink>a>b').innerText;for(let i=1;i<max;i++){let link=location.href+'&page='+i;setTimeout(()=>{get(link,i,max)},i*500)}",
+        "init": "const ge=e=>document.querySelector(e);let e=ge('.entry');e.innerHTML=e.innerHTML.replace(`\"&gt;`,'');const getImg=url=>{fetch(url).then(res=>res.text()).then((res)=>{let data=new DOMParser().parseFromString(res,'text/html');let img=data.querySelector('.entry img');let x=ge('.load');x.parentNode.insertBefore(img,x)})};let Load=document.createElement('p');Load.className='load';Load.innerText='Loading...';Load.style='font-size:24px;height: 40px;line-height: 40px;text-align: center;margin: 10px auto;';ge('.entry img').parentNode.appendChild(Load);let max=ge('.pageLink>a>b').innerText;for(let i=1;i<max;i++){let url=location.href+'&page='+i;setTimeout(()=>{getImg(url)},i*500)}let loop=setInterval(()=>{let ps=document.querySelectorAll('.entry img').length;if(ps>1){ge('.load').innerText='Loading Page '+ps+'/'+max;}if(ps==max){clearInterval(loop)}},1000)",
         "nextLink": "//div[@class='nextinfo']/p[contains(text(),'上一')]/a",
         "manualMode": true,
         "css": "aside.side,.pageLink{display:none!important;}.main-content{margin-left:0px!important;}"
@@ -7059,7 +7092,7 @@
         "nextLink": "//a[text()='下一章']",
         "pageElement": ".bookname>h1,#content",
         "replaceElement": "head>title,.bottem1,bottem2",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('.pagetual_pageBar')[0].remove();let h=geAll('h1');let t=geAll('#content');if(t.length>10){h[0].remove();t[0].remove()}",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)}gae('.pagetual_pageBar')[0].remove();let h=gae('h1');let t=gae('#content');if(t.length>10){h[0].remove();t[0].remove()}",
         "css": "table+h1,#content+h1{padding-top:20px;text-align:center}"
     },
     {
@@ -7074,15 +7107,15 @@
         "name": "歡喜冤家小說網 - 閱讀",
         "example": "https://www.huanxiyuanjia.com/12_12849/5258090.html",
         "url": "^https?://www.huanxiyuanjia.com/[0-9_]+/\\d+\\.html",
-        "init": "function geAll(e){return document.querySelectorAll(e)}geAll('#TextContent>*:not(p):nth-child(n+1):nth-child(-n+999)').forEach(e=>{e.remove()});geAll('#TextContent>p:nth-child(n+1):nth-child(-n+2)').forEach(e=>{e.remove()});let t = geAll('#TextContent')[0];t.innerHTML = t.innerHTML.replace(`huanxiyuanjia.com 欢喜冤家`,'');",
+        "init": "function gae(e){return document.querySelectorAll(e)}gae('#TextContent>*:not(p):nth-child(n+1):nth-child(-n+999)').forEach(e=>{e.remove()});gae('#TextContent>p:nth-child(n+1):nth-child(-n+2)').forEach(e=>{e.remove()});let t = gae('#TextContent')[0];t.innerHTML = t.innerHTML.replace(`huanxiyuanjia.com 欢喜冤家`,'');",
         "action": 1,
         "history": 2,
         "nextLink": "#next_url",
         "pageElement": "h1,#TextContent",
         "replaceElement": "head>title,.mlfy_page+.mlfy_page",
         "css": ".mlfy_main h1{padding-bottom:0px!important;border-bottom:none!important}#TextContent>p:nth-child(n+2):nth-child(-n+3){display: none!important;}",
-        "pageInit": "function geAll(e){return doc.querySelectorAll(e)}geAll('#TextContent>*:not(p):nth-child(n+1):nth-child(-n+999)').forEach(e=>{e.remove()});geAll('#TextContent>p:nth-child(n+1):nth-child(-n+2)').forEach(e=>{e.remove()});let t = geAll('#TextContent')[0];t.innerHTML = t.innerHTML.replace(`huanxiyuanjia.com 欢喜冤家`,'');",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('.pagetual_pageBar')[0].remove();let h=geAll('h1');let t=geAll('#TextContent');if(t.length>10){h[0].remove();t[0].remove()}"
+        "pageInit": "function gae(e){return doc.querySelectorAll(e)}gae('#TextContent>*:not(p):nth-child(n+1):nth-child(-n+999)').forEach(e=>{e.remove()});gae('#TextContent>p:nth-child(n+1):nth-child(-n+2)').forEach(e=>{e.remove()});let t = gae('#TextContent')[0];t.innerHTML = t.innerHTML.replace(`huanxiyuanjia.com 欢喜冤家`,'');",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)}gae('.pagetual_pageBar')[0].remove();let h=gae('h1');let t=gae('#TextContent');if(t.length>10){h[0].remove();t[0].remove()}"
     },
     {
         "name": "歡喜冤家小說網 - 書籍分類",
@@ -7102,7 +7135,7 @@
         "nextLink": "//a[text()='下一章']",
         "pageElement": "#nr_title,#nr.nr_nr",
         "replaceElement": "head>title,.nr_page",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('.pagetual_pageBar')[0].remove();let h=geAll('#nr_title');let t=geAll('#nr.nr_nr');if(t.length>10){h[0].remove();t[0].remove()}"
+        "pageAction": "function gae(e){return document.querySelectorAll(e)}gae('.pagetual_pageBar')[0].remove();let h=gae('#nr_title');let t=gae('#nr.nr_nr');if(t.length>10){h[0].remove();t[0].remove()}"
     },
     {
         "name": "筆趣閣bqg9527 - PC版閱讀",
@@ -7113,7 +7146,7 @@
         "nextLink": "//a[text()='下一章']",
         "pageElement": ".bookname>h1,#content",
         "replaceElement": "head>title,.bottem1,.bottem2",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('.pagetual_pageBar')[0].remove();let h=geAll('h1');let t=geAll('#content');if(t.length>10){h[0].remove();t[0].remove()}",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)}gae('.pagetual_pageBar')[0].remove();let h=gae('h1');let t=gae('#content');if(t.length>10){h[0].remove();t[0].remove()}",
         "css": ".read-top-ad{display:none!important}"
     },
     {
@@ -7132,7 +7165,7 @@
         "nextLink": "//a[text()='下一章']",
         "pageElement": ".bookname>h1,#content",
         "replaceElement": "head>title,.bottem1,.bottem2",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('.pagetual_pageBar')[0].remove();let h=geAll('h1');let t=geAll('#content');if(t.length>10){h[0].remove();t[0].remove()}",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)}gae('.pagetual_pageBar')[0].remove();let h=gae('h1');let t=gae('#content');if(t.length>10){h[0].remove();t[0].remove()}",
         "css": "#ifexplorer+h1,#content+h1{font:35px 雅黑;padding-top:20px;text-align:center}.read-top-ad{display:none!important}"
     },
     {
@@ -7157,7 +7190,7 @@
             ".cmask"
         ],
         "replaceElement": "head>title,#spage",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('.pagetual_pageBar')[0].remove();let h=geAll('.title>h2');let t=geAll('#content');if(t.length>10){h[0].remove();t[0].remove()}",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)}gae('.pagetual_pageBar')[0].remove();let h=gae('.title>h2');let t=gae('#content');if(t.length>10){h[0].remove();t[0].remove()}",
         "css": ".body>h2{text-align:center!important;}"
     },
     {
@@ -7172,7 +7205,7 @@
             ".mask.mask2"
         ],
         "replaceElement": "head>title,#right",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('.pagetual_pageBar')[0].remove();let t=geAll('#content');if(t.length>10){t[0].remove()}",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)}gae('.pagetual_pageBar')[0].remove();let t=gae('#content');if(t.length>10){t[0].remove()}",
         "css": "body,#center,#cbox,#content {overflow: initial !important;position: initial !important;} #right,.sidebarbox{position: fixed !important;right: 0;}#content+#content{padding-top:-10px!important}"
     },
     {
@@ -7194,7 +7227,7 @@
         "nextLink": "//a[text()='下一章']",
         "pageElement": ".read_chapterName,.read_chapterDetail",
         "replaceElement": "head>title,.pageNav",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('.pagetual_pageBar')[0].remove();let h=geAll('.read_chapterName');let t=geAll('.read_chapterDetail');if(t.length>10){h[0].remove();t[0].remove()}",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)}gae('.pagetual_pageBar')[0].remove();let h=gae('.read_chapterName');let t=gae('.read_chapterDetail');if(t.length>10){h[0].remove();t[0].remove()}",
         "css": ".read_chapterName h1{font:24px 'Microsoft YaHei'!important}.read_chapterName{margin-top:25px!important;margin-bottom:15px!important}"
     },
     {
@@ -7216,7 +7249,7 @@
         "nextLink": "//a[text()='下一章']",
         "pageElement": ".txtnav",
         "replaceElement": "head>title",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('.pagetual_pageBar')[0].remove();let t=geAll('.txtnav');if(t.length>10)t[0].remove()"
+        "pageAction": "function gae(e){return document.querySelectorAll(e)}gae('.pagetual_pageBar')[0].remove();let t=gae('.txtnav');if(t.length>10)t[0].remove()"
     },
     {
         "name": "乐文小说网 -閱讀",
@@ -7226,7 +7259,7 @@
         "nextLink": ".next>a",
         "pageElement": "//div[div[contains(@class,'content-body')]]",
         "replaceElement": "head>title,.pager",
-        "pageAction": "function gxAll(x,context){var nodes=[];try{var doc=(context&&context.ownerDocument)||window.document;var results=doc.evaluate(x,context||doc,null,XPathResult.ANY_TYPE,null);var node;while(node=results.iterateNext()){nodes.push(node)}}catch(e){throw e;}return nodes}let t=gxAll(\"//div[div[contains(@class,'content-body')]]\");if(t.length>10){t[0].remove()}",
+        "pageAction": "function gax(x,context){var nodes=[];try{var doc=(context&&context.ownerDocument)||window.document;var results=doc.evaluate(x,context||doc,null,XPathResult.ANY_TYPE,null);var node;while(node=results.iterateNext()){nodes.push(node)}}catch(e){throw e;}return nodes}let t=gax(\"//div[div[contains(@class,'content-body')]]\");if(t.length>10){t[0].remove()}",
         "pageBar": 0,
         "css": ".chaptera,#pccontent_tip{display:none!important}"
     },
@@ -7254,7 +7287,7 @@
         "nextLink": "//a[button[text()='下一章']]",
         "pageElement": "[class^='chapter_title'],[class^='chapter_list'],[class^='chapter_article']",
         "replaceElement": "head>title,[class^='chapter_footer']",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)}let h=geAll(\"[class^='chapter_title']\");let t=geAll(\"[class^='chapter_article']\");let l=geAll(\"[class^='chapter_list']\");if(t.length>10){h[0].remove();t[0].remove();l[0].remove();}",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)}let h=gae(\"[class^='chapter_title']\");let t=gae(\"[class^='chapter_article']\");let l=gae(\"[class^='chapter_list']\");if(t.length>10){h[0].remove();t[0].remove();l[0].remove();}",
         "pageBar": 0,
         "css": "[class^='chapter_article']+[class^='chapter_title']{padding-top:0px!important}"
     },
@@ -7269,7 +7302,7 @@
         "nextLink": "//a[text()='下一页' or text()='下一頁' and contains(@href,'.htm')]",
         "pageElement": "#title,#content",
         "replaceElement": "head>title,#footlink",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)}let h=geAll('#title');let t=geAll('#content');if(t.length>10){h[0].remove();t[0].remove()}",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)}let h=gae('#title');let t=gae('#content');if(t.length>10){h[0].remove();t[0].remove()}",
         "pageBar": 0
     },
     {
@@ -7293,7 +7326,7 @@
         "nextLink": ".next_page_links>a[href$='html']",
         "pageElement": ".title,.content",
         "replaceElement": "head>title,.prev_page,.next_page_links",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('amp-addthis').forEach(e =>{e.remove()});let h=geAll('.title');let t=geAll('.content');if(t.length>10){h[0].remove();t[0].remove()}",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)}gae('amp-addthis').forEach(e =>{e.remove()});let h=gae('.title');let t=gae('.content');if(t.length>10){h[0].remove();t[0].remove()}",
         "pageBar": 0,
         "css": ".content>center{display:none!important}"
     },
@@ -7306,7 +7339,7 @@
         "nextLink": "//a[text()='下一章']",
         "pageElement": ".name,.content",
         "replaceElement": "head>title,.container .chapter-nav,.main>.chapter-nav,#mm-5>.chapter-nav",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)}let h=geAll('.name');let t=geAll('.content');if(t.length>10){h[0].remove();t[0].remove()}",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)}let h=gae('.name');let t=gae('.content');if(t.length>10){h[0].remove();t[0].remove()}",
         "pageBar": 0
     },
     {
@@ -7349,7 +7382,7 @@
         "nextLink": "//a[contains(text(),'下一页')]|//a[contains(text(),'下一頁')]|//a[contains(text(),'下一章')]",
         "pageElement": ".chapter-name,#content",
         "replaceElement": "head>title,.g-content-nav",
-        "pageAction": "function gx(x){return document.evaluate(x,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue}function geAll(e){return document.querySelectorAll(e)}setTimeout(()=>{let n=gx(\"//a[contains(text(),'下一章')]\");if(n){let l=geAll('.chapter-name').length-1;geAll('.chapter-name')[l].remove()}},0);setTimeout(()=>{let t=geAll('.chapter-name');if(t.length>10){geAll('.g-reader>*:not(.chapter-opt):nth-child(n+1):nth-child(-n+4)').forEach(e=>{e.remove()})}},1000)",
+        "pageAction": "function gx(x){return document.evaluate(x,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue}function gae(e){return document.querySelectorAll(e)}setTimeout(()=>{let n=gx(\"//a[contains(text(),'下一章')]\");if(n){let l=gae('.chapter-name').length-1;gae('.chapter-name')[l].remove()}},0);setTimeout(()=>{let t=gae('.chapter-name');if(t.length>10){gae('.g-reader>*:not(.chapter-opt):nth-child(n+1):nth-child(-n+4)').forEach(e=>{e.remove()})}},1000)",
         "pageBar": 0,
         "css": ".chapter-name{font-size:20px!important;font-weight:bold!important;padding-top:10px;padding-bottom:10px;}"
     },
@@ -7371,7 +7404,7 @@
         "pageElement": ".text-head,.read-content",
         "replaceElement": "head>title,.chapter-control.dib-wrap",
         "css": ".review-count,.admire-wrap,.chapter-end-qrcode{display:none!important}",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('.pagetual_pageBar')[0].remove();let h=geAll('.text-head');let t=geAll('.read-content');if(t.length>10){h[0].remove();t[0].remove()}"
+        "pageAction": "function gae(e){return document.querySelectorAll(e)}gae('.pagetual_pageBar')[0].remove();let h=gae('.text-head');let t=gae('.read-content');if(t.length>10){h[0].remove();t[0].remove()}"
     },
     {
         "name": "起點小說 - 分類",
@@ -7397,7 +7430,7 @@
         ],
         "replaceElement": "//head/title | //div[@class='row mx-0 read_btn_gp']",
         "pageInit": "let t=doc.querySelector('#text');t.innerHTML=t.innerHTML.replace(/[<br>]{4}[⒏8８⒏⑧⑻ВbｂьＯσｏоοoＫkкｃсcｍmм．。·.]{9,10}/gi,'')",
-        "pageAction": "function gxAll(x,context){var nodes=[];try{var doc=(context&&context.ownerDocument)||window.document;var results=doc.evaluate(x,context||doc,null,XPathResult.ANY_TYPE,null);var node;while(node=results.iterateNext()){nodes.push(node)}}catch(e){throw e;}return nodes}gxAll(\"//*[contains(@class,'pagetual_pageBar')]\")[0].remove();let t=gxAll(\"//div[@id='text']\");let s=gxAll(\"//div[div/@id='subtitle']\");if(t.length>4){t[0].remove();s[0].remove()}",
+        "pageAction": "function gax(x,context){var nodes=[];try{var doc=(context&&context.ownerDocument)||window.document;var results=doc.evaluate(x,context||doc,null,XPathResult.ANY_TYPE,null);var node;while(node=results.iterateNext()){nodes.push(node)}}catch(e){throw e;}return nodes}gax(\"//*[contains(@class,'pagetual_pageBar')]\")[0].remove();let t=gax(\"//div[@id='text']\");let s=gax(\"//div[div/@id='subtitle']\");if(t.length>4){t[0].remove();s[0].remove()}",
         "css": "#text>br:nth-child(even){display:none!important}#subtitle{margin-bottom:0px!important}"
     },
     {
@@ -7419,7 +7452,7 @@
         "nextLink": "#read_next",
         "pageElement": "#divContent > h3,#bookContent",
         "replaceElement": "head>title,#read-page>.rp-switch",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('.pagetual_pageBar')[0].remove();let h=geAll('h3');let t=geAll('#bookContent');if(t.length>10){h[0].remove();t[0].remove()}geAll('.ad_content')[0].remove()"
+        "pageAction": "function gae(e){return document.querySelectorAll(e)}gae('.pagetual_pageBar')[0].remove();let h=gae('h3');let t=gae('#bookContent');if(t.length>10){h[0].remove();t[0].remove()}gae('.ad_content')[0].remove()"
     },
     {
         "name": "UU看書手機版 - 列表(加載更多小說)",
@@ -7436,7 +7469,7 @@
         "nextLink": "#next",
         "pageElement": ".h1title,.contentbox",
         "replaceElement": "head>title,.fanye",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('.pagetual_pageBar')[0].remove();let h=geAll('.h1title');let t=geAll('.contentbox');if(t.length>10){h[0].remove();t[0].remove()}"
+        "pageAction": "function gae(e){return document.querySelectorAll(e)}gae('.pagetual_pageBar')[0].remove();let h=gae('.h1title');let t=gae('.contentbox');if(t.length>10){h[0].remove();t[0].remove()}"
     },
     {
         "name": "UU看書 - 書籍列表",
@@ -7472,7 +7505,7 @@
         "replaceElement": ".fanye",
         "insert": ".fanye",
         "insertPos": 1,
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('.pagetual_pageBar')[0].remove();let h=geAll('.h1title');let t=geAll('#contentbox');if(t.length>10){h[0].remove();t[0].remove()}"
+        "pageAction": "function gae(e){return document.querySelectorAll(e)}gae('.pagetual_pageBar')[0].remove();let h=gae('.h1title');let t=gae('#contentbox');if(t.length>10){h[0].remove();t[0].remove()}"
     },
     {
         "name": "愛下電子書 - 閱讀",
@@ -7482,7 +7515,7 @@
         "nextLink": "a.chapter-paging.chapter-next",
         "pageElement": "#page .page-content",
         "replaceElement": "head>title,.page-d.page-turn,.page-d-top,.read-next,.read-pre,.read-prog-info",
-        "pageAction": "function geAll(e){return document.querySelectorAll(e)}geAll('.pagetual_pageBar')[0].remove();let t=geAll('#page .page-content');if(t.length>10){t[0].remove()}",
+        "pageAction": "function gae(e){return document.querySelectorAll(e)}gae('.pagetual_pageBar')[0].remove();let t=gae('#page .page-content');if(t.length>10){t[0].remove()}",
         "css": ".page-content{margin-top:.16rem!important}.page-content h3{line-height:.20rem!important;font-size:.24rem!important;text-align:center!important}"
     },
     {
