@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.33.55
+// @version      1.9.33.56
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -918,14 +918,14 @@
         }
 
         addRuleByUrl(url, from, callback) {
-            if(url.indexOf("?")==-1){
-                url=url+"?"+Date.now();
-            }else{
-                url=url+"&"+Date.now();
+            if (url.indexOf("?") == -1) {
+                url = url + "?" + Date.now();
+            } else {
+                url = url + "&" + Date.now();
             }
-            this.requestJSON(url, (json,err)=>{
-                if(!json){
-                    debug(err, "Update "+url+" rules fail!");
+            this.requestJSON(url, (json,err) => {
+                if (!json) {
+                    debug(err, "Update " + url + " rules fail!");
                 }
                 this.addRules(json, from);
                 callback(json, err);
@@ -933,12 +933,19 @@
         }
 
         addRules(rules, from) {
-            if(rules && rules.length>0){
-                this.rules=this.rules.filter(item=>{return item.from!=from});
-                rules.forEach(item=>{
-                    let rule=this.formatRule(item, from);
-                    if(rule){
-                        this.rules.unshift(rule);
+            if (rules && rules.length > 0) {
+                let first = -1;
+                this.rules = this.rules.filter((item, i) => {
+                    if (item.from == from) {
+                        if (first == -1) first = i;
+                        return false;
+                    } else return true;
+                });
+                if (first == -1) first = 0;
+                rules.forEach(item => {
+                    let rule = this.formatRule(item, from);
+                    if (rule) {
+                        this.rules.splice(first, 0, rule)
                     }
                 });
             }
@@ -3656,6 +3663,16 @@
                     sort.push(i.dataset.id);
                 });
                 rulesData.sort=sort;
+                let urls=[];
+                sort.forEach(id=>{
+                    for(let s=0;s<ruleUrls.length;s++){
+                        if(id==ruleUrls[s].id){
+                            urls.push(ruleUrls[s]);
+                            break;
+                        }
+                    }
+                });
+                ruleUrls=urls;
                 storage.setItem("rulesData", rulesData);
             }
             moveUp(){
@@ -3725,6 +3742,7 @@
         updateP.innerHTML=passStr;
         updateP.title=i18n("update")+" - "+pastDate;
         updateP.onclick=e=>{
+            ruleParser.rules=[];
             updateRules(()=>{
                 showTips(i18n("updateSucc"));
                 updateP.innerHTML=i18n("passSec", 0);
