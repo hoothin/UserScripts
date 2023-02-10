@@ -1911,6 +1911,7 @@
                      letter-spacing: 0px;
                  }
                  a.search-jumper-word {
+                     text-decoration: none;
                      background: #f7f7f7d9;
                      color: #111111!important;
                      filter: drop-shadow(1px 1px 3px #00000060);
