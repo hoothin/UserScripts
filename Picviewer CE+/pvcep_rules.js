@@ -1110,5 +1110,25 @@ var siteInfo=[
  getImage:function(a){
   if(a) return a.href;
  }
+},
+{
+ name:"imdb",
+ url:/^https?:\/\/www\.imdb\.com/,
+ src: /media\-amazon/,
+ r: /@.*(\.\w)/i,
+ s: '@$1'
+},
+{
+ name:"nsfw.xxx",
+ url:/^https?:\/\/nsfw\.xxx/,
+ src: /thumbnails/,
+ getImage: function(a,p) {
+     if (a && a.className==='slider_init_href' && a.href) {
+         return a.href;
+     }
+ },
+ xhr: {
+     q: '.sh-section__image>img',
+ }
 }
 ];
