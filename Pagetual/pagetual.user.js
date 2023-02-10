@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.33.53
+// @version      1.9.33.54
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -683,6 +683,7 @@
     const guidePage = /^https?:\/\/.*pagetual.*rule\.html/i;
     const ruleImportUrlReg = /greasyfork\.org\/.*scripts\/438684[^\/]*(\/discussions|\/?$|\/feedback)|github\.com\/hoothin\/UserScripts\/(tree\/master\/Pagetual|issues\/)/i;
     const allOfBody = "body>*";
+    const mainSel = "article,.article,[role=main],main,.main";
     const nextTextReg1 = new RegExp("\u005e\u7ffb\u003f\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u9875\u9801\u5f20\u5f35\u005d\u007c\u005e\u0028\u006e\u0065\u0078\u0074\u005b\u0020\u005f\u002d\u005d\u003f\u0070\u0061\u0067\u0065\u007c\u006f\u006c\u0064\u0065\u0072\u0029\u005c\u0073\u002a\u005b\u203a\u003e\u2192\u00bb\u005d\u003f\u0024\u007c\u6b21\u306e\u30da\u30fc\u30b8\u007c\u005e\u6b21\u3078\u003f\u0024\u007cВперед", "i");
     const nextTextReg2 = new RegExp("\u005e\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u7ae0\u8bdd\u8a71\u8282\u7bc0\u4e2a\u500b\u5e45\u005d", "i");
     _GM_registerMenuCommand(i18n("configure"), () => {
@@ -1296,6 +1297,19 @@
                         return [ele];
                     }
                     if (curHeight / bodyHeight <= 0.25) {
+                        let article = doc.querySelectorAll(mainSel);
+                        if (article && article.length > 0) {
+                            if (article.length == 1) {
+                                article = article[0];
+                                self.curSiteRule.pageElement = article.tagName + (article.className ? "." + article.className : "") + ">*";
+                                debug(self.curSiteRule.pageElement, 'Page element');
+                                return article.children;
+                            } else {
+                                self.curSiteRule.pageElement = mainSel;
+                                debug(self.curSiteRule.pageElement, 'Page element');
+                                return article;
+                            }
+                        }
                         self.curSiteRule.pageElement = allOfBody;
                         debug(self.curSiteRule.pageElement, 'Page element');
                         return [body];
@@ -2238,6 +2252,8 @@
                             realSrc = img.dataset.lazy;
                         } else if (img.dataset.src) {
                             realSrc = img.dataset.src;
+                        } else if (img.dataset.url) {
+                            realSrc = img.dataset.url;
                         } else if (img.dataset.origFile) {
                             realSrc = img.dataset.origFile;
                         }
@@ -2271,25 +2287,25 @@
                     }
                 }
             };
-            [].forEach.call(eles, ele=>{
-                if(ele.tagName=="IMG"){
+            [].forEach.call(eles, ele => {
+                if (ele.tagName == "IMG") {
                     setLazyImg(ele);
-                }else{
-                    [].forEach.call(ele.querySelectorAll("img"), img=>{
+                } else {
+                    [].forEach.call(ele.querySelectorAll("img"), img => {
                         setLazyImg(img);
                     });
-                    [].forEach.call(ele.querySelectorAll("div[data-src][data-thumb]"), div=>{
-                        div.style.setProperty("background-image", "url("+div.dataset.src+")", "important");
+                    [].forEach.call(ele.querySelectorAll("div[data-src][data-thumb]"), div => {
+                        div.style.setProperty("background-image", "url(" + div.dataset.src + ")", "important");
                     });
                 }
-                if(ele.tagName=="A" && ele.classList.contains("lazyload")){
-                    if(ele.dataset.original){
-                        ele.style.backgroundImage='url("'+ele.dataset.original+'")';
+                if (ele.tagName == "A" && ele.classList.contains("lazyload")) {
+                    if (ele.dataset.original) {
+                        ele.style.backgroundImage = 'url("' + ele.dataset.original + '")';
                     }
-                }else{
-                    [].forEach.call(ele.querySelectorAll("a.lazyload"), a=>{
-                        if(a.dataset.original){
-                            a.style.backgroundImage='url("'+a.dataset.original+'")';
+                } else {
+                    [].forEach.call(ele.querySelectorAll("a.lazyload"), a => {
+                        if (a.dataset.original) {
+                            a.style.backgroundImage = 'url("' + a.dataset.original + '")';
                         }
                     });
                 }
