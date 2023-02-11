@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.54.16
+// @version      1.6.6.54.17
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -729,7 +729,8 @@
         minPopup: false,
         selectToShow: true,
         expandType: false,
-        rightMouse: true
+        rightMouse: true,
+        shiftLastUsedType: false
     };
     function run() {
         const lang = navigator.appName == "Netscape" ? navigator.language : navigator.userLanguage;
@@ -1245,7 +1246,7 @@
             setTimeout( checkReady, 100 );
         }
 
-        var logoBtn, searchBar, searchTypes = [], currentSite = false, cacheKeywords, localKeywords, lastSign, inPagePostParams, cacheIcon, historySites, sortTypeNames, cachePool = [], cacheFontPool = [], currentFormParams, globalInPageWords, navEnable, referrer, lastAddType;
+        var logoBtn, searchBar, searchTypes = [], currentSite = false, cacheKeywords, localKeywords, lastSign, inPagePostParams, cacheIcon, historySites, historyType, sortTypeNames, cachePool = [], cacheFontPool = [], currentFormParams, globalInPageWords, navEnable, referrer, lastAddType;
         const logoBtnSvg = `<svg class="search-jumper-logoBtnSvg" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><title>${i18n("scriptName")}</title><path d="M.736 510.464c0-281.942 228.335-510.5 510-510.5 135.26 0 264.981 53.784 360.625 149.522 95.643 95.737 149.375 225.585 149.375 360.978 0 281.94-228.335 510.5-510 510.5-281.665 0-510-228.56-510-510.5zm510-510.5v1021m-510-510.5h1020" fill="#fefefe"/><path d="M237.44 346.624a48.64 48.64 0 1 0 97.28 0 48.64 48.64 0 1 0-97.28 0zM699.904 346.624a48.64 48.64 0 1 0 97.28 0 48.64 48.64 0 1 0-97.28 0zM423.296 759.296c-64 0-115.712-52.224-115.712-115.712 0-26.624 9.216-52.224 25.6-72.704 9.216-11.776 26.112-13.312 37.888-4.096s13.312 26.112 4.096 37.888c-9.216 11.264-13.824 24.576-13.824 38.912 0 34.304 27.648 61.952 61.952 61.952s61.952-27.648 61.952-61.952c0-4.096-.512-8.192-1.024-11.776-2.56-14.848 6.656-28.672 21.504-31.744 14.848-2.56 28.672 6.656 31.744 21.504 1.536 7.168 2.048 14.336 2.048 22.016-.512 63.488-52.224 115.712-116.224 115.712z" fill="#333"/><path d="M602.08 760.296c-64 0-115.712-52.224-115.712-115.712 0-14.848 12.288-27.136 27.136-27.136s27.136 12.288 27.136 27.136c0 34.304 27.648 61.952 61.952 61.952s61.952-27.648 61.952-61.952c0-15.36-5.632-30.208-15.872-41.472-9.728-11.264-9.216-28.16 2.048-37.888 11.264-9.728 28.16-9.216 37.888 2.048 19.456 21.504 29.696 48.64 29.696 77.824 0 62.976-52.224 115.2-116.224 115.2z" fill="#333"/><ellipse ry="58" rx="125" cy="506.284" cx="201.183" fill="#faf"/><ellipse ry="58" rx="125" cy="506.284" cx="823.183" fill="#faf"/></svg>`;
         const logoBase64 = "data:image/svg+xml;base64,PHN2ZyBjbGFzcz0ic2VhcmNoLWp1bXBlci1sb2dvQnRuU3ZnIiB2aWV3Qm94PSIwIDAgMTAyNCAxMDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0uNzM2IDUxMC40NjRjMC0yODEuOTQyIDIyOC4zMzUtNTEwLjUgNTEwLTUxMC41IDEzNS4yNiAwIDI2NC45ODEgNTMuNzg0IDM2MC42MjUgMTQ5LjUyMiA5NS42NDMgOTUuNzM3IDE0OS4zNzUgMjI1LjU4NSAxNDkuMzc1IDM2MC45NzggMCAyODEuOTQtMjI4LjMzNSA1MTAuNS01MTAgNTEwLjUtMjgxLjY2NSAwLTUxMC0yMjguNTYtNTEwLTUxMC41em01MTAtNTEwLjV2MTAyMW0tNTEwLTUxMC41aDEwMjAiIGZpbGw9IiNmZWZlZmUiLz48cGF0aCBkPSJNMjM3LjQ0IDM0Ni42MjRhNDguNjQgNDguNjQgMCAxIDAgOTcuMjggMCA0OC42NCA0OC42NCAwIDEgMC05Ny4yOCAwek02OTkuOTA0IDM0Ni42MjRhNDguNjQgNDguNjQgMCAxIDAgOTcuMjggMCA0OC42NCA0OC42NCAwIDEgMC05Ny4yOCAwek00MjMuMjk2IDc1OS4yOTZjLTY0IDAtMTE1LjcxMi01Mi4yMjQtMTE1LjcxMi0xMTUuNzEyIDAtMjYuNjI0IDkuMjE2LTUyLjIyNCAyNS42LTcyLjcwNCA5LjIxNi0xMS43NzYgMjYuMTEyLTEzLjMxMiAzNy44ODgtNC4wOTZzMTMuMzEyIDI2LjExMiA0LjA5NiAzNy44ODhjLTkuMjE2IDExLjI2NC0xMy44MjQgMjQuNTc2LTEzLjgyNCAzOC45MTIgMCAzNC4zMDQgMjcuNjQ4IDYxLjk1MiA2MS45NTIgNjEuOTUyczYxLjk1Mi0yNy42NDggNjEuOTUyLTYxLjk1MmMwLTQuMDk2LS41MTItOC4xOTItMS4wMjQtMTEuNzc2LTIuNTYtMTQuODQ4IDYuNjU2LTI4LjY3MiAyMS41MDQtMzEuNzQ0IDE0Ljg0OC0yLjU2IDI4LjY3MiA2LjY1NiAzMS43NDQgMjEuNTA0IDEuNTM2IDcuMTY4IDIuMDQ4IDE0LjMzNiAyLjA0OCAyMi4wMTYtLjUxMiA2My40ODgtNTIuMjI0IDExNS43MTItMTE2LjIyNCAxMTUuNzEyeiIgZmlsbD0iIzMzMyIvPjxwYXRoIGQ9Ik02MDIuMDggNzYwLjI5NmMtNjQgMC0xMTUuNzEyLTUyLjIyNC0xMTUuNzEyLTExNS43MTIgMC0xNC44NDggMTIuMjg4LTI3LjEzNiAyNy4xMzYtMjcuMTM2czI3LjEzNiAxMi4yODggMjcuMTM2IDI3LjEzNmMwIDM0LjMwNCAyNy42NDggNjEuOTUyIDYxLjk1MiA2MS45NTJzNjEuOTUyLTI3LjY0OCA2MS45NTItNjEuOTUyYzAtMTUuMzYtNS42MzItMzAuMjA4LTE1Ljg3Mi00MS40NzItOS43MjgtMTEuMjY0LTkuMjE2LTI4LjE2IDIuMDQ4LTM3Ljg4OCAxMS4yNjQtOS43MjggMjguMTYtOS4yMTYgMzcuODg4IDIuMDQ4IDE5LjQ1NiAyMS41MDQgMjkuNjk2IDQ4LjY0IDI5LjY5NiA3Ny44MjQgMCA2Mi45NzYtNTIuMjI0IDExNS4yLTExNi4yMjQgMTE1LjJ6IiBmaWxsPSIjMzMzIi8+PGVsbGlwc2Ugcnk9IjU4IiByeD0iMTI1IiBjeT0iNTA2LjI4NCIgY3g9IjIwMS4xODMiIGZpbGw9IiNmYWYiLz48ZWxsaXBzZSByeT0iNTgiIHJ4PSIxMjUiIGN5PSI1MDYuMjg0IiBjeD0iODIzLjE4MyIgZmlsbD0iI2ZhZiIvPjwvc3ZnPg==";
         const noImgBase64 = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAyNCIgaGVpZ2h0PSIxMDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNNDI5LjAxMzMzMyA2NDBBMzIgMzIgMCAwIDEgMzg0IDU5NC45ODY2NjdsMzcuNzYtMzcuNzYtMjIuODI2NjY3LTIyLjYxMzMzNC0xMzUuNjggMTM1LjY4IDkwLjQ1MzMzNCA5MC40NTMzMzQgMTM1LjY4LTEzNS42OC0yMi42MTMzMzQtMjIuNjEzMzM0ek01MzQuNjEzMzMzIDM5OC45MzMzMzNsMjIuNjEzMzM0IDIyLjYxMzMzNEw1OTQuOTg2NjY3IDM4NEEzMiAzMiAwIDAgMSA2NDAgNDI5LjAxMzMzM2wtMzcuNzYgMzcuNzYgMjIuNjEzMzMzIDIyLjYxMzMzNCAxMzUuNjgtMTM1LjY4LTkwLjQ1MzMzMy05MC40NTMzMzR6IiBmaWxsPSIjNUU1QzVDIj48L3BhdGg+PHBhdGggZD0iTTUxMiAyMS4zMzMzMzNhNDkwLjY2NjY2NyA0OTAuNjY2NjY3IDAgMSAwIDQ5MC42NjY2NjcgNDkwLjY2NjY2N0E0OTAuNjY2NjY3IDQ5MC42NjY2NjcgMCAwIDAgNTEyIDIxLjMzMzMzM3ogbTMxNi44IDM1NC45ODY2NjdsLTE4MS4xMiAxODEuMTJhMzIgMzIgMCAwIDEtNDUuMjI2NjY3IDBMNTU3LjIyNjY2NyA1MTIgNTEyIDU1Ny4yMjY2NjdsNDUuMjI2NjY3IDQ1LjIyNjY2NmEzMiAzMiAwIDAgMSAwIDQ1LjIyNjY2N2wtMTgxLjEyIDE4MS4xMmEzMiAzMiAwIDAgMS00NS4yMjY2NjcgMGwtMTM1LjY4LTEzNS42OGEzMiAzMiAwIDAgMSAwLTQ1LjIyNjY2N2wxODEuMTItMTgxLjEyYTMyIDMyIDAgMCAxIDQ1LjIyNjY2NyAwTDQ2Ni43NzMzMzMgNTEyIDUxMiA0NjYuNzczMzMzbC00NS4yMjY2NjctNDUuMjI2NjY2YTMyIDMyIDAgMCAxIDAtNDUuMjI2NjY3bDE4MS4xMi0xODEuMTJhMzIgMzIgMCAwIDEgNDUuMjI2NjY3IDBsMTM1LjY4IDEzNS42OGEzMiAzMiAwIDAgMSAwIDQ1LjIyNjY2N3oiIGZpbGw9IiM1RTVDNUMiPjwvcGF0aD4KPC9zdmc+";
@@ -1809,7 +1810,7 @@
                      bottom: unset;
                      top: 5%;
                  }
-                 .search-jumper-type.not-expand>a:nth-of-type(10)~a {
+                 .search-jumper-type.not-expand>a:nth-of-type(10)~a:not(.historySite) {
                      display: none;
                  }
                  #search-jumper .sitelist {
@@ -4842,6 +4843,13 @@
             }
 
             initSort() {
+                if (searchData.prefConfig.shiftLastUsedType && this.historyTypeEle) {
+                    if (currentSite) {
+                        this.bar.insertBefore(this.historyTypeEle, this.bar.children[1]);
+                    } else {
+                        this.bar.insertBefore(this.historyTypeEle, this.bar.children[0]);
+                    }
+                }
                 if (!searchData.prefConfig.sortType) return;
                 let self = this;
                 searchTypes.sort((a, b) => {
@@ -4849,21 +4857,26 @@
                     let bTypeValue = sortTypeNames[b.dataset.type] || 0;
                     return bTypeValue - aTypeValue;
                 });
+                let changed = false;
                 let allHide = self.bar.children[0].classList.contains("search-jumper-hide");
                 for (let i = searchTypes.length - 1; i >= 0; i--) {
                     let typeEle = searchTypes[i];
                     let curValue = sortTypeNames[typeEle.dataset.type] || 0;
                     if (i == searchTypes.length - 1) {
-                        if (curValue > 0) sortTypeNames[typeEle.dataset.type] = 0;
+                        if (curValue > 0) {
+                            changed = true;
+                            sortTypeNames[typeEle.dataset.type] = 0;
+                        }
                     } else {
                         let preValue = sortTypeNames[searchTypes[i + 1].dataset.type] || 0;
                         if (curValue - preValue > 50) {
+                            changed = true;
                             sortTypeNames[typeEle.dataset.type] = preValue + 50;
                         }
                     }
                     self.bar.insertBefore(typeEle, self.bar.children[allHide ? 0 : 1]);
                 }
-                storage.setItem("sortTypeNames", sortTypeNames);
+                if (changed) storage.setItem("sortTypeNames", sortTypeNames);
             }
 
             initHistorySites() {
@@ -4887,18 +4900,27 @@
                 typeEle.style.height = "auto";
                 let self = this;
                 this.historyInserted = true;
-                this.historySiteBtns.slice(0, searchData.prefConfig.historyLength).forEach(btn => {
+                let num = 0;
+                for (let i = 0; i < this.historySiteBtns.length; i++) {
+                    let btn = this.historySiteBtns[i];
                     if (btn.parentNode != typeEle) {
                         let sites = typeEle.querySelectorAll("a.search-jumper-btn");
-                        for (let i = 0; i < sites.length; i++) {
-                            let site = sites[i];
-                            if (site.href == btn.href) return;
+                        let findSame = false;
+                        for (let j = 0; j < sites.length; j++) {
+                            let site = sites[j];
+                            if (site.name == btn.dataset.name) {
+                                findSame = true;
+                                break;
+                            }
                         }
+                        if (findSame) continue;
+                        btn.classList.add("historySite");
                         if (self.searchJumperExpand.parentNode == typeEle) {
                             typeEle.insertBefore(btn, self.searchJumperExpand);
                         } else typeEle.appendChild(btn);
+                        if (++num >= searchData.prefConfig.historyLength) break;
                     }
-                });
+                }
                 typeEle.style.width = typeEle.scrollWidth + "px";
                 typeEle.style.height = typeEle.scrollHeight + "px";
             }
@@ -4908,8 +4930,12 @@
                 if (!this.historyInserted) return;
                 this.historyInserted = false;
                 let self = this;
-                this.historySiteBtns.slice(0, searchData.prefConfig.historyLength).forEach(btn => {
-                    let curParent = btn.parentNode;
+                let curParent;
+                for (let i = 0; i < this.historySiteBtns.length; i++) {
+                    let btn = this.historySiteBtns[i];
+                    if (!btn.classList.contains("historySite")) continue;
+                    btn.classList.remove("historySite");
+                    curParent = btn.parentNode;
                     for (let i = 0; i < searchTypes.length; i++) {
                         let typeBtn = searchTypes[i];
                         if (typeBtn.dataset.type == btn.dataset.type) {
@@ -4919,13 +4945,13 @@
                             break;
                         }
                     }
-                    if (!curParent.classList.contains("search-jumper-hide")) {
-                        curParent.style.width = "auto";
-                        curParent.style.height = "auto";
-                        curParent.style.width = curParent.scrollWidth + "px";
-                        curParent.style.height = curParent.scrollHeight + "px";
-                    }
-                });
+                }
+                if (curParent && !curParent.classList.contains("search-jumper-hide")) {
+                    curParent.style.width = "auto";
+                    curParent.style.height = "auto";
+                    curParent.style.width = curParent.scrollWidth + "px";
+                    curParent.style.height = curParent.scrollHeight + "px";
+                }
             }
 
             bindSite(a, siteEle) {
@@ -5187,7 +5213,7 @@
                 let siteEles = [];
                 let ele = document.createElement("span");
                 ele.className = "search-jumper-type search-jumper-hide";
-                if (!searchData.prefConfig.expandType) ele.classList.add("not-expand");
+                if (!searchData.prefConfig.expandType && sites.length > 10) ele.classList.add("not-expand");
                 if (data.match === '0') {
                     ele.style.display = 'none';
                     ele.classList.add("notmatch");
@@ -5486,6 +5512,11 @@
                         });
                     }
                 } else {
+                    if (!self.historyTypeEle) {
+                        if (historyType == type) {
+                            self.historyTypeEle = ele;
+                        }
+                    }
                     self.bar.insertBefore(ele, self.bar.children[self.bar.children.length - 1]);
                 }
 
@@ -6181,6 +6212,19 @@
                                 storage.setItem("historySites", historySites);
                                 self.initHistorySites();
                             });
+                        }
+                        if (searchData.prefConfig.shiftLastUsedType) {
+                            let parent = ele.parentNode;
+                            let dismissHistory = parent && (parent.classList.contains("search-jumper-isInPage") ||
+                                                            parent.classList.contains("search-jumper-isTargetImg") ||
+                                                            parent.classList.contains("search-jumper-isTargetAudio") ||
+                                                            parent.classList.contains("search-jumper-isTargetVideo") ||
+                                                            parent.classList.contains("search-jumper-isTargetLink") ||
+                                                            parent.classList.contains("search-jumper-isTargetPage"));
+                            if (!dismissHistory && historyType != ele.dataset.type) {
+                                historyType = ele.dataset.type;
+                                storage.setItem("historyType", historyType);
+                            }
                         }
                         if (searchData.prefConfig.sortType) {
                             storage.getItem("sortTypeNames", data => {
@@ -9442,6 +9486,11 @@
             historySites = await new Promise((resolve) => {
                 storage.getItem("historySites", data => {
                     resolve(data || []);
+                });
+            });
+            historyType = await new Promise((resolve) => {
+                storage.getItem("historyType", data => {
+                    resolve(data || '');
                 });
             });
             sortTypeNames = await new Promise((resolve) => {
