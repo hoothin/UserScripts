@@ -8936,6 +8936,14 @@
         "pageAction": "eles.forEach(ele=>{let img=ele.querySelector('img');img.classList.remove('sl_lazyimg')})"
     },
     {
+        "name": "易书 电子书聚合搜索引擎",
+        "url": "^https?://search\\.zhelper\\.net/",
+        "pinUrl": true,
+        "nextLink": "//a[text()='下一页']",
+        "pageElement": "ol.list-group>a",
+        "pageAction": "eles.forEach(ele=>{let source=ele.querySelector('.card-title').nextSibling.data.match(/书源：(\\S+)/)[1];let id=ele.querySelector('small').innerText.match(/ID：(\\d+)/)[1];ele.onclick=e=>{axios.post('https://api.ylibrary.org/api/detail/', {id: id,source: source}).then(response=>{if (response.data.errorn) {alert(response.data.msg)} else {let detail=response.data;document.querySelector('#detailModal .modal-body').innerHTML=`<div class='modal-body'>书名：${detail.title}，书源：${detail.source} <br> 作者：${detail.author}，出版社：，出版时间： <br> MD5： ${detail.md5}<br> 文件大小：${detail.filesize}<!----><p></p><div class='modal-footer'><a class='btn btn-secondary' href='http://libgendown.1kbtool.com/${detail.md5}' target='_blank'> Libgen </a><a class='btn btn-secondary' href='https://ipfs-checker.1kbtool.com/${detail.ipfs_cid}?filename=${detail.title}_${detail.author}_zhelper-search.pdf' target='_blank'> IPFS </a><a class='btn btn-secondary' href='https://rulite.1kbtool.com/${detail.md5}#${detail.filesize}#${detail.title}_${detail.author}_zhelper-search.pdf' target='_blank'>秒传</a><!----><!----></div></div>`}}).catch(error=>{if (error.toJSON().status == 429) {alert('请求过于频繁，请稍等一下再次尝试(429)')} else {alert(`未知错误，请打开控制台查看(${error.message})`)}});var myModal = new bootstrap.Modal(document.getElementById('detailModal'),{});myModal.toggle()}})"
+    },
+    {
         "name": "豆瓣电影",
         "url": "^https://movie\\.douban\\.com",
         "wheel": true
