@@ -19673,17 +19673,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/77441",
-  "name": "Screen Rant",
-  "created_by": "Tanookirby",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "updated_at": "2018-12-09T10:40:35+09:00",
   "data": {
-    "exampleUrl": "http://screenrant.com/most-powerful-dc-comic-superheroes http://screenrant.com/fantastic-four-movie-rights-fox-marvel-studios-2015/2/ https://screenrant.com/movies-didnt-know-had-post-credits-scenes/4/?view=lista",
+    "pageElement": "descendant::*[./article][1]/article",
+    "nextLink": "//a[@class='next']",
     "url": "^https?://screenrant\\.com/.+",
-    "pageElement": "(//a[@class='next-btn icon i-arrow-2']/preceding-sibling::*[preceding-sibling::h2/@class='item-title']|//h2[@class='item-title']|//h2[@style='text-align: center;'][a]/preceding-sibling::*[preceding-sibling::p])[not(//div/@class='wp-pagenavi')]|//*[@itemprop='articleBody']/div[@class='wp-pagenavi']/preceding-sibling::*[node()][not(self::h3 or self::h2[@style='text-align: center;']/a)]",
-    "nextLink": "//*[@rel='next']"
+    "exampleUrl": "https://screenrant.com/search/?q=masked%20singer&page=2"
   },
-  "created_at": "2015-08-04T04:56:30+09:00"
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "Tanookirby",
+  "name": "Screen Rant",
+  "created_at": "2015-08-04T04:56:30+09:00",
+  "updated_at": "2023-02-12T10:11:58+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/77437",
