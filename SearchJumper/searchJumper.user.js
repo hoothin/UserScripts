@@ -6200,7 +6200,8 @@
                 let action = e => {
                     if (!self.batchOpening && !isBookmark) {
                         let historyLength = Math.max(searchData.prefConfig.historyLength, 20);
-                        if (!ele.dataset.clone && historyLength) {
+                        let onlyCurrent = ele.dataset.current && currentSite && currentSite.hideNotMatch;
+                        if (!ele.dataset.clone && historyLength && !onlyCurrent) {
                             storage.getItem("historySites", data => {
                                 historySites = (data || []);
                                 historySites = historySites.filter(site => {return site && site != name});
@@ -6212,7 +6213,7 @@
                                 self.initHistorySites();
                             });
                         }
-                        if (searchData.prefConfig.shiftLastUsedType) {
+                        if (searchData.prefConfig.shiftLastUsedType && !onlyCurrent) {
                             let parent = ele.parentNode;
                             let dismissHistory = parent && (parent.classList.contains("search-jumper-isInPage") ||
                                                             parent.classList.contains("search-jumper-isTargetImg") ||
