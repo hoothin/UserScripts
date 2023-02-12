@@ -527,9 +527,6 @@
             }, {
                 name: "大圣盘",
                 url: "https://www.dashengpan.com/search?keyword=%s"
-            }, {
-                name: "优聚搜",
-                url: "https://v3.ujuso.com/#/main?kw=%s"
             } ]
         },
         {
@@ -730,7 +727,7 @@
         selectToShow: true,
         expandType: false,
         rightMouse: true,
-        shiftLastUsedType: false
+        shiftLastUsedType: true
     };
     function run() {
         const lang = navigator.appName == "Netscape" ? navigator.language : navigator.userLanguage;
