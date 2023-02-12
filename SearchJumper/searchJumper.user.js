@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.54.17
+// @version      1.6.6.54.18
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -5300,7 +5300,8 @@
                     }
                 };
                 if (searchData.prefConfig.shortcut && data.shortcut) {
-                    ele.dataset.title += ` (${data.shortcut.toUpperCase()})`;
+                    let shortcurStr = data.shortcut.replace('Key', '').toUpperCase();
+                    if (shortcurStr.length == 1) ele.dataset.title += ` (${shortcurStr})`;
                     document.addEventListener('keydown', e => {
                         if (e.target.id === "searchJumperInput") return;
                         if ((!data.ctrl == e.ctrlKey) ||
@@ -5826,7 +5827,8 @@
                 self.stopInput = false;
                 if (searchData.prefConfig.shortcut && data.shortcut && !ele.dataset.clone) {
                     let shortcutCover = document.createElement("div");
-                    shortcutCover.innerText = data.shortcut.toUpperCase();
+                    let shortcurStr = data.shortcut.replace('Key', '').toUpperCase();
+                    if (shortcurStr.length == 1) shortcutCover.innerText = shortcurStr;
                     ele.appendChild(shortcutCover);
                     document.addEventListener('keydown', e => {
                         if (e.target.id === "searchJumperInput") return;
