@@ -8949,16 +8949,21 @@
         "wheel": true
     },
     {
-        "name": "游戏怀旧灌水首页禁用",
-        "url": "^https?://www\\.yxhjgs\\.com/$",
-        "enable": 0
-    },
-    {
         "name": "威锋",
         "url": "^https?://www\\.feng\\.com/",
         "nextLink": ".next:not(.disable)",
         "pinUrl": true,
         "loadMore": ".load-more-btn>button"
+    },
+    {
+        "name": "游戏怀旧灌水首页禁用",
+        "url": "^https?://www\\.yxhjgs\\.com/$",
+        "enable": 0
+    },
+    {
+        "name": "百度跳转页禁用",
+        "url": "^https?://jump\\d?\\.bdimg\\.com/safecheck",
+        "enable": 0
     },
     {
         "name": "检测到AC百度就不运行",
