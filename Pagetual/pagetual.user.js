@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.33.56
+// @version      1.9.33.57
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -133,9 +133,9 @@
     }
 
     const noRuleTest = false;
-    const lang = navigator.appName=="Netscape"?navigator.language:navigator.userLanguage;
-    let config={};
-    switch (lang){
+    const lang = navigator.appName == "Netscape" ? navigator.language : navigator.userLanguage;
+    let config = {};
+    switch (lang) {
         case "zh-CN":
         case "zh-SG":
             config = {
@@ -166,7 +166,7 @@
                 updateSucc:"更新成功",
                 beginUpdate:"正在更新，请耐心等待，不要关闭页面",
                 customUrls:"导入 Pagetual 或 AutoPagerize 规则 url，一行一条",
-                customRules:"输入【东方永页机】格式的自定义规则",
+                customRules:"输入【东方永页机】格式的自定义规则 <a href='#t#'>贡献规则</a>",
                 save:"保存设置",
                 loadingText:"少女祈祷中...",
                 opacity:"不透明值",
@@ -250,7 +250,7 @@
                 updateSucc:"更新成功",
                 beginUpdate:"正在更新，請稍候",
                 customUrls:"導入 Pagetual 或 AutoPagerize 規則 url，一行一條",
-                customRules:"輸入【東方永頁機】格式的自定義規則",
+                customRules:"輸入【東方永頁機】格式的自定義規則 <a href='#t#'>貢獻規則</a>",
                 save:"存儲設置",
                 loadingText:"少女祈禱中...",
                 opacity:"不透明值",
@@ -333,7 +333,7 @@
                 updateSucc: "更新に成功しました",
                 beginUpdate: "更新中、お待ちください",
                 customUrls: "インポートルールのURL、1行に1つ",
-                customRules: "【東方永頁機】の形式でカスタムルールを入力してください",
+                customRules: "【東方永頁機】の形式でカスタムルールを入力してください <a href='#t#'>寄稿ルール</a>",
                 save: "設定を保存",
                 loadingText: "少女祈祷中...",
                 opacity:"不透明値",
@@ -417,7 +417,7 @@
                 updateSucc:"Обновление прошло успешно",
                 beginUpdate:"Обновление начато, подождите минуту, пожалуйста",
                 customUrls:"Импортируйте URL-адрес правила Пэйджтуал или AutoPagerize по одному URL на строку",
-                customRules:"Введите пользовательские правила с форматом [Pagetual]",
+                customRules:"Введите пользовательские правила с форматом [Pagetual]. <a href='#t#'>Правила внесения вклада</a>",
                 save:"Сохранить",
                 loadingText:"Shojo загружается...",
                 opacity:"Непрозрачность",
@@ -500,7 +500,7 @@
                 updateSucc:"Update succeeded",
                 beginUpdate:"Begin update, wait a minute please",
                 customUrls:"Import Pagetual or AutoPagerize rule url, One url per line",
-                customRules:"Input custom rules with [Pagetual] format",
+                customRules:"Input custom rules with [Pagetual] format. <a href='#t#'>Contribute rules</a>",
                 save:"Save",
                 loadingText:"Shojo Now Loading...",
                 opacity:"Opacity",
@@ -555,13 +555,13 @@
             };
             break;
     }
-    var enableDebug=true;
+    var enableDebug = true;
     function i18n(name, param) {
-        return config[name]?config[name].replace("#t#",param):name;
+        return config[name] ? config[name].replace("#t#",param) : name;
     };
 
     function debug(str, title) {
-        if(enableDebug){
+        if (enableDebug) {
             console.log(
                 `%c【Pagetual v.${_GM_info.script.version}】 ${title ? title : 'debug'}:`,
                 'color: yellow;font-size: large;font-weight: bold;background-color: darkblue;',
@@ -570,50 +570,50 @@
         }
     };
 
-    var _GM_xmlhttpRequest,_GM_registerMenuCommand,_GM_notification,_GM_addStyle,_GM_openInTab,_GM_info,_GM_setClipboard;
-    if(typeof GM_xmlhttpRequest!='undefined'){
-        _GM_xmlhttpRequest=GM_xmlhttpRequest;
-    }else if(typeof GM!='undefined' && typeof GM.xmlHttpRequest!='undefined'){
-        _GM_xmlhttpRequest=GM.xmlHttpRequest;
-    }else{
-        _GM_xmlhttpRequest=(f)=>{fetch(f.url).then(response=>response.text()).then(data=>{let res={response:data};f.onload(res)}).catch(e => f.onerror(e))};
+    var _GM_xmlhttpRequest, _GM_registerMenuCommand, _GM_notification, _GM_addStyle, _GM_openInTab, _GM_info, _GM_setClipboard;
+    if (typeof GM_xmlhttpRequest != 'undefined') {
+        _GM_xmlhttpRequest = GM_xmlhttpRequest;
+    } else if (typeof GM != 'undefined' && typeof GM.xmlHttpRequest != 'undefined') {
+        _GM_xmlhttpRequest = GM.xmlHttpRequest;
+    } else {
+        _GM_xmlhttpRequest = (f) => {fetch(f.url).then(response => response.text()).then(data => {let res = {response:data}; f.onload(res)}).catch(e => f.onerror(e))};
     }
-    if(typeof GM_registerMenuCommand!='undefined'){
-        _GM_registerMenuCommand=GM_registerMenuCommand;
-    }else if(typeof GM!='undefined' && typeof GM.registerMenuCommand!='undefined'){
-        _GM_registerMenuCommand=GM.registerMenuCommand;
-    }else{
-        _GM_registerMenuCommand=(s,f)=>{};
+    if (typeof GM_registerMenuCommand != 'undefined') {
+        _GM_registerMenuCommand = GM_registerMenuCommand;
+    } else if (typeof GM != 'undefined' && typeof GM.registerMenuCommand != 'undefined') {
+        _GM_registerMenuCommand = GM.registerMenuCommand;
+    } else {
+        _GM_registerMenuCommand = (s, f) => {};
     }
-    if(typeof GM_info!='undefined'){
-        _GM_info=GM_info;
-    }else if(typeof GM!='undefined' && typeof GM.info!='undefined'){
-        _GM_info=GM.info;
-    }else{
-        _GM_info={script:1};
+    if (typeof GM_info != 'undefined') {
+        _GM_info = GM_info;
+    } else if (typeof GM != 'undefined' && typeof GM.info != 'undefined') {
+        _GM_info = GM.info;
+    } else {
+        _GM_info = {script: 1};
     }
-    if(typeof GM_notification!='undefined'){
-        _GM_notification=GM_notification;
-    }else if(typeof GM!='undefined' && typeof GM.notification!='undefined'){
-        _GM_notification=GM.notification;
-    }else{
-        _GM_notification=(s)=>{showTips(s)};
+    if (typeof GM_notification != 'undefined') {
+        _GM_notification = GM_notification;
+    } else if (typeof GM != 'undefined' && typeof GM.notification != 'undefined') {
+        _GM_notification = GM.notification;
+    } else {
+        _GM_notification = (s) => {showTips(s)};
     }
-    if(typeof GM_openInTab!='undefined'){
-        _GM_openInTab=GM_openInTab;
-    }else if(typeof GM!='undefined' && typeof GM.openInTab!='undefined'){
-        _GM_openInTab=GM.openInTab;
-    }else{
-        _GM_openInTab=(s,t)=>{window.open(s)};
+    if (typeof GM_openInTab != 'undefined') {
+        _GM_openInTab = GM_openInTab;
+    } else if (typeof GM != 'undefined' && typeof GM.openInTab != 'undefined') {
+        _GM_openInTab = GM.openInTab;
+    } else {
+        _GM_openInTab = (s,t) => {window.open(s)};
     }
-    if(typeof GM_addStyle!='undefined'){
-        _GM_addStyle=GM_addStyle;
-    }else if(typeof GM!='undefined' && typeof GM.addStyle!='undefined'){
-        _GM_addStyle=GM.addStyle;
-    }else{
-        _GM_addStyle=cssStr=>{
-            let styleEle=document.createElement("style");
-            styleEle.innerHTML=cssStr;
+    if (typeof GM_addStyle != 'undefined') {
+        _GM_addStyle = GM_addStyle;
+    } else if (typeof GM != 'undefined' && typeof GM.addStyle != 'undefined') {
+        _GM_addStyle = GM.addStyle;
+    } else {
+        _GM_addStyle = cssStr => {
+            let styleEle = document.createElement("style");
+            styleEle.innerHTML = cssStr;
             document.head.appendChild(styleEle);
             return styleEle;
         };
@@ -625,54 +625,54 @@
     } else {
         _GM_setClipboard = (s, i) => {};
     }
-    var _unsafeWindow=(typeof unsafeWindow=='undefined')?window:unsafeWindow;//兼容 ios userscripts 的寫法
-    var storage={
-        supportGM: typeof GM_getValue=='function' && typeof GM_getValue('a','b')!='undefined',
-        supportGMPromise: typeof GM!='undefined' && typeof GM.getValue=='function' && typeof GM.getValue('a','b')!='undefined',
-        mxAppStorage:(function(){
-            try{
+    var _unsafeWindow = (typeof unsafeWindow == 'undefined') ? window : unsafeWindow;//兼容 ios userscripts 的寫法
+    var storage = {
+        supportGM: typeof GM_getValue == 'function' && typeof GM_getValue('a','b') != 'undefined',
+        supportGMPromise: typeof GM != 'undefined' && typeof GM.getValue == 'function' && typeof GM.getValue('a','b') != 'undefined',
+        mxAppStorage: (function() {
+            try {
                 return window.external.mxGetRuntime().storage;
-            }catch(e){
+            } catch(e) {
             }
         })(),
-        operaUJSStorage:(function(){
-            try{
+        operaUJSStorage: (function() {
+            try {
                 return window.opera.scriptStorage;
-            }catch(e){
+            } catch(e) {
             }
         })(),
-        setItem:function(key,value){
-            if(this.operaUJSStorage){
-                this.operaUJSStorage.setItem(key,value);
-            }else if(this.mxAppStorage){
-                this.mxAppStorage.setConfig(key,value);
-            }else if(this.supportGM){
-                GM_setValue(key,value);
-                if(value==="" && typeof GM_deleteValue!='undefined'){
+        setItem: function(key, value) {
+            if (this.operaUJSStorage) {
+                this.operaUJSStorage.setItem(key, value);
+            } else if (this.mxAppStorage) {
+                this.mxAppStorage.setConfig(key, value);
+            } else if (this.supportGM) {
+                GM_setValue(key, value);
+                if (value === "" && typeof GM_deleteValue != 'undefined') {
                     GM_deleteValue(key);
                 }
-            }else if(this.supportGMPromise){
-                GM.setValue(key,value);
-                if(value==="" && typeof GM!='undefined' && typeof GM.deleteValue!='undefined'){
+            } else if (this.supportGMPromise) {
+                GM.setValue(key, value);
+                if (value === "" && typeof GM != 'undefined' && typeof GM.deleteValue != 'undefined') {
                     GM.deleteValue(key);
                 }
-            }else if(window.localStorage){
-                window.localStorage.setItem(key,value);
+            } else if (window.localStorage) {
+                window.localStorage.setItem(key, value);
             }
         },
-        getItem:function(key,cb){
+        getItem: function(key, cb) {
             var value;
-            if(this.operaUJSStorage){
-                value=this.operaUJSStorage.getItem(key);
-            }else if(this.mxAppStorage){
-                value=this.mxAppStorage.getConfig(key);
-            }else if(this.supportGM){
-                value=GM_getValue(key);
-            }else if(this.supportGMPromise){
-                value=GM.getValue(key).then(v=>{cb(v)});
+            if (this.operaUJSStorage) {
+                value = this.operaUJSStorage.getItem(key);
+            } else if (this.mxAppStorage) {
+                value = this.mxAppStorage.getConfig(key);
+            } else if (this.supportGM) {
+                value = GM_getValue(key);
+            } else if (this.supportGMPromise) {
+                value = GM.getValue(key).then(v => {cb(v)});
                 return;
-            }else if(window.localStorage){
-                value=window.localStorage.getItem(key);
+            } else if (window.localStorage) {
+                value = window.localStorage.getItem(key);
             };
             cb(value);
         }
@@ -793,7 +793,7 @@
         for (segs = []; elm && elm.nodeType == 1; elm = elm.parentNode) {
             if (elm.hasAttribute('id')) {
                 var uniqueIdCount = 0;
-                for (var n=0;n < allNodes.length;n++) {
+                for (var n = 0; n < allNodes.length; n++) {
                     if (allNodes[n].hasAttribute('id') && allNodes[n].id == elm.id) uniqueIdCount++;
                     if (uniqueIdCount > 1) break;
                 }
@@ -861,7 +861,7 @@
             });
         }
 
-        saveCurSiteRule(){
+        saveCurSiteRule() {
             /*if(!this.curSiteRule || !this.curSiteRule.url || this.curSiteRule.singleUrl || this.curSiteRule.url.length<13)return;
             this.hpRules=this.hpRules.filter(item=>{return item&&item.url!=this.curSiteRule.url});
             this.hpRules.unshift(this.curSiteRule);
@@ -871,16 +871,16 @@
             storage.setItem("hpRules", this.hpRules);*/
         }
 
-        requestJSON(url, callback){
+        requestJSON(url, callback) {
             _GM_xmlhttpRequest({
                 url: url,
                 method: 'GET',
                 timeout: 20000,
                 onload: function(res) {
-                    let json=null;
-                    try{
-                        json=JSON.parse(res.response||res.responseText);
-                    }catch(e){
+                    let json = null;
+                    try {
+                        json = JSON.parse(res.response || res.responseText);
+                    } catch(e) {
                         debug(e, 'Error json');
                     }
                     callback(json);
@@ -894,24 +894,24 @@
             });
         }
 
-        formatRule(item, from){
-            if(item.data && item.data.url){
+        formatRule(item, from) {
+            if (item.data && item.data.url) {
                 let result = {
-                    name:item.name,
-                    from:from,
-                    action:item.data.forceIframe=="true"?1:undefined,
-                    url:item.data.url,
-                    pageElement:item.data.pageElement,
-                    nextLink:item.data.nextLink,
-                    insert:item.data.insertBefore||undefined,
-                    updatedAt:item.updated_at
+                    name: item.name,
+                    from: from,
+                    action: item.data.forceIframe=="true"?1:undefined,
+                    url: item.data.url,
+                    pageElement: item.data.pageElement,
+                    nextLink: item.data.nextLink,
+                    insert: item.data.insertBefore||undefined,
+                    updatedAt: item.updated_at
                 };
                 let _css = (item.data.Stylus || '') + (item.data.CSS || '');
                 if (_css) result.css = _css;
                 if (item.data.bookmarklet) result.pageAction = item.data.bookmarklet;
                 return result;
-            }else{
-                item.from=from;
+            } else {
+                item.from = from;
                 return item;
             }
             return null;
@@ -3967,7 +3967,7 @@
         let dbClick2StopKeyInput=createCheckbox(i18n("dbClick2StopKey"), rulesData.dbClick2StopKey, "h4", dbClick2StopInput, "key");
 
         let customRulesTitle=document.createElement("h2");
-        customRulesTitle.innerHTML=i18n("customRules");
+        customRulesTitle.innerHTML=i18n("customRules", location.href.replace('tree', 'edit').replace(/\/$/, '') + '/pagetualRules.json');
         configCon.insertBefore(customRulesTitle, insertPos);
         let customRulesInput=document.createElement("textarea");
         customRulesInput.spellcheck=false;
