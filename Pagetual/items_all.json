@@ -2,6 +2,21 @@
 {
   "data": {
     "insertBefore": "",
+    "pageElement": "id('dle-content')",
+    "nextLink": "//span[@class='pnext']/a",
+    "url": "https://rsload\\.net",
+    "exampleUrl": "https://rsload.net"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "powertalent",
+  "resource_url": "http://wedata.net/items/86069",
+  "name": "Download programs for Windows computer for free",
+  "created_at": "2023-02-13T09:56:33+09:00",
+  "updated_at": "2023-02-13T09:56:33+09:00"
+},
+{
+  "data": {
+    "insertBefore": "",
     "pageElement": "//div[@class='hdgLv2']|//div[@class='sectionBlock']",
     "nextLink": "//span[@id='isPagingNext-Bottom']/a[@id='goPagingToNextTop']",
     "url": "^https://tickets\\.jr-odekake\\.net/",
