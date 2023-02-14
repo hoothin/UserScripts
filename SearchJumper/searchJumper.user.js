@@ -6027,7 +6027,7 @@
                         let curTime = new Date().getTime();
                         while (customMatch) {
                             if (runTimes++ > 100) break;
-                            let timeEval = customMatch[2];
+                            let timeEval = customMatch[2].replace(/\s/g, '');
                             let value = curTime;
                             if (timeEval) {
                                 let mathEval = timeEval.match(/(\D*)?(\d+)/);
@@ -6046,7 +6046,7 @@
                                             value += parseInt(mathEval[2]);
                                             break;
                                     }
-                                    timeEval = timeEval.replace(mathEval[0], "").trim();
+                                    timeEval = timeEval.replace(mathEval[0], "");
                                     mathEval = timeEval.match(/(\D*)?(\d+)/);
                                 }
                             } else {
