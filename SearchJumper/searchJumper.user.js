@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.54.18
+// @version      1.6.6.54.19
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -6003,13 +6003,13 @@
                         });
                         return str;
                     };
-                    let customSelectElement = str => {
-                        let selectorMatch = str.match(/%element{(.*?)}(\.prop\((.*?)\))?/);
+                    let customVariable = str => {
+                        let customMatch = str.match(/%element{(.*?)}(\.prop\((.*?)\))?/);
                         let runTimes = 0;
-                        while (selectorMatch) {
+                        while (customMatch) {
                             if (runTimes++ > 100) break;
-                            let selector = selectorMatch[1];
-                            let prop = selectorMatch[3];
+                            let selector = customMatch[1];
+                            let prop = customMatch[3];
                             let value = "";
                             let ele = getElement(selector);
                             if (ele) {
@@ -6019,8 +6019,41 @@
                                     value = ele.innerText;
                                 }
                             }
-                            str = customReplaceSingle(str, selectorMatch[0], value);
-                            selectorMatch = str.match(/%element{(.*?)}(\.prop\((.*?)\))?/);
+                            str = customReplaceSingle(str, customMatch[0], value);
+                            customMatch = str.match(/%element{(.*?)}(\.prop\((.*?)\))?/);
+                        }
+                        customMatch = str.match(/%date({(.*?)})?/);
+                        runTimes = 0;
+                        let curTime = new Date().getTime();
+                        while (customMatch) {
+                            if (runTimes++ > 100) break;
+                            let timeEval = customMatch[2];
+                            let value = curTime;
+                            if (timeEval) {
+                                let mathEval = timeEval.match(/(\D*)?(\d+)/);
+                                while (mathEval) {
+                                    switch (mathEval[1]) {
+                                        case "-":
+                                            value -= parseInt(mathEval[2]);
+                                            break;
+                                        case "*":
+                                            value *= parseInt(mathEval[2]);
+                                            break;
+                                        case "/":
+                                            value /= parseInt(mathEval[2]);
+                                            break;
+                                        default:
+                                            value += parseInt(mathEval[2]);
+                                            break;
+                                    }
+                                    timeEval = timeEval.replace(mathEval[0], "").trim();
+                                    mathEval = timeEval.match(/(\D*)?(\d+)/);
+                                }
+                            } else {
+                                value = curTime;
+                            }
+                            str = customReplaceSingle(str, customMatch[0], value);
+                            customMatch = str.match(/%date({(.*?)})?/);
                         }
                         return str;
                     }
@@ -6029,12 +6062,12 @@
                         if (inPagePost) {
                             tempUrl = tempUrl.replace(postMatch[0], "");
                         }
-                        ele.dataset.url = customSelectElement(tempUrl.replace(/%e\b/g, document.characterSet).replace(/%c\b/g, (isMobile?"mobile":"pc")).replace(/%h\b/g, host));
+                        ele.dataset.url = tempUrl.replace(/%e\b/g, document.characterSet).replace(/%c\b/g, (isMobile?"mobile":"pc")).replace(/%h\b/g, host);
                     }
                     let selStr = getSelectStr();
                     let targetUrl = '';
                     let targetName = selStr || document.title;
-                    let imgBase64 = '', resultUrl = ele.dataset.url.replace(/%date/g, new Date().getTime());
+                    let imgBase64 = '', resultUrl = customVariable(ele.dataset.url);
                     let hasWordParam = /%s[lur]?\b/.test(data.url);
                     if (targetElement) {
                         targetUrl = targetElement.src || targetElement.href || '';
@@ -6200,8 +6233,8 @@
                 let action = e => {
                     if (!self.batchOpening && !isBookmark) {
                         let historyLength = Math.max(searchData.prefConfig.historyLength, 20);
-                        let onlyCurrent = ele.dataset.current && currentSite && currentSite.hideNotMatch;
-                        if (!ele.dataset.clone && historyLength && !onlyCurrent) {
+                        let isCurrent = ele.dataset.current;
+                        if (!ele.dataset.clone && historyLength && !isCurrent) {
                             storage.getItem("historySites", data => {
                                 historySites = (data || []);
                                 historySites = historySites.filter(site => {return site && site != name});
@@ -6213,7 +6246,7 @@
                                 self.initHistorySites();
                             });
                         }
-                        if (searchData.prefConfig.shiftLastUsedType && !onlyCurrent) {
+                        if (searchData.prefConfig.shiftLastUsedType && !isCurrent) {
                             let parent = ele.parentNode;
                             let dismissHistory = parent && (parent.classList.contains("search-jumper-isInPage") ||
                                                             parent.classList.contains("search-jumper-isTargetImg") ||
@@ -7315,7 +7348,7 @@
             let iconName = icon.className.trim().replace('fa fa-', '').replace(/ /g, '_');
             if (cacheIcon[iconName]) return;
             let cache = icon2Base64(icon);
-            if (cache == 'data:,' || !cache) cache = 'fail';
+            if (cache == 'data:,' || !cache) return;
             cacheIcon[iconName] = cache;
             storage.setItem("cacheIcon", cacheIcon);
         }
