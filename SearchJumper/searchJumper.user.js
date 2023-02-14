@@ -6027,9 +6027,10 @@
                         let curTime = new Date().getTime();
                         while (customMatch) {
                             if (runTimes++ > 100) break;
-                            let timeEval = customMatch[2].replace(/\s/g, '');
+                            let timeEval = customMatch[2];
                             let value = curTime;
                             if (timeEval) {
+                                timeEval = timeEval.replace(/\s/g, '');
                                 let mathEval = timeEval.match(/(\D*)?(\d+)/);
                                 while (mathEval) {
                                     switch (mathEval[1]) {
