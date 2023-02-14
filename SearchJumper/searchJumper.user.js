@@ -6430,7 +6430,9 @@
                                         if (checkAlt() || !isPage) {
                                             ele.click();
                                         } else {
-                                            _GM_openInTab(_url, {active: true});
+                                            if (ele.dataset.target == "1") {
+                                                _GM_openInTab(_url, {active: true});
+                                            } else location.href = _url;
                                         }
                                     };
                                     if (url.indexOf('%input{') !== -1) {
