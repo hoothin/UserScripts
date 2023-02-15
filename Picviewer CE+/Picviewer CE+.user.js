@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.2.14.1
+// @version              2023.2.15.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -41,7 +41,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
-// @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1147780
+// @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1149906
 // @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1138919
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
@@ -21001,7 +21001,7 @@ ImgOps | https://imgops.com/#b#`;
                     var iurl, iurls = [], cap, doc = createDoc(html);
 
                     if(typeof q == 'function') {
-                        iurl = q(html, doc);
+                        iurl = q(html, doc, url);
                         if (Array.isArray(iurl)) {
                             iurls = iurl;
                             iurl = iurls.shift();
@@ -21315,6 +21315,7 @@ ImgOps | https://imgops.com/#b#`;
                                         document.head.appendChild(style);
                                     }
                                     if(site.xhr){
+                                        self._xhr=site.xhr;
                                         self.xhr=site.xhr;
                                     }
                                     if(site.lazyAttr){
@@ -21364,8 +21365,10 @@ ImgOps | https://imgops.com/#b#`;
                     if(rule.src && !rule.src.test(img.src))continue;
                     if(rule.exclude && rule.exclude.test(img.src))continue;
                     if(rule.getImage){
-                        newSrc = rule.getImage.call(img, a, p);
-                    }else{
+                        newSrc = rule.getImage.call(img, a, p, rule);
+                        this.xhr = (newSrc && !rule.stopXhr) ? (this._xhr || null) : null;
+                    }else newSrc = null;
+                    if(!newSrc){
                         if(rule.r){
                             if(Array.isArray(rule.r)){//r最多一层
                                 for(var j in rule.r){
@@ -22790,6 +22793,8 @@ ImgOps | https://imgops.com/#b#`;
                     let saveBtn=doc.querySelector("#"+this.id+"_saveBtn");
                     let closeBtn=doc.querySelector("#"+this.id+"_closeBtn");
                     let resetLink=doc.querySelector("#"+this.id+"_resetLink");
+                    let customInput=doc.querySelector("#"+this.id+"_field_customRules");
+                    customInput.style.height="500px";
                     saveBtn.textContent=i18n("saveBtn");
                     saveBtn.title=i18n("saveBtnTips");
                     closeBtn.textContent=i18n("closeBtn");
