@@ -127,7 +127,37 @@ var siteInfo=[
  url:/^https?:\/\/tieba\.baidu\.[^\/]+\//i,
  r: [/\/sys\/portrait/i,
      /^(http:\/\/tiebapic\.baidu\.com\/forum\/)ab(pic\/item\/[\w.]+)/i],
- s: ["/sys/portraitl", "$1$2"]
+ s: ["/sys/portraitl", "$1$2"],
+ getImage: function(a, p, rule) {
+   rule.stopXhr = true;
+   let pid = this.src.match(/\.baidu\.com\/forum\/w.*\/(\w+)\./);
+   if (!pid) return null;
+   pid = pid[1];
+   let tid = 0;
+   let tidm = location.href.match(/\/p\/(\d+)/);
+   if (tidm) tid = tidm[1];
+   if (tid) {
+    let kw = document.querySelector(`#wd2`);
+    if (kw && kw.value) {
+     rule.stopXhr = false;
+     return `https://tieba.baidu.com/photo/bw/picture/guide?kw=${kw.value}&tid=${tid}&pic_id=${pid}&see_lz=0&from_page=0&alt=jview`;
+    }
+   }
+   let bsrc = this.getAttribute('bpic');
+   return bsrc || null;
+ },
+ xhr: {
+     q: function(html, doc, url) {
+        let data = JSON.parse(html);
+        if (!data) return null;
+        let pid = url.match(/&pic_id=(\w+)/)[1];
+        for (let key in data.data.pic_list) {
+         let pic = data.data.pic_list[key];
+         if (pic.img.screen.id == pid) return pic.img.screen.waterurl;
+        }
+        return null;
+     }
+ }
 },
 {
  name: "百度图片搜索",
@@ -1123,7 +1153,7 @@ var siteInfo=[
  url:/^https?:\/\/nsfw\.xxx/,
  src: /thumbnails/,
  getImage: function(a,p) {
-     if (a && a.className==='slider_init_href' && a.href) {
+     if (a && a.className==='slider_init_href' && a.href && !this.nextElementSibling) {
          return a.href;
      }
  },
