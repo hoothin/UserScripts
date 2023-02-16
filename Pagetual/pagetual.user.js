@@ -10,10 +10,10 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.33.60
+// @version      1.9.33.61
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
-// @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
-// @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
+// @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，自动适配任意网页
+// @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，自動適配任意網頁
 // @description:ja     Webページを自動で読み込み継ぎ足し表示を行うブラウザ拡張です、次のページ付けされた Web ページの自動読み込みと現在のページへの挿入 ルールなしで何千もの Web サイトをサポートします。
 // @description:ru     Автоматическая загрузка следующих веб-страниц с разбивкой на страницы и вставка на текущую страницу. Поддержка тысяч веб-сайтов без каких-либо правил.
 // @description:de     Automatisches Laden der nächsten paginierten Webseiten und Einfügen in die aktuelle Seite. Unterstützen Sie Tausende von Websites ohne Regeln.
@@ -3253,23 +3253,31 @@
         }
 
         getTempRule() {
+            if (this.tempRule.value) {
+                try {
+                    this.editTemp = JSON.parse(this.tempRule.value);
+                } catch (e) {
+                    this.editTemp = null;
+                }
+            }
+            if (!this.editTemp) {
+                if (ruleParser.curSiteRule.url && !ruleParser.curSiteRule.singleUrl) {
+                    this.editTemp = ruleParser.curSiteRule;
+                } else {
+                    this.editTemp = {
+                        name: document.title,
+                        url: "^" + location.origin.replace(/^https?/, "https?").replace(/\./g,"\\.") + "/"
+                    };
+                }
+                delete this.editTemp.from;
+                delete this.editTemp.type;
+                delete this.editTemp.updatedAt;
+            }
             let selectorInput = this.frame.querySelector(".selector");
-            let editTemp;
-            if (ruleParser.curSiteRule.url && !ruleParser.curSiteRule.singleUrl) {
-                editTemp = ruleParser.curSiteRule;
-            } else {
-                editTemp = {
-                    name: document.title,
-                    url: "^" + location.origin.replace(/^https?/, "https?").replace(/\./g,"\\.") + "/"
-                };
-            }
             if (selectorInput.value) {
-                editTemp.pageElement = selectorInput.value;
+                this.editTemp.pageElement = selectorInput.value;
             }
-            delete editTemp.from;
-            delete editTemp.type;
-            delete editTemp.updatedAt;
-            return editTemp;
+            return this.editTemp;
         }
 
         getTarget(ele) {
