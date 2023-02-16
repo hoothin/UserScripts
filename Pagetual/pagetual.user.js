@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.33.59
+// @version      1.9.33.60
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  自动翻页 - 加载并拼接下一分页内容至当前页尾，无需规则自动适配任意网页
 // @description:zh-TW  自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，無需規則自動適配任意網頁
@@ -1798,49 +1798,49 @@
         }
 
         getLinkByPage(url, pageNum) {
-            if(!url)return;
-            if(this.curSiteRule.pageNum){
-                let result=this.curSiteRule.pageNum;
-                let strMatch=result.match(/\{.*?}/);
-                if(!strMatch)return null;
-                let urlReg=new RegExp("("+result.replace(strMatch[0], ")\\d+(")+")","i");
-                let code=strMatch[0].replace(/^{/,"").replace(/}$/,"").replace(/\$p/g,pageNum);
-                if(code==pageNum){
-                    result=url.replace(urlReg,"$1"+code+"$2");
-                }else{
-                    try{
-                        code=Function('"use strict";return ' + code)();
-                        result=url.replace(urlReg,"$1"+code+"$2");
-                    }catch(e){
+            if (!url) return;
+            if (this.curSiteRule.pageNum) {
+                let result = this.curSiteRule.pageNum;
+                let strMatch = result.match(/\{.*?}/);
+                if (!strMatch) return null;
+                let urlReg = new RegExp("(" + result.replace(strMatch[0], ")\\d+(") + ")", "i");
+                let code = strMatch[0].replace(/^{/, "").replace(/}$/, "").replace(/\$p/g, pageNum);
+                if (code == pageNum) {
+                    result = url.replace(urlReg, "$1" + code + "$2");
+                } else {
+                    try {
+                        code = Function('"use strict";return ' + code)();
+                        result = url.replace(urlReg, "$1" + code + "$2");
+                    } catch(e) {
                         debug(e);
                     }
                 }
-                if(result!=url){
+                if (result != url) {
                     return result;
                 }
             }
-            return url.replace(/([&\/\?](p=|page[=\/_-]?))\d+/i, "$1"+pageNum).replace(/([_-])\d+\./i, "$1"+pageNum+".");
+            return url.replace(/([&\/\?](p=|page[=\/_-]?))\d+/i, "$1" + pageNum).replace(/([_-])\d+\./i, "$1" + pageNum + ".");
         }
 
         getPageNumFromUrl(url) {
-            if(!url)return curPage;
-            if(this.curSiteRule.pageNum){
-                let result=this.curSiteRule.pageNum;
-                let strMatch=result.match(/\{.*?}/);
-                if(!strMatch)return null;
-                let urlReg=new RegExp(".*"+result.replace(strMatch[0], "(\\d+)")+".*","i");
-                let curShowNum=url.replace(urlReg,"$1");
-                if (curShowNum!=url){
-                    let code=strMatch[0].replace(/^{/,"").replace(/}$/,"");
-                    if(code=="$p"){
+            if (!url) return curPage;
+            if (this.curSiteRule.pageNum) {
+                let result = this.curSiteRule.pageNum;
+                let strMatch = result.match(/\{.*?}/);
+                if (!strMatch) return null;
+                let urlReg = new RegExp(".*" + result.replace(strMatch[0], "(\\d+)") + ".*", "i");
+                let curShowNum = url.replace(urlReg, "$1");
+                if (curShowNum != url) {
+                    let code = strMatch[0].replace(/^{/, "").replace(/}$/, "");
+                    if (code == "$p") {
                         return curShowNum;
-                    }else{
-                        try{
-                            let page1=Function('"use strict";return ' + code.replace("$p", "0"))();
-                            let page2=Function('"use strict";return ' + code.replace("$p", "1"))();
-                            let numGap=page2-page1;
+                    } else {
+                        try {
+                            let page1 = Function('"use strict";return ' + code.replace("$p", "0"))();
+                            let page2 = Function('"use strict";return ' + code.replace("$p", "1"))();
+                            let numGap = page2 - page1;
                             return (curShowNum - page1) / numGap;
-                        }catch(e){
+                        } catch(e) {
                             debug(e);
                         }
                     }
@@ -1848,8 +1848,8 @@
                     return curPage;
                 }
             }
-            let pageNum=url.replace(/.*[&\/\?](p=|page[=\/_-]?)(\d+).*/i, "$2");
-            return pageNum==url?curPage:pageNum;
+            let pageNum = url.replace(/.*[&\/\?](p=|page[=\/_-]?)(\d+).*/i, "$2");
+            return pageNum == url ? curPage : (pageNum.length > 4 ? curPage : pageNum);
         }
 
         async getNextLink(doc) {
@@ -2436,6 +2436,7 @@
                 this.curUrl = location.href;
                 return false;
             }
+            let curScroll = document.body.scrollTop || document.documentElement.scrollTop;
             if (callback) callback(eles);
             this.getInsert();
             var self = this, newEles = [];
@@ -2443,7 +2444,6 @@
             } else {
                 isLoading = true;
                 await this.pageInit(doc, eles);
-                let curScroll = document.body.scrollTop || document.documentElement.scrollTop;
                 [].forEach.call(eles, ele => {
                     let newEle = ele.cloneNode(true);
                     let oldCanvass = ele.querySelectorAll("canvas");
@@ -2905,7 +2905,7 @@
               top: 3px;
               left: 10px;
              }
-             #pagetual-picker .selector{
+             #pagetual-picker textarea{
               display: inline-block;
               width: 290px;
               height: 20px;
@@ -2921,8 +2921,10 @@
               border-radius: 4px;
               transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
               box-sizing: content-box;
+              margin-right: 5px;
+              resize: both;
              }
-             #pagetual-picker .selector:focus {
+             #pagetual-picker textarea:focus {
               color: #495057;
               background-color: #fff;
               border-color: #80bdff;
@@ -2964,7 +2966,7 @@
              #pagetual-picker .allpath {
               font-size: 18px;
               margin: 10px;
-              max-width: 350px;
+              max-width: 330px;
               word-break: break-all;
               cursor: context-menu;
               overflow: hidden;
@@ -3001,6 +3003,38 @@
              #pagetual-picker .command:hover {
               color: orangered;
              }
+             #pagetual-picker #showDetail {
+              float: initial;
+              margin-top: 10px;
+             }
+             #pagetual-picker #showDetail.showDetail {
+              float: right;
+             }
+             #pagetual-picker #showDetail>svg {
+              -moz-transition:transform 0.3s ease;
+              -webkit-transition:transform 0.3s ease;
+              transition:transform 0.3 ease;
+             }
+             #pagetual-picker #showDetail.showDetail>svg {
+              transform: rotate(180deg);
+             }
+             #pagetual-picker .tempRule {
+              margin-top: 10px;
+              height: 300px;
+             }
+             #pagetual-picker #saveDetail {
+              display: none;
+              position: absolute;
+              bottom: 10px;
+              right: 8px;
+             }
+             #pagetual-picker .showDetail~#saveDetail {
+              display: inline-block;
+             }
+             #pagetual-picker #saveDetail svg {
+              width: 35px;
+              height: 35px;
+             }
             `;
             this.styleEle = _GM_addStyle(this.cssText);
             this.mainSignDiv = this.createSignDiv();
@@ -3009,24 +3043,24 @@
             frame.id = "pagetual-picker";
             frame.innerHTML = createHTML(`
                 <button title="Pagetual" type="button" class="logoToHome">
-                  <svg width="30" height="30" class="upSvg pagetual" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a"></path></svg>
+                  <svg width="30" height="30" class="upSvg pagetual" viewBox="0 0 1024 1024"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a"></path></svg>
                 </button>
                 <div class="title">${i18n("picker")}</div>
                 <button title="${i18n("closePicker")}" type="button" class="closePicker">
-                  <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 128c212 0 384 172 384 384s-172 384-384 384-384-172-384-384 172-384 384-384m0-64C264.8 64 64 264.8 64 512s200.8 448 448 448 448-200.8 448-448S759.2 64 512 64z m238.4 254.4l-45.6-45.6L512 467.2 318.4 273.6l-45.6 45.6L467.2 512 273.6 705.6l45.6 45.6L512 557.6l193.6 193.6 45.6-45.6L557.6 512l192.8-193.6z" fill="#604b4a"></path></svg>
+                  <svg viewBox="0 0 1024 1024"><path d="M512 128c212 0 384 172 384 384s-172 384-384 384-384-172-384-384 172-384 384-384m0-64C264.8 64 64 264.8 64 512s200.8 448 448 448 448-200.8 448-448S759.2 64 512 64z m238.4 254.4l-45.6-45.6L512 467.2 318.4 273.6l-45.6 45.6L467.2 512 273.6 705.6l45.6 45.6L512 557.6l193.6 193.6 45.6-45.6L557.6 512l192.8-193.6z" fill="#604b4a"></path></svg>
                 </button>
                 <div class="allpath" title="${i18n("switchSelector")}"></div>
                 <div>
                   <textarea class="selector" spellcheck="false" name="selector" placeholder="${i18n("pickerPlaceholder")}"></textarea>
                   <button id="check" title="${i18n("pickerCheck")}" type="button">
-                    <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 128a384 384 0 1 0 0 768 384 384 0 0 0 0-768z m0-85.333333c259.2 0 469.333333 210.133333 469.333333 469.333333s-210.133333 469.333333-469.333333 469.333333S42.666667 771.2 42.666667 512 252.8 42.666667 512 42.666667zM696.149333 298.666667L768 349.866667 471.594667 725.333333 256 571.733333l53.888-68.266666 143.744 102.4z" fill="#604b4a"></path></svg>
+                    <svg viewBox="0 0 1024 1024"><path d="M512 128a384 384 0 1 0 0 768 384 384 0 0 0 0-768z m0-85.333333c259.2 0 469.333333 210.133333 469.333333 469.333333s-210.133333 469.333333-469.333333 469.333333S42.666667 771.2 42.666667 512 252.8 42.666667 512 42.666667zM696.149333 298.666667L768 349.866667 471.594667 725.333333 256 571.733333l53.888-68.266666 143.744 102.4z" fill="#604b4a"></path></svg>
                   </button>
                 </div>
                 <div class="bottom">
                   <input name="xpath" id="checkbox_id" type="checkbox">
                   <label for="checkbox_id">XPath</label>
                   <button id="edit" title="${i18n("gotoEdit")}" type="button">
-                    <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" style="color: orangered;fill: orangered;">
+                    <svg viewBox="0 0 1024 1024" style="color: orangered;fill: orangered;">
                       <path d="M775.84 392.768l-155.2-172.352L160.768 643.264l-38.368 187.936 190.56-12.832zM929.952 229.952l-131.2-150.944-0.288-0.32a16 16 0 0 0-22.592-0.96l-131.168 120.576 155.168 172.352 128.832-118.464a15.936 15.936 0 0 0 1.248-22.24zM96 896h832v64H96z">
                       </path>
                     </svg>
@@ -3048,6 +3082,15 @@
                 </div>
                 <button id="nextSwitch" class="command" title="${i18n("nextSwitch")}" type="button">${i18n("nextSwitch")}</button>
                 <button id="loadNow" class="command" title="${i18n("loadNow")}" type="button">${i18n("loadNow")}</button>
+                <div>
+                  <textarea style="display: none;" class="tempRule" spellcheck="false" placeholder="{rule object}"></textarea>
+                  <button id="showDetail" title="" type="button">
+                    <svg viewBox="0 0 1024 1024"><path d="M511.1 63.7c-247.4 0-448 200.6-448 448s200.6 448 448 448 448-200.6 448-448-200.6-448-448-448z m281.2 374.5L535.6 694.9c-12.5 12.5-32.8 12.5-45.3 0l-255.8-256c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l210.7 210.7c12.5 12.5 32.8 12.5 45.3 0l211.4-211.4c12.5-12.5 32.8-12.5 45.3 0 12.3 12.5 12.3 32.8-0.2 45.3z" fill="orangered"></path></svg>
+                  </button>
+                  <button id="saveDetail" title="" type="button">
+                    <svg viewBox="0 0 1024 1024"><path d="M704 128H192c-35.2 0-64 28.8-64 64v640c0 35.2 28.8 64 64 64h640c35.2 0 64-28.8 64-64V320L704 128zM256 256h320v128H256V256z m256 512c-70.4 0-128-57.6-128-128s57.6-128 128-128 128 57.6 128 128-57.6 128-128 128z" fill="orangered"></path></svg>
+                  </button>
+                </div>
             `);
             let forceStateIframe = frame.querySelector("#forceStateIframe");//forceState 1 禁用 2 强嵌 3 动态
             let forceStateDynamic = frame.querySelector("#forceStateDynamic");
@@ -3091,6 +3134,36 @@
             let editBtn = frame.querySelector("#edit");
             let nextSwitch = frame.querySelector("#nextSwitch");
             let loadNow = frame.querySelector("#loadNow");
+            let tempRule = frame.querySelector(".tempRule");
+            let showDetailBtn = frame.querySelector("#showDetail");
+            let saveDetailBtn = frame.querySelector("#saveDetail");
+            showDetailBtn.addEventListener("click", e => {
+                if (tempRule.style.display == "none") {
+                    tempRule.style.display = "";
+                    showDetailBtn.classList.add("showDetail");
+                } else {
+                    tempRule.style.display = "none";
+                    showDetailBtn.classList.remove("showDetail");
+                }
+            }, true);
+            saveDetailBtn.addEventListener("click", e => {
+                let editTemp = self.getTempRule();
+                if(!ruleParser.customRules) {
+                    ruleParser.customRules = [];
+                }
+                for (let i in ruleParser.customRules) {
+                    if (ruleParser.customRules[i].url == editTemp.url) {
+                        ruleParser.customRules.splice(i, 1);
+                        break;
+                    }
+                }
+                ruleParser.customRules.unshift(editTemp);
+                storage.setItem("customRules", ruleParser.customRules);
+                storage.setItem("hpRules", []);
+                if (window.confirm("Edit completed, reload page now?")) {
+                    setTimeout(() => {location.reload()}, 100);
+                }
+            }, true);
             nextSwitch.addEventListener("click", e => {
                 self.close();
                 NextSwitch.getInstance().start();
@@ -3152,22 +3225,7 @@
                 selectorInput.value = selector;
             });
             editBtn.addEventListener("click", e => {
-                let editTemp;
-                if (ruleParser.curSiteRule.url && !ruleParser.curSiteRule.singleUrl) {
-                    editTemp = ruleParser.curSiteRule;
-                } else {
-                    editTemp = {
-                        name: document.title,
-                        url: "^" + location.origin.replace(/^https?/, "https?").replace(/\./g,"\\.") + "/"
-                    };
-                }
-                if (selectorInput.value) {
-                    editTemp.pageElement = selectorInput.value;
-                }
-                delete editTemp.from;
-                delete editTemp.type;
-                delete editTemp.updatedAt;
-                rulesData.editTemp = editTemp;
+                rulesData.editTemp = self.getTempRule();
                 storage.setItem("rulesData", rulesData);
                 _GM_openInTab(configPage[0], {active: true});
             });
@@ -3177,6 +3235,7 @@
             this.selectorInput = selectorInput;
             this.nextSwitch = nextSwitch;
             this.loadNow = loadNow;
+            this.tempRule = tempRule;
             this.moveHandler = e => {
                 if (e.target === document) return;
                 self.adjustSignDiv(self.mainSignDiv, self.getTarget(e.target));
@@ -3188,9 +3247,29 @@
                 }
                 let target = self.getTarget(e.target);
                 let selector = self.getSelectorFromEle(target);
-                self.setSelectorDiv(selector);
                 selectorInput.value = selector;
+                self.setSelectorDiv(selector);
             };
+        }
+
+        getTempRule() {
+            let selectorInput = this.frame.querySelector(".selector");
+            let editTemp;
+            if (ruleParser.curSiteRule.url && !ruleParser.curSiteRule.singleUrl) {
+                editTemp = ruleParser.curSiteRule;
+            } else {
+                editTemp = {
+                    name: document.title,
+                    url: "^" + location.origin.replace(/^https?/, "https?").replace(/\./g,"\\.") + "/"
+                };
+            }
+            if (selectorInput.value) {
+                editTemp.pageElement = selectorInput.value;
+            }
+            delete editTemp.from;
+            delete editTemp.type;
+            delete editTemp.updatedAt;
+            return editTemp;
         }
 
         getTarget(ele) {
@@ -3238,6 +3317,7 @@
         }
 
         setSelectorDiv(selector) {
+            this.tempRule.value = JSON.stringify(this.getTempRule(), null, 4);
             let self = this;
             this.allpath.innerHTML = createHTML("");
             if (!selector) return;
@@ -3291,6 +3371,7 @@
                     self.adjustSignDiv(sign, ele);
                     self.signList.push(sign);
                 });
+                this.tempRule.value = JSON.stringify(this.getTempRule(), null, 4);
             }
         }
 
@@ -3322,9 +3403,9 @@
                 this.nextSwitch.style.display = "none";
             }
 
-            let pageElementSel=ruleParser.curSiteRule.pageElement || "";
-            if(Array && Array.isArray && Array.isArray(pageElementSel)){
-                pageElementSel=pageElementSel[nextIndex<pageElementSel.length?nextIndex:0];
+            let pageElementSel = ruleParser.curSiteRule.pageElement || "";
+            if (Array && Array.isArray && Array.isArray(pageElementSel)) {
+                pageElementSel = pageElementSel[nextIndex < pageElementSel.length ? nextIndex : 0];
             }
             this.setSelectorDiv(pageElementSel);
         }
@@ -4820,16 +4901,16 @@
         document.removeEventListener('keydown', manualModeKeyHandler);
         document.removeEventListener('pagetual.next', pagetualNextHandler, false);
         document.removeEventListener('keyup', keyupHandler);
-        let loadmoreBtn,loading=true,lastScroll=0,checkLoadMoreTimes=0;
+        let loadmoreBtn, loading = true, lastScroll = 0, checkLoadMoreTimes = 0;
         if (ruleParser.curSiteRule.loadMore) {
-            loading=false;
+            loading = false;
         } else {
-            checkLoadMore=setInterval(()=>{
-                loadmoreBtn=getLoadMore(document);
-                if(loadmoreBtn && isVisible(loadmoreBtn, _unsafeWindow)){
-                    loading=false;
+            checkLoadMore = setInterval(() => {
+                loadmoreBtn = getLoadMore(document);
+                if (loadmoreBtn && isVisible(loadmoreBtn, _unsafeWindow)) {
+                    loading = false;
                     clearInterval(checkLoadMore);
-                }else if(checkLoadMoreTimes++>30){
+                } else if (checkLoadMoreTimes++ > 30) {
                     clearInterval(checkLoadMore);
                 }
             },300);
