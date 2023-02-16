@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.54.20
+// @version      1.6.6.54.21
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -641,6 +641,10 @@
             sites: [ {
                 name: "SEO查询",
                 url: "http://seo.chinaz.com/?q=%h"
+            }, {
+                name: "打开链接",
+                url: "%t",
+                openInNewTab: true
             }, {
                 name: "网页快照查询",
                 url: "https://2tool.top/kuaizhao.php?k=%u",
@@ -7895,23 +7899,22 @@
                     let startX = e.clientX;
                     let startY = e.clientY;
                     let moved = false;
-                    let mouseMoveHandler = e => {
+                    let inpageMouseMoveHandler = e => {
                         if (Math.abs(startX - e.clientX) + Math.abs(startY - e.clientY) > 2) {
                             clearTimeout(showToolbarTimer);
-                            document.removeEventListener('mousemove', mouseMoveHandler, true);
+                            document.removeEventListener('mousemove', inpageMouseMoveHandler, true);
                             e.target.removeEventListener('scroll', scrollHandler);
                             moved = true;
                         }
                     };
                     let scrollHandler = e => {
                         clearTimeout(showToolbarTimer);
-                        document.removeEventListener('mousemove', mouseMoveHandler, true);
+                        document.removeEventListener('mousemove', inpageMouseMoveHandler, true);
                         e.target.removeEventListener('scroll', scrollHandler);
                     };
-                    let mouseUpHandler = e => {
+                    let inpageMouseUpHandler = e => {
                         draging = false;
                         if (searchBar.bar.contains(e.target) || shown) {
-                            e.stopPropagation();
                             e.preventDefault();
                         } else if (!inputSign) {
                             setTimeout(() => {
@@ -7925,16 +7928,16 @@
                             }, 0);
                         }
                         clearTimeout(showToolbarTimer);
-                        document.removeEventListener('mouseup', mouseUpHandler, true);
-                        document.removeEventListener('mousemove', mouseMoveHandler, true);
+                        document.removeEventListener('mouseup', inpageMouseUpHandler, true);
+                        document.removeEventListener('mousemove', inpageMouseMoveHandler, true);
                         e.target.removeEventListener('scroll', scrollHandler);
                     };
                     if (e.type === 'dblclick') {
                         if (getSelectStr() !== '') {
                             shown = true;
                             draging = false;
-                            document.removeEventListener('mouseup', mouseUpHandler, true);
-                            document.removeEventListener('mousemove', mouseMoveHandler, true);
+                            document.removeEventListener('mouseup', inpageMouseUpHandler, true);
+                            document.removeEventListener('mousemove', inpageMouseMoveHandler, true);
                             e.target.removeEventListener('scroll', scrollHandler);
                             clearTimeout(showToolbarTimer);
                             searchBar.showInPage(true, e);
@@ -7949,12 +7952,12 @@
                             if (!draging) {
                                 searchBar.showInPage(true, e);
                             }
-                            document.removeEventListener('mousemove', mouseMoveHandler, true);
+                            document.removeEventListener('mousemove', inpageMouseMoveHandler, true);
                             e.target.removeEventListener('scroll', scrollHandler);
                         }, 200);
                         shown = true;
                         clearTimeout(showToolbarTimer);
-                        document.addEventListener('mouseup', mouseUpHandler, true);
+                        document.addEventListener('mouseup', inpageMouseUpHandler, true);
                         document.addEventListener('click', clickHandler, true);
                         return false;
                     }
@@ -7969,8 +7972,8 @@
                         searchBar.showInPage();
                         shown = true;
                     }, parseInt(searchData.prefConfig.longPressTime));
-                    document.addEventListener('mousemove', mouseMoveHandler, true);
-                    document.addEventListener('mouseup', mouseUpHandler, true);
+                    document.addEventListener('mousemove', inpageMouseMoveHandler, true);
+                    document.addEventListener('mouseup', inpageMouseUpHandler, true);
                     e.target.addEventListener('scroll', scrollHandler);
                 };
                 document.addEventListener('mousedown', mouseDownHandler);
@@ -7981,7 +7984,6 @@
                 });
                 if (searchData.prefConfig.dragToSearch && !isInConfigPage()) {
                     document.body.addEventListener('dragstart', e => {
-                        if (disabled) return;
                         if ((searchData.prefConfig.dragAlt && !e.altKey) ||
                             (searchData.prefConfig.dragCtrl && !e.ctrlKey) ||
                             (searchData.prefConfig.dragShift && !e.shiftKey) ||
