@@ -8708,6 +8708,16 @@
         var dragRoundFrame, dragSiteCurSpans, dragSiteHistorySpans, dragEndHandler, dragenterHandler, dragCssEle, dragCssText;
         function showDragSearch(left, top) {
             if (!searchBar || !searchBar.bar) return;
+            let removeFrame = () => {
+                document.removeEventListener('dragend', dragEndHandler, true);
+                document.removeEventListener('dragenter', dragenterHandler, true);
+                if (dragRoundFrame.parentNode) {
+                    dragRoundFrame.parentNode.removeChild(dragRoundFrame);
+                    dragRoundFrame.style.opacity = "";
+                    dragRoundFrame.style.transform = '';
+                }
+                draging = false;
+            };
             if (!dragRoundFrame) {
                 dragCssText = `
                     #searchJumperWrapper * {
@@ -8917,16 +8927,6 @@
                     let sectorSpan = geneSector("sector out", sector2Start + sector2Gap * i, `translateX(12px) translateY(-15px) rotate(${sector2Start - sector2Gap * i}deg)`);
                     dragSiteHistorySpans.push(sectorSpan);
                 }
-                let removeFrame = () => {
-                    document.removeEventListener('dragend', dragEndHandler, true);
-                    document.removeEventListener('dragenter', dragenterHandler, true);
-                    if (dragRoundFrame.parentNode) {
-                        dragRoundFrame.parentNode.removeChild(dragRoundFrame);
-                        dragRoundFrame.style.opacity = "";
-                        dragRoundFrame.style.transform = '';
-                    }
-                    draging = false;
-                };
                 dragEndHandler = e => {
                     removeFrame();
                 }
@@ -9035,7 +9035,11 @@
                     dragRoundFrame.style.transform = 'scale(1)';
                 }, 10);
                 setTimeout(() => {
-                    document.addEventListener('dragenter', dragenterHandler, true);
+                    if (getComputedStyle(dragRoundFrame).zIndex != "2147483647") {
+                        removeFrame();
+                    } else {
+                        document.addEventListener('dragenter', dragenterHandler, true);
+                    }
                 }, 100);
             }, 0);
         }
