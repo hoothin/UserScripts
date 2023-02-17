@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86070",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[@class='pager pager-article']/preceding-sibling::node()[not(@class='storyImg')]|\r\n//div[@class='storyImg']/div[@class='block-lazy']",
+    "nextLink": "//link[@rel='next']",
+    "url": "^https://laurier\\.excite\\.co\\.jp/i/",
+    "exampleUrl": "https://laurier.excite.co.jp/i/E1674998117626"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "Griever3",
+  "name": "ローリエプレス 記事",
+  "created_at": "2023-02-16T20:10:43+09:00",
+  "updated_at": "2023-02-16T20:10:43+09:00"
+},
+{
   "data": {
     "insertBefore": "",
     "pageElement": "id('dle-content')",
