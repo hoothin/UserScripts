@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.33.61
+// @version      1.9.33.62
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，自动适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，自動適配任意網頁
@@ -681,7 +681,7 @@
     const configPage = ["https://github.com/hoothin/UserScripts/tree/master/Pagetual",
                       "https://hoothin.github.io/UserScripts/Pagetual/"];
     const guidePage = /^https?:\/\/.*pagetual.*rule\.html/i;
-    const ruleImportUrlReg = /greasyfork\.org\/.*scripts\/438684[^\/]*(\/discussions|\/?$|\/feedback)|github\.com\/hoothin\/UserScripts\/(tree\/master\/Pagetual|issues\/)/i;
+    const ruleImportUrlReg = /greasyfork\.org\/.*scripts\/438684[^\/]*(\/discussions|\/?$|\/feedback)|github\.com\/hoothin\/UserScripts\/(tree\/master\/Pagetual|issues)/i;
     const allOfBody = "body>*";
     const mainSel = "article,.article,[role=main],main,.main";
     const nextTextReg1 = new RegExp("\u005e\u7ffb\u003f\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u9875\u9801\u5f20\u5f35\u005d\u007c\u005e\u0028\u006e\u0065\u0078\u0074\u005b\u0020\u005f\u002d\u005d\u003f\u0070\u0061\u0067\u0065\u007c\u006f\u006c\u0064\u0065\u0072\u0029\u005c\u0073\u002a\u005b\u203a\u003e\u2192\u00bb\u005d\u003f\u0024\u007c\u6b21\u306e\u30da\u30fc\u30b8\u007c\u005e\u6b21\u3078\u003f\u0024\u007cВперед", "i");
@@ -2524,8 +2524,8 @@
             this.cssText = `
              #pagetual-sideController {
                  position: fixed;
-                 top: calc(50% - 75px);
-                 left: calc(99% - 60px);
+                 top: calc(50% - 83px);
+                 left: calc(99% - 40px);
                  width: 40px;
                  border-radius: 20px;
                  box-shadow: rgb(0 0 0) 0px 0px 10px;
@@ -2643,10 +2643,10 @@
                 if (moving) {
                     let windowHeight=window.innerHeight || document.documentElement.clientHeight;
                     let windowWidth=window.innerWidth || document.documentElement.clientWidth;
-                    initX = e.clientX / windowWidth * 100;
-                    initY = e.clientY / windowHeight * 100;
-                    this.frame.style.top = `calc(${initY}% - 80px)`;
-                    this.frame.style.left = `calc(${initX}% - 5px)`;
+                    initX = (e.clientX - 10 + 40) / windowWidth * 100;
+                    initY = (e.clientY - 83 + 83) / windowHeight * 100;
+                    this.frame.style.top = `calc(${initY}% - 83px)`;
+                    this.frame.style.left = `calc(${initX}% - 40px)`;
                 } else if (Math.abs(e.clientX - initX) + Math.abs(e.clientY - initY) > 20) {
                     moving = true;
                 }
@@ -2670,8 +2670,8 @@
 
             this.frame = frame;
             if (rulesData.sideControllerPos) {
-                this.frame.style.top = `calc(${rulesData.sideControllerPos.y}% - 80px)`;
-                this.frame.style.left = `calc(${rulesData.sideControllerPos.x}% - 5px)`;
+                this.frame.style.top = `calc(${rulesData.sideControllerPos.y}% - 83px)`;
+                this.frame.style.left = `calc(${rulesData.sideControllerPos.x}% - 40px)`;
             }
         }
 
@@ -2873,6 +2873,7 @@
              #pagetual-picker * {
               margin: 0;
               padding: 0;
+              font-family: Times New Roman;
              }
              #pagetual-picker>.title {
               margin: -5px 45px 10px 45px;
@@ -2882,7 +2883,6 @@
               border-bottom: 1px solid black;
               user-select: none;
               color: orangered;
-              font-family: Times New Roman;
              }
              #pagetual-picker button {
               background: none;
@@ -2923,6 +2923,7 @@
               box-sizing: content-box;
               margin-right: 5px;
               resize: both;
+              box-shadow: 0 1px 5px 1px #ddd;
              }
              #pagetual-picker textarea:focus {
               color: #495057;
@@ -2965,7 +2966,7 @@
              }
              #pagetual-picker .allpath {
               font-size: 18px;
-              margin: 10px;
+              margin: 10px auto;
               max-width: 330px;
               word-break: break-all;
               cursor: context-menu;
@@ -3083,7 +3084,7 @@
                 <button id="nextSwitch" class="command" title="${i18n("nextSwitch")}" type="button">${i18n("nextSwitch")}</button>
                 <button id="loadNow" class="command" title="${i18n("loadNow")}" type="button">${i18n("loadNow")}</button>
                 <div>
-                  <textarea style="display: none;" class="tempRule" spellcheck="false" placeholder="{rule object}"></textarea>
+                  <textarea style="display: none;" class="tempRule" spellcheck="false" placeholder="{Rule object}" title="Rule for current site"></textarea>
                   <button id="showDetail" title="" type="button">
                     <svg viewBox="0 0 1024 1024"><path d="M511.1 63.7c-247.4 0-448 200.6-448 448s200.6 448 448 448 448-200.6 448-448-200.6-448-448-448z m281.2 374.5L535.6 694.9c-12.5 12.5-32.8 12.5-45.3 0l-255.8-256c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l210.7 210.7c12.5 12.5 32.8 12.5 45.3 0l211.4-211.4c12.5-12.5 32.8-12.5 45.3 0 12.3 12.5 12.3 32.8-0.2 45.3z" fill="orangered"></path></svg>
                   </button>
@@ -3182,9 +3183,10 @@
                 _GM_openInTab(configPage[0], {active: true});
             }, true);
             let moving = false;
+            let initX = 0, initY = 0;
             let moveHanlder = e => {
-                frame.style.left = e.clientX - 200 + "px";
-                frame.style.top = e.clientY - 15 + "px";
+                frame.style.left = e.clientX - initX + "px";
+                frame.style.top = e.clientY - initY + "px";
                 e.stopPropagation();
                 e.preventDefault();
             };
@@ -3197,6 +3199,8 @@
             };
             title.addEventListener("mousedown", e => {
                 moving = true;
+                initX = e.clientX - parseInt(getComputedStyle(frame).left);
+                initY = e.clientY - parseInt(getComputedStyle(frame).top);
                 document.addEventListener("mousemove", moveHanlder, true);
                 title.addEventListener("mouseup", upHanlder, true);
             });
@@ -4030,7 +4034,7 @@
         let dbClick2StopInput=createCheckbox(i18n("dbClick2Stop"), rulesData.dbClick2Stop);
         let manualModeInput=createCheckbox(i18n("manualMode"), rulesData.manualMode);
         let clickModeInput=createCheckbox(i18n("clickMode"), rulesData.clickMode);
-        let pageBarMenuInput=createCheckbox(i18n("pageBarMenu"), rulesData.pageBarMenu);
+        let pageBarMenuInput=createCheckbox(i18n("pageBarMenu"), rulesData.pageBarMenu!=false);
         let arrowToScrollInput=createCheckbox(i18n("arrowToScroll"), rulesData.arrowToScroll);
         let sideControllerInput=createCheckbox(i18n("sideController"), rulesData.sideController);
 
@@ -4406,7 +4410,7 @@
                     rulesData.clickMode=false;
                 }
                 if(typeof(rulesData.pageBarMenu)=="undefined"){
-                    rulesData.pageBarMenu=false;
+                    rulesData.pageBarMenu=true;
                 }
                 if(typeof(rulesData.arrowToScroll)=="undefined"){
                     rulesData.arrowToScroll=false;
@@ -4582,6 +4586,7 @@
            -webkit-transition:opacity 0.3s ease-in-out 0s;
            transition:opacity 0.3s ease-in-out 0s;
            font-family: Arial,sans-serif !important;
+           text-align: center !important;
          }
          .pagetual_pageBar.stop {
            -webkit-filter: invert(100%);
@@ -4718,7 +4723,7 @@
            100% { opacity: 1 }
          }
         `;
-            pageBarStyle = `text-indent: initial;vertical-align: super;line-height:1;opacity:${rulesData.opacity};display:${rulesData.opacity==0?"none":"inline-flex"};padding:0;box-shadow: 0px 0px 10px 0px #000000aa;border-radius: 20px;background-color: rgb(240 240 240 / 80%);font-size: 30px;visibility: visible; position: initial; width: auto; height: 30px; float: none; clear: both; margin: 5px auto; text-align: center!important;justify-content: center;`;
+            pageBarStyle = `text-indent: initial;vertical-align: super;line-height:1;opacity:${rulesData.opacity};display:${rulesData.opacity==0?"none":"inline-flex"};padding:0;box-shadow: 0px 0px 10px 0px #000000aa;border-radius: 20px;background-color: rgb(240 240 240 / 80%);font-size: 30px;visibility: visible; position: initial; width: auto; height: 30px; float: none; clear: both; margin: 5px auto; text-align: center;justify-content: center;`;
         }
         if (!mainStyleEle || !mainStyleEle.parentNode) {
             mainStyleEle = _GM_addStyle(mainStyleStyle);
