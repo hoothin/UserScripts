@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.33.62
+// @version      1.9.33.63
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，自动适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，自動適配任意網頁
@@ -214,6 +214,7 @@
                 arrowToScroll:"左方向键滚动至上一页，右方向键滚动至下一页",
                 sideController:"在侧边显示翻页控制栏",
                 hideLoadingIcon:"隐藏加载动画",
+                hideBarArrow:"隐藏分隔条定位箭头",
                 duplicate:"检测到永页机重复安装，请删除其他脚本管理器中的永页机!",
                 forceStateIframe:"以 iframe 嵌入整页",
                 forceStateDynamic:"通过 iframe 加载动态内容后取出",
@@ -298,6 +299,7 @@
                 arrowToScroll:"左方向鍵滾動至上一頁，右方向鍵滾動至下一頁",
                 sideController:"在側邊顯示翻頁控制欄",
                 hideLoadingIcon:"隱藏加載動畫",
+                hideBarArrow:"隱藏分隔條定位箭頭",
                 duplicate:"檢測到永頁機重複安裝，請刪除其他腳本管理器中的永頁機!",
                 forceStateIframe:"以 iframe 嵌入整頁",
                 forceStateDynamic:"通過 iframe 加載動態內容後取出",
@@ -381,6 +383,7 @@
                 arrowToScroll:"左矢印キーで前へ、右矢印キーで次へ",
                 sideController:"サイドバーにページング コントロール バーを表示する",
                 hideLoadingIcon:"読み込み中のアニメーションを隠す",
+                hideBarArrow:"分割線の位置矢印を隠す",
                 duplicate: "Pagetual の重複インストールが検出されました。他のスクリプト マネージャで永続的なページ マシンを削除してください!",
                 forceStateIframe: "iframe にページ全体を埋め込む",
                 forceStateDynamic: "iframe 経由で動的コンテンツを読み込む",
@@ -465,6 +468,7 @@
                 arrowToScroll:"Нажмите клавишу со стрелкой влево для предыдущего и клавишу со стрелкой вправо для следующего",
                 sideController:"Отображение панели управления пейджингом на боковой панели",
                 hideLoadingIcon:"Скрыть анимацию загрузки",
+                hideBarArrow:"Скрыть стрелки позиционирования разделителя",
                 duplicate: "Обнаружена двойная установка Pagetual, пожалуйста, удалите постоянную страничную машину в других менеджерах скриптов!",
                 forceStateIframe: "Вставить полную страницу как iframe",
                 forceStateDynamic:"Загружать динамический контент через iframe",
@@ -548,6 +552,7 @@
                 arrowToScroll:"Press left arrow key to scroll prev and right arrow key to scroll next",
                 sideController:"Display the paging control bar in the sidebar",
                 hideLoadingIcon:"Hide loading animation",
+                hideBarArrow:"Hide arrow for page bar",
                 duplicate:"Duplicate Pagetual have been installed, check your script manager!",
                 forceStateIframe: "Embed full page as iframe",
                 forceStateDynamic: "Load dynamic content via iframe",
@@ -4026,6 +4031,7 @@
         let enableHistoryAfterInsertInput=createCheckbox(i18n("enableHistoryAfterInsert"), rulesData.enableHistoryAfterInsert===true);
         let openInNewTabInput=createCheckbox(i18n("openInNewTab"), rulesData.openInNewTab!=false);
         let hidePageBarInput=createCheckbox(i18n("hideBar"), rulesData.opacity==0);
+        let hidePageBarArrowInput=createCheckbox(i18n("hideBarArrow"), rulesData.hideBarArrow);
         let hideLoadingIconInput=createCheckbox(i18n("hideLoadingIcon"), rulesData.hideLoadingIcon!=false);
         let initRunInput=createCheckbox(i18n("initRun"), rulesData.initRun!=false);
         let autoLoadNumInput=createCheckbox(i18n("autoLoadNum"), rulesData.autoLoadNum, "h4", initRunInput, "number");
@@ -4143,6 +4149,7 @@
             rulesData.enableHistoryAfterInsert = enableHistoryAfterInsertInput.checked;
             rulesData.openInNewTab = openInNewTabInput.checked;
             rulesData.hideLoadingIcon = hideLoadingIconInput.checked;
+            rulesData.hideBarArrow = hidePageBarArrowInput.checked;
             rulesData.initRun = initRunInput.checked;
             rulesData.autoLoadNum = autoLoadNumInput.value !== "0" ? autoLoadNumInput.value : '';
             rulesData.rate = rateInput.value;
@@ -4417,6 +4424,9 @@
                 }
                 if(typeof(rulesData.hideLoadingIcon)=="undefined"){
                     rulesData.hideLoadingIcon=false;
+                }
+                if(typeof(rulesData.hideBarArrow)=="undefined"){
+                    rulesData.hideBarArrow=false;
                 }
                 if(rulesData.blacklist && rulesData.blacklist.length>0){
                     for(let b in rulesData.blacklist){
@@ -5308,8 +5318,10 @@
                 }
             }
         });
-        pageText.insertBefore(preBtn, pageText.firstChild);
-        pageText.insertBefore(nextBtn, pageText.firstChild);
+        if (!rulesData.hideBarArrow) {
+            pageText.insertBefore(preBtn, pageText.firstChild);
+            pageText.insertBefore(nextBtn, pageText.firstChild);
+        }
         pageBar.appendChild(downSpan);
         if (forceState == 2) {
             pageBar.style.width = "99%";
@@ -5319,8 +5331,7 @@
             pageBar.style.width=parentWidth-parseInt(parentStyle.paddingLeft)-parseInt(parentStyle.paddingRight)-10+"px";
             pageBar.style.margin='10px 5px';
             if(parentStyle.display=="grid" || parentStyle.display=="inline-grid"){
-                pageBar.style.gridColumnStart=1;
-                pageBar.style.gridColumnEnd=1+parseInt(example.parentNode.offsetWidth/example.offsetWidth);
+                pageBar.style.gridColumn="1/-1";
             }
             if(inTable){
                 example=(example.tagName=="TR" || example.tagName=="TBODY")?example:example.previousElementSibling;
