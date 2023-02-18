@@ -2044,17 +2044,16 @@
 {
   "resource_url": "http://wedata.net/items/85869",
   "data": {
-    "insertBefore": "",
-    "pageElement": "descendant::*[./article][1]/article",
-    "nextLink": "//link[@rel='next']",
-    "url": "^https://bgr\\.com/(this_string_is_required_to_exceed_74923)?(bgr_is_applied_to_74923_URL)?",
-    "exampleUrl": "https://bgr.com/deals/"
+    "pageElement": "//div[contains(concat(' ', @class, ' '), ' loop-item-container ')]/article",
+    "nextLink": "//span[@aria-current='page']/following-sibling::a[1]",
+    "url": "^https://bgr\\.com/",
+    "exampleUrl": "https://bgr.com/\r\nhttps://bgr.com/deals/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "jigen_ldid",
   "name": "BGR",
   "created_at": "2022-02-20T13:38:28+09:00",
-  "updated_at": "2022-02-20T13:38:28+09:00"
+  "updated_at": "2023-02-17T22:45:11+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85868",
