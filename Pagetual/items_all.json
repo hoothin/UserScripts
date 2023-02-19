@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86071",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[@class='mainwrapper']",
+    "nextLink": "//span[@class='current']/following-sibling::a[1]",
+    "url": "^https://www\\.listal\\.com/picture",
+    "exampleUrl": "https://www.listal.com/pictures\r\nhttps://www.listal.com/pictures/2/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "Griever3",
+  "name": "listal.com/picture",
+  "created_at": "2023-02-18T20:29:21+09:00",
+  "updated_at": "2023-02-18T20:29:21+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86070",
   "data": {
     "insertBefore": "",
@@ -2044,7 +2059,7 @@
 {
   "resource_url": "http://wedata.net/items/85869",
   "data": {
-    "pageElement": "//div[contains(concat(' ', @class, ' '), ' loop-item-container ')]/article",
+    "pageElement": "descendant::*[count(./article)>1]/article",
     "nextLink": "//span[@aria-current='page']/following-sibling::a[1]",
     "url": "^https://bgr\\.com/",
     "exampleUrl": "https://bgr.com/\r\nhttps://bgr.com/deals/"
@@ -2053,7 +2068,7 @@
   "created_by": "jigen_ldid",
   "name": "BGR",
   "created_at": "2022-02-20T13:38:28+09:00",
-  "updated_at": "2023-02-17T22:45:11+09:00"
+  "updated_at": "2023-02-18T13:49:27+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85868",
@@ -14159,17 +14174,17 @@
 {
   "resource_url": "http://wedata.net/items/81254",
   "data": {
-    "pageElement": "descendant::*[self::h1 or self::h2][1]/following-sibling::div[1]",
+    "pageElement": "descendant::div[@class='pages'][1]/ancestor::*[preceding-sibling::div][1]/preceding-sibling::*[(self::div and .//img) or self::br]",
     "nextLink": "//span[@class='current']/following-sibling::a[1]",
     "disableSeparator": "true",
-    "url": "^https?://(?:www\\.)?listal\\.com",
-    "exampleUrl": "https://www.listal.com/"
+    "url": "^https://www\\.listal\\.com/",
+    "exampleUrl": "https://www.listal.com/\r\nhttps://www.listal.com/dvds\r\nhttps://www.listal.com/dvds/top-rated\r\nhttps://www.listal.com/artdesign\r\nhttps://www.listal.com/actors/actress"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "mikailz",
   "name": "listal.com",
   "created_at": "2017-03-26T08:22:23+09:00",
-  "updated_at": "2020-07-09T19:30:10+09:00"
+  "updated_at": "2023-02-18T20:29:04+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/81252",
