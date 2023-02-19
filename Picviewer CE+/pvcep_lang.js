@@ -1,4 +1,4 @@
-var langData = [
+const langData = [
 {
     name: "English",
     match: ["en"],
@@ -1461,7 +1461,7 @@ langData.forEach(lang => {
     langList[lang.match[0]] = lang.name;
 });
 var i18nData = {};
-function setLang(la){
+function setLang(la) {
     i18nData = langData[0].lang;
     for (let i = 0; i < langData.length; i++) {
         let lang = langData[i];
