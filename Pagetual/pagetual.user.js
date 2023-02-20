@@ -1302,10 +1302,20 @@
                         debug(self.curSiteRule.pageElement, 'Page element');
                         return [ele.parentNode];
                     }
-                    if (ele.childNodes && ele.childNodes.length == 1) {
-                        ele = ele.childNodes[0];
-                        curHeight = parseInt(ele.offsetHeight || ele.scrollHeight);
-                        curWidth = parseInt(ele.offsetWidth || ele.scrollWidth);
+                    if (ele.children && ele.children.length == 1) {
+                        let hasText = false;
+                        for (let i in ele.childNodes) {
+                            let child = ele.childNodes[i];
+                            if (child.nodeType == 3 && child.nodeValue.trim() !== '') {
+                                hasText = true;
+                                break;
+                            }
+                        }
+                        if (!hasText) {
+                            ele = ele.children[0];
+                            curHeight = parseInt(ele.offsetHeight || ele.scrollHeight);
+                            curWidth = parseInt(ele.offsetWidth || ele.scrollWidth);
+                        }
                     }
                     if (ele.tagName == "PICTURE") {
                         self.curSiteRule.pageElement = geneSelector(ele.parentNode) + ">" + ele.tagName.toLowerCase();
@@ -1341,7 +1351,7 @@
                         debug(self.curSiteRule.pageElement, 'Page element');
                         return getAllElements(self.curSiteRule.pageElement, doc);
                     }
-                    let i, minHeight = curHeight * 0.55, curMaxEle = null, curMaxArea = 0, minWidth = curWidth * 0.25;
+                    let i, minHeight = curHeight * 0.55, curMaxEle = null, curMaxArea = 0, minWidth = curWidth * 0.45;
                     let isHori = true;
                     let offsetTop = ele.children[0].offsetTop;
                     for (i = 1; i < ele.children.length; i++) {
