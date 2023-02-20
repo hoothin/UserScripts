@@ -1341,7 +1341,7 @@
                         debug(self.curSiteRule.pageElement, 'Page element');
                         return getAllElements(self.curSiteRule.pageElement, doc);
                     }
-                    let i, minHeight = curHeight * 0.55, curMaxEle = null, curMaxArea = 0, minWidth = curWidth * 0.45;
+                    let i, minHeight = curHeight * 0.55, curMaxEle = null, curMaxArea = 0, minWidth = curWidth * 0.25;
                     let isHori = true;
                     let offsetTop = ele.children[0].offsetTop;
                     for (i = 1; i < ele.children.length; i++) {
