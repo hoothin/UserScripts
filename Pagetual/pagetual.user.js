@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.33.67
+// @version      1.9.33.68
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，自动适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，自動適配任意網頁
@@ -6071,9 +6071,9 @@
 
     var tryTimes = 0;
     async function nextPage() {
-        if (typeof ruleParser.curSiteRule.manualMode=='undefined' ? rulesData.manualMode : ruleParser.curSiteRule.manualMode) return;
+        if (typeof ruleParser.curSiteRule.manualMode == 'undefined' ? rulesData.manualMode : ruleParser.curSiteRule.manualMode) return;
         if (clickMode) return;
-        if (isPause || isLoading || forceState==1) return;
+        if (isPause || isLoading || forceState == 1) return;
         if (ruleParser.curSiteRule.delay) {
             try {
                 let checkDelay = ((typeof _unsafeWindow.pagetualDelay=='undefined') ? Function('"use strict";' + ruleParser.curSiteRule.delay) : _unsafeWindow.pagetualDelay)();
@@ -6120,7 +6120,7 @@
             if (parent.tagName == "TBODY") {
                 parent = parent.parentNode;
             }
-            if(parent.tagName == "TABLE"){
+            if (parent.tagName == "TABLE") {
                 parent.parentNode.appendChild(loadingDiv);
             }
             loadingDiv.style.cssText = loadingCSS;
@@ -6144,7 +6144,7 @@
                         }
                     };
                     try {
-                        ((typeof _unsafeWindow.pagetualPageElementByJs == 'undefined') ? Function("over",'"use strict";' + ruleParser.curSiteRule.pageElementByJs) : _unsafeWindow.pagetualPageElementByJs)(over);
+                        ((typeof _unsafeWindow.pagetualPageElementByJs == 'undefined') ? Function("over",'"use strict";' + ruleParser.curSiteRule.pageElementByJs) : _unsafeWindow.pagetualPageElementByJs)(over, curPage);
                     } catch(e) {
                         debug(e);
                     }
