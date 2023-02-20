@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.33.69
+// @version      1.9.33.70
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，自动适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，自動適配任意網頁
@@ -5662,9 +5662,9 @@
         document.body.appendChild(iframe);
     }
 
-    var emuIframe, lastActiveUrl;
+    var emuIframe, lastActiveUrl, orgContent;
     function emuPage(callback) {
-        let orgPage = null, orgContent = null, preContent = null, iframeDoc, times = 0, loadmoreBtn, pageEle, nextLink, loadmoreEnd = false, waitTimes = 80, changed = false;
+        let orgPage = null, preContent = null, iframeDoc, times = 0, loadmoreBtn, pageEle, nextLink, loadmoreEnd = false, waitTimes = 80, changed = false;
         function returnFalse(log) {
             debug(log);
             isPause = true;
@@ -5740,14 +5740,23 @@
                         }
                     }
                 }
-                orgPage = pageEle;
-                if (!orgPage || orgPage.length == 0) {
+                if (!pageEle || pageEle.length == 0) {
                     returnFalse("Stop as no page when emu");
                     return;
                 }
-                if (orgPage[0].tagName == "UL") orgPage = orgPage[0].children;
+                if (pageEle[0].tagName == "UL") pageEle = pageEle[0].children;
+                pageEle = pageEle[parseInt(pageEle.length / 2)];
+                if (ruleParser.curSiteRule.singleUrl && orgContent != pageEle.innerHTML) {
+                    orgContent = pageEle.innerHTML;
+                    if (waitTimes-- > 0) {
+                        setTimeout(() => {
+                            checkPage();
+                        }, waitTime);
+                        return;
+                    }
+                }
+                orgPage = pageEle;
                 if (nextLink) {
-                    orgPage = orgPage[parseInt(orgPage.length / 2)];
                     if (orgPage.tagName == "IMG") {
                         if (!ruleParser.curSiteRule.lazyImgSrc) ruleParser.curSiteRule.lazyImgSrc = "0";
                         if (orgPage.src) {
@@ -5824,6 +5833,7 @@
                     if (orgContent == preContent) {
                         returnFalse("Stop as same content");
                     } else {
+                        orgContent = preContent;
                         callback(iframeDoc, eles);
                     }
                 } else {
@@ -5874,7 +5884,7 @@
                     if (loaded) return;
                     loaded = true;
                     checkPage();
-                },500);
+                }, 500);
             });
             if (!lastActiveUrl) lastActiveUrl = location.href;
             emuIframe.src = lastActiveUrl;
