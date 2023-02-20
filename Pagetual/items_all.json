@@ -1,5 +1,19 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86072",
+  "data": {
+    "pageElement": "//div[@class='pure-g'][.//div[@class='ratingsbox']]",
+    "nextLink": "//span[@class='current']/following-sibling::a[1]",
+    "url": "^https://www\\.listal\\.com/.",
+    "exampleUrl": "https://www.listal.com/dvds/top-rated https://www.listal.com/actors/actress"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "kenzou_ogawa2",
+  "name": "listal.com grid",
+  "created_at": "2023-02-19T10:35:04+09:00",
+  "updated_at": "2023-02-19T10:51:59+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86071",
   "data": {
     "insertBefore": "",
@@ -2059,7 +2073,7 @@
 {
   "resource_url": "http://wedata.net/items/85869",
   "data": {
-    "pageElement": "descendant::*[count(./article)>1]/article",
+    "pageElement": "//*[count(./article)>1]/article",
     "nextLink": "//span[@aria-current='page']/following-sibling::a[1]",
     "url": "^https://bgr\\.com/",
     "exampleUrl": "https://bgr.com/\r\nhttps://bgr.com/deals/"
@@ -2068,7 +2082,7 @@
   "created_by": "jigen_ldid",
   "name": "BGR",
   "created_at": "2022-02-20T13:38:28+09:00",
-  "updated_at": "2023-02-18T13:49:27+09:00"
+  "updated_at": "2023-02-19T10:37:17+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85868",
@@ -14174,17 +14188,17 @@
 {
   "resource_url": "http://wedata.net/items/81254",
   "data": {
-    "pageElement": "descendant::div[@class='pages'][1]/ancestor::*[preceding-sibling::div][1]/preceding-sibling::*[(self::div and .//img) or self::br]",
+    "pageElement": "//div[contains(@style,'dotted')]",
     "nextLink": "//span[@class='current']/following-sibling::a[1]",
     "disableSeparator": "true",
     "url": "^https://www\\.listal\\.com/",
-    "exampleUrl": "https://www.listal.com/\r\nhttps://www.listal.com/dvds\r\nhttps://www.listal.com/dvds/top-rated\r\nhttps://www.listal.com/artdesign\r\nhttps://www.listal.com/actors/actress"
+    "exampleUrl": "https://www.listal.com/\r\nhttps://www.listal.com/dvds\r\nhttps://www.listal.com/artdesign"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "mikailz",
   "name": "listal.com",
   "created_at": "2017-03-26T08:22:23+09:00",
-  "updated_at": "2023-02-18T20:29:04+09:00"
+  "updated_at": "2023-02-19T10:30:24+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/81252",
@@ -30109,17 +30123,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/64539",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "created_at": "2012-11-07T19:25:43+09:00",
   "data": {
-    "pageElement": "//header|//article",
-    "exampleUrl": "http://blog.tatsuru.com/\r\nhttp://blog.tatsuru.com/2012/10/29_0949.php",
+    "pageElement": "//header|//header/following-sibling::*[1]",
+    "nextLink": "//a[@rel='prev']",
     "url": "^http://blog\\.tatsuru\\.com/",
-    "nextLink": "//a[@rel='prev']"
+    "exampleUrl": "http://blog.tatsuru.com/2023/02/\r\nhttp://blog.tatsuru.com/2012/10/29_0949.php"
   },
-  "updated_at": "2020-05-23T10:22:17+09:00",
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "taizooo",
   "name": "内田樹の研究室",
-  "created_by": "taizooo"
+  "created_at": "2012-11-07T19:25:43+09:00",
+  "updated_at": "2023-02-19T20:22:56+09:00"
 },
 {
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
