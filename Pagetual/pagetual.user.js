@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.33.68
+// @version      1.9.33.69
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，自动适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，自動適配任意網頁
@@ -851,7 +851,6 @@
             this.oldUrl = "";
             this.curUrl = location.href;
             this.curSiteRule = {};
-            this.initGetPage = true;
         }
 
         initSavedRules(callback) {
@@ -1102,7 +1101,7 @@
                         checkReady();
                         return true;
                     }else if(r.wait){
-                        let waitTime=500, checkEval, maxCheckTimes=20;
+                        let waitTime=500, checkEval, maxCheckTimes=50;
                         if(isNaN(r.wait)){
                             try{
                                 checkEval=(typeof _unsafeWindow.pagetualWait=='undefined') ? Function("doc",'"use strict";' + r.wait) : _unsafeWindow.pagetualWait;
@@ -1533,18 +1532,18 @@
             return pageElement;
         }
 
-        getPage(doc){
-            if(document.documentElement.className.indexOf('discourse')!=-1)return {};
-            let video=document.querySelector("video,iframe[id*=play]:not([name=pagetual-iframe]),[id*=play]>iframe:not([name=pagetual-iframe]),iframe[src*=player]:not([name=pagetual-iframe]),iframe[src*=m3u8]:not([name=pagetual-iframe])");
-            if(video){
+        getPage(doc) {
+            if (document.documentElement.className.indexOf('discourse') != -1) return {};
+            let video = document.querySelector("video,iframe[id*=play]:not([name=pagetual-iframe]),[id*=play]>iframe:not([name=pagetual-iframe]),iframe[src*=player]:not([name=pagetual-iframe]),iframe[src*=m3u8]:not([name=pagetual-iframe])");
+            if (video) {
                 let scrollWidth = video.scrollWidth || video.offsetWidth;
                 let scrollHeight = video.scrollHeight || video.offsetHeight;
-                if(scrollWidth>500 && scrollHeight>500){
+                if (scrollWidth > 500 && scrollHeight > 500) {
                     debug("Won't run when video found");
                     return {};
                 }
             }
-            let canSave=false;//發現頁碼選擇器在其他頁對不上，還是別保存了
+            let canSave = false;//發現頁碼選擇器在其他頁對不上，還是別保存了
             let url = this.curUrl.replace("index.php?","?");
             let _url = url.replace(/\.s?html?$/i,"");
             let pageNum = 1,preStr = "",afterStr = "";
@@ -1569,111 +1568,123 @@
                 preStr = "";
                 afterStr = "";
             }
-            let curPage=doc,i,cur,jsNext,body=doc.body||doc;
-            let next1,next2,next3,next4,nextJs1,nextJs2,nextJs3;
-            let next=body.querySelector(".page-next>a")||
-                body.querySelector("a.next_page")||
-                body.querySelector("#next_page")||
-                body.querySelector(".nextPage")||
-                body.querySelector("a[data-pagination=next]")||
-                body.querySelector("ul.pagination>li.active+li>a")||
-                body.querySelector(".pagination a.current+a")||
-                body.querySelector(".pagination a[rel=next]")||
-                body.querySelector(".pagination-nav__item--next>a")||
-                body.querySelector("a.pageright")||
-                body.querySelector(".page-numbers.current+a")||
-                body.querySelector("[title='Next page']")||
-                body.querySelector("[title='下一页']")||
-                body.querySelector("[title='下一頁']")||
-                body.querySelector("input[value='next']")||
-                body.querySelector("input[value='Next page']")||
-                body.querySelector("input[value='下一页']")||
-                body.querySelector("input[value='下一頁']")||
-                body.querySelector("a#pb_next")||
-                body.querySelector("a#rightFix")||
-                body.querySelector("a#btnPreGn")||
-                body.querySelector("a.page-next")||
-                body.querySelector("a.pages-next")||
-                body.querySelector("a.page.right")||
-                body.querySelector("a#next")||
-                body.querySelector(".next>a")||
-                body.querySelector(".next>button")||
-                body.querySelector("a[alt=next]")||
-                body.querySelector("button.next:not([disabled])")||
-                body.querySelector(".btn-next:not([disabled])")||
-                body.querySelector("[title=next]")||
-                body.querySelector("a#linkNext")||
+            let curPage = doc, i, cur, jsNext, body = doc.body || doc;
+            let next1, next2, next3, next4, nextJs1, nextJs2, nextJs3;
+            let next = body.querySelector(".page-next>a") ||
+                body.querySelector("a.next_page") ||
+                body.querySelector("#next_page") ||
+                body.querySelector(".nextPage") ||
+                body.querySelector("a[data-pagination=next]") ||
+                body.querySelector("ul.pagination>li.active+li>a") ||
+                body.querySelector(".pagination a.current+a") ||
+                body.querySelector(".pagination a[rel=next]") ||
+                body.querySelector(".pagination-nav__item--next>a") ||
+                body.querySelector("a.pageright") ||
+                body.querySelector(".page-numbers.current+a") ||
+                body.querySelector("[title='Next page']") ||
+                body.querySelector("[title='下一页']") ||
+                body.querySelector("[title='下一頁']") ||
+                body.querySelector("input[value='next']") ||
+                body.querySelector("input[value='Next page']") ||
+                body.querySelector("input[value='下一页']") ||
+                body.querySelector("input[value='下一頁']") ||
+                body.querySelector("a#pb_next") ||
+                body.querySelector("a#rightFix") ||
+                body.querySelector("a#btnPreGn") ||
+                body.querySelector("a.page-next") ||
+                body.querySelector("a.pages-next") ||
+                body.querySelector("a.page.right") ||
+                body.querySelector("a#next") ||
+                body.querySelector(".next>a") ||
+                body.querySelector(".next>button") ||
+                body.querySelector("a[alt=next]") ||
+                body.querySelector(".pg_area>em+a") ||
+                body.querySelector("button.next:not([disabled])") ||
+                body.querySelector(".btn_next:not([disabled])") ||
+                body.querySelector(".btn-next:not([disabled])") ||
+                body.querySelector("[title=next]") ||
+                body.querySelector("a#linkNext") ||
                 body.querySelector("a[class*=page__next]");
-            if(!next){
-                let nexts=body.querySelectorAll("a.next");
-                for(i=0;i<nexts.length;i++){
-                    if(nexts[i].style.display!=="none" &&
-                       nexts[i].parentNode.style.display!=="none" &&
-                       !/^\s*([上前首尾]|previous)/i.test(nexts[i].innerText.trim())){
-                        next=nexts[i];
+            if (!next) {
+                let nexts = body.querySelectorAll("a.next");
+                for (i = 0; i < nexts.length; i++) {
+                    if (nexts[i].style.display !== "none" &&
+                       nexts[i].parentNode.style.display !== "none" &&
+                       !/^\s*([上前首尾]|previous)/i.test(nexts[i].innerText.trim())) {
+                        next = nexts[i];
                         break;
                     }
                 }
             }
-            if(next && (!next.href || /^(javascript|#)/.test(next.href.replace(location.href,"")))){
-                jsNext=next;
-                next=null;
+            if (next && (!next.href || /^(javascript|#)/.test(next.href.replace(location.href, "")))) {
+                jsNext = next;
+                next = null;
             }
-            if(!next){
-                next=body.querySelectorAll("[aria-label='Next page']");
-                if(next && next.length==1){
-                    next=next[0];
-                    if(!next.href || /^(javascript|#)/.test(next.href.replace(location.href,""))){
-                        if(!jsNext)jsNext=next;
-                        next=null;
+            if (!next) {
+                next = body.querySelectorAll("[aria-label='Next page']");
+                if (next && next.length == 1) {
+                    next = next[0];
+                    if (!next.href || /^(javascript|#)/.test(next.href.replace(location.href, ""))) {
+                        if (!jsNext) jsNext = next;
+                        next = null;
                     }
-                }else{
-                    next=null;
+                } else {
+                    next = null;
                 }
             }
-            if(!next){
-                next=body.querySelectorAll("[aria-label='Next']");
-                if(next && next.length==1){
-                    next=next[0];
-                    if(!next.href || /^(javascript|#)/.test(next.href.replace(location.href,""))){
-                        if(!jsNext)jsNext=next;
-                        next=null;
+            if (!next) {
+                next = body.querySelectorAll("[aria-label='Next']");
+                if (next && next.length == 1) {
+                    next = next[0];
+                    if (!next.href || /^(javascript|#)/.test(next.href.replace(location.href, ""))) {
+                        if (!jsNext) jsNext = next;
+                        next = null;
                     }
-                }else{
-                    next=null;
+                } else {
+                    next = null;
                 }
             }
-            if(next && nextTextReg2.test(next.innerText.trim())){
-                next2=next;
-                next=null;
-            }
-            if(!next){
-                next=body.querySelector("a.curr+a");
-            }
-            if(!next){
-                next=body.querySelector("div.wp-pagenavi>span.current+a,div.page-nav>span.current+a,div.article-paging>span+a");
-            }
-            if(!next){
-                let pageDiv=body.querySelector("div.pages>ul");
-                if(pageDiv){
-                    cur=pageDiv.querySelector("li>b");
-                    if(cur)next=cur.parentNode.nextElementSibling;
-                    if(next)next=next.querySelector("a");
+            if (jsNext) {
+                if (jsNext.className) {
+                    if (/slick|slide|gallery/i.test(jsNext.className)) jsNext = null;
+                    else if (jsNext.classList && jsNext.classList.contains('disabled')) jsNext = null;
+                }
+                if (jsNext) {
+                    let ariaLabel = jsNext.getAttribute("aria-label");
+                    if (ariaLabel && /slick|slide|gallery/i.test(ariaLabel)) jsNext = null;
                 }
             }
-            if(!next){
-                next=body.querySelector(".number>ul>li.active+li>a");
+            if (next && nextTextReg2.test(next.innerText.trim())) {
+                next2 = next;
+                next = null;
             }
-            if(!next){
-                next=body.querySelector(".pages>a[href='javascript:;']+a");
-                if(next && (next.href=="javascript:;" || next.getAttribute("href")=="#"))next=null;
+            if (!next) {
+                next = body.querySelector("a.curr+a");
             }
-            if(!next){
-                let pageDiv=body.querySelector(".pagination");
-                if(pageDiv){
-                    cur=pageDiv.querySelector("[class*=current]");
-                    if(cur)next=cur.parentNode.nextElementSibling;
-                    if(next)next=next.querySelector("a");
+            if (!next) {
+                next = body.querySelector("div.wp-pagenavi>span.current+a,div.page-nav>span.current+a,div.article-paging>span+a");
+            }
+            if (!next) {
+                let pageDiv = body.querySelector("div.pages>ul");
+                if (pageDiv) {
+                    cur = pageDiv.querySelector("li>b");
+                    if (cur) next = cur.parentNode.nextElementSibling;
+                    if (next) next = next.querySelector("a");
+                }
+            }
+            if (!next) {
+                next = body.querySelector(".number>ul>li.active+li>a");
+            }
+            if (!next) {
+                next = body.querySelector(".pages>a[href='javascript:;']+a");
+                if (next && (next.href == "javascript:;" || next.getAttribute("href") == "#")) next = null;
+            }
+            if (!next) {
+                let pageDiv = body.querySelector(".pagination");
+                if (pageDiv) {
+                    cur = pageDiv.querySelector("[class*=current]");
+                    if (cur) next = cur.parentNode.nextElementSibling;
+                    if (next) next = next.querySelector("a");
                 }
             }
             if (!next) {
@@ -1691,13 +1702,15 @@
                         if (/slick|slide|gallery/i.test(aTag.className)) continue;
                         if (aTag.classList && aTag.classList.contains('disabled')) continue;
                     }
+                    let ariaLabel = aTag.getAttribute("aria-label");
+                    if (ariaLabel && /slick|slide|gallery/i.test(ariaLabel)) continue;
                     if (aTag.parentNode) {
                         if (aTag.parentNode.className && /slick|slide|gallery/i.test(aTag.parentNode.className)) continue;
                         if (aTag.parentNode.classList && aTag.parentNode.classList.contains('disabled')) continue;
                         if (aTag.parentNode.tagName == "BLOCKQUOTE") continue;
                     }
-                    let innerText = (aTag.innerText||aTag.value||aTag.title||'').trim().replace(/\n.*/, '').replace(/ /g, '');
-                    let isJs = !aTag.href || /^(javascript|#)/.test(aTag.href.replace(location.href,""));
+                    let innerText = (aTag.innerText || aTag.value || aTag.title || '').trim().replace(/\n.*/, '').replace(/ /g, '');
+                    let isJs = !aTag.href || /^(javascript|#)/.test(aTag.href.replace(location.href, ""));
                     if (innerText && innerText.length <= 25) {
                         if (!next1) {
                             if (nextTextReg1.test(innerText)) {
@@ -1773,8 +1786,7 @@
                 }
             }
             if (!next) next = next1 || next4 || next3 || next2;
-            if (!next && (this.initGetPage || doc != document)) {
-                this.initGetPage = false;
+            if (!next) {
                 next = jsNext || nextJs1 || nextJs3 || nextJs2;
                 if (next && next.parentNode.className.indexOf('tab') != -1) next = null;
             }
@@ -5587,7 +5599,7 @@
             }
         }, 500);
         let loadedHandler = e => {
-            if(e.data != 'pagetual-iframe:DOMLoaded' && e.type != 'load') return;
+            if (e.data != 'pagetual-iframe:DOMLoaded' && e.type != 'load') return;
             clearInterval(checkRemoveIntv);
             window.removeEventListener('message', loadedHandler, false);
             iframe.removeEventListener('load', loadedHandler, false);
@@ -5650,73 +5662,73 @@
         document.body.appendChild(iframe);
     }
 
-    var emuIframe,lastActiveUrl;
+    var emuIframe, lastActiveUrl;
     function emuPage(callback) {
-        let orgPage=null,orgContent=null,preContent=null,iframeDoc,times=0,loadmoreBtn,pageEle,nextLink,loadmoreEnd=false,waitTimes=10,changed=false;
-        function returnFalse(log){
+        let orgPage = null, orgContent = null, preContent = null, iframeDoc, times = 0, loadmoreBtn, pageEle, nextLink, loadmoreEnd = false, waitTimes = 80, changed = false;
+        function returnFalse(log) {
             debug(log);
-            isPause=true;
+            isPause = true;
             callback(false, false);
-            if(emuIframe && emuIframe.parentNode){
+            if (emuIframe && emuIframe.parentNode) {
                 emuIframe.parentNode.removeChild(emuIframe);
-                emuIframe=null;
+                emuIframe = null;
             }
         }
-        async function checkPage(){
-            if(isPause)return loadPageOver();
-            try{
-                iframeDoc=emuIframe.contentDocument || emuIframe.contentWindow.document;
-            }catch(e){
+        async function checkPage() {
+            if (isPause) return loadPageOver();
+            try {
+                iframeDoc = emuIframe.contentDocument || emuIframe.contentWindow.document;
+            } catch(e) {
                 returnFalse("Stop as cors");
                 return;
             }
 
-            let waitTime=200,checkEval;
-            if(ruleParser.curSiteRule.waitElement){
+            let waitTime = 200, checkEval;
+            if (ruleParser.curSiteRule.waitElement) {
                 checkEval = doc => {
                     return ruleParser.waitElement(doc);
                 };
-            }else if(ruleParser.curSiteRule.wait){
-                if(isNaN(ruleParser.curSiteRule.wait)){
-                    try{
-                        checkEval=(typeof _unsafeWindow.pagetualWait=='undefined') ? Function("doc", '"use strict";' + ruleParser.curSiteRule.wait) : _unsafeWindow.pagetualWait;
-                    }catch(e){
+            } else if(ruleParser.curSiteRule.wait) {
+                if (isNaN(ruleParser.curSiteRule.wait)) {
+                    try {
+                        checkEval = (typeof _unsafeWindow.pagetualWait == 'undefined') ? Function("doc", '"use strict";' + ruleParser.curSiteRule.wait) : _unsafeWindow.pagetualWait;
+                    } catch(e) {
                         debug(e);
                     }
-                }else{
-                    waitTime=ruleParser.curSiteRule.wait;
+                } else {
+                    waitTime = ruleParser.curSiteRule.wait;
                 }
             }
 
-            if(!orgPage){
-                if(!loadmoreEnd){
-                    loadmoreBtn=getLoadMore(iframeDoc);
-                    if(loadmoreBtn && isVisible(loadmoreBtn, iframeDoc.defaultView)){
+            if (!orgPage) {
+                if (!loadmoreEnd) {
+                    loadmoreBtn = getLoadMore(iframeDoc);
+                    if (loadmoreBtn && isVisible(loadmoreBtn, iframeDoc.defaultView)) {
                         emuClick(loadmoreBtn);
-                        let intv=setInterval(()=>{
-                            loadmoreBtn=getLoadMore(iframeDoc);
-                            if(!loadmoreBtn || !document.body.contains(loadmoreBtn) || !isVisible(loadmoreBtn, iframeDoc.defaultView)){
+                        let intv = setInterval(() => {
+                            loadmoreBtn = getLoadMore(iframeDoc);
+                            if (!loadmoreBtn || !document.body.contains(loadmoreBtn) || !isVisible(loadmoreBtn, iframeDoc.defaultView)) {
                                 clearInterval(intv);
-                                loadmoreEnd=true;
-                                setTimeout(()=>{
+                                loadmoreEnd = true;
+                                setTimeout(() => {
                                     checkPage();
-                                },500);
-                            }else if(isInViewPort(loadmoreBtn)){
+                                }, 500);
+                            } else if (isInViewPort(loadmoreBtn)) {
                                 emuClick(loadmoreBtn);
                             }
-                        },200);
+                        }, 200);
                         return;
-                    }else{
-                        loadmoreEnd=true;
+                    } else {
+                        loadmoreEnd = true;
                     }
                 }
-                if(checkEval && !checkEval(iframeDoc)){
-                    waitTimes=10;
-                    setTimeout(()=>{
+                if (checkEval && !checkEval(iframeDoc)) {
+                    waitTimes = 50;
+                    setTimeout(() => {
                         checkPage();
-                    },waitTime);
+                    }, waitTime);
                     return;
-                }else {
+                } else {
                     nextLink = await ruleParser.getNextLink(iframeDoc);
                     pageEle = ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView, true);
                     if (!pageEle || pageEle.length==0 || !nextLink) {
@@ -5728,65 +5740,65 @@
                         }
                     }
                 }
-                orgPage=pageEle;
-                if(!orgPage || orgPage.length==0){
+                orgPage = pageEle;
+                if (!orgPage || orgPage.length == 0) {
                     returnFalse("Stop as no page when emu");
                     return;
                 }
-                if(orgPage[0].tagName=="UL")orgPage=orgPage[0].children;
-                if(nextLink){
-                    orgPage=orgPage[parseInt(orgPage.length/2)];
-                    if(orgPage.tagName=="IMG"){
+                if (orgPage[0].tagName == "UL") orgPage = orgPage[0].children;
+                if (nextLink) {
+                    orgPage = orgPage[parseInt(orgPage.length / 2)];
+                    if (orgPage.tagName == "IMG") {
                         if (!ruleParser.curSiteRule.lazyImgSrc) ruleParser.curSiteRule.lazyImgSrc = "0";
                         if (orgPage.src) {
                             orgContent = orgPage.src;
                         } else {
-                            setTimeout(()=>{
+                            setTimeout(() => {
                                 checkPage();
-                            },500);
+                            }, 500);
                             return;
                         }
-                    }else{
-                        orgContent=orgPage.innerHTML;
+                    } else {
+                        orgContent = orgPage.innerHTML;
                     }
-                    preContent=orgContent;
-                    if(!isVisible(nextLink, iframeDoc.defaultView)){
+                    preContent = orgContent;
+                    if (!isVisible(nextLink, iframeDoc.defaultView)) {
                         returnFalse("Stop as next hide when emu");
-                    }else{
+                    } else {
                         emuClick(nextLink);
-                        setTimeout(()=>{
+                        setTimeout(() => {
                             checkPage();
-                        },500);
+                        }, 500);
                     }
-                }else{
+                } else {
                     returnFalse("Stop as no next when emu");
                 }
                 return;
             }
             nextLink = nextLink || await ruleParser.getNextLink(iframeDoc);
-            if(!nextLink){
-                if(waitTimes-->0){
-                    setTimeout(()=>{
+            if (!nextLink) {
+                if (waitTimes-- > 0) {
+                    setTimeout(() => {
                         checkPage();
-                    },waitTime);
+                    }, waitTime);
                     return;
                 }
             }
-            if(times++ > 200){
+            if (times++ > 200) {
                 returnFalse("Stop as timeout when emu");
                 return;
             }
-            let eles=ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView, true),checkItem;
-            if(eles && eles.length>0){
-                checkItem=eles;
-                if(eles[0].tagName=="UL")checkItem=eles[0].children;
-                checkItem=checkItem[parseInt(checkItem.length/2)];
+            let eles = ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView, true), checkItem;
+            if (eles && eles.length > 0) {
+                checkItem = eles;
+                if (eles[0].tagName == "UL") checkItem = eles[0].children;
+                checkItem = checkItem[parseInt(checkItem.length / 2)];
             }
-            if(!checkItem || (checkEval && !checkEval(iframeDoc))){
-                setTimeout(()=>{
+            if (!checkItem || (checkEval && !checkEval(iframeDoc))) {
+                setTimeout(() => {
                     checkPage();
-                },waitTime);
-            }else{
+                }, waitTime);
+            } else {
                 let checkInner;
                 if (checkItem.tagName == "IMG") {
                     if (checkItem.src) {
@@ -5797,39 +5809,42 @@
                         }, waitTime);
                         return;
                     }
-                }else{
-                    checkInner=checkItem.innerHTML;
+                } else {
+                    checkInner = checkItem.innerHTML;
                 }
-                if(orgPage!=checkItem || checkInner!=preContent){
-                    changed=true;
-                    orgPage=checkItem;
-                    preContent=checkInner;
-                    setTimeout(()=>{
+                if (orgPage != checkItem || checkInner != preContent) {
+                    changed = true;
+                    orgPage = checkItem;
+                    preContent = checkInner;
+                    setTimeout(() => {
                         checkPage();
-                    },waitTime);
-                }else if(changed){
+                    }, waitTime);
+                } else if (changed) {
                     times = 0;
                     if (orgContent == preContent) {
                         returnFalse("Stop as same content");
                     } else {
                         callback(iframeDoc, eles);
                     }
-                }else{
+                } else {
                     if (times % 10 === 1) {
                         emuClick(nextLink);
                     }
-                    setTimeout(()=>{
+                    setTimeout(() => {
                         checkPage();
-                    },waitTime);
+                    }, waitTime);
                 }
             }
         }
-        if(!emuIframe){
-            let loaded=false;
+        if (!emuIframe) {
+            let loaded = false;
             emuIframe = document.createElement('iframe');
             emuIframe.name = 'pagetual-iframe';
-            if(ruleParser.curSiteRule.sandbox!=false){
-                emuIframe.sandbox="allow-same-origin allow-scripts allow-popups allow-forms";
+            let notSetSandbox = typeof ruleParser.curSiteRule.sandbox == 'undefined';
+            if (notSetSandbox || ruleParser.curSiteRule.sandbox == true) {
+                emuIframe.sandbox = "allow-same-origin allow-scripts allow-popups allow-forms";
+            } else if (ruleParser.curSiteRule.sandbox) {
+                emuIframe.sandbox = ruleParser.curSiteRule.sandbox;
             }
             emuIframe.width = '100%';
             emuIframe.height = '100';
@@ -5840,7 +5855,12 @@
                     try {
                         iframeDoc = emuIframe.contentDocument || emuIframe.contentWindow.document;
                     } catch(e) {
-                        returnFalse("Stop as cors");
+                        if (e.message && e.message.indexOf("cross-origin") != -1 && notSetSandbox) {
+                            emuIframe.removeAttribute("sandbox");
+                            emuIframe.src = lastActiveUrl;
+                        } else {
+                            returnFalse("Stop as cors");
+                        }
                         return;
                     }
                     let code = ruleParser.curSiteRule.init;
@@ -5856,7 +5876,7 @@
                     checkPage();
                 },500);
             });
-            if (!lastActiveUrl) lastActiveUrl=location.href;
+            if (!lastActiveUrl) lastActiveUrl = location.href;
             emuIframe.src = lastActiveUrl;
             document.body.appendChild(emuIframe);
         }else{
