@@ -7798,8 +7798,7 @@
         "pageNum": "&start={10*($p-1)}",
         "pageBarTop": 55,
         "url": "^https?://[^./]+\\.google(?:\\.[^./]{2,3}){1,2}/(?:c(?:se|ustom)|search|webhp|m|#)",
-        "replaceElement": "[role='navigation']>[role='presentation']",
-        "css": ".pagetual_pageBar{margin-top:-25px!important}#res{margin-top:0px!important;line-height:-0!important}.g{margin-bottom:10px!important}#bres{position:fixed;width:650px;height:auto;border-radius:5px;z-index:999;right:40px;bottom:80px;box-shadow:0 0 5px rgba(0,0,0,0.6);}#bres>div:last-child{padding:20px;margin:0}"
+        "replaceElement": "[role='navigation']>[role='presentation']"
     },
     {
         "name": "Google cse",
