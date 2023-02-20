@@ -6144,7 +6144,7 @@
                         }
                     };
                     try {
-                        ((typeof _unsafeWindow.pagetualPageElementByJs == 'undefined') ? Function("over",'"use strict";' + ruleParser.curSiteRule.pageElementByJs) : _unsafeWindow.pagetualPageElementByJs)(over, curPage);
+                        ((typeof _unsafeWindow.pagetualPageElementByJs == 'undefined') ? Function("over", "pageNum",'"use strict";' + ruleParser.curSiteRule.pageElementByJs) : _unsafeWindow.pagetualPageElementByJs)(over, curPage);
                     } catch(e) {
                         debug(e);
                     }
