@@ -4,7 +4,7 @@
 // @description    围观Flash，增加 HTML5 视频速度与亮度调整
 // @version        1.2.1.8
 // @created        2013-12-27
-// @lastUpdated    2022-10-19
+// @lastUpdated    2023-2-20
 // @grant          none
 // @run-at         document-start
 // @namespace      http://userscripts.org/users/NLF
@@ -3504,6 +3504,46 @@
                     if (bright) this.brightSelect.value = bright[1];
                     let ratio = target.style.transform.match(/.*scale\((.*?)\).*/);
                     if (ratio) this.ratioSelect.value = ratio[1].replace(/ /g, '');
+                    if (!target.dataset.isInit) {
+                        target.dataset.isInit = 1;
+                        let lastPos = 0;
+                        let speedUpTimer;
+                        let mouseDown = false;
+                        let lastRate;
+                        target.addEventListener('mousedown', function (e) {
+                            clearTimeout(speedUpTimer);
+                            if (!target.ended) {
+                                mouseDown = true;
+                                lastRate = target.playbackRate;
+                                speedUpTimer = setTimeout(() => {
+                                    target.playbackRate = 3;
+                                    target.play();
+                                }, 500);
+                                lastPos = e.clientX;
+                            }
+                        });
+                        target.addEventListener('click', function (e) {
+                            clearTimeout(speedUpTimer);
+                            if (target.playbackRate != lastRate) {
+                                target.playbackRate = lastRate;
+                                e.preventDefault();
+                                e.stopPropagation();
+                            }
+                            mouseDown = false;
+                        }, true);
+                        target.addEventListener('mousemove', function (e) {
+                            clearTimeout(speedUpTimer);
+                            target.playbackRate = lastRate;
+                            if (!mouseDown) return;
+                            target.pause();
+                            target.currentTime += (e.clientX - lastPos) / 5;
+                            lastPos = e.clientX;
+                        });
+                        target.addEventListener('mouseleave', function (e) {
+                            clearTimeout(speedUpTimer);
+                            mouseDown = false;
+                        });
+                    }
                 } else {
                     this.rateSelect.parentNode.style.display = "none";
                     this.brightSelect.parentNode.style.display = "none";
