@@ -110,7 +110,7 @@ Stop to load next page when matching this sign
 --
 Selector or xpath of main content which need to insert, you can let it to be a array to contains multiple page elements.
 
-[pageElementByJs `(over)`](https://pagetual.hoothin.com/en/rules/pageElementByJs.html)
+[pageElementByJs `(over, pageNum)`](https://pagetual.hoothin.com/en/rules/pageElementByJs.html)
 --
 Use this to eval javaScript code and create the elements whatever you want to insert, a over(eles) is needed to callback with elements array for insert
 
