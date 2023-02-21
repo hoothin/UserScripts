@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.33.70
+// @version      1.9.33.71
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，自动适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，自動適配任意網頁
@@ -1033,7 +1033,7 @@
             if (doc === document) return true;
             if (selArr.length == 2 && selArr[1].trim()) {
                 if (!this.scrollToShow(selArr[1], doc)) {
-                    if (!document.documentElement.contains(loadingDiv) && this.insert.parentNode) {
+                    if (!loadingDiv.offsetParent && this.insert.parentNode) {
                         this.insertElement(loadingDiv);
                     }
                     return false;
@@ -2443,7 +2443,6 @@
 
         insertElement(ele) {
             this.addedElePool.push(ele);
-            this.getInsert();
             if (this.curSiteRule.insertPos == 2) {
                 this.insert.appendChild(ele);
             } else {
@@ -2522,8 +2521,8 @@
             if (enableHistory) {
                 this.historyUrl = enableHistoryAfterInsert ? this.curUrl : this.oldUrl;
                 if(this.historyUrl != location.href) {
-                    let isJs=/^(javascript|#)/.test(this.historyUrl.replace(location.href, ""));
-                    if(!isJs){
+                    let isJs = /^(javascript|#)/.test(this.historyUrl.replace(location.href, ""));
+                    if (!isJs) {
                         let historyTitle = enableHistoryAfterInsert ? doc.title : oldTitle;
                         _unsafeWindow.history.replaceState(undefined, historyTitle, this.historyUrl);
                         document.title = historyTitle;
@@ -5227,50 +5226,50 @@
         if (example.className == "pagetual_pageBar") {
             example = example.previousElementSibling;
         }
-        if(!example || !example.parentNode)example=insert;
+        if (!example || !example.parentNode) example = insert;
         let exampleStyle = _unsafeWindow.getComputedStyle(example);
         let inTable, inLi;
         if (forceState == 2) {
             inTable = inLi = false;
         } else {
-            inTable=example.parentNode.tagName=="TABLE" ||
-            example.parentNode.tagName=="TBODY" ||
-            example.tagName=="TR" ||
-            example.tagName=="TBODY" ||
-            exampleStyle.display=="table-row" ||
-            (example.previousElementSibling && example.previousElementSibling.tagName=="TR") ||
-            (example.previousElementSibling && example.previousElementSibling.tagName=="TBODY");
-            inLi=example.tagName=="LI" || (example.previousElementSibling && example.previousElementSibling.tagName=="LI");
+            inTable = example.parentNode.tagName == "TABLE" ||
+            example.parentNode.tagName == "TBODY" ||
+            example.tagName == "TR" ||
+            example.tagName == "TBODY" ||
+            exampleStyle.display == "table-row" ||
+            (example.previousElementSibling && example.previousElementSibling.tagName == "TR") ||
+            (example.previousElementSibling && example.previousElementSibling.tagName == "TBODY");
+            inLi = example.tagName == "LI" || (example.previousElementSibling && example.previousElementSibling.tagName == "LI");
         }
-        let pageBar=document.createElement(inTable?"tr":(inLi?"li":"div"));
-        let upSpan=document.createElement("span");
-        let downSpan=document.createElement("span");
-        let pageText=document.createElement("a");
+        let pageBar = document.createElement(inTable ? "tr" : (inLi ? "li" : "div"));
+        let upSpan = document.createElement("span");
+        let downSpan = document.createElement("span");
+        let pageText = document.createElement("a");
         let pageNum;
-        pageBar.className=isHideBar?"pagetual_pageBar hide":"pagetual_pageBar";
-        pageBar.id="pagetual_pageBar"+curPage;
+        pageBar.className = isHideBar ? "pagetual_pageBar hide" : "pagetual_pageBar";
+        pageBar.id = "pagetual_pageBar" + curPage;
         pageBar.setAttribute("translate", "no");
-        if(isPause){
+        if (isPause) {
             pageBar.classList.add("stop");
         }
-        pageBar.style.cssText=pageBarStyle;
-        pageBar.title=i18n(isPause?"enable":"disable");
-        upSpan.innerHTML=upSvg;
-        upSpan.children[0].style.cssText=upSvgCSS;
-        upSpan.title=i18n("toTop");
-        downSpan.innerHTML=downSvg;
-        downSpan.children[0].style.cssText=downSvgCSS;
-        downSpan.title=i18n("toBottom");
-        upSpan.style.cssText=initStyle;
-        downSpan.style.cssText=initStyle;
-        pageText.href=url;
-        pageText.style.cssText=pageTextStyle;
-        pageText.title=i18n("current");
-        if(rulesData.openInNewTab)pageText.target="_blank";
+        pageBar.style.cssText = pageBarStyle;
+        pageBar.title = i18n(isPause ? "enable" : "disable");
+        upSpan.innerHTML = upSvg;
+        upSpan.children[0].style.cssText = upSvgCSS;
+        upSpan.title = i18n("toTop");
+        downSpan.innerHTML = downSvg;
+        downSpan.children[0].style.cssText = downSvgCSS;
+        downSpan.title = i18n("toBottom");
+        upSpan.style.cssText = initStyle;
+        downSpan.style.cssText = initStyle;
+        pageText.href = url;
+        pageText.style.cssText = pageTextStyle;
+        pageText.title = i18n("current");
+        if (rulesData.openInNewTab) pageText.target = "_blank";
         pageBar.appendChild(upSpan);
         pageBar.appendChild(pageText);
-        if(rulesData.pageBarMenu){
-            pageText.addEventListener("click", e=>{
+        if (rulesData.pageBarMenu) {
+            pageText.addEventListener("click", e => {
                 e.stopPropagation();
                 if (e.ctrlKey || e.altKey || e.shiftKey || e.metaKey) return;
                 e.preventDefault();
@@ -5280,7 +5279,7 @@
         let touched = false;
         let touchBodyHandler = e => {
             touched = false;
-            document.body.removeEventListener('touchstart', touchBodyHandler);
+            document.body.removeEventListener('touchstart', touchBodyHandler, { passive: false, capture: false });
         };
         pageText.addEventListener("touchstart", e => {
             if (touched) return;
@@ -5289,52 +5288,52 @@
             setTimeout(() => {
                 pageText.style.pointerEvents = 'all';
             }, 250);
-            document.body.addEventListener("touchstart", touchBodyHandler);
-        });
-        if(ruleParser.nextTitle){
-            pageText.innerHTML=ruleParser.nextTitle+" ";
-            pageText.title=ruleParser.nextTitle;
+            document.body.addEventListener("touchstart", touchBodyHandler, { passive: false, capture: false });
+        }, { passive: false, capture: false });
+        if (ruleParser.nextTitle) {
+            pageText.innerHTML = ruleParser.nextTitle + " ";
+            pageText.title = ruleParser.nextTitle;
         }
-        if(ruleParser.curSiteRule.pageNum || pageNumReg.test(url)){
-            pageText.innerHTML+="Page ";
-            pageNum=document.createElement("span");
-            pageNum.innerHTML=ruleParser.getPageNumFromUrl(url);
-            pageNum.className="pagetual_pageNum";
-            pageNum.title=i18n("inputPageNum");
-            pageNum.style.cssText=pageTextStyle;
-            pageNum.style.cursor="pointer";
-            pageNum.style.color="";
-            pageNum.style.marginLeft="5px";
-            pageNum.addEventListener("click", e=>{
-                let pageInput=prompt(i18n("inputPageNum"), "1");
-                if(pageInput){
-                    let pageLink=ruleParser.getLinkByPage(url, pageInput);
-                    if(pageLink){
-                        _GM_openInTab(pageLink,{active:true});
+        if (ruleParser.curSiteRule.pageNum || pageNumReg.test(url)) {
+            pageText.innerHTML += "Page ";
+            pageNum = document.createElement("span");
+            pageNum.innerHTML = ruleParser.getPageNumFromUrl(url);
+            pageNum.className = "pagetual_pageNum";
+            pageNum.title = i18n("inputPageNum");
+            pageNum.style.cssText = pageTextStyle;
+            pageNum.style.cursor = "pointer";
+            pageNum.style.color = "";
+            pageNum.style.marginLeft = "5px";
+            pageNum.addEventListener("click", e => {
+                let pageInput = prompt(i18n("inputPageNum"), "1");
+                if (pageInput) {
+                    let pageLink = ruleParser.getLinkByPage(url, pageInput);
+                    if (pageLink) {
+                        _GM_openInTab(pageLink, {active:true});
                     }
                 }
                 e.preventDefault();
                 e.stopPropagation();
             });
             pageBar.appendChild(pageNum);
-        }else{
-            pageText.innerHTML+="Page "+curPage;
+        } else {
+            pageText.innerHTML += "Page " + curPage;
         }
-        let preBtn=document.createElement("span");
-        preBtn.innerHTML="∧";
-        preBtn.title="Prev page";
-        preBtn.className="prevScreen";
-        preBtn.style.cssText="display: none;text-align: center;right: unset; float: left; margin-top: -30px; width: 40px; background: rgba(240, 240, 240, 0.8); position: absolute; border-radius: 20px 20px 0 0; box-shadow: rgb(0 0 0 / 50%) 0px -5px 5px;z-index:9999999";
-        let nextBtn=document.createElement("span");
-        nextBtn.innerHTML="∨";
-        nextBtn.title="Next page";
-        nextBtn.className="nextScreen";
-        nextBtn.style.cssText="display: none;text-align: center;right: unset; float: left; margin-top: 30px; width: 40px; background: rgba(240, 240, 240, 0.8); position: absolute; border-radius: 0 0 20px 20px; box-shadow: rgb(0 0 0 / 50%) 0px 5px 5px;z-index:9999999";
-        let localPage=curPage;
-        preBtn.addEventListener("click", e=>{
+        let preBtn = document.createElement("span");
+        preBtn.innerHTML = "∧";
+        preBtn.title = "Prev page";
+        preBtn.className = "prevScreen";
+        preBtn.style.cssText = "display: none;text-align: center;right: unset; float: left; width: 40px; background: rgba(240, 240, 240, 0.8); position: absolute; z-index: 9999999; box-shadow: rgb(0 0 0 / 50%) 0px -5px 5px; border-radius: 20px 20px 0 0; margin-top: -30px; ";
+        let nextBtn = document.createElement("span");
+        nextBtn.innerHTML = "∨";
+        nextBtn.title = "Next page";
+        nextBtn.className = "nextScreen";
+        nextBtn.style.cssText = "display: none;text-align: center;right: unset; float: left; width: 40px; background: rgba(240, 240, 240, 0.8); position: absolute; z-index: 9999999; box-shadow: rgb(0 0 0 / 50%) 0px 5px 5px; border-radius: 0 0 20px 20px; margin-top: 30px; ";
+        let localPage = curPage;
+        preBtn.addEventListener("click", e => {
             e.stopPropagation();
             e.preventDefault();
-            let prePageBar = document.querySelector("#pagetual_pageBar"+(localPage-1));
+            let prePageBar = document.querySelector("#pagetual_pageBar" + (localPage - 1));
             if (prePageBar) {
                 scrollToPageBar(prePageBar);
             } else {
@@ -5342,17 +5341,17 @@
                 window.scrollTo({ top: scrollTop - (window.innerHeight || document.documentElement.clientHeight), behavior: 'smooth'});
             }
         });
-        nextBtn.addEventListener("click", e=>{
+        nextBtn.addEventListener("click", e => {
             e.stopPropagation();
             e.preventDefault();
-            let nextPageBar=document.querySelector("#pagetual_pageBar"+(localPage+1));
+            let nextPageBar = document.querySelector("#pagetual_pageBar" + (localPage + 1));
             if (nextPageBar) {
                 scrollToPageBar(nextPageBar);
             } else {
                 let nextEle = pageBar.parentNode.children[pageBar.parentNode.children.length - 1];
                 if (nextEle) scrollToPageBar(nextEle);
                 else {
-                    scrollH=Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+                    scrollH = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
                     window.scrollTo({ top: scrollH || 9999999, behavior: 'smooth'});
                 }
             }
@@ -5365,92 +5364,92 @@
         if (forceState == 2) {
             pageBar.style.width = "99%";
         } else {
-            let parentStyle=_unsafeWindow.getComputedStyle(example.parentNode);
-            let parentWidth=example.parentNode.offsetWidth||parseInt(parentStyle.width);
-            pageBar.style.width=parentWidth-parseInt(parentStyle.paddingLeft)-parseInt(parentStyle.paddingRight)-10+"px";
-            pageBar.style.margin='10px 5px';
-            if(parentStyle.display=="grid" || parentStyle.display=="inline-grid"){
-                pageBar.style.gridColumn="1/-1";
+            let parentStyle = _unsafeWindow.getComputedStyle(example.parentNode);
+            let parentWidth = example.parentNode.offsetWidth || parseInt(parentStyle.width);
+            pageBar.style.width = parentWidth - parseInt(parentStyle.paddingLeft) - parseInt(parentStyle.paddingRight) - 10 + "px";
+            pageBar.style.margin = '10px 5px';
+            if (parentStyle.display == "grid" || parentStyle.display == "inline-grid") {
+                pageBar.style.gridColumn = "1/-1";
             }
-            if(inTable){
-                example=(example.tagName=="TR" || example.tagName=="TBODY")?example:example.previousElementSibling;
-                if(example.tagName=="TBODY")example=example.querySelector("tr");
-                let preTr=example;
-                while(preTr && preTr.children.length==0)preTr=preTr.previousElementSibling;
-                if(preTr)example=preTr;
-                let tdNum=0;
-                if (exampleStyle.display=="table-row") {
-                    [].forEach.call(example.children, el=>{
-                        tdNum+=el.colSpan||1;
+            if (inTable) {
+                example = (example.tagName == "TR" || example.tagName == "TBODY") ? example : example.previousElementSibling;
+                if (example.tagName == "TBODY") example = example.querySelector("tr");
+                let preTr = example;
+                while (preTr && preTr.children.length == 0) preTr = preTr.previousElementSibling;
+                if (preTr) example = preTr;
+                let tdNum = 0;
+                if (exampleStyle.display == "table-row") {
+                    [].forEach.call(example.children, el => {
+                        tdNum += el.colSpan || 1;
                     });
                 } else {
-                    [].forEach.call(example.children, el=>{
-                        if(el.tagName=="TD" || el.tagName=="TH"){
-                            tdNum+=el.colSpan||1;
+                    [].forEach.call(example.children, el => {
+                        if (el.tagName == "TD" || el.tagName == "TH") {
+                            tdNum += el.colSpan || 1;
                         }
                     });
                 }
-                pageBar.style.display="table-row";
-                pageBar.style.backgroundColor="unset";
-                pageBar.style.lineHeight="20px";
-                pageBar.style.boxShadow="";
-                pageBar.style.height="35px";
-                let td=document.createElement("td");
-                td.colSpan=tdNum||1;
-                let inTd=document.createElement("div");
-                inTd.style.backgroundColor="rgb(240 240 240 / 80%)";
-                inTd.style.borderRadius="20px";
-                inTd.style.padding="0 0";
-                inTd.style.margin="0";
-                inTd.style.lineHeight="20px";
-                inTd.style.textAlign="center";
-                inTd.style.boxShadow="rgb(0 0 0 / 67%) 0px 0px 10px 0px";
+                pageBar.style.display = "table-row";
+                pageBar.style.backgroundColor = "unset";
+                pageBar.style.lineHeight = "20px";
+                pageBar.style.boxShadow = "";
+                //pageBar.style.height="35px";
+                let td = document.createElement("td");
+                td.colSpan = tdNum || 1;
+                let inTd = document.createElement("div");
+                inTd.style.backgroundColor = "rgb(240 240 240 / 80%)";
+                inTd.style.borderRadius = "20px";
+                inTd.style.padding = "0 0";
+                inTd.style.margin = "0";
+                inTd.style.lineHeight = "20px";
+                inTd.style.textAlign = "center";
+                inTd.style.boxShadow = "rgb(0 0 0 / 67%) 0px 0px 10px 0px";
                 inTd.appendChild(upSpan);
                 inTd.appendChild(pageText);
-                if(pageNum)inTd.appendChild(pageNum);
+                if (pageNum) inTd.appendChild(pageNum);
                 inTd.appendChild(downSpan);
                 td.appendChild(inTd);
                 pageBar.appendChild(td);
-            }else if(inLi){
-                example=example.tagName=="LI"?example:example.previousElementSibling;
-                pageBar.style.display=getComputedStyle(example).display;
-                pageBar.style.backgroundColor="unset";
-                pageBar.style.lineHeight="20px";
-                pageBar.style.boxShadow="";
-                pageBar.style.height="35px";
-                let td=document.createElement("td");
-                td.colSpan=example.children.length;
-                td.style.width='100%';
-                let inTd=document.createElement("div");
-                inTd.style.backgroundColor="rgb(240 240 240 / 80%)";
-                inTd.style.borderRadius="20px";
-                inTd.style.margin="0"
-                inTd.style.padding="0 0";
-                inTd.style.textAlign="center";
-                inTd.style.minWidth="150px";
+            } else if(inLi) {
+                example = example.tagName == "LI" ? example : example.previousElementSibling;
+                pageBar.style.display = getComputedStyle(example).display;
+                pageBar.style.backgroundColor = "unset";
+                pageBar.style.lineHeight = "20px";
+                pageBar.style.boxShadow = "";
+                //pageBar.style.height="35px";
+                let td = document.createElement("td");
+                td.colSpan = example.children.length;
+                td.style.width = '100%';
+                let inTd = document.createElement("div");
+                inTd.style.backgroundColor = "rgb(240 240 240 / 80%)";
+                inTd.style.borderRadius = "20px";
+                inTd.style.margin = "0"
+                inTd.style.padding = "0 0";
+                inTd.style.textAlign = "center";
+                inTd.style.minWidth = "150px";
                 inTd.appendChild(upSpan);
                 inTd.appendChild(pageText);
-                inTd.style.width='calc(100% - 20px)';
-                inTd.style.boxShadow="rgb(0 0 0 / 67%) 0px 0px 10px 0px";
-                if(pageNum)inTd.appendChild(pageNum);
+                inTd.style.width = 'calc(100% - 20px)';
+                inTd.style.boxShadow = "rgb(0 0 0 / 67%) 0px 0px 10px 0px";
+                if (pageNum) inTd.appendChild(pageNum);
                 inTd.appendChild(downSpan);
                 if (pageBar.style.display === 'table-row') {
                     td.appendChild(inTd);
                     pageBar.appendChild(td);
                 } else {
-                    inTd.style.width='100%';
+                    inTd.style.width = '100%';
                     pageBar.appendChild(inTd);
                 }
             }
         }
 
-        upSpan.addEventListener("click", e=>{
-            document.body.scrollTop=0;
-            document.documentElement.scrollTop=0;
+        upSpan.addEventListener("click", e => {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
             e.preventDefault();
             e.stopPropagation();
         });
-        downSpan.addEventListener("click", e=>{
+        downSpan.addEventListener("click", e => {
             changeStop(true);
             pageBar.title = i18n(isPause ? "enable" : "disable");
             scrollH=Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
@@ -5459,15 +5458,15 @@
             e.preventDefault();
             e.stopPropagation();
         });
-        pageBar.addEventListener("click", e=>{
+        pageBar.addEventListener("click", e => {
             changeStop(!isPause);
-            pageBar.title=i18n(isPause?"enable":"disable");
+            pageBar.title = i18n(isPause ? "enable" : "disable");
         });
         ruleParser.insertElement(pageBar);
-        if(ruleParser.curSiteRule.pageBar && ruleParser.curSiteRule.pageBar !== 0){
-            try{
-                ((typeof _unsafeWindow.pagetualPageBar=='undefined') ? Function("pageBar",'"use strict";' + ruleParser.curSiteRule.pageBar) : _unsafeWindow.pagetualPageBar)(pageBar);
-            }catch(e){
+        if (ruleParser.curSiteRule.pageBar && ruleParser.curSiteRule.pageBar !== 0) {
+            try {
+                ((typeof _unsafeWindow.pagetualPageBar == 'undefined') ? Function("pageBar",'"use strict";' + ruleParser.curSiteRule.pageBar) : _unsafeWindow.pagetualPageBar)(pageBar);
+            } catch(e) {
                 debug(e);
             }
         }
