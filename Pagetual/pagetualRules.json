@@ -8111,7 +8111,6 @@
     },
     {
         "name": "Baidu",
-        "css": "span.c-img-radius-large.c-img-border,.result-molecule[tpl='app/rs']{pointer-events: none}.result-molecule[tpl='app/rs']>div{pointer-events: all}#rs_new{position:fixed;width:auto;height:auto;border-radius:5px;z-index:999;right:40px;bottom:50px;box-shadow:0 0 5px rgba(0,0,0,0.6);background:white;}#rs_new>div{padding:20px 20px 0 20px}#rs_new>table{padding:0 20px 20px 20px;margin:0}",
         "insertPos": 1,
         "nextLink": [
             "//*[@id=\"page\"]/div/a[contains(text(),'下一页')]",
