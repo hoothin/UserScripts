@@ -1,5 +1,35 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86074",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//p[@class='article-singup-link']/preceding-sibling::*",
+    "nextLink": "//a[@class='page-links__next']",
+    "url": "^https?://(www\\.)?indiewire\\.com/.",
+    "exampleUrl": "https://www.indiewire.com/2016/06/best-biopic-last-20-years-straight-outta-compton-ali-wolf-of-wall-street-1201690643/ https://www.indiewire.com/2017/11/best-gay-directors-lgbt-movies-queer-filmmakers-1201888200/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "kenzou_ogawa2",
+  "name": "Indiewire entry",
+  "created_at": "2023-02-20T16:53:01+09:00",
+  "updated_at": "2023-02-20T16:53:01+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/86073",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//article[starts-with(@id,'post-')]",
+    "nextLink": "//div[@class='pagination simple-pagination']/a[last()][./preceding-sibling::a or @href='https://www.indiewire.com/c/news/page/2/']",
+    "url": "^https?://(www\\.)?indiewire\\.com/.",
+    "exampleUrl": "https://www.indiewire.com/c/news/ https://www.indiewire.com/c/news/page/2/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "kenzou_ogawa2",
+  "name": "Indiewire post",
+  "created_at": "2023-02-20T16:42:54+09:00",
+  "updated_at": "2023-02-20T16:42:54+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86072",
   "data": {
     "pageElement": "//div[@class='pure-g'][.//div[@class='ratingsbox']]",
@@ -26021,17 +26051,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/74722",
-  "name": "Indiewire",
-  "created_by": "Tanookirby",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "updated_at": "2018-11-17T14:14:50+09:00",
   "data": {
-    "exampleUrl": "https://www.indiewire.com/ https://www.indiewire.com/c/news/ https://www.indiewire.com/films https://www.indiewire.com/2016/06/best-biopic-last-20-years-straight-outta-compton-ali-wolf-of-wall-street-1201690643/ https://www.indiewire.com/2017/11/best-gay-directors-lgbt-movies-queer-filmmakers-1201888200/",
+    "pageElement": "descendant::ul[.//span[@class='c-author']][last()]/li",
+    "nextLink": "//div[@class='o-posts-nav__item'][position()>1 or (not(./following-sibling::div) and ./a[@href='https://www.indiewire.com/page/2/'])]/a",
     "url": "^https?://(www\\.)?indiewire\\.com",
-    "pageElement": "//article[starts-with(@id,'post-')]|//div[@class='hide-tab tab-content-1 selected' or @class='l-section' or @class='l-features__main']/ul/li|//div[@class='entry-content']/*[following-sibling::div/@class='page-links__wrapper'][not(strong/em or a/@title or starts-with(.,'On the next page: '))]",
-    "nextLink": "//div[@class='hidden-mobile']/div[@class='pagination simple-pagination'][count(./a)>1 or contains(a/@href,'page/2/')]/a[last()]|//a[@class='page-links__next']|//div[@class='page-links']/text()[string-length(normalize-space()) > 0][last()]/following-sibling::a[1]|//link[@rel='next']"
+    "exampleUrl": "https://www.indiewire.com/\r\nhttps://www.indiewire.com/page/2/"
   },
-  "created_at": "2014-04-12T07:19:04+09:00"
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "Tanookirby",
+  "name": "Indiewire",
+  "created_at": "2014-04-12T07:19:04+09:00",
+  "updated_at": "2023-02-20T16:34:20+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/74721",
@@ -30825,17 +30855,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/63648",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "created_at": "2012-09-28T20:31:51+09:00",
   "data": {
-    "pageElement": "//article/div",
-    "exampleUrl": "http://bl.takeshobo.co.jp/info_all/",
-    "url": "^https?://bl\\.takeshobo\\.co\\.jp/",
-    "nextLink": "//li[@class='next']/a"
+    "pageElement": "//ul[@class='pager']/preceding-sibling::*[./preceding-sibling::*]",
+    "nextLink": "//li[@class='next']/a",
+    "url": "^https://bl\\.takeshobo\\.co\\.jp/",
+    "exampleUrl": "https://bl.takeshobo.co.jp/info_all/\r\nhttps://bl.takeshobo.co.jp/uno/archive/\r\nhttps://bl.takeshobo.co.jp/info_qpa/14508/"
   },
-  "updated_at": "2020-05-22T10:54:51+09:00",
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "plais",
   "name": "竹書房BL通信【麗人,ラヴァーズ文庫,Qpa】",
-  "created_by": "plais"
+  "created_at": "2012-09-28T20:31:51+09:00",
+  "updated_at": "2023-02-20T20:28:26+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/63647",
