@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         草榴小助手
 // @namespace    hoothin
-// @version      0.6
+// @version      0.6.1
 // @description  草榴小助手修复，提供“加亮今日帖子”、“移除viidii跳转”、“图片自动缩放”、“种子链接转磁力链”、“预览整页图片”、“游客站内搜索”、“返回顶部”等功能！
 // @author       NewType & hoothin
 // @match        *://*.t66y.com/*
@@ -152,7 +152,7 @@
             });
 
             helper.addCss('.viewer{position:fixed; top:7px; right:7px; cursor:pointer;}');
-            helper.addScript('function Viewer(){ $("#lightgallery").lightGallery(); $("div#viewer,div#main,div#footer").fadeToggle(300); }');
+            helper.addScript('function Viewer(){ $("#lightgallery").lightGallery(); $("html,body").animate({scrollTop:0}, 500); $("div#viewer,div#main,div#footer").fadeToggle(300); }');
             $('body').append(`<svg class="viewer" onmousedown="this.style.opacity=0;" onclick="Viewer();this.style.opacity=1;" title="预览整页图片" style="width: 50px;height: 50px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1152 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6334"><path d="M871.125 433.75a119.85 119.85 0 1 0 0-239.66 119.85 119.85 0 0 0 0 239.66z m209.622-399.318H102.272c-38.955 0-69.93 31.701-69.93 70.656v817.067c0 38.954 30.975 70.656 69.93 70.656h978.475c38.954 0 69.93-31.702 69.93-70.656V105.088c0-38.955-30.976-70.656-69.93-70.656z m-257.28 493.44a42.837 42.837 0 0 0-31.958-15.488c-12.714 0-21.674 5.973-31.957 14.208l-46.677 39.467c-9.728 6.997-17.494 11.733-28.672 11.733a41.301 41.301 0 0 1-27.478-10.24 338.09 338.09 0 0 1-10.752-10.24L511.701 412.075a55.04 55.04 0 0 0-41.685-18.774c-16.725 0-32.213 8.278-41.941 19.499L112.213 793.643V143.53c2.475-16.982 15.702-29.227 32.683-29.227h892.928c17.237 0 31.19 12.757 32.213 29.952l0.726 649.899L823.38 527.872z" p-id="6335"></path></svg>`);
         }
 
