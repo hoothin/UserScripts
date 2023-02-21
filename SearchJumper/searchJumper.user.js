@@ -1479,6 +1479,7 @@
                  #search-jumper.funcKeyCall {
                      overflow: visible;
                      position: absolute;
+                     max-width: 100%;
                  }
                  .funcKeyCall>.search-jumper-searchBar {
                      position: absolute!important;
@@ -6651,7 +6652,6 @@
                     self.bar.parentNode.style.cssText = "";
                     let viewWidth = window.innerWidth || document.documentElement.clientWidth;
                     let viewHeight = window.innerHeight || document.documentElement.clientHeight;
-                    self.bar.style.position = "fixed";
                     let clientX = e.pageX - self.bar.clientWidth / 2;
                     if (clientX < 0) clientX = 5;
                     else if (clientX + self.bar.clientWidth > viewWidth) clientX = viewWidth - self.bar.clientWidth - 20;
