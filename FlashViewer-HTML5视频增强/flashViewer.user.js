@@ -3533,8 +3533,8 @@
                         }, true);
                         target.addEventListener('mousemove', function (e) {
                             clearTimeout(speedUpTimer);
-                            target.playbackRate = lastRate;
                             if (!mouseDown) return;
+                            target.playbackRate = lastRate;
                             target.pause();
                             target.currentTime += (e.clientX - lastPos) / 5;
                             lastPos = e.clientX;
