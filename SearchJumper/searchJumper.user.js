@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.54.23
+// @version      1.6.6.55.1
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -2568,6 +2568,7 @@
                 }
 
                 this.bar = bar;
+                this.con = searchBarCon;
 
                 let tips = document.createElement("span");
                 tips.className = "search-jumper-tips";
@@ -3799,9 +3800,9 @@
             }
 
             closeShowAll() {
-                if (!this.bar.parentNode.classList.contains("search-jumper-showall")) return;
+                if (!this.con.classList.contains("search-jumper-showall")) return;
                 document.removeEventListener("mousedown", self.showAllMouseHandler);
-                this.bar.parentNode.classList.remove("search-jumper-showall");
+                this.con.classList.remove("search-jumper-showall");
                 this.showallInput.value = "";
                 this.historySiteBtns.slice(0, 10).forEach(btn => {
                     for (let i = 0; i < searchTypes.length; i++) {
@@ -3819,10 +3820,11 @@
             }
 
             showAllSites() {
-                if (!this.bar.parentNode || !this.bar.parentNode.parentNode || this.bar.parentNode.classList.contains("search-jumper-showall")) return;
+                if (!this.con || !this.con.parentNode || this.con.classList.contains("search-jumper-showall")) return;
                 let self = this;
+                this.setFuncKeyCall(false);
                 this.hideSearchInput();
-                this.bar.parentNode.classList.add("search-jumper-showall");
+                this.con.classList.add("search-jumper-showall");
                 searchTypes.forEach(type => {
                     if (type.style.display != 'none') {
                         let sitelist = type.querySelector('.sitelist');
@@ -3846,10 +3848,10 @@
             }
 
             showSearchInput() {
-                if (this.bar.parentNode && this.bar.parentNode.classList.contains("search-jumper-showall")) return;
+                if (this.con && this.con.classList.contains("search-jumper-showall")) return;
                 let selectStr = getSelectStr();
                 this.recoveHistory();
-                this.bar.parentNode.classList.add("in-input");
+                this.con.classList.add("in-input");
                 this.searchInput.value = "";
                 if (this.filterSitesTab.checked) {
                     this.searchInput.focus();
@@ -3891,8 +3893,8 @@
 
             hideSearchInput() {
                 this.inInput = false;
-                this.bar.parentNode.classList.remove("in-input");
-                this.bar.parentNode.classList.remove("lock-input");
+                this.con.classList.remove("in-input");
+                this.con.classList.remove("lock-input");
                 this.searchInput.value = "";
                 this.searchJumperInputKeyWords.value = "";
                 this.pickerBtn.classList.remove("checked");
@@ -3905,16 +3907,16 @@
             }
 
             removeBar() {
-                if (this.bar.parentNode.parentNode) {
-                    this.bar.parentNode.parentNode.removeChild(this.bar.parentNode);
+                if (this.con.parentNode) {
+                    this.con.parentNode.removeChild(this.con);
                 }
             }
 
             appendBar() {
-                if (!this.bar.parentNode.parentNode) {
-                    document.documentElement.appendChild(this.bar.parentNode);
+                if (!this.con.parentNode) {
+                    document.documentElement.appendChild(this.con);
                     setTimeout(() => {
-                        if (getComputedStyle(this.bar.parentNode).zIndex != "2147483647") {
+                        if (getComputedStyle(this.con).zIndex != "2147483647") {
                             disabled = true;
                             this.removeBar();
                         } else disabled = false;
@@ -4002,7 +4004,7 @@
             lockSearchInput(lockWords) {
                 this.lockSiteKeywords = true;
                 this.searchLockInput.innerText = lockWords;
-                this.bar.parentNode.classList.add("lock-input");
+                this.con.classList.add("lock-input");
                 this.searchInput.value = "";
                 this.searchInput.style.paddingLeft = `${15 + this.searchLockInput.scrollWidth}px`;
                 this.searchInput.placeholder = i18n("inputKeywords");
@@ -4065,7 +4067,7 @@
                                 if (!self.showallInput.value) return;
                                 let siteEle, forceTarget = "";
                                 if (currentSite) {
-                                    siteEle = self.bar.parentNode.querySelector(".search-jumper-btn.current");
+                                    siteEle = self.con.querySelector(".search-jumper-btn.current");
                                     forceTarget = "_self";
                                 } else {
                                     siteEle = self.bar.querySelector(`.search-jumper-needInPage>a[href^=http]`) ||
@@ -4215,8 +4217,8 @@
                 this.searchJumperExpand.addEventListener("click", e => {
                     let typeEle = this.searchJumperExpand.parentNode;
                     typeEle.classList.remove('not-expand');
-                    let leftRight = this.bar.parentNode.classList.contains("search-jumper-left") ||
-                        this.bar.parentNode.classList.contains("search-jumper-right");
+                    let leftRight = this.con.classList.contains("search-jumper-left") ||
+                        this.con.classList.contains("search-jumper-right");
                     typeEle.removeChild(this.searchJumperExpand);
                     let scrollSize = Math.max(typeEle.scrollWidth, typeEle.scrollHeight) + 5 + "px";
                     if (leftRight) {
@@ -4327,7 +4329,7 @@
                                 self.searchInput.value = self.searchLockInput.innerText;
                                 self.searchLockInput.innerText = "";
                                 self.lockSiteKeywords = false;
-                                self.bar.parentNode.classList.remove("lock-input");
+                                self.con.classList.remove("lock-input");
                                 self.searchInput.style.paddingLeft = "";
                                 self.searchInput.placeholder = i18n("inputPlaceholder");
                             }*/
@@ -4423,7 +4425,7 @@
                 };
 
                 let setStartBottom = () => {
-                    if (!startBottom) startBottom = self.bar.parentNode.classList.contains('search-jumper-bottom') ? window.innerHeight * 0.95 - 60 : window.innerHeight * 0.03;
+                    if (!startBottom) startBottom = self.con.classList.contains('search-jumper-bottom') ? window.innerHeight * 0.95 - 60 : window.innerHeight * 0.03;
                 };
 
                 let touchStart = false;
@@ -5067,8 +5069,8 @@
                 this.preList = list;
                 let ew = ele.clientWidth;
                 let eh = ele.clientHeight;
-                let clientX = ele.offsetLeft + ew / 2 - this.bar.parentNode.scrollLeft;
-                let clientY = ele.offsetTop + eh / 2 - this.bar.parentNode.scrollTop;
+                let clientX = ele.offsetLeft + ew / 2 - this.con.scrollLeft;
+                let clientY = ele.offsetTop + eh / 2 - this.con.scrollTop;
                 let current = ele.offsetParent;
 
                 while (current !== null){
@@ -5109,10 +5111,10 @@
                 //}
                 let ew = clingEle.clientWidth;
                 let eh = clingEle.clientHeight;
-                let clientX = clingEle.offsetLeft + ew / 2 - this.bar.parentNode.scrollLeft;
-                let clientY = clingEle.offsetTop + eh / 2 - this.bar.parentNode.scrollTop - clingEle.parentNode.scrollTop;
+                let clientX = clingEle.offsetLeft + ew / 2 - this.con.scrollLeft;
+                let clientY = clingEle.offsetTop + eh / 2 - this.con.scrollTop - clingEle.parentNode.scrollTop;
                 let current = clingEle.offsetParent;
-                let showall = this.bar.parentNode && this.bar.parentNode.classList.contains("search-jumper-showall");
+                let showall = this.con && this.con.classList.contains("search-jumper-showall");
 
                 while (current !== null){
                     clientX += current.offsetLeft;
@@ -5122,8 +5124,8 @@
                 let viewWidth = window.innerWidth || document.documentElement.clientWidth;
                 let viewHeight = window.innerHeight || document.documentElement.clientHeight;
                 if (showall) {
-                    clientX -= target.scrollWidth / 2 - this.bar.parentNode.scrollLeft;
-                    clientY += this.bar.parentNode.scrollTop;
+                    clientX -= target.scrollWidth / 2 - this.con.scrollLeft;
+                    clientY += this.con.scrollTop;
                     if (clientY > viewHeight / 2) clientY -= (target.scrollHeight / 2 + eh / 2 + 30);
                     else clientY += (eh / 2 + 10);
                     target.style.right = "";
@@ -5353,7 +5355,6 @@
                         }
                     }
                     if (self.funcKeyCall) {
-                        self.setFuncKeyCall(false);
                         self.showAllSites();
                         /*self.bar.style.display = "none";
                         setTimeout(() => {
@@ -5369,8 +5370,8 @@
                     }
                     ele.style.width = "";
                     ele.style.height = "";
-                    let leftRight = self.bar.parentNode.classList.contains("search-jumper-left") ||
-                        self.bar.parentNode.classList.contains("search-jumper-right");
+                    let leftRight = self.con.classList.contains("search-jumper-left") ||
+                        self.con.classList.contains("search-jumper-right");
                     if (self.preList) {
                         self.preList.style.visibility = "hidden";
                     }
@@ -5962,7 +5963,7 @@
                 let getUrl = () => {
                     self.customInput = false;
                     let keywords;
-                    if (self.bar.parentNode && self.bar.parentNode.classList.contains("search-jumper-showall")) {
+                    if (self.con && self.con.classList.contains("search-jumper-showall")) {
                         keywords = self.showallInput.value;
                     } else if (self.searchJumperInputKeyWords.value) {
                         keywords = self.searchJumperInputKeyWords.value;
@@ -6515,14 +6516,14 @@
                 let viewWidth = window.innerWidth || document.documentElement.clientWidth;
                 let viewHeight = window.innerHeight || document.documentElement.clientHeight;
                 if (this.bar.scrollWidth > viewWidth || this.bar.scrollHeight > viewHeight) {
-                    if (!this.bar.parentNode.classList.contains("search-jumper-scroll")) {
+                    if (!this.con.classList.contains("search-jumper-scroll")) {
                         this.bar.style.cssText = "";
-                        this.bar.parentNode.classList.add("search-jumper-scroll");
+                        this.con.classList.add("search-jumper-scroll");
                     }
                 } else {
-                    if (this.bar.parentNode.classList.contains("search-jumper-scroll")) {
+                    if (this.con.classList.contains("search-jumper-scroll")) {
                         this.bar.style.cssText = "";
-                        this.bar.parentNode.classList.remove("search-jumper-scroll");
+                        this.con.classList.remove("search-jumper-scroll");
                     }
                 }
                 if (noIntoView) return;
@@ -6546,7 +6547,7 @@
                 }
                 let selectStr = getSelectStr();
                 if (_funcKeyCall && selectStr && selectStr.length < (searchData.prefConfig.limitPopupLen || 1)) return;
-                if (this.bar.parentNode && this.bar.parentNode.classList.contains("search-jumper-showall")) return;
+                if (this.con && this.con.classList.contains("search-jumper-showall")) return;
                 if (searchData.prefConfig.hidePopup) _funcKeyCall = false;
                 if (!targetElement) targetElement = document.body;
                 let _targetElement = targetElement, children;
@@ -6641,15 +6642,9 @@
                 }
                 self.setFuncKeyCall(_funcKeyCall);
                 if (_funcKeyCall) {
-                    this.bar.parentNode.classList.remove("search-jumper-scroll");
-                } else {
-                    this.bar.style.display = "";
-                    this.initPos();
-                }
-
-                if (_funcKeyCall) {
+                    self.con.classList.remove("search-jumper-scroll");
                     self.bar.style.cssText = "";
-                    self.bar.parentNode.style.cssText = "";
+                    self.con.style.cssText = "";
                     let viewWidth = window.innerWidth || document.documentElement.clientWidth;
                     let viewHeight = window.innerHeight || document.documentElement.clientHeight;
                     let clientX = e.pageX - self.bar.clientWidth / 2;
@@ -6674,15 +6669,18 @@
                             self.bar.style.opacity = 1;
                         }, 10);
                     }, 1);
+                } else {
+                    self.bar.style.display = "";
+                    self.initPos();
                 }
             }
 
             setFuncKeyCall(value) {
                 this.funcKeyCall = value;
                 if (value) {
-                    this.bar.parentNode.classList.add("funcKeyCall");
+                    this.con.classList.add("funcKeyCall");
                 } else {
-                    this.bar.parentNode.classList.remove("funcKeyCall");
+                    this.con.classList.remove("funcKeyCall");
                 }
             }
 
@@ -6694,12 +6692,12 @@
                 let self = this;
                 let setClass = className => {
                     self.bar.style.cssText = "";
-                    self.bar.parentNode.style.cssText = "";
-                    self.bar.parentNode.className = "search-jumper-searchBarCon " + className;
+                    self.con.style.cssText = "";
+                    self.con.className = "search-jumper-searchBarCon " + className;
                     if (searchData.prefConfig.resizePage) {
                         if (typeof self.initBodyStyle == 'undefined') self.initBodyStyle = document.body.style.cssText;
                         else document.body.style.cssText = self.initBodyStyle;
-                        self.bar.parentNode.classList.add("resizePage");
+                        self.con.classList.add("resizePage");
                         document.body.style.position = "absolute";
                         switch (className) {
                             case "search-jumper-left":
@@ -6724,11 +6722,11 @@
                                 break;
                         }
                     } else if (searchData.prefConfig.autoHideAll) {
-                        self.bar.parentNode.classList.add("hideAll");
+                        self.con.classList.add("hideAll");
                     }
                     let baseSize = Math.min(self.bar.scrollWidth, self.bar.scrollHeight);
-                    let leftRight = self.bar.parentNode.classList.contains("search-jumper-left") ||
-                        self.bar.parentNode.classList.contains("search-jumper-right");
+                    let leftRight = self.con.classList.contains("search-jumper-left") ||
+                        self.con.classList.contains("search-jumper-right");
                     searchTypes.forEach(ele => {
                         ele.style.width = "";
                         ele.style.height = "";
@@ -6826,16 +6824,16 @@
                     setClass("search-jumper-left");
                     self.bar.style.position = "absolute";
                     self.bar.style.marginTop = posY + "px";
-                    self.bar.parentNode.style.display = "flex";
-                    self.bar.parentNode.style.justifyContent = "center";
+                    self.con.style.display = "flex";
+                    self.con.style.justifyContent = "center";
                 } else if (relX == "right" && relY == "center") {
                     //右中
                     setClass("search-jumper-right");
                     self.bar.style.position = "absolute";
                     self.bar.style.marginTop = posY + "px";
-                    self.bar.parentNode.style.display = "flex";
-                    self.bar.parentNode.style.justifyContent = "center";
-                    self.bar.parentNode.style.alignItems = "flex-end";
+                    self.con.style.display = "flex";
+                    self.con.style.justifyContent = "center";
+                    self.con.style.alignItems = "flex-end";
                 }
                 searchData.prefConfig.position.x = relX;
                 searchData.prefConfig.position.y = relY;
@@ -6916,7 +6914,7 @@
                     self.clickedEles[self.clickedIndex] = target;
                     self.appendSign(sign, target, self.clickedIndex);
                     self.clickedIndex++;
-                    searchBar.bar.parentNode.classList.add("selectedEle");
+                    searchBar.con.classList.add("selectedEle");
                 };
             }
 
@@ -6960,8 +6958,8 @@
                 this.clickedEles = {};
                 if (this.mainSignDiv.parentNode) this.mainSignDiv.parentNode.removeChild(this.mainSignDiv);
                 document.body.classList.remove("searchJumper-picker");
-                searchBar.bar.parentNode.classList.remove("selectedEle");
-                searchBar.bar.parentNode.removeEventListener("mouseenter", this.leaveHandler, true);
+                searchBar.con.classList.remove("selectedEle");
+                searchBar.con.removeEventListener("mouseenter", this.leaveHandler, true);
                 document.body.removeEventListener("mousemove", this.moveHandler, true);
                 document.body.removeEventListener("mouseenter", this.enterHandler, true);
                 document.body.removeEventListener("click", this.clickHandler, true);
@@ -7098,7 +7096,7 @@
                 document.body.appendChild(this.mainSignDiv);
                 document.body.classList.add("searchJumper-picker");
 
-                searchBar.bar.parentNode.addEventListener("mouseenter", this.leaveHandler, true);
+                searchBar.con.addEventListener("mouseenter", this.leaveHandler, true);
                 document.body.addEventListener("mousemove", this.moveHandler, true);
                 document.body.addEventListener("mouseenter", this.enterHandler, true);
                 document.body.addEventListener("click", this.clickHandler, true);
@@ -7626,7 +7624,7 @@
                     searchBar.bar.style.right = "";
                     searchBar.bar.style.bottom = "";
                     searchBar.bar.style.transform = "unset";
-                    searchBar.bar.parentNode.classList.remove("search-jumper-scroll");
+                    searchBar.con.classList.remove("search-jumper-scroll");
                     searchBar.bar.className = "search-jumper-searchBar grabbing";
                 }
                 grabState = 2;
@@ -7693,7 +7691,7 @@
             }, { passive: false, capture: false });
 
             searchBar.bar.addEventListener(getSupportWheelEventName(), e => {
-                let targetClassList = searchBar.bar.parentNode.classList;
+                let targetClassList = searchBar.con.classList;
                 if (!targetClassList.contains('search-jumper-scroll')) return;
                 if (targetClassList.contains('search-jumper-left') ||
                     targetClassList.contains('search-jumper-right')) return;
@@ -7723,7 +7721,7 @@
                 e.preventDefault();
                 e.stopPropagation();
 
-                searchBar.bar.parentNode.scrollLeft += deltaY;
+                searchBar.con.scrollLeft += deltaY;
             }, { passive: false, capture: false });
 
             document.addEventListener('searchJumper', e => {
@@ -7814,7 +7812,6 @@
                         }
                         var key = (e.key || String.fromCharCode(e.keyCode)).toLowerCase();
                         if (searchData.prefConfig.showAllShortcutKey == e.code || searchData.prefConfig.showAllShortcutKey == key) {
-                            searchBar.setFuncKeyCall(false);
                             searchBar.appendBar();
                             searchBar.showAllSites();
                             e.preventDefault();
@@ -8708,7 +8705,7 @@
             }
         }
 
-        var dragRoundFrame, dragSiteCurSpans, dragSiteHistorySpans, dragEndHandler, dragenterHandler, dragCssEle, dragCssText;
+        var dragRoundFrame, dragSiteCurSpans, dragSiteHistorySpans, dragEndHandler, dragenterHandler, dragCssEle, dragCssText, openAllTimer;
         function showDragSearch(left, top) {
             if (!searchBar || !searchBar.bar) return;
             let removeFrame = () => {
@@ -8720,6 +8717,7 @@
                     dragRoundFrame.style.transform = '';
                 }
                 draging = false;
+                clearTimeout(openAllTimer);
             };
             if (!dragRoundFrame) {
                 dragCssText = `
@@ -8887,6 +8885,9 @@
                 let dragSector;
                 let dragLogo = dragRoundFrame.querySelector(".dragLogo");
                 dragLogo.addEventListener("dragover", e => {
+                    e.preventDefault();
+                }, true);
+                dragLogo.addEventListener("dragenter", e => {
                     if (dragSector) {
                         dragSector.style.transform = `rotate(${dragSector.dataset.deg}deg) ${searchData.prefConfig.hideDragHistory ? 'scale(1.2)' : ''}`;
                         dragSector.classList.remove("over");
@@ -8894,6 +8895,11 @@
                     dragSector = null;
                     dragLogo.style.transform = `scale(1.35)`;
                     e.preventDefault();
+                    clearTimeout(openAllTimer);
+                    openAllTimer = setTimeout(() => {
+                        removeFrame();
+                        searchBar.showAllSites();
+                    }, 1000);
                 }, true);
                 let geneSector = (className, deg, spanTransform) => {
                     let sector = document.createElement("div");
@@ -8909,6 +8915,9 @@
                     sector.dataset.deg = deg;
                     sectorCon.appendChild(sector);
                     sectorSpan.addEventListener("dragover", e => {
+                        e.preventDefault();
+                    }, true);
+                    sectorSpan.addEventListener("dragenter", e => {
                         if (!sectorSpan.innerText) return;
                         if (dragSector) {
                             dragSector.style.transform = `rotate(${dragSector.dataset.deg}deg) ${searchData.prefConfig.hideDragHistory ? 'scale(1.2)' : ''}`;
@@ -8918,7 +8927,7 @@
                         sector.style.transform = `scale(${searchData.prefConfig.hideDragHistory ? '1.6' : '1.35'}) ${transform}`;
                         sector.classList.add("over");
                         dragSector = sector;
-                        e.preventDefault();
+                        clearTimeout(openAllTimer);
                     }, true);
                     return sectorSpan;
                 };
