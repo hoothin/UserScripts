@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.33.71
+// @version      1.9.33.72
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，自动适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，自動適配任意網頁
@@ -2443,10 +2443,15 @@
 
         insertElement(ele) {
             this.addedElePool.push(ele);
-            if (this.curSiteRule.insertPos == 2) {
-                this.insert.appendChild(ele);
-            } else {
-                this.insert.parentNode.insertBefore(ele, this.insert);
+            if (!this.insert || !this.insert.parentNode) {
+                this.getInsert();
+            }
+            if (this.insert) {
+                if (this.curSiteRule.insertPos == 2) {
+                    this.insert.appendChild(ele);
+                } else {
+                    this.insert.parentNode.insertBefore(ele, this.insert);
+                }
             }
         }
 
@@ -4771,7 +4776,7 @@
            100% { opacity: 1 }
          }
         `;
-            pageBarStyle = `text-indent: initial;vertical-align: super;line-height:1;opacity:${rulesData.opacity};display:${rulesData.opacity==0?"none":"inline-flex"};padding:0;box-shadow: 0px 0px 10px 0px #000000aa;border-radius: 20px;background-color: rgb(240 240 240 / 80%);font-size: 30px;visibility: visible; position: initial; width: auto; height: 30px; float: none; clear: both; margin: 5px auto; text-align: center;justify-content: center;`;
+            pageBarStyle = `text-indent: initial;vertical-align: super;line-height:1;opacity:${rulesData.opacity};display:${rulesData.opacity==0?"none":"inline-flex"};padding:0;box-shadow: 0px 0px 10px 0px #000000aa;border-radius: 20px;background-color: rgb(240 240 240 / 80%);font-size: 30px;visibility: visible; position: relative; width: auto; height: 30px; float: none; clear: both; margin: 5px auto; text-align: center;justify-content: center;`;
         }
         if (!mainStyleEle || !mainStyleEle.parentNode) {
             mainStyleEle = _GM_addStyle(mainStyleStyle);
@@ -4821,8 +4826,8 @@
     }
 
     function isInViewPort(element) {
-        if(!document.body.contains(element))return false;
-        if(_unsafeWindow.getComputedStyle(element).display=="none")return false;
+        if (!document.body.contains(element)) return false;
+        if (_unsafeWindow.getComputedStyle(element).display == "none") return false;
         const viewWidth = window.innerWidth || document.documentElement.clientWidth;
         const viewHeight = window.innerHeight || document.documentElement.clientHeight;
         const {
@@ -5898,61 +5903,83 @@
     var resizePool = [];
     var scrollingToResize = false;
 
+    function isTouchViewPort(element) {
+        const viewWidth = window.innerWidth || document.documentElement.clientWidth;
+        const viewHeight = window.innerHeight || document.documentElement.clientHeight;
+        const {
+            top,
+            right,
+            bottom,
+            left,
+        } = element.getBoundingClientRect();
+
+        return (
+            top <= viewHeight &&
+            left <= viewWidth &&
+            right >= 0 &&
+            bottom >= 0
+        );
+    }
+
     function scrollToResize(e) {
         if (scrollingToResize) return;
         else {
             scrollingToResize = true;
             let fitWidth = ruleParser.curSiteRule.fitWidth !== false;
             let resizeHandler = () => {
-                resizePool.forEach(resizeArr => {
+                let touched = false;
+                for (let i in resizePool) {
+                    let resizeArr = resizePool[i];
                     let iframe = resizeArr[1]();
-                    let frameDoc = resizeArr[2]();
-                    if(ruleParser.curSiteRule.singleUrl || forceState === 2){
-                        iframe.style.height = (frameDoc.body.scrollHeight || frameDoc.body.offsetHeight) + "px";
-                        iframe.style.minHeight = iframe.style.height;
-                        iframe.style.width = "100%";
-                        frameDoc.documentElement.scrollTop = 0;
-                        frameDoc.documentElement.scrollLeft = 0;
-                    }else{
-                        let pageEle = resizeArr[0]();
-                        if(pageEle){
-                            let targetElement = pageEle[0];
-                            if (!targetElement) return;
-                            if(pageEle.length > 1){
-                                targetElement = targetElement.parentNode;
-                            }
-                            let scrollHeight = targetElement.scrollHeight || targetElement.offsetHeight;
-                            if(!scrollHeight || parseInt(iframe.style.height)==scrollHeight) return;
-                            iframe.style.height=(scrollHeight+1)+"px";
-                            let scrollTop = 0, scrollLeft = 0;
-                            frameDoc.body.scrollTop = 0;
-                            frameDoc.body.scrollLeft = 0;
-                            while(targetElement && targetElement.offsetParent){
-                                targetElement.offsetParent.scrollTop = targetElement.offsetTop;
-                                if(targetElement.offsetParent.scrollTop == 0){
-                                    scrollTop += targetElement.offsetTop;
+                    if (isTouchViewPort(iframe)) {
+                        touched = true;
+                        let frameDoc = resizeArr[2]();
+                        if(ruleParser.curSiteRule.singleUrl || forceState === 2){
+                            iframe.style.height = (frameDoc.body.scrollHeight || frameDoc.body.offsetHeight) + "px";
+                            iframe.style.minHeight = iframe.style.height;
+                            iframe.style.width = "100%";
+                            frameDoc.documentElement.scrollTop = 0;
+                            frameDoc.documentElement.scrollLeft = 0;
+                        }else{
+                            let pageEle = resizeArr[0]();
+                            if(pageEle){
+                                let targetElement = pageEle[0];
+                                if (!targetElement) return;
+                                if(pageEle.length > 1){
+                                    targetElement = targetElement.parentNode;
                                 }
-                                if(fitWidth){
-                                    targetElement.offsetParent.scrollLeft = targetElement.offsetLeft;
-                                    if(targetElement.offsetParent.scrollLeft == 0){
-                                        scrollLeft += targetElement.offsetLeft;
+                                let scrollHeight = targetElement.scrollHeight || targetElement.offsetHeight;
+                                iframe.style.height = scrollHeight + "px";
+                                let scrollTop = 0, scrollLeft = 0;
+                                frameDoc.body.scrollTop = 0;
+                                frameDoc.body.scrollLeft = 0;
+                                while(targetElement && targetElement.offsetParent){
+                                    targetElement.offsetParent.scrollTop = targetElement.offsetTop;
+                                    if(targetElement.offsetParent.scrollTop == 0){
+                                        scrollTop += targetElement.offsetTop;
                                     }
+                                    if(fitWidth){
+                                        targetElement.offsetParent.scrollLeft = targetElement.offsetLeft;
+                                        if(targetElement.offsetParent.scrollLeft == 0){
+                                            scrollLeft += targetElement.offsetLeft;
+                                        }
+                                    }
+                                    targetElement = targetElement.offsetParent;
                                 }
-                                targetElement = targetElement.offsetParent;
-                            }
-                            frameDoc.documentElement.scrollTop = scrollTop;
-                            frameDoc.documentElement.scrollLeft = scrollLeft;
-                            if (frameDoc.documentElement.scrollTop == 0 && frameDoc.documentElement.scrollLeft == 0) {
-                                frameDoc.body.scrollTop += scrollTop;
-                                frameDoc.body.scrollLeft += scrollLeft;
-                            }
-                            if(!fitWidth && iframe.style.marginLeft == '0px'){
-                                iframe.style.width = "100vw";
-                                iframe.style.marginLeft = -iframe.getBoundingClientRect().left + "px";
+                                frameDoc.documentElement.scrollTop = scrollTop;
+                                frameDoc.documentElement.scrollLeft = scrollLeft;
+                                if (frameDoc.documentElement.scrollTop == 0 && frameDoc.documentElement.scrollLeft == 0) {
+                                    frameDoc.body.scrollTop += scrollTop;
+                                    frameDoc.body.scrollLeft += scrollLeft;
+                                }
+                                if(!fitWidth && iframe.style.marginLeft == '0px'){
+                                    iframe.style.width = "100vw";
+                                    iframe.style.marginLeft = -iframe.getBoundingClientRect().left + "px";
+                                }
                             }
                         }
-                    }
-                });
+                    } else if (touched) break;
+                }
             };
             setTimeout(() => {
                 scrollingToResize = false;
@@ -5983,7 +6010,7 @@
             } else {
                 let pageElement = ruleParser.getPageElement(iframeDoc,iframeDoc.defaultView);
                 let getPageEle = () => {
-                    if (!pageElement || pageElement.length === 0) {
+                    if (!pageElement || pageElement.length === 0 || !pageElement[0].offsetParent) {
                         pageElement = ruleParser.getPageElement(iframeDoc,iframeDoc.defaultView);
                     }
                     return pageElement;
@@ -6182,7 +6209,7 @@
                         loadPageOver();
                         if (urlChanged || isPause) return;
                         let pageBar = createPageBar(nextLink);
-                        if (pageBar && iframe) iframe.parentNode.insertBefore(pageBar, iframe);
+                        if (pageBar && iframe) ruleParser.insertElement(iframe);
                         checkAutoLoadNum();
                     });
                 } else if ((forceState == 3 || ruleParser.curSiteRule.action == 1) && !isJs) {
