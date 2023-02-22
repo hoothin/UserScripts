@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.55.1
+// @version      1.6.6.55.2
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -1384,8 +1384,6 @@
                      border-bottom: 1px solid #ddd;
                      pointer-events: all;
                  }
-                 .search-jumper-historylist>a.search-jumper-btn {
-                 }
                  #search-jumper.search-jumper-showall #search-jumper-alllist {
                      display: block;
                  }
@@ -1521,12 +1519,14 @@
                  #search-jumper.funcKeyCall>.search-jumper-searchBar>.search-jumper-type>.sitelist {
                      display: none;
                  }
+                 ${searchData.prefConfig.minPopup ? `
                  #search-jumper.funcKeyCall>.search-jumper-searchBar>.search-jumper-type>a.search-jumper-btn {
-                     ${searchData.prefConfig.minPopup ? 'visibility: hidden;' : ''}
+                     visibility: hidden;
                  }
                  #search-jumper.funcKeyCall>.search-jumper-searchBar>.search-jumper-type:hover>a.search-jumper-btn {
-                     ${searchData.prefConfig.minPopup ? 'visibility: visible;' : ''}
+                     visibility: visible;
                  }
+                 ` : ''}
                  #search-jumper.funcKeyCall>.search-jumper-searchBar>.search-jumper-type:hover {
                      height: auto!important;
                      width: ${240 * this.scale}px!important;
@@ -1680,16 +1680,18 @@
                  .search-jumper-isTargetLink .search-jumper-btn>div,
                  .search-jumper-isTargetPage .search-jumper-btn>div {
                      animation-name: changeOpacity;
-                     animation-duration: 2.5s;
+                     animation-duration: 2s;
                      animation-iteration-count: infinite;
                      animation-delay: 0.1s;
                      display: block;
-                     opacity: 0.1;
+                     opacity: 0;
                  }
                  @keyframes changeOpacity {
-                     0%   {opacity: 0.1;}
-                     50%  {opacity: 0.6;}
-                     100% {opacity: 0.1;}
+                     0%   {opacity: 0;}
+                     10%  {opacity: 0;}
+                     50%  {opacity: 0.75;}
+                     80%  {opacity: 0;}
+                     100% {opacity: 0;}
                  }
                  .searchJumper-loading {
                      animation-name: changeScale;
@@ -2405,6 +2407,9 @@
                  .searchJumper-hide {
                      display: none!important;
                  }
+                 .search-jumper-historylist>a.search-jumper-btn {
+                     filter: drop-shadow(0px 0px 3px #00000050);
+                 }
                  @media (prefers-color-scheme: dark) {
                      /* 站点列表 */
                      #search-jumper .sitelist > .sitelistCon > p {
@@ -2427,6 +2432,10 @@
                      /* 历史列表 */
                      .search-jumper-historylist {
                          background-color: #181C20 !important;
+                     }
+
+                     .search-jumper-historylist>a.search-jumper-btn {
+                         filter: drop-shadow(0px 0px 3px #ffffff50);
                      }
 
                      .search-jumper-showall a.search-jumper-word,
