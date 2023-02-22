@@ -16097,18 +16097,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/80913",
-  "name": "动漫屋",
-  "created_by": "tyf2",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "updated_at": "2016-07-18T21:40:43+09:00",
   "data": {
-    "exampleUrl": "http://www.dm5.com/manhua-shaonianrexue/",
-    "url": "^http://(www|tel|cnc|en)\\.(1kkk|dm5)\\.com/",
-    "pageElement": "//div[@id=\"index_left\"]//div[@class=\"innr3\"]|//div[@class=\"main\"]//ul[@class=\"in_01\"]",
-    "insertBefore": "",
-    "nextLink": "//div[@id=\"search_fy\"]/a[.=\"下一页\"]"
+    "pageElement": "//div[@class='box-body']/ul[contains(@class, 'mh-list')]/*",
+    "nextLink": "//div[contains(@class, 'page-pagination')]/ul//a[contains(.,'>')]",
+    "url": "^https?://(www|tel|cnc|en)\\.(1kkk|dm5)\\.(com|cn)/",
+    "exampleUrl": "http://www.dm5.com/manhua-shaonianrexue/"
   },
-  "created_at": "2016-07-18T21:40:43+09:00"
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "tyf2",
+  "name": "动漫屋",
+  "created_at": "2016-07-18T21:40:43+09:00",
+  "updated_at": "2023-02-22T08:55:37+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/80884",
@@ -30884,17 +30883,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/63646",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "created_at": "2012-09-28T20:30:00+09:00",
   "data": {
-    "pageElement": "//article",
-    "exampleUrl": "http://www.daiwashobo.co.jp/search/new.html",
-    "url": "^https?://(www\\.)?daiwashobo\\.co\\.jp/search/",
-    "nextLink": "//div[@class='jump lst_next']/a"
+    "pageElement": "//div[@class='pickup_block']",
+    "nextLink": "//div[@class='jump lst_next']/a",
+    "url": "^https://www\\.daiwashobo\\.co\\.jp/.",
+    "exampleUrl": "https://www.daiwashobo.co.jp/search/new.html\r\nhttps://www.daiwashobo.co.jp/news/"
   },
-  "updated_at": "2020-05-22T10:30:43+09:00",
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "plais",
   "name": "大和書房",
-  "created_by": "plais"
+  "created_at": "2012-09-28T20:30:00+09:00",
+  "updated_at": "2023-02-21T19:59:55+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/63643",
