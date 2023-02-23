@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.33.73
+// @version      1.9.34.1
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，自动适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，自動適配任意網頁
@@ -2132,28 +2132,28 @@
                         }
                     }
 
-                    if(needUrl && (href===""||href===null)){
-                        this.nextLinkHref=false;
-                    }else if(needUrl && /^(javascript:|#)/.test(href)){
-                        this.nextLinkHref=false;
-                    }else{
-                        this.nextLinkHref=(href && !/^(javascript:|#)/.test(href))?this.canonicalUri(href):"#";
-                        if(this.nextLinkHref!="#" && (this.nextLinkHref==this.curUrl || this.nextLinkHref==this.curUrl+"#" || this.nextLinkHref==this.oldUrl || this.nextLinkHref==this.oldUrl+"#")){
-                            this.nextLinkHref=false;
-                        }else if(doc==document)debug(nextLink, 'Next link');
+                    if (needUrl && (href === "" || href === null)) {
+                        this.nextLinkHref = false;
+                    } else if (needUrl && /^(javascript:|#)/.test(href)) {
+                        this.nextLinkHref = false;
+                    } else {
+                        this.nextLinkHref = (href && !/^(javascript:|#)/.test(href)) ? this.canonicalUri(href) : "#";
+                        if (this.nextLinkHref != "#" && (this.nextLinkHref == this.initUrl || this.nextLinkHref == this.curUrl || this.nextLinkHref == this.curUrl + "#" || this.nextLinkHref == this.oldUrl || this.nextLinkHref == this.oldUrl + "#")) {
+                            this.nextLinkHref = false;
+                        } else if (doc == document) debug(nextLink, 'Next link');
                     }
                 }
-            }else{
-                this.nextLinkHref=false;
+            } else {
+                this.nextLinkHref = false;
             }
             this.preload();
             return nextLink;
         }
 
-        preload(){
-            if(!rulesData.preload)return;
-            if(!this.nextLinkHref || this.nextLinkHref=="#")return;
-            let self=this;
+        preload() {
+            if (!rulesData.preload) return;
+            if (!this.nextLinkHref || this.nextLinkHref == "#") return;
+            let self = this;
             _GM_xmlhttpRequest({
                 url: this.nextLinkHref,
                 method: 'GET',
@@ -2163,24 +2163,24 @@
                 },
                 timeout: 10000,
                 onload: function(res) {
-                    var doc=null;
+                    var doc = null;
                     try {
-                        doc=document.implementation.createHTMLDocument('');
-                        doc.documentElement.innerHTML=res.response;
+                        doc = document.implementation.createHTMLDocument('');
+                        doc.documentElement.innerHTML = res.response;
                         var body = doc.body;
                         if (body && body.firstChild) {
                             self.lazyImgAction(body.children);
                         }
-                        if(!self.preloadDiv){
+                        if (!self.preloadDiv) {
                             self.preloadDiv = document.createElement('div');
                             self.preloadDiv.id = "pagetual-preload";
                             self.preloadDiv.style.cssText = 'display:none!important;';
                             document.body.appendChild(self.preloadDiv);
-                            self.checkedImgs={};
+                            self.checkedImgs = {};
                         }
-                        [].forEach.call(doc.images, i=>{
-                            let iSrc=i.src;
-                            if(iSrc && !self.checkedImgs[iSrc]){
+                        [].forEach.call(doc.images, i => {
+                            let iSrc = i.src;
+                            if (iSrc && !self.checkedImgs[iSrc]) {
                                 self.checkedImgs[iSrc] = true;
                                 let img = document.createElement('img');
                                 img.src = iSrc;
@@ -2386,6 +2386,7 @@
             this.nextLinkHref = null;
             this.curUrl = location.href;
             this.oldUrl = "";
+            this.initUrl = location.href;
             this.historyUrl = "";
             let base = document.querySelector("base");
             this.basePath = base ? base.href : location.href;
