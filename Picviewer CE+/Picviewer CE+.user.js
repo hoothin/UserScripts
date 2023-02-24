@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.2.24.1
+// @version              2023.2.24.2
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -14583,7 +14583,7 @@ ImgOps | https://imgops.com/#b#`;
                 */
                 if (prefs.gallery.sidebarToggle) {
                     var toggleBar = this.eleMaps['sidebar-toggle'];
-                    toggleBar.style.display = 'block';
+                    toggleBar.style.display = 'flex';
                     toggleBar.style.height = '12px';
                     toggleBar.addEventListener('click', this.showHideBottom.bind(this), false);
 
@@ -16890,8 +16890,9 @@ ImgOps | https://imgops.com/#b#`;
                     width:50px;\
                     margin-top:-30px;\
                     cursor:pointer;\
-                    opacity:0.3;\
+                    opacity:0.6;\
                     z-index:1;\
+                    transition: opacity .3s ease;\
                     }\
                     .pv-gallery-img-controler-pre{\
                     background:rgba(70,70,70,0.5) url("'+prefs.icons.arrowLeft+'") no-repeat center;\
@@ -17031,15 +17032,19 @@ ImgOps | https://imgops.com/#b#`;
                     color:#757575;\
                     white-space:nowrap;\
                     cursor:pointer;\
-                    z-index:1;\
+                    z-index:2;\
+                    transition: background-color .3s ease, opacity .3s ease;\
+                    justify-content: center;\
                     display:none;\
                     }\
                     .pv-gallery-container.pv-gallery-sidebar-toggle-hide>.pv-gallery-body>.pv-gallery-img-container>span.pv-gallery-sidebar-toggle{\
                     opacity: 0.6;\
-                    transition: opacity .3s ease;\
+                    padding: 15px;\
+                    background-color:#00000000;\
                     }\
                     .pv-gallery-container.pv-gallery-sidebar-toggle-hide>.pv-gallery-body>.pv-gallery-img-container>span.pv-gallery-sidebar-toggle:hover{\
                     opacity: 1;\
+                    background-color:rgb(0 0 0 / 50%);\
                     }\
                     .pv-gallery-container.pv-gallery-sidebar-toggle-hide>.pv-gallery-body{\
                     border-top: 0px solid transparent;\
