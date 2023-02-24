@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.55.2
+// @version      1.6.6.55.3
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -1339,6 +1339,8 @@
                      overflow-x: scroll;
                      overflow-y: hidden;
                      height: calc(100% - 101px);
+                     overscroll-behavior: contain;
+                     -ms-scroll-chaining: contain;
                  }
                  #search-jumper-alllist>.search-jumper-btn {
                      position: fixed;
@@ -1359,6 +1361,7 @@
                      width: 100%;
                      height: 100%;
                      z-index: -1;
+                     transform: translateZ(0);
                      ${searchData.prefConfig.noAni ? "background-color: rgba(255, 255, 255, 0.8);" : (
                     "background-color: rgba(255, 255, 255, 0.1);" +
                     "backdrop-filter: blur(10px);" +
@@ -1367,11 +1370,6 @@
                  }
                  #search-jumper.search-jumper-showall>.search-jumper-showallBg {
                      display: block;
-                 }
-                 #search-jumper-alllist:hover+.search-jumper-showallBg {
-                     backdrop-filter: none;
-                     -webkit-backdrop-filter: none;
-                     background-color: rgb(28 33 39 / 80%);
                  }
                  .search-jumper-historylist {
                      display: flex;
@@ -3811,6 +3809,7 @@
             closeShowAll() {
                 if (!this.con.classList.contains("search-jumper-showall")) return;
                 document.removeEventListener("mousedown", self.showAllMouseHandler);
+                document.removeEventListener("keydown", self.showAllKeydownHandler);
                 this.con.classList.remove("search-jumper-showall");
                 this.showallInput.value = "";
                 this.historySiteBtns.slice(0, 10).forEach(btn => {
@@ -3846,12 +3845,23 @@
                 let kw = getKeywords() || cacheKeywords;
                 this.showallInput.value = kw;
                 setTimeout(() => {
-                    self.showAllMouseHandler = e => {
-                        if (e.isTrusted == false || e.target.className === 'sitelistBox' || e.target.className === 'search-jumper-showallBg' || e.target.className === 'search-jumper-historylist') {
-                            self.closeShowAll();
-                        }
-                    };
+                    if (!self.showAllMouseHandler) {
+                        self.showAllMouseHandler = e => {
+                            if (e.isTrusted == false || e.target.className === 'sitelistBox' || e.target.className === 'search-jumper-showallBg' || e.target.className === 'search-jumper-historylist') {
+                                self.closeShowAll();
+                            }
+                        };
+                    }
                     document.addEventListener("mousedown", self.showAllMouseHandler);
+
+                    if (!self.showAllKeydownHandler) {
+                        self.showAllKeydownHandler = e => {
+                            if (e.keyCode == 27) {
+                                self.closeShowAll();
+                            }
+                        };
+                    }
+                    document.addEventListener("keydown", self.showAllKeydownHandler);
                     this.showallInput.focus();
                 }, 0);
             }
@@ -9686,7 +9696,7 @@
 
         function checkVisibility() {
             if (document.hidden) {
-                searchBar.closeShowAll();
+                if (searchBar) searchBar.closeShowAll();
                 return;
             }
             init(() => {
