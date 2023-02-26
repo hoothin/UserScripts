@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.34.1
+// @version      1.9.34.2
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，自动适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，自動適配任意網頁
@@ -113,7 +113,7 @@
             window.scroll(window.scrollX, 999999);
             window.parent.postMessage('pagetual-iframe:DOMLoaded', '*');
         };
-        if(window.opera){
+        if (window.opera) {
             document.addEventListener('DOMContentLoaded', domloaded, false);
         } else {
             domloaded();
@@ -123,12 +123,12 @@
         return;
     }
 
-    if(window.top != window.self){
-        try{
+    if (window.top != window.self) {
+        try {
             if (window.self.innerWidth < 100 || window.self.innerHeight < 100) {
                 return;
             }
-        }catch(e){
+        } catch(e) {
             return;
         }
     }
@@ -140,180 +140,180 @@
         case "zh-CN":
         case "zh-SG":
             config = {
-                enableDebug:"调试模式，输出信息至控制台",
-                disable:"暂时禁用",
-                disableSite:"切换禁用状态",
-                disableSiteTips:"已在此站禁用",
-                enableSiteTips:"已在此站启用",
-                enable:"启用翻页",
-                toTop:"回到顶部",
-                toBottom:"前往页尾",
-                current:"当前页",
-                forceIframe:"强制拼接",
-                cancelForceIframe:"取消强制拼接",
-                configure:"打开配置页面",
-                firstUpdate:"点击此处初始化规则",
-                update:"更新规则",
-                click2update:"点击立即更新规则",
-                loadNow:"立即翻页",
-                loadConfirm:"要翻几页？（0为不间断）",
-                noNext:"没有找到下一页，请新建规则",
-                passSec:"更新于 #t# 秒前",
-                passMin:"更新于 #t# 分钟前",
-                passHour:"更新于 #t# 小时前",
-                passDay:"更新于 #t# 天前",
-                cantDel:"无法删除内置规则",
-                confirmDel:"是否确认要删除此规则？",
-                updateSucc:"更新成功",
-                beginUpdate:"正在更新，请耐心等待，不要关闭页面",
-                customUrls:"导入 Pagetual 或 AutoPagerize 规则 url，一行一条",
-                customRules:"输入【东方永页机】格式的自定义规则 <a href='#t#'>贡献规则</a>",
-                save:"保存设置",
-                loadingText:"少女祈祷中...",
-                opacity:"不透明值",
-                opacityPlaceholder:"0: 隐藏分隔条",
-                hideBar:"隐藏分页隔条",
-                hideBarButNoStop:"隐藏但不停止",
-                dbClick2Stop:"空白处双击暂停翻页",
-                sortTitle:"排序在下次更新规则后生效",
-                autoRun:"自动启用，否则为白名单模式",
-                autoLoadNum:"自动加载指定页数",
-                turnRate:"距离页尾X倍页面高度时就开始翻页",
-                inputPageNum:"输入页码跳转",
-                enableHistory:"翻页后写入历史记录",
-                enableHistoryAfterInsert:"拼接后立即写入历史记录，否则浏览完毕后再行写入",
-                initRun:"打开页面后立即尝试翻页，否则滚动至页尾再翻页",
-                preload:"翻页前预读下一页，加速浏览",
-                click2ImportRule:"点击下方添加特殊规则库，并静待更新成功：",
-                forceAllBody:"是否拼接整个页面？",
-                openInNewTab:"使拼接页面的内容在新页面打开",
-                importSucc:"导入成功",
-                import:"导入",
-                editCurrent:"编辑此站规则",
-                editBlacklist:"编辑黑名单网址，一行一条，支持? *通配符",
-                upBtnImg:"回到页首图标",
-                downBtnImg:"前往页尾图标",
-                loadingTextTitle:"加载中文字",
-                dbClick2StopCtrl:"Ctrl 键",
-                dbClick2StopAlt:"Alt 键",
-                dbClick2StopShift:"Shift 键",
-                dbClick2StopMeta:"Meta 键",
-                dbClick2StopKey:"快捷键",
-                pageElementCss:"页面主体框架的样式",
-                customCss:"自定义 CSS",
-                firstAlert:"你还未导入规则库，请选择合适的规则库导入哦",
-                picker:"东方永页机主体元素抓取器",
-                closePicker:"关闭东方永页机抓取器",
-                pickerPlaceholder:"没想法建议留空",
-                pickerCheck:"检查你编辑的选择器并复制",
-                switchSelector:"点击切换元素",
-                gotoEdit:"使用当前的选择器前往编辑规则",
-                manualMode:"禁用拼接，手动用右方向键翻页，可使用 Alt + 左方向键返回",
-                clickMode:"禁用拼接，滚动至页尾时自动点击下一页",
-                pageBarMenu:"点击分隔条中间弹出菜单",
-                nextSwitch:"切换其他页码",
-                arrowToScroll:"左方向键滚动至上一页，右方向键滚动至下一页",
-                sideController:"在侧边显示翻页控制栏",
-                hideLoadingIcon:"隐藏加载动画",
-                hideBarArrow:"隐藏分隔条定位箭头",
-                duplicate:"检测到永页机重复安装，请删除其他脚本管理器中的永页机!",
-                forceStateIframe:"以 iframe 嵌入整页",
-                forceStateDynamic:"通过 iframe 加载动态内容后取出",
-                forceStateDisable:"在此站禁用"
+                enableDebug: "调试模式，输出信息至控制台",
+                disable: "暂时禁用",
+                disableSite: "切换禁用状态",
+                disableSiteTips: "已在此站禁用",
+                enableSiteTips: "已在此站启用",
+                enable: "启用翻页",
+                toTop: "回到顶部",
+                toBottom: "前往页尾",
+                current: "当前页",
+                forceIframe: "强制拼接",
+                cancelForceIframe: "取消强制拼接",
+                configure: "打开配置页面",
+                firstUpdate: "点击此处初始化规则",
+                update: "更新规则",
+                click2update: "点击立即更新规则",
+                loadNow: "立即翻页",
+                loadConfirm: "要翻几页？（0为不间断）",
+                noNext: "没有找到下一页，请新建规则",
+                passSec: "更新于 #t# 秒前",
+                passMin: "更新于 #t# 分钟前",
+                passHour: "更新于 #t# 小时前",
+                passDay: "更新于 #t# 天前",
+                cantDel: "无法删除内置规则",
+                confirmDel: "是否确认要删除此规则？",
+                updateSucc: "更新成功",
+                beginUpdate: "正在更新，请耐心等待，不要关闭页面",
+                customUrls: "导入 Pagetual 或 AutoPagerize 规则 url，一行一条",
+                customRules: "输入【东方永页机】格式的自定义规则 <a href='#t#'>贡献规则</a>",
+                save: "保存设置",
+                loadingText: "少女祈祷中...",
+                opacity: "不透明值",
+                opacityPlaceholder: "0: 隐藏分隔条",
+                hideBar: "隐藏分页隔条",
+                hideBarButNoStop: "隐藏但不停止",
+                dbClick2Stop: "空白处双击暂停翻页",
+                sortTitle: "排序在下次更新规则后生效",
+                autoRun: "自动启用，否则为白名单模式",
+                autoLoadNum: "自动加载指定页数",
+                turnRate: "距离页尾X倍页面高度时就开始翻页",
+                inputPageNum: "输入页码跳转",
+                enableHistory: "翻页后写入历史记录",
+                enableHistoryAfterInsert: "拼接后立即写入历史记录，否则浏览完毕后再行写入",
+                initRun: "打开页面后立即尝试翻页，否则滚动至页尾再翻页",
+                preload: "翻页前预读下一页，加速浏览",
+                click2ImportRule: "点击下方添加特殊规则库，并静待更新成功：",
+                forceAllBody: "是否拼接整个页面？",
+                openInNewTab: "使拼接页面的内容在新页面打开",
+                importSucc: "导入成功",
+                import: "导入",
+                editCurrent: "编辑此站规则",
+                editBlacklist: "编辑黑名单网址，一行一条，支持? *通配符",
+                upBtnImg: "回到页首图标",
+                downBtnImg: "前往页尾图标",
+                loadingTextTitle: "加载中文字",
+                dbClick2StopCtrl: "Ctrl 键",
+                dbClick2StopAlt: "Alt 键",
+                dbClick2StopShift: "Shift 键",
+                dbClick2StopMeta: "Meta 键",
+                dbClick2StopKey: "快捷键",
+                pageElementCss: "页面主体框架的样式",
+                customCss: "自定义 css",
+                firstAlert: "你还未导入规则库，请选择合适的规则库导入哦",
+                picker: "东方永页机主体元素抓取器",
+                closePicker: "关闭东方永页机抓取器",
+                pickerPlaceholder: "没想法建议留空",
+                pickerCheck: "检查你编辑的选择器并复制",
+                switchSelector: "点击切换元素",
+                gotoEdit: "使用当前的选择器前往编辑规则",
+                manualMode: "禁用拼接，手动用右方向键翻页，可使用 Alt + 左方向键返回",
+                clickMode: "禁用拼接，滚动至页尾时自动点击下一页",
+                pageBarMenu: "点击分隔条中间弹出菜单",
+                nextSwitch: "切换其他页码",
+                arrowToScroll: "左方向键滚动至上一页，右方向键滚动至下一页",
+                sideController: "在侧边显示翻页控制栏",
+                hideLoadingIcon: "隐藏加载动画",
+                hideBarArrow: "隐藏分隔条定位箭头",
+                duplicate: "检测到永页机重复安装，请删除其他脚本管理器中的永页机!",
+                forceStateIframe: "以 iframe 嵌入整页",
+                forceStateDynamic: "通过 iframe 加载动态内容后取出",
+                forceStateDisable: "在此站禁用"
             };
             break;
         case "zh-TW":
         case "zh-HK":
             config = {
-                enableDebug:"調試模式，輸出信息至控制台",
-                disable:"暫時禁用",
-                disableSite:"切換禁用狀態",
-                disableSiteTips:"已在此站禁用",
-                enableSiteTips:"已在此站啟用",
-                enable:"啟用翻頁",
-                toTop:"回到頂部",
-                toBottom:"前往頁尾",
-                current:"當前頁",
-                forceIframe:"強制拼接",
-                cancelForceIframe:"取消强制拼接",
-                configure:"打開配置頁面",
-                firstUpdate:"點擊此處初始化規則",
-                update:"更新規則",
-                click2update:"點擊立即更新規則",
-                loadNow:"立即翻頁",
-                loadConfirm:"要翻几頁？（0為不間斷）",
-                noNext:"沒有找到下一頁，請新建規則",
-                passSec:"更新于 #t# 秒前",
-                passMin:"更新于 #t# 分鐘前",
-                passHour:"更新于 #t# 小時前",
-                passDay:"更新于 #t# 天前",
-                cantDel:"無法刪除内置規則",
-                confirmDel:"是否確認要刪除此規則？",
-                updateSucc:"更新成功",
-                beginUpdate:"正在更新，請稍候",
-                customUrls:"導入 Pagetual 或 AutoPagerize 規則 url，一行一條",
-                customRules:"輸入【東方永頁機】格式的自定義規則 <a href='#t#'>貢獻規則</a>",
-                save:"存儲設置",
-                loadingText:"少女祈禱中...",
-                opacity:"不透明值",
-                opacityPlaceholder:"0: 隱藏分隔條",
-                hideBar:"隱藏分頁隔條",
-                hideBarButNoStop:"隱藏但不停止",
-                dbClick2Stop:"空白處雙擊暫停翻頁",
-                sortTitle:"排序在下次更新規則後生效",
-                autoRun:"自動啓用，否則為白名單模式",
-                autoLoadNum:"自動加載指定頁數",
-                turnRate:"距離頁尾X倍頁面高度時就開始翻頁",
-                inputPageNum:"輸入頁碼跳轉",
-                enableHistory:"翻頁后寫入歷史記錄",
-                enableHistoryAfterInsert:"拼接後立即寫入歷史記錄，否則瀏覽完畢後再行寫入",
-                initRun:"打開頁面后立即嘗試翻頁，否則滾動至頁尾再翻頁",
-                preload:"翻頁前預讀下一頁，加速瀏覽",
-                click2ImportRule:"點擊下方添加特殊規則庫，并靜待更新成功：",
-                forceAllBody:"是否拼接整個頁面？",
-                openInNewTab:"使拼接頁面的内容在新頁面打開",
-                importSucc:"導入成功",
-                import:"導入",
-                editCurrent:"編輯此站規則",
-                editBlacklist:"編輯黑名單網址，一行一條，支持? *通配符",
-                upBtnImg:"回到頁首圖標",
-                downBtnImg:"前往頁尾圖標",
-                loadingTextTitle:"加載中文字",
-                dbClick2StopCtrl:"Ctrl 鍵",
-                dbClick2StopAlt:"Alt 鍵",
-                dbClick2StopShift:"Shift 鍵",
-                dbClick2StopMeta:"Meta 鍵",
-                dbClick2StopKey:"快捷鍵",
-                pageElementCss:"頁面主體框架的樣式",
-                customCss:"自定義 CSS",
-                firstAlert:"你還未導入規則庫，請選擇合適的規則庫導入哦",
-                picker:"東方永頁機主體元素抓取器",
-                closePicker:"關閉東方永頁機抓取器",
-                pickerPlaceholder:"沒想法建議留空",
-                pickerCheck:"檢查你編輯的選擇器並複製",
-                switchSelector:"點擊切換元素",
-                gotoEdit:"使用當前的選擇器前往編輯規則",
-                manualMode:"禁用拼接，手動用右方向鍵翻頁",
-                clickMode:"禁用拼接，滾動至頁尾時自動點擊下一頁",
-                pageBarMenu:"點擊分隔條中間彈出菜單",
-                nextSwitch:"切換其他頁碼",
-                arrowToScroll:"左方向鍵滾動至上一頁，右方向鍵滾動至下一頁",
-                sideController:"在側邊顯示翻頁控制欄",
-                hideLoadingIcon:"隱藏加載動畫",
-                hideBarArrow:"隱藏分隔條定位箭頭",
-                duplicate:"檢測到永頁機重複安裝，請刪除其他腳本管理器中的永頁機!",
-                forceStateIframe:"以 iframe 嵌入整頁",
-                forceStateDynamic:"通過 iframe 加載動態內容後取出",
-                forceStateDisable:"在此站禁用"
+                enableDebug: "調試模式，輸出信息至控制台",
+                disable: "暫時禁用",
+                disableSite: "切換禁用狀態",
+                disableSiteTips: "已在此站禁用",
+                enableSiteTips: "已在此站啟用",
+                enable: "啟用翻頁",
+                toTop: "回到頂部",
+                toBottom: "前往頁尾",
+                current: "當前頁",
+                forceIframe: "強制拼接",
+                cancelForceIframe: "取消强制拼接",
+                configure: "打開配置頁面",
+                firstUpdate: "點擊此處初始化規則",
+                update: "更新規則",
+                click2update: "點擊立即更新規則",
+                loadNow: "立即翻頁",
+                loadConfirm: "要翻几頁？（0為不間斷）",
+                noNext: "沒有找到下一頁，請新建規則",
+                passSec: "更新于 #t# 秒前",
+                passMin: "更新于 #t# 分鐘前",
+                passHour: "更新于 #t# 小時前",
+                passDay: "更新于 #t# 天前",
+                cantDel: "無法刪除内置規則",
+                confirmDel: "是否確認要刪除此規則？",
+                updateSucc: "更新成功",
+                beginUpdate: "正在更新，請稍候",
+                customUrls: "導入 Pagetual 或 AutoPagerize 規則 url，一行一條",
+                customRules: "輸入【東方永頁機】格式的自定義規則 <a href='#t#'>貢獻規則</a>",
+                save: "存儲設置",
+                loadingText: "少女祈禱中...",
+                opacity: "不透明值",
+                opacityPlaceholder: "0: 隱藏分隔條",
+                hideBar: "隱藏分頁隔條",
+                hideBarButNoStop: "隱藏但不停止",
+                dbClick2Stop: "空白處雙擊暫停翻頁",
+                sortTitle: "排序在下次更新規則後生效",
+                autoRun: "自動啓用，否則為白名單模式",
+                autoLoadNum: "自動加載指定頁數",
+                turnRate: "距離頁尾X倍頁面高度時就開始翻頁",
+                inputPageNum: "輸入頁碼跳轉",
+                enableHistory: "翻頁后寫入歷史記錄",
+                enableHistoryAfterInsert: "拼接後立即寫入歷史記錄，否則瀏覽完畢後再行寫入",
+                initRun: "打開頁面后立即嘗試翻頁，否則滾動至頁尾再翻頁",
+                preload: "翻頁前預讀下一頁，加速瀏覽",
+                click2ImportRule: "點擊下方添加特殊規則庫，并靜待更新成功：",
+                forceAllBody: "是否拼接整個頁面？",
+                openInNewTab: "使拼接頁面的内容在新頁面打開",
+                importSucc: "導入成功",
+                import: "導入",
+                editCurrent: "編輯此站規則",
+                editBlacklist: "編輯黑名單網址，一行一條，支持? *通配符",
+                upBtnImg: "回到頁首圖標",
+                downBtnImg: "前往頁尾圖標",
+                loadingTextTitle: "加載中文字",
+                dbClick2StopCtrl: "Ctrl 鍵",
+                dbClick2StopAlt: "Alt 鍵",
+                dbClick2StopShift: "Shift 鍵",
+                dbClick2StopMeta: "Meta 鍵",
+                dbClick2StopKey: "快捷鍵",
+                pageElementCss: "頁面主體框架的樣式",
+                customCss: "自定義 css",
+                firstAlert: "你還未導入規則庫，請選擇合適的規則庫導入哦",
+                picker: "東方永頁機主體元素抓取器",
+                closePicker: "關閉東方永頁機抓取器",
+                pickerPlaceholder: "沒想法建議留空",
+                pickerCheck: "檢查你編輯的選擇器並複製",
+                switchSelector: "點擊切換元素",
+                gotoEdit: "使用當前的選擇器前往編輯規則",
+                manualMode: "禁用拼接，手動用右方向鍵翻頁",
+                clickMode: "禁用拼接，滾動至頁尾時自動點擊下一頁",
+                pageBarMenu: "點擊分隔條中間彈出菜單",
+                nextSwitch: "切換其他頁碼",
+                arrowToScroll: "左方向鍵滾動至上一頁，右方向鍵滾動至下一頁",
+                sideController: "在側邊顯示翻頁控制欄",
+                hideLoadingIcon: "隱藏加載動畫",
+                hideBarArrow: "隱藏分隔條定位箭頭",
+                duplicate: "檢測到永頁機重複安裝，請刪除其他腳本管理器中的永頁機!",
+                forceStateIframe: "以 iframe 嵌入整頁",
+                forceStateDynamic: "通過 iframe 加載動態內容後取出",
+                forceStateDisable: "在此站禁用"
             };
             break;
         case "ja":
             config = {
-                enableDebug:"デバッグモード",
+                enableDebug: "デバッグモード",
                 disable: "一時的に無効にする",
-                disableSite:"無効状態の切り替え",
-                disableSiteTips:"このサイトで既に無効になっています",
-                enableSiteTips:"このサイトで既に有効になっています",
+                disableSite: "無効状態の切り替え",
+                disableSiteTips: "このサイトで既に無効になっています",
+                enableSiteTips: "このサイトで既に有効になっています",
                 enable: "ページめくりを有効にする",
                 toTop: "トップに戻る",
                 toBottom: "ページの下部に移動",
@@ -321,12 +321,12 @@
                 forceIframe: "強制ステッチ",
                 cancelForceIframe: "強制ステッチをキャンセル",
                 configure: "設定ページを開く",
-                firstUpdate:"ここをクリックしてルールを初期化します",
+                firstUpdate: "ここをクリックしてルールを初期化します",
                 update: "更新ルール",
-                click2update:"今すぐルールを更新してください",
-                loadNow:"今すぐページをめくる",
-                loadConfirm:"数ページめくりたいですか？（0は途切れない）",
-                noNext:"次のページが見つかりません、新しいルールを作成してください",
+                click2update: "今すぐルールを更新してください",
+                loadNow: "今すぐページをめくる",
+                loadConfirm: "数ページめくりたいですか？（0は途切れない）",
+                noNext: "次のページが見つかりません、新しいルールを作成してください",
                 passSec: "#t#秒前に更新",
                 passMin: "#t#分前に更新",
                 passHour: "#t#時間前に更新",
@@ -339,52 +339,52 @@
                 customRules: "【東方永頁機】の形式でカスタムルールを入力してください <a href='#t#'>寄稿ルール</a>",
                 save: "設定を保存",
                 loadingText: "少女祈祷中...",
-                opacity:"不透明値",
-                opacityPlaceholder:"0: 隠す",
-                hideBar:"ページ区切り文字を非表示にします",
-                hideBarButNoStop:"非表示にするが停止しない",
-                dbClick2Stop:"空白部分をダブルクリックしてページめくりを一時停止します",
-                sortTitle:"並べ替えは、次のルールの更新後に有効になります",
-                autoRun:"自動的に有効",
-                autoLoadNum:"指定したページ数を自動的に読み込みます",
-                turnRate:"ページの端からページの高さの X 倍になったらページをめくる",
-                inputPageNum:"ジャンプするページ番号を入力",
-                enableHistory:"ページめくり後の履歴を書く",
+                opacity: "不透明値",
+                opacityPlaceholder: "0: 隠す",
+                hideBar: "ページ区切り文字を非表示にします",
+                hideBarButNoStop: "非表示にするが停止しない",
+                dbClick2Stop: "空白部分をダブルクリックしてページめくりを一時停止します",
+                sortTitle: "並べ替えは、次のルールの更新後に有効になります",
+                autoRun: "自動的に有効",
+                autoLoadNum: "指定したページ数を自動的に読み込みます",
+                turnRate: "ページの端からページの高さの X 倍になったらページをめくる",
+                inputPageNum: "ジャンプするページ番号を入力",
+                enableHistory: "ページめくり後の履歴を書く",
                 enableHistoryAfterInsert: "スプライシングの直後に履歴レコードを書き込みます。それ以外の場合は、閲覧後に書き込みます",
-                initRun:"Webページを開いた直後にページをめくる",
-                preload:"事前に次のページを読む",
-                click2ImportRule:"以下をクリックして、ルールベースを追加します：",
-                forceAllBody:"フルページ埋め込み？",
-                openInNewTab:"スプライスされたページのコンテンツを新しいページで開きます",
-                importSucc:"インポート完了",
-                import:"インポート",
-                editCurrent:"現在のルールの編集",
-                editBlacklist:"ブラックリストのURLを編集し、1行ずつ、サポート? *ワイルドカード",
-                upBtnImg:"トップアイコンに戻る",
-                downBtnImg:"フッターアイコンに移動",
-                loadingTextTitle:"テキストをロード",
-                dbClick2StopCtrl:"Ctrlキー",
-                dbClick2StopAlt:"Altキー",
-                dbClick2StopShift:"Shiftキー",
-                dbClick2StopMeta:"Metaキー",
-                dbClick2StopKey:"Shortcutキー",
-                pageElementCss:"ページ本文フレームの STYLE",
-                customCss:"カスタム CSS",
-                firstAlert:"ルールベースをインポートしていないため、インポートする適切なルールベースを選択してください",
-                picker:"Pagetualページ要素ピッカー",
-                closePicker:"Pagetualピッカーを閉じる",
-                pickerPlaceholder:"わからない場合は空のままにしてください",
-                pickerCheck:"セレクターをチェックしてコピー",
-                switchSelector:"クリックして要素を切り替えます",
-                gotoEdit:"現在のセレクターでルールを編集する",
-                manualMode:"スプライシングを無効にします。手動で右の矢印キーを使用してページをめくります",
+                initRun: "Webページを開いた直後にページをめくる",
+                preload: "事前に次のページを読む",
+                click2ImportRule: "以下をクリックして、ルールベースを追加します：",
+                forceAllBody: "フルページ埋め込み？",
+                openInNewTab: "スプライスされたページのコンテンツを新しいページで開きます",
+                importSucc: "インポート完了",
+                import: "インポート",
+                editCurrent: "現在のルールの編集",
+                editBlacklist: "ブラックリストのURLを編集し、1行ずつ、サポート? *ワイルドカード",
+                upBtnImg: "トップアイコンに戻る",
+                downBtnImg: "フッターアイコンに移動",
+                loadingTextTitle: "テキストをロード",
+                dbClick2StopCtrl: "Ctrlキー",
+                dbClick2StopAlt: "Altキー",
+                dbClick2StopShift: "Shiftキー",
+                dbClick2StopMeta: "Metaキー",
+                dbClick2StopKey: "Shortcutキー",
+                pageElementCss: "ページ本文フレームの STYLE",
+                customCss: "カスタム css",
+                firstAlert: "ルールベースをインポートしていないため、インポートする適切なルールベースを選択してください",
+                picker: "Pagetualページ要素ピッカー",
+                closePicker: "Pagetualピッカーを閉じる",
+                pickerPlaceholder: "わからない場合は空のままにしてください",
+                pickerCheck: "セレクターをチェックしてコピー",
+                switchSelector: "クリックして要素を切り替えます",
+                gotoEdit: "現在のセレクターでルールを編集する",
+                manualMode: "スプライシングを無効にします。手動で右の矢印キーを使用してページをめくります",
                 clickMode: "スティッチングを無効にします。ページの最後までスクロールすると、次のページが自動的にクリックされます",
-                pageBarMenu:"ページバーの中央をクリックしてメニューをポップアップ表示",
-                nextSwitch:"次のページに切り替え",
-                arrowToScroll:"左矢印キーで前へ、右矢印キーで次へ",
-                sideController:"サイドバーにページング コントロール バーを表示する",
-                hideLoadingIcon:"読み込み中のアニメーションを隠す",
-                hideBarArrow:"分割線の位置矢印を隠す",
+                pageBarMenu: "ページバーの中央をクリックしてメニューをポップアップ表示",
+                nextSwitch: "次のページに切り替え",
+                arrowToScroll: "左矢印キーで前へ、右矢印キーで次へ",
+                sideController: "サイドバーにページング コントロール バーを表示する",
+                hideLoadingIcon: "読み込み中のアニメーションを隠す",
+                hideBarArrow: "分割線の位置矢印を隠す",
                 duplicate: "Pagetual の重複インストールが検出されました。他のスクリプト マネージャで永続的なページ マシンを削除してください!",
                 forceStateIframe: "iframe にページ全体を埋め込む",
                 forceStateDynamic: "iframe 経由で動的コンテンツを読み込む",
@@ -394,167 +394,167 @@
         case "ru":
         case "ru-RU":
             config = {
-                enableDebug:"Включить отладку",
-                disable:"Отключено",
-                disableSite:"Переключить состояние отключения",
-                disableSiteTips:"Отключено на этом сайте",
-                enableSiteTips:"Включено на этом сайте",
-                enable:"Включено",
-                toTop:"В начало",
-                toBottom:"В конец",
-                current:"Текущая страница",
-                forceIframe:"Принудительно присоединить следующую страницу",
-                cancelForceIframe:"Отменить принудительное присоединение",
-                configure:"Настроить",
-                firstUpdate:"Нажмите здесь, чтобы инициализировать правила",
-                update:"Обновить правила онлайн",
-                click2update:"Нажмите, чтобы обновить правила по URL сейчас",
-                loadNow:"Загрузить следующую страницу сейчас",
-                loadConfirm:"Сколько страниц вы хотите загрузить? (0 означает бесконечность)",
-                noNext:"Ссылка на следующую страницу не найдена, пожалуйста, создайте новое правило",
-                passSec:"Обновлено #t# секунд назад",
-                passMin:"Обновлено #t# минут назад",
-                passHour:"Обновлено #t# часов назад",
-                passDay:"Обновлено #t# дней назад",
-                cantDel:"Невозможно удалить встроенные правила",
-                confirmDel:"Вы уверены, что хотите удалить это правило?",
-                updateSucc:"Обновление прошло успешно",
-                beginUpdate:"Обновление начато, подождите минуту, пожалуйста",
-                customUrls:"Импортируйте URL-адрес правила Пэйджтуал или AutoPagerize по одному URL на строку",
-                customRules:"Введите пользовательские правила с форматом [Pagetual]. <a href='#t#'>Правила внесения вклада</a>",
-                save:"Сохранить",
-                loadingText:"Shojo загружается...",
-                opacity:"Непрозрачность",
-                opacityPlaceholder:"0: скрыть",
-                hideBar:"Скрыть промежуток переключения страниц",
-                hideBarButNoStop:"Скрыть, но не останавливать",
-                dbClick2Stop:"Двойной щелчок по пустому пространству для паузы",
-                sortTitle:"Сортировка вступает в силу после следующего обновления правила",
-                autoRun:"Автозапуск (режим черного списка)",
-                autoLoadNum:"Количество для предварительной загрузки страниц",
-                turnRate:"Переверните страницу, когда она будет в X раз больше высоты страницы от конца страницы",
-                inputPageNum:"Введите номер страницы для перехода",
-                enableHistory:"Записать историю после переключения страниц",
+                enableDebug: "Включить отладку",
+                disable: "Отключено",
+                disableSite: "Переключить состояние отключения",
+                disableSiteTips: "Отключено на этом сайте",
+                enableSiteTips: "Включено на этом сайте",
+                enable: "Включено",
+                toTop: "В начало",
+                toBottom: "В конец",
+                current: "Текущая страница",
+                forceIframe: "Принудительно присоединить следующую страницу",
+                cancelForceIframe: "Отменить принудительное присоединение",
+                configure: "Настроить",
+                firstUpdate: "Нажмите здесь, чтобы инициализировать правила",
+                update: "Обновить правила онлайн",
+                click2update: "Нажмите, чтобы обновить правила по URL сейчас",
+                loadNow: "Загрузить следующую страницу сейчас",
+                loadConfirm: "Сколько страниц вы хотите загрузить? (0 означает бесконечность)",
+                noNext: "Ссылка на следующую страницу не найдена, пожалуйста, создайте новое правило",
+                passSec: "Обновлено #t# секунд назад",
+                passMin: "Обновлено #t# минут назад",
+                passHour: "Обновлено #t# часов назад",
+                passDay: "Обновлено #t# дней назад",
+                cantDel: "Невозможно удалить встроенные правила",
+                confirmDel: "Вы уверены, что хотите удалить это правило?",
+                updateSucc: "Обновление прошло успешно",
+                beginUpdate: "Обновление начато, подождите минуту, пожалуйста",
+                customUrls: "Импортируйте URL-адрес правила Пэйджтуал или AutoPagerize по одному URL на строку",
+                customRules: "Введите пользовательские правила с форматом [Pagetual]. <a href='#t#'>Правила внесения вклада</a>",
+                save: "Сохранить",
+                loadingText: "Shojo загружается...",
+                opacity: "Непрозрачность",
+                opacityPlaceholder: "0: скрыть",
+                hideBar: "Скрыть промежуток переключения страниц",
+                hideBarButNoStop: "Скрыть, но не останавливать",
+                dbClick2Stop: "Двойной щелчок по пустому пространству для паузы",
+                sortTitle: "Сортировка вступает в силу после следующего обновления правила",
+                autoRun: "Автозапуск (режим черного списка)",
+                autoLoadNum: "Количество для предварительной загрузки страниц",
+                turnRate: "Переверните страницу, когда она будет в X раз больше высоты страницы от конца страницы",
+                inputPageNum: "Введите номер страницы для перехода",
+                enableHistory: "Записать историю после переключения страниц",
                 enableHistoryAfterInsert: "Записать запись истории сразу после сплайсинга, в противном случае запишите после просмотра",
-                initRun:"Переключать страницы сразу после открытия",
-                preload:"Предварительная загрузка следующей страницы для ускорения",
-                click2ImportRule:"Нажмите, чтобы импортировать ссылку базовых правил, затем дождитесь завершения обновления:",
-                forceAllBody:"Присоединить полное тело страницы?",
-                openInNewTab:"Открыть дополнительные URL-адреса в новой вкладке",
-                importSucc:"Импорт завершен",
-                import:"Импорт",
-                editCurrent:"Редактировать правило для текущего",
-                editBlacklist:"Редактировать URL-адреса черного списка, по одной строке, поддержка ? * для подстановочного знака",
-                upBtnImg:"Иконка перехода к началу страницы",
-                downBtnImg:"Иконка перехода к концу страницы",
-                loadingTextTitle:"Текст загрузки",
-                dbClick2StopCtrl:"Клавиша Ctrl",
-                dbClick2StopAlt:"Клавиша Alt",
-                dbClick2StopShift:"Клавиша Shift",
-                dbClick2StopMeta:"Клавиша Meta",
-                dbClick2StopKey:"Клавиша быстрого доступа",
-                pageElementCss:"Пользовательский стиль для основных элементов страницы",
-                customCss:"Полный пользовательский CSS",
-                firstAlert:"Вы не импортировали базовое правило, пожалуйста, выберите соответствующее правило для импорта",
-                picker:"Выбор элемента страницы Пэйджтуал",
-                closePicker:"Закрыть выбор Пэйджтуал",
-                pickerPlaceholder:"Оставьте пустым, если вы не знаете",
-                pickerCheck:"Проверить селектор и скопируй",
-                switchSelector:"нажмите для переключения элемента",
-                gotoEdit:"Перейти к редактированию правила с текущим селектором",
-                manualMode:"Отключить автоматическую перелистывание страниц, перелистывать страницы вручную с помощью стрелок справа (или вызвать событие 'pagetual.next')",
+                initRun: "Переключать страницы сразу после открытия",
+                preload: "Предварительная загрузка следующей страницы для ускорения",
+                click2ImportRule: "Нажмите, чтобы импортировать ссылку базовых правил, затем дождитесь завершения обновления: ",
+                forceAllBody: "Присоединить полное тело страницы?",
+                openInNewTab: "Открыть дополнительные URL-адреса в новой вкладке",
+                importSucc: "Импорт завершен",
+                import: "Импорт",
+                editCurrent: "Редактировать правило для текущего",
+                editBlacklist: "Редактировать URL-адреса черного списка, по одной строке, поддержка ? * для подстановочного знака",
+                upBtnImg: "Иконка перехода к началу страницы",
+                downBtnImg: "Иконка перехода к концу страницы",
+                loadingTextTitle: "Текст загрузки",
+                dbClick2StopCtrl: "Клавиша Ctrl",
+                dbClick2StopAlt: "Клавиша Alt",
+                dbClick2StopShift: "Клавиша Shift",
+                dbClick2StopMeta: "Клавиша Meta",
+                dbClick2StopKey: "Клавиша быстрого доступа",
+                pageElementCss: "Пользовательский стиль для основных элементов страницы",
+                customCss: "Полный пользовательский css",
+                firstAlert: "Вы не импортировали базовое правило, пожалуйста, выберите соответствующее правило для импорта",
+                picker: "Выбор элемента страницы Пэйджтуал",
+                closePicker: "Закрыть выбор Пэйджтуал",
+                pickerPlaceholder: "Оставьте пустым, если вы не знаете",
+                pickerCheck: "Проверить селектор и скопируй",
+                switchSelector: "нажмите для переключения элемента",
+                gotoEdit: "Перейти к редактированию правила с текущим селектором",
+                manualMode: "Отключить автоматическую перелистывание страниц, перелистывать страницы вручную с помощью стрелок справа (или вызвать событие 'pagetual.next')",
                 clickMode: "Отключить \"сшивание\" страниц, т.е. автоматически переходить на следующую страницу при прокрутке к ее концу",
-                pageBarMenu:"Щелкните середину панели страниц, чтобы открыть меню.",
-                nextSwitch:"Переключить ссылку на следующую страницу",
-                arrowToScroll:"Нажмите клавишу со стрелкой влево для предыдущего и клавишу со стрелкой вправо для следующего",
-                sideController:"Отображение панели управления пейджингом на боковой панели",
-                hideLoadingIcon:"Скрыть анимацию загрузки",
-                hideBarArrow:"Скрыть стрелки позиционирования разделителя",
+                pageBarMenu: "Щелкните середину панели страниц, чтобы открыть меню.",
+                nextSwitch: "Переключить ссылку на следующую страницу",
+                arrowToScroll: "Нажмите клавишу со стрелкой влево для предыдущего и клавишу со стрелкой вправо для следующего",
+                sideController: "Отображение панели управления пейджингом на боковой панели",
+                hideLoadingIcon: "Скрыть анимацию загрузки",
+                hideBarArrow: "Скрыть стрелки позиционирования разделителя",
                 duplicate: "Обнаружена двойная установка Pagetual, пожалуйста, удалите постоянную страничную машину в других менеджерах скриптов!",
                 forceStateIframe: "Вставить полную страницу как iframe",
-                forceStateDynamic:"Загружать динамический контент через iframe",
+                forceStateDynamic: "Загружать динамический контент через iframe",
                 forceStateDisable: "Отключить перелистывание страниц на этой станции"
             };
             break;
         default:
             config = {
-                enableDebug:"Enable debug output",
-                disable:"Disable",
-                disableSite:"Toggle disabled state",
-                disableSiteTips:"Disabled on this site",
-                enableSiteTips:"Enabled on this site",
-                enable:"Enable",
-                toTop:"To Top",
-                toBottom:"To Bottom",
-                current:"Current Page",
-                forceIframe:"Force to join next page",
-                cancelForceIframe:"Cancel Force join",
-                configure:"Configure",
-                firstUpdate:"Click here to initialize the rules",
-                update:"Update online rules",
-                click2update:"Click to update rules from url now",
-                loadNow:"Load next page manually",
-                loadConfirm:"How much pages do you want to load? (0 means infinite)",
-                noNext:"No next link found, please create a new rule",
-                passSec:"Updated #t# seconds ago",
-                passMin:"Updated #t# minutes ago",
-                passHour:"Updated #t# hours ago",
-                passDay:"Updated #t# days ago",
-                cantDel:"Can't delete buildin rules",
-                confirmDel:"Are you sure you want to delete this rule?",
-                updateSucc:"Update succeeded",
-                beginUpdate:"Begin update, wait a minute please",
-                customUrls:"Import Pagetual or AutoPagerize rule url, One url per line",
-                customRules:"Input custom rules with [Pagetual] format. <a href='#t#'>Contribute rules</a>",
-                save:"Save",
-                loadingText:"Shojo Now Loading...",
-                opacity:"Opacity",
-                opacityPlaceholder:"0: hide spacer",
-                hideBar:"Hide the paging spacer",
-                hideBarButNoStop:"Hide but not stop",
-                dbClick2Stop:"Double-click on the blank space to pause",
-                sortTitle:"Sorting takes effect after the next rule update",
-                autoRun:"Auto run (black list mode)",
-                autoLoadNum:"Amount for preload pages",
-                turnRate:"Turn the next page when it's less than X times page height from the footer",
-                inputPageNum:"Enter page number to jump",
-                enableHistory:"Write history after page turning",
+                enableDebug: "Enable debug output",
+                disable: "Disable",
+                disableSite: "Toggle disabled state",
+                disableSiteTips: "Disabled on this site",
+                enableSiteTips: "Enabled on this site",
+                enable: "Enable",
+                toTop: "To Top",
+                toBottom: "To Bottom",
+                current: "Current Page",
+                forceIframe: "Force to join next page",
+                cancelForceIframe: "Cancel Force join",
+                configure: "Configure",
+                firstUpdate: "Click here to initialize the rules",
+                update: "Update online rules",
+                click2update: "Click to update rules from url now",
+                loadNow: "Load next page manually",
+                loadConfirm: "How much pages do you want to load? (0 means infinite)",
+                noNext: "No next link found, please create a new rule",
+                passSec: "Updated #t# seconds ago",
+                passMin: "Updated #t# minutes ago",
+                passHour: "Updated #t# hours ago",
+                passDay: "Updated #t# days ago",
+                cantDel: "Can't delete buildin rules",
+                confirmDel: "Are you sure you want to delete this rule?",
+                updateSucc: "Update succeeded",
+                beginUpdate: "Begin update, wait a minute please",
+                customUrls: "Import Pagetual or AutoPagerize rule url, One url per line",
+                customRules: "Input custom rules with [Pagetual] format. <a href='#t#'>Contribute rules</a>",
+                save: "Save",
+                loadingText: "Shojo Now Loading...",
+                opacity: "Opacity",
+                opacityPlaceholder: "0: hide spacer",
+                hideBar: "Hide the paging spacer",
+                hideBarButNoStop: "Hide but not stop",
+                dbClick2Stop: "Double-click on the blank space to pause",
+                sortTitle: "Sorting takes effect after the next rule update",
+                autoRun: "Auto run (black list mode)",
+                autoLoadNum: "Amount for preload pages",
+                turnRate: "Turn the next page when it's less than X times page height from the footer",
+                inputPageNum: "Enter page number to jump",
+                enableHistory: "Write history after page turning",
                 enableHistoryAfterInsert: "Write history immediately after splicing, otherwise write after browsing",
-                initRun:"Turn pages immediately after opening",
-                preload:"Preload next page for speeding up",
-                click2ImportRule:"Click to import base rules link, then wait until the update is complete:",
-                forceAllBody:"Join full body of page?",
-                openInNewTab:"Open urls of additions in new tab",
-                importSucc:"Import completed",
-                import:"Import",
-                editCurrent:"Edit rule for current",
-                editBlacklist:"Edit the blacklist urls, line by line, Support ? * for wildcard",
-                upBtnImg:"Icon of back to top",
-                downBtnImg:"Icon of go to footer",
-                loadingTextTitle:"Loading text",
-                dbClick2StopCtrl:"Ctrl key",
-                dbClick2StopAlt:"Alt key",
-                dbClick2StopShift:"Shift key",
-                dbClick2StopMeta:"Meta key",
-                dbClick2StopKey:"Shortcut key",
-                pageElementCss:"Custom style for main page elements",
-                customCss:"Custom complete css",
-                firstAlert:"You have not imported the base rule, please select the appropriate rule to import",
-                picker:"Pagetual page element picker",
-                closePicker:"Close Pagetual picker",
-                pickerPlaceholder:"Leave empty if you have no idea",
-                pickerCheck:"Check selector and copy",
-                switchSelector:"Click to switch element",
-                gotoEdit:"Go to edit rule with current selector",
-                manualMode:"Disable splicing, manually turn pages with the right arrow keys (or dispatch event 'pagetual.next')",
+                initRun: "Turn pages immediately after opening",
+                preload: "Preload next page for speeding up",
+                click2ImportRule: "Click to import base rules link, then wait until the update is complete: ",
+                forceAllBody: "Join full body of page?",
+                openInNewTab: "Open urls of additions in new tab",
+                importSucc: "Import completed",
+                import: "Import",
+                editCurrent: "Edit rule for current",
+                editBlacklist: "Edit the blacklist urls, line by line, Support ? * for wildcard",
+                upBtnImg: "Icon of back to top",
+                downBtnImg: "Icon of go to footer",
+                loadingTextTitle: "Loading text",
+                dbClick2StopCtrl: "Ctrl key",
+                dbClick2StopAlt: "Alt key",
+                dbClick2StopShift: "Shift key",
+                dbClick2StopMeta: "Meta key",
+                dbClick2StopKey: "Shortcut key",
+                pageElementCss: "Custom style for main page elements",
+                customCss: "Custom complete css",
+                firstAlert: "You have not imported the base rule, please select the appropriate rule to import",
+                picker: "Pagetual page element picker",
+                closePicker: "Close Pagetual picker",
+                pickerPlaceholder: "Leave empty if you have no idea",
+                pickerCheck: "Check selector and copy",
+                switchSelector: "Click to switch element",
+                gotoEdit: "Go to edit rule with current selector",
+                manualMode: "Disable splicing, manually turn pages with the right arrow keys (or dispatch event 'pagetual.next')",
                 clickMode: "Disable splicing, automatically click the next page when scrolling to the end of the page",
-                pageBarMenu:"Click the middle of the page bar to open the menu",
-                nextSwitch:"Switch next link",
-                arrowToScroll:"Press left arrow key to scroll prev and right arrow key to scroll next",
-                sideController:"Display the paging control bar in the sidebar",
-                hideLoadingIcon:"Hide loading animation",
-                hideBarArrow:"Hide arrow for page bar",
-                duplicate:"Duplicate Pagetual have been installed, check your script manager!",
+                pageBarMenu: "Click the middle of the page bar to open the menu",
+                nextSwitch: "Switch next link",
+                arrowToScroll: "Press left arrow key to scroll prev and right arrow key to scroll next",
+                sideController: "Display the paging control bar in the sidebar",
+                hideLoadingIcon: "Hide loading animation",
+                hideBarArrow: "Hide arrow for page bar",
+                duplicate: "Duplicate Pagetual have been installed, check your script manager!",
                 forceStateIframe: "Embed full page as iframe",
                 forceStateDynamic: "Load dynamic content via iframe",
                 forceStateDisable: "Disable page turning on this site"
@@ -1043,20 +1043,20 @@
         }
 
         getRule(callback) {
-            if(noRuleTest){
-                this.curSiteRule={};
-                this.curSiteRule.url=location.origin+location.pathname;
-                this.curSiteRule.singleUrl=true;
+            if(noRuleTest) {
+                this.curSiteRule = {};
+                this.curSiteRule.url = location.origin + location.pathname;
+                this.curSiteRule.singleUrl = true;
                 callback();
                 return;
             }
-            if(this.curSiteRule && this.curSiteRule.url){
+            if (this.curSiteRule && this.curSiteRule.url) {
                 return this.curSiteRule;
             }
-            var self=this;
+            var self = this;
 
             function setRule(r) {
-                self.curSiteRule=r;
+                self.curSiteRule = r;
                 if (!r.singleUrl) {
                     debug(r, 'Match rule');
                 }
@@ -1065,9 +1065,9 @@
 
             function checkRule(r) {
                 if (r.from == 1 && r.url.length <= 13) return false;
-                let urlReg=new RegExp(r.url, "i");
-                if(urlReg.test(location.href)){
-                    if(r.include){
+                let urlReg = new RegExp(r.url, "i");
+                if (urlReg.test(location.href)) {
+                    if (r.include) {
                         let include;
                         if (Array && Array.isArray && Array.isArray(r.include)) {
                             include = r.include.every((sel, i) => {
@@ -1077,7 +1077,7 @@
                         } else include = getElement(r.include, document);
                         if (!include) return false;
                     }
-                    if(r.exclude){
+                    if (r.exclude) {
                         let exclude;
                         if (Array && Array.isArray && Array.isArray(r.exclude)) {
                             exclude = !r.exclude.every((sel, i) => {
@@ -1087,52 +1087,52 @@
                         } else exclude = getElement(r.exclude, document);
                         if (exclude) return false;
                     }
-                    if(r.waitElement){
-                        let waitTime=500;
-                        let checkReady=()=>{
-                            setTimeout(()=>{
-                                if(!self.waitElement(document, r.waitElement)){
+                    if (r.waitElement) {
+                        let waitTime = 500;
+                        let checkReady = () => {
+                            setTimeout(() => {
+                                if (!self.waitElement(document, r.waitElement)) {
                                     checkReady();
-                                }else{
+                                } else {
                                     setRule(r);
                                 }
-                            },parseInt(waitTime));
+                            }, parseInt(waitTime));
                         };
                         checkReady();
                         return true;
-                    }else if(r.wait){
-                        let waitTime=500, checkEval, maxCheckTimes=50;
-                        if(isNaN(r.wait)){
-                            try{
-                                checkEval=(typeof _unsafeWindow.pagetualWait=='undefined') ? Function("doc",'"use strict";' + r.wait) : _unsafeWindow.pagetualWait;
-                            }catch(e){
+                    } else if (r.wait) {
+                        let waitTime = 500, checkEval, maxCheckTimes = 50;
+                        if (isNaN(r.wait)) {
+                            try {
+                                checkEval = (typeof _unsafeWindow.pagetualWait == 'undefined') ? Function("doc",'"use strict";' + r.wait) : _unsafeWindow.pagetualWait;
+                            } catch(e) {
                                 debug(e, 'Error when checkeval');
                             }
-                        }else{
-                            waitTime=r.wait;
+                        } else {
+                            waitTime = r.wait;
                         }
-                        let checkReady=()=>{
-                            if(maxCheckTimes--<=0){
+                        let checkReady = () => {
+                            if (maxCheckTimes-- <= 0) {
                                 debug("Wait for rule ready but failed");
                                 setRule(r);
                                 return;
                             }
-                            setTimeout(()=>{
-                                if(!self.ruleMatch(r) || (checkEval && !checkEval(document))){
+                            setTimeout(() => {
+                                if (!self.ruleMatch(r) || (checkEval && !checkEval(document))) {
                                     checkReady();
-                                }else{
+                                } else {
                                     setRule(r);
                                 }
-                            },parseInt(waitTime));
+                            }, parseInt(waitTime));
                         };
                         checkReady();
                         return true;
                     }
-                    if(r.pinUrl){
+                    if (r.pinUrl) {
                         setRule(r);
                         return true;
                     }
-                    if(!self.ruleMatch(r)){
+                    if (!self.ruleMatch(r)) {
                         return false;
                     }
                     setRule(r);
@@ -1181,32 +1181,32 @@
                 }
             }
             let r = 0;
-            function searchByTime(){
-                setTimeout(()=>{
-                    let end=r+50;
-                    end=end>self.rules.length?self.rules.length:end;
-                    for(;r<end;r++){
-                        let rule=self.rules[r];
+            function searchByTime() {
+                setTimeout(() => {
+                    let end = r + 50;
+                    end = end > self.rules.length ? self.rules.length : end;
+                    for (; r < end; r++) {
+                        let rule = self.rules[r];
                         if (rule.from == 2) {
                             delete rule.autoLoadNum;
                             delete rule.history;
                             delete rule.sideController;
                             if (rule.pageBar == 0) delete rule.pageBar;
                         }
-                        if(checkRule(rule))return;
+                        if (checkRule(rule)) return;
                     }
-                    if(end>=self.rules.length){
+                    if (end >= self.rules.length) {
                         if (!self.curSiteRule.singleUrl) {
-                            self.curSiteRule={};
-                            self.curSiteRule.url=location.origin+location.pathname;
-                            self.curSiteRule.singleUrl=true;
+                            self.curSiteRule = {};
+                            self.curSiteRule.url = location.origin + location.pathname;
+                            self.curSiteRule.singleUrl = true;
                         }
                         callback();
                         return;
-                    }else{
+                    } else {
                         searchByTime();
                     }
-                },1);
+                }, 1);
             }
             searchByTime();
         }
@@ -2950,10 +2950,13 @@
               top: 3px;
               right: 10px;
              }
-             #pagetual-picker>.logoToHome {
+             #pagetual-picker>.logoIcon {
               position: absolute;
               top: 3px;
               left: 10px;
+             }
+             #pagetual-picker>.logoIcon.showSign>svg>path {
+              fill: gray;
              }
              #pagetual-picker textarea{
               display: inline-block;
@@ -2976,7 +2979,7 @@
               box-shadow: 0 1px 5px 1px #ddd;
              }
              #pagetual-picker textarea:focus {
-              color: #495057;
+              color: black;
               background-color: #fff;
               border-color: #80bdff;
               outline: 0;
@@ -3013,6 +3016,9 @@
               vertical-align: middle;
               fill: #161616;
               overflow: hidden;
+             }
+             #pagetual-picker svg * {
+              pointer-events: none;
              }
              #pagetual-picker .allpath {
               font-size: 18px;
@@ -3093,7 +3099,7 @@
             let frame = document.createElement("div");
             frame.id = "pagetual-picker";
             frame.innerHTML = createHTML(`
-                <button title="Pagetual" type="button" class="logoToHome">
+                <button title="Pagetual" type="button" class="logoIcon">
                   <svg width="30" height="30" class="upSvg pagetual" viewBox="0 0 1024 1024"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a"></path></svg>
                 </button>
                 <div class="title">${i18n("picker")}</div>
@@ -3176,7 +3182,7 @@
             else if (forceState == 2) forceStateIframe.checked = true;
             else if (forceState == 3) forceStateDynamic.checked = true;
             let closeBtn = frame.querySelector(".closePicker");
-            let homeBtn = frame.querySelector(".logoToHome");
+            let logoBtn = frame.querySelector(".logoIcon");
             let title = frame.querySelector(".title");
             let allpath = frame.querySelector(".allpath");
             let selectorInput = frame.querySelector(".selector");
@@ -3231,37 +3237,51 @@
             closeBtn.addEventListener("click", e => {
                 self.close();
             }, true);
-            homeBtn.addEventListener("click", e => {
-                _GM_openInTab(configPage[0], {active: true});
+            this.showSign = true;
+            logoBtn.addEventListener("click", e => {
+                logoBtn.classList.toggle("showSign");
+                self.showSign = !self.showSign;
             }, true);
             let moving = false;
-            let initX = 0, initY = 0;
+            let initX = 0, initY = 0, initPos = {x: 0, y: 0};
             let moveHanlder = e => {
-                frame.style.left = e.clientX - initX + "px";
-                frame.style.top = e.clientY - initY + "px";
-                e.stopPropagation();
-                e.preventDefault();
+                if (moving) {
+                    frame.style.left = e.clientX - initX + "px";
+                    frame.style.top = e.clientY - initY + "px";
+                    e.stopPropagation();
+                    e.preventDefault();
+                } else if(Math.abs(e.clientX - initPos.x) + Math.abs(e.clientY - initPos.y) > 20) {
+                    moving = true;
+                }
             };
             let upHanlder = e => {
-                moving = false;
+                if (moving) {
+                    moving = false;
+                } else {
+                    _GM_openInTab(configPage[0], {active: true});
+                }
                 document.removeEventListener("mousemove", moveHanlder, true);
                 title.removeEventListener("mouseup", upHanlder, true);
                 e.stopPropagation();
                 e.preventDefault();
             };
             title.addEventListener("mousedown", e => {
-                moving = true;
+                initPos = {x: e.clientX, y: e.clientY};
                 initX = e.clientX - parseInt(getComputedStyle(frame).left);
                 initY = e.clientY - parseInt(getComputedStyle(frame).top);
                 document.addEventListener("mousemove", moveHanlder, true);
                 title.addEventListener("mouseup", upHanlder, true);
             });
             frame.addEventListener("mouseenter", e => {
-                if (moving) return;
+                if (!self.showSign || moving) return;
                 if (self.mainSignDiv.parentNode) self.mainSignDiv.parentNode.removeChild(self.mainSignDiv);
                 self.checkInputSelector();
             });
             frame.addEventListener("mouseleave", e => {
+                if (!self.showSign) {
+                    if (self.mainSignDiv.parentNode) self.mainSignDiv.parentNode.removeChild(self.mainSignDiv);
+                    return;
+                }
                 if (moving) return;
                 document.body.appendChild(self.mainSignDiv);
                 self.clearSigns();
@@ -3285,6 +3305,10 @@
                 storage.setItem("rulesData", rulesData);
                 _GM_openInTab(configPage[0], {active: true});
             });
+            editBtn.oncontextmenu = e => {
+                e.preventDefault();
+                _GM_openInTab(configPage[0], {active: true});
+            };
             this.frame = frame;
             this.xpath = xpath;
             this.allpath = allpath;
@@ -3293,10 +3317,11 @@
             this.loadNow = loadNow;
             this.tempRule = tempRule;
             this.moveHandler = e => {
-                if (e.target === document) return;
+                if (!self.showSign || e.target === document) return;
                 self.adjustSignDiv(self.mainSignDiv, self.getTarget(e.target));
             };
             this.clickHandler = e => {
+                if (!self.showSign) return;
                 if (self.inPicker) {
                     e.stopPropagation();
                     e.preventDefault();
@@ -3322,7 +3347,7 @@
                 } else {
                     this.editTemp = {
                         name: document.title,
-                        url: "^" + location.origin.replace(/^https?/, "https?").replace(/\./g,"\\.") + "/"
+                        url: "^" + (location.origin + location.pathname).replace(/^https?/, "https?").replace(/\./g, "\\.")
                     };
                 }
                 delete this.editTemp.from;
@@ -3475,7 +3500,7 @@
         }
     }
 
-    function createEdit(){
+    function createEdit() {
         var options = {
             mode: 'code',
             modes: ['code', 'tree'],
@@ -3524,22 +3549,22 @@
         container.innerHTML = "";
         var editor = new JSONEditor(container, options);
         editor.set(ruleParser.customRules);
-        document.querySelector("#saveBtn").onclick=e=>{
-            try{
+        document.querySelector("#saveBtn").onclick = e => {
+            try {
                 storage.setItem("hpRules", []);
                 storage.setItem("smartRules", []);
-                let customRules=editor.get();
-                if(!customRules){
+                let customRules = editor.get();
+                if (!customRules) {
                     storage.setItem("customRules", "");
-                }else{
-                    if(Array && Array.isArray && !Array.isArray(customRules)){
+                } else {
+                    if (Array && Array.isArray && !Array.isArray(customRules)) {
                         showTips("Rules must be a Array!");
                         return;
                     }
                     debug(customRules);
                     storage.setItem("customRules", customRules);
                 }
-            }catch(e){
+            } catch(e) {
                 debug(e);
                 showTips("JSON error, check again!");
                 return;
@@ -3548,48 +3573,48 @@
         };
     }
 
-    function initConfig(){
+    function initConfig() {
         initView();
         listenUrl();
-        try{
-            if(_unsafeWindow.initedPagetual){
-                if(ruleImportUrlReg.test(location.href)){
+        try {
+            if (_unsafeWindow.initedPagetual) {
+                if (ruleImportUrlReg.test(location.href)) {
                     showTips(i18n('duplicate'));
                 }
                 return true;
             }
-            _unsafeWindow.initedPagetual=true;
-        }catch(e){}
-        _GM_registerMenuCommand(i18n(forceState==1?"enable":"disableSite"), ()=>{
-            forceState=(forceState==1?0:1);
-            storage.setItem("forceState_"+location.host, forceState);
-            showTips(i18n(forceState==1?"disableSiteTips":"enableSiteTips"));
-            if(!ruleParser.curSiteRule.url) location.reload();
+            _unsafeWindow.initedPagetual = true;
+        } catch(e) {showTips(e)}
+        _GM_registerMenuCommand(i18n(forceState == 1 ? "enable" : "disableSite"), () => {
+            forceState = (forceState == 1 ? 0 : 1);
+            storage.setItem("forceState_" + location.host, forceState);
+            showTips(i18n(forceState == 1 ? "disableSiteTips" : "enableSiteTips"));
+            if (!ruleParser.curSiteRule.url) location.reload();
         });
-        _GM_registerMenuCommand(i18n("update"), ()=>{
+        _GM_registerMenuCommand(i18n("update"), () => {
             showTips(i18n("beginUpdate"));
-            updateRules(()=>{
+            updateRules(() => {
                 showTips(i18n("updateSucc"));
                 location.reload();
-            },(rule,err)=>{
+            },(rule, err) => {
                 showTips(`Update ${rule.url} rules fail! ${err}`);
             });
         });
-        if(guidePage.test(location.href)){
-            if(typeof JSONEditor !== 'undefined'){
+        if (guidePage.test(location.href)) {
+            if (typeof JSONEditor !== 'undefined') {
                 createEdit();
-            }else{
+            } else {
                 window.onload = e => {
                     createEdit();
                 }
             }
             return true;
         }
-        if(location.href.indexOf("PagetualGuide")!=-1) return true;
-        if(location.hostname==="pagetual.hoothin.com") return true;
+        if (location.href.indexOf("PagetualGuide") != -1) return true;
+        if (location.hostname === "pagetual.hoothin.com") return true;
 
-        var configCon,insertPos;
-        var noRules=!rulesData.urls || rulesData.urls.length===0;
+        var configCon, insertPos;
+        var noRules = !rulesData.urls || rulesData.urls.length === 0;
 
         let inConfig = false;
         for (let i = 0; i < configPage.length; i++) {
@@ -3598,9 +3623,9 @@
                 break;
             }
         }
-        if(ruleImportUrlReg.test(location.href) || inConfig){
+        if (ruleImportUrlReg.test(location.href) || inConfig) {
             let importing = false;
-            if(noRules){
+            if (noRules) {
                 setTimeout(() => {
                     if (!importing) showTips(i18n("firstAlert"));
                 }, 3000);
@@ -3611,8 +3636,9 @@
             }
             let defaultOption = document.querySelector('#discussion_rating_4');
             if (defaultOption) defaultOption.checked = true;
-            let createImportBtn = () => {
+            let createImportBtn = (pre) => {
                 let importBtn = document.createElement("button");
+                importBtn.id = "pagetualImport";
                 importBtn.innerText = i18n("import");
                 importBtn.style.marginTop = "100px";
                 importBtn.style.float = "right";
@@ -3624,91 +3650,91 @@
                     if (!parentNode) return;
                     parentNode.removeChild(importBtn);
                     try {
-                        let rules=parentNode.innerText.trim();
-                        let isContent=/['"]name['"]/i.test(rules);
-                        if(isContent){
-                            let ruleList=JSON.parse(`[${rules}]`);
-                            for(let i in ruleList){
+                        let rules = parentNode.innerText.trim();
+                        let isContent = /['"]name['"]/i.test(rules);
+                        if (isContent) {
+                            let ruleList = JSON.parse(`[${rules}]`);
+                            for (let i in ruleList) {
                                 let hasRule = false;
                                 let r = ruleList[i];
-                                for(let j in ruleParser.customRules){
-                                    if(ruleParser.customRules[j].name == r.name){
+                                for (let j in ruleParser.customRules) {
+                                    if (ruleParser.customRules[j].name == r.name) {
                                         ruleParser.customRules[j] = r;
                                         hasRule = true;
                                         break;
                                     }
                                 }
-                                if(!hasRule)ruleParser.customRules.push(r);
+                                if (!hasRule) ruleParser.customRules.push(r);
                             }
                             storage.setItem("customRules", ruleParser.customRules);
                             storage.setItem("hpRules", []);
                             storage.setItem("smartRules", []);
                             showTips(i18n("importSucc"));
-                        }else{
-                            rules=rules.split("\n");
-                            let diff=false;
-                            for(let c=0;c<rules.length;c++){
-                                let urlArr=rules[c].split("|"),url,type=1;
-                                if(urlArr.length==1){
-                                    url=urlArr[0].trim();
-                                    if(!/^http/.test(url)){
+                        } else {
+                            rules = rules.split("\n");
+                            let diff = false;
+                            for (let c = 0; c < rules.length; c++) {
+                                let urlArr = rules[c].split("|"), url, type = 1;
+                                if (urlArr.length == 1) {
+                                    url = urlArr[0].trim();
+                                    if (!/^http/.test(url)) {
                                         showTips("Wrong url, check again!");
                                         return;
                                     }
-                                }else if(urlArr.length==2){
-                                    type=urlArr[0].trim();
-                                    url=urlArr[1].trim();
-                                    if(!/^http/.test(url)){
+                                } else if (urlArr.length == 2) {
+                                    type = urlArr[0].trim();
+                                    url = urlArr[1].trim();
+                                    if (!/^http/.test(url)) {
                                         showTips("Wrong url, check again!");
                                         return;
                                     }
-                                }else{
+                                } else {
                                     break;
                                 }
-                                let maxId=0,hasUrl=false;
-                                if(!rulesData.urls){
-                                    rulesData.urls=[];
-                                    maxId=1;
-                                }else{
-                                    rulesData.urls.forEach(u=>{
-                                        if(maxId<u.id){
-                                            maxId=u.id;
+                                let maxId = 0, hasUrl = false;
+                                if (!rulesData.urls) {
+                                    rulesData.urls = [];
+                                    maxId = 1;
+                                } else {
+                                    rulesData.urls.forEach(u => {
+                                        if (maxId < u.id) {
+                                            maxId = u.id;
                                         }
-                                        if(u.url==url){
-                                            hasUrl=true;
+                                        if (u.url == url) {
+                                            hasUrl = true;
                                         }
                                     });
-                                    if(hasUrl)break;
+                                    if (hasUrl) break;
                                 }
-                                diff=true;
-                                if(!rulesData.sort)rulesData.sort=[1];
-                                rulesData.urls.push({id:maxId+1,url:url,type:type});
-                                rulesData.sort.unshift(maxId+1);
+                                diff = true;
+                                if (!rulesData.sort) rulesData.sort = [1];
+                                rulesData.urls.push({id: maxId + 1, url: url, type: type});
+                                rulesData.sort.unshift(maxId + 1);
                             }
-                            if(!diff){
+                            if (!diff) {
                                 showTips("Already exists!");
                                 return;
                             }
                             storage.setItem("rulesData", rulesData);
 
-                            if(rulesData.urls)ruleUrls=ruleUrls.concat(rulesData.urls);
-                            if(rulesData.sort){
-                                let urls=[];
-                                rulesData.sort.forEach(id=>{
-                                    for(let s=0;s<ruleUrls.length;s++){
-                                        if(id==ruleUrls[s].id){
+                            if (rulesData.urls) ruleUrls = ruleUrls.concat(rulesData.urls);
+                            if (rulesData.sort) {
+                                let urls = [];
+                                rulesData.sort.forEach(id => {
+                                    for (let s = 0; s < ruleUrls.length; s++) {
+                                        if (id == ruleUrls[s].id) {
                                             urls.push(ruleUrls[s]);
                                             break;
                                         }
                                     }
                                 });
-                                ruleUrls=urls;
+                                ruleUrls = urls;
                             }
                             showTips(i18n("beginUpdate"));
-                            updateRules(()=>{
+                            updateRules(() => {
                                 showTips(i18n("updateSucc"));
                                 location.reload();
-                            },(rule,err)=>{
+                            }, (rule, err) => {
                                 showTips(`Update ${rule.url} rules fail! ${err}`);
                             });
                             importing = true;
@@ -3717,30 +3743,28 @@
                         _GM_notification(e.toString());
                     }
                 });
+                if (pre) {
+                    let clientHeight = 35 - pre.clientHeight;
+                    if (clientHeight > -20) clientHeight = -20;
+                    importBtn.style.marginTop = `${clientHeight}px`;
+                    pre.appendChild(importBtn);
+                }
                 return importBtn;
             };
             [].forEach.call(document.querySelectorAll('pre[name=pagetual],pre[name=user-content-pagetual]'), pre => {
-                let importBtn = createImportBtn();
-                let clientHeight = 35 - pre.clientHeight;
-                if (clientHeight > -20) clientHeight = -20;
-                importBtn.style.marginTop = `${clientHeight}px`;
-                pre.appendChild(importBtn);
+                let importBtn = createImportBtn(pre);
             });
             document.addEventListener("mouseover", e => {
                 if (e.target.tagName === "PRE") {
-                    let nameAttr=e.target.getAttribute("name");
-                    if(nameAttr=="pagetual" || nameAttr=="user-content-pagetual"){
-                        if (e.target.querySelector('button')) return;
-                        let importBtn = createImportBtn();
-                        let clientHeight = 35 - e.target.clientHeight;
-                        if (clientHeight > -20) clientHeight = -20;
-                        importBtn.style.marginTop = `${clientHeight}px`;
-                        e.target.appendChild(importBtn);
+                    let nameAttr = e.target.getAttribute("name");
+                    if (nameAttr == "pagetual" || nameAttr == "user-content-pagetual") {
+                        if (e.target.querySelector('#pagetualImport')) return;
+                        let importBtn = createImportBtn(e.target);
                     }
                 }
             });
 
-            if(inConfig){
+            if (inConfig) {
                 _GM_addStyle(`
                  p>span:nth-child(1),p>span:nth-child(2),p>span:nth-child(3){
                   cursor: pointer;
@@ -3764,39 +3788,42 @@
                  input[type=number] {
                   -moz-appearance:textfield;
                  }
+                 #readme>.is-stuck {
+                  position: static!important;
+                 }
                 `);
-                document.querySelector("[name='user-content-click2import'],[name='click2import']").innerText=i18n("click2ImportRule")
-                configCon=document.querySelector(".markdown-body");
-                insertPos=configCon.querySelector("hr");
+                document.querySelector("[name='user-content-click2import'],[name='click2import']").innerText = i18n("click2ImportRule")
+                configCon = document.querySelector(".markdown-body");
+                insertPos = configCon.querySelector("hr");
 
-                if(!noRules){
-                    document.querySelector("pre[name='user-content-pagetual'],pre[name='pagetual']").style.display="none";
-                    document.querySelector("p[name='user-content-click2import'],p[name='click2import']").style.display="none";
+                if (!noRules) {
+                    document.querySelector("pre[name='user-content-pagetual'],pre[name='pagetual']").style.display = "none";
+                    document.querySelector("p[name='user-content-click2import'],p[name='click2import']").style.display = "none";
                 }
-            }else return true;
-        }else return false;
+            } else return true;
+        } else return false;
         class Rulebar {
-            init(ruleUrl){
-                this.ruleUrl=ruleUrl;
-                this.item=document.createElement("p");
-                this.item.dataset.id=this.ruleUrl.id;
-                let url=document.createElement("span");
-                url.innerHTML=ruleUrl.url;
-                let up=document.createElement("span");
-                up.innerHTML="↑ ";
-                up.title=i18n("sortTitle");
-                let down=document.createElement("span");
-                down.innerHTML="↓ ";
-                down.title=i18n("sortTitle");
-                let del=document.createElement("span");
-                del.innerHTML="× ";
-                up.onclick=e=>{
+            init(ruleUrl) {
+                this.ruleUrl = ruleUrl;
+                this.item = document.createElement("p");
+                this.item.dataset.id = this.ruleUrl.id;
+                let url = document.createElement("span");
+                url.innerHTML = ruleUrl.url;
+                let up = document.createElement("span");
+                up.innerHTML = "↑ ";
+                up.title = i18n("sortTitle");
+                let down = document.createElement("span");
+                down.innerHTML = "↓ ";
+                down.title = i18n("sortTitle");
+                let del = document.createElement("span");
+                del.innerHTML = "× ";
+                up.onclick = e => {
                     this.moveUp();
                 };
-                down.onclick=e=>{
+                down.onclick = e => {
                     this.moveDown();
                 };
-                del.onclick=e=>{
+                del.onclick = e => {
                     this.del();
                 };
                 this.item.appendChild(up);
@@ -3805,223 +3832,223 @@
                 this.item.appendChild(url);
                 configCon.insertBefore(this.item, insertPos);
             }
-            saveSort(){
-                let sort=[];
-                [].forEach.call(this.item.parentNode.querySelectorAll("p[data-id]"), i=>{
+            saveSort() {
+                let sort = [];
+                [].forEach.call(this.item.parentNode.querySelectorAll("p[data-id]"), i => {
                     sort.push(i.dataset.id);
                 });
-                rulesData.sort=sort;
-                let urls=[];
-                sort.forEach(id=>{
-                    for(let s=0;s<ruleUrls.length;s++){
-                        if(id==ruleUrls[s].id){
+                rulesData.sort = sort;
+                let urls = [];
+                sort.forEach(id => {
+                    for (let s = 0; s < ruleUrls.length; s++) {
+                        if (id == ruleUrls[s].id) {
                             urls.push(ruleUrls[s]);
                             break;
                         }
                     }
                 });
-                ruleUrls=urls;
+                ruleUrls = urls;
                 storage.setItem("rulesData", rulesData);
             }
-            moveUp(){
-                let preE=this.item.previousElementSibling;
-                if(preE.tagName=="P" && preE.children.length>1){
-                    this.item.parentNode.insertBefore(this.item,preE);
+            moveUp() {
+                let preE = this.item.previousElementSibling;
+                if (preE.tagName == "P" && preE.children.length > 1) {
+                    this.item.parentNode.insertBefore(this.item, preE);
                     this.saveSort();
                 }
             }
-            moveDown(){
-                let nextE=this.item.nextElementSibling;
-                if(nextE.tagName=="P" && nextE.children.length>1){
-                    this.item.parentNode.insertBefore(nextE,this.item);
+            moveDown() {
+                let nextE = this.item.nextElementSibling;
+                if (nextE.tagName == "P" && nextE.children.length > 1) {
+                    this.item.parentNode.insertBefore(nextE, this.item);
                     this.saveSort();
                 }
             }
-            del(){
-                if(this.ruleUrl.id<2){
+            del() {
+                if (this.ruleUrl.id < 2) {
                     showTips(i18n("cantDel"));
-                }else if(window.confirm(i18n("confirmDel"))){
-                    for(let u=0;u<rulesData.urls.length;u++){
-                        if(this.ruleUrl.id==rulesData.urls[u].id){
-                            rulesData.urls.splice(u,1);
+                } else if (window.confirm(i18n("confirmDel"))) {
+                    for (let u = 0; u < rulesData.urls.length; u++) {
+                        if (this.ruleUrl.id == rulesData.urls[u].id) {
+                            rulesData.urls.splice(u, 1);
                             break;
                         }
                     }
-                    for(let u=0;u<ruleUrls.length;u++){
-                        if(this.ruleUrl.id==ruleUrls[u].id){
-                            ruleUrls.splice(u,1);
+                    for (let u = 0; u < ruleUrls.length; u++) {
+                        if (this.ruleUrl.id == ruleUrls[u].id) {
+                            ruleUrls.splice(u, 1);
                             break;
                         }
                     }
-                    for(let u=0;u<rulesData.sort.length;u++){
-                        if(this.ruleUrl.id==rulesData.sort[u]){
-                            rulesData.sort.splice(u,1);
+                    for (let u = 0; u < rulesData.sort.length; u++) {
+                        if (this.ruleUrl.id == rulesData.sort[u]) {
+                            rulesData.sort.splice(u, 1);
                             break;
                         }
                     }
                     storage.setItem("rulesData", rulesData);
-                    ruleParser.rules=ruleParser.rules.filter(item=>{return item.from!=this.ruleUrl.id});
+                    ruleParser.rules = ruleParser.rules.filter(item => {return item.from != this.ruleUrl.id});
                     storage.setItem("rules", ruleParser.rules);
                     this.item.parentNode.removeChild(this.item);
                     //location.reload();
                 }
             }
         }
-        let updateP=document.createElement("p"),i=0;
-        let now=new Date().getTime(),inUpdate=false;
+        let updateP = document.createElement("p"), i = 0;
+        let now = new Date().getTime(), inUpdate = false;
 
 
-        let pastDate=(new Date(updateDate)).toString(),passStr;
-        let passTime=(now-updateDate)/1000;
-        if(isNaN(passTime)){
-            passStr=i18n("firstUpdate");
-        }else if(passTime<60){
-            passStr=i18n("passSec", parseInt(passTime))+" 👆 "+i18n("click2update");
-        }else if(passTime<60*60){
-            passStr=i18n("passMin", parseInt(passTime/60))+" 👆 "+i18n("click2update");
-        }else if(passTime<60*60*24){
-            passStr=i18n("passHour", parseInt(passTime/3600))+" 👆 "+i18n("click2update");
-        }else{
-            passStr=i18n("passDay", parseInt(passTime/86400))+" 👆 "+i18n("click2update");
+        let pastDate = (new Date(updateDate)).toString(), passStr;
+        let passTime = (now - updateDate) / 1000;
+        if (isNaN(passTime)) {
+            passStr = i18n("firstUpdate");
+        } else if (passTime < 60) {
+            passStr = i18n("passSec", parseInt(passTime)) + " 👆 " + i18n("click2update");
+        } else if (passTime < 60 * 60) {
+            passStr = i18n("passMin", parseInt(passTime / 60)) + " 👆 " + i18n("click2update");
+        } else if (passTime < 60 * 60 * 24) {
+            passStr = i18n("passHour", parseInt(passTime / 3600)) + " 👆 " + i18n("click2update");
+        } else {
+            passStr = i18n("passDay", parseInt(passTime / 86400)) + " 👆 " + i18n("click2update");
         }
 
 
-        updateP.className="updateDate";
-        updateP.innerHTML=passStr;
-        updateP.title=i18n("update")+" - "+pastDate;
-        updateP.onclick=e=>{
-            ruleParser.rules=[];
+        updateP.className = "updateDate";
+        updateP.innerHTML = passStr;
+        updateP.title = i18n("update") + " - " + pastDate;
+        updateP.onclick = e => {
+            ruleParser.rules = [];
             showTips(i18n("beginUpdate"));
-            updateRules(()=>{
+            updateRules(() => {
                 showTips(i18n("updateSucc"));
-                updateP.innerHTML=i18n("passSec", 0);
-                updateP.title=i18n("update");
-            },(rule, err) => {
+                updateP.innerHTML = i18n("passSec", 0);
+                updateP.title = i18n("update");
+            }, (rule, err) => {
                 showTips(`Update ${rule.url} rules fail! ${err}`);
             });
         };
         configCon.insertBefore(updateP, insertPos);
-        if(ruleUrls){
-            ruleUrls.forEach(ruleUrl=>{
-                var rulebar=new Rulebar();
+        if (ruleUrls) {
+            ruleUrls.forEach(ruleUrl => {
+                var rulebar = new Rulebar();
                 rulebar.init(ruleUrl);
             });
         }
-        let customUrlsTitle=document.createElement("h2");
-        customUrlsTitle.innerHTML=i18n("customUrls");
+        let customUrlsTitle = document.createElement("h2");
+        customUrlsTitle.innerHTML = i18n("customUrls");
         configCon.insertBefore(customUrlsTitle, insertPos);
-        let customUrlsInput=document.createElement("textarea");
-        customUrlsInput.style.width="100%";
-        customUrlsInput.placeholder="http://wedata.net/databases/AutoPagerize/items_all.json";
-        customUrlsInput.spellcheck=false;
+        let customUrlsInput = document.createElement("textarea");
+        customUrlsInput.style.width = "100%";
+        customUrlsInput.placeholder = "http://wedata.net/databases/AutoPagerize/items_all.json";
+        customUrlsInput.spellcheck = false;
         configCon.insertBefore(customUrlsInput, insertPos);
 
-        let btns=document.createElement("div");
-        btns.style.display="flex";
+        let btns = document.createElement("div");
+        btns.style.display = "flex";
         configCon.insertBefore(btns, insertPos);
-        let upBtnImg=document.createElement("div");
-        upBtnImg.style.width="50%";
-        let upBtnImgTitle=document.createElement("h2");
-        upBtnImgTitle.style.whiteSpace="nowrap";
-        upBtnImgTitle.style.overflow="auto";
-        upBtnImgTitle.innerHTML=i18n("upBtnImg");
+        let upBtnImg = document.createElement("div");
+        upBtnImg.style.width = "50%";
+        let upBtnImgTitle = document.createElement("h2");
+        upBtnImgTitle.style.whiteSpace = "nowrap";
+        upBtnImgTitle.style.overflow = "auto";
+        upBtnImgTitle.innerHTML = i18n("upBtnImg");
         upBtnImg.appendChild(upBtnImgTitle);
-        let upBtnImgInput=document.createElement("input");
-        upBtnImgInput.style.width="100%";
-        upBtnImgInput.placeholder="data:image/png;base64,UpBtn";
-        upBtnImgInput.value=rulesData.upBtnImg||'';
-        upBtnImgInput.spellcheck=false;
+        let upBtnImgInput = document.createElement("input");
+        upBtnImgInput.style.width = "100%";
+        upBtnImgInput.placeholder = "data:image/png;base64,UpBtn";
+        upBtnImgInput.value = rulesData.upBtnImg || '';
+        upBtnImgInput.spellcheck = false;
         upBtnImg.appendChild(upBtnImgInput);
         btns.appendChild(upBtnImg);
 
-        let downBtnImg=document.createElement("div");
-        downBtnImg.style.width="50%";
-        let downBtnImgTitle=document.createElement("h2");
-        downBtnImgTitle.style.whiteSpace="nowrap";
-        downBtnImgTitle.style.overflow="auto";
-        downBtnImgTitle.innerHTML=i18n("downBtnImg");
+        let downBtnImg = document.createElement("div");
+        downBtnImg.style.width = "50%";
+        let downBtnImgTitle = document.createElement("h2");
+        downBtnImgTitle.style.whiteSpace = "nowrap";
+        downBtnImgTitle.style.overflow = "auto";
+        downBtnImgTitle.innerHTML = i18n("downBtnImg");
         downBtnImg.appendChild(downBtnImgTitle);
-        let downBtnImgInput=document.createElement("input");
-        downBtnImgInput.style.width="100%";
-        downBtnImgInput.placeholder="data:image/png;base64,DownBtn";
-        downBtnImgInput.value=rulesData.downBtnImg||'';
-        downBtnImgInput.spellcheck=false;
+        let downBtnImgInput = document.createElement("input");
+        downBtnImgInput.style.width = "100%";
+        downBtnImgInput.placeholder = "data:image/png;base64,DownBtn";
+        downBtnImgInput.value = rulesData.downBtnImg || '';
+        downBtnImgInput.spellcheck = false;
         downBtnImg.appendChild(downBtnImgInput);
         btns.appendChild(downBtnImg);
 
-        let otherBtns=document.createElement("div");
-        otherBtns.style.display="flex";
+        let otherBtns = document.createElement("div");
+        otherBtns.style.display = "flex";
         configCon.insertBefore(otherBtns, insertPos);
-        let loadingText=document.createElement("div");
-        loadingText.style.width="100%";
-        let loadingTextTitle=document.createElement("h2");
-        loadingTextTitle.style.whiteSpace="nowrap";
-        loadingTextTitle.style.overflow="auto";
-        loadingTextTitle.innerHTML=i18n("loadingTextTitle");
+        let loadingText = document.createElement("div");
+        loadingText.style.width = "100%";
+        let loadingTextTitle = document.createElement("h2");
+        loadingTextTitle.style.whiteSpace = "nowrap";
+        loadingTextTitle.style.overflow = "auto";
+        loadingTextTitle.innerHTML = i18n("loadingTextTitle");
         loadingText.appendChild(loadingTextTitle);
-        let loadingTextInput=document.createElement("input");
-        loadingTextInput.value=rulesData.loadingText||'';
-        loadingTextInput.placeholder=i18n("loadingText");
-        loadingTextInput.style.width="100%";
-        loadingTextInput.style.margin="0";
-        loadingTextInput.spellcheck=false;
+        let loadingTextInput = document.createElement("input");
+        loadingTextInput.value = rulesData.loadingText||'';
+        loadingTextInput.placeholder = i18n("loadingText");
+        loadingTextInput.style.width = "100%";
+        loadingTextInput.style.margin = "0";
+        loadingTextInput.spellcheck = false;
         loadingText.appendChild(loadingTextInput);
         otherBtns.appendChild(loadingText);
 
-        let opacity=document.createElement("div");
-        let opacityTitle=document.createElement("h2");
-        opacityTitle.style.whiteSpace="nowrap";
-        opacityTitle.style.overflow="visible";
-        opacityTitle.innerHTML=i18n("opacity");
+        let opacity = document.createElement("div");
+        let opacityTitle = document.createElement("h2");
+        opacityTitle.style.whiteSpace = "nowrap";
+        opacityTitle.style.overflow = "visible";
+        opacityTitle.innerHTML = i18n("opacity");
         opacity.appendChild(opacityTitle);
-        let opacityInput=document.createElement("input");
-        opacityInput.value=rulesData.opacity*100;
-        opacityInput.type="number";
-        opacityInput.style.width="110px";
-        opacityInput.style.margin="0";
-        opacityInput.placeholder=i18n("opacityPlaceholder");
-        opacityInput.spellcheck=false;
+        let opacityInput = document.createElement("input");
+        opacityInput.value = rulesData.opacity * 100;
+        opacityInput.type = "number";
+        opacityInput.style.width = "110px";
+        opacityInput.style.margin = "0";
+        opacityInput.placeholder = i18n("opacityPlaceholder");
+        opacityInput.spellcheck = false;
         opacity.appendChild(opacityInput);
         otherBtns.appendChild(opacity);
 
-        let pageElementCss=document.createElement("div");
-        pageElementCss.style.marginBottom="30px";
-        let pageElementCssTitle=document.createElement("h2");
-        pageElementCssTitle.innerHTML=i18n("pageElementCss");
+        let pageElementCss = document.createElement("div");
+        pageElementCss.style.marginBottom = "30px";
+        let pageElementCssTitle = document.createElement("h2");
+        pageElementCssTitle.innerHTML = i18n("pageElementCss");
         pageElementCss.appendChild(pageElementCssTitle);
-        let pageElementCssInput=document.createElement("input");
-        pageElementCssInput.value=rulesData.pageElementCss||'';
-        pageElementCssInput.style.width="100%";
-        pageElementCssInput.style.margin="0";
-        pageElementCssInput.placeholder="font-size: xx-large;";
-        pageElementCssInput.spellcheck=false;
+        let pageElementCssInput = document.createElement("input");
+        pageElementCssInput.value = rulesData.pageElementCss || '';
+        pageElementCssInput.style.width = "100%";
+        pageElementCssInput.style.margin = "0";
+        pageElementCssInput.placeholder = "font-size: xx-large;";
+        pageElementCssInput.spellcheck = false;
         pageElementCss.appendChild(pageElementCssInput);
         configCon.insertBefore(pageElementCss, insertPos);
 
-        let customCss=document.createElement("div");
-        customCss.style.marginBottom="50px";
-        let customCssTitle=document.createElement("h2");
-        customCssTitle.innerHTML=i18n("customCss");
+        let customCss = document.createElement("div");
+        customCss.style.marginBottom = "50px";
+        let customCssTitle = document.createElement("h2");
+        customCssTitle.innerHTML = i18n("customCss");
         customCss.appendChild(customCssTitle);
-        let customCssInput=document.createElement("textarea");
-        customCssInput.value=rulesData.customCss||'';
-        customCssInput.style.width="100%";
-        customCssInput.style.margin="0";
-        customCssInput.placeholder=".pagetual{\n}";
-        customCssInput.spellcheck=false;
+        let customCssInput = document.createElement("textarea");
+        customCssInput.value = rulesData.customCss || '';
+        customCssInput.style.width = "100%";
+        customCssInput.style.margin = "0";
+        customCssInput.placeholder = ".pagetual{\n}";
+        customCssInput.spellcheck = false;
         customCss.appendChild(customCssInput);
         configCon.insertBefore(customCss, insertPos);
 
-        let configTable=document.createElement("table");
-        configTable.style.width="100%";
-        let configTbody=document.createElement("tbody");
-        configTbody.style.width="100%";
-        configTbody.style.display="inline-table";
+        let configTable = document.createElement("table");
+        configTable.style.width = "100%";
+        let configTbody = document.createElement("tbody");
+        configTbody.style.width = "100%";
+        configTbody.style.display = "inline-table";
         configTable.appendChild(configTbody);
         configCon.insertBefore(configTable, insertPos);
         function createCheckbox(innerText, val, tag, parentCheck, otherType) {
             if (typeof val == 'undefined') val = "";
-            let title=document.createElement(tag || "h3");
+            let title = document.createElement(tag || "h3");
             title.innerHTML = innerText;
             title.style.overflowWrap = "normal";
             let input = document.createElement("input");
@@ -4072,24 +4099,24 @@
             return input;
         }
 
-        let enableWhiteListInput=createCheckbox(i18n("autoRun"), rulesData.enableWhiteList!=true);
-        let enableDebugInput=createCheckbox(i18n("enableDebug"), rulesData.enableDebug!=false);
-        let enableHistoryInput=createCheckbox(i18n("enableHistory"), rulesData.enableHistory===true);
-        let enableHistoryAfterInsertInput=createCheckbox(i18n("enableHistoryAfterInsert"), rulesData.enableHistoryAfterInsert===true);
-        let openInNewTabInput=createCheckbox(i18n("openInNewTab"), rulesData.openInNewTab!=false);
-        let hidePageBarInput=createCheckbox(i18n("hideBar"), rulesData.opacity==0);
-        let hidePageBarArrowInput=createCheckbox(i18n("hideBarArrow"), rulesData.hideBarArrow);
-        let hideLoadingIconInput=createCheckbox(i18n("hideLoadingIcon"), rulesData.hideLoadingIcon!=false);
-        let initRunInput=createCheckbox(i18n("initRun"), rulesData.initRun!=false);
-        let autoLoadNumInput=createCheckbox(i18n("autoLoadNum"), rulesData.autoLoadNum, "h4", initRunInput, "number");
-        let preloadInput=createCheckbox(i18n("preload"), rulesData.preload!=false);
-        let rateInput=createCheckbox(i18n("turnRate"), rulesData.rate, "h4", preloadInput, "number");
-        let dbClick2StopInput=createCheckbox(i18n("dbClick2Stop"), rulesData.dbClick2Stop);
-        let manualModeInput=createCheckbox(i18n("manualMode"), rulesData.manualMode);
-        let clickModeInput=createCheckbox(i18n("clickMode"), rulesData.clickMode);
-        let pageBarMenuInput=createCheckbox(i18n("pageBarMenu"), rulesData.pageBarMenu!=false);
-        let arrowToScrollInput=createCheckbox(i18n("arrowToScroll"), rulesData.arrowToScroll);
-        let sideControllerInput=createCheckbox(i18n("sideController"), rulesData.sideController);
+        let enableWhiteListInput = createCheckbox(i18n("autoRun"), rulesData.enableWhiteList != true);
+        let enableDebugInput = createCheckbox(i18n("enableDebug"), rulesData.enableDebug != false);
+        let enableHistoryInput = createCheckbox(i18n("enableHistory"), rulesData.enableHistory === true);
+        let enableHistoryAfterInsertInput = createCheckbox(i18n("enableHistoryAfterInsert"), rulesData.enableHistoryAfterInsert === true);
+        let openInNewTabInput = createCheckbox(i18n("openInNewTab"), rulesData.openInNewTab != false);
+        let hidePageBarInput = createCheckbox(i18n("hideBar"), rulesData.opacity == 0);
+        let hidePageBarArrowInput = createCheckbox(i18n("hideBarArrow"), rulesData.hideBarArrow);
+        let hideLoadingIconInput = createCheckbox(i18n("hideLoadingIcon"), rulesData.hideLoadingIcon != false);
+        let initRunInput = createCheckbox(i18n("initRun"), rulesData.initRun != false);
+        let autoLoadNumInput = createCheckbox(i18n("autoLoadNum"), rulesData.autoLoadNum, "h4", initRunInput, "number");
+        let preloadInput = createCheckbox(i18n("preload"), rulesData.preload != false);
+        let rateInput = createCheckbox(i18n("turnRate"), rulesData.rate, "h4", preloadInput, "number");
+        let dbClick2StopInput = createCheckbox(i18n("dbClick2Stop"), rulesData.dbClick2Stop);
+        let manualModeInput = createCheckbox(i18n("manualMode"), rulesData.manualMode);
+        let clickModeInput = createCheckbox(i18n("clickMode"), rulesData.clickMode);
+        let pageBarMenuInput = createCheckbox(i18n("pageBarMenu"), rulesData.pageBarMenu != false);
+        let arrowToScrollInput = createCheckbox(i18n("arrowToScroll"), rulesData.arrowToScroll);
+        let sideControllerInput = createCheckbox(i18n("sideController"), rulesData.sideController);
 
         let hideBarInput = createCheckbox(i18n("hideBar"), rulesData.hideBar && !rulesData.hideBarButNoStop, "h4", dbClick2StopInput, 'radio');
         hideBarInput.name = 'hideBar';
@@ -4106,81 +4133,81 @@
             }
         });
         hidePageBarInput.addEventListener('click', e => {
-            opacityInput.value=hidePageBarInput.checked?0:30;
+            opacityInput.value = hidePageBarInput.checked ? 0 : 30;
         });
 
-        let dbClick2StopCtrlInput=createCheckbox(i18n("dbClick2StopCtrl"), rulesData.dbClick2StopCtrl, "h4", dbClick2StopInput);
-        let dbClick2StopAltInput=createCheckbox(i18n("dbClick2StopAlt"), rulesData.dbClick2StopAlt, "h4", dbClick2StopInput);
-        let dbClick2StopShiftInput=createCheckbox(i18n("dbClick2StopShift"), rulesData.dbClick2StopShift, "h4", dbClick2StopInput);
-        let dbClick2StopMetaInput=createCheckbox(i18n("dbClick2StopMeta"), rulesData.dbClick2StopMeta, "h4", dbClick2StopInput);
-        let dbClick2StopKeyInput=createCheckbox(i18n("dbClick2StopKey"), rulesData.dbClick2StopKey, "h4", dbClick2StopInput, "key");
+        let dbClick2StopCtrlInput = createCheckbox(i18n("dbClick2StopCtrl"), rulesData.dbClick2StopCtrl, "h4", dbClick2StopInput);
+        let dbClick2StopAltInput = createCheckbox(i18n("dbClick2StopAlt"), rulesData.dbClick2StopAlt, "h4", dbClick2StopInput);
+        let dbClick2StopShiftInput = createCheckbox(i18n("dbClick2StopShift"), rulesData.dbClick2StopShift, "h4", dbClick2StopInput);
+        let dbClick2StopMetaInput = createCheckbox(i18n("dbClick2StopMeta"), rulesData.dbClick2StopMeta, "h4", dbClick2StopInput);
+        let dbClick2StopKeyInput = createCheckbox(i18n("dbClick2StopKey"), rulesData.dbClick2StopKey, "h4", dbClick2StopInput, "key");
 
-        let customRulesTitle=document.createElement("h2");
-        customRulesTitle.innerHTML=i18n("customRules", location.href.replace('tree', 'edit').replace(/\/$/, '') + '/pagetualRules.json');
+        let customRulesTitle = document.createElement("h2");
+        customRulesTitle.innerHTML = i18n("customRules", location.href.replace('tree', 'edit').replace(/\/$/, '') + '/pagetualRules.json');
         configCon.insertBefore(customRulesTitle, insertPos);
-        let customRulesInput=document.createElement("textarea");
-        customRulesInput.spellcheck=false;
+        let customRulesInput = document.createElement("textarea");
+        customRulesInput.spellcheck = false;
         configCon.insertBefore(customRulesInput, insertPos);
-        if(rulesData.editTemp){
-            if(!ruleParser.customRules){
-                ruleParser.customRules=[];
+        if (rulesData.editTemp) {
+            if (!ruleParser.customRules) {
+                ruleParser.customRules = [];
             }
-            for(let i in ruleParser.customRules){
-                if(ruleParser.customRules[i].url==rulesData.editTemp.url){
+            for (let i in ruleParser.customRules) {
+                if (ruleParser.customRules[i].url == rulesData.editTemp.url) {
                     ruleParser.customRules.splice(i, 1);
                     break;
                 }
             }
             ruleParser.customRules.unshift(rulesData.editTemp);
-            rulesData.editTemp=null;
+            rulesData.editTemp = null;
             storage.setItem("rulesData", rulesData);
             customRulesInput.previousElementSibling.scrollIntoView();
         }
-        customRulesInput.style.width="100%";
-        customRulesInput.style.height="800px";
-        customRulesInput.placeholder=`[\n  {\n    "name":"yande",\n    "action":"0",\n    "url":"^https:\/\/yande\\.re\/",\n    "pageElement":"ul#post-list-posts>li",\n    "nextLink":"a.next_page",\n    "css":".javascript-hide {display: inline-block !important;}"\n  },\n  {\n    "name":"tieba",\n    "action":"1",\n    "url":"^https:\/\/tieba\\.baidu.com\/f\\?kw=",\n    "pageElement":"ul#thread_list>li",\n    "nextLink":".next.pagination-item "\n  }\n]`;
-        customRulesInput.value=getFormatJSON(ruleParser.customRules);
-        let blacklistInput=document.createElement("textarea");
-        blacklistInput.style.width="100%";
-        blacklistInput.style.height="500px";
-        blacklistInput.style.display="none";
-        blacklistInput.spellcheck=false;
-        blacklistInput.placeholder="http://*.xxx.com/*/y";
-        blacklistInput.value=rulesData.blacklist?rulesData.blacklist.join("\n"):"";
-        let blacklistBtn=document.createElement("button");
-        blacklistBtn.innerText=i18n("editBlacklist");
-        blacklistBtn.style.width="100%";
-        blacklistBtn.onclick=e=>{
-            blacklistInput.style.display=blacklistInput.style.display=="none"?"":"none";
+        customRulesInput.style.width = "100%";
+        customRulesInput.style.height = "800px";
+        customRulesInput.placeholder = `[\n  {\n    "name":"yande",\n    "action":"0",\n    "url":"^https:\/\/yande\\.re\/",\n    "pageElement":"ul#post-list-posts>li",\n    "nextLink":"a.next_page",\n    "css":".javascript-hide {display: inline-block !important;}"\n  },\n  {\n    "name":"tieba",\n    "action":"1",\n    "url":"^https:\/\/tieba\\.baidu.com\/f\\?kw=",\n    "pageElement":"ul#thread_list>li",\n    "nextLink":".next.pagination-item "\n  }\n]`;
+        customRulesInput.value = getFormatJSON(ruleParser.customRules);
+        let blacklistInput = document.createElement("textarea");
+        blacklistInput.style.width = "100%";
+        blacklistInput.style.height = "500px";
+        blacklistInput.style.display = "none";
+        blacklistInput.spellcheck = false;
+        blacklistInput.placeholder = "http://*.xxx.com/*/y";
+        blacklistInput.value = rulesData.blacklist ? rulesData.blacklist.join("\n") : "";
+        let blacklistBtn = document.createElement("button");
+        blacklistBtn.innerText = i18n("editBlacklist");
+        blacklistBtn.style.width = "100%";
+        blacklistBtn.onclick = e => {
+            blacklistInput.style.display = blacklistInput.style.display == "none" ? "" : "none";
         };
         configCon.insertBefore(blacklistBtn, insertPos);
         configCon.insertBefore(blacklistInput, insertPos);
-        let saveBtn=document.createElement("button");
-        saveBtn.innerHTML=i18n("save");
-        saveBtn.style.width="100%";
-        saveBtn.style.position="fixed";
-        saveBtn.style.zIndex="999";
-        saveBtn.style.bottom=0;
-        saveBtn.style.left=0;
-        saveBtn.style.fontSize="x-large";
+        let saveBtn = document.createElement("button");
+        saveBtn.innerHTML = i18n("save");
+        saveBtn.style.width = "100%";
+        saveBtn.style.position = "fixed";
+        saveBtn.style.zIndex = "999";
+        saveBtn.style.bottom = 0;
+        saveBtn.style.left = 0;
+        saveBtn.style.fontSize = "x-large";
         configCon.insertBefore(saveBtn, insertPos);
-        saveBtn.onclick=e=>{
-            try{
+        saveBtn.onclick = e => {
+            try {
                 storage.setItem("hpRules", []);
                 storage.setItem("smartRules", []);
-                if(customRulesInput.value==""){
+                if (customRulesInput.value == "") {
                     storage.setItem("customRules", "");
-                }else{
-                    let customRules=JSON.parse(customRulesInput.value);
-                    if(Array && Array.isArray && !Array.isArray(customRules)){
+                } else {
+                    let customRules = JSON.parse(customRulesInput.value);
+                    if (Array && Array.isArray && !Array.isArray(customRules)) {
                         showTips("Rules must be a Array!");
                         return;
                     }
                     debug(customRules);
                     storage.setItem("customRules", customRules);
-                    customRulesInput.value=JSON.stringify(customRules, null, 4);
+                    customRulesInput.value = JSON.stringify(customRules, null, 4);
                 }
-            }catch(e){
+            } catch(e) {
                 debug(e);
                 showTips("JSON error, check again!");
                 return;
@@ -4225,35 +4252,35 @@
                 customUrls = customUrls.split(/\n/);
                 for (let c = 0; c < customUrls.length; c++) {
                     let url;
-                    if(/^0\s*\|/.test(customUrls[c])){
-                        url=customUrls[c].replace(/^0\s*\|\s*/, "").trim();
-                        if(!/^http/.test(url)){
+                    if (/^0\s*\|/.test(customUrls[c])) {
+                        url = customUrls[c].replace(/^0\s*\|\s*/, "").trim();
+                        if (!/^http/.test(url)) {
                             showTips("Wrong url, check again!");
                             return;
                         }
-                    }else{
-                        url=customUrls[c].trim();
-                        if(!/^http/.test(url)){
+                    } else {
+                        url = customUrls[c].trim();
+                        if (!/^http/.test(url)) {
                             showTips("Wrong url, check again!");
                             return;
                         }
                     }
-                    let maxId=1,hasUrl=false;
-                    if(!rulesData.urls){
-                        rulesData.urls=[];
+                    let maxId = 1, hasUrl = false;
+                    if (!rulesData.urls) {
+                        rulesData.urls = [];
                     }
-                    ruleUrls.forEach(u=>{
-                        if(maxId<u.id){
-                            maxId=u.id;
+                    ruleUrls.forEach(u => {
+                        if (maxId < u.id) {
+                            maxId = u.id;
                         }
-                        if(u.url==url){
-                            hasUrl=true;
+                        if (u.url == url) {
+                            hasUrl = true;
                         }
                     });
-                    if(hasUrl)break;
-                    if(!rulesData.sort)rulesData.sort=[1];
-                    rulesData.urls.push({id:maxId+1,url:url});
-                    rulesData.sort.push(maxId+1);
+                    if (hasUrl) break;
+                    if (!rulesData.sort) rulesData.sort = [1];
+                    rulesData.urls.push({id: maxId + 1, url: url});
+                    rulesData.sort.push(maxId + 1);
                     storage.setItem("rulesData", rulesData);
                 }
             }
@@ -5169,14 +5196,14 @@
         document.addEventListener('wheel', scrollHandler, true);
     }
 
-    function showTips(content, wordColor, backColor){
+    function showTips(content, wordColor, backColor) {
         document.body.appendChild(tipsWords);
-        tipsWords.style.opacity=0.8;
-        tipsWords.innerText=content;
-        tipsWords.style.marginLeft=-tipsWords.offsetWidth/2+"px";
-        tipsWords.style.color=wordColor||0xFFFFFF;
-        tipsWords.style.backgroundColor=backColor||0x000;
-        setTimeout(()=>{tipsWords.style.opacity=0},1000);
+        tipsWords.style.opacity = 0.8;
+        tipsWords.innerText = content;
+        tipsWords.style.marginLeft = -tipsWords.offsetWidth / 2 + "px";
+        tipsWords.style.color = wordColor || 0xFFFFFF;
+        tipsWords.style.backgroundColor = backColor || 0x000;
+        setTimeout(() => {tipsWords.style.opacity = 0}, 1000);
     }
 
     function getLoadMore(doc) {
