@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86080",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//article/div[@class='article__contents']",
+    "nextLink": "//a[@class='-next']",
+    "url": "^https://jocr\\.jp/raditopi/",
+    "exampleUrl": "https://jocr.jp/raditopi/2022/11/17/465808/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "t_f_m'",
+  "name": "ラジオ関西トピックス ラジトピ",
+  "created_at": "2023-02-26T05:54:53+09:00",
+  "updated_at": "2023-02-26T05:54:53+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86078",
   "data": {
     "pageElement": "//dl[contains(concat(\" \", normalize-space(@class), \" \"), \" news_block \")]",
