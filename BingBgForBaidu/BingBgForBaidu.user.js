@@ -2,7 +2,7 @@
 // @name         百Bing图
 // @name:en      BingBgForBaidu
 // @namespace    hoothin
-// @version      2.3.28
+// @version      2.3.29
 // @description     给百度首页换上Bing的背景图，并添加背景图链接与日历组件
 // @description:en  Just change the background image of baidu.com to bing.com
 // @author       hoothin
@@ -115,7 +115,7 @@
     var skinContainer=document.querySelector(".s-skin-container");
     if(!skinContainer){
         skinContainer=document.getElementsByTagName("body")[0];
-        GM_addStyle(".hot-refresh{padding-bottom:7px;}.hot-title>div,.hot-refresh{background-color: #f0f8ffc9; border-radius: 5px 5px 0 0}.s-hotsearch-content{position: absolute; background-color: #f0f8ffc9; border-radius: 0 0 10px 10px;padding-right: 2px;}.s_ipt{margin:0!important;}.s_ipt_wr{border-radius: 10px 4px 4px 10px;border-radius: 10px 0 0 10px;background: #fff!important;}#qrcodeCon{display:none}body{position:fixed;_position:absolute;top:0;left:0;height:100%;width:100%;min-width:1000px;z-index:-10;background-position:center 0;background-repeat:no-repeat;background-size:cover;-webkit-background-size:cover;-o-background-size:cover;zoom:1;}");
+        GM_addStyle(".hot-refresh{padding-bottom:7px;}.hot-title>div,.hot-refresh{background-color: #f0f8ffc9; border-radius: 3px 3px 0 0}.s-hotsearch-content{position: absolute; background-color: #f0f8ffc9; border-radius: 0 0 5px 5px;padding-right: 2px;}.s_ipt{margin:0!important;}.s_ipt_wr{border-radius: 10px 4px 4px 10px;border-radius: 10px 0 0 10px;background: #fff!important;}#qrcodeCon{display:none}body{position:fixed;_position:absolute;top:0;left:0;height:100%;width:100%;min-width:1000px;z-index:-10;background-position:center 0;background-repeat:no-repeat;background-size:cover;-webkit-background-size:cover;-o-background-size:cover;zoom:1;}");
         document.querySelector("input#su").addEventListener("click",function(){skinContainer.style.backgroundImage="";});
     }
     var bingImg=GM_getValue("bingImg");
@@ -140,6 +140,13 @@
             logo.style.display="initial";
         }
     }
+    var input=document.querySelector("#kw");
+    var headWrapper=document.querySelector("#head_wrapper");
+    input.addEventListener('input', e => {
+        if(headWrapper.children[0].id=="ent_sug"){
+            skinContainer.style.backgroundImage="";
+        }
+    });
     GM_xmlhttpRequest({
         method: 'GET',
         url: "http://global.bing.com/HPImageArchive.aspx?format=js&idx=0&pid=hp&video=1&n=1",
