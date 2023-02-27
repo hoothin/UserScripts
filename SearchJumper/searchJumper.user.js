@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.55.3
+// @version      1.6.6.55.4
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -1820,7 +1820,7 @@
                      position: fixed;
                      text-align: left;
                      background: #00000000;
-                     max-height: 100vh;
+                     max-height: calc(100vh - 50px);
                      overflow: scroll;
                      border: 0;
                      pointer-events: none;
@@ -1878,6 +1878,9 @@
                      flex: 1;
                      text-align: left;
                      white-space: nowrap;
+                 }
+                 #search-jumper .sitelist a * {
+                     pointer-events: none;
                  }
                  #search-jumper .sitelist>.sitelistCon>p {
                      color: #565656;
@@ -2408,6 +2411,28 @@
                  .search-jumper-historylist>a.search-jumper-btn {
                      filter: drop-shadow(0px 0px 3px #00000050);
                  }
+                 #search-jumper .listArrow {
+                     width: 0;
+                     height: 0;
+                     border: 10px solid transparent;
+                     pointer-events: none;
+                     border-bottom-color: white;
+                     position: fixed;
+                     display: none;
+                     z-index: 2147483647;
+                 }
+                 #search-jumper.search-jumper-left .listArrow {
+                     border-bottom-color: transparent;
+                     border-right-color: white;
+                 }
+                 #search-jumper.search-jumper-right .listArrow {
+                     border-bottom-color: transparent;
+                     border-left-color: white;
+                 }
+                 #search-jumper.search-jumper-bottom .listArrow {
+                     border-bottom-color: transparent;
+                     border-top-color: white;
+                 }
                  @media (prefers-color-scheme: dark) {
                      /* 站点列表 */
                      #search-jumper .sitelist > .sitelistCon > p {
@@ -2425,6 +2450,21 @@
                      #search-jumper .sitelist > .sitelistCon > p,
                      #search-jumper .sitelist a > p {
                          color: #DADADA !important;
+                     }
+                     #search-jumper .listArrow {
+                         border-bottom-color: #1C2127;
+                     }
+                     #search-jumper.search-jumper-left .listArrow {
+                         border-bottom-color: transparent;
+                         border-right-color: #1C2127;
+                     }
+                     #search-jumper.search-jumper-right .listArrow {
+                         border-bottom-color: transparent;
+                         border-left-color: #1C2127;
+                     }
+                     #search-jumper.search-jumper-bottom .listArrow {
+                         border-bottom-color: transparent;
+                         border-top-color: #1C2127;
                      }
 
                      /* 历史列表 */
@@ -2472,6 +2512,7 @@
                 logoCon.addEventListener('mouseenter', e => {
                     if (this.preList) {
                         this.preList.style.visibility = "hidden";
+                        this.listArrow.style.cssText = "";
                     }
                 });
 
@@ -4265,6 +4306,10 @@
                 this.copyEleBtn.addEventListener("click", e => {
                     Picker.getInstance().copy();
                 });
+                let listArrow = document.createElement("div");
+                listArrow.className = "listArrow";
+                this.listArrow = listArrow;
+                this.con.appendChild(listArrow);
                 for (let siteConfig of searchData.sitesConfig) {
                     let isBookmark = siteConfig.bookmark || siteConfig.sites.length > 100 || (/^BM/.test(siteConfig.type) && siteConfig.icon === "bookmark");
                     if (isBookmark) {
@@ -4605,6 +4650,7 @@
                 this.hideTimeout = setTimeout(hideHandler, delayTime);
                 if (this.preList) {
                     this.preList.style.visibility = "hidden";
+                    this.listArrow.style.cssText = "";
                 }
             }
 
@@ -5099,12 +5145,23 @@
                 }
                 let viewWidth = window.innerWidth || document.documentElement.clientWidth;
                 let viewHeight = window.innerHeight || document.documentElement.clientHeight;
+                let arrowStyle = this.listArrow.style;
+                arrowStyle.cssText = "display: block";
                 if (this.bar.clientWidth > this.bar.clientHeight) {
                     //横
+                    let arrowX = clientX;
+                    if (clientX < 30) {
+                        arrowX = 30;
+                    } else if (clientX > viewWidth - 40) {
+                        arrowX = viewWidth - 40;
+                    }
+                    arrowStyle.left = arrowX - 10 + "px";
                     if (clientY - eh / 2 < 100) {
                         list.style.top = this.bar.clientHeight + "px";
+                        arrowStyle.top = this.bar.clientHeight - 10 + "px";
                     } else {
                         list.style.bottom = this.bar.clientHeight + "px";
+                        arrowStyle.bottom = this.bar.clientHeight - 10 + "px";
                     }
                     clientX -= list.scrollWidth / 2;
                     if (clientX > viewWidth - list.scrollWidth - 10) clientX = viewWidth - list.scrollWidth - 10;
@@ -5112,10 +5169,19 @@
                     list.style.left = clientX + "px";
                 } else {
                     //竖
+                    let arrowY = clientY;
+                    if (clientY < 30) {
+                        arrowY = 30;
+                    } else if (clientY > viewHeight - 30) {
+                        arrowY = viewHeight - 30;
+                    }
+                    arrowStyle.top = arrowY - 10 + "px";
                     if (clientX - ew / 2 < 100) {
                         list.style.left = this.bar.clientWidth + "px";
+                        arrowStyle.left = this.bar.clientWidth - 10 + "px";
                     } else {
                         list.style.right = this.bar.clientWidth + "px";
+                        arrowStyle.right = this.bar.clientWidth - 10 + "px";
                     }
                     clientY -= list.scrollHeight / 2;
                     if (clientY > viewHeight - list.scrollHeight) clientY = viewHeight - list.scrollHeight;
@@ -5308,6 +5374,9 @@
                         typeBtn.appendChild(img);
                     }
                 }
+                ele.addEventListener('mouseleave', e => {
+                    self.listArrow.style.cssText = "";
+                });
                 let batchSiteNames = [];
                 let batchOpenConfirm = (e) => {
                     switch (searchData.prefConfig.batchOpenConfirm) {
@@ -5393,6 +5462,7 @@
                         self.con.classList.contains("search-jumper-right");
                     if (self.preList) {
                         self.preList.style.visibility = "hidden";
+                        self.listArrow.style.cssText = "";
                     }
                     self.recoveHistory();
                     if (ele.classList.contains("search-jumper-hide")) {
@@ -6704,6 +6774,10 @@
             }
 
             initPos(relX, relY, posX, posY) {
+                if (this.preList) {
+                    this.preList.style.visibility = "hidden";
+                    this.listArrow.style.cssText = "";
+                }
                 relX = relX || searchData.prefConfig.position.x;
                 relY = relY || searchData.prefConfig.position.y;
                 posX = posX || searchData.prefConfig.offset.x;
@@ -7710,6 +7784,8 @@
             }, { passive: false, capture: false });
 
             searchBar.bar.addEventListener(getSupportWheelEventName(), e => {
+                if (e.target.parentNode && (e.target.parentNode.className == "sitelistCon" ||
+                    (e.target.parentNode.parentNode && e.target.parentNode.parentNode.className == "sitelistCon"))) return;
                 let targetClassList = searchBar.con.classList;
                 if (!targetClassList.contains('search-jumper-scroll')) return;
                 if (targetClassList.contains('search-jumper-left') ||
@@ -8917,6 +8993,7 @@
                     clearTimeout(openAllTimer);
                     openAllTimer = setTimeout(() => {
                         removeFrame();
+                        searchBar.appendBar();
                         searchBar.showAllSites();
                     }, 1000);
                 }, true);
