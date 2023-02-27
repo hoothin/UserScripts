@@ -8110,6 +8110,14 @@
         "css": "section.posts-expand>article.post{opacity:1}"
     },
     {
+        "name": "AfreecaTV 搜索",
+        "url": "^https?://afreecatv\\.com/total_search",
+        "pageElement": "ul#detailVideoPageList>li",
+        "nextLink": ".pg_area>em+a",
+        "wait": 500,
+        "replaceElement": ".pg_area"
+    },
+    {
         "name": "Baidu",
         "insertPos": 1,
         "nextLink": [
