@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.34.3
+// @version      1.9.34.4
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，自动适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，自動適配任意網頁
@@ -801,6 +801,10 @@
     function createXPathFromElement(elm) {
         let allNodes = document.getElementsByTagName('*'), segs;
         for (segs = []; elm && elm.nodeType == 1; elm = elm.parentNode) {
+            if (elm.tagName == 'BODY' || elm.tagName == 'HTML') {
+                segs.unshift(elm.localName.toLowerCase());
+                continue;
+            }
             if (elm.hasAttribute('id')) {
                 var uniqueIdCount = 0;
                 for (var n = 0; n < allNodes.length; n++) {
@@ -2916,7 +2920,7 @@
               text-align: center;
               opacity: 0.95;
               color: #161616;
-              z-index: 2147483647;
+              z-index: 2147483646;
               font-size: 16px;
               box-shadow: rgb(0 0 0) 0px 0px 10px;
              }
@@ -2924,6 +2928,7 @@
               margin: 0;
               padding: 0;
               font-family: Times New Roman;
+              overflow: initial;
              }
              #pagetual-picker>.title {
               margin: -5px 45px 10px 45px;
@@ -2941,6 +2946,7 @@
               transition: transform .15s ease-in-out;
               float: right;
               cursor: pointer;
+              overflow: hidden;
              }
              #pagetual-picker button:hover {
               transform: scale(1.2);
@@ -3291,6 +3297,7 @@
             checkBtn.addEventListener("click", e => {
                 self.checkInputSelector();
                 if (this.selectorInput.value) _GM_setClipboard(this.selectorInput.value);
+                showTips("Copied");
             });
             xpath.addEventListener("click", e => {
                 if (!selectorInput.value) {
@@ -3389,7 +3396,7 @@
             let signDiv = document.createElement("div");
             this.setImportant(signDiv, "position", "absolute");
             this.setImportant(signDiv, "pointer-events", "none");
-            this.setImportant(signDiv, "z-index", "2147483647");
+            this.setImportant(signDiv, "z-index", "2147483646");
             this.setImportant(signDiv, "background", "rgba(120, 170, 210, 0.6)");
             this.setImportant(signDiv, "transition", "all 0.15s ease-out");
             this.setImportant(signDiv, "box-shadow", "rgb(0 0 0) 0px 0px 3px 0px");
@@ -3408,8 +3415,12 @@
             return this.xpath.checked ? createXPathFromElement(ele) : geneSelector(ele, true);
         }
 
+        fillTempRuleTextarea() {
+            if (this.tempRule.style.display == "none") this.tempRule.value = JSON.stringify(this.getTempRule(), null, 4);
+        }
+
         setSelectorDiv(selector) {
-            this.tempRule.value = JSON.stringify(this.getTempRule(), null, 4);
+            this.fillTempRuleTextarea();
             let self = this;
             this.allpath.innerHTML = createHTML("");
             if (!selector) return;
@@ -3463,7 +3474,7 @@
                     self.adjustSignDiv(sign, ele);
                     self.signList.push(sign);
                 });
-                this.tempRule.value = JSON.stringify(this.getTempRule(), null, 4);
+                this.fillTempRuleTextarea();
             }
         }
 
@@ -4764,7 +4775,7 @@
            top: 10%;
            margin-left: -99999px;
            padding: 0 15px;
-           z-index: 999999999;
+           z-index: 2147483647;
            background-color: #000;
            border: 1px solid #303030;
            border-radius: 10px;
