@@ -1,5 +1,19 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86081",
+  "data": {
+    "pageElement": "//table[@class='tborder tfixed clear']",
+    "insertBefore": "//form[@id='quick_reply_form']",
+    "nextLink": "//a[@class='pagination_next'][1]",
+    "url": "^https?://(?:[^.]+\\.)?breached\\.vc/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "J21",
+  "name": "breached.vc",
+  "created_at": "2023-02-28T05:38:26+09:00",
+  "updated_at": "2023-02-28T05:40:24+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86080",
   "data": {
     "insertBefore": "",
