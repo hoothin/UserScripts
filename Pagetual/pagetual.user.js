@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.34.2
+// @version      1.9.34.3
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，自动适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，自動適配任意網頁
@@ -142,7 +142,7 @@
             config = {
                 enableDebug: "调试模式，输出信息至控制台",
                 disable: "暂时禁用",
-                disableSite: "切换禁用状态",
+                disableSite: "站点禁用开关",
                 disableSiteTips: "已在此站禁用",
                 enableSiteTips: "已在此站启用",
                 enable: "启用翻页",
@@ -153,7 +153,7 @@
                 cancelForceIframe: "取消强制拼接",
                 configure: "打开配置页面",
                 firstUpdate: "点击此处初始化规则",
-                update: "更新规则",
+                update: "更新在线规则",
                 click2update: "点击立即更新规则",
                 loadNow: "立即翻页",
                 loadConfirm: "要翻几页？（0为不间断）",
@@ -227,7 +227,7 @@
             config = {
                 enableDebug: "調試模式，輸出信息至控制台",
                 disable: "暫時禁用",
-                disableSite: "切換禁用狀態",
+                disableSite: "站點禁用開關",
                 disableSiteTips: "已在此站禁用",
                 enableSiteTips: "已在此站啟用",
                 enable: "啟用翻頁",
@@ -238,7 +238,7 @@
                 cancelForceIframe: "取消强制拼接",
                 configure: "打開配置頁面",
                 firstUpdate: "點擊此處初始化規則",
-                update: "更新規則",
+                update: "更新在綫規則",
                 click2update: "點擊立即更新規則",
                 loadNow: "立即翻頁",
                 loadConfirm: "要翻几頁？（0為不間斷）",
@@ -3241,6 +3241,7 @@
             logoBtn.addEventListener("click", e => {
                 logoBtn.classList.toggle("showSign");
                 self.showSign = !self.showSign;
+                document.body.classList.toggle("pagetual-picker");
             }, true);
             let moving = false;
             let initX = 0, initY = 0, initPos = {x: 0, y: 0};
@@ -3280,6 +3281,7 @@
             frame.addEventListener("mouseleave", e => {
                 if (!self.showSign) {
                     if (self.mainSignDiv.parentNode) self.mainSignDiv.parentNode.removeChild(self.mainSignDiv);
+                    self.clearSigns();
                     return;
                 }
                 if (moving) return;
@@ -4699,9 +4701,10 @@
            pointer-events: none;
            padding: unset;
            opacity: 0;
-           -moz-transition:all 0.3s ease-in-out 0s;
-           -webkit-transition:all 0.3s ease-in-out 0s;
-           transition:all 0.3s ease-in-out 0s;
+           -moz-transition:margin-top 0.3s ease-in-out 0s, opacity .3s;
+           -webkit-transition:margin-top 0.3s ease-in-out 0s, opacity .3s;
+           transition:margin-top 0.3s ease-in-out 0s, opacity .3s;
+           transform: none;
          }
          .pagetual_pageBar a>span:hover {
            color: red;
@@ -6270,9 +6273,9 @@
                             }, true);
                         }
                     });
-                }else{
-                    if(!isJs){
-                        requestDoc(nextLink, (eles)=>{
+                } else {
+                    if (!isJs) {
+                        requestDoc(nextLink, (eles) => {
                             loadPageOver();
                             if (urlChanged || isPause) return;
                             if (eles) {
@@ -6280,12 +6283,12 @@
                                 checkAutoLoadNum();
                             }
                         });
-                    }else{
-                        emuPage((doc, eles)=>{
+                    } else {
+                        emuPage((doc, eles) => {
                             loadPageOver();
                             if (urlChanged || isPause) return;
                             if (eles) {
-                                ruleParser.insertPage(doc, eles, "", ()=>{
+                                ruleParser.insertPage(doc, eles, "", () => {
                                     createPageBar(nextLink);
                                     checkAutoLoadNum();
                                 }, true);
