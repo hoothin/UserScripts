@@ -3318,6 +3318,7 @@
             this.nextSwitch = nextSwitch;
             this.loadNow = loadNow;
             this.tempRule = tempRule;
+            this.logoBtn = logoBtn;
             this.moveHandler = e => {
                 if (!self.showSign || e.target === document) return;
                 self.adjustSignDiv(self.mainSignDiv, self.getTarget(e.target));
@@ -3482,6 +3483,9 @@
             document.documentElement.appendChild(this.frame);
             document.body.appendChild(this.mainSignDiv);
             document.body.classList.add("pagetual-picker");
+
+            this.logoBtn.classList.remove("showSign");
+            this.showSign = true;
 
             document.body.addEventListener("mousemove", this.moveHandler, true);
             document.body.addEventListener("click", this.clickHandler, true);
