@@ -1907,7 +1907,7 @@
                      background: black;
                      color: #ffffff!important;
                      font-family: Arial, sans-serif;
-                     font-weight: bold;
+                     font-weight: 500;
                      border-radius: ${20 * this.scale}px!important;
                      font-size: ${15 * this.scale}px;
                      line-height: ${32 * this.scale}px;
@@ -1916,6 +1916,11 @@
                      min-width: ${32 * this.scale}px;
                      min-height: ${32 * this.scale}px;
                      letter-spacing: 0px;
+                     text-shadow: unset;
+                 }
+                 .search-jumper-word:hover {
+                     font-weight: bold;
+                     text-shadow: 0px 0px 5px #d0d0d0;
                  }
                  a.search-jumper-word {
                      text-decoration: none;
@@ -1927,12 +1932,6 @@
                      background: #f7f7f7d9;
                      color: #222!important;
                      border-radius: 20px;
-                 }
-                 .search-jumper-word {
-                     text-shadow: unset;
-                 }
-                 .search-jumper-word:hover {
-                     text-shadow: 0px 0px 5px #d0d0d0;
                  }
                  .search-jumper-type img {
                      width: ${32 * this.scale}px;
