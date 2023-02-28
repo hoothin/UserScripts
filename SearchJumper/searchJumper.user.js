@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.55.4
+// @version      1.6.6.55.5
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -2418,8 +2418,9 @@
                      pointer-events: none;
                      border-bottom-color: white;
                      position: fixed;
-                     display: none;
+                     opacity: 0;
                      z-index: 2147483647;
+                     transition: opacity .3s ease, top .25s, bottom .25s, left .25s, right .25s;
                  }
                  #search-jumper.search-jumper-left .listArrow {
                      border-bottom-color: transparent;
@@ -4724,7 +4725,7 @@
                 this.insertHistory(this.currentType);
                 let inPageWords = searchData.prefConfig.showInSearchEngine ? getKeywords() : globalInPageWords;
                 if (inPageWords) {
-                    this.setInPageWords(inPageWords.replace(/[:;]/g, ' '));
+                    this.setInPageWords(inPageWords.replace(/['";]/g, ' '));
                 }
             }
 
@@ -5146,7 +5147,7 @@
                 let viewWidth = window.innerWidth || document.documentElement.clientWidth;
                 let viewHeight = window.innerHeight || document.documentElement.clientHeight;
                 let arrowStyle = this.listArrow.style;
-                arrowStyle.cssText = "display: block";
+                arrowStyle.opacity = 1;
                 if (this.bar.clientWidth > this.bar.clientHeight) {
                     //横
                     let arrowX = clientX;
@@ -5375,7 +5376,7 @@
                     }
                 }
                 ele.addEventListener('mouseleave', e => {
-                    self.listArrow.style.cssText = "";
+                    self.listArrow.style.opacity = "";
                 });
                 let batchSiteNames = [];
                 let batchOpenConfirm = (e) => {
@@ -8473,7 +8474,7 @@
                         filter: alpha(opacity=95);
                         box-shadow: 5px 5px 20px 0px #000;
                         color: #6e7070;
-                        transition:all 0.25s ease;
+                        transition: all 0.25s ease;
                         border: 0;
                     }
                     .searchJumperFrame-title {
