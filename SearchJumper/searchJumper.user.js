@@ -3878,7 +3878,10 @@
                 searchTypes.forEach(type => {
                     if (type.style.display != 'none') {
                         let sitelist = type.querySelector('.sitelist');
-                        if (sitelist) self.sitelistBox.appendChild(sitelist);
+                        if (sitelist) {
+                            self.sitelistBox.appendChild(sitelist);
+                            self.initList(sitelist);
+                        }
                     }
                 });
                 this.historySiteBtns.slice(0, 10).forEach(btn => {
@@ -5118,10 +5121,7 @@
                 return list;
             }
 
-            listPos(ele, list) {
-                //if (this.preList) {
-                    //this.preList.style.visibility = "hidden";
-                //}
+            initList(list) {
                 if (!list.dataset.inited) {
                     list.dataset.inited = true;
                     [].forEach.call(list.querySelectorAll("div>a>img"), img => {
@@ -5131,6 +5131,13 @@
                         }
                     });
                 }
+            }
+
+            listPos(ele, list) {
+                //if (this.preList) {
+                    //this.preList.style.visibility = "hidden";
+                //}
+                this.initList(list);
                 list.style = "";
                 this.preList = list;
                 let ew = ele.clientWidth;
@@ -9601,7 +9608,11 @@
                 searchBar.appendBar();
                 searchBar.showAllSites();
                 if (location.hash) {
-                    searchBar.showallInput.value = location.hash.slice(1);
+                    let hash = location.hash.slice(1);
+                    try {
+                        hash = decodeURIComponent(hash);
+                    } catch (e) {}
+                    searchBar.showallInput.value = hash;
                 }
                 document.body.style.cssText = `
                     zoom: 1;
