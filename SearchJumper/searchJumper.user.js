@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.55.5
+// @version      1.6.6.55.6
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -45,6 +45,7 @@
     if (window.name === 'pagetual-iframe' || (window.frameElement && window.frameElement.name === 'pagetual-iframe')) return;
     const configPage = 'https://hoothin.github.io/SearchJumper';
     const importPageReg = /^https:\/\/github\.com\/hoothin\/SearchJumper\/issue|^https:\/\/greasyfork\.org\/.*\/scripts\/445274[\-\/].*\/discussions/i;
+    const isAllPage = /^https:\/\/hoothin\.github\.io\/SearchJumper\/all\.html/.test(location.href);
     const mobileUa = "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1";
 
     var searchData = {};
@@ -1364,7 +1365,7 @@
                      transform: translateZ(0);
                      ${searchData.prefConfig.noAni ? "background-color: rgba(255, 255, 255, 0.8);" : (
                     "background-color: rgba(255, 255, 255, 0.1);" +
-                    "backdrop-filter: blur(10px);" +
+                    "backdrop-filter: blur(5px);" +
                     "-webkit-backdrop-filter: blur(5px);" +
                     "transition:background-color 1s ease;")}
                  }
@@ -3848,7 +3849,7 @@
             }
 
             closeShowAll() {
-                if (!this.con.classList.contains("search-jumper-showall")) return;
+                if (!this.con.classList.contains("search-jumper-showall") || isAllPage) return;
                 document.removeEventListener("mousedown", self.showAllMouseHandler);
                 document.removeEventListener("keydown", self.showAllKeydownHandler);
                 this.con.classList.remove("search-jumper-showall");
@@ -8275,7 +8276,7 @@
         }
 
         function initConfig() {
-            if (isInConfigPage()) {
+            if (isInConfigPage() && !isAllPage) {
                 let sendMessageTimer, received = false;
                 let loadConfig = () => {
                     sendMessageTimer = setTimeout(() => {
@@ -9595,9 +9596,70 @@
             searchBar = new SearchBar();
         }
 
+        function initAllPage() {
+            if (isAllPage) {
+                searchBar.appendBar();
+                searchBar.showAllSites();
+                if (location.hash) {
+                    searchBar.showallInput.value = location.hash.slice(1);
+                }
+                document.body.style.cssText = `
+                    zoom: 1;
+                    margin: 0;
+                    padding: 0;
+                    width: 100vw;
+                    height: 100vh;
+                    background-position: center 0;
+                    background-repeat: no-repeat;
+                    background-size: cover;
+                    -webkit-background-size: cover;
+                    -o-background-size: cover;
+                `;
+                storage.getItem("allPageBg", allPageBg => {
+                    if (allPageBg) {
+                        document.body.style.backgroundImage = `url("${allPageBg.base64}")`;
+                    } else allPageBg = {url: ""};
+                    _GM_xmlhttpRequest({
+                        method: 'GET',
+                        url: "http://global.bing.com/HPImageArchive.aspx?format=js&idx=0&pid=hp&video=1&n=1",
+                        onload: function(result) {
+                            var jsonData = null;
+                            try {
+                                jsonData = JSON.parse(result.responseText);
+                                var bgUrl = jsonData.images[0].url;
+                                if (!/^https?:\/\//.test(bgUrl)) {
+                                    bgUrl = "https://global.bing.com" + bgUrl;
+                                }
+                                if (bgUrl == allPageBg.url) return;
+                                _GM_xmlhttpRequest({
+                                    method: 'GET',
+                                    url: bgUrl,
+                                    responseType: "blob",
+                                    onload: function(r) {
+                                        var blob = r.response;
+                                        var fr = new FileReader();
+                                        fr.readAsDataURL(blob);
+                                        fr.onload = function (e) {
+                                            var base64ImgData = e.target.result;
+                                            allPageBg = {url: bgUrl, base64: base64ImgData};
+                                            storage.setItem("allPageBg", allPageBg);
+                                        };
+                                    }
+                                });
+                                if (!allPageBg.base64) document.body.style.backgroundImage = `url("${bgUrl}")`;
+                            } catch (e) {
+                                console.log(e);
+                            }
+                        }
+                    });
+                });
+            }
+        }
+
         async function initRun() {
             await searchBar.initRun();
             initListener();
+            initAllPage();
         }
 
         async function sleep(time) {
