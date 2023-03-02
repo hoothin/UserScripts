@@ -563,7 +563,7 @@
     }
     var enableDebug = true;
     function i18n(name, param) {
-        return config[name] ? config[name].replace("#t#",param) : name;
+        return config[name] ? config[name].replace("#t#", param) : name;
     };
 
     function debug(str, title) {
@@ -1555,8 +1555,8 @@
                 }
             }
             let canSave = false;//發現頁碼選擇器在其他頁對不上，還是別保存了
-            let url = this.curUrl.replace("index.php?","?");
-            let _url = url.replace(/\.s?html?$/i,"");
+            let url = this.curUrl.replace("index.php?", "?");
+            let _url = url.replace(/\.s?html?$/i, "");
             let pageNum = 1,preStr = "",afterStr = "";
             let pageTwoReg = /^[\/\?&]?[_-]?(p|page)?=?\/?2(\/|\?|&|$)/i;
             let pageMatch1 = url.match(/(.*[a-z\/\-_](?:p|page)?\/?)(\d+)(\.s?html?$|\/?$)/i);
@@ -1775,7 +1775,7 @@
                             _aHref = _aHref.replace(/\.s?html?$/i, "");
                             if (_aHref.indexOf(_url) != -1 && pageTwoReg.test(_aHref.replace(_url, ""))) {
                                 let curHref = aTag.getAttribute("href");
-                                let pageOne = curHref.replace(/\/2(\/|\?|&|$)/,"/1$1");
+                                let pageOne = curHref.replace(/\/2(\/|\?|&|$)/, "/1$1");
                                 if (pageOne == curHref) pageOne = null;
                                 else pageOne = body.querySelector(`a[href='${pageOne}']`);
                                 if (!pageOne || pageOne.className != curHref.className) next4 = aTag;
@@ -1955,7 +1955,7 @@
                     let reps = targetUrl.match(/{.*?}/g);
                     if (reps) {
                         reps.forEach(rep => {
-                            let code = rep.replace("{","").replace("}", "").replace(/\(\)/g, "0");
+                            let code = rep.replace("{", "").replace("}", "").replace(/\(\)/g, "0");
                             let result = code.match(/^(\d*)\+1$/);
                             if (result) {
                                 result = parseInt(result[1] || 1) + 1;
@@ -2035,7 +2035,7 @@
                         parent = parent.parentNode;
                     }
                     if (doc == document) {
-                        if ((!nextLink.href || /^(javascript|#)/.test(nextLink.href.replace(location.href,""))) && !isVisible(nextLink, _unsafeWindow)) {
+                        if ((!nextLink.href || /^(javascript|#)/.test(nextLink.href.replace(location.href, ""))) && !isVisible(nextLink, _unsafeWindow)) {
                             this.nextLinkHref = false;
                             return null;
                         } else {
@@ -3357,7 +3357,7 @@
                 } else {
                     this.editTemp = {
                         name: document.title,
-                        url: "^" + (location.origin + location.pathname).replace(/^https?/, "https?").replace(/\./g, "\\.")
+                        url: "^" + (location.origin + location.pathname).replace(/[^\/]*$/, "").replace(/^https?/, "https?").replace(/\./g, "\\.")
                     };
                 }
                 delete this.editTemp.from;
