@@ -6445,7 +6445,7 @@
                         let url = getUrl();
                         if ((data.charset && data.charset != 'utf-8') || /[:%]p{/.test(data.url)) {
                             if (url === false) return false;
-                            let jumpFrom = data.url.match(/#j(umpFrom)?{(.*?)}/);
+                            let jumpFrom = data.url.match(/#j(umpFrom|f)?{(.*?)}/);
                             let processPostUrl = _url => {
                                 storage.setItem("postUrl", [_url, data.charset]);
                                 if (jumpFrom) {
@@ -7352,7 +7352,7 @@
         }
 
         function submitByForm(charset, url, target) {
-            url = url.replace(/#j(umpFrom)?{(.*?)}/, "");
+            url = url.replace(/#j(umpFrom|f)?{(.*?)}/, "");
             currentFormParams = {charset: charset, url: url, target: target};
             if (url.indexOf("#submitBySearchJumper") !== -1) {
                 currentFormParams = {charset: charset, url: url.replace("#submitBySearchJumper", ""), target: target};
@@ -8139,7 +8139,7 @@
                             }
                             url += params.join("&");
                         }
-                        url += `#j{${location.pathname.slice(1)}}`;
+                        url += `#jf{${location.pathname.slice(1)}}`;
                     } else if (e.target.value) {
                         if (location.href.indexOf(e.target.value) !== -1) {
                             url = location.href.replace(e.target.value, "%s");
