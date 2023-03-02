@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.2.28.1
+// @version              2023.3.2.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -12870,7 +12870,7 @@ ImgOps | https://imgops.com/#b#`;
                     };
 
                     callback.call(this,ne? ne : e);
-                },useCapture || false);
+                },{ passive: false, capture: useCapture || false });
             };
         })();
 
@@ -18400,7 +18400,7 @@ ImgOps | https://imgops.com/#b#`;
 
                 container.addEventListener('touchstart',function(e){//当按下的时，执行平移，缩放，旋转操作
                     self.imgWindowEventHandler(e);
-                },false);
+                },{ passive: false, capture: false });
 
                 container.addEventListener('click',function(e){//阻止opera ctrl+点击保存图片
                     self.imgWindowEventHandler(e);
@@ -21731,11 +21731,14 @@ ImgOps | https://imgops.com/#b#`;
                 if(target.nodeName == "AREA")target=target.parentNode;
                 var targetBg;
                 var bgReg=/^\s*url\(\s*["']?(.+?)["']?\s*\)/i;
-                var preEle=target.previousElementSibling;
+                var preEle=target;
+                while(preEle&&getComputedStyle(preEle).position=="absolute"){
+                    preEle=preEle.previousElementSibling;
+                }
+                if(preEle==target)preEle=null;
                 if(prefs.floatBar.listenBg && hasBg(target)){
                     targetBg = unsafeWindow.getComputedStyle(target).backgroundImage.replace(bgReg,"$1");
                     let src=targetBg,nsrc=src,noActual=true,type="scale";
-                    let img={src:src};
                     result = {
                         src: nsrc,
                         type: type,
@@ -21744,15 +21747,12 @@ ImgOps | https://imgops.com/#b#`;
                         img: target
                     };
                 }else if(preEle && preEle.tagName=="IMG"){
-                    if(unsafeWindow.getComputedStyle(target).position=="absolute" || target.nodeName == "MAP"){
-                        target=preEle;
-                    }
-                }else if(target.childNodes.length<=2 && target.querySelectorAll("img").length==1){
-                    target=target.querySelector("img");
+                    target=preEle;
+                }else if(target.children.length==1 && target.children[0].tagName=="IMG"){
+                    target=target.children[0];
                 }else if(prefs.floatBar.listenBg && preEle && hasBg(preEle)){
                     targetBg = unsafeWindow.getComputedStyle(preEle).backgroundImage.replace(bgReg,"$1");
                     let src=targetBg,nsrc=src,noActual=true,type="scale";
-                    let img={src:src};
                     result = {
                         src: nsrc,
                         type: type,
@@ -21767,7 +21767,6 @@ ImgOps | https://imgops.com/#b#`;
                         target=target.parentNode;
                         targetBg=unsafeWindow.getComputedStyle(target).backgroundImage.replace(bgReg,"$1");
                         let src=targetBg,nsrc=src,noActual=true,type="scale";
-                        let img={src:src};
                         result = {
                             src: nsrc,
                             type: type,
