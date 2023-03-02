@@ -14,14 +14,14 @@
 // @connect      global.bing.com
 // @connect      cn.bing.com
 // @license      MIT License
-// @include      *://www.baidu.com/
-// @include      *://www.baidu.com/home*
-// @include      *://www.baidu.com/?tn=*
-// @include      *://www.baidu.com/index.php*
-// @include      *://ipv6.baidu.com/
-// @include      *://ipv6.baidu.com/home*
-// @include      *://ipv6.baidu.com/?tn=*
-// @include      *://ipv6.baidu.com/index.php*
+// @match      *://www.baidu.com/
+// @match      *://www.baidu.com/home*
+// @match      *://www.baidu.com/?tn=*
+// @match      *://www.baidu.com/index.php*
+// @match      *://ipv6.baidu.com/
+// @match      *://ipv6.baidu.com/home*
+// @match      *://ipv6.baidu.com/?tn=*
+// @match      *://ipv6.baidu.com/index.php*
 // ==/UserScript==
 
 (function() {
@@ -52,6 +52,7 @@
     iframe.style.position="fixed";
     iframe.style.zIndex="99";
     iframe.style.borderRadius="16px";
+    iframe.name="pagetual-iframe";
     iframe.style.border="none";
     var sUpfuncMenus=document.querySelector("#s_upfunc_menus");
     if(!sUpfuncMenus){
@@ -67,10 +68,10 @@
     if(dateDay<10)dateDay="0"+dateDay;
     if(dateMonth<10)dateMonth="0"+dateMonth;
     var week=["\u65e5","\u4e00","\u4e8c","\u4e09","\u56db","\u4e94","\u516d"];
-    riliLink.innerHTML="<span class='title' style='cursor: zoom-in; border: solid 1px; border-radius: 10px; padding: 5px;'>"+date.getFullYear()+"-"+dateMonth+"-"+dateDay+" "+"\u661f\u671f"+week[date.getDay()]+"</span>";
+    riliLink.innerHTML="<span class='title' style='cursor: zoom-in; border: solid 1px; border-radius: 10px; padding: 5px;'>"+date.getFullYear()+"-"+dateMonth+"-"+dateDay+" \u661f\u671f"+week[date.getDay()]+"</span>";
     if(icons)icons.insertBefore(riliLink,icons.firstChild);
     iframe.onload=function(){
-        var contentHead=this.contentWindow.document.querySelector("#head");
+        var contentHead=iframe.contentDocument.querySelector("#head");
         if(contentHead && contentHead.parentNode)contentHead.parentNode.removeChild(contentHead);
         var $=unsafeWindow.$;
         var iframeDoc=$(iframe.contentDocument);
@@ -81,8 +82,8 @@
         var today=$(".op-calendar-new-table-border,.op-calendar-new-table-today,.op-calendar-pc-table-border,.op-calendar-pc-table-today,.cell-today",iframe.contentDocument);
         var t;
         //riliLink.innerHTML="<span class='title' style='text-decoration:overline;cursor:crosshair'>"+$(".op-calendar-new-right-date,.op-calendar-pc-right-date",iframe.contentDocument).html()+"</span>";
-        riliLink.onmouseover=function(){
-            t=setTimeout(function(){
+        riliLink.onmouseenter=function(){
+            clearTimeout(t);
                 $(iframe).show(200);
                 var top=rili.offset().top;
                 var left=rili.offset().left;
@@ -94,13 +95,21 @@
                 var height=rili.height();
                 iframe.width=width===0?538:width;
                 iframe.height=height===0?366:height;
-            },500);
         };
-        riliLink.onmouseout=function(){
+        riliLink.onmouseleave=function(){
+            clearTimeout(t);
+            t=setTimeout(function(){
+                $(iframe).hide(500);
+            },300);
+        };
+        iframe.onmouseenter=function(){
             clearTimeout(t);
         };
-        iframe.onmouseout=function(){
-            $(iframe).hide(500);
+        iframe.onmouseleave=function(){
+            clearTimeout(t);
+            t=setTimeout(function(){
+                $(iframe).hide(500);
+            },100);
         };
         var holiday=$('[class*="calendar-right-holiday"]',iframe.contentDocument)[0];
         if(holiday || today[0].classList.contains("op-calendar-new-table-festival") || today[0].classList.contains("op-calendar-pc-table-festival")){
@@ -118,9 +127,9 @@
         GM_addStyle(".hot-refresh{padding-bottom:7px;}.hot-title>div,.hot-refresh{background-color: #f0f8ffc9; border-radius: 3px 3px 0 0}.s-hotsearch-content{position: absolute; background-color: #f0f8ffc9; border-radius: 0 0 5px 5px;padding-right: 2px;}.s_ipt{margin:0!important;}.s_ipt_wr{border-radius: 10px 4px 4px 10px;border-radius: 10px 0 0 10px;background: #fff!important;}#qrcodeCon{display:none}body{position:fixed;_position:absolute;top:0;left:0;height:100%;width:100%;min-width:1000px;z-index:-10;background-position:center 0;background-repeat:no-repeat;background-size:cover;-webkit-background-size:cover;-o-background-size:cover;zoom:1;}");
         document.querySelector("input#su").addEventListener("click",function(){skinContainer.style.backgroundImage="";});
     }
-    var bingImg=GM_getValue("bingImg");
-    if(bingImg){
-        skinContainer.style.backgroundImage = "url(\""+bingImg+"\")";
+    var bingImgObj=GM_getValue("bingImgObj");
+    if(bingImgObj){
+        skinContainer.style.backgroundImage = "url(\""+bingImgObj.base64+"\")";
     }
     var logo=document.querySelector("#s_lg_img_new");
     if(logo)logo.parentNode.removeChild(logo);
@@ -151,32 +160,32 @@
         method: 'GET',
         url: "http://global.bing.com/HPImageArchive.aspx?format=js&idx=0&pid=hp&video=1&n=1",
         onload: function(result) {
-            var jsonData = null;
+            var jsonData=null;
             try {
-                jsonData = JSON.parse(result.responseText);
+                jsonData=JSON.parse(result.responseText);
                 var bgUrl=jsonData.images[0].url;
                 if(!/^https?:\/\//.test(bgUrl)){
                     bgUrl="http://global.bing.com"+bgUrl;
                 }
                 bingBgLink.title=jsonData.images[0].copyright;
                 bingBgLink.href=bgUrl;
+                if(bingImgObj && bingImgObj.url==bgUrl)return;
+                if(!bingImgObj)skinContainer.style.backgroundImage="url(\""+bgUrl+"\")";
                 GM_xmlhttpRequest({
                     method: 'GET',
                     url: bgUrl,
                     responseType: "blob",
                     onload: function(r) {
-                        var blob = r.response;
-                        var fr = new FileReader();
+                        var blob=r.response;
+                        var fr=new FileReader();
                         fr.readAsDataURL(blob);
-                        fr.onload = function (e) {
-                            var base64ImgData = e.target.result;
-                            GM_setValue("bingImg",base64ImgData);
-                            skinContainer.style.backgroundImage = "url(\""+base64ImgData+"\")";
+                        fr.onload=function (e) {
+                            var base64ImgData=e.target.result;
+                            GM_setValue("bingImgObj",{url: bgUrl, base64: base64ImgData});
+                            skinContainer.style.backgroundImage="url(\""+base64ImgData+"\")";
                         };
                     }
                 });
-                bgUrl="url(\""+bgUrl+"\")";
-                if(!bingImg)skinContainer.style.backgroundImage = bgUrl;
             }catch (e) {
                 console.log(e);
             }
