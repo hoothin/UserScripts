@@ -9204,5 +9204,13 @@
         "url": ".",
         "pageElement": ".AC-style-logo",
         "enable": 0
+    },
+    {
+        "name": "ExHentai.org",
+        "url": "^https?://exhentai\\.org/(?!g)",
+        "nextLink": "body > div#i1.sni > div#i4 > div.sn > a#next",
+        "pageElement": "body > div#i1.sni > div#i3 > a > img#img",
+        "insert": "body > div#i1.sni > div#i4",
+        "pinUrl": true
     }
 ]
