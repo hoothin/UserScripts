@@ -2,7 +2,7 @@
 // @name         百Bing图
 // @name:en      BingBgForBaidu
 // @namespace    hoothin
-// @version      2.3.29
+// @version      2.3.30
 // @description     给百度首页换上Bing的背景图，并添加背景图链接与日历组件
 // @description:en  Just change the background image of baidu.com to bing.com
 // @author       hoothin
@@ -68,7 +68,19 @@
     if(dateDay<10)dateDay="0"+dateDay;
     if(dateMonth<10)dateMonth="0"+dateMonth;
     var week=["\u65e5","\u4e00","\u4e8c","\u4e09","\u56db","\u4e94","\u516d"];
-    riliLink.innerHTML="<span class='title' style='cursor: zoom-in; border: solid 1px; border-radius: 10px; padding: 5px;'>"+date.getFullYear()+"-"+dateMonth+"-"+dateDay+" \u661f\u671f"+week[date.getDay()]+"</span>";
+    var riliurl=GM_getValue("riliurl")||"https://www.rili.com.cn/";
+    riliLink.innerHTML="<span class='title' style='cursor: pointer; border-bottom: solid 1px; padding: 2px 0;'>"+date.getFullYear()+"-"+dateMonth+"-"+dateDay+" \u661f\u671f"+week[date.getDay()]+"</span>";
+    riliLink.onclick=function(){
+        window.open(riliurl);
+    };
+    riliLink.oncontextmenu=function(e){
+        let newRiliurl=prompt("自定义 url", riliurl);
+        if(newRiliurl){
+            riliurl=newRiliurl;
+            GM_setValue("riliurl", newRiliurl);
+        }
+        e.preventDefault();
+    };
     if(icons)icons.insertBefore(riliLink,icons.firstChild);
     iframe.onload=function(){
         var contentHead=iframe.contentDocument.querySelector("#head");
