@@ -1363,11 +1363,14 @@
                      height: 100%;
                      z-index: -1;
                      transform: translateZ(0);
-                     ${searchData.prefConfig.noAni ? "background-color: rgba(255, 255, 255, 0.8);" : (
-                    "background-color: rgba(255, 255, 255, 0.1);" +
-                    "backdrop-filter: blur(5px);" +
-                    "-webkit-backdrop-filter: blur(5px);" +
-                    "transition:background-color 1s ease;")}
+                     ${searchData.prefConfig.noAni ? "background-color: rgba(0, 0, 0, 0.1);" : (
+                    "background-color: rgba(0, 0, 0, 0.1);" +
+                    //"backdrop-filter: blur(5px);" +
+                    //"-webkit-backdrop-filter: blur(5px);" +
+                    "transition:background-color .6s ease;")}
+                 }
+                 #search-jumper:hover>.search-jumper-showallBg {
+                     background-color: rgba(0, 0, 0, 0.8);
                  }
                  #search-jumper.search-jumper-showall>.search-jumper-showallBg {
                      display: block;
