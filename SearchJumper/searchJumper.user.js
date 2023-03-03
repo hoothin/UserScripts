@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.55.7
+// @version      1.6.6.55.8
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -609,7 +609,7 @@
             openInNewTab: true,
             sites: [ {
                 name: "生成二维码",
-                url: "https://www.lofter.com/genBitmaxImage?h=330&w=330&url=%T"
+                url: "https://hoothin.github.io/SearchJumper/qrcode.html#%U"
             }, {
                 name: "分享到微博",
                 url: "https://service.weibo.com/share/share.php?url=%t&title=%n"
@@ -5982,7 +5982,7 @@
                         if (new RegExp(urlMatch).test(location.href)) {
                             ele.dataset.current = true;
                         }
-                    } else if (!pointer && data.url.indexOf(location.hostname) != -1) {
+                    } else if (!pointer && location.hostname && data.url.indexOf(location.hostname) != -1) {
                         if (!this.inSiteMatch) this.inSiteMatch = /site(%3A|:)(.+?)[\s%]/;
                         let match = data.url.match(this.inSiteMatch);
                         if (match) {
@@ -6007,9 +6007,9 @@
                                         ele.dataset.current = true;
                                     }
                                 }
-                            } else if (data.url.indexOf("?") === -1) {
+                            } else if (data.url.indexOf("javascript") !== 0 && data.url.indexOf("?") === -1) {
                                 if (!this.keywordMatch) this.keywordMatch = /%[stb][a-z]?\b/g;
-                                if (new RegExp(data.url.replace(/^https?/, "").replace(/\./g, "\\.").replace(this.keywordMatch, ".*")).test(location.href)) {
+                                if (new RegExp(data.url.replace(/^https?/, "").replace(/[#%]\w+{.*/, "").replace(/\./g, "\\.").replace(this.keywordMatch, ".*")).test(location.href)) {
                                     ele.dataset.current = true;
                                 }
                             }
