@@ -43,7 +43,7 @@
         "pageInit": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/eval/)>-1).innerHTML.trim().slice(4);let imgData=eval(eval(code).match(/picdata[^;]+/)[0]);let F=new DocumentFragment();imgData.forEach(e=>{let img=new Image();img.src=imgDomain+e;F.appendChild(img)});let E=doc.querySelector('.comiclist');E.innerHTML='';E.appendChild(F);",
         "pageAction": "let gae=e=>document.querySelectorAll(e);let c=gae('.comiclist');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}",
         "pageBarText": "let t=doc.querySelector('a.active');if(t)return t.innerText.match(/[^（]+/)[0].trim();",
-        "css": "h1.title>span{display:none!important}"
+        "css": "h1.title>span{display:none!important}.comiclist>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
     },
     {
         "name": "漫画牛 - 閱讀",
@@ -224,7 +224,6 @@
         "pageInit": "let gae=e=>doc.querySelectorAll(e);let E=gae('.comic-contain')[0];let F=new DocumentFragment();let imgs=gae('.comic-contain amp-img');imgs.forEach(e=>{let img=new Image();img.className='comic-contain__item';img.src=e.getAttribute('src');F.appendChild(img)});E.innerHTML='';E.appendChild(F);",
         "pageAction": "let gae=e=>document.querySelectorAll(e);gae('.pagetual_pageBar a').forEach(e=>{if(/\\/\\d+_\\d+_\\d+\\.html$/.test(e.href))e.parentNode.remove()});let ps=gae('.pagetual_pageBar');if(ps.length>10){ps[0].remove();let ds=gae('.chapter-main>*');for(let i in ds){if(/pagetual/.test(ds[i].id)){break};ds[i].remove()}}",
         "pageBarText": "let t=doc.querySelector('span.title');if(t)return t.innerText",
-        "rate": 3,
         "css": ".mobadsq{display:none!important}ul{margin-block-start:-2px!important;margin-block-end:2px!important}.pagetual_pageBar{margin-top:7px!important}"
     },
     {
@@ -276,7 +275,8 @@
     {
         "name": "COCOMANGA - 閱讀 - 雙擊前往下一章，鍵盤左右鍵上下章",
         "example": "https://www.colamanhua.com/15177/1/2.html",
-        "url": "^https?://www\\.colamanhua\\.com/\\w+/\\d+/\\d+\\.html",
+        "url": "^https?://www\\.colamanhua\\.com/",
+        "include": ".mh_comicpic",
         "init": "let gx=x=>document.evaluate(x,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue;function next(e){let key=window.event?e.keyCode:e.which;if(key==39){e.preventDefault();let n=gx(\"//a[contains(@href,'html') and text()='下一章']\");if(n){n.click()}else{alert('沒有下一章了！')}}};document.addEventListener('keydown',next);function prev(e){let key=window.event?e.keyCode:e.which;if(key==37){e.preventDefault();let p=gx(\"//a[contains(@href,'html') and text()='上一章']\");if(p){p.click()}else{alert('沒有上一章了！')}}};document.addEventListener('keydown',prev);function dcnext(){let n=gx(\"//a[contains(@href,'html') and text()='下一章']\");if(n){n.click()}else{alert('沒有下一章了！')}};document.addEventListener('dblclick',dcnext);",
         "nextLink": "0",
         "pinUrl": true,
@@ -539,7 +539,7 @@
     {
         "name": "dm5 動漫屋 / 極速漫畫 - PC版閱讀",
         "example": "https://www.dm5.com/m1331307/，https://www.1kkk.com/ch1063-1331307/",
-        "url": "^https?://(www|tel|en)?\\.(dm5|1kkk)\\.(com|cn)/(m|ch)\\d+",
+        "url": "^https?://(www|tel|en|cnc)?\\.(dm5|1kkk)\\.(com|cn)/(m|ch)\\d+",
         "include": "#chapterpager",
         "pinUrl": true,
         "init": "let g=(e)=>document.querySelector(e);let loop=setInterval(()=>{let set=g('#cp_img>img');if(set){clearInterval(loop);ge('body').removeAttribute('style');g('#cp_img').innerHTML=g('#cp_img>img').outerHTML}},100);",
@@ -2081,7 +2081,7 @@
         "nextLink": "#pager_links>a[title='next page']",
         "pageElement": "//table[tbody/tr[@class='lista2']/td/a/img]",
         "replaceElement": "#pager_links",
-        "pageAction": "document.querySelectorAll('iframe[name]').forEach(iftame=>{iftame.style.margin='0 -2px 2px 0px'});let w=document.querySelector(\".lista2t .lista2>td[align='center']:not([width])\").clientWidth-2;let Iframes=document.getElementsByTagName(\"iframe\");for(let i=0;i<Iframes.length;i++){let I=(Iframes[i].contentWindow||Iframes[i].contentDocument);let fdoc;if(I.document){fdoc=I.document}fdoc.body.querySelectorAll(\".lista2t .lista2>td[align='center']:not([width])\").forEach(e=>{e.setAttribute('width',w)})};",
+        "pageAction": "document.querySelectorAll('iframe[name]').forEach(iftame=>{iftame.style.margin='0 -2px 2px 0px'});let w=document.querySelector('.lista2t .lista2>td[align=center]:not([width])').clientWidth-2;let iframes=document.getElementsByTagName('iframe');for(let i=0;i<iframes.length;i++){let iframe=iframes[i].contentWindow.document;iframe.body.querySelectorAll('.lista2t .lista2>td[align=center]:not([width])').forEach(e=>{e.setAttribute('width',w)})};",
         "sleep": 1000,
         "css": "inIframe:body,table{margin:0!important;padding:0!important;width:100.1%!important}td[width='100'],.lista2t tr:not(.lista2){display:none!important}body{background:none!important}table.lista2t{border-top:2px solid #a0cff0}"
     },
@@ -6994,7 +6994,7 @@
         "autoLoadNum": "0"
     },
     {
-        "name": "小黃書 - 圖片清單瀏覽 - 翻頁完後添加顯示所有大圖按鈕",
+        "name": "小黃書 - 圖片清單",
         "example": "https://tw.xchina.co/photo/id-63d02a8cdaf75.html，https://8se.me/photo/id-63938c1972fde.html",
         "url": "^https?://([a-z-]{2}\\.)?(xchina|8se)\\.(co|me|pro)/photo/",
         "include": "img.cr_only",
@@ -7003,7 +7003,6 @@
         "waitElement": [
             "img.cr_only"
         ],
-        "init": "let ge=e=>document.querySelector(e);let gae=e=>document.querySelectorAll(e);let bs=ge('body[style]');if(bs)bs.removeAttribute('style');let loop=setInterval(()=>{let last=ge('a[current=true]+a.next');let p=ge('.info').textContent.match(/\\d+/)[0];if(last||p<18){clearInterval(loop);let photos=ge('.photos').parentNode;let css='width: 160px;height: 30px;font-size: 22px;font-weight:bold;line-height:26px;text-align:center;margin:10px auto;box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);border-radius:15px;';let imgBox=document.createElement('div');imgBox.id='PagetualBox';imgBox.style='display:none';photos.insertBefore(imgBox,photos.firstChild);let showAllImgButton=document.createElement('div');showAllImgButton.id='showAllImgButton';showAllImgButton.innerText='顯示所有大圖';showAllImgButton.style=css;showAllImgButton.addEventListener('click',()=>{let b=ge('#PagetualBox');let s=ge('#showAllImgButton');if(b.style.display=='none'){gae('.pager').forEach(e=>{e.style='display:none'});ge('.photos').style='display:none';b.removeAttribute('style');s.innerText='關閉顯示大圖';if(!ge('#PagetualBox>img')){let imgs=gae('img.cr_only');let ps=imgs.length;let over=document.createElement('div');over.innerText='大圖添加結束';over.setAttribute('title','點擊返回頂部');over.style=css;over.addEventListener('click',()=>{document.documentElement.scrollTo({top:0})});if(ps>200){for(let i=0;i<ps;i++){setTimeout(()=>{let img=new Image();img.src=imgs[i].src.replace('_600x0','');b.appendChild(img);if(i==ps-1){b.appendChild(over)}},i*100)}}else{let F=new DocumentFragment();imgs.forEach(e=>{let img=new Image();img.src=e.src.replace('_600x0','');F.appendChild(img)});b.appendChild(F);b.appendChild(over)}}}else{gae('.pager').forEach(e=>{e.removeAttribute('style')});ge('.photos').removeAttribute('style');b.style.display='none';s.innerText='顯示所有大圖'}});photos.insertBefore(showAllImgButton,photos.firstChild);let p=ge('#pagetual-preload');if(p)p.remove()}},1000)",
         "nextLink": "a.next",
         "pageElement": ".photos > a",
         "replaceElement": [
@@ -7123,9 +7122,12 @@
         "example": "https://myjkwd.com/e/action/ShowInfo.php?classid=1&id=23726",
         "url": "^https?://myjkwd\\.com/e/action/ShowInfo\\.php",
         "pinUrl": true,
-        "init": "let ge=e=>document.querySelector(e);let e=ge('.entry');e.innerHTML=e.innerHTML.replace(`\"&gt;`,'');const getImg=url=>{fetch(url).then(res=>res.text()).then((res)=>{let data=new DOMParser().parseFromString(res,'text/html');let img=data.querySelector('.entry img');let x=ge('.load');x.parentNode.insertBefore(img,x)})};let Load=document.createElement('p');Load.className='load';Load.innerText='Loading...';Load.style='font-size:24px;height: 40px;line-height: 40px;text-align: center;margin: 10px auto;';ge('.entry img').parentNode.appendChild(Load);let max=ge('.pageLink>a>b').innerText;for(let i=1;i<max;i++){let url=location.href+'&page='+i;setTimeout(()=>{getImg(url)},i*500)}let loop=setInterval(()=>{let ps=document.querySelectorAll('.entry img').length;if(ps>1){ge('.load').innerText='Loading Page '+ps+'/'+max;}if(ps==max){clearInterval(loop)}},1000)",
-        "nextLink": "//div[@class='nextinfo']/p[contains(text(),'上一')]/a",
-        "manualMode": true,
+        "init": "let ge=e=>document.querySelector(e);let e=ge('.entry');e.innerHTML=e.innerHTML.replace('\"&gt;','');document.addEventListener('keydown',(e)=>{let key=window.event?e.keyCode:e.which;if(key=='39'){let n=ge('.nextinfo a');if(n)n.click()}});document.addEventListener('keydown',(e)=>{let key=window.event?e.keyCode:e.which;if(key=='37'){let p=ge('.nextinfo p:last-child a');if(p)p.click()}});",
+        "nextLink": ".pageLink b+a",
+        "pageElement": ".entry img",
+        "replaceElement": ".pageLink",
+        "pageBar": 0,
+        "rate": 10,
         "css": "aside.side,.pageLink{display:none!important;}.main-content{margin-left:0px!important;}"
     },
     {
@@ -7514,14 +7516,14 @@
         "example": "https://www.novel543.com/1004298677/8001_1.html",
         "url": "^https?://www\\.novel543\\.com/\\d+/\\w+\\.html",
         "history": 2,
-        "init": "let h=document.querySelector('h1');h.innerText=h.innerText.split('-')[1].trim();let c=document.querySelectorAll('.content>*');let b=c.length-5;for(let i=b;i<c.length;i++){c[i].remove()}",
+        "init": "let ge=e=>document.querySelector(e);let h=ge('h1');h.innerText=h.innerText.split('-')[1].trim();let c=ge('.content');c.innerHTML=c.innerHTML.replace(/[^\\u4e00-\\u9fa5]+(<br>)?/,'<br>').replace(/[^\\u4e00-\\u9fa5]+$/,'');let ad=ge('.gadBlock,.adBlock');if(ad){ad.remove()}c.innerHTML=c.innerHTML.replace(/<br><br>/g,'<br>');",
         "nextLink": "//a[text()='下一章' and not(contains(@href,'end'))]",
         "pageElement": "h1,.content",
         "replaceElement": "head>title,.is-active,.foot-nav",
-        "pageInit": "let h=doc.querySelector('h1');h.innerText=h.innerText.split('-')[1].trim();let c=doc.querySelectorAll('.content>*');let b=c.length-5;for(let i=b;i<c.length;i++){c[i].remove()}",
+        "pageInit": "let ge=e=>doc.querySelector(e);let h=ge('h1');h.innerText=h.innerText.split('-')[1].trim();let c=ge('.content');c.innerHTML=c.innerHTML.replace(/[^\\u4e00-\\u9fa5]+(<br>)?/,'<br>').replace(/[^\\u4e00-\\u9fa5]+$/,'');let ad=ge('.gadBlock,.adBlock');if(ad){ad.remove()}c.innerHTML=c.innerHTML.replace(/<br><br>/g,'<br>');",
         "pageAction": "let gae=e=>document.querySelectorAll(e);gae('amp-addthis').forEach(e=>{e.remove()});let h=gae('h1');let t=gae('.content');if(t.length>10){h[0].remove();t[0].remove()}",
         "pageBar": 0,
-        "css": ".gadBlock,.adBlock{display:none!important}"
+        "css": ".gadBlock,.adBlock{display:none!important}#read h1{padding:20px 0 0px!important}"
     },
     {
         "name": "稷下書院 - 分類",
