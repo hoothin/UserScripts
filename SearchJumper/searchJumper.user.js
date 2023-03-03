@@ -4725,11 +4725,13 @@
 
             inSearchEngine() {
                 if (!this.currentType) return;
-                if (this.currentType.classList.contains("search-jumper-targetImg") ||
-                   this.currentType.classList.contains("search-jumper-targetAudio") ||
-                   this.currentType.classList.contains("search-jumper-targetVideo") ||
-                   this.currentType.classList.contains("search-jumper-targetLink") ||
-                   this.currentType.classList.contains("search-jumper-targetPage")) {
+                if (this.currentType.classList.contains("search-jumper-needInPage")) {
+                    this.bar.classList.add("search-jumper-isTargetPage");
+                } else if (this.currentType.classList.contains("search-jumper-targetImg") ||
+                    this.currentType.classList.contains("search-jumper-targetAudio") ||
+                    this.currentType.classList.contains("search-jumper-targetVideo") ||
+                    this.currentType.classList.contains("search-jumper-targetLink") ||
+                    this.currentType.classList.contains("search-jumper-targetPage")) {
                     return;
                 }
                 if (!searchData.prefConfig.hideOnSearchEngine) {
