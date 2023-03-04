@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.55.10
+// @version      1.6.6.55.11
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -766,7 +766,7 @@
                     siteAddOver: '站点添加成功',
                     multiline: '是否以换行符分隔多行搜索？',
                     multilineTooMuch: '行数超过10行，是否继续搜索？',
-                    inputPlaceholder: '输入关键词筛选站点，支持 * ? 通配符，$代表末尾，^代表开头，类别**站点 可筛选指定类别，例如【图片**baidu】，tab 下一项',
+                    inputPlaceholder: '输入关键词筛选站点，支持 * ? 通配符，$代表末尾，^代表开头，分组**站点 可筛选指定分组，例如【图片**baidu】，tab 下一项',
                     inputKeywords: '输入搜索关键词',
                     inPageTips: '自定义分隔符：$c 加分隔符，例如 $c| search | jumper，默认空格作为分隔符\n原始文本不分隔：$o 加文本，例如$oopai liked by hero\n正则表达式：/re/，例如 $c, /google/i , /aPPle/\n添加提示文本：搜索文本$t{提示文本}，例如 linux$t{linux is not unix}\n添加自定义样式：搜索文本$s{背景;其他}，例如 google$s{#333333;color:red;}\n左键点击关键词跳转至下一个，右键点击关键词跳转至上一个',
                     inPagePlaceholder: '输入文字，按下回车进行页内查找',
@@ -842,7 +842,7 @@
                     siteAddOver: '站點添加成功',
                     multiline: '是否以換行符分隔多行搜索？',
                     multilineTooMuch: '行數超過10行，是否繼續搜索？',
-                    inputPlaceholder: '輸入關鍵詞篩選站點，支持 * ? 通配符，$代表末尾，^代表開頭，類別**站點 可篩選指定類別，例如【圖片**goo】，tab 下一項',
+                    inputPlaceholder: '輸入關鍵詞篩選站點，支持 * ? 通配符，$代表末尾，^代表開頭，分組**站點 可篩選指定分組，例如【圖片**goo】，tab 下一項',
                     inputKeywords: '輸入搜索關鍵詞',
                     inPageTips: '自定義分隔符：$c 加分隔符，例如 $c| search | jumper，默認空格作為分隔符\n原始文本不分隔：$o 加文本，例如$oopai liked by hero\n正則表達式：/re/，例如 $c, /google/i , /aPPle/\n添加提示文本：搜索文本$t{提示文本}，例如 linux$t{linux is not unix}\n添加自定義樣式：搜索文本$s{背景;其他}，例如 google$s{#333333;color:red;}\n左鍵點擊關鍵詞跳轉至下一個，右鍵點擊關鍵詞跳轉至上一個',
                     inPagePlaceholder: '輸入文字，按下回車進行頁內查找',
@@ -3890,7 +3890,13 @@
                 this.historySiteBtns.slice(0, 10).forEach(btn => {
                     self.historylist.appendChild(btn);
                 });
-                let kw = getKeywords() || cacheKeywords;
+                let targetKw = "";
+                if (targetElement &&
+                    (targetElement.tagName == 'A' ||
+                     (targetElement.parentNode && targetElement.parentNode.tagName == 'A'))) {
+                    targetKw = targetElement.textContent.trim();
+                }
+                let kw = getKeywords() || targetKw || cacheKeywords;
                 this.showallInput.value = kw;
                 setTimeout(() => {
                     if (!self.showAllMouseHandler) {
@@ -6265,9 +6271,7 @@
                                 if (promptStr === false) {
                                     promptStr = window.prompt(i18n("targetUrl"), "https://www.google.com/favicon.ico");
                                     if (promptStr) {
-                                        let preTargetElement = targetElement;
                                         targetElement = {src: promptStr};
-                                        setTimeout(() => {targetElement = preTargetElement}, 1);
                                     }
                                 }
                                 if (promptStr === null) return false;
@@ -6664,19 +6668,21 @@
                 if (this.con && this.con.classList.contains("search-jumper-showall")) return;
                 if (searchData.prefConfig.hidePopup) _funcKeyCall = false;
                 if (!targetElement) targetElement = document.body;
-                let _targetElement = targetElement, children;
-                while (_targetElement) {
-                    if (_targetElement.tagName == 'IMG' || _targetElement.tagName == 'AUDIO' || _targetElement.tagName == 'VIDEO' || _targetElement.tagName == 'A') break;
-                    if (_targetElement.parentNode) {
-                        children = _targetElement.parentNode.querySelectorAll("img,audio,video,a");
-                        if (children && children.length === 1 && children[0].clientHeight && _targetElement.clientHeight / children[0].clientHeight < 2) {
-                            _targetElement = children[0];
-                            break;
+                else if (targetElement != document.body) {
+                    let _targetElement = targetElement, children;
+                    while (_targetElement) {
+                        if (_targetElement.tagName == 'IMG' || _targetElement.tagName == 'AUDIO' || _targetElement.tagName == 'VIDEO' || _targetElement.tagName == 'A') break;
+                        if (_targetElement.parentNode) {
+                            children = _targetElement.parentNode.querySelectorAll("img,audio,video,a");
+                            if (children && children.length === 1 && children[0].clientHeight && _targetElement.clientHeight / children[0].clientHeight < 2) {
+                                _targetElement = children[0];
+                                break;
+                            }
                         }
+                        _targetElement = _targetElement.parentNode;
                     }
-                    _targetElement = _targetElement.parentNode;
+                    if (_targetElement) targetElement = _targetElement;
                 }
-                if (_targetElement) targetElement = _targetElement;
                 this.appendBar();
                 //this.recoveHistory();
                 let firstType;
@@ -7661,6 +7667,14 @@
             _GM_registerMenuCommand(i18n('search'), () => {
                 searchBar.searchAuto(0, {});
             });
+            if (!currentSite) {
+                let firstInput = document.body.querySelector('input[type=text]:not([readonly]),input:not([type])');
+                if (firstInput) {
+                    _GM_registerMenuCommand(i18n('addSearchEngine'), () => {
+                        quickAddByInput(firstInput);
+                    });
+                }
+            }
             let logoSvg = logoBtn.children[0];
             let grabState = 0;//0 未按下 1 已按下 2 已拖动
             let hideTimer;
@@ -8124,54 +8138,7 @@
                 document.addEventListener('click', e => {
                     if (!(((e.ctrlKey || e.metaKey) && e.shiftKey) || ((e.ctrlKey || e.metaKey) && e.altKey) || (e.altKey && e.shiftKey))) return;
                     if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') return;
-                    let parentForm, url;
-                    if (e.target.name) {
-                        parentForm = e.target.parentNode;
-                        while (parentForm) {
-                            if (parentForm.tagName === "FORM") {
-                                break;
-                            }
-                            parentForm = parentForm.parentNode;
-                        }
-                    }
-                    if (parentForm) {
-                        url = parentForm.action;
-                        let params = [];
-                        let formData = new FormData(parentForm);
-                        for (let [key, value] of formData) {
-                            if (e.target.name === key) {
-                                value = "%s";
-                            } else value = encodeURIComponent(value);
-                            params.push(key + "=" + value);
-                        }
-                        if (parentForm.method.toLowerCase() == "post") {
-                            url += "%p{" + params.join("&") + "}";
-                        } else {
-                            if (url.indexOf("?") === -1) {
-                                url += "?";
-                            }
-                            url += params.join("&");
-                        }
-                        url += `#jf{${location.pathname.slice(1)}}`;
-                    } else if (e.target.value) {
-                        if (location.href.indexOf(e.target.value) !== -1) {
-                            url = location.href.replace(e.target.value, "%s");
-                        } else {
-                            let encodeValue = encodeURIComponent(e.target.value);
-                            if (location.href.indexOf(encodeValue) !== -1) {
-                                url = location.href.replace(encodeValue, "%s");
-                            } else {
-                                return;
-                            }
-                        }
-                    } else {
-                        return;
-                    }
-                    let icons = [];
-                    [].forEach.call(document.querySelectorAll("link[rel='shortcut icon'],link[rel='icon']"), link => {
-                        icons.push(link.href);
-                    });
-                    showSiteAdd(document.title.replace(e.target.value, ""), "", url, icons, document.characterSet);
+                    quickAddByInput(e.target);
                 }, true);
             }
             let changeHandler = e => {
@@ -8270,6 +8237,59 @@
                 }
             });
             bodyObserver.observe(document.body, bodyObserverOptions);
+        }
+
+        function quickAddByInput(input) {
+            let parentForm, url;
+            if (input.name) {
+                parentForm = input.parentNode;
+                while (parentForm) {
+                    if (parentForm.tagName === "FORM") {
+                        break;
+                    }
+                    parentForm = parentForm.parentNode;
+                }
+            }
+            if (parentForm) {
+                url = parentForm.action;
+                let params = [];
+                let formData = new FormData(parentForm);
+                for (let [key, value] of formData) {
+                    if (input.name === key) {
+                        value = "%s";
+                    } else value = encodeURIComponent(value);
+                    params.push(key + "=" + value);
+                }
+                if (parentForm.method.toLowerCase() == "post") {
+                    url += "%p{" + params.join("&") + "}";
+                    if (location.pathname && location.pathname !== "/") url += `#jf{${location.pathname.slice(1)}}`;
+                } else {
+                    if (url.indexOf("?") === -1) {
+                        url += "?";
+                    }
+                    url += params.join("&");
+                }
+            } else if (input.value) {
+                if (location.href.indexOf(input.value) !== -1) {
+                    url = location.href.replace(input.value, "%s");
+                } else {
+                    let encodeValue = encodeURIComponent(input.value);
+                    if (location.href.indexOf(encodeValue) !== -1) {
+                        url = location.href.replace(encodeValue, "%s");
+                    } else {
+                        _GM_notification(i18n("Valid item not found"));
+                        return;
+                    }
+                }
+            } else {
+                _GM_notification(i18n("Valid item not found"));
+                return;
+            }
+            let icons = [];
+            [].forEach.call(document.querySelectorAll("link[rel='shortcut icon'],link[rel='icon']"), link => {
+                icons.push(link.href);
+            });
+            showSiteAdd(document.title.replace(input.value, "").replace(/^\s*[-_]\s*/, ""), "", url, icons, document.characterSet);
         }
 
         const jumpHtml = "https://hoothin.github.io/SearchJumper/jump.html";
