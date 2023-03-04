@@ -2,7 +2,7 @@
 // @name         百Bing图
 // @name:en      BingBgForBaidu
 // @namespace    hoothin
-// @version      2.3.30
+// @version      2.3.31
 // @description     给百度首页换上Bing的背景图，并添加背景图链接与日历组件
 // @description:en  Just change the background image of baidu.com to bing.com
 // @author       hoothin
@@ -163,11 +163,16 @@
     }
     var input=document.querySelector("#kw");
     var headWrapper=document.querySelector("#head_wrapper");
-    input.addEventListener('input', e => {
-        if(headWrapper.children[0].id=="ent_sug"){
-            skinContainer.style.backgroundImage="";
-        }
-    });
+    let inputHandler = e => {
+        setTimeout(() => {
+            if(headWrapper.children[0].id=="ent_sug"){
+                skinContainer.style.backgroundImage="";
+                skinContainer=null;
+                input.removeEventListener('input', inputHandler);
+            }
+        }, 0);
+    };
+    input.addEventListener('input', inputHandler);
     GM_xmlhttpRequest({
         method: 'GET',
         url: "http://global.bing.com/HPImageArchive.aspx?format=js&idx=0&pid=hp&video=1&n=1",
@@ -182,7 +187,7 @@
                 bingBgLink.title=jsonData.images[0].copyright;
                 bingBgLink.href=bgUrl;
                 if(bingImgObj && bingImgObj.url==bgUrl)return;
-                if(!bingImgObj)skinContainer.style.backgroundImage="url(\""+bgUrl+"\")";
+                if(skinContainer && !bingImgObj)skinContainer.style.backgroundImage="url(\""+bgUrl+"\")";
                 GM_xmlhttpRequest({
                     method: 'GET',
                     url: bgUrl,
@@ -194,7 +199,6 @@
                         fr.onload=function (e) {
                             var base64ImgData=e.target.result;
                             GM_setValue("bingImgObj",{url: bgUrl, base64: base64ImgData});
-                            skinContainer.style.backgroundImage="url(\""+base64ImgData+"\")";
                         };
                     }
                 });
