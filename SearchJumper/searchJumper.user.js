@@ -4377,10 +4377,11 @@
                     this.waitForHide();
                 }, false);
 
-                if (lastSign && lastSign !== 0) {
-                    this.batchOpen(lastSign, {which: 3});
+                if (lastSign) {
+                    targetElement = lastSign.target;
+                    this.batchOpen(lastSign.sites, {which: 3});
                 }
-                lastSign = 0;
+                lastSign = false;
                 let inputTimer;
                 this.inInput = false;
                 this.searchInput.addEventListener("input", e => {
@@ -5751,22 +5752,26 @@
                     }
                     c.document.write(html);
                     c.document.close();
-                } else if (e.which === 1 && (e.ctrlKey || e.metaKey) && e.shiftKey) {
+                } else if ((e.ctrlKey || e.metaKey) && e.shiftKey) {
                     for (let i = 0;i < targetSites.length;i++) {
                         let siteEle = targetSites[i];
                         let mouseDownEvent = new PointerEvent("mousedown");
                         siteEle.dispatchEvent(mouseDownEvent);
                         if (self.stopInput) return;
                         if (siteEle.dataset.isPage && !siteEle.onclick) {
-                            storage.setItem("lastSign", siteNames);
+                            let target = {};
+                            if (targetElement) {
+                                target = {src: targetElement.src || targetElement.href || '', title: targetElement.title || targetElement.alt};
+                            }
+                            storage.setItem("lastSign", {target: target, sites: siteNames});
                             _GM_openInTab(siteEle.href, {incognito: true});
                             setTimeout(() => {
-                                storage.setItem("lastSign", 0);
+                                storage.setItem("lastSign", false);
                             }, 2000);
                             break;
                         }
                     }
-                } else if (e.which === 1 && e.altKey) {
+                } else if (e.altKey) {
                     let urls=[];
                     for (let i = 0;i < targetSites.length;i++) {
                         let siteEle = targetSites[i];
@@ -5788,22 +5793,26 @@
                         let top = parseInt(i / numPerLine) * (_height + 70);
                         window.open(urls[i] + "#searchJumperMin", "_blank", `width=${_width-10}, height=${_height}, location=0, resizable=1, status=0, toolbar=0, menubar=0, scrollbars=0, left=${left}, top=${top}`);
                     }
-                } else if (e.which === 1 && e.shiftKey) {
+                } else if (e.shiftKey) {
                     for (let i = 0;i < targetSites.length;i++) {
                         let siteEle = targetSites[i];
                         let mouseDownEvent = new PointerEvent("mousedown");
                         siteEle.dispatchEvent(mouseDownEvent);
                         if (self.stopInput) return;
                         if (siteEle.dataset.isPage && !siteEle.onclick) {
-                            storage.setItem("lastSign", siteNames);
+                            let target = {};
+                            if (targetElement) {
+                                target = {src: targetElement.src || targetElement.href || '', title: targetElement.title || targetElement.alt};
+                            }
+                            storage.setItem("lastSign", {target: target, sites: siteNames});
                             window.open(siteEle.href, '_blank');
                             setTimeout(() => {
-                                storage.setItem("lastSign", 0);
+                                storage.setItem("lastSign", false);
                             }, 2000);
                             break;
                         }
                     }
-                } else if (e.which === 1 && (e.ctrlKey || e.metaKey)) {
+                } else if (e.ctrlKey || e.metaKey) {
                     for (let i = 0;i < targetSites.length;i++) {
                         let siteEle = targetSites[i];
                         let isPage = siteEle.dataset.isPage;
@@ -9733,10 +9742,10 @@
             });
             lastSign = await new Promise((resolve) => {
                 storage.getItem("lastSign", data => {
-                    resolve(data || 0);
+                    resolve(data || false);
                 });
             });
-            storage.setItem("lastSign", 0);
+            storage.setItem("lastSign", false);
             inPagePostParams = await new Promise((resolve) => {
                 storage.getItem("inPagePostParams_" + location.hostname, data => {
                     resolve(data || false);
