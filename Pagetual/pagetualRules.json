@@ -6967,6 +6967,68 @@
         "pageBar": 0
     },
     {
+        "name": "X成人论坛 帖子內",
+        "example": "https://xbbs.me/thread/id-620bd15362b3d.html",
+        "url": "^https?://(tw\\.)?xbbs\\.me/thread/[^.]+\\.html",
+        "pinUrl": true,
+        "init": "document.querySelectorAll('img[data-src]').forEach(e=>{e.src=e.dataset.src;e.removeAttribute('data-src')})",
+        "nextLink": "a.next",
+        "pageElement": "//div[div[@class='xbbs-thread-content reply']]",
+        "insert": ".pager",
+        "insertPos": 1,
+        "replaceElement": ".pager"
+    },
+    {
+        "name": "X成人论坛 帖子",
+        "example": "https://xbbs.me/forum/id-61fe70f2b9631.html",
+        "url": "^https?://(tw\\.)?xbbs\\.me/forum/[^.]+\\.html",
+        "nextLink": "a.next",
+        "pageElement": ".xbbs-item",
+        "replaceElement": [
+            "div.article>div.pager:first-child",
+            "div.article>div.pager:last-child"
+        ],
+        "css": ".slider-ad,.push-top{display:none!important}"
+    },
+    {
+        "name": "丽图·污漫画 - 閱讀",
+        "example": "https://litu100.xyz/comic/id-624428abcf548/1.html",
+        "url": "^https?://litu100\\.xyz/comic/id-\\w+/\\d+\\.html",
+        "init": "document.querySelectorAll('img[data-src]').forEach(e=>{e.src=e.dataset.src;e.removeAttribute('data-src')})",
+        "nextLink": "a.next",
+        "pageElement": ".article.comic",
+        "pageInit": "doc.querySelectorAll('img[data-src]').forEach(e=>{e.src=e.dataset.src;e.removeAttribute('data-src')})",
+        "replaceElement": ".prevNext",
+        "pageBarText": "return doc.querySelector('.tag[checked=true]').innerText;",
+        "css": ".banner_ad{display:none!important}.pagetual_pageBar{margin-top:2px!important}"
+    },
+    {
+        "name": "丽图·污漫画 - 分類",
+        "example": "https://litu100.xyz/comics.html",
+        "url": "^https?://litu100\\.xyz/",
+        "nextLink": "a.next",
+        "pageElement": ".list>.item",
+        "replaceElement": ".pager",
+        "css": "._728x90{display:none!important}"
+    },
+    {
+        "name": "小黃書 - 成人小說閱讀",
+        "example": "https://tw.xchina.co/fiction/id-64036d06046a5/1.html",
+        "url": "^https?://(tw\\.)?xchina\\.co/fiction/id-\\w+/\\d+\\.html",
+        "nextLink": "a.next",
+        "pageElement": ".article.large",
+        "replaceElement": ".prevNext",
+        "css": ".banner_ad{display:none!important}"
+    },
+    {
+        "name": "小黃書 - 成人小說目錄",
+        "example": "https://tw.xchina.co/fiction/id-64036d06046a5.html",
+        "url": "^https?://(tw\\.)?xchina\\.co/fiction/id-\\w+\\.html",
+        "pinUrl": true,
+        "nextLink": "0",
+        "css": ".banner_ad{display:none!important}"
+    },
+    {
         "name": "小黃書 - 搜索",
         "example": "https://tw.xchina.co/search/keyword-%E4%B8%9D%E8%A2%9C/mode-photo.html",
         "url": "^https?://([a-z-]{2}\\.)?(xchina|8se)\\.(co|me|pro)/search/",
@@ -7017,12 +7079,12 @@
     {
         "name": "小黃書 - 分類",
         "example": "https://tw.xchina.co/photos/kind-2.html，https://8se.me/photos/model-61be1af337a19.html",
-        "url": "^https?://([a-z-]{2}\\.)?(xchina|8se)\\.(co|me|pro)/(photos|videos|models)",
+        "url": "^https?://([a-z-]{2}\\.)?(xchina|8se)\\.(co|me|pro)/(photos|videos|models|fictions)",
         "exclude": "body>.image",
         "init": "let bs = document.querySelector('body[style]');if(bs)bs.removeAttribute('style');",
         "pinUrl": true,
         "nextLink": "a.next",
-        "pageElement": ".list>.item,.videos",
+        "pageElement": ".list>.item,.list>.fiction,.videos",
         "replaceElement": [
             "div.article>div.pager:first-child",
             "div.article>div.pager:last-child"
