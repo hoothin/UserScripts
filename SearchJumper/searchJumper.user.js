@@ -10046,11 +10046,11 @@
                 storage.setItem("postUrl", '');
                 submitByForm(postUrl[1], postUrl[0], '_self');
             } else {
-                if (document.documentElement && document.head && document.body) {
+                if (document.head && document.body) {
                     init();
                 } else {
                     let checkReady = () => {
-                        if (document.documentElement && document.head && document.body) {
+                        if (document.head && document.body) {
                             init();
                         } else {
                             setTimeout(() => {
@@ -10064,11 +10064,11 @@
         });
     }
 
-    if (document) {
+    if (document && document.documentElement) {
         run();
     } else {
         let checkReady = () => {
-            if (document) {
+            if (document && document.documentElement) {
                 run();
             } else {
                 setTimeout(() => {
