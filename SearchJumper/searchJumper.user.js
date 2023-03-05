@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.55.11
+// @version      1.6.6.55.12
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -1280,11 +1280,9 @@
                  #search-jumper.search-jumper-showall>.search-jumper-searchBar {
                      display: none;
                  }
-                 #search-jumper.search-jumper-showall .search-jumper-showallInput {
-                     background-color: #212022;
-                     color: white;
+                 #search-jumper.search-jumper-showall #filterSites {
+                     background-color: #2a282c;
                      border: none;
-                     font-size: 20px;
                      height: 40px;
                      margin-bottom: 0;
                      padding: 5px;
@@ -1305,6 +1303,17 @@
                      border-radius: 10px;
                      box-shadow: 0px 0px 10px 0px #7a7a7a;
                      pointer-events: all;
+                 }
+                 #search-jumper.search-jumper-showall #filterSites>input {
+                     background-color: #000000;
+                     color: white;
+                     border: none;
+                     outline: none;
+                     box-sizing: border-box;
+                     font-size: 20px;
+                 }
+                 #search-jumper.search-jumper-showall #filterSites>span {
+                     display: none;
                  }
                  #search-jumper.search-jumper-showall #search-jumper-alllist .sitelist {
                      visibility: visible!important;
@@ -1351,6 +1360,7 @@
                      filter: drop-shadow(1px 1px 3px #00000060);
                      cursor: pointer;
                      pointer-events: all;
+                     z-index: 1;
                  }
                  #search-jumper-alllist>.search-jumper-btn>svg {
                      cursor: pointer;
@@ -1396,6 +1406,7 @@
                      justify-content: center;
                      width: fit-content;
                      min-height: 100%;
+                     position: initial;
                  }
                  .search-jumper-searchBarCon {
                      all: unset;
@@ -1754,7 +1765,8 @@
                  #search-jumper.in-input .sitelistCon>div:not(.input-hide)>a {
                      display: flex!important;
                  }
-                 #search-jumper.in-input .input-hide {
+                 #search-jumper .input-hide,
+                 #search-jumper.search-jumper-showall #search-jumper-alllist .sitelist.input-hide {
                      display: none!important;
                  }
                  #search-jumper.in-input .search-jumper-type:not(.input-hide) {
@@ -2423,8 +2435,9 @@
                      border-bottom-color: white;
                      position: fixed;
                      opacity: 0;
+                     visibility: hidden;
                      z-index: 2147483647;
-                     transition: opacity .3s ease, top .25s, bottom .25s, left .25s, right .25s;
+                     transition: opacity .3s ease, top .15s, bottom .15s, left .15s, right .15s;
                  }
                  #search-jumper.search-jumper-left .listArrow {
                      border-bottom-color: transparent;
@@ -2578,10 +2591,6 @@
                     alllist.scrollLeft += deltaY;
                 }, { passive: false, capture: false });
 
-                let showallInput = document.createElement("input");
-                showallInput.className = "search-jumper-showallInput";
-                alllist.appendChild(showallInput);
-                this.showallInput = showallInput;
 
                 let logoConfigBtn = document.createElement("span");
                 logoConfigBtn.innerHTML = createHTML(logoBtnSvg);
@@ -2642,7 +2651,7 @@
 
                 let searchJumperExpand = document.createElement("span");
                 searchJumperExpand.title = i18n('expand');
-                searchJumperExpand.className = "searchJumperExpand search-jumper-btn input-hide";
+                searchJumperExpand.className = "searchJumperExpand search-jumper-btn";
                 searchJumperExpand.innerHTML = createHTML(`
                 <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><rect height="450" width="600" y="300" x="200" fill="#fff"></rect><path d="M512 64C264.8 64 64 264.8 64 512s200.8 448 448 448 448-200.8 448-448S759.2 64 512 64z m0 640L240 432l45.6-45.6L512 613.6l226.4-226.4 45.6 45.6L512 704z"></path></svg>
                 `);
@@ -2664,8 +2673,10 @@
                 <div class="content-container">
                   <div class="inputGroup" id="filterSites">
                     <input spellcheck="false" id="searchJumperInput" placeholder="${i18n("inputPlaceholder")}" list="filterGlob">
-                    <input spellcheck="false" id="searchJumperInputKeyWords" placeholder="${i18n("inputKeywords")}">
+                    <input spellcheck="false" id="searchJumperInputKeyWords" placeholder="${i18n("inputKeywords")}" list="suggest">
                     <datalist id="filterGlob">
+                    </datalist>
+                    <datalist id="suggest">
                     </datalist>
                     <span class="search-jumper-lock-input"></span>
                     <span class="svgBtns">
@@ -2711,12 +2722,14 @@
                 this.emptyBtn = searchInputDiv.querySelector("#emptyBtn");
                 this.copyInPageBtn = searchInputDiv.querySelector("#copyInPageBtn");
                 this.closeBtn = searchInputDiv.querySelector(".closeBtn");
+                this.filterSites = searchInputDiv.querySelector("#filterSites");
                 this.filterSitesTab = searchInputDiv.querySelector("#filterSitesTab");
                 this.searchInPageTab = searchInputDiv.querySelector("#searchInPageTab");
                 this.searchInPageLockWords = searchInputDiv.querySelector("#searchInPage>.lockWords");
                 this.contentContainer = searchInputDiv.querySelector(".content-container");
                 this.rightSizeChange = searchInputDiv.querySelector("#rightSizeChange");
                 this.filterGlob = searchInputDiv.querySelector("#filterGlob");
+                this.suggestDatalist = searchInputDiv.querySelector("#suggest");
             }
 
             showInPageSearch() {
@@ -3854,16 +3867,17 @@
 
             closeShowAll() {
                 if (!this.con.classList.contains("search-jumper-showall") || isAllPage) return;
+                this.clearInputHide();
                 document.removeEventListener("mousedown", self.showAllMouseHandler);
                 document.removeEventListener("keydown", self.showAllKeydownHandler);
                 this.con.classList.remove("search-jumper-showall");
-                this.showallInput.value = "";
+                this.searchJumperInputKeyWords.value = "";
                 this.historySiteBtns.slice(0, 10).forEach(btn => {
                     for (let i = 0; i < searchTypes.length; i++) {
                         let typeBtn = searchTypes[i];
                         if (typeBtn.dataset.type == btn.dataset.type) {
                             if (btn.dataset.id) {
-                                typeBtn.insertBefore(btn, typeBtn.children[parseInt(btn.dataset.id) + 1]);
+                                typeBtn.insertBefore(btn, typeBtn.children[parseInt(btn.dataset.id) - parseInt(typeBtn.dataset.id) + 1]);
                             } else typeBtn.insertBefore(btn, typeBtn.children[1]);
                             break;
                         }
@@ -3875,6 +3889,9 @@
 
             showAllSites() {
                 if (!this.con || !this.con.parentNode || this.con.classList.contains("search-jumper-showall")) return;
+                this.clearInputHide();
+                this.alllist.appendChild(this.filterSites);
+                this.filterGlob.innerHTML = createHTML();
                 let self = this;
                 this.setFuncKeyCall(false);
                 this.hideSearchInput();
@@ -3898,7 +3915,7 @@
                     targetKw = targetElement.textContent.trim();
                 }
                 let kw = getKeywords() || targetKw || cacheKeywords;
-                this.showallInput.value = kw;
+                this.searchJumperInputKeyWords.value = kw;
                 setTimeout(() => {
                     if (!self.showAllMouseHandler) {
                         self.showAllMouseHandler = e => {
@@ -3917,8 +3934,23 @@
                         };
                     }
                     document.addEventListener("keydown", self.showAllKeydownHandler);
-                    this.showallInput.focus();
+                    if (this.searchJumperInputKeyWords.value) this.searchJumperInputKeyWords.focus();
                 }, 0);
+            }
+
+            clearInputHide() {
+                searchTypes.forEach(type => {
+                    type.classList.remove("input-hide");
+                });
+                this.allSiteBtns.forEach(btn => {
+                    btn[0].classList.remove("input-hide");
+                });
+                this.allListBtns.forEach(listItem => {
+                    listItem.classList.remove("input-hide");
+                });
+                this.allLists.forEach(listCon => {
+                    listCon.classList.remove("input-hide");
+                });
             }
 
             showSearchInput() {
@@ -3927,6 +3959,7 @@
                 this.recoveHistory();
                 this.con.classList.add("in-input");
                 this.searchInput.value = "";
+                this.contentContainer.appendChild(this.filterSites);
                 if (this.filterSitesTab.checked) {
                     this.searchInput.focus();
                     if (!this.initShowPicker && searchData.prefConfig.defaultPicker) {
@@ -3948,16 +3981,8 @@
                         this.submitIgnoreSpace(selectStr);
                     }
                 }
-                searchTypes.forEach(type => {
-                    type.classList.remove("input-hide");
-                });
-                this.allSiteBtns.forEach(btn => {
-                    btn.classList.remove("input-hide");
-                });
-                this.allListBtns.forEach(listItem => {
-                    listItem.classList.remove("input-hide");
-                });
                 this.inInput = true;
+                this.clearInputHide();
                 if (this.lockWords) this.searchJumperInPageInput.style.paddingLeft = this.searchInPageLockWords.clientWidth + 3 + "px";
                 if (searchData.prefConfig.altToHighlight) {
                     document.removeEventListener("mouseup", this.checkSelHandler);
@@ -3967,6 +3992,7 @@
 
             hideSearchInput() {
                 this.inInput = false;
+                this.clearInputHide();
                 this.con.classList.remove("in-input");
                 this.con.classList.remove("lock-input");
                 this.searchInput.value = "";
@@ -4000,7 +4026,7 @@
 
             searchBySiteName(siteName, e) {
                 for (let i = 0; i < this.allSiteBtns.length; i++) {
-                    let siteBtn = this.allSiteBtns[i];
+                    let siteBtn = this.allSiteBtns[i][0];
                     if (siteBtn.dataset.name == siteName) {
                         let mouseDownEvent = new PointerEvent("mousedown", {altKey: e.altKey, ctrlKey: e.ctrlKey, shiftKey: e.shiftKey, metaKey: e.metaKey})
                         siteBtn.dispatchEvent(mouseDownEvent);
@@ -4086,10 +4112,12 @@
 
             async initRun() {
                 let self = this;
+                this.siteIndex = 1;
                 this.customInput = false;
                 this.fontPool = [];
                 this.allSiteBtns = [];
                 this.allListBtns = [];
+                this.allLists = [];
                 this.bar.style.visibility = "hidden";
                 let sitesNum = 0;
                 let bookmarkTypes = [];
@@ -4132,31 +4160,6 @@
                         } else {
                             this.highlight("");
                         }
-                    }
-                });
-                this.showallInput.addEventListener("keydown", e => {
-                    switch(e.keyCode) {
-                        case 13://回车
-                            {
-                                if (!self.showallInput.value) return;
-                                let siteEle, forceTarget = "";
-                                if (currentSite) {
-                                    siteEle = self.con.querySelector(".search-jumper-btn.current");
-                                    forceTarget = "_self";
-                                } else {
-                                    siteEle = self.bar.querySelector(`.search-jumper-needInPage>a[href^=http]`) ||
-                                        self.bar.querySelector(".search-jumper-type:not(.search-jumper-hide)>a.search-jumper-btn:not(.input-hide)") ||
-                                        self.bar.querySelector("a.search-jumper-btn:not(.input-hide)");
-                                    forceTarget = "_blank";
-                                }
-                                if (siteEle) {
-                                    self.openSiteBtn(siteEle, forceTarget);
-                                    self.closeShowAll();
-                                }
-                            }
-                            break;
-                        default:
-                            break;
                     }
                 });
                 this.searchJumperInPageInput.addEventListener("keydown", e => {
@@ -4387,7 +4390,9 @@
                 this.inInput = false;
                 this.searchInput.addEventListener("input", e => {
                     clearTimeout(inputTimer);
-                    inputTimer = setTimeout(() => self.searchSiteBtns(), 500);
+                    inputTimer = setTimeout(() => {
+                        self.searchSiteBtns(self.searchInput.value)
+                    }, 500);
                 });
                 this.searchInput.addEventListener("keydown", e => {
                     switch(e.keyCode) {
@@ -4417,10 +4422,20 @@
                             break;
                     }
                 });
+                this.searchJumperInputKeyWords.addEventListener("input", e => {
+                    clearTimeout(inputTimer);
+                    inputTimer = setTimeout(() => {
+                        self.getSuggest(self.searchJumperInputKeyWords.value)
+                    }, 500);
+                });
                 this.searchJumperInputKeyWords.addEventListener("keydown", e => {
                     switch(e.keyCode) {
                         case 9:
-                            if (!e.shiftKey) {
+                            if (!this.inInput) {
+                                e.stopPropagation();
+                                e.preventDefault();
+                                this.searchInput.focus();
+                            } else if (!e.shiftKey) {
                                 e.stopPropagation();
                                 e.preventDefault();
                                 this.searchInPageTab.checked = true;
@@ -4433,10 +4448,10 @@
                                 clearTimeout(inputTimer);
                                 let siteEle, forceTarget = "";
                                 if (currentSite && !self.searchInput.value) {
-                                    siteEle = self.bar.querySelector(".search-jumper-btn.current");
+                                    siteEle = self.con.querySelector(".search-jumper-btn.current");
                                     forceTarget = "_self";
                                 } else {
-                                    siteEle = self.bar.querySelector(".search-jumper-type:not(.search-jumper-hide)>a.search-jumper-btn:not(.input-hide)") || self.bar.querySelector("a.search-jumper-btn:not(.input-hide)");
+                                    siteEle = self.con.querySelector(".search-jumper-type:not(.search-jumper-hide)>a.search-jumper-btn:not(.input-hide)") || self.con.querySelector("a.search-jumper-btn:not(.input-hide)");
                                     forceTarget = "_blank";
                                 }
                                 if (siteEle) {
@@ -4753,9 +4768,79 @@
                 }
             }
 
-            searchSiteBtns() {
-                if (!this.inInput) return;
-                let inputWords = this.searchInput.value;
+            getSuggest(searchWords) {
+                let suggestDatalist = this.suggestDatalist;
+                suggestDatalist.innerHTML = createHTML();
+                if (!searchWords) return;
+                let requestSuggest = (api, cb) => {
+                    _GM_xmlhttpRequest({
+                        method: 'GET',
+                        url: api,
+                        headers: {
+                            referer: api,
+                            origin: api
+                        },
+                        onload: function(d) {
+                            let response = d.response;
+                            if (d.status >= 400 || !response) return;
+                            cb(response);
+                        },
+                        onerror: function(e){
+                            debug(e);
+                        },
+                        ontimeout: function(e){
+                            debug(e);
+                        }
+                    });
+                };
+                switch (searchData.prefConfig.suggestType) {
+                    case "google":
+                        requestSuggest("http://suggestqueries.google.com/complete/search?client=youtube&q=%s&jsonp=window.google.ac.h".replace("%s", searchWords), res => {
+                            res = res.match(/window.google.ac.h\((.*)\)$/, "$1");
+                            if (res) {
+                                res = JSON.parse(res[1])[1];
+                                for (let i in res) {
+                                    let option = document.createElement('option');
+                                    option.value = res[i][0];
+                                    suggestDatalist.appendChild(option);
+                                }
+                            }
+                        });
+                        break;
+                    case "baidu":
+                        requestSuggest("http://suggestion.baidu.com/su?wd=%s&cb=".replace("%s", searchWords), res => {
+                            res = res.match(/.*,s:(.*)}\);$/, "$1");
+                            if (res) {
+                                res = JSON.parse(res[1]);
+                                for (let i in res) {
+                                    let option = document.createElement('option');
+                                    option.value = res[i];
+                                    suggestDatalist.appendChild(option);
+                                }
+                            }
+                        });
+                        break;
+                    case "bing":
+                        requestSuggest("http://api.bing.com/qsonhs.aspx?type=cb&q=%s".replace("%s", searchWords), res => {
+                            if (res) {
+                                res = JSON.parse(res).AS.Results;
+                                for (let i in res) {
+                                    let result = res[i].Suggests;
+                                    for (let j in result) {
+                                        let option = document.createElement('option');
+                                        option.value = result[j].Txt;
+                                        suggestDatalist.appendChild(option);
+                                    }
+                                }
+                            }
+                        });
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            searchSiteBtns(inputWords) {
                 let checkIndex = inputWords.indexOf('**'), checkType;
                 if (checkIndex > 0) {
                     checkType = inputWords.slice(0, checkIndex);
@@ -4770,7 +4855,9 @@
                 });
                 let optionNum = 0;
                 this.filterGlob.innerHTML = createHTML();
-                this.allSiteBtns.forEach(btn => {
+                this.allSiteBtns.forEach(arr => {
+                    let btn = arr[0];
+                    let data = arr[1];
                     let typeNode = btn.parentNode;
                     let globMatchName = "";
                     if (checkType) {
@@ -4792,7 +4879,7 @@
                         if (canCheckHost) {
                             if (!btn.dataset.host) {
                                 let hostReg = /^https?:\/\/([^\/]*)\/.*$/;
-                                let href = btn.getAttribute("href");
+                                let href = data.url;
                                 btn.dataset.host = hostReg.test(href) ? href.replace(hostReg, "$1") : href;
                             }
                             canMatch = this.globMatch(inputWords, btn.dataset.host);
@@ -4806,7 +4893,13 @@
                     if (canMatch) {
                         btn.classList.remove("input-hide");
                         typeNode.classList.remove("input-hide");
-                        let listItem = typeNode.querySelector("#list" + btn.dataset.id);
+                        let listItem;
+                        for (let i = 0; i < this.allListBtns.length; i++) {
+                            if (this.allListBtns[i].id == "list" + btn.dataset.id) {
+                                listItem = this.allListBtns[i];
+                                break;
+                            }
+                        }
                         if (listItem) listItem.classList.remove("input-hide");
                         if (optionNum < 50 && inputWords && this.searchInput.value !== globMatchName) {
                             optionNum++;
@@ -4815,6 +4908,19 @@
                             this.filterGlob.appendChild(option);
                         }
                     }
+                });
+                searchTypes.forEach(type => {
+                    let targetList;
+                    for (let i = 0; i < this.allLists.length; i++) {
+                        if (this.allLists[i].dataset.type == type.dataset.type) {
+                            targetList = this.allLists[i];
+                            break;
+                        }
+                    }
+                    if (!targetList) return;
+                    if (type.classList.contains("input-hide")) {
+                        targetList.classList.add("input-hide");
+                    } else targetList.classList.remove("input-hide");
                 });
                 let showType = this.bar.querySelector(".search-jumper-type:not(.input-hide)");
                 if (showType && showType.classList.contains("search-jumper-hide")) showType.querySelector("span.search-jumper-btn").onmousedown();
@@ -4979,7 +5085,7 @@
                 let self = this;
                 historySites.forEach(n => {
                     for (let i = 0; i < self.allSiteBtns.length; i++) {
-                        let siteBtn = self.allSiteBtns[i];
+                        let siteBtn = self.allSiteBtns[i][0];
                         if (siteBtn.dataset.name == n) {
                             self.historySiteBtns.push(siteBtn);
                             break;
@@ -5035,7 +5141,7 @@
                         let typeBtn = searchTypes[i];
                         if (typeBtn.dataset.type == btn.dataset.type) {
                             if (btn.dataset.id) {
-                                typeBtn.insertBefore(btn, typeBtn.children[parseInt(btn.dataset.id) + 1]);
+                                typeBtn.insertBefore(btn, typeBtn.children[parseInt(btn.dataset.id) - parseInt(typeBtn.dataset.id) + 1]);
                             } else typeBtn.insertBefore(btn, typeBtn.children[1]);
                             break;
                         }
@@ -5077,12 +5183,12 @@
                 con.className = "sitelistCon";
                 list.appendChild(con);
                 let title = document.createElement("p");
-                title.innerText = type;
+                title.innerText = type.dataset.title;
                 title.title = i18n('batchOpen');
                 title.addEventListener('click', e => {
                     self.batchOpen(batchSiteNames, {ctrlKey: e.ctrlKey, shiftKey: e.shiftKey, altKey: e.altKey, metaKey: e.metaKey, which: (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) ? 1 : 3});
                 });
-                list.dataset.type = type;
+                list.dataset.type = type.dataset.type;
                 con.appendChild(title);
                 function createItem(siteEle, index) {
                     let li = document.createElement("div");
@@ -5131,14 +5237,16 @@
                 }
                 try {
                     for (let [index, siteEle] of sites.entries()) {
-                        createItem(siteEle, index)
+                        createItem(siteEle, siteEle.dataset.id);
                         if (index%50 === 49) await sleep(1);
                     }
                 } catch(e) {
                     for (let index = 0; index < sites.length; index++) {
-                        createItem(sites[index], index);
+                        let siteEle = sites[index];
+                        createItem(siteEle, siteEle.dataset.id);
                     }
                 }
+                this.allLists.push(list);
                 return list;
             }
 
@@ -5175,6 +5283,7 @@
                 let viewWidth = window.innerWidth || document.documentElement.clientWidth;
                 let viewHeight = window.innerHeight || document.documentElement.clientHeight;
                 let arrowStyle = this.listArrow.style;
+                arrowStyle.visibility = "visible";
                 arrowStyle.opacity = 1;
                 if (this.bar.clientWidth > this.bar.clientHeight) {
                     //横
@@ -5589,11 +5698,13 @@
                 }, false);
                 let isCurrent = false;
                 let tooLoog = sites && sites.length > 200;
+                ele.dataset.id = self.siteIndex;
                 async function createItem(site, i) {
                     let siteEle = await self.createSiteBtn((tooLoog || searchData.prefConfig.noIcons ? 0 : site.icon), site, openInNewTab, isBookmark);
                     siteEle.dataset.type = type;
-                    siteEle.dataset.id = siteEles.length;
-                    self.allSiteBtns.push(siteEle);
+                    siteEle.dataset.id = self.siteIndex;
+                    self.siteIndex++;
+                    self.allSiteBtns.push([siteEle, site]);
                     ele.appendChild(siteEle);
                     siteEles.push(siteEle);
                     if (!site.nobatch) batchSiteNames.push(site.name);
@@ -5618,7 +5729,7 @@
                     }
                     await sleep(1);
                 }
-                siteList = await self.createList(siteEles, ele.dataset.title, batchSiteNames);
+                siteList = await self.createList(siteEles, ele, batchSiteNames);
                 if (isCurrent) {
                     self.bar.insertBefore(ele, self.bar.children[0]);
                     if (!searchData.prefConfig.disableAutoOpen) {
@@ -5840,7 +5951,7 @@
                 let targetSites = [];
                 siteNames.forEach(n => {
                     for (let i = 0; i < self.allSiteBtns.length; i++) {
-                        let siteBtn = self.allSiteBtns[i];
+                        let siteBtn = self.allSiteBtns[i][0];
                         if (siteBtn.dataset.pointer) continue;
                         if (siteBtn.dataset.name == n) {
                             targetSites.push(siteBtn);
@@ -6089,9 +6200,7 @@
                 let getUrl = () => {
                     self.customInput = false;
                     let keywords;
-                    if (self.con && self.con.classList.contains("search-jumper-showall")) {
-                        keywords = self.showallInput.value;
-                    } else if (self.searchJumperInputKeyWords.value) {
+                    if (self.searchJumperInputKeyWords.value) {
                         keywords = self.searchJumperInputKeyWords.value;
                     } else {
                         keywords = getKeywords() || (currentSite && cacheKeywords);
@@ -9661,7 +9770,7 @@
                     try {
                         hash = decodeURIComponent(hash);
                     } catch (e) {}
-                    searchBar.showallInput.value = hash;
+                    searchBar.searchJumperInputKeyWords.value = hash;
                 }
                 document.body.style.cssText = `
                     zoom: 1;
@@ -9837,6 +9946,11 @@
             }
             if (typeof searchData.prefConfig.rightMouse === "undefined") {
                 searchData.prefConfig.rightMouse = true;
+            }
+            if (typeof searchData.prefConfig.suggestType === "undefined") {
+                if (lang === "zh-CN") {
+                    searchData.prefConfig.suggestType = "baidu";
+                } else searchData.prefConfig.suggestType = "google";
             }
         }
 
