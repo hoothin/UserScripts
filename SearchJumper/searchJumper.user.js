@@ -1825,7 +1825,7 @@
                      position: fixed;
                      text-align: left;
                      background: #00000000;
-                     max-height: calc(100vh - 50px);
+                     max-height: calc(100vh - 20px);
                      overflow: scroll;
                      border: 0;
                      pointer-events: none;
