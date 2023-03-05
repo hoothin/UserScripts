@@ -36,6 +36,7 @@
 // @homepage     https://github.com/hoothin/SearchJumper
 // @downloadURL  https://greasyfork.org/scripts/445274-searchjumper/code/SearchJumper.user.js
 // @updateURL    https://greasyfork.org/scripts/445274-searchjumper/code/SearchJumper.user.js
+// @connect      global.bing.com
 // @connect      *
 // @run-at       document-start
 // ==/UserScript==
@@ -8271,7 +8272,7 @@
                 }
                 if (parentForm.method.toLowerCase() == "post") {
                     url += "%p{" + params.join("&") + "}";
-                    if (location.pathname && location.pathname !== "/") url += `#jf{${location.pathname.slice(1)}}`;
+                    if (parentForm.action.indexOf(location.origin) == 0 && location.pathname && location.pathname !== "/") url += `#jf{${location.pathname.slice(1)}}`;
                 } else {
                     if (url.indexOf("?") === -1) {
                         url += "?";
