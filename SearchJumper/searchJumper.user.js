@@ -5319,10 +5319,10 @@
                     arrowStyle.top = arrowY - 10 + "px";
                     if (clientX - ew / 2 < 100) {
                         list.style.left = this.bar.clientWidth + "px";
-                        arrowStyle.left = this.bar.clientWidth - 10 + "px";
+                        arrowStyle.left = this.bar.clientWidth - 9 + "px";
                     } else {
                         list.style.right = this.bar.clientWidth + "px";
-                        arrowStyle.right = this.bar.clientWidth - 10 + "px";
+                        arrowStyle.right = this.bar.clientWidth - 9 + "px";
                     }
                     clientY -= list.scrollHeight / 2;
                     if (clientY > viewHeight - list.scrollHeight) clientY = viewHeight - list.scrollHeight;
