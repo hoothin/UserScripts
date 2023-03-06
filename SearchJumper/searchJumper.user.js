@@ -3977,6 +3977,10 @@
                         this.searchJumperInputKeyWords.value = getKeywords() || cacheKeywords;
                         this.searchJumperInputKeyWords.focus();
                     }
+                    let firstType = this.bar.querySelector('.search-jumper-needInPage:not(.notmatch)>span');
+                    if (firstType && !firstType.parentNode.classList.contains('search-jumper-open')) {
+                        firstType.onmousedown();
+                    }
                 } else if (this.searchInPageTab.checked) {
                     this.searchJumperInPageInput.focus();
                     if (!this.searchJumperInPageInput.value) {
@@ -6050,7 +6054,7 @@
                     openInNewTab = data.openInNewTab;
                 }
                 let isPage = /^(https?|ftp):/.test(data.url);
-                ele.dataset.isPage = isPage;
+                if (isPage) ele.dataset.isPage = isPage;
                 ele.className = "search-jumper-btn";
                 if (typeof data.description !== 'undefined') ele.title = name + " - " + data.description;
                 ele.dataset.name = name;
