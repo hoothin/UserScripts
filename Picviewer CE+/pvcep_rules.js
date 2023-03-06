@@ -1160,5 +1160,12 @@ var siteInfo=[
  xhr: {
      q: '.sh-section__image>img',
  }
+},
+{
+ name: "雪球",
+ url: /^https?:\/\/xueqiu\.com\//,
+ src: /^https?:\/\/xqimg\.imedao\.com\//i,
+ r: /!\d+(x\d+[a-z]?)?\.\w+$/,
+ s: ''
 }
 ];
