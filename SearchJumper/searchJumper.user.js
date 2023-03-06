@@ -6969,27 +6969,29 @@
                     } else if (searchData.prefConfig.autoHideAll) {
                         self.con.classList.add("hideAll");
                     }
-                    let baseSize = Math.min(self.bar.scrollWidth, self.bar.scrollHeight);
-                    let leftRight = self.con.classList.contains("search-jumper-left") ||
-                        self.con.classList.contains("search-jumper-right");
-                    searchTypes.forEach(ele => {
-                        ele.style.width = "";
-                        ele.style.height = "";
-                        let scrollSize = Math.max(ele.scrollWidth, ele.scrollHeight) + "px";
-                        if (!ele.classList.contains("search-jumper-open")) {
-                            if (leftRight) {
-                                ele.style.height = baseSize + "px";
+                    setTimeout(() => {
+                        let baseSize = Math.min(self.bar.scrollWidth, self.bar.scrollHeight);
+                        let leftRight = self.con.classList.contains("search-jumper-left") ||
+                            self.con.classList.contains("search-jumper-right");
+                        searchTypes.forEach(ele => {
+                            ele.style.width = "";
+                            ele.style.height = "";
+                            let scrollSize = Math.max(ele.scrollWidth, ele.scrollHeight) + "px";
+                            if (!ele.classList.contains("search-jumper-open")) {
+                                if (leftRight) {
+                                    ele.style.height = baseSize + "px";
+                                } else {
+                                    ele.style.width = baseSize + "px";
+                                }
                             } else {
-                                ele.style.width = baseSize + "px";
+                                if (leftRight) {
+                                    ele.style.height = scrollSize;
+                                } else {
+                                    ele.style.width = scrollSize;
+                                }
                             }
-                        } else {
-                            if (leftRight) {
-                                ele.style.height = scrollSize;
-                            } else {
-                                ele.style.width = scrollSize;
-                            }
-                        }
-                    });
+                        });
+                    }, 1);
                 };
                 let viewWidth = window.innerWidth || document.documentElement.clientWidth;
                 let viewHeight = window.innerHeight || document.documentElement.clientHeight;
