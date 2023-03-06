@@ -4457,7 +4457,7 @@
                                     siteEle = self.con.querySelector(".search-jumper-btn.current");
                                     forceTarget = "_self";
                                 } else {
-                                    siteEle = self.con.querySelector(".search-jumper-type.search-jumper-open>a.search-jumper-btn:not(.input-hide)") || self.con.querySelector("a.search-jumper-btn:not(.input-hide)");
+                                    siteEle = self.con.querySelector(".search-jumper-type.search-jumper-open>a.search-jumper-btn:not(.input-hide)") || self.con.querySelector(".search-jumper-needInPage>a.search-jumper-btn:not(.input-hide)") || self.con.querySelector("a.search-jumper-btn:not(.input-hide)");
                                     forceTarget = "_blank";
                                 }
                                 if (siteEle) {
