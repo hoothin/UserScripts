@@ -1,5 +1,33 @@
 [
 {
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//*[@id=\"cnt-list\"]",
+    "nextLink": "//*[@class=\"next\"]/a",
+    "url": "^https://cosmeet.cosme\\\\.net/(product|review|brand)*/search(\\\\?|/|/page/.*)fw=?.*",
+    "exampleUrl": ""
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "2q5HAX7iN8QG7Fp3gngW",
+  "resource_url": "http://wedata.net/items/86086",
+  "name": "@cosme",
+  "created_at": "2023-03-06T09:06:26+09:00",
+  "updated_at": "2023-03-06T09:06:26+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/86084",
+  "data": {
+    "pageElement": "//div[contains(@class, \"list-container\")]|//div[contains(@class, \"__homel\")]",
+    "nextLink": "id(\"next\")/a",
+    "url": "^https?://dlraw\\.net/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "hkcomori",
+  "name": "DLRAW",
+  "created_at": "2023-03-05T11:56:28+09:00",
+  "updated_at": "2023-03-05T12:30:54+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86081",
   "data": {
     "pageElement": "//table[@class='tborder tfixed clear']",
