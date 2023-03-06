@@ -8185,7 +8185,7 @@
         "name": "Baidu",
         "insertPos": 1,
         "nextLink": [
-            "//*[@id=\"page\"]/div/a[contains(text(),'下一页')]",
+            "//*[@id=\"page\"]/div/a[last()]",
             "//*[@id=\"page\"]/div/a[contains(text(),'上一页')]"
         ],
         "pageElement": "//*[@id=\"content_style\"]|//*[@id=\"content_left\"]/*",
