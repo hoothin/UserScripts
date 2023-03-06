@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.55.12
+// @version      1.6.6.55.13
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -1585,7 +1585,7 @@
                      height: unset;
                      color: black;
                  }
-                 .search-jumper-type:not(.search-jumper-hide)>span.search-jumper-word {
+                 .search-jumper-type.search-jumper-open>span.search-jumper-word {
                      filter: drop-shadow(0px 0px 2px black);
                  }
                  .search-jumper-left .searchJumperExpand>svg,
@@ -1761,7 +1761,7 @@
                  .search-jumper-searchBar.search-jumper-isTargetLink:hover>.search-jumper-type {
                      display: none;
                  }
-                 #search-jumper.in-input .search-jumper-type:not(.search-jumper-hide) {
+                 #search-jumper.in-input .search-jumper-type.search-jumper-open {
                      width: auto!important;
                      height: auto!important;
                  }
@@ -1976,18 +1976,17 @@
                      white-space: nowrap;
                      line-height: 35px;
                  }
-                 .search-jumper-searchBar>.search-jumper-type.search-jumper-hide {
-                     background: unset;
+                 .search-jumper-searchBar>.search-jumper-type {
                      padding: 0px;
                      ${searchData.prefConfig.minSizeMode ? 'display: none;' : ''}
                  }
-                 .search-jumper-searchBar:hover>.search-jumper-hide {
+                 .search-jumper-searchBar>.search-jumper-type:not(.search-jumper-open) {
+                     background: unset;
+                 }
+                 .search-jumper-searchBar:hover>.search-jumper-type {
                      ${searchData.prefConfig.minSizeMode ? 'display: inline-flex;' : ''}
                  }
-                 .funcKeyCall>.search-jumper-searchBar>.search-jumper-type.search-jumper-hide {
-                     display: none;
-                 }
-                 .funcKeyCall>.search-jumper-searchBar:hover>.search-jumper-hide {
+                 .funcKeyCall>.search-jumper-searchBar>.search-jumper-type:not(.search-jumper-open) {
                      display: none;
                  }
                  span.search-jumper-word>img {
@@ -2526,7 +2525,7 @@
                 mainStyleEle = _GM_addStyle(cssText);
 
                 let logoCon = document.createElement("span");
-                logoCon.className = "search-jumper-hide search-jumper-logo";
+                logoCon.className = "search-jumper-logo";
                 logoBtn = document.createElement("span");
                 logoBtn.innerHTML = createHTML(logoBtnSvg);
                 logoBtn.className = "search-jumper-btn";
@@ -2675,7 +2674,7 @@
                 <div class="line"></div>
                 <div class="content-container">
                   <div class="inputGroup" id="filterSites">
-                    <input spellcheck="false" id="searchJumperInput" placeholder="${i18n("inputPlaceholder")}" list="filterGlob">
+                    <input spellcheck="false" id="searchJumperInput" title="${i18n("inputPlaceholder")}" placeholder="${i18n("inputPlaceholder")}" list="filterGlob">
                     <input spellcheck="false" id="searchJumperInputKeyWords" placeholder="${i18n("inputKeywords")}" list="suggest">
                     <datalist id="filterGlob">
                     </datalist>
@@ -4003,7 +4002,7 @@
                 this.pickerBtn.classList.remove("checked");
                 Picker.getInstance().close();
                 document.removeEventListener("mouseup", this.checkSelHandler);
-                let openType = this.bar.querySelector('.search-jumper-type:not(.search-jumper-hide)>span');
+                let openType = this.bar.querySelector('.search-jumper-type.search-jumper-open>span');
                 if (openType) {
                     openType.onmousedown();
                 }
@@ -4454,7 +4453,7 @@
                                     siteEle = self.con.querySelector(".search-jumper-btn.current");
                                     forceTarget = "_self";
                                 } else {
-                                    siteEle = self.con.querySelector(".search-jumper-type:not(.search-jumper-hide)>a.search-jumper-btn:not(.input-hide)") || self.con.querySelector("a.search-jumper-btn:not(.input-hide)");
+                                    siteEle = self.con.querySelector(".search-jumper-type.search-jumper-open>a.search-jumper-btn:not(.input-hide)") || self.con.querySelector("a.search-jumper-btn:not(.input-hide)");
                                     forceTarget = "_blank";
                                 }
                                 if (siteEle) {
@@ -4652,7 +4651,7 @@
                     self.bar.classList.remove("initShow");
                     //self.recoveHistory();
                     if (searchData.prefConfig.autoClose) {
-                        let openType = self.bar.querySelector('.search-jumper-type:not(.search-jumper-hide)>span');
+                        let openType = self.bar.querySelector('.search-jumper-type.search-jumper-open>span');
                         if (openType) {
                             openType.onmousedown();
                         }
@@ -4661,8 +4660,8 @@
                         self.setFuncKeyCall(false);
                         if (currentSite) {
                             self.initPos();
-                            let firstType = self.bar.querySelector('.search-jumper-type.search-jumper-hide:nth-child(1)>span');
-                            if (firstType) {
+                            let firstType = self.bar.querySelector('.search-jumper-type:nth-child(1)>span');
+                            if (firstType && !firstType.classList.contains("search-jumper-open")) {
                                 firstType.onmousedown();
                             }
                             self.bar.style.display = 'none';
@@ -4678,7 +4677,7 @@
                 if (this.hideTimeout) {
                     clearTimeout(this.hideTimeout);
                 }
-                let delayTime = delay || (this.funcKeyCall ? 300 : (searchData.prefConfig.autoDelay || 1000));
+                let delayTime = delay || (this.funcKeyCall ? 500 : (searchData.prefConfig.autoDelay || 1000));
 
                 this.hideTimeout = setTimeout(hideHandler, delayTime);
                 if (this.preList) {
@@ -4926,7 +4925,7 @@
                     } else targetList.classList.remove("input-hide");
                 });
                 let showType = this.bar.querySelector(".search-jumper-type:not(.input-hide)");
-                if (showType && showType.classList.contains("search-jumper-hide")) showType.querySelector("span.search-jumper-btn").onmousedown();
+                if (showType && !showType.classList.contains("search-jumper-open")) showType.querySelector("span.search-jumper-btn").onmousedown();
             }
 
             globMatch(glob, target, inner) {
@@ -5035,8 +5034,8 @@
                         this.appendBar();
                         this.bar.style.display = "";
                         this.initPos();
-                        let typeBtn = this.bar.querySelector(`.search-jumper-type.search-jumper-hide[data-type="${typeData.type}"]>span`);
-                        if (typeBtn) {
+                        let typeBtn = this.bar.querySelector(`.search-jumper-type[data-type="${typeData.type}"]>span`);
+                        if (typeBtn && !typeBtn.classList.contains("search-jumper-open")) {
                             this.bar.insertBefore(typeBtn.parentNode, this.bar.children[0]);
                             if (!searchData.prefConfig.disableAutoOpen) {
                                 typeBtn.onmousedown();
@@ -5062,7 +5061,7 @@
                     return bTypeValue - aTypeValue;
                 });
                 let changed = false;
-                let allHide = self.bar.children[0].classList.contains("search-jumper-hide");
+                let allHide = !self.bar.children[0].classList.contains("search-jumper-open");
                 for (let i = searchTypes.length - 1; i >= 0; i--) {
                     let typeEle = searchTypes[i];
                     let curValue = sortTypeNames[typeEle.dataset.type] || 0;
@@ -5150,7 +5149,7 @@
                         }
                     }
                 }
-                if (curParent && !curParent.classList.contains("search-jumper-hide")) {
+                if (curParent && curParent.classList.contains("search-jumper-open")) {
                     curParent.style.width = "auto";
                     curParent.style.height = "auto";
                     curParent.style.width = curParent.scrollWidth + "px";
@@ -5443,7 +5442,7 @@
                 let openInNewTab = typeof data.openInNewTab === 'undefined' ? searchData.prefConfig.openInNewTab : data.openInNewTab;
                 let siteEles = [];
                 let ele = document.createElement("span");
-                ele.className = "search-jumper-type search-jumper-hide";
+                ele.className = "search-jumper-type";
                 if (!searchData.prefConfig.expandType && sites.length > 10) ele.classList.add("not-expand");
                 if (data.match === '0') {
                     ele.style.display = 'none';
@@ -5530,7 +5529,7 @@
                             self.batchOpen(batchSiteNames, e);
                             break;
                         default:
-                            if (!ele.classList.contains("search-jumper-hide") || (e.shiftKey || e.altKey || e.ctrlKey || e.metaKey) || window.confirm(i18n('batchOpenConfirm'))) {
+                            if (ele.classList.contains("search-jumper-open") || (e.shiftKey || e.altKey || e.ctrlKey || e.metaKey) || window.confirm(i18n('batchOpenConfirm'))) {
                                 self.batchOpen(batchSiteNames, e);
                             }
                             break;
@@ -5606,8 +5605,8 @@
                         self.listArrow.style.cssText = "";
                     }
                     self.recoveHistory();
-                    if (ele.classList.contains("search-jumper-hide")) {
-                        ele.classList.remove("search-jumper-hide");
+                    if (!ele.classList.contains("search-jumper-open")) {
+                        ele.classList.add("search-jumper-open");
                         if (sites.length > 10 && !searchData.prefConfig.expandType) {
                             ele.classList.add("not-expand");
                             ele.appendChild(self.searchJumperExpand);
@@ -5621,13 +5620,13 @@
                             ele.style.height = "";
                         }
                         setTimeout(() => {
-                            if (!ele.classList.contains("search-jumper-hide")) {
+                            if (ele.classList.contains("search-jumper-open")) {
                                 ele.style.flexWrap = "nowrap";
                             }
                         }, searchData.prefConfig.typeOpenTime);
                         searchTypes.forEach(type => {
                             if (ele != type) {
-                                type.classList.add("search-jumper-hide");
+                                type.classList.remove("search-jumper-open");
                                 type.style.width = baseSize + "px";
                                 type.style.height = baseSize + "px";
                                 type.style.flexWrap = "";
@@ -5652,7 +5651,7 @@
 
 
                     } else {
-                        ele.classList.add("search-jumper-hide");
+                        ele.classList.remove("search-jumper-open");
                         if (leftRight) {
                             ele.style.height = baseSize + "px";
                         } else {
@@ -5680,14 +5679,14 @@
 
                 let showTimer, siteList;
                 typeBtn.addEventListener('mouseenter', e => {
-                    if (!self.funcKeyCall && searchData.prefConfig.showSiteLists && (searchData.prefConfig.alwaysShowSiteLists || ele.classList.contains("search-jumper-hide"))) {
+                    if (!self.funcKeyCall && searchData.prefConfig.showSiteLists && (searchData.prefConfig.alwaysShowSiteLists || !ele.classList.contains("search-jumper-open"))) {
                         ele.appendChild(siteList);
                         self.listPos(ele.children[0], siteList);
                     } else {
                         self.tipsPos(typeBtn, ele.dataset.title);
                     }
                     if (searchData.prefConfig.overOpen) {
-                        if (!ele.classList.contains("search-jumper-hide")) return;
+                        if (ele.classList.contains("search-jumper-open")) return;
                         showTimer = setTimeout(() => {
                             typeAction(e);
                         }, 500);
@@ -5736,7 +5735,7 @@
                 if (isCurrent) {
                     self.bar.insertBefore(ele, self.bar.children[0]);
                     if (!searchData.prefConfig.disableAutoOpen) {
-                        ele.classList.remove("search-jumper-hide");
+                        ele.classList.add("search-jumper-open");
                         if (sites.length > 10 && !searchData.prefConfig.expandType) {
                             ele.classList.add("not-expand");
                             ele.appendChild(self.searchJumperExpand);
@@ -5897,12 +5896,12 @@
                             urls.push(siteEle.href);
                         }
                     }
-                    let viewWidth = window.innerWidth || document.documentElement.clientWidth;
-                    let viewHeight = window.innerHeight || document.documentElement.clientHeight;
+                    let viewWidth = window.screen.availWidth || window.innerWidth || document.documentElement.clientWidth;
+                    let viewHeight = window.screen.availHeight || window.innerHeight || document.documentElement.clientHeight;
                     let numPerLine = parseInt(viewWidth / 800);
                     if (numPerLine > urls.length) numPerLine = urls.length;
                     let _width = parseInt(viewWidth / numPerLine);
-                    let _height = viewHeight / (parseInt((urls.length - 1) / numPerLine) + 1) - 10;
+                    let _height = viewHeight / (parseInt((urls.length - 1) / numPerLine) + 1) - 65;
                     for (let i = 0; i< urls.length; i++) {
                         let left = (i % numPerLine) * _width;
                         let top = parseInt(i / numPerLine) * (_height + 70);
@@ -6654,8 +6653,8 @@
                                                         mobileMatch = match.match(/\(([^\)\|]+)\|([^\)\|]+)/);
                                                     }
                                                 }
-                                                let viewWidth = window.innerWidth || document.documentElement.clientWidth;
-                                                let viewHeight = window.innerHeight || document.documentElement.clientHeight;
+                                                let viewWidth = window.screen.availWidth || window.innerWidth || document.documentElement.clientWidth;
+                                                let viewHeight = window.screen.availHeight || window.innerHeight || document.documentElement.clientHeight;
                                                 let left = viewWidth - 450;
                                                 let top = (viewHeight - 800) / 2;
                                                 window.open(url + "#searchJumperMin" + (/#p{/.test(data.url) ? 'Post' : ''), "_blank", `width=450, height=800, location=0, resizable=1, status=0, toolbar=0, menubar=0, scrollbars=0, left=${left}, top=${top}`);
@@ -6767,7 +6766,7 @@
                     }
                 }
                 if (noIntoView) return;
-                let firstType = this.bar.querySelector(".search-jumper-type:not(.search-jumper-hide)");
+                let firstType = this.bar.querySelector(".search-jumper-type.search-jumper-open");
                 if (firstType) {
                     if (firstType.style.width === "0px") {
                         firstType.style.width = "auto";
@@ -6837,7 +6836,7 @@
                     if (this.bar.style.display == "none" || _funcKeyCall) {
                         firstType = this.bar.querySelector('.search-jumper-needInPage:not(.notmatch)>span');
                     } else {
-                        let openType = this.bar.querySelector(".search-jumper-type:not(.search-jumper-hide)");
+                        let openType = this.bar.querySelector(".search-jumper-type.search-jumper-open");
                         if (!openType || openType.classList.contains('notmatch') ||
                             openType.classList.contains('search-jumper-targetPage') ||
                             openType.classList.contains('search-jumper-targetImg') ||
@@ -6876,7 +6875,7 @@
                     this.bar.style.display = "";
                 }
                 self.setFuncKeyCall(false);
-                if (firstType && firstType.parentNode.classList.contains('search-jumper-hide')) {
+                if (firstType && !firstType.parentNode.classList.contains('search-jumper-open')) {
                     if (!searchData.prefConfig.disableAutoOpen || _funcKeyCall) {
                         firstType.onmousedown();
                     }
@@ -6977,7 +6976,7 @@
                         ele.style.width = "";
                         ele.style.height = "";
                         let scrollSize = Math.max(ele.scrollWidth, ele.scrollHeight) + "px";
-                        if (ele.classList.contains("search-jumper-hide")) {
+                        if (!ele.classList.contains("search-jumper-open")) {
                             if (leftRight) {
                                 ele.style.height = baseSize + "px";
                             } else {
@@ -7088,7 +7087,7 @@
                 self.checkScroll(false, true);
                 setTimeout(() => {
                     if (!searchData.prefConfig.disableAutoOpen) {
-                        if (self.currentType && !self.currentType.classList.contains('search-jumper-hide')) {
+                        if (self.currentType && self.currentType.classList.contains('search-jumper-open')) {
                             self.currentType.style.width = self.currentType.scrollWidth + "px";
                             self.currentType.style.height = self.currentType.scrollHeight + "px";
                         }
@@ -7863,13 +7862,17 @@
                     }
                 }
                 logoSvg.style.cursor = "";
-                let firstType = searchBar.bar.querySelector('.search-jumper-type:not(.search-jumper-hide)>span');
+                let firstType = searchBar.bar.querySelector('.search-jumper-type.search-jumper-open>span');
                 if (firstType) firstType.onmousedown();
                 searchBar.initPos(relX, relY, posX, posY);
                 storage.setItem("searchData", searchData);
             };
 
+            let startPos = {x: 0, y: 0};
             let mouseMoveHandler = e => {
+                let curX = clientX(e);
+                let curY = clientY(e);
+                if (Math.abs(startPos.x - curX) + Math.abs(startPos.y - curY) < 50) return;
                 if (grabState === 1) {
                     clearTimeout(hideTimer);
                     logoSvg.style.cursor = "grabbing";
@@ -7883,8 +7886,8 @@
                     searchBar.bar.className = "search-jumper-searchBar grabbing";
                 }
                 grabState = 2;
-                searchBar.bar.style.left = clientX(e) - searchBar.bar.scrollWidth + 20 + "px";
-                searchBar.bar.style.top = clientY(e) - searchBar.bar.scrollHeight + 20 + "px";
+                searchBar.bar.style.left = curX - searchBar.bar.scrollWidth + 20 + "px";
+                searchBar.bar.style.top = curY - searchBar.bar.scrollHeight + 20 + "px";
             };
 
             logoBtn.oncontextmenu = function (event) {
@@ -7914,6 +7917,7 @@
                     return;
                 }
                 grabState = 1;
+                startPos = {x: clientX(e), y: clientY(e)};
                 document.addEventListener('mouseup', mouseUpHandler, false);
                 setTimeout(() => {
                     if (grabState === 1) {
@@ -7932,6 +7936,7 @@
                 e.stopPropagation();
                 touchStart = true;
                 grabState = 1;
+                startPos = {x: clientX(e), y: clientY(e)};
                 document.addEventListener('touchend', mouseUpHandler, false);
                 setTimeout(() => {
                     if (grabState === 1) {
