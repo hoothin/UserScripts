@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.34.8
+// @version      1.9.34.9
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1060,7 +1060,12 @@
             var self = this;
 
             function setRule(r) {
-                self.curSiteRule = r;
+                if (self.preSiteRule && self.ruleMatch(self.preSiteRule)) {
+                    self.curSiteRule = self.preSiteRule;
+                } else {
+                    self.curSiteRule = r;
+                    self.preSiteRule = r;
+                }
                 if (!r.singleUrl && r.enable !== 0) {
                     debug(r, 'Match rule');
                 }
@@ -4586,7 +4591,6 @@
             },
             timeout: 20000,
             onload: async function(res) {
-                if (res.status >= 400) return callback(false);
                 var doc = null, response = res.response;
                 let preCode = ruleParser.curSiteRule.pageElementPre || ruleParser.curSiteRule.pagePre;
                 if (preCode) {
@@ -4612,6 +4616,10 @@
                     debug('parse error:' + e.toString());
                 }
                 let pageElement = ruleParser.getPageElement(doc);
+                if ((!pageElement || pageElement.length == 0) && res.status >= 400) {
+                    debug(res.status, "Error status");
+                    return callback(false);
+                }
                 if (inCors && (!pageElement || pageElement.length == 0)) {
                     ruleParser.curSiteRule.pageElement = allOfBody;
                     pageElement = ruleParser.getPageElement(doc);
@@ -4637,7 +4645,7 @@
                         }
                     });
                 } else {
-                    debug(pageElement, "Stop as no page element");
+                    debug("Stop as no page element");
                     isPause = true;
                     callback(false);
                 }
@@ -4937,34 +4945,36 @@
         return {preBar: preBar, nextBar: nextBar};
     }
 
-    var urlChanged=false;
+    var urlChanged = false;
     var urlchangeHandler = e => {
         if (ruleParser && ruleParser.curSiteRule && ruleParser.curSiteRule.listenUrlChange == false) return;
-        urlChanged = true;
         isPause = true;
         setTimeout(() => {
             lastActiveUrl = location.href;
-            if (guidePage.test(location.href)) {
+            if (location.href == configPage[0]) {
+                location.reload();
+            } else {
                 setTimeout(() => {
-                    if(typeof JSONEditor !== 'undefined'){
-                        createEdit();
-                    }else{
-                        window.onload = e => {
+                    if (guidePage.test(location.href)) {
+                        if (typeof JSONEditor !== 'undefined') {
                             createEdit();
+                        } else {
+                            window.onload = e => {
+                                createEdit();
+                            }
+                        }
+                    } else {
+                        urlChanged = true;
+                        if (!ruleParser.nextLinkHref) {
+                            isLoading = false;
+                        }
+                        if (!isLoading && (ruleParser.curSiteRule.singleUrl || !ruleParser.ruleMatch(ruleParser.curSiteRule))) {
+                            initPage();
                         }
                     }
                 }, 500);
-            } else if (location.href == configPage[0]) {
-                location.reload();
-            } else {
-                if (!ruleParser.nextLinkHref) {
-                    isLoading = false;
-                }
-                if (!isLoading && (ruleParser.curSiteRule.singleUrl || !ruleParser.ruleMatch(ruleParser.curSiteRule))) {
-                    initPage();
-                }
             }
-        },1);
+        }, 1);
     };
     window.addEventListener('pagetual_pushState', urlchangeHandler);
     /*var _wr = function(type) {
@@ -5064,8 +5074,7 @@
         };
         scrollHandler = e => {
             if (urlChanged && !isLoading) {
-                ruleParser.initPage(() => {
-                });
+                ruleParser.initPage(() => {});
                 urlChanged = false;
             }
             if (isPause) return;
@@ -5286,9 +5295,9 @@
         }
         if (rulesData.opacity == 0 || ruleParser.curSiteRule.pageBar === 0) return null;
         url = url.replace(/#p{.*/, "");
-        let example = ruleParser.curSiteRule.insertPos == 2 ? insert.children[0] : (insert.parentNode.children[parseInt(insert.parentNode.children.length / 2)] || insert);
-        if (example.className == "pagetual_pageBar") {
-            example = example.previousElementSibling;
+        let example = ruleParser.curSiteRule.insertPos == 2 ? insert.children[0] : (insert.parentNode.children[0] || insert);
+        while (example && (example.tagName == "SCRIPT" || example.tagName == "STYLE" || example.className == "pagetual_pageBar")) {
+            example = example.nextElementSibling;
         }
         if (!example || !example.parentNode) example = insert;
         let exampleStyle = _unsafeWindow.getComputedStyle(example);
@@ -5724,7 +5733,11 @@
         window.addEventListener('message', loadedHandler, false);
         iframe.addEventListener('load', loadedHandler, false);
         iframe.src = url;
-        document.body.appendChild(iframe);
+        try {
+            document.body.appendChild(iframe);
+        } catch (e) {
+            return callback(false, false);
+        }
     }
 
     var emuIframe, lastActiveUrl, orgContent;
