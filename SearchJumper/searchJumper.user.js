@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.55.15
+// @version      1.6.6.55.16
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -800,6 +800,7 @@
                     cancel: '取消',
                     modifyWord: '修改页内搜索词',
                     addSearchEngine: '添加搜索引擎',
+                    noValidItemAsk: '未找到有效元素，是否手动编辑规则并添加？',
                     expand: '展开剩余站点',
                     add: '添加',
                     addWord: '添加新词语',
@@ -808,8 +809,8 @@
                     customSubmit: '提交搜索',
                     finalSearch: '目标搜索字串',
                     search: '搜索此项',
-                    siteKeywords: '关键词',
-                    siteMatch: '站点 URL 匹配',
+                    siteKeywords: '关键词(多个关键词以|分隔)',
+                    siteMatch: '站点 URL 匹配正则',
                     openSelect: '打开选项',
                     openInDefault: '默认',
                     openInNewTab: '新标签页打开',
@@ -876,6 +877,7 @@
                     cancel: '取消',
                     modifyWord: '修改頁內搜索詞',
                     addSearchEngine: '添加搜尋引擎',
+                    noValidItemAsk: '未找到有效元素，是否手動編輯規則並添加？',
                     expand: '展開剩餘站點',
                     add: '添加',
                     addWord: '添加新詞語',
@@ -884,8 +886,8 @@
                     customSubmit: '提交搜索',
                     finalSearch: '目標搜尋字串',
                     search: '搜索此項',
-                    siteKeywords: '關鍵詞',
-                    siteMatch: '站點 URL 匹配',
+                    siteKeywords: '關鍵詞(多個關鍵詞以|分隔)',
+                    siteMatch: '站點 URL 匹配正則',
                     openSelect: '打開選項',
                     openInDefault: '默認',
                     openInNewTab: '新標籤頁打開',
@@ -951,6 +953,7 @@
                     cancel: 'Cancel',
                     modifyWord: 'Modify search word',
                     addSearchEngine: 'Add search engine',
+                    noValidItemAsk: 'No valid element found, do you want to manually edit the rule and add it?',
                     expand: 'Expand other sites',
                     add: 'Add',
                     addWord: 'Add new word',
@@ -959,8 +962,8 @@
                     customSubmit: 'Submit',
                     finalSearch: 'Target search string',
                     search: 'Search this',
-                    siteKeywords: 'Keywords',
-                    siteMatch: 'Match site URL',
+                    siteKeywords: 'Keywords(split by |)',
+                    siteMatch: 'Regexp to match site URL',
                     openSelect: 'Open option',
                     openInDefault: 'Default',
                     openInNewTab: 'Open a new tab',
@@ -8374,7 +8377,7 @@
         }
 
         function quickAddByInput(input) {
-            let parentForm, url;
+            let parentForm, url = location.href;
             if (input.name) {
                 parentForm = input.parentNode;
                 while (parentForm) {
@@ -8383,6 +8386,12 @@
                     }
                     parentForm = parentForm.parentNode;
                 }
+            }
+            let fail = () => {
+                if (window.confirm(i18n("noValidItemAsk"))) {
+                    return false;
+                }
+                return true;
             }
             if (parentForm) {
                 url = parentForm.action;
@@ -8411,13 +8420,11 @@
                     if (location.href.indexOf(encodeValue) !== -1) {
                         url = location.href.replace(encodeValue, "%s");
                     } else {
-                        _GM_notification(i18n("Valid item not found"));
-                        return;
+                        if (fail()) return;
                     }
                 }
             } else {
-                _GM_notification(i18n("Valid item not found"));
-                return;
+                if (fail()) return;
             }
             let icons = [];
             [].forEach.call(document.querySelectorAll("link[rel='shortcut icon'],link[rel='icon']"), link => {
@@ -9540,10 +9547,10 @@
                     <div class="searchJumperFrame-inputs">
                         <div class="searchJumperFrame-input-title">${i18n("siteName")}</div>
                         <input name="siteName" type="text">
-                        <div class="searchJumperFrame-input-title">${i18n("siteDesc")}</div>
-                        <textarea name="description" type="text"></textarea>
                         <div class="searchJumperFrame-input-title">${i18n("siteUrl")}</div>
                         <textarea name="url" type="text"></textarea>
+                        <div class="searchJumperFrame-input-title">${i18n("siteDesc")}</div>
+                        <textarea name="description" type="text"></textarea>
                         <div class="searchJumperFrame-input-title">${i18n("siteIcon")}</div>
                         <textarea name="icon" type="text"></textarea>
                         <img width="27px" height="27px">
