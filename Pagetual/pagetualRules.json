@@ -8254,7 +8254,7 @@
     },
     {
         "name": "行情 - 雪球",
-        "url": "^https?://xueqiu\\.com/",
+        "url": "^https?://xueqiu\\.com/hq",
         "pageElement": "div#stockList table.portfolio",
         "pinUrl": true,
         "action": 3
