@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.34.10
+// @version      1.9.34.11
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1927,9 +1927,15 @@
 
         async getNextLink(doc) {
             let nextLink = null, page, href;
-            let getNextLinkByForm = (form, n) => {
+            let getNextLinkByForm = (form, submitBtn, n) => {
                 let params = [];
                 let formData = new FormData(form);
+                if (submitBtn && submitBtn.getAttribute) {
+                    let btnValue, btnName;
+                    btnName = submitBtn.getAttribute("name");
+                    btnValue = submitBtn.getAttribute("value");
+                    if (btnName && btnValue) params = [btnName + "=" + btnValue];
+                }
                 for (let [key, value] of formData) {
                     if (n && /^(p|page)$/i.test(key)) {
                         params.push(key + '=' + n);
@@ -2005,7 +2011,7 @@
                     let form = doc.querySelector('#search-form');
                     if (!nextLink.href && nextLink.hasAttribute("onclick") && form) {
                         if (/^\d+$/.test(nextLink.innerText)) {
-                            nextLink.href = getNextLinkByForm(form, nextLink.innerText);
+                            nextLink.href = getNextLinkByForm(form, nextLink, nextLink.innerText);
                         }
                     } else if (nextLink.tagName == "INPUT" || nextLink.type == "submit") {
                         form = nextLink.parentNode;
@@ -2014,7 +2020,7 @@
                             else form = form.parentNode;
                         }
                         if (form) {
-                            nextLink.href = getNextLinkByForm(form);
+                            nextLink.href = getNextLinkByForm(form, nextLink);
                         }
                     }
                     if (nextLink.href && this.curSiteRule.action != 0) {
@@ -2032,7 +2038,7 @@
                             else form = form.parentNode;
                         }
                         if (form) {
-                            nextLink.href = getNextLinkByForm(form);
+                            nextLink.href = getNextLinkByForm(form, nextLink);
                         }
                     }
                     let parent = nextLink;
@@ -2069,7 +2075,7 @@
                     let form = doc.querySelector('#search-form');
                     if (!nextLink.href && nextLink.hasAttribute("onclick") && form) {
                         if (form && /^\d+$/.test(nextLink.innerText)) {
-                            href = getNextLinkByForm(form, nextLink.innerText);
+                            href = getNextLinkByForm(form, nextLink, nextLink.innerText);
                         }
                     }
                 }
@@ -2161,7 +2167,8 @@
                         this.nextLinkHref = false;
                     } else {
                         this.nextLinkHref = (href && !/^(javascript:|#)/.test(href)) ? this.canonicalUri(href) : "#";
-                        if (this.nextLinkHref != "#" && (this.nextLinkHref == this.initUrl || this.nextLinkHref == this.curUrl || this.nextLinkHref == this.curUrl + "#" || this.nextLinkHref == this.oldUrl || this.nextLinkHref == this.oldUrl + "#")) {
+                        let compareUrl = this.nextLinkHref.replace(/#p{.*/, "");
+                        if (compareUrl != "#" && (compareUrl == this.initUrl || compareUrl == this.curUrl || compareUrl == this.curUrl + "#" || compareUrl == this.oldUrl || compareUrl == this.oldUrl + "#")) {
                             this.nextLinkHref = false;
                         } else if (doc == document) debug(nextLink, 'Next link');
                     }
