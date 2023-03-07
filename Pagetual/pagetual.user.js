@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.34.9
+// @version      1.9.34.10
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -964,7 +964,31 @@
             }
         }
 
-        ruleMatch(r) {
+        ruleMatchPre(r) {
+            if (r.include) {
+                let include;
+                if (Array && Array.isArray && Array.isArray(r.include)) {
+                    include = r.include.every((sel, i) => {
+                        let ele = getElement(sel, document);
+                        return !!ele;
+                    });
+                } else include = getElement(r.include, document);
+                if (!include) return false;
+            }
+            if (r.exclude) {
+                let exclude;
+                if (Array && Array.isArray && Array.isArray(r.exclude)) {
+                    exclude = !r.exclude.every((sel, i) => {
+                        let ele = getElement(sel, document);
+                        return !ele;
+                    });
+                } else exclude = getElement(r.exclude, document);
+                if (exclude) return false;
+            }
+            return true;
+        }
+
+        ruleMatchReady(r) {
             let findIndex = 0;
             if (r.nextLink && r.nextLink != 0) {
                 let nextLinkSel = r.nextLink, nextLink;
@@ -995,6 +1019,10 @@
             }
             //if (findIndex !== 0) nextIndex = findIndex;
             return true;
+        }
+
+        ruleMatch(r) {
+            return this.ruleMatchPre(r) && this.ruleMatchReady(r);
         }
 
         scrollToShow(sel, doc) {
@@ -1054,20 +1082,23 @@
                 callback();
                 return;
             }
-            if (this.curSiteRule && this.curSiteRule.url) {
-                return this.curSiteRule;
+            if (this.curSiteRule && this.curSiteRule.url && !this.curSiteRule.singleUrl) {
+                if (this.ruleMatch(this.curSiteRule)) {
+                    return callback();
+                }
             }
+            this.curSiteRule = {};
             var self = this;
 
             function setRule(r) {
                 if (self.preSiteRule && self.ruleMatch(self.preSiteRule)) {
                     self.curSiteRule = self.preSiteRule;
-                } else {
-                    self.curSiteRule = r;
-                    self.preSiteRule = r;
+                    return callback();
                 }
-                if (!r.singleUrl && r.enable !== 0) {
-                    debug(r, 'Match rule');
+                self.curSiteRule = r;
+                if (!r.singleUrl) {
+                    self.preSiteRule = r;
+                    if (r.enable !== 0) debug(r, 'Match rule');
                 }
                 callback();
             }
@@ -1076,26 +1107,7 @@
                 if (r.from == 1 && r.url.length <= 13) return false;
                 let urlReg = new RegExp(r.url, "i");
                 if (urlReg.test(location.href)) {
-                    if (r.include) {
-                        let include;
-                        if (Array && Array.isArray && Array.isArray(r.include)) {
-                            include = r.include.every((sel, i) => {
-                                let ele = getElement(sel, document);
-                                return !!ele;
-                            });
-                        } else include = getElement(r.include, document);
-                        if (!include) return false;
-                    }
-                    if (r.exclude) {
-                        let exclude;
-                        if (Array && Array.isArray && Array.isArray(r.exclude)) {
-                            exclude = !r.exclude.every((sel, i) => {
-                                let ele = getElement(sel, document);
-                                return !ele;
-                            });
-                        } else exclude = getElement(r.exclude, document);
-                        if (exclude) return false;
-                    }
+                    if (!self.ruleMatchPre(r)) return false;
                     if (r.waitElement) {
                         let waitTime = 500;
                         let checkReady = () => {
@@ -1127,7 +1139,7 @@
                                 return;
                             }
                             setTimeout(() => {
-                                if (!self.ruleMatch(r) || (checkEval && !checkEval(document))) {
+                                if (!self.ruleMatchReady(r) || (checkEval && !checkEval(document))) {
                                     checkReady();
                                 } else {
                                     setRule(r);
@@ -1141,7 +1153,7 @@
                         setRule(r);
                         return true;
                     }
-                    if (!self.ruleMatch(r)) {
+                    if (!self.ruleMatchReady(r)) {
                         return false;
                     }
                     setRule(r);
@@ -2392,7 +2404,6 @@
             }
             this.insert = null;
             this.addedElePool = [];
-            this.curSiteRule = {};
             this.pageDoc = document;
             this.nextLinkHref = null;
             this.curUrl = location.href;
@@ -5012,7 +5023,7 @@
         checkUrlTimer = setTimeout(checkFunc, checkUrlTime);
 
         document.addEventListener("click", e => {
-            checkUrlTime = 1000;
+            checkUrlTime = 100;
             clearTimeout(checkUrlTimer);
             checkUrlTimer = setTimeout(checkFunc, checkUrlTime);
         });
@@ -5169,8 +5180,8 @@
         }
         if (ruleParser.curSiteRule.listenHashChange) {
             hashchangeHandler = () => {
-                urlChanged = true;
                 isPause = true;
+                urlChanged = true;
                 if (!ruleParser.nextLinkHref) isLoading = false;
             };
             window.addEventListener('hashchange', hashchangeHandler, false);
