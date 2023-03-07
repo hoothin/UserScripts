@@ -8583,18 +8583,18 @@
   "updated_at": "2019-08-26T14:25:51+09:00"
 },
 {
-  "created_by": "かいらいぺるくん",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "name": "日経 xTECH Active",
-  "data": {
-    "exampleUrl": "https://active.nikkeibp.co.jp/atclact/active/15/070800078/041000098/\r\nhttps://active.nikkeibp.co.jp/atclact/active/18/053100114/060300002/",
-    "nextLink": "//footer/nav[@class='pagenation']//li[@class='next']/a",
-    "url": "^https://active\\.nikkeibp\\.co\\.jp/",
-    "pageElement": "//div[@class='articleBody']"
-  },
-  "created_at": "2019-08-13T14:03:28+09:00",
   "resource_url": "http://wedata.net/items/82223",
-  "updated_at": "2019-08-14T18:27:23+09:00"
+  "data": {
+    "pageElement": "//div[contains(@class, 'articleBody')]",
+    "nextLink": "//nav[contains(@class, 'pagenation')]//p[@class='p-pagenation_nextPage']/a",
+    "url": "^https://active\\.nikkeibp\\.co\\.jp/",
+    "exampleUrl": "https://active.nikkeibp.co.jp/atclact/active/15/070800078/041000098/\r\nhttps://active.nikkeibp.co.jp/atclact/active/18/053100114/060300002/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "かいらいぺるくん",
+  "name": "日経 xTECH Active",
+  "created_at": "2019-08-13T14:03:28+09:00",
+  "updated_at": "2023-03-07T08:25:24+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/82221",
