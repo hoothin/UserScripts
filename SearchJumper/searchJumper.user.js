@@ -3871,6 +3871,29 @@
                 this.submitInPageWords();
             }
 
+            siteBtnReturnHome(btn) {
+                for (let i = 0; i < searchTypes.length; i++) {
+                    let typeBtn = searchTypes[i];
+                    if (typeBtn.dataset.type == btn.dataset.type) {
+                        if (btn.dataset.id) {
+                            let curIndex = parseInt(btn.dataset.id);
+                            for (let j = 1; j < typeBtn.children.length; j++) {
+                                let targetIndex = parseInt(typeBtn.children[j].dataset.id);
+                                if (curIndex < targetIndex) {
+                                    typeBtn.insertBefore(btn, typeBtn.children[j]);
+                                    break;
+                                } else if (j == typeBtn.children.length - 1) {
+                                    typeBtn.appendChild(btn);
+                                    break;
+                                }
+                            }
+                            //typeBtn.insertBefore(btn, typeBtn.children[parseInt(btn.dataset.id) - parseInt(typeBtn.dataset.id) + 1]);
+                        } else typeBtn.insertBefore(btn, typeBtn.children[1]);
+                        break;
+                    }
+                }
+            }
+
             closeShowAll() {
                 if (!this.con.classList.contains("search-jumper-showall") || isAllPage) return;
                 this.clearInputHide();
@@ -3879,15 +3902,7 @@
                 this.con.classList.remove("search-jumper-showall");
                 this.searchJumperInputKeyWords.value = "";
                 this.historySiteBtns.slice(0, 10).forEach(btn => {
-                    for (let i = 0; i < searchTypes.length; i++) {
-                        let typeBtn = searchTypes[i];
-                        if (typeBtn.dataset.type == btn.dataset.type) {
-                            if (btn.dataset.id) {
-                                typeBtn.insertBefore(btn, typeBtn.children[parseInt(btn.dataset.id) - parseInt(typeBtn.dataset.id) + 1]);
-                            } else typeBtn.insertBefore(btn, typeBtn.children[1]);
-                            break;
-                        }
-                    }
+                    this.siteBtnReturnHome(btn);
                 });
                 this.bar.style.display = "";
                 this.initPos();
@@ -5147,15 +5162,7 @@
                     if (!btn.classList.contains("historySite")) continue;
                     btn.classList.remove("historySite");
                     curParent = btn.parentNode;
-                    for (let i = 0; i < searchTypes.length; i++) {
-                        let typeBtn = searchTypes[i];
-                        if (typeBtn.dataset.type == btn.dataset.type) {
-                            if (btn.dataset.id) {
-                                typeBtn.insertBefore(btn, typeBtn.children[parseInt(btn.dataset.id) - parseInt(typeBtn.dataset.id) + 1]);
-                            } else typeBtn.insertBefore(btn, typeBtn.children[1]);
-                            break;
-                        }
-                    }
+                    this.siteBtnReturnHome(btn);
                 }
                 if (curParent && curParent.classList.contains("search-jumper-open")) {
                     curParent.style.width = "auto";
