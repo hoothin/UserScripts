@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.55.16
+// @version      1.6.6.55.17
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -2097,7 +2097,7 @@
                  }
                  #searchJumperInput,
                  #searchJumperInputKeyWords {
-                     width: calc(50% - 11px);
+                     width: calc(100% - 11px);
                      float: left;
                      transition: 0.25s width ease;
                  }
@@ -2107,8 +2107,13 @@
                  #searchJumperInputKeyWords {
                      margin: 0 10px 0 1px;
                  }
+                 #searchJumperInputKeyWords:disabled {
+                     opacity: 0.5;
+                     max-width: 20%;
+                     min-width: 20%;
+                 }
                  #filterSites>input:focus {
-                     width: calc(200% - 20px);
+                     width: calc(400% - 20px);
                  }
                  .search-jumper-input * {
                      box-sizing: border-box;
@@ -2183,16 +2188,22 @@
                      position: absolute;
                  }
                  .inputGroup>.svgBtns {
-                     right: 25px;
-                     top: 15px;
+                     right: 21px;
+                     top: 11px;
+                     height: 33px;
                      position: absolute;
                      user-select: none;
                      background: rgb(0 0 0 / 50%);
                      white-space: nowrap;
                      overflow: hidden;
+                     display: flex;
+                     align-items: center;
                  }
                  .inputGroup>.svgBtns:hover {
                      width: auto;
+                 }
+                 .inputGroup>.svgBtns>svg {
+                     margin: 0 2px;
                  }
                  .inputGroup svg.checked {
                      fill: #1E88E5;
@@ -3985,8 +3996,7 @@
                     this.searchInput.focus();
                     if (!this.initShowPicker && searchData.prefConfig.defaultPicker) {
                         this.initShowPicker = true;
-                        this.pickerBtn.classList.toggle("checked");
-                        Picker.getInstance().toggle();
+                        this.togglePicker();
                     }
                     if (this.bar.classList.contains("search-jumper-isInPage")) {
                         //this.lockSearchInput("*");
@@ -4015,6 +4025,12 @@
                 }
             }
 
+            togglePicker() {
+                this.pickerBtn.classList.toggle("checked");
+                this.searchJumperInputKeyWords.disabled = !this.searchJumperInputKeyWords.disabled;
+                Picker.getInstance().toggle();
+            }
+
             hideSearchInput() {
                 this.inInput = false;
                 this.clearInputHide();
@@ -4023,6 +4039,7 @@
                 this.searchInput.value = "";
                 this.searchJumperInputKeyWords.value = "";
                 this.pickerBtn.classList.remove("checked");
+                this.searchJumperInputKeyWords.disabled = false;
                 Picker.getInstance().close();
                 document.removeEventListener("mouseup", this.checkSelHandler);
                 let openType = this.bar.querySelector('.search-jumper-type.search-jumper-open>span');
@@ -4336,8 +4353,7 @@
                 });
                 this.pickerBtn.addEventListener("click", e => {
                     this.searchJumperInputKeyWords.value = "";
-                    this.pickerBtn.classList.toggle("checked");
-                    Picker.getInstance().toggle();
+                    this.togglePicker();
                 });
                 this.maxEleBtn.addEventListener("click", e => {
                     Picker.getInstance().expand();
@@ -4431,7 +4447,20 @@
                             }
                             break;
                         case 13://回车
-                            this.searchJumperInputKeyWords.focus();
+                            if (this.searchJumperInputKeyWords.disabled) {
+                                clearTimeout(inputTimer);
+                                let siteEle, forceTarget = "";
+                                if (currentSite && !self.searchInput.value) {
+                                    siteEle = self.con.querySelector(".search-jumper-btn.current");
+                                    forceTarget = "_self";
+                                } else {
+                                    siteEle = self.con.querySelector(".search-jumper-type.search-jumper-open>a.search-jumper-btn:not(.input-hide)") || self.con.querySelector(".search-jumper-needInPage>a.search-jumper-btn:not(.input-hide)") || self.con.querySelector("a.search-jumper-btn:not(.input-hide)");
+                                    forceTarget = "_blank";
+                                }
+                                if (siteEle) {
+                                    self.openSiteBtn(siteEle, forceTarget);
+                                }
+                            } else this.searchJumperInputKeyWords.focus();
                             break;
                         case 8://退格
                             /*if (self.lockSiteKeywords && !self.searchInput.value) {
