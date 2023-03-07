@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.3.6.1
+// @version              2023.3.7.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -11816,7 +11816,7 @@ ImgOps | https://imgops.com/#b#`;
                     command: false,
                     type: "hold",
                     closeAfterPreview: false,
-                    previewFollowMouse: false
+                    previewFollowMouse: true
                 }
             },
 
@@ -11868,7 +11868,7 @@ ImgOps | https://imgops.com/#b#`;
 
             imgWindow:{// 图片窗相关设置
                 suitLongImg: true,
-                fitToScreen: false,//适应屏幕,并且水平垂直居中(适应方式为contain，非cover).
+                fitToScreen: true,//适应屏幕,并且水平垂直居中(适应方式为contain，非cover).
                 fitToScreenSmall: false,
                 syncSelectedTool:true,//同步当前选择的工具，如果开了多个图片窗口，其中修改一个会反映到其他的上面。
                 defaultTool:'hand',//"hand","rotate","zoom";打开窗口的时候默认选择的工具
@@ -18244,14 +18244,16 @@ ImgOps | https://imgops.com/#b#`;
                         h:img.naturalHeight,
                         w:img.naturalWidth,
                     };
-                    if (!self.imgWindow.classList.contains("pv-pic-window-scroll")) {
-                        self.zoomLevel=0;
-                        self.zoom(1);
-                    }
-                    if (prefs.imgWindow.fitToScreen) {
-                        self.fitToScreen();
-                    }
-                    if (!prefs.floatBar.globalkeys.previewFollowMouse) {
+                    if (prefs.floatBar.globalkeys.previewFollowMouse) {
+                        uniqueImgWin.followPos(uniqueImgWinInitX, uniqueImgWinInitY);
+                    } else {
+                        if (!self.imgWindow.classList.contains("pv-pic-window-scroll")) {
+                            self.zoomLevel=0;
+                            self.zoom(1);
+                        }
+                        if (prefs.imgWindow.fitToScreen) {
+                            self.fitToScreen();
+                        }
                         self.center(true, true);
                     }
                     self.imgWindow.style.opacity = 1;
@@ -19064,6 +19066,8 @@ ImgOps | https://imgops.com/#b#`;
                 if(this.removed)return;
                 this.following=true;
                 var wSize=getWindowSize();
+                wSize.h -= 26;
+                wSize.w -= 26;
                 this.zoom(1);
                 if(prefs.imgWindow.fitToScreen && !imgWindow.classList.contains("pv-pic-window-scroll")){
                     var imgWindowCS=unsafeWindow.getComputedStyle(imgWindow);
@@ -20525,6 +20529,7 @@ ImgOps | https://imgops.com/#b#`;
                 switch(this.buttonType){
                     case 'popup':
                         if(!uniqueImgWin || uniqueImgWin.removed){
+                            this.data.src=this.img.src;
                             uniqueImgWin = new ImgWindowC(this.img, this.data);
                             //uniqueImgWin.imgWindow.classList.add("pv-pic-window-transition-all");
                         }
