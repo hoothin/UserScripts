@@ -2365,6 +2365,9 @@
                      pointer-events: all;
                      opacity: 1;
                  }
+                 .search-jumper-showall > .searchJumperNavBar.show {
+                     opacity: 0;
+                 }
                  .searchJumperNavBar>.closeNavBtn {
                      width: 16px;
                      height: 16px;
