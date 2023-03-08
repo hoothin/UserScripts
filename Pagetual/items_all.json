@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86087",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[@class='search_list inner']/ul",
+    "nextLink": "//a[@rel='next']",
+    "url": "^https://osakairasshai\\.start\\.osaka-info\\.jp/",
+    "exampleUrl": "https://osakairasshai.start.osaka-info.jp/merchant/?search_element_0_46=9&search_element_0_cnt=81&search_element_1_cnt=16&search_element_3_cnt=2&s_keyword_4=&search_element_5_0=2&searchbutton=%E6%A4%9C%E7%B4%A2%E3%81%99%E3%82%8B&csp=search_add&feadvns_max_line_2=6&fe_form_no=2"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "sunny",
+  "name": "大阪いらっしゃいキャンペーン",
+  "created_at": "2023-03-07T18:51:15+09:00",
+  "updated_at": "2023-03-07T18:51:15+09:00"
+},
+{
   "data": {
     "insertBefore": "",
     "pageElement": "//*[@id=\"cnt-list\"]",
