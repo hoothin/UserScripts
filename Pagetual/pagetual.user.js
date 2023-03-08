@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.34.11
+// @version      1.9.34.12
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1277,6 +1277,22 @@
             }
         }
 
+        getValidHeight(ele) {
+            if (!ele.offsetParent) return 0;
+            let h = ele.scrollHeight;
+            let moreChild = ele.children[0], minOffsetTop = h;
+            while (moreChild) {
+                if (moreChild.offsetParent && moreChild.offsetTop < minOffsetTop) {
+                    minOffsetTop = moreChild.offsetTop;
+                }
+                moreChild = moreChild.nextElementSibling;
+            }
+            if (minOffsetTop != h && minOffsetTop > 0) {
+                h -= minOffsetTop;
+            }
+            return h;
+        }
+
         getPageElement(doc, curWin, dontFind) {
             if (doc == document && this.docPageElement) {
                 let parent = this.docPageElement;
@@ -1341,7 +1357,7 @@
                         }
                         if (!hasText) {
                             ele = ele.children[0];
-                            curHeight = parseInt(ele.offsetHeight || ele.scrollHeight);
+                            curHeight = self.getValidHeight(ele);
                             curWidth = parseInt(ele.offsetWidth || ele.scrollWidth);
                         }
                     }
@@ -1379,7 +1395,7 @@
                         debug(self.curSiteRule.pageElement, 'Page element');
                         return getAllElements(self.curSiteRule.pageElement, doc);
                     }
-                    let i, minHeight = curHeight * 0.55, curMaxEle = null, curMaxArea = 0, minWidth = curWidth * 0.45;
+                    let i, minHeight = curHeight * 0.55, curMaxEle = null, curMaxArea = 0, minWidth = curWidth * 0.38;
                     let isHori = true;
                     let offsetTop = ele.children[0].offsetTop;
                     for (i = 1; i < ele.children.length; i++) {
@@ -1399,28 +1415,30 @@
                             continue;
                         }
                         if (curNode.tagName == "ARTICLE") articleNum++;
-                        let comStyle = curWin.getComputedStyle(curNode);
-                        let h = parseInt(curNode.offsetHeight || curNode.scrollHeight);
-                        let w = parseInt(curNode.offsetWidth || curNode.scrollWidth);
+                        let h = self.getValidHeight(curNode);
+                        let w = curNode.scrollWidth;
                         if (isNaN(h) || isNaN(w)) continue;
                         if (isHori && h <= 50) continue;
-                        let a = h * w + h, moreChild = curNode.children[0];
+                        let a = h * w, moreChild = curNode.children[0];
                         while (moreChild) {
-                            comStyle = curWin.getComputedStyle(moreChild);
-                            let ch = parseInt(moreChild.offsetHeight || moreChild.scrollHeight);
-                            let cw = parseInt(moreChild.scrollWidth);
-                            if (h < ch) h = ch;
-                            if (moreChild.innerText != "" && !isNaN(ch) && !isNaN(cw)) {
+                            let ch = self.getValidHeight(moreChild);
+                            let cw = moreChild.scrollWidth;
+                            if (h < ch) {
+                                h = ch;
+                            }
+                            if (moreChild.innerText != "" && ch && cw) {
                                 a += ch * cw;
                             }
                             moreChild = moreChild.nextElementSibling;
                         }
                         let isMax = false;
                         if (isHori) {
-                            if (curWidth < w) {
-                                isMax = true;
-                            } else if (curWidth < w + 300 && curMaxArea < a) {
-                                isMax = true;
+                            if (curMaxEle) {
+                                if (curWidth < w) {
+                                    isMax = true;
+                                } else if (curWidth < w + 300 && curMaxArea < a) {
+                                    isMax = true;
+                                }
                             }
                         } else {
                             if (curMaxEle && curMaxEle.offsetParent == curNode.offsetParent && curMaxEle.offsetTop == curNode.offsetTop) {
@@ -1430,7 +1448,7 @@
                         }
                         if (curMaxEle == null || isMax) {
                             if (isHori) {
-                                if (w < minWidth) {
+                                if (curMaxEle && w < minWidth) {
                                     continue;
                                 }
                             } else {
@@ -6013,11 +6031,57 @@
         );
     }
 
+    function resizeIframe(iframe, frameDoc, pageEle) {
+        if (ruleParser.curSiteRule.singleUrl || forceState === 2) {
+            iframe.style.height = (frameDoc.body.scrollHeight || frameDoc.body.offsetHeight || 500) + "px";
+            iframe.style.minHeight = iframe.style.height;
+            iframe.style.width = "100%";
+            frameDoc.documentElement.scrollTop = 0;
+            frameDoc.documentElement.scrollLeft = 0;
+        } else {
+            if (pageEle) {
+                let fitWidth = ruleParser.curSiteRule.fitWidth !== false;
+                let targetElement = pageEle[0];
+                if (!targetElement) return;
+                if (pageEle.length > 1) {
+                    targetElement = targetElement.parentNode;
+                }
+                let scrollHeight = targetElement.scrollHeight || targetElement.offsetHeight || 500;
+                iframe.style.height = scrollHeight + "px";
+                let scrollTop = 0, scrollLeft = 0;
+                frameDoc.body.scrollTop = 0;
+                frameDoc.body.scrollLeft = 0;
+                while (targetElement && targetElement.offsetParent) {
+                    targetElement.offsetParent.scrollTop = targetElement.offsetTop;
+                    if (targetElement.offsetParent.scrollTop == 0) {
+                        scrollTop += targetElement.offsetTop;
+                    }
+                    if (fitWidth) {
+                        targetElement.offsetParent.scrollLeft = targetElement.offsetLeft;
+                        if (targetElement.offsetParent.scrollLeft == 0) {
+                            scrollLeft += targetElement.offsetLeft;
+                        }
+                    }
+                    targetElement = targetElement.offsetParent;
+                }
+                frameDoc.documentElement.scrollTop = scrollTop;
+                frameDoc.documentElement.scrollLeft = scrollLeft;
+                if (frameDoc.documentElement.scrollTop == 0 && frameDoc.documentElement.scrollLeft == 0) {
+                    frameDoc.body.scrollTop += scrollTop;
+                    frameDoc.body.scrollLeft += scrollLeft;
+                }
+                if (!fitWidth && iframe.style.marginLeft == '0px') {
+                    iframe.style.width = "100vw";
+                    iframe.style.marginLeft = -iframe.getBoundingClientRect().left + "px";
+                }
+            }
+        }
+    }
+
     function scrollToResize(e) {
         if (scrollingToResize) return;
         else {
             scrollingToResize = true;
-            let fitWidth = ruleParser.curSiteRule.fitWidth !== false;
             let resizeHandler = () => {
                 let touched = false;
                 for (let i in resizePool) {
@@ -6025,52 +6089,13 @@
                     let iframe = resizeArr[1]();
                     if (isTouchViewPort(iframe)) {
                         touched = true;
+                        let pageEle = resizeArr[0]();
                         let frameDoc = resizeArr[2]();
-                        if(ruleParser.curSiteRule.singleUrl || forceState === 2){
-                            iframe.style.height = (frameDoc.body.scrollHeight || frameDoc.body.offsetHeight || 500) + "px";
-                            iframe.style.minHeight = iframe.style.height;
-                            iframe.style.width = "100%";
-                            frameDoc.documentElement.scrollTop = 0;
-                            frameDoc.documentElement.scrollLeft = 0;
-                        }else{
-                            let pageEle = resizeArr[0]();
-                            if(pageEle){
-                                let targetElement = pageEle[0];
-                                if (!targetElement) return;
-                                if(pageEle.length > 1){
-                                    targetElement = targetElement.parentNode;
-                                }
-                                let scrollHeight = targetElement.scrollHeight || targetElement.offsetHeight || 500;
-                                iframe.style.height = scrollHeight + "px";
-                                let scrollTop = 0, scrollLeft = 0;
-                                frameDoc.body.scrollTop = 0;
-                                frameDoc.body.scrollLeft = 0;
-                                while(targetElement && targetElement.offsetParent){
-                                    targetElement.offsetParent.scrollTop = targetElement.offsetTop;
-                                    if(targetElement.offsetParent.scrollTop == 0){
-                                        scrollTop += targetElement.offsetTop;
-                                    }
-                                    if(fitWidth){
-                                        targetElement.offsetParent.scrollLeft = targetElement.offsetLeft;
-                                        if(targetElement.offsetParent.scrollLeft == 0){
-                                            scrollLeft += targetElement.offsetLeft;
-                                        }
-                                    }
-                                    targetElement = targetElement.offsetParent;
-                                }
-                                frameDoc.documentElement.scrollTop = scrollTop;
-                                frameDoc.documentElement.scrollLeft = scrollLeft;
-                                if (frameDoc.documentElement.scrollTop == 0 && frameDoc.documentElement.scrollLeft == 0) {
-                                    frameDoc.body.scrollTop += scrollTop;
-                                    frameDoc.body.scrollLeft += scrollLeft;
-                                }
-                                if(!fitWidth && iframe.style.marginLeft == '0px'){
-                                    iframe.style.width = "100vw";
-                                    iframe.style.marginLeft = -iframe.getBoundingClientRect().left + "px";
-                                }
-                            }
-                        }
+                        resizeIframe(iframe, frameDoc, pageEle);
                     } else if (touched) {
+                        let pageEle = resizeArr[0]();
+                        let frameDoc = resizeArr[2]();
+                        resizeIframe(iframe, frameDoc, pageEle);
                         break;
                     } else if (!iframe.parentNode) {
                         resizePool.splice(i, 1);
@@ -6080,8 +6105,7 @@
             };
             setTimeout(() => {
                 scrollingToResize = false;
-                resizeHandler();
-            }, 200);
+            }, 300);
             resizeHandler();
         }
     }
@@ -6102,19 +6126,22 @@
             let getFrameDoc = () => {
                 return iframeDoc;
             };
+            let pageElement = null;
             if (ruleParser.curSiteRule.singleUrl) {
                 resizePool.push([() => {}, getIframe, getFrameDoc]);
             } else {
-                let pageElement = ruleParser.getPageElement(iframeDoc,iframeDoc.defaultView);
+                pageElement = ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView);
                 let getPageEle = () => {
                     if (!pageElement || pageElement.length === 0 || !pageElement[0].offsetParent) {
-                        pageElement = ruleParser.getPageElement(iframeDoc,iframeDoc.defaultView);
+                        pageElement = ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView);
                     }
                     return pageElement;
                 };
                 resizePool.push([getPageEle, getIframe, getFrameDoc]);
             }
-            scrollToResize();
+            setTimeout(() => {
+                resizeIframe(curIframe, iframeDoc, pageElement);
+            }, 100);
         };
         let checkIframeTimer = setInterval(() => {
             if (!curIframe.parentNode) {
@@ -6126,7 +6153,7 @@
         curIframe.sandbox = "allow-same-origin allow-scripts allow-popups allow-forms";
         curIframe.frameBorder = '0';
         curIframe.scrolling = "no";
-        curIframe.style.cssText = 'display: block; visibility: visible; float: none; clear: both; width: 100%; height: 0; background: initial; border: 0px; border-radius: 0px; margin: 0px; padding: 0px; z-index: 2147483647;';
+        curIframe.style.cssText = 'opacity: 0.1; display: block; visibility: visible; float: none; clear: both; width: 100%; height: 0; background: initial; border: 0px; border-radius: 0px; margin: 0px; padding: 0px; z-index: 2147483647;';
         curIframe.addEventListener("load", e => {
             clearInterval(checkIframeTimer);
             try {
@@ -6145,6 +6172,7 @@
                 iframeDoc.head.appendChild(styleEle);
             }
             loadedHandler();
+            curIframe.style.opacity = "";
             let code = ruleParser.curSiteRule.init;
             if (code) {
                 try {
