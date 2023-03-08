@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.55.17
+// @version      1.6.6.55.18
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -1890,6 +1890,18 @@
                      margin-right: 10px;
                      margin-top: unset;
                      max-width: unset;
+                     -moz-transition: transform 0.3s ease;
+                     -webkit-transition: transform 0.3s ease;
+                     transition: transform 0.3s ease;
+                 }
+                 #search-jumper .sitelist a.dragTarget>p {
+                     font-size: 16px;
+                     font-weight: bold;
+                 }
+                 #search-jumper .sitelist a.dragTarget>img {
+                     -webkit-transform:scale(1.5);
+                     -moz-transform:scale(1.5);
+                     transform:scale(1.5);
                  }
                  #search-jumper .sitelist a>p {
                      display: inline-block;
@@ -4239,6 +4251,10 @@
                 });
                 this.searchInPageTab.addEventListener("change", e => {
                     this.initSetInPageWords();
+                    this.searchJumperInPageInput.focus();
+                });
+                this.filterSitesTab.addEventListener("change", e => {
+                    this.searchInput.focus();
                 });
                 if (globalInPageWords) {
                     this.recoverBtn.addEventListener("click", e => {
@@ -5204,6 +5220,7 @@
             bindSite(a, siteEle) {
                 if (a.getAttribute("bind")) return;
                 a.setAttribute("bind", true);
+                let self = this;
                 if (siteEle.href) a.href = siteEle.href;
                 a.style.display = siteEle.style.display;
                 a.addEventListener('mousedown', e => {
@@ -5219,6 +5236,30 @@
                         }
                     }
                 }, false);
+                a.addEventListener("dragover", e => {
+                    e.preventDefault();
+                }, true);
+                a.addEventListener("dragenter", e => {
+                    if (self.dragTarget) {
+                        self.dragTarget.classList.remove("dragTarget");
+                    }
+                    self.dragTarget = a;
+                    self.dragTarget.classList.add("dragTarget");
+                    clearTimeout(self.dragTimer);
+                    self.dragTimer = setTimeout(() => {
+                        a.scrollIntoView({behavior: "smooth", block: "center", inline: "center"});
+                    }, 1000);
+                }, true);
+                a.addEventListener("dragleave", e => {
+                    a.classList.remove("dragTarget");
+                }, true);
+                a.addEventListener("drop", e => {
+                    clearTimeout(self.dragTimer);
+                    if (self.dragTarget) {
+                        self.dragTarget.classList.remove("dragTarget");
+                    }
+                    self.searchBySiteName(siteEle.dataset.name, e);
+                }, true);
             }
 
             async createList(sites, type, batchSiteNames) {
