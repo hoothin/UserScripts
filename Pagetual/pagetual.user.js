@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.34.13
+// @version      1.9.34.14
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -4879,7 +4879,7 @@
            100% { opacity: 1 }
          }
         `;
-            pageBarStyle = `text-indent: initial;vertical-align: super;line-height:1;opacity:${rulesData.opacity};display:${rulesData.opacity==0?"none":"inline-flex"};padding:0;box-shadow: 0px 0px 10px 0px #000000aa;border-radius: 20px;background-color: rgb(240 240 240 / 80%);font-size: 30px;visibility: visible; position: relative; width: auto; height: 30px; float: none; clear: both; margin: 5px auto; text-align: center;justify-content: center;`;
+            pageBarStyle = `text-indent: initial;vertical-align: super;line-height:1;opacity:${rulesData.opacity};display:${rulesData.opacity==0?"none":"inline-flex"};padding:0;box-shadow: 0px 0px 10px 0px #000000aa;border-radius: 20px;background-color: rgb(240 240 240 / 80%);font-size: 30px;visibility: visible; position: relative; width: auto; max-width: 100vw; height: 30px; float: none; clear: both; margin: 5px auto; text-align: center;justify-content: center;`;
         }
         if (!mainStyleEle || !mainStyleEle.parentNode) {
             mainStyleEle = _GM_addStyle(mainStyleStyle);
@@ -6083,19 +6083,21 @@
         else {
             scrollingToResize = true;
             let resizeHandler = () => {
-                let touched = false;
+                let touched = 0;
                 for (let i in resizePool) {
                     let resizeArr = resizePool[i];
                     let iframe = resizeArr[1]();
                     if (isTouchViewPort(iframe)) {
-                        touched = true;
+                        touched++;
                         let pageEle = resizeArr[0]();
                         let frameDoc = resizeArr[2]();
                         resizeIframe(iframe, frameDoc, pageEle);
                     } else if (touched) {
-                        /*let pageEle = resizeArr[0]();
-                        let frameDoc = resizeArr[2]();
-                        resizeIframe(iframe, frameDoc, pageEle);*/
+                        if (touched == 1) {
+                            let pageEle = resizeArr[0]();
+                            let frameDoc = resizeArr[2]();
+                            resizeIframe(iframe, frameDoc, pageEle);
+                        }
                         break;
                     } else if (!iframe.parentNode) {
                         resizePool.splice(i, 1);
