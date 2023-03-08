@@ -6093,9 +6093,9 @@
                         let frameDoc = resizeArr[2]();
                         resizeIframe(iframe, frameDoc, pageEle);
                     } else if (touched) {
-                        let pageEle = resizeArr[0]();
+                        /*let pageEle = resizeArr[0]();
                         let frameDoc = resizeArr[2]();
-                        resizeIframe(iframe, frameDoc, pageEle);
+                        resizeIframe(iframe, frameDoc, pageEle);*/
                         break;
                     } else if (!iframe.parentNode) {
                         resizePool.splice(i, 1);
@@ -6112,36 +6112,32 @@
 
     function forceIframe(url, callback) {
         url = url.indexOf('=') == -1 ? url.replace(/#[^#]*/,"") : url;
-        let curIframe = document.createElement('iframe'), iframeDoc, isloaded = false, inAction = true;
+        let curIframe = document.createElement('iframe'), iframeDoc, pageElement = null, isloaded = false, inAction = true;
         let loadedHandler = () => {
             inAction = false;
+            let getPageEle = () => {
+                if (ruleParser.curSiteRule.singleUrl) {
+                    return null;
+                } else {
+                    if (!pageElement || pageElement.length === 0 || !pageElement[0].offsetParent) {
+                        pageElement = ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView);
+                    }
+                    return pageElement;
+                }
+            };
+            resizeIframe(curIframe, iframeDoc, getPageEle());
             if (isloaded) return;
             isloaded = true;
-            ruleParser.insertPage(iframeDoc, [], url, ele => {
-                callback(curIframe);
-            }, true);
             let getIframe = () => {
                 return curIframe;
             };
             let getFrameDoc = () => {
                 return iframeDoc;
             };
-            let pageElement = null;
-            if (ruleParser.curSiteRule.singleUrl) {
-                resizePool.push([() => {}, getIframe, getFrameDoc]);
-            } else {
-                pageElement = ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView);
-                let getPageEle = () => {
-                    if (!pageElement || pageElement.length === 0 || !pageElement[0].offsetParent) {
-                        pageElement = ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView);
-                    }
-                    return pageElement;
-                };
-                resizePool.push([getPageEle, getIframe, getFrameDoc]);
-            }
-            setTimeout(() => {
-                resizeIframe(curIframe, iframeDoc, pageElement);
-            }, 100);
+            ruleParser.insertPage(iframeDoc, [], url, ele => {
+                callback(curIframe);
+            }, true);
+            resizePool.push([getPageEle, getIframe, getFrameDoc]);
         };
         let checkIframeTimer = setInterval(() => {
             if (!curIframe.parentNode) {
@@ -6153,7 +6149,7 @@
         curIframe.sandbox = "allow-same-origin allow-scripts allow-popups allow-forms";
         curIframe.frameBorder = '0';
         curIframe.scrolling = "no";
-        curIframe.style.cssText = 'opacity: 0.1; display: block; visibility: visible; float: none; clear: both; width: 100%; height: 0; background: initial; border: 0px; border-radius: 0px; margin: 0px; padding: 0px; z-index: 2147483647;';
+        curIframe.style.cssText = 'display: block; visibility: visible; float: none; clear: both; width: 100%; height: 0; background: initial; border: 0px; border-radius: 0px; margin: 0px; padding: 0px; z-index: 2147483647;';
         curIframe.addEventListener("load", e => {
             clearInterval(checkIframeTimer);
             try {
@@ -6172,7 +6168,6 @@
                 iframeDoc.head.appendChild(styleEle);
             }
             loadedHandler();
-            curIframe.style.opacity = "";
             let code = ruleParser.curSiteRule.init;
             if (code) {
                 try {
@@ -6199,7 +6194,7 @@
                     } else if (checkTimes >= 10) {
                         foundNext();
                     } else if (checkTimes >= 3 && !findPageEle) {
-                        let pageElement = ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView);
+                        if (!pageElement) pageElement = ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView);
                         if (!pageElement) {
                             inAction = true;
                             curIframe.contentWindow.location.reload();
@@ -6210,7 +6205,7 @@
                 } else {
                     foundNext();
                 }
-            },50);
+            }, 50);
         };
         document.addEventListener("scroll", forceRefresh);
         curIframe.src = url;
