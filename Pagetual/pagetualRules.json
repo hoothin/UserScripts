@@ -9114,7 +9114,8 @@
         "name": "scribblehub",
         "url": "^https://www\\.scribblehub\\.com/read",
         "pageElement": "#chp_raw",
-        "nextLink": "a.btn-next"
+        "nextLink": "a.btn-next",
+        "pageAction": "eles.forEach(ele=>{[].forEach.call(ele.querySelectorAll('.sp-head'),sp=>{sp.onclick=e=>{sp.nextElementSibling.classList.toggle('folded')}})})"
     },
     {
         "name": "serx.ml",
