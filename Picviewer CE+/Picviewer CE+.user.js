@@ -12165,7 +12165,7 @@ ImgOps | https://imgops.com/#b#`;
                 return this.slice(0, str.length) == str;
             };
         }
-        console.log("Picviewer CE+ is runing");
+        console.log("Picviewer CE+ is running");
 
         var rulerEle = document.createElement("span");
         rulerEle.style.visibility = "hidden";
