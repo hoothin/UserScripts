@@ -8740,6 +8740,7 @@
                         background-color: rgba(255, 255, 255, 0.1);
                         backdrop-filter: blur(10px);
                         -webkit-backdrop-filter: blur(5px);
+                        transform: translateZ(0);
                     }
                     .searchJumperFrame-body {
                         width: 350px;
