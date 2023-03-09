@@ -5288,7 +5288,6 @@
 
     const pageNumReg=/[&\/\?](p=|page[=\/_-]?)\d+|[_-]\d+\./;
     function createPageBar(url) {
-        if (curPage == 1) initView();
         curPage++;
         SideController.setup();
         let posEle = null;
@@ -6263,6 +6262,7 @@
         if (pvGallery && pvGallery.style.display != "none") return;
         let insert = ruleParser.getInsert();
         if (insert) {
+            if (curPage == 1) initView();
             /*if (curPage == 1) {
                 window.postMessage({
                     insert: geneSelector(ruleParser.curSiteRule.insertPos == 2 ? insert : insert.parentNode, true),
