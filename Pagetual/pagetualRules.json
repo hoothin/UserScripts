@@ -9269,5 +9269,125 @@
         "url": ".",
         "pageElement": ".AC-style-logo",
         "enable": 0
+    },
+    {
+        "name": "pan.baidu",
+        "url": "^https?://.*pan\\.baidu\\.com",
+        "enable": 0
+    },
+    {
+        "name": "baike.baidu",
+        "url": "^https?://baike\\.baidu\\.com",
+        "enable": 0
+    },
+    {
+        "name": "wenku.baidu",
+        "url": "^https?://wenku\\.baidu\\.com/view",
+        "enable": 0
+    },
+    {
+        "name": "baofeng",
+        "url": "^https?://.*\\.baofeng\\.com/play",
+        "enable": 0
+    },
+    {
+        "name": "bilibili",
+        "url": "^https?://.*\\.bilibili\\.com/(bangumi/play|video|anime)",
+        "enable": 0
+    },
+    {
+        "name": "instagram",
+        "url": "^https?://.*\\.instagram\\.com",
+        "enable": 0
+    },
+    {
+        "name": "iqiyi",
+        "url": "^https?://.*\\.iqiyi\\.com/(a_|v_|w_|$)",
+        "enable": 0
+    },
+    {
+        "name": "letv",
+        "url": "^https?://.*\\.le\\.com/ptv/vplay",
+        "enable": 0
+    },
+    {
+        "name": "mega",
+        "url": "^https?://(.*\\.)?mega\\.",
+        "enable": 0
+    },
+    {
+        "name": "mgtv",
+        "url": "^https?://.*\\.mgtv\\.com/b",
+        "enable": 0
+    },
+    {
+        "name": "tudou",
+        "url": "^https?://.*\\.tudou\\.com/(albumplay|listplay|programs/view)",
+        "enable": 0
+    },
+    {
+        "name": "youku",
+        "url": "^https?://.*\\.youku\\.com/(v_|alipay_video)",
+        "enable": 0
+    },
+    {
+        "name": "youtube",
+        "url": "^https?://.*\\.youtube\\.com",
+        "enable": 0
+    },
+    {
+        "name": "sohu tv",
+        "url": "^https?://(m\\.)?(film|tv)\\.sohu\\.com/(album|v)",
+        "enable": 0
+    },
+    {
+        "name": "acfun",
+        "url": "^https?://.*\\.acfun\\.cn/v",
+        "enable": 0
+    },
+    {
+        "name": "pptv",
+        "url": "^https?://(m|v|vip)\\.pptv\\.com/show",
+        "enable": 0
+    },
+    {
+        "name": "qqtv",
+        "url": "^https?://(m\\.)?v\\.qq\\.com/(tv|x/cover|x/page)",
+        "enable": 0
+    },
+    {
+        "name": "qqtv",
+        "url": "^https?://(m\\.)?v\\.qq\\.com/(tv|x/cover|x/page)",
+        "enable": 0
+    },
+    {
+        "name": "wasu",
+        "url": "^https?://(m|www)\\.wasu\\.cn/Play/show",
+        "enable": 0
+    },
+    {
+        "name": "map.google",
+        "url": "^https?://maps\\.google\\.com",
+        "enable": 0
+    },
+    {
+        "name": "order.jd",
+        "url": "^https?://order\\.jd\\.com",
+        "enable": 0
+    },
+    {
+        "name": "twitter",
+        "url": "^https?://twitter\\.com",
+        "enable": 0
+    },
+    {
+        "name": "google newtab",
+        "url": "^https?://www\\.google\\..*/_/chrome/newtab",
+        "enable": 0
+    },
+    {
+        "name": "toodledo",
+        "url": "^https?://www\\.toodledo\\.com/tasks",
+        "enable": 0
     }
 ]
