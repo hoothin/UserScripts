@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.55.19
+// @version      1.6.6.55.20
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -1386,7 +1386,8 @@
                     //"-webkit-backdrop-filter: blur(5px);" +
                     "transition:background-color .6s ease;")}
                  }
-                 #search-jumper:hover>.search-jumper-showallBg {
+                 #search-jumper.search-jumper-showall:hover>.search-jumper-showallBg,
+                 body:hover+#search-jumper.search-jumper-showall>.search-jumper-showallBg {
                      background-color: rgba(0, 0, 0, 0.8);
                  }
                  #search-jumper.search-jumper-showall>.search-jumper-showallBg {
@@ -1894,15 +1895,6 @@
                      -webkit-transition: transform 0.3s ease;
                      transition: transform 0.3s ease;
                  }
-                 #search-jumper .sitelist a.dragTarget>p {
-                     font-size: 16px;
-                     font-weight: bold;
-                 }
-                 #search-jumper .sitelist a.dragTarget>img {
-                     -webkit-transform:scale(1.5);
-                     -moz-transform:scale(1.5);
-                     transform:scale(1.5);
-                 }
                  #search-jumper .sitelist a>p {
                      display: inline-block;
                      font-size: 15px;
@@ -1913,6 +1905,20 @@
                      flex: 1;
                      text-align: left;
                      white-space: nowrap;
+                     transform-origin: left;
+                     -moz-transition: transform 0.3s ease;
+                     -webkit-transition: transform 0.3s ease;
+                     transition: transform 0.3s ease;
+                 }
+                 #search-jumper .sitelist a.dragTarget>img {
+                     -webkit-transform:scale(1.5);
+                     -moz-transform:scale(1.5);
+                     transform:scale(1.5);
+                 }
+                 #search-jumper .sitelist a.dragTarget>p {
+                     -webkit-transform:scale(1.2);
+                     -moz-transform:scale(1.2);
+                     transform: scale(1.2);
                  }
                  #search-jumper .sitelist a * {
                      pointer-events: none;
