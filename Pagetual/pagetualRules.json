@@ -9367,7 +9367,7 @@
     },
     {
         "name": "map.google",
-        "url": "^https?://maps\\.google\\.com",
+        "url": "^https?://(maps\\.google\\.|www\\.google\\..*/maps)",
         "enable": 0
     },
     {
