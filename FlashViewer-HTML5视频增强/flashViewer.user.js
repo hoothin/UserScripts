@@ -4,7 +4,7 @@
 // @description    围观Flash，增加 HTML5 视频速度与亮度调整
 // @version        1.2.1.8
 // @created        2013-12-27
-// @lastUpdated    2023-2-20
+// @lastUpdated    2023-3-9
 // @grant          none
 // @run-at         document-start
 // @namespace      http://userscripts.org/users/NLF
@@ -3509,9 +3509,11 @@
                         let lastPos = 0;
                         let speedUpTimer;
                         let mouseDown = false;
+                        let mouseMoving = false;
                         let lastRate;
                         target.addEventListener('mousedown', function (e) {
                             clearTimeout(speedUpTimer);
+                            mouseMoving = false;
                             if (!target.ended) {
                                 mouseDown = true;
                                 lastRate = target.playbackRate;
@@ -3529,11 +3531,18 @@
                                 e.preventDefault();
                                 e.stopPropagation();
                             }
+                            mouseMoving = false;
                             mouseDown = false;
                         }, true);
                         target.addEventListener('mousemove', function (e) {
                             clearTimeout(speedUpTimer);
                             if (!mouseDown) return;
+                            if (!mouseMoving) {
+                                if (Math.abs(e.clientX - lastPos) > 10) {
+                                    mouseMoving = true;
+                                }
+                                return;
+                            }
                             target.playbackRate = lastRate;
                             target.pause();
                             target.currentTime += (e.clientX - lastPos) / 5;
