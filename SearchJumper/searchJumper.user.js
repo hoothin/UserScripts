@@ -1293,7 +1293,7 @@
                      margin-bottom: 0;
                      padding: 5px;
                      margin: 0 10px;
-                     box-shadow: #333 0px 0px 2px;
+                     box-shadow: #ddd 0px 0px 3px;
                      outline: none;
                      box-sizing: border-box;
                      cursor: text;
@@ -1307,7 +1307,6 @@
                      left: 25%;
                      top: 1%;
                      border-radius: 10px;
-                     box-shadow: 0px 0px 10px 0px #7a7a7a;
                      pointer-events: all;
                  }
                  #search-jumper.search-jumper-showall #filterSites>input {
@@ -9274,7 +9273,7 @@
                         removeFrame();
                         searchBar.appendBar();
                         searchBar.showAllSites();
-                    }, 1000);
+                    }, 800);
                 }, true);
                 let geneSector = (className, deg, spanTransform) => {
                     let sector = document.createElement("div");
