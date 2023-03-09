@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.34.15
+// @version      1.9.34.16
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -53,55 +53,6 @@
 // @connect      ghproxy.com
 // @connect      hoothin.github.io
 // @run-at       document-idle
-// @exclude      http://www.toodledo.com/tasks/*
-// @exclude      http*://maps.google.com*/*
-// @exclude      *://www.google.*/_/chrome/newtab*
-// @exclude      *://mega.*/*
-// @exclude      *://*.mega.*/*
-// @exclude      *://*.youku.com/v_*
-// @exclude      *://*pan.baidu.com
-// @exclude      *://*.iqiyi.com/v_*
-// @exclude      *://*.iqiyi.com/w_*
-// @exclude      *://*.iqiyi.com/a_*
-// @exclude      *://*.le.com/ptv/vplay/*
-// @exclude      *://v.qq.com/x/cover/*
-// @exclude      *://v.qq.com/x/page/*
-// @exclude      *://v.qq.com/tv/*
-// @exclude      *://*.tudou.com/listplay/*
-// @exclude      *://*.tudou.com/albumplay/*
-// @exclude      *://*.tudou.com/programs/view/*
-// @exclude      *://*.mgtv.com/b/*
-// @exclude      *://film.sohu.com/album/*
-// @exclude      *://tv.sohu.com/v/*
-// @exclude      *://*.bilibili.com/video/*
-// @exclude      *://*.bilibili.com/bangumi/play/*
-// @exclude      *://*.baofeng.com/play/*
-// @exclude      *://vip.pptv.com/show/*
-// @exclude      *://v.pptv.com/show/*
-// @exclude      *://www.le.com/ptv/vplay/*
-// @exclude      *://www.wasu.cn/Play/show/*
-// @exclude      *://m.v.qq.com/*
-// @exclude      *://m.iqiyi.com/*
-// @exclude      *://m.youku.com/alipay_video/*
-// @exclude      *://m.mgtv.com/b/*
-// @exclude      *://m.tv.sohu.com/v/*
-// @exclude      *://m.film.sohu.com/album/*
-// @exclude      *://m.le.com/ptv/vplay/*
-// @exclude      *://m.pptv.com/show/*
-// @exclude      *://m.acfun.cn/v/*
-// @exclude      *://m.bilibili.com/video/*
-// @exclude      *://m.bilibili.com/anime/*
-// @exclude      *://m.bilibili.com/bangumi/play/*
-// @exclude      *://m.wasu.cn/Play/show/*
-// @exclude      *://*.youtube.com
-// @exclude      *://*.youtube.com/*
-// @exclude      *://twitter.com/*
-// @exclude      *://www.youtube.com/watch*
-// @exclude      *://baike.baidu.com/*
-// @exclude      *://*.instagram.com/*
-// @exclude      *://order.jd.com/*
-// @exclude      *://wenku.baidu.com/view/*
-// @exclude      *://pan.baidu.com/*
 // @connect      *
 // ==/UserScript==
 
@@ -145,7 +96,7 @@
                 disableSite: "站点禁用开关",
                 disableSiteTips: "已在此站禁用",
                 enableSiteTips: "已在此站启用",
-                enable: "启用翻页",
+                enable: "启用自动翻页",
                 toTop: "回到顶部",
                 toBottom: "前往页尾",
                 current: "当前页",
@@ -230,7 +181,7 @@
                 disableSite: "站點禁用開關",
                 disableSiteTips: "已在此站禁用",
                 enableSiteTips: "已在此站啟用",
-                enable: "啟用翻頁",
+                enable: "啟用自動翻頁",
                 toTop: "回到頂部",
                 toBottom: "前往頁尾",
                 current: "當前頁",
@@ -1580,12 +1531,13 @@
 
         getPage(doc) {
             if (document.documentElement.className.indexOf('discourse') != -1) return {};
-            let video = document.querySelector("video,iframe[id*=play]:not([name=pagetual-iframe]),[id*=play]>iframe:not([name=pagetual-iframe]),iframe[src*=player]:not([name=pagetual-iframe]),iframe[src*=m3u8]:not([name=pagetual-iframe])");
+            let video = document.querySelector("video,canvas,iframe[id*=play]:not([name=pagetual-iframe]),[id*=play]>iframe:not([name=pagetual-iframe]),iframe[src*=player]:not([name=pagetual-iframe]),iframe[src*=m3u8]:not([name=pagetual-iframe])");
             if (video) {
                 let scrollWidth = video.scrollWidth || video.offsetWidth;
                 let scrollHeight = video.scrollHeight || video.offsetHeight;
                 if (scrollWidth > 500 && scrollHeight > 500) {
-                    debug("Won't run when video found");
+                    isPause = true;
+                    debug("Disable when large media found");
                     return {};
                 }
             }
@@ -3663,7 +3615,6 @@
     }
 
     function initConfig() {
-        initView();
         listenUrl();
         try {
             if (_unsafeWindow.initedPagetual) {
@@ -4509,122 +4460,122 @@
 
     function initRules(callback) {
         /*0 wedata格式，1 pagetual格式*/
-        ruleUrls=[
+        ruleUrls = [
             {
-                id:1,
+                id: 1,
                 url:'http://wedata.net/databases/AutoPagerize/items_all.json',
-                type:0,
+                type: 0,
             }
-        ];var i=0,j=0;
+        ];
 
-        ruleParser.initSavedRules(()=>{
-            storage.getItem("rulesData", data=>{
-                if(data){
-                    rulesData=data;
-                    if(data.urls)ruleUrls=ruleUrls.concat(data.urls);
-                    if(data.sort){
-                        let urls=[];
-                        data.sort.forEach(id=>{
-                            for(let s=0;s<ruleUrls.length;s++){
-                                if(id==ruleUrls[s].id){
+        ruleParser.initSavedRules(() => {
+            storage.getItem("rulesData", data => {
+                if (data) {
+                    rulesData = data;
+                    if (data.urls) ruleUrls = ruleUrls.concat(data.urls);
+                    if (data.sort) {
+                        let urls = [];
+                        data.sort.forEach(id => {
+                            for (let s = 0; s < ruleUrls.length; s++) {
+                                if (id == ruleUrls[s].id) {
                                     urls.push(ruleUrls[s]);
                                     break;
                                 }
                             }
                         });
-                        ruleUrls=urls;
+                        ruleUrls = urls;
                     }
                 }
-                let upBtnImg=rulesData.upBtnImg,downBtnImg=rulesData.downBtnImg;
-                if(upBtnImg && downBtnImg){
-                    downSvgCSS=downSvgCSS.replace("transform: rotate(180deg);","");
-                }else if(upBtnImg && !downBtnImg){
-                    downBtnImg=upBtnImg;
-                }else if(downBtnImg && !upBtnImg){
-                    upBtnImg=downBtnImg;
+                let upBtnImg = rulesData.upBtnImg, downBtnImg = rulesData.downBtnImg;
+                if (upBtnImg && downBtnImg) {
+                    downSvgCSS = downSvgCSS.replace("transform: rotate(180deg);", "");
+                } else if (upBtnImg && !downBtnImg) {
+                    downBtnImg = upBtnImg;
+                } else if(downBtnImg && !upBtnImg) {
+                    upBtnImg = downBtnImg;
                 }
-                if(upBtnImg){
-                    upSvg=`<img class="pagetual" src="${upBtnImg}"/>`;
+                if (upBtnImg) {
+                    upSvg = `<img class="pagetual" src="${upBtnImg}"/>`;
                 }
-                if(downBtnImg){
-                    downSvg=`<img class="pagetual" src="${downBtnImg}"/>`;
+                if (downBtnImg) {
+                    downSvg = `<img class="pagetual" src="${downBtnImg}"/>`;
                 }
                 setLoadingDiv(rulesData.loadingText || i18n("loadingText"));
-                if(typeof(rulesData.opacity)=="undefined"){
-                    rulesData.opacity=0.3;
+                if (typeof(rulesData.opacity) == "undefined") {
+                    rulesData.opacity = 0.3;
                 }
-                if(typeof(rulesData.hideBar)=="undefined"){
-                    rulesData.hideBar=false;
+                if (typeof(rulesData.hideBar) == "undefined") {
+                    rulesData.hideBar = false;
                 }
-                if(typeof(rulesData.dbClick2Stop)=="undefined"){
-                    rulesData.dbClick2Stop=true;
+                if (typeof(rulesData.dbClick2Stop) == "undefined") {
+                    rulesData.dbClick2Stop = true;
                 }
-                if(typeof(rulesData.enableWhiteList)=="undefined"){
-                    rulesData.enableWhiteList=false;
+                if (typeof(rulesData.enableWhiteList) == "undefined") {
+                    rulesData.enableWhiteList = false;
                 }
-                if(typeof(rulesData.enableHistory)=="undefined"){
-                    rulesData.enableHistory=false;
+                if (typeof(rulesData.enableHistory) == "undefined") {
+                    rulesData.enableHistory = false;
                 }
-                if(typeof(rulesData.openInNewTab)=="undefined"){
-                    rulesData.openInNewTab=true;
+                if (typeof(rulesData.openInNewTab) == "undefined") {
+                    rulesData.openInNewTab = true;
                 }
-                if(typeof(rulesData.enableDebug)=="undefined"){
-                    rulesData.enableDebug=true;
+                if (typeof(rulesData.enableDebug) == "undefined") {
+                    rulesData.enableDebug = true;
                 }
-                if(typeof(rulesData.initRun)=="undefined"){
-                    rulesData.initRun=true;
+                if (typeof(rulesData.initRun) == "undefined") {
+                    rulesData.initRun = true;
                 }
-                if(typeof(rulesData.preload)=="undefined"){
-                    rulesData.preload=true;
+                if (typeof(rulesData.preload) == "undefined") {
+                    rulesData.preload = true;
                 }
-                if(typeof(rulesData.manualMode)=="undefined"){
-                    rulesData.manualMode=false;
+                if (typeof(rulesData.manualMode) == "undefined") {
+                    rulesData.manualMode = false;
                 }
-                if(typeof(rulesData.clickMode)=="undefined"){
-                    rulesData.clickMode=false;
+                if (typeof(rulesData.clickMode) == "undefined") {
+                    rulesData.clickMode = false;
                 }
-                if(typeof(rulesData.pageBarMenu)=="undefined"){
-                    rulesData.pageBarMenu=true;
+                if (typeof(rulesData.pageBarMenu) == "undefined") {
+                    rulesData.pageBarMenu = true;
                 }
-                if(typeof(rulesData.arrowToScroll)=="undefined"){
-                    rulesData.arrowToScroll=false;
+                if (typeof(rulesData.arrowToScroll) == "undefined") {
+                    rulesData.arrowToScroll = false;
                 }
-                if(typeof(rulesData.hideLoadingIcon)=="undefined"){
-                    rulesData.hideLoadingIcon=false;
+                if (typeof(rulesData.hideLoadingIcon) == "undefined") {
+                    rulesData.hideLoadingIcon = false;
                 }
-                if(typeof(rulesData.hideBarArrow)=="undefined"){
-                    rulesData.hideBarArrow=false;
+                if (typeof(rulesData.hideBarArrow) == "undefined") {
+                    rulesData.hideBarArrow = false;
                 }
-                if(rulesData.blacklist && rulesData.blacklist.length>0){
-                    for(let b in rulesData.blacklist){
-                        let curGlob=rulesData.blacklist[b];
-                        if(globMatch(curGlob, location.href)){
-                            forceState==1;
+                if (rulesData.blacklist && rulesData.blacklist.length > 0) {
+                    for (let b in rulesData.blacklist) {
+                        let curGlob = rulesData.blacklist[b];
+                        if (globMatch(curGlob, location.href)) {
+                            forceState == 1;
                             return;
                         }
                     }
                 }
-                if(rulesData.autoLoadNum && rulesData.initRun){
-                    autoLoadNum=parseInt(rulesData.autoLoadNum);
+                if (rulesData.autoLoadNum && rulesData.initRun) {
+                    autoLoadNum = parseInt(rulesData.autoLoadNum);
                 }
-                enableDebug=rulesData.enableDebug;
-                storage.getItem("nextSwitch_"+location.host, i=>{
-                    storage.getItem("forceState_"+location.host, v=>{
-                        storage.getItem("ruleLastUpdate", date=>{
-                            if(typeof(i)!=="undefined"){
-                                nextIndex=i;
+                enableDebug = rulesData.enableDebug;
+                storage.getItem("nextSwitch_" + location.host, i => {
+                    storage.getItem("forceState_" + location.host, v => {
+                        storage.getItem("ruleLastUpdate", date => {
+                            if (typeof(i) !== "undefined") {
+                                nextIndex = i;
                             }
-                            if(typeof(v)=="undefined"){
-                                v=(rulesData.enableWhiteList?1:0);
+                            if (typeof(v) == "undefined") {
+                                v = (rulesData.enableWhiteList ? 1 : 0);
                             }
-                            forceState=v;
-                            updateDate=date;
-                            if(initConfig())return;
-                            if(forceState==1)return;
-                            let now=new Date().getTime();
-                            if(!date || now-date>2*24*60*60*1000){
-                                updateRules(()=>{
-                                },(rule,err)=>{});
+                            forceState = v;
+                            updateDate = date;
+                            if (initConfig()) return;
+                            if (forceState == 1) return;
+                            let now = new Date().getTime();
+                            if (!date || now - date > 2 * 24 * 60 * 60 * 1000) {
+                                updateRules(() => {
+                                }, (rule, err) => {});
                                 storage.setItem("ruleLastUpdate", now);
                             }
                             callback();
@@ -5060,6 +5011,9 @@
             if (checkUrlTime < 5000) {
                 checkUrlTime += checkUrlTime>>1;
             }
+            clearTimeout(checkUrlTimer);
+            checkUrlTimer = setTimeout(checkFunc, checkUrlTime);
+            if (document.hidden) return;
             let url = window.location.pathname + window.location.search;
             if (prevState !== url && window.location.href != ruleParser.historyUrl) {
                 checkUrlTime = 2000;
@@ -5068,8 +5022,6 @@
                 e.arguments = arguments;
                 window.dispatchEvent(e);
             }
-            clearTimeout(checkUrlTimer);
-            checkUrlTimer = setTimeout(checkFunc, checkUrlTime);
         };
         checkUrlTimer = setTimeout(checkFunc, checkUrlTime);
 
@@ -5292,6 +5244,7 @@
     }
 
     function showTips(content, wordColor, backColor) {
+        initView();
         document.body.appendChild(tipsWords);
         tipsWords.style.opacity = 0.8;
         tipsWords.innerText = content;
@@ -6312,12 +6265,12 @@
         if (pvGallery && pvGallery.style.display != "none") return;
         let insert = ruleParser.getInsert();
         if (insert) {
-            if (curPage == 1) {
-                /*window.postMessage({
+            /*if (curPage == 1) {
+                window.postMessage({
                     insert: geneSelector(ruleParser.curSiteRule.insertPos == 2 ? insert : insert.parentNode, true),
                     command: 'pagetual.insert'
-                }, '*');*/
-            }
+                }, '*');
+            }*/
             let isJs = ruleParser.curSiteRule.action == 3 || /^(javascript|#)/.test(nextLink.replace(location.href,""));
             if (!isJs) {
                 emuIframe = null;
