@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.3.8.2
+// @version              2023.3.9.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -16890,20 +16890,23 @@ ImgOps | https://imgops.com/#b#`;
                     width:50px;\
                     margin-top:-30px;\
                     cursor:pointer;\
-                    opacity:0.6;\
+                    opacity:0.3;\
                     z-index:1;\
-                    transition: opacity .3s ease;\
+                    transition: opacity .5s ease;\
+                    }\
+                    .pv-gallery-sidebar-toggle-hide .pv-gallery-img-controler{\
+                    opacity:0;\
                     }\
                     .pv-gallery-img-controler-pre{\
-                    background:rgba(70,70,70,0.5) url("'+prefs.icons.arrowLeft+'") no-repeat center;\
+                    background:rgba(70,70,70,0.8) url("'+prefs.icons.arrowLeft+'") no-repeat center;\
                     left:10px;\
                     }\
                     .pv-gallery-img-controler-next{\
-                    background:rgba(70,70,70,0.5) url("'+prefs.icons.arrowRight+'") no-repeat center;\
+                    background:rgba(70,70,70,0.8) url("'+prefs.icons.arrowRight+'") no-repeat center;\
                     right:10px;\
                     }\
                     .pv-gallery-img-controler:hover{\
-                    background-color:rgba(140,140,140,0.5);\
+                    background-color:rgba(140,140,140,0.8);\
                     opacity:0.9;\
                     z-index:2;\
                     }\
@@ -19059,11 +19062,19 @@ ImgOps | https://imgops.com/#b#`;
                 // keepSI(this.descriptionSpan,['bottom', 'left'],[-40, 10]);
             },
             followPos:function(posX, posY){
+                if(this.removed)return;
                 if(!prefs.floatBar.globalkeys.previewFollowMouse)return;
                 var imgWindow=this.imgWindow;
                 if(!imgWindow)return;
+                this.followPosX = posX;
+                this.followPosY = posY;
+                clearTimeout(this.followPosTimer);
+                this.followPosTimer=setTimeout(() => {
+                    this.following=false;
+                    imgWindow.classList.add("pv-pic-window-transition-all");
+                    this.followPos(this.followPosX, this.followPosY);
+                }, 50);
                 if(this.following)return;
-                if(this.removed)return;
                 this.following=true;
                 var wSize=getWindowSize();
                 wSize.h -= 26;
@@ -19160,10 +19171,6 @@ ImgOps | https://imgops.com/#b#`;
                     }
                     imgWindow.style.top=top + scrolled.y +'px';
                 }
-                setTimeout(() => {
-                    this.following=false;
-                    imgWindow.classList.add("pv-pic-window-transition-all");
-                },50);
             },
             fitToScreen:function(){
                 var imgWindow=this.imgWindow;
@@ -21736,8 +21743,9 @@ ImgOps | https://imgops.com/#b#`;
                 if(target.nodeName == "AREA")target=target.parentNode;
                 var targetBg;
                 var bgReg=/^\s*url\(\s*["']?(.+?)["']?\s*\)/i;
-                var preEle=target;
-                while(preEle&&preEle.tagName!="IMG"&&getComputedStyle(preEle).position=="absolute"){
+                var preEle=target, preImg;
+                while(preEle&&getComputedStyle(preEle).position=="absolute"){
+                    if(preEle.tagName=="IMG")preImg=preEle;
                     preEle=preEle.previousElementSibling;
                 }
                 if(preEle==target)preEle=null;
@@ -21751,8 +21759,8 @@ ImgOps | https://imgops.com/#b#`;
                         noActual:noActual,
                         img: target
                     };
-                }else if(preEle && preEle.tagName=="IMG"){
-                    target=preEle;
+                }else if(preImg){
+                    target=preImg;
                 }else if(target.children.length==1 && target.children[0].tagName=="IMG"){
                     target=target.children[0];
                 }else if(prefs.floatBar.listenBg && preEle && hasBg(preEle)){
