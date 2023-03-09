@@ -2,7 +2,7 @@
 // @name         百Bing图
 // @name:en      BingBgForBaidu
 // @namespace    hoothin
-// @version      2.3.32
+// @version      2.3.33
 // @description     给百度首页换上Bing的背景图，并添加背景图链接与日历组件
 // @description:en  Just change the background image of baidu.com to bing.com
 // @author       hoothin
@@ -171,7 +171,7 @@
     let inputHandler = e => {
         setTimeout(() => {
             if(headWrapper.children[0].id=="ent_sug"){
-                skinContainer.style.backgroundImage="";
+                if(skinContainer)skinContainer.style.backgroundImage="";
                 skinContainer=null;
                 input.removeEventListener('input', inputHandler);
             }
