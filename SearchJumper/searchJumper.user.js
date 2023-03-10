@@ -6992,7 +6992,7 @@
                     self.con.style.cssText = "";
                     let viewWidth = window.innerWidth || document.documentElement.clientWidth;
                     let viewHeight = window.innerHeight || document.documentElement.clientHeight;
-                    let clientX = e.pageX - self.bar.clientWidth / 2;
+                    let clientX = e.pageX - self.bar.clientWidth / 2 - document.documentElement.offsetLeft;
                     if (clientX < 0) clientX = 5;
                     else if (clientX + self.bar.clientWidth > viewWidth) clientX = viewWidth - self.bar.clientWidth - 20;
                     let clientY = e.pageY;
