@@ -3910,7 +3910,7 @@
                             let curIndex = parseInt(btn.dataset.id);
                             for (let j = 1; j < typeBtn.children.length; j++) {
                                 let targetIndex = parseInt(typeBtn.children[j].dataset.id);
-                                if (curIndex < targetIndex) {
+                                if (isNaN(targetIndex) || curIndex < targetIndex) {
                                     typeBtn.insertBefore(btn, typeBtn.children[j]);
                                     break;
                                 } else if (j == typeBtn.children.length - 1) {
