@@ -5835,6 +5835,11 @@
                     }
                     await sleep(1);
                 }
+                siteEles.forEach(siteEle => {
+                    if (siteEle.classList.contains("notmatch")) {
+                        ele.appendChild(siteEle);
+                    }
+                });
                 siteList = await self.createList(siteEles, ele, batchSiteNames);
                 if (isCurrent) {
                     self.bar.insertBefore(ele, self.bar.children[0]);
