@@ -5312,6 +5312,10 @@
             example = example.nextElementSibling;
         }
         if (!example || !example.parentNode) example = insert;
+        if (example.nodeType != 1) {
+            example = example.previousElementSibling || example.parentNode;
+            if (!example || example.nodeType != 1) return;
+        }
         let exampleStyle = _unsafeWindow.getComputedStyle(example);
         let inTable, inLi;
         if (forceState == 2) {
@@ -5457,7 +5461,7 @@
                 pageBar.style.gridColumn = "1/-1";
             }
             if (inTable) {
-                example = (example.tagName == "TR" || example.tagName == "TBODY") ? example : example.nextElementSibling || example.previousElementSibling || example;
+                example = (example.tagName == "TR" || example.tagName == "TBODY") ? example : example.nextElementSibling || example;
                 if (example.tagName == "TBODY") example = example.querySelector("tr");
                 let nextTr = example;
                 while (nextTr && nextTr.children.length == 0) nextTr = nextTr.nextElementSibling;
@@ -5496,7 +5500,7 @@
                 td.appendChild(inTd);
                 pageBar.appendChild(td);
             } else if(inLi) {
-                example = example.tagName == "LI" ? example : example.nextElementSibling || example.previousElementSibling || example;
+                example = example.tagName == "LI" ? example : example.nextElementSibling || example;
                 pageBar.style.display = getComputedStyle(example).display;
                 pageBar.style.backgroundColor = "unset";
                 pageBar.style.lineHeight = "20px";
