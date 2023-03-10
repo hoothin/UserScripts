@@ -1531,7 +1531,7 @@
 
         getPage(doc) {
             if (document.documentElement.className.indexOf('discourse') != -1) return {};
-            let video = document.querySelector("video,canvas,iframe[id*=play]:not([name=pagetual-iframe]),[id*=play]>iframe:not([name=pagetual-iframe]),iframe[src*=player]:not([name=pagetual-iframe]),iframe[src*=m3u8]:not([name=pagetual-iframe])");
+            let video = document.body.querySelector("video,canvas,iframe[id*=play]:not([name=pagetual-iframe]),[id*=play]>iframe:not([name=pagetual-iframe]),iframe[src*=player]:not([name=pagetual-iframe]),iframe[src*=m3u8]:not([name=pagetual-iframe])");
             if (video) {
                 let scrollWidth = video.scrollWidth || video.offsetWidth;
                 let scrollHeight = video.scrollHeight || video.offsetHeight;
