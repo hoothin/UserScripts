@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.3.9.1
+// @version              2023.3.10.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -21670,40 +21670,35 @@ ImgOps | https://imgops.com/#b#`;
             }, prefs.floatBar.showDelay || 0)
         }
 
-        //监听 mouseover
-        function globalMouseoverHandler(e){
-
-            if(galleryMode)return;//库模式全屏中......
-
-            var target = e.target;
-
-            if (!target || target.id=="pv-float-bar-container" ||
-                (target.parentNode && (target.parentNode.id=="icons" || target.parentNode.className=="search-jumper-btn")) ||
+        function checkFloatBar(_target, type, canPreview, clientX, clientY, altKey) {
+            let target = _target;
+            if (!target || target.id == "pv-float-bar-container" ||
+                (target.parentNode && (target.parentNode.id == "icons" || target.parentNode.className == "search-jumper-btn")) ||
                 (target.className &&
                  (/^pv\-/.test(target.className) ||
-                  target.className=="whx-a" ||
-                  target.className=="whx-a-node" ||
-                  target.className=="search-jumper-btn" ||
+                  target.className == "whx-a" ||
+                  target.className == "whx-a-node" ||
+                  target.className == "search-jumper-btn" ||
                   target.classList.contains("ks-imagezoom-lens")))) {
                 return;
             }
-            if (target.nodeName=="PICTURE"){
-                target=target.querySelector("img");
+            if (target.nodeName == "PICTURE"){
+                target = target.querySelector("img");
             }
-            if(e.type=="mousemove"){
-                if((uniqueImgWin && !uniqueImgWin.removed && !uniqueImgWin.previewed)){
-                    uniqueImgWin.followPos(e.clientX, e.clientY);
-                    if(!checkPreview(e)){
+            if (type == "mousemove") {
+                if ((uniqueImgWin && !uniqueImgWin.removed && !uniqueImgWin.previewed)) {
+                    uniqueImgWin.followPos(clientX, clientY);
+                    if (!canPreview) {
                         uniqueImgWin.remove();
                     }
                     return;
-                }else if(target.nodeName != 'IMG' || !checkPreview(e)){
+                } else if (target.nodeName != 'IMG' || !canPreview) {
                     return;
                 }
             }
 
             // 扩展模式，检查前面一个是否为 img
-            if (target.nodeName != 'IMG' && matchedRule.rules.length>0 && matchedRule.ext) {
+            if (target.nodeName != 'IMG' && matchedRule.rules.length > 0 && matchedRule.ext) {
                 var _type = typeof matchedRule.ext;
                 if (_type == 'string') {
                     switch (matchedRule.ext) {
@@ -21735,23 +21730,23 @@ ImgOps | https://imgops.com/#b#`;
                 let nodeStyle = unsafeWindow.getComputedStyle(node);
                 return node && nodeStyle.backgroundImage && parseFloat(nodeStyle.width) > prefs.floatBar.minSizeLimit.w && parseFloat(nodeStyle.height) > prefs.floatBar.minSizeLimit.h && /^\s*url\(\s*['"]?\s*[^a\s'"]/i.test(nodeStyle.backgroundImage);
             };
-            if (target.nodeName != 'IMG' && target.dataset.role=="img"){
+            if (target.nodeName != 'IMG' && target.dataset.role == "img") {
                 let img = target.parentNode.querySelector('img');
                 if (img) target = img;
             }
-            if (target.nodeName != 'IMG'){
-                if(target.nodeName == "AREA")target=target.parentNode;
+            if (target.nodeName != 'IMG') {
+                if (target.nodeName == "AREA") target = target.parentNode;
                 var targetBg;
-                var bgReg=/^\s*url\(\s*["']?(.+?)["']?\s*\)/i;
-                var preEle=target, preImg;
-                while(preEle&&getComputedStyle(preEle).position=="absolute"){
-                    if(preEle.tagName=="IMG")preImg=preEle;
-                    preEle=preEle.previousElementSibling;
+                var bgReg = /^\s*url\(\s*["']?(.+?)["']?\s*\)/i;
+                var preEle = target, preImg;
+                while (preEle && getComputedStyle(preEle).position == "absolute") {
+                    if (preEle.tagName == "IMG") preImg = preEle;
+                    preEle = preEle.previousElementSibling;
                 }
-                if(preEle==target)preEle=null;
-                if(prefs.floatBar.listenBg && hasBg(target)){
-                    targetBg = unsafeWindow.getComputedStyle(target).backgroundImage.replace(bgReg,"$1");
-                    let src=targetBg,nsrc=src,noActual=true,type="scale";
+                if (preEle == target) preEle = null;
+                if (prefs.floatBar.listenBg && hasBg(target)) {
+                    targetBg = unsafeWindow.getComputedStyle(target).backgroundImage.replace(bgReg, "$1");
+                    let src = targetBg, nsrc = src, noActual = true, type = "scale";
                     result = {
                         src: nsrc,
                         type: type,
@@ -21759,13 +21754,13 @@ ImgOps | https://imgops.com/#b#`;
                         noActual:noActual,
                         img: target
                     };
-                }else if(preImg){
-                    target=preImg;
-                }else if(target.children.length==1 && target.children[0].tagName=="IMG"){
-                    target=target.children[0];
-                }else if(prefs.floatBar.listenBg && preEle && hasBg(preEle)){
-                    targetBg = unsafeWindow.getComputedStyle(preEle).backgroundImage.replace(bgReg,"$1");
-                    let src=targetBg,nsrc=src,noActual=true,type="scale";
+                } else if (preImg) {
+                    target = preImg;
+                } else if (target.children.length == 1 && target.children[0].tagName == "IMG") {
+                    target = target.children[0];
+                } else if (prefs.floatBar.listenBg && preEle && hasBg(preEle)) {
+                    targetBg = unsafeWindow.getComputedStyle(preEle).backgroundImage.replace(bgReg, "$1");
+                    let src = targetBg, nsrc = src, noActual = true, type = "scale";
                     result = {
                         src: nsrc,
                         type: type,
@@ -21773,13 +21768,13 @@ ImgOps | https://imgops.com/#b#`;
                         noActual:noActual,
                         img: target
                     };
-                }else if(target.parentNode){
-                    if(target.parentNode.nodeName=='IMG'){
-                        target=target.parentNode;
-                    }else if(prefs.floatBar.listenBg && hasBg(target.parentNode)){
-                        target=target.parentNode;
-                        targetBg=unsafeWindow.getComputedStyle(target).backgroundImage.replace(bgReg,"$1");
-                        let src=targetBg,nsrc=src,noActual=true,type="scale";
+                } else if (target.parentNode) {
+                    if (target.parentNode.nodeName == 'IMG') {
+                        target = target.parentNode;
+                    } else if (prefs.floatBar.listenBg && hasBg(target.parentNode)) {
+                        target = target.parentNode;
+                        targetBg = unsafeWindow.getComputedStyle(target).backgroundImage.replace(bgReg, "$1");
+                        let src = targetBg, nsrc = src, noActual = true, type = "scale";
                         result = {
                             src: nsrc,
                             type: type,
@@ -21821,14 +21816,14 @@ ImgOps | https://imgops.com/#b#`;
                         }
                     }*/
                 }
-                if(result && !/^data:/i.test(result.src)){
-                    if(matchedRule.rules.length>0 && target.nodeName != 'IMG'){
-                        let src=result.src,img={src:src},type,imgSrc=src;
-                        try{
-                            var newSrc=matchedRule.getImage(img);
-                            if(newSrc && imgSrc!=newSrc) {
+                if (result && !/^data:/i.test(result.src)) {
+                    if (matchedRule.rules.length > 0 && target.nodeName != 'IMG') {
+                        let src = result.src, img = {src: src}, type, imgSrc = src;
+                        try {
+                            var newSrc = matchedRule.getImage(img);
+                            if (newSrc && imgSrc != newSrc) {
                                 let srcs, description;
-                                src=newSrc;
+                                src = newSrc;
                                 if (Array.isArray(src)) {
                                     srcs = src;
                                     src = srcs.shift();
@@ -21841,47 +21836,47 @@ ImgOps | https://imgops.com/#b#`;
                                         description = node.getAttribute('title') || node.textContent;
                                     }
                                 }
-                                result.src=src;
-                                result.type=type;
-                                result.noActual=false;
-                                result.xhr=matchedRule.xhr;
-                                result.description=description || '';
+                                result.src = src;
+                                result.type = type;
+                                result.noActual = false;
+                                result.xhr = matchedRule.xhr;
+                                result.description = description || '';
                             }
-                        }catch(err){}
-                        if(result.type!="rule"){
-                            tprules.find(function(rule,index,array){
-                                try{
-                                    src=rule.call(img);
-                                    if(src){
+                        } catch(err) {}
+                        if (result.type != "rule") {
+                            tprules.find(function(rule, index, array) {
+                                try {
+                                    src = rule.call(img);
+                                    if (src) {
                                         return true;
                                     };
-                                }catch(err){
+                                } catch(err) {
                                 }
                             });
-                            if(src && src != imgSrc){
-                                result.src=src;
-                                result.type="tpRule";
-                                result.noActual=false;
+                            if (src && src != imgSrc) {
+                                result.src = src;
+                                result.type = "tpRule";
+                                result.noActual = false;
                             }
                         }
                     }
                 }
             }
-            var checkUniqueImgWin = function(t) {
-                if(checkPreview(e)){
-                    if(removeUniqueWinTimer)clearTimeout(removeUniqueWinTimer);
-                    if(uniqueImgWin && !uniqueImgWin.removed) {
-                        if(uniqueImgWin.src == result.src)return true;
+            var checkUniqueImgWin = function() {
+                if (canPreview) {
+                    if (removeUniqueWinTimer) clearTimeout(removeUniqueWinTimer);
+                    if (uniqueImgWin && !uniqueImgWin.removed) {
+                        if (uniqueImgWin.src == result.src) return true;
                         uniqueImgWin.remove();
                     }
-                    uniqueImgWinInitX = e.clientX;
-                    uniqueImgWinInitY = e.clientY;
-                    waitUntilMove(t, () => {
+                    uniqueImgWinInitX = clientX;
+                    uniqueImgWinInitY = clientY;
+                    waitUntilMove(_target, () => {
                         new LoadingAnimC(result, 'popup', prefs.waitImgLoad, prefs.framesPicOpenInTopWindow);
                     });
                     return true;
-                }else {
-                    if(uniqueImgWin && uniqueImgWin.imgWindow && !uniqueImgWin.removed){
+                } else {
+                    if (uniqueImgWin && uniqueImgWin.imgWindow && !uniqueImgWin.removed) {
                         uniqueImgWin.imgWindow.style.pointerEvents = "auto";
                     }
                     return false;
@@ -21889,7 +21884,7 @@ ImgOps | https://imgops.com/#b#`;
             };
 
             if (!result && target.nodeName != 'IMG') {
-                if(target.nodeName == 'A' && /\.(jpg|png|jpeg|gif|webp)\b/.test(target.href)){
+                if (target.nodeName == 'A' && /\.(jpg|png|jpeg|gif|webp)\b/.test(target.href)) {
                     result = {
                         src: target.href,
                         type: "",
@@ -21897,8 +21892,8 @@ ImgOps | https://imgops.com/#b#`;
                         noActual:true,
                         img: target
                     };
-                    checkUniqueImgWin(e.target);
-                }else if(target.parentNode.nodeName == 'A' && /\.(jpg|png|jpeg|gif|webp)\b/.test(target.parentNode.href)){
+                    checkUniqueImgWin();
+                } else if (target.parentNode.nodeName == 'A' && /\.(jpg|png|jpeg|gif|webp)\b/.test(target.parentNode.href)) {
                     result = {
                         src: target.parentNode.href,
                         type: "",
@@ -21906,7 +21901,7 @@ ImgOps | https://imgops.com/#b#`;
                         noActual:true,
                         img: target.parentNode
                     };
-                    checkUniqueImgWin(e.target);
+                    checkUniqueImgWin();
                 }
                 return;
             }
@@ -21914,68 +21909,93 @@ ImgOps | https://imgops.com/#b#`;
             if (!result) {
                 pretreatment(target)
                 result = findPic(target);
-                if(!result)return;
-                if (prefs.floatBar.showWithRules && result.type=="rule"){
-                }else if(!(result.imgAS.w==result.imgCS.w && result.imgAS.h==result.imgCS.h)){//如果不是两者完全相等,那么被缩放了.
-                    if(prefs.floatBar.sizeLimitOr){
-                        if(result.imgCS.h <= prefs.floatBar.minSizeLimit.h && result.imgCS.w <= prefs.floatBar.minSizeLimit.w){//最小限定判断.
+                if (!result) return;
+                if (prefs.floatBar.showWithRules && result.type == "rule") {
+                } else if (!(result.imgAS.w==result.imgCS.w && result.imgAS.h == result.imgCS.h)) {//如果不是两者完全相等,那么被缩放了.
+                    if (prefs.floatBar.sizeLimitOr) {
+                        if (result.imgCS.h <= prefs.floatBar.minSizeLimit.h && result.imgCS.w <= prefs.floatBar.minSizeLimit.w) {//最小限定判断.
                             return;
                         }
                     }else{
-                        if(result.imgCS.h <= prefs.floatBar.minSizeLimit.h || result.imgCS.w <= prefs.floatBar.minSizeLimit.w){//最小限定判断.
+                        if (result.imgCS.h <= prefs.floatBar.minSizeLimit.h || result.imgCS.w <= prefs.floatBar.minSizeLimit.w) {//最小限定判断.
                             return;
                         }
                     }
-                }else{
-                    if(prefs.floatBar.sizeLimitOr){
-                        if(result.imgCS.w <= prefs.floatBar.forceShow.size.w && result.imgCS.h <= prefs.floatBar.forceShow.size.h){
+                } else {
+                    if (prefs.floatBar.sizeLimitOr) {
+                        if (result.imgCS.w <= prefs.floatBar.forceShow.size.w && result.imgCS.h <= prefs.floatBar.forceShow.size.h) {
                             return;
                         }
-                    }else{
-                        if(result.imgCS.w <= prefs.floatBar.forceShow.size.w || result.imgCS.h <= prefs.floatBar.forceShow.size.h){
+                    } else {
+                        if (result.imgCS.w <= prefs.floatBar.forceShow.size.w || result.imgCS.h <= prefs.floatBar.forceShow.size.h) {
                             return;
                         }
                     }
                 }
             }
 
-            if(result){
+            if (result) {
                 debug(result);
-                if(!result.noActual){
-                    if(!result.srcs){
-                        result.srcs=[result.imgSrc];
-                    }else{
-                        if(result.imgSrc && result.srcs.join(" ").indexOf(result.imgSrc)==-1){
+                if (!result.noActual) {
+                    if (!result.srcs) {
+                        result.srcs = [result.imgSrc];
+                    } else {
+                        if (result.imgSrc && result.srcs.join(" ").indexOf(result.imgSrc) == -1) {
                             result.srcs.push(result.imgSrc);
                         }
                     }
                 }
-                if(!floatBar){
-                    floatBar=new FloatBarC();
+                if (!floatBar) {
+                    floatBar = new FloatBarC();
                 }
-                if(result.type=='rule' && matchedRule.clickToOpen && matchedRule.clickToOpen.enabled){
-                    if(canclePreCTO){//取消上次的，防止一次点击打开多张图片
+                if (result.type == 'rule' && matchedRule.clickToOpen && matchedRule.clickToOpen.enabled) {
+                    if (canclePreCTO) {//取消上次的，防止一次点击打开多张图片
                         canclePreCTO();
                     }
-                    canclePreCTO=clickToOpen(result);
+                    canclePreCTO = clickToOpen(result);
                 }
 
-                if(!checkUniqueImgWin(e.target)){
-                    let canShow=floatBar.start(result);
-                    if(canShow){
-                        var keyHide=prefs.floatBar.position=="hide"?!e.altKey:e.altKey;
-                        if(keyHide){
-                            floatBar.floatBar.style.opacity=0;
-                            floatBar.floatBar.style.display="none";
-                        }else{
-                            if(floatBar.floatBar.style.opacity==0){
-                                floatBar.floatBar.style.opacity="";
+                if (!checkUniqueImgWin()) {
+                    let canShow = floatBar.start(result);
+                    if (canShow) {
+                        var keyHide = prefs.floatBar.position == "hide" ? !altKey : altKey;
+                        if (keyHide) {
+                            floatBar.floatBar.style.opacity = 0;
+                            floatBar.floatBar.style.display = "none";
+                        } else {
+                            if (floatBar.floatBar.style.opacity == 0) {
+                                floatBar.floatBar.style.opacity = "";
                             }
-                            floatBar.floatBar.style.display="initial";
+                            floatBar.floatBar.style.display = "initial";
                         }
                     }
                 }
-            };
+            }
+        }
+
+        var checkFloatBarTimer;
+        function globalMouseoverHandler(e) {
+            if (galleryMode) return;//库模式全屏中......
+            if (e.type == "mousemove") {
+                if ((uniqueImgWin && !uniqueImgWin.removed && !uniqueImgWin.previewed)) {
+                    uniqueImgWin.followPos(e.clientX, e.clientY);
+                    if (!checkPreview(e)) {
+                        uniqueImgWin.remove();
+                    }
+                    return;
+                } else {
+                    if (!checkPreview(e)) return;
+                    let target = e.target;
+                    if (target.nodeName == "PICTURE"){
+                        target = target.querySelector("img") || target;
+                    }
+                    if (target.nodeName != 'IMG') return;
+                }
+            }
+            clearTimeout(checkFloatBarTimer);
+            checkFloatBarTimer = setTimeout(() => {
+                checkFloatBar(e.target, e.type, checkPreview(e), e.clientX, e.clientY, e.altKey);
+            }, 50);
         }
 
         async function input(sel, v) {
@@ -22174,7 +22194,7 @@ ImgOps | https://imgops.com/#b#`;
         addPageScript();
 
         document.addEventListener('keyup', keyup, false);
-        document.addEventListener('mouseover', globalMouseoverHandler, true);
+        document.addEventListener('mouseenter', globalMouseoverHandler, true);
         document.addEventListener('mousemove', globalMouseoverHandler, true);
 
         document.addEventListener('mouseout',e=>{
