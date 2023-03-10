@@ -4844,7 +4844,7 @@
                     this.bar.style.display = "";
                     this.initPos();
                 }
-                this.insertHistory(this.currentType);
+                this.insertHistory(this.currentType, true);
                 let inPageWords = searchData.prefConfig.showInSearchEngine ? getKeywords() : globalInPageWords;
                 if (inPageWords) {
                     this.setInPageWords(inPageWords.replace(/['";]/g, ' '));
@@ -5177,7 +5177,7 @@
                 });
             }
 
-            insertHistory(typeEle) {
+            insertHistory(typeEle, init) {
                 if (searchData.prefConfig.disableAutoOpen) return;
                 if (!searchData.prefConfig.historyLength) return;
                 typeEle.style.width = "auto";
@@ -5199,7 +5199,7 @@
                         }
                         if (findSame) continue;
                         btn.classList.add("historySite");
-                        if (searchData.prefConfig.historyInsertFirst) {
+                        if (!init && searchData.prefConfig.historyInsertFirst) {
                             if (typeEle.children.length > 1) {
                                 typeEle.insertBefore(btn, typeEle.children[1]);
                             } else typeEle.appendChild(btn);
