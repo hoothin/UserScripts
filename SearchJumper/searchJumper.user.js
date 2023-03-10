@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.55.21
+// @version      1.6.6.55.22
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -6334,7 +6334,7 @@
                             return str.replace(keyToReg(key, "g"), (after ? after(value) : value));
                         }
                     };
-                    let needDecode = (/^c:|[#:%]P{/i.test(data.url));
+                    let needDecode = (/^c(opy)?:|[#:%]P{|^javascript:/i.test(data.url));
                     let keywordsU, keywordsL, keywordsR;
                     let customReplaceKeywords = str => {
                         str = customReplaceSingle(str, "%su", keywordsU);
@@ -6614,18 +6614,18 @@
                             });
                         }
                     }
-                    if (/^c:/.test(data.url)) {
+                    if (/^c(opy)?:/.test(data.url)) {
                         let url = getUrl();
                         if (!url) {
                             ele.href = "#";
                             return false;
                         } else if (url.indexOf('%input{') !== -1) {
                             self.showCustomInputWindow(url, _url => {
-                                _GM_setClipboard(_url.replace(/^c:/, ""));
+                                _GM_setClipboard(_url.replace(/^c(opy)?:/, ""));
                                 //_GM_notification('Copied successfully!');
                             });
                         } else {
-                            _GM_setClipboard(url.replace(/^c:/, ""));
+                            _GM_setClipboard(url.replace(/^c(opy)?:/, ""));
                             //_GM_notification('Copied successfully!');
                         }
                     } else if (/^\[/.test(data.url)) {
@@ -6991,7 +6991,7 @@
                     else if (clientX + self.bar.clientWidth > viewWidth) clientX = viewWidth - self.bar.clientWidth - 20;
                     let clientY = e.pageY;
                     if (clientY > viewHeight / 5) clientY -= (self.bar.clientHeight + 20);
-                    else clientY += 30;
+                    else clientY += 20;
                     if (clientX < viewWidth / 2) {
                         self.bar.style.left = clientX + "px";
                         self.bar.style.transformOrigin = '0 0';
