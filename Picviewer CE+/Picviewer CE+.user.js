@@ -21993,7 +21993,7 @@ ImgOps | https://imgops.com/#b#`;
                 }
             }
             clearTimeout(checkFloatBarTimer);
-            checkFloatBarTimer = setTimeout(() => {
+            checkFloatBarTimer = setTimeout(function() {
                 checkFloatBar(e.target, e.type, checkPreview(e), e.clientX, e.clientY, e.altKey);
             }, 50);
         }
