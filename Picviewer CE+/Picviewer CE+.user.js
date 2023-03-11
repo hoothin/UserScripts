@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.3.11.1
+// @version              2023.3.11.2
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -42,7 +42,7 @@
 // @grant                unsafeWindow
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
 // @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1157785
-// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1151341
+// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1160078
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @match                *://*/*
@@ -11693,6 +11693,7 @@ ImgOps | https://imgops.com/#b#`;
     }else{
         _GM_notification=(s)=>{alert(s)};
     }
+
     function getRightSaveName(url, name, type, _ext) {
         /*
          0: i18n("default"),
@@ -22910,21 +22911,26 @@ ImgOps | https://imgops.com/#b#`;
         });
 
 
-        var hideIcon=false;
+
+        loadPrefs();
+
+        var hideIcon=storage.getItem("hideIcon" + location.hostname) || false;
         var hideIconStyle=document.createElement('style');
         hideIconStyle.textContent=`#pv-float-bar-container{display:none!important}`;
+        if(hideIcon){
+            document.head.appendChild(hideIconStyle);
+        }
         _GM_registerMenuCommand(i18n("openConfig"), openPrefs);
         _GM_registerMenuCommand(i18n("openGallery"), openGallery);
-        _GM_registerMenuCommand(i18n("toggleIcon"), ()=>{
+        _GM_registerMenuCommand(i18n("hideIcon") + (hideIcon ? "☑️" : ""), ()=>{
             hideIcon=!hideIcon;
+            storage.setItem("hideIcon" + location.hostname, hideIcon);
             if(hideIcon){
                 document.head.appendChild(hideIconStyle);
             }else{
                 document.head.removeChild(hideIconStyle);
             }
         });
-
-        loadPrefs();
 
         function initKeyInputs() {
             if (!GM_config.frame || !GM_config.frame.contentDocument) return;
