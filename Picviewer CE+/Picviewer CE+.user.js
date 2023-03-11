@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.3.10.1
+// @version              2023.3.11.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -11693,7 +11693,7 @@ ImgOps | https://imgops.com/#b#`;
     }else{
         _GM_notification=(s)=>{alert(s)};
     }
-    function getRightSaveName(url, name, type) {
+    function getRightSaveName(url, name, type, _ext) {
         /*
          0: i18n("default"),
          1: i18n("textFirst"),
@@ -11702,14 +11702,19 @@ ImgOps | https://imgops.com/#b#`;
         */
         type = parseInt(type || 0);
         if (name) name = name.split("\n")[0];
-        let ext = url.match(/(\.\w{2,5})(\?|@|$)/);
         let nameFromUrl = "";
-        if (ext) {
-            ext = ext[1];
-            nameFromUrl = url.replace(/.*\/([^\/]+?)\.\w{2,5}(\?|@|$).*/, "$1");
-            try {
-                nameFromUrl = decodeURIComponent(nameFromUrl);
-            } catch (e) {}
+        let ext;
+        if (_ext) {
+            ext = "." + _ext;
+        } else {
+            ext = url.match(/(\.\w{2,5})(\?|@|$)/);
+            if (ext) {
+                ext = ext[1];
+                nameFromUrl = url.replace(/.*\/([^\/]+?)\.\w{2,5}(\?|@|$).*/, "$1");
+                try {
+                    nameFromUrl = decodeURIComponent(nameFromUrl);
+                } catch (e) {}
+            }
         }
         switch (type) {
             case 1:
@@ -11757,6 +11762,65 @@ ImgOps | https://imgops.com/#b#`;
             }
         })
     };
+    function dataURLToCanvas(dataurl, cb){
+        if(!dataurl)return cb(null);
+        var canvas = document.createElement('CANVAS');
+        var ctx = canvas.getContext('2d');
+        var img = new Image();
+        img.setAttribute("crossOrigin","anonymous");
+        img.onload = function(){
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0);
+            cb(canvas);
+        };
+        img.onerror = function(){
+            cb(null);
+        };
+        img.src = dataurl;
+    }
+    function downloadImg(url, name, type, errCb) {
+        _GM_xmlhttpRequest({
+            method: 'GET',
+            url: url,
+            responseType:'blob',
+            timeout:20000,
+            headers: {
+                origin: location.origin,
+                referer: location.href,
+                accept: "*/*"
+            },
+            onload: function(d) {
+                let blob = d.response;
+                let ext = blob.type.replace("image/", "");
+                if (ext=="webp") {
+                    var self=this;
+                    var a = new FileReader();
+                    a.readAsDataURL(blob);
+                    a.onload = function (e){
+                        dataURLToCanvas(e.target.result, canvas=>{
+                            canvas.toBlob(blob=>{
+                                saveAs(blob, getRightSaveName(url, name, type, "png"));
+                            }, "image/png");
+                        });
+                    };
+                    a.onerror = function (e){
+                        if (errCb) errCb();
+                    }
+                }else{
+                    saveAs(blob, getRightSaveName(url, name, type, ext));
+                }
+            },
+            onerror: function(){
+                _GM_download(url, name, type);
+                if (errCb) errCb();
+            },
+            ontimeout: function(){
+                _GM_download(url, name, type);
+                if (errCb) errCb();
+            }
+        });
+    }
     var prefs;
     var escapeHTMLPolicy;
     if (unsafeWindow.trustedTypes && unsafeWindow.trustedTypes.createPolicy) {
@@ -14451,7 +14515,7 @@ ImgOps | https://imgops.com/#b#`;
                     for(let i=0;i<5;i++){
                         let saveParam=saveParams.shift();
                         if(saveParam){
-                            _GM_download(saveParam[0], saveParam[1], prefs.saveName);
+                            downloadImg(saveParam[0], saveParam[1], prefs.saveName);
                         }else{
                             callback();
                             break;
@@ -14837,35 +14901,16 @@ ImgOps | https://imgops.com/#b#`;
                     if(curSrc.indexOf("data")===0){
                         defaultDl();
                     }else{
-                        fetch(curSrc).then(response=>{
-                            return response.blob();
-                        }).then(blob=>{
-                            imgReady(img,{
-                                ready:function(){
-                                    if(img.width>=88 && img.height>=88){
-                                        self.addDlSpan(img, imgSpan, curNode, e=>{
-                                            e.stopPropagation();
-                                            if(blob.type=="image/webp"){
-                                                self.blobToCanvas(blob, canvas=>{
-                                                    canvas.toBlob(blob=>{
-                                                        saveAs(blob, getRightSaveName("", curNode.title, prefs.saveName));
-                                                    }, "image/png");
-                                                });
-                                            }else{
-                                                _GM_download(curNode.dataset.src, curNode.title, prefs.saveName);
-                                            }
-                                            return true;
-                                        });
-                                    }
+                        imgReady(img,{
+                            ready:function(){
+                                if(img.width>=88 && img.height>=88){
+                                    self.addDlSpan(img, imgSpan, curNode, e=>{
+                                        e.stopPropagation();
+                                        downloadImg(curNode.dataset.src, curNode.title, prefs.saveName);
+                                        return true;
+                                    });
                                 }
-                            });
-                        }).catch(e=>{
-                            curNode.dataset.src=curNode.dataset.thumbSrc;
-                            imgReady(img,{
-                                ready:function(){
-                                    defaultDl();
-                                }
-                            });
+                            }
                         });
                     }
                     maximizeContainer.appendChild(imgSpan);
@@ -15757,7 +15802,7 @@ ImgOps | https://imgops.com/#b#`;
                         img.style[support.cssTransform] = ' rotate('+ origin +'rad) ' + iTransform;
                         break;
                     case prefs.floatBar.keys.download:
-                        _GM_download(this.img.src, this.selected.title, prefs.saveName);
+                        downloadImg(this.img.src, this.selected.title, prefs.saveName);
                         break;
                 }
             },
@@ -19851,6 +19896,10 @@ ImgOps | https://imgops.com/#b#`;
             },
             focusedKeydown:function(e){
                 var keyCode=e.keyCode;
+                if (e.key.toLowerCase() == prefs.floatBar.keys.download) {
+                    downloadImg(this.img.src, (this.data.img.alt || this.data.img.title), prefs.saveName);
+                    return;
+                }
                 var valid=[32,82,72,90,18,16,17,27,67,71];//有效的按键
                 if(valid.indexOf(keyCode)==-1) return;
 
@@ -20582,7 +20631,7 @@ ImgOps | https://imgops.com/#b#`;
                             if (copy) {
                                 _GM_setClipboard(this.data.src || this.data.imgSrc);
                             } else {
-                                _GM_download(this.data.src||this.data.imgSrc, (this.data.img.alt || this.data.img.title), prefs.saveName);
+                                downloadImg(this.data.src||this.data.imgSrc, (this.data.img.alt || this.data.img.title), prefs.saveName);
                             }
                         }
                         break;
@@ -20982,7 +21031,7 @@ ImgOps | https://imgops.com/#b#`;
                     if (copy) {
                         _GM_setClipboard(this.data.src || this.data.imgSrc);
                     } else {
-                        _GM_download(this.data.src||this.data.imgSrc, (this.data.img.alt || this.data.img.title), prefs.saveName);
+                        downloadImg(this.data.src||this.data.imgSrc, (this.data.img.alt || this.data.img.title), prefs.saveName);
                     }
                     return;
                 }
@@ -21434,7 +21483,7 @@ ImgOps | https://imgops.com/#b#`;
                     switch(command){
                         case 'open':{
                             if (data.buttonType === 'download') {
-                                _GM_download(data.src, document.title, prefs.saveName);
+                                downloadImg(data.src, document.title, prefs.saveName);
                                 return;
                             }
                             var img=document.createElement('img');
@@ -21994,6 +22043,7 @@ ImgOps | https://imgops.com/#b#`;
             }
             clearTimeout(checkFloatBarTimer);
             checkFloatBarTimer = setTimeout(function() {
+                if (!e || !e.target || !e.target.parentNode) return;
                 checkFloatBar(e.target, e.type, checkPreview(e), e.clientX, e.clientY, e.altKey);
             }, 50);
         }
