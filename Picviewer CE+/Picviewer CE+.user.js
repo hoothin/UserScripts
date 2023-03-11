@@ -16382,8 +16382,10 @@ ImgOps | https://imgops.com/#b#`;
                 var canvasImgs=Array.from(document.body.querySelectorAll('canvas'))
                     .reduce((total, canvas) => {
                         if (canvas.clientHeight != 0) {
-                            canvas.src = canvas.toDataURL("image/png");
-                            total.push(canvas);
+                            try {
+                                canvas.src = canvas.toDataURL("image/png");
+                                total.push(canvas);
+                            } catch(e) {}
                         }
                         return total;
                 }, []);
