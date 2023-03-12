@@ -1513,7 +1513,7 @@
                 let pageElementCss = self.curSiteRule.pageElementCss || self.curSiteRule.pageElementStyle || rulesData.pageElementCss;
                 if (pageElementCss) {
                     [].forEach.call(pageElement, ele => {
-                        if (!ele.dataset.pagetualPageElement) {
+                        if (!ele.dataset.pagetualPageElement && !/LINK|META|STYLE|SCRIPT/.test(ele.tagName)) {
                             ele.style.cssText = (ele.style.cssText || '') + pageElementCss;
                             ele.dataset.pagetualPageElement = 1;
                         }
@@ -1534,8 +1534,10 @@
 
         processPageElement(pageElements) {
             [].forEach.call(pageElements, ele => {
-                ele.style.containIntrinsicSize = `auto ${ele.offsetWidth || 100}px auto ${ele.offsetHeight || 100}px`;
-                ele.style.contentVisibility = "auto";
+                if (!/LINK|META|STYLE|SCRIPT/.test(ele.tagName)) {
+                    ele.style.containIntrinsicSize = `auto ${ele.offsetWidth || 100}px auto ${ele.offsetHeight || 100}px`;
+                    ele.style.contentVisibility = "auto";
+                }
             });
         }
 
