@@ -18380,16 +18380,16 @@
 {
   "resource_url": "http://wedata.net/items/77724",
   "data": {
-    "pageElement": "//aside[not(./preceding-sibling::div[contains(@class,'pag')])]/preceding-sibling::*|//aside/preceding-sibling::div[contains(@class,'pag')][1]/preceding-sibling::*",
+    "pageElement": "descendant::div[./div[@class='next'] or @class='p-article-wp-pager'][1]/preceding-sibling::*[not(self::aside or @id='ad_dfp_premiumrec')]",
     "nextLink": "//div[@class=\"next\"]/a|//div[@class=\"p-article-wp-pager\"]/span[@aria-current]/following-sibling::a[1]",
     "url": "^https://www\\.yomiuri\\.co\\.jp/",
-    "exampleUrl": "https://www.yomiuri.co.jp/fukayomi/20190204-OYT8T50085/\r\nhttps://www.yomiuri.co.jp/economy/20210926-OYT1T50112/\r\nhttps://www.yomiuri.co.jp/politics/20221030-OYT1T50259/\r\nhttps://www.yomiuri.co.jp/national/20230116-OYT1T50098/\r\n"
+    "exampleUrl": "https://www.yomiuri.co.jp/fukayomi/20190204-OYT8T50085/\r\nhttps://www.yomiuri.co.jp/economy/20210926-OYT1T50112/\r\nhttps://www.yomiuri.co.jp/politics/20221030-OYT1T50259/\r\nhttps://www.yomiuri.co.jp/national/20230116-OYT1T50098/\r\nhttps://www.yomiuri.co.jp/fukayomi/20171207-OYT8T50002/3/\r\nhttps://www.yomiuri.co.jp/shinsai311/news/20230310-OYT1T50279/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "ofk",
   "name": "YOMIURI ONLINE=",
   "created_at": "2015-12-17T12:29:58+09:00",
-  "updated_at": "2023-01-17T10:07:10+09:00"
+  "updated_at": "2023-03-11T15:54:24+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/77721",
