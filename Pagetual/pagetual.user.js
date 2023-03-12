@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.34.22
+// @version      1.9.34.23
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -2161,13 +2161,21 @@
         preload() {
             if (!rulesData.preload) return;
             if (!this.nextLinkHref || this.nextLinkHref == "#") return;
-            let self = this;
+            let self = this, url = this.nextLinkHref;
+            let postParams = url.match(/#p{(.*)}$/);
+            if (postParams) {
+                postParams = postParams[1];
+                url = url.replace(/#p{.*/, "");
+            }
             _GM_xmlhttpRequest({
-                url: this.nextLinkHref,
-                method: 'GET',
+                url: url,
+                method: postParams ? 'POST' : 'GET',
+                data: postParams,
                 overrideMimeType: 'text/html;charset=' + (document.characterSet || document.charset || document.inputEncoding),
                 headers: {
-                    'Referer': location.href
+                    'Referer': location.href,
+                    'User-Agent': navigator.userAgent,
+                    "Content-Type": (postParams ? "application/x-www-form-urlencoded" : "text/html") + ";charset=" + (document.characterSet || document.charset || document.inputEncoding),
                 },
                 timeout: 10000,
                 onload: function(res) {
