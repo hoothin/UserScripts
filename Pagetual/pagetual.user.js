@@ -5092,14 +5092,14 @@
         document.removeEventListener('keydown', manualModeKeyHandler);
         document.removeEventListener('pagetual.next', pagetualNextHandler, false);
         document.removeEventListener('keyup', keyupHandler);
-        let loadmoreBtn, loading = true, lastScroll = 0, checkLoadMoreTimes = 0;
-        if (ruleParser.curSiteRule.loadMore) {
-            loading = false;
+        let loadmoreBtn, loadingMore = true, lastScroll = 0, checkLoadMoreTimes = 0;
+        if (typeof ruleParser.curSiteRule.loadMore !== 'undefined') {
+            loadingMore = false;
         } else {
             checkLoadMore = setInterval(() => {
                 loadmoreBtn = getLoadMore(document);
                 if (loadmoreBtn && isVisible(loadmoreBtn, _unsafeWindow)) {
-                    loading = false;
+                    loadingMore = false;
                     clearInterval(checkLoadMore);
                 } else if (checkLoadMoreTimes++ > 30) {
                     clearInterval(checkLoadMore);
@@ -5134,17 +5134,17 @@
                 urlChanged = false;
             }
             if (isPause) return;
-            if (!loading) {
+            if (!loadingMore) {
                 loadmoreBtn = getLoadMore(document, loadmoreBtn);
                 if (loadmoreBtn) {
                     if (isInViewPort(loadmoreBtn)) {
                         emuClick(loadmoreBtn);
-                        loading = true;
-                        setTimeout(() => {loading = false}, 200);
+                        loadingMore = true;
+                        setTimeout(() => {loadingMore = false}, 200);
                     }
                 } else {
-                    loading = true;
-                    setTimeout(() => {loading = false}, 200);
+                    loadingMore = true;
+                    setTimeout(() => {loadingMore = false}, 200);
                 }
             }
             if (!isLoading && !stopScroll) {
@@ -5296,7 +5296,7 @@
 
     function getLoadMore(doc, loadmoreBtn) {
         if (!loadmoreBtn || !doc.body.contains(loadmoreBtn) || /less/.test(loadmoreBtn.innerText)) loadmoreBtn = null;
-        if (ruleParser.curSiteRule.loadMore === "") return null;
+        if (typeof ruleParser.curSiteRule.loadMore !== 'undefined' && !ruleParser.curSiteRule.loadMore) return null;
         let btnSel = ruleParser.curSiteRule.loadMore || ".loadMore,.LoadMore,.load-more,.button-show-more,button[data-testid='more-results-button'],#btn_preview_remain";
         if (btnSel) {
             loadmoreBtn = getElement(btnSel, doc);
