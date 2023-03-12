@@ -5093,8 +5093,10 @@
         document.removeEventListener('pagetual.next', pagetualNextHandler, false);
         document.removeEventListener('keyup', keyupHandler);
         let loadmoreBtn, loadingMore = true, lastScroll = 0, checkLoadMoreTimes = 0;
-        if (typeof ruleParser.curSiteRule.loadMore !== 'undefined') {
-            loadingMore = false;
+        if (!ruleParser.curSiteRule.singleUrl) {
+            if (ruleParser.curSiteRule.loadMore) {
+                loadingMore = false;
+            }
         } else {
             checkLoadMore = setInterval(() => {
                 loadmoreBtn = getLoadMore(document);
@@ -5296,7 +5298,7 @@
 
     function getLoadMore(doc, loadmoreBtn) {
         if (!loadmoreBtn || !doc.body.contains(loadmoreBtn) || /less/.test(loadmoreBtn.innerText)) loadmoreBtn = null;
-        if (typeof ruleParser.curSiteRule.loadMore !== 'undefined' && !ruleParser.curSiteRule.loadMore) return null;
+        if (!ruleParser.curSiteRule.singleUrl && !ruleParser.curSiteRule.loadMore) return null;
         let btnSel = ruleParser.curSiteRule.loadMore || ".loadMore,.LoadMore,.load-more,.button-show-more,button[data-testid='more-results-button'],#btn_preview_remain";
         if (btnSel) {
             loadmoreBtn = getElement(btnSel, doc);
