@@ -5295,7 +5295,7 @@
     }
 
     function getLoadMore(doc, loadmoreBtn) {
-        if (!loadmoreBtn || !document.body.contains(loadmoreBtn) || /less/.test(loadmoreBtn.innerText)) loadmoreBtn = null;
+        if (!loadmoreBtn || !doc.body.contains(loadmoreBtn) || /less/.test(loadmoreBtn.innerText)) loadmoreBtn = null;
         if (ruleParser.curSiteRule.loadMore === "") return null;
         let btnSel = ruleParser.curSiteRule.loadMore || ".loadMore,.LoadMore,.load-more,.button-show-more,button[data-testid='more-results-button'],#btn_preview_remain";
         if (btnSel) {
