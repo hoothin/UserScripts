@@ -485,7 +485,7 @@
     },
     {
         "name": "動漫狂 - 閱讀",
-        "url": "^https?://www\\.cartoonmad\\.cc/comic/\\d+\\.html",
+        "url": "^https?://www\\.cartoonmad\\.(cc|com)/comic/\\d+\\.html",
         "example": "https://www.cartoonmad.com/comic/6187.html",
         "history": 2,
         "init": "document.onkeydown=null;let ge=e=>document.querySelector(e);let _src=ge('img[onload]').src.replace(/\\d+$/,'');let max=document.querySelectorAll('option[value]').length;let E=ge('img[onload]').parentNode.parentNode;let F=new DocumentFragment();for(let i=1;i<=max;i++){let imgSrc;if(i<10){imgSrc=_src+'00'+i}else if(i<100){imgSrc=_src+'0'+i}else{imgSrc=_src+i}let img=new Image();img.className='PagetualImg';img.src=imgSrc;F.appendChild(img)};E.innerHTML='';E.appendChild(F);let p=ge('body>table>tbody>tr:nth-child(2)').cloneNode(true);let c=ge('body>table>tbody>tr:last-child');c.parentNode.insertBefore(p,c);",
@@ -496,13 +496,14 @@
         "insertPos": 2,
         "pageInit": "let docge=e=>doc.querySelector(e);let ge=e=>document.querySelector(e);let _src=docge('img[onload]').src.replace(/\\d+$/,'');let max=doc.querySelectorAll('option[value]').length;let E=ge('.PagetualImg').parentNode;let F=new DocumentFragment();for(let i=1;i<=max;i++){let imgSrc;if(i<10){imgSrc=_src+'00'+i}else if(i<100){imgSrc=_src+'0'+i}else{imgSrc=_src+i}let img=new Image();img.className='PagetualImg';img.src=imgSrc;F.appendChild(img)};E.appendChild(F);let re=docge('body>table>tbody>tr:nth-child(2)').outerHTML;ge('body>table>tbody>tr:nth-child(2)').outerHTML=re;ge('body>table>tbody>tr:nth-child(7)').outerHTML=re;",
         "pageAction": "let ps=document.querySelectorAll('.pagetual_pageBar');if(ps.length>10){ps[0].remove();let ds=document.querySelector('.PagetualImg').parentNode.querySelectorAll('*');for(let i in ds){if(/pagetual/.test(ds[i].id)){break};ds[i].remove()}}",
+        "preloadImages": "let ge=e=>doc.querySelector(e);let _src=ge('img[onload]').src.replace(/\\d+$/,'');let max=doc.querySelectorAll('option[value]').length;let imgSrcArr=[];for(let i=1;i<=max;i++){let imgSrc;if(i<10){imgSrc=_src+'00'+i}else if(i<100){imgSrc=_src+'0'+i}else{imgSrc=_src+i}imgSrcArr.push(imgSrc)};return imgSrcArr",
         "pageBarText": "let t=doc.querySelector('b+a[style]');if(t)return t.innerText;",
         "css": ".PagetualImg{max-width: 100% !important;display: block !important;margin: 0 auto !important;}td[valign='top'][width='160'],td[width='12'],select[name],body>table>tbody>tr:nth-child(5){display:none!important}"
     },
     {
         "name": "動漫狂 - 分類",
         "example": "https://www.cartoonmad.com/hotrank.html",
-        "url": "^https?://www\\.cartoonmad\\.com/(hotrank|topcm|newcm|comic\\d+)(\\.\\d+)?\\.html",
+        "url": "^https?://www\\.cartoonmad\\.(cc|com)/(hotrank|topcm|newcm|comic\\d+)(\\.\\d+)?\\.html",
         "nextLink": "a.onpage+a",
         "pageElement": "//table[tbody/tr/td/table/tbody/tr/td/a/span[@class='covers']]",
         "replaceElement": "td[align='right']>table:last-child",
@@ -923,7 +924,7 @@
         "url": "^https?://wap\\.ykmh\\.com/manhua/[a-z]+/\\d+\\.html",
         "history": 2,
         "pinUrl": true,
-        "init": "let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML;let imgs=eval(code.match(/chapterImages[^;]+/)[0]);let host=eval(code.match(/pageImage[^;]+/)[0]).match(/^https?:\\/\\/[^/]+/)[0];let F=new DocumentFragment();imgs.forEach(e=>{let img=new Image();img.src=host+e;F.appendChild(img)});let E=document.querySelector('#images');E.innerHTML='';E.appendChild(F);",
+        "init": "$('#images').unbind('click',SinTheme.nextPage);$('#images').unbind('mousedown');let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML;let imgs=eval(code.match(/chapterImages[^;]+/)[0]);let host=eval(code.match(/pageImage[^;]+/)[0]).match(/^https?:\\/\\/[^/]+/)[0];let F=new DocumentFragment();imgs.forEach(e=>{let img=new Image();img.src=host+e;F.appendChild(img)});let E=document.querySelector('#images');E.innerHTML='';E.appendChild(F);",
         "nextLinkByJs": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/nextChapterData/)>-1).innerHTML;let next=eval(code.match(/nextChapterData[^;]+/)[0]);if(next.id>0)return next.url;",
         "pageElement": "#images",
         "replaceElement": "head>title,.BarTit",
@@ -978,6 +979,7 @@
         "url": "^https?://www\\.90mh\\.com/manhua/\\w+/\\d+\\.html",
         "history": 2,
         "pinUrl": true,
+        "autoClick": "#chapter-scroll:not(.active)",
         "init": "let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML;let ih=eval(code.match(/pageImage[^;]+/)[0]).match(/^https?:\\/\\/[^/]+\\//)[0];let cp=eval(code.match(/chapterPath[^;]+/)[0]);let imgData=eval(code.match(/chapterImages[^;]+/)[0]);let F=new DocumentFragment();imgData.forEach(e=>{let img=new Image();img.src=ih+cp+e;F.appendChild(img)});let E=document.querySelector('#images');E.innerHTML='';E.appendChild(F);let style=document.createElement('style');style.innerHTML='#tbCenter>#images:nth-child(1)>img:nth-child('+imgData.length+')~*{display: none!important}';ge('head').appendChild(style);",
         "nextLinkByJs": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/nextChapterData/)>-1).innerHTML;let next=eval(code.match(/nextChapterData[^;]+/)[0]);if(next.id>0)return next.url",
         "pageElement": "#images",
@@ -1034,13 +1036,13 @@
         "url": "^https?://m\\.manhua456\\.com/manhua/\\w+/\\d+\\.html",
         "pinUrl": true,
         "history": 2,
-        "init": "let ge=e=>document.querySelector(e);let loop=setInterval(()=>{let set=ge('#images img');if(set){clearInterval(loop);let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML;let ih = eval(code.match(/pageImage[^;]+/)[0]).match(/^https?:\\/\\/[^/]+\\//)[0];let cp=eval(code.match(/chapterPath[^;]+/)[0]);let imgData=eval(code.match(/chapterImages[^;]+/)[0]);let F=new DocumentFragment();imgData.forEach(e=>{let img=new Image();img.src=ih+cp+e;F.appendChild(img)});let E=ge('#images');E.innerHTML='';E.appendChild(F)}},200)",
+        "init": "$('#images').unbind('click',SinTheme.nextPage);$('#images').unbind('mousedown');let ge=e=>document.querySelector(e);let loop=setInterval(()=>{let set=ge('#images img');if(set){clearInterval(loop);let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML;let ih = eval(code.match(/pageImage[^;]+/)[0]).match(/^https?:\\/\\/[^/]+\\//)[0];let cp=eval(code.match(/chapterPath[^;]+/)[0]);let imgData=eval(code.match(/chapterImages[^;]+/)[0]);let F=new DocumentFragment();imgData.forEach(e=>{let img=new Image();img.src=ih+cp+e;F.appendChild(img)});let E=ge('#images');E.innerHTML='';E.appendChild(F)}},200)",
         "nextLinkByJs": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/nextChapterData/)>-1).innerHTML;let next=eval(code.match(/nextChapterData[^;]+/)[0]);if(next.id>0)return next.url",
         "pageElement": "#images",
         "pageInit": "let ge=e=>doc.querySelector(e);let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML;let ih = eval(code.match(/pageImage[^;]+/)[0]).match(/^https?:\\/\\/[^/]+\\//)[0];let cp=eval(code.match(/chapterPath[^;]+/)[0]);let imgData=eval(code.match(/chapterImages[^;]+/)[0]);let F=new DocumentFragment();imgData.forEach(e=>{let img=new Image();img.src=ih+cp+e;F.appendChild(img)});let E=ge('#images');E.innerHTML='';E.appendChild(F);",
         "preloadImages": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/chapterImages/)>-1).innerHTML;let ih=eval(code.match(/pageImage[^;]+/)[0]).match(/^https?:\\/\\/[^/]+\\//)[0];let cp=eval(code.match(/chapterPath[^;]+/)[0]);let imgData=eval(code.match(/chapterImages[^;]+/)[0]);let imgSrcArr=[];imgData.forEach(e=>{let imgSrc=ih+cp+e;imgSrcArr.push(imgSrc)});return imgSrcArr",
         "pageBarText": "let t=doc.querySelector('.BarTit');if(t)return t.innerText.trim()",
-        "css": "#page-info,#action li:nth-child(2),#action li:nth-child(3),.control_bottom~*,.chapter-view~*,#loading{display:none!important}#action li{width:50%!important}.chapter-view>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
+        "css": "#page-info,#action li:nth-child(2),#action li:nth-child(3),.control_bottom~*:not(.pagetual_tipsWords),.chapter-view~*:not(.pagetual_tipsWords),#loading{display:none!important}#action li{width:50%!important}.chapter-view>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
     },
     {
         "name": "漫画456 - PC版閱讀",
