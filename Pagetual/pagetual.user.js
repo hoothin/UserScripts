@@ -5302,7 +5302,7 @@
             loadmoreBtn = getElement(btnSel, doc);
         }
         if (!loadmoreBtn) {
-            let buttons = doc.querySelectorAll("input,button,a,div[onclick]"), loadmoreReg = /^\s*(加载更多|加載更多|(load|show)\s*more|もっと読み込む)\s*$/i;
+            let buttons = doc.querySelectorAll("input,button,a,div[onclick]"), loadmoreReg = /^\s*(加载更多|加載更多|load\s*more|もっと読み込む)\s*$/i;
             for (let i = 0; i < buttons.length; i++) {
                 let button = buttons[i];
                 if (button.innerText.length > 20) continue;
