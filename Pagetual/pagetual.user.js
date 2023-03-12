@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.34.24
+// @version      1.9.34.25
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -5135,9 +5135,7 @@
             }
             if (isPause) return;
             if (!loading) {
-                if (ruleParser.curSiteRule.loadMore || !loadmoreBtn || !document.body.contains(loadmoreBtn)) {
-                    loadmoreBtn = getLoadMore(document);
-                }
+                loadmoreBtn = getLoadMore(document, loadmoreBtn);
                 if (loadmoreBtn) {
                     if (isInViewPort(loadmoreBtn)) {
                         emuClick(loadmoreBtn);
@@ -5296,9 +5294,10 @@
         setTimeout(() => {tipsWords.style.opacity = 0}, 1000);
     }
 
-    function getLoadMore(doc) {
+    function getLoadMore(doc, loadmoreBtn) {
+        if (!loadmoreBtn || !document.body.contains(loadmoreBtn) || /less/.test(loadmoreBtn.innerText)) loadmoreBtn = null;
         if (ruleParser.curSiteRule.loadMore === "") return null;
-        let btnSel = ruleParser.curSiteRule.loadMore || ".loadMore,.LoadMore,.load-more,.button-show-more,button[data-testid='more-results-button'],#btn_preview_remain", loadmoreBtn;
+        let btnSel = ruleParser.curSiteRule.loadMore || ".loadMore,.LoadMore,.load-more,.button-show-more,button[data-testid='more-results-button'],#btn_preview_remain";
         if (btnSel) {
             loadmoreBtn = getElement(btnSel, doc);
         }
@@ -5319,6 +5318,7 @@
                 loadmoreBtn = null;
             }
         }
+        if (loadmoreBtn && /less/.test(loadmoreBtn.innerText)) loadmoreBtn = null;
         return loadmoreBtn;
     }
 
