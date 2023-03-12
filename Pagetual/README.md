@@ -218,6 +218,10 @@ The javaScript code to delay next action until return true, use this prop to get
 --
 Set to true to enable manual mode, then paging will stop, right arrow (or 'pagetual.next' event) will be bound to click next link.
 
+[clickMode](https://pagetual.hoothin.com/en/rules/manualMode.html)
+--
+Set to true to enable click mode, will automatically click the next link when scrolling to the end of the page.
+
 [child script](https://pagetual.hoothin.com/en/rules/child-script.html)
 --
 If the site has some limit for code eval. You can make a child script with function under object `window`. You should name them start with `pagetual` use camelCase. Like `window.pagetualWait`, `window.pagetualNextLinkByJs`, `window.pagetualPageInit`, `window.pagetualPageAction`, `window.pagetualInit`, `window.pagetualPageBarText`.
