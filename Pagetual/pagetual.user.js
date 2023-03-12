@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.34.23
+// @version      1.9.34.24
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1508,25 +1508,35 @@
                 }
                 //if(pageElement)this.saveCurSiteRule();
             }
-            if (doc == document && !this.docPageElement){
-                this.docPageElement = pageElement;
-                if (this.nextLinkHref) {
-                    this.openInNewTab(pageElement);
-                }
-            }
-            if(pageElement && pageElement.length>0){
-                let pageElementCss=self.curSiteRule.pageElementCss || self.curSiteRule.pageElementStyle || rulesData.pageElementCss;
-                if(pageElementCss){
-                    [].forEach.call(pageElement, ele=>{
-                        if(!ele.dataset.pagetualPageElement){
-                            ele.style.cssText=(ele.style.cssText||'')+pageElementCss;
-                            ele.dataset.pagetualPageElement=1;
+
+            if (pageElement && pageElement.length > 0) {
+                let pageElementCss = self.curSiteRule.pageElementCss || self.curSiteRule.pageElementStyle || rulesData.pageElementCss;
+                if (pageElementCss) {
+                    [].forEach.call(pageElement, ele => {
+                        if (!ele.dataset.pagetualPageElement) {
+                            ele.style.cssText = (ele.style.cssText || '') + pageElementCss;
+                            ele.dataset.pagetualPageElement = 1;
                         }
                     });
                 }
             }
-            if (doc !== document) this.lazyImgAction(pageElement);
+            if (doc !== document) {
+                this.lazyImgAction(pageElement);
+            } else if (!this.docPageElement) {
+                this.docPageElement = pageElement;
+                if (this.nextLinkHref) {
+                    this.openInNewTab(pageElement);
+                }
+                this.processPageElement(pageElement);
+            }
             return pageElement;
+        }
+
+        processPageElement(pageElements) {
+            [].forEach.call(pageElements, ele => {
+                ele.style.containIntrinsicSize = `auto ${ele.offsetWidth || 100}px auto ${ele.offsetHeight || 100}px`;
+                ele.style.contentVisibility = "auto";
+            });
         }
 
         getPage(doc) {
@@ -2194,24 +2204,6 @@
                             document.body.appendChild(self.preloadDiv);
                             self.checkedImgs = {};
                         }
-                        let code = self.curSiteRule.preloadImages;
-                        if (code) {
-                            try {
-                                let imgSrcArr = new Function("doc", '"use strict";' + code)(doc);
-                                if (imgSrcArr && imgSrcArr.length) {
-                                    imgSrcArr.forEach(imgSrc => {
-                                        if (imgSrc && !self.checkedImgs[imgSrc]) {
-                                            self.checkedImgs[imgSrc] = true;
-                                            let img = document.createElement('img');
-                                            img.src = imgSrc;
-                                            self.preloadDiv.appendChild(img);
-                                        }
-                                    });
-                                }
-                            } catch(e) {
-                                debug(e);
-                            }
-                        }
                         [].forEach.call(doc.images, i => {
                             let iSrc = i.src;
                             if (iSrc && !self.checkedImgs[iSrc]) {
@@ -2221,8 +2213,23 @@
                                 self.preloadDiv.appendChild(img);
                             }
                         });
+                        let code = self.curSiteRule.preloadImages;
+                        if (code) {
+                            let imgSrcArr = new Function("doc", '"use strict";' + code)(doc);
+                            if (imgSrcArr && imgSrcArr.length) {
+                                imgSrcArr.forEach(imgSrc => {
+                                    if (imgSrc && !self.checkedImgs[imgSrc]) {
+                                        self.checkedImgs[imgSrc] = true;
+                                        let img = document.createElement('img');
+                                        img.src = imgSrc;
+                                        self.preloadDiv.appendChild(img);
+                                    }
+                                });
+                            }
+                        }
                     }
-                    catch (e) {
+                    catch(e) {
+                        debug(e);
                         return;
                     }
                 }
@@ -2283,16 +2290,17 @@
             }
         }
 
-        pageAction(doc,eles){
-            let code=this.curSiteRule.pageAction;
-            if(code){
-                try{
-                    ((typeof _unsafeWindow.pagetualPageAction=='undefined') ? Function("doc", "eles", '"use strict";' + code) : _unsafeWindow.pagetualPageAction)(doc, eles);
-                }catch(e){
+        pageAction(doc,eles) {
+            let code = this.curSiteRule.pageAction;
+            if (code) {
+                try {
+                    ((typeof _unsafeWindow.pagetualPageAction == 'undefined') ? Function("doc", "eles", '"use strict";' + code) : _unsafeWindow.pagetualPageAction)(doc, eles);
+                } catch(e) {
                     debug(e);
                 }
             }
             this.openInNewTab(eles);
+            this.processPageElement(eles);
             this.replaceElement(doc);
         }
 
@@ -6162,7 +6170,7 @@
         curIframe.sandbox = "allow-same-origin allow-scripts allow-popups allow-forms";
         curIframe.frameBorder = '0';
         curIframe.scrolling = "no";
-        curIframe.style.cssText = 'display: block; visibility: visible; float: none; clear: both; width: 100%; height: 0; background: initial; border: 0px; border-radius: 0px; margin: 0px; padding: 0px; z-index: 2147483647;';
+        curIframe.style.cssText = 'display: block; visibility: visible; float: none; clear: both; width: 100%; height: 0; background: initial; border: 0px; border-radius: 0px; margin: 0px; padding: 0px; z-index: 2147483647;content-visibility: auto;contain-intrinsic-size: auto 300px;';
         curIframe.addEventListener("load", e => {
             clearInterval(checkIframeTimer);
             try {
