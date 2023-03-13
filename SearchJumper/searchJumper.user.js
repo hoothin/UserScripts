@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.55.24
+// @version      1.6.6.55.25
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -4926,10 +4926,16 @@
             }
 
             searchSiteBtns(inputWords) {
-                let checkIndex = inputWords.indexOf('**'), checkType;
+                let checkIndex = inputWords.indexOf('**'), checkType = "", accurate = false;
                 if (checkIndex > 0) {
                     checkType = inputWords.slice(0, checkIndex);
                     inputWords = inputWords.slice(checkIndex + 2);
+                }
+                if (inputWords.indexOf('^') === 0) {
+                    accurate = true;
+                } else {
+                    checkType = checkType.toLowerCase();
+                    inputWords = inputWords.toLowerCase();
                 }
                 let canCheckHost = !/[^\w\.\/\:\*\?\^\$]/.test(inputWords);
                 this.allListBtns.forEach(listItem => {
@@ -4944,18 +4950,26 @@
                     let btn = arr[0];
                     let data = arr[1];
                     let typeNode = btn.parentNode;
+                    let targetType = btn.dataset.type;
+                    let targetName = btn.dataset.name;
+                    let targetTitle = btn.title;
+                    if (!accurate) {
+                        targetType = targetType.toLowerCase();
+                        targetName = targetName.toLowerCase();
+                        targetTitle = targetTitle.toLowerCase();
+                    }
                     let globMatchName = "";
                     if (checkType) {
-                        let typeMatch = this.globMatch(checkType, typeNode.dataset.type);
+                        let typeMatch = this.globMatch(checkType, targetType);
                         if (!typeMatch) return;
-                        globMatchName = checkType + "**";
+                        globMatchName = btn.dataset.type + "**";
                     }
                     let canMatch = false;
                     if (!btn.dataset.clone) {
-                        if (this.globMatch(inputWords, btn.dataset.name)) {
+                        if (this.globMatch(inputWords, targetName)) {
                             canMatch = true;
                             globMatchName += '^' + btn.dataset.name + '$';
-                        } else if (btn.title && this.globMatch(inputWords, btn.title)) {
+                        } else if (btn.title && this.globMatch(inputWords, targetTitle)) {
                             canMatch = true;
                             globMatchName += '^' + btn.title + '$';
                         }
@@ -4977,7 +4991,7 @@
                     }
                     if (canMatch) {
                         btn.classList.remove("input-hide");
-                        typeNode.classList.remove("input-hide");
+                        if (typeNode) typeNode.classList.remove("input-hide");
                         let listItem;
                         for (let i = 0; i < this.allListBtns.length; i++) {
                             if (this.allListBtns[i].id == "list" + btn.dataset.id) {
@@ -5017,18 +5031,18 @@
                 }
 
                 if (glob.length === 1 && glob[0] === '$') {
-                    return target.length === 0;
+                    return !target || target.length === 0;
                 }
 
                 if (glob.length > 1 && glob[0] === '*' &&
-                    target.length === 0) {
+                    (!target || target.length === 0)) {
                     return false;
                 }
 
                 if (!inner) {
                     inner = true;
                     if (glob.length > 1 && glob[0] === '^' &&
-                        target.length !== 0) {
+                        target && target.length !== 0) {
                         glob = glob.substring(1);
                         if (glob[0] !== target[0]) {
                             return false;
@@ -5039,7 +5053,7 @@
                 }
 
                 if ((glob.length > 1 && glob[0] === '?') ||
-                    (glob.length != 0 && target.length !== 0 &&
+                    (glob.length != 0 && target && target.length !== 0 &&
                      glob[0] === target[0])) {
                     return this.globMatch(glob.substring(1),
                                      target.substring(1), !!inner);
@@ -5047,7 +5061,7 @@
 
                 if (glob.length > 0 && glob[0] === '*') {
                     return this.globMatch(glob.substring(1), target, !!inner) ||
-                        this.globMatch(glob, target.substring(1), !!inner);
+                        this.globMatch(glob, target && target.substring(1), !!inner);
                 }
 
                 return false;
