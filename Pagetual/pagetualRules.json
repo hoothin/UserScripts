@@ -8531,13 +8531,13 @@
     },
     {
         "name": "魂+",
-        "url": "^https://.*(soul|white|north|south|snow)\\-plus\\.",
+        "url": "^https?://((www\\.|bbs\\.)?(south|north|level|white|soul|snow|east|spring|summer|blue)-plus.(net|org)|bbs.imoutolove.me)/",
         "action": 1,
         "sleep": 1000
     },
     {
         "name": "魂+阅读页",
-        "url": "^https://.*(soul|white|north|south|snow)\\-plus\\.",
+        "url": "^https?://((www\\.|bbs\\.)?(south|north|level|white|soul|snow|east|spring|summer|blue)-plus.(net|org)|bbs.imoutolove.me)/",
         "action": 1,
         "type": 0,
         "pageElement": "//div[@id='main']/form",
@@ -8547,7 +8547,7 @@
     },
     {
         "name": "魂+列表页",
-        "url": "^https://.*(soul|white|north|south|snow)\\-plus\\.",
+        "url": "^https?://((www\\.|bbs\\.)?(south|north|level|white|soul|snow|east|spring|summer|blue)-plus.(net|org)|bbs.imoutolove.me)/",
         "action": 1,
         "type": 0,
         "pageElement": "//tr[@align='center']",
