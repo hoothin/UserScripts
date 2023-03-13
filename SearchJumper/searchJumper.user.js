@@ -1702,7 +1702,7 @@
                  .search-jumper-isTargetPage .search-jumper-btn>div {
                      animation-name: changeOpacity;
                      animation-duration: 2s;
-                     animation-iteration-count: infinite;
+                     animation-iteration-count: 3;
                      animation-delay: 0.1s;
                      display: block;
                      opacity: 0;
