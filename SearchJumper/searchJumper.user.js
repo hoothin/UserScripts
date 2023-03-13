@@ -6708,11 +6708,11 @@
                         let url = getUrl();
                         if ((data.charset && data.charset != 'utf-8') || /[:%]p{/.test(data.url)) {
                             if (url === false) return false;
-                            let jumpFrom = data.url.match(/#j(umpFrom|f)?{(.*?)}/);
+                            let jumpFrom = data.url.match(/#(j(umpFrom|f)?|from){(.*?)}/);
                             let processPostUrl = _url => {
                                 storage.setItem("postUrl", [_url, data.charset]);
                                 if (jumpFrom) {
-                                    jumpFrom = jumpFrom[2];
+                                    jumpFrom = jumpFrom[3];
                                     if (jumpFrom.indexOf("http") !== 0) {
                                         jumpFrom = _url.replace(/(:\/\/.*?\/).*/, "$1" + jumpFrom);
                                     }
@@ -7619,7 +7619,7 @@
         }
 
         function submitByForm(charset, url, target) {
-            url = url.replace(/#j(umpFrom|f)?{(.*?)}/, "");
+            url = url.replace(/#(j(umpFrom|f)?|from){(.*?)}/, "");
             currentFormParams = {charset: charset, url: url, target: target};
             if (url.indexOf("#submitBySearchJumper") !== -1) {
                 currentFormParams = {charset: charset, url: url.replace("#submitBySearchJumper", ""), target: target};
@@ -8522,7 +8522,7 @@
                 }
                 if (parentForm.method.toLowerCase() == "post") {
                     url += "%p{" + params.join("&") + "}";
-                    if (parentForm.action.indexOf(location.origin) == 0 && location.pathname && location.pathname !== "/") url += `#jf{${location.pathname.slice(1)}}`;
+                    if (parentForm.action.indexOf(location.origin) == 0 && location.pathname && location.pathname !== "/") url += `#from{${location.pathname.slice(1)}}`;
                 } else {
                     if (url.indexOf("?") === -1) {
                         url += "?";
