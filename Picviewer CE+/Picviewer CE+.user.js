@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.3.11.2
+// @version              2023.3.13.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -42,7 +42,7 @@
 // @grant                unsafeWindow
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
 // @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1157785
-// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1160078
+// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1160810
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @match                *://*/*
@@ -14145,10 +14145,10 @@ ImgOps | https://imgops.com/#b#`;
                     lastX=e.changedTouches[0].clientX;
                     lastY=e.changedTouches[0].clientY;
                     self.eleMaps['img-content'].addEventListener('touchmove',tracer);
-                });
+                },{ passive: false, capture: false });
                 self.eleMaps['img-content'].addEventListener('touchend',function(e){
                     self.eleMaps['img-content'].removeEventListener('touchmove',tracer);
-                });
+                },{ passive: false, capture: false });
 
                 //上下左右切换图片,空格键模拟滚动一页
 
@@ -18453,7 +18453,7 @@ ImgOps | https://imgops.com/#b#`;
 
                 container.addEventListener('touchstart',function(e){//当按下的时，执行平移，缩放，旋转操作
                     self.imgWindowEventHandler(e);
-                },{ passive: false, capture: false });
+                },{ passive: true, capture: false });
 
                 container.addEventListener('click',function(e){//阻止opera ctrl+点击保存图片
                     self.imgWindowEventHandler(e);
@@ -19794,7 +19794,7 @@ ImgOps | https://imgops.com/#b#`;
                 if(e!==true && imgWindow.contains(e.target))return;
                 imgWindow.classList.remove('pv-pic-window-container_focus');
                 document.removeEventListener('mousedown',this._blur,true);
-                document.removeEventListener('keydown',this._focusedKeydown,true);
+                document.removeEventListener('keydown',this._focusedKeydown,false);
                 document.removeEventListener('keyup',this._focusedKeyup,true);
                 this.changeCursor('default');
                 ImgWindowC.selectedTool=this.selectedTool;
@@ -19808,7 +19808,7 @@ ImgOps | https://imgops.com/#b#`;
                 this.imgWindow.classList.add('pv-pic-window-container_focus');
                 this.imgWindow.style.zIndex=prefs.imgWindow.zIndex+1;
                 this.zIndex=prefs.imgWindow.zIndex+1;
-                document.addEventListener('keydown',this._focusedKeydown,true);
+                document.addEventListener('keydown',this._focusedKeydown,false);
                 document.addEventListener('keyup',this._focusedKeyup,true);
                 document.addEventListener('mousedown',this._blur,true);
 
@@ -19899,8 +19899,10 @@ ImgOps | https://imgops.com/#b#`;
             },
             focusedKeydown:function(e){
                 var keyCode=e.keyCode;
-                if (e.key.toLowerCase() == prefs.floatBar.keys.download) {
+                if (this.data && this.data.img && e.key.toLowerCase() == prefs.floatBar.keys.download) {
                     downloadImg(this.img.src, (this.data.img.alt || this.data.img.title), prefs.saveName);
+                    e.preventDefault();
+                    e.stopPropagation();
                     return;
                 }
                 var valid=[32,82,72,90,18,16,17,27,67,71];//有效的按键
@@ -22222,7 +22224,7 @@ ImgOps | https://imgops.com/#b#`;
                         event.preventDefault();
                         return true;
                     }
-                })
+                });
             }
         }
 
