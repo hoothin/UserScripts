@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.55.25
+// @version      1.6.6.55.26
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -2402,7 +2402,7 @@
                      height: 0.5vh;
                      width: 100%;
                      position: absolute;
-                     border: 1px solid #beb7b7;
+                     border: 1px solid #999999;
                      min-height: 3px;
                      box-sizing: border-box;
                      left: 0;
@@ -5724,8 +5724,8 @@
                         self.preList.style.visibility = "hidden";
                         self.listArrow.style.cssText = "";
                     }
-                    self.recoveHistory();
                     if (!ele.classList.contains("search-jumper-open")) {
+                        self.recoveHistory();
                         ele.classList.add("search-jumper-open");
                         if (sites.length > 10 && !searchData.prefConfig.expandType) {
                             ele.classList.add("not-expand");
@@ -5753,6 +5753,7 @@
                             }
                         });
                         let href = (targetElement && (targetElement.href || targetElement.src)) || location.href;
+                        let keyWords = getKeywords();
                         siteEles.forEach((se, i) => {
                             let si = se.querySelector("img");
                             if (si && !si.src && si.dataset.src) {
@@ -5767,9 +5768,16 @@
                                     se.style.display = 'none';
                                 }
                             }
+                            if (keyWords && data.kwFilter) {
+                                if (new RegExp(data.kwFilter).test(keyWords)) {
+                                    se.style.display = '';
+                                    if (ele.children.length > 1) ele.insertBefore(se, ele.children[1]);
+                                } else {
+                                    se.style.display = 'none';
+                                    ele.appendChild(se);
+                                }
+                            }
                         });
-
-
                     } else {
                         ele.classList.remove("search-jumper-open");
                         if (leftRight) {
@@ -5865,10 +5873,20 @@
                             ele.classList.add("not-expand");
                             ele.appendChild(self.searchJumperExpand);
                         }
-                        siteEles.forEach(se => {
+                        siteEles.forEach((se, i) => {
                             let si = se.querySelector("img");
                             if (si && !si.src && si.dataset.src) {
                                 si.src = si.dataset.src;
+                            }
+                            let data = sites[i];
+
+                            if (localKeywords && data.kwFilter) {
+                                if (new RegExp(data.kwFilter).test(localKeywords)) {
+                                    se.style.display = '';
+                                } else {
+                                    se.style.display = 'none';
+                                    ele.appendChild(se);
+                                }
                             }
                         });
                     }
@@ -7000,11 +7018,14 @@
                     this.bar.style.display = "";
                 }
                 self.setFuncKeyCall(false);
-                if (firstType && !firstType.parentNode.classList.contains('search-jumper-open')) {
+                if (firstType) {
                     if (!searchData.prefConfig.disableAutoOpen || _funcKeyCall) {
+                        if (firstType.parentNode.classList.contains('search-jumper-open')) {
+                            firstType.onmousedown();
+                        }
                         firstType.onmousedown();
+                        self.insertHistory(firstType.parentNode);
                     }
-                    self.insertHistory(firstType.parentNode);
                 }
                 self.setFuncKeyCall(_funcKeyCall);
                 if (_funcKeyCall) {
@@ -7816,12 +7837,9 @@
             if (!currentSite) return localKeywords || '';
             //if (localKeywords === '' && cacheKeywords) return cacheKeywords;
 
-            let keywordsMatch, keywords = '';
-            if (currentSite.charset && currentSite.charset != 'UTF-8') {
-                let firstInput = document.body.querySelector('input[type=text]:not([readonly]),input:not([type])');
-                if (firstInput) keywords = firstInput.value;
-            } else {
-                if (currentSite.keywords) {
+            let keywordsMatch, keywords = '', isUtf8 = !currentSite.charset || currentSite.charset == 'UTF-8';
+            if (currentSite.keywords) {
+                if (isUtf8) {
                     if (/^[\w\|]+$/.test(currentSite.keywords)) {
                         let keywordsList = currentSite.keywords.split("|");
                         let urlParams = new URLSearchParams(location.search);
@@ -7829,8 +7847,40 @@
                             keywords = urlParams.get(keywordsList[i]);
                             if (keywords) break;
                         }
-                    } else {
-                        keywordsMatch = location.href.match(new RegExp(currentSite.keywords));
+                    } else if (/\(.+\)/.test(currentSite.keywords)) {
+                        try {
+                            keywordsMatch = location.href.match(new RegExp(currentSite.keywords));
+                            if (keywordsMatch) {
+                                keywords = keywordsMatch[1];
+                            }
+                            if (keywords) {
+                                keywords = decodeURIComponent(keywords);
+                            }
+                        } catch (e) {
+                            keywords = '';
+                        }
+                    }
+                }
+                if (!keywords && document.body) {
+                    try {
+                        let targetEle = document.body.querySelector(currentSite.keywords);
+                        if (targetEle) {
+                            keywords = targetEle.value || targetEle.innerText;
+                        }
+                    } catch (e) {
+                        keywords = '';
+                    }
+                }
+            } else if (isUtf8 && /%s\b/.test(currentSite.url) && !/[#:%]p{/.test(currentSite.url)) {
+                if (location.href.indexOf("?") != -1) {
+                    keywordsMatch = currentSite.url.match(/[\?&]([^&]*?)=%s\b.*/);
+                    if (keywordsMatch) {
+                        keywords = new URLSearchParams(location.search).get(keywordsMatch[1]);
+                    }
+                } else {
+                    keywordsMatch = currentSite.url.match(/https?:\/\/[^\/]*\/(.*)%s\b/);
+                    if (keywordsMatch) {
+                        keywordsMatch = location.href.match(new RegExp((keywordsMatch[1] || (location.host.replace(/\./g, "\\.") + "/")) + "(.*?)(\/|$)"));
                         if (keywordsMatch) {
                             keywords = keywordsMatch[1];
                         }
@@ -7839,28 +7889,6 @@
                                 keywords = decodeURIComponent(keywords);
                             } catch (e) {
                                 keywords = '';
-                            }
-                        }
-                    }
-                } else if (/%s\b/.test(currentSite.url) && !/[#:%]p{/.test(currentSite.url)) {
-                    if (location.href.indexOf("?") != -1) {
-                        keywordsMatch = currentSite.url.match(/[\?&]([^&]*?)=%s\b.*/);
-                        if (keywordsMatch) {
-                            keywords = new URLSearchParams(location.search).get(keywordsMatch[1]);
-                        }
-                    } else {
-                        keywordsMatch = currentSite.url.match(/https?:\/\/[^\/]*\/(.*)%s\b/);
-                        if (keywordsMatch) {
-                            keywordsMatch = location.href.match(new RegExp((keywordsMatch[1] || (location.host.replace(/\./g, "\\.") + "/")) + "(.*?)(\/|$)"));
-                            if (keywordsMatch) {
-                                keywords = keywordsMatch[1];
-                            }
-                            if (keywords) {
-                                try {
-                                    keywords = decodeURIComponent(keywords);
-                                } catch (e) {
-                                    keywords = '';
-                                }
                             }
                         }
                     }
