@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.3.13.1
+// @version              2023.3.14.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -41,7 +41,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
-// @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1157785
+// @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1161316
 // @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1160810
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
@@ -11640,7 +11640,7 @@ var floatBar;
         }
         return result?result:key;
     }
-    var defaultSearchData=`Google | https://www.google.com/searchbyimage?image_url=#t#
+    var defaultSearchData=`Google | https://www.google.com/searchbyimage?safe=off&sbisrc=1&image_url=#t#
 Yandex | https://yandex.com/images/search?source=collections&rpt=imageview&url=#t#
 SauceNAO | https://saucenao.com/search.php?db=999&url=#t#
 IQDB | https://iqdb.org/?url=#t#
@@ -21432,6 +21432,22 @@ ImgOps | https://imgops.com/#b#`;
                 }
                 return results;
             },
+            getExtSrc:function(ele){
+                var newSrc,rule;
+                for(var i in this.rules){
+                    rule=this.rules[i];
+                    if(rule.getExtSrc){
+                        newSrc = rule.getExtSrc.call(ele);
+                        this.xhr = (newSrc && !rule.stopXhr) ? (this._xhr || null) : null;
+                    }else newSrc = null;
+                    if(newSrc && newSrc.length>0){
+                        debug(rule);
+                        break;
+                    }
+                }
+                if(newSrc && newSrc.length==0)newSrc=null;
+                return newSrc;
+            },
             getImage:function(img, a, p){
                 var newSrc,rule;
                 var base64Img=/^data:/i.test(img.src);
@@ -21784,49 +21800,39 @@ ImgOps | https://imgops.com/#b#`;
                 let nodeStyle = unsafeWindow.getComputedStyle(node);
                 return node && nodeStyle.backgroundImage && parseFloat(nodeStyle.width) > prefs.floatBar.minSizeLimit.w && parseFloat(nodeStyle.height) > prefs.floatBar.minSizeLimit.h && /^\s*url\(\s*['"]?\s*[^a\s'"]/i.test(nodeStyle.backgroundImage);
             };
-            if (target.nodeName != 'IMG' && target.dataset.role == "img") {
-                let img = target.parentNode.querySelector('img');
-                if (img) target = img;
-            }
-            if (target.nodeName != 'IMG') {
-                if (target.nodeName == "AREA") target = target.parentNode;
-                var targetBg;
-                var bgReg = /^\s*url\(\s*["']?(.+?)["']?\s*\)/i;
-                var preEle = target, preImg;
-                while (preEle && getComputedStyle(preEle).position == "absolute") {
-                    if (preEle.tagName == "IMG") preImg = preEle;
-                    preEle = preEle.previousElementSibling;
+            if (target.nodeName != 'IMG' && matchedRule.getExtSrc) {
+                let nsrc;
+                try {
+                    nsrc = matchedRule.getExtSrc(target);
+                } catch(ex) {
+                    throwErrorInfo(ex);
                 }
-                if (preEle == target) preEle = null;
-                if (prefs.floatBar.listenBg && hasBg(target)) {
-                    targetBg = unsafeWindow.getComputedStyle(target).backgroundImage.replace(bgReg, "$1");
-                    let src = targetBg, nsrc = src, noActual = true, type = "scale";
+                if (nsrc) {
                     result = {
                         src: nsrc,
-                        type: type,
-                        imgSrc: src,
-                        noActual:noActual,
+                        type: "scale",
+                        imgSrc: nsrc,
+                        noActual: true,
                         img: target
                     };
-                } else if (preImg) {
-                    target = preImg;
-                } else if (target.children.length == 1 && target.children[0].tagName == "IMG") {
-                    target = target.children[0];
-                } else if (prefs.floatBar.listenBg && preEle && hasBg(preEle)) {
-                    targetBg = unsafeWindow.getComputedStyle(preEle).backgroundImage.replace(bgReg, "$1");
-                    let src = targetBg, nsrc = src, noActual = true, type = "scale";
-                    result = {
-                        src: nsrc,
-                        type: type,
-                        imgSrc: src,
-                        noActual:noActual,
-                        img: target
-                    };
-                } else if (target.parentNode) {
-                    if (target.parentNode.nodeName == 'IMG') {
-                        target = target.parentNode;
-                    } else if (prefs.floatBar.listenBg && hasBg(target.parentNode)) {
-                        target = target.parentNode;
+                }
+            }
+            if (!result) {
+                if (target.nodeName != 'IMG' && target.dataset.role == "img") {
+                    let img = target.parentNode.querySelector('img');
+                    if (img) target = img;
+                }
+                if (target.nodeName != 'IMG') {
+                    if (target.nodeName == "AREA") target = target.parentNode;
+                    var targetBg;
+                    var bgReg = /^\s*url\(\s*["']?(.+?)["']?\s*\)/i;
+                    var preEle = target, preImg;
+                    while (preEle && getComputedStyle(preEle).position == "absolute") {
+                        if (preEle.tagName == "IMG") preImg = preEle;
+                        preEle = preEle.previousElementSibling;
+                    }
+                    if (preEle == target) preEle = null;
+                    if (prefs.floatBar.listenBg && hasBg(target)) {
                         targetBg = unsafeWindow.getComputedStyle(target).backgroundImage.replace(bgReg, "$1");
                         let src = targetBg, nsrc = src, noActual = true, type = "scale";
                         result = {
@@ -21836,7 +21842,35 @@ ImgOps | https://imgops.com/#b#`;
                             noActual:noActual,
                             img: target
                         };
-                    }/*else if(unsafeWindow.getComputedStyle(target).position=="absolute" || target.nodeName == "MAP"){
+                    } else if (preImg) {
+                        target = preImg;
+                    } else if (target.children.length == 1 && target.children[0].tagName == "IMG") {
+                        target = target.children[0];
+                    } else if (prefs.floatBar.listenBg && preEle && hasBg(preEle)) {
+                        targetBg = unsafeWindow.getComputedStyle(preEle).backgroundImage.replace(bgReg, "$1");
+                        let src = targetBg, nsrc = src, noActual = true, type = "scale";
+                        result = {
+                            src: nsrc,
+                            type: type,
+                            imgSrc: src,
+                            noActual:noActual,
+                            img: target
+                        };
+                    } else if (target.parentNode) {
+                        if (target.parentNode.nodeName == 'IMG') {
+                            target = target.parentNode;
+                        } else if (prefs.floatBar.listenBg && hasBg(target.parentNode)) {
+                            target = target.parentNode;
+                            targetBg = unsafeWindow.getComputedStyle(target).backgroundImage.replace(bgReg, "$1");
+                            let src = targetBg, nsrc = src, noActual = true, type = "scale";
+                            result = {
+                                src: nsrc,
+                                type: type,
+                                imgSrc: src,
+                                noActual:noActual,
+                                img: target
+                            };
+                        }/*else if(unsafeWindow.getComputedStyle(target).position=="absolute" || target.nodeName == "MAP"){
                         var imgChildren=[],availableImgs = [];
                         [].forEach.call(target.parentNode.querySelectorAll('img'),function(img){
                             var imgStyle=unsafeWindow.getComputedStyle(img);
@@ -21869,48 +21903,49 @@ ImgOps | https://imgops.com/#b#`;
                             }
                         }
                     }*/
-                }
-                if (result && !/^data:/i.test(result.src)) {
-                    if (matchedRule.rules.length > 0 && target.nodeName != 'IMG') {
-                        let src = result.src, img = {src: src}, type, imgSrc = src;
-                        try {
-                            var newSrc = matchedRule.getImage(img);
-                            if (newSrc && imgSrc != newSrc) {
-                                let srcs, description;
-                                src = newSrc;
-                                if (Array.isArray(src)) {
-                                    srcs = src;
-                                    src = srcs.shift();
-                                }
-                                type = 'rule';
-
-                                if (matchedRule.description) {
-                                    var node = getElementMix(matchedRule.description, img);
-                                    if (node) {
-                                        description = node.getAttribute('title') || node.textContent;
+                    }
+                    if (result && !/^data:/i.test(result.src)) {
+                        if (matchedRule.rules.length > 0 && target.nodeName != 'IMG') {
+                            let src = result.src, img = {src: src}, type, imgSrc = src;
+                            try {
+                                var newSrc = matchedRule.getImage(img);
+                                if (newSrc && imgSrc != newSrc) {
+                                    let srcs, description;
+                                    src = newSrc;
+                                    if (Array.isArray(src)) {
+                                        srcs = src;
+                                        src = srcs.shift();
                                     }
+                                    type = 'rule';
+
+                                    if (matchedRule.description) {
+                                        var node = getElementMix(matchedRule.description, img);
+                                        if (node) {
+                                            description = node.getAttribute('title') || node.textContent;
+                                        }
+                                    }
+                                    result.src = src;
+                                    result.type = type;
+                                    result.noActual = false;
+                                    result.xhr = matchedRule.xhr;
+                                    result.description = description || '';
                                 }
-                                result.src = src;
-                                result.type = type;
-                                result.noActual = false;
-                                result.xhr = matchedRule.xhr;
-                                result.description = description || '';
-                            }
-                        } catch(err) {}
-                        if (result.type != "rule") {
-                            tprules.find(function(rule, index, array) {
-                                try {
-                                    src = rule.call(img);
-                                    if (src) {
-                                        return true;
-                                    };
-                                } catch(err) {
+                            } catch(err) {}
+                            if (result.type != "rule") {
+                                tprules.find(function(rule, index, array) {
+                                    try {
+                                        src = rule.call(img);
+                                        if (src) {
+                                            return true;
+                                        };
+                                    } catch(err) {
+                                    }
+                                });
+                                if (src && src != imgSrc) {
+                                    result.src = src;
+                                    result.type = "tpRule";
+                                    result.noActual = false;
                                 }
-                            });
-                            if (src && src != imgSrc) {
-                                result.src = src;
-                                result.type = "tpRule";
-                                result.noActual = false;
                             }
                         }
                     }
@@ -21939,21 +21974,18 @@ ImgOps | https://imgops.com/#b#`;
 
             if (!result && target.nodeName != 'IMG') {
                 if (target.nodeName == 'A' && /\.(jpg|png|jpeg|gif|webp)\b/.test(target.href)) {
+                } else if (target.parentNode.nodeName == 'A' && /\.(jpg|png|jpeg|gif|webp)\b/.test(target.parentNode.href)) {
+                    target = target.parentNode;
+                } else {
+                    target = null;
+                }
+                if (target) {
                     result = {
                         src: target.href,
                         type: "",
                         imgSrc: target.href,
                         noActual:true,
                         img: target
-                    };
-                    checkUniqueImgWin();
-                } else if (target.parentNode.nodeName == 'A' && /\.(jpg|png|jpeg|gif|webp)\b/.test(target.parentNode.href)) {
-                    result = {
-                        src: target.parentNode.href,
-                        type: "",
-                        imgSrc: target.parentNode.href,
-                        noActual:true,
-                        img: target.parentNode
                     };
                     checkUniqueImgWin();
                 }
