@@ -698,6 +698,20 @@ var siteInfo=[
 {
  name: "Youtube",
  url: /youtube\.com/,
+ ext: function(target) {
+     if(target.tagName=="ytd-thumbnail"){
+        return target.querySelector("img");
+     }
+ },
+ getExtSrc: function() {
+    let newsrc = "";
+    if(this.id=="thumbnail-container"){
+        newsrc=this.querySelector('img').src;
+    }else if(this.parentNode && this.parentNode.className=="ytp-inline-preview-ui"){
+        newsrc = this.parentNode.parentNode.querySelector(".ytp-cued-thumbnail-overlay-image").style.backgroundImage.replace(/url\("(.*)"\)/,"$1");
+    }
+    return newsrc.replace(/\?.*$/i,"");
+ },
  getImage: function(a, p) {
      var newsrc=this.src;
      if(p[2] && this.classList.contains('ytd-moving-thumbnail-renderer')){
