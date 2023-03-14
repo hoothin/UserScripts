@@ -5774,7 +5774,9 @@
                                     if (ele.children.length > 1) ele.insertBefore(se, ele.children[1]);
                                 } else {
                                     se.style.display = 'none';
-                                    ele.appendChild(se);
+                                    if (self.searchJumperExpand.parentNode == ele) {
+                                        ele.insertBefore(se, self.searchJumperExpand);
+                                    } else ele.appendChild(se);
                                 }
                             }
                         });
@@ -5885,7 +5887,9 @@
                                     se.style.display = '';
                                 } else {
                                     se.style.display = 'none';
-                                    ele.appendChild(se);
+                                    if (self.searchJumperExpand.parentNode == ele) {
+                                        ele.insertBefore(se, self.searchJumperExpand);
+                                    } else ele.appendChild(se);
                                 }
                             }
                         });
