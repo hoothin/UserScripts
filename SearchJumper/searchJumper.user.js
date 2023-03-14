@@ -6622,7 +6622,7 @@
                     if (!self.batchOpening && !isBookmark) {
                         let historyLength = Math.max(searchData.prefConfig.historyLength, 20);
                         let isCurrent = ele.dataset.current;
-                        if (!ele.dataset.clone && !ele.classList.contains("notmatch") && historyLength && !isCurrent) {
+                        if (!data.hideNotMatch && !data.kwFilter && !ele.dataset.clone && urlMatch !== '0' && historyLength && !isCurrent) {
                             storage.getItem("historySites", data => {
                                 historySites = (data || []);
                                 historySites = historySites.filter(site => {return site && site != name});
