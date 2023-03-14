@@ -21438,7 +21438,6 @@ ImgOps | https://imgops.com/#b#`;
                     rule=this.rules[i];
                     if(rule.getExtSrc){
                         newSrc = rule.getExtSrc.call(ele);
-                        this.xhr = (newSrc && !rule.stopXhr) ? (this._xhr || null) : null;
                     }else newSrc = null;
                     if(newSrc && newSrc.length>0){
                         debug(rule);
@@ -21974,7 +21973,7 @@ ImgOps | https://imgops.com/#b#`;
 
             if (!result && target.nodeName != 'IMG') {
                 if (target.nodeName == 'A' && /\.(jpg|png|jpeg|gif|webp)\b/.test(target.href)) {
-                } else if (target.parentNode.nodeName == 'A' && /\.(jpg|png|jpeg|gif|webp)\b/.test(target.parentNode.href)) {
+                } else if (target.parentNode && target.parentNode.nodeName == 'A' && /\.(jpg|png|jpeg|gif|webp)\b/.test(target.parentNode.href)) {
                     target = target.parentNode;
                 } else {
                     target = null;
