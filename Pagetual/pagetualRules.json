@@ -873,6 +873,20 @@
         "css": ".nav-pagination,.img_land_prev,.img_land_next,#page_select,.img_info,.title.pr>em:nth-child(5),.title.pr>span,.img_info{display:none!important}#images>img{max-width: 100% !important;display: block !important;margin: 0 auto -2px auto !important;border:0px!important;padding:0px!important;}.w996,.tbCenter{width:auto!important}"
     },
     {
+        "name": "爱米推漫画 - 手機版閱讀",
+        "example": "https://m.imitui.com/manhua/yuanzun/3683.html",
+        "url": "^https?://m\\.imitui\\.com/manhua/\\w+/\\d+\\.html",
+        "action": 1,
+        "init": "let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/nextChapterData/)>-1).innerHTML;let next=eval(code.match(/nextChapterData[^;]+/)[0]);let prev=eval(code.match(/prevChapterData[^;]+/)[0]);document.querySelectorAll('.comic-panel a:last-child').forEach(e=>{e.removeAttribute('onclick');if(next.id>0){e.href=next.url}else{e.href='';e.innerText='無下一章'}});document.querySelectorAll('.comic-panel a:first-child').forEach(e=>{e.removeAttribute('onclick');if(prev.id>0)e.href=prev.url});let ge=e=>document.querySelector(e);let F=new DocumentFragment();document.querySelectorAll('#image,.scroll-item img').forEach(e=>{let img=new Image();if(e.dataset.src){img.src=e.dataset.src}else{img.src=e.src}F.appendChild(img)});let E=ge('#scroll-image');E.innerHTML='';E.appendChild(F);ge('#images').remove();",
+        "nextLinkByJs": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/nextChapterData/)>-1).innerHTML;let next=eval(code.match(/nextChapterData[^;]+/)[0]);if(next.id>0)return next.url",
+        "pageElement": "#scroll-image",
+        "replaceElement": "head>title,h1,.BarTit",
+        "pageInit": "let F=new DocumentFragment();doc.querySelectorAll('#image,.scroll-item img').forEach(e=>{let img=new Image();if(e.dataset.src){img.src=e.dataset.src}else{img.src=e.src}F.appendChild(img)});let E=doc.querySelector('#scroll-image');E.innerHTML='';E.appendChild(F);let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/nextChapterData/)>-1).innerHTML;let next=eval(code.match(/nextChapterData[^;]+/)[0]);let prev=eval(code.match(/prevChapterData[^;]+/)[0]);document.querySelectorAll('.comic-panel a:last-child').forEach(e=>{if(next.id>0){e.href=next.url}else{e.href='';e.innerText='無下一章'}});document.querySelectorAll('.comic-panel a:first-child').forEach(e=>{if(prev.id>0)e.href=prev.url});",
+        "pageAction": "let gae=e=>document.querySelectorAll(e);let c=gae('#scroll-image');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}",
+        "pageBarText": "let t=doc.querySelector('.BarTit');if(t)return t.innerText;",
+        "css": ".nav+div{display:none!important}#scroll-image img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
+    },
+    {
         "name": "漫画芯 / 最漫画 - 手機版閱讀",
         "example": "https://m.mhxin.com/manhua/douluodalu/631505.html，https://m.zuimh.com/manhua/douluodalu/314222.html",
         "url": "^https?://m\\.(mhxin|zuimh)\\.com/manhua/[a-z]+/\\d+\\.html",
@@ -887,11 +901,12 @@
         "css": "#image-msg,ul.nav+div:not(#images),ul.nav+div+div:not(#images),.action-list>ul>li:nth-child(n+2):nth-child(-n+3){display:none!important}.action-list li{width:50%!important}.chapter-view #images img{margin:0 auto 0px!important}"
     },
     {
-        "name": "最漫画 - PC版閱讀",
-        "example": "https://www.zuimh.com/manhua/maoshendoumaocao/1755415.html",
-        "url": "^https?://www\\.zuimh\\.com/manhua/[a-z]+/\\d+\\.html",
+        "name": "最漫画 / 爱米推漫画 - PC版閱讀",
+        "example": "https://www.zuimh.com/manhua/maoshendoumaocao/1755415.html，https://www.imitui.com/manhua/yuanzun/3683.html",
+        "url": "^https?://www\\.(zuimh|imitui)\\.com/manhua/[a-z]+/\\d+\\.html",
         "pinUrl": true,
         "history": 2,
+        "autoClick": "#chapter-scroll:not(.active)",
         "init": "let ge=e=>document.querySelector(e);let E=ge('#images');let F=new DocumentFragment();chapterImages.forEach(e=>{let img=new Image();img.src=e;F.appendChild(img)});E.innerHTML='';E.appendChild(F);let style=document.createElement('style');style.innerHTML='#tbCenter>#images:nth-child(1)>img:nth-child('+chapterImages.length+')~*{display: none!important}';ge('head').appendChild(style);",
         "nextLinkByJs": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/nextChapterData/)>-1).innerHTML;let next=eval(code.match(/nextChapterData[^;]+/)[0]);if(next.id>0)return next.url",
         "pageElement": "#images",
@@ -1112,9 +1127,9 @@
         "css": ".comic_wraCon img{border:none!important;padding:0!important;width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}select,.img_land_prev,.img_land_next,#images{display:none!important}body,.autoHeight,.wrap_last_mid .pre,.wrap_last_mid .next,.chapter-view .panel,.mainNav_inner{width:auto!important;min-width:auto!important}"
     },
     {
-        "name": "优酷漫画 / 360 漫画 / 古漫画 / 前未漫画 / 最漫画 / 漫画芯 / 亲亲漫画 / 漫画456 - 分類",
-        "example": "www.ykmh.com，www.qianwee.com，www.100fanwo.com，www.izhegu.com，www.zuimh.com，www.mhxin.com，www.acgqd.com，www.manhua456.com",
-        "url": "^https?://www\\.(ykmh|qianwee|100fanwo|izhegu|zuimh|mhxin|acgqd|manhua456)\\.com/",
+        "name": "优酷漫画 / 360 漫画 / 古漫画 / 前未漫画 / 最漫画 / 漫画芯 / 亲亲漫画 / 漫画456 / 爱米推漫画 - 分類",
+        "example": "www.ykmh.com，www.qianwee.com，www.100fanwo.com，www.izhegu.com，www.zuimh.com，www.mhxin.com，www.acgqd.com，www.manhua456.com，www.imitui.com",
+        "url": "^https?://www\\.(ykmh|qianwee|100fanwo|izhegu|zuimh|mhxin|acgqd|manhua456|imitui)\\.com/",
         "nextLink": "li.next>a",
         "pageElement": "li.item-lg,.list-comic",
         "replaceElement": "ul.pagination",
