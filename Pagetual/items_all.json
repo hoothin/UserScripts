@@ -26403,16 +26403,16 @@
 {
   "resource_url": "http://wedata.net/items/74694",
   "data": {
-    "pageElement": "//*[count(./article)>1]/article",
-    "nextLink": "//nav[@class='c-pagination']/span/following-sibling::a[1]",
+    "pageElement": "//*[count(./article)>1]/article\r\n|//div[@class='main_col']/ul[@class='one-cols_list']",
+    "nextLink": "//nav[@class='c-pagination']/span/following-sibling::a[1]\r\n|//li[@class='page-next']/a",
     "url": "^https://full-count\\.jp/.+",
-    "exampleUrl": "https://full-count.jp/category/mlb/"
+    "exampleUrl": "https://full-count.jp/category/mlb/\r\nhttps://full-count.jp/category/samurai-japan/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "soolo",
   "name": "Full-count",
   "created_at": "2014-04-01T10:55:15+09:00",
-  "updated_at": "2022-12-10T09:41:46+09:00"
+  "updated_at": "2023-03-13T22:24:59+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/74691",
