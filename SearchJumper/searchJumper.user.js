@@ -7863,7 +7863,7 @@
                 }
                 if (!keywords && document.body) {
                     try {
-                        let targetEle = document.body.querySelector(currentSite.keywords);
+                        let targetEle = getElement(currentSite.keywords);
                         if (targetEle) {
                             keywords = targetEle.value || targetEle.innerText;
                         }
