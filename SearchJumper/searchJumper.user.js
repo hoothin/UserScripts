@@ -2011,6 +2011,7 @@
                  }
                  .funcKeyCall>.search-jumper-searchBar>.search-jumper-type:not(.search-jumper-open) {
                      display: none;
+                     border-radius: ${20 * this.scale}px!important;
                  }
                  span.search-jumper-word>img {
                      width: ${20 * this.scale}px;
