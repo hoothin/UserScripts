@@ -5659,30 +5659,32 @@
                     touchEvent.initEvent(type, true, true)
                 }
             }
-            try {
-                touchEvent.targetTouches = [{
-                    pageX: 1,
-                    pageY: 1,
-                    clientX: 1,
-                    clientY: 1,
-                    target: btn
-                }];
-                touchEvent.touches = [{
-                    pageX: 1,
-                    pageY: 1,
-                    clientX: 1,
-                    clientY: 1,
-                    target: btn
-                }];
-                touchEvent.changedTouches = [{
-                    pageX: 1,
-                    pageY: 1,
-                    clientX: 1,
-                    clientY: 1,
-                    target: btn
-                }];
-            } catch (err) {}
-            ele.dispatchEvent(touchEvent);
+            if (touchEvent) {
+                try {
+                    touchEvent.targetTouches = [{
+                        pageX: 1,
+                        pageY: 1,
+                        clientX: 1,
+                        clientY: 1,
+                        target: btn
+                    }];
+                    touchEvent.touches = [{
+                        pageX: 1,
+                        pageY: 1,
+                        clientX: 1,
+                        clientY: 1,
+                        target: btn
+                    }];
+                    touchEvent.changedTouches = [{
+                        pageX: 1,
+                        pageY: 1,
+                        clientX: 1,
+                        clientY: 1,
+                        target: btn
+                    }];
+                } catch (err) {}
+                ele.dispatchEvent(touchEvent);
+            }
         }
         dispatchTouchEvent(btn, "touchstart");
         dispatchTouchEvent(btn, "touchend");
