@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.34.25
+// @version      1.9.34.26
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1509,36 +1509,33 @@
                 //if(pageElement)this.saveCurSiteRule();
             }
 
-            if (pageElement && pageElement.length > 0) {
-                let pageElementCss = self.curSiteRule.pageElementCss || self.curSiteRule.pageElementStyle || rulesData.pageElementCss;
-                if (pageElementCss) {
-                    [].forEach.call(pageElement, ele => {
-                        if (!ele.dataset.pagetualPageElement && !/LINK|META|STYLE|SCRIPT/.test(ele.tagName)) {
-                            ele.style.cssText = (ele.style.cssText || '') + pageElementCss;
-                            ele.dataset.pagetualPageElement = 1;
-                        }
-                    });
-                }
-            }
             if (doc !== document) {
+                this.setPageElementCss(pageElement);
                 this.lazyImgAction(pageElement);
             } else if (!this.docPageElement) {
+                this.setPageElementCss(pageElement);
                 this.docPageElement = pageElement;
                 if (this.nextLinkHref) {
                     this.openInNewTab(pageElement);
                 }
-                this.processPageElement(pageElement);
             }
             return pageElement;
         }
 
-        processPageElement(pageElements) {
-            [].forEach.call(pageElements, ele => {
-                if (!/LINK|META|STYLE|SCRIPT/.test(ele.tagName)) {
-                    ele.style.containIntrinsicSize = `auto ${ele.offsetWidth || 100}px auto ${ele.offsetHeight || 100}px`;
-                    ele.style.contentVisibility = "auto";
-                }
-            });
+        setPageElementCss(pageElement) {
+            if (pageElement && pageElement.length > 0) {
+                let pageElementCss = this.curSiteRule.pageElementCss || this.curSiteRule.pageElementStyle || rulesData.pageElementCss;
+                [].forEach.call(pageElement, ele => {
+                    if (!/LINK|META|STYLE|SCRIPT/.test(ele.tagName)) {
+                        ele.style.containIntrinsicSize = `auto ${ele.offsetWidth || 100}px auto ${ele.offsetHeight || 100}px`;
+                        ele.style.contentVisibility = "auto";
+                        if (pageElementCss && !ele.dataset.pagetualPageElement) {
+                            ele.style.cssText = (ele.style.cssText || '') + pageElementCss;
+                            ele.dataset.pagetualPageElement = 1;
+                        }
+                    }
+                });
+            }
         }
 
         getPage(doc) {
@@ -2302,7 +2299,6 @@
                 }
             }
             this.openInNewTab(eles);
-            this.processPageElement(eles);
             this.replaceElement(doc);
         }
 
