@@ -5541,29 +5541,27 @@
     },
     {
         "name": "NEXE channels/models",
-        "example": "https://nnwjs.top/models",
+        "example": "https://nehen.xyz/models",
         "url": "^https?://[^/]+/(models|channels)",
         "pinUrl": true,
         "include": "//title[contains(text(),'NEXE')]",
-        "exclude": "iframe[src]",
         "nextLink": "//li[a/@class='active']/following-sibling::li[1][not(@title)]/a",
         "pageElement": ".margin-top-sm>.hex,.padding-lr-sm>.hex",
         "replaceElement": ".pagination",
         "pageInit": "doc.querySelectorAll('div.media[data-src]').forEach(div=>{div.style.width=div.dataset.width;div.style.height=div.dataset.height+'px';div.style.backgroundImage=`url('${div.dataset.src}')`;div.removeAttribute('data-src');div.removeAttribute('data-height');div.removeAttribute('data-width');div.classList.remove('loading')})",
-        "css": "h2~.pagetual_pageBar{margin-top:-20px!important}.pagetual_pageBar{margin-top:2px!important}"
+        "css": "h2~.pagetual_pageBar{margin-top:-20px!important}.pagetual_pageBar{margin-top:2px!important}.padding-lr-xs.margin-tb-xs {display: none !important;}.mobile .content{padding:0!important}"
     },
     {
         "name": "NEXE",
-        "example": "https://nnwjs.top/",
-        "url": "^https?://[^/]+/(\\?forwarding.+|best.+|search.+|index.+|amateur.+|danmaku.*)?$",
+        "example": "https://nehen.xyz/",
+        "url": "^https?://[^/]+/(\\?forwarding.+|best.+|search.+|index.+|amateur.+|danmaku.*|keywords.*)?$",
         "pinUrl": true,
         "include": "//title[contains(text(),'NEXE')]",
-        "exclude": "iframe[src]",
         "nextLink": "//li[a/@class='active']/following-sibling::li[1][not(@title)]/a",
         "pageElement": ".margin-top-sm>.hex,.hot-keywords",
         "replaceElement": ".pagination",
         "pageInit": "doc.querySelectorAll('div.media[data-thumb]').forEach(div=>{div.style.backgroundImage=`url('${div.dataset.src}')`;div.removeAttribute('data-src');div.classList.remove('loading')})",
-        "css": ".pagetual_pageBar{margin-top:0px!important}.hot-keywords+.pagetual_pageBar{margin-top:6px!important}.pagetual_pageBar+.hot-keywords{margin-top:0px!important}"
+        "css": ".pagetual_pageBar{margin-top:0px!important}.hot-keywords+.pagetual_pageBar{margin-top:6px!important}.pagetual_pageBar+.hot-keywords{margin-top:0px!important}.padding-lr-xs.margin-tb-xs {display: none !important;}.mobile .content{padding:0!important}"
     },
     {
         "name": "yinmh - 移除lazy直接載入圖片",
