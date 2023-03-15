@@ -7866,21 +7866,21 @@
     },
     {
         "name": "Yandex",
-        "url": "^https?://yandex\\.com/search/",
+        "url": "^https?://yandex\\.(com|ru)/search/",
         "pageElement": "#search-result>li",
         "pageElementCss": "content-visibility:visible"
     },
     {
         "name": "yandex web search mobile",
         "example": "https://yandex.com/",
-        "url": "^https?://yandex\\.com/",
+        "url": "^https?://yandex\\.(com|ru)/",
         "include": ".Pager-More",
         "loadMore": ".Pager-More"
     },
     {
         "name": "yandex Images Video search mobile",
         "example": "https://yandex.com/",
-        "url": "^https?://yandex\\.com/",
+        "url": "^https?://yandex\\.(com|ru)/",
         "include": ".more_direction_next",
         "loadMore": ".more_direction_next>button"
     },
