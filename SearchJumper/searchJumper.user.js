@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.55.26
+// @version      1.6.6.55.27
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -1522,7 +1522,7 @@
                  }
                  #search-jumper.funcKeyCall>.search-jumper-searchBar>.search-jumper-type {
                      height: ${searchData.prefConfig.minPopup ? '24px' : 'auto'}!important;
-                     width: ${searchData.prefConfig.minPopup ? 24 : (240 * this.scale)}px!important;
+                     width: ${searchData.prefConfig.minPopup ? 24 : (280 * this.scale)}px!important;
                      max-width: unset;
                      max-height: ${108 * this.scale + 10}px;
                      flex-wrap: wrap!important;
@@ -1550,7 +1550,7 @@
                  ` : ''}
                  #search-jumper.funcKeyCall>.search-jumper-searchBar>.search-jumper-type:hover {
                      height: auto!important;
-                     width: ${240 * this.scale}px!important;
+                     width: ${280 * this.scale}px!important;
                  }
                  #search-jumper.funcKeyCall>.search-jumper-searchBar>.search-jumper-type::-webkit-scrollbar {
                      width: 0 !important;
@@ -1837,7 +1837,7 @@
                      bottom: unset;
                      top: 5%;
                  }
-                 .search-jumper-type.not-expand>a:nth-of-type(10)~a {
+                 .search-jumper-type.not-expand>a:nth-of-type(${searchData.prefConfig.expandTypeLength || 12})~a {
                      display: none;
                  }
                  #search-jumper .sitelist {
@@ -7611,27 +7611,29 @@
                                     touchEvent.initEvent(type, true, true)
                                 }
                             }
-                            touchEvent.targetTouches = [{
-                                pageX: 1,
-                                pageY: 1,
-                                clientX: 1,
-                                clientY: 1,
-                                target: btn
-                            }];
-                            touchEvent.touches = [{
-                                pageX: 1,
-                                pageY: 1,
-                                clientX: 1,
-                                clientY: 1,
-                                target: btn
-                            }];
-                            touchEvent.changedTouches = [{
-                                pageX: 1,
-                                pageY: 1,
-                                clientX: 1,
-                                clientY: 1,
-                                target: btn
-                            }];
+                            try {
+                                touchEvent.targetTouches = [{
+                                    pageX: 1,
+                                    pageY: 1,
+                                    clientX: 1,
+                                    clientY: 1,
+                                    target: btn
+                                }];
+                                touchEvent.touches = [{
+                                    pageX: 1,
+                                    pageY: 1,
+                                    clientX: 1,
+                                    clientY: 1,
+                                    target: btn
+                                }];
+                                touchEvent.changedTouches = [{
+                                    pageX: 1,
+                                    pageY: 1,
+                                    clientX: 1,
+                                    clientY: 1,
+                                    target: btn
+                                }];
+                            } catch (err) {}
                             ele.dispatchEvent(touchEvent);
                         }
                         dispatchTouchEvent(btn, "touchstart");
