@@ -3823,6 +3823,8 @@
                                node.tagName != "STYLE" &&
                                node.tagName != "TEXTAREA" &&
                                node.contentEditable != 'true' &&
+                               node.ariaHidden != 'true' &&
+                               (!node.hasAttribute || node.hasAttribute('jsname') == false) &&
                                node.tagName != "MARK") {
                         if (!searchingPre && (node.tagName === "PRE" || node.tagName === "CODE")) {
                             preEles.push(node);
