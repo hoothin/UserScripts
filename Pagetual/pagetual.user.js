@@ -1513,7 +1513,7 @@
                 this.setPageElementCss(pageElement);
                 this.lazyImgAction(pageElement);
             } else if (!this.docPageElement) {
-                this.setPageElementCss(pageElement);
+                this.setPageElementCss(pageElement, true);
                 this.docPageElement = pageElement;
                 if (this.nextLinkHref) {
                     this.openInNewTab(pageElement);
@@ -1522,13 +1522,16 @@
             return pageElement;
         }
 
-        setPageElementCss(pageElement) {
+        setPageElementCss(pageElement, init) {
             if (pageElement && pageElement.length > 0) {
                 let pageElementCss = this.curSiteRule.pageElementCss || this.curSiteRule.pageElementStyle || rulesData.pageElementCss;
-                [].forEach.call(pageElement, ele => {
+                if (!pageElementCss && init && !this.nextLinkHref) return;
+                [].forEach.call(pageElement, (ele, i) => {
                     if (!/LINK|META|STYLE|SCRIPT/.test(ele.tagName)) {
-                        ele.style.containIntrinsicSize = `auto ${ele.offsetWidth || 100}px auto ${ele.offsetHeight || 100}px`;
-                        ele.style.contentVisibility = "auto";
+                        if (!init || i !== 0 || pageElement.length === 1) {
+                            ele.style.containIntrinsicSize = `auto ${ele.offsetWidth || 100}px auto ${ele.offsetHeight || 100}px`;
+                            ele.style.contentVisibility = "auto";
+                        }
                         if (pageElementCss && !ele.dataset.pagetualPageElement) {
                             ele.style.cssText = (ele.style.cssText || '') + pageElementCss;
                             ele.dataset.pagetualPageElement = 1;
