@@ -872,7 +872,7 @@ var siteInfo=[
 {
  name: "sina sports",
  src: /k\.sinaimg\.cn\/n\//i,
- r: /k\.sinaimg\.cn\/n\/(.*)\/w\d+h\d+[^\/]+$/,
+ r: /k\.sinaimg\.cn\/n\/(.*)\/(w\d+)?h\d+[^\/]+$/,
  s: 'n.sinaimg.cn/$1'
 },
 {
