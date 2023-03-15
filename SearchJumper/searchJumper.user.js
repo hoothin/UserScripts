@@ -6387,13 +6387,16 @@
                     let needDecode = (/^c(opy)?:|[#:%]P{|^javascript:/i.test(data.url));
                     let keywordsU, keywordsL, keywordsR;
                     let customReplaceKeywords = str => {
-                        str = customReplaceSingle(str, "%su", keywordsU);
-                        str = customReplaceSingle(str, "%sl", keywordsL);
-                        str = customReplaceSingle(str, "%sr", keywordsR);
-                        str = customReplaceSingle(str, "%s", keywordsR, v => {
-                            return (needDecode ? v : encodeURIComponent(v));
-                        });
-                        return str;
+                        let _str = str;
+                        _str = customReplaceSingle(_str, "%su", keywordsU);
+                        _str = customReplaceSingle(_str, "%sl", keywordsL);
+                        _str = customReplaceSingle(_str, "%sr", keywordsR);
+                        if (_str == str) {
+                            _str = customReplaceSingle(_str, "%s", keywordsR, v => {
+                                return (needDecode ? v : encodeURIComponent(v));
+                            });
+                        }
+                        return _str;
                     };
                     let customVariable = str => {
                         let customMatch = str.match(/%element{(.*?)}(\.prop\((.*?)\))?/);
