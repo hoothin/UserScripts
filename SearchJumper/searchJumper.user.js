@@ -3690,6 +3690,9 @@
                     return;
                 }
                 ele = ele || document.body;
+                if (ele.contentEditable == 'true' || (
+                    ele.parentNode && ele.parentNode.contentEditable == 'true'
+                )) return;
                 let preEles = [];
                 let searchingPre = false;
                 let self = this;
@@ -3819,6 +3822,7 @@
                                node.tagName != "SCRIPT" &&
                                node.tagName != "STYLE" &&
                                node.tagName != "TEXTAREA" &&
+                               node.contentEditable != 'true' &&
                                node.tagName != "MARK") {
                         if (!searchingPre && (node.tagName === "PRE" || node.tagName === "CODE")) {
                             preEles.push(node);
@@ -3880,7 +3884,9 @@
             }
 
             checkCharacterData(target) {
-                this.highlight("insert", target, true);
+                setTimeout(() => {
+                    this.highlight("insert", target, true);
+                }, 0);
             }
 
             removeMark(removedNode) {
