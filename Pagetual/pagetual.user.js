@@ -5641,9 +5641,9 @@
             twist: 0,
             which: 1
         };
-        let mouseEvent = new PointerEvent("mousedown",eventParam);
+        let mouseEvent = new PointerEvent("mousedown", eventParam);
         btn.dispatchEvent(mouseEvent);
-        mouseEvent = new PointerEvent("mouseup",eventParam);
+        mouseEvent = new PointerEvent("mouseup", eventParam);
         btn.dispatchEvent(mouseEvent);
         let dispatchTouchEvent = (ele, type) => {
             let touchEvent;
@@ -5659,27 +5659,29 @@
                     touchEvent.initEvent(type, true, true)
                 }
             }
-            touchEvent.targetTouches = [{
-                pageX: 1,
-                pageY: 1,
-                clientX: 1,
-                clientY: 1,
-                target: btn
-            }];
-            touchEvent.touches = [{
-                pageX: 1,
-                pageY: 1,
-                clientX: 1,
-                clientY: 1,
-                target: btn
-            }];
-            touchEvent.changedTouches = [{
-                pageX: 1,
-                pageY: 1,
-                clientX: 1,
-                clientY: 1,
-                target: btn
-            }];
+            try {
+                touchEvent.targetTouches = [{
+                    pageX: 1,
+                    pageY: 1,
+                    clientX: 1,
+                    clientY: 1,
+                    target: btn
+                }];
+                touchEvent.touches = [{
+                    pageX: 1,
+                    pageY: 1,
+                    clientX: 1,
+                    clientY: 1,
+                    target: btn
+                }];
+                touchEvent.changedTouches = [{
+                    pageX: 1,
+                    pageY: 1,
+                    clientX: 1,
+                    clientY: 1,
+                    target: btn
+                }];
+            } catch (err) {}
             ele.dispatchEvent(touchEvent);
         }
         dispatchTouchEvent(btn, "touchstart");
