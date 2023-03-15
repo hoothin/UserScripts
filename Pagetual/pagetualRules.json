@@ -7865,6 +7865,12 @@
         "css": ".pagetual_pageBar{margin-bottom:0px!important}"
     },
     {
+        "name": "Yandex",
+        "url": "^https?://yandex\\.com/search/",
+        "pageElement": "#search-result>li",
+        "pageElementCss": "content-visibility:visible"
+    },
+    {
         "name": "yandex web search mobile",
         "example": "https://yandex.com/",
         "url": "^https?://yandex\\.com/",
