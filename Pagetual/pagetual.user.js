@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.34.27
+// @version      1.9.34.28
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1522,19 +1522,91 @@
             return pageElement;
         }
 
+        changeVisibility() {
+            let pageElementCss = this.curSiteRule.pageElementCss || this.curSiteRule.pageElementStyle || rulesData.pageElementCss;
+            if (pageElementCss) return;
+            if (!this.changingVisibility) {
+                clearTimeout(this.changeVisibilityTimer);
+                this.changeVisibilityTimer = setTimeout(() => {
+                    this.changingVisibility = true;
+                    this.changeVisibility();
+                }, 300);
+                return;
+            }
+            this.changingVisibility = false;
+            if (!this.visibilityItems || !this.visibilityItems.length || this.visibleIndex < 0) return;
+            let tempIndex = this.visibleIndex, findVisible = false, lastVisible = 0;
+            let viewPortHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+            let checkItem = this.visibilityItems[tempIndex];
+            while(checkItem) {
+                if (checkItem.offsetParent) {
+                    let clientRect = checkItem.getBoundingClientRect();
+                    let top = clientRect && clientRect.top;
+                    let bottom = clientRect && clientRect.bottom;
+                    if (bottom > 0 && top < viewPortHeight) {
+                        if (!findVisible) {
+                            findVisible = true;
+                            lastVisible = tempIndex;
+                        }
+                        checkItem.style.contentVisibility = "visible";
+                    } else {
+                        if (top < viewPortHeight && checkItem.style.contentVisibility == "auto") {
+                            break;
+                        } else checkItem.style.contentVisibility = "auto";
+                    }
+                }
+                if (tempIndex == 0) break;
+                tempIndex--;
+                checkItem = this.visibilityItems[tempIndex];
+            }
+            tempIndex = this.visibleIndex + 1;
+            if (findVisible) {
+                this.visibleIndex = lastVisible;
+            }
+            checkItem = this.visibilityItems[tempIndex];
+            while(checkItem) {
+                if (checkItem.offsetParent) {
+                    let clientRect = checkItem.getBoundingClientRect();
+                    let top = clientRect && clientRect.top;
+                    let bottom = clientRect && clientRect.bottom;
+                    if (bottom > 0 && top < viewPortHeight) {
+                        findVisible = true;
+                        lastVisible = tempIndex;
+                        checkItem.style.contentVisibility = "visible";
+                    } else {
+                        if (findVisible && checkItem.style.contentVisibility == "auto") {
+                            break;
+                        } else checkItem.style.contentVisibility = "auto";
+                    }
+                }
+                if (tempIndex == this.visibilityItems.length - 1) break;
+                tempIndex++;
+                checkItem = this.visibilityItems[tempIndex];
+            }
+            if (findVisible) {
+                this.visibleIndex = lastVisible;
+            }
+        }
+
         setPageElementCss(pageElement, init) {
+            let self = this;
             if (pageElement && pageElement.length > 0) {
                 let pageElementCss = this.curSiteRule.pageElementCss || this.curSiteRule.pageElementStyle || rulesData.pageElementCss;
                 if (!pageElementCss && init && !this.nextLinkHref) return;
                 [].forEach.call(pageElement, (ele, i) => {
                     if (!/LINK|META|STYLE|SCRIPT/.test(ele.tagName)) {
-                        if (!init || i !== 0 || pageElement.length === 1) {
+                        if (pageElementCss) {
+                            if (!ele.dataset.pagetualPageElement) {
+                                ele.style.cssText = (ele.style.cssText || '') + pageElementCss;
+                                ele.dataset.pagetualPageElement = 1;
+                            }
+                        } else {
                             ele.style.containIntrinsicSize = `auto ${ele.offsetWidth || 100}px auto ${ele.offsetHeight || 100}px`;
-                            ele.style.contentVisibility = "auto";
-                        }
-                        if (pageElementCss && !ele.dataset.pagetualPageElement) {
-                            ele.style.cssText = (ele.style.cssText || '') + pageElementCss;
-                            ele.dataset.pagetualPageElement = 1;
+                            if (init) {
+                                ele.style.contentVisibility = "visible";
+                                self.visibilityItems.push(ele);
+                                self.visibleIndex++;
+                            } else ele.style.contentVisibility = "auto";
                         }
                     }
                 });
@@ -2424,6 +2496,8 @@
             }
             this.insert = null;
             this.addedElePool = [];
+            this.visibilityItems = [];
+            this.visibleIndex = -1;
             this.pageDoc = document;
             this.nextLinkHref = null;
             this.curUrl = location.href;
@@ -2489,11 +2563,11 @@
         }
 
         insertElement(ele) {
-            this.addedElePool.push(ele);
             if (!this.insert || !this.insert.parentNode) {
                 this.getInsert();
             }
             if (this.insert) {
+                this.addedElePool.push(ele);
                 if (this.curSiteRule.insertPos == 2) {
                     this.insert.appendChild(ele);
                 } else {
@@ -2550,6 +2624,7 @@
                         let newCanvas = newCanvass[i];
                         newCanvas.getContext('2d').drawImage(oldCanvas, 0, 0);
                     }
+                    self.visibilityItems.push(newEle);
                     self.insertElement(newEle);
                     newEles.push(newEle);
                 });
@@ -5151,6 +5226,7 @@
             if (!isLoading && !stopScroll) {
                 checkScrollReach();
             }
+            ruleParser.changeVisibility();
             if (ruleParser.curSiteRule.lockScroll) {
                 let curScroll = document.body.scrollTop || document.documentElement.scrollTop;
                 if (isLoading && Math.abs(lastScroll - curScroll) > 350) {
