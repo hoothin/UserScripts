@@ -5,44 +5,65 @@ PVCEP - Rules for Picviewer CE+
 (c) 2021-2022 Hoothin <rixixi [at] gmail.com>
 Licenced under the MIT license.
 
-最少仅需
+最少僅需
 {
- name: 站点名
- r: 图片链接正则或者待替换字符串
- s: 替换目标字符串
+ name: 站點名
+ r: 圖片地址正則或者待替換字符串
+ s: 替換目標字符串
 }
 或者
 {
- name: 站点名
- getImage: 图片链接替换函数
+ name: 站點名
+ getImage: 指向圖片時的地址替換函數，詳情見下方例子
 }
-其他参数项按需添加即可，需要注意 css/ext/xhr/lazyAttr（懒加载的原图 URL 属性名）/description（收藏图片时的描述，支持选择器或 xpath）/clickToOpen 在指定站点 URL 之后方可使用
-xhr 为内页图片获取属性，配合 getImage 使用，首先使用 getImage 筛选并返回父级 a 标签的 url，然后脚本会自动抓取该 url 指向的网页，通过 xhr 获取图片，其中 xhr.q 为图片（可以为多张，多张将添加到图库）的选择器或者函数
+其他參數項按需添加即可，需要注意 css/ext/xhr/lazyAttr（懶加載的原圖 URL 屬性名）/description（收藏圖片時的描述，支持選擇器或 xpath）/clickToOpen 在指定站點 URL 之後方可使用
+xhr 為內頁圖片獲取屬性，配合 getImage 使用，首先使用 getImage 篩選並返回父級 a 標籤的 url，然後腳本會自動抓取該 url 指向的網頁，透過 xhr 獲取圖片，其中 xhr.q 為圖片（可以為多張，多張將添加到圖庫）的選擇器或者函數
+如果鼠標指向對象非圖片，可使用 getExtSrc 生成想要的圖片地址，詳情見下方 youtube 例子
+
+minimum
+{
+  name: site name
+  r: regular image url or string to be replaced
+  s: replacement target string
+}
+or
+{
+  name: site name
+  getImage: The address replacement function when pointing to an image, see the example below for details
+}
+Other parameter items can be added as needed, you need to pay attention to css/ext/xhr/lazyAttr (lazy loaded original image URL attribute name)/description (description when collecting images, support selector or xpath)/clickToOpen in the specified site URL available after
+xhr is used to obtain the attributes of the pictures on the inner pages. It is used together with getImage. First, use getImage to filter and return the url of the parent a tag, and then the script will automatically grab the webpage pointed to by the url, and get pictures through xhr, where xhr.q is the picture (you can For multiple, multiple will be added to the gallery) selector or function
+If the mouse points to an object other than a picture, you can use getExtSrc to generate the desired picture url, see the youtube example below for details
  */
 var siteInfo=[
 {
  name: "google 图片搜索",
  
- //网址例子 ( 方便测试和查看 )
+ //網址例子 ( 方便測試和查看 )
  example:"http://www.google.com.hk/search?q=firefox&tbm=isch",
  
- //是否启用
+ //是否啟用
  enabled:true,
  
- //站点正则，匹配站点url该条规则才会生效
+ //站點正則，匹配站點url該條規則才會生效
  url:/https?:\/\/www.google(\.\w{1,3}){1,3}\/search\?.*&tbm=isch/,
  
- //鼠标左键点击直接打开（仅当高级规则的getImage()返回图片的时候生效）
+ //鼠標點擊直接打開（僅當高級規則的getImage()或者r/s替換有返回值的時候生效）
  clickToOpen:{
      enabled:false,
-     preventDefault:true,//是否尝试阻止点击的默认行为（比如如果是你点的是一个链接，默认行为是打开这个链接，如果是true，js会尝试阻止链接的打开(如果想临时打开这个链接，请使用右键的打开命令)）
-     type:'actual',//默认的打开方式: 'actual'(弹出,原始图片) 'magnifier'(放大镜) 'current'(弹出,当前图片)
+     preventDefault:true,//是否嘗試阻止點擊的默認行為（比如如果是你點的是一個鏈接，默認行為是打開這個鏈接，如果是true，js會嘗試阻止鏈接的打開(如果想臨時打開這個鏈接，請使用右鍵的打開命令)）
+     button:0,//0：鼠標左鍵 1：滾輪按鈕或中間按鈕（如果有） 2：鼠標右鍵。默認為 0
+     alt:false,//是否需要按下alt鍵
+     ctrl:false,//是否需要按下ctrl鍵
+     shift:false,//是否需要按下shift鍵
+     meta:false,//是否需要按下meta鍵
+     type:'actual',//默認的打開方式: 'actual'(彈出,原始圖片) 'magnifier'(放大鏡) 'current'(彈出,當前圖片)
  },
  
- //获取图片实际地址的处理函数,
- //this 为当前鼠标悬浮图片的引用,
- //第一个参数为当前图片的父元素中第一个a元素(可能不存在)
- //第二个参数为保存当前图片所有父元素的数组
+ //獲取圖片實際地址的處理函數,
+ //this 為當前鼠標懸浮圖片的引用,
+ //第一個參數為當前圖片的父元素中第一個a元素(可能不存在)
+ //第二個參數為保存當前圖片所有父元素的數組
  getImage:function(a){
      if(!a)return;
      let jsaction = a.getAttribute("jsaction");
@@ -54,24 +75,24 @@ var siteInfo=[
      }
  },
  
- // 自定义样式
+ // 自定義樣式
  // css: '',
  
- // 如果图片藏在非img标签后面，使用此项获取被遮挡的img元素。
- // 其中previous代表前面一个元素，previous-2代表前面第二个元素，next代表后面一个元素。
- // 或者直接用函数获取，传入当前元素，返回查找到的元素或是null。
+ // 如果圖片藏在非img標籤後面，使用此項獲取被遮擋的img元素。
+ // 其中previous代表前面一個元素，previous-2代表前面第二個元素，next代表後面一個元素。
+ // 或者直接用函數獲取，傳入當前元素，返回查找到的元素或是null。
  // ext: 'previous-2',
  
- // 排除的图片正则
+ // 排除的圖片正則
  // exclude: /weixin_code\.png$/i,
  
- // 需要替换的图片正则，匹配上图片url该条规则才生效
+ // 需要替換的圖片正則，匹配上圖片url該條規則才生效
  // src: /avatar/i,
  
- // 正则或字符串检测内容，可以为含有多组规则的数组，若为字符串则只进行字符串替换
+ // 正則或字符串檢測內容，可以為含有多組規則的數組，若為字符串則只進行字符串替換
  // r: /\?.*$/i,
  
- // 正则或字符串替换内容，可以与上一条一一对应，也可以以数组对应检测正则的其中一条，比如希望有多个结果尝试显示原图
+ // 正則或字符串替換內容，可以與上一條一一對應，也可以以數組對應檢測正則的其中一條，比如希望有多個結果嘗試顯示原圖
  // s: ''
 },
 {
@@ -987,6 +1008,21 @@ var siteInfo=[
  s: ["http://$1$2",
     "$1$3",
     "$1.jpg"]
+},
+{
+ name: "taobao",
+ url: /item\.taobao\.com/i,
+ r: [/.*((?:img\d\d\.taobaocdn|img(?:[^.]*\.?){1,2}?\.alicdn)\.com\/)(?:img\/|tps\/http:\/\/img\d\d+\.taobaocdn\.com\/)?((?:imgextra|bao\/uploaded)\/.+\.(?:jpe?g|png|gif|bmp))_.+\.jpg$/i,
+    /(.*\.alicdn\.com\/.*?)((.jpg|.png)(\.|_)\d+x\d+.*)\.jpg(_\.webp)?$/i,
+    /(.*\.alicdn\.com\/.*?)((\.|_)\d+x\d+.*|\.search|\.summ)\.jpg(_\.webp)?$/i],
+ s: ["http://$1$2",
+    "$1$3",
+    "$1.jpg"],
+ getExtSrc:function(){
+    if(this.tagName=='A' && this.style.background){
+        return this.style.background.replace(/.*url\(['"](https?:)?(.*)['"]\).*/,"https:$2").replace(/_\d+x\d+\.\w+$/,"")
+    }
+ }
 },
 {
  name: "yihaodianimg",
