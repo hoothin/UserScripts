@@ -35,7 +35,7 @@ Other parameter items can be added as needed, you need to pay attention to css/e
 xhr is used to obtain the attributes of the pictures on the inner pages. It is used together with getImage. First, use getImage to filter and return the url of the parent a tag, and then the script will automatically grab the webpage pointed to by the url, and get pictures through xhr, where xhr.q is the picture (you can For multiple, multiple will be added to the gallery) selector or function
 If the mouse points to an object other than a picture, you can use getExtSrc to generate the desired picture url, see the youtube example below for details
  */
-var siteInfo=[
+var siteInfo = [
 {
  name: "google 图片搜索",
  
@@ -73,7 +73,7 @@ var siteInfo=[
      if (a.href.match(/imgurl=(.*?\.\w{1,5})&/i)) {
          return decodeURIComponent(RegExp.$1);
      }
- },
+ }
  
  // 自定義樣式
  // css: '',
