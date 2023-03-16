@@ -40,34 +40,34 @@ var siteInfo=[
  name: "google 图片搜索",
  
  //網址例子 ( 方便測試和查看 )
- example:"http://www.google.com.hk/search?q=firefox&tbm=isch",
+ example: "http://www.google.com.hk/search?q=firefox&tbm=isch",
  
  //是否啟用
- enabled:true,
+ enabled: true,
  
  //站點正則，匹配站點url該條規則才會生效
- url:/https?:\/\/www.google(\.\w{1,3}){1,3}\/search\?.*&tbm=isch/,
+ url: /https?:\/\/www.google(\.\w{1,3}){1,3}\/search\?.*&tbm=isch/,
  
  //鼠標點擊直接打開（僅當高級規則的getImage()或者r/s替換有返回值的時候生效）
- clickToOpen:{
-     enabled:false,
-     preventDefault:true,//是否嘗試阻止點擊的默認行為（比如如果是你點的是一個鏈接，默認行為是打開這個鏈接，如果是true，js會嘗試阻止鏈接的打開(如果想臨時打開這個鏈接，請使用右鍵的打開命令)）
-     button:0,//0：鼠標左鍵 1：滾輪按鈕或中間按鈕（如果有） 2：鼠標右鍵。默認為 0
-     alt:false,//是否需要按下alt鍵
-     ctrl:false,//是否需要按下ctrl鍵
-     shift:false,//是否需要按下shift鍵
-     meta:false,//是否需要按下meta鍵
-     type:'actual',//默認的打開方式: 'actual'(彈出,原始圖片) 'magnifier'(放大鏡) 'current'(彈出,當前圖片)
+ clickToOpen: {
+     enabled: false,
+     preventDefault: true,//是否嘗試阻止點擊的默認行為（比如如果是你點的是一個鏈接，默認行為是打開這個鏈接，如果是true，js會嘗試阻止鏈接的打開(如果想臨時打開這個鏈接，請使用右鍵的打開命令)）
+     button: 0,//0：鼠標左鍵 1：滾輪按鈕或中間按鈕（如果有） 2：鼠標右鍵。默認為 0
+     alt: false,//是否需要按下alt鍵
+     ctrl: false,//是否需要按下ctrl鍵
+     shift: false,//是否需要按下shift鍵
+     meta: false,//是否需要按下meta鍵
+     type: 'actual',//默認的打開方式: 'actual'(彈出,原始圖片) 'magnifier'(放大鏡) 'current'(彈出,當前圖片)
  },
  
  //獲取圖片實際地址的處理函數,
  //this 為當前鼠標懸浮圖片的引用,
  //第一個參數為當前圖片的父元素中第一個a元素(可能不存在)
  //第二個參數為保存當前圖片所有父元素的數組
- getImage:function(a){
-     if(!a)return;
+ getImage: function(a) {
+     if(!a) return;
      let jsaction = a.getAttribute("jsaction");
-     if(!jsaction || jsaction.indexOf('mousedown')==-1)return;
+     if (!jsaction || jsaction.indexOf('mousedown') == -1) return;
      var fakeEvent = new MouseEvent('mousedown', {bubbles: true});
      a.dispatchEvent(fakeEvent);
      if (a.href.match(/imgurl=(.*?\.\w{1,5})&/i)) {
