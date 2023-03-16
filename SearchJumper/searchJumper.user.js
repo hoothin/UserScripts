@@ -4114,7 +4114,9 @@
                                 _GM_openInTab(siteBtn.href, {active: true});
                             }
                         }
-                        siteBtn.setAttribute("target", siteBtn.dataset.target==1?"_blank":"");
+                        if (isPage) {
+                            siteBtn.setAttribute("target", siteBtn.dataset.target == 1 ? "_blank" : "_self");
+                        }
                         return;
                     }
                 }
@@ -4677,7 +4679,9 @@
                                 _GM_openInTab(dragSiteBtn.href, {active: false});
                             }
                         }
-                        dragSiteBtn.setAttribute("target", dragSiteBtn.dataset.target==1?"_blank":"");
+                        if (isPage) {
+                            dragSiteBtn.setAttribute("target", dragSiteBtn.dataset.target == 1 ? "_blank" : "_self");
+                        }
                     }
                     document.body.removeEventListener('dragover', dragOpenOverHandler);
                     document.removeEventListener('drop', dragOpenDropHandler);
@@ -5959,7 +5963,7 @@
                         } else location.href = siteEle.href;
                     }
                 }
-                if (isPage) siteEle.setAttribute("target", siteEle.dataset.target == 1 ? "_blank" : "");
+                if (isPage) siteEle.setAttribute("target", siteEle.dataset.target == 1 ? "_blank" : "_self");
             }
 
             batchOpen(siteNames, e) {
@@ -6093,7 +6097,9 @@
                         siteEle.dispatchEvent(mouseDownEvent);
                         if (self.stopInput) return;
                         siteEle.click();
-                        siteEle.setAttribute("target", siteEle.dataset.target==1?"_blank":"");
+                        if (isPage) {
+                            siteEle.setAttribute("target", siteEle.dataset.target == 1 ? "_blank" : "_self");
+                        }
                     }
                 } else if (e.which === 3) {
                     targetSites.forEach(siteEle => {
@@ -6351,9 +6357,11 @@
                         if (!isBookmark && !cacheIcon[imgSrc]) cachePool.push(img);
                     }
                 }
-                if (isPage && openInNewTab) {
-                    ele.setAttribute("target", "_blank");
-                    ele.dataset.target = 1;
+                if (isPage) {
+                    if (openInNewTab) {
+                        ele.setAttribute("target", "_blank");
+                        ele.dataset.target = 1;
+                    } else ele.setAttribute("target", "_self");
                 }
                 let getUrl = () => {
                     self.customInput = false;
