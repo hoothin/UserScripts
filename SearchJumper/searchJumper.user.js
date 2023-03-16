@@ -2916,9 +2916,9 @@
                         this.showModifyWindow(word, wordSpan);
                     }, true);
                     wordSpan.addEventListener("mousedown", e => {
-                        if (e.which === 1 ) {
+                        if (e.button === 0) {
                             this.focusHighlightByText(word.content, true, wordSpan);
-                        } else if (e.which === 3){
+                        } else if (e.button === 2){
                             this.focusHighlightByText(word.content, false, wordSpan);
                         }
                     });
@@ -3775,11 +3775,11 @@
                             spannode.addEventListener("mousedown", e => {
                                 if (!e.altKey) return;
                                 let target;
-                                if (e.which === 1 ) {
+                                if (e.button === 0) {
                                     if (index != curList.length - 1) {
                                         self.focusIndex = index + 1;
                                     } else self.focusIndex = 0;
-                                } else if (e.which === 3){
+                                } else if (e.button === 2){
                                     if (index != 0) {
                                         self.focusIndex = index - 1;
                                     } else self.focusIndex = curList.length - 1;
@@ -5708,10 +5708,10 @@
                 let typeAction = e => {
                     let baseSize = Math.min(self.bar.scrollWidth, self.bar.scrollHeight);
                     if (e) {
-                        if (e.which === 3) {
+                        if (e.button === 2) {
                             batchOpenConfirm(e);
                             return false;
-                        } if (e.which === 1 && (e.shiftKey || e.altKey || e.ctrlKey)) {
+                        } if (e.button === 0 && (e.shiftKey || e.altKey || e.ctrlKey)) {
                             return false;
                         }
                     }
@@ -5971,7 +5971,7 @@
                 self.batchOpening = true;
                 self.customInput = false;
                 let targetSites = self.getTargetSitesByName(siteNames);
-                if (e.which === 1 && e.altKey && e.shiftKey) {
+                if (e.button === 0 && e.altKey && e.shiftKey) {
                     let html = '<title>SearchJumper Multi</title><style>body{background: black; margin: 0;}iframe{box-sizing: border-box;padding: 5px}</style>';
                     let c = window.open("", "_blank");
                     for (let i = 0;i < targetSites.length;i++) {
@@ -6101,7 +6101,7 @@
                             siteEle.setAttribute("target", siteEle.dataset.target == 1 ? "_blank" : "_self");
                         }
                     }
-                } else if (e.which === 3) {
+                } else if (e.button === 2) {
                     targetSites.forEach(siteEle => {
                         if (siteEle.dataset.current) return;
                         self.openSiteBtn(siteEle);
@@ -8081,7 +8081,7 @@
                     touchStart = false;
                     return;
                 }
-                if (e.which === 3) {
+                if (e.button === 2) {
                     if (searchData.prefConfig.resizePage) {
                         if (typeof searchBar.initBodyStyle != "undefined") document.body.style.cssText = searchBar.initBodyStyle;
                     }
@@ -8093,7 +8093,7 @@
                 }
                 e.preventDefault();
                 e.stopPropagation();
-                if (searchBar.inInput || e.which === 2 || e.altKey || e.ctrlKey || e.shiftKey || e.metaKey) {
+                if (searchBar.inInput || e.button === 1 || e.altKey || e.ctrlKey || e.shiftKey || e.metaKey) {
                     _GM_openInTab(configPage, {active: true});
                     return;
                 }
@@ -8284,7 +8284,7 @@
                     document.removeEventListener('click', clickHandler, true);
                 };
                 let mouseDownHandler = e => {
-                    if ((waitForMouse && e.type === 'mousedown' && e.which === 1) ||
+                    if ((waitForMouse && e.type === 'mousedown' && e.button === 0) ||
                         e.target.tagName === 'CANVAS' ||
                         e.target.tagName === 'HTML' ||
                         (e.target.classList && e.target.classList.contains('search-jumper-btn')) ||
@@ -8336,7 +8336,7 @@
                         matchKey = true;
                     }
                     if (!searchData.prefConfig.selectToShow &&
-                        (e.which === 1 || e.which === 2) && !searchData.prefConfig.leftMouse) {
+                        (e.button === 0 || e.button === 1) && !searchData.prefConfig.leftMouse) {
                         return;
                     }
                     let startX = e.clientX;
@@ -8362,7 +8362,7 @@
                         } else if (!inputSign) {
                             setTimeout(() => {
                                 if (shown) return;
-                                if ((matchKey && e.which !== 1) || (moved && e.which === 1 && searchData.prefConfig.selectToShow && getSelectStr())) {
+                                if ((matchKey && e.button !== 0) || (moved && e.button === 0 && searchData.prefConfig.selectToShow && getSelectStr())) {
                                     searchBar.showInPage(true, e);
                                 } else {
                                     waitForMouse = false;
@@ -8387,10 +8387,10 @@
                         }
                         return;
                     }
-                    if ((e.which === 1 && clientRect && !inputSign &&
+                    if ((e.button === 0 && clientRect && !inputSign &&
                          e.clientX > clientRect.left && e.clientX < clientRect.left + clientRect.width &&
                          e.clientY > clientRect.top && e.clientY < clientRect.top + clientRect.height) ||
-                        (matchKey && e.which !== 1)) {
+                        (matchKey && e.button !== 0)) {
                         setTimeout(() => {
                             if (!draging) {
                                 searchBar.showInPage(true, e);
@@ -8408,9 +8408,9 @@
                     showToolbarTimer = setTimeout(() => {
                         if (draging) return;
                         if (targetElement != e.target) return;
-                        if (e.which === 3 && !searchData.prefConfig.rightMouse) return;
-                        if ((e.which === 1 || e.which === 2) && !searchData.prefConfig.leftMouse) return;
-                        if (e.which === 1 && getSelectStr() !== '') return;
+                        if (e.button === 2 && !searchData.prefConfig.rightMouse) return;
+                        if ((e.button === 0 || e.button === 1) && !searchData.prefConfig.leftMouse) return;
+                        if (e.button === 0 && getSelectStr() !== '') return;
                         searchBar.setFuncKeyCall(false);
                         searchBar.showInPage();
                         shown = true;
