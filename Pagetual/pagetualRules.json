@@ -549,14 +549,14 @@
     {
         "name": "dm5 動漫屋 / 極速漫畫 - PC版閱讀",
         "example": "https://www.dm5.com/m1331307/，https://www.1kkk.com/ch1063-1331307/",
-        "url": "^https?://(www|tel|en|cnc)?\\.(dm5|1kkk)\\.(com|cn)/(m|ch)\\d+",
+        "url": "^https?://(www|tel|en|cnc)?\\.?(dm5|1kkk)\\.(com|cn)/(m|ch)\\d+",
         "include": "#chapterpager",
         "pinUrl": true,
-        "init": "let g=(e)=>document.querySelector(e);let loop=setInterval(()=>{let set=g('#cp_img>img');if(set){clearInterval(loop);ge('body').removeAttribute('style');g('#cp_img').innerHTML=g('#cp_img>img').outerHTML}},100);",
-        "nextLinkByJs": "let g=(e)=>doc.querySelector(e);let gx=x=>doc.evaluate(x,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue;let c=g('.chapterpager>span.current').innerText;let m=g('.chapterpager>*:last-child').innerText;let nc=gx(\"//a[text()='下一章']\");if(c!=m){let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/DM5_CURL/)>-1).innerHTML;let dc=eval(code.match(/DM5_CURL[^;]+/)[0]);let url=location.origin+dc;let next=url.replace(/(-p\\d+)?\\/$/,'')+'-p'+(parseInt(c)+1)+'/';return next}else if(nc){return nc.href}else{return null}",
+        "init": "let ge=(e)=>document.querySelector(e);let loop=setInterval(()=>{let set=ge('#cp_img>img');if(set){clearInterval(loop);ge('body').removeAttribute('style');ge('#cp_img').innerHTML=ge('#cp_img>img').outerHTML}},100);",
+        "nextLinkByJs": "let ge=(e)=>doc.querySelector(e);let gx=x=>doc.evaluate(x,doc,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue;let c=ge('.chapterpager>span.current').innerText;let m=ge('.chapterpager>*:last-child').innerText;let nc=gx(\"//a[text()='下一章']\");if(c!=m){let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/DM5_CURL/)>-1).innerHTML;let dc=eval(code.match(/DM5_CURL[^;]+/)[0]);let url=location.origin+dc;let next=url.replace(/(-p\\d+)?\\/$/,'')+'-p'+(parseInt(c)+1)+'/';return next}else if(nc){return nc.href}else{return null}",
         "pageElement": "#cp_img>img",
         "replaceElement": ".container",
-        "pageAction": "let ga=(e)=>document.querySelectorAll(e);ga('.pagetual_pageBar>a').forEach(e=>{if(/-p\\d+\\/$/.test(e.href))e.parentNode.remove()});let ps=ga('.pagetual_pageBar');if(ps.length>4){ps[0].remove();let ds=ga('#cp_img>*');for(let i in ds){if(/pagetual/.test(ds[i].id)){break};ds[i].remove()}}",
+        "pageAction": "let gae=(e)=>document.querySelectorAll(e);gae('.pagetual_pageBar>a').forEach(e=>{if(/-p\\d+\\/$/.test(e.href))e.parentNode.remove()});let ps=gae('.pagetual_pageBar');if(ps.length>4){ps[0].remove();let ds=gae('#cp_img>*');for(let i in ds){if(/pagetual/.test(ds[i].id)){break};ds[i].remove()}}",
         "pageBarText": "let t=doc.querySelector('.active');if(t)return t.innerText.trim()",
         "rate": 10,
         "css": "a[href^='j'],.chapterpager{display:none!important}#cp_img>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}.container{width:auto!important}"
@@ -564,7 +564,7 @@
     {
         "name": "dm5 動漫屋 / 極速漫畫 - 分類",
         "example": "https://www.dm5.com/manhua-list/，https://www.1kkk.com/manhua-list/",
-        "url": "^https?://(www|tel|en)?\\.(dm5|1kkk)\\.(com|cn)/manhua-([a-z]+/|list-area|list-tag|list-char)",
+        "url": "^https?://(www|tel|en|cnc)?\\.?(dm5|1kkk)\\.(com|cn)/manhua-([a-z]+/|list-area|list-tag|list-char)",
         "init": "document.querySelectorAll('.cat-filter a').forEach(a=>{a.setAttribute('onclick','setTimeout(()=>{location.reload()}, 1000)')})",
         "nextLink": "//a[text()=' > ']",
         "pinUrl": true,
@@ -2573,6 +2573,27 @@
         "pageElement": "//div[article]",
         "replaceElement": "#pagination",
         "pageBar": 0
+    },
+    {
+        "name": "www.thingiverse.com",
+        "example": "https://www.thingiverse.com/",
+        "url": "^https?://www\\.thingiverse\\.com/",
+        "action": 1,
+        "waitElement": [
+            "img[alt='Make Card'][loading]"
+        ],
+        "nextLink": "//a[div[span[text()='More']]]",
+        "pageElement": "[class^='SearchResult__searchResultItems']",
+        "replaceElement": "[class^='Pagination__pagination']",
+        "css": ".pagetual_pageBar{margin-top:2px!important;margin-bottom:0px!important}"
+    },
+    {
+        "name": "https://www.orcy.net.cn/",
+        "example": "https://www.orcy.net.cn/",
+        "url": "^https?://www\\.orcy\\.net\\.cn/",
+        "nextLink": ".nextpostslink",
+        "pageElement": ".Article__content",
+        "replaceElement": ".wp-pagenavi"
     },
     {
         "name": "小众软件",
@@ -5560,7 +5581,8 @@
         "nextLink": "//li[a/@class='active']/following-sibling::li[1][not(@title)]/a",
         "pageElement": ".margin-top-sm>.hex,.hot-keywords",
         "replaceElement": ".pagination",
-        "pageInit": "doc.querySelectorAll('div.media[data-thumb]').forEach(div=>{div.style.backgroundImage=`url('${div.dataset.src}')`;div.removeAttribute('data-src');div.classList.remove('loading')})",
+        "pageInit": "doc.querySelectorAll('div.media[data-thumb]').forEach(div=>{div.style.backgroundImage=`url('${div.dataset.src}')`;div.removeAttribute('data-src');div.classList.remove('loading');})",
+        "pageAction": "let es=document.querySelectorAll('.margin-top-sm>.hex');if(es.length>1){let last=[...es].pop();last.querySelectorAll('div[data-thumb]').forEach(e=>{let img=new Image();img.src=e.getAttribute('data-thumb');img.onerror=()=>{e.classList.add('error')}})}",
         "css": ".pagetual_pageBar{margin-top:0px!important}.hot-keywords+.pagetual_pageBar{margin-top:6px!important}.pagetual_pageBar+.hot-keywords{margin-top:0px!important}.padding-lr-xs.margin-tb-xs {display: none !important;}.mobile .content{padding:0!important}"
     },
     {
@@ -6377,7 +6399,7 @@
     {
         "name": "微圖坊 - 看圖",
         "example": "https://www.v2ph.com/album/SSA-392",
-        "url": "^https?://(www\\.)?v2ph\\.(com|net)/album/",
+        "url": "^https?://(www\\.)?v2ph\\.(com|net|ovh)/album/",
         "nextLink": ".active.page-item+li>a",
         "pageElement": "div.album-photo",
         "replaceElement": ".pagination",
@@ -6387,7 +6409,7 @@
     {
         "name": "微圖坊 - 分類",
         "example": "https://www.v2ph.com/country/taiwan",
-        "url": "^https?://(www\\.)?v2ph\\.(com|net)/",
+        "url": "^https?://(www\\.)?v2ph\\.(com|net|ovh)/",
         "nextLink": ".active.page-item+li>a",
         "pageElement": "//div[(div/div/div/a/@class='media-cover') and contains(@class,'albums-list')]",
         "replaceElement": ".pagination",
