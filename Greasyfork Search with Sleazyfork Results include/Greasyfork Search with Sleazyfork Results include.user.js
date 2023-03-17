@@ -4,16 +4,16 @@
 // @name:zh-TW   大人的Greasyfork
 // @name:ja      大人のGreasyfork
 // @namespace    hoothin
-// @version      1.6.3
+// @version      1.6.4
 // @description  Merge adult results of sleazyfork into greasyfork when the script is no longer anonymously available, add rating score and version for scripts then
 // @description:zh-CN 在Greasyfork的搜索结果中添加Sleazyfork上的成人脚本，增加评分与版本号，并在访问匿名不可用脚本时跳转至Sleazyfork
 // @description:zh-TW 在Greasyfork的搜索結果中添加Sleazyfork上的成人腳本，增加評分與版本號，並在訪問匿名不可用腳本時跳轉至Sleazyfork
 // @description:ja    脚本付けるSleazyfork上の成人脚本検索結果からGreasyfork、脚本付ける採点とバージョン番号を訪問匿名利用できない脚本にジャンプからSleazyfork
 // @author       hoothin
-// @include      http*://greasyfork.org/*
-// @include      http*://www.greasyfork.org/*
-// @include      http*://sleazyfork.org/*
-// @include      http*://www.sleazyfork.org/*
+// @match        http*://greasyfork.org/*
+// @match        http*://www.greasyfork.org/*
+// @match        http*://sleazyfork.org/*
+// @match        http*://www.sleazyfork.org/*
 // @grant        GM_xmlhttpRequest
 // @grant        GM_setValue
 // @grant        GM_getValue
@@ -103,7 +103,7 @@
             if(!document.querySelector("#script-info") && (otherSite == "greasyfork" || document.querySelector("div.width-constraint>section>p>a").href.indexOf("sign_in")!=-1)){
                 location.href=location.href.replace(/\/\/([^\.]+\.)?(greasyfork|sleazyfork)\.org/,"//$1"+otherSite+"\.org");
             }
-        }else if(/\/(scripts|users)(\/|.*(\?|&)q=|.*\?set=)/.test(location.href)){
+        }else if(/\/(scripts|users)(\/|.*(\?|&)q=|.*[\?&]set=)/.test(location.href)){
             _GM_xmlhttpRequest({
                 method: 'GET',
                 url: location.href.replace(/\/\/([^\.]+\.)?(greasyfork|sleazyfork)\.org/,"//$1"+otherSite+"\.org"),
@@ -309,6 +309,15 @@
         totalInstalls.innerHTML=parseInt(totalInstalls.innerHTML)+totalCount;
         dailyInstalls.innerHTML=parseInt(dailyInstalls.innerHTML)+dailyCount;
         ratingSpan.style.display=totalInstalls.style.display=dailyInstalls.style.display="";
+        if(badCount && badCount>goodCount){
+            let scriptLink=script.querySelector('.script-link');
+            if(scriptLink){
+                var warn=document.createTextNode("⚠");
+                scriptLink.style.textDecoration="line-through";
+                scriptLink.title="May be dangerous!";
+                scriptLink.parentNode.insertBefore(warn,scriptLink);
+            }
+        }
     }
 
     _GM_registerMenuCommand("Configure the Filter", ()=>{
