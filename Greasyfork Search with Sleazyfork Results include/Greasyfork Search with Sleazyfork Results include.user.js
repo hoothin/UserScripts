@@ -295,29 +295,31 @@
     }
 
     function count(script){
-        if(!inUserPage)return;
         var dailySpan=script.querySelector("dd.script-list-daily-installs>span");
         if(!dailySpan)return;
-        var dailyCount=parseInt(dailySpan.innerHTML.replace(/[^\d\.\-]/g,""));
-        var totalCount=parseInt(script.querySelector("dd.script-list-total-installs>span").innerHTML.replace(/[^\d]/g,""));
         var goodCount=parseInt(script.querySelector("dd.script-list-ratings>span>.good-rating-count").innerHTML.replace(/[^\d]/g,""));
         var okCount=parseInt(script.querySelector("dd.script-list-ratings>span>.ok-rating-count").innerHTML.replace(/[^\d]/g,""));
         var badCount=parseInt(script.querySelector("dd.script-list-ratings>span>.bad-rating-count").innerHTML.replace(/[^\d]/g,""));
+        if(badCount && badCount>goodCount){
+            let scriptLink=script.querySelector('.script-link');
+            if(scriptLink){
+                var warn=document.createTextNode("⚠");
+                scriptLink.style.textDecoration="line-through";
+                scriptLink.style.color="#67000080";
+                scriptLink.title="May be dangerous!";
+                scriptLink.parentNode.insertBefore(warn,scriptLink);
+            }
+        }
+
+        if(!inUserPage)return;
+        var dailyCount=parseInt(dailySpan.innerHTML.replace(/[^\d\.\-]/g,""));
+        var totalCount=parseInt(script.querySelector("dd.script-list-total-installs>span").innerHTML.replace(/[^\d]/g,""));
         goodRating.innerHTML=parseInt(goodRating.innerHTML)+goodCount;
         okRating.innerHTML=parseInt(okRating.innerHTML)+okCount;
         badRating.innerHTML=parseInt(badRating.innerHTML)+badCount;
         totalInstalls.innerHTML=parseInt(totalInstalls.innerHTML)+totalCount;
         dailyInstalls.innerHTML=parseInt(dailyInstalls.innerHTML)+dailyCount;
         ratingSpan.style.display=totalInstalls.style.display=dailyInstalls.style.display="";
-        if(badCount && badCount>goodCount){
-            let scriptLink=script.querySelector('.script-link');
-            if(scriptLink){
-                var warn=document.createTextNode("⚠");
-                scriptLink.style.textDecoration="line-through";
-                scriptLink.title="May be dangerous!";
-                scriptLink.parentNode.insertBefore(warn,scriptLink);
-            }
-        }
     }
 
     _GM_registerMenuCommand("Configure the Filter", ()=>{
