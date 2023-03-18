@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.55.28
+// @version      1.6.6.55.29
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -817,7 +817,19 @@
                     openInCurrent: '当前页打开',
                     currentType: '当前分类',
                     maxAddSiteBtn: '最大化',
-                    minAddSiteBtn: '还原'
+                    minAddSiteBtn: '还原',
+                    addAction: '添加操作',
+                    crawlInfo: '模拟输入搜索',
+                    inputAction: '输入',
+                    clickAction: '点击',
+                    sleepAction: '等待',
+                    submitCrawl: '完成操作',
+                    inputOutput: '在元素<span title="#t1#" class="element">#t1#</span>内输入<span title="#t2#">#t2#</span>',
+                    clickOutput: '点击元素<span title="#t#" class="element">#t#</span>',
+                    sleepOutpus: '休眠<span title="#t#">#t#</span>毫秒',
+                    inputNewValue: '请输入新值',
+                    deleteConfirm: '确定要删除此项吗？',
+                    sleepPrompt: '等待时间（毫秒）'
                 };
                 break;
             case "zh-TW":
@@ -894,7 +906,19 @@
                     openInCurrent: '當前頁打開',
                     currentType: '當前分類',
                     maxAddSiteBtn: '最大化',
-                    minAddSiteBtn: '還原'
+                    minAddSiteBtn: '還原',
+                    addAction: '添加操作',
+                    crawlInfo: '模擬輸入搜索',
+                    inputAction: '輸入',
+                    clickAction: '點擊',
+                    sleepAction: '等待',
+                    submitCrawl: '完成操作',
+                    inputOutput: '在元素<span title="#t1#" class="element">#t1#</span>內輸入<span title="#t2#">#t2#</span>',
+                    clickOutput: '點擊元素<span title="#t#" class="element">#t#</span>',
+                    sleepOutpus: '休眠<span title="#t#">#t#</span>毫秒',
+                    inputNewValue: '請輸入新值',
+                    deleteConfirm: '確定要刪除此項嗎？ ',
+                    sleepPrompt: '等待時間（毫秒）'
                 };
                 break;
             default:
@@ -970,12 +994,24 @@
                     openInCurrent: 'Open in current',
                     currentType: 'Current',
                     maxAddSiteBtn: 'Maximize',
-                    minAddSiteBtn: 'Restore'
+                    minAddSiteBtn: 'Restore',
+                    addAction: 'Add Actions',
+                    crawlInfo: 'Analog input search',
+                    inputAction: 'Input',
+                    clickAction: 'Click',
+                    sleepAction: 'Wait',
+                    submitCrawl: 'Complete operation',
+                    inputOutput: 'Input <span title="#t2#">#t2#</span> in the element <span title="#t1#" class="element">#t1#</span>',
+                    clickOutput: 'Click on element <span title="#t#" class="element">#t#</span>',
+                    sleepOutpus: 'Sleep for <span title="#t#">#t#</span> milliseconds',
+                    inputNewValue: 'Please enter a new value',
+                    deleteConfirm: 'Are you sure you want to delete this item? ',
+                    sleepPrompt: 'Wait time (milliseconds)'
                 };
                 break;
         }
         var i18n = (name, param) => {
-            return config[name] ? config[name].replace("#t#",param) : name;
+            return config[name] ? (param ? config[name].replace(/#t#/g, param).replace(/#t1#/g, param[0]).replace(/#t2#/g, param[1]) : config[name]) : name;
         };
         const isMobile = ('ontouchstart' in document.documentElement);
         var enableDebug = true;
@@ -1296,7 +1332,7 @@
                      box-shadow: #ddd 0px 0px 3px;
                      outline: none;
                      box-sizing: border-box;
-                     cursor: text;
+                     cursor: default;
                      user-select: none;
                      -webkit-user-select: none;
                      -moz-user-select: none;
@@ -1316,6 +1352,7 @@
                      outline: none;
                      box-sizing: border-box;
                      font-size: 20px;
+                     cursor: text;
                  }
                  #search-jumper.search-jumper-showall #filterSites>span {
                      display: none;
@@ -7421,14 +7458,16 @@
             geneSelector(ele, id) {
                 let selector = ele.tagName.toLowerCase();
                 if (ele.tagName !== "HTML" && ele.tagName !== "BODY") {
-                    if (id && ele.id) selector += '#' + ele.id;
-                    if (ele.className) {
-                        let classLen = ele.classList.length;
-                        selector += [].map.call(ele.classList, d => /^[\w]+$/.test(d) || (classLen < 3 && /^[\w\-_]+$/.test(d)) ? ('.' + d) : "").join('');
-                    }
-                    let parent = ele.parentElement;
-                    if (parent) {
-                        selector = this.geneSelector(parent, !!id) + ' > ' + selector;
+                    if (id && ele.id) selector = '#' + ele.id;
+                    else {
+                        if (ele.className) {
+                            let classLen = ele.classList.length;
+                            selector += [].map.call(ele.classList, d => /^[\w]+$/.test(d) || (classLen < 3 && /^[\w\-_]+$/.test(d)) ? ('.' + d) : "").join('');
+                        }
+                        let parent = ele.parentElement;
+                        if (parent) {
+                            selector = this.geneSelector(parent, !!id) + ' > ' + selector;
+                        }
                     }
                 }
                 return selector;
@@ -7970,12 +8009,19 @@
                 searchBar.searchAuto(0, {});
             });
             if (!currentSite) {
-                let firstInput = document.body.querySelector('input[type=text]:not([readonly]),input:not([type])');
-                if (firstInput) {
-                    _GM_registerMenuCommand(i18n('addSearchEngine'), () => {
+                _GM_registerMenuCommand(i18n('addSearchEngine'), () => {
+                    let openSearch = document.head.querySelector('[rel="search"]');
+                    if (openSearch) {
+                        showSiteAddFromOpenSearch(openSearch.href, (type, e) => {
+                            if (type != 'load') {
+                                _GM_notification(e.statusText || e.error);
+                            }
+                        });
+                    } else {
+                        let firstInput = document.body.querySelector('input[type=text]:not([readonly]),input:not([type])');
                         quickAddByInput(firstInput);
-                    });
-                }
+                    }
+                });
             }
             let logoSvg = logoBtn.children[0];
             let grabState = 0;//0 未按下 1 已按下 2 已拖动
@@ -8548,8 +8594,8 @@
         }
 
         function quickAddByInput(input) {
-            let parentForm, url = location.href;
-            if (input.name) {
+            let parentForm, url = location.href, showCrawl = false;
+            if (input && input.name) {
                 parentForm = input.parentNode;
                 while (parentForm) {
                     if (parentForm.tagName === "FORM") {
@@ -8560,6 +8606,7 @@
             }
             let fail = () => {
                 if (window.confirm(i18n("noValidItemAsk"))) {
+                    showCrawl = true;
                     return false;
                 }
                 return true;
@@ -8583,7 +8630,7 @@
                     }
                     url += params.join("&");
                 }
-            } else if (input.value) {
+            } else if (input && input.value) {
                 if (location.href.indexOf(input.value) !== -1) {
                     url = location.href.replace(input.value, "%s");
                 } else {
@@ -8601,7 +8648,7 @@
             [].forEach.call(document.querySelectorAll("link[rel='shortcut icon'],link[rel='icon']"), link => {
                 icons.push(link.href);
             });
-            showSiteAdd(document.title.replace(input.value, "").replace(/^\s*[-_]\s*/, ""), "", url, icons, document.characterSet);
+            showSiteAdd(document.title.replace(input ? input.value : "", "").replace(/^\s*[-_]\s*/, ""), "", url, icons, document.characterSet, showCrawl);
         }
 
         const jumpHtml = "https://hoothin.github.io/SearchJumper/jump.html";
@@ -9524,11 +9571,12 @@
             }, 0);
         }
 
-        var addFrame, nameInput, descInput, urlInput, iconInput, iconShow, iconsCon, typeSelect, testBtn, cancelBtn, addBtn, addFrameCssText, addFrameCssEle, siteKeywords, siteMatch, openSelect;
-        function showSiteAdd(name, description, url, icons, charset) {
+        var addFrame, nameInput, descInput, urlInput, iconInput, iconShow, iconsCon, typeSelect, testBtn, cancelBtn, addBtn, addFrameCssText, addFrameCssEle, siteKeywords, siteMatch, openSelect, crawlBtn;
+        function showSiteAdd(name, description, url, icons, charset, showCrawl) {
             if (!addFrame) {
                 addFrameCssText = `
-                    .searchJumperFrame-body {
+                    .searchJumperFrame-body,
+                    .searchJumperFrame-crawlBody {
                         width: 300px;
                         min-height: 300px;
                         position: fixed;
@@ -9621,7 +9669,7 @@
                     .searchJumperFrame-buttons>button:hover {
                         color: #e3f2fd;
                     }
-                    .searchJumperFrame-inputs>img {
+                    .searchJumperFrame-inputs>.sideIcon {
                         float: right;
                         margin-top: -40px;
                         position: relative;
@@ -9630,6 +9678,19 @@
                         background: rgb(0 0 0 / 50%);
                         border-radius: 5px;
                         pointer-events: none;
+                        width: 27px;
+                        height: 27px;
+                    }
+                    .searchJumperFrame-inputs>svg.sideIcon {
+                        fill: white;
+                        pointer-events: all;
+                        cursor: pointer;
+                        transition: transform 0.25s ease;
+                    }
+                    .searchJumperFrame-inputs>svg.sideIcon:hover {
+                        transform: scale(1.2);
+                        opacity: 1;
+                        background: rgb(0 0 0);
                     }
                     .searchJumperFrame-body>.iconsCon {
                         max-height: 150px;
@@ -9662,17 +9723,19 @@
                         width: 600px;
                         margin-left: -300px;
                     }
-                    .searchJumperFrame-maxBtn {
+                    .searchJumperFrame-maxBtn,
+                    .searchJumperFrame-closeBtn {
                         position: absolute;
                         right: 5px;
                         top: 5px;
                         color: white;
                         width: 25px;
                         cursor: pointer;
-                        transition:width 0.25s ease;
+                        transition:transform 0.25s ease;
                     }
-                    .searchJumperFrame-maxBtn:hover {
-                        width: 30px;
+                    .searchJumperFrame-maxBtn:hover,
+                    .searchJumperFrame-closeBtn:hover {
+                        transform: scale(1.2);
                     }
                     .searchJumperFrame-maxBtn>#maxBtn {
                         display: block;
@@ -9686,8 +9749,54 @@
                     .maxContent .searchJumperFrame-maxBtn>#minBtn {
                         display: block;
                     }
+                    .crawling>.searchJumperFrame-body {
+                        display: none;
+                    }
+                    .searchJumperFrame-crawlBody {
+                        display: none;
+                    }
+                    .crawling>.searchJumperFrame-crawlBody {
+                        display: block;
+                    }
+                    .searchJumperFrame-buttons>button#submitCrawl {
+                        width: 99%;
+                    }
+                    .searchJumperFrame-crawlBody>.actionCon {
+                        height: 200px;
+                        background: gray;
+                        border-radius: 10px;
+                        margin: 10px;
+                        padding: 0 10px 10px 10px;
+                        resize: auto;
+                        box-sizing: border-box;
+                        overflow: auto;
+                    }
+                    .searchJumperFrame-crawlBody>.actionCon>div {
+                        width: 100%;
+                        font-size: 16px;
+                        background: #000000cc;
+                        border-radius: 8px;
+                        color: white;
+                        margin: 3px 0;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        cursor: pointer;
+                        white-space: nowrap;
+                    }
+                    .searchJumperFrame-crawlBody>.actionCon>div>span {
+                        background: #275f90;
+                        border-radius: 5px;
+                        max-width: 40px;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                        display: inline-block;
+                        margin: 0 3px;
+                        white-space: nowrap;
+                    }
                     @media (prefers-color-scheme: dark) {
                       .searchJumperFrame-body,
+                      .searchJumperFrame-crawlBody,
                       .searchJumperFrame-input-title,
                       .searchJumperFrame-inputs>input,
                       .searchJumperFrame-inputs>textarea,
@@ -9733,11 +9842,12 @@
                         <input name="siteName" type="text">
                         <div class="searchJumperFrame-input-title">${i18n("siteUrl")}</div>
                         <textarea name="url" type="text"></textarea>
+                        <svg id="crawlBtn" class="sideIcon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("crawlInfo")}</title><path d="M385 926.3c-11 0-21.4-4.3-29.2-12l-0.6-0.6c-0.7-0.7-65.6-70.4-108.4-112.7-42.8-42.3-118.6-111.4-119.3-112.1l-0.6-0.5c-15.9-15.7-24.6-36.6-24.5-58.8s9-43.1 25-58.6c28.6-27.7 72.2-31 104.6-8.2l90.5 44-83.1-290.1c-4.9-17.1-4.2-34.9 2.1-51.6 6.3-16.6 17.5-30.5 32.5-40.1 22-14.1 47.7-17.7 70.3-10 22.6 7.7 40.7 26.3 49.5 50.9L431 369.8V176.9c0-43.4 35.3-78.7 78.7-78.7 20.7 0 40.2 7.9 55 22.4 14.8 14.4 23.2 33.8 23.7 54.4v0.2l2.4 165.5L625 229.1l0.1-0.4c8.2-23.2 26.2-41.1 49.4-49.3 23.2-8.2 48.5-5.5 69.4 7.3 15.6 9.6 27.7 24.3 33.9 41.6s6.4 36.3 0.6 53.7L736 409.5l42.9-48.6 0.3-0.3c15.7-16.2 34.4-25.7 54.1-27.3 19.8-1.6 39.1 4.7 56 18.1 33 26.4 40.8 60.1 22.7 97.5l-0.5 1.1-0.6 1c-41.8 65.2-107.1 171.9-115.8 199-12.4 38.6-41 140.7-41.3 141.7l-0.2 0.7-34.5 107.2-0.6 1.2c-6.8 14.3-21.5 23.7-37.4 23.8l-295.9 1.6c0 0.1-0.1 0.1-0.2 0.1z"></path></svg>
                         <div class="searchJumperFrame-input-title">${i18n("siteDesc")}</div>
                         <textarea name="description" type="text"></textarea>
                         <div class="searchJumperFrame-input-title">${i18n("siteIcon")}</div>
                         <textarea name="icon" type="text"></textarea>
-                        <img width="27px" height="27px">
+                        <img class="sideIcon" width="27px" height="27px">
                     </div>
                     <div class="searchJumperFrame-inputs moreItem">
                         <div class="searchJumperFrame-input-title">${i18n("siteKeywords")}</div>
@@ -9759,6 +9869,21 @@
                         <button id="test" type="button">${i18n("siteTest")}</button>
                         <button id="cancel" type="button">${i18n("siteCancel")}</button>
                         <button id="add" type="button">${i18n("siteAdd")}</button>
+                    </div>
+                </div>
+                <div class="searchJumperFrame-crawlBody searchJumperFrame-hide">
+                    <a href="${configPage}" class="searchJumperFrame-title" target="_blank">
+                        <img width="32px" height="32px" src=${logoBase64}>${i18n("addAction")}
+                    </a>
+                    <svg class="searchJumperFrame-closeBtn" fill="white" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>Close crawl</title><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64z m165.4 618.2l-66-0.3L512 563.4l-99.3 118.4-66.1 0.3c-4.4 0-8-3.5-8-8 0-1.9 0.7-3.7 1.9-5.2l130.1-155L340.5 359c-1.2-1.5-1.9-3.3-1.9-5.2 0-4.4 3.6-8 8-8l66.1 0.3L512 464.6l99.3-118.4 66-0.3c4.4 0 8 3.5 8 8 0 1.9-0.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"></path></svg>
+                    <div class="actionCon"></div>
+                    <div class="searchJumperFrame-buttons">
+                        <button id="input" type="button">${i18n("inputAction")}</button>
+                        <button id="click" type="button">${i18n("clickAction")}</button>
+                        <button id="sleep" type="button">${i18n("sleepAction")}</button>
+                    </div>
+                    <div class="searchJumperFrame-buttons">
+                        <button id="submitCrawl" type="button">${i18n("submitCrawl")}</button>
                     </div>
                 </div>
                 `);
@@ -9794,7 +9919,42 @@
                     typeSelect.appendChild(option);
                 }
                 testBtn.addEventListener("click", e => {
-                    if (/[:%]p{/.test(urlInput.value) || (charset && charset.toLowerCase() != 'utf-8')) {
+                    if (/#p{/.test(urlInput.value)) {
+                        let actionParams = urlInput.value.match(/#p{(.*)}/);
+                        if (!actionParams) return;
+                        let postParams = [];
+                        actionParams[1].replace(/([^\\])&/g, "$1SJ^PARAM").split("SJ^PARAM").forEach(pair => {//ios不支持零宽断言，哭唧唧
+                            pair = pair.trim();
+                            if (pair.startsWith("click(") && pair.endsWith(')')) {
+                                let click = pair.slice(6, pair.length - 1);
+                                if (click) {
+                                    postParams.push(['@click', click.replace(/\\([\=&])/g, "$1").trim()]);
+                                }
+                            } else if (pair.startsWith("call(") && pair.endsWith(')')) {
+                                let func = pair.slice(5, pair.length - 1);
+                                if (func) {
+                                    postParams.push(['@call', func.replace(/\\([\=&])/g, "$1").trim()]);
+                                }
+                            } else if (/^sleep\(\d+\)$/.test(pair)) {
+                                let sleep = pair.match(/sleep\((.*)\)/);
+                                if (sleep) {
+                                    postParams.push(['@sleep', sleep[1]]);
+                                }
+                            } else {
+                                pair = pair.replace(/([^\\])\=/g, "$1SJ^PARAM").replace(/\\([\=&])/g, "$1");
+                                let pairArr = pair.split("SJ^PARAM");
+                                if (pairArr.length === 2) {
+                                    let k = pairArr[0];
+                                    let v = pairArr[1].replace(/\\([\=&])/g, "$1");
+                                    postParams.push([k, v]);
+                                } else if (pair.endsWith('.click()') || pair.endsWith('.click')) {
+                                    postParams.push(['@' + pair.replace(/\.click(\(\))?$/, ''), 'click']);
+                                }
+                            }
+                        });
+                        inPagePostParams = postParams;
+                        searchBar.submitAction(postParams);
+                    } else if (/[:%]p{/.test(urlInput.value) || (charset && charset.toLowerCase() != 'utf-8')) {
                         submitByForm(charset, urlInput.value.replace(/%s\b/g, "searchJumper"), "_blank");
                     } else {
                         _GM_openInTab(urlInput.value.replace(/%s\b/g, "searchJumper"), {active: true});
@@ -9855,8 +10015,156 @@
                         addFrame.parentNode.removeChild(addFrame);
                     }
                 });
+
+                crawlBtn = addFrame.querySelector("#crawlBtn");
+                let closeCrawlBtn = addFrame.querySelector(".searchJumperFrame-closeBtn");
+                let actionCon = addFrame.querySelector(".actionCon");
+                let inputAction = addFrame.querySelector("#input");
+                let clickAction = addFrame.querySelector("#click");
+                let sleepAction = addFrame.querySelector("#sleep");
+                let submitCrawl = addFrame.querySelector("#submitCrawl");
+                let dragDiv;
+                let addAction = (type, params) => {
+                    let div = document.createElement("div");
+                    let words = "";
+                    switch(type) {
+                        case "input":
+                            words = i18n('inputOutput', params);
+                            break;
+                        case "click":
+                            words = i18n('clickOutput', params[0]);
+                            break;
+                        case "sleep":
+                            words = i18n('sleepOutpus', params[0]);
+                            break;
+                        default:
+                            break;
+                    }
+                    if (words) {
+                        div.innerHTML = createHTML(words);
+                        div.dataset.type = type;
+                        div.dataset.params = params;
+                        div.draggable = "true";
+                        div.ondragover = e => {
+                            e.preventDefault();
+                        };
+                        div.ondragstart = e => {
+                            dragDiv = div;
+                        }
+                        div.ondrop = e => {
+                            actionCon.insertBefore(dragDiv, div);
+                        }
+                        div.onclick = e => {
+                            if (e.target.tagName == 'SPAN') {
+                                if (e.target.className == 'element') {
+                                    Picker.getInstance().getSelector(selector => {
+                                        e.target.innerText = selector;
+                                        e.target.title = selector;
+                                        addFrame.style.display = '';
+                                    });
+                                    addFrame.style.display = 'none';
+                                } else {
+                                    let newValue = prompt(i18n('inputNewValue'), e.target.innerText);
+                                    if (newValue) e.target.innerText = newValue;
+                                }
+                            } else if (confirm(i18n('deleteConfirm'))) {
+                                actionCon.removeChild(div);
+                            }
+                        }
+                        actionCon.appendChild(div);
+                    }
+                };
+                let anylizeEmuUrl = () => {
+                    actionCon.innerHTML = createHTML();
+                    let actionParams = urlInput.value.match(/#p{(.*)}/);
+                    if (!actionParams) return;
+                    actionParams[1].replace(/([^\\])&/g, "$1SJ^PARAM").split("SJ^PARAM").forEach(pair => {
+                        pair = pair.trim();
+                        if (pair.startsWith("click(") && pair.endsWith(')')) {
+                            let click = pair.slice(6, pair.length - 1);
+                            if (click) {
+                                addAction('click', [click.replace(/\\([\=&])/g, "$1").trim()]);
+                            }
+                        } else if (pair.startsWith("call(") && pair.endsWith(')')) {
+                            let func = pair.slice(5, pair.length - 1);
+                            if (func) {
+                                addAction('call', [func.replace(/\\([\=&])/g, "$1").trim()]);
+                            }
+                        } else if (/^sleep\(\d+\)$/.test(pair)) {
+                            let sleep = pair.match(/sleep\((.*)\)/);
+                            if (sleep) {
+                                addAction('sleep', [sleep[1]]);
+                            }
+                        } else {
+                            pair = pair.replace(/([^\\])\=/g, "$1SJ^PARAM").replace(/\\([\=&])/g, "$1");
+                            let pairArr = pair.split("SJ^PARAM");
+                            if (pairArr.length === 2) {
+                                addAction('input', [pairArr[0], pairArr[1].replace(/\\([\=&])/g, "$1")]);
+                            } else if (pair.endsWith('.click()') || pair.endsWith('.click')) {
+                                addAction('click', [pair.replace(/\.click(\(\))?$/, '')]);
+                            }
+                        }
+                    });
+
+
+                };
+                let geneUrl = () => {
+                    let actions = [];
+                    [].forEach.call(actionCon.children, action => {
+                        if (!action) return;
+                        let params = action.dataset.params;
+                        if (!params) return;
+                        switch(action.dataset.type) {
+                            case "click":
+                                actions.push(`click(${params.replace(/([=&])/g, '\\$1')})`);
+                                break;
+                            case "input":
+                                params = params.split(',');
+                                if (params.length != 2) return;
+                                actions.push(`${params[0].replace(/([=&])/g, '\\$1')}=${params[1]}`);
+                                break;
+                            case "sleep":
+                                actions.push(`sleep(${params})`);
+                                break;
+                            default:
+                                break;
+                        }
+                    });
+                    return actions.join('&');
+                };
+                crawlBtn.addEventListener("click", e => {
+                    anylizeEmuUrl();
+                    addFrame.classList.add("crawling");
+                });
+                closeCrawlBtn.addEventListener("click", e => {
+                    addFrame.classList.remove("crawling");
+                });
+                inputAction.addEventListener("click", e => {
+                    Picker.getInstance().getSelector(selector => {
+                        addAction('input', [selector, '%s']);
+                        addFrame.style.display = '';
+                    });
+                    addFrame.style.display = 'none';
+                });
+                clickAction.addEventListener("click", e => {
+                    Picker.getInstance().getSelector(selector => {
+                        addAction('click', [selector]);
+                        addFrame.style.display = '';
+                    });
+                    addFrame.style.display = 'none';
+                });
+                sleepAction.addEventListener("click", e => {
+                    let sleepTime = prompt(i18n('sleepPrompt'), 1000);
+                    sleepTime = sleepTime && parseInt(sleepTime);
+                    if (sleepTime) addAction('sleep', [sleepTime]);
+                });
+                submitCrawl.addEventListener("click", e => {
+                    urlInput.value = (urlInput.value || location.href).replace(/#p{.*/, '') + '#p{' + geneUrl() + '}';
+                    addFrame.classList.remove("crawling");
+                });
             }
             if (!addFrameCssEle || !addFrameCssEle.parentNode) addFrameCssEle = _GM_addStyle(addFrameCssText);
+            crawlBtn.style.display = showCrawl ? '' : 'none';
             document.body.appendChild(addFrame);
             siteKeywords.value = "";
             siteMatch.value = "";
@@ -9890,6 +10198,41 @@
             }
         }
 
+        function showSiteAddFromOpenSearch(url, callback) {
+            _GM_xmlhttpRequest({
+                method: "GET",
+                url: url,
+                onload: (d) => {
+                    callback('load', d);
+                    let shortName = d.responseXML.querySelector("ShortName");
+                    let description = d.responseXML.querySelector("Description");
+                    let urlparam = d.responseXML.querySelector('Url[type="text/html"]');
+                    let image = d.responseXML.querySelector("Image");
+                    let inputEncoding = d.responseXML.querySelector("InputEncoding");
+                    let postParams = urlparam.querySelectorAll("Param");
+                    let name = shortName && shortName.textContent;
+                    let desc = description && description.textContent;
+                    let url = urlparam.getAttribute("template");
+                    let ico = image && image.textContent;
+                    let charset = inputEncoding && inputEncoding.textContent;
+                    if (postParams.length > 0) {
+                        let params = [];
+                        [].forEach.call(postParams, postParam => {
+                            params.push(`${postParam.getAttribute("name")}=${postParam.getAttribute("value")}`);
+                        });
+                        url += `%p{${params.join("&")}}`;
+                    }
+                    showSiteAdd(name, desc, url.replace(/{searchTerms}/g, "%s"), [ico], charset);
+                },
+                onerror: (e) => {
+                    callback('error', e);
+                },
+                ontimeout: (e) => {
+                    callback('error', e);
+                }
+            });
+        }
+
         function initMycroft() {
             if (location.hostname !== "mycroftproject.com") return;
             let checkLinks = () => {
@@ -9913,40 +10256,10 @@
                         if (isLoading) return;
                         isLoading = true;
                         icon.classList.add("searchJumper-loading");
-                        _GM_xmlhttpRequest({
-                            method: "GET",
-                            url: `https://mycroftproject.com/installos.php/${urlMatch[1]}/${urlMatch[2]}.xml`,
-                            onload: (d) => {
-                                isLoading = false;
-                                icon.classList.remove("searchJumper-loading");
-                                let shortName = d.responseXML.querySelector("ShortName");
-                                let description = d.responseXML.querySelector("Description");
-                                let urlparam = d.responseXML.querySelector("Url[method]");
-                                let image = d.responseXML.querySelector("Image");
-                                let inputEncoding = d.responseXML.querySelector("InputEncoding");
-                                let postParams = urlparam.querySelectorAll("Param");
-                                let name = shortName.textContent;
-                                let desc = description.textContent;
-                                let url = urlparam.getAttribute("template");
-                                let ico = image.textContent;
-                                let charset = inputEncoding.textContent;
-                                if (postParams.length > 0) {
-                                    let params = [];
-                                    [].forEach.call(postParams, postParam => {
-                                        params.push(`${postParam.getAttribute("name")}=${postParam.getAttribute("value")}`);
-                                    });
-                                    url += `%p{${params.join("&")}}`;
-                                }
-                                showSiteAdd(name, desc, url.replace(/{searchTerms}/g, "%s"), [ico], charset);
-                            },
-                            onerror: (e) => {
-                                isLoading = false;
-                                icon.classList.remove("searchJumper-loading");
-                                _GM_notification(e.statusText || e.error);
-                            },
-                            ontimeout: (e) => {
-                                isLoading = false;
-                                icon.classList.remove("searchJumper-loading");
+                        showSiteAddFromOpenSearch(`https://mycroftproject.com/installos.php/${urlMatch[1]}/${urlMatch[2]}.xml`, (type, e) => {
+                            isLoading = false;
+                            icon.classList.remove("searchJumper-loading");
+                            if (type != 'load') {
                                 _GM_notification(e.statusText || e.error);
                             }
                         });
