@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.34.28
+// @version      1.9.34.29
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -684,7 +684,7 @@
 
     function isXPath(xpath) {
         if (!xpath) return false;
-        return /^\(*(descendant::|\.\/|\/\/|id\()/.test(xpath);
+        return /^\(*(descendant::|\.\/|\/|id\()/.test(xpath);
     }
 
     function getAllElements(sel, doc) {
@@ -716,33 +716,34 @@
             let hasId = false;
             if (addID && ele.id && /^[a-z_][\w\-_]*$/i.test(ele.id)) {
                 hasId = true;
-                selector += '#' + ele.id;
-            }
-            let className = "";
-            if (ele.className) {
-                let classList = ele.classList, i = 0;
-                for (let i = 0; i < classList.length; i++) {
-                    let c = classList[i];
-                    if (/^[\w\-_]+$/.test(c) && !/\d{3,}/.test(c)) {
-                        className += '.' + c;
-                    }
-                }
-                selector += className;
-            }
-            let parent = ele.parentElement;
-            if (parent) {
-                selector = geneSelector(parent, addID) + ' > ' + selector;
-                if (!className && !hasId && parent.children.length > 1) {
-                    let i, j = 0;
-                    for (i = 0; i < parent.children.length; i++) {
-                        if (parent.children[i].tagName == ele.tagName) {
-                            j++;
-                            if (parent.children[i] == ele) {
-                                break;
-                            }
+                selector = '#' + ele.id;
+            } else {
+                let className = "";
+                if (ele.className) {
+                    let classList = ele.classList, i = 0;
+                    for (let i = 0; i < classList.length; i++) {
+                        let c = classList[i];
+                        if (/^[\w\-_]+$/.test(c) && !/\d{3,}/.test(c)) {
+                            className += '.' + c;
                         }
                     }
-                    selector += (parent.tagName == "HTML" ? "" : `:nth-of-type(${j})`);
+                    selector += className;
+                }
+                let parent = ele.parentElement;
+                if (parent) {
+                    selector = geneSelector(parent, addID) + ' > ' + selector;
+                    if (!className && !hasId && parent.children.length > 1) {
+                        let i, j = 0;
+                        for (i = 0; i < parent.children.length; i++) {
+                            if (parent.children[i].tagName == ele.tagName) {
+                                j++;
+                                if (parent.children[i] == ele) {
+                                    break;
+                                }
+                            }
+                        }
+                        selector += (parent.tagName == "HTML" ? "" : `:nth-of-type(${j})`);
+                    }
                 }
             }
         }
@@ -5963,6 +5964,10 @@
                 }
                 if (pageEle[0].tagName == "UL") pageEle = pageEle[0].children;
                 pageEle = pageEle[parseInt(pageEle.length / 2)];
+                while(pageEle && !pageEle.offsetParent) {
+                    if (pageEle.nextElementSibling) pageEle = pageEle.nextElementSibling;
+                    else break;
+                }
                 if (ruleParser.curSiteRule.singleUrl && orgContent != pageEle.innerHTML) {
                     orgContent = pageEle.innerHTML;
                     if (waitTimes-- > 0) {
@@ -6019,6 +6024,10 @@
                 checkItem = eles;
                 if (eles[0].tagName == "UL") checkItem = eles[0].children;
                 checkItem = checkItem[parseInt(checkItem.length / 2)];
+                while(checkItem && !checkItem.offsetParent) {
+                    if (checkItem.nextElementSibling) checkItem = checkItem.nextElementSibling;
+                    else break;
+                }
             }
             if (!checkItem || (checkEval && !checkEval(iframeDoc))) {
                 setTimeout(() => {
