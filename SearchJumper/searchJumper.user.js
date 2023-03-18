@@ -10207,15 +10207,15 @@
                     origin: url
                 },
                 onload: (d) => {
-                    let shortName = d.responseXML.querySelector("ShortName");
-                    let description = d.responseXML.querySelector("Description");
-                    let urlparam = d.responseXML.querySelector('Url[type="text/html"]');
-                    let image = d.responseXML.querySelector("Image");
-                    let inputEncoding = d.responseXML.querySelector("InputEncoding");
+                    let urlparam = d && d.responseXML && d.responseXML.querySelector('Url[type="text/html"]');
                     if (!urlparam) {
                         callback('error', d);
                         return;
                     }
+                    let shortName = d.responseXML.querySelector("ShortName");
+                    let description = d.responseXML.querySelector("Description");
+                    let image = d.responseXML.querySelector("Image");
+                    let inputEncoding = d.responseXML.querySelector("InputEncoding");
                     let postParams = urlparam.querySelectorAll("Param");
                     let name = shortName && shortName.textContent;
                     let desc = description && description.textContent;
@@ -10229,7 +10229,7 @@
                         });
                         url += `%p{${params.join("&")}}`;
                     }
-                    showSiteAdd(name, desc, url.replace(/{searchTerms}/g, "%s"), [ico], charset);
+                    showSiteAdd(name, desc, url.replace(/{searchTerms\??}/g, "%s").replace(/{startPage\??}/g, '1').replace(/{count\??}/g, '10').replace(/{startIndex\??}/g, '1').replace(/{startPage\??}/g, '1').replace(/{language\??}/g, '*').replace(/{inputEncoding\??}/g, 'UTF-8').replace(/{outputEncoding\??}/g, 'UTF-8'), [ico], charset);
                     callback('load', d);
                 },
                 onerror: (e) => {
