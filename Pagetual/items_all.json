@@ -33060,16 +33060,16 @@
 {
   "resource_url": "http://wedata.net/items/60005",
   "data": {
-    "pageElement": "//div[@class='extMdlSeriesMngrArticleMargin']/a| //*[not(self::a)]/img[@alt='comic'] |//ul[starts-with(@id, 'extMdlSeriesMngrAuthorUL')]",
-    "nextLink": "//li[@class='next']/a[contains(@href,substring-before(substring-after(//meta[@property='og:url'][1]/@content,id('breadcrumbsList')//li[last()-1]/a/@href),'/'))]|//a[@title='next page']",
-    "url": "^https?://mangalifewin\\.takeshobo\\.co\\.jp/.+",
-    "exampleUrl": "http://mangalifewin.takeshobo.co.jp/rensai/halfde_ittoko/item-1/001/\r\nhttp://mangalifewin.takeshobo.co.jp/sakka/\r\nhttp://mangalifewin.takeshobo.co.jp/rensai/halfde_ittoko/item-3/033/"
+    "pageElement": "//div[@class='img']",
+    "nextLink": "//a[@class='btnNext']\r\n",
+    "url": "^https?://mangalifewin\\.takeshobo\\.co\\.jp/",
+    "exampleUrl": "http://mangalifewin.takeshobo.co.jp/rensai/halfde_ittoko/item-1/001/\r\nhttp://mangalifewin.takeshobo.co.jp/rensai/halfde_ittoko/item-3/033/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "jigendaddy_be",
   "name": "ゆるっとcafe / まんがライフWIN",
   "created_at": "2012-04-08T11:52:07+09:00",
-  "updated_at": "2020-07-13T12:07:11+09:00"
+  "updated_at": "2023-03-18T09:19:42+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/59945",
