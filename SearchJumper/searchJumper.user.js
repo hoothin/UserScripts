@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.55.29
+// @version      1.6.6.55.30
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -8008,21 +8008,21 @@
             _GM_registerMenuCommand(i18n('search'), () => {
                 searchBar.searchAuto(0, {});
             });
-            if (!currentSite) {
-                _GM_registerMenuCommand(i18n('addSearchEngine'), () => {
-                    let openSearch = document.head.querySelector('[rel="search"]');
-                    if (openSearch) {
-                        showSiteAddFromOpenSearch(openSearch.href, (type, e) => {
-                            if (type != 'load') {
-                                _GM_notification(e.statusText || e.error);
-                            }
-                        });
-                    } else {
-                        let firstInput = document.body.querySelector('input[type=text]:not([readonly]),input:not([type])');
-                        quickAddByInput(firstInput);
-                    }
-                });
-            }
+            _GM_registerMenuCommand(i18n('addSearchEngine'), () => {
+                let openSearch = document.head.querySelector('[rel="search"]');
+                if (openSearch) {
+                    showSiteAddFromOpenSearch(openSearch.href, (type, e) => {
+                        if (type != 'load') {
+                            if (e) debug(e.statusText || e.error || e.response || e);
+                            let firstInput = document.body.querySelector('input[type=text]:not([readonly]),input:not([type])');
+                            quickAddByInput(firstInput);
+                        }
+                    });
+                } else {
+                    let firstInput = document.body.querySelector('input[type=text]:not([readonly]),input:not([type])');
+                    quickAddByInput(firstInput);
+                }
+            });
             let logoSvg = logoBtn.children[0];
             let grabState = 0;//0 未按下 1 已按下 2 已拖动
             let hideTimer;
@@ -10202,13 +10202,20 @@
             _GM_xmlhttpRequest({
                 method: "GET",
                 url: url,
+                headers: {
+                    referer: url,
+                    origin: url
+                },
                 onload: (d) => {
-                    callback('load', d);
                     let shortName = d.responseXML.querySelector("ShortName");
                     let description = d.responseXML.querySelector("Description");
                     let urlparam = d.responseXML.querySelector('Url[type="text/html"]');
                     let image = d.responseXML.querySelector("Image");
                     let inputEncoding = d.responseXML.querySelector("InputEncoding");
+                    if (!urlparam) {
+                        callback('error', d);
+                        return;
+                    }
                     let postParams = urlparam.querySelectorAll("Param");
                     let name = shortName && shortName.textContent;
                     let desc = description && description.textContent;
@@ -10223,6 +10230,7 @@
                         url += `%p{${params.join("&")}}`;
                     }
                     showSiteAdd(name, desc, url.replace(/{searchTerms}/g, "%s"), [ico], charset);
+                    callback('load', d);
                 },
                 onerror: (e) => {
                     callback('error', e);
