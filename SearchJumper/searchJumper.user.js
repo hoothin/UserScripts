@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.55.30
+// @version      1.6.6.55.31
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -6444,6 +6444,7 @@
                         _str = customReplaceSingle(_str, "%su", keywordsU);
                         _str = customReplaceSingle(_str, "%sl", keywordsL);
                         _str = customReplaceSingle(_str, "%sr", keywordsR);
+                        _str = customReplaceSingle(_str, "%se", escape ? escape(keywordsR) : keywordsR);
                         if (_str == str) {
                             _str = customReplaceSingle(_str, "%s", keywordsR, v => {
                                 return (needDecode ? v : encodeURIComponent(v));
@@ -6519,7 +6520,7 @@
                     let targetUrl = '';
                     let targetName = selStr || document.title;
                     let imgBase64 = '', resultUrl = customVariable(ele.dataset.url);
-                    let hasWordParam = /%s[lur]?\b/.test(data.url);
+                    let hasWordParam = /%s[lure]?\b/.test(data.url);
                     if (targetElement) {
                         targetUrl = targetElement.src || targetElement.href || '';
                         if (targetElement.tagName == "VIDEO" || targetElement.tagName == "AUDIO") {
@@ -8635,10 +8636,15 @@
                     url = location.href.replace(input.value, "%s");
                 } else {
                     let encodeValue = encodeURIComponent(input.value);
-                    if (location.href.indexOf(encodeValue) !== -1) {
-                        url = location.href.replace(encodeValue, "%s");
+                    if (location.pathname.indexOf(encodeValue) !== -1 || location.search.indexOf(encodeValue) !== -1) {
+                        url = location.origin + location.pathname.replace(encodeValue, "%s") + location.search.replace(encodeValue, "%s");
                     } else {
-                        if (fail()) return;
+                        encodeValue = escape && escape(input.value);
+                        if (encodeValue && location.pathname.indexOf(encodeValue) !== -1 || location.search.indexOf(encodeValue) !== -1) {
+                            url = location.origin + location.pathname.replace(encodeValue, "%se") + location.search.replace(encodeValue, "%se");
+                        } else {
+                            if (fail()) return;
+                        }
                     }
                 }
             } else {
@@ -9955,9 +9961,9 @@
                         inPagePostParams = postParams;
                         searchBar.submitAction(postParams);
                     } else if (/[:%]p{/.test(urlInput.value) || (charset && charset.toLowerCase() != 'utf-8')) {
-                        submitByForm(charset, urlInput.value.replace(/%s\b/g, "searchJumper"), "_blank");
+                        submitByForm(charset, urlInput.value.replace(/%se?\b/g, "searchJumper"), "_blank");
                     } else {
-                        _GM_openInTab(urlInput.value.replace(/%s\b/g, "searchJumper"), {active: true});
+                        _GM_openInTab(urlInput.value.replace(/%se?\b/g, "searchJumper"), {active: true});
                     }
                 });
                 cancelBtn.addEventListener("click", e => {
