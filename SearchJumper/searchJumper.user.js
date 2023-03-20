@@ -8713,32 +8713,33 @@
 
                 loadConfig();
 
-                let sendVerifyResult = (url, status, statusText, finalUrl) => {
+                let sendVerifyResult = (url, name, status, finalUrl) => {
                     window.postMessage({
                         url: url,
+                        name: name,
                         status: status,
-                        statusText: statusText,
                         finalUrl: finalUrl,
                         command: 'verifyResult'
                     }, '*');
                 };
                 document.addEventListener('verifyUrl', e => {
                     let targetUrl = (e.detail ? e.detail.url : e.url);
+                    let name = (e.detail ? e.detail.name : e.name);
                     _GM_xmlhttpRequest({
-                        method: 'HEAD',
+                        method: 'GET',
                         url: targetUrl,
                         headers: {
                             referer: targetUrl,
-                            origin: targetUrl
+                            'User-Agent': navigator.userAgent
                         },
                         onload: function(e) {
-                            sendVerifyResult(targetUrl, e && e.status, e && e.statusText, e && e.finalUrl);
+                            sendVerifyResult(targetUrl, name, e && e.status, e && e.finalUrl);
                         },
                         onerror: function(e){
-                            sendVerifyResult(targetUrl, 'error', e, '');
+                            sendVerifyResult(targetUrl, name, 'error', '');
                         },
                         ontimeout: function(e){
-                            sendVerifyResult(targetUrl, 'timeout', e, '');
+                            sendVerifyResult(targetUrl, name, 'timeout', '');
                         }
                     });
                 });
