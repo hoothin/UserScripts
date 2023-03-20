@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.55.31
+// @version      1.6.6.55.32
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -694,6 +694,7 @@
         autoDelay: 1000,
         shortcut: true,
         initShow: false,
+        alwaysShow: false,
         customSize: 100,
         typeOpenTime: 250,
         longPressTime: 500,
@@ -4467,6 +4468,9 @@
                 this.searchInPageRule();
                 if (currentSite && /%s\b/.test(currentSite.url)) {
                     this.inSearchEngine();
+                } else if (searchData.prefConfig.alwaysShow) {
+                    this.bar.style.display = "";
+                    this.initPos();
                 }
                 if (this.fontPool.length > 0 || isInConfigPage()) {
                     let linkEle = document.createElement("link");
@@ -7100,7 +7104,7 @@
                     if (clientX < 0) clientX = 5;
                     else if (clientX + self.bar.clientWidth > viewWidth) clientX = viewWidth - self.bar.clientWidth - 20;
                     let clientY = e.pageY;
-                    if (clientY > viewHeight / 5) clientY -= (self.bar.clientHeight + 20);
+                    if (e.clientY > viewHeight / 5) clientY -= (self.bar.clientHeight + 20);
                     else clientY += 20;
                     if (clientX < viewWidth / 2) {
                         self.bar.style.left = clientX + "px";
@@ -8708,6 +8712,36 @@
                 });
 
                 loadConfig();
+
+                let sendVerifyResult = (url, status, statusText, finalUrl) => {
+                    window.postMessage({
+                        url: url,
+                        status: status,
+                        statusText: statusText,
+                        finalUrl: finalUrl,
+                        command: 'verifyResult'
+                    }, '*');
+                };
+                document.addEventListener('verifyUrl', e => {
+                    let targetUrl = (e.detail ? e.detail.url : e.url);
+                    _GM_xmlhttpRequest({
+                        method: 'HEAD',
+                        url: targetUrl,
+                        headers: {
+                            referer: targetUrl,
+                            origin: targetUrl
+                        },
+                        onload: function(e) {
+                            sendVerifyResult(targetUrl, e && e.status, e && e.statusText, e && e.finalUrl);
+                        },
+                        onerror: function(e){
+                            sendVerifyResult(targetUrl, 'error', e, '');
+                        },
+                        ontimeout: function(e){
+                            sendVerifyResult(targetUrl, 'timeout', e, '');
+                        }
+                    });
+                });
 
                 let preSwitch = searchData.prefConfig.cacheSwitch;
                 document.addEventListener('saveConfig', e => {
