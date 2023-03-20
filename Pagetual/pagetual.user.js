@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.34.29
+// @version      1.9.34.30
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1597,7 +1597,7 @@
                 [].forEach.call(pageElement, (ele, i) => {
                     if (!/LINK|META|STYLE|SCRIPT/.test(ele.tagName)) {
                         if (pageElementCss) {
-                            if (!ele.dataset.pagetualPageElement) {
+                            if (pageElementCss !== '0' && !ele.dataset.pagetualPageElement) {
                                 ele.style.cssText = (ele.style.cssText || '') + pageElementCss;
                                 ele.dataset.pagetualPageElement = 1;
                             }
@@ -2554,7 +2554,8 @@
                 await self.getNextLink(document);
                 self.refreshByClick();
 
-                if (self.curSiteRule.pageElementCss || self.curSiteRule.pageElementStyle || rulesData.pageElementCss) {
+                let pageElementCss = self.curSiteRule.pageElementCss || self.curSiteRule.pageElementStyle || rulesData.pageElementCss;
+                if (pageElementCss && pageElementCss !== '0') {
                     self.getPageElement(document, _unsafeWindow);
                 }
                 callback();
@@ -2701,7 +2702,7 @@
                  z-index: 2147483646!important;
                  padding: 0!important;
                  opacity: 0.5;
-                 transition: opacity .3s ease, background .3s;
+                 transition: opacity .5s ease, background .5s, box-shadow .5s;
              }
              #pagetual-sideController:hover {
                  opacity: 1;
@@ -2728,7 +2729,7 @@
                  color: red;
              }
              #pagetual-sideController.minSize {
-                 box-shadow: unset;
+                 box-shadow: rgb(0 0 0 / 0%) 0px 0px 0px;
                  background: #00000000!important;
              }
              #pagetual-sideController.minSize .pagetual-sideController-btn {
