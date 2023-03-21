@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86096",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//*[@id=\"gc-balance-table\"]/div[8]/table/tbody",
+    "nextLink": "//*[@id=\"gc-balance-table\"]/div[8]/div/ul/li[8]/a",
+    "url": "^https://www\\.amazon\\.co\\.jp/gp/css/gc/balance",
+    "exampleUrl": "https://www.amazon.co.jp/gp/css/gc/balance"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "2q5HAX7iN8QG7Fp3gngW",
+  "name": "Amazonギフトカード",
+  "created_at": "2023-03-21T11:53:03+09:00",
+  "updated_at": "2023-03-21T11:53:03+09:00"
+},
+{
   "data": {
     "pageElement": "//div[@class='posts']/div[@class='post']",
     "nextLink": "//div[@class='pagination']/a[@aria-label='Next']",
