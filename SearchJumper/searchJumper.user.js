@@ -4007,6 +4007,10 @@
                     }
                 });
                 this.historySiteBtns.slice(0, 10).forEach(btn => {
+                    if (btn && btn.children.length && btn.children[0].dataset.src) {
+                        btn.children[0].src = btn.children[0].dataset.src;
+                        btn.children[0].dataset.src = '';
+                    }
                     self.historylist.appendChild(btn);
                 });
                 let targetKw = "";
