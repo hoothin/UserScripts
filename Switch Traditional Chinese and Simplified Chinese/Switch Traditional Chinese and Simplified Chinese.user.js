@@ -6,7 +6,7 @@
 // @namespace    hoothin
 // @supportURL   https://github.com/hoothin/UserScripts
 // @homepageURL  https://github.com/hoothin/UserScripts
-// @version      1.2.6.23
+// @version      1.2.6.24
 // @description        任意轉換網頁中的簡體中文與正體中文（默認簡體→正體）
 // @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体）
 // @description:ja     簡繁中国語に変換
@@ -1183,6 +1183,29 @@
                 return checkbox;
             };
             let autoInput = createCheckbox('總是自動切換', auto);
+            let notificationInput = createCheckbox('切換成功通知', notification);
+
+            let defaultSimple = document.createElement('select');
+            let cnOption = document.createElement('option');
+            cnOption.value = 'cn';
+            cnOption.innerHTML = '简体中文';
+            defaultSimple.appendChild(cnOption);
+            let trOption = document.createElement('option');
+            trOption.value = 'tr';
+            trOption.innerHTML = '正體中文';
+            defaultSimple.appendChild(trOption);
+            defaultSimple.value = isSimple ? 'cn' : 'tr';
+
+            let defaultSimpleCon = document.createElement('div');
+            defaultSimpleCon.style.display = 'flex';
+            defaultSimpleCon.style.alignItems = 'center';
+            let defaultSimpleTitle = document.createElement('h3');
+            defaultSimpleTitle.style.margin = '5px 0';
+            defaultSimpleTitle.innerText = '默認語言：';
+            defaultSimpleCon.appendChild(defaultSimpleTitle);
+            defaultSimpleCon.appendChild(defaultSimple);
+            baseCon.appendChild(defaultSimpleCon);
+
             let shortcutCon = document.createElement('div');
             shortcutCon.style.display = 'flex';
             shortcutCon.style.alignItems = 'center';
@@ -1208,7 +1231,6 @@
             let altKeyInput = createCheckbox('Alt 鍵', altKey);
             let shiftKeyInput = createCheckbox('Shift 鍵', shiftKey);
             let metaKeyInput = createCheckbox('Meta 鍵', metaKey);
-            let notificationInput = createCheckbox('通知', notification);
             ctrlKeyInput.parentNode.style.float = "left";
             altKeyInput.parentNode.style.float = "left";
             shiftKeyInput.parentNode.style.float = "left";
@@ -1302,6 +1324,7 @@
                 shiftKey = shiftKeyInput.checked;
                 metaKey = metaKeyInput.checked;
                 notification = notificationInput.checked;
+                isSimple = defaultSimple.value == 'cn';
 
                 if (siteChanged) {
                     sitesList.forEach(site => {
@@ -1326,13 +1349,15 @@
                 storage.setItem('shiftKey', shiftKey);
                 storage.setItem('metaKey', metaKey);
                 storage.setItem('notification', notification);
+                storage.setItem('isSimple', isSimple);
                 try {
                     sc2tcCombConfig = JSON.parse(customTermInput.value);
                     storage.setItem('sc2tcCombConfig', sc2tcCombConfig);
                 } catch (e) {
                     console.log(e);
                 }
-                alert('保存設置成功！')
+                alert('保存設置成功！');
+                location.reload();
             });
             baseCon.appendChild(saveBtn);
 
@@ -1384,7 +1409,7 @@
         return false;
     }
 
-    getMulValue(["auto", "shortcutKey", "ctrlKey", "altKey", "shiftKey", "metaKey", "sc2tcCombConfig", "notification", currentAction], values => {
+    getMulValue(["auto", "shortcutKey", "ctrlKey", "altKey", "shiftKey", "metaKey", "sc2tcCombConfig", "notification", "isSimple", currentAction], values => {
         if (values.sc2tcCombConfig) {
             auto = values.auto;
             shortcutKey = values.shortcutKey;
@@ -1394,6 +1419,7 @@
             metaKey = values.metaKey;
             sc2tcCombConfig = values.sc2tcCombConfig;
             notification = values.notification;
+            if (typeof values.isSimple != 'undefined') isSimple = values.isSimple;
             sc2tcComb = {};
             for (let key in sc2tcCombConfig) {
                  if (globMatch(key, location.href)) {
