@@ -1389,6 +1389,9 @@
     }
 
     function globMatch(first, second) {
+        if (first === '*') {
+            return true;
+        }
         if (first.length == 0 && second.length == 0){
             return true;
         }
