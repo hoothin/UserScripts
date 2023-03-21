@@ -1219,5 +1219,12 @@ var siteInfo = [
  src: /^https?:\/\/xqimg\.imedao\.com\//i,
  r: /!\d+(x\d+[a-z]?)?\.\w+$/,
  s: ''
+},
+{
+ name: "小众论坛",
+ url:/^https?:\/\/meta\.appinn\.net/,
+ src:/meta\-cdn/,
+ r:/\/optimized\/(.*)_\d+_\d+x\d+(\.\w+)$/,
+ s:"/original/$1$2"
 }
 ];
