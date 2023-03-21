@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.34.30
+// @version      1.9.34.31
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1041,6 +1041,7 @@
             }
             this.curSiteRule = {};
             var self = this;
+            var href = location.href.slice(0, 500);
 
             function setRule(r) {
                 if (self.preSiteRule && self.ruleMatch(self.preSiteRule)) {
@@ -1058,7 +1059,7 @@
             function checkRule(r) {
                 if (r.from == 1 && r.url.length <= 13) return false;
                 let urlReg = new RegExp(r.url, "i");
-                if (urlReg.test(location.href)) {
+                if (urlReg.test(href)) {
                     if (!self.ruleMatchPre(r)) return false;
                     if (r.waitElement) {
                         let waitTime = 500;
@@ -1635,7 +1636,7 @@
                 }
             }
             let canSave = false;//發現頁碼選擇器在其他頁對不上，還是別保存了
-            let url = this.curUrl.replace("index.php?", "?");
+            let url = this.curUrl.slice(0, 500).replace("index.php?", "?");
             let _url = url.replace(/\.s?html?$/i, "");
             let pageNum = 1,preStr = "",afterStr = "";
             let pageTwoReg = /^[\/\?&]?[_-]?(p|page)?=?\/?2(\/|\?|&|$)/i;
@@ -3734,9 +3735,10 @@
 
     function initConfig() {
         listenUrl();
+        let href = location.href.slice(0, 250);
         try {
             if (_unsafeWindow.initedPagetual) {
-                if (ruleImportUrlReg.test(location.href)) {
+                if (ruleImportUrlReg.test(href)) {
                     showTips(i18n('duplicate'));
                 }
                 return true;
@@ -3758,7 +3760,7 @@
                 showTips(`Update ${rule.url} rules fail! ${err}`);
             });
         });
-        if (guidePage.test(location.href)) {
+        if (guidePage.test(href)) {
             if (typeof JSONEditor !== 'undefined') {
                 createEdit();
             } else {
@@ -3768,7 +3770,7 @@
             }
             return true;
         }
-        if (location.href.indexOf("PagetualGuide") != -1) return true;
+        if (href.indexOf("PagetualGuide") != -1) return true;
         if (location.hostname === "pagetual.hoothin.com") return true;
 
         var configCon, insertPos;
@@ -3781,7 +3783,7 @@
                 break;
             }
         }
-        if (ruleImportUrlReg.test(location.href) || inConfig) {
+        if (ruleImportUrlReg.test(href) || inConfig) {
             let importing = false;
             if (noRules) {
                 setTimeout(() => {
@@ -4665,9 +4667,10 @@
                     rulesData.hideBarArrow = false;
                 }
                 if (rulesData.blacklist && rulesData.blacklist.length > 0) {
+                    let href = location.href.slice(0, 500);
                     for (let b in rulesData.blacklist) {
                         let curGlob = rulesData.blacklist[b];
-                        if (globMatch(curGlob, location.href)) {
+                        if (globMatch(curGlob, href)) {
                             forceState == 1;
                             return;
                         }
@@ -5086,7 +5089,7 @@
                 location.reload();
             } else {
                 setTimeout(() => {
-                    if (guidePage.test(location.href)) {
+                    if (guidePage.test(location.href.slice(0, 250))) {
                         if (typeof JSONEditor !== 'undefined') {
                             createEdit();
                         } else {
@@ -5394,7 +5397,7 @@
         }
         if (loadmoreBtn && !ruleParser.curSiteRule.loadMore && loadmoreBtn.dataset.ajax !== "true") {
             let href = loadmoreBtn.getAttribute("href");
-            if (href && href != "/" && !/^(javascript|#)/.test(href.replace(location.href,""))) {
+            if (href && href != "/" && !/^(javascript|#)/.test(href.replace(location.href, ""))) {
                 loadmoreBtn = null;
             }
         }
@@ -6406,7 +6409,7 @@
                     command: 'pagetual.insert'
                 }, '*');
             }*/
-            let isJs = ruleParser.curSiteRule.action == 3 || /^(javascript|#)/.test(nextLink.replace(location.href,""));
+            let isJs = ruleParser.curSiteRule.action == 3 || /^(javascript|#)/.test(nextLink.replace(location.href, ""));
             if (!isJs) {
                 emuIframe = null;
                 lastActiveUrl = nextLink;
