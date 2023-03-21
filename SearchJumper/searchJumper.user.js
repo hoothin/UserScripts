@@ -4852,11 +4852,12 @@
 
             searchInPageRule() {
                 if (searchData.prefConfig.inPageRule) {
+                    let href = location.href.slice(0, 250);
                     let keys = Object.keys(searchData.prefConfig.inPageRule);
                     for (let i = 0; i < keys.length; i++) {
                         let key = keys[i];
                         if (!key) continue;
-                        if (this.globMatch(key, location.href)) {
+                        if (this.globMatch(key, href)) {
                             let rule = searchData.prefConfig.inPageRule[key];
                             if (!rule) continue;
                             this.setInPageWords(rule);
@@ -5647,12 +5648,6 @@
                 //iEle.style.color = 'wheat';
                 typeBtn.appendChild(iEle);
                 img.style.display = "none";
-                img.onload = e => {
-                    img.style.display = "";
-                    iEle.innerText = '';
-                    iEle.style.fontSize = '';
-                    iEle.style.color = '';
-                };
                 ele.appendChild(typeBtn);
                 typeBtn.classList.add("search-jumper-word");
                 typeBtn.classList.add("search-jumper-btn");
@@ -5664,6 +5659,10 @@
                         let cache = searchData.prefConfig.cacheSwitch && cacheIcon[icon.trim().replace(/ /g, '_')];
                         if (cache === 'fail') {
                         } else if (cache) {
+                            img.style.display = "";
+                            iEle.innerText = '';
+                            iEle.style.fontSize = '';
+                            iEle.style.color = '';
                             img.src = cache;
                             img.style.width = '100%';
                             img.style.height = '100%';
@@ -5675,13 +5674,27 @@
                     } else {
                         let isBase64 = /^data:/.test(icon);
                         if (isBase64) {
+                            img.style.display = "";
+                            iEle.innerText = '';
+                            iEle.style.fontSize = '';
+                            iEle.style.color = '';
                             img.src = icon;
                         } else {
                             let cache = searchData.prefConfig.cacheSwitch && cacheIcon[icon];
                             if (cache === 'fail') {
                             } else if (cache) {
+                                img.style.display = "";
+                                iEle.innerText = '';
+                                iEle.style.fontSize = '';
+                                iEle.style.color = '';
                                 img.src = cache;
                             } else {
+                                img.onload = e => {
+                                    img.style.display = "";
+                                    iEle.innerText = '';
+                                    iEle.style.fontSize = '';
+                                    iEle.style.color = '';
+                                };
                                 img.src = icon;
                                 if (!cacheIcon[icon] && !isBookmark) cachePool.push(img);
                             }
@@ -6269,11 +6282,6 @@
                 img.style.display = "none";
                 ele.appendChild(img);
                 if (data.nobatch) ele.dataset.nobatch = 1;
-                img.onload = e => {
-                    ele.classList.remove("search-jumper-word");
-                    ele.removeChild(word);
-                    img.style.display = "";
-                };
                 self.stopInput = false;
                 if (searchData.prefConfig.shortcut && data.shortcut && !ele.dataset.clone) {
                     let shortcutCover = document.createElement("div");
@@ -6383,18 +6391,34 @@
                 }
                 let isBase64 = imgSrc && /^data:/.test(imgSrc);
                 if (isBase64) {
+                    ele.classList.remove("search-jumper-word");
+                    ele.removeChild(word);
+                    img.style.display = "";
                     img.src = imgSrc;
                 } else if (imgSrc) {
                     let cache = searchData.prefConfig.cacheSwitch && cacheIcon[imgSrc];
                     if (cache === 'fail') {
                         if (ele.dataset.current && imgSrc.indexOf(location.host) != -1) {
+                            img.onload = e => {
+                                ele.classList.remove("search-jumper-word");
+                                ele.removeChild(word);
+                                img.style.display = "";
+                            };
                             img.dataset.src = imgSrc;
                             cacheIcon[imgSrc] = '';
                             if (!isBookmark && !cacheIcon[imgSrc]) cachePool.push(img);
                         }
                     } else if (cache) {
+                        ele.classList.remove("search-jumper-word");
+                        ele.removeChild(word);
+                        img.style.display = "";
                         img.src = cache;
                     } else {
+                        img.onload = e => {
+                            ele.classList.remove("search-jumper-word");
+                            ele.removeChild(word);
+                            img.style.display = "";
+                        };
                         img.dataset.src = imgSrc;
                         if (!isBookmark && !cacheIcon[imgSrc]) cachePool.push(img);
                     }
