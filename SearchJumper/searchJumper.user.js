@@ -4882,6 +4882,7 @@
                 }
                 inPageWords = inPageWords || globalInPageWords;
                 if (inPageWords) {
+                    this.appendBar();
                     this.setInPageWords(inPageWords);
                 }
             }
