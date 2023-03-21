@@ -5401,10 +5401,10 @@
                                 img.style.height = "1px";
                                 img.style.display = "none";
                             } else {
-                                img.src = iconSrc;
+                                img.dataset.src = iconSrc;
                             }
                         } else {
-                            img.src = noImgBase64;
+                            img.dataset.src = noImgBase64;
                         }
                     }
                     let p = document.createElement("p");
@@ -6394,7 +6394,7 @@
                     ele.classList.remove("search-jumper-word");
                     ele.removeChild(word);
                     img.style.display = "";
-                    img.src = imgSrc;
+                    img.dataset.src = imgSrc;
                 } else if (imgSrc) {
                     let cache = searchData.prefConfig.cacheSwitch && cacheIcon[imgSrc];
                     if (cache === 'fail') {
@@ -6412,7 +6412,7 @@
                         ele.classList.remove("search-jumper-word");
                         ele.removeChild(word);
                         img.style.display = "";
-                        img.src = cache;
+                        img.dataset.src = cache;
                     } else {
                         img.onload = e => {
                             ele.classList.remove("search-jumper-word");
