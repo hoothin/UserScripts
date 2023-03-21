@@ -1636,7 +1636,7 @@
                 }
             }
             let canSave = false;//發現頁碼選擇器在其他頁對不上，還是別保存了
-            let url = this.curUrl.slice(0, 500).replace("index.php?", "?");
+            let url = this.curUrl.slice(0, 250).replace("index.php?", "?");
             let _url = url.replace(/\.s?html?$/i, "");
             let pageNum = 1,preStr = "",afterStr = "";
             let pageTwoReg = /^[\/\?&]?[_-]?(p|page)?=?\/?2(\/|\?|&|$)/i;
@@ -5182,10 +5182,10 @@
                 if (loadmoreBtn && isVisible(loadmoreBtn, _unsafeWindow)) {
                     loadingMore = false;
                     clearInterval(checkLoadMore);
-                } else if (checkLoadMoreTimes++ > 30) {
+                } else if (checkLoadMoreTimes++ > 10) {
                     clearInterval(checkLoadMore);
                 }
-            }, 300);
+            }, 1000);
         }
         clickMode = typeof ruleParser.curSiteRule.clickMode == 'undefined' ? rulesData.clickMode : ruleParser.curSiteRule.clickMode;
         let clickNext = async () => {
