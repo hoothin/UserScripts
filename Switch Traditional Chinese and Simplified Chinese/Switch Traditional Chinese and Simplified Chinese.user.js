@@ -1422,7 +1422,7 @@
             if (typeof values.isSimple != 'undefined') isSimple = values.isSimple;
             sc2tcComb = {};
             for (let key in sc2tcCombConfig) {
-                 if (globMatch(key, location.href)) {
+                 if (globMatch(key, location.href.replace(/#.*/, '').slice(0, 250))) {
                      let sc2tc = sc2tcCombConfig[key];
                      for (let sc in sc2tc) {
                          sc2tcComb[sc] = sc2tc[sc];
