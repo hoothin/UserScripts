@@ -1421,8 +1421,9 @@
             notification = values.notification;
             if (typeof values.isSimple != 'undefined') isSimple = values.isSimple;
             sc2tcComb = {};
+            let href = location.href.slice(0, 500);
             for (let key in sc2tcCombConfig) {
-                 if (globMatch(key, location.href.replace(/#.*/, '').slice(0, 250))) {
+                 if (globMatch(key, href)) {
                      let sc2tc = sc2tcCombConfig[key];
                      for (let sc in sc2tc) {
                          sc2tcComb[sc] = sc2tc[sc];
