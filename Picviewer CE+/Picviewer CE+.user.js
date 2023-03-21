@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.3.16.1
+// @version              2023.3.21.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -41,7 +41,7 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
-// @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1162090
+// @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1164300
 // @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1160810
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
@@ -21188,7 +21188,7 @@ ImgOps | https://imgops.com/#b#`;
         // ------------------- run -------------------------
 
         var matchedRule,
-            URL=location.href;
+            URL=location.href.slice(0, 250);
 
         function pretreatment(img){
             if(img.nodeName != "IMG" || img.src)return;
@@ -21381,7 +21381,7 @@ ImgOps | https://imgops.com/#b#`;
                 self.rules=[];
                 function searchByTime(){
                     setTimeout(()=>{
-                        let end=r+10;
+                        let end=r+20;
                         end=end>siteInfo.length?siteInfo.length:end;
                         for(;r<end;r++){
                             let site=siteInfo[r];
@@ -23028,7 +23028,7 @@ ImgOps | https://imgops.com/#b#`;
                 let siteReg=sitesArr[s].trim();
                 let autoViewMore=siteReg[0]=="@";
                 if(autoViewMore)siteReg=siteReg.substr(1);
-                if(new RegExp(siteReg).test(location.href)){
+                if(new RegExp(siteReg).test(URL)){
                     setTimeout(function(){
                         var gallery = openGallery();
                         if(autoViewMore)gallery.maximizeSidebar();
