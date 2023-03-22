@@ -1776,7 +1776,7 @@
             }
             if (!next) {
                 let aTags = body.querySelectorAll("a,button,[type='button']");
-                let min = aTags.length > 1200 ? aTags.length - 1200 : 0;
+                let min = aTags.length > 2000 ? aTags.length - 2000 : 0;
                 for (i = aTags.length - 1; i >= min; i--) {
                     if (next1) break;
                     let aTag = aTags[i];
@@ -1785,7 +1785,8 @@
                         if (aTag.innerText.trim().length > 80) continue;
                         if (aTag.innerText == "§") continue;
                     }
-                    if (aTag.href && /next$/i.test(aTag.href)) continue;
+                    let availableHref = aTag.href && aTag.href.length < 250;
+                    if (availableHref && /next$/i.test(aTag.href)) continue;
                     if (aTag.className) {
                         if (/slick|slide|gallery/i.test(aTag.className)) continue;
                         if (aTag.classList && aTag.classList.contains('disabled')) continue;
@@ -1842,7 +1843,8 @@
                             }
                         }
                     }
-                    if (!next4 && aTag.href.length < 250) {
+                    if (!next4 && availableHref) {
+                        if (aTag.href.indexOf('http') === 0 && aTag.href.indexOf(location.hostname) === -1) continue;
                         let _aHref = aTag.href.replace("?&", "?").replace("index.php?", "?");
                         if (preStr || afterStr) {
                             let _aHrefTrim = _aHref;
@@ -3078,6 +3080,9 @@
               border-bottom: 1px solid black;
               user-select: none;
               color: orangered;
+              height: initial;
+              width: initial;
+              position: initial;
              }
              #pagetual-picker button {
               background: none;
