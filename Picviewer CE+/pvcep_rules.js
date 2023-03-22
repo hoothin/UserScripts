@@ -1222,9 +1222,16 @@ var siteInfo = [
 },
 {
  name: "小众论坛",
- url:/^https?:\/\/meta\.appinn\.net/,
- src:/meta\-cdn/,
- r:/\/optimized\/(.*)_\d+_\d+x\d+(\.\w+)$/,
- s:"/original/$1$2"
+ url: /^https?:\/\/meta\.appinn\.net/,
+ src: /meta\-cdn/,
+ r: /\/optimized\/(.*)_\d+_\d+x\d+(\.\w+)$/,
+ s: "/original/$1$2"
+},
+{
+ name: "诱惑福利图",
+ url: /www\.yhflt\.com/,
+ src: /imgs\.yhflt\.com/,
+ r: /imgs(\..*\/)q/,
+ s: "pic$1"
 }
 ];
