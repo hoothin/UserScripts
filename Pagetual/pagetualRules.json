@@ -8079,7 +8079,12 @@
         "url": "^https://fsoufsou\\.com/search",
         "nextLink": ".bottom-pagination-bar+.turn-page-btn",
         "pinUrl": true,
-        "css": "svg{visibility: visible;}"
+        "css": "svg{visibility: visible;}",
+        "pageElement": "div.organic-results>div",
+        "stopSign": [
+            "",
+            ".empty-result-container"
+        ]
     },
     {
         "name": "gog",
