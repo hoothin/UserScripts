@@ -1618,7 +1618,7 @@
         getPage(doc) {
             if (document.documentElement.className.indexOf('discourse') != -1) return {};
             let video = document.body.querySelector("video,canvas,iframe[id*=play],[id*=play]>iframe,iframe[src*=player],iframe[src*=m3u8]");
-            if (video && video.name != 'pagetual-iframe') {
+            if (video && video.offsetParent && video.name != 'pagetual-iframe') {
                 let scrollWidth = video.scrollWidth || video.offsetWidth;
                 let scrollHeight = video.scrollHeight || video.offsetHeight;
                 if (scrollWidth > 500 && scrollHeight > 500) {
@@ -1776,7 +1776,7 @@
             }
             if (!next) {
                 let aTags = body.querySelectorAll("a,button,[type='button']");
-                if (aTags.length < 500) {
+                if (aTags.length < 1000) {
                     for (i = aTags.length - 1; i >= 0; i--) {
                         if (next1) break;
                         let aTag = aTags[i];
