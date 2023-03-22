@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.34.31
+// @version      1.9.34.32
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1617,8 +1617,8 @@
 
         getPage(doc) {
             if (document.documentElement.className.indexOf('discourse') != -1) return {};
-            let video = document.body.querySelector("video,canvas,iframe[id*=play]:not([name=pagetual-iframe]),[id*=play]>iframe:not([name=pagetual-iframe]),iframe[src*=player]:not([name=pagetual-iframe]),iframe[src*=m3u8]:not([name=pagetual-iframe])");
-            if (video) {
+            let video = document.body.querySelector("video,canvas,iframe[id*=play],[id*=play]>iframe,iframe[src*=player],iframe[src*=m3u8]");
+            if (video && video.name != 'pagetual-iframe') {
                 let scrollWidth = video.scrollWidth || video.offsetWidth;
                 let scrollHeight = video.scrollHeight || video.offsetHeight;
                 if (scrollWidth > 500 && scrollHeight > 500) {
@@ -1638,22 +1638,24 @@
             let canSave = false;//發現頁碼選擇器在其他頁對不上，還是別保存了
             let url = this.curUrl.slice(0, 250).replace("index.php?", "?");
             let _url = url.replace(/\.s?html?$/i, "");
-            let pageNum = 1,preStr = "",afterStr = "";
+            let pageNum = 1, preStr = "", afterStr = "";
             let pageTwoReg = /^[\/\?&]?[_-]?(p|page)?=?\/?2(\/|\?|&|$)/i;
-            let pageMatch1 = url.match(/(.*[a-z\/\-_](?:p|page)?\/?)(\d+)(\.s?html?$|\/?$)/i);
-            let pageMatch2 = url.match(/(.*[\?&]p(?:age)?=)(\d+)($|[#&].*)/i);
+            let pageMatch1 = url.match(/(.*[\?&]p(?:age)?=)(\d+)($|[#&].*)/i);
             if (pageMatch1) {
                 preStr = pageMatch1[1];
                 pageNum = parseInt(pageMatch1[2]);
                 afterStr = pageMatch1[3];
-                if (/^\/?$/.test(afterStr) && !/(p(age)?|_|\-|\/)$/.test(preStr)) {
-                    preStr = "";
-                    afterStr = "";
+            } else {
+                let pageMatch2 = url.match(/(.*[a-z\/\-_](?:p|page)?\/?)(\d+)(\.s?html?$|\/?$)/i);
+                if (pageMatch2) {
+                    preStr = pageMatch2[1];
+                    pageNum = parseInt(pageMatch2[2]);
+                    afterStr = pageMatch2[3];
+                    if (/^\/?$/.test(afterStr) && !/(p(age)?|_|\-|\/)$/.test(preStr)) {
+                        preStr = "";
+                        afterStr = "";
+                    }
                 }
-            } else if (pageMatch2) {
-                preStr = pageMatch2[1];
-                pageNum = parseInt(pageMatch2[2]);
-                afterStr = pageMatch2[3];
             }
             if (pageNum > 999) {
                 pageNum = 1;
@@ -1673,9 +1675,6 @@
                 body.querySelector(".pagination-nav__item--next>a") ||
                 body.querySelector("a.pageright") ||
                 body.querySelector(".page-numbers.current+a") ||
-                body.querySelector("[title='Next page']") ||
-                body.querySelector("[title='下一页']") ||
-                body.querySelector("[title='下一頁']") ||
                 body.querySelector("input[value='next']") ||
                 body.querySelector("input[value='Next page']") ||
                 body.querySelector("input[value='下一页']") ||
@@ -1751,10 +1750,9 @@
                 next = null;
             }
             if (!next) {
-                next = body.querySelector("a.curr+a");
-            }
-            if (!next) {
-                next = body.querySelector("div.wp-pagenavi>span.current+a,div.page-nav>span.current+a,div.article-paging>span+a");
+                next = body.querySelector("a.curr+a") ||
+                    body.querySelector("div.wp-pagenavi>span.current+a,div.page-nav>span.current+a,div.article-paging>span+a") ||
+                    body.querySelector(".number>ul>li.active+li>a");;
             }
             if (!next) {
                 let pageDiv = body.querySelector("div.pages>ul");
@@ -1763,9 +1761,6 @@
                     if (cur) next = cur.parentNode.nextElementSibling;
                     if (next) next = next.querySelector("a");
                 }
-            }
-            if (!next) {
-                next = body.querySelector(".number>ul>li.active+li>a");
             }
             if (!next) {
                 next = body.querySelector(".pages>a[href='javascript:;']+a");
@@ -1781,100 +1776,105 @@
             }
             if (!next) {
                 let aTags = body.querySelectorAll("a,button,[type='button']");
-                for (i = aTags.length - 1; i >= 0; i--) {
-                    if (next1) break;
-                    let aTag = aTags[i];
-                    if (aTag.innerText) {
-                        if (aTag.innerText == "§") continue;
-                        if (aTag.innerText.trim().length > 80) continue;
-                    }
-                    if (aTag.style.display == "none") continue;
-                    if (aTag.href && /next$/i.test(aTag.href)) continue;
-                    if (aTag.className) {
-                        if (/slick|slide|gallery/i.test(aTag.className)) continue;
-                        if (aTag.classList && aTag.classList.contains('disabled')) continue;
-                    }
-                    let ariaLabel = aTag.getAttribute("aria-label");
-                    if (ariaLabel && /slick|slide|gallery/i.test(ariaLabel)) continue;
-                    if (aTag.parentNode) {
-                        if (aTag.parentNode.className && /slick|slide|gallery/i.test(aTag.parentNode.className)) continue;
-                        if (aTag.parentNode.classList && aTag.parentNode.classList.contains('disabled')) continue;
-                        if (aTag.parentNode.tagName == "BLOCKQUOTE") continue;
-                    }
-                    let innerText = (aTag.innerText || aTag.value || aTag.title || '').trim().replace(/\n.*/, '').replace(/ /g, '');
-                    let isJs = !aTag.href || /^(javascript|#)/.test(aTag.href.replace(location.href, ""));
-                    if (innerText && innerText.length <= 25) {
-                        if (!next1) {
-                            if (nextTextReg1.test(innerText)) {
-                                if (isJs) {
-                                    if (!nextJs1) nextJs1 = aTag;
-                                } else {
-                                    next1 = aTag;
+                if (aTags.length < 500) {
+                    for (i = aTags.length - 1; i >= 0; i--) {
+                        if (next1) break;
+                        let aTag = aTags[i];
+                        if (aTag.style.display == "none") continue;
+                        if (aTag.innerText) {
+                            if (aTag.innerText.trim().length > 80) continue;
+                            if (aTag.innerText == "§") continue;
+                        }
+                        if (aTag.href && /next$/i.test(aTag.href)) continue;
+                        if (aTag.className) {
+                            if (/slick|slide|gallery/i.test(aTag.className)) continue;
+                            if (aTag.classList && aTag.classList.contains('disabled')) continue;
+                        }
+                        let ariaLabel = aTag.getAttribute("aria-label");
+                        if (ariaLabel && /slick|slide|gallery/i.test(ariaLabel)) continue;
+                        if (aTag.parentNode) {
+                            if (aTag.parentNode.className && /slick|slide|gallery/i.test(aTag.parentNode.className)) continue;
+                            if (aTag.parentNode.classList && aTag.parentNode.classList.contains('disabled')) continue;
+                            if (aTag.parentNode.tagName == "BLOCKQUOTE") continue;
+                        }
+                        let isJs = !aTag.href || /^(javascript|#)/.test(aTag.href.replace(location.href, ""));
+                        let innerText = (aTag.innerText || aTag.value || aTag.title || '');
+                        if (innerText && innerText.length < 250) {
+                            innerText = innerText.trim().replace(/\n.*/, '').replace(/ /g, '');
+                            if (innerText && innerText.length <= 25) {
+                                if (!next1) {
+                                    if (nextTextReg1.test(innerText)) {
+                                        if (isJs) {
+                                            if (!nextJs1) nextJs1 = aTag;
+                                        } else {
+                                            next1 = aTag;
+                                        }
+                                    }
+                                }
+                                if (!next4) {
+                                    if (!next2) {
+                                        if (nextTextReg2.test(innerText) || /nextpage|pager\-older/i.test(aTag.className) || /^\s*(»|>>)\s*$/.test(innerText)) {
+                                            if (isJs) {
+                                                if (!nextJs2) nextJs2 = aTag;
+                                            } else {
+                                                next2 = aTag;
+                                            }
+                                        }
+                                    }
+                                    if (!next3) {
+                                        if (/^\s*(next|&gt;|▶|>|›|→|❯)\s*$/i.test(innerText)) {
+                                            if (isJs) {
+                                                if (!nextJs3) nextJs3 = aTag;
+                                            } else {
+                                                next3 = aTag;
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
+                        if (isJs) continue;
                         if (!next4) {
-                            if (!next2) {
-                                if (nextTextReg2.test(innerText) || /nextpage|pager\-older/i.test(aTag.className) || /^\s*(»|>>)\s*$/.test(innerText)) {
-                                    if (isJs) {
-                                        if (!nextJs2) nextJs2 = aTag;
-                                    } else {
-                                        next2 = aTag;
-                                    }
-                                }
-                            }
-                            if (!next3) {
-                                if (/^\s*(next|&gt;|▶|>|›|→|❯)\s*$/i.test(innerText)) {
-                                    if (isJs) {
-                                        if (!nextJs3) nextJs3 = aTag;
-                                    } else {
-                                        next3 = aTag;
-                                    }
+                            let prevEle = aTag.previousElementSibling;
+                            if (prevEle && (prevEle.tagName == 'B' || prevEle.tagName == 'SPAN' || prevEle.tagName == 'STRONG')) {
+                                if (/^\d+$/.test(aTag.innerText.trim()) && /^\d+$/.test(prevEle.innerText.trim()) && parseInt(aTag.innerText) == parseInt(prevEle.innerText) + 1) {
+                                    next4 = aTag;
                                 }
                             }
                         }
-                    }
-                    if (isJs) continue;
-                    if (!next4) {
-                        let prevEle = aTag.previousElementSibling;
-                        if (prevEle && (prevEle.tagName == 'B' || prevEle.tagName == 'SPAN' || prevEle.tagName == 'STRONG')) {
-                            if (/^\d+$/.test(aTag.innerText.trim()) && /^\d+$/.test(prevEle.innerText.trim()) && parseInt(aTag.innerText) == parseInt(prevEle.innerText) + 1) {
-                                next4 = aTag;
+                        if (!next4 && aTag.href.length < 250) {
+                            let _aHref = aTag.href.replace("?&", "?").replace("index.php?", "?");
+                            if (preStr || afterStr) {
+                                let _aHrefTrim = _aHref;
+                                if (preStr) _aHrefTrim = _aHrefTrim.replace(preStr, "");
+                                if (afterStr) _aHrefTrim = _aHrefTrim.replace(afterStr, "");
+                                if (_aHrefTrim == pageNum + 1) {
+                                    next4 = aTag;
+                                }
+                            } else if (this.curUrl != aTag.href) {
+                                _aHref = _aHref.replace(/\.s?html?$/i, "");
+                                if (_aHref.indexOf(_url) != -1 && pageTwoReg.test(_aHref.replace(_url, ""))) {
+                                    let curHref = aTag.getAttribute("href");
+                                    let pageOne = curHref.replace(/\/2(\/|\?|&|$)/, "/1$1");
+                                    if (pageOne == curHref) pageOne = null;
+                                    else pageOne = body.querySelector(`a[href='${pageOne}']`);
+                                    if (!pageOne || pageOne.className != curHref.className) next4 = aTag;
+                                }
                             }
                         }
                     }
-                    if (!next4 && aTag.href.length < 250) {
-                        let _aHref = aTag.href.replace("?&", "?").replace("index.php?", "?");
-                        if (preStr || afterStr) {
-                            let _aHrefTrim = _aHref;
-                            if (preStr) _aHrefTrim = _aHrefTrim.replace(preStr, "");
-                            if (afterStr) _aHrefTrim = _aHrefTrim.replace(afterStr, "");
-                            if (_aHrefTrim == pageNum + 1) {
-                                next4 = aTag;
-                            }
-                        } else if (this.curUrl != aTag.href) {
-                            _aHref = _aHref.replace(/\.s?html?$/i, "");
-                            if (_aHref.indexOf(_url) != -1 && pageTwoReg.test(_aHref.replace(_url, ""))) {
-                                let curHref = aTag.getAttribute("href");
-                                let pageOne = curHref.replace(/\/2(\/|\?|&|$)/, "/1$1");
-                                if (pageOne == curHref) pageOne = null;
-                                else pageOne = body.querySelector(`a[href='${pageOne}']`);
-                                if (!pageOne || pageOne.className != curHref.className) next4 = aTag;
-                            }
-                        }
+                    if (next2 && /^\s*(»|>>)\s*$/.test(next2.innerText)) {
+                        next2 = this.verifyNext(next2, doc);
                     }
-                }
-                if (next2 && /^\s*(»|>>)\s*$/.test(next2.innerText)) {
-                    next2 = this.verifyNext(next2, doc);
-                }
-                if (nextJs2 && /^\s*(»|>>)\s*$/.test(nextJs2.innerText)) {
-                    nextJs2 = this.verifyNext(nextJs2, doc);
-                }
-                if (next3) {
-                    next3 = this.verifyNext(next3, doc);
-                }
-                if (nextJs3) {
-                    nextJs3 = this.verifyNext(nextJs3, doc);
+                    if (nextJs2 && /^\s*(»|>>)\s*$/.test(nextJs2.innerText)) {
+                        nextJs2 = this.verifyNext(nextJs2, doc);
+                    }
+                    if (next3) {
+                        next3 = this.verifyNext(next3, doc);
+                    }
+                    if (nextJs3) {
+                        nextJs3 = this.verifyNext(nextJs3, doc);
+                    }
                 }
             }
             if (!next) next = next1 || next4 || next3 || next2;
@@ -2561,7 +2561,7 @@
                 }
                 callback();
                 let initRun = typeof self.curSiteRule.initRun == 'undefined' ? rulesData.initRun : self.curSiteRule.initRun;
-                if (initRun && initRun != false) nextPage();
+                if (initRun && initRun != false && self.nextLinkHref) nextPage();
             });
         }
 
@@ -4989,7 +4989,7 @@
     var loadingDiv = document.createElement("div");
     loadingDiv.style.cssText = "text-indent: initial;cy: initial;d: initial;dominant-baseline: initial;empty-cells: initial;fill: initial;fill-opacity: initial;fill-rule: initial;filter: initial;flex: initial;flex-flow: initial;float: initial;flood-color: initial;flood-opacity: initial;grid: initial;grid-area: initial;height: initial;hyphens: initial;image-orientation: initial;image-rendering: initial;inline-size: initial;inset-block: initial;inset-inline: initial;isolation: initial;letter-spacing: initial;lighting-color: initial;line-break: initial;list-style: initial;margin-block: initial;margin: 0px auto;margin-inline: initial;marker: initial;mask: initial;mask-type: initial;max-block-size: initial;max-height: initial;max-inline-size: initial;max-width: initial;min-block-size: initial;min-height: initial;min-inline-size: initial;min-width: initial;mix-blend-mode: initial;object-fit: initial;object-position: initial;offset: initial;opacity: initial;order: initial;origin-trial-test-property: initial;orphans: initial;outline: initial;outline-offset: initial;overflow-anchor: initial;overflow-clip-margin: initial;overflow-wrap: initial;overflow: initial;overscroll-behavior-block: initial;overscroll-behavior-inline: initial;overscroll-behavior: initial;padding-block: initial;padding: initial;padding-inline: initial;page: initial;page-orientation: initial;paint-order: initial;perspective: initial;perspective-origin: initial;pointer-events: initial;position: initial;quotes: initial;r: initial;resize: initial;ruby-position: initial;rx: initial;ry: initial;scroll-behavior: initial;scroll-margin-block: initial;scroll-margin: initial;scroll-margin-inline: initial;scroll-padding-block: initial;scroll-padding: initial;scroll-padding-inline: initial;scroll-snap-align: initial;scroll-snap-stop: initial;scroll-snap-type: initial;scrollbar-gutter: initial;shape-image-threshold: initial;shape-margin: initial;shape-outside: initial;shape-rendering: initial;size: initial;speak: initial;stop-color: initial;stop-opacity: initial;stroke: initial;stroke-dasharray: initial;stroke-dashoffset: initial;stroke-linecap: initial;stroke-linejoin: initial;stroke-miterlimit: initial;stroke-opacity: initial;stroke-width: initial;tab-size: initial;table-layout: initial;text-align: initial;text-align-last: initial;text-anchor: initial;text-combine-upright: initial;text-decoration: initial;text-decoration-skip-ink: initial;text-indent: initial;text-overflow: initial;text-shadow: initial;text-size-adjust: initial;text-transform: initial;text-underline-offset: initial;text-underline-position: initial;touch-action: initial;transform: initial;transform-box: initial;transform-origin: initial;transform-style: initial;transition: initial;user-select: initial;vector-effect: initial;vertical-align: initial;visibility: initial;border-spacing: initial;-webkit-border-image: initial;-webkit-box-align: initial;-webkit-box-decoration-break: initial;-webkit-box-direction: initial;-webkit-box-flex: initial;-webkit-box-ordinal-group: initial;-webkit-box-orient: initial;-webkit-box-pack: initial;-webkit-box-reflect: initial;-webkit-highlight: initial;-webkit-hyphenate-character: initial;-webkit-line-break: initial;-webkit-line-clamp: initial;-webkit-mask-box-image: initial;-webkit-mask: initial;-webkit-mask-composite: initial;-webkit-perspective-origin-x: initial;-webkit-perspective-origin-y: initial;-webkit-print-color-adjust: initial;-webkit-rtl-ordering: initial;-webkit-ruby-position: initial;-webkit-tap-highlight-color: initial;-webkit-text-combine: initial;-webkit-text-decorations-in-effect: initial;-webkit-text-emphasis: initial;-webkit-text-emphasis-position: initial;-webkit-text-fill-color: initial;-webkit-text-security: initial;-webkit-text-stroke: initial;-webkit-transform-origin-x: initial;-webkit-transform-origin-y: initial;-webkit-transform-origin-z: initial;-webkit-user-drag: initial;-webkit-user-modify: initial;white-space: initial;widows: initial;width: initial;will-change: initial;word-break: initial;word-spacing: initial;x: initial;y: initial;z-index: 2147483647;";
 
-    const loadingCSS = `display: block; position: initial; margin: auto auto 5px auto; shape-rendering: auto; vertical-align: middle; visibility: visible; width: initial; height: initial; text-align: center; color: #6e6e6e; flex: 0;`;
+    const loadingCSS = `text-indent: unset; display: block; position: initial; margin: auto auto 5px auto; shape-rendering: auto; vertical-align: middle; visibility: visible; width: initial; height: initial; text-align: center; color: #6e6e6e; flex: 0;`;
     function setLoadingDiv(loadingText) {
         loadingDiv.innerHTML = createHTML(`<p class="pagetual_loading_text" style="${loadingCSS}display: inline-block;width: 100%;">${loadingText}</p>${rulesData.hideLoadingIcon ? "" : `<div class="pagetual_loading"><svg width="50" height="50" style="position:relative;cursor: pointer;width: 50px;height: 50px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#6e6e6e"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#6e6e6e"></path></svg></div>`}`);
     }
