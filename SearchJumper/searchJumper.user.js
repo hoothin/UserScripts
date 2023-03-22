@@ -2008,7 +2008,7 @@
                      filter: drop-shadow(1px 1px 3px #00000060);
                  }
                  .funcKeyCall a.search-jumper-word {
-                     background: #f7f7f7c0;
+                     background: #f7f7f7a0;
                  }
                  a.search-jumper-word>span {
                      color: #222!important;
