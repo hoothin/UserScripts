@@ -1437,7 +1437,7 @@
                      justify-content: center;
                      left: 0;
                      top: 60px;
-                     background: white;
+                     background: #f5f5f5e0;
                      border-bottom: 1px solid #ddd;
                      pointer-events: all;
                      min-height: 40px;
@@ -1696,7 +1696,7 @@
                      margin: ${3 * this.scale}px;
                      cursor: pointer;
                      box-sizing: content-box;
-                     ${searchData.prefConfig.noAni ? "" : "transition:margin-left 0.25s ease, width 0.25s, height 0.25s, transform 0.25s;"}
+                     ${searchData.prefConfig.noAni ? "" : "transition:margin-left 0.25s ease, width 0.25s, height 0.25s, transform 0.25s, background 0.25s;"}
                      width: ${32 * this.scale}px;
                      height: ${32 * this.scale}px;
                      overflow: hidden;
@@ -1900,7 +1900,7 @@
                      border-radius: 10px;
                      box-shadow: 0px 0px 10px 0px #7a7a7a;
                      padding: 0 0 10px 0;
-                     background: white;
+                     background: #ffffffe0;
                      opacity: 1;
                      border: 0;
                  }
@@ -2003,12 +2003,14 @@
                  }
                  a.search-jumper-word {
                      text-decoration: none;
-                     background: #f7f7f7d9;
+                     background: white;
                      color: #111111!important;
                      filter: drop-shadow(1px 1px 3px #00000060);
                  }
+                 .funcKeyCall a.search-jumper-word {
+                     background: #f7f7f7c0;
+                 }
                  a.search-jumper-word>span {
-                     background: #f7f7f7d9;
                      color: #222!important;
                      border-radius: 20px;
                      line-height: unset;
@@ -2536,7 +2538,7 @@
                      }
 
                      #search-jumper .sitelist > .sitelistCon {
-                         background-color: #1C2127 !important;
+                         background-color: #1C2127e0 !important;
                      }
 
                      #search-jumper .sitelist > .sitelistCon > div:hover {
@@ -2565,7 +2567,7 @@
 
                      /* 历史列表 */
                      .search-jumper-historylist {
-                         background-color: #181C20 !important;
+                         background-color: #181C20e0 !important;
                      }
 
                      .search-jumper-historylist>a.search-jumper-btn {
