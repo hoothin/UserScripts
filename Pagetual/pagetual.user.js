@@ -1776,105 +1776,104 @@
             }
             if (!next) {
                 let aTags = body.querySelectorAll("a,button,[type='button']");
-                if (aTags.length < 1000) {
-                    for (i = aTags.length - 1; i >= 0; i--) {
-                        if (next1) break;
-                        let aTag = aTags[i];
-                        if (aTag.style.display == "none") continue;
-                        if (aTag.innerText) {
-                            if (aTag.innerText.trim().length > 80) continue;
-                            if (aTag.innerText == "§") continue;
-                        }
-                        if (aTag.href && /next$/i.test(aTag.href)) continue;
-                        if (aTag.className) {
-                            if (/slick|slide|gallery/i.test(aTag.className)) continue;
-                            if (aTag.classList && aTag.classList.contains('disabled')) continue;
-                        }
-                        let ariaLabel = aTag.getAttribute("aria-label");
-                        if (ariaLabel && /slick|slide|gallery/i.test(ariaLabel)) continue;
-                        if (aTag.parentNode) {
-                            if (aTag.parentNode.className && /slick|slide|gallery/i.test(aTag.parentNode.className)) continue;
-                            if (aTag.parentNode.classList && aTag.parentNode.classList.contains('disabled')) continue;
-                            if (aTag.parentNode.tagName == "BLOCKQUOTE") continue;
-                        }
-                        let isJs = !aTag.href || /^(javascript|#)/.test(aTag.href.replace(location.href, ""));
-                        let innerText = (aTag.innerText || aTag.value || aTag.title || '');
-                        if (innerText && innerText.length < 250) {
-                            innerText = innerText.trim().replace(/\n.*/, '').replace(/ /g, '');
-                            if (innerText && innerText.length <= 25) {
-                                if (!next1) {
-                                    if (nextTextReg1.test(innerText)) {
+                let min = aTags.length > 1200 ? aTags.length - 1200 : 0;
+                for (i = aTags.length - 1; i >= min; i--) {
+                    if (next1) break;
+                    let aTag = aTags[i];
+                    if (aTag.style.display == "none") continue;
+                    if (aTag.innerText) {
+                        if (aTag.innerText.trim().length > 80) continue;
+                        if (aTag.innerText == "§") continue;
+                    }
+                    if (aTag.href && /next$/i.test(aTag.href)) continue;
+                    if (aTag.className) {
+                        if (/slick|slide|gallery/i.test(aTag.className)) continue;
+                        if (aTag.classList && aTag.classList.contains('disabled')) continue;
+                    }
+                    let ariaLabel = aTag.getAttribute("aria-label");
+                    if (ariaLabel && /slick|slide|gallery/i.test(ariaLabel)) continue;
+                    if (aTag.parentNode) {
+                        if (aTag.parentNode.className && /slick|slide|gallery/i.test(aTag.parentNode.className)) continue;
+                        if (aTag.parentNode.classList && aTag.parentNode.classList.contains('disabled')) continue;
+                        if (aTag.parentNode.tagName == "BLOCKQUOTE") continue;
+                    }
+                    let isJs = !aTag.href || /^(javascript|#)/.test(aTag.href.replace(location.href, ""));
+                    let innerText = (aTag.innerText || aTag.value || aTag.title || '');
+                    if (innerText && innerText.length < 250) {
+                        innerText = innerText.trim().replace(/\n.*/, '').replace(/ /g, '');
+                        if (innerText && innerText.length <= 25) {
+                            if (!next1) {
+                                if (nextTextReg1.test(innerText)) {
+                                    if (isJs) {
+                                        if (!nextJs1) nextJs1 = aTag;
+                                    } else {
+                                        next1 = aTag;
+                                    }
+                                }
+                            }
+                            if (!next4) {
+                                if (!next2) {
+                                    if (nextTextReg2.test(innerText) || /nextpage|pager\-older/i.test(aTag.className) || /^\s*(»|>>)\s*$/.test(innerText)) {
                                         if (isJs) {
-                                            if (!nextJs1) nextJs1 = aTag;
+                                            if (!nextJs2) nextJs2 = aTag;
                                         } else {
-                                            next1 = aTag;
+                                            next2 = aTag;
                                         }
                                     }
                                 }
-                                if (!next4) {
-                                    if (!next2) {
-                                        if (nextTextReg2.test(innerText) || /nextpage|pager\-older/i.test(aTag.className) || /^\s*(»|>>)\s*$/.test(innerText)) {
-                                            if (isJs) {
-                                                if (!nextJs2) nextJs2 = aTag;
-                                            } else {
-                                                next2 = aTag;
-                                            }
-                                        }
-                                    }
-                                    if (!next3) {
-                                        if (/^\s*(next|&gt;|▶|>|›|→|❯)\s*$/i.test(innerText)) {
-                                            if (isJs) {
-                                                if (!nextJs3) nextJs3 = aTag;
-                                            } else {
-                                                next3 = aTag;
-                                            }
+                                if (!next3) {
+                                    if (/^\s*(next|&gt;|▶|>|›|→|❯)\s*$/i.test(innerText)) {
+                                        if (isJs) {
+                                            if (!nextJs3) nextJs3 = aTag;
+                                        } else {
+                                            next3 = aTag;
                                         }
                                     }
                                 }
                             }
                         }
-                        if (isJs) continue;
-                        if (!next4) {
-                            let prevEle = aTag.previousElementSibling;
-                            if (prevEle && (prevEle.tagName == 'B' || prevEle.tagName == 'SPAN' || prevEle.tagName == 'STRONG')) {
-                                if (/^\d+$/.test(aTag.innerText.trim()) && /^\d+$/.test(prevEle.innerText.trim()) && parseInt(aTag.innerText) == parseInt(prevEle.innerText) + 1) {
-                                    next4 = aTag;
-                                }
-                            }
-                        }
-                        if (!next4 && aTag.href.length < 250) {
-                            let _aHref = aTag.href.replace("?&", "?").replace("index.php?", "?");
-                            if (preStr || afterStr) {
-                                let _aHrefTrim = _aHref;
-                                if (preStr) _aHrefTrim = _aHrefTrim.replace(preStr, "");
-                                if (afterStr) _aHrefTrim = _aHrefTrim.replace(afterStr, "");
-                                if (_aHrefTrim == pageNum + 1) {
-                                    next4 = aTag;
-                                }
-                            } else if (this.curUrl != aTag.href) {
-                                _aHref = _aHref.replace(/\.s?html?$/i, "");
-                                if (_aHref.indexOf(_url) != -1 && pageTwoReg.test(_aHref.replace(_url, ""))) {
-                                    let curHref = aTag.getAttribute("href");
-                                    let pageOne = curHref.replace(/\/2(\/|\?|&|$)/, "/1$1");
-                                    if (pageOne == curHref) pageOne = null;
-                                    else pageOne = body.querySelector(`a[href='${pageOne}']`);
-                                    if (!pageOne || pageOne.className != curHref.className) next4 = aTag;
-                                }
+                    }
+                    if (isJs) continue;
+                    if (!next4) {
+                        let prevEle = aTag.previousElementSibling;
+                        if (prevEle && (prevEle.tagName == 'B' || prevEle.tagName == 'SPAN' || prevEle.tagName == 'STRONG')) {
+                            if (/^\d+$/.test(aTag.innerText.trim()) && /^\d+$/.test(prevEle.innerText.trim()) && parseInt(aTag.innerText) == parseInt(prevEle.innerText) + 1) {
+                                next4 = aTag;
                             }
                         }
                     }
-                    if (next2 && /^\s*(»|>>)\s*$/.test(next2.innerText)) {
-                        next2 = this.verifyNext(next2, doc);
+                    if (!next4 && aTag.href.length < 250) {
+                        let _aHref = aTag.href.replace("?&", "?").replace("index.php?", "?");
+                        if (preStr || afterStr) {
+                            let _aHrefTrim = _aHref;
+                            if (preStr) _aHrefTrim = _aHrefTrim.replace(preStr, "");
+                            if (afterStr) _aHrefTrim = _aHrefTrim.replace(afterStr, "");
+                            if (_aHrefTrim == pageNum + 1) {
+                                next4 = aTag;
+                            }
+                        } else if (this.curUrl != aTag.href) {
+                            _aHref = _aHref.replace(/\.s?html?$/i, "");
+                            if (_aHref.indexOf(_url) != -1 && pageTwoReg.test(_aHref.replace(_url, ""))) {
+                                let curHref = aTag.getAttribute("href");
+                                let pageOne = curHref.replace(/\/2(\/|\?|&|$)/, "/1$1");
+                                if (pageOne == curHref) pageOne = null;
+                                else pageOne = body.querySelector(`a[href='${pageOne}']`);
+                                if (!pageOne || pageOne.className != curHref.className) next4 = aTag;
+                            }
+                        }
                     }
-                    if (nextJs2 && /^\s*(»|>>)\s*$/.test(nextJs2.innerText)) {
-                        nextJs2 = this.verifyNext(nextJs2, doc);
-                    }
-                    if (next3) {
-                        next3 = this.verifyNext(next3, doc);
-                    }
-                    if (nextJs3) {
-                        nextJs3 = this.verifyNext(nextJs3, doc);
-                    }
+                }
+                if (next2 && /^\s*(»|>>)\s*$/.test(next2.innerText)) {
+                    next2 = this.verifyNext(next2, doc);
+                }
+                if (nextJs2 && /^\s*(»|>>)\s*$/.test(nextJs2.innerText)) {
+                    nextJs2 = this.verifyNext(nextJs2, doc);
+                }
+                if (next3) {
+                    next3 = this.verifyNext(next3, doc);
+                }
+                if (nextJs3) {
+                    nextJs3 = this.verifyNext(nextJs3, doc);
                 }
             }
             if (!next) next = next1 || next4 || next3 || next2;
