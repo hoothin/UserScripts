@@ -40,3 +40,8 @@ https://greasyfork.org/users/8227
 + [SearchJumper 搜索醬](https://github.com/hoothin/SearchJumper)
 
 ---
+## Contributors
+
+<a href="https://github.com/hoothin/UserScripts/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=hoothin/UserScripts" />
+</a>
