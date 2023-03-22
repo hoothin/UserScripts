@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.34.32
+// @version      1.9.34.33
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -2146,69 +2146,7 @@
                 }
             }
             if (nextLink) {
-                if (this.curSiteRule.stopSign) {
-                    if (Array && Array.isArray && Array.isArray(this.curSiteRule.stopSign)) {
-                        let includeSel = this.curSiteRule.stopSign[0];
-                        let excludeSel = this.curSiteRule.stopSign[1];
-                        let curSign = this.curSiteRule.stopSign[2];
-                        let maxSign = this.curSiteRule.stopSign[3];
-                        if (Array && Array.isArray && Array.isArray(includeSel) && !curSign) {
-                            curSign = includeSel;
-                            includeSel = false;
-                        }
-                        if (Array && Array.isArray && Array.isArray(excludeSel) && !maxSign) {
-                            maxSign = excludeSel;
-                            excludeSel = false;
-                        }
-                        if (includeSel) {
-                            includeSel = includeSel.trim();
-                            if (!getElement(includeSel, doc)) {
-                                this.nextLinkHref=false;
-                                return null;
-                            }
-                        }
-                        if (excludeSel) {
-                            excludeSel = excludeSel.trim();
-                            if (getElement(excludeSel, doc)) {
-                                this.nextLinkHref=false;
-                                return null;
-                            }
-                        }
-                        if (curSign && maxSign) {
-                            let currentEle = getElement(curSign[0], doc);
-                            let maxEle = getElement(maxSign[0], doc);
-                            if (currentEle && maxEle) {
-                                let currentSignNum, maxSignNum;
-                                if (/\(.*\)/.test(curSign[1])) {
-                                    currentSignNum = currentEle.innerText.match(new RegExp(curSign[1]));
-                                    if (currentSignNum) currentSignNum = currentSignNum[1];
-                                } else if (currentEle.getAttribute) {
-                                    currentSignNum = currentEle.getAttribute(curSign[1]);
-                                }
-                                if (/\(.*\)/.test(maxSign[1])) {
-                                    maxSignNum = maxEle.innerText.match(new RegExp(maxSign[1]));
-                                    if (maxSignNum) maxSignNum = maxSignNum[1];
-                                } else if (maxEle.getAttribute) {
-                                    maxSignNum = maxEle.getAttribute(maxSign[1]);
-                                }
-                                if (currentSignNum && maxSignNum && currentSignNum == maxSignNum) {
-                                    this.nextLinkHref = false;
-                                    return null;
-                                }
-                            }
-                        }
-                    } else {
-                        try {
-                            let stopSign = ((typeof _unsafeWindow.stopSign == 'undefined') ? Function("doc", "nextLink", '"use strict";' + this.curSiteRule.stopSign) : _unsafeWindow.stopSign)(doc, nextLink);
-                            if (stopSign) {
-                                this.nextLinkHref = false;
-                                return null;
-                            }
-                        } catch(e) {
-                            debug(e);
-                        }
-                    }
-                }
+                if (!this.checkStopSign(nextLink, doc)) return null;
                 if (this.curSiteRule.action == 3) {
                     if (doc == document) debug(nextLink, 'Next link');
                     this.nextLinkHref = '#';
@@ -2243,6 +2181,77 @@
             }
             this.preload();
             return nextLink;
+        }
+
+        checkStopSign(nextLink, doc) {
+            if (this.curSiteRule.stopSign) {
+                if (Array && Array.isArray && Array.isArray(this.curSiteRule.stopSign)) {
+                    let includeSel = this.curSiteRule.stopSign[0];
+                    let excludeSel = this.curSiteRule.stopSign[1];
+                    let curSign = this.curSiteRule.stopSign[2];
+                    let maxSign = this.curSiteRule.stopSign[3];
+                    if (Array && Array.isArray && Array.isArray(includeSel) && !curSign) {
+                        curSign = includeSel;
+                        includeSel = false;
+                    }
+                    if (Array && Array.isArray && Array.isArray(excludeSel) && !maxSign) {
+                        maxSign = excludeSel;
+                        excludeSel = false;
+                    }
+                    if (includeSel) {
+                        includeSel = includeSel.trim();
+                        if (!getElement(includeSel, doc)) {
+                            isPause = true;
+                            this.nextLinkHref = false;
+                            return false;
+                        }
+                    }
+                    if (excludeSel) {
+                        excludeSel = excludeSel.trim();
+                        if (getElement(excludeSel, doc)) {
+                            isPause = true;
+                            this.nextLinkHref = false;
+                            return false;
+                        }
+                    }
+                    if (curSign && maxSign) {
+                        let currentEle = getElement(curSign[0], doc);
+                        let maxEle = getElement(maxSign[0], doc);
+                        if (currentEle && maxEle) {
+                            let currentSignNum, maxSignNum;
+                            if (/\(.*\)/.test(curSign[1])) {
+                                currentSignNum = currentEle.innerText.match(new RegExp(curSign[1]));
+                                if (currentSignNum) currentSignNum = currentSignNum[1];
+                            } else if (currentEle.getAttribute) {
+                                currentSignNum = currentEle.getAttribute(curSign[1]);
+                            }
+                            if (/\(.*\)/.test(maxSign[1])) {
+                                maxSignNum = maxEle.innerText.match(new RegExp(maxSign[1]));
+                                if (maxSignNum) maxSignNum = maxSignNum[1];
+                            } else if (maxEle.getAttribute) {
+                                maxSignNum = maxEle.getAttribute(maxSign[1]);
+                            }
+                            if (currentSignNum && maxSignNum && currentSignNum == maxSignNum) {
+                                isPause = true;
+                                this.nextLinkHref = false;
+                                return false;
+                            }
+                        }
+                    }
+                } else {
+                    try {
+                        let stopSign = ((typeof _unsafeWindow.stopSign == 'undefined') ? Function("doc", "nextLink", '"use strict";' + this.curSiteRule.stopSign) : _unsafeWindow.stopSign)(doc, nextLink);
+                        if (stopSign) {
+                            isPause = true;
+                            this.nextLinkHref = false;
+                            return false;
+                        }
+                    } catch(e) {
+                        debug(e);
+                    }
+                }
+            }
+            return true;
         }
 
         preload() {
@@ -4984,7 +4993,7 @@
            100% { opacity: 1 }
          }
         `;
-            pageBarStyle = `text-indent: initial;vertical-align: super;line-height:1;opacity:${rulesData.opacity};display:${rulesData.opacity==0?"none":"inline-flex"};padding:0;box-shadow: 0px 0px 10px 0px #000000aa;border-radius: 20px;background-color: rgb(240 240 240 / 80%);font-size: 30px;visibility: visible; position: relative; width: auto; max-width: 100vw; height: 30px; float: none; clear: both; margin: 5px auto; text-align: center;justify-content: center;`;
+            pageBarStyle = `overflow: visible;text-indent: initial;vertical-align: super;line-height:1;opacity:${rulesData.opacity};display:${rulesData.opacity==0?"none":"inline-flex"};padding:0;box-shadow: 0px 0px 10px 0px #000000aa;border-radius: 20px;background-color: rgb(240 240 240 / 80%);font-size: 30px;visibility: visible; position: relative; width: auto; max-width: 100vw; height: 30px; float: none; clear: both; margin: 5px auto; text-align: center;justify-content: center;`;
         }
         if (!mainStyleEle || !mainStyleEle.parentNode) {
             mainStyleEle = _GM_addStyle(mainStyleStyle);
@@ -6017,15 +6026,7 @@
                 }
                 return;
             }
-            nextLink = nextLink || await ruleParser.getNextLink(iframeDoc);
-            if (!nextLink) {
-                if (waitTimes-- > 0) {
-                    setTimeout(() => {
-                        checkPage();
-                    }, waitTime);
-                    return;
-                }
-            }
+            if (!ruleParser.checkStopSign(nextLink, iframeDoc)) return returnFalse("Stop as stopSign");;
             if (times++ > 200) {
                 returnFalse("Stop as timeout when emu");
                 return;
@@ -6067,7 +6068,7 @@
                     }, waitTime);
                 } else if (changed) {
                     times = 0;
-                    if (orgContent == preContent) {
+                    if (orgContent == preContent && (ruleParser.curSiteRule.singleUrl || ruleParser.curSiteRule.stopSame)) {
                         returnFalse("Stop as same content");
                     } else {
                         orgContent = preContent;
@@ -6075,7 +6076,12 @@
                     }
                 } else {
                     if (times % 10 === 1) {
-                        emuClick(nextLink);
+                        if (!nextLink || !nextLink.offsetParent) {
+                            nextLink = await ruleParser.getNextLink(iframeDoc);
+                        }
+                        if (nextLink) {
+                            emuClick(nextLink);
+                        }
                     }
                     setTimeout(() => {
                         checkPage();
