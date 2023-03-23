@@ -70,7 +70,7 @@
             domloaded();
         }
         if (getComputedStyle(document.documentElement).display == 'none') document.documentElement.style.display = 'block';
-        if (getComputedStyle(document.body).display == 'none') document.body.style.display = 'block';
+        if (document.body && getComputedStyle(document.body).display == 'none') document.body.style.display = 'block';
         return;
     }
 
@@ -654,6 +654,10 @@
         Picker.getInstance().start();
     });
 
+    function getBody(doc) {
+        return doc.body || doc.querySelector('body') || doc;
+    }
+
     function getElementByXpath(xpath, contextNode, doc) {
         doc = doc || document;
         contextNode = contextNode || doc;
@@ -986,15 +990,15 @@
                     actualTop += current.offsetTop;
                     current = current.offsetParent;
                 }
-                doc.body.scrollTop = 0;
+                getBody(doc).scrollTop = 0;
                 doc.documentElement.scrollTop = 0;
-                let maxHeight = Math.max(doc.body.scrollHeight, doc.documentElement.scrollHeight);
-                doc.body.scrollTop = actualTop - 10;
+                let maxHeight = Math.max(getBody(doc).scrollHeight, doc.documentElement.scrollHeight);
+                getBody(doc).scrollTop = actualTop - 10;
                 doc.documentElement.scrollTop = actualTop - 10;
                 setTimeout(() => {
                     while (actualTop < maxHeight) {
                         actualTop += 200;
-                        doc.body.scrollTop = actualTop;
+                        getBody(doc).scrollTop = actualTop;
                         doc.documentElement.scrollTop = actualTop;
                     }
                 }, 0);
@@ -1258,7 +1262,7 @@
             }
             let pageElement = null;
             let self = this;
-            let body = doc.body;
+            let body = getBody(doc);
             if (this.curSiteRule.pageElement) {
                 let pageElementSel = this.curSiteRule.pageElement;
                 if (Array && Array.isArray && Array.isArray(pageElementSel)) {
@@ -1337,7 +1341,7 @@
                         debug(self.curSiteRule.pageElement, 'Page element');
                         return [body];
                     }
-                    if (ele.tagName == "FORM" && ele.parentNode != document.body) {
+                    if (ele.tagName == "FORM" && ele.parentNode != getBody(document)) {
                         self.curSiteRule.pageElement = geneSelector(ele) + ">*";
                         debug(self.curSiteRule.pageElement, 'Page element');
                         return ele.children;
@@ -1538,7 +1542,7 @@
             this.changingVisibility = false;
             if (!this.visibilityItems || !this.visibilityItems.length || this.visibleIndex < 0) return;
             let tempIndex = this.visibleIndex, findVisible = false, lastVisible = 0;
-            let viewPortHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+            let viewPortHeight = window.innerHeight || document.documentElement.clientHeight || getBody(document).clientHeight;
             let checkItem = this.visibilityItems[tempIndex];
             while(checkItem) {
                 if (checkItem.offsetParent) {
@@ -1617,7 +1621,8 @@
 
         getPage(doc) {
             if (document.documentElement.className.indexOf('discourse') != -1) return {};
-            let video = document.body.querySelector("video,canvas,iframe[id*=play],[id*=play]>iframe,iframe[src*=player],iframe[src*=m3u8]");
+            let body = getBody(doc);
+            let video = body.querySelector("video,canvas,iframe[id*=play],[id*=play]>iframe,iframe[src*=player],iframe[src*=m3u8]");
             if (video && video.offsetParent && video.name != 'pagetual-iframe') {
                 let scrollWidth = video.scrollWidth || video.offsetWidth;
                 let scrollHeight = video.scrollHeight || video.offsetHeight;
@@ -1662,7 +1667,7 @@
                 preStr = "";
                 afterStr = "";
             }
-            let curPage = doc, i, cur, jsNext, body = doc.body || doc;
+            let curPage = doc, i, cur, jsNext;
             let next1, next2, next3, next4, nextJs1, nextJs2, nextJs3;
             let next = body.querySelector(".page-next>a") ||
                 body.querySelector("a.next_page") ||
@@ -1901,7 +1906,7 @@
                     next = null;
                 } else {
                     let bottom = top + next.offsetHeight || 0;
-                    let scrollH = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+                    let scrollH = Math.max(document.documentElement.scrollHeight, getBody(document).scrollHeight);
                     if (scrollH - bottom < 10) next = null;
                 }
             }
@@ -2279,7 +2284,7 @@
                     try {
                         doc = document.implementation.createHTMLDocument('');
                         doc.documentElement.innerHTML = res.response;
-                        var body = doc.body;
+                        var body = getBody(doc);
                         if (body && body.firstChild) {
                             self.lazyImgAction(body.children);
                         }
@@ -2287,7 +2292,7 @@
                             self.preloadDiv = document.createElement('div');
                             self.preloadDiv.id = "pagetual-preload";
                             self.preloadDiv.style.cssText = 'display:none!important;';
-                            document.body.appendChild(self.preloadDiv);
+                            getBody(document).appendChild(self.preloadDiv);
                             self.checkedImgs = {};
                         }
                         [].forEach.call(doc.images, i => {
@@ -2612,7 +2617,7 @@
                 this.curUrl = location.href;
                 return false;
             }
-            let curScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            let curScroll = getBody(document).scrollTop || document.documentElement.scrollTop;
             if (callback) callback(eles);
             this.getInsert();
             var self = this, newEles = [];
@@ -2641,7 +2646,7 @@
                     self.insertElement(newEle);
                     newEles.push(newEle);
                 });
-                document.body.scrollTop = curScroll;
+                getBody(document).scrollTop = curScroll;
                 document.documentElement.scrollTop = curScroll;
             }
             this.pageAction(doc, newEles);
@@ -2790,7 +2795,7 @@
                 if (prePageBar) {
                     scrollToPageBar(prePageBar);
                 } else {
-                    let scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+                    let scrollTop = getBody(document).scrollTop || document.documentElement.scrollTop;
                     window.scrollTo({ top: scrollTop - (window.innerHeight || document.documentElement.clientHeight), behavior: 'smooth'});
                 }
             }, true);
@@ -2802,17 +2807,17 @@
                     scrollToPageBar(nextPageBar);
                 } else {
                     if (pageBarObj.preBar) {
-                        let scrollH = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+                        let scrollH = Math.max(document.documentElement.scrollHeight, getBody(document).scrollHeight);
                         window.scrollTo({ top: (scrollH || 9999999), behavior: 'smooth'});
                     } else {
-                        let scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+                        let scrollTop = getBody(document).scrollTop || document.documentElement.scrollTop;
                         window.scrollTo({ top: scrollTop + (window.innerHeight || document.documentElement.clientHeight), behavior: 'smooth'});
                     }
                 }
             }, true);
 
             top.addEventListener("click", e => {
-                document.body.scrollTop=0;
+                getBody(document).scrollTop=0;
                 document.documentElement.scrollTop=0;
                 e.preventDefault();
                 e.stopPropagation();
@@ -2820,8 +2825,8 @@
 
             bottom.addEventListener("click", e => {
                 changeStop(true);
-                let scrollH = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
-                document.body.scrollTop = scrollH || 9999999;
+                let scrollH = Math.max(document.documentElement.scrollHeight, getBody(document).scrollHeight);
+                getBody(document).scrollTop = scrollH || 9999999;
                 document.documentElement.scrollTop = scrollH || 9999999;
                 e.preventDefault();
                 e.stopPropagation();
@@ -2884,7 +2889,7 @@
                 this.frame.classList.remove("stop");
             }
             if (this.frame.parentNode) return;
-            document.body.appendChild(this.frame);
+            getBody(document).appendChild(this.frame);
             clearTimeout(this.hideTimer);
             this.hideTimer = setTimeout(() => {
                 this.frame.classList.add("minSize");
@@ -3403,7 +3408,7 @@
             logoBtn.addEventListener("click", e => {
                 logoBtn.classList.toggle("showSign");
                 self.showSign = !self.showSign;
-                document.body.classList.toggle("pagetual-picker");
+                getBody(document).classList.toggle("pagetual-picker");
             }, true);
             let moving = false;
             let initX = 0, initY = 0, initPos = {x: 0, y: 0};
@@ -3447,7 +3452,7 @@
                     return;
                 }
                 if (moving) return;
-                document.body.appendChild(self.mainSignDiv);
+                getBody(document).appendChild(self.mainSignDiv);
                 self.clearSigns();
             });
             checkBtn.addEventListener("click", e => {
@@ -3538,9 +3543,9 @@
             this.clearSigns();
             if (this.frame.parentNode) this.frame.parentNode.removeChild(this.frame);
             if (this.mainSignDiv.parentNode) this.mainSignDiv.parentNode.removeChild(this.mainSignDiv);
-            document.body.classList.remove("pagetual-picker");
-            document.body.removeEventListener("mousemove", this.moveHandler, true);
-            document.body.removeEventListener("click", this.clickHandler, true);
+            getBody(document).classList.remove("pagetual-picker");
+            getBody(document).removeEventListener("mousemove", this.moveHandler, true);
+            getBody(document).removeEventListener("click", this.clickHandler, true);
             this.inPicker = false;
         }
 
@@ -3626,7 +3631,7 @@
             if (eles && eles.length > 0) {
                 eles.forEach(ele => {
                     let sign = self.createSignDiv();
-                    document.body.appendChild(sign);
+                    getBody(document).appendChild(sign);
                     self.adjustSignDiv(sign, ele);
                     self.signList.push(sign);
                 });
@@ -3648,14 +3653,14 @@
                 this.styleEle = _GM_addStyle(this.cssText);
             }
             document.documentElement.appendChild(this.frame);
-            document.body.appendChild(this.mainSignDiv);
-            document.body.classList.add("pagetual-picker");
+            getBody(document).appendChild(this.mainSignDiv);
+            getBody(document).classList.add("pagetual-picker");
 
             this.logoBtn.classList.remove("showSign");
             this.showSign = true;
 
-            document.body.addEventListener("mousemove", this.moveHandler, true);
-            document.body.addEventListener("click", this.clickHandler, true);
+            getBody(document).addEventListener("mousemove", this.moveHandler, true);
+            getBody(document).addEventListener("click", this.clickHandler, true);
             this.xpath.checked = isXPath(ruleParser.curSiteRule.pageElement);
 
             this.loadNow.style.display = ruleParser.nextLinkHref ? "block" : "none";
@@ -5043,7 +5048,7 @@
     }
 
     function isInViewPort(element) {
-        if (!document.body.contains(element)) return false;
+        if (!getBody(document).contains(element)) return false;
         if (_unsafeWindow.getComputedStyle(element).display == "none") return false;
         const viewWidth = window.innerWidth || document.documentElement.clientWidth;
         const viewHeight = window.innerHeight || document.documentElement.clientHeight;
@@ -5067,7 +5072,7 @@
         let pageBars = [].slice.call(document.querySelectorAll(".pagetual_pageBar"));
         for (let i = 0; i < pageBars.length; i++) {
             let pageBar = pageBars[i];
-            if (!pageBar || !document.body.contains(pageBar)) continue;
+            if (!pageBar || !getBody(document).contains(pageBar)) continue;
             let {
                 top,
                 right,
@@ -5077,7 +5082,7 @@
             if (top > 500) {
                 nextBar = pageBar;
                 preBar = (i - 1 >= 0 ? pageBars[i - 1] : null);
-                if (pageBar && document.body.contains(pageBar)) {
+                if (pageBar && getBody(document).contains(pageBar)) {
                     let {
                         top,
                         right,
@@ -5172,7 +5177,7 @@
     function distToBottom () {
         let scrolly = window.scrollY;
         let windowHeight = window.innerHeight || document.documentElement.clientHeight;
-        let scrollH = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+        let scrollH = Math.max(document.documentElement.scrollHeight, getBody(document).scrollHeight);
         return scrollH - scrolly - windowHeight;
     }
 
@@ -5249,9 +5254,9 @@
             }
             ruleParser.changeVisibility();
             if (ruleParser.curSiteRule.lockScroll) {
-                let curScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                let curScroll = getBody(document).scrollTop || document.documentElement.scrollTop;
                 if (isLoading && Math.abs(lastScroll - curScroll) > 350) {
-                    document.body.scrollTop = lastScroll;
+                    getBody(document).scrollTop = lastScroll;
                     document.documentElement.scrollTop = lastScroll;
                 } else {
                     lastScroll = curScroll;
@@ -5360,7 +5365,7 @@
                     if (nextPageBar) {
                         scrollToPageBar(nextPageBar);
                     } else {
-                        let scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+                        let scrollTop = getBody(document).scrollTop || document.documentElement.scrollTop;
                         window.scrollTo({ top: scrollTop + (window.innerHeight || document.documentElement.clientHeight), behavior: 'smooth'});
                     }
                 } else if (e.keyCode == 37) {
@@ -5368,7 +5373,7 @@
                     if (prePageBar) {
                         scrollToPageBar(prePageBar);
                     } else {
-                        let scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+                        let scrollTop = getBody(document).scrollTop || document.documentElement.scrollTop;
                         window.scrollTo({ top: scrollTop - (window.innerHeight || document.documentElement.clientHeight), behavior: 'smooth'});
                     }
                 }
@@ -5383,7 +5388,7 @@
 
     function showTips(content, wordColor, backColor) {
         initView();
-        document.body.appendChild(tipsWords);
+        getBody(document).appendChild(tipsWords);
         tipsWords.style.opacity = 0.8;
         tipsWords.innerText = content;
         tipsWords.style.marginLeft = -tipsWords.offsetWidth / 2 + "px";
@@ -5393,7 +5398,7 @@
     }
 
     function getLoadMore(doc, loadmoreBtn) {
-        if (!loadmoreBtn || !doc.body.contains(loadmoreBtn) || /less/.test(loadmoreBtn.innerText)) loadmoreBtn = null;
+        if (!loadmoreBtn || !getBody(doc).contains(loadmoreBtn) || /less/.test(loadmoreBtn.innerText)) loadmoreBtn = null;
         if (!ruleParser.curSiteRule.singleUrl && !ruleParser.curSiteRule.loadMore) return null;
         if (loadmoreBtn) return loadmoreBtn;
         let btnSel = ruleParser.curSiteRule.loadMore || ".loadMore,.LoadMore,.load-more,.button-show-more,button[data-testid='more-results-button'],#btn_preview_remain";
@@ -5435,7 +5440,7 @@
         curPage++;
         SideController.setup();
         let posEle = null;
-        let scrollH = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+        let scrollH = Math.max(document.documentElement.scrollHeight, getBody(document).scrollHeight);
         let insert = ruleParser.getInsert();
         if (!insert || !insert.parentNode) return;
         posEle = insert;
@@ -5512,7 +5517,7 @@
         let touched = false;
         let touchBodyHandler = e => {
             touched = false;
-            document.body.removeEventListener('touchstart', touchBodyHandler, { passive: false, capture: false });
+            getBody(document).removeEventListener('touchstart', touchBodyHandler, { passive: false, capture: false });
         };
         pageText.addEventListener("touchstart", e => {
             if (touched) return;
@@ -5521,7 +5526,7 @@
             setTimeout(() => {
                 pageText.style.pointerEvents = 'all';
             }, 250);
-            document.body.addEventListener("touchstart", touchBodyHandler, { passive: false, capture: false });
+            getBody(document).addEventListener("touchstart", touchBodyHandler, { passive: false, capture: false });
         }, { passive: false, capture: false });
         if (ruleParser.nextTitle) {
             pageText.innerHTML = ruleParser.nextTitle + " ";
@@ -5570,7 +5575,7 @@
             if (prePageBar) {
                 scrollToPageBar(prePageBar);
             } else {
-                let scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+                let scrollTop = getBody(document).scrollTop || document.documentElement.scrollTop;
                 window.scrollTo({ top: scrollTop - (window.innerHeight || document.documentElement.clientHeight), behavior: 'smooth'});
             }
         });
@@ -5581,7 +5586,7 @@
             if (nextPageBar) {
                 scrollToPageBar(nextPageBar);
             } else {
-                scrollH = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+                scrollH = Math.max(document.documentElement.scrollHeight, getBody(document).scrollHeight);
                 window.scrollTo({ top: scrollH || 9999999, behavior: 'smooth'});
             }
         });
@@ -5675,7 +5680,7 @@
         }
 
         upSpan.addEventListener("click", e => {
-            document.body.scrollTop = 0;
+            getBody(document).scrollTop = 0;
             document.documentElement.scrollTop = 0;
             e.preventDefault();
             e.stopPropagation();
@@ -5683,8 +5688,8 @@
         downSpan.addEventListener("click", e => {
             changeStop(true);
             pageBar.title = i18n(isPause ? "enable" : "disable");
-            scrollH=Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
-            document.body.scrollTop = scrollH || 9999999;
+            scrollH=Math.max(document.documentElement.scrollHeight, getBody(document).scrollHeight);
+            getBody(document).scrollTop = scrollH || 9999999;
             document.documentElement.scrollTop = scrollH || 9999999;
             e.preventDefault();
             e.stopPropagation();
@@ -5827,7 +5832,7 @@
         }
         if (checkRemoveIntv) clearInterval(checkRemoveIntv);
         checkRemoveIntv = setInterval(() => {
-            if (!iframe || !document.body.contains(iframe)) {
+            if (!iframe || !getBody(document).contains(iframe)) {
                 clearInterval(checkRemoveIntv);
                 loadPageOver();
             }
@@ -5894,7 +5899,7 @@
         iframe.addEventListener('load', loadedHandler, false);
         iframe.src = url;
         try {
-            document.body.appendChild(iframe);
+            getBody(document).appendChild(iframe);
         } catch (e) {
             return callback(false, false);
         }
@@ -5945,7 +5950,7 @@
                         emuClick(loadmoreBtn);
                         let intv = setInterval(() => {
                             loadmoreBtn = getLoadMore(iframeDoc);
-                            if (!loadmoreBtn || !document.body.contains(loadmoreBtn) || !isVisible(loadmoreBtn, iframeDoc.defaultView)) {
+                            if (!loadmoreBtn || !getBody(document).contains(loadmoreBtn) || !isVisible(loadmoreBtn, iframeDoc.defaultView)) {
                                 clearInterval(intv);
                                 loadmoreEnd = true;
                                 setTimeout(() => {
@@ -6131,7 +6136,7 @@
             });
             if (!lastActiveUrl) lastActiveUrl = location.href;
             emuIframe.src = lastActiveUrl;
-            document.body.appendChild(emuIframe);
+            getBody(document).appendChild(emuIframe);
         }else{
             if (emuIframe.src != lastActiveUrl) emuIframe.src = lastActiveUrl;
             checkPage();
@@ -6162,7 +6167,7 @@
 
     function resizeIframe(iframe, frameDoc, pageEle) {
         if (ruleParser.curSiteRule.singleUrl || forceState === 2) {
-            iframe.style.height = (frameDoc.body.scrollHeight || frameDoc.body.offsetHeight || 500) + "px";
+            iframe.style.height = (getBody(frameDoc).scrollHeight || getBody(frameDoc).offsetHeight || 500) + "px";
             iframe.style.minHeight = iframe.style.height;
             iframe.style.width = "100%";
             frameDoc.documentElement.scrollTop = 0;
@@ -6178,8 +6183,8 @@
                 let scrollHeight = targetElement.scrollHeight || targetElement.offsetHeight || 500;
                 iframe.style.height = scrollHeight + "px";
                 let scrollTop = 0, scrollLeft = 0;
-                frameDoc.body.scrollTop = 0;
-                frameDoc.body.scrollLeft = 0;
+                getBody(frameDoc).scrollTop = 0;
+                getBody(frameDoc).scrollLeft = 0;
                 while (targetElement && targetElement.offsetParent) {
                     targetElement.offsetParent.scrollTop = targetElement.offsetTop;
                     if (targetElement.offsetParent.scrollTop == 0) {
@@ -6196,8 +6201,8 @@
                 frameDoc.documentElement.scrollTop = scrollTop;
                 frameDoc.documentElement.scrollLeft = scrollLeft;
                 if (frameDoc.documentElement.scrollTop == 0 && frameDoc.documentElement.scrollLeft == 0) {
-                    frameDoc.body.scrollTop += scrollTop;
-                    frameDoc.body.scrollLeft += scrollLeft;
+                    getBody(frameDoc).scrollTop += scrollTop;
+                    getBody(frameDoc).scrollLeft += scrollLeft;
                 }
                 if (!fitWidth && iframe.style.marginLeft == '0px') {
                     iframe.style.width = "100vw";
@@ -6343,8 +6348,8 @@
         curIframe.src = url;
         let insert = ruleParser.getInsert();
         if (ruleParser.curSiteRule.singleUrl || forceState == 2) {
-            document.body.appendChild(loadingDiv);
-            document.body.appendChild(curIframe);
+            getBody(document).appendChild(loadingDiv);
+            getBody(document).appendChild(curIframe);
         } else {
             ruleParser.insertElement(curIframe);
         }
