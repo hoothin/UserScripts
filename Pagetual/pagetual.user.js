@@ -1622,7 +1622,7 @@
         getPage(doc) {
             if (document.documentElement.className.indexOf('discourse') != -1) return {};
             let body = getBody(doc);
-            let video = body.querySelector("video,canvas,iframe[id*=play],[id*=play]>iframe,iframe[src*=player],iframe[src*=m3u8]");
+            let video = body.querySelector("video") || body.querySelector("iframe[id*=play],[id*=play]>iframe,iframe[src*=player],iframe[src*=m3u8]") || body.querySelector("canvas");
             if (video && video.offsetParent && video.name != 'pagetual-iframe') {
                 let scrollWidth = video.scrollWidth || video.offsetWidth;
                 let scrollHeight = video.scrollHeight || video.offsetHeight;
