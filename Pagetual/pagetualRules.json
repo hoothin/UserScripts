@@ -9480,7 +9480,7 @@
     },
     {
         "name": "acfun",
-        "url": "^https?://.*\\.acfun\\.cn/v",
+        "url": "^https?://((m|www|live)\\.)?acfun\\.cn/(v|live)",
         "enable": 0
     },
     {
