@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.3.23.1
+// @version              2023.3.23.2
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -11830,6 +11830,9 @@ ImgOps | https://imgops.com/#b#`;
         });
     }
 
+    function getBody(doc){
+        return doc.body || doc.querySelector('body') || doc;
+    }
     function createHTML(html){
         return escapeHTMLPolicy?escapeHTMLPolicy.createHTML(html):html;
     }
@@ -12238,9 +12241,9 @@ ImgOps | https://imgops.com/#b#`;
             rulerEle.style.fontSize = size || "inherit";
             rulerEle.style.fontFamily = family || "inherit";
             rulerEle.innerText = str;
-            document.body.appendChild(rulerEle);
+            getBody(document).appendChild(rulerEle);
             let w = rulerEle.offsetWidth;
-            document.body.removeChild(rulerEle);
+            getBody(document).removeChild(rulerEle);
             return w;
         }
 
@@ -12377,7 +12380,7 @@ ImgOps | https://imgops.com/#b#`;
 
             //去除滚动条的窗口大小
             var de=document.documentElement;
-            var body=document.body;
+            var body=getBody(document);
             var backCompat=document.compatMode=='BackCompat';
             return {
                 h:backCompat? body.clientHeight : de.clientHeight,
@@ -12395,8 +12398,8 @@ ImgOps | https://imgops.com/#b#`;
                 };
             }
             return {
-                x:'scrollX' in window ? window.scrollX : ('pageXOffset' in window ? window.pageXOffset : document.documentElement.scrollLeft || document.body.scrollLeft),
-                y:'scrollY' in window ? window.scrollY : ('pageYOffset' in window ? window.pageYOffset :  document.documentElement.scrollTop || document.body.scrollTop),
+                x:'scrollX' in window ? window.scrollX : ('pageXOffset' in window ? window.pageXOffset : document.documentElement.scrollLeft || getBody(document).scrollLeft),
+                y:'scrollY' in window ? window.scrollY : ('pageYOffset' in window ? window.pageYOffset :  document.documentElement.scrollTop || getBody(document).scrollTop),
             };
         }
 
@@ -13202,7 +13205,7 @@ ImgOps | https://imgops.com/#b#`;
                     '<span class="pv-gallery-maximize-scroll"><span class="pv-gallery-maximize-container"></span></span>'+
                     '<span class="pv-gallery-tipsWords"></span>'+
                     '</span>');
-                document.body.appendChild(container);
+                getBody(document).appendChild(container);
 
                 var self=this;
 
@@ -13247,7 +13250,7 @@ ImgOps | https://imgops.com/#b#`;
                 maximizeTrigger.innerHTML=createHTML('-'+i18n("returnToGallery")+'-<span class="pv-gallery-maximize-trigger-close" title="'+i18n("closeGallery")+'"></span>');
                 maximizeTrigger.className='pv-gallery-maximize-trigger';
 
-                document.body.appendChild(maximizeTrigger);
+                getBody(document).appendChild(maximizeTrigger);
 
                 container.querySelector("#galleryRotate").addEventListener('change',function(e) {
                     self.galleryRotate = e.target.value;
@@ -14868,7 +14871,7 @@ ImgOps | https://imgops.com/#b#`;
                                         }
                                     }
                                 };
-                                addWheelEvent(document.body,wheelHandler,true);
+                                addWheelEvent(getBody(document),wheelHandler,true);
                             }
                         }
                     };
@@ -15037,7 +15040,7 @@ ImgOps | https://imgops.com/#b#`;
                 this.eleMaps['sidebar-viewmore'].style.visibility = isHidden ? 'visible' : 'hidden';
             },
             initZoom: function() {  // 如果有放大，则把图片及 sidebar 部分缩放比率改为 1
-                if (prefs.gallery.autoZoom && document.body.style.zoom != undefined) {
+                if (prefs.gallery.autoZoom && getBody(document).style.zoom != undefined) {
                     var oZoom = detectZoom();
                     if (oZoom > 100) {
                         this.eleMaps['body'].style.zoom = 100 / oZoom;
@@ -16334,12 +16337,12 @@ ImgOps | https://imgops.com/#b#`;
             },
             getAllValidImgs:function(newer){
                 var validImgs = [];
-                var imgs = document.body.getElementsByTagName('img'),
+                var imgs = getBody(document).getElementsByTagName('img'),
                     container = document.querySelector('.pv-gallery-container'),
                     preloadContainer = document.querySelector('.pv-gallery-preloaded-img-container');
 
                 imgs = Array.prototype.slice.call(imgs);
-                arrayFn.forEach.call(document.body.querySelectorAll("iframe"),function(iframe){
+                arrayFn.forEach.call(getBody(document).querySelectorAll("iframe"),function(iframe){
                     if (iframe.name == "pagetual-iframe") return;
                     if (!iframe.src || (iframe.src && (iframe.src == "about:blank" || iframe.src.replace(/\/[^\/]*$/,"").indexOf(location.hostname) != -1))) {
                         try{
@@ -16352,7 +16355,7 @@ ImgOps | https://imgops.com/#b#`;
                     }
                 });
                 var bgReg=/.*url\(\s*["']?(.+?)["']?\s*\)/i;
-                var bgImgs=Array.from(document.body.querySelectorAll('*'))
+                var bgImgs=Array.from(getBody(document).querySelectorAll('*'))
                     .reduce((total, node) => {
                         if(node.nodeName != "IMG" && (!node.className || !node.className.indexOf || node.className.indexOf("pv-")==-1)){
                             let prop = getComputedStyle(node).backgroundImage;
@@ -16367,7 +16370,7 @@ ImgOps | https://imgops.com/#b#`;
                         return total;
                 }, []);
                 if(bgImgs)imgs=imgs.concat(bgImgs);
-                var svgImgs=Array.from(document.body.querySelectorAll('svg'))
+                var svgImgs=Array.from(getBody(document).querySelectorAll('svg'))
                     .reduce((total, svg) => {
                         if (svg.clientHeight != 0 && (!svg.classList || !svg.classList.contains("pagetual"))) {
                             try {
@@ -16380,7 +16383,7 @@ ImgOps | https://imgops.com/#b#`;
                         return total;
                 }, []);
                 if(svgImgs)imgs=imgs.concat(svgImgs);
-                var canvasImgs=Array.from(document.body.querySelectorAll('canvas'))
+                var canvasImgs=Array.from(getBody(document).querySelectorAll('canvas'))
                     .reduce((total, canvas) => {
                         if (canvas.clientHeight != 0) {
                             try {
@@ -17587,7 +17590,7 @@ ImgOps | https://imgops.com/#b#`;
                     var div=document.createElement('div');
                     div.className='pv-gallery-preloaded-img-container';
                     div.style.display='none';
-                    document.body.appendChild(div);
+                    getBody(document).appendChild(div);
                     GalleryC.prototype.Preload.prototype.container=div;
                 };
                 this.max=prefs.gallery.max;
@@ -17841,7 +17844,7 @@ ImgOps | https://imgops.com/#b#`;
                 var container=document.createElement('span');
 
                 container.className='pv-magnifier-container';
-                document.body.appendChild(container);
+                getBody(document).appendChild(container);
 
                 this.magnifier=container;
 
@@ -18509,13 +18512,13 @@ ImgOps | https://imgops.com/#b#`;
                         overlayer.className='pv-pic-window-overlayer';
                     };
                     overlayer.style.backgroundColor=prefs.imgWindow.overlayer.color;
-                    document.body.appendChild(overlayer);
+                    getBody(document).appendChild(overlayer);
                     overlayer.style.display='block';
                 };
                 if(prefs.imgWindow.backgroundColor){
                     this.imgWindow.style.backgroundColor=prefs.imgWindow.backgroundColor;
                 }
-                document.body.appendChild(container);
+                getBody(document).appendChild(container);
 
                 this.rotatedRadians=0;//已经旋转的角度
                 this.zoomLevel=0;
@@ -20335,7 +20338,7 @@ ImgOps | https://imgops.com/#b#`;
                 if (this.buttonType == 'popup'){
                     container.style.pointerEvents="none";
                 }
-                document.body.appendChild(container);
+                getBody(document).appendChild(container);
 
                 var self = this;
                 container.addEventListener('click',function(e){
@@ -20665,7 +20668,7 @@ ImgOps | https://imgops.com/#b#`;
                 this.addStyle();
                 var container=document.createElement('span');
                 container.id='pv-float-bar-container';
-                document.body.appendChild(container);
+                getBody(document).appendChild(container);
                 for(let i=0;i<5;i++){
                     let spanChild=document.createElement('span');
                     spanChild.className='pv-float-bar-button';
@@ -21534,7 +21537,7 @@ ImgOps | https://imgops.com/#b#`;
                             window.postMessage({
                                 messageID:messageID,
                                 command:'topWindowValid_frame',
-                                valid:document.body.nodeName!='FRAMESET',
+                                valid:getBody(document).nodeName!='FRAMESET',
                                 to:data.from,
                             },'*');
                         }break;
