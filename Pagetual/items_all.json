@@ -1,5 +1,35 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86098",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//*[@id=\"itm\"]",
+    "nextLink": "//*[@id=\"__next\"]/div/div[1]/div/div/main/div/div/div[2]/div[2]/nav/ul/li[6]/a",
+    "url": "^https://paypayfleamarket\\.yahoo\\.co\\.jp/search/",
+    "exampleUrl": "https://paypayfleamarket.yahoo.co.jp/search/%E3%83%88%E3%83%83%E3%83%97%E3%82%B9"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "2q5HAX7iN8QG7Fp3gngW",
+  "name": "PayPayフリマ",
+  "created_at": "2023-03-22T13:42:29+09:00",
+  "updated_at": "2023-03-22T13:42:29+09:00"
+},
+{
+  "resource_url": "http://wedata.net/items/86097",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//section[@class=\"entrylist-unit\"]",
+    "nextLink": "//p[@class=\"entrylist-readmore js-keyboard-selectable-item\"]//a",
+    "url": "^https://b\\\\.hatena\\\\.ne\\\\.jp/site/",
+    "exampleUrl": "https://b.hatena.ne.jp/site/anond.hatelabo.jp/?sort=eid"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "knoa-openid-cn",
+  "name": "はてなブックマーク - サイト別",
+  "created_at": "2023-03-22T11:21:07+09:00",
+  "updated_at": "2023-03-22T11:21:07+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86096",
   "data": {
     "insertBefore": "",
