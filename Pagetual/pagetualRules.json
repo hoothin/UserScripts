@@ -9430,7 +9430,7 @@
     },
     {
         "name": "bilibili",
-        "url": "^https?://((m|www)\\.)?bilibili\\.com/(bangumi/play|video|anime)",
+        "url": "^https?://((m|www|live)\\.)?bilibili\\.com/(bangumi/play|video|anime|\\d)",
         "enable": 0
     },
     {
