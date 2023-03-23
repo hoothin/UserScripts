@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.55.34
+// @version      1.6.6.55.35
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -1161,6 +1161,10 @@
             String.prototype.startsWith = function(search, pos){
                 return this.slice(pos || 0, search.length) === search;
             };
+        }
+
+        function getBody(doc) {
+            return doc.body || doc.querySelector('body');
         }
 
         function createHTML(html = "") {
@@ -2695,7 +2699,7 @@
                     let touched = false;
                     let touchBodyHandler = e => {
                         touched = false;
-                        document.body.removeEventListener('touchstart', touchBodyHandler, { passive: true, capture: false });
+                        getBody(document).removeEventListener('touchstart', touchBodyHandler, { passive: true, capture: false });
                     };
                     let touchHandler = e => {
                         if (touched) return;
@@ -2704,7 +2708,7 @@
                         setTimeout(() => {
                             bar.classList.remove('disable-pointer');
                         }, 250);
-                        document.body.addEventListener("touchstart", touchBodyHandler, { passive: true, capture: false });
+                        getBody(document).addEventListener("touchstart", touchBodyHandler, { passive: true, capture: false });
                     };
                     bar.addEventListener('touchstart', touchHandler, { passive: true, capture: true });
                 }
@@ -3203,7 +3207,7 @@
                 this.finalSearch.dataset.url = tempUrl;
                 this.finalSearch.value = tempUrl.replace(/◎/g, '');
                 if (!this.customInputCssEle || !this.customInputCssEle.parentNode) this.customInputCssEle = _GM_addStyle(this.customInputCssText);
-                document.body.appendChild(this.customInputFrame);
+                getBody(document).appendChild(this.customInputFrame);
             }
 
             showModifyWindow(word, wordSpan) {
@@ -3450,7 +3454,7 @@
                     }
                 }
                 if (!this.modifyCssEle || !this.modifyCssEle.parentNode) this.modifyCssEle = _GM_addStyle(this.modifyCssText);
-                document.body.appendChild(this.modifyFrame);
+                getBody(document).appendChild(this.modifyFrame);
             }
 
             replaceWord(word, newWord, modifySpan, contentChange) {
@@ -3595,8 +3599,8 @@
                     this.hPosBar.className = "searchJumperPosBar searchJumperPosH";
                 }
                 if (!this.wPosBar.parentNode) {
-                    document.body.appendChild(this.wPosBar);
-                    document.body.appendChild(this.hPosBar);
+                    getBody(document).appendChild(this.wPosBar);
+                    getBody(document).appendChild(this.hPosBar);
                 }
 
                 this.wPosBar.style.top = getElementTop(ele) + "px";
@@ -3715,7 +3719,7 @@
             highlight(words, ele, root) {
                 if (!words && !this.curHighlightWords) return;
                 if (!ele) {
-                    this.highlight(words, document.body, root);
+                    this.highlight(words, getBody(document), root);
                     [].forEach.call(document.getElementsByTagName("iframe"), iframe => {
                         let iframeDoc;
                         try {
@@ -3723,13 +3727,13 @@
                         } catch(e) {
                             return;
                         }
-                        if (iframeDoc && iframeDoc.body) {
-                            this.highlight(words, iframeDoc.body, root);
+                        if (iframeDoc && getBody(iframeDoc)) {
+                            this.highlight(words, getBody(iframeDoc), root);
                         }
                     });
                     return;
                 }
-                ele = ele || document.body;
+                ele = ele || getBody(document);
                 if (ele.contentEditable == 'true' || (
                     ele.parentNode && ele.parentNode.contentEditable == 'true'
                 )) return;
@@ -4167,7 +4171,7 @@
             }
 
             autoGetFirstType() {
-                if (!targetElement) targetElement = document.body;
+                if (!targetElement) targetElement = getBody(document);
                 let firstType;
                 switch (targetElement.tagName) {
                     case 'IMG':
@@ -4730,7 +4734,7 @@
                             dragSiteBtn.setAttribute("target", dragSiteBtn.dataset.target == 1 ? "_blank" : "_self");
                         }
                     }
-                    document.body.removeEventListener('dragover', dragOpenOverHandler);
+                    getBody(document).removeEventListener('dragover', dragOpenOverHandler);
                     document.removeEventListener('drop', dragOpenDropHandler);
                     document.removeEventListener('dragover', dragOpenOverHandler);
                 };
@@ -4738,7 +4742,7 @@
                     e.preventDefault();
                 };
                 let dragOpenEndHandler = e => {
-                    document.body.removeEventListener('dragover', dragOpenOverHandler);
+                    getBody(document).removeEventListener('dragover', dragOpenOverHandler);
                     document.removeEventListener('drop', dragOpenDropHandler);
                     document.removeEventListener('dragover', dragOpenOverHandler);
                 };
@@ -4748,12 +4752,12 @@
                     if (target.tagName !== 'IMG' && target.tagName !== 'A') return;
                     if (target.classList && target.classList.contains('search-jumper-btn')) {
                         dragSiteBtn = target;
-                        document.body.addEventListener('dragover', dragOpenOverHandler);
+                        getBody(document).addEventListener('dragover', dragOpenOverHandler);
                         document.addEventListener('drop', dragOpenDropHandler);
                         document.addEventListener('dragend', dragOpenEndHandler);
                     } else if (parentNode && parentNode.classList && parentNode.classList.contains('search-jumper-btn')) {
                         dragSiteBtn = parentNode;
-                        document.body.addEventListener('dragover', dragOpenOverHandler);
+                        getBody(document).addEventListener('dragover', dragOpenOverHandler);
                         document.addEventListener('drop', dragOpenDropHandler);
                         document.addEventListener('dragend', dragOpenEndHandler);
                     }
@@ -4836,7 +4840,7 @@
                     let loadHandler = e => {
                         if (document.readyState != "complete") return;
                         document.removeEventListener("readystatechange", loadHandler);
-                        if (document.body.style.display === "none") document.body.style.display = "";
+                        if (getBody(document).style.display === "none") getBody(document).style.display = "";
                         let word = this.initInPageWords.shift();
                         while (word) {
                             this.searchJumperInPageInput.value = word;
@@ -4846,7 +4850,7 @@
                     };
                     document.addEventListener("readystatechange", loadHandler);
                 } else {
-                    if (document.body.style.display === "none") document.body.style.display = "";
+                    if (getBody(document).style.display === "none") getBody(document).style.display = "";
                     let word = this.initInPageWords.shift();
                     while (word) {
                         this.searchJumperInPageInput.value = word;
@@ -7033,8 +7037,8 @@
                 if (_funcKeyCall && selectStr && selectStr.length < (searchData.prefConfig.limitPopupLen || 1)) return;
                 if (this.con && this.con.classList.contains("search-jumper-showall")) return;
                 if (searchData.prefConfig.hidePopup) _funcKeyCall = false;
-                if (!targetElement) targetElement = document.body;
-                else if (targetElement != document.body) {
+                if (!targetElement) targetElement = getBody(document);
+                else if (targetElement != getBody(document)) {
                     let _targetElement = targetElement, children;
                     while (_targetElement) {
                         if (_targetElement.tagName == 'IMG' || _targetElement.tagName == 'AUDIO' || _targetElement.tagName == 'VIDEO' || _targetElement.tagName == 'A') break;
@@ -7188,30 +7192,30 @@
                     self.con.style.cssText = "";
                     self.con.className = "search-jumper-searchBarCon " + className;
                     if (searchData.prefConfig.resizePage) {
-                        if (typeof self.initBodyStyle == 'undefined') self.initBodyStyle = document.body.style.cssText;
-                        else document.body.style.cssText = self.initBodyStyle;
+                        if (typeof self.initBodyStyle == 'undefined') self.initBodyStyle = getBody(document).style.cssText;
+                        else getBody(document).style.cssText = self.initBodyStyle;
                         self.con.classList.add("resizePage");
-                        document.body.style.position = "absolute";
+                        getBody(document).style.position = "absolute";
                         switch (className) {
                             case "search-jumper-left":
-                                document.body.style.width = `calc(100% - ${self.scale * 42}px)`;
-                                document.body.style.right = "0px";
+                                getBody(document).style.width = `calc(100% - ${self.scale * 42}px)`;
+                                getBody(document).style.right = "0px";
                                 break;
                             case "search-jumper-right":
-                                document.body.style.width = `calc(100% - ${self.scale * 42}px)`;
-                                document.body.style.left = "0px";
+                                getBody(document).style.width = `calc(100% - ${self.scale * 42}px)`;
+                                getBody(document).style.left = "0px";
                                 break;
                             case "search-jumper-bottom":
-                                document.body.style.width = "100%";
-                                document.body.style.height = `calc(100% - ${self.scale * 42}px)`;
-                                document.body.style.top = "0px";
-                                document.body.style.overflow = "auto";
+                                getBody(document).style.width = "100%";
+                                getBody(document).style.height = `calc(100% - ${self.scale * 42}px)`;
+                                getBody(document).style.top = "0px";
+                                getBody(document).style.overflow = "auto";
                                 break;
                             default:
-                                document.body.style.width = "100%";
-                                document.body.style.height = `calc(100% - ${self.scale * 42}px)`;
-                                document.body.style.bottom = "0px";
-                                document.body.style.overflow = "auto";
+                                getBody(document).style.width = "100%";
+                                getBody(document).style.height = `calc(100% - ${self.scale * 42}px)`;
+                                getBody(document).style.bottom = "0px";
+                                getBody(document).style.overflow = "auto";
                                 break;
                         }
                     } else if (searchData.prefConfig.autoHideAll) {
@@ -7391,7 +7395,7 @@
                     if (this.mainSignDiv.parentNode) this.mainSignDiv.parentNode.removeChild(this.mainSignDiv);
                 };
                 this.enterHandler = e => {
-                    document.body.appendChild(this.mainSignDiv);
+                    getBody(document).appendChild(this.mainSignDiv);
                 };
                 this.clickHandler = e => {
                     if (self.inPicker) {
@@ -7418,13 +7422,13 @@
             appendSign(sign, target, index) {
                 target.dataset.signNum = parseInt(target.dataset.signNum || 0) + 1;
                 sign.dataset.target = index;
-                document.body.appendChild(sign);
+                getBody(document).appendChild(sign);
                 this.adjustSignDiv(sign, target);
                 this.signList.push([sign, target]);
             }
 
             removeSign(sign) {
-                document.body.removeChild(sign);
+                getBody(document).removeChild(sign);
                 for (let i = 0; i < this.signList.length; i++) {
                     let signArr = this.signList[i];
                     if (signArr[0] === sign) {
@@ -7454,12 +7458,12 @@
                 this.clearSigns();
                 this.clickedEles = {};
                 if (this.mainSignDiv.parentNode) this.mainSignDiv.parentNode.removeChild(this.mainSignDiv);
-                document.body.classList.remove("searchJumper-picker");
+                getBody(document).classList.remove("searchJumper-picker");
                 searchBar.con.classList.remove("selectedEle");
                 searchBar.con.removeEventListener("mouseenter", this.leaveHandler, true);
-                document.body.removeEventListener("mousemove", this.moveHandler, true);
-                document.body.removeEventListener("mouseenter", this.enterHandler, true);
-                document.body.removeEventListener("click", this.clickHandler, true);
+                getBody(document).removeEventListener("mousemove", this.moveHandler, true);
+                getBody(document).removeEventListener("mouseenter", this.enterHandler, true);
+                getBody(document).removeEventListener("click", this.clickHandler, true);
                 this.inPicker = false;
             }
 
@@ -7479,13 +7483,13 @@
                     if (this.mainSignDiv.parentNode) this.mainSignDiv.parentNode.removeChild(this.mainSignDiv);
                 }, true);
                 signDiv.addEventListener("mouseleave", e => {
-                    document.body.appendChild(this.mainSignDiv);
+                    getBody(document).appendChild(this.mainSignDiv);
                 }, true);
                 signDiv.addEventListener("mousedown", e => {
                     e.stopPropagation();
                     e.preventDefault();
                     this.removeSign(signDiv);
-                    document.body.appendChild(this.mainSignDiv);
+                    getBody(document).appendChild(this.mainSignDiv);
                 }, true);
                 return signDiv;
             }
@@ -7560,7 +7564,7 @@
                     target.dataset.signNum = 0;
                     [].forEach.call(document.querySelectorAll(sel), ele => {
                         let sign = self.createSignDiv();
-                        document.body.appendChild(sign);
+                        getBody(document).appendChild(sign);
                         self.appendSign(sign, ele, index);
                     });
                 });
@@ -7573,7 +7577,7 @@
                     let target = self.clickedEles[index];
                     target.dataset.signNum = 0;
                     let sign = self.createSignDiv();
-                    document.body.appendChild(sign);
+                    getBody(document).appendChild(sign);
                     self.appendSign(sign, target, index);
                 });
             }
@@ -7592,13 +7596,13 @@
                     return;
                 }
                 this.inPicker = true;
-                document.body.appendChild(this.mainSignDiv);
-                document.body.classList.add("searchJumper-picker");
+                getBody(document).appendChild(this.mainSignDiv);
+                getBody(document).classList.add("searchJumper-picker");
 
                 searchBar.con.addEventListener("mouseenter", this.leaveHandler, true);
-                document.body.addEventListener("mousemove", this.moveHandler, true);
-                document.body.addEventListener("mouseenter", this.enterHandler, true);
-                document.body.addEventListener("click", this.clickHandler, true);
+                getBody(document).addEventListener("mousemove", this.moveHandler, true);
+                getBody(document).addEventListener("mouseenter", this.enterHandler, true);
+                getBody(document).addEventListener("click", this.clickHandler, true);
             }
         }
 
@@ -7969,7 +7973,7 @@
                         }
                     }
                 }
-                if (!keywords && document.body) {
+                if (!keywords && getBody(document)) {
                     try {
                         let targetEle = getElement(currentSite.keywords);
                         if (targetEle) {
@@ -8002,8 +8006,8 @@
                     }
                 }
             }
-            if (keywords == '' && document.body) {
-                let firstInput = document.body.querySelector('input[type=text]:not([readonly]),input:not([type])');
+            if (keywords == '' && getBody(document)) {
+                let firstInput = getBody(document).querySelector('input[type=text]:not([readonly]),input:not([type])');
                 if (firstInput) keywords = firstInput.value;
             }
             if (keywords) localKeywords = keywords;
@@ -8057,12 +8061,12 @@
                     showSiteAddFromOpenSearch(openSearch.href, (type, e) => {
                         if (type != 'load') {
                             if (e) debug(e.statusText || e.error || e.response || e);
-                            let firstInput = document.body.querySelector('input[type=text]:not([readonly]),input:not([type])');
+                            let firstInput = getBody(document).querySelector('input[type=text]:not([readonly]),input:not([type])');
                             quickAddByInput(firstInput);
                         }
                     });
                 } else {
-                    let firstInput = document.body.querySelector('input[type=text]:not([readonly]),input:not([type])');
+                    let firstInput = getBody(document).querySelector('input[type=text]:not([readonly]),input:not([type])');
                     quickAddByInput(firstInput);
                 }
             });
@@ -8172,7 +8176,7 @@
                 }
                 if (e.button === 2) {
                     if (searchData.prefConfig.resizePage) {
-                        if (typeof searchBar.initBodyStyle != "undefined") document.body.style.cssText = searchBar.initBodyStyle;
+                        if (typeof searchBar.initBodyStyle != "undefined") getBody(document).style.cssText = searchBar.initBodyStyle;
                     }
                     document.removeEventListener('mouseup', mouseUpHandler, false);
                     document.removeEventListener('mousemove', mouseMoveHandler, false);
@@ -8515,7 +8519,7 @@
                     shown = false;
                 });
                 if (searchData.prefConfig.dragToSearch && !isInConfigPage()) {
-                    document.body.addEventListener('dragstart', e => {
+                    getBody(document).addEventListener('dragstart', e => {
                         if ((searchData.prefConfig.dragAlt && !e.altKey) ||
                             (searchData.prefConfig.dragCtrl && !e.ctrlKey) ||
                             (searchData.prefConfig.dragShift && !e.shiftKey) ||
@@ -8633,7 +8637,7 @@
                     }
                 }
             });
-            bodyObserver.observe(document.body, bodyObserverOptions);
+            bodyObserver.observe(getBody(document), bodyObserverOptions);
         }
 
         function quickAddByInput(input) {
@@ -9493,7 +9497,7 @@
                         removeFrame();
                         searchBar.appendBar();
                         searchBar.showAllSites();
-                    }, 800);
+                    }, 1500);
                 }, true);
                 let geneSector = (className, deg, spanTransform) => {
                     let sector = document.createElement("div");
@@ -10244,7 +10248,7 @@
             }
             if (!addFrameCssEle || !addFrameCssEle.parentNode) addFrameCssEle = _GM_addStyle(addFrameCssText);
             crawlBtn.style.display = showCrawl ? '' : 'none';
-            document.body.appendChild(addFrame);
+            getBody(document).appendChild(addFrame);
             siteKeywords.value = "";
             siteMatch.value = "";
             nameInput.value = name;
@@ -10378,7 +10382,7 @@
                     } catch (e) {}
                     searchBar.searchJumperInputKeyWords.value = hash;
                 }
-                document.body.style.cssText = `
+                getBody(document).style.cssText = `
                     zoom: 1;
                     margin: 0;
                     padding: 0;
@@ -10392,7 +10396,7 @@
                 `;
                 storage.getItem("allPageBg", allPageBg => {
                     if (allPageBg) {
-                        document.body.style.backgroundImage = `url("${allPageBg.base64}")`;
+                        getBody(document).style.backgroundImage = `url("${allPageBg.base64}")`;
                     } else allPageBg = {url: ""};
                     _GM_xmlhttpRequest({
                         method: 'GET',
@@ -10421,7 +10425,7 @@
                                         };
                                     }
                                 });
-                                if (!allPageBg.base64) document.body.style.backgroundImage = `url("${bgUrl}")`;
+                                if (!allPageBg.base64) getBody(document).style.backgroundImage = `url("${bgUrl}")`;
                             } catch (e) {
                                 console.log(e);
                             }
@@ -10593,7 +10597,7 @@
 
         var inited = false;
         async function init(cb) {
-            if (window.top != window.self && document.body.clientHeight < 100 && document.body.clientWidth < 100) {
+            if (window.top != window.self && getBody(document).clientHeight < 100 && getBody(document).clientWidth < 100) {
                 return;
             }
             if (inited) {
@@ -10652,11 +10656,11 @@
                 storage.setItem("postUrl", '');
                 submitByForm(postUrl[1], postUrl[0], '_self');
             } else {
-                if (document.head && document.body) {
+                if (document.head && getBody(document)) {
                     init();
                 } else {
                     let checkReady = () => {
-                        if (document.head && document.body) {
+                        if (document.head && getBody(document)) {
                             init();
                         } else {
                             setTimeout(() => {
