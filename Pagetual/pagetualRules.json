@@ -9425,27 +9425,27 @@
     },
     {
         "name": "baofeng",
-        "url": "^https?://.*\\.baofeng\\.com/play",
+        "url": "^https?://((m|www)\\.)?baofeng\\.com/play",
         "enable": 0
     },
     {
         "name": "bilibili",
-        "url": "^https?://.*\\.bilibili\\.com/(bangumi/play|video|anime)",
+        "url": "^https?://((m|www)\\.)?bilibili\\.com/(bangumi/play|video|anime)",
         "enable": 0
     },
     {
         "name": "instagram",
-        "url": "^https?://.*\\.instagram\\.com",
+        "url": "^https?://((m|www)\\.)?instagram\\.com",
         "enable": 0
     },
     {
         "name": "iqiyi",
-        "url": "^https?://.*\\.iqiyi\\.com/(a_|v_|w_|$)",
+        "url": "^https?://((m|www)\\.)?iqiyi\\.com/(a_|v_|w_|$)",
         "enable": 0
     },
     {
         "name": "letv",
-        "url": "^https?://.*\\.le\\.com/ptv/vplay",
+        "url": "^https?://((m|www)\\.)?le\\.com/ptv/vplay",
         "enable": 0
     },
     {
@@ -9455,22 +9455,22 @@
     },
     {
         "name": "mgtv",
-        "url": "^https?://.*\\.mgtv\\.com/b",
+        "url": "^https?://((m|www)\\.)?mgtv\\.com/b",
         "enable": 0
     },
     {
         "name": "tudou",
-        "url": "^https?://.*\\.tudou\\.com/(albumplay|listplay|programs/view)",
+        "url": "^https?://((m|i|v|www|play)\\.)?tudou\\.com/(albumplay|listplay|programs/view)",
         "enable": 0
     },
     {
         "name": "youku",
-        "url": "^https?://.*\\.youku\\.com/(v_|alipay_video)",
+        "url": "^https?://((m|i|v|www|play)\\.)?youku\\.com/(v_|alipay_video)",
         "enable": 0
     },
     {
         "name": "youtube",
-        "url": "^https?://.*\\.youtube\\.com",
+        "url": "^https?://(m\\.)?youtube\\.com",
         "enable": 0
     },
     {
@@ -9486,11 +9486,6 @@
     {
         "name": "pptv",
         "url": "^https?://(m|v|vip)\\.pptv\\.com/show",
-        "enable": 0
-    },
-    {
-        "name": "qqtv",
-        "url": "^https?://(m\\.)?v\\.qq\\.com/(tv|x/cover|x/page)",
         "enable": 0
     },
     {
