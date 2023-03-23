@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.34.33
+// @version      1.9.34.34
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1806,6 +1806,7 @@
                     let isJs = !aTag.href || /^(javascript|#)/.test(aTag.href.replace(location.href, ""));
                     let innerText = (aTag.innerText || aTag.value || aTag.title || '');
                     if (innerText && innerText.length < 250) {
+                        if (isJs && /^\s*(»|>>|>|›|→|❯)\s*$/.test(innerText)) continue;
                         innerText = innerText.trim().replace(/\n.*/, '').replace(/ /g, '');
                         if (innerText && innerText.length <= 25) {
                             if (!next1) {
@@ -5406,7 +5407,7 @@
             loadmoreBtn = getElement(btnSel, doc);
         }
         if (!loadmoreBtn) {
-            let buttons = doc.querySelectorAll("input,button,a,div[onclick]"), loadmoreReg = /^\s*(加载更多|加載更多|load\s*more|もっと読み込む)\s*$/i;
+            let buttons = doc.querySelectorAll("input,button,a,div[onclick]"), loadmoreReg = /^\s*(加载更多|加載更多|load\s*more|もっと読み込む)[.…]*\s*$/i;
             for (let i = 0; i < buttons.length; i++) {
                 let button = buttons[i];
                 if (button.innerText.length > 20) continue;
@@ -5905,7 +5906,7 @@
         }
     }
 
-    var emuIframe, lastActiveUrl, orgContent;
+    var emuIframe, lastActiveUrl, orgContent, meetCors = false;
     function emuPage(callback) {
         let orgPage = null, preContent = null, iframeDoc, times = 0, loadmoreBtn, pageEle, nextLink, loadmoreEnd = false, waitTimes = 80, changed = false;
         function returnFalse(log) {
@@ -6115,12 +6116,14 @@
                     } catch(e) {
                         if (e.message && e.message.indexOf("cross-origin") != -1 && notSetSandbox && emuIframe.hasAttribute("sandbox")) {
                             emuIframe.removeAttribute("sandbox");
-                            emuIframe.src = lastActiveUrl;
+                            meetCors = true;
+                            callback(false, false);
                         } else {
                             returnFalse("Stop as cors");
                         }
                         return;
                     }
+                    meetCors = false;
                     let code = ruleParser.curSiteRule.init;
                     if (code) {
                         try {
@@ -6137,8 +6140,11 @@
             if (!lastActiveUrl) lastActiveUrl = location.href;
             emuIframe.src = lastActiveUrl;
             getBody(document).appendChild(emuIframe);
-        }else{
-            if (emuIframe.src != lastActiveUrl) emuIframe.src = lastActiveUrl;
+        } else {
+            if (emuIframe.src != lastActiveUrl || meetCors) {
+                emuIframe.src = lastActiveUrl;
+                return;
+            }
             checkPage();
         }
     }
