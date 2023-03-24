@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.55.35
+// @version      1.6.6.55.36
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -19,6 +19,8 @@
 // @grant        GM_setValue
 // @grant        GM_addStyle
 // @grant        GM.addStyle
+// @grant        GM.deleteValue
+// @grant        GM_deleteValue
 // @grant        GM.registerMenuCommand
 // @grant        GM_registerMenuCommand
 // @grant        GM.xmlHttpRequest
@@ -3001,7 +3003,7 @@
                         top: 50%;
                         margin-top: -160px;
                         margin-left: -150px;
-                        z-index: 100000;
+                        z-index: 2147483647;
                         background-color: #ffffff;
                         border: 1px solid #afb3b6;
                         border-radius: 10px;
@@ -3207,7 +3209,7 @@
                 this.finalSearch.dataset.url = tempUrl;
                 this.finalSearch.value = tempUrl.replace(/◎/g, '');
                 if (!this.customInputCssEle || !this.customInputCssEle.parentNode) this.customInputCssEle = _GM_addStyle(this.customInputCssText);
-                getBody(document).appendChild(this.customInputFrame);
+                document.documentElement.appendChild(this.customInputFrame);
             }
 
             showModifyWindow(word, wordSpan) {
@@ -4216,8 +4218,9 @@
             }
 
             setNav(enable, noSave) {
-                if (!noSave) {
+                if (!noSave && navEnable != enable) {
                     storage.setItem("navEnable", enable || "");
+                    navEnable = enable;
                 }
                 if (enable) {
                     this.locBtn.classList.add("checked");
@@ -4797,15 +4800,9 @@
                     self.bar.classList.remove("search-jumper-isTargetPage");
                     self.bar.classList.remove("initShow");
                     //self.recoveHistory();
-                    if (searchData.prefConfig.autoClose) {
-                        let openType = self.bar.querySelector('.search-jumper-type.search-jumper-open>span');
-                        if (openType) {
-                            openType.onmousedown();
-                        }
-                    }
                     if (self.funcKeyCall) {
                         self.setFuncKeyCall(false);
-                        if (currentSite) {
+                        if (currentSite && !currentSite.hideNotMatch) {
                             self.initPos();
                             let firstType = self.bar.querySelector('.search-jumper-type:nth-child(1)>span');
                             if (firstType && !firstType.classList.contains("search-jumper-open")) {
@@ -4817,6 +4814,12 @@
                             }, 250);
                         } else {
                             self.bar.style.display = 'none';
+                        }
+                    }
+                    if (searchData.prefConfig.autoClose) {
+                        let openType = self.bar.querySelector('.search-jumper-type.search-jumper-open>span');
+                        if (openType) {
+                            openType.onmousedown();
                         }
                     }
                     this.hideTimeout = null;
@@ -6208,7 +6211,7 @@
                 for (let param of params) {
                     if (inPagePostParams) {
                         inPagePostParams.shift();
-                        storage.setItem("inPagePostParams_" + location.hostname, inPagePostParams ? inPagePostParams : "");
+                        storage.setItem("inPagePostParams_" + location.hostname, inPagePostParams && inPagePostParams.length ? inPagePostParams : "");
                     }
                     if (param[0] === "sleep" || param[0] === "@sleep") {
                         await sleep(param[1]);
