@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.34.35
+// @version      1.9.34.36
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -2396,17 +2396,19 @@
             this.replaceElement(doc);
         }
 
-        openInNewTab(eles){
-            if(rulesData.openInNewTab){
-                [].forEach.call(eles, ele=>{
-                    if(ele.tagName=="A" && ele.href && !/^(mailto:|javascript:)|#/.test(ele.href)){
-                        ele.setAttribute('target', '_blank');
-                    }else{
-                        [].forEach.call(ele.querySelectorAll('a[href]:not([href^="mailto:"]):not([href^="javascript:"]):not([href^="#"])'), a=>{
-                            a.setAttribute('target', '_blank');
-                            if (a.getAttribute('onclick') == 'atarget(this)') {
-                                a.removeAttribute('onclick');
-                            }
+        openInNewTab(eles) {
+            if (openInNewTab) {
+                [].forEach.call(eles, ele => {
+                    if (ele.tagName == "A" && ele.href && !/^(mailto:|javascript:)|#/.test(ele.href)) {
+                        ele.setAttribute('target', openInNewTab == 1 ? '_blank' : '_self');
+                    } else {
+                        [].forEach.call(ele.querySelectorAll('a[href]:not([href^="mailto:"]):not([href^="javascript:"]):not([href^="#"])'), a => {
+                            if (openInNewTab == 1) {
+                                a.setAttribute('target', '_blank');
+                                if (a.getAttribute('onclick') == 'atarget(this)') {
+                                    a.removeAttribute('onclick');
+                                }
+                            } else a.setAttribute('target', '_self');
                         });
                     }
                 });
@@ -2552,6 +2554,9 @@
                 let css = self.curSiteRule.css || rulesData.customCss;
                 if (css && !/^inIframe:/.test(css)) {
                     _GM_addStyle(css);
+                }
+                if (typeof self.curSiteRule.openInNewTab !== 'undefined') {
+                    openInNewTab = self.curSiteRule.openInNewTab ? 1 : 2;
                 }
                 let autoClick = self.curSiteRule.autoClick;
                 if (autoClick) {
@@ -4702,6 +4707,7 @@
                 if (rulesData.autoLoadNum && rulesData.initRun) {
                     autoLoadNum = parseInt(rulesData.autoLoadNum);
                 }
+                openInNewTab = rulesData.openInNewTab ? 1 : 0;
                 enableDebug = rulesData.enableDebug;
                 storage.getItem("nextSwitch_" + location.host, i => {
                     storage.getItem("forceState_" + location.host, v => {
@@ -5026,6 +5032,7 @@
     tipsWords.className = "pagetual_tipsWords";
 
     var isPause = false, isHideBar = false, isLoading = false, curPage = 1, forceState = 0, bottomGap = 1000, autoLoadNum = -1, nextIndex = 0, stopScroll = false, clickMode = false;
+    var openInNewTab = 0;
 
     function changeStop(stop) {
         isPause = stop;
@@ -5505,7 +5512,7 @@
         pageText.href = url;
         pageText.style.cssText = pageTextStyle;
         pageText.title = i18n("current");
-        if (rulesData.openInNewTab) pageText.target = "_blank";
+        if (openInNewTab == 1) pageText.target = "_blank";
         pageBar.appendChild(upSpan);
         pageBar.appendChild(pageText);
         if (rulesData.pageBarMenu) {
