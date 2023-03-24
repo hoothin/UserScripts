@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.34.34
+// @version      1.9.34.35
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1673,6 +1673,7 @@
                 body.querySelector("a.next_page") ||
                 body.querySelector("#next_page") ||
                 body.querySelector(".nextPage") ||
+                body.querySelector(".pagination-next>a") ||
                 body.querySelector("a[data-pagination=next]") ||
                 body.querySelector("ul.pagination>li.active+li>a") ||
                 body.querySelector(".pagination a.current+a") ||
@@ -1806,8 +1807,8 @@
                     let isJs = !aTag.href || /^(javascript|#)/.test(aTag.href.replace(location.href, ""));
                     let innerText = (aTag.innerText || aTag.value || aTag.title || '');
                     if (innerText && innerText.length < 250) {
-                        if (isJs && /^\s*(»|>>|>|›|→|❯)\s*$/.test(innerText)) continue;
                         innerText = innerText.trim().replace(/\n.*/, '').replace(/ /g, '');
+                        if (isJs && /^(»|>>|>|›|→|❯)$/.test(innerText)) continue;
                         if (innerText && innerText.length <= 25) {
                             if (!next1) {
                                 if (nextTextReg1.test(innerText)) {
@@ -1820,7 +1821,7 @@
                             }
                             if (!next4) {
                                 if (!next2) {
-                                    if (nextTextReg2.test(innerText) || /nextpage|pager\-older/i.test(aTag.className) || /^\s*(»|>>)\s*$/.test(innerText)) {
+                                    if (nextTextReg2.test(innerText) || /nextpage|pager\-older/i.test(aTag.className) || /^(»|>>)$/.test(innerText)) {
                                         if (isJs) {
                                             if (!nextJs2) nextJs2 = aTag;
                                         } else {
@@ -1829,7 +1830,7 @@
                                     }
                                 }
                                 if (!next3) {
-                                    if (/^\s*(next|&gt;|▶|>|›|→|❯)\s*$/i.test(innerText)) {
+                                    if (/^(next\s*(»|>>|>|›|→|❯)?|&gt;|▶|>|›|→|❯)$/i.test(innerText)) {
                                         if (isJs) {
                                             if (!nextJs3) nextJs3 = aTag;
                                         } else {
