@@ -4484,6 +4484,7 @@
                 } else if (searchData.prefConfig.alwaysShow) {
                     this.bar.style.display = "";
                     this.initPos();
+                    this.appendBar();
                 }
                 if (this.fontPool.length > 0 || isInConfigPage()) {
                     let linkEle = document.createElement("link");
