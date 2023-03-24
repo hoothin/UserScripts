@@ -194,22 +194,6 @@ The css selector or xpath of element which you want to click automatically
 --
 Set to 0 then history writing will be disable. Set to 1 then history writing will be enable. Set to 2 then history writing will action immediately after splicing. No matter what value is the general option.
 
-[lockScroll](https://pagetual.hoothin.com/en/rules/lockScroll.html)
---
-Set to true if you don't want the page to auto scroll when navigate to next page
-
-[wheel](https://pagetual.hoothin.com/en/rules/wheel.html)
---
-Set to true so the next page action will only effect when the mouse wheel roll
-
-[fitWidth](https://pagetual.hoothin.com/en/rules/fitWidth.html)
---
-Set to false if you find the pageElement get the wrong small width
-
-[pageElementStyle](https://pagetual.hoothin.com/en/rules/pageElementStyle.html)
---
-Custom cssText of style for pageElement
-
 [delay](https://pagetual.hoothin.com/en/rules/delay.html)
 --
 The javaScript code to delay next action until return true, use this prop to get complete page elements with lazy load.
@@ -221,7 +205,3 @@ Set to true to enable manual mode, then paging will stop, right arrow (or 'paget
 [clickMode](https://pagetual.hoothin.com/en/rules/manualMode.html)
 --
 Set to true to enable click mode, will automatically click the next link when scrolling to the end of the page.
-
-[child script](https://pagetual.hoothin.com/en/rules/child-script.html)
---
-If the site has some limit for code eval. You can make a child script with function under object `window`. You should name them start with `pagetual` use camelCase. Like `window.pagetualWait`, `window.pagetualNextLinkByJs`, `window.pagetualPageInit`, `window.pagetualPageAction`, `window.pagetualInit`, `window.pagetualPageBarText`.
