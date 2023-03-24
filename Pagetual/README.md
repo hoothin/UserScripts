@@ -166,14 +166,6 @@ The multi-windowHeight which you can set to 2 or 3 while some sites load next pa
 --
 The amount of pages for auto turning after page opening
 
-[listenHashChange](https://pagetual.hoothin.com/en/rules/listenHashChange.html)
---
-Set this to true so pagetual will restart when hash changed
-
-[refreshByClick](https://pagetual.hoothin.com/en/rules/refreshByClick.html)
---
-If the site reload content without changing url when click a submit button. Set this with the selector of the target button, pagetual will reset after click it.
-
 [pageNum](https://pagetual.hoothin.com/en/rules/pageNum.html)
 --
 Point the page number with $p in current url, you can use{} to eval result string from page number, like {$p\*25+1}
@@ -189,10 +181,6 @@ Set to 1 so the document title of next page will be shown on pagebar
 [autoClick](https://pagetual.hoothin.com/en/rules/autoClick.html)
 --
 The css selector or xpath of element which you want to click automatically
-
-[history](https://pagetual.hoothin.com/en/rules/history.html)
---
-Set to 0 then history writing will be disable. Set to 1 then history writing will be enable. Set to 2 then history writing will action immediately after splicing. No matter what value is the general option.
 
 [delay](https://pagetual.hoothin.com/en/rules/delay.html)
 --
