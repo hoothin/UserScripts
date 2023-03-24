@@ -190,6 +190,6 @@ The javaScript code to delay next action until return true, use this prop to get
 --
 Set to true to enable manual mode, then paging will stop, right arrow (or 'pagetual.next' event) will be bound to click next link.
 
-[clickMode](https://pagetual.hoothin.com/en/rules/manualMode.html)
+[clickMode](https://pagetual.hoothin.com/en/rules/clickMode.html)
 --
 Set to true to enable click mode, will automatically click the next link when scrolling to the end of the page.
