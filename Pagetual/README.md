@@ -62,13 +62,21 @@ Example url of this rule
 --
 RegExp for the url of target site
 
-[pinUrl](https://pagetual.hoothin.com/en/rules/pinUrl.html)
+[nextLink](https://pagetual.hoothin.com/en/rules/nextLink.html)
 --
-Sometimes the next link or page element will be inexistence, set this to true so you can pin the rule just with url instead of finding elements by intelligent rules
+Selector or xpath of next page link, disable when set to 0, you can let it to be a array to contains multiple next links.
+
+[pageElement](https://pagetual.hoothin.com/en/rules/pageElement.html)
+--
+Selector or xpath of main content which need to insert, you can let it to be a array to contains multiple page elements.
 
 [enable](https://pagetual.hoothin.com/en/rules/enable.html)
 --
 0 means stop action when all matched
+
+[pinUrl](https://pagetual.hoothin.com/en/rules/pinUrl.html)
+--
+Sometimes the next link or page element will be inexistence, set this to true so you can pin the rule just with url instead of finding elements by intelligent rules
 
 [include](https://pagetual.hoothin.com/en/rules/include.html)
 --
@@ -90,10 +98,6 @@ The array["exist", "not exist"] contains "selector or xpath of element must exis
 --
 0 means load url and insert with static html, 1 means load by iframe so that dynamic javaScript code on page may effect, 2 means force insert iframe to bottom
 
-[nextLink](https://pagetual.hoothin.com/en/rules/nextLink.html)
---
-Selector or xpath of next page link, disable when set to 0, you can let it to be a array to contains multiple next links.
-
 [nextLinkByUrl](https://pagetual.hoothin.com/en/rules/nextLinkByUrl.html)
 --
 If there is no next element, you can use this to generate a href from current url, [0] means RegExp string, [1] means replace string, [2] means selector or xpath of the element which must include, [3] means selector or xpath of the element which must not include, you can use {} to eval simple code
@@ -105,10 +109,6 @@ Use this to eval javaScript code and return target url of next page with doc (do
 [stopSign](https://pagetual.hoothin.com/en/rules/stopSign.html)
 --
 Stop to load next page when matching this sign
-
-[pageElement](https://pagetual.hoothin.com/en/rules/pageElement.html)
---
-Selector or xpath of main content which need to insert, you can let it to be a array to contains multiple page elements.
 
 [pageElementByJs `(over, pageNum)`](https://pagetual.hoothin.com/en/rules/pageElementByJs.html)
 --
