@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.34.36
+// @version      1.9.34.37
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -799,6 +799,14 @@
 
     const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
 
+    async function sleep(time) {
+        await new Promise((resolve) => {
+            setTimeout(() => {
+                resolve();
+            }, time);
+        })
+    }
+
     class RuleParser {
         constructor() {
             this.hpRules = [];
@@ -1161,7 +1169,7 @@
             let r = 0;
             function searchByTime() {
                 setTimeout(() => {
-                    let end = r + 50;
+                    let end = r + 20;
                     end = end > self.rules.length ? self.rules.length : end;
                     for (; r < end; r++) {
                         let rule = self.rules[r];
@@ -1184,7 +1192,7 @@
                     } else {
                         searchByTime();
                     }
-                }, 1);
+                }, 0);
             }
             searchByTime();
         }
@@ -1619,7 +1627,7 @@
             }
         }
 
-        getPage(doc) {
+        async getPage(doc) {
             if (document.documentElement.className.indexOf('discourse') != -1) return {};
             let body = getBody(doc);
             let video = body.querySelector("video") || body.querySelector("iframe[id*=play],[id*=play]>iframe,iframe[src*=player],iframe[src*=m3u8]") || body.querySelector("canvas");
@@ -1680,8 +1688,10 @@
                 body.querySelector(".pagination a[rel=next]") ||
                 body.querySelector(".pagination-nav__item--next>a") ||
                 body.querySelector("a.pageright") ||
-                body.querySelector(".page-numbers.current+a") ||
-                body.querySelector("input[value='next']") ||
+                body.querySelector(".page-numbers.current+a");
+            if (!next) {
+                await sleep(1);
+                next = body.querySelector("input[value='next']") ||
                 body.querySelector("input[value='Next page']") ||
                 body.querySelector("input[value='下一页']") ||
                 body.querySelector("input[value='下一頁']") ||
@@ -1690,8 +1700,11 @@
                 body.querySelector("a#btnPreGn") ||
                 body.querySelector("a.page-next") ||
                 body.querySelector("a.pages-next") ||
-                body.querySelector("a.page.right") ||
-                body.querySelector("a#next") ||
+                body.querySelector("a.page.right");
+            }
+            if (!next) {
+                await sleep(1);
+                next = body.querySelector("a#next") ||
                 body.querySelector(".next>a") ||
                 body.querySelector(".next>button") ||
                 body.querySelector("a[alt=next]") ||
@@ -1702,7 +1715,9 @@
                 body.querySelector("[title=next]") ||
                 body.querySelector("a#linkNext") ||
                 body.querySelector("a[class*=page__next]");
+            }
             if (!next) {
+                await sleep(1);
                 let nexts = body.querySelectorAll("a.next");
                 for (i = 0; i < nexts.length; i++) {
                     if (nexts[i].style.display !== "none" &&
@@ -1773,6 +1788,7 @@
                 if (next && (next.href == "javascript:;" || next.getAttribute("href") == "#")) next = null;
             }
             if (!next) {
+                await sleep(1);
                 let pageDiv = body.querySelector(".pagination");
                 if (pageDiv) {
                     cur = pageDiv.querySelector("[class*=current]");
@@ -1782,9 +1798,11 @@
             }
             if (!next) {
                 let aTags = body.querySelectorAll("a,button,[type='button']");
-                let min = aTags.length > 2000 ? aTags.length - 2000 : 0;
-                for (i = aTags.length - 1; i >= min; i--) {
+                for (i = aTags.length - 1; i >= 0; i--) {
                     if (next1) break;
+                    if (i % 500 == 0) {
+                        await sleep(1);
+                    }
                     let aTag = aTags[i];
                     if (aTag.style.display == "none") continue;
                     if (aTag.innerText) {
@@ -2100,7 +2118,7 @@
                     }
                 }
             } else {
-                page = this.getPage(doc);
+                page = await this.getPage(doc);
                 nextLink = page.next;
                 if (nextLink) {
                     if (nextLink.tagName == "INPUT" || nextLink.type == "submit") {
@@ -6488,7 +6506,7 @@
                         loadPageOver();
                         if (urlChanged || isPause) return;
                         let pageBar = createPageBar(nextLink);
-                        if (pageBar && iframe) ruleParser.insertElement(iframe);
+                        if (pageBar && iframe && pageBar.parentNode == iframe.parentNode) pageBar.parentNode.insertBefore(pageBar, iframe);
                         checkAutoLoadNum();
                     });
                 } else if ((forceState == 3 || ruleParser.curSiteRule.action == 1) && !isJs) {
