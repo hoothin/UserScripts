@@ -10458,16 +10458,16 @@
 {
   "resource_url": "http://wedata.net/items/82058",
   "data": {
-    "pageElement": "//div[contains(@class, 'articleBody')]/p[not(@class)][last()]/following-sibling::*[1]/preceding-sibling::*",
+    "pageElement": "//div[contains(@class, 'articleBody')]/*[contains(@class, 'pagination')][1]/preceding-sibling::*[not(contains(@class, 'adRectangle'))]",
     "nextLink": "//li[contains(@class, \"p-pagination_list_item\") and contains(@class, \"-next\")]/a[@aria-label=\"次のページへリンク\"]",
     "url": "^https://business\\.nikkei\\.com/",
-    "exampleUrl": "https://business.nikkei.com/atcl/seminar/19/00030/032200460/"
+    "exampleUrl": "https://business.nikkei.com/atcl/seminar/19/00030/032200460/\r\nhttps://business.nikkei.com/atcl/gen/19/00533/030600006/"
   },
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "love_livedoor",
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "name": "日経ビジネス電子版",
   "created_at": "2019-01-16T14:26:53+09:00",
-  "updated_at": "2023-03-23T14:36:35+09:00"
+  "updated_at": "2023-03-25T09:22:13+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/82056",
@@ -50846,16 +50846,16 @@
 {
   "resource_url": "http://wedata.net/items/1669",
   "data": {
-    "pageElement": "//div[contains(@class,\"article-body\")]/p|//div[@class=\"NewsDetail\"]/*[not(count(./a)=1)]",
+    "pageElement": "//div[contains(@class,\"article-body\")]/*[self::p or self::figure or contains(self::div/@class, 'html')]|//div[@class=\"NewsDetail\"]/*[not(count(./a)=1)]",
     "nextLink": "//link[@rel=\"next\"]",
     "url": "^https?://(?:race|www)\\.sanspo\\.com/",
-    "exampleUrl": "http://www.sanspo.com/baseball/news/20150609/bbo15060905050004-n1.html\r\nhttp://www.sanspo.com/baseball/news/20150609/bbo15060905040002-n1.html\r\nhttp://race.sanspo.com/keiba/news/20180625/ope18062505090011-n1.html"
+    "exampleUrl": "https://www.sanspo.com/article/20150609-YI4RDXJ3WBLBVBNPK774XQAQ7Y/\r\nhttps://www.sanspo.com/article/20150609-FDK5SVYCZVJMPBURD34KKANVRM/\r\nhttp://race.sanspo.com/keiba/news/20180625/ope18062505090011-n1.html\r\nhttps://www.sanspo.com/article/20230308-F4GQKOTHHRJINABAI7TOZXETBI/\r\nhttps://www.sanspo.com/article/20230314-7CJFDCSPB5NMHK4FKE2RR4GALM/"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "nax",
   "name": "SANSPO.COM",
   "created_at": "2008-06-11T16:07:41+09:00",
-  "updated_at": "2021-10-20T14:28:17+09:00"
+  "updated_at": "2023-03-25T09:09:16+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/1654",
