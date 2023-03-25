@@ -8233,11 +8233,6 @@
         "css": "@media (min-width: 1000px) {@supports (display:grid)  {.krFoBL { grid-template-columns: repeat(6, 184px); }}}"
     },
     {
-        "name": "DeviantArt",
-        "url": "^https://www\\.deviantart\\.com",
-        "pageElement": "#sub-folder-gallery>div>div:not([class])>div>div>div>div"
-    },
-    {
         "name": "Z-Library",
         "url": "^https?://.*(1lib\\.(to|us|org)|z-lib\\.org|booksc\\.(org|eu)|bookfi\\.net|b\\-ok\\.(asia|africa)|1lib\\.pl|sg1lib\\.org|2lib\\.org|book4you\\.org)/s/",
         "pageElement": "#searchResultBox"
@@ -9066,8 +9061,10 @@
     {
         "name": "alternativeto",
         "url": "^https://alternativeto\\.net/",
+        "nextLink": "nav[aria-label='Pagination Navigation']>a",
         "action": 1,
-        "pageElement": "div.container>ol>li"
+        "pageElement": "div.container>ol>li",
+        "pageInit": "eles.forEach(e=>{let span=e.querySelector('div>div>div>span');if(span)span.onVisible()})"
     },
     {
         "name": "hirelateral",
@@ -9198,7 +9195,8 @@
         "url": "^https://xfantazy\\.com",
         "pageElement": ".MuiGrid-container",
         "action": 2,
-        "fitWidth": false
+        "fitWidth": false,
+        "init": "if(!doc||win.loaded)return;win.loaded=true;doc.querySelector('[data-stats=\"feed:button:choose-sort\"]').click();doc.querySelector('[data-stats=\"feed:button:sort:mostViewed\"]').click()"
     },
     {
         "name": "PornAV",
@@ -9269,7 +9267,7 @@
     {
         "name": "东方财富",
         "url": "^http://quote\\.eastmoney\\.com/",
-        "pinUrl": "true",
+        "pinUrl": true,
         "nextLink": "a.next:not(.disabled)",
         "pageElement": "#table_wrapper-table>tbody>tr"
     },
@@ -9334,16 +9332,6 @@
         "name": "套图吧",
         "url": "^https://www\\.192tp\\.com/",
         "pageElement": ".picsboxcenter"
-    },
-    {
-        "name": "Wndfx",
-        "url": "^https://www\\.wndfx\\.com/",
-        "pageElement": "article.article-content"
-    },
-    {
-        "name": "蕾丝猫",
-        "url": "^https://www\\.lesmao\\.org/",
-        "pageElement": "#thread-pic>ul>li"
     },
     {
         "name": "昵图网",
@@ -9504,6 +9492,165 @@
         "nextLink": "//a[text()='下一页']",
         "pageElement": "ol.list-group>a",
         "pageAction": "eles.forEach(ele=>{let source=ele.querySelector('.card-title').nextSibling.data.match(/书源：(\\S+)/)[1];let id=ele.querySelector('small').innerText.match(/ID：(\\d+)/)[1];ele.onclick=e=>{axios.post('https://api.ylibrary.org/api/detail/', {id: id,source: source}).then(response=>{if (response.data.errorn) {alert(response.data.msg)} else {let detail=response.data;document.querySelector('#detailModal .modal-body').innerHTML=`<div class='modal-body'>书名：${detail.title}，书源：${detail.source} <br> 作者：${detail.author}，出版社：，出版时间： <br> MD5： ${detail.md5}<br> 文件大小：${detail.filesize}<!----><p></p><div class='modal-footer'><a class='btn btn-secondary' href='http://libgendown.1kbtool.com/${detail.md5}' target='_blank'> Libgen </a><a class='btn btn-secondary' href='https://ipfs-checker.1kbtool.com/${detail.ipfs_cid}?filename=${detail.title}_${detail.author}_zhelper-search.pdf' target='_blank'> IPFS </a><a class='btn btn-secondary' href='https://rulite.1kbtool.com/${detail.md5}#${detail.filesize}#${detail.title}_${detail.author}_zhelper-search.pdf' target='_blank'>秒传</a><!----><!----></div></div>`}}).catch(error=>{if (error.toJSON().status == 429) {alert('请求过于频繁，请稍等一下再次尝试(429)')} else {alert(`未知错误，请打开控制台查看(${error.message})`)}});var myModal = new bootstrap.Modal(document.getElementById('detailModal'),{});myModal.toggle()}})"
+    },
+    {
+        "name": "Gamersky.com",
+        "url": "^https://(.+)?gamersky\\.com/",
+        "pageElement": "(id('gspaging')|//div[contains(@class,'Mid')][contains(@class,'L')][contains(@class,'con')])/p",
+        "nextLink": "//div[@class='page_css']/b/following-sibling::a[1]",
+        "action": 0,
+        "css": ".post_ding{position: fixed; bottom: 5%; left: 0; z-index: 11;}.post_ding>.Content_Paging{padding: 5px 20px; width: auto;}.post_ding>.Content_Paging>.hd{width: auto;}.post_ding>.Content_Paging>.bd{display: none;}.post_ding:hover>.Content_Paging>.bd{display: block;}"
+    },
+    {
+        "name": "Zoeken met Startpagina en Google",
+        "url": "^https?://startgoogle\\.startpagina\\.nl/.*query=",
+        "pinUrl": true,
+        "history": 0,
+        "nextLinkByUrl": [
+            "/(search)?\\?(.*)&(query|q)=(\\w+)(&page=(\\d+))?.*",
+            "/search?$2&q=$4&page={$6+1}&start={($6-1)*10}&num=10"
+        ],
+        "pageElement": "#organic-results>.organic",
+        "pagePre": "let lis=[];JSON.parse(response).results.forEach(r=>{let li=`<li><h2><a href='${r.url}' target='_blank'>${r.title}</a></h2><div class='url'>${r.display_url}</div><div class='lines'>${r.snippet}</div></li>`;lis.push(li)});return `<div id='organic-results'><ul class='organic'>${lis.join('')}</ul></div>`;"
+    },
+    {
+        "name": "Parts search",
+        "url": "^https?://pcpph\\.in/",
+        "init": "$('#search_results')[0].dataset.pageLength=100;$('#search_results_length select').val(100).trigger('change');"
+    },
+    {
+        "name": "SpankBang",
+        "example": "https://jp.spankbang.com/trending_videos/",
+        "url": "^https?://([a-z]{2}\\.)?spankbang\\.com/(trending_videos|new_videos|category|pornstar|upcoming|most_popular|s)",
+        "nextLinkByUrl": [
+            "/(\\d+)/$",
+            "/{$1+1}/"
+        ],
+        "pageElement": ".video-list.video-rotate.video-list-with-ads",
+        "replaceElement": ".pagination",
+        "css": ".pagetual_pageBar+div {margin-top: -5px !important;}"
+    },
+    {
+        "name": "法務部行政執行署拍賣公告查詢系統",
+        "url": "^https?://www\\.tpkonsale\\.moj\\.gov\\.tw/",
+        "nextLinkByUrl": [
+            "&PAGINATION_PAGE_NO=(\\d+)",
+            "&PAGINATION_PAGE_NO={$1+1}"
+        ],
+        "pageElement": ".table_scroll"
+    },
+    {
+        "name": "贵州省图",
+        "url": "^https?://sxgzlib\\.chineseall\\.cn/",
+        "nextLink": ".item.twocol>span:nth-child(2)",
+        "css": "#bookContent{overflow: scroll;}"
+    },
+    {
+        "name": "夺宝岛列表-京东_拍拍",
+        "url": "^https?://1paipai\\.jd\\.com/",
+        "nextLink": ".btn-next",
+        "pinUrl": true,
+        "stopSign": [
+            "",
+            ".btn-next[disabled]"
+        ],
+        "pageElement": "body > div:nth-of-type(1) > div.auction-list > div.list-selector > div.container > div:nth-of-type(2)"
+    },
+    {
+        "name": "高校古文献資源庫读者检索系统",
+        "url": "^https?://rbsc\\.calis\\.edu\\.cn:8086/",
+        "pageElement": "input~tr"
+    },
+    {
+        "name": "Hoothin github page",
+        "url": "^https?://hoothin\\.github\\.io/",
+        "enable": 0
+    },
+    {
+        "name": "Ru.Board",
+        "url": "^https?://forum\\.ru-board\\.com/",
+        "nextLink": "table .small>b+a"
+    },
+    {
+        "name": "iconfont-阿里巴巴矢量图标库",
+        "url": "^https://www\\.iconfont\\.cn",
+        "pageElement": "ul.block-icon-list>li",
+        "wait": 500,
+        "nextLink": "a.next"
+    },
+    {
+        "name": "16Personalities",
+        "url": "^https://www\\.16personalities\\.com",
+        "enable": 0
+    },
+    {
+        "name": "Soccercatch.com",
+        "url": "^https://www\\.soccercatch\\.com",
+        "nextLink": ".tabs-page[data-active=true] .pagination-next",
+        "init": "if(doc){let tabName=document.querySelector('[data-active=true]').dataset.title;doc.querySelector('[data-title='+tabName+']').click()}",
+        "pageElement": "[data-active=true]>section>*",
+        "wait": "if(doc==document)return true;let tabName=document.querySelector('[data-active=true]').dataset.title;doc.querySelector('[data-title='+tabName+']').click();return true;"
+    },
+    {
+        "name": "All the Internet",
+        "url": "^https://www\\.alltheinternet\\.com",
+        "pageElement": ".gsc-result",
+        "nextLink": ".pagebuttons",
+        "wait": 500
+    },
+    {
+        "name": "Lukol",
+        "url": "^https://www\\.lukol\\.com",
+        "pageElement": ".gsc-result",
+        "nextLink": ".gsc-cursor-current-page+div",
+        "wait": 500
+    },
+    {
+        "name": "微博",
+        "url": "^https://weibo\\.com",
+        "pageElement": ".WB_feed",
+        "nextLink": "a.next",
+        "exclude": ".container",
+        "wait": 500
+    },
+    {
+        "name": "Free Porn Videos & Sex Tube Movies at xHamster",
+        "url": "^https://xhopen\\.com",
+        "pageElement": ".thumb-list.thumb-list--sidebar",
+        "action": 2
+    },
+    {
+        "name": "全站书库-优书网",
+        "url": "^https://www\\.yousuu\\.com",
+        "pageElement": "div.result",
+        "nextLink": "button.btn-next",
+        "lockScroll": true
+    },
+    {
+        "name": "infinitenoveltranslations",
+        "url": "^https://infinitenoveltranslations\\.net",
+        "type": 0,
+        "pageElement": "//div[@class='entry-content']",
+        "nextLink": "//a[contains(text(),'Next Chapter')]",
+        "autoClick": "//a[contains(text(),'Enjoy')]",
+        "pinUrl": true
+    },
+    {
+        "name": "搜狗wap",
+        "url": "^https?://wap\\.sogou\\.com/web/searchList\\.jsp",
+        "loadMore": "#ajax_next_page",
+        "nextLink": 0
+    },
+    {
+        "name": "bt1207",
+        "url": "^https://bt1207ao\\.xyz/",
+        "nextLinkByJs": "let n=doc.querySelector('ul.pagination>li.active+li>a');if(!n)return null;let params=[]; let form=doc.querySelector('#search-form'); [].forEach.call(form.querySelectorAll('input'), input=>{ if(input.name=='p')params.push('p='+n.innerText);else params.push(input.name+'='+input.value); }); return form.action+'?'+params.join('&');",
+        "pageElement": "ul.list-unstyled"
+    },
+    {
+        "name": "REPACK скачать",
+        "url": "^https?://lrepacks\\.net/",
+        "css": ".animated .slideUp{opacity:1}"
     },
     {
         "name": "豆瓣电影",
