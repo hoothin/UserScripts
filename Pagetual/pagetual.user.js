@@ -3803,7 +3803,8 @@
                 showTips(i18n("updateSucc"));
                 location.reload();
             },(rule, err) => {
-                showTips(`Update ${rule.url} rules fail! ${err}`);
+                showTips(`Update ${rule.url} rules fail!`);
+                debug(err);
             });
         });
         if (guidePage.test(href)) {
@@ -3942,7 +3943,8 @@
                                 showTips(i18n("updateSucc"));
                                 location.reload();
                             }, (rule, err) => {
-                                showTips(`Update ${rule.url} rules fail! ${err}`);
+                                showTips(`Update ${rule.url} rules fail!`);
+                                debug(err);
                             });
                             importing = true;
                         }
@@ -4131,7 +4133,8 @@
                 updateP.innerHTML = i18n("passSec", 0);
                 updateP.title = i18n("update");
             }, (rule, err) => {
-                showTips(`Update ${rule.url} rules fail! ${err}`);
+                showTips(`Update ${rule.url} rules fail!`);
+                debug(err);
             });
         };
         configCon.insertBefore(updateP, insertPos);
