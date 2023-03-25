@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.34.37
+// @version      1.9.34.38
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1169,7 +1169,7 @@
             let r = 0;
             function searchByTime() {
                 setTimeout(() => {
-                    let end = r + 20;
+                    let end = r + 50;
                     end = end > self.rules.length ? self.rules.length : end;
                     for (; r < end; r++) {
                         let rule = self.rules[r];
@@ -1192,7 +1192,7 @@
                     } else {
                         searchByTime();
                     }
-                }, 0);
+                }, 1);
             }
             searchByTime();
         }
@@ -2554,7 +2554,7 @@
                 }
                 //若是再亂匹配就不緩存wedata，或者只在找完本地規則之後再考慮wedata的緩存
                 if (self.curSiteRule.singleUrl) {
-                    self.curSiteRule.pageElement = "";
+                    delete self.curSiteRule.pageElement;
                     self.smartRules = self.smartRules.filter(item => {return item && item.url != self.curSiteRule.url});
                     self.smartRules.unshift(self.curSiteRule);
                     if (self.smartRules.length > 100) {
@@ -3410,7 +3410,10 @@
                     ruleParser.customRules.unshift(editTemp);
                 }
                 storage.setItem("customRules", ruleParser.customRules);
-                storage.setItem("hpRules", []);
+                if (ruleParser.hpRules && ruleParser.curSiteRule && !ruleParser.curSiteRule.singleUrl) {
+                    ruleParser.hpRules = ruleParser.hpRules.filter(item => {return item && item.url != ruleParser.curSiteRule.url});
+                    storage.setItem("hpRules", ruleParser.hpRules);
+                }
                 if (window.confirm("Edit completed, reload page now?")) {
                     setTimeout(() => {location.reload()}, 100);
                 }
@@ -3868,9 +3871,10 @@
                                     }
                                 }
                                 if (!hasRule) ruleParser.customRules.push(r);
+                                ruleParser.hpRules.unshift(r);
                             }
                             storage.setItem("customRules", ruleParser.customRules);
-                            storage.setItem("hpRules", []);
+                            storage.setItem("hpRules", ruleParser.hpRules);
                             storage.setItem("smartRules", []);
                             showTips(i18n("importSucc"));
                         } else {
@@ -4369,7 +4373,8 @@
         customRulesInput.style.width = "100%";
         customRulesInput.style.height = "800px";
         customRulesInput.placeholder = `[\n  {\n    "name":"yande",\n    "action":"0",\n    "url":"^https:\/\/yande\\.re\/",\n    "pageElement":"ul#post-list-posts>li",\n    "nextLink":"a.next_page",\n    "css":".javascript-hide {display: inline-block !important;}"\n  },\n  {\n    "name":"tieba",\n    "action":"1",\n    "url":"^https:\/\/tieba\\.baidu.com\/f\\?kw=",\n    "pageElement":"ul#thread_list>li",\n    "nextLink":".next.pagination-item "\n  }\n]`;
-        customRulesInput.value = getFormatJSON(ruleParser.customRules);
+        let preCustom = getFormatJSON(ruleParser.customRules);
+        customRulesInput.value = preCustom;
         let blacklistInput = document.createElement("textarea");
         blacklistInput.style.width = "100%";
         blacklistInput.style.height = "500px";
@@ -4396,8 +4401,10 @@
         configCon.insertBefore(saveBtn, insertPos);
         saveBtn.onclick = e => {
             try {
-                storage.setItem("hpRules", []);
-                storage.setItem("smartRules", []);
+                if (customRulesInput.value != preCustom) {
+                    storage.setItem("hpRules", []);
+                    storage.setItem("smartRules", []);
+                }
                 if (customRulesInput.value == "") {
                     storage.setItem("customRules", "");
                 } else {
@@ -4494,7 +4501,7 @@
     }
 
     var inUpdate = false;
-    function updateRules (success, fail) {
+    function updateRules (success, fail, keepCache) {
         if (!storage.supportCrossSave()) {
             fail({url:''}, "Not support cross storage");
             return;
@@ -4502,8 +4509,10 @@
         if (inUpdate) return;
         inUpdate = true;
         let ruleIndex = ruleUrls.length - 1;
-        storage.setItem("hpRules", []);
-        storage.setItem("smartRules", []);
+        if (!keepCache) {
+            storage.setItem("hpRules", []);
+            storage.setItem("smartRules", []);
+        }
         function addNextRule() {
             if (ruleIndex < 0) {
                 let now = new Date().getTime();
@@ -4743,7 +4752,7 @@
                             let now = new Date().getTime();
                             if (!date || now - date > 2 * 24 * 60 * 60 * 1000) {
                                 updateRules(() => {
-                                }, (rule, err) => {});
+                                }, (rule, err) => {}, true);
                                 storage.setItem("ruleLastUpdate", now);
                             }
                             callback();
