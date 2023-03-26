@@ -15,7 +15,7 @@
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
 // @description:ja     Webページを自動で読み込み継ぎ足し表示を行うブラウザ拡張です、次のページ付けされた Web ページの自動読み込みと現在のページへの挿入 ルールなしで何千もの Web サイトをサポートします。
-// @description:ru     Автоматическая загрузка следующих веб-страниц с разбивкой на страницы и вставка на текущую страницу. Поддержка тысяч веб-сайтов без каких-либо правил.
+// @description:ru     Автоматическая подгрузка следующих страниц и вставка их содержимого в текущую страницу. Поддерживает тысячи сайтов даже с настройками по умолчанию.
 // @description:de     Automatisches Laden der nächsten paginierten Webseiten und Einfügen in die aktuelle Seite. Unterstützen Sie Tausende von Websites ohne Regeln.
 // @description:es     Carga automática de las siguientes páginas web paginadas e inserción en la página actual. Admite miles de sitios web sin ninguna regla.
 // @description:fr     Chargement automatique des pages Web paginées suivantes et insertion dans la page en cours. Prend en charge des milliers de sites Web sans aucune règle.
@@ -170,7 +170,20 @@
                 duplicate: "检测到永页机重复安装，请删除其他脚本管理器中的永页机!",
                 forceStateIframe: "以 iframe 嵌入整页",
                 forceStateDynamic: "通过 iframe 加载动态内容后取出",
-                forceStateDisable: "在此站禁用"
+                forceStateDisable: "在此站禁用",
+                page: "Page ",
+                prevPage: "Prev page",
+                nextPage: "Next page",
+                errorRulesMustBeArray: "Rules must be a Array!",
+                errorJson: "JSON error, check again!",
+                editSuccess: "Edit successfully",
+                errorWrongUrl: "Wrong url, check again!",
+                errorAlreadyExists: "Already exists!",
+                settingsSaved: "The settings are saved, refresh to view",
+                iframe: "Iframe",
+                dynamic: "Dynamic",
+                reloadPage: "Edit completed, reload page now?",
+                copied: "Copied"
             };
             break;
         case "zh-TW":
@@ -255,7 +268,20 @@
                 duplicate: "檢測到永頁機重複安裝，請刪除其他腳本管理器中的永頁機!",
                 forceStateIframe: "以 iframe 嵌入整頁",
                 forceStateDynamic: "通過 iframe 加載動態內容後取出",
-                forceStateDisable: "在此站禁用"
+                forceStateDisable: "在此站禁用",
+                page: "Page ",
+                prevPage: "Prev page",
+                nextPage: "Next page",
+                errorRulesMustBeArray: "Rules must be a Array!",
+                errorJson: "JSON error, check again!",
+                editSuccess: "Edit successfully",
+                errorWrongUrl: "Wrong url, check again!",
+                errorAlreadyExists: "Already exists!",
+                settingsSaved: "The settings are saved, refresh to view",
+                iframe: "Iframe",
+                dynamic: "Dynamic",
+                reloadPage: "Edit completed, reload page now?",
+                copied: "Copied"
             };
             break;
         case "ja":
@@ -339,92 +365,118 @@
                 duplicate: "Pagetual の重複インストールが検出されました。他のスクリプト マネージャで永続的なページ マシンを削除してください!",
                 forceStateIframe: "iframe にページ全体を埋め込む",
                 forceStateDynamic: "iframe 経由で動的コンテンツを読み込む",
-                forceStateDisable: "このステーションでのページめくりを無効にする"
+                forceStateDisable: "このステーションでのページめくりを無効にする",
+                page: "Page ",
+                prevPage: "Prev page",
+                nextPage: "Next page",
+                errorRulesMustBeArray: "Rules must be a Array!",
+                errorJson: "JSON error, check again!",
+                editSuccess: "Edit successfully",
+                errorWrongUrl: "Wrong url, check again!",
+                errorAlreadyExists: "Already exists!",
+                settingsSaved: "The settings are saved, refresh to view",
+                iframe: "Iframe",
+                dynamic: "Dynamic",
+                reloadPage: "Edit completed, reload page now?",
+                copied: "Copied"
             };
             break;
         case "ru":
         case "ru-RU":
             config = {
                 enableDebug: "Включить отладку",
-                disable: "Запрещать",
-                disableSite: "Переключить состояние отключения",
-                disableSiteTips: "Отключено на этом сайте",
-                enableSiteTips: "Включено на этом сайте",
-                enable: "Включить",
+                disable: "Выключено",
+                disableSite: "Включить/выключить на сайте",
+                disableSiteTips: "Выключено для этого сайта",
+                enableSiteTips: "Включено для этого сайта",
+                enable: "Включено",
                 toTop: "Наверх",
                 toBottom: "Вниз",
                 current: "Текущая страница",
-                forceIframe: "Принудительно присоединиться",
-                cancelForceIframe: "Отменить принудительное присоединение",
-                configure: "Настроить",
+                forceIframe: "Подгрузить ещё страницу",
+                cancelForceIframe: "Отменить подгрузку",
+                configure: "Настройки",
                 firstUpdate: "Нажмите здесь, чтобы инициализировать правила",
-                update: "Обновить правила с URL-адреса сейчас",
-                click2update: "Нажмите, чтобы обновить правила по URL сейчас",
-                loadNow: "Загрузить следующую страницу сейчас",
+                update: "Обновить правила",
+                click2update: "Нажмите, чтобы обновить правила",
+                loadNow: "Загрузить следующую страницу",
                 loadConfirm: "Сколько страниц вы хотите загрузить? (0 означает бесконечность)",
-                noNext: "Ссылка на следующую страницу не найдена, пожалуйста, создайте новое правило",
+                noNext: "Ссылка на следующую страницу не найдена. Пожалуйста, создайте новое правило",
                 passSec: "Обновлено #t# секунд назад",
                 passMin: "Обновлено #t# минут назад",
                 passHour: "Обновлено #t# часов назад",
                 passDay: "Обновлено #t# дней назад",
-                cantDel: "Не могу удалить встроенные правила",
-                confirmDel: "Вы уверены, что хотите удалить это правило?",
-                updateSucc: "Обновление выполнено",
-                beginUpdate: "Начать обновление, подождите, пожалуйста",
-                customUrls: "URL-адрес правила импорта, один URL-адрес в строке",
-                customRules: "Введите пользовательские правила в формате [Pagetual]. <a href='#t#'>Правила внесения вклада</a>",
-                save: "Сохранить",
-                loadingText: "Shojo загружается...",
-                opacity: "Непрозрачность",
-                opacityPlaceholder: "0: скрыть",
-                hideBar: "Скрыть промежуток переключения страниц",
+                cantDel: "Нельзя удалить правила по умолчанию",
+                confirmDel: "Вы уверены, что хотите удалить эту ссылку?",
+                updateSucc: "Правила обновлены",
+                beginUpdate: "Обновление. Пожалуйста, немного подождите",
+                customUrls: "Ссылки с правилами для импорта. Одна ссылка на строку",
+                customRules: "Введите пользовательские правила в формате Pagetual. <a href='#t#'>Улучшить встроенные правила</a>",
+                save: "Сохранить настройки",
+                loadingText: "Следующая страница подгружается…",
+                opacity: "Прозрачность",
+                opacityPlaceholder: "0 - скрыть",
+                hideBar: "Скрыть разделитель страниц",
                 hideBarButNoStop: "Скрыть, но не останавливать",
-                dbClick2Stop: "Двойной щелчок по пустому пространству для паузы",
-                sortTitle: "Сортировка вступает в силу после следующего обновления правила",
+                dbClick2Stop: "Двойной клик на странице для выключения",
+                sortTitle: "Правило сортировки применится после следующего обновления правил",
                 autoRun: "Автозапуск (режим черного списка)",
-                autoLoadNum: "Количество для предварительной загрузки страниц",
-                turnRate: "Переверните страницу, когда она будет в X раз больше высоты страницы от конца страницы",
+                autoLoadNum: "Количество страниц для предзагрузки",
+                turnRate: "Подгрузить страницу, когда она будет в X раз больше высоты страницы от конца страницы",
                 inputPageNum: "Введите номер страницы для перехода",
                 enableHistory: "Записать историю после переключения страниц",
-                enableHistoryAfterInsert: "Записать запись истории сразу после сплайсинга, в противном случае запишите после просмотра",
-                initRun: "Переключать страницы сразу после открытия",
-                preload: "Предварительная загрузка следующей страницы для ускорения",
-                click2ImportRule: "Нажмите, чтобы импортировать ссылку базовых правил, затем дождитесь завершения обновления: ",
-                forceAllBody: "Присоединить полное тело страницы?",
-                openInNewTab: "Открыть дополнительные URL-адреса в новой вкладке",
+                enableHistoryAfterInsert: "Записать запись истории сразу после вставки, иначе записать после просмотра",
+                initRun: "Подгружать страницы сразу после открытия",
+                preload: "Предзагрузка следующей страницы",
+                click2ImportRule: "Нажмите, чтобы импортировать базовые правила: ",
+                forceAllBody: "Присоединить страницу целиком?",
+                openInNewTab: "Открыть дополнительные ссылки в новой вкладке",
                 importSucc: "Импорт завершен",
                 import: "Импорт",
-                editCurrent: "Редактировать правило для текущего",
-                editBlacklist: "Редактировать URL-адреса черного списка, по одной строке, поддержка ? * для подстановочного знака",
+                editCurrent: "Изменить правило для текущего сайта",
+                editBlacklist: "Изменить черный список. Одна ссылка на строку. Поддерживаются метасимволы: ? и *",
                 upBtnImg: "Иконка перехода к началу страницы",
                 downBtnImg: "Иконка перехода к концу страницы",
-                loadingTextTitle: "Текст загрузки",
-                dbClick2StopCtrl: "Клавиша Ctrl",
-                dbClick2StopAlt: "Клавиша Alt",
-                dbClick2StopShift: "Клавиша Shift",
-                dbClick2StopMeta: "Клавиша Meta",
-                dbClick2StopKey: "Клавиша быстрого доступа",
+                loadingTextTitle: "Текст во время загрузки",
+                dbClick2StopCtrl: "Ctrl",
+                dbClick2StopAlt: "Alt",
+                dbClick2StopShift: "Shift",
+                dbClick2StopMeta: "Meta",
+                dbClick2StopKey: "Клавиша",
                 pageElementCss: "Пользовательский стиль для основных элементов страницы",
-                customCss: "Полный пользовательский css",
-                firstAlert: "Вы не импортировали базовое правило, пожалуйста, выберите соответствующее правило для импорта",
-                picker: "Выбор элемента страницы Пэйджтуал",
-                closePicker: "Закрыть выбор Пэйджтуал",
-                pickerPlaceholder: "Оставьте пустым, если вы не знаете",
-                pickerCheck: "Проверить селектор и скопируй",
-                switchSelector: "нажмите для переключения элемента",
+                customCss: "Полный пользовательский CSS",
+                firstAlert: "Вы не импортировали базовое правило. Пожалуйста, выберите соответствующее правило для импорта",
+                picker: "Pagetual: выбор элемента страницы",
+                closePicker: "Закрыть окно Pagetual",
+                pickerPlaceholder: "Если не знаете, что тут писать — оставьте поле пустым",
+                pickerCheck: "Проверить и скопировать селектор",
+                switchSelector: "Нажмите для выбора элемента",
                 gotoEdit: "Перейти к редактированию правила с текущим селектором",
-                manualMode: "Отключить автоматическую перелистывание страниц, перелистывать страницы вручную с помощью стрелок справа (или вызвать событие 'pagetual.next')",
-                clickMode: "Отключить \"сшивание\" страниц, т.е. автоматически переходить на следующую страницу при прокрутке к ее концу",
-                pageBarMenu: "Щелкните середину панели страниц, чтобы открыть меню.",
+                manualMode: "Отключить автоматическую загрузку страниц. Загружать вручную с помощью стрелки вправо (или вызова события 'pagetual.next')",
+                clickMode: "Отключить \"сшивание\" страниц. При прокрутке до конца автоматически переходить на следующую страницу",
+                pageBarMenu: "Открывать меню кликом на середину панели страниц",
                 nextSwitch: "Переключить ссылку на следующую страницу",
-                arrowToScroll: "Нажмите клавишу со стрелкой влево для предыдущего и клавишу со стрелкой вправо для следующего",
-                sideController: "Отображение панели управления пейджингом на боковой панели",
+                arrowToScroll: "Листать страницы клавишами со стрелками влево и вправо",
+                sideController: "Показать справа панель перемещения по вкладке",
                 hideLoadingIcon: "Скрыть анимацию загрузки",
-                hideBarArrow: "Скрыть стрелки позиционирования разделителя",
-                duplicate: "Обнаружена двойная установка Pagetual, пожалуйста, удалите постоянную страничную машину в других менеджерах скриптов!",
+                hideBarArrow: "Скрыть кнопки перемещения на разделителе",
+                duplicate: "Похоже, Pagetual установлен несколько раз. Пожалуйста, удалите Pagetual из других менеджеров скриптов!",
                 forceStateIframe: "Вставить полную страницу как iframe",
                 forceStateDynamic: "Загружать динамический контент через iframe",
-                forceStateDisable: "Отключить перелистывание страниц на этой станции"
+                forceStateDisable: "Отключить перелистывание страниц на этой станции",
+                page: "Страница ",
+                prevPage: "Предыдущая страница",
+                nextPage: "Следующая страница",
+                errorRulesMustBeArray: "Правила должны быть массивом!",
+                errorJson: "Ошибка разбора JSON. Пожалуйста, исправьте его",
+                editSuccess: "Редактирование успешно",
+                errorWrongUrl: "Ссылка некорректна. Пожалуйста, исправьте её",
+                errorAlreadyExists: "Уже существует!",
+                settingsSaved: "Настройки сохранены. Обновите страницы",
+                iframe: "iframe",
+                dynamic: "Динамически",
+                reloadPage: "Редактирование завершено. Обновить страницу?",
+                copied: "Скопировано"
             };
             break;
         default:
@@ -508,7 +560,20 @@
                 duplicate: "Duplicate Pagetual have been installed, check your script manager!",
                 forceStateIframe: "Embed full page as iframe",
                 forceStateDynamic: "Load dynamic content via iframe",
-                forceStateDisable: "Disable page turning on this site"
+                forceStateDisable: "Disable page turning on this site",
+                page: "Page ",
+                prevPage: "Prev page",
+                nextPage: "Next page",
+                errorRulesMustBeArray: "Rules must be a Array!",
+                errorJson: "JSON error, check again!",
+                editSuccess: "Edit successfully",
+                errorWrongUrl: "Wrong url, check again!",
+                errorAlreadyExists: "Already exists!",
+                settingsSaved: "The settings are saved, refresh to view",
+                iframe: "Iframe",
+                dynamic: "Dynamic",
+                reloadPage: "Edit completed, reload page now?",
+                copied: "Copied"
             };
             break;
     }
@@ -3318,15 +3383,15 @@
                 <div class="moreConfig">
                   <div title="${i18n('forceStateIframe')}">
                     <input name="forceState" id="forceStateIframe" type="radio">
-                    <label for="forceStateIframe">Iframe</label>
+                    <label for="forceStateIframe">${i18n('iframe')}</label>
                   </div>
                   <div title="${i18n('forceStateDynamic')}">
                     <input name="forceState" id="forceStateDynamic" type="radio">
-                    <label for="forceStateDynamic">Dynamic</label>
+                    <label for="forceStateDynamic">${i18n('dynamic')}</label>
                   </div>
                   <div title="${i18n('forceStateDisable')}">
                     <input name="forceState" id="forceStateDisable" type="radio">
-                    <label for="forceStateDisable">Disable</label>
+                    <label for="forceStateDisable">${i18n('disable')}</label>
                   </div>
                 </div>
                 <button id="nextSwitch" class="command" title="${i18n("nextSwitch")}" type="button">${i18n("nextSwitch")}</button>
@@ -3414,7 +3479,7 @@
                     ruleParser.hpRules = ruleParser.hpRules.filter(item => {return item && item.url != ruleParser.curSiteRule.url});
                     storage.setItem("hpRules", ruleParser.hpRules);
                 }
-                if (window.confirm("Edit completed, reload page now?")) {
+                if (window.confirm(i18n("reloadPage"))) {
                     setTimeout(() => {location.reload()}, 100);
                 }
             }, true);
@@ -3486,7 +3551,7 @@
             checkBtn.addEventListener("click", e => {
                 self.checkInputSelector();
                 if (this.selectorInput.value) _GM_setClipboard(this.selectorInput.value);
-                showTips("Copied");
+                showTips(i18n("copied"));
             });
             xpath.addEventListener("click", e => {
                 if (!selectorInput.value) {
@@ -3764,7 +3829,7 @@
                     storage.setItem("customRules", "");
                 } else {
                     if (Array && Array.isArray && !Array.isArray(customRules)) {
-                        showTips("Rules must be a Array!");
+                        showTips(i18n("errorRulesMustBeArray"));
                         return;
                     }
                     debug(customRules);
@@ -3772,10 +3837,10 @@
                 }
             } catch(e) {
                 debug(e);
-                showTips("JSON error, check again!");
+                showTips(i18n("errorJson"));
                 return;
             }
-            showTips("Edit successfully");
+            showTips(i18n("editSuccess"));
         };
     }
 
@@ -3886,14 +3951,14 @@
                                 if (urlArr.length == 1) {
                                     url = urlArr[0].trim();
                                     if (!/^http/.test(url)) {
-                                        showTips("Wrong url, check again!");
+                                        showTips(i18n("errorWrongUrl"));
                                         return;
                                     }
                                 } else if (urlArr.length == 2) {
                                     type = urlArr[0].trim();
                                     url = urlArr[1].trim();
                                     if (!/^http/.test(url)) {
-                                        showTips("Wrong url, check again!");
+                                        showTips(i18n("errorWrongUrl"));
                                         return;
                                     }
                                 } else {
@@ -3920,7 +3985,7 @@
                                 rulesData.sort.unshift(maxId + 1);
                             }
                             if (!diff) {
-                                showTips("Already exists!");
+                                showTips(i18n("errorAlreadyExists"));
                                 return;
                             }
                             storage.setItem("rulesData", rulesData);
@@ -4413,7 +4478,7 @@
                 } else {
                     let customRules = JSON.parse(customRulesInput.value);
                     if (Array && Array.isArray && !Array.isArray(customRules)) {
-                        showTips("Rules must be a Array!");
+                        showTips(i18n("errorRulesMustBeArray"));
                         return;
                     }
                     debug(customRules);
@@ -4422,7 +4487,7 @@
                 }
             } catch(e) {
                 debug(e);
-                showTips("JSON error, check again!");
+                showTips(i18n("errorJson"));
                 return;
             }
             rulesData.opacity = opacityInput.value / 100;
@@ -4468,13 +4533,13 @@
                     if (/^0\s*\|/.test(customUrls[c])) {
                         url = customUrls[c].replace(/^0\s*\|\s*/, "").trim();
                         if (!/^http/.test(url)) {
-                            showTips("Wrong url, check again!");
+                            showTips(i18n("errorWrongUrl"));
                             return;
                         }
                     } else {
                         url = customUrls[c].trim();
                         if (!/^http/.test(url)) {
-                            showTips("Wrong url, check again!");
+                            showTips(i18n("errorWrongUrl"));
                             return;
                         }
                     }
@@ -4497,7 +4562,7 @@
                     storage.setItem("rulesData", rulesData);
                 }
             }
-            showTips("The settings are saved, refresh to view");
+            showTips(i18n("settingsSaved"));
             //location.reload();
         };
         return true;
@@ -5572,7 +5637,7 @@
             pageText.title = ruleParser.nextTitle;
         }
         if (ruleParser.curSiteRule.pageNum || pageNumReg.test(url)) {
-            pageText.innerHTML += "Page ";
+            pageText.innerHTML += i18n("page");
             pageNum = document.createElement("span");
             pageNum.innerHTML = ruleParser.getPageNumFromUrl(url);
             pageNum.className = "pagetual_pageNum";
@@ -5594,16 +5659,16 @@
             });
             pageBar.appendChild(pageNum);
         } else {
-            pageText.innerHTML += "Page " + curPage;
+            pageText.innerHTML += i18n("page") + curPage;
         }
         let preBtn = document.createElement("span");
         preBtn.innerHTML = "∧";
-        preBtn.title = "Prev page";
+        preBtn.title = i18n("prevPage");
         preBtn.className = "prevScreen";
         preBtn.style.cssText = "display: none;text-align: center;right: unset; float: left; width: 40px; background: rgba(240, 240, 240, 0.8); position: absolute; z-index: 9999999; box-shadow: rgb(0 0 0 / 50%) 0px -5px 5px; border-radius: 20px 20px 0 0; margin-top: -30px; ";
         let nextBtn = document.createElement("span");
         nextBtn.innerHTML = "∨";
-        nextBtn.title = "Next page";
+        nextBtn.title = i18n("nextPage");
         nextBtn.className = "nextScreen";
         nextBtn.style.cssText = "display: none;text-align: center;right: unset; float: left; width: 40px; background: rgba(240, 240, 240, 0.8); position: absolute; z-index: 9999999; box-shadow: rgb(0 0 0 / 50%) 0px 5px 5px; border-radius: 0 0 20px 20px; margin-top: 30px; ";
         let localPage = curPage;
