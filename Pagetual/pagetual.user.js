@@ -172,18 +172,18 @@
                 forceStateDynamic: "通过 iframe 加载动态内容后取出",
                 forceStateDisable: "在此站禁用",
                 page: "Page ",
-                prevPage: "Prev page",
-                nextPage: "Next page",
-                errorRulesMustBeArray: "Rules must be a Array!",
-                errorJson: "JSON error, check again!",
-                editSuccess: "Edit successfully",
-                errorWrongUrl: "Wrong url, check again!",
-                errorAlreadyExists: "Already exists!",
-                settingsSaved: "The settings are saved, refresh to view",
-                iframe: "Iframe",
-                dynamic: "Dynamic",
-                reloadPage: "Edit completed, reload page now?",
-                copied: "Copied"
+                prevPage: "上一页",
+                nextPage: "下一页",
+                errorRulesMustBeArray: "规则必须为数组形式!",
+                errorJson: "JSON 格式有错，请重新检查!",
+                editSuccess: "编辑成功",
+                errorWrongUrl: "URL 错误, 请重新检查!",
+                errorAlreadyExists: "已经存在!",
+                settingsSaved: "设置已保存，刷新后生效",
+                iframe: "强制拼接",
+                dynamic: "动态加载",
+                reloadPage: "编辑完成，是否立即刷新页面？",
+                copied: "已复制"
             };
             break;
         case "zh-TW":
@@ -270,24 +270,24 @@
                 forceStateDynamic: "通過 iframe 加載動態內容後取出",
                 forceStateDisable: "在此站禁用",
                 page: "Page ",
-                prevPage: "Prev page",
-                nextPage: "Next page",
-                errorRulesMustBeArray: "Rules must be a Array!",
-                errorJson: "JSON error, check again!",
-                editSuccess: "Edit successfully",
-                errorWrongUrl: "Wrong url, check again!",
-                errorAlreadyExists: "Already exists!",
-                settingsSaved: "The settings are saved, refresh to view",
-                iframe: "Iframe",
-                dynamic: "Dynamic",
-                reloadPage: "Edit completed, reload page now?",
-                copied: "Copied"
+                prevPage: "上一頁",
+                nextPage: "下一頁",
+                errorRulesMustBeArray: "規則必須為陣列形式!",
+                errorJson: "JSON 格式有錯，請重新檢查!",
+                editSuccess: "編輯成功",
+                errorWrongUrl: "URL 錯誤, 請重新檢查!",
+                errorAlreadyExists: "已經存在!",
+                settingsSaved: "設置已保存，刷新後生效",
+                iframe: "強制拼接",
+                dynamic: "動態加載",
+                reloadPage: "編輯完成，是否立即刷新頁面？",
+                copied: "已復制"
             };
             break;
         case "ja":
             config = {
                 enableDebug: "デバッグモード",
-                disable: "一時的に無効にする",
+                disable: "一時的に無効",
                 disableSite: "無効状態の切り替え",
                 disableSiteTips: "このサイトで既に無効になっています",
                 enableSiteTips: "このサイトで既に有効になっています",
@@ -4992,6 +4992,8 @@
            -webkit-transition:margin-top 0.3s ease-in-out 0s, opacity .3s;
            transition:margin-top 0.3s ease-in-out 0s, opacity .3s;
            transform: none;
+           left: 0;
+           margin-left: calc(50% - 20px);
          }
          .pagetual_pageBar a>span:hover {
            color: red;
