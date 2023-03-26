@@ -3626,7 +3626,7 @@
         }
 
         getTarget(ele) {
-            while (ele.parentNode && (ele.scrollWidth === 0 || ele.scrollHeight === 0)) {
+            while (ele.parentNode && (ele.offsetWidth === 0 || ele.offsetHeight === 0)) {
                 ele = ele.parentNode;
             }
             return ele;
