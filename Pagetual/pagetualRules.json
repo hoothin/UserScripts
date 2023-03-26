@@ -587,7 +587,7 @@
     {
         "name": "漫画人 / dm5 動漫屋 / 極速漫畫 - 手機版 - 漫畫在新分頁打開",
         "example": "https://m.dm5.com/",
-        "url": "^https?://(www|m)\\.(manhuaren|1kkk|dm5)\\.[a-z]{2,3}/",
+        "url": "^https?://(www\\.manhuaren|m\\.dm5|m\\.1kkk)\\.com/",
         "exclude": [
             "#cp_img",
             "#tempc"
