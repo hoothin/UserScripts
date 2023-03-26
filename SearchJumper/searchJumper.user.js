@@ -3002,6 +3002,7 @@
                         filter: alpha(opacity=95);
                         box-shadow: 5px 5px 20px 0px #000;
                         color: #6e7070;
+                        font-size: initial;
                     }
                     .customInputFrame-title {
                         background: #458bd1!important;
