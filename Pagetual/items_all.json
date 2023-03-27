@@ -1,5 +1,18 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86100",
+  "data": {
+    "pageElement": "/html/body/div[2]/div/div/div[2]/div/div/section/div/div[2]/section",
+    "nextLink": "/html/body/div[2]/div/div/div[2]/div/div/div[2]/div[3]/a",
+    "url": "^https://fril\\.jp/shop/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "2q5HAX7iN8QG7Fp3gngW",
+  "name": "ラクマ(出品)",
+  "created_at": "2023-03-26T13:35:44+09:00",
+  "updated_at": "2023-03-26T13:38:33+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86098",
   "data": {
     "insertBefore": "",
@@ -15959,16 +15972,16 @@
 {
   "resource_url": "http://wedata.net/items/80977",
   "data": {
-    "pageElement": "id('comments')/*[position()>1]|descendant::div[not(id('comments'))][./div[contains(@class,'first')][./following-sibling::div or ./preceding-sibling::div]][1]/div",
-    "nextLink": "//li[contains(@class, \"pager-next\")]/a",
-    "url": "^https?://(ecchi|www)\\.iwara\\.tv/",
+    "pageElement": "//div[contains(@class, 'Teaser--author')]/parent::div",
+    "nextLink": "//*[contains(@class, \"fa-angle-right\")]/ancestor::li",
+    "url": "^https?://www\\.iwara\\.tv/",
     "exampleUrl": "https://www.iwara.tv/videos\r\nhttps://ecchi.iwara.tv/images\r\nhttps://ecchi.iwara.tv/search\r\nhttps://ecchi.iwara.tv/users/*"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "うｙｔｆヴぃおひぎお",
   "name": "Iwara",
   "created_at": "2016-09-16T14:15:18+09:00",
-  "updated_at": "2022-12-07T19:40:51+09:00"
+  "updated_at": "2023-03-26T11:33:37+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/80976",
