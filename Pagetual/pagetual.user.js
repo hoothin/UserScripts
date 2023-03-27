@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.34.38
+// @version      1.9.34.39
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -144,6 +144,7 @@
                 editBlacklist: "编辑黑名单网址，一行一条，支持? *通配符",
                 upBtnImg: "回到页首图标",
                 downBtnImg: "前往页尾图标",
+                sideControllerIcon: "侧边栏图标",
                 loadingTextTitle: "加载中文字",
                 dbClick2StopCtrl: "Ctrl 键",
                 dbClick2StopAlt: "Alt 键",
@@ -242,6 +243,7 @@
                 editBlacklist: "編輯黑名單網址，一行一條，支持? *通配符",
                 upBtnImg: "回到頁首圖標",
                 downBtnImg: "前往頁尾圖標",
+                sideControllerIcon: "側邊欄圖標",
                 loadingTextTitle: "加載中文字",
                 dbClick2StopCtrl: "Ctrl 鍵",
                 dbClick2StopAlt: "Alt 鍵",
@@ -339,6 +341,7 @@
                 editBlacklist: "ブラックリストのURLを編集し、1行ずつ、サポート? *ワイルドカード",
                 upBtnImg: "トップアイコンに戻る",
                 downBtnImg: "フッターアイコンに移動",
+                sideControllerIcon: "サイドバー アイコン",
                 loadingTextTitle: "テキストをロード",
                 dbClick2StopCtrl: "Ctrlキー",
                 dbClick2StopAlt: "Altキー",
@@ -437,6 +440,7 @@
                 editBlacklist: "Изменить черный список. Одна ссылка на строку. Поддерживаются метасимволы: ? и *",
                 upBtnImg: "Иконка перехода к началу страницы",
                 downBtnImg: "Иконка перехода к концу страницы",
+                sideControllerIcon: "значок боковой панели",
                 loadingTextTitle: "Текст во время загрузки",
                 dbClick2StopCtrl: "Ctrl",
                 dbClick2StopAlt: "Alt",
@@ -534,6 +538,7 @@
                 editBlacklist: "Edit the blacklist urls, line by line, Support ? * for wildcard",
                 upBtnImg: "Icon of back to top",
                 downBtnImg: "Icon of go to footer",
+                sideControllerIcon: "Icon of sidebar",
                 loadingTextTitle: "Loading text",
                 dbClick2StopCtrl: "Ctrl key",
                 dbClick2StopAlt: "Alt key",
@@ -2844,6 +2849,17 @@
              #pagetual-sideController.minSize #pagetual-sideController-move > svg {
                  background: white;
              }
+             #pagetual-sideController #pagetual-sideController-move > img,
+             #pagetual-sideController #pagetual-sideController-move > span {
+                 width: 35px;
+                 height: 35px;
+                 cursor: pointer;
+             }
+             #pagetual-sideController.minSize #pagetual-sideController-move > img,
+             #pagetual-sideController.minSize #pagetual-sideController-move > span {
+                 border-radius: 50px;
+                 text-shadow: rgb(255 255 255) 0px 0px 10px;
+             }
             `;
             this.styleEle = _GM_addStyle(this.cssText);
             let frame = document.createElement("div");
@@ -2862,6 +2878,7 @@
             let move = frame.querySelector("#pagetual-sideController-move");
             let next = frame.querySelector("#pagetual-sideController-next");
             let bottom = frame.querySelector("#pagetual-sideController-bottom");
+            if (sideControllerIcon) move.innerHTML = sideControllerIcon;
 
             frame.addEventListener("dblclick", e => {
                 e.preventDefault();
@@ -4222,7 +4239,7 @@
         btns.style.display = "flex";
         configCon.insertBefore(btns, insertPos);
         let upBtnImg = document.createElement("div");
-        upBtnImg.style.width = "50%";
+        upBtnImg.style.width = "33%";
         let upBtnImgTitle = document.createElement("h2");
         upBtnImgTitle.style.whiteSpace = "nowrap";
         upBtnImgTitle.style.overflow = "auto";
@@ -4237,7 +4254,7 @@
         btns.appendChild(upBtnImg);
 
         let downBtnImg = document.createElement("div");
-        downBtnImg.style.width = "50%";
+        downBtnImg.style.width = "33%";
         let downBtnImgTitle = document.createElement("h2");
         downBtnImgTitle.style.whiteSpace = "nowrap";
         downBtnImgTitle.style.overflow = "auto";
@@ -4250,6 +4267,21 @@
         downBtnImgInput.spellcheck = false;
         downBtnImg.appendChild(downBtnImgInput);
         btns.appendChild(downBtnImg);
+
+        let sideControllerIconDiv = document.createElement("div");
+        sideControllerIconDiv.style.width = "33%";
+        let sideControllerIconTitle = document.createElement("h2");
+        sideControllerIconTitle.style.whiteSpace = "nowrap";
+        sideControllerIconTitle.style.overflow = "auto";
+        sideControllerIconTitle.innerHTML = i18n("sideControllerIcon");
+        sideControllerIconDiv.appendChild(sideControllerIconTitle);
+        let sideControllerIconInput = document.createElement("input");
+        sideControllerIconInput.style.width = "100%";
+        sideControllerIconInput.placeholder = "⚪";
+        sideControllerIconInput.value = rulesData.sideControllerIcon || '';
+        sideControllerIconInput.spellcheck = false;
+        sideControllerIconDiv.appendChild(sideControllerIconInput);
+        btns.appendChild(sideControllerIconDiv);
 
         let otherBtns = document.createElement("div");
         otherBtns.style.display = "flex";
@@ -4518,6 +4550,7 @@
             rulesData.customCss = customCssInput.value;
             rulesData.upBtnImg = upBtnImgInput.value;
             rulesData.downBtnImg = downBtnImgInput.value;
+            rulesData.sideControllerIcon = sideControllerIconInput.value;
             rulesData.loadingText = loadingTextInput.value;
             rulesData.dbClick2StopCtrl = dbClick2StopCtrlInput.checked;
             rulesData.dbClick2StopAlt = dbClick2StopAltInput.checked;
@@ -4729,7 +4762,7 @@
                         ruleUrls = urls;
                     }
                 }
-                let upBtnImg = rulesData.upBtnImg, downBtnImg = rulesData.downBtnImg;
+                let upBtnImg = rulesData.upBtnImg, downBtnImg = rulesData.downBtnImg, _sideControllerIcon = rulesData.sideControllerIcon;
                 if (upBtnImg && downBtnImg) {
                     downSvgCSS = downSvgCSS.replace("transform: rotate(180deg);", "");
                 } else if (upBtnImg && !downBtnImg) {
@@ -4738,10 +4771,13 @@
                     upBtnImg = downBtnImg;
                 }
                 if (upBtnImg) {
-                    upSvg = `<img class="pagetual" src="${upBtnImg}"/>`;
+                    upSvg = /https?:|data/.test(upBtnImg) ? `<img class="pagetual" src="${upBtnImg}"/>` : `<span>${upBtnImg}</span>`;
                 }
                 if (downBtnImg) {
-                    downSvg = `<img class="pagetual" src="${downBtnImg}"/>`;
+                    downSvg = /https?:|data/.test(downBtnImg) ? `<img class="pagetual" src="${downBtnImg}"/>` : `<span>${downBtnImg}</span>`;
+                }
+                if (_sideControllerIcon) {
+                    sideControllerIcon = /https?:|data/.test(_sideControllerIcon) ? `<img class="pagetual" src="${_sideControllerIcon}"/>` : `<span>${_sideControllerIcon}</span>`;
                 }
                 setLoadingDiv(rulesData.loadingText || i18n("loadingText"));
                 if (typeof(rulesData.opacity) == "undefined") {
@@ -5118,12 +5154,13 @@
     }
 
     var upSvg = `<svg width="30" height="30" class="upSvg pagetual" style="display:initial;position:relative;cursor: pointer;margin: 0 8px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a"></path></svg>`;
-    var upSvgCSS = `display:initial;position:relative;cursor: pointer;margin: 0 8px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;`;
+    var upSvgCSS = `text-align: center;display: initial;position: relative;cursor: pointer;margin: 0 8px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;`;
     var downSvg = `<svg width="30" height="30" class="downSvg pagetual" style="display:initial;position:relative;cursor: pointer;margin: 0 8px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;transform: rotate(180deg);" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a"></path></svg>`;
-    var downSvgCSS = `display:initial;position:relative;cursor: pointer;margin: 0 8px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;transform: rotate(180deg);`;
+    var downSvgCSS = `text-align: center;display: initial;position: relative;cursor: pointer;margin: 0 8px;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;transform: rotate(180deg);`;
 
     const initStyle = `text-indent: initial;display: contents;right: unset;left: unset;top: unset;bottom: unset;inset: unset;clear: both;cy: initial;d: initial;dominant-baseline: initial;empty-cells: initial;fill: initial;fill-opacity: initial;fill-rule: initial;filter: initial;flex: initial;flex-flow: initial;float: initial;flood-color: initial;flood-opacity: initial;grid: initial;grid-area: initial;height: initial;hyphens: initial;image-orientation: initial;image-rendering: initial;inline-size: initial;inset-block: initial;inset-inline: initial;isolation: initial;letter-spacing: initial;lighting-color: initial;line-break: initial;list-style: initial;margin-block: initial;margin: 0px 5px;margin-inline: initial;marker: initial;mask: initial;mask-type: initial;max-block-size: initial;max-height: initial;max-inline-size: initial;max-width: initial;min-block-size: initial;min-height: initial;min-inline-size: initial;min-width: initial;mix-blend-mode: initial;object-fit: initial;object-position: initial;offset: initial;opacity: initial;order: initial;orphans: initial;outline: initial;outline-offset: initial;overflow-anchor: initial;overflow-clip-margin: initial;overflow-wrap: initial;overflow: initial;overscroll-behavior-block: initial;overscroll-behavior-inline: initial;overscroll-behavior: initial;padding-block: initial;padding: initial;padding-inline: initial;page: initial;page-orientation: initial;paint-order: initial;perspective: initial;perspective-origin: initial;pointer-events: initial;position: relative;quotes: initial;r: initial;resize: initial;ruby-position: initial;rx: initial;ry: initial;scroll-behavior: initial;scroll-margin-block: initial;scroll-margin: initial;scroll-margin-inline: initial;scroll-padding-block: initial;scroll-padding: initial;scroll-padding-inline: initial;scroll-snap-align: initial;scroll-snap-stop: initial;scroll-snap-type: initial;scrollbar-gutter: initial;shape-image-threshold: initial;shape-margin: initial;shape-outside: initial;shape-rendering: initial;size: initial;speak: initial;stop-color: initial;stop-opacity: initial;stroke: initial;stroke-dasharray: initial;stroke-dashoffset: initial;stroke-linecap: initial;stroke-linejoin: initial;stroke-miterlimit: initial;stroke-opacity: initial;stroke-width: initial;tab-size: initial;table-layout: initial;text-align: initial;text-align-last: initial;text-anchor: initial;text-combine-upright: initial;text-decoration: initial;text-decoration-skip-ink: initial;text-indent: initial;text-overflow: initial;text-shadow: initial;text-size-adjust: initial;text-transform: initial;text-underline-offset: initial;text-underline-position: initial;touch-action: initial;transform: initial;transform-box: initial;transform-origin: initial;transform-style: initial;transition: initial;user-select: initial;vector-effect: initial;vertical-align: initial;visibility: initial;border-spacing: initial;-webkit-border-image: initial;-webkit-box-align: initial;-webkit-box-decoration-break: initial;-webkit-box-direction: initial;-webkit-box-flex: initial;-webkit-box-ordinal-group: initial;-webkit-box-orient: initial;-webkit-box-pack: initial;-webkit-box-reflect: initial;-webkit-highlight: initial;-webkit-hyphenate-character: initial;-webkit-line-break: initial;-webkit-line-clamp: initial;-webkit-mask-box-image: initial;-webkit-mask: initial;-webkit-mask-composite: initial;-webkit-perspective-origin-x: initial;-webkit-perspective-origin-y: initial;-webkit-print-color-adjust: initial;-webkit-rtl-ordering: initial;-webkit-ruby-position: initial;-webkit-tap-highlight-color: initial;-webkit-text-combine: initial;-webkit-text-decorations-in-effect: initial;-webkit-text-emphasis: initial;-webkit-text-emphasis-position: initial;-webkit-text-fill-color: initial;-webkit-text-security: initial;-webkit-text-stroke: initial;-webkit-transform-origin-x: initial;-webkit-transform-origin-y: initial;-webkit-transform-origin-z: initial;-webkit-user-drag: initial;-webkit-user-modify: initial;white-space: initial;widows: initial;width: initial;will-change: initial;word-break: initial;word-spacing: initial;x: initial;y: initial;`;
     const pageTextStyle = `opacity: 1!important;text-indent: initial;padding: unset;border: none;background: unset!important;line-height: 30px;text-decoration: none;user-select: none;visibility: visible;position: initial;width: auto;max-width: 80%; white-space: nowrap; text-overflow: ellipsis;overflow: hidden;height: auto;float: none;clear: both;margin: 0px;text-align: center;display: inline-block;font-weight: bold;font-style: normal;font-size: 16px;letter-spacing: initial;vertical-align: top;color: rgb(85, 85, 95)!important;`;
+    var sideControllerIcon = '';
 
     var tipsWords = document.createElement("div");
     tipsWords.className = "pagetual_tipsWords";
@@ -5370,7 +5407,7 @@
             }
         };
         dblclickHandler = e => {
-            if (forceState == 1 || e.target.tagName == 'INPUT' || e.target.tagName == 'TEXTAREA') return;
+            if (forceState == 1 || e.target.tagName == 'INPUT' || e.target.tagName == 'TEXTAREA' || e.target.tagName == 'SELECT') return;
             if (!rulesData.dbClick2StopKey) {
                 if ((rulesData.dbClick2StopCtrl && !e.ctrlKey) ||
                    (rulesData.dbClick2StopAlt && !e.altKey) ||
@@ -5544,7 +5581,6 @@
     const pageNumReg=/[&\/\?](p=|page[=\/_-]?)\d+|[_-]\d+\./;
     function createPageBar(url) {
         curPage++;
-        SideController.setup();
         let posEle = null;
         let scrollH = Math.max(document.documentElement.scrollHeight, getBody(document).scrollHeight);
         let insert = ruleParser.getInsert();
@@ -6532,6 +6568,7 @@
         let insert = ruleParser.getInsert();
         if (insert) {
             if (curPage == 1) initView();
+            SideController.setup();
             /*if (curPage == 1) {
                 window.postMessage({
                     insert: geneSelector(ruleParser.curSiteRule.insertPos == 2 ? insert : insert.parentNode, true),
