@@ -5999,16 +5999,7 @@
         }
         if (checkRemoveIntv) clearInterval(checkRemoveIntv);
         checkRemoveIntv = setInterval(() => {
-            let urlValid = true;
-            try {
-                if (location.protocol === 'https:' && iframe.contentWindow && iframe.contentWindow.location.protocol !== 'https:') {
-                    urlValid = false;
-                    showTips(i18n("noValidContent"), "", "", url);
-                }
-            } catch(e) {
-                urlValid = false;
-            }
-            if (!iframe || !getBody(document).contains(iframe) || !urlValid) {
+            if (!iframe || !getBody(document).contains(iframe)) {
                 clearInterval(checkRemoveIntv);
                 loadPageOver();
             }
