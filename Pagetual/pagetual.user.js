@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.34.39
+// @version      1.9.35.1
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -184,7 +184,8 @@
                 iframe: "强制拼接",
                 dynamic: "动态加载",
                 reloadPage: "编辑完成，是否立即刷新页面？",
-                copied: "已复制"
+                copied: "已复制",
+                noValidContent: "没有检测到有效内容，点击查看"
             };
             break;
         case "zh-TW":
@@ -283,7 +284,8 @@
                 iframe: "強制拼接",
                 dynamic: "動態加載",
                 reloadPage: "編輯完成，是否立即刷新頁面？",
-                copied: "已復制"
+                copied: "已復制",
+                noValidContent: "沒有檢測到有效内容，點擊查看"
             };
             break;
         case "ja":
@@ -381,7 +383,8 @@
                 iframe: "Iframe",
                 dynamic: "Dynamic",
                 reloadPage: "Edit completed, reload page now?",
-                copied: "Copied"
+                copied: "Copied",
+                noValidContent: "有効なコンテンツが検出されませんでした。クリックして表示"
             };
             break;
         case "ru":
@@ -480,7 +483,8 @@
                 iframe: "iframe",
                 dynamic: "Динамически",
                 reloadPage: "Редактирование завершено. Обновить страницу?",
-                copied: "Скопировано"
+                copied: "Скопировано",
+                noValidContent: "Действительный контент не обнаружен, нажмите для просмотра"
             };
             break;
         default:
@@ -578,7 +582,8 @@
                 iframe: "Iframe",
                 dynamic: "Dynamic",
                 reloadPage: "Edit completed, reload page now?",
-                copied: "Copied"
+                copied: "Copied",
+                noValidContent: "No valid content detected, click to view"
             };
             break;
     }
@@ -4940,6 +4945,7 @@
                     });
                 } else {
                     debug("Stop as no page element");
+                    showTips(i18n("noValidContent"), "", "", url);
                     isPause = true;
                     callback(false);
                 }
@@ -5070,7 +5076,7 @@
          .pagetual_pageBar .pagetual_pageNum:hover{
            color: #ff6464;
          }
-         .pagetual_tipsWords{
+         .pagetual_tipsWords {
            font-size: 50px;
            font-weight: bold;
            font-family: "黑体", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
@@ -5096,6 +5102,9 @@
            -webkit-transition:opacity 0.3s ease-in-out 0s;
            transition:opacity 0.3s ease-in-out 0s;
            pointer-events: none;
+         }
+         .pagetual_tipsWords>a {
+           color: #ffffff;
          }
          .pagetual_loading {
            width: 50px;
@@ -5529,15 +5538,28 @@
         document.addEventListener('wheel', scrollHandler, true);
     }
 
-    function showTips(content, wordColor, backColor) {
+    function showTips(content, wordColor, backColor, href) {
         initView();
         getBody(document).appendChild(tipsWords);
         tipsWords.style.opacity = 0.8;
-        tipsWords.innerText = content;
-        tipsWords.style.marginLeft = -tipsWords.offsetWidth / 2 + "px";
         tipsWords.style.color = wordColor || 0xFFFFFF;
         tipsWords.style.backgroundColor = backColor || 0x000;
-        setTimeout(() => {tipsWords.style.opacity = 0}, 1000);
+        let time = 1000;
+        if (href) {
+            time = 3000;
+            tipsWords.innerHTML = createHTML(`<a href='${href}'>${content}</a>`);
+            tipsWords.style.pointerEvents = 'all';
+        } else {
+            tipsWords.innerHTML = createHTML(content);
+        }
+        tipsWords.style.marginLeft = -tipsWords.offsetWidth / 2 + "px";
+        setTimeout(() => {
+            tipsWords.style.marginLeft = -tipsWords.offsetWidth / 2 + "px";
+        }, 0);
+        setTimeout(() => {
+            tipsWords.style.opacity = 0;
+            tipsWords.style.pointerEvents = '';
+        }, time);
     }
 
     function getLoadMore(doc, loadmoreBtn) {
@@ -5946,6 +5968,9 @@
     var inCors = false;
     var checkRemoveIntv;
     function requestFromIframe(url, callback){
+        if (location.protocol === 'https:' && !/^https:/.test(url)) {
+            showTips(i18n("noValidContent"), "", "", url);
+        }
         url = url.indexOf('=') == -1 ? url.replace(/#[^#]*/,"") : url;
         let iframe = document.createElement('iframe');
         iframe.name = 'pagetual-iframe';
@@ -5974,7 +5999,16 @@
         }
         if (checkRemoveIntv) clearInterval(checkRemoveIntv);
         checkRemoveIntv = setInterval(() => {
-            if (!iframe || !getBody(document).contains(iframe)) {
+            let urlValid = true;
+            try {
+                if (location.protocol === 'https:' && iframe.contentWindow && iframe.contentWindow.location.protocol !== 'https:') {
+                    urlValid = false;
+                    showTips(i18n("noValidContent"), "", "", url);
+                }
+            } catch(e) {
+                urlValid = false;
+            }
+            if (!iframe || !getBody(document).contains(iframe) || !urlValid) {
                 clearInterval(checkRemoveIntv);
                 loadPageOver();
             }
@@ -6013,6 +6047,7 @@
                             isPause = true;
                             callback(false, false);
                         } else {
+                            showTips(i18n("noValidContent"), "", "", url);
                             callback(false, false);
                         }
                     }
