@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.35.1
+// @version      1.9.35.2
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -160,7 +160,7 @@
                 pickerCheck: "检查你编辑的选择器并复制",
                 switchSelector: "点击切换元素",
                 gotoEdit: "使用当前的选择器前往编辑规则",
-                manualMode: "禁用拼接，手动用右方向键翻页，可使用 Alt + 左方向键返回",
+                manualMode: "禁用拼接，手动用右方向键翻页，可使用左方向键返回",
                 clickMode: "禁用拼接，滚动至页尾时自动点击下一页",
                 pageBarMenu: "点击分隔条中间弹出菜单",
                 nextSwitch: "切换其他页码",
@@ -260,7 +260,7 @@
                 pickerCheck: "檢查你編輯的選擇器並複製",
                 switchSelector: "點擊切換元素",
                 gotoEdit: "使用當前的選擇器前往編輯規則",
-                manualMode: "禁用拼接，手動用右方向鍵翻頁",
+                manualMode: "禁用拼接，手動用右方向鍵翻頁，左方向鍵返回",
                 clickMode: "禁用拼接，滾動至頁尾時自動點擊下一頁",
                 pageBarMenu: "點擊分隔條中間彈出菜單",
                 nextSwitch: "切換其他頁碼",
@@ -5493,8 +5493,10 @@
                      document.activeElement.contentEditable == 'true')) {
                     return;
                 }
-                if(e.keyCode == 39){
+                if (e.keyCode == 39) {
                     clickNext();
+                } else if (e.keyCode == 37) {
+                    history.back();
                 }
             };
             document.addEventListener('keydown', manualModeKeyHandler);
