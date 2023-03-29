@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.55.41
+// @version      1.6.6.55.42
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -7069,7 +7069,7 @@
                 }
                 this.appendBar();
                 //this.recoveHistory();
-                let firstType;
+                let firstType, targetSiteImgs;
                 let self = this;
                 if (this.hideTimeout) {
                     clearTimeout(this.hideTimeout);
@@ -7098,6 +7098,7 @@
                     this.bar.classList.add("search-jumper-isInPage");
                     if (this.bar.style.display == "none" || _funcKeyCall) {
                         firstType = this.bar.querySelector('.search-jumper-needInPage:not(.notmatch)>span');
+                        targetSiteImgs = this.bar.querySelectorAll('.search-jumper-needInPage:not(.notmatch)>a>img');
                     } else {
                         let openType = this.bar.querySelector(".search-jumper-type.search-jumper-open");
                         if (!openType || openType.classList.contains('notmatch') ||
@@ -7107,6 +7108,7 @@
                             openType.classList.contains('search-jumper-targetVideo') ||
                             openType.classList.contains('search-jumper-targetLink')) {
                             firstType = this.bar.querySelector('.search-jumper-needInPage:not(.notmatch)>span');
+                            targetSiteImgs = this.bar.querySelectorAll('.search-jumper-needInPage:not(.notmatch)>a>img');
                         }
                     }
                 } else {
@@ -7115,22 +7117,27 @@
                         case 'IMG':
                             this.bar.classList.add("search-jumper-isTargetImg");
                             firstType = this.bar.querySelector('.search-jumper-targetImg:not(.notmatch)>span');
+                            targetSiteImgs = this.bar.querySelectorAll('.search-jumper-targetImg:not(.notmatch)>a>img');
                             break;
                         case 'AUDIO':
                             this.bar.classList.add("search-jumper-isTargetAudio");
                             firstType = this.bar.querySelector('.search-jumper-targetAudio:not(.notmatch)>span');
+                            targetSiteImgs = this.bar.querySelectorAll('.search-jumper-targetAudio:not(.notmatch)>a>img');
                             break;
                         case 'VIDEO':
                             this.bar.classList.add("search-jumper-isTargetVideo");
                             firstType = this.bar.querySelector('.search-jumper-targetVideo:not(.notmatch)>span');
+                            targetSiteImgs = this.bar.querySelectorAll('.search-jumper-targetVideo:not(.notmatch)>a>img');
                             break;
                         case 'A':
                             this.bar.classList.add("search-jumper-isTargetLink");
                             firstType = this.bar.querySelector('.search-jumper-targetLink:not(.notmatch)>span');
+                            targetSiteImgs = this.bar.querySelectorAll('.search-jumper-targetLink:not(.notmatch)>a>img');
                             break;
                         default:
                             this.bar.classList.add("search-jumper-isTargetPage");
                             firstType = this.bar.querySelector('.search-jumper-targetPage:not(.notmatch)>span');
+                            targetSiteImgs = this.bar.querySelectorAll('.search-jumper-targetPage:not(.notmatch)>a>img');
                             break;
                     }
                 }
@@ -7145,6 +7152,12 @@
                         }
                         firstType.onmousedown();
                         self.insertHistory(firstType.parentNode);
+                        [].forEach.call(targetSiteImgs, siteImg => {
+                            if (siteImg.dataset.src) {
+                                siteImg.src = siteImg.dataset.src;
+                                siteImg.dataset.src = '';
+                            }
+                        });
                     }
                 }
                 self.setFuncKeyCall(_funcKeyCall);
