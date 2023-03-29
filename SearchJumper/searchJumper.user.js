@@ -4436,13 +4436,17 @@
                     setTimeout(() => {
                         self.checkScroll();
                     }, 251);
-                };
+                }, showTimer;
                 this.searchJumperExpand.addEventListener("click", expandTypeHandler);
                 if (searchData.prefConfig.overOpen) {
                     this.searchJumperExpand.addEventListener('mouseenter', e => {
-                        setTimeout(() => {
+                        clearTimeout(showTimer);
+                        showTimer = setTimeout(() => {
                             expandTypeHandler(e);
                         }, 500);
+                    }, false);
+                    this.searchJumperExpand.addEventListener('mouseleave', e => {
+                        clearTimeout(showTimer);
                     }, false);
                 }
                 this.pickerBtn.addEventListener("click", e => {
@@ -5905,6 +5909,7 @@
                     }
                     if (searchData.prefConfig.overOpen) {
                         if (ele.classList.contains("search-jumper-open")) return;
+                        clearTimeout(showTimer);
                         showTimer = setTimeout(() => {
                             typeAction(e);
                         }, 500);
