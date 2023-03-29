@@ -7152,6 +7152,11 @@
                         }
                         firstType.onmousedown();
                         self.insertHistory(firstType.parentNode);
+                    }
+                }
+                self.setFuncKeyCall(_funcKeyCall);
+                if (_funcKeyCall) {
+                    if (targetSiteImgs) {
                         [].forEach.call(targetSiteImgs, siteImg => {
                             if (siteImg.dataset.src) {
                                 siteImg.src = siteImg.dataset.src;
@@ -7159,9 +7164,6 @@
                             }
                         });
                     }
-                }
-                self.setFuncKeyCall(_funcKeyCall);
-                if (_funcKeyCall) {
                     self.con.classList.remove("search-jumper-scroll");
                     self.bar.style.cssText = "";
                     self.con.style.cssText = "";
