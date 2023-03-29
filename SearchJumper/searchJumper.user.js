@@ -1367,6 +1367,9 @@
                      pointer-events: all;
                      cursor: pointer;
                  }
+                 #search-jumper.search-jumper-showall #search-jumper-alllist .sitelist>.sitelistCon a {
+                     display: flex!important;
+                 }
                  #search-jumper.search-jumper-showall #search-jumper-alllist .sitelist:hover {
                      z-index: 1;
                  }
