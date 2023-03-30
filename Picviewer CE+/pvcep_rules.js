@@ -1233,5 +1233,16 @@ var siteInfo = [
  src: /imgs\.yhflt\.com/,
  r: /imgs(\..*\/)q/,
  s: "pic$1"
+},
+{
+ name: "Sankaku Complex",
+ url:/sankakucomplex\.com/,
+ src:/\/data\/preview\//,
+ getImage:function(a){
+  return a?a.href:null;
+ },
+ xhr:{
+  q:["img#image"]
+ }
 }
 ];
