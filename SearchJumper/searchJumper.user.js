@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.55.42
+// @version      1.6.6.55.43
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -720,7 +720,7 @@
         hideOnSearchEngine: false,
         minSizeMode: false,
         hidePopup: false,
-        minPopup: false,
+        minPopup: 0,
         selectToShow: true,
         expandType: false,
         rightMouse: true,
@@ -1576,6 +1576,24 @@
                      visibility: hidden;
                  }
                  #search-jumper.funcKeyCall>.search-jumper-searchBar>.search-jumper-type:hover>a.search-jumper-btn {
+                     visibility: visible;
+                 }
+                 ` : ''}
+                 ${searchData.prefConfig.minPopup == 2 ? `
+                 .funcKeyCall:not(.targetInput)>.search-jumper-searchBar {
+                     transform: scale(1);
+                 }
+                 #search-jumper.funcKeyCall:not(.targetInput)>.search-jumper-searchBar>.search-jumper-type {
+                     height: auto!important;
+                     width: ${280 * this.scale}px!important;
+                 }
+                 #search-jumper.funcKeyCall>.search-jumper-searchBar>.search-jumper-type>a.search-jumper-btn {
+                     visibility: visible;
+                 }
+                 #search-jumper.funcKeyCall.targetInput>.search-jumper-searchBar>.search-jumper-type>a.search-jumper-btn {
+                     visibility: hidden;
+                 }
+                 #search-jumper.funcKeyCall.targetInput>.search-jumper-searchBar>.search-jumper-type:hover>a.search-jumper-btn {
                      visibility: visible;
                  }
                  ` : ''}
@@ -6797,7 +6815,7 @@
                         if (!ele.onclick) {
                             let siteNames = JSON.parse(data.url);
                             ele.onclick = e => {
-                                self.batchOpen(siteNames, e);
+                                self.batchOpen(siteNames, {button: 2, altKey: e.altKey, ctrlKey: e.ctrlKey, shiftKey: e.shiftKey, metaKey: e.metaKey});
                                 return false;
                             };
                         }
@@ -8419,32 +8437,35 @@
                         return;
                     }
                     if (searchBar.bar.classList.contains("grabbing")) return;
-                    let inputSign = false;
-                    if (!searchData.prefConfig.enableInInput) {
-                        if (e.target.tagName == 'INPUT' ||
-                            e.target.tagName == 'TEXTAREA' ||
-                            e.target.contentEditable == 'true') {
-                            inputSign = true;
-                            //searchBar.waitForHide();
-                            //return;
-                        } else {
-                            let contentEditable = false;
-                            let parent = e.target;
-                            while (parent) {
-                                contentEditable = parent.contentEditable == 'true';
-                                if (contentEditable || parent.tagName == 'BODY') {
-                                    break;
-                                }
-                                parent = parent.parentNode;
+                    let targetInput = false;
+                    if (e.target.tagName == 'INPUT' ||
+                        e.target.tagName == 'TEXTAREA' ||
+                        e.target.contentEditable == 'true') {
+                        targetInput = true;
+                    } else {
+                        let contentEditable = false;
+                        let parent = e.target;
+                        while (parent) {
+                            contentEditable = parent.contentEditable == 'true';
+                            if (contentEditable || parent.tagName == 'BODY') {
+                                break;
                             }
-                            if (contentEditable) {
-                                inputSign = true;
-                                //searchBar.waitForHide();
-                                //return;
-                            }
+                            parent = parent.parentNode;
+                        }
+                        if (contentEditable) {
+                            targetInput = true;
                         }
                     }
+                    let inputSign = false;
+                    if (!searchData.prefConfig.enableInInput) {
+                        inputSign = targetInput;
+                    }
                     if (inputSign && e.type === 'dblclick') return;
+                    if (searchData.prefConfig.minPopup == 2) {
+                        if (targetInput) {
+                            searchBar.con.classList.add("targetInput");
+                        } else searchBar.con.classList.remove("targetInput");
+                    }
                     waitForMouse = true;
                     setTimeout(() => {
                         waitForMouse = false;
@@ -9338,14 +9359,14 @@
             }
         }
 
-        var dragRoundFrame, dragSiteCurSpans, dragSiteHistorySpans, dragEndHandler, dragenterHandler, dragCssEle, dragCssText, openAllTimer;
+        var dragRoundFrame, dragCon, dragSiteCurSpans, dragSiteHistorySpans, dragEndHandler, dragenterHandler, dragCssEle, dragCssText, openAllTimer;
         function showDragSearch(left, top) {
             if (!searchBar || !searchBar.bar) return;
             let removeFrame = () => {
                 document.removeEventListener('dragend', dragEndHandler, true);
                 document.removeEventListener('dragenter', dragenterHandler, true);
-                if (dragRoundFrame.parentNode) {
-                    dragRoundFrame.parentNode.removeChild(dragRoundFrame);
+                if (dragCon.parentNode) {
+                    dragCon.parentNode.removeChild(dragCon);
                     dragRoundFrame.style.opacity = "";
                     dragRoundFrame.style.transform = '';
                 }
@@ -9354,6 +9375,12 @@
             };
             if (!dragRoundFrame) {
                 dragCssText = `
+                    #dragCon {
+                      position: fixed;
+                      top: 0;
+                      left: 0;
+                      transform: scale(${searchBar.scale});
+                    }
                     #searchJumperWrapper * {
                       margin: 0;
                       padding: 0;
@@ -9599,6 +9626,9 @@
                         return;
                     }
                 };
+                dragCon = document.createElement("div");
+                dragCon.id = "dragCon";
+                dragCon.appendChild(dragRoundFrame);
             }
             if (!dragCssEle || !dragCssEle.parentNode) dragCssEle = _GM_addStyle(dragCssText);
             searchBar.recoveHistory();
@@ -9659,24 +9689,26 @@
                 let targetIcon = targetSite.querySelector("img");
                 if (targetIcon) img.src = targetIcon.src || targetIcon.dataset.src;
             });
+            let scaleWidth = searchBar.scale * 190;
+            let scaleHeight = searchBar.scale * 190;
 
-            if (left - 190 < 0) {
-                left = 190;
-            } else if (document.documentElement.clientWidth - left - 190 < 0) {
-                left = document.documentElement.clientWidth - 190;
+            if (left - scaleWidth < 0) {
+                left = scaleWidth;
+            } else if (document.documentElement.clientWidth - left - scaleWidth < 0) {
+                left = document.documentElement.clientWidth - scaleWidth;
             }
-            if (top - 190 < 0) {
-                top = 190;
-            } else if (document.documentElement.clientHeight - top - 190 < 0) {
-                top = document.documentElement.clientHeight - 190;
+            if (top - scaleHeight < 0) {
+                top = scaleHeight;
+            } else if (document.documentElement.clientHeight - top - scaleHeight < 0) {
+                top = document.documentElement.clientHeight - scaleHeight;
             }
-            dragRoundFrame.style.left = left - 190 + "px";
-            dragRoundFrame.style.top = top - 190 + "px";
+            dragCon.style.left = left - scaleWidth + "px";
+            dragCon.style.top = top - scaleHeight + "px";
             dragRoundFrame.style.opacity = "";
             dragRoundFrame.style.transform = '';
             setTimeout(() => {
                 document.addEventListener('dragend', dragEndHandler, true);
-                document.documentElement.appendChild(dragRoundFrame);
+                document.documentElement.appendChild(dragCon);
                 setTimeout(() => {
                     dragRoundFrame.style.opacity = 1;
                     dragRoundFrame.style.transform = 'scale(1)';
