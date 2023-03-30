@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.55.43
+// @version      1.6.6.55.44
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -5805,8 +5805,8 @@
                         }
                     });
                 }
+                let baseSize = this.scale * 40;
                 let typeAction = e => {
-                    let baseSize = Math.min(self.bar.scrollWidth, self.bar.scrollHeight);
                     if (e) {
                         if (e.button === 2) {
                             batchOpenConfirm(e);
@@ -7268,8 +7268,8 @@
                     } else if (searchData.prefConfig.autoHideAll) {
                         self.con.classList.add("hideAll");
                     }
+                    let baseSize = self.scale * 40;
                     setTimeout(() => {
-                        let baseSize = Math.min(self.bar.scrollWidth, self.bar.scrollHeight);
                         let leftRight = self.con.classList.contains("search-jumper-left") ||
                             self.con.classList.contains("search-jumper-right");
                         searchTypes.forEach(ele => {
