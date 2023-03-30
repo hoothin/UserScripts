@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.55.44
+// @version      1.6.6.55.45
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -2076,9 +2076,9 @@
                      background: white;
                  }
                  .search-jumper-btn:hover {
-                     -webkit-transform:scale(1.2);
-                     -moz-transform:scale(1.2);
-                     transform:scale(1.2);
+                     -webkit-transform:scale(1.1);
+                     -moz-transform:scale(1.1);
+                     transform:scale(1.1);
                      color: white;
                      text-decoration:none;
                      filter: drop-shadow(1px 1px 3px #00000050);
@@ -5427,13 +5427,16 @@
                         let iconSrc = icon.src || icon.dataset.src;
                         let img = document.createElement("img");
                         a.appendChild(img);
+                        img.onload = e => {
+                            img.style.width = "";
+                            img.style.height = "";
+                            img.style.display = "";
+                        };
+                        img.style.width = "1px";
+                        img.style.height = "1px";
+                        img.style.display = "none";
                         if (iconSrc) {
                             if (!/^data:/.test(iconSrc)) {
-                                img.onload = e => {
-                                    img.style.width = "";
-                                    img.style.height = "";
-                                    img.style.display = "";
-                                };
                                 img.οnerrοr = e => {
                                     img.src = noImgBase64;
                                     img.onerror = null;
@@ -5442,9 +5445,6 @@
                                     img.style.display = "";
                                 };
                                 img.dataset.src = iconSrc;
-                                img.style.width = "1px";
-                                img.style.height = "1px";
-                                img.style.display = "none";
                             } else {
                                 img.dataset.src = iconSrc;
                             }
@@ -5700,14 +5700,16 @@
                 let isBookmark = /^BM/.test(type) && data.icon === "bookmark";//書簽就不緩存了
                 if (icon) {
                     typeBtn.classList.remove("noIcon");
+                    img.onload = e => {
+                        img.style.display = "";
+                        iEle.innerText = '';
+                        iEle.style.fontSize = '';
+                        iEle.style.color = '';
+                    };
                     if (/^[a-z\- ]+$/.test(icon)) {
                         let cache = searchData.prefConfig.cacheSwitch && cacheIcon[icon.trim().replace(/ /g, '_')];
                         if (cache === 'fail') {
                         } else if (cache) {
-                            img.style.display = "";
-                            iEle.innerText = '';
-                            iEle.style.fontSize = '';
-                            iEle.style.color = '';
                             img.src = cache;
                             img.style.width = '100%';
                             img.style.height = '100%';
@@ -5719,27 +5721,13 @@
                     } else {
                         let isBase64 = /^data:/.test(icon);
                         if (isBase64) {
-                            img.style.display = "";
-                            iEle.innerText = '';
-                            iEle.style.fontSize = '';
-                            iEle.style.color = '';
                             img.src = icon;
                         } else {
                             let cache = searchData.prefConfig.cacheSwitch && cacheIcon[icon];
                             if (cache === 'fail') {
                             } else if (cache) {
-                                img.style.display = "";
-                                iEle.innerText = '';
-                                iEle.style.fontSize = '';
-                                iEle.style.color = '';
                                 img.src = cache;
                             } else {
-                                img.onload = e => {
-                                    img.style.display = "";
-                                    iEle.innerText = '';
-                                    iEle.style.fontSize = '';
-                                    iEle.style.color = '';
-                                };
                                 img.src = icon;
                                 if (!cacheIcon[icon] && !isBookmark) cachePool.push(img);
                             }
@@ -6435,38 +6423,29 @@
                 } else if (!isBookmark && isPage) {
                     imgSrc = data.url.replace(/^(https?:\/\/[^\/]*\/).*$/, "$1favicon.ico");
                 }
-                let isBase64 = imgSrc && /^data:/.test(imgSrc);
-                if (isBase64) {
-                    ele.classList.remove("search-jumper-word");
-                    ele.removeChild(word);
-                    img.style.display = "";
-                    img.dataset.src = imgSrc;
-                } else if (imgSrc) {
-                    let cache = searchData.prefConfig.cacheSwitch && cacheIcon[imgSrc];
-                    if (cache === 'fail') {
-                        if (ele.dataset.current && imgSrc.indexOf(location.host) != -1) {
-                            img.onload = e => {
-                                ele.classList.remove("search-jumper-word");
-                                ele.removeChild(word);
-                                img.style.display = "";
-                            };
-                            img.dataset.src = imgSrc;
-                            cacheIcon[imgSrc] = '';
-                            if (!isBookmark && !cacheIcon[imgSrc]) cachePool.push(img);
-                        }
-                    } else if (cache) {
+                if (imgSrc) {
+                    img.onload = e => {
                         ele.classList.remove("search-jumper-word");
                         ele.removeChild(word);
                         img.style.display = "";
-                        img.dataset.src = cache;
-                    } else {
-                        img.onload = e => {
-                            ele.classList.remove("search-jumper-word");
-                            ele.removeChild(word);
-                            img.style.display = "";
-                        };
+                    };
+                    let isBase64 = /^data:/.test(imgSrc);
+                    if (isBase64) {
                         img.dataset.src = imgSrc;
-                        if (!isBookmark && !cacheIcon[imgSrc]) cachePool.push(img);
+                    } else {
+                        let cache = searchData.prefConfig.cacheSwitch && cacheIcon[imgSrc];
+                        if (cache === 'fail') {
+                            if (ele.dataset.current && imgSrc.indexOf(location.host) != -1) {
+                                img.dataset.src = imgSrc;
+                                cacheIcon[imgSrc] = '';
+                                if (!isBookmark && !cacheIcon[imgSrc]) cachePool.push(img);
+                            }
+                        } else if (cache) {
+                            img.dataset.src = cache;
+                        } else {
+                            img.dataset.src = imgSrc;
+                            if (!isBookmark && !cacheIcon[imgSrc]) cachePool.push(img);
+                        }
                     }
                 }
                 if (isPage) {
