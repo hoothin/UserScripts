@@ -5534,12 +5534,14 @@
     {
         "name": "ExHentai.org",
         "url": "^https?://exhentai\\.org/(?!g)",
-        "nextLink": "body > div.ido > div:nth-of-type(2) > div.searchnav > div:nth-of-type(5) > a",
-        "pageElement": "body > div.ido > div:nth-of-type(2)",
-        "insert": "body > div.ido > div:nth-of-type(2)",
-        "insertPos": 2,
+        "nextLink": "body > div#i1.sni > div#i4 > div.sn > a#next",
+        "pageElement": "body > div#i1.sni > div#i3 > a > img#img",
+        "insert": "body > div#i1.sni > div#i4",
+        "rate": 3,
+        "autoLoadNum": 3,
+        "pageBar": 0,
         "pinUrl": true
-    },
+    }
     {
         "name": "177 漫画/xxiav - 圖片",
         "example": "www.177picyy.com，www.xxiav.com",
