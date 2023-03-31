@@ -6231,6 +6231,7 @@
                 }
             }
             if (!checkItem || (checkEval && !checkEval(iframeDoc))) {
+                if (checkEval) times = 0;
                 setTimeout(() => {
                     checkPage();
                 }, waitTime);
@@ -6593,17 +6594,18 @@
         }
         let nextLink = ruleParser.nextLinkHref;
         if (!nextLink) {
+            isLoading = true;
             if (curPage == 1) {
                 await ruleParser.getNextLink(document);
                 nextLink = ruleParser.nextLinkHref;
             }
             if (!nextLink) {
-                isLoading = true;
                 if (curPage == 1 && (ruleParser.curSiteRule.pinUrl || tryTimes++ <= 10)) {
                     setTimeout(() => {isLoading = false}, 500);
                 }
                 return;
             }
+            isLoading = false;
         }
         let pvGallery = document.querySelector("span.pv-gallery-container");
         if (pvGallery && pvGallery.style.display != "none") return;
