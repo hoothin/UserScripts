@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.35.6
+// @version      1.9.35.7
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1941,8 +1941,7 @@
                             }
                         }
                     }
-                    if (!next4 && availableHref && innerText) {
-                        if (!/\d/.test(innerText)) continue;
+                    if (!next4 && availableHref) {
                         if (aTag.href.indexOf('http') === 0 && aTag.href.indexOf(location.hostname) === -1) continue;
                         let _aHref = aTag.href.replace("?&", "?").replace("index.php?", "?");
                         if (preStr || afterStr) {
@@ -1954,13 +1953,24 @@
                             }
                         } else if (this.curUrl != aTag.href) {
                             _aHref = _aHref.replace(/\.s?html?$/i, "");
-                            if (_aHref.indexOf(_url) != -1 && pageTwoReg.test(_aHref.replace(_url, ""))) {
-                                let curHref = aTag.getAttribute("href");
-                                let pageOne = curHref.replace(/\/2(\/|\?|&|$)/, "/1$1");
-                                if (pageOne == curHref) pageOne = null;
-                                else pageOne = body.querySelector(`a[href='${pageOne}']`);
-                                if (!pageOne || pageOne.className != curHref.className) next4 = aTag;
+                            if (_aHref.indexOf(_url) != -1) {
+                                let pageTwoMatch = _aHref.replace(_url, "").match(pageTwoReg);
+                                if (pageTwoMatch) {
+                                    afterStr = pageTwoMatch[2];
+                                    next4 = aTag;
+                                }
                             }
+                        }
+                        if (next4) {
+                            let curHref = next4.getAttribute("href");
+                            let curPageReg = new RegExp("(.*)" + (pageNum + 1) + afterStr.replace(/([\.\?])/g, '\\$1'));
+                            let otherPageHref = curHref.replace(curPageReg, `$1${pageNum}${afterStr}`);
+                            let otherPageEle = body.querySelector(`a[href='${otherPageHref}']`);
+                            if (!otherPageEle) {
+                                otherPageHref = curHref.replace(curPageReg, `$1${pageNum + 2}${afterStr}`);
+                                otherPageEle = body.querySelector(`a[href='${otherPageHref}']`);
+                            }
+                            if (otherPageEle && !/^\d+$/.test(otherPageEle.innerText.trim())) next4 = null;
                         }
                     }
                 }
