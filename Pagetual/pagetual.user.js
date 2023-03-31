@@ -1941,9 +1941,9 @@
                             }
                         }
                     }
-                    if (!next4 && availableHref) {
+                    if (!next4 && availableHref && innerText) {
+                        if (!/\d/.test(innerText)) continue;
                         if (aTag.href.indexOf('http') === 0 && aTag.href.indexOf(location.hostname) === -1) continue;
-                        if (innerText && !/\d/.test(innerText)) continue;
                         let _aHref = aTag.href.replace("?&", "?").replace("index.php?", "?");
                         if (preStr || afterStr) {
                             let _aHrefTrim = _aHref;
