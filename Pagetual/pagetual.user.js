@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.35.4
+// @version      1.9.35.5
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1733,6 +1733,7 @@
             let pageNum = 1, preStr = "", afterStr = "";
             let pageTwoReg = /^[\/\?&]?[_-]?(p|page)?=?\/?2(\/|\?|&|$)/i;
             let pageMatch1 = url.match(/(.*[\?&]p(?:age)?=)(\d+)($|[#&].*)/i);
+            let doubtTextReg = /^\s*(»|>>)\s*$/;
             if (pageMatch1) {
                 preStr = pageMatch1[1];
                 pageNum = parseInt(pageMatch1[2]);
@@ -1949,6 +1950,7 @@
                     }
                     if (!next4 && availableHref) {
                         if (aTag.href.indexOf('http') === 0 && aTag.href.indexOf(location.hostname) === -1) continue;
+                        if (innerText && !/\d/.test(innerText)) continue;
                         let _aHref = aTag.href.replace("?&", "?").replace("index.php?", "?");
                         if (preStr || afterStr) {
                             let _aHrefTrim = _aHref;
@@ -1969,10 +1971,10 @@
                         }
                     }
                 }
-                if (next2 && /^\s*(»|>>)\s*$/.test(next2.innerText)) {
+                if (next2 && doubtTextReg.test(next2.innerText)) {
                     next2 = this.verifyNext(next2, doc);
                 }
-                if (nextJs2 && /^\s*(»|>>)\s*$/.test(nextJs2.innerText)) {
+                if (nextJs2 && doubtTextReg.test(nextJs2.innerText)) {
                     nextJs2 = this.verifyNext(nextJs2, doc);
                 }
                 if (next3) {
@@ -1995,9 +1997,7 @@
         verifyNext(next, doc) {
             if (!next) return null;
             let eles = getAllElements(`//${next.tagName}[text()='${next.innerText}']`, doc);
-            if (eles.length > 2) {
-                next = null;
-            } else if (eles.length == 2 && eles[0].href != eles[1].href) {
+            if (eles.length >= 2 && eles[0].href != eles[1].href) {
                 next = null;
             } else if (doc == document) {
                 let top = getElementTop(next);
