@@ -4,7 +4,7 @@ https://greasyfork.org/users/8227
 
 ![star](https://img.shields.io/github/stars/hoothin/UserScripts)
 ![license](https://img.shields.io/badge/License-MIT-red.svg)
-![support](https://img.shields.io/badge/Support-Chrome|Firefox|Edge-989898.svg)
+![support](https://img.shields.io/badge/Support-Chrome|Firefox|Edge-blue.svg)
 
 ---
 + [Easy offline 一鍵離綫下載 ![](https://img.shields.io/greasyfork/dt/22590)](Easy%20offline)
