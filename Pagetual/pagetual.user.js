@@ -185,7 +185,8 @@
                 dynamic: "动态加载",
                 reloadPage: "编辑完成，是否立即刷新页面？",
                 copied: "已复制",
-                noValidContent: "没有检测到有效内容，点击查看"
+                noValidContent: "没有检测到有效内容，点击查看",
+                outOfDate: "脚本已过时，请及时更新到最新版本！"
             };
             break;
         case "zh-TW":
@@ -285,7 +286,8 @@
                 dynamic: "動態加載",
                 reloadPage: "編輯完成，是否立即刷新頁面？",
                 copied: "已復制",
-                noValidContent: "沒有檢測到有效内容，點擊查看"
+                noValidContent: "沒有檢測到有效内容，點擊查看",
+                outOfDate: "脚本已過時，請及時更新到最新版本！"
             };
             break;
         case "ja":
@@ -384,7 +386,8 @@
                 dynamic: "Dynamic",
                 reloadPage: "Edit completed, reload page now?",
                 copied: "Copied",
-                noValidContent: "有効なコンテンツが検出されませんでした。クリックして表示"
+                noValidContent: "有効なコンテンツが検出されませんでした。クリックして表示",
+                outOfDate: "スクリプトが古くなっています。最新バージョンに更新してください。"
             };
             break;
         case "ru":
@@ -484,7 +487,8 @@
                 dynamic: "Динамически",
                 reloadPage: "Редактирование завершено. Обновить страницу?",
                 copied: "Скопировано",
-                noValidContent: "Действительный контент не обнаружен, нажмите для просмотра"
+                noValidContent: "Действительный контент не обнаружен, нажмите для просмотра",
+                outOfDate: "Скрипт устарел, своевременно обновляйте до последней версии!"
             };
             break;
         default:
@@ -583,7 +587,8 @@
                 dynamic: "Dynamic",
                 reloadPage: "Edit completed, reload page now?",
                 copied: "Copied",
-                noValidContent: "No valid content detected, click to view"
+                noValidContent: "No valid content detected, click to view",
+                outOfDate: "The script is outdated, update to the latest version in time!"
             };
             break;
     }
@@ -622,7 +627,7 @@
     } else if (typeof GM != 'undefined' && typeof GM.info != 'undefined') {
         _GM_info = GM.info;
     } else {
-        _GM_info = {script: 1};
+        _GM_info = {script: {}};
     }
     if (typeof GM_notification != 'undefined') {
         _GM_notification = GM_notification;
@@ -4053,6 +4058,13 @@
             });
 
             if (inConfig) {
+                if (_GM_info.script && _GM_info.script.version) {
+                    let versionEle = document.querySelector('.markdown-body>h1[id],article>h1');
+                    let latestVer = versionEle.innerText.match(/\d[\d\.]+/)[0];
+                    if (latestVer != _GM_info.script.version) {
+                        showTips(i18n('outOfDate'));
+                    }
+                }
                 _GM_addStyle(`
                  p>span:nth-child(1),p>span:nth-child(2),p>span:nth-child(3){
                   cursor: pointer;
