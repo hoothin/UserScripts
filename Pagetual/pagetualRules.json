@@ -9629,6 +9629,13 @@
         ]
     },
     {
+        "name": "露天市集",
+        "url": "^https?://www\\.ruten\\.com\\.tw/find/",
+        "nextLink": "button[aria-label='下一頁']",
+        "pageElement": ".search-result-container",
+        "wait": 1000
+    },
+    {
         "name": "Free Porn Videos & Sex Tube Movies at xHamster",
         "url": "^https://xhopen\\.com",
         "pageElement": ".thumb-list.thumb-list--sidebar",
