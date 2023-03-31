@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.55.46
+// @version      1.6.6.55.47
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -8742,7 +8742,7 @@
             [].forEach.call(document.querySelectorAll("link[rel='shortcut icon'],link[rel='icon']"), link => {
                 icons.push(link.href);
             });
-            showSiteAdd(document.title.replace(input ? input.value : "", "").replace(/^\s*[-_]\s*/, ""), "", url, icons, document.characterSet, showCrawl);
+            showSiteAdd(document.title.replace(input ? input.value : "", "").replace(/^\s*[-_]\s*/, ""), "", url, icons, document.characterSet, true);
         }
 
         const jumpHtml = "https://hoothin.github.io/SearchJumper/jump.html";
@@ -9847,6 +9847,7 @@
                     }
                     .searchJumperFrame-body>.iconsCon>img:hover {
                         border: 2px solid #4e91d3;
+                        background: gray;
                     }
                     .maxContent .searchJumperFrame-inputs {
                         width: 50%;
@@ -10298,7 +10299,7 @@
                     if (sleepTime) addAction('sleep', [sleepTime]);
                 });
                 submitCrawl.addEventListener("click", e => {
-                    urlInput.value = (urlInput.value || location.href).replace(/#p{.*/, '') + '#p{' + geneUrl() + '}';
+                    urlInput.value = location.href.replace(/\?.*/, '') + '#p{' + geneUrl() + '}';
                     addFrame.classList.remove("crawling");
                 });
             }
