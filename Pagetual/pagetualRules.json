@@ -9618,6 +9618,17 @@
         "wait": 500
     },
     {
+        "name": "蝦皮購物台灣",
+        "url": "^https?://shopee\\.tw/",
+        "pinUrl": true,
+        "nextLink": "button.shopee-icon-button--right",
+        "pageElement": ".shopee-search-item-result__items",
+        "waitElement": [
+            "",
+            ".shopee-search-item-result__item img:not([src]),.shopee-image-placeholder"
+        ]
+    },
+    {
         "name": "Free Porn Videos & Sex Tube Movies at xHamster",
         "url": "^https://xhopen\\.com",
         "pageElement": ".thumb-list.thumb-list--sidebar",
