@@ -9221,7 +9221,8 @@
         "url": "htm_data/\\d+/\\d+/\\d+\\.html",
         "pageElement": "//div[@class='t t2']",
         "sleep": 2000,
-        "nextLink": "//div[@class='pages']/a[u]/following-sibling::a[1]"
+        "nextLink": "//div[@class='pages']/a[u]/following-sibling::a[1]",
+        "action": 0
     },
     {
         "name": "起点中文网",
