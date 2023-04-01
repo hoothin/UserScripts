@@ -16,8 +16,13 @@ Licenced under the MIT license.
  name: 站點名
  getImage: 指向圖片時的地址替換函數，詳情見下方例子
 }
-其他參數項按需添加即可，需要注意 css/ext/xhr/lazyAttr（懶加載的原圖 URL 屬性名）/description（收藏圖片時的描述，支持選擇器或 xpath）/clickToOpen 在指定站點 URL 之後方可使用
-xhr 為內頁圖片獲取屬性，配合 getImage 使用，首先使用 getImage 篩選並返回父級 a 標籤的 url，然後腳本會自動抓取該 url 指向的網頁，透過 xhr 獲取圖片，其中 xhr.q 為圖片（可以為多張，多張將添加到圖庫）的選擇器或者函數
+其他參數項按需添加即可。
+需要注意 css/ext/xhr/lazyAttr（懶加載的原圖 URL 屬性名）/description（收藏圖片時的描述，支持選擇器或 xpath）/clickToOpen 在指定站點 URL 之後方可使用
+xhr 為內頁圖片獲取屬性，配合 getImage 使用。
+    1. 首先使用 getImage 篩選並返回父級 a 標籤的 url，然後腳本會自動抓取該 url 指向的網頁。
+    2. 透過 xhr 獲取圖片。
+        2.1 其中 xhr.q 為圖片（可以為多張，多張將添加到圖庫）的選擇器或者函數
+        2.2 xhr.c 為圖片的文字描述，抓取方式同上
 如果鼠標指向對象非圖片，可使用 getExtSrc 生成想要的圖片地址，詳情見下方 youtube 例子
 
 #####################################################################################
@@ -33,8 +38,13 @@ or
   name: site name
   getImage: The address replacement function when pointing to an image, see the example below for details
 }
-Other parameter items can be added as needed, you need to pay attention to css/ext/xhr/lazyAttr (lazy loaded original image URL attribute name)/description (description when collecting images, support selector or xpath)/clickToOpen in the specified site URL available after
-xhr is used to obtain the attributes of the pictures on the inner pages. It is used together with getImage. First, use getImage to filter and return the url of the parent a tag, and then the script will automatically grab the webpage pointed to by the url, and get pictures through xhr, where xhr.q is the picture (you can For multiple, multiple will be added to the gallery) selector or function
+Other parameter items can be added as needed.
+you need to pay attention to css/ext/xhr/lazyAttr (lazy loaded original image URL attribute name)/description (description when collecting images, support selector or xpath)/clickToOpen in the specified site URL available after
+xhr is used to obtain the attributes of the pictures on the inner pages. It is used together with getImage. 
+    1. First, use getImage to filter and return the url of the parent a tag, and then the script will automatically grab the webpage pointed to by the url.
+    2. And get pictures through xhr.
+        2.1 xhr.q is the picture (you can For multiple, multiple will be added to the gallery) selector or function
+        2.2 xhr.c is the description of picture
 If the mouse points to an object other than a picture, you can use getExtSrc to generate the desired picture url, see the youtube example below for details
  */
 var siteInfo = [
