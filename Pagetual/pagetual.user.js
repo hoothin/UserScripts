@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.35.7
+// @version      1.9.35.8
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1697,7 +1697,7 @@
                                 ele.dataset.pagetualPageElement = 1;
                             }
                         } else {
-                            ele.style.containIntrinsicSize = `auto ${ele.offsetWidth || 100}px auto ${ele.offsetHeight || 100}px`;
+                            ele.style.containIntrinsicSize = `auto ${ele.offsetHeight || 100}px`;
                             if (ele.style.containIntrinsicSize) {
                                 if (init) {
                                     ele.style.contentVisibility = "visible";
@@ -2003,13 +2003,18 @@
             if (eles.length >= 2 && eles[0].href != eles[1].href) {
                 next = null;
             } else if (doc == document) {
-                let top = getElementTop(next);
-                if (top < 20) {
+                let left = getElementLeft(next);
+                if (left < 20 || (document.documentElement.scrollWidth > 500 && left < 250)) {
                     next = null;
                 } else {
-                    let bottom = top + next.offsetHeight || 0;
-                    let scrollH = Math.max(document.documentElement.scrollHeight, getBody(document).scrollHeight);
-                    if (scrollH - bottom < 10) next = null;
+                    let top = getElementTop(next);
+                    if (top < 20) {
+                        next = null;
+                    } else {
+                        let bottom = top + next.offsetHeight || 0;
+                        let scrollH = Math.max(document.documentElement.scrollHeight, getBody(document).scrollHeight);
+                        if (scrollH - bottom < 10) next = null;
+                    }
                 }
             }
             return next;
@@ -4685,6 +4690,17 @@
             current = current.offsetParent;
         }
         return actualTop;
+    }
+
+    function getElementLeft(ele) {
+        if (!ele) return 0;
+        var actualLeft = ele.offsetLeft;
+        var current = ele.offsetParent;
+        while (current) {
+            actualLeft += current.offsetLeft;
+            current = current.offsetParent;
+        }
+        return actualLeft;
     }
 
     function getElementBottom(ele) {
