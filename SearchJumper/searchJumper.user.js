@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.55.47
+// @version      1.6.6.55.48
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -6225,18 +6225,12 @@
                 let form, input, clicked = false;
 
                 for (let param of params) {
-                    if (inPagePostParams) {
-                        inPagePostParams.shift();
-                        storage.setItem("inPagePostParams_" + location.hostname, inPagePostParams && inPagePostParams.length ? inPagePostParams : "");
-                    }
                     if (param[0] === "sleep" || param[0] === "@sleep") {
                         await sleep(param[1]);
                         debug(`sleep ${param[1]}`);
-                        continue;
                     } else if (param[0] === "@click") {
                         clicked = true;
                         await emuClick(param[1]);
-                        continue;
                     } else if (param[1] === 'click' && param[0].indexOf('@') === 0) {
                         clicked = true;
                         await emuClick(param[0].substr(1));
@@ -6247,6 +6241,10 @@
                         if (!localKeywords) localKeywords = param[1];
                         await emuInput(param[0], param[1]);
                         input = getElement(param[0]);
+                    }
+                    if (inPagePostParams) {
+                        inPagePostParams.shift();
+                        storage.setItem("inPagePostParams_" + location.hostname, inPagePostParams && inPagePostParams.length ? inPagePostParams : "");
                     }
                 }
 
