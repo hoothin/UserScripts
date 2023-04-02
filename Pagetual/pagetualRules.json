@@ -8401,7 +8401,7 @@
         ],
         "pageNum": "\\-\\d+\\-{$p}\\.html",
         "pageElement": "div#threadlist form",
-        "replaceElement": ".pgt>div.pg"
+        "replaceElement": "#pgt div.pg"
     },
     {
         "name": "Discuz7.2Postlist",
