@@ -8383,7 +8383,7 @@
         ],
         "pageNum": "\\-\\d+\\-{$p}\\-\\d+\\.html",
         "pageElement": "div#postlist>*",
-        "replaceElement": "div.pg"
+        "replaceElement": ".pgt>div.pg"
     },
     {
         "name": "bbsPostlist2",
@@ -8401,7 +8401,7 @@
         ],
         "pageNum": "\\-\\d+\\-{$p}\\.html",
         "pageElement": "div#threadlist form",
-        "replaceElement": "div.pg"
+        "replaceElement": ".pgt>div.pg"
     },
     {
         "name": "Discuz7.2Postlist",
