@@ -1262,12 +1262,7 @@
                         if (checkRule(rule)) return;
                     }
                     if (end >= self.rules.length) {
-                        if (!self.curSiteRule.singleUrl) {
-                            self.curSiteRule = {};
-                            self.curSiteRule.url = location.origin + location.pathname;
-                            self.curSiteRule.singleUrl = true;
-                        }
-                        callback();
+                        setRule({url: location.origin + location.pathname, singleUrl: true});
                         return;
                     } else {
                         searchByTime();
@@ -5304,9 +5299,6 @@
                         urlChanged = true;
                         if (!ruleParser.nextLinkHref) {
                             isLoading = false;
-                        }
-                        if (!isLoading && (ruleParser.curSiteRule.singleUrl || !ruleParser.ruleMatch(ruleParser.curSiteRule))) {
-                            initPage();
                         }
                     }
                 }, 500);
