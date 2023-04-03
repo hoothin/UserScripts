@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.35.8
+// @version      1.9.35.9
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -682,35 +682,35 @@
             }
         })(),
         setItem: function(key, value) {
-            if (this.operaUJSStorage) {
-                this.operaUJSStorage.setItem(key, value);
-            } else if (this.mxAppStorage) {
-                this.mxAppStorage.setConfig(key, value);
+            if (this.supportGMPromise) {
+                GM.setValue(key, value);
+                if (value === "" && typeof GM != 'undefined' && typeof GM.deleteValue != 'undefined') {
+                    GM.deleteValue(key);
+                }
             } else if (this.supportGM) {
                 GM_setValue(key, value);
                 if (value === "" && typeof GM_deleteValue != 'undefined') {
                     GM_deleteValue(key);
                 }
-            } else if (this.supportGMPromise) {
-                GM.setValue(key, value);
-                if (value === "" && typeof GM != 'undefined' && typeof GM.deleteValue != 'undefined') {
-                    GM.deleteValue(key);
-                }
+            } else if (this.operaUJSStorage) {
+                this.operaUJSStorage.setItem(key, value);
+            } else if (this.mxAppStorage) {
+                this.mxAppStorage.setConfig(key, value);
             } else if (window.localStorage) {
                 window.localStorage.setItem(key, value);
             }
         },
         getItem: function(key, cb) {
             var value;
-            if (this.operaUJSStorage) {
+            if (this.supportGMPromise) {
+                value = GM.getValue(key).then(v => {cb(v)});
+                return;
+            } else if (this.supportGM) {
+                value = GM_getValue(key);
+            } else if (this.operaUJSStorage) {
                 value = this.operaUJSStorage.getItem(key);
             } else if (this.mxAppStorage) {
                 value = this.mxAppStorage.getConfig(key);
-            } else if (this.supportGM) {
-                value = GM_getValue(key);
-            } else if (this.supportGMPromise) {
-                value = GM.getValue(key).then(v => {cb(v)});
-                return;
             } else if (window.localStorage) {
                 value = window.localStorage.getItem(key);
             };
@@ -6724,9 +6724,19 @@
     }
 
     function init() {
-        initRules(() => {
-            initPage();
-        });
+        if (document.readyState == 'loading' || document.readyState == 'uninitialized') {
+            let domReady = e => {
+                initRules(() => {
+                    initPage();
+                });
+                document.removeEventListener("DOMContentLoaded", domReady, false);
+            }
+            document.addEventListener("DOMContentLoaded", domReady, false);
+        } else {
+            initRules(() => {
+                initPage();
+            });
+        }
     }
 
     function visibilitychangeHandler() {
