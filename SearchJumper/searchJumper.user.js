@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.55.48
+// @version      1.6.6.55.49
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -727,277 +727,279 @@
         shiftLastUsedType: true
     };
     function run() {
-        const lang = navigator.appName == "Netscape" ? navigator.language : navigator.userLanguage;
+        let lang = navigator.appName == "Netscape" ? navigator.language : navigator.userLanguage;
         let config = {};
-        switch (lang) {
-            case "zh-CN":
-            case "zh-SG":
-                config = {
-                    scriptName: '搜索酱',
-                    import: '导入',
-                    filter: '筛选',
-                    selectAll: '全选',
-                    importOrNot: '是否导入配置？',
-                    settings: '配置脚本',
-                    batchOpen: '批量打开',
-                    batchOpenConfirm: '确定要批量打开吗？',
-                    postOver: '发送成功：',
-                    postError: '发送失败：',
-                    keywords: '请输入搜索词',
-                    targetUrl: '请输入搜索URL',
-                    siteName: '站名',
-                    siteDesc: '描述',
-                    siteUrl: '地址',
-                    siteIcon: '图标',
-                    siteTest: '测试',
-                    siteCancel: '取消',
-                    siteAdd: '添加',
-                    siteType: '分类',
-                    siteExist: '已存在相同规则，是否添加为克隆项？',
-                    siteAddOver: '站点添加成功',
-                    multiline: '是否以换行符分隔多行搜索？',
-                    multilineTooMuch: '行数超过10行，是否继续搜索？',
-                    inputPlaceholder: '输入关键词筛选站点，支持 * ? 通配符，$代表末尾，^代表开头，分组**站点 可筛选指定分组，例如【图片**baidu】，tab 下一项',
-                    inputKeywords: '输入搜索关键词',
-                    inPageTips: '自定义分隔符：$c 加分隔符，例如 $c| search | jumper，默认空格作为分隔符\n原始文本不分隔：$o 加文本，例如$oopai liked by hero\n正则表达式：/re/，例如 $c, /google/i , /aPPle/\n添加提示文本：搜索文本$t{提示文本}，例如 linux$t{linux is not unix}\n添加自定义样式：搜索文本$s{背景;其他}，例如 google$s{#333333;color:red;}\n左键点击关键词跳转至下一个，右键点击关键词跳转至上一个',
-                    inPagePlaceholder: '输入文字，按下回车进行页内查找',
-                    pickerBtn: '抓取元素',
-                    editBtn: '编辑查找文字',
-                    emptyBtn: '清空查找文字',
-                    copyInPageBtn: '复制查找文字',
-                    copyEleBtn: '复制选中元素',
-                    maxEleBtn: '展开选中元素',
-                    minEleBtn: '收起选中元素',
-                    expandAll: '全部展开',
-                    collapseAll: '全部合起',
-                    rename: '重命名',
-                    recoverBtn: '恢复查找文字',
-                    pinBtn: '固定查找文字，在所有标签页中搜索',
-                    locBtn: '定位侧边栏',
-                    filterSites: '筛选搜索引擎',
-                    searchInPage: '页内查找',
-                    removeBtn: '移除搜索词',
-                    saveRuleBtn: '保存当前站点的搜索词',
-                    wordContent: '搜索词内容',
-                    wordHide: '隐藏父级元素',
-                    wordHideTips: '元素深度，0为当前父级',
-                    wordStyle: '搜索词样式',
-                    wordTitle: '搜索词注释',
-                    modify: '修改',
-                    cancel: '取消',
-                    modifyWord: '修改页内搜索词',
-                    addSearchEngine: '添加搜索引擎',
-                    noValidItemAsk: '未找到有效元素，是否手动编辑规则并添加？',
-                    expand: '展开剩余站点',
-                    add: '添加',
-                    addWord: '添加新词语',
-                    wordRange: '生效范围',
-                    customInputFrame: '自定义搜索参数',
-                    customSubmit: '提交搜索',
-                    finalSearch: '目标搜索字串',
-                    search: '搜索此项',
-                    siteKeywords: '关键词(多个关键词以|分隔)',
-                    siteMatch: '站点 URL 匹配正则',
-                    openSelect: '打开选项',
-                    openInDefault: '默认',
-                    openInNewTab: '新标签页打开',
-                    openInCurrent: '当前页打开',
-                    currentType: '当前分类',
-                    maxAddSiteBtn: '最大化',
-                    minAddSiteBtn: '还原',
-                    addAction: '添加操作',
-                    crawlInfo: '模拟输入搜索',
-                    inputAction: '输入',
-                    clickAction: '点击',
-                    sleepAction: '等待',
-                    submitCrawl: '完成操作',
-                    inputOutput: '在元素<span title="#t1#" class="element">#t1#</span>内输入<span title="#t2#">#t2#</span>',
-                    clickOutput: '点击元素<span title="#t#" class="element">#t#</span>',
-                    sleepOutpus: '休眠<span title="#t#">#t#</span>毫秒',
-                    inputNewValue: '请输入新值',
-                    deleteConfirm: '确定要删除此项吗？',
-                    sleepPrompt: '等待时间（毫秒）'
-                };
-                break;
-            case "zh-TW":
-            case "zh-HK":
-                config = {
-                    scriptName: "搜索醬",
-                    import: '導入',
-                    filter: '篩選',
-                    selectAll: '全選',
-                    importOrNot: '是否導入配置？',
-                    settings: '配置脚本',
-                    batchOpen: '批量打開',
-                    batchOpenConfirm: '確定要批量打開嗎？',
-                    postOver: '發送成功：',
-                    postError: '發送失敗：',
-                    keywords: '請輸入搜索詞',
-                    targetUrl: '請輸入搜索URL',
-                    siteName: '站名',
-                    siteDesc: '描述',
-                    siteUrl: '地址',
-                    siteIcon: '圖標',
-                    siteTest: '測試',
-                    siteCancel: '取消',
-                    siteAdd: '添加',
-                    siteType: '分類',
-                    siteExist: '已存在相同規則，是否添加為克隆項？',
-                    siteAddOver: '站點添加成功',
-                    multiline: '是否以換行符分隔多行搜索？',
-                    multilineTooMuch: '行數超過10行，是否繼續搜索？',
-                    inputPlaceholder: '輸入關鍵詞篩選站點，支持 * ? 通配符，$代表末尾，^代表開頭，分組**站點 可篩選指定分組，例如【圖片**goo】，tab 下一項',
-                    inputKeywords: '輸入搜索關鍵詞',
-                    inPageTips: '自定義分隔符：$c 加分隔符，例如 $c| search | jumper，默認空格作為分隔符\n原始文本不分隔：$o 加文本，例如$oopai liked by hero\n正則表達式：/re/，例如 $c, /google/i , /aPPle/\n添加提示文本：搜索文本$t{提示文本}，例如 linux$t{linux is not unix}\n添加自定義樣式：搜索文本$s{背景;其他}，例如 google$s{#333333;color:red;}\n左鍵點擊關鍵詞跳轉至下一個，右鍵點擊關鍵詞跳轉至上一個',
-                    inPagePlaceholder: '輸入文字，按下回車進行頁內查找',
-                    pickerBtn: '抓取元素',
-                    editBtn: '編輯查找文字',
-                    emptyBtn: '清空查找文字',
-                    copyInPageBtn: '複製查找文字',
-                    copyEleBtn: '複製選中元素',
-                    maxEleBtn: '展開選中元素',
-                    minEleBtn: '收起選中元素',
-                    expandAll: '全部展開',
-                    collapseAll: '全部合起',
-                    rename: '重命名',
-                    recoverBtn: '恢復查找文字',
-                    pinBtn: '固定查找文字，在所有標籤頁中搜索',
-                    locBtn: '定位側邊欄',
-                    filterSites: '篩選搜尋引擎',
-                    searchInPage: '頁內查找',
-                    removeBtn: '移除搜索詞',
-                    saveRuleBtn: '保存當前站點的搜索詞',
-                    wordContent: '搜索詞內容',
-                    wordHide: '隱藏父級元素',
-                    wordHideTips: '元素深度，0為當前父級',
-                    wordStyle: '搜索詞樣式',
-                    wordTitle: '搜索詞注釋',
-                    modify: '修改',
-                    cancel: '取消',
-                    modifyWord: '修改頁內搜索詞',
-                    addSearchEngine: '添加搜尋引擎',
-                    noValidItemAsk: '未找到有效元素，是否手動編輯規則並添加？',
-                    expand: '展開剩餘站點',
-                    add: '添加',
-                    addWord: '添加新詞語',
-                    wordRange: '生效範圍',
-                    customInputFrame: '自定義搜索參數',
-                    customSubmit: '提交搜索',
-                    finalSearch: '目標搜尋字串',
-                    search: '搜索此項',
-                    siteKeywords: '關鍵詞(多個關鍵詞以|分隔)',
-                    siteMatch: '站點 URL 匹配正則',
-                    openSelect: '打開選項',
-                    openInDefault: '默認',
-                    openInNewTab: '新標籤頁打開',
-                    openInCurrent: '當前頁打開',
-                    currentType: '當前分類',
-                    maxAddSiteBtn: '最大化',
-                    minAddSiteBtn: '還原',
-                    addAction: '添加操作',
-                    crawlInfo: '模擬輸入搜索',
-                    inputAction: '輸入',
-                    clickAction: '點擊',
-                    sleepAction: '等待',
-                    submitCrawl: '完成操作',
-                    inputOutput: '在元素<span title="#t1#" class="element">#t1#</span>內輸入<span title="#t2#">#t2#</span>',
-                    clickOutput: '點擊元素<span title="#t#" class="element">#t#</span>',
-                    sleepOutpus: '休眠<span title="#t#">#t#</span>毫秒',
-                    inputNewValue: '請輸入新值',
-                    deleteConfirm: '確定要刪除此項嗎？ ',
-                    sleepPrompt: '等待時間（毫秒）'
-                };
-                break;
-            default:
-                config = {
-                    scriptName: "SearchJumper",
-                    import: 'Import',
-                    filter: 'Filter',
-                    selectAll: 'SelectAll',
-                    importOrNot: 'Do you want to import this config?',
-                    settings: 'Settings',
-                    batchOpen: 'Batch open',
-                    batchOpenConfirm: 'Batch open urls?',
-                    postOver: 'Post over: ',
-                    postError: 'Post fail: ',
-                    keywords: 'Input keywords',
-                    targetUrl: 'Input URL',
-                    siteName: 'Site Name',
-                    siteDesc: 'Description',
-                    siteUrl: 'Site Url',
-                    siteIcon: 'Site Icon',
-                    siteTest: 'Test',
-                    siteCancel: 'Cancel',
-                    siteAdd: 'Add',
-                    siteType: 'Category',
-                    siteExist: 'Site is already exist, add it as clone?',
-                    siteAddOver: 'Site added successfully',
-                    multiline: 'Search as multilines?',
-                    multilineTooMuch: 'The number of lines exceeds 10, do you want to continue searching?',
-                    inputPlaceholder: 'Enter keywords to filter sites, support * ? wildcards, $ means end, ^ means start, type name**site name to filter type like "image**google", tab to next ',
-                    inputKeywords: 'Enter search keywords',
-                    inPageTips: 'Custom delimiter: $c + delimiter, such as $c| search | jumper, space as delimiter by default\nOriginal text without delimited: $o + text, such as $oopai liked by hero\nRegular expression: /re/, such as $c, /google/i , /aPPle/\nTips text: search text$t{tips text}, such as linux$t{linux is not unix}\nCustom style: Search text$s{background;other}, such as google$s{#333333;color:red;}\nLeft-click keyword to jump to the next, right-click keyword to jump to the previous',
-                    inPagePlaceholder: 'Input text, press Enter to find in the page',
-                    pickerBtn: 'Pick a element',
-                    editBtn: 'Edit search text',
-                    emptyBtn: 'Empty search text',
-                    copyInPageBtn: 'Copy search text',
-                    copyEleBtn: 'Copy selected elements',
-                    maxEleBtn: 'Expand selected elements',
-                    minEleBtn: 'Collapse selected elements',
-                    expandAll: 'Expand All',
-                    collapseAll: 'Collapse All',
-                    rename: 'Rename',
-                    recoverBtn: 'Recover find text',
-                    pinBtn: 'Pin search text to search in all tabs',
-                    locBtn: 'Sidebar to locate',
-                    filterSites: 'Filter search engines',
-                    searchInPage: 'Find in page',
-                    removeBtn: 'Remove search term',
-                    saveRuleBtn: 'Save the search term of the current site',
-                    wordContent: 'Search word content',
-                    wordHide: 'Hide parent element',
-                    wordHideTips: 'Element depth, 0 means the current',
-                    wordStyle: 'Search word style',
-                    wordTitle: 'Search word annotation',
-                    modify: 'Modify',
-                    cancel: 'Cancel',
-                    modifyWord: 'Modify search word',
-                    addSearchEngine: 'Add search engine',
-                    noValidItemAsk: 'No valid element found, do you want to manually edit the rule and add it?',
-                    expand: 'Expand other sites',
-                    add: 'Add',
-                    addWord: 'Add new word',
-                    wordRange: 'Effective range',
-                    customInputFrame: 'Custom search parameters',
-                    customSubmit: 'Submit',
-                    finalSearch: 'Target search string',
-                    search: 'Search this',
-                    siteKeywords: 'Keywords(split by |)',
-                    siteMatch: 'Regexp to match site URL',
-                    openSelect: 'Open option',
-                    openInDefault: 'Default',
-                    openInNewTab: 'Open a new tab',
-                    openInCurrent: 'Open in current',
-                    currentType: 'Current',
-                    maxAddSiteBtn: 'Maximize',
-                    minAddSiteBtn: 'Restore',
-                    addAction: 'Add Actions',
-                    crawlInfo: 'Analog input search',
-                    inputAction: 'Input',
-                    clickAction: 'Click',
-                    sleepAction: 'Wait',
-                    submitCrawl: 'Complete operation',
-                    inputOutput: 'Input <span title="#t2#">#t2#</span> in the element <span title="#t1#" class="element">#t1#</span>',
-                    clickOutput: 'Click on element <span title="#t#" class="element">#t#</span>',
-                    sleepOutpus: 'Sleep for <span title="#t#">#t#</span> milliseconds',
-                    inputNewValue: 'Please enter a new value',
-                    deleteConfirm: 'Are you sure you want to delete this item? ',
-                    sleepPrompt: 'Wait time (milliseconds)'
-                };
-                break;
+        function setLang() {
+            switch (lang) {
+                case "zh-CN":
+                case "zh-SG":
+                    config = {
+                        scriptName: '搜索酱',
+                        import: '导入',
+                        filter: '筛选',
+                        selectAll: '全选',
+                        importOrNot: '是否导入配置？',
+                        settings: '配置脚本',
+                        batchOpen: '批量打开',
+                        batchOpenConfirm: '确定要批量打开吗？',
+                        postOver: '发送成功：',
+                        postError: '发送失败：',
+                        keywords: '请输入搜索词',
+                        targetUrl: '请输入搜索URL',
+                        siteName: '站名',
+                        siteDesc: '描述',
+                        siteUrl: '地址',
+                        siteIcon: '图标',
+                        siteTest: '测试',
+                        siteCancel: '取消',
+                        siteAdd: '添加',
+                        siteType: '分类',
+                        siteExist: '已存在相同规则，是否添加为克隆项？',
+                        siteAddOver: '站点添加成功',
+                        multiline: '是否以换行符分隔多行搜索？',
+                        multilineTooMuch: '行数超过10行，是否继续搜索？',
+                        inputPlaceholder: '输入关键词筛选站点，支持 * ? 通配符，$代表末尾，^代表开头，分组**站点 可筛选指定分组，例如【图片**baidu】，tab 下一项',
+                        inputKeywords: '输入搜索关键词',
+                        inPageTips: '自定义分隔符：$c 加分隔符，例如 $c| search | jumper，默认空格作为分隔符\n原始文本不分隔：$o 加文本，例如$oopai liked by hero\n正则表达式：/re/，例如 $c, /google/i , /aPPle/\n添加提示文本：搜索文本$t{提示文本}，例如 linux$t{linux is not unix}\n添加自定义样式：搜索文本$s{背景;其他}，例如 google$s{#333333;color:red;}\n左键点击关键词跳转至下一个，右键点击关键词跳转至上一个',
+                        inPagePlaceholder: '输入文字，按下回车进行页内查找',
+                        pickerBtn: '抓取元素',
+                        editBtn: '编辑查找文字',
+                        emptyBtn: '清空查找文字',
+                        copyInPageBtn: '复制查找文字',
+                        copyEleBtn: '复制选中元素',
+                        maxEleBtn: '展开选中元素',
+                        minEleBtn: '收起选中元素',
+                        expandAll: '全部展开',
+                        collapseAll: '全部合起',
+                        rename: '重命名',
+                        recoverBtn: '恢复查找文字',
+                        pinBtn: '固定查找文字，在所有标签页中搜索',
+                        locBtn: '定位侧边栏',
+                        filterSites: '筛选搜索引擎',
+                        searchInPage: '页内查找',
+                        removeBtn: '移除搜索词',
+                        saveRuleBtn: '保存当前站点的搜索词',
+                        wordContent: '搜索词内容',
+                        wordHide: '隐藏父级元素',
+                        wordHideTips: '元素深度，0为当前父级',
+                        wordStyle: '搜索词样式',
+                        wordTitle: '搜索词注释',
+                        modify: '修改',
+                        cancel: '取消',
+                        modifyWord: '修改页内搜索词',
+                        addSearchEngine: '添加搜索引擎',
+                        noValidItemAsk: '未找到有效元素，是否手动编辑规则并添加？',
+                        expand: '展开剩余站点',
+                        add: '添加',
+                        addWord: '添加新词语',
+                        wordRange: '生效范围',
+                        customInputFrame: '自定义搜索参数',
+                        customSubmit: '提交搜索',
+                        finalSearch: '目标搜索字串',
+                        search: '搜索此项',
+                        siteKeywords: '关键词(多个关键词以|分隔)',
+                        siteMatch: '站点 URL 匹配正则',
+                        openSelect: '打开选项',
+                        openInDefault: '默认',
+                        openInNewTab: '新标签页打开',
+                        openInCurrent: '当前页打开',
+                        currentType: '当前分类',
+                        maxAddSiteBtn: '最大化',
+                        minAddSiteBtn: '还原',
+                        addAction: '添加操作',
+                        crawlInfo: '模拟输入搜索',
+                        inputAction: '输入',
+                        clickAction: '点击',
+                        sleepAction: '等待',
+                        submitCrawl: '完成操作',
+                        inputOutput: '在元素<span title="#t1#" class="element">#t1#</span>内输入<span title="#t2#">#t2#</span>',
+                        clickOutput: '点击元素<span title="#t#" class="element">#t#</span>',
+                        sleepOutpus: '休眠<span title="#t#">#t#</span>毫秒',
+                        inputNewValue: '请输入新值',
+                        deleteConfirm: '确定要删除此项吗？',
+                        sleepPrompt: '等待时间（毫秒）'
+                    };
+                    break;
+                case "zh-TW":
+                case "zh-HK":
+                    config = {
+                        scriptName: "搜索醬",
+                        import: '導入',
+                        filter: '篩選',
+                        selectAll: '全選',
+                        importOrNot: '是否導入配置？',
+                        settings: '配置脚本',
+                        batchOpen: '批量打開',
+                        batchOpenConfirm: '確定要批量打開嗎？',
+                        postOver: '發送成功：',
+                        postError: '發送失敗：',
+                        keywords: '請輸入搜索詞',
+                        targetUrl: '請輸入搜索URL',
+                        siteName: '站名',
+                        siteDesc: '描述',
+                        siteUrl: '地址',
+                        siteIcon: '圖標',
+                        siteTest: '測試',
+                        siteCancel: '取消',
+                        siteAdd: '添加',
+                        siteType: '分類',
+                        siteExist: '已存在相同規則，是否添加為克隆項？',
+                        siteAddOver: '站點添加成功',
+                        multiline: '是否以換行符分隔多行搜索？',
+                        multilineTooMuch: '行數超過10行，是否繼續搜索？',
+                        inputPlaceholder: '輸入關鍵詞篩選站點，支持 * ? 通配符，$代表末尾，^代表開頭，分組**站點 可篩選指定分組，例如【圖片**goo】，tab 下一項',
+                        inputKeywords: '輸入搜索關鍵詞',
+                        inPageTips: '自定義分隔符：$c 加分隔符，例如 $c| search | jumper，默認空格作為分隔符\n原始文本不分隔：$o 加文本，例如$oopai liked by hero\n正則表達式：/re/，例如 $c, /google/i , /aPPle/\n添加提示文本：搜索文本$t{提示文本}，例如 linux$t{linux is not unix}\n添加自定義樣式：搜索文本$s{背景;其他}，例如 google$s{#333333;color:red;}\n左鍵點擊關鍵詞跳轉至下一個，右鍵點擊關鍵詞跳轉至上一個',
+                        inPagePlaceholder: '輸入文字，按下回車進行頁內查找',
+                        pickerBtn: '抓取元素',
+                        editBtn: '編輯查找文字',
+                        emptyBtn: '清空查找文字',
+                        copyInPageBtn: '複製查找文字',
+                        copyEleBtn: '複製選中元素',
+                        maxEleBtn: '展開選中元素',
+                        minEleBtn: '收起選中元素',
+                        expandAll: '全部展開',
+                        collapseAll: '全部合起',
+                        rename: '重命名',
+                        recoverBtn: '恢復查找文字',
+                        pinBtn: '固定查找文字，在所有標籤頁中搜索',
+                        locBtn: '定位側邊欄',
+                        filterSites: '篩選搜尋引擎',
+                        searchInPage: '頁內查找',
+                        removeBtn: '移除搜索詞',
+                        saveRuleBtn: '保存當前站點的搜索詞',
+                        wordContent: '搜索詞內容',
+                        wordHide: '隱藏父級元素',
+                        wordHideTips: '元素深度，0為當前父級',
+                        wordStyle: '搜索詞樣式',
+                        wordTitle: '搜索詞注釋',
+                        modify: '修改',
+                        cancel: '取消',
+                        modifyWord: '修改頁內搜索詞',
+                        addSearchEngine: '添加搜尋引擎',
+                        noValidItemAsk: '未找到有效元素，是否手動編輯規則並添加？',
+                        expand: '展開剩餘站點',
+                        add: '添加',
+                        addWord: '添加新詞語',
+                        wordRange: '生效範圍',
+                        customInputFrame: '自定義搜索參數',
+                        customSubmit: '提交搜索',
+                        finalSearch: '目標搜尋字串',
+                        search: '搜索此項',
+                        siteKeywords: '關鍵詞(多個關鍵詞以|分隔)',
+                        siteMatch: '站點 URL 匹配正則',
+                        openSelect: '打開選項',
+                        openInDefault: '默認',
+                        openInNewTab: '新標籤頁打開',
+                        openInCurrent: '當前頁打開',
+                        currentType: '當前分類',
+                        maxAddSiteBtn: '最大化',
+                        minAddSiteBtn: '還原',
+                        addAction: '添加操作',
+                        crawlInfo: '模擬輸入搜索',
+                        inputAction: '輸入',
+                        clickAction: '點擊',
+                        sleepAction: '等待',
+                        submitCrawl: '完成操作',
+                        inputOutput: '在元素<span title="#t1#" class="element">#t1#</span>內輸入<span title="#t2#">#t2#</span>',
+                        clickOutput: '點擊元素<span title="#t#" class="element">#t#</span>',
+                        sleepOutpus: '休眠<span title="#t#">#t#</span>毫秒',
+                        inputNewValue: '請輸入新值',
+                        deleteConfirm: '確定要刪除此項嗎？ ',
+                        sleepPrompt: '等待時間（毫秒）'
+                    };
+                    break;
+                default:
+                    config = {
+                        scriptName: "SearchJumper",
+                        import: 'Import',
+                        filter: 'Filter',
+                        selectAll: 'SelectAll',
+                        importOrNot: 'Do you want to import this config?',
+                        settings: 'Settings',
+                        batchOpen: 'Batch open',
+                        batchOpenConfirm: 'Batch open urls?',
+                        postOver: 'Post over: ',
+                        postError: 'Post fail: ',
+                        keywords: 'Input keywords',
+                        targetUrl: 'Input URL',
+                        siteName: 'Site Name',
+                        siteDesc: 'Description',
+                        siteUrl: 'Site Url',
+                        siteIcon: 'Site Icon',
+                        siteTest: 'Test',
+                        siteCancel: 'Cancel',
+                        siteAdd: 'Add',
+                        siteType: 'Category',
+                        siteExist: 'Site is already exist, add it as clone?',
+                        siteAddOver: 'Site added successfully',
+                        multiline: 'Search as multilines?',
+                        multilineTooMuch: 'The number of lines exceeds 10, do you want to continue searching?',
+                        inputPlaceholder: 'Enter keywords to filter sites, support * ? wildcards, $ means end, ^ means start, type name**site name to filter type like "image**google", tab to next ',
+                        inputKeywords: 'Enter search keywords',
+                        inPageTips: 'Custom delimiter: $c + delimiter, such as $c| search | jumper, space as delimiter by default\nOriginal text without delimited: $o + text, such as $oopai liked by hero\nRegular expression: /re/, such as $c, /google/i , /aPPle/\nTips text: search text$t{tips text}, such as linux$t{linux is not unix}\nCustom style: Search text$s{background;other}, such as google$s{#333333;color:red;}\nLeft-click keyword to jump to the next, right-click keyword to jump to the previous',
+                        inPagePlaceholder: 'Input text, press Enter to find in the page',
+                        pickerBtn: 'Pick a element',
+                        editBtn: 'Edit search text',
+                        emptyBtn: 'Empty search text',
+                        copyInPageBtn: 'Copy search text',
+                        copyEleBtn: 'Copy selected elements',
+                        maxEleBtn: 'Expand selected elements',
+                        minEleBtn: 'Collapse selected elements',
+                        expandAll: 'Expand All',
+                        collapseAll: 'Collapse All',
+                        rename: 'Rename',
+                        recoverBtn: 'Recover find text',
+                        pinBtn: 'Pin search text to search in all tabs',
+                        locBtn: 'Sidebar to locate',
+                        filterSites: 'Filter search engines',
+                        searchInPage: 'Find in page',
+                        removeBtn: 'Remove search term',
+                        saveRuleBtn: 'Save the search term of the current site',
+                        wordContent: 'Search word content',
+                        wordHide: 'Hide parent element',
+                        wordHideTips: 'Element depth, 0 means the current',
+                        wordStyle: 'Search word style',
+                        wordTitle: 'Search word annotation',
+                        modify: 'Modify',
+                        cancel: 'Cancel',
+                        modifyWord: 'Modify search word',
+                        addSearchEngine: 'Add search engine',
+                        noValidItemAsk: 'No valid element found, do you want to manually edit the rule and add it?',
+                        expand: 'Expand other sites',
+                        add: 'Add',
+                        addWord: 'Add new word',
+                        wordRange: 'Effective range',
+                        customInputFrame: 'Custom search parameters',
+                        customSubmit: 'Submit',
+                        finalSearch: 'Target search string',
+                        search: 'Search this',
+                        siteKeywords: 'Keywords(split by |)',
+                        siteMatch: 'Regexp to match site URL',
+                        openSelect: 'Open option',
+                        openInDefault: 'Default',
+                        openInNewTab: 'Open a new tab',
+                        openInCurrent: 'Open in current',
+                        currentType: 'Current',
+                        maxAddSiteBtn: 'Maximize',
+                        minAddSiteBtn: 'Restore',
+                        addAction: 'Add Actions',
+                        crawlInfo: 'Analog input search',
+                        inputAction: 'Input',
+                        clickAction: 'Click',
+                        sleepAction: 'Wait',
+                        submitCrawl: 'Complete operation',
+                        inputOutput: 'Input <span title="#t2#">#t2#</span> in the element <span title="#t1#" class="element">#t1#</span>',
+                        clickOutput: 'Click on element <span title="#t#" class="element">#t#</span>',
+                        sleepOutpus: 'Sleep for <span title="#t#">#t#</span> milliseconds',
+                        inputNewValue: 'Please enter a new value',
+                        deleteConfirm: 'Are you sure you want to delete this item? ',
+                        sleepPrompt: 'Wait time (milliseconds)'
+                    };
+                    break;
+            }
         }
-        var i18n = (name, param) => {
+        function i18n(name, param) {
             return config[name] ? (param ? config[name].replace(/#t#/g, param).replace(/#t1#/g, param[0]).replace(/#t2#/g, param[1]) : config[name]) : name;
         };
         const isMobile = ('ontouchstart' in document.documentElement);
@@ -1087,15 +1089,15 @@
                 }
             })(),
             setItem: function (key, value) {
-                if (this.supportGM) {
-                    GM_setValue(key, value);
-                    if(value === "" && typeof GM_deleteValue != 'undefined'){
-                        GM_deleteValue(key);
-                    }
-                } else if (this.supportGMPromise) {
+                if (this.supportGMPromise) {
                     GM.setValue(key, value);
                     if(value === "" && typeof GM != 'undefined' && typeof GM.deleteValue != 'undefined'){
                         GM.deleteValue(key);
+                    }
+                } else if (this.supportGM) {
+                    GM_setValue(key, value);
+                    if(value === "" && typeof GM_deleteValue != 'undefined'){
+                        GM_deleteValue(key);
                     }
                 } else if (this.operaUJSStorage) {
                     this.operaUJSStorage.setItem(key, value);
@@ -1107,11 +1109,11 @@
             },
             getItem: function (key, cb) {
                 var value;
-                if (this.supportGM) {
-                    value = GM_getValue(key);
-                } else if (this.supportGMPromise) {
+                if (this.supportGMPromise) {
                     value = GM.getValue(key).then(v=>{cb(v)});
                     return;
+                } else if (this.supportGM) {
+                    value = GM_getValue(key);
                 } else if (this.operaUJSStorage) {
                     value = this.operaUJSStorage.getItem(key);
                 } else if (this.mxAppStorage) {
@@ -4944,7 +4946,7 @@
                     this.initPos();
                 }
                 this.insertHistory(this.currentType, true);
-                let inPageWords = searchData.prefConfig.showInSearchEngine ? getKeywords() : globalInPageWords;
+                let inPageWords = searchData.prefConfig.showInSearchEngine ? localKeywords : globalInPageWords;
                 if (inPageWords) {
                     this.setInPageWords(inPageWords.replace(/['";]/g, ' '));
                 }
@@ -5167,7 +5169,7 @@
             setCurrentSite(data) {
                 currentSite = data;
                 localKeywords = "";
-                if (!/#p{/.test(data.url)) {
+                if (!/#p{/.test(data.url) && /%s[lur]?\b/.test(data.url)) {
                     let keywords = getKeywords();
                     if (keywords && keywords != cacheKeywords) {
                         cacheKeywords = keywords;
@@ -8011,15 +8013,15 @@
                         keywords = '';
                     }
                 }
-            } else if (isUtf8 && /%s\b/.test(currentSite.url) && !/[#:%]p{/.test(currentSite.url)) {
+            } else if (isUtf8 && /%s[lur]?\b/.test(currentSite.url) && !/[#:%]p{/.test(currentSite.url)) {
                 if (location.href.indexOf("?") != -1) {
-                    keywordsMatch = currentSite.url.match(/[\?&]([^&]*?)=%s\b.*/);
+                    keywordsMatch = currentSite.url.match(/[\?&]([^&]*?)=%s[lur]?\b.*/);
                     if (keywordsMatch) {
                         keywords = new URLSearchParams(location.search).get(keywordsMatch[1]);
                     }
                 }
                 if (!keywords) {
-                    keywordsMatch = currentSite.url.match(/https?:\/\/[^\/]*\/(.*)%s\b/);
+                    keywordsMatch = currentSite.url.match(/https?:\/\/[^\/]*\/(.*)%s[lur]?\b/);
                     if (keywordsMatch) {
                         keywordsMatch = location.href.match(new RegExp((keywordsMatch[1] || (location.host.replace(/\./g, "\\.") + "/")) + "(.*?)(\/|$)"));
                         if (keywordsMatch) {
@@ -10569,6 +10571,10 @@
             if (_searchData) {
                 searchData = _searchData;
             }
+            if (searchData.prefConfig.lang && searchData.prefConfig.lang != '0') {
+                lang = searchData.prefConfig.lang;
+            }
+            setLang();
             //旧版兼容
             if (typeof searchData.prefConfig.customSize === "undefined") {
                 searchData.prefConfig.customSize = 100;
@@ -10704,7 +10710,6 @@
                 waiting = false;
             }, 500);
         }
-
 
         storage.getItem("postUrl", postUrl => {
             if (postUrl && postUrl[0].indexOf(location.hostname.replace(/.*\.(\w+\.\w+)/, "$1")) != -1) {
