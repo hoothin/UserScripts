@@ -9229,7 +9229,7 @@
     {
         "name": "草榴社區",
         "type": 0,
-        "url": "htm_data/\\d+/\\d+/\\d+\\.html",
+        "url": "htm_data/\\d+/\\d+/\\d+\\.html|read\\.php\\?tid=",
         "pageElement": "id('ajaxtable')//tr[.//a][./preceding-sibling::tr or ./following-sibling::tr]|//div[@class='t t2']",
         "sleep": 2000,
         "nextLink": "//div[@class='pages']/a[u]/following-sibling::a[1]",
