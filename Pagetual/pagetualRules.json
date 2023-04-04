@@ -9281,6 +9281,16 @@
         "enable": 0
     },
     {
+        "name": "极简",
+        "url": "^https://chrome\\.zzzmh\\.cn/",
+        "pageElement": ".row>.index-card-box",
+        "nextLink": "[aria-label='Next page']",
+        "waitElement": [
+            "",
+            ".v-image__image--preload"
+        ]
+    },
+    {
         "name": "东方财富",
         "url": "^http://quote\\.eastmoney\\.com/",
         "pinUrl": true,
