@@ -1457,7 +1457,7 @@ const langData = [
 },
 {
     name: "Українська",
-    match: ["uk", "uk-UK"],
+    match: ["uk", "uk-UA"],
     lang: {
         //Український переклад by MaSHiNiK.
         saveBtn:"Зберегти",
