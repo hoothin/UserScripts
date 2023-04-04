@@ -1187,6 +1187,8 @@ var siteInfo = [
     if(target && target.previousElementSibling){
         let imgs=target.previousElementSibling.querySelectorAll("img");
         if(imgs && imgs.length==1)return imgs[0];
+    }else if(target.tagName=='UL' && target.parentNode && target.parentNode.parentNode && target.parentNode.parentNode.tagName=='A'){
+        return target.parentNode.parentNode.querySelector('img');
     }
  }
 },
