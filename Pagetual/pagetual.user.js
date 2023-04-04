@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.35.9
+// @version      1.9.35.10
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1097,18 +1097,22 @@
 
         waitElement(doc, selArr) {
             if (!selArr) selArr = this.curSiteRule.waitElement;
-            if (selArr[0].trim()) {
-                let include = getElement(selArr[0], doc);
+            let includeSel = selArr[0].trim(), excludeSel;
+            if (selArr.length == 2) {
+                excludeSel = selArr[1].trim().replace(/^!/, '');
+            } else if (includeSel.indexOf('!') == 0) {
+                excludeSel = includeSel.replace(/^!/, '');
+                includeSel = '';
+            }
+            if (includeSel) {
+                let include = getElement(includeSel, doc);
                 if (!include) {
-                    if (selArr.length == 2 && selArr[1].trim()) {
-                        this.scrollToShow(selArr[1], doc);
-                    }
                     return false;
                 }
             }
             if (doc === document) return true;
-            if (selArr.length == 2 && selArr[1].trim()) {
-                if (!this.scrollToShow(selArr[1], doc)) {
+            if (excludeSel) {
+                if (!this.scrollToShow(excludeSel, doc)) {
                     if (!loadingDiv.offsetParent && this.insert.parentNode) {
                         this.insertElement(loadingDiv);
                     }
@@ -1698,7 +1702,9 @@
                                     ele.style.contentVisibility = "visible";
                                     self.visibilityItems.push(ele);
                                     self.visibleIndex++;
-                                } else ele.style.contentVisibility = "auto";
+                                } else {
+                                    ele.style.contentVisibility = emuIframe ? "visible" : "auto";
+                                }
                             }
                         }
                     }
@@ -6298,7 +6304,7 @@
                 emuIframe.sandbox = ruleParser.curSiteRule.sandbox;
             }
             emuIframe.width = '100%';
-            emuIframe.height = '100';
+            emuIframe.height = '100%';
             emuIframe.frameBorder = '0';
             emuIframe.style.cssText = 'margin:0!important;padding:0!important;flex:0;opacity:0!important;pointer-events:none!important;position:fixed;top:0px;left:0px;z-index:-2147483647;';
             emuIframe.addEventListener("load", e => {
