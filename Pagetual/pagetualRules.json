@@ -9286,8 +9286,7 @@
         "pageElement": ".row>.index-card-box",
         "nextLink": "[aria-label='Next page']",
         "waitElement": [
-            "",
-            ".v-image__image--preload"
+            "!.v-image__image--preload"
         ]
     },
     {
