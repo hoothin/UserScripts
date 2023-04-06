@@ -11999,7 +11999,7 @@ ImgOps | https://imgops.com/#b#`;
                 }else if(this.dataset && this.dataset.origFile){
                     newsrc=this.dataset.origFile;
                 }else if(this.srcset){
-                    var srcs=this.srcset.split("[xw],"),largeSize=0;
+                    var srcs=this.srcset.split(/[xw],/i),largeSize=0;
                     srcs.forEach(srci=>{
                         let srcInfo=srci.trim().split(" "),curSize=parseInt(srcInfo[1]);
                         if(!srcInfo[1]){
