@@ -1,4 +1,4 @@
-☯️東方永頁機 v.1.9.35.10
+☯️東方永頁機 v.1.9.35.11
 ==
 *Pagetual - Perpetual pages. Auto loading paginated web pages for 90% of all web sites !* [Wiki](https://pagetual.hoothin.com/en/)
 
@@ -31,7 +31,7 @@ https://raw.githubusercontent.com/hoothin/UserScripts/master/Pagetual/pagetualRu
         <th colspan="3">💞Buy me a coffee if it helps you</th>
     </tr>
     <tr>
-        <td><a href="https://paypal.me/hoothin">PayPal.Me</a></td><td><a href="https://buymeacoffee.com/hoothin">BuyMeACoffee</a></td>
+        <td><a href="https://paypal.me/hoothin">❤️PayPal.Me</a></td><td><a href="https://buymeacoffee.com/hoothin">❤️BuyMeACoffee</a></td>
     </tr>
 </table>
 
