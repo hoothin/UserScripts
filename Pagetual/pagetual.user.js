@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.35.11
+// @version      1.9.35.12
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -723,7 +723,7 @@
     const guidePage = /^https?:\/\/.*pagetual.*rule\.html/i;
     const ruleImportUrlReg = /greasyfork\.org\/.*scripts\/438684[^\/]*(\/discussions|\/?$|\/feedback)|github\.com\/hoothin\/UserScripts\/(tree\/master\/Pagetual|issues)/i;
     const allOfBody = "body>*";
-    const mainSel = "article,.article,[role=main],main,.main";
+    const mainSel = "article,.article,[role=main],main,.main,#main";
     const nextTextReg1 = new RegExp("\u005e\u7ffb\u003f\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u9875\u9801\u5f20\u5f35\u005d\u007c\u005e\u0028\u006e\u0065\u0078\u0074\u005b\u0020\u005f\u002d\u005d\u003f\u0070\u0061\u0067\u0065\u007c\u006f\u006c\u0064\u0065\u0072\u0029\u005c\u0073\u002a\u005b\u203a\u003e\u2192\u00bb\u005d\u003f\u0024\u007c\u6b21\u306e\u30da\u30fc\u30b8\u007c\u005e\u6b21\u3078\u003f\u0024\u007cВперед", "i");
     const nextTextReg2 = new RegExp("\u005e\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u7ae0\u8bdd\u8a71\u8282\u7bc0\u4e2a\u500b\u5e45\u005d", "i");
     const lazyImgAttr = ["data-lazy-src", "data-lazy", "data-url", "data-orig-file", "zoomfile", "file", "original", "load-src", "imgsrc", "real_src", "src2", "origin-src", "data-lazyload", "data-lazyload-src", "data-lazy-load-src", "data-ks-lazyload", "data-ks-lazyload-custom", "data-src", "data-defer-src", "data-actualsrc", "data-cover", "data-original", "data-thumb", "data-imageurl", "data-placeholder",];
@@ -1415,7 +1415,7 @@
                         if (article && article.length > 0) {
                             if (article.length == 1) {
                                 article = article[0];
-                                self.curSiteRule.pageElement = article.tagName + (article.className ? "." + article.className : "") + ">*";
+                                self.curSiteRule.pageElement = article.tagName + (article.id ? "#" + article.id : "") + (article.className ? "." + article.className : "") + ">*";
                                 debug(self.curSiteRule.pageElement, 'Page element');
                                 return article.children;
                             } else {
@@ -1439,15 +1439,8 @@
                         debug(self.curSiteRule.pageElement, 'Page element');
                         return getAllElements(self.curSiteRule.pageElement, doc);
                     }
-                    let i, minHeight = curHeight * 0.55, curMaxEle = null, curMaxArea = 0, minWidth = curWidth * 0.38;
-                    let isHori = true;
-                    let offsetTop = ele.children[0].offsetTop;
-                    for (i = 1; i < ele.children.length; i++) {
-                        if (ele.children[i].offsetTop != offsetTop) {
-                            isHori = false;
-                            break;
-                        }
-                    }
+                    let i, minHeight = curHeight * 0.52, curMaxEle = null, curMaxArea = 0, minWidth = curWidth * 0.38;
+                    let isHori, preOffsetTop = -1;
                     let articleNum = 0;
                     for (i = 0; i < ele.children.length; i++) {
                         let curNode = ele.children[i];
@@ -1462,6 +1455,7 @@
                         let h = self.getValidHeight(curNode);
                         let w = curNode.scrollWidth;
                         if (isNaN(h) || isNaN(w)) continue;
+                        isHori = preOffsetTop == curNode.offsetTop ? true : (preOffsetTop == -1 ? (curNode.nextElementSibling && curNode.nextElementSibling.offsetTop == curNode.offsetTop) : false);
                         if (isHori && h <= 50) continue;
                         let a = h * w, moreChild = curNode.children[0];
                         while (moreChild) {
@@ -1506,6 +1500,7 @@
                             curMaxArea = a;
                             curWidth = w;
                             curMaxEle = curNode;
+                            preOffsetTop == curNode.offsetTop;
                         }
                     }
                     if (curMaxEle) {
@@ -2000,6 +1995,7 @@
 
         verifyNext(next, doc) {
             if (!next) return null;
+            if (next.previousElementSibling && next.previousElementSibling.tagName == 'BR') return null;
             let eles = getAllElements(`//${next.tagName}[text()='${next.innerText}']`, doc);
             if (eles.length >= 2 && eles[0].href != eles[1].href) {
                 next = null;
