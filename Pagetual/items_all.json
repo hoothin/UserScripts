@@ -30,17 +30,16 @@
 {
   "resource_url": "http://wedata.net/items/86097",
   "data": {
-    "insertBefore": "",
     "pageElement": "//section[@class=\"entrylist-unit\"]",
-    "nextLink": "//p[@class=\"entrylist-readmore js-keyboard-selectable-item\"]//a",
-    "url": "^https://b\\\\.hatena\\\\.ne\\\\.jp/site/",
+    "nextLink": "//link[@rel='next']",
+    "url": "^https://b\\.hatena\\.ne\\.jp/site/",
     "exampleUrl": "https://b.hatena.ne.jp/site/anond.hatelabo.jp/?sort=eid"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "knoa-openid-cn",
   "name": "はてなブックマーク - サイト別",
   "created_at": "2023-03-22T11:21:07+09:00",
-  "updated_at": "2023-03-22T11:21:07+09:00"
+  "updated_at": "2023-04-05T21:45:08+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/86096",
