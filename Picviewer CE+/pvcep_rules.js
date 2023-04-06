@@ -1182,7 +1182,7 @@ var siteInfo = [
 },
 {
  name:"instagram",
- url:/^https?:\/\/[^.]+\.instagram.com/i,
+ url:/^https?:\/\/[^.]+\.instagram\.com/i,
  ext: function(target) {
     if(target && target.previousElementSibling){
         let imgs=target.previousElementSibling.querySelectorAll("img");
