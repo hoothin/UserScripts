@@ -9563,7 +9563,7 @@
                         removeFrame();
                         searchBar.appendBar();
                         searchBar.showAllSites();
-                    }, 1500);
+                    }, 800);
                 }, true);
                 let geneSector = (className, deg, spanTransform) => {
                     let sector = document.createElement("div");
