@@ -8132,7 +8132,8 @@
         "pageNum": "&start={10*($p-1)}",
         "pageBarTop": 55,
         "url": "^https?://[^./]+\\.google(?:\\.[^./]{2,3}){1,2}/(?:c(?:se|ustom)|search|webhp|m|#)",
-        "replaceElement": "[role='navigation']>[role='presentation']"
+        "replaceElement": "[role='navigation']>[role='presentation']",
+        "css": "ol>li{display: inline-flex;}"
     },
     {
         "name": "Google cse",
