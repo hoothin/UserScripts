@@ -4809,7 +4809,7 @@
                         sitesNum = 0;
                     }
                 }
-                let foundKeyword = currentSite && /%s\b/.test(currentSite.url);
+                let foundKeyword = currentSite && /%s[lur]?\b/.test(currentSite.url);
                 if (!hasCurrent && foundKeyword) {
                     this.inSearchEngine();
                 } else if (!foundKeyword && window.top == window.self) {
@@ -4939,7 +4939,7 @@
 
             inSearchEngine() {
                 if (!this.currentType || !currentSite) return;
-                if (!/#p{/.test(currentSite.url)) {
+                if (!/#p{/.test(currentSite.url) || currentSite.keywords) {
                     this.appendBar();
                     if (this.currentType.classList.contains("search-jumper-needInPage")) {
                         this.bar.classList.add("search-jumper-isTargetPage");
