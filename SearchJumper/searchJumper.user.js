@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.55.51
+// @version      1.6.6.55.52
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -725,7 +725,8 @@
         expandType: false,
         rightMouse: true,
         shiftLastUsedType: true,
-        mouseLeaveToHide: true
+        mouseLeaveToHide: true,
+        currentTypeFirst: true
     };
     function run() {
         let lang = navigator.appName == "Netscape" ? navigator.language : navigator.userLanguage;
@@ -4522,7 +4523,7 @@
                 this.bar.style.visibility = "";
                 this.bar.style.display = "none";
                 this.searchInPageRule();
-                if (currentSite && /%s\b/.test(currentSite.url)) {
+                if (currentSite && /%s[lur]?\b/.test(currentSite.url)) {
                     this.inSearchEngine();
                 } else if (searchData.prefConfig.alwaysShow) {
                     this.bar.style.display = "";
@@ -4875,6 +4876,19 @@
                     let loadHandler = e => {
                         if (document.readyState != "complete") return;
                         document.removeEventListener("readystatechange", loadHandler);
+                        setTimeout(() => {
+                            if (getBody(document).style.display === "none") getBody(document).style.display = "";
+                            let word = this.initInPageWords.shift();
+                            while (word) {
+                                this.searchJumperInPageInput.value = word;
+                                this.submitInPageWords(true);
+                                word = this.initInPageWords.shift();
+                            }
+                        }, 600);
+                    };
+                    document.addEventListener("readystatechange", loadHandler);
+                } else {
+                    setTimeout(() => {
                         if (getBody(document).style.display === "none") getBody(document).style.display = "";
                         let word = this.initInPageWords.shift();
                         while (word) {
@@ -4882,16 +4896,7 @@
                             this.submitInPageWords(true);
                             word = this.initInPageWords.shift();
                         }
-                    };
-                    document.addEventListener("readystatechange", loadHandler);
-                } else {
-                    if (getBody(document).style.display === "none") getBody(document).style.display = "";
-                    let word = this.initInPageWords.shift();
-                    while (word) {
-                        this.searchJumperInPageInput.value = word;
-                        this.submitInPageWords(true);
-                        word = this.initInPageWords.shift();
-                    }
+                    }, 600);
                 }
             }
 
@@ -4933,20 +4938,22 @@
             }
 
             inSearchEngine() {
-                if (!this.currentType) return;
-                this.appendBar();
-                if (this.currentType.classList.contains("search-jumper-needInPage")) {
-                    this.bar.classList.add("search-jumper-isTargetPage");
-                } else if (this.currentType.classList.contains("search-jumper-targetImg") ||
-                    this.currentType.classList.contains("search-jumper-targetAudio") ||
-                    this.currentType.classList.contains("search-jumper-targetVideo") ||
-                    this.currentType.classList.contains("search-jumper-targetLink") ||
-                    this.currentType.classList.contains("search-jumper-targetPage")) {
-                    return;
-                }
-                if (!searchData.prefConfig.hideOnSearchEngine) {
-                    this.bar.style.display = "";
-                    this.initPos();
+                if (!this.currentType || !currentSite) return;
+                if (!/#p{/.test(currentSite.url)) {
+                    this.appendBar();
+                    if (this.currentType.classList.contains("search-jumper-needInPage")) {
+                        this.bar.classList.add("search-jumper-isTargetPage");
+                    } else if (this.currentType.classList.contains("search-jumper-targetImg") ||
+                               this.currentType.classList.contains("search-jumper-targetAudio") ||
+                               this.currentType.classList.contains("search-jumper-targetVideo") ||
+                               this.currentType.classList.contains("search-jumper-targetLink") ||
+                               this.currentType.classList.contains("search-jumper-targetPage")) {
+                        return;
+                    }
+                    if (!searchData.prefConfig.hideOnSearchEngine) {
+                        this.bar.style.display = "";
+                        this.initPos();
+                    }
                 }
                 this.insertHistory(this.currentType, true);
                 let inPageWords = searchData.prefConfig.showInSearchEngine ? localKeywords : globalInPageWords;
@@ -5975,7 +5982,11 @@
                 });
                 siteList = await self.createList(siteEles, ele, batchSiteNames);
                 if (isCurrent) {
-                    self.bar.insertBefore(ele, self.bar.children[0]);
+                    if (searchData.prefConfig.currentTypeFirst) {
+                        self.bar.insertBefore(ele, self.bar.children[0]);
+                    } else {
+                        self.bar.insertBefore(ele, self.bar.children[self.bar.children.length - 1]);
+                    }
                     if (!searchData.prefConfig.disableAutoOpen) {
                         ele.classList.add("search-jumper-open");
                         if (sites.length > (searchData.prefConfig.expandTypeLength || 12) && !searchData.prefConfig.expandType) {
@@ -9370,6 +9381,7 @@
                       top: 0;
                       left: 0;
                       transform: scale(${searchBar.scale});
+                      z-index: 2147483647;
                     }
                     #searchJumperWrapper * {
                       margin: 0;
@@ -10623,6 +10635,9 @@
             }
             if (typeof searchData.prefConfig.mouseLeaveToHide === "undefined") {
                 searchData.prefConfig.mouseLeaveToHide = true;
+            }
+            if (typeof searchData.prefConfig.currentTypeFirst === "undefined") {
+                searchData.prefConfig.currentTypeFirst = true;
             }
             if (typeof searchData.prefConfig.suggestType === "undefined") {
                 if (lang === "zh-CN") {
