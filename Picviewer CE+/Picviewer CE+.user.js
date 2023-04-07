@@ -17149,7 +17149,8 @@ ImgOps | https://imgops.com/#b#`;
                     width: 100%;\
                     text-align: center;\
                     pointer-events: none;\
-                    margin-top: 25px;\
+                    margin-bottom: 45px;\
+                    bottom: 0;\
                     }\
                     .pv-gallery-maximize-container>p>input{\
                     pointer-events: all;\
@@ -17161,6 +17162,9 @@ ImgOps | https://imgops.com/#b#`;
                     cursor: pointer;\
                     margin: 1px;\
                     font-size: 20px;\
+                    }\
+                    .pv-gallery-maximize-container>p>input:hover{\
+                    color: red;\
                     }\
                     .pv-gallery-maximize-container{\
                     width: 100%;\
