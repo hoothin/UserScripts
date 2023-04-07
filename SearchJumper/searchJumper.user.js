@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.55.52
+// @version      1.6.6.55.53
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -3750,7 +3750,7 @@
             }
 
             highlight(words, ele, root) {
-                if (!words && !this.curHighlightWords) return;
+                if (!words && !this.curHighlightWords || this.curHighlightWords.length === 0) return;
                 if (!ele) {
                     this.highlight(words, getBody(document), root);
                     [].forEach.call(document.getElementsByTagName("iframe"), iframe => {
@@ -5197,58 +5197,58 @@
                     let oldWords = this.curHighlightWords;
                     this.highlight("");
                     this.highlight(oldWords);
-                }, 500);
-                if (!currentSite && this.bar.style.display == "none") {
-                    let typeData;
-                    for (let i in searchData.sitesConfig) {
-                        if (currentSite) break;
-                        typeData = searchData.sitesConfig[i];
-                        if (!typeData) {
-                            continue;
-                        }
-                        let sites = typeData.sites;
-                        for (let j in sites) {
+                    if (!currentSite && this.bar.style.display == "none") {
+                        let typeData;
+                        for (let i in searchData.sitesConfig) {
                             if (currentSite) break;
-                            let data = sites[j];
-                            if (!data || !data.url) {
+                            typeData = searchData.sitesConfig[i];
+                            if (!typeData) {
                                 continue;
                             }
-                            if (data.match === '0') {
-                            } else if (data.match) {
-                                if (new RegExp(data.match).test(location.href)) {
-                                    this.setCurrentSite(data);
+                            let sites = typeData.sites;
+                            for (let j in sites) {
+                                if (currentSite) break;
+                                let data = sites[j];
+                                if (!data || !data.url) {
+                                    continue;
                                 }
-                            } else if (data.url.indexOf(location.hostname) != -1) {
-                                if (data.url.indexOf("site") != -1) {
-                                    let siteMatch = data.url.match(/site(%3A|:)(.+?)[\s%]/);
-                                    if (siteMatch && location.href.indexOf(siteMatch[2]) != -1 && data.url.replace(siteMatch[0], "").indexOf(location.hostname) != -1) {
+                                if (data.match === '0') {
+                                } else if (data.match) {
+                                    if (new RegExp(data.match).test(location.href)) {
                                         this.setCurrentSite(data);
                                     }
-                                } else if (!currentSite && data.url.replace(/^https?:\/\//, "").replace(location.host, "").replace(/\/?[\?#].*/, "") == location.pathname.replace(/\/$/, "")) {
-                                    let urlReg = data.url.match(/[^\/\?&]+(?=%[stb])/g);
-                                    if (urlReg) {
-                                        urlReg = urlReg.join('.*');
-                                        if (new RegExp(urlReg).test(location.href)) {
+                                } else if (data.url.indexOf(location.hostname) != -1) {
+                                    if (data.url.indexOf("site") != -1) {
+                                        let siteMatch = data.url.match(/site(%3A|:)(.+?)[\s%]/);
+                                        if (siteMatch && location.href.indexOf(siteMatch[2]) != -1 && data.url.replace(siteMatch[0], "").indexOf(location.hostname) != -1) {
                                             this.setCurrentSite(data);
+                                        }
+                                    } else if (!currentSite && data.url.replace(/^https?:\/\//, "").replace(location.host, "").replace(/\/?[\?#].*/, "") == location.pathname.replace(/\/$/, "")) {
+                                        let urlReg = data.url.match(/[^\/\?&]+(?=%[stb])/g);
+                                        if (urlReg) {
+                                            urlReg = urlReg.join('.*');
+                                            if (new RegExp(urlReg).test(location.href)) {
+                                                this.setCurrentSite(data);
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
-                    }
-                    if (currentSite) {
-                        this.appendBar();
-                        this.bar.style.display = "";
-                        this.initPos();
-                        let typeBtn = this.bar.querySelector(`.search-jumper-type[data-type="${typeData.type}"]>span`);
-                        if (typeBtn && !typeBtn.classList.contains("search-jumper-open")) {
-                            this.bar.insertBefore(typeBtn.parentNode, this.bar.children[0]);
-                            if (!searchData.prefConfig.disableAutoOpen) {
-                                typeBtn.onmousedown();
+                        if (currentSite) {
+                            this.appendBar();
+                            this.bar.style.display = "";
+                            this.initPos();
+                            let typeBtn = this.bar.querySelector(`.search-jumper-type[data-type="${typeData.type}"]>span`);
+                            if (typeBtn && !typeBtn.classList.contains("search-jumper-open")) {
+                                this.bar.insertBefore(typeBtn.parentNode, this.bar.children[0]);
+                                if (!searchData.prefConfig.disableAutoOpen) {
+                                    typeBtn.onmousedown();
+                                }
                             }
                         }
                     }
-                }
+                }, 500);
             }
 
             initSort() {
@@ -8604,7 +8604,7 @@
                 var orig = history[type];
                 return function() {
                     var rv = orig.apply(this, arguments);
-                    var e = new Event(type);
+                    var e = new Event('sj_' + type);
                     e.arguments = arguments;
                     window.dispatchEvent(e);
                     return rv;
@@ -8612,8 +8612,8 @@
             };
             history.pushState = _wr('pushState');
             history.replaceState = _wr('replaceState');
-            window.addEventListener('pushState', changeHandler);
-            window.addEventListener('replaceState', changeHandler);
+            window.addEventListener('sj_pushState', changeHandler);
+            window.addEventListener('sj_replaceState', changeHandler);
             window.addEventListener('yt-navigate-finish', changeHandler);
             window.addEventListener("securitypolicyviolation", (e) => {
                 if (e.violatedDirective === 'form-action') {
