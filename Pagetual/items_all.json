@@ -30969,17 +30969,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/63821",
-  "created_by": "taizooo",
-  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
-  "name": "ソフトバンク ビジネス+IT",
   "data": {
-    "exampleUrl": "http://www.sbbit.jp/article/7481/ http://www.sbbit.jp/article/cont1/21311 http://www.sbbit.jp/article/cont1/21311?page=2 https://www.sbbit.jp/article/cont1/36675",
-    "nextLink": "//a[contains(text(),'次へ')][contains(@href,'?page=')]",
+    "pageElement": "//*[contains(concat(' ', normalize-space(@class), ' '), ' pgr ')]/preceding-sibling::node()",
+    "nextLink": "//link[@rel='next']",
     "url": "^https://www\\.sbbit\\.jp/article/",
-    "pageElement": "//div[@class=\"ar-title-sentence\"]/descendant::br[last()]/ancestor::div[1]/node()|//div[@class=\"ar-title-sentence\"]/descendant::text()[string-length(normalize-space()) > 0][1]/ancestor::div[1][./p]"
+    "exampleUrl": "https://www.sbbit.jp/article/cont1/21311\r\nhttps://www.sbbit.jp/article/cont1/36675"
   },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "taizooo",
+  "name": "ビジネス+IT",
   "created_at": "2012-10-05T17:13:23+09:00",
-  "updated_at": "2019-07-18T17:50:34+09:00"
+  "updated_at": "2023-04-07T17:12:35+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/63804",
