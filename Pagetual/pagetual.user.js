@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.35.12
+// @version      1.9.35.13
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -841,7 +841,7 @@
                 segs.unshift(elm.localName.toLowerCase());
                 continue;
             }
-            if (elm.hasAttribute('id')) {
+            if (elm.hasAttribute && elm.hasAttribute('id')) {
                 var uniqueIdCount = 0;
                 for (var n = 0; n < allNodes.length; n++) {
                     if (allNodes[n].hasAttribute('id') && allNodes[n].id == elm.id) uniqueIdCount++;
@@ -853,7 +853,7 @@
                 } else {
                     segs.unshift(elm.localName.toLowerCase() + '[@id="' + elm.getAttribute('id') + '"]');
                 }
-            } else if (elm.hasAttribute('class')) {
+            } else if (elm.hasAttribute && elm.hasAttribute('class')) {
                 segs.unshift(elm.localName.toLowerCase() + '[@class="' + elm.getAttribute('class') + '"]');
             } else {
                 let i, sib;
@@ -2183,7 +2183,7 @@
                 }
                 if (nextLink && (this.curSiteRule.action == 0 || this.curSiteRule.action == 1 || this.curSiteRule.action == 2)) {
                     let form = doc.querySelector('#search-form');
-                    if (!nextLink.href && nextLink.hasAttribute("onclick") && form) {
+                    if (!nextLink.href && nextLink.hasAttribute && nextLink.hasAttribute("onclick") && form) {
                         if (/^\d+$/.test(nextLink.innerText)) {
                             nextLink.href = getNextLinkByForm(form, nextLink, nextLink.innerText);
                         }
@@ -2217,7 +2217,7 @@
                     }
                     let parent = nextLink;
                     while (parent && parent.tagName !== "BODY") {
-                        if (parent.hasAttribute("disabled")) {
+                        if (parent.hasAttribute && parent.hasAttribute("disabled")) {
                             this.nextLinkHref = false;
                             return null;
                         }
@@ -2227,7 +2227,7 @@
                                 return null;
                             }
                         }
-                        if (parent.style.display === "none") {
+                        if (parent.style && parent.style.display === "none") {
                             this.nextLinkHref = false;
                             return null;
                         }
@@ -3388,24 +3388,24 @@
             frame.id = "pagetual-picker";
             frame.innerHTML = createHTML(`
                 <button title="Pagetual" type="button" class="logoIcon">
-                  <svg width="30" height="30" class="upSvg pagetual" viewBox="0 0 1024 1024"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a"></path></svg>
+                  <svg width="30" height="30" class="upSvg pagetual" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a"></path></svg>
                 </button>
                 <div class="title">${i18n("picker")}</div>
                 <button title="${i18n("closePicker")}" type="button" class="closePicker">
-                  <svg viewBox="0 0 1024 1024"><path d="M512 128c212 0 384 172 384 384s-172 384-384 384-384-172-384-384 172-384 384-384m0-64C264.8 64 64 264.8 64 512s200.8 448 448 448 448-200.8 448-448S759.2 64 512 64z m238.4 254.4l-45.6-45.6L512 467.2 318.4 273.6l-45.6 45.6L467.2 512 273.6 705.6l45.6 45.6L512 557.6l193.6 193.6 45.6-45.6L557.6 512l192.8-193.6z" fill="#604b4a"></path></svg>
+                  <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 128c212 0 384 172 384 384s-172 384-384 384-384-172-384-384 172-384 384-384m0-64C264.8 64 64 264.8 64 512s200.8 448 448 448 448-200.8 448-448S759.2 64 512 64z m238.4 254.4l-45.6-45.6L512 467.2 318.4 273.6l-45.6 45.6L467.2 512 273.6 705.6l45.6 45.6L512 557.6l193.6 193.6 45.6-45.6L557.6 512l192.8-193.6z" fill="#604b4a"></path></svg>
                 </button>
                 <div class="allpath" title="${i18n("switchSelector")}"></div>
                 <div>
                   <textarea class="selector" spellcheck="false" name="selector" placeholder="${i18n("pickerPlaceholder")}"></textarea>
                   <button id="check" title="${i18n("pickerCheck")}" type="button">
-                    <svg viewBox="0 0 1024 1024"><path d="M512 128a384 384 0 1 0 0 768 384 384 0 0 0 0-768z m0-85.333333c259.2 0 469.333333 210.133333 469.333333 469.333333s-210.133333 469.333333-469.333333 469.333333S42.666667 771.2 42.666667 512 252.8 42.666667 512 42.666667zM696.149333 298.666667L768 349.866667 471.594667 725.333333 256 571.733333l53.888-68.266666 143.744 102.4z" fill="#604b4a"></path></svg>
+                    <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 128a384 384 0 1 0 0 768 384 384 0 0 0 0-768z m0-85.333333c259.2 0 469.333333 210.133333 469.333333 469.333333s-210.133333 469.333333-469.333333 469.333333S42.666667 771.2 42.666667 512 252.8 42.666667 512 42.666667zM696.149333 298.666667L768 349.866667 471.594667 725.333333 256 571.733333l53.888-68.266666 143.744 102.4z" fill="#604b4a"></path></svg>
                   </button>
                 </div>
                 <div class="bottom">
-                  <input name="xpath" id="checkbox_id" type="checkbox">
+                  <input name="xpath" id="checkbox_id" type="checkbox" />
                   <label for="checkbox_id">XPath</label>
                   <button id="edit" title="${i18n("gotoEdit")}" type="button">
-                    <svg viewBox="0 0 1024 1024" style="color: orangered;fill: orangered;">
+                    <svg viewBox="0 0 1024 1024" style="color: orangered;fill: orangered;" version="1.1" xmlns="http://www.w3.org/2000/svg">
                       <path d="M775.84 392.768l-155.2-172.352L160.768 643.264l-38.368 187.936 190.56-12.832zM929.952 229.952l-131.2-150.944-0.288-0.32a16 16 0 0 0-22.592-0.96l-131.168 120.576 155.168 172.352 128.832-118.464a15.936 15.936 0 0 0 1.248-22.24zM96 896h832v64H96z">
                       </path>
                     </svg>
@@ -3413,15 +3413,15 @@
                 </div>
                 <div class="moreConfig">
                   <div title="${i18n('forceStateIframe')}">
-                    <input name="forceState" id="forceStateIframe" type="radio">
+                    <input name="forceState" id="forceStateIframe" type="radio" />
                     <label for="forceStateIframe">${i18n('iframe')}</label>
                   </div>
                   <div title="${i18n('forceStateDynamic')}">
-                    <input name="forceState" id="forceStateDynamic" type="radio">
+                    <input name="forceState" id="forceStateDynamic" type="radio" />
                     <label for="forceStateDynamic">${i18n('dynamic')}</label>
                   </div>
                   <div title="${i18n('forceStateDisable')}">
-                    <input name="forceState" id="forceStateDisable" type="radio">
+                    <input name="forceState" id="forceStateDisable" type="radio" />
                     <label for="forceStateDisable">${i18n('disable')}</label>
                   </div>
                 </div>
@@ -3430,10 +3430,10 @@
                 <div>
                   <textarea style="display: none;" class="tempRule" spellcheck="false" placeholder="{Rule object}" title="Rule for current site"></textarea>
                   <button id="showDetail" title="" type="button">
-                    <svg viewBox="0 0 1024 1024"><path d="M511.1 63.7c-247.4 0-448 200.6-448 448s200.6 448 448 448 448-200.6 448-448-200.6-448-448-448z m281.2 374.5L535.6 694.9c-12.5 12.5-32.8 12.5-45.3 0l-255.8-256c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l210.7 210.7c12.5 12.5 32.8 12.5 45.3 0l211.4-211.4c12.5-12.5 32.8-12.5 45.3 0 12.3 12.5 12.3 32.8-0.2 45.3z" fill="orangered"></path></svg>
+                    <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M511.1 63.7c-247.4 0-448 200.6-448 448s200.6 448 448 448 448-200.6 448-448-200.6-448-448-448z m281.2 374.5L535.6 694.9c-12.5 12.5-32.8 12.5-45.3 0l-255.8-256c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l210.7 210.7c12.5 12.5 32.8 12.5 45.3 0l211.4-211.4c12.5-12.5 32.8-12.5 45.3 0 12.3 12.5 12.3 32.8-0.2 45.3z" fill="orangered"></path></svg>
                   </button>
                   <button id="saveDetail" title="" type="button">
-                    <svg viewBox="0 0 1024 1024"><path d="M704 128H192c-35.2 0-64 28.8-64 64v640c0 35.2 28.8 64 64 64h640c35.2 0 64-28.8 64-64V320L704 128zM256 256h320v128H256V256z m256 512c-70.4 0-128-57.6-128-128s57.6-128 128-128 128 57.6 128 128-57.6 128-128 128z" fill="orangered"></path></svg>
+                    <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M704 128H192c-35.2 0-64 28.8-64 64v640c0 35.2 28.8 64 64 64h640c35.2 0 64-28.8 64-64V320L704 128zM256 256h320v128H256V256z m256 512c-70.4 0-128-57.6-128-128s57.6-128 128-128 128 57.6 128 128-57.6 128-128 128z" fill="orangered"></path></svg>
                   </button>
                 </div>
             `);
