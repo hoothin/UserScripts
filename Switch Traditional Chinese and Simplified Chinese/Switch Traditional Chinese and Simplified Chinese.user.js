@@ -6,7 +6,7 @@
 // @namespace    hoothin
 // @supportURL   https://github.com/hoothin/UserScripts
 // @homepageURL  https://github.com/hoothin/UserScripts
-// @version      1.2.6.24
+// @version      1.2.6.25
 // @description        任意轉換網頁中的簡體中文與正體中文（默認簡體→正體）
 // @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体）
 // @description:ja     簡繁中国語に変換
@@ -27,6 +27,7 @@
 // @grant        GM.listValues
 // @grant        GM.deleteValue
 // @grant        GM.openInTab
+// @grant        unsafeWindow
 // @contributionURL      https://www.buymeacoffee.com/hoothin
 // @contributionAmount 1
 // ==/UserScript==
@@ -945,6 +946,12 @@
     } else {
         _GM_openInTab = (s, t) => {window.open(s)};
     }
+
+    //將接口暴露出去
+    var _unsafeWindow = (typeof unsafeWindow == 'undefined') ? window : unsafeWindow;
+    _unsafeWindow.tc2sc = simplized;
+    _unsafeWindow.sc2tc = traditionalized;
+
     var storage = {
         supportGM: typeof GM_getValue == 'function' && typeof GM_getValue('a', 'b') != 'undefined',
         supportGMPromise: typeof GM != 'undefined' && typeof GM.getValue == 'function' && typeof GM.getValue('a','b') != 'undefined',
