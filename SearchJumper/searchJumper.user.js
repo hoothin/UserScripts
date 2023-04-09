@@ -3751,7 +3751,7 @@
             }
 
             highlight(words, ele, root) {
-                if (!words && !this.curHighlightWords) return;
+                if (!words && (!this.curHighlightWords || this.curHighlightWords.length === 0)) return;
                 if (!ele) {
                     this.highlight(words, getBody(document), root);
                     [].forEach.call(document.getElementsByTagName("iframe"), iframe => {
