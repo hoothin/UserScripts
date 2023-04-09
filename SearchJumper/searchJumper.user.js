@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.55.53
+// @version      1.6.6.55.54
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -2774,15 +2774,15 @@
                 searchInputDiv.className = "search-jumper-input";
                 searchInputDiv.innerHTML = createHTML(`
                 <svg class="closeBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>Close search input</title><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64z m165.4 618.2l-66-0.3L512 563.4l-99.3 118.4-66.1 0.3c-4.4 0-8-3.5-8-8 0-1.9 0.7-3.7 1.9-5.2l130.1-155L340.5 359c-1.2-1.5-1.9-3.3-1.9-5.2 0-4.4 3.6-8 8-8l66.1 0.3L512 464.6l99.3-118.4 66-0.3c4.4 0 8 3.5 8 8 0 1.9-0.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"></path></svg>
-                <input type="radio" id="filterSitesTab" name="tab" ${searchData.prefConfig.defaultFindTab? "" : "checked"}>
+                <input type="radio" id="filterSitesTab" name="tab" ${searchData.prefConfig.defaultFindTab? "" : "checked=\"checked\""} />
                 <label for="filterSitesTab">${i18n("filterSites")}</label>
-                <input type="radio" id="searchInPageTab" name="tab" ${searchData.prefConfig.defaultFindTab? "checked" : ""}>
+                <input type="radio" id="searchInPageTab" name="tab" ${searchData.prefConfig.defaultFindTab? "checked=\"checked\"" : ""} />
                 <label for="searchInPageTab">${i18n("searchInPage")}</label>
                 <div class="line"></div>
                 <div class="content-container">
                   <div class="inputGroup" id="filterSites">
-                    <input spellcheck="false" id="searchJumperInput" title="${i18n("inputPlaceholder")}" placeholder="${i18n("inputPlaceholder")}" list="filterGlob">
-                    <input spellcheck="false" id="searchJumperInputKeyWords" placeholder="${i18n("inputKeywords")}" list="suggest">
+                    <input spellcheck="false" id="searchJumperInput" title="${i18n("inputPlaceholder")}" placeholder="${i18n("inputPlaceholder")}" list="filterGlob" />
+                    <input spellcheck="false" id="searchJumperInputKeyWords" placeholder="${i18n("inputKeywords")}" list="suggest" />
                     <datalist id="filterGlob">
                     </datalist>
                     <datalist id="suggest">
@@ -2797,7 +2797,7 @@
                   </div>
                   <div class="inputGroup" id="searchInPage">
                     <span class="lockWords"></span>
-                    <input spellcheck="false" id="searchJumperInPageInput" title="${i18n("inPageTips")}" placeholder="${i18n("inPagePlaceholder")}">
+                    <input spellcheck="false" id="searchJumperInPageInput" title="${i18n("inPageTips")}" placeholder="${i18n("inPagePlaceholder")}" />
                     <span class="svgBtns">
                       <svg id="editBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("editBtn")}</title><path d="M928 365.664a32 32 0 0 0-32 32V864a32 32 0 0 1-32 32H160a32 32 0 0 1-32-32V160a32 32 0 0 1 32-32h429.6a32 32 0 0 0 0-64H160a96 96 0 0 0-96 96v704a96 96 0 0 0 96 96h704a96 96 0 0 0 96-96V397.664a32 32 0 0 0-32-32z"></path><path d="M231.616 696.416a38.4 38.4 0 0 0 44.256 53.792l148-38.368L950.496 185.248 814.72 49.472 290.432 573.76l-58.816 122.656z m111.808-85.12L814.72 140l45.248 45.248-468.992 468.992-77.824 20.16 30.272-63.104z"></path></svg>
                       <svg id="addWord" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("addWord")}</title><path d="M821.364 962h-618.75C123.864 962 62 900.114 62 821.364v-618.75c0-78.75 61.864-140.635 140.614-140.635h618.75c78.75 0 140.636 61.885 140.636 140.635v618.75C962 900.114 900.114 962 821.364 962z m79.265-756.814c0-46.586-35.25-81.815-81.815-81.815H205.186c-46.843-0.214-84.557 34.758-83.165 82.393-0.128 14.4 1.35 613.05 1.35 613.05 0 46.565 35.25 81.815 81.815 81.815h613.628c46.565 0 81.815-35.25 81.815-81.815V205.186z m-173.55 347.657H552.843v174.236c0 16.95-13.736 30.685-30.686 30.685h-0.236a30.686 30.686 0 0 1-30.685-30.685V552.843H296.92a30.686 30.686 0 0 1-30.685-30.686v-0.236c0-16.95 13.735-30.685 30.685-30.685h194.315V296.92c0-16.95 13.735-30.685 30.685-30.685h0.236c16.95 0 30.686 13.735 30.686 30.685v194.315h174.236c16.95 0 30.685 13.735 30.685 30.685v0.236c0 16.95-13.735 30.686-30.685 30.686z"></path></svg>
@@ -3751,7 +3751,7 @@
             }
 
             highlight(words, ele, root) {
-                if (!words && !this.curHighlightWords || this.curHighlightWords.length === 0) return;
+                if (!words && !this.curHighlightWords) return;
                 if (!ele) {
                     this.highlight(words, getBody(document), root);
                     [].forEach.call(document.getElementsByTagName("iframe"), iframe => {
@@ -4047,10 +4047,6 @@
                     }
                 });
                 this.historySiteBtns.slice(0, 10).forEach(btn => {
-                    if (btn && btn.children.length && btn.children[0].dataset.src) {
-                        btn.children[0].src = btn.children[0].dataset.src;
-                        btn.children[0].dataset.src = '';
-                    }
                     self.historylist.appendChild(btn);
                 });
                 let targetKw = "";
@@ -5296,6 +5292,11 @@
                     for (let i = 0; i < self.allSiteBtns.length; i++) {
                         let siteBtn = self.allSiteBtns[i][0];
                         if (siteBtn.dataset.name == n) {
+                            let siteImg = siteBtn.querySelector('img');
+                            if (siteImg && siteImg.dataset.src) {
+                                siteImg.src = siteImg.dataset.src;
+                                siteImg.dataset.src = '';
+                            }
                             self.historySiteBtns.push(siteBtn);
                             break;
                         }
@@ -5324,10 +5325,6 @@
                             }
                         }
                         if (findSame) continue;
-                        if (btn.children.length && btn.children[0].dataset.src) {
-                            btn.children[0].src = btn.children[0].dataset.src;
-                            btn.children[0].dataset.src = '';
-                        }
                         btn.classList.add("historySite");
                         if (!init && searchData.prefConfig.historyInsertFirst) {
                             if (typeEle.children.length > 1) {
