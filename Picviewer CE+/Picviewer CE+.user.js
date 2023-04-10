@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.4.6.1
+// @version              2023.4.10.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -42,7 +42,7 @@
 // @grant                unsafeWindow
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
 // @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1171600
-// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1170723
+// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1173627
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @match                *://*/*
@@ -13004,8 +13004,8 @@ ImgOps | https://imgops.com/#b#`;
                     '<span class="pv-gallery-head-left-img-info-scaling" title="'+i18n("scaleRatio")+'">（100%）</span>'+
                     '<span class="pv-gallery-vertical-align-helper"></span>'+
                     '<span class="pv-gallery-head-left-img-info-description" title="'+i18n("picNote")+'"></span>'+
-                    '<div class="pv-gallery-range-box"><input type="range" id="minsizeW" min="0" max="100" value="0" title="Width"> <span id="minsizeWSpan">0px</span> '+
-                    '<input type="range" id="minsizeH" min="0" max="100" value="0" title="Height"> <span id="minsizeHSpan">0px</span></div>'+
+                    '<div class="pv-gallery-range-box"><input type="range" id="minsizeW" min="0" max="100" value="0" title="Width" /> <span id="minsizeWSpan">0px</span> '+
+                    '<input type="range" id="minsizeH" min="0" max="100" value="0" title="Height" /> <span id="minsizeHSpan">0px</span></div>'+
                     '<span class="pv-gallery-head-left-lock-icon" title="'+i18n("lockSizeTip")+'"></span>'+
                     '</span>'+
                     '</span>'+
@@ -13841,7 +13841,7 @@ ImgOps | https://imgops.com/#b#`;
                             break;
                         case 'scrollToEndAndReload':
                             var checkbox = target.parentNode.querySelector("input");
-                            if(target.nodeName=="LABEL"){
+                            if(target.nodeName.toUpperCase()=="LABEL"){
                                 checkbox.checked = !checkbox.checked;
                             }
 
@@ -14207,7 +14207,7 @@ ImgOps | https://imgops.com/#b#`;
                 var imgDraged;
                 eleMaps['img-parent'].addEventListener('mousedown',function(e){//如果图片尺寸大于屏幕的时候按住图片进行拖移
                     var target=e.target;
-                    if(e.button!=0 || target.nodeName!='IMG')return;
+                    if(e.button!=0 || target.nodeName.toUpperCase()!='IMG')return;
                     var bigger=target.classList.contains('pv-gallery-img_zoom-out') || self.scaleByScreen;//如果是大于屏幕
 
                     var oClient={
@@ -14253,7 +14253,7 @@ ImgOps | https://imgops.com/#b#`;
 
                 eleMaps['img-parent'].addEventListener('click',function(e){//点击图片本身就行图片缩放处理
                     var target=e.target;
-                    if(e.button!=0 || target.nodeName!='IMG')return;
+                    if(e.button!=0 || target.nodeName.toUpperCase()!='IMG')return;
 
                     if(imgDraged){//在拖动后触发的click事件，取消掉。免得一拖动完就立即进行的缩放。。。
                         imgDraged=false;
@@ -14282,7 +14282,7 @@ ImgOps | https://imgops.com/#b#`;
                     }else{
                         self.hideImg=target;
                     }
-                    if(e.button!=0 || target.nodeName!='IMG')return;
+                    if(e.button!=0 || target.nodeName.toUpperCase()!='IMG')return;
 
                     if(imgDraged){
                         imgDraged=false;
@@ -14306,7 +14306,7 @@ ImgOps | https://imgops.com/#b#`;
                 container.addEventListener('mousedown',function(e){//鼠标按在导航上，切换图片
                     if(e.button!=0)return;//左键
                     var target=e.target;
-                    if(target.nodeName=='IMG')e.preventDefault();
+                    if(target.nodeName.toUpperCase()=='IMG')e.preventDefault();
 
                     var matched=true;
                     var stop;
@@ -14742,12 +14742,32 @@ ImgOps | https://imgops.com/#b#`;
                         let batchDlBtn=document.createElement('input');
                         let cancelBtn=document.createElement('input');
                         let invertBtn=document.createElement('input');
+                        let compareBtn=document.createElement('input');
                         batchDlBtn.value=i18n("download");
                         cancelBtn.value=i18n("closeBtn");
                         invertBtn.value=i18n("invertBtn");
+                        compareBtn.value=i18n("compareBtn");
                         batchDlBtn.type="button";
                         cancelBtn.type="button";
                         invertBtn.type="button";
+                        compareBtn.type="button";
+                        compareBtn.className = "compareBtn";
+                        compareBtn.onclick=function(e){
+                            checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input:checked");
+                            if(checkBoxs.length<2)return;
+                            let imgSrcs=[];
+                            [].forEach.call(checkBoxs, function(node){
+                                let conItem=node.parentNode;
+                                if(conItem.style.display=="none")return;
+                                let imgSrc=conItem.querySelector("img").src;
+                                imgSrcs.push(imgSrc);
+                            });
+                            if(imgSrcs.length<2)return;
+                            let mainImg=document.createElement("img");
+                            mainImg.src=imgSrcs.shift();
+                            let mainImgWin=new ImgWindowC(mainImg);
+                            mainImgWin.compare(imgSrcs);
+                        };
                         batchDlBtn.onclick=function(e){
                             checkBoxs=maximizeContainer.querySelectorAll(".maximizeChild>input:checked");
                             if(checkBoxs.length<1)return;
@@ -14801,11 +14821,16 @@ ImgOps | https://imgops.com/#b#`;
                         self.batchDl.appendChild(batchDlBtn);
                         self.batchDl.appendChild(cancelBtn);
                         self.batchDl.appendChild(invertBtn);
+                        self.batchDl.appendChild(compareBtn);
                         maximizeContainer.appendChild(self.batchDl);
                     }
+                    maximizeContainer.classList.remove("canCompare");
                     if(checkBoxs.length>0){
                         maximizeContainer.appendChild(self.batchDl);
                         maximizeContainer.classList.add("checked");
+                        if (checkBoxs.length > 1) {
+                            maximizeContainer.classList.add("canCompare");
+                        }
                     }else{
                         maximizeContainer.removeChild(self.batchDl);
                         maximizeContainer.classList.remove("checked");
@@ -14876,7 +14901,7 @@ ImgOps | https://imgops.com/#b#`;
                         }
                     };
                     imgSpan.className = "maximizeChild";
-                    imgSpan.innerHTML = createHTML('<img data-src="' + curNode.dataset.src + '" src="' + curNode.dataset.thumbSrc + '">');
+                    imgSpan.innerHTML = createHTML('<img data-src="' + curNode.dataset.src + '" src="' + curNode.dataset.thumbSrc + '" />');
                     let img=imgSpan.querySelector("img");
                     imgSpan.addEventListener("click", function(e) {
                         imgReady(img.dataset.src, {
@@ -15196,10 +15221,11 @@ ImgOps | https://imgops.com/#b#`;
 
                 //显示读取指示器。
                 var loadingIndicator=ele.querySelector('.pv-gallery-sidebar-thumb-loading');
-                loadingIndicator.style.display='block';
+                if (loadingIndicator && loadingIndicator.style) loadingIndicator.style.display='block';
 
 
-                this.imgReady=imgReady(src,{
+                if (!src) return;
+                this.imgReady=imgReady(src, {
                     ready:function(){
                         //从读取队列中删除自己
                         var index=allLoading.indexOf(src);
@@ -15209,7 +15235,7 @@ ImgOps | https://imgops.com/#b#`;
 
                         if(src!=self.lastLoading)return;
 
-                        loadingIndicator.style.display='';
+                        if (loadingIndicator && loadingIndicator.style) loadingIndicator.style.display='';
                         if(preImgR)preImgR.abort();
                         self.loadImg(this,ele);
                     },
@@ -15223,7 +15249,7 @@ ImgOps | https://imgops.com/#b#`;
                         if(src!=self.lastLoading)return;
 
                         if(e.type=='error'){
-                            loadingIndicator.style.display='';
+                            if (loadingIndicator && loadingIndicator.style) loadingIndicator.style.display='';
                             self.errorSpan=ele;
                             if(preImgR)preImgR.abort();
                             self.loadImg(this,ele,true);
@@ -15242,12 +15268,12 @@ ImgOps | https://imgops.com/#b#`;
                 });
 
                 this.imgReady.removeLI=function(){
-                    loadingIndicator.style.display='';
+                    if (loadingIndicator && loadingIndicator.style) loadingIndicator.style.display='';
                 };
 
             },
             loadImg:function(img,relatedThumb,error){
-                if(img.nodeName!='IMG'){//先读取。
+                if(img.nodeName.toUpperCase()!='IMG'){//先读取。
                     this.getImg(img);
                     return;
                 };
@@ -15559,7 +15585,7 @@ ImgOps | https://imgops.com/#b#`;
                             spanMark.dataset.src=item.src;
                             spanMark.dataset.srcs=item.srcs?item.srcs.join(","):"";
                             if(item.xhr)spanMark.dataset.xhr=encodeURIComponent(JSON.stringify(item.xhr));
-                            spanMark.dataset.description=encodeURIComponent(item.description || item.img.title || item.img.alt);
+                            spanMark.dataset.description=encodeURIComponent(item.description || (item.img ? (item.img.title || item.img.alt) : ""));
                             spanMark.dataset.thumbSrc=item.imgSrc;
                             let title = item.img ? (item.img.title || item.img.alt || "").slice(-50) : "";
                             if (title) {
@@ -15865,8 +15891,10 @@ ImgOps | https://imgops.com/#b#`;
                     this.gallery.blur();
                     this.gallery.style.display='none';
                     var des=document.documentElement.style;
-                    des.overflowX=this.deOverflow.x;
-                    des.overflowY=this.deOverflow.y;
+                    if(this.deOverflow){
+                        des.overflowX=this.deOverflow.x;
+                        des.overflowY=this.deOverflow.y;
+                    }
                     this.slideShow.exit();
                     this.collection.exit();
                     window.removeEventListener('resize',this._resizeHandler,true);
@@ -16052,7 +16080,7 @@ ImgOps | https://imgops.com/#b#`;
                         targetUrl=childA;
                     }else{
                         while(targetUrl=targetUrl.parentElement){
-                            if(targetUrl.nodeName=='A'){
+                            if(targetUrl.nodeName.toUpperCase()=='A'){
                                 break;
                             }
                         }
@@ -16369,7 +16397,7 @@ ImgOps | https://imgops.com/#b#`;
                 });
                 var bgReg=/.*url\(\s*["']?(.+?)["']?\s*\)/i;
                 var bgImgs=Array.from(getBody(document).querySelectorAll('*')).reduceRight((total, node) => {
-                        if(node.nodeName != "IMG" && node.offsetParent && (!node.className || !node.className.indexOf || node.className.indexOf("pv-")==-1)){
+                        if(node.nodeName.toUpperCase() != "IMG" && node.offsetParent && (!node.className || !node.className.indexOf || node.className.indexOf("pv-")==-1)){
                             let prop = getComputedStyle(node).backgroundImage;
                             if (prop != "none") {
                                 let match = bgReg.exec(prop);
@@ -16457,7 +16485,7 @@ ImgOps | https://imgops.com/#b#`;
                 var arr=[];
                 for (i = 0; i < nodes.length; ++i) {
                     if(unsafeWindow.getComputedStyle(nodes[i]).display=="none")arr.push("");
-                    else arr.push('<div><img src=' + nodes[i].dataset.src + '></div>');
+                    else arr.push('<div><img src="' + nodes[i].dataset.src + '" /></div>');
                 }
 
                 var title = document.title;
@@ -16488,10 +16516,10 @@ ImgOps | https://imgops.com/#b#`;
                  </span>\
                  <body class="'+prefs.gallery.exportType+'">\
                  <p style="width:100vw;display:flex;flex-direction:column;">\
-                 <img id="bigImg" style="pointer-events:none;position:fixed;z-index:999;width:100vw;top:0px;align-self:center;"></p>\
+                 <img id="bigImg" style="pointer-events:none;position:fixed;z-index:999;width:100vw;top:0px;align-self:center;" /></p>\
                  <p>【'+i18n("picTitle")+'】：' + title + '</p>\
                  <p>【'+i18n("picNum")+'】：' + nodes.length + ' <select onchange="document.body.className=this.options[this.options.selectedIndex].value"><option value="grid" '+(prefs.gallery.exportType=="grid"?"selected='selected'":"")+'>'+i18n("grid")+'</option><option value="gridBig" '+(prefs.gallery.exportType=="gridBig"?"selected='selected'":"")+'>'+i18n("gridBig")+'</option><option value="list" '+(prefs.gallery.exportType=="list"?"selected='selected'":"")+'>'+i18n("list")+'</option> </select> \
-                 <input type="button" value="'+i18n("exportImagesUrl")+'" onclick="var imgStr=\'\',selList=document.querySelectorAll(\'.select>img\');if(selList.length==0)[].forEach.call(document.querySelectorAll(\'img\'),function(i){imgStr+=i.src+\' \\n\'});else{[].forEach.call(selList,function(i){imgStr+=i.src+\' \\n\'});}window.prompt(\''+i18n("exportImagesUrlPop")+'\',imgStr);">\
+                 <input type="button" value="'+i18n("exportImagesUrl")+'" onclick="var imgStr=\'\',selList=document.querySelectorAll(\'.select>img\');if(selList.length==0)[].forEach.call(document.querySelectorAll(\'img\'),function(i){imgStr+=i.src+\' \\n\'});else{[].forEach.call(selList,function(i){imgStr+=i.src+\' \\n\'});}window.prompt(\''+i18n("exportImagesUrlPop")+'\',imgStr);" />\
                   ('+i18n("picTips")+')</p><p>'+i18n("savePageTips")+"</p>";
 
                 html += arr.join('\n') +
@@ -17275,6 +17303,12 @@ ImgOps | https://imgops.com/#b#`;
                     }\
                     .pv-gallery-maximize-container.checked span>.pv-top-banner{\
                     opacity: 0.6;\
+                    }\
+                    .pv-gallery-maximize-container>p>input.compareBtn{\
+                    display: none;\
+                    }\
+                    .pv-gallery-maximize-container.canCompare>p>input.compareBtn{\
+                    display: inline;\
                     }\
                     .pv-gallery-maximize-container span:hover>input{\
                     opacity: 1;\
@@ -18545,6 +18579,64 @@ ImgOps | https://imgops.com/#b#`;
                 //选中默认工具
                 this.selectTool(prefs.imgWindow.defaultTool);
             },
+            geneCompareImg: function(src, percent) {
+                let parent = document.createElement("div");
+                let compareImgCon = document.createElement("div");
+                compareImgCon.className = "compareImgCon";
+                let compareImg = document.createElement("img");
+                let compareSlider = document.createElement("div");
+                compareSlider.className = "compareSlider";
+                compareImgCon.style.width = percent + "%";
+                compareSlider.style.left = percent + "%";
+                let compareSliderButton = document.createElement("button");
+                let self = this;
+                let mouseMoveHandler = e => {
+                    if (compareSliderButton.style.display == "") {
+                        self.imgWindow.removeEventListener("mousemove", mouseMoveHandler);
+                        return;
+                    }
+                    e = (e.changedTouches) ? e.changedTouches[0] : e;
+                    let a = self.img.getBoundingClientRect();
+                    let x = e.pageX - a.left;
+                    x = x - window.pageXOffset;
+                    if (x < 0 || x > a.width) return;
+                    compareImgCon.style.width = x / a.width * 100 + "%";
+                    compareSlider.style.left = x / a.width * 100 + "%";
+                };
+                compareSlider.addEventListener("mousedown", e => {
+                    compareSliderButton.style.display = "none";
+                    self.imgWindow.addEventListener("mousemove", mouseMoveHandler);
+                    e.preventDefault();
+                    e.stopPropagation();
+                    document.addEventListener("mouseup", e => {
+                        compareSliderButton.style.display = "";
+                        self.imgWindow.removeEventListener("mousemove", mouseMoveHandler);
+                    });
+                });
+                compareSlider.appendChild(compareSliderButton);
+                compareImg.src = src;
+                compareImgCon.appendChild(compareImg);
+                parent.appendChild(compareImgCon);
+                parent.appendChild(compareSlider);
+                return parent;
+            },
+            compare: function(otherSrcs) {
+                if (!otherSrcs || otherSrcs.length === 0) return;
+                if (!this.compareBox) {
+                    let compareBox = document.createElement("div");
+                    compareBox.className = "compareBox";
+                    this.compareBox = compareBox;
+                    this.imgWindow.appendChild(compareBox);
+                }
+                this.compareBox.innerHTML = createHTML("");
+                let self = this, count = 0;
+                otherSrcs.forEach(src => {
+                    count++;
+                    let percent = 100 - count * (100 / (otherSrcs.length + 1));
+                    let compareImg = self.geneCompareImg(src, percent);
+                    self.compareBox.appendChild(compareImg);
+                });
+            },
             switchImage:function(fw){
                 if (!gallery) {
                     gallery = new GalleryC();
@@ -18626,6 +18718,57 @@ ImgOps | https://imgops.com/#b#`;
                     }\
                     .pv-pic-window-container_focus {\
                     border: 5px solid rgb(255 255 255 / 50%);\
+                    }\
+                    .pv-pic-window-container>.compareBox {\
+                    position: absolute;\
+                    top: 8px;\
+                    left: 8px;\
+                    width: calc(100% - 16px);\
+                    height: calc(100% - 16px);\
+                    pointer-events: none;\
+                    }\
+                    .pv-pic-window-container>.compareBox>div {\
+                    width: 100%;\
+                    height: 100%;\
+                    position: absolute;\
+                    }\
+                    .pv-pic-window-container>.compareBox>div>.compareImgCon {\
+                    width: 100%;\
+                    max-width: 100%;\
+                    height: 100%;\
+                    overflow: hidden;\
+                    }\
+                    .pv-pic-window-container>.compareBox>div>.compareImgCon>img {\
+                    width: auto;\
+                    height: 100%;\
+                    }\
+                    .pv-pic-window-container>.compareBox>div>.compareSlider {\
+                    position: absolute;\
+                    top: 0;\
+                    bottom: 0;\
+                    width: 2px;\
+                    background-color: rgba(255,255,255,.5);\
+                    border-top: 0;\
+                    border-bottom: 0;\
+                    box-shadow: 0 0 2px rgba(0,0,0,.5);\
+                    }\
+                    .pv-pic-window-container>.compareBox>div>.compareSlider>button {\
+                    position: absolute;\
+                    top: calc(50% - 40px);\
+                    left: -4px;\
+                    width: 10px;\
+                    background-color: #ddd;\
+                    border: 4px solid #fff;\
+                    height: 80px;\
+                    text-align: center;\
+                    padding: 0;\
+                    outline: 0;\
+                    cursor: ew-resize;\
+                    box-shadow: 0 0 2px rgba(0,0,0,.5);\
+                    pointer-events: all;\
+                    }\
+                    .pv-pic-window-container>.compareBox>div>.compareSlider>button:hover {\
+                    background-color: #777;\
                     }\
                     .pv-pic-window-close,\
                     .pv-pic-window-max,\
@@ -20081,7 +20224,7 @@ ImgOps | https://imgops.com/#b#`;
                 switch(e.type){
                     case 'click':{//阻止opera的图片保存
                         this.moving=false;
-                        if(e.ctrlKey && e.target.nodeName=='IMG'){
+                        if(e.ctrlKey && e.target.nodeName.toUpperCase()=='IMG'){
                             e.preventDefault();
                         }
                     }break;
@@ -20893,12 +21036,12 @@ ImgOps | https://imgops.com/#b#`;
                 }else{
                     this.buttons['actual'].style.removeProperty('display');
                 }
-                if(this.data.type != "force" && this.data.img.nodeName == 'IMG'){
+                if(this.data.type != "force" && this.data.img.nodeName.toUpperCase() == 'IMG'){
                     this.buttons['magnifier'].style.removeProperty('display');
                 }else{
                     this.buttons['magnifier'].style.display='none';
                 }
-                if (this.data.img.nodeName != 'IMG') {
+                if (this.data.img.nodeName.toUpperCase() != 'IMG') {
                     //this.buttons['gallery'].style.display = 'none';
                     //this.buttons['current'].style.display = 'none';
                 } else {
@@ -21209,7 +21352,7 @@ ImgOps | https://imgops.com/#b#`;
             URL=location.href.slice(0, 250);
 
         function pretreatment(img){
-            if(img.nodeName != "IMG" || img.src)return;
+            if(img.nodeName.toUpperCase() != "IMG" || img.src)return;
             if(img._lazyrias && img._lazyrias.srcset){
                 img.src=img._lazyrias.srcset[0];
             }else if(img.currentSrc){
@@ -21226,14 +21369,14 @@ ImgOps | https://imgops.com/#b#`;
             var imgPN=img;
             var imgPA,imgPE=[];
             while(imgPN=imgPN.parentElement){
-                if(imgPN.nodeName=='A'){
+                if(imgPN.nodeName.toUpperCase()=='A'){
                     imgPA=imgPN;
                     break;
                 }
             }
             imgPN=img;
             while(imgPN=imgPN.parentElement){
-                if(imgPN.nodeName=='BODY'){
+                if(imgPN.nodeName.toUpperCase()=='BODY'){
                     break;
                 }else{
                     imgPE.push(imgPN);
@@ -21552,7 +21695,7 @@ ImgOps | https://imgops.com/#b#`;
                             window.postMessage({
                                 messageID:messageID,
                                 command:'topWindowValid_frame',
-                                valid:getBody(document).nodeName!='FRAMESET',
+                                valid:getBody(document).nodeName.toUpperCase()!='FRAMESET',
                                 to:data.from,
                             },'*');
                         }break;
@@ -21790,7 +21933,7 @@ ImgOps | https://imgops.com/#b#`;
                   target.classList.contains("ks-imagezoom-lens")))) {
                 return;
             }
-            if (target.nodeName == "PICTURE"){
+            if (target.nodeName.toUpperCase() == "PICTURE"){
                 target = target.querySelector("img");
             }
             if (type == "mousemove") {
@@ -21800,13 +21943,13 @@ ImgOps | https://imgops.com/#b#`;
                         uniqueImgWin.remove();
                     }
                     return;
-                } else if (target.nodeName != 'IMG' || !canPreview) {
+                } else if (target.nodeName.toUpperCase() != 'IMG' || !canPreview) {
                     return;
                 }
             }
 
             // 扩展模式，检查前面一个是否为 img
-            if (target.nodeName != 'IMG' && matchedRule.rules.length > 0 && matchedRule.ext) {
+            if (target.nodeName.toUpperCase() != 'IMG' && matchedRule.rules.length > 0 && matchedRule.ext) {
                 var _type = typeof matchedRule.ext;
                 if (_type == 'string') {
                     switch (matchedRule.ext) {
@@ -21832,13 +21975,13 @@ ImgOps | https://imgops.com/#b#`;
                 }
             }
             var result, hasBg = node => {
-                if(node.nodeName == "HTML" || node.nodeName == "#document"){
+                if(node.nodeName.toUpperCase() == "HTML" || node.nodeName == "#document"){
                     return false;
                 }
                 let nodeStyle = unsafeWindow.getComputedStyle(node);
                 return node && nodeStyle.backgroundImage && parseFloat(nodeStyle.width) > prefs.floatBar.minSizeLimit.w && parseFloat(nodeStyle.height) > prefs.floatBar.minSizeLimit.h && /^\s*url\(\s*['"]?\s*[^a\s'"]/i.test(nodeStyle.backgroundImage);
             };
-            if (target.nodeName != 'IMG' && matchedRule.getExtSrc) {
+            if (target.nodeName.toUpperCase() != 'IMG' && matchedRule.getExtSrc) {
                 let nsrc;
                 try {
                     nsrc = matchedRule.getExtSrc(target);
@@ -21856,12 +21999,12 @@ ImgOps | https://imgops.com/#b#`;
                 }
             }
             if (!result) {
-                if (target.nodeName != 'IMG' && target.dataset.role == "img") {
+                if (target.nodeName.toUpperCase() != 'IMG' && target.dataset.role == "img") {
                     let img = target.parentNode.querySelector('img');
                     if (img) target = img;
                 }
-                if (target.nodeName != 'IMG') {
-                    if (target.nodeName == "AREA") target = target.parentNode;
+                if (target.nodeName.toUpperCase() != 'IMG') {
+                    if (target.nodeName.toUpperCase() == "AREA") target = target.parentNode;
                     var targetBg;
                     var bgReg = /^\s*url\(\s*["']?(.+?)["']?\s*\)/i;
                     var preEle = target, preImg;
@@ -21896,7 +22039,7 @@ ImgOps | https://imgops.com/#b#`;
                             img: target
                         };
                     } else if (target.parentNode) {
-                        if (target.parentNode.nodeName == 'IMG') {
+                        if (target.parentNode.nodeName.toUpperCase() == 'IMG') {
                             target = target.parentNode;
                         } else if (prefs.floatBar.listenBg && hasBg(target.parentNode)) {
                             target = target.parentNode;
@@ -21944,7 +22087,7 @@ ImgOps | https://imgops.com/#b#`;
                     }*/
                     }
                     if (result && !/^data:/i.test(result.src)) {
-                        if (matchedRule.rules.length > 0 && target.nodeName != 'IMG') {
+                        if (matchedRule.rules.length > 0 && target.nodeName.toUpperCase() != 'IMG') {
                             let src = result.src, img = {src: src}, type, imgSrc = src;
                             try {
                                 var newSrc = matchedRule.getImage(img);
@@ -22011,9 +22154,9 @@ ImgOps | https://imgops.com/#b#`;
                 }
             };
 
-            if (!result && target.nodeName != 'IMG') {
-                if (target.nodeName == 'A' && /\.(jpg|png|jpeg|gif|webp)\b/.test(target.href)) {
-                } else if (target.parentNode && target.parentNode.nodeName == 'A' && /\.(jpg|png|jpeg|gif|webp)\b/.test(target.parentNode.href)) {
+            if (!result && target.nodeName.toUpperCase() != 'IMG') {
+                if (target.nodeName.toUpperCase() == 'A' && /\.(jpg|png|jpeg|gif|webp)\b/.test(target.href)) {
+                } else if (target.parentNode && target.parentNode.nodeName.toUpperCase() == 'A' && /\.(jpg|png|jpeg|gif|webp)\b/.test(target.parentNode.href)) {
                     target = target.parentNode;
                 } else {
                     target = null;
@@ -22112,10 +22255,10 @@ ImgOps | https://imgops.com/#b#`;
                 } else {
                     if (!checkPreview(e)) return;
                     let target = e.target;
-                    if (target.nodeName == "PICTURE"){
+                    if (target.nodeName.toUpperCase() == "PICTURE"){
                         target = target.querySelector("img") || target;
                     }
-                    if (target.nodeName != 'IMG') return;
+                    if (target.nodeName.toUpperCase() != 'IMG') return;
                 }
             }
             clearTimeout(checkFloatBarTimer);
@@ -23061,6 +23204,14 @@ ImgOps | https://imgops.com/#b#`;
         document.addEventListener('keydown', keydown, true);
 
         function openPrefs() {
+            let fieldsSearchData = GM_config.fields["gallery.searchData"];
+            if (fieldsSearchData && fieldsSearchData.value) {
+                fieldsSearchData.value = fieldsSearchData.value.replace(/&amp;/g, "&").replace(/&gt;/g, ">").replace(/&lt;/g, "<").replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;");
+            }
+            let fieldsCustomRules = GM_config.fields.customRules;
+            if (fieldsCustomRules && fieldsCustomRules.value) {
+                fieldsCustomRules.value = fieldsCustomRules.value.replace(/&amp;/g, "&").replace(/&gt;/g, ">").replace(/&lt;/g, "<").replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;");
+            }
             GM_config.open();
             setTimeout(()=>{
                 if(GM_config.frame && GM_config.frame.style && GM_config.frame.style.display=="none"){
