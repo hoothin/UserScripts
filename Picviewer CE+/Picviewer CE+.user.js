@@ -18741,6 +18741,7 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-pic-window-container>.compareBox>div>.compareImgCon>img {\
                     width: auto;\
                     height: 100%;\
+                    max-width: unset;\
                     }\
                     .pv-pic-window-container>.compareBox>div>.compareSlider {\
                     position: absolute;\
