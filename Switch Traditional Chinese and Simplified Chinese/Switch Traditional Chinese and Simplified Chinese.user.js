@@ -870,7 +870,7 @@
         if (childs) {
             for (var i = 0;i<childs.length;i++){
                 var child=childs[i];
-                if (/BR|META|SCRIPT|HR|STYLE/.test(child.tagName)) continue;
+                if (/BR|META|SCRIPT|HR|STYLE/.test(child.tagName.toUpperCase())) continue;
                 if (child.getAttribute && child.getAttribute('translate') === 'no') continue;
                 if (child.title) {
                     let title = stranText(child.title);
@@ -893,7 +893,7 @@
                         }
                     }
                 }
-                if (child.tagName == "INPUT" && child.value !== "" && child.type != "text" && child.type != "search" && child.type != "hidden") {
+                if (child.tagName.toUpperCase() == "INPUT" && child.value !== "" && child.type != "text" && child.type != "search" && child.type != "hidden") {
                     let value = stranText(child.value);
                     if (child.value != value) {
                         child.value = value;
@@ -1139,11 +1139,11 @@
         var curLang=isSimple;
         document.addEventListener("keydown", function(e) {
             if(e.key == shortcutKey && e.ctrlKey == ctrlKey && e.altKey == altKey && e.shiftKey == shiftKey && e.metaKey == metaKey) {
-                if("TEXTAREA"==document.activeElement.tagName){
+                if("TEXTAREA"==document.activeElement.tagName.toUpperCase()){
                     curLang=!curLang;
                     document.activeElement.innerHTML=curLang?traditionalized(document.activeElement.innerHTML):simplized(document.activeElement.innerHTML);
                     document.activeElement.value=curLang?traditionalized(document.activeElement.value):simplized(document.activeElement.value);
-                }else if("INPUT"==document.activeElement.tagName){
+                }else if("INPUT"==document.activeElement.tagName.toUpperCase()){
                     curLang=!curLang;
                     document.activeElement.value=curLang?traditionalized(document.activeElement.value):simplized(document.activeElement.value);
                 }else{
