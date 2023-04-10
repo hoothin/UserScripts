@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.55.54
+// @version      1.6.6.55.55
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -2987,7 +2987,7 @@
                     wordSpan.addEventListener('dblclick', e => {
                         e.stopPropagation();
                         e.preventDefault();
-                        if (e.target.tagName === 'EM') return;
+                        if (e.target.tagName.toUpperCase() === 'EM') return;
                         if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) return;
                         this.showModifyWindow(word, wordSpan);
                     }, true);
@@ -3140,7 +3140,7 @@
                     customInputFrame.innerHTML = createHTML(`
                      <div class="customInputFrame-body">
                          <a href="${configPage}" class="customInputFrame-title" target="_blank">
-                             <img width="32px" height="32px" src=${logoBase64}>${i18n("customInputFrame")}
+                             <img width="32px" height="32px" src="${logoBase64}" />${i18n("customInputFrame")}
                          </a>
                          <div id="customGroup">
                          </div>
@@ -3165,7 +3165,7 @@
                     finalSearch.addEventListener("click", e => {
                         let finalValue = finalSearch.dataset.url;
                         [].forEach.call(customGroup.children, ele => {
-                            if (ele.tagName === 'DIV') return;
+                            if (ele.tagName.toUpperCase() === 'DIV') return;
                             finalValue = finalValue.replace('◎', ele.value || '');
                         });
                         finalSearch.value = finalValue;
@@ -3383,17 +3383,17 @@
                     modifyFrame.innerHTML = createHTML(`
                      <div class="searchJumperModify-body">
                          <a href="${configPage}" class="searchJumperModify-title" target="_blank">
-                             <img width="32px" height="32px" src=${logoBase64}>${i18n("modifyWord")}
+                             <img width="32px" height="32px" src="${logoBase64}" />${i18n("modifyWord")}
                          </a>
                          <div class="searchJumperModify-input-title">${i18n("wordContent")}</div>
-                         <input name="wordContent" type="text">
+                         <input name="wordContent" type="text" />
                          <div class="searchJumperModify-input-title">${i18n("wordHide")}</div>
-                         <input name="wordHide" min="0" placeholder="${i18n("wordHideTips")}" type="number">
+                         <input name="wordHide" min="0" placeholder="${i18n("wordHideTips")}" type="number" />
                          <div class="searchJumperModify-input-title">${i18n("wordRange")}</div>
-                         <input name="wordRange" placeholder="#main" type="text">
+                         <input name="wordRange" placeholder="#main" type="text" />
                          <svg id="rangePickerBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("pickerBtn")}</title><path d="M874.048 533.333333C863.424 716.629333 716.629333 863.424 533.333333 874.048V917.333333a21.333333 21.333333 0 0 1-42.666666 0v-43.285333C307.370667 863.424 160.576 716.629333 149.952 533.333333H106.666667a21.333333 21.333333 0 0 1 0-42.666666h43.285333C160.576 307.370667 307.370667 160.576 490.666667 149.952V106.666667a21.333333 21.333333 0 0 1 42.666666 0v43.285333c183.296 10.624 330.090667 157.418667 340.714667 340.714667h42.816a21.333333 21.333333 0 1 1 0 42.666666H874.026667z m-42.752 0h-127.786667a21.333333 21.333333 0 0 1 0-42.666666h127.786667C820.778667 330.922667 693.056 203.221333 533.333333 192.704V320a21.333333 21.333333 0 0 1-42.666666 0V192.704C330.922667 203.221333 203.221333 330.944 192.704 490.666667H320a21.333333 21.333333 0 0 1 0 42.666666H192.704c10.517333 159.744 138.24 287.445333 297.962667 297.962667V704a21.333333 21.333333 0 0 1 42.666666 0v127.296c159.744-10.517333 287.445333-138.24 297.962667-297.962667zM512 554.666667a42.666667 42.666667 0 1 1 0-85.333334 42.666667 42.666667 0 0 1 0 85.333334z"></path></svg>
                          <div class="searchJumperModify-input-title">${i18n("wordStyle")}</div>
-                         <input name="wordStyle" placeholder="#333333;color:red;" type="text">
+                         <input name="wordStyle" placeholder="#333333;color:red;" type="text" />
                          <div class="searchJumperModify-input-title">${i18n("wordTitle")}</div>
                          <textarea name="wordTitle" type="text"></textarea>
                          <div class="searchJumperModify-buttons">
@@ -3803,7 +3803,7 @@
                 function searchWithinNode(node, word) {
                     let len, pos = -1, skip, spannode, middlebit, middleclone;
                     skip = 0;
-                    if (node.nodeType == 3 && (typeof word.hideParent !== 'undefined' || node.parentNode.tagName == "BODY" || node.parentNode.offsetParent || (node.parentNode.scrollHeight && node.parentNode.scrollWidth))) {
+                    if (node.nodeType == 3 && (typeof word.hideParent !== 'undefined' || node.parentNode.tagName.toUpperCase() == "BODY" || node.parentNode.offsetParent || (node.parentNode.scrollHeight && node.parentNode.scrollWidth))) {
                         if (word.isRe) {
                             let wordMatch = node.data.match(new RegExp(word.content, word.reCase));
                             if (wordMatch) {
@@ -3897,14 +3897,14 @@
                     } else if ((!root || node === ele) &&
                                node.nodeType == 1 &&
                                node.childNodes &&
-                               node.tagName != "SCRIPT" &&
-                               node.tagName != "STYLE" &&
-                               node.tagName != "TEXTAREA" &&
+                               node.tagName.toUpperCase() != "SCRIPT" &&
+                               node.tagName.toUpperCase() != "STYLE" &&
+                               node.tagName.toUpperCase() != "TEXTAREA" &&
                                node.contentEditable != 'true' &&
                                node.ariaHidden != 'true' &&
                                (!node.hasAttribute || node.hasAttribute('jsname') == false) &&
-                               node.tagName != "MARK") {
-                        if (!searchingPre && (node.tagName === "PRE" || node.tagName === "CODE")) {
+                               node.tagName.toUpperCase() != "MARK") {
+                        if (!searchingPre && (node.tagName.toUpperCase() === "PRE" || node.tagName.toUpperCase() === "CODE")) {
                             preEles.push(node);
                         } else {
                             for (var child = 0; child < node.childNodes.length; ++child) {
@@ -4051,8 +4051,8 @@
                 });
                 let targetKw = "";
                 if (targetElement &&
-                    (targetElement.tagName == 'A' ||
-                     (targetElement.parentNode && targetElement.parentNode.tagName == 'A'))) {
+                    (targetElement.tagName.toUpperCase() == 'A' ||
+                     (targetElement.parentNode && targetElement.parentNode.tagName.toUpperCase() == 'A'))) {
                     targetKw = targetElement.textContent.trim();
                 }
                 let kw = getKeywords() || targetKw || cacheKeywords;
@@ -4201,9 +4201,9 @@
             }
 
             autoGetFirstType() {
-                if (!targetElement) targetElement = getBody(document);
+                if (!targetElement || !targetElement.tagName) targetElement = getBody(document);
                 let firstType;
-                switch (targetElement.tagName) {
+                switch (targetElement.tagName.toUpperCase()) {
                     case 'IMG':
                         firstType = this.bar.querySelector('.search-jumper-targetImg:not(.notmatch)');
                         break;
@@ -4223,7 +4223,7 @@
                     default:
                         if (getSelectStr()) {
                             firstType = this.bar.querySelector('.search-jumper-needInPage:not(.notmatch)');
-                        } else if (targetElement.parentNode.tagName === 'A') {
+                        } else if (targetElement.parentNode.tagName.toUpperCase() === 'A') {
                             firstType = this.bar.querySelector('.search-jumper-targetLink:not(.notmatch)');
                         } else {
                             firstType = this.bar.querySelector('.search-jumper-targetPage:not(.notmatch)');
@@ -4705,7 +4705,7 @@
                 let touchStart = false;
                 this.searchInputDiv.addEventListener("touchstart", e => {
                     touchStart = true;
-                    if (e.target.className === 'inputGroup' || e.target.tagName === 'LABEL') {
+                    if (e.target.className === 'inputGroup' || e.target.tagName.toUpperCase() === 'LABEL') {
                         setStartBottom();
                         currentGroup = e.target;
                         currentGroup.style.cursor = "grabbing";
@@ -4721,7 +4721,7 @@
                         touchStart = false;
                         return;
                     }
-                    if (e.target.className === 'inputGroup' || e.target.tagName === 'LABEL') {
+                    if (e.target.className === 'inputGroup' || e.target.tagName.toUpperCase() === 'LABEL') {
                         setStartBottom();
                         currentGroup = e.target;
                         currentGroup.style.cursor = "grabbing";
@@ -4782,7 +4782,7 @@
                 this.bar.addEventListener("dragstart", e => {
                     let target = e.target;
                     let parentNode = target.parentNode;
-                    if (target.tagName !== 'IMG' && target.tagName !== 'A') return;
+                    if (target.tagName.toUpperCase() !== 'IMG' && target.tagName.toUpperCase() !== 'A') return;
                     if (target.classList && target.classList.contains('search-jumper-btn')) {
                         dragSiteBtn = target;
                         getBody(document).addEventListener('dragover', dragOpenOverHandler);
@@ -5779,16 +5779,16 @@
                         }
                         if (!searchData.prefConfig.enableInInput) {
                             if (document.activeElement &&
-                                (document.activeElement.tagName == 'INPUT' ||
-                                 document.activeElement.tagName == 'TEXTAREA' ||
+                                (document.activeElement.tagName.toUpperCase() == 'INPUT' ||
+                                 document.activeElement.tagName.toUpperCase() == 'TEXTAREA' ||
                                  document.activeElement.contentEditable == 'true')) {
                                 return;
                             } else {
                                 let contentEditable = false;
                                 let parent = document.activeElement;
-                                while (parent) {
+                                while (parent && parent.tagName) {
                                     contentEditable = parent.contentEditable == 'true';
-                                    if (contentEditable || parent.tagName == 'BODY') {
+                                    if (contentEditable || parent.tagName.toUpperCase() == 'BODY') {
                                         break;
                                     }
                                     parent = parent.parentNode;
@@ -6264,7 +6264,7 @@
 
                 if (!clicked && input) {
                     form = input.parentNode;
-                    while (form.tagName != 'FORM') {
+                    while (form.tagName.toUpperCase() != 'FORM') {
                         form = form.parentNode;
                         if (!form) break;
                     }
@@ -6346,16 +6346,16 @@
                         }
                         if (!searchData.prefConfig.enableInInput) {
                             if (document.activeElement &&
-                                (document.activeElement.tagName == 'INPUT' ||
-                                 document.activeElement.tagName == 'TEXTAREA' ||
+                                (document.activeElement.tagName.toUpperCase() == 'INPUT' ||
+                                 document.activeElement.tagName.toUpperCase() == 'TEXTAREA' ||
                                  document.activeElement.contentEditable == 'true')) {
                                 return;
                             } else {
                                 let contentEditable = false;
                                 let parent = document.activeElement;
-                                while (parent) {
+                                while (parent && parent.tagName) {
                                     contentEditable = parent.contentEditable == 'true';
-                                    if (contentEditable || parent.tagName == 'BODY') {
+                                    if (contentEditable || parent.tagName.toUpperCase() == 'BODY') {
                                         break;
                                     }
                                     parent = parent.parentNode;
@@ -6587,9 +6587,9 @@
                     let targetName = selStr || document.title;
                     let imgBase64 = '', resultUrl = customVariable(ele.dataset.url);
                     let hasWordParam = /%s[lure]?\b/.test(data.url);
-                    if (targetElement) {
+                    if (targetElement && targetElement.tagName) {
                         targetUrl = targetElement.src || targetElement.href || '';
-                        if (targetElement.tagName == "VIDEO" || targetElement.tagName == "AUDIO") {
+                        if (targetElement.tagName.toUpperCase() == "VIDEO" || targetElement.tagName.toUpperCase() == "AUDIO") {
                             if (!targetUrl) {
                                 let source = targetElement.querySelector("source");
                                 if (source) targetUrl = source.src;
@@ -6597,7 +6597,7 @@
                             if (targetUrl) targetUrl = targetUrl.replace(/^blob:/, "");
                         }
                         targetName = targetElement.title || targetElement.alt || document.title;
-                        if (targetElement.tagName == 'IMG' && /%i\b/.test(ele.dataset.url)) {
+                        if (targetElement.tagName.toUpperCase() == 'IMG' && /%i\b/.test(ele.dataset.url)) {
                             if (targetElement.src) {
                                 if (/^data/.test(targetElement.src)) {
                                     resultUrl = resultUrl.replace(/%i\b/g, targetElement.src);
@@ -6606,7 +6606,7 @@
                                     resultUrl = resultUrl.replace(/%i\b/g, imgBase64);
                                 }
                             }
-                        } else if ((targetElement.tagName == 'A' || (targetElement.parentNode && targetElement.parentNode.tagName == 'A')) && hasWordParam && !keywords) {
+                        } else if ((targetElement.tagName.toUpperCase() == 'A' || (targetElement.parentNode && targetElement.parentNode.tagName.toUpperCase() == 'A')) && hasWordParam && !keywords) {
                             if (targetElement.textContent.trim()) keywords = targetElement.textContent.trim();
                         }
                     }
@@ -7060,11 +7060,11 @@
                 if (_funcKeyCall && selectStr && selectStr.length < (searchData.prefConfig.limitPopupLen || 1)) return;
                 if (this.con && this.con.classList.contains("search-jumper-showall")) return;
                 if (searchData.prefConfig.hidePopup) _funcKeyCall = false;
-                if (!targetElement) targetElement = getBody(document);
+                if (!targetElement || !targetElement.tagName) targetElement = getBody(document);
                 else if (targetElement != getBody(document)) {
                     let _targetElement = targetElement, children;
-                    while (_targetElement) {
-                        if (_targetElement.tagName == 'IMG' || _targetElement.tagName == 'AUDIO' || _targetElement.tagName == 'VIDEO' || _targetElement.tagName == 'A') break;
+                    while (_targetElement && _targetElement.tagName) {
+                        if (_targetElement.tagName.toUpperCase() == 'IMG' || _targetElement.tagName.toUpperCase() == 'AUDIO' || _targetElement.tagName.toUpperCase() == 'VIDEO' || _targetElement.tagName.toUpperCase() == 'A') break;
                         if (_targetElement.parentNode) {
                             children = _targetElement.parentNode.querySelectorAll("img,audio,video,a");
                             if (children && children.length === 1 && children[0].clientHeight && _targetElement.clientHeight / children[0].clientHeight < 2) {
@@ -7074,7 +7074,7 @@
                         }
                         _targetElement = _targetElement.parentNode;
                     }
-                    if (_targetElement) targetElement = _targetElement;
+                    if (_targetElement && _targetElement.tagName) targetElement = _targetElement;
                 }
                 this.appendBar();
                 //this.recoveHistory();
@@ -7122,7 +7122,7 @@
                     }
                 } else {
                     let parentNode = targetElement.parentNode;
-                    switch (targetElement.tagName) {
+                    switch (targetElement.tagName.toUpperCase()) {
                         case 'IMG':
                             this.bar.classList.add("search-jumper-isTargetImg");
                             firstType = this.bar.querySelector('.search-jumper-targetImg:not(.notmatch)>span');
@@ -7542,7 +7542,7 @@
 
             geneSelector(ele, id) {
                 let selector = ele.tagName.toLowerCase();
-                if (ele.tagName !== "HTML" && ele.tagName !== "BODY") {
+                if (selector !== "html" && selector !== "body") {
                     if (id && ele.id) selector = '#' + ele.id;
                     else {
                         if (ele.className) {
@@ -7665,10 +7665,10 @@
                         let event = new Event('focus', { bubbles: true });
                         input.dispatchEvent(event);
                         let lastValue = input.value;
-                        if (input.tagName == "INPUT") {
+                        if (input.tagName.toUpperCase() == "INPUT") {
                             var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
                             nativeInputValueSetter.call(input, v);
-                        } else if (input.tagName == "TEXTAREA") {
+                        } else if (input.tagName.toUpperCase() == "TEXTAREA") {
                             var nativeTextareaValueSetter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, "value").set;
                             nativeTextareaValueSetter.call(input, v);
                         }
@@ -7914,7 +7914,7 @@
                 }, 1);
             });
             if (!searchData.prefConfig.cacheSwitch) return;
-            if (target.tagName == 'IMG') {
+            if (target.tagName.toUpperCase() == 'IMG') {
                 if (!target.src && target.dataset.src) target.src = target.dataset.src;
                 let cache;
                 if (target.complete) {
@@ -8331,16 +8331,16 @@
                         }
                         if (!searchData.prefConfig.enableInInput) {
                             if (document.activeElement &&
-                                (document.activeElement.tagName == 'INPUT' ||
-                                 document.activeElement.tagName == 'TEXTAREA' ||
+                                (document.activeElement.tagName.toUpperCase() == 'INPUT' ||
+                                 document.activeElement.tagName.toUpperCase() == 'TEXTAREA' ||
                                  document.activeElement.contentEditable == 'true')) {
                                 return;
                             } else {
                                 let contentEditable = false;
                                 let parent = document.activeElement;
-                                while (parent) {
+                                while (parent && parent.tagName) {
                                     contentEditable = parent.contentEditable == 'true';
-                                    if (contentEditable || parent.tagName == 'BODY') {
+                                    if (contentEditable || parent.tagName.toUpperCase() == 'BODY') {
                                         break;
                                     }
                                     parent = parent.parentNode;
@@ -8372,16 +8372,16 @@
                         }
                         if (!searchData.prefConfig.enableInInput) {
                             if (document.activeElement &&
-                                (document.activeElement.tagName == 'INPUT' ||
-                                 document.activeElement.tagName == 'TEXTAREA' ||
+                                (document.activeElement.tagName.toUpperCase() == 'INPUT' ||
+                                 document.activeElement.tagName.toUpperCase() == 'TEXTAREA' ||
                                  document.activeElement.contentEditable == 'true')) {
                                 return;
                             } else {
                                 let contentEditable = false;
                                 let parent = document.activeElement;
-                                while (parent) {
+                                while (parent && parent.tagName) {
                                     contentEditable = parent.contentEditable == 'true';
-                                    if (contentEditable || parent.tagName == 'BODY') {
+                                    if (contentEditable || parent.tagName.toUpperCase() == 'BODY') {
                                         break;
                                     }
                                     parent = parent.parentNode;
@@ -8421,24 +8421,24 @@
                 };
                 let mouseDownHandler = e => {
                     if ((waitForMouse && e.type === 'mousedown' && e.button === 0) ||
-                        e.target.tagName === 'CANVAS' ||
-                        e.target.tagName === 'HTML' ||
+                        e.target.tagName.toUpperCase() === 'CANVAS' ||
+                        e.target.tagName.toUpperCase() === 'HTML' ||
                         (e.target.classList && e.target.classList.contains('search-jumper-btn')) ||
                         searchBar.bar.contains(e.target)) {
                         return;
                     }
                     if (searchBar.bar.classList.contains("grabbing")) return;
                     let targetInput = false;
-                    if (e.target.tagName == 'INPUT' ||
-                        e.target.tagName == 'TEXTAREA' ||
+                    if (e.target.tagName.toUpperCase() == 'INPUT' ||
+                        e.target.tagName.toUpperCase() == 'TEXTAREA' ||
                         e.target.contentEditable == 'true') {
                         targetInput = true;
                     } else {
                         let contentEditable = false;
                         let parent = e.target;
-                        while (parent) {
+                        while (parent && parent.tagName) {
                             contentEditable = parent.contentEditable == 'true';
-                            if (contentEditable || parent.tagName == 'BODY') {
+                            if (contentEditable || parent.tagName.toUpperCase() == 'BODY') {
                                 break;
                             }
                             parent = parent.parentNode;
@@ -8584,7 +8584,7 @@
             if (searchData.prefConfig.quickAddRule) {
                 document.addEventListener('click', e => {
                     if (!(((e.ctrlKey || e.metaKey) && e.shiftKey) || ((e.ctrlKey || e.metaKey) && e.altKey) || (e.altKey && e.shiftKey))) return;
-                    if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') return;
+                    if (e.target.tagName.toUpperCase() !== 'INPUT' && e.target.tagName.toUpperCase() !== 'TEXTAREA') return;
                     quickAddByInput(e.target);
                 }, true);
             }
@@ -8691,7 +8691,7 @@
             if (input && input.name) {
                 parentForm = input.parentNode;
                 while (parentForm) {
-                    if (parentForm.tagName === "FORM") {
+                    if (parentForm.tagName.toUpperCase() === "FORM") {
                         let target = parentForm.target;
                         if (target && target != '_blank' && target != '_self' && target != '_parent' && target != '_top') {
                             let targetIframe = getBody(document).querySelector(target);
@@ -8981,7 +8981,7 @@
                 });
 
                 document.addEventListener("mouseover", e => {
-                    if (e.target.tagName === "PRE" && importPageReg.test(location.href)) {
+                    if (e.target.tagName.toUpperCase() === "PRE" && importPageReg.test(location.href)) {
                         targetPre = e.target;
                         bindPre();
                     }
@@ -9127,7 +9127,7 @@
                 this.filterFrame.innerHTML = createHTML(`
                 <div class="searchJumperFrame-body">
                     <a href="${configPage}" class="searchJumperFrame-title" target="_blank">
-                        <img width="32px" height="32px" src=${logoBase64}>${i18n("addSearchEngine")}
+                        <img width="32px" height="32px" src="${logoBase64}" />${i18n("addSearchEngine")}
                     </a>
                     <div class="searchJumperFrame-buttons">
                         <button id="expandAll" type="button">${i18n("expandAll")}</button>
@@ -9296,7 +9296,7 @@
                         };
                         siteCon.appendChild(checkSite);
                         siteCon.addEventListener("click", e => {
-                            if (e.target.tagName == 'SPAN') {
+                            if (e.target.tagName.toUpperCase() == 'SPAN') {
                                 checkSite.click();
                             }
                         });
@@ -9652,7 +9652,10 @@
                     img.style.display = "";
                 };
                 let targetIcon = targetSite.querySelector("img");
-                if (targetIcon) img.src = targetIcon.src || targetIcon.dataset.src;
+                if (targetIcon) {
+                    let src = targetIcon.src || targetIcon.dataset.src;
+                    if (src) img.src = src;
+                }
             });
             let findIndex = 0;
             let getHistorySiteBtn = () => {
@@ -9687,7 +9690,10 @@
                     img.style.display = "";
                 };
                 let targetIcon = targetSite.querySelector("img");
-                if (targetIcon) img.src = targetIcon.src || targetIcon.dataset.src;
+                if (targetIcon) {
+                    let src = targetIcon.src || targetIcon.dataset.src;
+                    if (src) img.src = src;
+                }
             });
             let scaleWidth = searchBar.scale * 190;
             let scaleHeight = searchBar.scale * 190;
@@ -10208,7 +10214,7 @@
                             actionCon.insertBefore(dragDiv, div);
                         }
                         div.onclick = e => {
-                            if (e.target.tagName == 'SPAN') {
+                            if (e.target.tagName.toUpperCase() == 'SPAN') {
                                 if (e.target.className == 'element') {
                                     Picker.getInstance().getSelector(selector => {
                                         e.target.innerText = selector;
