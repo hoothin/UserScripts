@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.35.13
+// @version      1.9.35.14
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -664,8 +664,8 @@
     }
     var _unsafeWindow = (typeof unsafeWindow == 'undefined') ? window : unsafeWindow;//兼容 ios userscripts 的寫法
     var storage = {
-        supportGM: typeof GM_getValue == 'function' && typeof GM_getValue('a','b') != 'undefined',
-        supportGMPromise: typeof GM != 'undefined' && typeof GM.getValue == 'function' && typeof GM.getValue('a','b') != 'undefined',
+        supportGM: typeof GM_getValue == 'function' && typeof GM_getValue('a', 'b') != 'undefined',
+        supportGMPromise: typeof GM != 'undefined' && typeof GM.getValue == 'function' && typeof GM.getValue('a', 'b') != 'undefined' && typeof GM.getValue('a', 'b').then == 'function',
         supportCrossSave: function() {
             return this.supportGM || this.supportGMPromise;
         },
@@ -4070,7 +4070,7 @@
             });
 
             if (inConfig) {
-                if (_GM_info.script && _GM_info.script.version) {
+                if (_GM_info.script && _GM_info.script.version && _GM_info.script.version !== '1.0.0') {
                     let versionEle = document.querySelector('.markdown-body>h1[id],article>h1');
                     let latestVer = versionEle.innerText.match(/\d[\d\.]+/)[0];
                     if (latestVer != _GM_info.script.version) {
