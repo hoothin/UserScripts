@@ -9984,7 +9984,7 @@
                 addFrame.innerHTML = createHTML(`
                 <div class="searchJumperFrame-body">
                     <a href="${configPage}" class="searchJumperFrame-title" target="_blank">
-                        <img width="32px" height="32px" src=${logoBase64}>${i18n("addSearchEngine")}
+                        <img width="32px" height="32px" src="${logoBase64}" />${i18n("addSearchEngine")}
                     </a>
                     <div class="searchJumperFrame-maxBtn">
                         <svg id="maxBtn" fill="white" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("maxAddSiteBtn")}</title><path d="M192 832h160a32 32 0 0 1 0 64H160a32 32 0 0 1-32-32V672a32 32 0 0 1 64 0zM182.72 886.72a32 32 0 0 1-45.44-45.44l224-224a32 32 0 0 1 45.44 45.44zM832 832V672a32 32 0 0 1 64 0v192a32 32 0 0 1-32 32H672a32 32 0 0 1 0-64zM886.72 841.28a32 32 0 0 1-45.44 45.44l-224-224a32 32 0 0 1 45.44-45.44zM192 192v160a32 32 0 0 1-64 0V160a32 32 0 0 1 32-32h192a32 32 0 0 1 0 64zM137.28 182.72a32 32 0 0 1 45.44-45.44l224 224a32 32 0 0 1-45.44 45.44zM832 192H672a32 32 0 0 1 0-64h192a32 32 0 0 1 32 32v192a32 32 0 0 1-64 0zM841.28 137.28a32 32 0 1 1 45.44 45.44l-224 224a32 32 0 0 1-45.44-45.44z"></path></svg>
@@ -9992,7 +9992,7 @@
                     </div>
                     <div class="searchJumperFrame-inputs">
                         <div class="searchJumperFrame-input-title">${i18n("siteName")}</div>
-                        <input name="siteName" type="text">
+                        <input name="siteName" type="text" />
                         <div class="searchJumperFrame-input-title">${i18n("siteUrl")}</div>
                         <textarea name="url" type="text"></textarea>
                         <svg id="crawlBtn" class="sideIcon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("crawlInfo")}</title><path d="M385 926.3c-11 0-21.4-4.3-29.2-12l-0.6-0.6c-0.7-0.7-65.6-70.4-108.4-112.7-42.8-42.3-118.6-111.4-119.3-112.1l-0.6-0.5c-15.9-15.7-24.6-36.6-24.5-58.8s9-43.1 25-58.6c28.6-27.7 72.2-31 104.6-8.2l90.5 44-83.1-290.1c-4.9-17.1-4.2-34.9 2.1-51.6 6.3-16.6 17.5-30.5 32.5-40.1 22-14.1 47.7-17.7 70.3-10 22.6 7.7 40.7 26.3 49.5 50.9L431 369.8V176.9c0-43.4 35.3-78.7 78.7-78.7 20.7 0 40.2 7.9 55 22.4 14.8 14.4 23.2 33.8 23.7 54.4v0.2l2.4 165.5L625 229.1l0.1-0.4c8.2-23.2 26.2-41.1 49.4-49.3 23.2-8.2 48.5-5.5 69.4 7.3 15.6 9.6 27.7 24.3 33.9 41.6s6.4 36.3 0.6 53.7L736 409.5l42.9-48.6 0.3-0.3c15.7-16.2 34.4-25.7 54.1-27.3 19.8-1.6 39.1 4.7 56 18.1 33 26.4 40.8 60.1 22.7 97.5l-0.5 1.1-0.6 1c-41.8 65.2-107.1 171.9-115.8 199-12.4 38.6-41 140.7-41.3 141.7l-0.2 0.7-34.5 107.2-0.6 1.2c-6.8 14.3-21.5 23.7-37.4 23.8l-295.9 1.6c0 0.1-0.1 0.1-0.2 0.1z"></path></svg>
@@ -10000,18 +10000,18 @@
                         <textarea name="description" type="text"></textarea>
                         <div class="searchJumperFrame-input-title">${i18n("siteIcon")}</div>
                         <textarea name="icon" type="text"></textarea>
-                        <img class="sideIcon" width="27px" height="27px">
+                        <img class="sideIcon" width="27px" height="27px" />
                     </div>
                     <div class="searchJumperFrame-inputs moreItem">
                         <div class="searchJumperFrame-input-title">${i18n("siteKeywords")}</div>
-                        <input name="siteKeywords" placeholder="kw|key" type="text">
+                        <input name="siteKeywords" placeholder="kw|key" type="text" />
                         <div class="searchJumperFrame-input-title">${i18n("siteMatch")}</div>
-                        <input name="siteMatch" placeholder="(www|m)\\.google\\.com" type="text"></textarea>
+                        <input name="siteMatch" placeholder="(www|m)\\.google\\.com" type="text" />
                         <div class="searchJumperFrame-input-title">${i18n("openSelect")}</div>
                         <select name="openSelect">
-                            <option value='-1'>${i18n("openInDefault")}</option>
-                            <option value='true'>${i18n("openInNewTab")}</option>
-                            <option value='false'>${i18n("openInCurrent")}</option>
+                            <option value="-1">${i18n("openInDefault")}</option>
+                            <option value="true">${i18n("openInNewTab")}</option>
+                            <option value="false">${i18n("openInCurrent")}</option>
                         </select>
                     </div>
                     <div class="iconsCon"></div>
@@ -10026,7 +10026,7 @@
                 </div>
                 <div class="searchJumperFrame-crawlBody searchJumperFrame-hide">
                     <a href="${configPage}" class="searchJumperFrame-title" target="_blank">
-                        <img width="32px" height="32px" src=${logoBase64}>${i18n("addAction")}
+                        <img width="32px" height="32px" src="${logoBase64}" />${i18n("addAction")}
                     </a>
                     <svg class="searchJumperFrame-closeBtn" fill="white" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>Close crawl</title><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64z m165.4 618.2l-66-0.3L512 563.4l-99.3 118.4-66.1 0.3c-4.4 0-8-3.5-8-8 0-1.9 0.7-3.7 1.9-5.2l130.1-155L340.5 359c-1.2-1.5-1.9-3.3-1.9-5.2 0-4.4 3.6-8 8-8l66.1 0.3L512 464.6l99.3-118.4 66-0.3c4.4 0 8 3.5 8 8 0 1.9-0.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"></path></svg>
                     <div class="actionCon"></div>
