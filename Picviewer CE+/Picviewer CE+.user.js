@@ -18592,25 +18592,26 @@ ImgOps | https://imgops.com/#b#`;
                 let self = this;
                 let mouseMoveHandler = e => {
                     if (compareSliderButton.style.display == "") {
-                        self.imgWindow.removeEventListener("mousemove", mouseMoveHandler);
+                        document.removeEventListener("mousemove", mouseMoveHandler);
                         return;
                     }
                     e = (e.changedTouches) ? e.changedTouches[0] : e;
                     let a = self.img.getBoundingClientRect();
                     let x = e.pageX - a.left;
                     x = x - window.pageXOffset;
-                    if (x < 0 || x > a.width) return;
+                    if (x < 0) x = 0;
+                    if (x > a.width) x = a.width;
                     compareImgCon.style.width = x / a.width * 100 + "%";
                     compareSlider.style.left = x / a.width * 100 + "%";
                 };
                 compareSlider.addEventListener("mousedown", e => {
                     compareSliderButton.style.display = "none";
-                    self.imgWindow.addEventListener("mousemove", mouseMoveHandler);
+                    document.addEventListener("mousemove", mouseMoveHandler);
                     e.preventDefault();
                     e.stopPropagation();
                     document.addEventListener("mouseup", e => {
                         compareSliderButton.style.display = "";
-                        self.imgWindow.removeEventListener("mousemove", mouseMoveHandler);
+                        document.removeEventListener("mousemove", mouseMoveHandler);
                     });
                 });
                 compareSlider.appendChild(compareSliderButton);
