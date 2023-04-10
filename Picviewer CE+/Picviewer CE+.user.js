@@ -18627,7 +18627,7 @@ ImgOps | https://imgops.com/#b#`;
                     let compareBox = document.createElement("div");
                     compareBox.className = "compareBox";
                     this.compareBox = compareBox;
-                    this.imgWindow.appendChild(compareBox);
+                    this.imgWindow.insertBefore(compareBox, this.imgWindow.querySelector('.pv-pic-window-rotate-indicator'));
                 }
                 this.compareBox.innerHTML = createHTML("");
                 let self = this, count = 0;
