@@ -4230,7 +4230,7 @@
                         }
                         break;
                 }
-                if (!firstType) firstType = this.bar.querySelector('.search-jumper-type');
+                if (!firstType) firstType = this.bar.querySelector('.search-jumper-targetAll:not(.notmatch)') || this.bar.querySelector('.search-jumper-type');
                 return firstType;
             }
 
@@ -4940,7 +4940,8 @@
                     this.appendBar();
                     if (this.currentType.classList.contains("search-jumper-needInPage")) {
                         this.bar.classList.add("search-jumper-isTargetPage");
-                    } else if (this.currentType.classList.contains("search-jumper-targetImg") ||
+                    } else if (this.currentType.classList.contains("search-jumper-targetAll") ||
+                               this.currentType.classList.contains("search-jumper-targetImg") ||
                                this.currentType.classList.contains("search-jumper-targetAudio") ||
                                this.currentType.classList.contains("search-jumper-targetVideo") ||
                                this.currentType.classList.contains("search-jumper-targetLink") ||
@@ -6025,24 +6026,25 @@
                 ele.appendChild(siteList);
                 if (inPage && selectImg && selectAudio && selectVideo && selectLink && selectPage) {
                     ele.classList.add("search-jumper-targetAll");
-                }
-                if (inPage) {
-                    ele.classList.add("search-jumper-needInPage");
-                }
-                if (selectImg) {
-                    ele.classList.add("search-jumper-targetImg");
-                }
-                if (selectAudio) {
-                    ele.classList.add("search-jumper-targetAudio");
-                }
-                if (selectVideo) {
-                    ele.classList.add("search-jumper-targetVideo");
-                }
-                if (selectLink) {
-                    ele.classList.add("search-jumper-targetLink");
-                }
-                if (selectPage) {
-                    ele.classList.add("search-jumper-targetPage");
+                } else {
+                    if (inPage) {
+                        ele.classList.add("search-jumper-needInPage");
+                    }
+                    if (selectImg) {
+                        ele.classList.add("search-jumper-targetImg");
+                    }
+                    if (selectAudio) {
+                        ele.classList.add("search-jumper-targetAudio");
+                    }
+                    if (selectVideo) {
+                        ele.classList.add("search-jumper-targetVideo");
+                    }
+                    if (selectLink) {
+                        ele.classList.add("search-jumper-targetLink");
+                    }
+                    if (selectPage) {
+                        ele.classList.add("search-jumper-targetPage");
+                    }
                 }
                 searchTypes.push(ele);
                 return ele;
@@ -7148,6 +7150,10 @@
                             targetSiteImgs = this.bar.querySelectorAll('.search-jumper-targetPage:not(.notmatch)>a>img');
                             break;
                     }
+                }
+                if (!firstType) {
+                    firstType = this.bar.querySelector('.search-jumper-targetAll:not(.notmatch)>span');
+                    targetSiteImgs = this.bar.querySelectorAll('.search-jumper-targetAll:not(.notmatch)>a>img');
                 }
                 if (this.bar.style.display == "none") {
                     this.bar.style.display = "";
