@@ -20406,7 +20406,7 @@ ImgOps | https://imgops.com/#b#`;
                     if(tool=="compare"){
                         var topmost=0, topmostWin;
                         ImgWindowC.all.forEach(function(iwin){
-                            if(iwin.zIndex > topmost && iwin!=self){
+                            if(iwin.zIndex >= topmost && iwin!=self){
                                 topmost=iwin.zIndex;
                                 topmostWin=iwin;
                             };
@@ -20496,7 +20496,7 @@ ImgOps | https://imgops.com/#b#`;
                 }else{
                     var topmost=0, topmostWin;
                     ImgWindowC.all.forEach(function(iwin){
-                        if(iwin.zIndex > topmost){
+                        if(iwin.zIndex >= topmost){
                             topmost=iwin.zIndex;
                             topmostWin=iwin;
                         }
