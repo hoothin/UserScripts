@@ -9001,6 +9001,13 @@
         "pageElement": ".data-box>.data-list"
     },
     {
+        "name": "Freepik",
+        "url": "^https?://www\\.freepik\\.com/",
+        "pageElement": "div.list-content > section.showcase",
+        "action": 0,
+        "css": ".showcase:not(.showcase--completed){display:flex;flex-wrap: wrap;}.showcase:not(.showcase--completed)>figure{visibility: visible;}.showcase:not(.showcase--completed)>div{display: none!important;}"
+    },
+    {
         "name": "中国大学MOOC课程评论区",
         "url": "^https://www\\.icourse163\\.org/course/",
         "action": 1,
