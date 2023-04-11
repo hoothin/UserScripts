@@ -15885,17 +15885,17 @@
 },
 {
   "resource_url": "http://wedata.net/items/80993",
-  "name": "Forbes JAPAN（フォーブス ジャパン）",
   "data": {
-    "url": "^https?://forbesjapan\\.com/articles/detail/.*",
-    "pageElement": "//div[@class=\"kizi-honbun\"]",
-    "exampleUrl": "https://forbesjapan.com/articles/detail/13687\r\nhttps://forbesjapan.com/articles/detail/32271",
-    "nextLink": "//ul[@class=\"contents_pagination\"]/li/a[.=\">\"][@href]"
+    "pageElement": "//div[contains(concat(' ',@class,' '),' article-detail-txt ')]",
+    "nextLink": "//div[@class='article-detail-btn']/a",
+    "url": "^https?://forbesjapan\\.com/articles/detail/",
+    "exampleUrl": "https://forbesjapan.com/articles/detail/13687\r\nhttps://forbesjapan.com/articles/detail/32271\r\nhttps://forbesjapan.com/articles/detail/61830\r\n"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "raitu",
+  "name": "Forbes JAPAN（フォーブス ジャパン）",
   "created_at": "2016-09-27T13:26:53+09:00",
-  "updated_at": "2020-02-11T17:11:59+09:00"
+  "updated_at": "2023-04-10T22:51:45+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/80988",
