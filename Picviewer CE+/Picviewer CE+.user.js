@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.4.11.1
+// @version              2023.4.11.2
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -22059,13 +22059,22 @@ ImgOps | https://imgops.com/#b#`;
                     if (target.nodeName.toUpperCase() == "AREA") target = target.parentNode;
                     var targetBg;
                     var bgReg = /^\s*url\(\s*["']?(.+?)["']?\s*\)/i;
-                    var preEle = target, preImg;
-                    while (preEle) {
-                        if (preEle.tagName == "IMG") preImg = preEle;
-                        if (getComputedStyle(preEle).position !== "absolute") break;
-                        preEle = preEle.previousElementSibling;
+                    var broEle = target, broImg;
+                    while (broEle) {
+                        if (broEle.tagName == "IMG") broImg = broEle;
+                        if (getComputedStyle(broEle).position !== "absolute") break;
+                        broEle = broEle.previousElementSibling;
                     }
-                    if (preEle == target) preEle = null;
+                    if (broEle == target) broEle = null;
+                    else if (!broEle) {
+                        broEle = target;
+                        while (broEle) {
+                            if (broEle.tagName == "IMG") broImg = broEle;
+                            if (getComputedStyle(broEle).position !== "absolute") break;
+                            broEle = broEle.nextElementSibling;
+                        }
+                        if (broEle == target) broEle = null;
+                    }
                     if (prefs.floatBar.listenBg && hasBg(target)) {
                         targetBg = unsafeWindow.getComputedStyle(target).backgroundImage.replace(bgReg, "$1");
                         let src = targetBg, nsrc = src, noActual = true, type = "scale";
@@ -22076,12 +22085,12 @@ ImgOps | https://imgops.com/#b#`;
                             noActual:noActual,
                             img: target
                         };
-                    } else if (preImg) {
-                        target = preImg;
+                    } else if (broImg) {
+                        target = broImg;
                     } else if (target.children.length == 1 && target.children[0].tagName == "IMG") {
                         target = target.children[0];
-                    } else if (prefs.floatBar.listenBg && preEle && hasBg(preEle)) {
-                        targetBg = unsafeWindow.getComputedStyle(preEle).backgroundImage.replace(bgReg, "$1");
+                    } else if (prefs.floatBar.listenBg && broEle && hasBg(broEle)) {
+                        targetBg = unsafeWindow.getComputedStyle(broEle).backgroundImage.replace(bgReg, "$1");
                         let src = targetBg, nsrc = src, noActual = true, type = "scale";
                         result = {
                             src: nsrc,
