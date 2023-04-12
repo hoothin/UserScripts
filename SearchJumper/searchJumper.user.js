@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.55.57
+// @version      1.6.6.55.58
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -699,7 +699,7 @@
         autoHide: false,
         autoHideAll: false,
         showCurrent: true,
-        shortcutKey: '`',
+        shortcutKey: 'Backquote',
         showInSearchEngine: false,
         showInSearchJumpPage: true,
         limitInPageLen: 1,
@@ -726,7 +726,13 @@
         rightMouse: true,
         shiftLastUsedType: true,
         mouseLeaveToHide: true,
-        currentTypeFirst: true
+        currentTypeFirst: true,
+        switchSitesPreKey: 'ArrowLeft',
+        switchSitesNextKey: 'ArrowRight',
+        switchSitesCtrl: true,
+        switchSitesAlt: false,
+        switchSitesShift: true,
+        switchSitesMeta: false
     };
     function run() {
         let lang = navigator.appName == "Netscape" ? navigator.language : navigator.userLanguage;
@@ -4079,6 +4085,31 @@
                 }, 0);
             }
 
+            switchSite(next) {
+                if (!currentSite || this.bar.style.display == "none") return;
+                let siteEle = this.con.querySelector(".search-jumper-btn.current");
+                if (next) {
+                    siteEle = siteEle.nextElementSibling;
+                    while(siteEle) {
+                        if (!siteEle.classList.contains("notmatch") && siteEle.style.display != "none" && siteEle.dataset.current != "true" && siteEle.dataset.isPage == "true") {
+                            break;
+                        }
+                        siteEle = siteEle.nextElementSibling;
+                    }
+                } else {
+                    siteEle = siteEle.previousElementSibling;
+                    while(siteEle) {
+                        if (!siteEle.classList.contains("notmatch") && siteEle.style.display != "none" && siteEle.dataset.current != "true" && siteEle.dataset.isPage == "true") {
+                            break;
+                        }
+                        siteEle = siteEle.previousElementSibling;
+                    }
+                }
+                if (siteEle) {
+                    this.openSiteBtn(siteEle, "_self");
+                }
+            }
+
             clearInputHide() {
                 searchTypes.forEach(type => {
                     type.classList.remove("input-hide");
@@ -5174,8 +5205,9 @@
                 return false;
             }
 
-            setCurrentSite(data) {
+            setCurrentSite(data, siteEle) {
                 currentSite = data;
+                siteEle.classList.add('current');
                 localKeywords = "";
                 if (!/#p{/.test(data.url) && /%s[lur]?\b/.test(data.url)) {
                     let keywords = getKeywords();
@@ -5210,26 +5242,31 @@
                                 if (!data || !data.url) {
                                     continue;
                                 }
+                                let currentData;
                                 if (data.match === '0') {
                                 } else if (data.match) {
                                     if (new RegExp(data.match).test(location.href)) {
-                                        this.setCurrentSite(data);
+                                        currentData = data;
                                     }
                                 } else if (data.url.indexOf(location.hostname) != -1) {
                                     if (data.url.indexOf("site") != -1) {
                                         let siteMatch = data.url.match(/site(%3A|:)(.+?)[\s%]/);
                                         if (siteMatch && location.href.indexOf(siteMatch[2]) != -1 && data.url.replace(siteMatch[0], "").indexOf(location.hostname) != -1) {
-                                            this.setCurrentSite(data);
+                                            currentData = data;
                                         }
                                     } else if (!currentSite && data.url.replace(/^https?:\/\//, "").replace(location.host, "").replace(/\/?[\?#].*/, "") == location.pathname.replace(/\/$/, "")) {
                                         let urlReg = data.url.match(/[^\/\?&]+(?=%[stb])/g);
                                         if (urlReg) {
                                             urlReg = urlReg.join('.*');
                                             if (new RegExp(urlReg).test(location.href)) {
-                                                this.setCurrentSite(data);
+                                                currentData = data;
                                             }
                                         }
                                     }
+                                }
+                                if (currentData) {
+                                    let siteEle = this.getTargetSitesByName([currentData.name])[0];
+                                    this.setCurrentSite(currentData, siteEle);
                                 }
                             }
                         }
@@ -5955,11 +5992,10 @@
                     if (!site.nobatch) batchSiteNames.push(site.name);
                     if (!currentSite && (siteEle.dataset.current || match) && !ele.classList.contains("notmatch")) {
                         isCurrent = true;
-                        siteEle.classList.add('current');
                         if (!searchData.prefConfig.showCurrent) {
                             siteEle.style.display = 'none';
                         }
-                        self.setCurrentSite(site);
+                        self.setCurrentSite(site, siteEle);
                         self.currentType = ele;
                     }
                 }
@@ -8331,87 +8367,85 @@
                         break;
                 }
             });
-            if (searchData.prefConfig.enableInPage) {
-                let shown = false;
-                let showToolbarTimer;
-                if (searchData.prefConfig.shortcutKey) {
-                    document.addEventListener('keydown', e => {
-                        if (e.target.id === "searchJumperInput") return;
-                        if ((searchData.prefConfig.callBarAlt && !e.altKey) ||
-                            (searchData.prefConfig.callBarCtrl && !e.ctrlKey) ||
-                            (searchData.prefConfig.callBarShift && !e.shiftKey) ||
-                            (searchData.prefConfig.callBarMeta && !e.metaKey)) {
-                            return;
-                        }
-                        if (!searchData.prefConfig.enableInInput) {
-                            if (document.activeElement &&
-                                (document.activeElement.tagName.toUpperCase() == 'INPUT' ||
-                                 document.activeElement.tagName.toUpperCase() == 'TEXTAREA' ||
-                                 document.activeElement.contentEditable == 'true')) {
-                                return;
-                            } else {
-                                let contentEditable = false;
-                                let parent = document.activeElement;
-                                while (parent && parent.tagName) {
-                                    contentEditable = parent.contentEditable == 'true';
-                                    if (contentEditable || parent.tagName.toUpperCase() == 'BODY') {
-                                        break;
-                                    }
-                                    parent = parent.parentNode;
+            if (searchData.prefConfig.switchSitesPreKey ||
+               searchData.prefConfig.switchSitesNextKey ||
+               searchData.prefConfig.shortcutKey ||
+               searchData.prefConfig.showAllShortcutKey) {
+                let inputing = -1, key = false;
+                let checkShortcutEnable = (e, _alt, _ctrl, _shift, _meta, _key) => {
+                    if ((_alt && !e.altKey) ||
+                        (_ctrl && !e.ctrlKey) ||
+                        (_shift && !e.shiftKey) ||
+                        (_meta && !e.metaKey)) {
+                        return false;
+                    }
+                    if (!key) key = (e.key || String.fromCharCode(e.keyCode)).toLowerCase();
+                    if (_key != key && _key != e.code) {
+                        return false;
+                    }
+                    if (!searchData.prefConfig.enableInInput && inputing == -1) {
+                        inputing = 1;
+                        if (document.activeElement &&
+                            (document.activeElement.tagName.toUpperCase() == 'INPUT' ||
+                             document.activeElement.tagName.toUpperCase() == 'TEXTAREA' ||
+                             document.activeElement.contentEditable == 'true')) {
+                            return false;
+                        } else {
+                            let contentEditable = false;
+                            let parent = document.activeElement;
+                            while (parent && parent.tagName) {
+                                contentEditable = parent.contentEditable == 'true';
+                                if (contentEditable || parent.tagName.toUpperCase() == 'BODY') {
+                                    break;
                                 }
-                                if (contentEditable) return;
+                                parent = parent.parentNode;
+                            }
+                            if (contentEditable) {
+                                return false;
                             }
                         }
-                        var key = (e.key || String.fromCharCode(e.keyCode)).toLowerCase();
-                        if (searchData.prefConfig.shortcutKey == e.code || searchData.prefConfig.shortcutKey == key) {
+                    }
+                    inputing = 0;
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return true;
+                };
+                document.addEventListener('keydown', e => {
+                    if (e.target.id === "searchJumperInput") return;
+                    inputing = -1;
+                    key = false;
+                    if (searchData.prefConfig.shortcutKey) {
+                        if (checkShortcutEnable(e, searchData.prefConfig.callBarAlt, searchData.prefConfig.callBarCtrl, searchData.prefConfig.callBarShift, searchData.prefConfig.callBarMeta, searchData.prefConfig.shortcutKey)) {
                             searchBar.setFuncKeyCall(false);
                             searchBar.showInPage();
                             if (!searchData.prefConfig.disableInputOnWords || searchBar.inInput || !getSelectStr()) {
                                 searchBar.showSearchInput();
                             }
-                            e.preventDefault();
-                            e.stopPropagation();
                         }
-                    });
-                }
-
-                if (searchData.prefConfig.showAllShortcutKey) {
-                    document.addEventListener('keydown', e => {
-                        if (e.target.id === "searchJumperInput") return;
-                        if ((searchData.prefConfig.showAllAlt && !e.altKey) ||
-                            (searchData.prefConfig.showAllCtrl && !e.ctrlKey) ||
-                            (searchData.prefConfig.showAllShift && !e.shiftKey) ||
-                            (searchData.prefConfig.showAllMeta && !e.metaKey)) {
-                            return;
-                        }
-                        if (!searchData.prefConfig.enableInInput) {
-                            if (document.activeElement &&
-                                (document.activeElement.tagName.toUpperCase() == 'INPUT' ||
-                                 document.activeElement.tagName.toUpperCase() == 'TEXTAREA' ||
-                                 document.activeElement.contentEditable == 'true')) {
-                                return;
-                            } else {
-                                let contentEditable = false;
-                                let parent = document.activeElement;
-                                while (parent && parent.tagName) {
-                                    contentEditable = parent.contentEditable == 'true';
-                                    if (contentEditable || parent.tagName.toUpperCase() == 'BODY') {
-                                        break;
-                                    }
-                                    parent = parent.parentNode;
-                                }
-                                if (contentEditable) return;
-                            }
-                        }
-                        var key = (e.key || String.fromCharCode(e.keyCode)).toLowerCase();
-                        if (searchData.prefConfig.showAllShortcutKey == e.code || searchData.prefConfig.showAllShortcutKey == key) {
+                    }
+                    if (inputing == 1) return;
+                    if (searchData.prefConfig.showAllShortcutKey) {
+                        if (checkShortcutEnable(e, searchData.prefConfig.showAllAlt, searchData.prefConfig.showAllCtrl, searchData.prefConfig.showAllShift, searchData.prefConfig.showAllMeta, searchData.prefConfig.showAllShortcutKey)) {
                             searchBar.appendBar();
                             searchBar.showAllSites();
-                            e.preventDefault();
-                            e.stopPropagation();
                         }
-                    });
-                }
+                    }
+                    if (searchData.prefConfig.switchSitesPreKey) {
+                        if (checkShortcutEnable(e, searchData.prefConfig.switchSitesAlt, searchData.prefConfig.switchSitesCtrl, searchData.prefConfig.switchSitesShift, searchData.prefConfig.switchSitesMeta, searchData.prefConfig.switchSitesPreKey)) {
+                            searchBar.switchSite();
+                            return;
+                        }
+                    }
+                    if (searchData.prefConfig.switchSitesNextKey) {
+                        if (checkShortcutEnable(e, searchData.prefConfig.switchSitesAlt, searchData.prefConfig.switchSitesCtrl, searchData.prefConfig.switchSitesShift, searchData.prefConfig.switchSitesMeta, searchData.prefConfig.switchSitesNextKey)) {
+                            searchBar.switchSite(true);
+                        }
+                    }
+                });
+            }
+            if (searchData.prefConfig.enableInPage) {
+                let shown = false;
+                let showToolbarTimer;
 
                 let clientRect;
                 if (searchData.prefConfig.leftMouse) {
