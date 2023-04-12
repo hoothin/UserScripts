@@ -1,5 +1,20 @@
 [
 {
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//*[@id=\"term-cal\"]/ul",
+    "nextLink": "//*[@id=\"term-cal\"]/div[1]/ul/li[2]/a",
+    "url": "^https://point\\.cosme\\.net/mypoint/expiration/offset/",
+    "exampleUrl": "https://point.cosme.net/mypoint/expiration/offset/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "2q5HAX7iN8QG7Fp3gngW",
+  "resource_url": "http://wedata.net/items/86103",
+  "name": "@cosme ビューティコイン･ビューティポイント有効期限",
+  "created_at": "2023-04-11T17:11:35+09:00",
+  "updated_at": "2023-04-11T17:11:35+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86100",
   "data": {
     "pageElement": "/html/body/div[2]/div/div/div[2]/div/div/section/div/div[2]/section",
