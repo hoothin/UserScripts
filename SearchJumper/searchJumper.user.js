@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.55.56
+// @version      1.6.6.55.57
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -4827,7 +4827,7 @@
                     self.bar.classList.remove("search-jumper-isTargetAudio");
                     self.bar.classList.remove("search-jumper-isTargetVideo");
                     self.bar.classList.remove("search-jumper-isTargetLink");
-                    self.bar.classList.remove("search-jumper-isTargetPage");
+                    //self.bar.classList.remove("search-jumper-isTargetPage");
                     self.bar.classList.remove("initShow");
                     //self.recoveHistory();
                     if (self.funcKeyCall) {
@@ -5945,7 +5945,7 @@
                 let tooLoog = sites && sites.length > 200;
                 ele.dataset.id = self.siteIndex;
                 async function createItem(site, i) {
-                    let siteEle = await self.createSiteBtn((tooLoog || searchData.prefConfig.noIcons ? 0 : site.icon), site, openInNewTab, isBookmark);
+                    let siteEle = await self.createSiteBtn((tooLoog || searchData.prefConfig.noIcons ? 0 : site.icon), site, openInNewTab, isBookmark, data);
                     siteEle.dataset.type = type;
                     siteEle.dataset.id = self.siteIndex;
                     self.siteIndex++;
@@ -6279,7 +6279,7 @@
                 }
             }
 
-            async createSiteBtn(icon, data, openInNewTab, isBookmark) {
+            async createSiteBtn(icon, data, openInNewTab, isBookmark, typeData) {
                 let self = this;
                 let ele = document.createElement("a");
                 ele.setAttribute("ref", "noopener noreferrer");
@@ -6589,7 +6589,7 @@
                     let imgBase64 = '', resultUrl = customVariable(ele.dataset.url);
                     let hasWordParam = /%s[lure]?\b/.test(data.url);
                     if (targetElement && targetElement.tagName) {
-                        targetUrl = targetElement.src || targetElement.href || '';
+                        targetUrl = (typeData.selectImg || typeData.selectAudio || typeData.selectVideo) ? (targetElement.src || '') : (targetElement.href || (targetElement.parentNode && targetElement.parentNode.href) || '');
                         if (targetElement.tagName.toUpperCase() == "VIDEO" || targetElement.tagName.toUpperCase() == "AUDIO") {
                             if (!targetUrl) {
                                 let source = targetElement.querySelector("source");
@@ -7122,7 +7122,6 @@
                         }
                     }
                 } else {
-                    let parentNode = targetElement.parentNode;
                     switch (targetElement.tagName.toUpperCase()) {
                         case 'IMG':
                             this.bar.classList.add("search-jumper-isTargetImg");
@@ -7145,10 +7144,20 @@
                             targetSiteImgs = this.bar.querySelectorAll('.search-jumper-targetLink:not(.notmatch)>a>img');
                             break;
                         default:
-                            this.bar.classList.add("search-jumper-isTargetPage");
-                            firstType = this.bar.querySelector('.search-jumper-targetPage:not(.notmatch)>span');
-                            targetSiteImgs = this.bar.querySelectorAll('.search-jumper-targetPage:not(.notmatch)>a>img');
                             break;
+                    }
+                    let parentNode = targetElement.parentNode;
+                    if (parentNode && parentNode.tagName.toUpperCase() === 'A') {
+                        this.bar.classList.add("search-jumper-isTargetLink");
+                        if (!firstType) {
+                            firstType = this.bar.querySelector('.search-jumper-targetLink:not(.notmatch)>span');
+                            targetSiteImgs = this.bar.querySelectorAll('.search-jumper-targetLink:not(.notmatch)>a>img');
+                        }
+                    }
+                    if (!firstType) {
+                        this.bar.classList.add("search-jumper-isTargetPage");
+                        firstType = this.bar.querySelector('.search-jumper-targetPage:not(.notmatch)>span');
+                        targetSiteImgs = this.bar.querySelectorAll('.search-jumper-targetPage:not(.notmatch)>a>img');
                     }
                 }
                 if (!firstType) {
