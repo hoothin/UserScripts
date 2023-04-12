@@ -4822,7 +4822,7 @@
                 let self = this;
                 if (this.bar.classList.contains("grabbing")) return;
                 var hideHandler = () => {
-                    self.bar.classList.remove("search-jumper-isInPage");
+                    //self.bar.classList.remove("search-jumper-isInPage");
                     self.bar.classList.remove("search-jumper-isTargetImg");
                     self.bar.classList.remove("search-jumper-isTargetAudio");
                     self.bar.classList.remove("search-jumper-isTargetVideo");
@@ -7159,10 +7159,10 @@
                         firstType = this.bar.querySelector('.search-jumper-targetPage:not(.notmatch)>span');
                         targetSiteImgs = this.bar.querySelectorAll('.search-jumper-targetPage:not(.notmatch)>a>img');
                     }
-                }
-                if (!firstType) {
-                    firstType = this.bar.querySelector('.search-jumper-targetAll:not(.notmatch)>span');
-                    targetSiteImgs = this.bar.querySelectorAll('.search-jumper-targetAll:not(.notmatch)>a>img');
+                    if (!firstType) {
+                        firstType = this.bar.querySelector('.search-jumper-targetAll:not(.notmatch)>span');
+                        targetSiteImgs = this.bar.querySelectorAll('.search-jumper-targetAll:not(.notmatch)>a>img');
+                    }
                 }
                 if (this.bar.style.display == "none") {
                     this.bar.style.display = "";
