@@ -16014,7 +16014,7 @@ ImgOps | https://imgops.com/#b#`;
                                     nextt=aTag;
                                 }else{
                                     let prevEle = aTag.previousElementSibling;
-                                    if (prevEle && (prevEle.tagName == 'B' || prevEle.tagName == 'SPAN')) {
+                                    if (prevEle && (prevEle.nodeName == 'B' || prevEle.nodeName == 'SPAN')) {
                                         if (/^\d+$/.test(aTag.innerText) && parseInt(aTag.innerText) == parseInt(prevEle.innerText) + 1) {
                                             nextt = aTag;
                                         }
@@ -16080,7 +16080,7 @@ ImgOps | https://imgops.com/#b#`;
                     return;
                 }
                 var targetUrl=next?pageObj.next:pageObj.pre;
-                if(targetUrl.tagName!="A"){
+                if(targetUrl.nodeName!="A"){
                     var childA=targetUrl.querySelector("a");
                     if(childA){
                         targetUrl=childA;
@@ -16456,7 +16456,7 @@ ImgOps | https://imgops.com/#b#`;
                 var self = this;
                 imgs.forEach(function(img) {
                     pretreatment(img);
-                    if(!img.src || (img.tagName=='IMG' && img.getAttribute && !img.getAttribute("src"))) return;
+                    if(!img.src || (img.nodeName=='IMG' && img.getAttribute && !img.getAttribute("src"))) return;
                     if (newer && self._dataCache[img.src]) return;
 
                     var result = findPic(img);
@@ -21945,8 +21945,8 @@ ImgOps | https://imgops.com/#b#`;
             let selStr;
             try {
                 if (document.activeElement &&
-                    (document.activeElement.tagName == 'INPUT' ||
-                     document.activeElement.tagName == 'TEXTAREA' ||
+                    (document.activeElement.nodeName == 'INPUT' ||
+                     document.activeElement.nodeName == 'TEXTAREA' ||
                      document.activeElement.contentEditable == 'true')) {
                     return false;
                 }
@@ -22070,7 +22070,7 @@ ImgOps | https://imgops.com/#b#`;
                     var bgReg = /^\s*url\(\s*["']?(.+?)["']?\s*\)/i;
                     var broEle = target, broImg;
                     while (broEle) {
-                        if (broEle.tagName == "IMG") broImg = broEle;
+                        if (broEle.nodeName == "IMG") broImg = broEle;
                         if (getComputedStyle(broEle).position !== "absolute") break;
                         broEle = broEle.previousElementSibling;
                     }
@@ -22078,7 +22078,7 @@ ImgOps | https://imgops.com/#b#`;
                     else if (!broEle) {
                         broEle = target;
                         while (broEle) {
-                            if (broEle.tagName == "IMG") broImg = broEle;
+                            if (broEle.nodeName == "IMG") broImg = broEle;
                             if (getComputedStyle(broEle).position !== "absolute") break;
                             broEle = broEle.nextElementSibling;
                         }
@@ -22096,7 +22096,7 @@ ImgOps | https://imgops.com/#b#`;
                         };
                     } else if (broImg) {
                         target = broImg;
-                    } else if (target.children.length == 1 && target.children[0].tagName == "IMG") {
+                    } else if (target.children.length == 1 && target.children[0].nodeName == "IMG") {
                         target = target.children[0];
                     } else if (prefs.floatBar.listenBg && broEle && hasBg(broEle)) {
                         targetBg = unsafeWindow.getComputedStyle(broEle).backgroundImage.replace(bgReg, "$1");
@@ -22346,7 +22346,7 @@ ImgOps | https://imgops.com/#b#`;
                         input.focus();
                         input.scrollIntoView();
                         let lastValue = input.value;
-                        if (input.tagName == "INPUT") {
+                        if (input.nodeName == "INPUT") {
                             var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
                             nativeInputValueSetter.call(input, v);
                         } else {
@@ -22477,9 +22477,9 @@ ImgOps | https://imgops.com/#b#`;
         function keydown(event) {
             if (ImgWindowC.showing) return;
             if (document.activeElement &&
-                (document.activeElement.tagName == 'INPUT' ||
-                 document.activeElement.tagName == 'INPUT' ||
-                 document.activeElement.tagName == 'TEXTAREA' ||
+                (document.activeElement.nodeName == 'INPUT' ||
+                 document.activeElement.nodeName == 'INPUT' ||
+                 document.activeElement.nodeName == 'TEXTAREA' ||
                  document.activeElement.contentEditable == 'true')) {
                 return;
             }
