@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.4.11.2
+// @version              2023.4.13.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -11982,34 +11982,39 @@ ImgOps | https://imgops.com/#b#`;
             firstEngine:"Tineye"
         };
 
-        var tprules=[
+        const lazyImgAttr = ["data-lazy-src", "data-lazy", "data-url", "data-orig-file", "zoomfile", "file", "original", "load-src", "imgsrc", "real_src", "src2", "origin-src", "data-lazyload", "data-lazyload-src", "data-lazy-load-src", "data-ks-lazyload", "data-ks-lazyload-custom", "data-src", "data-defer-src", "data-actualsrc", "data-cover", "data-original", "data-thumb", "data-imageurl", "data-placeholder", "lazysrc"];
+        var tprules = [
             function(a) {
-                var oldsrc = (this.currentSrc||this.src);
-                var newsrc = oldsrc;
-                if(this.getAttribute("lazysrc")){
-                    newsrc=this.getAttribute("lazysrc");
-                }else if(this.getAttribute("_src") && !this.src){
-                    newsrc=this.getAttribute("_src");
-                }else if(this.dataset && this.dataset.original){
-                    newsrc=this.dataset.original;
-                }else if(this.dataset && this.dataset.src){
-                    newsrc=this.dataset.src;
-                }else if(this._lazyrias && this._lazyrias.srcset){
-                    newsrc=this._lazyrias.srcset[this._lazyrias.srcset.length-1];
-                }else if(this.dataset && this.dataset.origFile){
-                    newsrc=this.dataset.origFile;
-                }else if(this.srcset){
-                    var srcs=this.srcset.split(/[xw],/i),largeSize=0;
-                    srcs.forEach(srci=>{
-                        let srcInfo=srci.trim().split(" "),curSize=parseInt(srcInfo[1]);
-                        if(!srcInfo[1]){
-                            newsrc=srcInfo[0];
-                        }else if(curSize>largeSize){
-                            largeSize=curSize;
-                            newsrc=srcInfo[0];
+                var oldsrc = (this.currentSrc || this.src);
+                var newsrc = null;
+
+                if (this.getAttribute("_src") && !this.src) {
+                    newsrc = this.getAttribute("_src");
+                } else {
+                    for (let i in lazyImgAttr) {
+                        let attrName = lazyImgAttr[i];
+                        let attrValue = this.getAttribute(attrName);
+                        if (attrValue) {
+                            newsrc = attrValue;
+                            break;
+                        }
+                    }
+                }
+                if (!newsrc && this._lazyrias && this._lazyrias.srcset) {
+                    newsrc = this._lazyrias.srcset[this._lazyrias.srcset.length - 1];
+                }
+                if (newsrc) {
+                } else if (this.srcset) {
+                    var srcs = this.srcset.split(/[xw],/i), largeSize = 0;
+                    srcs.forEach(srci => {
+                        let srcInfo = srci.trim().split(" "), curSize = parseInt(srcInfo[1]);
+                        if (srcInfo[1] && curSize > largeSize) {
+                            largeSize = curSize;
+                            newsrc = srcInfo[0];
                         }
                     });
                 }
+
                 return oldsrc != newsrc ? newsrc : null;
             }
         ];
@@ -21403,17 +21408,21 @@ ImgOps | https://imgops.com/#b#`;
         var matchedRule,
             URL=location.href.slice(0, 250);
 
-        function pretreatment(img){
-            if(img.nodeName.toUpperCase() != "IMG" || img.src)return;
-            if(img._lazyrias && img._lazyrias.srcset){
-                img.src=img._lazyrias.srcset[0];
-            }else if(img.currentSrc){
-                img.src=img.currentSrc;
-            }else if(img.srcset){
-                var srcs=img.srcset.split(",");
-                if (!srcs.length) return;
-                var newSrc=srcs[0].trim().split(" ")[0];
-                if(newSrc)img.src=newSrc;
+        function pretreatment(img) {
+            if (img.nodeName.toUpperCase() != "IMG" || (img.src && !/^data/.test(img.src))) return;
+            let src;
+            tprules.find(function(rule, index, array) {
+                try {
+                    src = rule.call(img);
+                    if (src) {
+                        return true;
+                    }
+                } catch(err) {
+                    debug(err);
+                }
+            });
+            if (src) {
+                img.src = src;
             }
         }
 
@@ -21472,7 +21481,7 @@ ImgOps | https://imgops.com/#b#`;
                     type = 'rule';
                     xhr = matchedRule.xhr;
 
-                    if (matchedRule.lazyAttr) {  // 由于采用了延迟加载技术，所以图片可能为 loading.gif
+                    if (matchedRule.lazyAttr) { // 由于采用了延迟加载技术，所以图片可能为 loading.gif
                         imgSrc = img.getAttribute(matchedRule.lazyAttr) || img.src;
                     }
 
