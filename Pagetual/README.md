@@ -2,7 +2,7 @@
 ==
 *Pagetual - Perpetual pages. Auto loading paginated web pages for 90% of all web sites !* [Wiki](https://pagetual.hoothin.com/en/)
 
-<a name="otherconfig" title="for restricted environment" href="https://hoothin.github.io/UserScripts/Pagetual/"><strong>【Config page on github.io】</strong></a>
+<a name="otherconfig" title="for restricted environment" href="https://hoothin.github.io/UserScripts/Pagetual/"><strong>🔧【Config page on github.io】</strong></a>
 
 <p name="click2import"></p>
 <pre name="pagetual">
