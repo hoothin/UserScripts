@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.55.59
+// @version      1.6.6.55.60
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -1138,6 +1138,7 @@
                 createHTML: (string, sink) => string
             });
         }
+        const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
 
         if (typeof String.prototype.replaceAll != 'function') {
             String.prototype.replaceAll = function(search, replacement) {
@@ -6286,8 +6287,10 @@
                         clicked = true;
                         await emuClick(param[0].substr(1));
                     } else if (param[0] === '@call') {
-                        let func = window[param[1]] || Function('"use strict";' + param[1]);
+                        let func = window[param[1]] || new AsyncFunction('"use strict";' + param[1]);
                         if (func) await func();
+                    } else if (param[0] === '@wait') {
+                        await waitForElement(param[1]);
                     } else {
                         if (!localKeywords) localKeywords = param[1];
                         await emuInput(param[0], param[1]);
@@ -6745,6 +6748,11 @@
                                 let func = pair.slice(5, pair.length - 1);
                                 if (func) {
                                     postParams.push(['@call', func.replace(/\\([\=&])/g, "$1").trim()]);
+                                }
+                            } else if (pair.startsWith("wait(") && pair.endsWith(')')) {
+                                let wait = pair.slice(5, pair.length - 1);
+                                if (wait) {
+                                    postParams.push(['@wait', wait.replace(/\\([\=&])/g, "$1").trim()]);
                                 }
                             } else if (/^sleep\(\d+\)$/.test(pair)) {
                                 let sleep = pair.match(/sleep\((.*)\)/);
@@ -7706,137 +7714,134 @@
             debug(targetElement, `press ${v}`);
         }
 
-        async function emuInput(sel, v) {
-            await new Promise((resolve) => {
+        async function waitForElement(sel) {
+            return new Promise((resolve) => {
                 let checkInv = setInterval(() => {
-                    let input = getElement(sel);
-                    if (input) {
-                        targetElement = input;
-                        let event = new Event('focus', { bubbles: true });
-                        input.dispatchEvent(event);
-                        let lastValue = input.value;
-                        if (input.nodeName.toUpperCase() == "INPUT") {
-                            var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
-                            nativeInputValueSetter.call(input, v);
-                        } else if (input.nodeName.toUpperCase() == "TEXTAREA") {
-                            var nativeTextareaValueSetter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, "value").set;
-                            nativeTextareaValueSetter.call(input, v);
-                        }
-                        event = new Event('input', { bubbles: true });
-                        let tracker = input._valueTracker;
-                        if (tracker) {
-                            tracker.setValue(lastValue);
-                        }
-                        input.dispatchEvent(event);
-                        event = new Event('change', { bubbles: true });
-                        input.dispatchEvent(event);
-
+                    let result = getElement(sel);
+                    if (result) {
                         clearInterval(checkInv);
-                        resolve();
-                        debug(input, `input ${sel}, ${v}`);
+                        resolve(result);
                     }
                 }, 100);
             });
         }
 
+        async function emuInput(sel, v) {
+            let input = await waitForElement(sel);
+            targetElement = input;
+            let event = new Event('focus', { bubbles: true });
+            input.dispatchEvent(event);
+            let lastValue = input.value;
+            if (input.nodeName.toUpperCase() == "INPUT") {
+                var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
+                nativeInputValueSetter.call(input, v);
+            } else if (input.nodeName.toUpperCase() == "TEXTAREA") {
+                var nativeTextareaValueSetter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, "value").set;
+                nativeTextareaValueSetter.call(input, v);
+            } else {
+                input.innerHTML = createHTML(v);
+            }
+            event = new Event('input', { bubbles: true });
+            let tracker = input._valueTracker;
+            if (tracker) {
+                tracker.setValue(lastValue);
+            }
+            input.dispatchEvent(event);
+            event = new Event('change', { bubbles: true });
+            input.dispatchEvent(event);
+            debug(input, `input ${sel}, ${v}`);
+        }
+
         async function emuClick(sel) {
-            await new Promise((resolve) => {
-                let checkInv = setInterval(() => {
-                    let btn = getElement(sel);
-                    if (btn) {
-                        targetElement = btn;
-                        clearInterval(checkInv);
-                        if(!PointerEvent) return btn.click();
-                        let eventParam = {
-                            isTrusted: true,
-                            altKey: false,
-                            azimuthAngle: 0,
-                            bubbles: true,
-                            button: 0,
-                            buttons: 0,
-                            clientX: 1,
-                            clientY: 1,
-                            cancelBubble: false,
-                            cancelable: true,
-                            composed: true,
-                            ctrlKey: false,
-                            defaultPrevented: false,
-                            detail: 1,
-                            eventPhase: 2,
-                            fromElement: null,
-                            height: 1,
-                            isPrimary: false,
-                            metaKey: false,
-                            pointerId: 1,
-                            pointerType: "mouse",
-                            pressure: 0,
-                            relatedTarget: null,
-                            returnValue: true,
-                            shiftKey: false,
-                            toElement: null,
-                            twist: 0,
-                            which: 1
-                        };
-                        btn.focus();
-                        var mouseEvent = new PointerEvent("mouseover",eventParam);
-                        btn.dispatchEvent(mouseEvent);
-                        mouseEvent = new PointerEvent("pointerover",eventParam);
-                        btn.dispatchEvent(mouseEvent);
-                        mouseEvent = new PointerEvent("mousedown",eventParam);
-                        btn.dispatchEvent(mouseEvent);
-                        mouseEvent = new PointerEvent("pointerdown",eventParam);
-                        btn.dispatchEvent(mouseEvent);
-                        mouseEvent = new PointerEvent("mouseup",eventParam);
-                        btn.dispatchEvent(mouseEvent);
-                        mouseEvent = new PointerEvent("pointerup",eventParam);
-                        btn.dispatchEvent(mouseEvent);
-                        let dispatchTouchEvent = (ele, type) => {
-                            let touchEvent;
-                            try {
-                                touchEvent = document.createEvent('TouchEvent')
-                                touchEvent.initTouchEvent(type, true, true)
-                            } catch (err) {
-                                try {
-                                    touchEvent = document.createEvent('UIEvent')
-                                    touchEvent.initUIEvent(type, true, true)
-                                } catch (err) {
-                                    touchEvent = document.createEvent('Event')
-                                    touchEvent.initEvent(type, true, true)
-                                }
-                            }
-                            try {
-                                touchEvent.targetTouches = [{
-                                    pageX: 1,
-                                    pageY: 1,
-                                    clientX: 1,
-                                    clientY: 1,
-                                    target: btn
-                                }];
-                                touchEvent.touches = [{
-                                    pageX: 1,
-                                    pageY: 1,
-                                    clientX: 1,
-                                    clientY: 1,
-                                    target: btn
-                                }];
-                                touchEvent.changedTouches = [{
-                                    pageX: 1,
-                                    pageY: 1,
-                                    clientX: 1,
-                                    clientY: 1,
-                                    target: btn
-                                }];
-                            } catch (err) {}
-                            ele.dispatchEvent(touchEvent);
-                        }
-                        dispatchTouchEvent(btn, "touchstart");
-                        dispatchTouchEvent(btn, "touchend");
-                        btn.click();
-                        resolve();
-                        debug(btn, `click ${sel}`);
+            let btn = await waitForElement(sel);
+            targetElement = btn;
+            if(!PointerEvent) return btn.click();
+            let eventParam = {
+                isTrusted: true,
+                altKey: false,
+                azimuthAngle: 0,
+                bubbles: true,
+                button: 0,
+                buttons: 0,
+                clientX: 1,
+                clientY: 1,
+                cancelBubble: false,
+                cancelable: true,
+                composed: true,
+                ctrlKey: false,
+                defaultPrevented: false,
+                detail: 1,
+                eventPhase: 2,
+                fromElement: null,
+                height: 1,
+                isPrimary: false,
+                metaKey: false,
+                pointerId: 1,
+                pointerType: "mouse",
+                pressure: 0,
+                relatedTarget: null,
+                returnValue: true,
+                shiftKey: false,
+                toElement: null,
+                twist: 0,
+                which: 1
+            };
+            btn.focus();
+            var mouseEvent = new PointerEvent("mouseover",eventParam);
+            btn.dispatchEvent(mouseEvent);
+            mouseEvent = new PointerEvent("pointerover",eventParam);
+            btn.dispatchEvent(mouseEvent);
+            mouseEvent = new PointerEvent("mousedown",eventParam);
+            btn.dispatchEvent(mouseEvent);
+            mouseEvent = new PointerEvent("pointerdown",eventParam);
+            btn.dispatchEvent(mouseEvent);
+            mouseEvent = new PointerEvent("mouseup",eventParam);
+            btn.dispatchEvent(mouseEvent);
+            mouseEvent = new PointerEvent("pointerup",eventParam);
+            btn.dispatchEvent(mouseEvent);
+            let dispatchTouchEvent = (ele, type) => {
+                let touchEvent;
+                try {
+                    touchEvent = document.createEvent('TouchEvent')
+                    touchEvent.initTouchEvent(type, true, true)
+                } catch (err) {
+                    try {
+                        touchEvent = document.createEvent('UIEvent')
+                        touchEvent.initUIEvent(type, true, true)
+                    } catch (err) {
+                        touchEvent = document.createEvent('Event')
+                        touchEvent.initEvent(type, true, true)
                     }
-                }, 100);
-            });
+                }
+                try {
+                    touchEvent.targetTouches = [{
+                        pageX: 1,
+                        pageY: 1,
+                        clientX: 1,
+                        clientY: 1,
+                        target: btn
+                    }];
+                    touchEvent.touches = [{
+                        pageX: 1,
+                        pageY: 1,
+                        clientX: 1,
+                        clientY: 1,
+                        target: btn
+                    }];
+                    touchEvent.changedTouches = [{
+                        pageX: 1,
+                        pageY: 1,
+                        clientX: 1,
+                        clientY: 1,
+                        target: btn
+                    }];
+                } catch (err) {}
+                ele.dispatchEvent(touchEvent);
+            }
+            dispatchTouchEvent(btn, "touchstart");
+            dispatchTouchEvent(btn, "touchend");
+            btn.click();
+            debug(btn, `click ${sel}`);
         }
 
         function submitByForm(charset, url, target) {
@@ -8800,7 +8805,8 @@
                 if (fail()) return;
             }
             let icons = [];
-            [].forEach.call(document.querySelectorAll("link[rel='shortcut icon'],link[rel='icon']"), link => {
+            [].forEach.call(document.querySelectorAll("link[rel='shortcut icon'],link[rel='icon'],link[rel='fluid-icon'],link[rel='apple-touch-icon']"), link => {
+                if (icons.indexOf && icons.indexOf(link.href) !== -1) return;
                 icons.push(link.href);
             });
             showSiteAdd(document.title.replace(input ? input.value : "", "").replace(/^\s*[-_]\s*/, ""), "", url, icons, document.characterSet, true);
@@ -10142,6 +10148,11 @@
                                 let func = pair.slice(5, pair.length - 1);
                                 if (func) {
                                     postParams.push(['@call', func.replace(/\\([\=&])/g, "$1").trim()]);
+                                }
+                            } else if (pair.startsWith("wait(") && pair.endsWith(')')) {
+                                let wait = pair.slice(5, pair.length - 1);
+                                if (wait) {
+                                    postParams.push(['@wait', wait.replace(/\\([\=&])/g, "$1").trim()]);
                                 }
                             } else if (/^sleep\(\d+\)$/.test(pair)) {
                                 let sleep = pair.match(/sleep\((.*)\)/);
