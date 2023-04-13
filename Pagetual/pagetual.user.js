@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.35.15
+// @version      1.9.35.16
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -794,7 +794,7 @@
     }
 
     function geneSelector(ele, addID) {
-        let selector = ele.tagName.toLowerCase();
+        let selector = ele.nodeName.toLowerCase();
         //Google id class都是隨機。百度更過分，style script順序都是隨機的
         if (selector != "html" && selector != "body") {
             let hasId = false;
@@ -814,19 +814,19 @@
                     selector += className;
                 }
                 let parent = ele.parentElement;
-                if (parent && parent.tagName) {
+                if (parent) {
                     selector = geneSelector(parent, addID) + ' > ' + selector;
                     if (!className && !hasId && parent.children.length > 1) {
                         let i, j = 0;
                         for (i = 0; i < parent.children.length; i++) {
-                            if (parent.children[i].tagName == ele.tagName) {
+                            if (parent.children[i].nodeName == ele.nodeName) {
                                 j++;
                                 if (parent.children[i] == ele) {
                                     break;
                                 }
                             }
                         }
-                        selector += (parent.tagName.toUpperCase() == "HTML" ? "" : `:nth-of-type(${j})`);
+                        selector += (parent.nodeName.toUpperCase() == "HTML" ? "" : `:nth-of-type(${j})`);
                     }
                 }
             }
@@ -836,8 +836,8 @@
 
     function createXPathFromElement(elm) {
         let allNodes = document.getElementsByTagName('*'), segs;
-        for (segs = []; elm && elm.nodeType == 1 && elm.tagName; elm = elm.parentNode) {
-            if (elm.tagName.toUpperCase() == 'BODY' || elm.tagName.toUpperCase() == 'HTML') {
+        for (segs = []; elm && elm.nodeType == 1; elm = elm.parentNode) {
+            if (elm.nodeName.toUpperCase() == 'BODY' || elm.nodeName.toUpperCase() == 'HTML') {
                 segs.unshift(elm.localName.toLowerCase());
                 continue;
             }
@@ -1360,15 +1360,15 @@
             if (pageElement && pageElement.length === 1 && pageElement[0].style.display === 'none') {
                 pageElement = [body];
             }
-            if (this.curSiteRule.singleUrl && pageElement && pageElement.length > 0 && pageElement[0].tagName.toUpperCase() == "TR") {
+            if (this.curSiteRule.singleUrl && pageElement && pageElement.length > 0 && pageElement[0].nodeName.toUpperCase() == "TR") {
                 let mainTr = this.insert.parentNode.querySelector('tr'), mainTdNum = 0, newTdNum = 0;
                 [].forEach.call(mainTr.children, el => {
-                    if (el.tagName.toUpperCase() == "TD" || el.tagName.toUpperCase() == "TH") {
+                    if (el.nodeName.toUpperCase() == "TD" || el.nodeName.toUpperCase() == "TH") {
                         mainTdNum += el.colSpan || 1;
                     }
                 });
                 [].forEach.call(pageElement[0].children, el => {
-                    if (el.tagName.toUpperCase() == "TD" || el.tagName.toUpperCase() == "TH") {
+                    if (el.nodeName.toUpperCase() == "TD" || el.nodeName.toUpperCase() == "TH") {
                         newTdNum += el.colSpan || 1;
                     }
                 });
@@ -1385,7 +1385,7 @@
                 let windowHeight = window.innerHeight || document.documentElement.clientHeight;
                 let needCheckNext = (doc == document && this.initNext);
                 function checkElement(ele) {
-                    if (ele.tagName.toUpperCase() == "PRE" || ele.tagName.toUpperCase() == "CODE") {
+                    if (ele.nodeName.toUpperCase() == "PRE" || ele.nodeName.toUpperCase() == "CODE") {
                         self.curSiteRule.pageElement = geneSelector(ele.parentNode);
                         debug(self.curSiteRule.pageElement, 'Page element');
                         return [ele.parentNode];
@@ -1405,8 +1405,8 @@
                             curWidth = parseInt(ele.offsetWidth || ele.scrollWidth);
                         }
                     }
-                    if (ele.tagName.toUpperCase() == "PICTURE") {
-                        self.curSiteRule.pageElement = geneSelector(ele.parentNode) + ">" + ele.tagName.toLowerCase();
+                    if (ele.nodeName.toUpperCase() == "PICTURE") {
+                        self.curSiteRule.pageElement = geneSelector(ele.parentNode) + ">" + ele.nodeName.toLowerCase();
                         debug(self.curSiteRule.pageElement, 'Page element');
                         return [ele];
                     }
@@ -1415,7 +1415,7 @@
                         if (article && article.length > 0) {
                             if (article.length == 1) {
                                 article = article[0];
-                                self.curSiteRule.pageElement = article.tagName.toLowerCase() + (article.id ? "#" + article.id : "") + (article.className ? "." + article.className : "") + ">*";
+                                self.curSiteRule.pageElement = article.nodeName.toLowerCase() + (article.id ? "#" + article.id : "") + (article.className ? "." + article.className : "") + ">*";
                                 debug(self.curSiteRule.pageElement, 'Page element');
                                 return article.children;
                             } else {
@@ -1428,14 +1428,14 @@
                         debug(self.curSiteRule.pageElement, 'Page element');
                         return [body];
                     }
-                    if (ele.tagName.toUpperCase() == "FORM" && ele.parentNode != getBody(document)) {
+                    if (ele.nodeName.toUpperCase() == "FORM" && ele.parentNode != getBody(document)) {
                         self.curSiteRule.pageElement = geneSelector(ele) + ">*";
                         debug(self.curSiteRule.pageElement, 'Page element');
                         return ele.children;
                     }
                     if (ele.children.length == 0 && !self.curSiteRule.pageElement) {
-                        if (ele.parentNode.tagName.toUpperCase() == "P") ele = ele.parentNode;
-                        self.curSiteRule.pageElement = geneSelector(ele.parentNode) + ">" + ele.tagName.toLowerCase();
+                        if (ele.parentNode.nodeName.toUpperCase() == "P") ele = ele.parentNode;
+                        self.curSiteRule.pageElement = geneSelector(ele.parentNode) + ">" + ele.nodeName.toLowerCase();
                         debug(self.curSiteRule.pageElement, 'Page element');
                         return getAllElements(self.curSiteRule.pageElement, doc);
                     }
@@ -1444,14 +1444,14 @@
                     let articleNum = 0;
                     for (i = 0; i < ele.children.length; i++) {
                         let curNode = ele.children[i];
-                        if (curNode.tagName.toUpperCase() == "CANVAS") continue;
-                        if (curNode.tagName.toUpperCase() == "NAV") continue;
+                        if (curNode.nodeName.toUpperCase() == "CANVAS") continue;
+                        if (curNode.nodeName.toUpperCase() == "NAV") continue;
                         if (!curNode.offsetParent) continue;
-                        if (curNode.tagName.toUpperCase() != "IMG" && curNode.querySelector('img') == null && /^\s*$/.test(curNode.innerText)) continue;
+                        if (curNode.nodeName.toUpperCase() != "IMG" && curNode.querySelector('img') == null && /^\s*$/.test(curNode.innerText)) continue;
                         if (needCheckNext && !curNode.contains(self.initNext) && getElementTop(curNode) > windowHeight) {
                             continue;
                         }
-                        if (curNode.tagName.toUpperCase() == "ARTICLE") articleNum++;
+                        if (curNode.nodeName.toUpperCase() == "ARTICLE") articleNum++;
                         let h = self.getValidHeight(curNode);
                         let w = curNode.scrollWidth;
                         if (isNaN(h) || isNaN(w)) continue;
@@ -1508,7 +1508,7 @@
                         if (curMaxEle.className) {
                             for(i = 0; i < ele.children.length; i++) {
                                 let curNode = ele.children[i];
-                                if (curMaxEle != curNode && curNode.style.display !== 'none' && curMaxEle.className == curNode.className && curMaxEle.tagName == curNode.tagName){
+                                if (curMaxEle != curNode && curNode.style.display !== 'none' && curMaxEle.className == curNode.className && curMaxEle.nodeName == curNode.nodeName){
                                     sameClassNum++;
                                 }
                             }
@@ -1518,9 +1518,9 @@
                         }
                     }
                     if (ele.parentNode.children.length == 1 && curWin.getComputedStyle(ele.parentNode).float == 'none') ele = ele.parentNode;
-                    else if (ele.tagName.toUpperCase() == "P" || ele.tagName.toUpperCase() == "BR") ele = ele.parentNode;
-                    else if (ele.tagName.toUpperCase() == "TD") ele = ele.parentNode;
-                    else if (ele.tagName.toUpperCase() == "TBODY") {
+                    else if (ele.nodeName.toUpperCase() == "P" || ele.nodeName.toUpperCase() == "BR") ele = ele.parentNode;
+                    else if (ele.nodeName.toUpperCase() == "TD") ele = ele.parentNode;
+                    else if (ele.nodeName.toUpperCase() == "TBODY") {
                         self.curSiteRule.pageElement = geneSelector(ele) + ">*";
                         if (ele.children.length > 0 && ele.children[0].querySelector("th")) {
                             self.curSiteRule.pageElement += ":not(:first-child)";
@@ -1563,7 +1563,7 @@
                                     let middleChild = ele.children[parseInt(ele.children.length / 2)];
                                     if (curWin.getComputedStyle(ele).display === 'flex' || (rulesData.opacity != 0 && !pf)) {
                                         ele = [ele];
-                                    } else if ((middleChild.style && middleChild.style.position === "absolute" && middleChild.style.left && middleChild.style.top) || ele.tagName.toUpperCase() === "UL" || curHeight == 0) {
+                                    } else if ((middleChild.style && middleChild.style.position === "absolute" && middleChild.style.left && middleChild.style.top) || ele.nodeName.toUpperCase() === "UL" || curHeight == 0) {
                                         ele = [ele];
                                     } else {
                                         self.curSiteRule.pageElement += ">*";
@@ -1589,7 +1589,7 @@
                         isPause = true;
                         pageElement = [];
                     } else {
-                        if (pageElement.length == 1 && pageElement[0].tagName.toUpperCase() == "IMG") {
+                        if (pageElement.length == 1 && pageElement[0].nodeName.toUpperCase() == "IMG") {
                             self.curSiteRule.pageBar = 0;
                         }
                     }
@@ -1684,7 +1684,7 @@
                 let pageElementCss = this.curSiteRule.pageElementCss || this.curSiteRule.pageElementStyle || rulesData.pageElementCss;
                 if (!pageElementCss && init && !this.nextLinkHref) return;
                 [].forEach.call(pageElement, (ele, i) => {
-                    if (!/LINK|META|STYLE|SCRIPT/.test(ele.tagName.toUpperCase())) {
+                    if (!/LINK|META|STYLE|SCRIPT/.test(ele.nodeName.toUpperCase())) {
                         if (pageElementCss) {
                             if (pageElementCss !== '0' && !ele.dataset.pagetualPageElement) {
                                 ele.style.cssText = (ele.style.cssText || '') + pageElementCss;
@@ -1889,7 +1889,7 @@
                     if (aTag.parentNode) {
                         if (aTag.parentNode.className && /slick|slide|gallery/i.test(aTag.parentNode.className)) continue;
                         if (aTag.parentNode.classList && aTag.parentNode.classList.contains('disabled')) continue;
-                        if (aTag.parentNode.tagName.toUpperCase() == "BLOCKQUOTE") continue;
+                        if (aTag.parentNode.nodeName.toUpperCase() == "BLOCKQUOTE") continue;
                     }
                     let isJs = !aTag.href || /^(javascript|#)/.test(aTag.href.replace(location.href, ""));
                     let innerText = (aTag.innerText || aTag.value || aTag.title || '');
@@ -1931,7 +1931,7 @@
                     if (isJs) continue;
                     if (!next4) {
                         let prevEle = aTag.previousElementSibling;
-                        if (prevEle && (prevEle.tagName.toUpperCase() == 'B' || prevEle.tagName.toUpperCase() == 'SPAN' || prevEle.tagName.toUpperCase() == 'STRONG')) {
+                        if (prevEle && (prevEle.nodeName.toUpperCase() == 'B' || prevEle.nodeName.toUpperCase() == 'SPAN' || prevEle.nodeName.toUpperCase() == 'STRONG')) {
                             if (/^\d+$/.test(aTag.innerText.trim()) && /^\d+$/.test(prevEle.innerText.trim()) && parseInt(aTag.innerText) == parseInt(prevEle.innerText) + 1) {
                                 next4 = aTag;
                             }
@@ -1995,8 +1995,8 @@
 
         verifyNext(next, doc) {
             if (!next) return null;
-            if (next.previousElementSibling && next.previousElementSibling.tagName.toUpperCase() == 'BR') return null;
-            let eles = getAllElements(`//${next.tagName}[text()='${next.innerText}']`, doc);
+            if (next.previousElementSibling && next.previousElementSibling.nodeName.toUpperCase() == 'BR') return null;
+            let eles = getAllElements(`//${next.nodeName}[text()='${next.innerText}']`, doc);
             if (eles.length >= 2 && eles[0].href != eles[1].href) {
                 next = null;
             } else if (doc == document) {
@@ -2187,10 +2187,10 @@
                         if (/^\d+$/.test(nextLink.innerText)) {
                             nextLink.href = getNextLinkByForm(form, nextLink, nextLink.innerText);
                         }
-                    } else if (nextLink.tagName.toUpperCase() == "INPUT" || nextLink.type == "submit") {
+                    } else if (nextLink.nodeName.toUpperCase() == "INPUT" || nextLink.type == "submit") {
                         form = nextLink.parentNode;
                         while (form) {
-                            if (form.tagName.toUpperCase() == "FORM") break;
+                            if (form.nodeName.toUpperCase() == "FORM") break;
                             else form = form.parentNode;
                         }
                         if (form) {
@@ -2205,10 +2205,10 @@
                 page = await this.getPage(doc);
                 nextLink = page.next;
                 if (nextLink) {
-                    if (nextLink.tagName.toUpperCase() == "INPUT" || nextLink.type == "submit") {
+                    if (nextLink.nodeName.toUpperCase() == "INPUT" || nextLink.type == "submit") {
                         let form = nextLink.parentNode;
                         while (form) {
-                            if (form.tagName.toUpperCase() == "FORM") break;
+                            if (form.nodeName.toUpperCase() == "FORM") break;
                             else form = form.parentNode;
                         }
                         if (form) {
@@ -2216,7 +2216,7 @@
                         }
                     }
                     let parent = nextLink;
-                    while (parent && parent.tagName.toUpperCase() !== "BODY") {
+                    while (parent && parent.nodeName.toUpperCase() !== "BODY") {
                         if (parent.hasAttribute && parent.hasAttribute("disabled")) {
                             this.nextLinkHref = false;
                             return null;
@@ -2501,7 +2501,7 @@
         openInNewTab(eles) {
             if (openInNewTab) {
                 [].forEach.call(eles, ele => {
-                    if (ele.tagName.toUpperCase() == "A" && ele.href && !/^(mailto:|javascript:)|#/.test(ele.href)) {
+                    if (ele.nodeName.toUpperCase() == "A" && ele.href && !/^(mailto:|javascript:)|#/.test(ele.href)) {
                         ele.setAttribute('target', openInNewTab == 1 ? '_blank' : '_self');
                     } else {
                         [].forEach.call(ele.querySelectorAll('a[href]:not([href^="mailto:"]):not([href^="javascript:"]):not([href^="#"])'), a => {
@@ -2578,7 +2578,7 @@
                 }
             };
             [].forEach.call(eles, ele => {
-                if (ele.tagName.toUpperCase() == "IMG") {
+                if (ele.nodeName.toUpperCase() == "IMG") {
                     setLazyImg(ele);
                 } else {
                     [].forEach.call(ele.querySelectorAll("img,picture>source"), img => {
@@ -2588,7 +2588,7 @@
                         div.style.setProperty("background-image", "url(" + div.dataset.src + ")", "important");
                     });
                 }
-                if (ele.tagName.toUpperCase() == "A" && ele.classList.contains("lazyload")) {
+                if (ele.nodeName.toUpperCase() == "A" && ele.classList.contains("lazyload")) {
                     if (ele.dataset.original) {
                         ele.style.backgroundImage = 'url("' + ele.dataset.original + '")';
                     }
@@ -4061,7 +4061,7 @@
                 let importBtn = createImportBtn(pre);
             });
             document.addEventListener("mouseover", e => {
-                if (e.target.tagName.toUpperCase() === "PRE") {
+                if (e.target.nodeName.toUpperCase() === "PRE") {
                     let nameAttr = e.target.getAttribute("name");
                     if (nameAttr == "pagetual" || nameAttr == "user-content-pagetual") {
                         if (e.target.querySelector('#pagetualImport')) return;
@@ -4113,6 +4113,8 @@
                     document.querySelector("pre[name='user-content-pagetual'],pre[name='pagetual']").style.display = "none";
                     document.querySelector("p[name='user-content-click2import'],p[name='click2import']").style.display = "none";
                 }
+                let otherconfig = document.querySelector("pre[name='user-content-otherconfig'],pre[name='otherconfig']");
+                if (otherconfig) otherconfig.parentNode.removeChild(otherconfig);
             } else return true;
         } else return false;
         class Rulebar {
@@ -4165,14 +4167,14 @@
             }
             moveUp() {
                 let preE = this.item.previousElementSibling;
-                if (preE.tagName.toUpperCase() == "P" && preE.children.length > 1) {
+                if (preE.nodeName.toUpperCase() == "P" && preE.children.length > 1) {
                     this.item.parentNode.insertBefore(this.item, preE);
                     this.saveSort();
                 }
             }
             moveDown() {
                 let nextE = this.item.nextElementSibling;
-                if (nextE.tagName.toUpperCase() == "P" && nextE.children.length > 1) {
+                if (nextE.nodeName.toUpperCase() == "P" && nextE.children.length > 1) {
                     this.item.parentNode.insertBefore(nextE, this.item);
                     this.saveSort();
                 }
@@ -4666,11 +4668,11 @@
     function isVisible(el, win) {
         if(!el || !el.offsetParent)return false;
         var loopable = true,
-            visible = el.tagName && win.getComputedStyle(el).display != 'none' && win.getComputedStyle(el).visibility != 'hidden';
+            visible = el.nodeName && win.getComputedStyle(el).display != 'none' && win.getComputedStyle(el).visibility != 'hidden';
         while(loopable && visible) {
             el = el.parentNode;
 
-            if(el && el.tagName && el.tagName.toUpperCase() != "BODY") {
+            if(el && el.nodeName && el.nodeName.toUpperCase() != "BODY") {
                 visible = win.getComputedStyle(el).display != 'none' && win.getComputedStyle(el).visibility != 'hidden';
             }else {
                 loopable = false;
@@ -4952,7 +4954,7 @@
                     if (article && article.length > 0) {
                         if (article.length == 1) {
                             article = article[0];
-                            ruleParser.curSiteRule.pageElement = article.tagName.toLowerCase() + (article.id ? "#" + article.id : "") + (article.className ? "." + article.className : "") + ">*";
+                            ruleParser.curSiteRule.pageElement = article.nodeName.toLowerCase() + (article.id ? "#" + article.id : "") + (article.className ? "." + article.className : "") + ">*";
                             pageElement = article.children;
                         } else {
                             ruleParser.curSiteRule.pageElement = mainSel;
@@ -4965,7 +4967,7 @@
                     ruleParser.getInsert(true);
                 }
                 //只有1的話怕不是圖片哦
-                if (pageElement && (pageElement.length > 1 || (pageElement.length == 1 && pageElement[0].tagName.toUpperCase() != "IMG"))) {
+                if (pageElement && (pageElement.length > 1 || (pageElement.length == 1 && pageElement[0].nodeName.toUpperCase() != "IMG"))) {
                     await ruleParser.insertPage(doc, pageElement, url, callback, false);
                     if (ruleParser.curSiteRule.action == 1) {
                         requestFromIframe(url, (doc, eles) => {
@@ -5453,7 +5455,7 @@
             }
         };
         dblclickHandler = e => {
-            if (forceState == 1 || e.target.tagName.toUpperCase() == 'INPUT' || e.target.tagName.toUpperCase() == 'TEXTAREA' || e.target.tagName.toUpperCase() == 'SELECT') return;
+            if (forceState == 1 || e.target.nodeName.toUpperCase() == 'INPUT' || e.target.nodeName.toUpperCase() == 'TEXTAREA' || e.target.nodeName.toUpperCase() == 'SELECT') return;
             if (!rulesData.dbClick2StopKey) {
                 if ((rulesData.dbClick2StopCtrl && !e.ctrlKey) ||
                    (rulesData.dbClick2StopAlt && !e.altKey) ||
@@ -5462,7 +5464,7 @@
                     return;
                 }
             }
-            if (e.target.tagName.toUpperCase() !== "BODY" && e.target.className !== 'pagetual_pageBar') {
+            if (e.target.nodeName.toUpperCase() !== "BODY" && e.target.className !== 'pagetual_pageBar') {
                 let selStr = document.getSelection().toString();
                 if (selStr && selStr.trim()) {
                     return;
@@ -5497,8 +5499,8 @@
                     return;
                 }
                 if (document.activeElement &&
-                    (document.activeElement.tagName.toUpperCase() == 'INPUT' ||
-                     document.activeElement.tagName.toUpperCase() == 'TEXTAREA')) {
+                    (document.activeElement.nodeName.toUpperCase() == 'INPUT' ||
+                     document.activeElement.nodeName.toUpperCase() == 'TEXTAREA')) {
                     return;
                 }
                 var key = e.key.toLowerCase();
@@ -5525,8 +5527,8 @@
         if (manualMode) {
             manualModeKeyHandler = e => {
                 if (document.activeElement &&
-                    (document.activeElement.tagName.toUpperCase() == 'INPUT' ||
-                     document.activeElement.tagName.toUpperCase() == 'TEXTAREA' ||
+                    (document.activeElement.nodeName.toUpperCase() == 'INPUT' ||
+                     document.activeElement.nodeName.toUpperCase() == 'TEXTAREA' ||
                      document.activeElement.contentEditable == 'true')) {
                     return;
                 }
@@ -5546,8 +5548,8 @@
         if (rulesData.arrowToScroll) {
             keyupHandler = e => {
                 if (document.activeElement &&
-                    (document.activeElement.tagName.toUpperCase() == 'INPUT' ||
-                     document.activeElement.tagName.toUpperCase() == 'TEXTAREA' ||
+                    (document.activeElement.nodeName.toUpperCase() == 'INPUT' ||
+                     document.activeElement.nodeName.toUpperCase() == 'TEXTAREA' ||
                      document.activeElement.contentEditable == 'true')) {
                     return;
                 }
@@ -5660,7 +5662,7 @@
         if (rulesData.opacity == 0 || ruleParser.curSiteRule.pageBar === 0) return null;
         url = url.replace(/#p{.*/, "");
         let example = ruleParser.curSiteRule.insertPos == 2 ? insert.children[0] : (insert.parentNode.children[0] || insert);
-        while (example && (example.tagName.toUpperCase() == "SCRIPT" || example.tagName.toUpperCase() == "STYLE" || example.className == "pagetual_pageBar")) {
+        while (example && (example.nodeName.toUpperCase() == "SCRIPT" || example.nodeName.toUpperCase() == "STYLE" || example.className == "pagetual_pageBar")) {
             example = example.nextElementSibling;
         }
         if (!example || !example.parentNode) example = insert;
@@ -5673,14 +5675,14 @@
         if (forceState == 2) {
             inTable = inLi = false;
         } else {
-            inTable = example.parentNode.tagName.toUpperCase() == "TABLE" ||
-            example.parentNode.tagName.toUpperCase() == "TBODY" ||
-            example.tagName.toUpperCase() == "TR" ||
-            example.tagName.toUpperCase() == "TBODY" ||
+            inTable = example.parentNode.nodeName.toUpperCase() == "TABLE" ||
+            example.parentNode.nodeName.toUpperCase() == "TBODY" ||
+            example.nodeName.toUpperCase() == "TR" ||
+            example.nodeName.toUpperCase() == "TBODY" ||
             exampleStyle.display == "table-row" ||
-            (example.nextElementSibling && example.nextElementSibling.tagName.toUpperCase() == "TR") ||
-            (example.nextElementSibling && example.nextElementSibling.tagName.toUpperCase() == "TBODY");
-            inLi = example.tagName.toUpperCase() == "LI" || (example.nextElementSibling && example.nextElementSibling.tagName.toUpperCase() == "LI");
+            (example.nextElementSibling && example.nextElementSibling.nodeName.toUpperCase() == "TR") ||
+            (example.nextElementSibling && example.nextElementSibling.nodeName.toUpperCase() == "TBODY");
+            inLi = example.nodeName.toUpperCase() == "LI" || (example.nextElementSibling && example.nextElementSibling.nodeName.toUpperCase() == "LI");
         }
         let pageBar = document.createElement(inTable ? "tr" : (inLi ? "li" : "div"));
         let upSpan = document.createElement("span");
@@ -5809,8 +5811,8 @@
                 pageBar.style.gridColumn = "1/-1";
             }
             if (inTable) {
-                example = (example.tagName.toUpperCase() == "TR" || example.tagName.toUpperCase() == "TBODY") ? example : example.nextElementSibling || example;
-                if (example.tagName.toUpperCase() == "TBODY") example = example.querySelector("tr");
+                example = (example.nodeName.toUpperCase() == "TR" || example.nodeName.toUpperCase() == "TBODY") ? example : example.nextElementSibling || example;
+                if (example.nodeName.toUpperCase() == "TBODY") example = example.querySelector("tr");
                 let nextTr = example;
                 while (nextTr && nextTr.children.length == 0) nextTr = nextTr.nextElementSibling;
                 if (nextTr) example = nextTr;
@@ -5821,7 +5823,7 @@
                     });
                 } else {
                     [].forEach.call(example.children, el => {
-                        if (el.tagName.toUpperCase() == "TD" || el.tagName.toUpperCase() == "TH") {
+                        if (el.nodeName.toUpperCase() == "TD" || el.nodeName.toUpperCase() == "TH") {
                             tdNum += el.colSpan || 1;
                         }
                     });
@@ -5848,7 +5850,7 @@
                 td.appendChild(inTd);
                 pageBar.appendChild(td);
             } else if(inLi) {
-                example = example.tagName.toUpperCase() == "LI" ? example : example.nextElementSibling || example;
+                example = example.nodeName.toUpperCase() == "LI" ? example : example.nextElementSibling || example;
                 pageBar.style.display = getComputedStyle(example).display;
                 pageBar.style.backgroundColor = "unset";
                 pageBar.style.lineHeight = "20px";
@@ -6194,7 +6196,7 @@
                     returnFalse("Stop as no page when emu");
                     return;
                 }
-                if (pageEle[0].tagName.toUpperCase() == "UL") pageEle = pageEle[0].children;
+                if (pageEle[0].nodeName.toUpperCase() == "UL") pageEle = pageEle[0].children;
                 pageEle = pageEle[parseInt(pageEle.length / 2)];
                 while(pageEle && !pageEle.offsetParent) {
                     if (pageEle.nextElementSibling) pageEle = pageEle.nextElementSibling;
@@ -6211,7 +6213,7 @@
                 }
                 orgPage = pageEle;
                 if (nextLink) {
-                    if (orgPage.tagName.toUpperCase() == "IMG") {
+                    if (orgPage.nodeName.toUpperCase() == "IMG") {
                         if (!ruleParser.curSiteRule.lazyImgSrc) ruleParser.curSiteRule.lazyImgSrc = "0";
                         if (orgPage.src) {
                             orgContent = orgPage.src;
@@ -6246,7 +6248,7 @@
             let eles = ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView, true), checkItem;
             if (eles && eles.length > 0) {
                 checkItem = eles;
-                if (eles[0].tagName.toUpperCase() == "UL") checkItem = eles[0].children;
+                if (eles[0].nodeName.toUpperCase() == "UL") checkItem = eles[0].children;
                 checkItem = checkItem[parseInt(checkItem.length / 2)];
                 while(checkItem && !checkItem.offsetParent) {
                     if (checkItem.nextElementSibling) checkItem = checkItem.nextElementSibling;
@@ -6260,7 +6262,7 @@
                 }, waitTime);
             } else {
                 let checkInner;
-                if (checkItem.tagName.toUpperCase() == "IMG") {
+                if (checkItem.nodeName.toUpperCase() == "IMG") {
                     if (checkItem.src) {
                         checkInner = checkItem.src;
                     } else {
@@ -6653,10 +6655,10 @@
             isLoading = true;
             ruleParser.insertElement(loadingDiv);
             let parent = loadingDiv.parentNode;
-            if (parent.tagName.toUpperCase() == "TBODY") {
+            if (parent.nodeName.toUpperCase() == "TBODY") {
                 parent = parent.parentNode;
             }
-            if (parent.tagName.toUpperCase() == "TABLE") {
+            if (parent.nodeName.toUpperCase() == "TABLE") {
                 parent.parentNode.appendChild(loadingDiv);
             }
             loadingDiv.style.cssText = loadingCSS;
