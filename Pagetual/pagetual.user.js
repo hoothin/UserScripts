@@ -4113,7 +4113,7 @@
                     document.querySelector("pre[name='user-content-pagetual'],pre[name='pagetual']").style.display = "none";
                     document.querySelector("p[name='user-content-click2import'],p[name='click2import']").style.display = "none";
                 }
-                let otherconfig = document.querySelector("pre[name='user-content-otherconfig'],pre[name='otherconfig']");
+                let otherconfig = document.querySelector("a[name='user-content-otherconfig'],a[name='otherconfig']");
                 if (otherconfig) otherconfig.parentNode.removeChild(otherconfig);
             } else return true;
         } else return false;
