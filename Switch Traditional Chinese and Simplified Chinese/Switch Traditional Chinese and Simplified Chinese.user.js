@@ -6,7 +6,7 @@
 // @namespace    hoothin
 // @supportURL   https://github.com/hoothin/UserScripts
 // @homepageURL  https://github.com/hoothin/UserScripts
-// @version      1.2.6.25
+// @version      1.2.6.26
 // @description        任意轉換網頁中的簡體中文與正體中文（默認簡體→正體）
 // @description:zh-CN  任意转换网页中的简体中文与繁体中文（默认繁体→简体）
 // @description:ja     簡繁中国語に変換
@@ -870,7 +870,7 @@
         if (childs) {
             for (var i = 0;i<childs.length;i++){
                 var child=childs[i];
-                if (/BR|META|SCRIPT|HR|STYLE/.test(child.tagName.toUpperCase())) continue;
+                if (/BR|META|SCRIPT|HR|STYLE/.test(child.nodeName.toUpperCase())) continue;
                 if (child.getAttribute && child.getAttribute('translate') === 'no') continue;
                 if (child.title) {
                     let title = stranText(child.title);
@@ -893,7 +893,7 @@
                         }
                     }
                 }
-                if (child.tagName.toUpperCase() == "INPUT" && child.value !== "" && child.type != "text" && child.type != "search" && child.type != "hidden") {
+                if (child.nodeName.toUpperCase() == "INPUT" && child.value !== "" && child.type != "text" && child.type != "search" && child.type != "hidden") {
                     let value = stranText(child.value);
                     if (child.value != value) {
                         child.value = value;
@@ -1139,11 +1139,11 @@
         var curLang=isSimple;
         document.addEventListener("keydown", function(e) {
             if(e.key == shortcutKey && e.ctrlKey == ctrlKey && e.altKey == altKey && e.shiftKey == shiftKey && e.metaKey == metaKey) {
-                if("TEXTAREA"==document.activeElement.tagName.toUpperCase()){
+                if("TEXTAREA"==document.activeElement.nodeName.toUpperCase()){
                     curLang=!curLang;
                     document.activeElement.innerHTML=curLang?traditionalized(document.activeElement.innerHTML):simplized(document.activeElement.innerHTML);
                     document.activeElement.value=curLang?traditionalized(document.activeElement.value):simplized(document.activeElement.value);
-                }else if("INPUT"==document.activeElement.tagName.toUpperCase()){
+                }else if("INPUT"==document.activeElement.nodeName.toUpperCase()){
                     curLang=!curLang;
                     document.activeElement.value=curLang?traditionalized(document.activeElement.value):simplized(document.activeElement.value);
                 }else{
