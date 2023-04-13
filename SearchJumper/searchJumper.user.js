@@ -2993,7 +2993,7 @@
                     wordSpan.addEventListener('dblclick', e => {
                         e.stopPropagation();
                         e.preventDefault();
-                        if (e.target.tagName.toUpperCase() === 'EM') return;
+                        if (e.target.nodeName.toUpperCase() === 'EM') return;
                         if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) return;
                         this.showModifyWindow(word, wordSpan);
                     }, true);
@@ -3171,7 +3171,7 @@
                     finalSearch.addEventListener("click", e => {
                         let finalValue = finalSearch.dataset.url;
                         [].forEach.call(customGroup.children, ele => {
-                            if (ele.tagName.toUpperCase() === 'DIV') return;
+                            if (ele.nodeName.toUpperCase() === 'DIV') return;
                             finalValue = finalValue.replace('◎', ele.value || '');
                         });
                         finalSearch.value = finalValue;
@@ -3809,7 +3809,7 @@
                 function searchWithinNode(node, word) {
                     let len, pos = -1, skip, spannode, middlebit, middleclone;
                     skip = 0;
-                    if (node.nodeType == 3 && (typeof word.hideParent !== 'undefined' || node.parentNode.tagName.toUpperCase() == "BODY" || node.parentNode.offsetParent || (node.parentNode.scrollHeight && node.parentNode.scrollWidth))) {
+                    if (node.nodeType == 3 && (typeof word.hideParent !== 'undefined' || node.parentNode.nodeName.toUpperCase() == "BODY" || node.parentNode.offsetParent || (node.parentNode.scrollHeight && node.parentNode.scrollWidth))) {
                         if (word.isRe) {
                             let wordMatch = node.data.match(new RegExp(word.content, word.reCase));
                             if (wordMatch) {
@@ -3903,14 +3903,14 @@
                     } else if ((!root || node === ele) &&
                                node.nodeType == 1 &&
                                node.childNodes &&
-                               node.tagName.toUpperCase() != "SCRIPT" &&
-                               node.tagName.toUpperCase() != "STYLE" &&
-                               node.tagName.toUpperCase() != "TEXTAREA" &&
+                               node.nodeName.toUpperCase() != "SCRIPT" &&
+                               node.nodeName.toUpperCase() != "STYLE" &&
+                               node.nodeName.toUpperCase() != "TEXTAREA" &&
                                node.contentEditable != 'true' &&
                                node.ariaHidden != 'true' &&
                                (!node.hasAttribute || node.hasAttribute('jsname') == false) &&
-                               node.tagName.toUpperCase() != "MARK") {
-                        if (!searchingPre && (node.tagName.toUpperCase() === "PRE" || node.tagName.toUpperCase() === "CODE")) {
+                               node.nodeName.toUpperCase() != "MARK") {
+                        if (!searchingPre && (node.nodeName.toUpperCase() === "PRE" || node.nodeName.toUpperCase() === "CODE")) {
                             preEles.push(node);
                         } else {
                             for (var child = 0; child < node.childNodes.length; ++child) {
@@ -4057,8 +4057,8 @@
                 });
                 let targetKw = "";
                 if (targetElement &&
-                    (targetElement.tagName.toUpperCase() == 'A' ||
-                     (targetElement.parentNode && targetElement.parentNode.tagName.toUpperCase() == 'A'))) {
+                    (targetElement.nodeName.toUpperCase() == 'A' ||
+                     (targetElement.parentNode && targetElement.parentNode.nodeName.toUpperCase() == 'A'))) {
                     targetKw = targetElement.textContent.trim();
                 }
                 let kw = getKeywords() || targetKw || cacheKeywords;
@@ -4232,9 +4232,9 @@
             }
 
             autoGetFirstType() {
-                if (!targetElement || !targetElement.tagName) targetElement = getBody(document);
+                if (!targetElement) targetElement = getBody(document);
                 let firstType;
-                switch (targetElement.tagName.toUpperCase()) {
+                switch (targetElement.nodeName.toUpperCase()) {
                     case 'IMG':
                         firstType = this.bar.querySelector('.search-jumper-targetImg:not(.notmatch)');
                         break;
@@ -4254,7 +4254,7 @@
                     default:
                         if (getSelectStr()) {
                             firstType = this.bar.querySelector('.search-jumper-needInPage:not(.notmatch)');
-                        } else if (targetElement.parentNode.tagName.toUpperCase() === 'A') {
+                        } else if (targetElement.parentNode.nodeName.toUpperCase() === 'A') {
                             firstType = this.bar.querySelector('.search-jumper-targetLink:not(.notmatch)');
                         } else {
                             firstType = this.bar.querySelector('.search-jumper-targetPage:not(.notmatch)');
@@ -4736,7 +4736,7 @@
                 let touchStart = false;
                 this.searchInputDiv.addEventListener("touchstart", e => {
                     touchStart = true;
-                    if (e.target.className === 'inputGroup' || e.target.tagName.toUpperCase() === 'LABEL') {
+                    if (e.target.className === 'inputGroup' || e.target.nodeName.toUpperCase() === 'LABEL') {
                         setStartBottom();
                         currentGroup = e.target;
                         currentGroup.style.cursor = "grabbing";
@@ -4752,7 +4752,7 @@
                         touchStart = false;
                         return;
                     }
-                    if (e.target.className === 'inputGroup' || e.target.tagName.toUpperCase() === 'LABEL') {
+                    if (e.target.className === 'inputGroup' || e.target.nodeName.toUpperCase() === 'LABEL') {
                         setStartBottom();
                         currentGroup = e.target;
                         currentGroup.style.cursor = "grabbing";
@@ -4813,7 +4813,7 @@
                 this.bar.addEventListener("dragstart", e => {
                     let target = e.target;
                     let parentNode = target.parentNode;
-                    if (target.tagName.toUpperCase() !== 'IMG' && target.tagName.toUpperCase() !== 'A') return;
+                    if (target.nodeName.toUpperCase() !== 'IMG' && target.nodeName.toUpperCase() !== 'A') return;
                     if (target.classList && target.classList.contains('search-jumper-btn')) {
                         dragSiteBtn = target;
                         getBody(document).addEventListener('dragover', dragOpenOverHandler);
@@ -5817,16 +5817,16 @@
                         }
                         if (!searchData.prefConfig.enableInInput) {
                             if (document.activeElement &&
-                                (document.activeElement.tagName.toUpperCase() == 'INPUT' ||
-                                 document.activeElement.tagName.toUpperCase() == 'TEXTAREA' ||
+                                (document.activeElement.nodeName.toUpperCase() == 'INPUT' ||
+                                 document.activeElement.nodeName.toUpperCase() == 'TEXTAREA' ||
                                  document.activeElement.contentEditable == 'true')) {
                                 return;
                             } else {
                                 let contentEditable = false;
                                 let parent = document.activeElement;
-                                while (parent && parent.tagName) {
+                                while (parent && parent.nodeName) {
                                     contentEditable = parent.contentEditable == 'true';
-                                    if (contentEditable || parent.tagName.toUpperCase() == 'BODY') {
+                                    if (contentEditable || parent.nodeName.toUpperCase() == 'BODY') {
                                         break;
                                     }
                                     parent = parent.parentNode;
@@ -6301,7 +6301,7 @@
 
                 if (!clicked && input) {
                     form = input.parentNode;
-                    while (form.tagName.toUpperCase() != 'FORM') {
+                    while (form.nodeName.toUpperCase() != 'FORM') {
                         form = form.parentNode;
                         if (!form) break;
                     }
@@ -6383,16 +6383,16 @@
                         }
                         if (!searchData.prefConfig.enableInInput) {
                             if (document.activeElement &&
-                                (document.activeElement.tagName.toUpperCase() == 'INPUT' ||
-                                 document.activeElement.tagName.toUpperCase() == 'TEXTAREA' ||
+                                (document.activeElement.nodeName.toUpperCase() == 'INPUT' ||
+                                 document.activeElement.nodeName.toUpperCase() == 'TEXTAREA' ||
                                  document.activeElement.contentEditable == 'true')) {
                                 return;
                             } else {
                                 let contentEditable = false;
                                 let parent = document.activeElement;
-                                while (parent && parent.tagName) {
+                                while (parent && parent.nodeName) {
                                     contentEditable = parent.contentEditable == 'true';
-                                    if (contentEditable || parent.tagName.toUpperCase() == 'BODY') {
+                                    if (contentEditable || parent.nodeName.toUpperCase() == 'BODY') {
                                         break;
                                     }
                                     parent = parent.parentNode;
@@ -6624,9 +6624,9 @@
                     let targetName = selStr || document.title;
                     let imgBase64 = '', resultUrl = customVariable(ele.dataset.url);
                     let hasWordParam = /%s[lure]?\b/.test(data.url);
-                    if (targetElement && targetElement.tagName) {
+                    if (targetElement) {
                         targetUrl = (typeData.selectImg || typeData.selectAudio || typeData.selectVideo) ? (targetElement.src || '') : (targetElement.href || (targetElement.parentNode && targetElement.parentNode.href) || '');
-                        if (targetElement.tagName.toUpperCase() == "VIDEO" || targetElement.tagName.toUpperCase() == "AUDIO") {
+                        if (targetElement.nodeName.toUpperCase() == "VIDEO" || targetElement.nodeName.toUpperCase() == "AUDIO") {
                             if (!targetUrl) {
                                 let source = targetElement.querySelector("source");
                                 if (source) targetUrl = source.src;
@@ -6634,7 +6634,7 @@
                             if (targetUrl) targetUrl = targetUrl.replace(/^blob:/, "");
                         }
                         targetName = targetElement.title || targetElement.alt || document.title;
-                        if (targetElement.tagName.toUpperCase() == 'IMG' && /%i\b/.test(ele.dataset.url)) {
+                        if (targetElement.nodeName.toUpperCase() == 'IMG' && /%i\b/.test(ele.dataset.url)) {
                             if (targetElement.src) {
                                 if (/^data/.test(targetElement.src)) {
                                     resultUrl = resultUrl.replace(/%i\b/g, targetElement.src);
@@ -6643,7 +6643,7 @@
                                     resultUrl = resultUrl.replace(/%i\b/g, imgBase64);
                                 }
                             }
-                        } else if ((targetElement.tagName.toUpperCase() == 'A' || (targetElement.parentNode && targetElement.parentNode.tagName.toUpperCase() == 'A')) && hasWordParam && !keywords) {
+                        } else if ((targetElement.nodeName.toUpperCase() == 'A' || (targetElement.parentNode && targetElement.parentNode.nodeName.toUpperCase() == 'A')) && hasWordParam && !keywords) {
                             if (targetElement.textContent.trim()) keywords = targetElement.textContent.trim();
                         }
                     }
@@ -7097,11 +7097,11 @@
                 if (_funcKeyCall && selectStr && selectStr.length < (searchData.prefConfig.limitPopupLen || 1)) return;
                 if (this.con && this.con.classList.contains("search-jumper-showall")) return;
                 if (searchData.prefConfig.hidePopup) _funcKeyCall = false;
-                if (!targetElement || !targetElement.tagName) targetElement = getBody(document);
+                if (!targetElement) targetElement = getBody(document);
                 else if (targetElement != getBody(document)) {
                     let _targetElement = targetElement, children;
-                    while (_targetElement && _targetElement.tagName) {
-                        if (_targetElement.tagName.toUpperCase() == 'IMG' || _targetElement.tagName.toUpperCase() == 'AUDIO' || _targetElement.tagName.toUpperCase() == 'VIDEO' || _targetElement.tagName.toUpperCase() == 'A') break;
+                    while (_targetElement && _targetElement.nodeName) {
+                        if (_targetElement.nodeName.toUpperCase() == 'IMG' || _targetElement.nodeName.toUpperCase() == 'AUDIO' || _targetElement.nodeName.toUpperCase() == 'VIDEO' || _targetElement.nodeName.toUpperCase() == 'A') break;
                         if (_targetElement.parentNode) {
                             children = _targetElement.parentNode.querySelectorAll("img,audio,video,a");
                             if (children && children.length === 1 && children[0].clientHeight && _targetElement.clientHeight / children[0].clientHeight < 2) {
@@ -7111,7 +7111,7 @@
                         }
                         _targetElement = _targetElement.parentNode;
                     }
-                    if (_targetElement && _targetElement.tagName) targetElement = _targetElement;
+                    if (_targetElement) targetElement = _targetElement;
                 }
                 this.appendBar();
                 //this.recoveHistory();
@@ -7158,7 +7158,7 @@
                         }
                     }
                 } else {
-                    switch (targetElement.tagName.toUpperCase()) {
+                    switch (targetElement.nodeName.toUpperCase()) {
                         case 'IMG':
                             this.bar.classList.add("search-jumper-isTargetImg");
                             firstType = this.bar.querySelector('.search-jumper-targetImg:not(.notmatch)>span');
@@ -7183,7 +7183,7 @@
                             break;
                     }
                     let parentNode = targetElement.parentNode;
-                    if (parentNode && parentNode.tagName.toUpperCase() === 'A') {
+                    if (parentNode && parentNode.nodeName.toUpperCase() === 'A') {
                         this.bar.classList.add("search-jumper-isTargetLink");
                         if (!firstType) {
                             firstType = this.bar.querySelector('.search-jumper-targetLink:not(.notmatch)>span');
@@ -7591,7 +7591,7 @@
             }
 
             geneSelector(ele, id) {
-                let selector = ele.tagName.toLowerCase();
+                let selector = ele.nodeName.toLowerCase();
                 if (selector !== "html" && selector !== "body") {
                     if (id && ele.id) selector = '#' + ele.id;
                     else {
@@ -7715,10 +7715,10 @@
                         let event = new Event('focus', { bubbles: true });
                         input.dispatchEvent(event);
                         let lastValue = input.value;
-                        if (input.tagName.toUpperCase() == "INPUT") {
+                        if (input.nodeName.toUpperCase() == "INPUT") {
                             var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
                             nativeInputValueSetter.call(input, v);
-                        } else if (input.tagName.toUpperCase() == "TEXTAREA") {
+                        } else if (input.nodeName.toUpperCase() == "TEXTAREA") {
                             var nativeTextareaValueSetter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, "value").set;
                             nativeTextareaValueSetter.call(input, v);
                         }
@@ -7964,7 +7964,7 @@
                 }, 1);
             });
             if (!searchData.prefConfig.cacheSwitch) return;
-            if (target.tagName.toUpperCase() == 'IMG') {
+            if (target.nodeName.toUpperCase() == 'IMG') {
                 if (!target.src && target.dataset.src) target.src = target.dataset.src;
                 let cache;
                 if (target.complete) {
@@ -8386,16 +8386,16 @@
                     if (!searchData.prefConfig.enableInInput && inputing == -1) {
                         inputing = 1;
                         if (document.activeElement &&
-                            (document.activeElement.tagName.toUpperCase() == 'INPUT' ||
-                             document.activeElement.tagName.toUpperCase() == 'TEXTAREA' ||
+                            (document.activeElement.nodeName.toUpperCase() == 'INPUT' ||
+                             document.activeElement.nodeName.toUpperCase() == 'TEXTAREA' ||
                              document.activeElement.contentEditable == 'true')) {
                             return false;
                         } else {
                             let contentEditable = false;
                             let parent = document.activeElement;
-                            while (parent && parent.tagName) {
+                            while (parent && parent.nodeName) {
                                 contentEditable = parent.contentEditable == 'true';
-                                if (contentEditable || parent.tagName.toUpperCase() == 'BODY') {
+                                if (contentEditable || parent.nodeName.toUpperCase() == 'BODY') {
                                     break;
                                 }
                                 parent = parent.parentNode;
@@ -8469,24 +8469,24 @@
                 };
                 let mouseDownHandler = e => {
                     if ((waitForMouse && e.type === 'mousedown' && e.button === 0) ||
-                        e.target.tagName.toUpperCase() === 'CANVAS' ||
-                        e.target.tagName.toUpperCase() === 'HTML' ||
+                        e.target.nodeName.toUpperCase() === 'CANVAS' ||
+                        e.target.nodeName.toUpperCase() === 'HTML' ||
                         (e.target.classList && e.target.classList.contains('search-jumper-btn')) ||
                         searchBar.bar.contains(e.target)) {
                         return;
                     }
                     if (searchBar.bar.classList.contains("grabbing")) return;
                     let targetInput = false;
-                    if (e.target.tagName.toUpperCase() == 'INPUT' ||
-                        e.target.tagName.toUpperCase() == 'TEXTAREA' ||
+                    if (e.target.nodeName.toUpperCase() == 'INPUT' ||
+                        e.target.nodeName.toUpperCase() == 'TEXTAREA' ||
                         e.target.contentEditable == 'true') {
                         targetInput = true;
                     } else {
                         let contentEditable = false;
                         let parent = e.target;
-                        while (parent && parent.tagName) {
+                        while (parent) {
                             contentEditable = parent.contentEditable == 'true';
-                            if (contentEditable || parent.tagName.toUpperCase() == 'BODY') {
+                            if (contentEditable || parent.nodeName.toUpperCase() == 'BODY') {
                                 break;
                             }
                             parent = parent.parentNode;
@@ -8632,7 +8632,7 @@
             if (searchData.prefConfig.quickAddRule) {
                 document.addEventListener('click', e => {
                     if (!(((e.ctrlKey || e.metaKey) && e.shiftKey) || ((e.ctrlKey || e.metaKey) && e.altKey) || (e.altKey && e.shiftKey))) return;
-                    if (e.target.tagName.toUpperCase() !== 'INPUT' && e.target.tagName.toUpperCase() !== 'TEXTAREA') return;
+                    if (e.target.nodeName.toUpperCase() !== 'INPUT' && e.target.nodeName.toUpperCase() !== 'TEXTAREA') return;
                     quickAddByInput(e.target);
                 }, true);
             }
@@ -8739,7 +8739,7 @@
             if (input && input.name) {
                 parentForm = input.parentNode;
                 while (parentForm) {
-                    if (parentForm.tagName.toUpperCase() === "FORM") {
+                    if (parentForm.nodeName.toUpperCase() === "FORM") {
                         let target = parentForm.target;
                         if (target && target != '_blank' && target != '_self' && target != '_parent' && target != '_top') {
                             let targetIframe = getBody(document).querySelector(target);
@@ -9029,7 +9029,7 @@
                 });
 
                 document.addEventListener("mouseover", e => {
-                    if (e.target.tagName.toUpperCase() === "PRE" && importPageReg.test(location.href)) {
+                    if (e.target.nodeName.toUpperCase() === "PRE" && importPageReg.test(location.href)) {
                         targetPre = e.target;
                         bindPre();
                     }
@@ -9344,7 +9344,7 @@
                         };
                         siteCon.appendChild(checkSite);
                         siteCon.addEventListener("click", e => {
-                            if (e.target.tagName.toUpperCase() == 'SPAN') {
+                            if (e.target.nodeName.toUpperCase() == 'SPAN') {
                                 checkSite.click();
                             }
                         });
@@ -10262,7 +10262,7 @@
                             actionCon.insertBefore(dragDiv, div);
                         }
                         div.onclick = e => {
-                            if (e.target.tagName.toUpperCase() == 'SPAN') {
+                            if (e.target.nodeName.toUpperCase() == 'SPAN') {
                                 if (e.target.className == 'element') {
                                     Picker.getInstance().getSelector(selector => {
                                         e.target.innerText = selector;
