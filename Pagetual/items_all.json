@@ -1,5 +1,19 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86104",
+  "data": {
+    "pageElement": "id('listB')",
+    "nextLink": "//ul[contains(concat(' ',@class,' '),' pagination ')]/li[span]/following-sibling::li/a",
+    "url": "^http://(?:www\\.)?comic-medu\\.com/(?:mn|wk)",
+    "exampleUrl": "http://www.comic-medu.com/wk?page=1 http://www.comic-medu.com/mn"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "t_f_m'",
+  "name": "comic medu ",
+  "created_at": "2023-04-13T15:32:08+09:00",
+  "updated_at": "2023-04-13T15:33:21+09:00"
+},
+{
   "data": {
     "insertBefore": "",
     "pageElement": "//*[@id=\"term-cal\"]/ul",
