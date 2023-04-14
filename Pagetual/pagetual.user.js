@@ -2443,8 +2443,9 @@
                 if (Array && Array.isArray && Array.isArray(insertSel)) {
                     insertSel = insertSel[nextIndex < insertSel.length ? nextIndex : 0];
                 }
-                this.insert=getElement(insertSel, document);
+                this.insert = getElement(insertSel, document);
             } else {
+                if (refresh) this.docPageElement = null;
                 let pageElement = this.getPageElement(document, _unsafeWindow);
                 if (this.curSiteRule.singleUrl && this.nextLinkHref == "#" && this.curSiteRule.pageElement === 'body') {
                     debug("Stop as jsNext & whole body");
@@ -6099,7 +6100,7 @@
             }
             setTimeout(() => {
                 checkIframe();
-            },waitTime);
+            }, waitTime);
         };
         window.addEventListener('message', loadedHandler, false);
         iframe.addEventListener('load', loadedHandler, false);
