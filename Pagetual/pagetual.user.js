@@ -1732,7 +1732,7 @@
             let url = this.curUrl.slice(0, 250).replace("index.php?", "?");
             let _url = url.replace(/\.s?html?$/i, "").toLowerCase();
             let pageNum = 1, preStr = "", afterStr = "";
-            let pageTwoReg = /((\/|\?|&|^)[_-]?(p|page)=?|^[\/\?&]?[_-]?)\/?2(\/|\?|&|$)/i;
+            let pageTwoReg = /^[\/\?&]?[_-]?(p|page)?=?\/?2(\/|\?|&|$)/i;
             let pageMatch1 = url.match(/(.*[\?&]p(?:age)?=)(\d+)($|[#&].*)/i);
             let doubtTextReg = /^\s*(»|>>)\s*$/;
             if (pageMatch1) {
@@ -1765,7 +1765,7 @@
                 body.querySelector(".pagination-next>a") ||
                 body.querySelector("a[data-pagination=next]") ||
                 body.querySelector("ul.pagination>li.active+li>a") ||
-                body.querySelector(".pagination a.current+a") ||
+                body.querySelector("[class^=pagination] a.current+a") ||
                 body.querySelector(".pagination a[rel=next]") ||
                 body.querySelector(".pagination-nav__item--next>a") ||
                 body.querySelector("a.pageright") ||
