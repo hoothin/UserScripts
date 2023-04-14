@@ -1773,7 +1773,7 @@
                 body.querySelector(".pagination-next>a") ||
                 body.querySelector("a[data-pagination=next]") ||
                 body.querySelector("ul.pagination>li.active+li>a") ||
-                body.querySelector("[class^=pagination] a.current+a") ||
+                body.querySelector("[class^=pag] .current+a") ||
                 body.querySelector(".pagination a[rel=next]") ||
                 body.querySelector(".pagination-nav__item--next>a") ||
                 body.querySelector("a.pageright") ||
