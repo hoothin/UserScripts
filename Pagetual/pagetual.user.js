@@ -1722,14 +1722,21 @@
             if (video && video.offsetParent && video.name != 'pagetual-iframe') {
                 let scrollWidth = video.scrollWidth || video.offsetWidth;
                 let scrollHeight = video.scrollHeight || video.offsetHeight;
-                if (scrollWidth > 500 && scrollHeight > 500) {
+                if (scrollWidth > 420 && scrollHeight > 420) {
                     isPause = true;
                     debug("Disable when large media found");
+                    if (this.addedElePool && this.addedElePool.length) {
+                        this.addedElePool.forEach(ele => {
+                            if (ele.parentNode) ele.parentNode.removeChild(ele);
+                        });
+                        this.addedElePool = [];
+                    }
+                    SideController.getInstance().remove();
                     return {};
                 } else if (scrollWidth > 100 && scrollHeight > 100) {
                     let winWidth = window.innerWidth || document.documentElement.clientWidth;
                     let winHeight = window.innerHeight || document.documentElement.clientHeight;
-                    if (scrollWidth > winWidth>>1 && scrollHeight > winHeight>>1) {
+                    if (scrollWidth > winWidth>>2 && scrollHeight > winHeight>>2) {
                         isPause = true;
                         debug("Disable when large media found under mobile");
                         return {};
@@ -6587,7 +6594,7 @@
         return curIframe;
     }
 
-    function loadPageOver(){
+    function loadPageOver() {
         isLoading = false;
         stopScroll = true;
         let dist = distToBottom();
