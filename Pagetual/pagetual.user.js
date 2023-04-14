@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.35.17
+// @version      1.9.35.18
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -133,6 +133,7 @@
                 inputPageNum: "输入页码跳转",
                 enableHistory: "翻页后写入历史记录",
                 enableHistoryAfterInsert: "拼接后立即写入历史记录，否则浏览完毕后再行写入",
+                contentVisibility: "自动切换 contentVisibility，提升渲染性能",
                 initRun: "打开页面后立即尝试翻页，否则滚动至页尾再翻页",
                 preload: "翻页前预读下一页，加速浏览",
                 click2ImportRule: "点击下方添加特殊规则库，并静待更新成功：",
@@ -234,6 +235,7 @@
                 inputPageNum: "輸入頁碼跳轉",
                 enableHistory: "翻頁后寫入歷史記錄",
                 enableHistoryAfterInsert: "拼接後立即寫入歷史記錄，否則瀏覽完畢後再行寫入",
+                contentVisibility: "自動切換 contentVisibility，提升渲染性能",
                 initRun: "打開頁面后立即嘗試翻頁，否則滾動至頁尾再翻頁",
                 preload: "翻頁前預讀下一頁，加速瀏覽",
                 click2ImportRule: "點擊下方添加特殊規則庫，并靜待更新成功：",
@@ -334,6 +336,7 @@
                 inputPageNum: "ジャンプするページ番号を入力",
                 enableHistory: "ページめくり後の履歴を書く",
                 enableHistoryAfterInsert: "スプライシングの直後に履歴レコードを書き込みます。それ以外の場合は、閲覧後に書き込みます",
+                contentVisibility: "contentVisibility を自動的に切り替えてレンダリング パフォーマンスを向上させる",
                 initRun: "Webページを開いた直後にページをめくる",
                 preload: "事前に次のページを読む",
                 click2ImportRule: "以下をクリックして、ルールベースを追加します：",
@@ -435,6 +438,7 @@
                 inputPageNum: "Введите номер страницы для перехода",
                 enableHistory: "Записать историю после переключения страниц",
                 enableHistoryAfterInsert: "Записать запись истории сразу после вставки, иначе записать после просмотра",
+                contentVisibility: "Автоматически переключать contentVisibility для повышения производительности рендеринга",
                 initRun: "Подгружать страницы сразу после открытия",
                 preload: "Предзагрузка следующей страницы",
                 click2ImportRule: "Нажмите, чтобы импортировать базовые правила: ",
@@ -535,6 +539,7 @@
                 inputPageNum: "Enter page number to jump",
                 enableHistory: "Write history after page turning",
                 enableHistoryAfterInsert: "Write history immediately after splicing, otherwise write after browsing",
+                contentVisibility: "Automatically switch contentVisibility to improve rendering performance",
                 initRun: "Turn pages immediately after opening",
                 preload: "Preload next page for speeding up",
                 click2ImportRule: "Click to import base rules link, then wait until the update is complete: ",
@@ -1610,8 +1615,8 @@
         }
 
         changeVisibility() {
-            let pageElementCss = this.curSiteRule.pageElementCss || this.curSiteRule.pageElementStyle || rulesData.pageElementCss;
-            if (pageElementCss) return;
+            let contentVisibility = this.curSiteRule.contentVisibility || rulesData.contentVisibility;
+            if (!contentVisibility) return;
             if (!this.changingVisibility) {
                 clearTimeout(this.changeVisibilityTimer);
                 this.changeVisibilityTimer = setTimeout(() => {
@@ -1680,8 +1685,10 @@
         setPageElementCss(pageElement, init) {
             let self = this;
             if (pageElement && pageElement.length > 0) {
-                let pageElementCss = this.curSiteRule.pageElementCss || this.curSiteRule.pageElementStyle || rulesData.pageElementCss;
+                let pageElementCss = this.curSiteRule.pageElementCss || rulesData.pageElementCss;
                 if (!pageElementCss && init && !this.nextLinkHref) return;
+                let contentVisibility = this.curSiteRule.contentVisibility || rulesData.contentVisibility;
+                if (!contentVisibility && !pageElementCss) return;
                 [].forEach.call(pageElement, (ele, i) => {
                     if (!/LINK|META|STYLE|SCRIPT/i.test(ele.nodeName)) {
                         if (pageElementCss) {
@@ -1689,7 +1696,8 @@
                                 ele.style.cssText = (ele.style.cssText || '') + pageElementCss;
                                 ele.dataset.pagetualPageElement = 1;
                             }
-                        } else {
+                        }
+                        if (contentVisibility) {
                             ele.style.containIntrinsicSize = `auto ${ele.offsetHeight || self.preVisibleHeight || 100}px`;
                             if (ele.style.containIntrinsicSize) {
                                 if (ele.offsetHeight) self.preVisibleHeight = ele.offsetHeight;
@@ -2680,7 +2688,7 @@
                 await self.getNextLink(document);
                 self.refreshByClick();
 
-                let pageElementCss = self.curSiteRule.pageElementCss || self.curSiteRule.pageElementStyle || rulesData.pageElementCss;
+                let pageElementCss = self.curSiteRule.pageElementCss || rulesData.pageElementCss;
                 if (pageElementCss && pageElementCss !== '0') {
                     self.getPageElement(document, _unsafeWindow);
                 }
@@ -4105,6 +4113,9 @@
                  #readme>.is-stuck {
                   position: static!important;
                  }
+                 .markdown-body table td>h3 {
+                  margin: 16px!important;
+                 }
                 `);
                 document.querySelector("[name='user-content-click2import'],[name='click2import']").innerText = i18n("click2ImportRule")
                 configCon = document.querySelector(".markdown-body");
@@ -4432,6 +4443,7 @@
         }
 
         let enableWhiteListInput = createCheckbox(i18n("autoRun"), rulesData.enableWhiteList != true);
+        let sideControllerInput = createCheckbox(i18n("sideController"), rulesData.sideController);
         let enableDebugInput = createCheckbox(i18n("enableDebug"), rulesData.enableDebug != false);
         let enableHistoryInput = createCheckbox(i18n("enableHistory"), rulesData.enableHistory === true);
         let enableHistoryAfterInsertInput = createCheckbox(i18n("enableHistoryAfterInsert"), rulesData.enableHistoryAfterInsert === true);
@@ -4448,7 +4460,7 @@
         let clickModeInput = createCheckbox(i18n("clickMode"), rulesData.clickMode);
         let pageBarMenuInput = createCheckbox(i18n("pageBarMenu"), rulesData.pageBarMenu != false);
         let arrowToScrollInput = createCheckbox(i18n("arrowToScroll"), rulesData.arrowToScroll);
-        let sideControllerInput = createCheckbox(i18n("sideController"), rulesData.sideController);
+        let contentVisibilityInput = createCheckbox(i18n("contentVisibility"), rulesData.contentVisibility);
 
         let hideBarInput = createCheckbox(i18n("hideBar"), rulesData.hideBar && !rulesData.hideBarButNoStop, "h4", dbClick2StopInput, 'radio');
         hideBarInput.name = 'hideBar';
@@ -4567,6 +4579,7 @@
             rulesData.clickMode = clickModeInput.checked;
             rulesData.pageBarMenu = pageBarMenuInput.checked;
             rulesData.arrowToScroll = arrowToScrollInput.checked;
+            rulesData.contentVisibility = contentVisibilityInput.checked;
             if (rulesData.sideController != sideControllerInput.checked) {
                 rulesData.sideControllerPos = false;
             }
@@ -6587,9 +6600,11 @@
             }, 1);
         }
         setTimeout(() => {stopScroll = false}, 300);
-        if(loadingDiv.parentNode){
-            loadingDiv.parentNode.removeChild(loadingDiv);
-        }
+        setTimeout(() => {
+            if(loadingDiv.parentNode && !isLoading){
+                loadingDiv.parentNode.removeChild(loadingDiv);
+            }
+        }, 0);
     }
 
     function checkAutoLoadNum() {
