@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.35.16
+// @version      1.9.35.17
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -726,7 +726,7 @@
     const mainSel = "article,.article,[role=main],main,.main,#main";
     const nextTextReg1 = new RegExp("\u005e\u7ffb\u003f\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u9875\u9801\u5f20\u5f35\u005d\u007c\u005e\u0028\u006e\u0065\u0078\u0074\u005b\u0020\u005f\u002d\u005d\u003f\u0070\u0061\u0067\u0065\u007c\u006f\u006c\u0064\u0065\u0072\u0029\u005c\u0073\u002a\u005b\u203a\u003e\u2192\u00bb\u005d\u003f\u0024\u007c\u6b21\u306e\u30da\u30fc\u30b8\u007c\u005e\u6b21\u3078\u003f\u0024\u007cВперед", "i");
     const nextTextReg2 = new RegExp("\u005e\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u7ae0\u8bdd\u8a71\u8282\u7bc0\u4e2a\u500b\u5e45\u005d", "i");
-    const lazyImgAttr = ["data-lazy-src", "data-lazy", "data-url", "data-orig-file", "zoomfile", "file", "original", "load-src", "imgsrc", "real_src", "src2", "origin-src", "data-lazyload", "data-lazyload-src", "data-lazy-load-src", "data-ks-lazyload", "data-ks-lazyload-custom", "data-src", "data-defer-src", "data-actualsrc", "data-cover", "data-original", "data-thumb", "data-imageurl", "data-placeholder",];
+    const lazyImgAttr = ["data-lazy-src", "data-lazy", "data-url", "data-orig-file", "zoomfile", "file", "original", "load-src", "imgsrc", "real_src", "src2", "origin-src", "data-lazyload", "data-lazyload-src", "data-lazy-load-src", "data-ks-lazyload", "data-ks-lazyload-custom", "data-src", "data-defer-src", "data-actualsrc", "data-cover", "data-original", "data-thumb", "data-imageurl", "data-placeholder", "lazysrc"];
     _GM_registerMenuCommand(i18n("configure"), () => {
         _GM_openInTab(configPage[0], {active: true});
     });
@@ -807,7 +807,7 @@
                     let classList = ele.classList, i = 0;
                     for (let i = 0; i < classList.length; i++) {
                         let c = classList[i];
-                        if (/^[\w\-_]+$/.test(c) && !/\d{3,}|completed|loaded/.test(c)) {
+                        if (/^[\w\-_]+$/.test(c) && !/\d{3,}/.test(c)) {
                             className += '.' + c;
                         }
                     }
@@ -826,7 +826,7 @@
                                 }
                             }
                         }
-                        selector += (parent.nodeName.toUpperCase() == "HTML" ? "" : `:nth-of-type(${j})`);
+                        selector += (/^HTML$/i.test(parent.nodeName) ? "" : `:nth-of-type(${j})`);
                     }
                 }
             }
@@ -837,7 +837,7 @@
     function createXPathFromElement(elm) {
         let allNodes = document.getElementsByTagName('*'), segs;
         for (segs = []; elm && elm.nodeType == 1; elm = elm.parentNode) {
-            if (elm.nodeName.toUpperCase() == 'BODY' || elm.nodeName.toUpperCase() == 'HTML') {
+            if (/^(BODY|HTML)$/i.test(elm.nodeName)) {
                 segs.unshift(elm.localName.toLowerCase());
                 continue;
             }
@@ -1148,7 +1148,7 @@
                     self.curSiteRule = r;
                     self.preSiteRule = r;
                     if (r.enable !== 0) debug(r, 'Match rule');
-                } else if (!self.curSiteRule.singleUrl) self.curSiteRule = r;
+                } else if (!self.curSiteRule || !self.curSiteRule.singleUrl) self.curSiteRule = r;
                 callback();
             }
 
@@ -1339,11 +1339,11 @@
 
         getPageElement(doc, curWin, dontFind) {
             if (doc == document && this.docPageElement) {
-                let parent = this.docPageElement;
-                while (parent && parent.nodeName && parent.nodeName.toUpperCase() != "BODY") {
+                let parent = this.docPageElement && this.docPageElement[0];
+                while (parent && !/^BODY$/i.test(parent.nodeName)) {
                     parent = parent.parentNode;
                 }
-                if (parent && parent.nodeName && parent.nodeName.toUpperCase() == "BODY") {
+                if (parent && /^BODY$/i.test(parent.nodeName)) {
                     return this.docPageElement;
                 }
             }
@@ -1360,15 +1360,15 @@
             if (pageElement && pageElement.length === 1 && pageElement[0].style.display === 'none') {
                 pageElement = [body];
             }
-            if (this.curSiteRule.singleUrl && pageElement && pageElement.length > 0 && pageElement[0].nodeName.toUpperCase() == "TR") {
+            if (this.curSiteRule.singleUrl && pageElement && pageElement.length > 0 && /^TR$/i.test(pageElement[0].nodeName)) {
                 let mainTr = this.insert.parentNode.querySelector('tr'), mainTdNum = 0, newTdNum = 0;
                 [].forEach.call(mainTr.children, el => {
-                    if (el.nodeName.toUpperCase() == "TD" || el.nodeName.toUpperCase() == "TH") {
+                    if (/^(TD|TH)$/i.test(el.nodeName)) {
                         mainTdNum += el.colSpan || 1;
                     }
                 });
                 [].forEach.call(pageElement[0].children, el => {
-                    if (el.nodeName.toUpperCase() == "TD" || el.nodeName.toUpperCase() == "TH") {
+                    if (/^(TD|TH)$/i.test(el.nodeName)) {
                         newTdNum += el.colSpan || 1;
                     }
                 });
@@ -1385,7 +1385,7 @@
                 let windowHeight = window.innerHeight || document.documentElement.clientHeight;
                 let needCheckNext = (doc == document && this.initNext);
                 function checkElement(ele) {
-                    if (ele.nodeName.toUpperCase() == "PRE" || ele.nodeName.toUpperCase() == "CODE") {
+                    if (/^(PRE|CODE)$/i.test(ele.nodeName)) {
                         self.curSiteRule.pageElement = geneSelector(ele.parentNode);
                         debug(self.curSiteRule.pageElement, 'Page element');
                         return [ele.parentNode];
@@ -1405,7 +1405,7 @@
                             curWidth = parseInt(ele.offsetWidth || ele.scrollWidth);
                         }
                     }
-                    if (ele.nodeName.toUpperCase() == "PICTURE") {
+                    if (/^PICTURE$/i.test(ele.nodeName)) {
                         self.curSiteRule.pageElement = geneSelector(ele.parentNode) + ">" + ele.nodeName.toLowerCase();
                         debug(self.curSiteRule.pageElement, 'Page element');
                         return [ele];
@@ -1428,13 +1428,13 @@
                         debug(self.curSiteRule.pageElement, 'Page element');
                         return [body];
                     }
-                    if (ele.nodeName.toUpperCase() == "FORM" && ele.parentNode != getBody(document)) {
+                    if (/^FORM$/i.test(ele.nodeName) && ele.parentNode != getBody(document)) {
                         self.curSiteRule.pageElement = geneSelector(ele) + ">*";
                         debug(self.curSiteRule.pageElement, 'Page element');
                         return ele.children;
                     }
                     if (ele.children.length == 0 && !self.curSiteRule.pageElement) {
-                        if (ele.parentNode.nodeName.toUpperCase() == "P") ele = ele.parentNode;
+                        if (/^P$/i.test(ele.parentNode.nodeName)) ele = ele.parentNode;
                         self.curSiteRule.pageElement = geneSelector(ele.parentNode) + ">" + ele.nodeName.toLowerCase();
                         debug(self.curSiteRule.pageElement, 'Page element');
                         return getAllElements(self.curSiteRule.pageElement, doc);
@@ -1444,14 +1444,13 @@
                     let articleNum = 0;
                     for (i = 0; i < ele.children.length; i++) {
                         let curNode = ele.children[i];
-                        if (curNode.nodeName.toUpperCase() == "CANVAS") continue;
-                        if (curNode.nodeName.toUpperCase() == "NAV") continue;
+                        if (/^(CANVAS|NAV)$/i.test(curNode.nodeName)) continue;
                         if (!curNode.offsetParent) continue;
-                        if (curNode.nodeName.toUpperCase() != "IMG" && curNode.querySelector('img') == null && /^\s*$/.test(curNode.innerText)) continue;
+                        if (!/^IMG$/i.test(curNode.nodeName) && curNode.querySelector('img') == null && /^\s*$/.test(curNode.innerText)) continue;
                         if (needCheckNext && !curNode.contains(self.initNext) && getElementTop(curNode) > windowHeight) {
                             continue;
                         }
-                        if (curNode.nodeName.toUpperCase() == "ARTICLE") articleNum++;
+                        if (/^ARTICLE$/i.test(curNode.nodeName)) articleNum++;
                         let h = self.getValidHeight(curNode);
                         let w = curNode.scrollWidth;
                         if (isNaN(h) || isNaN(w)) continue;
@@ -1518,9 +1517,8 @@
                         }
                     }
                     if (ele.parentNode.children.length == 1 && curWin.getComputedStyle(ele.parentNode).float == 'none') ele = ele.parentNode;
-                    else if (ele.nodeName.toUpperCase() == "P" || ele.nodeName.toUpperCase() == "BR") ele = ele.parentNode;
-                    else if (ele.nodeName.toUpperCase() == "TD") ele = ele.parentNode;
-                    else if (ele.nodeName.toUpperCase() == "TBODY") {
+                    else if (/^(P|BR|TD)$/i.test(ele.nodeName)) ele = ele.parentNode;
+                    else if (/^TBODY$/i.test(ele.nodeName)) {
                         self.curSiteRule.pageElement = geneSelector(ele) + ">*";
                         if (ele.children.length > 0 && ele.children[0].querySelector("th")) {
                             self.curSiteRule.pageElement += ":not(:first-child)";
@@ -1556,14 +1554,15 @@
                                 }
                             }
                             if (!hasText) {
-                                if (curWin.getComputedStyle(ele).gridArea && curWin.getComputedStyle(ele).gridArea != "auto / auto / auto / auto") {
+                                let gridArea = curWin.getComputedStyle(ele).gridArea;
+                                if (gridArea && gridArea != "auto / auto / auto / auto") {
                                     self.curSiteRule.pageElement += ">*";
                                     ele = ele.children;
                                 } else {
                                     let middleChild = ele.children[parseInt(ele.children.length / 2)];
                                     if (curWin.getComputedStyle(ele).display === 'flex' || (rulesData.opacity != 0 && !pf)) {
                                         ele = [ele];
-                                    } else if ((middleChild.style && middleChild.style.position === "absolute" && middleChild.style.left && middleChild.style.top) || ele.nodeName.toUpperCase() === "UL" || curHeight == 0) {
+                                    } else if ((middleChild.style && middleChild.style.position === "absolute" && middleChild.style.left && middleChild.style.top) || /^UL$/i.test(ele.nodeName) || curHeight == 0) {
                                         ele = [ele];
                                     } else {
                                         self.curSiteRule.pageElement += ">*";
@@ -1589,7 +1588,7 @@
                         isPause = true;
                         pageElement = [];
                     } else {
-                        if (pageElement.length == 1 && pageElement[0].nodeName.toUpperCase() == "IMG") {
+                        if (pageElement.length == 1 && /^IMG$/i.test(pageElement[0].nodeName)) {
                             self.curSiteRule.pageBar = 0;
                         }
                     }
@@ -1627,8 +1626,8 @@
             let viewPortHeight = window.innerHeight || document.documentElement.clientHeight || getBody(document).clientHeight;
             let checkItem = this.visibilityItems[tempIndex];
             while(checkItem) {
-                if (!checkItem.style.containIntrinsicSize) return;
                 if (checkItem.offsetParent) {
+                    if (!checkItem.style.containIntrinsicSize) return;
                     let clientRect = checkItem.getBoundingClientRect();
                     let top = clientRect && clientRect.top;
                     let bottom = clientRect && clientRect.bottom;
@@ -1654,8 +1653,8 @@
             }
             checkItem = this.visibilityItems[tempIndex];
             while(checkItem) {
-                if (!checkItem.style.containIntrinsicSize) return;
                 if (checkItem.offsetParent) {
+                    if (!checkItem.style.containIntrinsicSize) return;
                     let clientRect = checkItem.getBoundingClientRect();
                     let top = clientRect && clientRect.top;
                     let bottom = clientRect && clientRect.bottom;
@@ -1684,15 +1683,16 @@
                 let pageElementCss = this.curSiteRule.pageElementCss || this.curSiteRule.pageElementStyle || rulesData.pageElementCss;
                 if (!pageElementCss && init && !this.nextLinkHref) return;
                 [].forEach.call(pageElement, (ele, i) => {
-                    if (!/LINK|META|STYLE|SCRIPT/.test(ele.nodeName.toUpperCase())) {
+                    if (!/LINK|META|STYLE|SCRIPT/i.test(ele.nodeName)) {
                         if (pageElementCss) {
                             if (pageElementCss !== '0' && !ele.dataset.pagetualPageElement) {
                                 ele.style.cssText = (ele.style.cssText || '') + pageElementCss;
                                 ele.dataset.pagetualPageElement = 1;
                             }
                         } else {
-                            ele.style.containIntrinsicSize = `auto ${ele.offsetHeight || 100}px`;
+                            ele.style.containIntrinsicSize = `auto ${ele.offsetHeight || self.preVisibleHeight || 100}px`;
                             if (ele.style.containIntrinsicSize) {
+                                if (ele.offsetHeight) self.preVisibleHeight = ele.offsetHeight;
                                 if (init) {
                                     ele.style.contentVisibility = "visible";
                                     self.visibilityItems.push(ele);
@@ -1730,9 +1730,9 @@
             }
             let canSave = false;//發現頁碼選擇器在其他頁對不上，還是別保存了
             let url = this.curUrl.slice(0, 250).replace("index.php?", "?");
-            let _url = url.replace(/\.s?html?$/i, "");
+            let _url = url.replace(/\.s?html?$/i, "").toLowerCase();
             let pageNum = 1, preStr = "", afterStr = "";
-            let pageTwoReg = /^[\/\?&]?[_-]?(p|page)?=?\/?2(\/|\?|&|$)/i;
+            let pageTwoReg = /[\/\?&]?[_-]?(p|page)?=?\/?2(\/|\?|&|$)/i;
             let pageMatch1 = url.match(/(.*[\?&]p(?:age)?=)(\d+)($|[#&].*)/i);
             let doubtTextReg = /^\s*(»|>>)\s*$/;
             if (pageMatch1) {
@@ -1878,7 +1878,7 @@
                         if (aTag.innerText.trim().length > 80) continue;
                         if (aTag.innerText == "§") continue;
                     }
-                    let availableHref = aTag.href && aTag.href.length < 250;
+                    let availableHref = aTag.href && aTag.href.length < 250 && /^http/.test(aTag.href);
                     if (availableHref && /next$/i.test(aTag.href)) continue;
                     if (aTag.className) {
                         if (/slick|slide|gallery/i.test(aTag.className)) continue;
@@ -1889,7 +1889,7 @@
                     if (aTag.parentNode) {
                         if (aTag.parentNode.className && /slick|slide|gallery/i.test(aTag.parentNode.className)) continue;
                         if (aTag.parentNode.classList && aTag.parentNode.classList.contains('disabled')) continue;
-                        if (aTag.parentNode.nodeName.toUpperCase() == "BLOCKQUOTE") continue;
+                        if (/^BLOCKQUOTE$/i.test(aTag.parentNode.nodeName)) continue;
                     }
                     let isJs = !aTag.href || /^(javascript|#)/.test(aTag.href.replace(location.href, ""));
                     let innerText = (aTag.innerText || aTag.value || aTag.title || '');
@@ -1931,15 +1931,15 @@
                     if (isJs) continue;
                     if (!next4) {
                         let prevEle = aTag.previousElementSibling;
-                        if (prevEle && (prevEle.nodeName.toUpperCase() == 'B' || prevEle.nodeName.toUpperCase() == 'SPAN' || prevEle.nodeName.toUpperCase() == 'STRONG')) {
+                        if (prevEle && (/^(B|SPAN|STRONG)$/i.test(prevEle.nodeName))) {
                             if (/^\d+$/.test(aTag.innerText.trim()) && /^\d+$/.test(prevEle.innerText.trim()) && parseInt(aTag.innerText) == parseInt(prevEle.innerText) + 1) {
                                 next4 = aTag;
                             }
                         }
                     }
                     if (!next4 && availableHref) {
-                        if (aTag.href.indexOf('http') === 0 && aTag.href.indexOf(location.hostname) === -1) continue;
-                        let _aHref = aTag.href.replace("?&", "?").replace("index.php?", "?");
+                        if (aTag.href.indexOf(location.hostname) === -1) continue;
+                        let _aHref = aTag.href.replace("?&", "?").replace("index.php?", "?").toLowerCase();
                         if (preStr || afterStr) {
                             let _aHrefTrim = _aHref;
                             if (preStr) _aHrefTrim = _aHrefTrim.replace(preStr, "");
@@ -1995,7 +1995,7 @@
 
         verifyNext(next, doc) {
             if (!next) return null;
-            if (next.previousElementSibling && next.previousElementSibling.nodeName.toUpperCase() == 'BR') return null;
+            if (next.previousElementSibling && /^BR$/i.test(next.previousElementSibling.nodeName)) return null;
             let eles = getAllElements(`//${next.nodeName}[text()='${next.innerText}']`, doc);
             if (eles.length >= 2 && eles[0].href != eles[1].href) {
                 next = null;
@@ -2187,10 +2187,10 @@
                         if (/^\d+$/.test(nextLink.innerText)) {
                             nextLink.href = getNextLinkByForm(form, nextLink, nextLink.innerText);
                         }
-                    } else if (nextLink.nodeName.toUpperCase() == "INPUT" || nextLink.type == "submit") {
+                    } else if (/^INPUT$/i.test(nextLink.nodeName) || nextLink.type == "submit") {
                         form = nextLink.parentNode;
                         while (form) {
-                            if (form.nodeName.toUpperCase() == "FORM") break;
+                            if (/^FORM$/i.test(form.nodeName)) break;
                             else form = form.parentNode;
                         }
                         if (form) {
@@ -2205,10 +2205,10 @@
                 page = await this.getPage(doc);
                 nextLink = page.next;
                 if (nextLink) {
-                    if (nextLink.nodeName.toUpperCase() == "INPUT" || nextLink.type == "submit") {
+                    if (/^INPUT$/i.test(nextLink.nodeName) || nextLink.type == "submit") {
                         let form = nextLink.parentNode;
                         while (form) {
-                            if (form.nodeName.toUpperCase() == "FORM") break;
+                            if (/^FORM$/i.test(form.nodeName)) break;
                             else form = form.parentNode;
                         }
                         if (form) {
@@ -2216,7 +2216,7 @@
                         }
                     }
                     let parent = nextLink;
-                    while (parent && parent.nodeName.toUpperCase() !== "BODY") {
+                    while (parent && !/^BODY$/i.test(parent.nodeName)) {
                         if (parent.hasAttribute && parent.hasAttribute("disabled")) {
                             this.nextLinkHref = false;
                             return null;
@@ -2501,7 +2501,7 @@
         openInNewTab(eles) {
             if (openInNewTab) {
                 [].forEach.call(eles, ele => {
-                    if (ele.nodeName.toUpperCase() == "A" && ele.href && !/^(mailto:|javascript:)|#/.test(ele.href)) {
+                    if (/^A$/i.test(ele.nodeName) && ele.href && !/^(mailto:|javascript:)|#/.test(ele.href)) {
                         ele.setAttribute('target', openInNewTab == 1 ? '_blank' : '_self');
                     } else {
                         [].forEach.call(ele.querySelectorAll('a[href]:not([href^="mailto:"]):not([href^="javascript:"]):not([href^="#"])'), a => {
@@ -2578,7 +2578,7 @@
                 }
             };
             [].forEach.call(eles, ele => {
-                if (ele.nodeName.toUpperCase() == "IMG") {
+                if (/^IMG$/i.test(ele.nodeName)) {
                     setLazyImg(ele);
                 } else {
                     [].forEach.call(ele.querySelectorAll("img,picture>source"), img => {
@@ -2588,7 +2588,7 @@
                         div.style.setProperty("background-image", "url(" + div.dataset.src + ")", "important");
                     });
                 }
-                if (ele.nodeName.toUpperCase() == "A" && ele.classList.contains("lazyload")) {
+                if (/^A$/i.test(ele.nodeName) && ele.classList.contains("lazyload")) {
                     if (ele.dataset.original) {
                         ele.style.backgroundImage = 'url("' + ele.dataset.original + '")';
                     }
@@ -2751,7 +2751,7 @@
                         let newCanvas = newCanvass[i];
                         newCanvas.getContext('2d').drawImage(oldCanvas, 0, 0);
                     }
-                    self.visibilityItems.push(newEle);
+                    if (!/^(STYLE|SCRIPT)$/.test(newEle.nodeName)) self.visibilityItems.push(newEle);
                     self.insertElement(newEle);
                     newEles.push(newEle);
                 });
@@ -4061,7 +4061,7 @@
                 let importBtn = createImportBtn(pre);
             });
             document.addEventListener("mouseover", e => {
-                if (e.target.nodeName.toUpperCase() === "PRE") {
+                if (/^PRE$/i.test(e.target.nodeName)) {
                     let nameAttr = e.target.getAttribute("name");
                     if (nameAttr == "pagetual" || nameAttr == "user-content-pagetual") {
                         if (e.target.querySelector('#pagetualImport')) return;
@@ -4167,14 +4167,14 @@
             }
             moveUp() {
                 let preE = this.item.previousElementSibling;
-                if (preE.nodeName.toUpperCase() == "P" && preE.children.length > 1) {
+                if (/^P$/i.test(preE.nodeName) && preE.children.length > 1) {
                     this.item.parentNode.insertBefore(this.item, preE);
                     this.saveSort();
                 }
             }
             moveDown() {
                 let nextE = this.item.nextElementSibling;
-                if (nextE.nodeName.toUpperCase() == "P" && nextE.children.length > 1) {
+                if (/^P$/i.test(nextE.nodeName) && nextE.children.length > 1) {
                     this.item.parentNode.insertBefore(nextE, this.item);
                     this.saveSort();
                 }
@@ -4672,7 +4672,7 @@
         while(loopable && visible) {
             el = el.parentNode;
 
-            if(el && el.nodeName && el.nodeName.toUpperCase() != "BODY") {
+            if(el && !/^BODY$/i.test(el.nodeName)) {
                 visible = win.getComputedStyle(el).display != 'none' && win.getComputedStyle(el).visibility != 'hidden';
             }else {
                 loopable = false;
@@ -4967,7 +4967,7 @@
                     ruleParser.getInsert(true);
                 }
                 //只有1的話怕不是圖片哦
-                if (pageElement && (pageElement.length > 1 || (pageElement.length == 1 && pageElement[0].nodeName.toUpperCase() != "IMG"))) {
+                if (pageElement && (pageElement.length > 1 || (pageElement.length == 1 && !/^IMG$/i.test(pageElement[0].nodeName)))) {
                     await ruleParser.insertPage(doc, pageElement, url, callback, false);
                     if (ruleParser.curSiteRule.action == 1) {
                         requestFromIframe(url, (doc, eles) => {
@@ -5455,7 +5455,7 @@
             }
         };
         dblclickHandler = e => {
-            if (forceState == 1 || e.target.nodeName.toUpperCase() == 'INPUT' || e.target.nodeName.toUpperCase() == 'TEXTAREA' || e.target.nodeName.toUpperCase() == 'SELECT') return;
+            if (forceState == 1 || /^(INPUT|TEXTAREA|SELECT)$/i.test(e.target.nodeName)) return;
             if (!rulesData.dbClick2StopKey) {
                 if ((rulesData.dbClick2StopCtrl && !e.ctrlKey) ||
                    (rulesData.dbClick2StopAlt && !e.altKey) ||
@@ -5464,7 +5464,7 @@
                     return;
                 }
             }
-            if (e.target.nodeName.toUpperCase() !== "BODY" && e.target.className !== 'pagetual_pageBar') {
+            if (!/^BODY$/i.test(e.target.nodeName) && e.target.className !== 'pagetual_pageBar') {
                 let selStr = document.getSelection().toString();
                 if (selStr && selStr.trim()) {
                     return;
@@ -5499,8 +5499,8 @@
                     return;
                 }
                 if (document.activeElement &&
-                    (document.activeElement.nodeName.toUpperCase() == 'INPUT' ||
-                     document.activeElement.nodeName.toUpperCase() == 'TEXTAREA')) {
+                    (/^(INPUT|TEXTAREA)$/i.test(document.activeElement.nodeName) ||
+                     document.activeElement.contentEditable == 'true')) {
                     return;
                 }
                 var key = e.key.toLowerCase();
@@ -5527,8 +5527,7 @@
         if (manualMode) {
             manualModeKeyHandler = e => {
                 if (document.activeElement &&
-                    (document.activeElement.nodeName.toUpperCase() == 'INPUT' ||
-                     document.activeElement.nodeName.toUpperCase() == 'TEXTAREA' ||
+                    (/^(INPUT|TEXTAREA)$/i.test(document.activeElement.nodeName) ||
                      document.activeElement.contentEditable == 'true')) {
                     return;
                 }
@@ -5548,8 +5547,7 @@
         if (rulesData.arrowToScroll) {
             keyupHandler = e => {
                 if (document.activeElement &&
-                    (document.activeElement.nodeName.toUpperCase() == 'INPUT' ||
-                     document.activeElement.nodeName.toUpperCase() == 'TEXTAREA' ||
+                    (/^(INPUT|TEXTAREA)$/i.test(document.activeElement.nodeName) ||
                      document.activeElement.contentEditable == 'true')) {
                     return;
                 }
@@ -5582,12 +5580,11 @@
     function showTips(content, wordColor, backColor, href) {
         initView();
         getBody(document).appendChild(tipsWords);
-        tipsWords.style.opacity = 0.8;
         tipsWords.style.color = wordColor || 0xFFFFFF;
         tipsWords.style.backgroundColor = backColor || 0x000;
-        let time = 1000;
+        let time = 1500;
         if (href) {
-            time = 3000;
+            time = 3500;
             tipsWords.innerHTML = createHTML(`<a href='${href}'>${content}</a>`);
             tipsWords.style.pointerEvents = 'all';
         } else {
@@ -5598,9 +5595,12 @@
             tipsWords.style.marginLeft = -tipsWords.offsetWidth / 2 + "px";
         }, 0);
         setTimeout(() => {
-            tipsWords.style.opacity = 0;
-            tipsWords.style.pointerEvents = '';
-        }, time);
+            tipsWords.style.opacity = 0.8;
+            setTimeout(() => {
+                tipsWords.style.opacity = 0;
+                tipsWords.style.pointerEvents = '';
+            }, time);
+        }, 1);
     }
 
     function getLoadMore(doc, loadmoreBtn) {
@@ -5662,7 +5662,7 @@
         if (rulesData.opacity == 0 || ruleParser.curSiteRule.pageBar === 0) return null;
         url = url.replace(/#p{.*/, "");
         let example = ruleParser.curSiteRule.insertPos == 2 ? insert.children[0] : (insert.parentNode.children[0] || insert);
-        while (example && (example.nodeName.toUpperCase() == "SCRIPT" || example.nodeName.toUpperCase() == "STYLE" || example.className == "pagetual_pageBar")) {
+        while (example && (/^(SCRIPT|STYLE)$/i.test(example.nodeName) || example.className == "pagetual_pageBar")) {
             example = example.nextElementSibling;
         }
         if (!example || !example.parentNode) example = insert;
@@ -5675,14 +5675,11 @@
         if (forceState == 2) {
             inTable = inLi = false;
         } else {
-            inTable = example.parentNode.nodeName.toUpperCase() == "TABLE" ||
-            example.parentNode.nodeName.toUpperCase() == "TBODY" ||
-            example.nodeName.toUpperCase() == "TR" ||
-            example.nodeName.toUpperCase() == "TBODY" ||
+            inTable = /^(TABLE|TBODY)$/i.test(example.parentNode.nodeName) ||
+            /^(TR|TBODY)$/i.test(example.nodeName) ||
             exampleStyle.display == "table-row" ||
-            (example.nextElementSibling && example.nextElementSibling.nodeName.toUpperCase() == "TR") ||
-            (example.nextElementSibling && example.nextElementSibling.nodeName.toUpperCase() == "TBODY");
-            inLi = example.nodeName.toUpperCase() == "LI" || (example.nextElementSibling && example.nextElementSibling.nodeName.toUpperCase() == "LI");
+            (example.nextElementSibling && /^(TR|TBODY)$/i.test(example.nextElementSibling.nodeName));
+            inLi = /^LI$/i.test(example.nodeName) || (example.nextElementSibling && /^LI$/i.test(example.nextElementSibling.nodeName));
         }
         let pageBar = document.createElement(inTable ? "tr" : (inLi ? "li" : "div"));
         let upSpan = document.createElement("span");
@@ -5811,8 +5808,8 @@
                 pageBar.style.gridColumn = "1/-1";
             }
             if (inTable) {
-                example = (example.nodeName.toUpperCase() == "TR" || example.nodeName.toUpperCase() == "TBODY") ? example : example.nextElementSibling || example;
-                if (example.nodeName.toUpperCase() == "TBODY") example = example.querySelector("tr");
+                example = (/^(TR|TBODY)$/i.test(example.nodeName)) ? example : example.nextElementSibling || example;
+                if (/^TBODY$/i.test(example.nodeName)) example = example.querySelector("tr");
                 let nextTr = example;
                 while (nextTr && nextTr.children.length == 0) nextTr = nextTr.nextElementSibling;
                 if (nextTr) example = nextTr;
@@ -5823,7 +5820,7 @@
                     });
                 } else {
                     [].forEach.call(example.children, el => {
-                        if (el.nodeName.toUpperCase() == "TD" || el.nodeName.toUpperCase() == "TH") {
+                        if (/^(TD|TH)$/i.test(el.nodeName)) {
                             tdNum += el.colSpan || 1;
                         }
                     });
@@ -5850,7 +5847,7 @@
                 td.appendChild(inTd);
                 pageBar.appendChild(td);
             } else if(inLi) {
-                example = example.nodeName.toUpperCase() == "LI" ? example : example.nextElementSibling || example;
+                example = /^LI$/i.test(example.nodeName) ? example : example.nextElementSibling || example;
                 pageBar.style.display = getComputedStyle(example).display;
                 pageBar.style.backgroundColor = "unset";
                 pageBar.style.lineHeight = "20px";
@@ -6196,7 +6193,7 @@
                     returnFalse("Stop as no page when emu");
                     return;
                 }
-                if (pageEle[0].nodeName.toUpperCase() == "UL") pageEle = pageEle[0].children;
+                if (/^UL$/i.test(pageEle[0].nodeName)) pageEle = pageEle[0].children;
                 pageEle = pageEle[parseInt(pageEle.length / 2)];
                 while(pageEle && !pageEle.offsetParent) {
                     if (pageEle.nextElementSibling) pageEle = pageEle.nextElementSibling;
@@ -6213,7 +6210,7 @@
                 }
                 orgPage = pageEle;
                 if (nextLink) {
-                    if (orgPage.nodeName.toUpperCase() == "IMG") {
+                    if (/^IMG$/i.test(orgPage.nodeName)) {
                         if (!ruleParser.curSiteRule.lazyImgSrc) ruleParser.curSiteRule.lazyImgSrc = "0";
                         if (orgPage.src) {
                             orgContent = orgPage.src;
@@ -6248,7 +6245,7 @@
             let eles = ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView, true), checkItem;
             if (eles && eles.length > 0) {
                 checkItem = eles;
-                if (eles[0].nodeName.toUpperCase() == "UL") checkItem = eles[0].children;
+                if (/^UL$/i.test(eles[0].nodeName)) checkItem = eles[0].children;
                 checkItem = checkItem[parseInt(checkItem.length / 2)];
                 while(checkItem && !checkItem.offsetParent) {
                     if (checkItem.nextElementSibling) checkItem = checkItem.nextElementSibling;
@@ -6262,7 +6259,7 @@
                 }, waitTime);
             } else {
                 let checkInner;
-                if (checkItem.nodeName.toUpperCase() == "IMG") {
+                if (/^IMG$/i.test(checkItem.nodeName)) {
                     if (checkItem.src) {
                         checkInner = checkItem.src;
                     } else {
@@ -6655,10 +6652,10 @@
             isLoading = true;
             ruleParser.insertElement(loadingDiv);
             let parent = loadingDiv.parentNode;
-            if (parent.nodeName.toUpperCase() == "TBODY") {
+            if (/^TBODY$/i.test(parent.nodeName)) {
                 parent = parent.parentNode;
             }
-            if (parent.nodeName.toUpperCase() == "TABLE") {
+            if (/^TABLE$/i.test(parent.nodeName)) {
                 parent.parentNode.appendChild(loadingDiv);
             }
             loadingDiv.style.cssText = loadingCSS;
