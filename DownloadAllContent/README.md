@@ -102,8 +102,32 @@ https://yuyan.pw/novel/xxx/[xxxxxxx-xxxxxxx].html@@@@@@var c=data.querySelector(
  ul.readlist>li>a>>let href=item.getAttribute("onclick").replace(/.\*open\\('(.\*)','.\*/,"$1");item.href=href;return item;
  ```
  10. [東北人小説網](https://www.dbrxs.org/86/86323/)
- ``` css
+ ``` javascript
  .chapterList li>a>>item.href=item.href.replace(/.*gotochapter\('(\d+)','(\d+)','(\d+)'\).*/,"/$1/$2/$3.html");return item;@@@@@@let content=data.querySelector('#contentinfo,#ChapterView>div:nth-child(3)>div');if(!content)return data.body.innerText;content.innerHTML=content.innerHTML.replace(/<br>/g,"\n");content=content.innerText;let pages=data.querySelectorAll(".chapterPages>a:not(.curr)");if(pages){let num=pages.length,cur=0;content=[content];[].forEach.call(pages, (page,i)=>{let url=page.href.replace(/.*\((\d+),(\d+),(\d+),(\d+)\).*/,"/$1/$2/$3_$4.html");fetch(url).then(r => r.text()).then(d => {let doc = document.implementation.createHTMLDocument(''); doc.documentElement.innerHTML = d;let c=doc.querySelector('#contentinfo,#ChapterView>div:nth-child(3)>div');if(c){c.innerHTML=c.innerHTML.replace(/<br>/g,"\n"); content[i+1]=c.innerText;if(++cur>=num)cb(content.join("\n"));} }); });return false;}return content;
+ ```
+ 11. [暢讀小説網](https://www.cdxsw.cc/53/53458/)
+ ``` javascript
+.section-list>li>a@@@@@@let content="";let checkContent=(doc,over)=>{word=doc.querySelector('.word_read');if(!word)content+='\n'+doc.body.innerText;else [].forEach.call(word.querySelectorAll('p,h3'),c=>content+='\n'+c.innerText);let next=doc.querySelector(".read_btn>a:nth-child(4)");if(next&&/_\d\.html/.test(next.href)){fetch(next.href).then(r => r.text()).then(d => {let _doc = document.implementation.createHTMLDocument('');_doc.documentElement.innerHTML = d;checkContent(_doc,over);});}else over();};checkContent(data,()=>{cb(content)});return false;
+ ```
+ 12. [lofter](https://kuencar.lofter.com/view)
+ ``` javascript
+body>>let title="俞亮/时光",chs=[];item.querySelectorAll("ul.list>li>a").forEach(a=>{if(a.children[0].innerText.indexOf(title)!=-1)chs.push(a)});return chs.reverse();
+ ```
+ 13. [頂點小説網](https://m.biqugeu.net/booklist/20128662.html)
+ ``` javascript
+.book_last>dl>dd>a:not([style])@@@@@@let content="";let checkContent=(doc,over)=>{word=doc.querySelector('#chaptercontent');if(!word)content+='\n'+doc.body.innerText;else {word.innerHTML=word.innerHTML.replace(/<br>/g,'\n');content+='\n'+word.innerText;}let next=doc.querySelector("#pb_next");if(next&&/_\d\.html/.test(next.href)){fetch(next.href).then(r => r.arrayBuffer()).then(d => {let decoder = new TextDecoder("gbk");let text = decoder.decode(d);let _doc = document.implementation.createHTMLDocument('');_doc.documentElement.innerHTML = text;checkContent(_doc,over);});}else over();};checkContent(data,()=>{cb(content)});return false;
+ ```
+ 14. [宅男小説網](http://www.zhainanxs.com/mytool/getChapterList/)
+ ``` javascript
+#list-chapterAll>dd>a>>item.href=item.href.replace(/.*book('(\d+)','(\d+)').*/,"/go/$1/$2.html");return item;@@@@@@let content=data.querySelector('h1~div');if(!content)return data.body.innerText;content.innerHTML=content.innerHTML.replace(/<br>/g,"\n");content=content.innerText;let pages=data.querySelectorAll(".chapterPages>a:not(.curr)");if(pages){let num=pages.length,cur=0;content=[content];[].forEach.call(pages, (page,i)=>{let url=page.href.replace(/.*'(\d+)','([\d_]+)'.*/,"/go/$1/$2.html");fetch(url).then(r => r.text()).then(d => {let doc = document.implementation.createHTMLDocument(''); doc.documentElement.innerHTML = d;let c=doc.querySelector('h1~div');if(c){c.innerHTML=c.innerHTML.replace(/<br>/g,"\n"); content[i+1]=c.innerText;if(++cur>=num)cb(content.join("\n"));} }); });return false;}return content;
+ ```
+ 15. [免費小説網](http://www.huazhuangsheying.com/book/3659/)
+ ``` javascript
+.section-box+h2+.section-box>.section-list>.book-item>a@@@@@@let content=data.querySelector('#content');if(!content)return data.body.innerText;if(content.children[0].tagName=='DIV')content.removeChild(content.children[0]);content.innerHTML=content.innerHTML.replace(/<br>/g,"\n");content=content.innerText;let nextpage=data.querySelector(a[href$="_2.html"]);if(nextpage){fetch(nextpage.href).then(r => r.text()).then(d => {let doc = document.implementation.createHTMLDocument(''); doc.documentElement.innerHTML = d;let c=doc.querySelector('#content');if(c){if(c.children[0].tagName=='DIV')c.removeChild(c.children[0]);c.innerHTML=c.innerHTML.replace(/<br>/g,"\n"); content+=c.innerText;}cb(content);});return false;}return content;
+ ```
+ 16. [海棠文化](https://haitbook.com/?act=showinfo&bookwritercode=EB20160922203907769482&bookid=67166&pavilionid=a)
+ ``` javascript
+.uk-list>li>a@@@@@@let contentMatch=data.body.innerHTML.match(/url: '\/showpapercolor.php',[\s\S]*?paperid:\s*'(\w+)',\s*vercodechk:\s*'(\w+)'/);if(!contentMatch)return "";$.ajax({url: '/showpapercolor.php',type: 'POST',data: { paperid: `${contentMatch[1]}`, vercodechk: `${contentMatch[2]}`},error: function (xhr) {cb("");},success: function (colorresponse) {cb(colorresponse.replace(/<img.*?>/,"").replace(/<br \/>/g,""))}});return false;
  ```
  
 
