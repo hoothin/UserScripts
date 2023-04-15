@@ -9764,7 +9764,7 @@
     },
     {
         "name": "youtube",
-        "url": "^https?://(m\\.)?youtube\\.com",
+        "url": "^https?://(m\\.|www\\.)?youtube\\.com",
         "enable": 0
     },
     {
