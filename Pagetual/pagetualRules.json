@@ -9804,7 +9804,7 @@
     },
     {
         "name": "twitter",
-        "url": "^https?://twitter\\.com",
+        "url": "^https?://(m\\.|www\\.)?twitter\\.com",
         "enable": 0
     },
     {
