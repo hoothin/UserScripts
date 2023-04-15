@@ -1220,14 +1220,14 @@
     {
         "name": "亲亲漫画 - 手機版漫畫在新分頁打開",
         "example": "https://m.acgqd.com/update/",
-        "url": "^https?://m\\.acgqd\\.com/(update|list|list/wanjie)?/?$",
+        "url": "^https?://m\\.acg(u|q)d\\.com/(update|list|list/wanjie)?/?$",
         "pinUrl": true,
         "init": "let openInNewTab=()=>document.querySelectorAll('.itemBox a:not([target=_blank]),.list-comic a:not([target=_blank])').forEach(a=>{a.setAttribute('target','_blank')});openInNewTab();new MutationObserver(()=>{openInNewTab()}).observe(document.body,{childList:true,subtree:true});"
     },
     {
         "name": "亲亲漫画 - 手機版章節全部展開",
         "example": "https://m.acgqd.com/manhua/38496/",
-        "url": "^https?://m\\.acgqd\\.com/manhua/\\d+/$",
+        "url": "^https?://m\\.acg(u|q)d\\.com/manhua/\\d+/$",
         "pinUrl": true,
         "autoClick": "//a[@title='全部展开']",
         "css": "script+a{display:none!important}.Introduct_Sub{background:url(https://m.idmzj.com/images/int_bg.png)!important;background-size:100% 100%!important}"
@@ -1235,7 +1235,7 @@
     {
         "name": "亲亲漫画 - 手機版閱讀",
         "example": "https://m.acgqd.com/manhua/39305/1277010.html",
-        "url": "^https?://m\\.acgqd\\.com/manhua/\\d+/\\d+\\.html",
+        "url": "^https?://m\\.acg(u|q)d\\.com/manhua/\\d+/\\d+\\.html",
         "pinUrl": true,
         "history": 2,
         "init": "let ge=e=>document.querySelector(e);$('.control_bottom').append('<div class=\"side_public scroll-top\"id=\"sidePublic\"style=\"display: block;\"><a href=\"javascript:SinMH.scrollTo(0);\"id=\"returnTop\"class=\"return-top\"></a></div>');let imgs=document.createElement('div');imgs.className='PagetualImgBox';let host=SinConf.resHost[0].domain+'/';let F=new DocumentFragment();chapterImages.forEach(e=>{let img=new Image();img.src=host+chapterPath+e;F.appendChild(img)});imgs.appendChild(F);let x=ge('#loading');x.parentNode.insertBefore(imgs,x);ge('a.iconRet').href=comicUrl;let n=ge('#action li:nth-child(4)>a');if(nextChapterData.id==null){n.href=comicUrl;n.innerText='返回目录'}",
@@ -1252,8 +1252,8 @@
     },
     {
         "name": "亲亲漫画 - PC版閱讀",
-        "example": "https://www.acgqd.com/manhua/39305/1277010.html",
-        "url": "^https?://www\\.acgqd\\.com/manhua/\\d+/\\d+\\.html",
+        "example": "http://www.acgud.com/manhua/39305/1277010.html",
+        "url": "^https?://www\\.acg(u|q)d\\.com/manhua/\\d+/\\d+\\.html",
         "pinUrl": true,
         "history": 2,
         "init": "let imgs=document.createElement('div');imgs.className='PagetualImgBox';let host=SinConf.resHost[0].domain+'/';let F=new DocumentFragment();chapterImages.forEach(e=>{let img=new Image();img.src=host+chapterPath+e;F.appendChild(img)});imgs.appendChild(F);document.querySelector('.comic_wraCon').appendChild(imgs);",
@@ -1270,8 +1270,8 @@
     },
     {
         "name": "古风漫画网 / 优酷漫画 / 360 漫画 / 古漫画 / 前未漫画 / 最漫画 / 漫画芯 / 亲亲漫画 / 漫画456 / 爱米推漫画 / 蔷薇漫画 - 分類",
-        "example": "www.gufengmh.com，www.ykmh.com，www.qianwee.com，www.100fanwo.com，www.izhegu.com，www.zuimh.com，www.mhxin.com，www.acgqd.com，www.manhua456.com，www.imitui.com，www.qwmanhua.com",
-        "url": "^https?://www\\.(gufengmh|ykmh|qianwee|100fanwo|izhegu|zuimh|mhxin|acgqd|manhua456|imitui|qwmanhua)\\.com/",
+        "example": "www.gufengmh.com，www.ykmh.com，www.qianwee.com，www.100fanwo.com，www.izhegu.com，www.zuimh.com，www.mhxin.com，www.acgud.com，www.manhua456.com，www.imitui.com，www.qwmanhua.com",
+        "url": "^https?://www\\.(gufengmh|ykmh|qianwee|100fanwo|izhegu|zuimh|mhxin|acg(u|q)d|manhua456|imitui|qwmanhua)\\.com/",
         "nextLink": "li.next>a",
         "pageElement": "li.item-lg,.list-comic",
         "replaceElement": "ul.pagination",
@@ -1625,13 +1625,13 @@
         "waitElement": [
             ".btmBtnBox"
         ],
-        "init": "let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/arr_img/)>-1).innerHTML.slice(71,-1);let Data=eval('('+eval(code).slice(11,-2)+')');let imgData=Data.page_url.split('\\r\\n');let host='https://images.idmzj.com/';let F=new DocumentFragment();imgData.forEach(e=>{let img=new Image();img.src=host+e;F.appendChild(img)});let E=document.querySelector('.comic_wraCon');E.innerHTML='';E.appendChild(F);",
+        "init": "let code=Array.from(document.scripts).find(s=>s.innerHTML.search(/arr_img/)>-1).innerHTML.slice(71,-1);let Data=eval('('+eval(code).slice(11,-2)+')');let imgData=Data.page_url.split('\\r\\n');let host='https://images.idmzj.com/';let F=new DocumentFragment();imgData.forEach(e=>{let img=new Image();img.src=host+decodeURI(e).replace(/amp;/g,'');F.appendChild(img)});let E=document.querySelector('.comic_wraCon');E.innerHTML='';E.appendChild(F);",
         "nextLink": "span.next>a",
         "pageElement": ".comic_wraCon",
         "replaceElement": "head>title,.wrap_last_head,.wrap_last_mid,.btmBtnBox",
-        "pageInit": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/arr_img/)>-1).innerHTML.slice(71,-1);let Data=eval('('+eval(code).slice(11,-2)+')');let imgData=Data.page_url.split('\\r\\n');let host='https://images.idmzj.com/';let F=new DocumentFragment();imgData.forEach(e=>{let img=new Image();img.src=host+e;F.appendChild(img)});let E=doc.querySelector('.comic_wraCon');E.innerHTML='';E.appendChild(F);",
+        "pageInit": "let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/arr_img/)>-1).innerHTML.slice(71,-1);let Data=eval('('+eval(code).slice(11,-2)+')');let imgData=Data.page_url.split('\\r\\n');let host='https://images.idmzj.com/';let F=new DocumentFragment();imgData.forEach(e=>{let img=new Image();img.src=host+decodeURI(e).replace(/amp;/g,'');F.appendChild(img)});let E=doc.querySelector('.comic_wraCon');E.innerHTML='';E.appendChild(F);",
         "pageAction": "let gae=e=>document.querySelectorAll(e);let c=gae('.comic_wraCon');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}",
-        "preloadImages": "document.querySelector('#pagetual-preload').innerHTML='';let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/arr_img/)>-1).innerHTML.slice(71,-1);let Data=eval('('+eval(code).slice(11,-2)+')');let imgData=Data.page_url.split('\\r\\n');let host='https://images.idmzj.com/';let imgSrcArr=[];imgData.forEach(e=>{let imgSrc=host+e;imgSrcArr.push(imgSrc)});return imgSrcArr",
+        "preloadImages": "document.querySelector('#pagetual-preload').innerHTML='';let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/arr_img/)>-1).innerHTML.slice(71,-1);let Data=eval('('+eval(code).slice(11,-2)+')');let imgData=Data.page_url.split('\\r\\n');let host='https://images.idmzj.com/';let imgSrcArr=[];imgData.forEach(e=>{let imgSrc=host+decodeURI(e).replace(/amp;/g,'');imgSrcArr.push(imgSrc)});return imgSrcArr",
         "pageBarText": "let t=doc.querySelector('h2');if(t)return t.innerText",
         "css": ".nav-pagination,.img_land_prev,.img_land_next,#page_select,.img_info,.title.pr>em:nth-child(5),.title.pr>span,.user_show,.login_tip.out,#floatCode,.ad_bottom_code,script[src]+[style*=both]{display:none!important}.comic_wraCon>img{max-width: 100% !important;display: block !important;margin: 0 auto -2px auto !important;border:0px!important;padding:0px!important;}body,.autoHeight,.wrap_last_mid .pre,.wrap_last_mid .next,.chapter-view .panel,.mainNav_inner{width:auto!important;min-width:auto!important}.head_wz,.foot-detail-wrap{width:auto!important}"
     },
@@ -1652,13 +1652,13 @@
         "autoClick": "//a[@id='qiehuan_txt' and text()='切换到上下滚动阅读']",
         "history": 2,
         "action": 1,
-        "init": "let ge=e=>document.querySelector(e);let F=new DocumentFragment();eval(pages).forEach(e=>{let img=new Image();img.src='//images.idmzj.com/'+e;F.appendChild(img)});let loop=setInterval(()=>{let set=ge('#center_box img');if(set){clearInterval(loop);let E=ge('#center_box');E.innerHTML='';E.appendChild(F)}},100)",
+        "init": "let ge=e=>document.querySelector(e);let F=new DocumentFragment();eval(pages).forEach(e=>{let img=new Image();img.src='//images.idmzj.com/'+decodeURI(e);F.appendChild(img)});let loop=setInterval(()=>{let set=ge('#center_box img');if(set){clearInterval(loop);let E=ge('#center_box');E.innerHTML='';E.appendChild(F)}},100)",
         "nextLink": "a.fr",
         "pageElement": "#center_box",
         "replaceElement": "head>title,.display_graybg,.btmBtnBox",
-        "pageInit": "let ge=e=>doc.querySelector(e);let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/eval/)>-1).innerHTML;let imgs=eval(code.match(/eval.+\\)\\)/)[0].slice(4));let imgsArr=eval(imgs.match(/\\[.+\\]/)[0]);let F=new DocumentFragment();imgsArr.forEach(e=>{let img=new Image();img.src='//images.idmzj.com/'+e;F.appendChild(img)});let E=ge('#center_box');E.innerHTML='';E.appendChild(F);",
+        "pageInit": "let ge=e=>doc.querySelector(e);let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/eval/)>-1).innerHTML;let imgs=eval(code.match(/eval.+\\)\\)/)[0].slice(4));let imgsArr=eval(imgs.match(/\\[.+\\]/)[0]);let F=new DocumentFragment();imgsArr.forEach(e=>{let img=new Image();img.src='//images.idmzj.com/'+decodeURI(e);F.appendChild(img)});let E=ge('#center_box');E.innerHTML='';E.appendChild(F);",
         "pageAction": "let gae=e=>document.querySelectorAll(e);let c=gae('#center_box');if(c.length>10){c[0].remove()}let p=gae('.pagetual_pageBar');if(p.length>10){p[0].remove()}",
-        "preloadImages": "document.querySelector('#pagetual-preload').innerHTML='';let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/eval/)>-1).innerHTML;let imgs=eval(code.match(/eval.+\\)\\)/)[0].slice(4));let imgsArr=eval(imgs.match(/\\[.+\\]/)[0]);let imgSrcArr=[];imgsArr.forEach(e=>{let imgSrc='//images.dmzj.com/'+e;imgSrcArr.push(imgSrc)});return imgSrcArr",
+        "preloadImages": "document.querySelector('#pagetual-preload').innerHTML='';let code=Array.from(doc.scripts).find(s=>s.innerHTML.search(/eval/)>-1).innerHTML;let imgs=eval(code.match(/eval.+\\)\\)/)[0].slice(4));let imgsArr=eval(imgs.match(/\\[.+\\]/)[0]);let imgSrcArr=[];imgsArr.forEach(e=>{let imgSrc='//images.dmzj.com/'+decodeURI(e);imgSrcArr.push(imgSrc)});return imgSrcArr",
         "pageBarText": "let t=doc.querySelector('span.redhotl');if(t)return t.innerText",
         "css": "#center_box img{opacity:1!important;width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important;border: none!important;padding: 0px!important;}"
     },
@@ -2924,14 +2924,13 @@
         "pageBar": 0
     },
     {
-        "name": "Blogger",
+        "name": "阿榮福利味",
         "example": "https://www.azofreeware.com/",
-        "url": "^https?://[^/]+/",
-        "include": "#blog-pager-older-link",
+        "url": "^https?://www\\.azofreeware\\.com/",
+        "action": 1,
         "nextLink": ".blog-pager-older-link",
         "pageElement": ".blog-posts.hfeed",
-        "replaceElement": "#blog-pager",
-        "pageBar": 0
+        "replaceElement": "#blog-pager"
     },
     {
         "name": "Apkpure",
@@ -3397,8 +3396,7 @@
         "example": "https://kemono.party/fantia/user/17148/post/1528173",
         "url": "^https?://kemono\\.party/fantia/user/\\d+/post/\\d+$",
         "nextLink": ".post__nav-item>a.next",
-        "pageElement": ".post__header,.post__body",
-        "replaceElement": ".post__nav-links,.post__footer"
+        "pageElement": ".post__header,.post__body"
     },
     {
         "name": "Kemono - user",
@@ -3410,7 +3408,6 @@
             "li.pagination-button-disabled.pagination-button-current+li.pagination-button-disabled.pagination-button-after-current"
         ],
         "pageElement": ".card-list__items>article",
-        "replaceElement": "#paginator-top,#paginator-bottom",
         "pageBar": 0
     },
     {
@@ -3422,8 +3419,7 @@
             "",
             ".card-list__item--no-results"
         ],
-        "pageElement": ".card-list.card-list--legacy",
-        "replaceElement": "#paginator-top,#paginator-bottom"
+        "pageElement": ".card-list.card-list--legacy"
     },
     {
         "name": "全图网 - 圖片 - 直接載入全部圖片",
@@ -3591,16 +3587,6 @@
         "css": "#content>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
     },
     {
-        "name": "nhentai - 圖片清單載入大圖",
-        "example": "https://nhentai.net/g/438743/",
-        "url": "^https?://n(ya)?hentai\\.(net|to|xxx|red)/g/\\d+/?$",
-        "include": "#thumbnail-container",
-        "init": "let t=document.querySelector('.thumbs[style]');if(t){t.removeAttribute('style')}function get(url){return fetch(url).then(res=>res.text()).then((res)=>{let doc=new DOMParser().parseFromString(res,'text/html');let imgRes=doc.querySelector('#image-container img');if(imgRes){setTimeout(()=>{document.querySelectorAll('img').forEach(e=>{e.src=e.src})},2000);return imgRes.outerHTML}else{location.reload()}})}let imgs=document.querySelectorAll('.gallerythumb');for(let i=0;i<imgs.length;i++){setTimeout(async()=>{imgs[i].innerHTML=await get(imgs[i].href)},i*333)}",
-        "nextLink": "0",
-        "autoClick": "#show-all-images-button",
-        "css": ".thumb-container{width:100%!important;margin:0px!important}.thumbs img{margin:-1px!important;padding:0px!important;border-radius:0!important}"
-    },
-    {
         "name": "nhentai",
         "example": "https://nhentai.net/",
         "url": "^https?://n(ya)?hentai\\.(net|to|xxx|red)/(search|\\?page=|tags|artists|characters|parodies|groups)?",
@@ -3635,14 +3621,6 @@
         "nextLink": "//a[text()='下一页']",
         "pageElement": "#d_list",
         "replaceElement": "#d_list_page,#d_list_foot"
-    },
-    {
-        "name": "asiantolick - 清單大圖",
-        "example": "https://asiantolick.com/post-16288/djawa-photo-son-ye-eun-",
-        "url": "^https?://asiantolick\\.com/post",
-        "init": "document.querySelectorAll('img.miniaturaImg').forEach(e=>{e.src=e.parentNode.dataset.src});",
-        "pinUrl": true,
-        "css": "div[data-src]{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}#touch_to_see{display:none!important}"
     },
     {
         "name": "24tupian - 圖片原圖",
@@ -4199,6 +4177,17 @@
         "pageBar": 0
     },
     {
+        "name": "idol.gravureprincess.date",
+        "example": "http://idol.gravureprincess.date/",
+        "url": "^https?://idol\\.gravureprincess\\.date/",
+        "pinUrl": true,
+        "init": "document.querySelectorAll('.date-outer').forEach(e=>{e.removeAttribute('style')})",
+        "nextLink": ".blog-pager-older-link",
+        "pageElement": ".blog-posts>.date-outer",
+        "replaceElement": "#blog-pager",
+        "pageInit": "doc.querySelectorAll('.date-outer').forEach(e=>{e.removeAttribute('style')})"
+    },
+    {
         "name": "NongMo.Zone",
         "example": "http://www.ilovexs.com/",
         "url": "^https?://www\\.ilovexs\\.com/(category)?",
@@ -4209,18 +4198,6 @@
         "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": 10
-    },
-    {
-        "name": "CoserBOX - 圖片 - 免積分",
-        "example": "https://coserbox.org/image/63c9de45313ec27ef8a5069b.html，https://picacg.org/image/63c6914a9ae15810728237d2.html",
-        "url": "^https?://[^/]+/",
-        "include": [
-            "//img[contains(@alt,'CoserBOX')]",
-            "#lightgallery"
-        ],
-        "pinUrl": true,
-        "init": "let ge=e=>document.querySelector(e);let p=ge('.list>li:nth-child(2)').innerText.match(/\\d+/)[0];let Img=ge('img.lazyload');let m=Img.dataset.src.match(/^(.+\\/)(\\d+)(\\.[a-z]{3,4})$/i);let path=m[1];let s=m[2];let ex=m[3];let _img='';if(s==0){for(let i=s;i<p;i++){_img+=`<img src='${path+i+ex}'>`}}else if(s==1){for(let i=s;i<=p;i++){_img+=`<img src='${path+i+ex}'>`}}if(_img!='')ge('#lightgallery').innerHTML=_img;",
-        "css": ".plan.plan--best{display:none!important}.article__content img{margin-bottom:2px!important;border-radius:0!important}"
     },
     {
         "name": "CoserBOX - 分類",
@@ -5706,6 +5683,13 @@
         "pageBar": 0
     },
     {
+        "name": "萝丝派 - 分類",
+        "example": "https://www.yylsp.com/",
+        "url": "^https?://www\\.yylsp\\.com/",
+        "pageElement": ".posts-item.card",
+        "replaceElement": ".pagenav"
+    },
+    {
         "name": "美人图 - 看圖",
         "example": "https://meirentu.cc/pic/147617207297.html",
         "url": "^https?://meirentu\\.cc/pic/",
@@ -7169,18 +7153,6 @@
         "autoLoadNum": "0",
         "sleep": 5000,
         "css": "#arcbox img[alt]{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0px auto !important}[id^='ad']{display:none!important}"
-    },
-    {
-        "name": "秀色女神 - 看圖",
-        "example": "https://www.xsnvshen.co/album/39844",
-        "url": "^https?://www\\.xsnvshen\\.[a-z]{2,3}/album/\\d+",
-        "include": [
-            "#bigImg"
-        ],
-        "pinUrl": true,
-        "init": "let ge=e=>document.querySelector(e);let _img='';_img+=ge('.show-topmbx').outerHTML;_img+=ge('.swp-tit').outerHTML;document.querySelectorAll(`img[id^='imglist'][data-original]`).forEach(e=>{_img+=`<img src='${e.dataset.original.replace(/thumb[^/]+\\// , '')}'>`});_img+=ge('.poster-nav').outerHTML;ge('.longConWhite').innerHTML=_img;",
-        "nextLink": "0",
-        "css": ".longConWhite>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
     },
     {
         "name": "秀色女神 - 分類",
