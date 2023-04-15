@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.35.19
+// @version      1.9.35.20
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1611,6 +1611,36 @@
                     this.openInNewTab(pageElement);
                 }
             }
+            if (this.curSiteRule.singleUrl && pageElement && pageElement.length > 0) {
+                let targetEle = pageElement.length > 1 ? pageElement[0].parentNode : pageElement[0];
+                let video = targetEle.querySelector("video") || targetEle.querySelector("iframe[id*=play],[id*=play]>iframe,iframe[src*=player],iframe[src*=m3u8]") || targetEle.querySelector("canvas");
+                if (video && doc == document) {
+                    if (video && video.offsetParent && video.name != 'pagetual-iframe') {
+                        let scrollWidth = video.scrollWidth || video.offsetWidth;
+                        let scrollHeight = video.scrollHeight || video.offsetHeight;
+                        if (scrollWidth > 420 && scrollHeight > 420) {
+                            debug("Disable when large media found");
+                        } else if (scrollWidth > 100 && scrollHeight > 100) {
+                            let winWidth = window.innerWidth || document.documentElement.clientWidth;
+                            let winHeight = window.innerHeight || document.documentElement.clientHeight;
+                            if (scrollWidth > winWidth>>1 || scrollHeight > winHeight>>1) {
+                                debug("Disable when large media found under mobile");
+                            } else {
+                                video = null;
+                            }
+                        } else {
+                            video = null;
+                        }
+                    } else {
+                        video = null;
+                    }
+                }
+                if (video) {
+                    isPause = true;
+                    this.clearAddElement();
+                    return null;
+                }
+            }
             return pageElement;
         }
 
@@ -1715,34 +1745,19 @@
             }
         }
 
+        clearAddElement() {
+            if (this.addedElePool && this.addedElePool.length) {
+                this.addedElePool.forEach(ele => {
+                    if (ele.parentNode) ele.parentNode.removeChild(ele);
+                });
+            }
+            this.addedElePool = [];
+            SideController.getInstance().remove();
+        }
+
         async getPage(doc) {
             if (document.documentElement.className.indexOf('discourse') != -1) return {};
             let body = getBody(doc);
-            let video = body.querySelector("video") || body.querySelector("iframe[id*=play],[id*=play]>iframe,iframe[src*=player],iframe[src*=m3u8]") || body.querySelector("canvas");
-            if (video && video.offsetParent && video.name != 'pagetual-iframe') {
-                let scrollWidth = video.scrollWidth || video.offsetWidth;
-                let scrollHeight = video.scrollHeight || video.offsetHeight;
-                if (scrollWidth > 420 && scrollHeight > 420) {
-                    isPause = true;
-                    debug("Disable when large media found");
-                    if (this.addedElePool && this.addedElePool.length) {
-                        this.addedElePool.forEach(ele => {
-                            if (ele.parentNode) ele.parentNode.removeChild(ele);
-                        });
-                        this.addedElePool = [];
-                    }
-                    SideController.getInstance().remove();
-                    return {};
-                } else if (scrollWidth > 100 && scrollHeight > 100) {
-                    let winWidth = window.innerWidth || document.documentElement.clientWidth;
-                    let winHeight = window.innerHeight || document.documentElement.clientHeight;
-                    if (scrollWidth > winWidth>>2 && scrollHeight > winHeight>>2) {
-                        isPause = true;
-                        debug("Disable when large media found under mobile");
-                        return {};
-                    }
-                }
-            }
             let canSave = false;//發現頁碼選擇器在其他頁對不上，還是別保存了
             let url = this.curUrl.slice(0, 250).replace("index.php?", "?");
             let _url = url.replace(/\.s?html?$/i, "").toLowerCase();
@@ -2627,14 +2642,8 @@
             }, 100);
             curPage = 1;
             urlChanged = false;
-            SideController.getInstance().remove();
-            if (this.addedElePool && this.addedElePool.length) {
-                this.addedElePool.forEach(ele => {
-                    if (ele.parentNode) ele.parentNode.removeChild(ele);
-                });
-            }
+            this.clearAddElement();
             this.insert = null;
-            this.addedElePool = [];
             this.visibilityItems = [];
             this.visibleIndex = -1;
             this.pageDoc = document;
