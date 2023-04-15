@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.35.18
+// @version      1.9.35.19
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1504,7 +1504,7 @@
                             curMaxArea = a;
                             curWidth = w;
                             curMaxEle = curNode;
-                            preOffsetTop == curNode.offsetTop;
+                            preOffsetTop = curNode.offsetTop;
                         }
                     }
                     if (curMaxEle) {
@@ -2890,6 +2890,27 @@
                  border-radius: 50px;
                  text-shadow: rgb(255 255 255) 0px 0px 10px;
              }
+             #pagetual-sideController #pagetual-sideController-pagenum {
+                 color: black;
+                 font-size: 10px!important;
+                 line-height: 12px;
+                 text-align: center;
+                 position: absolute;
+                 right: -2px;
+                 top: 60px;
+                 border: 1px solid #00000099;
+                 display: inline-block;
+                 width: 12px;
+                 height: 12px;
+                 border-radius: 50%;
+                 background: white;
+                 opacity: 0;
+                 transition: opacity .5s ease;
+                 pointer-events: none;
+             }
+             #pagetual-sideController.minSize #pagetual-sideController-pagenum {
+                 opacity: 0.8;
+             }
             `;
             this.styleEle = _GM_addStyle(this.cssText);
             let frame = document.createElement("div");
@@ -2898,7 +2919,7 @@
                 <div id="pagetual-sideController-top" class="pagetual-sideController-btn">⊼</div>
                 <div>
                   <div id="pagetual-sideController-pre" class="pagetual-sideController-btn">∧</div>
-                  <div id="pagetual-sideController-move"><svg width="30" height="30" style="border-radius: 15px;display: initial;position: relative;cursor: pointer;margin: 0;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a"></path></svg></div>
+                  <div id="pagetual-sideController-move"><svg width="30" height="30" style="border-radius: 15px;display: initial;position: relative;cursor: pointer;margin: 0;width: 30px;height: 30px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a"></path></svg><div id="pagetual-sideController-pagenum"></div></div>
                   <div id="pagetual-sideController-next" class="pagetual-sideController-btn">∨</div>
                 </div>
                 <div id="pagetual-sideController-bottom" class="pagetual-sideController-btn">⊻</div>
@@ -2908,6 +2929,7 @@
             let move = frame.querySelector("#pagetual-sideController-move");
             let next = frame.querySelector("#pagetual-sideController-next");
             let bottom = frame.querySelector("#pagetual-sideController-bottom");
+            let pagenum = frame.querySelector("#pagetual-sideController-pagenum");
             if (sideControllerIcon) move.innerHTML = sideControllerIcon;
 
             frame.addEventListener("dblclick", e => {
@@ -3011,6 +3033,7 @@
             }, true);
 
             this.frame = frame;
+            this.pagenum = pagenum;
             if (rulesData.sideControllerPos) {
                 this.frame.style.top = `calc(${rulesData.sideControllerPos.y}% - 83px)`;
                 this.frame.style.left = `calc(${rulesData.sideControllerPos.x}% - 40px)`;
@@ -3025,6 +3048,8 @@
             if (!isPause) {
                 this.frame.classList.remove("stop");
             }
+            this.pagenum.innerText = curPage;
+            this.frame.title = i18n("page") + curPage;
             if (this.frame.parentNode) return;
             getBody(document).appendChild(this.frame);
             clearTimeout(this.hideTimer);
@@ -4704,6 +4729,9 @@
 
     function getElementTop(ele) {
         if (!ele) return 0;
+        if (ele.getBoundingClientRect) {
+            return ele.getBoundingClientRect().top + document.documentElement.scrollTop;
+        }
         var actualTop = ele.offsetTop;
         var current = ele.offsetParent;
         while (current) {
@@ -4715,6 +4743,9 @@
 
     function getElementLeft(ele) {
         if (!ele) return 0;
+        if (ele.getBoundingClientRect) {
+            return ele.getBoundingClientRect().left + document.documentElement.scrollLeft;
+        }
         var actualLeft = ele.offsetLeft;
         var current = ele.offsetParent;
         while (current) {
@@ -4725,41 +4756,12 @@
     }
 
     function getElementBottom(ele) {
-        return getElementTop(ele) + ele.offsetHeight;
+        return getElementTop(ele) + (ele.offsetHeight || ele.scrollHeight);
     }
 
     function getFormatJSON(obj){
         if(!objIsArr(obj) || obj.length === 0)return "";
         return JSON.stringify(obj, null, 4);
-        let ret="[\n";
-        let len=obj.length,i=0,isLast;
-        obj.forEach(item=>{
-            ret+="  {\n";
-            let iLen=Object.keys(item).length,j=0;
-            for(let key in item){
-                isLast=(++j)==iLen;
-                let value=item[key];
-                if(objIsArr(value)){
-                    let vstr="[",v=0,vIsLast=false;
-                    value.forEach(vi=>{
-                        vIsLast=(++v)==value.length;
-                        vstr+="\""+vi.replace(/\\/g,"\\\\")+"\""+(vIsLast?"":",");
-                    });
-                    vstr+="]";
-                    ret+="    \""+key+"\":"+vstr+""+(isLast?"":",")+"\n";
-                }else{
-                    if(typeof value=="string"){
-                        value=value.replace(/\\/g,"\\\\").replace(/"/g,"\\\"");
-                        value="\""+value+"\"";
-                    }
-                    ret+="    \""+key+"\":"+value+""+(isLast?"":",")+"\n";
-                }
-            }
-            isLast=(++i)==len;
-            ret+="  }"+(isLast?"":",")+"\n";
-        });
-        ret+="]";
-        return ret;
     }
 
     function globMatch(first, second) {
