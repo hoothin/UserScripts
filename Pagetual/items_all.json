@@ -2708,18 +2708,18 @@
   "updated_at": "2022-02-01T12:25:41+09:00"
 },
 {
-  "resource_url": "http://wedata.net/items/85835",
   "data": {
     "pageElement": "descendant::*[@data-ual-view-type=\"detail\" or @class=\"newsFeed_list\"][1]",
-    "nextLink": "//li[contains(@class,\"pagination_item-next\")]/a",
+    "nextLink": "//a[contains(@href, 'page=') and text()='次へ']",
     "url": "^https://news\\.yahoo\\.co\\.jp/",
     "exampleUrl": "https://news.yahoo.co.jp/articles/a578c289b2651c6e60935bb4f4f8542d79792c6c?page=1 https://news.yahoo.co.jp/topics/top-picks"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "kenzou_ogawa2",
+  "resource_url": "http://wedata.net/items/85835",
   "name": "Yahoo!ニュース",
   "created_at": "2022-01-29T10:34:24+09:00",
-  "updated_at": "2023-03-01T22:38:06+09:00"
+  "updated_at": "2023-04-14T18:45:15+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/85834",
