@@ -2893,15 +2893,16 @@
              #pagetual-sideController #pagetual-sideController-pagenum {
                  color: black;
                  font-size: 10px!important;
-                 line-height: 12px;
+                 line-height: 15px;
                  text-align: center;
                  position: absolute;
-                 right: -2px;
+                 right: -5px;
                  top: 60px;
                  border: 1px solid #00000099;
                  display: inline-block;
-                 width: 12px;
-                 height: 12px;
+                 width: 15px;
+                 height: 15px;
+                 box-sizing: content-box;
                  border-radius: 50%;
                  background: white;
                  opacity: 0;
