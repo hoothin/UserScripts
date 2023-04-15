@@ -2838,7 +2838,6 @@
                  box-shadow: rgb(0 0 0) 0px 0px 10px;
                  text-align: center;
                  background: #ffffffd0!important;
-                 color: black!important;
                  user-select: none;
                  z-index: 2147483646!important;
                  padding: 0!important;
@@ -2853,6 +2852,7 @@
                  font-family: arial;
                  font-style: normal;
                  font-size: 20px!important;
+                 color: black!important;
                  line-height: normal;
                  float: none;
              }
@@ -2865,9 +2865,9 @@
                  cursor: pointer;
                  transition: transform .15s ease-in-out, opacity .3s ease;
              }
-             .pagetual-sideController-btn:hover {
+             #pagetual-sideController .pagetual-sideController-btn:hover {
                  transform: scale(1.5);
-                 color: red;
+                 color: red!important;
              }
              #pagetual-sideController.minSize {
                  box-shadow: rgb(0 0 0 / 0%) 0px 0px 0px;
@@ -2875,6 +2875,12 @@
              }
              #pagetual-sideController.minSize .pagetual-sideController-btn {
                  opacity: 0;
+             }
+             #pagetual-sideController #pagetual-sideController-move > svg {
+                 transition: transform .3s ease;
+             }
+             #pagetual-sideController #pagetual-sideController-move > svg:hover {
+                 transform: scale(1.2);
              }
              #pagetual-sideController.minSize #pagetual-sideController-move > svg {
                  background: white;
@@ -2891,17 +2897,16 @@
                  text-shadow: rgb(255 255 255) 0px 0px 10px;
              }
              #pagetual-sideController #pagetual-sideController-pagenum {
-                 color: black;
                  font-size: 10px!important;
-                 line-height: 15px;
+                 line-height: 13px;
                  text-align: center;
                  position: absolute;
-                 right: -5px;
+                 right: -2px;
                  top: 60px;
                  border: 1px solid #00000099;
                  display: inline-block;
-                 width: 15px;
-                 height: 15px;
+                 width: 13px;
+                 height: 13px;
                  box-sizing: content-box;
                  border-radius: 50%;
                  background: white;
