@@ -5403,7 +5403,9 @@
             } else {
                 setTimeout(() => {
                     let isGuidePage = checkGuidePage(location.href.slice(0, 60));
-                    if (!isGuidePage) {
+                    if (isGuidePage) {
+                        location.reload();
+                    } else {
                         urlChanged = true;
                         if (!ruleParser.nextLinkHref) {
                             isLoading = false;
