@@ -3011,7 +3011,9 @@
             }, true);
 
             bottom.addEventListener("click", e => {
-                changeStop(true);
+                if (!e.altKey && !e.ctrlKey && !e.shiftKey && !e.metaKey) {
+                    changeStop(true);
+                }
                 let scrollH = Math.max(document.documentElement.scrollHeight, getBody(document).scrollHeight);
                 getBody(document).scrollTop = scrollH || 9999999;
                 document.documentElement.scrollTop = scrollH || 9999999;
@@ -5981,7 +5983,9 @@
             e.stopPropagation();
         });
         downSpan.addEventListener("click", e => {
-            changeStop(true);
+            if (!e.altKey && !e.ctrlKey && !e.shiftKey && !e.metaKey) {
+                changeStop(true);
+            }
             pageBar.title = i18n(isPause ? "enable" : "disable");
             scrollH=Math.max(document.documentElement.scrollHeight, getBody(document).scrollHeight);
             getBody(document).scrollTop = scrollH || 9999999;
