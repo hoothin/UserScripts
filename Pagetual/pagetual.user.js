@@ -4356,7 +4356,7 @@
         configCon.insertBefore(customUrlsTitle, insertPos);
         let customUrlsInput = document.createElement("textarea");
         customUrlsInput.style.width = "100%";
-        customUrlsInput.placeholder = "http://wedata.net/databases/AutoPagerize/items_all.json";
+        customUrlsInput.placeholder = "http://wedata.net/databases/AutoPagerize/items_all.json \nhttps://hoothin.github.io/UserScripts/Pagetual/pagetualRules.json";
         customUrlsInput.spellcheck = false;
         configCon.insertBefore(customUrlsInput, insertPos);
 
