@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.35.20
+// @version      1.9.35.21
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -187,7 +187,10 @@
                 reloadPage: "编辑完成，是否立即刷新页面？",
                 copied: "已复制",
                 noValidContent: "没有检测到有效内容，点击查看",
-                outOfDate: "脚本已过时，请及时更新到最新版本！"
+                outOfDate: "脚本已过时，请及时更新到最新版本！",
+                hideBarTips: "隐藏分页隔条，沉浸式体验",
+                setConfigPage: "将当前页面设为默认配置页",
+                wedata2github: "将 wedata 地址更改为 github 仓库内的镜像地址"
             };
             break;
         case "zh-TW":
@@ -289,7 +292,10 @@
                 reloadPage: "編輯完成，是否立即刷新頁面？",
                 copied: "已復制",
                 noValidContent: "沒有檢測到有效内容，點擊查看",
-                outOfDate: "脚本已過時，請及時更新到最新版本！"
+                outOfDate: "脚本已過時，請及時更新到最新版本！",
+                hideBarTips: "隱藏分頁隔條，沉浸式體驗",
+                setConfigPage: "將當前頁面設為默認配置頁",
+                wedata2github: "將 wedata 地址更改為 github 倉庫內的鏡像地址"
             };
             break;
         case "ja":
@@ -390,7 +396,10 @@
                 reloadPage: "Edit completed, reload page now?",
                 copied: "Copied",
                 noValidContent: "有効なコンテンツが検出されませんでした。クリックして表示",
-                outOfDate: "スクリプトが古くなっています。最新バージョンに更新してください。"
+                outOfDate: "スクリプトが古くなっています。最新バージョンに更新してください。",
+                hideBarTips: "ページネーション バーを非表示にします。没入型エクスペリエンス",
+                setConfigPage: "現在のページをデフォルト設定ページとして設定",
+                wedata2github: "wedata アドレスを github ウェアハウスのミラー アドレスに変更"
             };
             break;
         case "ru":
@@ -492,7 +501,10 @@
                 reloadPage: "Редактирование завершено. Обновить страницу?",
                 copied: "Скопировано",
                 noValidContent: "Действительный контент не обнаружен, нажмите для просмотра",
-                outOfDate: "Скрипт устарел, своевременно обновляйте до последней версии!"
+                outOfDate: "Скрипт устарел, своевременно обновляйте до последней версии!",
+                hideBarTips: "Скрыть панель разбиения на страницы, иммерсивный опыт",
+                setConfigPage: "Установить текущую страницу в качестве страницы конфигурации по умолчанию",
+                wedata2github: "Изменить адрес wedata на зеркальный адрес на складе github"
             };
             break;
         default:
@@ -593,7 +605,10 @@
                 reloadPage: "Edit completed, reload page now?",
                 copied: "Copied",
                 noValidContent: "No valid content detected, click to view",
-                outOfDate: "The script is outdated, update to the latest version in time!"
+                outOfDate: "The script is outdated, update to the latest version in time!",
+                hideBarTips: "Hide the pagination bar, toggle immersive experience",
+                setConfigPage: "Set current page as the default configuration page",
+                wedata2github: "Change the wedate address to the mirror address in the github repository"
             };
             break;
     }
@@ -667,8 +682,8 @@
     } else {
         _GM_setClipboard = (s, i) => {};
     }
-    var _unsafeWindow = (typeof unsafeWindow == 'undefined') ? window : unsafeWindow;//兼容 ios userscripts 的寫法
-    var storage = {
+    const _unsafeWindow = (typeof unsafeWindow == 'undefined') ? window : unsafeWindow;//兼容 ios userscripts 的寫法
+    const storage = {
         supportGM: typeof GM_getValue == 'function' && typeof GM_getValue('a', 'b') != 'undefined',
         supportGMPromise: typeof GM != 'undefined' && typeof GM.getValue == 'function' && typeof GM.getValue('a', 'b') != 'undefined' && typeof GM.getValue('a', 'b').then == 'function',
         supportCrossSave: function() {
@@ -733,7 +748,7 @@
     const nextTextReg2 = new RegExp("\u005e\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u7ae0\u8bdd\u8a71\u8282\u7bc0\u4e2a\u500b\u5e45\u005d", "i");
     const lazyImgAttr = ["data-lazy-src", "data-lazy", "data-url", "data-orig-file", "zoomfile", "file", "original", "load-src", "imgsrc", "real_src", "src2", "origin-src", "data-lazyload", "data-lazyload-src", "data-lazy-load-src", "data-ks-lazyload", "data-ks-lazyload-custom", "data-src", "data-defer-src", "data-actualsrc", "data-cover", "data-original", "data-thumb", "data-imageurl", "data-placeholder", "lazysrc"];
     _GM_registerMenuCommand(i18n("configure"), () => {
-        _GM_openInTab(configPage[0], {active: true});
+        _GM_openInTab(rulesData.configPage || configPage[0], {active: true});
     });
     _GM_registerMenuCommand(i18n("editCurrent"), () => {
         Picker.getInstance().start();
@@ -871,15 +886,12 @@
         return segs.length ? '/' + segs.join('/') : null;
     }
 
-    var escapeHTMLPolicy;
-    if (_unsafeWindow.trustedTypes && _unsafeWindow.trustedTypes.createPolicy) {
-        escapeHTMLPolicy = _unsafeWindow.trustedTypes.createPolicy('pagetual_default', {
-            createHTML: (string, sink) => string
-        });
-    }
+    const escapeHTMLPolicy = (_unsafeWindow.trustedTypes && _unsafeWindow.trustedTypes.createPolicy) ? _unsafeWindow.trustedTypes.createPolicy('pagetual_default', {
+        createHTML: (string, sink) => string
+    }) : null;
 
-    function createHTML(html){
-        return escapeHTMLPolicy?escapeHTMLPolicy.createHTML(html):html;
+    function createHTML(html) {
+        return escapeHTMLPolicy ? escapeHTMLPolicy.createHTML(html) : html;
     }
 
     const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
@@ -1637,7 +1649,7 @@
                 }
                 if (video) {
                     isPause = true;
-                    this.clearAddElement();
+                    this.clearAddedElements();
                     return null;
                 }
             }
@@ -1745,7 +1757,7 @@
             }
         }
 
-        clearAddElement() {
+        clearAddedElements() {
             if (this.addedElePool && this.addedElePool.length) {
                 this.addedElePool.forEach(ele => {
                     if (ele.parentNode) ele.parentNode.removeChild(ele);
@@ -2642,7 +2654,7 @@
             }, 100);
             curPage = 1;
             urlChanged = false;
-            this.clearAddElement();
+            this.clearAddedElements();
             this.insert = null;
             this.visibilityItems = [];
             this.visibleIndex = -1;
@@ -2893,6 +2905,7 @@
              }
              #pagetual-sideController.minSize #pagetual-sideController-move > svg {
                  background: white;
+                 opacity: 0;
              }
              #pagetual-sideController #pagetual-sideController-move > img,
              #pagetual-sideController #pagetual-sideController-move > span {
@@ -2906,17 +2919,17 @@
                  text-shadow: rgb(255 255 255) 0px 0px 10px;
              }
              #pagetual-sideController #pagetual-sideController-pagenum {
-                 font-size: 10px!important;
-                 line-height: 13px;
+                 font-size: 15px!important;
+                 line-height: 30px;
                  text-align: center;
                  position: absolute;
-                 right: -2px;
-                 top: 60px;
+                 right: calc(50% - 15px);
+                 top: calc(50% - 15px);
                  border: 1px solid #00000099;
                  display: inline-block;
-                 width: 13px;
-                 height: 13px;
-                 box-sizing: content-box;
+                 width: 30px;
+                 height: 30px;
+                 box-sizing: border-box;
                  border-radius: 50%;
                  background: white;
                  opacity: 0;
@@ -2924,7 +2937,7 @@
                  pointer-events: none;
              }
              #pagetual-sideController.minSize #pagetual-sideController-pagenum {
-                 opacity: 0.8;
+                 opacity: 0.6;
              }
             `;
             this.styleEle = _GM_addStyle(this.cssText);
@@ -3262,6 +3275,7 @@
               padding: 0;
               font-family: Times New Roman;
               overflow: initial;
+              user-select: none;
              }
              #pagetual-picker>.title {
               margin: -5px 45px 10px 45px;
@@ -3302,8 +3316,9 @@
              }
              #pagetual-picker textarea{
               display: inline-block;
-              width: 290px;
+              width: calc(100% - 65px);
               height: 20px;
+              min-width: 290px;
               max-width: calc(65vw - 50px);
               min-height: unset;
               padding: 6px 12px;
@@ -3346,6 +3361,7 @@
               display: inline-block;
               color: black;
               position: initial;
+              cursor: pointer;
              }
              #pagetual-picker .bottom {
               text-align: left;
@@ -3607,7 +3623,7 @@
                 if (moving) {
                     moving = false;
                 } else {
-                    _GM_openInTab(configPage[0], {active: true});
+                    _GM_openInTab(rulesData.configPage || configPage[0], {active: true});
                 }
                 document.removeEventListener("mousemove", moveHanlder, true);
                 title.removeEventListener("mouseup", upHanlder, true);
@@ -3654,11 +3670,11 @@
             editBtn.addEventListener("click", e => {
                 rulesData.editTemp = self.getTempRule();
                 storage.setItem("rulesData", rulesData);
-                _GM_openInTab(configPage[0], {active: true});
+                _GM_openInTab(rulesData.configPage || configPage[0], {active: true});
             });
             editBtn.oncontextmenu = e => {
                 e.preventDefault();
-                _GM_openInTab(configPage[0], {active: true});
+                _GM_openInTab(rulesData.configPage || configPage[0], {active: true});
             };
             this.frame = frame;
             this.xpath = xpath;
@@ -3859,6 +3875,7 @@
         }
     }
 
+    var editor, editorChanged = false;
     function createEdit() {
         var options = {
             mode: 'code',
@@ -3901,35 +3918,33 @@
                     },
                     "required": ["name", "url"]
                 }
+            },
+            onChange: () => {
+                editorChanged = true;
             }
         };
         var container = document.getElementById("jsoneditor");
         container.style.height = '800px';
         container.innerHTML = "";
-        var editor = new JSONEditor(container, options);
+        editor = new JSONEditor(container, options);
         editor.set(ruleParser.customRules);
-        document.querySelector("#saveBtn").onclick = e => {
-            try {
-                storage.setItem("hpRules", []);
-                storage.setItem("smartRules", []);
-                let customRules = editor.get();
-                if (!customRules) {
-                    storage.setItem("customRules", "");
-                } else {
-                    if (Array && Array.isArray && !Array.isArray(customRules)) {
-                        showTips(i18n("errorRulesMustBeArray"));
-                        return;
+    }
+
+    function checkGuidePage(href) {
+        if (guidePage.test(href)) {
+            if (typeof JSONEditor !== 'undefined') {
+                createEdit();
+            } else {
+                let checkEditorReady = setInterval(() => {
+                    if (typeof JSONEditor !== 'undefined') {
+                        createEdit();
+                        clearInterval(checkEditorReady);
                     }
-                    debug(customRules);
-                    storage.setItem("customRules", customRules);
-                }
-            } catch(e) {
-                debug(e);
-                showTips(i18n("errorJson"));
-                return;
+                }, 100);
             }
-            showTips(i18n("editSuccess"));
-        };
+            return true;
+        }
+        return false;
     }
 
     function initConfig() {
@@ -3960,27 +3975,22 @@
                 debug(err);
             });
         });
-        if (guidePage.test(href)) {
-            if (typeof JSONEditor !== 'undefined') {
-                createEdit();
-            } else {
-                window.onload = e => {
-                    createEdit();
-                }
-            }
-            return true;
+        let isGuidePage = checkGuidePage(href);
+        if (!isGuidePage) {
+            if (href.indexOf("PagetualGuide") != -1) return true;
+            if (location.hostname === "pagetual.hoothin.com") return true;
         }
-        if (href.indexOf("PagetualGuide") != -1) return true;
-        if (location.hostname === "pagetual.hoothin.com") return true;
 
         var configCon, insertPos;
         var noRules = !rulesData.urls || rulesData.urls.length === 0;
 
-        let inConfig = false;
-        for (let i = 0; i < configPage.length; i++) {
-            if (configPage[i] == location.href) {
-                inConfig = true;
-                break;
+        let inConfig = isGuidePage;
+        if (!inConfig) {
+            for (let i = 0; i < configPage.length; i++) {
+                if (configPage[i] == location.href) {
+                    inConfig = true;
+                    break;
+                }
             }
         }
         if (ruleImportUrlReg.test(href) || inConfig) {
@@ -4129,8 +4139,8 @@
             if (inConfig) {
                 if (_GM_info.script && _GM_info.script.version && _GM_info.script.version !== '1.0.0') {
                     let versionEle = document.querySelector('.markdown-body>h1[id],article>h1');
-                    let latestVer = versionEle.innerText.match(/\d[\d\.]+/)[0];
-                    if (latestVer != _GM_info.script.version) {
+                    let latestVer = versionEle && versionEle.innerText.match(/\d[\d\.]+/)[0];
+                    if (latestVer && latestVer != _GM_info.script.version) {
                         showTips(i18n('outOfDate'));
                     }
                 }
@@ -4138,16 +4148,30 @@
                  p>span:nth-child(1),p>span:nth-child(2),p>span:nth-child(3){
                   cursor: pointer;
                   user-select: none;
+                  display: inline-block;
+                  margin-right: 5px;
+                  -moz-transition:color 0.3s ease, transform 0.3s;
+                  -webkit-transition:color 0.3s ease, transform 0.3s;
+                  transition:color 0.3s ease, transform 0.3s;
                  }
                  p>span:nth-child(1):hover,p>span:nth-child(2):hover,p>span:nth-child(3):hover{
                   color:red;
+                  transform: scale(1.5);
+                  -webkit-transform: scale(1.5);
                  }
                  .updateDate{
                   cursor: pointer;
                   user-select: none;
+                  -moz-transition:color 0.3s ease, transform 0.3s;
+                  -webkit-transition:color 0.3s ease, transform 0.3s;
+                  transition:color 0.3s ease, transform 0.3s;
+                  transform-origin: left;
+                  -webkit-transform-origin: left;
                  }
                  .updateDate:hover{
                   color:red;
+                  transform: scale(1.1);
+                  -webkit-transform: scale(1.1);
                  }
                  input[type=number]::-webkit-inner-spin-button,
                  input[type=number]::-webkit-outer-spin-button {
@@ -4160,17 +4184,35 @@
                  #readme>.is-stuck {
                   position: static!important;
                  }
-                 .markdown-body table td>h3 {
+                 table td>h3 {
                   margin: 16px!important;
                  }
+                 #saveBtn {
+                  width: 100%;
+                  position: fixed;
+                  z-index: 999;
+                  bottom: 0px;
+                  left: 0px;
+                  font-size: x-large;
+                  opacity: 0.8;
+                  cursor: pointer;
+                  -moz-transition:opacity 0.3s ease;
+                  -webkit-transition:opacity 0.3s ease;
+                  transition:opacity 0.3s ease;
+                 }
+                 #saveBtn:hover {
+                  opacity: 1;
+                 }
                 `);
-                document.querySelector("[name='user-content-click2import'],[name='click2import']").innerText = i18n("click2ImportRule")
-                configCon = document.querySelector(".markdown-body");
-                insertPos = configCon.querySelector("hr");
+                let click2import = document.querySelector("[name='user-content-click2import'],[name='click2import']");
+                if (click2import) click2import.innerText = i18n("click2ImportRule")
+                configCon = document.querySelector(".markdown-body,.theme-default-content");
+                insertPos = configCon.querySelector("hr,#jsoneditor");
 
                 if (!noRules) {
-                    document.querySelector("pre[name='user-content-pagetual'],pre[name='pagetual']").style.display = "none";
-                    document.querySelector("p[name='user-content-click2import'],p[name='click2import']").style.display = "none";
+                    let importUrlPre = document.querySelector("pre[name='user-content-pagetual'],pre[name='pagetual']");
+                    if (importUrlPre) importUrlPre.style.display = "none";
+                    if (click2import) click2import.style.display = "none";
                 }
                 let otherconfig = document.querySelector("a[name='user-content-otherconfig'],a[name='otherconfig']");
                 if (otherconfig) otherconfig.parentNode.removeChild(otherconfig);
@@ -4360,7 +4402,7 @@
         sideControllerIconDiv.appendChild(sideControllerIconTitle);
         let sideControllerIconInput = document.createElement("input");
         sideControllerIconInput.style.width = "100%";
-        sideControllerIconInput.placeholder = "⚪";
+        sideControllerIconInput.placeholder = "🤍";
         sideControllerIconInput.value = rulesData.sideControllerIcon || '';
         sideControllerIconInput.spellcheck = false;
         sideControllerIconDiv.appendChild(sideControllerIconInput);
@@ -4432,7 +4474,7 @@
         let configTable = document.createElement("table");
         configTable.style.width = "100%";
         let configTbody = document.createElement("tbody");
-        configTbody.style.width = "100%";
+        configTbody.style.width = "99%";
         configTbody.style.display = "inline-table";
         configTable.appendChild(configTbody);
         configCon.insertBefore(configTable, insertPos);
@@ -4489,13 +4531,14 @@
             return input;
         }
 
+        let setConfigPageInput = createCheckbox(i18n("setConfigPage"), false);
         let enableWhiteListInput = createCheckbox(i18n("autoRun"), rulesData.enableWhiteList != true);
         let sideControllerInput = createCheckbox(i18n("sideController"), rulesData.sideController);
         let enableDebugInput = createCheckbox(i18n("enableDebug"), rulesData.enableDebug != false);
         let enableHistoryInput = createCheckbox(i18n("enableHistory"), rulesData.enableHistory === true);
         let enableHistoryAfterInsertInput = createCheckbox(i18n("enableHistoryAfterInsert"), rulesData.enableHistoryAfterInsert === true);
         let openInNewTabInput = createCheckbox(i18n("openInNewTab"), rulesData.openInNewTab != false);
-        let hidePageBarInput = createCheckbox(i18n("hideBar"), rulesData.opacity == 0);
+        let hidePageBarInput = createCheckbox(i18n("hideBarTips"), rulesData.opacity == 0);
         let hidePageBarArrowInput = createCheckbox(i18n("hideBarArrow"), rulesData.hideBarArrow);
         let hideLoadingIconInput = createCheckbox(i18n("hideLoadingIcon"), rulesData.hideLoadingIcon != false);
         let initRunInput = createCheckbox(i18n("initRun"), rulesData.initRun != false);
@@ -4508,6 +4551,7 @@
         let pageBarMenuInput = createCheckbox(i18n("pageBarMenu"), rulesData.pageBarMenu != false);
         let arrowToScrollInput = createCheckbox(i18n("arrowToScroll"), rulesData.arrowToScroll);
         let contentVisibilityInput = createCheckbox(i18n("contentVisibility"), rulesData.contentVisibility);
+        let wedata2githubInput = createCheckbox(i18n("wedata2github"), rulesData.wedata2github);
 
         let hideBarInput = createCheckbox(i18n("hideBar"), rulesData.hideBar && !rulesData.hideBarButNoStop, "h4", dbClick2StopInput, 'radio');
         hideBarInput.name = 'hideBar';
@@ -4533,8 +4577,12 @@
         let dbClick2StopMetaInput = createCheckbox(i18n("dbClick2StopMeta"), rulesData.dbClick2StopMeta, "h4", dbClick2StopInput);
         let dbClick2StopKeyInput = createCheckbox(i18n("dbClick2StopKey"), rulesData.dbClick2StopKey, "h4", dbClick2StopInput, "key");
 
+        let otherConfigPage = rulesData.configPage ? rulesData.configPage != location.href : configPage[0] != location.href;
+        if (!otherConfigPage) {
+            setConfigPageInput.parentNode.parentNode.style.display = "none";
+        }
         let customRulesTitle = document.createElement("h2");
-        customRulesTitle.innerHTML = i18n("customRules", location.href.replace('tree', 'edit').replace(/\/$/, '') + '/pagetualRules.json');
+        customRulesTitle.innerHTML = i18n("customRules", /tree/.test(location.href) ? location.href.replace('tree', 'edit').replace(/\/$/, '') + '/pagetualRules.json' : 'https://github.com/hoothin/UserScripts/edit/master/Pagetual/pagetualRules.json');
         configCon.insertBefore(customRulesTitle, insertPos);
         let customRulesInput = document.createElement("textarea");
         customRulesInput.spellcheck = false;
@@ -4559,6 +4607,7 @@
         customRulesInput.placeholder = `[\n  {\n    "name":"yande",\n    "action":"0",\n    "url":"^https:\/\/yande\\.re\/",\n    "pageElement":"ul#post-list-posts>li",\n    "nextLink":"a.next_page",\n    "css":".javascript-hide {display: inline-block !important;}"\n  },\n  {\n    "name":"tieba",\n    "action":"1",\n    "url":"^https:\/\/tieba\\.baidu.com\/f\\?kw=",\n    "pageElement":"ul#thread_list>li",\n    "nextLink":".next.pagination-item "\n  }\n]`;
         let preCustom = getFormatJSON(ruleParser.customRules);
         customRulesInput.value = preCustom;
+        if (isGuidePage) customRulesInput.style.display = "none";
         let blacklistInput = document.createElement("textarea");
         blacklistInput.style.width = "100%";
         blacklistInput.style.height = "500px";
@@ -4576,36 +4625,51 @@
         configCon.insertBefore(blacklistInput, insertPos);
         let saveBtn = document.createElement("button");
         saveBtn.innerHTML = i18n("save");
-        saveBtn.style.width = "100%";
-        saveBtn.style.position = "fixed";
-        saveBtn.style.zIndex = "999";
-        saveBtn.style.bottom = 0;
-        saveBtn.style.left = 0;
-        saveBtn.style.fontSize = "x-large";
+        saveBtn.id = "saveBtn";
         configCon.insertBefore(saveBtn, insertPos);
         saveBtn.onclick = e => {
             try {
-                if (customRulesInput.value != preCustom) {
-                    storage.setItem("hpRules", []);
-                    storage.setItem("smartRules", []);
-                }
-                if (customRulesInput.value == "") {
-                    storage.setItem("customRules", "");
-                } else {
-                    let customRules = JSON.parse(customRulesInput.value);
-                    if (Array && Array.isArray && !Array.isArray(customRules)) {
-                        showTips(i18n("errorRulesMustBeArray"));
-                        return;
+                let customRules;
+                if (editor) {
+                    if (editorChanged) {
+                        editorChanged = false;
+                        storage.setItem("hpRules", []);
+                        storage.setItem("smartRules", []);
                     }
-                    debug(customRules);
-                    storage.setItem("customRules", customRules);
-                    customRulesInput.value = JSON.stringify(customRules, null, 4);
+                    customRules = editor.get();
+                    if (!customRules) {
+                        customRules = "";
+                    } else {
+                        if (Array && Array.isArray && !Array.isArray(customRules)) {
+                            showTips(i18n("errorRulesMustBeArray"));
+                            return;
+                        }
+                    }
+                } else {
+                    if (customRulesInput.value != preCustom) {
+                        storage.setItem("hpRules", []);
+                        storage.setItem("smartRules", []);
+                    }
+                    if (customRulesInput.value == "") {
+                        customRules = "";
+                    } else {
+                        customRules = JSON.parse(customRulesInput.value);
+                        if (Array && Array.isArray && !Array.isArray(customRules)) {
+                            showTips(i18n("errorRulesMustBeArray"));
+                            return;
+                        }
+                        customRulesInput.value = JSON.stringify(customRules, null, 4);
+                    }
                 }
+                debug(customRules);
+                storage.setItem("customRules", customRules);
             } catch(e) {
                 debug(e);
                 showTips(i18n("errorJson"));
                 return;
             }
+            if (setConfigPageInput.checked) rulesData.configPage = location.href;
+            rulesData.wedata2github = wedata2githubInput.checked;
             rulesData.opacity = opacityInput.value / 100;
             rulesData.blacklist = blacklistInput.value ? blacklistInput.value.split("\n") : "";
             rulesData.hideBar = hideBarInput.checked;
@@ -4681,7 +4745,6 @@
                 }
             }
             showTips(i18n("settingsSaved"));
-            //location.reload();
         };
         return true;
     }
@@ -4808,17 +4871,14 @@
     }
 
     function initRules(callback) {
-        /*0 wedata格式，1 pagetual格式*/
-        ruleUrls = [
-            {
-                id: 1,
-                url:'http://wedata.net/databases/AutoPagerize/items_all.json',
-                type: 0,
-            }
-        ];
-
         ruleParser.initSavedRules(() => {
             storage.getItem("rulesData", data => {
+                /*0 wedata格式，1 pagetual格式*/
+                ruleUrls = [{
+                    id: 1,
+                    url: data && data.wedata2github ? 'https://hoothin.github.io/UserScripts/Pagetual/items_all.json' : 'http://wedata.net/databases/AutoPagerize/items_all.json',
+                    type: 0,
+                }];
                 if (data) {
                     rulesData = data;
                     if (data.urls) ruleUrls = ruleUrls.concat(data.urls);
@@ -5207,7 +5267,7 @@
              transform: scale(0.0);
              -webkit-transform: scale(0.0);
            } 100% {
-           transform: scale(1.0);
+             transform: scale(1.0);
              -webkit-transform: scale(1.0);
              opacity: 0;
            }
@@ -5259,7 +5319,7 @@
 
     function changeStop(stop) {
         isPause = stop;
-        [].forEach.call(document.querySelectorAll(".pagetual_pageBar,#pagetual-sideController"), bar => {
+        [].forEach.call(getBody(document).querySelectorAll(".pagetual_pageBar,#pagetual-sideController"), bar => {
             if (isPause) {
                 bar.classList.add("stop");
             } else {
@@ -5270,7 +5330,7 @@
 
     function changeHideBar(hide) {
         isHideBar = hide;
-        [].forEach.call(document.querySelectorAll(".pagetual_pageBar"), bar => {
+        [].forEach.call(getBody(document).querySelectorAll(".pagetual_pageBar"), bar => {
             if (isHideBar) {
                 bar.classList.add("hide");
             } else {
@@ -5342,15 +5402,8 @@
                 location.reload();
             } else {
                 setTimeout(() => {
-                    if (guidePage.test(location.href.slice(0, 250))) {
-                        if (typeof JSONEditor !== 'undefined') {
-                            createEdit();
-                        } else {
-                            window.onload = e => {
-                                createEdit();
-                            }
-                        }
-                    } else {
+                    let isGuidePage = checkGuidePage(location.href.slice(0, 60));
+                    if (!isGuidePage) {
                         urlChanged = true;
                         if (!ruleParser.nextLinkHref) {
                             isLoading = false;
@@ -5641,16 +5694,18 @@
         }, 1);
     }
 
+    const loadmoreReg = /^\s*(加载更多|加載更多|load\s*more|もっと読み込む)[.…]*\s*$/i;
+    const defaultLoadmoreSel = ".loadMore,.LoadMore,.load-more,.button-show-more,button[data-testid='more-results-button'],#btn_preview_remain";
     function getLoadMore(doc, loadmoreBtn) {
         if (!loadmoreBtn || !getBody(doc).contains(loadmoreBtn) || /less/.test(loadmoreBtn.innerText)) loadmoreBtn = null;
         if (!ruleParser.curSiteRule.singleUrl && !ruleParser.curSiteRule.loadMore) return null;
         if (loadmoreBtn) return loadmoreBtn;
-        let btnSel = ruleParser.curSiteRule.loadMore || ".loadMore,.LoadMore,.load-more,.button-show-more,button[data-testid='more-results-button'],#btn_preview_remain";
+        let btnSel = ruleParser.curSiteRule.loadMore || defaultLoadmoreSel;
         if (btnSel) {
             loadmoreBtn = getElement(btnSel, doc);
         }
         if (!loadmoreBtn) {
-            let buttons = doc.querySelectorAll("input,button,a,div[onclick]"), loadmoreReg = /^\s*(加载更多|加載更多|load\s*more|もっと読み込む)[.…]*\s*$/i;
+            let buttons = doc.querySelectorAll("input,button,a,div[onclick]");
             for (let i = 0; i < buttons.length; i++) {
                 let button = buttons[i];
                 if (button.innerText.length > 20) continue;
@@ -5867,7 +5922,6 @@
                 pageBar.style.backgroundColor = "unset";
                 pageBar.style.lineHeight = "20px";
                 pageBar.style.boxShadow = "";
-                //pageBar.style.height="35px";
                 let td = document.createElement("td");
                 td.colSpan = tdNum || 1;
                 let inTd = document.createElement("div");
@@ -5892,7 +5946,6 @@
                 pageBar.style.boxShadow = "";
                 pageBar.style.maxWidth = "unset";
                 pageBar.style.flex = "auto";
-                //pageBar.style.height="35px";
                 let td = document.createElement("td");
                 td.colSpan = example.children.length;
                 td.style.width = '100%';

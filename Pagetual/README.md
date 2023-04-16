@@ -1,8 +1,8 @@
-☯️東方永頁機 v.1.9.35.20
+☯️東方永頁機 v.1.9.35.21
 ==
 *Pagetual - Perpetual pages. Auto loading paginated web pages for 90% of all web sites ! [**Wiki**](https://pagetual.hoothin.com/en/)*
 
-<a name="otherconfig" title="for restricted environment" href="https://hoothin.github.io/UserScripts/Pagetual/"><strong>🔧【Config page on github.io】</strong></a>
+<a name="otherconfig" title="for restricted environment" href="https://pagetual.hoothin.com/en/rule.html"><strong>🔧【Configuration page on wiki site】</strong></a>
 
 <p name="click2import"></p>
 <pre name="pagetual">
