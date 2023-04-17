@@ -3074,6 +3074,7 @@
                         color: #646464;
                         word-break: break-all;
                         max-width: 85%;
+                        z-index: 1;
                     }
                     .customInputFrame-body input[type=text],
                     .customInputFrame-body input[type=number],
@@ -3113,6 +3114,13 @@
                     }
                     .customInputFrame-buttons>button:hover {
                         color: #e3f2fd;
+                    }
+                    .customInputFrame-body select+input[type=text] {
+                        top: -28px;
+                        left: 1px;
+                        position: relative;
+                        border: unset!important;
+                        width: calc(100% - 40px);
                     }
                     @media (prefers-color-scheme: dark) {
                       .customInputFrame-body,
@@ -3169,16 +3177,20 @@
                         this.customGroup = customGroup;
                         let finalSearch = this.customInputFrame.querySelector("[name='finalSearch']");
                         this.finalSearch = finalSearch;
-                        finalSearch.addEventListener("click", e => {
+                        let geneFinalUrl = () => {
                             let finalValue = finalSearch.dataset.url;
                             [].forEach.call(customGroup.children, ele => {
-                                if (ele.nodeName.toUpperCase() === 'DIV') return;
+                                if (/^(DIV|SELECT)$/i.test(ele.nodeName)) return;
                                 finalValue = finalValue.replace('◎', ele.value || '');
                             });
                             finalSearch.value = finalValue;
+                        };
+                        finalSearch.addEventListener("click", e => {
+                            geneFinalUrl();
                         });
                         let customSubmit = customInputFrame.querySelector("#customSubmit");
                         customSubmit.addEventListener("click", e => {
+                            geneFinalUrl();
                             if (finalSearch.value) {
                                 if (this.customInputCallback) this.customInputCallback(finalSearch.value);
                             }
@@ -3213,6 +3225,8 @@
                             inputTitle.className = 'customInputFrame-input-title';
                             inputTitle.innerText = titleSplit[0];
                             this.customGroup.appendChild(inputTitle);
+                            let paramSelectInput = document.createElement('input');
+                            paramSelectInput.type = "text";
                             let paramSelect = document.createElement('select');
 
                             let option = document.createElement("option");
@@ -3228,9 +3242,10 @@
                                 paramSelect.appendChild(option);
                             }
                             paramSelect.addEventListener("change", e => {
-                                this.finalSearch.click();
+                                paramSelectInput.value = paramSelect.value;
                             });
                             this.customGroup.appendChild(paramSelect);
+                            this.customGroup.appendChild(paramSelectInput);
                         } else if (param.length === 1) {//input
                             let inputTitle = document.createElement('div');
                             inputTitle.className = 'customInputFrame-input-title';
@@ -3238,9 +3253,6 @@
                             this.customGroup.appendChild(inputTitle);
                             let paramInput = document.createElement('input');
                             paramInput.type = 'text';
-                            paramInput.addEventListener("change", e => {
-                                this.finalSearch.click();
-                            });
                             this.customGroup.appendChild(paramInput);
                         }
                         tempUrl = tempUrl.replace(inputMatch[0], '◎');
