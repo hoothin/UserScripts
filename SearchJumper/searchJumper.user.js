@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.55.62
+// @version      1.6.6.55.63
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -5117,7 +5117,7 @@
                     if (!canMatch) {
                         if (canCheckHost) {
                             if (!btn.dataset.host) {
-                                let hostReg = /^https?:\/\/([^\/]*)\/.*$/;
+                                let hostReg = /^https?:\/\/([^\/]*)\/[\s\S]*$/;
                                 let href = data.url;
                                 btn.dataset.host = hostReg.test(href) ? href.replace(hostReg, "$1") : href;
                             }
@@ -5252,11 +5252,11 @@
                                     }
                                 } else if (data.url.indexOf(location.hostname) != -1) {
                                     if (data.url.indexOf("site") != -1) {
-                                        let siteMatch = data.url.match(/site(%3A|:)(.+?)[\s%]/);
+                                        let siteMatch = data.url.match(/site(%3A|:)([\s\S]+?)[\s%]/);
                                         if (siteMatch && location.href.indexOf(siteMatch[2]) != -1 && data.url.replace(siteMatch[0], "").indexOf(location.hostname) != -1) {
                                             currentData = data;
                                         }
-                                    } else if (!currentSite && data.url.replace(/^https?:\/\//, "").replace(location.host, "").replace(/\/?[\?#].*/, "") == location.pathname.replace(/\/$/, "")) {
+                                    } else if (!currentSite && data.url.replace(/^https?:\/\//, "").replace(location.host, "").replace(/\/?[\?#][\s\S]*/, "") == location.pathname.replace(/\/$/, "")) {
                                         let urlReg = data.url.match(/[^\/\?&]+(?=%[stb])/g);
                                         if (urlReg) {
                                             urlReg = urlReg.join('.*');
@@ -6478,7 +6478,7 @@
                 } else if (icon) {
                     imgSrc = icon;
                 } else if (!isBookmark && isPage) {
-                    imgSrc = data.url.replace(/^(https?:\/\/[^\/]*\/).*$/, "$1favicon.ico");
+                    imgSrc = data.url.replace(/^(https?:\/\/[^\/]*\/)[\s\S]*$/, "$1favicon.ico");
                 }
                 if (imgSrc) {
                     img.onload = e => {
@@ -6525,7 +6525,7 @@
                     }
                     let postMatch;
                     if (inPagePost) {
-                        postMatch = data.url.match(/#p{(.*[^\\])}/);
+                        postMatch = data.url.match(/#p{([\s\S]*[^\\])}/);
                     }
                     let host = location.host;
                     let href = location.href;
