@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.35.21
+// @version      1.9.35.22
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -3944,6 +3944,9 @@
                     }
                 }, 100);
             }
+            [].forEach.call(getBody(document).querySelectorAll('a'), ele => {
+                ele.target = "_blank";
+            });
             return true;
         }
         return false;
@@ -3951,7 +3954,7 @@
 
     function initConfig() {
         listenUrl();
-        let href = location.href.slice(0, 250);
+        let href = location.href.slice(0, 100);
         try {
             if (_unsafeWindow.initedPagetual) {
                 if (ruleImportUrlReg.test(href)) {
@@ -5020,6 +5023,7 @@
             },
             timeout: 20000,
             onload: async function(res) {
+                if (isPause) return callback(false);
                 var doc = null, response = res.response;
                 let preCode = ruleParser.curSiteRule.pageElementPre || ruleParser.curSiteRule.pagePre;
                 if (preCode) {
@@ -5400,12 +5404,12 @@
         isPause = true;
         setTimeout(() => {
             lastActiveUrl = location.href;
-            if (location.href == configPage[0]) {
+            let href = location.href.slice(0, 60);
+            if (href == configPage[0]) {
                 location.reload();
             } else {
                 setTimeout(() => {
-                    let isGuidePage = checkGuidePage(location.href.slice(0, 60));
-                    if (isGuidePage) {
+                    if (guidePage.test(href)) {
                         location.reload();
                     } else {
                         urlChanged = true;
@@ -6597,6 +6601,7 @@
         curIframe.style.cssText = 'display: block; visibility: visible; float: none; clear: both; width: 100%; height: 0; background: initial; border: 0px; border-radius: 0px; margin: 0px; padding: 0px; z-index: 2147483647;content-visibility: auto;contain-intrinsic-size: auto 300px;';
         curIframe.addEventListener("load", e => {
             clearInterval(checkIframeTimer);
+            if (isPause) return callback(false);
             try {
                 iframeDoc = curIframe.contentDocument || curIframe.contentWindow.document;
             } catch(e) {
@@ -6631,7 +6636,7 @@
             }
             setTimeout(async () => {
                 inAction = false;
-                if (!ruleParser.nextLinkHref) {
+                if (!ruleParser.nextLinkHref && !isPause) {
                     checkTimes++;
                     await ruleParser.getNextLink(iframeDoc);
                     if (ruleParser.nextLinkHref) {

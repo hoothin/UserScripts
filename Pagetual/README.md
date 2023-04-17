@@ -1,4 +1,4 @@
-☯️東方永頁機 v.1.9.35.21
+☯️東方永頁機 v.1.9.35.22
 ==
 *Pagetual - Perpetual pages. Auto loading paginated web pages for 90% of all web sites ! [**Wiki**](https://pagetual.hoothin.com/en/)*
 
@@ -183,10 +183,6 @@ Set to 1 so the document title of next page will be shown on pagebar
 [autoClick](https://pagetual.hoothin.com/en/rules/autoClick.html)
 --
 The css selector or xpath of element which you want to click automatically
-
-[delay](https://pagetual.hoothin.com/en/rules/delay.html)
---
-The javaScript code to delay next action until return true, use this prop to get complete page elements with lazy load.
 
 [manualMode](https://pagetual.hoothin.com/en/rules/manualMode.html)
 --
