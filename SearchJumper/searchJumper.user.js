@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.55.63
+// @version      1.6.6.55.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -3025,10 +3025,11 @@
                 return wordSpans;
             }
 
-            showCustomInputWindow(url, callback) {
-                this.customInputCallback = callback;
-                if (!this.customInputFrame) {
-                    this.customInputCssText = `
+            async showCustomInputWindow(url, callback) {
+                return new Promise((resolve) => {
+                    this.customInputCallback = callback;
+                    if (!this.customInputFrame) {
+                        this.customInputCssText = `
                     .customInputFrame-body {
                         width: 300px;
                         min-height: 200px;
@@ -3050,13 +3051,13 @@
                     }
                     .customInputFrame-title {
                         background: #458bd1!important;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
+                        display: flex!important;
+                        align-items: center!important;
+                        justify-content: center!important;
                         color: white!important;
                         font-weight: bold;
-                        font-size: 18px;
-                        border-radius: 10px 10px 0 0;
+                        font-size: 18px!important;
+                        border-radius: 10px 10px 0 0!important;
                     }
                     .customInputFrame-title>img {
                         margin: 5px;
@@ -3130,7 +3131,8 @@
                       .customInputFrame-body input,
                       .customInputFrame-body textarea,
                       .customInputFrame-body select {
-                        border: 1px solid rgb(255 255 255 / 36%);
+                        border: 1px solid rgb(255 255 255 / 36%)!important;
+                        background-color: #0c0c0c!important;
                       }
                       .customInputFrame-title,
                       .customInputFrame-buttons>button {
@@ -3138,10 +3140,10 @@
                       }
                     }
                     `;
-                    this.customInputCssEle = _GM_addStyle(this.customInputCssText);
-                    let customInputFrame = document.createElement("div");
-                    this.customInputFrame = customInputFrame;
-                    customInputFrame.innerHTML = createHTML(`
+                        this.customInputCssEle = _GM_addStyle(this.customInputCssText);
+                        let customInputFrame = document.createElement("div");
+                        this.customInputFrame = customInputFrame;
+                        customInputFrame.innerHTML = createHTML(`
                      <div class="customInputFrame-body">
                          <a href="${configPage}" class="customInputFrame-title" target="_blank">
                              <img width="32px" height="32px" src="${logoBase64}" />${i18n("customInputFrame")}
@@ -3156,96 +3158,99 @@
                          </div>
                      </div>
                     `);
-                    let cancelBtn = customInputFrame.querySelector("#cancel");
-                    cancelBtn.addEventListener("click", e => {
-                        if (customInputFrame.parentNode) {
-                            customInputFrame.parentNode.removeChild(customInputFrame);
-                        }
-                    });
-                    let customGroup = this.customInputFrame.querySelector("#customGroup");
-                    this.customGroup = customGroup;
-                    let finalSearch = this.customInputFrame.querySelector("[name='finalSearch']");
-                    this.finalSearch = finalSearch;
-                    finalSearch.addEventListener("click", e => {
-                        let finalValue = finalSearch.dataset.url;
-                        [].forEach.call(customGroup.children, ele => {
-                            if (ele.nodeName.toUpperCase() === 'DIV') return;
-                            finalValue = finalValue.replace('◎', ele.value || '');
+                        let cancelBtn = customInputFrame.querySelector("#cancel");
+                        cancelBtn.addEventListener("click", e => {
+                            if (customInputFrame.parentNode) {
+                                customInputFrame.parentNode.removeChild(customInputFrame);
+                            }
+                            resolve("");
                         });
-                        finalSearch.value = finalValue;
-                    });
-                    let customSubmit = customInputFrame.querySelector("#customSubmit");
-                    customSubmit.addEventListener("click", e => {
-                        if (finalSearch.value) {
-                            this.customInputCallback(finalSearch.value);
-                        }
-                    });
-                }
-                this.customGroup.innerHTML = createHTML();
-                let tempUrl = url;
-                let inputMatch = tempUrl.match(/%input{(.*?)}/);
-                while (inputMatch) {
-                    let param = inputMatch[1];
-                    if (param.indexOf("\"") === 0 && param.indexOf("\",\"") !== -1) {
-                        param = param.substr(1, param.length - 2).split("\",\"");
-                    } else {
-                        param = param.split(",");
+                        let customGroup = this.customInputFrame.querySelector("#customGroup");
+                        this.customGroup = customGroup;
+                        let finalSearch = this.customInputFrame.querySelector("[name='finalSearch']");
+                        this.finalSearch = finalSearch;
+                        finalSearch.addEventListener("click", e => {
+                            let finalValue = finalSearch.dataset.url;
+                            [].forEach.call(customGroup.children, ele => {
+                                if (ele.nodeName.toUpperCase() === 'DIV') return;
+                                finalValue = finalValue.replace('◎', ele.value || '');
+                            });
+                            finalSearch.value = finalValue;
+                        });
+                        let customSubmit = customInputFrame.querySelector("#customSubmit");
+                        customSubmit.addEventListener("click", e => {
+                            if (finalSearch.value) {
+                                if (this.customInputCallback) this.customInputCallback(finalSearch.value);
+                            }
+                            resolve(finalSearch.value);
+                        });
                     }
-                    if (param.length === 2) {//select
-                        let titleSplit = param[0];
-                        if (titleSplit.indexOf("'") === 0 && titleSplit.indexOf("'/'") !== -1) {
-                            titleSplit = titleSplit.substr(1, titleSplit.length - 2).split("'/'");
+                    this.customGroup.innerHTML = createHTML();
+                    let tempUrl = url;
+                    let inputMatch = tempUrl.match(/%input{(.*?)}/);
+                    while (inputMatch) {
+                        let param = inputMatch[1];
+                        if (param.indexOf("\"") === 0 && param.indexOf("\",\"") !== -1) {
+                            param = param.substr(1, param.length - 2).split("\",\"");
                         } else {
-                            titleSplit = titleSplit.split("/");
+                            param = param.split(",");
                         }
-                        let optionSplit = param[1];
-                        if (optionSplit.indexOf("'") === 0 && optionSplit.indexOf("'/'") !== -1) {
-                            optionSplit = optionSplit.substr(1, optionSplit.length - 2).split("'/'");
-                        } else {
-                            optionSplit = optionSplit.split("/");
-                        }
-                        let singleTitle = titleSplit.length === optionSplit.length + 1;
-                        let inputTitle = document.createElement('div');
-                        inputTitle.className = 'customInputFrame-input-title';
-                        inputTitle.innerText = titleSplit[0];
-                        this.customGroup.appendChild(inputTitle);
-                        let paramSelect = document.createElement('select');
+                        if (param.length === 2) {//select
+                            let titleSplit = param[0];
+                            if (titleSplit.indexOf("'") === 0 && titleSplit.indexOf("'/'") !== -1) {
+                                titleSplit = titleSplit.substr(1, titleSplit.length - 2).split("'/'");
+                            } else {
+                                titleSplit = titleSplit.split("/");
+                            }
+                            let optionSplit = param[1];
+                            if (optionSplit.indexOf("'") === 0 && optionSplit.indexOf("'/'") !== -1) {
+                                optionSplit = optionSplit.substr(1, optionSplit.length - 2).split("'/'");
+                            } else {
+                                optionSplit = optionSplit.split("/");
+                            }
+                            let singleTitle = titleSplit.length === optionSplit.length + 1;
+                            let inputTitle = document.createElement('div');
+                            inputTitle.className = 'customInputFrame-input-title';
+                            inputTitle.innerText = titleSplit[0];
+                            this.customGroup.appendChild(inputTitle);
+                            let paramSelect = document.createElement('select');
 
-                        let option = document.createElement("option");
-                        option.value = '';
-                        option.innerText = '';
-                        paramSelect.appendChild(option);
-
-                        for (let i = 0; i < optionSplit.length; i++) {
-                            let value = optionSplit[i];
                             let option = document.createElement("option");
-                            option.value = value;
-                            option.innerText = singleTitle ? titleSplit[i + 1] : value;
+                            option.value = '';
+                            option.innerText = '';
                             paramSelect.appendChild(option);
+
+                            for (let i = 0; i < optionSplit.length; i++) {
+                                let value = optionSplit[i];
+                                let option = document.createElement("option");
+                                option.value = value;
+                                option.innerText = singleTitle ? titleSplit[i + 1] : value;
+                                paramSelect.appendChild(option);
+                            }
+                            paramSelect.addEventListener("change", e => {
+                                this.finalSearch.click();
+                            });
+                            this.customGroup.appendChild(paramSelect);
+                        } else if (param.length === 1) {//input
+                            let inputTitle = document.createElement('div');
+                            inputTitle.className = 'customInputFrame-input-title';
+                            inputTitle.innerText = param[0];
+                            this.customGroup.appendChild(inputTitle);
+                            let paramInput = document.createElement('input');
+                            paramInput.type = 'text';
+                            paramInput.addEventListener("change", e => {
+                                this.finalSearch.click();
+                            });
+                            this.customGroup.appendChild(paramInput);
                         }
-                        paramSelect.addEventListener("change", e => {
-                            this.finalSearch.click();
-                        });
-                        this.customGroup.appendChild(paramSelect);
-                    } else if (param.length === 1) {//input
-                        let inputTitle = document.createElement('div');
-                        inputTitle.className = 'customInputFrame-input-title';
-                        inputTitle.innerText = param[0];
-                        this.customGroup.appendChild(inputTitle);
-                        let paramInput = document.createElement('input');
-                        paramInput.type = 'text';
-                        paramInput.addEventListener("change", e => {
-                            this.finalSearch.click();
-                        });
-                        this.customGroup.appendChild(paramInput);
+                        tempUrl = tempUrl.replace(inputMatch[0], '◎');
+                        inputMatch = tempUrl.match(/%input{(.*?)}/);
                     }
-                    tempUrl = tempUrl.replace(inputMatch[0], '◎');
-                    inputMatch = tempUrl.match(/%input{(.*?)}/);
-                }
-                this.finalSearch.dataset.url = tempUrl;
-                this.finalSearch.value = tempUrl.replace(/◎/g, '');
-                if (!this.customInputCssEle || !this.customInputCssEle.parentNode) this.customInputCssEle = _GM_addStyle(this.customInputCssText);
-                document.documentElement.appendChild(this.customInputFrame);
+                    this.finalSearch.dataset.url = tempUrl;
+                    this.finalSearch.value = tempUrl.replace(/◎/g, '');
+                    if (!this.customInputCssEle || !this.customInputCssEle.parentNode) this.customInputCssEle = _GM_addStyle(this.customInputCssText);
+                    document.documentElement.appendChild(this.customInputFrame);
+                });
             }
 
             showModifyWindow(word, wordSpan) {
@@ -3280,13 +3285,13 @@
                     }
                     .searchJumperModify-title {
                         background: #458bd1!important;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
+                        display: flex!important;
+                        align-items: center!important;
+                        justify-content: center!important;
                         color: white!important;
                         font-weight: bold;
-                        font-size: 18px;
-                        border-radius: 10px 10px 0 0;
+                        font-size: 18px!important;
+                        border-radius: 10px 10px 0 0!important;
                     }
                     .searchJumperModify-title>img {
                         margin: 5px;
@@ -3368,7 +3373,7 @@
                       .searchJumperModify-body>input[type=text],
                       .searchJumperModify-body>input[type=number],
                       .searchJumperModify-body>textarea {
-                        border: 1px solid rgb(255 255 255 / 36%);
+                        border: 1px solid rgb(255 255 255 / 36%)!important;
                       }
                       .searchJumperModify-title,
                       .searchJumperModify-buttons>button {
@@ -6275,7 +6280,7 @@
                     this.submitAction(params);
                     return;
                 }
-                let form, input, clicked = false;
+                let form, input, clicked = false, self = this;
 
                 for (let param of params) {
                     if (param[0] === "sleep" || param[0] === "@sleep") {
@@ -6297,8 +6302,13 @@
                             await waitForElement(param[1]);
                         }
                     } else {
-                        if (!localKeywords) localKeywords = param[1];
-                        await emuInput(param[0], param[1]);
+                        let inputStr = param[1];
+                        if (!localKeywords) localKeywords = inputStr;
+                        if (inputStr.indexOf('%input{') !== -1) {
+                            let customInputStr = await self.showCustomInputWindow(inputStr);
+                            if (customInputStr) inputStr = customInputStr;
+                        }
+                        await emuInput(param[0], inputStr);
                         input = getElement(param[0]);
                     }
                     if (inPagePostParams) {
@@ -9110,13 +9120,13 @@
                     }
                     .searchJumperFrame-title {
                         background: #458bd1!important;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
+                        display: flex!important;
+                        align-items: center!important;
+                        justify-content: center!important;
                         color: white!important;
                         font-weight: bold;
-                        font-size: 18px;
-                        border-radius: 10px 10px 0 0;
+                        font-size: 18px!important;
+                        border-radius: 10px 10px 0 0!important;
                     }
                     .searchJumperFrame-title>img {
                         margin: 5px;
@@ -9830,13 +9840,13 @@
                     }
                     .searchJumperFrame-title {
                         background: #458bd1!important;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
+                        display: flex!important;
+                        align-items: center!important;
+                        justify-content: center!important;
                         color: white!important;
                         font-weight: bold;
-                        font-size: 18px;
-                        border-radius: 10px 10px 0 0;
+                        font-size: 18px!important;
+                        border-radius: 10px 10px 0 0!important;
                     }
                     .searchJumperFrame-title>img {
                         margin: 5px;
