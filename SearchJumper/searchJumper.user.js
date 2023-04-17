@@ -3116,11 +3116,12 @@
                         color: #e3f2fd;
                     }
                     .customInputFrame-body select+input[type=text] {
-                        top: -28px;
-                        left: 1px;
+                        top: -27px;
+                        left: 2px;
                         position: relative;
                         border: unset!important;
                         width: calc(100% - 40px);
+                        padding-bottom: 3px;
                     }
                     @media (prefers-color-scheme: dark) {
                       .customInputFrame-body,
@@ -6318,7 +6319,9 @@
                         if (!localKeywords) localKeywords = inputStr;
                         if (inputStr.indexOf('%input{') !== -1) {
                             let customInputStr = await self.showCustomInputWindow(inputStr);
-                            if (customInputStr) inputStr = customInputStr;
+                            if (customInputStr) {
+                                inputStr = customInputStr;
+                            } else return;
                         }
                         await emuInput(param[0], inputStr);
                         input = getElement(param[0]);
