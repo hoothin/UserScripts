@@ -5702,7 +5702,7 @@
         }, 1);
     }
 
-    const loadmoreReg = /^\s*(加载更多|加載更多|load\s*more|もっと読み込む)[.…]*\s*$/i;
+    const loadmoreReg = /^\s*((点击)?加载更多|(點擊)?加載更多|load\s*more|もっと読み込む)[.…]*\s*$/i;
     const defaultLoadmoreSel = ".loadMore,.LoadMore,.load-more,.button-show-more,button[data-testid='more-results-button'],#btn_preview_remain";
     function getLoadMore(doc, loadmoreBtn) {
         if (!loadmoreBtn || !getBody(doc).contains(loadmoreBtn) || /less/.test(loadmoreBtn.innerText)) loadmoreBtn = null;
