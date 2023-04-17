@@ -3122,6 +3122,8 @@
                         border: unset!important;
                         width: calc(100% - 40px);
                         padding-bottom: 3px;
+                        margin-bottom: -30px;
+                        float: left;
                     }
                     @media (prefers-color-scheme: dark) {
                       .customInputFrame-body,
