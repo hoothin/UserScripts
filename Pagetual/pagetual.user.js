@@ -2013,6 +2013,9 @@
                                 let parent = otherPageEle.parentNode;
                                 if (parent && parent.parentNode) {
                                     parent = parent.parentNode;
+                                    if (parent.parentNode) {
+                                        parent = parent.parentNode;
+                                    }
                                 }
                                 if (parent && parent.contains(otherPageEle) && !/^\d+$/.test(otherPageEle.innerText.trim())) {
                                     next4 = null;
@@ -5501,6 +5504,11 @@
                 loadmoreBtn = getLoadMore(document);
                 if (loadmoreBtn && isVisible(loadmoreBtn, _unsafeWindow)) {
                     loadingMore = false;
+                    if (isInViewPort(loadmoreBtn)) {
+                        emuClick(loadmoreBtn);
+                        loadingMore = true;
+                        setTimeout(() => {loadingMore = false}, 200);
+                    }
                     clearInterval(checkLoadMore);
                 } else if (checkLoadMoreTimes++ > 10) {
                     clearInterval(checkLoadMore);
