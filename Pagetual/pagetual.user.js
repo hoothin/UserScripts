@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.35.22
+// @version      1.9.35.23
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1808,6 +1808,7 @@
                 body.querySelector("a[data-pagination=next]") ||
                 body.querySelector("ul.pagination>li.active+li>a") ||
                 body.querySelector("[class^=pag] .current+a") ||
+                body.querySelector(".pager-section a[rel=next]") ||
                 body.querySelector(".pagination a[rel=next]") ||
                 body.querySelector(".pagination-nav__item--next>a") ||
                 body.querySelector("a.pageright") ||
@@ -2008,7 +2009,15 @@
                                 otherPageHref = curHref.replace(curPageReg, `$1${pageNum + 2}${afterStr}`);
                                 otherPageEle = body.querySelector(`a[href='${otherPageHref}']`);
                             }
-                            if (otherPageEle && !/^\d+$/.test(otherPageEle.innerText.trim())) next4 = null;
+                            if (otherPageEle) {
+                                let parent = otherPageEle.parentNode;
+                                if (parent && parent.parentNode) {
+                                    parent = parent.parentNode;
+                                }
+                                if (parent && parent.contains(otherPageEle) && !/^\d+$/.test(otherPageEle.innerText.trim())) {
+                                    next4 = null;
+                                }
+                            }
                         }
                     }
                 }
@@ -6479,6 +6488,7 @@
     }
 
     function resizeIframe(iframe, frameDoc, pageEle) {
+        let curScroll = getBody(document).scrollTop || document.documentElement.scrollTop;
         if (ruleParser.curSiteRule.singleUrl || forceState === 2) {
             iframe.style.height = (getBody(frameDoc).scrollHeight || getBody(frameDoc).offsetHeight || 500) + "px";
             iframe.style.minHeight = iframe.style.height;
@@ -6519,10 +6529,14 @@
                 }
                 if (!fitWidth && iframe.style.marginLeft == '0px') {
                     iframe.style.width = "100vw";
-                    iframe.style.marginLeft = -iframe.getBoundingClientRect().left + "px";
+                    var cWidth = document.body.clientWidth || document.documentElement.clientWidth;
+                    var iWidth = window.innerWidth;
+                    iframe.style.marginLeft = -iframe.getBoundingClientRect().left - (iWidth - cWidth) / 2 + "px";
                 }
             }
         }
+        getBody(document).scrollTop = curScroll;
+        document.documentElement.scrollTop = curScroll;
     }
 
     function scrollToResize(e) {
@@ -6563,7 +6577,6 @@
         url = url.indexOf('=') == -1 ? url.replace(/#[^#]*/,"") : url;
         let curIframe = document.createElement('iframe'), iframeDoc, pageElement = null, isloaded = false, inAction = true;
         let loadedHandler = () => {
-            inAction = false;
             let getPageEle = () => {
                 if (ruleParser.curSiteRule.singleUrl) {
                     return null;
@@ -6585,6 +6598,7 @@
             };
             ruleParser.insertPage(iframeDoc, [], url, ele => {
                 callback(curIframe);
+                inAction = false;
             }, true);
             resizePool.push([getPageEle, getIframe, getFrameDoc]);
         };
