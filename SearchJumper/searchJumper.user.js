@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.55.64
+// @version      1.6.6.56.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -3030,145 +3030,204 @@
                     this.customInputCallback = callback;
                     if (!this.customInputFrame) {
                         this.customInputCssText = `
-                    .customInputFrame-body {
-                        width: 300px;
-                        min-height: 200px;
-                        position: fixed;
-                        text-align: left;
-                        left: 50%;
-                        top: 50%;
-                        margin-top: -160px;
-                        margin-left: -150px;
-                        z-index: 2147483647;
-                        background-color: #ffffff;
-                        border: 1px solid #afb3b6;
-                        border-radius: 10px;
-                        opacity: 0.95;
-                        filter: alpha(opacity=95);
-                        box-shadow: 5px 5px 20px 0px #000;
-                        color: #6e7070;
-                        font-size: initial;
-                    }
-                    .customInputFrame-title {
-                        background: #458bd1!important;
-                        display: flex!important;
-                        align-items: center!important;
-                        justify-content: center!important;
-                        color: white!important;
-                        font-weight: bold;
-                        font-size: 18px!important;
-                        border-radius: 10px 10px 0 0!important;
-                    }
-                    .customInputFrame-title>img {
-                        margin: 5px;
-                    }
-                    .customInputFrame-input-title {
-                        font-size: 9pt;
-                        font-family: Arial, sans-serif;
-                        display: inline-block;
-                        background-color: white;
-                        position: relative;
-                        left: 20px;
-                        padding: 0px 4px;
-                        text-align: left;
-                        color: #646464;
-                        word-break: break-all;
-                        max-width: 85%;
-                        z-index: 1;
-                    }
-                    .customInputFrame-body input[type=text],
-                    .customInputFrame-body input[type=number],
-                    .customInputFrame-body textarea,
-                    .customInputFrame-body select {
-                        resize: both;
-                        font-size: 11pt;
-                        font-weight: normal;
-                        border-radius: 4px;
-                        border: 1px solid rgba(0, 0, 0, 0.23);
-                        margin: 4px;
-                        font-family: inherit;
-                        background-color: #FFF;
-                        width: calc(100% - 8px);
-                        color: #4A4A4A;
-                        margin-top: -8px;
-                        padding: 4px;
-                        padding-top: 8px;
-                        box-sizing: border-box;
-                    }
-                    .customInputFrame-buttons {
-                        text-align: center;
-                        margin-bottom: 5px;
-                        display: flex;
-                        justify-content: space-evenly;
-                    }
-                    .customInputFrame-buttons>button {
-                        width: 32%;
-                        font-size: 16px;
-                        cursor: pointer;
-                        border: 1px solid #1976d2;
-                        border-radius: 4px;
-                        transition: all .3s;
-                        color: #fff;
-                        background-color: #458bd1;
-                        line-height: 25px;
-                    }
-                    .customInputFrame-buttons>button:hover {
-                        color: #e3f2fd;
-                    }
-                    .customInputFrame-body select+input[type=text] {
-                        top: -27px;
-                        left: 2px;
-                        position: relative;
-                        border: unset!important;
-                        width: calc(100% - 40px);
-                        padding-bottom: 3px;
-                        margin-bottom: -30px;
-                        float: left;
-                    }
-                    @media (prefers-color-scheme: dark) {
-                      .customInputFrame-body,
-                      .customInputFrame-input-title,
-                      .customInputFrame-body input,
-                      .customInputFrame-body textarea,
-                      .customInputFrame-body select {
-                        background-color: black!important;
-                        color: #d5d5d5!important;
-                      }
-                      .customInputFrame-body input:focus,
-                      .customInputFrame-body textarea:focus,
-                      .customInputFrame-body select:focus {
-                        background-color: #1e1e1e!important;
-                      }
-                      .customInputFrame-body input,
-                      .customInputFrame-body textarea,
-                      .customInputFrame-body select {
-                        border: 1px solid rgb(255 255 255 / 36%)!important;
-                        background-color: #0c0c0c!important;
-                      }
-                      .customInputFrame-title,
-                      .customInputFrame-buttons>button {
-                        background: #245d8f!important;
-                      }
-                    }
-                    `;
+                         .customInputFrame-body {
+                             width: 300px;
+                             min-height: 200px;
+                             position: fixed;
+                             text-align: left;
+                             left: 50%;
+                             top: 50%;
+                             margin-top: -160px;
+                             margin-left: -150px;
+                             z-index: 2147483647;
+                             background-color: #ffffff;
+                             border: 1px solid #afb3b6;
+                             border-radius: 10px;
+                             opacity: 0.95;
+                             filter: alpha(opacity=95);
+                             box-shadow: 5px 5px 20px 0px #000;
+                             color: #6e7070;
+                             font-size: initial;
+                         }
+                         .customInputFrame-body #customGroup {
+                             max-height: 50vh;
+                             overflow: auto;
+                         }
+                         .customInputFrame-title {
+                             background: #458bd1!important;
+                             display: flex!important;
+                             align-items: center!important;
+                             justify-content: center!important;
+                             color: white!important;
+                             font-weight: bold;
+                             font-size: 18px!important;
+                             border-radius: 10px 10px 0 0!important;
+                         }
+                         .customInputFrame-title>img {
+                             margin: 5px;
+                         }
+                         .customInputFrame-input-title {
+                             font-size: 9pt;
+                             font-family: Arial, sans-serif;
+                             display: inline-block;
+                             background-color: white;
+                             position: relative;
+                             left: 20px;
+                             padding: 0px 4px;
+                             text-align: left;
+                             color: #646464;
+                             word-break: break-all;
+                             max-width: 85%;
+                             z-index: 1;
+                         }
+                         .customInputFrame-body input[type=text],
+                         .customInputFrame-body input[type=number],
+                         .customInputFrame-body textarea,
+                         .customInputFrame-body .select {
+                             resize: both;
+                             font-size: 11pt;
+                             font-weight: normal;
+                             border-radius: 4px;
+                             border: 1px solid rgba(0, 0, 0, 0.23);
+                             margin: 4px;
+                             font-family: inherit;
+                             background-color: #FFF;
+                             width: calc(100% - 8px);
+                             color: #4A4A4A;
+                             margin-top: -8px;
+                             padding: 4px;
+                             padding-top: 8px;
+                             box-sizing: border-box;
+                         }
+                         .customInputFrame-buttons {
+                             text-align: center;
+                             margin-bottom: 5px;
+                             display: flex;
+                             justify-content: space-evenly;
+                         }
+                         .customInputFrame-buttons>button {
+                             width: 32%;
+                             font-size: 16px;
+                             cursor: pointer;
+                             border: 1px solid #1976d2;
+                             border-radius: 4px;
+                             transition: all .3s;
+                             color: #fff;
+                             background-color: #458bd1;
+                             line-height: 25px;
+                         }
+                         .customInputFrame-buttons>button:hover {
+                             color: #e3f2fd;
+                         }
+                         .customInputFrame-body .select {
+                             height: 30px;
+                             position: relative;
+                         }
+                         .customInputFrame-body .select>input[type=text] {
+                             top: 0px;
+                             left: -7px;
+                             position: relative;
+                             border: unset!important;
+                             width: calc(100% - 40px);
+                             padding-bottom: 3px;
+                             margin-bottom: -30px;
+                             float: left;
+                         }
+                         .customInputFrame-body .select>p {
+                             padding: 0;
+                             margin: 0;
+                             position: absolute;
+                             pointer-events: none;
+                         }
+                         .customInputFrame-body .select>.options {
+                             position: absolute;
+                             visibility: hidden;
+                             opacity: 0;
+                             transition: opacity .3s;
+                             background-color: #FFF;
+                             color: #4A4A4A;
+                             border: 1px solid rgba(0, 0, 0, 0.23);
+                             border-radius: 4px;
+                             z-index: 10;
+                             width: auto;
+                             max-width: 35%;
+                             margin-left: 275px;
+                             margin-top: -10px;
+                             position: fixed;
+                         }
+                         .customInputFrame-body .select>input:focus+p {
+                             display: none;
+                         }
+                         .customInputFrame-body .select:hover>.options {
+                             visibility: visible;
+                             opacity: 1;
+                         }
+                         .customInputFrame-body .select>.options>p {
+                             cursor: pointer;
+                             min-height: 20px;
+                         }
+                         .customInputFrame-body .select>.options>p:hover {
+                             background: aliceblue;
+                         }
+                         .customInputFrame-body div.select:after {
+                             content: "▼";
+                             position: absolute;
+                             right: 6px;
+                             top: 8px;
+                             font-size: 9px;
+                         }
+                         @media (prefers-color-scheme: dark) {
+                           .customInputFrame-body,
+                           .customInputFrame-input-title,
+                           .customInputFrame-body input,
+                           .customInputFrame-body textarea,
+                           .customInputFrame-body .select {
+                             background-color: black!important;
+                             color: #d5d5d5!important;
+                           }
+                           .customInputFrame-body input:focus,
+                           .customInputFrame-body textarea:focus,
+                           .customInputFrame-body .select:focus {
+                             background-color: #1e1e1e!important;
+                           }
+                           .customInputFrame-body input,
+                           .customInputFrame-body textarea,
+                           .customInputFrame-body .select {
+                             border: 1px solid rgb(255 255 255 / 36%)!important;
+                             background-color: #0c0c0c!important;
+                           }
+                           .customInputFrame-title,
+                           .customInputFrame-buttons>button {
+                             background: #245d8f!important;
+                           }
+                           .customInputFrame-body .select>.options {
+                             border: 1px solid rgb(255 255 255 / 36%)!important;
+                             background-color: black;
+                             color: #d5d5d5;
+                           }
+                           .customInputFrame-body .select>.options>p:hover {
+                             background: #1e1e1e;
+                           }
+                         }
+                        `;
                         this.customInputCssEle = _GM_addStyle(this.customInputCssText);
                         let customInputFrame = document.createElement("div");
                         this.customInputFrame = customInputFrame;
                         customInputFrame.innerHTML = createHTML(`
-                     <div class="customInputFrame-body">
-                         <a href="${configPage}" class="customInputFrame-title" target="_blank">
-                             <img width="32px" height="32px" src="${logoBase64}" />${i18n("customInputFrame")}
-                         </a>
-                         <div id="customGroup">
+                         <div class="customInputFrame-body">
+                             <a href="${configPage}" class="customInputFrame-title" target="_blank">
+                                 <img width="32px" height="32px" src="${logoBase64}" />${i18n("customInputFrame")}
+                             </a>
+                             <div id="customGroup">
+                             </div>
+                             <div class="customInputFrame-input-title">${i18n("finalSearch")}</div>
+                             <textarea name="finalSearch" type="text"></textarea>
+                             <div class="customInputFrame-buttons">
+                                 <button id="cancel" type="button">${i18n("cancel")}</button>
+                                 <button id="customSubmit" type="button">${i18n("customSubmit")}</button>
+                             </div>
                          </div>
-                         <div class="customInputFrame-input-title">${i18n("finalSearch")}</div>
-                         <textarea name="finalSearch" type="text"></textarea>
-                         <div class="customInputFrame-buttons">
-                             <button id="cancel" type="button">${i18n("cancel")}</button>
-                             <button id="customSubmit" type="button">${i18n("customSubmit")}</button>
-                         </div>
-                     </div>
-                    `);
+                        `);
                         let cancelBtn = customInputFrame.querySelector("#cancel");
                         cancelBtn.addEventListener("click", e => {
                             if (customInputFrame.parentNode) {
@@ -3183,8 +3242,11 @@
                         let geneFinalUrl = () => {
                             let finalValue = finalSearch.dataset.url;
                             [].forEach.call(customGroup.children, ele => {
-                                if (/^(DIV|SELECT)$/i.test(ele.nodeName)) return;
-                                finalValue = finalValue.replace('◎', ele.value || '');
+                                let value = ele.value;
+                                if (ele.className == "select") {
+                                    value = ele.children[0].value;
+                                } else if (/^DIV$/i.test(ele.nodeName)) return;
+                                finalValue = finalValue.replace('◎', value || '');
                             });
                             finalSearch.value = finalValue;
                         };
@@ -3202,26 +3264,36 @@
                     }
                     this.customGroup.innerHTML = createHTML();
                     let tempUrl = url;
-                    let inputMatch = tempUrl.match(/%input{(.*?)}/);
+                    let inputMatch = tempUrl.match(/%input{(.*?[^\\])}/);
                     while (inputMatch) {
                         let param = inputMatch[1];
                         if (param.indexOf("\"") === 0 && param.indexOf("\",\"") !== -1) {
                             param = param.substr(1, param.length - 2).split("\",\"");
                         } else {
-                            param = param.split(",");
+                            param = param.replace(/\\,/g, "◎SJ").split(",").map(str => str.replace(/◎SJ/g, ","));
                         }
-                        if (param.length === 2) {//select
-                            let titleSplit = param[0];
+                        if (param.length === 1) {//input
+                            param = param[0].replace(/\\\|/g, "◎SJ").split("|").map(str => str.replace(/◎SJ/g, "|"));
+                            let inputTitle = document.createElement('div');
+                            inputTitle.className = 'customInputFrame-input-title';
+                            inputTitle.innerText = param[0];
+                            this.customGroup.appendChild(inputTitle);
+                            let paramInput = document.createElement('input');
+                            paramInput.type = 'text';
+                            if (param.length > 1) paramInput.title = param[1];
+                            this.customGroup.appendChild(paramInput);
+                        } else if (param.length >= 2) {//select
+                            let titleSplit = param[0].replace(/\\}/g, "}");
                             if (titleSplit.indexOf("'") === 0 && titleSplit.indexOf("'/'") !== -1) {
                                 titleSplit = titleSplit.substr(1, titleSplit.length - 2).split("'/'");
                             } else {
-                                titleSplit = titleSplit.split("/");
+                                titleSplit = titleSplit.replace(/\\\//g, "◎SJ").split("/").map(str => str.replace(/◎SJ/g, "/"));
                             }
-                            let optionSplit = param[1];
+                            let optionSplit = param.slice(1).join(",");
                             if (optionSplit.indexOf("'") === 0 && optionSplit.indexOf("'/'") !== -1) {
                                 optionSplit = optionSplit.substr(1, optionSplit.length - 2).split("'/'");
                             } else {
-                                optionSplit = optionSplit.split("/");
+                                optionSplit = optionSplit.replace(/\\\//g, "◎SJ").split("/").map(str => str.replace(/◎SJ/g, "/"));
                             }
                             let singleTitle = titleSplit.length === optionSplit.length + 1;
                             let inputTitle = document.createElement('div');
@@ -3230,41 +3302,65 @@
                             this.customGroup.appendChild(inputTitle);
                             let paramSelectInput = document.createElement('input');
                             paramSelectInput.type = "text";
-                            let paramSelect = document.createElement('select');
+                            let paramSelect = document.createElement('div');
+                            paramSelect.className = "select";
+                            paramSelect.appendChild(paramSelectInput);
 
-                            let option = document.createElement("option");
-                            option.value = '';
-                            option.innerText = '';
-                            paramSelect.appendChild(option);
+                            let selectTips = document.createElement('p');
+                            selectTips.innerText = 'Select option';
+                            paramSelect.appendChild(selectTips);
+
+                            let options = document.createElement('div');
+                            options.className = "options";
+                            paramSelect.appendChild(options);
+
+                            let option = document.createElement("p");
+                            option.setAttribute("value", "");
+                            option.innerHTML = createHTML('<b>Select option</b>');
+                            options.appendChild(option);
+                            option.addEventListener("click", e => {
+                                paramSelectInput.value = "";
+                                selectTips.innerText = 'Select option';
+                            });
 
                             for (let i = 0; i < optionSplit.length; i++) {
                                 let value = optionSplit[i];
-                                let option = document.createElement("option");
-                                option.value = value;
-                                option.innerText = singleTitle ? titleSplit[i + 1] : value;
-                                paramSelect.appendChild(option);
+                                let option = document.createElement("p");
+                                option.setAttribute("value", value);
+                                if (singleTitle) {
+                                    let title = titleSplit[i + 1];
+                                    title = title.replace(/\\\|/g, "◎SJ").split("|").map(str => str.replace(/◎SJ/g, "|"));
+                                    option.innerText = title[0];
+                                    if (title.length > 1) {
+                                        option.title = title[1];
+                                    }
+                                } else {
+                                    option.innerText = value;
+                                }
+                                option.addEventListener("click", e => {
+                                    paramSelectInput.value = option.getAttribute("value");
+                                    selectTips.innerText = '';
+                                });
+                                options.appendChild(option);
                             }
-                            paramSelect.addEventListener("change", e => {
-                                paramSelectInput.value = paramSelect.value;
+                            paramSelectInput.addEventListener("change", e => {
+                                selectTips.innerText = '';
+                            });
+                            paramSelect.addEventListener("mouseenter", e => {
+                                paramSelect.focus();
+                                options.style.marginTop = - this.customGroup.scrollTop - 10 + "px";
                             });
                             this.customGroup.appendChild(paramSelect);
-                            this.customGroup.appendChild(paramSelectInput);
-                        } else if (param.length === 1) {//input
-                            let inputTitle = document.createElement('div');
-                            inputTitle.className = 'customInputFrame-input-title';
-                            inputTitle.innerText = param[0];
-                            this.customGroup.appendChild(inputTitle);
-                            let paramInput = document.createElement('input');
-                            paramInput.type = 'text';
-                            this.customGroup.appendChild(paramInput);
                         }
                         tempUrl = tempUrl.replace(inputMatch[0], '◎');
-                        inputMatch = tempUrl.match(/%input{(.*?)}/);
+                        inputMatch = tempUrl.match(/%input{(.*?[^\\])}/);
                     }
                     this.finalSearch.dataset.url = tempUrl;
                     this.finalSearch.value = tempUrl.replace(/◎/g, '');
                     if (!this.customInputCssEle || !this.customInputCssEle.parentNode) this.customInputCssEle = _GM_addStyle(this.customInputCssText);
                     document.documentElement.appendChild(this.customInputFrame);
+                    let frameBody = this.customInputFrame.children[0];
+                    frameBody.style.marginTop = -frameBody.offsetHeight / 2 + "px";
                 });
             }
 
@@ -3768,8 +3864,8 @@
                 }
                 if (background) {
                     let color = getWordColor(background);
-                    if (color) color = "color:" + color + ";";
-                    background = `background:${background};${color}`;
+                    if (color) color = "color:" + color + "!important;";
+                    background = `background:${background}!important;${color}`;
                 }
                 return `${background}${addCssText}`;
             }
@@ -6323,7 +6419,10 @@
                             let customInputStr = await self.showCustomInputWindow(inputStr);
                             if (customInputStr) {
                                 inputStr = customInputStr;
-                            } else return;
+                            } else {
+                                storage.setItem("inPagePostParams_" + location.hostname, "");
+                                return;
+                            }
                         }
                         await emuInput(param[0], inputStr);
                         input = getElement(param[0]);
@@ -6683,7 +6782,7 @@
                         }
                     }
                     while (resultUrl.indexOf('%input{') !== -1) {
-                        let inputMatch = resultUrl.match(/%input{(.*?)}/);
+                        let inputMatch = resultUrl.match(/%input{(.*?[^\\])}/);
                         if (!inputMatch) return false;
                         self.customInput = true;
                         if (self.stopInput) return false;
