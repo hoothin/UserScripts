@@ -1256,5 +1256,15 @@ var siteInfo = [
  xhr:{
   q:["img#image"]
  }
+},
+{
+ name:"极简壁纸",
+ url:/https:\/\/bz\.zzzmh\.cn\//i,
+ getImage: function(a,p){
+  if(p&&p[1]&&p[1].classList.contains("img-box")){
+   let saveEle=p[1].querySelector("a");
+   if(saveEle) return saveEle.href;
+  }
+ }
 }
 ];
