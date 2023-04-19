@@ -6314,8 +6314,8 @@
                     return;
                 }
                 if (/^UL$/i.test(pageEle[0].nodeName)) pageEle = pageEle[0].children;
-                pageEle = pageEle[parseInt(pageEle.length / 2)];
-                while(pageEle && !pageEle.offsetParent) {
+                pageEle = pageEle[parseInt((pageEle.length - 1) / 2)];
+                while(pageEle && (!pageEle.offsetParent || (!/^IMG$/i.test(pageEle.nodeName) && !pageEle.innerHTML.trim()))) {
                     if (pageEle.nextElementSibling) pageEle = pageEle.nextElementSibling;
                     else break;
                 }
@@ -6366,8 +6366,8 @@
             if (eles && eles.length > 0) {
                 checkItem = eles;
                 if (/^UL$/i.test(eles[0].nodeName)) checkItem = eles[0].children;
-                checkItem = checkItem[parseInt(checkItem.length / 2)];
-                while(checkItem && !checkItem.offsetParent) {
+                checkItem = checkItem[parseInt((checkItem.length - 1) / 2)];
+                while(checkItem && (!checkItem.offsetParent || (!/^IMG$/i.test(checkItem.nodeName) && !checkItem.innerHTML.trim()))) {
                     if (checkItem.nextElementSibling) checkItem = checkItem.nextElementSibling;
                     else break;
                 }
