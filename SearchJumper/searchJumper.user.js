@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.56.64
+// @version      1.6.6.57.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -1646,6 +1646,7 @@
                      width: unset;
                      height: unset;
                      color: black;
+                     fill: black;
                  }
                  .search-jumper-type.search-jumper-open>span.search-jumper-word {
                      filter: drop-shadow(0px 0px 2px black);
@@ -1886,7 +1887,7 @@
                      right: unset;
                      left: 0;
                  }
-                 .search-jumper-right>.searchJumperNavBar>#navMarks>div.navPointer {
+                 .search-jumper-right>.searchJumperNavBar>#navMarks+div.navPointer {
                      right: unset;
                      left: 20px;
                      transform: rotate(180deg);
@@ -2442,7 +2443,7 @@
                      fill: white;
                      cursor: pointer;
                  }
-                 #navMarks>div.navPointer {
+                 #navMarks+.navPointer {
                      pointer-events: none;
                      position: absolute;
                      right: 20px;
@@ -2453,6 +2454,7 @@
                      margin-top: 2px;
                      opacity: 0.8;
                      color: black;
+                     transition: top 0.25s ease;
                  }
                  #navMarks {
                      height: 100%;
@@ -2759,6 +2761,7 @@
                 searchJumperNavBar.innerHTML = createHTML(`
                   <svg class="closeNavBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>Close navigation</title><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64z m165.4 618.2l-66-0.3L512 563.4l-99.3 118.4-66.1 0.3c-4.4 0-8-3.5-8-8 0-1.9 0.7-3.7 1.9-5.2l130.1-155L340.5 359c-1.2-1.5-1.9-3.3-1.9-5.2 0-4.4 3.6-8 8-8l66.1 0.3L512 464.6l99.3-118.4 66-0.3c4.4 0 8 3.5 8 8 0 1.9-0.7 3.7-1.9 5.2L553.5 514l130 155c1.2 1.5 1.9 3.3 1.9 5.2 0 4.4-3.6 8-8 8z"></path></svg>
                   <div id="navMarks"></div>
+                  <div class="navPointer">></div>
                 `);
                 searchBarCon.appendChild(searchJumperNavBar);
 
@@ -2773,6 +2776,7 @@
                 this.navMarks = searchJumperNavBar.querySelector("#navMarks");
                 this.closeNavBtn = searchJumperNavBar.querySelector(".closeNavBtn");
                 this.searchJumperNavBar = searchJumperNavBar;
+                this.navPointer = searchJumperNavBar.querySelector(".navPointer");
 
                 let searchInputDiv = document.createElement("div");
                 searchInputDiv.className = "search-jumper-input";
@@ -3923,7 +3927,8 @@
                 function searchWithinNode(node, word) {
                     let len, pos = -1, skip, spannode, middlebit, middleclone;
                     skip = 0;
-                    if (node.nodeType == 3 && (typeof word.hideParent !== 'undefined' || node.parentNode.nodeName.toUpperCase() == "BODY" || node.parentNode.offsetParent || (node.parentNode.scrollHeight && node.parentNode.scrollWidth))) {
+                    let pa = node.parentNode;
+                    if (node.nodeType == 3 && (typeof word.hideParent !== 'undefined' || /^BODY$/i.test(pa.nodeName) || pa.offsetParent || (pa.scrollHeight && pa.scrollWidth))) {
                         if (word.isRe) {
                             let wordMatch = node.data.match(new RegExp(word.content, word.reCase));
                             if (wordMatch) {
@@ -3998,7 +4003,7 @@
                             let top = getElementTop(spannode);
                             navMark.dataset.top = top;
                             navMark.dataset.content = word.content;
-                            navMark.style.top = top / document.documentElement.scrollHeight * 100 + "vh";
+                            navMark.style.top = top / document.documentElement.scrollHeight * 100 + "%";
                             navMark.style.background = spannode.style.background || "yellow";
                             navMark.addEventListener("click", e => {
                                 e.stopPropagation();
@@ -4006,8 +4011,8 @@
                                 self.focusIndex = index;
                                 self.focusHighlight(spannode);
                                 self.setHighlightSpan(self.getHighlightSpanByText(word.content), index, curList.length);
-                                self.navMarks.appendChild(self.navPointer);
-                                self.navPointer.style.top = navMark.style.top;
+                                self.navPointer.style.display = "";
+                                self.navPointer.style.top = navMark.offsetTop + 16 + "px";
                                 return false;
                             }, true);
                             self.navMarks.appendChild(navMark);
@@ -4077,9 +4082,12 @@
             refreshNavMarks() {
                 if (this.refreshNavMarksTimer) clearTimeout(this.refreshNavMarksTimer);
                 this.refreshNavMarksTimer = setTimeout(() => {
-                    [].forEach.call(this.navMarks.querySelectorAll("span"), m => {
-                        m.style.top = m.dataset.top / document.documentElement.scrollHeight * 100 + "vh";
+                    this.navPointer.style.display = "none";
+                    this.navMarks.style.display = "none";
+                    [].forEach.call(this.navMarks.children, m => {
+                        m.style.top = m.dataset.top / document.documentElement.scrollHeight * 100 + "%";
                     });
+                    this.navMarks.style.display = "";
                 }, 500);
             }
 
@@ -4405,7 +4413,7 @@
                 } else {
                     this.locBtn.classList.remove("checked");
                     this.searchJumperNavBar.style.display = "none";
-                    if (this.navPointer.parentNode) this.navPointer.parentNode.removeChild(this.navPointer);
+                    this.navPointer.style.display = "none";
                 }
             }
 
@@ -4444,9 +4452,6 @@
                 this.highlightSpans = {};
                 this.curHighlightWords = [];
                 this.curWordIndex = 0;
-                this.navPointer = document.createElement("div");
-                this.navPointer.className = "navPointer";
-                this.navPointer.innerHTML = createHTML(">");
                 let editFunc = () => {
                     this.searchJumperInPageInput.focus();
                     this.highlight("");
