@@ -3056,6 +3056,11 @@
                          .customInputFrame-body #customGroup {
                              max-height: 50vh;
                              overflow: auto;
+                             scrollbar-width: none;
+                         }
+                         .customInputFrame-body #customGroup::-webkit-scrollbar {
+                             width: 0 !important;
+                             height: 0 !important;
                          }
                          .customInputFrame-title {
                              background: #458bd1!important;
@@ -3155,7 +3160,7 @@
                              z-index: 10;
                              width: auto;
                              max-width: 35%;
-                             margin-left: 275px;
+                             margin-left: 287px;
                              margin-top: -10px;
                              position: fixed;
                          }
