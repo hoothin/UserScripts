@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.57.64
+// @version      1.6.6.58.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -1338,8 +1338,8 @@
                      -khtml-user-select: none;
                      -ms-user-select: none;
                      position: fixed;
-                     width: 50%;
-                     left: 25%;
+                     width: 80%;
+                     left: 10%;
                      top: 1%;
                      border-radius: 10px;
                      pointer-events: all;
@@ -1400,7 +1400,7 @@
                  #search-jumper-alllist>.search-jumper-btn {
                      position: fixed;
                      top: 1%;
-                     right: 25%;
+                     right: 10%;
                      filter: drop-shadow(1px 1px 3px #00000060);
                      cursor: pointer;
                      pointer-events: all;
@@ -1435,6 +1435,8 @@
                      display: flex;
                      position: fixed;
                      width: 100%;
+                     max-width: 100%;
+                     overflow: auto;
                      justify-content: center;
                      left: 0;
                      top: 60px;
@@ -2061,11 +2063,11 @@
                  }
                  .search-jumper-searchBar>.search-jumper-type {
                      padding: 0px;
-                     ${searchData.prefConfig.minSizeMode ? 'display: none;' : ''}
                  }
                  .search-jumper-searchBar>.search-jumper-type:not(.search-jumper-open) {
                      background: unset;
                      border-radius: unset!important;
+                     ${searchData.prefConfig.minSizeMode ? 'display: none;' : ''}
                  }
                  .search-jumper-searchBar:hover>.search-jumper-type {
                      ${searchData.prefConfig.minSizeMode ? 'display: inline-flex;' : ''}
@@ -2724,24 +2726,28 @@
                     }, false);
                 }
 
+                this.touched = true;
                 if (searchData.prefConfig.initShow) {
                     bar.classList.add("initShow");
                 } else {
-                    let touched = false;
+                    this.touched = false;
+                }
+                if (isMobile) {
                     let touchBodyHandler = e => {
-                        touched = false;
-                        getBody(document).removeEventListener('touchstart', touchBodyHandler, { passive: true, capture: false });
+                        this.touched = false;
+                        bar.classList.remove("initShow");
                     };
                     let touchHandler = e => {
-                        if (touched) return;
-                        touched = true;
+                        if (this.touched) return;
+                        this.touched = true;
                         bar.classList.add('disable-pointer');
+                        e.stopPropagation();
                         setTimeout(() => {
                             bar.classList.remove('disable-pointer');
                         }, 250);
-                        getBody(document).addEventListener("touchstart", touchBodyHandler, { passive: true, capture: false });
                     };
-                    bar.addEventListener('touchstart', touchHandler, { passive: true, capture: true });
+                    getBody(document).addEventListener("touchstart", touchBodyHandler, { passive: true, capture: false });
+                    bar.addEventListener('touchstart', touchHandler, { passive: false, capture: true });
                 }
 
                 this.bar = bar;
@@ -4157,8 +4163,17 @@
                 this.historySiteBtns.slice(0, 10).forEach(btn => {
                     this.siteBtnReturnHome(btn);
                 });
-                this.bar.style.display = "";
-                this.initPos();
+                this.touched = false;
+                if (currentSite && !currentSite.hideNotMatch) {
+                    this.initPos();
+                    let firstType = this.bar.querySelector('.search-jumper-type:nth-child(1)>span');
+                    if (firstType && !firstType.classList.contains("search-jumper-open")) {
+                        firstType.onmousedown();
+                    }
+                    this.bar.style.display = ''
+                } else {
+                    this.bar.style.display = 'none';
+                }
             }
 
             showAllSites() {
@@ -4980,6 +4995,7 @@
             waitForHide(delay) {
                 let self = this;
                 if (this.bar.classList.contains("grabbing")) return;
+                this.touched = false;
                 var hideHandler = () => {
                     //self.bar.classList.remove("search-jumper-isInPage");
                     self.bar.classList.remove("search-jumper-isTargetImg");
