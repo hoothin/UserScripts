@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.35.23
+// @version      1.9.36.1
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1471,7 +1471,7 @@
                         let h = self.getValidHeight(curNode);
                         let w = curNode.scrollWidth;
                         if (isNaN(h) || isNaN(w)) continue;
-                        isHori = preOffsetTop == curNode.offsetTop ? true : (preOffsetTop == -1 ? (curNode.nextElementSibling && curNode.nextElementSibling.offsetTop == curNode.offsetTop) : false);
+                        isHori = preOffsetTop == curNode.offsetTop ? true : (preOffsetTop == -1 && curNode.nextElementSibling && curNode.nextElementSibling.offsetTop == curNode.offsetTop);
                         if (isHori && h <= 50) continue;
                         let a = h * w, moreChild = curNode.children[0];
                         while (moreChild) {
@@ -1505,11 +1505,10 @@
                                 if (curMaxEle && w < minWidth) {
                                     continue;
                                 }
-                            } else {
-                                if (h < minHeight) {
-                                    if (!needCheckNext || h < windowHeight || !ele.contains(self.initNext)) {
-                                        continue;
-                                    }
+                            }
+                            if (h < minHeight) {
+                                if (!needCheckNext || h < windowHeight || !ele.contains(self.initNext)) {
+                                    continue;
                                 }
                             }
                             curHeight = h;
@@ -2703,8 +2702,11 @@
                     storage.setItem("hpRules", self.hpRules);
                 }
                 let css = self.curSiteRule.css || rulesData.customCss;
-                if (css && !/^inIframe:/.test(css)) {
-                    _GM_addStyle(css);
+                if (css) {
+                    let cssArr = css.split("inIframe:");
+                    if (cssArr && cssArr.length) {
+                        _GM_addStyle(cssArr[0]);
+                    }
                 }
                 if (typeof self.curSiteRule.openInNewTab !== 'undefined') {
                     openInNewTab = self.curSiteRule.openInNewTab ? 1 : 2;
@@ -6634,10 +6636,12 @@
             }
             let css = ruleParser.curSiteRule.css || rulesData.customCss;
             if (css) {
-                css = css.replace(/^inIframe:/, "");
-                let styleEle=iframeDoc.createElement("style");
-                styleEle.innerHTML=css;
-                iframeDoc.head.appendChild(styleEle);
+                let cssArr = css.split("inIframe:");
+                if (cssArr && cssArr.length > 1) {
+                    let styleEle = iframeDoc.createElement("style");
+                    styleEle.innerHTML = cssArr[1];
+                    iframeDoc.head.appendChild(styleEle);
+                }
             }
             loadedHandler();
             let code = ruleParser.curSiteRule.init;
