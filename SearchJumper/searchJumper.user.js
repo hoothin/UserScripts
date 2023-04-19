@@ -3160,7 +3160,7 @@
                              z-index: 10;
                              width: auto;
                              max-width: 35%;
-                             margin-left: 287px;
+                             right: calc(50% - 147px);
                              margin-top: -10px;
                              position: fixed;
                          }
@@ -3357,7 +3357,7 @@
                             });
                             paramSelect.addEventListener("mouseenter", e => {
                                 paramSelect.focus();
-                                options.style.marginTop = - this.customGroup.scrollTop - 10 + "px";
+                                options.style.marginTop = - this.customGroup.scrollTop + 20 + "px";
                             });
                             this.customGroup.appendChild(paramSelect);
                         }
@@ -6238,8 +6238,8 @@
                 let self = this;
                 self.batchOpening = true;
                 self.customInput = false;
-                let targetSites = self.getTargetSitesByName(siteNames);
                 if (e.button === 0 && e.altKey && e.shiftKey) {
+                    let targetSites = self.getTargetSitesByName(siteNames);
                     let html = '<title>SearchJumper Multi</title><style>body{background: black; margin: 0;}iframe{box-sizing: border-box;padding: 5px}</style>';
                     let c = window.open("", "_blank");
                     for (let i = 0;i < targetSites.length;i++) {
@@ -6295,6 +6295,7 @@
                     c.document.write(html);
                     c.document.close();
                 } else if ((e.ctrlKey || e.metaKey) && e.shiftKey) {
+                    let targetSites = self.getTargetSitesByName(siteNames);
                     for (let i = 0;i < targetSites.length;i++) {
                         let siteEle = targetSites[i];
                         let mouseDownEvent = new PointerEvent("mousedown");
@@ -6314,6 +6315,7 @@
                         }
                     }
                 } else if (e.altKey) {
+                    let targetSites = self.getTargetSitesByName(siteNames);
                     let urls=[];
                     for (let i = 0;i < targetSites.length;i++) {
                         let siteEle = targetSites[i];
@@ -6336,6 +6338,7 @@
                         window.open(urls[i] + "#searchJumperMin", "_blank", `width=${_width-10}, height=${_height}, location=0, resizable=1, status=0, toolbar=0, menubar=0, scrollbars=0, left=${left}, top=${top}`);
                     }
                 } else if (e.shiftKey) {
+                    let targetSites = self.getTargetSitesByName(siteNames);
                     for (let i = 0;i < targetSites.length;i++) {
                         let siteEle = targetSites[i];
                         let mouseDownEvent = new PointerEvent("mousedown");
@@ -6355,6 +6358,7 @@
                         }
                     }
                 } else if (e.ctrlKey || e.metaKey) {
+                    let targetSites = self.getTargetSitesByName(siteNames);
                     for (let i = 0;i < targetSites.length;i++) {
                         let siteEle = targetSites[i];
                         let isPage = siteEle.dataset.isPage;
@@ -6370,6 +6374,7 @@
                         }
                     }
                 } else if (e.button === 2) {
+                    let targetSites = self.getTargetSitesByName(siteNames);
                     targetSites.forEach(siteEle => {
                         if (siteEle.dataset.current) return;
                         self.openSiteBtn(siteEle);
