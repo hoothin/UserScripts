@@ -6743,7 +6743,7 @@
                             str = str.replace(replaceMatch[0], key);
                             return customReplaceSingle(str, key, value, after);
                         } else {
-                            return str.replace(keyToReg(key, "g"), (after ? after(value) : value));
+                            return str.replace(keyToReg(key, "g"), (after ? after(value.replace(/\$/g, "$$$$")) : value.replace(/\$/g, "$$$$")));
                         }
                     };
                     let needDecode = (/^c(opy)?:|[#:%]P{|^javascript:/i.test(data.url));
