@@ -6728,10 +6728,10 @@
                 }
             }, 1);
         }
-        loadingDiv.style.display = "none";
+        loadingDiv.style.visibility = "hidden";
         setTimeout(() => {stopScroll = false}, 300);
         setTimeout(() => {
-            loadingDiv.style.display = "";
+            loadingDiv.style.visibility = "visible";
             if (loadingDiv.parentNode && !isLoading) {
                 loadingDiv.parentNode.removeChild(loadingDiv);
             }
