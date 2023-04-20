@@ -1147,11 +1147,10 @@
                     window.localStorage.setItem(key, value);
                 }
             },
-            getItem: function (key, cb) {
+            getItem: async function (key, cb) {
                 var value;
                 if (this.supportGMPromise) {
-                    value = GM.getValue(key).then(v=>{cb(v)});
-                    return;
+                    value = await GM.getValue(key);
                 } else if (this.supportGM) {
                     value = GM_getValue(key);
                 } else if (this.operaUJSStorage) {
@@ -1161,7 +1160,8 @@
                 } else if (window.localStorage) {
                     value = window.localStorage.getItem(key);
                 };
-                cb(value);
+                if(cb) cb(value);
+                return value;
             }
         };
         var escapeHTMLPolicy;
