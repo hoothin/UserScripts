@@ -7279,7 +7279,9 @@
                                 tipsData = tipsResult[1];
                                 tipsResult = tipsResult[0];
                             }
-                            tips += "<br/>" + tipsResult;
+                            if (tipsResult) {
+                                tips += "<br/>" + tipsResult;
+                            }
                         } catch(e) {debug(e)}
                         self.tipsPos(ele, tips);
                     } else self.tipsPos(ele, ele.dataset.name);
