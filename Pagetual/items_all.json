@@ -1,5 +1,20 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86106",
+  "data": {
+    "insertBefore": "",
+    "pageElement": "//div[contains(concat(' ',@class,' '),' content-area ')]/p[@class='contents']",
+    "nextLink": "//div[@class='pagenation']//span[number(.)>0]/following-sibling::a",
+    "url": "^https://www\\.athome\\.co\\.jp/vox/award/",
+    "exampleUrl": "https://www.athome.co.jp/vox/award/6/neighbors/59/2/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "t_f_m'",
+  "name": "at HOME AWARD",
+  "created_at": "2023-04-19T13:23:16+09:00",
+  "updated_at": "2023-04-19T13:23:16+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86104",
   "data": {
     "pageElement": "id('listB')",
