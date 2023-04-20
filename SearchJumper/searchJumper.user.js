@@ -2639,11 +2639,11 @@
                      }
 
                      .search-jumper-tips {
-                         background-color: #3F4042 !important;
+                         background-color: #3F4042;
+                         color: #DADADA;
                      }
 
-                     .search-jumper-showall a.search-jumper-word > span,
-                     .search-jumper-tips {
+                     .search-jumper-showall a.search-jumper-word > span {
                          color: #DADADA !important;
                      }
 
@@ -5871,7 +5871,7 @@
             }
 
             tipsPos(ele, type) {
-                this.tips.innerText = type;
+                this.tips.innerHTML = createHTML(type);
                 this.tips.style.opacity = 1;
                 this.clingPos(ele, this.tips);
             }
@@ -7268,7 +7268,7 @@
                         let tips = ele.dataset.name;
                         self.tipsPos(ele, tips);
                         try {
-                            tips += "\n" + await new AsyncFunction('fetch', 'storage', '"use strict";'+ url.replace(/^javascript:/, ''))(GM_fetch, storage);
+                            tips += "<br/>" + await new AsyncFunction('fetch', 'storage', '"use strict";'+ url.replace(/^javascript:/, ''))(GM_fetch, storage);
                         } catch(e) {debug(e)}
                         self.tipsPos(ele, tips);
                     } else self.tipsPos(ele, ele.dataset.name);
