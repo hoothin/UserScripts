@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.58.64
+// @version      1.6.6.59.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -1020,14 +1020,49 @@
         };
         var disabled = false;
 
-        var _GM_xmlhttpRequest, _GM_registerMenuCommand, _GM_notification, _GM_setClipboard, _GM_openInTab, _GM_addStyle, _GM_info;
+        var _GM_xmlhttpRequest, _GM_registerMenuCommand, _GM_notification, _GM_setClipboard, _GM_openInTab, _GM_addStyle, _GM_info, GM_fetch;
         if (typeof GM_xmlhttpRequest != 'undefined') {
             _GM_xmlhttpRequest = GM_xmlhttpRequest;
+            GM_fetch = true;
         } else if (typeof GM != 'undefined' && typeof GM.xmlHttpRequest != 'undefined') {
             _GM_xmlhttpRequest = GM.xmlHttpRequest;
+            GM_fetch = true;
         } else {
             _GM_xmlhttpRequest = (f) => {fetch(f.url).then(response => response.text()).then(data => {let res = {response: data};f.onload(res)}).catch(f.onerror())};
         }
+        if (GM_fetch) {
+            GM_fetch = async (url, option) => {
+                if (!url) return null;
+                return new Promise((resolve) => {
+                    _GM_xmlhttpRequest({
+                        method: (option && option.method) || 'GET',
+                        url: url,
+                        data: (option && option.body) || '',
+                        headers: (option && option.headers) || {
+                            referer: url,
+                            origin: url
+                        },
+                        onload: function(d) {
+                            let response = d.response;
+                            if (d.status >= 400 || !response) response = "";
+                            let text = () => new Promise((r) => {
+                                r(response);
+                            });
+                            let json = () => new Promise((r) => {
+                                r(JSON.parse(response));
+                            });
+                            resolve({text: text, json: json});
+                        },
+                        onerror: function(e){
+                            resolve(e);
+                        },
+                        ontimeout: function(e){
+                            resolve(e);
+                        }
+                    });
+                });
+            }
+        } else GM_fetch = fetch;
         if (typeof GM_registerMenuCommand != 'undefined') {
             _GM_registerMenuCommand = GM_registerMenuCommand;
         } else if (typeof GM != 'undefined' && typeof GM.registerMenuCommand != 'undefined') {
@@ -5004,6 +5039,7 @@
                     self.bar.classList.remove("search-jumper-isTargetLink");
                     //self.bar.classList.remove("search-jumper-isTargetPage");
                     self.bar.classList.remove("initShow");
+                    self.tips.style.opacity = 0;
                     //self.recoveHistory();
                     if (self.funcKeyCall) {
                         self.setFuncKeyCall(false);
@@ -6486,6 +6522,7 @@
                 ele.setAttribute("ref", "noopener noreferrer");
                 let name = data.name;
                 let urlMatch = data.match;
+                let showTips = false;
                 let pointer = !isBookmark && /^\[/.test(data.url);
                 if (pointer) {
                     ele.dataset.pointer = true;
@@ -6510,6 +6547,10 @@
                 } else if (/^d:/.test(data.url)) {
                     ele.setAttribute('download', '');
                     data.url = data.url.replace(/^d:/, '');
+                } else if (/^showTips:/.test(data.url)) {
+                    showTips = true;
+                    ele.dataset.showTips = true;
+                    data.url = data.url.replace(/^showTips:/, 'javascript:');
                 }
                 if (typeof data.openInNewTab !== 'undefined') {
                     openInNewTab = data.openInNewTab;
@@ -6955,6 +6996,7 @@
                     return resultUrl;
                 };
                 let action = e => {
+                    if (showTips) return;
                     if (!self.batchOpening && !isBookmark) {
                         let historyLength = Math.max(searchData.prefConfig.historyLength, 20);
                         let isCurrent = ele.dataset.current;
@@ -7220,8 +7262,16 @@
                 //ele.href = data.url;
                 ele.addEventListener('mousedown', action, false);
 
-                ele.addEventListener('mouseenter', e => {
-                    self.tipsPos(ele, ele.dataset.name);
+                ele.addEventListener('mouseenter', async e => {
+                    if (showTips) {
+                        let url = getUrl();
+                        let tips = ele.dataset.name;
+                        self.tipsPos(ele, tips);
+                        try {
+                            tips += "\n" + await new AsyncFunction('fetch', 'storage', '"use strict";'+ url.replace(/^javascript:/, ''))(GM_fetch, storage);
+                        } catch(e) {debug(e)}
+                        self.tipsPos(ele, tips);
+                    } else self.tipsPos(ele, ele.dataset.name);
                 }, false);
                 ele.addEventListener('mouseleave', e => {
                     self.tips.style.opacity = 0;
