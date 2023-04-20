@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.36.1
+// @version      1.9.36.2
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -745,7 +745,7 @@
     const allOfBody = "body>*";
     const mainSel = "article,.article,[role=main],main,.main,#main";
     const nextTextReg1 = new RegExp("\u005e\u7ffb\u003f\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u9875\u9801\u5f20\u5f35\u005d\u007c\u005e\u0028\u006e\u0065\u0078\u0074\u005b\u0020\u005f\u002d\u005d\u003f\u0070\u0061\u0067\u0065\u007c\u006f\u006c\u0064\u0065\u0072\u0029\u005c\u0073\u002a\u005b\u203a\u003e\u2192\u00bb\u005d\u003f\u0024\u007c\u6b21\u306e\u30da\u30fc\u30b8\u007c\u005e\u6b21\u3078\u003f\u0024\u007cВперед", "i");
-    const nextTextReg2 = new RegExp("\u005e\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u7ae0\u8bdd\u8a71\u8282\u7bc0\u4e2a\u500b\u5e45\u005d", "i");
+    const nextTextReg2 = new RegExp("\u005e\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u7ae0\u8bdd\u8a71\u8282\u7bc0\u4e2a\u500b\u5e45\u005d\u0028\u005b\u003a\uff1a\u005c\u002d\u005f\u2014\u0020\u005c\u002e\u3002\u003e\u0023\u00b7\u005c\u005b\u3010\u3001\uff08\u005c\u0028\u002f\u002c\uff0c\uff1b\u003b\u005d\u007c\u0024\u0029", "i");
     const lazyImgAttr = ["data-lazy-src", "data-lazy", "data-url", "data-orig-file", "zoomfile", "file", "original", "load-src", "imgsrc", "real_src", "src2", "origin-src", "data-lazyload", "data-lazyload-src", "data-lazy-load-src", "data-ks-lazyload", "data-ks-lazyload-custom", "data-src", "data-defer-src", "data-actualsrc", "data-cover", "data-original", "data-thumb", "data-imageurl", "data-placeholder", "lazysrc"];
     _GM_registerMenuCommand(i18n("configure"), () => {
         _GM_openInTab(rulesData.configPage || configPage[0], {active: true});
@@ -1911,14 +1911,16 @@
                 let aTags = body.querySelectorAll("a,button,[type='button']");
                 for (i = aTags.length - 1; i >= 0; i--) {
                     if (next1) break;
-                    if (i % 500 == 0) {
+                    if (i % 300 == 0) {
                         await sleep(1);
                     }
                     let aTag = aTags[i];
                     if (aTag.style.display == "none") continue;
-                    if (aTag.innerText) {
-                        if (aTag.innerText.trim().length > 80) continue;
-                        if (aTag.innerText == "§") continue;
+                    let innerText = (aTag.innerText || aTag.value || aTag.title || '');
+                    if (innerText) {
+                        if (innerText == "§") continue;
+                        innerText = innerText.trim();
+                        if (innerText.length > 80) continue;
                     }
                     let availableHref = aTag.href && aTag.href.length < 250 && /^http/.test(aTag.href);
                     if (availableHref && /next$/i.test(aTag.href)) continue;
@@ -1934,9 +1936,8 @@
                         if (/^BLOCKQUOTE$/i.test(aTag.parentNode.nodeName)) continue;
                     }
                     let isJs = !aTag.href || /^(javascript|#)/.test(aTag.href.replace(location.href, ""));
-                    let innerText = (aTag.innerText || aTag.value || aTag.title || '');
-                    if (innerText && innerText.length < 250) {
-                        innerText = innerText.trim().replace(/\n.*/, '').replace(/ /g, '');
+                    if (innerText) {
+                        innerText = innerText.split(/\n/)[0].replace(/ /g, '');
                         if (isJs && /^(»|>>|>|›|→|❯)$/.test(innerText)) continue;
                         if (innerText && innerText.length <= 25) {
                             if (!next1) {
@@ -2341,6 +2342,7 @@
             } else {
                 this.nextLinkHref = false;
             }
+            this.nextLinkEle = nextLink;
             this.preload();
             return nextLink;
         }
@@ -2738,6 +2740,18 @@
                 let initRun = typeof self.curSiteRule.initRun == 'undefined' ? rulesData.initRun : self.curSiteRule.initRun;
                 if (initRun && initRun != false && self.nextLinkHref) nextPage();
             });
+        }
+
+        beginLoading() {
+            isLoading = true;
+            ruleParser.insertElement(loadingDiv);
+            let parent = loadingDiv.parentNode;
+            if (/^TBODY$/i.test(parent.nodeName)) {
+                parent = parent.parentNode;
+            }
+            if (/^TABLE$/i.test(parent.nodeName)) {
+                parent.parentNode.appendChild(loadingDiv);
+            }
         }
 
         insertElement(ele) {
@@ -5523,7 +5537,8 @@
             if (!nextLink) return;
             let isJs = /^(javascript|#)/.test(nextLink.replace(location.href, ""));
             if (isJs) {
-                let nextBtn = await ruleParser.getNextLink(document);
+                let nextBtn = ruleParser.nextLinkEle;
+                if (!nextBtn || !nextBtn.offsetParent) nextBtn = await ruleParser.getNextLink(document);
                 if (nextBtn) emuClick(nextBtn);
             } else {
                 window.location.href = nextLink;
@@ -6298,9 +6313,9 @@
                     }, waitTime);
                     return;
                 } else {
-                    nextLink = await ruleParser.getNextLink(iframeDoc);
-                    pageEle = ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView, true);
-                    if (!pageEle || pageEle.length==0 || !nextLink) {
+                    if (!nextLink || !nextLink.offsetParent) nextLink = await ruleParser.getNextLink(iframeDoc);
+                    if (nextLink) pageEle = ruleParser.getPageElement(iframeDoc, iframeDoc.defaultView, true);
+                    if (!pageEle || pageEle.length == 0 || !nextLink) {
                         if (waitTimes-- > 0) {
                             setTimeout(() => {
                                 checkPage();
@@ -6713,9 +6728,11 @@
                 }
             }, 1);
         }
+        loadingDiv.style.display = "none";
         setTimeout(() => {stopScroll = false}, 300);
         setTimeout(() => {
-            if(loadingDiv.parentNode && !isLoading){
+            loadingDiv.style.display = "";
+            if (loadingDiv.parentNode && !isLoading) {
                 loadingDiv.parentNode.removeChild(loadingDiv);
             }
         }, 0);
@@ -6752,7 +6769,7 @@
                 nextLink = ruleParser.nextLinkHref;
             }
             if (!nextLink) {
-                if (curPage == 1 && (ruleParser.curSiteRule.pinUrl || tryTimes++ <= 10)) {
+                if (curPage == 1 && (ruleParser.curSiteRule.pinUrl || tryTimes++ <= 5)) {
                     setTimeout(() => {isLoading = false}, 500);
                 }
                 return;
@@ -6779,18 +6796,8 @@
                     nextLink = nextLink.replace(/^http/, "https");
                 }
             }
-            isLoading = true;
-            ruleParser.insertElement(loadingDiv);
-            let parent = loadingDiv.parentNode;
-            if (/^TBODY$/i.test(parent.nodeName)) {
-                parent = parent.parentNode;
-            }
-            if (/^TABLE$/i.test(parent.nodeName)) {
-                parent.parentNode.appendChild(loadingDiv);
-            }
-            loadingDiv.style.cssText = loadingCSS;
-            if (curPage == 1 && isJs && ruleParser.curSiteRule.singleUrl) {
-                loadingDiv.style.display = "none";
+            if (curPage != 1 || !isJs || !ruleParser.curSiteRule.singleUrl) {
+                ruleParser.beginLoading(loadingDiv);
             }
             let sleep = ruleParser.curSiteRule.sleep || 0;
             setTimeout(() => {
