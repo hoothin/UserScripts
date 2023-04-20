@@ -6550,7 +6550,6 @@
                 } else if (/^showTips:/.test(data.url)) {
                     showTips = true;
                     ele.dataset.showTips = true;
-                    data.url = data.url.replace(/^showTips:/, 'javascript:');
                 }
                 if (typeof data.openInNewTab !== 'undefined') {
                     openInNewTab = data.openInNewTab;
@@ -6650,7 +6649,7 @@
                                         ele.dataset.current = true;
                                     }
                                 }
-                            } else if (data.url.indexOf("javascript") !== 0 && data.url.indexOf("?") === -1) {
+                            } else if (data.url.indexOf("http") === 0 && data.url.indexOf("?") === -1) {
                                 if (!this.keywordMatch) this.keywordMatch = /%[stb][a-z]?\b/g;
                                 if (new RegExp(data.url.replace(/^https?/, "").replace(/[#%]\w+{.*/, "").replace(/\./g, "\\.").replace(this.keywordMatch, ".*")).test(location.href)) {
                                     ele.dataset.current = true;
@@ -6746,7 +6745,7 @@
                             return str.replace(keyToReg(key, "g"), (after ? after(value.replace(/\$/g, "$$$$")) : value.replace(/\$/g, "$$$$")));
                         }
                     };
-                    let needDecode = (/^c(opy)?:|[#:%]P{|^javascript:/i.test(data.url));
+                    let needDecode = (/^c(opy)?:|[#:%]P{|^javascript:|^showTips:/i.test(data.url));
                     let keywordsU, keywordsL, keywordsR;
                     let customReplaceKeywords = str => {
                         let _str = str;
@@ -7268,7 +7267,7 @@
                         let tips = ele.dataset.name;
                         self.tipsPos(ele, tips);
                         try {
-                            tips += "<br/>" + await new AsyncFunction('fetch', 'storage', '"use strict";'+ url.replace(/^javascript:/, ''))(GM_fetch, storage);
+                            tips += "<br/>" + await new AsyncFunction('fetch', 'storage', '"use strict";'+ url.replace(/^showTips:/, ''))(GM_fetch, storage);
                         } catch(e) {debug(e)}
                         self.tipsPos(ele, tips);
                     } else self.tipsPos(ele, ele.dataset.name);
