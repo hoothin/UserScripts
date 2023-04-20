@@ -2773,6 +2773,7 @@
             let oldTitle = this.pageDoc.title;
             this.pageDoc = doc;
             this.curUrl = url;
+            let curScroll = getBody(document).scrollTop || document.documentElement.scrollTop;
             let nextLink = await this.getNextLink(doc);
             this.nextTitle = "";
             if (this.curSiteRule.pageBarText) {
@@ -2791,7 +2792,6 @@
                 this.curUrl = location.href;
                 return false;
             }
-            let curScroll = getBody(document).scrollTop || document.documentElement.scrollTop;
             if (callback) callback(eles);
             this.getInsert();
             var self = this, newEles = [];
@@ -6702,12 +6702,15 @@
         document.addEventListener("scroll", forceRefresh);
         curIframe.src = url;
         let insert = ruleParser.getInsert();
+        let curScroll = getBody(document).scrollTop || document.documentElement.scrollTop;
         if (ruleParser.curSiteRule.singleUrl || forceState == 2) {
             getBody(document).appendChild(loadingDiv);
             getBody(document).appendChild(curIframe);
         } else {
             ruleParser.insertElement(curIframe);
         }
+        getBody(document).scrollTop = curScroll;
+        document.documentElement.scrollTop = curScroll;
 
         if (!scrollToResizeInited) {
             scrollToResizeInited = true;
