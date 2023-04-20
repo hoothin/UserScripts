@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.59.64
+// @version      1.6.6.60.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -6523,6 +6523,7 @@
                 let name = data.name;
                 let urlMatch = data.match;
                 let showTips = false;
+                let tipsData;
                 let pointer = !isBookmark && /^\[/.test(data.url);
                 if (pointer) {
                     ele.dataset.pointer = true;
@@ -6995,7 +6996,12 @@
                     return resultUrl;
                 };
                 let action = e => {
-                    if (showTips) return;
+                    if (showTips) {
+                        if (tipsData) {
+                            _GM_setClipboard(tipsData);
+                        }
+                        return;
+                    }
                     if (!self.batchOpening && !isBookmark) {
                         let historyLength = Math.max(searchData.prefConfig.historyLength, 20);
                         let isCurrent = ele.dataset.current;
@@ -7262,12 +7268,18 @@
                 ele.addEventListener('mousedown', action, false);
 
                 ele.addEventListener('mouseenter', async e => {
+                    tipsData = null;
                     if (showTips) {
                         let url = getUrl();
                         let tips = ele.dataset.name;
                         self.tipsPos(ele, tips);
                         try {
-                            tips += "<br/>" + await new AsyncFunction('fetch', 'storage', '"use strict";'+ url.replace(/^showTips:/, ''))(GM_fetch, storage);
+                            let tipsResult = await new AsyncFunction('fetch', 'storage', '"use strict";'+ url.replace(/^showTips:/, ''))(GM_fetch, storage);
+                            if (Array && Array.isArray && Array.isArray(tipsResult)) {
+                                tipsData = tipsResult[1];
+                                tipsResult = tipsResult[0];
+                            }
+                            tips += "<br/>" + tipsResult;
                         } catch(e) {debug(e)}
                         self.tipsPos(ele, tips);
                     } else self.tipsPos(ele, ele.dataset.name);
