@@ -542,7 +542,25 @@ var siteInfo = [
  r: [/wallpapers\/thumb\/small\/th(.*)\./i,
     /th\.wallhaven\.cc\/(small|lg)\/(.*)?\/(.*)\..*/i],
  s: [["wallpapers/full/wallhaven$1.jpg","wallpapers/full/wallhaven$1.png"],
-     ["w.wallhaven.cc/full/$2/wallhaven-$3.jpg","w.wallhaven.cc/full/$2/wallhaven-$3.png"]]
+     ["w.wallhaven.cc/full/$2/wallhaven-$3.jpg","w.wallhaven.cc/full/$2/wallhaven-$3.png"]],
+ getImage() {
+    let srcReg1 = /wallpapers\/thumb\/small\/th(.*)\./i;
+    let srcReg2 = /th\.wallhaven\.cc\/(small|lg)\/(.*)?\/(.*)\..*/i;
+    let res1 = "wallpapers/full/wallhaven$1.";
+    let res2 = "w.wallhaven.cc/full/$2/wallhaven-$3.";
+    let png, ne;
+    if (this.nextElementSibling && this.nextElementSibling.nextElementSibling) {
+        ne = this.nextElementSibling.nextElementSibling;
+        if (ne.className != "thumb-info") ne = null;
+        else png = !!ne.querySelector('.png');
+    }
+    if (srcReg1.test(this.src)) {
+        return ne ? this.src.replace(srcReg1, res1 + (png ? "png" : "jpg")) : [this.src.replace(srcReg1, res1 + "jpg"), this.src.replace(srcReg1, res1 + "png")];
+    }
+    if (srcReg2.test(this.src)) {
+        return ne ? this.src.replace(srcReg2, res2 + (png ? "png" : "jpg")) : [this.src.replace(srcReg2, res2 + "jpg"), this.src.replace(srcReg2, res2 + "png")];
+    }
+ }
 },
 {
  name: "lofter",
