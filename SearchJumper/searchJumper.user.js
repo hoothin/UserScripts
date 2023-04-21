@@ -8248,7 +8248,17 @@
         }
 
         function getSelectStr() {
-            let selStr = Picker.getInstance().getPickerStr() || window.getSelection().toString();
+            let selStr = Picker.getInstance().getPickerStr();
+            if (!selStr) {
+                let tar = document.activeElement;
+                if (tar && /^(TEXTAREA|INPUT)$/i.test(tar.nodeName)) {
+                    let start = tar.selectionStart;
+                    var finish = tar.selectionEnd;
+                    selStr = tar.value.substring(start, finish);
+                } else {
+                    selStr = window.getSelection().toString();
+                }
+            }
             if (selStr) {
                 selStr = selStr.trim();
                 if (selStr) {
