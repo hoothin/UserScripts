@@ -8094,7 +8094,7 @@
             return form.submit();
         }
 
-        function dataURLtoFile(dataurl, filename = "image.png") {
+        function dataURLtoFile(dataurl) {
             try {
                 var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
                     bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
@@ -8102,7 +8102,9 @@
                     u8arr[n] = bstr.charCodeAt(n);
                 }
             } catch(e) { debug(e); }
-            return new File([u8arr], filename, {type: mime});
+            let ext = mime.split("/");
+            ext = ext.length > 1 ? ext[1] : ext[0];
+            return new File([u8arr], "image." + ext, {type: mime});
         }
 
         async function image2Base64(img) {
