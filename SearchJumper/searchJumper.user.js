@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.61.64
+// @version      1.6.6.62.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -4387,22 +4387,19 @@
                 }
             }
 
-            searchBySiteName(siteName, e) {
-                for (let i = 0; i < this.allSiteBtns.length; i++) {
-                    let siteBtn = this.allSiteBtns[i][0];
+            async searchBySiteName(siteName, e) {
+                for (let siteBtn of this.allSiteBtns) {
+                    let siteBtn = siteBtn[0];
                     if (siteBtn.dataset.name == siteName) {
-                        let mouseDownEvent = new PointerEvent("mousedown", {altKey: e.altKey, ctrlKey: e.ctrlKey, shiftKey: e.shiftKey, metaKey: e.metaKey})
-                        siteBtn.dispatchEvent(mouseDownEvent);
+                        await this.siteSetUrl(siteBtn, {altKey: e.altKey, ctrlKey: e.ctrlKey, shiftKey: e.shiftKey, metaKey: e.metaKey});
                         let isPage = /^(https?|ftp):/.test(siteBtn.href);
                         if (isPage) {
                             siteBtn.setAttribute("target", "_blank");
                         }
-                        if (!this.customInput) {
-                            if (siteBtn.onclick || !isPage) {
-                                siteBtn.click();
-                            } else {
-                                _GM_openInTab(siteBtn.href, {active: true});
-                            }
+                        if (!isPage) {
+                            siteBtn.click();
+                        } else {
+                            _GM_openInTab(siteBtn.href, {active: true});
                         }
                         if (isPage) {
                             siteBtn.setAttribute("target", siteBtn.dataset.target == 1 ? "_blank" : "_self");
@@ -4548,7 +4545,7 @@
                                 let spans = this.submitInPageWords();
                                 if (spans && spans.length > 0) {
                                     let lastSpan = spans.pop();
-                                    var mouseEvent = new PointerEvent("mousedown", {which: 1});
+                                    var mouseEvent = new PointerEvent("mousedown", {button: 0});
                                     lastSpan.dispatchEvent(mouseEvent);
                                 }
                             }
@@ -4759,7 +4756,7 @@
 
                 if (lastSign) {
                     targetElement = lastSign.target;
-                    this.batchOpen(lastSign.sites, {which: 3});
+                    this.batchOpen(lastSign.sites, {button: 2});
                 }
                 lastSign = false;
                 let inputTimer;
@@ -4965,12 +4962,10 @@
                         if (isPage) {
                             dragSiteBtn.setAttribute("target", "_blank");
                         }
-                        if (!this.customInput || this.batchOpening) {
-                            if (dragSiteBtn.onclick || !isPage) {
-                                dragSiteBtn.click();
-                            } else {
-                                _GM_openInTab(dragSiteBtn.href, {active: false});
-                            }
+                        if (!isPage) {
+                            dragSiteBtn.click();
+                        } else {
+                            _GM_openInTab(dragSiteBtn.href, {active: false});
                         }
                         if (isPage) {
                             dragSiteBtn.setAttribute("target", dragSiteBtn.dataset.target == 1 ? "_blank" : "_self");
@@ -5587,13 +5582,13 @@
                 let self = this;
                 if (siteEle.href) a.href = siteEle.href;
                 a.style.display = siteEle.style.display;
-                a.addEventListener('mousedown', e => {
-                    siteEle.dispatchEvent(new PointerEvent("mousedown", {altKey: e.altKey, ctrlKey: e.ctrlKey, shiftKey: e.shiftKey, metaKey: e.metaKey}));
+                a.addEventListener('mousedown', async e => {
+                    await self.siteSetUrl(siteEle, {altKey: e.altKey, ctrlKey: e.ctrlKey, shiftKey: e.shiftKey, metaKey: e.metaKey});
+                    if (siteEle.href) a.href = siteEle.href;
                     a.setAttribute("target", siteEle.target);
-                    a.href = siteEle.href || "#";
-                    if (!a.onclick && siteEle.onclick) {
+                    if (!a.onclick) {
                         a.onclick = e => {
-                            siteEle.onclick(e);
+                            siteEle.click();
                             e.stopPropagation();
                             e.preventDefault();
                             return false;
@@ -5637,7 +5632,7 @@
                 title.innerText = type.dataset.title;
                 title.title = i18n('batchOpen');
                 title.addEventListener('click', e => {
-                    self.batchOpen(batchSiteNames, {ctrlKey: e.ctrlKey, shiftKey: e.shiftKey, altKey: e.altKey, metaKey: e.metaKey, which: (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) ? 1 : 3});
+                    self.batchOpen(batchSiteNames, {ctrlKey: e.ctrlKey, shiftKey: e.shiftKey, altKey: e.altKey, metaKey: e.metaKey, button: (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) ? 0 : 2});
                 });
                 list.dataset.type = type.dataset.type;
                 con.appendChild(title);
@@ -6266,46 +6261,39 @@
                 return ele;
             }
 
-            openSiteBtn(siteEle, forceTarget) {
+            async openSiteBtn(siteEle, forceTarget) {
                 let isPage = siteEle.dataset.isPage;
                 if (!forceTarget) forceTarget = "_blank";
                 if (isPage) {
                     siteEle.setAttribute("target", forceTarget);
                 }
-                let mouseDownEvent = new PointerEvent("mousedown");
-                siteEle.dispatchEvent(mouseDownEvent);
-                if (!this.customInput || this.batchOpening) {
-                    if (siteEle.onclick || !isPage) {
-                        siteEle.click();
-                    } else {
-                        if (forceTarget == "_blank") {
-                            _GM_openInTab(siteEle.href, {active: true});
-                        } else location.href = siteEle.href;
-                    }
+                await this.siteSetUrl(siteEle);
+                if (isPage) {
+                    _GM_openInTab(siteEle.href);
+                    siteEle.setAttribute("target", siteEle.dataset.target == 1 ? "_blank" : "_self");
+                } else {
+                    siteEle.click();
                 }
-                if (isPage) siteEle.setAttribute("target", siteEle.dataset.target == 1 ? "_blank" : "_self");
             }
 
-            batchOpen(siteNames, e) {
+            async batchOpen(siteNames, e) {
                 let self = this;
                 self.batchOpening = true;
                 self.customInput = false;
                 if (e.button === 0 && e.altKey && e.shiftKey) {
                     let targetSites = self.getTargetSitesByName(siteNames);
                     let html = '<title>SearchJumper Multi</title><style>body{background: black; margin: 0;}iframe{box-sizing: border-box;padding: 5px}</style>';
-                    let c = window.open("", "_blank");
-                    for (let i = 0;i < targetSites.length;i++) {
-                        let siteEle = targetSites[i];
-                        if (siteEle.dataset.isPage && !siteEle.onclick) {
-                            let mouseDownEvent = new PointerEvent("mousedown");
-                            siteEle.dispatchEvent(mouseDownEvent);
+                    let c = window.open("", "_blank"), i = 1;
+                    for (let siteEle of targetSites) {
+                        if (siteEle.dataset.isPage) {
+                            await self.siteSetUrl(siteEle);
                             if (self.stopInput) return;
                             let iframe = document.createElement('iframe');
                             iframe.width = targetSites.length <= 2 ? '50%' : '33%';
                             iframe.height = '100%';
                             iframe.frameBorder = '0';
                             iframe.sandbox = "allow-same-origin allow-scripts allow-popups allow-forms";
-                            iframe.id = "searchJumper" + i;
+                            iframe.id = "searchJumper" + i++;
                             iframe.style.display = "none";
                             html += iframe.outerHTML;
                             _GM_xmlhttpRequest({
@@ -6348,12 +6336,10 @@
                     c.document.close();
                 } else if ((e.ctrlKey || e.metaKey) && e.shiftKey) {
                     let targetSites = self.getTargetSitesByName(siteNames);
-                    for (let i = 0;i < targetSites.length;i++) {
-                        let siteEle = targetSites[i];
-                        let mouseDownEvent = new PointerEvent("mousedown");
-                        siteEle.dispatchEvent(mouseDownEvent);
+                    for (let siteEle of targetSites) {
+                        await self.siteSetUrl(siteEle);
                         if (self.stopInput) return;
-                        if (siteEle.dataset.isPage && !siteEle.onclick) {
+                        if (siteEle.dataset.isPage) {
                             let target = {};
                             if (targetElement) {
                                 target = {src: targetElement.src || targetElement.href || '', title: targetElement.title || targetElement.alt};
@@ -6369,11 +6355,9 @@
                 } else if (e.altKey) {
                     let targetSites = self.getTargetSitesByName(siteNames);
                     let urls=[];
-                    for (let i = 0;i < targetSites.length;i++) {
-                        let siteEle = targetSites[i];
-                        if (siteEle.dataset.isPage && !siteEle.onclick) {
-                            let mouseDownEvent = new PointerEvent("mousedown");
-                            siteEle.dispatchEvent(mouseDownEvent);
+                    for (let siteEle of targetSites) {
+                        if (siteEle.dataset.isPage) {
+                            await self.siteSetUrl(siteEle);
                             if (self.stopInput) return;
                             urls.push(siteEle.href);
                         }
@@ -6391,12 +6375,10 @@
                     }
                 } else if (e.shiftKey) {
                     let targetSites = self.getTargetSitesByName(siteNames);
-                    for (let i = 0;i < targetSites.length;i++) {
-                        let siteEle = targetSites[i];
-                        let mouseDownEvent = new PointerEvent("mousedown");
-                        siteEle.dispatchEvent(mouseDownEvent);
+                    for (let siteEle of targetSites) {
+                        await self.siteSetUrl(siteEle);
                         if (self.stopInput) return;
-                        if (siteEle.dataset.isPage && !siteEle.onclick) {
+                        if (siteEle.dataset.isPage) {
                             let target = {};
                             if (targetElement) {
                                 target = {src: targetElement.src || targetElement.href || '', title: targetElement.title || targetElement.alt};
@@ -6411,14 +6393,12 @@
                     }
                 } else if (e.ctrlKey || e.metaKey) {
                     let targetSites = self.getTargetSitesByName(siteNames);
-                    for (let i = 0;i < targetSites.length;i++) {
-                        let siteEle = targetSites[i];
+                    for (let siteEle of targetSites) {
                         let isPage = siteEle.dataset.isPage;
                         if (isPage) {
                             siteEle.setAttribute("target", "_blank");
                         }
-                        let mouseDownEvent = new PointerEvent("mousedown");
-                        siteEle.dispatchEvent(mouseDownEvent);
+                        await self.siteSetUrl(siteEle);
                         if (self.stopInput) return;
                         siteEle.click();
                         if (isPage) {
@@ -6433,6 +6413,18 @@
                     });
                 }
                 self.batchOpening = false;
+            }
+
+            async siteSetUrl(siteEle, e) {
+                return new Promise((resolve) => {
+                    let actionOverHandler = e => {
+                        siteEle.removeEventListener('actionOver', actionOverHandler);
+                        resolve(true);
+                    }
+                    siteEle.addEventListener('actionOver', actionOverHandler);
+                    let mouseDownEvent = new PointerEvent("mousedown", e);
+                    siteEle.dispatchEvent(mouseDownEvent);
+                });
             }
 
             getTargetSitesByName(siteNames) {
@@ -6709,7 +6701,7 @@
                         ele.dataset.target = 1;
                     } else ele.setAttribute("target", "_self");
                 }
-                let getUrl = () => {
+                let getUrl = async () => {
                     self.customInput = false;
                     let keywords;
                     if (self.searchJumperInputKeyWords.value) {
@@ -6830,7 +6822,7 @@
                     let targetName = selStr || document.title;
                     let imgBase64 = '', resultUrl = customVariable(ele.dataset.url);
                     let hasWordParam = /%s[lure]?\b/.test(data.url);
-                    if (targetElement) {
+                    if (targetElement && targetElement.nodeName) {
                         targetUrl = (typeData.selectImg || typeData.selectAudio || typeData.selectVideo) ? (targetElement.src || '') : (targetElement.href || (targetElement.parentNode && targetElement.parentNode.href) || '');
                         if (targetElement.nodeName.toUpperCase() == "VIDEO" || targetElement.nodeName.toUpperCase() == "AUDIO") {
                             if (!targetUrl) {
@@ -6840,12 +6832,12 @@
                             if (targetUrl) targetUrl = targetUrl.replace(/^blob:/, "");
                         }
                         targetName = targetElement.title || targetElement.alt || document.title;
-                        if (targetElement.nodeName.toUpperCase() == 'IMG' && /%i\b/.test(ele.dataset.url)) {
+                        if (targetElement.nodeName.toUpperCase() == 'IMG' && /%i\b/.test(data.url)) {
                             if (targetElement.src) {
                                 if (/^data/.test(targetElement.src)) {
                                     resultUrl = resultUrl.replace(/%i\b/g, targetElement.src);
                                 } else {
-                                    imgBase64 = image2Base64(targetElement);
+                                    imgBase64 = await image2Base64(targetElement);
                                     resultUrl = resultUrl.replace(/%i\b/g, imgBase64);
                                 }
                             }
@@ -6967,7 +6959,7 @@
                                 let pairArr = pair.split("SJ^PARAM");
                                 if (pairArr.length === 2) {
                                     let k = pairArr[0];
-                                    let v = customReplaceKeywords(pairArr[1].replace(/\\([\=&])/g, "$1").replace(/%e\b/g, document.characterSet).replace(/%c\b/g, (isMobile?"mobile":"pc")).replace(/%U\b/g, encodeURIComponent(href)).replace(/%h\b/g, host).replace(/%T\b/g, encodeURIComponent(targetUrl)).replace(/%b\b/g, targetBaseUrl).replace(/%B\b/g, encodeURIComponent(targetBaseUrl)).replace(/%n\b/g, targetName).replace(/%S\b/g, (cacheKeywords || keywords)));
+                                    let v = customReplaceKeywords(pairArr[1].replace(/\\([\=&])/g, "$1").replace(/%e\b/g, document.characterSet).replace(/%i\b/g, imgBase64).replace(/%c\b/g, (isMobile?"mobile":"pc")).replace(/%U\b/g, encodeURIComponent(href)).replace(/%h\b/g, host).replace(/%T\b/g, encodeURIComponent(targetUrl)).replace(/%b\b/g, targetBaseUrl).replace(/%B\b/g, encodeURIComponent(targetBaseUrl)).replace(/%n\b/g, targetName).replace(/%S\b/g, (cacheKeywords || keywords)));
                                     v = customReplaceSingle(v, "%t", targetUrl);
                                     v = customReplaceSingle(v, "%u", href);
                                     postParams.push([k, v]);
@@ -6995,13 +6987,52 @@
                     }
                     return resultUrl;
                 };
-                let action = e => {
+                let targetUrlData;
+                let clicked = false;
+                let alt, ctrl, meta, shift;
+                let action = async e => {
                     if (showTips) {
                         if (tipsData) {
                             _GM_setClipboard(tipsData);
                         }
                         return;
                     }
+                    alt = e && e.altKey;
+                    ctrl = e && e.ctrlKey;
+                    meta = e && e.metaKey;
+                    shift = e && e.shiftKey;
+                    clicked = false;
+                    targetUrlData = "";
+                    targetUrlData = await getUrl();
+                    if (/^c(opy)?:/.test(data.url) || /^\[/.test(data.url) || /[:%]P{/.test(data.url) || (data.charset && data.charset != 'utf-8') || /[:%]p{/.test(data.url) || self.customInput) {
+                    } else {
+                        if (!targetUrlData) {
+                            //wait for all input stoped
+                            if (!self.stopInput) {
+                                self.stopInput = true;
+                                setTimeout(() => {
+                                    self.stopInput = false;
+                                }, 1);
+                            }
+                            return;
+                        }
+                        ele.href = targetUrlData;
+                    }
+                    ele.dispatchEvent(new Event("actionOver"));
+                    if (clicked) {
+                        ele.click();
+                    }
+                };
+                let clickHandler = e => {
+                    clicked = true;
+                    if (!targetUrlData) {
+                        if (e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                        }
+                        return false;
+                    }
+                    let isPage = /^(https?|ftp):/.test(targetUrlData);
                     if (!self.batchOpening && !isBookmark) {
                         let historyLength = Math.max(searchData.prefConfig.historyLength, 20);
                         let isCurrent = ele.dataset.current;
@@ -7043,234 +7074,154 @@
                         }
                     }
                     if (/^c(opy)?:/.test(data.url)) {
-                        let url = getUrl();
-                        if (!url) {
-                            ele.href = "#";
+                        if (!targetUrlData) {
                             return false;
-                        } else if (url.indexOf('%input{') !== -1) {
-                            self.showCustomInputWindow(url, _url => {
+                        } else if (targetUrlData.indexOf('%input{') !== -1) {
+                            self.showCustomInputWindow(targetUrlData, _url => {
                                 _GM_setClipboard(_url.replace(/^c(opy)?:/, ""));
                                 //_GM_notification('Copied successfully!');
                             });
                         } else {
-                            _GM_setClipboard(url.replace(/^c(opy)?:/, ""));
+                            _GM_setClipboard(targetUrlData.replace(/^c(opy)?:/, ""));
                             //_GM_notification('Copied successfully!');
                         }
                     } else if (/^\[/.test(data.url)) {
-                        if (!ele.onclick) {
-                            let siteNames = JSON.parse(data.url);
-                            ele.onclick = e => {
-                                self.batchOpen(siteNames, {button: 2, altKey: e.altKey, ctrlKey: e.ctrlKey, shiftKey: e.shiftKey, metaKey: e.metaKey});
-                                return false;
-                            };
-                        }
+                        let siteNames = JSON.parse(data.url);
+                        self.batchOpen(siteNames, {button: 2, altKey: alt || e.altKey, ctrlKey: ctrl || e.ctrlKey, shiftKey: shift || e.shiftKey, metaKey: meta || e.metaKey});
+                        return false;
                     } else if (/[:%]P{/.test(data.url)) {
-                        if (!ele.onclick) {
-                            ele.onclick = e => {
-                                e.stopPropagation();
-                                e.preventDefault();
+                        e.stopPropagation();
+                        e.preventDefault();
 
-                                let url = getUrl();
-                                if (url === false) return false;
-                                let postHandler = _url => {
-                                    let postBody = _url.match(/[:%]P{(.*?)}/), postParam = {};
-                                    if (postBody) {
-                                        _url = _url.replace(postBody[0], '');
-                                        postBody = postBody[1];
-                                        postBody = new URLSearchParams(postBody);
-                                        postBody.forEach((v, k) => {
-                                            postParam[k] = v;
-                                        });
-                                    }
-                                    _GM_xmlhttpRequest({
-                                        method: "POST", url: _url, data: JSON.stringify(postParam),
-                                        onload: (d) => {
-                                            _GM_notification(i18n("postOver") + d.statusText);
-                                        },
-                                        onerror: (e) => {
-                                            _GM_notification(i18n("postError") + (e.statusText || e.error));
-                                        },
-                                        ontimeout: (e) => {
-                                            _GM_notification(i18n("postError") + (e.statusText || e.error));
-                                        }
-                                    });
-                                }
-                                if (url.indexOf('%input{') !== -1) {
-                                    self.showCustomInputWindow(url, _url => {
-                                        postHandler(_url);
-                                    });
-                                } else {
-                                    postHandler(url);
-                                }
-                                return false;
-                            };
-                        }
-                    } else {
-                        let url = getUrl();
-                        if ((data.charset && data.charset != 'utf-8') || /[:%]p{/.test(data.url)) {
-                            if (url === false) return false;
-                            let jumpFrom = data.url.match(/#(j(umpFrom|f)?|from){(.*?)}/);
-                            let processPostUrl = _url => {
-                                storage.setItem("postUrl", [_url, data.charset]);
-                                if (jumpFrom) {
-                                    jumpFrom = jumpFrom[3];
-                                    if (jumpFrom.indexOf("http") !== 0) {
-                                        jumpFrom = _url.replace(/(:\/\/.*?\/)[\s\S]*/, "$1" + jumpFrom);
-                                    }
-                                    _url = jumpFrom;
-                                } else {
-                                    _url = _url.replace(/(:\/\/.*?)\/[\s\S]*/, "$1").replace(/[:%]p{[\s\S]*/, '');
-                                }
-                                return _url;
-                            };
-                            if (url.indexOf('%input{') !== -1) {
-                                self.showCustomInputWindow(url, _url => {
-                                    _url = processPostUrl(_url);
-                                    ele.href = _url;
-                                    if (ele.target === '_blank') {
-                                        _GM_openInTab(ele.href, {active: true});
-                                    } else {
-                                        location.href = ele.href;
-                                    }
+                        if (targetUrlData === false) return false;
+                        let postHandler = _url => {
+                            let postBody = _url.match(/[:%]P{(.*?)}/), postParam = {};
+                            if (postBody) {
+                                _url = _url.replace(postBody[0], '');
+                                postBody = postBody[1];
+                                postBody = new URLSearchParams(postBody);
+                                postBody.forEach((v, k) => {
+                                    postParam[k] = v;
                                 });
-                                return;
-                            } else {
-                                url = processPostUrl(url);
                             }
+                            _GM_xmlhttpRequest({
+                                method: "POST", url: _url, data: JSON.stringify(postParam),
+                                onload: (d) => {
+                                    _GM_notification(i18n("postOver") + d.statusText);
+                                },
+                                onerror: (e) => {
+                                    _GM_notification(i18n("postError") + (e.statusText || e.error));
+                                },
+                                ontimeout: (e) => {
+                                    _GM_notification(i18n("postError") + (e.statusText || e.error));
+                                }
+                            });
                         }
-                        let alt = e && e.altKey;
-                        let ctrl = e && (e.ctrlKey || e.metaKey);
-                        let shift = e && e.shiftKey;
-                        if (!url) {
-                            //wait for all input stoped
-                            if (!self.stopInput) {
-                                self.stopInput = true;
-                                setTimeout(() => {
-                                    self.stopInput = false;
-                                }, 1);
-                            }
-                            //disable click
-                            ele.onclick = e => {
-                                ele.onclick = null;
-                                e.preventDefault();
-                                e.stopPropagation();
-                                return false;
-                            };
+                        if (targetUrlData.indexOf('%input{') !== -1) {
+                            self.showCustomInputWindow(targetUrlData, _url => {
+                                postHandler(_url);
+                            });
                         } else {
-                            ele.href = url;
-                            if (!self.batchOpening) {
-                                let isPage = /^(https?|ftp):/.test(url);
-                                let checkAlt = () => {
-                                    if (shift && !ctrl && !alt && e.isTrusted) return false;
-                                    if ((alt || ctrl || shift) && isPage) {
-                                        ele.onclick = e => {
-                                            ele.onclick = null;
-                                            if (ctrl && shift) {
-                                                _GM_openInTab(url, {incognito: true});
-                                            } else if (ctrl) {
-                                                _GM_openInTab(url);
-                                            } else if (alt) {
-                                                if (data.match) {
-                                                    let match = data.match.replace(/\\/g, "");
-                                                    let mobileMatch = match.match(/\((www)\|([^\)\|]+)/);
-                                                    while (mobileMatch) {
-                                                        url = url.replace(mobileMatch[1], mobileMatch[2]);
-                                                        match = match.replace(mobileMatch[0], "");
-                                                        mobileMatch = match.match(/\(([^\)\|]+)\|([^\)\|]+)/);
-                                                    }
-                                                }
-                                                let viewWidth = window.screen.availWidth || window.innerWidth || document.documentElement.clientWidth;
-                                                let viewHeight = window.screen.availHeight || window.innerHeight || document.documentElement.clientHeight;
-                                                let left = viewWidth - 450;
-                                                let top = (viewHeight - 800) / 2;
-                                                window.open(url + "#searchJumperMin" + (/#p{/.test(data.url) ? 'Post' : ''), "_blank", `width=450, height=800, location=0, resizable=1, status=0, toolbar=0, menubar=0, scrollbars=0, left=${left}, top=${top}`);
-                                            } else if (shift) {
-                                                _GM_openInTab(url, {active: true});
-                                            }
-                                            if (e.preventDefault) e.preventDefault();
-                                            if (e.stopPropagation) e.stopPropagation();
-                                            return false;
-                                        };
-                                        return true;
-                                    }
-                                    return false;
-                                };
-                                if (self.customInput) {
-                                    //lose click, click one more time
-                                    let checkCustomHandler = _url => {
-                                        ele.href = _url;
-                                        if (checkAlt() || !isPage) {
-                                            ele.click();
-                                        } else {
-                                            if (ele.dataset.target == "1") {
-                                                _GM_openInTab(_url, {active: true});
-                                            } else location.href = _url;
-                                        }
-                                    };
-                                    if (url.indexOf('%input{') !== -1) {
-                                        ele.onclick = e => {
-                                            ele.onclick = null;
-                                            if (e.preventDefault) e.preventDefault();
-                                            if (e.stopPropagation) e.stopPropagation();
-                                            return false;
-                                        };
-                                        self.showCustomInputWindow(url, _url => {
-                                            checkCustomHandler(_url);
-                                        });
-                                        return false;
-                                    } else {
-                                        checkCustomHandler(url);
-                                    }
+                            postHandler(targetUrlData);
+                        }
+                        return false;
+                    } else if ((data.charset && data.charset != 'utf-8') || /[:%]p{/.test(data.url)) {
+                        if (targetUrlData === false) return false;
+                        let jumpFrom = data.url.match(/#(j(umpFrom|f)?|from){(.*?)}/);
+                        let processPostUrl = _url => {
+                            storage.setItem("postUrl", [_url, data.charset]);
+                            if (jumpFrom) {
+                                jumpFrom = jumpFrom[3];
+                                if (jumpFrom.indexOf("http") !== 0) {
+                                    jumpFrom = _url.replace(/(:\/\/.*?\/)[\s\S]*/, "$1" + jumpFrom);
+                                }
+                                _url = jumpFrom;
+                            } else {
+                                _url = _url.replace(/(:\/\/.*?)\/[\s\S]*/, "$1").replace(/[:%]p{[\s\S]*/, '');
+                            }
+                            return _url;
+                        };
+                        if (targetUrlData.indexOf('%input{') !== -1) {
+                            self.showCustomInputWindow(targetUrlData, _url => {
+                                _url = processPostUrl(_url);
+                                ele.href = _url;
+                                if (ele.target === '_blank') {
+                                    _GM_openInTab(ele.href, {active: true});
                                 } else {
-                                    if (!checkAlt()) {
-                                        if (searchData.prefConfig.multiline == 1 || searchData.prefConfig.multiline == 2) {
-                                            let selStr = getSelectStr();
-                                            if (selStr &&
-                                                /%s\b/.test(ele.dataset.url) &&
-                                                selStr.indexOf("\n") !== -1) {
-                                                if (searchData.prefConfig.multiline == 1 ||
-                                                    confirm(i18n("multiline"))) {
-                                                    let selStrArr = selStr.split("\n");
-                                                    if (selStrArr.length > 10 && !confirm(i18n("multilineTooMuch"))) return;
-                                                    let encodeSelStr = encodeURIComponent(selStr);
-                                                    let searchIndex = 0;
-                                                    let searchByLine = () => {
-                                                        _GM_openInTab(url.replace(encodeSelStr, encodeURIComponent(selStrArr[searchIndex++])));
-                                                        if (searchIndex < selStrArr.length) {
-                                                            setTimeout(() => {
-                                                                searchByLine();
-                                                            }, searchData.prefConfig.multilineGap || 1000);
-                                                        }
-                                                    };
-                                                    searchByLine();
-                                                    if (searchData.prefConfig.multiline == 1) {
-                                                        ele.onclick = e => {
-                                                            ele.onclick = null;
-                                                            e.preventDefault();
-                                                            e.stopPropagation();
-                                                            return false;
-                                                        };
-                                                    }
-                                                } else {
-                                                    ele.click();
-                                                }
-                                                return false;
-                                            }
-                                        }
-                                        ele.onclick = null;
+                                    location.href = ele.href;
+                                }
+                            });
+                            return;
+                        } else {
+                            targetUrlData = processPostUrl(targetUrlData);
+                        }
+                    }
+                    if (searchData.prefConfig.multiline == 1 || searchData.prefConfig.multiline == 2) {
+                        let selStr = getSelectStr();
+                        if (selStr &&
+                            /%s\b/.test(ele.dataset.url) &&
+                            selStr.indexOf("\n") !== -1) {
+                            if (searchData.prefConfig.multiline == 1 ||
+                                confirm(i18n("multiline"))) {
+                                let selStrArr = selStr.split("\n");
+                                if (selStrArr.length > 10 && !confirm(i18n("multilineTooMuch"))) return;
+                                let encodeSelStr = encodeURIComponent(selStr);
+                                let searchIndex = 0;
+                                let searchByLine = () => {
+                                    _GM_openInTab(targetUrlData.replace(encodeSelStr, encodeURIComponent(selStrArr[searchIndex++])));
+                                    if (searchIndex < selStrArr.length) {
+                                        setTimeout(() => {
+                                            searchByLine();
+                                        }, searchData.prefConfig.multilineGap || 1000);
                                     }
+                                };
+                                searchByLine();
+                                if (searchData.prefConfig.multiline == 1) {
+                                    targetUrlData = "";
+                                }
+                            } else {
+                                ele.click();
+                            }
+                            return false;
+                        }
+                    }
+                    if (shift && !ctrl && !meta && !alt && e.isTrusted) return;
+                    if ((alt || ctrl || meta || shift) && isPage) {
+                        if ((ctrl || meta) && shift) {
+                            _GM_openInTab(targetUrlData, {incognito: true});
+                        } else if (ctrl || meta) {
+                            _GM_openInTab(targetUrlData);
+                        } else if (alt) {
+                            if (data.match) {
+                                let match = data.match.replace(/\\/g, "");
+                                let mobileMatch = match.match(/\((www)\|([^\)\|]+)/);
+                                while (mobileMatch) {
+                                    targetUrlData = targetUrlData.replace(mobileMatch[1], mobileMatch[2]);
+                                    match = match.replace(mobileMatch[0], "");
+                                    mobileMatch = match.match(/\(([^\)\|]+)\|([^\)\|]+)/);
                                 }
                             }
+                            let viewWidth = window.screen.availWidth || window.innerWidth || document.documentElement.clientWidth;
+                            let viewHeight = window.screen.availHeight || window.innerHeight || document.documentElement.clientHeight;
+                            let left = viewWidth - 450;
+                            let top = (viewHeight - 800) / 2;
+                            window.open(targetUrlData + "#searchJumperMin" + (/#p{/.test(data.url) ? 'Post' : ''), "_blank", `width=450, height=800, location=0, resizable=1, status=0, toolbar=0, menubar=0, scrollbars=0, left=${left}, top=${top}`);
+                        } else if (shift) {
+                            _GM_openInTab(targetUrlData, {active: true});
                         }
+                        if (e.preventDefault) e.preventDefault();
+                        if (e.stopPropagation) e.stopPropagation();
+                        return false;
                     }
                 };
                 //ele.href = data.url;
                 ele.addEventListener('mousedown', action, false);
+                ele.addEventListener('click', clickHandler, true);
 
                 ele.addEventListener('mouseenter', async e => {
                     tipsData = null;
                     if (showTips) {
-                        let url = getUrl();
+                        let url = await getUrl();
                         let tips = ele.dataset.name;
                         self.tipsPos(ele, tips);
                         try {
@@ -7325,6 +7276,9 @@
             showInPage(_funcKeyCall, e) {
                 if (this.bar.contains(targetElement) || this.inInput || (!_funcKeyCall && this.funcKeyCall)) {
                     return;
+                }
+                if (!mainStyleEle || !mainStyleEle.parentNode) {
+                    mainStyleEle = _GM_addStyle(cssText);
                 }
                 let selectStr = getSelectStr();
                 if (_funcKeyCall && selectStr && selectStr.length < (searchData.prefConfig.limitPopupLen || 1)) return;
@@ -7971,7 +7925,21 @@
             let event = new Event('focus', { bubbles: true });
             input.dispatchEvent(event);
             let lastValue = input.value;
-            if (input.nodeName.toUpperCase() == "INPUT") {
+            if (input.type == 'file') {
+                let file = v;
+                if (file.indexOf('data:') == 0) {
+                    file = dataURLtoFile(file);
+                } else {
+                    let blob = new Blob([file], {
+                        type: 'text/plain'
+                    });
+                    file = new File([blob], 'noname.txt', { type: blob.type })
+                }
+                let dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                input.files = dataTransfer.files;
+                v = "c:/fakepath/fakefile";
+            } else if (input.nodeName.toUpperCase() == "INPUT") {
                 var nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
                 nativeInputValueSetter.call(input, v);
             } else if (input.nodeName.toUpperCase() == "TEXTAREA") {
@@ -7988,7 +7956,7 @@
             input.dispatchEvent(event);
             event = new Event('change', { bubbles: true });
             input.dispatchEvent(event);
-            debug(input, `input ${sel}, ${v}`);
+            debug(input, `input ${sel}`);
         }
 
         async function emuClick(sel) {
@@ -8126,9 +8094,20 @@
             return form.submit();
         }
 
+        function dataURLtoFile(dataurl, filename = "image.png") {
+            try {
+                var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+                    bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+                while(n--) {
+                    u8arr[n] = bstr.charCodeAt(n);
+                }
+            } catch(e) { debug(e); }
+            return new File([u8arr], filename, {type: mime});
+        }
+
         async function image2Base64(img) {
             if (!img || !img.src) return null;
-            let urlSplit=img.src.split("/");
+            let urlSplit = img.src.split("/");
             if (urlSplit[2] == document.domain) {
                 let imgStyle = getComputedStyle(img);
                 var canvas = document.createElement("canvas");
@@ -8882,9 +8861,17 @@
                 }, true);
             }
             let changeHandler = e => {
-                setTimeout(()=>{
+                setTimeout(() => {
                     searchBar.refresh();
-                },0);
+                    if (!mainStyleEle || !mainStyleEle.parentNode) {
+                        mainStyleEle = _GM_addStyle(cssText);
+                    }
+                }, 100);
+                setTimeout(() => {
+                    if (!mainStyleEle || !mainStyleEle.parentNode) {
+                        mainStyleEle = _GM_addStyle(cssText);
+                    }
+                }, 1000);
             }
             document.addEventListener("fullscreenchange", e => {
                 if (document.fullscreenElement) {
