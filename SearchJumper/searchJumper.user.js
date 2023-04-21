@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.60.64
+// @version      1.6.6.61.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -6747,7 +6747,7 @@
                         }
                     };
                     let needDecode = (/^c(opy)?:|[#:%]P{|^javascript:|^showTips:/i.test(data.url));
-                    let keywordsU, keywordsL, keywordsR;
+                    let keywordsU = "", keywordsL = "", keywordsR = "";
                     let customReplaceKeywords = str => {
                         let _str = str;
                         _str = customReplaceSingle(_str, "%su", keywordsU);
@@ -7115,11 +7115,11 @@
                                 if (jumpFrom) {
                                     jumpFrom = jumpFrom[3];
                                     if (jumpFrom.indexOf("http") !== 0) {
-                                        jumpFrom = _url.replace(/(:\/\/.*?\/).*/, "$1" + jumpFrom);
+                                        jumpFrom = _url.replace(/(:\/\/.*?\/)[\s\S]*/, "$1" + jumpFrom);
                                     }
                                     _url = jumpFrom;
                                 } else {
-                                    _url = _url.replace(/(:\/\/.*?)\/.*/, "$1").replace(/[:%]p{.*/, '');
+                                    _url = _url.replace(/(:\/\/.*?)\/[\s\S]*/, "$1").replace(/[:%]p{[\s\S]*/, '');
                                 }
                                 return _url;
                             };
@@ -8348,7 +8348,7 @@
                 if (firstInput) keywords = firstInput.value;
             }
             if (keywords) localKeywords = keywords;
-            return localKeywords;//!localKeywords ? cacheKeywords : localKeywords;
+            return localKeywords || "";//!localKeywords ? cacheKeywords : localKeywords;
         }
 
         function eventSupported(eventName, elem) {
