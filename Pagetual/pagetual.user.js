@@ -4001,7 +4001,7 @@
             if (!ruleParser.curSiteRule.url) location.reload();
         });
         _GM_registerMenuCommand(i18n("update"), () => {
-            showTips(i18n("beginUpdate"));
+            showTips(i18n("beginUpdate"), "", 30000);
             updateRules(() => {
                 showTips(i18n("updateSucc"));
                 location.reload();
@@ -4136,7 +4136,7 @@
                                 });
                                 ruleUrls = urls;
                             }
-                            showTips(i18n("beginUpdate"));
+                            showTips(i18n("beginUpdate"), "", 30000);
                             updateRules(() => {
                                 showTips(i18n("updateSucc"));
                                 location.reload();
@@ -4369,7 +4369,7 @@
         updateP.title = i18n("update") + " - " + pastDate;
         updateP.onclick = e => {
             ruleParser.rules = [];
-            showTips(i18n("beginUpdate"));
+            showTips(i18n("beginUpdate"), "", 30000);
             updateRules(() => {
                 showTips(i18n("updateSucc"));
                 updateP.innerHTML = i18n("passSec", 0);
@@ -5130,7 +5130,7 @@
                     });
                 } else {
                     debug("Stop as no page element");
-                    showTips(i18n("noValidContent"), "", "", url);
+                    showTips(i18n("noValidContent"), url);
                     isPause = true;
                     callback(false);
                 }
@@ -5726,14 +5726,15 @@
         document.addEventListener('wheel', scrollHandler, true);
     }
 
-    function showTips(content, wordColor, backColor, href) {
+    let hideTipsTimeout;
+    function showTips(content, href, time, wordColor, backColor) {
         initView();
         getBody(document).appendChild(tipsWords);
         tipsWords.style.color = wordColor || 0xFFFFFF;
         tipsWords.style.backgroundColor = backColor || 0x000;
-        let time = 1500;
+        let _time = 1500;
         if (href) {
-            time = 3500;
+            _time = 3500;
             tipsWords.innerHTML = createHTML(`<a href='${href}'>${content}</a>`);
             tipsWords.style.pointerEvents = 'all';
         } else {
@@ -5745,10 +5746,11 @@
         }, 0);
         setTimeout(() => {
             tipsWords.style.opacity = 0.8;
-            setTimeout(() => {
+            clearTimeout(hideTipsTimeout);
+            hideTipsTimeout = setTimeout(() => {
                 tipsWords.style.opacity = 0;
                 tipsWords.style.pointerEvents = '';
-            }, time);
+            }, time || _time);
         }, 1);
     }
 
@@ -6158,7 +6160,7 @@
     var checkRemoveIntv;
     function requestFromIframe(url, callback){
         if (location.protocol === 'https:' && !/^https:/.test(url)) {
-            showTips(i18n("noValidContent"), "", "", url);
+            showTips(i18n("noValidContent"), url);
         }
         url = url.indexOf('=') == -1 ? url.replace(/#[^#]*/,"") : url;
         let iframe = document.createElement('iframe');
@@ -6227,7 +6229,7 @@
                             isPause = true;
                             callback(false, false);
                         } else {
-                            showTips(i18n("noValidContent"), "", "", url);
+                            showTips(i18n("noValidContent"), url);
                             callback(false, false);
                         }
                     }
