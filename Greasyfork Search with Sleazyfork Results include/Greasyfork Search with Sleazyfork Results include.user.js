@@ -301,6 +301,7 @@
         var okCount=parseInt(script.querySelector("dd.script-list-ratings>span>.ok-rating-count").innerHTML.replace(/[^\d]/g,""));
         var badCount=parseInt(script.querySelector("dd.script-list-ratings>span>.bad-rating-count").innerHTML.replace(/[^\d]/g,""));
         if(badCount && badCount>goodCount){
+            if (badCount === 1) { return; }
             let scriptLink=script.querySelector('.script-link');
             if(scriptLink){
                 var warn=document.createTextNode("⚠");
