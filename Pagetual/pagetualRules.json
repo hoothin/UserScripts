@@ -9677,7 +9677,8 @@
     {
         "name": "豆瓣电影",
         "url": "^https://movie\\.douban\\.com",
-        "wheel": true
+        "wheel": true,
+        "loadMore": ".explore-more>button"
     },
     {
         "name": "威锋",
