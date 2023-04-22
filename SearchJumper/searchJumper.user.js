@@ -6999,10 +6999,11 @@
                         }
                         return;
                     }
-                    alt = e && e.altKey;
-                    ctrl = e && e.ctrlKey;
-                    meta = e && e.metaKey;
-                    shift = e && e.shiftKey;
+                    if (!e) e = {};
+                    alt = e.altKey;
+                    ctrl = e.ctrlKey;
+                    meta = e.metaKey;
+                    shift = e.shiftKey;
                     clicked = false;
                     targetUrlData = "";
                     targetUrlData = await getUrl();
