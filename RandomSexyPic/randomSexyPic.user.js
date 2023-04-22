@@ -3,20 +3,20 @@
 // @name:zh-TW   軟瑟盤
 // @name:ja      RandomSexyPicParser
 // @namespace    hoothin
-// @version      1.3.15.2
+// @version      1.3.15.3
 // @description        Random Sexy Pictures Parser
 // @description:zh-TW  隨機色圖
 // @description:ja     Random Sexy Pictures Parser
 // @author       hoothin
-// @include      https://api.lolicon.app/setu/v2*
-// @include      https://api.nyan.xyz/httpapi/sexphoto*
-// @include      https://huanmengii.xyz/ZY/aCOS/cos*
-// @include      https://api.uomg.com/api/rand.img3*
-// @include      https://api.vvhan.com/api/tao*
-// @include      https://www.hlapi.cn/api/mjx*
-// @include      https://3650000.xyz/api/?*
-// @include      https://*
-// @include      http://*
+// @match        https://api.lolicon.app/setu/v2*
+// @match        https://api.nyan.xyz/httpapi/sexphoto*
+// @match        https://huanmengii.xyz/ZY/aCOS/cos*
+// @match        https://api.uomg.com/api/rand.img3*
+// @match        https://api.vvhan.com/api/tao*
+// @match        https://www.hlapi.cn/api/mjx*
+// @match        https://3650000.xyz/api/?*
+// @match        https://*
+// @match        http://*
 // @icon         data:image/jpg;base64,/9j/4AAQSkZJRgABAQEBLAEsAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBYQERMUFRUVDA8XGBYUGBIUFRT/2wBDAQMEBAUEBQkFBQkUDQsNFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBT/wAARCAAgACADASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAABgcICQX/xAAsEAABAwMEAQIFBQEAAAAAAAABAgMEBQYRAAcSITEIQRMUIjJRIyRCYYHB/8QAFgEBAQEAAAAAAAAAAAAAAAAABgQF/8QAIxEAAgEDBAEFAAAAAAAAAAAAAQMCABESBCFBUQUVMWHB8P/aAAwDAQACEQMRAD8AHNrPQdFYZlXBX6fJuRqns/NhptIUmSodhCG0nsdeCcqOAPOnVLvK3r227YVFjy6OEpLaWavEMKU2cY4utn7eseMjAHeq7vuaxtDs/VnaRSG6nIp9MffjwnMhD7jTKlpQsgZ7KcfnWQFv+sO6d0txKOxcFuw7ibqUpDUmPT4vwnWStQT+ksKJPHOfqB6Hf50Qd4vUOjlKWUj3x8Dik6PIJhO2Nojr7qo6fGtG1YUVNSrcJMl7PAzpjcZtPXkKUQCP+6CNz7Ttq+rdmP1iOKnDhq5iTBd5OMjoFbS0+evbvIGmfbm2dgVrcmq29W4MauJSwWYqpzaHUK4r+ocVAgE9eOzpmVnYaj2zt4qZQ4saOWnlhuBGYRHa+AnyPhoAGcknx3qD05qEiUY2MeR+vWgNeljTAm4l3T6vCDG3k2YffoFQfDdRhplQ5UNYK1j7hxPvyHX+6yhqm3tV2XuqrV2mJpLkpt1TiXFMltb5UMlOBnifOR1351f3owrEmgekbb52mKXVG2qU0ostjms9q5cO++8jGkp6lrQtLca6H7lp8gUCsrBcqESYSxyUPKig/wAseT76ZLcJQBB3omV4zsfapo2gq993nuhR6vUGl01EV/5pNOhO/uJCgfpSpRGG289n+vfV/wBs3LMNoNxn1olzo6HEvSgrkyHVrJWEqx2lOeIPvjU02Kzbe3VBkvPzIkl+SOSni5kke3+f1jXN3i9Vsdi2GqDakOUoBHFElCShAI8qB/GfbUmoeFrMb7mrFJLGAgbCv//Z
 // @grant        GM_addStyle
 // @grant        GM_setValue
@@ -35,7 +35,7 @@
         "api.lolicon.app":{
             include: /setu\/v2/i,
             name:"Lolicon ACG SexyPic",
-            url:"https://api.lolicon.app/setu/v2?r18=1&num=5",
+            url:"https://api.lolicon.app/setu/v2?r18=1&num=10",
             luckyUrl:["https://api.lolicon.app/setu/v2?r18=0&num=5",
                      "https://api.lolicon.app/setu/v2?r18=1&num=5",
                      "https://api.lolicon.app/setu/v2?r18=2&num=5"],
@@ -82,7 +82,7 @@
             hide: true,
             include: /httpapi\/sexphoto/i,
             name:"Nyan ACG SexyPic",
-            url:"https://api.nyan.xyz/httpapi/sexphoto/?r18=true&num=5",
+            url:"https://api.nyan.xyz/httpapi/sexphoto/?r18=true&num=10",
             luckyUrl:["https://api.nyan.xyz/httpapi/sexphoto/?r18=true&num=5",
                      "https://api.nyan.xyz/httpapi/sexphoto/?r18=false&num=5"],
             run:()=>{
@@ -486,7 +486,7 @@
         img.className="list-show";
         grabHandler(img,false);
         img.style.cursor="";
-        img.scrollIntoView();
+        img.scrollIntoView({ block: "center", inline: "center" });
     }
 
     function createImg(url){
@@ -608,6 +608,11 @@
     }
     body{
       background: black;
+      scrollbar-width: none;
+    }
+    body::-webkit-scrollbar {
+      width: 0 !important;
+      height: 0 !important;
     }
     .btns>select{
       display: none;
@@ -697,6 +702,7 @@
       font-weight: bold;
       text-decoration: none;
       margin: 1px;
+      font-family: Arial,Helvetica,sans-serif;
     }
     .btns>a:hover{
       background: #ffa31a;
