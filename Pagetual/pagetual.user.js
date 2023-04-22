@@ -4471,10 +4471,16 @@
         let opacityInput = document.createElement("input");
         opacityInput.value = rulesData.opacity * 100;
         opacityInput.type = "number";
+        opacityInput.min = 0;
+        opacityInput.max = 100;
         opacityInput.style.width = "110px";
         opacityInput.style.margin = "0";
         opacityInput.placeholder = i18n("opacityPlaceholder");
         opacityInput.spellcheck = false;
+        opacityInput.oninput = e => {
+            if (opacityInput.value > 100) opacityInput.value = 100;
+            else if (opacityInput.value < 0) opacityInput.value = 0;
+        };
         opacity.appendChild(opacityInput);
         otherBtns.appendChild(opacity);
 
@@ -4603,7 +4609,7 @@
             }
         });
         hidePageBarInput.addEventListener('click', e => {
-            opacityInput.value = hidePageBarInput.checked ? 0 : 30;
+            opacityInput.value = hidePageBarInput.checked ? 0 : 100;
         });
 
         let dbClick2StopCtrlInput = createCheckbox(i18n("dbClick2StopCtrl"), rulesData.dbClick2StopCtrl, "h4", dbClick2StopInput);
@@ -4705,7 +4711,10 @@
             }
             if (setConfigPageInput.checked) rulesData.configPage = location.href;
             rulesData.wedata2github = wedata2githubInput.checked;
-            rulesData.opacity = opacityInput.value / 100;
+            let opacity = parseInt(opacityInput.value) || 0;
+            if (opacity > 100) opacity = 100;
+            else if (opacity < 0) opacity = 0;
+            rulesData.opacity = opacity / 100;
             rulesData.blacklist = blacklistInput.value ? blacklistInput.value.split("\n") : "";
             rulesData.hideBar = hideBarInput.checked;
             rulesData.hideBarButNoStop = hideBarButNoStopInput.checked;
