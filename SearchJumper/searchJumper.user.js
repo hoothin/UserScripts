@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.62.64
+// @version      1.6.6.63.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -6673,7 +6673,9 @@
                 if (imgSrc) {
                     img.onload = e => {
                         ele.classList.remove("search-jumper-word");
-                        ele.removeChild(word);
+                        if (word.parentNode) {
+                            word.parentNode.removeChild(word);
+                        }
                         img.style.display = "";
                     };
                     let isBase64 = /^data:/.test(imgSrc);
@@ -7074,6 +7076,8 @@
                         }
                     }
                     if (/^c(opy)?:/.test(data.url)) {
+                        if (e.preventDefault) e.preventDefault();
+                        if (e.stopPropagation) e.stopPropagation();
                         if (!targetUrlData) {
                             return false;
                         } else if (targetUrlData.indexOf('%input{') !== -1) {
@@ -7086,13 +7090,14 @@
                             //_GM_notification('Copied successfully!');
                         }
                     } else if (/^\[/.test(data.url)) {
+                        if (e.preventDefault) e.preventDefault();
+                        if (e.stopPropagation) e.stopPropagation();
                         let siteNames = JSON.parse(data.url);
                         self.batchOpen(siteNames, {button: 2, altKey: alt || e.altKey, ctrlKey: ctrl || e.ctrlKey, shiftKey: shift || e.shiftKey, metaKey: meta || e.metaKey});
                         return false;
                     } else if (/[:%]P{/.test(data.url)) {
-                        e.stopPropagation();
-                        e.preventDefault();
-
+                        if (e.preventDefault) e.preventDefault();
+                        if (e.stopPropagation) e.stopPropagation();
                         if (targetUrlData === false) return false;
                         let postHandler = _url => {
                             let postBody = _url.match(/[:%]P{(.*?)}/), postParam = {};
@@ -7151,9 +7156,12 @@
                                     location.href = ele.href;
                                 }
                             });
+                            if (e.preventDefault) e.preventDefault();
+                            if (e.stopPropagation) e.stopPropagation();
                             return;
                         } else {
                             targetUrlData = processPostUrl(targetUrlData);
+                            ele.href = targetUrlData;
                         }
                     }
                     if (searchData.prefConfig.multiline == 1 || searchData.prefConfig.multiline == 2) {
@@ -7177,12 +7185,11 @@
                                 };
                                 searchByLine();
                                 if (searchData.prefConfig.multiline == 1) {
-                                    targetUrlData = "";
+                                    ele.href = "";
                                 }
-                            } else {
-                                ele.click();
+                                if (e.preventDefault) e.preventDefault();
+                                if (e.stopPropagation) e.stopPropagation();
                             }
-                            return false;
                         }
                     }
                     if (shift && !ctrl && !meta && !alt && e.isTrusted) return;
