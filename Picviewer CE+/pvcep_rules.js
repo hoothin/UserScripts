@@ -79,11 +79,17 @@ var siteInfo = [
  getImage: function(a) {
      if(!a) return;
      let jsaction = a.getAttribute("jsaction");
-     if (!jsaction || jsaction.indexOf('mousedown') == -1) return;
-     var fakeEvent = new MouseEvent('mousedown', {bubbles: true});
-     a.dispatchEvent(fakeEvent);
+     if (!jsaction || jsaction.indexOf('touchstart') == -1) return;
      if (a.href.match(/imgurl=(.*?\.\w{1,5})&/i)) {
          return decodeURIComponent(RegExp.$1);
+     } else {
+         var fakeEvent = new TouchEvent('touchstart', {bubbles: true});
+         a.dispatchEvent(fakeEvent);
+         fakeEvent = new TouchEvent('touchend', {bubbles: true});
+         a.dispatchEvent(fakeEvent);
+         if (a.href.match(/imgurl=(.*?\.\w{1,5})&/i)) {
+             return decodeURIComponent(RegExp.$1);
+         }
      }
  }
  
