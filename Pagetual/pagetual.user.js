@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.36.3
+// @version      1.9.36.4
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -157,7 +157,7 @@
                 firstAlert: "你还未导入规则库，请选择合适的规则库导入哦",
                 picker: "东方永页机主体元素抓取器",
                 closePicker: "关闭东方永页机抓取器",
-                pickerPlaceholder: "没想法建议留空",
+                pickerPlaceholder: "元素选择器，没想法建议留空",
                 pickerCheck: "检查你编辑的选择器并复制",
                 switchSelector: "点击切换元素",
                 gotoEdit: "使用当前的选择器前往编辑规则",
@@ -190,7 +190,12 @@
                 outOfDate: "脚本已过时，请及时更新到最新版本！",
                 hideBarTips: "隐藏分页隔条，沉浸式体验",
                 setConfigPage: "将当前页面设为默认配置页",
-                wedata2github: "将 wedata 地址更改为 github 仓库内的镜像地址"
+                wedata2github: "将 wedata 地址更改为 github 仓库内的镜像地址",
+                addOtherProp: "添加规则属性",
+                addNextSelector: "添加选择器内容为 nextLink",
+                addPageSelector: "添加选择器内容为 pageElement",
+                propName: "输入规则属性名",
+                propValue: "输入规则属性值"
             };
             break;
         case "zh-TW":
@@ -262,7 +267,7 @@
                 firstAlert: "你還未導入規則庫，請選擇合適的規則庫導入哦",
                 picker: "東方永頁機主體元素抓取器",
                 closePicker: "關閉東方永頁機抓取器",
-                pickerPlaceholder: "沒想法建議留空",
+                pickerPlaceholder: "元素選擇器，沒想法建議留空",
                 pickerCheck: "檢查你編輯的選擇器並複製",
                 switchSelector: "點擊切換元素",
                 gotoEdit: "使用當前的選擇器前往編輯規則",
@@ -295,7 +300,12 @@
                 outOfDate: "脚本已過時，請及時更新到最新版本！",
                 hideBarTips: "隱藏分頁隔條，沉浸式體驗",
                 setConfigPage: "將當前頁面設為默認配置頁",
-                wedata2github: "將 wedata 地址更改為 github 倉庫內的鏡像地址"
+                wedata2github: "將 wedata 地址更改為 github 倉庫內的鏡像地址",
+                addOtherProp: "添加規則屬性",
+                addNextSelector: "添加選擇器內容為 nextLink",
+                addPageSelector: "添加選擇器內容為 pageElement",
+                propName: "輸入規則屬性名",
+                propValue: "輸入規則屬性值"
             };
             break;
         case "ja":
@@ -399,7 +409,12 @@
                 outOfDate: "スクリプトが古くなっています。最新バージョンに更新してください。",
                 hideBarTips: "ページネーション バーを非表示にします。没入型エクスペリエンス",
                 setConfigPage: "現在のページをデフォルト設定ページとして設定",
-                wedata2github: "wedata アドレスを github ウェアハウスのミラー アドレスに変更"
+                wedata2github: "wedata アドレスを github ウェアハウスのミラー アドレスに変更",
+                addOtherProp: "ルールプロパティを追加",
+                addNextSelector: "セレクターのコンテンツを nextLink として追加",
+                addPageSelector: "セレクタ コンテンツを pageElement として追加",
+                propName: "ルールのプロパティ名を入力してください",
+                propValue: "ルールのプロパティ値を入力してください"
             };
             break;
         case "ru":
@@ -504,7 +519,12 @@
                 outOfDate: "Скрипт устарел, своевременно обновляйте до последней версии!",
                 hideBarTips: "Скрыть панель разбиения на страницы, иммерсивный опыт",
                 setConfigPage: "Установить текущую страницу в качестве страницы конфигурации по умолчанию",
-                wedata2github: "Изменить адрес wedata на зеркальный адрес на складе github"
+                wedata2github: "Изменить адрес wedata на зеркальный адрес на складе github",
+                addOtherProp: "Добавить свойство правила",
+                addNextSelector: "Добавить содержимое селектора как nextLink",
+                addPageSelector: "Добавить содержимое селектора как pageElement",
+                propName: "Введите имя свойства правила",
+                propValue: "Введите значение свойства правила"
             };
             break;
         default:
@@ -575,7 +595,7 @@
                 firstAlert: "You have not imported the base rule, please select the appropriate rule to import",
                 picker: "Pagetual page element picker",
                 closePicker: "Close Pagetual picker",
-                pickerPlaceholder: "Leave empty if you have no idea",
+                pickerPlaceholder: "Element selector, Leave empty if you have no idea",
                 pickerCheck: "Check selector and copy",
                 switchSelector: "Click to switch element",
                 gotoEdit: "Go to edit rule with current selector",
@@ -608,7 +628,12 @@
                 outOfDate: "The script is outdated, update to the latest version in time!",
                 hideBarTips: "Hide the pagination bar, toggle immersive experience",
                 setConfigPage: "Set current page as the default configuration page",
-                wedata2github: "Change the wedate address to the mirror address in the github repository"
+                wedata2github: "Change the wedate address to the mirror address in the github repository",
+                addOtherProp: "Add rule property",
+                addNextSelector: "Add selector content as nextLink",
+                addPageSelector: "Add selector content as pageElement",
+                propName: "Enter rule property name",
+                propValue: "Enter rule property value"
             };
             break;
     }
@@ -3312,7 +3337,7 @@
               margin: -5px 45px 10px 45px;
               font-size: 20px;
               font-weight: bold;
-              cursor: pointer;
+              cursor: move;
               border-bottom: 1px solid black;
               user-select: none;
               color: orangered;
@@ -3348,7 +3373,7 @@
              #pagetual-picker textarea{
               display: inline-block;
               width: calc(100% - 65px);
-              height: 20px;
+              height: 40px;
               min-width: 290px;
               max-width: calc(65vw - 50px);
               min-height: unset;
@@ -3470,6 +3495,7 @@
              #pagetual-picker .tempRule {
               margin-top: 10px;
               height: 300px;
+              min-height: 150px;
              }
              #pagetual-picker #saveDetail {
               display: none;
@@ -3484,6 +3510,22 @@
               width: 35px;
               height: 35px;
              }
+             #pagetual-picker .addProp {
+              display: none;
+              flex-direction: column;
+              position: absolute;
+              bottom: 45px;
+              right: 12px;
+             }
+             #pagetual-picker .showDetail~.addProp {
+              display: flex;
+             }
+             #pagetual-picker .addProp>button {
+              font-size: 30px;
+              font-family: Arial,sans-serif;
+              line-height: 35px;
+              color: #161616;
+             }
             `;
             this.styleEle = _GM_addStyle(this.cssText);
             this.mainSignDiv = this.createSignDiv();
@@ -3494,7 +3536,7 @@
                 <button title="Pagetual" type="button" class="logoIcon">
                   <svg width="30" height="30" class="upSvg pagetual" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M296 440c-44.1 0-80 35.9-80 80s35.9 80 80 80 80-35.9 80-80-35.9-80-80-80z" fill="#604b4a"></path><path d="M960 512c0-247-201-448-448-448S64 265 64 512c0 1.8 0.1 3.5 0.1 5.3 0 0.9-0.1 1.8-0.1 2.7h0.2C68.5 763.3 267.7 960 512 960c236.2 0 430.1-183.7 446.7-415.7 0.1-0.8 0.1-1.6 0.2-2.3 0.4-4.6 0.5-9.3 0.7-13.9 0.1-2.7 0.4-5.3 0.4-8h-0.2c0-2.8 0.2-5.4 0.2-8.1z m-152 8c0 44.1-35.9 80-80 80s-80-35.9-80-80 35.9-80 80-80 80 35.9 80 80zM512 928C284.4 928 99 744.3 96.1 517.3 97.6 408.3 186.6 320 296 320c110.3 0 200 89.7 200 200 0 127.9 104.1 232 232 232 62.9 0 119.9-25.2 161.7-66-66 142.7-210.4 242-377.7 242z" fill="#604b4a"></path></svg>
                 </button>
-                <div class="title">${i18n("picker")}</div>
+                <div class="title" title="${i18n("configure")}">${i18n("picker")}</div>
                 <button title="${i18n("closePicker")}" type="button" class="closePicker">
                   <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M512 128c212 0 384 172 384 384s-172 384-384 384-384-172-384-384 172-384 384-384m0-64C264.8 64 64 264.8 64 512s200.8 448 448 448 448-200.8 448-448S759.2 64 512 64z m238.4 254.4l-45.6-45.6L512 467.2 318.4 273.6l-45.6 45.6L467.2 512 273.6 705.6l45.6 45.6L512 557.6l193.6 193.6 45.6-45.6L557.6 512l192.8-193.6z" fill="#604b4a"></path></svg>
                 </button>
@@ -3536,7 +3578,12 @@
                   <button id="showDetail" title="" type="button">
                     <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M511.1 63.7c-247.4 0-448 200.6-448 448s200.6 448 448 448 448-200.6 448-448-200.6-448-448-448z m281.2 374.5L535.6 694.9c-12.5 12.5-32.8 12.5-45.3 0l-255.8-256c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l210.7 210.7c12.5 12.5 32.8 12.5 45.3 0l211.4-211.4c12.5-12.5 32.8-12.5 45.3 0 12.3 12.5 12.3 32.8-0.2 45.3z" fill="orangered"></path></svg>
                   </button>
-                  <button id="saveDetail" title="" type="button">
+                  <div class="addProp">
+                    <button id="addOtherProp" title="${i18n("addOtherProp")}" type="button">+</button>
+                    <button id="addNextSelector" title="${i18n("addNextSelector")}" type="button">></button>
+                    <button id="addPageSelector" title="${i18n("addPageSelector")}" type="button">❏</button>
+                  </div>
+                  <button id="saveDetail" title="${i18n("save")}" type="button">
                     <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M704 128H192c-35.2 0-64 28.8-64 64v640c0 35.2 28.8 64 64 64h640c35.2 0 64-28.8 64-64V320L704 128zM256 256h320v128H256V256z m256 512c-70.4 0-128-57.6-128-128s57.6-128 128-128 128 57.6 128 128-57.6 128-128 128z" fill="orangered"></path></svg>
                   </button>
                 </div>
@@ -3586,6 +3633,40 @@
             let tempRule = frame.querySelector(".tempRule");
             let showDetailBtn = frame.querySelector("#showDetail");
             let saveDetailBtn = frame.querySelector("#saveDetail");
+            let addOtherProp = frame.querySelector("#addOtherProp");
+            let addNextSelector = frame.querySelector("#addNextSelector");
+            let addPageSelector = frame.querySelector("#addPageSelector");
+            addOtherProp.addEventListener("click", e => {
+                let propName = prompt(i18n("propName"));
+                if (!propName) return;
+                let propValue = prompt(i18n("propValue"));
+                if (!propValue) return;
+                if (propValue === "true") propValue = true;
+                else if (propValue === "false") propValue = false;
+                else if (/^\d+$/.test(propValue)) propValue = parseInt(propValue);
+                let editTemp = self.getTempRule();
+                if (!editTemp) return;
+                editTemp[propName] = propValue;
+                self.tempRule.value = JSON.stringify(editTemp, null, 4);
+            }, true);
+            addNextSelector.addEventListener("click", e => {
+                let editTemp = self.getTempRule();
+                if (!editTemp) return;
+                let selector = self.selectorInput.value;
+                if (selector) {
+                    editTemp.nextLink = selector;
+                }
+                self.tempRule.value = JSON.stringify(editTemp, null, 4);
+            }, true);
+            addPageSelector.addEventListener("click", e => {
+                let editTemp = self.getTempRule();
+                if (!editTemp) return;
+                let selector = self.selectorInput.value;
+                if (selector) {
+                    editTemp.pageElement = selector;
+                }
+                self.tempRule.value = JSON.stringify(editTemp, null, 4);
+            }, true);
             showDetailBtn.addEventListener("click", e => {
                 if (tempRule.style.display == "none") {
                     tempRule.style.display = "";
@@ -3715,9 +3796,21 @@
             this.loadNow = loadNow;
             this.tempRule = tempRule;
             this.logoBtn = logoBtn;
+            let setTitleTimer;
             this.moveHandler = e => {
                 if (!self.showSign || e.target === document) return;
-                self.adjustSignDiv(self.mainSignDiv, self.getTarget(e.target));
+                let target = self.getTarget(e.target);
+                self.adjustSignDiv(self.mainSignDiv, target);
+                clearTimeout(setTitleTimer);
+                setTitleTimer = setTimeout(() => {
+                    if (self.inPicker && target.hasAttributes()) {
+                        let title = target.nodeName + "\n";
+                        for (const attr of target.attributes) {
+                            title += `${attr.name}${attr.value ? " ➡️ " + attr.value : ""}\n`;
+                        }
+                        getBody(document).title = title;
+                    }
+                }, 500);
             };
             this.clickHandler = e => {
                 if (!self.showSign) return;
@@ -3754,9 +3847,8 @@
                 delete this.editTemp.type;
                 delete this.editTemp.updatedAt;
             }
-            let selectorInput = this.frame.querySelector(".selector");
-            if (selectorInput.value && this.tempRule.style.display == "none") {
-                this.editTemp.pageElement = selectorInput.value;
+            if (this.selectorInput.value && this.tempRule.style.display == "none") {
+                this.editTemp.pageElement = this.selectorInput.value;
             }
             return this.editTemp;
         }
@@ -3775,6 +3867,7 @@
             getBody(document).classList.remove("pagetual-picker");
             getBody(document).removeEventListener("mousemove", this.moveHandler, true);
             getBody(document).removeEventListener("click", this.clickHandler, true);
+            getBody(document).title = "";
             this.inPicker = false;
         }
 
@@ -4176,7 +4269,7 @@
                     let versionEle = document.querySelector('.markdown-body>h1[id],article>h1');
                     let latestVer = versionEle && versionEle.innerText.match(/\d[\d\.]+/)[0];
                     if (latestVer && latestVer != _GM_info.script.version) {
-                        showTips(i18n('outOfDate'));
+                        showTips(i18n('outOfDate'), "", 3000);
                     }
                 }
                 _GM_addStyle(`
@@ -5250,6 +5343,19 @@
            transition:transform 0.5 ease, opacity 0.3s ease;
            opacity: 0;
          }
+         .pagetual_pageBar.stop span>svg{
+           opacity: 1;
+         }
+         .pagetual_pageBar.stop span>svg>path{
+           transform: scale(.8);
+           transform-origin: center;
+           -moz-transition:transform 0.3s ease;
+           -webkit-transition:transform 0.3s ease;
+           transition:transform 0.3 ease;
+         }
+         .pagetual_pageBar.stop:hover span>svg>path{
+           transform: unset;
+         }
          .pagetual_pageBar:hover span>svg {
            opacity: 1;
          }
@@ -5890,7 +5996,8 @@
         if (ruleParser.curSiteRule.pageNum || pageNumReg.test(url)) {
             pageText.innerHTML += i18n("page");
             pageNum = document.createElement("span");
-            pageNum.innerHTML = ruleParser.getPageNumFromUrl(url);
+            let num = ruleParser.getPageNumFromUrl(url);
+            pageNum.innerHTML = num;
             pageNum.className = "pagetual_pageNum";
             pageNum.title = i18n("inputPageNum");
             pageNum.style.cssText = pageTextStyle;
@@ -5898,7 +6005,7 @@
             pageNum.style.color = "";
             pageNum.style.marginLeft = "5px";
             pageNum.addEventListener("click", e => {
-                let pageInput = prompt(i18n("inputPageNum"), "1");
+                let pageInput = prompt(i18n("inputPageNum"), num || "1");
                 if (pageInput) {
                     let pageLink = ruleParser.getLinkByPage(url, pageInput);
                     if (pageLink) {
