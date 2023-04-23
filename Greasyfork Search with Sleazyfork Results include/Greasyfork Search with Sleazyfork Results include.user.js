@@ -4,7 +4,7 @@
 // @name:zh-TW   大人的Greasyfork
 // @name:ja      大人のGreasyfork
 // @namespace    hoothin
-// @version      1.6.4
+// @version      1.6.5
 // @description  Merge adult results of sleazyfork into greasyfork when the script is no longer anonymously available, add rating score and version for scripts then
 // @description:zh-CN 在Greasyfork的搜索结果中添加Sleazyfork上的成人脚本，增加评分与版本号，并在访问匿名不可用脚本时跳转至Sleazyfork
 // @description:zh-TW 在Greasyfork的搜索結果中添加Sleazyfork上的成人腳本，增加評分與版本號，並在訪問匿名不可用腳本時跳轉至Sleazyfork
@@ -300,7 +300,7 @@
         var goodCount=parseInt(script.querySelector("dd.script-list-ratings>span>.good-rating-count").innerHTML.replace(/[^\d]/g,""));
         var okCount=parseInt(script.querySelector("dd.script-list-ratings>span>.ok-rating-count").innerHTML.replace(/[^\d]/g,""));
         var badCount=parseInt(script.querySelector("dd.script-list-ratings>span>.bad-rating-count").innerHTML.replace(/[^\d]/g,""));
-        if(badCount && badCount>goodCount){
+        if(badCount && badCount>2 && badCount>goodCount){
             let scriptLink=script.querySelector('.script-link');
             if(scriptLink){
                 var warn=document.createTextNode("⚠");
