@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.4.22.1
+// @version              2023.4.23.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -13873,7 +13873,7 @@ ImgOps | https://imgops.com/#b#`;
                             self.maximizeSidebar();
                             break;
                         case 'addImageUrls':
-                            var urls=window.prompt(i18n('addImageUrls'),"https://xxx.xxx/pic-[20-99].jpg, https://xxx.xxx/pic-[01-10].png");
+                            var urls=window.prompt(i18n('addImageUrls')+": ',' to split multi-image, '[01-09]' to generate nine urls form 01 to 09","https://xxx.xxx/pic-[20-99].jpg, https://xxx.xxx/pic-[01-10].png");
                             if(!urls)return;
                             var imgs=[];
                             [].forEach.call(urls.split(","),function(i){
@@ -14545,9 +14545,9 @@ ImgOps | https://imgops.com/#b#`;
                 var sizeInputW=this.gallery.querySelector("#minsizeW");
                 var sizeInputHSpan=this.gallery.querySelector("#minsizeHSpan");
                 var sizeInputWSpan=this.gallery.querySelector("#minsizeWSpan");
-                sizeInputH.title=sizeInputH.value+"px";
+                sizeInputH.title="min height: "+sizeInputH.value+"px";
                 sizeInputHSpan.innerHTML=createHTML(Math.floor(sizeInputH.value)+"px");
-                sizeInputW.title=sizeInputW.value+"px";
+                sizeInputW.title="min width: "+sizeInputW.value+"px";
                 sizeInputWSpan.innerHTML=createHTML(Math.floor(sizeInputW.value)+"px");
 
                 var self=this;
@@ -14577,12 +14577,12 @@ ImgOps | https://imgops.com/#b#`;
                     });
                     sizeInputH.max=maxSizeH;
                     sizeInputH.min=minSizeH;
-                    sizeInputH.title=sizeInputH.value+"px";
+                    sizeInputH.title="min height: "+sizeInputH.value+"px";
                     sizeInputHSpan.innerHTML=createHTML(Math.floor(sizeInputH.value)+"px");
 
                     sizeInputW.max=maxSizeW;
                     sizeInputW.min=minSizeW;
-                    sizeInputW.title=sizeInputW.value+"px";
+                    sizeInputW.title="min width: "+sizeInputW.value+"px";
                     sizeInputWSpan.innerHTML=createHTML(Math.floor(sizeInputW.value)+"px");
                 }else{
                     this.data.forEach(function(item) {
@@ -14639,14 +14639,14 @@ ImgOps | https://imgops.com/#b#`;
                 sizeInputH.max=maxSizeH;
                 sizeInputH.min=minSizeH;
                 sizeInputH.value=prefs.gallery.defaultSizeLimit.h;
-                sizeInputH.title=sizeInputH.value+"px";
+                sizeInputH.title="min height: "+sizeInputH.value+"px";
                 var sizeInputHSpan=this.gallery.querySelector("#minsizeHSpan");
                 sizeInputHSpan.innerHTML=createHTML(Math.floor(sizeInputH.value)+"px");
 
                 sizeInputW.max=maxSizeW;
                 sizeInputW.min=minSizeW;
                 sizeInputW.value=prefs.gallery.defaultSizeLimit.w;
-                sizeInputW.title=sizeInputW.value+"px";
+                sizeInputW.title="min width: "+sizeInputW.value+"px";
                 var sizeInputWSpan=this.gallery.querySelector("#minsizeWSpan");
                 sizeInputWSpan.innerHTML=createHTML(Math.floor(sizeInputW.value)+"px");
             },
@@ -15567,13 +15567,13 @@ ImgOps | https://imgops.com/#b#`;
                         if(selectData.sizeW<sizeInputW.value){
                             var sizeInputWSpan=this.gallery.querySelector("#minsizeWSpan");
                             sizeInputW.value=selectData.sizeW;
-                            sizeInputW.title=sizeInputW.value+"px";
+                            sizeInputW.title="min width: "+sizeInputW.value+"px";
                             sizeInputWSpan.innerHTML=createHTML(Math.floor(sizeInputW.value)+"px");
                         }
                         if(selectData.sizeH<sizeInputH.value){
                             var sizeInputHSpan=this.gallery.querySelector("#minsizeHSpan");
                             sizeInputH.value=selectData.sizeH;
-                            sizeInputH.title=sizeInputH.value+"px";
+                            sizeInputH.title="min height: "+sizeInputH.value+"px";
                             sizeInputHSpan.innerHTML=createHTML(Math.floor(sizeInputH.value)+"px");
                         }
                     }
@@ -16498,7 +16498,7 @@ ImgOps | https://imgops.com/#b#`;
 
                 var html = '\
                  <head>\
-                 <title>' + title + ' '+i18n("exportImages")+'</title>\
+                 <title>Picviewer CE+ '+i18n("exportImages")+' '+title+'</title>\
                  <style>\
                  .toTop{width:28px;height:28px;border-radius:14px;position: fixed;right:2px;bottom: 2px;cursor: pointer;background-color:#000;opacity:.3;padding:0em!important;border:0px!important;z-index:1}\
                  .toTop:hover{opacity:1}\
@@ -16735,6 +16735,11 @@ ImgOps | https://imgops.com/#b#`;
                     .pv-gallery-head-left-img-info-description {\
                     margin-left: 10px;\
                     margin-right: 10px;\
+                    overflow: hidden;\
+                    text-overflow: ellipsis;\
+                    white-space: nowrap;\
+                    max-width: 25em;\
+                    display: inherit;\
                     }\
                     .pv-gallery-range-box{\
                     display: inline-flex;\
@@ -16884,6 +16889,7 @@ ImgOps | https://imgops.com/#b#`;
                     }\
                     .pv-gallery-head-command-drop-list-item > * {\
                     vertical-align:middle;\
+                    width: auto;\
                     }\
                     .pv-gallery-head-command-drop-list-item label {\
                     font-weight: normal;\
@@ -17161,7 +17167,7 @@ ImgOps | https://imgops.com/#b#`;
                     position:absolute;\
                     line-height:0;\
                     text-align:center;\
-                    background-color:#000000;\
+                    background-color:#00000060;\
                     color:#757575;\
                     white-space:nowrap;\
                     cursor:pointer;\
@@ -17172,11 +17178,11 @@ ImgOps | https://imgops.com/#b#`;
                     border-radius: 15px;\
                     line-height: 2 !important;\
                     font-family: auto;\
-                    opacity: 0.35;\
-                    transition: opacity .3s ease;\
+                    transition: background-color .3s ease;\
                     }\
                     .pv-gallery-sidebar-viewmore:hover{\
                     opacity: 1;\
+                    background-color:#000000;\
                     }\
                     .pv-gallery-maximize-container>p{\
                     position: fixed;\
@@ -17363,7 +17369,6 @@ ImgOps | https://imgops.com/#b#`;
                     }\
                     .pv-gallery-sidebar-viewmore-bottom{\
                     display: block;\
-                    background-color: #000000;\
                     bottom:12px;\
                     }\
                     .pv-gallery-sidebar-viewmore-bottom.showmore{\
@@ -18595,6 +18600,7 @@ ImgOps | https://imgops.com/#b#`;
                 let compareImg = document.createElement("img");
                 let compareSlider = document.createElement("div");
                 compareSlider.className = "compareSlider";
+                compareSlider.title = "Right mouse to bottom, hold to top";
                 compareImgCon.style.width = percent + "%";
                 compareSlider.style.left = percent + "%";
                 let compareSliderButton = document.createElement("button");
@@ -18953,7 +18959,7 @@ ImgOps | https://imgops.com/#b#`;
                     opacity:0;\
                     }\
                     .pv-pic-search-state {\
-                    top: 8px;\
+                    top: -14px;\
                     left: 8px;\
                     display: block;\
                     position: absolute;\
@@ -18962,16 +18968,21 @@ ImgOps | https://imgops.com/#b#`;
                     height: 20px;\
                     line-height: 20px;\
                     background: rgb(0 0 0 / 80%);\
-                    border-radius: 0 0 8px 0;\
+                    border-radius: 1px 1px 0 0;\
                     padding: 1px 5px;\
                     white-space: nowrap;\
                     overflow: hidden;\
-                    opacity:0.3;\
+                    opacity:0.5;\
                     font-size: small;\
                     transition: all 0.3s ease;\
                     user-select: none;\
                     -webkit-box-sizing: content-box;\
                     box-sizing: content-box;\
+                    }\
+                    .pv-pic-window-container_focus>.pv-pic-search-state {\
+                    border-radius: 0 0 8px 0;\
+                    opacity:0.3;\
+                    top: 8px;\
                     }\
                     .pv-pic-window-scrollSign {\
                     display: none;\
