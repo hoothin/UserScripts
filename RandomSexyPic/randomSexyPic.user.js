@@ -3,7 +3,7 @@
 // @name:zh-TW   軟瑟盤
 // @name:ja      RandomSexyPicParser
 // @namespace    hoothin
-// @version      1.3.15.3
+// @version      1.3.16
 // @description        Random Sexy Pictures Parser
 // @description:zh-TW  隨機色圖
 // @description:ja     Random Sexy Pictures Parser
@@ -15,13 +15,11 @@
 // @match        https://api.vvhan.com/api/tao*
 // @match        https://www.hlapi.cn/api/mjx*
 // @match        https://3650000.xyz/api/?*
-// @match        https://*
-// @match        http://*
+// @match        *://*/*
 // @icon         data:image/jpg;base64,/9j/4AAQSkZJRgABAQEBLAEsAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBYQERMUFRUVDA8XGBYUGBIUFRT/2wBDAQMEBAUEBQkFBQkUDQsNFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBT/wAARCAAgACADASIAAhEBAxEB/8QAGAAAAwEBAAAAAAAAAAAAAAAABgcICQX/xAAsEAABAwMEAQIFBQEAAAAAAAABAgMEBQYRAAcSITEIQRMUIjJRIyRCYYHB/8QAFgEBAQEAAAAAAAAAAAAAAAAABgQF/8QAIxEAAgEDBAEFAAAAAAAAAAAAAQMCABESBCFBUQUVMWHB8P/aAAwDAQACEQMRAD8AHNrPQdFYZlXBX6fJuRqns/NhptIUmSodhCG0nsdeCcqOAPOnVLvK3r227YVFjy6OEpLaWavEMKU2cY4utn7eseMjAHeq7vuaxtDs/VnaRSG6nIp9MffjwnMhD7jTKlpQsgZ7KcfnWQFv+sO6d0txKOxcFuw7ibqUpDUmPT4vwnWStQT+ksKJPHOfqB6Hf50Qd4vUOjlKWUj3x8Dik6PIJhO2Nojr7qo6fGtG1YUVNSrcJMl7PAzpjcZtPXkKUQCP+6CNz7Ttq+rdmP1iOKnDhq5iTBd5OMjoFbS0+evbvIGmfbm2dgVrcmq29W4MauJSwWYqpzaHUK4r+ocVAgE9eOzpmVnYaj2zt4qZQ4saOWnlhuBGYRHa+AnyPhoAGcknx3qD05qEiUY2MeR+vWgNeljTAm4l3T6vCDG3k2YffoFQfDdRhplQ5UNYK1j7hxPvyHX+6yhqm3tV2XuqrV2mJpLkpt1TiXFMltb5UMlOBnifOR1351f3owrEmgekbb52mKXVG2qU0ostjms9q5cO++8jGkp6lrQtLca6H7lp8gUCsrBcqESYSxyUPKig/wAseT76ZLcJQBB3omV4zsfapo2gq993nuhR6vUGl01EV/5pNOhO/uJCgfpSpRGG289n+vfV/wBs3LMNoNxn1olzo6HEvSgrkyHVrJWEqx2lOeIPvjU02Kzbe3VBkvPzIkl+SOSni5kke3+f1jXN3i9Vsdi2GqDakOUoBHFElCShAI8qB/GfbUmoeFrMb7mrFJLGAgbCv//Z
 // @grant        GM_addStyle
 // @grant        GM_setValue
 // @grant        GM_getValue
-// @grant        GM_deleteValue
 // @grant        GM_xmlhttpRequest
 // @grant        GM_registerMenuCommand
 // @run-at       document-idle
@@ -240,6 +238,12 @@
         "www.hlapi.cn":"buyersShow",
         "api.ghser.com":"buyersShow"
     };
+    var customRule=GM_getValue("RSPrules") || {};
+    var customRuleArr=[];
+    for(var j in customRule){
+        let href=customRule[j];
+        customRuleArr.push(href);
+    }
     GM_registerMenuCommand("I am feeling lucky", ()=>{
         var luckyUrls=[],targetUrl;
         for(var i in setuConfig){
@@ -254,6 +258,7 @@
                 luckyUrls.push(sc.url);
             }
         }
+        luckyUrls=luckyUrls.concat(customRuleArr);
         var randomIndex=Math.floor(Math.random()*luckyUrls.length);
         targetUrl=luckyUrls[randomIndex];
         location.href=targetUrl;
@@ -268,13 +273,14 @@
         }
     }
     if(!curConfig){
-        var customRule=GM_getValue("RSPrules_"+document.domain+location.pathname);
-        if(!customRule){
+        let currentParsing=customRule[document.domain+location.pathname];
+        if(!currentParsing){
             GM_registerMenuCommand("Parse current api", customSet);
             return;
         }else{
             GM_registerMenuCommand("Stop parse api", () => {
-                GM_deleteValue("RSPrules_"+document.domain+location.pathname);
+                delete customRule[document.domain+location.pathname];
+                GM_setValue("RSPrules", customRule);
                 location.reload();
             });
             curConfig={run:()=>{
@@ -398,6 +404,12 @@
         siteA.href=url;
         siteA.innerHTML=config.name;
         btns.appendChild(siteA);
+    }
+    if(customRuleArr.length){
+        var otherSiteA=document.createElement("a");
+        otherSiteA.href=customRuleArr[Math.floor(Math.random()*customRuleArr.length)];
+        otherSiteA.innerHTML="Other";
+        btns.appendChild(otherSiteA);
     }
     btns.appendChild(numInput);
     btns.appendChild(r18Check);
@@ -580,7 +592,8 @@
 
     function customSet(){
         if(window.confirm("Parse current api?")){
-            GM_setValue("RSPrules_"+document.domain+location.pathname, true);
+            customRule[document.domain+location.pathname]=location.href;
+            GM_setValue("RSPrules", customRule);
             location.reload();
         }
     }
