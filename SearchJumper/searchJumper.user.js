@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.64.64
+// @version      1.6.6.65.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -61,7 +61,7 @@
             icon: "language",
             sites: [ {
                 name: "百度翻译",
-                url: "http://fanyi.baidu.com/#auto/zh/%s"
+                url: "https://fanyi.baidu.com/#auto/zh/%s"
             }, {
                 name: "DeepL",
                 url: "https://www.deepl.com/translator#zh/en/%s",
@@ -72,11 +72,11 @@
                 match: "translate\\.google\\.com.*\\btext="
             }, {
                 name: "有道词典",
-                url: "http://dict.youdao.com/search?q=%s",
+                url: "https://dict.youdao.com/search?q=%s",
                 icon: "https://shared.ydstatic.com/images/favicon.ico"
             }, {
                 name: "必应翻译",
-                url: "http://www.bing.com/dict/search?q=%s"
+                url: "https://www.bing.com/dict/search?q=%s"
             } ]
         },
         {
@@ -84,30 +84,30 @@
             icon: "video",
             sites: [ {
                 name: "bilibili",
-                url: "http://search.bilibili.com/all?keyword=%s"
+                url: "https://search.bilibili.com/all?keyword=%s"
             }, {
                 name: "腾讯视频",
                 url: "https://v.qq.com/x/search/?q=%s"
             }, {
                 name: "爱奇艺",
-                url: "http://so.iqiyi.com/so/q_%s",
+                url: "https://so.iqiyi.com/so/q_%s",
                 icon: "https://www.iqiyi.com/favicon.ico"
             }, {
                 name: "youtube",
                 url: "https://www.youtube.com/results?search_query=%s"
             }, {
                 name: "优酷",
-                url: "http://www.soku.com/search_video/q_%s",
+                url: "https://www.soku.com/search_video/q_%s",
                 icon: "https://img.alicdn.com/tfs/TB1WeJ9Xrj1gK0jSZFuXXcrHpXa-195-195.png"
             }, {
                 name: "AcFun",
                 url: "https://www.acfun.cn/search?keyword=%s"
             }, {
                 name: "搜狐",
-                url: "http://so.tv.sohu.com/mts?wd=%s"
+                url: "https://so.tv.sohu.com/mts?wd=%s"
             }, {
                 name: "niconico",
-                url: "http://www.nicovideo.jp/search/%s"
+                url: "https://www.nicovideo.jp/search/%s"
             } ]
         },
         {
@@ -115,7 +115,7 @@
             icon: "music",
             sites: [ {
                 name: "网易音乐",
-                url: "http://music.163.com/#/search/m/?s=%s",
+                url: "https://music.163.com/#/search/m/?s=%s",
                 icon: "https://s1.music.126.net/style/favicon.ico"
             }, {
                 name: "一听",
@@ -157,7 +157,7 @@
                 url: "https://www.facebook.com/search/results.php?q=%s"
             }, {
                 name: "微信搜索",
-                url: "http://weixin.sogou.com/weixin?ie=utf8&type=2&query=%s"
+                url: "https://weixin.sogou.com/weixin?ie=utf8&type=2&query=%s"
             } ]
         },
         {
@@ -169,7 +169,7 @@
                 match: "www\\.google\\..*tbm=isch"
             }, {
                 name: "百度图片",
-                url: "http://image.baidu.com/search/index?tn=baiduimage&ie=utf-8&word=%s"
+                url: "https://image.baidu.com/search/index?tn=baiduimage&ie=utf-8&word=%s"
             }, {
                 name: "必应图片",
                 url: "https://www.bing.com/images/search?q=%s"
@@ -178,13 +178,13 @@
                 url: "https://pic.sogou.com/pics?query=%s"
             }, {
                 name: "pixiv",
-                url: "http://www.pixiv.net/search.php?word=%s"
+                url: "https://www.pixiv.net/search.php?word=%s"
             }, {
                 name: "flickr",
-                url: "http://www.flickr.com/search/?q=%s"
+                url: "https://www.flickr.com/search/?q=%s"
             }, {
                 name: "花瓣",
-                url: "http://huaban.com/search/?q=%s"
+                url: "https://huaban.com/search/?q=%s"
             }, {
                 name: "Pinterest",
                 url: "https://www.pinterest.com/search/pins/?q=%s&rs=typed&term_meta"
@@ -209,7 +209,7 @@
                 icon: "https://www.google.com/favicon.ico"
             }, {
                 name: "百度新闻",
-                url: "http://news.baidu.com/ns?word=%s&tn=news&from=news&cl=2&rn=20&ct=1",
+                url: "https://news.baidu.com/ns?word=%s&tn=news&from=news&cl=2&rn=20&ct=1",
                 icon: "https://www.baidu.com/favicon.ico"
             }, {
                 name: "网易-百度",
@@ -411,7 +411,7 @@
             icon: "graduation-cap",
             sites: [ {
                 name: "百度学术",
-                url: "http://xueshu.baidu.com/s?wd=%s"
+                url: "https://xueshu.baidu.com/s?wd=%s"
             }, {
                 name: "Scholar",
                 url: "http://scholar.google.com/scholar?hl=zh-CN&q=%s"
@@ -483,13 +483,13 @@
             icon: "book-open-reader",
             sites: [ {
                 name: "维基",
-                url: "http://zh.wikipedia.org/wiki/%s"
+                url: "https://zh.wikipedia.org/wiki/%s"
             }, {
                 name: "百度百科",
-                url: "http://baike.baidu.com/search/word?pic=1&sug=1&word=%s"
+                url: "https://baike.baidu.com/search/word?pic=1&sug=1&word=%s"
             }, {
                 name: "百度文库",
-                url: "http://wenku.baidu.com/search?word=%s&ie=utf-8"
+                url: "https://wenku.baidu.com/search?word=%s&ie=utf-8"
             }, {
                 name: "豆丁文档",
                 url: "http://www.docin.com/search.do?searchcat=2&searchType_banner=p&nkey=%s"
@@ -2938,6 +2938,7 @@
                         }
                         let title = "";
                         let style = "";
+                        let popup = false;
                         let hideParent;
                         let inRange;
                         let isRe = false;
@@ -2947,6 +2948,17 @@
                         if (titleMatch) {
                             title = titleMatch[1];
                             word = word.replace(titleReg, "$2");
+                            switch(title) {
+                                case "$popup":
+                                    title = "";
+                                    popup = true;
+                                    break;
+                                case "\\$popup":
+                                    title = "$popup";
+                                    break;
+                                default:
+                                    break;
+                            }
                         }
                         let hideParentReg = /\$p{(.*?)}($|\$)/;
                         let hideParentMatch = word.match(hideParentReg);
@@ -2975,7 +2987,7 @@
                             word = reMatch[1];
                             reCase = reMatch[2];
                         }
-                        result.push({content: word, isRe: isRe, reCase: reCase, title: title, style: style, oriWord: oriWord, hideParent: hideParent, inRange: inRange});
+                        result.push({content: word, isRe: isRe, reCase: reCase, title: title, style: style, oriWord: oriWord, hideParent: hideParent, inRange: inRange, popup: popup});
                         self.curWordIndex++;
                     });
                 } else {
@@ -3556,7 +3568,7 @@
                              <img width="32px" height="32px" src="${logoBase64}" />${i18n("modifyWord")}
                          </a>
                          <div class="searchJumperModify-input-title">${i18n("wordContent")}</div>
-                         <input name="wordContent" type="text" />
+                         <input name="wordContent" type="text" placeholder="word /aPPle\\d/ /google/i"/>
                          <div class="searchJumperModify-input-title">${i18n("wordHide")}</div>
                          <input name="wordHide" min="0" placeholder="${i18n("wordHideTips")}" type="number" />
                          <div class="searchJumperModify-input-title">${i18n("wordRange")}</div>
@@ -3565,7 +3577,7 @@
                          <div class="searchJumperModify-input-title">${i18n("wordStyle")}</div>
                          <input name="wordStyle" placeholder="#333333;color:red;" type="text" />
                          <div class="searchJumperModify-input-title">${i18n("wordTitle")}</div>
-                         <textarea name="wordTitle" type="text"></textarea>
+                         <textarea name="wordTitle" type="text" placeholder="$popup to popup"></textarea>
                          <div class="searchJumperModify-buttons">
                              <button id="cancel" type="button">${i18n("cancel")}</button>
                              <button id="modify" type="button">${i18n("modify")}</button>
@@ -4013,6 +4025,14 @@
                             spannode = document.createElement("mark");
                             spannode.className = "searchJumper";
                             if (word.title) spannode.title = JSON.parse('"' + word.title + '"');
+                            if (word.popup) {
+                                spannode.addEventListener("mouseenter", e => {
+                                    if (targetElement != spannode || !searchBar.funcKeyCall) {
+                                        targetElement = spannode;
+                                        searchBar.showInPage(true, e);
+                                    }
+                                });
+                            }
                             spannode.style.cssText = word.style;
                             spannode.addEventListener("click", e => {
                                 if (!e.altKey) return;
@@ -7292,7 +7312,7 @@
                 if (this.con && this.con.classList.contains("search-jumper-showall")) return;
                 if (searchData.prefConfig.hidePopup) _funcKeyCall = false;
                 if (!targetElement) targetElement = getBody(document);
-                else if (targetElement != getBody(document)) {
+                else if (targetElement != getBody(document) && (targetElement.className != "searchJumper" || !/^MARK$/i.test(targetElement.nodeName))) {
                     let _targetElement = targetElement, children;
                     while (_targetElement && _targetElement.nodeName) {
                         if (_targetElement.nodeName.toUpperCase() == 'IMG' || _targetElement.nodeName.toUpperCase() == 'AUDIO' || _targetElement.nodeName.toUpperCase() == 'VIDEO' || _targetElement.nodeName.toUpperCase() == 'A') break;
@@ -8269,6 +8289,10 @@
                 if (selStr) {
                     return selStr;
                 }
+            } else {
+                if (targetElement && targetElement.className === "searchJumper" && /^MARK$/i.test(targetElement.nodeName)) {
+                    return targetElement.innerText;
+                }
             }
             return "";
         }
@@ -9103,6 +9127,16 @@
                 document.addEventListener('received', e => {
                     received = true;
                     clearTimeout(sendMessageTimer);
+                });
+
+                document.addEventListener('downloadCache', e => {
+                    downloadCache();
+                });
+
+                document.addEventListener('importCache', e => {
+                    let cacheData = e.detail ? e.detail.cacheData : e.cacheData;
+                    importCache(cacheData);
+                    _GM_notification('Cache imported successfully!');
                 });
 
                 loadConfig();
@@ -10657,6 +10691,30 @@
                 });
             } else {
                 iconsCon.style.opacity = 0;
+            }
+        }
+
+        function downloadCache() {
+            let downloadEle = document.createElement('a');
+            downloadEle.download = "searchJumperCache.json";
+            downloadEle.target = "_blank";
+            let blobStr = [JSON.stringify({sortTypeNames: sortTypeNames, cacheIcon: cacheIcon}, null , 4)];
+            let myBlob = new Blob(blobStr, { type: "application/json" });
+            downloadEle.href = window.URL.createObjectURL(myBlob);
+            downloadEle.click();
+        }
+
+        function importCache(cacheData) {
+            if (cacheData.cacheIcon) {
+                cacheIcon = cacheData.cacheIcon;
+                storage.setItem("cacheIcon", cacheIcon);
+                cachePool = [];
+                searchData.prefConfig.cacheSwitch = true;
+                storage.setItem("searchData", searchData);
+            }
+            if (cacheData.sortTypeNames) {
+                sortTypeNames = cacheData.sortTypeNames;
+                storage.setItem("sortTypeNames", sortTypeNames);
             }
         }
 
