@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.36.4
+// @version      1.9.36.5
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1833,6 +1833,7 @@
                 body.querySelector("ul.pagination>li.active+li>a") ||
                 body.querySelector("[class^=pag] .current+a") ||
                 body.querySelector("a[class*=nextpage]") ||
+                body.querySelector("li.page-current+li>a") ||
                 body.querySelector(".pager-section a[rel=next]") ||
                 body.querySelector(".pagination a[rel=next]") ||
                 body.querySelector(".pagination-nav__item--next>a");
@@ -2362,7 +2363,9 @@
                         let compareUrl = this.nextLinkHref.replace(/#p{.*/, "");
                         if (compareUrl != "#" && (compareUrl == this.initUrl || compareUrl == this.curUrl || compareUrl == this.curUrl + "#" || compareUrl == this.oldUrl || compareUrl == this.oldUrl + "#")) {
                             this.nextLinkHref = false;
-                        } else if (doc == document) debug(nextLink, 'Next link');
+                        } else if (doc == document) {
+                            debug(nextLink, 'Next link');
+                        }
                     }
                 }
             } else {
@@ -6110,6 +6113,7 @@
                 pageBar.style.backgroundColor = "unset";
                 pageBar.style.lineHeight = "20px";
                 pageBar.style.boxShadow = "";
+                pageBar.style.border = "";
                 pageBar.style.maxWidth = "unset";
                 pageBar.style.flex = "auto";
                 let inTd = document.createElement("div");
@@ -6373,13 +6377,14 @@
 
     var emuIframe, lastActiveUrl, orgContent, meetCors = false;
     function emuPage(callback) {
-        let orgPage = null, preContent = null, iframeDoc, times = 0, loadmoreBtn, pageEle, nextLink, loadmoreEnd = false, waitTimes = 80, changed = false;
+        let orgPage = null, preContent = null, iframeDoc, checkTimes = 0, loadmoreBtn, pageEle, nextLink, loadmoreEnd = false, waitTimes = 80, changed = false;
         function returnFalse(log) {
             debug(log);
             isPause = true;
             callback(false, false);
             if (emuIframe && emuIframe.parentNode) {
                 emuIframe.parentNode.removeChild(emuIframe);
+                SideController.getInstance().remove();
                 emuIframe = null;
             }
         }
@@ -6498,7 +6503,7 @@
                 return;
             }
             if (!ruleParser.checkStopSign(nextLink, iframeDoc)) return returnFalse("Stop as stopSign");;
-            if (times++ > 200) {
+            if (checkTimes++ > 200) {
                 returnFalse("Stop as timeout when emu");
                 return;
             }
@@ -6513,7 +6518,7 @@
                 }
             }
             if (!checkItem || (checkEval && !checkEval(iframeDoc))) {
-                if (checkEval) times = 0;
+                if (checkEval) checkTimes = 0;
                 setTimeout(() => {
                     checkPage();
                 }, waitTime);
@@ -6539,7 +6544,7 @@
                         checkPage();
                     }, waitTime);
                 } else if (changed) {
-                    times = 0;
+                    checkTimes = 0;
                     if (orgContent == preContent && (ruleParser.curSiteRule.singleUrl || ruleParser.curSiteRule.stopSame)) {
                         returnFalse("Stop as same content");
                     } else {
@@ -6547,7 +6552,7 @@
                         callback(iframeDoc, eles);
                     }
                 } else {
-                    if (times % 10 === 1) {
+                    if (checkTimes % 10 === 1) {
                         if (!nextLink || !nextLink.offsetParent) {
                             nextLink = await ruleParser.getNextLink(iframeDoc);
                         }
@@ -6924,6 +6929,7 @@
                     nextLink = nextLink.replace(/^http/, "https");
                 }
             }
+            isLoading = true;
             if (curPage != 1 || !isJs || !ruleParser.curSiteRule.singleUrl) {
                 ruleParser.beginLoading(loadingDiv);
             }
