@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.66.64
+// @version      1.6.6.67.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -765,7 +765,7 @@
                         siteAddOver: '站点添加成功',
                         multiline: '是否以换行符分隔多行搜索？',
                         multilineTooMuch: '行数超过10行，是否继续搜索？',
-                        inputPlaceholder: '输入关键词筛选站点，支持 * ? 通配符，$代表末尾，^代表开头，分组**站点 可筛选指定分组，例如【图片**baidu】，tab 下一项',
+                        inputPlaceholder: '输入关键词筛选站点，支持 * ? 通配符，$代表末尾，^代表开头，分组**站点 可筛选指定分组，例如 图片**baidu，tab 下一项',
                         inputKeywords: '输入搜索关键词',
                         inPageTips: '自定义分隔符：$c 加分隔符，例如 $c| search | jumper，默认空格作为分隔符\n原始文本不分隔：$o 加文本，例如$oopai liked by hero\n正则表达式：/re/，例如 $c, /google/i , /aPPle/\n添加提示文本：搜索文本$t{提示文本}，例如 linux$t{linux is not unix}\n添加自定义样式：搜索文本$s{背景;其他}，例如 google$s{#333333;color:red;}\n左键点击关键词跳转至下一个，右键点击关键词跳转至上一个',
                         inPagePlaceholder: '输入文字，按下回车进行页内查找',
@@ -821,7 +821,7 @@
                         submitCrawl: '完成操作',
                         inputOutput: '在元素<span title="#t1#" class="element">#t1#</span>内输入<span title="#t2#">#t2#</span>',
                         clickOutput: '点击元素<span title="#t#" class="element">#t#</span>',
-                        sleepOutpus: '休眠<span title="#t#">#t#</span>毫秒',
+                        sleepOutput: '休眠<span title="#t#">#t#</span>毫秒',
                         inputNewValue: '请输入新值',
                         deleteConfirm: '确定要删除此项吗？',
                         sleepPrompt: '等待时间（毫秒）'
@@ -853,7 +853,7 @@
                         siteAddOver: '站點添加成功',
                         multiline: '是否以換行符分隔多行搜索？',
                         multilineTooMuch: '行數超過10行，是否繼續搜索？',
-                        inputPlaceholder: '輸入關鍵詞篩選站點，支持 * ? 通配符，$代表末尾，^代表開頭，分組**站點 可篩選指定分組，例如【圖片**goo】，tab 下一項',
+                        inputPlaceholder: '輸入關鍵詞篩選站點，支持 * ? 通配符，$代表末尾，^代表開頭，分組**站點 可篩選指定分組，例如 圖片**google，tab 下一項',
                         inputKeywords: '輸入搜索關鍵詞',
                         inPageTips: '自定義分隔符：$c 加分隔符，例如 $c| search | jumper，默認空格作為分隔符\n原始文本不分隔：$o 加文本，例如$oopai liked by hero\n正則表達式：/re/，例如 $c, /google/i , /aPPle/\n添加提示文本：搜索文本$t{提示文本}，例如 linux$t{linux is not unix}\n添加自定義樣式：搜索文本$s{背景;其他}，例如 google$s{#333333;color:red;}\n左鍵點擊關鍵詞跳轉至下一個，右鍵點擊關鍵詞跳轉至上一個',
                         inPagePlaceholder: '輸入文字，按下回車進行頁內查找',
@@ -909,7 +909,7 @@
                         submitCrawl: '完成操作',
                         inputOutput: '在元素<span title="#t1#" class="element">#t1#</span>內輸入<span title="#t2#">#t2#</span>',
                         clickOutput: '點擊元素<span title="#t#" class="element">#t#</span>',
-                        sleepOutpus: '休眠<span title="#t#">#t#</span>毫秒',
+                        sleepOutput: '休眠<span title="#t#">#t#</span>毫秒',
                         inputNewValue: '請輸入新值',
                         deleteConfirm: '確定要刪除此項嗎？ ',
                         sleepPrompt: '等待時間（毫秒）'
@@ -996,7 +996,7 @@
                         submitCrawl: 'Complete operation',
                         inputOutput: 'Input <span title="#t2#">#t2#</span> in the element <span title="#t1#" class="element">#t1#</span>',
                         clickOutput: 'Click on element <span title="#t#" class="element">#t#</span>',
-                        sleepOutpus: 'Sleep for <span title="#t#">#t#</span> milliseconds',
+                        sleepOutput: 'Sleep for <span title="#t#">#t#</span> milliseconds',
                         inputNewValue: 'Please enter a new value',
                         deleteConfirm: 'Are you sure you want to delete this item? ',
                         sleepPrompt: 'Wait time (milliseconds)'
@@ -6512,7 +6512,9 @@
                             }
                         }
                         await emuInput(param[0], inputStr);
-                        input = getElement(param[0]);
+                        if (param[0] !== "@") {
+                            input = getElement(param[0]);
+                        }
                     }
                     if (inPagePostParams) {
                         inPagePostParams.shift();
@@ -6742,6 +6744,7 @@
                     }
                     if (keywords && keywords != cacheKeywords) {
                         cacheKeywords = keywords;
+                        self.keywordIndex = 0;
                         storage.setItem("cacheKeywords", keywords);
                     }
                     let postMatch;
@@ -6759,6 +6762,38 @@
                         return new RegExp(key.replace(/([\*\.\?\+\$\^\[\]\(\)\{\}\|\\\/])/g, "\\$1") + more, sign);
                     }
                     let customReplaceSingle = (str, key, value, after) => {
+                        if (str.indexOf(key + "[") !== -1) {
+                            let multiMatch = str.match(keyToReg(key, "", "\\[(.*?)(\\|(.+))?\\]")), valueArr;
+                            if (multiMatch) {
+                                if (multiMatch[3]) {
+                                    valueArr = value.split(multiMatch[3]);
+                                } else {
+                                    valueArr = value.split(/[\n\r]/);
+                                    if (valueArr.length === 1) {
+                                        valueArr = value.split(" ");
+                                    }
+                                }
+                                if (!self.keywordIndex) self.keywordIndex = 0;
+                                switch(multiMatch[1]) {
+                                    case ""://next
+                                        value = valueArr[self.keywordIndex];
+                                        if (++self.keywordIndex >= valueArr.length) {
+                                            self.keywordIndex = 0;
+                                        }
+                                        break;
+                                    case "-1"://prev
+                                        if (--self.keywordIndex < 0) {
+                                            self.keywordIndex = valueArr.length - 1;
+                                        }
+                                        value = valueArr[self.keywordIndex];
+                                        break;
+                                    default://number
+                                        value = valueArr[parseInt(multiMatch[1]) || 0];
+                                        break;
+                                }
+                                str = str.replace(multiMatch[0], key);
+                            }
+                        }
                         if (str.indexOf(key + ".replace(/") !== -1) {
                             let replaceMatch = str.match(keyToReg(key, "", "\\.replace\\(/(.*?[^\\\\])/(.*?),\s*[\"'](.*?[^\\\\])??[\"']\\)"));
                             if (!replaceMatch) return str.replace(keyToReg(key, "g"), (after ? after(value) : value));
@@ -7949,7 +7984,10 @@
             if (!sel) return null;
             return new Promise((resolve) => {
                 let checkInv = setInterval(() => {
-                    let result = getElement(sel);
+                    let result = null;
+                    if (sel === "@") {
+                        result = targetElement;
+                    } else result = getElement(sel);
                     if (result) {
                         clearInterval(checkInv);
                         resolve(result);
@@ -10587,18 +10625,18 @@
                 let sleepAction = addFrame.querySelector("#sleep");
                 let submitCrawl = addFrame.querySelector("#submitCrawl");
                 let dragDiv;
-                let addAction = (type, params) => {
+                let addAction = (type, sel, val) => {
                     let div = document.createElement("div");
                     let words = "";
                     switch(type) {
                         case "input":
-                            words = i18n('inputOutput', params);
+                            words = i18n('inputOutput', [sel, val]);
                             break;
                         case "click":
-                            words = i18n('clickOutput', params[0]);
+                            words = i18n('clickOutput', sel);
                             break;
                         case "sleep":
-                            words = i18n('sleepOutpus', params[0]);
+                            words = i18n('sleepOutput', val);
                             break;
                         default:
                             break;
@@ -10606,7 +10644,8 @@
                     if (words) {
                         div.innerHTML = createHTML(words);
                         div.dataset.type = type;
-                        div.dataset.params = params;
+                        div.dataset.sel = sel;
+                        div.dataset.val = val;
                         div.draggable = "true";
                         div.ondragover = e => {
                             e.preventDefault();
@@ -10624,11 +10663,16 @@
                                         e.target.innerText = selector;
                                         e.target.title = selector;
                                         addFrame.style.display = '';
+                                        div.dataset.sel = selector;
                                     });
                                     addFrame.style.display = 'none';
                                 } else {
                                     let newValue = prompt(i18n('inputNewValue'), e.target.innerText);
-                                    if (newValue) e.target.innerText = newValue;
+                                    if (newValue) {
+                                        e.target.innerText = newValue;
+                                        e.target.title = newValue;
+                                        div.dataset.val = newValue;
+                                    }
                                 }
                             } else if (confirm(i18n('deleteConfirm'))) {
                                 actionCon.removeChild(div);
@@ -10646,25 +10690,25 @@
                         if (pair.startsWith("click(") && pair.endsWith(')')) {
                             let click = pair.slice(6, pair.length - 1);
                             if (click) {
-                                addAction('click', [click.replace(/\\([\=&])/g, "$1").trim()]);
+                                addAction('click', click.replace(/\\([\=&])/g, "$1").trim());
                             }
                         } else if (pair.startsWith("call(") && pair.endsWith(')')) {
                             let func = pair.slice(5, pair.length - 1);
                             if (func) {
-                                addAction('call', [func.replace(/\\([\=&])/g, "$1").trim()]);
+                                addAction('call', '', func.replace(/\\([\=&])/g, "$1").trim());
                             }
                         } else if (/^sleep\(\d+\)$/.test(pair)) {
                             let sleep = pair.match(/sleep\((.*)\)/);
                             if (sleep) {
-                                addAction('sleep', [sleep[1]]);
+                                addAction('sleep', '', sleep[1]);
                             }
                         } else {
                             pair = pair.replace(/([^\\])\=/g, "$1SJ^PARAM").replace(/\\([\=&])/g, "$1");
                             let pairArr = pair.split("SJ^PARAM");
                             if (pairArr.length === 2) {
-                                addAction('input', [pairArr[0], pairArr[1].replace(/\\([\=&])/g, "$1")]);
+                                addAction('input', pairArr[0], pairArr[1].replace(/\\([\=&])/g, "$1"));
                             } else if (pair.endsWith('.click()') || pair.endsWith('.click')) {
-                                addAction('click', [pair.replace(/\.click(\(\))?$/, '')]);
+                                addAction('click', pair.replace(/\.click(\(\))?$/, ''));
                             }
                         }
                     });
@@ -10675,19 +10719,17 @@
                     let actions = [];
                     [].forEach.call(actionCon.children, action => {
                         if (!action) return;
-                        let params = action.dataset.params;
-                        if (!params) return;
+                        let sel = action.dataset.sel;
+                        let val = action.dataset.val;
                         switch(action.dataset.type) {
                             case "click":
-                                actions.push(`click(${params.replace(/([=&])/g, '\\$1')})`);
+                                actions.push(`click(${sel.replace(/([=&])/g, '\\$1')})`);
                                 break;
                             case "input":
-                                params = params.split(',');
-                                if (params.length != 2) return;
-                                actions.push(`${params[0].replace(/([=&])/g, '\\$1')}=${params[1]}`);
+                                actions.push(`${sel.replace(/([=&])/g, '\\$1')}=${val}`);
                                 break;
                             case "sleep":
-                                actions.push(`sleep(${params})`);
+                                actions.push(`sleep(${val})`);
                                 break;
                             default:
                                 break;
@@ -10704,14 +10746,14 @@
                 });
                 inputAction.addEventListener("click", e => {
                     Picker.getInstance().getSelector(selector => {
-                        addAction('input', [selector, '%s']);
+                        addAction('input', selector, '%s');
                         addFrame.style.display = '';
                     });
                     addFrame.style.display = 'none';
                 });
                 clickAction.addEventListener("click", e => {
                     Picker.getInstance().getSelector(selector => {
-                        addAction('click', [selector]);
+                        addAction('click', selector);
                         addFrame.style.display = '';
                     });
                     addFrame.style.display = 'none';
@@ -10719,7 +10761,7 @@
                 sleepAction.addEventListener("click", e => {
                     let sleepTime = prompt(i18n('sleepPrompt'), 1000);
                     sleepTime = sleepTime && parseInt(sleepTime);
-                    if (sleepTime) addAction('sleep', [sleepTime]);
+                    if (sleepTime) addAction('sleep', '', sleepTime);
                 });
                 submitCrawl.addEventListener("click", e => {
                     urlInput.value = location.href.replace(/\?.*/, '') + '#p{' + geneUrl() + '}';
