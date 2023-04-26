@@ -1357,7 +1357,7 @@
                      display: none;
                  }
                  #search-jumper.search-jumper-showall #filterSites {
-                     background-color: #2a282c;
+                     background-color: #2a282cc0;
                      border: none;
                      height: 40px;
                      margin-bottom: 0;
@@ -1376,10 +1376,11 @@
                      width: 80%;
                      left: calc(10% - 10px);
                      top: 1%;
-                     border-radius: 10px;
+                     border-radius: 20px;
                      pointer-events: all;
                  }
-                 #search-jumper.search-jumper-showall #filterSites>input {
+                 #search-jumper.search-jumper-showall #filterSites>input,
+                 #search-jumper.search-jumper-showall #filterSites>textarea {
                      background-color: #000000;
                      color: white;
                      border: none;
@@ -2221,7 +2222,8 @@
                  .inputGroup * {
                      cursor: default;
                  }
-                 .search-jumper-input input {
+                 .search-jumper-input input,
+                 .search-jumper-input textarea {
                      background-color: #212022;
                      color: white;
                      border: none;
@@ -2244,7 +2246,7 @@
                      transition: 0.25s width ease;
                  }
                  #searchJumperInput {
-                     margin: 0 1px 0 10px;
+                     margin: 0 5px 0 10px;
                  }
                  #searchJumperInputKeyWords {
                      margin: 0 10px 0 1px;
@@ -2254,7 +2256,8 @@
                      max-width: 20%;
                      min-width: 20%;
                  }
-                 #filterSites>input:focus {
+                 #filterSites>input:focus,
+                 #filterSites>textarea:focus {
                      width: calc(400% - 20px);
                  }
                  .search-jumper-input * {
@@ -2330,9 +2333,9 @@
                      position: absolute;
                  }
                  .inputGroup>.svgBtns {
-                     right: 21px;
-                     top: 11px;
-                     height: 33px;
+                     right: 20px;
+                     top: 10px;
+                     height: 35px;
                      position: absolute;
                      user-select: none;
                      background: #212022;
@@ -5420,42 +5423,47 @@
             }
 
             globMatch(glob, target, inner) {
-                if (glob.length == 0 || glob === '*') {
-                    return true;
-                }
-
-                if (glob.length === 1 && glob[0] === '$') {
-                    return !target || target.length === 0;
-                }
-
-                if (glob.length > 1 && glob[0] === '*' &&
-                    (!target || target.length === 0)) {
-                    return false;
-                }
-
-                if (!inner) {
-                    inner = true;
-                    if (glob.length > 1 && glob[0] === '^' &&
-                        target && target.length !== 0) {
-                        glob = glob.substring(1);
-                        if (glob[0] !== target[0]) {
-                            return false;
-                        }
-                    } else if (glob[0] !== '*') {
-                        glob = '*' + glob;
+                if (target.length > 500) return false;
+                try {
+                    if (glob.length == 0 || glob === '*') {
+                        return true;
                     }
-                }
 
-                if ((glob.length > 1 && glob[0] === '?') ||
-                    (glob.length != 0 && target && target.length !== 0 &&
-                     glob[0] === target[0])) {
-                    return this.globMatch(glob.substring(1),
-                                     target.substring(1), !!inner);
-                }
+                    if (glob.length === 1 && glob[0] === '$') {
+                        return !target || target.length === 0;
+                    }
 
-                if (glob.length > 0 && glob[0] === '*') {
-                    return this.globMatch(glob.substring(1), target, !!inner) ||
-                        this.globMatch(glob, target && target.substring(1), !!inner);
+                    if (glob.length > 1 && glob[0] === '*' &&
+                        (!target || target.length === 0)) {
+                        return false;
+                    }
+
+                    if (!inner) {
+                        inner = true;
+                        if (glob.length > 1 && glob[0] === '^' &&
+                            target && target.length !== 0) {
+                            glob = glob.substring(1);
+                            if (glob[0] !== target[0]) {
+                                return false;
+                            }
+                        } else if (glob[0] !== '*') {
+                            glob = '*' + glob;
+                        }
+                    }
+
+                    if ((glob.length > 1 && glob[0] === '?') ||
+                        (glob.length != 0 && target && target.length !== 0 &&
+                         glob[0] === target[0])) {
+                        return this.globMatch(glob.substring(1),
+                                              target.substring(1), !!inner);
+                    }
+
+                    if (glob.length > 0 && glob[0] === '*') {
+                        return this.globMatch(glob.substring(1), target, !!inner) ||
+                            this.globMatch(glob, target && target.substring(1), !!inner);
+                    }
+                } catch(e) {
+                    debug(e);
                 }
 
                 return false;
