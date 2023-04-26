@@ -6007,7 +6007,7 @@
                             break;
                     }
                 };
-                if (searchData.prefConfig.shortcut && data.shortcut) {
+                if (searchData.prefConfig.shortcut && data.shortcut && !ele.classList.contains("notmatch")) {
                     let shortcurStr = data.shortcut.replace('Key', '').toUpperCase();
                     if (shortcurStr.length == 1) ele.dataset.title += ` (${shortcurStr})`;
                     document.addEventListener('keydown', e => {
@@ -6595,49 +6595,6 @@
                 ele.appendChild(img);
                 if (data.nobatch) ele.dataset.nobatch = 1;
                 self.stopInput = false;
-                if (searchData.prefConfig.shortcut && data.shortcut && !ele.dataset.clone) {
-                    let shortcutCover = document.createElement("div");
-                    let shortcurStr = data.shortcut.replace('Key', '').toUpperCase();
-                    if (shortcurStr.length == 1) shortcutCover.innerText = shortcurStr;
-                    ele.appendChild(shortcutCover);
-                    document.addEventListener('keydown', e => {
-                        if (e.target.id === "searchJumperInput") return;
-                        if (!self.hideTimeout) {
-                            if ((!data.ctrl == e.ctrlKey) ||
-                                (!data.alt == e.altKey) ||
-                                (!data.shift == e.shiftKey) ||
-                                (!data.meta == e.metaKey)) {
-                                return;
-                            }
-                        }
-                        if (!searchData.prefConfig.enableInInput) {
-                            if (document.activeElement &&
-                                (document.activeElement.nodeName.toUpperCase() == 'INPUT' ||
-                                 document.activeElement.nodeName.toUpperCase() == 'TEXTAREA' ||
-                                 document.activeElement.contentEditable == 'true')) {
-                                return;
-                            } else {
-                                let contentEditable = false;
-                                let parent = document.activeElement;
-                                while (parent && parent.nodeName) {
-                                    contentEditable = parent.contentEditable == 'true';
-                                    if (contentEditable || parent.nodeName.toUpperCase() == 'BODY') {
-                                        break;
-                                    }
-                                    parent = parent.parentNode;
-                                }
-                                if (contentEditable) return;
-                            }
-                        }
-                        var key = (e.key || String.fromCharCode(e.keyCode)).toLowerCase();
-                        if (data.shortcut == e.code || data.shortcut == key) {
-                            if (action() !== false && !self.customInput) {
-                                ele.click();
-                            }
-                            e.stopPropagation();
-                        }
-                    });
-                }
                 ele.dataset.inPagePost = (data.url.indexOf("#p{") != -1) ? 't' : 'f';
                 let inPagePost = ele.dataset.inPagePost === 't';
                 if (urlMatch === '0') {
@@ -6693,6 +6650,49 @@
                         ele.style.display = 'none';
                         ele.classList.add("notmatch");
                     }
+                }
+                if (searchData.prefConfig.shortcut && data.shortcut && !ele.dataset.clone && !ele.classList.contains("notmatch")) {
+                    let shortcutCover = document.createElement("div");
+                    let shortcurStr = data.shortcut.replace('Key', '').toUpperCase();
+                    if (shortcurStr.length == 1) shortcutCover.innerText = shortcurStr;
+                    ele.appendChild(shortcutCover);
+                    document.addEventListener('keydown', e => {
+                        if (e.target.id === "searchJumperInput") return;
+                        if (!self.hideTimeout) {
+                            if ((!data.ctrl == e.ctrlKey) ||
+                                (!data.alt == e.altKey) ||
+                                (!data.shift == e.shiftKey) ||
+                                (!data.meta == e.metaKey)) {
+                                return;
+                            }
+                        }
+                        if (!searchData.prefConfig.enableInInput) {
+                            if (document.activeElement &&
+                                (document.activeElement.nodeName.toUpperCase() == 'INPUT' ||
+                                 document.activeElement.nodeName.toUpperCase() == 'TEXTAREA' ||
+                                 document.activeElement.contentEditable == 'true')) {
+                                return;
+                            } else {
+                                let contentEditable = false;
+                                let parent = document.activeElement;
+                                while (parent && parent.nodeName) {
+                                    contentEditable = parent.contentEditable == 'true';
+                                    if (contentEditable || parent.nodeName.toUpperCase() == 'BODY') {
+                                        break;
+                                    }
+                                    parent = parent.parentNode;
+                                }
+                                if (contentEditable) return;
+                            }
+                        }
+                        var key = (e.key || String.fromCharCode(e.keyCode)).toLowerCase();
+                        if (data.shortcut == e.code || data.shortcut == key) {
+                            if (action() !== false && !self.customInput) {
+                                ele.click();
+                            }
+                            e.stopPropagation();
+                        }
+                    });
                 }
                 let imgSrc;
                 if (icon == 0) {
