@@ -2118,7 +2118,7 @@
                      font-weight: bold;
                      ${searchData.prefConfig.noAni ? "" : "transition: all 0.2s ease;"}
                      color: black;
-                     white-space: nomal;
+                     white-space: normal;
                      max-width: 640px;
                      line-height: 35px;
                  }
@@ -5888,7 +5888,7 @@
                 if (showall) {
                     clientX -= target.scrollWidth / 2 - this.con.scrollLeft;
                     clientY += this.con.scrollTop;
-                    if (clientY > viewHeight / 2) clientY -= (target.scrollHeight / 2 + eh / 2 + 30);
+                    if (clientY > viewHeight / 2) clientY -= (target.scrollHeight + eh / 2 + 10);
                     else clientY += (eh / 2 + 10);
                     target.style.right = "";
                     target.style.bottom = "";
@@ -5897,7 +5897,7 @@
                 } else if (this.funcKeyCall) {
                     clientX -= target.scrollWidth / 2;
                     let actualTop = clingEle.getBoundingClientRect().top;
-                    if (actualTop > viewHeight / 2) clientY -= (target.scrollHeight / 2 + eh / 2 + 30);
+                    if (actualTop > viewHeight / 2) clientY -= (target.scrollHeight + eh / 2 + 10);
                     else clientY += (eh / 2 + 10);
                     target.style.right = "";
                     target.style.bottom = "";
