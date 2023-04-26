@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.67.64
+// @version      1.6.6.68.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -1374,7 +1374,7 @@
                      -ms-user-select: none;
                      position: fixed;
                      width: 80%;
-                     left: 10%;
+                     left: calc(10% - 10px);
                      top: 1%;
                      border-radius: 10px;
                      pointer-events: all;
@@ -1490,6 +1490,30 @@
                      width: fit-content;
                      min-height: 100%;
                      position: initial;
+                 }
+                 #search-jumper-alllist>.timeInAll,
+                 #search-jumper-alllist>.dayInAll {
+                     position: fixed;
+                     top: 0;
+                     width: 10%;
+                     font-size: 1.5vw;
+                     line-height: 1;
+                     color: white;
+                     height: 60px;
+                     display: flex;
+                     justify-content: center;
+                     align-items: center;
+                     opacity: 0.6;
+                     font-weight: bold;
+                     font-family: Arial,sans-serif;
+                     overflow-wrap: anywhere;
+                     pointer-events: none;
+                 }
+                 #search-jumper-alllist>.dayInAll {
+                     left: 0;
+                 }
+                 #search-jumper-alllist>.timeInAll {
+                     right: 0;
                  }
                  .search-jumper-searchBarCon {
                      all: unset;
@@ -2698,6 +2722,16 @@
                 sitelistBox.className = "sitelistBox";
                 alllist.appendChild(sitelistBox);
                 this.sitelistBox = sitelistBox;
+
+                let timeInAll = document.createElement("span");
+                timeInAll.className = "timeInAll";
+                alllist.appendChild(timeInAll);
+                this.timeInAll = timeInAll;
+
+                let dayInAll = document.createElement("span");
+                dayInAll.className = "dayInAll";
+                alllist.appendChild(dayInAll);
+                this.dayInAll = dayInAll;
 
                 alllist.addEventListener(getSupportWheelEventName(), e => {
                     if (e.target != alllist && e.target != showallBg && e.target != sitelistBox) return;
@@ -4211,6 +4245,7 @@
             closeShowAll() {
                 if (!this.con.classList.contains("search-jumper-showall") || isAllPage) return;
                 this.clearInputHide();
+                clearInterval(this.showAllTimeTimer);
                 document.removeEventListener("mousedown", self.showAllMouseHandler);
                 document.removeEventListener("keydown", self.showAllKeydownHandler);
                 this.con.classList.remove("search-jumper-showall");
@@ -4240,6 +4275,24 @@
                 this.setFuncKeyCall(false);
                 this.hideSearchInput();
                 this.con.classList.add("search-jumper-showall");
+                clearInterval(this.showAllTimeTimer);
+                const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+                if (window.innerWidth > 1666) {
+                    self.timeInAll.style.fontSize = "25px";
+                    self.dayInAll.style.fontSize = "25px";
+                } else if (window.innerWidth < 1000) {
+                    self.timeInAll.style.fontSize = "15px";
+                    self.dayInAll.style.fontSize = "15px";
+                } else {
+                    self.timeInAll.style.fontSize = "";
+                    self.dayInAll.style.fontSize = "";
+                }
+                this.showAllTimeTimer = setInterval(() => {
+                    let now = new Date();
+                    let year = now.getFullYear(), month = now.getMonth(), date = now.getDate(), hour = now.getHours(), minute = now.getMinutes(), seconds = now.getSeconds();
+                    self.timeInAll.innerText = (hour < 10 ? '0' + hour : hour) + ':' + (minute < 10 ? '0' + minute : minute) + ':' + (seconds < 10 ? '0' + seconds : seconds);
+                    self.dayInAll.innerHTML = createHTML(days[now.getDay()] + "<br/>" + year + '-' + (++month < 10 ? '0' + month : month) + '-' + (date < 10 ? '0' + date : date));
+                }, 1000);
                 searchTypes.forEach(type => {
                     if (type.style.display != 'none') {
                         let sitelist = type.querySelector('.sitelist');
