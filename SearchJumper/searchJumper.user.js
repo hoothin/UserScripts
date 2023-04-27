@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.70.64
+// @version      1.6.6.71.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -4823,7 +4823,7 @@
                 this.bar.style.visibility = "";
                 this.bar.style.display = "none";
                 this.searchInPageRule();
-                if (currentSite && /%s[lur]?\b/.test(currentSite.url)) {
+                if (currentSite && /%s[lurst]?\b/.test(currentSite.url)) {
                     this.inSearchEngine();
                 } else if (searchData.prefConfig.alwaysShow) {
                     this.bar.style.display = "";
@@ -5107,7 +5107,7 @@
                         sitesNum = 0;
                     }
                 }
-                let foundKeyword = currentSite && /%s[lur]?\b/.test(currentSite.url);
+                let foundKeyword = currentSite && /%s[lurst]?\b/.test(currentSite.url);
                 if (!hasCurrent && foundKeyword) {
                     this.inSearchEngine();
                 } else if (!foundKeyword && window.top == window.self) {
@@ -5513,7 +5513,7 @@
                 currentSite = data;
                 siteEle.classList.add('current');
                 localKeywords = "";
-                if (!/#p{/.test(data.url) && /%s[lur]?\b/.test(data.url)) {
+                if (!/#p{/.test(data.url) && /%s[lurst]?\b/.test(data.url)) {
                     let keywords = getKeywords();
                     if (keywords && keywords != cacheKeywords) {
                         cacheKeywords = keywords;
@@ -6912,12 +6912,14 @@
                         }
                     };
                     let needDecode = (/^c(opy)?:|[#:%]P{|^javascript:|^showTips:/i.test(data.url));
-                    let keywordsU = "", keywordsL = "", keywordsR = "";
+                    let keywordsU = "", keywordsL = "", keywordsR = "", keywordsSC = "", keywordsTC = "";
                     let customReplaceKeywords = str => {
                         let _str = str;
                         _str = customReplaceSingle(_str, "%su", keywordsU);
                         _str = customReplaceSingle(_str, "%sl", keywordsL);
                         _str = customReplaceSingle(_str, "%sr", keywordsR);
+                        _str = customReplaceSingle(_str, "%ss", keywordsSC);
+                        _str = customReplaceSingle(_str, "%st", keywordsTC);
                         _str = customReplaceSingle(_str, "%se", escape ? escape(keywordsR) : keywordsR);
                         if (_str == str) {
                             _str = customReplaceSingle(_str, "%s", keywordsR, v => {
@@ -7052,13 +7054,16 @@
                         keywordsR = keywords;
                         keywordsU = keywordsR.toUpperCase();
                         keywordsL = keywordsR.toLowerCase();
+                        keywordsSC = _unsafeWindow.tc2sc ? _unsafeWindow.tc2sc(keywordsR) : keywordsR;
+                        keywordsTC = _unsafeWindow.sc2tc ? _unsafeWindow.sc2tc(keywordsR) : keywordsR;
                         if (!needDecode) keywords = encodeURIComponent(keywords);
                         resultUrl = customReplaceKeywords(resultUrl);
-                    }
-                    if (keywords && (!keywordsU && !keywordsL && !keywordsR)) {
+                    } else if (keywords && (!keywordsU && !keywordsL && !keywordsR)) {
                         keywordsR = keywords;
                         keywordsU = keywordsR.toUpperCase();
                         keywordsL = keywordsR.toLowerCase();
+                        keywordsSC = _unsafeWindow.tc2sc ? _unsafeWindow.tc2sc(keywordsR) : keywordsR;
+                        keywordsTC = _unsafeWindow.sc2tc ? _unsafeWindow.sc2tc(keywordsR) : keywordsR;
                         if (!needDecode) keywords = encodeURIComponent(keywords);
                     }
                     if (targetUrl === '') {
@@ -8527,15 +8532,15 @@
                         keywords = '';
                     }
                 }
-            } else if (isUtf8 && /%s[lur]?\b/.test(currentSite.url) && !/[#:%]p{/.test(currentSite.url)) {
+            } else if (isUtf8 && /%s[lurst]?\b/.test(currentSite.url) && !/[#:%]p{/.test(currentSite.url)) {
                 if (location.href.indexOf("?") != -1) {
-                    keywordsMatch = currentSite.url.match(/[\?&]([^&]*?)=%s[lur]?\b.*/);
+                    keywordsMatch = currentSite.url.match(/[\?&]([^&]*?)=%s[lurst]?\b.*/);
                     if (keywordsMatch) {
                         keywords = new URLSearchParams(location.search).get(keywordsMatch[1]);
                     }
                 }
                 if (!keywords) {
-                    keywordsMatch = currentSite.url.match(/https?:\/\/[^\/]*\/(.*)%s[lur]?\b/);
+                    keywordsMatch = currentSite.url.match(/https?:\/\/[^\/]*\/(.*)%s[lurst]?\b/);
                     if (keywordsMatch) {
                         keywordsMatch = location.href.match(new RegExp((keywordsMatch[1] || (location.host.replace(/\./g, "\\.") + "/")) + "(.*?)(\/|$)"));
                         if (keywordsMatch) {
