@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.69.64
+// @version      1.6.6.70.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -3363,6 +3363,9 @@
                                 if (this.customInputCallback) this.customInputCallback(finalSearch.value);
                             }
                             resolve(finalSearch.value);
+                            if (customInputFrame.parentNode) {
+                                customInputFrame.parentNode.removeChild(customInputFrame);
+                            }
                         });
                     }
                     this.customGroup.innerHTML = createHTML();
@@ -4265,7 +4268,12 @@
                     this.initPos();
                     let firstType = this.bar.querySelector('.search-jumper-type:nth-child(1)>span');
                     if (firstType && !firstType.classList.contains("search-jumper-open")) {
-                        firstType.onmousedown();
+                        if (firstType.onmousedown) {
+                            firstType.onmousedown();
+                        } else {
+                            let mouseEvent = new PointerEvent("mousedown");
+                            firstType.dispatchEvent(mouseEvent);
+                        }
                     }
                     this.bar.style.display = ''
                 } else {
@@ -4409,7 +4417,12 @@
                     }
                     let firstType = this.bar.querySelector('.search-jumper-needInPage:not(.notmatch)>span');
                     if (firstType && !firstType.parentNode.classList.contains('search-jumper-open')) {
-                        firstType.onmousedown();
+                        if (firstType.onmousedown) {
+                            firstType.onmousedown();
+                        } else {
+                            let mouseEvent = new PointerEvent("mousedown");
+                            firstType.dispatchEvent(mouseEvent);
+                        }
                     }
                 } else if (this.searchInPageTab.checked) {
                     this.searchJumperInPageInput.focus();
@@ -4445,7 +4458,12 @@
                 document.removeEventListener("mouseup", this.checkSelHandler);
                 let openType = this.bar.querySelector('.search-jumper-type.search-jumper-open>span');
                 if (openType) {
-                    openType.onmousedown();
+                    if (openType.onmousedown) {
+                        openType.onmousedown();
+                    } else {
+                        let mouseEvent = new PointerEvent("mousedown");
+                        openType.dispatchEvent(mouseEvent);
+                    }
                 }
             }
 
@@ -5121,7 +5139,12 @@
                             self.initPos();
                             let firstType = self.bar.querySelector('.search-jumper-type:nth-child(1)>span');
                             if (firstType && !firstType.classList.contains("search-jumper-open")) {
-                                firstType.onmousedown();
+                                if (firstType.onmousedown) {
+                                    firstType.onmousedown();
+                                } else {
+                                    let mouseEvent = new PointerEvent("mousedown");
+                                    firstType.dispatchEvent(mouseEvent);
+                                }
                             }
                             self.bar.style.display = 'none';
                             setTimeout(() => {
@@ -5134,7 +5157,12 @@
                     if (searchData.prefConfig.autoClose) {
                         let openType = self.bar.querySelector('.search-jumper-type.search-jumper-open>span');
                         if (openType) {
-                            openType.onmousedown();
+                            if (openType.onmousedown) {
+                                openType.onmousedown();
+                            } else {
+                                let mouseEvent = new PointerEvent("mousedown");
+                                openType.dispatchEvent(mouseEvent);
+                            }
                         }
                     }
                     this.hideTimeout = null;
@@ -5423,7 +5451,15 @@
                     } else targetList.classList.remove("input-hide");
                 });
                 let showType = this.bar.querySelector(".search-jumper-type:not(.input-hide)");
-                if (showType && !showType.classList.contains("search-jumper-open")) showType.querySelector("span.search-jumper-btn").onmousedown();
+                if (showType && !showType.classList.contains("search-jumper-open")) {
+                    let typeBtn = showType.querySelector("span.search-jumper-btn");
+                    if (typeBtn.onmousedown) {
+                        typeBtn.onmousedown();
+                    } else {
+                        let mouseEvent = new PointerEvent("mousedown");
+                        typeBtn.dispatchEvent(mouseEvent);
+                    }
+                }
             }
 
             globMatch(glob, target, inner) {
@@ -5546,7 +5582,12 @@
                             if (typeBtn && !typeBtn.classList.contains("search-jumper-open")) {
                                 this.bar.insertBefore(typeBtn.parentNode, this.bar.children[0]);
                                 if (!searchData.prefConfig.disableAutoOpen) {
-                                    typeBtn.onmousedown();
+                                    if (typeBtn.onmousedown) {
+                                        typeBtn.onmousedown();
+                                    } else {
+                                        let mouseEvent = new PointerEvent("mousedown");
+                                        typeBtn.dispatchEvent(mouseEvent);
+                                    }
                                 }
                             }
                         }
@@ -7235,6 +7276,7 @@
                             _GM_setClipboard(targetUrlData.replace(/^c(opy)?:/, ""));
                             //_GM_notification('Copied successfully!');
                         }
+                        return false;
                     } else if (/^\[/.test(data.url)) {
                         if (e.preventDefault) e.preventDefault();
                         if (e.stopPropagation) e.stopPropagation();
@@ -7310,7 +7352,17 @@
                             ele.href = targetUrlData;
                         }
                     }
-                    if (searchData.prefConfig.multiline == 1 || searchData.prefConfig.multiline == 2) {
+                    if (targetUrlData.indexOf('%input{') !== -1) {
+                        self.showCustomInputWindow(targetUrlData, _url => {
+                            targetUrlData = _url;
+                            ele.href = _url;
+                            ele.click();
+                        });
+                        if (e.preventDefault) e.preventDefault();
+                        if (e.stopPropagation) e.stopPropagation();
+                        return;
+                    }
+                    if (isPage && (searchData.prefConfig.multiline == 1 || searchData.prefConfig.multiline == 2)) {
                         let selStr = getSelectStr();
                         if (selStr &&
                             /%s\b/.test(ele.dataset.url) &&
@@ -7546,10 +7598,17 @@
                 self.setFuncKeyCall(false);
                 if (firstType) {
                     if (!searchData.prefConfig.disableAutoOpen || _funcKeyCall) {
+                        let mouseEvent = new PointerEvent("mousedown");
                         if (firstType.parentNode.classList.contains('search-jumper-open')) {
-                            firstType.onmousedown();
+                            if (firstType.onmousedown) firstType.onmousedown();
+                            else {
+                                firstType.dispatchEvent(mouseEvent);
+                            }
                         }
-                        firstType.onmousedown();
+                        if (firstType.onmousedown) firstType.onmousedown();
+                        else {
+                            firstType.dispatchEvent(mouseEvent);
+                        }
                         self.insertHistory(firstType.parentNode);
                     }
                 }
@@ -8623,7 +8682,14 @@
                 }
                 logoSvg.style.cursor = "";
                 let firstType = searchBar.bar.querySelector('.search-jumper-type.search-jumper-open>span');
-                if (firstType) firstType.onmousedown();
+                if (firstType) {
+                    if (firstType.onmousedown) {
+                        firstType.onmousedown();
+                    } else {
+                        let mouseEvent = new PointerEvent("mousedown");
+                        firstType.dispatchEvent(mouseEvent);
+                    }
+                }
                 searchBar.initPos(relX, relY, posX, posY);
                 storage.setItem("searchData", searchData);
             };
