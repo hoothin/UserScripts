@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.4.23.1
+// @version              2023.4.27.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -42,7 +42,7 @@
 // @grant                unsafeWindow
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
 // @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1179756
-// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1173627
+// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1182203
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @match                *://*/*
@@ -11841,6 +11841,8 @@ ImgOps | https://imgops.com/#b#`;
         prefs={
             floatBar:{//浮动工具栏相关设置.
                 butonOrder:['actual','current','gallery','magnifier','download'],//按钮排列顺序'actual'(实际的图片),'current'(当前显示的图片),'magnifier'(放大镜观察),'gallery'(图集),'search'(搜索原图)
+                additionalFeature: 'open',
+                invertAdditionalFeature: false,
                 listenBg:true,//监听背景图
                 showDelay:100,//浮动工具栏显示延时.单位(毫秒)
                 hideDelay:566,//浮动工具栏隐藏延时.单位(毫秒)
@@ -11848,7 +11850,7 @@ ImgOps | https://imgops.com/#b#`;
                 stayOut:false,
                 stayOutOffsetX:0,
                 stayOutOffsetY:0,
-                download2copy:false,
+                download2copy:false,//废弃
                 offset:{//浮动工具栏偏移.单位(像素)
                     x:-15,//x轴偏移(正值,向右偏移,负值向左)
                     y:-15,//y轴偏移(正值,向下,负值向上)
@@ -19472,8 +19474,8 @@ ImgOps | https://imgops.com/#b#`;
                 if(!imgWindow)return;
                 var wSize=getWindowSize();
                 var scrolled=getScrolled();
-                if(horizontal)imgWindow.style.left= (wSize.w - imgWindow.offsetWidth)/2 + scrolled.x +'px';
-                if(vertical)imgWindow.style.top= (wSize.h - imgWindow.offsetHeight)/2 + scrolled.y +'px';
+                if(horizontal)imgWindow.style.left = (wSize.w - imgWindow.offsetWidth)/2 + scrolled.x +'px';
+                if(vertical)imgWindow.style.top = (wSize.h - imgWindow.offsetHeight)/2 + scrolled.y + (prefs.imgWindow.suitLongImg && this.isLongImg ? 13 : 0) +'px';
             },
 
 
@@ -20264,7 +20266,7 @@ ImgOps | https://imgops.com/#b#`;
                         } else this.imgWindow.classList.add("pv-pic-window-scroll");
                         //this.center(true , true);
                         if(!inScroll){
-                            imgWindow.style.top= (wSize.h - imgWindow.offsetHeight)/2 + scrolled.y +'px';
+                            imgWindow.style.top= (wSize.h - imgWindow.offsetHeight)/2 + scrolled.y + 13 +'px';
                             var scrollTop=parseFloat(imgWindow.style.top)-origTop;
                             if(this.imgWindow.scrollTop)this.imgWindow.scrollTop = scrollTop;
                             else if(this.imgWindow.pageYOffset)this.imgWindow.pageYOffset = scrollTop;
@@ -20864,14 +20866,13 @@ ImgOps | https://imgops.com/#b#`;
                         new MagnifierC(this.img,this.data);
                         break;
                     case 'download':
-                        {
-                            let copy = prefs.floatBar.download2copy;
-                            if (copy) {
-                                _GM_setClipboard(this.data.src || this.data.imgSrc);
-                            } else {
-                                downloadImg(this.data.src||this.data.imgSrc, (this.data.img.alt || this.data.img.title), prefs.saveName);
-                            }
-                        }
+                        downloadImg(this.data.src || this.data.imgSrc, (this.data.img.alt || this.data.img.title), prefs.saveName);
+                        break;
+                    case "copy":
+                        _GM_setClipboard(this.data.src || this.data.imgSrc);
+                        break;
+                    case "open":
+                        _GM_openInTab(this.data.src || this.data.imgSrc, {active:true});
                         break;
                     case 'actual':
                     case 'search':
@@ -21264,14 +21265,33 @@ ImgOps | https://imgops.com/#b#`;
             },
             open:function(e,buttonType){
                 if (buttonType === 'download' && !this.data.xhr) {
-                    let copy = prefs.floatBar.download2copy;
-                    if (e && (e.ctrlKey || e.altKey || e.shiftKey || e.metaKey)) copy = !copy;
-                    if (copy) {
-                        _GM_setClipboard(this.data.src || this.data.imgSrc);
-                    } else {
-                        downloadImg(this.data.src||this.data.imgSrc, (this.data.img.alt || this.data.img.title), prefs.saveName);
-                    }
+                    downloadImg(this.data.src || this.data.imgSrc, (this.data.img.alt || this.data.img.title), prefs.saveName);
                     return;
+                } else {
+                    let additionEnable = prefs.floatBar.invertAdditionalFeature ? !e.altKey : e.altKey;
+                    if (additionEnable) {
+                        let src, feature = prefs.floatBar.additionalFeature;
+                        if (buttonType == 'actual') {
+                            if (this.data.xhr) {
+                                buttonType = feature || "open";
+                            } else {
+                                src = this.data.src || this.data.imgSrc;
+                            }
+                        } else if (buttonType == 'current') {
+                            src = this.data.imgSrc;
+                        }
+                        if (src) {
+                            switch(feature) {
+                                case "copy":
+                                    _GM_setClipboard(src);
+                                    break;
+                                case "open":
+                                    _GM_openInTab(src, {active:true});
+                                    break;
+                            }
+                            return;
+                        }
+                    }
                 }
                 var waitImgLoad = e && e.ctrlKey ? !prefs.waitImgLoad : prefs.waitImgLoad; //按住ctrl取反向值
                 var openInTopWindow = e && e.shiftKey ? !prefs.framesPicOpenInTopWindow : prefs.framesPicOpenInTopWindow; //按住shift取反向值
@@ -22523,7 +22543,7 @@ ImgOps | https://imgops.com/#b#`;
                     return true;
                 }
             }
-            if (!prefs.floatBar.keys.enable || event.ctrlKey || event.altKey || event.shiftKey || event.metaKey){
+            if (!prefs.floatBar.keys.enable){
                 return false;
             }
 
@@ -22764,10 +22784,19 @@ ImgOps | https://imgops.com/#b#`;
                     className: 'order',
                     "default": prefs.floatBar.butonOrder.join(', '),
                 },
-                'floatBar.download2copy': {
-                    label: i18n("download2copy"),
+                'floatBar.additionalFeature': {
+                    label: i18n("additionalFeature"),
+                    type: 'select',
+                    options: {
+                        'copy': i18n("copy"),
+                        'open': i18n("openInNewTab")
+                    },
+                    "default": prefs.floatBar.additionalFeature || 'open'
+                },
+                'floatBar.invertAdditionalFeature': {
+                    label: i18n("invertAdditionalFeature"),
                     type: 'checkbox',
-                    "default": prefs.floatBar.download2copy
+                    "default": prefs.floatBar.invertAdditionalFeature
                 },
                 'floatBar.listenBg': {
                     label: i18n("listenBg"),
