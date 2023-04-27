@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.36.5
+// @version      1.9.36.6
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -129,7 +129,7 @@
                 sortTitle: "排序在下次更新规则后生效",
                 autoRun: "自动启用，否则为白名单模式",
                 autoLoadNum: "自动加载指定页数",
-                turnRate: "距离页尾X倍页面高度时就开始翻页",
+                turnRate: "距离页尾【X】倍页面高度时就开始翻页",
                 inputPageNum: "输入页码跳转",
                 enableHistory: "翻页后写入历史记录",
                 enableHistoryAfterInsert: "拼接后立即写入历史记录，否则浏览完毕后再行写入",
@@ -239,7 +239,7 @@
                 sortTitle: "排序在下次更新規則後生效",
                 autoRun: "自動啓用，否則為白名單模式",
                 autoLoadNum: "自動加載指定頁數",
-                turnRate: "距離頁尾X倍頁面高度時就開始翻頁",
+                turnRate: "距離頁尾【X】倍頁面高度時就開始翻頁",
                 inputPageNum: "輸入頁碼跳轉",
                 enableHistory: "翻頁后寫入歷史記錄",
                 enableHistoryAfterInsert: "拼接後立即寫入歷史記錄，否則瀏覽完畢後再行寫入",
@@ -348,7 +348,7 @@
                 sortTitle: "並べ替えは、次のルールの更新後に有効になります",
                 autoRun: "自動的に有効",
                 autoLoadNum: "指定したページ数を自動的に読み込みます",
-                turnRate: "ページの端からページの高さの X 倍になったらページをめくる",
+                turnRate: "ページの端からページの高さの【X】倍になったらページをめくる",
                 inputPageNum: "ジャンプするページ番号を入力",
                 enableHistory: "ページめくり後の履歴を書く",
                 enableHistoryAfterInsert: "スプライシングの直後に履歴レコードを書き込みます。それ以外の場合は、閲覧後に書き込みます",
@@ -458,7 +458,7 @@
                 sortTitle: "Правило сортировки применится после следующего обновления правил",
                 autoRun: "Автозапуск (режим черного списка)",
                 autoLoadNum: "Количество страниц для предзагрузки",
-                turnRate: "Подгрузить страницу, когда она будет в X раз больше высоты страницы от конца страницы",
+                turnRate: "Подгрузить страницу, когда она будет в 【X】 раз больше высоты страницы от конца страницы",
                 inputPageNum: "Введите номер страницы для перехода",
                 enableHistory: "Записать историю после переключения страниц",
                 enableHistoryAfterInsert: "Записать запись истории сразу после вставки, иначе записать после просмотра",
@@ -567,7 +567,7 @@
                 sortTitle: "Sorting takes effect after the next rule update",
                 autoRun: "Auto run (black list mode)",
                 autoLoadNum: "Amount for preload pages",
-                turnRate: "Turn the next page when it's less than X times page height from the footer",
+                turnRate: "Turn the next page when it's less than 【X】 times page height from the footer",
                 inputPageNum: "Enter page number to jump",
                 enableHistory: "Write history after page turning",
                 enableHistoryAfterInsert: "Write history immediately after splicing, otherwise write after browsing",
@@ -4665,6 +4665,13 @@
                 tr.appendChild(td);
                 configTable.children[0].appendChild(tr);
             }
+            let xNodePos = innerText.indexOf('【X】');
+            if (xNodePos !== -1) {
+                input.style.float = "";
+                let xNode = title.firstChild.splitText(xNodePos);
+                xNode.splitText(3);
+                xNode.parentNode.replaceChild(input, xNode);
+            }
             return input;
         }
 
@@ -6010,9 +6017,14 @@
             pageNum.addEventListener("click", e => {
                 let pageInput = prompt(i18n("inputPageNum"), num || "1");
                 if (pageInput) {
-                    let pageLink = ruleParser.getLinkByPage(url, pageInput);
-                    if (pageLink) {
-                        _GM_openInTab(pageLink, {active:true});
+                    let localPageBar = document.querySelector("#pagetual_pageBar" + pageInput);
+                    if (localPageBar) {
+                        scrollToPageBar(localPageBar);
+                    } else {
+                        let pageLink = ruleParser.getLinkByPage(url, pageInput);
+                        if (pageLink) {
+                            _GM_openInTab(pageLink, {active:true});
+                        }
                     }
                 }
                 e.preventDefault();
