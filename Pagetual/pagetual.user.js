@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.36.6
+// @version      1.9.36.7
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -142,7 +142,7 @@
                 importSucc: "导入成功",
                 import: "导入",
                 editCurrent: "编辑此站规则",
-                editBlacklist: "编辑黑名单网址，一行一条，支持? *通配符",
+                editBlacklist: "编辑黑名单网址，一行一条，支持? *通配符与正则",
                 upBtnImg: "回到页首图标",
                 downBtnImg: "前往页尾图标",
                 sideControllerIcon: "侧边栏图标",
@@ -252,7 +252,7 @@
                 importSucc: "導入成功",
                 import: "導入",
                 editCurrent: "編輯此站規則",
-                editBlacklist: "編輯黑名單網址，一行一條，支持? *通配符",
+                editBlacklist: "編輯黑名單網址，一行一條，支持? *通配符與正則",
                 upBtnImg: "回到頁首圖標",
                 downBtnImg: "前往頁尾圖標",
                 sideControllerIcon: "側邊欄圖標",
@@ -1960,6 +1960,7 @@
                     if (aTag.parentNode) {
                         if (aTag.parentNode.className && /slick|slide|gallery/i.test(aTag.parentNode.className)) continue;
                         if (aTag.parentNode.classList && aTag.parentNode.classList.contains('disabled')) continue;
+                        if (aTag.parentNode.classList && aTag.parentNode.classList.contains('active')) continue;
                         if (/^BLOCKQUOTE$/i.test(aTag.parentNode.nodeName)) continue;
                     }
                     let isJs = !aTag.href || /^(javascript|#)/.test(aTag.href.replace(location.href, ""));
@@ -2360,8 +2361,8 @@
                         this.nextLinkHref = false;
                     } else {
                         this.nextLinkHref = (href && !/^(javascript:|#)/.test(href)) ? this.canonicalUri(href) : "#";
-                        let compareUrl = this.nextLinkHref.replace(/#p{.*/, "");
-                        if (compareUrl != "#" && (compareUrl == this.initUrl || compareUrl == this.curUrl || compareUrl == this.curUrl + "#" || compareUrl == this.oldUrl || compareUrl == this.oldUrl + "#")) {
+                        let tempUrl = this.nextLinkHref.replace(/#p{.*/, "");
+                        if (tempUrl != "#" && (this.compareUrl(tempUrl, this.initUrl) || this.compareUrl(tempUrl, this.curUrl) || this.compareUrl(tempUrl, this.curUrl + "#") || this.compareUrl(tempUrl, this.oldUrl) || this.compareUrl(tempUrl, this.oldUrl + "#"))) {
                             this.nextLinkHref = false;
                         } else if (doc == document) {
                             debug(nextLink, 'Next link');
@@ -2374,6 +2375,15 @@
             this.nextLinkEle = nextLink;
             this.preload();
             return nextLink;
+        }
+
+        compareUrl(url1, url2) {
+            let url1Arr = url1.split("?");
+            let url2Arr = url2.split("?");
+            if (url1Arr[0] != url2Arr[0]) return false;
+            url1Arr = url1Arr[1].split("&").sort().join("&");
+            url2Arr = url2Arr[1].split("&").sort().join("&");
+            return url1Arr == url2Arr;
         }
 
         checkStopSign(nextLink, doc) {
@@ -2713,6 +2723,22 @@
                 if (self.curSiteRule.enable == 0) {
                     debug("Stop as rule disable");
                     isPause = true;
+                    _GM_registerMenuCommand(i18n("enable"), () => {
+                        showTips(i18n("enableSiteTips"));
+                        if(!self.customRules) {
+                            self.customRules = [];
+                        }
+                        for (let i in self.customRules) {
+                            if (self.customRules[i].url == self.curSiteRule.url) {
+                                self.customRules.splice(i, 1);
+                                break;
+                            }
+                        }
+                        self.curSiteRule.enable = 1;
+                        self.customRules.unshift(self.curSiteRule);
+                        storage.setItem("customRules", self.customRules);
+                        location.reload();
+                    });
                     return;
                 }
                 //若是再亂匹配就不緩存wedata，或者只在找完本地規則之後再考慮wedata的緩存
@@ -2773,6 +2799,7 @@
 
         beginLoading() {
             isLoading = true;
+            let curScroll = getBody(document).scrollTop || document.documentElement.scrollTop;
             ruleParser.insertElement(loadingDiv);
             let parent = loadingDiv.parentNode;
             if (/^TBODY$/i.test(parent.nodeName)) {
@@ -2781,6 +2808,8 @@
             if (/^TABLE$/i.test(parent.nodeName)) {
                 parent.parentNode.appendChild(loadingDiv);
             }
+            getBody(document).scrollTop = curScroll;
+            document.documentElement.scrollTop = curScroll;
         }
 
         insertElement(ele) {
@@ -2803,6 +2832,7 @@
             this.pageDoc = doc;
             this.curUrl = url;
             let curScroll = getBody(document).scrollTop || document.documentElement.scrollTop;
+            isLoading = true;
             let nextLink = await this.getNextLink(doc);
             this.nextTitle = "";
             if (this.curSiteRule.pageBarText) {
@@ -2819,6 +2849,7 @@
             if (curPage == 1 && !tried && !nextLink && this.curSiteRule.singleUrl && this.curSiteRule.pageElement && this.curSiteRule.action != 0) {
                 this.curSiteRule.action = 1;
                 this.curUrl = location.href;
+                isLoading = false;
                 return false;
             }
             if (callback) callback(eles);
@@ -2826,7 +2857,6 @@
             var self = this, newEles = [];
             if (!eles || eles.length == 0 || !self.insert || !self.insert.parentNode) {
             } else {
-                isLoading = true;
                 await this.pageInit(doc, eles);
                 [].forEach.call(eles, ele => {
                     let newEle = ele.cloneNode(true);
@@ -2849,9 +2879,9 @@
                     self.insertElement(newEle);
                     newEles.push(newEle);
                 });
-                getBody(document).scrollTop = curScroll;
-                document.documentElement.scrollTop = curScroll;
             }
+            getBody(document).scrollTop = curScroll;
+            document.documentElement.scrollTop = curScroll;
             this.pageAction(doc, newEles);
             let enableHistory = this.curSiteRule.history;
             let enableHistoryAfterInsert = false;
@@ -4090,12 +4120,6 @@
             }
             _unsafeWindow.initedPagetual = true;
         } catch(e) {showTips(e)}
-        _GM_registerMenuCommand(i18n(forceState == 1 ? "enable" : "disableSite"), () => {
-            forceState = (forceState == 1 ? 0 : 1);
-            storage.setItem("forceState_" + location.host, forceState);
-            showTips(i18n(forceState == 1 ? "disableSiteTips" : "enableSiteTips"));
-            if (!ruleParser.curSiteRule.url) location.reload();
-        });
         _GM_registerMenuCommand(i18n("update"), () => {
             showTips(i18n("beginUpdate"), "", 30000);
             updateRules(() => {
@@ -4757,7 +4781,7 @@
         blacklistInput.style.height = "500px";
         blacklistInput.style.display = "none";
         blacklistInput.spellcheck = false;
-        blacklistInput.placeholder = "http://*.xxx.com/*/y";
+        blacklistInput.placeholder = "http://*.xxx.com/*/y\n/^https?://.*\\.xxx\\.com/i";
         blacklistInput.value = rulesData.blacklist ? rulesData.blacklist.join("\n") : "";
         let blacklistBtn = document.createElement("button");
         blacklistBtn.innerText = i18n("editBlacklist");
@@ -5018,30 +5042,46 @@
     }
 
     function initRules(callback) {
-        ruleParser.initSavedRules(() => {
-            storage.getItem("rulesData", data => {
-                /*0 wedata格式，1 pagetual格式*/
-                ruleUrls = [{
-                    id: 1,
-                    url: data && data.wedata2github ? 'https://hoothin.github.io/UserScripts/Pagetual/items_all.json' : 'http://wedata.net/databases/AutoPagerize/items_all.json',
-                    type: 0,
-                }];
-                if (data) {
-                    rulesData = data;
-                    if (data.urls) ruleUrls = ruleUrls.concat(data.urls);
-                    if (data.sort) {
-                        let urls = [];
-                        data.sort.forEach(id => {
-                            for (let s = 0; s < ruleUrls.length; s++) {
-                                if (id == ruleUrls[s].id) {
-                                    urls.push(ruleUrls[s]);
-                                    break;
-                                }
+        storage.getItem("rulesData", data => {
+            /*0 wedata格式，1 pagetual格式*/
+            ruleUrls = [{
+                id: 1,
+                url: data && data.wedata2github ? 'https://hoothin.github.io/UserScripts/Pagetual/items_all.json' : 'http://wedata.net/databases/AutoPagerize/items_all.json',
+                type: 0,
+            }];
+            if (data) {
+                rulesData = data;
+                if (data.urls) ruleUrls = ruleUrls.concat(data.urls);
+                if (data.sort) {
+                    let urls = [];
+                    data.sort.forEach(id => {
+                        for (let s = 0; s < ruleUrls.length; s++) {
+                            if (id == ruleUrls[s].id) {
+                                urls.push(ruleUrls[s]);
+                                break;
                             }
-                        });
-                        ruleUrls = urls;
+                        }
+                    });
+                    ruleUrls = urls;
+                }
+            }
+            if (rulesData.blacklist && rulesData.blacklist.length > 0) {
+                let href = location.href.slice(0, 500);
+                for (let b in rulesData.blacklist) {
+                    let curGlob = rulesData.blacklist[b];
+                    if (curGlob.indexOf("/") == 0) {
+                        let regMatch = curGlob.match(/^\/(.*)\/(\w*)$/);
+                        if (regMatch && new RegExp(regMatch[1], regMatch[2]).test(href)) {
+                            forceState == 1;
+                            return;
+                        }
+                    } else if (globMatch(curGlob, href)) {
+                        forceState == 1;
+                        return;
                     }
                 }
+            }
+            ruleParser.initSavedRules(() => {
                 let upBtnImg = rulesData.upBtnImg, downBtnImg = rulesData.downBtnImg, _sideControllerIcon = rulesData.sideControllerIcon;
                 if (upBtnImg && downBtnImg) {
                     downSvgCSS = downSvgCSS.replace("transform: rotate(180deg);", "");
@@ -5104,16 +5144,6 @@
                 }
                 if (typeof(rulesData.hideBarArrow) == "undefined") {
                     rulesData.hideBarArrow = false;
-                }
-                if (rulesData.blacklist && rulesData.blacklist.length > 0) {
-                    let href = location.href.slice(0, 500);
-                    for (let b in rulesData.blacklist) {
-                        let curGlob = rulesData.blacklist[b];
-                        if (globMatch(curGlob, href)) {
-                            forceState == 1;
-                            return;
-                        }
-                    }
                 }
                 if (rulesData.autoLoadNum && rulesData.initRun) {
                     autoLoadNum = parseInt(rulesData.autoLoadNum);
@@ -5280,6 +5310,12 @@
                     nextPage();
                 });
             }
+            _GM_registerMenuCommand(i18n(forceState == 1 ? "enable" : "disableSite"), () => {
+                forceState = (forceState == 1 ? 0 : 1);
+                storage.setItem("forceState_" + location.host, forceState);
+                showTips(i18n(forceState == 1 ? "disableSiteTips" : "enableSiteTips"));
+                if (!ruleParser.curSiteRule.url) location.reload();
+            });
             initListener();
         });
     }
@@ -5913,11 +5949,17 @@
     const pageNumReg=/[&\/\?](p=|page[=\/_-]?)\d+|[_-]\d+\./;
     function createPageBar(url) {
         curPage++;
+        SideController.setup();
         let posEle = null;
         let scrollH = Math.max(document.documentElement.scrollHeight, getBody(document).scrollHeight);
         let insert = ruleParser.getInsert();
         if (!insert || !insert.parentNode) return;
-        posEle = insert;
+        if (forceState == 2) {
+            posEle = getBody(document);
+            posEle = posEle.children[posEle.children.length - 1];
+        } else {
+            posEle = insert;
+        }
         while (posEle && !posEle.offsetParent) {
             posEle = posEle.previousElementSibling || posEle.parentNode;
         }
@@ -6845,7 +6887,7 @@
         curIframe.src = url;
         let insert = ruleParser.getInsert();
         let curScroll = getBody(document).scrollTop || document.documentElement.scrollTop;
-        if (ruleParser.curSiteRule.singleUrl || forceState == 2) {
+        if (forceState == 2) {
             getBody(document).appendChild(loadingDiv);
             getBody(document).appendChild(curIframe);
         } else {
@@ -6865,6 +6907,12 @@
         isLoading = false;
         stopScroll = true;
         let dist = distToBottom();
+        setTimeout(() => {stopScroll = false}, 300);
+        setTimeout(() => {
+            if (loadingDiv.parentNode) {
+                loadingDiv.parentNode.removeChild(loadingDiv);
+            }
+        }, 0);
         let rate = (ruleParser.curSiteRule.rate || rulesData.rate || 1);
         if (rate != 1 && !clickMode) {
             setTimeout(() => {
@@ -6873,14 +6921,6 @@
                 }
             }, 1);
         }
-        loadingDiv.style.visibility = "hidden";
-        setTimeout(() => {stopScroll = false}, 300);
-        setTimeout(() => {
-            loadingDiv.style.visibility = "visible";
-            if (loadingDiv.parentNode && !isLoading) {
-                loadingDiv.parentNode.removeChild(loadingDiv);
-            }
-        }, 0);
     }
 
     function checkAutoLoadNum() {
@@ -6942,11 +6982,11 @@
                 }
             }
             isLoading = true;
-            if (curPage != 1 || !isJs || !ruleParser.curSiteRule.singleUrl) {
-                ruleParser.beginLoading(loadingDiv);
-            }
             let sleep = ruleParser.curSiteRule.sleep || 0;
             setTimeout(() => {
+                if (curPage != 1 || !isJs || !ruleParser.curSiteRule.singleUrl) {
+                    ruleParser.beginLoading(loadingDiv);
+                }
                 if (ruleParser.curSiteRule.pageElementByJs) {
                     var over = eles => {
                         loadPageOver();
@@ -7008,7 +7048,7 @@
                         });
                     }
                 }
-            },sleep);
+            }, sleep);
         }
     }
 
