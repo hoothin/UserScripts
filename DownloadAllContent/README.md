@@ -69,9 +69,13 @@
  ``` css
 .l_chaptname>a @@ articles @@ articlescontent
  ```
- 2. [pixiv](https://www.pixiv.net/novel/series/7807554)，p站小說的章節選擇器為`main>section ul>li>div>a`，無需替換連結，因此後兩項留空。有6個@了 😂。正文在meta里，需要自定義代碼提取meta-preload數據的content項。其中 "data" 代表抓取網頁的document對象，若返回的是純文本，則用 `data.body.innerText` 獲取。
+ 如果需要下載已購買的vip章節，用這個規則
  ``` javascript
-main>section ul>li>div>a @@@@@@ var noval=JSON.parse(data.querySelector("#meta-preload-data").content).novel;noval[Object.keys(noval)[0]].content;
+ a.btn_L_blue>>let a=document.createElement("a");a.innerText=item.parentNode.parentNode.querySelector('.l_chaptname').innerText;a.href=item.href;return a;@@articles@@articlescontent
+ ```
+ 2. [pixiv](https://www.pixiv.net/novel/series/7807554)，p站小說的章節選擇器為`main>section ul>li>div>a`，無需替換連結，因此後兩項留空。有6個@了 😂。正文在meta里，需要自定義代碼提取meta-preload數據的content項。其中 "doc" 代表抓取網頁的document對象，若返回的是純文本，則用 `doc.body.innerText` 獲取。
+ ``` javascript
+main>section ul>li>div>a @@@@@@ var noval=JSON.parse(doc.querySelector("#meta-preload-data").content).novel;noval[Object.keys(noval)[0]].content;
  ```
  3. [紅薯中文網](https://g.hongshu.com/chapterlist/91735.do)，這個站沒有目錄連結，此時可以遍歷標籤自己創建目錄連結下載
  ``` javascript
@@ -101,31 +105,31 @@ https://yuyan.pw/novel/xxx/[xxxxxxx-xxxxxxx].html@@@@@@var c=data.querySelector(
  ``` javascript 
  ul.readlist>li>a>>let href=item.getAttribute("onclick").replace(/.\*open\\('(.\*)','.\*/,"$1");item.href=href;return item;
  ```
- 10. [東北人小説網](https://www.dbrxs.org/86/86323/)
+ 10. [東北人小説網](https://www.dbrxs.org/86/86323/) 此站有內分頁，故需要使用異步方法，抓取內容後暫不返回，待請求所有分頁內容再拼接後一起返回。
  ``` javascript
  .chapterList li>a>>item.href=item.href.replace(/.*gotochapter\('(\d+)','(\d+)','(\d+)'\).*/,"/$1/$2/$3.html");return item;@@@@@@let content=data.querySelector('#contentinfo,#ChapterView>div:nth-child(3)>div');if(!content)return data.body.innerText;content.innerHTML=content.innerHTML.replace(/<br>/g,"\n");content=content.innerText;let pages=data.querySelectorAll(".chapterPages>a:not(.curr)");if(pages){let num=pages.length,cur=0;content=[content];[].forEach.call(pages, (page,i)=>{let url=page.href.replace(/.*\((\d+),(\d+),(\d+),(\d+)\).*/,"/$1/$2/$3_$4.html");fetch(url).then(r => r.text()).then(d => {let doc = document.implementation.createHTMLDocument(''); doc.documentElement.innerHTML = d;let c=doc.querySelector('#contentinfo,#ChapterView>div:nth-child(3)>div');if(c){c.innerHTML=c.innerHTML.replace(/<br>/g,"\n"); content[i+1]=c.innerText;if(++cur>=num)cb(content.join("\n"));} }); });return false;}return content;
  ```
- 11. [暢讀小説網](https://www.cdxsw.cc/53/53458/)
+ 11. [暢讀小説網](https://www.cdxsw.cc/53/53458/) 此站同樣有內分頁，不同之處在於它的內分頁需要加載後才能知道是否存在，故同樣異步返回，並且回調fetch直至分頁全部分析完
  ``` javascript
 .section-list>li>a@@@@@@let content="";let checkContent=(doc,over)=>{word=doc.querySelector('.word_read');if(!word)content+='\n'+doc.body.innerText;else [].forEach.call(word.querySelectorAll('p,h3'),c=>content+='\n'+c.innerText);let next=doc.querySelector(".read_btn>a:nth-child(4)");if(next&&/_\d\.html/.test(next.href)){fetch(next.href).then(r => r.text()).then(d => {let _doc = document.implementation.createHTMLDocument('');_doc.documentElement.innerHTML = d;checkContent(_doc,over);});}else over();};checkContent(data,()=>{cb(content)});return false;
  ```
- 12. [lofter](https://kuencar.lofter.com/view)
+ 12. [lofter](https://kuencar.lofter.com/view) 此站包含雜項博文，故需要手動抓取篩選並且排序後下載
  ``` javascript
 body>>let title="俞亮/时光",chs=[];item.querySelectorAll("ul.list>li>a").forEach(a=>{if(a.children[0].innerText.indexOf(title)!=-1)chs.push(a)});return chs.reverse();
  ```
- 13. [頂點小説網](https://m.biqugeu.net/booklist/20128662.html)
+ 13. [頂點小説網](https://m.biqugeu.net/booklist/20128662.html) 此站同11項
  ``` javascript
 .book_last>dl>dd>a:not([style])@@@@@@let content="";let checkContent=(doc,over)=>{word=doc.querySelector('#chaptercontent');if(!word)content+='\n'+doc.body.innerText;else {word.innerHTML=word.innerHTML.replace(/<br>/g,'\n');content+='\n'+word.innerText;}let next=doc.querySelector("#pb_next");if(next&&/_\d\.html/.test(next.href)){fetch(next.href).then(r => r.arrayBuffer()).then(d => {let decoder = new TextDecoder("gbk");let text = decoder.decode(d);let _doc = document.implementation.createHTMLDocument('');_doc.documentElement.innerHTML = text;checkContent(_doc,over);});}else over();};checkContent(data,()=>{cb(content)});return false;
  ```
- 14. [宅男小説網](http://www.zhainanxs.com/mytool/getChapterList/)
+ 14. [宅男小説網](http://www.zhainanxs.com/mytool/getChapterList/) 此站目錄鏈接被隱藏了，因此需要手動構造，同10項。但是因為此站文字被占位圖片替換了，因此需要有人整理對照表，否則缺字。
  ``` javascript
 #list-chapterAll>dd>a>>item.href=item.href.replace(/.*book('(\d+)','(\d+)').*/,"/go/$1/$2.html");return item;@@@@@@let content=data.querySelector('h1~div');if(!content)return data.body.innerText;content.innerHTML=content.innerHTML.replace(/<br>/g,"\n");content=content.innerText;let pages=data.querySelectorAll(".chapterPages>a:not(.curr)");if(pages){let num=pages.length,cur=0;content=[content];[].forEach.call(pages, (page,i)=>{let url=page.href.replace(/.*'(\d+)','([\d_]+)'.*/,"/go/$1/$2.html");fetch(url).then(r => r.text()).then(d => {let doc = document.implementation.createHTMLDocument(''); doc.documentElement.innerHTML = d;let c=doc.querySelector('h1~div');if(c){c.innerHTML=c.innerHTML.replace(/<br>/g,"\n"); content[i+1]=c.innerText;if(++cur>=num)cb(content.join("\n"));} }); });return false;}return content;
  ```
- 15. [免費小説網](http://www.huazhuangsheying.com/book/3659/)
+ 15. [免費小説網](http://www.huazhuangsheying.com/book/3659/) 也是有分頁，fetch後簡單處理一下就ok。
  ``` javascript
 .section-box+h2+.section-box>.section-list>.book-item>a@@@@@@let content=data.querySelector('#content');if(!content)return data.body.innerText;if(content.children[0].tagName=='DIV')content.removeChild(content.children[0]);content.innerHTML=content.innerHTML.replace(/<br>/g,"\n");content=content.innerText;let nextpage=data.querySelector(a[href$="_2.html"]);if(nextpage){fetch(nextpage.href).then(r => r.text()).then(d => {let doc = document.implementation.createHTMLDocument(''); doc.documentElement.innerHTML = d;let c=doc.querySelector('#content');if(c){if(c.children[0].tagName=='DIV')c.removeChild(c.children[0]);c.innerHTML=c.innerHTML.replace(/<br>/g,"\n"); content+=c.innerText;}cb(content);});return false;}return content;
  ```
- 16. [海棠文化](https://haitbook.com/?act=showinfo&bookwritercode=EB20160922203907769482&bookid=67166&pavilionid=a)
+ 16. [海棠文化](https://haitbook.com/?act=showinfo&bookwritercode=EB20160922203907769482&bookid=67166&pavilionid=a) token在頁面中，直接match拿到然後請求了事。
  ``` javascript
 .uk-list>li>a@@@@@@let contentMatch=data.body.innerHTML.match(/url: '\/showpapercolor.php',[\s\S]*?paperid:\s*'(\w+)',\s*vercodechk:\s*'(\w+)'/);if(!contentMatch)return "";$.ajax({url: '/showpapercolor.php',type: 'POST',data: { paperid: `${contentMatch[1]}`, vercodechk: `${contentMatch[2]}`},error: function (xhr) {cb("");},success: function (colorresponse) {cb(colorresponse.replace(/<img.*?>/,"").replace(/<br \/>/g,""))}});return false;
  ```
