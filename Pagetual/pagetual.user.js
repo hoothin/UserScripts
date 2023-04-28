@@ -5245,6 +5245,7 @@
                 //只有1的話怕不是圖片哦
                 if (pageElement && (pageElement.length > 1 || (pageElement.length == 1 && !/^IMG$/i.test(pageElement[0].nodeName)))) {
                     await ruleParser.insertPage(doc, pageElement, url, callback, false);
+                    isLoading = true;
                     if (ruleParser.curSiteRule.action == 1) {
                         requestFromIframe(url, (doc, eles) => {
                             loadPageOver();
