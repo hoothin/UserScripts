@@ -4480,14 +4480,17 @@
         let passTime = (now - updateDate) / 1000;
         if (isNaN(passTime)) {
             passStr = i18n("firstUpdate");
-        } else if (passTime < 60) {
-            passStr = i18n("passSec", parseInt(passTime)) + " 👆 " + i18n("click2update");
-        } else if (passTime < 60 * 60) {
-            passStr = i18n("passMin", parseInt(passTime / 60)) + " 👆 " + i18n("click2update");
-        } else if (passTime < 60 * 60 * 24) {
-            passStr = i18n("passHour", parseInt(passTime / 3600)) + " 👆 " + i18n("click2update");
         } else {
-            passStr = i18n("passDay", parseInt(passTime / 86400)) + " 👆 " + i18n("click2update");
+            if (passTime < 60) {
+                passStr = i18n("passSec", parseInt(passTime));
+            } else if (passTime < 60 * 60) {
+                passStr = i18n("passMin", parseInt(passTime / 60));
+            } else if (passTime < 60 * 60 * 24) {
+                passStr = i18n("passHour", parseInt(passTime / 3600));
+            } else {
+                passStr = i18n("passDay", parseInt(passTime / 86400));
+            }
+            passStr += " 👆 " + i18n("click2update");
         }
 
 
