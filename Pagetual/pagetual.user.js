@@ -4928,6 +4928,7 @@
     function updateRules (success, fail, keepCache) {
         if (!storage.supportCrossSave()) {
             fail({url:''}, "Not support cross storage");
+            showTips("Current platform do not support cross storage!");
             return;
         }
         if (inUpdate) return;
