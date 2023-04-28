@@ -42,7 +42,7 @@
  下載內容可能含有干擾碼，此時只需點擊**懶人小說下載設置**，輸入干擾碼的 css 選擇器即可排除干擾碼。例如 `.mask,.ksam,font.jammer`，代表刪除 class 為 mask 或者 ksam 的元素或者 class 為 jammer 的 font 元素。
 ### 第六層心法（超難）
 
- 倘若正文不在內頁正文，是頁面加載後處理得到的，可點擊**自定義下載**，輸入自定義代碼對內頁進行分析獲取正確結果。例如 【`眾神的風車@@@@@@var noval=JSON.parse(data.querySelector("#meta-preload-data").content).novel;noval[Object.keys(noval)[0]].content;`】，即可通過自定義代碼處理返回頁面獲取內容。代碼中使用 data 可以獲得返回頁面的 document，最後一個表達式的值為最終寫入的內容。
+ 倘若正文不在內頁正文，是頁面加載後處理得到的，可點擊**自定義下載**，輸入自定義代碼對內頁進行分析獲取正確結果。例如 【`眾神的風車@@@@@@var noval=JSON.parse(doc.querySelector("#meta-preload-data").content).novel;noval[Object.keys(noval)[0]].content;`】，即可通過自定義代碼處理返回頁面獲取內容。代碼中使用 doc 可以獲得返回頁面的 document，最後一個表達式的值為最終寫入的內容。
  
  如果返回 false，代表異步回調，可自行抓取內容並等待抓取成功後用 cb(content) 返回抓取到的 content。
 
@@ -149,6 +149,9 @@ body>>let title="俞亮/时光",chs=[];item.querySelectorAll("ul.list>li>a").for
 可能是快捷鍵被其他應用接管了，使用腳本管理器中的命令菜單下載即可
 - 有無關干擾字符怎麼辦？<br>
 設置里輸入干擾碼css選擇器即可，多個選擇器用逗號分隔
+- 章節順序不對怎麼辦？<br>
+默認是按網頁內出現位置排序。點擊設置，嘗試更改為“按網址重新排序”或者“按章節名重新排序”即可
+- 其他問題歡迎通過 email 聯繫我，有空可幫你解決。
 
 ### 為啥要寫這個腳本？
 主要是<img src="https://stickershop.line-scdn.net/stickershop/v1/product/8692/LINEStorePC/main.png;compress=true" width=50 alt="怠惰啊" title="怠惰啊"/>
