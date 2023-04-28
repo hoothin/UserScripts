@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.71.64
+// @version      1.6.6.72.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -1788,10 +1788,12 @@
                      text-decoration:none;
                      min-width: ${32 * this.scale}px;
                      min-height: ${32 * this.scale}px;
+                     text-align: center;
                  }
                  .search-jumper-btn>img {
                      width: ${32 * this.scale}px;
                      height: ${32 * this.scale}px;
+                     border: unset;
                  }
                  .search-jumper-btn>b {
                      line-height: ${32 * this.scale}px;
@@ -2097,6 +2099,7 @@
                      color: #222!important;
                      border-radius: 20px;
                      line-height: unset;
+                     text-align: center;
                  }
                  .search-jumper-type img {
                      width: ${32 * this.scale}px;
@@ -6843,10 +6846,12 @@
                 }
                 let getUrl = async () => {
                     self.customInput = false;
-                    let keywords;
-                    if (self.searchJumperInputKeyWords.value) {
-                        keywords = self.searchJumperInputKeyWords.value;
-                    } else {
+                    let selStr = getSelectStr();
+                    let keywords = self.searchJumperInputKeyWords.value || selStr;
+                    if (!keywords && /%s[lure]?\[/.test(data.url)) {
+                        keywords = await navigator.clipboard.readText();
+                    }
+                    if (!keywords) {
                         keywords = getKeywords();
                     }
                     if (keywords && keywords != cacheKeywords) {
@@ -6992,7 +6997,6 @@
                         }
                         ele.dataset.url = tempUrl.replace(/%e\b/g, document.characterSet).replace(/%c\b/g, (isMobile?"mobile":"pc")).replace(/%h\b/g, host);
                     }
-                    let selStr = getSelectStr();
                     let targetUrl = '';
                     let targetName = selStr || document.title;
                     let imgBase64 = '', resultUrl = customVariable(ele.dataset.url);
@@ -7434,17 +7438,20 @@
                         let url = await getUrl();
                         let tips = ele.dataset.name;
                         self.tipsPos(ele, tips);
-                        try {
-                            let tipsResult = await new AsyncFunction('fetch', 'storage', '"use strict";'+ url.replace(/^showTips:/, ''))(GM_fetch, storage);
-                            if (Array && Array.isArray && Array.isArray(tipsResult)) {
-                                tipsData = tipsResult[1];
-                                tipsResult = tipsResult[0];
-                            }
-                            if (tipsResult) {
-                                tips += "<br/>" + tipsResult;
-                            }
-                        } catch(e) {debug(e)}
-                        self.tipsPos(ele, tips);
+                        if (url) {
+                            try {
+                                url = url.replace(/^showTips:/, '');
+                                let tipsResult = /\breturn\b/.test(url) ? await new AsyncFunction('fetch', 'storage', '"use strict";' + url)(GM_fetch, storage) : url;
+                                if (Array && Array.isArray && Array.isArray(tipsResult)) {
+                                    tipsData = tipsResult[1];
+                                    tipsResult = tipsResult[0];
+                                }
+                                if (tipsResult) {
+                                    tips += "<br/>" + tipsResult;
+                                    self.tipsPos(ele, tips);
+                                }
+                            } catch(e) {debug(e)}
+                        }
                     } else self.tipsPos(ele, ele.dataset.name);
                 }, false);
                 ele.addEventListener('mouseleave', e => {
