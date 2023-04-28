@@ -2801,12 +2801,16 @@
             isLoading = true;
             let curScroll = getBody(document).scrollTop || document.documentElement.scrollTop;
             ruleParser.insertElement(loadingDiv);
-            let parent = loadingDiv.parentNode;
-            if (/^TBODY$/i.test(parent.nodeName)) {
-                parent = parent.parentNode;
-            }
-            if (/^TABLE$/i.test(parent.nodeName)) {
-                parent.parentNode.appendChild(loadingDiv);
+            if (forceState == 2) {
+                getBody(document).appendChild(loadingDiv);
+            } else {
+                let parent = loadingDiv.parentNode;
+                if (/^TBODY$/i.test(parent.nodeName)) {
+                    parent = parent.parentNode;
+                }
+                if (/^TABLE$/i.test(parent.nodeName)) {
+                    parent.parentNode.appendChild(loadingDiv);
+                }
             }
             getBody(document).scrollTop = curScroll;
             document.documentElement.scrollTop = curScroll;
@@ -5245,8 +5249,8 @@
                 //只有1的話怕不是圖片哦
                 if (pageElement && (pageElement.length > 1 || (pageElement.length == 1 && !/^IMG$/i.test(pageElement[0].nodeName)))) {
                     await ruleParser.insertPage(doc, pageElement, url, callback, false);
-                    isLoading = true;
                     if (ruleParser.curSiteRule.action == 1) {
+                        isLoading = true;
                         requestFromIframe(url, (doc, eles) => {
                             loadPageOver();
                             if (eles) {
@@ -6983,11 +6987,11 @@
                 }
             }
             isLoading = true;
+            if (curPage != 1 || !isJs || !ruleParser.curSiteRule.singleUrl) {
+                ruleParser.beginLoading(loadingDiv);
+            }
             let sleep = ruleParser.curSiteRule.sleep || 0;
             setTimeout(() => {
-                if (curPage != 1 || !isJs || !ruleParser.curSiteRule.singleUrl) {
-                    ruleParser.beginLoading(loadingDiv);
-                }
                 if (ruleParser.curSiteRule.pageElementByJs) {
                     var over = eles => {
                         loadPageOver();
