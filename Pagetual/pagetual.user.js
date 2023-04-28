@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.36.7
+// @version      1.9.36.8
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -776,7 +776,7 @@
         _GM_openInTab(rulesData.configPage || configPage[0], {active: true});
     });
     _GM_registerMenuCommand(i18n("editCurrent"), () => {
-        Picker.getInstance().start();
+        picker.start();
     });
 
     function getBody(doc) {
@@ -1788,7 +1788,7 @@
                 });
             }
             this.addedElePool = [];
-            SideController.getInstance().remove();
+            sideController.remove();
         }
 
         async getPage(doc) {
@@ -2918,22 +2918,22 @@
     var ruleParser = new RuleParser();
 
     class SideController {
-        static controller;
+        //static controller;
         constructor() {
             this.inited = false;
         }
 
-        static getInstance() {
+        /*static getInstance() {
             if (!SideController.controller) {
                 SideController.controller = new SideController();
             }
             return SideController.controller;
-        }
+        }*/
 
-        static setup() {
+        setup() {
             if (ruleParser.curSiteRule.sideController === false) return;
             if (!rulesData.sideController && !ruleParser.curSiteRule.sideController) return;
-            SideController.getInstance().addToStage();
+            this.addToStage();
         }
 
         init() {
@@ -3031,7 +3031,6 @@
                  opacity: 0.6;
              }
             `;
-            this.styleEle = _GM_addStyle(this.cssText);
             let frame = document.createElement("div");
             frame.id = "pagetual-sideController";
             frame.innerHTML = createHTML(`
@@ -3121,7 +3120,7 @@
 
             move.oncontextmenu = e => {
                 e.preventDefault();
-                Picker.getInstance().start();
+                picker.start();
             };
 
             let mouseMoveHandler = e => {
@@ -3183,21 +3182,24 @@
             if (this.frame && this.frame.parentNode) this.frame.parentNode.removeChild(this.frame);
         }
     }
+    const sideController = new SideController();
 
     class NextSwitch {
-        static nextSwitch;
+        //static nextSwitch;
         constructor() {
-            this.init();
+            this.inited = false;
         }
 
-        static getInstance() {
+        /*static getInstance() {
             if (!NextSwitch.nextSwitch) {
                 NextSwitch.nextSwitch = new NextSwitch();
             }
             return NextSwitch.nextSwitch;
-        }
+        }*/
 
         init() {
+            if (this.inited) return;
+            this.inited = true;
             let self = this;
             this.cssText = `
              #pagetual-nextSwitch {
@@ -3261,7 +3263,6 @@
               transform: scale(1.2);
              }
             `;
-            this.styleEle = _GM_addStyle(this.cssText);
             let frame = document.createElement("div");
             frame.id = "pagetual-nextSwitch";
             frame.innerHTML = createHTML(`
@@ -3316,6 +3317,7 @@
         }
 
         start() {
+            this.init();
             if (!this.styleEle || !this.styleEle.parentNode) {
                 this.styleEle = _GM_addStyle(this.cssText);
             }
@@ -3326,19 +3328,20 @@
             if (this.frame.parentNode) this.frame.parentNode.removeChild(this.frame);
         }
     }
+    const nextSwitch = new NextSwitch();
 
     class Picker {
-        static picker;
+        //static picker;
         constructor() {
             this.init();
         }
 
-        static getInstance() {
+        /*static getInstance() {
             if (!Picker.picker) {
                 Picker.picker = new Picker();
             }
             return Picker.picker;
-        }
+        }*/
 
         init() {
             let self = this;
@@ -3564,7 +3567,6 @@
               color: #161616;
              }
             `;
-            this.styleEle = _GM_addStyle(this.cssText);
             this.mainSignDiv = this.createSignDiv();
             this.allSignDiv = [];
             let frame = document.createElement("div");
@@ -3665,7 +3667,7 @@
             let xpath = frame.querySelector("#checkbox_id");
             let checkBtn = frame.querySelector("#check");
             let editBtn = frame.querySelector("#edit");
-            let nextSwitch = frame.querySelector("#nextSwitch");
+            let nextSwitchBtn = frame.querySelector("#nextSwitch");
             let loadNow = frame.querySelector("#loadNow");
             let tempRule = frame.querySelector(".tempRule");
             let showDetailBtn = frame.querySelector("#showDetail");
@@ -3736,9 +3738,9 @@
                     setTimeout(() => {location.reload()}, 100);
                 }
             }, true);
-            nextSwitch.addEventListener("click", e => {
+            nextSwitchBtn.addEventListener("click", e => {
                 self.close();
-                NextSwitch.getInstance().start();
+                nextSwitch.start();
             }, true);
             loadNow.addEventListener("click", e => {
                 self.close();
@@ -3829,7 +3831,7 @@
             this.xpath = xpath;
             this.allpath = allpath;
             this.selectorInput = selectorInput;
-            this.nextSwitch = nextSwitch;
+            this.nextSwitchBtn = nextSwitchBtn;
             this.loadNow = loadNow;
             this.tempRule = tempRule;
             this.logoBtn = logoBtn;
@@ -4024,9 +4026,9 @@
 
             this.loadNow.style.display = ruleParser.nextLinkHref ? "block" : "none";
             if (ruleParser.curSiteRule.nextLink && Array && Array.isArray && Array.isArray(ruleParser.curSiteRule.nextLink)) {
-                this.nextSwitch.style.display = "block";
+                this.nextSwitchBtn.style.display = "block";
             } else {
-                this.nextSwitch.style.display = "none";
+                this.nextSwitchBtn.style.display = "none";
             }
 
             let pageElementSel = ruleParser.curSiteRule.pageElement || "";
@@ -4036,6 +4038,7 @@
             this.setSelectorDiv(pageElementSel);
         }
     }
+    const picker = new Picker();
 
     var editor, editorChanged = false;
     function createEdit() {
@@ -5292,7 +5295,7 @@
             }
             if (ruleParser.curSiteRule.nextLink && Array && Array.isArray && Array.isArray(ruleParser.curSiteRule.nextLink)) {
                 _GM_registerMenuCommand(i18n("nextSwitch"), () => {
-                    NextSwitch.getInstance().start();
+                    nextSwitch.start();
                 });
             }
             if (ruleParser.nextLinkHref) {
@@ -5955,7 +5958,7 @@
     const pageNumReg=/[&\/\?](p=|page[=\/_-]?)\d+|[_-]\d+\./;
     function createPageBar(url) {
         curPage++;
-        SideController.setup();
+        sideController.setup();
         let posEle = null;
         let scrollH = Math.max(document.documentElement.scrollHeight, getBody(document).scrollHeight);
         let insert = ruleParser.getInsert();
@@ -6030,7 +6033,7 @@
                 e.stopPropagation();
                 if (e.ctrlKey || e.altKey || e.shiftKey || e.metaKey) return;
                 e.preventDefault();
-                Picker.getInstance().start();
+                picker.start();
             });
         }
         let touched = false;
@@ -6444,7 +6447,7 @@
             callback(false, false);
             if (emuIframe && emuIframe.parentNode) {
                 emuIframe.parentNode.removeChild(emuIframe);
-                SideController.getInstance().remove();
+                sideController.remove();
                 emuIframe = null;
             }
         }
@@ -6972,7 +6975,7 @@
         let insert = ruleParser.getInsert();
         if (insert) {
             if (curPage == 1) initView();
-            SideController.setup();
+            sideController.setup();
             /*if (curPage == 1) {
                 window.postMessage({
                     insert: geneSelector(ruleParser.curSiteRule.insertPos == 2 ? insert : insert.parentNode, true),
