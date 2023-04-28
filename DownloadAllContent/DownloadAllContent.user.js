@@ -4,7 +4,7 @@
 // @name:zh-TW   怠惰小説下載器
 // @name:ja      怠惰者小説ダウンロードツール
 // @namespace    hoothin
-// @version      2.7.3.18
+// @version      2.7.3.19
 // @description  Fetch and download main content on current page, provide special support for chinese novel
 // @description:zh-CN  通用网站内容抓取工具，可批量抓取任意站点的小说、论坛内容等并保存为TXT文档
 // @description:zh-TW  通用網站內容抓取工具，可批量抓取任意站點的小說、論壇內容等並保存為TXT文檔
@@ -286,12 +286,12 @@
                     Analysing......
                 </div>
                 <div id="txtDownQuit" style="width: 30px;height: 30px;border-radius: 30px;position:absolute;right:2px;top:2px;cursor: pointer;background-color:#ff5a5a;">
-                    <span style="height: 30px;line-height: 30px;display:block;color:#FFF;text-align:center;font-size: 12px;font-weight: bold;">╳</span>
+                    <span style="height: 30px;line-height: 30px;display:block;color:#FFF;text-align:center;font-size: 12px;font-weight: bold;font-family: arial;">╳</span>
                 </div>
                 <div style="position:absolute;right:0px;bottom:2px;cursor: pointer;max-width:85px">
                     <button id="abortRequest" style="background: #008aff;border: 0;padding: 5px;border-radius: 6px;color: white;float: right;margin: 1px;height: 25px;display:none;line-height: 16px;">${getI18n('abort')}</button>
                     <button id="tempSaveTxt" style="background: #008aff;border: 0;padding: 5px;border-radius: 6px;color: white;float: right;margin: 1px;height: 25px;line-height: 16px;cursor: pointer;">${getI18n('save')}</button>
-                    <button id="saveAsMd" style="background: #008aff;border: 0;padding: 5px;border-radius: 6px;color: white;float: right;margin: 1px;height: 25px;line-height: 16px;cursor: pointer;" title="${getI18n('saveAsMd')}">Markdown</button>
+                    <button id="saveAsMd" style="background: #008aff;border: 0;padding: 5px;border-radius: 6px;color: white;float: right;margin: 1px;height: 25px;line-height: 16px;cursor: pointer;overflow: hidden;" title="${getI18n('saveAsMd')}">Markdown</button>
                 </div>
             </div>
         </div>`;
@@ -475,7 +475,7 @@
         var waitForComplete;
         function processDoc(i, aTag, doc, cause){
             let cbFunc=content=>{
-                rCats[i]=(aTag.innerText.replace(/[\r\n\t]/g, "") + "\r\n" + (cause || '') + content);
+                rCats[i]=(aTag.innerText.replace(/[\r\n\t]/g, "") + "\r\n" + (cause || '') + content.replace(/\s*$/, ""));
                 curRequests = curRequests.filter(function(e){return e[0]!=i});
                 txtDownContent.style.display="block";
                 txtDownWords.innerHTML=getI18n("downloading",[downNum,(aEles.length-downNum),aTag.innerText]);
@@ -847,10 +847,11 @@
             }
             if(urlsArr[3]){
                 processFunc=(data, cb)=>{
+                    let doc=data;
                     if(urlsArr[3].indexOf("return ")==-1){
-                        return eval(urlsArr[3])
+                        return eval(urlsArr[3]);
                     }else{
-                        return Function("data","cb",urlsArr[3])(data, cb);
+                        return Function("data", "doc", "cb",urlsArr[3])(data, doc, cb);
                     }
                 };
             }else{
