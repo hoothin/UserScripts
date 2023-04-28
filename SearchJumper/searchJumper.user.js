@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.72.64
+// @version      1.6.6.73.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -3639,7 +3639,7 @@
                     });
                     let rangePickerBtn = modifyFrame.querySelector("#rangePickerBtn");
                     rangePickerBtn.addEventListener("click", e => {
-                        Picker.getInstance().getSelector(selector => {
+                        picker.getSelector(selector => {
                             wordRange.value = selector;
                             modifyFrame.style.display = '';
                         });
@@ -4445,7 +4445,7 @@
             togglePicker() {
                 this.pickerBtn.classList.toggle("checked");
                 this.searchJumperInputKeyWords.disabled = !this.searchJumperInputKeyWords.disabled;
-                Picker.getInstance().toggle();
+                picker.toggle();
             }
 
             hideSearchInput() {
@@ -4457,7 +4457,7 @@
                 this.searchJumperInputKeyWords.value = "";
                 this.pickerBtn.classList.remove("checked");
                 this.searchJumperInputKeyWords.disabled = false;
-                Picker.getInstance().close();
+                picker.close();
                 document.removeEventListener("mouseup", this.checkSelHandler);
                 let openType = this.bar.querySelector('.search-jumper-type.search-jumper-open>span');
                 if (openType) {
@@ -4796,13 +4796,13 @@
                     this.togglePicker();
                 });
                 this.maxEleBtn.addEventListener("click", e => {
-                    Picker.getInstance().expand();
+                    picker.expand();
                 });
                 this.minEleBtn.addEventListener("click", e => {
-                    Picker.getInstance().collapse();
+                    picker.collapse();
                 });
                 this.copyEleBtn.addEventListener("click", e => {
-                    Picker.getInstance().copy();
+                    picker.copy();
                 });
                 let listArrow = document.createElement("div");
                 listArrow.className = "listArrow";
@@ -7853,17 +7853,17 @@
         }
 
         class Picker {
-            static picker;
+            //static picker;
             constructor() {
                 this.init();
             }
 
-            static getInstance() {
+            /*static getInstance() {
                 if (!Picker.picker) {
                     Picker.picker = new Picker();
                 }
                 return Picker.picker;
-            }
+            }*/
 
             getSelector(callback) {
                 this.close();
@@ -8104,6 +8104,7 @@
                 getBody(document).addEventListener("click", this.clickHandler, true);
             }
         }
+        const picker = new Picker();
 
         function emuPress(v) {
             if (!targetElement) return;
@@ -8475,7 +8476,7 @@
         }
 
         function getSelectStr() {
-            let selStr = Picker.getInstance().getPickerStr() || window.getSelection().toString();
+            let selStr = picker.getPickerStr() || window.getSelection().toString();
             if (!selStr) {
                 let tar = document.activeElement;
                 if (tar && /^(TEXTAREA|INPUT)$/i.test(tar.nodeName)) {
@@ -9453,6 +9454,7 @@
                 let targetPre, ruleType = 0;
                 let importBtn = document.createElement("button");
                 let filterBtn = document.createElement("button");
+                const importFilter = new ImportFilter();
                 importBtn.innerText = i18n("import");
                 importBtn.style.position = "absolute";
                 importBtn.style.display = "block";
@@ -9526,7 +9528,7 @@
                         if (!configTxt || configTxt.indexOf('[') !== 0) return;
                         try {
                             configData = JSON.parse(configTxt);
-                            ImportFilter.getInstance().open(configData);
+                            importFilter.open(configData);
                         } catch (e) {
                             _GM_notification(e.toString());
                         }
@@ -9571,17 +9573,17 @@
         }
 
         class ImportFilter {
-            static importFilter;
+            //static importFilter;
             constructor() {
                 this.init();
             }
 
-            static getInstance() {
+            /*static getInstance() {
                 if (!ImportFilter.importFilter) {
                     ImportFilter.importFilter = new ImportFilter();
                 }
                 return ImportFilter.importFilter;
-            }
+            }*/
 
             init() {
                 let self = this;
@@ -10803,7 +10805,7 @@
                         div.onclick = e => {
                             if (e.target.nodeName.toUpperCase() == 'SPAN') {
                                 if (e.target.className == 'element') {
-                                    Picker.getInstance().getSelector(selector => {
+                                    picker.getSelector(selector => {
                                         e.target.innerText = selector;
                                         e.target.title = selector;
                                         addFrame.style.display = '';
@@ -10889,14 +10891,14 @@
                     addFrame.classList.remove("crawling");
                 });
                 inputAction.addEventListener("click", e => {
-                    Picker.getInstance().getSelector(selector => {
+                    picker.getSelector(selector => {
                         addAction('input', selector, '%s');
                         addFrame.style.display = '';
                     });
                     addFrame.style.display = 'none';
                 });
                 clickAction.addEventListener("click", e => {
-                    Picker.getInstance().getSelector(selector => {
+                    picker.getSelector(selector => {
                         addAction('click', selector);
                         addFrame.style.display = '';
                     });
