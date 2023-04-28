@@ -1572,13 +1572,16 @@
         "css": ".pagetual_pageBar{margin-top:0px!important;margin-bottom:0px!important}.mh-search-list+.pagetual_pageBar{display:none!important}"
     },
     {
-        "name": "木马漫画 - 閱讀 - 雙擊前往下一章，鍵盤左右鍵上下章",
-        "example": "https://www.omyschool.com/article_detail/590/653244/%E5%85%A8%E8%81%B7%E7%8D%B5%E4%BA%BA/390%E8%A9%B1/",
+        "name": "木马漫画 - 閱讀",
+        "example": "https://www.omyschool.com/article_detail/19057/672194/%E7%A5%9E%E6%98%8E%E5%AD%B8%E6%A0%A1%E7%9A%84%E5%B7%AE%E7%AD%89%E7%94%9F/01%E8%A9%B1/",
         "url": "^https?://www\\.omyschool\\.com/article_detail/\\d+/\\d+/",
-        "init": "function gx(x){return document.evaluate(x,document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue};function next(e){let key=window.event?e.keyCode:e.which;if(key==39){let n=gx(\"//a[contains(@class,'next')][not(@href='javascript:void(0)')]\");if(n){n.click()}else{alert('沒有下一章了！')}}};document.addEventListener('keydown',next);function prev(e){let key=window.event?e.keyCode:e.which;if(key==37){let p=gx(\"//a[contains(@class,'prev')][not(@href='javascript:void(0)')]\");if(p){p.click()}else{alert('沒有上一章了！')}}};document.addEventListener('keydown',prev);function dcnext(){let n=gx(\"//a[contains(@class,'next')][not(@href='javascript:void(0)')]\");if(n){n.click()}else{alert('沒有下一章了！')}};document.addEventListener('dblclick',dcnext);function gax(xpath,context){var nodes=[];try{var doc=(context&&context.ownerDocument)||window.document;var results=doc.evaluate(xpath,context||doc,null,XPathResult.ANY_TYPE,null);var node;while(node=results.iterateNext()){nodes.push(node)}}catch(e){throw e;}return nodes}gax(\"//div[(span) and contains(@class,'wrap_img')]\").forEach(div=>{div.remove()})",
-        "nextLink": ".nav_button next",
-        "pinUrl": true,
-        "manualMode": true
+        "history": 2,
+        "init": "const gax=xpath=>{let nodes=[];let results=document.evaluate(xpath,document,null,XPathResult.ANY_TYPE,null);let node;while(node=results.iterateNext()){nodes.push(node)}return nodes};setTimeout(()=>{[...gax('//div[span[@style]]')].forEach(e=>{e.remove()})},0)",
+        "nextLink": ".nav_button.next",
+        "pageElement": "//div[amp-img]",
+        "pageBarText": "return doc.querySelector('.uk-breadcrumb').innerText.trim().slice(2).trim()",
+        "preloadImages": "document.querySelector('#pagetual-preload').innerHTML='';let arr=[];[...doc.querySelectorAll('#imgs amp-img')].forEach(e=>{arr.push(e.getAttribute('src'))});return arr",
+        "css": "#col_right{display:none!important}"
     },
     {
         "name": "木马漫画 - 分類",
@@ -3044,6 +3047,13 @@
         "pageBar": 0
     },
     {
+        "name": "448人体艺术",
+        "example": "https://488xm.com/666rentiyishu/",
+        "url": "^https?://488xm\\.com/\\w+/",
+        "pageElement": "#container>.grid",
+        "replaceElement": ".pagelist"
+    },
+    {
         "name": "gogo人体艺术 - 圖片",
         "example": "https://gogortrt.com/gmgqdd/1305/",
         "url": "^https?://gogortrt\\.[a-z]{2,3}/[a-z]+/\\d+/",
@@ -3986,8 +3996,8 @@
     },
     {
         "name": "MEITU131 - 看圖",
-        "example": "https://www.meitu131.com/meinv/7672/",
-        "url": "^https?://www\\.meitu131\\.com/meinv/\\d+",
+        "example": "https://www.meitu131.net/meinv/7672/",
+        "url": "^https?://www\\.meitu131\\.net/meinv/\\d+",
         "init": "document.querySelectorAll('p>a').forEach(e=>{e.outerHTML=e.innerHTML})",
         "nextLink": "//a[text()='下一页']",
         "pageElement": ".work-content img",
@@ -3998,8 +4008,8 @@
     },
     {
         "name": "MEITU131",
-        "example": "https://www.meitu131.com/rank/dalu/",
-        "url": "^https?://www\\.meitu131\\.com/(e/search|rank|meinv|shouji|sucai|nvshen|hot)/([a-z]+)?",
+        "example": "https://www.meitu131.net/rank/dalu/",
+        "url": "^https?://www\\.meitu131\\.net/(e/search|rank|meinv|shouji|sucai|nvshen|hot)/([a-z]+)?",
         "exclude": "h1",
         "nextLink": "//a[text()='下一页']",
         "pageElement": ".details>ul,.cover-list",
@@ -4157,14 +4167,11 @@
     },
     {
         "name": "Mitaku - 看圖",
+        "enable": 0,
         "example": "https://mitaku.net/ero-cosplay/byoru-riamu-yumemi-nekomini/",
         "url": "^https?://mitaku\\.net/",
         "include": ".msacwl-slider-wrap",
-        "pinUrl": true,
-        "init": "let ge=e=>document.querySelector(e);setTimeout(()=>{let _img='';document.querySelectorAll('.slick-track img[data-src]').forEach(e=>{_img+=`<img src='${e.dataset.src}'>`});let msw=ge('.msacwl-slider-wrap');ge('.entry-content').appendChild(msw);msw.innerHTML=_img;msw.removeAttribute('data-conf')},1000)",
-        "nextLink": ".next>a",
-        "manualMode": true,
-        "css": ".msacwl-slider-wrap>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
+        "pinUrl": true
     },
     {
         "name": "Mitaku",
@@ -4211,7 +4218,8 @@
     },
     {
         "name": "CoserBOX - 首頁",
-        "example": "https://coserbox.org/，https://picacg.org/，https://loli.pub/",
+        "enable": 0,
+        "example": "https://acg.coserbox.net/，https://coserbox.org/，https://picacg.org/，https://loli.pub/",
         "url": "^https?://[^/]+/$",
         "include": "//img[contains(@alt,'CoserBOX')]",
         "loadMore": ".load-more:not(:disabled)"
@@ -4248,15 +4256,6 @@
         "pageElement": ".wp-block-post-template.is-flex-container",
         "replaceElement": "nav[aria-label='Pagination']",
         "pageBar": 0
-    },
-    {
-        "name": "4KUP - 圖片清單載入大圖",
-        "example": "https://www.4kup.net/2022/08/pure-media-vol182-bomi-bomistrys-office.html",
-        "url": "^https?://www\\.4kup\\.net/\\d+/\\d+/[^.]+\\.html$",
-        "init": "document.querySelectorAll('#gallery img').forEach(img=>{img.src=img.parentNode.nextSibling.firstChild.href;img.removeAttribute('data-src');img.removeAttribute('class');img.removeAttribute('loading')})",
-        "pinUrl": true,
-        "nextLink": "0",
-        "css": ".caption{display:none!important}#gallery>.item{width:100%!important;height: auto!important;}"
     },
     {
         "name": "4KUP - 分類",
@@ -4600,6 +4599,7 @@
     },
     {
         "name": "Mrcong - 看圖",
+        "enable": 0,
         "example": "https://mrcong.com/xiaoyu-vol-831-yang-chen-chen-yome-74-anh/",
         "url": "^https?://mrcong\\.com/",
         "init": "document.querySelectorAll('p>br').forEach(br=>{br.remove()})",
@@ -4788,15 +4788,6 @@
         "pageElement": ".posts-wrapper article",
         "replaceElement": ".page-numbers",
         "pageBar": 0
-    },
-    {
-        "name": "Xiuren 秀人网 -圖片",
-        "example": "http://www.xiuren.org/tuigirl-084.html",
-        "url": "^https?://www\\.xiuren\\.org/",
-        "include": "a[href*='download'][rel='gallery']",
-        "pinUrl": true,
-        "init": "let post=document.querySelector('.post');let d=document.querySelector(\"a[href*='download'][rel='gallery']\");post.parentNode.insertBefore(d,post);let _img='';document.querySelectorAll(\"a[rel='gallery']:not([href*='html'])\").forEach(e=>{_img+=`<img src='${e.href}'>`});document.querySelector('.post').innerHTML=_img;",
-        "css": "#title{padding-bottom:20px!important}"
     },
     {
         "name": "Xiuren 秀人网",
@@ -5111,14 +5102,6 @@
         "pageBar": 0
     },
     {
-        "name": "7mmtv - 漫畫 - 直接載入全部圖片",
-        "example": "https://0vrlcn.7mmtv.sx/zh/hcomic_content/4162/content.html",
-        "url": "^https?://\\w+\\.7mmtv\\.sx/(zh|en|ja|ko)/hcomic_content/",
-        "init": "let _img='';for(let i=1;i<Large_cgurl.length;i++){_img+=`<img src=\"${Large_cgurl[i]}\"class=\"img-responsive\">`};document.querySelector('#show_cg_html').innerHTML=_img;",
-        "css": ".ut1_img_content_js,.fullcomics-controls,.video-introduction-images-row>center>*:not(#content) {display: none !important;}.img-responsive{max-width:100%}",
-        "pinUrl": true
-    },
-    {
         "name": "7mmtv - 分類",
         "example": "https://7mmtv.sx/zh/uncensored_random/all/index.html",
         "url": "^https?://7mmtv\\.sx/(zh|en|ja|ko)/[a-z]+_(random|list)/",
@@ -5339,19 +5322,6 @@
         "pageBar": 0
     },
     {
-        "name": "松鼠症倉庫 - 閱讀",
-        "example": "https://ahri8.top/readOnline2.php?ID=90518&host_id=0",
-        "url": "^https?://[^/]+/readOnline\\d\\.php\\?ID=\\d+",
-        "include": [
-            "//div[@id='logo-group']//a[contains(text(),'松鼠症倉庫') or contains(text(),'松鼠症仓库')]",
-            "//script[contains(text(),'HTTP_IMAGE') and contains(text(),'Original_Image_List')]"
-        ],
-        "pinUrl": true,
-        "init": "document.querySelector('#Big_Image').innerHTML='';let p=Original_Image_List;let _img='';for(let i=0;i<p.length;i++){setTimeout(()=>{let imgSrc=`<img src='${HTTP_IMAGE + p[i].new_filename + '_w1500.' + p[i].extension}'>`;$('#Big_Image').append(imgSrc)},i*500)}",
-        "nextLink": "0",
-        "css": "#Big_Image>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}#content>[style^='text-align']{display:none!important}"
-    },
-    {
         "name": "松鼠症倉庫",
         "example": "https://ahri8.top/dnew.php?t=1669824000",
         "url": "^https?://[^/]+/dnew\\.php",
@@ -5446,14 +5416,6 @@
         "css": ".javascript-hide { display: inline-block !important; }.pagetual_pageBar { display: inline-flex!important;width: 100%!important; }"
     },
     {
-        "name": "hitomi - 閱讀",
-        "example": "https://hitomi.la/reader/2348858.html#1",
-        "url": "^https?://hitomi\\.la/reader/",
-        "init": "setTimeout(()=>{let g=document.querySelector('a.brand').outerHTML;document.querySelector('body').innerText='';let imgs=galleryinfo.files.length;for(let i=0;i<imgs;i++){setTimeout(()=>{$('body').append(make_image_element(galleryinfo['id'],our_galleryinfo[i],no_webp));if(i==imgs-1){$('body').append(g)}},i*1000)}},1000)",
-        "nextLink": "0",
-        "css": "img{max-width:100vw!important;max-height:100vh!important;display:block!important;margin:0 auto !important}body{overflow:inherit!important}.brand{display:block;font-size:32px;text-align:center;margin:10px auto;}"
-    },
-    {
         "name": "hitomi - Gallery Info",
         "example": "https://hitomi.la/doujinshi/akisame-mabara-ni-natte-%E4%B8%AD%E6%96%87-2431684.html#1",
         "url": "^https?://hitomi\\.la/(cg|manga|doujinshi|gamecg)/.+\\.html#1$",
@@ -5478,24 +5440,6 @@
             ".gallery-content[style]"
         ],
         "pageBar": 0
-    },
-    {
-        "name": "Orzqwq - 圖片 List style",
-        "example": "https://orzqwq.com/manga/pixiv-dogvahkiin-cg-934423-2/japanese/?style=list",
-        "url": "^https?://orzqwq\\.com/",
-        "include": "//option[@selected and text()='List style']",
-        "init": "let gae=e=>document.querySelectorAll(e);let interval=setInterval(()=>{let Img=gae('img[id][data-src]')[0];if(Img){let path=Img.getAttribute('data-src').trim().replace(/\\d+\\.[a-z]{3}$/,'');let imgs=gae('img[id][data-src]').length;let _img='';for(let i=1;i<=imgs;i++){let p;if(i<10){p='00'+i}else if(i<100){p='0'+i}else{p=i}let imgSrc=path+p+'.jpg';_img+=`<img src='${imgSrc}'>`};gae('.entry-content')[0].innerHTML=_img;clearInterval(interval)}},100);",
-        "nextLink": "0",
-        "css": ".entry-content img{display: block!important; margin: 0 auto!important;}"
-    },
-    {
-        "name": "Orzqwq - 圖片 Paged style",
-        "example": "https://orzqwq.com/manga/pixiv-dogvahkiin-cg-934423-2/japanese/p/1/",
-        "url": "^https?://orzqwq\\.com/",
-        "include": "//option[@selected and text()='Paged style']",
-        "init": "let gae=e=>document.querySelectorAll(e);let interval=setInterval(()=>{let _src=gae('img[id][data-src]')[0].src;if(_src){let path=_src.replace(/\\d+\\.[a-z]{3}$/,'');let imgs=gae('.select-pagination')[0].querySelectorAll('option').length;let _img='';for(let i=1;i<=imgs;i++){let p;if(i<10){p='00'+i}else if(i<100){p='0'+i}else{p=i}let imgSrc=path+p+'.jpg';_img+=`<img src='${imgSrc}'>`};gae('.entry-content')[0].innerHTML=_img;clearInterval(interval)}},100);",
-        "nextLink": "0",
-        "css": ".page-link-hover,.select-pagination{display:none!important}.entry-content img{display: block!important; margin: 0 auto!important;}"
     },
     {
         "name": "Orzqwq",
@@ -5687,6 +5631,8 @@
         "example": "https://www.yylsp.com/",
         "url": "^https?://www\\.yylsp\\.com/",
         "pageElement": ".posts-item.card",
+        "insert": ".pagenav.ajax-pag",
+        "insertPos": 1,
         "replaceElement": ".pagenav"
     },
     {
@@ -5739,20 +5685,6 @@
         "pageInit": "doc.querySelectorAll('div.media[data-thumb]').forEach(div=>{div.style.backgroundImage=`url('${div.dataset.src}')`;div.removeAttribute('data-src');div.classList.remove('loading');})",
         "pageAction": "let es=document.querySelectorAll('.margin-top-sm>.hex');if(es.length>1){let last=[...es].pop();last.querySelectorAll('div[data-thumb]').forEach(e=>{let img=new Image();img.src=e.getAttribute('data-thumb');img.onerror=()=>{e.classList.add('error')}})}",
         "css": ".pagetual_pageBar{margin-top:0px!important}.hot-keywords+.pagetual_pageBar{margin-top:6px!important}.pagetual_pageBar+.hot-keywords{margin-top:0px!important}.padding-lr-xs.margin-tb-xs {display: none !important;}.mobile .content{padding:0!important}"
-    },
-    {
-        "name": "yinmh - 移除lazy直接載入圖片",
-        "example": "https://www.yinmh.com/149201.html",
-        "url": "^https?://www\\.yinmh\\.com/\\d+\\.html",
-        "init": "setTimeout(()=>{document.querySelectorAll(`.image img.lazy[img^='h']`).forEach(img=>{img.src=img.getAttribute('img');img.removeAttribute('class');img.removeAttribute('img')})},1000);setTimeout(()=>{document.querySelectorAll(`.image img.lazy`).forEach(img=>{img.src=img.src})},12000)",
-        "pinUrl": true
-    },
-    {
-        "name": "qinimg - 清單大圖",
-        "example": "https://www.qinimg.com/image/133275.html",
-        "url": "^https?://www\\.qinimg\\.com/image/\\d+\\.html",
-        "init": "document.querySelectorAll('#image img.lazy').forEach(img=>{img.src=img.parentElement.href;img.removeAttribute('class');img.removeAttribute('img')})",
-        "pinUrl": true
     },
     {
         "name": "JieAV",
@@ -5923,20 +5855,6 @@
         "autoLoadNum": "0"
     },
     {
-        "name": "BuzzAV - album 相簿清單直接載入大圖",
-        "example": "https://www.buzzav.com/album/260/jk",
-        "url": "^https?://www\\.buzzav\\.com/album/\\d+",
-        "init": "document.querySelectorAll('.row.content-row .img-responsive').forEach(img=>{let s=img.src;let sm=s.match(/media\\/photos\\/tmb\\//);let f=s.replace('tmb/','');if(sm){img.src=f}})",
-        "nextLink": ".page-item.active+li>a",
-        "pinUrl": true,
-        "pageElement": ".row>.col-12>.row.content-row",
-        "replaceElement": ".pagination,.well-info",
-        "pageAction": "document.querySelectorAll('.row.content-row .img-responsive').forEach(img=>{let s=img.src;let sm=s.match(/media\\/photos\\/tmb\\//);let f=s.replace('tmb/','');if(sm){img.src=f}})",
-        "pageBar": 0,
-        "initRun": 1,
-        "autoLoadNum": "0"
-    },
-    {
         "name": "BuzzAV - album",
         "example": "https://www.buzzav.com/album/260/jk",
         "url": "^https?://www\\.buzzav\\.com/album/\\d+",
@@ -6099,13 +6017,6 @@
         "replaceElement": ".nav-links"
     },
     {
-        "name": "Avbebe - 漫畫圖片提前全部載入",
-        "example": "https://avbebe.com/archives/102353",
-        "url": "^https?://avbebe\\.com/archives/\\d+$",
-        "init": "document.querySelectorAll('img[data-lazy-src]').forEach(img=>{img.src=img.getAttribute('data-lazy-src');img.removeAttribute('data-lazy-src');img.setAttribute('class','lazyloaded');img.setAttribute('data-ll-status','loaded')})",
-        "pinUrl": true
-    },
-    {
         "name": "Avbebe",
         "example": "https://avbebe.com/",
         "url": "^https?://avbebe\\.com/",
@@ -6181,15 +6092,6 @@
         "initRun": 1,
         "autoLoadNum": "0",
         "css": "#photobitlefta,#photobitrighta{display:none!important}#gridphoto *{overflow: initial !important;position: initial !important;}img[alt]{max-width: 98% !important;display: block !important;margin: 0 auto !important;}"
-    },
-    {
-        "name": "EPORNER - gallery圖片清單1秒載入3張大圖",
-        "example": "https://www.eporner.com/gallery/z5BA6pUNvdW/Blacqkl-Angela/",
-        "url": "^https?://[a-z]{2,3}\\.eporner\\.com/gallery/",
-        "exclude": ".photosgrid img[alt][src$='gif']",
-        "init": "let imgs=document.querySelectorAll('.photosgrid img[alt]');for(let i=0;i<imgs.length;i++){setTimeout(()=>{imgs[i].src=imgs[i].src.replace('_296x1000','')},i*333)}",
-        "pinUrl": true,
-        "css": "#container.photosgrid{display:block!important}"
     },
     {
         "name": "EPORNER",
@@ -6293,15 +6195,6 @@
         "pageElement": ".thumb-list",
         "replaceElement": ".pager-section",
         "pageAction": "let gae=e=>document.querySelectorAll(e);let ps=gae('.thumb-list');let last=ps.length-1;ps[last].querySelectorAll('a[data-previewvideo]').forEach(a=>{a.onmouseenter=e=>{let v=document.createElement('video');v.setAttribute('loop','loop');v.setAttribute('autoplay','autoplay');v.setAttribute('playsinline','playsinline');v.setAttribute('webkitplaysinline','webkitplaysinline');v.setAttribute('src',a.getAttribute('data-previewvideo'));v.setAttribute('class','thumb-image-container__video');v.setAttribute('eid1','156');a.appendChild(v)};a.onmouseleave=e=>{a.querySelector('video').remove()}})"
-    },
-    {
-        "name": "GavPorn 相冊",
-        "example": "https://cav103.com/albums/549/jk8/",
-        "url": "^https?://cav\\w+\\.com/albums/",
-        "include": ".block-album>.album-holder>.images",
-        "pinUrl": true,
-        "init": "document.querySelectorAll('a[data-fancybox-type]').forEach(a=>{a.outerHTML=`<img src='${a.href}'>`})",
-        "css": ".images img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}.content>.top,.sponsor{display:none!important}"
     },
     {
         "name": "色色啦",
@@ -6413,14 +6306,6 @@
         "nextLink": ".page_next:not(.disabled)>a",
         "pageElement": "#singleFeedSection>.pcVideoListItem,#videoCategory>.pcVideoListItem,#videoSearchResult>.pcVideoListItem,.videoList,.homeSection",
         "replaceElement": ".paginationGated"
-    },
-    {
-        "name": "multi.xnxx.com gallery",
-        "example": "https://multi.xnxx.com/gallery/1119940/2676/my_wife_she_is_cute_gallery_4_6/10/",
-        "url": "^https?://multi\\.xnxx\\.com/gallery/",
-        "pinUrl": true,
-        "init": "document.querySelectorAll('.galleryPage .boxImg').forEach(e=>{e.outerHTML=`<img src='${e.dataset.src}'>`})",
-        "css": ".galleryPage img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
     },
     {
         "name": "XVIDEOS",
@@ -6915,14 +6800,6 @@
         "pageBar": 0
     },
     {
-        "name": "javbangers.com - 相冊圖片清單載入全部大圖",
-        "example": "https://www.javbangers.com/albums/1293/fc2-ppv-2414851-college-student-reimi-chan-21/",
-        "url": "^https?://www\\.javbangers\\.com/albums/\\d+/[^/]+/",
-        "pinUrl": true,
-        "init": "let imgs=document.querySelectorAll('.images .thumb.lazy-load');for(let i=0;i<imgs.length;i++){setTimeout(()=>{let f=imgs[i].parentNode.href;if(f){imgs[i].src=f;imgs[i].removeAttribute('data-original');imgs[i].style.display='inline'}},i*300)}",
-        "css": ".block-album .images a.item{display:block!important}.images img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
-    },
-    {
         "name": "javbangers.com",
         "example": "https://www.javbangers.com/latest-updates/",
         "url": "^https?://www\\.javbangers\\.com/",
@@ -6952,15 +6829,6 @@
         "pageBar": 0,
         "initRun": 1,
         "autoLoadNum": "0"
-    },
-    {
-        "name": "HOTGIRL.asia - 寫真 - SLIDE SHO模式",
-        "example": "https://hotgirl.asia/yuna-%ec%9c%a0%eb%82%98-saint-photolife-habibi/?stype=slideshow",
-        "url": "^https?://hotgirl\\.asia/",
-        "include": "#carouselImageIndicators",
-        "init": "let _img='';document.querySelectorAll('.item img[alt]').forEach(e=>{_img+=`<img src='${e.src}'>`});document.querySelector('#carouselImageIndicators').innerHTML=_img;",
-        "nextLink": "0",
-        "css": "#carouselImageIndicators>img{width:auto!important;height:auto!important;max-width:100%!important;display:block!important;margin:0 auto !important}"
     },
     {
         "name": "imgasd",
@@ -7082,26 +6950,6 @@
         "include": "a[data-tid]",
         "pinUrl": true,
         "init": "document.querySelectorAll('img[data-src]').forEach(e=>{e.src=e.parentNode.href})"
-    },
-    {
-        "name": "优丝库HD - 日韓看圖 - 完全免VIP需有全部的預覽圖",
-        "example": "https://yskhd.com/archives/67828",
-        "url": "^https?://yskhd\\.com/archives/\\d+",
-        "include": [
-            "img[width='285'][height='285']",
-            "#menu-item-57917[class*=current]"
-        ],
-        "pinUrl": true,
-        "init": "let fimgs=document.querySelectorAll('.article-content img[loading]');let _img='';for(let i=0;i<fimgs.length;i++){let imgSrc=fimgs[i].getAttribute('src').replace('-285x285','-scaled');let p=parseInt(i)+1;if(i<9){p='0'+p}let alt=document.querySelector('.article-title').innerText+'_P'+p;_img+=`<img src='${imgSrc}'ale='${alt}'>`};document.querySelector('.gallery.clearfix').innerHTML=_img"
-    },
-    {
-        "name": "优丝库HD - 看圖 - 完全免VIP需有全部的預覽圖",
-        "example": "https://yskhd.com/archives/127252",
-        "url": "^https?://yskhd\\.com/archives/\\d+",
-        "include": "img[width='285'][height='285']",
-        "exclude": "#menu-item-57917[class*=current]",
-        "pinUrl": true,
-        "init": "let fimgs=document.querySelectorAll('.article-content img[loading]');let _img='';for(let i=0;i<fimgs.length;i++){let imgSrc=fimgs[i].getAttribute('src').replace('-285x285','');let p=parseInt(i)+1;if(i<9){p='0'+p}let alt=document.querySelector('.article-title').innerText+'_P'+p;_img+=`<img src='${imgSrc}'ale='${alt}'>`};document.querySelector('.gallery.clearfix').innerHTML=_img"
     },
     {
         "name": "优丝库HD - 分類",
