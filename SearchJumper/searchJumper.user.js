@@ -2940,11 +2940,12 @@
                              left: -7px;
                              position: relative;
                              border: unset!important;
-                             width: calc(100% - 40px);
+                             width: calc(100% - 65px);
                              padding-bottom: 3px;
                              margin-bottom: -30px;
                              float: left;
                              background: unset;
+                             height: 28px;
                          }
                          .customInputFrame-body .select>p {
                              padding: 0;
