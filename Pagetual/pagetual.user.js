@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.36.9
+// @version      1.9.36.10
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -5058,6 +5058,7 @@
         return false;
     }
 
+    let pageReady = false;
     function initRules(callback) {
         storage.getItem("rulesData", data => {
             /*0 wedata格式，1 pagetual格式*/
@@ -5179,6 +5180,7 @@
                             forceState = v;
                             updateDate = date;
                             if (initConfig()) return;
+                            pageReady = true;
                             if (forceState == 1) return;
                             let now = new Date().getTime();
                             if (!date || now - date > 2 * 24 * 60 * 60 * 1000) {
@@ -5200,16 +5202,36 @@
             postParams = postParams[1];
             url = url.replace(/#p{.*/, "");
         }
+        let ruleHeaders = ruleParser.curSiteRule.headers;
+        let headers = {
+            'Referer': location.href,
+            'User-Agent': navigator.userAgent,
+            'accept': 'text/html,application/xhtml+xml,application/xml',
+            "Content-Type": (postParams ? "application/x-www-form-urlencoded" : "text/html") + ";charset=" + (document.characterSet || document.charset || document.inputEncoding),
+        };
+        if (ruleHeaders) {
+            if (ruleHeaders.referer) {
+                headers.referer = ruleHeaders.referer;
+            }
+            if (ruleHeaders.userAgent) {
+                headers.userAgent = ruleHeaders.userAgent;
+            }
+            if (ruleHeaders.accept) {
+                headers.accept = ruleHeaders.accept;
+            }
+            if (ruleHeaders.contentType) {
+                headers.contentType = ruleHeaders.contentType;
+            }
+            if (ruleHeaders.cookie) {
+                headers.cookie = ruleHeaders.cookie;
+            }
+        }
         _GM_xmlhttpRequest({
             url: url,
             method: postParams ? 'POST' : 'GET',
             data: postParams,
             overrideMimeType: 'text/html;charset=' + (document.characterSet || document.charset || document.inputEncoding),
-            headers: {
-                'Referer': location.href,
-                'User-Agent': navigator.userAgent,
-                "Content-Type": (postParams ? "application/x-www-form-urlencoded" : "text/html") + ";charset=" + (document.characterSet || document.charset || document.inputEncoding),
-            },
+            headers: headers,
             timeout: 20000,
             onload: async function(res) {
                 if (isPause) return callback(false);
@@ -5630,6 +5652,7 @@
                         if (!ruleParser.nextLinkHref) {
                             isLoading = false;
                         }
+                        if (!pageReady) location.reload();
                     }
                 }, 500);
             }

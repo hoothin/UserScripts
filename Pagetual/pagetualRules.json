@@ -8979,6 +8979,17 @@
         "pinUrl": true
     },
     {
+        "name": "Repository search results · GitHub",
+        "url": "^https?://github\\.com/search",
+        "example": "https://github.com/search?q=C%2B%2B",
+        "nextLinkByUrl": [
+            "&p=(\\d+)$",
+            "&p={$1+1}"
+        ],
+        "pageElement": "[data-testid='results-list']",
+        "action": 0
+    },
+    {
         "name": "Actions · github",
         "action": 0,
         "url": "^https?://github\\.com/",
@@ -9406,11 +9417,6 @@
         "name": "高校古文献資源庫读者检索系统",
         "url": "^https?://rbsc\\.calis\\.edu\\.cn:8086/",
         "pageElement": "input~tr"
-    },
-    {
-        "name": "Hoothin github page",
-        "url": "^https?://hoothin\\.github\\.io/",
-        "enable": 0
     },
     {
         "name": "Ru.Board",
