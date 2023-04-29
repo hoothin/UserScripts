@@ -3606,6 +3606,16 @@
         "css": ".pagetual_pageBar+div{margin-top:0px!important}"
     },
     {
+        "name": "Simply Hentai",
+        "example": "https://www.simply-hentai.com/",
+        "url": "^https?://www\\.simply-hentai\\.com/",
+        "pageElement": "//div[div[article[a[div[@class='image-wrapper']/img[@data-src]]]]]",
+        "insert": "nav.pagination",
+        "insertPos": 1,
+        "pageInit": "doc.querySelectorAll('.image-loader').forEach(e=>{e.remove()});",
+        "css": ".text-center{display:none!important}"
+    },
+    {
         "name": "西图阁",
         "example": "https://www.xtg123.cc/xrall",
         "url": "^https?://www\\.xtg123\\.cc/([a-z]+|\\?s=)",
@@ -5636,6 +5646,33 @@
         "replaceElement": ".pagenav"
     },
     {
+        "name": "绅士猫 - 分類",
+        "example": "https://www.cos6.net/",
+        "url": "^https?://www\\.cos6\\.net/",
+        "pageElement": "posts.posts-item",
+        "insert": ".pagenav.ajax-pag",
+        "insertPos": 1,
+        "replaceElement": ".pagenav"
+    },
+    {
+        "name": "COSPLAY ZIP - 分類",
+        "example": "https://www.coszip.com/",
+        "url": "^https?://www\\.coszip\\.com/",
+        "pageElement": ".jeg_inner_content .jeg_block_container",
+        "insert": ".jeg_block_navigation",
+        "insertPos": 1,
+        "replaceElement": ".jeg_block_navigation"
+    },
+    {
+        "name": "Asianude4u - 分類",
+        "example": "https://www.asianude4u.net/",
+        "url": "^https?://www\\.asianude4u\\.net/",
+        "action": 1,
+        "pageElement": "#infinite-articles",
+        "replaceElement": ".wp-pagenavi",
+        "css": ".ms-item.homeimg{display:none!important}"
+    },
+    {
         "name": "美人图 - 看圖",
         "example": "https://meirentu.cc/pic/147617207297.html",
         "url": "^https?://meirentu\\.cc/pic/",
@@ -6258,6 +6295,19 @@
         "pageBar": 0
     },
     {
+        "name": "Porned Up",
+        "example": "https://pornedup.com/",
+        "url": "^https?://pornedup.com/pics/\\d+/[^/]+/",
+        "nextLink": "a.control.next",
+        "pageElement": "div.main"
+    },
+    {
+        "name": "PicHunter",
+        "example": "https://www.pichunter.com/",
+        "url": "^https?://www\\.pichunter\\.com/",
+        "enable": 0
+    },
+    {
         "name": "PornHub photo",
         "example": "https://cn.pornhub.com/photo/825175581",
         "url": "^https?://[a-z]{2,3}\\.pornhub\\.com/photo/\\d+",
@@ -6332,7 +6382,7 @@
         "pageElement": ".cat_list",
         "replaceElement": ".posts-nav",
         "pageInit": "doc.querySelectorAll('a[data-src]').forEach(a=>{a.style.backgroundImage=`url('${a.dataset.src}')`})",
-        "css": ".pagetual_pageBar{margin-top:-4px!important}"
+        "css": ".pagetual_pageBar{margin-top:-4px!important}#search+div.row.mb-4,#content>.slide-blog.mb-4{display:none!important}"
     },
     {
         "name": "牛C網 - 看圖",
