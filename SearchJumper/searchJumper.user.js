@@ -57,219 +57,123 @@
     var searchData = {};
     searchData.sitesConfig = [
         {
-            type: "翻译",
+            type: "Translate",
             icon: "language",
             sites: [ {
-                name: "百度翻译",
-                url: "https://fanyi.baidu.com/#auto/zh/%s"
-            }, {
                 name: "DeepL",
                 url: "https://www.deepl.com/translator#zh/en/%s",
                 icon: "https://www.deepl.com/img/favicon/favicon_96.png"
             }, {
-                name: "谷歌翻译",
+                name: "Google translate",
                 url: "https://translate.google.com/?text=%s",
                 match: "translate\\.google\\.com.*\\btext="
             }, {
-                name: "有道词典",
-                url: "https://dict.youdao.com/search?q=%s",
-                icon: "https://shared.ydstatic.com/images/favicon.ico"
+                name: "Bing translate",
+                url: "http://www.bing.com/dict/search?q=%s"
             }, {
-                name: "必应翻译",
-                url: "https://www.bing.com/dict/search?q=%s"
+                name: "Translate with ChatGPT",
+                url: "https://poe.com/ChatGPT#p{sleep(1000)&textarea[class^\\='ChatMessageInput']=Please help me to translate \\`%s\\` to English, please return only translated content not include the origin text&click([class^\\='ChatMessageInputView_sendButton']>button)}"
             } ]
         },
         {
-            type: "影视",
+            type: "Video",
             icon: "video",
             sites: [ {
                 name: "bilibili",
                 url: "https://search.bilibili.com/all?keyword=%s"
             }, {
-                name: "腾讯视频",
-                url: "https://v.qq.com/x/search/?q=%s"
-            }, {
-                name: "爱奇艺",
-                url: "https://so.iqiyi.com/so/q_%s",
-                icon: "https://www.iqiyi.com/favicon.ico"
-            }, {
-                name: "youtube",
+                name: "Youtube",
                 url: "https://www.youtube.com/results?search_query=%s"
-            }, {
-                name: "优酷",
-                url: "https://www.soku.com/search_video/q_%s",
-                icon: "https://img.alicdn.com/tfs/TB1WeJ9Xrj1gK0jSZFuXXcrHpXa-195-195.png"
-            }, {
-                name: "AcFun",
-                url: "https://www.acfun.cn/search?keyword=%s"
-            }, {
-                name: "搜狐",
-                url: "https://so.tv.sohu.com/mts?wd=%s"
             }, {
                 name: "niconico",
                 url: "https://www.nicovideo.jp/search/%s"
             } ]
         },
         {
-            type: "音乐",
+            type: "Music",
             icon: "music",
             sites: [ {
-                name: "网易音乐",
+                name: "163 Music",
                 url: "https://music.163.com/#/search/m/?s=%s",
                 icon: "https://s1.music.126.net/style/favicon.ico"
             }, {
-                name: "一听",
-                url: "https://so.1ting.com/all.do?q=%s"
-            }, {
-                name: "QQ音乐",
+                name: "QQ Music",
                 url: "https://y.qq.com/portal/search.html#page=1&searchid=1&remoteplace=txt.yqq.top&t=song&w=%s"
             }, {
-                name: "百度音乐",
-                url: "https://music.91q.com/search?ie=utf-8&oe=utf-8&key=%s"
-            }, {
-                name: "酷我音乐",
-                url: "https://www.kuwo.cn/search/list?key=%s"
-            }, {
-                name: "酷狗",
-                url: "http://search.5sing.kugou.com/?keyword=%s"
+                name: "Jango",
+                url: "https://www.jango.com/music/%s",
+                icon: "https://s1.cdn107.com/assets/logos/jango/favicon-32x32-2d45face09da6b62b25031d8b9afeefc9274656a5a969c75e6afc644bf85eb96.png"
             } ]
         },
         {
-            type: "社交",
+            type: "Social",
             icon: "users",
             sites: [ {
-                name: "知乎",
-                url: "https://www.zhihu.com/search?q=%s&type=content"
-            }, {
-                name: "推特",
+                name: "Twitter",
                 url: "https://twitter.com/search/%s"
             }, {
-                name: "豆瓣",
-                url: "https://www.douban.com/search?source=suggest&q=%s"
-            }, {
-                name: "百度贴吧",
-                url: "https://tieba.baidu.com/f?kw=%s&ie=utf-8"
-            }, {
-                name: "新浪微博",
-                url: "https://s.weibo.com/weibo?q=%s"
-            }, {
-                name: "脸书",
+                name: "Facebook",
                 url: "https://www.facebook.com/search/results.php?q=%s"
-            }, {
-                name: "微信搜索",
-                url: "https://weixin.sogou.com/weixin?ie=utf8&type=2&query=%s"
             } ]
         },
         {
-            type: "图片",
+            type: "Image",
             icon: "image",
             sites: [ {
-                name: "谷歌图片",
+                name: "Google image",
                 url: "https://www.google.com/search?q=%s&tbm=isch",
                 match: "www\\.google\\..*tbm=isch"
             }, {
-                name: "百度图片",
-                url: "https://image.baidu.com/search/index?tn=baiduimage&ie=utf-8&word=%s"
-            }, {
-                name: "必应图片",
+                name: "Bing image",
                 url: "https://www.bing.com/images/search?q=%s"
-            }, {
-                name: "搜狗图片",
-                url: "https://pic.sogou.com/pics?query=%s"
             }, {
                 name: "pixiv",
                 url: "https://www.pixiv.net/search.php?word=%s"
             }, {
                 name: "flickr",
                 url: "https://www.flickr.com/search/?q=%s"
-            }, {
-                name: "花瓣",
-                url: "https://huaban.com/search/?q=%s"
-            }, {
-                name: "Pinterest",
-                url: "https://www.pinterest.com/search/pins/?q=%s&rs=typed&term_meta"
-            }, {
-                name: "yandex",
-                url: "https://yandex.com/images/search?text=%s"
-            }, {
-                name: "pixabay",
-                url: "https://pixabay.com/images/search/%s/",
-                icon: "https://pixabay.com/favicon-32x32.png"
-            }, {
-                name: "unsplash",
-                url: "https://unsplash.com/s/photos/%s"
             } ]
         },
         {
-            type: "新闻",
+            type: "News",
             icon: "newspaper",
             sites: [ {
-                name: "谷歌新闻",
+                name: "Google news",
                 url: "https://news.google.com/search?q=%s&hl=zh-CN&gl=CN&ceid=CN:zh-Hans",
                 icon: "https://www.google.com/favicon.ico"
-            }, {
-                name: "百度新闻",
-                url: "https://news.baidu.com/ns?word=%s&tn=news&from=news&cl=2&rn=20&ct=1",
-                icon: "https://www.baidu.com/favicon.ico"
-            }, {
-                name: "网易-百度",
-                url: "https://www.baidu.com/s?wd=%s%20site%3Anews.163.com%20",
-                icon: "https://news.163.com/favicon.ico",
-                match: "site%3Anews\\.163\\.com"
-            }, {
-                name: "腾讯新闻",
-                url: "https://www.sogou.com/sogou?site=news.qq.com&query=%s",
-                icon: "https://news.qq.com/favicon.ico"
-            }, {
-                name: "凤凰新闻",
-                url: "https://so.ifeng.com/?q=%s&c=1"
             }, {
                 name: "CNN",
                 url: "https://edition.cnn.com/search/?q=%s"
             }, {
                 name: "BBC",
                 url: "https://www.bbc.co.uk/search?q=%s"
-            }, {
-                name: "今日头条",
-                url: "https://www.toutiao.com/search/?keyword=%s"
             } ]
         },
         {
-            type: "搜索",
+            type: "Search",
             icon: "search",
             sites: [ {
                 name: "Google",
                 url: "https://www.google.com/search?q=%s&ie=utf-8&oe=utf-8",
                 match: "https://www\\.google\\..*/search"
             }, {
-                name: "百度",
-                url: "https://www.baidu.com/s?wd=%s&ie=utf-8",
-                keywords: "wd|word",
-                match: "https://(www|m)\\.baidu\\.com/.*(wd|word)="
-            }, {
-                name: "头条搜索",
-                url: "https://so.toutiao.com/search/?dvpf=%c&keyword=%s"
-            }, {
-                name: "必应",
+                name: "Bing",
                 url: "https://www.bing.com/search?q=%s",
                 match: "^https://(www|cn|global)\\.bing\\.com/search"
             }, {
-                name: "360",
-                url: "https://www.so.com/s?ie=utf-8&q=%s",
-                match: "(www|m)\\.so\\.com/s\\?.*[&\?]q="
+                name: "Baidu",
+                url: "https://www.baidu.com/s?wd=%s&ie=utf-8",
+                keywords: "(?:wd|word)=(.*?)(&|$)",
+                match: "https?://(www|m)\\.baidu\\.com/.*(wd|word)="
             }, {
-                name: "搜狗",
-                url: "https://www.sogou.com/web?query=%s",
-                keywords: "query|keyword",
-                match: "(www|wap|m)\\.sogou\\.com/(web|web/searchList\\.jsp).*(query|keyword)="
-            }, {
-                name: "谷歌高级搜索",
-                url: "https://www.google.com/search?q=%s%input{请输入限制文件类型, filetype:doc}%input{请输入结果限制语言,&lr=lang_zh-CN|lang_zh-TW}%input{请输入限制日期,&as_qdr=w1}&ie=utf-8&oe=utf-8",
-                nobatch: true
+                name: "Google advanced",
+                url: "https://www.google.com/search?q=%s%input{Filetype, filetype:doc/ filetype:ppt/ filetype:xls/ filetype:pdf}%input{Limit lang/zh-CN/zh-TW/CN/EN,&lr=lang_zh-CN/&lr=lang_zh-TW/&lr=lang_zh-CN|lang_zh-TW/&lr=lang_en}%input{Limit date/Last hour/Last day/Last week/Last month/Last year,&as_qdr=h1/&as_qdr=d1/&as_qdr=w1/&as_qdr=m1/&as_qdr=y1}&ie=utf-8&oe=utf-8",
+                match: "https://www\\.google\\..*/search",
+                hideNotMatch: true
             } ]
         },
         {
-            type: "划词搜索",
+            type: "Search in page",
             icon: "sitemap",
             selectTxt: true,
             openInNewTab: true,
@@ -277,65 +181,36 @@
                 name: "Google ",
                 url: "[\"Google\"]"
             }, {
-                name: "📄  复制",
-                url: "c:%sr",
+                name: "📄  Copy",
+                url: "copy:%sr",
                 nobatch: true
             }, {
-                name: "🔗  打开文字链接",
+                name: "🔗  Open text link",
                 url: "%sr.replace(/(点|。)/g,\".\").replace(/[^ \\w\\-_\\.~!\\*'\\(\\);:@&=\\+\\$,\\/\\?#\\[\\]%]/g,\"\").replace(/.*(1[a-z0-9]{22,}).*?\\b([a-z0-9]{4}\\b|$).*/i,\"https://pan.baidu.com/s/$1?pwd=$2\").replace(/ /g,\"\").replace(/^/,\"http://\").replace(/^http:\\/\\/(https?:)/,\"$1\")",
                 kwFilter: "\\w.*[\\.点。].*\\w|1[a-zA-Z0-9]{22,}",
-                description: "支持类似“pan点baidu。com😄河蟹”以及“1bP23pzUpIV4CMuoMjOfxFA提取码:prt4”的分享链接",
                 nobatch: true
             }, {
-                name: "百度 ",
-                url: "[\"百度\"]"
-            }, {
-                name: "谷歌站内搜",
+                name: "Google Search in site",
                 url: "https://www.google.com/search?q=%s%20site%3A%h&ie=utf-8&oe=utf-8",
             }, {
-                name: "头条站内搜",
-                url: "https://so.toutiao.com/search/?dvpf=%c&keyword=%s%20site%3A%h"
-            }, {
-                name: "百度站内搜",
-                url: "https://www.baidu.com/s?wd=%s%20site%3A%h&ie=utf-8"
-            }, {
-                name: "必应站内搜",
+                name: "Bing Search in site",
                 url: "https://www.bing.com/search?q=%s%20site%3A%h"
             }, {
-                name: "鸭鸭站内搜",
-                url: "https://duckduckgo.com/?q=%s%20site%3A%h"
-            }, {
-                name: "360站内搜",
-                url: "https://www.so.com/s?ie=utf-8&q=%s%20site%3A%h"
-            }, {
-                name: "文字转二维码-草料",
+                name: "Words to QRCode",
                 url: "https://cli.im/text#p{#text-content=%s&click(#click-create)}"
-            }, {
-                name: "雅虎站内搜",
-                url: "https://search.yahoo.com/search;?p=%s%20site%3A%h"
-            }, {
-                name: "搜狗站内搜",
-                url: "https://www.sogou.com/web?query=%s%20site%3A%h"
-            }, {
-                name: "Yandex站内搜",
-                url: "https://yandex.com/search/?text=%s%20site%3A%h"
-            }, {
-                name: "Startpage站内搜",
-                url: "https://www.startpage.com/sp/search?query=%s%20site%3A%h",
-                icon: "https://www.startpage.com/sp/cdn/favicons/favicon-16x16--default.png"
             } ]
         },
         {
-            type: "以图搜图",
+            type: "Search by image",
             icon: "eye",
             selectImg: true,
             openInNewTab: true,
             sites: [ {
-                name: "谷歌搜图",
+                name: "Google search by image",
                 url: "https://www.google.com/searchbyimage?sbisrc=cr_1_0_0&image_url=%T"
             }, {
-                name: "Yandex搜图",
-                url: "https://yandex.com/images/search?source=collections&rpt=imageview&url=%t"
+                name: "Google translate image",
+                url: "https://translate.google.com/?op=images#p{input#ucj-11=%i}"
             }, {
                 name: "SauceNAO",
                 url: "https://saucenao.com/search.php?db=999&url=%t"
@@ -343,49 +218,17 @@
                 name :"IQDB",
                 url: "https://iqdb.org/?url=%t"
             }, {
-                name: "3D IQDB",
-                url: "https://3d.iqdb.org/?url=%t"
-            }, {
                 name: "Lunapic",
-                url: "https://www.lunapic.com/editor/index.php?action=url&url=%t",
-                description: "使用 Lunapic 编辑图片"
+                url: "https://www.lunapic.com/editor/index.php?action=url&url=%t"
             }, {
                 name: "Pixlr easy",
-                url: "https://pixlr.com/x/#p{click(#home-open-url)&#image-url=%t&click(.dialog>.buttons>a.button.positive)}",
-                description: "使用 Pixlr easy 编辑图片"
+                url: "https://pixlr.com/x/#p{click(#home-open-url)&#image-url=%t&click(.dialog>.buttons>a.button.positive)}"
             }, {
-                name: "百度搜图",
-                url: "https://graph.baidu.com/details?isfromtusoupc=1&tn=pc&carousel=0&promotion_name=pc_image_shituindex&extUiData%5bisLogoShow%5d=1&image=%t"
-            }, {
-                name: "Bing搜图",
+                name: "Bing search by image",
                 url: "https://www.bing.com/images/search?view=detailv2&iss=sbi&form=SBIVSP&sbisrc=UrlPaste&q=imgurl:%t"
             }, {
                 name: "TinEye",
                 url: "https://www.tineye.com/search?url=%t"
-            }, {
-                name: "搜狗搜图",
-                url: "https://pic.sogou.com/ris?query=%t"
-            }, {
-                name: "360搜图",
-                url: "http://st.so.com/stu?imgurl=%t"
-            }, {
-                name: "WhatAnime",
-                url: "https://trace.moe/?url=%t"
-            }, {
-                name: "Ascii2D",
-                url: "https://ascii2d.net/search/url/%t"
-            }, {
-                name: "Trace Moe",
-                url: "https://trace.moe/?url=%t"
-            }, {
-                name: "KarmaDecay",
-                url: "http://karmadecay.com/%t"
-            }, {
-                name: "ZXing二维码解码",
-                url: "https://zxing.org/w/decode?full=true&u=%t"
-            }, {
-                name: "ImgOps",
-                url: "https://imgops.com/%b"
             } ]
         },
         {
@@ -395,39 +238,14 @@
             sites: []
         },
         {
-            type: "视频",
-            icon: "circle-play",
-            selectVideo: true,
-            sites: [ {
-                name: "M3u8播放器",
-                url: "https://players.akamai.com/players/hlsjs?streamUrl=%t"
-            }, {
-                name: "去视频水印",
-                url: "https://parse.bqrdh.com/smart/#p{.ant-input=%u&click(.ant-input-search-button)}"
-            } ]
-        },
-        {
-            type: "学术",
+            type: "Scholar",
             icon: "graduation-cap",
             sites: [ {
-                name: "百度学术",
-                url: "https://xueshu.baidu.com/s?wd=%s"
-            }, {
                 name: "Scholar",
                 url: "http://scholar.google.com/scholar?hl=zh-CN&q=%s"
             }, {
                 name: "Google Book",
-                url: "https://www.google.com/search?q=%s&btnG=搜索图书&tbm=bks&tbo=1&hl=zh-CN&gws_rd=ssl"
-            }, {
-                name: "中国知网",
-                url: "https://kns.cnki.net/KNS8/DefaultResult/Index?dbcode=CFLS&kw=%s"
-            }, {
-                name: "爱学术",
-                url: "https://www.ixueshu.com/search/index.html?search_type=&q=%s",
-                icon: "https://www.ixueshu.com/static/favicon.ico"
-            }, {
-                name: "维普",
-                url: "http://lib.cqvip.com/Qikan/Search/Index?from=Qikan_Search_Index/%p{isNoteHistory=1&isLog=1&indexIdentifier=U&indexKey=%s}"
+                url: "https://www.google.com/search?q=%s&tbm=bks&tbo=1&hl=zh-CN&gws_rd=ssl"
             }, {
                 name: "krugle",
                 url: "http://opensearch.krugle.org/document/search/#query=%s",
@@ -436,21 +254,10 @@
                 name: "npm",
                 url: "https://www.npmjs.org/search?q=%s",
                 icon: "https://static.npmjs.com/b0f1a8318363185cc2ea6a40ac23eeb2.png"
-            }, {
-                name: "中国大学MOOC",
-                url: "https://www.icourse163.org/search.htm?search=%s"
-            }, {
-                name: "读秀知识",
-                url: "http://qw.duxiu.com/getPage?sw=%s&ecode=utf-8",
-                icon: "https://mycroftproject.com/updateos.php/id0/duxiu.ico"
-            }, {
-                name: "读秀书籍",
-                url: "http://book.duxiu.com/search?Field=all&channel=search&sw=%s&ecode=utf-8&edtype=&searchtype=1&view=0",
-                icon: "https://mycroftproject.com/updateos.php/id0/duxiu.ico"
             } ]
         },
         {
-            type: "开发",
+            type: "Developer",
             icon: "code",
             sites: [ {
                 name: "MDN",
@@ -458,9 +265,6 @@
             }, {
                 name: "stackoverflow",
                 url: "https://stackoverflow.com/search?q=%s"
-            }, {
-                name: "掘金",
-                url: "https://juejin.im/search?query=%s&type=all"
             }, {
                 name: "Can I Use",
                 url: "http://caniuse.com/#search=%s",
@@ -479,113 +283,30 @@
             } ]
         },
         {
-            type: "百科",
+            type: "Wiki",
             icon: "book-open-reader",
             sites: [ {
-                name: "维基",
+                name: "Wikipedia",
                 url: "https://zh.wikipedia.org/wiki/%s"
-            }, {
-                name: "百度百科",
-                url: "https://baike.baidu.com/search/word?pic=1&sug=1&word=%s"
-            }, {
-                name: "百度文库",
-                url: "https://wenku.baidu.com/search?word=%s&ie=utf-8"
-            }, {
-                name: "豆丁文档",
-                url: "http://www.docin.com/search.do?searchcat=2&searchType_banner=p&nkey=%s"
-            }, {
-                name: "爱问知识",
-                url: "http://iask.sina.com.cn/search?searchWord=%s"
-            }, {
-                name: "果壳",
-                url: "http://www.guokr.com/search/all/?wd=%s"
             }, {
                 name: "Quora",
                 url: "https://www.quora.com/search?q=%s"
             } ]
         },
         {
-            type: "网盘",
-            icon: "cloud-download",
-            sites: [ {
-                name: "百度网盘",
-                url: "https://pan.baidu.com/disk/main?#/search?key=%s"
-            }, {
-                name: "大力盘",
-                url: "https://www.dalipan.com/search?keyword=%s"
-            }, {
-                name: "大圣盘",
-                url: "https://www.dashengpan.com/search?keyword=%s"
-            } ]
-        },
-        {
-            type: "购物",
+            type: "Shopping",
             icon: "shopping-cart",
             sites: [ {
-                name: "淘宝",
-                url: "http://s.taobao.com/search?q=%s",
-                icon: "https://www.taobao.com/favicon.ico"
-            }, {
-                name: "京东",
-                url: "http://search.jd.com/search?keyword=%s&enc=utf-8",
-                icon: "https://www.jd.com/favicon.ico"
-            }, {
-                name: "苏宁",
-                url: "https://search.suning.com/%s/"
-            }, {
-                name: "亚马逊",
+                name: "Amazon",
                 url: "http://www.amazon.cn/s/ref=nb_sb_noss?field-keywords=%s",
                 icon: "https://www.amazon.cn/favicon.ico"
             }, {
-                name: "天猫",
-                url: "http://list.tmall.com/search_product.htm?q=%s"
-            }, {
-                name: "值得买",
-                url: "http://search.smzdm.com/?c=home&s=%s"
-            }, {
-                name: "当当网",
-                url: "http://search.dangdang.com/?key=%s"
+                name: "1688",
+                url: "https://s.1688.com/selloffer/offer_search.htm?keywords=%s"
             } ]
         },
         {
-            type: "Github",
-            icon: "fa-brands fa-github",
-            match: "github\\.com",
-            selectLink: true,
-            selectPage: true,
-            openInNewTab: true,
-            sites: [ {
-                name: "页面镜像 - Fastgit",
-                url: "%u.replace(/https:\\/\\/github\\.com/,\"https://hub.fastgit.xyz\")",
-                match: "https:\\/\\/github\\.com",
-                hideNotMatch: true
-            }, {
-                name: "Raw镜像 - Fastgit",
-                url: "%u.replace(/raw\\.githubusercontent\\.com/,\"raw.fastgit.org\").replace(/github.com(.*)\\/blob\\/(.*)/,\"raw.fastgit.org$1/$2\")",
-                match: "github.com.*\\/blob\\/",
-                hideNotMatch: true
-            }, {
-                name: "Assets镜像 - Fastgit",
-                url: "%u.replace(/github\\.githubassets\\.com/,\"assets.fastgit.orgz\")",
-                match: "github\\.githubassets\\.com",
-                hideNotMatch: true
-            }, {
-                name: "Download镜像- Fastgit",
-                url: "%u.replace(/github\\.com(.*\\/download\\/)/,\"download.fastgit.org$1\")",
-                match: "github\\.com.*\\/download\\/",
-                hideNotMatch: true
-            }, {
-                name: "Archive镜像- Fastgit",
-                url: "%u.replace(/github\\.com(.*\\/archive\\/)/,\"download.fastgit.org$1\")",
-                match: "github\\.com.*\\/archive\\/",
-                hideNotMatch: true
-            }, {
-                name: "Ghproxy镜像加速",
-                url: "https://ghproxy.com/%u"
-            } ]
-        },
-        {
-            type: "辅助工具",
+            type: "Assit",
             icon: "list-alt",
             selectTxt: true,
             selectImg: true,
@@ -595,69 +316,52 @@
             selectPage: true,
             openInNewTab: true,
             sites: [ {
-                name: "生成二维码",
+                name: "QR code",
                 url: "https://hoothin.github.io/SearchJumper/qrcode.html#%U"
             }, {
-                name: "分享到微博",
-                url: "https://service.weibo.com/share/share.php?url=%t&title=%n"
-            }, {
-                name: "分享到推特",
+                name: "Share to Twitter",
                 url: "https://twitter.com/intent/tweet?url=%T"
             }, {
-                name: "使用Gmail发送",
+                name: "Send by Gmail",
                 url: "https://mail.google.com/mail/u/0/?tf=cm&source=mailto&body=%n %T"
             }, {
-                name: "分享到Facebook",
+                name: "Share to Facebook",
                 url: "https://www.facebook.com/sharer/sharer.php?u=%T&t=%n"
             }, {
-                name: "手机号码聚合搜索",
-                url: "[\"360\",\"搜狗\"]",
-                icon: "data:image/jpg;base64,/9j/4AAQSkZJRgABAQEBLAEsAAD/2wBDAAcFBQYFBAcGBQYIBwcIChELCgkJChUPEAwRGBUaGRgVGBcbHichGx0lHRcYIi4iJSgpKywrGiAvMy8qMicqKyr/2wBDAQcICAoJChQLCxQqHBgcKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKir/wAARCABAAEADASIAAhEBAxEB/8QAHAABAAICAwEAAAAAAAAAAAAAAAMIAgcBBQYE/8QAMxAAAQMDAgIIBAYDAAAAAAAAAQIDBAAFEQYSByEIEzFBUWFxgRQyUmIVIzNCkbFyoeH/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AsPSlKBSlKBSo2X2pDfWR3UPI+ptYUP5FSUClKUCo33kRo7j7ytrbSCtZxnAAyf8AQqSsHWkPtLacGUOJKFehGD/dBU2+9JPV0nVZmWFbUK0tL/Kgusoc61Hi4rGcn7SMd3jVotPXpjUel7deY6drU+KiQEZzt3JyU+xyPaqFXSzvWvUsuzyilp6NKVGWpw4CSle3JPh31efQ2mjo/QtrsJkiUuExtU8OxaiSo4+3KiB5YoNbWXTvC3VE5Y4cXuTp2+N5KfgH3WHQR4su8lp8QO6vWaT1beIepTozXoZ/GOrL0C4sJ2s3NodpA/a4O9Pr79XJjwuLFsukOdZ3dPaxsTiercKwXojpG5paHU43IVjs/wCGun1FepWqeAto10W+rvtifbmBSU7T1rboaeH+Khzx2dlBuqlRsPIkR232vkdQFp9CMj+6koFKUoKxdJPh29DvA1pbGSqJL2t3AJH6ToGErPkoADP1D7hXp+CfGy33GzxdNatmIiXGKgMxpT6tqJKBySkqPILA5c/m5d9bvmQ41whPRJzDciM+gtutOp3JWk8iCO8VWriJ0bJ8OS7cNAH4yIolRtzqwHmvJCjyWPI4V60G/NSa40zo8sDUl4jQFyRlpC8qUseOEgnHn2V9tl1BZdRRS/YbnDuLKcbjGdSvbnxA5j3FUKvFrvNrkiPfYc2I80OrCJba0FIHcN3d6VtLo22K+yuIyLzBS41aYbbiJrx5Id3IIS0PqO7ary258MhbalKUClKUClKUGDrTb7ex9CXUH9riQofwa4ZYajtBqO0hptPYhtISB7CpKUClKUH/2Q=="
-            }, {
-                name: "🧮  计算器",
+                name: "🧮  Calculator",
                 url: "calculator://"
             }, {
-                name: "🔎  Everything搜索",
+                name: "🔎  Everything",
                 url: "ES://%s"
             }, {
-                name: "货币转换",
-                url: "javascript:fetch(`https://api.exchangerate.host/convert?from=%input{转换货币/美元/欧元/日元/人民币,USD/EUR/JPY/CNY}&to=%input{目标货币/美元/欧元/日元/人民币,USD/EUR/JPY/CNY}&amount=%sr.replace(/\\D/g,\"\")`).then(r=>r.json()).then(r=>prompt(`${r.date} 当日汇率引用自 European Central Bank\\n${r.query.amount.toLocaleString()} ${r.query.from} =`,`${r.result.toLocaleString()} ${r.query.to}`)).catch(alert);"
+                name: "Convert currency",
+                url: "javascript:fetch(`https://api.exchangerate.host/convert?from=%input{From currency/US Dollar/Euro/Japanese Yen/China Yuan,USD/EUR/JPY/CNY}&to=%input{Target currency/US Dollar/Euro/Japanese Yen/China Yuan,USD/EUR/JPY/CNY}&amount=%sr.replace(/\\D/g,\"\")`).then(r=>r.json()).then(r=>prompt(`${r.date} Exchange rate by the European Central Bank\\n${r.query.amount.toLocaleString()} ${r.query.from} =`,`${r.result.toLocaleString()} ${r.query.to}`)).catch(alert);"
             } ]
         },
         {
-            type: "当前网页",
+            type: "Page",
             icon: "list",
             selectLink: true,
             selectPage: true,
             openInNewTab: true,
             sites: [ {
-                name: "SEO查询",
-                url: "http://seo.chinaz.com/?q=%h"
-            }, {
-                name: "打开链接",
+                name: "Open url",
                 url: "%t",
                 openInNewTab: true
             }, {
-                name: "网页快照查询",
-                url: "https://2tool.top/kuaizhao.php?k=%u",
-                icon: "data:image/svg+xml,%3Csvg xmlns=\"http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg\" width=\"1em\" height=\"1em\" preserveAspectRatio=\"xMidYMid meet\" viewBox=\"0 0 256 256\"%3E%3Cg fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"16\"%3E%3Cpath d=\"M 239.98507%2C55.993592 A 111.98507%2C39.994664 0 0 1 128%2C95.988256 111.98507%2C39.994664 0 0 1 16.01493%2C55.993592 111.98507%2C39.994664 0 0 1 128%2C15.998927 111.98507%2C39.994664 0 0 1 239.98507%2C55.993592 Z\"%2F%3E%3Cpath d=\"m 239.98507%2C199.97441 a 111.98507%2C39.994664 0 0 1 -55.99253%2C34.63639 111.98507%2C39.994664 0 0 1 -111.985079%2C0 111.98507%2C39.994664 0 0 1 -55.992531%2C-34.6364\"%2F%3E%3Cpath d=\"m 239.98507%2C151.9808 a 111.98507%2C39.994664 0 0 1 -55.99253%2C34.6364 111.98507%2C39.994664 0 0 1 -111.985079%2C-1e-5 A 111.98507%2C39.994664 0 0 1 16.01493%2C151.9808\"%2F%3E%3Cpath d=\"m 239.98507%2C103.9872 a 111.98507%2C39.994664 0 0 1 -55.99253%2C34.6364 111.98507%2C39.994664 0 0 1 -111.985079%2C0 111.98507%2C39.994664 0 0 1 -55.992531%2C-34.6364\"%2F%3E%3Cpath d=\"M 16.01493%2C55.99377 V 199.97441\"%2F%3E%3Cpath d=\"M 239.98507%2C55.993592 V 199.97441\"%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E"
+                name: "Search cache",
+                url: "https://2tool.top/kuaizhao.php?k=%u"
             }, {
-                name: "网页存档查询",
+                name: "Web archive",
                 url: "https://web.archive.org/web/*/%u",
                 icon: "https://web.archive.org/_static/images/archive.ico"
             }, {
-                name: "存档当前网页",
+                name: "Save archive",
                 url: "https://web.archive.org/save/%u",
                 icon: "https://web.archive.org/_static/images/archive.ico"
             }, {
-                name: "编辑当前网页",
-                url: "javascript:(function(){document.body.setAttribute('contenteditable', 'true');alert('已开启网页编辑，按ESC键取消');document.onkeydown = function (e) {e = e || window.event;if(e.keyCode==27){document.body.setAttribute('contenteditable', 'false');}}})();"
-            }, {
-                name: "万能命令",
-                url: "https://wn.run/%u"
-            }, {
-                name: "当前网址-草料",
-                url: "https://cli.im/url#p{#url_content=%u&click(#click-create)}"
+                name: "Edit current page",
+                url: "javascript:(function(){document.body.setAttribute('contenteditable', 'true');alert('Now you can modify the page, cancel by ESC');document.onkeydown = function (e) {e = e || window.event;if(e.keyCode==27){document.body.setAttribute('contenteditable', 'false');}}})();"
             } ]
         }
     ];
@@ -690,7 +394,7 @@
         cacheSwitch: false,
         noAni: false,
         quickAddRule: true,
-        multiline: 2,//0 关闭 1 开启 2 询问
+        multiline: 2,
         multilineGap: 1000,
         historyLength: 0,
         dragToSearch: true,
