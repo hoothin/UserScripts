@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.4.28.1
+// @version              2023.4.29.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -15175,7 +15175,10 @@ ImgOps | https://imgops.com/#b#`;
                 var thumBCClient=thumBC[pro[1]];
                 var scrollCenter=Math.max((thumBCClient - this.selected[pro[2]])/2,0);
 
-                this.thumbScrollbar.scroll(needScrollDis - scrollCenter,false,!noTransition);
+                let thumbScrollbar=this.thumbScrollbar;
+                setTimeout(function() {
+                    thumbScrollbar.scroll(needScrollDis - scrollCenter,false,!noTransition);
+                }, 0);
             },
             getImg:function(ele){
                 var self = this;
@@ -15315,7 +15318,7 @@ ImgOps | https://imgops.com/#b#`;
                 description;
 
                 this.img=img;
-                this.img.title=description;
+                //this.img.title=description;
                 this.src=img.src;
                 this.isLoading=false;
 
@@ -16537,11 +16540,12 @@ ImgOps | https://imgops.com/#b#`;
                  });\
                  var bigImg=document.querySelector("#bigImg"),body=document.body;\
                  [].forEach.call(document.querySelectorAll("div>img"),function(i){\
-                 i.onerror=function(e){i.style.display="none"};\
+                 i.onerror=function(e){i.style.display="none";i.parentNode.style.cursor="pointer";i.parentNode.title="reload"};\
+                 i.onload=function(e){i.style.display="";i.parentNode.style.cursor="pointer";i.parentNode.title=""};\
                  i.onmouseover=i.onmousemove=function(e){bigImg.style.top=(this.width/this.height>body.clientWidth/body.clientHeight?10+(body.clientHeight*0.95-body.clientWidth*this.height/this.width)*e.offsetY/this.height:10-(body.clientWidth*this.height/this.width-body.clientHeight*0.95)*e.offsetY/this.height);bigImg.src=e.ctrlKey?this.src:"";bigImg.style.display=e.ctrlKey?"":"none";};\
                  });\
                  [].forEach.call(document.querySelectorAll("body>div"),function(i){\
-                 i.onclick=function(e){if(e.ctrlKey&&i.firstChild.src){window.open(i.firstChild.src,"_blank")}else{this.classList.toggle("select")}}\
+                 i.onclick=function(e){if(i.firstChild.style.display=="none"){i.firstChild.src=i.firstChild.src;return;}if(e.ctrlKey&&i.firstChild.src){window.open(i.firstChild.src,"_blank")}else{this.classList.toggle("select")}}\
                  });\
                  </script></body>';
                 _GM_openInTab('data:text/html;charset=utf-8,' + encodeURIComponent(html),{active:true});
@@ -16598,6 +16602,7 @@ ImgOps | https://imgops.com/#b#`;
                     -moz-box-sizing: border-box;\
                     box-sizing: border-box;\
                     line-height: 1.6;\
+                    text-overflow: unset;\
                     }\
                     .pv-gallery-container * {\
                     font-size: 14px;\
@@ -20118,7 +20123,7 @@ ImgOps | https://imgops.com/#b#`;
             focusedKeydown:function(e){
                 var keyCode=e.keyCode;
                 if (this.data && this.data.img && e.key.toLowerCase() == prefs.floatBar.keys.download) {
-                    downloadImg(this.img.src, (this.data.img.alt || this.data.img.title), prefs.saveName);
+                    downloadImg(this.img.src, (this.data.img.title || this.data.img.alt), prefs.saveName);
                     e.preventDefault();
                     e.stopPropagation();
                     return;
@@ -20866,7 +20871,7 @@ ImgOps | https://imgops.com/#b#`;
                         new MagnifierC(this.img,this.data);
                         break;
                     case 'download':
-                        downloadImg(this.data.src || this.data.imgSrc, (this.data.img.alt || this.data.img.title), prefs.saveName);
+                        downloadImg(this.data.src || this.data.imgSrc, (this.data.img.title || this.data.img.alt), prefs.saveName);
                         break;
                     case "copy":
                         _GM_setClipboard(this.data.src || this.data.imgSrc);
@@ -21265,7 +21270,7 @@ ImgOps | https://imgops.com/#b#`;
             },
             open:function(e,buttonType){
                 if (buttonType === 'download' && !this.data.xhr) {
-                    downloadImg(this.data.src || this.data.imgSrc, (this.data.img.alt || this.data.img.title), prefs.saveName);
+                    downloadImg(this.data.src || this.data.imgSrc, (this.data.img.title || this.data.img.alt), prefs.saveName);
                     return;
                 } else {
                     let additionEnable = prefs.floatBar.invertAdditionalFeature ? !e.altKey : e.altKey;
@@ -22381,6 +22386,7 @@ ImgOps | https://imgops.com/#b#`;
             clearTimeout(checkFloatBarTimer);
             checkFloatBarTimer = setTimeout(function() {
                 if (!e || !e.target || !e.target.parentNode) return;
+                if (gallery && gallery.shown) return;
                 checkFloatBar(e.target, e.type, checkPreview(e), e.clientX, e.clientY, e.altKey);
             }, 50);
         }
