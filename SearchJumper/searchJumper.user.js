@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.73.64
+// @version      1.6.6.74.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -94,15 +94,13 @@
             icon: "music",
             sites: [ {
                 name: "163 Music",
-                url: "https://music.163.com/#/search/m/?s=%s",
-                icon: "https://s1.music.126.net/style/favicon.ico"
+                url: "https://music.163.com/#/search/m/?s=%s"
             }, {
                 name: "QQ Music",
                 url: "https://y.qq.com/portal/search.html#page=1&searchid=1&remoteplace=txt.yqq.top&t=song&w=%s"
             }, {
                 name: "Jango",
-                url: "https://www.jango.com/music/%s",
-                icon: "https://s1.cdn107.com/assets/logos/jango/favicon-32x32-2d45face09da6b62b25031d8b9afeefc9274656a5a969c75e6afc644bf85eb96.png"
+                url: "https://www.jango.com/music/%s"
             } ]
         },
         {
@@ -181,6 +179,9 @@
                 name: "Google ",
                 url: "[\"Google\"]"
             }, {
+                name: "Wikipedia ",
+                url: "[\"Wikipedia\"]"
+            }, {
                 name: "📄  Copy",
                 url: "copy:%sr",
                 nobatch: true
@@ -198,6 +199,10 @@
             }, {
                 name: "Words to QRCode",
                 url: "https://cli.im/text#p{#text-content=%s&click(#click-create)}"
+            }, {
+                name: "💲USD to RMB",
+                url: "showTips:let usd2rmb=await storage.getItem(\"usd2rmb\");let usd2rmbUpdate=await storage.getItem(\"usd2rmbUpdate\");if(!usd2rmbUpdate || usd2rmbUpdate > Date.now()+3600000){usd2rmb=await fetch(`https://api.exchangerate.host/convert?from=USD&to=CNY&amount=1`).then(r=>r.json()).then(r=>r.result).catch(alert);storage.setItem(\"usd2rmb\",usd2rmb||7);storage.setItem(\"usd2rmbUpdate\",Date.now());}let usd=\"%sr\".replace(/\\D/g,\"\"); let rmb=(usd * parseFloat(usd2rmb||7)).toFixed(2);return [`${usd} USD = ${rmb} RMB`,rmb]",
+                kwFilter: "\\d\\$|\\$\\d"
             } ]
         },
         {
@@ -276,10 +281,6 @@
             }, {
                 name: "w3c",
                 url: "http://www.runoob.com/?s=%s"
-            }, {
-                name: "GreasyFork",
-                url: "https://greasyfork.org/zh-CN/scripts?q=%s&utf8=✓",
-                icon: "https://greasyfork.org/packs/media/images/blacklogo96-b2384000fca45aa17e45eb417cbcbb59.png"
             } ]
         },
         {
@@ -298,8 +299,7 @@
             icon: "shopping-cart",
             sites: [ {
                 name: "Amazon",
-                url: "http://www.amazon.cn/s/ref=nb_sb_noss?field-keywords=%s",
-                icon: "https://www.amazon.cn/favicon.ico"
+                url: "http://www.amazon.com/s/ref=nb_sb_noss?field-keywords=%s"
             }, {
                 name: "1688",
                 url: "https://s.1688.com/selloffer/offer_search.htm?keywords=%s"
@@ -345,11 +345,11 @@
             selectPage: true,
             openInNewTab: true,
             sites: [ {
-                name: "Open url",
+                name: "🔗 Open url",
                 url: "%t",
                 openInNewTab: true
             }, {
-                name: "Search cache",
+                name: "📷 Search cache",
                 url: "https://2tool.top/kuaizhao.php?k=%u"
             }, {
                 name: "Web archive",
@@ -360,7 +360,7 @@
                 url: "https://web.archive.org/save/%u",
                 icon: "https://web.archive.org/_static/images/archive.ico"
             }, {
-                name: "Edit current page",
+                name: "✏️ Edit current page",
                 url: "javascript:(function(){document.body.setAttribute('contenteditable', 'true');alert('Now you can modify the page, cancel by ESC');document.onkeydown = function (e) {e = e || window.event;if(e.keyCode==27){document.body.setAttribute('contenteditable', 'false');}}})();"
             } ]
         }
@@ -1827,7 +1827,9 @@
                      color: black;
                      white-space: normal;
                      max-width: 640px;
+                     width: max-content;
                      line-height: 35px;
+                     word-break: break-all;
                  }
                  .search-jumper-tips * {
                      max-width: 640px;
@@ -5650,6 +5652,12 @@
                     let actualTop = clingEle.getBoundingClientRect().top;
                     if (actualTop > viewHeight / 2) clientY -= (target.scrollHeight + eh / 2 + 10);
                     else clientY += (eh / 2 + 10);
+                    if (clientX < 20) clientX = 20;
+                    let scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
+                    let maxLeft = viewWidth + scrollLeft - target.scrollWidth - 30;
+                    if (clientX > maxLeft) {
+                        clientX = maxLeft;
+                    }
                     target.style.right = "";
                     target.style.bottom = "";
                     target.style.left = clientX + "px";
@@ -7345,15 +7353,16 @@
                     self.bar.style.cssText = "";
                     self.con.style.cssText = "";
                     let viewWidth = window.innerWidth || document.documentElement.clientWidth;
+                    let scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
                     let viewHeight = window.innerHeight || document.documentElement.clientHeight;
                     let clientX = e.pageX - self.bar.clientWidth / 2 - document.documentElement.offsetLeft;
                     if (clientX < 0) clientX = 5;
-                    else if (clientX + self.bar.clientWidth > viewWidth) clientX = viewWidth - self.bar.clientWidth - 20;
+                    else if (clientX + self.bar.clientWidth > viewWidth + scrollLeft) clientX = viewWidth + scrollLeft - self.bar.clientWidth - 20;
                     let clientY = e.pageY;
                     if (e.clientY > viewHeight / 5) clientY -= (self.bar.clientHeight + 20);
                     else clientY += 20;
-                    if (clientX < viewWidth / 2) {
-                        self.bar.style.left = clientX + "px";
+                    if (e.pageX < viewWidth / 2) {
+                        self.bar.style.left = clientX + scrollLeft + "px";
                         self.bar.style.transformOrigin = '0 0';
                     } else {
                         self.bar.style.right = viewWidth - clientX - self.bar.clientWidth - 15 + "px";
