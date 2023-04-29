@@ -2942,6 +2942,7 @@
                              padding-bottom: 3px;
                              margin-bottom: -30px;
                              float: left;
+                             background: unset;
                          }
                          .customInputFrame-body .select>p {
                              padding: 0;
@@ -2975,6 +2976,8 @@
                          .customInputFrame-body .select>.options>p {
                              cursor: pointer;
                              min-height: 20px;
+                             padding: 3px 0;
+                             margin: 0;
                          }
                          .customInputFrame-body .select>.options>p:hover {
                              background: aliceblue;
