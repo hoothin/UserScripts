@@ -8983,8 +8983,8 @@
         "url": "^https?://github\\.com/search",
         "example": "https://github.com/search?q=C%2B%2B",
         "nextLinkByUrl": [
-            "&p=(\\d+)$",
-            "&p={$1+1}"
+            "(&p=(\\d+))?$",
+            "&p={$2+1}"
         ],
         "pageElement": "[data-testid='results-list']",
         "action": 0
