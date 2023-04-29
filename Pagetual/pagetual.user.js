@@ -1366,6 +1366,9 @@
         getValidHeight(ele) {
             if (!ele.offsetParent) return 0;
             let h = ele.scrollHeight;
+            if (h === 0 && ele.parentNode && ele.parentNode.children.length === 1) {
+                h = ele.parentNode.scrollHeight;
+            }
             let moreChild = ele.children[0], minOffsetTop = h;
             while (moreChild) {
                 if (moreChild.offsetParent && moreChild.offsetTop < minOffsetTop) {
