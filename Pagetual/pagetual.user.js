@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.36.8
+// @version      1.9.36.9
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -2378,9 +2378,12 @@
         }
 
         compareUrl(url1, url2) {
+            if (url1 == url2) return true;
+            if (!url1 || !url2) return false;
             let url1Arr = url1.split("?");
             let url2Arr = url2.split("?");
             if (url1Arr[0] != url2Arr[0]) return false;
+            if (!url1Arr[1] || !url2Arr[1]) return false;
             url1Arr = url1Arr[1].split("&").sort().join("&");
             url2Arr = url2Arr[1].split("&").sort().join("&");
             return url1Arr == url2Arr;
