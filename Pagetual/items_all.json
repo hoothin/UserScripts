@@ -1,5 +1,19 @@
 [
 {
+  "resource_url": "http://wedata.net/items/86112",
+  "data": {
+    "pageElement": "//div[contains(@class, \"herald-entry-content\")]",
+    "nextLink": "//link[@rel=\"next\"]",
+    "url": "^https?://www\\.igorslab\\.de/.*",
+    "exampleUrl": "https://www.igorslab.de/en/performance-secret-tip-for-gamers-memory-ranks-in-theory-and-practice-with-cyberpunk-2077/"
+  },
+  "database_resource_url": "http://wedata.net/databases/AutoPagerize",
+  "created_by": "awoifajwojfiawf",
+  "name": "Igor's LAB",
+  "created_at": "2023-04-30T00:27:23+09:00",
+  "updated_at": "2023-04-30T00:29:56+09:00"
+},
+{
   "resource_url": "http://wedata.net/items/86110",
   "data": {
     "insertBefore": "",
