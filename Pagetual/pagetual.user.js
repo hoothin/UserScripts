@@ -3359,7 +3359,7 @@
     class Picker {
         //static picker;
         constructor() {
-            this.init();
+            this.inited = false;
         }
 
         /*static getInstance() {
@@ -3370,6 +3370,8 @@
         }*/
 
         init() {
+            if (this.inited) return;
+            this.inited = true;
             let self = this;
             this.signList = [];
             this.cssText = `
@@ -4034,6 +4036,7 @@
         }
 
         start() {
+            this.init();
             if (this.inPicker) return;
             this.inPicker = true;
             if (!this.styleEle || !this.styleEle.parentNode) {
