@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.36.10
+// @version      1.9.36.11
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -769,8 +769,8 @@
     const ruleImportUrlReg = /greasyfork\.org\/.*scripts\/438684[^\/]*(\/discussions|\/?$|\/feedback)|github\.com\/hoothin\/UserScripts\/(tree\/master\/Pagetual|issues)/i;
     const allOfBody = "body>*";
     const mainSel = "article,.article,[role=main],main,.main,#main";
-    const nextTextReg1 = new RegExp("\u005e\u7ffb\u003f\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u9875\u9801\u5f20\u5f35\u005d\u007c\u005e\u0028\u006e\u0065\u0078\u0074\u005b\u0020\u005f\u002d\u005d\u003f\u0070\u0061\u0067\u0065\u007c\u006f\u006c\u0064\u0065\u0072\u0029\u005c\u0073\u002a\u005b\u203a\u003e\u2192\u00bb\u005d\u003f\u0024\u007c\u6b21\u306e\u30da\u30fc\u30b8\u007c\u005e\u6b21\u3078\u003f\u0024\u007cВперед", "i");
-    const nextTextReg2 = new RegExp("\u005e\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u7ae0\u8bdd\u8a71\u8282\u7bc0\u4e2a\u500b\u5e45\u005d\u0028\u005b\u003a\uff1a\u005c\u002d\u005f\u2014\u0020\u005c\u002e\u3002\u003e\u0023\u00b7\u005c\u005b\u3010\u3001\uff08\u005c\u0028\u002f\u002c\uff0c\uff1b\u003b\u005d\u007c\u0024\u0029", "i");
+    const nextTextReg1 = new RegExp("\u005e\u7ffb\u003f\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u9875\u9801\u5f20\u5f35\u005d\u007c\u005e\u006e\u0065\u0078\u0074\u005b\u0020\u005f\u002d\u005d\u003f\u0070\u0061\u0067\u0065\u005c\u0073\u002a\u005b\u203a\u003e\u2192\u00bb\u005d\u003f\u0024\u007c\u6b21\u306e\u30da\u30fc\u30b8\u007c\u005e\u6b21\u3078\u003f\u0024\u007cВперед", "i");
+    const nextTextReg2 = new RegExp("\u005e\u0028\u005b\u4e0b\u540e\u5f8c\u6b21\u005d\u005b\u4e00\u30fc\u0031\u005d\u003f\u005b\u7ae0\u8bdd\u8a71\u8282\u7bc0\u4e2a\u500b\u5e45\u005d\u007c\u006e\u0065\u0078\u0074\u002e\u003f\u0063\u0068\u0061\u0070\u0074\u0065\u0072\u0029\u0028\u005b\u003a\uff1a\u005c\u005c\u002d\u005f\u2014\u0020\u005c\u005c\u002e\u3002\u003e\u0023\u00b7\u005c\u005c\u005b\u3010\u3001\uff08\u005c\u005c\u0028\u002f\u002c\uff0c\uff1b\u003b\u005d\u007c\u0024\u0029", "i");
     const lazyImgAttr = ["data-lazy-src", "data-lazy", "data-url", "data-orig-file", "zoomfile", "file", "original", "load-src", "imgsrc", "real_src", "src2", "origin-src", "data-lazyload", "data-lazyload-src", "data-lazy-load-src", "data-ks-lazyload", "data-ks-lazyload-custom", "data-src", "data-defer-src", "data-actualsrc", "data-cover", "data-original", "data-thumb", "data-imageurl", "data-placeholder", "lazysrc"];
     _GM_registerMenuCommand(i18n("configure"), () => {
         _GM_openInTab(rulesData.configPage || configPage[0], {active: true});
@@ -1401,6 +1401,24 @@
                     pageElementSel = pageElementSel[nextIndex < pageElementSel.length ? nextIndex : 0];
                 }
                 pageElement = getAllElements(pageElementSel, doc);
+                if (this.curSiteRule.singleUrl && (!pageElement || pageElement.length == 0)) {
+                    const childSelMatch = />\s*\*$/;
+                    const targetChild = childSelMatch.test(pageElementSel);
+                    if (targetChild) pageElementSel = pageElementSel.replace(childSelMatch, "");
+                    let pageElementSelSplit = pageElementSel.split(">");
+                    while(pageElementSelSplit && pageElementSelSplit.length > 5) {
+                        pageElementSelSplit.shift();
+                        let tempSel = pageElementSelSplit.join(">");
+                        pageElement = getAllElements(tempSel, doc);
+                        if (pageElement && pageElement.length == 1) {
+                            if (targetChild) {
+                                pageElement = pageElement.children;
+                            }
+                            this.curSiteRule.pageElement = tempSel + (targetChild ? ">*" : "");
+                            break;
+                        }
+                    }
+                }
             }
             if (pageElement && pageElement.length === 1 && pageElement[0].style.display === 'none') {
                 pageElement = [body];
@@ -1460,7 +1478,7 @@
                         if (article && article.length > 0) {
                             if (article.length == 1) {
                                 article = article[0];
-                                self.curSiteRule.pageElement = article.nodeName.toLowerCase() + (article.id ? "#" + article.id : "") + (article.className ? "." + article.className : "") + ">*";
+                                self.curSiteRule.pageElement = article.nodeName.toLowerCase() + (article.id ? "#" + article.id : "") + (article.className ? "." + article.className.replace(/ /g, ".") : "") + ">*";
                                 debug(self.curSiteRule.pageElement, 'Page element');
                                 return article.children;
                             } else {
@@ -2805,7 +2823,7 @@
 
         beginLoading() {
             isLoading = true;
-            let curScroll = getBody(document).scrollTop || document.documentElement.scrollTop;
+            lastScrollTop = getBody(document).scrollTop || document.documentElement.scrollTop;
             ruleParser.insertElement(loadingDiv);
             if (forceState == 2) {
                 getBody(document).appendChild(loadingDiv);
@@ -2818,8 +2836,9 @@
                     parent.parentNode.appendChild(loadingDiv);
                 }
             }
-            getBody(document).scrollTop = curScroll;
-            document.documentElement.scrollTop = curScroll;
+            getBody(document).scrollTop = lastScrollTop;
+            document.documentElement.scrollTop = lastScrollTop;
+            lastScrollTop = 0;
         }
 
         insertElement(ele) {
@@ -2841,7 +2860,7 @@
             let oldTitle = this.pageDoc.title;
             this.pageDoc = doc;
             this.curUrl = url;
-            let curScroll = getBody(document).scrollTop || document.documentElement.scrollTop;
+            if (lastScrollTop == 0) lastScrollTop = getBody(document).scrollTop || document.documentElement.scrollTop;
             isLoading = true;
             let nextLink = await this.getNextLink(doc);
             this.nextTitle = "";
@@ -2890,8 +2909,9 @@
                     newEles.push(newEle);
                 });
             }
-            getBody(document).scrollTop = curScroll;
-            document.documentElement.scrollTop = curScroll;
+            getBody(document).scrollTop = lastScrollTop;
+            document.documentElement.scrollTop = lastScrollTop;
+            lastScrollTop = 0;
             this.pageAction(doc, newEles);
             let enableHistory = this.curSiteRule.history;
             let enableHistoryAfterInsert = false;
@@ -5269,7 +5289,7 @@
                     if (article && article.length > 0) {
                         if (article.length == 1) {
                             article = article[0];
-                            ruleParser.curSiteRule.pageElement = article.nodeName.toLowerCase() + (article.id ? "#" + article.id : "") + (article.className ? "." + article.className : "") + ">*";
+                            ruleParser.curSiteRule.pageElement = article.nodeName.toLowerCase() + (article.id ? "#" + article.id : "") + (article.className ? "." + article.className.replace(/ /g, ".") : "") + ">*";
                             pageElement = article.children;
                         } else {
                             ruleParser.curSiteRule.pageElement = mainSel;
@@ -6944,16 +6964,16 @@
         return curIframe;
     }
 
+    let lastScrollTop;
     function loadPageOver() {
         isLoading = false;
         stopScroll = true;
         let dist = distToBottom();
         setTimeout(() => {stopScroll = false}, 300);
-        setTimeout(() => {
-            if (loadingDiv.parentNode) {
-                loadingDiv.parentNode.removeChild(loadingDiv);
-            }
-        }, 0);
+        lastScrollTop = getBody(document).scrollTop || document.documentElement.scrollTop;
+        if (loadingDiv.parentNode) {
+            loadingDiv.parentNode.removeChild(loadingDiv);
+        }
         let rate = (ruleParser.curSiteRule.rate || rulesData.rate || 1);
         if (rate != 1 && !clickMode) {
             setTimeout(() => {
