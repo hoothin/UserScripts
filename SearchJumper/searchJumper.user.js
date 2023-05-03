@@ -5175,6 +5175,10 @@
                         let mouseEvent = new PointerEvent("mousedown");
                         typeBtn.dispatchEvent(mouseEvent);
                     }
+                    if (this.searchJumperExpand.parentNode == showType) {
+                        let mouseEvent = new PointerEvent("click");
+                        this.searchJumperExpand.dispatchEvent(mouseEvent);
+                    }
                 }
             }
 
