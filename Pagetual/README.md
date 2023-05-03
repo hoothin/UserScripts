@@ -1,4 +1,4 @@
-☯️東方永頁機 v.1.9.36.11
+☯️東方永頁機 v.1.9.36.12
 ==
 *Pagetual - Perpetual pages. Auto loading paginated web pages for 90% of all web sites ! [**Wiki**](https://pagetual.hoothin.com/en/)*
 
