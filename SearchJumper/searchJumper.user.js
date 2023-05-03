@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.75.64
+// @version      1.6.6.76.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -1667,8 +1667,8 @@
                      bottom: unset;
                      top: 5%;
                  }
-                 .search-jumper-type.not-expand>a:nth-of-type(${searchData.prefConfig.expandTypeLength || 12})~a {
-                     display: none;
+                 #search-jumper .search-jumper-type.not-expand>a:nth-of-type(${searchData.prefConfig.expandTypeLength || 12})~a {
+                     display: none!important;
                  }
                  #search-jumper .sitelist {
                      position: fixed;
@@ -6768,6 +6768,8 @@
                     if (!keywords) keywords = (currentSite && cacheKeywords);
                     if (!keywords && hasWordParam) {
                         self.customInput = true;
+                        if (self.con.classList.contains("search-jumper-showall")) return false;
+                        if (self.inInput || showTips) return false;
                         if (self.stopInput) return false;
                         let promptStr = window.prompt(i18n("keywords"));
                         if (promptStr === null) return false;
