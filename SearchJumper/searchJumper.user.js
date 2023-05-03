@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.74.64
+// @version      1.6.6.75.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -474,6 +474,7 @@
                         inPageTips: '自定义分隔符：$c 加分隔符，例如 $c| search | jumper，默认空格作为分隔符\n原始文本不分隔：$o 加文本，例如$oopai liked by hero\n正则表达式：/re/，例如 $c, /google/i , /aPPle/\n添加提示文本：搜索文本$t{提示文本}，例如 linux$t{linux is not unix}\n添加自定义样式：搜索文本$s{背景;其他}，例如 google$s{#333333;color:red;}\n左键点击关键词跳转至下一个，右键点击关键词跳转至上一个',
                         inPagePlaceholder: '输入文字，按下回车进行页内查找',
                         pickerBtn: '抓取元素',
+                        multiPickerBtn: '抓取元素，按住 Ctrl 或 Command 连续抓取',
                         editBtn: '编辑查找文字',
                         emptyBtn: '清空查找文字',
                         copyInPageBtn: '复制查找文字',
@@ -562,6 +563,7 @@
                         inPageTips: '自定義分隔符：$c 加分隔符，例如 $c| search | jumper，默認空格作為分隔符\n原始文本不分隔：$o 加文本，例如$oopai liked by hero\n正則表達式：/re/，例如 $c, /google/i , /aPPle/\n添加提示文本：搜索文本$t{提示文本}，例如 linux$t{linux is not unix}\n添加自定義樣式：搜索文本$s{背景;其他}，例如 google$s{#333333;color:red;}\n左鍵點擊關鍵詞跳轉至下一個，右鍵點擊關鍵詞跳轉至上一個',
                         inPagePlaceholder: '輸入文字，按下回車進行頁內查找',
                         pickerBtn: '抓取元素',
+                        multiPickerBtn: '抓取元素，按住 Ctrl 或 Command 連續抓取',
                         editBtn: '編輯查找文字',
                         emptyBtn: '清空查找文字',
                         copyInPageBtn: '複製查找文字',
@@ -649,6 +651,7 @@
                         inPageTips: 'Custom delimiter: $c + delimiter, such as $c| search | jumper, space as delimiter by default\nOriginal text without delimited: $o + text, such as $oopai liked by hero\nRegular expression: /re/, such as $c, /google/i , /aPPle/\nTips text: search text$t{tips text}, such as linux$t{linux is not unix}\nCustom style: Search text$s{background;other}, such as google$s{#333333;color:red;}\nLeft-click keyword to jump to the next, right-click keyword to jump to the previous',
                         inPagePlaceholder: 'Input text, press Enter to find in the page',
                         pickerBtn: 'Pick a element',
+                        multiPickerBtn: 'Pick a element, pick multi elements with Ctrl or Command',
                         editBtn: 'Edit search text',
                         emptyBtn: 'Empty search text',
                         copyInPageBtn: 'Copy search text',
@@ -2591,7 +2594,7 @@
                       <svg id="copyEleBtn" style="display:none;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("copyEleBtn")}</title><path d="M706.5 188.4H190.2c-29.8 0-54 24.2-54 54v662.9c0 29.8 24.2 54 54 54h516.3c29.8 0 54-24.2 54-54V242.4c0-29.8-24.2-54-54-54z m-18 698.9H208.2V260.4h480.3v626.9zM313.7 512.2h275.2c19.9 0 36-16.1 36-36s-16.1-36-36-36H313.7c-19.9 0-36 16.1-36 36s16.1 36 36 36zM313.7 715.2h201.6c19.9 0 36-16.1 36-36s-16.1-36-36-36H313.7c-19.9 0-36 16.1-36 36s16.1 36 36 36zM837.2 64.7H302.9c-19.9 0-36 16.1-36 36s16.1 36 36 36h516.3v662.9c0 19.9 16.1 36 36 36s36-16.1 36-36V118.7c0-29.8-24.2-54-54-54z"></path></svg>
                       <svg id="maxEleBtn" style="display:none;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("maxEleBtn")}</title><path d="M192 832h160a32 32 0 0 1 0 64H160a32 32 0 0 1-32-32V672a32 32 0 0 1 64 0zM182.72 886.72a32 32 0 0 1-45.44-45.44l224-224a32 32 0 0 1 45.44 45.44zM832 832V672a32 32 0 0 1 64 0v192a32 32 0 0 1-32 32H672a32 32 0 0 1 0-64zM886.72 841.28a32 32 0 0 1-45.44 45.44l-224-224a32 32 0 0 1 45.44-45.44zM192 192v160a32 32 0 0 1-64 0V160a32 32 0 0 1 32-32h192a32 32 0 0 1 0 64zM137.28 182.72a32 32 0 0 1 45.44-45.44l224 224a32 32 0 0 1-45.44 45.44zM832 192H672a32 32 0 0 1 0-64h192a32 32 0 0 1 32 32v192a32 32 0 0 1-64 0zM841.28 137.28a32 32 0 1 1 45.44 45.44l-224 224a32 32 0 0 1-45.44-45.44z"></path></svg>
                       <svg id="minEleBtn" style="display:none;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("minEleBtn")}</title><path d="M672 352h160a32 32 0 0 1 0 64H640a32 32 0 0 1-32-32V192a32 32 0 0 1 64 0zM662.72 406.72a32 32 0 0 1-45.44-45.44l224-224a32 32 0 1 1 45.44 45.44zM352 352V192a32 32 0 0 1 64 0v192a32 32 0 0 1-32 32H192a32 32 0 0 1 0-64zM406.72 361.28a32 32 0 0 1-45.44 45.44l-224-224a32 32 0 0 1 45.44-45.44zM672 672v160a32 32 0 0 1-64 0V640a32 32 0 0 1 32-32h192a32 32 0 0 1 0 64zM617.28 662.72a32 32 0 0 1 45.44-45.44l224 224a32 32 0 0 1-45.44 45.44zM192 672a32 32 0 0 1 0-64h192a32 32 0 0 1 32 32v192a32 32 0 0 1-64 0V672zM361.28 617.28a32 32 0 0 1 45.44 45.44l-224 224a32 32 0 0 1-45.44-45.44z"></path></svg>
-                      <svg id="pickerBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("pickerBtn")}</title><path d="M874.048 533.333333C863.424 716.629333 716.629333 863.424 533.333333 874.048V917.333333a21.333333 21.333333 0 0 1-42.666666 0v-43.285333C307.370667 863.424 160.576 716.629333 149.952 533.333333H106.666667a21.333333 21.333333 0 0 1 0-42.666666h43.285333C160.576 307.370667 307.370667 160.576 490.666667 149.952V106.666667a21.333333 21.333333 0 0 1 42.666666 0v43.285333c183.296 10.624 330.090667 157.418667 340.714667 340.714667h42.816a21.333333 21.333333 0 1 1 0 42.666666H874.026667z m-42.752 0h-127.786667a21.333333 21.333333 0 0 1 0-42.666666h127.786667C820.778667 330.922667 693.056 203.221333 533.333333 192.704V320a21.333333 21.333333 0 0 1-42.666666 0V192.704C330.922667 203.221333 203.221333 330.944 192.704 490.666667H320a21.333333 21.333333 0 0 1 0 42.666666H192.704c10.517333 159.744 138.24 287.445333 297.962667 297.962667V704a21.333333 21.333333 0 0 1 42.666666 0v127.296c159.744-10.517333 287.445333-138.24 297.962667-297.962667zM512 554.666667a42.666667 42.666667 0 1 1 0-85.333334 42.666667 42.666667 0 0 1 0 85.333334z"></path></svg>
+                      <svg id="pickerBtn" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><title>${i18n("multiPickerBtn")}</title><path d="M874.048 533.333333C863.424 716.629333 716.629333 863.424 533.333333 874.048V917.333333a21.333333 21.333333 0 0 1-42.666666 0v-43.285333C307.370667 863.424 160.576 716.629333 149.952 533.333333H106.666667a21.333333 21.333333 0 0 1 0-42.666666h43.285333C160.576 307.370667 307.370667 160.576 490.666667 149.952V106.666667a21.333333 21.333333 0 0 1 42.666666 0v43.285333c183.296 10.624 330.090667 157.418667 340.714667 340.714667h42.816a21.333333 21.333333 0 1 1 0 42.666666H874.026667z m-42.752 0h-127.786667a21.333333 21.333333 0 0 1 0-42.666666h127.786667C820.778667 330.922667 693.056 203.221333 533.333333 192.704V320a21.333333 21.333333 0 0 1-42.666666 0V192.704C330.922667 203.221333 203.221333 330.944 192.704 490.666667H320a21.333333 21.333333 0 0 1 0 42.666666H192.704c10.517333 159.744 138.24 287.445333 297.962667 297.962667V704a21.333333 21.333333 0 0 1 42.666666 0v127.296c159.744-10.517333 287.445333-138.24 297.962667-297.962667zM512 554.666667a42.666667 42.666667 0 1 1 0-85.333334 42.666667 42.666667 0 0 1 0 85.333334z"></path></svg>
                     </span>
                   </div>
                   <div class="inputGroup" id="searchInPage">
@@ -7601,24 +7604,8 @@
                  }
                 `;
                 _GM_addStyle(cssText);
-                this.mainSignDiv = this.createSignDiv();
-                this.setImportant(this.mainSignDiv, "pointer-events", "none");
-                this.moveHandler = e => {
-                    if (e.target === document) return;
-                    self.adjustSignDiv(self.mainSignDiv, self.getTarget(e.target));
-                };
-                this.leaveHandler = e => {
-                    if (this.mainSignDiv.parentNode) this.mainSignDiv.parentNode.removeChild(this.mainSignDiv);
-                };
-                this.enterHandler = e => {
-                    getBody(document).appendChild(this.mainSignDiv);
-                };
-                this.clickHandler = e => {
-                    if (self.inPicker) {
-                        e.stopPropagation();
-                        e.preventDefault();
-                    }
-                    let target = self.getTarget(e.target);
+                let clickTarget = target => {
+                    if (!target) return;
                     if (self.callback) {
                         if (target) {
                             let sel = self.geneSelector(target, true);
@@ -7632,7 +7619,50 @@
                     self.appendSign(sign, target, self.clickedIndex);
                     self.clickedIndex++;
                     searchBar.con.classList.add("selectedEle");
+                }
+                let cleanTimer;
+                this.mainSignDiv = this.createSignDiv();
+                this.setImportant(this.mainSignDiv, "pointer-events", "none");
+                this.moveHandler = e => {
+                    if (e.target === document) return;
+                    self.adjustSignDiv(self.mainSignDiv, self.getTarget(e.target));
+                    if (e.ctrlKey || e.metaKey) {
+                        clearTimeout(cleanTimer);
+                        cleanTimer = setTimeout(() => {
+                            let target = self.cleanTarget(e.target);
+                            clickTarget(target);
+                        }, 5);
+                    }
                 };
+                this.leaveHandler = e => {
+                    if (this.mainSignDiv.parentNode) this.mainSignDiv.parentNode.removeChild(this.mainSignDiv);
+                };
+                this.enterHandler = e => {
+                    getBody(document).appendChild(this.mainSignDiv);
+                };
+                this.clickHandler = e => {
+                    if (self.inPicker) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                    }
+                    let target = self.getTarget(e.target);
+                    clickTarget(target);
+                };
+            }
+
+            cleanTarget(target) {
+                if (!target || target.className == "searchJumperSign") return null;
+                target = this.getTarget(target);
+                if (!target) return null;
+                for (let i in this.clickedEles) {
+                    let clickedEle = this.clickedEles[i];
+                    try {
+                        if (clickedEle == target || clickedEle.contains(target) || target.contains(clickedEle)) return null;
+                    } catch (e) {
+                        return null;
+                    }
+                }
+                return target;
             }
 
             appendSign(sign, target, index) {
@@ -7695,6 +7725,7 @@
                 this.setImportant(signDiv, "transition", "all 0.15s ease-out");
                 this.setImportant(signDiv, "box-shadow", "rgb(0 0 0) 0px 0px 3px 0px");
                 this.setImportant(signDiv, "cursor", "pointer");
+                signDiv.className = "searchJumperSign";
                 signDiv.addEventListener("mouseenter", e => {
                     if (this.mainSignDiv.parentNode) this.mainSignDiv.parentNode.removeChild(this.mainSignDiv);
                 }, true);
