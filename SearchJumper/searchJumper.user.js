@@ -9034,7 +9034,7 @@
                 if (icons.indexOf && icons.indexOf(link.href) !== -1) return;
                 icons.push(link.href);
             });
-            showSiteAdd(document.title.replace(input ? input.value : "", "").replace(/^\s*[-_]\s*/, ""), "", url, icons, document.characterSet, true);
+            showSiteAdd(document.title.replace(input ? input.value : "", "").replace(/^\s*[-_]\s*/, ""), "", url, icons, document.characterSet, "", true);
         }
 
         const jumpHtml = "https://hoothin.github.io/SearchJumper/jump.html";
@@ -9235,7 +9235,7 @@
                             }
                             break;
                         case 1:
-                            showSiteAdd(configData.name, "", configData.url, configData.icon ? [configData.icon] : []);
+                            showSiteAdd(configData.name, "", configData.url, (configData.icon ? [configData.icon] : []), configData.charset, configData.kwFilter);
                             break;
                         case 2:
                             if (!searchData.prefConfig.inPageRule) searchData.prefConfig.inPageRule = {};
@@ -10063,7 +10063,7 @@
         }
 
         var addFrame, nameInput, descInput, urlInput, iconInput, iconShow, iconsCon, typeSelect, testBtn, cancelBtn, addBtn, addFrameCssText, addFrameCssEle, siteKeywords, siteMatch, openSelect, crawlBtn;
-        function showSiteAdd(name, description, url, icons, charset, showCrawl) {
+        function showSiteAdd(name, description, url, icons, charset, kwFilter, showCrawl) {
             if (!addFrame) {
                 addFrameCssText = `
                     .searchJumperFrame-body,
@@ -10501,6 +10501,9 @@
                         }
                         if (charset && charset.toLowerCase() != 'utf-8') {
                             siteObj.charset = charset;
+                        }
+                        if (kwFilter) {
+                            siteObj.kwFilter = kwFilter;
                         }
                     }
                     searchData.sitesConfig[typeSelect.value].sites.push(siteObj);
