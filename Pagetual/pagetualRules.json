@@ -3488,13 +3488,20 @@
         "autoLoadNum": "0"
     },
     {
+        "name": "看妹图",
+        "example": "https://kanmeitu1.cc/p/",
+        "url": "^https?://kanmeitu\\d\\.cc/p/(index_\\d+.html)?",
+        "pageElement": ".sou-con-list>ul",
+        "replaceElement": ".pages"
+    },
+    {
         "name": "俊美图 - 分類",
         "example": "https://www.meijuntu.com/beauty/",
         "url": "^https?://www\\.meijuntu\\.com/",
         "exclude": ".next_picture",
         "nextLink": ".pages>span +a:not(.a1)",
         "pageElement": ".pic-list>ul>*",
-        "replaceElement": ".pages"
+        "replaceElement": ".th_page"
     },
     {
         "name": "美女图片网 - 圖片",
@@ -3599,9 +3606,9 @@
     {
         "name": "nhentai",
         "example": "https://nhentai.net/",
-        "url": "^https?://n(ya)?hentai\\.(net|to|xxx|red)/(search|\\?page=|tags|artists|characters|parodies|groups)?",
-        "nextLink": "a.next,a.current+a,a.last",
-        "pageElement": ".gallery,#tag-container",
+        "url": "^https?://(n(ya)?hentai|cathentai)\\.(net|to|xxx|red)/(search|\\?page=|tags|artists|characters|parodies|groups)?",
+        "nextLink": "a.next,a.current+a,a.last,span.next>a",
+        "pageElement": "//section[contains(@class,'pagination')]/preceding-sibling::div[1]/div",
         "replaceElement": ".pagination",
         "css": ".pagetual_pageBar+div{margin-top:0px!important}"
     },
@@ -5332,6 +5339,17 @@
         "pageBar": 0
     },
     {
+        "name": "松鼠症倉庫 - 閱讀",
+        "example": "https://ahri8.top/readOnline2.php?ID=97432&host_id=0",
+        "url": "^https?://[^/]+/readOnline2\\.php",
+        "include": "//div[@id='logo-group']//a[contains(text(),'松鼠症倉庫') or contains(text(),'松鼠症仓库')]",
+        "action": 1,
+        "pageElement": "[id^=read_online_image]",
+        "replaceElement": "#page_num1,#next_page_btn_area,#page_num2,#next_page_btn_area2",
+        "pageBar": 0,
+        "css": "#content>.col-lg-12,[id^=read_online_ads_area],#Big_Image~*{display:none!important}"
+    },
+    {
         "name": "松鼠症倉庫",
         "example": "https://ahri8.top/dnew.php?t=1669824000",
         "url": "^https?://[^/]+/dnew\\.php",
@@ -5637,6 +5655,22 @@
         "pageBar": 0
     },
     {
+        "name": "秀人图集 - 分類",
+        "example": "http://xiuren0.com/",
+        "url": "^https?://xiuren0\\.com/",
+        "init": "let gax=x=>{let nodes=[];let results=document.evaluate(x,document,null,XPathResult.ANY_TYPE,null);let node;while(node=results.iterateNext()){nodes.push(node)}return nodes};gax(\"//div[div[a[img[contains(@data-src,'igusoft')]]]]\").forEach(e=>{e.remove()})",
+        "pageElement": "//div[div[a[img[not(contains(@data-src,'igusoft.com'))]]]]",
+        "replaceElement": ".pagination"
+    },
+    {
+        "name": "Xiutaku - 分類",
+        "example": "https://xiutaku.com/brand/1",
+        "url": "^https?://xiutaku\\.com/(\\w+/\\d+|\\w+)?$",
+        "init": "document.querySelectorAll('.search-form~*,.blog~*:not([class]),.pagination~*').forEach(e=>{e.remove()});",
+        "pageElement": ".columns",
+        "replaceElement": ".pagination"
+    },
+    {
         "name": "萝丝派 - 分類",
         "example": "https://www.yylsp.com/",
         "url": "^https?://www\\.yylsp\\.com/",
@@ -5662,6 +5696,33 @@
         "insert": ".jeg_block_navigation",
         "insertPos": 1,
         "replaceElement": ".jeg_block_navigation"
+    },
+    {
+        "name": "Chinese Beauties - 分類",
+        "example": "https://sxchinesegirlz.one/",
+        "url": "^https?://sxchinesegirlz\\.one/",
+        "nextLinkByJs": "let next=doc.querySelector('span.current+a');if(next)return next.href.replace(/\\?fbclid=\\w+/i,'');",
+        "pageElement": ".latestPost.excerpt",
+        "insert": ".pagination",
+        "insertPos": 1,
+        "replaceElement": ".pagination"
+    },
+    {
+        "name": "图宅网 - 分類",
+        "example": "https://www.tuzac.com/",
+        "url": "^https?://www\\.tuzac\\.com/",
+        "pageElement": ".node-teaser",
+        "insert": "#pager",
+        "insertPos": 1,
+        "replaceElement": "#pager",
+        "css": ".content-container .content{margin-right:0px!important}.ad-side-right,.footer{display:none!important}"
+    },
+    {
+        "name": "Fuskator- 分類",
+        "example": "https://fuskator.com/",
+        "url": "^https?://fuskator\\.com/",
+        "pageElement": ".thumblinks",
+        "replaceElement": "td.pages"
     },
     {
         "name": "Asianude4u - 分類",
