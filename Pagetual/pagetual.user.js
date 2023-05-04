@@ -1899,6 +1899,7 @@
                 body.querySelector("a[data-pagination=next]") ||
                 body.querySelector("ul.pagination>li.active+li>a") ||
                 body.querySelector("[class^=pag] .current+a") ||
+                body.querySelector(".pageButtonsCurrent+a") ||
                 body.querySelector("a[class*=nextpage]") ||
                 body.querySelector("li.page-current+li>a") ||
                 body.querySelector(".pager-section a[rel=next]") ||
@@ -3802,6 +3803,7 @@
                 }
                 storage.setItem("customRules", ruleParser.customRules);
                 if (ruleParser.hpRules && ruleParser.curSiteRule && !ruleParser.curSiteRule.singleUrl) {
+                    ruleParser.curSiteRule = editTemp;
                     ruleParser.addToHpRules(true);
                 }
                 if (window.confirm(i18n("reloadPage"))) {
