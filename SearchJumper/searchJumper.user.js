@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.77.64
+// @version      1.6.6.78.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -1843,10 +1843,10 @@
                  .search-jumper-searchBar>.search-jumper-type:not(.search-jumper-open) {
                      background: unset;
                      border-radius: unset!important;
-                     ${searchData.prefConfig.minSizeMode ? 'display: none;' : ''}
                  }
-                 .search-jumper-searchBar:hover>.search-jumper-type {
-                     ${searchData.prefConfig.minSizeMode ? 'display: inline-flex;' : ''}
+                 .minSizeMode.search-jumper-searchBar>.search-jumper-type:not(.search-jumper-open),
+                 .minSizeMode.search-jumper-searchBar:hover>.search-jumper-type:not(.search-jumper-open) {
+                     display: none;
                  }
                  .funcKeyCall>.search-jumper-searchBar>.search-jumper-type:not(.search-jumper-open) {
                      display: none;
@@ -2519,6 +2519,9 @@
                     bar.classList.add("initShow");
                 } else {
                     this.touched = false;
+                }
+                if (searchData.prefConfig.minSizeMode) {
+                    bar.classList.add("minSizeMode");
                 }
                 if (isMobile) {
                     let touchBodyHandler = e => {
@@ -4018,12 +4021,14 @@
                     self.timeInAll.style.fontSize = "";
                     self.dayInAll.style.fontSize = "";
                 }
-                this.showAllTimeTimer = setInterval(() => {
+                let setTimeLabel = () => {
                     let now = new Date();
                     let year = now.getFullYear(), month = now.getMonth(), date = now.getDate(), hour = now.getHours(), minute = now.getMinutes(), seconds = now.getSeconds();
                     self.timeInAll.innerText = (hour < 10 ? '0' + hour : hour) + ':' + (minute < 10 ? '0' + minute : minute) + ':' + (seconds < 10 ? '0' + seconds : seconds);
                     self.dayInAll.innerHTML = createHTML(days[now.getDay()] + "<br/>" + year + '-' + (++month < 10 ? '0' + month : month) + '-' + (date < 10 ? '0' + date : date));
-                }, 1000);
+                };
+                this.showAllTimeTimer = setInterval(setTimeLabel, 1000);
+                setTimeLabel();
                 searchTypes.forEach(type => {
                     if (type.style.display != 'none') {
                         let sitelist = type.querySelector('.sitelist');
@@ -5917,6 +5922,9 @@
                     if (!ele.classList.contains("search-jumper-open")) {
                         self.recoveHistory();
                         ele.classList.add("search-jumper-open");
+                        if (searchData.prefConfig.minSizeMode) {
+                            self.bar.classList.add("minSizeMode");
+                        }
                         if (sites.length > (searchData.prefConfig.expandTypeLength || 12) && !searchData.prefConfig.expandType) {
                             ele.classList.add("not-expand");
                             ele.appendChild(self.searchJumperExpand);
@@ -5971,6 +5979,9 @@
                             }
                         });
                     } else {
+                        if (searchData.prefConfig.minSizeMode) {
+                            self.bar.classList.remove("minSizeMode");
+                        }
                         ele.classList.remove("search-jumper-open");
                         if (leftRight) {
                             ele.style.height = baseSize + "px";
