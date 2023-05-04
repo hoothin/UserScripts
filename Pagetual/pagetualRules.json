@@ -5306,6 +5306,13 @@
         "replaceElement": ".page.bigpage"
     },
     {
+        "name": "ACGN小鎮/皮皮动漫社",
+        "example": "https://www.bbsacgn.com/，https://pipidm.top/，https://www.pipidm.top/",
+        "url": "^https?://(www\\.bbsacgn\\.com|pipidm\\.top|www\\.pipidm\\.top)/",
+        "pageElement": ".posts-wrapper.scroll>*",
+        "replaceElement": ".pagination"
+    },
+    {
         "name": "18x78",
         "example": "https://18x78.com/",
         "url": "^https?://18x78\\.com/",
@@ -6429,6 +6436,14 @@
         "pageAction": "xv.thumb_block_initiator.init_listing()"
     },
     {
+        "name": "麻豆村",
+        "example": "https://madoucun.com/",
+        "url": "^https?://madoucun\\.com/",
+        "pageElement": ".hl-list-item",
+        "replaceElement": ".hl-page-wrap",
+        "pageInit": "doc.querySelectorAll('a[data-original]').forEach(a=>{a.style.backgroundImage=`url('${a.dataset.original}')`})"
+    },
+    {
         "name": "麻豆社,草麻豆",
         "example": "https://madou.club/，https://xxxmadou.com/",
         "url": "^https?://(madou|xxxmadou|)\\.(club|com)/",
@@ -6565,6 +6580,14 @@
         "pageElement": "//div[(div/div/div/a/@class='media-cover') and contains(@class,'albums-list')]",
         "replaceElement": ".pagination",
         "css": ".pagetual_pageBar {margin-top: 5px!important;}.pagetual_pageBar+div {margin-top: -8px!important;}img{opacity:1!important}"
+    },
+    {
+        "name": "美图乐 - 分類",
+        "example": "https://www.meitule.cc/i/",
+        "url": "^https?://www\\.meitule\\.cc/",
+        "pageElement": ".list-item",
+        "replaceElement": ".page",
+        "css": ".list-img img{opacity:1!important}"
     },
     {
         "name": "極品性感美女 - 搜索",
