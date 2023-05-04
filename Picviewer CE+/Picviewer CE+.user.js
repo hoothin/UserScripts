@@ -10,7 +10,7 @@
 // @description:zh-TW    線上看圖工具，支援圖片翻轉、旋轉、縮放、彈出大圖、批量儲存
 // @description:pt-BR    Poderosa ferramenta de visualização de imagens on-line, que pode pop-up/dimensionar/girar/salvar em lote imagens automaticamente
 // @description:ru       Мощный онлайн-инструмент для просмотра изображений, который может автоматически отображать/масштабировать/вращать/пакетно сохранять изображения
-// @version              2023.5.3.1
+// @version              2023.5.4.1
 // @icon                 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAV1BMVEUAAAD////29vbKysoqKioiIiKysrKhoaGTk5N9fX3z8/Pv7+/r6+vk5OTb29vOzs6Ojo5UVFQzMzMZGRkREREMDAy4uLisrKylpaV4eHhkZGRPT08/Pz/IfxjQAAAAgklEQVQoz53RRw7DIBBAUb5pxr2m3/+ckfDImwyJlL9DDzQgDIUMRu1vWOxTBdeM+onApENF0qHjpkOk2VTwLVEF40Kbfj1wK8AVu2pQA1aBBYDHJ1wy9Cf4cXD5chzNAvsAnc8TjoLAhIzsBao9w1rlVTIvkOYMd9nm6xPi168t9AYkbANdajpjcwAAAABJRU5ErkJggg==
 // @namespace            https://github.com/hoothin/UserScripts
 // @homepage             https://www.hoothin.com
@@ -41,8 +41,8 @@
 // @grant                GM.notification
 // @grant                unsafeWindow
 // @require              https://greasyfork.org/scripts/6158-gm-config-cn/code/GM_config%20CN.js?version=23710
-// @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1179756
-// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1182203
+// @require              https://greasyfork.org/scripts/438080-pvcep-rules/code/pvcep_rules.js?version=1185312
+// @require              https://greasyfork.org/scripts/440698-pvcep-lang/code/pvcep_lang.js?version=1185366
 // @downloadURL          https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @updateURL            https://greasyfork.org/scripts/24204-picviewer-ce/code/Picviewer%20CE+.user.js
 // @match                *://*/*
@@ -11780,7 +11780,7 @@ ImgOps | https://imgops.com/#b#`;
         };
         img.src = dataurl;
     }
-    function downloadImg(url, name, type, errCb) {
+    function urlToBlob(url, cb, errCb, forcePng) {
         _GM_xmlhttpRequest({
             method: 'GET',
             url: url,
@@ -11794,14 +11794,14 @@ ImgOps | https://imgops.com/#b#`;
             onload: function(d) {
                 let blob = d.response;
                 let ext = blob.type.replace("image/", "");
-                if (ext=="webp") {
-                    var self=this;
+                if (ext == "webp" || forcePng) {
+                    var self = this;
                     var a = new FileReader();
                     a.readAsDataURL(blob);
-                    a.onload = function (e){
-                        dataURLToCanvas(e.target.result, canvas=>{
-                            canvas.toBlob(blob=>{
-                                saveAs(blob, getRightSaveName(url, name, type, "png"));
+                    a.onload = function (e) {
+                        dataURLToCanvas(e.target.result, canvas => {
+                            canvas.toBlob(blob => {
+                                cb(blob, "png");
                             }, "image/png");
                         });
                     };
@@ -11809,17 +11809,23 @@ ImgOps | https://imgops.com/#b#`;
                         if (errCb) errCb();
                     }
                 }else{
-                    saveAs(blob, getRightSaveName(url, name, type, ext));
+                    cb(blob, ext);
                 }
             },
             onerror: function(){
-                _GM_download(url, name, type);
                 if (errCb) errCb();
             },
             ontimeout: function(){
-                _GM_download(url, name, type);
                 if (errCb) errCb();
             }
+        });
+    }
+    function downloadImg(url, name, type, errCb) {
+        urlToBlob(url, (blob, ext) => {
+            saveAs(blob, getRightSaveName(url, name, type, ext));
+        }, () => {
+            _GM_download(url, name, type);
+            if (errCb) errCb();
         });
     }
     var prefs;
@@ -20879,6 +20885,9 @@ ImgOps | https://imgops.com/#b#`;
                     case "open":
                         _GM_openInTab(this.data.src || this.data.imgSrc, {active:true});
                         break;
+                    case "copyImg":
+                        copyData(this.data.src || this.data.imgSrc);
+                        break;
                     case 'actual':
                     case 'search':
                     case 'current':
@@ -20889,6 +20898,22 @@ ImgOps | https://imgops.com/#b#`;
                 };
             },
         };
+
+        function copyData(url) {
+            if (typeof ClipboardItem != 'undefined') {
+                urlToBlob(url, (blob, ext) => {
+                    try {
+                        navigator.clipboard.write([
+                            new ClipboardItem({
+                                [blob.type]: blob
+                            })
+                        ]);
+                    } catch (error) {
+                        console.error(error);
+                    }
+                }, null, true);
+            } else _GM_setClipboard(url);
+        }
 
         //工具栏
         function FloatBarC(){
@@ -21292,6 +21317,9 @@ ImgOps | https://imgops.com/#b#`;
                                     break;
                                 case "open":
                                     _GM_openInTab(src, {active:true});
+                                    break;
+                                case "copyImg":
+                                    copyData(src);
                                     break;
                             }
                             return;
@@ -22804,6 +22832,7 @@ ImgOps | https://imgops.com/#b#`;
                     type: 'select',
                     options: {
                         'copy': i18n("copy"),
+                        'copyImg': i18n("copyImg"),
                         'open': i18n("openInNewTab")
                     },
                     "default": prefs.floatBar.additionalFeature || 'open'
