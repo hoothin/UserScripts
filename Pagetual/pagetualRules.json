@@ -9098,7 +9098,8 @@
             "&p={$2+1}"
         ],
         "pageElement": "[data-testid='results-list']",
-        "action": 0
+        "action": 0,
+        "include": "[rel='next']"
     },
     {
         "name": "Actions · github",
