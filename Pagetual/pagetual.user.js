@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.36.13
+// @version      1.9.36.14
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1172,19 +1172,24 @@
                 callback();
                 return;
             }
+            var href = location.href.slice(0, 500);
             if (this.curSiteRule && this.curSiteRule.url && !this.curSiteRule.singleUrl) {
-                if (this.ruleMatch(this.curSiteRule)) {
+                let urlReg = new RegExp(this.curSiteRule.url, "i");
+                if (urlReg.test(href) && this.ruleMatch(this.curSiteRule)) {
                     return callback();
                 }
             }
             this.curSiteRule = {};
             var self = this;
-            var href = location.href.slice(0, 500);
 
             function setRule(r) {
-                if (self.preSiteRule && self.ruleMatch(self.preSiteRule)) {
-                    self.curSiteRule = self.preSiteRule;
-                    return callback();
+                if (self.preSiteRule) {
+                    href = location.href.slice(0, 500);
+                    let urlReg = new RegExp(self.preSiteRule.url, "i");
+                    if (urlReg.test(href) && self.ruleMatch(self.preSiteRule)) {
+                        self.curSiteRule = self.preSiteRule;
+                        return callback();
+                    }
                 }
                 if (!r.singleUrl) {
                     self.curSiteRule = r;
@@ -1278,12 +1283,7 @@
                                 self.smartRules = self.smartRules.filter(item => {return item && item.url != singleUrl});
                                 storage.setItem("smartRules", self.smartRules);
                                 if (self.curSiteRule.url.length > 13) {
-                                    self.hpRules = self.hpRules.filter(item => {return item && item.url != self.curSiteRule.url});
-                                    self.hpRules.unshift(self.curSiteRule);
-                                    if (self.hpRules.length > 30) {
-                                        self.hpRules.pop();
-                                    }
-                                    storage.setItem("hpRules", self.hpRules);
+                                    self.addToHpRules();
                                 }
                             }
                         };
@@ -1316,6 +1316,52 @@
                 }, 1);
             }
             searchByTime();
+        }
+
+        addToHpRules(instead) {
+            try {
+                if (!this.hpRules) this.hpRules = [];
+                let url = this.curSiteRule.url, self = this;
+                let href = location.href.slice(0, 500);
+                let matchedRules = this.hpRules.filter(rule => rule != self.curSiteRule && new RegExp(rule.url, "i").test(href) && self.ruleMatch(rule));
+                matchedRules.push(this.curSiteRule);
+                matchedRules.sort((a, b) => {
+                    if ((a.include || a.exclude) && (!b.include && !b.exclude)) {
+                        return -1;
+                    } else if ((b.include || b.exclude) && (!a.include && !a.exclude)) {
+                        return 1;
+                    } else {
+                        if ((a.nextLink || a.pageElement) && (!b.nextLink && !b.pageElement)) {
+                            return -1;
+                        } else if ((b.nextLink || b.pageElement) && (!a.nextLink && !a.pageElement)) {
+                            return 1;
+                        } else {
+                            if (a.url.length > b.url.length) {
+                                return -1;
+                            } else if (a.url.length < b.url.length) {
+                                return 1;
+                            } else {
+                                return 0;
+                            }
+                        }
+                    }
+                });
+                this.hpRules = this.hpRules.filter(item => {
+                    return item && !matchedRules.find(rule => item.url == rule.url && JSON.stringify(item) == JSON.stringify(rule));
+                });
+                if (instead) {
+                    this.hpRules.unshift(this.curSiteRule);
+                } else {
+                    this.hpRules = matchedRules.concat(this.hpRules);
+                }
+                if (matchedRules && matchedRules.length) this.curSiteRule = matchedRules[0];
+                if (this.hpRules.length > 30) {
+                    this.hpRules.pop();
+                }
+                storage.setItem("hpRules", this.hpRules);
+            } catch (e) {
+                debug(e);
+            }
         }
 
         replaceElement(doc) {
@@ -2779,12 +2825,7 @@
                     }
                     storage.setItem("smartRules", self.smartRules);
                 } else if (self.curSiteRule && self.curSiteRule.url.length > 13) {
-                    self.hpRules = self.hpRules.filter(item => {return item && item.url != self.curSiteRule.url});
-                    self.hpRules.unshift(self.curSiteRule);
-                    if (self.hpRules.length > 30) {
-                        self.hpRules.pop();
-                    }
-                    storage.setItem("hpRules", self.hpRules);
+                    self.addToHpRules();
                 }
                 let css = self.curSiteRule.css || rulesData.customCss;
                 if (css) {
@@ -3761,8 +3802,7 @@
                 }
                 storage.setItem("customRules", ruleParser.customRules);
                 if (ruleParser.hpRules && ruleParser.curSiteRule && !ruleParser.curSiteRule.singleUrl) {
-                    ruleParser.hpRules = ruleParser.hpRules.filter(item => {return item && item.url != ruleParser.curSiteRule.url});
-                    storage.setItem("hpRules", ruleParser.hpRules);
+                    ruleParser.addToHpRules(true);
                 }
                 if (window.confirm(i18n("reloadPage"))) {
                     setTimeout(() => {location.reload()}, 100);
