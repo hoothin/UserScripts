@@ -5334,7 +5334,7 @@
                     debug(res.status, "Error status");
                     return callback(false);
                 }
-                if (inCors && (!pageElement || pageElement.length == 0)) {
+                if (inCors && (!pageElement || pageElement.length == 0) && ruleParser.curSiteRule.singleUrl) {
                     let article = doc.querySelectorAll(mainSel);
                     if (article && article.length > 0) {
                         if (article.length == 1) {
@@ -5363,7 +5363,7 @@
                             }
                         });
                     } else ruleParser.curSiteRule.action = 0;
-                } else if (ruleParser.curSiteRule.singleUrl || curPage == 1) {
+                } else if ((ruleParser.curSiteRule.singleUrl || curPage == 1) && !inCors) {
                     ruleParser.curSiteRule.action = 1;
                     requestFromIframe(url, (doc, eles) => {
                         loadPageOver();
