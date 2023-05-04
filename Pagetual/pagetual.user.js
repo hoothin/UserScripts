@@ -4414,8 +4414,8 @@
                  input[type=number] {
                   -moz-appearance:textfield;
                  }
-                 #readme>.is-stuck {
-                  position: static!important;
+                 div[tabindex="0"]:not([data-selector]) {
+                  display: none;
                  }
                  table td>h3 {
                   margin: 16px!important;
