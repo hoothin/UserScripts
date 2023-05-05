@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.78.64
+// @version      1.6.6.79.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -1033,7 +1033,7 @@
             setTimeout( checkReady, 100 );
         }
 
-        var logoBtn, searchBar, searchTypes = [], currentSite = false, cacheKeywords, localKeywords, lastSign, inPagePostParams, cacheIcon, historySites, historyType, sortTypeNames, cachePool = [], cacheFontPool = [], currentFormParams, globalInPageWords, navEnable, referrer, disableHighlight, lastAddType;
+        var logoBtn, searchBar, searchTypes = [], currentSite = false, cacheKeywords, tipsStorage, localKeywords, lastSign, inPagePostParams, cacheIcon, historySites, historyType, sortTypeNames, cachePool = [], cacheFontPool = [], currentFormParams, globalInPageWords, navEnable, referrer, disableHighlight, lastAddType;
         const logoBtnSvg = `<svg class="search-jumper-logoBtnSvg" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><title>${_GM_info.script.name}</title><path d="M.736 510.464c0-281.942 228.335-510.5 510-510.5 135.26 0 264.981 53.784 360.625 149.522 95.643 95.737 149.375 225.585 149.375 360.978 0 281.94-228.335 510.5-510 510.5-281.665 0-510-228.56-510-510.5zm510-510.5v1021m-510-510.5h1020" fill="#fefefe"/><path d="M237.44 346.624a48.64 48.64 0 1 0 97.28 0 48.64 48.64 0 1 0-97.28 0zM699.904 346.624a48.64 48.64 0 1 0 97.28 0 48.64 48.64 0 1 0-97.28 0zM423.296 759.296c-64 0-115.712-52.224-115.712-115.712 0-26.624 9.216-52.224 25.6-72.704 9.216-11.776 26.112-13.312 37.888-4.096s13.312 26.112 4.096 37.888c-9.216 11.264-13.824 24.576-13.824 38.912 0 34.304 27.648 61.952 61.952 61.952s61.952-27.648 61.952-61.952c0-4.096-.512-8.192-1.024-11.776-2.56-14.848 6.656-28.672 21.504-31.744 14.848-2.56 28.672 6.656 31.744 21.504 1.536 7.168 2.048 14.336 2.048 22.016-.512 63.488-52.224 115.712-116.224 115.712z" fill="#333"/><path d="M602.08 760.296c-64 0-115.712-52.224-115.712-115.712 0-14.848 12.288-27.136 27.136-27.136s27.136 12.288 27.136 27.136c0 34.304 27.648 61.952 61.952 61.952s61.952-27.648 61.952-61.952c0-15.36-5.632-30.208-15.872-41.472-9.728-11.264-9.216-28.16 2.048-37.888 11.264-9.728 28.16-9.216 37.888 2.048 19.456 21.504 29.696 48.64 29.696 77.824 0 62.976-52.224 115.2-116.224 115.2z" fill="#333"/><ellipse ry="58" rx="125" cy="506.284" cx="201.183" fill="#faf"/><ellipse ry="58" rx="125" cy="506.284" cx="823.183" fill="#faf"/></svg>`;
         const logoBase64 = "data:image/svg+xml;base64,PHN2ZyBjbGFzcz0ic2VhcmNoLWp1bXBlci1sb2dvQnRuU3ZnIiB2aWV3Qm94PSIwIDAgMTAyNCAxMDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0uNzM2IDUxMC40NjRjMC0yODEuOTQyIDIyOC4zMzUtNTEwLjUgNTEwLTUxMC41IDEzNS4yNiAwIDI2NC45ODEgNTMuNzg0IDM2MC42MjUgMTQ5LjUyMiA5NS42NDMgOTUuNzM3IDE0OS4zNzUgMjI1LjU4NSAxNDkuMzc1IDM2MC45NzggMCAyODEuOTQtMjI4LjMzNSA1MTAuNS01MTAgNTEwLjUtMjgxLjY2NSAwLTUxMC0yMjguNTYtNTEwLTUxMC41em01MTAtNTEwLjV2MTAyMW0tNTEwLTUxMC41aDEwMjAiIGZpbGw9IiNmZWZlZmUiLz48cGF0aCBkPSJNMjM3LjQ0IDM0Ni42MjRhNDguNjQgNDguNjQgMCAxIDAgOTcuMjggMCA0OC42NCA0OC42NCAwIDEgMC05Ny4yOCAwek02OTkuOTA0IDM0Ni42MjRhNDguNjQgNDguNjQgMCAxIDAgOTcuMjggMCA0OC42NCA0OC42NCAwIDEgMC05Ny4yOCAwek00MjMuMjk2IDc1OS4yOTZjLTY0IDAtMTE1LjcxMi01Mi4yMjQtMTE1LjcxMi0xMTUuNzEyIDAtMjYuNjI0IDkuMjE2LTUyLjIyNCAyNS42LTcyLjcwNCA5LjIxNi0xMS43NzYgMjYuMTEyLTEzLjMxMiAzNy44ODgtNC4wOTZzMTMuMzEyIDI2LjExMiA0LjA5NiAzNy44ODhjLTkuMjE2IDExLjI2NC0xMy44MjQgMjQuNTc2LTEzLjgyNCAzOC45MTIgMCAzNC4zMDQgMjcuNjQ4IDYxLjk1MiA2MS45NTIgNjEuOTUyczYxLjk1Mi0yNy42NDggNjEuOTUyLTYxLjk1MmMwLTQuMDk2LS41MTItOC4xOTItMS4wMjQtMTEuNzc2LTIuNTYtMTQuODQ4IDYuNjU2LTI4LjY3MiAyMS41MDQtMzEuNzQ0IDE0Ljg0OC0yLjU2IDI4LjY3MiA2LjY1NiAzMS43NDQgMjEuNTA0IDEuNTM2IDcuMTY4IDIuMDQ4IDE0LjMzNiAyLjA0OCAyMi4wMTYtLjUxMiA2My40ODgtNTIuMjI0IDExNS43MTItMTE2LjIyNCAxMTUuNzEyeiIgZmlsbD0iIzMzMyIvPjxwYXRoIGQ9Ik02MDIuMDggNzYwLjI5NmMtNjQgMC0xMTUuNzEyLTUyLjIyNC0xMTUuNzEyLTExNS43MTIgMC0xNC44NDggMTIuMjg4LTI3LjEzNiAyNy4xMzYtMjcuMTM2czI3LjEzNiAxMi4yODggMjcuMTM2IDI3LjEzNmMwIDM0LjMwNCAyNy42NDggNjEuOTUyIDYxLjk1MiA2MS45NTJzNjEuOTUyLTI3LjY0OCA2MS45NTItNjEuOTUyYzAtMTUuMzYtNS42MzItMzAuMjA4LTE1Ljg3Mi00MS40NzItOS43MjgtMTEuMjY0LTkuMjE2LTI4LjE2IDIuMDQ4LTM3Ljg4OCAxMS4yNjQtOS43MjggMjguMTYtOS4yMTYgMzcuODg4IDIuMDQ4IDE5LjQ1NiAyMS41MDQgMjkuNjk2IDQ4LjY0IDI5LjY5NiA3Ny44MjQgMCA2Mi45NzYtNTIuMjI0IDExNS4yLTExNi4yMjQgMTE1LjJ6IiBmaWxsPSIjMzMzIi8+PGVsbGlwc2Ugcnk9IjU4IiByeD0iMTI1IiBjeT0iNTA2LjI4NCIgY3g9IjIwMS4xODMiIGZpbGw9IiNmYWYiLz48ZWxsaXBzZSByeT0iNTgiIHJ4PSIxMjUiIGN5PSI1MDYuMjg0IiBjeD0iODIzLjE4MyIgZmlsbD0iI2ZhZiIvPjwvc3ZnPg==";
         const noImgBase64 = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAyNCIgaGVpZ2h0PSIxMDI0IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNNDI5LjAxMzMzMyA2NDBBMzIgMzIgMCAwIDEgMzg0IDU5NC45ODY2NjdsMzcuNzYtMzcuNzYtMjIuODI2NjY3LTIyLjYxMzMzNC0xMzUuNjggMTM1LjY4IDkwLjQ1MzMzNCA5MC40NTMzMzQgMTM1LjY4LTEzNS42OC0yMi42MTMzMzQtMjIuNjEzMzM0ek01MzQuNjEzMzMzIDM5OC45MzMzMzNsMjIuNjEzMzM0IDIyLjYxMzMzNEw1OTQuOTg2NjY3IDM4NEEzMiAzMiAwIDAgMSA2NDAgNDI5LjAxMzMzM2wtMzcuNzYgMzcuNzYgMjIuNjEzMzMzIDIyLjYxMzMzNCAxMzUuNjgtMTM1LjY4LTkwLjQ1MzMzMy05MC40NTMzMzR6IiBmaWxsPSIjNUU1QzVDIj48L3BhdGg+PHBhdGggZD0iTTUxMiAyMS4zMzMzMzNhNDkwLjY2NjY2NyA0OTAuNjY2NjY3IDAgMSAwIDQ5MC42NjY2NjcgNDkwLjY2NjY2N0E0OTAuNjY2NjY3IDQ5MC42NjY2NjcgMCAwIDAgNTEyIDIxLjMzMzMzM3ogbTMxNi44IDM1NC45ODY2NjdsLTE4MS4xMiAxODEuMTJhMzIgMzIgMCAwIDEtNDUuMjI2NjY3IDBMNTU3LjIyNjY2NyA1MTIgNTEyIDU1Ny4yMjY2NjdsNDUuMjI2NjY3IDQ1LjIyNjY2NmEzMiAzMiAwIDAgMSAwIDQ1LjIyNjY2N2wtMTgxLjEyIDE4MS4xMmEzMiAzMiAwIDAgMS00NS4yMjY2NjcgMGwtMTM1LjY4LTEzNS42OGEzMiAzMiAwIDAgMSAwLTQ1LjIyNjY2N2wxODEuMTItMTgxLjEyYTMyIDMyIDAgMCAxIDQ1LjIyNjY2NyAwTDQ2Ni43NzMzMzMgNTEyIDUxMiA0NjYuNzczMzMzbC00NS4yMjY2NjctNDUuMjI2NjY2YTMyIDMyIDAgMCAxIDAtNDUuMjI2NjY3bDE4MS4xMi0xODEuMTJhMzIgMzIgMCAwIDEgNDUuMjI2NjY3IDBsMTM1LjY4IDEzNS42OGEzMiAzMiAwIDAgMSAwIDQ1LjIyNjY2N3oiIGZpbGw9IiM1RTVDNUMiPjwvcGF0aD4KPC9zdmc+";
@@ -1497,6 +1497,18 @@
                      min-height: ${32 * this.scale}px;
                      text-align: center;
                  }
+                 a.search-jumper-btn:not(.search-jumper-word)>span {
+                     position: absolute;
+                     text-align: center;
+                     width: 100%;
+                     bottom: 0px;
+                     color: black!important;
+                     font-family: Arial, sans-serif;
+                     text-shadow: 0 1px white, 1px 0 white, -1px 0 white, 0 -1px white;
+                     font-size: 12px;
+                     font-weight: bold;
+                     opacity: 0.8;
+                 }
                  .search-jumper-btn>img {
                      width: ${32 * this.scale}px;
                      height: ${32 * this.scale}px;
@@ -1780,7 +1792,7 @@
                      font-family: Arial, sans-serif;
                      font-weight: 500;
                      border-radius: ${20 * this.scale}px!important;
-                     font-size: ${15 * this.scale}px;
+                     font-size: ${14 * this.scale}px;
                      line-height: ${32 * this.scale}px;
                      width: ${32 * this.scale}px;
                      height: ${32 * this.scale}px;
@@ -1833,6 +1845,7 @@
                      width: max-content;
                      line-height: 35px;
                      word-break: break-all;
+                     text-align: center;
                  }
                  .search-jumper-tips * {
                      max-width: 640px;
@@ -6435,8 +6448,8 @@
                 ele.classList.add("search-jumper-word");
                 let word = document.createElement("span");
                 if (!isBookmark && name.length >= 3) {
-                    word.innerText = name.substr(0, 3).trim();
-                    if (!/^\w+$/.test(word.innerText)) word.innerText = word.innerText.substr(0, 2);
+                    word.innerText = name.trim();
+                    if (!/^[\w \-]+$/.test(word.innerText.substr(0, 3))) word.innerText = word.innerText.substr(0, 2);
                 } else word.innerText = name;
                 ele.appendChild(word);
                 let img = document.createElement("img");
@@ -6553,7 +6566,7 @@
                 if (imgSrc) {
                     img.onload = e => {
                         ele.classList.remove("search-jumper-word");
-                        if (word.parentNode) {
+                        if (word.parentNode && !searchData.prefConfig.showEngineWords) {
                             word.parentNode.removeChild(word);
                         }
                         img.style.display = "";
@@ -7182,7 +7195,7 @@
                         if (url) {
                             try {
                                 url = url.replace(/^showTips:/, '');
-                                let tipsResult = /\breturn\b/.test(url) ? await new AsyncFunction('fetch', 'storage', '"use strict";' + url)(GM_fetch, storage) : url;
+                                let tipsResult = await self.anylizeShowTips(url);
                                 if (Array && Array.isArray && Array.isArray(tipsResult)) {
                                     tipsData = tipsResult[1];
                                     tipsResult = tipsResult[0];
@@ -7199,6 +7212,134 @@
                     self.tips.style.opacity = 0;
                 }, false);
                 return ele;
+            }
+
+            async anylizeShowTips(data) {
+                let tipsResult;
+                try {
+                    const calcReg = /([^\\])([\+\-*/])(\d+)$/;
+                    const cacheReg = /\|cache\=(\d+)$/;
+                    data = data.replace(/^showTips:/, '');
+                    if (/^https?:/.test(data)) {
+                        let url = data.split(" ")[0];
+                        data = data.replace(url, "").trim().replace(/\\{/g, "showTipsLeftBrace").replace(/\\}/g, "showTipsRightBrace");
+                        let cache = url.match(cacheReg);
+                        if (cache) {
+                            cache = parseInt(cache[1]);
+                            url = url.replace(cacheReg, "");
+                        } else cache = 86400;
+                        if (cache) {
+                            let tipsIndex = tipsStorage.findIndex(t => t.url == url);
+                            if (tipsIndex != -1) {
+                                let tipsTemp = tipsStorage[tipsIndex];
+                                if (Date.now() - tipsTemp.time < cache) {
+                                    tipsResult = tipsTemp.data;
+                                } else {
+                                    tipsStorage.splice(tipsIndex, 1);
+                                }
+                            }
+                        }
+                        if (!tipsResult) {
+                            let template = data.match(/{(.*?)}/);
+                            if (!template) return;
+                            if (template[1].indexOf("json.") === 0) {
+                                let allValue = [];
+                                tipsResult = await GM_fetch(url).then(r => r.json()).then(r => {
+                                    let finalData = data;
+                                    while (template) {
+                                        let props = template[1].split("."), value = r;
+                                        props.shift();
+                                        props.forEach(prop => {
+                                            let needCalc = prop.match(calcReg);
+                                            if (needCalc) {
+                                                let calcArr = [];
+                                                while (needCalc) {
+                                                    prop = prop.replace(calcReg, "$1");
+                                                    calcArr.unshift([needCalc[2], needCalc[3]]);
+                                                    needCalc = prop.match(calcReg);
+                                                }
+                                                value = parseFloat(value[prop]);
+                                                calcArr.forEach(calc => {
+                                                    let param = parseFloat(calc[1]);
+                                                    switch (calc[0]) {
+                                                        case "+":
+                                                            value += param;
+                                                            break;
+                                                        case "-":
+                                                            value -= param;
+                                                            break;
+                                                        case "*":
+                                                            value *= param;
+                                                            break;
+                                                        case "/":
+                                                            value /= param;
+                                                            break;
+                                                    }
+                                                });
+                                                value = value.toFixed(2);
+                                            } else {
+                                                value = value[prop];
+                                            }
+                                        });
+                                        allValue.push(value);
+                                        finalData = finalData.replace(template[0], value);
+                                        template = finalData.match(/{(.*?)}/);
+                                    }
+                                    finalData = finalData.replace(/showTipsLeftBrace/g, "{").replace(/showTipsRightBrace/g, "}");
+                                    return finalData;
+                                });
+                                tipsResult = [tipsResult, allValue.join(",")];
+                            } else {
+                                tipsResult = await GM_fetch(url).then(r => r.text()).then(r => {
+                                    let doc = document.implementation.createHTMLDocument('');
+                                    doc.documentElement.innerHTML = r;
+                                    let finalData = data;
+                                    while (template) {
+                                        let value = "";
+                                        if (template[1] == "title") {
+                                            value = doc.title;
+                                        } else {
+                                            let selArr = template[1].split("|");
+                                            let eles = doc.querySelectorAll(selArr[0]);
+                                            if (eles && eles.length) {
+                                                if (selArr.length == 1) {
+                                                    value = eles[0].innerText;
+                                                } else {
+                                                    let forEachMatch = selArr[1].match(/\(.*?\)/g);
+                                                    if (forEachMatch) {
+                                                        [].forEach.call(eles, ele => {
+                                                            let _v = selArr[1];
+                                                            forEachMatch.forEach(p => {
+                                                                if (p === "()") {
+                                                                    _v = _v.replace(p, ele.innerText);
+                                                                } else {
+                                                                    _v = _v.replace(p, ele.getAttribute(p.match(/\((.*)\)/)[1]));
+                                                                }
+                                                            });
+                                                            value += _v;
+                                                        });
+                                                    } else {
+                                                        value = eles[0].getAttribute(selArr[1]);
+                                                    }
+                                                }
+                                            } else return;
+                                        }
+                                        finalData = finalData.replace(template[0], value);
+                                        template = finalData.match(/{(.*?)}/);
+                                    }
+                                    finalData = finalData.replace(/showTipsLeftBrace/g, "{").replace(/showTipsRightBrace/g, "}");
+                                    return finalData;
+                                });
+                            }
+                            tipsStorage.push({url:url, data:tipsResult, time: Date.now()});
+                            if (tipsStorage.length > 50) tipsStorage.shift();
+                            storage.setItem("tipsStorage", tipsStorage);
+                        }
+                    } else {
+                        tipsResult = /\breturn\b/.test(data) ? await new AsyncFunction('fetch', 'storage', '"use strict";' + data)(GM_fetch, storage) : data;
+                    }
+                } catch(e) {debug(e)}
+                return tipsResult;
             }
 
             checkScroll(noIntoView, noSmooth) {
@@ -10923,6 +11064,11 @@
             cacheKeywords = await new Promise((resolve) => {
                 storage.getItem("cacheKeywords", data => {
                     resolve(data || '');
+                });
+            });
+            tipsStorage = await new Promise((resolve) => {
+                storage.getItem("tipsStorage", data => {
+                    resolve(data || []);
                 });
             });
             lastSign = await new Promise((resolve) => {
