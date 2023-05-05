@@ -201,7 +201,7 @@
                 url: "https://cli.im/text#p{#text-content=%s&click(#click-create)}"
             }, {
                 name: "💲USD to RMB",
-                url: "showTips:let usd2rmb=await storage.getItem(\"usd2rmb\");let usd2rmbUpdate=await storage.getItem(\"usd2rmbUpdate\");if(!usd2rmbUpdate || usd2rmbUpdate > Date.now()+3600000){usd2rmb=await fetch(`https://api.exchangerate.host/convert?from=USD&to=CNY&amount=1`).then(r=>r.json()).then(r=>r.result).catch(alert);storage.setItem(\"usd2rmb\",usd2rmb||7);storage.setItem(\"usd2rmbUpdate\",Date.now());}let usd=\"%sr\".replace(/\\D/g,\"\"); let rmb=(usd * parseFloat(usd2rmb||7)).toFixed(2);return [`${usd} USD = ${rmb} RMB`,rmb]",
+                url: "showTips:https://api.exchangerate.host/convert?from=USD&to=CNY&amount=1 <i>{json.result*%s} USD = %s RMB</i>",
                 kwFilter: "\\d\\$|\\$\\d"
             } ]
         },
@@ -7330,6 +7330,7 @@
                                     finalData = finalData.replace(/showTipsLeftBrace/g, "{").replace(/showTipsRightBrace/g, "}");
                                     return finalData;
                                 });
+                                tipsResult = [tipsResult, url];
                             }
                             tipsStorage.push({url:url, data:tipsResult, time: Date.now()});
                             if (tipsStorage.length > 50) tipsStorage.shift();
