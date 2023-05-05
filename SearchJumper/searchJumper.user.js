@@ -201,7 +201,7 @@
                 url: "https://cli.im/text#p{#text-content=%s&click(#click-create)}"
             }, {
                 name: "💲USD to RMB",
-                url: "showTips:https://api.exchangerate.host/convert?from=USD&to=CNY&amount=1 <i>{json.result*%s} USD = %s RMB</i>",
+                url: "showTips:https://api.exchangerate.host/convert?from=USD&to=CNY&amount=1 <i>%s USD = {json.result*%s} RMB</i>",
                 kwFilter: "\\d\\$|\\$\\d"
             } ]
         },
