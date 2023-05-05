@@ -24303,14 +24303,14 @@
   "data": {
     "pageElement": "(//div|//li)[starts-with(@class,'Box-row') and not(@class='Box-row--drag-hide position-relative')]",
     "nextLink": "//a[@class='next_page']",
-    "url": "^https:\\/\\/github\\.com\\/[^/]+\\/[^/]+\\/(?:issues|pulls|discussions|actions|forks)",
+    "url": "^https://github\\.com/[^/]+/[^/]+/(?:issues|pulls|discussions|actions|forks)",
     "exampleUrl": "https://github.com/azu/promises-book/issues?page=2&q=is%3Aissue+is%3Aclosed\r\nhttps://github.com/azu/promises-book/pulls?q=is%3Apr+is%3Aclosed"
   },
   "database_resource_url": "http://wedata.net/databases/AutoPagerize",
   "created_by": "t_f_m",
   "name": "GitHub - Issues Pulls Discussions Actions Forks",
   "created_at": "2014-09-15T01:16:14+09:00",
-  "updated_at": "2023-03-15T03:35:26+09:00"
+  "updated_at": "2023-05-05T05:27:25+09:00"
 },
 {
   "resource_url": "http://wedata.net/items/76334",
