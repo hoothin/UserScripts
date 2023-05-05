@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.36.14
+// @version      1.9.36.15
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -1521,17 +1521,11 @@
                     }
                     if (curHeight / bodyHeight <= 0.25) {
                         let article = doc.querySelectorAll(mainSel);
-                        if (article && article.length > 0) {
-                            if (article.length == 1) {
-                                article = article[0];
-                                self.curSiteRule.pageElement = article.nodeName.toLowerCase() + (article.id ? "#" + article.id : "") + (article.className ? "." + article.className.replace(/ /g, ".") : "") + ">*";
-                                debug(self.curSiteRule.pageElement, 'Page element');
-                                return article.children;
-                            } else {
-                                self.curSiteRule.pageElement = mainSel;
-                                debug(self.curSiteRule.pageElement, 'Page element');
-                                return article;
-                            }
+                        if (article && article.length == 1) {
+                            article = article[0];
+                            self.curSiteRule.pageElement = article.nodeName.toLowerCase() + (article.id ? "#" + article.id : "") + (article.className ? "." + article.className.replace(/ /g, ".") : "") + ">*";
+                            debug(self.curSiteRule.pageElement, 'Page element');
+                            return article.children;
                         }
                         self.curSiteRule.pageElement = allOfBody;
                         debug(self.curSiteRule.pageElement, 'Page element');
@@ -3136,7 +3130,7 @@
                 clearTimeout(self.hideTimer);
                 self.hideTimer = setTimeout(() => {
                     frame.classList.add("minSize");
-                }, 2000);
+                }, 800);
             });
 
             pre.addEventListener("click", e => {
@@ -3194,6 +3188,7 @@
                 e.preventDefault();
                 picker.start();
             };
+            let removeTimer;
 
             let mouseMoveHandler = e => {
                 if (moving) {
@@ -3205,9 +3200,11 @@
                     this.frame.style.left = `calc(${initX}% - 40px)`;
                 } else if (Math.abs(e.clientX - initX) + Math.abs(e.clientY - initY) > 20) {
                     moving = true;
+                    clearTimeout(removeTimer);
                 }
             };
             let mouseUpHandler = e => {
+                clearTimeout(removeTimer);
                 document.removeEventListener("mousemove", mouseMoveHandler, true);
                 document.removeEventListener("mouseup", mouseUpHandler, true);
                 if (moving) {
@@ -3220,6 +3217,10 @@
                 initX = e.clientX;
                 initY = e.clientY;
                 moving = false;
+                clearTimeout(removeTimer);
+                removeTimer = setTimeout(() => {
+                    self.remove();
+                }, 1500);
                 document.addEventListener("mousemove", mouseMoveHandler, true);
                 document.addEventListener("mouseup", mouseUpHandler, true);
             }, true);
@@ -4419,7 +4420,7 @@
                  input[type=number] {
                   -moz-appearance:textfield;
                  }
-                 div[tabindex="0"]:not([data-selector]) {
+                 react-app>div>div>div>div>div>div>div[tabindex="0"]:not([data-selector]) {
                   display: none;
                  }
                  table td>h3 {
@@ -5336,15 +5337,10 @@
                 }
                 if (inCors && (!pageElement || pageElement.length == 0) && ruleParser.curSiteRule.singleUrl) {
                     let article = doc.querySelectorAll(mainSel);
-                    if (article && article.length > 0) {
-                        if (article.length == 1) {
-                            article = article[0];
-                            ruleParser.curSiteRule.pageElement = article.nodeName.toLowerCase() + (article.id ? "#" + article.id : "") + (article.className ? "." + article.className.replace(/ /g, ".") : "") + ">*";
-                            pageElement = article.children;
-                        } else {
-                            ruleParser.curSiteRule.pageElement = mainSel;
-                            pageElement = article;
-                        }
+                    if (article && article.length == 1) {
+                        article = article[0];
+                        ruleParser.curSiteRule.pageElement = article.nodeName.toLowerCase() + (article.id ? "#" + article.id : "") + (article.className ? "." + article.className.replace(/ /g, ".") : "") + ">*";
+                        pageElement = article.children;
                     } else {
                         ruleParser.curSiteRule.pageElement = allOfBody;
                         pageElement = ruleParser.getPageElement(doc);
