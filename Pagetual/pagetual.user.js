@@ -5158,9 +5158,8 @@
             }
             if (rulesData.blacklist && rulesData.blacklist.length > 0) {
                 let href = location.href.slice(0, 500);
-                for (let b in rulesData.blacklist) {
-                    let curGlob = rulesData.blacklist[b];
-                    if (!curGlob) continue;
+                rulesData.blacklist.forEach(curGlob => {
+                    if (!curGlob) return;
                     if (curGlob.indexOf("/") == 0) {
                         let regMatch = curGlob.match(/^\/(.*)\/(\w*)$/);
                         if (regMatch && new RegExp(regMatch[1], regMatch[2]).test(href)) {
@@ -5171,7 +5170,7 @@
                         forceState == 1;
                         return;
                     }
-                }
+                });
             }
             ruleParser.initSavedRules(() => {
                 let upBtnImg = rulesData.upBtnImg, downBtnImg = rulesData.downBtnImg, _sideControllerIcon = rulesData.sideControllerIcon;
