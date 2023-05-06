@@ -6618,13 +6618,14 @@
                     self.customInput = false;
                     let selStr = getSelectStr();
                     let keywords = self.searchJumperInputKeyWords.value || selStr;
-                    if (!keywords && /%s[lure]?/.test(data.url)) {
+                    let hasWordParam = /%s[lure]?\b/.test(data.url);
+                    if (!keywords) {
+                        keywords = getKeywords();
+                    }
+                    if (!keywords && hasWordParam) {
                         if (typeof navigator.clipboard.readText !== "undefined") {
                             keywords = await navigator.clipboard.readText();
                         }
-                    }
-                    if (!keywords) {
-                        keywords = getKeywords();
                     }
                     if (keywords && keywords != cacheKeywords) {
                         cacheKeywords = keywords;
@@ -6772,7 +6773,6 @@
                     let targetUrl = '';
                     let targetName = selStr || document.title;
                     let imgBase64 = '', resultUrl = customVariable(ele.dataset.url);
-                    let hasWordParam = /%s[lure]?\b/.test(data.url);
                     if (targetElement && targetElement.nodeName) {
                         targetUrl = (typeData.selectImg || typeData.selectAudio || typeData.selectVideo) ? (targetElement.src || '') : (targetElement.href || (targetElement.parentNode && targetElement.parentNode.href) || '');
                         if (targetElement.nodeName.toUpperCase() == "VIDEO" || targetElement.nodeName.toUpperCase() == "AUDIO") {
