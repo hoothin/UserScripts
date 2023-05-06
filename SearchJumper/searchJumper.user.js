@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.81.64
+// @version      1.6.6.82.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -529,7 +529,9 @@
                         sleepOutput: '休眠<span title="#t#">#t#</span>毫秒',
                         inputNewValue: '请输入新值',
                         deleteConfirm: '确定要删除此项吗？',
-                        sleepPrompt: '等待时间（毫秒）'
+                        sleepPrompt: '等待时间（毫秒）',
+                        startCache: '开始缓存，请耐心等待缓存完毕，勿关闭配置页！',
+                        cacheOver: '所有图标都已缓存完毕！'
                     };
                     break;
                 case "zh-TW":
@@ -618,7 +620,9 @@
                         sleepOutput: '休眠<span title="#t#">#t#</span>毫秒',
                         inputNewValue: '請輸入新值',
                         deleteConfirm: '確定要刪除此項嗎？ ',
-                        sleepPrompt: '等待時間（毫秒）'
+                        sleepPrompt: '等待時間（毫秒）',
+                        startCache: '開始緩存，請耐心等待緩存完畢，勿關閉配置頁！',
+                        cacheOver: '所有圖標都已緩存完畢！'
                     };
                     break;
                 default:
@@ -706,7 +710,9 @@
                         sleepOutput: 'Sleep for <span title="#t#">#t#</span> milliseconds',
                         inputNewValue: 'Please enter a new value',
                         deleteConfirm: 'Are you sure you want to delete this item? ',
-                        sleepPrompt: 'Wait time (milliseconds)'
+                        sleepPrompt: 'Wait time (milliseconds)',
+                        startCache: 'Start cache icons of engines, do not close this page!',
+                        cacheOver: 'All icons cached!'
                     };
                     break;
             }
@@ -720,7 +726,7 @@
             if(enableDebug) {
                 console.log(
                     `%c【SearchJumper v.${_GM_info.script.version}】 ${title ? title : 'debug'}`,
-                    'color: yellow;font-size: large;font-weight: bold;',
+                    'color: orange;font-size: large;font-weight: bold;',
                     str
                 );
             }
@@ -735,7 +741,7 @@
             _GM_xmlhttpRequest = GM.xmlHttpRequest;
             GM_fetch = true;
         } else {
-            _GM_xmlhttpRequest = (f) => {fetch(f.url).then(response => response.text()).then(data => {let res = {response: data};f.onload(res)}).catch(f.onerror())};
+            _GM_xmlhttpRequest = (f) => {fetch(f.url, {method: f.method || 'GET', body: f.data || '', headers: f.headers}).then(response => response.text()).then(data => {f.onload({response: data})}).catch(f.onerror())};
         }
         if (GM_fetch) {
             GM_fetch = async (url, option) => {
@@ -4594,7 +4600,6 @@
                         }
                     });
                 }
-                cacheImgManager();
 
                 if (lastSign) {
                     targetElement = lastSign.target;
@@ -5395,7 +5400,7 @@
                             let siteImg = siteBtn.querySelector('img');
                             if (siteImg && siteImg.dataset.src) {
                                 siteImg.src = siteImg.dataset.src;
-                                siteImg.dataset.src = '';
+                                delete siteImg.dataset.src;
                             }
                             self.historySiteBtns.push(siteBtn);
                             break;
@@ -5589,7 +5594,7 @@
                     [].forEach.call(list.querySelectorAll("div>a>img"), img => {
                         if (img.dataset.src) {
                             img.src = img.dataset.src;
-                            img.dataset.src = "";
+                            delete img.dataset.src;
                         }
                     });
                 }
@@ -5979,7 +5984,7 @@
                             let si = se.querySelector("img");
                             if (si && !si.src && si.dataset.src) {
                                 si.src = si.dataset.src;
-                                si.dataset.src = "";
+                                delete si.dataset.src;
                             }
                             let data = sites[i];
                             if (data.match && data.hideNotMatch) {
@@ -7545,7 +7550,7 @@
                         [].forEach.call(targetSiteImgs, siteImg => {
                             if (siteImg.dataset.src) {
                                 siteImg.src = siteImg.dataset.src;
-                                siteImg.dataset.src = '';
+                                delete siteImg.dataset.src;
                             }
                         });
                     }
@@ -8059,7 +8064,7 @@
             targetElement.dispatchEvent(event);
             event = new KeyboardEvent('keypress', eventParam);
             targetElement.dispatchEvent(event);
-            debug(targetElement, `press ${v}`);
+            debug(targetElement, `press ${v || 'Enter'}`);
         }
 
         async function waitForElement(sel) {
@@ -8291,33 +8296,38 @@
                 ctx.drawImage(img, 0, 0);
                 return (canvas.toDataURL("image/png"));
             } else {
-                return new Promise((resolve) => {
-                    _GM_xmlhttpRequest({
-                        method: 'GET',
-                        url: img.src,
-                        responseType:'arraybuffer',
-                        headers: {
-                            origin: urlSplit[0] + "//" + urlSplit[2],
-                            referer: img.src,
-                            accept: "*/*"
-                        },
-                        onload: function(d) {
-                            var binary = '';
-                            var bytes = new Uint8Array(d.response);
-                            for (var len = bytes.byteLength, i = 0; i < len; i++) {
-                                binary += String.fromCharCode(bytes[i]);
-                            }
-                            resolve(`data:image/jpeg;base64,${window.btoa(binary)}`);
-                        },
-                        onerror: function(){
-                            resolve(null);
-                        },
-                        ontimeout: function(){
-                            resolve(null);
-                        }
-                    });
-                });
+                return await imageSrc2Base64(img.src);
             }
+        }
+
+        async function imageSrc2Base64(src) {
+            let urlSplit = src.split("/");
+            return new Promise((resolve) => {
+                _GM_xmlhttpRequest({
+                    method: 'GET',
+                    url: src,
+                    responseType:'arraybuffer',
+                    headers: {
+                        origin: urlSplit[0] + "//" + urlSplit[2],
+                        referer: src,
+                        accept: "*/*"
+                    },
+                    onload: function(d) {
+                        var binary = '';
+                        var bytes = new Uint8Array(d.response);
+                        for (var len = bytes.byteLength, i = 0; i < len; i++) {
+                            binary += String.fromCharCode(bytes[i]);
+                        }
+                        resolve(`data:image/jpeg;base64,${window.btoa(binary)}`);
+                    },
+                    onerror: function(){
+                        resolve(null);
+                    },
+                    ontimeout: function(){
+                        resolve(null);
+                    }
+                });
+            });
         }
 
         function icon2Base64(icon) {
@@ -8337,14 +8347,6 @@
             return canvas.toDataURL("image/png");
         }
 
-        async function cacheImg(img) {
-            if (cacheIcon[img.src]) return;
-            let cache = await image2Base64(img);
-            if (cache == 'data:,' || !cache) cache = 'fail';
-            cacheIcon[img.src] = cache;
-            storage.setItem("cacheIcon", cacheIcon);
-        }
-
         function cacheFontIcon(icon) {
             let iconName = icon.className.trim().replace('fa fa-', '').replace(/ /g, '_');
             if (cacheIcon[iconName]) return;
@@ -8362,29 +8364,14 @@
             });
             if (!searchData.prefConfig.cacheSwitch) return;
             if (target.nodeName.toUpperCase() == 'IMG') {
-                if (!target.src && target.dataset.src) target.src = target.dataset.src;
-                let cache;
-                if (target.complete) {
-                    if (target.naturalHeight && target.naturalWidth) {
-                        await cacheImg(target);
-                    } else {
-                        cacheIcon[target.src] = 'fail';
-                        storage.setItem("cacheIcon", cacheIcon);
-                    }
-                } else {
-                    let loaded = await new Promise((resolve) => {
-                        target.addEventListener('load', e => {
-                            resolve(true);
-                        }, true);
-                        target.addEventListener('error', e => {
-                            resolve(false);
-                        }, true);
-                    });
-                    if (loaded) await cacheImg(target);
-                    else {
-                        cacheIcon[target.src] = 'fail';
-                        storage.setItem("cacheIcon", cacheIcon);
-                    }
+                let src = target.src || target.dataset.src;
+                if (src) {
+                    if (cacheIcon[src]) return;
+                    let cache = await imageSrc2Base64(src);
+                    if (cache == 'data:,' || !cache) cache = 'fail';
+                    cacheIcon[src] = cache;
+                    storage.setItem("cacheIcon", cacheIcon);
+                    debug(src + " cached");
                 }
             } else {
                 cacheFontIcon(target);
@@ -8398,9 +8385,7 @@
                     await cacheAction(cachePool.shift());
                 }
                 if (needCache) {
-                    let str = 'All img icons cached!';
-                    debug(str);
-                    if (noti) _GM_notification(str);
+                    if (noti) _GM_notification(i18n("cacheOver"));
                 }
             }
         }
@@ -8414,7 +8399,6 @@
                 if (needCache) {
                     let str = 'All font icons cached!';
                     debug(str);
-                    if (noti) _GM_notification(str);
                 }
             }
         }
@@ -9279,6 +9263,8 @@
                 document.addEventListener('received', e => {
                     received = true;
                     clearTimeout(sendMessageTimer);
+                    debug("Start cache!");
+                    cacheImgManager();
                 });
 
                 document.addEventListener('downloadCache', e => {
@@ -9374,9 +9360,7 @@
                         });
                         storage.setItem("cacheIcon", newCache);
                         if (searchData.prefConfig.cacheSwitch) {
-                            let str = 'SearchJumper start cache!';
-                            debug(str);
-                            _GM_notification(str);
+                            _GM_notification(i18n('startCache'));
                             searchBar.appendBar();
                             setTimeout(() => {
                                 cacheFontManager(true);
