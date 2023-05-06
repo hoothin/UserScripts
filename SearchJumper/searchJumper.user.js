@@ -6619,7 +6619,9 @@
                     let selStr = getSelectStr();
                     let keywords = self.searchJumperInputKeyWords.value || selStr;
                     if (!keywords && /%s[lure]?/.test(data.url)) {
-                        keywords = await navigator.clipboard.readText();
+                        if (typeof navigator.clipboard.readText !== "undefined") {
+                            keywords = await navigator.clipboard.readText();
+                        }
                     }
                     if (!keywords) {
                         keywords = getKeywords();
