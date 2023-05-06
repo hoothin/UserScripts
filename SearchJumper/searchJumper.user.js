@@ -7251,7 +7251,7 @@
                                     }
                                 } catch(e) {debug(e)}
                             }
-                        }, 300);
+                        }, 500);
                     }
                 }, false);
                 ele.addEventListener('mouseleave', e => {
