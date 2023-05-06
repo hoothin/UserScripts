@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.80.64
+// @version      1.6.6.81.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -201,7 +201,7 @@
                 url: "https://cli.im/text#p{#text-content=%s&click(#click-create)}"
             }, {
                 name: "💲USD to RMB",
-                url: "showTips:https://api.exchangerate.host/convert?from=USD&to=CNY&amount=1 <i>%s USD = {json.result*%s} RMB</i>",
+                url: "showTips:https://api.exchangerate.host/convert?from=USD&to=CNY&amount=1 <i>%s USD = {json.result*%s.replace(/\D/,'')} RMB</i>",
                 kwFilter: "\\d\\$|\\$\\d"
             } ]
         },
@@ -7208,25 +7208,29 @@
 
                 ele.addEventListener('mouseenter', async e => {
                     tipsData = null;
+                    clearTimeout(self.requestShowTipsTimer);
+                    self.tipsPos(ele, ele.dataset.name);
                     if (showTips) {
-                        let url = await getUrl();
-                        let tips = ele.dataset.name;
-                        self.tipsPos(ele, tips);
-                        if (url) {
-                            try {
-                                url = url.replace(/^showTips:/, '');
-                                let tipsResult = await self.anylizeShowTips(url);
-                                if (Array && Array.isArray && Array.isArray(tipsResult)) {
-                                    tipsData = tipsResult[1];
-                                    tipsResult = tipsResult[0];
-                                }
-                                if (tipsResult) {
-                                    tips += "<br/>" + tipsResult;
-                                    self.tipsPos(ele, tips);
-                                }
-                            } catch(e) {debug(e)}
-                        }
-                    } else self.tipsPos(ele, ele.dataset.name);
+                        self.requestShowTipsTimer = setTimeout(async() => {
+                            let url = await getUrl();
+                            let tips = ele.dataset.name;
+                            self.tipsPos(ele, tips + "<br/>Loading...");
+                            if (url) {
+                                try {
+                                    url = url.replace(/^showTips:/, '');
+                                    let tipsResult = await self.anylizeShowTips(url);
+                                    if (Array && Array.isArray && Array.isArray(tipsResult)) {
+                                        tipsData = tipsResult[1];
+                                        tipsResult = tipsResult[0];
+                                    }
+                                    if (tipsResult) {
+                                        tips += "<br/>" + tipsResult;
+                                        self.tipsPos(ele, tips);
+                                    }
+                                } catch(e) {debug(e)}
+                            }
+                        }, 300);
+                    }
                 }, false);
                 ele.addEventListener('mouseleave', e => {
                     self.tips.style.opacity = 0;
@@ -7252,7 +7256,7 @@
                             let tipsIndex = tipsStorage.findIndex(t => t.url == url);
                             if (tipsIndex != -1) {
                                 let tipsTemp = tipsStorage[tipsIndex];
-                                if (Date.now() - tipsTemp.time < cache) {
+                                if (Date.now()/1000 - tipsTemp.time < cache) {
                                     tipsResult = tipsTemp.data;
                                 } else {
                                     tipsStorage.splice(tipsIndex, 1);
@@ -7358,7 +7362,7 @@
                                 if (!tipsResult) tipsResult = "No result";
                                 tipsResult = [tipsResult, url];
                             }
-                            tipsStorage.push({url:url, data:tipsResult, time: Date.now()});
+                            tipsStorage.push({url:url, data:tipsResult, time: Date.now()/1000});
                             if (tipsStorage.length > 50) tipsStorage.shift();
                             storage.setItem("tipsStorage", tipsStorage);
                         }
