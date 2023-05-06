@@ -7179,7 +7179,15 @@
                         }
                     }
                     if (shift && !ctrl && !meta && !alt && e.isTrusted) return;
-                    if ((alt || ctrl || meta || shift) && isPage) {
+                    if (/^(chrome|edge|about):/.test(targetUrlData)) {
+                        if (e.preventDefault) e.preventDefault();
+                        if (e.stopPropagation) e.stopPropagation();
+                        if (ctrl) {
+                            _GM_openInTab(targetUrlData);
+                        } else {
+                            _GM_openInTab(targetUrlData, {active: true});
+                        }
+                    } else if ((alt || ctrl || meta || shift) && isPage) {
                         if ((ctrl || meta) && shift) {
                             _GM_openInTab(targetUrlData, {incognito: true});
                         } else if (ctrl || meta) {
