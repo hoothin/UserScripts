@@ -49,6 +49,15 @@
 (function() {
     'use strict';
     if (window.name === 'pagetual-iframe' || (window.frameElement && window.frameElement.name === 'pagetual-iframe')) return;
+    if (window.top != window.self) {
+        try {
+            if (window.self.innerWidth < 300 || window.self.innerHeight < 300) {
+                return;
+            }
+        } catch(e) {
+            return;
+        }
+    }
     const configPage = 'https://hoothin.github.io/SearchJumper';
     const importPageReg = /^https:\/\/github\.com\/hoothin\/SearchJumper(\/issue|$)|^https:\/\/greasyfork\.org\/.*\/scripts\/445274[\-\/].*\/discussions/i;
     const isAllPage = /^https:\/\/hoothin\.github\.io\/SearchJumper\/all\.html/.test(location.href);
@@ -11252,9 +11261,6 @@
 
         var inited = false;
         async function init(cb) {
-            if (window.top != window.self && getBody(document).clientHeight < 100 && getBody(document).clientWidth < 100) {
-                return;
-            }
             if (inited) {
                 if (cb) cb();
                 return;
