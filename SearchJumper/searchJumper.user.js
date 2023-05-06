@@ -5280,7 +5280,7 @@
                 currentSite = data;
                 siteEle.classList.add('current');
                 localKeywords = "";
-                if (!/#p{/.test(data.url) && /%s[lurst]?\b/.test(data.url)) {
+                if (!/#p{|^showTips/.test(data.url) && /%s[lurst]?\b/.test(data.url)) {
                     let keywords = getKeywords();
                     if (keywords && keywords != cacheKeywords) {
                         cacheKeywords = keywords;
