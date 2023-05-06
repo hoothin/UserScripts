@@ -10,7 +10,7 @@
 // @name:it      Pagetual
 // @name:ko      東方永頁機
 // @namespace    hoothin
-// @version      1.9.36.15
+// @version      1.9.36.16
 // @description  Perpetual pages - Most powerful auto-pager script. Auto loading next paginated web pages and inserting into current page. Support thousands of web sites without any rule.
 // @description:zh-CN  终极自动翻页 - 加载并拼接下一分页内容至当前页尾，智能适配任意网页
 // @description:zh-TW  終極自動翻頁 - 加載並拼接下一分頁內容至當前頁尾，智能適配任意網頁
@@ -2020,11 +2020,13 @@
                     let ariaLabel = aTag.getAttribute("aria-label");
                     if (ariaLabel && /slick|slide|gallery/i.test(ariaLabel)) continue;
                     if (aTag.parentNode) {
-                        if (aTag.parentNode.className && /slick|slide|gallery|control/i.test(aTag.parentNode.className)) continue;
+                        if (aTag.parentNode.className && /slick|slide|gallery/i.test(aTag.parentNode.className)) continue;
                         if (aTag.parentNode.classList && aTag.parentNode.classList.contains('disabled')) continue;
                         if (aTag.parentNode.classList && aTag.parentNode.classList.contains('active')) continue;
                         if (/^BLOCKQUOTE$/i.test(aTag.parentNode.nodeName)) continue;
                     }
+                    if (aTag.previousElementSibling && /\b(play|volume)\b/.test(aTag.previousElementSibling.className)) continue;
+                    if (aTag.nextElementSibling && /\b(play|volume)\b/.test(aTag.nextElementSibling.className)) continue;
                     let isJs = !aTag.href || !aTag.href.replace || /^(javascript|#)/.test(aTag.href.replace(location.href, ""));
                     if (innerText) {
                         innerText = innerText.split(/\n/)[0].replace(/ /g, '');
@@ -4929,7 +4931,7 @@
             if (opacity > 100) opacity = 100;
             else if (opacity < 0) opacity = 0;
             rulesData.opacity = opacity / 100;
-            rulesData.blacklist = blacklistInput.value ? blacklistInput.value.split("\n") : "";
+            rulesData.blacklist = blacklistInput.value ? blacklistInput.value.trim().split("\n") : "";
             rulesData.hideBar = hideBarInput.checked;
             rulesData.hideBarButNoStop = hideBarButNoStopInput.checked;
             rulesData.dbClick2Stop = dbClick2StopInput.checked;
@@ -5158,6 +5160,7 @@
                 let href = location.href.slice(0, 500);
                 for (let b in rulesData.blacklist) {
                     let curGlob = rulesData.blacklist[b];
+                    if (!curGlob) continue;
                     if (curGlob.indexOf("/") == 0) {
                         let regMatch = curGlob.match(/^\/(.*)\/(\w*)$/);
                         if (regMatch && new RegExp(regMatch[1], regMatch[2]).test(href)) {
