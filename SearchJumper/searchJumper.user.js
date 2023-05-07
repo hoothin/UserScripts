@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.88.64
+// @version      1.6.7.88.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -7288,8 +7288,64 @@
                                 }
                             }
                         }
-                        if (!tipsResult) {
-                            let template = data.match(/{(.*?)}/);
+
+                        let allValue = [];
+                        let calcJson = (json, template) => {
+                            let finalData = data;
+                            while (template) {
+                                let props = template[1].split("."), value = json;
+                                props.shift();
+                                props.forEach(prop => {
+                                    let needCalc = prop.match(calcReg);
+                                    if (needCalc) {
+                                        let calcArr = [];
+                                        while (needCalc) {
+                                            prop = prop.replace(calcReg, "$1");
+                                            calcArr.unshift([needCalc[2], needCalc[3]]);
+                                            needCalc = prop.match(calcReg);
+                                        }
+                                        value = value[prop];
+                                        if (!value) return null;
+                                        value = parseFloat(value);
+                                        calcArr.forEach(calc => {
+                                            let param = parseFloat(calc[1]);
+                                            switch (calc[0]) {
+                                                case "+":
+                                                    value += param;
+                                                    break;
+                                                case "-":
+                                                    value -= param;
+                                                    break;
+                                                case "*":
+                                                    value *= param;
+                                                    break;
+                                                case "/":
+                                                    value /= param;
+                                                    break;
+                                            }
+                                        });
+                                        value = value.toFixed(2);
+                                    } else {
+                                        value = value[prop];
+                                        if (!value) return null;
+                                    }
+                                });
+                                allValue.push(value);
+                                finalData = finalData.replace(template[0], value);
+                                template = finalData.match(/{(.*?)}/);
+                            }
+                            finalData = finalData.replace(/showTipsLeftBrace/g, "{").replace(/showTipsRightBrace/g, "}");
+                            return finalData;
+                        }
+
+                        let template = data.match(/{(.*?)}/);
+                        if (tipsResult) {
+                            if (template && template[1].indexOf("json.") === 0) {
+                                tipsResult = calcJson(tipsResult, template);
+                                tipsResult = [tipsResult, "\n" + allValue.join(",")];
+                            }
+                        } else {
+                            let storeData;
                             if (!template) return;
                             let postMatch = url.match(postReg), fetchOption = {}, _url = url;
                             if (postMatch) {
@@ -7301,50 +7357,8 @@
                                 let allValue = [];
                                 tipsResult = await GM_fetch(_url, fetchOption).then(r => r.json()).then(r => {
                                     if (!r) return null;
-                                    let finalData = data;
-                                    while (template) {
-                                        let props = template[1].split("."), value = r;
-                                        props.shift();
-                                        props.forEach(prop => {
-                                            let needCalc = prop.match(calcReg);
-                                            if (needCalc) {
-                                                let calcArr = [];
-                                                while (needCalc) {
-                                                    prop = prop.replace(calcReg, "$1");
-                                                    calcArr.unshift([needCalc[2], needCalc[3]]);
-                                                    needCalc = prop.match(calcReg);
-                                                }
-                                                value = value[prop];
-                                                if (!value) return null;
-                                                value = parseFloat(value);
-                                                calcArr.forEach(calc => {
-                                                    let param = parseFloat(calc[1]);
-                                                    switch (calc[0]) {
-                                                        case "+":
-                                                            value += param;
-                                                            break;
-                                                        case "-":
-                                                            value -= param;
-                                                            break;
-                                                        case "*":
-                                                            value *= param;
-                                                            break;
-                                                        case "/":
-                                                            value /= param;
-                                                            break;
-                                                    }
-                                                });
-                                                value = value.toFixed(2);
-                                            } else {
-                                                value = value[prop];
-                                                if (!value) return null;
-                                            }
-                                        });
-                                        allValue.push(value);
-                                        finalData = finalData.replace(template[0], value);
-                                        template = finalData.match(/{(.*?)}/);
-                                    }
-                                    finalData = finalData.replace(/showTipsLeftBrace/g, "{").replace(/showTipsRightBrace/g, "}");
+                                    storeData = r;
+                                    let finalData = calcJson(r, template);
                                     return finalData;
                                 });
                                 if (!tipsResult) tipsResult = "No result";
@@ -7392,8 +7406,9 @@
                                 });
                                 if (!tipsResult) tipsResult = "No result";
                                 tipsResult = [tipsResult, url];
+                                storeData = tipsResult;
                             }
-                            tipsStorage.push({url: url, data: tipsResult, time: Date.now()/1000});
+                            tipsStorage.push({url: url, data: storeData, time: Date.now()/1000});
                             if (tipsStorage.length > 50) tipsStorage.shift();
                             storage.setItem("tipsStorage", tipsStorage);
                         }
