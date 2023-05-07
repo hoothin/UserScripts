@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.84.64
+// @version      1.6.6.85.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -756,13 +756,16 @@
             GM_fetch = async (url, option) => {
                 if (!url) return null;
                 return new Promise((resolve) => {
+                    let isPost = option && /^post$/i.test(option.method);
                     _GM_xmlhttpRequest({
                         method: (option && option.method) || 'GET',
                         url: url,
                         data: (option && option.body) || '',
                         headers: (option && option.headers) || {
                             referer: url,
-                            origin: url
+                            origin: url,
+                            "Content-Type": (isPost ? "application/x-www-form-urlencoded" : "text/html"),
+                            'X-Requested-With': (isPost ? 'XMLHttpRequest' : '')
                         },
                         onload: function(d) {
                             let response = d.response;
@@ -7265,9 +7268,12 @@
                 try {
                     const calcReg = /([^\\])([\+\-*/])(\d+)$/;
                     const cacheReg = /\|cache\=(\d+)$/;
+                    const postReg = /%p{(.*)}/;
                     data = data.replace(/^showTips:/, '');
                     if (/^https?:/.test(data)) {
-                        let url = data.split(" ")[0];
+                        let url = data.split("\n");
+                        if (url.length == 1) url = data.split(" ");
+                        url = url[0];
                         data = data.replace(url, "").trim().replace(/\\{/g, "showTipsLeftBrace").replace(/\\}/g, "showTipsRightBrace");
                         let cache = url.match(cacheReg);
                         if (cache) {
@@ -7288,9 +7294,15 @@
                         if (!tipsResult) {
                             let template = data.match(/{(.*?)}/);
                             if (!template) return;
+                            let postMatch = url.match(postReg), fetchOption = {};
+                            if (postMatch) {
+                                fetchOption.body = postMatch[1];
+                                fetchOption.method = "POST";
+                                url = url.replace(postMatch[0], "");
+                            }
                             if (template[1].indexOf("json.") === 0) {
                                 let allValue = [];
-                                tipsResult = await GM_fetch(url).then(r => r.json()).then(r => {
+                                tipsResult = await GM_fetch(url, fetchOption).then(r => r.json()).then(r => {
                                     if (!r) return null;
                                     let finalData = data;
                                     while (template) {
@@ -7339,9 +7351,9 @@
                                     return finalData;
                                 });
                                 if (!tipsResult) tipsResult = "No result";
-                                tipsResult = [tipsResult, allValue.join(",")];
+                                tipsResult = [tipsResult, "\n" + allValue.join(",")];
                             } else {
-                                tipsResult = await GM_fetch(url).then(r => r.text()).then(r => {
+                                tipsResult = await GM_fetch(url, fetchOption).then(r => r.text()).then(r => {
                                     let doc = document.implementation.createHTMLDocument('');
                                     doc.documentElement.innerHTML = r;
                                     let finalData = data;
