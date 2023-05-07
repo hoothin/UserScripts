@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.6.86.64
+// @version      1.6.6.87.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -1226,19 +1226,17 @@
                  #search-jumper-alllist>.timeInAll,
                  #search-jumper-alllist>.dayInAll {
                      position: fixed;
-                     top: 0;
-                     width: 10%;
+                     bottom: 5%;
                      font-size: 1.5vw;
                      line-height: 1;
                      color: white;
                      height: 60px;
-                     display: flex;
-                     justify-content: center;
-                     align-items: center;
                      opacity: 0.6;
                      font-weight: bold;
                      font-family: Arial,sans-serif;
-                     overflow-wrap: anywhere;
+                     overflow-wrap: normal;
+                     white-space: nowrap;
+                     margin: 20px;
                      pointer-events: none;
                  }
                  #search-jumper-alllist>.dayInAll {
@@ -1267,7 +1265,7 @@
                  .search-jumper-searchBar {
                      z-index: 2147483647;
                      overflow-wrap: break-word;
-                     background: #505050;
+                     background: #505050cc;
                      border-radius: ${this.scale * 21}px!important;
                      border: 1px solid #b3b3b3;
                      display: inline-flex;
@@ -1540,8 +1538,13 @@
                  }
                  .search-jumper-btn>b {
                      line-height: ${32 * this.scale}px;
+                     font-size: ${13 * this.scale}px;
                      letter-spacing: 0;
                      color: white;
+                     opacity: 0.9;
+                 }
+                 .search-jumper-btn:hover>b {
+                     opacity: 1;
                  }
                  .search-jumper-btn.noIcon>b {
                      color: #f6e9d2;
@@ -1728,7 +1731,7 @@
                      border-radius: 10px;
                      box-shadow: 0px 0px 10px 0px #7a7a7a;
                      padding: 0 0 10px 0;
-                     background: #ffffffe0;
+                     background: #ffffffee;
                      opacity: 1;
                      border: 0;
                  }
@@ -2377,7 +2380,7 @@
                      }
 
                      #search-jumper .sitelist > .sitelistCon {
-                         background-color: #1C2127e0 !important;
+                         background-color: #1C2127ee !important;
                      }
 
                      #search-jumper .sitelist > .sitelistCon > div:hover {
@@ -5822,11 +5825,9 @@
                 let img = document.createElement("img");
                 let iEle = document.createElement("b");
                 if (type.length >= 3) {
-                    iEle.innerText = type.substr(0, 3).trim();
-                    if (!/^\w+$/.test(iEle.innerText)) iEle.innerText = iEle.innerText.substr(0, 2);
+                    iEle.innerText = type.trim();
+                    if (!/^[\w \-]+$/.test(iEle.innerText.substr(0, 3))) iEle.innerText = iEle.innerText.substr(0, 2);
                 } else iEle.innerText = type;
-                iEle.style.fontSize = 14 * this.scale + 'px';
-                //iEle.style.color = 'wheat';
                 typeBtn.appendChild(iEle);
                 img.style.display = "none";
                 ele.appendChild(typeBtn);
@@ -5839,8 +5840,6 @@
                     img.onload = e => {
                         img.style.display = "";
                         iEle.innerText = '';
-                        iEle.style.fontSize = '';
-                        iEle.style.color = '';
                     };
                     if (/^[a-z\- ]+$/.test(icon)) {
                         let cache = searchData.prefConfig.cacheSwitch && cacheIcon[icon.trim().replace(/ /g, '_')];
