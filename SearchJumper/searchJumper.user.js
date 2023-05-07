@@ -4,7 +4,7 @@
 // @name:zh-TW   搜尋醬
 // @name:ja      検索ちゃん - SearchJumper
 // @namespace    hoothin
-// @version      1.6.7.88.64
+// @version      1.6.8.88.64
 // @description  Assistant for switching search engines. Jump to any search engine quickly, can also search anything (selected text / image / link) on any engine with a simple right click or a variety of menus and shortcuts.
 // @description:zh-CN  高效搜索引擎辅助增强，在搜索时一键切换各大搜索引擎，支持任意页面右键划词搜索与全面自定义
 // @description:zh-TW  高效搜尋引擎輔助增强，在搜尋時一鍵切換各大搜尋引擎，支持任意頁面右鍵劃詞搜尋與全面自定義
@@ -8427,6 +8427,7 @@
                 }
                 if (needCache) {
                     if (noti) _GM_notification(i18n("cacheOver"));
+                    debug(i18n("cacheOver"));
                 }
             }
         }
@@ -9360,7 +9361,7 @@
                     let newCache = {}, oldCacheLength = cacheIcon ? Object.keys(cacheIcon).length : 0;
                     if (preSwitch == searchData.prefConfig.cacheSwitch) {
                         searchData.sitesConfig.forEach(type => {
-                            if (/^[a-z\- ]+$/.test(type.icon) || /^http/.test(type.icon)) {
+                            if (/^[a-z\- ]+$/.test(type.icon || "") || /^http/.test(type.icon)) {
                                 let icon = type.icon.trim().replace(/ /g, '_');
                                 let typeCache = cacheIcon[icon];
                                 if (typeCache) {
