@@ -7250,7 +7250,7 @@
                                     }
                                 } catch(e) {debug(e)}
                             }
-                        }, 500);
+                        }, 300);
                     }
                 }, false);
                 ele.addEventListener('mouseleave', e => {
